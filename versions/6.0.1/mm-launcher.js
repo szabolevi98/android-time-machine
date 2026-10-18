@@ -109,7 +109,7 @@
     const overview = `<div class="mmh-overview">${[['wallpaper', 'wallpaper_button_text'], ['widget', 'widget_button_text'], ['setting', 'settings_button_text']].map(([k, s]) => `<button type="button" class="mmh-ov-${k}" data-action="mmh-ov" data-ov="${k}"><i></i><span>${c.safe(t.t(s))}</span></button>`).join('')}</div>`;
     const cling = !c.data.homeClingSeen ? `<div class="mmh-cling"><i></i><div class="mmh-cling-box np-gel-cling_bg"><div class="mmh-cling-1">${c.safe(t.t('first_run_cling_title'))}</div><div class="mmh-cling-2">${c.safe(t.t('workspace_cling_longpress_title'))}</div><div class="mmh-cling-3">${c.safe(t.t('workspace_cling_longpress_description'))}</div><button type="button" data-action="mmh-cling">${c.safe(t.t('workspace_cling_longpress_dismiss'))}</button></div><i class="mmh-cling-2x"></i></div>` : '';
     return `<div class="mmh${st.page === 0 ? ' now' : ''}${st.overview ? ' overview' : ''}" style="--page:${st.page}">
-      <div class="mmh-strip"><div class="mmh-nowpage">${c.missing('now')}</div>${pages}</div>
+      <div class="mmh-strip"><div class="mmh-nowpage">${MM.google ? MM.google.nowPage(c) : c.missing('now')}</div>${pages}</div>
       <div class="mmh-qsb np-gel-search_bg"><button type="button" class="mmh-qsb-plate" data-action="mmh-search" aria-label="${c.safe(t.t('accessibility_google_search_button'))}"><img src="assets/gel-ic_searchbox_google.png" alt="Google"></button><button type="button" class="mmh-qsb-mic" data-action="mmh-voice" aria-label="${c.safe(t.t('accessibility_voice_button'))}"><i></i></button></div>
       ${targets}<div class="mmh-dots">${dots}</div>
       <div class="mmh-hotseat">${hotseat}</div>${overview}
@@ -306,8 +306,9 @@
       if (name === 'mmh-folder') { st.folder = el.dataset.src; c.render(); return true; }
       if (name === 'mmh-close-folder') { st.folder = null; c.render(); return true; }
       if (name === 'mmh-allapps') { c.open('drawer'); return true; }
-      if (name === 'mmh-search') { c.open('search'); return true; }
-      if (name === 'mmh-voice') { c.open('search', 'voice'); return true; }
+      if (name === 'mmh-search') { MM.googleOpen ? MM.googleOpen(c, false) : c.open('search'); return true; }
+      if (name === 'mmh-voice') { MM.googleOpen ? MM.googleOpen(c, true) : c.open('search', 'voice'); return true; }
+      if (name.startsWith('mmgg-') && MM.google) return MM.google.action(name, el, event, c);
       if (name === 'mmh-cling') { c.data.homeClingSeen = true; c.save(); c.render(); return true; }
       if (name === 'mmh-ov') { st.overview = false; c.open({wallpaper: 'wallpapers', widget: 'widgets', setting: 'home-settings'}[el.dataset.ov]); return true; }
       return false;

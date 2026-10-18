@@ -37,7 +37,7 @@
 .mmh-dots i.on{background-image:url('assets/gel-ic_pageindicator_current.png')}
 /* The search bar: search_bg around the 56 dp bounds (11 px in, 32 px down), the logo and the mic of search_widget.xml. */
 .mmh-qsb{position:absolute;left:calc(-3.810 * var(--dp));right:calc(-3.810 * var(--dp));top:calc(4.190 * var(--dp));height:calc(64 * var(--dp));display:flex;transition:opacity .25s}
-.mmh.now .mmh-qsb{opacity:0;pointer-events:none}
+.mmh.now .mmh-qsb,.mmh.now .mmh-hotseat,.mmh.now .mmh-dots{opacity:0;pointer-events:none}
 .mmh-qsb-plate{flex:1;min-width:0;padding:0;border:0;background:none;text-align:left}
 .mmh-qsb-plate img{display:block;width:calc(62 * var(--dp));height:calc(23 * var(--dp));margin:calc(14 * var(--dp)) 0 0 calc(16 * var(--dp))}
 .mmh-qsb-mic{flex:none;width:calc(56 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center}

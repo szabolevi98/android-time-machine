@@ -1,0 +1,8 @@
+# The Google app 5.3.27 (priv-app/Velvet): the Now header pictures and the opt-in mini cards (mm-google.js)
+vv-context_header_bg_dawn.jpg	priv-app/Velvet/Velvet.apk	drawable/context_header_bg_dawn
+vv-context_header_bg_daylight.jpg	priv-app/Velvet/Velvet.apk	drawable/context_header_bg_daylight
+vv-context_header_bg_dusk.jpg	priv-app/Velvet/Velvet.apk	drawable/context_header_bg_dusk
+vv-context_header_bg_twilight.jpg	priv-app/Velvet/Velvet.apk	drawable/context_header_bg_twilight
+vv-optin_minicard_ic_weather.png	priv-app/Velvet/Velvet.apk	drawable/optin_minicard_ic_weather
+vv-optin_minicard_ic_train.png	priv-app/Velvet/Velvet.apk	drawable/optin_minicard_ic_train
+vv-optin_minicard_ic_flight.png	priv-app/Velvet/Velvet.apk	drawable/optin_minicard_ic_flight
