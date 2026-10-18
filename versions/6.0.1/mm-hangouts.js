@@ -42,7 +42,13 @@
       <div class="mmho-page mmho-msgs">${x.messages.map(m => `<div class="mmho-msg ${m.mine ? 'out' : 'in'}">${m.mine ? '' : P().tile(c, p, 'mmho-mav')}<div class="mmho-bubble"><span>${esc(c, m.text)}</span><small>${esc(c, when(c, m.time))}</small></div></div>`).join('')}</div>
       <div class="mmho-compose"><textarea class="mmho-field" rows="1" placeholder="${esc(c, t.t('realtimechat_message_text_hint'))}">${esc(c, draft)}</textarea><button type="button" class="mmho-send" data-action="mmho-send" aria-label="${esc(c, t.t('realtimechat_send_button_description'))}"><img src="${A(draft.trim() ? 'ic_send_green_24' : 'ic_send_grey_24')}" alt=""></button></div></div>`;
   }
-  function render(c) { const u = ui(c); const x = chats(c).find(y => y.id === u.chat); return x ? chat(c, x) : list(c); }
+  // ShareIntentActivity: the shared text waits for the conversation picked from the list (or started), as its draft.
+  function render(c) {
+    const u = ui(c);
+    if (c.ui.sub === 'share') { c.ui.sub = ''; const d = MM.shareTake(c); u.share = d?.text || ''; u.chat = 0; u.drawer = u.pick = false; }
+    if (u.chat && u.share) { u.draft[u.chat] = u.share; u.share = ''; }
+    const x = chats(c).find(y => y.id === u.chat); return x ? chat(c, x) : list(c);
+  }
   MM.register('hangouts', {
     statusColor: () => '#0b8043',
     render,

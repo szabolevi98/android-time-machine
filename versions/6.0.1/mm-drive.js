@@ -18,7 +18,7 @@
   function render(c) {
     const t = T(), u = ui(c), list = u.view === 'menu_my_drive' ? files(c) : u.view === 'menu_show_starred' ? files(c).filter(f => f.starred) : u.view === 'menu_show_recent' ? [...files(c)].reverse() : [];
     const folders = list.filter(f => f.type === 'folder'), docs = list.filter(f => f.type !== 'folder');
-    const row = f => `<div class="mmgd-row"><img src="${A(f.type === 'folder' ? 'ic_type_folder' : f.type === 'sheet' ? 'ic_type_sheet' : 'ic_type_doc')}" alt=""><span>${esc(c, f.name)}</span></div>`;
+    const row = f => `<div class="mmgd-row"><img src="${A({folder: 'ic_type_folder', sheet: 'ic_type_sheet', file: 'ic_type_file', image: 'ic_type_image', pdf: 'ic_type_pdf'}[f.type] || 'ic_type_doc')}" alt=""><span>${esc(c, f.name)}</span></div>`;
     const body = list.length ? `${folders.length ? `<div class="mmgd-group">${esc(c, t.t('fast_scroll_title_grouper_collections'))}</div>${folders.map(row).join('')}` : ''}${docs.length ? `<div class="mmgd-group">${esc(c, t.t('title_grouper_files'))}</div>${docs.map(row).join('')}` : ''}`
       : u.view === 'menu_my_drive' ? `<div class="mmgd-empty"><img src="${A('ic_empty_drive')}" alt=""><b>${esc(c, t.t('empty_doclist_for_my_drive_view'))}</b><span>${esc(c, t.t('empty_doclist_for_my_drive_view_details'))}</span></div>`
       : `<div class="mmgd-empty"><b>${esc(c, t.t('empty_doclist'))}</b></div>`;

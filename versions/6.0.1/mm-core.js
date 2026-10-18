@@ -72,7 +72,7 @@
 
   // The context every module hook gets.
   const c = {
-    get data() { return data; }, ui, save, render, open, home, back, key: keyPress, toast, t, safe, clone,
+    get data() { return data; }, ui, save, render, open, home, back: () => back(true), key: keyPress, toast, t, safe, clone,
     get lang() { return i18n.language; }, locale: () => i18n.locale(),
     el: {screen, viewport, status: statusRoot, overlay: overlayRoot, nav: navRoot, device},
     has: id => !!modules[id], title: id => modules[id]?.title || SCREENS[id]?.[0] || id,
@@ -147,9 +147,12 @@
     modules.home?.reset?.(c);
     render();
   }
-  function back() {
-    // An open input method takes Back first (InputMethodService.onKeyDown hides itself).
-    if (window.MM.ime?.back?.()) return;
+  // fromApp: an app going back itself (its Up button, finish()) rather than the Back key, so an open input method
+  // closes with the window instead of taking the press.
+  function back(fromApp = false) {
+    // An open input method takes the Back key first (InputMethodService.onKeyDown hides itself).
+    if (fromApp) window.MM.ime?.hide?.();
+    else if (window.MM.ime?.back?.()) return;
     if (ui.overlay) { if (!modules[ui.overlay]?.back?.(c)) { ui.overlay = ''; renderOverlay(); } return; }
     if (modules[ui.view]?.back?.(c)) return;
     if (ui.view === 'home' || ui.view === 'lock') return;

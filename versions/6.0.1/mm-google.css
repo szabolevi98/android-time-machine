@@ -69,3 +69,11 @@
 /* Google Settings (common.Theme.GoogleSettings). */
 .mmgx .mmgs-bar{background:#263238}
 .mmgx .mmgs-cat{color:#009688;font-weight:500}
+/* Voice search heard nothing (no_match): the mic turns grey and starts listening again when touched. Sound Search
+   listens with the music note on Google blue and offers Try again. */
+.mmgg-vplate span{max-width:80%;text-align:center;line-height:1.25}
+.mmgg-vplate.done .mmgg-vmic{background:#bdbdbd;animation:none}
+.mmgg-vplate.music .mmgg-vmic{background:#4285f4}
+.mmgg-vplate.music .mmgg-vmic i{-webkit-mask-image:url('assets/vv-quantum_ic_music_note_white_48.png');mask-image:url('assets/vv-quantum_ic_music_note_white_48.png')}
+.mmgg-vplate.music.done .mmgg-vmic{background:#bdbdbd}
+.mmgg-vretry{margin-top:calc(-24 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;background:none;color:#4285f4;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}

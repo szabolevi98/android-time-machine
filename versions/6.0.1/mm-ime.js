@@ -32,7 +32,8 @@
   const SET = {en: 'qwerty', de: 'qwertz', hu: 'qwertz', fr: 'azerty', es: 'spanish'};
   const SYMBOLS = [['1234567890'], ['@#$%&-+()'], ['*"\':;!?'], [',', '_', '/', '.']];
   const SHIFT_SYMBOLS = [['~`|•√π÷×¶∆'], ['£¢€¥^°={}'], ['\\©®™℅[]'], [',', '<', '>', '.']];
-  let ctx = null, field = null, root = null, sheet = 'alpha', shift = 0, lastShiftTap = 0, repeatTimer = 0;
+  let ctx = null, field = null, root = null, sheet = 'alpha', shift = 0, lastShiftTap = 0, repeatTimer = 0, voice = null;
+  const LISTEN = 4000;
 
   const eligible = el => el && el.closest?.('#screen') && (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && /^(text|search|email|url|password|tel|number)$/.test(el.type || 'text'))) && !el.readOnly && !el.disabled;
   const kind = el => el.type === 'email' ? 'email' : el.type === 'url' ? 'url' : el.type === 'password' ? 'password' : 'text';
@@ -96,8 +97,23 @@
     const v = field.value.slice(0, field.selectionStart ?? field.value.length);
     return (v.match(/[\p{L}\p{N}'’-]+$/u) || [''])[0];
   }
+  /* The voice key switches to Google voice typing (the Google app's voice IME, Velvet ime.xml): ime_port_height 240 dp on
+     ime_background_holo, the 22 sp state ("Speak now", "Tap to speak" while paused, ime_no_match once nothing was
+     heard: the simulator has no microphone) 20 dp from the top, the 90 dp mic with ime_btn_rec in the middle, the
+     Google logo at the foot and ic_ime_keyboard back to Google Keyboard at its left. */
+  function voicePanel() {
+    const t = MM.text('google'), done = !voice.paused && Date.now() - voice.at >= LISTEN;
+    const state = voice.paused ? t.t('ime_hint_tap_to_speak') : done ? t.t('ime_no_match') : t.t('speak_now');
+    root.className = 'mmime voice';
+    root.innerHTML = `<div class="mmime-vpanel np-vv-ime_background_holo"><div class="mmime-vstate">${esc(state).replace(/\s*\n\s*/g, '<br>')}</div>
+      <button type="button" class="mmime-vmic${done || voice.paused ? ' idle' : ''}" data-t="vmic" aria-label="${esc(t.t(done || voice.paused ? 'ime_hint_tap_to_speak' : 'ime_hint_tap_to_pause'))}"><img src="assets/vv-ime_btn_rec.png" alt=""></button>
+      <div class="mmime-vfoot"><button type="button" class="mmime-vkbd" data-t="vkbd" aria-label="${esc(t.t('ime_hint_keyboard_input'))}"><img src="assets/vv-ic_ime_keyboard.png" alt=""></button><img class="mmime-vlogo" src="assets/vv-ic_google_logo_ime.png" alt="Google"></div></div>`;
+    ctx?.el.screen.style.setProperty('--ime-h', 'calc(240 * var(--dp))');
+    if (!done && !voice.paused) { const at = voice.at; setTimeout(() => { if (voice && voice.at === at) draw(); }, LISTEN - (Date.now() - at) + 20); }
+  }
   function draw() {
     if (!root) return;
+    if (voice) { voicePanel(); return; }
     const strip = field.type !== 'password';
     const keys = layout().map((row, r) => row.map(k => keyHtml(k, TOP + r * ROW)).join('')).join('');
     const word = currentWord();
@@ -151,7 +167,9 @@
         if (go && f.form) f.form.requestSubmit ? f.form.requestSubmit() : f.form.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}));
         if (a === 'done' || a === 'go' || a === 'search' || a === 'send') { hide(); f.blur?.(); return; }
       }
-    } else if (t === 'voice') { hide(); ctx?.open('missing-voice-typing'); return; }
+    } else if (t === 'voice') voice = {at: Date.now(), paused: false};
+    else if (t === 'vmic') voice = voice.paused || Date.now() - voice.at >= LISTEN ? {at: Date.now(), paused: false} : {...voice, paused: true};
+    else if (t === 'vkbd') { voice = null; autoShift(); }
     if (root && field) draw();
   }
 
@@ -169,7 +187,7 @@
       root.addEventListener('pointerleave', onCancel);
       root.addEventListener('mousedown', e => e.preventDefault());
     }
-    sheet = 'alpha'; shift = 0; autoShift();
+    sheet = 'alpha'; shift = 0; voice = null; autoShift();
     draw();
     ctx.el.screen.classList.add('ime');
     const back = ctx.el.nav.querySelector('[data-key="back"] img');
@@ -178,7 +196,7 @@
   }
   function hide() {
     if (!root) return;
-    root.remove(); root = null;
+    root.remove(); root = null; voice = null;
     if (field?.dataset.imeSet) { field.removeAttribute('inputmode'); delete field.dataset.imeSet; }
     field = null;
     ctx?.el.screen.classList.remove('ime');

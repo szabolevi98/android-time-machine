@@ -24,12 +24,15 @@ PER_DP = {'xxhdpi': 3.0, 'nodpi': 3.0, 'xhdpi': 2.0, 'xxxhdpi': 4.0, 'hdpi': 1.5
 
 
 def find(z, resource):
-    """The APK path of drawable/name in the best density for the 5X (folders like res/drawable-xxhdpi-v4)."""
+    """The APK path of drawable/name in the best density for the 5X (folders like res/drawable-xxhdpi-v4); of the same
+    density the highest -vNN the phone (API 23) takes wins, as the resource system picks it."""
     kind, name = resource.split('/', 1)
-    best = {}
+    best, ver = {}, {}
     for path in z.namelist():
-        m = re.match(rf'res/{kind}(?:-([a-z]+))?(?:-v\d+)?/{re.escape(name)}(\.9\.png|\.png|\.jpg|\.webp|\.gif)$', path)
-        if m and (m.group(1) or '') in DENSITIES: best.setdefault(m.group(1) or '', path)
+        m = re.match(rf'res/{kind}(?:-([a-z]+))?(?:-v(\d+))?/{re.escape(name)}(\.9\.png|\.png|\.jpg|\.webp|\.gif)$', path)
+        if not m or (m.group(1) or '') not in DENSITIES: continue
+        d, v = m.group(1) or '', int(m.group(2) or 0)
+        if v <= 23 and v >= ver.get(d, -1): best[d], ver[d] = path, v
     for d in DENSITIES:
         if d in best: return best[d], d
     raise KeyError(f'{resource} (no bitmap; a vector goes through mm-vectors.py)')

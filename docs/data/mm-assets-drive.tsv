@@ -19,3 +19,6 @@ dr-ic_createpanel_slide.png	app/Drive/Drive.apk	drawable/ic_createpanel_slide
 dr-ic_type_folder.png	app/Drive/Drive.apk	drawable/ic_type_folder
 dr-ic_type_doc.png	app/Drive/Drive.apk	drawable/ic_type_doc
 dr-ic_type_sheet.png	app/Drive/Drive.apk	drawable/ic_type_sheet
+dr-ic_type_file.png	app/Drive/Drive.apk	drawable/ic_type_file
+dr-ic_type_image.png	app/Drive/Drive.apk	drawable/ic_type_image
+dr-ic_type_pdf.png	app/Drive/Drive.apk	drawable/ic_type_pdf

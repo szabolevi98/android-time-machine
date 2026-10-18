@@ -34,9 +34,16 @@
   function nowPage(c) {
     return `<div class="mmgg-now"><div class="mmgg-head" style="background-image:url('assets/vv-context_header_bg_${header()}.jpg')">${plate(c)}</div><div class="mmgg-cards">${cards(c)}</div></div>`;
   }
+  const LISTEN_VOICE = 4000, LISTEN_MUSIC = 6000;
   function render(c) {
     const t = T(), u = ui(c);
-    if (u.mode === 'voice') return `<div class="mmgg mmgg-voice"><div class="mmgg-vplate"><span>${esc(c, t.t('speak_now'))}</span><button type="button" class="mmgg-vmic" data-action="mmgg-close"><i></i></button></div></div>`;
+    // Voice search listens for a few seconds; with no microphone in the simulator nothing is heard, so it ends in
+    // no_match with the mic to try again. Sound Search ("Listening for music…") ends in its no-result message.
+    if (u.mode === 'voice' || u.mode === 'music') {
+      const music = u.mode === 'music', done = Date.now() - (u.listenAt || 0) >= (music ? LISTEN_MUSIC : LISTEN_VOICE);
+      const text = t.t(music ? (done ? 'message_no_sound_search_results_tts' : 'listening_for_music_status') : (done ? 'no_match' : 'speak_now'));
+      return `<div class="mmgg mmgg-voice"><div class="mmgg-vplate${done ? ' done' : ''}${music ? ' music' : ''}"><span>${esc(c, text)}</span><button type="button" class="mmgg-vmic" data-action="${done ? 'mmgg-relisten' : 'mmgg-close'}" aria-label="${esc(c, t.t(done ? 'try_again' : 'speak_now'))}"><i></i></button>${done && music ? `<button type="button" class="mmgg-vretry" data-action="mmgg-relisten">${esc(c, t.t('try_again'))}</button>` : ''}</div></div>`;
+    }
     if (u.mode === 'search') {
       const p = u.result ? MM.web.page(u.result) : null;
       return `<div class="mmgg mmgg-search">${plate(c, true)}<div class="mmgg-results">${p ? `<div class="mmwb">${p.html}</div>` : ''}</div></div>`;
@@ -50,7 +57,8 @@
       case 'mmgg-optout': c.data.now = 'off'; c.save(); c.render(); return true;
       case 'mmgg-welcomed': c.data.nowWelcomed = true; c.save(); c.render(); return true;
       case 'mmgg-open': u.mode = 'search'; u.q = ''; u.result = ''; if (c.ui.view !== 'search') c.open('search'); else c.render(); return true;
-      case 'mmgg-voice': u.mode = 'voice'; if (c.ui.view !== 'search') c.open('search'); else c.render(); return true;
+      case 'mmgg-relisten': u.listenAt = Date.now(); c.render(); return true;
+      case 'mmgg-voice': u.mode = 'voice'; u.listenAt = Date.now(); if (c.ui.view !== 'search') c.open('search'); else c.render(); return true;
       case 'mmgg-close': u.mode = ''; c.back(); return true;
       case 'mmcr-go': u.result = el.dataset.url; c.render(); return true;
     }
@@ -60,7 +68,10 @@
   MM.register('search', {
     statusColor: c => ui(c).mode ? '#9e9e9e' : 'rgba(0,0,0,.2)',
     render,
-    mount(c, root) { const i = root.querySelector('.mmgg-input'); if (i && document.activeElement !== i) i.focus(); },
+    mount(c, root) {
+      const u = ui(c), i = root.querySelector('.mmgg-input'); if (i && document.activeElement !== i) i.focus();
+      if (u.mode === 'voice' || u.mode === 'music') { const left = (u.mode === 'music' ? LISTEN_MUSIC : LISTEN_VOICE) - (Date.now() - u.listenAt); if (left > 0) setTimeout(() => { if (c.ui.view === 'search' && ui(c).mode === u.mode) c.render(); }, left + 20); }
+    },
     submit(form, event, c) {
       const u = ui(c), q = (form.elements.q?.value || '').trim(); if (!q) return;
       if (form.dataset.form === 'mmcr-search' || form.dataset.form === 'mmgg-search') { u.q = q; u.result = `${MM.web.GOOGLE}search?q=${encodeURIComponent(q).split('%20').join('+')}`; c.render(); }
@@ -69,7 +80,8 @@
     action
   });
   // The home screen's search bar and mic open the app in the matching mode.
-  MM.googleOpen = (c, voice) => { const u = ui(c); u.mode = voice ? 'voice' : 'search'; u.q = ''; u.result = ''; c.open('search'); };
+  // voice: true for voice search (also RecognizerIntent from another app), 'music' for Sound Search.
+  MM.googleOpen = (c, voice) => { const u = ui(c); u.mode = voice === 'music' ? 'music' : voice ? 'voice' : 'search'; u.listenAt = Date.now(); u.q = ''; u.result = ''; c.open('search'); };
 })();
 /* Now on Tap (Velvet's assist layer, held Home): assist_layer.xml's #9e000000 scrim over the screen and, at the foot,
    screen_assist_opt_in.xml on #f2f2f2 (the 16 sp bold title, the 14 sp body, LEARN MORE, Not now / Turn on in

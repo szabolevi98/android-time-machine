@@ -73,7 +73,7 @@
     const t = T();
     switch (name) {
       case 'mmfp-cancel': leave(c); return true;
-      case 'mmfp-learn': c.open('missing-help'); return true;
+      case 'mmfp-learn': c.open('help', 'settings'); return true;
       case 'mmfp-continue':
         if (secure(c)) { c.ui.fpFlow = 'enroll'; MM.settingsGo(c, 'lock-confirm', ''); }
         else go(c, 'fp-onboard');

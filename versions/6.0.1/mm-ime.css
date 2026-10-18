@@ -22,3 +22,16 @@
 .mmime-key.act.down u{background-image:url('assets/ime-btn_keyboard_key_active_pressed_lxx_light.9.png')}
 .mmime-preview{position:absolute;display:flex;justify-content:center;padding-top:calc(14 * var(--dp));color:#37474f;font-family:Roboto,sans-serif;line-height:1;pointer-events:none;z-index:2}
 .mmime-preview[hidden]{display:none}
+/* Google voice typing (Velvet ime.xml): 240 dp, the state 20 dp down in 22 sp, the 90 dp mic, the Google logo foot. */
+.mmime.voice{height:calc(240 * var(--dp))}
+.mmime-vpanel{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;color:#757575;font-family:Roboto,sans-serif}
+.mmime-vstate{margin:calc(20 * var(--dp)) calc(24 * var(--dp)) 0;min-height:calc(56 * var(--dp));font-size:calc(22 * var(--dp));line-height:1.25;text-align:center}
+.mmime-vmic{flex:none;width:calc(90 * var(--dp));height:calc(90 * var(--dp));margin-top:calc(8 * var(--dp));padding:0;border:0;border-radius:50%;background:none;display:grid;place-items:center;animation:mmime-pulse 1.2s ease-in-out infinite}
+.mmime-vmic img{width:calc(64 * var(--dp));height:calc(64 * var(--dp))}
+.mmime-vmic.idle{animation:none}
+.mmime-vmic.idle img{filter:grayscale(1) brightness(1.25)}
+@keyframes mmime-pulse{50%{box-shadow:0 0 0 calc(12 * var(--dp)) rgba(229,57,53,.18)}}
+.mmime-vfoot{position:absolute;left:0;right:0;bottom:calc(8 * var(--dp));display:flex;align-items:center;justify-content:center}
+.mmime-vkbd{position:absolute;left:calc(8 * var(--dp));width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;border-radius:50%;background:none;display:grid;place-items:center}
+.mmime-vkbd img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.mmime-vlogo{width:calc(78 * var(--dp));height:calc(24 * var(--dp))}

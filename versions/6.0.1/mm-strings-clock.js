@@ -249,6 +249,85 @@ MM.strings('clock', {
 "fr": "Partager",
 "es": "Compartir"
 },
+"sw_share_main": {
+"res": "bullhead:PrebuiltDeskClockGoogle:sw_share_main",
+"en": "My time is %s",
+"hu": "Az én időm: %s",
+"de": "Meine Zeit: %s",
+"fr": "Mon heure est %s",
+"es": "Hora: %s"
+},
+"sw_share_laps": {
+"res": "bullhead:PrebuiltDeskClockGoogle:sw_share_laps",
+"en": "Lap times:",
+"hu": "Köridők:",
+"de": "Rundenzeiten:",
+"fr": "Temps de circuit :",
+"es": "Duración de las vueltas:"
+},
+"sw_share_strings": {
+"res": "bullhead:PrebuiltDeskClockGoogle:sw_share_strings",
+"en": [
+"You're quite the speed demon.",
+"Enjoy the fruits of your labor.",
+"Androids are known to be fast, but not as fast as you!",
+"Phew.",
+"L33t times.",
+"Such prodigious velocity.",
+"Let's do the time warp again.",
+"Just a jump to the left.",
+"You have a palette for haste.",
+"Photonic velocity."
+],
+"hu": [
+"Ön valósággal a sebesség ördöge.",
+"Élvezze a munkája gyümölcsét.",
+"Az androidok köztudottan gyorsak, de nem annyira, mint Ön!",
+"Tyű.",
+"L33t idő.",
+"Micsoda bődületes sebesség.",
+"Állítsuk meg újra az időt.",
+"Csak egy ugrás balra.",
+"Van érzéke a sietséghez.",
+"Fotonikus sebesség!"
+],
+"de": [
+"Sie sind teuflisch schnell.",
+"Ernten Sie die Früchte Ihrer Arbeit!",
+"Sie sind ja schneller als ein Roboter!",
+"Puh!",
+"L33t-Zeiten",
+"Wahnsinnsgeschwindigkeit",
+"Let's do the time warp again!",
+"Just a jump to the left.",
+"Sie haben es ganz schön eilig.",
+"Photonengeschwindigkeit"
+],
+"fr": [
+"On peut dire que vous êtes rapide.",
+"Profitez du fruit de votre travail.",
+"Les appareils Android sont connus pour leur rapidité, mais ils ne sont pas aussi rapides que vous !",
+"Ouf !",
+"Temps record !",
+"Quelle vitesse prodigieuse !",
+"Distorsion temporelle",
+"Un bond vers la gauche",
+"Quoi qu'il arrive, vous n'êtes jamais en retard.",
+"Vitesse photonique"
+],
+"es": [
+"Eres el rey de la velocidad.",
+"Disfruta de los frutos de tu trabajo.",
+"Los androides se caracterizan por ser rápidos, pero no tanto como tú.",
+"¡Uf!",
+"L33t veces",
+"Una velocidad prodigiosa",
+"Vamos a saltar en el tiempo otra vez.",
+"Solo un salto a la izquierda",
+"Tienes muchas cosas que hacer en poco tiempo.",
+"Velocidad fotónica"
+]
+},
 "sw_resume_button": {
 "res": "bullhead:PrebuiltDeskClockGoogle:sw_resume_button",
 "en": "Resume",

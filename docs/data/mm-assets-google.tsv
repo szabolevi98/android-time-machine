@@ -7,3 +7,9 @@ vv-optin_minicard_ic_weather.png	priv-app/Velvet/Velvet.apk	drawable/optin_minic
 vv-optin_minicard_ic_train.png	priv-app/Velvet/Velvet.apk	drawable/optin_minicard_ic_train
 vv-optin_minicard_ic_flight.png	priv-app/Velvet/Velvet.apk	drawable/optin_minicard_ic_flight
 vv-ic_arrow_back.png	priv-app/Velvet/Velvet.apk	drawable/ic_arrow_back
+# Google voice typing (Velvet ime.xml) and Sound Search (mm-ime.js, mm-google.js)
+vv-ime_background_holo.9.png	priv-app/Velvet/Velvet.apk	drawable/ime_background_holo
+vv-ic_google_logo_ime.png	priv-app/Velvet/Velvet.apk	drawable/ic_google_logo_ime
+vv-ic_ime_keyboard.png	priv-app/Velvet/Velvet.apk	drawable/ic_ime_keyboard
+vv-ime_btn_rec.png	priv-app/Velvet/Velvet.apk	drawable/ime_btn_rec
+vv-quantum_ic_music_note_white_48.png	priv-app/Velvet/Velvet.apk	drawable/quantum_ic_music_note_white_48

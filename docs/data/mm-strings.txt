@@ -82,7 +82,7 @@ error_aborted error_overflow error_zero_divide menu_leading menu_fraction menu_l
 app_label menu_alarm menu_clock menu_timer menu_stopwatch alarm_repeat alarm_vibrate label default_label no_alarms ringtone
 delete expand_alarm collapse_alarm button_alarms button_cities menu_item_settings menu_item_night_mode menu_item_help
 hours_label minutes_label seconds_label timer_start timer_delete timer_reset timer_add_timer sw_start_button sw_stop_button
-sw_reset_button sw_lap_button sw_share_button sw_resume_button alarm_is_set alarm_deleted alarm_undo
+sw_reset_button sw_lap_button sw_share_button sw_share_main sw_share_laps array:sw_share_strings sw_resume_button alarm_is_set alarm_deleted alarm_undo
 full_wday_month_day_no_year abbrev_wday_month_day_no_year time_picker_set time_picker_cancel every_day
 array:alarm_set plurals:days plurals:hours plurals:minutes
 [phone] GoogleDialer framework
@@ -105,6 +105,7 @@ voice_search_not_available phoneTypeMobile callDetailTitle call_detail_list_head
 callDetailsShortDurationFormat recentCalls_removeFromRecentList recentCalls_editNumberBeforeCall call_detail_menu_report
 call_log_action_call+args1 description_call_log_call_action
 [contacts] GoogleContacts framework
+share_via
 # Google Contacts 1.2: PeopleActivity's tabs and menu, the lists, QuickContactActivity's cards and menu, the compact editor
 applicationLabel favorites_tab_label all_contacts_tab_label menu_search hint_findContacts menu_contacts_filter
 menu_import_export menu_clear_frequents menu_accounts menu_settings menu_help listTotalAllContactsZeroStarred noContacts
@@ -126,6 +127,7 @@ message_status_sending archived_toast_message delete_conversation_confirmation_b
 delete_conversation_decline_button plurals:delete_conversations_confirmation_dialog_title search_hint
 contact_list_empty_text
 [chrome] Chrome framework
+share_link_chooser_title
 # Chrome 44: the toolbar, the menu (main_menu.xml), the New Tab page, the first-run terms; the network error page from the APK's .pak files
 search_or_type_url menu_new_tab menu_new_incognito_tab menu_bookmarks menu_recent_tabs menu_history menu_share_page
 menu_print menu_find_in_page menu_add_to_homescreen menu_request_desktop_site menu_preferences menu_help
@@ -183,6 +185,7 @@ SEARCH YOUR_PLACES YOUR_TIMELINE OFFLINE_MAPS_TITLE LAYER_TRAFFIC LAYER_PUBLIC_T
 LAYER_GOOGLE_EARTH TIPS_AND_TRICKS SETTINGS HELP SEND_FEEDBACK DIRECTIONS_YOUR_LOCATION DIRECTIONS_CHOOSE_END_POINT
 START_NAVIGATION NAVIGATION
 [youtube] YouTube framework
+share_subject share_text
 # YouTube 10.28.60: search, the video cards, the watch page
 home_phone_label search_hint subscribe subscribed menu_share accessibility_addto settings menu_help channel_watch_history
 plurals:author_and_views plurals:age_and_views plurals:minutes_ago plurals:hours_ago plurals:days_ago plurals:weeks_ago
@@ -226,6 +229,8 @@ assist_optin_title assist_optin_body assist_optin_learn_more_text assist_optin_d
 no_results_found_status assist_layer_to_now own:weather_partly_cloudy
 search_settings homescreen_settings_header_category homescreen_settings_show_predictions allow_rotation_title
 header_category_search_and_now account_settings search_language voice_settings search_sources now_cards about
+no_match tap_mic_to_speak listening_for_music_status message_no_sound_search_results_tts try_again listen_for_music
+ime_no_match ime_hint_keyboard_input ime_hint_tap_to_speak ime_hint_tap_to_pause
 [widgets] Velvet CalendarGooglePrebuilt Chrome Drive Hangouts Maps Music2 PrebuiltBugle PrebuiltDeskClockGoogle PrebuiltGmail Phonesky Settings GoogleContacts framework
 # The launcher's widgets list (Launcher3 in Velvet 5.3.27) and the labels of the image's widget providers and shortcuts
 Velvet/widget_dims_format Velvet/long_press_widget_to_add Velvet/out_of_space Velvet/widget_button_text
@@ -273,3 +278,35 @@ security_settings_fingerprint_enroll_dialog_name_label security_settings_fingerp
 security_settings_fingerprint_enroll_dialog_delete fingerprint_last_delete_title fingerprint_last_delete_message
 fingerprint_last_delete_confirm lock_settings_picker_fingerprint_message fingerprint_add_max+args1
 framework/fingerprint_name_template SystemUI/fingerprint_not_recognized SystemUI/accessibility_unlock_button_fingerprint
+[intents] framework Bluetooth Drive Settings Hangouts PrebuiltBugle PrebuiltGmail Photos
+# ChooserActivity (chooser_grid.xml, resolve_grid_item.xml) and the labels of the image's ACTION_SEND activities
+whichSendApplication chooseActivity noApplications cancel
+Bluetooth/bt_share_picker_label Bluetooth/bt_enable_line1 Bluetooth/bt_enable_line2 Bluetooth/bt_enable_ok Bluetooth/bt_enable_cancel
+Bluetooth/enabling_progress_title Bluetooth/enabling_progress_content
+Drive/app_name Drive/send_to_clipboard_activity_title Drive/send_to_clipboard_success Drive/upload_shared_item_title
+Drive/upload_shared_item_confirm Drive/upload_document_title Drive/upload_account Drive/upload_folder Drive/upload_cancel
+Drive/menu_my_drive Drive/upload_untitled_file_title Drive/grid_sync_upload_label_format
+Hangouts/home_screen_babel_label PrebuiltBugle/share_intent_label PrebuiltGmail/app_name Photos/photos_uploadtoalbum_title
+Photos/photos_uploadtoalbum_account_label Photos/photos_uploadtoalbum_upload Photos/photos_uploadtoalbum_progress_title Photos/photos_uploadtoalbum_upload_complete
+# Settings' DevicePickerActivity (BluetoothOppLauncherActivity sends a file through it)
+Settings/device_picker Settings/bluetooth_preference_found_devices Settings/bluetooth_no_devices_found
+Settings/bluetooth_search_for_devices Settings/bluetooth_searching_for_devices Settings/progress_scanning
+[help] PrebuiltGmsCore framework
+# Google Help (gh_help_activity.xml: the search card, Popular, Contact us) and Google Feedback (feedback_ui.xml)
+gh_menu_help gh_default_help_box_string gh_popular_articles gh_help_recent_articles_title gh_help_browse_all_articles_title
+gh_menu_feedback_and_support gh_menu_send_feedback gh_feedback_wait_time gh_menu_clear_history gh_menu_version_info
+gh_menu_play_store gh_menu_print gh_print_job_name gh_clear_history_announcement gh_subtitle_format_for_version_number gh_copyright gh_no_results_found gh_help_search_title
+gf_report_feedback gf_action_send gf_enter_feedback gf_include_private_data gf_touch_preview gf_new_policy gf_product_information
+gf_privacy_policy gf_tos gf_report_being_sent gf_feedback_being_sent gf_invalid_description_text gf_preview_feedback gf_preview_screenshot
+gf_email_address gf_anonymous gf_touch_account_spinner gf_error_report_package_name gf_error_report_package_version_name gf_error_report_device
+gf_error_report_build_id gf_error_report_model gf_error_report_sdk_version gf_error_report_release gf_error_report_build_fingerprint gf_error_report_brand
+gf_error_report_product gf_error_report_time gf_error_report_user_initiated gf_error_report_type gf_locale
+own:calculator_1_t own:calculator_1_b own:calculator_2_t own:calculator_2_b own:calculator_3_t own:calculator_3_b own:calendar_1_t own:calendar_1_b own:calendar_2_t own:calendar_2_b own:calendar_3_t own:calendar_3_b own:clock_1_t own:clock_1_b own:clock_2_t own:clock_2_b own:clock_3_t own:clock_3_b own:contacts_1_t own:contacts_1_b own:contacts_2_t own:contacts_2_b own:contacts_3_t own:contacts_3_b own:gmail_1_t own:gmail_1_b own:gmail_2_t own:gmail_2_b own:gmail_3_t own:gmail_3_b own:messenger_1_t own:messenger_1_b own:messenger_2_t own:messenger_2_b own:messenger_3_t own:messenger_3_b own:photos_1_t own:photos_1_b own:photos_2_t own:photos_2_b own:photos_3_t own:photos_3_b own:chrome_1_t own:chrome_1_b own:chrome_2_t own:chrome_2_b own:chrome_3_t own:chrome_3_b own:drive_1_t own:drive_1_b own:drive_2_t own:drive_2_b own:drive_3_t own:drive_3_b own:hangouts_1_t own:hangouts_1_b own:hangouts_2_t own:hangouts_2_b own:hangouts_3_t own:hangouts_3_b own:maps_1_t own:maps_1_b own:maps_2_t own:maps_2_b own:maps_3_t own:maps_3_b own:youtube_1_t own:youtube_1_b own:youtube_2_t own:youtube_2_b own:youtube_3_t own:youtube_3_b own:play_1_t own:play_1_b own:play_2_t own:play_2_b own:play_3_t own:play_3_b own:media_1_t own:media_1_b own:media_2_t own:media_2_b own:media_3_t own:media_3_b  own:settings_1_t own:settings_1_b own:settings_2_t own:settings_2_b own:settings_3_t own:settings_3_b
+[print] PrintSpooler DocumentsUI DownloadProvider framework
+# PrintSpooler's PrintActivity (print_activity.xml, print_activity_controls.xml), SelectPrinterActivity, DocumentsUI's save
+save_as_pdf all_printers all_printers_label label_copies label_copies_summary label_paper_size label_paper_size_summary
+label_color label_orientation label_pages label_duplex more_options_button print_preparing_preview template_all_pages
+print_button savetopdf_button page_description_template current_page_template print_searching_for_printers print_no_printers
+print_add_printer array:color_mode_labels array:orientation_labels array:duplex_mode_labels pages_range_example
+framework/mediasize_iso_a4 framework/mediasize_na_letter
+DocumentsUI/title_save DocumentsUI/menu_save DownloadProvider/root_downloads DocumentsUI/empty

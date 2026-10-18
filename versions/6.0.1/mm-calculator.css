@@ -24,3 +24,10 @@
 .mmca-advanced .mmca-b:active{background:rgba(0,0,0,.12)}
 .mmca-advanced .mmca-b.on{background:rgba(0,0,0,.12)}
 .mmca-pager:not(.adv) .mmca-advanced .mmca-b{pointer-events:none}
+/* Licenses (Theme.Licenses: the dark action bar in calculator_accent_color over the WebView). */
+.mmca-lic{position:absolute;inset:0;display:flex;flex-direction:column;background:#fff}
+.mmca-licbar{flex:none;display:flex;align-items:center;height:calc(56 * var(--dp));background:#00bcd4;color:#fff;font:500 calc(20 * var(--dp)) Roboto,sans-serif;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) rgba(0,0,0,.2)}
+.mmca-licbar button{width:calc(56 * var(--dp));height:calc(56 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center}
+.mmca-licbar img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.mmca-licbar span{padding-left:calc(16 * var(--dp))}
+.mmca-lic iframe{flex:1;width:100%;border:0}

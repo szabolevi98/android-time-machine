@@ -73,6 +73,7 @@ versions/6.0.1/assets/ca-ic_settings.svg	112c923e83c0f802	vector	bullhead:/syste
 versions/6.0.1/assets/ca-ic_today.svg	347836e4e5fedffd	vector	bullhead:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-v21/ic_today.xml	drawable-v21	vector drawable drawn as SVG	317c0d47e5112032
 versions/6.0.1/assets/ca-ic_week.svg	61cb69469e608f48	vector	bullhead:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-v21/ic_week.xml	drawable-v21	vector drawable drawn as SVG	6016439cef8d5b65
 versions/6.0.1/assets/ca-icon.png	9f91545c527a3e0b	copy	bullhead:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/icon.png	drawable-xxhdpi-v4		9f91545c527a3e0b
+versions/6.0.1/assets/ca-licenses.html	e6fca311f73ed96c	copy	bullhead:/system/app/CalculatorGoogle/CalculatorGoogle.apk!assets/licenses.html			e6fca311f73ed96c
 versions/6.0.1/assets/ca-quickcreate.png	47432898b4e9edb7	copy	bullhead:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-nodpi-v4/quickcreate.png	drawable-nodpi-v4		47432898b4e9edb7
 versions/6.0.1/assets/ca-richness.png	375335770feede54	copy	bullhead:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-nodpi-v4/richness.png	drawable-nodpi-v4		375335770feede54
 versions/6.0.1/assets/ca-smartmail.png	32bcd7266c33c70b	copy	bullhead:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-nodpi-v4/smartmail.png	drawable-nodpi-v4		32bcd7266c33c70b
@@ -182,7 +183,10 @@ versions/6.0.1/assets/dr-ic_empty_drive.png	41a0a2826afd3121	copy	bullhead:/syst
 versions/6.0.1/assets/dr-ic_empty_shared_with_me.png	f874dfadb0ee5398	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_empty_shared_with_me.png	drawable-xxhdpi-v4		f874dfadb0ee5398
 versions/6.0.1/assets/dr-ic_menu_search_alpha.png	db0469b399521932	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_menu_search_alpha.png	drawable-xxhdpi-v4		db0469b399521932
 versions/6.0.1/assets/dr-ic_type_doc.png	eb0254d58d3b4a48	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_type_doc.png	drawable-xxhdpi-v4		eb0254d58d3b4a48
+versions/6.0.1/assets/dr-ic_type_file.png	a71bd034d0ae92fb	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_type_file.png	drawable-xxhdpi-v4		a71bd034d0ae92fb
 versions/6.0.1/assets/dr-ic_type_folder.png	5b15f3ef18042de2	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_type_folder.png	drawable-xxhdpi-v4		5b15f3ef18042de2
+versions/6.0.1/assets/dr-ic_type_image.png	336c3edf37b821cc	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_type_image.png	drawable-xxhdpi-v4		336c3edf37b821cc
+versions/6.0.1/assets/dr-ic_type_pdf.png	07602d7af6e85bdd	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_type_pdf.png	drawable-xxhdpi-v4		07602d7af6e85bdd
 versions/6.0.1/assets/dr-ic_type_sheet.png	4a70fcf24edef36b	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_type_sheet.png	drawable-xxhdpi-v4		4a70fcf24edef36b
 versions/6.0.1/assets/dr-quantum_ic_menu_grey600_24.png	28f72804b7b8ba43	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/quantum_ic_menu_grey600_24.png	drawable-xxhdpi-v4		28f72804b7b8ba43
 versions/6.0.1/assets/dr-widget_app_logo.png	93b029328b364be9	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-hdpi-v4/widget_app_logo.png	drawable-hdpi-v4		93b029328b364be9
@@ -190,6 +194,7 @@ versions/6.0.1/assets/dr-widget_background.9.png	6eaecc1e83d15986	copy	bullhead:
 versions/6.0.1/assets/dr-widget_newdoc.png	0d0f65d505b3c856	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-hdpi-v4/widget_newdoc.png	drawable-hdpi-v4		0d0f65d505b3c856
 versions/6.0.1/assets/dr-widget_newdocfromcamera.png	36b9424b80fa7e3e	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-hdpi-v4/widget_newdocfromcamera.png	drawable-hdpi-v4		36b9424b80fa7e3e
 versions/6.0.1/assets/dr-widget_upload.png	16e4141b898731b2	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-hdpi-v4/widget_upload.png	drawable-hdpi-v4		16e4141b898731b2
+versions/6.0.1/assets/du-ic_doc_pdf_alpha.png	53742476ec5b7a12	copy	bullhead:/system/app/DocumentsUI/DocumentsUI.apk!res/drawable-xxhdpi-v4/ic_doc_pdf_alpha.png	drawable-xxhdpi-v4		53742476ec5b7a12
 versions/6.0.1/assets/du-ic_hamburger_alpha.png	eff6fcdd34d85037	copy	bullhead:/system/app/DocumentsUI/DocumentsUI.apk!res/drawable-xxhdpi-v4/ic_hamburger_alpha.png	drawable-xxhdpi-v4		eff6fcdd34d85037
 versions/6.0.1/assets/du-ic_menu_search_alpha.png	9ec18d8f5ed1085c	copy	bullhead:/system/app/DocumentsUI/DocumentsUI.apk!res/drawable-xxhdpi-v4/ic_menu_search_alpha.png	drawable-xxhdpi-v4		9ec18d8f5ed1085c
 versions/6.0.1/assets/du-ic_menu_sortby_am_alpha.png	63bedc41741b6e7f	copy	bullhead:/system/app/DocumentsUI/DocumentsUI.apk!res/drawable-xxhdpi-v4/ic_menu_sortby_am_alpha.png	drawable-xxhdpi-v4		63bedc41741b6e7f
@@ -314,6 +319,12 @@ versions/6.0.1/assets/gel-ic_widget_pressed.png	f5027aca5412c108	copy	bullhead:/
 versions/6.0.1/assets/gel-portal_ring_inner.png	cb684598871fd094	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/portal_ring_inner.png	drawable-xxhdpi-v4		cb684598871fd094
 versions/6.0.1/assets/gel-screenpanel.9.png	5367af4067b16862	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/screenpanel.9.png	drawable-xxhdpi-v4		5367af4067b16862
 versions/6.0.1/assets/gel-search_bg.9.png	023562590363b025	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/search_bg.9.png	drawable-xxhdpi-v4		023562590363b025
+versions/6.0.1/assets/gh-gf_menu_send.png	81bc4c81f2cc2fd9	copy	bullhead:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable-xxhdpi-v4/gf_menu_send.png	drawable-xxhdpi-v4		81bc4c81f2cc2fd9
+versions/6.0.1/assets/gh-gh_article.png	645d56a80d9feb1e	copy	bullhead:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable/gh_article.png	drawable		645d56a80d9feb1e
+versions/6.0.1/assets/gh-gh_card_background.9.png	414d7c95cfee52ce	copy	bullhead:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable-xxhdpi-v4/gh_card_background.9.png	drawable-xxhdpi-v4		414d7c95cfee52ce
+versions/6.0.1/assets/gh-gh_feedback.png	64b86a8a4fc4c76d	copy	bullhead:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable/gh_feedback.png	drawable		64b86a8a4fc4c76d
+versions/6.0.1/assets/gh-gh_ic_search_grey_24dp.png	8584d59c3aa530fd	copy	bullhead:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable-xxhdpi-v4/gh_ic_search_grey_24dp.png	drawable-xxhdpi-v4		8584d59c3aa530fd
+versions/6.0.1/assets/gh-gh_search_clear_normal.png	141c39cd7971553b	copy	bullhead:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable-xxhdpi-v4/gh_search_clear_normal.png	drawable-xxhdpi-v4		141c39cd7971553b
 versions/6.0.1/assets/gm-abc_ic_search_api_mtrl_alpha.png	f1136d0c76acb788	copy	bullhead:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/abc_ic_search_api_mtrl_alpha.png	drawable-xxhdpi-v4		f1136d0c76acb788
 versions/6.0.1/assets/gm-avatar_placeholder.png	e5a4072a512488e5	copy	bullhead:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/avatar_placeholder.png	drawable-xxhdpi-v4		e5a4072a512488e5
 versions/6.0.1/assets/gm-gradient_bg_widget_holo.9.png	1618e7488c8afac2	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/gradient_bg_widget_holo.9.png	drawable-xxhdpi-v4		1618e7488c8afac2
@@ -384,6 +395,7 @@ versions/6.0.1/assets/ime-sym_keyboard_send_lxx_light.png	a862adbfd68bfd76	copy	
 versions/6.0.1/assets/ime-sym_keyboard_shift_locked_lxx_light.png	8c607f572da0a1c2	copy	bullhead:/system/app/LatinImeGoogle/LatinImeGoogle.apk!res/drawable-xxhdpi-v4/sym_keyboard_shift_locked_lxx_light.png	drawable-xxhdpi-v4		8c607f572da0a1c2
 versions/6.0.1/assets/ime-sym_keyboard_shift_lxx_light.png	b9982fd26986968d	copy	bullhead:/system/app/LatinImeGoogle/LatinImeGoogle.apk!res/drawable-xxhdpi-v4/sym_keyboard_shift_lxx_light.png	drawable-xxhdpi-v4		b9982fd26986968d
 versions/6.0.1/assets/ime-sym_keyboard_voice_lxx_light.png	4ffb02e86a04e9b7	copy	bullhead:/system/app/LatinImeGoogle/LatinImeGoogle.apk!res/drawable-xxhdpi-v4/sym_keyboard_voice_lxx_light.png	drawable-xxhdpi-v4		4ffb02e86a04e9b7
+versions/6.0.1/assets/in-bt_share.png	d6c10c37ed2142ec	copy	bullhead:/system/app/Bluetooth/Bluetooth.apk!res/mipmap-xxhdpi-v4/bt_share.png	mipmap-xxhdpi-v4		d6c10c37ed2142ec
 versions/6.0.1/assets/landing-home.jpg	bf40cbc3c53ec989	own	capture of the simulator's own home screen for the landing page card			
 versions/6.0.1/assets/lw-ic_launcher_live_wallpaper.png	06afb1f349962092	copy	bullhead:/system/app/LiveWallpapersPicker/LiveWallpapersPicker.apk!res/mipmap-xxhdpi-v4/ic_launcher_live_wallpaper.png	mipmap-xxhdpi-v4		06afb1f349962092
 versions/6.0.1/assets/mp-button_compass.png	2c0a0d3f5bfa279e	copy	bullhead:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/button_compass.png	drawable-xxhdpi-v4		2c0a0d3f5bfa279e
@@ -445,9 +457,13 @@ versions/6.0.1/assets/ps-ic_drawer_people.png	985e898456eef016	copy	bullhead:/sy
 versions/6.0.1/assets/ps-ic_drawer_redeem.png	1a6866652cae92c2	copy	bullhead:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xhdpi-v4/ic_drawer_redeem.png	drawable-xhdpi-v4		1a6866652cae92c2
 versions/6.0.1/assets/ps-ic_drawer_settings.png	60309ca95ef9550d	copy	bullhead:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xhdpi-v4/ic_drawer_settings.png	drawable-xhdpi-v4		60309ca95ef9550d
 versions/6.0.1/assets/ps-ic_drawer_wishlist.png	e72cb9ec29c76194	copy	bullhead:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xhdpi-v4/ic_drawer_wishlist.png	drawable-xhdpi-v4		e72cb9ec29c76194
+versions/6.0.1/assets/ps-ic_expand_less.png	afcf0bc698041e09	copy	bullhead:/system/app/PrintSpooler/PrintSpooler.apk!res/drawable-xxhdpi-v4/ic_expand_less.png	drawable-xxhdpi-v4		afcf0bc698041e09
+versions/6.0.1/assets/ps-ic_expand_more.png	1f9e2b8a0561fcfd	copy	bullhead:/system/app/PrintSpooler/PrintSpooler.apk!res/drawable-xxhdpi-v4/ic_expand_more.png	drawable-xxhdpi-v4		1f9e2b8a0561fcfd
 versions/6.0.1/assets/ps-ic_menu_moreoverflow_card_dark_normal.png	209a27bdb628e3e8	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_menu_moreoverflow_card_dark_normal.png	drawable-xxhdpi-v4		209a27bdb628e3e8
 versions/6.0.1/assets/ps-ic_menu_moreoverflow_white.png	49181de95d07415d	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_menu_moreoverflow_white.png	drawable-xxhdpi-v4		49181de95d07415d
+versions/6.0.1/assets/ps-ic_menu_savetopdf.png	ffe0048f6caaaee3	copy	bullhead:/system/app/PrintSpooler/PrintSpooler.apk!res/drawable-xxhdpi-v4/ic_menu_savetopdf.png	drawable-xxhdpi-v4		ffe0048f6caaaee3
 versions/6.0.1/assets/ps-ic_mic_dark.png	95287832082406ec	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_mic_dark.png	drawable-xxhdpi-v4		95287832082406ec
+versions/6.0.1/assets/ps-ic_print.png	8e533edac802ee10	copy	bullhead:/system/framework/framework-res.apk!res/drawable-xhdpi-v4/ic_print.png	drawable-xhdpi-v4		8e533edac802ee10
 versions/6.0.1/assets/ps-ic_profile_none.png	93ec3fe8ba525348	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_profile_none.png	drawable-xxhdpi-v4		93ec3fe8ba525348
 versions/6.0.1/assets/ps-ic_search_recent.png	c4c59a05e853b737	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_search_recent.png	drawable-xxhdpi-v4		c4c59a05e853b737
 versions/6.0.1/assets/ps-ic_search_white.png	613f20f319f6b267	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_search_white.png	drawable-xxhdpi-v4		613f20f319f6b267
@@ -666,11 +682,16 @@ versions/6.0.1/assets/vv-context_header_bg_dusk.jpg	aac0aad6bfd0cfa1	copy	bullhe
 versions/6.0.1/assets/vv-context_header_bg_twilight.jpg	51986f68d57fffda	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/context_header_bg_twilight.jpg	drawable-nodpi-v4		51986f68d57fffda
 versions/6.0.1/assets/vv-ic_actionbar_accept.png	ddf65985aefe51ed	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_actionbar_accept.png	drawable-xxhdpi-v4		ddf65985aefe51ed
 versions/6.0.1/assets/vv-ic_arrow_back.png	9817c5d907f46d3a	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_arrow_back.png	drawable-xxhdpi-v4		9817c5d907f46d3a
+versions/6.0.1/assets/vv-ic_google_logo_ime.png	54ad7d2bb8f530f0	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v21/ic_google_logo_ime.png	drawable-xxhdpi-v21		54ad7d2bb8f530f0
 versions/6.0.1/assets/vv-ic_images.png	431958254f957dbc	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_images.png	drawable-xxhdpi-v4		431958254f957dbc
+versions/6.0.1/assets/vv-ic_ime_keyboard.png	de1cc87aca07f0cd	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v21/ic_ime_keyboard.png	drawable-xxhdpi-v21		de1cc87aca07f0cd
 versions/6.0.1/assets/vv-ic_tick.svg	549ff548f6d76436	vector	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-v21/ic_tick.xml	drawable-v21	vector drawable drawn as SVG	932646c014b9700b
+versions/6.0.1/assets/vv-ime_background_holo.9.png	6e45e4ab21bb7c63	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v21/ime_background_holo.9.png	drawable-xxhdpi-v21		6e45e4ab21bb7c63
+versions/6.0.1/assets/vv-ime_btn_rec.png	1982f0eac148cd59	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ime_btn_rec.png	drawable-xxhdpi-v4		1982f0eac148cd59
 versions/6.0.1/assets/vv-optin_minicard_ic_flight.png	9043a9e1f9f98de4	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/optin_minicard_ic_flight.png	drawable-nodpi-v4		9043a9e1f9f98de4
 versions/6.0.1/assets/vv-optin_minicard_ic_train.png	e1760baa4d223ede	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/optin_minicard_ic_train.png	drawable-nodpi-v4		e1760baa4d223ede
 versions/6.0.1/assets/vv-optin_minicard_ic_weather.png	248d7577c025af71	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/optin_minicard_ic_weather.png	drawable-nodpi-v4		248d7577c025af71
+versions/6.0.1/assets/vv-quantum_ic_music_note_white_48.png	e58c88faadbee295	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/quantum_ic_music_note_white_48.png	drawable-xxhdpi-v4		e58c88faadbee295
 versions/6.0.1/assets/vv-tile_shadow_bottom.9.png	a19b5df935c366b7	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/tile_shadow_bottom.9.png	drawable-xxhdpi-v4		a19b5df935c366b7
 versions/6.0.1/assets/vv-tile_shadow_top.9.png	c730c8124c867aca	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/tile_shadow_top.9.png	drawable-xxhdpi-v4		c730c8124c867aca
 versions/6.0.1/assets/vv-widget_card_frame.9.png	97e8a2643cbedc41	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/widget_card_frame.9.png	drawable-xxhdpi-v4		97e8a2643cbedc41

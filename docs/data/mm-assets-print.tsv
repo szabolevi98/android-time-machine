@@ -1,0 +1,6 @@
+# PrintSpooler's PrintActivity and DocumentsUI's save (mm-print.js)
+ps-ic_print.png	framework/framework-res.apk	drawable/ic_print
+ps-ic_menu_savetopdf.png	app/PrintSpooler/PrintSpooler.apk	drawable/ic_menu_savetopdf
+ps-ic_expand_more.png	app/PrintSpooler/PrintSpooler.apk	drawable/ic_expand_more
+ps-ic_expand_less.png	app/PrintSpooler/PrintSpooler.apk	drawable/ic_expand_less
+du-ic_doc_pdf_alpha.png	app/DocumentsUI/DocumentsUI.apk	drawable/ic_doc_pdf_alpha

@@ -78,7 +78,7 @@
       switch (name) {
         case 'mmmp-menu': u.menu = !u.menu; c.render(); return true;
         case 'mmmp-search': u.search = ''; c.render(); return true;
-        case 'mmmp-voice': c.open('missing-voice-search'); return true;
+        case 'mmmp-voice': MM.googleOpen(c, true); return true;
         case 'mmmp-place': { const p = PLACES.find(x => x.id === el.dataset.id); u.place = p.id; u.search = null; u.route = false; focus(c, p); c.render(); return true; }
         case 'mmmp-route': { const p = PLACES.find(x => x.id === u.place); u.route = true; focus(c, {x: (p.x + ME.x) / 2, y: (p.y + ME.y) / 2}); c.render(); return true; }
         case 'mmmp-dirsearch': u.search = ''; c.render(); return true;

@@ -81,7 +81,7 @@
     render,
     back(c) { const u = ui(c); if (u.watch) { u.pos = position(u); u.playing = false; u.watch = 0; c.render(); return true; } if (u.tab) { u.tab = 0; c.render(); return true; } return false; },
     action(name, el, event, c) {
-      const u = ui(c);
+      const u = ui(c), t = T();
       switch (name) {
         case 'mmyt-tab': u.tab = +el.dataset.tab; c.render(); return true;
         case 'mmyt-watch': u.watch = +el.dataset.id; u.pos = 0; u.playing = true; u.started = Date.now(); c.render(); c.el.viewport.querySelector('.mmyt-wpage')?.scrollTo(0, 0); tick(c); return true;
@@ -90,7 +90,9 @@
         case 'mmyt-sub': { const ch = el.dataset.ch, list = subs(c); c.data.ytSubs = list.includes(ch) ? list.filter(x => x !== ch) : [...list, ch]; c.save(); c.render(); return true; }
         case 'mmyt-like': el.classList.toggle('on'); return true;
         case 'mmyt-search': c.open('missing-youtube-search'); return true;
-        case 'mmyt-share': c.open('missing-share'); return true;
+        // The watch page's share: share_subject and share_text (title: URL) through the chooser; the URL is made up like the videos.
+        case 'mmyt-share': { const v = VIDEOS.find(x => x.id === ui(c).watch); if (!v) return true; const link = `https://youtu.be/mm601v${v.seed}`;
+          MM.share(c, {title: t.t('menu_share'), subject: AndroidStrings.format(t.t('share_subject'), v.title), text: AndroidStrings.format(t.t('share_text'), v.title, link)}); return true; }
         case 'mmyt-addto': case 'mmyt-missing': c.open('missing-youtube-feature'); return true;
       }
       return false;

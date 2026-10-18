@@ -1,2 +1,9 @@
 # Google Settings (PrebuiltGmsCore, mm-google.js)
 gms-abc_ic_ab_back_mtrl_am_alpha.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/abc_ic_ab_back_mtrl_am_alpha
+# Google Help and Google Feedback (mm-gmshelp.js)
+gh-gh_article.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/gh_article
+gh-gh_feedback.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/gh_feedback
+gh-gh_ic_search_grey_24dp.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/gh_ic_search_grey_24dp
+gh-gh_card_background.9.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/gh_card_background
+gh-gf_menu_send.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/gf_menu_send
+gh-gh_search_clear_normal.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/gh_search_clear_normal

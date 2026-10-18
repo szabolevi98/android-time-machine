@@ -106,9 +106,9 @@
         case 'mmgp-up': if (u.external) { u.external = false; u.screen = ''; c.back(); return true; } u.screen = u.from || ''; c.render(); return true;
         case 'mmgp-trashit': p.trashed = !p.trashed; c.save(); u.screen = u.from || ''; c.render(); return true;
         case 'mmgp-assistant': case 'mmgp-collections': case 'mmgp-folders': case 'mmgp-shared': case 'mmgp-settings': u.drawer = false; c.open(`missing-photos-${name.slice(5)}`); return true;
-        case 'mmgp-help': u.drawer = false; c.open('missing-help'); return true;
+        case 'mmgp-help': u.drawer = false; c.open('help', 'photos'); return true;
         case 'mmgp-search': c.open('missing-photos-search'); return true;
-        case 'mmgp-share': c.open('missing-share'); return true;
+        case 'mmgp-share': MM.share(c, {kind: 'image', exclude: ['photos']}); return true;
         case 'mmgp-edit': c.open('missing-photo-editor'); return true;
         case 'mmgp-info': c.open('missing-photo-details'); return true;
         case 'mmgp-more': c.open('missing-photo-menu'); return true;

@@ -31,24 +31,55 @@
     return `<div class="mmsa">${bar(c, t.t('DocumentsUI/root_recent'), '#37474f', true, btn('ic_menu_search_alpha', 'mmsa-missing'), btn('ic_hamburger_alpha', 'mmsa-roots'))}
       <div class="mmsa-page grey">${tiles ? `<div class="mmsa-docs">${tiles}</div>` : `<div class="mmsa-empty">${esc(c, t.t('DocumentsUI/empty'))}</div>`}</div>${roots}</div>`;
   }
+  // The files of the Downloads root (what the simulator saved there: printed PDFs), item_doc_list.xml rows: the mime
+  // icon tinted colorControlNormal, the Subhead title, the date (90 dp) and the size in Body1.
+  const docs = c => c.data.docs || (c.data.docs = []);
+  function docRows(c) {
+    const list = [...docs(c)].sort((a, b) => b.time - a.time);
+    if (!list.length) return '';
+    const day = time => new Intl.DateTimeFormat(c.locale(), new Date(time).toDateString() === new Date().toDateString() ? {hour: 'numeric', minute: '2-digit'} : {month: 'short', day: 'numeric'}).format(new Date(time));
+    return `<div class="mmsa-list">${list.map(d => `<div class="mmsa-file"><i class="mmsa-mime" style="-webkit-mask-image:url('assets/du-ic_doc_pdf_alpha.png');mask-image:url('assets/du-ic_doc_pdf_alpha.png')"></i><span><b>${esc(c, d.name)}</b><small><em>${esc(c, day(d.time))}</em><em>${esc(c, MM.fileSize(c, d.size))}</em></small></span></div>`).join('')}</div>`;
+  }
+  /* ACTION_CREATE_DOCUMENT (printing's Save as PDF): DocumentsUI in Downloads with fragment_save.xml at the bottom, the
+     PDF icon, the file name (selected) and SAVE; the roots drawer opens under title_save ("Save to"). */
+  function saveDoc(c) {
+    const t = T(), u = c.ui.downloads, s = c.ui.docSave || {name: 'Document.pdf'};
+    const roots = u.roots ? `<div class="mmsa-scrim" data-action="mmsa-roots"></div><div class="mmsa-roots"><div class="mmsa-rbar"><span>${esc(c, MM.text('print').t('DocumentsUI/title_save'))}</span></div><button type="button" class="mmsa-root on" data-action="mmsa-roots"><img src="assets/du-ic_root_download_alpha.png" alt=""><span>${esc(c, t.t('DownloadProvider/root_downloads'))}</span></button></div>` : '';
+    const btn = (img, action) => `<button type="button" class="mmsa-btn" data-action="${action}"><img src="assets/du-${img}.png" alt=""></button>`;
+    return `<div class="mmsa">${bar(c, t.t('DownloadProvider/root_downloads'), '#37474f', true, '', btn('ic_hamburger_alpha', 'mmsa-roots'))}
+      <div class="mmsa-page grey">${docRows(c) || `<div class="mmsa-empty">${esc(c, t.t('DocumentsUI/empty'))}</div>`}</div>
+      <div class="mmsa-save"><i class="mmsa-mime" style="-webkit-mask-image:url('assets/du-ic_doc_pdf_alpha.png');mask-image:url('assets/du-ic_doc_pdf_alpha.png')"></i><input class="mmsa-savename" value="${esc(c, s.name)}" autocomplete="off" spellcheck="false"><button type="button" data-action="mmsa-save">${esc(c, MM.text('print').t('DocumentsUI/menu_save'))}</button></div>${roots}</div>`;
+  }
   MM.register('downloads', {
     statusColor: () => '#263238',
     render(c) {
       if (c.ui.sub === 'pick:wallpaper') { c.ui.sub = ''; c.ui.downloads = {grid: true, roots: false, pick: true}; }
+      if (c.ui.sub === 'save') { c.ui.sub = ''; c.ui.downloads = {grid: false, roots: false, save: true}; }
       if (c.ui.downloads?.pick) return pickImage(c);
+      if (c.ui.downloads?.save) return saveDoc(c);
       const t = T(), u = c.ui.downloads || (c.ui.downloads = {grid: false, roots: false});
       const btn = (img, action, label) => `<button type="button" class="mmsa-btn" data-action="${action}" aria-label="${esc(c, label)}"><img src="assets/du-${img}.png" alt=""></button>`;
       const roots = u.roots ? `<div class="mmsa-scrim" data-action="mmsa-roots"></div><div class="mmsa-roots"><div class="mmsa-rbar"></div><button type="button" class="mmsa-root" data-action="mmsa-roots"><img src="assets/du-ic_root_recent_alpha.png" alt=""><span>${esc(c, t.t('DocumentsUI/root_recent'))}</span></button><button type="button" class="mmsa-root on" data-action="mmsa-roots"><img src="assets/du-ic_root_download_alpha.png" alt=""><span>${esc(c, t.t('DownloadProvider/root_downloads'))}</span></button></div>` : '';
       return `<div class="mmsa">${bar(c, t.t('DownloadProvider/root_downloads'), '#37474f', true, `${btn('ic_menu_search_alpha', 'mmsa-missing', t.t('DocumentsUI/menu_search'))}${btn(u.grid ? 'ic_menu_view_list_alpha' : 'ic_menu_view_grid_alpha', 'mmsa-grid', t.t(u.grid ? 'DocumentsUI/menu_list' : 'DocumentsUI/menu_grid'))}${MM.menu.button(c, 'mmsa-over')}`, btn('ic_hamburger_alpha', 'mmsa-roots', ''))}
-        <div class="mmsa-page grey"><div class="mmsa-empty">${esc(c, t.t('DocumentsUI/empty'))}</div></div>${roots}</div>`;
+        <div class="mmsa-page grey">${docRows(c) || `<div class="mmsa-empty">${esc(c, t.t('DocumentsUI/empty'))}</div>`}</div>${roots}</div>`;
     },
-    back(c) { const u = c.ui.downloads; if (u?.roots) { u.roots = false; c.render(); return true; } if (u?.pick) c.ui.downloads = null; return false; },
+    mount(c, root) {
+      const f = root.querySelector('.mmsa-savename');
+      if (f) { f.addEventListener('input', () => { if (c.ui.docSave) c.ui.docSave.name = f.value; }); const dot = f.value.lastIndexOf('.'); setTimeout(() => { f.focus(); f.setSelectionRange(0, dot > 0 ? dot : f.value.length); }, 60); }
+    },
+    back(c) { const u = c.ui.downloads; if (u?.roots) { u.roots = false; c.render(); return true; } if (u?.pick || u?.save) { c.ui.downloads = null; c.ui.docSave = null; } return false; },
     action(name, el, event, c) {
       const t = T(), u = c.ui.downloads;
       if (name === 'mmsa-roots') { u.roots = !u.roots; c.render(); return true; }
       if (name === 'mmsa-grid') { u.grid = !u.grid; c.render(); return true; }
       if (name === 'mm-menu') { c.menu([{label: t.t('DocumentsUI/menu_sort'), action: c => c.dialog({title: t.t('DocumentsUI/menu_sort'), items: ['DocumentsUI/sort_name', 'DocumentsUI/sort_date', 'DocumentsUI/sort_size'].map(k => ({html: c.safe(t.t(k))}))})}, {label: t.t('DocumentsUI/menu_advanced_show'), action: () => {}}]); return true; }
       if (name === 'mmsa-missing') { c.open('missing-documents-search'); return true; }
+      if (name === 'mmsa-save') {
+        const s = c.ui.docSave || {}, name = (s.name || '').trim() || 'Document.pdf';
+        docs(c).push({name, size: s.size || 20000, mime: s.mime || 'application/pdf', time: Date.now()}); c.save();
+        c.ui.downloads = null; c.ui.docSave = null; c.back(); s.done?.(c);
+        return true;
+      }
       if (name === 'mmsa-pickone') { c.ui.downloads = null; MM.wallpaperPicked?.(c, +el.dataset.id); c.back(); return true; }
       return false;
     }

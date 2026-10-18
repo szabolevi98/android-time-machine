@@ -37,3 +37,16 @@
 .mmsa-doc b{font:400 calc(14 * var(--dp))/1.3 Roboto,sans-serif;color:#212121;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mmsa-doc small{color:rgba(0,0,0,.54);font-size:calc(12 * var(--dp))}
 .mmsa-rbar span{display:block;padding:calc(16 * var(--dp));color:#fff;font:500 calc(14 * var(--dp)) Roboto,sans-serif}
+/* The Downloads root's files (item_doc_list.xml) and DocumentsUI's save bar (fragment_save.xml). */
+.mmsa-list{background:#fff}
+.mmsa-file{display:flex;align-items:center;min-height:calc(72 * var(--dp));padding:0 calc(16 * var(--dp))}
+.mmsa-mime{flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin:0 calc(32 * var(--dp)) 0 calc(8 * var(--dp));background:rgba(0,0,0,.54);-webkit-mask:center/100% no-repeat;mask:center/100% no-repeat}
+.mmsa-file>span{flex:1;min-width:0;display:flex;flex-direction:column}
+.mmsa-file b{font-weight:400;font-size:calc(16 * var(--dp));color:rgba(0,0,0,.87);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mmsa-file small{display:flex;gap:calc(8 * var(--dp));color:rgba(0,0,0,.54);font-size:calc(14 * var(--dp))}
+.mmsa-file em{width:calc(90 * var(--dp));font-style:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mmsa-save{flex:none;display:flex;align-items:center;min-height:calc(48 * var(--dp));padding-left:calc(16 * var(--dp));background:#fff;box-shadow:0 calc(-1 * var(--dp)) calc(3 * var(--dp)) rgba(0,0,0,.15)}
+.mmsa-save .mmsa-mime{margin:0 calc(24 * var(--dp)) 0 calc(8 * var(--dp))}
+.mmsa-savename{flex:1;min-width:0;height:calc(40 * var(--dp));padding:0 calc(4 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #009688;outline:0;background:none;color:rgba(0,0,0,.87);font:calc(16 * var(--dp)) Roboto,sans-serif}
+.mmsa-savename::selection{background:rgba(0,150,136,.3)}
+.mmsa-save button{flex:none;min-width:calc(64 * var(--dp));height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;color:#009688;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}

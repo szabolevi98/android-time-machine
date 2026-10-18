@@ -1,0 +1,24 @@
+/* Sending to another app (mm-intents.js), in dp: ChooserActivity's chooser_grid.xml / chooser_row.xml /
+   resolve_grid_item.xml between the status bar and the navigation bar (the window does not draw behind them), Drive's
+   upload_shared_item_activity.xml in the dialog. */
+.mmin{position:absolute;left:0;right:0;top:calc(24 * var(--dp));bottom:calc(48 * var(--dp));font-family:Roboto,sans-serif;overflow:hidden}
+.mmin-dim{position:absolute;inset:0;background:rgba(0,0,0,.6);animation:mmin-fade .2s}
+@keyframes mmin-fade{from{opacity:0}}
+.mmin-sheet{position:absolute;left:0;right:0;bottom:0;max-height:calc(288 * var(--dp));overflow-y:auto;background:#fff;box-shadow:0 0 calc(8 * var(--dp)) rgba(0,0,0,.3);animation:mmin-up .25s cubic-bezier(0,0,.2,1)}
+@keyframes mmin-up{from{transform:translateY(100%)}}
+.mmin-title{padding:calc(12 * var(--dp)) calc(24 * var(--dp)) calc(12 * var(--dp)) calc(16 * var(--dp));color:rgba(0,0,0,.87);font-size:calc(14 * var(--dp));line-height:1.43}
+.mmin-row{display:flex;min-height:calc(80 * var(--dp));padding:calc(8 * var(--dp)) 0}
+.mmin-item{flex:1 1 0;min-width:calc(80 * var(--dp));display:flex;flex-direction:column;align-items:center;padding:calc(8 * var(--dp)) 0;border:0;background:none;font:inherit}
+button.mmin-item:active{background:rgba(0,0,0,.08)}
+.mmin-item img{width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin:0 calc(3 * var(--dp)) calc(3 * var(--dp))}
+.mmin-item span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;height:calc(2 * 16 * var(--dp));margin:calc(8 * var(--dp)) calc(4 * var(--dp)) 0;color:rgba(0,0,0,.87);font:calc(12 * var(--dp))/calc(16 * var(--dp)) 'Roboto Condensed',Roboto,sans-serif;font-stretch:condensed;text-align:center}
+.mmin-empty{padding:calc(16 * var(--dp));color:rgba(0,0,0,.54);font-size:calc(16 * var(--dp))}
+.mmin-bt{padding:calc(18 * var(--dp)) calc(24 * var(--dp)) calc(6 * var(--dp));font-size:calc(16 * var(--dp));line-height:1.3;color:rgba(0,0,0,.87)}
+.mmin-bt p{margin:0 0 calc(12 * var(--dp))}
+/* Drive's Save to Drive: Upload.Text.SectionHeader (14 sp medium, the secondary text), the 20 sp title field, spinners. */
+.mmin-up{padding:calc(16 * var(--dp)) calc(24 * var(--dp)) calc(8 * var(--dp))}
+.mmin-uplabel{margin-top:calc(16 * var(--dp));color:rgba(0,0,0,.54);font:500 calc(14 * var(--dp)) Roboto,sans-serif}
+.mmin-uplabel:first-child{margin-top:0}
+.mmin-upname{width:100%;min-height:calc(48 * var(--dp));padding:0;border:0;border-bottom:calc(2 * var(--dp)) solid #009688;outline:0;background:none;color:rgba(0,0,0,.87);font:calc(20 * var(--dp)) Roboto,sans-serif}
+.mmin-upspin{display:flex;align-items:center;gap:calc(8 * var(--dp));min-height:calc(48 * var(--dp));border-bottom:1px solid rgba(0,0,0,.12);color:rgba(0,0,0,.87);font-size:calc(16 * var(--dp))}
+.mmin-upspin img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}

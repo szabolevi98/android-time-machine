@@ -57,6 +57,12 @@
     const list = freq.length ? `<div class="mmct-freqhead${starred.length ? '' : ' first'}">${esc(c, t.t('favoritesFrequentContacted'))}</div>${freq.map(p => `<button type="button" class="mmct-freq" data-action="mmct-open" data-id="${p.id}">${P().tile(c, p, 'mmct-photo', false)}<span class="mmct-fname">${esc(c, p.name)}</span></button>`).join('')}` : '';
     return `<div class="mmct-favs">${grid}${list}</div>`;
   }
+  // QuickContactActivity's Share: the contact as a vCard (Contacts.CONTENT_VCARD_URI, text/x-vcard) through share_via.
+  function share(c, p) {
+    if (!p) return;
+    const vcard = ['BEGIN:VCARD', 'VERSION:2.1', `N:;${p.name || ''};;;`, `FN:${p.name || ''}`, ...(p.phone ? [`TEL;CELL:${p.phone}`] : []), ...(p.email ? [`EMAIL;HOME:${p.email}`] : []), 'END:VCARD'].join('\r\n');
+    MM.share(c, {title: T().t('share_via'), kind: 'vcard', name: `${p.name || 'contact'}.vcf`, subject: p.name || '', text: vcard});
+  }
   function people(c) {
     const t = T(), u = ui(c), searching = u.search !== null;
     const bar = searching
@@ -188,12 +194,12 @@
     }
     if (u.screen.startsWith('card:')) {
       const id = u.screen.slice(5);
-      return c.menu([{label: t.t('menu_deleteContact'), action: c => remove(c, id)}, {label: t.t('menu_share'), action: c => c.open('missing-share')}, {label: t.t('menu_create_contact_shortcut'), action: c => c.open('missing-shortcut')}, {label: t.t('menu_help'), action: c => c.open('missing-help')}]);
+      return c.menu([{label: t.t('menu_deleteContact'), action: c => remove(c, id)}, {label: t.t('menu_share'), action: c => share(c, P().byId(c, id))}, {label: t.t('menu_create_contact_shortcut'), action: c => c.open('missing-shortcut')}, {label: t.t('menu_help'), action: c => c.open('help', 'contacts')}]);
     }
     const items = [];
     if (u.tab === 1) items.push({label: t.t('menu_contacts_filter'), action: c => c.open('missing-contacts-filter')});
     if (u.tab === 0 && frequents(c).length) items.push({label: t.t('menu_clear_frequents'), action: c => { c.data.frequentsCleared = Date.now(); c.save(); c.render(); }});
-    items.push({label: t.t('menu_import_export'), action: c => c.open('missing-import-export')}, {label: t.t('menu_accounts'), action: c => c.open('settings', 'accounts')}, {label: t.t('menu_settings'), action: c => c.open('missing-contacts-settings')}, {label: t.t('menu_help'), action: c => c.open('missing-help')});
+    items.push({label: t.t('menu_import_export'), action: c => c.open('missing-import-export')}, {label: t.t('menu_accounts'), action: c => c.open('settings', 'accounts')}, {label: t.t('menu_settings'), action: c => c.open('missing-contacts-settings')}, {label: t.t('menu_help'), action: c => c.open('help', 'contacts')});
     c.menu(items);
   }
 

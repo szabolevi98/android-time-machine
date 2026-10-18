@@ -120,6 +120,8 @@
   function consume(c) {
     const sub = c.ui.sub || ''; if (!sub) return;
     c.ui.sub = '';
+    // ComposeActivityGmail from ACTION_SEND: EXTRA_SUBJECT and EXTRA_TEXT fill the draft.
+    if (sub === 'share') { const d = MM.shareTake(c) || {}; const u = ui(c); u.draft = {to: '', subject: d.subject || '', body: d.text || ''}; u.screen = 'compose'; u.external = true; return; }
     if (sub.startsWith('to:')) { const u = ui(c); u.draft = {to: sub.slice(3), subject: '', body: ''}; u.screen = 'compose'; u.external = true; }
   }
   function render(c) {
@@ -143,7 +145,7 @@
     if (u.screen === 'compose') return c.menu([{label: t.t('save_draft'), action: c => closeCompose(c, true)}, {label: t.t('discard'), action: c => { c.toast(t.t('message_discarded'), false); closeCompose(c, false); }}]);
     const m = mail(c).find(x => x.id === +u.screen.slice(5)); if (!m) return;
     c.menu([{label: t.t('menu_move_to'), action: c => c.open('missing-move-to')}, {label: t.t('menu_change_folders'), action: c => c.open('missing-change-labels')}, {label: t.t(m.starred ? 'remove_star' : 'add_star'), action: c => { m.starred = !m.starred; c.save(); c.render(); }},
-      {label: t.t('mark_not_important'), action: c => c.open('missing-important')}, {label: t.t('mute'), action: c => c.open('missing-mute')}, {label: t.t('print'), action: c => c.open('missing-print')}, {label: t.t('report_spam'), action: c => { m.box = 'spam'; u.screen = ''; c.save(); c.render(); }}, {label: t.t('help_and_feedback'), action: c => c.open('missing-help')}]);
+      {label: t.t('mark_not_important'), action: c => c.open('missing-important')}, {label: t.t('mute'), action: c => c.open('missing-mute')}, {label: t.t('print'), action: c => MM.print(c, {name: m.subject, title: m.subject, lines: [m.box === 'sent' || m.box === 'drafts' ? `${MM.account.name} <${MM.account.email}>` : m.from, new Intl.DateTimeFormat(c.locale(), {dateStyle: 'full', timeStyle: 'short'}).format(new Date(m.time)), m.body]})}, {label: t.t('report_spam'), action: c => { m.box = 'spam'; u.screen = ''; c.save(); c.render(); }}, {label: t.t('help_and_feedback'), action: c => c.open('help', 'gmail')}]);
   }
 
   MM.register('gmail', {
@@ -171,7 +173,7 @@
         case 'mmgm-drawer': u.drawer = !u.drawer; c.render(); return true;
         case 'mmgm-folder': u.folder = el.dataset.f; u.drawer = false; c.render(); return true;
         case 'mmgm-settings': c.open('missing-gmail-settings'); return true;
-        case 'mmgm-help': c.open('missing-help'); return true;
+        case 'mmgm-help': c.open('help', 'gmail'); return true;
         case 'mmgm-search': c.open('missing-gmail-search'); return true;
         case 'mmgm-open': if (event?.target?.closest('.mmgm-star')) return false; m.unread = false; c.save(); u.screen = `conv:${m.id}`; c.render(); return true;
         case 'mmgm-star': m.starred = !m.starred; c.save(); c.render(); return true;

@@ -346,7 +346,7 @@
         case 'mmph-search': u.search = ''; c.render(); return true;
         case 'mmph-sback': u.search = null; c.render(); return true;
         case 'mmph-sclear': u.search = ''; c.render(); return true;
-        case 'mmph-voice': c.open('missing-voice-search'); return true;
+        case 'mmph-voice': MM.googleOpen(c, true); return true;
         case 'mmph-expand': if (event?.target?.closest('.mmph-callback')) return false; u.expanded = u.expanded === +el.dataset.key ? null : +el.dataset.key; c.render(); return true;
         case 'mmph-details': u.from = u.screen; u.screen = `details:${el.dataset.key}`; c.render(); return true;
         case 'mmph-delcalls': {

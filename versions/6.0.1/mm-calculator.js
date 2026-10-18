@@ -203,10 +203,18 @@
       if (name === 'mmca-inv') { s.inv = !s.inv; c.render(); return true; }
       if (name === 'mmca-mode') { s.deg = !s.deg; c.render(); return true; }
       if (name === 'mm-menu') {
-        c.menu([{label: t.t('menu_feedback'), action: c => c.open('missing-feedback')}, {label: t.t('menu_help'), action: c => c.open('missing-help')}, {label: t.t('menu_licenses'), action: c => c.open('missing-licenses')}]);
+        c.menu([{label: t.t('menu_feedback'), action: c => c.open('feedback', 'calculator')}, {label: t.t('menu_help'), action: c => c.open('help', 'calculator')}, {label: t.t('menu_licenses'), action: c => c.open('calculator-licenses')}]);
         return true;
       }
       return false;
     }
+  });
+  // com.android.calculator2.Licenses (Theme.Licenses: Theme.Material.Light.DarkActionBar with colorPrimary and the status
+  // bar in calculator_accent_color #00bcd4, the label menu_licenses): a WebView of the APK's assets/licenses.html.
+  MM.register('calculator-licenses', {
+    app: false,
+    statusColor: () => '#00bcd4',
+    render: c => `<div class="mmca-lic"><div class="mmca-licbar"><button type="button" data-action="mmca-licup"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button><span>${c.safe(T().t('menu_licenses'))}</span></div><iframe src="assets/ca-licenses.html" title="${c.safe(T().t('menu_licenses'))}"></iframe></div>`,
+    action(name, el, event, c) { if (name === 'mmca-licup') { c.back(); return true; } return false; }
   });
 })();

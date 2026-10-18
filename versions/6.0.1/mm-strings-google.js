@@ -257,5 +257,85 @@ MM.strings('google', {
 "de": "Info",
 "fr": "À propos",
 "es": "Información"
+},
+"no_match": {
+"res": "bullhead:Velvet:no_match",
+"en": "Didn't catch that. Try speaking again.",
+"hu": "Nem sikerült értelmezni. Mondja ki újra.",
+"de": "Das wurde nicht verstanden. Bitte sprechen Sie erneut.",
+"fr": "Je n'ai pas compris. Veuillez répéter.",
+"es": "No lo he entendido. Prueba a decirlo otra vez."
+},
+"tap_mic_to_speak": {
+"res": "bullhead:Velvet:tap_mic_to_speak",
+"en": "Tap mic to start speaking",
+"hu": "Érintse meg a mikrofont a beszéd megkezdéséhez",
+"de": "Auf das Mikrofon tippen und dann sprechen",
+"fr": "Appuyez sur l'icône Micro pour commencer à parler.",
+"es": "Toca el micrófono para empezar a hablar"
+},
+"listening_for_music_status": {
+"res": "bullhead:Velvet:listening_for_music_status",
+"en": "Listening for music…",
+"hu": "Zenehallgatás…",
+"de": "Erfassen von Musik…",
+"fr": "Écoute en cours…",
+"es": "Escuchando música…"
+},
+"message_no_sound_search_results_tts": {
+"res": "bullhead:Velvet:message_no_sound_search_results_tts",
+"en": "Sorry, I don't recognize this one.",
+"hu": "Sajnos ezt nem ismerem fel.",
+"de": "Dieser Titel wurde nicht erkannt.",
+"fr": "Désolé, la requête n'est pas reconnue.",
+"es": "Lo siento, no he entendido lo que has dicho."
+},
+"try_again": {
+"res": "bullhead:Velvet:try_again",
+"en": "Try again",
+"hu": "Újrapróbálkozás",
+"de": "Erneut versuchen",
+"fr": "Réessayer",
+"es": "Vuelve a intentarlo."
+},
+"listen_for_music": {
+"res": "bullhead:Velvet:listen_for_music",
+"en": "Listen for music",
+"hu": "Zenehallgatás",
+"de": "Musik erfassen",
+"fr": "Écouter la musique",
+"es": "Escuchar música"
+},
+"ime_no_match": {
+"res": "bullhead:Velvet:ime_no_match",
+"en": "Touch the mic \n Try speaking again",
+"hu": "Érintse meg a mikrofont \n Ismételje meg a kimondott szöveget",
+"de": "Tippen Sie auf das Mikrofon. \n Sprechen Sie erneut.",
+"fr": "Appuyez sur le micro. \n Essayez de parler à nouveau.",
+"es": "Toca el micrófono \n e intenta hablar de nuevo"
+},
+"ime_hint_keyboard_input": {
+"res": "bullhead:Velvet:ime_hint_keyboard_input",
+"en": "Keyboard input",
+"hu": "Bevitel billentyűzettel",
+"de": "Tastatureingabe",
+"fr": "Keyboard input",
+"es": "Entrada de teclado"
+},
+"ime_hint_tap_to_speak": {
+"res": "bullhead:Velvet:ime_hint_tap_to_speak",
+"en": "Tap to speak",
+"hu": "Koppintson a beszédhez",
+"de": "Zum Sprechen tippen",
+"fr": "Appuyer pour parler",
+"es": "Toca para hablar"
+},
+"ime_hint_tap_to_pause": {
+"res": "bullhead:Velvet:ime_hint_tap_to_pause",
+"en": "Tap to pause",
+"hu": "Koppintson a szüneteltetéshez",
+"de": "Zum Anhalten tippen",
+"fr": "Appuyez pour interrompre",
+"es": "Toca para detener."
 }
 });

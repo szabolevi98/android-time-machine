@@ -169,7 +169,7 @@
         case 'mmcl-picker': c.open('missing-calendar-month-picker'); return true;
         case 'mmcl-dayview': case 'mmcl-weekview': case 'mmcl-monthview': c.open(`missing-calendar-${name.slice(5)}`); return true;
         case 'mmcl-settings': c.open('missing-calendar-settings'); return true;
-        case 'mmcl-help': c.open('missing-help'); return true;
+        case 'mmcl-help': c.open('help', 'calendar'); return true;
         case 'mmcl-event': u.screen = `event:${e.id}`; c.render(); return true;
         case 'mmcl-up': u.screen = ''; c.render(); return true;
         case 'mmcl-new': startEdit(c, null); c.render(); return true;

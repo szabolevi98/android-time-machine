@@ -126,12 +126,21 @@
         case 'mmcr-forward': close(); if (s.index < s.history.length - 1) { s.index++; c.save(); c.render(); } return true;
         case 'mmcr-star': close(); s.bookmarks = s.bookmarks.includes(cur) ? s.bookmarks.filter(x => x !== cur) : [...s.bookmarks, cur]; c.save(); return true;
         case 'mmcr-info': close(); c.open('missing-site-info'); return true;
+        // ShareHelper: the page's URL as text with its title as the subject, through share_link_chooser_title.
+        // Chrome prints the page through the framework's print dialog, the job named after the page's title.
+        case 'mmcr-print': {
+          close(); const p = MM.web.page(cur); if (!p) return true;
+          const div = document.createElement('div'); div.innerHTML = p.html;
+          const lines = [...div.querySelectorAll('h1, h2, h3, p, li')].map(e => e.textContent.trim()).filter(Boolean);
+          MM.print(c, {name: p.title, title: p.title, lines: lines.length ? lines : [div.textContent.trim()]}); return true;
+        }
+        case 'mmcr-share': { close(); const p = MM.web.page(cur); MM.share(c, {title: T().t('share_link_chooser_title'), subject: p?.title || '', text: cur}); return true; }
         case 'mmcr-reload': close(); go(c, cur, {replace: true}); return true;
         case 'mmcr-newtab': close(); go(c, NTP); return true;
         case 'mmcr-desktop': close(); s.desktop = !s.desktop; c.save(); go(c, cur, {replace: true}); return true;
       }
-      const missing = {'mmcr-incognito': 'missing-incognito', 'mmcr-bookmarks': 'missing-chrome-bookmarks', 'mmcr-recent': 'missing-chrome-recent-tabs', 'mmcr-history': 'missing-chrome-history', 'mmcr-share': 'missing-share', 'mmcr-print': 'missing-print', 'mmcr-find': 'missing-find-in-page', 'mmcr-homescreen': 'missing-add-to-home', 'mmcr-settings': 'missing-chrome-settings', 'mmcr-help': 'missing-help'}[name];
-      if (missing) { close(); c.open(missing); return true; }
+      const missing = {'mmcr-incognito': 'missing-incognito', 'mmcr-bookmarks': 'missing-chrome-bookmarks', 'mmcr-recent': 'missing-chrome-recent-tabs', 'mmcr-history': 'missing-chrome-history', 'mmcr-find': 'missing-find-in-page', 'mmcr-homescreen': 'missing-add-to-home', 'mmcr-settings': 'missing-chrome-settings', 'mmcr-help': 'help'}[name];
+      if (missing) { close(); if (missing === 'help') c.open('help', 'chrome'); else c.open(missing); return true; }
       return false;
     }
   });
@@ -172,7 +181,7 @@
         case 'mmcr-clear': u.text = ''; c.render(); return true;
         case 'mmcr-go': go(c, el.dataset.url); return true;
         case 'mmcr-menu': c.overlay('chrome-menu'); return true;
-        case 'mmcr-voice': c.open('missing-voice-search'); return true;
+        case 'mmcr-voice': MM.googleOpen(c, true); return true;
         case 'mmcr-bookmarks': c.open('missing-chrome-bookmarks'); return true;
         case 'mmcr-recent': c.open('missing-chrome-recent-tabs'); return true;
         case 'mmcr-reload': go(c, url(c), {replace: true}); return true;

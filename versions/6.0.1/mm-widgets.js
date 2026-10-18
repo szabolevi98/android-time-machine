@@ -259,7 +259,7 @@
     if (name === 'mmwg-tap') { if (c.ui.widgetsHeld) { c.ui.widgetsHeld = false; return true; } c.toast(T().t('Velvet/long_press_widget_to_add'), false); return true; }
     if (name === 'mmwg-open') { c.open(el.dataset.app); return true; }
     if (name === 'mmwg-url') { c.open('chrome', `url:${el.dataset.url}`); return true; }
-    if (name === 'mmwg-sound') { c.open('missing-sound-search'); return true; }
+    if (name === 'mmwg-sound') { MM.googleOpen(c, 'music'); return true; }
     return false;
   }
 

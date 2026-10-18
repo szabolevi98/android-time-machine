@@ -117,6 +117,7 @@
     let x = threadFor(c, number);
     if (!x) { const all = threads(c); x = {id: Math.max(0, ...all.map(y => y.id)) + 1, number, read: true, messages: []}; all.push(x); c.save(); }
     x.read = true; x.archived = false; u.screen = `conv:${x.id}`;
+    if (u.share) { u.draft[x.id] = u.share; u.share = ''; }
   }
   function send(c, x) {
     const u = ui(c), text = (u.draft[x.id] || '').trim(); if (!text) return;
@@ -130,6 +131,8 @@
     const u = ui(c), sub = c.ui.sub || '';
     if (!sub) return;
     c.ui.sub = ''; u.search = null;
+    // ShareIntentActivity: the shared text becomes the draft of the conversation picked next.
+    if (sub === 'share') { const d = MM.shareTake(c); u.share = d?.text || ''; u.screen = ''; return; }
     if (sub.startsWith('to:')) { const n = sub.slice(3); if (n) { openThread(c, n); u.external = true; } else { u.screen = 'pick'; u.to = ''; } }
   }
   function render(c) {
@@ -164,10 +167,10 @@
       items.push({label: t.t('action_people_and_options'), action: c => c.open('missing-people-options')},
         {label: t.t('action_archive'), action: c => { x.archived = true; c.save(); u.screen = ''; c.toast(t.fmt('archived_toast_message', null, 1), false); c.render(); }},
         {label: t.t('action_delete'), action: c => c.dialog({title: t.plural('delete_conversations_confirmation_dialog_title', 1), buttons: [{label: t.t('delete_conversation_decline_button')}, {label: t.t('delete_conversation_confirmation_button'), action: c => { c.data.sms = threads(c).filter(y => y !== x); c.save(); u.screen = ''; c.render(); }}]})},
-        {label: t.t('action_help_and_feedback'), action: c => c.open('missing-help')});
+        {label: t.t('action_help_and_feedback'), action: c => c.open('help', 'messenger')});
       return c.menu(items);
     }
-    c.menu([{label: t.t('action_menu_show_archived'), action: c => c.open('missing-archived')}, {label: t.t('blocked_contacts_title'), action: c => c.open('missing-blocked')}, {label: t.t('action_settings'), action: c => c.open('missing-messenger-settings')}, {label: t.t('action_help_and_feedback'), action: c => c.open('missing-help')}]);
+    c.menu([{label: t.t('action_menu_show_archived'), action: c => c.open('missing-archived')}, {label: t.t('blocked_contacts_title'), action: c => c.open('missing-blocked')}, {label: t.t('action_settings'), action: c => c.open('missing-messenger-settings')}, {label: t.t('action_help_and_feedback'), action: c => c.open('help', 'messenger')}]);
   }
 
   MM.register('messenger', {
@@ -183,7 +186,7 @@
     action(name, el, event, c) {
       const u = ui(c);
       switch (name) {
-        case 'mmms-open': { const x = thread(c, el.dataset.id); x.read = true; c.save(); u.screen = `conv:${x.id}`; c.render(); return true; }
+        case 'mmms-open': { const x = thread(c, el.dataset.id); x.read = true; c.save(); u.screen = `conv:${x.id}`; if (u.share) { u.draft[x.id] = u.share; u.share = ''; } c.render(); return true; }
         case 'mmms-up': if (u.external) { u.external = false; u.screen = ''; c.back(); return true; } u.screen = ''; c.render(); return true;
         case 'mmms-new': u.screen = 'pick'; u.to = ''; c.render(); return true;
         case 'mmms-ptab': u.pickTab = +el.dataset.tab; c.render(); return true;

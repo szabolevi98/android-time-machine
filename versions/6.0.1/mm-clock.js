@@ -178,8 +178,14 @@
         case 'mmck-tadd': u.timer = null; u.timerDigits = ''; c.render(); return true;
         case 'mmck-swreset': u.sw = {start: 0, acc: 0, running: false, laps: []}; c.render(); return true;
         case 'mmck-swlap': { const total = swElapsed(u), done = u.sw.laps.reduce((x, y) => x + y, 0); u.sw.laps.unshift(total - done); c.render(); return true; }
-        case 'mmck-swshare': c.open('missing-share'); return true;
-        case 'mm-menu': c.menu([{label: t.t('menu_item_settings'), action: c => c.open('missing-clock-settings')}, {label: t.t('menu_item_help'), action: c => c.open('missing-help')}]); return true;
+        case 'mmck-swshare': {
+          // StopwatchFragment.doShare: Stopwatches.getShareTitle (a random sw_share_strings line) and buildShareResults.
+          const plain = ms => swText(ms).replace(/<\/?small>/g, ''), lines = t.t('sw_share_strings');
+          const laps = u.sw.laps.length ? `${t.t('sw_share_laps')}\n${[...u.sw.laps].reverse().map((l, i) => `#${i + 1}  ${plain(l)}`).join('\n')}\n` : '';
+          MM.share(c, {title: t.t('sw_share_button'), subject: lines[Math.floor(Math.random() * lines.length)], text: `${AndroidStrings.format(t.t('sw_share_main'), plain(swElapsed(u)))}\n${laps}`});
+          return true;
+        }
+        case 'mm-menu': c.menu([{label: t.t('menu_item_settings'), action: c => c.open('missing-clock-settings')}, {label: t.t('menu_item_help'), action: c => c.open('help', 'clock')}]); return true;
         case 'mmck-fab':
           if (u.tab === 'clock') { c.open('missing-cities'); return true; }
           if (u.tab === 'alarm') {
