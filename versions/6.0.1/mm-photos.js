@@ -62,18 +62,28 @@
       <div class="mmgp-vtop"><button type="button" data-action="mmgp-up"><img src="${A('quantum_ic_arrow_back_white_24')}" alt=""></button><i></i><button type="button" data-action="mmgp-more"><img src="${A('quantum_ic_more_vert_white_24')}" alt=""></button></div>
       <div class="mmgp-vbar">${btn('quantum_ic_share_white_24', 'mmgp-share', 'stories_share')}${btn('quantum_ic_edit_white_24', 'mmgp-edit', 'edit_button_text')}${btn('quantum_ic_info_white_24', 'mmgp-info', 'photos_photofragment_components_photobar_action_details')}${btn('quantum_ic_delete_white_24', 'mmgp-trashit', 'photos_photofragment_components_photobar_action_move_to_trash')}</div></div>`;
   }
+  // SetWallpaperActivity (Settings > Wallpaper > Photos): the picker titled photos_setwallpaper_picker_title over the
+  // photos; the one chosen goes to the launcher's crop screen (CROP_AND_SET_WALLPAPER).
+  function picker(c) {
+    const list = visible(c, false).filter(p => p.kind !== 'video');
+    return `<div class="mmgp"><div class="mmgp-bar"><button type="button" class="mmgp-btn" data-action="mmgp-pickback"><img src="${A('quantum_ic_arrow_back_grey600_24')}" alt=""></button><span class="mmgp-title">${esc(c, MM.text('wallpapers').t('Photos/photos_setwallpaper_picker_title'))}</span></div>
+      <div class="mmgp-page mmgp-list">${grid(c, list).split('data-action="mmgp-open"').join('data-action="mmgp-pickone"')}</div></div>`;
+  }
   function render(c) {
     const sub = c.ui.sub || '', u = ui(c);
+    if (sub === 'pick:wallpaper') { c.ui.sub = ''; u.pick = true; }
+    if (u.pick) return picker(c);
     if (sub.startsWith('photo:')) { c.ui.sub = ''; c.data.photosOnboarded = true; u.screen = `photo:${sub.slice(6)}`; u.external = true; u.chrome = true; }
     if (!c.data.photosOnboarded) return onboarding(c);
     if (u.screen.startsWith('photo:')) { const p = MM.media.photos(c).find(x => x.id === +u.screen.slice(6)); if (p) return viewer(c, p); u.screen = ''; }
     return home(c);
   }
   MM.register('photos', {
-    statusColor: c => ui(c).screen.startsWith('photo:') || !c.data.photosOnboarded ? '#000' : '#757575',
+    statusColor: c => ui(c).pick ? '#757575' : ui(c).screen.startsWith('photo:') || !c.data.photosOnboarded ? '#000' : '#757575',
     render,
     back(c) {
       const u = ui(c);
+      if (u.pick) { u.pick = false; return false; }
       if (u.drawer) { u.drawer = false; c.render(); return true; }
       if (u.screen.startsWith('photo:')) { if (u.external) { u.external = false; u.screen = ''; return false; } u.screen = u.from || ''; c.render(); return true; }
       if (u.screen) { u.screen = ''; c.render(); return true; }
@@ -82,6 +92,8 @@
     action(name, el, event, c) {
       const u = ui(c), p = MM.media.photos(c).find(x => x.id === +(el.dataset.id || u.screen.slice(6)));
       switch (name) {
+        case 'mmgp-pickback': u.pick = false; c.back(); return true;
+        case 'mmgp-pickone': u.pick = false; c.open('wallpapers', `crop:${el.dataset.id}`); return true;
         case 'mmgp-start': u.onboard = 1; c.render(); return true;
         case 'mmgp-backupsw': u.backup = !u.backup; c.render(); return true;
         case 'mmgp-quality': u.quality = el.dataset.q; c.render(); return true;

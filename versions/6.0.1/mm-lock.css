@@ -1,7 +1,7 @@
 /* Android 6.0.1 lock screen (mm-lock.js), in dp: keyguard_status_bar.xml, keyguard_status_view.xml,
    keyguard_status_area.xml and keyguard_bottom_area.xml. The panel is the screen above the 48 dp navigation bar. */
 .mmlk{position:absolute;inset:0;overflow:hidden;font-family:Roboto,sans-serif;line-height:1.172;touch-action:none}
-.mmlk-wall{position:absolute;inset:0;background:url('assets/fw-default_wallpaper.jpg') left top/auto 100% no-repeat}
+.mmlk-wall{position:absolute;inset:0;background:var(--mm-wallpaper,url('assets/fw-default_wallpaper.jpg')) left top/auto 100% no-repeat}
 .mmlk-scrim{position:absolute;inset:0;background:#000;opacity:.45;transition:opacity .26s}
 .mmlk.leaving .mmlk-scrim{opacity:0}
 .mmlk-panel{position:absolute;left:0;right:0;top:0;height:calc(683.43 * var(--dp));transition:transform .26s cubic-bezier(.4,0,.2,1),opacity .26s}

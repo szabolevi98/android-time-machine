@@ -1,0 +1,5 @@
+# The wallpaper picker (GelWallpaperPickerActivity, mm-wallpapers.js)
+vv-ic_actionbar_accept.png	priv-app/Velvet/Velvet.apk	drawable/ic_actionbar_accept
+vv-ic_images.png	priv-app/Velvet/Velvet.apk	drawable/ic_images
+vv-tile_shadow_top.9.png	priv-app/Velvet/Velvet.apk	drawable/tile_shadow_top
+vv-tile_shadow_bottom.9.png	priv-app/Velvet/Velvet.apk	drawable/tile_shadow_bottom

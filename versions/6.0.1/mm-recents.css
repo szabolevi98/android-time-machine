@@ -1,6 +1,6 @@
 /* Android 6.0.1 Overview (mm-recents.js), in dp: recents.xml, recents_task_view.xml, recents_task_view_header.xml; the
    stack is laid out in window pixels (2.625 a dp), so the screen's whole window is its area. */
-.screen.view-recents{background:#000 url('assets/fw-default_wallpaper.jpg') left top/auto 100% no-repeat}
+.screen.view-recents{background:#000 var(--mm-wallpaper,url('assets/fw-default_wallpaper.jpg')) left top/auto 100% no-repeat}
 .screen.view-recents #viewport{top:0;bottom:0}
 .screen.view-recents .mmnb{background:transparent}
 .mmrc{position:absolute;inset:0;z-index:0;overflow:hidden;font-family:Roboto,sans-serif;line-height:1.172;touch-action:none;user-select:none}

@@ -235,3 +235,8 @@ CalendarGooglePrebuilt/widget_day_today CalendarGooglePrebuilt/widget_day_tomorr
 CalendarGooglePrebuilt/no_more_events_today CalendarGooglePrebuilt/widget_no_events_scheduled
 CalendarGooglePrebuilt/timely_chip_time_location
 Velvet/widget_get_now
+[wallpapers] Velvet LiveWallpapersPicker Photos DocumentsUI framework
+# The wallpaper picker (GelWallpaperPickerActivity), Live Wallpapers, Photos' and DocumentsUI's pickers
+Velvet/pick_wallpaper Velvet/wallpaper_instructions Velvet/pick_image Velvet/crop_wallpaper
+LiveWallpapersPicker/live_wallpaper_picker_label LiveWallpapersPicker/live_wallpaper_empty
+Photos/photos_setwallpaper_picker_title DocumentsUI/title_open DocumentsUI/root_recent

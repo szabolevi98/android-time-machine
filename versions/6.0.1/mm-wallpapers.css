@@ -1,0 +1,22 @@
+/* The wallpaper picker and Live Wallpapers (mm-wallpapers.js), in dp. */
+.mmwl{position:absolute;inset:0;background:#000;font-family:Roboto,sans-serif;overflow:hidden}
+.mmwl-crop{position:absolute;inset:0;background:#000 left top/auto 100% no-repeat}
+.mmwl-bar{position:absolute;left:0;right:0;top:0;height:calc(56 * var(--dp));background:rgba(0,0,0,.533)}
+.mmwl-set{display:flex;align-items:center;gap:calc(8 * var(--dp));width:100%;height:100%;padding:0 calc(20 * var(--dp)) 0 calc(12 * var(--dp));border:0;background:none;color:#fff;font:calc(14 * var(--dp))/1.172 Roboto,sans-serif}
+.mmwl-set:active{background:rgba(255,255,255,.12)}
+.mmwl-set img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.mmwl-strip{position:absolute;left:0;right:0;bottom:0}
+.mmwl-strip>i{display:block;height:calc(2 * var(--dp))}
+.mmwl-tiles{display:flex;overflow-x:auto;scrollbar-width:none}
+.mmwl-tile{position:relative;flex:none;width:calc(106.5 * var(--dp));height:calc(94.5 * var(--dp));padding:0;border:0;background:#000 center/cover no-repeat;overflow:hidden}
+.mmwl-tile.def{background-image:url('assets/fw-default_wallpaper.jpg')}
+.mmwl-svg{position:absolute;inset:0;width:100%;height:100%}
+.mmwl-gray{position:absolute;inset:0;background:rgba(0,0,0,.4)}
+.mmwl-tile.pick span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(4 * var(--dp));color:#fff;font-size:calc(14 * var(--dp))}
+.mmwl-tile.pick span img{width:calc(36 * var(--dp));height:calc(36 * var(--dp))}
+.mmwl-tick{position:absolute;left:calc(29.25 * var(--dp));top:calc(23.25 * var(--dp));width:calc(48 * var(--dp));height:calc(48 * var(--dp));background:url('assets/vv-ic_tick.svg') center/100% no-repeat}
+.mmwl-tile:active::after{content:"";position:absolute;inset:0;background:rgba(255,255,255,.4)}
+.mmwl-live{position:absolute;inset:0;display:flex;flex-direction:column;background:#000;color:#fff;font-family:Roboto,sans-serif}
+.mmwl-lbar{flex:none;display:flex;align-items:center;gap:calc(8 * var(--dp));height:calc(48 * var(--dp));padding:0 calc(8 * var(--dp));background:#222;font-size:calc(18 * var(--dp))}
+.mmwl-lbar img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.mmwl-empty{flex:1;display:grid;place-items:center;color:#fff;font-size:calc(18 * var(--dp))}

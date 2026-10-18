@@ -3,7 +3,7 @@
    navigation bar (LauncherRootView fitsSystemWindows), 1080 x 1731 px. */
 /* The wallpaper behind the launcher, the keyguard and the bars: framework default_wallpaper scaled to the screen's height,
    at the launcher's wallpaper offset 0 (its left edge). */
-.screen.view-home,.screen.view-drawer,.screen.view-widgets{background:#000 url('assets/fw-default_wallpaper.jpg') left top/auto 100% no-repeat}
+.screen.view-home,.screen.view-drawer,.screen.view-widgets{background:#000 var(--mm-wallpaper,url('assets/fw-default_wallpaper.jpg')) left top/auto 100% no-repeat}
 .screen.view-home .mmnb,.screen.view-drawer .mmnb,.screen.view-widgets .mmnb{background:transparent}
 .mmh{position:absolute;inset:0;overflow:hidden;font-family:Roboto,sans-serif;line-height:1.172;touch-action:pan-y;user-select:none}
 /* The pages: the Now page (custom content) left of the workspace pages, moved as a strip. */

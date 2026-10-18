@@ -384,8 +384,7 @@
     action(c, name, el) {
       if (name !== 'mmwp-pick') return false;
       const id = el.dataset.id;
-      if (id === 'wallpapers') c.open('wallpapers');
-      else MM.settingsGo(c, `missing:${id === 'live' ? 'com.android.wallpaper.livepicker.LiveWallpaperActivity' : 'com.google.android.apps.photos.setwallpaper.SetWallpaperActivity'}`, '');
+      c.open({wallpapers: 'wallpapers', live: 'live-wallpapers', photos: 'photos'}[id], id === 'photos' ? 'pick:wallpaper' : '');
       return true;
     }
   };

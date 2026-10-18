@@ -407,6 +407,7 @@ versions/6.0.1/assets/ps-ic_search_white.png	613f20f319f6b267	copy	bullhead:/sys
 versions/6.0.1/assets/ps-ic_whats_new.png	7eccbe04985af330	copy	bullhead:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xxhdpi-v4/ic_whats_new.png	drawable-xxhdpi-v4		7eccbe04985af330
 versions/6.0.1/assets/ps-play_ic_dl_m_download_00000.png	82dbe084091a725e	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxxhdpi-v4/play_ic_dl_m_download_00000.png	drawable-xxxhdpi-v4		82dbe084091a725e
 versions/6.0.1/assets/ps-play_ic_dl_m_finish_00015.png	42c516622a79c367	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxxhdpi-v4/play_ic_dl_m_finish_00015.png	drawable-xxxhdpi-v4		42c516622a79c367
+versions/6.0.1/assets/pt-quantum_ic_arrow_back_grey600_24.png	4ebc975addf79a40	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/quantum_ic_arrow_back_grey600_24.png	drawable-xxhdpi-v4		4ebc975addf79a40
 versions/6.0.1/assets/pt-quantum_ic_arrow_back_white_24.png	71c8d28fe97d117e	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/quantum_ic_arrow_back_white_24.png	drawable-xxhdpi-v4		71c8d28fe97d117e
 versions/6.0.1/assets/pt-quantum_ic_cloud_done_white_24.png	259ee7b1dcbfaa5c	copy	bullhead:/system/app/Photos/Photos.apk!res/drawable-xxhdpi-v4/quantum_ic_cloud_done_white_24.png	drawable-xxhdpi-v4		259ee7b1dcbfaa5c
 versions/6.0.1/assets/pt-quantum_ic_delete_grey600_24.png	6f7fb90ae298ac3e	copy	bullhead:/system/app/Photos/Photos.apk!res/drawable-xxhdpi-v4/quantum_ic_delete_grey600_24.png	drawable-xxhdpi-v4		6f7fb90ae298ac3e
@@ -608,9 +609,14 @@ versions/6.0.1/assets/vv-context_header_bg_dawn.jpg	1d1e6458ea1fffa5	copy	bullhe
 versions/6.0.1/assets/vv-context_header_bg_daylight.jpg	ba3e657cc2ac9643	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/context_header_bg_daylight.jpg	drawable-nodpi-v4		ba3e657cc2ac9643
 versions/6.0.1/assets/vv-context_header_bg_dusk.jpg	aac0aad6bfd0cfa1	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/context_header_bg_dusk.jpg	drawable-nodpi-v4		aac0aad6bfd0cfa1
 versions/6.0.1/assets/vv-context_header_bg_twilight.jpg	51986f68d57fffda	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/context_header_bg_twilight.jpg	drawable-nodpi-v4		51986f68d57fffda
+versions/6.0.1/assets/vv-ic_actionbar_accept.png	ddf65985aefe51ed	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_actionbar_accept.png	drawable-xxhdpi-v4		ddf65985aefe51ed
+versions/6.0.1/assets/vv-ic_images.png	431958254f957dbc	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_images.png	drawable-xxhdpi-v4		431958254f957dbc
+versions/6.0.1/assets/vv-ic_tick.svg	549ff548f6d76436	vector	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-v21/ic_tick.xml	drawable-v21	vector drawable drawn as SVG	932646c014b9700b
 versions/6.0.1/assets/vv-optin_minicard_ic_flight.png	9043a9e1f9f98de4	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/optin_minicard_ic_flight.png	drawable-nodpi-v4		9043a9e1f9f98de4
 versions/6.0.1/assets/vv-optin_minicard_ic_train.png	e1760baa4d223ede	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/optin_minicard_ic_train.png	drawable-nodpi-v4		e1760baa4d223ede
 versions/6.0.1/assets/vv-optin_minicard_ic_weather.png	248d7577c025af71	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/optin_minicard_ic_weather.png	drawable-nodpi-v4		248d7577c025af71
+versions/6.0.1/assets/vv-tile_shadow_bottom.9.png	a19b5df935c366b7	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/tile_shadow_bottom.9.png	drawable-xxhdpi-v4		a19b5df935c366b7
+versions/6.0.1/assets/vv-tile_shadow_top.9.png	c730c8124c867aca	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/tile_shadow_top.9.png	drawable-xxhdpi-v4		c730c8124c867aca
 versions/6.0.1/assets/vv-widget_card_frame.9.png	97e8a2643cbedc41	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/widget_card_frame.9.png	drawable-xxhdpi-v4		97e8a2643cbedc41
 versions/6.0.1/assets/vw-widget_tile.png	00bcc498b7a94a70	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/widget_tile.png	drawable-xxhdpi-v4		00bcc498b7a94a70
 versions/6.0.1/assets/wa-ic_add.png	c63e09363eb080a0	copy	bullhead:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c63e09363eb080a0
