@@ -57,6 +57,174 @@ MM.strings('playgames', {
 "fr": "Paramètres",
 "es": "Ajustes"
 },
+"games_menu_search": {
+"res": "bullhead:PlayGames:games_menu_search",
+"en": "Search",
+"hu": "Keresés",
+"de": "Suchen",
+"fr": "Rechercher",
+"es": "Buscar"
+},
+"games_search_games_no_results": {
+"res": "bullhead:PlayGames:games_search_games_no_results",
+"en": "No matching games",
+"hu": "Nincsenek a keresésnek megfelelő játékok",
+"de": "Keine entsprechenden Spiele",
+"fr": "Aucun jeu correspondant.",
+"es": "No se ha encontrado ningún juego"
+},
+"games_settings_title": {
+"res": "bullhead:PlayGames:games_settings_title",
+"en": "Settings",
+"hu": "Beállítások",
+"de": "Einstellungen",
+"fr": "Paramètres",
+"es": "Ajustes"
+},
+"games_gcore_public_profile": {
+"res": "bullhead:PlayGames:games_gcore_public_profile",
+"en": "Game Profile",
+"hu": "Játékprofil",
+"de": "Spielprofil",
+"fr": "Profil de jeu",
+"es": "Perfil de juego"
+},
+"games_gcore_public_profile_public_status": {
+"res": "bullhead:PlayGames:games_gcore_public_profile_public_status",
+"en": "Public",
+"hu": "Nyilvános",
+"de": "Öffentlich",
+"fr": "Public",
+"es": "Público"
+},
+"games_gcore_multiplayer_notifications": {
+"res": "bullhead:PlayGames:games_gcore_multiplayer_notifications",
+"en": "Multiplayer notifications",
+"hu": "Többszereplős játékok értesítései",
+"de": "Mehrspielermodus-Benachrichtigungen",
+"fr": "Notifications jeux multijoueurs",
+"es": "Notificaciones de multijugador"
+},
+"games_gcore_multiplayer_notifications_summary": {
+"res": "bullhead:PlayGames:games_gcore_multiplayer_notifications_summary",
+"en": "Allow games to send notifications for multiplayer games",
+"hu": "Értesítésküldés engedélyezése többszereplős játékoknál",
+"de": "Senden von Mehrspielermodus-Benachrichtigungen zulassen",
+"fr": "Autoriser l'envoi de notifications via les jeux multijoueurs",
+"es": "Permitir que los juegos multijugador envíen notificaciones"
+},
+"games_gcore_quest_notifications": {
+"res": "bullhead:PlayGames:games_gcore_quest_notifications",
+"en": "Quests notifications",
+"hu": "Értesítés küldetésről",
+"de": "Benachrichtigungen zu Missionen",
+"fr": "Notifications des quêtes",
+"es": "Notificaciones de misiones"
+},
+"games_gcore_quest_notifications_summary": {
+"res": "bullhead:PlayGames:games_gcore_quest_notifications_summary",
+"en": "Allow games to send notifications for quests",
+"hu": "Értesítésküldés engedélyezése küldetések esetén",
+"de": "Spiele dürfen Benachrichtigungen zu Missionen senden",
+"fr": "Autoriser les jeux à envoyer des notifications pour les quêtes",
+"es": "Permitir que los juegos envíen notificaciones de misiones"
+},
+"games_gcore_request_notifications": {
+"res": "bullhead:PlayGames:games_gcore_request_notifications",
+"en": "Requests notifications",
+"hu": "Értesítések kérések esetén",
+"de": "Benachrichtigungen bei Anfragen",
+"fr": "Notifications des demandes",
+"es": "Notificaciones de solicitudes"
+},
+"games_gcore_request_notifications_summary": {
+"res": "bullhead:PlayGames:games_gcore_request_notifications_summary",
+"en": "Allow games to send notifications for gifts and requests",
+"hu": "Ajándék- és kérésértesítés engedélyezése játékok esetén",
+"de": "Spielen Benachrichtigungen für Geschenke/Anfragen gestatten",
+"fr": "Autoriser l'envoi de notifications pour les demandes et les cadeaux via les jeux",
+"es": "Permitir que los juegos envíen notificaciones sobre regalos y solicitudes"
+},
+"games_gcore_level_notifications": {
+"res": "bullhead:PlayGames:games_gcore_level_notifications",
+"en": "Level up notifications",
+"hu": "Szintugrási értesítők",
+"de": "Benachrichtigung für nächstes Level",
+"fr": "Notifications des niveaux",
+"es": "Notificaciones al subir de nivel"
+},
+"games_gcore_level_notifications_summary": {
+"res": "bullhead:PlayGames:games_gcore_level_notifications_summary",
+"en": "Display notifications on this device for level up events",
+"hu": "Értesítések megjelenítése az eszközön szintlépéskor",
+"de": "Auf diesem Gerät bei Erreichen des nächsten Levels eine Benachrichtigung erhalten",
+"fr": "Afficher des notifications sur cet appareil lorsqu'un niveau est atteint",
+"es": "Mostrar notificaciones en este dispositivo al subir de nivel"
+},
+"games_gcore_notification_scope": {
+"res": "bullhead:PlayGames:games_gcore_notification_scope",
+"en": "Allow priority notifications from",
+"hu": "Elsőbbségi értesítések engedélyezése tőle:",
+"de": "Wichtige Benachrichtigungen zulassen von",
+"fr": "Autoriser les notif. prioritaires de",
+"es": "Permitir notificaciones de prioridad de"
+},
+"common_chips_label_only_you": {
+"res": "bullhead:PlayGames:common_chips_label_only_you",
+"en": "Only you",
+"hu": "Csak Ön",
+"de": "Nur für mich",
+"fr": "Vous uniquement",
+"es": "Solo tú"
+},
+"games_gcore_learn_more_notifications": {
+"res": "bullhead:PlayGames:games_gcore_learn_more_notifications",
+"en": "Learn about game notifications",
+"hu": "Információ a játékokra vonatkozó értesítőkről",
+"de": "Mehr zu Spielebenachrichtigungen",
+"fr": "En savoir plus sur les notifications",
+"es": "Más sobre notificaciones de juegos"
+},
+"games_gcore_muted_games": {
+"res": "bullhead:PlayGames:games_gcore_muted_games",
+"en": "Muted games",
+"hu": "Zárolt játékok",
+"de": "Ausgeblendete Spiele",
+"fr": "Notifications bloquées",
+"es": "Juegos silenciados"
+},
+"games_gcore_muted_games_empty": {
+"res": "bullhead:PlayGames:games_gcore_muted_games_empty",
+"en": "No games muted yet",
+"hu": "Még nem zárolt játékokat",
+"de": "Keine Spiele ausgeblendet",
+"fr": "Aucun jeu",
+"es": "No has silenciado ningún juego."
+},
+"games_gcore_about": {
+"res": "bullhead:PlayGames:games_gcore_about",
+"en": "About",
+"hu": "Névjegy",
+"de": "Info",
+"fr": "À propos",
+"es": "Información"
+},
+"games_gcore_build_version_title": {
+"res": "bullhead:PlayGames:games_gcore_build_version_title",
+"en": "%s version",
+"hu": "%s verzió",
+"de": "%s-Version",
+"fr": "%s – Version",
+"es": "Versión de %s"
+},
+"common_games_settings_title": {
+"res": "bullhead:PlayGames:common_games_settings_title",
+"en": "Play Games",
+"hu": "Play Játékok",
+"de": "Play Spiele",
+"fr": "Play Jeux",
+"es": "Play Juegos"
+},
 "games_dest_nav_drawer_help": {
 "res": "bullhead:PlayGames:games_dest_nav_drawer_help",
 "en": "Help & Feedback",

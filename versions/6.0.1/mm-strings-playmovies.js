@@ -72,5 +72,21 @@ MM.strings('playmovies', {
 "de": "Wunschliste ist leer.",
 "fr": "La liste de souhaits est vide.",
 "es": "La lista de deseos está vacía"
+},
+"menu_search": {
+"res": "bullhead:Videos:menu_search",
+"en": "Search",
+"hu": "Keresés",
+"de": "Suche",
+"fr": "Rechercher",
+"es": "Buscar"
+},
+"no_results": {
+"res": "bullhead:Videos:no_results",
+"en": "No results found",
+"hu": "Nincs találat",
+"de": "Keine Ergebnisse gefunden",
+"fr": "Aucun résultat trouvé.",
+"es": "No se han encontrado resultados"
 }
 });

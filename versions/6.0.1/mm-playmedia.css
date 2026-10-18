@@ -27,3 +27,7 @@
 .mmpm-di.text{font-weight:400}
 .mmpm-div{display:block;height:1px;margin:calc(8 * var(--dp)) 0;background:#e0e0e0}
 .mmpm-empty.edu{margin:calc(16 * var(--dp));padding:calc(32 * var(--dp)) calc(16 * var(--dp));border-radius:calc(2 * var(--dp));background:#689f38}
+/* The Play search plate over the toolbar (search). */
+.mmpm-plate{flex:1;display:flex;align-items:center;height:calc(48 * var(--dp));margin:0 calc(4 * var(--dp));border-radius:calc(2 * var(--dp));background:#fff;box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) rgba(0,0,0,.2)}
+.mmpm-plate .mmpm-btn img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.mmpm-sinput{flex:1;min-width:0;height:100%;border:0;outline:0;background:none;color:#212121;font:calc(18 * var(--dp)) Roboto,sans-serif}

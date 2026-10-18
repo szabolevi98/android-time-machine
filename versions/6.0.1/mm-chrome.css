@@ -162,3 +162,11 @@
 .mmcr-info p{margin:calc(12 * var(--dp)) 0 0;font-size:calc(14 * var(--dp));color:#0b8043}
 .mmcr-info p.warn{color:#5a5a5a}
 .mmcr-hslabel{display:block;font-size:calc(12 * var(--dp));color:#4285f4}
+/* My Account (mm-web.js myaccount): the offline page Google Settings' account rows open. */
+.mmwb-acct{padding:0 calc(16 * var(--dp)) calc(24 * var(--dp));font-family:Roboto,sans-serif;color:#212121}
+.mmwb-abar2{display:flex;align-items:center;gap:calc(12 * var(--dp));margin:0 calc(-16 * var(--dp));padding:calc(10 * var(--dp)) calc(16 * var(--dp));border-bottom:1px solid #e0e0e0}
+.mmwb-abar2 b{font-weight:400;font-size:calc(20 * var(--dp));color:#757575}
+.mmwb-acct h1{margin:calc(24 * var(--dp)) 0 calc(8 * var(--dp));font:400 calc(26 * var(--dp))/1.25 Roboto,sans-serif}
+.mmwb-acct p{color:#616161;font-size:calc(15 * var(--dp));line-height:1.5}
+.mmwb-acard{display:flex;flex-direction:column;gap:calc(4 * var(--dp));margin:calc(16 * var(--dp)) 0;padding:calc(16 * var(--dp));border-radius:calc(2 * var(--dp));box-shadow:0 calc(1 * var(--dp)) calc(3 * var(--dp)) rgba(0,0,0,.2)}
+.mmwb-acard span{color:#757575;font-size:calc(13 * var(--dp))}

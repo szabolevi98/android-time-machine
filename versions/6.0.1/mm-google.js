@@ -154,7 +154,7 @@
   'use strict';
   const T = () => MM.text('gms');
   const ACCOUNT = [['security', 'accountsettings_security_settings_title'], ['privacy', 'accountsettings_privacy_settings_title'], ['preferences', 'accountsettings_preferences_settings_title']];
-  const SERVICES = [['ads', 'common_ads_settings_title'], ['apps', 'common_connected_apps_settings_title'], ['fit', 'common_fitness_settings_title'], ['location', 'common_location_settings_title'], ['nearby', 'common_nearby_settings_title'], ['games', 'common_games_settings_title'], ['data', 'common_google_settings_data_management_title'], ['now', 'common_search_and_now_settings_title'], ['security', 'common_security_settings_title'], ['pay', 'common_wallet_settings_title']];
+  const SERVICES = [['ads', 'common_ads_settings_title'], ['apps', 'common_connected_apps_settings_title'], ['fit', 'common_fitness_settings_title'], ['location', 'common_location_settings_title'], ['nearby', 'common_nearby_settings_title'], ['games', 'common_games_settings_title'], ['data', 'common_google_settings_data_management_title'], ['now', 'common_search_and_now_settings_title'], ['gsecurity', 'common_security_settings_title'], ['pay', 'common_wallet_settings_title']];
   MM.register('google-settings', {
     statusColor: () => '#21272b',
     render(c) {
@@ -164,8 +164,13 @@
     },
     action(name, el, event, c) {
       if (name === 'mmgx-up') { c.back(); return true; }
-      // Android Pay's row opens the Android Pay app; the others are Play services' own pages, not built yet.
-      if (name === 'mmgx-open') { c.open(el.dataset.id === 'pay' ? 'android-pay' : `missing-gms-${el.dataset.id}`); return true; }
+      // Android Pay's row opens the Android Pay app, Location Settings' Location (Google Settings' location page moved
+      // there on 6.0), Search & Now the Google app's settings; the others are Play services' pages (mm-gms.js).
+      if (name === 'mmgx-open') {
+        const id = el.dataset.id;
+        if (id === 'pay') c.open('android-pay'); else if (id === 'location') c.open('settings', 'xml:location_settings'); else if (id === 'now') c.open('home-settings'); else c.open('gms-page', id);
+        return true;
+      }
       return false;
     }
   });

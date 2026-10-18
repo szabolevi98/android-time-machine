@@ -77,3 +77,9 @@
 .mmgg-vplate.music .mmgg-vmic i{-webkit-mask-image:url('assets/vv-quantum_ic_music_note_white_48.png');mask-image:url('assets/vv-quantum_ic_music_note_white_48.png')}
 .mmgg-vplate.music.done .mmgg-vmic{background:#bdbdbd}
 .mmgg-vretry{margin-top:calc(-24 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;background:none;color:#4285f4;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+/* Google Settings' pages (mm-gms.js). */
+.mmgp .mmgs-bar span{flex:1;min-width:0}
+.mmgp-foot{padding:calc(16 * var(--dp));color:rgba(0,0,0,.54);font-size:calc(14 * var(--dp));line-height:1.4;word-break:break-all}
+.mmgp-empty{padding:calc(24 * var(--dp)) calc(16 * var(--dp));color:rgba(0,0,0,.54);font-size:calc(16 * var(--dp));line-height:1.4}
+.mmgp-note{padding:0 calc(16 * var(--dp)) calc(16 * var(--dp));color:rgba(0,0,0,.54);font-size:calc(14 * var(--dp));line-height:1.4}
+.mmgp .mmst-switchbar{background:#37474f}

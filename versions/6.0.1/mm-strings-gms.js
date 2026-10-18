@@ -128,5 +128,405 @@ MM.strings('gms', {
 "de": "Android Pay",
 "fr": "Android Pay",
 "es": "Android Pay"
+},
+"accountsettings_help": {
+"res": "bullhead:PrebuiltGmsCore:accountsettings_help",
+"en": "Help",
+"hu": "Súgó",
+"de": "Hilfe",
+"fr": "Aide",
+"es": "Ayuda"
+},
+"accountsettings_preferences_settings_delete_account_title": {
+"res": "bullhead:PrebuiltGmsCore:accountsettings_preferences_settings_delete_account_title",
+"en": "Delete your account or services",
+"hu": "A fiók vagy szolgáltatások törlése",
+"de": "Konto oder Dienste löschen",
+"fr": "Supprimer votre compte ou des services",
+"es": "Eliminar tu cuenta o algunos servicios"
+},
+"accountsettings_preferences_settings_language_title": {
+"res": "bullhead:PrebuiltGmsCore:accountsettings_preferences_settings_language_title",
+"en": "Language",
+"hu": "Nyelv",
+"de": "Sprache",
+"fr": "Langue",
+"es": "Idioma"
+},
+"accountsettings_preferences_settings_storage_title": {
+"res": "bullhead:PrebuiltGmsCore:accountsettings_preferences_settings_storage_title",
+"en": "Your Google Drive storage",
+"hu": "Az Ön Google Drive Tárolója",
+"de": "Mein Google Drive-Speicherplatz",
+"fr": "Votre espace de stockage Google Drive",
+"es": "Tu almacenamiento en Google Drive"
+},
+"accountsettings_privacy_settings_ads_title": {
+"res": "bullhead:PrebuiltGmsCore:accountsettings_privacy_settings_ads_title",
+"en": "Ads settings",
+"hu": "Hirdetésbeállítások",
+"de": "Einstellungen für Werbung",
+"fr": "Paramètres des annonces",
+"es": "Configuración de anuncios"
+},
+"accountsettings_privacy_settings_data_title": {
+"res": "bullhead:PrebuiltGmsCore:accountsettings_privacy_settings_data_title",
+"en": "Control your content",
+"hu": "Tartalomkezelés",
+"de": "Kontrolle über Inhalte",
+"fr": "Contrôlez votre contenu",
+"es": "Controla tu contenido"
+},
+"accountsettings_privacy_settings_history_title": {
+"res": "bullhead:PrebuiltGmsCore:accountsettings_privacy_settings_history_title",
+"en": "Activity controls",
+"hu": "Tevékenységvezérlők",
+"de": "Aktivitätseinstellungen",
+"fr": "Commandes relatives à l'activité",
+"es": "Control de tu actividad"
+},
+"accountsettings_privacy_settings_overview_title": {
+"res": "bullhead:PrebuiltGmsCore:accountsettings_privacy_settings_overview_title",
+"en": "Account overview",
+"hu": "Fiók áttekintése",
+"de": "Kontoübersicht",
+"fr": "Général",
+"es": "Descripción general de la cuenta"
+},
+"accountsettings_privacy_settings_personal_info_title": {
+"res": "bullhead:PrebuiltGmsCore:accountsettings_privacy_settings_personal_info_title",
+"en": "Your personal info",
+"hu": "Személyes adatok",
+"de": "Ihre persönlichen Daten",
+"fr": "Vos informations personnelles",
+"es": "Tu información personal"
+},
+"accountsettings_security_settings_apps_title": {
+"res": "bullhead:PrebuiltGmsCore:accountsettings_security_settings_apps_title",
+"en": "Connected apps & sites",
+"hu": "Társított alkalmazások és webhelyek",
+"de": "Verbundene Apps & Websites",
+"fr": "Applications et sites connectés",
+"es": "Aplicaciones y sitios conectados"
+},
+"accountsettings_security_settings_devices_title": {
+"res": "bullhead:PrebuiltGmsCore:accountsettings_security_settings_devices_title",
+"en": "Device access & notifications",
+"hu": "Eszközhozzáférés és értesítések",
+"de": "Gerätezugriff & Benachrichtigungen",
+"fr": "Accès des appareils et notifications",
+"es": "Acceso al dispositivo y notificaciones"
+},
+"accountsettings_security_settings_sign_in_title": {
+"res": "bullhead:PrebuiltGmsCore:accountsettings_security_settings_sign_in_title",
+"en": "Signing in to Google",
+"hu": "Bejelentkezés a Google-ba",
+"de": "Bei Google anmelden",
+"fr": "Se connecter à Google",
+"es": "Inicio de sesión en Google"
+},
+"ads_prefs_ads_by_google": {
+"res": "bullhead:PrebuiltGmsCore:ads_prefs_ads_by_google",
+"en": "Ads by Google",
+"hu": "Google Hirdetések",
+"de": "Google Anzeigen",
+"fr": "Annonces Google",
+"es": "Anuncios Google"
+},
+"ads_prefs_help_and_feedback": {
+"res": "bullhead:PrebuiltGmsCore:ads_prefs_help_and_feedback",
+"en": "Help & feedback",
+"hu": "Súgó és visszajelzés",
+"de": "Hilfe & Feedback",
+"fr": "Aide et commentaires",
+"es": "Ayuda y sugerencias"
+},
+"ads_prefs_interest_based_ads": {
+"res": "bullhead:PrebuiltGmsCore:ads_prefs_interest_based_ads",
+"en": "Opt out of interest-based ads",
+"hu": "Az érdeklődésen alapuló hirdetések letiltása",
+"de": "Interessenbezogene Werbung deaktivieren",
+"fr": "Désactiver annonces par centres d'intérêt",
+"es": "Inhabilitar anuncios basados en intereses"
+},
+"ads_prefs_interest_based_ads_summary": {
+"res": "bullhead:PrebuiltGmsCore:ads_prefs_interest_based_ads_summary",
+"en": "Instruct apps not to use your advertising ID to build profiles or show you interest-based ads.",
+"hu": "Utasítsa az alkalmazásokat, hogy ne használják a hirdetési azonosítóját profilok építéséhez, illetve ne jelenítsenek meg Önnek érdeklődésen alapuló hirdetéseket.",
+"de": "Weisen Sie Apps an, Ihre Werbe-ID nicht zur Erstellung von Profilen zu verwenden oder Ihnen keine interessenbezogene Werbung zu zeigen.",
+"fr": "Demandez aux applications de ne pas utiliser votre identifiant publicitaire pour créer des profils ni diffuser d'annonces par centres d'intérêt.",
+"es": "Indicar a las aplicaciones que no utilicen tu ID de publicidad para crear perfiles o mostrar anuncios basados en tus intereses."
+},
+"ads_prefs_reset_adid": {
+"res": "bullhead:PrebuiltGmsCore:ads_prefs_reset_adid",
+"en": "Reset advertising ID",
+"hu": "Hirdetési azonosító visszaállítása",
+"de": "Werbe-ID zurücksetzen",
+"fr": "Réinitialiser l'identifiant publicitaire",
+"es": "Restablecer ID de publicidad"
+},
+"ads_prefs_reset_adid_dialog_msg": {
+"res": "bullhead:PrebuiltGmsCore:ads_prefs_reset_adid_dialog_msg",
+"en": "This will replace your advertising ID with a new random number.",
+"hu": "Ez lecseréli az Ön hirdetési azonosítóját egy véletlenszerűen kiválasztott számra.",
+"de": "Ihre Werbe-ID wird durch eine zufällig ausgewählte Nummer ersetzt.",
+"fr": "Votre identifiant publicitaire va être remplacé par un nouveau numéro aléatoire.",
+"es": "Esto sustituirá tu ID de publicidad con un nuevo número aleatorio."
+},
+"ads_prefs_reset_adid_dialog_title": {
+"res": "bullhead:PrebuiltGmsCore:ads_prefs_reset_adid_dialog_title",
+"en": "Reset advertising ID?",
+"hu": "Visszaállítja a hirdetési azonosítót?",
+"de": "Werbe-ID zurücksetzen?",
+"fr": "Réinitialiser l'identifiant publicitaire ?",
+"es": "¿Restablecer ID de publicidad?"
+},
+"ads_prefs_your_adid": {
+"res": "bullhead:PrebuiltGmsCore:ads_prefs_your_adid",
+"en": "Your advertising ID:",
+"hu": "Az Ön hirdetési azonosítója:",
+"de": "Meine Werbe-ID:",
+"fr": "Votre identifiant publicitaire :",
+"es": "Tu ID de publicidad:"
+},
+"plus_list_apps_empty_message": {
+"res": "bullhead:PrebuiltGmsCore:plus_list_apps_empty_message",
+"en": "No apps are connected to your Google account",
+"hu": "Nem kapcsolódik alkalmazás a Google-fiókodhoz.",
+"de": "Es sind keine Apps mit Ihrem Google-Konto verbunden.",
+"fr": "Aucune application n'est associée à votre compte Google.",
+"es": "No hay aplicaciones conectadas con tu cuenta de Google."
+},
+"fitness_settings_connected_apps_title": {
+"res": "bullhead:PrebuiltGmsCore:fitness_settings_connected_apps_title",
+"en": "Connected apps",
+"hu": "Társított alkalmazások",
+"de": "Verbundene Apps",
+"fr": "Applications associées",
+"es": "Aplicaciones conectadas"
+},
+"fitness_settings_connected_apps_title_empty": {
+"res": "bullhead:PrebuiltGmsCore:fitness_settings_connected_apps_title_empty",
+"en": "No apps are connected",
+"hu": "Nincsenek társított alkalmazások",
+"de": "Keine verbundenen Apps",
+"fr": "Aucune application connectée",
+"es": "No hay aplicaciones conectadas"
+},
+"fitness_settings_connected_devices_title": {
+"res": "bullhead:PrebuiltGmsCore:fitness_settings_connected_devices_title",
+"en": "Connected devices",
+"hu": "Társított eszközök",
+"de": "Verbundene Geräte",
+"fr": "Appareils connectés",
+"es": "Dispositivos conectados"
+},
+"fitness_settings_connected_devices_title_empty": {
+"res": "bullhead:PrebuiltGmsCore:fitness_settings_connected_devices_title_empty",
+"en": "No devices are connected",
+"hu": "Nincsenek társított eszközök",
+"de": "Keine verbundenen Geräte",
+"fr": "Aucun appareil connecté",
+"es": "No hay dispositivos conectados"
+},
+"fitness_settings_menu_delete_history": {
+"res": "bullhead:PrebuiltGmsCore:fitness_settings_menu_delete_history",
+"en": "Delete history",
+"hu": "Előzmények törlése",
+"de": "Verlauf löschen",
+"fr": "Supprimer l'historique",
+"es": "Eliminar historial"
+},
+"fitness_settings_menu_help_feedback": {
+"res": "bullhead:PrebuiltGmsCore:fitness_settings_menu_help_feedback",
+"en": "Help & feedback",
+"hu": "Súgó és visszajelzés",
+"de": "Hilfe & Feedback",
+"fr": "Aide et commentaires",
+"es": "Ayuda y opiniones"
+},
+"fitness_settings_confirm_delete_dialog": {
+"res": "bullhead:PrebuiltGmsCore:fitness_settings_confirm_delete_dialog",
+"en": "Delete history?",
+"hu": "Törli az előzményeket?",
+"de": "Verlauf löschen?",
+"fr": "Supprimer l'historique ?",
+"es": "¿Eliminar historial?"
+},
+"fitness_settings_confirm_delete_message": {
+"res": "bullhead:PrebuiltGmsCore:fitness_settings_confirm_delete_message",
+"en": "Apps that use your Google Fit data may stop working.",
+"hu": "A Fitnesz adatait használó alkalmazások leállhatnak.",
+"de": "Apps, die Ihre Google Fit-Daten nutzen, funktionieren eventuell nicht mehr.",
+"fr": "Applis utilisant données Fit peuvent cesser fonction.",
+"es": "Las aplicaciones que utilizan los datos de Google Fit pueden dejar de funcionar."
+},
+"fitness_settings_confirm_delete_button": {
+"res": "bullhead:PrebuiltGmsCore:fitness_settings_confirm_delete_button",
+"en": "Delete",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Supprimer",
+"es": "Eliminar"
+},
+"nearby_overall_disabled_settings_text": {
+"res": "bullhead:PrebuiltGmsCore:nearby_overall_disabled_settings_text",
+"en": "When Nearby is turned on, Google will use your device's sensors to connect with other devices across short distances. <a href=%1$s>Learn more</a>",
+"hu": "Ha a Nearby funkció be van kapcsolva, akkor eszköze érzékelőit használva a Google összekapcsolja az eszközt a kis távolságokra lévő más eszközökkel. <a href=%1$s>További információ</a>",
+"de": "Wenn Nearby aktiviert ist, verwendet Google die Sensoren Ihres Geräts, um eine Verbindung mit anderen Geräten in der Nähe herzustellen. <a href=%1$s>Weitere Informationen</a>",
+"fr": "Lorsque la fonctionnalité À proximité est activée, notre système utilise les capteurs de votre appareil pour se connecter à d'autres appareils sur de courtes distances. <a href=%1$s>En savoir plus</a>",
+"es": "Si la función Cercano está activada, Google utiliza los sensores del dispositivo para conectarse con otros dispositivos cercanos. <a href=%1$s>Más información</a>"
+},
+"nearby_settings_help_and_feedback": {
+"res": "bullhead:PrebuiltGmsCore:nearby_settings_help_and_feedback",
+"en": "Help & Feedback",
+"hu": "Súgó és visszajelzés",
+"de": "Hilfe und Feedback",
+"fr": "Aide et commentaires",
+"es": "Ayuda y sugerencias"
+},
+"nearby_apps": {
+"res": "bullhead:PrebuiltGmsCore:nearby_apps",
+"en": "Nearby apps",
+"hu": "Nearby-alkalmazások",
+"de": "Nearby-Apps",
+"fr": "Applications à proximité",
+"es": "Aplicaciones de Cercano"
+},
+"nearby_apps_summary": {
+"res": "bullhead:PrebuiltGmsCore:nearby_apps_summary",
+"en": "%1$d of %2$d enabled",
+"hu": "%1$d/%2$d engedélyezve",
+"de": "Aktiviert für %1$d von %2$d",
+"fr": "Activée pour %1$d application(s) sur %2$d",
+"es": "%1$d de %2$d habilitadas"
+},
+"common_google_settings_drive_network_usage": {
+"res": "bullhead:PrebuiltGmsCore:common_google_settings_drive_network_usage",
+"en": "Update Drive-enabled app files",
+"hu": "Drive-kompatibilis alkalmazásfájlok frissítése",
+"de": "Dateien Drive-fähiger Apps aktualisieren",
+"fr": "Mettre à jour les fichiers des applis fonctionnant avec Drive",
+"es": "Actualizar archivos de aplicaciones compatibles con Drive"
+},
+"common_settings_drive_network_usage_all": {
+"res": "bullhead:PrebuiltGmsCore:common_settings_drive_network_usage_all",
+"en": "Over Wi-Fi or Cellular",
+"hu": "Wi-Fi- vagy mobiladat-hálózaton",
+"de": "Über WLAN oder Mobilfunk",
+"fr": "Via le Wi-Fi ou les données mobiles",
+"es": "En redes Wi-Fi o móviles"
+},
+"common_settings_drive_network_usage_wifi": {
+"res": "bullhead:PrebuiltGmsCore:common_settings_drive_network_usage_wifi",
+"en": "Over Wi-Fi only",
+"hu": "Csak Wi-Fi-hálózaton",
+"de": "Nur über WLAN",
+"fr": "Via le Wi-Fi uniquement",
+"es": "Solo por Wi-Fi"
+},
+"common_mdm_feature_name": {
+"res": "bullhead:PrebuiltGmsCore:common_mdm_feature_name",
+"en": "Android Device Manager",
+"hu": "Android Eszközkezelő",
+"de": "Android Geräte-Manager",
+"fr": "Gestionnaire d'appareils Android",
+"es": "Administrador de dispositivos"
+},
+"mdm_settings_locate_title": {
+"res": "bullhead:PrebuiltGmsCore:mdm_settings_locate_title",
+"en": "Remotely locate this device",
+"hu": "Az eszköz távoli meghatározása",
+"de": "Remote-Ortung für dieses Gerät durchführen",
+"fr": "Localiser cet appareil à distance",
+"es": "Ubicar este dispositivo de forma remota"
+},
+"mdm_settings_locate_summary": {
+"res": "bullhead:PrebuiltGmsCore:mdm_settings_locate_summary",
+"en": "Show device location on Android Device Manager",
+"hu": "Eszköz helyének megjelenítése az Android Eszközkezelőben",
+"de": "Gerätestandort im Android Geräte-Manager anzeigen",
+"fr": "Afficher la position de l'appareil dans le Gestionnaire d'appareils Android",
+"es": "Mostrar ubicación del dispositivo en el Administrador de dispositivos Android"
+},
+"mdm_settings_system_locate_disabled_summary": {
+"res": "bullhead:PrebuiltGmsCore:mdm_settings_system_locate_disabled_summary",
+"en": "Unavailable because Settings > Location is turned off",
+"hu": "Nem érhető el, mert a Beállítások > Helyadatok elem ki van kapcsolva",
+"de": "Nicht verfügbar, weil \"Einstellungen\" > \"Standort\" deaktiviert ist",
+"fr": "Indisponible, car l'option figurant sous Paramètres > Position est désactivée.",
+"es": "No disponible porque la opción Ajustes > Ubicación está desactivada"
+},
+"mdm_settings_wipe_title": {
+"res": "bullhead:PrebuiltGmsCore:mdm_settings_wipe_title",
+"en": "Allow remote lock and erase",
+"hu": "Távoli zárolás és törlés engedélyezése",
+"de": "Remote-Sperre und Löschen zulassen",
+"fr": "Autoriser verrouillage et suppression des données à distance",
+"es": "Permitir borrado y bloqueo remotos"
+},
+"mdm_settings_wipe_summary": {
+"res": "bullhead:PrebuiltGmsCore:mdm_settings_wipe_summary",
+"en": "If you lose your device, you can remotely lock or factory reset it with Android Device Manager",
+"hu": "Ha elveszíti eszközét, az Android Eszközkezelővel távolról zárolhatja azt, illetve visszaállíthatja rajta a gyári beállításokat.",
+"de": "Wenn Sie Ihr Gerät verlieren, können Sie es mit dem Android Geräte-Manager per Remote-Zugriff sperren oder auf die Werkseinstellungen zurücksetzen.",
+"fr": "Si vous égarez votre appareil, vous pouvez le verrouiller ou le réinitialiser à distance grâce au Gestionnaire d'appareils Android.",
+"es": "Si pierdes tu dispositivo, puedes bloquearlo o restablecer los datos de fábrica de forma remota con el Administrador de dispositivos Android"
+},
+"verify_apps_section_title": {
+"res": "bullhead:PrebuiltGmsCore:verify_apps_section_title",
+"en": "Verify apps",
+"hu": "Alkalmazások ellenőrzése",
+"de": "Apps überprüfen",
+"fr": "Valider les applications",
+"es": "Verificar aplicaciones"
+},
+"verify_apps_title": {
+"res": "bullhead:PrebuiltGmsCore:verify_apps_title",
+"en": "Scan device for security threats",
+"hu": "Ellenőrzés biztonsági veszélyek szempontjából",
+"de": "Gerät nach Sicherheitsbedrohungen durchsuchen",
+"fr": "Analyser appareil pour détecter menaces de sécurité",
+"es": "Buscar amenazas de seguridad en el dispositivo"
+},
+"verify_apps_summary": {
+"res": "bullhead:PrebuiltGmsCore:verify_apps_summary",
+"en": "Regularly check device activity and prevent or warn about potential harm",
+"hu": "Eszköztevékenység rendszeres ellenőrzése és a potenciális veszélyek megelőzése, illetve értesítés küldése ezekről",
+"de": "Geräteaktivität regelmäßig überprüfen und vor potenziellen Schäden warnen oder diese verhindern",
+"fr": "Vérifier régulièrement l'activité de l'appareil pour empêcher tout dommage ou vous en avertir",
+"es": "Comprobar de forma regular la actividad del dispositivo y avisar sobre posibles daños y evitarlos"
+},
+"security_help": {
+"res": "bullhead:PrebuiltGmsCore:security_help",
+"en": "Help & feedback",
+"hu": "Súgó és visszajelzés",
+"de": "Hilfe & Feedback",
+"fr": "Aide et commentaires",
+"es": "Ayuda y sugerencias"
+},
+"security_settings_activity_title": {
+"res": "bullhead:PrebuiltGmsCore:security_settings_activity_title",
+"en": "Security",
+"hu": "Biztonság",
+"de": "Sicherheit",
+"fr": "Sécurité",
+"es": "Seguridad"
+},
+"framework/ok": {
+"res": "bullhead:framework:ok",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"framework/cancel": {
+"res": "bullhead:framework:cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
 }
 });

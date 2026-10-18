@@ -96,5 +96,29 @@ MM.strings('playmusic', {
 "de": "Du hast noch keine Playlists.",
 "fr": "Vous n'avez encore aucune playlist.",
 "es": "Aún no tienes playlists."
+},
+"search": {
+"res": "bullhead:Music2:search",
+"en": "Search",
+"hu": "Keresés",
+"de": "Suchen",
+"fr": "Rechercher",
+"es": "Buscar"
+},
+"empty_screen_search": {
+"res": "bullhead:Music2:empty_screen_search",
+"en": "No results found",
+"hu": "Nincs találat",
+"de": "Keine Ergebnisse gefunden",
+"fr": "Aucun résultat trouvé",
+"es": "No se han encontrado resultados"
+},
+"empty_search_screen_helper_text": {
+"res": "bullhead:Music2:empty_search_screen_helper_text",
+"en": "Search for any artist, song, genre, activity, and more",
+"hu": "Keresés bármely előadóra, dalra, műfajra, tevékenységre vagy egyebekre.",
+"de": "Du kannst nach beliebigen Interpreten, Titeln, Genres, Aktivitäten und mehr suchen.",
+"fr": "Recherchez un artiste, un titre, un genre, une activité, etc.",
+"es": "Busca cualquier artista, canción, género, actividad y mucho más"
 }
 });

@@ -41,6 +41,17 @@
     <h2>Five apps to try this week</h2><p>From photo editing to note taking, a few favourites from the Play Store.</p><p>${link(RETRO, 'Visit The 2016 Web')}</p></div>`});
   const retro = () => ({title: 'The 2016 Web', secure: false, html: `<div class="mmwb-retro"><h1>Welcome to the 2016 Web</h1><p>A little time capsule from the age of Material design and mobile-first sites.</p><ul><li>Responsive pages</li><li>Cards everywhere</li><li>Hamburger menus</li></ul><p>${link(GOOGLE, 'Back to Google')}</p></div>`});
 
+  // My Account (myaccount.google.com): the pages Google Settings' account rows open; the simulator's own short page.
+  const ACCOUNT_PAGES = {security: ['Sign-in & security', 'Control your password and account access, along with backup options if you get locked out of your account.'],
+    privacy: ['Personal info & privacy', 'Manage your visibility settings and the data we use to personalize your experience.'],
+    preferences: ['Account preferences', 'Set language, accessibility and other settings that help you use Google.'],
+    ads: ['Ads Settings', 'Control the information Google uses to show you ads.'],
+    games: ['Google Play Games', 'Games can send you notifications about multiplayer invitations, quests and gifts.']};
+  function myaccount(u) {
+    const sec = (/myaccount\.google\.com\/(\w+)/.exec(u) || [])[1], [title, text] = ACCOUNT_PAGES[sec] || ['My Account', 'Control, protect and secure your account, all in one place.'];
+    return {title: `${title} – My Account`, secure: true, html: `<div class="mmwb-acct"><div class="mmwb-abar2">${logo('small')}<b>My Account</b></div><h1>${esc(title)}</h1><p>${esc(text)}</p>
+      <div class="mmwb-acard"><b>nexus5x.demo@gmail.com</b><span>Demo account · offline</span></div><p class="mmwb-date">Offline demo pages · 2016</p></div>`};
+  }
   function normalize(text) {
     const s = String(text || '').trim();
     if (!s) return '';
@@ -55,6 +66,7 @@
     if (/^https:\/\/en\.(m\.)?wikipedia\.org\/wiki\/Android/.test(u)) return {url: WIKI, ...wiki()};
     if (/^http:\/\/news\.example\/?$/.test(u)) return {url: NEWS, ...news()};
     if (/^http:\/\/retro\.example\/?$/.test(u)) return {url: RETRO, ...retro()};
+    if (/^https:\/\/myaccount\.google\.com\//.test(u)) return {url: u, ...myaccount(u)};
     return null;
   }
   MM.web = {page, normalize, GOOGLE};
