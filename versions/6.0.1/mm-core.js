@@ -148,6 +148,8 @@
     render();
   }
   function back() {
+    // An open input method takes Back first (InputMethodService.onKeyDown hides itself).
+    if (window.MM.ime?.back?.()) return;
     if (ui.overlay) { if (!modules[ui.overlay]?.back?.(c)) { ui.overlay = ''; renderOverlay(); } return; }
     if (modules[ui.view]?.back?.(c)) return;
     if (ui.view === 'home' || ui.view === 'lock') return;

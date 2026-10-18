@@ -91,7 +91,7 @@
   MM.register('navbar', {
     render(c) {
       const key = (id, img, label) => `<button type="button" class="mmnb-key" data-key="${id}" aria-label="${c.safe(c.t(label))}"><i class="mmnb-ripple"></i><img src="${A(`${img}.png`)}" alt=""></button>`;
-      return `<div class="mmnb"><span class="mmnb-side"></span>${key('back', 'ic_sysbar_back', 'Back')}<span class="mmnb-gap"></span>${key('home', 'ic_sysbar_home', 'Home')}<span class="mmnb-gap"></span>${key('recents', 'ic_sysbar_recent', 'Overview')}<span class="mmnb-side"></span></div>`;
+      return `<div class="mmnb"><span class="mmnb-side"></span>${key('back', MM.ime?.open() ? 'ic_sysbar_back_ime' : 'ic_sysbar_back', 'Back')}<span class="mmnb-gap"></span>${key('home', 'ic_sysbar_home', 'Home')}<span class="mmnb-gap"></span>${key('recents', 'ic_sysbar_recent', 'Overview')}<span class="mmnb-side"></span></div>`;
     },
     mount(c, root) {
       for (const el of root.querySelectorAll('.mmnb-key')) {

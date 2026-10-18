@@ -1,0 +1,24 @@
+/* Google Keyboard 4.1, LXX Light (mm-ime.js), in dp: 1080 px = 411.43 dp wide, 539 px keyboard + the 40 dp strip. */
+.screen.ime #viewport{bottom:calc(48 * var(--dp) + var(--ime-h))}
+.mmime{position:absolute;left:0;right:0;bottom:calc(48 * var(--dp));z-index:15;font-family:Roboto,sans-serif;touch-action:none;user-select:none}
+.mmime-strip{position:relative;display:flex;align-items:center;height:calc(40 * var(--dp));padding:0 calc(36 * var(--dp));background-color:#eceff1}
+.mmime-strip span{flex:1;min-width:calc(44 * var(--dp));padding:0 calc(6 * var(--dp));color:rgba(55,71,79,.851);font-size:calc(18 * var(--dp));text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mmime-strip span.mid{flex:none;width:36%}
+.mmime-strip .div{flex:none;width:1px;height:50%;background:url('assets/ime-suggestions_strip_divider_lxx_light.png') center/100% 100%}
+.mmime-voice{position:absolute;right:0;top:0;width:calc(36 * var(--dp));height:100%;padding:0;border:0;background:none;display:grid;place-items:center}
+.mmime-voice img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.mmime-voice.down{background:rgba(55,71,79,.149)}
+.mmime-kb{position:relative;height:calc(205.333 * var(--dp));background-color:#eceff1}
+.mmime-key{position:absolute;display:grid;place-items:center;padding:0;border:0;background:none;color:#37474f;font-family:Roboto,sans-serif}
+.mmime-key.down{background-color:rgba(55,71,79,.149)}
+.mmime-key b{font:400 calc(20.952 * var(--dp))/1 Roboto,sans-serif}
+.mmime-key span{color:rgba(55,71,79,.8);font:500 calc(12.952 * var(--dp))/1 Roboto,sans-serif}
+.mmime-key i{grid-area:1/1;width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:var(--ic) center/contain no-repeat}
+.mmime-key.space{padding:calc(8 * var(--dp)) 0}
+.mmime-key.space u{width:100%;height:100%}
+.mmime-key.space.down u{border-image-source:url('assets/ime-btn_keyboard_spacebar_pressed_lxx_light.9.png')}
+.mmime-key.space.down,.mmime-key.act.down{background-color:transparent}
+.mmime-key.act u{grid-area:1/1;width:calc(38.095 * var(--dp));height:calc(38.095 * var(--dp));background:url('assets/ime-btn_keyboard_key_active_lxx_light.9.png') center/100% no-repeat}
+.mmime-key.act.down u{background-image:url('assets/ime-btn_keyboard_key_active_pressed_lxx_light.9.png')}
+.mmime-preview{position:absolute;display:flex;justify-content:center;padding-top:calc(14 * var(--dp));color:#37474f;font-family:Roboto,sans-serif;line-height:1;pointer-events:none;z-index:2}
+.mmime-preview[hidden]{display:none}

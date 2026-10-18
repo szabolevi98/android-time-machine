@@ -57,7 +57,7 @@
     const menu = `<button type="button" class="mmcr-menu" data-action="mmcr-menu" aria-label="${esc(c, t.t('accessibility_toolbar_btn_menu'))}"><img src="${A('btn_menu')}" alt=""></button>`;
     if (cur === NTP && !u.editing) return `<div class="mmcr-toolbar ntp">${menu}</div>`;
     let field;
-    if (u.editing) field = `<img class="mmcr-nav" src="${A('ic_omnibox_magnifier')}" alt=""><form class="mmcr-form" data-form="mmcr-omnibox"><input class="mmcr-input" name="q" value="${esc(c, u.text)}" placeholder="${esc(c, t.t('search_or_type_url'))}" autocomplete="off" spellcheck="false" inputmode="url"></form>${u.text ? `<button type="button" class="mmcr-del" data-action="mmcr-clear"><img src="${A('btn_delete_url')}" alt=""></button>` : ''}`;
+    if (u.editing) field = `<img class="mmcr-nav" src="${A('ic_omnibox_magnifier')}" alt=""><form class="mmcr-form" data-form="mmcr-omnibox"><input class="mmcr-input" enterkeyhint="go" name="q" value="${esc(c, u.text)}" placeholder="${esc(c, t.t('search_or_type_url'))}" autocomplete="off" spellcheck="false" inputmode="url"></form>${u.text ? `<button type="button" class="mmcr-del" data-action="mmcr-clear"><img src="${A('btn_delete_url')}" alt=""></button>` : ''}`;
     else {
       const [, scheme, h, rest] = host(cur), secure = /^https:/.test(cur);
       const shown = p ? `<b>${esc(c, secure ? 'https://' : '')}${esc(c, h)}</b>${esc(c, rest === '/' ? '' : rest)}` : `${esc(c, h)}${esc(c, rest === '/' ? '' : rest)}`;
