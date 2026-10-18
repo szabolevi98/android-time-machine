@@ -1,0 +1,31 @@
+/* Downloads, Android Pay, Project Fi, Device Policy (mm-smallapps.js), in dp. */
+.mmsa{position:absolute;inset:0;display:flex;flex-direction:column;background:#fff;color:#212121;font-family:Roboto,sans-serif;overflow:hidden}
+.mmsa-bar{flex:none;position:relative;z-index:3;display:flex;align-items:center;height:calc(56 * var(--dp));padding-right:calc(4 * var(--dp));color:#212121;box-shadow:0 calc(1 * var(--dp)) calc(3 * var(--dp)) rgba(0,0,0,.2)}
+.mmsa-bar.dark{color:#fff}
+.mmsa-title{flex:1;min-width:0;padding-left:calc(16 * var(--dp));font:500 calc(20 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mmsa-btn{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;border-radius:50%;background:none;display:grid;place-items:center}
+.mmsa-bar>.mmsa-btn:first-child{width:calc(56 * var(--dp));height:calc(56 * var(--dp))}
+.mmsa-btn img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.mmsa-bar.dark .mm-overflow img{filter:invert(1)}
+.mmsa-bar:not(.dark) .mm-overflow img{filter:invert(.46)}
+.mmsa-logo{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-left:calc(16 * var(--dp))}
+.mmsa-page{flex:1;min-height:0;overflow-y:auto}
+.mmsa-page.grey{background:#fafafa}
+.mmsa-empty{display:grid;place-items:center;height:100%;color:rgba(0,0,0,.54);font-size:calc(16 * var(--dp))}
+.mmsa-scrim{position:absolute;inset:0;z-index:10;background:rgba(0,0,0,.5)}
+.mmsa-roots{position:absolute;z-index:11;left:0;top:0;bottom:0;width:calc(256 * var(--dp));background:#fff;animation:mmsa-in .2s cubic-bezier(.4,0,.2,1)}
+@keyframes mmsa-in{from{transform:translateX(-100%)}}
+.mmsa-rbar{height:calc(56 * var(--dp));background:#37474f;margin-bottom:calc(8 * var(--dp))}
+.mmsa-root{display:flex;align-items:center;gap:calc(32 * var(--dp));width:100%;height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;color:#212121;font:calc(16 * var(--dp)) Roboto,sans-serif;text-align:left}
+.mmsa-root.on{background:rgba(0,150,136,.12);color:#009688}
+.mmsa-root img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));filter:invert(.4)}
+.mmsa-pay{display:flex;flex-direction:column;align-items:center;gap:calc(24 * var(--dp));padding:calc(48 * var(--dp)) calc(24 * var(--dp));text-align:center}
+.mmsa-pay img{width:calc(240 * var(--dp))}
+.mmsa-pay b{font-weight:400;font-size:calc(18 * var(--dp));color:#616161}
+.mmsa-fab{position:absolute;right:calc(16 * var(--dp));bottom:calc(16 * var(--dp));width:calc(56 * var(--dp));height:calc(56 * var(--dp));padding:0;border:0;border-radius:50%;background:#4285f4;box-shadow:0 calc(3 * var(--dp)) calc(6 * var(--dp)) rgba(0,0,0,.3);display:grid;place-items:center}
+.mmsa-fab img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));filter:brightness(0) invert(1)}
+.mmsa-text{padding:calc(16 * var(--dp)) calc(24 * var(--dp))}
+.mmsa-text h1{margin:calc(16 * var(--dp)) 0;font:400 calc(24 * var(--dp)) Roboto,sans-serif}
+.mmsa-text p{margin:calc(11 * var(--dp)) 0 calc(14 * var(--dp));font-size:calc(16 * var(--dp));line-height:1.4;color:#424242}
+.mmsa-foot{flex:none;display:flex;justify-content:flex-end;border-top:1px solid #ccc}
+.mmsa-foot button{height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;color:#212121;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}

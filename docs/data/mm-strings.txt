@@ -209,3 +209,10 @@ wishlist_is_empty
 games_app_launcher_name games_dest_nav_drawer_home games_dest_nav_drawer_my_games games_dest_nav_drawer_inbox
 games_dest_nav_drawer_players games_dest_nav_drawer_recommended_games games_dest_nav_drawer_settings
 games_dest_nav_drawer_help
+[smallapps] DocumentsUI DownloadProvider Wallet Tycho DMAgent framework
+# Downloads (DocumentsUI's Downloads root), Android Pay 1.0, Project Fi, Device Policy
+DownloadProvider/root_downloads DocumentsUI/empty DocumentsUI/root_recent DocumentsUI/menu_sort DocumentsUI/sort_name
+DocumentsUI/sort_date DocumentsUI/sort_size DocumentsUI/menu_grid DocumentsUI/menu_list DocumentsUI/menu_search
+DocumentsUI/menu_advanced_show Wallet/application_name Wallet/action_add_payment_card Wallet/add_payment_card_headline
+Wallet/menu_item_warm_welcome Tycho/app_name Tycho/activation_error_title Tycho/activation_error_account_setup
+DMAgent/main_title DMAgent/introduction_text DMAgent/info_shared_admin DMAgent/next_button_label
