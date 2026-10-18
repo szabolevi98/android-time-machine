@@ -119,6 +119,10 @@
        height in 225 ms (fast_out_linear_in) over the home screen.
      - reveal: the window grows out of the icon (open's from), the home screen staying under it.
      - unreveal: the apps drawer closes back into the all apps button (Launcher3's reveal run backwards).
+     - to-recents: the app's window shrinks into its card in Overview (recents_enter_from_app_transition_duration
+       325 ms, the thumbnail scale-down); zoom: a card tapped in Overview grows into its window (open's zoom option);
+       recents-home: Overview's cards drop away (TaskView.startExitToHomeAnimation: recents_task_exit_to_home_duration
+       225 ms, fast_out_linear_in) over the home screen.
      Opening another screen, Back, Home and a module's own page change (module.page(c): a path such as 'xml:display/
      battery', deeper = longer) choose the animation; a module can ask for one with c.transition(kind). */
   const E = {decQuart: 'cubic-bezier(.165,.84,.44,1)', decQuint: 'cubic-bezier(.23,1,.32,1)', accQuart: 'cubic-bezier(.895,.03,.685,.22)', fosi: 'cubic-bezier(.4,0,.2,1)', losi: 'cubic-bezier(0,0,.2,1)', foli: 'cubic-bezier(.4,0,1,1)'};
@@ -138,10 +142,11 @@
       return depth(page) < depth(shown.page) || shown.page.startsWith(`${page}/`) ? 'close' : 'open';
     }
     if (from === 'drawer' && to === 'home') return 'unreveal';
-    if (to === 'home') return SYSTEM.includes(from) ? '' : 'home';
+    if (to === 'home') return from === 'recents' ? 'recents-home' : SYSTEM.includes(from) ? '' : 'home';
+    if (to === 'recents') return SYSTEM.includes(from) ? '' : 'to-recents';
+    if (reveal) return reveal.zoom ? 'zoom' : 'reveal';
     if (SYSTEM.includes(from) && from !== 'home' && from !== 'drawer') return '';
     if (SYSTEM.includes(to)) return '';
-    if (reveal) return 'reveal';
     return ui.backing ? 'close' : 'open';
   }
   // The leaving window: the old viewport element stays where it was (scroll positions and all), the new one takes its
@@ -154,7 +159,8 @@
     }
     old.removeAttribute('id'); old.classList.add('mm-leaving');
     Object.assign(old.style, {position: 'absolute', left: '0', right: '0', top: `${top}px`, height: `${height}px`, overflow: 'hidden', pointerEvents: 'none'});
-    if (kind === 'open' || kind === 'reveal') old.after(fresh); else old.before(fresh);
+    if (kind === 'open' || kind === 'reveal' || kind === 'zoom') old.after(fresh); else old.before(fresh);
+    if (kind === 'recents-home') old.style.background = 'none';
     viewport = fresh;
     return old;
   }
@@ -184,6 +190,25 @@
       const at = cs ? `at ${cs.getPropertyValue('--rx').trim()} ${cs.getPropertyValue('--ry').trim()}` : 'at 50% 100%';
       (panel || old).animate([{clipPath: `circle(150% ${at})`}, {clipPath: `circle(0px ${at})`}], {duration: 250, easing: E.fosi, ...fwd});
       done(250);
+    } else if (kind === 'to-recents') {
+      const card = [...viewport.querySelectorAll('.mmrc-task')].pop(), ob = old.getBoundingClientRect();
+      if (!card) { old.animate([{opacity: 1}, {opacity: 0}], {duration: 150, ...fwd}); done(150); return; }
+      const r = card.getBoundingClientRect(), k = r.width / ob.width, bar = 24 * screen.clientWidth / 411.4286;
+      old.style.transformOrigin = '0 0';
+      old.animate([{transform: 'none'}, {transform: `translate(${r.left - ob.left}px, ${r.top + bar * k - ob.top}px) scale(${k})`}], {duration: 325, easing: E.fosi, ...fwd});
+      card.style.visibility = 'hidden';
+      setTimeout(() => { card.style.visibility = ''; old.remove(); }, 325);
+    } else if (kind === 'zoom' && reveal) {
+      const vb = viewport.getBoundingClientRect(), k = reveal.width / vb.width, bar = 24 * screen.clientWidth / 411.4286;
+      viewport.style.transformOrigin = '0 0';
+      viewport.animate([{transform: `translate(${reveal.left - vb.left}px, ${reveal.top + bar * k - vb.top}px) scale(${k})`}, {transform: 'none'}], {duration: 325, easing: E.fosi});
+      setTimeout(() => { viewport.style.transformOrigin = ''; }, 330);
+      done(325);
+    } else if (kind === 'recents-home') {
+      const h = old.getBoundingClientRect();
+      for (const card of old.querySelectorAll('.mmrc-task')) card.animate([{translate: card.style.translate || '0 0'}, {translate: `0 ${h.bottom - card.getBoundingClientRect().top}px`}], {duration: 225, easing: E.foli, ...fwd});
+      for (const el of old.querySelectorAll('.mmrc-search,.mmrc-top,.mmrc-bottom,.mmrc-empty')) el.animate([{opacity: 1}, {opacity: 0}], {duration: 150, ...fwd});
+      done(225);
     } else old.remove();
   }
   function render() {
@@ -236,14 +261,15 @@
 
   // Opening a screen: an app goes to the front of the recent list (Overview keeps every task; trimmed here at 20).
   // from: an element the screen opens out of (the launcher's ActivityOptions.makeClipRevealAnimation from the icon).
-  function open(view, sub = '', {replace = false, from = null} = {}) {
+  function open(view, sub = '', {replace = false, from = null, zoom = false} = {}) {
     if (ui.view !== view && !replace && ui.view !== 'home' && ui.view !== 'lock') ui.history.push({view: ui.view, sub: ui.sub});
     ui.view = view; ui.sub = sub; ui.overlay = '';
     if (modules[view]?.app !== false && SCREENS[view] && !SYSTEM.includes(view)) ui.recent = [view, ...ui.recent.filter(id => id !== view)].slice(0, 20);
     // The launcher's predicted apps follow what was opened last (kept with the saved state).
     if (window.MM.appsData?.[view]) { data.recentApps = [view, ...(data.recentApps || []).filter(id => id !== view)].slice(0, 12); save(); }
     // AppTransition's clip reveal: the window grows out of the icon's bounds (fast out, slow in).
-    reveal = from?.getBoundingClientRect?.() || null;
+    const box = from?.getBoundingClientRect?.();
+    reveal = box ? {left: box.left, top: box.top, right: box.right, bottom: box.bottom, width: box.width, height: box.height, zoom} : null;
     render();
   }
   function home() {

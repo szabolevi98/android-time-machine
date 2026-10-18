@@ -92,7 +92,7 @@
 
   function render(c) {
     const list = tasks(c);
-    if (!c.ui.recentsState) c.ui.recentsState = {scroll: progressList(list).initial};
+    if (!c.ui.recentsState) c.ui.recentsState = {scroll: progressList(list).initial, fresh: true};
     return `<div class="mmrc"><div class="mmrc-search np-gel-search_bg"><button type="button" class="mmrc-plate" data-action="mmrc-search"><img src="assets/gel-ic_searchbox_google.png" alt="Google"></button><span class="mmrc-mic"></span></div>
       <div class="mmrc-stack">${cards(c)}</div><i class="mmrc-top np-sui-recents_status_gradient"></i><i class="mmrc-bottom np-sui-recents_lower_gradient"></i></div>`;
   }
@@ -101,6 +101,17 @@
 
   function mount(c, root) {
     const el = root.querySelector('.mmrc'); if (!el) return;
+    // From the home screen the cards rise from below the stack (TaskView.startEnterRecentsAnimation, launchedFromHome):
+    // each after recents_enter_from_home_transition_duration 100 ms plus 12 ms (recents_task_enter_from_home_stagger_delay)
+    // per task in front of it, over 225 ms plus the same, decelerating (quint out).
+    if (c.ui.prevView === 'home' && c.ui.recentsState.fresh && el.animate) {
+      const list = [...el.querySelectorAll('.mmrc-task')], bottom = el.getBoundingClientRect().bottom;
+      list.forEach((card, i) => {
+        const front = list.length - i - 1, dy = bottom - card.getBoundingClientRect().top;
+        card.animate([{translate: `0 ${dy}px`}, {translate: '0 0'}], {duration: 225 + front * 12, delay: 100 + front * 12, easing: 'cubic-bezier(.23,1,.32,1)', fill: 'backwards'});
+      });
+    }
+    c.ui.recentsState.fresh = false;
     const k = () => c.el.screen.clientWidth / W;   // css px per window px
     let drag = null;
     // The pointer is captured, so a drag that leaves the stack (or ends over the bars) still ends; pictures are not
@@ -174,7 +185,11 @@
     card.style.pointerEvents = 'none';
     card.animate([{translate: from, opacity: card.style.opacity || 1}, {translate: `${side * (c.el.viewport.clientWidth + 20)}px 0`, opacity: 0}], {duration: 150, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards'}).finished.then(finish, finish);
   }
-  function open(c, id) { c.ui.recentsState = null; c.open(id, c.ui.thumbs?.[id]?.sub || '', {replace: true}); }
+  // A task opens out of its card (mm-core.js 'zoom').
+  function open(c, id) {
+    const card = c.el.viewport.querySelector(`.mmrc-task[data-task="${CSS.escape(id)}"]`);
+    c.ui.recentsState = null; c.open(id, c.ui.thumbs?.[id]?.sub || '', {replace: true, from: card, zoom: !!card});
+  }
   function front(c) { const list = tasks(c); if (list.length) open(c, list[list.length - 1]); else c.home(); }
 
   MM.register('recents', {
