@@ -160,5 +160,93 @@ MM.strings('google', {
 "de": "Google Now",
 "fr": "Google Now",
 "es": "Google Now"
+},
+"search_settings": {
+"res": "bullhead:Velvet:search_settings",
+"en": "Settings",
+"hu": "Beállítások",
+"de": "Einstellungen",
+"fr": "Paramètres",
+"es": "Ajustes"
+},
+"homescreen_settings_header_category": {
+"res": "bullhead:Velvet:homescreen_settings_header_category",
+"en": "Home screen",
+"hu": "Kezdőképernyő",
+"de": "Startbildschirm",
+"fr": "Écran d'accueil",
+"es": "Pantalla de inicio"
+},
+"homescreen_settings_show_predictions": {
+"res": "bullhead:Velvet:homescreen_settings_show_predictions",
+"en": "App suggestions",
+"hu": "Alkalmazásjavaslatok",
+"de": "App-Vorschläge",
+"fr": "Suggestions d'applications",
+"es": "Sugerencias de aplicaciones"
+},
+"allow_rotation_title": {
+"res": "bullhead:Velvet:allow_rotation_title",
+"en": "Allow rotation",
+"hu": "Elforgatás engedélyezése",
+"de": "Drehung zulassen",
+"fr": "Autoriser la rotation",
+"es": "Permitir rotación"
+},
+"header_category_search_and_now": {
+"res": "bullhead:Velvet:header_category_search_and_now",
+"en": "Search & Now",
+"hu": "Keresés és Asszisztens",
+"de": "Suche & Google Now",
+"fr": "Recherche et Now",
+"es": "Búsqueda y Google Now"
+},
+"account_settings": {
+"res": "bullhead:Velvet:account_settings",
+"en": "Accounts & privacy",
+"hu": "Fiókok és adatvédelem",
+"de": "Konten & Datenschutz",
+"fr": "Comptes et confidentialité",
+"es": "Cuentas y privacidad"
+},
+"search_language": {
+"res": "bullhead:Velvet:search_language",
+"en": "Search language",
+"hu": "Nyelv keresése",
+"de": "Sprache für die Suche",
+"fr": "Langue de la recherche",
+"es": "Idioma de búsqueda"
+},
+"voice_settings": {
+"res": "bullhead:Velvet:voice_settings",
+"en": "Voice",
+"hu": "Hang",
+"de": "Sprache",
+"fr": "Voix",
+"es": "Voz"
+},
+"search_sources": {
+"res": "bullhead:Velvet:search_sources",
+"en": "Phone search",
+"hu": "Keresés a telefonon",
+"de": "Suche im Telefon",
+"fr": "Recherche sur le téléphone",
+"es": "Búsqueda en teléfono"
+},
+"now_cards": {
+"res": "bullhead:Velvet:now_cards",
+"en": "Now cards",
+"hu": "Asszisztens kártyák",
+"de": "Now-Karten",
+"fr": "Cartes Now",
+"es": "Tarjetas Now"
+},
+"about": {
+"res": "bullhead:Velvet:about",
+"en": "About",
+"hu": "Névjegy",
+"de": "Info",
+"fr": "À propos",
+"es": "Información"
 }
 });

@@ -222,6 +222,8 @@ type_or_tap_mic speak_now now_opt_in_card_title now_opt_in_card_description opt_
 my_reminders customize menu_settings help_and_feedback first_run_welcome first_run_swipe first_run_done
 assist_optin_title assist_optin_body assist_optin_learn_more_text assist_optin_decline assist_optin_accept
 no_results_found_status assist_layer_to_now
+search_settings homescreen_settings_header_category homescreen_settings_show_predictions allow_rotation_title
+header_category_search_and_now account_settings search_language voice_settings search_sources now_cards about
 [widgets] Velvet CalendarGooglePrebuilt Chrome Drive Hangouts Maps Music2 PrebuiltBugle PrebuiltDeskClockGoogle PrebuiltGmail Phonesky Settings GoogleContacts framework
 # The launcher's widgets list (Launcher3 in Velvet 5.3.27) and the labels of the image's widget providers and shortcuts
 Velvet/widget_dims_format Velvet/long_press_widget_to_add Velvet/out_of_space Velvet/widget_button_text

@@ -610,6 +610,7 @@ versions/6.0.1/assets/vv-context_header_bg_daylight.jpg	ba3e657cc2ac9643	copy	bu
 versions/6.0.1/assets/vv-context_header_bg_dusk.jpg	aac0aad6bfd0cfa1	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/context_header_bg_dusk.jpg	drawable-nodpi-v4		aac0aad6bfd0cfa1
 versions/6.0.1/assets/vv-context_header_bg_twilight.jpg	51986f68d57fffda	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/context_header_bg_twilight.jpg	drawable-nodpi-v4		51986f68d57fffda
 versions/6.0.1/assets/vv-ic_actionbar_accept.png	ddf65985aefe51ed	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_actionbar_accept.png	drawable-xxhdpi-v4		ddf65985aefe51ed
+versions/6.0.1/assets/vv-ic_arrow_back.png	9817c5d907f46d3a	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_arrow_back.png	drawable-xxhdpi-v4		9817c5d907f46d3a
 versions/6.0.1/assets/vv-ic_images.png	431958254f957dbc	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_images.png	drawable-xxhdpi-v4		431958254f957dbc
 versions/6.0.1/assets/vv-ic_tick.svg	549ff548f6d76436	vector	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-v21/ic_tick.xml	drawable-v21	vector drawable drawn as SVG	932646c014b9700b
 versions/6.0.1/assets/vv-optin_minicard_ic_flight.png	9043a9e1f9f98de4	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/optin_minicard_ic_flight.png	drawable-nodpi-v4		9043a9e1f9f98de4

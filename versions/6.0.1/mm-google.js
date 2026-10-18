@@ -99,3 +99,34 @@
     }
   });
 })();
+/* The Google app's settings (com.google.android.velvet.ui.settings.SettingsActivity, Theme.Settings), the screen
+   'home-settings': the launcher's Settings button and the app's own menu open it. Theme.Gsa.ActionBar: the toolbar in
+   qp_blue #4285f4 (status bar qp_blue_dark #356ac3) with ic_arrow_back and search_settings; the headers of
+   preferences_launcher.xml (Home screen: App suggestions and Allow rotation, both switches; GEL shows them while it is
+   the home app) then preferences_headers.xml (Search & Now: Accounts & privacy, Search language, Voice, Phone search,
+   Now cards, About; the Dogfood ones are hidden in release builds). Category titles are qp_preference_header (14 sp
+   bold qp_blue), titles qp_preference (16 sp qp_text_b1 #de000000). App suggestions turns the apps list's predicted
+   row on and off; rotation is kept but the simulator stays upright. */
+(() => {
+  'use strict';
+  const T = () => MM.text('google');
+  const esc = (c, s) => c.safe(s);
+  const LAUNCHER = [['launcherPredictions', 'homescreen_settings_show_predictions', true], ['launcherRotation', 'allow_rotation_title', false]];
+  const SEARCH = [['accounts', 'account_settings'], ['language', 'search_language'], ['voice', 'voice_settings'], ['sources', 'search_sources'], ['cards', 'now_cards'], ['about', 'about']];
+  MM.register('home-settings', {
+    statusColor: () => '#356ac3',
+    render(c) {
+      const t = T(), on = ([key, , def]) => c.data[key] ?? def;
+      const sw = row => `<button type="button" class="mmgs-row" data-action="mmgs-switch" data-key="${row[0]}"><span>${esc(c, t.t(row[1]))}</span><i class="mmw-switch${on(row) ? ' on' : ''}"><i class="mmw-thumb"></i></i></button>`;
+      const link = ([id, key]) => `<button type="button" class="mmgs-row" data-action="mmgs-open" data-id="${id}"><span>${esc(c, t.t(key))}</span></button>`;
+      return `<div class="mmgs"><div class="mmgs-bar"><button type="button" class="mmgs-up" data-action="mmgs-up"><img src="assets/vv-ic_arrow_back.png" alt=""></button><span>${esc(c, t.t('search_settings'))}</span></div>
+        <div class="mmgs-list"><div class="mmgs-cat">${esc(c, t.t('homescreen_settings_header_category'))}</div>${LAUNCHER.map(sw).join('')}<div class="mmgs-cat">${esc(c, t.t('header_category_search_and_now'))}</div>${SEARCH.map(link).join('')}</div></div>`;
+    },
+    action(name, el, event, c) {
+      if (name === 'mmgs-up') { c.back(); return true; }
+      if (name === 'mmgs-switch') { const row = LAUNCHER.find(r => r[0] === el.dataset.key); c.data[row[0]] = !(c.data[row[0]] ?? row[2]); c.save(); c.render(); return true; }
+      if (name === 'mmgs-open') { c.open(`missing-google-settings-${el.dataset.id}`); return true; }
+      return false;
+    }
+  });
+})();

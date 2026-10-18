@@ -33,7 +33,7 @@
     const st = c.ui.drawer, t = T(), q = st.query.trim();
     const list = apps(c).filter(id => matches(c, id, q));
     const recent = (c.data.recentApps || []).filter(id => MM.appsData[id]).slice(0, 4);
-    const predictions = !q && recent.length ? `<div class="mmd-row mmd-predicted">${recent.map(id => item(c, id)).join('')}</div><i class="mmd-divider"></i>` : '';
+    const predictions = !q && recent.length && c.data.launcherPredictions !== false ? `<div class="mmd-row mmd-predicted">${recent.map(id => item(c, id)).join('')}</div><i class="mmd-divider"></i>` : '';
     if (!list.length) return `<div class="mmd-empty">${c.safe(t.fmt('all_apps_no_search_results', null, q))}</div><button type="button" class="mmd-market" data-action="mmd-market">${c.safe(t.fmt('all_apps_search_market_message', null, MM.appLabel(c, 'play-store')))}</button>`;
     return `${predictions}<div class="mmd-grid">${list.map(id => item(c, id)).join('')}</div>`;
   }
