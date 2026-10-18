@@ -42,3 +42,18 @@
 .mmho-field{flex:1;min-width:0;padding:calc(12 * var(--dp)) 0;border:0;outline:0;resize:none;background:none;font:calc(16 * var(--dp)) Roboto,sans-serif;height:calc(44 * var(--dp));box-sizing:border-box}
 .mmho-send{width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center}
 .mmho-send img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+/* Invites / Archived empty states, the settings screens (.mmpf rows in Hangouts green), people search and a call. */
+.mmho-empty{display:flex;flex-direction:column;align-items:center;gap:calc(16 * var(--dp));padding:calc(64 * var(--dp)) calc(32 * var(--dp));color:rgba(0,0,0,.54);text-align:center}
+.mmho-empty img{width:calc(120 * var(--dp));height:auto;opacity:.6}
+.mmho-empty b{font-weight:400;font-size:calc(18 * var(--dp))}
+.mmho.mmpf .mmho-bar{flex:none}
+.mmho-di small{float:right;color:rgba(0,0,0,.54);font-size:calc(14 * var(--dp))}
+.mmho-sbar{flex:none;position:relative;z-index:2;display:flex;align-items:center;height:calc(56 * var(--dp));padding:0 calc(4 * var(--dp));background:#fff;box-shadow:0 calc(1 * var(--dp)) calc(3 * var(--dp)) rgba(0,0,0,.25)}
+.mmho-sfield{flex:1;min-width:0;margin-left:calc(12 * var(--dp));border:0;outline:0;background:none;color:rgba(0,0,0,.87);font:calc(18 * var(--dp)) Roboto,sans-serif}
+.mmho-search .mmho-page{background:#fff}
+.mmho-call{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(16 * var(--dp));background:#212121;color:#fff;font-family:Roboto,sans-serif}
+.mmho-cav{width:calc(120 * var(--dp));height:calc(120 * var(--dp))}
+.mmho-call>b{font-weight:400;font-size:calc(24 * var(--dp))}
+.mmho-end{position:absolute;bottom:calc(48 * var(--dp));left:50%;transform:translateX(-50%);width:calc(56 * var(--dp));height:calc(56 * var(--dp));padding:0;border:0;border-radius:50%;background:#db4437;display:grid;place-items:center;box-shadow:0 calc(3 * var(--dp)) calc(6 * var(--dp)) rgba(0,0,0,.3)}
+.mmho-end img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.mmho-title small{display:block;margin-top:calc(2 * var(--dp));color:#fff;font:400 calc(14 * var(--dp))/1.172 Roboto,sans-serif}

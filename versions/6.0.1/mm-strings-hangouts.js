@@ -19,6 +19,633 @@ MM.strings('hangouts', {
 "fr": "J’arrive !",
 "es": "¡Voy para allá!"
 },
+"invites_title": {
+"res": "bullhead:Hangouts:invites_title",
+"en": "Invites",
+"hu": "Invites",
+"de": "Invites",
+"fr": "Invites",
+"es": "Invites",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"no_invites_text": {
+"res": "bullhead:Hangouts:no_invites_text",
+"en": "No invites",
+"hu": "No invites",
+"de": "No invites",
+"fr": "No invites",
+"es": "No invites",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"archived_conversations_title": {
+"res": "bullhead:Hangouts:archived_conversations_title",
+"en": "Archived conversations",
+"hu": "Archived conversations",
+"de": "Archived conversations",
+"fr": "Archived conversations",
+"es": "Archived conversations",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"no_archived_conversations_text": {
+"res": "bullhead:Hangouts:no_archived_conversations_text",
+"en": "No archived conversations",
+"hu": "No archived conversations",
+"de": "No archived conversations",
+"fr": "No archived conversations",
+"es": "No archived conversations",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"dnd_dialog_title": {
+"res": "bullhead:Hangouts:dnd_dialog_title",
+"en": "Snooze notifications",
+"hu": "Snooze notifications",
+"de": "Snooze notifications",
+"fr": "Snooze notifications",
+"es": "Snooze notifications",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"dnd_off": {
+"res": "bullhead:Hangouts:dnd_off",
+"en": "Off",
+"hu": "Off",
+"de": "Off",
+"fr": "Off",
+"es": "Off",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"dnd_hours": {
+"res": "bullhead:Hangouts:dnd_hours",
+"en": {
+"other": "%d hours",
+"one": "1 hour"
+},
+"hu": {
+"other": "%d hours",
+"one": "1 hour"
+},
+"de": {
+"other": "%d hours",
+"one": "1 hour"
+},
+"fr": {
+"other": "%d hours",
+"one": "1 hour"
+},
+"es": {
+"other": "%d hours",
+"one": "1 hour"
+},
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"babel_settings_label": {
+"res": "bullhead:Hangouts:babel_settings_label",
+"en": "Settings",
+"hu": "Settings",
+"de": "Settings",
+"fr": "Settings",
+"es": "Settings",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"general_settings_preference_category": {
+"res": "bullhead:Hangouts:general_settings_preference_category",
+"en": "General settings",
+"hu": "General settings",
+"de": "General settings",
+"fr": "General settings",
+"es": "General settings",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"rich_status_share_your_status": {
+"res": "bullhead:Hangouts:rich_status_share_your_status",
+"en": "Share your status",
+"hu": "Share your status",
+"de": "Share your status",
+"fr": "Share your status",
+"es": "Share your status",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"status_settings_enabled": {
+"res": "bullhead:Hangouts:status_settings_enabled",
+"en": "Your status is visible to your contacts",
+"hu": "Your status is visible to your contacts",
+"de": "Your status is visible to your contacts",
+"fr": "Your status is visible to your contacts",
+"es": "Your status is visible to your contacts",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"status_settings_disabled": {
+"res": "bullhead:Hangouts:status_settings_disabled",
+"en": "Let your contacts know what you’re up to",
+"hu": "Let your contacts know what you’re up to",
+"de": "Let your contacts know what you’re up to",
+"fr": "Let your contacts know what you’re up to",
+"es": "Let your contacts know what you’re up to",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"rich_status_device": {
+"res": "bullhead:Hangouts:rich_status_device",
+"en": "Device",
+"hu": "Device",
+"de": "Device",
+"fr": "Device",
+"es": "Device",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"rich_status_device_summary": {
+"res": "bullhead:Hangouts:rich_status_device_summary",
+"en": "Show which device you're on (phone, tablet, computer)",
+"hu": "Show which device you're on (phone, tablet, computer)",
+"de": "Show which device you're on (phone, tablet, computer)",
+"fr": "Show which device you're on (phone, tablet, computer)",
+"es": "Show which device you're on (phone, tablet, computer)",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"rich_status_incall": {
+"res": "bullhead:Hangouts:rich_status_incall",
+"en": "In-call",
+"hu": "In-call",
+"de": "In-call",
+"fr": "In-call",
+"es": "In-call",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"rich_status_incall_summary_text": {
+"res": "bullhead:Hangouts:rich_status_incall_summary_text",
+"en": "Show when you're in a video or phone call on your devices",
+"hu": "Show when you're in a video or phone call on your devices",
+"de": "Show when you're in a video or phone call on your devices",
+"fr": "Show when you're in a video or phone call on your devices",
+"es": "Show when you're in a video or phone call on your devices",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"chat_notifications_preference_category": {
+"res": "bullhead:Hangouts:chat_notifications_preference_category",
+"en": "Notifications",
+"hu": "Notifications",
+"de": "Notifications",
+"fr": "Notifications",
+"es": "Notifications",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"chat_notification_enabled_title": {
+"res": "bullhead:Hangouts:chat_notification_enabled_title",
+"en": "Hangouts messages & invites",
+"hu": "Hangouts messages & invites",
+"de": "Hangouts messages & invites",
+"fr": "Hangouts messages & invites",
+"es": "Hangouts messages & invites",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"video_nofification_screen_title": {
+"res": "bullhead:Hangouts:video_nofification_screen_title",
+"en": "Video calls",
+"hu": "Video calls",
+"de": "Video calls",
+"fr": "Video calls",
+"es": "Video calls",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"sms_notification_enabled_title": {
+"res": "bullhead:Hangouts:sms_notification_enabled_title",
+"en": "Notifications",
+"hu": "Notifications",
+"de": "Notifications",
+"fr": "Notifications",
+"es": "Notifications",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"chat_notification_sound_title": {
+"res": "bullhead:Hangouts:chat_notification_sound_title",
+"en": "Sound",
+"hu": "Sound",
+"de": "Sound",
+"fr": "Sound",
+"es": "Sound",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"sms_notification_vibrate_title": {
+"res": "bullhead:Hangouts:sms_notification_vibrate_title",
+"en": "Vibrate",
+"hu": "Vibrate",
+"de": "Vibrate",
+"fr": "Vibrate",
+"es": "Vibrate",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"account_preference_category": {
+"res": "bullhead:Hangouts:account_preference_category",
+"en": "Account",
+"hu": "Account",
+"de": "Account",
+"fr": "Account",
+"es": "Account",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"phone_verification_title_default": {
+"res": "bullhead:Hangouts:phone_verification_title_default",
+"en": "Verify phone number",
+"hu": "Verify phone number",
+"de": "Verify phone number",
+"fr": "Verify phone number",
+"es": "Verify phone number",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"phone_verification_summary_default": {
+"res": "bullhead:Hangouts:phone_verification_summary_default",
+"en": "Phone number",
+"hu": "Phone number",
+"de": "Phone number",
+"fr": "Phone number",
+"es": "Phone number",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"hidden_contacts_title": {
+"res": "bullhead:Hangouts:hidden_contacts_title",
+"en": "Hidden contacts",
+"hu": "Hidden contacts",
+"de": "Hidden contacts",
+"fr": "Hidden contacts",
+"es": "Hidden contacts",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"sign_out_title": {
+"res": "bullhead:Hangouts:sign_out_title",
+"en": "Sign out",
+"hu": "Sign out",
+"de": "Sign out",
+"fr": "Sign out",
+"es": "Sign out",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"improve_hangouts_category": {
+"res": "bullhead:Hangouts:improve_hangouts_category",
+"en": "Improve Hangouts",
+"hu": "Improve Hangouts",
+"de": "Improve Hangouts",
+"fr": "Improve Hangouts",
+"es": "Improve Hangouts",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"improve_hangouts_title": {
+"res": "bullhead:Hangouts:improve_hangouts_title",
+"en": "Improve Hangouts",
+"hu": "Improve Hangouts",
+"de": "Improve Hangouts",
+"fr": "Improve Hangouts",
+"es": "Improve Hangouts",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"improve_hangouts_summary": {
+"res": "bullhead:Hangouts:improve_hangouts_summary",
+"en": "Report additional diagnostics to help improve Hangouts",
+"hu": "Report additional diagnostics to help improve Hangouts",
+"de": "Report additional diagnostics to help improve Hangouts",
+"fr": "Report additional diagnostics to help improve Hangouts",
+"es": "Report additional diagnostics to help improve Hangouts",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"people_search_hint": {
+"res": "bullhead:Hangouts:people_search_hint",
+"en": "Type name, phone or email",
+"hu": "Type name, phone or email",
+"de": "Type name, phone or email",
+"fr": "Type name, phone or email",
+"es": "Type name, phone or email",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"realtimechat_conversation_archive_menu_item_text": {
+"res": "bullhead:Hangouts:realtimechat_conversation_archive_menu_item_text",
+"en": "Archive",
+"hu": "Archive",
+"de": "Archive",
+"fr": "Archive",
+"es": "Archive",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"realtimechat_conversation_mute_menu_item_text": {
+"res": "bullhead:Hangouts:realtimechat_conversation_mute_menu_item_text",
+"en": "Turn notifications off",
+"hu": "Turn notifications off",
+"de": "Turn notifications off",
+"fr": "Turn notifications off",
+"es": "Turn notifications off",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"realtimechat_conversation_unmute_menu_item_text": {
+"res": "bullhead:Hangouts:realtimechat_conversation_unmute_menu_item_text",
+"en": "Turn notifications on",
+"hu": "Turn notifications on",
+"de": "Turn notifications on",
+"fr": "Turn notifications on",
+"es": "Turn notifications on",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"conversation_archived": {
+"res": "bullhead:Hangouts:conversation_archived",
+"en": "Hangout archived.",
+"hu": "Hangout archived.",
+"de": "Hangout archived.",
+"fr": "Hangout archived.",
+"es": "Hangout archived.",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"hangout_call_ended": {
+"res": "bullhead:Hangouts:hangout_call_ended",
+"en": "Call has ended",
+"hu": "Call has ended",
+"de": "Call has ended",
+"fr": "Call has ended",
+"es": "Call has ended",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"verify_phone_enter_your_phone_number": {
+"res": "bullhead:Hangouts:verify_phone_enter_your_phone_number",
+"en": "Enter your phone number",
+"hu": "Enter your phone number",
+"de": "Enter your phone number",
+"fr": "Enter your phone number",
+"es": "Enter your phone number",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"verify_phone_pitch": {
+"res": "bullhead:Hangouts:verify_phone_pitch",
+"en": "Add your phone number to help people find you.",
+"hu": "Add your phone number to help people find you.",
+"de": "Add your phone number to help people find you.",
+"fr": "Add your phone number to help people find you.",
+"es": "Add your phone number to help people find you.",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"dialpad_edit_text_hint": {
+"res": "bullhead:Hangouts:dialpad_edit_text_hint",
+"en": "Phone number",
+"hu": "Phone number",
+"de": "Phone number",
+"fr": "Phone number",
+"es": "Phone number",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"progress_verify_phone_number_message": {
+"res": "bullhead:Hangouts:progress_verify_phone_number_message",
+"en": "Verifying phone number…",
+"hu": "Verifying phone number…",
+"de": "Verifying phone number…",
+"fr": "Verifying phone number…",
+"es": "Verifying phone number…",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"setup_error_phone_verification_failed": {
+"res": "bullhead:Hangouts:setup_error_phone_verification_failed",
+"en": "Couldn't verify phone number.",
+"hu": "Couldn't verify phone number.",
+"de": "Couldn't verify phone number.",
+"fr": "Couldn't verify phone number.",
+"es": "Couldn't verify phone number.",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"account_picker_select_initial_title": {
+"res": "bullhead:Hangouts:account_picker_select_initial_title",
+"en": "Sign in",
+"hu": "Sign in",
+"de": "Sign in",
+"fr": "Sign in",
+"es": "Sign in",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"login_pending": {
+"res": "bullhead:Hangouts:login_pending",
+"en": "Signing in…",
+"hu": "Bejelentkezés…",
+"de": "Anmeldung…",
+"fr": "Connexion en cours…",
+"es": "Iniciando sesión…"
+},
+"framework/ok": {
+"res": "bullhead:framework:ok",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"framework/cancel": {
+"res": "bullhead:framework:cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
 "app_name": {
 "res": "bullhead:Hangouts:app_name",
 "en": "Hangouts",
