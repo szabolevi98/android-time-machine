@@ -191,3 +191,4 @@
 .mmsh-clearall{position:relative;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;border-radius:50%;background:none;overflow:visible}
 .mmsh-clearall svg{position:absolute;left:calc(15.5 * var(--dp));top:calc(15.5 * var(--dp));width:calc(85 * var(--dp));height:calc(17 * var(--dp));overflow:visible;pointer-events:none}
 .screen.view-lock .mmnt-hun,.screen.sleeping .mmnt-hun{display:none}
+svg.mmqs-icon{width:calc(24 * var(--dp))}

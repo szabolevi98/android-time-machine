@@ -94,11 +94,28 @@
     return {height: (top(rows) + px(8)) / DENSITY};
   }
 
+  /* A tile whose icon is one of SystemUI's AnimatedVectorDrawables (airplane, flashlight, location, rotation, Do not
+     disturb) draws it as SVG with SMIL (mm-qs-icons.js, docs/tools/mm-avd.py): the tile just toggled plays it from where
+     it is, the others rest on its last frame (playIcons). */
+  let avdSerial = 0;
+  function tileIcon(tile) {
+    const name = tile.icon.replace(/^sui-|\.svg$/g, ''), avd = MM.qsIcons?.[name];
+    if (!avd) return `<img class="mmqs-icon" src="${A(tile.icon)}" alt="">`;
+    const serial = ++avdSerial;
+    return avd.svg.replace(/(id="|url\(#)([^")]+)/g, `$1$2-${serial}`).replace('<svg class="mm-avd"', `<svg class="mm-avd mmqs-icon" data-avd="${name}"`);
+  }
+  function playIcons(root, started) {
+    for (const svg of root.querySelectorAll('svg[data-avd]')) {
+      const total = (MM.qsIcons?.[svg.dataset.avd]?.duration || 0) / 1000, tile = svg.closest('[data-tile]')?.dataset.tile;
+      const elapsed = started?.[tile] !== undefined ? (performance.now() - started[tile]) / 1000 : Infinity;
+      try { if (elapsed < total) { svg.setCurrentTime(elapsed); svg.unpauseAnimations(); } else { svg.pauseAnimations(); svg.setCurrentTime(total + 1); } } catch {}
+    }
+  }
   function tileHtml(c, tile) {
     const t = c.safe;
     const icon = tile.id === 'cell'
       ? `<span class="mmqs-signal"><img src="${A(tile.icon)}" alt="">${tile.overlay ? `<img class="mmqs-overlay" src="${A(tile.overlay)}" alt="">` : ''}</span>`
-      : `<img class="mmqs-icon" src="${A(tile.icon)}" alt="">`;
+      : tileIcon(tile);
     const pos = `left:calc(${tile.x.toFixed(3)} * var(--dp));top:calc(${tile.y.toFixed(3)} * var(--dp));width:calc(${tile.w.toFixed(3)} * var(--dp));height:calc(${tile.h.toFixed(3)} * var(--dp))`;
     if (tile.dual) {
       return `<div class="mmqs-tile dual" style="${pos}" data-tile="${tile.id}"><button type="button" class="mmqs-top" data-action="mmqs-click" data-tile="${tile.id}" aria-label="${t(tile.desc)}">${icon}</button>`
@@ -196,6 +213,7 @@
     if (st.scanUntil > Date.now()) { clearTimeout(st.scanTimer); st.scanTimer = setTimeout(() => root.querySelector('.mmsh-scan')?.remove(), st.scanUntil - Date.now()); }
     // The slider follows the pointer; the setting is saved when it is let go.
     bindSlider(c, root.querySelector('.mmqs-slider'));
+    playIcons(root, st.started);
     // A posted notification swipes away (SwipeHelper); the ones below close up in 360 ms (ANIMATION_DURATION_STANDARD).
     for (const card of root.querySelectorAll('.mmsh-stack .mmnt-row')) MM.notifications?.bindSwipe(c, card, dir => {
       const below = [...root.querySelectorAll('.mmsh-stack > *')].filter(x => x.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_PRECEDING);
@@ -257,6 +275,7 @@
 
   function click(c, id) {
     const s = c.data.settings, st = c.ui.shade, sy = sys();
+    (st.started ||= {})[id] = performance.now();
     if (id === 'wifi') sy.setWifi(c, !s.wifi);
     else if (id === 'bt') sy.setBluetooth(c, !s.bluetooth);
     else if (id === 'dnd') { if (s.zen) { st.lastZen = s.zen; sy.setZen(c, 0); } else { st.lastZen = 0; sy.setZen(c, s.zenFavorite || 3); showDetail(c, 'dnd'); } }

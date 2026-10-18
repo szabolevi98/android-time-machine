@@ -56,12 +56,19 @@
     }
     return activeSels.some(sel => { try { return el.matches(sel); } catch { return false; } });
   }
+  // QSTileView: a borderless ripple whose hotspot bounds are a square 1.25 x the 24 dp icon either side of its centre.
+  function qsBounds(el) {
+    const icon = el.matches('.mmqs-tile, .mmqs-top') && el.querySelector('.mmqs-icon, .mmqs-signal');
+    if (!icon) return null;
+    const r = icon.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, rad = 30 * DP();
+    return {left: cx - rad, top: cy - rad, width: 2 * rad, height: 2 * rad, qs: true};
+  }
   function press(el, event, screen) {
-    const box = screen.getBoundingClientRect(), rect = el.getBoundingClientRect();
+    const box = screen.getBoundingClientRect(), rect = qsBounds(el) || el.getBoundingClientRect();
     if (rect.width < 4 || rect.height < 4) return null;
     // Scrims and other screen-sized touch areas (a folder's, a dialog's outside) have no ripple.
     if (rect.width >= box.width * .9 && rect.height >= box.height * .5) return null;
-    const free = borderless(el, rect), dark = onDark(el, screen), node = document.createElement('div');
+    const free = rect.qs || borderless(el, rect), dark = onDark(el, screen), node = document.createElement('div');
     const w = rect.width, h = rect.height;
     node.className = `mmrp${free ? ' free' : ''}${dark ? ' dark' : ''}`;
     Object.assign(node.style, {left: `${rect.left - box.left}px`, top: `${rect.top - box.top}px`, width: `${w}px`, height: `${h}px`, borderRadius: free ? '0' : getComputedStyle(el).borderRadius});
