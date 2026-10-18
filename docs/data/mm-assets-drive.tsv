@@ -22,3 +22,8 @@ dr-ic_type_sheet.png	app/Drive/Drive.apk	drawable/ic_type_sheet
 dr-ic_type_file.png	app/Drive/Drive.apk	drawable/ic_type_file
 dr-ic_type_image.png	app/Drive/Drive.apk	drawable/ic_type_image
 dr-ic_type_pdf.png	app/Drive/Drive.apk	drawable/ic_type_pdf
+dr-ic_back_grey.png	app/Drive/Drive.apk	drawable/ic_back_grey
+dr-ds_shutter_holo.png	app/Drive/Drive.apk	drawable/ds_shutter_holo
+dr-ds_checkmark_holo_light.png	app/Drive/Drive.apk	drawable/ds_checkmark_holo_light
+dr-ic_close.png	app/Drive/Drive.apk	drawable/ic_close
+dr-ic_type_presentation.png	app/Drive/Drive.apk	drawable/ic_type_presentation

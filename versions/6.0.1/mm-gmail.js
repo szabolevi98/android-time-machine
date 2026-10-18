@@ -45,10 +45,12 @@
   function inFolder(m, f) {
     if (FOLDERS.some(x => x[0] === f)) return m.box === 'inbox' && m.cat === f;
     if (f === 'starred') return m.starred && m.box !== 'trash';
-    if (f === 'important') return m.box === 'inbox' && m.cat === 'primary';
+    if (f === 'important') return m.box === 'inbox' && important(m);
     if (f === 'all') return m.box !== 'trash' && m.box !== 'spam' && m.box !== 'drafts';
     return m.box === f;
   }
+  // Important: Gmail's own guess (the Primary mail) until marked otherwise.
+  const important = m => m.important ?? m.cat === 'primary';
   const folderName = (c, f) => T().t([...FOLDERS, ...LABELS].find(x => x[0] === f)[1]);
   function date(c, time) {
     const d = new Date(time), now = new Date(), loc = c.locale();
@@ -78,11 +80,15 @@
   }
 
   // ---- the list and the drawer -------------------------------------------------------------------------------------
+  function row(c, m) {
+    const t = T();
+    return `<div class="mmgm-item${m.unread ? ' unread' : ''}" data-action="mmgm-open" data-id="${m.id}">${avatar(c, m.box === 'sent' || m.box === 'drafts' ? MM.account.name : m.from, 'mmgm-av')}
+      <div class="mmgm-itext"><div class="mmgm-irow"><b class="mmgm-sender">${esc(c, m.box === 'sent' || m.box === 'drafts' ? t.t('me_object_pronoun') : m.from)}</b><span class="mmgm-date">${esc(c, date(c, m.time))}</span></div>
+      <div class="mmgm-irow2"><span class="mmgm-lines"><span class="mmgm-subj">${esc(c, m.subject)}</span><span class="mmgm-snip">${esc(c, m.body)}</span></span><button type="button" class="mmgm-star" data-action="mmgm-star" data-id="${m.id}" aria-label="${esc(c, t.t(m.starred ? 'remove_star' : 'add_star'))}"><img src="${A(m.starred ? 'ic_star_20dp' : 'ic_star_outline_20dp')}" alt=""></button></div></div></div>`;
+  }
   function list(c) {
     const t = T(), u = ui(c), items = mail(c).filter(m => inFolder(m, u.folder)).sort((a, b) => b.time - a.time);
-    const rows = items.map(m => `<div class="mmgm-item${m.unread ? ' unread' : ''}" data-action="mmgm-open" data-id="${m.id}">${avatar(c, m.box === 'sent' || m.box === 'drafts' ? MM.account.name : m.from, 'mmgm-av')}
-      <div class="mmgm-itext"><div class="mmgm-irow"><b class="mmgm-sender">${esc(c, m.box === 'sent' || m.box === 'drafts' ? t.t('me_object_pronoun') : m.from)}</b><span class="mmgm-date">${esc(c, date(c, m.time))}</span></div>
-      <div class="mmgm-irow2"><span class="mmgm-lines"><span class="mmgm-subj">${esc(c, m.subject)}</span><span class="mmgm-snip">${esc(c, m.body)}</span></span><button type="button" class="mmgm-star" data-action="mmgm-star" data-id="${m.id}" aria-label="${esc(c, t.t(m.starred ? 'remove_star' : 'add_star'))}"><img src="${A(m.starred ? 'ic_star_20dp' : 'ic_star_outline_20dp')}" alt=""></button></div></div></div>`).join('');
+    const rows = items.map(m => row(c, m)).join('');
     const empty = `<div class="mmgm-empty"><img src="${A('ic_empty_inbox')}" alt=""><p>${esc(c, t.t('empty_inbox'))}</p></div>`;
     return `<div class="mmgm"><div class="mmgm-bar"><button type="button" class="mmgm-btn" data-action="mmgm-drawer"><img src="${A('ic_menu_wht_24dp')}" alt=""></button><span class="mmgm-title">${esc(c, folderName(c, u.folder))}</span>
       <button type="button" class="mmgm-btn" data-action="mmgm-search" aria-label="${esc(c, t.t('search_hint'))}"><img src="${A('abc_ic_search_api_mtrl_alpha')}" alt=""></button></div>
@@ -102,9 +108,9 @@
     const t = T(), mine = m.box === 'sent' || m.box === 'drafts', who = mine ? MM.account.name : m.from;
     const btn = (img, action, label) => `<button type="button" class="mmgm-btn" data-action="${action}" aria-label="${esc(c, t.t(label))}"><img src="${A(img)}" alt=""></button>`;
     return `<div class="mmgm mmgm-conv"><div class="mmgm-bar"><button type="button" class="mmgm-btn" data-action="mmgm-up"><img src="${A('ic_arrow_back_wht_24dp')}" alt=""></button><i class="mmgm-flex"></i>${btn('ic_archive_wht_24dp', 'mmgm-archive', 'archive')}${btn('ic_delete_wht_24dp', 'mmgm-delete', 'delete')}${btn('ic_mark_unread_wht_24dp', 'mmgm-unread', 'mark_unread')}${MM.menu.button(c, 'mmgm-over')}</div>
-      <div class="mmgm-page mmgm-cview"><div class="mmgm-chead"><h1>${esc(c, m.subject)}</h1><button type="button" class="mmgm-cstar" data-action="mmgm-star" data-id="${m.id}"><img src="${A(m.starred ? 'ic_star_20dp' : 'ic_star_outline_20dp')}" alt=""></button></div>
+      <div class="mmgm-page mmgm-cview"><div class="mmgm-chead"><h1>${esc(c, m.subject)}${m.muted ? ` <span class="mmgm-chip">${esc(c, t.t('label_ignored'))}</span>` : ''}</h1><button type="button" class="mmgm-cstar" data-action="mmgm-star" data-id="${m.id}"><img src="${A(m.starred ? 'ic_star_20dp' : 'ic_star_outline_20dp')}" alt=""></button></div>
       <div class="mmgm-msg"><div class="mmgm-mhead">${avatar(c, who, 'mmgm-av')}<div class="mmgm-mwho"><b>${esc(c, who)}</b><span>${esc(c, mine ? `${t.t('to')} ${m.email}` : `${t.t('to')} ${t.t('me_object_pronoun')}`)}</span></div><span class="mmgm-mdate">${esc(c, date(c, m.time))}</span>
-        <button type="button" class="mmgm-mbtn" data-action="mmgm-reply" data-id="${m.id}" aria-label="${esc(c, t.t('reply'))}"><img src="${A('ic_reply_24dp')}" alt=""></button></div><div class="mmgm-body">${esc(c, m.body)}</div></div>
+        <button type="button" class="mmgm-mbtn" data-action="mmgm-reply" data-id="${m.id}" aria-label="${esc(c, t.t('reply'))}"><img src="${A('ic_reply_24dp')}" alt=""></button></div><div class="mmgm-body">${esc(c, m.body)}</div>${attachments(c, m.attach)}</div>
       <div class="mmgm-replies"><button type="button" data-action="mmgm-reply" data-id="${m.id}"><img src="${A('ic_reply_24dp')}" alt=""><span>${esc(c, t.t('reply'))}</span></button><button type="button" data-action="mmgm-reply" data-id="${m.id}"><img src="${A('ic_reply_all_24dp')}" alt=""><span>${esc(c, t.t('reply_all'))}</span></button><button type="button" data-action="mmgm-forward" data-id="${m.id}"><img src="${A('ic_forward_24dp')}" alt=""><span>${esc(c, t.t('forward'))}</span></button></div></div></div>`;
   }
   // ---- compose -----------------------------------------------------------------------------------------------------
@@ -114,7 +120,35 @@
     return `<div class="mmgm mmgm-compose"><div class="mmgm-bar"><button type="button" class="mmgm-btn" data-action="mmgm-cback"><img src="${A('ic_arrow_back_wht_24dp')}" alt=""></button><span class="mmgm-title">${esc(c, t.t('compose'))}</span>
       <button type="button" class="mmgm-btn" data-action="mmgm-attach" aria-label="${esc(c, t.t('add_file_attachment'))}"><img src="${A('ic_attach_file_wht_24dp')}" alt=""></button><button type="button" class="mmgm-btn" data-action="mmgm-send" aria-label="${esc(c, t.t('send'))}"><img src="${A('ic_send_wht_24dp')}" alt=""></button>${MM.menu.button(c, 'mmgm-over')}</div>
       <div class="mmgm-page mmgm-cform"><div class="mmgm-cf"><span>${esc(c, t.t('from'))}</span><b>${esc(c, MM.account.email)}</b></div>${field('to', t.t('to'), d.to, ' type="email"')}
-      <input class="mmgm-csubj" data-f="subject" value="${esc(c, d.subject)}" placeholder="${esc(c, t.t('subject_hint'))}" autocomplete="off"><textarea class="mmgm-cbody" data-f="body" placeholder="${esc(c, t.t('body_hint'))}">${esc(c, d.body)}</textarea></div></div>`;
+      <input class="mmgm-csubj" data-f="subject" value="${esc(c, d.subject)}" placeholder="${esc(c, t.t('subject_hint'))}" autocomplete="off"><textarea class="mmgm-cbody" data-f="body" placeholder="${esc(c, t.t('body_hint'))}">${esc(c, d.body)}</textarea>${attachments(c, d.attach, true)}</div></div>`;
+  }
+  // Attachment tiles (attachment_tile.xml): the file type icon, the name and the type with its size; in compose the X
+  // of remove_attachment_desc.
+  function attachments(c, list, removable) {
+    if (!list?.length) return '';
+    const t = T();
+    return `<div class="mmgm-atts">${list.map((f, i) => `<div class="mmgm-att"><img src="${A(f.mime?.startsWith('image/') ? 'ic_file_image' : f.mime === 'application/pdf' ? 'ic_file_pdf' : 'ic_file_file')}" alt=""><span><b>${esc(c, f.name)}</b><small>${f.mime?.startsWith('image/') || f.mime === 'application/pdf' ? `${esc(c, t.t(f.mime === 'application/pdf' ? 'attachment_application_pdf' : 'attachment_image'))} · ` : ''}${esc(c, MM.fileSize(c, f.size || 0))}</small></span>
+      ${removable ? `<button type="button" class="mmgm-attx" data-action="mmgm-attx" data-i="${i}" aria-label="${esc(c, AndroidStrings.format(t.t('remove_attachment_desc'), f.name))}"><img src="${A('ic_close_24dp')}" alt=""></button>` : ''}</div>`).join('')}</div>`;
+  }
+  // Search (the toolbar's SearchView over the list): the recent searches with ic_history_24dp while typing, the
+  // matching conversations under "Results" once the search is sent, empty_search when none match.
+  function search(c) {
+    const t = T(), u = ui(c), q = (u.q || '').trim(), recent = c.data.gmailSearches || [];
+    let body = '';
+    if (u.searched && q) {
+      const ql = q.toLowerCase(), hits = mail(c).filter(m => m.box !== 'trash' && m.box !== 'spam' && [m.from, m.email, m.subject, m.body].some(x => (x || '').toLowerCase().includes(ql))).sort((a, b) => b.time - a.time);
+      body = hits.length ? `<div class="mmgm-shead">${esc(c, t.t('search_results_header'))}</div>${hits.map(m => row(c, m)).join('')}` : `<div class="mmgm-sempty">${esc(c, AndroidStrings.format(t.t('empty_search'), q))}</div>`;
+    } else body = recent.filter(r => !q || r.toLowerCase().startsWith(q.toLowerCase())).map(r => `<button type="button" class="mmgm-sugg" data-action="mmgm-sugg" data-q="${esc(c, r)}"><img src="${A('ic_history_24dp')}" alt=""><span>${esc(c, r)}</span></button>`).join('');
+    return `<div class="mmgm mmgm-search"><div class="mmgm-sbar"><button type="button" class="mmgm-btn" data-action="mmgm-sback" aria-label="${esc(c, t.t('search_back_desc'))}"><img src="${A('ic_arrow_back_24dp')}" alt=""></button>
+      <input class="mmgm-sq" value="${esc(c, u.q || '')}" placeholder="${esc(c, t.t('search_hint'))}" autocomplete="off" spellcheck="false" enterkeyhint="search">${u.q ? `<button type="button" class="mmgm-btn" data-action="mmgm-sclear" aria-label="${esc(c, t.t('search_clear_desc'))}"><img src="${A('abc_ic_clear_mtrl_alpha')}" alt=""></button>` : ''}</div>
+      <div class="mmgm-page mmgm-list">${body}</div></div>`;
+  }
+  // "Add an email address": Gmail's Set up email landing (Google, Personal (IMAP/POP), Exchange); Google goes to
+  // Google Play services' sign-in, the others to the email setup (Settings' account-setup screens).
+  function landing(c) {
+    const t = T(), row = (k, ic, type) => `<button type="button" class="mmgm-lrow" data-action="mmgm-ltype" data-type="${type}"><img src="${ic}" alt=""><span>${esc(c, t.t(k))}</span></button>`;
+    return `<div class="mmgm mmgm-landing"><div class="mmgm-bar"><button type="button" class="mmgm-btn" data-action="mmgm-lback"><img src="${A('ic_arrow_back_wht_24dp')}" alt=""></button><span class="mmgm-title">${esc(c, t.t('account_setup_landing_headline'))}</span></div>
+      <div class="mmgm-page">${row('account_disambig_type_google_title', 'assets/gms-auth_gls_ic_google_selected.png', 'google')}${row('account_disambig_type_personal_title', A('ic_drawer_inbox_24dp'), 'email')}${row('account_disambig_type_exchange_title', A('ic_drawer_inbox_24dp'), 'email')}</div></div>`;
   }
 
   function consume(c) {
@@ -128,7 +162,9 @@
     consume(c);
     const g = c.data.gmailSetup || 0, u = ui(c);
     if (g === 0) return tour(c);
+    if (u.screen === 'landing') return landing(c);
     if (g === 1) return setup(c);
+    if (u.screen === 'search') return search(c);
     if (u.screen === 'compose' && u.draft) return compose(c);
     if (u.screen.startsWith('conv:')) { const m = mail(c).find(x => x.id === +u.screen.slice(5)); if (m) return conversation(c, m); u.screen = ''; }
     return list(c);
@@ -144,21 +180,52 @@
     const t = T(), u = ui(c);
     if (u.screen === 'compose') return c.menu([{label: t.t('save_draft'), action: c => closeCompose(c, true)}, {label: t.t('discard'), action: c => { c.toast(t.t('message_discarded'), false); closeCompose(c, false); }}]);
     const m = mail(c).find(x => x.id === +u.screen.slice(5)); if (!m) return;
-    c.menu([{label: t.t('menu_move_to'), action: c => c.open('missing-move-to')}, {label: t.t('menu_change_folders'), action: c => c.open('missing-change-labels')}, {label: t.t(m.starred ? 'remove_star' : 'add_star'), action: c => { m.starred = !m.starred; c.save(); c.render(); }},
-      {label: t.t('mark_not_important'), action: c => c.open('missing-important')}, {label: t.t('mute'), action: c => c.open('missing-mute')}, {label: t.t('print'), action: c => MM.print(c, {name: m.subject, title: m.subject, lines: [m.box === 'sent' || m.box === 'drafts' ? `${MM.account.name} <${MM.account.email}>` : m.from, new Intl.DateTimeFormat(c.locale(), {dateStyle: 'full', timeStyle: 'short'}).format(new Date(m.time)), m.body]})}, {label: t.t('report_spam'), action: c => { m.box = 'spam'; u.screen = ''; c.save(); c.render(); }}, {label: t.t('help_and_feedback'), action: c => c.open('help', 'gmail')}]);
+    // ConversationActivity's menu: Move to (FolderSelectionDialog, single choice), Change labels (Label as: check boxes),
+    // the star, Mark (not) important, Mute (out of the inbox for good), Print, Report spam, Help & feedback. The toasts
+    // are the undo bar's texts.
+    const leave = (c, text) => { u.screen = u.prev || ''; u.prev = ''; c.save(); c.toast(text.replace(/<\/?b>/g, ''), false); c.render(); };
+    const sections = FOLDERS.map(f => f[0]);
+    c.menu([{label: t.t('menu_move_to'), action: c => c.dialog({title: t.t('move_to_selection_dialog_title'), items: sections.map(f => ({html: `<span class="mmst-choice"><i class="mmw-radio${m.box === 'inbox' && m.cat === f ? ' on' : ''}"></i><span>${esc(c, folderName(c, f))}</span></span>`})),
+        onItem: (i, c) => { m.box = 'inbox'; m.cat = sections[i]; leave(c, AndroidStrings.format(t.t('conversation_folder_moved'), folderName(c, sections[i]))); }})},
+      {label: t.t('menu_change_folders'), action: c => {
+        const opts = [['inbox', 'mailbox_name_display_inbox', m.box === 'inbox'], ['starred', 'mailbox_name_display_starred', !!m.starred], ['important', 'label_important', important(m)]], on = opts.map(o => o[2]);
+        c.dialog({title: t.t('change_folders_selection_dialog_title'), keepOpen: true, items: opts.map(([, k], i) => ({html: `<span class="mmst-choice"><i class="mmst-check${on[i] ? ' on' : ''}"></i><span>${esc(c, t.t(k))}</span></span>`})),
+          onItem: (i, c) => { on[i] = !on[i]; c.el.overlay.querySelectorAll('.mmdlg-item .mmst-check')[i].classList.toggle('on', on[i]); },
+          buttons: [{label: t.t('framework/cancel')}, {label: t.t('framework/ok'), action: c => {
+            if (on[0] !== (m.box === 'inbox')) m.box = on[0] ? 'inbox' : 'archive';
+            m.starred = on[1]; m.important = on[2];
+            if (m.box !== 'inbox') leave(c, t.plural('conversation_folder_changed', 1)); else { c.save(); c.toast(t.plural('conversation_folder_changed', 1), false); c.render(); }
+          }}]});
+      }},
+      {label: t.t(m.starred ? 'remove_star' : 'add_star'), action: c => { m.starred = !m.starred; c.save(); c.render(); }},
+      important(m) ? {label: t.t('mark_not_important'), action: c => { m.important = false; leave(c, AndroidStrings.format(t.plural('conversation_not_important', 1), 1)); }} : {label: t.t('mark_important'), action: c => { m.important = true; c.save(); c.render(); }},
+      {label: t.t('mute'), action: c => { m.muted = true; if (m.box === 'inbox') m.box = 'archive'; leave(c, AndroidStrings.format(t.plural('conversation_muted', 1), 1)); }}, {label: t.t('print'), action: c => MM.print(c, {name: m.subject, title: m.subject, lines: [m.box === 'sent' || m.box === 'drafts' ? `${MM.account.name} <${MM.account.email}>` : m.from, new Intl.DateTimeFormat(c.locale(), {dateStyle: 'full', timeStyle: 'short'}).format(new Date(m.time)), m.body]})}, {label: t.t('report_spam'), action: c => { m.box = 'spam'; leave(c, AndroidStrings.format(t.plural('conversation_spammed', 1), 1)); }}, {label: t.t('help_and_feedback'), action: c => c.open('help', 'gmail')}]);
   }
 
+  // A search sent: remembered first among the recent searches (ten at most).
+  function submit(c, q) {
+    const u = ui(c); u.q = q; u.searched = true;
+    c.data.gmailSearches = [q, ...(c.data.gmailSearches || []).filter(x => x !== q)].slice(0, 10); c.save(); c.render();
+  }
   MM.register('gmail', {
     statusColor: c => ui(c).drawer ? '#8a2318' : '#b93221',
     render,
     mount(c, root) {
       root.querySelectorAll('.mmgm-compose [data-f]').forEach(i => i.addEventListener('input', () => { ui(c).draft[i.dataset.f] = i.value; }));
       const to = root.querySelector('.mmgm-compose [data-f="to"]'); if (to && !to.value) to.focus();
+      const q = root.querySelector('.mmgm-sq');
+      if (q) {
+        const u = ui(c);
+        q.addEventListener('input', () => { const p = q.selectionStart; u.q = q.value; u.searched = false; c.render(); const g = c.el.viewport.querySelector('.mmgm-sq'); if (g) { g.focus(); g.setSelectionRange(p, p); } });
+        q.addEventListener('keydown', e => { if (e.key !== 'Enter' || !q.value.trim()) return; e.preventDefault(); submit(c, q.value.trim()); });
+        if (!u.searched) setTimeout(() => q.focus(), 40);
+      }
     },
     back(c) {
       const u = ui(c);
       if (u.drawer) { u.drawer = false; c.render(); return true; }
       if (u.screen === 'compose') { closeCompose(c, true); return true; }
+      if (u.screen.startsWith('conv:') && u.prev) { u.screen = u.prev; u.prev = ''; c.render(); return true; }
       if (u.screen) { u.screen = ''; c.render(); return true; }
       if (u.folder !== 'primary') { u.folder = 'primary'; c.render(); return true; }
       return false;
@@ -169,26 +236,37 @@
         case 'mmgm-tnext': u.tour = 1; c.render(); return true;
         case 'mmgm-tdone': c.data.gmailSetup = 1; c.save(); c.render(); return true;
         case 'mmgm-setupdone': c.data.gmailSetup = 2; c.save(); c.render(); return true;
-        case 'mmgm-addacct': c.open('missing-add-email-account'); return true;
+        case 'mmgm-addacct': u.screen = 'landing'; c.render(); return true;
+        case 'mmgm-lback': u.screen = ''; c.render(); return true;
+        case 'mmgm-ltype': u.screen = ''; c.ui.addAccount = null; c.open('settings', `account-setup:${el.dataset.type}`); return true;
         case 'mmgm-drawer': u.drawer = !u.drawer; c.render(); return true;
         case 'mmgm-folder': u.folder = el.dataset.f; u.drawer = false; c.render(); return true;
         case 'mmgm-settings': MM.openPrefs(c, 'gmail', 'preference_headers'); return true;
         case 'mmgm-help': c.open('help', 'gmail'); return true;
-        case 'mmgm-search': c.open('missing-gmail-search'); return true;
-        case 'mmgm-open': if (event?.target?.closest('.mmgm-star')) return false; m.unread = false; c.save(); u.screen = `conv:${m.id}`; c.render(); return true;
+        case 'mmgm-search': u.screen = 'search'; u.q = ''; u.searched = false; c.render(); return true;
+        case 'mmgm-sback': u.screen = ''; c.render(); return true;
+        case 'mmgm-sclear': u.q = ''; u.searched = false; c.render(); return true;
+        case 'mmgm-sugg': submit(c, el.dataset.q); return true;
+        case 'mmgm-open': if (event?.target?.closest('.mmgm-star')) return false; m.unread = false; c.save(); u.prev = u.screen === 'search' ? 'search' : ''; u.screen = `conv:${m.id}`; c.render(); return true;
         case 'mmgm-star': m.starred = !m.starred; c.save(); c.render(); return true;
-        case 'mmgm-up': u.screen = ''; c.render(); return true;
-        case 'mmgm-archive': m.box = 'archive'; u.screen = ''; c.save(); c.toast(AndroidStrings.format(t.plural('conversation_archived', 1), 1).replace(/<\/?b>/g, ''), false); c.render(); return true;
-        case 'mmgm-delete': m.box = 'trash'; u.screen = ''; c.save(); c.toast(AndroidStrings.format(t.plural('conversation_deleted', 1), 1).replace(/<\/?b>/g, ''), false); c.render(); return true;
+        case 'mmgm-up': u.screen = u.prev || ''; u.prev = ''; c.render(); return true;
+        case 'mmgm-archive': m.box = 'archive'; u.screen = u.prev || ''; u.prev = ''; c.save(); c.toast(AndroidStrings.format(t.plural('conversation_archived', 1), 1).replace(/<\/?b>/g, ''), false); c.render(); return true;
+        case 'mmgm-delete': m.box = 'trash'; u.screen = u.prev || ''; u.prev = ''; c.save(); c.toast(AndroidStrings.format(t.plural('conversation_deleted', 1), 1).replace(/<\/?b>/g, ''), false); c.render(); return true;
         case 'mmgm-unread': m.unread = true; u.screen = ''; c.save(); c.render(); return true;
         case 'mmgm-compose': u.draft = {to: '', subject: '', body: ''}; u.screen = 'compose'; c.render(); return true;
         case 'mmgm-reply': u.draft = {to: m.email, subject: /^Re:/i.test(m.subject) ? m.subject : `Re: ${m.subject}`, body: ''}; u.screen = 'compose'; c.render(); return true;
         case 'mmgm-forward': u.draft = {to: '', subject: `Fwd: ${m.subject}`, body: `\n\n${m.body}`}; u.screen = 'compose'; c.render(); return true;
         case 'mmgm-cback': closeCompose(c, true); return true;
-        case 'mmgm-attach': c.open('missing-attach'); return true;
+        // The attach button's menu: Attach file (DocumentsUI's GET_CONTENT picker) and Insert from Drive (Drive's picker).
+        case 'mmgm-attach': {
+          const add = (c, f) => { const d = ui(c).draft; if (!d) return; d.attach = [...(d.attach || []), f]; c.render(); };
+          c.menu([{label: t.t('add_file_attachment'), action: c => MM.pickDocument(c, add)}, {label: t.t('attach_from_service_stub1'), action: c => MM.drivePick(c, add)}]);
+          return true;
+        }
+        case 'mmgm-attx': u.draft.attach.splice(+el.dataset.i, 1); c.render(); return true;
         case 'mmgm-send': {
           const d = u.draft; if (!d.to.trim()) { c.root?.querySelector?.('[data-f="to"]')?.focus(); return true; }
-          const all = mail(c); all.push({id: Math.max(0, ...all.map(x => x.id)) + 1, from: MM.account.name, email: d.to, subject: d.subject, body: d.body, time: Date.now(), unread: false, cat: 'primary', box: 'sent'});
+          const all = mail(c); all.push({id: Math.max(0, ...all.map(x => x.id)) + 1, from: MM.account.name, email: d.to, subject: d.subject, body: d.body, attach: d.attach, time: Date.now(), unread: false, cat: 'primary', box: 'sent'});
           c.save(); c.toast(t.t('sending'), false); u.draft = null; u.screen = ''; if (u.external) { u.external = false; c.back(); return true; } c.render(); return true;
         }
         case 'mm-menu': menu(c); return true;

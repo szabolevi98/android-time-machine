@@ -54,3 +54,5 @@ button.mmsa-file{width:100%;border:0;background:none;text-align:left;font-family
 button.mmsa-file:active{background:rgba(0,0,0,.08)}
 .mmsa-q{flex:1;min-width:0;height:calc(40 * var(--dp));border:0;outline:0;background:none;color:#fff;font:calc(18 * var(--dp)) Roboto,sans-serif}
 .mmsa-q::placeholder{color:rgba(255,255,255,.6)}
+.mmsa-docicon{display:grid!important;place-items:center;aspect-ratio:1;padding:0!important;background:#eceff1}
+.mmsa-docicon .mmsa-mime{width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin:0}

@@ -261,6 +261,9 @@ def trace(own, path, data):
         if digest in img.by_sha: return 'copy', img, sorted(img.by_sha[digest], key=lambda r: img.rank(r, names))[0], ''
     if re.match(r'boot-part\d+\.webp$', file):
         return 'generated', own, ['media/bootanimation.zip', '', 0, ''], 'sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)'
+    if re.match(r'bg-emoji-[a-z]+\.png$', file):
+        row = next((r for r in own.rows if r[0].endswith('PrebuiltBugle.apk') and '/emoji_u' in (r[1] or '')), None)
+        if row: return 'generated', own, row, "sprite of the category's emoji_u*.png, 72 px cells, 256 colours (docs/tools/mm-emoji.py)"
     m = re.match(r'(.+)-([0-9a-f]{8})\.webm$', file)
     if m:
         for img in images:

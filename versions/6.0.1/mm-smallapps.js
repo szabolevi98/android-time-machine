@@ -20,12 +20,17 @@
   /* GET_CONTENT for images (the launcher's "My photos"): DocumentsUI at its Recent root, the images as
      item_doc_grid.xml tiles (the thumbnail, the file name the camera gives, the date); the roots drawer opens under
      title_open ("Open from"). The picture chosen goes back to the asking app. */
+  const pad = n => String(n).padStart(2, '0');
+  const imgName = p => { const d = new Date(p.time); return `IMG_${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}.jpg`; };
+  // GET_CONTENT for any file (Gmail's Attach file, MM.pickDocument): the Recent root with the pictures and the files
+  // saved to Downloads as tiles; the one chosen goes back to the app as {name, size, mime}.
+  MM.pickDocument = (c, onPick) => { c.ui.docPick = onPick; c.open('downloads', 'pick:any'); };
   function pickImage(c) {
     const t = T(), u = c.ui.downloads, w = MM.text('wallpapers');
-    const pad = n => String(n).padStart(2, '0');
-    const name = p => { const d = new Date(p.time); return `IMG_${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}.jpg`; };
     const list = (MM.media?.photos(c) || []).filter(p => !p.trashed && p.kind !== 'video').sort((a, b) => b.time - a.time);
-    const tiles = list.map(p => `<button type="button" class="mmsa-doc" data-action="mmsa-pickone" data-id="${p.id}">${MM.media.svg(p, 'mmsa-docsvg', 1)}<span><b>${esc(c, name(p))}</b><small>${esc(c, new Intl.DateTimeFormat(c.locale(), {month: 'short', day: 'numeric'}).format(new Date(p.time)))}</small></span></button>`).join('');
+    const day = time => esc(c, new Intl.DateTimeFormat(c.locale(), {month: 'short', day: 'numeric'}).format(new Date(time)));
+    const files = u.pick === 'any' ? [...docs(c)].sort((a, b) => b.time - a.time).map((d, i) => `<button type="button" class="mmsa-doc" data-action="mmsa-pickdoc" data-i="${docs(c).indexOf(d)}"><span class="mmsa-docicon"><i class="mmsa-mime" style="-webkit-mask-image:url('assets/du-ic_doc_pdf_alpha.png');mask-image:url('assets/du-ic_doc_pdf_alpha.png')"></i></span><span><b>${esc(c, d.name)}</b><small>${day(d.time)}</small></span></button>`).join('') : '';
+    const tiles = files + list.map(p => `<button type="button" class="mmsa-doc" data-action="mmsa-pickone" data-id="${p.id}">${MM.media.svg(p, 'mmsa-docsvg', 1)}<span><b>${esc(c, imgName(p))}</b><small>${day(p.time)}</small></span></button>`).join('');
     const roots = u.roots ? `<div class="mmsa-scrim" data-action="mmsa-roots"></div><div class="mmsa-roots"><div class="mmsa-rbar"><span>${esc(c, w.t('DocumentsUI/title_open'))}</span></div><button type="button" class="mmsa-root on" data-action="mmsa-roots"><img src="assets/du-ic_root_recent_alpha.png" alt=""><span>${esc(c, t.t('DocumentsUI/root_recent'))}</span></button><button type="button" class="mmsa-root" data-action="mmsa-roots"><img src="assets/du-ic_root_download_alpha.png" alt=""><span>${esc(c, t.t('DownloadProvider/root_downloads'))}</span></button></div>` : '';
     const btn = (img, action) => `<button type="button" class="mmsa-btn" data-action="${action}"><img src="assets/du-${img}.png" alt=""></button>`;
     return `<div class="mmsa">${bar(c, t.t('DocumentsUI/root_recent'), '#37474f', true, btn('ic_menu_search_alpha', 'mmsa-missing'), btn('ic_hamburger_alpha', 'mmsa-roots'))}
@@ -86,7 +91,7 @@
       if (root) { c.ui.sub = ''; c.ui.downloads = {root: root[1], path: []}; }
       if (c.ui.downloads?.root) return browse(c);
       if (c.ui.downloads?.searching) return search(c);
-      if (c.ui.sub === 'pick:wallpaper') { c.ui.sub = ''; c.ui.downloads = {grid: true, roots: false, pick: true}; }
+      if (c.ui.sub === 'pick:wallpaper' || c.ui.sub === 'pick:any') { c.ui.downloads = {grid: true, roots: false, pick: c.ui.sub.slice(5)}; c.ui.sub = ''; }
       if (c.ui.sub === 'save') { c.ui.sub = ''; c.ui.downloads = {grid: false, roots: false, save: true}; }
       if (c.ui.downloads?.pick) return pickImage(c);
       if (c.ui.downloads?.save) return saveDoc(c);
@@ -106,7 +111,7 @@
       const u = c.ui.downloads;
       if (u?.root) { if (u.path.length) { u.path.pop(); c.render(); return true; } c.ui.downloads = null; return false; }
       if (u?.searching) { u.searching = false; u.q = ''; c.render(); return true; }
-      if (u?.roots) { u.roots = false; c.render(); return true; } if (u?.pick || u?.save) { c.ui.downloads = null; c.ui.docSave = null; } return false; },
+      if (u?.roots) { u.roots = false; c.render(); return true; } if (u?.pick || u?.save) { c.ui.downloads = null; c.ui.docSave = null; c.ui.docPick = null; } return false; },
     action(name, el, event, c) {
       const t = T(), u = c.ui.downloads;
       if (name === 'mmsa-roots') { u.roots = !u.roots; c.render(); return true; }
@@ -122,7 +127,14 @@
         c.ui.downloads = null; c.ui.docSave = null; c.back(); s.done?.(c);
         return true;
       }
-      if (name === 'mmsa-pickone') { c.ui.downloads = null; MM.wallpaperPicked?.(c, +el.dataset.id); c.back(); return true; }
+      if (name === 'mmsa-pickone' || name === 'mmsa-pickdoc') {
+        const pick = c.ui.docPick, photo = name === 'mmsa-pickone' && (MM.media?.photos(c) || []).find(p => p.id === +el.dataset.id);
+        c.ui.downloads = null; c.ui.docPick = null;
+        if (!pick) { MM.wallpaperPicked?.(c, +el.dataset.id); c.back(); return true; }
+        const d = docs(c)[+el.dataset.i];
+        c.back(); pick(c, photo ? {name: imgName(photo), size: 1800000 + (photo.id % 7) * 230000, mime: 'image/jpeg'} : {name: d.name, size: d.size, mime: d.mime || 'application/pdf'});
+        return true;
+      }
       return false;
     }
   });

@@ -270,5 +270,304 @@ MM.strings('messenger', {
 "de": "Geben Sie einen Kontaktnamen oder eine Telefonnummer ein, um eine neue Nachricht zu beginnen.",
 "fr": "Saisissez le nom d'un contact ou un numéro de téléphone pour commencer un nouveau message",
 "es": "Escribe el nombre de un contacto o un número de teléfono para iniciar un mensaje nuevo"
+},
+"people_and_options_activity_title": {
+"res": "bullhead:PrebuiltBugle:people_and_options_activity_title",
+"en": "People & options",
+"hu": "Személyek és beállítások",
+"de": "Personen & Optionen",
+"fr": "Participants et options",
+"es": "Contactos y opciones"
+},
+"notifications_enabled_conversation_pref_title": {
+"res": "bullhead:PrebuiltBugle:notifications_enabled_conversation_pref_title",
+"en": "Notifications",
+"hu": "Értesítések",
+"de": "Benachrichtigungen",
+"fr": "Notifications",
+"es": "Notificaciones"
+},
+"notification_sound_pref_title": {
+"res": "bullhead:PrebuiltBugle:notification_sound_pref_title",
+"en": "Sound",
+"hu": "Hang",
+"de": "Ton",
+"fr": "Son",
+"es": "Sonido"
+},
+"notification_vibrate_pref_title": {
+"res": "bullhead:PrebuiltBugle:notification_vibrate_pref_title",
+"en": "Vibrate",
+"hu": "Rezgés",
+"de": "Vibrieren",
+"fr": "Vibreur",
+"es": "Vibrar"
+},
+"block_contact_title": {
+"res": "bullhead:PrebuiltBugle:block_contact_title",
+"args": 1,
+"en": "Block %s",
+"hu": "%s letiltása",
+"de": "%s blockieren",
+"fr": "Bloquer \"%s\"",
+"es": "Bloquear a %s"
+},
+"unblock_contact_title": {
+"res": "bullhead:PrebuiltBugle:unblock_contact_title",
+"args": 1,
+"en": "Unblock %s",
+"hu": "%s feloldása",
+"de": "Blockierung aufheben für %s",
+"fr": "Débloquer \"%s\"",
+"es": "Desbloquear a %s"
+},
+"block_confirmation_title": {
+"res": "bullhead:PrebuiltBugle:block_confirmation_title",
+"args": 1,
+"en": "Block %s?",
+"hu": "Letiltja ezt: %s?",
+"de": "%s blockieren?",
+"fr": "Bloquer %s ?",
+"es": "¿Bloquear a %s?"
+},
+"block_confirmation_message": {
+"res": "bullhead:PrebuiltBugle:block_confirmation_message",
+"en": "You'll continue to receive messages from this number but won't be notified anymore. This conversation will be archived.",
+"hu": "Továbbra is kap üzeneteket erről a számról, ám a rendszer nem küld róluk értesítést. A beszélgetést a rendszer archiválja.",
+"de": "Sie erhalten weiterhin Nachrichten von dieser Nummer, werden jedoch nicht mehr benachrichtigt. Diese Unterhaltung wird archiviert.",
+"fr": "Vous continuerez à recevoir les messages envoyés par ce numéro, mais vous ne recevrez plus de notifications. Cette conversation sera archivée.",
+"es": "Seguirás recibiendo mensajes de este número pero no volverás a recibir notificaciones. Esta conversación se archivará."
+},
+"blocked_toast_message": {
+"res": "bullhead:PrebuiltBugle:blocked_toast_message",
+"en": "Contact blocked & archived",
+"hu": "Ismerős letiltva és archiválva",
+"de": "Kontakt blockiert und archiviert",
+"fr": "Contact bloqué et archivé",
+"es": "Contacto bloqueado y archivado"
+},
+"unblocked_toast_message": {
+"res": "bullhead:PrebuiltBugle:unblocked_toast_message",
+"en": "Contact unblocked & unarchived",
+"hu": "Névjegy tiltása és archiválása visszavonva",
+"de": "Blockierung des Kontakts aufgehoben & Kontakt aus dem Archiv entfernt",
+"fr": "Contact débloqué et archivage annulé.",
+"es": "Contacto desbloqueado y no archivado"
+},
+"tap_to_unblock_message": {
+"res": "bullhead:PrebuiltBugle:tap_to_unblock_message",
+"en": "UNBLOCK",
+"hu": "FELOLD",
+"de": "Blockierung aufheben",
+"fr": "DÉBLOQUER",
+"es": "DESBLOQUEAR"
+},
+"archived_activity_title": {
+"res": "bullhead:PrebuiltBugle:archived_activity_title",
+"en": "Archived",
+"hu": "Archiválva",
+"de": "Archiviert",
+"fr": "Archivées",
+"es": "Archivado"
+},
+"archived_conversation_list_empty_text": {
+"res": "bullhead:PrebuiltBugle:archived_conversation_list_empty_text",
+"en": "Archived conversations appear here",
+"hu": "Itt jelennek meg az archivált beszélgetések",
+"de": "Archivierte Unterhaltungen erscheinen hier.",
+"fr": "Les conversations archivées s'affichent ici.",
+"es": "Aquí aparecen las conversaciones archivadas"
+},
+"action_unarchive": {
+"res": "bullhead:PrebuiltBugle:action_unarchive",
+"en": "Unarchive",
+"hu": "Archiválás visszavonása",
+"de": "Aus Archiv entfernen",
+"fr": "Annuler l'archivage",
+"es": "No archivar"
+},
+"unarchived_toast_message": {
+"res": "bullhead:PrebuiltBugle:unarchived_toast_message",
+"en": "%d unarchived",
+"hu": "%d archiválása megszüntetve",
+"de": "%d aus dem Archiv entfernt",
+"fr": "Archivage annulé de %d conversation(s).",
+"es": "%d no archivadas"
+},
+"action_block": {
+"res": "bullhead:PrebuiltBugle:action_block",
+"en": "Block",
+"hu": "Tiltás",
+"de": "Blockieren",
+"fr": "Bloquer",
+"es": "Bloquear"
+},
+"silent_ringtone": {
+"res": "bullhead:PrebuiltBugle:silent_ringtone",
+"en": "Silent",
+"hu": "Néma",
+"de": "Lautlos",
+"fr": "Mode silencieux",
+"es": "Silencio"
+},
+"attachMediaButtonContentDescription": {
+"res": "bullhead:PrebuiltBugle:attachMediaButtonContentDescription",
+"en": "Add an attachment",
+"hu": "Melléklet hozzáadása",
+"de": "Anhang hinzufügen",
+"fr": "Ajouter une pièce jointe",
+"es": "Adjuntar un archivo"
+},
+"mediapicker_gallery_title": {
+"res": "bullhead:PrebuiltBugle:mediapicker_gallery_title",
+"en": "Choose photo",
+"hu": "Fotó kiválasztása",
+"de": "Foto auswählen",
+"fr": "Sélectionner une photo",
+"es": "Elegir foto"
+},
+"mediapicker_galleryChooserDescription": {
+"res": "bullhead:PrebuiltBugle:mediapicker_galleryChooserDescription",
+"en": "Choose images from this device",
+"hu": "Képek kiválasztása erről az eszközről",
+"de": "Bilder von diesem Gerät auswählen",
+"fr": "Sélectionner des images sur cet appareil",
+"es": "Seleccionar imágenes de este dispositivo"
+},
+"mediapicker_cameraChooserDescription": {
+"res": "bullhead:PrebuiltBugle:mediapicker_cameraChooserDescription",
+"en": "Capture pictures or video",
+"hu": "Kép vagy videó rögzítése",
+"de": "Bilder oder Videos aufnehmen",
+"fr": "Prendre des photos ou filmer une vidéo",
+"es": "Capturar imágenes o vídeo"
+},
+"mediapicker_audioChooserDescription": {
+"res": "bullhead:PrebuiltBugle:mediapicker_audioChooserDescription",
+"en": "Record audio",
+"hu": "Hanganyag rögzítése",
+"de": "Audio aufzeichnen",
+"fr": "Enregistrer un fichier audio",
+"es": "Grabar audio"
+},
+"audio_picker_hint_text": {
+"res": "bullhead:PrebuiltBugle:audio_picker_hint_text",
+"en": "Touch & hold",
+"hu": "Érintés és tartás",
+"de": "Berühren und halten",
+"fr": "Appuyez ici de manière prolongée",
+"es": "Mantener pulsado"
+},
+"audio_record_view_content_description": {
+"res": "bullhead:PrebuiltBugle:audio_record_view_content_description",
+"en": "Touch and hold to record audio",
+"hu": "Hangfelvétel készítéséhez tartsa nyomva",
+"de": "Für Audioaufnahme berühren und halten",
+"fr": "Appuyer de manière prolongée pour enregistrer des contenus audio",
+"es": "Mantener pulsado para grabar audio"
+},
+"camera_take_picture": {
+"res": "bullhead:PrebuiltBugle:camera_take_picture",
+"en": "Take picture",
+"hu": "Kép készítése",
+"de": "Bild aufnehmen",
+"fr": "Prendre une photo",
+"es": "Hacer foto"
+},
+"conversation_list_snippet_picture": {
+"res": "bullhead:PrebuiltBugle:conversation_list_snippet_picture",
+"en": "Picture",
+"hu": "Kép",
+"de": "Bild",
+"fr": "Image",
+"es": "Imagen"
+},
+"conversation_list_snippet_audio_clip": {
+"res": "bullhead:PrebuiltBugle:conversation_list_snippet_audio_clip",
+"en": "Audio clip",
+"hu": "Hangfelvétel",
+"de": "Audioclip",
+"fr": "Extrait audio",
+"es": "Fragmento de audio"
+},
+"emojiKeyboardButtonContentDescription": {
+"res": "bullhead:PrebuiltBugle:emojiKeyboardButtonContentDescription",
+"en": "Emoji Keyboard",
+"hu": "Hangulatjel-billentyűzet",
+"de": "Emoji-Tastatur",
+"fr": "Clavier emoji",
+"es": "Teclado de emojis"
+},
+"emoji_keyboard_backspace_content_description": {
+"res": "bullhead:PrebuiltBugle:emoji_keyboard_backspace_content_description",
+"en": "Delete last emoji",
+"hu": "Az utolsó hangulatjel törlése",
+"de": "Letztes Emoji löschen",
+"fr": "Supprimer le dernier emoji",
+"es": "Eliminar último emoji"
+},
+"recent_emoji_zero_state_text": {
+"res": "bullhead:PrebuiltBugle:recent_emoji_zero_state_text",
+"en": "Your recently used emoji… appear here",
+"hu": "A nemrég használt hangulatjelek… itt jelennek meg",
+"de": "Ihre kürzlich verwendeten Emojis erscheinen hier.",
+"fr": "Les emoji récemment utilisés s'affichent ici.",
+"es": "Aquí aparecen los emojis que hayas usado recientemente"
+},
+"widget_conversation_name": {
+"res": "bullhead:PrebuiltBugle:widget_conversation_name",
+"en": "Messenger",
+"hu": "Messenger",
+"de": "Messenger",
+"fr": "Messenger",
+"es": "Messenger"
+},
+"widget_reply_content_description": {
+"res": "bullhead:PrebuiltBugle:widget_reply_content_description",
+"en": "Reply",
+"hu": "Válasz",
+"de": "Antworten",
+"fr": "Répondre",
+"es": "Responder"
+},
+"widget_conversation_list_content_description": {
+"res": "bullhead:PrebuiltBugle:widget_conversation_list_content_description",
+"en": "Conversation list",
+"hu": "Beszélgetéslista",
+"de": "Konversationsliste",
+"fr": "Liste des conversations",
+"es": "Lista de conversaciones"
+},
+"tap_to_configure": {
+"res": "bullhead:PrebuiltBugle:tap_to_configure",
+"en": "Conversation deleted. Touch to show a different Messenger conversation",
+"hu": "Törölve. Másikhoz érintse meg.",
+"de": "Unterhaltung gelöscht. Hier tippen, um andere Unterhaltung zu sehen",
+"fr": "Conversation supprimée. Appuyez pour voir autre convers. Messenger.",
+"es": "Conversación eliminada. Ver otra"
+},
+"framework/ok": {
+"res": "bullhead:framework:ok",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"framework/cancel": {
+"res": "bullhead:framework:cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"framework/ringtone_default": {
+"res": "bullhead:framework:ringtone_default",
+"en": "Default ringtone",
+"hu": "Alapértelmezett csengőhang",
+"de": "Standard-Klingelton",
+"fr": "Sonnerie par défaut",
+"es": "Tono por defecto"
 }
 });

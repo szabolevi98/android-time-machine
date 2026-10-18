@@ -184,5 +184,296 @@ MM.strings('drive', {
 "de": "Ordner",
 "fr": "Dossiers",
 "es": "Carpetas"
+},
+"empty_doclist_for_shared_with_me_view": {
+"res": "bullhead:Drive:empty_doclist_for_shared_with_me_view",
+"en": "Files shared with you will appear here.",
+"hu": "Az Önnel megosztott fájlok itt fognak megjelenni.",
+"de": "Hier werden Dateien angezeigt, die für Sie freigegeben wurden.",
+"fr": "Les fichiers partagés avec vous s'afficheront ici.",
+"es": "Los archivos compartidos contigo se mostrarán aquí."
+},
+"empty_doclist_for_recent_view": {
+"res": "bullhead:Drive:empty_doclist_for_recent_view",
+"en": "No recently opened or edited files.",
+"hu": "Nincsenek a közelmúltban megnyitott vagy szerkesztett elemek.",
+"de": "Keine kürzlich geöffneten oder bearbeiteten Dateien vorhanden",
+"fr": "Aucun fichier n'a été ouvert ou modifié récemment.",
+"es": "No hay ningún archivo abierto o editado recientemente."
+},
+"empty_doclist_for_starred_view": {
+"res": "bullhead:Drive:empty_doclist_for_starred_view",
+"en": "You have no starred files.",
+"hu": "Nem rendelkezik csillagozott fájlokkal.",
+"de": "Keine markierten Dateien vorhanden",
+"fr": "Aucun fichier suivi.",
+"es": "No hay archivos destacados."
+},
+"empty_doclist_for_starred_view_details": {
+"res": "bullhead:Drive:empty_doclist_for_starred_view_details",
+"en": "Tap the star icon in the details panel to add the file to this list.",
+"hu": "A fájl felvételéhez a listába koppintson a részletek paneljén a csillag ikonra.",
+"de": "Tippen Sie im Detailbereich auf das Sternsymbol, um die Datei zu dieser Liste hinzuzufügen.",
+"fr": "Appuyez sur l'icône en forme d'étoile dans le volet Détails pour ajouter le fichier à cette liste.",
+"es": "Toca el icono de estrella en el panel de detalles para añadir el archivo a la lista."
+},
+"empty_doclist_for_pinned_view": {
+"res": "bullhead:Drive:empty_doclist_for_pinned_view",
+"en": "No files available offline.",
+"hu": "Egy fájl sem érhető el offline.",
+"de": "Keine Dateien offline verfügbar",
+"fr": "Aucun fichier n'est disponible en mode hors connexion.",
+"es": "No hay archivos disponibles sin conexión."
+},
+"empty_doclist_for_pinned_view_details": {
+"res": "bullhead:Drive:empty_doclist_for_pinned_view_details",
+"en": "Tap \"Keep offline\" in the details pane of the file to view it when your device is offline.",
+"hu": "Ha akkor is meg szeretne tekinteni egy fájlt, amikor készüléke nem csatlakozik az internethez, koppintson a „Tárolás offline” elemre a fájl részleteinek paneljén.",
+"de": "Wenn Sie die Datei auch offline ansehen möchten, tippen Sie im Detailbereich der Datei auf \"Offline speichern\".",
+"fr": "Appuyez sur \"Stocker hors connexion\" dans le volet des détails du fichier pour pouvoir consulter ce fichier hors connexion.",
+"es": "Toca Consultar sin conexión en el panel de detalles del archivo si quieres verlo cuando tengas el dispositivo desconectado de Internet."
+},
+"empty_doclist_for_uploads_view": {
+"res": "bullhead:Drive:empty_doclist_for_uploads_view",
+"en": "No recent uploads.",
+"hu": "Nincsenek nemrég feltöltött fájljai.",
+"de": "Keine letzten Uploads vorhanden",
+"fr": "Aucune importation récente.",
+"es": "No hay subidas recientes."
+},
+"empty_doclist_for_uploads_view_details": {
+"res": "bullhead:Drive:empty_doclist_for_uploads_view_details",
+"en": "Manage your active uploads and view files that you've recently uploaded from this device.",
+"hu": "Kezelheti aktív feltöltéseit, és megtekintheti az erről az eszközről nemrég feltöltött fájlokat.",
+"de": "Verwalten Sie Ihre aktiven Uploads und sehen Sie Dateien an, die Sie kürzlich von diesem Gerät hochgeladen haben.",
+"fr": "Gérer vos importations actives et afficher les fichiers que vous avez récemment importés depuis cet appareil",
+"es": "Administra tus subidas activas y visualiza los archivos que hayas subido recientemente desde este dispositivo."
+},
+"empty_doclist_for_search_view": {
+"res": "bullhead:Drive:empty_doclist_for_search_view",
+"en": "No results.",
+"hu": "Nincs találat.",
+"de": "Keine Ergebnisse",
+"fr": "Aucun résultat.",
+"es": "No hay resultados."
+},
+"search_hint": {
+"res": "bullhead:Drive:search_hint",
+"en": "Search my Drive",
+"hu": "Keresés a Saját meghajtón",
+"de": "In \"Meine Ablage\" suchen",
+"fr": "Rechercher dans Mon Drive",
+"es": "Buscar en Mi unidad"
+},
+"action_bar_close_search_button_desc": {
+"res": "bullhead:Drive:action_bar_close_search_button_desc",
+"en": "Close search",
+"hu": "Keresés bezárása",
+"de": "Suche beenden",
+"fr": "Fermer la barre de recherche",
+"es": "Cerrar la búsqueda"
+},
+"menu_search": {
+"res": "bullhead:Drive:menu_search",
+"en": "Search",
+"hu": "Keresés",
+"de": "Suche",
+"fr": "Rechercher",
+"es": "Buscar"
+},
+"menu_search_clear": {
+"res": "bullhead:Drive:menu_search_clear",
+"en": "Clear search",
+"hu": "Keresés törlése",
+"de": "Suche löschen",
+"fr": "Effacer la recherche",
+"es": "Borrar búsqueda"
+},
+"fast_scroll_search_result_grouper": {
+"res": "bullhead:Drive:fast_scroll_search_result_grouper",
+"en": "Search Results",
+"hu": "Keresési eredmények",
+"de": "Suchergebnisse",
+"fr": "Résultats de rech.",
+"es": "Resultado búsqueda"
+},
+"recent_activity_card_title": {
+"res": "bullhead:Drive:recent_activity_card_title",
+"en": "Activity",
+"hu": "Tevékenység",
+"de": "Aktivität",
+"fr": "Activité",
+"es": "Actividad"
+},
+"recent_activity_empty": {
+"res": "bullhead:Drive:recent_activity_empty",
+"en": "No recorded activity",
+"hu": "Nincs rögzített tevékenység",
+"de": "Keine aufgezeichnete Aktivität",
+"fr": "Aucune activité enregistrée",
+"es": "No hay actividad registrada"
+},
+"action_card_star": {
+"res": "bullhead:Drive:action_card_star",
+"en": "Star",
+"hu": "Csillagozás",
+"de": "Markieren",
+"fr": "Suivre",
+"es": "Destacar"
+},
+"action_card_unstar": {
+"res": "bullhead:Drive:action_card_unstar",
+"en": "Unstar",
+"hu": "Csill. törlése",
+"de": "Markierung aufheben",
+"fr": "Ne pas suivre",
+"es": "Dejar de destacar"
+},
+"menu_rename": {
+"res": "bullhead:Drive:menu_rename",
+"en": "Rename",
+"hu": "Átnevezés",
+"de": "Umbenennen",
+"fr": "Renommer",
+"es": "Cambiar nombre"
+},
+"menu_offline": {
+"res": "bullhead:Drive:menu_offline",
+"en": "Keep offline",
+"hu": "Tárolás offline",
+"de": "Offline speichern",
+"fr": "Stocker hors connexion",
+"es": "Consultar sin conexión"
+},
+"menu_delete": {
+"res": "bullhead:Drive:menu_delete",
+"en": "Remove",
+"hu": "Eltávolítás",
+"de": "Entfernen",
+"fr": "Supprimer",
+"es": "Eliminar"
+},
+"announce_document_removed": {
+"res": "bullhead:Drive:announce_document_removed",
+"en": "File removed.",
+"hu": "Eltávolította a fájlt.",
+"de": "Datei entfernt",
+"fr": "Fichier supprimé.",
+"es": "Archivo eliminado."
+},
+"announce_collection_removed": {
+"res": "bullhead:Drive:announce_collection_removed",
+"en": "Folder removed.",
+"hu": "Eltávolította a mappát.",
+"de": "Ordner entfernt",
+"fr": "Dossier supprimé.",
+"es": "Carpeta eliminada."
+},
+"announce_rename": {
+"res": "bullhead:Drive:announce_rename",
+"args": 1,
+"en": "Renamed to %1$s.",
+"hu": "Átnevezve erre: %1$s.",
+"de": "Umbenannt in %1$s",
+"fr": "Nouveau nom de l'élément : %1$s.",
+"es": "Nombre cambiado a: %1$s."
+},
+"button_ok": {
+"res": "bullhead:Drive:button_ok",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"chips_action_cancel": {
+"res": "bullhead:Drive:chips_action_cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"default_new_folder_title": {
+"res": "bullhead:Drive:default_new_folder_title",
+"en": "Untitled folder",
+"hu": "Névtelen mappa",
+"de": "Unbenannter Ordner",
+"fr": "Dossier sans titre",
+"es": "Carpeta sin nombre"
+},
+"default_new_kix_title": {
+"res": "bullhead:Drive:default_new_kix_title",
+"en": "Untitled document",
+"hu": "Névtelen dokumentum",
+"de": "Unbenanntes Dokument",
+"fr": "Document sans titre",
+"es": "Documento sin título"
+},
+"default_new_trix_title": {
+"res": "bullhead:Drive:default_new_trix_title",
+"en": "Untitled spreadsheet",
+"hu": "Névtelen táblázat",
+"de": "Unbenannte Tabelle",
+"fr": "Feuille de calcul sans titre",
+"es": "Hoja de cálculo sin título"
+},
+"default_new_punch_title": {
+"res": "bullhead:Drive:default_new_punch_title",
+"en": "Untitled presentation",
+"hu": "Névtelen prezentáció",
+"de": "Unbenannte Präsentation",
+"fr": "Présentation sans titre",
+"es": "Presentación sin título"
+},
+"ds_title_activity_capture": {
+"res": "bullhead:Drive:ds_title_activity_capture",
+"en": "Scan",
+"hu": "Lapolvasás",
+"de": "Scannen",
+"fr": "Numériser",
+"es": "Exploración"
+},
+"ds_scanned_file_name": {
+"res": "bullhead:Drive:ds_scanned_file_name",
+"args": 1,
+"en": "Scanned_%1$s",
+"hu": "beolvasott_%1$s",
+"de": "Gescannt_%1$s",
+"fr": "numérisé_%1$s",
+"es": "Escaneado_ %1$s"
+},
+"ds_scanner_introduction_header": {
+"res": "bullhead:Drive:ds_scanner_introduction_header",
+"en": "Scan to PDF",
+"hu": "Szkennelés PDF-be",
+"de": "Scanausgabe: PDF",
+"fr": "Numériser au format PDF",
+"es": "Escanear en formato PDF"
+},
+"ds_scanner_introduction_text": {
+"res": "bullhead:Drive:ds_scanner_introduction_text",
+"en": "Tap + to scan more pages or ✔ to upload document to Drive.",
+"hu": "Koppintson a + ikonra további oldalak szkenneléséhez, vagy a ✔ ikonra a dokumentumnak a Drive-ra való feltöltéséhez.",
+"de": "Tippen Sie auf +, um weitere Seiten zu scannen, oder auf ✔, um das Dokument auf Google Drive hochzuladen.",
+"fr": "Appuyez sur + pour numériser d'autres pages ou sur ✔ pour importer le document dans Drive.",
+"es": "Toca + para escanear más páginas o ✔ para subir un documento a Drive."
+},
+"grid_sync_upload_label_format": {
+"res": "bullhead:Drive:grid_sync_upload_label_format",
+"args": 1,
+"en": "Uploading %1$s",
+"hu": "%1$s feltöltése",
+"de": "Upload von %1$s",
+"fr": "Importation de %1$s...",
+"es": "Subiendo %1$s"
+},
+"menu_overflow_content_description": {
+"res": "bullhead:Drive:menu_overflow_content_description",
+"en": "More options",
+"hu": "További beállítások",
+"de": "Weitere Optionen",
+"fr": "Autres options",
+"es": "Más opciones"
 }
 });

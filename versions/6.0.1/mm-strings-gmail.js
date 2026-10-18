@@ -503,5 +503,298 @@ MM.strings('gmail', {
 "de": "Zitierten Text anzeigen",
 "fr": "Afficher le texte des messages précédents",
 "es": "Mostrar texto citado"
+},
+"move_to_selection_dialog_title": {
+"res": "bullhead:PrebuiltGmail:move_to_selection_dialog_title",
+"en": "Move to",
+"hu": "Áthelyezés",
+"de": "Verschieben nach",
+"fr": "Déplacer vers",
+"es": "Mover a"
+},
+"change_folders_selection_dialog_title": {
+"res": "bullhead:PrebuiltGmail:change_folders_selection_dialog_title",
+"en": "Label as",
+"hu": "Címkézés a következőként:",
+"de": "Kennzeichnen als",
+"fr": "Appliquer le libellé",
+"es": "Etiquetar como"
+},
+"mailbox_name_display_inbox": {
+"res": "bullhead:PrebuiltGmail:mailbox_name_display_inbox",
+"en": "Inbox",
+"hu": "Beérkező levelek",
+"de": "Posteingang",
+"fr": "Boîte de réception",
+"es": "Recibidos"
+},
+"conversation_folder_moved": {
+"res": "bullhead:PrebuiltGmail:conversation_folder_moved",
+"args": 1,
+"en": "Moved to %1$s",
+"hu": "Áthelyezve ide: %1$s",
+"de": "Verschoben nach \"%1$s\"",
+"fr": "Déplacée vers %1$s",
+"es": "Movida a %1$s"
+},
+"mark_important": {
+"res": "bullhead:PrebuiltGmail:mark_important",
+"en": "Mark important",
+"hu": "Megjelölés fontosként",
+"de": "Als wichtig markieren",
+"fr": "Marquer comme important",
+"es": "Marcar como importante"
+},
+"conversation_muted": {
+"res": "bullhead:PrebuiltGmail:conversation_muted",
+"en": {
+"other": "<b>%1$d</b> muted",
+"one": "<b>%1$d</b> muted"
+},
+"hu": {
+"other": "<b>%1$d</b> lezárva",
+"one": "<b>%1$d</b> lezárva"
+},
+"de": {
+"other": "<b>%1$d</b> ignoriert",
+"one": "<b>%1$d</b> ignoriert"
+},
+"fr": {
+"other": "<b>%1$d</b> conversations ignorées",
+"one": "<b>%1$d</b> conversation ignorée"
+},
+"es": {
+"other": "<b>%1$d</b> silenciados",
+"one": "<b>%1$d</b> silenciado"
+}
+},
+"conversation_not_important": {
+"res": "bullhead:PrebuiltGmail:conversation_not_important",
+"en": {
+"other": "<b>%1$d</b> marked not important",
+"one": "<b>%1$d</b> marked not important"
+},
+"hu": {
+"other": "<b>%1$d</b> megjelölve nem fontosként",
+"one": "<b>%1$d</b> megjelölve nem fontosként"
+},
+"de": {
+"other": "<b>%1$d</b> als nicht wichtig markiert",
+"one": "<b>%1$d</b> als nicht wichtig markiert"
+},
+"fr": {
+"other": "<b>%1$d</b> conversations marquées comme non importantes",
+"one": "<b>%1$d</b> conversation marquée comme non importante"
+},
+"es": {
+"other": "<b>%1$d</b> marcados como no importantes",
+"one": "<b>%1$d</b> marcado como no importante"
+}
+},
+"conversation_spammed": {
+"res": "bullhead:PrebuiltGmail:conversation_spammed",
+"en": {
+"other": "<b>%1$d</b> reported as spam",
+"one": "<b>%1$d</b> reported as spam"
+},
+"hu": {
+"other": "<b>%1$d</b> bejelentve spamként",
+"one": "<b>%1$d</b> bejelentve spamként"
+},
+"de": {
+"other": "<b>%1$d</b> als Spam gemeldet",
+"one": "<b>%1$d</b> als Spam gemeldet"
+},
+"fr": {
+"other": "<b>%1$d</b>conversations marquées comme étant du spam",
+"one": "<b>%1$d</b> conversation marquée comme étant du spam"
+},
+"es": {
+"other": "<b>%1$d</b> marcados como spam",
+"one": "<b>%1$d</b> marcado como spam"
+}
+},
+"conversation_folder_changed": {
+"res": "bullhead:PrebuiltGmail:conversation_folder_changed",
+"en": {
+"other": "Changed labels.",
+"one": "Changed label."
+},
+"hu": {
+"other": "Címkék módosítva.",
+"one": "Címke módosítva."
+},
+"de": {
+"other": "Labels geändert",
+"one": "Label geändert"
+},
+"fr": {
+"other": "Libellés modifiés.",
+"one": "Libellé modifié."
+},
+"es": {
+"other": "Etiquetas cambiadas.",
+"one": "Etiqueta cambiada."
+}
+},
+"label_ignored": {
+"res": "bullhead:PrebuiltGmail:label_ignored",
+"en": "Muted",
+"hu": "Lezárva",
+"de": "Ignoriert",
+"fr": "Ignoré",
+"es": "Silenciados"
+},
+"search_results_header": {
+"res": "bullhead:PrebuiltGmail:search_results_header",
+"en": "Results",
+"hu": "Találatok",
+"de": "Ergebnisse",
+"fr": "Résultats",
+"es": "Resultados"
+},
+"empty_search": {
+"res": "bullhead:PrebuiltGmail:empty_search",
+"args": 1,
+"en": "Whoops! We didn't find anything for \"%1$s\".",
+"hu": "Hoppá! Nincs találat a következőre: „%1$s”.",
+"de": "Keine Ergebnisse für Ihre Suche nach \"%1$s\"",
+"fr": "Désolé… Aucun résultat trouvé pour \"%1$s\".",
+"es": "¡Vaya! No hemos encontrado nada para \"%1$s\"."
+},
+"clear_history_title": {
+"res": "bullhead:PrebuiltGmail:clear_history_title",
+"en": "Clear search history",
+"hu": "Keresési előzmények törlése",
+"de": "Suchverlauf löschen",
+"fr": "Effacer l'historique des recherches",
+"es": "Borrar historial de búsquedas"
+},
+"clear_history_dialog_title": {
+"res": "bullhead:PrebuiltGmail:clear_history_dialog_title",
+"en": "Clear search history?",
+"hu": "Törli a keresési előzményeket?",
+"de": "Suchverlauf löschen?",
+"fr": "Effacer l'historique des recherches ?",
+"es": "¿Borrar historial de búsquedas?"
+},
+"clear_history_dialog_message": {
+"res": "bullhead:PrebuiltGmail:clear_history_dialog_message",
+"en": "All the searches you've previously performed will be removed.",
+"hu": "Valamennyi végrehajtott keresés eltávolításra kerül.",
+"de": "Alle Ihre bisherigen Suchanfragen werden entfernt.",
+"fr": "Toutes les recherches que vous avez effectuées auparavant seront supprimées.",
+"es": "Se eliminarán todas las búsquedas que hayas hecho."
+},
+"search_history_cleared": {
+"res": "bullhead:PrebuiltGmail:search_history_cleared",
+"en": "Search history cleared.",
+"hu": "A keresési előzmények törölve.",
+"de": "Suchverlauf gelöscht",
+"fr": "Historique des recherches effacé.",
+"es": "Se ha borrado el historial de búsquedas."
+},
+"search_back_desc": {
+"res": "bullhead:PrebuiltGmail:search_back_desc",
+"en": "Close search",
+"hu": "Keresés bezárása",
+"de": "Suche beenden",
+"fr": "Fermer la recherche",
+"es": "Cerrar la búsqueda"
+},
+"search_clear_desc": {
+"res": "bullhead:PrebuiltGmail:search_clear_desc",
+"en": "Clear search text",
+"hu": "Keresési kifejezés törlése",
+"de": "Sucheingabe löschen",
+"fr": "Effacer le texte de la recherche",
+"es": "Borrar el texto de la búsqueda"
+},
+"account_setup_landing_headline": {
+"res": "bullhead:PrebuiltGmail:account_setup_landing_headline",
+"en": "Set up email",
+"hu": "E-mail beállítása",
+"de": "E-Mail einrichten",
+"fr": "Configurer votre messagerie",
+"es": "Configurar correo electrónico"
+},
+"account_disambig_type_google_title": {
+"res": "bullhead:PrebuiltGmail:account_disambig_type_google_title",
+"en": "Google",
+"hu": "Google",
+"de": "Google",
+"fr": "Google",
+"es": "Google"
+},
+"account_disambig_type_personal_title": {
+"res": "bullhead:PrebuiltGmail:account_disambig_type_personal_title",
+"en": "Personal (IMAP/POP)",
+"hu": "Személyes (IMAP/POP)",
+"de": "Persönlich (IMAP/POP)",
+"fr": "Personnel (IMAP/POP)",
+"es": "Personal (IMAP/POP)"
+},
+"account_disambig_type_exchange_title": {
+"res": "bullhead:PrebuiltGmail:account_disambig_type_exchange_title",
+"en": "Exchange",
+"hu": "Exchange",
+"de": "Exchange",
+"fr": "Exchange",
+"es": "Exchange",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"attach_from_service_stub1": {
+"res": "bullhead:PrebuiltGmail:attach_from_service_stub1",
+"en": "Insert from Drive",
+"hu": "Beszúrás a Google Drive-ból",
+"de": "Aus Google Drive einfügen",
+"fr": "Insérer à partir de Drive",
+"es": "Insertar desde Drive"
+},
+"remove_attachment_desc": {
+"res": "bullhead:PrebuiltGmail:remove_attachment_desc",
+"args": 1,
+"en": "Remove attachment %s",
+"hu": "Melléklet (%s) eltávolítása",
+"de": "Anhang \"%s\" entfernen",
+"fr": "Supprimer la pièce jointe %s",
+"es": "Eliminar el archivo adjunto %s"
+},
+"attachment_image": {
+"res": "bullhead:PrebuiltGmail:attachment_image",
+"en": "Image",
+"hu": "Kép",
+"de": "Bild",
+"fr": "Image",
+"es": "Imagen"
+},
+"attachment_application_pdf": {
+"res": "bullhead:PrebuiltGmail:attachment_application_pdf",
+"en": "PDF",
+"hu": "PDF",
+"de": "PDF",
+"fr": "PDF",
+"es": "PDF"
+},
+"framework/ok": {
+"res": "bullhead:framework:ok",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"framework/cancel": {
+"res": "bullhead:framework:cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
 }
 });
