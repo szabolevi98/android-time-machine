@@ -5,6 +5,13 @@
    at the launcher's wallpaper offset 0 (its left edge). */
 .screen.view-home,.screen.view-drawer,.screen.view-widgets{background:#000 var(--mm-wallpaper,url('assets/fw-default_wallpaper.jpg')) left top/auto 100% no-repeat}
 .screen.view-home .mmnb,.screen.view-drawer .mmnb,.screen.view-widgets .mmnb{background:transparent}
+/* The launcher window draws under the see-through bars, so what dims it dims them too: the first-run cling's #80000000
+   scrim, and the shade's behind scrim (--mm-bar-dim, set by mm-shade.js while it follows the finger). */
+.screen:has(.mmh-cling) .mmsb{background:rgba(0,0,0,.5)!important}
+.screen.view-home:has(.mmh-cling) .mmnb{background:rgba(0,0,0,.5)}
+.screen:is(.view-home,.view-drawer,.view-widgets,.view-recents) .mmnb{transition:background-color .3s linear}
+.screen:is(.view-home,.view-drawer,.view-widgets,.view-recents):has(#overlay-root .mmsh) .mmnb{background:rgba(0,0,0,var(--mm-bar-dim,.62))}
+.screen.bar-drag .mmnb{transition:none!important}
 .mmh{position:absolute;inset:0;overflow:hidden;font-family:Roboto,sans-serif;line-height:1.172;touch-action:pan-y;user-select:none}
 /* The pages: the Now page (custom content) left of the workspace pages, moved as a strip. */
 .mmh-strip{position:absolute;inset:0;display:flex;transform:translateX(calc(var(--page) * -100%));transition:transform .35s cubic-bezier(.2,.8,.3,1)}
@@ -38,7 +45,7 @@
 /* The search bar: search_bg around the 56 dp bounds (11 px in, 32 px down), the logo and the mic of search_widget.xml. */
 .mmh-qsb{position:absolute;left:calc(-3.810 * var(--dp));right:calc(-3.810 * var(--dp));top:calc(4.190 * var(--dp));height:calc(64 * var(--dp));display:flex;transition:opacity .25s}
 .mmh.now .mmh-qsb,.mmh.now .mmh-hotseat,.mmh.now .mmh-dots{opacity:0;pointer-events:none}
-.mmh-qsb-plate{flex:1;min-width:0;padding:0;border:0;background:none;text-align:left}
+.mmh-qsb-plate{flex:1;min-width:0;padding:0;border:0;background:none;text-align:left;display:flex;align-items:flex-start}
 .mmh-qsb-plate img{display:block;width:calc(62 * var(--dp));height:calc(23 * var(--dp));margin:calc(14 * var(--dp)) 0 0 calc(16 * var(--dp))}
 .mmh-qsb-mic{flex:none;width:calc(56 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center}
 /* ic_mic_none is white; the layout tints it gray_700 #616161. */

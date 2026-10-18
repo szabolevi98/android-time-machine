@@ -61,6 +61,11 @@
 }
 /* EdgeEffect over a list dragged with the mouse (mm-scroll.js). */
 .mmscr-edges{position:absolute;inset:0;z-index:55;pointer-events:none;overflow:hidden}
+/* The page's own scrollbars never show on the phone; mm-scroll.js draws Android's fading scrollbar instead. */
+.screen *{scrollbar-width:none}
+.screen ::-webkit-scrollbar{display:none}
+.mmscr-bar{position:absolute;border-radius:0;opacity:0;transition:opacity .25s linear}
+.mmscr-bar.on{opacity:1;transition:none}
 .mmscr-edge{position:absolute;overflow:hidden;opacity:0;transform-origin:50% 0}
 .mmscr-edge.bottom{transform-origin:50% 100%}
 .mmscr-edge>i{position:absolute;border-radius:50%}

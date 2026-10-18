@@ -149,6 +149,29 @@
     window.addEventListener('pointercancel', end, true);
     // The release after a drag is not a tap on whatever lies under the pointer.
     window.addEventListener('click', event => { if (suppressClick) { suppressClick = false; event.preventDefault(); event.stopImmediatePropagation(); } }, true);
+    // View.onDrawScrollBars: while a view scrolls, scrollbar_handle_material (4 dp, #84ffffff tinted with the theme's
+    // colorControlNormal, so 54 % black or 70 % white) runs down its right edge, its length the shown part of the
+    // content (at least twice its width); it stays 300 ms after the last move (ViewConfiguration's
+    // SCROLL_BAR_DEFAULT_DELAY) and fades out in 250 ms (SCROLL_BAR_FADE_DURATION). The page's own scrollbars are hidden.
+    const bars = new WeakMap();
+    const darkBehind = el => {
+      for (let node = el; node && node !== screen; node = node.parentElement) {
+        const m = getComputedStyle(node).backgroundColor.match(/[\d.]+/g);
+        if (m && (m[3] === undefined || +m[3] > .5)) return .299 * m[0] + .587 * m[1] + .114 * m[2] < 128;
+      }
+      return true;
+    };
+    screen.addEventListener('scroll', event => {
+      const el = event.target;
+      if (!(el instanceof Element) || !screen.contains(el) || el.scrollHeight <= el.clientHeight + 1 || el.closest('.mm-leaving')) return;
+      let bar = bars.get(el);
+      if (!bar || !bar.isConnected) { bar = document.createElement('i'); bar.className = 'mmscr-bar'; layer.append(bar); bars.set(el, bar); }
+      const box = screen.getBoundingClientRect(), r = el.getBoundingClientRect(), w = 4 * DP();
+      const len = Math.max(2 * w, r.height * el.clientHeight / el.scrollHeight), top = (r.height - len) * el.scrollTop / (el.scrollHeight - el.clientHeight);
+      Object.assign(bar.style, {left: `${r.right - box.left - w}px`, top: `${r.top - box.top + top}px`, width: `${w}px`, height: `${len}px`, background: darkBehind(el) ? 'rgba(255,255,255,.364)' : 'rgba(0,0,0,.284)'});
+      bar.classList.add('on');
+      clearTimeout(bar.timer); bar.timer = setTimeout(() => { bar.classList.remove('on'); setTimeout(() => { if (!bar.classList.contains('on')) { bar.remove(); bars.delete(el); } }, 300); }, 300);
+    }, true);
     return {stop() { fling = null; }};
   }
   // colorEdgeEffect is the theme's colorPrimary: the colour of the bar above the list where there is one.

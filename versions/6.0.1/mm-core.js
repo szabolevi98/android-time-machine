@@ -62,7 +62,7 @@
   const clone = value => JSON.parse(JSON.stringify(value));
 
   const screen = document.querySelector('#screen');
-  const viewport = document.querySelector('#viewport');
+  let viewport = document.querySelector('#viewport');
   const statusRoot = document.querySelector('#status-bar');
   const overlayRoot = document.querySelector('#overlay-root');
   const navRoot = document.querySelector('#nav-bar');
@@ -76,8 +76,9 @@
   const c = {
     get data() { return data; }, user: USER, notifications: () => (window.MM.notificationSources || []).flatMap(f => f(c)), ui, save, render, open, home, back: () => back(true), key: keyPress, toast, t, safe, clone,
     get lang() { return i18n.language; }, locale: () => i18n.locale(),
-    el: {screen, viewport, status: statusRoot, overlay: overlayRoot, nav: navRoot, device},
+    el: {screen, get viewport() { return viewport; }, status: statusRoot, overlay: overlayRoot, nav: navRoot, device},
     has: id => !!modules[id], title: id => modules[id]?.title || SCREENS[id]?.[0] || id,
+    transition(kind) { pending = kind; },
     overlay(id) { ui.overlay = id; renderOverlay(); }, closeOverlay() { ui.overlay = ''; renderOverlay(); },
     lock: () => lockScreen(), wake: () => wake(),
     // MasterClear: the saved phone goes and the page starts again from the boot animation.
@@ -101,16 +102,95 @@
 
   // Overview's thumbnails: the screen an app was left on (its HTML, the status bar's colour and the page), kept when
   // another screen takes its place.
-  let shown = {view: '', sub: ''};
+  let shown = {view: '', sub: '', page: ''};
   function snapshot() {
     const v = shown.view;
     if (v && v !== ui.view && SCREENS[v] && !SYSTEM.includes(v) && !v.startsWith('qs-')) {
       (ui.thumbs ||= {})[v] = {html: viewport.innerHTML, sub: shown.sub, status: statusRoot.querySelector('.mmsb')?.style.background || ''};
     }
   }
+  /* Window animations (framework-res res/anim in MTC20K), played by keeping the leaving window's content on screen as a
+     still layer while the new one comes in:
+     - open (activity_open_enter / _exit): the new window fades in (200 ms decelerate_quart) while it rises from 8 %
+       down (350 ms decelerate_quint); the old one dims to 0.7 over black (217 ms fast_out_slow_in).
+     - close (activity_close_exit / _enter): the old window drops 8 % (250 ms accelerate_quart) and fades out after
+       100 ms (150 ms linear); the one under it comes back from 0.7 (250 ms linear_out_slow_in).
+     - home (wallpaper_open_exit, the launcher with the wallpaper behind it coming forward): the app drops by 110 % of its
+       height in 225 ms (fast_out_linear_in) over the home screen.
+     - reveal: the window grows out of the icon (open's from), the home screen staying under it.
+     - unreveal: the apps drawer closes back into the all apps button (Launcher3's reveal run backwards).
+     Opening another screen, Back, Home and a module's own page change (module.page(c): a path such as 'xml:display/
+     battery', deeper = longer) choose the animation; a module can ask for one with c.transition(kind). */
+  const E = {decQuart: 'cubic-bezier(.165,.84,.44,1)', decQuint: 'cubic-bezier(.23,1,.32,1)', accQuart: 'cubic-bezier(.895,.03,.685,.22)', fosi: 'cubic-bezier(.4,0,.2,1)', losi: 'cubic-bezier(0,0,.2,1)', foli: 'cubic-bezier(.4,0,1,1)'};
+  const LAUNCHER = ['home', 'drawer', 'widgets', 'recents'];
+  const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+  let pending = '', reveal = null;
+  const depth = page => page ? page.split('/').length : 0;
+  function chooseTransition(page) {
+    if (!shown.view || ui.sleeping || reducedMotion?.matches || !viewport.animate || document.hidden) return '';
+    if (pending) return pending === 'none' ? '' : pending;
+    const from = shown.view, to = ui.view;
+    if (from === to) {
+      if (page === shown.page) return '';
+      return depth(page) < depth(shown.page) || shown.page.startsWith(`${page}/`) ? 'close' : 'open';
+    }
+    if (from === 'drawer' && to === 'home') return 'unreveal';
+    if (to === 'home') return SYSTEM.includes(from) ? '' : 'home';
+    if (SYSTEM.includes(from) && from !== 'home' && from !== 'drawer') return '';
+    if (SYSTEM.includes(to)) return '';
+    if (reveal) return 'reveal';
+    return ui.backing ? 'close' : 'open';
+  }
+  // The leaving window: the old viewport element stays where it was (scroll positions and all), the new one takes its
+  // id. Launcher screens carry the wallpaper with them, which otherwise belongs to the screen.
+  function leave(kind) {
+    const old = viewport, fresh = old.cloneNode(false), top = old.offsetTop, height = old.offsetHeight;
+    if (LAUNCHER.includes(shown.view)) {
+      const cs = getComputedStyle(screen);
+      old.style.background = `#000 ${cs.backgroundImage} 0 ${-top}px / auto ${screen.clientHeight}px no-repeat`;
+    }
+    old.removeAttribute('id'); old.classList.add('mm-leaving');
+    Object.assign(old.style, {position: 'absolute', left: '0', right: '0', top: `${top}px`, height: `${height}px`, overflow: 'hidden', pointerEvents: 'none'});
+    if (kind === 'open' || kind === 'reveal') old.after(fresh); else old.before(fresh);
+    viewport = fresh;
+    return old;
+  }
+  function animateTransition(kind, old) {
+    const done = ms => setTimeout(() => old.remove(), ms);
+    const fwd = {fill: 'forwards'};
+    if (kind === 'open') {
+      viewport.animate([{opacity: 0}, {opacity: 1}], {duration: 200, easing: E.decQuart});
+      viewport.animate([{transform: 'translateY(8%)'}, {transform: 'none'}], {duration: 350, easing: E.decQuint});
+      old.animate([{opacity: 1}, {opacity: .7}], {duration: 217, easing: E.fosi, ...fwd});
+      done(350);
+    } else if (kind === 'close') {
+      old.animate([{transform: 'none'}, {transform: 'translateY(8%)'}], {duration: 250, easing: E.accQuart, ...fwd});
+      old.animate([{opacity: 1}, {opacity: 0}], {duration: 150, delay: 100, easing: 'linear', ...fwd});
+      viewport.animate([{opacity: .7}, {opacity: 1}], {duration: 250, easing: E.losi});
+      done(250);
+    } else if (kind === 'home') {
+      old.animate([{transform: 'none'}, {transform: 'translateY(110%)'}], {duration: 225, easing: E.foli, ...fwd});
+      done(225);
+    } else if (kind === 'reveal' && reveal) {
+      const vb = viewport.getBoundingClientRect(), box = reveal;
+      const inset = `inset(${box.top - vb.top}px ${vb.right - box.right}px ${vb.bottom - box.bottom}px ${box.left - vb.left}px)`;
+      viewport.animate([{clipPath: inset}, {clipPath: 'inset(0px 0px 0px 0px)'}], {duration: 300, easing: E.fosi});
+      done(300);
+    } else if (kind === 'unreveal') {
+      const panel = old.querySelector('.mmd'), cs = panel && getComputedStyle(panel);
+      const at = cs ? `at ${cs.getPropertyValue('--rx').trim()} ${cs.getPropertyValue('--ry').trim()}` : 'at 50% 100%';
+      (panel || old).animate([{clipPath: `circle(150% ${at})`}, {clipPath: `circle(0px ${at})`}], {duration: 250, easing: E.fosi, ...fwd});
+      done(250);
+    } else old.remove();
+  }
   function render() {
     snapshot();
     const mod = modules[ui.view];
+    const page = mod?.page?.(c) ?? '';
+    const kind = chooseTransition(page);
+    pending = '';
+    const old = kind ? leave(kind) : null;
+    ui.prevView = shown.view;
     const noStatus = !!mod?.noStatus?.(c), noNav = !!mod?.noNav?.(c);
     screen.className = `screen${ui.sleeping ? ' sleeping' : ''}${noStatus ? ' no-status' : ''}${noNav ? ' no-nav' : ''} view-${ui.view}`;
     if (modules.statusbar) { statusRoot.innerHTML = modules.statusbar.render(c); modules.statusbar.mount?.(c, statusRoot); }
@@ -119,8 +199,10 @@
     else navRoot.innerHTML = missingNav();
     viewport.innerHTML = mod ? mod.render(c) : ui.view === 'home' ? missingHome() : missing(ui.view);
     mod?.mount?.(c, viewport);
-    shown = {view: ui.view, sub: ui.sub};
+    shown = {view: ui.view, sub: ui.sub, page};
     renderOverlay();
+    if (old) animateTransition(kind, old);
+    reveal = null; ui.backing = false;
   }
   function renderOverlay() {
     if (!ui.overlay) { overlayRoot.innerHTML = ''; return; }
@@ -137,13 +219,9 @@
     if (modules[view]?.app !== false && SCREENS[view] && !SYSTEM.includes(view)) ui.recent = [view, ...ui.recent.filter(id => id !== view)].slice(0, 20);
     // The launcher's predicted apps follow what was opened last (kept with the saved state).
     if (window.MM.appsData?.[view]) { data.recentApps = [view, ...(data.recentApps || []).filter(id => id !== view)].slice(0, 12); save(); }
-    const box = from?.getBoundingClientRect?.(), vb = viewport.getBoundingClientRect();
-    render();
     // AppTransition's clip reveal: the window grows out of the icon's bounds (fast out, slow in).
-    if (box && viewport.animate) {
-      const inset = `inset(${box.top - vb.top}px ${vb.right - box.right}px ${vb.bottom - box.bottom}px ${box.left - vb.left}px)`;
-      viewport.animate([{clipPath: inset}, {clipPath: 'inset(0px 0px 0px 0px)'}], {duration: 300, easing: 'cubic-bezier(.4,0,.2,1)'});
-    }
+    reveal = from?.getBoundingClientRect?.() || null;
+    render();
   }
   function home() {
     if (ui.view === 'lock') return;
@@ -161,7 +239,7 @@
     if (modules[ui.view]?.back?.(c)) return;
     if (ui.view === 'home' || ui.view === 'lock') return;
     const prev = ui.history.pop();
-    if (prev) { ui.view = prev.view; ui.sub = prev.sub; render(); } else home();
+    if (prev) { ui.view = prev.view; ui.sub = prev.sub; ui.backing = true; render(); } else home();
   }
 
   // Toasts: drawn by the toast module once it exists; until then the text goes to the console.
@@ -292,8 +370,9 @@
     setInterval(() => {
       const now = new Date();
       // A screen may keep its own user activity timeout (the keyguard's 10 s).
-      const timeout = modules[ui.view]?.timeout?.(c) ?? data.settings.screenTimeout ?? 30000;
-      if (!document.hidden && !ui.sleeping && !ui.power && !ui.overlay && Date.now() - lastActivity >= timeout && !modules[ui.view]?.keepAwake?.(c)) lockScreen();
+      // The simulator's rule: no timeout unless one is chosen in Settings › Display › Sleep (-1 is Never).
+      const timeout = modules[ui.view]?.timeout?.(c) ?? data.settings.screenTimeout ?? -1;
+      if (timeout >= 0 && !document.hidden && !ui.sleeping && !ui.power && !ui.overlay && Date.now() - lastActivity >= timeout && !modules[ui.view]?.keepAwake?.(c)) lockScreen();
       for (const mod of Object.values(modules)) mod.tick?.(c, now);
     }, 1000);
 

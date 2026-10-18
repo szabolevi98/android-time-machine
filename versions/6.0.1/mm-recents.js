@@ -103,17 +103,23 @@
     const el = root.querySelector('.mmrc'); if (!el) return;
     const k = () => c.el.screen.clientWidth / W;   // css px per window px
     let drag = null;
+    // The pointer is captured, so a drag that leaves the stack (or ends over the bars) still ends; pictures are not
+    // dragged by the browser.
+    el.addEventListener('dragstart', e => e.preventDefault());
     el.addEventListener('pointerdown', e => {
-      if (e.button) return;
+      if (e.button || drag) return;
       const t = e.target.closest('.mmrc-task');
-      drag = {x: e.clientX, y: e.clientY, task: t, mode: '', scroll: c.ui.recentsState.scroll};
+      drag = {id: e.pointerId, x: e.clientX, y: e.clientY, task: t, mode: '', scroll: c.ui.recentsState.scroll, samples: [[performance.now(), e.clientX]]};
+      try { el.setPointerCapture(e.pointerId); } catch {}
     });
     el.addEventListener('pointermove', e => {
-      if (!drag) return;
+      if (!drag || e.pointerId !== drag.id) return;
       const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
       if (!drag.mode && Math.hypot(dx, dy) > 10) drag.mode = drag.task && Math.abs(dx) > Math.abs(dy) ? 'swipe' : 'scroll';
-      if (drag.mode === 'swipe') { drag.task.style.translate = `${dx}px 0`; drag.task.style.opacity = String(1 - Math.min(1, Math.abs(dx) / (el.clientWidth * .6))); }
-      else if (drag.mode === 'scroll') {
+      if (drag.mode === 'swipe') {
+        drag.samples.push([performance.now(), e.clientX]); if (drag.samples.length > 6) drag.samples.shift();
+        drag.task.style.transition = 'none'; drag.task.style.translate = `${dx}px 0`; drag.task.style.opacity = String(1 - Math.min(1, Math.abs(dx) / (el.clientWidth * .6)));
+      } else if (drag.mode === 'scroll') {
         const list = tasks(c), {max, min} = progressList(list);
         const dP = toP(visible.top + visible.height / 2) - toP(visible.top + visible.height / 2 - dy / k());
         c.ui.recentsState.scroll = Math.max(min - .0875, Math.min(max + .0875, drag.scroll - dP));
@@ -121,28 +127,52 @@
       }
     });
     const end = e => {
-      if (!drag) return;
+      if (!drag || e.pointerId !== drag.id) return;
       const d = drag; drag = null;
+      try { el.releasePointerCapture(e.pointerId); } catch {}
       if (d.mode) { c.ui.recentsState.suppress = true; setTimeout(() => { c.ui.recentsState && (c.ui.recentsState.suppress = false); }); }
       if (d.mode === 'swipe') {
-        const dx = e.clientX - d.x;
-        if (Math.abs(dx) > el.clientWidth * .3) dismiss(c, d.task.dataset.task);
-        else { d.task.style.translate = ''; d.task.style.opacity = ''; }
+        // SwipeHelper: past 40 % of the width, or flung sideways faster than the escape velocity (500 dp/s), it goes.
+        const dx = e.clientX - d.x, [t0, x0] = d.samples[0], [t1, x1] = d.samples[d.samples.length - 1];
+        const v = t1 > t0 ? (x1 - x0) / (t1 - t0) * 1000 / (k() * W / 411.43) : 0;
+        const fling = Math.abs(v) > 500 && Math.sign(v) === Math.sign(dx);
+        if (e.type === 'pointerup' && (Math.abs(dx) > el.clientWidth * .4 || fling)) dismiss(c, d.task.dataset.task, Math.sign(dx) || 1);
+        else {
+          // Snapping back: SwipeHelper.snapChild, 150 ms.
+          d.task.animate([{translate: `${dx}px 0`, opacity: d.task.style.opacity}, {translate: '0 0', opacity: 1}], {duration: 150, easing: 'cubic-bezier(.4,0,.2,1)'});
+          d.task.style.translate = ''; d.task.style.opacity = ''; d.task.style.transition = '';
+        }
       } else if (d.mode === 'scroll') {
         const {max, min} = progressList(tasks(c));
         c.ui.recentsState.scroll = Math.max(min, Math.min(max, c.ui.recentsState.scroll));
         redraw(c);
-      } else if (d.task && !e.target.closest('button')) open(c, d.task.dataset.task);
+      } else if (d.task && e.type === 'pointerup' && !e.target.closest('button')) open(c, d.task.dataset.task);
     };
-    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end); el.addEventListener('lostpointercapture', end);
   }
 
-  function dismiss(c, id) {
-    c.ui.recent = c.ui.recent.filter(x => x !== id);
-    if (c.ui.thumbs) delete c.ui.thumbs[id];
-    const {max, min} = progressList(tasks(c));
-    c.ui.recentsState.scroll = Math.max(min, Math.min(max, c.ui.recentsState.scroll));
-    redraw(c);
+  /* Dismissing a task: it slides off to the side it was swiped to (SwipeHelper.dismissChild: 150 ms, fading), the X
+     sends it to the right; then the rest of the stack moves into its new places (TaskStackView.onStackTaskRemoved,
+     200 ms fast_out_slow_in). With no task left Overview goes home. */
+  function dismiss(c, id, side = 1) {
+    const stack = c.el.viewport.querySelector('.mmrc-stack'), card = stack?.querySelector(`.mmrc-task[data-task="${CSS.escape(id)}"]`);
+    const finish = () => {
+      const before = new Map([...(stack?.querySelectorAll('.mmrc-task') || [])].map(t => [t.dataset.task, t.getBoundingClientRect().top]));
+      c.ui.recent = c.ui.recent.filter(x => x !== id);
+      if (c.ui.thumbs) delete c.ui.thumbs[id];
+      if (!tasks(c).length) { c.home(); return; }
+      const {max, min} = progressList(tasks(c));
+      c.ui.recentsState.scroll = Math.max(min, Math.min(max, c.ui.recentsState.scroll));
+      redraw(c);
+      for (const t of c.el.viewport.querySelectorAll('.mmrc-task')) {
+        const was = before.get(t.dataset.task), now = t.getBoundingClientRect().top;
+        if (was !== undefined && Math.abs(was - now) > .5) t.animate([{transform: `translateY(${was - now}px)`}, {transform: 'none'}], {duration: 200, easing: 'cubic-bezier(.4,0,.2,1)', composite: 'add'});
+      }
+    };
+    if (!card || !card.animate) { finish(); return; }
+    const from = card.style.translate || '0px 0';
+    card.style.pointerEvents = 'none';
+    card.animate([{translate: from, opacity: card.style.opacity || 1}, {translate: `${side * (c.el.viewport.clientWidth + 20)}px 0`, opacity: 0}], {duration: 150, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards'}).finished.then(finish, finish);
   }
   function open(c, id) { c.ui.recentsState = null; c.open(id, c.ui.thumbs?.[id]?.sub || '', {replace: true}); }
   function front(c) { const list = tasks(c); if (list.length) open(c, list[list.length - 1]); else c.home(); }

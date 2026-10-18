@@ -20,7 +20,8 @@
   'use strict';
   const A = name => `assets/${name}`;
   const T = () => MM.text('lock');
-  const PANEL_H = 683.43;   // 1920 - 126 px of navigation bar, in dp
+  // The panel is the display above the 48 dp navigation bar (683.43 dp on the 5X; taller on a tall phone's page), the
+  // clock a fraction of the way down it.
   let hintTimer = 0;
 
   const is24 = c => c.data.settings.time24 ?? !new Intl.DateTimeFormat(c.locale(), {hour: 'numeric'}).resolvedOptions().hour12;
@@ -42,7 +43,7 @@
         <div class="mmlk-bar" data-action="mmlk-pull"><span class="mmlk-carrier">${c.safe(carrier)}</span>
           <span class="mmlk-icons"><span class="mmlk-cluster">${MM.signalCluster ? MM.signalCluster(c) : ''}</span><span class="mmlk-batt"></span>${b.plugged ? `<span class="mmlk-level">${c.safe(new Intl.NumberFormat(c.locale(), {style: 'percent'}).format(b.level / 100))}</span>` : ''}</span>
           <span class="mmlk-user"><img src="${A('fw-ic_account_circle-user0.svg')}" alt=""></span></div>
-        <div class="mmlk-status" style="top:calc(${(PANEL_H * 0.325).toFixed(2)} * var(--dp))">
+        <div class="mmlk-status" style="top:32.5%">
           <div class="mmlk-clock">${clockText(c)}</div><div class="mmlk-date">${c.safe(dateText(c))}</div>
           ${s.lock?.ownerInfo ? `<div class="mmlk-owner">${c.safe(s.lock.ownerInfo)}</div>` : ''}</div>
         <div class="mmlk-indication">${c.safe(indication)}</div>
@@ -144,7 +145,7 @@
       c.ui.lockState.bouncer = then || 'unlock'; c.render(); return;
     }
     lk?.classList.add('leaving');
-    if (panel) panel.style.transform = `translateY(calc(-${PANEL_H} * var(--dp)))`;
+    if (panel) panel.style.transform = 'translateY(-100%)';
     setTimeout(() => { c.unlock(); if (then) c.open(then); }, 260);
   }
 
@@ -214,7 +215,7 @@
     app: false,
     noStatus: () => true, noNav: c => !c.ui.lockState?.bouncer,
     shouldLock: c => (c.data.settings.lock?.type || 'swipe') !== 'none',
-    timeout: () => 10000,
+    timeout: c => (c.data.settings.screenTimeout ?? -1) < 0 ? -1 : 10000,
     reset(c) { c.ui.lockState = {hint: ''}; },
     render, mount,
     back(c) { if (c.ui.lockState?.bouncer) { c.ui.lockState.bouncer = null; c.render(); } return true; },

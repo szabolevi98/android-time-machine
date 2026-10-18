@@ -189,29 +189,25 @@
     if (st.scanUntil > Date.now()) { clearTimeout(st.scanTimer); st.scanTimer = setTimeout(() => root.querySelector('.mmsh-scan')?.remove(), st.scanUntil - Date.now()); }
     // The slider follows the pointer; the setting is saved when it is let go.
     bindSlider(c, root.querySelector('.mmqs-slider'));
-    // Dragging the panel: down opens quick settings, up closes them, then the shade.
-    const panel = root.querySelector('.mmsh-panel');
-    let start = null;
-    panel?.addEventListener('pointerdown', e => { st.dragged = false; if (!e.target.closest('.mmqs-slider')) start = {y: e.clientY}; });
-    panel?.addEventListener('pointerup', e => {
-      if (!start) return;
-      const dy = (e.clientY - start.y) / (c.el.screen.clientWidth / W); start = null;
-      if (dy > 40 && !st.qs) { st.dragged = true; setQs(c, true); }
-      else if (dy < -40) { st.dragged = true; if (st.qs) setQs(c, false); else close(c); }
-    });
+    // Dragging on the open shade moves the same expansion as pulling the status bar (see drag).
+    shade?.addEventListener('pointerdown', ev => { if (ev.button || ev.target.closest('.mmqs-slider,.mmqs-detail')) return; drag(c, ev, false); });
   }
 
   function setQs(c, on) {
-    const st = c.ui.shade; st.qs = on; if (!on) st.detail = '';
+    const st = c.ui.shade, detail = st.detail; st.qs = on; if (!on) st.detail = '';
     c.el.overlay.querySelector('.mmsh')?.classList.toggle('qs', on);
-    if (!on) refresh(c);
+    if (!on && detail) refresh(c);
   }
+  // The behind scrim reaches under the navigation bar (the status bar window is drawn behind it), so a see-through
+  // navigation bar darkens with the shade: --mm-bar-dim on the screen (mm-frame.css).
+  const barDim = (c, v) => { if (v) c.el.screen.style.setProperty('--mm-bar-dim', v.toFixed(3)); else c.el.screen.style.removeProperty('--mm-bar-dim'); };
   function open(c, qs = false) {
     c.ui.shade = {qs, detail: '', opened: false};
-    c.overlay('shade');
+    c.overlay('shade'); barDim(c, .62);
   }
   function close(c) {
     const el = c.el.overlay.querySelector('.mmsh');
+    barDim(c, 0);
     if (!el) { c.closeOverlay(); return; }
     el.classList.remove('shown'); el.classList.add('closing');
     setTimeout(() => { if (c.ui.overlay === 'shade') c.closeOverlay(); }, 250);
@@ -253,38 +249,65 @@
   function closeDetail(c) { const st = c.ui.shade; st.detail = ''; st.revealed = false; refresh(c); }
   const ctl = {refresh, close, closeDetail};
 
-  /* Pulling the status bar down (PhoneStatusBar's touch on the status bar → NotificationPanelView.startExpandMotion):
-     the panel follows the pointer from the top and the scrim darkens with it; let go past a third of the way it opens,
-     else it closes; pulled on past 220 dp, quick settings open as well (the second pull of PanelView). */
+  /* Dragging the shade (PanelView / NotificationPanelView): one expansion under the finger, from closed through the
+     notifications (the panel follows the pointer from the top, the scrim darkens with it) on to quick settings fully
+     out (QSContainer's expansion, --qsf), and back the same way. It starts on the status bar (closed) or anywhere on the
+     open shade. Let go, it settles on the nearest stop the way it last moved (PanelView.flingExpands): closed, the
+     notifications, or quick settings. */
+  function drag(c, e, closed) {
+    const dpPx = c.el.screen.clientWidth / W;
+    let el = null, P = 1, Q = 1, e0 = 0, pos = 0, moved = false, last = e.clientY, dir = 0;
+    const setup = () => {
+      el = c.el.overlay.querySelector('.mmsh'); if (!el) return false;
+      P = el.clientHeight * .6 / dpPx; Q = 56 + (parseFloat(el.style.getPropertyValue('--qs-h')) || 0);
+      e0 = closed ? 0 : P + (c.ui.shade?.qs ? Q : 0); pos = e0; return true;
+    };
+    if (!closed && !setup()) return;
+    const parts = () => [el.querySelector('.mmsh-panel'), el.querySelector('.mmsh-scrim')];
+    const apply = () => {
+      const pf = Math.min(1, pos / P), qf = Math.max(0, Math.min(1, (pos - P) / Q)), [panel, scrim] = parts();
+      el.classList.add('dragging', 'shown'); el.classList.toggle('qsdrag', qf > 0); c.el.screen.classList.add('bar-drag');
+      panel.style.transform = `translateY(${((pf - 1) * 100).toFixed(2)}%)`;
+      scrim.style.opacity = (.62 * pf).toFixed(3);
+      el.style.setProperty('--qsf', qf.toFixed(4)); barDim(c, .62 * pf || .0001);
+    };
+    const move = ev => {
+      const dy = (ev.clientY - e.clientY) / dpPx;
+      if (!moved) {
+        if (Math.abs(dy) <= 9 || Math.abs(ev.clientX - e.clientX) / dpPx > Math.abs(dy) || (closed && dy < 0)) return;
+        moved = true;
+        if (closed) { open(c); if (!setup()) return; }
+      }
+      if (!el) return;
+      if (ev.clientY !== last) dir = Math.sign(ev.clientY - last);
+      last = ev.clientY;
+      pos = Math.max(0, Math.min(P + Q, e0 + dy)); apply(); ev.preventDefault();
+    };
+    const up = () => {
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerup', up);
+      document.removeEventListener('pointercancel', up);
+      c.el.screen.classList.remove('bar-drag');
+      if (!moved || !el) return;
+      c.ui.shadePulled = Date.now();
+      // The click that follows the release must not count as a tap on what is under the pointer.
+      if (c.ui.shade) { c.ui.shade.dragged = true; setTimeout(() => { if (c.ui.shade) c.ui.shade.dragged = false; }, 0); }
+      const pf = pos / P, qf = (pos - P) / Q;
+      const stop = pos <= P ? (dir > 0 ? pf > .15 : dir < 0 ? pf >= .85 : pf >= .5) ? 1 : 0
+        : (dir > 0 ? qf > .15 : dir < 0 ? qf >= .85 : qf >= .5) ? 2 : 1;
+      const [panel, scrim] = parts();
+      el.classList.remove('dragging', 'qsdrag'); panel.style.transform = ''; scrim.style.opacity = ''; el.style.removeProperty('--qsf');
+      if (stop === 0) close(c);
+      else { barDim(c, .62); if (stop === 2 && c.ui.shade?.detail) { c.ui.shade.detail = ''; } setQs(c, stop === 2); }
+    };
+    document.addEventListener('pointermove', move, {passive: false});
+    document.addEventListener('pointerup', up);
+    document.addEventListener('pointercancel', up);
+  }
   function bindPull(c) {
     c.el.status.addEventListener('pointerdown', e => {
       if (e.button || c.ui.overlay || c.ui.view === 'lock' || c.ui.sleeping || c.ui.power) return;
-      const dpPx = () => c.el.screen.clientWidth / W, top = () => c.el.screen.getBoundingClientRect().top;
-      let pulled = false, frac = 0, dy = 0;
-      const parts = () => { const el = c.el.overlay.querySelector('.mmsh'); return el ? {el, panel: el.querySelector('.mmsh-panel'), scrim: el.querySelector('.mmsh-scrim')} : null; };
-      const move = ev => {
-        dy = (ev.clientY - e.clientY) / dpPx();
-        if (!pulled) { if (dy <= 9 || Math.abs(ev.clientX - e.clientX) / dpPx() > dy) return; pulled = true; open(c); }
-        const p = parts(); if (!p) return;
-        frac = Math.max(0, Math.min(1, (ev.clientY - top()) / (p.el.clientHeight * .6)));
-        p.el.classList.add('dragging', 'shown');
-        p.panel.style.transform = `translateY(${((frac - 1) * 100).toFixed(2)}%)`;
-        p.scrim.style.opacity = (.62 * frac).toFixed(3);
-        ev.preventDefault();
-      };
-      const up = () => {
-        document.removeEventListener('pointermove', move);
-        document.removeEventListener('pointercancel', up);
-        if (!pulled) return;
-        c.ui.shadePulled = Date.now();
-        const p = parts(); if (!p) return;
-        p.el.classList.remove('dragging'); p.panel.style.transform = ''; p.scrim.style.opacity = '';
-        if (frac < 1 / 3) close(c);
-        else if (dy > 220) setQs(c, true);
-      };
-      document.addEventListener('pointermove', move, {passive: false});
-      document.addEventListener('pointerup', up, {once: true});
-      document.addEventListener('pointercancel', up, {once: true});
+      drag(c, e, true);
     });
   }
 

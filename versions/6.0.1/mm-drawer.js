@@ -11,7 +11,8 @@
      (all_apps_prediction_bar_icon.xml: 8 dp above, 18 dp below) are the ones opened most recently, a divider under them.
    - The search: DefaultAppSearchAlgorithm, a label word starting with the query; none: all_apps_no_search_results and
      all_apps_search_market_message.
-   - It opens with a circular reveal from the all apps button; Back or Home closes it. */
+   - It opens with a circular reveal from the all apps button; Back or Home closes it back into the button (mm-core.js
+     'unreveal'). */
 (() => {
   'use strict';
   const T = () => MM.text('launcher');
@@ -39,16 +40,19 @@
   }
 
   function render(c) {
-    const st = c.ui.drawer || (c.ui.drawer = {query: '', fresh: true});
+    const st = c.ui.drawer || (c.ui.drawer = {query: ''});
+    // Opened from the home screen it reveals itself (a new search each time); back from an app it is just there.
+    const fresh = c.ui.prevView === 'home';
+    if (fresh) st.query = '';
     const t = T(), G = MM.launcherGrid;
     const origin = `--rx:${dp(G.edge * 2 + 2.5 * (G.W - G.edge * 4) / 5)};--ry:calc(100% - ${dp(G.hotseatH / 2)})`;
-    return `<div class="mmd${st.fresh ? ' reveal' : ''}" style="${origin}">
+    return `<div class="mmd${fresh ? ' reveal' : ''}" style="${origin}">
       <div class="mmd-search np-gel-search_bg"><input type="text" class="mmd-input" placeholder="${c.safe(t.t('search_apps_hint'))}" value="${c.safe(st.query)}" spellcheck="false" autocomplete="off"></div>
       <div class="mmd-panel"><div class="mmd-scroll">${grid(c)}</div></div></div>`;
   }
 
   function mount(c, root) {
-    const st = c.ui.drawer; st.fresh = false;
+    const st = c.ui.drawer;
     // An app held in the drawer is picked up onto the workspace (AllAppsContainerView.onLongClick: beginDragShared).
     root.querySelector('.mmd-scroll')?.addEventListener('pointerdown', e => {
       const app = e.target.closest('.mmd-app'); if (!app || e.button) return;

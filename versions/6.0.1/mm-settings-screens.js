@@ -7,7 +7,9 @@
      screensaver (config_dreamsSupported) stay. The timeout's summary is screen_timeout_summary with the largest entry
      not over the value; auto_rotate is a DropDownPreference of "Rotate the contents of the screen" and, the 5X not
      allowing all rotations, "Stay in portrait view"; the screensaver's summary is the active dream's label
-     (config_dreamsDefaultComponent: the Clock app's Screensaver) while dreams are on (config_dreamsEnabledByDefault). */
+     (config_dreamsDefaultComponent: the Clock app's Screensaver) while dreams are on (config_dreamsEnabledByDefault).
+   - The simulator's own rule (every version): the screen does not go off by itself unless a timeout is chosen, so Sleep
+     starts at "Never" (-1), an entry after screen_timeout_entries in Settings' own Never text. */
 (() => {
   'use strict';
   const T = () => MM.text('settings');
@@ -19,7 +21,7 @@
     get(c, key) {
       const s = S(c);
       if (key === 'auto_brightness') return s.brightnessAuto;
-      if (key === 'screen_timeout') return String(s.screenTimeout ?? 30000);
+      if (key === 'screen_timeout') return String(s.screenTimeout ?? -1);
       if (key === 'camera_double_tap_power_gesture') return !s.cameraDoubleTapDisabled;
       if (key === 'doze') return s.doze ?? true;
       if (key === 'font_size') return s.fontScale ?? '1.0';
@@ -37,7 +39,8 @@
     summary(c, key, n) {
       const t = T(), s = S(c);
       if (key === 'screen_timeout') {
-        const values = n.entryValues, entries = MM.settingsArr(n.entries), cur = s.screenTimeout ?? 30000;
+        const values = n.entryValues, entries = MM.settingsArr(n.entries), cur = s.screenTimeout ?? -1;
+        if (cur < 0) return t.t('battery_saver_turn_on_automatically_never');
         let best = 0; values.forEach((v, i) => { if (cur >= +v) best = i; });
         return t.fmt('screen_timeout_summary', null, entries[best]);
       }
@@ -45,7 +48,7 @@
       if (key === 'screensaver') return s.dreams === false ? t.t('screensaver_settings_summary_off') : {colors: () => t.t('BasicDreams/color_dream_name'), photos: () => t.t('Photos/photos_theme_google_photos')}[s.dream]?.() || MM.appLabel(c, 'clock');
       return undefined;
     },
-    click(c, key) {
+    click(c, key, n) {
       if (key === 'auto_rotate') {
         const t = T(), s = S(c), items = [t.t('display_auto_rotate_rotate'), t.t('display_auto_rotate_stay_in_portrait')];
         c.dialog({items: items.map((label, i) => ({html: `<span class="mmst-choice"><i class="mmw-radio${(i === 1) === !!s.rotationLocked ? ' on' : ''}"></i><span>${c.safe(label)}</span></span>`})),
@@ -53,6 +56,13 @@
         return true;
       }
       if (key === 'brightness') { c.overlay('brightness'); return true; }
+      if (key === 'screen_timeout') {
+        const t = T(), s = S(c), cur = String(s.screenTimeout ?? -1);
+        const values = [...n.entryValues, '-1'], labels = [...MM.settingsArr(n.entries), t.t('battery_saver_turn_on_automatically_never')];
+        c.dialog({title: MM.settingsStr(n.dialogTitle) || MM.settingsStr(n.title), items: labels.map((label, i) => ({html: `<span class="mmst-choice"><i class="mmw-radio${values[i] === cur ? ' on' : ''}"></i><span>${c.safe(label)}</span></span>`})),
+          buttons: [{label: t.t('framework/cancel') || 'Cancel'}], onItem: i => { s.screenTimeout = +values[i]; c.save(); c.render(); }});
+        return true;
+      }
       return false;
     }
   };

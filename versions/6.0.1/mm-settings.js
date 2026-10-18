@@ -247,6 +247,11 @@
     title: 'Settings',
     statusColor: () => MM.settingsTheme?.colorPrimaryDark || '#21272b',
     render, mount,
+    // The window animation's page: the stack of screens (SubSettings activities, one on another).
+    page(c) {
+      const st = state(c), stack = c.ui.sub && c.ui.sub !== st.opened ? [{screen: ALIASES[c.ui.sub] || c.ui.sub}] : st.stack;
+      return ['settings', ...stack.map(x => String(x.screen).replace(/\//g, '_'))].join('/');
+    },
     reset(c) { c.ui.settings = null; },
     back(c) {
       const st = state(c), cur = current(c);

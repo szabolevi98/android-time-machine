@@ -1,7 +1,10 @@
 /* Android 6.0.1 notification shade and quick settings (mm-shade.js), in dp: SystemUI's status_bar_expanded.xml,
    status_bar_expanded_header.xml, qs_panel.xml, quick_settings_brightness_dialog.xml and QSPanel / QSTileView's own
    layout code (see mm-shade.js). Roboto's line height (ascent + descent of the image's font) is 1.172. */
-.mmsh{position:absolute;left:0;right:0;top:0;bottom:calc(48 * var(--dp));overflow:hidden;font-family:Roboto,sans-serif;line-height:1.172}
+/* --qsf is how far quick settings are out (0 collapsed, 1 expanded): QSContainer's expansion. It is a registered
+   property so the header, the QS panel and the stack follow it together, whether animated or under the finger. */
+@property --qsf{syntax:"<number>";inherits:true;initial-value:0}
+.mmsh{--qsf:0;transition:--qsf .3s cubic-bezier(.4,0,.2,1);position:absolute;left:0;right:0;top:0;bottom:calc(48 * var(--dp));overflow:hidden;font-family:Roboto,sans-serif;line-height:1.172}
 .screen.no-nav .mmsh{bottom:0}
 /* ScrimController: the behind scrim at 0.62 black when the panel is open. */
 .mmsh-scrim{position:absolute;inset:0;background:#000;opacity:0;transition:opacity .3s linear}
@@ -13,16 +16,14 @@
 .mmsh-panel>*{pointer-events:auto}
 
 /* StatusBarHeaderView: 60 dp, 116 dp with quick settings, 8 dp padding at the sides, elevation 4 dp. */
-.mmsh-header{position:absolute;top:0;left:0;right:0;z-index:2;height:calc(60 * var(--dp));background:#384248;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) rgba(0,0,0,.24),0 0 calc(4 * var(--dp)) rgba(0,0,0,.12);transition:height .3s cubic-bezier(.4,0,.2,1);cursor:pointer}
-.mmsh.qs .mmsh-header{height:calc(116 * var(--dp))}
+.mmsh-header{position:absolute;top:0;left:0;right:0;z-index:2;height:calc(60 * var(--dp));background:#384248;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) rgba(0,0,0,.24),0 0 calc(4 * var(--dp)) rgba(0,0,0,.12);cursor:pointer;height:calc((60 + 56 * var(--qsf)) * var(--dp))}
+.mmsh.qs{--qsf:1}
 /* The clock (split_clock_view: TextAppearance.StatusBar.Expanded.Clock, sans-serif-medium white; 14 sp collapsed, 20 sp
    expanded, the AM / PM part at qs_time_collapsed_size) above the date group, 24 dp from the left (8 padding + 16 margin),
    the date group 10 dp from the bottom collapsed and clock_expanded_bottom_margin 20 dp expanded. */
-.mmsh-clockdate{position:absolute;left:calc(24 * var(--dp));bottom:calc(10 * var(--dp));transition:bottom .3s cubic-bezier(.4,0,.2,1);pointer-events:none}
-.mmsh.qs .mmsh-clockdate{bottom:calc(20 * var(--dp))}
+.mmsh-clockdate{position:absolute;left:calc(24 * var(--dp));bottom:calc((10 + 10 * var(--qsf)) * var(--dp));pointer-events:none}
 .mmsh-clock{color:#fff;font-weight:500;white-space:nowrap}
-.mmsh-time{font-size:calc(14 * var(--dp));transition:font-size .3s cubic-bezier(.4,0,.2,1)}
-.mmsh.qs .mmsh-time{font-size:calc(20 * var(--dp))}
+.mmsh-time{font-size:calc((14 + 6 * var(--qsf)) * var(--dp))}
 .mmsh-ampm{font-size:calc(14 * var(--dp))}
 /* TextAppearance.StatusBar.Expanded.Date: qs_date_collapsed_size 14 sp, #b2ffffff. */
 .mmsh-date{color:rgba(255,255,255,.698);font-size:calc(14 * var(--dp));white-space:nowrap}
@@ -36,19 +37,16 @@
 .mmsh-batt svg{width:calc(9.5 * var(--dp));height:calc(14.5 * var(--dp))}
 .mmsh-level{display:none;margin-left:calc(6 * var(--dp));padding-right:calc(2 * var(--dp));color:#fff;font-size:calc(12 * var(--dp))}
 .mmsh.qs .mmsh-level{display:inline}
-.mmsh-gear{width:0;height:calc(60 * var(--dp));padding:0;border:0;background:none;overflow:hidden;opacity:0;display:grid;place-items:center;transition:width .3s cubic-bezier(.4,0,.2,1),opacity .3s}
-.mmsh-gear img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));transform:rotate(90deg);transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.mmsh.qs .mmsh-gear{width:calc(48 * var(--dp));opacity:1}
-.mmsh.qs .mmsh-gear img{transform:none}
-.mmsh-user{width:calc(34 * var(--dp));height:calc(60 * var(--dp));margin-right:calc(13 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center;cursor:default;transition:width .3s cubic-bezier(.4,0,.2,1),margin .3s cubic-bezier(.4,0,.2,1)}
-.mmsh-user img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));transform:scale(.9167);transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.mmsh.qs .mmsh-user{width:calc(48 * var(--dp));margin-right:calc(8 * var(--dp));cursor:pointer}
-.mmsh.qs .mmsh-user img{transform:none}
+.mmsh-gear{width:calc(48 * var(--qsf) * var(--dp));height:calc(60 * var(--dp));padding:0;border:0;background:none;overflow:hidden;opacity:var(--qsf);display:grid;place-items:center}
+.mmsh-gear img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));transform:rotate(calc(90deg - 90deg * var(--qsf)))}
+.mmsh-user{width:calc((34 + 14 * var(--qsf)) * var(--dp));height:calc(60 * var(--dp));margin-right:calc((13 - 5 * var(--qsf)) * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center;cursor:default}
+.mmsh-user img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));transform:scale(calc(.9167 + .0833 * var(--qsf)))}
+.mmsh.qs .mmsh-user{cursor:pointer}
 
 /* QSContainer: qs_background_primary (#263238, 2 dp corners, the top 2 dp under the header), 8 dp padding above and
    below, elevation 2 dp; collapsed it sits behind the header. --qs-h is its height in dp. */
-.mmsh-qs{position:absolute;left:calc(8 * var(--dp));right:calc(8 * var(--dp));top:calc(114 * var(--dp));z-index:1;padding:calc(10 * var(--dp)) 0 calc(8 * var(--dp));background:#263238;border-radius:calc(2 * var(--dp));box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) rgba(0,0,0,.24);transform:translateY(calc((-56 - var(--qs-h)) * var(--dp)));visibility:hidden;transition:transform .3s cubic-bezier(.4,0,.2,1),visibility 0s .3s}
-.mmsh.qs .mmsh-qs{transform:none;visibility:visible;transition:transform .3s cubic-bezier(.4,0,.2,1),visibility 0s}
+.mmsh-qs{position:absolute;left:calc(8 * var(--dp));right:calc(8 * var(--dp));top:calc(114 * var(--dp));z-index:1;padding:calc(10 * var(--dp)) 0 calc(8 * var(--dp));background:#263238;border-radius:calc(2 * var(--dp));box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) rgba(0,0,0,.24);transform:translateY(calc((-56 - var(--qs-h)) * (1 - var(--qsf)) * var(--dp)));visibility:hidden;transition:visibility 0s .3s}
+.mmsh.qs .mmsh-qs,.mmsh.qsdrag .mmsh-qs{visibility:visible;transition:none}
 .mmqs-panel{position:relative}
 /* The brightness slider: 6 dp down, 16 dp padding, the SeekBar's 20 dp ends, 16 dp above and below the 28 dp thumb. */
 .mmqs-brightness{position:absolute;top:calc(6 * var(--dp));left:calc(16 * var(--dp));right:calc(16 * var(--dp));height:calc(60 * var(--dp))}
@@ -80,8 +78,7 @@
 .mmqs-detail{position:absolute;inset:calc(-10 * var(--dp)) 0 calc(-8 * var(--dp));z-index:3;border-radius:calc(2 * var(--dp));overflow:hidden}
 
 /* The notification stack: notifications_top_padding 8 dp under the header or the quick settings, 8 dp at the sides. */
-.mmsh-stack{position:absolute;left:calc(8 * var(--dp));right:calc(8 * var(--dp));top:calc(68 * var(--dp));transition:top .3s cubic-bezier(.4,0,.2,1)}
-.mmsh.qs .mmsh-stack{top:calc((124 + var(--qs-h)) * var(--dp))}
+.mmsh-stack{position:absolute;left:calc(8 * var(--dp));right:calc(8 * var(--dp));top:calc((68 + (56 + var(--qs-h)) * var(--qsf)) * var(--dp))}
 /* EmptyShadeView: 64 dp, the text 12 dp down, 20 sp white, centred. */
 .mmsh-empty{height:calc(64 * var(--dp));box-sizing:border-box;padding-top:calc(12 * var(--dp));color:#fff;font-size:calc(20 * var(--dp));text-align:center}
 
@@ -100,7 +97,7 @@
 .mmqd-head.clickable:active{background:rgba(255,255,255,.12)}
 .mmqd-title{flex:1;min-width:0;color:#fff;font:500 calc(20 * var(--dp))/1.172 Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @keyframes mmqd-fade{from{opacity:0}}
-.mmsh-clockdate{transition:bottom .3s cubic-bezier(.4,0,.2,1),opacity .3s}
+.mmsh-clockdate{transition:opacity .3s}
 .mmsh.detail .mmsh-clockdate{opacity:0}
 /* qs_detail_header_progress: the scan in progress under the header (track qs_detail_progress_track #99009688). */
 .mmsh-scan{position:absolute;left:0;right:0;bottom:0;z-index:2;height:calc(4 * var(--dp));background:rgba(0,150,136,.6);overflow:hidden}
@@ -162,7 +159,7 @@
 .mmqd-close{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));display:grid;place-items:center;border-radius:50%}
 .mmqd-close:active{background:rgba(255,255,255,.12)}
 .mmqd-close img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
-.mmsh.dragging .mmsh-panel,.mmsh.dragging .mmsh-scrim{transition:none}
+.mmsh.dragging,.mmsh.dragging .mmsh-panel,.mmsh.dragging .mmsh-scrim{transition:none}
 /* A notification card (notification_template_material_base, notification_material_action_list). */
 .mmsh-note{margin:0 0 calc(2 * var(--dp));background:#fff;border-radius:calc(2 * var(--dp));color:rgba(0,0,0,.87);font-family:Roboto,sans-serif}
 .mmsh-nmain{display:flex;align-items:center;gap:calc(12 * var(--dp));min-height:calc(64 * var(--dp));padding:calc(12 * var(--dp)) calc(16 * var(--dp)) calc(12 * var(--dp)) calc(12 * var(--dp))}

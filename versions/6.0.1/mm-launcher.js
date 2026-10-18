@@ -59,7 +59,18 @@
     return {pages, hotseat};
   }
   MM.defaults.home = null;
-  const home = c => c.data.home || (c.data.home = fromLayout());
+  /* The simulator's own rule for every version (the owner's): the home screen starts with the Clock app's digital clock
+     widget (digital_gadget) across the top two rows of the first page, as most people set their phone up then. A home
+     saved before the rule gets it once, when those rows are free. */
+  function addClock(h) {
+    const page = h.pages[0] || (h.pages[0] = []);
+    if (free(page, 0, 0, 5, 2)) page.push({type: 'widget', w: 'digital', spanX: 5, spanY: 2, x: 0, y: 0});
+  }
+  const home = c => {
+    const h = c.data.home || (c.data.home = fromLayout());
+    if (!c.data.clockWidget) { c.data.clockWidget = true; addClock(h); c.save(); }
+    return h;
+  };
 
   const label = (c, id) => { const a = MM.appsData[id]; return a ? (a.label[c.lang] || a.label.en) : id; };
   const folderTitle = (c, f) => typeof f.title === 'string' ? f.title : (f.title?.[c.lang] || f.title?.en || '');

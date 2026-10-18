@@ -4,11 +4,12 @@
 .screen.view-recents #viewport{top:0;bottom:0}
 .screen.view-recents .mmnb{background:transparent}
 .mmrc{position:absolute;inset:0;z-index:0;overflow:hidden;font-family:Roboto,sans-serif;line-height:1.172;touch-action:none;user-select:none}
+.mmrc img{-webkit-user-drag:none;user-drag:none}
 .mmrc-top{position:absolute;left:0;right:0;top:0;height:calc(40 * var(--dp));pointer-events:none;z-index:50}
 .mmrc-bottom{position:absolute;left:0;right:0;bottom:0;height:calc(78 * var(--dp));pointer-events:none;z-index:50}
 /* The search bar space: 64 dp under the status bar, the search widget in it. */
 .mmrc-search{position:absolute;left:0;right:0;top:calc(24 * var(--dp));height:calc(64 * var(--dp));display:flex;z-index:40}
-.mmrc-plate{flex:1;padding:0;border:0;background:none;text-align:left}
+.mmrc-plate{flex:1;padding:0;border:0;background:none;text-align:left;display:flex;align-items:flex-start}
 .mmrc-plate img{display:block;width:calc(62 * var(--dp));height:calc(23 * var(--dp));margin:calc(14 * var(--dp)) 0 0 calc(16 * var(--dp))}
 .mmrc-mic{flex:none;width:calc(56 * var(--dp));background:#616161;-webkit-mask:url('assets/gel-ic_mic_none.png') center/calc(24 * var(--dp)) no-repeat;mask:url('assets/gel-ic_mic_none.png') center/calc(24 * var(--dp)) no-repeat}
 .mmrc-stack{position:absolute;inset:0}

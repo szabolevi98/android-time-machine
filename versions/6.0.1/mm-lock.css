@@ -4,7 +4,7 @@
 .mmlk-wall{position:absolute;inset:0;background:var(--mm-wallpaper,url('assets/fw-default_wallpaper.jpg')) left top/auto 100% no-repeat}
 .mmlk-scrim{position:absolute;inset:0;background:#000;opacity:.45;transition:opacity .26s}
 .mmlk.leaving .mmlk-scrim{opacity:0}
-.mmlk-panel{position:absolute;left:0;right:0;top:0;height:calc(683.43 * var(--dp));transition:transform .26s cubic-bezier(.4,0,.2,1),opacity .26s}
+.mmlk-panel{position:absolute;left:0;right:0;top:0;height:calc(100% - 48 * var(--dp));transition:transform .26s cubic-bezier(.4,0,.2,1),opacity .26s}
 .mmlk.leaving .mmlk-panel{opacity:0}
 .mmlk-panel.hinting{animation:mmlk-hint .7s}
 @keyframes mmlk-hint{0%{transform:none}35%{transform:translateY(calc(-75 * var(--dp)));animation-timing-function:cubic-bezier(.3,1.6,.6,1)}100%{transform:none}}
