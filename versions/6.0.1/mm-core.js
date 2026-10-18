@@ -224,7 +224,8 @@
     data = AndroidState.load(STORE, defaults, saved => ({...clone(defaults), ...saved, settings: {...defaults.settings, ...saved.settings}}), upgrades);
     AndroidState.onProblem(problem => setTimeout(() => toast(t({unreadable: 'The saved data could not be read, so the phone started fresh. A copy of it was kept.', repaired: 'Some saved data was damaged and has been reset.', upgrade: 'Your saved data was kept, but part of it could not be updated.', unsaved: 'Changes can’t be saved: this browser’s storage is full or turned off.'}[problem.kind])), 1200));
     for (const mod of Object.values(modules)) mod.init?.(c);
-    if (modules.lock) ui.view = 'lock';
+    // As in the other versions, a page load starts on the keyguard only with a secure lock set, else on the home screen.
+    if (modules.lock && ['pin', 'password', 'pattern'].includes(data.settings?.lock?.type)) ui.view = 'lock';
 
     document.addEventListener('click', event => {
       const el = event.target.closest('[data-action]');
@@ -246,7 +247,7 @@
       else if (event.key === 'Home' && !typing) { event.preventDefault(); keyPress('home'); }
     });
 
-    screen.addEventListener('pointerdown', event => { if (ui.power) { event.preventDefault(); event.stopPropagation(); return; } if (ui.sleeping) { event.preventDefault(); event.stopPropagation(); wake(); } }, true);
+    screen.addEventListener('pointerdown', event => { if (ui.power) { event.preventDefault(); if (ui.power !== 'boot') event.stopPropagation(); return; } if (ui.sleeping) { event.preventDefault(); event.stopPropagation(); wake(); } }, true);
     for (const key of [document.querySelector('#power-button'), document.querySelector('.power-key')]) holdable(key, powerKey, powerHold);
     bindVolume(document.querySelector('#volume-down'), -1);
     bindVolume(document.querySelector('#volume-up'), 1);

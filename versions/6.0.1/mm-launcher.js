@@ -36,6 +36,17 @@
       folderCellW: iconSize + edge * 3, folderCellH: cellContent + edge, folderIcon: iconSize + edge * 2};
   })();
   MM.launcherGrid = G;
+  // DeviceProfile follows the display it runs on: on a phone whose screen is taller or shorter than the 5X's (the
+  // mobile layout fills the browser), the workspace between the search bar and the hotseat takes the height there is,
+  // its five rows share it and each cell centres its content (ShortcutAndWidgetContainer).
+  function fit(c) {
+    const vp = c.el.viewport, k = vp.clientWidth / 411.4286;
+    if (!k || !vp.clientHeight) return;
+    const H = Math.max(1200, Math.round(vp.clientHeight / k * PX));
+    G.H = H; G.ws.bottom = H - G.hotseatH - G.indicatorH; G.cellH = (G.ws.bottom - G.ws.top) / 5;
+    G.cellPad = Math.max(0, (G.cellH - G.cellContent) / 2);
+  }
+  G.cellPad = (G.cellH - G.cellContent) / 2;
 
   // The saved home: pages of {type, app | title + items, x, y}, the hotseat's five ranks (2 is the all apps button).
   function fromLayout() {
@@ -65,7 +76,7 @@
     return `<button type="button" class="mmh-icon ${where}" data-action="mmh-app" data-app="${item.app}" data-src="${src}"><img src="${a?.icon}" alt=""><span>${c.safe(label(c, item.app))}</span></button>`;
   }
   // FolderIcon.computePreviewDrawingParams / computePreviewItemDrawingParams, for its first three items.
-  function folderPreview(f, cellW = G.cellW) {
+  function folderPreview(f, cellW = G.cellW, pad = G.cellPad) {
     const previewSize = G.folderIcon, padding = 11, avail = previewSize - 2 * padding;
     const adjusted = Math.trunc(avail / 2 * 1.8), unscaledH = Math.trunc(G.iconSize * 1.18);
     const baseScale = adjusted / unscaledH, baseSize = Math.trunc(G.iconSize * baseScale), shift = baseSize * .18;
@@ -74,13 +85,13 @@
       const idx = 2 - i, r = idx / 2, scale = 1 - .35 * (1 - r), size = scale * baseSize;
       // dispatchDraw translates by mPreviewOffsetY (preview padding + folderBackgroundOffset); transY adds the icon's
       // top padding (11 px in a workspace cell); transX centres the item in the cell.
-      const y = (padding - G.edge) + avail - ((1 - r) * shift + size + (1 - scale) * baseSize) + 11;
+      const y = (padding - G.edge) + avail - ((1 - r) * shift + size + (1 - scale) * baseSize) + pad;
       const x = (cellW - size) / 2;
       return {app, x, y, size, overlay: Math.trunc((1 - r) * 80) / 255};
     }).reverse();
   }
   function folderIcon(c, f, where, src = '') {
-    const items = folderPreview(f, where === 'hs' ? G.hsCellW : G.cellW).map(p => `<span class="mmh-fi" style="left:${dp(p.x)};top:${dp(p.y)};width:${dp(p.size)};height:${dp(p.size)};--shade:${p.overlay.toFixed(3)}"><img src="${MM.appsData[p.app]?.icon}" alt=""></span>`).join('');
+    const items = folderPreview(f, where === 'hs' ? G.hsCellW : G.cellW, where === 'hs' ? 11 : G.cellPad).map(p => `<span class="mmh-fi" style="left:${dp(p.x)};top:${dp(p.y)};width:${dp(p.size)};height:${dp(p.size)};--shade:${p.overlay.toFixed(3)}"><img src="${MM.appsData[p.app]?.icon}" alt=""></span>`).join('');
     return `<button type="button" class="mmh-icon mmh-folder ${where}" data-action="mmh-folder" data-src="${src}" aria-label="${c.safe(T().fmt('folder_name_format', null, folderTitle(c, f)))}"><i class="mmh-ring"></i>${items}<span>${c.safe(folderTitle(c, f))}</span></button>`;
   }
 
@@ -114,6 +125,7 @@
   }
 
   function render(c) {
+    fit(c);
     const h = home(c), st = c.ui.home || (c.ui.home = {page: 1, folder: null});
     const t = T();
     const hotseat = h.hotseat.map((v, rank) => `<div class="mmh-hs" data-rank="${rank}" style="left:${dp(G.edge * 2 + rank * G.hsCellW)}">${v === 'allapps'
@@ -126,7 +138,7 @@
     const targets = `<div class="mmh-targets"><span data-target="remove"><img src="assets/gel-ic_remove_launcher.png" alt="">${c.safe(t.t('delete_target_label'))}</span><span data-target="info"><img src="assets/gel-ic_info_launcher.png" alt="">${c.safe(t.t('info_target_label'))}</span></div>`;
     const overview = `<div class="mmh-overview">${[['wallpaper', 'wallpaper_button_text'], ['widget', 'widget_button_text'], ['setting', 'settings_button_text']].map(([k, s]) => `<button type="button" class="mmh-ov-${k}" data-action="mmh-ov" data-ov="${k}"><i></i><span>${c.safe(t.t(s))}</span></button>`).join('')}</div>`;
     const cling = !c.data.homeClingSeen ? `<div class="mmh-cling"><i></i><div class="mmh-cling-box np-gel-cling_bg"><div class="mmh-cling-1">${c.safe(t.t('first_run_cling_title'))}</div><div class="mmh-cling-2">${c.safe(t.t('workspace_cling_longpress_title'))}</div><div class="mmh-cling-3">${c.safe(t.t('workspace_cling_longpress_description'))}</div><button type="button" data-action="mmh-cling">${c.safe(t.t('workspace_cling_longpress_dismiss'))}</button></div><i class="mmh-cling-2x"></i></div>` : '';
-    return `<div class="mmh${st.page === 0 ? ' now' : ''}${st.overview ? ' overview' : ''}" style="--page:${st.page}">
+    return `<div class="mmh${st.page === 0 ? ' now' : ''}${st.overview ? ' overview' : ''}" style="--page:${st.page};--cellh:${dp(G.cellH)};--cellpad:${dp(G.cellPad)};--wsh:${dp(G.ws.bottom - G.ws.top)}">
       <div class="mmh-strip"><div class="mmh-nowpage">${MM.google ? MM.google.nowPage(c) : c.missing('now')}</div>${pages}</div>
       <div class="mmh-qsb np-gel-search_bg"><button type="button" class="mmh-qsb-plate" data-action="mmh-search" aria-label="${c.safe(t.t('accessibility_google_search_button'))}"><img src="assets/gel-ic_searchbox_google.png" alt="Google"></button><button type="button" class="mmh-qsb-mic" data-action="mmh-voice" aria-label="${c.safe(t.t('accessibility_voice_button'))}"><i></i></button></div>
       ${targets}<div class="mmh-dots">${dots}</div>
@@ -153,7 +165,7 @@
     const [cols, rows] = folderGrid(f.items.length), inset = 11, padX = 11, padTop = 21, footer = 32 + Math.ceil(37 * 1.172);
     const w = cols * G.folderCellW + padX * 2 + inset * 2, hgt = rows * G.folderCellH + padTop + footer + inset * 2;
     const cx = loc.kind === 'hs' ? G.edge * 2 + G.hsCellW * (loc.rank + .5) : G.ws.left + G.cellW * (f.x + .5);
-    const cy = loc.kind === 'hs' ? G.H - G.hotseatH / 2 : G.ws.top + G.cellH * f.y + 11 + G.iconSize / 2;
+    const cy = loc.kind === 'hs' ? G.H - G.hotseatH / 2 : G.ws.top + G.cellH * f.y + G.cellPad + G.iconSize / 2;
     const left = Math.min(Math.max(G.ws.left, cx - w / 2), G.ws.right - w), top = Math.min(Math.max(G.ws.top, cy - hgt / 2), G.ws.bottom - hgt);
     const cells = f.items.map((id, i) => `<div class="mmh-fcell" style="left:${dp(inset + padX + (i % cols) * G.folderCellW)};top:${dp(inset + padTop + Math.floor(i / cols) * G.folderCellH)}">${icon(c, {type: 'app', app: id}, 'fd', `fd:${i}`)}</div>`).join('');
     const title = folderTitle(c, f);

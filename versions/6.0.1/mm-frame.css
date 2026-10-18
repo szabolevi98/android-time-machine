@@ -18,7 +18,7 @@
 :where(.screen) :where(button,input,textarea,select){font:inherit;color:inherit}
 :where(.screen) :where(button){cursor:pointer}
 /* status_bar_height 24 dp and navigation_bar_height 48 dp (framework-res); apps sit between them. */
-#status-bar{position:absolute;top:0;left:0;right:0;height:calc(24 * var(--dp));z-index:8}
+#status-bar{position:absolute;top:0;left:0;right:0;height:calc(24 * var(--dp));z-index:8;touch-action:none}
 #nav-bar{position:absolute;bottom:0;left:0;right:0;height:calc(48 * var(--dp));z-index:8}
 #viewport{position:absolute;top:calc(24 * var(--dp));left:0;right:0;bottom:calc(48 * var(--dp));overflow:hidden;isolation:isolate}
 .screen.no-status #viewport{top:0}
@@ -59,3 +59,8 @@
   .device::before,.power-key,.volume-rocker{display:none}
   .screen{--dp:calc(100vw / 411.4286);width:100%;height:auto;flex:1;min-height:0}
 }
+/* EdgeEffect over a list dragged with the mouse (mm-scroll.js). */
+.mmscr-edges{position:absolute;inset:0;z-index:55;pointer-events:none;overflow:hidden}
+.mmscr-edge{position:absolute;overflow:hidden;opacity:0;transform-origin:50% 0}
+.mmscr-edge.bottom{transform-origin:50% 100%}
+.mmscr-edge>i{position:absolute;border-radius:50%}

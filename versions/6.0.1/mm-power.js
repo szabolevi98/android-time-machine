@@ -68,7 +68,8 @@
       frame.style.backgroundPosition = `${p.cols > 1 ? col / (p.cols - 1) * 100 : 0}% ${p.rows > 1 ? row / (p.rows - 1) * 100 : 0}%`;
     };
     const finish = () => {
-      clearTimeout(timer);
+      clearTimeout(timer); off();
+      if (c.ui.power !== 'boot') return;
       c.ui.power = ''; layer.hidden = true; layer.innerHTML = '';
       c.ui.safeMode = !!c.ui.nextSafeMode; c.ui.nextSafeMode = false;
       watermark(c);
@@ -90,6 +91,10 @@
       }
       timer = setTimeout(step, 1000 / data.fps);
     };
+    // A touch or a key skips the animation, as in the other versions.
+    const skip = e => { e.preventDefault(); e.stopPropagation(); finish(); };
+    const off = () => { layer.removeEventListener('pointerdown', skip); window.removeEventListener('keydown', skip, true); };
+    layer.addEventListener('pointerdown', skip); window.addEventListener('keydown', skip, true);
     step();
   }
 

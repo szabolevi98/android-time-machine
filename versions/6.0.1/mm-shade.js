@@ -247,8 +247,44 @@
   function closeDetail(c) { const st = c.ui.shade; st.detail = ''; st.revealed = false; refresh(c); }
   const ctl = {refresh, close, closeDetail};
 
+  /* Pulling the status bar down (PhoneStatusBar's touch on the status bar → NotificationPanelView.startExpandMotion):
+     the panel follows the pointer from the top and the scrim darkens with it; let go past a third of the way it opens,
+     else it closes; pulled on past 220 dp, quick settings open as well (the second pull of PanelView). */
+  function bindPull(c) {
+    c.el.status.addEventListener('pointerdown', e => {
+      if (e.button || c.ui.overlay || c.ui.view === 'lock' || c.ui.sleeping || c.ui.power) return;
+      const dpPx = () => c.el.screen.clientWidth / W, top = () => c.el.screen.getBoundingClientRect().top;
+      let pulled = false, frac = 0, dy = 0;
+      const parts = () => { const el = c.el.overlay.querySelector('.mmsh'); return el ? {el, panel: el.querySelector('.mmsh-panel'), scrim: el.querySelector('.mmsh-scrim')} : null; };
+      const move = ev => {
+        dy = (ev.clientY - e.clientY) / dpPx();
+        if (!pulled) { if (dy <= 9 || Math.abs(ev.clientX - e.clientX) / dpPx() > dy) return; pulled = true; open(c); }
+        const p = parts(); if (!p) return;
+        frac = Math.max(0, Math.min(1, (ev.clientY - top()) / (p.el.clientHeight * .6)));
+        p.el.classList.add('dragging', 'shown');
+        p.panel.style.transform = `translateY(${((frac - 1) * 100).toFixed(2)}%)`;
+        p.scrim.style.opacity = (.62 * frac).toFixed(3);
+        ev.preventDefault();
+      };
+      const up = () => {
+        document.removeEventListener('pointermove', move);
+        document.removeEventListener('pointercancel', up);
+        if (!pulled) return;
+        c.ui.shadePulled = Date.now();
+        const p = parts(); if (!p) return;
+        p.el.classList.remove('dragging'); p.panel.style.transform = ''; p.scrim.style.opacity = '';
+        if (frac < 1 / 3) close(c);
+        else if (dy > 220) setQs(c, true);
+      };
+      document.addEventListener('pointermove', move, {passive: false});
+      document.addEventListener('pointerup', up, {once: true});
+      document.addEventListener('pointercancel', up, {once: true});
+    });
+  }
+
   MM.register('shade', {
     app: false,
+    init: bindPull,
     render, mount, open, close, refresh,
     back(c) {
       const st = c.ui.shade;

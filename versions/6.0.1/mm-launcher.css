@@ -12,12 +12,12 @@
 .mmh-nowpage .mm-missing{position:absolute;inset:0}
 .mmh-page{left:0}
 /* A workspace cell: 211.6 x 253.4 px from (11, 179) px. */
-.mmh-cell{position:absolute;width:calc(80.610 * var(--dp));height:calc(96.533 * var(--dp));margin:calc(68.190 * var(--dp)) 0 0 calc(4.190 * var(--dp))}
+.mmh-cell{position:absolute;width:calc(80.610 * var(--dp));height:var(--cellh,calc(96.533 * var(--dp)));margin:calc(68.190 * var(--dp)) 0 0 calc(4.190 * var(--dp))}
 .mmh-hs{position:absolute;top:0;width:calc(77.410 * var(--dp));height:100%}
 /* BubbleTextView: the 168 px icon 11 px down (the cell's padding), the 38 px label 11 px under it with its shadows. */
 .mmh-icon{position:absolute;inset:0;padding:0;border:0;background:none;color:#fff;font:calc(14.476 * var(--dp))/1.342 Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
-.mmh-icon>img{position:absolute;left:50%;top:calc(4.190 * var(--dp));width:calc(64 * var(--dp));height:calc(64 * var(--dp));margin-left:calc(-32 * var(--dp))}
-.mmh-icon>span{position:absolute;left:calc(3.048 * var(--dp));right:calc(3.048 * var(--dp));top:calc(72.381 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:clip;text-align:center;text-shadow:0 calc(.762 * var(--dp)) calc(1.524 * var(--dp)) rgba(0,0,0,.867),0 0 calc(.667 * var(--dp)) rgba(0,0,0,.8)}
+.mmh-icon>img{position:absolute;left:50%;top:var(--cellpad,calc(4.190 * var(--dp)));width:calc(64 * var(--dp));height:calc(64 * var(--dp));margin-left:calc(-32 * var(--dp))}
+.mmh-icon>span{position:absolute;left:calc(3.048 * var(--dp));right:calc(3.048 * var(--dp));top:calc(var(--cellpad,calc(4.190 * var(--dp))) + 68.190 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:clip;text-align:center;text-shadow:0 calc(.762 * var(--dp)) calc(1.524 * var(--dp)) rgba(0,0,0,.867),0 0 calc(.667 * var(--dp)) rgba(0,0,0,.8)}
 .mmh-icon.ws>span{-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
 .mmh-icon:active>img,.mmh-icon:active>.mmh-ring{filter:brightness(.8)}
 /* The hotseat: 232 px at the bottom, its CellLayout 32 px in at each side, the icons centred, no labels. */
@@ -102,7 +102,7 @@
 .mmh.overview .mmh-page{transform:translateX(calc((var(--page) - var(--i)) * 30%)) translateY(calc(-39.810 * var(--dp))) scale(.7)}
 .mmh-nowpage{transition:opacity .3s}
 .mmh.overview .mmh-nowpage{opacity:0}
-.mmh-panel{position:absolute;left:calc(4.190 * var(--dp));right:calc(4.190 * var(--dp));top:calc(68.190 * var(--dp));height:calc(482.667 * var(--dp));box-sizing:border-box;border-style:solid;border-color:transparent;border-width:calc(2.667 * var(--dp)) calc(4 * var(--dp)) calc(3 * var(--dp));border-image:url('assets/gel-screenpanel.9.png') 8 12 9 fill/calc(2.667 * var(--dp)) calc(4 * var(--dp)) calc(3 * var(--dp)) stretch;opacity:0;transition:opacity .3s;pointer-events:none}
+.mmh-panel{position:absolute;left:calc(4.190 * var(--dp));right:calc(4.190 * var(--dp));top:calc(68.190 * var(--dp));height:var(--wsh,calc(482.667 * var(--dp)));box-sizing:border-box;border-style:solid;border-color:transparent;border-width:calc(2.667 * var(--dp)) calc(4 * var(--dp)) calc(3 * var(--dp));border-image:url('assets/gel-screenpanel.9.png') 8 12 9 fill/calc(2.667 * var(--dp)) calc(4 * var(--dp)) calc(3 * var(--dp)) stretch;opacity:0;transition:opacity .3s;pointer-events:none}
 .mmh.overview .mmh-panel{opacity:1}
 .mmh.overview .mmh-qsb,.mmh.overview .mmh-hotseat{opacity:0;pointer-events:none}
 .mmh-qsb,.mmh-hotseat{transition:opacity .3s}
@@ -131,3 +131,6 @@ input.mmh-fname::placeholder{color:#808080}
 .mmh-cling-3{padding:0 calc(36 * var(--dp));color:rgba(0,0,0,.6);font-size:calc(16 * var(--dp))}
 .mmh-cling-box button{display:block;margin:calc(27 * var(--dp)) calc(12 * var(--dp)) 0 auto;min-height:calc(48 * var(--dp));padding:0 calc(24 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;color:#fff;font:500 calc(14 * var(--dp))/1.172 Roboto,sans-serif;text-transform:uppercase}
 .mmh-cling-box button:active{background:rgba(255,255,255,.2)}
+/* search_bg's own padding is 8 dp (its nine-patch padding box); the 21 dp slices draw beyond it, so the content box is
+   the plate inside the shadow, as in search_widget.xml and search_plate_proxy.xml. */
+.mmh-qsb.np-gel-search_bg,.mmd-search.np-gel-search_bg,.mmrc-search.np-gel-search_bg{border-width:calc(8 * var(--dp))}

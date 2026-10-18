@@ -79,7 +79,7 @@
         <span class="mmsb-clock">${clock(c)}</span></div>`;
     },
     // Pulling the bar down opens the notification shade.
-    action(name, el, event, c) { if (name === 'mmsb-pull') { const shade = MM.module('shade'); if (shade) shade.open(c); else c.overlay('shade'); return true; } return false; },
+    action(name, el, event, c) { if (name === 'mmsb-pull') { if (c.ui.overlay === 'shade' || Date.now() - (c.ui.shadePulled || 0) < 400) return true; const shade = MM.module('shade'); if (shade) shade.open(c); else c.overlay('shade'); return true; } return false; },
     tick(c, now) {
       if (now.getMinutes() === lastMinute) return;
       lastMinute = now.getMinutes();

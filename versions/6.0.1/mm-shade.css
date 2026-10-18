@@ -162,3 +162,4 @@
 .mmqd-close{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));display:grid;place-items:center;border-radius:50%}
 .mmqd-close:active{background:rgba(255,255,255,.12)}
 .mmqd-close img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.mmsh.dragging .mmsh-panel,.mmsh.dragging .mmsh-scrim{transition:none}
