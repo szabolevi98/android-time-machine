@@ -56,6 +56,8 @@
   }
 
   MM.register('help', {
+    // The window animation's page (mm-core.js): deeper screens open over the ones they came from.
+    page: c => MM.page('help', c.ui.help?.browse && 'browse', c.ui.help?.article),
     app: false,
     statusColor: c => colors(c, c.ui.help?.app)[1],
     render(c) {

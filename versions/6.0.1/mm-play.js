@@ -117,6 +117,8 @@
     setTimeout(step, 300);
   }
   MM.register('play-store', {
+    // The window animation's page (mm-core.js): deeper screens open over the ones they came from.
+    page: c => { const u = c.ui.play; return u ? MM.page('play', ...u.history.map(h => `${h.page}:${h.item}`), `${u.page}:${u.item}`) : 'play'; },
     statusColor: c => ui(c).search !== null ? '#757575' : GREEN_DARK,
     render,
     mount(c, root) {

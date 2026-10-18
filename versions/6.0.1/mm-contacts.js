@@ -261,6 +261,8 @@
   }
 
   MM.register('contacts', {
+    // The window animation's page (mm-core.js): deeper screens open over the ones they came from.
+    page: c => MM.page('contacts', c.ui.contacts?.screen),
     statusColor: c => { const u = ui(c); if (u.screen.startsWith('card:')) { const p = byId(c, u.screen.slice(5)); if (p) return palette(p)[1]; } return '#0277bd'; },
     render,
     mount(c, root) {

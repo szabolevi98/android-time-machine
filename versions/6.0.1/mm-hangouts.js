@@ -50,6 +50,8 @@
     const x = chats(c).find(y => y.id === u.chat); return x ? chat(c, x) : list(c);
   }
   MM.register('hangouts', {
+    // The window animation's page (mm-core.js): deeper screens open over the ones they came from.
+    page: c => MM.page('hangouts', c.ui.hangouts?.chat ? 'chat' : ''),
     statusColor: () => '#0b8043',
     render,
     mount(c, root) {

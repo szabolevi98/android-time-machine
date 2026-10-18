@@ -334,6 +334,8 @@
     }
   });
   MM.register('phone', {
+    // The window animation's page (mm-core.js): deeper screens open over the ones they came from.
+    page: c => MM.page('phone', c.ui.phone?.screen),
     statusColor: () => '#0277bd',
     render, mount,
     back(c) {

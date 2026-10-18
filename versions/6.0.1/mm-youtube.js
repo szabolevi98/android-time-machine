@@ -77,6 +77,8 @@
     }, 500);
   }
   MM.register('youtube', {
+    // The window animation's page (mm-core.js): deeper screens open over the ones they came from.
+    page: c => MM.page('youtube', c.ui.youtube?.watch ? 'watch' : ''),
     statusColor: c => ui(c).watch ? '#000' : '#ba1b12',
     render,
     back(c) { const u = ui(c); if (u.watch) { u.pos = position(u); u.playing = false; u.watch = 0; c.render(); return true; } if (u.tab) { u.tab = 0; c.render(); return true; } return false; },

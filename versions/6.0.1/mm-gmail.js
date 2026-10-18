@@ -212,6 +212,8 @@
     c.data.gmailSearches = [q, ...(c.data.gmailSearches || []).filter(x => x !== q)].slice(0, 10); c.save(); c.render();
   }
   MM.register('gmail', {
+    // The window animation's page (mm-core.js): deeper screens open over the ones they came from.
+    page: c => MM.page('gmail', c.ui.gmail?.screen),
     statusColor: c => ui(c).drawer ? '#8a2318' : '#b93221',
     render,
     mount(c, root) {

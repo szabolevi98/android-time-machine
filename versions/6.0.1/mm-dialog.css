@@ -2,8 +2,11 @@
    alert_dialog_title_material.xml, alert_dialog_button_bar_material.xml, progress_dialog_material.xml. */
 .mmdlg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Roboto,sans-serif;line-height:1.172}
 .mmdlg-dim{position:absolute;inset:0;background:rgba(0,0,0,.6);animation:mmdlg-in .15s}
-.mmdlg-win{position:relative;width:calc(411.4286 * .95 * var(--dp) - 32 * var(--dp));max-height:calc(100% - 32 * var(--dp));overflow:auto;border-radius:calc(2 * var(--dp));background:#fff;color:rgba(0,0,0,.871);box-shadow:0 calc(16 * var(--dp)) calc(24 * var(--dp)) rgba(0,0,0,.3),0 calc(6 * var(--dp)) calc(30 * var(--dp)) rgba(0,0,0,.2);animation:mmdlg-in .15s}
+.mmdlg-win{position:relative;width:calc(411.4286 * .95 * var(--dp) - 32 * var(--dp));max-height:calc(100% - 32 * var(--dp));overflow:auto;border-radius:calc(2 * var(--dp));background:#fff;color:rgba(0,0,0,.871);box-shadow:0 calc(16 * var(--dp)) calc(24 * var(--dp)) rgba(0,0,0,.3),0 calc(6 * var(--dp)) calc(30 * var(--dp)) rgba(0,0,0,.2);animation:mmdlg-grow .22s cubic-bezier(.23,1,.32,1),mmdlg-in .15s cubic-bezier(.215,.61,.355,1)}
+/* dialog_enter: from 0.9 in 220 ms (decelerate_quint), fading in over 150 ms (decelerate_cubic); dialog_exit is the
+   reverse, played by mm-core.js on a still copy when the dialog goes. */
 @keyframes mmdlg-in{from{opacity:0}}
+@keyframes mmdlg-grow{from{transform:scale(.9)}}
 .mmdlg-title{display:flex;align-items:center;padding:calc(18 * var(--dp)) calc(24 * var(--dp)) 0;font:500 calc(20 * var(--dp))/1.172 Roboto,sans-serif;white-space:nowrap}
 .mmdlg-title img{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-right:calc(8 * var(--dp))}
 .mmdlg-title span{overflow:hidden;text-overflow:ellipsis}

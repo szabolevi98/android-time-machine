@@ -26,6 +26,8 @@
 .screen.no-nav #viewport{bottom:0}
 .screen.no-nav #nav-bar{display:none}
 #overlay-root{position:absolute;inset:0;z-index:20;pointer-events:none}
+.mm-overlay-ghost{position:absolute;inset:0;z-index:21;pointer-events:none}
+.mm-overlay-ghost *{pointer-events:none!important}
 #overlay-root>*{pointer-events:auto}
 /* Screen off: the panel is dark; the first touch or a key wakes it (handled in mm-core.js). */
 .screen.sleeping::after{content:"";position:absolute;inset:0;background:#000;z-index:60}

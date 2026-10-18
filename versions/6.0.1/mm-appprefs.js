@@ -123,6 +123,8 @@
       buttons: [{label: MM.text('framework').t('cancel')}, {label: ok || MM.text('framework').t('ok'), action: c => onSet(c, values[i])}]});
   };
   MM.register('app-prefs', {
+    // The window animation's page (mm-core.js): deeper screens open over the ones they came from.
+    page: c => MM.page('prefs', ...(c.ui.appPrefs?.stack || []).map(s => `${s.xml}.${s.path.join('.')}`)),
     app: false,
     statusColor: c => st(c) ? colors(c)[1] : '#000',
     render,

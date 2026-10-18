@@ -158,6 +158,8 @@
     return home(c);
   }
   MM.register('photos', {
+    // The window animation's page (mm-core.js): deeper screens open over the ones they came from.
+    page: c => MM.page('photos', c.ui.photos?.screen),
     statusColor: c => ui(c).pick ? '#757575' : ui(c).screen.startsWith('photo:') || ui(c).screen === 'slide' || !c.data.photosOnboarded ? '#000' : '#757575',
     render,
     mount(c, root) {

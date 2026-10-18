@@ -251,6 +251,8 @@
   }
 
   MM.register('messenger', {
+    // The window animation's page (mm-core.js): deeper screens open over the ones they came from.
+    page: c => MM.page('messenger', c.ui.messenger?.screen),
     statusColor: c => { const u = ui(c); if (u.screen.startsWith('conv:')) { const x = thread(c, u.screen.slice(5)); if (x) return colorOf(c, x.number)[1]; } return '#026da7'; },
     render, mount,
     back(c) {

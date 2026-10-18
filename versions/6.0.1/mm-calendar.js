@@ -197,6 +197,8 @@
     return main(c);
   }
   MM.register('calendar', {
+    // The window animation's page (mm-core.js): deeper screens open over the ones they came from.
+    page: c => MM.page('calendar', c.ui.calendar?.screen),
     statusColor: () => '#000',
     render,
     mount(c, root) {

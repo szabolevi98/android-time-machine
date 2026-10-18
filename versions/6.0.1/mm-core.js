@@ -126,12 +126,15 @@
   const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
   let pending = '', reveal = null;
   const depth = page => page ? page.split('/').length : 0;
+  // A page path from its parts: empty parts drop out, a '/' inside a part does not split it.
+  window.MM.page = (...parts) => parts.filter(p => p !== undefined && p !== null && p !== '' && p !== false).map(p => String(p).replace(/\//g, '_')).join('/');
   function chooseTransition(page) {
     if (!shown.view || ui.sleeping || reducedMotion?.matches || !viewport.animate || document.hidden) return '';
     if (pending) return pending === 'none' ? '' : pending;
     const from = shown.view, to = ui.view;
     if (from === to) {
       if (page === shown.page) return '';
+      if (ui.backing) return 'close';
       return depth(page) < depth(shown.page) || shown.page.startsWith(`${page}/`) ? 'close' : 'open';
     }
     if (from === 'drawer' && to === 'home') return 'unreveal';
@@ -204,7 +207,27 @@
     if (old) animateTransition(kind, old);
     reveal = null; ui.backing = false;
   }
+  /* An overlay window that goes (or gives way to another) plays its exit animation on a still copy above the screen:
+     a dialog dialog_exit (down to 0.9 in 220 ms decelerate_quint, fading in 150 ms decelerate_cubic, its dim with it),
+     anything else popup_exit_material (a 150 ms fade). The shade, Now on Tap and the volume panel close themselves. */
+  const SELF_CLOSING = ['shade', 'assist', 'volume'];
+  let shownOverlay = '';
+  function overlayExit() {
+    const prev = shownOverlay; shownOverlay = ui.overlay;
+    if (!prev || prev === ui.overlay || SELF_CLOSING.includes(prev) || !overlayRoot.firstElementChild || ui.sleeping || reducedMotion?.matches || !overlayRoot.animate) return;
+    const ghost = document.createElement('div');
+    ghost.className = 'mm-overlay-ghost';
+    ghost.append(...overlayRoot.childNodes);
+    overlayRoot.after(ghost);
+    const win = ghost.querySelector('.mmdlg-win'), fwd = {fill: 'forwards'};
+    if (win) {
+      win.animate([{transform: 'none'}, {transform: 'scale(.9)'}], {duration: 220, easing: E.decQuint, ...fwd});
+      ghost.animate([{opacity: 1}, {opacity: 0}], {duration: 150, easing: 'cubic-bezier(.215,.61,.355,1)', ...fwd});
+    } else ghost.animate([{opacity: 1}, {opacity: 0}], {duration: 150, easing: 'cubic-bezier(.215,.61,.355,1)', ...fwd});
+    setTimeout(() => ghost.remove(), 230);
+  }
   function renderOverlay() {
+    overlayExit();
     if (!ui.overlay) { overlayRoot.innerHTML = ''; return; }
     const mod = modules[ui.overlay];
     overlayRoot.innerHTML = mod ? mod.render(c) : missing(ui.overlay, `<button type="button" data-action="mm-close">${safe(t('Close'))}</button>`);
@@ -236,7 +259,11 @@
     if (fromApp) window.MM.ime?.hide?.();
     else if (window.MM.ime?.back?.()) return;
     if (ui.overlay) { if (!modules[ui.overlay]?.back?.(c)) { ui.overlay = ''; renderOverlay(); } return; }
-    if (modules[ui.view]?.back?.(c)) return;
+    // A screen that goes back within itself closes the page it was on (the close animation).
+    ui.backing = true;
+    const handled = modules[ui.view]?.back?.(c);
+    ui.backing = false;
+    if (handled) return;
     if (ui.view === 'home' || ui.view === 'lock') return;
     const prev = ui.history.pop();
     if (prev) { ui.view = prev.view; ui.sub = prev.sub; ui.backing = true; render(); } else home();
