@@ -16,7 +16,14 @@
    - An event (event_info.xml): the 128 dp headline in the event's colour with the title, the when and calendar rows
      (ic_date, ic_calendar), edit (ic_edit_white) and delete. The editor (edit_fragment.xml): edit_fragment_header.xml
      (56 dp, ic_cancel_white, SAVE) over the title ("Enter title"), WhenEditSegment (ic_date, All-day, start and end),
-     where (ic_location) and the note (ic_notes); leaving unsaved changes asks discard_dialog_body_*. */
+     where (ic_location) and the note (ic_notes); leaving unsaved changes asks discard_dialog_body_*.
+   - The drawer's Day, Week and Month: the day and week grids (the hours down the side, the day headers with the weekday
+     and the date, today in accent_blue, the events as Peacock blocks at their times, all-day ones above, the current
+     time's red line), the month grid (the weekday initials, each day's number and its events' titles). Swiping moves a
+     period; the title shows the month of the date shown. Touching a free hour starts a new event there.
+   - The title's arrow drops the mini month (the month's grid, today circled; swiping turns the month): a day jumps there.
+   - Search (the overflow): the query field in the action bar, the events whose title, place or note match, by day;
+     no_results_found when none do. Settings: calendar_settings_headers (mm-appprefs.js). */
 (() => {
   'use strict';
   const T = () => MM.text('calendar');
@@ -88,18 +95,62 @@
     return `<div class="mmcl-week">${esc(c, same ? `${fmt(c, a, {month: 'short', day: 'numeric'})} – ${b.getDate()}` : `${fmt(c, a, {month: 'short', day: 'numeric'})} – ${fmt(c, b, {month: 'short', day: 'numeric'})}`)}</div>`;
   }
   function main(c) {
-    const t = T(), u = ui(c);
-    return `<div class="mmcl"><div class="mmcl-bar"><button type="button" class="mmcl-btn" data-action="mmcl-drawer">${ic(V('ic_menu'))}</button><button type="button" class="mmcl-month-title" data-action="mmcl-picker"><span>${esc(c, fmt(c, new Date(), {month: 'long'}))}</span><img src="${A('ic_arrow_down')}" alt=""></button><i class="mmcl-flex"></i>
+    const t = T(), u = ui(c), view = u.view || 'schedule', d = cur(c);
+    const body = view === 'day' ? grid(c, [d]) : view === 'week' ? grid(c, Array.from({length: 7}, (_, i) => add(weekStart(c, d), i))) : view === 'month' ? `<div class="mmcl-mview mmcl-swipe">${monthGrid(c, d, false)}</div>` : '';
+    const title = fmt(c, view === 'schedule' && !u.date ? new Date() : d, {month: 'long', ...(d.getFullYear() !== new Date().getFullYear() ? {year: 'numeric'} : {})});
+    const picker = u.picker ? `<div class="mmcl-mini mmcl-mswipe">${monthGrid(c, u.pickerMonth ? parse(u.pickerMonth) : d, true)}</div>` : '';
+    return `<div class="mmcl"><div class="mmcl-bar"><button type="button" class="mmcl-btn" data-action="mmcl-drawer">${ic(V('ic_menu'))}</button><button type="button" class="mmcl-month-title${u.picker ? ' open' : ''}" data-action="mmcl-picker"><span>${esc(c, u.picker && u.pickerMonth ? fmt(c, parse(u.pickerMonth), {month: 'long'}) : title)}</span><img src="${A('ic_arrow_down')}" alt=""></button><i class="mmcl-flex"></i>
       <button type="button" class="mmcl-btn" data-action="mmcl-today" aria-label="${esc(c, t.t('today'))}">${ic(V('ic_today'))}</button>${MM.menu.button(c, 'mmcl-over')}</div>
-      <div class="mmcl-page mmcl-sched">${schedule(c)}</div><button type="button" class="mmcl-fab" data-action="mmcl-new" aria-label="${esc(c, t.t('event'))}"><img src="${A('btn_create')}" alt=""></button>${u.drawer ? drawer(c) : ''}</div>`;
+      ${picker}${body ? `<div class="mmcl-page mmcl-views">${body}</div>` : `<div class="mmcl-page mmcl-sched">${schedule(c)}</div>`}<button type="button" class="mmcl-fab" data-action="mmcl-new" aria-label="${esc(c, t.t('event'))}"><img src="${A('btn_create')}" alt=""></button>${u.drawer ? drawer(c) : ''}</div>`;
   }
   function drawer(c) {
-    const t = T();
+    const t = T(), view = ui(c).view || 'schedule';
     const item = (icon, key, action, on = false) => `<button type="button" class="mmcl-ditem${on ? ' on' : ''}" data-action="${action}">${ic(icon)}<span>${esc(c, t.t(key))}</span></button>`;
     const cal = (key, color) => `<div class="mmcl-dcal"><i style="background:${color}"></i><span>${esc(c, t.t(key))}</span></div>`;
-    return `<div class="mmcl-scrim" data-action="mmcl-drawer"></div><div class="mmcl-drawer"><div class="mmcl-dlist">${item(V('ic_agenda'), 'agenda_view_label', 'mmcl-drawer', true)}${item(A('ic_hourview'), 'hourly_view_label', 'mmcl-dayview')}${item(V('ic_week'), 'week_view_label', 'mmcl-weekview')}${item(A('ic_monthview'), 'month_view_label', 'mmcl-monthview')}
+    return `<div class="mmcl-scrim" data-action="mmcl-drawer"></div><div class="mmcl-drawer"><div class="mmcl-dlist">${item(V('ic_agenda'), 'agenda_view_label', 'mmcl-schedview', view === 'schedule')}${item(A('ic_hourview'), 'hourly_view_label', 'mmcl-dayview', view === 'day')}${item(V('ic_week'), 'week_view_label', 'mmcl-weekview')}${item(A('ic_monthview'), 'month_view_label', 'mmcl-monthview')}
       <i class="mmcl-ddiv"></i><div class="mmcl-dacct"><img src="assets/gm-avatar_placeholder.png" alt=""><span>${esc(c, MM.account.email)}</span></div>${cal('my_events', PEACOCK)}${cal('reminders_calendar_name', '#4285f4')}${cal('drawer_birthdays_text', '#9e69af')}${cal('drawer_holidays_text', '#0b8043')}
       <i class="mmcl-ddiv"></i>${item(V('ic_settings'), 'drawer_settings', 'mmcl-settings')}${item(V('ic_help'), 'drawer_help_feedback', 'mmcl-help')}</div></div>`;
+  }
+
+  // ---- Day, Week, Month, the mini month, search ---------------------------------------------------------------------
+  const HOUR = 48;
+  const firstDow = c => (new Intl.Locale(c.locale()).weekInfo?.firstDay ?? (c.locale().startsWith('en') ? 7 : 1)) % 7;
+  const cur = c => { const u = ui(c); return u.date ? parse(u.date) : day0(); };
+  const add = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  const weekStart = (c, d) => add(d, -((d.getDay() - firstDow(c) + 7) % 7));
+  const minutes = hm => { const [h, m] = hm.split(':').map(Number); return h * 60 + m; };
+  const dayEvents = (c, d) => events(c).filter(e => e.date === iso(d));
+  function grid(c, days) {
+    const t = T(), today = day0(), now = new Date(), multi = days.length > 1;
+    const heads = days.map(d => `<div class="mmcl-gday${+d === +today ? ' today' : ''}"><small>${esc(c, fmt(c, d, {weekday: 'short'}))}</small><b>${d.getDate()}</b></div>`).join('');
+    const allDay = days.map(d => `<div class="mmcl-gall">${dayEvents(c, d).filter(e => e.allDay).map(e => `<button type="button" class="mmcl-gchip" data-action="mmcl-event" data-id="${e.id}" style="background:${PEACOCK}">${esc(c, e.title)}</button>`).join('')}</div>`).join('');
+    const hours = Array.from({length: 24}, (_, h) => `<div class="mmcl-ghour"><span>${h ? esc(c, fmt(c, new Date(2000, 0, 1, h), {hour: 'numeric'})) : ''}</span></div>`).join('');
+    const cols = days.map(d => {
+      const blocks = dayEvents(c, d).filter(e => !e.allDay).map(e => { const s = minutes(e.start), en = Math.max(s + 30, minutes(e.end || e.start)); return `<button type="button" class="mmcl-gev" data-action="mmcl-event" data-id="${e.id}" style="top:calc(${s / 60 * HOUR} * var(--dp));height:calc(${(en - s) / 60 * HOUR - 2} * var(--dp));background:${PEACOCK}"><b>${esc(c, e.title)}</b>${multi ? '' : `<small>${esc(c, `${time(c, e.start)} – ${time(c, e.end)}`)}${e.where ? `, ${esc(c, e.where)}` : ''}</small>`}</button>`; }).join('');
+      const line = +d === +today ? `<i class="mmcl-now" style="top:calc(${(now.getHours() * 60 + now.getMinutes()) / 60 * HOUR} * var(--dp))"></i>` : '';
+      return `<div class="mmcl-gcol" data-date="${iso(d)}">${Array.from({length: 24}, (_, h) => `<button type="button" class="mmcl-gslot" data-action="mmcl-slot" data-date="${iso(d)}" data-h="${h}"></button>`).join('')}${blocks}${line}</div>`;
+    }).join('');
+    return `<div class="mmcl-grid${multi ? ' week' : ''}"><div class="mmcl-ghead"><i class="mmcl-gcorner"></i>${heads}</div><div class="mmcl-gallrow"><i class="mmcl-gcorner"></i>${allDay}</div>
+      <div class="mmcl-gscroll mmcl-swipe"><div class="mmcl-gbody"><div class="mmcl-ghours">${hours}</div>${cols}</div></div></div>`;
+  }
+  function monthGrid(c, d, mini) {
+    const today = day0(), first = new Date(d.getFullYear(), d.getMonth(), 1), start = weekStart(c, first);
+    const initials = Array.from({length: 7}, (_, i) => esc(c, fmt(c, add(start, i), {weekday: 'narrow'}))).map(s => `<i>${s}</i>`).join('');
+    let cells = '';
+    for (let i = 0; i < 42; i++) {
+      const x = add(start, i), out = x.getMonth() !== d.getMonth();
+      if (i >= 35 && out && x > first) break;
+      const evs = mini ? [] : dayEvents(c, x);
+      cells += `<button type="button" class="mmcl-mcell${out ? ' out' : ''}${+x === +today ? ' today' : ''}" data-action="${mini ? 'mmcl-jump' : 'mmcl-mday'}" data-date="${iso(x)}"><b>${x.getDate()}</b>${evs.slice(0, 3).map(e => `<span style="background:${PEACOCK}">${esc(c, e.title)}</span>`).join('')}</button>`;
+    }
+    return `<div class="mmcl-mgrid${mini ? ' mini' : ''}"><div class="mmcl-mdow">${initials}</div><div class="mmcl-mcells">${cells}</div></div>`;
+  }
+  function searchView(c) {
+    const t = T(), u = ui(c), q = (u.search || '').trim().toLowerCase();
+    const hits = q ? events(c).filter(e => [e.title, e.where, e.note].some(x => (x || '').toLowerCase().includes(q))).sort((a, b) => a.date.localeCompare(b.date) || (a.start || '').localeCompare(b.start || '')) : [];
+    const rows = hits.map(e => { const d = parse(e.date); return `<div class="mmcl-day"><div class="mmcl-dhead"><small>${esc(c, fmt(c, d, {weekday: 'short'}))}</small><b>${d.getDate()}</b></div><div class="mmcl-chips"><button type="button" class="mmcl-chip${e.allDay ? '' : ' timed'}" data-action="mmcl-event" data-id="${e.id}" style="background:${PEACOCK}"><b>${esc(c, e.title)}</b>${e.allDay ? '' : `<small>${esc(c, `${time(c, e.start)} – ${time(c, e.end)}`)}</small>`}</button></div></div>`; }).join('');
+    return `<div class="mmcl"><div class="mmcl-bar"><button type="button" class="mmcl-btn" data-action="mmcl-sback"><img src="assets/gm-ic_arrow_back_24dp.png" alt=""></button><input class="mmcl-q" value="${esc(c, u.search || '')}" placeholder="${esc(c, t.t('search'))}" autocomplete="off">${u.search ? `<button type="button" class="mmcl-btn" data-action="mmcl-sclear" aria-label="${esc(c, t.t('accessibility_clear_search'))}"><img src="assets/gm-abc_ic_clear_mtrl_alpha.png" alt=""></button>` : ''}</div>
+      <div class="mmcl-page mmcl-sched">${rows || (q ? `<div class="mmcl-none">${esc(c, t.t('no_results_found'))}</div>` : '')}</div></div>`;
   }
 
   // ---- an event and the editor --------------------------------------------------------------------------------------
@@ -142,6 +193,7 @@
     const u = ui(c);
     if (u.screen === 'edit' && u.draft) return editor(c);
     if (u.screen.startsWith('event:')) { const e = events(c).find(x => x.id === +u.screen.slice(6)); if (e) return info(c, e); u.screen = ''; }
+    if (u.search !== undefined && u.search !== null) return searchView(c);
     return main(c);
   }
   MM.register('calendar', {
@@ -151,11 +203,21 @@
       const sched = root.querySelector('.mmcl-sched'), today = root.querySelector('#mmcl-today');
       if (sched && today && !ui(c).scrolled) { sched.scrollTop = Math.max(0, today.offsetTop - 120); ui(c).scrolled = true; }
       root.querySelectorAll('.mmcl-edit [data-f]').forEach(i => i.addEventListener('input', () => { ui(c).draft[i.dataset.f] = i.value; if (i.type === 'date' || i.type === 'time') c.render(); }));
+      const u = ui(c), gs = root.querySelector('.mmcl-gscroll');
+      if (gs) { gs.scrollTop = u.gridScroll ?? Math.max(0, (new Date().getHours() - 2) * HOUR * (gs.clientWidth / 360 || 1)); gs.addEventListener('scroll', () => { u.gridScroll = gs.scrollTop; }, {passive: true}); }
+      // A horizontal swipe turns the period (the views) or the month (the mini month).
+      const swipe = (el, turn) => { if (!el) return; let x0 = null, y0 = 0; el.addEventListener('pointerdown', e => { x0 = e.clientX; y0 = e.clientY; }); el.addEventListener('pointerup', e => { if (x0 === null) return; const dx = e.clientX - x0, dy = e.clientY - y0; x0 = null; if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) { u.swiped = Date.now(); turn(dx < 0 ? 1 : -1); } }); };
+      swipe(root.querySelector('.mmcl-swipe'), dir => { const d = cur(c), v = u.view; u.date = iso(v === 'month' ? new Date(d.getFullYear(), d.getMonth() + dir, 1) : add(d, v === 'week' ? 7 * dir : dir)); c.render(); });
+      swipe(root.querySelector('.mmcl-mswipe'), dir => { const m = u.pickerMonth ? parse(u.pickerMonth) : cur(c); u.pickerMonth = iso(new Date(m.getFullYear(), m.getMonth() + dir, 1)); c.render(); });
+      const q = root.querySelector('.mmcl-q');
+      if (q) { q.addEventListener('input', () => { const p = q.selectionStart; u.search = q.value; c.render(); const g = c.el.viewport.querySelector('.mmcl-q'); if (g) { g.focus(); g.setSelectionRange(p, p); } }); if (document.activeElement !== q) setTimeout(() => q.focus(), 40); }
     },
     back(c) {
       const u = ui(c);
       if (u.drawer) { u.drawer = false; c.render(); return true; }
+      if (u.picker) { u.picker = false; u.pickerMonth = ''; c.render(); return true; }
       if (u.screen === 'edit') { closeEditor(c, true); return true; }
+      if (!u.screen && u.search !== undefined && u.search !== null) { u.search = null; c.render(); return true; }
       if (u.screen) { u.screen = ''; c.render(); return true; }
       return false;
     },
@@ -165,10 +227,15 @@
         case 'mmcl-oobenext': u.oobe++; c.render(); return true;
         case 'mmcl-oobedone': c.data.calendarOobe = true; c.save(); c.render(); return true;
         case 'mmcl-drawer': u.drawer = !u.drawer; c.render(); return true;
-        case 'mmcl-today': { const s = c.el.viewport.querySelector('.mmcl-sched'), d = c.el.viewport.querySelector('#mmcl-today'); if (s && d) s.scrollTo({top: Math.max(0, d.offsetTop - 120), behavior: 'smooth'}); return true; }
-        case 'mmcl-picker': c.open('missing-calendar-month-picker'); return true;
-        case 'mmcl-dayview': case 'mmcl-weekview': case 'mmcl-monthview': c.open(`missing-calendar-${name.slice(5)}`); return true;
-        case 'mmcl-settings': c.open('missing-calendar-settings'); return true;
+        case 'mmcl-today': if ((u.view || 'schedule') !== 'schedule' || u.date) { u.date = ''; u.gridScroll = null; c.render(); return true; } { const s = c.el.viewport.querySelector('.mmcl-sched'), d = c.el.viewport.querySelector('#mmcl-today'); if (s && d) s.scrollTo({top: Math.max(0, d.offsetTop - 120), behavior: 'smooth'}); return true; }
+        case 'mmcl-picker': u.picker = !u.picker; u.pickerMonth = ''; c.render(); return true;
+        case 'mmcl-jump': if (Date.now() - (u.swiped || 0) < 300) return true; u.date = el.dataset.date; u.picker = false; u.pickerMonth = ''; u.gridScroll = null; if ((u.view || 'schedule') === 'schedule') u.view = 'day'; c.render(); return true;
+        case 'mmcl-mday': if (Date.now() - (u.swiped || 0) < 300) return true; u.date = el.dataset.date; u.view = 'day'; c.render(); return true;
+        case 'mmcl-slot': { if (Date.now() - (u.swiped || 0) < 300) return true; startEdit(c, null); const h = +el.dataset.h; Object.assign(u.draft, {date: el.dataset.date, start: `${String(h).padStart(2, '0')}:00`, end: `${String((h + 1) % 24).padStart(2, '0')}:00`}); u.draft.orig = JSON.stringify({...u.draft, orig: 0}); c.render(); return true; }
+        case 'mmcl-schedview': case 'mmcl-dayview': case 'mmcl-weekview': case 'mmcl-monthview': u.view = {schedview: 'schedule', dayview: 'day', weekview: 'week', monthview: 'month'}[name.slice(5)]; u.drawer = false; u.gridScroll = null; c.render(); return true;
+        case 'mmcl-settings': u.drawer = false; MM.openPrefs(c, 'calendar', 'calendar_settings_headers', t.t('drawer_settings')); return true;
+        case 'mmcl-sback': u.search = null; c.render(); return true;
+        case 'mmcl-sclear': u.search = ''; c.render(); return true;
         case 'mmcl-help': c.open('help', 'calendar'); return true;
         case 'mmcl-event': u.screen = `event:${e.id}`; c.render(); return true;
         case 'mmcl-up': u.screen = ''; c.render(); return true;
@@ -183,7 +250,7 @@
           c.save(); u.draft = null; u.screen = `event:${d.id}`; c.render(); return true;
         }
         case 'mmcl-delete': c.dialog({message: t.t('delete_this_event_title'), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok'), action: c => { c.data.events = events(c).filter(x => x !== e); c.save(); u.screen = ''; c.render(); }}]}); return true;
-        case 'mm-menu': c.menu([{label: t.t('search'), action: c => c.open('missing-calendar-search')}, {label: t.t('calendar_refresh'), action: c => c.render()}]); return true;
+        case 'mm-menu': c.menu([{label: t.t('search'), action: c => { u.search = ''; c.render(); }}, {label: t.t('calendar_refresh'), action: c => c.render()}]); return true;
       }
       return false;
     }

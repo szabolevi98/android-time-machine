@@ -332,6 +332,22 @@ MM.strings('calendar', {
 "fr": "Supprimer cet événement ?",
 "es": "¿Eliminar este evento?"
 },
+"accessibility_clear_search": {
+"res": "bullhead:CalendarGooglePrebuilt:accessibility_clear_search",
+"en": "Clear search",
+"hu": "Keresett kifejezés törlése",
+"de": "Suche zurücksetzen",
+"fr": "Effacer la recherche",
+"es": "Borrar la búsqueda"
+},
+"no_results_found": {
+"res": "bullhead:CalendarGooglePrebuilt:no_results_found",
+"en": "No results found",
+"hu": "Nincs találat",
+"de": "Keine Ergebnisse gefunden",
+"fr": "Aucun résultat trouvé.",
+"es": "No se han encontrado resultados"
+},
 "edit_location_hint": {
 "res": "bullhead:CalendarGooglePrebuilt:edit_location_hint",
 "en": "Add location",

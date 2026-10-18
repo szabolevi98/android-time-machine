@@ -181,6 +181,8 @@ week_view_label month_view_label search calendar_refresh drawer_settings drawer_
 reminders_calendar_name drawer_birthdays_text drawer_holidays_text today no_events edit_title_hint edit_event_save event
 reminder edit_label_all_day more_options edit_event_delete edit_label discard_dialog_body_new_event
 discard_dialog_body_existing_event discard_dialog_discard discard_dialog_keep_editing delete_this_event_title
+# Day, Week, Month, search
+accessibility_clear_search no_results_found
 edit_location_hint edit_description_hint edit_recurrence_none
 [camera] GoogleCamera framework
 # Google Camera 3.1.024: the mode list, the shutter, the mode options' descriptions
