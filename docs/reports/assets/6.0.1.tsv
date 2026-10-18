@@ -605,6 +605,8 @@ versions/6.0.1/assets/sui-stat_sys_wifi_signal_4_fully.svg	d529b6ae377a4174	vect
 versions/6.0.1/assets/sui-stat_sys_wifi_signal_null.svg	dd37e55ca1609257	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/stat_sys_wifi_signal_null.xml	drawable	vector drawable drawn as SVG	9cdf7da31705f42c
 versions/6.0.1/assets/sui-stat_sys_zen_important.svg	2bfc85973c2d6b73	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/stat_sys_zen_important.xml	drawable	vector drawable drawn as SVG	06cd809f509f5310
 versions/6.0.1/assets/sui-stat_sys_zen_none.svg	a5d565436ce6f33d	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/stat_sys_zen_none.xml	drawable	vector drawable drawn as SVG	f8c06b768052300e
+versions/6.0.1/assets/ts-fab_green.png	8ffe7eed53875fbe	copy	bullhead:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxhdpi-v4/fab_green.png	drawable-xxhdpi-v4		8ffe7eed53875fbe
+versions/6.0.1/assets/ts-fab_ic_call.png	96532ad712bb40b3	copy	bullhead:/system/priv-app/GoogleDialer/GoogleDialer.apk!res/drawable-xxhdpi-v4/fab_ic_call.png	drawable-xxhdpi-v4		96532ad712bb40b3
 versions/6.0.1/assets/vv-context_header_bg_dawn.jpg	1d1e6458ea1fffa5	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/context_header_bg_dawn.jpg	drawable-nodpi-v4		1d1e6458ea1fffa5
 versions/6.0.1/assets/vv-context_header_bg_daylight.jpg	ba3e657cc2ac9643	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/context_header_bg_daylight.jpg	drawable-nodpi-v4		ba3e657cc2ac9643
 versions/6.0.1/assets/vv-context_header_bg_dusk.jpg	aac0aad6bfd0cfa1	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/context_header_bg_dusk.jpg	drawable-nodpi-v4		aac0aad6bfd0cfa1

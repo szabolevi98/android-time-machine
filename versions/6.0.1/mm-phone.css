@@ -161,3 +161,16 @@
 .mmph-end{position:absolute;z-index:3;left:50%;bottom:calc(8 * var(--dp));width:calc(72 * var(--dp));height:calc(72 * var(--dp));margin-left:calc(-36 * var(--dp));padding:0;border:0;border-radius:50%;background:url('assets/gd-fab_red.png') center/100%;box-shadow:0 calc(3 * var(--dp)) calc(8 * var(--dp)) rgba(0,0,0,.3);display:grid;place-items:center}
 .mmph-end img{width:calc(56 * var(--dp));height:calc(56 * var(--dp))}
 .mmph-end:disabled{opacity:.6}
+/* TeleService's EmergencyDialer (emergency_dialer.xml, Dialpad_Dark). */
+.mmed{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:0 calc(16 * var(--dp)) calc(119 * var(--dp));background:#263238;box-sizing:border-box}
+.mmed .mmph-dpmenu{visibility:hidden}
+.mmed .mmph-digits output{color:#fff}
+.mmed .mmph-del .mmph-ic{background:#fff}
+.mmed .mmph-dline{background:rgba(255,255,255,.2)}
+.mmed .mmph-key b{color:#fff}
+.mmed .mmph-key small{color:#d4d6d7}
+.mmed .mmph-vm{filter:brightness(0) invert(.83)}
+.mmed .mmph-key:active{background:rgba(255,255,255,.12)}
+.mmed-fab{position:absolute;left:50%;bottom:calc(26 * var(--dp));width:calc(67 * var(--dp));height:calc(67 * var(--dp));margin-left:calc(-33.5 * var(--dp));padding:0;border:0;background:none}
+.mmed-fab img{position:absolute;inset:0;width:100%;height:100%}
+.mmed-fab:active::after{content:"";position:absolute;inset:calc(6 * var(--dp));border-radius:50%;background:rgba(255,255,255,.5)}

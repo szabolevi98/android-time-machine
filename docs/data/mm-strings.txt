@@ -242,3 +242,6 @@ Velvet/widget_get_now
 Velvet/pick_wallpaper Velvet/wallpaper_instructions Velvet/pick_image Velvet/crop_wallpaper
 LiveWallpapersPicker/live_wallpaper_picker_label LiveWallpapersPicker/live_wallpaper_empty
 Photos/photos_setwallpaper_picker_title DocumentsUI/title_open DocumentsUI/root_recent
+[emergency] TeleService framework
+# TeleService's EmergencyDialer
+dial_emergency_error emergencyDialerIconLabel ok

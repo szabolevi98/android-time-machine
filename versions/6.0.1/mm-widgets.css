@@ -85,7 +85,7 @@
 .mmwg-gm-head .compose{flex:none;width:calc(56 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center}
 .mmwg-gm-head .compose img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
 .mmwg-gm-list{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;border-width:0!important}
-.mmwg-gm-row{display:flex;flex-direction:column;width:100%;height:calc(72 * var(--dp));padding:calc(10 * var(--dp)) calc(16 * var(--dp)) 0;border:0;border-bottom:calc(.5 * var(--dp)) solid rgba(0,0,0,.1);background:none;font-family:Roboto,sans-serif;text-align:left;box-sizing:border-box}
+.mmwg-gm-row{display:flex;flex-direction:column;width:100%;height:calc(72 * var(--dp));padding:calc(10 * var(--dp)) calc(16 * var(--dp)) 0;border:0;border-bottom:calc(.5 * var(--dp)) solid rgba(0,0,0,.1);background:#fff;font-family:Roboto,sans-serif;text-align:left;box-sizing:border-box}
 .mmwg-gm-row .top{display:flex;align-items:flex-start;width:100%}
 .mmwg-gm-row .top b{flex:1;min-width:0;padding-right:calc(16 * var(--dp));color:rgba(0,0,0,.54);font:400 calc(18 * var(--dp))/1 Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mmwg-gm-row .top small{flex:none;color:rgba(0,0,0,.54);font-size:calc(12 * var(--dp))}

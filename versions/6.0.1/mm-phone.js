@@ -290,6 +290,33 @@
   }
 
   MM.phone = {call: (c, number) => startCall(c, number), active: c => !!call(c) && !call(c).ended};
+
+  /* TeleService's EmergencyDialer (EmergencyDialerTheme: emergency_dialer_background #263238 behind the bars), opened
+     from the keyguard's EMERGENCY CALL: emergency_dialer.xml with no emergency assistance app in the image (the action
+     group stays hidden), the dialpad in Dialpad_Dark (white digits, #d4d6d7 letters, no overflow) and the 67 dp call
+     button (fab_green, fab_ic_call) 26 dp above the bottom. A number that is not an emergency number (112, 911: the
+     SIM's list) gets dial_emergency_error. */
+  const EMERGENCY = ['112', '911'];
+  MM.register('emergency-dialer', {
+    app: false,
+    statusColor: () => '#263238',
+    render(c) {
+      const n = c.ui.emergency || '';
+      return `<div class="mmph mmed">${digitsRow(c, n, 'mmed-del')}${dialpadKeys(c, 'mmed-key')}<button type="button" class="mmed-fab" data-action="mmed-call" aria-label="dial"><img src="assets/ts-fab_green.png" alt=""><img src="assets/ts-fab_ic_call.png" alt=""></button></div>`;
+    },
+    back(c) { c.ui.emergency = ''; return false; },
+    action(name, el, event, c) {
+      const n = c.ui.emergency || '', t = MM.text('emergency');
+      if (name === 'mmed-key') { c.ui.emergency = n + el.dataset.k; c.render(); return true; }
+      if (name === 'mmed-del') { c.ui.emergency = n.slice(0, -1); c.render(); return true; }
+      if (name === 'mmed-call') {
+        if (!n) return true;
+        if (!EMERGENCY.includes(n)) { c.dialog({message: AndroidStrings.format(t.t('dial_emergency_error'), n), buttons: [{label: t.t('ok')}]}); return true; }
+        c.ui.emergency = ''; startCall(c, n); return true;
+      }
+      return false;
+    }
+  });
   MM.register('phone', {
     statusColor: () => '#0277bd',
     render, mount,
