@@ -25,7 +25,10 @@
      the digital clock (digital_widget_time.xml: TextClock "h:mm" / "kk:mm" in widget_big_thin, 75 dp sans-serif-light,
      the date in widget_label 14 dp all caps with 0.15 letter spacing and the next alarm with ic_alarm_small in
      #b3ffffff), Sound Search (ic_soundsearch_selector centred) and Play Music's I'm Feeling Lucky (widget_ifl.xml:
-     ifl_widget_background in 3 dp, the 33 dp dice). The others are still a "not built yet" card of their size. */
+     ifl_widget_background in 3 dp, the 33 dp dice); Calendar, Gmail, Chrome's bookmarks, Drive, Play Music, Messenger's
+     list, Hangouts and Google Now are described where they are drawn below. Messenger's single conversation and Play
+     Store's widget need their configuration activities (a conversation, the content), which are not built: they are
+     still a "not built yet" card of their size. */
 (() => {
   'use strict';
   const T = () => MM.text('widgets');
@@ -175,6 +178,15 @@
     const now = new Date();
     switch (item.w) {
       case 'calendar': return calendarWidget(c);
+      case 'hangouts': {
+        // Hangouts 4.1's widget.xml: the 42 dp quantum_googgreen500 header (8 dp in) with app_name (one account, as
+        // BabelWidgetProvider sets it), a 1 dp #aaaaaa line, the white list of widget_conversation.xml rows (72 dp:
+        // the 40 dp avatar 16 dp before the text, the 16 sp name in #9a000000, the 12 sp time in #929292, the last
+        // message 14 sp quantum_bluegrey600 in up to two lines).
+        const list = MM.hangoutsWidget ? MM.hangoutsWidget(c) : [];
+        const rows = list.map(x => `<button type="button" class="row" data-action="mmwg-open" data-app="hangouts">${x.avatar}<span class="body"><span class="top"><b>${c.safe(x.name)}</b><small>${c.safe(x.when)}</small></span><span class="snip">${c.safe(x.text)}</span></span></button>`).join('');
+        return `<div class="mmwg-ho"><button type="button" class="head" data-action="mmwg-open" data-app="hangouts">${c.safe(T().t('Hangouts/app_name'))}</button><i class="line"></i><div class="list">${rows}</div></div>`;
+      }
       case 'messenger-list': {
         // Messenger 1.4's widget_conversation_list.xml: 8 dp in, the 48 dp header in primary_color #0288d1 (2 dp top
         // corners, "Messenger" in the action bar title style, ic_add_white), a 1 dp #aaaaaa line, the white list with

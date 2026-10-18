@@ -23,6 +23,9 @@
     if (d < 7 * 864e5) return new Intl.DateTimeFormat(c.locale(), {weekday: 'short'}).format(date);
     return new Intl.DateTimeFormat(c.locale(), {month: 'short', day: 'numeric'}).format(date);
   }
+  // Hangouts' widget (mm-widgets.js) lists the same conversations.
+  MM.hangoutsWidget = c => chats(c).filter(x => x.messages.length).sort((a, b) => b.messages.at(-1).time - a.messages.at(-1).time)
+    .map(x => { const p = P().byId(c, x.contact), last = x.messages.at(-1); return {name: p.name, avatar: P().tile(c, p, 'mmwg-ho-av'), when: when(c, last.time), text: last.text}; });
   function list(c) {
     const t = T(), u = ui(c), items = chats(c).filter(x => x.messages.length).sort((a, b) => b.messages.at(-1).time - a.messages.at(-1).time);
     const drawer = u.drawer ? `<div class="mmho-scrim" data-action="mmho-drawer"></div><div class="mmho-drawer"><div class="mmho-dhead"><img src="assets/gm-avatar_placeholder.png" alt=""><b>${esc(c, MM.account.name)}</b><small>${esc(c, MM.account.email)}</small></div>
