@@ -20,7 +20,7 @@
 /* status_bar_height 24 dp and navigation_bar_height 48 dp (framework-res); apps sit between them. */
 #status-bar{position:absolute;top:0;left:0;right:0;height:calc(24 * var(--dp));z-index:8}
 #nav-bar{position:absolute;bottom:0;left:0;right:0;height:calc(48 * var(--dp));z-index:8}
-#viewport{position:absolute;top:calc(24 * var(--dp));left:0;right:0;bottom:calc(48 * var(--dp));overflow:hidden}
+#viewport{position:absolute;top:calc(24 * var(--dp));left:0;right:0;bottom:calc(48 * var(--dp));overflow:hidden;isolation:isolate}
 .screen.no-status #viewport{top:0}
 .screen.no-status #status-bar{display:none}
 .screen.no-nav #viewport{bottom:0}

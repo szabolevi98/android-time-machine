@@ -104,5 +104,61 @@ MM.strings('google', {
 "de": "OK",
 "fr": "OK",
 "es": "Entendido"
+},
+"assist_optin_title": {
+"res": "bullhead:Velvet:assist_optin_title",
+"en": "Want help with any screen?\nTurn on Now on Tap",
+"hu": "Segítséget szeretne valamelyik képernyővel kapcsolatban?\nKapcsolja be az Asszisztens koppintásra funkciót",
+"de": "Benötigen Sie Hilfe zu einem Bildschirm?\nAktivieren Sie Now on Tap.",
+"fr": "Vous voulez obtenir de l'aide sur le contenu affiché à l'écran ?\nActivez la fonctionnalité Google on Tap.",
+"es": "¿Necesitas ayuda sobre alguna pantalla?\nActiva Google Now con un toque"
+},
+"assist_optin_body": {
+"res": "bullhead:Velvet:assist_optin_body",
+"en": "When you want help without leaving the app you're in, just tap and hold the Home button. This asks Google to use what's on your screen to show you related info, apps, and actions.\n\nYou can also say “Ok Google” or tap the mic to get help with what's on the screen.",
+"hu": "Ha anélkül szeretne segítséget kérni, hogy elhagyná az épp megnyitott alkalmazást, egyszerűen tartsa lenyomva a Kezdőképernyő gombot. Ezzel arra kéri a Google-t, hogy a képernyőjén szereplő adatok alapján kapcsolódó információkat, alkalmazásokat és műveleteket jelenítsen meg.\n\nMásik megoldásként kimondhatja az „OK Google” parancsot is, illetve rákoppinthat a mikrofon ikonra, hogy további segítséget kérjen a képernyő tartalmával kapcsolatban.",
+"de": "Wenn du Hilfe erhalten möchtest, ohne die geöffnete App zu verlassen, halte die Schaltfläche \"Startseite\" gedrückt. Google zeigt dir dann basierend auf dem Bildschirminhalt relevante Informationen, Apps und Aktionen.\n\nDu kannst auch Hilfe zum aktuellen Bildschirm erhalten, indem du \"Ok Google\" sagst oder auf das Mikrofon tippst.",
+"fr": "Pour obtenir de l'aide sans quitter l'application que vous êtes en train d'utiliser, appuyez de manière prolongée sur le bouton de l'accueil. Des informations, des applications et des actions en relation avec le contenu que vous consultez s'affichent alors.\n\nPour obtenir de l'aide sur ce même contenu, vous pouvez également dire \"Ok Google\" ou cliquer sur le micro.",
+"es": "Si necesitas ayuda antes de salir de la aplicación que tienes abierta, solo tienes que mantener pulsado el botón de inicio. Esta acción pedirá a Google que use lo que aparece en tu pantalla para mostrarte información, aplicaciones y acciones relacionadas.\n \nTambién puedes decir “Ok Google” o tocar el micrófono para obtener ayuda sobre el contenido mostrado en tu pantalla."
+},
+"assist_optin_learn_more_text": {
+"res": "bullhead:Velvet:assist_optin_learn_more_text",
+"en": "Learn more",
+"hu": "További információ",
+"de": "Weitere Informationen",
+"fr": "En savoir plus",
+"es": "Más información"
+},
+"assist_optin_decline": {
+"res": "bullhead:Velvet:assist_optin_decline",
+"en": "Not now",
+"hu": "Most nem",
+"de": "Nicht jetzt",
+"fr": "Plus tard",
+"es": "Ahora no"
+},
+"assist_optin_accept": {
+"res": "bullhead:Velvet:assist_optin_accept",
+"en": "Turn on",
+"hu": "Bekapcsolás",
+"de": "Aktivieren",
+"fr": "Activer",
+"es": "Activar"
+},
+"no_results_found_status": {
+"res": "bullhead:Velvet:no_results_found_status",
+"en": "Couldn't find a close match.",
+"hu": "Nincs közeli találat.",
+"de": "Es wurde keine gute Übereinstimmung gefunden.",
+"fr": "Couldn't find a close match.",
+"es": "No se ha podido encontrar una coincidencia cercana."
+},
+"assist_layer_to_now": {
+"res": "bullhead:Velvet:assist_layer_to_now",
+"en": "Google Now",
+"hu": "Google Asszisztens",
+"de": "Google Now",
+"fr": "Google Now",
+"es": "Google Now"
 }
 });

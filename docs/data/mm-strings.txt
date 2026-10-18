@@ -220,3 +220,5 @@ DMAgent/main_title DMAgent/introduction_text DMAgent/info_shared_admin DMAgent/n
 # The Google app 5.3.27: the search plate, the Now page and its opt-in, voice search
 type_or_tap_mic speak_now now_opt_in_card_title now_opt_in_card_description opt_in_agree_button opt_in_not_now_button
 my_reminders customize menu_settings help_and_feedback first_run_welcome first_run_swipe first_run_done
+assist_optin_title assist_optin_body assist_optin_learn_more_text assist_optin_decline assist_optin_accept
+no_results_found_status assist_layer_to_now

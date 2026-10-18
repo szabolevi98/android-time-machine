@@ -36,3 +36,21 @@
 .mmgg-vmic{width:calc(96 * var(--dp));height:calc(96 * var(--dp));padding:0;border:0;border-radius:50%;background:#db4437;display:grid;place-items:center;animation:mmgg-pulse 1.2s infinite}
 @keyframes mmgg-pulse{50%{box-shadow:0 0 0 calc(16 * var(--dp)) rgba(219,68,55,.2)}}
 .mmgg-vmic i{width:calc(40 * var(--dp));height:calc(40 * var(--dp));background:#fff;-webkit-mask:url('assets/gel-ic_mic_none.png') center/100%;mask:url('assets/gel-ic_mic_none.png') center/100%}
+/* Now on Tap (assist_layer.xml), drawn under the navigation bar as the voice interaction window is. */
+.mmot{position:absolute;inset:0 0 calc(48 * var(--dp));z-index:30}
+.mmot-scrim{position:absolute;inset:0;background:rgba(0,0,0,.62);animation:mmot-fade .2s}
+@keyframes mmot-fade{from{opacity:0}}
+.mmot-panel{position:absolute;left:0;right:0;bottom:0;background:#f2f2f2;animation:mmot-up .25s cubic-bezier(.4,0,.2,1);font-family:Roboto,sans-serif}
+@keyframes mmot-up{from{transform:translateY(100%)}}
+.mmot-optin{padding:calc(20 * var(--dp)) calc(16 * var(--dp)) calc(8 * var(--dp))}
+.mmot-optin b{display:block;padding-bottom:calc(8 * var(--dp));font-weight:700;font-size:calc(16 * var(--dp));color:rgba(0,0,0,.871)}
+.mmot-optin p{margin:0;font-size:calc(14 * var(--dp));line-height:1.4;color:rgba(0,0,0,.518)}
+.mmot-learn{display:block;padding-top:calc(8 * var(--dp));color:#4285f4;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.mmot-btns{display:flex;justify-content:flex-end;gap:calc(8 * var(--dp));padding-top:calc(16 * var(--dp))}
+.mmot-btns button,.mmot-card button{padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;color:#4285f4;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.mmot-btns button.yes{background:#4285f4;color:#fff}
+.mmot-spin{display:grid;place-items:center;height:calc(96 * var(--dp))}
+.mmot-spin i{width:calc(32 * var(--dp));height:calc(32 * var(--dp));border:calc(3 * var(--dp)) solid #4285f4;border-right-color:transparent;border-radius:50%;animation:mmot-rot .8s linear infinite}
+@keyframes mmot-rot{to{transform:rotate(360deg)}}
+.mmot-card{display:flex;align-items:center;justify-content:space-between;min-height:calc(96 * var(--dp));padding:0 calc(8 * var(--dp)) 0 calc(16 * var(--dp))}
+.mmot-card p{margin:0;font-size:calc(16 * var(--dp));color:rgba(0,0,0,.871)}

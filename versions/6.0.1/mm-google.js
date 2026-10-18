@@ -71,3 +71,31 @@
   // The home screen's search bar and mic open the app in the matching mode.
   MM.googleOpen = (c, voice) => { const u = ui(c); u.mode = voice ? 'voice' : 'search'; u.q = ''; u.result = ''; c.open('search'); };
 })();
+/* Now on Tap (Velvet's assist layer, held Home): assist_layer.xml's #9e000000 scrim over the screen and, at the foot,
+   screen_assist_opt_in.xml on #f2f2f2 (the 16 sp bold title, the 14 sp body, LEARN MORE, Not now / Turn on in
+   #4285f4) until it is turned on; then screen_assist_spinner.xml's 96 dp module and the result card, which on the
+   simulator's screens is no_results_found_status ("Couldn't find a close match."), with the way to Google Now. */
+(() => {
+  'use strict';
+  const T = () => MM.text('google');
+  const esc = (c, s) => c.safe(s);
+  const show = c => { c.ui.assistLoading = !!c.data.nowOnTap; c.overlay('assist'); if (c.data.nowOnTap) setTimeout(() => { c.ui.assistLoading = false; if (c.ui.overlay === 'assist') c.overlay('assist'); }, 900); };
+  MM.register('assist', {
+    app: false,
+    show,
+    render(c) {
+      const t = T();
+      const body = !c.data.nowOnTap
+        ? `<div class="mmot-optin"><b>${esc(c, t.t('assist_optin_title'))}</b><p>${esc(c, t.t('assist_optin_body'))}</p><span class="mmot-learn">${esc(c, t.t('assist_optin_learn_more_text'))}</span><div class="mmot-btns"><button type="button" data-action="mmot-no">${esc(c, t.t('assist_optin_decline'))}</button><button type="button" class="yes" data-action="mmot-yes">${esc(c, t.t('assist_optin_accept'))}</button></div></div>`
+        : c.ui.assistLoading ? `<div class="mmot-spin"><i></i></div>` : `<div class="mmot-card"><p>${esc(c, t.t('no_results_found_status'))}</p><button type="button" data-action="mmot-now">${esc(c, t.t('assist_layer_to_now'))}</button></div>`;
+      return `<div class="mmot"><div class="mmot-scrim" data-action="mmot-close"></div><div class="mmot-panel">${body}</div></div>`;
+    },
+    action(name, el, event, c) {
+      if (name === 'mmot-close' || name === 'mmot-no') { c.closeOverlay(); return true; }
+      if (name === 'mmot-yes') { c.data.nowOnTap = true; c.save(); show(c); return true; }
+      // assist_layer_to_now: the Google app on its Now page.
+      if (name === 'mmot-now') { c.ui.google = {mode: '', q: '', result: ''}; c.open('search'); return true; }
+      return false;
+    }
+  });
+})();
