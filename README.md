@@ -14,8 +14,7 @@ An interactive browser simulator of classic Android releases, each on its own Ne
 | [Android 4.3 Jelly Bean](docs/features-4.3.md) | Nexus 4 | Google Play Store 4.2.3 |
 | [Android 4.4.4 KitKat](docs/features-4.4.4.md) | Nexus 5 (Google apps) | Google Play Store 4.5.10 |
 | [Android 5.1.1 Lollipop](docs/features-5.1.1.md) | Nexus 6 (Google apps) | Google Play Store 5.2.13 |
-
-Android 6.0.1 Marshmallow on the Nexus 5X is next: its landing card opens a preview page with the phone installing a system update in recovery (`versions/6.0.1/`).
+| [Android 6.0.1 Marshmallow](docs/features-6.0.1.md) | Nexus 5X (Google apps) | Google Play Store 5.12.7 |
 
 ## Getting started
 
@@ -41,6 +40,7 @@ What each version does, screen by screen:
 - [Android 4.3 Jelly Bean](docs/features-4.3.md) on the Nexus 4
 - [Android 4.4.4 KitKat](docs/features-4.4.4.md) on the Nexus 5, with the stock Google apps
 - [Android 5.1.1 Lollipop](docs/features-5.1.1.md) on the Nexus 6, as its LMY48Y factory image ships it
+- [Android 6.0.1 Marshmallow](docs/features-6.0.1.md) on the Nexus 5X, rebuilt from its MTC20K factory image
 
 ## Social preview image
 

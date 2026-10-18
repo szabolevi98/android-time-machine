@@ -73,9 +73,9 @@ window.ANDROID_VERSIONS = [
     version: 'Android 6.0.1',
     year: '2016',
     device: 'Nexus 5X · Google',
-    description: 'Marshmallow on the Nexus 5X: Now on Tap, Doze, app permissions, Nexus Imprint and the vertically scrolling app drawer. Coming next.',
+    description: 'Marshmallow on the Nexus 5X: Now on Tap, Doze, app permissions, Nexus Imprint and the vertically scrolling app drawer.',
     url: 'versions/6.0.1/',
-    status: 'preview',
-    art: {shot: 'landing-home.jpg?v=1', phone: 'nexus5x'}
+    status: 'available',
+    art: {shot: 'landing-home.jpg?v=2', phone: 'nexus5x'}
   }
 ];

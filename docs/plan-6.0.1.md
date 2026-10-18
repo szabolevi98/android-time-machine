@@ -42,8 +42,8 @@ The same rules as 2.1 ([plan-2.1.md](plan-2.1.md)), with 5.1.1 as the version th
 | 1 | Image (download, SHA-256, unpack), `oat2dex.py`, strings index, this plan | done 2026-10-16 |
 | 2 | Scaffold: `versions/6.0.1/index.html` with the approved frame, the logic-only core, placeholders, leak checks; the preview page goes | done 2026-10-16 |
 | 3 | Status bar, quick settings and notification shade, lock screen, power menu, volume panel, Google Now Launcher with the drawer, recents, dialogs and menus | done 2026-10-17 (the Now page waits for step 5) |
-| 4 | Settings (with app permissions, Doze, Do not disturb) and the core apps: Phone, Contacts, Messenger, Chrome, Gmail, Calendar, Camera, Photos, Clock, Calculator | 3 |
-| 5 | Google apps and Play Store from the image's APKs with made-up offline content, widgets, live wallpapers, Now on Tap | 2–3 |
-| 6 | Language sweep, landing picture, `features-6.0.1.md`, catalogue status available, README and sitemap; the OG cover is the owner's call | 1 |
+| 4 | Settings (with app permissions, Doze, Do not disturb) and the core apps: Phone, Contacts, Messenger, Chrome, Gmail, Calendar, Camera, Photos, Clock, Calculator | done 2026-10-17 |
+| 5 | Google apps and Play Store from the image's APKs with made-up offline content, widgets, live wallpapers, Now on Tap | done 2026-10-18 (also Google Keyboard 4.1, Nexus Imprint, Google Settings, the emergency dialer and the Marshmallow Land easter egg; the image has no live wallpapers) |
+| 6 | Language sweep, landing picture, `features-6.0.1.md`, catalogue status available, README and sitemap; the OG cover is the owner's call | done 2026-10-18: [features-6.0.1.md](features-6.0.1.md), available (not deployed: the owner's call) |
 
 Commits are pushed as each piece passes the gate; the site is not deployed during the build (owner, 2026-10-16).
