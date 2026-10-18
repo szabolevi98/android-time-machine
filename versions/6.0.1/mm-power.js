@@ -73,7 +73,9 @@
       c.ui.power = ''; layer.hidden = true; layer.innerHTML = '';
       c.ui.safeMode = !!c.ui.nextSafeMode; c.ui.nextSafeMode = false;
       watermark(c);
-      c.lock(); c.wake();
+      // As in the other versions: the keyguard after a boot only with a secure lock, else the home screen.
+      if (['pin', 'password', 'pattern'].includes(c.data.settings.lock?.type)) { c.lock(); c.wake(); }
+      else { c.ui.sleeping = false; c.home(); }
     };
     const step = () => {
       const p = data.parts[part];

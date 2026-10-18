@@ -1,4 +1,4 @@
-// Browser flows for the six versions (audit point 13 B): the page in headless Chrome, as a visitor uses it.
+// Browser flows for the seven versions (audit point 13 B): the page in headless Chrome, as a visitor uses it.
 //   start (boot, then the lock screen or the home screen) → unlock → open Settings → Back → hold the power key for the
 //   power menu → Back closes it → switch the language → reload: the language and the save survive, the save reads clean
 //   → the save made old (no revision markers, no clings) upgrades without a problem on two reloads
@@ -16,7 +16,7 @@ const BASE = process.env.BASE || 'http://localhost:8090';
 const CHROME = process.env.CHROME || (process.platform === 'win32' ? 'C:/Program Files/Google/Chrome/Application/chrome.exe' : 'google-chrome');
 const ARTIFACTS = path.join(ROOT, 'tests', 'browser', 'artifacts');
 const picked = process.argv.slice(2).filter(a => /^\d/.test(a));
-const VERSIONS = picked.length ? picked : ['2.1', '2.3.6', '4.0.4', '4.3', '4.4.4', '5.1.1'];
+const VERSIONS = picked.length ? picked : ['2.1', '2.3.6', '4.0.4', '4.3', '4.4.4', '5.1.1', '6.0.1'];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'flows-')), port = 9100 + Math.floor(Math.random() * 600);
@@ -89,6 +89,78 @@ async function flow21(mobile) {
   }
   return steps;
 }
+// Android 6.0.1 is built from its own image with its own modules (mm-*.js); the page has no context object, so the
+// flow drives it the way a visitor does: pointer drags, the keys, and the screens' own buttons.
+const MM6 = {view: `document.querySelector('#screen').className`, home: `/view-home/.test(document.querySelector('#screen').className) && !!document.querySelector('#viewport .mmh')`, lock: `/view-lock/.test(document.querySelector('#screen').className)`};
+const open6 = (view, sub = '') => ev(`(()=>{const b=document.createElement('button');b.dataset.action='mm-open';b.dataset.view=${JSON.stringify(view)};if(${JSON.stringify(sub)})b.dataset.sub=${JSON.stringify(sub)};document.querySelector('#viewport').append(b);b.click();b.remove();return true})()`);
+// A pointer drag in steps (the shade follows the finger; it opens past a third and quick settings follow on).
+const drag6 = async (selector, dx, dy) => {
+  const r = await ev(`(()=>{const el=document.querySelector(${JSON.stringify(selector)});if(!el)return null;const b=el.getBoundingClientRect();return [b.left+b.width/2,b.top+b.height/2]})()`);
+  if (!r) return false;
+  const mouse = (type, x, y, buttons) => send('Input.dispatchMouseEvent', {type, x, y, button: 'left', buttons, clickCount: type === 'mouseMoved' ? 0 : 1});
+  await mouse('mousePressed', r[0], r[1], 1);
+  for (let i = 1; i <= 12; i++) { await mouse('mouseMoved', r[0] + dx * i / 12, r[1] + dy * i / 12, 1); await sleep(16); }
+  await mouse('mouseReleased', r[0] + dx, r[1] + dy, 0);
+  return true;
+};
+async function flow601(mobile) {
+  const steps = [], check = (name, ok, detail = '') => { steps.push({name, ok, detail}); if (!ok) throw new Error(`${name}${detail ? ': ' + detail : ''}`); };
+  const load6 = () => send('Page.navigate', {url: `${BASE}/versions/6.0.1/`}).then(() => until(`(${MM6.home}) || (${MM6.lock})`, 25000));
+  check('loads', await load6(), await ev(MM6.view));
+  // The boot animation plays on the first load of a session (a touch would only skip it); without a secure lock it
+  // ends on the home screen, as in the other versions.
+  check('the boot animation ends on the home screen', await until(`!document.querySelector('.mmpw-boot')`, 30000) && await until(MM6.home, 3000), await ev(MM6.view));
+  await ev(`document.querySelector('[data-action="mmh-cling"]')?.click()`);
+  if (mobile) {
+    // The workspace fills the display: the dock sits at the bottom, and so do the keyguard's affordances.
+    check('the dock is at the bottom of a tall phone', await ev(`(()=>{const v=document.querySelector('#viewport').getBoundingClientRect(),h=document.querySelector('.mmh-hotseat')?.getBoundingClientRect();return !!h&&v.bottom-h.bottom<40})()`));
+    check('fits the phone width', await ev(`document.documentElement.scrollWidth <= innerWidth + 1`));
+    await ev(`document.querySelector('#power-button').click()`); await sleep(400); await ev(`document.querySelector('#power-button').click()`);
+    check('the power key locks', await until(MM6.lock, 4000), await ev(MM6.view));
+    check('the lock screen icons are at the bottom', await ev(`(()=>{const s=document.querySelector('#screen').getBoundingClientRect(),c=document.querySelector('.mmlk-camera')?.getBoundingClientRect();return !!c&&s.bottom-c.bottom<120})()`));
+    return steps;
+  }
+  const pulled = await drag6('#status-bar', 0, 200);
+  check('pulls the shade down', pulled && await until(`!!document.querySelector('.mmsh.shown')`, 3000), `${pulled} ${await ev(MM6.view)} ${await ev(`document.querySelector('#overlay-root').innerHTML.slice(0, 80)`)} ${await ev(`JSON.stringify(document.querySelector('#status-bar').getBoundingClientRect())`)}`);
+  await sleep(400);
+  check('pulling on opens quick settings', await drag6('.mmsh-stack', 0, 250) && await until(`!!document.querySelector('.mmsh.qs')`, 3000), await ev(`document.querySelector('.mmsh')?.className`));
+  check('pushing up closes quick settings', await drag6('.mmsh-header', 0, -200) && await until(`!document.querySelector('.mmsh.qs')`, 3000));
+  await key('Escape');
+  check('Back closes the shade', await until(`!document.querySelector('.mmsh')`, 3000));
+  await ev(`document.querySelector('[data-action="mmh-allapps"]').click()`);
+  check('opens the apps drawer', await until(`/view-drawer/.test(document.querySelector('#screen').className)`, 3000));
+  await key('Escape');
+  check('Back closes the drawer', await until(MM6.home, 3000));
+  await open6('settings');
+  check('opens Settings', await until(`!!document.querySelector('#viewport .mmst')`), await ev(MM6.view));
+  await ev(`document.querySelectorAll('#viewport [data-action="mmst-go"]')[1].click()`);
+  check('opens a Settings screen', await until(`!!document.querySelector('.mm-leaving') || !document.querySelector('#viewport .mmst-dash')`, 3000));
+  await ev(`[...document.querySelectorAll('#viewport .mmst-pref, #viewport .mmst-switchbar, #viewport [data-action]')].find(e=>/mmst-master|mmst-switch|mmst-pref/.test(e.dataset.action||''))?.click()`);
+  await key('Escape'); await sleep(400); await key('Escape');
+  check('Back leaves Settings', await until(MM6.home, 4000), await ev(MM6.view));
+  await ev(`document.querySelector('.mmnb-key[data-key="recents"]').click()`);
+  check('opens Overview', await until(`/view-recents/.test(document.querySelector('#screen').className)`, 3000));
+  await ev(`document.querySelector('.mmnb-key[data-key="home"]').click()`);
+  check('Home leaves Overview', await until(MM6.home, 3000));
+  const MENU = `document.querySelector('#overlay-root .mmdlg, #overlay-root .mmpw')`;
+  await ev(`(async()=>{const k=document.querySelector('#power-button');k.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}));await new Promise(r=>setTimeout(r,1500));k.dispatchEvent(new PointerEvent('pointerup',{bubbles:true}));})()`);
+  check('holding power opens the power menu', await until(`!!${MENU}`, 4000));
+  await key('Escape');
+  check('Back closes the menu', await until(`!${MENU}`, 4000));
+  const saved = await ev(`!!${SAVE}`);
+  check('the phone is saved', saved);
+  await ev(`(()=>{const s=document.querySelector('#language-select');s.value='hu';s.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+  check('switches to Hungarian', await until(`document.documentElement.lang === 'hu'`, 4000));
+  check('the language survives a reload', await load6() && await until(`document.documentElement.lang === 'hu' && AndroidI18n.language === 'hu'`, 6000));
+  check('the save reads clean', await ev(`AndroidState.problems.length === 0`), JSON.stringify(await ev(`AndroidState.problems`)));
+  // An older save: without the home layout, the clock widget rule and the notifications; they come back on load.
+  check('there is a save', await ev(`(()=>{const k=${SAVE_KEY};if(!k)return false;const d=JSON.parse(localStorage.getItem(k));delete d.home;delete d.clockWidget;delete d.notifications;localStorage.setItem(k,JSON.stringify(d));return true;})()`));
+  for (const pass of ['first', 'second']) {
+    check(`an old save upgrades cleanly (${pass} load)`, await load6() && await ev(`AndroidState.problems.length === 0`), JSON.stringify(await ev(`AndroidState.problems`)));
+  }
+  check('the clock widget is on the home screen', await until(`!!document.querySelector('.mmwg-digital')`, 3000));
+  return steps;
+}
 async function flow(version, mobile) {
   const steps = [], check = (name, ok, detail = '') => { steps.push({name, ok, detail}); if (!ok) throw new Error(`${name}${detail ? ': ' + detail : ''}`); };
   errors.length = 0; failed.length = 0;
@@ -96,6 +168,7 @@ async function flow(version, mobile) {
   await send('Page.navigate', {url: `${BASE}/versions/${version}/`}); await sleep(300);
   await ev(`localStorage.clear(); localStorage.setItem('android-time-machine-language', 'en')`);
   if (version === '2.1') { steps.push(...await flow21(mobile)); return mobile ? steps : finish(steps, check); }
+  if (version === '6.0.1') { steps.push(...await flow601(mobile)); return mobile ? steps : finish(steps, check); }
   check('boots to the lock or home screen', await load(version), await view());
   if (/lock-view/.test(await view())) { await act('unlock'); check('unlocks', await until(`!!document.querySelector('#viewport .home-view')`), await view()); }
   await openApp('settings');
@@ -140,7 +213,7 @@ async function finish(steps, check) {
 }
 
 let failures = 0;
-for (const [version, mobile] of [...VERSIONS.map(v => [v, false]), ...(picked.length ? [] : [['5.1.1', true], ['2.3.6', true], ['2.1', true]])]) {
+for (const [version, mobile] of [...VERSIONS.map(v => [v, false]), ...(picked.length ? picked.filter(v => v === '6.0.1').map(v => [v, true]) : [['6.0.1', true], ['5.1.1', true], ['2.3.6', true], ['2.1', true]])]) {
   const name = `${version}${mobile ? ' (phone width)' : ''}`;
   try { const steps = await flow(version, mobile); console.log(`ok   ${name}: ${steps.map(s => s.name).join(', ')}`); }
   catch (error) {
