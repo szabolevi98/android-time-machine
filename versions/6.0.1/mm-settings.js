@@ -205,6 +205,8 @@
       // A screen with code of its own draws itself, or adds a bar / actions to its res/xml (Location's switch bar).
       const custom = MM.settingsScreens[cur.screen.split(':')[0]] || MM.settingsScreens[cur.screen];
       bar = custom?.bar?.(c, cur) || '';
+      // A screen of its own activity without the action bar (Theme.FingerprintEnroll's SetupWizardLayout) draws it all.
+      if (custom?.full) return `<div class="mmst mmst-full">${custom.render(c, cur)}</div>`;
       if (custom?.render) { title = custom.title?.(c, cur) || cur.title; body = custom.render(c, cur); }
       else if (cur.xml && X()[cur.xml]) { title = cur.title || str(nodeOf(cur).title) || title; body = `<div class="mmst-list">${cur.nested ? '' : MM.settingsHooks[cur.xml]?.top?.(c) || ''}${rows(c, nodeOf(cur), cur.xml)}</div>`; }
       else { title = cur.title || title; body = `<div class="mmst-missing">${c.missing('settings', `<small>${c.safe(cur.screen.replace(/^missing:/, ''))}</small>`)}</div>`; }

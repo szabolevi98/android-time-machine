@@ -47,7 +47,7 @@
           ${s.lock?.ownerInfo ? `<div class="mmlk-owner">${c.safe(s.lock.ownerInfo)}</div>` : ''}</div>
         <div class="mmlk-indication">${c.safe(indication)}</div>
         <button type="button" class="mmlk-aff mmlk-phone" data-aff="phone" aria-label="${c.safe(t.t('accessibility_phone_button'))}"><i></i><img src="${A('sui-ic_phone_24dp.png')}" alt=""></button>
-        <button type="button" class="mmlk-lock" data-action="mmlk-hint" aria-label="${c.safe(t.t('accessibility_unlock_button'))}"><img src="${A(secure(c) ? 'sui-ic_lock_24dp.svg' : 'sui-ic_lock_open_24dp.svg')}" alt=""></button>
+        <button type="button" class="mmlk-lock" data-action="mmlk-hint" aria-label="${c.safe(t.t('accessibility_unlock_button'))}"><img src="${A(secure(c) && MM.fingerprint?.enrolled(c) ? 'sui-ic_fingerprint.svg' : secure(c) ? 'sui-ic_lock_24dp.svg' : 'sui-ic_lock_open_24dp.svg')}" alt=""></button>
         <button type="button" class="mmlk-aff mmlk-camera" data-aff="camera" aria-label="${c.safe(t.t('accessibility_camera_button'))}"><i></i><img src="${A('sui-ic_camera_alt_24dp.png')}" alt=""></button>
       </div>${st.bouncer ? bouncer(c) : ''}</div>`;
   }

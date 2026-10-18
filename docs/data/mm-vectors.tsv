@@ -146,3 +146,6 @@ ca-ic_edit_white.svg	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	ic_ed
 cm-ic_switch_camera_back.svg	app/GoogleCamera/GoogleCamera.apk	ic_switch_camera_back	-
 cm-ic_switch_camera_front.svg	app/GoogleCamera/GoogleCamera.apk	ic_switch_camera_front	-
 vv-ic_tick.svg	priv-app/Velvet/Velvet.apk	ic_tick	-
+st-fp_illustration_enrollment.svg	priv-app/Settings/Settings.apk	fp_illustration_enrollment	-
+sui-ic_fingerprint.svg	priv-app/SystemUI/SystemUI.apk	ic_fingerprint	-
+st-ic_check.svg	priv-app/Settings/Settings.apk	ic_check	-

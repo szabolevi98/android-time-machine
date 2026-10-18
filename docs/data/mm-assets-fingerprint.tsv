@@ -1,0 +1,4 @@
+# Nexus Imprint (mm-fingerprint.js)
+st-fp_enrollment_header.png	priv-app/Settings/Settings.apk	drawable/fp_enrollment_header
+st-fingerprint_sensor_location.png	priv-app/Settings/Settings.apk	drawable/fingerprint_sensor_location
+st-fp_app_indicator.png	priv-app/Settings/Settings.apk	drawable/fp_app_indicator

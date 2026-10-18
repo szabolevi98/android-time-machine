@@ -66,6 +66,7 @@
     summary(c, key, n) {
       const t = T(), l = lock(c);
       if (key === 'trust_agent') return secure(c) ? '' : t.t('disabled_because_no_backup_security');
+      if (key === 'fingerprint_settings' && MM.fingerprint?.count(c)) { const n = MM.fingerprint.count(c); return MM.text('fingerprint').plural('security_settings_fingerprint_preference_summary', n, null, n); }
       if (key === 'manage_trust_agents' && !secure(c)) return t.t('disabled_because_no_backup_security');
       if (key === 'credential_storage_type') return t.t('credential_storage_type_hardware');
       if (key === 'owner_info_settings') return l.ownerInfo || MM.settingsStr(n.summary);
@@ -90,7 +91,7 @@
           mount(c, win) { const i = win.querySelector('.mmsc-owner'); c.ui.ownerInfo = i.value; i.addEventListener('input', () => { c.ui.ownerInfo = i.value.trim(); }); setTimeout(() => i.focus(), 50); }});
         return true;
       }
-      if (key === 'fingerprint_settings') { MM.settingsGo(c, 'missing:com.android.settings.fingerprint.FingerprintEnrollIntroduction', t.t('security_settings_fingerprint_preference_title')); return true; }
+      if (key === 'fingerprint_settings') { MM.fingerprint.open(c); return true; }
       if (key === 'trust_agent') { MM.settingsGo(c, 'missing:com.google.android.gms.auth.trustagent.GoogleTrustAgentPersonalUnlockingSettings', trustTitle()); return true; }
       if (key === 'toggle_install_applications' && !s.unknownSources) {
         c.dialog({message: t.t('install_all_warning'), buttons: [{label: t.t('cancel')}, {label: t.t('okay'), action: c => { s.unknownSources = true; c.save(); c.render(); }}]});
@@ -103,14 +104,22 @@
   // -- ChooseLockGeneric ---------------------------------------------------------------------------------------------
   const PICK = {unlock_set_off: 'none', unlock_set_none: 'swipe', unlock_set_pattern: 'pattern', unlock_set_pin: 'pin', unlock_set_password: 'password'};
   function setLock(c, type, secret = '') {
-    const l = lock(c); l.type = type; l.secret = secret; c.save();
+    const l = lock(c); l.type = type; l.secret = secret;
+    // No secure lock, no fingerprints (ChooseLockGeneric's removeAllFingerprintTemplates).
+    if (!secure(c)) MM.fingerprint?.clear(c);
+    c.save();
   }
   // Back to Security, dropping the lock screens from the stack.
   function done(c) {
     const st = c.ui.settings; while (st.stack.length > 1 && st.stack.at(-1).screen !== 'xml:security') st.stack.pop();
+    // A backup lock set up for Nexus Imprint goes on to the sensor; without one the enrollment ends.
+    if (c.ui.fpFlow === 'onboard') { if (secure(c)) { MM.fingerprint.continueFlow(c); return; } c.ui.fpFlow = ''; }
     c.render();
   }
   H.security_settings_picker = {
+    // For Nexus Imprint: the backup methods only, under lock_settings_picker_fingerprint_message.
+    hide: (c, key) => c.ui.fpFlow === 'onboard' && (key === 'unlock_set_off' || key === 'unlock_set_none'),
+    top: c => c.ui.fpFlow === 'onboard' ? `<div class="mmfp-pickhead">${c.safe(MM.text('fingerprint').t('lock_settings_picker_fingerprint_message'))}</div>` : '',
     summary: (c, key) => PICK[key] === lock(c).type ? T().t('current_screen_lock') : undefined,
     click(c, key) {
       const t = T(), type = PICK[key];
@@ -249,7 +258,7 @@
       return `<div class="mmsc-confirm">${head}<i class="mmsc-fill"></i><input class="mmsc-centry" type="password" ${type === 'pin' ? 'inputmode="numeric"' : ''} autocomplete="off"><div class="mmsc-error">${c.safe(err)}</div></div>`;
     },
     mount(c, root, cur) {
-      const t = T(), l = lock(c), next = () => { c.ui.confirmError = ''; const st2 = c.ui.settings.stack; st2.pop(); MM.settingsGo(c, 'xml:security_settings_picker', t.t('lock_settings_picker_title')); };
+      const t = T(), l = lock(c), next = () => { c.ui.confirmError = ''; const st2 = c.ui.settings.stack; st2.pop(); if (MM.fingerprint?.pending(c)) { MM.fingerprint.continueFlow(c); return; } MM.settingsGo(c, 'xml:security_settings_picker', t.t('lock_settings_picker_title')); };
       if (l.type === 'pattern') {
         const view = root.querySelector('.mmsc-pattern'); MM.pattern.init(view);
         MM.pattern.bind(view, {onDone: cells => {
@@ -267,7 +276,7 @@
       });
       setTimeout(() => input.focus(), 30);
     },
-    action(c, name) { if (name === 'mmsc-ccancel') { c.ui.confirmError = ''; c.ui.settings.stack.pop(); c.render(); return true; } return false; }
+    action(c, name) { if (name === 'mmsc-ccancel') { c.ui.confirmError = ''; c.ui.fpFlow = ''; c.ui.settings.stack.pop(); c.render(); return true; } return false; }
   };
 
   // -- RedactionInterstitial -----------------------------------------------------------------------------------------
