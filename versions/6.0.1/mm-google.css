@@ -66,3 +66,6 @@
 .mmgs-row:active{background:rgba(0,0,0,.08)}
 .mmgs-row span{flex:1}
 .mmgs{--mmw-accent:#4285f4}
+/* Google Settings (common.Theme.GoogleSettings). */
+.mmgx .mmgs-bar{background:#263238}
+.mmgx .mmgs-cat{color:#009688;font-weight:500}

@@ -130,3 +130,31 @@
     }
   });
 })();
+/* Google Play services 8.1's Google Settings (com.google.android.gms.app.settings.GoogleSettingsActivity, the screen
+   'google-settings', from Settings' Google entry): common.Theme.GoogleSettings on v23, the toolbar in
+   material_blue_grey_900 #263238 (status bar material_blue_grey_950 #21272b), common_google_settings. The rows are the
+   ones its code adds for this image, in its order: Account (Sign-in & security, Personal info & privacy, Account
+   preferences; Google+'s privacy row needs the Google+ app) and Services (Ads, Connected apps, Fit, Location, Nearby,
+   Play Games for Play Games 3.2, Data management, Search & Now, Security, and Android Pay's row since the Android Pay
+   app is installed; Maps' location, networking and Smart Lock for Passwords are off in this image). Category titles in
+   the AppCompat accent #009688, rows 16 sp. */
+(() => {
+  'use strict';
+  const T = () => MM.text('gms');
+  const ACCOUNT = [['security', 'accountsettings_security_settings_title'], ['privacy', 'accountsettings_privacy_settings_title'], ['preferences', 'accountsettings_preferences_settings_title']];
+  const SERVICES = [['ads', 'common_ads_settings_title'], ['apps', 'common_connected_apps_settings_title'], ['fit', 'common_fitness_settings_title'], ['location', 'common_location_settings_title'], ['nearby', 'common_nearby_settings_title'], ['games', 'common_games_settings_title'], ['data', 'common_google_settings_data_management_title'], ['now', 'common_search_and_now_settings_title'], ['security', 'common_security_settings_title'], ['pay', 'common_wallet_settings_title']];
+  MM.register('google-settings', {
+    statusColor: () => '#21272b',
+    render(c) {
+      const t = T(), row = ([id, key]) => `<button type="button" class="mmgs-row" data-action="mmgx-open" data-id="${id}"><span>${c.safe(t.t(key))}</span></button>`;
+      return `<div class="mmgs mmgx"><div class="mmgs-bar"><button type="button" class="mmgs-up" data-action="mmgx-up"><img src="assets/gms-abc_ic_ab_back_mtrl_am_alpha.png" alt=""></button><span>${c.safe(t.t('common_google_settings'))}</span></div>
+        <div class="mmgs-list"><div class="mmgs-cat">${c.safe(t.t('common_google_settings_account'))}</div>${ACCOUNT.map(row).join('')}<div class="mmgs-cat">${c.safe(t.t('common_google_settings_services'))}</div>${SERVICES.map(row).join('')}</div></div>`;
+    },
+    action(name, el, event, c) {
+      if (name === 'mmgx-up') { c.back(); return true; }
+      // Android Pay's row opens the Android Pay app; the others are Play services' own pages, not built yet.
+      if (name === 'mmgx-open') { c.open(el.dataset.id === 'pay' ? 'android-pay' : `missing-gms-${el.dataset.id}`); return true; }
+      return false;
+    }
+  });
+})();

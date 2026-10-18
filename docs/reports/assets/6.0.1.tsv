@@ -326,6 +326,7 @@ versions/6.0.1/assets/gm-ic_reply_all_24dp.png	54a58e8fc408dafe	copy	bullhead:/s
 versions/6.0.1/assets/gm-ic_send_wht_24dp.png	2e691bbd6100501b	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_send_wht_24dp.png	drawable-xxhdpi-v4		2e691bbd6100501b
 versions/6.0.1/assets/gm-ic_star_20dp.png	7912d2df8aeac380	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_star_20dp.png	drawable-xxhdpi-v4		7912d2df8aeac380
 versions/6.0.1/assets/gm-ic_star_outline_20dp.png	ee9c82cd8389e9d1	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_star_outline_20dp.png	drawable-xxhdpi-v4		ee9c82cd8389e9d1
+versions/6.0.1/assets/gms-abc_ic_ab_back_mtrl_am_alpha.png	14285687caefb1cf	copy	bullhead:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/abc_ic_ab_back_mtrl_am_alpha.png	drawable-xxhdpi-v4		14285687caefb1cf
 versions/6.0.1/assets/gms-auth_gls_ic_google_selected.png	3f65f591599a6239	copy	bullhead:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable-xxhdpi-v4/auth_gls_ic_google_selected.png	drawable-xxhdpi-v4		3f65f591599a6239
 versions/6.0.1/assets/gms-ic_google.png	b1f36b9fc14bc46f	copy	bullhead:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/ic_google.png	drawable-xxhdpi-v4		b1f36b9fc14bc46f
 versions/6.0.1/assets/gms-ic_google_settings.svg	c45ec4be45b1950a	vector	bullhead:/system/app/PlayGames/PlayGames.apk!res/drawable-anydpi-v21/ic_google_settings.xml	drawable-anydpi-v21	vector drawable drawn as SVG	853b3748a0d5a040
