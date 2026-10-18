@@ -36,3 +36,5 @@ gd-fab_blue.png	priv-app/GoogleDialer/GoogleDialer.apk	drawable/fab_blue
 gd-fab_green.png	priv-app/GoogleDialer/GoogleDialer.apk	drawable/fab_green
 gd-fab_red.png	priv-app/GoogleDialer/GoogleDialer.apk	drawable/fab_red
 gd-ic_delete_24dp.png	priv-app/GoogleDialer/GoogleDialer.apk	drawable/ic_delete_24dp
+gd-ic_toolbar_merge.png	priv-app/GoogleDialer/GoogleDialer.apk	drawable/ic_toolbar_merge
+gd-ic_toolbar_swap.png	priv-app/GoogleDialer/GoogleDialer.apk	drawable/ic_toolbar_swap

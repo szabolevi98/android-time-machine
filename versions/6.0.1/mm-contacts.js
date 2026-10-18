@@ -23,7 +23,16 @@
      contact", Save (ic_done_wht_24dp) and the overflow (Discard changes, Delete); the photo at width / 1.96
      (editor_portrait_photo_ratio) with ic_photo_camera_white_24dp; KindSectionView rows (EditKindIconStyle: 24 dp #7f7f7f
      icons 16 dp in, 14 dp down, 28 dp before the fields) with 16 sp fields 54 dp high, hints at #40000000: Name, Phone
-     with its Mobile type, Email with Home; "More Fields" in the accent. No account on the phone, so no account row. */
+     with its Mobile type, Email with Home; "More Fields" in the accent opens the rest of the kinds (Nickname,
+     Organization's Company and Title, Address, Website, Notes), which the contact's card lists too. No account on the
+     phone, so no account row.
+   - "Set up my profile" edits the profile (the "Me" row then shows it, opening its card like a contact's).
+   - Contacts to display (AccountFilterActivity): All contacts, the account, Customize (CustomContactListFilterActivity:
+     the account's All other contacts check box; unticked, the list shows "Contacts in custom view" and nothing else).
+   - Import/export (ImportExportDialogFragment, shared with Phone): Import from SIM card (the SIM holds none), Import
+     from .vcf file (DocumentsUI's picker), Export to .vcf file (DocumentsUI's save, contacts.vcf), Share visible
+     contacts (the vCards through share_via).
+   - Place on Home screen: the contact's shortcut in the first free cell of the home screen (InstallShortcutReceiver). */
 (() => {
   'use strict';
   const T = () => MM.text('contacts'), P = () => MM.people;
@@ -38,11 +47,15 @@
   function row(c, p, head = '') {
     return `<div class="mmct-item"><span class="mmct-sec">${esc(c, head)}</span><button type="button" class="mmct-row" data-action="mmct-open" data-id="${p.id}">${P().tile(c, p, 'mmct-photo')}<span class="mmct-name">${esc(c, p.name)}</span></button></div>`;
   }
+  // The filter of All contacts: the custom view without "All other contacts" shows none of them.
+  const hidden = c => c.data.contactsFilter === 'custom' && c.data.contactsUngrouped === false;
   function allContacts(c, list = P().sorted(c), profile = true) {
     const t = T();
+    if (profile && hidden(c)) return `<div class="mmct-list"><div class="mmct-fhead">${esc(c, t.t('listCustomView'))}</div></div><div class="mmct-empty">${esc(c, t.t('noContacts'))}</div>`;
     if (!list.length) return `<div class="mmct-empty">${esc(c, t.t('noContacts'))}</div>`;
     let letter = '';
-    const me = profile ? `<div class="mmct-item mmct-me"><span class="mmct-sec">${esc(c, t.t('user_profile_contacts_list_header'))}</span><button type="button" class="mmct-row mmct-setup" data-action="mmct-profile">${esc(c, t.t('profile_display_name'))}</button></div>` : '';
+    const pr = c.data.profile, me = !profile ? '' : pr?.name ? `<div class="mmct-item mmct-me"><span class="mmct-sec">${esc(c, t.t('user_profile_contacts_list_header'))}</span><button type="button" class="mmct-row" data-action="mmct-open" data-id="me">${P().tile(c, pr, 'mmct-photo')}<span class="mmct-name">${esc(c, pr.name)}</span></button></div>`
+      : `<div class="mmct-item mmct-me"><span class="mmct-sec">${esc(c, t.t('user_profile_contacts_list_header'))}</span><button type="button" class="mmct-row mmct-setup" data-action="mmct-profile">${esc(c, t.t('profile_display_name'))}</button></div>`;
     return `<div class="mmct-list">${me}${list.map(p => { const l = p.name.charAt(0).toLocaleUpperCase(c.locale()); const h = l !== letter ? (letter = l) : ''; return row(c, p, h); }).join('')}</div>`;
   }
   function frequents(c) {
@@ -98,13 +111,19 @@
     const email = p.email ? entry('ic_email_24dp', p.email, `<span>${esc(c, t.t('emailTypeHome'))}</span>`, '', ` data-action="mmct-mail" data-to="${esc(c, p.email)}"`) : '';
     const recent = P().calls(c).filter(x => P().same(x.number, p.phone)).sort((a, b) => b.time - a.time).slice(0, 3);
     const recentCard = recent.length ? `<div class="mmct-card"><div class="mmct-ctitle" style="color:${color}">${esc(c, t.t('recent_card_title'))}</div><i class="mmct-csep"></i>${recent.map(x => entry('ic_phone_24dp', x.number, `<span>${esc(c, P().typeLabel())}</span><span class="mmct-when"><i class="mmct-arrow ${x.type}"></i>${esc(c, interactionDate(c, x.time))}</span>`, '', ` data-action="mmct-call" data-n="${esc(c, x.number)}"`)).join('')}</div>` : '';
-    return `<div class="mmct-card">${phone}${phone && email ? '<i class="mmct-esep"></i>' : ''}${email}</div>${recentCard}`;
+    const more = [p.nickname && entry('ic_person_24dp', p.nickname, `<span>${esc(c, t.t('header_nickname_entry'))}</span>`),
+      (p.company || p.title) && entry('ic_business_black_24dp', p.company && p.title ? AndroidStrings.format(t.t('organization_company_and_title'), p.title, p.company) : p.company || p.title, `<span>${esc(c, t.t('header_organization_entry'))}</span>`),
+      p.address && entry('ic_place_24dp', p.address, `<span>${esc(c, t.t('postal_address'))}</span>`, `<button type="button" class="mmct-alt" data-action="mmct-map" data-q="${esc(c, p.address)}">${icon('ic_directions_24dp', '', tint)}</button>`, ` data-action="mmct-map" data-q="${esc(c, p.address)}"`),
+      p.website && entry('ic_public_black_24dp', p.website, `<span>${esc(c, t.t('header_website_entry'))}</span>`, '', ` data-action="mmct-web" data-url="${esc(c, p.website)}"`),
+      p.note && entry('ic_insert_comment_black_24dp', p.note, `<span>${esc(c, t.t('label_notes'))}</span>`)].filter(Boolean);
+    const main = [phone, email].filter(Boolean).join('<i class="mmct-esep"></i>');
+    return `${main ? `<div class="mmct-card">${main}</div>` : ''}${more.length ? `<div class="mmct-card">${more.join('<i class="mmct-esep"></i>')}</div>` : ''}${recentCard}`;
   }
   function quick(c, p) {
     const t = T(), [color] = palette(p);
     return `<div class="mmct mmct-qc" style="--pal:${color}"><div class="mmct-qhead"><div class="mmct-qphoto" style="background:${color}"><img src="${A('person_white_540dp')}" alt=""></div><i class="mmct-qgrad top"></i><i class="mmct-qgrad bottom"></i>
       <div class="mmct-qbar"><button type="button" class="mmct-btn" data-action="mmct-up"><img src="${A('ic_arrow_back_24dp')}" alt=""></button><i class="mmct-flex"></i>
-        <button type="button" class="mmct-btn" data-action="mmct-star" data-id="${p.id}" aria-label="${esc(c, t.t(p.starred ? 'menu_removeStar' : 'menu_addStar'))}"><img src="${A(p.starred ? 'ic_star_24dp' : 'ic_star_outline_24dp')}" alt=""></button>
+        ${p.id === 'me' ? '' : `<button type="button" class="mmct-btn" data-action="mmct-star" data-id="${p.id}" aria-label="${esc(c, t.t(p.starred ? 'menu_removeStar' : 'menu_addStar'))}"><img src="${A(p.starred ? 'ic_star_24dp' : 'ic_star_outline_24dp')}" alt=""></button>`}
         <button type="button" class="mmct-btn" data-action="mmct-edit" data-id="${p.id}" aria-label="${esc(c, t.t('menu_editContact'))}"><img src="${A('ic_create_24dp')}" alt=""></button>${MM.menu.button(c, 'mmct-over')}</div>
       <b class="mmct-qtitle">${esc(c, p.name || t.t('missing_name'))}</b></div>
       <div class="mmct-qscroll"><i class="mmct-qspace"></i><div class="mmct-cards">${card(c, p)}</div></div></div>`;
@@ -134,30 +153,40 @@
       <button type="button" class="mmct-btn" data-action="mmct-save" aria-label="${esc(c, t.t('menu_save'))}"><img src="${A('ic_done_wht_24dp')}" alt=""></button>${MM.menu.button(c, 'mmct-over')}</div></div>
       <div class="mmct-page"><div class="mmct-ephoto" style="background:${color}"><img src="${A('person_white_540dp')}" alt=""><i class="mmct-eover"></i><img class="mmct-cam" src="${A('ic_photo_camera_white_24dp')}" alt=""></div>
         <div class="mmct-fields">${section('ic_person_24dp', field('name', t.t('full_name'), d.name))}${section('ic_phone_24dp', `<div class="mmct-fr">${field('phone', t.t('phoneLabelsGroup'), d.phone, 'tel')}${spinner(P().typeLabel())}</div>`)}${section('ic_email_24dp', `<div class="mmct-fr">${field('email', t.t('emailLabelsGroup'), d.email, 'email')}${spinner(t.t('emailTypeHome'))}</div>`)}
-        <button type="button" class="mmct-more" data-action="mmct-more">${esc(c, t.t('compact_editor_more_fields'))}</button></div></div></div>`;
+        ${d.more ? `${section('ic_person_24dp', field('nickname', t.t('nicknameLabelsGroup'), d.nickname))}${section('ic_business_black_24dp', `${field('company', t.t('ghostData_company'), d.company)}${field('title', t.t('ghostData_title'), d.title)}`)}${section('ic_place_24dp', field('address', t.t('postal_address'), d.address))}${section('ic_public_black_24dp', field('website', t.t('websiteLabelsGroup'), d.website, 'url'))}${section('ic_insert_comment_black_24dp', field('note', t.t('label_notes'), d.note))}`
+          : `<button type="button" class="mmct-more" data-action="mmct-more">${esc(c, t.t('compact_editor_more_fields'))}</button>`}</div></div></div>`;
   }
   function mountEditor(c, root) {
     root.querySelectorAll('.mmct-field').forEach(i => i.addEventListener('input', () => { ui(c).draft[i.dataset.f] = i.value; }));
   }
+  const KEYS = ['name', 'phone', 'email', 'nickname', 'company', 'title', 'address', 'website', 'note'];
+  const snap = d => JSON.stringify(KEYS.map(k => d[k] || ''));
   function startEdit(c, p, phone = '') {
-    const u = ui(c);
-    u.draft = p ? {id: p.id, name: p.name, phone: p.phone, email: p.email || '', orig: JSON.stringify([p.name, p.phone, p.email || ''])} : {id: 0, name: '', phone, email: '', orig: JSON.stringify(['', phone, ''])};
+    const u = ui(c), d = {id: p ? p.id : 0, more: false};
+    for (const k of KEYS) d[k] = p ? p[k] || '' : k === 'phone' ? phone : '';
+    d.more = KEYS.slice(3).some(k => d[k]); d.orig = snap(d); u.draft = d;
     u.editFrom = u.screen; u.screen = 'edit';
   }
   function save(c) {
     const u = ui(c), d = u.draft, t = T();
-    if (!d.name.trim() && !d.phone.trim() && !d.email.trim()) { leaveEditor(c); return; }
-    const list = P().list(c);
-    let p = d.id ? list.find(x => x.id === d.id) : null;
-    if (!p) { p = {id: Math.max(0, ...list.map(x => x.id)) + 1}; list.push(p); }
-    Object.assign(p, {name: d.name.trim(), phone: d.phone.trim(), email: d.email.trim()});
+    if (KEYS.every(k => !(d[k] || '').trim())) { leaveEditor(c); return; }
+    const vals = Object.fromEntries(KEYS.map(k => [k, (d[k] || '').trim()]));
+    let p;
+    // The profile ("Me") is kept apart from the contacts.
+    if (d.id === 'me') p = c.data.profile = Object.assign(c.data.profile || {id: 'me', lookup: 'profile'}, vals);
+    else {
+      const list = P().list(c);
+      p = d.id ? list.find(x => x.id === d.id) : null;
+      if (!p) { p = {id: Math.max(0, ...list.map(x => x.id)) + 1}; list.push(p); }
+      Object.assign(p, vals);
+    }
     c.save(); c.toast(t.t('contactSavedToast'), false);
     u.draft = null; u.screen = `card:${p.id}`; c.render();
   }
   function leaveEditor(c) { const u = ui(c); u.draft = null; u.screen = u.editFrom || ''; u.editFrom = ''; if (u.closeAfter) { u.closeAfter = false; c.back(); return; } c.render(); }
   function editorBack(c) {
     const u = ui(c), d = u.draft, t = T();
-    if (JSON.stringify([d.name, d.phone, d.email]) === d.orig) { leaveEditor(c); return; }
+    if (snap(d) === d.orig) { leaveEditor(c); return; }
     // CancelEditDialogFragment.
     c.dialog({icon: 'assets/fw-ic_dialog_alert_material.svg', message: t.t('cancel_confirmation_dialog_message'), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok'), action: c => leaveEditor(c)}]});
   }
@@ -182,8 +211,34 @@
     const u = ui(c);
     if (u.screen === 'edit' && u.draft) return editor(c);
     if (u.screen === 'pick') return picker(c);
-    if (u.screen.startsWith('card:')) { const p = P().byId(c, u.screen.slice(5)); if (p) return quick(c, p); u.screen = ''; }
+    if (u.screen === 'filter' || u.screen === 'customize') return filters(c);
+    if (u.screen.startsWith('card:')) { const p = byId(c, u.screen.slice(5)); if (p) return quick(c, p); u.screen = ''; }
     return people(c);
+  }
+  const byId = (c, id) => id === 'me' ? c.data.profile : P().byId(c, id);
+  // ImportExportDialogFragment (Contacts and Phone).
+  MM.contactsImportExport = c => {
+    const t = T(), list = P().sorted(c);
+    const vcards = () => list.map(p => ['BEGIN:VCARD', 'VERSION:2.1', `N:;${p.name || ''};;;`, `FN:${p.name || ''}`, ...(p.phone ? [`TEL;CELL:${p.phone}`] : []), ...(p.email ? [`EMAIL;HOME:${p.email}`] : []), 'END:VCARD'].join('\r\n')).join('\r\n');
+    c.dialog({title: t.t('dialog_import_export'), items: [t.t('import_from_sim'), t.t('import_from_vcf_file'), t.t('export_to_vcf_file'), t.t('share_visible_contacts')].map(s => ({html: esc(c, s)})), onItem: (i, c) => {
+      if (i === 0) MM.pickList(c, {title: t.t('import_from_sim'), color: '#0288d1', status: '#0277bd', rows: [], empty: t.t('noContacts'), onPick: () => {}});
+      else if (i === 1) MM.pickDocument(c, (c, f) => c.toast(/\.vcf$/i.test(f.name) ? AndroidStrings.format(t.t('importing_vcard_finished_title'), f.name) : t.t('import_failure_no_vcard_file'), false));
+      else if (i === 2) { c.ui.docSave = {name: t.t('exporting_vcard_filename'), size: 120 + vcards().length, mime: 'text/x-vcard', done: (c, name) => c.toast(AndroidStrings.format(t.t('exporting_vcard_finished_title'), name || t.t('exporting_vcard_filename')), false)}; c.open('downloads', 'save'); }
+      else MM.share(c, {title: t.t('share_via'), kind: 'vcard', name: t.t('exporting_vcard_filename'), subject: '', text: vcards()});
+    }});
+  };
+  // AccountFilterActivity and CustomContactListFilterActivity.
+  function filters(c) {
+    const t = T(), f = c.data.contactsFilter || 'all', radio = on => `<i class="mmw-radio${on ? ' on' : ''}"></i>`;
+    if (ui(c).screen === 'customize') {
+      const on = c.data.contactsUngrouped !== false;
+      return `<div class="mmct mmct-filter"><div class="mmct-head"><div class="mmct-bar"><button type="button" class="mmct-btn" data-action="mmct-up"><img src="${A('ic_arrow_back_24dp')}" alt=""></button><span class="mmct-title in">${esc(c, t.t('custom_list_filter'))}</span></div></div>
+        <div class="mmct-page white"><div class="mmct-frow head"><span><b>${esc(c, MM.account.email)}</b><small>${esc(c, AndroidStrings.format(t.t('google_account_type_format'), 'Google'))}</small></span></div>
+        <button type="button" class="mmct-frow child" data-action="mmct-ungrouped"><span><b>${esc(c, t.t('display_ungrouped'))}</b></span><i class="mmst-check${on ? ' on' : ''}"></i></button></div></div>`;
+    }
+    const row = (key, title, sub) => `<button type="button" class="mmct-frow" data-action="mmct-filterpick" data-f="${key}"><span><b>${esc(c, title)}</b>${sub ? `<small>${esc(c, sub)}</small>` : ''}</span>${key === 'customize' ? '' : radio(f === key)}</button>`;
+    return `<div class="mmct mmct-filter"><div class="mmct-head"><div class="mmct-bar"><button type="button" class="mmct-btn" data-action="mmct-up"><img src="${A('ic_arrow_back_24dp')}" alt=""></button><span class="mmct-title in">${esc(c, t.t('activity_title_contacts_filter'))}</span></div></div>
+      <div class="mmct-page white">${row('all', t.t('list_filter_all_accounts'))}${row('account', MM.account.email, AndroidStrings.format(t.t('google_account_type_format'), 'Google'))}${row('customize', t.t('list_filter_customize'))}</div></div>`;
   }
   function menu(c) {
     const t = T(), u = ui(c);
@@ -194,17 +249,19 @@
     }
     if (u.screen.startsWith('card:')) {
       const id = u.screen.slice(5);
-      return c.menu([{label: t.t('menu_deleteContact'), action: c => remove(c, id)}, {label: t.t('menu_share'), action: c => share(c, P().byId(c, id))}, {label: t.t('menu_create_contact_shortcut'), action: c => c.open('missing-shortcut')}, {label: t.t('menu_help'), action: c => c.open('help', 'contacts')}]);
+      if (id === 'me') return c.menu([{label: t.t('menu_share'), action: c => share(c, byId(c, id))}, {label: t.t('menu_help'), action: c => c.open('help', 'contacts')}]);
+      return c.menu([{label: t.t('menu_deleteContact'), action: c => remove(c, id)}, {label: t.t('menu_share'), action: c => share(c, P().byId(c, id))}, {label: t.t('menu_create_contact_shortcut'), action: c => { const p = P().byId(c, id); MM.launcherInstall?.(c, {type: 'shortcut', label: p.name, person: p.id, badge: 'contact', open: {view: 'contacts', sub: `contact:${p.id}`}}); }}, {label: t.t('menu_help'), action: c => c.open('help', 'contacts')}]);
     }
     const items = [];
-    if (u.tab === 1) items.push({label: t.t('menu_contacts_filter'), action: c => c.open('missing-contacts-filter')});
+    if (u.screen) return;
+    if (u.tab === 1) items.push({label: t.t('menu_contacts_filter'), action: c => { ui(c).screen = 'filter'; c.render(); }});
     if (u.tab === 0 && frequents(c).length) items.push({label: t.t('menu_clear_frequents'), action: c => { c.data.frequentsCleared = Date.now(); c.save(); c.render(); }});
-    items.push({label: t.t('menu_import_export'), action: c => c.open('missing-import-export')}, {label: t.t('menu_accounts'), action: c => c.open('settings', 'accounts')}, {label: t.t('menu_settings'), action: c => MM.openPrefs(c, 'contacts', 'preference_display_options')}, {label: t.t('menu_help'), action: c => c.open('help', 'contacts')});
+    items.push({label: t.t('menu_import_export'), action: c => MM.contactsImportExport(c)}, {label: t.t('menu_accounts'), action: c => c.open('settings', 'accounts')}, {label: t.t('menu_settings'), action: c => MM.openPrefs(c, 'contacts', 'preference_display_options')}, {label: t.t('menu_help'), action: c => c.open('help', 'contacts')});
     c.menu(items);
   }
 
   MM.register('contacts', {
-    statusColor: c => { const u = ui(c); if (u.screen.startsWith('card:')) { const p = P().byId(c, u.screen.slice(5)); if (p) return palette(p)[1]; } return '#0277bd'; },
+    statusColor: c => { const u = ui(c); if (u.screen.startsWith('card:')) { const p = byId(c, u.screen.slice(5)); if (p) return palette(p)[1]; } return '#0277bd'; },
     render,
     mount(c, root) {
       const u = ui(c);
@@ -220,6 +277,7 @@
       const u = ui(c);
       if (u.screen === 'edit') { editorBack(c); return true; }
       if (u.from === 'external' && (u.screen.startsWith('card:') || u.screen === 'pick')) { u.from = ''; u.screen = ''; return false; }
+      if (u.screen === 'customize') { u.screen = 'filter'; c.render(); return true; }
       if (u.screen) { u.screen = ''; c.render(); return true; }
       if (u.search !== null) { u.search = null; c.render(); return true; }
       return false;
@@ -229,16 +287,20 @@
       switch (name) {
         case 'mmct-tab': u.tab = +el.dataset.tab; c.data.contactsTab = u.tab; c.save(); c.render(); return true;
         case 'mmct-open': u.screen = `card:${el.dataset.id}`; u.from = ''; if (u.scroll) delete u.scroll[u.screen]; c.render(); return true;
-        case 'mmct-up': if (u.from === 'external') { u.from = ''; u.screen = ''; c.back(); return true; } u.screen = ''; c.render(); return true;
+        case 'mmct-up': if (u.from === 'external') { u.from = ''; u.screen = ''; c.back(); return true; } this.back(c); return true;
+        case 'mmct-filterpick': { const f = el.dataset.f; if (f === 'customize') { u.screen = 'customize'; c.render(); return true; } c.data.contactsFilter = f; c.save(); u.screen = ''; c.render(); return true; }
+        case 'mmct-ungrouped': c.data.contactsUngrouped = c.data.contactsUngrouped === false; c.data.contactsFilter = 'custom'; c.save(); c.render(); return true;
+        case 'mmct-map': c.open('maps', `q:${el.dataset.q}`); return true;
+        case 'mmct-web': c.open('chrome', `url:${el.dataset.url}`); return true;
         case 'mmct-search': u.search = ''; c.render(); return true;
         case 'mmct-sback': u.search = null; c.render(); return true;
         case 'mmct-sclear': u.search = ''; c.render(); return true;
         case 'mmct-new': startEdit(c, null); c.render(); return true;
-        case 'mmct-edit': startEdit(c, P().byId(c, el.dataset.id)); c.render(); return true;
+        case 'mmct-edit': startEdit(c, byId(c, el.dataset.id)); c.render(); return true;
         case 'mmct-edback': editorBack(c); return true;
         case 'mmct-save': save(c); return true;
-        case 'mmct-more': c.open('missing-more-fields'); return true;
-        case 'mmct-profile': c.open('missing-profile'); return true;
+        case 'mmct-more': u.draft.more = true; c.render(); return true;
+        case 'mmct-profile': startEdit(c, c.data.profile || {id: 'me', name: ''}); c.render(); return true;
         case 'mmct-pick': { const p = P().byId(c, el.dataset.id); startEdit(c, p); if (u.pickNumber) u.draft.phone = u.pickNumber; u.pickNumber = ''; u.editFrom = ''; u.closeAfter = true; c.render(); return true; }
         case 'mmct-star': { const p = P().byId(c, el.dataset.id); p.starred = !p.starred; c.save(); c.toast(t.t(p.starred ? 'description_action_menu_add_star' : 'description_action_menu_remove_star'), false); c.render(); return true; }
         case 'mmct-call': if (event?.target?.closest('.mmct-alt')) return false; MM.phone?.call(c, el.dataset.n); return true;

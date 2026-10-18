@@ -90,3 +90,12 @@
 .mmct-field::placeholder{color:rgba(0,0,0,.251)}
 .mmct-spin{flex:none;width:calc(150 * var(--dp));height:calc(54 * var(--dp));margin-left:calc(8 * var(--dp));padding:calc(18 * var(--dp)) calc(48 * var(--dp)) 0 calc(8 * var(--dp));border-bottom:calc(1 * var(--dp)) solid rgba(0,0,0,.38);box-sizing:border-box;color:rgba(0,0,0,.87);font-size:calc(16 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:url('assets/fw-ic_spinner_caret.svg') right calc(12 * var(--dp)) center/calc(24 * var(--dp)) no-repeat}
 .mmct-more{display:flex;align-items:center;width:100%;min-height:calc(54 * var(--dp));padding:0 0 0 calc(72 * var(--dp));border:0;background:none;color:#0288d1;font:calc(16 * var(--dp)) Roboto,sans-serif;text-align:left}
+/* Contacts to display, Customize, the custom view's header */
+.mmct-page.white{background:#fff}
+.mmct-frow{display:flex;align-items:center;gap:calc(16 * var(--dp));width:100%;min-height:calc(56 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;background:none;font-family:Roboto,sans-serif;text-align:left}
+.mmct-frow>span{flex:1;min-width:0;display:flex;flex-direction:column}
+.mmct-frow b{font-weight:400;font-size:calc(16 * var(--dp));color:rgba(0,0,0,.87)}
+.mmct-frow small{font-size:calc(14 * var(--dp));color:rgba(0,0,0,.54)}
+.mmct-frow.head{background:#f5f5f5}
+.mmct-frow.child{padding-left:calc(32 * var(--dp))}
+.mmct-fhead{padding:calc(12 * var(--dp)) calc(16 * var(--dp));font-size:calc(14 * var(--dp));color:#0288d1}

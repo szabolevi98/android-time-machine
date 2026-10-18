@@ -124,7 +124,7 @@
       if (name === 'mmsa-save') {
         const s = c.ui.docSave || {}, name = (s.name || '').trim() || 'Document.pdf';
         docs(c).push({name, size: s.size || 20000, mime: s.mime || 'application/pdf', time: Date.now()}); c.save();
-        c.ui.downloads = null; c.ui.docSave = null; c.back(); s.done?.(c);
+        c.ui.downloads = null; c.ui.docSave = null; c.back(); s.done?.(c, name);
         return true;
       }
       if (name === 'mmsa-pickone' || name === 'mmsa-pickdoc') {

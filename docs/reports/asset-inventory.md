@@ -8,7 +8,7 @@ copy: 1264, generated: 2, own: 2
 
 ## 6.0.1 (bullhead)
 
-copy: 652, vector: 200, generated: 9, own: 2
+copy: 662, vector: 200, generated: 9, own: 2
 
 ## 2.3.6 (crespo)
 

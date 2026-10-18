@@ -105,6 +105,9 @@ type_incoming type_outgoing type_missed clearFrequentsConfirmation_title clearFr
 voice_search_not_available phoneTypeMobile callDetailTitle call_detail_list_header callDetailsDurationFormat
 callDetailsShortDurationFormat recentCalls_removeFromRecentList recentCalls_editNumberBeforeCall call_detail_menu_report
 call_log_action_call+args1 description_call_log_call_action
+# Add call (hold, swap, merge), Report inaccurate number
+card_title_conf_call onscreenSwapCallsText onscreenMergeCallsText dialer_returnToInCallScreen report_google_caller_id_dialog_title
+report_google_caller_id_toast
 [contacts] GoogleContacts framework
 share_via
 # Google Contacts 1.2: PeopleActivity's tabs and menu, the lists, QuickContactActivity's cards and menu, the compact editor
@@ -117,6 +120,12 @@ missing_name contact_editor_title_new_contact contact_editor_title_existing_cont
 contactSavedToast compact_editor_more_fields full_name phoneLabelsGroup emailLabelsGroup menu_done
 action_menu_overflow_description yesterday cancel_confirmation_dialog_message contactPickerActivityTitle
 phoneTypeMobile emailTypeHome
+# More fields, the profile, Contacts to display, Import/export
+header_nickname_entry header_organization_entry organization_company_and_title+args2 postal_address header_website_entry label_notes
+nicknameLabelsGroup ghostData_company ghostData_title websiteLabelsGroup listCustomView custom_list_filter google_account_type_format+args1
+display_ungrouped activity_title_contacts_filter list_filter_all_accounts list_filter_customize dialog_import_export import_from_sim
+import_from_vcf_file export_to_vcf_file share_visible_contacts import_failure_no_vcard_file importing_vcard_finished_title+args1
+exporting_vcard_filename exporting_vcard_finished_title+args1
 [messenger] PrebuiltBugle framework
 # Messenger 1.4.533: the conversation list and its menu, the conversation, the compose bar, the contact picker, the dates
 app_name start_new_conversation action_search action_menu_show_archived blocked_contacts_title action_settings

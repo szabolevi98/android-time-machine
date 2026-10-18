@@ -28,3 +28,5 @@
 .mmdlg-win{display:flex;flex-direction:column;overflow:hidden}
 .mmdlg-win>*{flex:none}
 .mmdlg-win>.mmdlg-list,.mmdlg-win>.mmdlg-body,.mmdlg-win>.mmdlg-message{flex:0 1 auto;min-height:0;overflow-y:auto}
+/* A plain list (AlertDialog.setItems: select_dialog_item_material, 48 dp, 24 dp sides, 16 sp). */
+.mmdlg-item:not(:has(> .mmst-choice, > span[class], > i)){min-height:calc(48 * var(--dp));padding:0 calc(24 * var(--dp));font:calc(16 * var(--dp)) Roboto,sans-serif;color:rgba(0,0,0,.87)}

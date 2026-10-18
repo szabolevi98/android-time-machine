@@ -374,5 +374,229 @@ MM.strings('contacts', {
 "de": "Privat",
 "fr": "Domicile",
 "es": "Casa"
+},
+"header_nickname_entry": {
+"res": "bullhead:GoogleContacts:header_nickname_entry",
+"en": "Nickname",
+"hu": "Becenév",
+"de": "Nickname",
+"fr": "Pseudo",
+"es": "Apodo"
+},
+"header_organization_entry": {
+"res": "bullhead:GoogleContacts:header_organization_entry",
+"en": "Organization",
+"hu": "Szervezet",
+"de": "Organisation",
+"fr": "Organisation",
+"es": "Organización"
+},
+"organization_company_and_title": {
+"res": "bullhead:GoogleContacts:organization_company_and_title",
+"args": 2,
+"en": "%2$s, %1$s",
+"hu": "%2$s, %1$s",
+"de": "%2$s, %1$s",
+"fr": "%2$s, %1$s",
+"es": "%2$s, %1$s"
+},
+"postal_address": {
+"res": "bullhead:GoogleContacts:postal_address",
+"en": "Address",
+"hu": "Cím",
+"de": "Adresse",
+"fr": "Adresse",
+"es": "Dirección"
+},
+"header_website_entry": {
+"res": "bullhead:GoogleContacts:header_website_entry",
+"en": "Website",
+"hu": "Webhely",
+"de": "Website",
+"fr": "Site Web",
+"es": "Sitio web"
+},
+"label_notes": {
+"res": "bullhead:GoogleContacts:label_notes",
+"en": "Notes",
+"hu": "Megjegyzések",
+"de": "Notizen",
+"fr": "Notes",
+"es": "Notas"
+},
+"nicknameLabelsGroup": {
+"res": "bullhead:GoogleContacts:nicknameLabelsGroup",
+"en": "Nickname",
+"hu": "Becenév",
+"de": "Alias",
+"fr": "Pseudo",
+"es": "Apodo"
+},
+"ghostData_company": {
+"res": "bullhead:GoogleContacts:ghostData_company",
+"en": "Company",
+"hu": "Cég",
+"de": "Unternehmen",
+"fr": "Entreprise",
+"es": "Empresa"
+},
+"ghostData_title": {
+"res": "bullhead:GoogleContacts:ghostData_title",
+"en": "Title",
+"hu": "Beosztás",
+"de": "Position",
+"fr": "Titre",
+"es": "Cargo"
+},
+"websiteLabelsGroup": {
+"res": "bullhead:GoogleContacts:websiteLabelsGroup",
+"en": "Website",
+"hu": "Webhely",
+"de": "Website",
+"fr": "Site Web",
+"es": "Sitio web"
+},
+"listCustomView": {
+"res": "bullhead:GoogleContacts:listCustomView",
+"en": "Contacts in custom view",
+"hu": "Egyéni nézet névjegyei",
+"de": "Kontakte in benutzerdef. Ansicht",
+"fr": "Contacts avec affichage perso.",
+"es": "Contactos en vista personalizada"
+},
+"custom_list_filter": {
+"res": "bullhead:GoogleContacts:custom_list_filter",
+"en": "Define custom view",
+"hu": "Egyéni nézet megadása",
+"de": "Ansicht festlegen",
+"fr": "Définir affichage perso",
+"es": "Definir vista personalizada"
+},
+"google_account_type_format": {
+"res": "bullhead:GoogleContacts:google_account_type_format",
+"args": 1,
+"en": "%1$s account",
+"hu": "%1$s account",
+"de": "%1$s account",
+"fr": "%1$s account",
+"es": "%1$s account",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"display_ungrouped": {
+"res": "bullhead:GoogleContacts:display_ungrouped",
+"en": "All other contacts",
+"hu": "Az összes többi névjegy",
+"de": "Alle weiteren Kontakte",
+"fr": "Tous les autres contacts",
+"es": "Todos los demás contactos"
+},
+"activity_title_contacts_filter": {
+"res": "bullhead:GoogleContacts:activity_title_contacts_filter",
+"en": "Contacts to display",
+"hu": "Megjelenítendő névjegyek",
+"de": "Angezeigte Kontakte",
+"fr": "Contacts à afficher",
+"es": "Contactos que mostrar"
+},
+"list_filter_all_accounts": {
+"res": "bullhead:GoogleContacts:list_filter_all_accounts",
+"en": "All contacts",
+"hu": "Összes névjegy",
+"de": "Alle Kontakte",
+"fr": "Tous les contacts",
+"es": "Todos los contactos"
+},
+"list_filter_customize": {
+"res": "bullhead:GoogleContacts:list_filter_customize",
+"en": "Customize",
+"hu": "Személyre szabás",
+"de": "Personalisieren",
+"fr": "Personnaliser",
+"es": "Personalizar"
+},
+"dialog_import_export": {
+"res": "bullhead:GoogleContacts:dialog_import_export",
+"en": "Import/export contacts",
+"hu": "Névjegyek importálása/exportálása",
+"de": "Kontakte importieren/exportieren",
+"fr": "Importer/Exporter des contacts",
+"es": "Importar/exportar contactos"
+},
+"import_from_sim": {
+"res": "bullhead:GoogleContacts:import_from_sim",
+"en": "Import from SIM card",
+"hu": "Importálás SIM kártyáról",
+"de": "Von SIM-Karte importieren",
+"fr": "Importer depuis la carte SIM",
+"es": "Importar contactos de la tarjeta SIM"
+},
+"import_from_vcf_file": {
+"res": "bullhead:GoogleContacts:import_from_vcf_file",
+"en": "Import from .vcf file",
+"hu": "Importálás .vcf fájlból",
+"de": "Aus VCF-Datei importieren",
+"fr": "Importer à partir de fichier VCF",
+"es": "Importar de archivo .vcf"
+},
+"export_to_vcf_file": {
+"res": "bullhead:GoogleContacts:export_to_vcf_file",
+"en": "Export to .vcf file",
+"hu": "Exportálás .vcf fájlba",
+"de": "In VCF-Datei exportieren",
+"fr": "Exporter dans fichier VCF",
+"es": "Exportar a archivo .vcf"
+},
+"share_visible_contacts": {
+"res": "bullhead:GoogleContacts:share_visible_contacts",
+"en": "Share visible contacts",
+"hu": "Látható névjegyek megosztása",
+"de": "Sichtbare Kontakte teilen",
+"fr": "Partager les contacts visibles",
+"es": "Compartir contactos visibles"
+},
+"import_failure_no_vcard_file": {
+"res": "bullhead:GoogleContacts:import_failure_no_vcard_file",
+"en": "No vCard file found in storage.",
+"hu": "Nem található vCard fájl a tárhelyen.",
+"de": "Im Speicher wurde keine vCard-Datei gefunden.",
+"fr": "Aucun fichier vCard trouvé dans la mémoire de stockage.",
+"es": "No se han encontrado archivos vCard en el almacenamiento."
+},
+"importing_vcard_finished_title": {
+"res": "bullhead:GoogleContacts:importing_vcard_finished_title",
+"args": 1,
+"en": "Finished importing vCard %s",
+"hu": "A(z) %s vCard importálása befejeződött",
+"de": "Import der vCard %s abgeschlossen",
+"fr": "Le fichier vCard %s a bien été importé",
+"es": "Importación de %s de vCard finalizada"
+},
+"exporting_vcard_filename": {
+"res": "bullhead:GoogleContacts:exporting_vcard_filename",
+"en": "contacts.vcf",
+"hu": "contacts.vcf",
+"de": "contacts.vcf",
+"fr": "contacts.vcf",
+"es": "contacts.vcf",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"exporting_vcard_finished_title": {
+"res": "bullhead:GoogleContacts:exporting_vcard_finished_title",
+"args": 1,
+"en": "Finished exporting %s.",
+"hu": "A(z) %s exportálása befejeződött.",
+"de": "Export von %s abgeschlossen",
+"fr": "Exportation du fichier %s terminée",
+"es": "Exportación de %s finalizada"
 }
 });

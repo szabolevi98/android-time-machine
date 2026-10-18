@@ -729,5 +729,53 @@ MM.strings('phone', {
 "fr",
 "es"
 ]
+},
+"card_title_conf_call": {
+"res": "bullhead:GoogleDialer:card_title_conf_call",
+"en": "Conference call",
+"hu": "Konferenciahívás",
+"de": "Telefonkonferenz",
+"fr": "Conférence téléphonique",
+"es": "Conferencia telefónica"
+},
+"onscreenSwapCallsText": {
+"res": "bullhead:GoogleDialer:onscreenSwapCallsText",
+"en": "Swap",
+"hu": "Csere",
+"de": "Wechseln",
+"fr": "Permuter",
+"es": "Cambiar"
+},
+"onscreenMergeCallsText": {
+"res": "bullhead:GoogleDialer:onscreenMergeCallsText",
+"en": "Merge calls",
+"hu": "Hívások egyesítése",
+"de": "Anrufe verbinden",
+"fr": "Fusionner les appels",
+"es": "Llamada a tres"
+},
+"dialer_returnToInCallScreen": {
+"res": "bullhead:GoogleDialer:dialer_returnToInCallScreen",
+"en": "Return to call in progress",
+"hu": "Vissza a folyamatban lévő híváshoz",
+"de": "Zurück zum aktuellen Anruf",
+"fr": "Reprendre l'appel en cours",
+"es": "Volver a la llamada en curso"
+},
+"report_google_caller_id_dialog_title": {
+"res": "bullhead:GoogleDialer:report_google_caller_id_dialog_title",
+"en": "Report incorrect number",
+"hu": "Helytelen szám bejelentése",
+"de": "Falsche Nummer melden",
+"fr": "Signaler un numéro incorrect",
+"es": "Notificar número incorrecto"
+},
+"report_google_caller_id_toast": {
+"res": "bullhead:GoogleDialer:report_google_caller_id_toast",
+"en": "Number reported to Google",
+"hu": "Szám jelentve a Google-nak",
+"de": "Nummer wurde Google gemeldet.",
+"fr": "Le numéro a bien été signalé à Google.",
+"es": "Número notificado a Google"
 }
 });

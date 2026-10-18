@@ -24,6 +24,7 @@
 
   // A list activity; rows: {icon (html), title, sub, value}.
   function list(c, spec) { c.ui.pickList = spec; c.open('pick-list'); }
+  MM.pickList = list;
   MM.register('pick-list', {
     app: false,
     statusColor: c => c.ui.pickList?.status || '#000',

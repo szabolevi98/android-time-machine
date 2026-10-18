@@ -165,7 +165,9 @@
     const fab = u.dialpad || searching ? '' : `<button type="button" class="mmph-fab" data-action="mmph-fab" aria-label="${esc(c, t.t(u.tab === 2 ? 'search_shortcut_create_new_contact' : 'action_menu_dialpad_button'))}"><img${u.tab === 2 ? ' class="small"' : ''} src="${A(u.tab === 2 ? 'ic_person_add_24dp' : 'fab_ic_dial')}" alt=""></button>`;
     const pad = u.dialpad ? `<div class="mmph-dialpad"><i class="mmph-fade"></i><div class="mmph-dpview">${digitsRow(c, P().typing(u.digits), 'mmph-del')}<i class="mmph-dspace"></i>${dialpadKeys(c, 'mmph-key')}<i class="mmph-bottom"></i></div>
       <button type="button" class="mmph-fab green" data-action="mmph-dialcall" aria-label="${esc(c, t.t('description_dial_button'))}"><img src="${A('fab_ic_call')}" alt=""></button></div>` : '';
-    return `<div class="mmph${u.dialpad ? ' dp' : ''}">${bar}${tabBar}${body}${fab}${pad}</div>`;
+    // During Add call, the way back to the call in progress (dialer_returnToInCallScreen) heads the dialer.
+    const back = u.addCall && call(c) ? `<button type="button" class="mmph-returncall" data-action="mmph-return">${esc(c, t.t('dialer_returnToInCallScreen'))}</button>` : '';
+    return `<div class="mmph${u.dialpad ? ' dp' : ''}">${back}${bar}${tabBar}${body}${fab}${pad}</div>`;
   }
   function screenBar(c, title, actions = '') {
     return `<div class="mmph-bar"><button type="button" class="mmph-up" data-action="mmph-up" aria-label="${esc(c, MM.text('framework').t('action_menu_overflow_description'))}"><img src="${A('ic_arrow_back_24dp')}" alt=""></button><span>${esc(c, title)}</span>${actions}</div>`;
@@ -203,14 +205,21 @@
     if (k.hold) return t.t('card_title_on_hold');
     return '';
   }
+  /* A second call (Add call: the first one goes on hold and the dialpad opens): secondary_call_info.xml's bar under the
+     banner (the held call's name and "On hold", touch to swap); the buttons Swap (ic_toolbar_swap) and Merge calls
+     (ic_toolbar_merge) take the places of Hold and Add call; merged, the banner shows "Conference call". When the
+     active call ends, the held one comes back. */
+  const held = c => c.ui.heldCall;
+  const callName = (c, k) => { if (k.conf) return T().t('card_title_conf_call'); const p = P().byNumber(c, k.number); return p ? p.name : P().format(k.number); };
   function incall(c) {
-    const t = T(), k = call(c), p = P().byNumber(c, k.number), now = Date.now(), live = !k.ended;
-    const btn = (id, ic, label, toggle = true) => `<button type="button" class="mmph-cbtn${k[id] ? ' on' : ''}" data-action="${toggle ? 'mmph-ctoggle' : 'mmph-addcall'}" data-id="${id}" aria-pressed="${!!k[id]}" aria-label="${esc(c, t.t(label))}"${live ? '' : ' disabled'}>${icon(ic)}</button>`;
+    const t = T(), k = call(c), p = k.conf ? null : P().byNumber(c, k.number), now = Date.now(), live = !k.ended, h = held(c);
+    const btn = (id, ic, label, toggle = true) => `<button type="button" class="mmph-cbtn${k[id] ? ' on' : ''}" data-action="${toggle ? 'mmph-ctoggle' : `mmph-${id}`}" data-id="${id}" aria-pressed="${!!k[id]}" aria-label="${esc(c, t.t(label))}"${live ? '' : ' disabled'}>${icon(ic)}</button>`;
+    const second = h ? `<button type="button" class="mmph-second" data-action="mmph-swap"><b>${esc(c, callName(c, h))}</b><span>${esc(c, t.t('card_title_on_hold'))}</span></button>` : '';
     const pad = k.dialpad && live ? `<div class="mmph-incallpad">${digitsRow(c, k.dtmf, 'mmph-dtmfdel')}<i class="mmph-dspace"></i>${dialpadKeys(c, 'mmph-dtmf')}<i class="mmph-bottom"></i></div>` : '';
-    return `<div class="mmph-incall"><div class="mmph-banner"><div class="mmph-primary"><span class="mmph-state">${esc(c, stateLabel(k, now))}</span><b class="mmph-cname">${esc(c, p ? p.name : P().format(k.number))}</b>
+    return `<div class="mmph-incall"><div class="mmph-banner"><div class="mmph-primary"><span class="mmph-state">${esc(c, stateLabel(k, now))}</span><b class="mmph-cname">${esc(c, callName(c, k))}</b>
       <span class="mmph-sub">${p ? `<span>${esc(c, P().typeLabel())}</span><span class="num">${esc(c, P().format(k.number))}</span>` : '<span class="num"></span>'}<time>${now >= k.connected || k.ended ? elapsed(callSeconds(k, now)) : ''}</time></span></div>
-      <div class="mmph-cbtns">${btn('speaker', 'ic_toolbar_speaker_on', 'onscreenAudioText')}${btn('mute', 'ic_toolbar_mic_off', 'onscreenMuteText')}${btn('dialpad', 'ic_toolbar_dialpad', 'onscreenShowDialpadText')}${btn('hold', 'ic_toolbar_hold', 'onscreenHoldText_unselected')}${btn('add', 'ic_toolbar_add_call', 'onscreenAddCallText', false)}</div></div>
-      <div class="mmph-cphoto"><img src="${A('img_no_image')}" alt=""></div>${pad}
+      <div class="mmph-cbtns">${btn('speaker', 'ic_toolbar_speaker_on', 'onscreenAudioText')}${btn('mute', 'ic_toolbar_mic_off', 'onscreenMuteText')}${btn('dialpad', 'ic_toolbar_dialpad', 'onscreenShowDialpadText')}${h ? btn('swap', 'ic_toolbar_swap', 'onscreenSwapCallsText', false) : btn('hold', 'ic_toolbar_hold', 'onscreenHoldText_unselected')}${h ? btn('merge', 'ic_toolbar_merge', 'onscreenMergeCallsText', false) : btn('addcall', 'ic_toolbar_add_call', 'onscreenAddCallText', false)}</div></div>
+      ${second}<div class="mmph-cphoto"><img src="${A('img_no_image')}" alt=""></div>${pad}
       <button type="button" class="mmph-end" data-action="mmph-hangup" aria-label="${esc(c, t.t('onscreenEndCallText'))}"${live ? '' : ' disabled'}><img src="${A('fab_ic_end_call')}" alt=""></button></div>`;
   }
   function begin(c, number) {
@@ -220,16 +229,23 @@
   }
   function startCall(c, number) {
     number = String(number || '').trim(); if (!number) return;
-    const u = ui(c);
-    u.dialpad = false; u.digits = ''; u.search = null; u.expanded = null;
+    const u = ui(c), cur = call(c);
+    u.dialpad = false; u.digits = ''; u.search = null; u.expanded = null; u.addCall = false;
+    // A call placed while one is up (Add call): that one waits on hold.
+    if (cur && !cur.ended) { cur.hold = true; c.ui.heldCall = cur; }
     begin(c, number);
     if (c.ui.view !== 'phone') c.open('phone'); else c.render();
   }
   function hangup(c) {
     const k = call(c); if (!k || k.ended) return;
     k.ended = Date.now(); c.render();
-    P().log(c, {number: k.number, time: k.started, duration: callSeconds(k), type: 'outgoing'});
-    setTimeout(() => { if (call(c) === k) { c.ui.call = null; if (c.ui.view === 'phone') c.render(); } }, 1500);
+    for (const n of k.conf || [k.number]) P().log(c, {number: n, time: k.started, duration: callSeconds(k), type: 'outgoing'});
+    setTimeout(() => {
+      if (call(c) !== k) return;
+      const h = held(c); c.ui.heldCall = null;
+      if (h) { h.hold = false; c.ui.call = h; tickLoop(c); } else c.ui.call = null;
+      if (c.ui.view === 'phone') c.render();
+    }, 1500);
   }
   let ticker = 0;
   function tickLoop(c) {
@@ -255,7 +271,7 @@
   function render(c) {
     consume(c);
     const u = ui(c);
-    if (call(c)) return incall(c);
+    if (call(c) && !u.addCall) return incall(c);
     if (u.screen === 'history') return history(c);
     if (u.screen.startsWith('details:')) return details(c, u.screen.slice(8));
     return main(c);
@@ -280,10 +296,10 @@
     const t = T(), u = ui(c);
     if (u.screen.startsWith('details:')) {
       const g = groups(c).find(x => String(x.key) === u.screen.slice(8));
-      return c.menu([{label: t.t('recentCalls_editNumberBeforeCall'), action: c => { const uu = ui(c); uu.screen = ''; uu.dialpad = true; uu.digits = P().digits(g?.number); c.render(); }}, {label: t.t('call_detail_menu_report'), action: c => c.open('missing-report')}]);
+      return c.menu([{label: t.t('recentCalls_editNumberBeforeCall'), action: c => { const uu = ui(c); uu.screen = ''; uu.dialpad = true; uu.digits = P().digits(g?.number); c.render(); }}, {label: t.t('call_detail_menu_report'), action: c => c.dialog({title: t.t('report_google_caller_id_dialog_title'), message: P().format(g?.number || ''), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok'), action: c => c.toast(t.t('report_google_caller_id_toast'), false)}]})}]);
     }
     if (u.dialpad) return c.menu([{label: t.t('add_2sec_pause'), action: c => { ui(c).digits += ','; c.render(); }}, {label: t.t('add_wait'), action: c => { ui(c).digits += ';'; c.render(); }}]);
-    const items = [{label: t.t('action_menu_call_history_description'), action: c => { ui(c).screen = 'history'; c.render(); }}, {label: t.t('menu_import_export'), action: c => c.open('missing-import-export')}];
+    const items = [{label: t.t('action_menu_call_history_description'), action: c => { ui(c).screen = 'history'; c.render(); }}, {label: t.t('menu_import_export'), action: c => MM.contactsImportExport(c)}];
     if (frequents(c).length) items.push({label: t.t('menu_clear_frequents'), action: c => c.dialog({title: t.t('clearFrequentsConfirmation_title'), message: t.t('clearFrequentsConfirmation'), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok'), action: c => { c.data.frequentsCleared = Date.now(); c.save(); c.render(); }}]})});
     items.push({label: t.t('menu_newContact'), action: c => c.open('contacts', 'new')}, {label: t.t('dialer_settings_label'), action: c => MM.openPrefs(c, 'dialer', 'dialer_settings', t.t('dialer_settings_label'))});
     c.menu(items);
@@ -322,6 +338,7 @@
     render, mount,
     back(c) {
       const u = ui(c), k = call(c);
+      if (k && u.addCall) { u.addCall = false; u.dialpad = false; if (!held(c)) k.hold = false; c.render(); return true; }
       if (k) { if (k.dialpad) { k.dialpad = false; c.render(); return true; } return false; }
       if (u.screen.startsWith('details:')) { u.screen = u.from || ''; u.from = ''; c.render(); return true; }
       if (u.screen) { u.screen = ''; c.render(); return true; }
@@ -361,7 +378,10 @@
         case 'mmph-sms': c.open('messenger', `to:${el.dataset.n || ''}`); return true;
         case 'mm-menu': menu(c); return true;
         case 'mmph-ctoggle': if (!k || k.ended) return true; k[el.dataset.id] = !k[el.dataset.id]; c.render(); return true;
-        case 'mmph-addcall': c.open('missing-add-call'); return true;
+        case 'mmph-addcall': if (!k || k.ended) return true; k.hold = true; u.addCall = true; u.dialpad = true; u.digits = ''; u.screen = ''; c.render(); return true;
+        case 'mmph-return': u.addCall = false; u.dialpad = false; if (k && !held(c)) k.hold = false; c.render(); return true;
+        case 'mmph-swap': { const h = held(c); if (!h || !k || k.ended) return true; k.hold = true; h.hold = false; c.ui.heldCall = k; c.ui.call = h; tickLoop(c); c.render(); return true; }
+        case 'mmph-merge': { const h = held(c); if (!h || !k || k.ended) return true; k.conf = [...(h.conf || [h.number]), ...(k.conf || [k.number])]; k.hold = false; c.ui.heldCall = null; c.render(); return true; }
         case 'mmph-dtmf': if (k) { k.dtmf += el.dataset.k; c.render(); } return true;
         case 'mmph-dtmfdel': if (k) { k.dtmf = k.dtmf.slice(0, -1); c.render(); } return true;
         case 'mmph-hangup': hangup(c); return true;

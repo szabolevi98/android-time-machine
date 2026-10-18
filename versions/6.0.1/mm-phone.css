@@ -174,3 +174,9 @@
 .mmed-fab{position:absolute;left:50%;bottom:calc(26 * var(--dp));width:calc(67 * var(--dp));height:calc(67 * var(--dp));margin-left:calc(-33.5 * var(--dp));padding:0;border:0;background:none}
 .mmed-fab img{position:absolute;inset:0;width:100%;height:100%}
 .mmed-fab:active::after{content:"";position:absolute;inset:calc(6 * var(--dp));border-radius:50%;background:rgba(255,255,255,.5)}
+/* Add call: the way back to the call, the held call's bar */
+.mmph-returncall{flex:none;height:calc(40 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:#0f9d58;color:#fff;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-align:left}
+.mmph-second{display:flex;align-items:center;gap:calc(12 * var(--dp));width:100%;min-height:calc(56 * var(--dp));padding:0 calc(24 * var(--dp));border:0;background:#01579b;color:#fff;font-family:Roboto,sans-serif;text-align:left;position:relative;z-index:1}
+.mmph-second b{flex:1;min-width:0;font-weight:400;font-size:calc(18 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mmph-second span{font-size:calc(14 * var(--dp));opacity:.7}
+.mmph .mmph-returncall{position:absolute;left:0;right:0;top:0;z-index:6}

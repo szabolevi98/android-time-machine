@@ -394,6 +394,13 @@
     c.ui.drawer = null; c.home();
   };
   // A widget or shortcut held in the widgets list: the drag goes on over the home screen (a copy, like the drawer's).
+  // InstallShortcutReceiver: a shortcut an app asks for goes to the first free cell, page by page (a new page when all
+  // are full).
+  MM.launcherInstall = (c, item) => {
+    const h = home(c);
+    for (const list of h.pages) for (let y = 0; y < 5; y++) for (let x = 0; x < 5; x++) if (free(list, x, y, 1, 1)) { list.push({...item, x, y}); c.save(); return; }
+    h.pages.push([{...item, x: 0, y: 0}]); c.save();
+  };
   MM.launcherDragNew = (c, item, x, y) => {
     const st = c.ui.home || (c.ui.home = {page: 1, folder: null});
     st.pendingDrag = {item, x, y}; st.suppressClick = true;
