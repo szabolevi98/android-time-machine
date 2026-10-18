@@ -57,6 +57,54 @@ MM.strings('camera', {
 "fr": "Obturateur",
 "es": "Obturador"
 },
+"exposure_compensation_desc_n2": {
+"res": "bullhead:GoogleCamera:exposure_compensation_desc_n2",
+"en": "Exposure Compensation -2",
+"hu": "Expozíciókompenzáció: -2",
+"de": "Belichtungskorrektur -2",
+"fr": "Correction d'exposition -2",
+"es": "Compensación de exposición -2"
+},
+"exposure_compensation_desc_n1": {
+"res": "bullhead:GoogleCamera:exposure_compensation_desc_n1",
+"en": "Exposure Compensation -1",
+"hu": "Expozíciókompenzáció: -1",
+"de": "Belichtungskorrektur -1",
+"fr": "Correction d'exposition -1",
+"es": "Compensación de exposición -1"
+},
+"exposure_compensation_desc_0": {
+"res": "bullhead:GoogleCamera:exposure_compensation_desc_0",
+"en": "Exposure Compensation 0",
+"hu": "Expozíciókompenzáció: 0",
+"de": "Belichtungskorrektur 0",
+"fr": "Correction d'exposition 0",
+"es": "Compensación de exposición 0"
+},
+"exposure_compensation_desc_p1": {
+"res": "bullhead:GoogleCamera:exposure_compensation_desc_p1",
+"en": "Exposure Compensation +1",
+"hu": "Expozíciókompenzáció: +1",
+"de": "Belichtungskorrektur +1",
+"fr": "Correction d'exposition +1",
+"es": "Compensación de exposición +1"
+},
+"exposure_compensation_desc_p2": {
+"res": "bullhead:GoogleCamera:exposure_compensation_desc_p2",
+"en": "Exposure Compensation +2",
+"hu": "Expozíciókompenzáció: +2",
+"de": "Belichtungskorrektur +2",
+"fr": "Correction d'exposition +2",
+"es": "Compensación de exposición +2"
+},
+"manual_exposure_compensation_desc": {
+"res": "bullhead:GoogleCamera:manual_exposure_compensation_desc",
+"en": "Manual Exposure Compensation",
+"hu": "Kézi expozíciókompenzáció",
+"de": "Manuelle Belichtungskorrektur",
+"fr": "Correction d'exposition manuelle",
+"es": "Compensación de exposición manual"
+},
 "accessibility_mode_options": {
 "res": "bullhead:GoogleCamera:accessibility_mode_options",
 "en": "Options",

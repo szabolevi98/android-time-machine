@@ -123,7 +123,12 @@ versions/6.0.1/assets/cm-ic_capture_camera_normal.png	3b3be2a2156c03dd	copy	bull
 versions/6.0.1/assets/cm-ic_capture_pano.png	6e9633096e6527fd	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_capture_pano.png	drawable-xxhdpi-v4		6e9633096e6527fd
 versions/6.0.1/assets/cm-ic_capture_refocus.png	a5f3865a8899ee4d	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_capture_refocus.png	drawable-xxhdpi-v4		a5f3865a8899ee4d
 versions/6.0.1/assets/cm-ic_capture_video.png	78360557826dc3ba	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_capture_video.png	drawable-xxhdpi-v4		78360557826dc3ba
+versions/6.0.1/assets/cm-ic_exposure_0.png	223f5c6254738142	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_exposure_0.png	drawable-xxhdpi-v4		223f5c6254738142
+versions/6.0.1/assets/cm-ic_exposure_n1.png	687159c4ca6c6038	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_exposure_n1.png	drawable-xxhdpi-v4		687159c4ca6c6038
+versions/6.0.1/assets/cm-ic_exposure_n2.png	640e70ae5cbbf0e0	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_exposure_n2.png	drawable-xxhdpi-v4		640e70ae5cbbf0e0
 versions/6.0.1/assets/cm-ic_exposure_normal.png	54629c0a7b4cfd27	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_exposure_normal.png	drawable-xxhdpi-v4		54629c0a7b4cfd27
+versions/6.0.1/assets/cm-ic_exposure_p1.png	d5c9b2f931dbafec	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_exposure_p1.png	drawable-xxhdpi-v4		d5c9b2f931dbafec
+versions/6.0.1/assets/cm-ic_exposure_p2.png	1db7f5673a65578d	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_exposure_p2.png	drawable-xxhdpi-v4		1db7f5673a65578d
 versions/6.0.1/assets/cm-ic_flash_auto_normal.png	84f0f18fa76174e1	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_flash_auto_normal.png	drawable-xxhdpi-v4		84f0f18fa76174e1
 versions/6.0.1/assets/cm-ic_flash_off_normal.png	9e864b376ad0cd72	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_flash_off_normal.png	drawable-xxhdpi-v4		9e864b376ad0cd72
 versions/6.0.1/assets/cm-ic_flash_on_normal.png	24021c3d6f075f53	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_flash_on_normal.png	drawable-xxhdpi-v4		24021c3d6f075f53
@@ -140,6 +145,7 @@ versions/6.0.1/assets/cm-ic_timer_10s_normal.png	08aa2f18d822e393	copy	bullhead:
 versions/6.0.1/assets/cm-ic_timer_3s_normal.png	240fc5b8e46195e8	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_timer_3s_normal.png	drawable-xxhdpi-v4		240fc5b8e46195e8
 versions/6.0.1/assets/cm-ic_timer_off_normal.png	77950f304d39ec21	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_timer_off_normal.png	drawable-xxhdpi-v4		77950f304d39ec21
 versions/6.0.1/assets/cm-ic_video_normal.png	96941d80cad37ae0	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_video_normal.png	drawable-xxhdpi-v4		96941d80cad37ae0
+versions/6.0.1/assets/cr-account_management_incognito.png	0fadd833a1737cb7	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/account_management_incognito.png	drawable-xxhdpi-v4		0fadd833a1737cb7
 versions/6.0.1/assets/cr-bg_bookmarks_widget_holo.9.png	44b223d0b54618d6	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-nodpi-v4/bg_bookmarks_widget_holo.9.png	drawable-nodpi-v4		44b223d0b54618d6
 versions/6.0.1/assets/cr-border_thumb_bookmarks_widget_holo.9.png	82bed21d48d1116c	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xhdpi-v4/border_thumb_bookmarks_widget_holo.9.png	drawable-xhdpi-v4		82bed21d48d1116c
 versions/6.0.1/assets/cr-btn_close.png	cb24830b19923a6f	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/btn_close.png	drawable-xxhdpi-v4		cb24830b19923a6f
@@ -156,6 +162,7 @@ versions/6.0.1/assets/cr-fre_product_logo.png	ac8ac986e4197f5c	copy	bullhead:/sy
 versions/6.0.1/assets/cr-globe_incognito_favicon.png	e1eaf460dbcdcc72	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xhdpi-v4/globe_incognito_favicon.png	drawable-xhdpi-v4		e1eaf460dbcdcc72
 versions/6.0.1/assets/cr-google_logo.png	6cf17ef198ab82ba	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/google_logo.png	drawable-xxhdpi-v4		6cf17ef198ab82ba
 versions/6.0.1/assets/cr-ic_most_visited_placeholder.png	0426d1c003f1a9ad	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/ic_most_visited_placeholder.png	drawable-xxhdpi-v4		0426d1c003f1a9ad
+versions/6.0.1/assets/cr-ic_omnibox_incognito_badge.png	09a2120d84bfed74	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/ic_omnibox_incognito_badge.png	drawable-xxhdpi-v4		09a2120d84bfed74
 versions/6.0.1/assets/cr-ic_omnibox_magnifier.png	df8bd2edc0b1b19b	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/ic_omnibox_magnifier.png	drawable-xxhdpi-v4		df8bd2edc0b1b19b
 versions/6.0.1/assets/cr-ic_omnibox_page.png	a16737ffc63e1997	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/ic_omnibox_page.png	drawable-xxhdpi-v4		a16737ffc63e1997
 versions/6.0.1/assets/cr-omnibox_https_valid.png	34f4af6b46b467ba	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/omnibox_https_valid.png	drawable-xxhdpi-v4		34f4af6b46b467ba

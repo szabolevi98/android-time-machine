@@ -156,6 +156,12 @@ accessibility_btn_stop_loading ntp_bookmarks recent_tabs most_visited_placeholde
 accessibility_toolbar_btn_mic accessibility_toolbar_btn_menu fre_welcome fre_tos_and_privacy fre_send_report_check
 fre_accept_continue
 own:neterror_title own:neterror_reload own:neterror_details own:neterror_hide_details own:neterror_dns
+# Bookmarks, Recent tabs, History, incognito, Find in page, Add to Home screen, site information
+own:history_title own:history_search own:history_none own:history_clear own:history_today own:history_remove own:history_more_site own:history_no_results own:mobile_bookmarks
+bookmarks bookmarks_folder_empty recent_tabs recently_closed show_full_history ntp_recent_tabs_sync_promo_title ntp_recent_tabs_sync_promo_instructions
+remove_all new_tab_incognito_header new_tab_incognito_message menu_close_all_incognito_tabs hint_find_in_page find_in_page_count+args2
+accessible_find_in_page_no_results add_to_homescreen_title added_to_homescreen+args1 add cancel close page_info_connection_https
+page_info_connection_http page_info_connection_internal_page page_info_site_settings_button page_info_copy_url_button contextmenu_delete_bookmark
 [gmail] PrebuiltGmail framework
 # Gmail 5.7: the welcome tour, setting up addresses, the inbox and its drawer, a conversation, compose
 welcome_tour_welcome_new_title welcome_tour_welcome_new_text welcome_tour_promo_text welcome_tour_bottombar_skip done
@@ -187,6 +193,7 @@ edit_location_hint edit_description_hint edit_recurrence_none
 [camera] GoogleCamera framework
 # Google Camera 3.1.024: the mode list, the shutter, the mode options' descriptions
 mode_camera mode_video mode_refocus mode_photosphere mode_panorama mode_settings accessibility_shutter_button
+exposure_compensation_desc_n2 exposure_compensation_desc_n1 exposure_compensation_desc_0 exposure_compensation_desc_p1 exposure_compensation_desc_p2 manual_exposure_compensation_desc
 accessibility_mode_options array:camera_flash_descriptions array:hdr_plus_descriptions array:countdown_duration_descriptions
 video_recording_started video_recording_stopped
 [photos] Photos framework

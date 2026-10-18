@@ -26,9 +26,12 @@
 
   function render(c) {
     const t = T(), s = S(c), u = ui(c), [, color, , shutterIcon] = MODES[s.mode], last = MM.media.photos(c).at(-1);
-    const preview = MM.media.svg({id: 'vf', seed: u.seed, time: Date.now(), front: s.front}, 'mmcm-scene');
-    const opts = s.mode === 'video' ? '' : `<div class="mmcm-opts" aria-label="${esc(c, t.t('accessibility_mode_options'))}">
-      <button type="button" data-action="mmcm-exposure"><img src="${A('ic_exposure_normal')}" alt=""></button>
+    const ev = s.exposure || 0, EV = ['n2', 'n1', '0', 'p1', 'p2'];
+    const preview = MM.media.svg({id: 'vf', seed: u.seed, time: Date.now(), front: s.front}, 'mmcm-scene').replace('<svg ', `<svg style="filter:brightness(${(1 + ev * 0.22).toFixed(2)})" `);
+    // The exposure button opens the compensation row in the options' place (-2 … +2, exposure_compensation_desc_*);
+    // a value other than 0 shows on the button and brightens or darkens the preview.
+    const opts = s.mode === 'video' ? '' : u.exposure ? `<div class="mmcm-opts ev">${EV.map((k, i) => `<button type="button" class="${i - 2 === ev ? 'on' : ''}" data-action="mmcm-ev" data-ev="${i - 2}" aria-label="${esc(c, t.t(`exposure_compensation_desc_${k}`))}"><img src="${A(`ic_exposure_${k}`)}" alt=""></button>`).join('')}</div>` : `<div class="mmcm-opts" aria-label="${esc(c, t.t('accessibility_mode_options'))}">
+      <button type="button" data-action="mmcm-exposure" aria-label="${esc(c, t.t('manual_exposure_compensation_desc'))}"><img src="${A(ev ? `ic_exposure_${EV[ev + 2]}` : 'ic_exposure_normal')}" alt=""></button>
       <button type="button" data-action="mmcm-timer" aria-label="${esc(c, t.t('countdown_duration_descriptions')[s.timer])}"><img src="${A(TIMER[s.timer])}" alt=""></button>
       <button type="button" data-action="mmcm-hdr" aria-label="${esc(c, t.t('hdr_plus_descriptions')[s.hdr])}"><img class="hdr" src="${A(HDR[s.hdr])}" alt=""></button>
       <button type="button" data-action="mmcm-flash" aria-label="${esc(c, t.t('camera_flash_descriptions')[s.flash])}"><img src="${A(FLASH[s.flash])}" alt=""></button></div>`;
@@ -69,7 +72,8 @@
         case 'mmcm-flash': s.flash = (s.flash + 1) % 3; c.save(); c.render(); return true;
         case 'mmcm-hdr': s.hdr = (s.hdr + 1) % 3; c.save(); c.render(); return true;
         case 'mmcm-timer': s.timer = (s.timer + 1) % 3; c.save(); c.render(); return true;
-        case 'mmcm-exposure': c.open('missing-exposure'); return true;
+        case 'mmcm-exposure': ui(c).exposure = true; c.render(); return true;
+        case 'mmcm-ev': S(c).exposure = +el.dataset.ev; ui(c).exposure = false; c.save(); c.render(); return true;
         case 'mmcm-modes': u.modes = !u.modes; c.render(); return true;
         case 'mmcm-mode': s.mode = el.dataset.m; u.modes = false; c.save(); c.render(); return true;
         case 'mmcm-settings': u.modes = false; MM.openPrefs(c, 'camera', 'camera_preferences'); return true;

@@ -277,5 +277,280 @@ MM.strings('chrome', {
 "de": "Die DNS-Adresse des Servers kann nicht aufgelöst werden.",
 "fr": "Impossible de résoudre l'adresse DNS du serveur.",
 "es": "No se puede resolver la dirección DNS del servidor."
+},
+"history_title": {
+"own": true,
+"source": "Chrome.apk assets/<lang>.pak resource 14703",
+"en": "History",
+"hu": "Előzmények",
+"de": "Verlauf",
+"fr": "Historique",
+"es": "Historial"
+},
+"history_search": {
+"own": true,
+"source": "Chrome.apk assets/<lang>.pak resource 14718",
+"en": "Search history",
+"hu": "Keresés az előzmények között",
+"de": "Im Verlauf suchen",
+"fr": "Rechercher dans l'historique",
+"es": "Buscar en el historial"
+},
+"history_none": {
+"own": true,
+"source": "Chrome.apk assets/<lang>.pak resource 14717",
+"en": "No history entries found.",
+"hu": "Nincsenek előzménybejegyzések.",
+"de": "Keine Verlaufseinträge gefunden",
+"fr": "Aucune entrée d'historique trouvée.",
+"es": "No se han encontrado entradas de historial."
+},
+"history_clear": {
+"own": true,
+"source": "Chrome.apk assets/<lang>.pak resource 14710",
+"en": "Clear browsing data...",
+"hu": "Böngészési adatok törlése...",
+"de": "Browserdaten löschen...",
+"fr": "Effacer les données de navigation...",
+"es": "Borrar datos de navegación..."
+},
+"history_today": {
+"own": true,
+"source": "Chrome.apk assets/<lang>.pak resource 14737",
+"en": "Today",
+"hu": "Ma",
+"de": "Heute",
+"fr": "Aujourd'hui",
+"es": "Hoy"
+},
+"history_remove": {
+"own": true,
+"source": "Chrome.apk assets/<lang>.pak resource 14730",
+"en": "Remove from history",
+"hu": "Eltávolítás az előzmények közül",
+"de": "Aus Verlauf entfernen",
+"fr": "Supprimer de l'historique",
+"es": "Eliminar del historial"
+},
+"history_more_site": {
+"own": true,
+"source": "Chrome.apk assets/<lang>.pak resource 14731",
+"en": "More from this site",
+"hu": "Továbbiak erről a webhelyről",
+"de": "Mehr von dieser Website",
+"fr": "Plus de résultats pour ce site",
+"es": "Más entradas de este sitio"
+},
+"history_no_results": {
+"own": true,
+"source": "Chrome.apk assets/<lang>.pak resource 14716",
+"en": "No search results found.",
+"hu": "Nincs találat",
+"de": "Keine Suchergebnisse gefunden.",
+"fr": "Aucun résultat de recherche trouvé",
+"es": "No se han encontrado resultados de búsqueda."
+},
+"mobile_bookmarks": {
+"own": true,
+"source": "Chrome.apk assets/<lang>.pak resource 30053",
+"en": "Mobile bookmarks",
+"hu": "Mobil könyvjelzők",
+"de": "Mobile Lesezeichen",
+"fr": "Favoris sur mobile",
+"es": "Marcadores del móvil"
+},
+"bookmarks": {
+"res": "bullhead:Chrome:bookmarks",
+"en": "Bookmarks",
+"hu": "Könyvjelzők",
+"de": "Lesezeichen",
+"fr": "Favoris",
+"es": "Marcadores"
+},
+"bookmarks_folder_empty": {
+"res": "bullhead:Chrome:bookmarks_folder_empty",
+"en": "No bookmarks here",
+"hu": "Itt nincsenek könyvjelzők",
+"de": "Keine Lesezeichen vorhanden",
+"fr": "Il n'y a aucun favori dans ce dossier.",
+"es": "Ningún marcador incluido"
+},
+"recently_closed": {
+"res": "bullhead:Chrome:recently_closed",
+"en": "Recently closed",
+"hu": "Mostanában bezárt",
+"de": "Kürzlich geschlossen",
+"fr": "Récemment fermés",
+"es": "Cerrado recientemente"
+},
+"show_full_history": {
+"res": "bullhead:Chrome:show_full_history",
+"en": "Show full history",
+"hu": "Az összes előzmény megjelenítése",
+"de": "Gesamten Verlauf anzeigen",
+"fr": "Afficher l'historique complet",
+"es": "Mostrar todo el historial"
+},
+"ntp_recent_tabs_sync_promo_title": {
+"res": "bullhead:Chrome:ntp_recent_tabs_sync_promo_title",
+"en": "Other devices",
+"hu": "Egyéb eszközök",
+"de": "Andere Geräte",
+"fr": "Autres appareils",
+"es": "Otros dispositivos"
+},
+"ntp_recent_tabs_sync_promo_instructions": {
+"res": "bullhead:Chrome:ntp_recent_tabs_sync_promo_instructions",
+"en": "Access the tabs you have open on your computer, right here.\n\nJust open Chrome on your computer, go to the menu, and select “Sign in to Chrome…”",
+"hu": "Itt is hozzáférhet a számítógépén megnyitott lapokhoz.\n\nEhhez elég elindítania a Chrome böngészőt a számítógépen, megnyitnia a menüt, majd kiválasztania a „Bejelentkezés ide: Chrome” lehetőséget",
+"de": "Greifen Sie hier auf die Tabs zu, die Sie auf Ihrem Computer geöffnet haben.\n\nÖffnen Sie dazu Chrome auf Ihrem Computer und wählen Sie im Menü \"In Chrome anmelden...\" aus.",
+"fr": "Accédez ici aux onglets ouverts sur votre ordinateur.\n\nIl vous suffit d'ouvrir Chrome sur votre ordinateur, d'accéder au menu, puis de sélectionner \"Se connecter à Chrome\".",
+"es": "Accede a las pestañas que tengas abiertas en tu ordenador desde aquí.\n\nSolo tienes que abrir Chrome en tu ordenador, acceder al menú y seleccionar \"Iniciar sesión en Chrome...\""
+},
+"remove_all": {
+"res": "bullhead:Chrome:remove_all",
+"en": "Remove all",
+"hu": "Összes eltávolítása",
+"de": "Alle entfernen",
+"fr": "Tout supprimer",
+"es": "Eliminar todo"
+},
+"new_tab_incognito_header": {
+"res": "bullhead:Chrome:new_tab_incognito_header",
+"en": "You've gone incognito.",
+"hu": "Ön inkognitómódra váltott.",
+"de": "Sie haben in den Inkognitomodus gewechselt.",
+"fr": "Vous êtes passé en mode navigation privée",
+"es": "Has entrado en el modo de navegación de incógnito."
+},
+"new_tab_incognito_message": {
+"res": "bullhead:Chrome:new_tab_incognito_message",
+"en": "Pages you view in incognito tabs won’t stick around in your browser’s history, cookie store, or search history after you’ve closed all of your incognito tabs. Any files you download or bookmarks you create will be kept.\n\nHowever, you aren’t invisible. Going incognito doesn’t hide your browsing from your employer, your internet service provider, or the websites you visit.",
+"hu": "Az inkognitólapokon megtekintett oldalak nem maradnak meg a böngészési előzményekben, a cookie-k tárolójában vagy a keresési előzményekben, miután bezárta az összes inkognitólapot. A letöltött fájlok és a létrehozott könyvjelzők azonban megmaradnak.\n\nMindazonáltal Ön nem lesz láthatatlan. Az inkognitómód használatával nem rejtheti el böngészési tevékenységét munkaadója, internetszolgáltatója vagy a felkeresett webhelyek elől.",
+"de": "Seiten, die Sie in Inkognito-Tabs öffnen, werden nicht in Ihrem Browserverlauf, Cookie-Speicher oder Suchverlauf gespeichert, nachdem Sie alle Inkognito-Tabs geschlossen haben. Alle heruntergeladenen Dateien und gespeicherten Lesezeichen bleiben erhalten.\n\nSie sind jedoch nicht unsichtbar. Durch den Inkognitomodus wird die Tatsache, dass Sie im Web surfen, nicht vor Ihrem Arbeitgeber, Internetanbieter oder den besuchten Websites verborgen.",
+"fr": "Les pages consultées dans les onglets de navigation privée ne sont pas enregistrées dans l'historique de votre navigateur, dans les cookies ni dans l'historique des recherches une fois que vous avez fermé tous les onglets de navigation privée. Les fichiers téléchargés et les favoris ajoutés sont conservés.\n\nVous n'êtes cependant pas devenu invisible. L'utilisation du mode navigation privée n'empêche pas votre employeur, votre fournisseur d'accès à Internet ou les sites Web que vous avez consultés d'avoir accès aux informations relatives à votre navigation.",
+"es": "Las páginas que visites a través de las pestañas de incógnito no se mostrarán en el historial del navegador, en el almacén de cookies ni en el historial de búsquedas una vez que cierres todas las pestañas de incógnito. Sí se conservarán los archivos que descargues y los marcadores que crees.\n\nNo obstante, tus acciones no serán totalmente invisibles. El uso del modo incógnito no te permite ocultar tu actividad de navegación a tu empresa, a tu proveedor de servicios de Internet o a los sitios web que visites."
+},
+"menu_close_all_incognito_tabs": {
+"res": "bullhead:Chrome:menu_close_all_incognito_tabs",
+"en": "Close incognito tabs",
+"hu": "Inkognitólapok bezárása",
+"de": "Inkognito-Tabs schließen",
+"fr": "Fermer onglets navigation privée",
+"es": "Cerrar pestañas de incógnito"
+},
+"hint_find_in_page": {
+"res": "bullhead:Chrome:hint_find_in_page",
+"en": "Find in page",
+"hu": "Keresés ezen az oldalon",
+"de": "Suchen auf der Seite",
+"fr": "Chercher sur la page",
+"es": "Buscar en la página"
+},
+"find_in_page_count": {
+"res": "bullhead:Chrome:find_in_page_count",
+"args": 2,
+"en": "%1$d/%2$d",
+"hu": "%1$d/%2$d",
+"de": "%1$d/%2$d",
+"fr": "%1$d/%2$d",
+"es": "%1$d/%2$d"
+},
+"accessible_find_in_page_no_results": {
+"res": "bullhead:Chrome:accessible_find_in_page_no_results",
+"en": "No results",
+"hu": "Nincs találat",
+"de": "Keine Ergebnisse",
+"fr": "Aucun résultat",
+"es": "Sin resultados"
+},
+"add_to_homescreen_title": {
+"res": "bullhead:Chrome:add_to_homescreen_title",
+"en": "Title",
+"hu": "Cím",
+"de": "Titel",
+"fr": "Titre",
+"es": "Título"
+},
+"added_to_homescreen": {
+"res": "bullhead:Chrome:added_to_homescreen",
+"args": 1,
+"en": "%1$s was added to your Home screen",
+"hu": "A(z) %1$s hozzáadva a kezdőképernyőhöz",
+"de": "%1$s wurde zum Startbildschirm hinzugefügt.",
+"fr": "%1$s a été ajouté à votre écran d'accueil.",
+"es": "%1$s se ha añadido a tu pantalla de inicio"
+},
+"add": {
+"res": "bullhead:Chrome:add",
+"en": "Add",
+"hu": "Hozzáadás",
+"de": "Hinzufügen",
+"fr": "Ajouter",
+"es": "Añadir"
+},
+"cancel": {
+"res": "bullhead:Chrome:cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"close": {
+"res": "bullhead:Chrome:close",
+"en": "Close",
+"hu": "Bezárás",
+"de": "Schließen",
+"fr": "Fermer",
+"es": "Cerrar"
+},
+"page_info_connection_https": {
+"res": "bullhead:Chrome:page_info_connection_https",
+"en": "Your connection to this site is private.",
+"hu": "A webhellyel való kapcsolata privát.",
+"de": "Ihre Verbindung zu dieser Website ist privat.",
+"fr": "Votre connexion à ce site est privée.",
+"es": "Tu conexión con este sitio es privada."
+},
+"page_info_connection_http": {
+"res": "bullhead:Chrome:page_info_connection_http",
+"en": "Your connection to this site is not private.",
+"hu": "A webhellyel való kapcsolata nem privát.",
+"de": "Die Verbindung zu dieser Website ist nicht sicher.",
+"fr": "Votre connexion à ce site n'est pas privée.",
+"es": "Tu conexión con este sitio no es privada."
+},
+"page_info_connection_internal_page": {
+"res": "bullhead:Chrome:page_info_connection_internal_page",
+"en": "You are viewing a secure Google Chrome page.",
+"hu": "Ön egy biztonságos Google Chrome-oldalt lát.",
+"de": "Dies ist eine sichere Google Chrome-Seite.",
+"fr": "Cette page Google Chrome est sécurisée.",
+"es": "Estás viendo una página de Google Chrome segura."
+},
+"page_info_site_settings_button": {
+"res": "bullhead:Chrome:page_info_site_settings_button",
+"en": "Site Settings",
+"hu": "Webhelybeállítások",
+"de": "Website-Einstellungen",
+"fr": "Paramètres du site",
+"es": "Ajustes del sitio"
+},
+"page_info_copy_url_button": {
+"res": "bullhead:Chrome:page_info_copy_url_button",
+"en": "Copy URL",
+"hu": "URL másolása",
+"de": "URL kopieren",
+"fr": "Copier l'URL",
+"es": "Copiar URL"
+},
+"contextmenu_delete_bookmark": {
+"res": "bullhead:Chrome:contextmenu_delete_bookmark",
+"en": "Delete bookmark",
+"hu": "Könyvjelző törlése",
+"de": "Lesezeichen löschen",
+"fr": "Supprimer le favori",
+"es": "Eliminar marcador"
 }
 });

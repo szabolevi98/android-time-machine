@@ -28,3 +28,4 @@
 .mmcm-mode{display:flex;align-items:center;width:100%;height:calc(60 * var(--dp));padding:0;border:0;background:none;color:#fff;font:calc(16 * var(--dp)) Roboto,sans-serif;text-align:left}
 .mmcm-mode i{flex:none;display:grid;place-items:center;width:calc(40 * var(--dp));height:calc(40 * var(--dp));margin:0 calc(16 * var(--dp)) 0 calc(8 * var(--dp));border-radius:50%;background:rgba(0,0,0,.298)}
 .mmcm-mode img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.mmcm-opts.ev button.on{background:radial-gradient(circle,rgba(255,255,255,.3) 55%,transparent 56%)}

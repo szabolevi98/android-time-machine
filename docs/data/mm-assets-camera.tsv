@@ -20,3 +20,8 @@ cm-ic_timer_3s_normal.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_timer_3s
 cm-ic_timer_10s_normal.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_timer_10s_normal
 cm-ic_exposure_normal.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_exposure_normal
 cm-ic_cancel_normal.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_cancel_normal
+cm-ic_exposure_n2.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_exposure_n2
+cm-ic_exposure_n1.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_exposure_n1
+cm-ic_exposure_0.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_exposure_0
+cm-ic_exposure_p1.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_exposure_p1
+cm-ic_exposure_p2.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_exposure_p2
