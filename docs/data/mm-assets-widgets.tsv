@@ -38,3 +38,10 @@ dr-widget_app_logo.png	app/Drive/Drive.apk	drawable/widget_app_logo
 dr-widget_upload.png	app/Drive/Drive.apk	drawable/widget_upload
 dr-widget_newdocfromcamera.png	app/Drive/Drive.apk	drawable/widget_newdocfromcamera
 dr-widget_newdoc.png	app/Drive/Drive.apk	drawable/widget_newdoc
+gm-gradient_bg_widget_holo.9.png	app/PrebuiltGmail/PrebuiltGmail.apk	drawable/gradient_bg_widget_holo
+cr-bg_bookmarks_widget_holo.9.png	app/Chrome/Chrome.apk	drawable/bg_bookmarks_widget_holo
+cr-border_thumb_bookmarks_widget_holo.9.png	app/Chrome/Chrome.apk	drawable/border_thumb_bookmarks_widget_holo
+cr-thumbnail_bookmarks_widget_no_bookmark_holo.png	app/Chrome/Chrome.apk	drawable/thumbnail_bookmarks_widget_no_bookmark_holo
+cr-overlay_url_bookmark_widget_holo.9.png	app/Chrome/Chrome.apk	drawable/overlay_url_bookmark_widget_holo
+cr-globe_incognito_favicon.png	app/Chrome/Chrome.apk	drawable/globe_incognito_favicon
+vv-widget_card_frame.9.png	priv-app/Velvet/Velvet.apk	drawable/widget_card_frame

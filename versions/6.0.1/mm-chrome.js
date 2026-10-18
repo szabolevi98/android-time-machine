@@ -28,6 +28,8 @@
   const A = n => `assets/cr-${n}.png`;
   const NTP = 'chrome-native://newtab/';
   const S = c => c.data.chrome || (c.data.chrome = {fre: false, history: [NTP], index: 0, bookmarks: [], visits: {}, desktop: false, report: true});
+  // Chrome's bookmarks widget (mm-widgets.js) shows the bookmarks made with the star.
+  MM.chromeBookmarks = c => S(c).bookmarks;
   const ui = c => c.ui.chrome || (c.ui.chrome = {editing: false, text: '', loading: 0, details: false});
   const esc = (c, s) => c.safe(s);
   const url = c => S(c).history[S(c).index];

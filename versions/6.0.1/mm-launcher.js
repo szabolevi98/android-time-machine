@@ -119,7 +119,8 @@
     const hotseat = h.hotseat.map((v, rank) => `<div class="mmh-hs" data-rank="${rank}" style="left:${dp(G.edge * 2 + rank * G.hsCellW)}">${v === 'allapps'
       ? `<button type="button" class="mmh-allapps" data-action="mmh-allapps" aria-label="${c.safe(t.t('all_apps_button_label'))}"></button>`
       : v ? icon(c, typeof v === 'string' ? {type: 'app', app: v} : v, 'hs', `hs:${rank}`) : ''}</div>`).join('');
-    const pages = h.pages.map((items, i) => pageHtml(c, items, i + 1)).join('');
+    // Workspace.addExtraEmptyScreenOnDrag: an empty page after the last one, reachable only while dragging.
+    const pages = h.pages.map((items, i) => pageHtml(c, items, i + 1)).join('') + `<div class="mmh-page mmh-extra" data-page="${h.pages.length + 1}" style="--i:${h.pages.length + 1}"><i class="mmh-panel"></i></div>`;
     const dots = [0, ...h.pages.map((_, i) => i + 1)].map(i => `<i class="${i === st.page ? 'on' : ''}"></i>`).join('');
     // search_drop_target_bar.xml: Remove and App info (Uninstall only for an app the user installed: none here).
     const targets = `<div class="mmh-targets"><span data-target="remove"><img src="assets/gel-ic_remove_launcher.png" alt="">${c.safe(t.t('delete_target_label'))}</span><span data-target="info"><img src="assets/gel-ic_info_launcher.png" alt="">${c.safe(t.t('info_target_label'))}</span></div>`;
@@ -198,9 +199,27 @@
     if (py < G.ws.bottom) return {kind: 'ws', x: Math.max(0, Math.min(4, Math.floor((px - G.ws.left) / G.cellW))), y: Math.max(0, Math.min(4, Math.floor((py - G.ws.top) / G.cellH))), fx: (px - G.ws.left) / G.cellW, fy: (py - G.ws.top) / G.cellH};
     return null;
   }
+  // DragController.checkScrollState: held within scroll_zone (20 dp) of a side for 500 ms, the workspace turns a page
+  // (to the extra empty one after the last).
+  function edgeScroll(c, root, x, r) {
+    const st = c.ui.home, d = st.dragging, zone = 20 * r.width / (G.W / PX), dir = x - r.left < zone ? -1 : r.right - x < zone ? 1 : 0;
+    if (dir === d.edgeDir) return;
+    clearTimeout(d.edgeTimer); d.edgeDir = dir;
+    if (!dir) return;
+    d.edgeTimer = setTimeout(() => {
+      const last = home(c).pages.length + 1, page = Math.max(1, Math.min(last, st.page + dir));
+      d.edgeDir = 0;
+      if (page === st.page || st.dragging !== d) return;
+      st.page = page;
+      const el = root.querySelector('.mmh');
+      el.style.setProperty('--page', page);
+      root.querySelectorAll('.mmh-dots i').forEach((dot, i) => dot.classList.toggle('on', i === page));
+    }, 500);
+  }
   function moveDrag(c, root, x, y) {
     const d = c.ui.home.dragging, r = root.querySelector('.mmh').getBoundingClientRect();
     d.view.style.left = `${x - r.left}px`; d.view.style.top = `${y - r.top}px`;
+    edgeScroll(c, root, x, r);
     const t = target(c, root, x, y);
     root.querySelectorAll('.mmh-targets span').forEach(s => s.classList.toggle('hover', !!t && s.dataset.target === t.kind));
     d.view.classList.toggle('remove', t?.kind === 'remove');
@@ -208,7 +227,12 @@
   function endDrag(c, root, x, y) {
     const st = c.ui.home, d = st.dragging, h = home(c);
     st.dragging = null;
+    clearTimeout(d.edgeTimer);
     const t = target(c, root, x, y), page = st.page > 0 ? st.page : 1;
+    // A drop on the extra page makes it a real one; Workspace.stripEmptyScreens drops the empty ones afterwards.
+    if (page > h.pages.length) h.pages.push([]);
+    const strip = () => { const keep = h.pages.filter((p, i) => !i || p.length); if (keep.length !== h.pages.length) { const cur = h.pages[st.page - 1]; h.pages = keep; st.page = Math.max(1, keep.indexOf(cur) + 1 || Math.min(st.page, keep.length)); } };
+    const saveRender = () => { strip(); c.save(); c.render(); };
     const app = d.item.type === 'app' ? d.item.app : null;
     // Taking the item out of where it was (a drawer item is a copy and leaves nothing behind).
     const take = () => {
@@ -217,45 +241,45 @@
       else if (d.from === 'fd') { const loc = folderOf(c, d.folder); loc.item.items.splice(d.index, 1); tidyFolder(h, loc); }
     };
     const wi = d.item.type === 'widget' ? MM.widgets.info(d.item.w) : null;
-    if (t?.kind === 'info' && (app || wi)) { c.render(); c.open('settings', `app:${app || wi.app}`); return; }
-    if (t?.kind === 'remove' && d.from !== 'drawer') { take(); c.save(); c.render(); return; }
+    if (t?.kind === 'info' && (app || wi)) { strip(); c.render(); c.open('settings', `app:${app || wi.app}`); return; }
+    if (t?.kind === 'remove' && d.from !== 'drawer') { take(); saveRender(); return; }
     const fresh = {...d.item};
     if (wi && t?.kind === 'ws') {
       // A widget (or a shortcut from the widgets list) goes to the nearest free area of its span on this page.
       const list = h.pages[page - 1], self = d.from === 'ws' ? locate(h, d.src).item : null;
       const at = nearest(list, t.fx - wi.spanX / 2 + .5, t.fy - wi.spanY / 2 + .5, wi.spanX, wi.spanY, self);
-      if (!at) { c.render(); c.toast(MM.widgets.outOfSpace(), false); return; }
+      if (!at) { strip(); c.render(); c.toast(MM.widgets.outOfSpace(), false); return; }
       // A shortcut's CREATE_SHORTCUT activity (its configuration screen) is not built yet.
-      if (wi.kind === 'shortcut') { c.render(); c.open('missing-shortcut'); return; }
+      if (wi.kind === 'shortcut') { strip(); c.render(); c.open('missing-shortcut'); return; }
       take();
       h.pages[page - 1].push({type: 'widget', w: wi.id, spanX: wi.spanX, spanY: wi.spanY, x: at.x, y: at.y});
-      c.save(); c.render(); return;
+      saveRender(); return;
     }
-    if (wi) { c.render(); return; }
+    if (wi) { strip(); c.render(); return; }
     if (t?.kind === 'ws') {
       const list = h.pages[page - 1];
       let hit = list.findIndex(it => covers(it, t.x, t.y));
       // Over a widget an icon takes the nearest free cell instead.
       if (hit >= 0 && list[hit].type === 'widget') {
         const at = nearest(list, t.fx, t.fy, 1, 1, d.from === 'ws' ? locate(h, d.src).item : null);
-        if (!at) { c.render(); c.toast(MM.widgets.outOfSpace(), false); return; }
+        if (!at) { strip(); c.render(); c.toast(MM.widgets.outOfSpace(), false); return; }
         t.x = at.x; t.y = at.y; hit = list.findIndex(it => covers(it, t.x, t.y));
       }
       const self = d.from === 'ws' && d.src === `ws:${page}:${hit}`;
       if (hit < 0 || self) { take(); const l2 = h.pages[page - 1]; l2.push({...fresh, x: t.x, y: t.y}); }
       else if (app && list[hit].type === 'app') { take(); const l2 = h.pages[page - 1], at = l2.findIndex(it => it.x === t.x && it.y === t.y); l2[at] = {type: 'folder', title: '', items: [l2[at].app, app], x: t.x, y: t.y}; }
       else if (app && list[hit].type === 'folder') { take(); const l2 = h.pages[page - 1], at = l2.findIndex(it => it.x === t.x && it.y === t.y); l2[at].items.push(app); }
-      else { c.render(); return; }
-      c.save(); c.render(); return;
+      else { strip(); c.render(); return; }
+      saveRender(); return;
     }
     if (t?.kind === 'hs' && h.hotseat[t.rank] !== 'allapps') {
       const cur = h.hotseat[t.rank], self = d.from === 'hs' && d.src === `hs:${t.rank}`;
       if (!cur || self) { take(); h.hotseat[t.rank] = fresh.type === 'app' ? fresh.app : fresh; }
       else if (app && typeof cur === 'string') { take(); h.hotseat[t.rank] = {type: 'folder', title: '', items: [cur, app]}; }
       else if (app && cur.type === 'folder') { take(); h.hotseat[t.rank].items.push(app); }
-      c.save(); c.render(); return;
+      saveRender(); return;
     }
-    c.render();
+    strip(); c.render();
   }
 
   function mount(c, root) {

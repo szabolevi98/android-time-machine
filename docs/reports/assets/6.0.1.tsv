@@ -99,6 +99,8 @@ versions/6.0.1/assets/cm-ic_timer_10s_normal.png	08aa2f18d822e393	copy	bullhead:
 versions/6.0.1/assets/cm-ic_timer_3s_normal.png	240fc5b8e46195e8	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_timer_3s_normal.png	drawable-xxhdpi-v4		240fc5b8e46195e8
 versions/6.0.1/assets/cm-ic_timer_off_normal.png	77950f304d39ec21	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_timer_off_normal.png	drawable-xxhdpi-v4		77950f304d39ec21
 versions/6.0.1/assets/cm-ic_video_normal.png	96941d80cad37ae0	copy	bullhead:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_video_normal.png	drawable-xxhdpi-v4		96941d80cad37ae0
+versions/6.0.1/assets/cr-bg_bookmarks_widget_holo.9.png	44b223d0b54618d6	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-nodpi-v4/bg_bookmarks_widget_holo.9.png	drawable-nodpi-v4		44b223d0b54618d6
+versions/6.0.1/assets/cr-border_thumb_bookmarks_widget_holo.9.png	82bed21d48d1116c	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xhdpi-v4/border_thumb_bookmarks_widget_holo.9.png	drawable-xhdpi-v4		82bed21d48d1116c
 versions/6.0.1/assets/cr-btn_close.png	cb24830b19923a6f	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/btn_close.png	drawable-xxhdpi-v4		cb24830b19923a6f
 versions/6.0.1/assets/cr-btn_delete_url.png	7fa8a0ccc8e334d7	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/btn_delete_url.png	drawable-xxhdpi-v4		7fa8a0ccc8e334d7
 versions/6.0.1/assets/cr-btn_info.png	24c8e8e60dc7aba1	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/btn_info.png	drawable-xxhdpi-v4		24c8e8e60dc7aba1
@@ -110,12 +112,15 @@ versions/6.0.1/assets/cr-btn_star.png	ea4be7aafef466f2	copy	bullhead:/system/app
 versions/6.0.1/assets/cr-btn_star_filled.png	4d045fa869f76f83	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/btn_star_filled.png	drawable-xxhdpi-v4		4d045fa869f76f83
 versions/6.0.1/assets/cr-btn_toolbar_reload.png	d14bc8f53f95139f	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/btn_toolbar_reload.png	drawable-xxhdpi-v4		d14bc8f53f95139f
 versions/6.0.1/assets/cr-fre_product_logo.png	ac8ac986e4197f5c	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/fre_product_logo.png	drawable-xxhdpi-v4		ac8ac986e4197f5c
+versions/6.0.1/assets/cr-globe_incognito_favicon.png	e1eaf460dbcdcc72	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xhdpi-v4/globe_incognito_favicon.png	drawable-xhdpi-v4		e1eaf460dbcdcc72
 versions/6.0.1/assets/cr-google_logo.png	6cf17ef198ab82ba	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/google_logo.png	drawable-xxhdpi-v4		6cf17ef198ab82ba
 versions/6.0.1/assets/cr-ic_most_visited_placeholder.png	0426d1c003f1a9ad	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/ic_most_visited_placeholder.png	drawable-xxhdpi-v4		0426d1c003f1a9ad
 versions/6.0.1/assets/cr-ic_omnibox_magnifier.png	df8bd2edc0b1b19b	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/ic_omnibox_magnifier.png	drawable-xxhdpi-v4		df8bd2edc0b1b19b
 versions/6.0.1/assets/cr-ic_omnibox_page.png	a16737ffc63e1997	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/ic_omnibox_page.png	drawable-xxhdpi-v4		a16737ffc63e1997
 versions/6.0.1/assets/cr-omnibox_https_valid.png	34f4af6b46b467ba	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/omnibox_https_valid.png	drawable-xxhdpi-v4		34f4af6b46b467ba
+versions/6.0.1/assets/cr-overlay_url_bookmark_widget_holo.9.png	efdeee1ec85505ae	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xhdpi-v4/overlay_url_bookmark_widget_holo.9.png	drawable-xhdpi-v4		efdeee1ec85505ae
 versions/6.0.1/assets/cr-textbox.9.png	d02d84eecc307fa4	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/textbox.9.png	drawable-xxhdpi-v4		d02d84eecc307fa4
+versions/6.0.1/assets/cr-thumbnail_bookmarks_widget_no_bookmark_holo.png	835d3d1f5a5afa9e	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xhdpi-v4/thumbnail_bookmarks_widget_no_bookmark_holo.png	drawable-xhdpi-v4		835d3d1f5a5afa9e
 versions/6.0.1/assets/cr-toolbar_shadow_normal.png	0d86fddbcfa773e9	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/toolbar_shadow_normal.png	drawable-xxhdpi-v4		0d86fddbcfa773e9
 versions/6.0.1/assets/ct-fab_blue.png	4db487e978edfe1c	copy	bullhead:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxhdpi-v4/fab_blue.png	drawable-xxhdpi-v4		4db487e978edfe1c
 versions/6.0.1/assets/ct-ic_ab_search.png	e2cf3d0c2df20b47	copy	bullhead:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxhdpi-v4/ic_ab_search.png	drawable-xxhdpi-v4		e2cf3d0c2df20b47
@@ -285,6 +290,7 @@ versions/6.0.1/assets/gel-screenpanel.9.png	5367af4067b16862	copy	bullhead:/syst
 versions/6.0.1/assets/gel-search_bg.9.png	023562590363b025	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/search_bg.9.png	drawable-xxhdpi-v4		023562590363b025
 versions/6.0.1/assets/gm-abc_ic_search_api_mtrl_alpha.png	f1136d0c76acb788	copy	bullhead:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/abc_ic_search_api_mtrl_alpha.png	drawable-xxhdpi-v4		f1136d0c76acb788
 versions/6.0.1/assets/gm-avatar_placeholder.png	e5a4072a512488e5	copy	bullhead:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/avatar_placeholder.png	drawable-xxhdpi-v4		e5a4072a512488e5
+versions/6.0.1/assets/gm-gradient_bg_widget_holo.9.png	1618e7488c8afac2	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/gradient_bg_widget_holo.9.png	drawable-xxhdpi-v4		1618e7488c8afac2
 versions/6.0.1/assets/gm-ic_archive_wht_24dp.png	73c969811b8d48c2	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_archive_wht_24dp.png	drawable-xxhdpi-v4		73c969811b8d48c2
 versions/6.0.1/assets/gm-ic_arrow_back_wht_24dp.png	93d01cbffe38b055	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_arrow_back_wht_24dp.png	drawable-xxhdpi-v4		93d01cbffe38b055
 versions/6.0.1/assets/gm-ic_attach_file_wht_24dp.png	391d1cd08e6e1407	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_attach_file_wht_24dp.png	drawable-xxhdpi-v4		391d1cd08e6e1407
@@ -605,6 +611,7 @@ versions/6.0.1/assets/vv-context_header_bg_twilight.jpg	51986f68d57fffda	copy	bu
 versions/6.0.1/assets/vv-optin_minicard_ic_flight.png	9043a9e1f9f98de4	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/optin_minicard_ic_flight.png	drawable-nodpi-v4		9043a9e1f9f98de4
 versions/6.0.1/assets/vv-optin_minicard_ic_train.png	e1760baa4d223ede	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/optin_minicard_ic_train.png	drawable-nodpi-v4		e1760baa4d223ede
 versions/6.0.1/assets/vv-optin_minicard_ic_weather.png	248d7577c025af71	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/optin_minicard_ic_weather.png	drawable-nodpi-v4		248d7577c025af71
+versions/6.0.1/assets/vv-widget_card_frame.9.png	97e8a2643cbedc41	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/widget_card_frame.9.png	drawable-xxhdpi-v4		97e8a2643cbedc41
 versions/6.0.1/assets/vw-widget_tile.png	00bcc498b7a94a70	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/widget_tile.png	drawable-xxhdpi-v4		00bcc498b7a94a70
 versions/6.0.1/assets/wa-ic_add.png	c63e09363eb080a0	copy	bullhead:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c63e09363eb080a0
 versions/6.0.1/assets/wa-tp_logo_android_pay_color_48dp.png	1bfb146418cb2661	copy	bullhead:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_logo_android_pay_color_48dp.png	drawable-xxhdpi-v4		1bfb146418cb2661

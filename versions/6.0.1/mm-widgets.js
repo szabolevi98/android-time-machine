@@ -175,6 +175,44 @@
     const now = new Date();
     switch (item.w) {
       case 'calendar': return calendarWidget(c);
+      case 'messenger-list': {
+        // Messenger 1.4's widget_conversation_list.xml: 8 dp in, the 48 dp header in primary_color #0288d1 (2 dp top
+        // corners, "Messenger" in the action bar title style, ic_add_white), a 1 dp #aaaaaa line, the white list with
+        // 2 dp bottom corners; widget_conversation_list_item.xml rows 72 dp: the 42 dp avatar (8 dp before, 12 after),
+        // the name 18 sp and the date 12 sp in #424242, the last message 13 sp in up to two lines.
+        const list = MM.messengerWidget ? MM.messengerWidget(c) : [];
+        const rows = list.map(x => `<button type="button" class="row${x.unread ? ' unread' : ''}" data-action="mmwg-open" data-app="messenger">${x.avatar}<span class="body"><span class="top"><b>${c.safe(x.name)}</b><small>${c.safe(x.when)}</small></span><span class="snip">${c.safe(x.text)}</span></span></button>`).join('');
+        return `<div class="mmwg-ms"><div class="head"><button type="button" class="title" data-action="mmwg-open" data-app="messenger">${c.safe(T().t('PrebuiltBugle/widget_conversation_name'))}</button><button type="button" class="add" data-action="mmwg-open" data-app="messenger"><img src="assets/bg-ic_add_white.png" alt=""></button></div><i class="line"></i><div class="list">${rows}</div></div>`;
+      }
+      case 'now': {
+        // predictive_cards_widget.xml: the cards in widget_card_frame; without Google Now turned on, no_cards' white
+        // text on the frame, widget_get_now. With it on, widget_card_three_line.xml rows (68 dp, 18 dp text and 14 dp
+        // small text in qp_text_b2 #84000000) with the simulator's own cards, the weather and the next event.
+        if (c.data.now !== 'on') return `<button type="button" class="mmwg-now off np-vv-widget_card_frame" data-action="mmwg-open" data-app="search"><span>${c.safe(T().t('Velvet/widget_get_now'))}</span></button>`;
+        const next = (MM.calendarEvents ? MM.calendarEvents(c) : []).filter(e => e.date >= new Date().toISOString().slice(0, 10)).sort((a, b) => (a.date + (a.start || '')).localeCompare(b.date + (b.start || '')))[0];
+        const card = (l1, l2) => `<span class="card"><b>${c.safe(l1)}</b><small>${c.safe(l2)}</small></span>`;
+        return `<button type="button" class="mmwg-now np-vv-widget_card_frame" data-action="mmwg-open" data-app="search">${card('18° Riverside', 'Partly cloudy')}${next ? card(next.title, (() => { const [y, m, d] = next.date.split('-').map(Number), [hh, mm] = (next.start || '0:0').split(':').map(Number); return new Intl.DateTimeFormat(c.locale(), {weekday: 'long', ...(next.start ? {hour: 'numeric', minute: '2-digit'} : {})}).format(new Date(y, m - 1, d, hh, mm)); })()) : ''}</button>`;
+      }
+      case 'bookmarks': {
+        // Chrome 44's bookmark_thumbnail_widget.xml: a GridView on bg_bookmarks_widget_holo (80 dp columns stretched,
+        // 6 dp apart) of bookmark_thumbnail_widget_item.xml (the 94 dp thumbnail in border_thumb_bookmarks_widget_holo,
+        // no page thumbnail here so thumbnail_bookmarks_widget_no_bookmark_holo; the overlay_url_bookmark_widget_holo bar
+        // with the 16 dp favicon, globe_incognito_favicon, and the 12 sp bold black title), and the app_shortcut icon at
+        // the bottom right. The bookmarks are the ones starred in Chrome.
+        const list = (MM.chromeBookmarks ? MM.chromeBookmarks(c) : []).map(url => MM.web?.page(url) || {url, title: url});
+        const items = list.map(p => `<button type="button" class="item" data-action="mmwg-url" data-url="${c.safe(p.url)}"><span class="thumb np-cr-border_thumb_bookmarks_widget_holo"><img src="assets/cr-thumbnail_bookmarks_widget_no_bookmark_holo.png" alt=""></span><span class="ovl np-cr-overlay_url_bookmark_widget_holo"><img src="assets/cr-globe_incognito_favicon.png" alt=""><b>${c.safe(p.title)}</b></span></button>`).join('');
+        return `<div class="mmwg-bm np-cr-bg_bookmarks_widget_holo"><div class="grid">${items}</div><button type="button" class="app" data-action="mmwg-open" data-app="chrome"><img src="${MM.appsData.chrome?.icon}" alt=""></button></div>`;
+      }
+      case 'gmail': {
+        // widget.xml: the 48 dp primary_color header (16 dp in, the folder in the action bar title style, the compose
+        // button ic_pencil_wht_24dp 56 dp wide) over gradient_bg_widget_holo; widget_conversation_list_item.xml rows
+        // (72 sp) built as Gmail's widget builder does: the senders 18 sp, the date 12 sp (accent_blue when unread,
+        // else text_color_grey), the subject 13 sp (bold gray_87pc when unread, else gray_54pc) and the snippet 13 sp
+        // grey; dividers 0.5 dp gray_10pc.
+        const g = MM.gmailWidget ? MM.gmailWidget(c) : {title: '', items: [], date: () => ''};
+        const rows = g.items.slice(0, 25).map(m => `<button type="button" class="mmwg-gm-row${m.unread ? ' unread' : ''}" data-action="mmwg-open" data-app="gmail"><span class="top"><b>${c.safe(m.from)}</b><small>${c.safe(g.date(m.time))}</small></span><span class="subj">${c.safe(m.subject)}</span><span class="snip">${c.safe(m.body)}</span></button>`).join('');
+        return `<div class="mmwg-gm"><div class="mmwg-gm-head"><button type="button" class="title" data-action="mmwg-open" data-app="gmail">${c.safe(g.title)}</button><button type="button" class="compose" data-action="mmwg-open" data-app="gmail"><img src="assets/gm-ic_pencil_wht_24dp.png" alt=""></button></div><div class="mmwg-gm-list np-gm-gradient_bg_widget_holo">${rows}</div></div>`;
+      }
       case 'music':
         // music_widget_small.xml in NowPlayingWidgetUtils.showEmptyState (nothing played yet): ic_widget_headphone as the
         // 73 dp album art, the app's name as the track, and the button row (prev, play, next; no thumbs without a
@@ -208,6 +246,7 @@
   function action(name, el, event, c) {
     if (name === 'mmwg-tap') { if (c.ui.widgetsHeld) { c.ui.widgetsHeld = false; return true; } c.toast(T().t('Velvet/long_press_widget_to_add'), false); return true; }
     if (name === 'mmwg-open') { c.open(el.dataset.app); return true; }
+    if (name === 'mmwg-url') { c.open('chrome', `url:${el.dataset.url}`); return true; }
     if (name === 'mmwg-sound') { c.open('missing-sound-search'); return true; }
     return false;
   }

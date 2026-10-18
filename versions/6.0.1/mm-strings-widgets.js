@@ -282,5 +282,13 @@ MM.strings('widgets', {
 "de": "%s Ort: %s",
 "fr": "%s (lieu : %s)",
 "es": "%s en %s"
+},
+"Velvet/widget_get_now": {
+"res": "bullhead:Velvet:widget_get_now",
+"en": "Get Google Now",
+"hu": "A Google Asszisztens beszerzése",
+"de": "Google Now aktivieren",
+"fr": "Découvrez Google Now",
+"es": "Descargar Google Now"
 }
 });

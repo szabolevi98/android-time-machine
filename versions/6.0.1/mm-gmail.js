@@ -57,6 +57,8 @@
     return new Intl.DateTimeFormat(loc, {year: '2-digit', month: 'numeric', day: 'numeric'}).format(d);
   }
   const avatar = (c, name, cls) => P().tile(c, {name}, cls);
+  // Gmail's widget (mm-widgets.js) lists the Primary inbox with the same dates.
+  MM.gmailWidget = c => ({title: folderName(c, 'primary'), items: mail(c).filter(m => inFolder(m, 'primary')).sort((a, b) => b.time - a.time), date: time => date(c, time)});
 
   // ---- first run ---------------------------------------------------------------------------------------------------
   function tour(c) {

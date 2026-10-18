@@ -51,6 +51,9 @@
     return new Intl.DateTimeFormat(loc, {year: '2-digit', month: 'numeric', day: 'numeric'}).format(date);
   }
   const thread = (c, id) => threads(c).find(x => x.id === +id);
+  // Messenger's conversation list widget (mm-widgets.js) shows the same list.
+  MM.messengerWidget = c => threads(c).filter(x => !x.archived && x.messages.length).sort((a, b) => b.messages.at(-1).time - a.messages.at(-1).time)
+    .map(x => ({id: x.id, name: nameOf(c, x.number), avatar: avatar(c, x.number, 'mmwg-ms-av'), when: when(c, x.messages.at(-1).time, true), text: x.messages.at(-1).text, unread: !x.read}));
   const threadFor = (c, number) => threads(c).find(x => P().same(x.number, number));
 
   // ---- conversation list ------------------------------------------------------------------------------------------
