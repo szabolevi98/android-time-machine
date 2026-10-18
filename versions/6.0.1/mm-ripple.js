@@ -17,7 +17,7 @@
   const DP = () => { const s = document.querySelector('#screen'); return s?.clientWidth ? s.clientWidth / 411.43 : .833; };
   const DENSITY = 2.625, PX = () => DP() / DENSITY;   // CSS px per device px
   const TARGETS = 'button, [role="button"], a[href], [data-action], label';
-  const SKIP = '.mmh-icon, .mmh-widget, .mmh-wcell, .mmh-qsb, .mmd-app, .mmwg-cell, .mmlk, .mmbo-key, #status-bar, #nav-bar, .mmrc-task, .mmrc, .mmqs-slider, .mmime, .mmh-fname, .mmsh-scrim, .mmmenu-out, .mmdlg-dim, .no-ripple, [disabled], [aria-disabled="true"], .mm-leaving, .mm-overlay-ghost, input, textarea, select';
+  const SKIP = '.mmh-fscrim, .mmh-cling, .mmh-icon, .mmh-widget, .mmh-wcell, .mmh-qsb, .mmd-app, .mmwg-cell, .mmlk, .mmbo-key, #status-bar, #nav-bar, .mmrc-task, .mmrc, .mmqs-slider, .mmime, .mmh-fname, .mmsh-scrim, .mmmenu-out, .mmdlg-dim, .no-ripple, [disabled], [aria-disabled="true"], .mm-leaving, .mm-overlay-ghost, input, textarea, select';
   const log = t => (1 - Math.pow(400, -t / 1.4)) / (1 - Math.pow(400, -1 / 1.4));
   let layer = null, active = null;
   const reduced = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -59,6 +59,8 @@
   function press(el, event, screen) {
     const box = screen.getBoundingClientRect(), rect = el.getBoundingClientRect();
     if (rect.width < 4 || rect.height < 4) return null;
+    // Scrims and other screen-sized touch areas (a folder's, a dialog's outside) have no ripple.
+    if (rect.width >= box.width * .9 && rect.height >= box.height * .5) return null;
     const free = borderless(el, rect), dark = onDark(el, screen), node = document.createElement('div');
     const w = rect.width, h = rect.height;
     node.className = `mmrp${free ? ' free' : ''}${dark ? ' dark' : ''}`;

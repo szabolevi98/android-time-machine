@@ -188,8 +188,34 @@
     const left = Math.min(Math.max(G.ws.left, cx - w / 2), G.ws.right - w), top = Math.min(Math.max(G.ws.top, cy - hgt / 2), G.ws.bottom - hgt);
     const cells = f.items.map((id, i) => `<div class="mmh-fcell" style="left:${dp(inset + padX + (i % cols) * G.folderCellW)};top:${dp(inset + padTop + Math.floor(i / cols) * G.folderCellH)}">${icon(c, {type: 'app', app: id}, 'fd', `fd:${i}`)}</div>`).join('');
     const title = folderTitle(c, f);
-    return `<div class="mmh-fscrim" data-action="mmh-close-folder"></div><div class="mmh-fpanel" style="left:${dp(left)};top:${dp(top)};width:${dp(w)};height:${dp(hgt)};--ox:${dp(cx - left)};--oy:${dp(cy - top)}">
+    return `<div class="mmh-fscrim" data-action="mmh-close-folder"></div><div class="mmh-fpanel" style="left:${dp(left)};top:${dp(top)};width:${dp(w)};height:${dp(hgt)};--ox:${dp(cx - left)};--oy:${dp(cy - top)}" data-geo="${[w, hgt, cx - left, cy - top].map(v => (v / PX).toFixed(2)).join(' ')}">
       <div class="mmh-fgrid">${cells}</div><input class="mmh-fname" style="top:${dp(inset + padTop + rows * G.folderCellH)}" value="${c.safe(title)}" placeholder="${c.safe(T().t('folder_hint_text'))}" spellcheck="false"></div>`;
+  }
+
+  /* Folder.animateOpen (Launcher3 6.0.1, ATLEAST_LOLLIPOP): a circular reveal from the folder icon's centre to the
+     farthest corner over config_materialFolderExpandDuration 200 ms (LogDecelerateInterpolator 100, 0), the panel drifting
+     in from 7.5 % of the way to the icon and the icons and the name fading in (AccelerateInterpolator 1.5), both after
+     config_materialFolderExpandStagger 60 ms. animateClosed: to alpha 0 and scale 0.9 in config_folderExpandDuration
+     120 ms about the same pivot. */
+  const logDecel = t => (1 - Math.pow(100, -t)) / (1 - 1 / 100);
+  function folderOpenAnim(c, panel) {
+    if (!panel?.animate || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    const k = c.el.viewport.clientWidth / 411.4286, [w, h, ox, oy] = panel.dataset.geo.split(' ').map(v => +v * k);
+    const r = Math.hypot(Math.max(w - ox, ox), Math.max(h - oy, oy)), tx = -.075 * (w / 2 - ox), ty = -.075 * (h / 2 - oy);
+    const n = 12, steps = f => Array.from({length: n + 1}, (_, i) => f(i / n));
+    panel.animate(steps(t => ({offset: t, clipPath: `circle(${(r * logDecel(t)).toFixed(1)}px at ${ox}px ${oy}px)`})), {duration: 200});
+    panel.animate(steps(t => ({offset: t, transform: `translate(${(tx * (1 - logDecel(t))).toFixed(2)}px, ${(ty * (1 - logDecel(t))).toFixed(2)}px)`})), {duration: 200, delay: 60, fill: 'backwards'});
+    for (const el of panel.querySelectorAll('.mmh-fgrid, .mmh-fname')) el.animate(steps(t => ({offset: t, opacity: Math.pow(t, 3)})), {duration: 200, delay: 60, fill: 'backwards'});
+  }
+  function closeFolder(c, then) {
+    const st = c.ui.home, panel = c.el.viewport.querySelector('.mmh-fpanel');
+    st.folder = null; st.folderShown = null;
+    if (!panel?.animate) { then ? then() : c.render(); return; }
+    panel.remove();
+    if (then) then(); else c.render();
+    const root = c.el.viewport.querySelector('.mmh') || c.el.viewport;
+    panel.style.pointerEvents = 'none'; root.append(panel);
+    panel.animate([{opacity: 1, transform: 'none'}, {opacity: 0, transform: 'scale(.9)'}], {duration: 120, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards'}).finished.then(() => panel.remove(), () => panel.remove());
   }
 
   // Removing an item from a folder: one left replaces the folder (Folder.replaceFolderWithFinalItem), none removes it.
@@ -332,6 +358,9 @@
     const el = root.querySelector('.mmh'), strip = root.querySelector('.mmh-strip');
     if (!el) return;
     const st = c.ui.home, h = home(c), last = h.pages.length;
+    // A folder plays its opening once (a re-render while it is open keeps it as it is).
+    if (st.folder && st.folderShown !== st.folder) { st.folderShown = st.folder; folderOpenAnim(c, el.querySelector('.mmh-fpanel')); }
+    if (!st.folder) st.folderShown = null;
     const name = el.querySelector('.mmh-fname');
     name?.addEventListener('change', () => { const loc = folderOf(c, st.folder); if (loc) { loc.item.title = name.value; c.save(); } });
     name?.addEventListener('keydown', e => { if (e.key === 'Enter') name.blur(); e.stopPropagation(); });
@@ -422,7 +451,7 @@
     app: false,
     render, mount,
     reset(c) { if (c.ui.home) { Object.assign(c.ui.home, {folder: null, overview: false}); if (!c.ui.home.pendingDrag) c.ui.home.page = 1; } },
-    back(c) { const st = c.ui.home; if (st?.folder || st?.overview) { st.folder = null; st.overview = false; c.render(); } return true; },
+    back(c) { const st = c.ui.home; if (st?.folder) { closeFolder(c); return true; } if (st?.overview) { st.overview = false; c.render(); } return true; },
     action(name, el, event, c) {
       const st = c.ui.home;
       if (st?.suppressClick) { st.suppressClick = false; return true; }
@@ -430,7 +459,7 @@
       if (name === 'mmh-app') { if (st.folder) st.folder = null; c.open(el.dataset.app, '', {from: el.querySelector('img')}); return true; }
       if (name === 'mmh-folder') { st.folder = el.dataset.src; c.render(); return true; }
       if (name === 'mmh-sc') { const it = locate(home(c), el.dataset.src)?.item; if (st.folder) st.folder = null; if (it) MM.openShortcut?.(c, it); return true; }
-      if (name === 'mmh-close-folder') { st.folder = null; c.render(); return true; }
+      if (name === 'mmh-close-folder') { closeFolder(c); return true; }
       if (name === 'mmh-allapps') { c.open('drawer'); return true; }
       if (name === 'mmh-search') { MM.googleOpen ? MM.googleOpen(c, false) : c.open('search'); return true; }
       if (name === 'mmh-voice') { MM.googleOpen ? MM.googleOpen(c, true) : c.open('search', 'voice'); return true; }
