@@ -54,6 +54,7 @@
     const total = list.reduce((a, e) => a + e[3], 0), max = Math.max(...list.map(e => e[3]));
     return list.sort((a, b) => b[3] - a[3]).map(([key, label, icon, v]) => ({key, label, icon, share: v / total * 100, of: v / max * 100}));
   }
+  MM.batteryEntries = entries;
   function render(c) {
     const t = T();
     const rows = entries(c).map(e => `<button type="button" class="mmap-row" data-action="mmbt-entry" data-key="${e.key}">${e.icon.mask ? `<i class="mmbt-ic" style="-webkit-mask-image:url('assets/${e.icon.mask}');mask-image:url('assets/${e.icon.mask}')"></i>` : `<img src="assets/${e.icon.img}" alt="">`}<span class="mmap-texts"><span class="mmap-line"><span class="mmap-label">${c.safe(e.label)}</span><span class="mmap-size">${c.safe(pct(c, Math.round(e.share)))}</span></span><span class="mmbt-bar"><i style="width:${Math.ceil(e.of)}%"></i></span></span></button>`).join('');
@@ -67,13 +68,13 @@
       const t = T();
       if (name === 'mm-menu') {
         c.menu([{label: t.t('battery_saver'), action: c => MM.settingsGo(c, 'xml:battery_saver_settings', t.t('battery_saver'))},
-          {label: t.t('high_power_apps'), action: c => MM.settingsGo(c, 'missing:com.android.settings.fuelgauge.HighPowerApps', t.t('high_power_apps'))}]);
+          {label: t.t('high_power_apps'), action: c => MM.settingsGo(c, 'high-power', t.t('high_power_apps'))}]);
         return true;
       }
       if (name === 'mmbt-entry') {
         const key = el.dataset.key;
         if (key.startsWith('app:')) MM.settingsGo(c, key, t.t('application_info_label'));
-        else MM.settingsGo(c, `missing:com.android.settings.fuelgauge.PowerUsageDetail#${key}`, '');
+        else MM.settingsGo(c, `batt:${key}`, T().t('details_title'));
         return true;
       }
       return false;

@@ -60,6 +60,16 @@
     }
   }
   // RingtonePickerActivity: None first (showSilent), then the titles; OK keeps the choice.
+  // RingtonePickerActivity for an app (RingtoneManager.ACTION_RINGTONE_PICKER): the default sound's row
+  // (EXTRA_RINGTONE_SHOW_DEFAULT, titled by the app), Silent, then the sounds of the type; onPick gets 'default', '' or a title.
+  MM.ringtonePicker = (c, {kind, current, defaultTitle, onPick}) => {
+    const f = F(), list = [...(defaultTitle ? ['default'] : []), '', ...MM.settingsRingtones[kind].titles];
+    let pick = Math.max(0, list.indexOf(current ?? (defaultTitle ? 'default' : '')));
+    const label = v => v === 'default' ? defaultTitle : v || f.t('ringtone_silent');
+    c.dialog({title: f.t('ringtone_picker_title'), keepOpen: true, items: list.map((v, i) => ({html: `<span class="mmst-choice"><i class="mmw-radio${i === pick ? ' on' : ''}"></i><span>${c.safe(label(v))}</span></span>`})),
+      onItem: (i, c) => { pick = i; c.el.overlay.querySelectorAll('.mmdlg-item .mmw-radio').forEach((r, j) => r.classList.toggle('on', j === i)); },
+      buttons: [{label: f.t('cancel')}, {label: f.t('ok'), action: c => onPick(c, list[pick])}]});
+  };
   function picker(c, kind) {
     const f = F(), list = ['', ...MM.settingsRingtones[kind].titles], cur = tone(c, kind);
     let pick = list.indexOf(cur);
@@ -164,17 +174,106 @@
       return true;
     }
   };
-  const RULES = [['framework/zen_mode_default_weeknights_name', 'ic_schedule'], ['framework/zen_mode_default_weekends_name', 'ic_schedule'], ['framework/zen_mode_default_events_name', 'ic_event']];
+  /* Automatic rules (ZenModeAutomationSettings) over ZenModeConfig's automaticRules, the framework's defaults first:
+     Weeknight (Sun–Thu 22:00–07:00) and Weekend (Fri–Sat 23:30–10:00) schedules, Event (any calendar, Yes or Maybe),
+     all off. A rule opens ZenModeScheduleRuleSettings (the switch bar, Rule name, Days, Start time, End time with
+     "next day" when it ends earlier, Do not disturb: Priority only / Alarms only / Total silence) or
+     ZenModeEventRuleSettings (Rule name, During events for, Where reply is, Do not disturb), Delete rule in the
+     overflow. Add rule asks the name (ZenRuleNameDialog) and the type (Time rule / Event rule). */
+  const ZEN = [['important_interruptions', 1], ['alarms', 3], ['no_interruptions', 2]];
+  const REPLIES = ['zen_mode_event_rule_reply_any_except_no', 'zen_mode_event_rule_reply_yes_or_maybe', 'zen_mode_event_rule_reply_yes'];
+  const DEFAULT_RULES = () => [
+    {id: 1, name: 'framework/zen_mode_default_weeknights_name', kind: 'schedule', on: false, days: [0, 1, 2, 3, 4], start: [22, 0], end: [7, 0], mode: 1},
+    {id: 2, name: 'framework/zen_mode_default_weekends_name', kind: 'schedule', on: false, days: [5, 6], start: [23, 30], end: [10, 0], mode: 1},
+    {id: 3, name: 'framework/zen_mode_default_events_name', kind: 'event', on: false, reply: 1, mode: 1}];
+  const rules = c => S(c).zenRules || (S(c).zenRules = DEFAULT_RULES());
+  const ruleName = r => r.name.startsWith('framework/') ? T().t(r.name) : r.name;
+  const hm = (c, [h, m]) => new Intl.DateTimeFormat(c.locale(), {hour: 'numeric', minute: '2-digit', hour12: !(c.data.settings.time24 ?? !new Intl.DateTimeFormat(c.locale(), {hour: 'numeric'}).resolvedOptions().hour12)}).format(new Date(2016, 0, 3, h, m));
+  // Days in the locale's week order (Calendar.getFirstDayOfWeek), short names joined as ZenModeScheduleDaysSelection does.
+  const firstDay = c => (new Intl.Locale(c.locale()).weekInfo?.firstDay ?? 1) % 7;
+  const weekOrder = c => Array.from({length: 7}, (_, i) => (firstDay(c) + i) % 7);
+  const dayName = (c, d, style = 'short') => new Intl.DateTimeFormat(c.locale(), {weekday: style}).format(new Date(2016, 0, 3 + d));
+  function daysText(c, r) {
+    const t = T();
+    if (!r.days.length) return t.t('zen_mode_schedule_rule_days_none');
+    if (r.days.length === 7) return t.t('zen_mode_schedule_rule_days_all');
+    return weekOrder(c).filter(d => r.days.includes(d)).map(d => dayName(c, d)).join(', ');
+  }
+  function summary(c, r) {
+    const t = T();
+    if (!r.on) return t.t('switch_off_text');
+    if (r.kind === 'event') return t.fmt('zen_mode_rule_summary_combination', null, t.fmt('zen_mode_event_rule_summary_calendar_template', null, t.t('zen_mode_event_rule_summary_any_calendar')), t.fmt('zen_mode_event_rule_summary_reply_template', null, t.t(REPLIES[r.reply]).toLowerCase()));
+    return t.fmt('zen_mode_rule_summary_combination', null, daysText(c, r), `${hm(c, r.start)} – ${hm(c, r.end)}`);
+  }
   MM.settingsScreens['xml:zen_mode_automation_settings'] = {
     title: () => T().t('zen_mode_automation_settings_title'),
     render(c) {
-      const t = T(), row = (icon, title, summary, action) => `<button type="button" class="mmst-pref" data-action="${action}"><span class="mmst-iconframe"><img class="mmst-ic" src="assets/st-${icon}.svg" alt=""></span><span class="mmst-texts"><span class="mmst-title">${c.safe(title)}</span>${summary ? `<span class="mmst-summary">${c.safe(summary)}</span>` : ''}</span></button>`;
-      return `<div class="mmst-list">${RULES.map(([name, icon]) => row(icon, t.t(name), t.t('switch_off_text'), 'mmzr-rule')).join('')}${row('ic_add', t.t('zen_mode_add_rule'), '', 'mmzr-add')}</div>`;
+      const t = T(), row = (icon, title, sum, action, id = '') => `<button type="button" class="mmst-pref" data-action="${action}" data-id="${id}"><span class="mmst-iconframe"><img class="mmst-ic" src="assets/st-${icon}.svg" alt=""></span><span class="mmst-texts"><span class="mmst-title">${c.safe(title)}</span>${sum ? `<span class="mmst-summary">${c.safe(sum)}</span>` : ''}</span></button>`;
+      return `<div class="mmst-list">${rules(c).map(r => row(r.kind === 'event' ? 'ic_event' : 'ic_schedule', ruleName(r), summary(c, r), 'mmzr-rule', r.id)).join('')}${row('ic_add', t.t('zen_mode_add_rule'), '', 'mmzr-add')}</div>`;
     },
-    action(c, name) {
-      if (name === 'mmzr-rule') { MM.settingsGo(c, 'missing:com.android.settings.notification.ZenModeScheduleRuleSettings', ''); return true; }
-      if (name === 'mmzr-add') { MM.settingsGo(c, 'missing:com.android.settings.notification.ZenRuleNameDialog', ''); return true; }
-      return false;
+    action(c, name, el) {
+      const t = T();
+      if (name === 'mmzr-rule') { MM.settingsGo(c, `zen-rule:${el.dataset.id}`, ''); return true; }
+      if (name !== 'mmzr-add') return false;
+      let value = '';
+      c.dialog({title: t.t('zen_mode_add_rule'), html: `<div class="mmst-edit"><input type="text" class="mmst-input mmzr-name" placeholder="${c.safe(t.t('zen_mode_rule_name_hint'))}" spellcheck="false"></div>`,
+        mount(c, win) { const i = win.querySelector('.mmzr-name'); i.addEventListener('input', () => { value = i.value.trim(); }); setTimeout(() => i.focus(), 50); },
+        buttons: [{label: t.t('cancel')}, {label: t.t('framework/ok'), action: c => {
+          if (!value) return;
+          if (rules(c).some(r => ruleName(r) === value)) { c.toast(t.t('zen_mode_rule_name_warning')); return; }
+          c.dialog({title: t.t('zen_mode_rule_type'), items: [{html: c.safe(t.t('zen_schedule_rule_type_name'))}, {html: c.safe(t.t('zen_event_rule_type_name'))}], onItem: (i, c) => {
+            const list = rules(c), id = Math.max(0, ...list.map(r => r.id)) + 1;
+            list.push(i === 0 ? {id, name: value, kind: 'schedule', on: true, days: [], start: [22, 0], end: [7, 0], mode: 1} : {id, name: value, kind: 'event', on: true, reply: 1, mode: 1});
+            c.save(); MM.settingsGo(c, `zen-rule:${id}`, ''); c.toast(t.t(i === 0 ? 'zen_schedule_rule_enabled_toast' : 'zen_event_rule_enabled_toast'));
+          }});
+        }}]});
+      return true;
+    }
+  };
+  const ruleOf = (c, cur) => rules(c).find(r => r.id === +cur.screen.split(':')[1]);
+  MM.settingsScreens['zen-rule'] = {
+    title: (c, cur) => { const r = ruleOf(c, cur); return r ? ruleName(r) : ''; },
+    bar(c, cur) { const r = ruleOf(c, cur); return r ? `<button type="button" class="mmst-switchbar" data-action="mmzr-on"><span>${c.safe(T().t(r.on ? 'switch_on_text' : 'switch_off_text'))}</span><i class="mmw-switch${r.on ? ' on' : ''}"><i class="mmw-thumb"></i></i></button>` : ''; },
+    actions: c => MM.menu.button(c),
+    render(c, cur) {
+      const t = T(), r = ruleOf(c, cur); if (!r) return `<div class="mmst-empty center">${c.safe(t.t('zen_mode_rule_not_found_text'))}</div>`;
+      const row = (key, title, sum) => `<button type="button" class="mmst-pref${r.on ? '' : ' disabled'}" data-action="mmzr-edit" data-key="${key}"${r.on ? '' : ' disabled'}><span class="mmst-texts"><span class="mmst-title">${c.safe(title)}</span><span class="mmst-summary">${c.safe(sum)}</span></span></button>`;
+      const mode = t.t(`zen_mode_option_${ZEN.find(z => z[1] === r.mode)[0]}`);
+      const name = `<button type="button" class="mmst-pref" data-action="mmzr-edit" data-key="name"><span class="mmst-texts"><span class="mmst-title">${c.safe(t.t('zen_mode_rule_name'))}</span><span class="mmst-summary">${c.safe(ruleName(r))}</span></span></button>`;
+      if (r.kind === 'event') return `<div class="mmst-list">${name}${row('calendar', t.t('zen_mode_event_rule_calendar'), t.t('zen_mode_event_rule_calendar_any'))}${row('reply', t.t('zen_mode_event_rule_reply'), t.t(REPLIES[r.reply]))}${row('mode', t.t('zen_mode_settings_title'), mode)}</div>`;
+      const nextDay = r.end[0] * 60 + r.end[1] <= r.start[0] * 60 + r.start[1];
+      return `<div class="mmst-list">${name}${row('days', t.t('zen_mode_schedule_rule_days'), daysText(c, r))}${row('start', t.t('zen_mode_start_time'), hm(c, r.start))}${row('end', t.t('zen_mode_end_time'), nextDay ? t.fmt('zen_mode_end_time_next_day_summary_format', null, hm(c, r.end)) : hm(c, r.end))}${row('mode', t.t('zen_mode_settings_title'), mode)}</div>`;
+    },
+    action(c, name, el, cur) {
+      const t = T(), r = ruleOf(c, cur); if (!r) return false;
+      const done = () => { c.save(); c.render(); };
+      if (name === 'mmzr-on') { r.on = !r.on; done(); return true; }
+      if (name === 'mm-menu') {
+        c.menu([{label: t.t('zen_mode_delete_rule'), action: c => c.dialog({message: t.fmt('zen_mode_delete_rule_confirmation', null, ruleName(r)), buttons: [{label: t.t('cancel')}, {label: t.t('zen_mode_delete_rule_button'), action: c => { S(c).zenRules = rules(c).filter(x => x !== r); c.save(); c.ui.settings.stack.pop(); c.render(); }}]})}]);
+        return true;
+      }
+      if (name !== 'mmzr-edit') return false;
+      const key = el.dataset.key, radio = (label, on) => ({html: `<span class="mmst-choice"><i class="mmw-radio${on ? ' on' : ''}"></i><span>${c.safe(label)}</span></span>`});
+      if (key === 'name') {
+        let v = ruleName(r);
+        c.dialog({title: t.t('zen_mode_rule_name'), html: `<div class="mmst-edit"><input type="text" class="mmst-input mmzr-name" value="${c.safe(v)}" spellcheck="false"></div>`,
+          mount(c, win) { const i = win.querySelector('.mmzr-name'); i.addEventListener('input', () => { v = i.value.trim(); }); setTimeout(() => i.focus(), 50); },
+          buttons: [{label: t.t('cancel')}, {label: t.t('framework/ok'), action: () => { if (v) { r.name = v; done(); } }}]});
+      } else if (key === 'days') {
+        let days = [...r.days];
+        c.dialog({title: t.t('zen_mode_schedule_rule_days'), keepOpen: true, items: weekOrder(c).map(d => ({html: `<span class="mmst-choice"><i class="mmst-check${days.includes(d) ? ' on' : ''}"></i><span>${c.safe(dayName(c, d, 'long'))}</span></span>`})),
+          onItem: (i, c) => { const d = weekOrder(c)[i]; days = days.includes(d) ? days.filter(x => x !== d) : [...days, d]; c.el.overlay.querySelectorAll('.mmdlg-item .mmst-check')[i].classList.toggle('on', days.includes(d)); },
+          buttons: [{label: t.t('cancel')}, {label: t.t('framework/ok'), action: () => { r.days = days; done(); }}]});
+      } else if (key === 'start' || key === 'end') {
+        MM.timePicker(c, r[key][0], r[key][1], (h, m) => { r[key] = [h, m]; done(); }, 'settings');
+      } else if (key === 'mode') {
+        c.dialog({items: ZEN.map(([k, v]) => radio(t.t(`zen_mode_option_${k}`), v === r.mode)), onItem: i => { r.mode = ZEN[i][1]; done(); }});
+      } else if (key === 'reply') {
+        c.dialog({title: t.t('zen_mode_event_rule_reply'), items: REPLIES.map((k, i) => radio(t.t(k), i === r.reply)), onItem: i => { r.reply = i; done(); }});
+      } else if (key === 'calendar') {
+        c.dialog({title: t.t('zen_mode_event_rule_calendar'), items: [radio(t.t('zen_mode_event_rule_calendar_any'), true), radio(MM.account.email, false)], onItem: () => {}});
+      }
+      return true;
     }
   };
 })();

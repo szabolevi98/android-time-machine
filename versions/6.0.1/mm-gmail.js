@@ -172,7 +172,7 @@
         case 'mmgm-addacct': c.open('missing-add-email-account'); return true;
         case 'mmgm-drawer': u.drawer = !u.drawer; c.render(); return true;
         case 'mmgm-folder': u.folder = el.dataset.f; u.drawer = false; c.render(); return true;
-        case 'mmgm-settings': c.open('missing-gmail-settings'); return true;
+        case 'mmgm-settings': MM.openPrefs(c, 'gmail', 'preference_headers'); return true;
         case 'mmgm-help': c.open('help', 'gmail'); return true;
         case 'mmgm-search': c.open('missing-gmail-search'); return true;
         case 'mmgm-open': if (event?.target?.closest('.mmgm-star')) return false; m.unread = false; c.save(); u.screen = `conv:${m.id}`; c.render(); return true;

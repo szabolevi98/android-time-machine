@@ -66,6 +66,17 @@ class ImageRes:
             return strings['DEFAULT' if lang == 'en' else lang].get(rid)
         out = {'en': text(rid, 'en')}
         out.update({lang: text(rid, lang) for lang in LANGS[1:] if rid in strings.get(lang, {})})
+        # A string defined only under an API qualifier the phone meets (Google Play services' values-v19 Android Pay
+        # texts on the 6.0.1 image): that configuration is its default.
+        if self.device == 'bullhead' and (out['en'] is None or len(out) < len(LANGS)):
+            import re as _re
+            for config, entry in r.get_res_configs(rid):
+                q = config.get_qualifier() or ''
+                m = _re.fullmatch(r'(?:(\w\w)-)?v(\d+)', q)
+                if m and int(m.group(2)) <= 23 and entry.key.data_type == 3:
+                    lang = m.group(1) or 'en'
+                    if lang in LANGS and out.get(lang) is None: out[lang] = r.stringpool_main.getString(entry.key.data)
+            out = {k: v for k, v in out.items() if v is not None or k == 'en'}
         return out
 
     def array(self, apks, key):

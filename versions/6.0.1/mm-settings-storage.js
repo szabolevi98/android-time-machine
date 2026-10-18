@@ -43,7 +43,8 @@
       else if (key === 'cached') c.dialog({title: t.t('memory_clear_cache_title'), message: t.t('memory_clear_cache_message'),
         buttons: [{label: t.t('cancel')}, {label: t.t('okay'), action: c => { c.data.settings.cacheCleared = true; c.save(); c.render(); }}]});
       else if (key === 'other') c.dialog({title: t.t('storage_detail_other'), message: t.t('storage_detail_dialog_other'), buttons: [{label: t.t('okay')}]});
-      else MM.settingsGo(c, 'missing:com.android.documentsui.DocumentsActivity', t.t('storage_menu_explore'));
+      // PrivateVolumeSettings: Images / Videos / Audio browse MediaDocumentsProvider's roots, Explore the volume itself.
+      else c.open('downloads', `root:${key === 'explore' ? 'storage' : key}`);
       return true;
     }
   };

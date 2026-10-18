@@ -81,7 +81,7 @@
         return true;
       }
       if (name === 'mm-menu') {
-        c.menu([{label: t.t('menu_show_system'), action: c => MM.settingsGo(c, 'missing:com.android.settings.applications.ManageApplications#showSystem', t.t('applications_settings'))},
+        c.menu([{label: t.t('menu_show_system'), action: c => MM.settingsGo(c, 'apps-all', t.t('applications_settings'))},
           {label: t.t('reset_app_preferences'), action: c => c.dialog({title: t.t('reset_app_preferences_title'), message: t.t('reset_app_preferences_desc'),
             buttons: [{label: t.t('dlg_cancel')}, {label: t.t('reset_app_preferences_button'), action: c => { S(c).disabledApps = []; c.save(); c.render(); }}]})}]);
         return true;
@@ -95,16 +95,17 @@
     const t = T(), id = cur.screen.slice(4), a = MM.appsData[id];
     if (!a) return '';
     const off = disabled(c, id), running = (c.ui.recent || []).includes(id) && !off;
-    const pref = (key, title, summary) => `<button type="button" class="mmst-pref" data-action="mmai-pref" data-key="${key}"><span class="mmst-texts"><span class="mmst-title">${c.safe(title)}</span><span class="mmst-summary">${c.safe(summary)}</span></span></button>`;
+    // Battery and Memory stay greyed while the app has used nothing (InstalledAppDetails.refreshUi).
+    const pref = (key, title, summary, off = false) => `<button type="button" class="mmst-pref${off ? ' disabled' : ''}" data-action="mmai-pref" data-key="${key}"${off ? ' disabled' : ''}><span class="mmst-texts"><span class="mmst-title">${c.safe(title)}</span><span class="mmst-summary">${c.safe(summary)}</span></span></button>`;
     return `<div class="mmst-list"><div class="mmai-head"><div class="mmap-row static"><img src="${a.icon}" alt=""><span class="mmap-texts"><span class="mmap-line"><span class="mmap-label">${c.safe(MM.appLabel(c, id))}</span></span><span class="mmap-sub">${c.safe(t.fmt('version_text', null, a.version))}</span></span></div>
       <div class="mmai-buttons"><button type="button" class="mmai-button" data-action="mmai-disable"${PLATFORM.includes(id) ? ' disabled' : ''}>${c.safe(t.t(off ? 'enable_text' : 'disable_text'))}</button><i></i><button type="button" class="mmai-button" data-action="mmai-stop"${running ? '' : ' disabled'}>${c.safe(t.t('force_stop'))}</button></div></div>
-      ${pref('storage_settings', t.t('storage_settings'), t.fmt('storage_summary_format', null, MM.fileSize(c, a.codeSize), t.t('storage_type_internal')))}
-      ${pref('data_settings', t.t('data_usage_summary_title'), t.t('no_data_usage'))}
+      ${pref('storage_settings', t.t('storage_settings'), t.fmt('storage_summary_format', null, MM.fileSize(c, MM.appTotalSize ? MM.appTotalSize(c, id) : a.codeSize), t.t('storage_type_internal')))}
+      ${pref('data_settings', t.t('data_usage_summary_title'), MM.appDataUsage?.(c, id) ? t.fmt('data_summary_format', null, MM.fileSize(c, MM.appDataUsage(c, id)), MM.dataCycleStart?.(c) || '') : t.t('no_data_usage'))}
       ${pref('permission_settings', t.t('permissions_label'), permissions(c, id))}
-      ${pref('notification_settings', t.t('notifications_label'), t.t('notifications_enabled'))}
-      ${pref('preferred_settings', t.t('launch_by_default'), t.t('launch_defaults_none'))}
-      ${pref('battery', t.t('power_usage_summary_title'), t.t('no_battery_summary'))}
-      ${pref('memory', t.t('memory_settings_title'), t.t('no_memory_use_summary'))}</div>`;
+      ${pref('notification_settings', t.t('notifications_label'), MM.appNotifSummary ? MM.appNotifSummary(c, id) : t.t('notifications_enabled'))}
+      ${pref('preferred_settings', t.t('launch_by_default'), MM.appLaunchSummary ? MM.appLaunchSummary(c, id) : t.t('launch_defaults_none'))}
+      ${pref('battery', t.t('power_usage_summary_title'), t.t('no_battery_summary'), true)}
+      ${pref('memory', t.t('memory_settings_title'), t.t('no_memory_use_summary'), true)}</div>`;
   }
   MM.settingsScreens.app = {
     title: () => T().t('application_info_label'),
@@ -125,8 +126,12 @@
         return true;
       }
       if (name === 'mmai-pref') {
-        if (el.dataset.key === 'permission_settings' && (MM.appsData[id].permGroups || []).length) MM.settingsGo(c, `app-perms:${id}`, t.t('GooglePackageInstaller/app_permissions'));
-        else MM.settingsGo(c, `missing:${el.dataset.key}`, '');
+        const k = el.dataset.key;
+        if (k === 'permission_settings') { if ((MM.appsData[id].permGroups || []).length) MM.settingsGo(c, `app-perms:${id}`, t.t('GooglePackageInstaller/app_permissions')); }
+        else if (k === 'storage_settings') MM.settingsGo(c, `app-storage:${id}`, t.t('application_info_label'));
+        else if (k === 'data_settings') MM.settingsGo(c, `data-app:${id}`, t.t('data_usage_app_summary_title'));
+        else if (k === 'notification_settings') MM.settingsGo(c, `app-notif:${id}`, t.t('app_notifications_title'));
+        else if (k === 'preferred_settings') MM.settingsGo(c, `app-launch:${id}`, t.t('application_info_label'));
         return true;
       }
       return false;

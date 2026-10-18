@@ -84,6 +84,7 @@ delete expand_alarm collapse_alarm button_alarms button_cities menu_item_setting
 hours_label minutes_label seconds_label timer_start timer_delete timer_reset timer_add_timer sw_start_button sw_stop_button
 sw_reset_button sw_lap_button sw_share_button sw_share_main sw_share_laps array:sw_share_strings sw_resume_button alarm_is_set alarm_deleted alarm_undo
 full_wday_month_day_no_year abbrev_wday_month_day_no_year time_picker_set time_picker_cancel every_day
+cities_activity_title selected_cities_label menu_item_sort_by_gmt_offset menu_item_sort_by_name abc_search_hint abc_searchview_description_search
 array:alarm_set plurals:days plurals:hours plurals:minutes
 [phone] GoogleDialer framework
 # Google Dialer 2.21: DialtactsActivity's search box, tabs and menus, the dialpad, the call log rows and actions, InCallUI
@@ -214,13 +215,14 @@ wishlist_is_empty
 games_app_launcher_name games_dest_nav_drawer_home games_dest_nav_drawer_my_games games_dest_nav_drawer_inbox
 games_dest_nav_drawer_players games_dest_nav_drawer_recommended_games games_dest_nav_drawer_settings
 games_dest_nav_drawer_help
-[smallapps] DocumentsUI DownloadProvider Wallet Tycho DMAgent framework
+[smallapps] DocumentsUI DownloadProvider Wallet Tycho DMAgent MediaProvider ExternalStorageProvider framework
 # Downloads (DocumentsUI's Downloads root), Android Pay 1.0, Project Fi, Device Policy
 DownloadProvider/root_downloads DocumentsUI/empty DocumentsUI/root_recent DocumentsUI/menu_sort DocumentsUI/sort_name
 DocumentsUI/sort_date DocumentsUI/sort_size DocumentsUI/menu_grid DocumentsUI/menu_list DocumentsUI/menu_search
 DocumentsUI/menu_advanced_show Wallet/application_name Wallet/action_add_payment_card Wallet/add_payment_card_headline
 Wallet/menu_item_warm_welcome Tycho/app_name Tycho/activation_error_title Tycho/activation_error_account_setup
 DMAgent/main_title DMAgent/introduction_text DMAgent/info_shared_admin DMAgent/next_button_label
+MediaProvider/root_images MediaProvider/root_videos MediaProvider/root_audio ExternalStorageProvider/root_internal_storage framework/search_hint
 [google] Velvet framework
 # The Google app 5.3.27: the search plate, the Now page and its opt-in, voice search
 type_or_tap_mic speak_now now_opt_in_card_title now_opt_in_card_description opt_in_agree_button opt_in_not_now_button
@@ -310,3 +312,13 @@ print_button savetopdf_button page_description_template current_page_template pr
 print_add_printer array:color_mode_labels array:orientation_labels array:duplex_mode_labels pages_range_example
 framework/mediasize_iso_a4 framework/mediasize_na_letter
 DocumentsUI/title_save DocumentsUI/menu_save DownloadProvider/root_downloads DocumentsUI/empty
+[users] SystemUI framework Settings
+# Users: UserSwitcherController's guest and new user, the framework's UserSwitchingDialog, Settings' user details
+guest_exit_guest guest_exit_guest_dialog_message guest_exit_guest_dialog_remove guest_exit_guest_dialog_title guest_nickname
+guest_notification_remove_action guest_notification_text guest_notification_title guest_wipe_session_dontwipe guest_wipe_session_message
+guest_wipe_session_title guest_wipe_session_wipe user_add_user user_add_user_message_short user_add_user_title user_new_user_name
+framework/user_switching_message framework/owner_name framework/cancel framework/ok
+Settings/user_info_settings_title Settings/user_nickname Settings/user_remove_user Settings/user_enable_calling_sms Settings/user_enable_calling
+Settings/user_confirm_remove_title Settings/user_confirm_remove_message Settings/user_delete_button Settings/user_you+args1 Settings/user_guest
+Settings/user_summary_not_set_up Settings/user_exit_guest_title Settings/user_exit_guest_confirm_title Settings/user_exit_guest_confirm_message
+Settings/user_exit_guest_dialog_remove

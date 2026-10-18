@@ -24,7 +24,7 @@
     action(c, name) {
       const t = T(), s = S(c);
       if (name === 'mmac-add') { MM.settingsGo(c, 'add-account', t.t('header_add_an_account')); return true; }
-      if (name === 'mmac-google') { MM.settingsGo(c, 'missing:com.android.settings.accounts.AccountSyncSettings', ''); return true; }
+      if (name === 'mmac-google') { MM.settingsGo(c, 'account-sync', ''); return true; }
       if (name === 'mm-menu') {
         const on = s.autoSync ?? true;
         c.menu([{label: t.t('data_usage_menu_auto_sync'), checked: on, action: c => c.dialog({title: t.t(on ? 'data_usage_auto_sync_off_dialog_title' : 'data_usage_auto_sync_on_dialog_title'),
@@ -44,7 +44,9 @@
     action(c, name, el) {
       if (name !== 'mmac-type') return false;
       const type = el.dataset.type;
-      MM.settingsGo(c, `missing:${type === 'google' ? 'com.google.android.gms.auth.uiflows.addaccount.AccountIntroActivity' : 'com.android.email.activity.setup.AccountSetupFinal'}`, '');
+      // Google Play services' AccountIntroActivity or the Email part of Gmail's account setup (mm-settings-more.js).
+      c.ui.addAccount = null;
+      MM.settingsGo(c, `account-setup:${type === 'google' ? 'google' : 'email'}`, '');
       return true;
     }
   };

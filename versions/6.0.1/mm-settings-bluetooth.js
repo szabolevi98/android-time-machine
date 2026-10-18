@@ -115,7 +115,7 @@
         const on = !!s.bluetooth && !(sys().live.btTurningOn > Date.now()), busy = scanning(c);
         c.menu([{label: t.t(busy ? 'bluetooth_searching_for_devices' : 'bluetooth_search_for_devices'), disabled: !on || busy, action: c => { startScan(c); c.render(); }},
           {label: t.t('bluetooth_rename_device'), disabled: !on, action: renameDialog},
-          {label: t.t('bluetooth_show_received_files'), action: c => MM.settingsGo(c, 'missing:com.android.bluetooth.opp.BluetoothOppTransferHistory', t.t('bluetooth_show_received_files'))}]);
+          {label: t.t('bluetooth_show_received_files'), action: c => MM.settingsGo(c, 'bt-history', t.t('bluetooth_show_received_files'))}]);
         return true;
       }
       if (actionName === 'mmbt-toggle') {

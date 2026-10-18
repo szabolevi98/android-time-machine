@@ -74,3 +74,27 @@
 .mmck-fabspace{flex:none;width:calc(56 * var(--dp));height:calc(56 * var(--dp))}
 .mmck-side{border:0;border-radius:50%;background:none;width:calc(56 * var(--dp));height:calc(56 * var(--dp));display:grid;place-items:center}
 .mmck-side img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+/* The world clock (world_clock_list_item.xml / world_clock_item.xml: 32 dp margins, the city label over the time). */
+.mmck-world{align-self:stretch;margin:calc(8 * var(--dp)) calc(32 * var(--dp)) 0;padding-right:calc(12 * var(--dp))}
+.mmck-wcrow{display:flex}
+.mmck-wc{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;padding-top:calc(22 * var(--dp));color:#fff}
+.mmck-wcname{font:calc(14 * var(--dp)) Roboto,sans-serif;opacity:.7;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.mmck-wctime{font:100 calc(36 * var(--dp))/1.2 Roboto,sans-serif}
+/* CitiesActivity (cities_activity.xml, city_list_header.xml, city_list_item.xml). */
+.mmck-cities{display:flex;flex-direction:column}
+.mmck-cbar{flex:none;display:flex;align-items:center;height:calc(56 * var(--dp));color:#fff;font:500 calc(20 * var(--dp)) Roboto,sans-serif}
+.mmck-cbar>span{flex:1;padding-left:calc(16 * var(--dp))}
+.mmck-cbtn{flex:none;width:calc(56 * var(--dp));height:calc(56 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center}
+.mmck-cbtn img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.mmck-cbar .mm-overflow img{filter:invert(1)}
+.mmck-cq{flex:1;min-width:0;height:calc(40 * var(--dp));border:0;outline:0;background:none;color:#fff;font:calc(18 * var(--dp)) Roboto,sans-serif}
+.mmck-cq::placeholder{color:rgba(255,255,255,.5)}
+.mmck-clist{flex:1;min-height:0;overflow-y:auto}
+.mmck-chead{min-height:calc(32 * var(--dp));margin:calc(24 * var(--dp)) 0 calc(8 * var(--dp));padding-left:calc(20 * var(--dp));color:#fff;font-size:calc(20 * var(--dp))}
+.mmck-chead:empty{min-height:0;margin:calc(8 * var(--dp)) 0}
+.mmck-city{display:flex;align-items:center;width:100%;min-height:calc(56 * var(--dp));padding:0;border:0;background:none;color:#fff;text-align:left;font-family:Roboto,sans-serif}
+.mmck-cindex{flex:none;width:calc(74 * var(--dp));text-align:center;font:700 calc(14 * var(--dp)) Roboto,sans-serif}
+.mmck-city .mmst-check{background:rgba(255,255,255,.7)}
+.mmck-city .mmst-check.on{background:#fff}
+.mmck-cname{flex:1;min-width:0;padding:0 calc(10 * var(--dp)) 0 calc(16 * var(--dp));font-size:calc(16 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mmck-ctimes{margin-right:calc(8 * var(--dp));color:rgba(255,255,255,.7);font-size:calc(14 * var(--dp))}

@@ -72,7 +72,7 @@
         case 'mmcm-exposure': c.open('missing-exposure'); return true;
         case 'mmcm-modes': u.modes = !u.modes; c.render(); return true;
         case 'mmcm-mode': s.mode = el.dataset.m; u.modes = false; c.save(); c.render(); return true;
-        case 'mmcm-settings': u.modes = false; c.open('missing-camera-settings'); return true;
+        case 'mmcm-settings': u.modes = false; MM.openPrefs(c, 'camera', 'camera_preferences'); return true;
         case 'mmcm-thumb': { const last = MM.media.photos(c).at(-1); if (last) c.open('photos', `photo:${last.id}`); return true; }
       }
       return false;

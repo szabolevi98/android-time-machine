@@ -1,0 +1,15 @@
+/* Daydreams (mm-daydream.js): full screen over the status and navigation bars. */
+.mmdd{position:absolute;inset:0;background:#000;color:#fff;font-family:Roboto,sans-serif;overflow:hidden}
+.mmdd-face{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translate(-0%,-50%)}
+.mmdd-face b{font:100 calc(84 * var(--dp))/1 Roboto,sans-serif}
+.mmdd-face span{margin-top:calc(8 * var(--dp));font-size:calc(16 * var(--dp));opacity:.7;text-transform:uppercase}
+.mmdd-clock.night{color:#b71c1c}
+.mmdd-clock.night .mmdd-face{opacity:.7}
+.mmdd-analog{width:calc(180 * var(--dp));height:calc(180 * var(--dp))}
+.mmdd-analog circle{fill:none;stroke:currentColor;stroke-width:1.5}
+.mmdd-analog line{stroke:currentColor;stroke-width:2.5;stroke-linecap:round}
+.mmdd-colors{animation:mmdd-hue 24s linear infinite;background:hsl(0 80% 50%)}
+@keyframes mmdd-hue{0%{background:hsl(0 80% 50%)}17%{background:hsl(60 80% 50%)}33%{background:hsl(120 80% 50%)}50%{background:hsl(180 80% 50%)}67%{background:hsl(240 80% 50%)}83%{background:hsl(300 80% 50%)}100%{background:hsl(360 80% 50%)}}
+.mmdd-photo{position:absolute;inset:0;width:100%;height:100%;animation:mmdd-fade 1.2s}
+@keyframes mmdd-fade{from{opacity:0}}
+.mmdd-none{position:absolute;inset:0;display:grid;place-items:center;font-size:calc(16 * var(--dp));opacity:.7}

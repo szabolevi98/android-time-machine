@@ -68,11 +68,25 @@
   }
 
   // -- the pages -----------------------------------------------------------------------------------------------------
+  // The world clock: the cities picked in CitiesActivity (mm-cities.js, DeskClock's cities.xml) two to a row
+  // (world_clock_list_item.xml): world_clock_label's city name and the time there in world_clock_12_hours_format.
+  const cityRow = id => (MM.deskClockCities || []).find(r => r[0] === id);
+  const LANG_COL = {en: 2, hu: 3, de: 4, fr: 5, es: 6};
+  const cityName = (c, r) => String(r[LANG_COL[c.lang] ?? 2] || r[2]).split('=').pop();
+  const zoneTime = (c, tz, opts = {}) => { try { return new Intl.DateTimeFormat(c.locale(), {timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: !h24(c), ...opts}).format(new Date()); } catch { return ''; } };
+  function worldClocks(c) {
+    const rows = (S(c).cities || []).map(cityRow).filter(Boolean);
+    if (!rows.length) return '';
+    const cell = r => `<div class="mmck-wc"><span class="mmck-wcname">${c.safe(cityName(c, r))}</span><span class="mmck-wctime">${c.safe(zoneTime(c, r[1]))}</span></div>`;
+    const out = [];
+    for (let i = 0; i < rows.length; i += 2) out.push(`<div class="mmck-wcrow">${cell(rows[i])}${rows[i + 1] ? cell(rows[i + 1]) : '<div class="mmck-wc"></div>'}</div>`);
+    return `<div class="mmck-world">${out.join('')}</div>`;
+  }
   function clockPage(c) {
     const now = new Date(), next = nextAlarm(c);
     const date = new Intl.DateTimeFormat(c.locale(), {weekday: 'short', month: 'long', day: 'numeric'}).format(now);
     return `<div class="mmck-clock"><div class="mmck-big">${timeHtml(c, now.getHours(), now.getMinutes(), 'mmck-ampm')}</div>
-      <div class="mmck-labels"><span class="mmck-date">${c.safe(date)}</span>${next ? `<span class="mmck-next"><img src="${A('ic_alarm_small')}" alt="">${c.safe(next)}</span>` : ''}</div><i class="mmck-hair"></i></div>`;
+      <div class="mmck-labels"><span class="mmck-date">${c.safe(date)}</span>${next ? `<span class="mmck-next"><img src="${A('ic_alarm_small')}" alt="">${c.safe(next)}</span>` : ''}</div><i class="mmck-hair"></i>${worldClocks(c)}</div>`;
   }
   function alarmPage(c) {
     const t = T(), u = ui(c), list = S(c).alarms;
@@ -185,9 +199,9 @@
           MM.share(c, {title: t.t('sw_share_button'), subject: lines[Math.floor(Math.random() * lines.length)], text: `${AndroidStrings.format(t.t('sw_share_main'), plain(swElapsed(u)))}\n${laps}`});
           return true;
         }
-        case 'mm-menu': c.menu([{label: t.t('menu_item_settings'), action: c => c.open('missing-clock-settings')}, {label: t.t('menu_item_help'), action: c => c.open('help', 'clock')}]); return true;
+        case 'mm-menu': c.menu([{label: t.t('menu_item_settings'), action: c => MM.openPrefs(c, 'clock', 'settings')}, {label: t.t('menu_item_help'), action: c => c.open('help', 'clock')}]); return true;
         case 'mmck-fab':
-          if (u.tab === 'clock') { c.open('missing-cities'); return true; }
+          if (u.tab === 'clock') { c.open('clock-cities'); return true; }
           if (u.tab === 'alarm') {
             MM.timePicker?.(c, new Date().getHours(), new Date().getMinutes(), (h, m) => { const id = Math.max(0, ...s.alarms.map(x => x.id)) + 1; const n = {id, h, m, days: [], on: true, vibrate: true, label: ''}; s.alarms.push(n); s.alarms.sort((x, y) => x.h * 60 + x.m - (y.h * 60 + y.m)); u.expanded = id; save(); setToast(c, n); });
             return true;
@@ -204,4 +218,74 @@
       return false;
     }
   });
+  /* CitiesActivity (cities_activity.xml over the clock's background): the action bar with "Cities", search and the
+     overflow's Sort by time / Sort by name; city_list_header.xml's Selected Cities, then every city of cities.xml in
+     city_list_item.xml (56 dp: the 74 dp index column with the first letter of a new letter (cities_names' "X=" sort key)
+     or nothing, the check box, the name, the time there). A check adds the city to the world clock. */
+  MM.register('clock-cities', {
+    app: false,
+    statusColor: () => HOUR_COLORS[new Date().getHours()],
+    render(c) {
+      const t = T(), u = c.ui.clockCities || (c.ui.clockCities = {q: '', byTime: false, search: false}), picked = S(c).cities || [];
+      const all = (MM.deskClockCities || []).map(r => ({r, id: r[0], name: cityName(c, r), key: String(r[LANG_COL[c.lang] ?? 2]).split('=')[0] || cityName(c, r).charAt(0).toUpperCase(), tz: r[1]}));
+      const q = u.q.trim().toLowerCase();
+      const offset = tz => { try { const p = new Intl.DateTimeFormat('en-US', {timeZone: tz, timeZoneName: 'longOffset'}).formatToParts(new Date()).find(x => x.type === 'timeZoneName').value; const m = /GMT([+-]\d+)(?::(\d+))?/.exec(p); return m ? (+m[1]) * 60 + Math.sign(+m[1] || 1) * (+(m[2] || 0)) : 0; } catch { return 0; } };
+      const col = new Intl.Collator(c.locale());
+      let list = all.filter(x => !q || x.name.toLowerCase().includes(q));
+      list.sort((a, b) => u.byTime ? offset(a.tz) - offset(b.tz) || col.compare(a.name, b.name) : col.compare(a.key + a.name, b.key + b.name));
+      const row = (x, index) => `<button type="button" class="mmck-city" data-action="mmck-city" data-id="${x.id}"><span class="mmck-cindex">${c.safe(index)}</span><i class="mmst-check${picked.includes(x.id) ? ' on' : ''}"></i><span class="mmck-cname">${c.safe(x.name)}</span><span class="mmck-ctimes">${c.safe(zoneTime(c, x.tz))}</span></button>`;
+      let last = '';
+      const rows = list.map(x => { const k = u.byTime ? '' : x.key; const show = k !== last ? k : ''; last = k; return row(x, show); }).join('');
+      const sel = all.filter(x => picked.includes(x.id) && !q);
+      const bar = u.search ? `<div class="mmck-cbar"><button type="button" class="mmck-cbtn" data-action="mmck-csearchoff"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button><input class="mmck-cq" value="${c.safe(u.q)}" placeholder="${c.safe(t.t('abc_search_hint'))}" autocomplete="off"></div>`
+        : `<div class="mmck-cbar"><button type="button" class="mmck-cbtn" data-action="mmck-cup"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button><span>${c.safe(t.t('cities_activity_title'))}</span><button type="button" class="mmck-cbtn" data-action="mmck-csearch" aria-label="${c.safe(t.t('abc_searchview_description_search'))}"><img src="assets/fw-ic_search_api_material.svg" alt=""></button>${MM.menu.button(c)}</div>`;
+      return `<div class="mmck mmck-cities" style="background:${HOUR_COLORS[new Date().getHours()]}">${bar}<div class="mmck-clist">${sel.length ? `<div class="mmck-chead">${c.safe(t.t('selected_cities_label'))}</div>${sel.map(x => row(x, '')).join('')}<div class="mmck-chead"></div>` : ''}${rows}</div></div>`;
+    },
+    mount(c, root) {
+      const f = root.querySelector('.mmck-cq'); if (!f) return;
+      f.addEventListener('input', () => { const pos = f.selectionStart; c.ui.clockCities.q = f.value; c.render(); const g = c.el.viewport.querySelector('.mmck-cq'); if (g) { g.focus(); g.setSelectionRange(pos, pos); } });
+      if (document.activeElement !== f) setTimeout(() => f.focus(), 30);
+    },
+    back(c) { const u = c.ui.clockCities; if (u?.search) { u.search = false; u.q = ''; c.render(); return true; } c.ui.clockCities = null; return false; },
+    action(name, el, event, c) {
+      const t = T(), u = c.ui.clockCities, s = S(c);
+      if (name === 'mmck-cup') { c.ui.clockCities = null; c.back(); return true; }
+      if (name === 'mmck-csearch') { u.search = true; c.render(); return true; }
+      if (name === 'mmck-csearchoff') { u.search = false; u.q = ''; c.render(); return true; }
+      if (name === 'mmck-city') { const id = el.dataset.id, list = s.cities || []; s.cities = list.includes(id) ? list.filter(x => x !== id) : [...list, id]; c.save(); c.render(); return true; }
+      if (name === 'mm-menu') { c.menu([{label: t.t(u.byTime ? 'menu_item_sort_by_name' : 'menu_item_sort_by_gmt_offset'), action: c => { u.byTime = !u.byTime; c.render(); }}]); return true; }
+      return false;
+    }
+  });
+
+  /* Clock's settings (SettingsActivity, settings.xml) through mm-appprefs.js: Style, Automatic home clock, Home time zone
+     (the phone's zone by default), Change Date & time (Settings' Date & time), Silence after (auto_silence_summary or
+     Never), Snooze length and Gradually increase volume (their NumberPicker dialogs: 1–30 minutes, Off / 5–60
+     seconds), Alarm volume (Settings' Sound & notification), Volume buttons, Start week on, Timer ringtone (Timer
+     Expired by default, the alarm sounds to pick from). */
+  const P = () => MM.text('appprefs'), D = 'PrebuiltDeskClockGoogle/';
+  const localZone = () => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch { return 'Europe/London'; } };
+  MM.appPrefsHooks.clock = {
+    get(c, key) {
+      if (key === 'home_time_zone') { const v = MM.appPref(c, 'clock', key); if (v) return v; const n = MM.appPrefsXml.clock.xml.settings.c[0].c[2]; const vals = MM.appPrefArr(n.entryValues); const z = localZone(); return vals.includes(z) ? z : vals.find(x => zoneTime(c, x, {timeZoneName: 'short'}).split(' ').pop() === zoneTime(c, z, {timeZoneName: 'short'}).split(' ').pop()) || vals[0]; }
+      return undefined;
+    },
+    summary(c, key) {
+      const p = P(), v = MM.appPref(c, 'clock', key);
+      if (key === 'auto_silence') { const n = +(v ?? 10); return n < 0 ? p.t(D + 'auto_silence_never') : p.plural(D + 'auto_silence_summary', n); }
+      if (key === 'snooze_duration') return p.plural(D + 'snooze_duration', +(v ?? 10));
+      if (key === 'alarm_crescendo_duration' || key === 'timer_crescendo_duration') { const n = +(v ?? 0); return n ? p.fmt(D + 'crescendo_duration', null, n) : p.t(D + 'no_crescendo_duration'); }
+      if (key === 'timer_ringtone') return v === '' ? p.t(D + 'silent_timer_ringtone_title') : v && v !== 'default' ? v : p.t(D + 'default_timer_ringtone_title');
+      return undefined;
+    },
+    click(c, key, n) {
+      const p = P(), set = v => { (c.data.appPrefs.clock ||= {})[key] = v; c.save(); c.render(); };
+      if (key === 'date_time') { c.open('settings', 'xml:date_time_prefs'); return true; }
+      if (key === 'volume_setting') { c.open('settings', 'sound'); return true; }
+      if (key === 'snooze_duration') { MM.numberDialog(c, {title: MM.appPrefStr(n.title), values: Array.from({length: 30}, (_, i) => i + 1), value: +(MM.appPref(c, 'clock', key) ?? 10), label: x => p.plural(D + 'snooze_duration', x), onSet: (c, v) => set(v)}); return true; }
+      if (key === 'alarm_crescendo_duration' || key === 'timer_crescendo_duration') { MM.numberDialog(c, {title: MM.appPrefStr(n.title), values: Array.from({length: 13}, (_, i) => i * 5), value: +(MM.appPref(c, 'clock', key) ?? 0), label: x => x ? p.fmt(D + 'crescendo_duration', null, x) : p.t(D + 'no_crescendo_duration'), onSet: (c, v) => set(v)}); return true; }
+      if (key === 'timer_ringtone') { MM.ringtonePicker?.(c, {kind: 'alarm', current: MM.appPref(c, 'clock', key) ?? 'default', defaultTitle: p.t(D + 'default_timer_ringtone_title'), onPick: (c, v) => set(v)}); return true; }
+      return false;
+    }
+  };
 })();

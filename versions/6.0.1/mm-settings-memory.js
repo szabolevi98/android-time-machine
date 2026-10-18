@@ -22,6 +22,7 @@
     const sum = ids.reduce((a, id) => a + weight(id), 0), pool = usedFor(st(c).d) * .55;
     return ids.map(id => ({id, bytes: Math.round(pool * weight(id) / sum)})).sort((a, b) => b.bytes - a.bytes);
   }
+  MM.memoryApps = apps;
   function large(c, bytes) {
     const parts = MM.fileSize(c, bytes, true).split(/\s+/), unit = parts.pop(), value = parts.join(' ');
     return T().t('storage_size_large').split(/(\^[12])/).map(p => p === '^1' ? `<span>${c.safe(value)}</span>` : p === '^2' ? `<small>${c.safe(unit)}</small>` : c.safe(p)).join('');
@@ -59,7 +60,7 @@
     },
     action(c, name, el) {
       if (name === 'mmme-duration') { pickDuration(c); return true; }
-      if (name === 'mmme-app') { MM.settingsGo(c, 'missing:com.android.settings.applications.ProcessStatsDetail', MM.appLabel(c, el.dataset.app)); return true; }
+      if (name === 'mmme-app') { MM.settingsGo(c, `mem-app:${el.dataset.app}`, MM.appLabel(c, el.dataset.app)); return true; }
       return false;
     }
   };

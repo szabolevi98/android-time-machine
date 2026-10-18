@@ -170,7 +170,7 @@
         {label: t.t('action_help_and_feedback'), action: c => c.open('help', 'messenger')});
       return c.menu(items);
     }
-    c.menu([{label: t.t('action_menu_show_archived'), action: c => c.open('missing-archived')}, {label: t.t('blocked_contacts_title'), action: c => c.open('missing-blocked')}, {label: t.t('action_settings'), action: c => c.open('missing-messenger-settings')}, {label: t.t('action_help_and_feedback'), action: c => c.open('help', 'messenger')}]);
+    c.menu([{label: t.t('action_menu_show_archived'), action: c => c.open('missing-archived')}, {label: t.t('blocked_contacts_title'), action: c => c.open('missing-blocked')}, {label: t.t('action_settings'), action: c => MM.openPrefs(c, 'messenger', 'preferences_application')}, {label: t.t('action_help_and_feedback'), action: c => c.open('help', 'messenger')}]);
   }
 
   MM.register('messenger', {

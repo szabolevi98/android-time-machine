@@ -285,7 +285,7 @@
     if (u.dialpad) return c.menu([{label: t.t('add_2sec_pause'), action: c => { ui(c).digits += ','; c.render(); }}, {label: t.t('add_wait'), action: c => { ui(c).digits += ';'; c.render(); }}]);
     const items = [{label: t.t('action_menu_call_history_description'), action: c => { ui(c).screen = 'history'; c.render(); }}, {label: t.t('menu_import_export'), action: c => c.open('missing-import-export')}];
     if (frequents(c).length) items.push({label: t.t('menu_clear_frequents'), action: c => c.dialog({title: t.t('clearFrequentsConfirmation_title'), message: t.t('clearFrequentsConfirmation'), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok'), action: c => { c.data.frequentsCleared = Date.now(); c.save(); c.render(); }}]})});
-    items.push({label: t.t('menu_newContact'), action: c => c.open('contacts', 'new')}, {label: t.t('dialer_settings_label'), action: c => c.open('missing-call-settings')});
+    items.push({label: t.t('menu_newContact'), action: c => c.open('contacts', 'new')}, {label: t.t('dialer_settings_label'), action: c => MM.openPrefs(c, 'dialer', 'dialer_settings', t.t('dialer_settings_label'))});
     c.menu(items);
   }
 

@@ -42,7 +42,16 @@
     'com.android.settings.PrivacySettings': 'xml:privacy_settings', 'com.android.settings.DateTimeSettings': 'xml:date_time_prefs',
     'com.android.settings.accessibility.AccessibilitySettings': 'xml:accessibility_settings', 'com.android.settings.print.PrintSettingsFragment': 'xml:print_settings',
     'com.android.settings.DevelopmentSettings': 'xml:development_prefs', 'com.android.settings.DeviceInfoSettings': 'xml:device_info_settings',
-    'com.android.settings.DreamSettings': 'dream', 'com.android.settings.WallpaperTypeSettings': 'wallpaper-type'
+    'com.android.settings.DreamSettings': 'dream', 'com.android.settings.WallpaperTypeSettings': 'wallpaper-type',
+    // Screens with code of their own in mm-settings-extra.js / mm-settings-extra2.js / mm-settings-more.js.
+    'com.android.settings.LocalePicker': 'locale', 'com.android.settings.ZonePicker': 'timezone', 'com.android.settings.backup.ToggleBackupSettingFragment': 'backup',
+    'com.android.settings.accessibility.ToggleGlobalGesturePreferenceFragment': 'a11y:enable_global_gesture_preference_screen',
+    'com.android.settings.accessibility.ToggleScreenMagnificationPreferenceFragment': 'a11y:screen_magnification_preference_screen',
+    'com.android.settings.MasterClear': 'master-clear', 'com.android.settings.ResetNetwork': 'reset-network', 'com.android.settings.nfc.AndroidBeam': 'beam',
+    'com.android.settings.applications.ManageAssist': 'xml:manage_assist', 'com.android.settings.DeviceAdminSettings': 'device-admins',
+    'com.android.settings.TrustedCredentialsSettings': 'credentials', 'com.android.settings.applications.RunningServices': 'running',
+    'com.android.settings.notification.NotificationAccessSettings': 'notif-access', 'com.android.settings.notification.ZenAccessSettings': 'zen-access',
+    'com.android.settings.IccLockSettings': 'xml:sim_lock_settings'
   };
   // Other preference fragments of the image whose screen is a res/xml of the same name.
   const XML_FRAGMENTS = {
@@ -65,6 +74,13 @@
   // The screens other parts of the system open by a short name (Quick Settings' "More settings", the launcher's links).
   const ALIASES = {zen: 'xml:zen_mode_settings', 'zen-priority': 'xml:zen_mode_priority_settings', users: 'xml:user_settings',
     cast: 'xml:wifi_display_settings', display: 'xml:display_settings', sound: 'xml:notification_settings'};
+  // The screens whose fragment has a help resource (help_uri_* / help_url_*: Google Help's contexts): their overflow
+  // ends with Help & feedback (HelpUtils.prepareHelpMenuItem), as the dashboard's does (help_uri_dashboard).
+  const HELP = new Set(['wifi', 'bluetooth', 'data-usage', 'xml:wireless_settings', 'xml:tether_prefs', 'xml:vpn_settings2', 'xml:display_settings', 'wallpaper-type',
+    'xml:notification_settings', 'xml:zen_mode_settings', 'xml:other_sound_settings', 'apps', 'storage', 'battery', 'xml:user_settings', 'nfc-payment',
+    'xml:location_settings', 'xml:security', 'accounts', 'xml:privacy_settings', 'xml:accessibility_settings', 'xml:print_settings', 'xml:device_info_settings',
+    'dream', 'xml:wifi_display_settings', 'xml:security_settings_picker']);
+  const helpItem = () => ({label: T().t('help_label'), action: c => c.open('help', 'settings')});
   function screenOf(fragment) {
     if (!fragment) return null;
     if (FRAGMENTS[fragment]) return FRAGMENTS[fragment];
@@ -212,7 +228,8 @@
       else { title = cur.title || title; body = `<div class="mmst-missing">${c.missing('settings', `<small>${c.safe(cur.screen.replace(/^missing:/, ''))}</small>`)}</div>`; }
     }
     const up = !!cur;
-    const actions = !cur ? `<button type="button" class="mmst-ab-btn" data-action="mmst-search" aria-label="${c.safe(T().t('search_menu'))}"><img src="assets/fw-ic_search_api_material.svg" alt=""></button>` : ((MM.settingsScreens[cur.screen.split(':')[0]] || MM.settingsScreens[cur.screen])?.actions?.(c, cur) || '');
+    let actions = !cur ? `<button type="button" class="mmst-ab-btn" data-action="mmst-search" aria-label="${c.safe(T().t('search_menu'))}"><img src="assets/fw-ic_search_api_material.svg" alt=""></button>${MM.menu.button(c)}` : ((MM.settingsScreens[cur.screen.split(':')[0]] || MM.settingsScreens[cur.screen])?.actions?.(c, cur) || '');
+    if (cur && HELP.has(cur.screen) && !actions.includes('mm-overflow')) actions += MM.menu.button(c);
     return `<div class="mmst"><div class="mmst-ab">${up ? `<button type="button" class="mmst-up" data-action="mmst-up" aria-label="Navigate up"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button>` : ''}<span class="mmst-abtitle${up ? ' up' : ''}">${c.safe(title)}</span>${actions}</div>${bar}
       <div class="mmst-content">${body}</div></div>`;
   }
@@ -241,11 +258,21 @@
     action(name, el, event, c) {
       const cur = current(c);
       const custom = cur && (MM.settingsScreens[cur.screen.split(':')[0]] || MM.settingsScreens[cur.screen]);
-      if (custom?.action?.(c, name, el, cur)) return true;
+      // A screen's own overflow gets Help & feedback at its end.
+      const helps = name === 'mm-menu' && (!cur || HELP.has(cur.screen));
+      if (helps && custom?.action) {
+        const menu = c.menu; let shown = false;
+        c.menu = items => { shown = true; c.menu = menu; menu([...items, helpItem()]); };
+        const done = custom.action(c, name, el, cur);
+        c.menu = menu;
+        if (done && shown) return true;
+        if (done) return true;
+      } else if (custom?.action?.(c, name, el, cur)) return true;
+      if (helps) { c.menu([helpItem()]); return true; }
       if (name === 'mmst-up') { if (!this.back(c)) c.back(); return true; }
       if (name === 'mmst-go') { go(c, el.dataset.screen, el.dataset.title); return true; }
       if (name === 'mmst-external') { c.open('google-settings'); return true; }
-      if (name === 'mmst-search') { go(c, 'missing:com.android.settings.dashboard.SearchResultsSummary', T().t('search_menu')); return true; }
+      if (name === 'mmst-search') { c.ui.settingsQ = ''; go(c, 'search', T().t('search_menu')); return true; }
       if (name === 'mmst-pref' && cur?.xml) {
         const n = findKey(X()[cur.xml], el.dataset.key) || {};
         const hook = MM.settingsHooks[cur.xml] || {};
@@ -253,7 +280,11 @@
         if (n.t === 'SwitchPreference' || n.t === 'CheckBoxPreference' || hook.switch?.includes(n.key)) { const v = !value(c, n); setValue(c, n, v); hook.changed?.(c, n.key, v, n); c.render(); return true; }
         if (isList(n)) { listDialog(c, n, cur.xml); return true; }
         if (n.t === 'EditTextPreference') { textDialog(c, n, cur.xml); return true; }
+        // Sound & notification > App notifications: ManageApplications listing the apps with their notification state.
+        if (n.fragment && n.extras?.classname?.endsWith('NotificationAppListActivity')) { go(c, 'apps-notif', str(n.title)); return true; }
         if (n.fragment) { go(c, screenOf(n.fragment), str(n.title)); return true; }
+        // About phone > System updates: Google Play services' SystemUpdateActivity (android.settings.SYSTEM_UPDATE_SETTINGS).
+        if (n.intent?.action === 'android.settings.SYSTEM_UPDATE_SETTINGS') { go(c, 'system-update', ''); return true; }
         if (n.t === 'PreferenceScreen' && n.c && !n.fragment) { go(c, `xml:${cur.xml}#${n.key}`, str(n.title)); return true; }
         if (n.intent) { go(c, screenOf(n.intent.targetClass) && !screenOf(n.intent.targetClass).startsWith('missing:') ? screenOf(n.intent.targetClass) : `missing:${n.intent.targetClass || n.intent.action || ''}`, str(n.title)); return true; }
         return true;

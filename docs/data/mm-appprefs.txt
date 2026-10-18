@@ -1,0 +1,60 @@
+# The apps' preference screens docs/tools/mm-appprefs.py reads: "[id] Apk Activity" (the activity whose theme colours the
+# screen, '-' for the application's), then res/xml names, "+name" for texts the app's code shows.
+[clock] PrebuiltDeskClockGoogle SettingsActivity
+settings dream_settings
++plurals:snooze_duration +plurals:auto_silence_summary +crescendo_duration +no_crescendo_duration +default_timer_ringtone_title
++silent_timer_ringtone_title +auto_silence_never
+[calendar] CalendarGooglePrebuilt CalendarSettingsActivity
+calendar_settings_headers
+[camera] GoogleCamera CameraSettingsActivity
+camera_preferences additional_preferences
++setting_summary_aspect_ratio_and_megapixels +pref_video_quality_entry_2160p +pref_video_quality_entry_1080p +pref_video_quality_entry_720p
++pref_video_quality_entry_480p
+[gmail] PrebuiltGmail MailPreferenceActivity
+preference_headers general_preferences gmail_account_preferences inbox_section_preferences label_preferences
++preferences_signature_summary_not_set
+[messenger] PrebuiltBugle SettingsActivity
+preferences_application preferences_per_subscription
+[contacts] GoogleContacts ContactsPreferenceActivity
+preference_headers preference_display_options
++display_options_sort_by_given_name +display_options_sort_by_family_name +display_options_view_given_name_first +display_options_view_family_name_first
+[dialer] GoogleDialer DialerSettingsActivity
+display_options_settings sound_settings nearby_places_settings
++display_options_title +sounds_and_vibration_title +respond_via_sms_setting_title +call_settings_label +local_search_setting_title
++display_options_sort_by_given_name +display_options_sort_by_family_name +display_options_view_given_name_first +display_options_view_family_name_first
+[calls] TeleService CallFeaturesSetting
+call_feature_setting gsm_umts_call_options gsm_umts_additional_options voicemail_settings fdn_setting callforward_options
++sum_cfu_disabled +sum_cfb_disabled +sum_cfnry_disabled +sum_cfnrc_disabled +manage_fdn_list +fdn_disabled
+[network] TeleService MobileNetworkSettings
+network_setting gsm_umts_options carrier_select
++roaming_alert_title +roaming_warning
+[quickresponses] Telecom RespondViaSmsSettings
+respond_via_sms_settings
+[cellbroadcast] CellBroadcastReceiver CellBroadcastSettings
+preferences
+[chrome] Chrome Preferences
+main_preferences privacy_preferences accessibility_preferences content_preferences autofill_preferences
+bandwidth_reduction_preferences_off about_chrome_preferences legal_information_preferences document_mode_preferences
+translate_preferences do_not_track_preferences usage_and_crash_reports_preferences contextual_search_preferences
+[keyboard] LatinImeGoogle SettingsActivity
+prefs prefs_screen_preferences prefs_screen_appearance prefs_screen_theme prefs_screen_gesture prefs_screen_correction
+prefs_screen_advanced prefs_screen_accounts
++english_ime_settings +english_ime_name +spell_checker_service_name
+[voice] Velvet SettingsActivity
+voicesearch_preferences hands_free_settings hotword_settings privacy_and_account_preferences now_cards_settings about legal_settings
+[photos] Photos SettingsActivity
+settings_headers settings_about settings_playback
+[drive] Drive DrivePreferencesActivity
+drive_preferences
+[music] Music2 MusicPreferenceActivity
+music_settings
+[movies] Videos SettingsActivity
+preferences preferences_caption
+[youtube] YouTube SettingsActivity
+preference_headers general_prefs offline_prefs privacy_prefs subtitles_prefs about_prefs
+[maps] Maps -
+settings
+[play] Phonesky SettingsActivity
+settings
+[smartlock] PrebuiltGmsCore PersonalUnlockingSettingsActivity
+personal_unlocking_settings_preferences trusted_devices_preferences trusted_places_preferences on_body_detection_preferences face_unlock_preferences

@@ -26,11 +26,15 @@
 
   // -- Date & time ---------------------------------------------------------------------------------------------------
   const h24 = c => S(c).time24 ?? !new Intl.DateTimeFormat(c.locale(), {hour: 'numeric'}).resolvedOptions().hour12;
+  // The zone picked in ZonePicker once Automatic time zone is off, else the phone's own.
   function zoneText(c, now) {
-    const off = -now.getTimezoneOffset(), sign = off < 0 ? '-' : '+', a = Math.abs(off);
+    const tz = S(c).autoZone === false && S(c).timeZone ? S(c).timeZone : undefined;
+    let off = -now.getTimezoneOffset();
+    if (tz) { try { const p = new Intl.DateTimeFormat('en-US', {timeZone: tz, timeZoneName: 'longOffset'}).formatToParts(now).find(x => x.type === 'timeZoneName').value; const m = /GMT([+-])(\d+)(?::(\d+))?/.exec(p); off = m ? (m[1] === '-' ? -1 : 1) * (+m[2] * 60 + +(m[3] || 0)) : 0; } catch {} }
+    const sign = off < 0 ? '-' : '+', a = Math.abs(off);
     const gmt = `GMT${sign}${String(Math.floor(a / 60)).padStart(2, '0')}:${String(a % 60).padStart(2, '0')}`;
     let name = '';
-    try { name = new Intl.DateTimeFormat(c.locale(), {timeZoneName: 'long'}).formatToParts(now).find(p => p.type === 'timeZoneName')?.value || ''; } catch {}
+    try { name = new Intl.DateTimeFormat(c.locale(), {timeZoneName: 'long', ...(tz ? {timeZone: tz} : {})}).formatToParts(now).find(p => p.type === 'timeZoneName')?.value || ''; } catch {}
     return `${gmt} ${name}`.trim();
   }
   H.date_time_prefs = {
@@ -63,7 +67,11 @@
       return undefined;
     },
     click(c, key) {
-      if (key === 'date' || key === 'time') { MM.settingsGo(c, `missing:android.app.${key === 'date' ? 'DatePickerDialog' : 'TimePickerDialog'}`, ''); return true; }
+      // Set date / Set time: the framework's pickers; the moment chosen is kept as an offset from the real clock.
+      const now = new Date(Date.now() + (S(c).timeOffset || 0)), apply = d => { S(c).timeOffset = d - Date.now(); c.save(); c.render(); };
+      if (key === 'date') { MM.datePicker(c, now, (c, d) => apply(new Date(d.getFullYear(), d.getMonth(), d.getDate(), now.getHours(), now.getMinutes(), now.getSeconds()))); return true; }
+      if (key === 'time') { MM.timePicker(c, now.getHours(), now.getMinutes(), (h, m) => apply(new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m)), 'settings'); return true; }
+      if (key === 'timezone') { MM.settingsGo(c, 'timezone', T().t('date_time_set_timezone')); return true; }
       return false;
     }
   };
@@ -88,7 +96,7 @@
   })();
   H.location_settings.selectable = (c, key) => key !== 'no_recent_apps';
   H.location_settings.click = (c, key) => {
-    if (key === 'location_history') { MM.settingsGo(c, 'missing:com.google.android.location.settings.LocationHistorySettingsActivity', T().t('PrebuiltGmsCore/location_ulr_setting_label')); return true; }
+    if (key === 'location_history') { MM.settingsGo(c, 'location-history', T().t('PrebuiltGmsCore/location_ulr_setting_label')); return true; }
     if (key === 'location_mode') { MM.settingsGo(c, 'xml:location_mode', T().t('location_mode_screen_title')); return true; }
     return false;
   };
@@ -149,8 +157,13 @@
     },
     click(c, key) {
       const t = T();
-      if (key === 'phone_language') { MM.settingsGo(c, 'missing:com.android.settings.LocalePicker', t.t('phone_language')); return true; }
-      if (key === 'ime_latin' || key === 'ime_voice' || key === 'spellcheckers_settings' || key === 'current_input_method' || key === 'key_user_dictionary_settings') { MM.settingsGo(c, `missing:${key}`, ''); return true; }
+      if (key === 'phone_language') { MM.settingsGo(c, 'locale', t.t('phone_language')); return true; }
+      // The input methods' own settings activities: Google Keyboard's and the Google app's voice typing.
+      if (key === 'ime_latin') { MM.openPrefs(c, 'keyboard', 'prefs', MM.text('appprefs').t('LatinImeGoogle/english_ime_settings') || ''); return true; }
+      if (key === 'ime_voice') { MM.openPrefs(c, 'voice', 'voicesearch_preferences'); return true; }
+      if (key === 'spellcheckers_settings') { MM.settingsGo(c, 'spellcheck', t.t('spellcheckers_settings_title')); return true; }
+      if (key === 'key_user_dictionary_settings') { MM.settingsGo(c, 'user-dictionary', t.t('user_dict_settings_title')); return true; }
+      if (key === 'current_input_method') { MM.imePicker(c); return true; }
       return false;
     }
   };
@@ -165,11 +178,12 @@
   const userRow = (c, key, icon, title, summary) => `<button type="button" class="mmst-pref" data-action="mmst-pref" data-key="${key}"><span class="mmst-iconframe">${key === 'user_guest' ? `<i class="mmst-ic" style="background:#9e9e9e;-webkit-mask-image:url('assets/${icon}');mask-image:url('assets/${icon}')"></i>` : `<img class="mmst-ic" src="assets/${icon}" alt="">`}</span><span class="mmst-texts"><span class="mmst-title">${c.safe(title)}</span>${summary ? `<span class="mmst-summary">${c.safe(summary)}</span>` : ''}</span></button>`;
   H.user_settings = {
     title(c, key) { return key === 'user_add' ? T().t('user_add_user_menu') : undefined; },
+    // The users of mm-users.js: the owner (You (Owner) for the owner), the users added, the guest.
     top(c) {
-      const t = T(), users = S(c).users || [];
-      return `<div class="mmst-cat">${c.safe(t.t('user_list_title'))}</div>${userRow(c, 'user_me', 'fw-ic_account_circle-user0.svg', t.fmt('user_you', null, t.t('user_owner')), '')}
-        ${users.map((u, i) => userRow(c, `user_${i}`, 'fw-ic_account_circle-user0.svg', u.name, t.t('user_summary_not_set_up'))).join('')}
-        ${userRow(c, 'user_guest', 'fw-ic_account_circle-guest.svg', t.t('user_guest'), '')}`;
+      const t = T(), U = MM.users, me = U.current(c), you = (id, name) => id === me ? t.fmt('user_you', null, name) : name;
+      return `<div class="mmst-cat">${c.safe(t.t('user_list_title'))}</div>${userRow(c, 'user_me', 'fw-ic_account_circle-user0.svg', you('owner', me === 'owner' ? t.t('user_owner') : U.ownerName()), '')}
+        ${U.list().map(u => userRow(c, `user_${u.id}`, 'fw-ic_account_circle-user0.svg', you(u.id, u.name), u.id === me ? '' : t.t('user_summary_not_set_up'))).join('')}
+        ${userRow(c, 'user_guest', 'fw-ic_account_circle-guest.svg', you('guest', t.t('user_guest')), '')}`;
     },
     hidden: ['user_list'],
     click(c, key) {
@@ -177,12 +191,20 @@
       if (key === 'user_add') {
         c.dialog({title: t.t('user_add_user_title'), message: t.t('user_add_user_message_long'), buttons: [{label: t.t('cancel')}, {label: t.t('ok'), action: c => {
           c.dialog({title: t.t('user_setup_dialog_title'), message: t.t('user_setup_dialog_message'), buttons: [
-            {label: t.t('user_setup_button_setup_later'), action: c => { s.users = [...(s.users || []), {name: t.t('user_new_user_name')}]; c.save(); c.render(); }},
-            {label: t.t('user_setup_button_setup_now'), action: c => { s.users = [...(s.users || []), {name: t.t('user_new_user_name')}]; c.save(); c.overlay('user-add'); }}]});
+            {label: t.t('user_setup_button_setup_later'), action: c => { MM.users.addUser(c); c.render(); }},
+            {label: t.t('user_setup_button_setup_now'), action: c => MM.users.switchTo(c, MM.users.addUser(c))}]});
         }}]});
         return true;
       }
-      if (key === 'user_me' || key === 'user_guest' || key?.startsWith('user_')) { MM.settingsGo(c, `missing:com.android.settings.users.${key === 'user_me' ? 'EditUserInfoController' : 'UserDetailsSettings'}`, ''); return true; }
+      // EditUserInfoController's User info dialog for the owner; UserDetailsSettings for another user or the guest.
+      if (key === 'user_me') {
+        const u = MM.text('users'); let name = MM.users.ownerName();
+        c.dialog({title: u.t('Settings/user_info_settings_title'), html: `<div class="mmsx-userinfo"><img src="assets/fw-ic_account_circle-user0.svg" alt=""><input class="mmst-input" value="${c.safe(name)}" spellcheck="false"></div>`,
+          mount: (c, win) => { const i = win.querySelector('input'); i.addEventListener('input', () => { name = i.value; }); setTimeout(() => i.focus(), 50); },
+          buttons: [{label: t.t('cancel')}, {label: t.t('okay'), action: c => { if (name.trim()) { MM.users.setOwnerName(name.trim()); c.render(); } }}]});
+        return true;
+      }
+      if (key?.startsWith('user_')) { MM.settingsGo(c, `user-detail:${key.slice(5)}`, key === 'user_guest' ? T().t('user_guest') : MM.users.name(key.slice(5))); return true; }
       return false;
     }
   };
@@ -223,8 +245,8 @@
       if (key === 'enable_global_gesture_preference_screen') return t.t(a.shortcut ? 'accessibility_global_gesture_preference_summary_on' : 'accessibility_global_gesture_preference_summary_off');
       return undefined;
     },
-    click(c, key) {
-      if (SERVICES.some(([k]) => k === key)) { MM.settingsGo(c, `missing:com.android.settings.accessibility.ToggleAccessibilityServicePreferenceFragment#${key}`, T().t(SERVICES.find(([k]) => k === key)[1])); return true; }
+    click(c, key, n) {
+      if (SERVICES.some(([k]) => k === key) || key === 'screen_magnification_preference_screen' || key === 'enable_global_gesture_preference_screen') { MM.settingsGo(c, `a11y:${key}`, MM.settingsStr(n?.title) || T().t(SERVICES.find(([k]) => k === key)?.[1] || '')); return true; }
       return false;
     }
   };
@@ -233,7 +255,7 @@
   H.print_settings = {
     hidden: ['print_jobs_category'],
     summary: (c, key) => key === 'print_cloud' ? T().t(S(c).cloudPrint ? 'print_feature_state_on' : 'print_feature_state_off') : undefined,
-    click(c, key) { if (key !== 'print_cloud') return false; MM.settingsGo(c, 'missing:com.android.settings.print.PrintServiceSettingsFragment', T().t('CloudPrint2/app_name')); return true; }
+    click(c, key) { if (key !== 'print_cloud') return false; MM.settingsGo(c, 'cloudprint', T().t('CloudPrint2/app_name')); return true; }
   };
 
   /* development_prefs (DevelopmentSettings.onCreate on the user build): Clear USB debugging authorizations stays
@@ -265,7 +287,7 @@
         c.dialog({title: t.t('adb_warning_title'), message: t.t('adb_warning_message'), buttons: [{label: t.t('cancel')}, {label: t.t('okay'), action: c => { d.enable_adb = true; c.save(); c.render(); }}]});
         return true;
       }
-      if (['bugreport', 'local_backup_password', 'running_apps', 'clear_adb_keys', 'mock_location_app', 'debug_app', 'inactive_apps'].includes(key)) { MM.settingsGo(c, `missing:com.android.settings.DevelopmentSettings#${key}`, ''); return true; }
+      if (MM.devClick?.(c, key)) return true;
       return false;
     }
   };
@@ -308,7 +330,9 @@
       return undefined;
     },
     click(c, key, n) {
-      if (key === 'mobile_network_settings' || key === 'cell_broadcast_settings') { MM.settingsGo(c, `missing:${n.intent.targetClass}`, MM.settingsStr(n.title)); return true; }
+      // TeleService's MobileNetworkSettings and CellBroadcastReceiver's settings, apps of their own.
+      if (key === 'mobile_network_settings') { MM.openPrefs(c, 'network', 'network_setting'); return true; }
+      if (key === 'cell_broadcast_settings') { MM.openPrefs(c, 'cellbroadcast', 'preferences', MM.settingsStr(n.title)); return true; }
       return false;
     }
   };
@@ -362,10 +386,11 @@
       const t = T(), s = S(c);
       if (name === 'mmdr-toggle') { s.dreams = s.dreams === false; c.save(); c.render(); return true; }
       if (name === 'mmdr-pick') { s.dream = el.dataset.id; c.save(); c.render(); return true; }
-      if (name === 'mmdr-settings') { MM.settingsGo(c, `missing:${el.dataset.id === 'clock' ? 'com.android.deskclock.settings.ScreensaverSettingsActivity' : 'com.google.android.apps.photos.daydream.DreamSettingsActivity'}`, ''); return true; }
+      // The dreams' settings activities: DeskClock's ScreensaverSettingsActivity (dream_settings.xml) and Photos' own.
+      if (name === 'mmdr-settings') { if (el.dataset.id === 'clock') MM.openPrefs(c, 'clock', 'dream_settings'); else MM.settingsGo(c, 'photos-dream', ''); return true; }
       if (name === 'mm-menu') {
         const on = s.dreams !== false, when = s.dreamWhen || 'dock';
-        c.menu([{label: t.t('screensaver_settings_dream_start'), disabled: !on, action: c => MM.settingsGo(c, `missing:dream:${s.dream || 'clock'}`, '')},
+        c.menu([{label: t.t('screensaver_settings_dream_start'), disabled: !on, action: c => c.open('daydream', s.dream || 'clock')},
           {label: t.t('screensaver_settings_when_to_dream'), disabled: !on, action: c => c.dialog({title: t.t('screensaver_settings_when_to_dream'),
             items: WHEN.map(([v, label]) => ({html: `<span class="mmst-choice"><i class="mmw-radio${v === when ? ' on' : ''}"></i><span>${c.safe(t.t(label))}</span></span>`})),
             onItem: i => { s.dreamWhen = WHEN[i][0]; c.save(); }})}]);

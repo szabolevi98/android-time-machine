@@ -412,6 +412,54 @@ MM.strings('clock', {
 "fr": "Tous les jours",
 "es": "Todos los días"
 },
+"cities_activity_title": {
+"res": "bullhead:PrebuiltDeskClockGoogle:cities_activity_title",
+"en": "Cities",
+"hu": "Városok",
+"de": "Städte",
+"fr": "Villes",
+"es": "Ciudades"
+},
+"selected_cities_label": {
+"res": "bullhead:PrebuiltDeskClockGoogle:selected_cities_label",
+"en": "Selected Cities",
+"hu": "Kiválasztott városok",
+"de": "Ausgewählte Städte",
+"fr": "Villes sélectionnées",
+"es": "Ciudades seleccionadas"
+},
+"menu_item_sort_by_gmt_offset": {
+"res": "bullhead:PrebuiltDeskClockGoogle:menu_item_sort_by_gmt_offset",
+"en": "Sort by time",
+"hu": "Rendezés idő szerint",
+"de": "Zeitlich sortieren",
+"fr": "Trier par heure",
+"es": "Ordenar por hora"
+},
+"menu_item_sort_by_name": {
+"res": "bullhead:PrebuiltDeskClockGoogle:menu_item_sort_by_name",
+"en": "Sort by name",
+"hu": "Rendezés név szerint",
+"de": "Nach Namen sortieren",
+"fr": "Trier par nom",
+"es": "Ordenar por nombre"
+},
+"abc_search_hint": {
+"res": "bullhead:PrebuiltDeskClockGoogle:abc_search_hint",
+"en": "Search…",
+"hu": "Keresés…",
+"de": "Suchen…",
+"fr": "Rechercher…",
+"es": "Buscar…"
+},
+"abc_searchview_description_search": {
+"res": "bullhead:PrebuiltDeskClockGoogle:abc_searchview_description_search",
+"en": "Search",
+"hu": "Keresés",
+"de": "Suchen",
+"fr": "Rechercher",
+"es": "Buscar"
+},
 "alarm_set": {
 "res": "bullhead:PrebuiltDeskClockGoogle:alarm_set",
 "en": [

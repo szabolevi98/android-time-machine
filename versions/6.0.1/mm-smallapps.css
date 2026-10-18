@@ -50,3 +50,7 @@
 .mmsa-savename{flex:1;min-width:0;height:calc(40 * var(--dp));padding:0 calc(4 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #009688;outline:0;background:none;color:rgba(0,0,0,.87);font:calc(16 * var(--dp)) Roboto,sans-serif}
 .mmsa-savename::selection{background:rgba(0,150,136,.3)}
 .mmsa-save button{flex:none;min-width:calc(64 * var(--dp));height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;color:#009688;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+button.mmsa-file{width:100%;border:0;background:none;text-align:left;font-family:Roboto,sans-serif}
+button.mmsa-file:active{background:rgba(0,0,0,.08)}
+.mmsa-q{flex:1;min-width:0;height:calc(40 * var(--dp));border:0;outline:0;background:none;color:#fff;font:calc(18 * var(--dp)) Roboto,sans-serif}
+.mmsa-q::placeholder{color:rgba(255,255,255,.6)}

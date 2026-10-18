@@ -7960,6 +7960,2177 @@ MM.strings('settings', {
 "fr": "OK",
 "es": "Listo"
 },
+"change": {
+"res": "bullhead:Settings:change",
+"en": "Change",
+"hu": "Módosítás",
+"de": "Ändern",
+"fr": "Modifier",
+"es": "Cambiar"
+},
+"clear_user_data_text": {
+"res": "bullhead:Settings:clear_user_data_text",
+"en": "Clear data",
+"hu": "Adatok törlése",
+"de": "Daten löschen",
+"fr": "Effacer les données",
+"es": "Borrar datos"
+},
+"clear_cache_btn_text": {
+"res": "bullhead:Settings:clear_cache_btn_text",
+"en": "Clear cache",
+"hu": "A gyorsítótár törlése",
+"de": "Cache leeren",
+"fr": "Vider le cache",
+"es": "Borrar caché"
+},
+"clear_data_dlg_title": {
+"res": "bullhead:Settings:clear_data_dlg_title",
+"en": "Delete app data?",
+"hu": "Törli az alkalmazás adatait?",
+"de": "App-Daten löschen?",
+"fr": "Supprimer les données de l'application ?",
+"es": "¿Eliminar datos de la aplicación?"
+},
+"clear_data_dlg_text": {
+"res": "bullhead:Settings:clear_data_dlg_text",
+"en": "All this app’s data will be deleted permanently. This includes all files, settings, accounts, databases, etc.",
+"hu": "Az alkalmazás minden adatát véglegesen törölni fogja. Ez magában foglalja az összes fájlt, beállítást, fiókot, adatbázist stb.",
+"de": "Alle Daten dieser App werden endgültig gelöscht. Dazu zählen alle Dateien, Einstellungen, Konten, Datenbanken.",
+"fr": "Les données de cette application (fichiers, paramètres, comptes, bases de données, etc.) vont être définitivement supprimées.",
+"es": "Todos los datos de esta aplicación se eliminarán de forma permanente. Esto incluye todos los archivos, ajustes, cuentas, bases de datos, etc."
+},
+"notifications_disabled": {
+"res": "bullhead:Settings:notifications_disabled",
+"en": "Block",
+"hu": "Letiltás",
+"de": "Aus",
+"fr": "Bloquer",
+"es": "Bloquear"
+},
+"notifications_priority": {
+"res": "bullhead:Settings:notifications_priority",
+"en": "Priority",
+"hu": "Prioritást élvező",
+"de": "Wichtig",
+"fr": "Prioritaires",
+"es": "Prioridad"
+},
+"notifications_sensitive": {
+"res": "bullhead:Settings:notifications_sensitive",
+"en": "Sensitive content hidden",
+"hu": "Bizalmas tartalom elrejtve",
+"de": "Vertrauliche Inhalte verborgen",
+"fr": "Contenu sensible masqué",
+"es": "Contenido sensible oculto"
+},
+"app_link_open_always": {
+"res": "bullhead:Settings:app_link_open_always",
+"en": "Open in this app",
+"hu": "Megnyitás ebben az alkalmazásban",
+"de": "In dieser App öffnen",
+"fr": "Ouvrir dans cette application",
+"es": "Abrir en esta aplicación"
+},
+"app_link_open_ask": {
+"res": "bullhead:Settings:app_link_open_ask",
+"en": "Ask every time",
+"hu": "Mindig rákérdez",
+"de": "Jedes Mal fragen",
+"fr": "Toujours demander",
+"es": "Preguntar siempre"
+},
+"app_link_open_never": {
+"res": "bullhead:Settings:app_link_open_never",
+"en": "Don’t open in this app",
+"hu": "Nem nyitja meg ebben az alkalmazásban",
+"de": "In dieser App nicht öffnen",
+"fr": "Ne pas ouvrir dans cette application",
+"es": "No abrir en esta aplicación"
+},
+"auto_launch_disable_text": {
+"res": "bullhead:Settings:auto_launch_disable_text",
+"en": "No defaults set.",
+"hu": "Nincs alapbeállítás.",
+"de": "Kein Standard",
+"fr": "Aucun paramètre par défaut défini",
+"es": "No se han establecido valores por defecto"
+},
+"auto_launch_label": {
+"res": "bullhead:Settings:auto_launch_label",
+"en": "Open by default",
+"hu": "Megnyitás alapértelmezés szerint",
+"de": "Standardmäßig öffnen",
+"fr": "Ouvrir par défaut",
+"es": "Abrir de forma predeterminada"
+},
+"clear_activities": {
+"res": "bullhead:Settings:clear_activities",
+"en": "Clear defaults",
+"hu": "Alapértelmezések törlése",
+"de": "Aktionen auf Standard zurücksetzen",
+"fr": "Effacer les actions par défaut",
+"es": "Borrar valores por defecto"
+},
+"domain_urls_summary_none": {
+"res": "bullhead:Settings:domain_urls_summary_none",
+"en": "Don’t open supported links",
+"hu": "Ne nyissa meg a támogatott linkeket",
+"de": "Unterstützte Links nicht öffnen",
+"fr": "Ne pas ouvrir les liens compatibles",
+"es": "No se abren enlaces compatibles"
+},
+"domain_urls_summary_one": {
+"res": "bullhead:Settings:domain_urls_summary_one",
+"args": 1,
+"en": "Open %s",
+"hu": "Megnyitás: %s",
+"de": "%s öffnen",
+"fr": "Ouvrir \"%s\"",
+"es": "Abre %s"
+},
+"domain_urls_summary_some": {
+"res": "bullhead:Settings:domain_urls_summary_some",
+"args": 1,
+"en": "Open %s and related URLs",
+"hu": "A(z) %s és a kapcsolódó URL-ek megnyitása",
+"de": "%s und zugehörige URLs öffnen",
+"fr": "Ouvrir \"%s\" et les URL associées",
+"es": "Abre %s y las URL relacionadas"
+},
+"auto_launch_enable_text": {
+"res": "bullhead:Settings:auto_launch_enable_text",
+"en": "You’ve chosen to launch this app by default for some actions.",
+"hu": "Úgy döntött, hogy ezt az alkalmazást indítja el alapértelmezettként egyes műveletekhez.",
+"de": "Du hast diese App für einige Aktionen als Standard festgelegt.",
+"fr": "Vous avez choisi de lancer cette application par défaut pour certaines actions.",
+"es": "Has elegido iniciar esta aplicación de forma predeterminada para algunas acciones."
+},
+"launch_defaults_some": {
+"res": "bullhead:Settings:launch_defaults_some",
+"en": "Some defaults set",
+"hu": "Van néhány alapbeállítás",
+"de": "Einige Standardeinstellungen festgelegt",
+"fr": "Certains paramètres par défaut définis",
+"es": "Se han establecido algunos valores predeterminados"
+},
+"data_usage_app_settings": {
+"res": "bullhead:Settings:data_usage_app_settings",
+"en": "App settings",
+"hu": "Alkalmazásbeállítások",
+"de": "App-Einstellungen",
+"fr": "Paramètres de l'application",
+"es": "Ajustes de la aplicación"
+},
+"data_usage_label_foreground": {
+"res": "bullhead:Settings:data_usage_label_foreground",
+"en": "Foreground",
+"hu": "Előtér",
+"de": "Vordergrund",
+"fr": "Premier plan",
+"es": "Primer plano"
+},
+"data_usage_label_background": {
+"res": "bullhead:Settings:data_usage_label_background",
+"en": "Background",
+"hu": "Háttér",
+"de": "Hintergrund",
+"fr": "Arrière-plan",
+"es": "Segundo plano"
+},
+"data_usage_app_restrict_background": {
+"res": "bullhead:Settings:data_usage_app_restrict_background",
+"en": "Restrict app background data",
+"hu": "Háttéradatok korlátozása",
+"de": "App-Hintergrunddaten beschränken",
+"fr": "Limiter données arrière-plan",
+"es": "Restringir conex. autom. aplic."
+},
+"data_usage_app_restrict_background_summary": {
+"res": "bullhead:Settings:data_usage_app_restrict_background_summary",
+"en": "Disable background data on cellular networks.",
+"hu": "Háttéradatok kikapcsolása mobilhálózatokon.",
+"de": "Hintergrunddaten in Mobilfunknetzen deaktivieren",
+"fr": "Désactiver les données en arrière-plan sur les réseaux mobiles",
+"es": "Inhabilita las conexiones automáticas en redes móviles."
+},
+"data_usage_app_restrict_dialog_title": {
+"res": "bullhead:Settings:data_usage_app_restrict_dialog_title",
+"en": "Restrict background data?",
+"hu": "Korlátozza a háttéradatokat?",
+"de": "Hintergrunddaten beschränken?",
+"fr": "Limiter les données en arrière-plan ?",
+"es": "¿Restringir conexiones automáticas?"
+},
+"data_usage_app_restrict_dialog": {
+"res": "bullhead:Settings:data_usage_app_restrict_dialog",
+"en": "This feature may cause an app that depends on background data to stop working when only cellular networks are available.\n\nYou can find more appropriate data usage controls in the settings available within the app.",
+"hu": "A funkció miatt elképzelhető, hogy a háttéradatoktól függő alkalmazások nem fognak működni, amikor csak mobilhálózat áll rendelkezésre.\n\nMegfelelőbb adathasználati beállításokat az alkalmazáson belül találhat.",
+"de": "Wenn nur Mobilfunknetze verfügbar sind, kann diese Funktion die ordnungsgemäße Funktion von Apps behindern, die Hintergrunddaten benötigen.\n\nGeeignetere Steuerelemente für die Datennutzung findest du in den Einstellungen der jeweiligen App.",
+"fr": "Cette fonctionnalité peut empêcher certaines applications de fonctionner lorsque celles-ci sont dépendantes des données en arrière-plan et que seuls des réseaux mobiles sont disponibles.\n\nVous trouverez des options plus adaptées en matière de contrôle de la consommation des données dans les paramètres de l'application.",
+"es": "Esta función puede hacer que una aplicación que depende de las conexiones automáticas deje de funcionar si solo hay redes móviles disponibles.\n\nPuedes encontrar más opciones para controlar el uso de datos en los ajustes disponibles en la aplicación."
+},
+"data_usage_change_cycle": {
+"res": "bullhead:Settings:data_usage_change_cycle",
+"en": "Change cycle…",
+"hu": "Ciklus módosítása...",
+"de": "Zyklus ändern...",
+"fr": "Changer le cycle...",
+"es": "Cambiar ciclo…"
+},
+"data_usage_cycle_editor_subtitle": {
+"res": "bullhead:Settings:data_usage_cycle_editor_subtitle",
+"en": "Date of each month:",
+"hu": "Hónap napja:",
+"de": "Datum (monatlich):",
+"fr": "Jour du mois :",
+"es": "Día de cada mes:"
+},
+"data_usage_cycle_editor_positive": {
+"res": "bullhead:Settings:data_usage_cycle_editor_positive",
+"en": "Set",
+"hu": "Beállítás",
+"de": "Übernehmen",
+"fr": "Définir",
+"es": "Establecer"
+},
+"data_usage_tab_mobile": {
+"res": "bullhead:Settings:data_usage_tab_mobile",
+"en": "Cellular",
+"hu": "Mobil",
+"de": "Mobilfunk",
+"fr": "Mobile",
+"es": "Móvil"
+},
+"data_usage_menu_hide_wifi": {
+"res": "bullhead:Settings:data_usage_menu_hide_wifi",
+"en": "Hide Wi‑Fi",
+"hu": "Wi‑Fi-használat elrejtése",
+"de": "WLAN ausblenden",
+"fr": "Masquer conso données Wi‑Fi",
+"es": "Ocultar Wi‑Fi"
+},
+"data_usage_empty": {
+"res": "bullhead:Settings:data_usage_empty",
+"en": "No apps used data during this period.",
+"hu": "Egy alkalmazás sem használt adatokat ekkor.",
+"de": "Kein Datenverbrauch in diesem Zeitraum",
+"fr": "Aucune donnée utilisée par les applications pendant cette période.",
+"es": "Ninguna aplicación ha usado datos en este período."
+},
+"data_summary_format": {
+"res": "bullhead:Settings:data_summary_format",
+"args": 2,
+"en": "%1$s used since %2$s",
+"hu": "%1$s %2$s óta",
+"de": "%1$s seit %2$s genutzt",
+"fr": "%1$s utilisés depuis %2$s",
+"es": "%1$s usados desde %2$s"
+},
+"spellchecker_language": {
+"res": "bullhead:Settings:spellchecker_language",
+"en": "Language",
+"hu": "Nyelv",
+"de": "Sprache",
+"fr": "Langue",
+"es": "Idioma"
+},
+"use_system_language_to_select_input_method_subtypes": {
+"res": "bullhead:Settings:use_system_language_to_select_input_method_subtypes",
+"en": "Use system language",
+"hu": "A rendszer nyelvének használata",
+"de": "Systemsprache",
+"fr": "Utiliser la langue du système",
+"es": "Usar idioma del sistema"
+},
+"user_dict_settings_empty_text": {
+"res": "bullhead:Settings:user_dict_settings_empty_text",
+"en": "You don’t have any words in the user dictionary. Add a word by touching the Add (+) button.",
+"hu": "Nincsenek szavak a felhasználói szótárban. Új szavakat a Hozzáadás (+) gomb megérintésével vehet fel.",
+"de": "Es sind noch keine Wörter in deinem Wörterbuch vorhanden. Du kannst Wörter hinzufügen, indem du das \"+\"-Symbol berührst.",
+"fr": "Votre dictionnaire personnel ne contient aucun mot. Ajoutez un mot en appuyant sur le bouton d'ajout \"+\".",
+"es": "No tienes ninguna palabra en el diccionario del usuario. Toca el botón Añadir (+) para añadir una palabra."
+},
+"user_dict_settings_add_menu_title": {
+"res": "bullhead:Settings:user_dict_settings_add_menu_title",
+"en": "Add",
+"hu": "Hozzáadás",
+"de": "Hinzufügen",
+"fr": "Ajouter",
+"es": "Añadir"
+},
+"user_dict_settings_add_dialog_title": {
+"res": "bullhead:Settings:user_dict_settings_add_dialog_title",
+"en": "Add to dictionary",
+"hu": "Hozzáadás a szótárhoz",
+"de": "Ins Wörterbuch",
+"fr": "Ajouter au dictionnaire",
+"es": "Añadir al diccionario"
+},
+"user_dict_settings_add_word_hint": {
+"res": "bullhead:Settings:user_dict_settings_add_word_hint",
+"en": "Type a word",
+"hu": "Szó beírása",
+"de": "Wort eingeben",
+"fr": "Saisissez un mot",
+"es": "Escribe una palabra"
+},
+"user_dict_settings_add_shortcut_hint": {
+"res": "bullhead:Settings:user_dict_settings_add_shortcut_hint",
+"en": "Optional shortcut",
+"hu": "Választható gyorsparancs",
+"de": "Optionales Tastaturkürzel",
+"fr": "Raccourci facultatif",
+"es": "Introducir"
+},
+"user_dict_settings_add_word_option_name": {
+"res": "bullhead:Settings:user_dict_settings_add_word_option_name",
+"en": "Word:",
+"hu": "Szó:",
+"de": "Wort:",
+"fr": "Mot :",
+"es": "Palabra:"
+},
+"user_dict_settings_add_shortcut_option_name": {
+"res": "bullhead:Settings:user_dict_settings_add_shortcut_option_name",
+"en": "Shortcut:",
+"hu": "Parancsikon:",
+"de": "Tastaturkürzel:",
+"fr": "Raccourci :",
+"es": "Texto de sustitución:"
+},
+"user_dict_settings_add_locale_option_name": {
+"res": "bullhead:Settings:user_dict_settings_add_locale_option_name",
+"en": "Language:",
+"hu": "Nyelv:",
+"de": "Sprache:",
+"fr": "Langue :",
+"es": "Idioma:"
+},
+"user_dict_settings_add_dialog_confirm": {
+"res": "bullhead:Settings:user_dict_settings_add_dialog_confirm",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"user_dict_settings_edit_dialog_title": {
+"res": "bullhead:Settings:user_dict_settings_edit_dialog_title",
+"en": "Edit word",
+"hu": "Szó szerkesztése",
+"de": "Wort bearbeiten",
+"fr": "Modifier le mot",
+"es": "Editar palabra"
+},
+"user_dict_settings_context_menu_delete_title": {
+"res": "bullhead:Settings:user_dict_settings_context_menu_delete_title",
+"en": "Delete",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Supprimer",
+"es": "Eliminar"
+},
+"framework/select_input_method": {
+"res": "bullhead:framework:select_input_method",
+"en": "Change keyboard",
+"hu": "Billentyűzet megváltoztatása",
+"de": "Tastatur ändern",
+"fr": "Changer de clavier",
+"es": "Cambiar teclado"
+},
+"framework/configure_input_methods": {
+"res": "bullhead:framework:configure_input_methods",
+"en": "Choose keyboards",
+"hu": "Billentyűzetek kiválasztása",
+"de": "Tastatur auswählen",
+"fr": "Sélectionner des claviers",
+"es": "Elegir teclados"
+},
+"framework/show_ime": {
+"res": "bullhead:framework:show_ime",
+"en": "Show input method",
+"hu": "Beviteli mód megjelenítése",
+"de": "Eingabemethode anzeigen",
+"fr": "Afficher mode de saisie",
+"es": "Mostrar método de entrada"
+},
+"spellchecker_security_warning": {
+"res": "bullhead:Settings:spellchecker_security_warning",
+"en": "This spell checker may be able to collect all the text you type, including personal data like passwords and credit card numbers. It comes from the app %1$s. Use this spell checker?",
+"hu": "Lehetséges, hogy ez a helyesírás-ellenőrző összegyűjti a beírt szövegeket, beleértve a személyes adatokat, mint amilyenek a jelszavak és bankkártyaszámok. A(z) %1$s alkalmazástól származik. Használja ezt a helyesírás-ellenőrzőt?",
+"de": "Diese Rechtschreibprüfung kann den gesamten von dir eingegebenen Text erfassen, einschließlich personenbezogener Daten wie Passwörter und Kreditkartennummern. Sie ist Teil der App \"%1$s\". Möchtest du die Rechtschreibprüfung verwenden?",
+"fr": "Ce correcteur orthographique peut recueillir l'ensemble du texte saisi, y compris des données personnelles comme des mots de passe et des numéros de carte de paiement. Il provient de l'application %1$s. Utiliser ce correcteur orthographique ?",
+"es": "Este corrector ortográfico puede registrar todo lo que escribas, incluidos datos personales, como las contraseñas y los números de las tarjetas de crédito. Procede de la aplicación %1$s. ¿Quieres usar este corrector ortográfico?"
+},
+"date_picker_title": {
+"res": "bullhead:Settings:date_picker_title",
+"en": "Date",
+"hu": "Dátum",
+"de": "Datum",
+"fr": "Date",
+"es": "Fecha"
+},
+"time_picker_title": {
+"res": "bullhead:Settings:time_picker_title",
+"en": "Time",
+"hu": "Idő",
+"de": "Uhrzeit",
+"fr": "Heure",
+"es": "Hora"
+},
+"zone_list_menu_sort_alphabetically": {
+"res": "bullhead:Settings:zone_list_menu_sort_alphabetically",
+"en": "Sort alphabetically",
+"hu": "Rendezés név szerint",
+"de": "Alphabetisch sortieren",
+"fr": "Trier par ordre alphabétique",
+"es": "Ordenar alfabéticamente"
+},
+"zone_list_menu_sort_by_timezone": {
+"res": "bullhead:Settings:zone_list_menu_sort_by_timezone",
+"en": "Sort by time zone",
+"hu": "Rendezés időzóna szerint",
+"de": "Nach Zeitzone sortieren",
+"fr": "Trier par fuseau horaire",
+"es": "Ordenar por zona horaria"
+},
+"accessibility_screen_magnification_summary": {
+"res": "bullhead:Settings:accessibility_screen_magnification_summary",
+"en": "When this feature is turned on, you can zoom in and out by triple-tapping the screen.\n\nWhile zoomed in, you can:\nPan: Drag two or more fingers across the screen.\nAdjust zoom level: Pinch two or more fingers together or spread them apart.\n\nYou can also temporarily magnify what’s under your finger by triple-tapping and holding. In this magnified state, you can drag your finger to explore different parts of the screen. Lift your finger to return to your previous state.\n\nNote: Triple-tap for magnification works everywhere except the keyboard and navigation bar.",
+"hu": "Ha a funkció be van kapcsolva, úgy kicsinyíthet/nagyíthat, hogy háromszor rákoppint a képernyőre.\n\nNagyított állapotban:\nPásztázhat: Két vagy több ujját húzza végig a képernyőn.\nMódosíthatja a nagyítási szintet: Két ujját húzza össze vagy távolítsa el egymástól.\n\nIdeiglenesen felnagyíthatja az ujja alatt lévő részt is, úgy hogy hármat koppint és lenyomva hagyja ujját. A nagyított nézetben az ujját húzva fedezheti fel a képernyő más részeit is. Az ujja felemelésével visszatérhet az előző állapotra.\n\nMegjegyzés: A háromszoros koppintással való nagyítás a billentyűzet és a navigációs sáv kivételével mindenhol működik.",
+"de": "Wenn diese Funktion aktiviert ist, kannst du heranzoomen und herauszoomen, indem du dreimal auf den Bildschirm tippst.\n\nWenn du herangezoomt hast, kannst du:\nSchwenken: mindestens 2 Finger über den Bildschirm ziehen\nZoomstufe anpassen: mindestens 2 Finger zusammen- oder auseinanderziehen\n\nDu kannst auch das, was sich unter deinem Finger befindet, vorübergehend vergrößern, indem du dreimal tippst und hältst. In diesem vergrößerten Zustand kannst du deinen Finger ziehen, um verschiedene Bereiche des Bildschirms zu erkunden. Hebe deinen Finger an, um zum vorherigen Zustand zurückzukehren.\n\nHinweis: Das dreimalige Tippen zur Vergrößerung funktioniert überall außer in der Tastatur und in der Navigationsleiste.",
+"fr": "Lorsque cette fonctionnalité est activée, vous pouvez effectuer des zooms avant et arrière en appuyant trois fois sur l'écran.\n\nAprès un zoom avant, vous pouvez :\nEffectuer un panoramique : faites glisser deux doigts ou plus sur l'écran.\nRégler le niveau de zoom : pincez deux doigts ou plus, ou écartez-les.\n\nVous pouvez également agrandir le contenu se trouvant sous votre doigt en appuyant trois fois sur l'écran et en prolongeant la troisième pression. Lorsque le zoom est activé, vous pouvez faire glisser votre doigt sur l'écran pour en explorer les différentes parties. Relevez votre doigt pour revenir à l'état précédent.\n\nRemarque : vous pouvez appuyer trois fois sur l'écran pour agrandir le contenu partout, sauf sur le clavier et la barre de navigation.",
+"es": "Cuando esta función está activada, puedes acercar y alejar la imagen tocando tres veces la pantalla.\n\nCon la imagen acercada, puedes:\nDesplazar la imagen: arrastra dos o más dedos por la pantalla.\nModificar el nivel de zoom: pellizca dos o más dedos o sepáralos mientras los arrastras.\n\nTambién puedes ampliar el contenido seleccionado de forma temporal con solo tocar la pantalla tres veces y mantenerla pulsada. Con el contenido ampliado, puedes arrastrar el dedo para explorar diferentes partes de la pantalla. Levanta el dedo para volver al estado anterior.\n\nNota: puedes tocar tres veces la pantalla para ampliar el contenido en cualquier parte, excepto en el teclado y en la barra de navegación."
+},
+"accessibility_global_gesture_preference_description": {
+"res": "bullhead:Settings:accessibility_global_gesture_preference_description",
+"en": "When this feature is turned on, you can quickly enable accessibility features in two steps:\n\nStep 1: Press and hold the power button until you hear a sound or feel a vibration.\n\nStep 2: Touch and hold two fingers until you hear audio confirmation.\n\nIf the device has multiple users, using this shortcut on the lock screen temporarily enables accessibility until the device is unlocked.",
+"hu": "Ha a funkció engedélyezve van, gyorsan elérheti a kisegítő lehetőségeket két lépésben:\n\n1. lépés: tartsa lenyomva a bekapcsológombot a hangjelzésig vagy rezgésig.\n\n2. lépés: két ujját tartsa lenyomva a hangjelzéssel történő jóváhagyásig.\n\nHa az eszközt több felhasználó is használja, akkor e kombináció zárolási képernyőn való használatával ideiglenesen hozzáférhetővé válik az eszköz, amíg fel nem oldják azt.",
+"de": "Wenn diese Funktion aktiviert ist, kannst du Bedienungshilfen schnell in zwei Schritten aktivieren:\n\nSchritt 1: Drücke und halte die Ein-/Aus-Taste, bis du einen Ton hörst oder eine Vibration spürst.\n\nSchritt 2: Berühre und halte mit zwei Fingern, bis du eine Audiobestätigung hörst.\n\nFalls das Gerät mehrere Nutzer hat, werden die Bedienungshilfen durch Verwendung dieser Verknüpfung in der Bildschirmsperre so lange aktiviert, bis das Gerät entsperrt ist.",
+"fr": "Lorsque cette fonctionnalité est activée, vous pouvez rapidement activer les fonctionnalités d'accessibilité en deux étapes :\n\nÉtape 1 : Appuyez de manière prolongée sur le bouton Marche/Arrêt jusqu'à ce que le téléphone sonne ou vibre.\n\nÉtape 2 : Appuyez de manière prolongée avec deux doigts jusqu'à ce que vous entendiez la confirmation audio.\n\nSi l'appareil est utilisé par plusieurs personnes, l’utilisation de ce raccourci sur l'écran de verrouillage active l'accessibilité de manière temporaire jusqu'au déverrouillage de l'appareil.",
+"es": "Cuando esta función está activada, puedes habilitar las funciones de accesibilidad rápidamente en dos pasos.\n\nPaso 1: mantén pulsado el botón de encendido hasta que escuches un sonido o notes una vibración.\n\nPaso 2: mantén la pantalla pulsada con dos dedos hasta que escuches una confirmación.\n\nSi hay varios usuarios en el dispositivo, usar este acceso directo en la pantalla de bloqueo permite habilitar la accesibilidad de forma temporal hasta que el dispositivo se desbloquea."
+},
+"enable_service_title": {
+"res": "bullhead:Settings:enable_service_title",
+"args": 1,
+"en": "Use %1$s?",
+"hu": "Használja a(z) %1$s szolgáltatást?",
+"de": "%1$s verwenden?",
+"fr": "Utiliser %1$s ?",
+"es": "¿Usar %1$s?"
+},
+"disable_service_title": {
+"res": "bullhead:Settings:disable_service_title",
+"args": 1,
+"en": "Stop %1$s?",
+"hu": "Leállítja a következőt: %1$s?",
+"de": "%1$s beenden?",
+"fr": "Arrêter %1$s ?",
+"es": "¿Detener %1$s?"
+},
+"disable_service_message": {
+"res": "bullhead:Settings:disable_service_message",
+"args": 1,
+"en": "Touching OK will stop %1$s.",
+"hu": "Az OK gomb megérintésével leállítja a következőt: %1$s.",
+"de": "Durch Berühren von \"OK\" wird %1$s beendet.",
+"fr": "Si vous appuyez sur \"OK\", %1$s sera interrompu.",
+"es": "Si tocas Aceptar, se detendrá %1$s."
+},
+"accessibility_service_default_description": {
+"res": "bullhead:Settings:accessibility_service_default_description",
+"en": "No description provided.",
+"hu": "Nincs leírás.",
+"de": "Es wurde keine Beschreibung bereitgestellt.",
+"fr": "Aucune description fournie",
+"es": "No se ha especificado ninguna descripción."
+},
+"accessibility_menu_item_settings": {
+"res": "bullhead:Settings:accessibility_menu_item_settings",
+"en": "Settings",
+"hu": "Beállítások",
+"de": "Einstellungen",
+"fr": "Paramètres",
+"es": "Ajustes"
+},
+"capabilities_list_title": {
+"res": "bullhead:Settings:capabilities_list_title",
+"args": 1,
+"en": "%1$s needs to:",
+"hu": "A(z) %1$s szolgáltatásnak a következőkre van szüksége:",
+"de": "%1$s muss:",
+"fr": "%1$s doit pouvoir :",
+"es": "%1$s necesita:"
+},
+"framework/capability_title_canRetrieveWindowContent": {
+"res": "bullhead:framework:capability_title_canRetrieveWindowContent",
+"en": "Retrieve window content",
+"hu": "Ablaktartalom lekérdezése",
+"de": "Fensterinhalte abrufen",
+"fr": "Récupérer le contenu d'une fenêtre",
+"es": "Recuperar el contenido de la ventana"
+},
+"framework/capability_desc_canRetrieveWindowContent": {
+"res": "bullhead:framework:capability_desc_canRetrieveWindowContent",
+"en": "Inspect the content of a window you're interacting with.",
+"hu": "A használt ablak tartalmának vizsgálata.",
+"de": "Die Inhalte eines Fensters, mit dem Sie interagieren, werden abgerufen.",
+"fr": "Inspecter le contenu d'une fenêtre avec laquelle vous interagissez",
+"es": "Inspecciona el contenido de una ventana con la que estés interactuando."
+},
+"framework/capability_title_canRequestTouchExploration": {
+"res": "bullhead:framework:capability_title_canRequestTouchExploration",
+"en": "Turn on Explore by Touch",
+"hu": "Felfedezés érintéssel bekapcsolása",
+"de": "\"Tippen & Entdecken\" aktivieren",
+"fr": "Activer la fonctionnalité Explorer au toucher",
+"es": "Activar la exploración táctil"
+},
+"framework/capability_desc_canRequestTouchExploration": {
+"res": "bullhead:framework:capability_desc_canRequestTouchExploration",
+"en": "Touched items will be spoken aloud and the screen can be explored using gestures.",
+"hu": "A megérintett elemeket a rendszer hangosan kimondja, a képernyő pedig felfedezhető kézmozdulatok használatával.",
+"de": "Berührte Elemente werden laut vorgelesen und der Bildschirm kann über Gesten erkundet werden.",
+"fr": "Les éléments sélectionnés sont énoncés à voix haute. Vous pouvez explorer l'écran à l'aide de gestes.",
+"es": "Los elementos seleccionados se dirán en voz alta y podrás explorar la pantalla mediante gestos."
+},
+"framework/capability_title_canRequestFilterKeyEvents": {
+"res": "bullhead:framework:capability_title_canRequestFilterKeyEvents",
+"en": "Observe text you type",
+"hu": "A gépelt szöveg figyelése",
+"de": "Text bei der Eingabe beobachten",
+"fr": "Observer le texte que vous saisissez",
+"es": "Observar el texto que escribes"
+},
+"framework/capability_desc_canRequestFilterKeyEvents": {
+"res": "bullhead:framework:capability_desc_canRequestFilterKeyEvents",
+"en": "Includes personal data such as credit card numbers and passwords.",
+"hu": "Beleértve a személyes adatokat, például a hitelkártyaszámokat és jelszavakat.",
+"de": "Einschließlich personenbezogener Daten wie Kreditkartennummern und Passwörter.",
+"fr": "Inclut des données personnelles telles que les numéros de cartes de paiement et les mots de passe.",
+"es": "Incluye datos personales como números de tarjetas de crédito y contraseñas."
+},
+"talkback/talkback_service_description": {
+"res": "bullhead:talkback:talkback_service_description",
+"en": "When TalkBack is on, your device provides spoken feedback to help blind and low-vision users. For example, it describes what you touch, select, and activate.",
+"hu": "Amikor a Talkback funkció be van kapcsolva, a készülék hangos visszajelzést ad, hogy segítsen a vakoknak és gyengénlátóknak. Például elmondja, hogy a felhasználó mit érintett meg, választott ki vagy aktivált.",
+"de": "Wenn TalkBack aktiviert ist, gibt das Gerät blinden Nutzern und Nutzern mit geringem Sehvermögen gesprochenes Feedback. So werden etwa die Elemente beschrieben, die Sie berühren, auswählen und aktivieren.",
+"fr": "Lorsque TalkBack est activé, l'appareil fournit des commentaires audio aux personnes malvoyantes et non-voyantes utilisant Android. Par exemple, une description vocale des éléments sélectionnés et activés.",
+"es": "Cuando TalkBack está activado, tu dispositivo ofrece mensajes de voz para usuarios con discapacidad visual. Por ejemplo, hablará para describir los elementos que selecciones y actives."
+},
+"talkback/switch_access_service_description": {
+"res": "bullhead:talkback:switch_access_service_description",
+"en": "Switch Access allows you to control your device using configurable key combinations. You can move focus to clickable items and select them.",
+"hu": "A kapcsolóalapú hozzáférés lehetővé teszi eszköze kezelését beállítható billentyűkódok használatával. Válthat a kattintható elemek között, és kiválaszthatja azokat.",
+"de": "Über den Schalterzugriff können Sie Ihr Gerät mithilfe konfigurierbarer Tastenkombinationen steuern. Sie können den Fokus auf anklickbare Elemente setzen und diese auswählen.",
+"fr": "Switch Access vous permet de contrôler votre appareil à l'aide de combinaisons de touches que vous pouvez configurer. Vous pouvez mettre en surbrillance des éléments cliquables et les sélectionner.",
+"es": "La función Accesibilidad mediante interruptor permite controlar el dispositivo utilizando combinaciones de teclas configurables. Puedes dirigir el foco a elementos interactivos y seleccionarlos."
+},
+"backup_data_summary": {
+"res": "bullhead:Settings:backup_data_summary",
+"en": "Back up app data, Wi-Fi passwords, and other settings to Google servers",
+"hu": "Alkalmazásadatok, Wi-Fi-jelszavak és egyéb beállítások mentése a Google szervereire",
+"de": "App-Daten, WLAN-Passwörter und andere Einstellungen auf Google-Servern sichern",
+"fr": "Sauvegarder les données d'applications, les mots de passe Wi-Fi et d'autres paramètres sur les serveurs Google",
+"es": "Crear copia de seguridad de datos de aplicaciones, contraseñas Wi-Fi y otros ajustes en los servidores de Google"
+},
+"backup_erase_dialog_message": {
+"res": "bullhead:Settings:backup_erase_dialog_message",
+"en": "Stop backing up your Wi‑Fi passwords, bookmarks, other settings, and app data, plus erase all copies on Google servers?",
+"hu": "Kikapcsolja a Wi-Fi-jelszavak, könyvjelzők, egyéb beállítások és alkalmazásadatok biztonsági mentését, illetve törli a Google szerverein lévő összes példányt?",
+"de": "Sicherung Ihrer WLAN-Passwörter, Lesezeichen, anderer Einstellungen und App-Daten beenden und alle Kopien auf Google-Servern löschen?",
+"fr": "Voulez-vous vraiment arrêter de sauvegarder vos mots de passe Wi-Fi, vos favoris, ainsi que d'autres paramètres et données d'applications, et en effacer toutes les copies des serveurs Google ?",
+"es": "¿Quieres dejar de crear copias de seguridad de las contraseñas Wi-Fi, de los marcadores y de otros ajustes y datos de aplicaciones, además de borrar todas las copias de los servidores de Google?"
+},
+"print_no_printers_found": {
+"res": "bullhead:Settings:print_no_printers_found",
+"en": "No printers found",
+"hu": "Nem található nyomtató",
+"de": "Keine Drucker gefunden",
+"fr": "Aucune imprimante trouvée",
+"es": "No se encontraron impresoras"
+},
+"print_menu_item_add_printer": {
+"res": "bullhead:Settings:print_menu_item_add_printer",
+"en": "Add printer",
+"hu": "Nyomtató hozzáadása",
+"de": "Drucker hinzufügen",
+"fr": "Ajouter une imprimante",
+"es": "Añadir impresora"
+},
+"print_menu_item_settings": {
+"res": "bullhead:Settings:print_menu_item_settings",
+"en": "Settings",
+"hu": "Beállítások",
+"de": "Einstellungen",
+"fr": "Paramètres",
+"es": "Ajustes"
+},
+"print_service_security_warning_title": {
+"res": "bullhead:Settings:print_service_security_warning_title",
+"args": 1,
+"en": "Use %1$s?",
+"hu": "Használja a következőt: %1$s?",
+"de": "%1$s verwenden?",
+"fr": "Utiliser %1$s ?",
+"es": "¿Usar %1$s?"
+},
+"print_service_security_warning_summary": {
+"res": "bullhead:Settings:print_service_security_warning_summary",
+"en": "Your document may pass through one or more servers on its way to the printer.",
+"hu": "A dokumentum áthaladhat egy vagy több szerveren, mielőtt a nyomtatóhoz érne.",
+"de": "Ihr Dokument passiert bei der Übermittlung an den Drucker möglicherweise einen oder mehrere Server.",
+"fr": "Votre document peut passer par un ou plusieurs serveurs avant d'être envoyé sur l'imprimante.",
+"es": "Es posible que el documento pase por uno o varios servidores antes de imprimirse."
+},
+"print_searching_for_printers": {
+"res": "bullhead:Settings:print_searching_for_printers",
+"en": "Searching for printers",
+"hu": "Nyomtatók keresése",
+"de": "Suche nach Druckern…",
+"fr": "Recherche d'imprimantes en cours",
+"es": "Buscando impresoras"
+},
+"zen_event_rule_enabled_toast": {
+"res": "bullhead:Settings:zen_event_rule_enabled_toast",
+"en": "Automatic rule set to turn on Do Not Disturb during specified events",
+"hu": "Automatikus szabály beállítva a „Ne zavarjanak” bekapcsolására adott események közben",
+"de": "Automatische Regel zur Aktivierung des Status \"Nicht stören\" während bestimmter Ereignisse eingestellt",
+"fr": "Règle automatique pour activer le mode \"Ne pas déranger\" pendant les événements indiqués",
+"es": "Regla automática establecida para activar el modo No molestar durante los eventos especificados"
+},
+"zen_schedule_rule_enabled_toast": {
+"res": "bullhead:Settings:zen_schedule_rule_enabled_toast",
+"en": "Automatic rule set to turn on Do Not Disturb during specified times",
+"hu": "Automatikus szabály beállítva a „Ne zavarjanak” bekapcsolására adott időpontokban",
+"de": "Automatische Regel zur Aktivierung des Status \"Nicht stören\" zu bestimmten Zeiten eingestellt",
+"fr": "Règle automatique pour activer le mode \"Ne pas déranger\" aux heures indiquées",
+"es": "Regla automática para activar el modo No molestar durante las horas especificadas"
+},
+"zen_event_rule_type_name": {
+"res": "bullhead:Settings:zen_event_rule_type_name",
+"en": "Event rule",
+"hu": "Eseményszabály",
+"de": "Ereignisregel",
+"fr": "Règle de l'événement",
+"es": "Regla de evento"
+},
+"zen_schedule_rule_type_name": {
+"res": "bullhead:Settings:zen_schedule_rule_type_name",
+"en": "Time rule",
+"hu": "Időfüggő szabály",
+"de": "Zeitregel",
+"fr": "Règle basée sur l'heure",
+"es": "Regla de hora"
+},
+"zen_mode_delete_rule": {
+"res": "bullhead:Settings:zen_mode_delete_rule",
+"en": "Delete rule",
+"hu": "Szabály törlése",
+"de": "Regel löschen",
+"fr": "Supprimer la règle",
+"es": "Eliminar regla"
+},
+"zen_mode_delete_rule_button": {
+"res": "bullhead:Settings:zen_mode_delete_rule_button",
+"en": "Delete",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Supprimer",
+"es": "Eliminar"
+},
+"zen_mode_delete_rule_confirmation": {
+"res": "bullhead:Settings:zen_mode_delete_rule_confirmation",
+"args": 1,
+"en": "Delete “%1$s” rule?",
+"hu": "Törli a(z) „%1$s” szabályt?",
+"de": "Regel \"%1$s\" löschen?",
+"fr": "Supprimer la règle \"%1$s\" ?",
+"es": "¿Quieres eliminar la regla \"%1$s\"?"
+},
+"zen_mode_end_time": {
+"res": "bullhead:Settings:zen_mode_end_time",
+"en": "End time",
+"hu": "Befejezés ideje",
+"de": "Schlusszeit",
+"fr": "Heure de fin",
+"es": "Hora de finalización"
+},
+"zen_mode_start_time": {
+"res": "bullhead:Settings:zen_mode_start_time",
+"en": "Start time",
+"hu": "Kezdés ideje",
+"de": "Startzeit",
+"fr": "Heure de début",
+"es": "Hora de inicio"
+},
+"zen_mode_end_time_next_day_summary_format": {
+"res": "bullhead:Settings:zen_mode_end_time_next_day_summary_format",
+"args": 1,
+"en": "%s next day",
+"hu": "%s a következő napon",
+"de": "Am nächsten Tag um %s",
+"fr": "%s le lendemain",
+"es": "Día siguiente a las %s"
+},
+"zen_mode_event_rule_calendar_any": {
+"res": "bullhead:Settings:zen_mode_event_rule_calendar_any",
+"en": "Any calendar",
+"hu": "Bármilyen naptár",
+"de": "Beliebiger Kalender",
+"fr": "Tous les agendas",
+"es": "Cualquier calendario"
+},
+"zen_mode_event_rule_reply_any_except_no": {
+"res": "bullhead:Settings:zen_mode_event_rule_reply_any_except_no",
+"en": "Yes, Maybe, or Not replied",
+"hu": "Igen, talán vagy nincs válasz",
+"de": "\"Ja\", \"Vielleicht\" oder \"Keine Antwort\"",
+"fr": "\"Oui\", \"Peut-être\" ou \"Pas de réponse\"",
+"es": "Sí, quizás o sin respuesta"
+},
+"zen_mode_event_rule_reply_yes": {
+"res": "bullhead:Settings:zen_mode_event_rule_reply_yes",
+"en": "Yes",
+"hu": "Igen",
+"de": "Ja",
+"fr": "Oui",
+"es": "Sí"
+},
+"zen_mode_event_rule_reply_yes_or_maybe": {
+"res": "bullhead:Settings:zen_mode_event_rule_reply_yes_or_maybe",
+"en": "Yes or Maybe",
+"hu": "Igen vagy talán",
+"de": "\"Ja\" oder \"Vielleicht\"",
+"fr": "\"Oui\" ou \"Peut-être\"",
+"es": "Sí o quizás"
+},
+"zen_mode_event_rule_summary_any_calendar": {
+"res": "bullhead:Settings:zen_mode_event_rule_summary_any_calendar",
+"en": "any calendar",
+"hu": "bármilyen naptár",
+"de": "beliebiger Kalender",
+"fr": "tous les agendas",
+"es": "cualquier calendario"
+},
+"zen_mode_event_rule_summary_calendar_template": {
+"res": "bullhead:Settings:zen_mode_event_rule_summary_calendar_template",
+"args": 1,
+"en": "During events for %1$s",
+"hu": "A következő eseményekkor: %1$s",
+"de": "Während Terminen für %1$s",
+"fr": "Durant les événements pour %1$s",
+"es": "Durante eventos de %1$s"
+},
+"zen_mode_event_rule_summary_reply_template": {
+"res": "bullhead:Settings:zen_mode_event_rule_summary_reply_template",
+"args": 1,
+"en": "Where reply is %1$s",
+"hu": "Ha a válasz a következő: %1$s",
+"de": "Bei folgenden Antworten: %1$s",
+"fr": "Si la réponse est %1$s",
+"es": "Cuando la respuesta sea %1$s"
+},
+"zen_mode_rule_name_hint": {
+"res": "bullhead:Settings:zen_mode_rule_name_hint",
+"en": "Enter rule name",
+"hu": "Szabály nevének megadása",
+"de": "Regelnamen eingeben",
+"fr": "Saisissez le nom de la règle",
+"es": "Introduce un nombre"
+},
+"zen_mode_rule_name_warning": {
+"res": "bullhead:Settings:zen_mode_rule_name_warning",
+"en": "Rule name already in use",
+"hu": "A szabálynév már használatban van",
+"de": "Regelname wird bereits verwendet.",
+"fr": "Ce nom de règle est déjà utilisé.",
+"es": "Nombre de regla ya en uso"
+},
+"zen_mode_rule_not_found_text": {
+"res": "bullhead:Settings:zen_mode_rule_not_found_text",
+"en": "Rule not found.",
+"hu": "Szabály nem található",
+"de": "Regel nicht gefunden",
+"fr": "Règle introuvable.",
+"es": "No se ha encontrado esa regla."
+},
+"zen_mode_rule_summary_combination": {
+"res": "bullhead:Settings:zen_mode_rule_summary_combination",
+"args": 2,
+"en": "%1$s / %2$s",
+"hu": "%1$s / %2$s",
+"de": "%1$s/%2$s",
+"fr": "%1$s/%2$s",
+"es": "%1$s/%2$s"
+},
+"zen_mode_schedule_rule_days_all": {
+"res": "bullhead:Settings:zen_mode_schedule_rule_days_all",
+"en": "Every day",
+"hu": "Minden nap",
+"de": "Täglich",
+"fr": "Tous les jours",
+"es": "Todos los días"
+},
+"zen_mode_schedule_rule_days_none": {
+"res": "bullhead:Settings:zen_mode_schedule_rule_days_none",
+"en": "None",
+"hu": "Nincs",
+"de": "Keine",
+"fr": "Aucun",
+"es": "Ninguno"
+},
+"zen_mode_option_important_interruptions": {
+"res": "bullhead:Settings:zen_mode_option_important_interruptions",
+"en": "Priority only",
+"hu": "Csak prioritásos",
+"de": "Nur wichtige Unterbrechungen",
+"fr": "Interruptions prioritaires uniquement",
+"es": "Solo prioritarias"
+},
+"zen_mode_option_alarms": {
+"res": "bullhead:Settings:zen_mode_option_alarms",
+"en": "Alarms only",
+"hu": "Csak riasztások",
+"de": "Nur Wecker",
+"fr": "Alarmes uniquement",
+"es": "Solo alarmas"
+},
+"zen_mode_option_no_interruptions": {
+"res": "bullhead:Settings:zen_mode_option_no_interruptions",
+"en": "Total silence",
+"hu": "Teljes némítás",
+"de": "Lautlos",
+"fr": "Aucune interruption",
+"es": "Silencio total"
+},
+"sim_bad_pin": {
+"res": "bullhead:Settings:sim_bad_pin",
+"en": "Incorrect PIN",
+"hu": "Helytelen PIN-kód",
+"de": "Falsche PIN",
+"fr": "Code PIN incorrect.",
+"es": "PIN incorrecto"
+},
+"sim_change_failed": {
+"res": "bullhead:Settings:sim_change_failed",
+"en": "Can’t change PIN.\nPossibly incorrect PIN.",
+"hu": "Nem lehet megváltoztatni a PIN-kódot.\nLehet, hogy hibás a PIN-kód.",
+"de": "PIN kann nicht geändert werden.\nMöglicherweise ist es die falsche PIN.",
+"fr": "Impossible de modifier le code PIN.\nLe code PIN est peut-être incorrect.",
+"es": "No se puede modificar el PIN.\nEs posible que el PIN no sea correcto."
+},
+"sim_change_succeeded": {
+"res": "bullhead:Settings:sim_change_succeeded",
+"en": "SIM PIN changed successfully",
+"hu": "A SIM kártya PIN kódja sikeresen módosításra került",
+"de": "SIM-PIN erfolgreich geändert",
+"fr": "Le code PIN de la carte SIM a été modifié.",
+"es": "El PIN de la tarjeta SIM se ha modificado correctamente."
+},
+"sim_disable_sim_lock": {
+"res": "bullhead:Settings:sim_disable_sim_lock",
+"en": "Unlock SIM card",
+"hu": "SIM kártya feloldása",
+"de": "SIM-Karte entsperren",
+"fr": "Déverrouiller la carte SIM",
+"es": "Desbloquear tarjeta SIM"
+},
+"sim_enable_sim_lock": {
+"res": "bullhead:Settings:sim_enable_sim_lock",
+"en": "Lock SIM card",
+"hu": "SIM kártya lezárása",
+"de": "SIM-Karte sperren",
+"fr": "Verrouiller la carte SIM",
+"es": "Bloquear tarjeta SIM"
+},
+"sim_enter_new": {
+"res": "bullhead:Settings:sim_enter_new",
+"en": "New SIM PIN",
+"hu": "Új PIN-kód a SIM kártyához",
+"de": "Neue PIN für SIM-Karte",
+"fr": "Nouveau code PIN de la carte SIM",
+"es": "Nuevo PIN de tarjeta SIM"
+},
+"sim_enter_pin": {
+"res": "bullhead:Settings:sim_enter_pin",
+"en": "SIM PIN",
+"hu": "SIM kártya PIN kódja",
+"de": "PIN für SIM-Karte",
+"fr": "Code PIN de la carte SIM",
+"es": "PIN de la tarjeta SIM"
+},
+"sim_lock_failed": {
+"res": "bullhead:Settings:sim_lock_failed",
+"en": "Can’t change SIM card lock state.\nPossibly incorrect PIN.",
+"hu": "Nem lehet megváltoztatni a SIM kártya zárolási állapotát.\nLehet, hogy hibás a PIN-kód.",
+"de": "Status der SIM-Kartensperrung kann nicht geändert werden.\nMöglicherweise falsche PIN.",
+"fr": "Impossible de changer l'état de verrouillage de la carte SIM.\nLe code PIN est peut-être incorrect.",
+"es": "No se puede modificar el estado de bloqueo de la tarjeta SIM.\nEs posible que el PIN no sea correcto."
+},
+"sim_pins_dont_match": {
+"res": "bullhead:Settings:sim_pins_dont_match",
+"en": "PINs don’t match",
+"hu": "A PIN kódok nem egyeznek",
+"de": "Die PINs stimmen nicht überein.",
+"fr": "Les codes PIN ne correspondent pas.",
+"es": "Los números PIN no coinciden."
+},
+"sim_reenter_new": {
+"res": "bullhead:Settings:sim_reenter_new",
+"en": "Re‑type new PIN",
+"hu": "Írja be ismét az új PIN kódot",
+"de": "Neue PIN erneut eingeben",
+"fr": "Saisissez à nouveau le code d'accès.",
+"es": "Volver a introducir nuevo PIN"
+},
+"add_device_admin": {
+"res": "bullhead:Settings:add_device_admin",
+"en": "Activate",
+"hu": "Aktiválás",
+"de": "Aktivieren",
+"fr": "Activer",
+"es": "Activar"
+},
+"add_device_admin_msg": {
+"res": "bullhead:Settings:add_device_admin_msg",
+"en": "Activate device administrator?",
+"hu": "Aktiválja az eszközkezelőt?",
+"de": "Geräteadministrator aktivieren?",
+"fr": "Activer l'administrateur de l'appareil ?",
+"es": "¿Activar administrador de dispositivos?"
+},
+"device_admin_status": {
+"res": "bullhead:Settings:device_admin_status",
+"args": 1,
+"en": "This administrator is active and allows the app %1$s to perform the following operations:",
+"hu": "Ez a kezelő aktív, és lehetővé teszi a(z) %1$s számára a következő műveletek végrehajtását:",
+"de": "Dieser Administrator ist aktiv und ermöglicht der App \"%1$s\", folgende Vorgänge auszuführen:",
+"fr": "Cet administrateur est activé et permet à l'application %1$s d'effectuer les opérations suivantes :",
+"es": "Este administrador está activo y permite que la aplicación %1$s realice las siguientes operaciones:"
+},
+"device_admin_warning": {
+"res": "bullhead:Settings:device_admin_warning",
+"args": 1,
+"en": "Activating this administrator will allow the app %1$s to perform the following operations:",
+"hu": "A kezelő aktiválásával lehetővé teszi a(z) %1$s alkalmazásnak a következő műveletek végrehajtását:",
+"de": "Die Aktivierung dieses Administrators ermöglicht der App \"%1$s\", folgende Vorgänge auszuführen:",
+"fr": "L'activation de cet administrateur permettra à l'application %1$s d'effectuer les opérations suivantes :",
+"es": "Al activar este administrador, la aplicación %1$s podrá llevar a cabo las siguientes operaciones:"
+},
+"remove_device_admin": {
+"res": "bullhead:Settings:remove_device_admin",
+"en": "Deactivate",
+"hu": "Kikapcsolás",
+"de": "Deaktivieren",
+"fr": "Désactiver",
+"es": "Desactivar"
+},
+"PrebuiltGmsCore/common_mdm_feature_name": {
+"res": "bullhead:PrebuiltGmsCore:common_mdm_feature_name",
+"en": "Android Device Manager",
+"hu": "Android Eszközkezelő",
+"de": "Android Geräte-Manager",
+"fr": "Gestionnaire d'appareils Android",
+"es": "Administrador de dispositivos"
+},
+"PrebuiltGmsCore/mdm_device_admin_desc_2": {
+"res": "bullhead:PrebuiltGmsCore:mdm_device_admin_desc_2",
+"en": "Allow Android Device Manager to lock or erase a lost device",
+"hu": "Az Android Eszközkezelő zárolhatja vagy törölheti az eltűnt eszközt",
+"de": "Sperren des Geräts oder Löschen Ihrer Daten über Android Geräte-Manager zulassen",
+"fr": "Autoriser le Gestionnaire à verrouiller un appareil ou à en effacer les données",
+"es": "Permitir que el Admin. disposit. Android bloquee o borre un dispositivo perdido"
+},
+"PrebuiltGmsCore/tp_payments_application_name": {
+"res": "bullhead:PrebuiltGmsCore:tp_payments_application_name",
+"en": "Android Pay",
+"hu": "Android Pay",
+"de": "Android Pay",
+"fr": "Android Pay",
+"es": "Android Pay",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"PrebuiltGmsCore/tp_device_admin_desc": {
+"res": "bullhead:PrebuiltGmsCore:tp_device_admin_desc",
+"en": "As a device administrator, Android Pay can help make your phone more secure",
+"hu": "As a device administrator, Android Pay can help make your phone more secure",
+"de": "As a device administrator, Android Pay can help make your phone more secure",
+"fr": "As a device administrator, Android Pay can help make your phone more secure",
+"es": "As a device administrator, Android Pay can help make your phone more secure",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"DMAgent/agent_device_admin": {
+"res": "bullhead:DMAgent:agent_device_admin",
+"en": "Google Apps Device Policy",
+"fr": "Google Apps Device Policy",
+"hu": "Google Apps Device Policy",
+"de": "Google Apps Device Policy",
+"es": "Google Apps Device Policy",
+"untranslated": [
+"hu",
+"de",
+"es"
+]
+},
+"DMAgent/agent_device_admin_description": {
+"res": "bullhead:DMAgent:agent_device_admin_description",
+"en": "This application enables the Google Apps domain administrators to manage the device.",
+"fr": "Cette application permet aux administrateurs du domaine Google Apps de gérer l'appareil.",
+"hu": "This application enables the Google Apps domain administrators to manage the device.",
+"de": "This application enables the Google Apps domain administrators to manage the device.",
+"es": "This application enables the Google Apps domain administrators to manage the device.",
+"untranslated": [
+"hu",
+"de",
+"es"
+]
+},
+"framework/policylab_wipeData": {
+"res": "bullhead:framework:policylab_wipeData",
+"en": "Erase all data",
+"hu": "Minden adat törlése",
+"de": "Alle Daten löschen",
+"fr": "Effacer toutes les données",
+"es": "Borrar todos los datos"
+},
+"framework/policydesc_wipeData": {
+"res": "bullhead:framework:policydesc_wipeData",
+"en": "Erase the phone's data without warning by performing a factory data reset.",
+"hu": "Figyelmeztetés nélkül törli a telefon összes adatát, visszaállítva a gyári adatokat.",
+"de": "Setzen Sie das Telefon auf die Werkseinstellungen zurück. Dabei werden alle Daten ohne Warnung gelöscht.",
+"fr": "Effacer les données du téléphone sans avertissement, en rétablissant la configuration d'usine",
+"es": "Borrar los datos del teléfono sin avisar restableciendo datos de fábrica"
+},
+"framework/policylab_resetPassword": {
+"res": "bullhead:framework:policylab_resetPassword",
+"en": "Change the screen lock",
+"hu": "A képernyőzár módosítása",
+"de": "Displaysperre ändern",
+"fr": "Modifier le verrouillage de l'écran",
+"es": "Cambiar el bloqueo de pantalla"
+},
+"framework/policydesc_resetPassword": {
+"res": "bullhead:framework:policydesc_resetPassword",
+"en": "Change the screen lock.",
+"hu": "A képernyőzár módosítása.",
+"de": "Displaysperre ändern",
+"fr": "Modifier le verrouillage de l'écran",
+"es": "Cambiar el bloqueo de pantalla"
+},
+"framework/policylab_forceLock": {
+"res": "bullhead:framework:policylab_forceLock",
+"en": "Lock the screen",
+"hu": "A képernyő zárolása",
+"de": "Bildschirm sperren",
+"fr": "Verrouiller l'écran",
+"es": "Bloquear la pantalla"
+},
+"framework/policydesc_forceLock": {
+"res": "bullhead:framework:policydesc_forceLock",
+"en": "Control how and when the screen locks.",
+"hu": "A képernyőzárolás módjának és idejének vezérlése.",
+"de": "Legen Sie fest, wie und wann der Bildschirm gesperrt wird.",
+"fr": "Gérer le mode et les conditions de verrouillage de l'écran",
+"es": "Controlar cómo y cuándo se bloquea la pantalla"
+},
+"framework/policylab_limitPassword": {
+"res": "bullhead:framework:policylab_limitPassword",
+"en": "Set password rules",
+"hu": "Jelszavakkal kapcsolatos szabályok beállítása",
+"de": "Passwortregeln festlegen",
+"fr": "Définir les règles du mot de passe",
+"es": "Establecimiento de reglas de contraseña"
+},
+"framework/policydesc_limitPassword": {
+"res": "bullhead:framework:policydesc_limitPassword",
+"en": "Control the length and the characters allowed in screen lock passwords and PINs.",
+"hu": "A képernyőzár jelszavaiban és PIN kódjaiban engedélyezett karakterek és hosszúság vezérlése.",
+"de": "Zulässige Länge und Zeichen für Passwörter für die Displaysperre festlegen",
+"fr": "Gérer le nombre et le type de caractères autorisés dans les mots de passe et les codes d'accès de verrouillage de l'écran",
+"es": "Controla la longitud y los caracteres permitidos en los PIN y en las contraseñas de bloqueo de pantalla."
+},
+"framework/policylab_watchLogin": {
+"res": "bullhead:framework:policylab_watchLogin",
+"en": "Monitor screen-unlock attempts",
+"hu": "Képernyőzár-feloldási kísérletek figyelése",
+"de": "Versuche zum Entsperren des Displays überwachen",
+"fr": "Gérer les tentatives de déverrouillage de l'écran",
+"es": "Control de intentos de bloqueo de pantalla"
+},
+"framework/policydesc_watchLogin": {
+"res": "bullhead:framework:policydesc_watchLogin",
+"en": "Monitor the number of incorrect passwords typed. when unlocking the screen, and lock the phone or erase all the phone's data if too many incorrect passwords are typed.",
+"hu": "Megfigyeli a képernyő feloldásakor helytelenül beírt jelszavak számát, és túl sok hibásan beírt jelszó esetén lezárja a telefont, vagy törli a telefon összes adatát.",
+"de": "Anzahl der falsch eingegebenen Passwörter beim Entsperren des Bildschirms überwachen und Telefon sperren oder alle Daten auf dem Telefon löschen, wenn zu häufig ein falsches Passwort eingegeben wird.",
+"fr": "Contrôler le nombre de mots de passe incorrects saisis pour le déverrouillage de l'écran, puis verrouiller le téléphone ou effacer toutes ses données si le nombre maximal de tentatives de saisie du mot de passe est atteint",
+"es": "Controla el número de contraseñas incorrectas introducidas al desbloquear la pantalla y bloquea el teléfono o elimina todos sus datos si se introducen demasiadas contraseñas incorrectas."
+},
+"framework/policylab_encryptedStorage": {
+"res": "bullhead:framework:policylab_encryptedStorage",
+"en": "Set storage encryption",
+"hu": "Tárhelytitkosítás beállítása",
+"de": "Speicherverschlüsselung",
+"fr": "Définir chiffrement du stockage",
+"es": "Cifrado del almacenamiento"
+},
+"framework/policydesc_encryptedStorage": {
+"res": "bullhead:framework:policydesc_encryptedStorage",
+"en": "Require that stored app data be encrypted.",
+"hu": "Megköveteli a tárolt alkalmazásadatok titkosítását.",
+"de": "Anforderung, dass gespeicherte App-Daten verschlüsselt werden",
+"fr": "Exiger le chiffrement des données d'application stockées",
+"es": "Exige que se cifren los datos de la aplicación almacenados."
+},
+"framework/policylab_expirePassword": {
+"res": "bullhead:framework:policylab_expirePassword",
+"en": "Set screen lock password expiration",
+"hu": "Zárolási jelszó lejárati ideje",
+"de": "Passwortablauf für Sperre festlegen",
+"fr": "Config. expir. mot passe verr. écran",
+"es": "Definir caducidad contraseña"
+},
+"framework/policydesc_expirePassword": {
+"res": "bullhead:framework:policydesc_expirePassword",
+"en": "Change how frequently the screen lock password, PIN, or pattern must be changed.",
+"hu": "Annak módosítása, hogy a képernyőzár jelszavát, PIN kódját vagy mintáját milyen gyakran kell megváltoztatni.",
+"de": "Häufigkeit ändern, mit der das Passwort, die PIN oder das Muster für die Displaysperre geändert werden muss",
+"fr": "Modifier la fréquence de modification du mot de passe, du code d'accès ou du schéma de verrouillage de l'écran",
+"es": "Cambia la frecuencia con la que se debe cambiar el patrón, el PIN o la contraseña del bloqueo de pantalla."
+},
+"framework/policylab_disableCamera": {
+"res": "bullhead:framework:policylab_disableCamera",
+"en": "Disable cameras",
+"hu": "Kamerák letiltása",
+"de": "Kameras deaktivieren",
+"fr": "Désactiver les appareils photo",
+"es": "Inhabilitar cámaras"
+},
+"framework/policydesc_disableCamera": {
+"res": "bullhead:framework:policydesc_disableCamera",
+"en": "Prevent use of all device cameras.",
+"hu": "Az összes eszközkamera használatának megakadályozása.",
+"de": "Nutzung sämtlicher Gerätekameras unterbinden",
+"fr": "Empêcher l'utilisation de tous les appareils photos",
+"es": "Evitar el uso de las cámaras del dispositivo"
+},
+"framework/policylab_disableKeyguardFeatures": {
+"res": "bullhead:framework:policylab_disableKeyguardFeatures",
+"en": "Disable some screen lock features",
+"hu": "Egyes képernyőzár-funkciók használatának kikapcsolása",
+"de": "Einige Funktionen der Displaysperre deaktivieren",
+"fr": "Désact. options du verr. écran",
+"es": "Inhab. alg. func. bloq. pant."
+},
+"framework/policydesc_disableKeyguardFeatures": {
+"res": "bullhead:framework:policydesc_disableKeyguardFeatures",
+"en": "Prevent use of some screen lock features.",
+"hu": "Egyes képernyőzár-funkciók használatának megakadályozása.",
+"de": "Verhindert die Verwendung einiger Funktionen der Displaysperre",
+"fr": "Empêchez l'utilisation de certaines fonctionnalités du verrouillage de l'écran.",
+"es": "Evita el uso de algunas funciones del bloqueo de pantalla."
+},
+"framework/policylab_setGlobalProxy": {
+"res": "bullhead:framework:policylab_setGlobalProxy",
+"en": "Set the device global proxy",
+"hu": "Az eszköz globális proxyjának beállítása",
+"de": "Den globalen Proxy des Geräts festlegen",
+"fr": "Définir le proxy global du mobile",
+"es": "Definir el servidor proxy global"
+},
+"framework/policydesc_setGlobalProxy": {
+"res": "bullhead:framework:policydesc_setGlobalProxy",
+"en": "Set the device global proxy to be used while policy is enabled. Only the device owner can set the global proxy.",
+"hu": "Az eszköz globális proxyja lesz használatban, amíg a házirend engedélyezve van. A globális proxyt csak az eszköz tulajdonosa állíthatja be.",
+"de": "Bei aktivierter Richtlinie zu verwendenden globalen Geräteproxy festlegen. Nur der Eigentümer des Geräts kann den globalen Proxy festlegen.",
+"fr": "Indiquer le proxy global à utiliser pour l'appareil lorsque la règle est activée. Seul le propriétaire de l'appareil peut définir le proxy global.",
+"es": "Define el servidor proxy global que se debe utilizar mientras la política esté habilitada. Solo el propietario del dispositivo puede definir el proxy global."
+},
+"trusted_credentials_system_tab": {
+"res": "bullhead:Settings:trusted_credentials_system_tab",
+"en": "System",
+"hu": "Rendszer",
+"de": "System",
+"fr": "Système",
+"es": "Sistema"
+},
+"trusted_credentials_user_tab": {
+"res": "bullhead:Settings:trusted_credentials_user_tab",
+"en": "User",
+"hu": "Felhasználó",
+"de": "Nutzer",
+"fr": "Utilisateur",
+"es": "Usuario"
+},
+"trusted_credentials_enable_confirmation": {
+"res": "bullhead:Settings:trusted_credentials_enable_confirmation",
+"en": "Enable the system CA certificate?",
+"hu": "Engedélyezi a rendszer CA tanúsítványát?",
+"de": "System-CA-Zertifikat aktivieren?",
+"fr": "Activer le certificat d'autorité du système ?",
+"es": "¿Quieres habilitar el certificado de CA del sistema?"
+},
+"trusted_credentials_disable_confirmation": {
+"res": "bullhead:Settings:trusted_credentials_disable_confirmation",
+"en": "Disable the system CA certificate?",
+"hu": "Letiltja a rendszer CA tanúsítványát?",
+"de": "System-CA-Zertifikat deaktivieren?",
+"fr": "Désactiver le certificat d'autorité du système ?",
+"es": "¿Quieres inhabilitar el certificado de CA del sistema?"
+},
+"trusted_credentials_enable_label": {
+"res": "bullhead:Settings:trusted_credentials_enable_label",
+"en": "Enable",
+"hu": "Engedélyezés",
+"de": "Aktivieren",
+"fr": "Activer",
+"es": "Habilitar"
+},
+"trusted_credentials_disable_label": {
+"res": "bullhead:Settings:trusted_credentials_disable_label",
+"en": "Disable",
+"hu": "Letiltás",
+"de": "Deaktivieren",
+"fr": "Désactiver",
+"es": "Inhabilitar"
+},
+"framework/ssl_certificate": {
+"res": "bullhead:framework:ssl_certificate",
+"en": "Security certificate",
+"hu": "Biztonsági tanúsítvány",
+"de": "Sicherheitszertifikat",
+"fr": "Certificat de sécurité",
+"es": "Certificado de seguridad"
+},
+"framework/issued_to": {
+"res": "bullhead:framework:issued_to",
+"en": "Issued to:",
+"hu": "Kiállítva a következőnek:",
+"de": "Ausgestellt für:",
+"fr": "Délivré à :",
+"es": "Emitido para:"
+},
+"framework/issued_by": {
+"res": "bullhead:framework:issued_by",
+"en": "Issued by:",
+"hu": "Kiállította:",
+"de": "Ausgestellt von:",
+"fr": "Émis par :",
+"es": "Emitido por:"
+},
+"framework/common_name": {
+"res": "bullhead:framework:common_name",
+"en": "Common name:",
+"hu": "Név:",
+"de": "Allgemeiner Name:",
+"fr": "Nom commun :",
+"es": "Nombre común:"
+},
+"framework/org_name": {
+"res": "bullhead:framework:org_name",
+"en": "Organization:",
+"hu": "Szervezet:",
+"de": "Organisation:",
+"fr": "Organisation :",
+"es": "Organización:"
+},
+"framework/org_unit": {
+"res": "bullhead:framework:org_unit",
+"en": "Organizational unit:",
+"hu": "Szervezeti egység:",
+"de": "Organisationseinheit:",
+"fr": "Unité organisationnelle :",
+"es": "Departamento:"
+},
+"framework/validity_period": {
+"res": "bullhead:framework:validity_period",
+"en": "Validity:",
+"hu": "Érvényesség:",
+"de": "Gültigkeit:",
+"fr": "Validité :",
+"es": "Validez:"
+},
+"framework/issued_on": {
+"res": "bullhead:framework:issued_on",
+"en": "Issued on:",
+"hu": "Kiállítva:",
+"de": "Ausgegeben am:",
+"fr": "Date d'émission :",
+"es": "Fecha de emisión:"
+},
+"framework/expires_on": {
+"res": "bullhead:framework:expires_on",
+"en": "Expires on:",
+"hu": "Lejár:",
+"de": "Läuft ab am:",
+"fr": "Date d'expiration :",
+"es": "Fecha de caducidad:"
+},
+"framework/fingerprints": {
+"res": "bullhead:framework:fingerprints",
+"en": "Fingerprints:",
+"hu": "Ujjlenyomatok:",
+"de": "Fingerabdrücke:",
+"fr": "Empreintes :",
+"es": "Huellas digitales:"
+},
+"framework/sha256_fingerprint": {
+"res": "bullhead:framework:sha256_fingerprint",
+"en": "SHA-256 fingerprint:",
+"hu": "SHA-256 ujjlenyomat:",
+"de": "SHA-256-Fingerabdruck:",
+"fr": "Empreinte SHA-256 :",
+"es": "Huella digital SHA-256:"
+},
+"framework/sha1_fingerprint": {
+"res": "bullhead:framework:sha1_fingerprint",
+"en": "SHA-1 fingerprint:",
+"hu": "SHA-1 ujjlenyomat:",
+"de": "SHA-1-Fingerabdruck:",
+"fr": "Empreinte SHA-1 :",
+"es": "Huella digital SHA-1:"
+},
+"master_clear_desc": {
+"res": "bullhead:Settings:master_clear_desc",
+"en": "This will erase all data from your phone’s internal storage, including:\n\nYour Google account\nSystem and app data and settings\nDownloaded apps",
+"hu": "Ez minden adatot töröl a telefon belső tárolójáról, többek között: \n \nGoogle-fiókját;\na rendszer- és alkalmazásadatokat és beállításokat; \n a letöltött alkalmazásokat.",
+"de": "Hierdurch werden alle Daten aus dem internen Speicher Ihres Telefons gelöscht, u. a.\n\nIhr Google-Konto\nSystem- und App-Daten sowie entsprechende Einstellungen\nHeruntergeladene Apps",
+"fr": "Cette action effacera toutes les données du stockage interne de votre téléphone, y compris :\n\nVotre compte Google\nLes données et paramètres du système et des applications\nLes applications téléchargées",
+"es": "Se borrarán todos los datos del almacenamiento interno del teléfono, como:\n\nTu cuenta de Google\nLos ajustes y los datos de aplicaciones y del sistema\nLas aplicaciones descargadas"
+},
+"master_clear_accounts": {
+"res": "bullhead:Settings:master_clear_accounts",
+"en": "\n\nYou are currently signed into the following accounts:\n",
+"hu": "\n\nJelenleg a következő fiókokba van bejelentkezve:\n",
+"de": "\n\nDu bist zurzeit in folgenden Konten angemeldet:\n",
+"fr": "\n\nVous êtes actuellement connecté aux comptes suivants :\n",
+"es": "\n\nHas accedido a las cuentas que se indican a continuación:\n"
+},
+"master_clear_button_text": {
+"res": "bullhead:Settings:master_clear_button_text",
+"en": "Reset phone",
+"hu": "Telefon visszaállítása",
+"de": "Telefon zurücksetzen",
+"fr": "Réinitialiser le téléphone",
+"es": "Restablecer teléfono"
+},
+"master_clear_confirm_title": {
+"res": "bullhead:Settings:master_clear_confirm_title",
+"en": "Reset?",
+"hu": "Visszaállítás?",
+"de": "Zurücksetzen?",
+"fr": "Réinitialiser ?",
+"es": "¿Restablecer?"
+},
+"master_clear_final_desc": {
+"res": "bullhead:Settings:master_clear_final_desc",
+"en": "Erase all your personal information and downloaded apps? You can’t undo this action!",
+"hu": "Törli az összes személyes információt és letöltött alkalmazást? A műveletet nem lehet visszavonni.",
+"de": "Alle personenbezogenen Daten und heruntergeladenen Apps löschen? Diese Aktion kann nicht rückgängig gemacht werden!",
+"fr": "Effacer toutes vos informations personnelles et les applications téléchargées ? Cette action est irréversible.",
+"es": "¿Quieres borrar toda tu información personal y todas las aplicaciones descargadas? Esta acción no se puede deshacer."
+},
+"master_clear_final_button_text": {
+"res": "bullhead:Settings:master_clear_final_button_text",
+"en": "Erase everything",
+"hu": "Minden törlése",
+"de": "Alles löschen",
+"fr": "Tout effacer",
+"es": "Borrar todo"
+},
+"master_clear_progress_title": {
+"res": "bullhead:Settings:master_clear_progress_title",
+"en": "Erasing",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Suppression en cours",
+"es": "Borrando"
+},
+"master_clear_progress_text": {
+"res": "bullhead:Settings:master_clear_progress_text",
+"en": "Please wait...",
+"hu": "Kérjük, várjon…",
+"de": "Bitte warten...",
+"fr": "Veuillez patienter...",
+"es": "Espera..."
+},
+"reset_network_desc": {
+"res": "bullhead:Settings:reset_network_desc",
+"en": "This will reset all network settings, including:\n\nWi‑Fi\nCellular data\nBluetooth",
+"hu": "Ezzel minden hálózati beállítás alaphelyzetbe áll, beleértve a következőket:\n\nWi‑Fi\nMobiladatok\nBluetooth",
+"de": "Dadurch werden alle Netzwerkeinstellungen zurückgesetzt, einschließlich:\n\nWLAN\nMobilfunkdaten\nBluetooth",
+"fr": "Tous les paramètres réseau seront réinitialisés, y compris les suivants :\n\nWi‑Fi\nDonnées mobiles\nBluetooth",
+"es": "Se restablecerán todos los ajustes de red, incluidos los siguientes:\n\nWi‑Fi\nDatos móviles\nBluetooth"
+},
+"reset_network_button_text": {
+"res": "bullhead:Settings:reset_network_button_text",
+"en": "Reset settings",
+"hu": "Beállítások visszaállítása",
+"de": "Einstellungen zurücksetzen",
+"fr": "Réinitialiser les paramètres",
+"es": "Restablecer ajustes"
+},
+"reset_network_confirm_title": {
+"res": "bullhead:Settings:reset_network_confirm_title",
+"en": "Reset?",
+"hu": "Visszaállítja?",
+"de": "Zurücksetzen?",
+"fr": "Réinitialiser ?",
+"es": "¿Restablecer?"
+},
+"reset_network_final_desc": {
+"res": "bullhead:Settings:reset_network_final_desc",
+"en": "Reset all network settings? You can’t undo this action!",
+"hu": "Visszaállítja az összes hálózati beállítást? Ezt a műveletet nem lehet visszavonni.",
+"de": "Alle Netzwerkeinstellungen zurücksetzen? Diese Aktion kann nicht rückgängig gemacht werden!",
+"fr": "Réinitialiser tous les paramètres réseau ? Cette action est irréversible.",
+"es": "¿Quieres restablecer todos los ajustes de red? Esta acción no se puede deshacer."
+},
+"reset_network_final_button_text": {
+"res": "bullhead:Settings:reset_network_final_button_text",
+"en": "Reset settings",
+"hu": "Beállítások visszaállítása",
+"de": "Einstellungen zurücksetzen",
+"fr": "Réinitialiser les paramètres",
+"es": "Restablecer ajustes"
+},
+"reset_network_complete_toast": {
+"res": "bullhead:Settings:reset_network_complete_toast",
+"en": "Network settings have been reset",
+"hu": "A hálózati beállítások vissza lettek állítva.",
+"de": "Die Netzwerkeinstellungen wurden zurückgesetzt.",
+"fr": "Les paramètres des réseaux ont bien été réinitialisés.",
+"es": "Se han restablecido los ajustes de red"
+},
+"android_beam_explained": {
+"res": "bullhead:Settings:android_beam_explained",
+"en": "When this feature is turned on, you can beam app content to another NFC-capable device by holding the devices close together. For example, you can beam Browser pages, YouTube videos, People contacts, and more.\n\nJust bring the devices together (typically back to back) and then touch your screen. The app determines what gets beamed.",
+"hu": "Ha ez a funkció be van kapcsolva, alkalmazástartalmat sugározhat át egy másik NFC-kompatibilis eszközre úgy, hogy egymáshoz közel tartja az eszközöket. Például átsugározhat böngészőoldalalakat, YouTube-videókat, névjegyeket stb.\n\nMindössze helyezze az eszközöket egymáshoz közel (lehetőleg a hátlapjaikat összeérintve), majd érintse meg a képernyőt. Az alkalmazás eldönti, hogy mit fog átsugározni.",
+"de": "Wenn diese Funktion aktiviert ist, kannst du App-Inhalte auf ein anderes NFC-fähiges Gerät beamen, indem du die Geräte dicht nebeneinander hältst. Du kannst beispielsweise Browserseiten, YouTube-Videos und Kontakte beamen.\n\nHalte die Geräte einfach dicht nebeneinander, am besten Rückseite an Rückseite, und berühre den Bildschirm. Die App bestimmt, was übertragen wird.",
+"fr": "Lorsque cette fonctionnalité est activée, vous pouvez partager le contenu d'une application avec un appareil compatible NFC en rapprochant les appareils. Vous pouvez, par exemple, partager des pages du navigateur, des vidéos YouTube, des contacts, etc.\n\nIl vous suffit de rapprocher les appareils (en les plaçant dos à dos), puis d'appuyer sur votre écran. L'application détermine le contenu à transférer.",
+"es": "Si la función Android Beam está activada, puedes juntar tu dispositivo con otro compatible con la tecnología NFC para compartir el contenido de las aplicaciones. Por ejemplo, puedes transferir páginas del navegador, vídeos de YouTube, contactos y mucho más.\n\nSolo tienes que unir los dispositivos (normalmente, por la parte trasera) y, a continuación, tocar la pantalla de tu dispositivo. Las aplicaciones determinan el contenido que puede compartirse."
+},
+"no_notification_listeners": {
+"res": "bullhead:Settings:no_notification_listeners",
+"en": "No installed apps have requested notification access.",
+"hu": "Egy telepített alkalmazás sem kért hozzáférést az értesítésekhez",
+"de": "Keine installierte App hat Benachrichtigungszugriff angefordert.",
+"fr": "Aucune demande d'accès aux notifications n'a été envoyée pour les applications installées.",
+"es": "Ninguna aplicación instalada ha solicitado acceso a las notificaciones."
+},
+"zen_access_empty_text": {
+"res": "bullhead:Settings:zen_access_empty_text",
+"en": "No installed apps have requested Do Not Disturb access",
+"hu": "Egy telepített alkalmazás sem kért „Ne zavarjanak” elérést",
+"de": "Keine installierte App hat während \"Nicht stören\" Zugriff angefordert.",
+"fr": "Aucune demande d'accès \"Ne pas déranger\" n'a été envoyée par les applications installées.",
+"es": "Ninguna aplicación instalada ha solicitado acceso de No molestar"
+},
+"details_title": {
+"res": "bullhead:Settings:details_title",
+"en": "Use details",
+"hu": "Használat részletei",
+"de": "Infos zum Verbrauch",
+"fr": "Infos utilisation",
+"es": "Detalles de uso"
+},
+"battery_action_display": {
+"res": "bullhead:Settings:battery_action_display",
+"en": "Screen settings",
+"hu": "Képernyő-beállítások",
+"de": "Bildschirmeinstellungen",
+"fr": "Paramètres de l'écran",
+"es": "Ajustes de la pantalla"
+},
+"battery_action_wifi": {
+"res": "bullhead:Settings:battery_action_wifi",
+"en": "Wi‑Fi settings",
+"hu": "Wi-Fi beállítások",
+"de": "WLAN-Einstellungen",
+"fr": "Paramètres Wi-Fi",
+"es": "Ajustes de Wi-Fi"
+},
+"battery_action_stop": {
+"res": "bullhead:Settings:battery_action_stop",
+"en": "Force stop",
+"hu": "Kényszerített leállítás",
+"de": "Beenden erzwingen",
+"fr": "Forcer l'arrêt",
+"es": "Forzar detención"
+},
+"battery_action_app_details": {
+"res": "bullhead:Settings:battery_action_app_details",
+"en": "App info",
+"hu": "Alkalmazásinformáció",
+"de": "App-Info",
+"fr": "Infos appli",
+"es": "Información de la aplicación"
+},
+"usage_type_on_time": {
+"res": "bullhead:Settings:usage_type_on_time",
+"en": "Time on",
+"hu": "Bekapcsolva töltött idő",
+"de": "Laufzeit",
+"fr": "Durée d'activation",
+"es": "Tiempo desde activación"
+},
+"usage_type_no_coverage": {
+"res": "bullhead:Settings:usage_type_no_coverage",
+"en": "Time without a signal",
+"hu": "Jel nélkül eltelt idő",
+"de": "Zeit ohne Signal",
+"fr": "Durée sans signal",
+"es": "Tiempo sin señal"
+},
+"usage_type_computed_power": {
+"res": "bullhead:Settings:usage_type_computed_power",
+"en": "Computed power use",
+"hu": "Kalkulált energiahasználat",
+"de": "Berechneter Akkuverbrauch",
+"fr": "Consommation calculée",
+"es": "Uso de batería calculado"
+},
+"usage_type_cpu": {
+"res": "bullhead:Settings:usage_type_cpu",
+"en": "CPU total",
+"hu": "CPU teljes",
+"de": "CPU insgesamt",
+"fr": "Processeur - Durée totale",
+"es": "Total de CPU"
+},
+"usage_type_cpu_foreground": {
+"res": "bullhead:Settings:usage_type_cpu_foreground",
+"en": "CPU foreground",
+"hu": "CPU-használat az előtérben",
+"de": "CPU Vordergrund",
+"fr": "Processeur - Premier plan",
+"es": "Primer plano de la CPU"
+},
+"usage_type_wake_lock": {
+"res": "bullhead:Settings:usage_type_wake_lock",
+"en": "Keep awake",
+"hu": "Ébren tartás",
+"de": "Aktiv lassen",
+"fr": "Maintenir activé",
+"es": "Activo"
+},
+"usage_type_gps": {
+"res": "bullhead:Settings:usage_type_gps",
+"en": "GPS",
+"hu": "GPS",
+"de": "GPS",
+"fr": "GPS",
+"es": "GPS"
+},
+"usage_type_data_wifi_send": {
+"res": "bullhead:Settings:usage_type_data_wifi_send",
+"en": "Wi‑Fi packets sent",
+"hu": "Elküldött Wi‑Fi-adatok",
+"de": "WLAN-Paketdaten gesendet",
+"fr": "Paquets Wi‑Fi envoyés",
+"es": "Paquetes Wi‑Fi enviados"
+},
+"usage_type_data_wifi_recv": {
+"res": "bullhead:Settings:usage_type_data_wifi_recv",
+"en": "Wi‑Fi packets received",
+"hu": "Fogadott Wi‑Fi-adatok",
+"de": "WLAN-Paketdaten empfangen",
+"fr": "Paquets Wi‑Fi reçus",
+"es": "Paquetes Wi‑Fi recibidos"
+},
+"usage_type_wifi_running": {
+"res": "bullhead:Settings:usage_type_wifi_running",
+"en": "Wi‑Fi running",
+"hu": "Wi-Fi használat",
+"de": "WLAN aktiv",
+"fr": "Wi-Fi actif",
+"es": "Wi‑Fi activado"
+},
+"battery_desc_display": {
+"res": "bullhead:Settings:battery_desc_display",
+"en": "Battery used by the display and backlight",
+"hu": "A kijelző és a háttérfény által felhasznált energia",
+"de": "Akkuverbrauch durch Display und Beleuchtung",
+"fr": "Batterie utilisée par l'affichage et le rétro-éclairage",
+"es": "Batería utilizada por la pantalla y por la retroiluminación"
+},
+"battery_sugg_display": {
+"res": "bullhead:Settings:battery_sugg_display",
+"en": "Reduce the screen brightness and/or screen timeout",
+"hu": "Csökkentse a képernyő fényerejét és kikapcsolási idejét",
+"de": "Display-Helligkeit und/oder Display-Zeitlimit verringern",
+"fr": "Réduire la luminosité et/ou le délai de mise en veille de l'écran",
+"es": "Reduce el brillo y el tiempo que permanece encendida la pantalla."
+},
+"battery_desc_radio": {
+"res": "bullhead:Settings:battery_desc_radio",
+"en": "Battery used by cell radio",
+"hu": "Mobil adó által felhasznált energia",
+"de": "Akkuverbrauch durch Mobilfunk",
+"fr": "Batterie utilisée par le signal de cellule GSM",
+"es": "Batería utilizada por la señal móvil"
+},
+"battery_sugg_radio": {
+"res": "bullhead:Settings:battery_sugg_radio",
+"en": "Switch to airplane mode to save power in areas with no cell coverage",
+"hu": "Ahol nincs lefedettség, váltson repülési üzemmódra, hogy spóroljon az energiával",
+"de": "Flugmodus zum Energiesparen in Gebieten ohne Mobilfunkabdeckung",
+"fr": "Passez en mode Avion pour économiser la batterie dans les zones sans couverture cellulaire.",
+"es": "Cambia a modo avión para ahorrar batería en zonas sin cobertura."
+},
+"battery_desc_standby": {
+"res": "bullhead:Settings:battery_desc_standby",
+"en": "Battery used when phone is idle",
+"hu": "Akkumulátorhasználat, amíg a telefon tétlen volt",
+"de": "Akkuverbrauch in Ruhezustand",
+"fr": "Batterie utilisée lorsque le téléphone est inactif",
+"es": "Batería utilizada cuando el teléfono está inactivo"
+},
+"battery_desc_wifi": {
+"res": "bullhead:Settings:battery_desc_wifi",
+"en": "Battery used by Wi‑Fi",
+"hu": "Wi-Fi által felhasznált energia",
+"de": "Akkuverbrauch durch WLAN",
+"fr": "Batterie utilisée par le Wi-Fi",
+"es": "Batería utilizada por la conexión Wi-Fi"
+},
+"battery_sugg_wifi": {
+"res": "bullhead:Settings:battery_sugg_wifi",
+"en": "Turn off Wi‑Fi when not using it or when it isn’t available",
+"hu": "Kapcsolja ki a Wi-Fit, ha nem használja, vagy amikor nincs elérhető hálózat",
+"de": "WLAN bei Nichtverwendung oder Nichtverfügbarkeit deaktivieren",
+"fr": "Désactivez le Wi-Fi lorsque vous ne l'utilisez pas ou qu'il n'est pas disponible.",
+"es": "Desactiva la conexión Wi-Fi cuando no la estés usando o cuando no esté disponible."
+},
+"always_running": {
+"res": "bullhead:Settings:always_running",
+"args": 1,
+"en": "Always running (%s)",
+"hu": "Mindig fut (%s)",
+"de": "Immer ausgeführt (%s)",
+"fr": "Toujours en cours d'exécution (%s)",
+"es": "Siempre en ejecución (%s)"
+},
+"sometimes_running": {
+"res": "bullhead:Settings:sometimes_running",
+"args": 1,
+"en": "Sometimes running (%s)",
+"hu": "Néha fut (%s)",
+"de": "Gelegentlich ausgeführt (%s)",
+"fr": "Parfois en cours d'exécution (%s)",
+"es": "A veces en ejecución (%s)"
+},
+"rarely_running": {
+"res": "bullhead:Settings:rarely_running",
+"args": 1,
+"en": "Rarely running (%s)",
+"hu": "Ritkán fut (%s)",
+"de": "Kaum ausgeführt (%s)",
+"fr": "Rarement en cours d'exécution (%s)",
+"es": "Apenas en ejecución (%s)"
+},
+"sync_enabled": {
+"res": "bullhead:Settings:sync_enabled",
+"en": "Sync is ON",
+"hu": "Szinkr. BEKAPCSOLVA",
+"de": "Synchronisierung: AN",
+"fr": "Synchronisation activée",
+"es": "Sincronización activa"
+},
+"sync_disabled": {
+"res": "bullhead:Settings:sync_disabled",
+"en": "Sync is OFF",
+"hu": "Szinkr. KIKAPCSOLVA",
+"de": "Synchronisierung: AUS",
+"fr": "Synchronisation désactivée",
+"es": "La sincronización está desactivada"
+},
+"last_synced": {
+"res": "bullhead:Settings:last_synced",
+"args": 1,
+"en": "Last synced %1$s",
+"hu": "Utolsó szinkronizálás: %1$s",
+"de": "Zuletzt synchronisiert: %1$s",
+"fr": "Dernière synchronisation : %1$s",
+"es": "Última sincronización: %1$s"
+},
+"sync_menu_sync_now": {
+"res": "bullhead:Settings:sync_menu_sync_now",
+"en": "Sync now",
+"hu": "Szinkronizálás most",
+"de": "Jetzt synchronisieren",
+"fr": "Synchroniser maintenant",
+"es": "Sincronizar ahora"
+},
+"PrebuiltGmsCore/location_settings_location_history_activity_title": {
+"res": "bullhead:PrebuiltGmsCore:location_settings_location_history_activity_title",
+"en": "Location History",
+"hu": "Helyelőzmények",
+"de": "Standortverlauf",
+"fr": "Historique des positions",
+"es": "Historial de Ubicaciones"
+},
+"PrebuiltGmsCore/location_ulr_history_enabled_text": {
+"res": "bullhead:PrebuiltGmsCore:location_ulr_history_enabled_text",
+"en": "Enabled for this device",
+"hu": "Engedélyezve ezen az eszközön",
+"de": "Für dieses Gerät aktiviert",
+"fr": "Activé pour cet appareil",
+"es": "Habilitado en este dispositivo"
+},
+"PrebuiltGmsCore/location_ulr_history_disabled_text": {
+"res": "bullhead:PrebuiltGmsCore:location_ulr_history_disabled_text",
+"en": "Disabled for this device",
+"hu": "Letiltva ezen az eszközön",
+"de": "Für dieses Gerät deaktiviert",
+"fr": "Désactivé pour cet appareil",
+"es": "Inhabilitado en este dispositivo"
+},
+"PrebuiltGmsCore/location_settings_location_history_summary_full": {
+"res": "bullhead:PrebuiltGmsCore:location_settings_location_history_summary_full",
+"en": "Location History helps you get useful information — for example, automatic commute predictions, improved search results, and more useful ads on and off Google — by creating a private map of where you go with your logged-in devices. \n\nTo create this map, Google will regularly obtain location data from devices where you have enabled Location History, including when you aren’t using a specific Google product. \n\nYou can pause Location History whenever you like, but this doesn’t delete any previous activity. Learn more. ",
+"hu": "A Helyelőzmények segítségével hasznos információkhoz juthat: például az ingázással kapcsolatos automatikus előrejelzésekhez, javított keresési eredményekhez, valamint hasznosabb hirdetésekhez a Google domainjein és más webhelyeken. Ehhez a szolgáltatás privát térképet készít a tartózkodási helyekről, amelyeket bejelentkezett eszközeivel felkeres. \n\nA térkép létrehozásához a Google rendszeresen helyadatokat hív le az eszközökről, amelyeken engedélyezte a Helyelőzményeket, olyankor is, amikor Ön éppen nem használja valamelyik konkrét Google-terméket. \n\nA Helyelőzményeket bármikor szüneteltetheti, de ezzel nem törli a korábbi tevékenységeket. További információ",
+"de": "Mit dem Standortverlauf erhalten Sie nützliche Informationen wie automatische Verkehrshinweise für Ihren Arbeitsweg, verbesserte Suchergebnisse und nützlichere Anzeigen nicht nur bei Google, indem eine private Karte mit Orten erstellt wird, die Sie mit Ihren in Google angemeldeten Geräten besucht haben. \n\nUm diese Karte zu erstellen, bezieht Google regelmäßig Standortdaten von allen Geräten, auf denen der Standortverlauf aktiviert ist, auch wenn Sie kein bestimmtes Google-Produkt verwenden. \n\nSie können den Standortverlauf jederzeit pausieren. Ihre bisherigen Aktivitäten werden dadurch jedoch nicht gelöscht. Weitere Informationen",
+"fr": "L'historique des positions permet de créer une carte privée des lieux où vous vous rendez avec les appareils auxquels vous êtes connecté. Vous pouvez ainsi bénéficier d'informations utiles telles que des prévisions automatiques concernant vos trajets habituels, des résultats de recherche améliorés ou la diffusion d'annonces plus pertinentes sur Google ou ailleurs. \n\nPour créer cette carte, notre système extrait régulièrement les données de localisation des appareils sur lesquels vous avez activé l'historique des positions, y compris lorsque vous n'utilisez pas un produit Google spécifique. \n\nVous pouvez à tout moment suspendre l'historique des positions, mais cela n'entraîne pas la suppression des activités déjà enregistrées. En savoir plus",
+"es": "Gracias al Historial de Ubicaciones, puedes obtener información útil (predicciones automáticas del tiempo de los desplazamientos, mejores resultados de búsqueda y anuncios más útiles tanto de Google como de terceros, etc.) creando un mapa privado de los lugares adonde vas con tus dispositivos conectados. \n\nPara crear este mapa, Google obtendrá regularmente datos de ubicación de todos los dispositivos en los que está habilitada esta opción, incluso cuando no utilices un producto específico de Google. \n\nPuedes detener el Historial de ubicaciones siempre que quieras, pero esta acción no elimina ninguna actividad anterior. Más información"
+},
+"PrebuiltGmsCore/location_settings_delete_location_history": {
+"res": "bullhead:PrebuiltGmsCore:location_settings_delete_location_history",
+"en": "DELETE LOCATION HISTORY",
+"hu": "HELYELŐZMÉNYEK TÖRLÉSE",
+"de": "STANDORTVERLAUF LÖSCHEN",
+"fr": "SUPPRIMER L'HISTORIQUE DES POSITIONS",
+"es": "ELIMINAR HISTORIAL DE UBICACIONES"
+},
+"PrebuiltGmsCore/location_settings_confirm_location_history_off_title": {
+"res": "bullhead:PrebuiltGmsCore:location_settings_confirm_location_history_off_title",
+"en": "Pause Location History?",
+"hu": "Szünetelteti a helyelőzményeket?",
+"de": "Standortverlauf pausieren?",
+"fr": "Suspendre historique positions ?",
+"es": "¿Detener Historial de Ubicaciones?"
+},
+"PrebuiltGmsCore/location_settings_confirm_location_history_off_body": {
+"res": "bullhead:PrebuiltGmsCore:location_settings_confirm_location_history_off_body",
+"en": "When you pause Location History, places you go with your devices will stop being added to your Location History map. This limits functionality of some Google products over time, such as Google Maps and Google Now. \n\nRemember, pausing this setting doesn’t delete any previous activity, but you can view and manage this information in your Location History map. ",
+"hu": "Ha szünetelteti a Helyelőzmények funkciót, azok a helyek, amelyeket felkeres – és ahová eszközeit is magával viszi – nem lesznek hozzáadva a Helyelőzmények-térképhez. Ez idővel korlátozhatja bizonyos Google-termékek (például a Google Térkép és a Google Asszisztens) működését. \n\nNe feledje, hogy a beállítás szüneteltetésével nem törli a korábbi tevékenységeket, azonban ezeket az információkat megtekintheti és kezelheti a Helyelőzmények-térképen.",
+"de": "Wenn Sie den Standortverlauf pausieren, werden die Orte, die Sie mit Ihren Geräten besuchen, nicht mehr auf der Karte für den Standortverlauf hinzugefügt. Dadurch wird die Funktionsfähigkeit einiger Google-Produkte mit der Zeit eingeschränkt, z. B. Google Maps und Google Now. \n\nDurch das Pausieren dieser Funktion werden die früheren Aktivitäten nicht gelöscht. Sie können diese in der Karte für den Standortverlauf einsehen und verwalten.",
+"fr": "Quand l'historique des positions est suspendu sur votre compte, les lieux où vous vous rendez avec vos appareils ne sont plus ajoutés à la carte. À terme, cela peut restreindre les fonctionnalités de certains produits Google, tels que Google Maps et Google Now. \n\nGardez à l'esprit que la suspension de ce paramètre ne supprime pas les activités précédentes. Vous pouvez cependant consulter et gérer ces informations dans la carte de l'historique des positions.",
+"es": "Si detienes el Historial de Ubicaciones, dejarán de añadirse al mapa los sitios a los que vas con tus dispositivos. Con el tiempo, esto limita las funciones de algunos productos de Google, como es el caso de Google Maps y Google Now. \n\nRecuerda que, si detienes este ajuste, no se elimina ninguna actividad anterior, sino que podrás ver y administrar esta información en el mapa Historial de Ubicaciones."
+},
+"PrebuiltGmsCore/location_settings_dialog_message_ulr": {
+"res": "bullhead:PrebuiltGmsCore:location_settings_dialog_message_ulr",
+"args": 1,
+"en": "Turn on Location History, letting Google store and use this device's location data with %1$s ",
+"hu": "Kapcsolja be a Helyelőzmények használatát, hogy a Google tárolhassa és használhassa az eszköz helyadatait a következővel: %1$s.",
+"de": "Aktivieren Sie den Standortverlauf, damit Google die Standortdaten dieses Gerätes in Zusammenhang mit %1$s speichern und verwenden darf.",
+"fr": "Activer l'historique des positions, qui nous permet d'enregistrer et d'utiliser les données de localisation de cet appareil avec %1$s",
+"es": "Activa el Historial de Ubicaciones para permitir que Google almacene y utilice los datos de ubicación de este dispositivo con %1$s"
+},
+"PrebuiltGmsCore/location_settings_confirm_deleting_location_history_body": {
+"res": "bullhead:PrebuiltGmsCore:location_settings_confirm_deleting_location_history_body",
+"en": "You won't be able to get your Location History back again. \n\nGoogle Now and other apps that use your Location History may stop working.",
+"hu": "Nem tud majd újra hozzáférni a helyelőzményekhez. \n\nA Google Asszisztens és a helyelőzményeket használó egyéb alkalmazások működése leállhat.",
+"de": "Sie können Ihren Standortverlauf nicht wiederherstellen. \n\nGoogle Now und andere Apps, die Ihren Standortverlauf verwenden, funktionieren nach dem Löschen möglicherweise nicht mehr.",
+"fr": "Vous ne pourrez pas récupérer l'historique des positions. \n\nGoogle Now et les applications qui l'utilisent risquent de ne plus fonctionner.",
+"es": "No podrás volver a acceder a tu Historial de Ubicaciones. \n\nEs posible que Google Now y otras aplicaciones que utilizan el Historial de Ubicaciones dejen de funcionar."
+},
+"Bluetooth/inbound_history_title": {
+"res": "bullhead:Bluetooth:inbound_history_title",
+"en": "Inbound transfers",
+"hu": "Bejövő átvitelek",
+"de": "Eingehende Übertragungen",
+"fr": "Transferts entrants",
+"es": "Transferencias entrantes"
+},
+"Bluetooth/no_transfers": {
+"res": "bullhead:Bluetooth:no_transfers",
+"en": "Transfer history is empty.",
+"hu": "Az átvitelek előzménye üres.",
+"de": "Übertragungsverlauf ist leer.",
+"fr": "L'historique des transferts est vide.",
+"es": "El historial de transferencias está vacío."
+},
+"Bluetooth/transfer_clear_dlg_title": {
+"res": "bullhead:Bluetooth:transfer_clear_dlg_title",
+"en": "Clear",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Effacer",
+"es": "Borrar"
+},
+"PrebuiltGmsCore/system_update_activity_title": {
+"res": "bullhead:PrebuiltGmsCore:system_update_activity_title",
+"en": "System updates",
+"hu": "Rendszerfrissítések",
+"de": "Systemupdates",
+"fr": "Mises à jour du système",
+"es": "Actualizaciones del sistema"
+},
+"PrebuiltGmsCore/system_update_checking_status_text": {
+"res": "bullhead:PrebuiltGmsCore:system_update_checking_status_text",
+"en": "Checking",
+"hu": "Keresés",
+"de": "Wird überprüft...",
+"fr": "Vérification en cours…",
+"es": "Buscando"
+},
+"PrebuiltGmsCore/system_update_no_update_content_text": {
+"res": "bullhead:PrebuiltGmsCore:system_update_no_update_content_text",
+"en": "Your system is up to date.",
+"hu": "Az Ön által használt rendszer naprakész.",
+"de": "Ihr System ist momentan auf dem neuesten Stand.",
+"fr": "Votre système est à jour.",
+"es": "Tu sistema está actualizado"
+},
+"PrebuiltGmsCore/system_update_last_checkin": {
+"res": "bullhead:PrebuiltGmsCore:system_update_last_checkin",
+"en": "Last checked for update ^1.",
+"hu": "Frissítés utolsó ellenőrzése: ^1.",
+"de": "Letzte Update-Überprüfung: ^1",
+"fr": "Dernière vérification : ^1",
+"es": "Última comprobación: ^1"
+},
+"PrebuiltGmsCore/system_update_check_now_button_text": {
+"res": "bullhead:PrebuiltGmsCore:system_update_check_now_button_text",
+"en": "Check for update",
+"hu": "Frissítés keresése",
+"de": "Auf Updates überprüfen",
+"fr": "Rechercher les mises à jour",
+"es": "Comprobar actualizaciones"
+},
+"settings_license_activity_unavailable": {
+"res": "bullhead:Settings:settings_license_activity_unavailable",
+"en": "There is a problem loading the licenses.",
+"hu": "Gond van a licencek betöltésével.",
+"de": "Beim Laden der Lizenzen ist ein Problem aufgetreten.",
+"fr": "Un problème est survenu lors du chargement des licences.",
+"es": "Se ha producido un problema al intentar cargar las licencias."
+},
+"GoogleServicesFramework/gls_settings_tos_activity_title": {
+"res": "bullhead:GoogleServicesFramework:gls_settings_tos_activity_title",
+"en": "Google legal",
+"hu": "Google - jogi szabályozás",
+"de": "Rechtliche Hinweise",
+"fr": "Infos légales Google",
+"es": "Condiciones de Google"
+},
+"search_results_label": {
+"res": "bullhead:Settings:search_results_label",
+"en": "Results",
+"hu": "Találatok",
+"de": "Ergebnisse",
+"fr": "Résultats",
+"es": "Resultados"
+},
+"framework/bugreport_message": {
+"res": "bullhead:framework:bugreport_message",
+"en": "This will collect information about your current device state, to send as an e-mail message. It will take a little time from starting the bug report until it is ready to be sent; please be patient.",
+"hu": "Ezzel információt fog gyűjteni az eszköz jelenlegi állapotáról, amelyet a rendszer e-mailben fog elküldeni. Kérjük, legyen türelemmel, amíg a hibajelentés elkészül, és küldhető állapotba kerül.",
+"de": "Bei diesem Fehlerbericht werden Daten zum aktuellen Status Ihres Geräts erfasst und als E-Mail versandt. Vom Start des Berichts bis zu seinem Versand kann es eine Weile dauern. Bitte haben Sie etwas Geduld.",
+"fr": "Cela permet de recueillir des informations concernant l'état actuel de votre appareil. Ces informations sont ensuite envoyées sous forme d'e-mail. Merci de patienter pendant la préparation du rapport de bug. Cette opération peut prendre quelques instants.",
+"es": "Se recopilará información sobre el estado actual de tu dispositivo y se enviará por correo electrónico. Pasarán unos minutos desde que empiece a generarse el informe de errores hasta que se envíe."
+},
+"report": {
+"res": "bullhead:framework:report",
+"en": "Report",
+"hu": "Jelentés",
+"de": "Bericht",
+"fr": "Rapport",
+"es": "Informar"
+},
+"adb_keys_warning_message": {
+"res": "bullhead:Settings:adb_keys_warning_message",
+"en": "Revoke access to USB debugging from all computers you’ve previously authorized?",
+"hu": "Visszavonja a hozzáférést az USB-s hibakereséshez az összes számítógépről, ahol korábban engedélyezte azt?",
+"de": "Zugriff auf USB-Debugging für alle zuvor autorisierten Computer aufheben?",
+"fr": "Voulez-vous vraiment désactiver l'accès au débogage USB de tous les ordinateurs précédemment autorisés ?",
+"es": "¿Quieres revocar el acceso a la depuración por USB de todos los ordenadores que has autorizado?"
+},
+"no_application": {
+"res": "bullhead:Settings:no_application",
+"en": "Nothing",
+"hu": "Semmi",
+"de": "Keine",
+"fr": "Aucune",
+"es": "Ninguna"
+},
+"current_backup_pw_prompt": {
+"res": "bullhead:Settings:current_backup_pw_prompt",
+"en": "Type your current full backup password here",
+"hu": "Adja meg a teljes mentések jelenlegi jelszavát",
+"de": "Aktuelles Passwort für vollständige Sicherungen eingeben",
+"fr": "Saisissez le mot de passe actuel utilisé pour les sauvegardes complètes.",
+"es": "Introduce aquí la contraseña actual de la copia de seguridad completa."
+},
+"new_backup_pw_prompt": {
+"res": "bullhead:Settings:new_backup_pw_prompt",
+"en": "Type a new password for full backups here",
+"hu": "Adja meg a teljes mentések új jelszavát",
+"de": "Neues Passwort für vollständige Sicherungen eingeben",
+"fr": "Saisissez votre nouveau mot de passe pour les sauvegardes complètes.",
+"es": "Introduce una contraseña nueva para las copias de seguridad completas."
+},
+"confirm_new_backup_pw_prompt": {
+"res": "bullhead:Settings:confirm_new_backup_pw_prompt",
+"en": "Retype your new full backup password here",
+"hu": "Még egyszer írja be a teljes mentés új jelszavát",
+"de": "Neues Passwort für vollständige Sicherungen erneut eingeben",
+"fr": "Confirmez ici votre nouveau mot de passe de sauvegarde complète.",
+"es": "Vuelve a escribir aquí la nueva contraseña de la copia de seguridad completa."
+},
+"backup_pw_cancel_button_text": {
+"res": "bullhead:Settings:backup_pw_cancel_button_text",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"backup_pw_set_button_text": {
+"res": "bullhead:Settings:backup_pw_set_button_text",
+"en": "Set backup password",
+"hu": "Mentési jelszó beállítása",
+"de": "Passwort festlegen",
+"fr": "Définir le mot de passe de sauvegarde",
+"es": "Establecer contraseña"
+},
+"local_backup_password_toast_confirmation_mismatch": {
+"res": "bullhead:Settings:local_backup_password_toast_confirmation_mismatch",
+"en": "New password and confirmation don’t match",
+"hu": "Az új jelszó és a megerősítése nem egyezik.",
+"de": "Das neue Passwort und die Bestätigung stimmen nicht überein.",
+"fr": "Le nouveau mot de passe et sa confirmation ne correspondent pas.",
+"es": "La nueva contraseña y la de confirmación no coinciden"
+},
+"local_backup_password_toast_validation_failure": {
+"res": "bullhead:Settings:local_backup_password_toast_validation_failure",
+"en": "Failure setting backup password",
+"hu": "Hiba a mentési jelszó beállítása során",
+"de": "Fehler beim Festlegen des Sicherungspassworts",
+"fr": "Échec de la définition du mot de passe de secours.",
+"es": "Error al establecer la contraseña de seguridad"
+},
+"local_backup_password_toast_success": {
+"res": "bullhead:Settings:local_backup_password_toast_success",
+"en": "New backup password set",
+"hu": "Új mentési jelszó beállítva",
+"de": "Neues Sicherungspasswort festgelegt",
+"fr": "Le nouveau mot de passe de secours a bien été défini.",
+"es": "Nueva contraseña de seguridad establecida"
+},
+"running_processes_header_title": {
+"res": "bullhead:Settings:running_processes_header_title",
+"en": "Device memory",
+"hu": "Eszközmemória",
+"de": "Gerätespeicher",
+"fr": "Mémoire de l'appareil",
+"es": "Memoria del dispositivo"
+},
+"running_processes_header_system_prefix": {
+"res": "bullhead:Settings:running_processes_header_system_prefix",
+"en": "System",
+"hu": "Rendszer",
+"de": "System",
+"fr": "Système",
+"es": "Sistema"
+},
+"running_processes_header_apps_prefix": {
+"res": "bullhead:Settings:running_processes_header_apps_prefix",
+"en": "Apps",
+"hu": "Alkalmazások",
+"de": "Apps",
+"fr": "Applications",
+"es": "Aplicaciones"
+},
+"running_processes_header_free_prefix": {
+"res": "bullhead:Settings:running_processes_header_free_prefix",
+"en": "Free",
+"hu": "Szabad",
+"de": "Frei",
+"fr": "Disponible",
+"es": "Libre"
+},
+"running_processes_header_footer": {
+"res": "bullhead:Settings:running_processes_header_footer",
+"en": "App RAM usage",
+"hu": "Alkalmazás memóriahasználata",
+"de": "App-RAM-Nutzung",
+"fr": "Utilisation de la RAM par les applications",
+"es": "RAM usada por las aplicaciones"
+},
+"running_processes_item_description_s_s": {
+"res": "bullhead:Settings:running_processes_item_description_s_s",
+"args": 2,
+"en": "%1$d process and %2$d service",
+"hu": "%1$d folyamat és %2$d szolgáltatás",
+"de": "%1$d Prozess und %2$d Dienst",
+"fr": "%1$d processus et %2$d service",
+"es": "%1$d proceso y %2$d servicio"
+},
+"inactive_app_active_summary": {
+"res": "bullhead:Settings:inactive_app_active_summary",
+"en": "Active. Touch to toggle.",
+"hu": "Aktív: A váltáshoz érintse meg.",
+"de": "Aktiv. Berühren zum Deaktivieren.",
+"fr": "Application active. Appuyez ici pour la désactiver.",
+"es": "Activa. Toca para cambiar."
+},
+"inactive_app_inactive_summary": {
+"res": "bullhead:Settings:inactive_app_inactive_summary",
+"en": "Inactive. Touch to toggle.",
+"hu": "Inaktív: A váltáshoz érintse meg.",
+"de": "Inaktiv. Berühren zum Aktivieren.",
+"fr": "Application inactive. Appuyez ici pour l'activer.",
+"es": "Inactiva. Toca para cambiar."
+},
+"Photos/dream_no_photos": {
+"res": "bullhead:Photos:dream_no_photos",
+"en": "No photos selected.",
+"hu": "Nincsenek fotók kiválasztva.",
+"de": "Keine Fotos ausgewählt",
+"fr": "Aucune photo sélectionnée",
+"es": "No se ha seleccionado ninguna foto."
+},
+"Photos/dream_local_photos_header": {
+"res": "bullhead:Photos:dream_local_photos_header",
+"en": "Photos on device",
+"hu": "Az eszközön található fotók",
+"de": "Fotos auf dem Gerät",
+"fr": "Photos provenant de l'appareil",
+"es": "Fotos en el dispositivo"
+},
+"Photos/dream_accounts_header": {
+"res": "bullhead:Photos:dream_accounts_header",
+"en": "Google Accounts",
+"hu": "Google-fiókok",
+"de": "Google-Konten",
+"fr": "Comptes Google",
+"es": "Cuentas de Google"
+},
+"PrebuiltGmsCore/auth_show_error_activity_title": {
+"res": "bullhead:PrebuiltGmsCore:auth_show_error_activity_title",
+"en": "Couldn't sign in",
+"hu": "Sikertelen bejelentkezés",
+"de": "Anmeldung nicht möglich",
+"fr": "Impossible de se connecter",
+"es": "Error al iniciar sesión"
+},
+"PrebuiltGmsCore/auth_error_generic_server_error": {
+"res": "bullhead:PrebuiltGmsCore:auth_error_generic_server_error",
+"en": "There was a problem communicating with Google servers. \n\nTry again later.",
+"hu": "Hiba történt a Google szervereivel való kommunikáció során. \n\nPróbálja újra később.",
+"de": "Bei der Kommunikation mit den Google-Servern ist ein Problem aufgetreten. \n\nVersuchen Sie es später erneut.",
+"fr": "Un problème est survenu lors de la connexion aux serveurs Google. \n\nVeuillez réessayer plus tard.",
+"es": "Se ha producido un problema al establecer comunicación con los servidores de Google. \n\nInténtalo de nuevo más tarde."
+},
+"PrebuiltGmsCore/auth_gls_name_checking_info_title": {
+"res": "bullhead:PrebuiltGmsCore:auth_gls_name_checking_info_title",
+"en": "Checking info…",
+"hu": "Ellenőrzés…",
+"de": "Überprüfung…",
+"fr": "Vérification des informations",
+"es": "Comprobando información…"
+},
+"PrebuiltGmail/account_setup_basics_title": {
+"res": "bullhead:PrebuiltGmail:account_setup_basics_title",
+"en": "Account setup",
+"hu": "Fiók beállítása",
+"de": "Kontoeinrichtung",
+"fr": "Configuration du compte",
+"es": "Configuración de la cuenta"
+},
+"PrebuiltGmail/account_setup_basics_headline": {
+"res": "bullhead:PrebuiltGmail:account_setup_basics_headline",
+"en": "Add your email address",
+"hu": "Adja hozzá e-mail címét",
+"de": "Meine E-Mail-Adresse hinzufügen",
+"fr": "Ajouter votre adresse e-mail",
+"es": "Añade tu dirección de correo electrónico"
+},
+"PrebuiltGmail/account_setup_basics_email_label": {
+"res": "bullhead:PrebuiltGmail:account_setup_basics_email_label",
+"en": "Enter your email",
+"hu": "Írja be e-mail címét",
+"de": "Geben Sie Ihre E-Mail-Adresse ein.",
+"fr": "Saisissez votre adresse e-mail.",
+"es": "Escribe tu dirección de correo"
+},
+"PrebuiltGmail/account_setup_basics_manual_setup_action": {
+"res": "bullhead:PrebuiltGmail:account_setup_basics_manual_setup_action",
+"en": "Manual setup",
+"hu": "Manuális beállítás",
+"de": "Manuell einrichten",
+"fr": "Config. manuelle",
+"es": "Configuración manual"
+},
+"PrebuiltGmail/account_setup_check_settings_check_incoming_msg": {
+"res": "bullhead:PrebuiltGmail:account_setup_check_settings_check_incoming_msg",
+"en": "Validating server settings…",
+"hu": "Szerverbeállítások ellenőrzése…",
+"de": "Servereinstellungen werden überprüft…",
+"fr": "Validation des paramètres du serveur en cours…",
+"es": "Validando los ajustes del servidor…"
+},
+"PrebuiltGmail/account_setup_failed_dlg_title": {
+"res": "bullhead:PrebuiltGmail:account_setup_failed_dlg_title",
+"en": "Couldn't finish",
+"hu": "Nem sikerült befejezni",
+"de": "Fertigstellen nicht möglich",
+"fr": "Impossible de terminer l'opération",
+"es": "No se ha podido terminar la configuración"
+},
+"PrebuiltGmail/account_setup_failed_ioerror": {
+"res": "bullhead:PrebuiltGmail:account_setup_failed_ioerror",
+"en": "Couldn't open connection to server.",
+"hu": "Nem sikerült megnyitni a kapcsolatot a szerverrel.",
+"de": "Verbindung zum Server kann nicht hergestellt werden.",
+"fr": "Impossible d'établir la connexion avec le serveur.",
+"es": "No se ha podido conectar con el servidor."
+},
+"PrebuiltGmail/account_setup_failed_dlg_edit_details_action": {
+"res": "bullhead:PrebuiltGmail:account_setup_failed_dlg_edit_details_action",
+"en": "Edit details",
+"hu": "Részletek szerkesztése",
+"de": "Details bearbeiten",
+"fr": "Modifier les infos",
+"es": "Modificar detalles"
+},
+"PrebuiltGmail/next": {
+"res": "bullhead:PrebuiltGmail:next",
+"en": "Next",
+"hu": "Következő",
+"de": "Weiter",
+"fr": "Suivante",
+"es": "Siguiente"
+},
+"help_label": {
+"res": "bullhead:Settings:help_label",
+"en": "Help & feedback",
+"hu": "Súgó és visszajelzés",
+"de": "Hilfe & Feedback",
+"fr": "Aide et commentaires",
+"es": "Ayuda y sugerencias"
+},
+"CertInstaller/no_cert_file_found": {
+"res": "bullhead:CertInstaller:no_cert_file_found",
+"en": "No certificate file found in USB storage.",
+"hu": "Nem található tanúsítványfájl az USB-táron.",
+"de": "Keine Zertifikatdatei auf USB-Speicher gefunden.",
+"fr": "Fichier de certificat introuvable dans la mémoire de stockage USB",
+"es": "No se ha encontrado ningún archivo de certificado en el almacenamiento USB."
+},
 "animator_duration_scale_entries": {
 "res": "bullhead:Settings:animator_duration_scale_entries",
 "en": [

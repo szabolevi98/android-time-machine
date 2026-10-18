@@ -161,6 +161,8 @@ EXTRA = ['settings_label_launcher', 'search_menu', 'framework/cancel', 'framewor
          # HighPowerApps, HighPowerDetail
          'high_power_on', 'high_power_off', 'high_power_filter_on', 'high_power_system', 'ignore_optimizations_on', 'ignore_optimizations_on_desc',
          'ignore_optimizations_off', 'ignore_optimizations_off_desc', 'done']
+# The texts the code of the other screens uses (docs/data/mm-settings-extra.txt: names as above, '#' starts a comment).
+EXTRA += [w for line in open(ROOT + 'docs/data/mm-settings-extra.txt', encoding='utf-8') for w in line.split('#', 1)[0].split()]
 strings, arrays, drawables = set(), set(), {}
 
 

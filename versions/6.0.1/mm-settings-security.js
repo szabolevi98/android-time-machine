@@ -62,7 +62,9 @@
       if (key === 'toggle_install_applications') { s.unknownSources = v; return true; }
       return false;
     },
-    disabled: (c, key) => (key === 'trust_agent' || key === 'manage_trust_agents') && !secure(c),
+    // Clear credentials is enabled only with user certificates installed (SecuritySettings' mResetCredentials:
+    // KeyStore.isEmpty()); the simulator has none.
+    disabled: (c, key) => key === 'credentials_reset' || ((key === 'trust_agent' || key === 'manage_trust_agents') && !secure(c)),
     summary(c, key, n) {
       const t = T(), l = lock(c);
       if (key === 'trust_agent') return secure(c) ? '' : t.t('disabled_because_no_backup_security');
@@ -92,7 +94,10 @@
         return true;
       }
       if (key === 'fingerprint_settings') { MM.fingerprint.open(c); return true; }
-      if (key === 'trust_agent') { MM.settingsGo(c, 'missing:com.google.android.gms.auth.trustagent.GoogleTrustAgentPersonalUnlockingSettings', trustTitle()); return true; }
+      // CertInstallerMain looks for certificate files in the storage's root; there are none.
+      if (key === 'credentials_install') { c.toast(t.t('CertInstaller/no_cert_file_found')); return true; }
+      // Google Play services' Smart Lock settings, an activity of its own (only with a secure lock).
+      if (key === 'trust_agent') { MM.openPrefs(c, 'smartlock', 'personal_unlocking_settings_preferences', trustTitle()); return true; }
       if (key === 'toggle_install_applications' && !s.unknownSources) {
         c.dialog({message: t.t('install_all_warning'), buttons: [{label: t.t('cancel')}, {label: t.t('okay'), action: c => { s.unknownSources = true; c.save(); c.render(); }}]});
         return true;

@@ -141,6 +141,12 @@
   }
   const headerDate = c => new Intl.DateTimeFormat(c.locale(), {weekday: 'long', month: 'long', day: 'numeric'}).format(new Date());
 
+  // A posted notification (notification_template_material_base: the 40 dp icon circle, the title in
+  // TextAppearance.Material.Notification.Title, the text, the actions of notification_material_action_list).
+  function noteHtml(c, n, i) {
+    return `<div class="mmsh-note" data-action="mmsh-noop"><div class="mmsh-nmain"><span class="mmsh-nicon"><img src="${n.icon}" alt=""></span><span class="mmsh-ntexts"><b>${c.safe(n.title)}</b><small>${c.safe(n.text)}</small></span></div>
+      ${n.actions?.length ? `<div class="mmsh-nactions">${n.actions.map((a, j) => `<button type="button" data-action="mmsh-naction" data-i="${i}" data-j="${j}">${c.safe(a.label)}</button>`).join('')}</div>` : ''}</div>`;
+  }
   function render(c) {
     const st = c.ui.shade || (c.ui.shade = {qs: false, detail: ''});
     const t = T(), list = tiles(c).filter(x => x.visible !== false), geo = layout(list), b = MM.battery();
@@ -154,7 +160,7 @@
     return `<div class="mmsh${st.qs ? ' qs' : ''}${st.detail ? ' detail' : ''}${st.opened ? ' shown' : ''}" style="--qs-h:${qsH.toFixed(3)}">
       <div class="mmsh-scrim" data-action="mmsh-close"></div>
       <div class="mmsh-panel">
-        <div class="mmsh-stack" data-action="mmsh-close">${notes.length ? '' : `<div class="mmsh-empty">${c.safe(t.t('empty_shade_text'))}</div>`}</div>
+        <div class="mmsh-stack" data-action="mmsh-close">${notes.length ? notes.map((n, i) => noteHtml(c, n, i)).join('') : `<div class="mmsh-empty">${c.safe(t.t('empty_shade_text'))}</div>`}</div>
         <div class="mmsh-qs"><div class="mmqs-panel" style="height:calc(${geo.height.toFixed(3)} * var(--dp))">
           <div class="mmqs-brightness">${sliderMarkup(c, value)}</div>
           ${list.map(tile => tileHtml(c, tile)).join('')}${detail}</div></div>
@@ -297,6 +303,8 @@
       const st = c.ui.shade;
       if (st?.dragged) { st.dragged = false; return true; }
       if (name === 'mmsh-close') { close(c); return true; }
+      if (name === 'mmsh-noop') return true;
+      if (name === 'mmsh-naction') { const n = c.notifications()[+el.dataset.i]; close(c); n?.actions?.[+el.dataset.j]?.action(c); return true; }
       if (name === 'mmsh-header') { setQs(c, !st.qs); return true; }
       if (name === 'mmsh-settings') { if (!st.qs) { setQs(c, true); return true; } c.closeOverlay(); c.open('settings'); return true; }
       if (name === 'mmsh-battery') { if (!st.qs) { setQs(c, true); return true; } c.closeOverlay(); c.open('settings', 'battery'); return true; }

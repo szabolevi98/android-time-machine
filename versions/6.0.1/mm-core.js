@@ -12,7 +12,9 @@
    A screen no module draws shows the "not built yet" card instead of an older version's screen. */
 (() => {
   'use strict';
-  const STORE = 'android-time-machine-mm-v1';
+  // Each user of the phone (mm-users.js) has a saved phone of its own; the owner keeps the original key.
+  const USER = (() => { try { return sessionStorage.getItem('mm-user') || 'owner'; } catch { return 'owner'; } })();
+  const STORE = `android-time-machine-mm-v1${USER === 'owner' ? '' : `-${USER}`}`;
   const modules = {};
   // Modules add their saved fields here (MM.defaults.contacts = [...]) and their upgrades of older saves.
   const defaults = {settings: {}};
@@ -72,12 +74,14 @@
 
   // The context every module hook gets.
   const c = {
-    get data() { return data; }, ui, save, render, open, home, back: () => back(true), key: keyPress, toast, t, safe, clone,
+    get data() { return data; }, user: USER, notifications: () => (window.MM.notificationSources || []).flatMap(f => f(c)), ui, save, render, open, home, back: () => back(true), key: keyPress, toast, t, safe, clone,
     get lang() { return i18n.language; }, locale: () => i18n.locale(),
     el: {screen, viewport, status: statusRoot, overlay: overlayRoot, nav: navRoot, device},
     has: id => !!modules[id], title: id => modules[id]?.title || SCREENS[id]?.[0] || id,
     overlay(id) { ui.overlay = id; renderOverlay(); }, closeOverlay() { ui.overlay = ''; renderOverlay(); },
-    lock: () => lockScreen(), wake: () => wake(), screens: SCREENS, missing: (id, extra) => missing(id, extra)
+    lock: () => lockScreen(), wake: () => wake(),
+    // MasterClear: the saved phone goes and the page starts again from the boot animation.
+    factoryReset() { try { localStorage.removeItem(STORE); sessionStorage.removeItem('android-sim-booted-6.0.1'); } catch {} location.reload(); }, screens: SCREENS, missing: (id, extra) => missing(id, extra)
   };
 
   function missing(id, extra = '') {

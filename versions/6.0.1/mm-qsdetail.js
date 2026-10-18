@@ -102,8 +102,13 @@
 
   function userGrid(c) {
     const t = T();
-    const users = [{name: t.t('owner_name'), icon: 'fw-ic_account_circle-user0.svg', current: true, id: 'owner'},
-      {name: t.t('guest_nickname'), icon: 'fw-ic_account_circle-guest.svg', id: 'guest'}, {name: t.t('user_add_user'), icon: 'sui-ic_add_circle_qs.svg', id: 'add'}];
+    // UserSwitcherController's records: the owner, the users added, the guest (Remove guest while it is the current
+    // user), Add user (mm-users.js).
+    const U = MM.users, me = U ? U.current(c) : 'owner';
+    const users = [{name: U ? U.ownerName() : t.t('owner_name'), icon: 'fw-ic_account_circle-user0.svg', current: me === 'owner', id: 'owner'},
+      ...(U ? U.list() : []).map(x => ({name: x.name, icon: 'fw-ic_account_circle-user0.svg', current: me === x.id, id: x.id})),
+      me === 'guest' ? {name: MM.text('users').t('guest_exit_guest'), icon: 'sui-ic_close.svg', current: true, id: 'guest'} : {name: t.t('guest_nickname'), icon: 'fw-ic_account_circle-guest.svg', id: 'guest'},
+      {name: t.t('user_add_user'), icon: 'sui-ic_add_circle_qs.svg', id: 'add'}];
     return `<div class="mmud">${users.map(u => `<button type="button" class="mmud-item${u.current ? ' on' : ''}" data-action="mmud-user" data-user="${u.id}"><span class="mmud-avatar"><img src="${A(u.icon)}" alt=""></span><span class="mmud-name">${c.safe(u.name)}</span></button>`).join('')}</div>`;
   }
 
@@ -181,8 +186,10 @@
         s.zenBucket = st.bucket; s.zenUntil = Date.now() + BUCKETS[st.bucket] * 60000; c.save(); ctl.refresh(c); return true;
       }
       if (name === 'mmud-user') {
-        if (el.dataset.user === 'owner') { ctl.closeDetail(c); return true; }
-        c.closeOverlay(); c.overlay(el.dataset.user === 'guest' ? 'user-guest' : 'user-add'); return true;
+        const id = el.dataset.user, me = MM.users?.current(c) || 'owner';
+        if (id === 'guest' || id === 'add') { c.closeOverlay(); c.overlay(id === 'guest' ? 'user-guest' : 'user-add'); return true; }
+        if (id === me) { ctl.closeDetail(c); return true; }
+        c.closeOverlay(); MM.users.switchTo(c, id); return true;
       }
       return false;
     }

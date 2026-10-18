@@ -50,9 +50,42 @@
       <div class="mmsa-page grey">${docRows(c) || `<div class="mmsa-empty">${esc(c, t.t('DocumentsUI/empty'))}</div>`}</div>
       <div class="mmsa-save"><i class="mmsa-mime" style="-webkit-mask-image:url('assets/du-ic_doc_pdf_alpha.png');mask-image:url('assets/du-ic_doc_pdf_alpha.png')"></i><input class="mmsa-savename" value="${esc(c, s.name)}" autocomplete="off" spellcheck="false"><button type="button" data-action="mmsa-save">${esc(c, MM.text('print').t('DocumentsUI/menu_save'))}</button></div>${roots}</div>`;
   }
+  /* DocumentsUI browsing a root (ACTION_BROWSE_DOCUMENT_ROOT from Settings > Storage): MediaDocumentsProvider's Images /
+     Videos / Audio (the camera's bucket "Camera" as a folder, its pictures as item_doc_grid tiles) and
+     ExternalStorageProvider's Internal storage (the primary volume's standard folders; DCIM holds Camera, Download the
+     saved files). A folder opens inside the root; Back goes up. */
+  const FOLDERS = ['Alarms', 'Android', 'DCIM', 'Download', 'Movies', 'Music', 'Notifications', 'Pictures', 'Podcasts', 'Ringtones'];
+  function browse(c) {
+    const t = T(), u = c.ui.downloads, path = u.path || [];
+    const rootTitle = {images: 'MediaProvider/root_images', videos: 'MediaProvider/root_videos', audio: 'MediaProvider/root_audio', storage: 'ExternalStorageProvider/root_internal_storage'}[u.root];
+    const photos = kind => (MM.media?.photos(c) || []).filter(p => !p.trashed && (kind === 'video' ? p.kind === 'video' : p.kind !== 'video')).sort((a, b) => b.time - a.time);
+    const folder = (name, n) => `<button type="button" class="mmsa-file" data-action="mmsa-open" data-name="${esc(c, name)}"><i class="mmsa-mime" style="-webkit-mask-image:url('assets/du-ic_doc_folder_alpha.png');mask-image:url('assets/du-ic_doc_folder_alpha.png')"></i><span><b>${esc(c, name)}</b>${n != null ? `<small><em>${n}</em></small>` : ''}</span></button>`;
+    const tiles = list => list.length ? `<div class="mmsa-docs">${list.map(p => `<div class="mmsa-doc">${MM.media.svg(p, 'mmsa-docsvg', 1)}<span><b>${esc(c, p.name || (p.kind === 'video' ? 'VID' : 'IMG'))}</b><small>${esc(c, new Intl.DateTimeFormat(c.locale(), {month: 'short', day: 'numeric'}).format(new Date(p.time)))}</small></span></div>`).join('')}</div>` : '';
+    let body = '';
+    const where = [u.root, ...path].join('/');
+    if (where === 'images' || where === 'videos') { const list = photos(u.root === 'videos' ? 'video' : 'image'); body = list.length ? `<div class="mmsa-list">${folder('Camera', list.length)}</div>` : ''; }
+    else if (where === 'images/Camera' || where === 'storage/DCIM/Camera') body = tiles(photos('image'));
+    else if (where === 'videos/Camera') body = tiles(photos('video'));
+    else if (where === 'storage') body = `<div class="mmsa-list">${FOLDERS.map(f => folder(f)).join('')}</div>`;
+    else if (where === 'storage/DCIM') body = `<div class="mmsa-list">${folder('Camera')}</div>`;
+    else if (where === 'storage/Download') body = docRows(c);
+    const title = path.length ? path.at(-1) : t.t(rootTitle);
+    return `<div class="mmsa">${bar(c, title, '#37474f', true, '', `<button type="button" class="mmsa-btn" data-action="mmsa-up"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button>`)}<div class="mmsa-page grey">${body || `<div class="mmsa-empty">${esc(c, t.t('DocumentsUI/empty'))}</div>`}</div></div>`;
+  }
+  // DocumentsUI's search (the action bar's SearchView, search_hint): the root's file names that match.
+  function search(c) {
+    const t = T(), u = c.ui.downloads, q = (u.q || '').trim().toLowerCase();
+    const hits = q ? docs(c).filter(d => d.name.toLowerCase().includes(q)) : [];
+    return `<div class="mmsa"><div class="mmsa-bar dark" style="background:#37474f"><button type="button" class="mmsa-btn" data-action="mmsa-searchoff"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button><input class="mmsa-q" value="${esc(c, u.q || '')}" placeholder="${esc(c, t.t('framework/search_hint'))}" autocomplete="off"></div>
+      <div class="mmsa-page grey">${hits.length ? `<div class="mmsa-list">${hits.map(d => `<div class="mmsa-file"><i class="mmsa-mime" style="-webkit-mask-image:url('assets/du-ic_doc_pdf_alpha.png');mask-image:url('assets/du-ic_doc_pdf_alpha.png')"></i><span><b>${esc(c, d.name)}</b><small><em>${esc(c, MM.fileSize(c, d.size))}</em></small></span></div>`).join('')}</div>` : q ? `<div class="mmsa-empty">${esc(c, t.t('DocumentsUI/empty'))}</div>` : ''}</div></div>`;
+  }
   MM.register('downloads', {
     statusColor: () => '#263238',
     render(c) {
+      const root = /^root:(\w+)$/.exec(c.ui.sub || '');
+      if (root) { c.ui.sub = ''; c.ui.downloads = {root: root[1], path: []}; }
+      if (c.ui.downloads?.root) return browse(c);
+      if (c.ui.downloads?.searching) return search(c);
       if (c.ui.sub === 'pick:wallpaper') { c.ui.sub = ''; c.ui.downloads = {grid: true, roots: false, pick: true}; }
       if (c.ui.sub === 'save') { c.ui.sub = ''; c.ui.downloads = {grid: false, roots: false, save: true}; }
       if (c.ui.downloads?.pick) return pickImage(c);
@@ -64,16 +97,25 @@
         <div class="mmsa-page grey">${docRows(c) || `<div class="mmsa-empty">${esc(c, t.t('DocumentsUI/empty'))}</div>`}</div>${roots}</div>`;
     },
     mount(c, root) {
+      const q = root.querySelector('.mmsa-q');
+      if (q) { q.addEventListener('input', () => { const p = q.selectionStart; c.ui.downloads.q = q.value; c.render(); const g = c.el.viewport.querySelector('.mmsa-q'); if (g) { g.focus(); g.setSelectionRange(p, p); } }); if (document.activeElement !== q) setTimeout(() => q.focus(), 40); }
       const f = root.querySelector('.mmsa-savename');
       if (f) { f.addEventListener('input', () => { if (c.ui.docSave) c.ui.docSave.name = f.value; }); const dot = f.value.lastIndexOf('.'); setTimeout(() => { f.focus(); f.setSelectionRange(0, dot > 0 ? dot : f.value.length); }, 60); }
     },
-    back(c) { const u = c.ui.downloads; if (u?.roots) { u.roots = false; c.render(); return true; } if (u?.pick || u?.save) { c.ui.downloads = null; c.ui.docSave = null; } return false; },
+    back(c) {
+      const u = c.ui.downloads;
+      if (u?.root) { if (u.path.length) { u.path.pop(); c.render(); return true; } c.ui.downloads = null; return false; }
+      if (u?.searching) { u.searching = false; u.q = ''; c.render(); return true; }
+      if (u?.roots) { u.roots = false; c.render(); return true; } if (u?.pick || u?.save) { c.ui.downloads = null; c.ui.docSave = null; } return false; },
     action(name, el, event, c) {
       const t = T(), u = c.ui.downloads;
       if (name === 'mmsa-roots') { u.roots = !u.roots; c.render(); return true; }
       if (name === 'mmsa-grid') { u.grid = !u.grid; c.render(); return true; }
       if (name === 'mm-menu') { c.menu([{label: t.t('DocumentsUI/menu_sort'), action: c => c.dialog({title: t.t('DocumentsUI/menu_sort'), items: ['DocumentsUI/sort_name', 'DocumentsUI/sort_date', 'DocumentsUI/sort_size'].map(k => ({html: c.safe(t.t(k))}))})}, {label: t.t('DocumentsUI/menu_advanced_show'), action: () => {}}]); return true; }
-      if (name === 'mmsa-missing') { c.open('missing-documents-search'); return true; }
+      if (name === 'mmsa-missing') { u.searching = true; u.q = ''; c.render(); return true; }
+      if (name === 'mmsa-searchoff') { u.searching = false; u.q = ''; c.render(); return true; }
+      if (name === 'mmsa-open') { u.path.push(el.dataset.name); c.render(); return true; }
+      if (name === 'mmsa-up') { if (!this.back(c)) c.back(); return true; }
       if (name === 'mmsa-save') {
         const s = c.ui.docSave || {}, name = (s.name || '').trim() || 'Document.pdf';
         docs(c).push({name, size: s.size || 20000, mime: s.mime || 'application/pdf', time: Date.now()}); c.save();

@@ -199,7 +199,7 @@
     const items = [];
     if (u.tab === 1) items.push({label: t.t('menu_contacts_filter'), action: c => c.open('missing-contacts-filter')});
     if (u.tab === 0 && frequents(c).length) items.push({label: t.t('menu_clear_frequents'), action: c => { c.data.frequentsCleared = Date.now(); c.save(); c.render(); }});
-    items.push({label: t.t('menu_import_export'), action: c => c.open('missing-import-export')}, {label: t.t('menu_accounts'), action: c => c.open('settings', 'accounts')}, {label: t.t('menu_settings'), action: c => c.open('missing-contacts-settings')}, {label: t.t('menu_help'), action: c => c.open('help', 'contacts')});
+    items.push({label: t.t('menu_import_export'), action: c => c.open('missing-import-export')}, {label: t.t('menu_accounts'), action: c => c.open('settings', 'accounts')}, {label: t.t('menu_settings'), action: c => MM.openPrefs(c, 'contacts', 'preference_display_options')}, {label: t.t('menu_help'), action: c => c.open('help', 'contacts')});
     c.menu(items);
   }
 

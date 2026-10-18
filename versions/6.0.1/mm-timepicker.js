@@ -10,7 +10,9 @@
      Cancel / OK in the accent. */
 (() => {
   'use strict';
-  const THEMES = {deskclock: {bg: '#212121', header: '#212121', dial: '#212121', numbers: '#ffffff', accent: '#da4336', dim: 'rgba(255,255,255,.5)'}};
+  // settings: Theme.Settings' light Material picker (the header in colorAccent #009688, dark numbers on #eceff1).
+  const THEMES = {deskclock: {bg: '#212121', header: '#212121', dial: '#212121', numbers: '#ffffff', accent: '#da4336', dim: 'rgba(255,255,255,.5)'},
+    settings: {bg: '#ffffff', header: '#009688', dial: '#eceff1', numbers: 'rgba(0,0,0,.87)', accent: '#009688', dim: 'rgba(255,255,255,.6)'}};
   const st = c => c.ui.timePicker;
   MM.timePicker = (c, h, m, onSet, theme = 'deskclock') => {
     const is24 = c.data.settings.time24 ?? !new Intl.DateTimeFormat(c.locale(), {hour: 'numeric'}).resolvedOptions().hour12;

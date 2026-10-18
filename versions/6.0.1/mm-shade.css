@@ -163,3 +163,13 @@
 .mmqd-close:active{background:rgba(255,255,255,.12)}
 .mmqd-close img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
 .mmsh.dragging .mmsh-panel,.mmsh.dragging .mmsh-scrim{transition:none}
+/* A notification card (notification_template_material_base, notification_material_action_list). */
+.mmsh-note{margin:0 0 calc(2 * var(--dp));background:#fff;border-radius:calc(2 * var(--dp));color:rgba(0,0,0,.87);font-family:Roboto,sans-serif}
+.mmsh-nmain{display:flex;align-items:center;gap:calc(12 * var(--dp));min-height:calc(64 * var(--dp));padding:calc(12 * var(--dp)) calc(16 * var(--dp)) calc(12 * var(--dp)) calc(12 * var(--dp))}
+.mmsh-nicon{flex:none;width:calc(40 * var(--dp));height:calc(40 * var(--dp));border-radius:50%;background:#607d8b;display:grid;place-items:center}
+.mmsh-nicon img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));filter:brightness(0) invert(1)}
+.mmsh-ntexts{display:flex;flex-direction:column;min-width:0}
+.mmsh-ntexts b{font-weight:500;font-size:calc(16 * var(--dp))}
+.mmsh-ntexts small{color:rgba(0,0,0,.54);font-size:calc(14 * var(--dp))}
+.mmsh-nactions{display:flex;border-top:1px solid rgba(0,0,0,.12);padding:0 calc(8 * var(--dp))}
+.mmsh-nactions button{height:calc(48 * var(--dp));padding:0 calc(8 * var(--dp));border:0;background:none;color:rgba(0,0,0,.87);font:500 calc(14 * var(--dp)) Roboto,sans-serif}
