@@ -71,3 +71,10 @@
 .mmscr-edge{position:absolute;overflow:hidden;opacity:0;transform-origin:50% 0}
 .mmscr-edge.bottom{transform-origin:50% 100%}
 .mmscr-edge>i{position:absolute;border-radius:50%}
+/* Touch feedback (mm-ripple.js): one layer over the screen, a host at each pressed control's bounds. */
+.mmrp-layer{position:absolute;inset:0;z-index:56;pointer-events:none;overflow:hidden}
+.mmrp{position:absolute;overflow:hidden;pointer-events:none;--rp:rgba(0,0,0,.122)}
+.mmrp.dark{--rp:rgba(255,255,255,.2)}
+.mmrp.free{overflow:visible}
+.mmrp>b{position:absolute;inset:0;background:var(--rp);opacity:0}
+.mmrp>i{position:absolute;border-radius:50%;background:var(--rp);transform:scale(0)}
