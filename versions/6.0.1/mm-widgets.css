@@ -46,3 +46,35 @@
 .mmwg-missing span{font-size:calc(12 * var(--dp))}
 .mmh-dragview.widget{width:auto;height:auto}
 .mmh-wprev{width:100%;height:100%;display:flex;align-items:center;justify-content:center;opacity:.85}
+/* Calendar's widget, narrow rows (widget_initial.xml, widget_*_narrow.xml). */
+.mmwg-cal{display:flex;flex-direction:column;height:100%;border-radius:calc(2 * var(--dp));background:#fafafa;overflow:hidden;font-family:Roboto,sans-serif}
+.mmwg-cal-head{flex:none;position:relative;height:calc(52 * var(--dp));padding:0;border:0;border-radius:calc(2 * var(--dp)) calc(2 * var(--dp)) 0 0;background:#4285f4;color:#fff;text-align:left}
+.mmwg-cal-head:active{background:#325bdc}
+.mmwg-cal-head small{position:absolute;left:calc(8 * var(--dp));top:calc(2 * var(--dp));font-size:calc(12 * var(--dp));line-height:1.172}
+.mmwg-cal-head b{position:absolute;left:calc(8 * var(--dp));right:0;bottom:calc(2 * var(--dp));font:400 calc(22 * var(--dp))/1.172 Roboto,sans-serif;white-space:nowrap;overflow:hidden}
+.mmwg-cal-list{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.mmwg-cal-top,.mmwg-cal-foot{height:calc(6 * var(--dp))}
+.mmwg-cal-day,.mmwg-cal-none{height:calc(30 * var(--dp));padding:0 calc(8 * var(--dp)) 0 calc(15 * var(--dp));color:#777;font-size:calc(12 * var(--dp));line-height:calc(30 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mmwg-cal-chip{display:block;width:100%;height:calc(30 * var(--dp));padding:calc(2 * var(--dp)) calc(8 * var(--dp));border:0;background:#fafafa;box-sizing:border-box}
+.mmwg-cal-chip.two{height:calc(50 * var(--dp))}
+.mmwg-cal-chip span{display:flex;flex-direction:column;justify-content:center;height:100%;padding:0 calc(7 * var(--dp));border-radius:calc(2 * var(--dp));color:#fff;font:calc(12 * var(--dp))/1.172 Roboto,sans-serif;text-align:left;box-sizing:border-box;overflow:hidden}
+.mmwg-cal-chip b,.mmwg-cal-chip i{font-style:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mmwg-cal-chip b{font-weight:700}
+/* Play Music's widget (music_widget_small.xml, empty state) and Drive's (app_widget.xml). */
+.mmwg-host>.mmwg-music{align-items:stretch;align-self:flex-start;height:calc(73 * var(--dp));background:#fff}
+.mmwg-music .art{flex:none;width:calc(73 * var(--dp));height:calc(73 * var(--dp))}
+.mmwg-music .info{flex:1;min-width:0;display:flex;flex-direction:column}
+.mmwg-music b{flex:1;display:flex;align-items:flex-end;padding:calc(4 * var(--dp)) calc(16 * var(--dp)) 0;color:#333;font:400 calc(14 * var(--dp))/1.172 Roboto,sans-serif;white-space:nowrap;overflow:hidden}
+.mmwg-music .row{position:relative;flex:none;display:flex;justify-content:center;height:calc(42 * var(--dp));padding:calc(1 * var(--dp));box-sizing:border-box}
+.mmwg-music .row u{width:20%;height:100%;background:center/calc(24 * var(--dp)) no-repeat}
+.mmwg-music .row u.play{background-size:contain}
+.mmwg-music .row i{position:absolute;inset:0;background:rgba(255,255,255,.8)}
+.mmwg-host .mmwg-drive{position:absolute;left:0;right:0;top:50%;display:flex;height:calc(56 * var(--dp));margin-top:calc(-28 * var(--dp))}
+.mmwg-drive button{flex:none;width:calc(52 * var(--dp));height:100%;padding:0 calc(6 * var(--dp));border:0;background:none;display:grid;place-items:center}
+.mmwg-drive button img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.mmwg-drive .home{flex:1;width:auto;min-width:0;display:flex;align-items:center;justify-content:flex-start;padding-left:calc(8 * var(--dp));color:#fff;text-align:left}
+.mmwg-drive .home img{flex:none;margin-right:calc(4 * var(--dp))}
+.mmwg-drive .home span{display:flex;flex-direction:column;min-width:0;padding-left:calc(4 * var(--dp))}
+.mmwg-drive .home b{font:400 calc(18 * var(--dp))/1.172 Roboto,sans-serif}
+.mmwg-drive .home small{padding-bottom:calc(5 * var(--dp));font-size:calc(10 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mmwg-drive button:active{background:rgba(255,255,255,.12)}

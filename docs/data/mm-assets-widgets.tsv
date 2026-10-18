@@ -29,3 +29,12 @@ wg-sc-gmaillabel.png	app/PrebuiltGmail/PrebuiltGmail.apk	mipmap/ic_launcher_shor
 wg-sc-contact.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/logo_quick_contacts_color_44in48dp
 wg-sc-dial.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/logo_quick_contacts_dialer_color_44in48dp
 wg-sc-message.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/logo_quick_contacts_mail_color_44in48dp
+mu-ic_widget_headphone.png	app/Music2/Music2.apk	drawable/ic_widget_headphone
+mu-ic_rew_dark.png	app/Music2/Music2.apk	drawable/ic_rew_dark
+mu-ic_play_black.png	app/Music2/Music2.apk	drawable/ic_play_black
+mu-ic_fwd_dark.png	app/Music2/Music2.apk	drawable/ic_fwd_dark
+dr-widget_background.9.png	app/Drive/Drive.apk	drawable/widget_background
+dr-widget_app_logo.png	app/Drive/Drive.apk	drawable/widget_app_logo
+dr-widget_upload.png	app/Drive/Drive.apk	drawable/widget_upload
+dr-widget_newdocfromcamera.png	app/Drive/Drive.apk	drawable/widget_newdocfromcamera
+dr-widget_newdoc.png	app/Drive/Drive.apk	drawable/widget_newdoc

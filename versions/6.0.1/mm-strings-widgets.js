@@ -234,5 +234,53 @@ MM.strings('widgets', {
 "de": "Direktnachricht",
 "fr": "Raccourci message",
 "es": "Mensaje directo"
+},
+"CalendarGooglePrebuilt/widget_day_today": {
+"res": "bullhead:CalendarGooglePrebuilt:widget_day_today",
+"en": "Today, %1$s",
+"hu": "Ma, %1$s",
+"de": "Heute, %1$s",
+"fr": "Aujourd'hui, %1$s",
+"es": "Hoy, %1$s"
+},
+"CalendarGooglePrebuilt/widget_day_tomorrow": {
+"res": "bullhead:CalendarGooglePrebuilt:widget_day_tomorrow",
+"en": "Tomorrow, %1$s",
+"hu": "Holnap, %1$s",
+"de": "Morgen, %1$s",
+"fr": "Demain, %1$s",
+"es": "Mañana, %1$s"
+},
+"CalendarGooglePrebuilt/no_events_today": {
+"res": "bullhead:CalendarGooglePrebuilt:no_events_today",
+"en": "No events today.",
+"hu": "Nincsenek mai események.",
+"de": "Für heute sind keine Termine geplant.",
+"fr": "Aucun événement aujourd'hui.",
+"es": "Hoy no hay ningún evento."
+},
+"CalendarGooglePrebuilt/no_more_events_today": {
+"res": "bullhead:CalendarGooglePrebuilt:no_more_events_today",
+"en": "No more events today.",
+"hu": "Nem tartozik több esemény a mai naphoz.",
+"de": "Für heute sind keine weiteren Termine geplant.",
+"fr": "Plus aucun événement aujourd'hui",
+"es": "Hoy no hay más eventos."
+},
+"CalendarGooglePrebuilt/widget_no_events_scheduled": {
+"res": "bullhead:CalendarGooglePrebuilt:widget_no_events_scheduled",
+"en": "No events scheduled",
+"hu": "Nincs ütemezett esemény",
+"de": "Keine Termine geplant",
+"fr": "Aucun événement planifié",
+"es": "No hay ningún evento programado"
+},
+"CalendarGooglePrebuilt/timely_chip_time_location": {
+"res": "bullhead:CalendarGooglePrebuilt:timely_chip_time_location",
+"en": "%s at %s",
+"hu": "%s – %s",
+"de": "%s Ort: %s",
+"fr": "%s (lieu : %s)",
+"es": "%s en %s"
 }
 });

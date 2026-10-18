@@ -125,11 +125,65 @@
 
   // ---- On the home screen ------------------------------------------------------------------------------------------
   const pad2 = n => String(n).padStart(2, '0');
+
+  /* Calendar 5.2.3's widget (CalendarAppWidgetProvider, widget_initial.xml): the 52 sp google_blue header (2 dp top
+     corners, 8 dp in) with the medium weekday (12 sp) at its top and the date (22 sp) at its foot, over the event list
+     on #fafafa. A widget at most 180 dp wide (WidgetUtils.getWidgetStyleFromWidth; two columns here) has the narrow
+     rows. WidgetDataReceiver.fillRows over 14 days: today's events that are not over yet (else
+     widget_no_events_today_narrow's "No events today." or, when some are over, no_more_events_today), then each later
+     day with events under its divider (getWidgetDayDividerText: weekday and date abbreviated, widget_day_tomorrow
+     for tomorrow), the chips (an all-day one 30 sp with the bold title, a timed one 50 sp with the time range and
+     timely_chip_time_location's place), the 6 dp footer; nothing in those days: widget_no_events_scheduled. */
+  function calendarWidget(c) {
+    const t = T(), loc = c.locale(), now = new Date(), color = '#039be5';
+    const day0 = d => new Date(d.getFullYear(), d.getMonth(), d.getDate()), today = day0(now);
+    const fmt = (d, o) => new Intl.DateTimeFormat(loc, o).format(d);
+    const evs = (MM.calendarEvents ? MM.calendarEvents(c) : []).map(e => {
+      const [y, m, d] = e.date.split('-').map(Number), at = hm => { const [hh, mm] = hm.split(':').map(Number); return new Date(y, m - 1, d, hh, mm); };
+      return {e, day: new Date(y, m - 1, d), start: e.allDay ? null : at(e.start), end: e.allDay ? new Date(y, m - 1, d + 1) : at(e.end || e.start)};
+    }).filter(x => x.end > now || +x.day === +today).sort((a, b) => a.day - b.day || (a.e.allDay ? -1 : b.e.allDay ? 1 : a.start - b.start));
+    const todays = evs.filter(x => +x.day === +today), past = x => x.end <= now;
+    const had = todays.length > 0, has = todays.some(x => !past(x));
+    const row = (cls, html) => `<div class="mmwg-cal-${cls}">${html}</div>`;
+    const chip = x => {
+      const title = `<b>${c.safe(x.e.title)}</b>`;
+      if (x.e.allDay) return `<button type="button" class="mmwg-cal-chip one" data-action="mmwg-open" data-app="calendar"><span style="background:${color}">${title}</span></button>`;
+      const range = new Intl.DateTimeFormat(loc, {hour: 'numeric', minute: '2-digit'});
+      const time = x.e.where ? range.format(x.start) : range.formatRange(x.start, x.end);
+      const when = x.e.where ? AndroidStrings.format(t.t('CalendarGooglePrebuilt/timely_chip_time_location'), time, x.e.where) : time;
+      return `<button type="button" class="mmwg-cal-chip two" data-action="mmwg-open" data-app="calendar"><span style="background:${color}">${title}<i>${c.safe(when)}</i></span></button>`;
+    };
+    let rows = '';
+    const later = evs.filter(x => +x.day > +today && x.day - today < 14 * 864e5);
+    if (!has && !later.length) rows = row('none', c.safe(t.t('CalendarGooglePrebuilt/widget_no_events_scheduled')));
+    else {
+      rows = has ? row('top', '') : row('day', c.safe(t.t(had ? 'CalendarGooglePrebuilt/no_more_events_today' : 'CalendarGooglePrebuilt/no_events_today')));
+      rows += todays.filter(x => !past(x)).map(chip).join('');
+      const days = [...new Set(later.map(x => +x.day))].sort((a, b) => a - b);
+      for (const d of days) {
+        const date = fmt(new Date(d), {weekday: 'short', month: 'short', day: 'numeric'});
+        const label = d - today === 864e5 ? AndroidStrings.format(t.t('CalendarGooglePrebuilt/widget_day_tomorrow'), date) : date;
+        rows += row('day', c.safe(label)) + later.filter(x => +x.day === d).map(chip).join('');
+      }
+      rows += row('foot', '');
+    }
+    return `<div class="mmwg-cal"><button type="button" class="mmwg-cal-head" data-action="mmwg-open" data-app="calendar"><small>${c.safe(fmt(now, {weekday: 'short'}))}</small><b>${c.safe(fmt(now, {month: 'long', day: 'numeric'}))}</b></button><div class="mmwg-cal-list">${rows}</div></div>`;
+  }
   function body(c, item) {
     const it = info(item.w);
     const w = it.spanX * MM.launcherGrid.cellW - 2 * PAD, h = it.spanY * MM.launcherGrid.cellH - 2 * PAD;
     const now = new Date();
     switch (item.w) {
+      case 'calendar': return calendarWidget(c);
+      case 'music':
+        // music_widget_small.xml in NowPlayingWidgetUtils.showEmptyState (nothing played yet): ic_widget_headphone as the
+        // 73 dp album art, the app's name as the track, and the button row (prev, play, next; no thumbs without a
+        // rating) under disabled_frame's white at 0.8.
+        return `<button type="button" class="mmwg-music" data-action="mmwg-open" data-app="play-music"><img class="art" src="assets/mu-ic_widget_headphone.png" alt=""><span class="info"><b>${c.safe(T().t('Music2/app_name'))}</b><span class="row"><u style="background-image:url('assets/mu-ic_rew_dark.png')"></u><u class="play" style="background-image:url('assets/mu-ic_play_black.png')"></u><u style="background-image:url('assets/mu-ic_fwd_dark.png')"></u><i></i></span></span></button>`;
+      case 'drive':
+        // app_widget.xml: Widget.Container (widget_background, 56 dp, centred), the logo and "Drive" over the account
+        // (Widget.Text.AppTitle 18 sp, AccountName 10 sp, white), then Upload, Document from photo and Add new, 52 dp each.
+        return `<div class="mmwg-drive np-dr-widget_background"><button type="button" class="home" data-action="mmwg-open" data-app="drive"><img src="assets/dr-widget_app_logo.png" alt=""><span><b>${c.safe(T().t('Drive/app_name'))}</b><small>${c.safe(MM.account?.email || '')}</small></span></button><button type="button" data-action="mmwg-open" data-app="drive"><img src="assets/dr-widget_upload.png" alt=""></button><button type="button" data-action="mmwg-open" data-app="drive"><img src="assets/dr-widget_newdocfromcamera.png" alt=""></button><button type="button" data-action="mmwg-open" data-app="drive"><img src="assets/dr-widget_newdoc.png" alt=""></button></div>`;
       case 'analog': {
         // AnalogClock.onDraw: the 630 px dial scaled down to fit, the hands turned about its centre.
         const s = Math.min(630, w, h), hr = (now.getHours() % 12 + now.getMinutes() / 60) * 30, mn = now.getMinutes() * 6;

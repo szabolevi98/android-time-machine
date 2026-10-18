@@ -34,6 +34,8 @@
       {id: 4, title: 'Meetup slides due', date: iso(plus(9)), allDay: true, where: '', note: ''}];
   })();
   const events = c => c.data.events || (c.data.events = JSON.parse(JSON.stringify(MM.defaults.events)));
+  // The Calendar widget (mm-widgets.js) lists the same events.
+  MM.calendarEvents = events;
   const ui = c => c.ui.calendar || (c.ui.calendar = {screen: '', drawer: false, oobe: 0, draft: null});
   const esc = (c, s) => c.safe(s);
   const parse = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
