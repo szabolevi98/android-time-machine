@@ -85,7 +85,24 @@
   }
 
   function pageHtml(c, items, p) {
-    return `<div class="mmh-page" data-page="${p}" style="--i:${p}"><i class="mmh-panel"></i>${items.map((it, i) => `<div class="mmh-cell" style="left:${dp(G.cellW * it.x)};top:${dp(G.cellH * it.y)}" data-index="${i}">${icon(c, it, 'ws', `ws:${p}:${i}`)}</div>`).join('')}</div>`;
+    return `<div class="mmh-page" data-page="${p}" style="--i:${p}"><i class="mmh-panel"></i>${items.map((it, i) => it.type === 'widget'
+      ? `<div class="mmh-cell mmh-wcell" style="left:${dp(G.cellW * it.x)};top:${dp(G.cellH * it.y)};width:${dp(G.cellW * it.spanX)};height:${dp(G.cellH * it.spanY)}" data-index="${i}"><div class="mmh-widget" data-src="ws:${p}:${i}" data-w="${it.w}">${MM.widgets.home(c, it)}</div></div>`
+      : `<div class="mmh-cell" style="left:${dp(G.cellW * it.x)};top:${dp(G.cellH * it.y)}" data-index="${i}">${icon(c, it, 'ws', `ws:${p}:${i}`)}</div>`).join('')}</div>`;
+  }
+
+  // CellLayout's occupied cells: an item covers its span (1 x 1 for icons and folders).
+  const covers = (it, x, y) => x >= it.x && x < it.x + (it.spanX || 1) && y >= it.y && y < it.y + (it.spanY || 1);
+  const free = (list, x, y, sx, sy, skip) => x >= 0 && y >= 0 && x + sx <= 5 && y + sy <= 5
+    && !list.some(it => it !== skip && it.x < x + sx && x < it.x + (it.spanX || 1) && it.y < y + sy && y < it.y + (it.spanY || 1));
+  // CellLayout.findNearestVacantArea: the free area of the size whose centre is nearest to the drop point.
+  function nearest(list, fx, fy, sx, sy, skip) {
+    let best = null, dist = Infinity;
+    for (let y = 0; y + sy <= 5; y++) for (let x = 0; x + sx <= 5; x++) {
+      if (!free(list, x, y, sx, sy, skip)) continue;
+      const d = Math.hypot(x + sx / 2 - fx, y + sy / 2 - fy);
+      if (d < dist) { dist = d; best = {x, y}; }
+    }
+    return best;
   }
 
   // An item and where it is, from a drag source name.
@@ -160,7 +177,13 @@
     if (st.folder && d.from === 'fd') { st.folder = null; el.querySelector('.mmh-fpanel')?.remove(); el.querySelector('.mmh-fscrim')?.remove(); }
     const view = document.createElement('div');
     view.className = 'mmh-dragview';
-    view.innerHTML = `<img src="${MM.appsData[d.item.type === 'folder' ? d.item.items[0] : d.item.app]?.icon}" alt="">`;
+    if (d.item.type === 'widget') {
+      // A widget drags as its view on the home screen, or from the list as its preview at the size it will take.
+      const wi = MM.widgets.info(d.item.w), w = G.cellW * wi.spanX, h = G.cellH * wi.spanY;
+      view.classList.add('widget');
+      Object.assign(view.style, {width: dp(w), height: dp(h), margin: `calc(${(-h / 2 / PX).toFixed(3)} * var(--dp)) 0 0 calc(${(-w / 2 / PX).toFixed(3)} * var(--dp))`});
+      view.innerHTML = d.from === 'ws' ? MM.widgets.home(c, d.item) : `<div class="mmh-wprev">${MM.widgets.preview(c, wi)}</div>`;
+    } else view.innerHTML = `<img src="${MM.appsData[d.item.type === 'folder' ? d.item.items[0] : d.item.app]?.icon}" alt="">`;
     if (d.item.type === 'folder') view.innerHTML = el.querySelector(`[data-src="${d.src}"]`)?.outerHTML || view.innerHTML, view.classList.add('folder');
     el.append(view);
     d.view = view;
@@ -172,7 +195,7 @@
     const px = (x - r.left) / k, py = (y - r.top) / k;
     if (py < G.searchBottom) return {kind: px < G.W / 2 ? 'remove' : 'info'};
     if (py > G.H - G.hotseatH) return {kind: 'hs', rank: Math.max(0, Math.min(4, Math.floor((px - G.edge * 2) / G.hsCellW)))};
-    if (py < G.ws.bottom) return {kind: 'ws', x: Math.max(0, Math.min(4, Math.floor((px - G.ws.left) / G.cellW))), y: Math.max(0, Math.min(4, Math.floor((py - G.ws.top) / G.cellH)))};
+    if (py < G.ws.bottom) return {kind: 'ws', x: Math.max(0, Math.min(4, Math.floor((px - G.ws.left) / G.cellW))), y: Math.max(0, Math.min(4, Math.floor((py - G.ws.top) / G.cellH))), fx: (px - G.ws.left) / G.cellW, fy: (py - G.ws.top) / G.cellH};
     return null;
   }
   function moveDrag(c, root, x, y) {
@@ -193,12 +216,31 @@
       else if (d.from === 'hs') h.hotseat[+d.src.split(':')[1]] = null;
       else if (d.from === 'fd') { const loc = folderOf(c, d.folder); loc.item.items.splice(d.index, 1); tidyFolder(h, loc); }
     };
-    if (t?.kind === 'info' && app) { c.render(); c.open('settings', `app:${app}`); return; }
+    const wi = d.item.type === 'widget' ? MM.widgets.info(d.item.w) : null;
+    if (t?.kind === 'info' && (app || wi)) { c.render(); c.open('settings', `app:${app || wi.app}`); return; }
     if (t?.kind === 'remove' && d.from !== 'drawer') { take(); c.save(); c.render(); return; }
     const fresh = {...d.item};
+    if (wi && t?.kind === 'ws') {
+      // A widget (or a shortcut from the widgets list) goes to the nearest free area of its span on this page.
+      const list = h.pages[page - 1], self = d.from === 'ws' ? locate(h, d.src).item : null;
+      const at = nearest(list, t.fx - wi.spanX / 2 + .5, t.fy - wi.spanY / 2 + .5, wi.spanX, wi.spanY, self);
+      if (!at) { c.render(); c.toast(MM.widgets.outOfSpace(), false); return; }
+      // A shortcut's CREATE_SHORTCUT activity (its configuration screen) is not built yet.
+      if (wi.kind === 'shortcut') { c.render(); c.open('missing-shortcut'); return; }
+      take();
+      h.pages[page - 1].push({type: 'widget', w: wi.id, spanX: wi.spanX, spanY: wi.spanY, x: at.x, y: at.y});
+      c.save(); c.render(); return;
+    }
+    if (wi) { c.render(); return; }
     if (t?.kind === 'ws') {
       const list = h.pages[page - 1];
-      const hit = list.findIndex(it => it.x === t.x && it.y === t.y);
+      let hit = list.findIndex(it => covers(it, t.x, t.y));
+      // Over a widget an icon takes the nearest free cell instead.
+      if (hit >= 0 && list[hit].type === 'widget') {
+        const at = nearest(list, t.fx, t.fy, 1, 1, d.from === 'ws' ? locate(h, d.src).item : null);
+        if (!at) { c.render(); c.toast(MM.widgets.outOfSpace(), false); return; }
+        t.x = at.x; t.y = at.y; hit = list.findIndex(it => covers(it, t.x, t.y));
+      }
       const self = d.from === 'ws' && d.src === `ws:${page}:${hit}`;
       if (hit < 0 || self) { take(); const l2 = h.pages[page - 1]; l2.push({...fresh, x: t.x, y: t.y}); }
       else if (app && list[hit].type === 'app') { take(); const l2 = h.pages[page - 1], at = l2.findIndex(it => it.x === t.x && it.y === t.y); l2[at] = {type: 'folder', title: '', items: [l2[at].app, app], x: t.x, y: t.y}; }
@@ -282,7 +324,7 @@
     // A drag the drawer started (an app held there) continues here.
     if (st.pendingDrag) {
       const d = st.pendingDrag; st.pendingDrag = null;
-      startDrag(c, root, {src: '', from: 'drawer', item: {type: 'app', app: d.app}});
+      startDrag(c, root, {src: '', from: 'drawer', item: d.item || {type: 'app', app: d.app}});
       moveDrag(c, root, d.x, d.y);
     }
   }
@@ -291,6 +333,12 @@
     const st = c.ui.home || (c.ui.home = {page: 1, folder: null});
     st.pendingDrag = {app, x, y}; st.suppressClick = true;
     c.ui.drawer = null; c.home();
+  };
+  // A widget or shortcut held in the widgets list: the drag goes on over the home screen (a copy, like the drawer's).
+  MM.launcherDragNew = (c, item, x, y) => {
+    const st = c.ui.home || (c.ui.home = {page: 1, folder: null});
+    st.pendingDrag = {item, x, y}; st.suppressClick = true;
+    c.home();
   };
 
   MM.register('home', {
@@ -309,6 +357,7 @@
       if (name === 'mmh-search') { MM.googleOpen ? MM.googleOpen(c, false) : c.open('search'); return true; }
       if (name === 'mmh-voice') { MM.googleOpen ? MM.googleOpen(c, true) : c.open('search', 'voice'); return true; }
       if (name.startsWith('mmgg-') && MM.google) return MM.google.action(name, el, event, c);
+      if (name.startsWith('mmwg-') && MM.widgets) return MM.widgets.action(name, el, event, c);
       if (name === 'mmh-cling') { c.data.homeClingSeen = true; c.save(); c.render(); return true; }
       if (name === 'mmh-ov') { st.overview = false; c.open({wallpaper: 'wallpapers', widget: 'widgets', setting: 'home-settings'}[el.dataset.ov]); return true; }
       return false;

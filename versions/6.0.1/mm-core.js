@@ -52,7 +52,7 @@
     'qs-cast': ['Cast screen', 'SystemUI.apk · CastTile detail'], 'qs-user': ['Users', 'SystemUI.apk · UserDetailView'],
     'user-guest': ['Guest', 'SystemUI.apk · UserSwitcherController'], 'user-add': ['Add user', 'SystemUI.apk · UserSwitcherController.AddUserDialog']
   };
-  const SYSTEM = ['home', 'lock', 'statusbar', 'navbar', 'shade', 'power', 'recents', 'volume', 'drawer', 'now'];
+  const SYSTEM = ['home', 'lock', 'statusbar', 'navbar', 'shade', 'power', 'recents', 'volume', 'drawer', 'widgets', 'now'];
 
   const i18n = window.AndroidI18n;
   const t = (key, context) => i18n.t(key, context);

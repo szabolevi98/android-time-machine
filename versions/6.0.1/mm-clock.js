@@ -150,6 +150,8 @@
     }, 50);
   }
 
+  // The clock widgets (mm-widgets.js) show the same time format and next alarm.
+  MM.clock24 = h24; MM.clockNextAlarm = nextAlarm;
   MM.register('clock', {
     statusColor: c => HOUR_COLORS[new Date().getHours()],
     render,

@@ -1,0 +1,48 @@
+/* The widgets list and the home screen widgets (mm-widgets.js), in dp (436 px cells = 166.095 dp). */
+.mmwg{position:absolute;inset:0;font-family:Roboto,sans-serif;line-height:1.172;animation:mmwg-in .25s cubic-bezier(.4,0,.2,1)}
+@keyframes mmwg-in{from{opacity:0;transform:scale(.96)}}
+.mmwg-panel{position:absolute;inset:calc(8 * var(--dp));border-radius:calc(2 * var(--dp));background:#374248;overflow:hidden;box-shadow:0 calc(8 * var(--dp)) calc(18 * var(--dp)) rgba(0,0,0,.35)}
+.mmwg-list{height:100%;overflow-y:auto;scrollbar-width:none}
+.mmwg-row{background:#263238}
+.mmwg-sec{display:flex;align-items:center;gap:calc(16 * var(--dp));height:calc(56 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));box-sizing:border-box;background:#374248;color:#fff;font-size:calc(16 * var(--dp));white-space:nowrap;overflow:hidden}
+.mmwg-sec img{flex:none;width:calc(40 * var(--dp));height:calc(40 * var(--dp))}
+.mmwg-sec span{overflow:hidden;text-overflow:ellipsis}
+.mmwg-cells{display:flex;margin-left:calc(8 * var(--dp));overflow-x:auto;scrollbar-width:none}
+.mmwg-cell{flex:none;display:flex;flex-direction:column;width:calc(166.095 * var(--dp));height:calc(166.095 * var(--dp));background:#263238;outline:0}
+.mmwg-cell+.mmwg-cell{border-left:calc(2 * var(--dp)) solid #374248}
+.mmwg-cell:active{background:#2e3c43}
+.mmwg-name{display:flex;padding:calc(8 * var(--dp));color:#c4c4c4;font:calc(14 * var(--dp))/1.172 'Roboto Condensed',Roboto,sans-serif;text-shadow:0 0 calc(2 * var(--dp)) rgba(0,0,0,.69);white-space:nowrap}
+.mmwg-name span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.mmwg-name small{flex:none;margin-left:calc(5 * var(--dp));font-size:inherit}
+.mmwg-prev{flex:1;min-height:0;display:flex;justify-content:center;align-items:flex-start;overflow:hidden;pointer-events:none}
+.mmwg-prev img{flex:none}
+.mmwg-sc{position:relative;flex:none}
+.mmwg-sc img{position:absolute;left:0;top:0}
+.mmwg-sc img.ghost{width:100%;height:100%;filter:grayscale(1);opacity:.059}
+.mmwg-tiles{position:relative;flex:none;background:url('assets/vw-widget_tile.png') 0 0 repeat}
+.mmwg-tiles img{position:absolute}
+
+/* On the home screen: AppWidgetHostView's default 8 dp padding inside the cells it spans. */
+.mmh-wcell{pointer-events:none}
+.mmh-widget{position:absolute;inset:0;pointer-events:auto}
+.mmwg-host{position:absolute;inset:calc(8 * var(--dp))}
+.mmwg-host>button{display:flex;width:100%;height:100%;padding:0;border:0;background:none;color:#fff;font-family:Roboto,sans-serif}
+.mmwg-analog{align-items:center;justify-content:center}
+.mmwg-analog span{position:relative;flex:none}
+.mmwg-analog img{position:absolute;inset:0;width:100%;height:100%}
+.mmwg-digital{flex-direction:column;align-items:center}
+.mmwg-digital b{margin-bottom:calc(-8 * var(--dp));font:300 calc(75 * var(--dp))/1.172 Roboto,sans-serif}
+.mmwg-digital span{display:flex;justify-content:center;align-items:center;font:calc(14 * var(--dp))/1.172 Roboto,sans-serif;text-transform:uppercase;letter-spacing:.15em;white-space:nowrap}
+.mmwg-digital i{font-style:normal}
+.mmwg-digital em{display:flex;align-items:center;gap:calc(2 * var(--dp));margin-left:calc(8 * var(--dp));color:rgba(255,255,255,.702);font-style:normal}
+.mmwg-digital em img{width:calc(18 * var(--dp));height:calc(18 * var(--dp))}
+.mmwg-sound{align-items:center;justify-content:center}
+.mmwg-sound img{width:calc(72 * var(--dp));height:calc(72 * var(--dp))}
+.mmwg-sound:active img{content:url('assets/wg-soundsearch-pressed.png')}
+.mmwg-ifl{position:relative;box-sizing:border-box;padding:calc(3 * var(--dp))!important}
+.mmwg-ifl img{width:100%;height:100%;object-fit:contain}
+.mmwg-ifl i{position:absolute;left:50%;top:50%;width:calc(33 * var(--dp));height:calc(33 * var(--dp));margin:calc(-16.5 * var(--dp)) 0 0 calc(-16.5 * var(--dp));background:center/contain no-repeat}
+.mmwg-missing{gap:calc(2 * var(--dp));padding:calc(4 * var(--dp));font-size:calc(10 * var(--dp))}
+.mmwg-missing span{font-size:calc(12 * var(--dp))}
+.mmh-dragview.widget{width:auto;height:auto}
+.mmh-wprev{width:100%;height:100%;display:flex;align-items:center;justify-content:center;opacity:.85}
