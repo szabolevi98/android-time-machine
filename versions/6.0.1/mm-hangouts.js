@@ -45,6 +45,7 @@
   // ShareIntentActivity: the shared text waits for the conversation picked from the list (or started), as its draft.
   function render(c) {
     const u = ui(c);
+    if (c.ui.sub?.startsWith('chat:')) { const id = +c.ui.sub.slice(5); c.ui.sub = ''; if (chats(c).some(y => y.id === id)) { u.chat = id; u.drawer = u.pick = false; } }
     if (c.ui.sub === 'share') { c.ui.sub = ''; const d = MM.shareTake(c); u.share = d?.text || ''; u.chat = 0; u.drawer = u.pick = false; }
     if (u.chat && u.share) { u.draft[u.chat] = u.share; u.share = ''; }
     const x = chats(c).find(y => y.id === u.chat); return x ? chat(c, x) : list(c);
@@ -68,7 +69,19 @@
         case 'mmho-open': u.chat = +el.dataset.id; c.render(); return true;
         case 'mmho-start': { const id = +el.dataset.id, all = chats(c); let x = all.find(y => y.contact === id); if (!x) { x = {id: Math.max(0, ...all.map(y => y.id)) + 1, contact: id, messages: []}; all.push(x); c.save(); } u.pick = false; u.chat = x.id; c.render(); return true; }
         case 'mmho-up': u.chat = 0; c.render(); return true;
-        case 'mmho-send': { const x = chats(c).find(y => y.id === u.chat), text = (u.draft[u.chat] || '').trim(); if (!text) return true; x.messages.push({id: Date.now(), mine: true, text, time: Date.now()}); u.draft[u.chat] = ''; c.save(); c.render(); return true; }
+        case 'mmho-send': {
+          const x = chats(c).find(y => y.id === u.chat), text = (u.draft[u.chat] || '').trim(); if (!text) return true;
+          x.messages.push({id: Date.now(), mine: true, text, time: Date.now()}); u.draft[u.chat] = ''; c.save(); c.render();
+          // The other side answers once (mm-notify.js), posted with stat_notify_hangout unless the chat is open.
+          const who = MM.people?.byId(c, x.contact);
+          if (who && MM.notifications) MM.notifications.answer(c, 'hangouts', x.id, c => {
+            const answer = MM.text('hangouts').t(`sim_reply_${who.id % 2 + 1}`), open = c.ui.view === 'hangouts' && ui(c).chat === x.id;
+            x.messages.push({id: Date.now(), mine: false, text: answer, time: Date.now()}); c.save();
+            if (open) { c.render(); return; }
+            MM.notify(c, {app: 'hangouts', icon: 'assets/ho-stat_notify_hangout.png', title: who.name, text: answer, person: who.id, open: ['hangouts', `chat:${x.id}`]});
+          });
+          return true;
+        }
         case 'mmho-missing': u.drawer = false; c.open('missing-hangouts-feature'); return true;
       }
       return false;

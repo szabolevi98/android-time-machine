@@ -194,6 +194,17 @@
     const out = pending.length ? pending.map((photo, i) => ({id: ++id, mine: true, photo, text: i === pending.length - 1 ? text : '', time: Date.now(), status: 'sending'})) : [{id: ++id, mine: true, text, time: Date.now(), status: 'sending'}];
     x.messages.push(...out); u.draft[x.id] = ''; if (u.attach) u.attach[x.id] = []; u.panel = ''; c.save(); c.render();
     setTimeout(() => { for (const m of out) { delete m.status; m.time = Date.now(); } c.save(); if (c.ui.view === 'messenger') c.render(); }, pending.length ? 2400 : 1200);
+    // A demo contact writes back once (mm-notify.js): BugleNotifications posts it with ic_sms_light and the sender's
+    // tile, unless the conversation is open.
+    const who = MM.people?.byNumber(c, x.number);
+    if (who && MM.notifications) MM.notifications.answer(c, 'messenger', x.id, c => {
+      const t = MM.text('messenger'), text = t.t(`sim_reply_${(who.id + x.id) % 3 + 1}`), open = c.ui.view === 'messenger' && ui(c).screen === `conv:${x.id}`;
+      x.messages.push({id: Math.max(0, ...threads(c).flatMap(y => y.messages.map(m => m.id))) + 1, mine: false, text, time: Date.now()});
+      x.read = open; c.save();
+      if (open) { c.render(); return; }
+      MM.notify(c, {app: 'messenger', icon: 'assets/bg-ic_sms_light.png', title: who.name, text, person: who.id, open: ['messenger', `conv:${x.id}`]});
+      if (c.ui.view === 'messenger' && !ui(c).screen) c.render();
+    });
   }
 
   function consume(c) {

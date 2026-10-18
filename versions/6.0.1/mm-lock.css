@@ -73,3 +73,7 @@
 /* With the bouncer up the keyguard panel has collapsed away; only its status bar stays over the scrim. */
 .mmlk.bouncing .mmlk-panel>:not(.mmlk-bar){opacity:0;pointer-events:none;transition:opacity .2s}
 .mmlk.bouncing .mmlk-bar{z-index:6}
+/* The keyguard's notification rows (mm-notify.js rows in the dimmed background; an activated one is opaque). */
+.mmlk-notes{position:absolute;left:calc(8 * var(--dp));right:calc(8 * var(--dp))}
+.mmlk-notes .mmnt-row{background:rgba(255,255,255,.831);transition:background-color .22s}
+.mmlk-notes .mmnt-row.active{background:#fafafa}

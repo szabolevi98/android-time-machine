@@ -170,3 +170,24 @@
 .mmsh-ntexts small{color:rgba(0,0,0,.54);font-size:calc(14 * var(--dp))}
 .mmsh-nactions{display:flex;border-top:1px solid rgba(0,0,0,.12);padding:0 calc(8 * var(--dp))}
 .mmsh-nactions button{height:calc(48 * var(--dp));padding:0 calc(8 * var(--dp));border:0;background:none;color:rgba(0,0,0,.87);font:500 calc(14 * var(--dp)) Roboto,sans-serif}
+/* Posted notifications (mm-notify.js): the row's first line holds the title and, at its end, the time
+   (TextAppearance.Material.Notification.Time, 12 sp secondary, 8 dp from the title); a person's notification shows
+   their letter tile with the small icon in a 16 dp badge of the app's colour (right_icon, 3 dp padding). */
+.mmnt-row{position:relative;cursor:pointer;touch-action:pan-y}
+.mmnt-row .mmsh-ntexts{flex:1}
+.mmnt-line1{display:flex;align-items:baseline;gap:calc(8 * var(--dp));min-width:0}
+.mmnt-line1 b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mmnt-line1 time{flex:none;color:rgba(0,0,0,.54);font-size:calc(12 * var(--dp))}
+.mmnt-row small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mmnt-large{position:relative;flex:none;width:calc(40 * var(--dp));height:calc(40 * var(--dp))}
+.mmnt-large .mmpp-tile{width:100%;height:100%;font-size:calc(20 * var(--dp))}
+.mmnt-badge{position:absolute;right:calc(-4 * var(--dp));bottom:calc(-4 * var(--dp));width:calc(16 * var(--dp));height:calc(16 * var(--dp));padding:calc(3 * var(--dp));box-sizing:border-box;border-radius:50%;display:grid;place-items:center}
+.mmnt-badge img{width:100%;height:100%;filter:brightness(0) invert(1)}
+/* The heads-up row: at the top of the screen over the status bar, 8 dp in from the sides, raised. */
+.mmnt-hun{position:absolute;left:calc(8 * var(--dp));right:calc(8 * var(--dp));top:0;z-index:19}
+.mmnt-hun .mmnt-row{margin:0;box-shadow:0 calc(4 * var(--dp)) calc(8 * var(--dp)) rgba(0,0,0,.3),0 0 calc(2 * var(--dp)) rgba(0,0,0,.15)}
+/* DismissView: the 48 dp Clear all button at the end, 12 dp under the stack. */
+.mmsh-dismissall{display:flex;justify-content:flex-end;padding-top:calc(12 * var(--dp))}
+.mmsh-clearall{position:relative;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;border-radius:50%;background:none;overflow:visible}
+.mmsh-clearall svg{position:absolute;left:calc(15.5 * var(--dp));top:calc(15.5 * var(--dp));width:calc(85 * var(--dp));height:calc(17 * var(--dp));overflow:visible;pointer-events:none}
+.screen.view-lock .mmnt-hun,.screen.sleeping .mmnt-hun{display:none}

@@ -41,7 +41,7 @@ zen_mode_until plurals:zen_mode_duration_minutes plurals:zen_mode_duration_hours
 quick_settings_user_title owner_name guest_nickname user_add_user
 [lock] SystemUI framework
 # The keyguard: KeyguardIndicationController's hints and charging texts, CarrierText, the bottom area's buttons
-keyguard_unlock camera_hint phone_hint keyguard_charged keyguard_plugged_in keyguard_indication_charging_time
+notification_tap_again keyguard_unlock camera_hint phone_hint keyguard_charged keyguard_plugged_in keyguard_indication_charging_time
 airplane_mode accessibility_camera_button accessibility_phone_button accessibility_unlock_button
 # The bouncer: KeyguardAbsKeyInputView / KeyguardPatternView's wrong-credential messages and lockout, EmergencyButton
 kg_wrong_pattern kg_wrong_password kg_wrong_pin kg_too_many_failed_attempts_countdown+args1 lockscreen_emergency_call
@@ -128,6 +128,7 @@ import_from_vcf_file export_to_vcf_file share_visible_contacts import_failure_no
 exporting_vcard_filename exporting_vcard_finished_title+args1
 [messenger] PrebuiltBugle framework
 # Messenger 1.4.533: the conversation list and its menu, the conversation, the compose bar, the contact picker, the dates
+own:sim_reply_1 own:sim_reply_2 own:sim_reply_3
 app_name start_new_conversation action_search action_menu_show_archived blocked_contacts_title action_settings
 action_help_and_feedback conversation_list_empty_text conversation_list_item_view_sent_from_you_prefix posted_now
 posted_just_now plurals:num_minutes_ago action_call action_add_contact action_people_and_options action_archive
@@ -243,6 +244,7 @@ home_phone_label search_hint subscribe subscribed menu_share accessibility_addto
 plurals:author_and_views plurals:age_and_views plurals:minutes_ago plurals:hours_ago plurals:days_ago plurals:weeks_ago
 [hangouts] Hangouts framework
 # Hangouts 4.1: the conversation list, the drawer, a conversation
+own:sim_reply_1 own:sim_reply_2
 app_name fab_new_conversation realtimechat_send_button_description realtimechat_message_text_hint menu_invites
 dnd_menu_item home_menu_settings help_feedback_menu_item_text menu_archived_conversations video_call_title
 voice_call_title posted_now

@@ -110,7 +110,7 @@
     const step = () => {
       if (!u.dl || u.dl.id !== id) return;
       u.dl.p = Math.min(100, u.dl.p + 9 + Math.floor(Math.random() * 12));
-      if (u.dl.p >= 100) { setTimeout(() => { u.dl = null; st(c).installed.push(id); c.save(); c.toast(T().t('notification_installation_success_message'), false); if (c.ui.view === 'play-store') c.render(); }, 900); }
+      if (u.dl.p >= 100) { setTimeout(() => { u.dl = null; st(c).installed.push(id); c.save(); MM.notify ? MM.notify(c, {app: 'play-store', icon: 'assets/ps-stat_notify_installed.png', title: item(c, id)?.name || id, text: T().t('notification_installation_success_message'), open: ['play-store', ''], heads: false}) : c.toast(T().t('notification_installation_success_message'), false); if (c.ui.view === 'play-store') c.render(); }, 900); }
       else setTimeout(step, 250);
       if (c.ui.view === 'play-store') c.render();
     };

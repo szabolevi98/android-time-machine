@@ -113,3 +113,8 @@ chrome	history_remove	Remove from history	Eltávolítás az előzmények közül
 chrome	history_more_site	More from this site	Továbbiak erről a webhelyről	Mehr von dieser Website	Plus de résultats pour ce site	Más entradas de este sitio	Chrome.apk assets/<lang>.pak resource 14731
 chrome	history_no_results	No search results found.	Nincs találat	Keine Suchergebnisse gefunden.	Aucun résultat de recherche trouvé	No se han encontrado resultados de búsqueda.	Chrome.apk assets/<lang>.pak resource 14716
 chrome	mobile_bookmarks	Mobile bookmarks	Mobil könyvjelzők	Mobile Lesezeichen	Favoris sur mobile	Marcadores del móvil	Chrome.apk assets/<lang>.pak resource 30053
+messenger	sim_reply_1	Sounds good, see you then!	Rendben, akkor ott találkozunk!	Klingt gut, bis dann!	Parfait, à tout à l’heure !	¡Perfecto, nos vemos!	the simulator's own answer from a demo contact (as in the other versions)
+messenger	sim_reply_2	Got it, thanks!	Rendben, köszi!	Alles klar, danke!	C’est noté, merci !	¡Entendido, gracias!	the simulator's own answer from a demo contact (as in the other versions)
+messenger	sim_reply_3	Haha, nice 😄	Haha, ez jó 😄	Haha, super 😄	Haha, génial 😄	Jaja, genial 😄	the simulator's own answer from a demo contact (as in the other versions)
+hangouts	sim_reply_1	Thanks! Talk soon 👋	Köszi! Beszélünk 👋	Danke! Bis bald 👋	Merci ! À bientôt 👋	¡Gracias! Hablamos 👋	the simulator's own answer from a demo contact (as in the other versions)
+hangouts	sim_reply_2	On my way!	Már indulok!	Bin unterwegs!	J’arrive !	¡Voy para allá!	the simulator's own answer from a demo contact (as in the other versions)

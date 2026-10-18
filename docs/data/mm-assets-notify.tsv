@@ -1,0 +1,5 @@
+# Notification small icons (mm-notify.js): Messenger (BugleNotifications), Hangouts, Play Store installs, Calendar reminders
+bg-ic_sms_light.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_sms_light
+ho-stat_notify_hangout.png	app/Hangouts/Hangouts.apk	drawable/stat_notify_hangout
+ps-stat_notify_installed.png	priv-app/Phonesky/Phonesky.apk	drawable/stat_notify_installed
+ca-ic_notification.png	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	drawable/ic_notification

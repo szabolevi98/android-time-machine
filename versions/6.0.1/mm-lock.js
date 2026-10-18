@@ -15,7 +15,13 @@
    - Swiping up more than keyguard_min_swipe_amount (110 dp) unlocks; a tap plays the unlock hint (the panel up
      hint_move_distance 75 dp and back) with "Swipe up to unlock"; a tap on an icon plays its hint ("Swipe from icon for
      phone / camera") and swiping from it opens the app. The hint text goes 1.2 s after the hint.
-   - The keyguard window's user activity timeout: 10 s (StatusBarWindowManager, AWAKE_INTERVAL_DEFAULT_MS). */
+   - The keyguard window's user activity timeout: 10 s (StatusBarWindowManager, AWAKE_INTERVAL_DEFAULT_MS).
+   - Notifications (mm-notify.js): at most keyguard_max_notification_count 3 rows in the dimmed background
+     (notification_material_background_dimmed_color #d4ffffff). KeyguardClockPositionAlgorithm moves the clock up with
+     them: t = count / (3 + notification_summary_height 44 / notification_min_height 64), the clock's centre at
+     (1 - t) x 0.325 + t x 0.198 of the panel and the rows keyguard_clock_notifications_margin 36 dp (none) to 24 dp
+     (t = 1) under the status view. A tap activates a row ("Touch again to open", notification_tap_again); the second
+     opens it, through the bouncer with a secure lock. */
 (() => {
   'use strict';
   const A = name => `assets/${name}`;
@@ -43,10 +49,10 @@
         <div class="mmlk-bar" data-action="mmlk-pull"><span class="mmlk-carrier">${c.safe(carrier)}</span>
           <span class="mmlk-icons"><span class="mmlk-cluster">${MM.signalCluster ? MM.signalCluster(c) : ''}</span><span class="mmlk-batt"></span>${b.plugged ? `<span class="mmlk-level">${c.safe(new Intl.NumberFormat(c.locale(), {style: 'percent'}).format(b.level / 100))}</span>` : ''}</span>
           <span class="mmlk-user"><img src="${A('fw-ic_account_circle-user0.svg')}" alt=""></span></div>
-        <div class="mmlk-status" style="top:32.5%">
+        <div class="mmlk-status" style="top:${(clockFraction(c) * 100).toFixed(2)}%">
           <div class="mmlk-clock">${clockText(c)}</div><div class="mmlk-date">${c.safe(dateText(c))}</div>
           ${s.lock?.ownerInfo ? `<div class="mmlk-owner">${c.safe(s.lock.ownerInfo)}</div>` : ''}</div>
-        <div class="mmlk-indication">${c.safe(indication)}</div>
+        ${notes(c)}<div class="mmlk-indication">${c.safe(indication)}</div>
         <button type="button" class="mmlk-aff mmlk-phone" data-aff="phone" aria-label="${c.safe(t.t('accessibility_phone_button'))}"><i></i><img src="${A('sui-ic_phone_24dp.png')}" alt=""></button>
         <button type="button" class="mmlk-lock" data-action="mmlk-hint" aria-label="${c.safe(t.t('accessibility_unlock_button'))}"><img src="${A(secure(c) && MM.fingerprint?.enrolled(c) ? 'sui-ic_fingerprint.svg' : secure(c) ? 'sui-ic_lock_24dp.svg' : 'sui-ic_lock_open_24dp.svg')}" alt=""></button>
         <button type="button" class="mmlk-aff mmlk-camera" data-aff="camera" aria-label="${c.safe(t.t('accessibility_camera_button'))}"><i></i><img src="${A('sui-ic_camera_alt_24dp.png')}" alt=""></button>
@@ -54,6 +60,10 @@
   }
 
   const secure = c => ['pin', 'password', 'pattern'].includes(c.data.settings.lock?.type);
+  const shownNotes = c => (MM.notifications?.list(c) || []).slice(0, 3);
+  const amount = c => shownNotes(c).length / (3 + 44 / 64);
+  const clockFraction = c => (1 - amount(c)) * .325 + amount(c) * .198;
+  const notes = c => { const list = shownNotes(c); return list.length ? `<div class="mmlk-notes">${list.map(n => MM.notifications.row(c, n)).join('')}</div>` : ''; };
 
   /* The bouncer (KeyguardBouncer over ScrimController's in-front scrim, black at 0.75): keyguard_host_view's
      KeyguardSecurityContainer at the bottom (BouncerSecurityContainer) above the navigation bar, keyguard_security_width
@@ -84,7 +94,7 @@
   }
   function checked(c, ok) {
     const st = c.ui.lockState, t = T(), type = c.data.settings.lock.type;
-    if (ok) { st.verified = true; st.fails = 0; const then = st.bouncer; st.bouncer = null; c.unlock(); if (then && then !== 'unlock') c.open(then); return; }
+    if (ok) { st.verified = true; st.fails = 0; const then = st.bouncer; st.bouncer = null; c.unlock(); if (typeof then === 'function') then(); else if (then && then !== 'unlock') c.open(then); return; }
     st.entry = ''; st.fails = (st.fails || 0) + 1;
     st.message = t.t(type === 'pin' ? 'kg_wrong_pin' : type === 'password' ? 'kg_wrong_password' : 'kg_wrong_pattern');
     if (st.fails >= 5) {
@@ -146,7 +156,7 @@
     }
     lk?.classList.add('leaving');
     if (panel) panel.style.transform = 'translateY(-100%)';
-    setTimeout(() => { c.unlock(); if (then) c.open(then); }, 260);
+    setTimeout(() => { c.unlock(); if (typeof then === 'function') then(); else if (then) c.open(then); }, 260);
   }
 
   function mount(c, root) {
@@ -155,6 +165,9 @@
     const lk = root.querySelector('.mmlk'), panel = root.querySelector('.mmlk-panel');
     if (!lk || !panel) return;
     const dpPx = () => c.el.screen.clientWidth / 411.4286;
+    // The rows start under the status view (its centre is at the clock fraction) by the clock-notifications margin.
+    const status = root.querySelector('.mmlk-status'), list = root.querySelector('.mmlk-notes');
+    if (status && list) list.style.top = `${status.offsetTop + status.offsetHeight / 2 + (amount(c) * 24 + (1 - amount(c)) * 36) * dpPx()}px`;
     let drag = null;
     lk.addEventListener('pointerdown', e => {
       if (e.button) return;
@@ -189,6 +202,14 @@
         return;
       }
       if (d.top && dy > 40) { MM.module('shade')?.open(c); return; }
+      const note = !d.moved && document.elementFromPoint(e.clientX, e.clientY)?.closest('.mmlk-notes .mmnt-row');
+      if (note) {
+        if (note.classList.contains('active')) { const id = note.dataset.id; unlock(c, root, () => MM.notifications.open(c, id)); return; }
+        root.querySelectorAll('.mmlk-notes .mmnt-row.active').forEach(x => x.classList.remove('active'));
+        note.classList.add('active'); setHint(c, root, T().t('notification_tap_again'));
+        clearTimeout(note.timer); note.timer = setTimeout(() => note.classList.remove('active'), 1800);
+        return;
+      }
       panel.style.transition = ''; panel.style.opacity = '';
       if (dy <= -110) { unlock(c, root); return; }
       panel.style.transform = '';
@@ -213,6 +234,7 @@
   let lastMinute = -1;
   MM.register('lock', {
     app: false,
+    refreshNotes(c) { if (!c.ui.lockState?.bouncer) c.render(); },
     noStatus: () => true, noNav: c => !c.ui.lockState?.bouncer,
     shouldLock: c => (c.data.settings.lock?.type || 'swipe') !== 'none',
     timeout: c => (c.data.settings.screenTimeout ?? -1) < 0 ? -1 : 10000,

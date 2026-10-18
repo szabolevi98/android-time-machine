@@ -79,6 +79,8 @@
     el: {screen, get viewport() { return viewport; }, status: statusRoot, overlay: overlayRoot, nav: navRoot, device},
     has: id => !!modules[id], title: id => modules[id]?.title || SCREENS[id]?.[0] || id,
     transition(kind) { pending = kind; },
+    // The status bar alone (a notification posted while an app is busy with input keeps the app as it is).
+    renderStatus() { if (modules.statusbar) { statusRoot.innerHTML = modules.statusbar.render(c); modules.statusbar.mount?.(c, statusRoot); } },
     overlay(id) { ui.overlay = id; renderOverlay(); }, closeOverlay() { ui.overlay = ''; renderOverlay(); },
     lock: () => lockScreen(), wake: () => wake(),
     // MasterClear: the saved phone goes and the page starts again from the boot animation.

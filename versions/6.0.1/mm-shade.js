@@ -143,6 +143,13 @@
 
   // A posted notification (notification_template_material_base: the 40 dp icon circle, the title in
   // TextAppearance.Material.Notification.Title, the text, the actions of notification_material_action_list).
+  /* status_bar_notification_dismiss_all.xml: DismissView's 48 dp DismissViewButton at the end (layout_gravity end),
+     clear_all_padding_top 12 dp under the last row, drawing dismiss_all_shape (85 x 17 dp, three 48 x 12 bars of the
+     260 x 48 viewport in steps) upside down with its bottom-left corner half its height left of and below the centre. */
+  function dismissAll(c) {
+    const bar = (x, y) => `<rect x="${x - 24}" y="${y - 6}" width="48" height="12"/>`;
+    return `<div class="mmsh-dismissall"><button type="button" class="mmsh-clearall" data-action="mmsh-clearall" aria-label="${c.safe(T().t('accessibility_clear_all'))}"><svg viewBox="0 0 260 48" aria-hidden="true"><g transform="translate(0 48) scale(1 -1)" fill="#fff"><g class="b1">${bar(48, 6)}</g><g class="b2">${bar(36, 24)}</g><g class="b3">${bar(24, 42)}</g></g></svg></button></div>`;
+  }
   function noteHtml(c, n, i) {
     return `<div class="mmsh-note" data-action="mmsh-noop"><div class="mmsh-nmain"><span class="mmsh-nicon"><img src="${n.icon}" alt=""></span><span class="mmsh-ntexts"><b>${c.safe(n.title)}</b><small>${c.safe(n.text)}</small></span></div>
       ${n.actions?.length ? `<div class="mmsh-nactions">${n.actions.map((a, j) => `<button type="button" data-action="mmsh-naction" data-i="${i}" data-j="${j}">${c.safe(a.label)}</button>`).join('')}</div>` : ''}</div>`;
@@ -160,7 +167,7 @@
     return `<div class="mmsh${st.qs ? ' qs' : ''}${st.detail ? ' detail' : ''}${st.opened ? ' shown' : ''}" style="--qs-h:${qsH.toFixed(3)}">
       <div class="mmsh-scrim" data-action="mmsh-close"></div>
       <div class="mmsh-panel">
-        <div class="mmsh-stack" data-action="mmsh-close">${notes.length ? notes.map((n, i) => noteHtml(c, n, i)).join('') : `<div class="mmsh-empty">${c.safe(t.t('empty_shade_text'))}</div>`}</div>
+        <div class="mmsh-stack" data-action="mmsh-close">${notes.length ? notes.map((n, i) => n.app && MM.notifications ? MM.notifications.row(c, n) : noteHtml(c, n, i)).join('') + (notes.some(n => n.app) ? dismissAll(c) : '') : `<div class="mmsh-empty">${c.safe(t.t('empty_shade_text'))}</div>`}</div>
         <div class="mmsh-qs"><div class="mmqs-panel" style="height:calc(${geo.height.toFixed(3)} * var(--dp))">
           <div class="mmqs-brightness">${sliderMarkup(c, value)}</div>
           ${list.map(tile => tileHtml(c, tile)).join('')}${detail}</div></div>
@@ -189,10 +196,38 @@
     if (st.scanUntil > Date.now()) { clearTimeout(st.scanTimer); st.scanTimer = setTimeout(() => root.querySelector('.mmsh-scan')?.remove(), st.scanUntil - Date.now()); }
     // The slider follows the pointer; the setting is saved when it is let go.
     bindSlider(c, root.querySelector('.mmqs-slider'));
+    // A posted notification swipes away (SwipeHelper); the ones below close up in 360 ms (ANIMATION_DURATION_STANDARD).
+    for (const card of root.querySelectorAll('.mmsh-stack .mmnt-row')) MM.notifications?.bindSwipe(c, card, dir => {
+      const below = [...root.querySelectorAll('.mmsh-stack > *')].filter(x => x.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_PRECEDING);
+      const h = card.offsetHeight + 2 * (c.el.screen.clientWidth / W);
+      card.animate([{translate: card.style.translate || '0 0', opacity: card.style.opacity || 1}, {translate: `${dir === 'left' ? -1 : 1}00% 0`, opacity: 0}], {duration: 200, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards'}).finished.then(() => {
+        card.style.display = 'none';
+        below.forEach(x => x.animate([{transform: `translateY(${h}px)`}, {transform: 'none'}], {duration: 360, easing: 'cubic-bezier(.4,0,.2,1)'}));
+        const left = (c.data.notifications || []).filter(n => n.id !== +card.dataset.id);
+        c.data.notifications = left; c.save(); c.renderStatus?.();
+        if (!c.notifications().length) setTimeout(() => close(c), 360);
+      });
+    }, {up: false});
     // Dragging on the open shade moves the same expansion as pulling the status bar (see drag).
     shade?.addEventListener('pointerdown', ev => { if (ev.button || ev.target.closest('.mmqs-slider,.mmqs-detail')) return; drag(c, ev, false); });
   }
 
+  /* Clear all (PhoneStatusBar.clearAllNotifications): the dismiss_all_shape_animation bars slide off to the right
+     (500 ms fast_out_slow_in, 33 ms apart, each fading in 100 ms after 150 / 183 / 217 ms), the rows fly off to the right
+     from the bottom one up, 10 ms apart in 260 ms, then the panel collapses. */
+  function clearAll(c, button) {
+    const rows = [...c.el.overlay.querySelectorAll('.mmsh-stack .mmnt-row')].reverse();
+    if (button.animate) ['b1', 'b2', 'b3'].forEach((k, i) => {
+      const g = button.querySelector(`.${k}`);
+      g?.animate([{transform: 'none'}, {transform: 'translateX(188px)'}], {duration: 500, delay: i * 33, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards'});
+      g?.animate([{opacity: 1}, {opacity: 0}], {duration: 100, delay: 150 + i * 33, fill: 'forwards'});
+    });
+    rows.forEach((r, i) => r.animate?.([{translate: '0 0'}, {translate: `${r.offsetWidth}px 0`}], {duration: 260, delay: i * 10, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards'}));
+    setTimeout(() => {
+      c.data.notifications = (c.data.notifications || []).filter(n => n.ongoing); c.save(); c.renderStatus?.();
+      close(c);
+    }, 260 + rows.length * 10 + 50);
+  }
   function setQs(c, on) {
     const st = c.ui.shade, detail = st.detail; st.qs = on; if (!on) st.detail = '';
     c.el.overlay.querySelector('.mmsh')?.classList.toggle('qs', on);
@@ -327,6 +362,8 @@
       if (st?.dragged) { st.dragged = false; return true; }
       if (name === 'mmsh-close') { close(c); return true; }
       if (name === 'mmsh-noop') return true;
+      if (name === 'mmnt-open') { if (!el.dataset.swiped) { close(c); MM.notifications?.open(c, el.dataset.id); } return true; }
+      if (name === 'mmsh-clearall') { clearAll(c, el); return true; }
       if (name === 'mmsh-naction') { const n = c.notifications()[+el.dataset.i]; close(c); n?.actions?.[+el.dataset.j]?.action(c); return true; }
       if (name === 'mmsh-header') { setQs(c, !st.qs); return true; }
       if (name === 'mmsh-settings') { if (!st.qs) { setQs(c, true); return true; } c.closeOverlay(); c.open('settings'); return true; }
