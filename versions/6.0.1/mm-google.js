@@ -21,7 +21,7 @@
     if (s === 'off') return '';
     const next = (c.data.events || MM.defaults.events || []).filter(e => e.date >= new Date().toISOString().slice(0, 10)).sort((a, b) => (a.date + (a.start || '')).localeCompare(b.date + (b.start || '')))[0];
     const welcome = c.data.nowWelcomed ? '' : `<div class="mmgg-card"><p>${t.t('first_run_welcome')}</p><div class="mmgg-btns"><button type="button" class="pri" data-action="mmgg-welcomed">${esc(c, t.t('first_run_done'))}</button></div></div>`;
-    const weather = `<div class="mmgg-card weather"><span class="mmgg-temp">18°</span><span class="mmgg-wtxt"><b>Riverside</b><small>Partly cloudy</small></span><img src="assets/vv-optin_minicard_ic_weather.png" alt=""></div>`;
+    const weather = `<div class="mmgg-card weather"><span class="mmgg-temp">18°</span><span class="mmgg-wtxt"><b>Riverside</b><small>${esc(c, t.t('weather_partly_cloudy'))}</small></span><img src="assets/vv-optin_minicard_ic_weather.png" alt=""></div>`;
     const when = next ? (() => { const [y, m, d] = next.date.split('-').map(Number), [hh, mm] = (next.start || '0:0').split(':').map(Number); const dt = new Date(y, m - 1, d, hh, mm); return new Intl.DateTimeFormat(c.locale(), {weekday: 'long', ...(next.start ? {hour: 'numeric', minute: '2-digit'} : {})}).format(dt); })() : '';
     const ev = next ? `<div class="mmgg-card"><small>${esc(c, when)}</small><b>${esc(c, next.title)}</b></div>` : '';
     return welcome + weather + ev;

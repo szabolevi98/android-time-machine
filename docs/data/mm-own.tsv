@@ -5,3 +5,12 @@ chrome	neterror_reload	Reload	Újratöltés	Neu laden	Actualiser	Cargar de nuevo
 chrome	neterror_details	Details	Részletek	Details	Détails	Detalles	Chrome.apk assets/<lang>.pak resource 17233
 chrome	neterror_hide_details	Hide details	Részletek elrejtése	Details ausblenden	Masquer les détails	Ocultar detalles	Chrome.apk assets/<lang>.pak resource 17234
 chrome	neterror_dns	Unable to resolve the server's DNS address.	Nem sikerült feloldani a szerver DNS-címét.	Die DNS-Adresse des Servers kann nicht aufgelöst werden.	Impossible de résoudre l'adresse DNS du serveur.	No se puede resolver la dirección DNS del servidor.	Chrome.apk assets/<lang>.pak resource 17119
+play	quick_apps	APPS	ALKALMAZÁSOK	APPS	APPLIS	APLICACIONES	the store home's quick link to the apps corpus (server content, the simulator's own)
+play	cluster_recommended	Recommended for you	Neked ajánljuk	Empfehlungen für dich	Recommandations	Recomendado para ti	a store home cluster title (server content, the simulator's own)
+play	cluster_recommended_sub	Based on your recent activity	A közelmúltbeli tevékenységed alapján	Basierend auf deinen letzten Aktivitäten	En fonction de vos activités récentes	Según tu actividad reciente	a store home cluster subtitle (server content, the simulator's own)
+play	cluster_games	New + Updated Games	Új és frissített játékok	Neue und aktualisierte Spiele	Jeux nouveaux et mis à jour	Juegos nuevos y actualizados	a store home cluster title (server content, the simulator's own)
+play	cluster_top_free	Top Free Apps	Legnépszerűbb ingyenes alkalmazások	Top-kostenlose Apps	Meilleures applis gratuites	Aplicaciones gratuitas más populares	a store home cluster title (server content, the simulator's own)
+play	cluster_google	Apps by Google	A Google alkalmazásai	Apps von Google	Applis Google	Aplicaciones de Google	a store home cluster title (server content, the simulator's own)
+play	cluster_google_sub	Already on your phone	Már a telefonodon van	Bereits auf deinem Smartphone	Déjà sur votre téléphone	Ya en tu teléfono	a store home cluster subtitle (server content, the simulator's own)
+google	weather_partly_cloudy	Partly cloudy	Részben felhős	Teilweise bewölkt	Partiellement nuageux	Parcialmente nublado	the Now weather card's condition (server content, the simulator's own)
+play	price_free	FREE	INGYENES	KOSTENLOS	GRATUIT	GRATIS	a free app's price on the store's cards (server content, the simulator's own)

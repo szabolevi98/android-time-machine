@@ -203,7 +203,7 @@
         if (c.data.now !== 'on') return `<button type="button" class="mmwg-now off np-vv-widget_card_frame" data-action="mmwg-open" data-app="search"><span>${c.safe(T().t('Velvet/widget_get_now'))}</span></button>`;
         const next = (MM.calendarEvents ? MM.calendarEvents(c) : []).filter(e => e.date >= new Date().toISOString().slice(0, 10)).sort((a, b) => (a.date + (a.start || '')).localeCompare(b.date + (b.start || '')))[0];
         const card = (l1, l2) => `<span class="card"><b>${c.safe(l1)}</b><small>${c.safe(l2)}</small></span>`;
-        return `<button type="button" class="mmwg-now np-vv-widget_card_frame" data-action="mmwg-open" data-app="search">${card('18° Riverside', 'Partly cloudy')}${next ? card(next.title, (() => { const [y, m, d] = next.date.split('-').map(Number), [hh, mm] = (next.start || '0:0').split(':').map(Number); return new Intl.DateTimeFormat(c.locale(), {weekday: 'long', ...(next.start ? {hour: 'numeric', minute: '2-digit'} : {})}).format(new Date(y, m - 1, d, hh, mm)); })()) : ''}</button>`;
+        return `<button type="button" class="mmwg-now np-vv-widget_card_frame" data-action="mmwg-open" data-app="search">${card('18° Riverside', MM.text('google').t('weather_partly_cloudy'))}${next ? card(next.title, (() => { const [y, m, d] = next.date.split('-').map(Number), [hh, mm] = (next.start || '0:0').split(':').map(Number); return new Intl.DateTimeFormat(c.locale(), {weekday: 'long', ...(next.start ? {hour: 'numeric', minute: '2-digit'} : {})}).format(new Date(y, m - 1, d, hh, mm)); })()) : ''}</button>`;
       }
       case 'bookmarks': {
         // Chrome 44's bookmark_thumbnail_widget.xml: a GridView on bg_bookmarks_widget_holo (80 dp columns stretched,

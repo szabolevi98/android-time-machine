@@ -129,6 +129,118 @@ MM.strings('play', {
 "fr": "Applications installées",
 "es": "Instaladas"
 },
+"quick_apps": {
+"own": true,
+"source": "the store home's quick link to the apps corpus (server content, the simulator's own)",
+"en": "APPS",
+"hu": "ALKALMAZÁSOK",
+"de": "APPS",
+"fr": "APPLIS",
+"es": "APLICACIONES"
+},
+"cluster_recommended": {
+"own": true,
+"source": "a store home cluster title (server content, the simulator's own)",
+"en": "Recommended for you",
+"hu": "Neked ajánljuk",
+"de": "Empfehlungen für dich",
+"fr": "Recommandations",
+"es": "Recomendado para ti"
+},
+"cluster_recommended_sub": {
+"own": true,
+"source": "a store home cluster subtitle (server content, the simulator's own)",
+"en": "Based on your recent activity",
+"hu": "A közelmúltbeli tevékenységed alapján",
+"de": "Basierend auf deinen letzten Aktivitäten",
+"fr": "En fonction de vos activités récentes",
+"es": "Según tu actividad reciente"
+},
+"cluster_games": {
+"own": true,
+"source": "a store home cluster title (server content, the simulator's own)",
+"en": "New + Updated Games",
+"hu": "Új és frissített játékok",
+"de": "Neue und aktualisierte Spiele",
+"fr": "Jeux nouveaux et mis à jour",
+"es": "Juegos nuevos y actualizados"
+},
+"cluster_top_free": {
+"own": true,
+"source": "a store home cluster title (server content, the simulator's own)",
+"en": "Top Free Apps",
+"hu": "Legnépszerűbb ingyenes alkalmazások",
+"de": "Top-kostenlose Apps",
+"fr": "Meilleures applis gratuites",
+"es": "Aplicaciones gratuitas más populares"
+},
+"cluster_google": {
+"own": true,
+"source": "a store home cluster title (server content, the simulator's own)",
+"en": "Apps by Google",
+"hu": "A Google alkalmazásai",
+"de": "Apps von Google",
+"fr": "Applis Google",
+"es": "Aplicaciones de Google"
+},
+"cluster_google_sub": {
+"own": true,
+"source": "a store home cluster subtitle (server content, the simulator's own)",
+"en": "Already on your phone",
+"hu": "Már a telefonodon van",
+"de": "Bereits auf deinem Smartphone",
+"fr": "Déjà sur votre téléphone",
+"es": "Ya en tu teléfono"
+},
+"price_free": {
+"own": true,
+"source": "a free app's price on the store's cards (server content, the simulator's own)",
+"en": "FREE",
+"hu": "INGYENES",
+"de": "KOSTENLOS",
+"fr": "GRATUIT",
+"es": "GRATIS"
+},
+"games_corpus_title": {
+"res": "bullhead:Phonesky:games_corpus_title",
+"en": "Games",
+"hu": "Játékok",
+"de": "Spiele",
+"fr": "Jeux",
+"es": "Juegos"
+},
+"corpus_title_movies": {
+"res": "bullhead:Phonesky:corpus_title_movies",
+"en": "Movies & TV",
+"hu": "Filmek",
+"de": "Filme & Serien",
+"fr": "Films et TV",
+"es": "Películas"
+},
+"corpus_title_music": {
+"res": "bullhead:Phonesky:corpus_title_music",
+"en": "Music",
+"hu": "Zene",
+"de": "Musik",
+"fr": "Musique",
+"es": "Música"
+},
+"corpus_title_books": {
+"res": "bullhead:Phonesky:corpus_title_books",
+"en": "Books",
+"hu": "Könyvek",
+"de": "Bücher",
+"fr": "Livres",
+"es": "Libros"
+},
+"corpus_title_newsstand": {
+"res": "bullhead:Phonesky:corpus_title_newsstand",
+"en": "Newsstand",
+"hu": "Újságos",
+"de": "Kiosk",
+"fr": "Kiosque",
+"es": "Play Kiosco"
+},
 "download_in_progress": {
 "res": "bullhead:Phonesky:download_in_progress",
 "en": "Downloading…",

@@ -161,6 +161,15 @@ MM.strings('google', {
 "fr": "Google Now",
 "es": "Google Now"
 },
+"weather_partly_cloudy": {
+"own": true,
+"source": "the Now weather card's condition (server content, the simulator's own)",
+"en": "Partly cloudy",
+"hu": "Részben felhős",
+"de": "Teilweise bewölkt",
+"fr": "Partiellement nuageux",
+"es": "Parcialmente nublado"
+},
 "search_settings": {
 "res": "bullhead:Velvet:search_settings",
 "en": "Settings",

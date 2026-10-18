@@ -21,7 +21,8 @@
   const T = () => MM.text('play');
   const A = n => `assets/ps-${n}.png`;
   const GREEN = '#689f38', GREEN_DARK = '#558b2f';
-  const CORPORA = [['APPS', '#689f38'], ['GAMES', '#689f38'], ['MOVIES & TV', '#ed3b3b'], ['MUSIC', '#ef6c00'], ['BOOKS', '#039be5'], ['NEWSSTAND', '#9c27b0']];
+  // The quick links of the store home: the apps link is server content (our own text), the others the corpora's titles.
+  const CORPORA = [['quick_apps', '#689f38'], ['games_corpus_title', '#689f38'], ['corpus_title_movies', '#ed3b3b'], ['corpus_title_music', '#ef6c00'], ['corpus_title_books', '#039be5'], ['corpus_title_newsstand', '#9c27b0']];
   // The simulator's own fictional apps (2016).
   const FICTION = [
     {id: 'trail-notes', name: 'Trail Notes', dev: 'Northbound Labs', cat: 'Travel & Local', rating: 4.6, size: '8.4 MB', dl: '500,000+', color: '#2e7d32', glyph: '▲', desc: 'Keep a journal of every hike: routes, photos and notes that work offline.', news: 'Elevation charts for your saved routes.'},
@@ -53,15 +54,15 @@
   const isInstalled = (c, it) => it.system || st(c).installed.includes(it.id);
   function card(c, it) {
     const t = T();
-    return `<button type="button" class="mmps-card" data-action="mmps-item" data-id="${it.id}"><span class="mmps-thumb">${icon(it)}</span><span class="mmps-ctitle">${esc(c, it.name)}</span><span class="mmps-csub">${esc(c, it.dev)}</span><span class="mmps-cfoot">${stars(it.rating)}<small>${esc(c, isInstalled(c, it) ? t.t('installed_list_state') : 'FREE')}</small></span></button>`;
+    return `<button type="button" class="mmps-card" data-action="mmps-item" data-id="${it.id}"><span class="mmps-thumb">${icon(it)}</span><span class="mmps-ctitle">${esc(c, it.name)}</span><span class="mmps-csub">${esc(c, it.dev)}</span><span class="mmps-cfoot">${stars(it.rating)}<small>${esc(c, isInstalled(c, it) ? t.t('installed_list_state') : T().t('price_free'))}</small></span></button>`;
   }
   function cluster(c, title, sub, list) {
     return `<div class="mmps-cluster"><div class="mmps-chead"><span><b>${esc(c, title)}</b>${sub ? `<small>${esc(c, sub)}</small>` : ''}</span><button type="button" class="mmps-more" data-action="mmps-moreclick">${esc(c, T().t('more'))}</button></div><div class="mmps-cards">${list.map(it => card(c, it)).join('')}</div></div>`;
   }
   function home(c) {
     const apps = FICTION.filter(x => !x.game), games = FICTION.filter(x => x.game);
-    const quick = `<div class="mmps-quick">${CORPORA.map(([n, col], i) => `<button type="button" class="mmps-ql" style="background:${col}" data-action="${i < 2 ? 'mmps-corpus' : 'mmps-othercorpus'}" data-i="${i}">${esc(c, n)}</button>`).join('')}</div>`;
-    return `${quick}${cluster(c, 'Recommended for you', 'Based on your recent activity', apps.slice(0, 6))}${cluster(c, 'New + Updated Games', '', games)}${cluster(c, 'Top Free Apps', '', [...apps].sort((a, b) => b.rating - a.rating))}${cluster(c, 'Apps by Google', 'Already on your phone', SYSTEM.map(id => item(c, id)).filter(Boolean).slice(0, 8))}`;
+    const quick = `<div class="mmps-quick">${CORPORA.map(([n, col], i) => `<button type="button" class="mmps-ql" style="background:${col}" data-action="${i < 2 ? 'mmps-corpus' : 'mmps-othercorpus'}" data-i="${i}">${esc(c, T().t(n).toLocaleUpperCase(c.locale()))}</button>`).join('')}</div>`;
+    return `${quick}${cluster(c, T().t('cluster_recommended'), T().t('cluster_recommended_sub'), apps.slice(0, 6))}${cluster(c, T().t('cluster_games'), '', games)}${cluster(c, T().t('cluster_top_free'), '', [...apps].sort((a, b) => b.rating - a.rating))}${cluster(c, T().t('cluster_google'), T().t('cluster_google_sub'), SYSTEM.map(id => item(c, id)).filter(Boolean).slice(0, 8))}`;
   }
   function details(c, it) {
     const t = T(), u = ui(c), installed = isInstalled(c, it), dl = u.dl?.id === it.id ? u.dl : null;
