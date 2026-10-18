@@ -282,6 +282,15 @@
       return true;
     }
   };
+  // NotificationStation (the Notification log shortcut): the notifications posted, newest first, with their icon, title
+  // and text (notification_log_row.xml).
+  MM.settingsScreens['notification-log'] = {
+    title: () => T().t('notification_log_title'),
+    render(c) {
+      const list = c.notifications();
+      return `<div class="mmst-list">${list.map(n => `<div class="mmap-row static"><img src="${n.icon}" alt=""><span class="mmap-texts"><span class="mmap-line"><span class="mmap-label">${esc(c, n.title)}</span></span><span class="mmap-sub">${esc(c, n.text || '')}</span></span></div>`).join('')}</div>`;
+    }
+  };
   MM.settingsScreens.running = {
     title: () => T().t('runningservices_settings_title'),
     render(c) {

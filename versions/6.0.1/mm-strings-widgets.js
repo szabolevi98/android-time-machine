@@ -290,5 +290,421 @@ MM.strings('widgets', {
 "de": "Google Now aktivieren",
 "fr": "Découvrez Google Now",
 "es": "Descargar Google Now"
+},
+"GoogleContacts/shortcutActivityTitle": {
+"res": "bullhead:GoogleContacts:shortcutActivityTitle",
+"en": "Choose a contact shortcut",
+"hu": "Válasszon névjegyet a parancsikonhoz",
+"de": "Verknüpfung für Kontakt auswählen",
+"fr": "Choisissez un contact pour le raccourci",
+"es": "Elegir un acceso directo para el contacto"
+},
+"GoogleContacts/callShortcutActivityTitle": {
+"res": "bullhead:GoogleContacts:callShortcutActivityTitle",
+"en": "Choose a number to call",
+"hu": "Válasszon telefonszámot a híváshoz",
+"de": "Nummer für den Anruf auswählen",
+"fr": "Choisissez le numéro à appeler",
+"es": "Elegir un número para la llamada"
+},
+"GoogleContacts/messageShortcutActivityTitle": {
+"res": "bullhead:GoogleContacts:messageShortcutActivityTitle",
+"en": "Choose a number to message",
+"hu": "Válasszon telefonszámot az üzenetküldéshez",
+"de": "Nummer für Nachricht auswählen",
+"fr": "Choisissez le numéro auquel envoyer le message",
+"es": "Elegir un número para el mensaje"
+},
+"Chrome/bookmark_shortcut_choose_bookmark": {
+"res": "bullhead:Chrome:bookmark_shortcut_choose_bookmark",
+"en": "Choose a bookmark",
+"hu": "Válasszon könyvjelzőt",
+"de": "Lesezeichen auswählen",
+"fr": "Sélectionner un favori",
+"es": "Seleccionar un marcador"
+},
+"Drive/create_shortcut_title": {
+"res": "bullhead:Drive:create_shortcut_title",
+"en": "Create shortcut to…",
+"hu": "Parancsikon létrehozása…",
+"de": "Verknüpfung erstellen zu…",
+"fr": "Créer un raccourci vers",
+"es": "Crear acceso directo a…"
+},
+"Drive/empty_doclist_for_my_drive_view": {
+"res": "bullhead:Drive:empty_doclist_for_my_drive_view",
+"en": "Welcome, your Drive is ready!\nTry uploading a file.",
+"hu": "Üdvözöljök, a Drive készen áll!\nPróbáljon feltölteni egy fájlt!",
+"de": "Willkommen in Ihrer Google-Ablage!\nProbieren Sie sie gleich aus, indem Sie eine Datei hochladen.",
+"fr": "Bienvenue, votre Drive est prêt.\nEssayez d'importer un fichier.",
+"es": "¡Te damos la bienvenida! Tu Drive está listo.\nPrueba a subir un archivo."
+},
+"PrebuiltGmail/activity_folder_selection": {
+"res": "bullhead:PrebuiltGmail:activity_folder_selection",
+"en": "Choose folder",
+"hu": "Mappa kiválasztása",
+"de": "Ordner auswählen",
+"fr": "Sélectionner un dossier",
+"es": "Seleccionar carpeta"
+},
+"PrebuiltGmail/shortcut_name_title": {
+"res": "bullhead:PrebuiltGmail:shortcut_name_title",
+"en": "Name label shortcut",
+"hu": "Parancsikon elnevezése",
+"de": "Labelverknüpfung benennen",
+"fr": "Nommer le raccourci du libellé",
+"es": "Poner un nombre al acceso directo a la etiqueta"
+},
+"Music2/choose_playlist": {
+"res": "bullhead:Music2:choose_playlist",
+"en": "Choose a playlist",
+"hu": "Lejátszási lista választása",
+"de": "Playlist wählen",
+"fr": "Sélectionner une playlist",
+"es": "Selecciona una playlist"
+},
+"Music2/thumbsup_list": {
+"res": "bullhead:Music2:thumbsup_list",
+"en": "Thumbs up",
+"hu": "Tetszik",
+"de": "Mag ich",
+"fr": "J'aime",
+"es": "Me gusta"
+},
+"Music2/recentlyadded": {
+"res": "bullhead:Music2:recentlyadded",
+"en": "Last added",
+"hu": "Utoljára hozzáadott",
+"de": "Zuletzt hinzugefügt",
+"fr": "Derniers ajouts",
+"es": "Añadidas recientemente"
+},
+"Music2/storemusic_list": {
+"res": "bullhead:Music2:storemusic_list",
+"en": "Free and purchased",
+"hu": "Ingyenes és megvásárolt",
+"de": "Kostenlos & gekauft",
+"fr": "Gratuits et achetés",
+"es": "Gratuitas y compradas"
+},
+"Maps/DIRECTIONS_WIDGET_TITLE": {
+"res": "bullhead:Maps:DIRECTIONS_WIDGET_TITLE",
+"en": "Create widget",
+"hu": "Modul létrehozása",
+"de": "Widget erstellen",
+"fr": "Créer un widget",
+"es": "Crear widget"
+},
+"Maps/DIRECTIONS_WIDGET_NAVIGATION_CHECKBOX": {
+"res": "bullhead:Maps:DIRECTIONS_WIDGET_NAVIGATION_CHECKBOX",
+"en": "Start turn-by-turn navigation",
+"hu": "Részletes navigáció indítása",
+"de": "Schritt-für-Schritt-Navigation starten",
+"fr": "Démarrer la navigation détaillée",
+"es": "Iniciar navegación paso a paso"
+},
+"Maps/DIRECTIONS_WIDGET_SHORTCUT_NAME": {
+"res": "bullhead:Maps:DIRECTIONS_WIDGET_SHORTCUT_NAME",
+"en": "Shortcut name",
+"hu": "Gyorsparancs neve",
+"de": "Name der Verknüpfung",
+"fr": "Nom du raccourci",
+"es": "Nombre del método abreviado"
+},
+"Maps/DIRECTIONS_WIDGET_SAVE": {
+"res": "bullhead:Maps:DIRECTIONS_WIDGET_SAVE",
+"en": "Save",
+"hu": "Mentés",
+"de": "Speichern",
+"fr": "Enregistrer",
+"es": "Guardar"
+},
+"Maps/DIRECTIONS_CHOOSE_END_POINT": {
+"res": "bullhead:Maps:DIRECTIONS_CHOOSE_END_POINT",
+"en": "Choose destination",
+"hu": "Válasszon úti célt",
+"de": "Ziel auswählen",
+"fr": "Choisir destination",
+"es": "Seleccionar destino"
+},
+"Maps/ACCESSIBILITY_SWITCH_TO_DRIVING": {
+"res": "bullhead:Maps:ACCESSIBILITY_SWITCH_TO_DRIVING",
+"en": "Driving mode",
+"hu": "Autós mód",
+"de": "Mit dem Auto",
+"fr": "Mode Voiture",
+"es": "Modo de conducción"
+},
+"Maps/ACCESSIBILITY_SWITCH_TO_TRANSIT": {
+"res": "bullhead:Maps:ACCESSIBILITY_SWITCH_TO_TRANSIT",
+"en": "Transit mode",
+"hu": "Tömegközlekedési mód",
+"de": "Mit öffentlichen Verkehrsmitteln",
+"fr": "Mode Transports en commun",
+"es": "Modo de transporte público"
+},
+"Maps/ACCESSIBILITY_SWITCH_TO_WALKING": {
+"res": "bullhead:Maps:ACCESSIBILITY_SWITCH_TO_WALKING",
+"en": "Walking mode",
+"hu": "Gyalogos mód",
+"de": "Zu Fuß",
+"fr": "Mode À pied",
+"es": "Modo a pie"
+},
+"Maps/ACCESSIBILITY_SWITCH_TO_BICYCLING": {
+"res": "bullhead:Maps:ACCESSIBILITY_SWITCH_TO_BICYCLING",
+"en": "Bicycling mode",
+"hu": "Kerékpáros mód",
+"de": "Mit dem Fahrrad",
+"fr": "Mode À vélo",
+"es": "Modo de bicicleta"
+},
+"Phonesky/app_name": {
+"res": "bullhead:Phonesky:app_name",
+"en": "Google Play",
+"hu": "Google Play",
+"de": "Google Play",
+"fr": "Google Play",
+"es": "Google Play"
+},
+"Phonesky/corpus_title_apps": {
+"res": "bullhead:Phonesky:corpus_title_apps",
+"en": "Apps & Games",
+"hu": "Alkalmazások és játékok",
+"de": "Apps & Spiele",
+"fr": "Applications et jeux",
+"es": "Aplicaciones y juegos"
+},
+"Phonesky/corpus_title_books": {
+"res": "bullhead:Phonesky:corpus_title_books",
+"en": "Books",
+"hu": "Könyvek",
+"de": "Bücher",
+"fr": "Livres",
+"es": "Libros"
+},
+"Phonesky/corpus_title_movies": {
+"res": "bullhead:Phonesky:corpus_title_movies",
+"en": "Movies & TV",
+"hu": "Filmek",
+"de": "Filme & Serien",
+"fr": "Films et TV",
+"es": "Películas"
+},
+"Phonesky/corpus_title_music": {
+"res": "bullhead:Phonesky:corpus_title_music",
+"en": "Music",
+"hu": "Zene",
+"de": "Musik",
+"fr": "Musique",
+"es": "Música"
+},
+"Phonesky/corpus_title_newsstand": {
+"res": "bullhead:Phonesky:corpus_title_newsstand",
+"en": "Newsstand",
+"hu": "Újságos",
+"de": "Kiosk",
+"fr": "Kiosque",
+"es": "Play Kiosco"
+},
+"PrebuiltBugle/app_name": {
+"res": "bullhead:PrebuiltBugle:app_name",
+"en": "Messenger",
+"hu": "Messenger",
+"de": "Messenger",
+"fr": "Messenger",
+"es": "Messenger"
+},
+"PrebuiltBugle/widget_reply_content_description": {
+"res": "bullhead:PrebuiltBugle:widget_reply_content_description",
+"en": "Reply",
+"hu": "Válasz",
+"de": "Antworten",
+"fr": "Répondre",
+"es": "Responder"
+},
+"PrebuiltBugle/widget_conversation_list_content_description": {
+"res": "bullhead:PrebuiltBugle:widget_conversation_list_content_description",
+"en": "Conversation list",
+"hu": "Beszélgetéslista",
+"de": "Konversationsliste",
+"fr": "Liste des conversations",
+"es": "Lista de conversaciones"
+},
+"PrebuiltBugle/tap_to_configure": {
+"res": "bullhead:PrebuiltBugle:tap_to_configure",
+"en": "Conversation deleted. Touch to show a different Messenger conversation",
+"hu": "Törölve. Másikhoz érintse meg.",
+"de": "Unterhaltung gelöscht. Hier tippen, um andere Unterhaltung zu sehen",
+"fr": "Conversation supprimée. Appuyez pour voir autre convers. Messenger.",
+"es": "Conversación eliminada. Ver otra"
+},
+"Settings/wifi_settings": {
+"res": "bullhead:Settings:wifi_settings",
+"en": "Wi‑Fi",
+"hu": "Wi-Fi",
+"de": "WLAN",
+"fr": "Wi-Fi",
+"es": "Wi-Fi"
+},
+"Settings/bluetooth_settings_title": {
+"res": "bullhead:Settings:bluetooth_settings_title",
+"en": "Bluetooth",
+"hu": "Bluetooth",
+"de": "Bluetooth",
+"fr": "Bluetooth",
+"es": "Bluetooth"
+},
+"Settings/tether_settings_title_all": {
+"res": "bullhead:Settings:tether_settings_title_all",
+"en": "Tethering & portable hotspot",
+"hu": "Megosztás és hotspot",
+"de": "Tethering & mobiler Hotspot",
+"fr": "Partage de connexion",
+"es": "Compartir Internet y zona Wi-Fi"
+},
+"Settings/vpn_settings_title": {
+"res": "bullhead:Settings:vpn_settings_title",
+"en": "VPN",
+"hu": "VPN",
+"de": "VPN",
+"fr": "VPN",
+"es": "VPN"
+},
+"Settings/zen_mode_settings_title": {
+"res": "bullhead:Settings:zen_mode_settings_title",
+"en": "Do not disturb",
+"hu": "Ne zavarjanak",
+"de": "Nicht stören",
+"fr": "Ne pas déranger",
+"es": "No molestar"
+},
+"Settings/zen_mode_priority_settings_title": {
+"res": "bullhead:Settings:zen_mode_priority_settings_title",
+"en": "Priority only allows",
+"hu": "Csak a prioritást élvezők",
+"de": "Nur wichtige Unterbr. zulassen",
+"fr": "Prioritaires uniquement",
+"es": "Permitir solo con prioridad"
+},
+"Settings/zen_mode_automation_settings_title": {
+"res": "bullhead:Settings:zen_mode_automation_settings_title",
+"en": "Automatic rules",
+"hu": "Automatikus szabályok",
+"de": "Automatische Regeln",
+"fr": "Règles automatiques",
+"es": "Reglas automáticas"
+},
+"Settings/display_settings": {
+"res": "bullhead:Settings:display_settings",
+"en": "Display",
+"hu": "Megjelenítés",
+"de": "Display",
+"fr": "Affichage",
+"es": "Pantalla"
+},
+"Settings/applications_settings": {
+"res": "bullhead:Settings:applications_settings",
+"en": "Apps",
+"hu": "Alkalmazások",
+"de": "Apps",
+"fr": "Applications",
+"es": "Aplicaciones"
+},
+"Settings/memory_settings_title": {
+"res": "bullhead:Settings:memory_settings_title",
+"en": "Memory",
+"hu": "Memória",
+"de": "Arbeitsspeicher",
+"fr": "Mémoire",
+"es": "Memoria"
+},
+"Settings/notification_log_title": {
+"res": "bullhead:Settings:notification_log_title",
+"en": "Notification log",
+"hu": "Értesítési napló",
+"de": "Benachrichtigungsprotokoll",
+"fr": "Journal des notifications",
+"es": "Registro de notificaciones"
+},
+"Settings/location_settings_title": {
+"res": "bullhead:Settings:location_settings_title",
+"en": "Location",
+"hu": "Tartózkodási hely",
+"de": "Standort",
+"fr": "Localisation",
+"es": "Ubicación"
+},
+"Settings/trusted_credentials": {
+"res": "bullhead:Settings:trusted_credentials",
+"en": "Trusted credentials",
+"hu": "Megbízható hitelesítők",
+"de": "Vertrauenswürdige Anmeldedaten",
+"fr": "Certificats de confiance",
+"es": "Certificados de confianza"
+},
+"Settings/accessibility_settings": {
+"res": "bullhead:Settings:accessibility_settings",
+"en": "Accessibility",
+"hu": "Kisegítő lehetőségek",
+"de": "Bedienungshilfen",
+"fr": "Accessibilité",
+"es": "Accesibilidad"
+},
+"Settings/power_usage_summary_title": {
+"res": "bullhead:Settings:power_usage_summary_title",
+"en": "Battery",
+"hu": "Akkumulátor",
+"de": "Akku",
+"fr": "Batterie",
+"es": "Batería"
+},
+"Settings/battery_saver": {
+"res": "bullhead:Settings:battery_saver",
+"en": "Battery saver",
+"hu": "Akkumulátorkímélő mód",
+"de": "Energiesparmodus",
+"fr": "Économiseur de batterie",
+"es": "Ahorro de batería"
+},
+"Settings/data_usage_summary_title": {
+"res": "bullhead:Settings:data_usage_summary_title",
+"en": "Data usage",
+"hu": "Adathasználat",
+"de": "Datenverbrauch",
+"fr": "Consommation des données",
+"es": "Uso de datos"
+},
+"Settings/screensaver_settings_title": {
+"res": "bullhead:Settings:screensaver_settings_title",
+"en": "Daydream",
+"hu": "Álmodozás",
+"de": "Daydream",
+"fr": "Écran de veille interactif",
+"es": "Salvapantallas"
+},
+"Settings/notification_settings": {
+"res": "bullhead:Settings:notification_settings",
+"en": "Sound & notification",
+"hu": "Hang és értesítés",
+"de": "Ton & Benachrichtigungen",
+"fr": "Sons et notifications",
+"es": "Sonido y notificaciones"
+},
+"framework/ok": {
+"res": "bullhead:framework:ok",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"framework/cancel": {
+"res": "bullhead:framework:cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
 }
 });

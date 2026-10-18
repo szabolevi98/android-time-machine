@@ -574,6 +574,12 @@ versions/6.0.1/assets/ps-ic_drawer_settings.png	60309ca95ef9550d	copy	bullhead:/
 versions/6.0.1/assets/ps-ic_drawer_wishlist.png	e72cb9ec29c76194	copy	bullhead:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xhdpi-v4/ic_drawer_wishlist.png	drawable-xhdpi-v4		e72cb9ec29c76194
 versions/6.0.1/assets/ps-ic_expand_less.png	afcf0bc698041e09	copy	bullhead:/system/app/PrintSpooler/PrintSpooler.apk!res/drawable-xxhdpi-v4/ic_expand_less.png	drawable-xxhdpi-v4		afcf0bc698041e09
 versions/6.0.1/assets/ps-ic_expand_more.png	1f9e2b8a0561fcfd	copy	bullhead:/system/app/PrintSpooler/PrintSpooler.apk!res/drawable-xxhdpi-v4/ic_expand_more.png	drawable-xxhdpi-v4		1f9e2b8a0561fcfd
+versions/6.0.1/assets/ps-ic_launcher_play_apps.png	85d4f99a38b5030b	copy	bullhead:/system/priv-app/Phonesky/Phonesky.apk!res/mipmap-xhdpi-v4/ic_launcher_play_apps.png	mipmap-xhdpi-v4		85d4f99a38b5030b
+versions/6.0.1/assets/ps-ic_launcher_play_books.png	08594d3348377183	copy	bullhead:/system/priv-app/Phonesky/Phonesky.apk!res/mipmap-xhdpi-v4/ic_launcher_play_books.png	mipmap-xhdpi-v4		08594d3348377183
+versions/6.0.1/assets/ps-ic_launcher_play_movietv.png	f748305627a37f41	copy	bullhead:/system/priv-app/Phonesky/Phonesky.apk!res/mipmap-xhdpi-v4/ic_launcher_play_movietv.png	mipmap-xhdpi-v4		f748305627a37f41
+versions/6.0.1/assets/ps-ic_launcher_play_music.png	bda78b6315eda941	copy	bullhead:/system/priv-app/Phonesky/Phonesky.apk!res/mipmap-xhdpi-v4/ic_launcher_play_music.png	mipmap-xhdpi-v4		bda78b6315eda941
+versions/6.0.1/assets/ps-ic_launcher_play_newsstand.png	e0365177e8de9891	copy	bullhead:/system/priv-app/Phonesky/Phonesky.apk!res/mipmap-xhdpi-v4/ic_launcher_play_newsstand.png	mipmap-xhdpi-v4		e0365177e8de9891
+versions/6.0.1/assets/ps-ic_launcher_play_store.png	c6b3211ea55266e9	copy	bullhead:/system/priv-app/Phonesky/Phonesky.apk!res/mipmap-xxhdpi-v4/ic_launcher_play_store.png	mipmap-xxhdpi-v4		c6b3211ea55266e9
 versions/6.0.1/assets/ps-ic_menu_moreoverflow_card_dark_normal.png	209a27bdb628e3e8	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_menu_moreoverflow_card_dark_normal.png	drawable-xxhdpi-v4		209a27bdb628e3e8
 versions/6.0.1/assets/ps-ic_menu_moreoverflow_white.png	49181de95d07415d	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_menu_moreoverflow_white.png	drawable-xxhdpi-v4		49181de95d07415d
 versions/6.0.1/assets/ps-ic_menu_savetopdf.png	ffe0048f6caaaee3	copy	bullhead:/system/app/PrintSpooler/PrintSpooler.apk!res/drawable-xxhdpi-v4/ic_menu_savetopdf.png	drawable-xxhdpi-v4		ffe0048f6caaaee3
@@ -583,6 +589,8 @@ versions/6.0.1/assets/ps-ic_profile_none.png	93ec3fe8ba525348	copy	bullhead:/sys
 versions/6.0.1/assets/ps-ic_search_recent.png	c4c59a05e853b737	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_search_recent.png	drawable-xxhdpi-v4		c4c59a05e853b737
 versions/6.0.1/assets/ps-ic_search_white.png	613f20f319f6b267	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_search_white.png	drawable-xxhdpi-v4		613f20f319f6b267
 versions/6.0.1/assets/ps-ic_whats_new.png	7eccbe04985af330	copy	bullhead:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xxhdpi-v4/ic_whats_new.png	drawable-xxhdpi-v4		7eccbe04985af330
+versions/6.0.1/assets/ps-phonesky_widget_bottom.9.png	3cd963cf6e9fcb99	copy	bullhead:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-hdpi-v4/phonesky_widget_bottom.9.png	drawable-hdpi-v4		3cd963cf6e9fcb99
+versions/6.0.1/assets/ps-phonesky_widget_top.9.png	4d9fa1dc658ad33c	copy	bullhead:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-hdpi-v4/phonesky_widget_top.9.png	drawable-hdpi-v4		4d9fa1dc658ad33c
 versions/6.0.1/assets/ps-play_ic_dl_m_download_00000.png	82dbe084091a725e	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxxhdpi-v4/play_ic_dl_m_download_00000.png	drawable-xxxhdpi-v4		82dbe084091a725e
 versions/6.0.1/assets/ps-play_ic_dl_m_finish_00015.png	42c516622a79c367	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxxhdpi-v4/play_ic_dl_m_finish_00015.png	drawable-xxxhdpi-v4		42c516622a79c367
 versions/6.0.1/assets/pt-quantum_ic_arrow_back_grey600_24.png	4ebc975addf79a40	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/quantum_ic_arrow_back_grey600_24.png	drawable-xxhdpi-v4		4ebc975addf79a40

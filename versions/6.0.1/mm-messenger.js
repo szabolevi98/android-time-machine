@@ -203,6 +203,8 @@
     // ShareIntentActivity: the shared text becomes the draft of the conversation picked next.
     if (sub === 'share') { const d = MM.shareTake(c); u.share = d?.text || ''; u.screen = ''; return; }
     if (sub === 'widget-pick') { u.screen = ''; return; }
+    // The conversation widget opens its conversation.
+    if (sub.startsWith('conv:')) { const x = thread(c, sub.slice(5)); if (x) { x.read = true; c.save(); u.screen = sub; u.external = true; } return; }
     if (sub.startsWith('to:')) { const n = sub.slice(3); if (n) { openThread(c, n); u.external = true; } else { u.screen = 'pick'; u.to = ''; } }
   }
   function render(c) {

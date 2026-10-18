@@ -70,10 +70,18 @@
   // An item's view; src names where it lives for the drag code ("ws:<page>:<index>", "hs:<rank>", "fd:<index>").
   function icon(c, item, where, src = '') {
     if (item.type === 'folder') return folderIcon(c, item, where, src);
+    // A shortcut an app made (CREATE_SHORTCUT, mm-shortcuts.js): its own label and icon; a contact's is the contact's
+    // photo tile with the call or message badge.
+    if (item.type === 'shortcut') return `<button type="button" class="mmh-icon mmh-sc ${where}" data-action="mmh-sc" data-src="${src}">${scIcon(c, item)}<span>${c.safe(item.label)}</span></button>`;
     // A disabled package's shortcuts go (Launcher3's PackageUpdatedTask on a disabled app).
     if (MM.appDisabled(c, item.app)) return '';
     const a = MM.appsData[item.app];
     return `<button type="button" class="mmh-icon ${where}" data-action="mmh-app" data-app="${item.app}" data-src="${src}"><img src="${a?.icon}" alt=""><span>${c.safe(label(c, item.app))}</span></button>`;
+  }
+  function scIcon(c, item) {
+    const p = item.person && MM.people?.byId(c, item.person);
+    if (p) return `<i class="mmh-scperson">${MM.people.tile(c, p, 'mmh-sctile')}${item.badge && item.badge !== 'contact' ? `<img class="mmh-scbadge" src="assets/ct-ic_${item.badge === 'dial' ? 'phone' : 'message'}_24dp.png" alt="">` : ''}</i>`;
+    return `<img src="${item.icon || ''}" alt="">`;
   }
   // FolderIcon.computePreviewDrawingParams / computePreviewItemDrawingParams, for its first three items.
   function folderPreview(f, cellW = G.cellW, pad = G.cellPad) {
@@ -196,7 +204,8 @@
       view.classList.add('widget');
       Object.assign(view.style, {width: dp(w), height: dp(h), margin: `calc(${(-h / 2 / PX).toFixed(3)} * var(--dp)) 0 0 calc(${(-w / 2 / PX).toFixed(3)} * var(--dp))`});
       view.innerHTML = d.from === 'ws' ? MM.widgets.home(c, d.item) : `<div class="mmh-wprev">${MM.widgets.preview(c, wi)}</div>`;
-    } else view.innerHTML = `<img src="${MM.appsData[d.item.type === 'folder' ? d.item.items[0] : d.item.app]?.icon}" alt="">`;
+    } else if (d.item.type === 'shortcut') view.innerHTML = scIcon(c, d.item);
+    else view.innerHTML = `<img src="${MM.appsData[d.item.type === 'folder' ? d.item.items[0] : d.item.app]?.icon}" alt="">`;
     if (d.item.type === 'folder') view.innerHTML = el.querySelector(`[data-src="${d.src}"]`)?.outerHTML || view.innerHTML, view.classList.add('folder');
     el.append(view);
     d.view = view;
@@ -239,6 +248,9 @@
   function endDrag(c, root, x, y) {
     const st = c.ui.home, d = st.dragging, h = home(c);
     st.dragging = null;
+    // The click that may follow this release is the drag's; a drag begun elsewhere (the widgets list, the drawer) has
+    // none, and the next tap must not be eaten.
+    setTimeout(() => { st.suppressClick = false; }, 60);
     clearTimeout(d.edgeTimer);
     const t = target(c, root, x, y), page = st.page > 0 ? st.page : 1;
     // A drop on the extra page makes it a real one; Workspace.stripEmptyScreens drops the empty ones afterwards.
@@ -261,8 +273,19 @@
       const list = h.pages[page - 1], self = d.from === 'ws' ? locate(h, d.src).item : null;
       const at = nearest(list, t.fx - wi.spanX / 2 + .5, t.fy - wi.spanY / 2 + .5, wi.spanX, wi.spanY, self);
       if (!at) { strip(); c.render(); c.toast(MM.widgets.outOfSpace(), false); return; }
-      // A shortcut's CREATE_SHORTCUT activity (its configuration screen) is not built yet.
-      if (wi.kind === 'shortcut') { strip(); c.render(); c.open('missing-shortcut'); return; }
+      // A shortcut's CREATE_SHORTCUT activity or a widget's configure activity first (mm-shortcuts.js); its result
+      // lands at the area found here, and Back there places nothing.
+      if (d.from !== 'ws' && MM.widgetConfigs?.[wi.id]) {
+        strip(); c.render();
+        const target = h.pages[page - 1] ? page : h.pages.length + 1, x = at.x, y = at.y;
+        MM.widgetConfigs[wi.id](c, res => {
+          const hh = home(c); while (hh.pages.length < target) hh.pages.push([]);
+          const item = res.type === 'shortcut' ? {...res, x, y} : {type: 'widget', w: wi.id, spanX: wi.spanX, spanY: wi.spanY, x, y, cfg: res};
+          if (!free(hh.pages[target - 1], x, y, item.spanX || 1, item.spanY || 1)) { c.toast(MM.widgets.outOfSpace(), false); return; }
+          hh.pages[target - 1].push(item); c.save(); if (c.ui.view === 'home') c.render();
+        });
+        return;
+      }
       take();
       h.pages[page - 1].push({type: 'widget', w: wi.id, spanX: wi.spanX, spanY: wi.spanY, x: at.x, y: at.y});
       saveRender(); return;
@@ -388,6 +411,7 @@
       if (st?.overview && name !== 'mmh-ov') { st.overview = false; c.render(); return true; }
       if (name === 'mmh-app') { if (st.folder) st.folder = null; c.open(el.dataset.app, '', {from: el.querySelector('img')}); return true; }
       if (name === 'mmh-folder') { st.folder = el.dataset.src; c.render(); return true; }
+      if (name === 'mmh-sc') { const it = locate(home(c), el.dataset.src)?.item; if (st.folder) st.folder = null; if (it) MM.openShortcut?.(c, it); return true; }
       if (name === 'mmh-close-folder') { st.folder = null; c.render(); return true; }
       if (name === 'mmh-allapps') { c.open('drawer'); return true; }
       if (name === 'mmh-search') { MM.googleOpen ? MM.googleOpen(c, false) : c.open('search'); return true; }

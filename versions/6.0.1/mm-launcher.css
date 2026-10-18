@@ -134,3 +134,10 @@ input.mmh-fname::placeholder{color:#808080}
 /* search_bg's own padding is 8 dp (its nine-patch padding box); the 21 dp slices draw beyond it, so the content box is
    the plate inside the shadow, as in search_widget.xml and search_plate_proxy.xml. */
 .mmh-qsb.np-gel-search_bg,.mmd-search.np-gel-search_bg,.mmrc-search.np-gel-search_bg{border-width:calc(8 * var(--dp))}
+/* A shortcut made by an app: a contact's is the photo tile (Launcher's icon size, less the 4 dp the legacy shortcut
+   icon keeps) with the call or message badge at its corner. */
+.mmh-scperson{position:absolute;left:50%;top:var(--cellpad,calc(4.190 * var(--dp)));width:calc(64 * var(--dp));height:calc(64 * var(--dp));margin-left:calc(-32 * var(--dp))}
+.mmh-sctile{position:absolute;inset:calc(4 * var(--dp));width:auto!important;height:auto!important;border-radius:50%;overflow:hidden}
+
+.mmh-scbadge{position:absolute;right:0;top:0;width:calc(20 * var(--dp));height:calc(20 * var(--dp))}
+.mmh-dragview .mmh-scperson{position:relative;left:auto;top:auto;margin:0;display:block}

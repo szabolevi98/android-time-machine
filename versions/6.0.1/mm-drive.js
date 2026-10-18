@@ -67,6 +67,8 @@
   function render(c) {
     const t = T(), u = ui(c);
     if (c.ui.sub === 'pick') { c.ui.sub = ''; u.pick = true; u.drawer = u.create = false; }
+    // The Drive scan shortcut (ScanToDriveActivity) goes straight to the scanner.
+    if (c.ui.sub === 'scan') { c.ui.sub = ''; u.scan = 'view'; u.drawer = u.create = u.search = false; }
     if (u.pick) return picker(c);
     if (u.scan) return scan(c);
     if (u.search) return search(c);

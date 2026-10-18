@@ -27,8 +27,8 @@
      #b3ffffff), Sound Search (ic_soundsearch_selector centred) and Play Music's I'm Feeling Lucky (widget_ifl.xml:
      ifl_widget_background in 3 dp, the 33 dp dice); Calendar, Gmail, Chrome's bookmarks, Drive, Play Music, Messenger's
      list, Hangouts and Google Now are described where they are drawn below. Messenger's single conversation and Play
-     Store's widget need their configuration activities (a conversation, the content), which are not built: they are
-     still a "not built yet" card of their size. */
+     Store's widget ask their configuration first (the conversation, the corpus: mm-shortcuts.js), as the shortcuts
+     do their CREATE_SHORTCUT activities. */
 (() => {
   'use strict';
   const T = () => MM.text('widgets');
@@ -196,6 +196,28 @@
         const rows = list.map(x => `<button type="button" class="row${x.unread ? ' unread' : ''}" data-action="mmwg-open" data-app="messenger">${x.avatar}<span class="body"><span class="top"><b>${c.safe(x.name)}</b><small>${c.safe(x.when)}</small></span><span class="snip">${c.safe(x.text)}</span></span></button>`).join('');
         return `<div class="mmwg-ms"><div class="head"><button type="button" class="title" data-action="mmwg-open" data-app="messenger">${c.safe(T().t('PrebuiltBugle/widget_conversation_name'))}</button><button type="button" class="add" data-action="mmwg-open" data-app="messenger"><img src="assets/bg-ic_add_white.png" alt=""></button></div><i class="line"></i><div class="list">${rows}</div></div>`;
       }
+      case 'messenger-conversation': {
+        // Messenger 1.4's widget_conversation.xml (transparent, widget_margin): the 48 dp header with the conversation's
+        // name (WidgetConversationTitle, white) and ic_widget_list; the messages stacked from the bottom
+        // (widget_message_item_incoming / _outgoing: the avatar with ic_widget_avatar_shadow, the widget bubbles, the
+        // 16 sp text and 12 sp time); widget_hr and ic_widget_fab_reply at the foot. A deleted conversation shows
+        // tap_to_configure.
+        const x = MM.messengerConversation?.(c, item.cfg?.conv);
+        if (!x) return `<button type="button" class="mmwg-mc empty" data-action="mmwg-open" data-app="messenger"><span>${c.safe(T().t('PrebuiltBugle/tap_to_configure'))}</span></button>`;
+        const msgs = x.messages.map(m => `<div class="msg ${m.mine ? 'out' : 'in'}">${m.mine ? '' : x.avatar}<div class="bubble np-bg-widget_msg_bubble_${m.mine ? 'outgoing' : 'incoming'}">${m.text ? `<b>${c.safe(m.text)}</b>` : `<b>${c.safe(T().t('PrebuiltBugle/app_name'))}</b>`}<small>${c.safe(m.when)}</small></div></div>`).join('');
+        return `<div class="mmwg-mc"><div class="head"><button type="button" class="title" data-action="mmwg-conv" data-id="${x.id}">${c.safe(x.name)}</button><button type="button" class="list" data-action="mmwg-open" data-app="messenger" aria-label="${c.safe(T().t('PrebuiltBugle/widget_conversation_list_content_description'))}"><img src="assets/bg-ic_widget_list.png" alt=""></button></div>
+          <div class="msgs" data-action="mmwg-conv" data-id="${x.id}">${msgs}</div><div class="foot"><i class="np-bg-widget_hr"></i><button type="button" data-action="mmwg-conv" data-id="${x.id}" aria-label="${c.safe(T().t('PrebuiltBugle/widget_reply_content_description'))}"><img src="assets/bg-ic_widget_fab_reply.png" alt=""></button></div></div>`;
+      }
+      case 'market': {
+        // Play Store's widget_layout.xml: a ViewFlipper (7 s) of widget_item.xml — the promo image band in
+        // phonesky_widget_top (20 dp sides), then phonesky_widget_bottom (50 dp) with the 32 dp icon, the 15 sp bold title
+        // and the 13 sp creator in grey #999999. The Apps corpus flips through the store's apps; the other corpora have no
+        // content here and keep the empty frame with ic_launcher_play_store.
+        const items = item.cfg?.corpus === 'apps' ? (MM.playWidgetItems?.() || []) : [];
+        if (!items.length) return `<button type="button" class="mmwg-ps empty" data-action="mmwg-open" data-app="play-store"><span class="top np-ps-phonesky_widget_top"></span><span class="bottom np-ps-phonesky_widget_bottom"></span><img src="assets/ps-ic_launcher_play_${item.cfg?.corpus || 'store'}.png" alt=""></button>`;
+        const it = items[Math.floor(Date.now() / 7000) % items.length];
+        return `<button type="button" class="mmwg-ps" data-action="mmwg-play" data-id="${it.id}"><span class="top np-ps-phonesky_widget_top">${it.icon}</span><span class="bottom np-ps-phonesky_widget_bottom">${it.icon}<span><b>${c.safe(it.name)}</b><small>${c.safe(it.dev)}</small></span></span></button>`;
+      }
       case 'now': {
         // predictive_cards_widget.xml: the cards in widget_card_frame; without Google Now turned on, no_cards' white
         // text on the frame, widget_get_now. With it on, widget_card_three_line.xml rows (68 dp, 18 dp text and 14 dp
@@ -259,6 +281,8 @@
     if (name === 'mmwg-tap') { if (c.ui.widgetsHeld) { c.ui.widgetsHeld = false; return true; } c.toast(T().t('Velvet/long_press_widget_to_add'), false); return true; }
     if (name === 'mmwg-open') { c.open(el.dataset.app); return true; }
     if (name === 'mmwg-url') { c.open('chrome', `url:${el.dataset.url}`); return true; }
+    if (name === 'mmwg-conv') { c.open('messenger', `conv:${el.dataset.id}`); return true; }
+    if (name === 'mmwg-play') { c.open('play-store', `details:${el.dataset.id}`); return true; }
     if (name === 'mmwg-sound') { MM.googleOpen(c, 'music'); return true; }
     return false;
   }

@@ -59,6 +59,8 @@
     return new Intl.DateTimeFormat(loc, {year: '2-digit', month: 'numeric', day: 'numeric'}).format(d);
   }
   const avatar = (c, name, cls) => P().tile(c, {name}, cls);
+  // The label shortcut's folder list (CreateShortcutActivity's FolderSelectionActivity): the sections and the labels.
+  MM.gmailFolders = c => [...FOLDERS, ...LABELS].map(([id, key, icon]) => ({id, name: T().t(key), icon: A(icon)}));
   // Gmail's widget (mm-widgets.js) lists the Primary inbox with the same dates.
   MM.gmailWidget = c => ({title: folderName(c, 'primary'), items: mail(c).filter(m => inFolder(m, 'primary')).sort((a, b) => b.time - a.time), date: time => date(c, time)});
 
@@ -156,6 +158,8 @@
     c.ui.sub = '';
     // ComposeActivityGmail from ACTION_SEND: EXTRA_SUBJECT and EXTRA_TEXT fill the draft.
     if (sub === 'share') { const d = MM.shareTake(c) || {}; const u = ui(c); u.draft = {to: '', subject: d.subject || '', body: d.text || ''}; u.screen = 'compose'; u.external = true; return; }
+    // A label shortcut opens that folder.
+    if (sub.startsWith('folder:')) { const u = ui(c); u.folder = sub.slice(7); u.screen = ''; u.drawer = false; return; }
     if (sub.startsWith('to:')) { const u = ui(c); u.draft = {to: sub.slice(3), subject: '', body: ''}; u.screen = 'compose'; u.external = true; }
   }
   function render(c) {

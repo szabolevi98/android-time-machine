@@ -17,3 +17,11 @@ ps-ic_profile_none.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_profile_none
 ps-ic_whats_new.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_whats_new
 ps-play_ic_dl_m_download_00000.png	priv-app/Phonesky/Phonesky.apk	drawable/play_ic_dl_m_download_00000
 ps-play_ic_dl_m_finish_00015.png	priv-app/Phonesky/Phonesky.apk	drawable/play_ic_dl_m_finish_00015
+ps-ic_launcher_play_apps.png	priv-app/Phonesky/Phonesky.apk	mipmap/ic_launcher_play_apps
+ps-ic_launcher_play_books.png	priv-app/Phonesky/Phonesky.apk	mipmap/ic_launcher_play_books
+ps-ic_launcher_play_movietv.png	priv-app/Phonesky/Phonesky.apk	mipmap/ic_launcher_play_movietv
+ps-ic_launcher_play_music.png	priv-app/Phonesky/Phonesky.apk	mipmap/ic_launcher_play_music
+ps-ic_launcher_play_newsstand.png	priv-app/Phonesky/Phonesky.apk	mipmap/ic_launcher_play_newsstand
+ps-ic_launcher_play_store.png	priv-app/Phonesky/Phonesky.apk	mipmap/ic_launcher_play_store
+ps-phonesky_widget_top.9.png	priv-app/Phonesky/Phonesky.apk	drawable/phonesky_widget_top
+ps-phonesky_widget_bottom.9.png	priv-app/Phonesky/Phonesky.apk	drawable/phonesky_widget_bottom

@@ -88,7 +88,10 @@
     const all = [...FICTION, ...SYSTEM.map(id => item(c, id)).filter(Boolean)];
     return `<div class="mmps-cards wrap">${all.filter(it => `${it.name} ${it.dev} ${it.cat}`.toLowerCase().includes(q)).map(it => card(c, it)).join('')}</div>`;
   }
+  // The Play Store widget's flipper (MarketWidgetProvider, the Apps corpus): the store's apps, each opening its page.
+  MM.playWidgetItems = () => FICTION.map(it => ({id: it.id, name: it.name, dev: it.dev, icon: icon(it, 'mmwg-ps-ic')}));
   function render(c) {
+    if ((c.ui.sub || '').startsWith('details:')) { const u0 = ui(c); u0.history = u0.history || []; u0.history.push({page: u0.page, item: u0.item}); u0.page = 'details'; u0.item = c.ui.sub.slice(8); u0.search = null; u0.drawer = false; c.ui.sub = ''; }
     const t = T(), u = ui(c), it = u.page === 'details' ? item(c, u.item) : null;
     const searching = u.search !== null;
     const bar = searching

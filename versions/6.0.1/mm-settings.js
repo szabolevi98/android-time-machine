@@ -35,7 +35,7 @@
     'com.android.settings.DataUsageSummary': 'data-usage', 'com.android.settings.WirelessSettings': 'xml:wireless_settings',
     'com.android.settings.DisplaySettings': 'xml:display_settings', 'com.android.settings.notification.NotificationSettings': 'xml:notification_settings',
     'com.android.settings.applications.ManageApplications': 'apps', 'com.android.settings.deviceinfo.StorageSettings': 'storage',
-    'com.android.settings.fuelgauge.PowerUsageSummary': 'battery', 'com.android.settings.applications.ProcessStatsSummary': 'memory',
+    'com.android.settings.notification.NotificationStation': 'notification-log', 'com.android.settings.fuelgauge.PowerUsageSummary': 'battery', 'com.android.settings.applications.ProcessStatsSummary': 'memory',
     'com.android.settings.users.UserSettings': 'xml:user_settings', 'com.android.settings.nfc.PaymentSettings': 'nfc-payment',
     'com.android.settings.location.LocationSettings': 'xml:location_settings', 'com.android.settings.SecuritySettings': 'xml:security',
     'com.android.settings.accounts.AccountSettings': 'accounts', 'com.android.settings.inputmethod.InputMethodAndLanguageSettings': 'xml:language_settings',

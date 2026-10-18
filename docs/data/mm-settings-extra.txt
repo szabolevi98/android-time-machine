@@ -84,3 +84,5 @@ PrebuiltGmail/account_setup_failed_ioerror PrebuiltGmail/account_setup_failed_dl
 help_label
 # Security: Install from storage (CertInstaller)
 CertInstaller/no_cert_file_found
+# Settings shortcut: Notification log (NotificationStation)
+notification_log_title
