@@ -89,6 +89,150 @@ MM.strings('youtube', {
 "fr": "Historique",
 "es": "Historial"
 },
+"no_results_found": {
+"res": "bullhead:YouTube:no_results_found",
+"en": "No results found",
+"hu": "Nincs találat",
+"de": "Keine Ergebnisse gefunden",
+"fr": "Aucun résultat",
+"es": "No se ha encontrado ningún resultado."
+},
+"no_watch_history_found": {
+"res": "bullhead:YouTube:no_watch_history_found",
+"en": "No watch history",
+"hu": "Nincsenek megtekintési előzmények",
+"de": "Kein Wiedergabeverlauf",
+"fr": "Aucun historique de visionnage",
+"es": "No hay historial de reproducciones."
+},
+"channel_watch_later": {
+"res": "bullhead:YouTube:channel_watch_later",
+"en": "Watch later",
+"hu": "Megnézendő videók",
+"de": "Später ansehen",
+"fr": "À regarder plus tard",
+"es": "Ver más tarde"
+},
+"menu_add_to": {
+"res": "bullhead:YouTube:menu_add_to",
+"en": "Add to…",
+"hu": "Hozzáadás…",
+"de": "Hinzufügen zu…",
+"fr": "Ajouter à…",
+"es": "Añadir a…"
+},
+"create_playlist_entry": {
+"res": "bullhead:YouTube:create_playlist_entry",
+"en": "New playlist…",
+"hu": "Új lejátszási lista...",
+"de": "Neue Playlist...",
+"fr": "Nouvelle playlist…",
+"es": "Nueva lista de reproducción..."
+},
+"create_playlist_dialog_title": {
+"res": "bullhead:YouTube:create_playlist_dialog_title",
+"en": "New playlist",
+"hu": "Új lejátszási lista",
+"de": "Neue Playlist",
+"fr": "Nouvelle playlist",
+"es": "Nueva lista"
+},
+"create_playlist_name": {
+"res": "bullhead:YouTube:create_playlist_name",
+"en": "Title",
+"hu": "Cím",
+"de": "Titel",
+"fr": "Titre",
+"es": "Título"
+},
+"create_playlist_private": {
+"res": "bullhead:YouTube:create_playlist_private",
+"en": "Private",
+"hu": "Privát",
+"de": "Privat",
+"fr": "Privée",
+"es": "Privada"
+},
+"watch_later_done": {
+"res": "bullhead:YouTube:watch_later_done",
+"en": "Video added to Watch Later playlist",
+"hu": "Hozzáadva a megnézendő videók listájához",
+"de": "Video zu \"Später ansehen\" hinzugefügt",
+"fr": "Vidéo ajoutée à la playlist \"À regarder plus tard\".",
+"es": "Vídeo añadido a la lista Ver más tarde"
+},
+"watch_later_duplicate": {
+"res": "bullhead:YouTube:watch_later_duplicate",
+"en": "Video is already in your Watch Later playlist",
+"hu": "Ez a videó már a megnézendők között van",
+"de": "Video schon unter \"Später ansehen\" gespeichert",
+"fr": "Vidéo déjà dans la playlist \"À regarder plus tard\".",
+"es": "Este vídeo ya está en la lista Ver más tarde"
+},
+"create_playlist_done": {
+"res": "bullhead:YouTube:create_playlist_done",
+"en": "Playlist created",
+"hu": "Lejátszási lista létrehozva",
+"de": "Playlist erstellt",
+"fr": "Playlist créée",
+"es": "Lista de reproducción creada"
+},
+"action_bar_search_clear": {
+"res": "bullhead:YouTube:action_bar_search_clear",
+"en": "Clear",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Effacer",
+"es": "Borrar"
+},
+"accessibility_search_edit_suggestion": {
+"res": "bullhead:YouTube:accessibility_search_edit_suggestion",
+"en": "Edit suggestion %1$s",
+"hu": "Javaslat szerkesztése: %1$s",
+"de": "Vorschlag %1$s bearbeiten",
+"fr": "Modifier la suggestion \"%1$s\"",
+"es": "Editar sugerencia %1$s"
+},
+"remove_from_history_button": {
+"res": "bullhead:YouTube:remove_from_history_button",
+"en": "Remove",
+"hu": "Eltávolítás",
+"de": "Entfernen",
+"fr": "Supprimer",
+"es": "Eliminar"
+},
+"framework/ok": {
+"res": "bullhead:framework:ok",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"framework/cancel": {
+"res": "bullhead:framework:cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"no_playlists_found": {
+"res": "bullhead:YouTube:no_playlists_found",
+"en": "No playlists found",
+"hu": "Nincs lejátszási lista",
+"de": "Keine Playlists gefunden",
+"fr": "Aucune playlist n'a été trouvée.",
+"es": "No se han encontrado listas de reproducción."
+},
+"menu_add_to_playlist": {
+"res": "bullhead:YouTube:menu_add_to_playlist",
+"en": "Add to %1$s",
+"hu": "Hozzáadás a következőhöz: %1$s",
+"de": "Zu %1$s hinzufügen",
+"fr": "Ajouter à \"%1$s\"",
+"es": "Añadir a %1$s"
+},
 "author_and_views": {
 "res": "bullhead:YouTube:author_and_views",
 "en": {

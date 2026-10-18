@@ -241,6 +241,9 @@ START_NAVIGATION NAVIGATION
 share_subject share_text
 # YouTube 10.28.60: search, the video cards, the watch page
 home_phone_label search_hint subscribe subscribed menu_share accessibility_addto settings menu_help channel_watch_history
+no_results_found no_watch_history_found channel_watch_later menu_add_to create_playlist_entry create_playlist_dialog_title create_playlist_name
+create_playlist_private watch_later_done watch_later_duplicate create_playlist_done action_bar_search_clear accessibility_search_edit_suggestion
+remove_from_history_button framework/ok framework/cancel no_playlists_found menu_add_to_playlist
 plurals:author_and_views plurals:age_and_views plurals:minutes_ago plurals:hours_ago plurals:days_ago plurals:weeks_ago
 [hangouts] Hangouts framework
 # Hangouts 4.1: the conversation list, the drawer, a conversation

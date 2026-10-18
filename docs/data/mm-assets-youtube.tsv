@@ -15,3 +15,11 @@ yt-ic_media_play.png	app/YouTube/YouTube.apk	drawable/ic_media_play
 yt-ic_media_pause.png	app/YouTube/YouTube.apk	drawable/ic_media_pause
 yt-ic_miniplayer.png	app/YouTube/YouTube.apk	drawable/ic_miniplayer
 yt-ic_account_circle.png	app/YouTube/YouTube.apk	drawable/ic_account_circle
+yt-ic_query_suggestion.png	app/YouTube/YouTube.apk	drawable/ic_query_suggestion
+yt-ic_edit_suggestion.png	app/YouTube/YouTube.apk	drawable/ic_edit_suggestion
+yt-ic_search_clear.png	app/YouTube/YouTube.apk	drawable/ic_search_clear
+yt-ic_arrow_back_black.png	app/YouTube/YouTube.apk	drawable/ic_arrow_back_black
+yt-quantum_ic_arrow_back_white_24.png	app/YouTube/YouTube.apk	drawable/quantum_ic_arrow_back_white_24
+yt-ic_drawer_watch_later_normal.png	app/YouTube/YouTube.apk	drawable/ic_drawer_watch_later_normal
+yt-ic_playlist_save.png	app/YouTube/YouTube.apk	drawable/ic_playlist_save
+yt-ic_playlist_lock.png	app/YouTube/YouTube.apk	drawable/ic_playlist_lock
