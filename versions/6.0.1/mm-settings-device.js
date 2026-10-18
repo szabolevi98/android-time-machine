@@ -52,7 +52,7 @@
       }
       if (key === 'firmware_version') {
         const now = Date.now(); entry.logoHits = [...(entry.logoHits || []), now].slice(-3);
-        if (entry.logoHits.length === 3 && entry.logoHits[0] >= now - 500) { entry.logoHits = []; MM.settingsGo(c, 'missing:com.android.internal.app.PlatLogoActivity', ''); }
+        if (entry.logoHits.length === 3 && entry.logoHits[0] >= now - 500) { entry.logoHits = []; c.open('platlogo'); }
         return true;
       }
       if (key === 'regulatory_info') {

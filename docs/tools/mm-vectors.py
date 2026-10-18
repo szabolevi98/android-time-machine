@@ -67,8 +67,9 @@ def color(value, apk, theme):
 def tree(apk, name, folder='drawable'):
     """The drawable's (or animator's) XML as nested [tag, {attr: value}, children]."""
     text = ''
-    # The folder as given, else its -v21 / -anydpi-v21 variants (GMS Core's ic_google_settings is drawable-anydpi-v21).
-    for f in (folder, f'{folder}-v21', f'{folder}-anydpi-v21'):
+    # The folder as given, else its -v21 / -anydpi-v21 / -nodpi-v4 variants (GMS Core's ic_google_settings is
+    # drawable-anydpi-v21, the Marshmallow egg's pictures drawable-nodpi-v4).
+    for f in (folder, f'{folder}-v21', f'{folder}-anydpi-v21', f'{folder}-nodpi-v4'):
         text = subprocess.run([AAPT, 'dump', 'xmltree', SYSTEM + apk, '--file', f'res/{f}/{name}.xml'], capture_output=True, text=True, encoding='utf-8', errors='replace').stdout
         if text.strip(): break
     root, stack = None, []

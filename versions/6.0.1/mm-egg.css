@@ -1,0 +1,44 @@
+/* PlatLogoActivity and Marshmallow Land (mm-egg.js); sizes come from the script in dp of the screen. */
+.mmeg{position:absolute;inset:0;overflow:hidden;user-select:none;touch-action:none}
+.screen.view-platlogo{background:#000 var(--mm-wallpaper,url('assets/fw-default_wallpaper.jpg')) left top/auto 100% no-repeat}
+.mmeg-logo{position:absolute;left:50%;top:50%;padding:0;border:0;border-radius:50%;background:var(--bg);overflow:hidden;box-shadow:0 calc(14 * var(--dp)) calc(28 * var(--dp)) rgba(0,0,0,.35);opacity:0}
+.mmeg-logo .arc{position:absolute;inset:0;background:linear-gradient(135deg,var(--fg) 50%,transparent 50%)}
+.mmeg-logo img{position:absolute;inset:0;width:100%;height:100%}
+.mmeg-logo .mm{opacity:0}
+.mmeg-logo .ripple{position:absolute;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.35);transform:translate(-50%,-50%);transition:width .5s,height .5s,opacity .3s}
+.mmeg-logo .ripple.on{width:250%;height:250%;opacity:1}
+.mmeg-logo .ripple.off{opacity:0}
+.mmeg-land{outline:0}
+.mmeg-world{position:absolute;inset:0}
+.mmeg-world>div{position:absolute;left:0;top:0;transform-origin:50% 50%;will-change:transform}
+.mmeg-scenery{background:center/100% 100% no-repeat}
+.mmeg-sun{background-image:url('assets/egg-sun.svg')}
+.mmeg-sun.dusk{filter:brightness(.24)}
+.mmeg-moon{background-image:url('assets/egg-moon.svg')}
+.mmeg-star{background-image:url('assets/egg-star.svg')}
+.mmeg-cloud{background-image:url('assets/egg-cloud.svg');opacity:.25}
+.mmeg-cloud.off{background-image:url('assets/egg-cloud_off.svg')}
+.mmeg-cactus.c1{background-image:url('assets/egg-cactus1.svg')}
+.mmeg-cactus.c2{background-image:url('assets/egg-cactus2.svg')}
+.mmeg-cactus.c3{background-image:url('assets/egg-cactus3.svg')}
+.mmeg-mountain.m1{background-image:url('assets/egg-mountain1.svg')}
+.mmeg-mountain.m2{background-image:url('assets/egg-mountain2.svg')}
+.mmeg-mountain.m3{background-image:url('assets/egg-mountain3.svg')}
+.mmeg-building{box-shadow:0 0 calc(6 * var(--dp)) rgba(0,0,0,.25)}
+.mmeg-stem{background:linear-gradient(to right,#bcaaa4 75%,#a1887f);box-shadow:0 0 calc(10 * var(--dp)) rgba(0,0,0,.2)}
+.mmeg-stem.jandy{background:repeating-linear-gradient(-45deg,#f00 0 2.8px,#fff 2.8px 5.6px),linear-gradient(to right,#fff 75%,#ddd)}
+.mmeg-stem svg{position:absolute;left:0;top:0}
+.mmeg-pop{background:url('assets/egg-mm_head.svg') center/100% 100% no-repeat;filter:drop-shadow(0 calc(4 * var(--dp)) calc(6 * var(--dp)) rgba(0,0,0,.3))}
+.mmeg-pop img{position:absolute;inset:0;width:100%;height:100%}
+.mmeg-droid{-webkit-mask:url('assets/egg-android.svg') center/100% 100% no-repeat;mask:url('assets/egg-android.svg') center/100% 100% no-repeat}
+.mmeg-welcome{position:absolute;inset:0;background:rgba(0,0,0,.627)}
+.mmeg-welcome[hidden]{display:none}
+.mmeg-play{position:absolute;left:50%;top:50%;width:calc(72 * var(--dp));height:calc(72 * var(--dp));margin:calc(-36 * var(--dp)) 0 0 calc(-36 * var(--dp));padding:0;border:0;border-radius:50%;background:#aaa}
+.mmeg-play:active,.mmeg-play:focus-visible{background:#fff}
+.mmeg-play img{position:absolute;left:50%;top:50%;width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin:calc(-24 * var(--dp)) 0 0 calc(-24 * var(--dp));filter:brightness(0)}
+.mmeg-play b{position:absolute;inset:0;display:grid;place-items:center;color:#000;font:400 calc(40 * var(--dp)) Roboto,sans-serif;opacity:0}
+.mmeg-setup{position:absolute;left:50%;top:0;transform:translateX(-50%);display:flex;align-items:center}
+.mmeg-setup button{width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:calc(10 * var(--dp));border:0;border-radius:50%;background:none}
+.mmeg-setup button img{width:100%;height:100%}
+.mmeg-scores{display:flex;gap:calc(4 * var(--dp));height:calc(64 * var(--dp));padding:calc(12 * var(--dp));box-sizing:border-box}
+.mmeg-card{display:grid;place-items:center;min-width:calc(40 * var(--dp));padding:calc(4 * var(--dp)) calc(6 * var(--dp));border-radius:calc(4 * var(--dp));font:700 calc(22 * var(--dp))/1 Roboto,sans-serif;box-sizing:border-box;box-shadow:0 calc(4 * var(--dp)) calc(8 * var(--dp)) rgba(0,0,0,.3)}
