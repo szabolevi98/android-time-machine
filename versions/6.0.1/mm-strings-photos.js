@@ -201,5 +201,462 @@ MM.strings('photos', {
 "de": "Bearbeiten",
 "fr": "Modifier",
 "es": "Editar"
+},
+"assistant_title": {
+"res": "bullhead:Photos:assistant_title",
+"en": "Assistant",
+"hu": "Asszisztens",
+"de": "Assistent",
+"fr": "Assistant",
+"es": "Asistente"
+},
+"photos_assistant_overview_card_title": {
+"res": "bullhead:Photos:photos_assistant_overview_card_title",
+"en": "Your Photos Assistant",
+"hu": "Saját Asszisztens",
+"de": "Ihr Fotoassistent",
+"fr": "Votre Assistant Google Photos",
+"es": "Tu asistente de Fotos"
+},
+"photos_assistant_overview_card_description": {
+"res": "bullhead:Photos:photos_assistant_overview_card_description",
+"en": "Your Assistant can suggest new movies, collages, & more, all created from your photos. It can even help you organize your photos and free up device storage.\n\nSuggestions appear here as cards, like this one. Keep just the ones you like.",
+"hu": "Az Asszisztens a fotóiból létrehozott új filmeket, kollázsokat és hasonló tartalmakat ajánlhat Önnek. Emellett segít a fotók rendezésében és tárhely felszabadításában.\n\nA javaslatok ehhez hasonló kártyaként jelennek meg. Tartsa meg azokat, amelyek tetszenek Önnek.",
+"de": "Der Assistent kann z. B. neue Filme und Collagen vorschlagen, die aus Ihren Fotos erstellt werden. Er kann Ihnen sogar dabei helfen, Ihre Fotos zu organisieren und Speicherplatz im Gerätespeicher freizugeben.\n\nVorschläge werden hier als Karten angezeigt – so wie diese hier. Heben Sie nur die Vorschläge auf, die Ihnen gefallen.",
+"fr": "Votre Assistant peut vous suggérer de nouveaux films, montages ou autres contenus créés à partir de vos photos. Il peut même vous aider à organiser vos photos et à libérer de l'espace de stockage sur l'appareil.\n\nLes suggestions apparaissent ici sous forme de cartes comme celle-ci. Conservez uniquement celles qui vous plaisent.",
+"es": "El asistente puede sugerirte la creación de películas, collages y muchas más cosas con tus fotos. También puede ayudarte a organizar tus fotos y a liberar espacio del dispositivo.\n\nLas sugerencias se muestran aquí en tarjetas como esta. Conserva solo las que te gusten."
+},
+"photos_assistant_overview_card_swipe_prompt": {
+"res": "bullhead:Photos:photos_assistant_overview_card_swipe_prompt",
+"en": "Swipe cards right to dismiss",
+"hu": "Elvetés jobbra húzással",
+"de": "Zum Ablehnen Karte nach rechts wischen",
+"fr": "Balayer vers la droite pour masquer",
+"es": "Ignorar tarjeta: desliza dcha"
+},
+"photos_assistant_autobackup_all_photos_backed_up": {
+"res": "bullhead:Photos:photos_assistant_autobackup_all_photos_backed_up",
+"en": "Backup complete",
+"hu": "A mentés befejeződött",
+"de": "Sicherung abgeschlossen",
+"fr": "Sauvegarde terminée",
+"es": "La copia de seguridad ha finalizado"
+},
+"photos_assistant_autobackup_is_off": {
+"res": "bullhead:Photos:photos_assistant_autobackup_is_off",
+"en": "Back up & sync is off",
+"hu": "Az automatikus mentés és szinkronizálás ki van kapcsolva",
+"de": "Sicherung und Synchronisierung sind deaktiviert.",
+"fr": "Sauvegarde et synchronisation désactivées",
+"es": "Copias de seguridad y sincronización desactivadas"
+},
+"photos_assistant_autobackup_is_off_subtitle": {
+"res": "bullhead:Photos:photos_assistant_autobackup_is_off_subtitle",
+"en": "Turn on in settings",
+"hu": "Bekapcsolás a beállítások között",
+"de": "In Einstellungen aktivieren",
+"fr": "Activer dans les paramètres",
+"es": "Activar en ajustes"
+},
+"photos_assistant_ui_dismiss_card_dismissed": {
+"res": "bullhead:Photos:photos_assistant_ui_dismiss_card_dismissed",
+"en": "Card dismissed",
+"hu": "Kártya elvetve",
+"de": "Karte abgelehnt",
+"fr": "Fiche ignorée.",
+"es": "Se ha ignorado la tarjeta"
+},
+"collections_title": {
+"res": "bullhead:Photos:collections_title",
+"en": "Collections",
+"hu": "Gyűjtemények",
+"de": "Sammlungen",
+"fr": "Collections",
+"es": "Colecciones"
+},
+"photos_remotemedia_ui_collection_empty_state_title": {
+"res": "bullhead:Photos:photos_remotemedia_ui_collection_empty_state_title",
+"en": "No collections",
+"hu": "Nincsenek gyűjtemények",
+"de": "Keine Sammlungen",
+"fr": "Aucune collection",
+"es": "No hay colecciones"
+},
+"photos_remotemedia_ui_collection_empty_state_caption": {
+"res": "bullhead:Photos:photos_remotemedia_ui_collection_empty_state_caption",
+"en": "Make albums, stories, and more with the + button at the top",
+"hu": "A képernyő tetején látható + gombbal albumokat, történeteket és más tartalmakat hozhat létre",
+"de": "Mit der Schaltfläche \"+\" oben auf der Seite können Sie Alben, Geschichten und mehr erstellen.",
+"fr": "Appuyez sur le bouton + affiché en haut de la page pour créer des albums, des histoires et plus encore.",
+"es": "Crea álbumes, historias y mucho más con el botón + de arriba"
+},
+"create_new_album": {
+"res": "bullhead:Photos:create_new_album",
+"en": "Album",
+"hu": "Album",
+"de": "Album",
+"fr": "Album",
+"es": "Álbum"
+},
+"default_album_name": {
+"res": "bullhead:Photos:default_album_name",
+"en": "Untitled",
+"hu": "Névtelen",
+"de": "Unbenannt",
+"fr": "Sans titre",
+"es": "Sin título"
+},
+"photos_remotemedia_ui_edit_album": {
+"res": "bullhead:Photos:photos_remotemedia_ui_edit_album",
+"en": "Choose photos",
+"hu": "Fotók kiválasztása",
+"de": "Fotos auswählen",
+"fr": "Choisir des photos",
+"es": "Elegir fotos"
+},
+"photos_remotemedia_ui_album_empty_state_caption": {
+"res": "bullhead:Photos:photos_remotemedia_ui_album_empty_state_caption",
+"en": "Album is empty",
+"hu": "Az album üres.",
+"de": "Album ist leer",
+"fr": "L'album est vide.",
+"es": "El álbum está vacío"
+},
+"photos_remotemedia_ui_delete_album": {
+"res": "bullhead:Photos:photos_remotemedia_ui_delete_album",
+"en": "Delete album",
+"hu": "Album törlése",
+"de": "Album löschen",
+"fr": "Supprimer l'album",
+"es": "Eliminar álbum"
+},
+"photos_remotemedia_ui_delete_album_dialog_title": {
+"res": "bullhead:Photos:photos_remotemedia_ui_delete_album_dialog_title",
+"en": "Delete album?",
+"hu": "Törli az albumot?",
+"de": "Album löschen?",
+"fr": "Supprimer l'album ?",
+"es": "¿Quieres eliminar el álbum?"
+},
+"photos_remotemedia_ui_delete_album_dialog_message": {
+"res": "bullhead:Photos:photos_remotemedia_ui_delete_album_dialog_message",
+"en": "Deleting an album is permanent. Photos and videos that were in a deleted album remain part of your Photos library.",
+"hu": "Az album törlése nem vonható vissza. A törölt albumban lévő fotók és videók továbbra is megmaradnak a Fotók könyvtárban.",
+"de": "Gelöschte Alben können nicht wiederhergestellt werden. Fotos und Videos aus gelöschten Alben bleiben aber weiterhin in Ihrer Google Fotos-Fotogalerie.",
+"fr": "La suppression d'un album est définitive. Les photos et les vidéos figurant dans un album supprimé sont conservées dans la photothèque Photos.",
+"es": "Los álbumes eliminados no se pueden recuperar. Las fotos y vídeos de los álbumes eliminados se conservan en tu biblioteca de Fotos."
+},
+"photos_remotemedia_ui_delete_album_negative_button": {
+"res": "bullhead:Photos:photos_remotemedia_ui_delete_album_negative_button",
+"en": "KEEP ALBUM",
+"hu": "ALBUM MEGTARTÁSA",
+"de": "Album behalten",
+"fr": "CONSERVER L'ALBUM",
+"es": "CONSERVAR ÁLBUM"
+},
+"photos_remotemedia_ui_delete_album_positive_button": {
+"res": "bullhead:Photos:photos_remotemedia_ui_delete_album_positive_button",
+"en": "DELETE",
+"hu": "TÖRLÉS",
+"de": "Löschen",
+"fr": "SUPPRIMER",
+"es": "ELIMINAR"
+},
+"album_subtitle_zero_photos": {
+"res": "bullhead:Photos:album_subtitle_zero_photos",
+"en": "No photos",
+"hu": "Nincsenek fotók",
+"de": "Keine Fotos",
+"fr": "Aucune photo",
+"es": "No hay ninguna foto"
+},
+"device_folders_title": {
+"res": "bullhead:Photos:device_folders_title",
+"en": "Device folders",
+"hu": "Eszközmappák",
+"de": "Geräteordner",
+"fr": "Dossiers de l'appareil",
+"es": "Carpetas del dispositivo"
+},
+"photos_localmedia_core_camera_label": {
+"res": "bullhead:Photos:photos_localmedia_core_camera_label",
+"en": "Camera",
+"hu": "Kamera",
+"de": "Kamera",
+"fr": "Appareil photo",
+"es": "Cámara"
+},
+"label_shared_links": {
+"res": "bullhead:Photos:label_shared_links",
+"en": "Shared Links",
+"hu": "Megosztott linkek",
+"de": "Geteilte Links",
+"fr": "Liens partagés",
+"es": "Enlaces compartidos"
+},
+"photos_search": {
+"res": "bullhead:Photos:photos_search",
+"en": "Search",
+"hu": "Keresés",
+"de": "Suchen",
+"fr": "Recherche",
+"es": "Buscar"
+},
+"photos_search_core_category_people": {
+"res": "bullhead:Photos:photos_search_core_category_people",
+"en": "People",
+"hu": "Személyek",
+"de": "Personen",
+"fr": "Personnes",
+"es": "Personas"
+},
+"photos_search_core_category_places": {
+"res": "bullhead:Photos:photos_search_core_category_places",
+"en": "Places",
+"hu": "Helyek",
+"de": "Orte",
+"fr": "Lieux",
+"es": "Lugares"
+},
+"photos_search_core_category_things": {
+"res": "bullhead:Photos:photos_search_core_category_things",
+"en": "Things",
+"hu": "Dolgok",
+"de": "Dinge",
+"fr": "Objets",
+"es": "Cosas"
+},
+"photos_search_core_category_types": {
+"res": "bullhead:Photos:photos_search_core_category_types",
+"en": "Types",
+"hu": "Típusok",
+"de": "Fototypen",
+"fr": "Types",
+"es": "Tipos"
+},
+"photos_search_core_type_videos_text": {
+"res": "bullhead:Photos:photos_search_core_type_videos_text",
+"en": "Videos",
+"hu": "Videók",
+"de": "Videos",
+"fr": "Vidéos",
+"es": "Vídeos"
+},
+"photos_search_core_type_creations_text": {
+"res": "bullhead:Photos:photos_search_core_type_creations_text",
+"en": "Creations",
+"hu": "Létrehozott elemek",
+"de": "Kreationen",
+"fr": "Créations",
+"es": "Creaciones"
+},
+"photos_search_suggestions_cold_start_header": {
+"res": "bullhead:Photos:photos_search_suggestions_cold_start_header",
+"en": "Processing your photos",
+"hu": "Fotók feldolgozása",
+"de": "Fotos werden verarbeitet…",
+"fr": "Traitement de vos photos",
+"es": "Procesando tus fotos"
+},
+"photos_search_suggestions_cold_start_text": {
+"res": "bullhead:Photos:photos_search_suggestions_cold_start_text",
+"en": "Some photos may not appear in search results until after they are backed up and processed.",
+"hu": "Egyes fotók csak az automatikus mentés és a feldolgozás után jelennek meg a keresési találatok között.",
+"de": "Einige Fotos erscheinen möglicherweise erst in den Suchergebnissen, nachdem sie gesichert und verarbeitet wurden.",
+"fr": "Certaines photos n'apparaîtront dans les résultats de recherche qu'après avoir été sauvegardées et traitées.",
+"es": "Puede que algunas fotos no aparezcan en los resultados de búsqueda hasta que haya una copia de seguridad y se procesen."
+},
+"photos_search_suggestions_empty_explore_title": {
+"res": "bullhead:Photos:photos_search_suggestions_empty_explore_title",
+"en": "No results",
+"hu": "Nincs találat",
+"de": "Keine Ergebnisse",
+"fr": "Aucun résultat",
+"es": "No hay resultados"
+},
+"photos_search_clear_text_button": {
+"res": "bullhead:Photos:photos_search_clear_text_button",
+"en": "Clear search text button",
+"hu": "Keresett kifejezés törlése gomb",
+"de": "Schaltfläche \"Suchbegriff löschen\"",
+"fr": "Bouton d'effacement du texte de recherche",
+"es": "Botón para borrar el texto de búsqueda"
+},
+"cpe_adjustments_auto": {
+"res": "bullhead:Photos:cpe_adjustments_auto",
+"en": "Auto",
+"hu": "Auto",
+"de": "Auto",
+"fr": "Auto",
+"es": "Auto."
+},
+"cpe_adjustments_light": {
+"res": "bullhead:Photos:cpe_adjustments_light",
+"en": "Light",
+"hu": "Fény",
+"de": "Licht",
+"fr": "Lumino.",
+"es": "Luz"
+},
+"cpe_adjustments_color": {
+"res": "bullhead:Photos:cpe_adjustments_color",
+"en": "Color",
+"hu": "Szín",
+"de": "Farbe",
+"fr": "Couleur",
+"es": "Color"
+},
+"cpe_adjustments_pop": {
+"res": "bullhead:Photos:cpe_adjustments_pop",
+"en": "Pop",
+"hu": "Kontraszt",
+"de": "Pop",
+"fr": "Pop",
+"es": "Pop"
+},
+"cpe_adjustments_vignette": {
+"res": "bullhead:Photos:cpe_adjustments_vignette",
+"en": "Vignette",
+"hu": "Vignetta",
+"de": "Vignette",
+"fr": "Vignette",
+"es": "Viñeta"
+},
+"cpe_adjustments_reset": {
+"res": "bullhead:Photos:cpe_adjustments_reset",
+"en": "Reset",
+"hu": "Alap",
+"de": "Rücks.",
+"fr": "Réin.",
+"es": "Rest."
+},
+"cpe_crop_and_rotate_auto": {
+"res": "bullhead:Photos:cpe_crop_and_rotate_auto",
+"en": "AUTO",
+"hu": "AUTO",
+"de": "Auto",
+"fr": "AUTO",
+"es": "AUTOM"
+},
+"cpe_crop_and_rotate_reset": {
+"res": "bullhead:Photos:cpe_crop_and_rotate_reset",
+"en": "RESET",
+"hu": "ALAP",
+"de": "Rücks.",
+"fr": "ANNUL",
+"es": "REST."
+},
+"cpe_editor_action_save": {
+"res": "bullhead:Photos:cpe_editor_action_save",
+"en": "SAVE",
+"hu": "MENTÉS",
+"de": "Speichern",
+"fr": "ENREGISTRER",
+"es": "GUARDAR"
+},
+"cpe_a11y_close_editor": {
+"res": "bullhead:Photos:cpe_a11y_close_editor",
+"en": "Close editor",
+"hu": "Szerkesztő bezárása",
+"de": "Editor schließen",
+"fr": "Fermer l'éditeur",
+"es": "Cerrar el editor"
+},
+"photos_photoeditor_save_complete": {
+"res": "bullhead:Photos:photos_photoeditor_save_complete",
+"en": "Saved",
+"hu": "Mentve",
+"de": "Gespeichert",
+"fr": "Modification enregistrée.",
+"es": "Se ha guardado"
+},
+"photos_mediadetails_details_title": {
+"res": "bullhead:Photos:photos_mediadetails_details_title",
+"en": "Info",
+"hu": "Információ",
+"de": "Info",
+"fr": "Informations",
+"es": "Información"
+},
+"photos_mediadetails_exif_header": {
+"res": "bullhead:Photos:photos_mediadetails_exif_header",
+"en": "Details",
+"hu": "Részletek",
+"de": "Details",
+"fr": "Détails",
+"es": "Detalles"
+},
+"photos_mediadetails_caption_placeholder_hint": {
+"res": "bullhead:Photos:photos_mediadetails_caption_placeholder_hint",
+"en": "Add a description",
+"hu": "Leírás hozzáadása",
+"de": "Beschreibung hinzufügen",
+"fr": "Ajouter une description",
+"es": "Añade una descripción"
+},
+"photos_mediadetails_exif_pixels_value": {
+"res": "bullhead:Photos:photos_mediadetails_exif_pixels_value",
+"args": 1,
+"en": "%dMP",
+"hu": "%dMP",
+"de": "%d MP",
+"fr": "%d MP",
+"es": "%d MP"
+},
+"photos_pager_menu_slideshow": {
+"res": "bullhead:Photos:photos_pager_menu_slideshow",
+"en": "Slideshow",
+"hu": "Diavetítés",
+"de": "Diashow",
+"fr": "Diaporama",
+"es": "Presentación de diapositivas"
+},
+"photos_pager_menu_set_as": {
+"res": "bullhead:Photos:photos_pager_menu_set_as",
+"en": "Use as",
+"hu": "Használat a következőként:",
+"de": "Verwenden als",
+"fr": "Utiliser comme",
+"es": "Usar como"
+},
+"photos_pager_menu_print": {
+"res": "bullhead:Photos:photos_pager_menu_print",
+"en": "Print",
+"hu": "Nyomtatás",
+"de": "Drucken",
+"fr": "Imprimer",
+"es": "Imprimir"
+},
+"photos_pager_menu_add_to_album": {
+"res": "bullhead:Photos:photos_pager_menu_add_to_album",
+"en": "Add to album",
+"hu": "Hozzáadás egy albumhoz",
+"de": "Zu Album hinzufügen",
+"fr": "Ajouter à l'album",
+"es": "Añadir a un álbum"
+},
+"photos_pager_menu_restore_from_trash": {
+"res": "bullhead:Photos:photos_pager_menu_restore_from_trash",
+"en": "Restore",
+"hu": "Visszaállítás",
+"de": "Wiederherstellen",
+"fr": "Restaurer",
+"es": "Restaurar"
+},
+"photos_pager_menu_delete_from_trash": {
+"res": "bullhead:Photos:photos_pager_menu_delete_from_trash",
+"en": "Permanently delete",
+"hu": "Végleges törlés",
+"de": "Endgültig löschen",
+"fr": "Supprimer définitivement",
+"es": "Eliminar permanentemente"
+},
+"photos_drawermenu_nav_search_subtitle": {
+"res": "bullhead:Photos:photos_drawermenu_nav_search_subtitle",
+"en": "People, places & things",
+"hu": "Személyek, helyek és dolgok",
+"de": "Personen, Orte und Dinge",
+"fr": "Personnes, lieux et objets",
+"es": "Personas, lugares y cosas"
 }
 });
