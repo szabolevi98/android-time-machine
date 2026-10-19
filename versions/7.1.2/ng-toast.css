@@ -1,0 +1,10 @@
+/* Android 7.1.2 Toast (ng-toast.js), in dp: toast_frame's nine-patch (its padding 11 / 25 dp), the condensed 16 sp
+   message, 64 dp above the navigation bar. */
+.ngtoast-layer{position:absolute;left:0;right:0;bottom:calc(48 * var(--dp) + 64 * var(--dp));z-index:45;display:flex;justify-content:center;pointer-events:none}
+.ngtoast{max-width:calc(100% - 32 * var(--dp));padding:0}
+.ngtoast span{display:block;margin:calc(-10 * var(--dp)) 0;color:#fff;font:400 calc(16 * var(--dp))/calc(21.25 * var(--dp)) 'Roboto Condensed',Roboto,sans-serif;text-shadow:0 0 calc(.786 * var(--dp)) #bb000000;text-align:center}
+.ngtoast.in{animation:ngtoast-in .5s cubic-bezier(.25,.46,.45,.94) both}
+.ngtoast.out{animation:ngtoast-out .5s cubic-bezier(.55,.085,.68,.53) both}
+@keyframes ngtoast-in{from{opacity:0}to{opacity:1}}
+@keyframes ngtoast-out{from{opacity:1}to{opacity:0}}
+.screen.no-nav .ngtoast-layer{bottom:calc(64 * var(--dp))}

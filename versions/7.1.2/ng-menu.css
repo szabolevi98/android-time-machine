@@ -1,0 +1,17 @@
+/* Android 7.1.2 framework overflow menu (ng-menu.js), in dp: the action bar's button and the popup over it. */
+.ng-overflow{flex:none;align-self:stretch;min-width:calc(36 * var(--dp));padding:0 calc(10 * var(--dp)) 0 calc(6 * var(--dp));border:0;border-radius:50%;background:none;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+.ng-overflow:active{background:#ffffff33}
+.ng-overflow.dark:active{background:#0000001f}
+.ng-overflow i{display:block;width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:#fff;-webkit-mask:url('assets/fw-ic_menu_moreoverflow_material.svg') center/100% no-repeat;mask:url('assets/fw-ic_menu_moreoverflow_material.svg') center/100% no-repeat}
+.ng-overflow.dark i{background:#0000008a}
+.ngmenu{position:absolute;inset:0;z-index:30}
+.ngmenu-out{position:absolute;inset:0}
+.ngmenu-pop{position:absolute;min-width:calc(196 * var(--dp));max-width:calc(100% - 8 * var(--dp));display:flex;flex-direction:column;border-radius:calc(2 * var(--dp));background:#fff;box-shadow:0 calc(16 * var(--dp)) calc(24 * var(--dp)) #00000038,0 calc(6 * var(--dp)) calc(16 * var(--dp)) #00000024;overflow:hidden;animation:ngmenu-reveal .25s cubic-bezier(.4,0,.2,1),ngmenu-fade .1s linear}
+@keyframes ngmenu-reveal{from{clip-path:inset(0 0 calc(100% - 24 * var(--dp)) calc(100% - 24 * var(--dp)) round calc(2 * var(--dp)))}to{clip-path:inset(0 0 0 0 round calc(2 * var(--dp)))}}
+@keyframes ngmenu-fade{from{opacity:.1}to{opacity:1}}
+.ngmenu-item{display:flex;align-items:center;height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;color:#000000de;font:400 calc(16 * var(--dp))/calc(21.25 * var(--dp)) Roboto,sans-serif;text-align:left;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.ngmenu-item span{flex:1}
+.ngmenu-item:active{background:#0000001f}
+.ngmenu-item:disabled{color:#00000042}
+.ngmenu-check{flex:none;width:calc(18 * var(--dp));height:calc(18 * var(--dp));margin-left:calc(16 * var(--dp));box-sizing:border-box;border:calc(2 * var(--dp)) solid #0000008a;border-radius:calc(2 * var(--dp))}
+.ngmenu-check.on{border-color:#009688;background:#009688}

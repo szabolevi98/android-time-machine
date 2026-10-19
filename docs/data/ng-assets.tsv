@@ -11,3 +11,5 @@ fw-btn_switch_to_on_mtrl_00012.9.png	framework/framework-res.apk	drawable/btn_sw
 # The default wallpaper (framework default_wallpaper, the Nougat mountains) and the keyguard bottom area's bitmap (KeyguardAffordanceView camera_button)
 fw-default_wallpaper.png	framework/framework-res.apk	drawable/default_wallpaper
 sui-ic_camera_alt_24dp.png	priv-app/SystemUI/SystemUI.apk	drawable/ic_camera_alt_24dp
+# The framework Toast (transient_notification.xml on toastFrameBackground)
+fw-toast_frame.9.png	framework/framework-res.apk	drawable/toast_frame

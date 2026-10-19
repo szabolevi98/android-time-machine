@@ -88,3 +88,6 @@ accessibility_google_search_button accessibility_voice_search_button all_apps_no
 [recents] SystemUI
 # Overview: TaskViewHeader, RecentsView's stack action button and empty view
 recents_stack_action_button_label recents_empty_message recents_app_info_button_label accessibility_recents_item_will_be_dismissed+args1
+[framework] framework
+# Framework texts the apps share: the overflow button
+action_menu_overflow_description

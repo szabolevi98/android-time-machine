@@ -39,6 +39,7 @@ versions/7.1.2/assets/fw-ic_ab_back_material.svg	b3eb88deea52b00e	vector	angler:
 versions/7.1.2/assets/fw-ic_lock_power_off.svg	5b4201f21766b0f3	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_lock_power_off.xml	drawable	vector drawable drawn as SVG	ec0bcae2cfacaf2f
 versions/7.1.2/assets/fw-ic_menu_moreoverflow_material.svg	1838187e20cd01ba	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_menu_moreoverflow_material.xml	drawable	vector drawable drawn as SVG	21c5d08046c0c1f8
 versions/7.1.2/assets/fw-ic_restart.svg	eed2155fe1231af1	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_restart.xml	drawable	vector drawable drawn as SVG	dde276bb089c0bc1
+versions/7.1.2/assets/fw-toast_frame.9.png	5e111c73aa2ebbbc	copy	angler:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/toast_frame.9.png	drawable-xxhdpi-v4		5e111c73aa2ebbbc
 versions/7.1.2/assets/gel-cling_bg.9.png	a7648c0a6be7114a	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/cling_bg.9.png	drawable-xxhdpi-v4		a7648c0a6be7114a
 versions/7.1.2/assets/gel-ic_allapps.png	8c0eb790d02cf1c5	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_allapps.png	drawable-xxhdpi-v4		8c0eb790d02cf1c5
 versions/7.1.2/assets/gel-ic_allapps_pressed.png	e7081eb6a1f57986	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_allapps_pressed.png	drawable-xxhdpi-v4		e7081eb6a1f57986
