@@ -1,0 +1,22 @@
+# The Google Now Launcher in Velvet.apk 6.5 (Launcher3 and GEL): the search bar (search_widget.xml), the hotseat's all apps button, FolderIcon / Folder, the page indicator markers, the drop targets, overview mode's buttons and panels, the long-press cling
+gel-search_bg.9.png	priv-app/Velvet/Velvet.apk	drawable/search_bg
+gel-ic_searchbox_google.png	priv-app/Velvet/Velvet.apk	drawable/ic_searchbox_google
+gel-ic_mic.png	priv-app/Velvet/Velvet.apk	drawable/ic_mic
+gel-ic_allapps.png	priv-app/Velvet/Velvet.apk	drawable/ic_allapps
+gel-ic_allapps_pressed.png	priv-app/Velvet/Velvet.apk	drawable/ic_allapps_pressed
+gel-portal_ring_inner.png	priv-app/Velvet/Velvet.apk	drawable/portal_ring_inner
+gel-quantum_panel_bitmap.9.png	priv-app/Velvet/Velvet.apk	drawable/quantum_panel_bitmap
+gel-ic_pageindicator_current.png	priv-app/Velvet/Velvet.apk	drawable/ic_pageindicator_current
+gel-ic_pageindicator_default.png	priv-app/Velvet/Velvet.apk	drawable/ic_pageindicator_default
+gel-ic_remove_launcher.png	priv-app/Velvet/Velvet.apk	drawable/ic_remove_launcher
+gel-ic_info_launcher.png	priv-app/Velvet/Velvet.apk	drawable/ic_info_launcher
+gel-ic_uninstall_launcher.png	priv-app/Velvet/Velvet.apk	drawable/ic_uninstall_launcher
+gel-ic_wallpaper.png	priv-app/Velvet/Velvet.apk	drawable/ic_wallpaper
+gel-ic_wallpaper_pressed.png	priv-app/Velvet/Velvet.apk	drawable/ic_wallpaper_pressed
+gel-ic_widget.png	priv-app/Velvet/Velvet.apk	drawable/ic_widget
+gel-ic_widget_pressed.png	priv-app/Velvet/Velvet.apk	drawable/ic_widget_pressed
+gel-ic_setting.png	priv-app/Velvet/Velvet.apk	drawable/ic_setting
+gel-ic_setting_pressed.png	priv-app/Velvet/Velvet.apk	drawable/ic_setting_pressed
+gel-cling_bg.9.png	priv-app/Velvet/Velvet.apk	drawable/cling_bg
+gel-screenpanel.9.png	priv-app/Velvet/Velvet.apk	drawable/screenpanel
+gel-screenpanel_hover.9.png	priv-app/Velvet/Velvet.apk	drawable/screenpanel_hover

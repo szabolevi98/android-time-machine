@@ -1,9 +1,34 @@
 file	sha256	status	source	qualifier	transform	source sha256
+versions/7.1.2/assets/app-android-pay.png	eef039a9a9f10f20	copy	angler:/system/app/Wallet/Wallet.apk!res/mipmap-xxxhdpi-v4/product_logo_android_pay_launcher_color_48.png	mipmap-xxxhdpi-v4		eef039a9a9f10f20
+versions/7.1.2/assets/app-calculator.png	bb200ee850886f78	copy	angler:/system/app/CalculatorGooglePrebuilt/CalculatorGooglePrebuilt.apk!res/mipmap-xxxhdpi-v4/ic_launcher_calculator.png	mipmap-xxxhdpi-v4		bb200ee850886f78
+versions/7.1.2/assets/app-calendar.png	29b24e7bae55df28	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/mipmap-xxxhdpi-v4/quantum_logo_calendar_launcher_color_48.png	mipmap-xxxhdpi-v4		29b24e7bae55df28
+versions/7.1.2/assets/app-camera.png	d58a723c2af913fe	copy	angler:/system/app/GoogleCamera/GoogleCamera.apk!res/mipmap-xxxhdpi-v4/logo_google_camera.png	mipmap-xxxhdpi-v4		d58a723c2af913fe
+versions/7.1.2/assets/app-chrome.png	a66fcf1955a0f4fd	copy	angler:/system/app/Chrome/Chrome.apk!res/mipmap-xxxhdpi-v4/app_icon.png	mipmap-xxxhdpi-v4		a66fcf1955a0f4fd
+versions/7.1.2/assets/app-clock.png	9fc433feaaede5c5	copy	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!res/mipmap-xxxhdpi-v4/ic_launcher_alarmclock.png	mipmap-xxxhdpi-v4		9fc433feaaede5c5
+versions/7.1.2/assets/app-contacts.png	805fadb772d49824	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/mipmap-xxxhdpi-v4/ic_contacts_launcher.png	mipmap-xxxhdpi-v4		805fadb772d49824
+versions/7.1.2/assets/app-device-policy.png	a483f1b6c4423a0c	copy	angler:/system/app/DMAgent/DMAgent.apk!res/drawable-xxxhdpi-v4/product_logo_apps_policy_color_192.png	drawable-xxxhdpi-v4		a483f1b6c4423a0c
+versions/7.1.2/assets/app-documents.png	c9f506900211112e	copy	angler:/system/app/DownloadProviderUi/DownloadProviderUi.apk!res/mipmap-xxxhdpi-v4/ic_launcher_download.png	mipmap-xxxhdpi-v4		c9f506900211112e
+versions/7.1.2/assets/app-drive.png	5f898fdaa9ecd3c1	copy	angler:/system/app/Drive/Drive.apk!res/mipmap-xxxhdpi-v4/quantum_logo_drive_launcher_color_48.png	mipmap-xxxhdpi-v4		5f898fdaa9ecd3c1
+versions/7.1.2/assets/app-gmail.png	ac6b416a68167438	copy	angler:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		ac6b416a68167438
+versions/7.1.2/assets/app-hangouts.png	af56355d87df5496	copy	angler:/system/app/Hangouts/Hangouts.apk!res/mipmap-xxxhdpi-v4/product_logo_hangouts_launcher_color_48.png	mipmap-xxxhdpi-v4		af56355d87df5496
+versions/7.1.2/assets/app-maps.png	439fca47f2059aea	copy	angler:/system/app/Maps/Maps.apk!res/mipmap-xxxhdpi-v4/product_logo_maps_launcher_color_48.png	mipmap-xxxhdpi-v4		439fca47f2059aea
+versions/7.1.2/assets/app-messenger.png	1e6f4b391d12ee22	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_launcher.png	drawable-xxxhdpi-v4		1e6f4b391d12ee22
+versions/7.1.2/assets/app-phone.png	442f798d329b7888	copy	angler:/system/priv-app/GoogleDialer/GoogleDialer.apk!res/mipmap-xxxhdpi-v4/product_logo_dialer_round_launcher_color_48.png	mipmap-xxxhdpi-v4		442f798d329b7888
+versions/7.1.2/assets/app-photos.png	4e840aeb56a904c4	copy	angler:/system/app/Photos/Photos.apk!res/mipmap-xxxhdpi-v4/quantum_logo_photos_launcher_color_48.png	mipmap-xxxhdpi-v4		4e840aeb56a904c4
+versions/7.1.2/assets/app-play-games.png	6858e1f0b9f59072	copy	angler:/system/app/PlayGames/PlayGames.apk!res/mipmap-xxxhdpi-v4/ic_launcher_play_games.png	mipmap-xxxhdpi-v4		6858e1f0b9f59072
+versions/7.1.2/assets/app-play-movies.png	29384dce6415f26d	copy	angler:/system/app/Videos/Videos.apk!res/mipmap-xxxhdpi-v4/ic_launcher_videos.png	mipmap-xxxhdpi-v4		29384dce6415f26d
+versions/7.1.2/assets/app-play-music.png	2d405fccd15ec002	copy	angler:/system/app/Music2/Music2.apk!res/mipmap-xxxhdpi-v4/ic_launcher_play_music.png	mipmap-xxxhdpi-v4		2d405fccd15ec002
+versions/7.1.2/assets/app-play-store.png	6e93aec0d9b5370d	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/mipmap-xxhdpi-v4/ic_launcher_play_store.png	mipmap-xxhdpi-v4		6e93aec0d9b5370d
+versions/7.1.2/assets/app-project-fi.png	93a00554ab0fa31d	copy	angler:/system/app/Tycho/Tycho.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		93a00554ab0fa31d
+versions/7.1.2/assets/app-search.png	3f42287cc21f6927	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/mipmap-xxxhdpi-v4/ic_launcher_google_search.png	mipmap-xxxhdpi-v4		3f42287cc21f6927
+versions/7.1.2/assets/app-settings.png	95337b618ba7c599	copy	angler:/system/priv-app/EmergencyInfo/EmergencyInfo.apk!res/mipmap-xxxhdpi-v4/ic_launcher_settings.png	mipmap-xxxhdpi-v4		95337b618ba7c599
+versions/7.1.2/assets/app-youtube.png	410baa2ebad0aeb5	copy	angler:/system/app/YouTube/YouTube.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		410baa2ebad0aeb5
 versions/7.1.2/assets/bg-ic_sms_light.png	af85bf19b66479f4	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_sms_light.png	drawable-xxxhdpi-v4		af85bf19b66479f4
 versions/7.1.2/assets/boot-part0.webp	f8727d04a326244f	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
 versions/7.1.2/assets/boot-part1.webp	f19881d52f757d52	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
 versions/7.1.2/assets/boot-part2.webp	8482865882f6cf6b	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
 versions/7.1.2/assets/boot-part3.webp	af9c0767dea06b7a	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
+versions/7.1.2/assets/dc-clock.ttf	d7bbc227ed36ee08	copy	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!assets/fonts/clock.ttf			d7bbc227ed36ee08
 versions/7.1.2/assets/device-nexus-6p.svg	b4dd8f6765bcacdd	own	drawn by docs/tools/device-frames.py: the outline measured from the maker's front render, the shading drawn			
 versions/7.1.2/assets/fw-btn_radio_off_mtrl.svg	bca8ae8fdfbe60ee	vector	angler:/system/framework/framework-res.apk!res/drawable/btn_radio_off_mtrl.xml	drawable	vector drawable drawn as SVG	182f36dea142dbf4
 versions/7.1.2/assets/fw-btn_radio_on_mtrl.svg	ea9c98a109ac7f0c	vector	angler:/system/framework/framework-res.apk!res/drawable/btn_radio_on_mtrl.xml	drawable	vector drawable drawn as SVG	e41bd411fb9cad26
@@ -14,6 +39,27 @@ versions/7.1.2/assets/fw-ic_ab_back_material.svg	b3eb88deea52b00e	vector	angler:
 versions/7.1.2/assets/fw-ic_lock_power_off.svg	5b4201f21766b0f3	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_lock_power_off.xml	drawable	vector drawable drawn as SVG	ec0bcae2cfacaf2f
 versions/7.1.2/assets/fw-ic_menu_moreoverflow_material.svg	1838187e20cd01ba	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_menu_moreoverflow_material.xml	drawable	vector drawable drawn as SVG	21c5d08046c0c1f8
 versions/7.1.2/assets/fw-ic_restart.svg	eed2155fe1231af1	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_restart.xml	drawable	vector drawable drawn as SVG	dde276bb089c0bc1
+versions/7.1.2/assets/gel-cling_bg.9.png	a7648c0a6be7114a	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/cling_bg.9.png	drawable-xxhdpi-v4		a7648c0a6be7114a
+versions/7.1.2/assets/gel-ic_allapps.png	8c0eb790d02cf1c5	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_allapps.png	drawable-xxhdpi-v4		8c0eb790d02cf1c5
+versions/7.1.2/assets/gel-ic_allapps_pressed.png	e7081eb6a1f57986	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_allapps_pressed.png	drawable-xxhdpi-v4		e7081eb6a1f57986
+versions/7.1.2/assets/gel-ic_info_launcher.png	77d82a2f9460854d	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/ic_info_launcher.png	drawable-xxxhdpi-v4		77d82a2f9460854d
+versions/7.1.2/assets/gel-ic_mic.png	95e716e16ee712a8	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/ic_mic.png	drawable-xxxhdpi-v4		95e716e16ee712a8
+versions/7.1.2/assets/gel-ic_pageindicator_current.png	af46aa5ed3b483c2	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_pageindicator_current.png	drawable-xxhdpi-v4		af46aa5ed3b483c2
+versions/7.1.2/assets/gel-ic_pageindicator_default.png	a6e0663c0de01c0b	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_pageindicator_default.png	drawable-xxhdpi-v4		a6e0663c0de01c0b
+versions/7.1.2/assets/gel-ic_remove_launcher.png	6ad3cf34ec940388	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/ic_remove_launcher.png	drawable-xxxhdpi-v4		6ad3cf34ec940388
+versions/7.1.2/assets/gel-ic_searchbox_google.png	873085aecd1c7e3b	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/ic_searchbox_google.png	drawable-xxxhdpi-v4		873085aecd1c7e3b
+versions/7.1.2/assets/gel-ic_setting.png	ff385a798556600b	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_setting.png	drawable-xxhdpi-v4		ff385a798556600b
+versions/7.1.2/assets/gel-ic_setting_pressed.png	6b979c5cc30a6c79	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_setting_pressed.png	drawable-xxhdpi-v4		6b979c5cc30a6c79
+versions/7.1.2/assets/gel-ic_uninstall_launcher.png	1dcdde002674e623	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/ic_uninstall_launcher.png	drawable-xxxhdpi-v4		1dcdde002674e623
+versions/7.1.2/assets/gel-ic_wallpaper.png	2cde42a09fbf6f99	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_wallpaper.png	drawable-xxhdpi-v4		2cde42a09fbf6f99
+versions/7.1.2/assets/gel-ic_wallpaper_pressed.png	c1e14453f57c16e2	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_wallpaper_pressed.png	drawable-xxhdpi-v4		c1e14453f57c16e2
+versions/7.1.2/assets/gel-ic_widget.png	ec402c741dc6aa06	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_widget.png	drawable-xxhdpi-v4		ec402c741dc6aa06
+versions/7.1.2/assets/gel-ic_widget_pressed.png	cb2c206581e193db	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_widget_pressed.png	drawable-xxhdpi-v4		cb2c206581e193db
+versions/7.1.2/assets/gel-portal_ring_inner.png	8e417f796ed5cad8	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/portal_ring_inner.png	drawable-xxxhdpi-v4		8e417f796ed5cad8
+versions/7.1.2/assets/gel-quantum_panel_bitmap.9.png	a9b44f692f71ebbc	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/quantum_panel_bitmap.9.png	drawable-xxxhdpi-v4		a9b44f692f71ebbc
+versions/7.1.2/assets/gel-screenpanel.9.png	5367af4067b16862	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/screenpanel.9.png	drawable-xxhdpi-v4		5367af4067b16862
+versions/7.1.2/assets/gel-screenpanel_hover.9.png	3a9d25444ea43a11	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/screenpanel_hover.9.png	drawable-xxhdpi-v4		3a9d25444ea43a11
+versions/7.1.2/assets/gel-search_bg.9.png	023562590363b025	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/search_bg.9.png	drawable-xxhdpi-v4		023562590363b025
 versions/7.1.2/assets/landing-home.jpg	f820daabc45af3ac	own	capture of the simulator's own home screen for the landing page card		closest: mean difference 7.68 (maguro:/system/media/bootanimation.zip!part0/f0003.jpg)	
 versions/7.1.2/assets/sui-ic_access_alarms_big.svg	54c66bc3509e3272	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_access_alarms_big.xml	drawable	vector drawable drawn as SVG	96b70639bcec34c0
 versions/7.1.2/assets/sui-ic_access_alarms_small.svg	47179ef1318c04db	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_access_alarms_small.xml	drawable	vector drawable drawn as SVG	af9011404059dd63

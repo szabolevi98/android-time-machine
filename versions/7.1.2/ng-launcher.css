@@ -1,0 +1,119 @@
+/* Android 7.1.2 home screen (ng-launcher.js), in dp: Launcher3's DeviceProfile of Velvet 6.5 computed in pixels at
+   560 dpi (3.5 px a dp) and written as dp; the launcher's area is the screen between the status bar and the navigation
+   bar (LauncherRootView fitsSystemWindows), 1440 x 2308 px. */
+/* The wallpaper behind the launcher and the see-through bars: framework default_wallpaper the screen high, at the
+   launcher's wallpaper offset 0 (its left edge). */
+.screen.view-home,.screen.view-drawer,.screen.view-widgets{background:#000 var(--ng-wallpaper,url('assets/fw-default_wallpaper.png')) left top/auto 100% no-repeat}
+.screen.view-home .ngnb,.screen.view-drawer .ngnb,.screen.view-widgets .ngnb{background:transparent}
+.screen:has(.ngh-cling) .ngsb,.screen.view-home:has(.ngh-cling) .ngnb{background:#00000080!important}
+.ngh{position:absolute;inset:0;overflow:hidden;font-family:Roboto,sans-serif;touch-action:pan-y;user-select:none}
+/* The pages: the Now page (custom content) left of the workspace pages, moved as a strip. */
+.ngh-strip{position:absolute;inset:0;display:flex;transform:translateX(calc(var(--page) * -100%));transition:transform .35s cubic-bezier(.2,.8,.3,1)}
+.ngh-nowpage,.ngh-page{position:relative;flex:none;width:100%;height:100%}
+.ngh-nowpage .ng-missing{position:absolute;inset:0}
+/* A workspace cell: 282.4 x 338.4 px from (14, 238) px. */
+.ngh-cell{position:absolute;width:calc(80.686 * var(--dp));height:var(--cellh,calc(96.686 * var(--dp)));margin:calc(68 * var(--dp)) 0 0 calc(4 * var(--dp))}
+.ngh-hs{position:absolute;top:0;width:calc(80.686 * var(--dp));height:100%}
+/* BubbleTextView (style Icon): the 224 px icon at the cell's top padding, the 50 px label (sans-serif-condensed, white,
+   one line, marquee's fading edge) 14 px under it, edgeMarginPx / 2 = 10 px in at the sides, with its two shadows. */
+.ngh-icon{position:absolute;inset:0;padding:0;border:0;background:none;color:#fff;font:400 calc(14.286 * var(--dp))/calc(18.96 * var(--dp)) 'Roboto Condensed',Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+.ngh-icon>img{position:absolute;left:50%;top:var(--cellpad,calc(4.571 * var(--dp)));width:calc(64 * var(--dp));height:calc(64 * var(--dp));margin-left:calc(-32 * var(--dp))}
+.ngh-icon>span{position:absolute;left:calc(2.857 * var(--dp));right:calc(2.857 * var(--dp));top:calc(var(--cellpad,calc(4.571 * var(--dp))) + 68 * var(--dp));white-space:nowrap;overflow:hidden;text-align:center;text-shadow:0 calc(.571 * var(--dp)) calc(1.143 * var(--dp)) #000000dd,0 0 calc(.5 * var(--dp)) #000000cc}
+.ngh-icon.ws>span{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 12 * var(--dp)),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 12 * var(--dp)),transparent)}
+.ngh-icon:active>img,.ngh-icon:active>.ngh-ring{filter:brightness(.8)}
+/* The hotseat: 308 px at the bottom, 14 px in at the sides; its cells' content (hotseatCellHeightPx 224 px) centred, so
+   the 196 px icons 42 px down, without labels. */
+.ngh-hotseat{position:absolute;left:0;right:0;bottom:0;height:calc(88 * var(--dp))}
+.ngh-icon.hs>img{top:calc(12 * var(--dp));width:calc(56 * var(--dp));height:calc(56 * var(--dp));margin-left:calc(-28 * var(--dp))}
+.ngh-icon.hs>span{display:none}
+.ngh-allapps{position:absolute;left:50%;top:calc(12 * var(--dp) + 28 * var(--dp) - 23.143 * var(--dp));width:calc(46.286 * var(--dp));height:calc(46.286 * var(--dp));margin-left:calc(-23.143 * var(--dp));padding:0;border:0;background:url('assets/gel-ic_allapps.png') center/100% no-repeat;-webkit-tap-highlight-color:transparent}
+.ngh-allapps:active{background-image:url('assets/gel-ic_allapps_pressed.png')}
+/* FolderIcon: portal_ring_inner at folderIconSize 266 px, folderBackgroundOffset 21 px above and beside the icon. */
+.ngh-ring{position:absolute;left:50%;top:calc(var(--cellpad,calc(4.571 * var(--dp))) - 6 * var(--dp));width:calc(76 * var(--dp));height:calc(76 * var(--dp));margin-left:calc(-38 * var(--dp));background:url('assets/gel-portal_ring_inner.png') center/100% no-repeat}
+.ngh-icon.hs .ngh-ring{top:calc(6 * var(--dp))}
+.ngh-fi{position:absolute}
+.ngh-fi img{width:100%;height:100%;display:block;filter:brightness(calc(1 - var(--shade)))}
+/* The page indicator: page_indicator_marker.xml (12 dp, the 9 dp markers centred) on the hotseat; shown while the pages
+   move. */
+.ngh-dots{position:absolute;left:0;right:0;bottom:calc(88 * var(--dp));height:calc(12 * var(--dp));display:flex;justify-content:center;opacity:0;transition:opacity .3s}
+.ngh.scrolling .ngh-dots,.ngh.overview .ngh-dots,.ngh.dragging .ngh-dots{opacity:1}
+.ngh-dots i{position:relative;width:calc(12 * var(--dp));height:calc(12 * var(--dp));background:url('assets/gel-ic_pageindicator_default.png') center/calc(9 * var(--dp)) no-repeat}
+.ngh-dots b{position:absolute;inset:0;background:url('assets/gel-ic_pageindicator_current.png') center/calc(9 * var(--dp)) no-repeat;opacity:0;transform:scale(.5);transition:opacity .175s,transform .175s}
+.ngh-dots i.on b{opacity:1;transform:none}
+/* The search bar: search_widget.xml 64 dp high in the search bar's bounds (14 px in), on search_bg (its shadow drawn
+   round the 8 dp padding box); the logo button (16 / 12 / 4 / 8 dp padding, ic_searchbox_google fitted to the start),
+   the hint area (search_box_click), the 56 dp mic button (ic_mic centred). */
+.ngh-qsb{position:absolute;left:calc(4 * var(--dp));right:calc(4 * var(--dp));top:0;height:calc(64 * var(--dp));display:flex;transition:opacity .25s}
+.ngh-qsb.np-gel-search_bg{border-width:calc(8 * var(--dp))}
+.ngh-qsb button{padding:0;border:0;background:none;-webkit-tap-highlight-color:transparent}
+.ngh-qsb button:active{background:#9999994d}
+.ngh-qsb-logo{flex:none;padding:calc(12 * var(--dp)) calc(4 * var(--dp)) calc(8 * var(--dp)) calc(16 * var(--dp))!important}
+.ngh-qsb-logo img{display:block;width:calc(68 * var(--dp));height:calc(28 * var(--dp))}
+.ngh-qsb-plate{flex:1;min-width:0}
+.ngh-qsb-mic{flex:none;width:calc(56 * var(--dp));display:grid;place-items:center}
+.ngh-qsb-mic img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngh.now .ngh-qsb,.ngh.now .ngh-hotseat,.ngh.now .ngh-dots{opacity:0;pointer-events:none}
+/* An open folder: user_folder.xml on quantum_panel, the cells (287 x 326 px, their content 10 px down), the name. */
+.ngh-fscrim{position:absolute;inset:0;z-index:5}
+.ngh-fpanel{position:absolute;z-index:6;transform-origin:var(--ox) var(--oy)}
+.ngh-fbg{position:absolute;inset:0}
+.ngh-fgrid{position:absolute;inset:0}
+.ngh-fcell{position:absolute;width:calc(82 * var(--dp));height:calc(93.143 * var(--dp))}
+.ngh-icon.fd{color:#666;--cellpad:calc(2.857 * var(--dp))}
+.ngh-icon.fd>span{text-shadow:none;text-overflow:ellipsis}
+input.ngh-fname{position:absolute;left:calc(11.75 * var(--dp));right:calc(11.75 * var(--dp));padding:calc(4 * var(--dp)) 0 calc(8 * var(--dp));border:0;background:none;outline:none;color:#777;font:400 calc(14 * var(--dp))/calc(18.59 * var(--dp)) 'Roboto Condensed',Roboto,sans-serif;text-align:center}
+input.ngh-fname::placeholder{color:#808080}
+/* Dragging: the drag view is the icon scaled by dragViewScale ((224 + 42) / 224) under the finger; the search bar gives
+   way to search_drop_target_bar.xml (DropTargetButtonBase: 14 sp white, its 4 px #ff000000 shadow 1 px down, the icon
+   7.5 dp before the text, 25 dp padding at the sides); the one under the finger takes its hover tint (Remove #c1c1c1,
+   App info the accent). */
+.ngh-targets{position:absolute;left:calc(4 * var(--dp));right:calc(4 * var(--dp));top:0;height:calc(68 * var(--dp));display:flex;opacity:0;pointer-events:none;transition:opacity .2s}
+.ngh.dragging .ngh-targets{opacity:1}
+.ngh.dragging .ngh-qsb{opacity:0}
+.ngh-targets span{flex:1;display:flex;align-items:center;justify-content:center;gap:calc(7.5 * var(--dp));padding:0 calc(25 * var(--dp));color:#fff;font:400 calc(14 * var(--dp))/1.328 Roboto,sans-serif;text-shadow:0 calc(.286 * var(--dp)) calc(1.143 * var(--dp)) #000;white-space:nowrap}
+.ngh-targets img{width:calc(20 * var(--dp));height:calc(20 * var(--dp))}
+.ngh-targets span[data-target="remove"].hover{color:#c1c1c1}
+.ngh-targets span[data-target="info"].hover{color:#009688}
+.ngh-dragview{position:absolute;z-index:20;width:calc(76 * var(--dp));height:calc(76 * var(--dp));margin:calc(-38 * var(--dp)) 0 0 calc(-38 * var(--dp));pointer-events:none;transition:filter .15s}
+.ngh-dragview>img{width:100%;height:100%;filter:drop-shadow(0 calc(2 * var(--dp)) calc(4 * var(--dp)) #00000066)}
+.ngh-dragview.remove{filter:sepia(1) hue-rotate(-50deg) saturate(3) brightness(.8)}
+.ngh-dragview.folder .ngh-icon{position:relative;width:calc(80.686 * var(--dp));height:calc(96.686 * var(--dp))}
+.ngh-dragview.folder .ngh-icon>span{display:none}
+/* Overview mode: the pages at config_workspaceOverviewShrinkPercentage 70 % about the workspace's centre, moved up to
+   centre them over overview_panel.xml (getOverviewModeButtonBarHeight: 20 % of the height within 80..120 dp: 120 dp;
+   three 80 dp buttons 20 dp apart; the 12 sp condensed caps labels 4 dp under their icons); each page on
+   bg_screenpanel; no search bar or hotseat. */
+.ngh-page{transform-origin:50% calc(68 * var(--dp) + var(--wsh,calc(483.43 * var(--dp))) / 2);transition:transform .25s cubic-bezier(.2,.8,.3,1)}
+.ngh.overview .ngh-page{transform:translateX(calc((var(--page) - var(--i)) * 30%)) translateY(calc(-42 * var(--dp))) scale(.7)}
+.ngh-nowpage{transition:opacity .25s}
+.ngh.overview .ngh-nowpage{opacity:0}
+.ngh-panel{position:absolute;left:calc(4 * var(--dp));right:calc(4 * var(--dp));top:calc(68 * var(--dp));height:var(--wsh,calc(483.43 * var(--dp)));box-sizing:border-box;border-style:solid;border-color:transparent;border-width:calc(2.667 * var(--dp)) calc(4 * var(--dp)) calc(3 * var(--dp));border-image:url('assets/gel-screenpanel.9.png') 8 12 9 12 fill / calc(2.667 * var(--dp)) calc(4 * var(--dp)) calc(3 * var(--dp)) stretch;opacity:0;transition:opacity .25s;pointer-events:none}
+.ngh.overview .ngh-panel{opacity:1}
+.ngh.overview .ngh-qsb,.ngh.overview .ngh-hotseat{opacity:0;pointer-events:none}
+.ngh-qsb,.ngh-hotseat{transition:opacity .25s}
+.ngh-overview{position:absolute;left:50%;bottom:0;width:calc(280 * var(--dp));height:calc(120 * var(--dp));margin-left:calc(-140 * var(--dp));display:flex;justify-content:space-between;opacity:0;pointer-events:none;transition:opacity .25s}
+.ngh.overview .ngh-overview{opacity:1;pointer-events:auto}
+.ngh-overview button{flex:none;width:calc(80 * var(--dp));padding:0;border:0;background:none;display:flex;flex-direction:column;align-items:center;color:#fff;font:400 calc(12 * var(--dp))/calc(15.93 * var(--dp)) 'Roboto Condensed',Roboto,sans-serif;text-transform:uppercase;-webkit-tap-highlight-color:transparent}
+.ngh-overview i{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-bottom:calc(4 * var(--dp));background:center/100% no-repeat}
+.ngh-ov-wallpaper i{background-image:url('assets/gel-ic_wallpaper.png')}
+.ngh-ov-wallpaper:active i{background-image:url('assets/gel-ic_wallpaper_pressed.png')}
+.ngh-ov-widget i{background-image:url('assets/gel-ic_widget.png')}
+.ngh-ov-widget:active i{background-image:url('assets/gel-ic_widget_pressed.png')}
+.ngh-ov-setting i{background-image:url('assets/gel-ic_setting.png')}
+.ngh-ov-setting:active i{background-image:url('assets/gel-ic_setting_pressed.png')}
+/* The first-run long-press cling: the #80000000 scrim, cling_bg's box a third down the free space with
+   longpress_cling_welcome_content.xml (36 dp above and 24 dp below, 36 dp at the sides; Welcome 34 sp #e1000000, the
+   title 20 sp medium 8 dp under it, the description 16 sp #99000000, GOT IT 14 sp medium white 27 dp down, 12 dp in). */
+.ngh-cling{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;background:#00000080}
+.ngh-cling>i{flex:1}
+.ngh-cling>i.ngh-cling-2x{flex:2}
+.ngh-cling-box{width:calc(360 * var(--dp));max-width:100%;padding:calc(36 * var(--dp) + 4.667 * var(--dp)) calc(5.667 * var(--dp)) calc(24 * var(--dp) + 18.333 * var(--dp));color:#000000e1;font-family:Roboto,sans-serif}
+.ngh-cling-box.np-gel-cling_bg{box-sizing:border-box}
+.ngh-cling-1{padding:0 calc(36 * var(--dp));margin-bottom:calc(8 * var(--dp));font:400 calc(34 * var(--dp))/1.328 Roboto,sans-serif}
+.ngh-cling-2{padding:0 calc(36 * var(--dp));margin-bottom:calc(5.3 * var(--dp));font:500 calc(20 * var(--dp))/1.328 Roboto,sans-serif}
+.ngh-cling-3{padding:0 calc(36 * var(--dp));color:#00000099;font:400 calc(16 * var(--dp))/1.328 Roboto,sans-serif}
+.ngh-cling-box button{display:block;margin:calc(27 * var(--dp)) calc(12 * var(--dp)) 0 auto;min-height:calc(48 * var(--dp));padding:0 calc(24 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;color:#fff;font:500 calc(14 * var(--dp))/1.328 Roboto,sans-serif;text-transform:uppercase}
+.ngh-cling-box button:active{background:#ffffff33}
+/* A widget's cell (LauncherAppWidgetHostView): the provider's view inside AppWidgetHostView's default 8 dp padding. */
+.ngh-wcell{margin:calc(68 * var(--dp)) 0 0 calc(4 * var(--dp))}
+.ngh-widget{position:absolute;inset:calc(8 * var(--dp))}

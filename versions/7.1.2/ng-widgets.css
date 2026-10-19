@@ -1,0 +1,8 @@
+/* Android 7.1.2 app widgets (ng-widgets.js), in dp: DeskClock's digital_widget.xml. --k is the clock's text size, --j
+   the date's and the alarm's, --l the alarm glyph's (the clock font), --m its padding (DigitalAppWidgetProvider). */
+@font-face{font-family:'ng-dc-clock';src:url('assets/dc-clock.ttf') format('truetype');font-display:block}
+.ngwg-digital{position:absolute;inset:0;padding:0;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;color:#fff;text-shadow:0 calc(.571 * var(--dp)) calc(.786 * var(--dp)) #00000067;-webkit-tap-highlight-color:transparent}
+.ngwg-time{font:300 var(--k)/1.172 Roboto,sans-serif;white-space:nowrap}
+.ngwg-row{display:flex;align-items:center;white-space:nowrap}
+.ngwg-date,.ngwg-alarm{font:400 var(--j)/1.172 Roboto,sans-serif;font-style:normal;letter-spacing:.15em;text-transform:uppercase}
+.ngwg-aicon{padding:0 var(--m);font:400 var(--l)/1.172 'ng-dc-clock';font-style:normal}
