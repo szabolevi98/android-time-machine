@@ -125,12 +125,11 @@ def frame(name, ref, body_x, body_y, screen, css_screen, features, buttons, pale
                         f'<circle cx="{x + S(r) * .42:.2f}" cy="{y + S(r) * .42:.2f}" r="{S(r) * .26:.2f}" fill="#d9a3a0" fill-opacity=".55"/>')
             continue
         if kind == 'cam6p':
-            # Nexus 6P front camera (Google's product shot): the dark lens with a blue-black glint in a clearly visible
-            # grey metal ring, a thin dark edge around the ring.
+            # Nexus 6P front camera (Google's product shot): the dark lens with a blue-black glint in a grey ring that
+            # fades into the glass at its edge (no outline, as on the 5X).
             _, cx, cy, ring, r = f; x, y = S(cx - origin[0]) + m + dx, S(cy - origin[1]) + m
-            feat.append(f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{S(ring) + .5:.2f}" fill="#0a0a0b"/>'
-                        f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{S(ring):.2f}" fill="url(#camRing)"/>'
-                        f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{S(r):.2f}" fill="url(#lens)" stroke="#050607" stroke-width=".6"/>'
+            feat.append(f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{S(ring):.2f}" fill="url(#camRing)"/>'
+                        f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{S(r):.2f}" fill="url(#lens)"/>'
                         f'<circle cx="{x - S(r) * .35:.2f}" cy="{y - S(r) * .35:.2f}" r="{S(r) * .28:.2f}" fill="#6f8db0" fill-opacity=".35"/>')
             continue
         if kind == 'grille6p':
@@ -249,7 +248,7 @@ def frame(name, ref, body_x, body_y, screen, css_screen, features, buttons, pale
 <linearGradient id="keyTop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#121416"/><stop offset=".55" stop-color="#55595c"/><stop offset="1" stop-color="#1b1e20"/></linearGradient>
 <linearGradient id="front" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#151617"/><stop offset=".5" stop-color="#050506"/><stop offset="1" stop-color="#0c0d0e"/></linearGradient>
 <pattern id="holes" width="1.25" height="1.25" patternUnits="userSpaceOnUse"><circle cx=".62" cy=".62" r=".36" fill="#050506"/></pattern>
-<radialGradient id="camRing" cx=".45" cy=".4" r=".6"><stop offset="0" stop-color="#5c5e61"/><stop offset=".7" stop-color="#46484b"/><stop offset="1" stop-color="#2e3032"/></radialGradient>
+<radialGradient id="camRing" cx=".5" cy=".5" r=".5"><stop offset=".55" stop-color="#4a4c4f"/><stop offset=".8" stop-color="#3a3c3f" stop-opacity=".8"/><stop offset="1" stop-color="#2a2b2d" stop-opacity="0"/></radialGradient>
 <linearGradient id="grille6p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#232426"/><stop offset=".5" stop-color="#303133"/><stop offset="1" stop-color="#3a3b3d"/></linearGradient>
 <pattern id="holes6p" width="1.1" height="1.1" patternUnits="userSpaceOnUse"><circle cx=".55" cy=".55" r=".3" fill="#141516" fill-opacity=".8"/></pattern>
 <pattern id="mesh" width="1.1" height="1.1" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="1.1" height="1.1" fill="#3c3c3c"/><rect width=".55" height=".55" fill="#232323"/></pattern>
