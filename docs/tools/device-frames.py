@@ -124,6 +124,25 @@ def frame(name, ref, body_x, body_y, screen, css_screen, features, buttons, pale
                         f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{S(r):.2f}" fill="url(#lens)" stroke="#121315" stroke-width=".5"/>'
                         f'<circle cx="{x + S(r) * .42:.2f}" cy="{y + S(r) * .42:.2f}" r="{S(r) * .26:.2f}" fill="#d9a3a0" fill-opacity=".55"/>')
             continue
+        if kind == 'cam6p':
+            # Nexus 6P front camera (Google's product shot): the dark lens with a blue-black glint in a clearly visible
+            # grey metal ring, a thin dark edge around the ring.
+            _, cx, cy, ring, r = f; x, y = S(cx - origin[0]) + m + dx, S(cy - origin[1]) + m
+            feat.append(f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{S(ring) + .5:.2f}" fill="#0a0a0b"/>'
+                        f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{S(ring):.2f}" fill="url(#camRing)"/>'
+                        f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{S(r):.2f}" fill="url(#lens)" stroke="#050607" stroke-width=".6"/>'
+                        f'<circle cx="{x - S(r) * .35:.2f}" cy="{y - S(r) * .35:.2f}" r="{S(r) * .28:.2f}" fill="#6f8db0" fill-opacity=".35"/>')
+            continue
+        if kind == 'grille6p':
+            # Nexus 6P loudspeaker: a pill-shaped recess with a near-black rim and a lighter grey grille inside it, a
+            # fine grid of holes over the grille and a faint lit lower lip.
+            _, cx, cy, fw, fh = f; x, y = S(cx - origin[0]) + m + dx, S(cy - origin[1]) + m; ww, hh = S(fw), S(fh)
+            r = f'x="{x - ww / 2:.2f}" y="{y - hh / 2:.2f}" width="{ww:.2f}" height="{hh:.2f}" rx="{hh / 2:.2f}"'
+            ins = 1.3; iw, ih = ww - 2 * ins, hh - 2 * ins
+            ri = f'x="{x - iw / 2:.2f}" y="{y - ih / 2:.2f}" width="{iw:.2f}" height="{ih:.2f}" rx="{ih / 2:.2f}"'
+            feat.append(f'<rect {r} fill="#070708"/><rect {ri} fill="url(#grille6p)"/><rect {ri} fill="url(#holes6p)"/>'
+                        f'<path d="M{x - ww / 2 + hh / 2:.2f} {y + hh / 2 + .4:.2f}H{x + ww / 2 - hh / 2:.2f}" stroke="#ffffff" stroke-opacity=".09" stroke-width=".6"/>')
+            continue
         if kind == 'meshslot':
             # Nexus 5X earpiece / loudspeaker: a dark rounded slot with a fine grid of holes and a faint lit lower lip.
             _, cx, cy, fw, fh = f; x, y = S(cx - origin[0]) + m + dx, S(cy - origin[1]) + m; ww, hh = S(fw), S(fh)
@@ -230,6 +249,9 @@ def frame(name, ref, body_x, body_y, screen, css_screen, features, buttons, pale
 <linearGradient id="keyTop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#121416"/><stop offset=".55" stop-color="#55595c"/><stop offset="1" stop-color="#1b1e20"/></linearGradient>
 <linearGradient id="front" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#151617"/><stop offset=".5" stop-color="#050506"/><stop offset="1" stop-color="#0c0d0e"/></linearGradient>
 <pattern id="holes" width="1.25" height="1.25" patternUnits="userSpaceOnUse"><circle cx=".62" cy=".62" r=".36" fill="#050506"/></pattern>
+<radialGradient id="camRing" cx=".45" cy=".4" r=".6"><stop offset="0" stop-color="#5c5e61"/><stop offset=".7" stop-color="#46484b"/><stop offset="1" stop-color="#2e3032"/></radialGradient>
+<linearGradient id="grille6p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#232426"/><stop offset=".5" stop-color="#303133"/><stop offset="1" stop-color="#3a3b3d"/></linearGradient>
+<pattern id="holes6p" width="1.1" height="1.1" patternUnits="userSpaceOnUse"><circle cx=".55" cy=".55" r=".3" fill="#141516" fill-opacity=".8"/></pattern>
 <pattern id="mesh" width="1.1" height="1.1" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="1.1" height="1.1" fill="#3c3c3c"/><rect width=".55" height=".55" fill="#232323"/></pattern>
 <linearGradient id="band" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="#3a3230"/><stop offset=".45" stop-color="#211c1b"/><stop offset="1" stop-color="#0b0909"/></linearGradient>
 <radialGradient id="ball" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#c2c2c2"/><stop offset=".66" stop-color="#c2c2c2"/><stop offset=".84" stop-color="#acacac"/><stop offset="1" stop-color="#c4c4c4"/></radialGradient>
@@ -373,7 +395,7 @@ open('device-nexus-5x.svg', 'w').write(svg); out['n5x'] = info
 # height (781.2 px): the 5.7" panel at 1 dp = 0.8523 px is 350.67 x 623.41 (411.43 x 731.43 dp).
 n6p_box = (10.47, 1.22, 466.18, 934.71)
 svg, info = frame('nexus-6p', None, (n6p_box[0], n6p_box[2]), (n6p_box[1], n6p_box[3]), (28.5, 101.05, 447.5, 845.95), (350.67, 623.41),
-  [('meshslot', 238.3, 46.5, 165, 14), ('frontcam', 105, 48, 6, 4.2), ('meshslot', 238.3, 896, 165, 14)],
+  [('grille6p', 238.3, 46.5, 165, 14), ('cam6p', 105, 48, 7.6, 4.6), ('grille6p', 238.3, 896, 165, 14)],
   [('right', 310, 366, 2), ('right', 404, 519, 2)],
   {'body': ['#28292b', '#141415', '#1d1d1f'], 'rim': ['#e4e5e7', '#8f9193', '#c9cbcd'], 'rimWidth': 2.2, 'chin': .05, 'glassInset': 2.0},
   contour=superellipse_body(*n6p_box, 60, 60, 2.25))

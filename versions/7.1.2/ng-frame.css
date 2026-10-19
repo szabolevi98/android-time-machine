@@ -12,7 +12,7 @@
 @font-face{font-family:'Roboto Condensed';src:url('fonts/RobotoCondensed-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
 
 .device{position:relative;width:393.39px;height:793.26px;padding:89.55px 21.63px 80.29px 21.09px}
-.device::before{content:"";position:absolute;inset:0;background:url('assets/device-nexus-6p.svg?v=2') 0 0/100% 100% no-repeat;filter:drop-shadow(0 28px 40px #000c) drop-shadow(0 0 1px #000);pointer-events:none}
+.device::before{content:"";position:absolute;inset:0;background:url('assets/device-nexus-6p.svg?v=3') 0 0/100% 100% no-repeat;filter:drop-shadow(0 28px 40px #000c) drop-shadow(0 0 1px #000);pointer-events:none}
 .screen{--dp:.852327px;position:relative;width:350.67px;height:623.41px;overflow:hidden;background:#000;color:#fff;font:calc(14 * var(--dp))/1.25 Roboto,Arial,sans-serif;user-select:none;-webkit-user-select:none;touch-action:pan-y;z-index:1}
 /* Without specificity, so every module's own button and field rules win over these defaults. */
 :where(.screen) :where(button,input,textarea,select){font:inherit;color:inherit}
