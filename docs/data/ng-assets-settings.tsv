@@ -1,4 +1,6 @@
 # Settings drawables named by its preference screens, dashboard and suggestions (written by docs/tools/ng-prefs.py)
+fw-sym_def_app_icon.png	framework/framework-res.apk	drawable/sym_def_app_icon
+gms-common_ic_googleplayservices.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/common_ic_googleplayservices
 gms-ic_google_settings.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/ic_google_settings
 gms-quantum_ic_directions_walk_googblue_24.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/quantum_ic_directions_walk_googblue_24
 st-ic_settings_development_alpha.png	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/ic_settings_development_alpha

@@ -8765,6 +8765,179 @@ NG.strings('settings', {
 "fr": "L'historique des transferts est vide.",
 "es": "El historial de transferencias está vacío."
 },
+"cell_data_template": {
+"res": "angler:SettingsGoogle:cell_data_template",
+"en": "%1$s cellular data",
+"hu": "%1$s mobiladat-forgalom",
+"de": "Mobile Datennutzung: %1$s",
+"fr": "%1$s de données mobiles",
+"es": "Datos móviles: %1$s"
+},
+"cell_warning_only": {
+"res": "angler:SettingsGoogle:cell_warning_only",
+"args": 1,
+"en": "%1$s Data warning",
+"hu": "%1$s adatforgalmi figyelmeztetés",
+"de": "Warnlimit für mobile Datennutzung: %1$s",
+"fr": "Seuil à partir duquel un avertissement relatif à la consommation des données est envoyé : %1$s",
+"es": "Advertencia de datos: %1$s"
+},
+"cell_warning_and_limit": {
+"res": "angler:SettingsGoogle:cell_warning_and_limit",
+"args": 2,
+"en": "%1$s Data warning / %2$s Data limit",
+"hu": "%1$s – adatforgalmi figyelmeztetés / %2$s – adatforgalom korlátozása",
+"de": "Warnlimit für mobile Datennutzung: %1$s/Datenlimit: %2$s",
+"fr": "Seuil à partir duquel un avertissement relatif à la consommation des données est envoyé : %1$s / Limite de consommation des données : %2$s",
+"es": "Advertencia de datos: %1$s/Límite de datos: %2$s"
+},
+"data_saver_on": {
+"res": "angler:SettingsGoogle:data_saver_on",
+"en": "On",
+"hu": "Be",
+"de": "An",
+"fr": "Activé",
+"es": "Sí"
+},
+"data_saver_off": {
+"res": "angler:SettingsGoogle:data_saver_off",
+"en": "Off",
+"hu": "Ki",
+"de": "Aus",
+"fr": "Désactivé",
+"es": "No"
+},
+"data_usage_template": {
+"res": "angler:SettingsGoogle:data_usage_template",
+"args": 2,
+"en": "%1$s used between %2$s",
+"hu": "%1$s felhasználva a következő időszakban: %2$s",
+"de": "%1$s im Zeitraum %2$s genutzt",
+"fr": "%1$s utilisé(s) entre %2$s",
+"es": "%1$s usados entre el %2$s"
+},
+"billing_cycle_fragment_summary": {
+"res": "angler:SettingsGoogle:billing_cycle_fragment_summary",
+"args": 1,
+"en": "Monthly starting %1$s",
+"hu": "Havonta a hónap %1$s. napján",
+"de": "Monatlich ab dem %1$s.",
+"fr": "Tous les mois à partir du %1$s",
+"es": "Mensualmente a partir del %1$s"
+},
+"data_usage_menu_cellular_networks": {
+"res": "angler:SettingsGoogle:data_usage_menu_cellular_networks",
+"en": "Cellular networks",
+"hu": "Mobilhálózatok",
+"de": "Mobilfunknetze",
+"fr": "Réseaux mobiles",
+"es": "Redes móviles"
+},
+"data_usage_disable_mobile": {
+"res": "angler:SettingsGoogle:data_usage_disable_mobile",
+"en": "Turn off cellular data?",
+"hu": "Kikapcsolja a mobiladat-kapcsolatot?",
+"de": "Mobilfunkdaten deaktivieren?",
+"fr": "Désactiver les données mobiles ?",
+"es": "¿Desactivar datos móviles?"
+},
+"data_used_template": {
+"res": "angler:SettingsGoogle:data_used_template",
+"args": 1,
+"en": "%1$s used",
+"hu": "%1$s felhasználva",
+"de": "Datennutzung: %1$s",
+"fr": "%1$s utilisé(s)",
+"es": "Datos usados: %1$s"
+},
+"app_data_usage": {
+"res": "angler:SettingsGoogle:app_data_usage",
+"en": "App data usage",
+"hu": "Alkalmazás adathasználata",
+"de": "Datennutzung durch Apps",
+"fr": "Consommation données applis",
+"es": "Uso de datos de la aplicación"
+},
+"configure": {
+"res": "angler:SettingsGoogle:configure",
+"en": "Configure",
+"hu": "Beállítás",
+"de": "Konfigurieren",
+"fr": "Configurer",
+"es": "Configurar"
+},
+"data_usage_cycle_editor_title": {
+"res": "angler:SettingsGoogle:data_usage_cycle_editor_title",
+"en": "Usage cycle reset date",
+"hu": "Használati ciklus visszaállításának ideje",
+"de": "Datum für Zurücksetzung der Nutzungszyklen",
+"fr": "Date de réinitialisation du cycle de consommation",
+"es": "Elige el día en el que empezará cada ciclo"
+},
+"data_usage_cycle_editor_subtitle": {
+"res": "angler:SettingsGoogle:data_usage_cycle_editor_subtitle",
+"en": "Date of each month:",
+"hu": "Hónap napja:",
+"de": "Datum (monatlich):",
+"fr": "Jour du mois :",
+"es": "Día de cada mes:"
+},
+"data_usage_cycle_editor_positive": {
+"res": "angler:SettingsGoogle:data_usage_cycle_editor_positive",
+"en": "Set",
+"hu": "Beállítás",
+"de": "Übernehmen",
+"fr": "Définir",
+"es": "Establecer"
+},
+"data_usage_warning_editor_title": {
+"res": "angler:SettingsGoogle:data_usage_warning_editor_title",
+"en": "Set data usage warning",
+"hu": "Adathasználati figyelmeztetés beállítása",
+"de": "Warnung für Datenverbrauch festlegen",
+"fr": "Définir avertissement utilisation des données",
+"es": "Establecer advertencia de uso de datos"
+},
+"data_usage_limit_editor_title": {
+"res": "angler:SettingsGoogle:data_usage_limit_editor_title",
+"en": "Set data usage limit",
+"hu": "Adathasználati korlát beállítása",
+"de": "Limit festlegen",
+"fr": "Définir un quota d'utilisation des données",
+"es": "Limitar uso de datos"
+},
+"data_usage_limit_dialog_title": {
+"res": "angler:SettingsGoogle:data_usage_limit_dialog_title",
+"en": "Limiting data usage",
+"hu": "Adatforgalom korlátozása",
+"de": "Datenverbrauch begrenzen",
+"fr": "Limitation conso de données mobiles",
+"es": "Limitar uso de datos"
+},
+"data_usage_limit_dialog_mobile": {
+"res": "angler:SettingsGoogle:data_usage_limit_dialog_mobile",
+"en": "Your phone will turn off cellular data once it reaches the limit you set.\n\nSince data usage is measured by your phone, and your carrier may account for usage differently, consider setting a conservative limit.",
+"hu": "Telefonja kikapcsolja a mobiladat-kapcsolatot, amint eléri a beállított korlátot.\n\nMivel az adathasználatot a telefon méri, és szolgáltatójának mérései ettől eltérhetnek, érdemes lehet szigorúbb korlátot megadnia.",
+"de": "Mobilfunkdaten werden auf deinem Telefon deaktiviert, sobald das von dir festgelegte Limit erreicht wird.\n\nDa die Datennutzung von deinem Telefon berechnet wird und dein Mobilfunkanbieter die Nutzung möglicherweise anders berechnet, solltest du das Limit eher niedrig ansetzen.",
+"fr": "Les données mobiles sont désactivées par votre téléphone lorsque la limite que vous avez définie est atteinte.\n\nLa consommation des données mesurée par le téléphone peut différer de celle mesurée par votre opérateur. Nous vous recommandons donc de définir un seuil plus bas.",
+"es": "Tu teléfono desactivará los datos móviles cuando alcance el límite que has establecido.\n\nEl uso de datos determinado por el teléfono puede variar del recuento realizado por el operador, por lo que te recomendamos que establezcas un límite moderado."
+},
+"process_kernel_label": {
+"res": "angler:SettingsGoogle:process_kernel_label",
+"en": "Android OS",
+"hu": "Android OS",
+"de": "Android OS",
+"fr": "Plate-forme Android",
+"es": "SO Android"
+},
+"PrebuiltGmsCore/common_app_name": {
+"res": "angler:PrebuiltGmsCore:common_app_name",
+"en": "Google Play services",
+"hu": "Google Play-szolgáltatások",
+"de": "Google Play-Dienste",
+"fr": "Services Google Play",
+"es": "Servicios de Google Play"
+},
 "settings_suggestion_header_summary_hidden_items": {
 "res": "angler:SettingsGoogle:settings_suggestion_header_summary_hidden_items",
 "en": {
@@ -9102,6 +9275,29 @@ NG.strings('settings', {
 "Buena",
 "Excelente"
 ]
+},
+"data_saver_unrestricted_summary": {
+"res": "angler:SettingsGoogle:data_saver_unrestricted_summary",
+"en": {
+"other": "%1$d apps allowed to use unrestricted data when Data Saver is on",
+"one": "1 app allowed to use unrestricted data when Data Saver is on"
+},
+"hu": {
+"other": "%1$d alkalmazás számára engedélyezett a korlátlan adathasználat, ha az Adatforgalom-csökkentő be van kapcsolva",
+"one": "1 alkalmazás számára engedélyezett a korlátlan adathasználat, ha az Adatforgalom-csökkentő be van kapcsolva"
+},
+"de": {
+"other": "%1$d Apps dürfen uneingeschränkt Daten verbrauchen, auch wenn der Datensparmodus aktiviert ist",
+"one": "1 App darf uneingeschränkt Daten verbrauchen, auch wenn der Datensparmodus aktiviert ist"
+},
+"fr": {
+"other": "%1$d applications autorisées à utiliser des données illimitées lorsque l'économiseur de données est activé",
+"one": "%1$d application autorisée à utiliser des données illimitées lorsque l'économiseur de données est activé"
+},
+"es": {
+"other": "%1$d aplicaciones pueden usar datos no restringidos cuando el ahorro de datos está activado",
+"one": "1 aplicación puede usar datos no restringidos cuando el ahorro de datos está activado"
+}
 },
 "PrebuiltGmsCore/common_google_platform_settings": {
 "res": "angler:PrebuiltGmsCore:common_google_platform_settings",

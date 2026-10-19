@@ -49,6 +49,7 @@ versions/7.1.2/assets/fw-ic_lock_power_off.svg	5b4201f21766b0f3	vector	angler:/s
 versions/7.1.2/assets/fw-ic_menu_moreoverflow_material.svg	1838187e20cd01ba	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_menu_moreoverflow_material.xml	drawable	vector drawable drawn as SVG	21c5d08046c0c1f8
 versions/7.1.2/assets/fw-ic_restart.svg	eed2155fe1231af1	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_restart.xml	drawable	vector drawable drawn as SVG	dde276bb089c0bc1
 versions/7.1.2/assets/fw-ic_search_api_material.svg	779f6a3b5984dbe8	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_search_api_material.xml	drawable	vector drawable drawn as SVG	bd5dbccb1eaaa661
+versions/7.1.2/assets/fw-sym_def_app_icon.png	a9ca2573500e8079	copy	angler:/system/framework/framework-res.apk!res/drawable-xxxhdpi-v4/sym_def_app_icon.png	drawable-xxxhdpi-v4		a9ca2573500e8079
 versions/7.1.2/assets/fw-toast_frame.9.png	5e111c73aa2ebbbc	copy	angler:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/toast_frame.9.png	drawable-xxhdpi-v4		5e111c73aa2ebbbc
 versions/7.1.2/assets/gel-cling_bg.9.png	a7648c0a6be7114a	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/cling_bg.9.png	drawable-xxhdpi-v4		a7648c0a6be7114a
 versions/7.1.2/assets/gel-ic_allapps.png	8c0eb790d02cf1c5	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_allapps.png	drawable-xxhdpi-v4		8c0eb790d02cf1c5
@@ -71,6 +72,7 @@ versions/7.1.2/assets/gel-quantum_panel_bitmap.9.png	a9b44f692f71ebbc	copy	angle
 versions/7.1.2/assets/gel-screenpanel.9.png	5367af4067b16862	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/screenpanel.9.png	drawable-xxhdpi-v4		5367af4067b16862
 versions/7.1.2/assets/gel-screenpanel_hover.9.png	3a9d25444ea43a11	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/screenpanel_hover.9.png	drawable-xxhdpi-v4		3a9d25444ea43a11
 versions/7.1.2/assets/gel-search_bg.9.png	023562590363b025	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/search_bg.9.png	drawable-xxhdpi-v4		023562590363b025
+versions/7.1.2/assets/gms-common_ic_googleplayservices.png	241e662a9a723b8c	copy	angler:/system/app/CalculatorGooglePrebuilt/CalculatorGooglePrebuilt.apk!res/drawable-xxhdpi-v4/common_ic_googleplayservices.png	drawable-xxhdpi-v4		241e662a9a723b8c
 versions/7.1.2/assets/gms-ic_google_settings.png	1494bcd0498fcea9	copy	angler:/system/priv-app/GmsCoreSetupPrebuilt/GmsCoreSetupPrebuilt.apk!res/drawable-xxhdpi-v4/ic_google_settings.png	drawable-xxhdpi-v4		1494bcd0498fcea9
 versions/7.1.2/assets/gms-quantum_ic_directions_walk_googblue_24.png	c517eeefa3f462ca	copy	angler:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable/quantum_ic_directions_walk_googblue_24.png	drawable		c517eeefa3f462ca
 versions/7.1.2/assets/landing-home.jpg	f820daabc45af3ac	own	capture of the simulator's own home screen for the landing page card		closest: mean difference 7.68 (maguro:/system/media/bootanimation.zip!part0/f0003.jpg)	
