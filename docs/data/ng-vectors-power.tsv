@@ -1,0 +1,3 @@
+# GlobalActions (config_globalActionsList power, restart): the items' icons in colorControlNormal, masks the CSS colours
+fw-ic_lock_power_off.svg	framework/framework-res.apk	ic_lock_power_off	-
+fw-ic_restart.svg	framework/framework-res.apk	ic_restart	-

@@ -1,5 +1,9 @@
 file	sha256	status	source	qualifier	transform	source sha256
 versions/7.1.2/assets/bg-ic_sms_light.png	af85bf19b66479f4	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_sms_light.png	drawable-xxxhdpi-v4		af85bf19b66479f4
+versions/7.1.2/assets/boot-part0.webp	f8727d04a326244f	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
+versions/7.1.2/assets/boot-part1.webp	f19881d52f757d52	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
+versions/7.1.2/assets/boot-part2.webp	8482865882f6cf6b	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
+versions/7.1.2/assets/boot-part3.webp	af9c0767dea06b7a	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
 versions/7.1.2/assets/device-nexus-6p.svg	b4dd8f6765bcacdd	own	drawn by docs/tools/device-frames.py: the outline measured from the maker's front render, the shading drawn			
 versions/7.1.2/assets/fw-btn_radio_off_mtrl.svg	bca8ae8fdfbe60ee	vector	angler:/system/framework/framework-res.apk!res/drawable/btn_radio_off_mtrl.xml	drawable	vector drawable drawn as SVG	182f36dea142dbf4
 versions/7.1.2/assets/fw-btn_radio_on_mtrl.svg	ea9c98a109ac7f0c	vector	angler:/system/framework/framework-res.apk!res/drawable/btn_radio_on_mtrl.xml	drawable	vector drawable drawn as SVG	e41bd411fb9cad26
@@ -7,7 +11,9 @@ versions/7.1.2/assets/fw-btn_switch_to_on_mtrl_00001.9.png	58263e2aef6f21c1	copy
 versions/7.1.2/assets/fw-btn_switch_to_on_mtrl_00012.9.png	d2e2517ee93d11ad	copy	angler:/system/framework/framework-res.apk!res/drawable-xxxhdpi-v4/btn_switch_to_on_mtrl_00012.9.png	drawable-xxxhdpi-v4		d2e2517ee93d11ad
 versions/7.1.2/assets/fw-default_wallpaper.png	960888db8bdc6e1d	copy	angler:/system/framework/framework-res.apk!res/drawable-nodpi-v4/default_wallpaper.png	drawable-nodpi-v4		960888db8bdc6e1d
 versions/7.1.2/assets/fw-ic_ab_back_material.svg	b3eb88deea52b00e	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_ab_back_material.xml	drawable	vector drawable drawn as SVG	c0db042a016d5cbf
+versions/7.1.2/assets/fw-ic_lock_power_off.svg	5b4201f21766b0f3	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_lock_power_off.xml	drawable	vector drawable drawn as SVG	ec0bcae2cfacaf2f
 versions/7.1.2/assets/fw-ic_menu_moreoverflow_material.svg	1838187e20cd01ba	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_menu_moreoverflow_material.xml	drawable	vector drawable drawn as SVG	21c5d08046c0c1f8
+versions/7.1.2/assets/fw-ic_restart.svg	eed2155fe1231af1	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_restart.xml	drawable	vector drawable drawn as SVG	dde276bb089c0bc1
 versions/7.1.2/assets/landing-home.jpg	f820daabc45af3ac	own	capture of the simulator's own home screen for the landing page card		closest: mean difference 7.68 (maguro:/system/media/bootanimation.zip!part0/f0003.jpg)	
 versions/7.1.2/assets/sui-ic_access_alarms_big.svg	54c66bc3509e3272	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_access_alarms_big.xml	drawable	vector drawable drawn as SVG	96b70639bcec34c0
 versions/7.1.2/assets/sui-ic_access_alarms_small.svg	47179ef1318c04db	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_access_alarms_small.xml	drawable	vector drawable drawn as SVG	af9011404059dd63

@@ -1,0 +1,12 @@
+/* Android 7.1.2 power menu and boot (ng-power.js), in dp: framework-res's global_actions_item.xml and safe_mode.xml of
+   N2G48C; the boot animation over black, its frames where BootAnimation centres them on the 1440 x 2560 display. */
+.ngdlg-item:has(>.ngpw-item){padding:0}
+.ngpw-item{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:calc(6 * var(--dp)) calc(16 * var(--dp)) calc(6 * var(--dp)) calc(8 * var(--dp));box-sizing:border-box}
+.ngpw-icon{flex:none;width:calc(56 * var(--dp));height:calc(56 * var(--dp));margin-right:calc(8 * var(--dp));background:#0000008a;-webkit-mask:center/calc(24 * var(--dp)) no-repeat;mask:center/calc(24 * var(--dp)) no-repeat}
+.ngpw-item span{margin-right:calc(8 * var(--dp));font:400 calc(22 * var(--dp))/calc(29.2 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.ngpw-layer{position:absolute;inset:0;z-index:40;background:#000}
+.ngpw-layer[hidden]{display:none}
+.ngpw-boot,.ngpw-frame{position:absolute}
+.ngpw-boot{inset:0}
+.ngpw-frame{background-repeat:no-repeat}
+.ngpw-safe{position:absolute;left:0;bottom:0;z-index:35;padding:calc(3 * var(--dp));background:#00000060;color:#ffffff80;font:400 calc(22 * var(--dp))/calc(29.2 * var(--dp)) Roboto,sans-serif;pointer-events:none}
