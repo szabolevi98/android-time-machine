@@ -368,12 +368,12 @@ open('device-nexus-5x.svg', 'w').write(svg); out['n5x'] = info
 # _aosp/angler/refs/nexus-6p-model.png): the outline where the alpha crosses .5, sides at x 10.47 and 466.18, top 1.22
 # and bottom 934.71 (2.048, the real 159.3 x 77.8 mm), four corners the superellipse a 60, b 60, n 2.25 (0.22 px rms on
 # both top corners); the display 419 px wide at x 28.5, centred at y 473.5 (its 16:9 window 744.9 tall); the slots
-# 165 x 14 centred at x 238 (y 46.5 and 896), the camera at (105, 48), the power key y 310-366 and the volume rocker
+# 165 x 14 centred at x 238 (y 46.5 and 896), the camera at (105, 48) (drawn a little larger than measured, the lens 8.4 px across in a 12 px ring, as large as the 5X's on the page, so it reads at the page's size), the power key y 310-366 and the volume rocker
 # 404-519, about 1.5 px proud. The phone is as tall as the Nexus 6 (159.3 mm), so it is drawn to the Nexus 6 frame's
 # height (781.2 px): the 5.7" panel at 1 dp = 0.8523 px is 350.67 x 623.41 (411.43 x 731.43 dp).
 n6p_box = (10.47, 1.22, 466.18, 934.71)
 svg, info = frame('nexus-6p', None, (n6p_box[0], n6p_box[2]), (n6p_box[1], n6p_box[3]), (28.5, 101.05, 447.5, 845.95), (350.67, 623.41),
-  [('meshslot', 238.3, 46.5, 165, 14), ('frontcam', 105, 48, 5, 3.5), ('meshslot', 238.3, 896, 165, 14)],
+  [('meshslot', 238.3, 46.5, 165, 14), ('frontcam', 105, 48, 6, 4.2), ('meshslot', 238.3, 896, 165, 14)],
   [('right', 310, 366, 2), ('right', 404, 519, 2)],
   {'body': ['#28292b', '#141415', '#1d1d1f'], 'rim': ['#e4e5e7', '#8f9193', '#c9cbcd'], 'rimWidth': 2.2, 'chin': .05, 'glassInset': 2.0},
   contour=superellipse_body(*n6p_box, 60, 60, 2.25))
