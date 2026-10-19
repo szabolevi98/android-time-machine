@@ -1,0 +1,11 @@
+# VolumeDialog (volume_dialog.xml, volume_dialog_row.xml, volume_zen_footer.xml): the stream icons and ZenFooter's icons, white on the dialog
+sui-ic_volume_ringer.svg	priv-app/SystemUI/SystemUI.apk	ic_volume_ringer	-
+sui-ic_volume_ringer_mute.svg	priv-app/SystemUI/SystemUI.apk	ic_volume_ringer_mute	-
+sui-ic_volume_ringer_vibrate.svg	priv-app/SystemUI/SystemUI.apk	ic_volume_ringer_vibrate	-
+sui-ic_volume_media.svg	priv-app/SystemUI/SystemUI.apk	ic_volume_media	-
+sui-ic_volume_media_mute.svg	priv-app/SystemUI/SystemUI.apk	ic_volume_media_mute	-
+sui-ic_volume_alarm.svg	priv-app/SystemUI/SystemUI.apk	ic_volume_alarm	-
+sui-ic_volume_alarm_mute.svg	priv-app/SystemUI/SystemUI.apk	ic_volume_alarm_mute	-
+sui-ic_volume_voice.svg	priv-app/SystemUI/SystemUI.apk	ic_volume_voice	-
+sui-ic_dnd.svg	priv-app/SystemUI/SystemUI.apk	ic_dnd	-
+sui-ic_dnd_total_silence.svg	priv-app/SystemUI/SystemUI.apk	ic_dnd_total_silence	-

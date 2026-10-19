@@ -73,3 +73,8 @@ airplane_mode
 # GlobalActions (PowerAction, RestartAction), ShutdownThread's dialogs, the safe_mode overlay
 global_action_power_off sim_restart_button power_off shutdown_progress reboot_safemode_title reboot_safemode_confirm cancel yes
 safeMode
+[volume] SystemUI framework
+# VolumeDialog, VolumeDialogController's stream titles, ZenFooter (ZenModeConfig.getConditionSummary)
+array:volume_stream_titles accessibility_volume_expand accessibility_volume_collapse volume_zen_end_now
+volume_stream_content_description_mute+args1 volume_stream_content_description_unmute+args1 volume_stream_content_description_vibrate+args1
+interruption_level_none interruption_level_alarms interruption_level_priority framework/zen_mode_forever framework/zen_mode_until+args1

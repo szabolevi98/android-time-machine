@@ -1,0 +1,43 @@
+/* Android 7.1.2 volume panel (ng-volume.js), in dp: SystemUI's volume_dialog.xml, volume_dialog_row.xml and
+   volume_zen_footer.xml of N2G48C, the framework's Widget.Material.SeekBar (seekbar_track_material: the 2 dp track at
+   white_disabled_material 0.3 of the tint, split around the thumb; seekbar_thumb_material_anim: a 12 dp dot, 18 dp
+   while pressed, a 2 dp ring when disabled). The window is the screen's width at the top, over the status bar. */
+.ngvol-layer{position:absolute;inset:0;z-index:25;pointer-events:none}
+.ngvol-layer.open{pointer-events:auto}
+.ngvol-dialog{position:absolute;top:0;left:0;right:0;margin-bottom:calc(4 * var(--dp));background:#263238;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0000003d,0 calc(1 * var(--dp)) calc(3 * var(--dp)) #0000001f;color:#fff;font-family:Roboto,sans-serif}
+.ngvol-rows{padding:calc(8 * var(--dp)) calc(48 * var(--dp)) 0 0}
+.ngvol-row{display:flex;flex-direction:column;height:calc(64 * var(--dp));padding-bottom:calc(9.4 * var(--dp));box-sizing:border-box}
+/* The header and the 48 dp line don't fit the row's 64 dp less its padding; the row doesn't clip, so the line runs into
+   the padding (clipChildren / clipToPadding false). */
+.ngvol-row>*{flex:none}
+.ngvol-header{padding-left:calc(16 * var(--dp));font:400 calc(12 * var(--dp))/calc(15.93 * var(--dp)) Roboto,sans-serif;color:#b0bec5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngvol-line{display:flex;height:calc(48 * var(--dp));padding-left:calc(4 * var(--dp))}
+.ngvol-icon{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+.ngvol-icon img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngvol-icon.off{opacity:.5}
+.ngvol-icon:active{background:#ffffff33}
+.ngvol-spacer{display:block;height:calc(14 * var(--dp))}
+/* The SeekBar: 12 dp in at the start, 16 dp at the end; the track's start in the slider's tint, the rest white at 0.3,
+   each side stopping short of the thumb (splitTrack). */
+.ngvol-slider{position:relative;flex:1;min-width:0;touch-action:none;cursor:pointer;--tint:#b0bec5;--x:calc(12 * var(--dp) + (100% - 28 * var(--dp)) * var(--v))}
+.ngvol-slider.on{--tint:#80cbc4}
+.ngvol-track,.ngvol-progress{position:absolute;top:calc(23 * var(--dp));height:calc(2 * var(--dp))}
+.ngvol-track{left:calc(var(--x) + 9 * var(--dp));right:calc(16 * var(--dp));background:#ffffff4d}
+.ngvol-progress{left:calc(12 * var(--dp));width:max(0px,calc(var(--x) - 12 * var(--dp) - 9 * var(--dp)));background:var(--tint)}
+.ngvol-thumb{position:absolute;top:calc(18 * var(--dp));left:calc(var(--x) - 6 * var(--dp));width:calc(12 * var(--dp));height:calc(12 * var(--dp));border-radius:50%;background:var(--tint);transition:transform .1s}
+.ngvol-slider.pressed .ngvol-thumb{transform:scale(1.5)}
+.ngvol-slider.off .ngvol-thumb{top:calc(20 * var(--dp));left:calc(var(--x) - 4 * var(--dp));width:calc(8 * var(--dp));height:calc(8 * var(--dp));box-sizing:border-box;background:none;border:calc(2 * var(--dp)) solid #ffffff8a}
+.ngvol-slider.off .ngvol-progress{display:none}
+.ngvol-expand{position:absolute;top:calc(6 * var(--dp));right:calc(2 * var(--dp));width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+.ngvol-expand:active{background:#ffffff33}
+.ngvol-chevron{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+/* ZenFooter. */
+.ngvol-zen{padding-bottom:calc(8 * var(--dp));display:flex;flex-direction:column}
+.ngvol-divider{display:block;height:calc(1 * var(--dp));margin:calc(8 * var(--dp)) 0 calc(12 * var(--dp));background:#ffffff29}
+.ngvol-zenrow{display:flex;align-items:center}
+.ngvol-zenrow img{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin-right:calc(7 * var(--dp));object-fit:none}
+.ngvol-zentext{flex:1;min-width:0}
+.ngvol-zen1{font:500 calc(14 * var(--dp))/calc(18.59 * var(--dp)) Roboto,sans-serif}
+.ngvol-zen2{margin-top:calc(1 * var(--dp));font:400 calc(14 * var(--dp))/calc(18.59 * var(--dp)) Roboto,sans-serif;color:#b0bec5}
+.ngvol-end{align-self:flex-end;margin-right:calc(8 * var(--dp));padding:calc(12 * var(--dp)) calc(15 * var(--dp));border:0;background:none;color:#80cbc4;font:500 calc(14 * var(--dp))/calc(18.59 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;-webkit-tap-highlight-color:transparent}
+.ngvol-end:active{background:#ffffff33}
