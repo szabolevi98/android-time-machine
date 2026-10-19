@@ -56,7 +56,7 @@ if (orbitCore && releases.length) {
   }, 3500);
 }
 
-// Header: the span of the available releases (a version in progress is not in it yet); footer: the current year.
-const sortedIds = versions.filter(version => version.status === 'available').map(version => version.id).sort((a, b) => numeric(a) - numeric(b)).map(id => id.split('.').slice(0, 2).join('.'));
+// Header: the span of the releases on the page, the one in progress included; footer: the current year.
+const sortedIds = versions.filter(version => version.status !== 'planned').map(version => version.id).sort((a, b) => numeric(a) - numeric(b)).map(id => id.split('.').slice(0, 2).join('.'));
 if (sortedIds.length) document.querySelector('#edition-range').textContent = `Android ${sortedIds[0]} – ${sortedIds[sortedIds.length - 1]}`;
 document.querySelector('#copyright-year').textContent = new Date().getFullYear();
