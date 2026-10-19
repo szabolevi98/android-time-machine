@@ -1,7 +1,7 @@
-"""Android 6.0.1: the factory image's apps are pre-optimised, so their APKs carry no classes.dex; the code is in the OAT
+"""Android 6.0.1 and 7.1.2: the factory image's apps are pre-optimised, so their APKs carry no classes.dex; the code is in the OAT
 file next to them (/system/app/X/oat/arm64/X.odex, /system/framework/arm64/boot*.oat). An OAT file (ELF, OAT version 064)
 keeps every dex file it was made from whole inside its oatdata section, so this cuts them out by their header:
-"dex\\n035\\0" magic, then file_size at offset 32.
+"dex\\n035\\0" (or 037 on 7.x) magic, then file_size at offset 32.
     python docs/tools/oat2dex.py <file.odex | file.oat> <out dir>
 Writes classes.dex, classes2.dex … in the order they appear. Methods the dex2oat compiler left to the interpreter hold
 ART's quickened opcodes (iget-quick and friends, 0xe3-0xf2 in ART 6.0, and 0x73 return-void-no-barrier); the compiled
@@ -73,8 +73,10 @@ data = open(src, 'rb').read()
 os.makedirs(out, exist_ok=True)
 pos, n, found = 0, 0, []
 while True:
-    pos = data.find(b'dex\n035\x00', pos)
-    if pos < 0: break
+    # dex 035 (6.0.1) or 037 (7.x): the first of either from here on.
+    hits = [p for p in (data.find(b'dex\n035\x00', pos), data.find(b'dex\n037\x00', pos)) if p >= 0]
+    if not hits: break
+    pos = min(hits)
     size = struct.unpack_from('<I', data, pos + 32)[0]
     header = struct.unpack_from('<I', data, pos + 36)[0]
     # A real dex header is 0x70 bytes long and fits in the file; anything else is a string that happens to match.

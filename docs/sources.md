@@ -15,11 +15,15 @@ says what to fetch, how to unpack it and how to rebuild and check the generated 
 | `_aosp/hammerhead` | 4.4.4 | Nexus 5 | KTU84P | google/hammerhead/hammerhead:4.4.4/KTU84P/1227136 | `hammerhead-ktu84p-factory-35ea0277.tgz` |
 | `_aosp/shamu` | 5.1.1 | Nexus 6 | LMY48Y | google/shamu/shamu:5.1.1/LMY48Y/2364368 | `shamu-lmy48y-factory-505ed306.zip` |
 | `_aosp/bullhead` | 6.0.1 | Nexus 5X | MTC20K | google/bullhead/bullhead:6.0.1/MTC20K/3142008 | `bullhead-mtc20k-factory-4a950470.zip` |
+| `_aosp/angler` | 7.1.2 | Nexus 6P | N2G48C | google/angler/angler:7.1.2/N2G48C/4104010 | `angler-n2g48c-factory-6a21e528.zip` |
 
 The packages come from Google's factory image page (`https://dl.google.com/dl/android/aosp/<package>`); the hash in a
 package name is the first eight digits of its SHA-1. Google no longer serves the Nexus S package; the copy used here is the
 Wayback Machine's capture of the same Google URL (2013-11-13), and its SHA-1 matches the name. Google's page also lists
-each package's SHA-256; the Nexus 5X package's (4a950470af6c1e01…eeae1b97a9) matches the download.
+each package's SHA-256; the Nexus 5X package's (4a950470af6c1e01…eeae1b97a9) matches the download. From 7.x on the name carries the
+SHA-256's first digits instead: the Nexus 6P package's SHA-256 (6a21e52889246aee…57e786cd771b) matches the download
+(the first download was damaged: its inner image zip failed its CRC; the second matched). Google's page lists the 7.x
+packages only once its terms are acknowledged; the names were read from the Wayback Machine's 2018-03 capture.
 
 Google never published factory packages for the Nexus One. Its 2.1 image is put together from two files of the Internet
 Archive item `media-fire-htc-passion-stock-software` ("Passion OTAs.zip"): `Downloads/Passion-ERD79.zip`, the HTC/Google

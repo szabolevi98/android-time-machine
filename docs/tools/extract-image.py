@@ -73,7 +73,7 @@ with open(RAW, 'rb') as fh:
                 # e.g. fonts/DroidSans.ttf -> Roboto-Regular.ttf from 4.1 on: the link's file, under the link's name.
                 target = child.readlink().decode('utf-8', 'replace')
                 try: child = volume.inode_at(target if target.startswith('/') else f'{path}/{target}')
-                except FileNotFoundError: continue
+                except OSError: continue  # missing, or through a link that is not a directory here (7.x)
                 if isinstance(child, Directory): continue
             if everything or name.endswith(('.apk', '.jar', '.odex', '.oat')):
                 target = OUT + full
