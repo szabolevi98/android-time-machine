@@ -15,7 +15,9 @@ from androguard.core.analysis.analysis import Analysis
 from androguard.decompiler.decompile import DvClass
 
 AAPT = 'D:/android_sdk/build-tools/36.0.0/aapt2.exe'
-FW = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace(os.sep, '/') + '/_aosp/bullhead/system/framework/framework-res.apk'
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from era import DEVICE   # ERA=ng: the angler image's framework (docs/tools/era.py)
+FW = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace(os.sep, '/') + f'/_aosp/{DEVICE}/system/framework/framework-res.apk'
 CACHE = None
 
 def table(apk):

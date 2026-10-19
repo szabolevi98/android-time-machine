@@ -2,17 +2,26 @@
 versions/6.0.1/mm-qs-icons.js. The source XML (android-6.0.1_r81, the same as the image's compiled files) comes from
 docs/tools/fetch-sui-avd.py; run from the repository root:
     python docs/tools/mm-avd.py
+7.1.2 (ERA=ng, docs/tools/era.py) reads the angler image's own compiled XML, written back as plain XML by
+docs/tools/res-xml.py into _aosp/angler/refs/sui-xml, and writes versions/7.1.2/ng-qs-icons.js:
+    ERA=ng python docs/tools/mm-avd.py
 VectorDrawable 6.0 semantics (as 5.1): a group is translate(tx + px, ty + py) rotate(r) scale(sx, sy) translate(-px, -py); a
 clip-path clips the siblings after it; only the root (VPathRenderer) has alpha, so group alpha animators do nothing;
 sequential sets add their children's durations. Every interpolator here is one cubic, which SMIL keySplines reproduce."""
 import json, os, re, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from era import ERA, VERSION, JS, out as era_out
 import xml.etree.ElementTree as ET
 
-RES = os.environ.get('AVD_RES') or '_aosp/bullhead/refs/sui-avd-res'
+RES = os.environ.get('AVD_RES') or ('_aosp/angler/refs/sui-xml' if ERA == 'ng' else '_aosp/bullhead/refs/sui-avd-res')
 A = '{http://schemas.android.com/apk/res/android}'
 ICONS = ['ic_signal_airplane', 'ic_signal_flashlight', 'ic_signal_location', 'ic_hotspot']
 NAMES = [f'{base}_{kind}_animation' for base in ICONS for kind in ('enable', 'disable')]
 NAMES += [f'ic_portrait_{d}_auto_rotate_animation' for d in ('from', 'to')] + ['ic_dnd_disable_animation', 'ic_dnd_total_silence_disable_animation']
+# Nougat: QuickStatusBarHeader's ExpandableIndicator turns with ic_volume_expand_animation / ic_volume_collapse_animation.
+if ERA == 'ng': NAMES += ['ic_volume_expand_animation', 'ic_volume_collapse_animation']
+# The animated properties this tool draws; any other stops it rather than being left out silently.
+DONE = {'pathData', 'fillAlpha', 'strokeAlpha', 'strokeWidth', 'rotation', 'scaleX', 'scaleY', 'alpha'}
 BUILTIN = {'fast_out_slow_in': (.4, 0, .2, 1), 'linear_out_slow_in': (0, 0, .2, 1), 'fast_out_linear_in': (.4, 0, 1, 1), 'linear': None}
 
 def xml(kind, name): return ET.parse(os.path.join(RES, kind, name + '.xml')).getroot()
@@ -37,6 +46,15 @@ def animators(node, start=0):
     if node.tag == 'objectAnimator':
         begin = start + num(node.get(A + 'startOffset'))
         dur = num(node.get(A + 'duration'), 300)
+        # A move along a path (Nougat's chevrons: propertyXName translateX, propertyYName translateY): PathKeyframes
+        # follows the path by its length, so a straight path is a plain move from its first point to its last.
+        if node.get(A + 'propertyXName'):
+            nums = [float(n) for n in re.findall(r'-?[\d.]+', node.get(A + 'pathData'))]
+            x0, y0, dx, dy = nums[0], nums[1], nums[-2], nums[-1]
+            assert re.fullmatch(r'M[\d.,\s-]+c[\d.,\s-]+', node.get(A + 'pathData')) and all(abs(nums[2 + 2 * i] * dy - nums[3 + 2 * i] * dx) < 1e-3 for i in range(3)), 'a curved motion path'
+            sp = spline(node.get(A + 'interpolator') or 'linear')
+            return [('translate', f'{x0:g} {y0:g}', f'{x0 + dx:g} {y0 + dy:g}', begin, dur, sp)], begin + dur
+        if node.get(A + 'propertyName') not in DONE: raise SystemExit(f"{node.get(A + 'propertyName')}: not drawn by this tool")
         out.append((node.get(A + 'propertyName'), node.get(A + 'valueFrom'), node.get(A + 'valueTo'), begin, dur, spline(node.get(A + 'interpolator') or 'linear')))
         return out, begin + dur
     sequential = node.get(A + 'ordering') == 'sequentially'
@@ -113,12 +131,17 @@ def convert(name):
             sc += (f'<animateTransform attributeName="transform" type="scale" values="{float(x[1]):g} {float(y[1]):g};{float(x[2]):g} {float(y[2]):g}" '
                    f'begin="{x[3] / 1000:g}s" dur="{max(x[4], 1) / 1000:g}s" fill="freeze"{calc}/>')
         body = children(node)
+        moves = [i for i in items if i[0] == 'translate']
+        if moves:
+            # The group's translation animates: its own translate, then the pivot's.
+            return (f'<g transform="translate({tx:g} {ty:g})">{transform("translate", moves, lambda v: v)}<g transform="translate({px:g} {py:g})">'
+                    f'<g transform="rotate({r:g})">{rot}<g transform="scale({sx:g} {sy:g})">{sc}<g transform="translate({-px:g} {-py:g})">{body}</g></g></g></g></g>')
         return (f'<g transform="translate({tx + px:g} {ty + py:g})"><g transform="rotate({r:g})">{rot}<g transform="scale({sx:g} {sy:g})">{sc}'
                 f'<g transform="translate({-px:g} {-py:g})">{body}</g></g></g></g>')
     w, h = vector.get(A + 'viewportWidth'), vector.get(A + 'viewportHeight')
     root_items = [i for i in targets.get(vector.get(A + 'name'), []) if i[0] == 'alpha']
     alpha = num(vector.get(A + 'alpha'), 1)
-    svg = (f'<svg class="mm-avd" viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+    svg = (f'<svg class="{ERA}-avd" viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
            f'<g opacity="{alpha:g}">{anim("opacity", root_items)}{children(vector)}</g></svg>')
     return svg, total
 
@@ -126,7 +149,7 @@ out = {}
 for name in NAMES:
     svg, total = convert(name)
     out[name] = {'svg': svg, 'duration': round(total)}
-js = ('/* Generated by docs/tools/mm-avd.py from SystemUI 6.0.1 (Quick Settings AnimatedVectorDrawables). Do not edit. */\n'
-      'MM.qsIcons = ' + json.dumps(out, separators=(',', ':')) + ';\n')
-open('versions/6.0.1/mm-qs-icons.js', 'w', encoding='utf-8', newline='\n').write(js)
+js = (f'/* Generated by docs/tools/mm-avd.py from SystemUI {VERSION} (Quick Settings AnimatedVectorDrawables). Do not edit. */\n'
+      f'{JS}.qsIcons = ' + json.dumps(out, separators=(',', ':')) + ';\n')
+open(era_out('qs-icons.js'), 'w', encoding='utf-8', newline='\n').write(js)
 print(len(out), 'icons', len(js), 'bytes', {k: v['duration'] for k, v in out.items()})

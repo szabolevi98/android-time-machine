@@ -17,9 +17,9 @@
 .ngsb-battery{width:calc(9.5 * var(--dp));height:calc(14.5 * var(--dp))}
 .ngsb-clock{flex:none;display:flex;align-items:center;padding-left:calc(7 * var(--dp));color:#fff;font:500 calc(14 * var(--dp)) Roboto,sans-serif}
 
-/* The navigation bar: 40 dp space at each end, Back / Home / Overview 80 dp wide side by side in the middle. */
+/* The navigation bar: navigation_side_padding (sw400dp: 50 dp) at each end, Back / Home / Overview 80 dp wide side by side in the middle. */
 .ngnb{display:flex;height:100%;background:#000}
-.ngnb-side{flex:none;width:calc(40 * var(--dp))}
+.ngnb-side{flex:none;width:calc(50 * var(--dp))}
 .ngnb-center{flex:1;display:flex;justify-content:center}
 .ngnb-key{position:relative;flex:none;width:calc(80 * var(--dp));height:100%;border:0;padding:0;background:none;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
 .ngnb-key img{position:relative;width:calc(22 * var(--dp));height:calc(22 * var(--dp))}

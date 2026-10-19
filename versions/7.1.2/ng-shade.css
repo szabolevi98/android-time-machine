@@ -1,0 +1,86 @@
+/* Android 7.1.2 notification shade and quick settings (ng-shade.js) and the notification rows (ng-notify.js), in dp:
+   SystemUI's status_bar_expanded.xml, qs_panel.xml, quick_status_bar_expanded_header.xml, QSPanel / TileLayout /
+   QuickQSPanel and the framework's notification_template_material_base.xml of N2G48C. --qsf is the quick settings
+   expansion (0..1), --qs-full the open QSContainer's height and --qs-panel QSPanel's (ng-shade.js works them out). */
+.ngsh{position:absolute;inset:0 0 calc(48 * var(--dp)) 0;overflow:hidden;--qs-h:calc((104 + (var(--qs-full) - 104) * var(--qsf)) * var(--dp))}
+/* ScrimController's behind scrim: 0.62 black. */
+.ngsh-scrim{position:absolute;inset:0;background:#000;opacity:0;transition:opacity .3s linear}
+.ngsh.shown .ngsh-scrim{opacity:.62}
+.ngsh-panel{position:absolute;inset:0;transform:translateY(-100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.ngsh.shown .ngsh-panel{transform:none}
+.ngsh.static .ngsh-panel,.ngsh.static .ngsh-scrim,.ngsh.dragging .ngsh-panel,.ngsh.dragging .ngsh-scrim{transition:none}
+
+/* QSContainer: qs_background_primary (#263238), elevation 4 dp, from the top as tall as the expansion makes it. */
+.ngqs{position:absolute;top:0;left:0;right:0;height:var(--qs-h);background:#263238;overflow:hidden;z-index:2;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0000003d,0 calc(1 * var(--dp)) calc(3 * var(--dp)) #0000001f}
+/* QSPanel, 80 dp down: slides out from under the header, its content kept in place, clipped to what has come out. */
+.ngqs-panel{position:absolute;top:calc(80 * var(--dp));left:0;right:0;height:calc(var(--qs-panel) * var(--dp));transform:translateY(calc((var(--qsf) - 1) * var(--qs-panel) * var(--dp)));clip-path:inset(calc((1 - var(--qsf)) * var(--qs-panel) * var(--dp)) 0 0 0)}
+.ngqs-brightness,.ngqs-grid{transform:translateY(calc((1 - var(--qsf)) * var(--qs-panel) * var(--dp)))}
+/* quick_settings_brightness_dialog.xml: 6 dp down, 48 dp high, 16 dp in; the ToggleSlider is 60 dp high (16 dp padding
+   around the 28 dp thumb), centred; the SeekBar 20 dp in at each end: the 2 dp track in white at 0.3, the progress in
+   colorAccent (#80cbc4). It fades in from half the expansion. */
+.ngqs-brightness{position:absolute;top:calc(6 * var(--dp));left:calc(16 * var(--dp));right:calc(16 * var(--dp));height:calc(48 * var(--dp));opacity:var(--qs-bright,1)}
+.ngqs-slider{position:absolute;left:0;right:0;top:calc(-6 * var(--dp));height:calc(60 * var(--dp));touch-action:none;cursor:pointer}
+.ngqs-track,.ngqs-progress{position:absolute;top:calc(29 * var(--dp));left:calc(20 * var(--dp));height:calc(2 * var(--dp))}
+.ngqs-track{right:calc(20 * var(--dp));background:#ffffff4d}
+.ngqs-progress{width:calc((100% - 40 * var(--dp)) * var(--v));background:#80cbc4}
+.ngqs-thumb{position:absolute;top:calc(16 * var(--dp));left:calc(20 * var(--dp) + (100% - 40 * var(--dp)) * var(--v) - 14 * var(--dp));width:calc(28 * var(--dp));height:calc(28 * var(--dp))}
+
+/* The grid (TileLayout's first page) 6 + 48 dp down; it and its labels fade in over the last 14 % of the expansion. The
+   first six tiles' icons wait while the quick tiles fly in (QSAnimator.mTopFiveQs). */
+.ngqs-grid{position:absolute;top:calc(54 * var(--dp));left:0;right:0;bottom:0;opacity:var(--qs-grid,1)}
+.ngqs-tile{position:absolute;display:flex;flex-direction:column;align-items:center;padding:calc(17.714 * var(--dp)) calc(4 * var(--dp)) 0;border:0;background:none;color:#fff;-webkit-tap-highlight-color:transparent}
+.ngsh:not(.qs-open) .ngqs-tile:nth-child(-n+6) .ngqs-icon{visibility:hidden}
+.ngqs-tile .ngqs-icon{margin-bottom:calc(12 * var(--dp))}
+.ngqs-label{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-height:calc(30.57 * var(--dp));max-width:100%;font:400 calc(12 * var(--dp))/calc(15.29 * var(--dp)) 'Roboto Condensed',Roboto,sans-serif;color:#ffffffb3;text-align:center;overflow-wrap:anywhere}
+.ngqs-icon{position:relative;display:block;flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngqs-signal img{position:absolute;left:0;top:0;width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngqs-signal img+img{width:calc(17.333 * var(--dp))}
+/* BatteryTile: BatteryMeterDrawable fitted into the 24 dp icon less qs_battery_padding 2 dp at each side. */
+.ngqs-batt{display:grid;place-items:center}
+.ngqs-batt svg{width:auto;height:calc(20 * var(--dp))}
+/* selectableItemBackgroundBorderless: a ripple 0.85 times the icon view's height (24 + 12 dp) around the tile's centre. */
+.ngqs-tile::before,.ngqs-quick::before{content:"";position:absolute;left:50%;top:50%;width:calc(61.2 * var(--dp));height:calc(61.2 * var(--dp));margin:calc(-30.6 * var(--dp)) 0 0 calc(-30.6 * var(--dp));border-radius:50%;background:#ffffff33;opacity:0;transform:scale(.6);transition:opacity .25s,transform .25s}
+.ngqs-tile:active::before,.ngqs-quick:active::before{opacity:1;transform:none;transition:opacity 0s,transform .2s}
+
+/* QuickStatusBarHeader, 104 dp. */
+.ngqs-header{position:absolute;top:0;left:0;right:0;height:calc(104 * var(--dp))}
+.ngqs-datetime{position:absolute;left:calc(16 * var(--dp));top:calc(16 * var(--dp));color:#fff;font:500 calc(14 * var(--dp))/calc(18.58 * var(--dp)) Roboto,sans-serif;white-space:nowrap}
+.ngqs-clock{display:flex;align-items:stretch}
+.ngqs-alarm{width:calc(16 * var(--dp));height:auto;padding-left:calc(6 * var(--dp));object-fit:contain;box-sizing:content-box}
+.ngqs-date{margin-top:calc(-4 * var(--dp));opacity:var(--qsf)}
+.ngqs-buttons{position:absolute;top:calc(4 * var(--dp));right:calc(12 * var(--dp));height:calc(48 * var(--dp));display:flex}
+.ngqs-buttons>*{position:relative;flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));border:0;padding:0;background:none;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+.ngqs-buttons img{width:calc(20 * var(--dp));height:calc(20 * var(--dp))}
+.ngqs-edit{opacity:var(--qsf);visibility:hidden}
+.ngsh.qs-moving .ngqs-edit,.ngsh.qs-open .ngqs-edit{visibility:visible}
+.ngqs-chevron{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngqs-buttons button::before{content:"";position:absolute;inset:0;border-radius:50%;background:#ffffff33;opacity:0;transition:opacity .25s}
+.ngqs-buttons button:active::before{opacity:1;transition:none}
+/* QuickQSPanel: 52 + 6 dp down, 48 dp tiles; gone once quick settings are fully out. */
+.ngqs-quickrow{position:absolute;top:calc(58 * var(--dp));left:0;right:0;height:calc(48 * var(--dp))}
+.ngqs-quick{position:absolute;top:0;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:calc(12 * var(--dp));border:0;background:none;color:#fff;-webkit-tap-highlight-color:transparent}
+.ngsh.qs-open .ngqs-quickrow{visibility:hidden}
+/* QSDetail (and QSCustomizer) over quick settings. */
+.ngqs-detail{position:absolute;inset:0;z-index:3}
+
+/* The notification stack, under QSContainer. */
+.ngsh-stack{position:absolute;top:var(--qs-h);left:0;right:0;bottom:0;overflow-y:auto;overscroll-behavior:contain}
+.ngsh-empty{height:calc(64 * var(--dp));padding-top:calc(28 * var(--dp));box-sizing:border-box;text-align:center;font:400 calc(16 * var(--dp))/1.2 Roboto,sans-serif;color:#ffffffe6}
+/* DismissView: Widget.Material.Button.Borderless at the end, 8 dp in (48 dp high, 88 dp wide at least, all caps). */
+.ngsh-dismiss{display:flex;justify-content:flex-end;padding:calc(.5 * var(--dp)) calc(8 * var(--dp)) 0 0}
+.ngsh-dismiss button{min-width:calc(88 * var(--dp));height:calc(48 * var(--dp));padding:0 calc(8 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;color:#fff;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.ngsh-dismiss button:active{background:#ffffff33}
+
+/* A notification row: notification_template_material_base (white, at least notification_min_height 92 dp),
+   notification_divider_height 0.5 dp between rows. */
+.ngnt-row{position:relative;min-height:calc(92 * var(--dp));margin-bottom:calc(.5 * var(--dp));background:#fff;color:#000;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ngsh:not(.dragging) .ngnt-row:active{background:linear-gradient(#00000028,#00000028),#fff}
+/* NotificationHeaderView: 10 dp padding above, 16 dp below, 16 dp from the start; children centred in what is left. */
+.ngnt-header{position:absolute;top:calc(10 * var(--dp));left:calc(16 * var(--dp));right:calc(16 * var(--dp));height:calc(27 * var(--dp));display:flex;align-items:center;font:400 calc(13 * var(--dp)) Roboto,sans-serif;color:#0000008a;white-space:nowrap}
+.ngnt-icon{flex:none;width:calc(18 * var(--dp));height:calc(18 * var(--dp));margin-right:calc(3 * var(--dp));background:var(--ngnt-color);-webkit-mask:center/contain no-repeat;mask:center/contain no-repeat}
+.ngnt-app{margin:0 calc(2 * var(--dp)) 0 calc(3 * var(--dp));color:var(--ngnt-color);overflow:hidden;text-overflow:ellipsis}
+.ngnt-sep,.ngnt-time{flex:none;margin:0 calc(2 * var(--dp))}
+.ngnt-main{padding:calc(37.5 * var(--dp)) calc(16 * var(--dp)) calc(16 * var(--dp))}
+.ngnt-title,.ngnt-text{font:400 calc(14 * var(--dp))/calc(18.58 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngnt-title{color:#000000de}
+.ngnt-text{margin-top:calc(.5 * var(--dp));color:#0000008a}

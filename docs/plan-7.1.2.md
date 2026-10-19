@@ -45,9 +45,19 @@ The same rules as 6.0.1 ([plan-6.0.1.md](plan-6.0.1.md)), with 6.0.1 as the vers
 | --- | --- | --- |
 | 1 | Image (download, SHA-256, unpack), `oat2dex.py` on the image's odex / oat, strings index, this plan | done 2026-10-19 |
 | 2 | Scaffold: `versions/7.1.2/index.html` with the frame, the logic-only core, placeholders, leak checks; the preview page goes | done 2026-10-19 |
-| 3 | Status bar, quick settings and notification shade (bundled notifications, direct reply), lock screen, power menu, volume panel, the launcher with the drawer, recents with split-screen, dialogs and menus | |
+| 3 | Status bar, quick settings and notification shade (bundled notifications, direct reply), lock screen, power menu, volume panel, the launcher with the drawer, recents with split-screen, dialogs and menus | in progress: status bar, navigation bar, the shade with QuickQSPanel / QSPanel and the notification rows done 2026-10-19 |
 | 4 | Settings (with the 7.x dashboard and its suggestions, Data Saver, Night mode where the image has it) and the core apps: Phone, Contacts, Messenger, Chrome, Gmail, Calendar, Camera, Photos, Clock, Calculator | |
 | 5 | Google apps and Play Store from the image's APKs with made-up offline content, widgets, the Google app | |
 | 6 | Language sweep, landing picture, `features-7.1.2.md`, catalogue status available, README and sitemap | |
 
 Commits are pushed as each piece passes the gate.
+
+## Tools added for 7.1.2
+
+- `docs/tools/layout-xml.py <apk> <res path>`: a compiled layout (or any XML resource) of the image with its resource ids
+  named and their first value, for reading a screen's structure.
+- `docs/tools/res-xml.py <apk> <out dir> <glob>`: compiled XML written back as plain XML (the AVD tool reads
+  `_aosp/angler/refs/sui-xml` this way: `ERA=ng python docs/tools/mm-avd.py`).
+- The 6.0.1 generators take `ERA=ng` (`docs/tools/era.py`): mm-assets, mm-vectors (now following a theme's parent styles
+  into the framework), mm-strings, mm-avd (now with path motions), dex-decompile (the era's framework).
+- Colours in the stylesheets: Android writes #AARRGGBB, CSS #RRGGBBAA (#b3ffffff is #ffffffb3).

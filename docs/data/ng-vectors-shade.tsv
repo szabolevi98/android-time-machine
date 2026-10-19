@@ -1,0 +1,23 @@
+# Android 7.1.2 notification shade and quick settings (ng-shade.js): QuickStatusBarHeader, the tiles of quick_settings_tiles_default as
+# their handleUpdateState picks them (white on qs_background_primary), the brightness slider's thumb in systemui_theme
+sui-ic_qs_wifi_full_4.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_wifi_full_4	-
+sui-ic_qs_wifi_disabled.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_wifi_disabled	-
+sui-ic_qs_wifi_no_network.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_wifi_no_network	-
+sui-ic_qs_wifi_disconnected.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_wifi_disconnected	-
+sui-ic_qs_signal_full_4.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_signal_full_4	-
+sui-ic_qs_signal_disabled.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_signal_disabled	-
+sui-ic_qs_signal_no_signal.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_signal_no_signal	-
+sui-ic_qs_no_sim.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_no_sim	-
+sui-ic_qs_signal_lte.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_signal_lte	-
+sui-ic_qs_dnd_on.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_dnd_on	-
+sui-ic_qs_dnd_on_total_silence.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_dnd_on_total_silence	-
+sui-ic_qs_bluetooth_on.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_bluetooth_on	-
+sui-ic_qs_bluetooth_off.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_bluetooth_off	-
+sui-ic_qs_bluetooth_connected.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_bluetooth_connected	-
+sui-ic_qs_bluetooth_connecting.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_bluetooth_connecting	-
+sui-ic_settings_20dp.svg	priv-app/SystemUI/SystemUI.apk	ic_settings_20dp	-
+sui-ic_mode_edit.svg	priv-app/SystemUI/SystemUI.apk	ic_mode_edit	-
+sui-ic_access_alarms_small.svg	priv-app/SystemUI/SystemUI.apk	ic_access_alarms_small	-
+sui-ic_brightness_thumb.svg	priv-app/SystemUI/SystemUI.apk	ic_brightness_thumb	systemui_theme
+# The simulator's first-boot welcome notification (as every version): SystemUI's ic_android robot, a mask the header tints
+sui-ic_android.svg	priv-app/SystemUI/SystemUI.apk	ic_android	tint=#ffffffff

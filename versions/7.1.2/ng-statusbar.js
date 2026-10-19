@@ -14,8 +14,8 @@
      (5 %) empty with battery_meter_very_low_overlay_symbol "!"; charging, the bolt (batterymeter_bolt_points) is cut out
      of the level once the level covers more than 30 % of it, drawn in white below that.
    - navigation_bar: NavigationBarInflaterView with config_navBarLayout "space,back;home;recent,menu_ime": the
-     navigation_side_padding 40 dp space at the start, Back, Home and Overview (KeyButtonView, navigation_key_width 80 dp,
-     no padding) side by side in center_group (gravity center), the 40 dp menu / IME slot at the end. KeyButtonRipple: a
+     navigation_side_padding space (sw400dp: 50 dp) at the start, Back, Home and Overview (KeyButtonView, navigation_key_width 80 dp,
+     no padding) side by side in center_group (gravity center, a layer of its own over the ends), the menu / IME slot at the end. KeyButtonRipple: a
      white pill as tall as the key and min(width, key_button_ripple_max_width 95 dp) wide, alpha 0.2, stretched to 1.35
      times in 350 ms while pressed, fading in 450 ms. Home held: the assist gesture. */
 (() => {

@@ -1,6 +1,27 @@
 file	sha256	status	source	qualifier	transform	source sha256
+versions/7.1.2/assets/bg-ic_sms_light.png	af85bf19b66479f4	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_sms_light.png	drawable-xxxhdpi-v4		af85bf19b66479f4
 versions/7.1.2/assets/device-nexus-6p.svg	b4dd8f6765bcacdd	own	drawn by docs/tools/device-frames.py: the outline measured from the maker's front render, the shading drawn			
 versions/7.1.2/assets/landing-home.jpg	f820daabc45af3ac	own	capture of the simulator's own home screen for the landing page card		closest: mean difference 7.68 (maguro:/system/media/bootanimation.zip!part0/f0003.jpg)	
+versions/7.1.2/assets/sui-ic_access_alarms_small.svg	47179ef1318c04db	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_access_alarms_small.xml	drawable	vector drawable drawn as SVG	af9011404059dd63
+versions/7.1.2/assets/sui-ic_android.svg	9946e88ee21d8e14	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_android.xml	drawable	vector drawable drawn as SVG	be178088772f73e6
+versions/7.1.2/assets/sui-ic_brightness_thumb.svg	301fbccd11dc9368	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_brightness_thumb.xml	drawable	vector drawable drawn as SVG	d56c691bc971df01
+versions/7.1.2/assets/sui-ic_mode_edit.svg	52722827cc3fd98f	vector	angler:/system/app/Hangouts/Hangouts.apk!res/drawable/ic_mode_edit.xml	drawable	vector drawable drawn as SVG	6e8c8483eb284981
+versions/7.1.2/assets/sui-ic_qs_bluetooth_connected.svg	41e610d8a902eb0a	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_bluetooth_connected.xml	drawable	vector drawable drawn as SVG	f33c44f706160e0e
+versions/7.1.2/assets/sui-ic_qs_bluetooth_connecting.svg	0f567cc19235cd6b	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_bluetooth_connecting.xml	drawable	vector drawable drawn as SVG	3462cbb806c5929c
+versions/7.1.2/assets/sui-ic_qs_bluetooth_off.svg	669a28fb3c99cbc9	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_bluetooth_off.xml	drawable	vector drawable drawn as SVG	ca9f2e6b2c612266
+versions/7.1.2/assets/sui-ic_qs_bluetooth_on.svg	3694c3134d013148	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_bluetooth_on.xml	drawable	vector drawable drawn as SVG	919e7b3c97a8307e
+versions/7.1.2/assets/sui-ic_qs_dnd_on.svg	577875de595c696c	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_dnd_on.xml	drawable	vector drawable drawn as SVG	ecb11b0819172b17
+versions/7.1.2/assets/sui-ic_qs_dnd_on_total_silence.svg	96c90ecd1816e658	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_dnd_on_total_silence.xml	drawable	vector drawable drawn as SVG	877e1d18170d62aa
+versions/7.1.2/assets/sui-ic_qs_no_sim.svg	e0a9f6430c5a2b55	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_no_sim.xml	drawable	vector drawable drawn as SVG	17b40e37be595ab3
+versions/7.1.2/assets/sui-ic_qs_signal_disabled.svg	e82dd58cf983f65b	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_signal_disabled.xml	drawable	vector drawable drawn as SVG	416a21732eceb700
+versions/7.1.2/assets/sui-ic_qs_signal_full_4.svg	46491d9625a3c837	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_signal_full_4.xml	drawable	vector drawable drawn as SVG	530e42a3ab1365a8
+versions/7.1.2/assets/sui-ic_qs_signal_lte.svg	7f25ef4bd781afb1	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_signal_lte.xml	drawable	vector drawable drawn as SVG	346025d915a4bca5
+versions/7.1.2/assets/sui-ic_qs_signal_no_signal.svg	eea221ba6d47f206	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_signal_no_signal.xml	drawable	vector drawable drawn as SVG	0d1d9a9215e65116
+versions/7.1.2/assets/sui-ic_qs_wifi_disabled.svg	05297846fdce2c13	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_wifi_disabled.xml	drawable	vector drawable drawn as SVG	62e24991cedcf9ef
+versions/7.1.2/assets/sui-ic_qs_wifi_disconnected.svg	a7527deab9ccee85	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_wifi_disconnected.xml	drawable	vector drawable drawn as SVG	1b6335e4ca0b0cc6
+versions/7.1.2/assets/sui-ic_qs_wifi_full_4.svg	3eec8e7f8aa44c2b	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_wifi_full_4.xml	drawable	vector drawable drawn as SVG	66464d4ceaaab11e
+versions/7.1.2/assets/sui-ic_qs_wifi_no_network.svg	31e9d3880b6226aa	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_qs_wifi_no_network.xml	drawable	vector drawable drawn as SVG	2306e80ca92d5600
+versions/7.1.2/assets/sui-ic_settings_20dp.svg	24ab45fc78ce1fa4	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_settings_20dp.xml	drawable	vector drawable drawn as SVG	125447c5ee4c24f2
 versions/7.1.2/assets/sui-ic_sysbar_back.png	ef473848061e4580	copy	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable-xxxhdpi-v4/ic_sysbar_back.png	drawable-xxxhdpi-v4		ef473848061e4580
 versions/7.1.2/assets/sui-ic_sysbar_back_ime.png	122aac2aacc1722c	copy	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable-xxxhdpi-v4/ic_sysbar_back_ime.png	drawable-xxxhdpi-v4		122aac2aacc1722c
 versions/7.1.2/assets/sui-ic_sysbar_home.png	ab0cb96bb2792a0a	copy	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable-xxxhdpi-v4/ic_sysbar_home.png	drawable-xxxhdpi-v4		ab0cb96bb2792a0a

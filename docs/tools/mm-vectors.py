@@ -23,7 +23,7 @@ def table(apk):
     """Colours {id: value} and styles {id: {attr id: value}} of an APK, from aapt2 dump resources."""
     if apk in _tables: return _tables[apk]
     text = subprocess.run([AAPT, 'dump', 'resources', SYSTEM + apk], capture_output=True, text=True, encoding='utf-8', errors='replace').stdout
-    colors, styles, names, current = {}, {}, {}, None
+    colors, styles, names, parents, current = {}, {}, {}, {}, None
     for line in text.splitlines():
         m = re.match(r'\s+resource (0x[0-9a-f]{8}) (\w+)/(\S+)', line)
         if m:
@@ -35,10 +35,29 @@ def table(apk):
             v = re.match(r'\s+\(\) (#[0-9a-f]+|@\S+)', line)
             if v and current[0] not in colors: colors[current[0]] = v.group(1)
         elif current[1] == 'style':
+            p = re.match(r'\s+\(\) \(style\) size=\d+ parent=(?:\S+ \()?(0x[0-9a-f]{8})', line)
+            if p and current[0] not in parents: parents[current[0]] = p.group(1)
             v = re.match(r'\s+(\w+)?\((0x[0-9a-f]{8})\)=(\S+)', line) or re.match(r'\s+(0x[0-9a-f]{8})=(\S+)', line)
             if v and len(v.groups()) == 3: styles[current[0]][v.group(2)] = v.group(3)
     _tables[apk] = (colors, styles, names)
+    _parents[apk] = parents
     return _tables[apk]
+
+_parents = {}
+
+def theme_attr(apk, theme, attr):
+    """A theme attribute's value: the style's own, else its parent's (a framework style for an app theme such as
+    SystemUI's systemui_theme, Theme.DeviceDefault.Settings.Dark on 7.1.2)."""
+    colors, styles, names = table(apk)
+    sid, src = names['style/' + theme], apk
+    for _ in range(16):
+        own = table(src)[1].get(sid, {})
+        # A framework style's @color/name is the framework's.
+        if attr in own: return own[attr].replace('@', '@android:', 1) if src == FRAMEWORK and own[attr].startswith('@') and not own[attr].startswith(('@android:', '@0x')) else own[attr]
+        sid = _parents[src].get(sid)
+        if not sid: break
+        src = FRAMEWORK if sid.startswith('0x01') else apk
+    raise KeyError(f'{theme}: {attr}')
 
 def color(value, apk, theme):
     """#aarrggbb (or a reference to one) -> (#rrggbb, alpha). A theme "tint=<colour>" is a SRC_IN colour filter: every
@@ -47,14 +66,15 @@ def color(value, apk, theme):
         # A theme attribute's own colour is not looked up under a tint: it is taken as opaque.
         (c, a), (tc, ta) = color(value, apk, None) if not value.startswith('?') else (None, 1), color(theme[5:], apk, None)
         return tc, a * ta
+    src = apk
     for _ in range(8):
         if value.startswith('?'):
-            colors, styles, names = table(apk)
-            value = styles[names['style/' + theme]][value[1:]]
+            value = theme_attr(apk, theme, value[1:])
             continue
         if value.startswith('@'):
             ref = value[1:]
-            src = FRAMEWORK if ref.startswith('0x01') or ref.startswith('android:') else apk
+            # A framework colour's own references (@color/primary_material_settings) stay in the framework.
+            src = FRAMEWORK if ref.startswith('0x01') or ref.startswith('android:') or src == FRAMEWORK else apk
             colors, styles, names = table(src)
             rid = ref if ref.startswith('0x') else names.get(ref.split(':')[-1])
             value = colors[rid]
@@ -219,6 +239,7 @@ if __name__ == '__main__':
     for out, apk, name, theme in rows:
         # A drawable the image does not have is named, not drawn (a list taken over from another version may hold one).
         if tree(apk, name) is None: missing.append(f'{apk} {name}'); continue
-        open(OUT + out, 'w', encoding='utf-8', newline='\n').write(svg(apk, name, None if theme == '-' else theme))
+        drawing = svg(apk, name, None if theme == '-' else theme)   # drawn first, so a failure leaves the old file whole
+        open(OUT + out, 'w', encoding='utf-8', newline='\n').write(drawing)
     print(len(rows) - len(missing), 'vectors')
     if missing: raise SystemExit('not in the image: ' + ', '.join(missing))
