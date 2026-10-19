@@ -1,0 +1,41 @@
+/* Android 7.1.2 quick settings editor (ng-qsedit.js), in dp: SystemUI's qs_customize_panel.xml,
+   qs_customize_panel_content.xml, qs_customize_divider.xml and qs_customize_tile_frame.xml of N2G48C in edit_theme
+   (Theme.DeviceDefault.Settings.Dark: colorPrimary #263238, colorSecondary #37474f, colorAccent #80cbc4).
+   - QSCustomizer covers QSContainer down to the bottom of the display (QSContainer measures it getDisplayHeight() high;
+     its nav_bar_background lies under the navigation bar); the background turns from qs_detail_transition (#66ffffff)
+     to colorPrimary over 0.6 of QSDetailClipper's 450 ms reveal.
+   - The Toolbar (Widget.Material.Toolbar, 28 dp down, actionBarSize 56 dp): the navigation button
+     (Toolbar.Button.Navigation, 56 dp, ic_ab_back_material in colorControlNormal, the dark theme's #b3ffffff), the title
+     at contentInsetStartWithNavigation 72 dp (TextAppearance.Material.Widget.Toolbar.Title: 20 sp sans-serif-medium,
+     white), the overflow at the end (ActionButton.Overflow: ic_menu_moreoverflow_material, 36 dp at least, 6 dp before
+     and 10 dp after the icon). The overflow menu (Widget.Material.PopupMenu.Overflow): over the button, 4 dp from the
+     end, popup_background_material (2 dp corners, colorBackgroundFloating background_floating_material_dark #424242),
+     a 48 dp row (popup_menu_item_layout: 196 dp wide at least, 16 dp in, TextAppearance.Material.Menu 16 sp white).
+   - The tiles: a third of the width each, qs_customize_tile_frame 8 dp at the sides and 16 dp under the tile; the
+     divider row from its top down on colorSecondary (TileItemDecoration). */
+.ngqe{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;background:#263238;color:#fff;font-family:Roboto,sans-serif}
+.ngqe.reveal{animation:ngqd-reveal 450ms cubic-bezier(.37,0,.63,1) both,ngqd-fade 270ms linear both}
+.ngqe-bar{flex:none;position:relative;display:flex;align-items:center;height:calc(56 * var(--dp));margin-top:calc(28 * var(--dp))}
+.ngqe-up{flex:none;width:calc(56 * var(--dp));height:calc(56 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+.ngqe-up i,.ngqe-more i{display:block;width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:#ffffffb3;-webkit-mask:center/100% 100% no-repeat;mask:center/100% 100% no-repeat}
+.ngqe-up i{-webkit-mask-image:url('assets/fw-ic_ab_back_material.svg');mask-image:url('assets/fw-ic_ab_back_material.svg')}
+.ngqe-more i{-webkit-mask-image:url('assets/fw-ic_menu_moreoverflow_material.svg');mask-image:url('assets/fw-ic_menu_moreoverflow_material.svg')}
+.ngqe-up:active,.ngqe-more:active{background:radial-gradient(circle closest-side,#ffffff33 99%,transparent 100%)}
+.ngqe-title{flex:1;min-width:0;margin-left:calc(16 * var(--dp));font:500 calc(20 * var(--dp))/calc(26.56 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngqe-more{flex:none;min-width:calc(36 * var(--dp));height:calc(56 * var(--dp));padding:0 calc(10 * var(--dp)) 0 calc(6 * var(--dp));border:0;background:none;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+.ngqe-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;position:relative}
+.ngqe-grid{position:relative;min-height:100%}
+.ngqe-decor{position:absolute;left:0;right:0;bottom:0;background:#37474f;transition:top .15s}
+.ngqe-item{position:absolute;box-sizing:border-box;transition:left .15s,top .15s}
+.ngqe-tile{padding:0 calc(8 * var(--dp)) calc(16 * var(--dp));touch-action:none;cursor:grab;-webkit-tap-highlight-color:transparent;user-select:none}
+.ngqe-tv{display:flex;flex-direction:column;align-items:center;padding:calc(18 * var(--dp)) calc(4 * var(--dp)) calc(4 * var(--dp));transition:transform .1s}
+.ngqe-tv .ngqs-icon{margin-bottom:calc(12 * var(--dp))}
+.ngqe-tv .ngqs-label{transition:opacity .1s}
+.ngqe-tile.dragging{z-index:2;transition:none;cursor:grabbing}
+.ngqe-tile.dragging .ngqe-tv{transform:scale(1.2)}
+.ngqe-tile.dragging .ngqs-label{opacity:0}
+.ngqe-divider{padding:calc(20 * var(--dp)) calc(8 * var(--dp)) calc(13 * var(--dp)) calc(16 * var(--dp));font:500 calc(14 * var(--dp))/calc(18.59 * var(--dp)) Roboto,sans-serif;color:#80cbc4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngqe-out{position:absolute;inset:0;z-index:3}
+.ngqe-pop{position:absolute;top:calc(28 * var(--dp));right:calc(4 * var(--dp));z-index:4;min-width:calc(196 * var(--dp));padding:calc(8 * var(--dp)) 0;border-radius:calc(2 * var(--dp));background:#424242;box-shadow:0 calc(16 * var(--dp)) calc(24 * var(--dp)) #00000038,0 calc(6 * var(--dp)) calc(16 * var(--dp)) #00000024;animation:ngdlg-in 150ms cubic-bezier(.215,.61,.355,1)}
+.ngqe-mi{display:flex;align-items:center;width:100%;height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;color:#fff;font:400 calc(16 * var(--dp))/calc(21.25 * var(--dp)) Roboto,sans-serif;text-align:left;-webkit-tap-highlight-color:transparent}
+.ngqe-mi:active{background:#ffffff33}

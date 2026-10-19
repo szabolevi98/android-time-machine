@@ -15,7 +15,7 @@ import xml.etree.ElementTree as ET
 
 RES = os.environ.get('AVD_RES') or ('_aosp/angler/refs/sui-xml' if ERA == 'ng' else '_aosp/bullhead/refs/sui-avd-res')
 A = '{http://schemas.android.com/apk/res/android}'
-ICONS = ['ic_signal_airplane', 'ic_signal_flashlight', 'ic_signal_location', 'ic_hotspot']
+ICONS = ['ic_signal_airplane', 'ic_signal_flashlight', 'ic_signal_location', 'ic_hotspot', 'ic_invert_colors']
 NAMES = [f'{base}_{kind}_animation' for base in ICONS for kind in ('enable', 'disable')]
 NAMES += [f'ic_portrait_{d}_auto_rotate_animation' for d in ('from', 'to')] + ['ic_dnd_disable_animation', 'ic_dnd_total_silence_disable_animation']
 # Nougat: QuickStatusBarHeader's ExpandableIndicator turns with ic_volume_expand_animation / ic_volume_collapse_animation.

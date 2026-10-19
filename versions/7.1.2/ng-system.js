@@ -10,13 +10,14 @@
    - The portable hotspot (SystemUI's HotspotControllerImpl, Settings' WifiApEnabler): switching it on turns Wi-Fi off
      and remembers it (WIFI_SAVED_STATE), switching it off turns that Wi-Fi back on; switching Wi-Fi on stops the hotspot,
      so does airplane mode. It is "turning on" / "turning off" for a moment (WIFI_AP_STATE_ENABLING / _DISABLING).
-   - PhoneStatusBarPolicy: the status icons in config_statusBarIcons order (cast, hotspot, location, bluetooth, zen,
+   - PhoneStatusBarPolicy: the status icons in config_statusBarIcons order (data_saver, cast, hotspot, location, bluetooth, zen,
      volume … alarm_clock): zen is stat_sys_dnd, or stat_sys_dnd_total_silence for total silence; Bluetooth shows while it
      is on (connected: its own icon); the alarm while AlarmManager has a next alarm clock.
    - SignalClusterView: Wi-Fi, the 4 dp spacer when both show, the mobile signal with its data type over it (LTE), the
      airplane after its spacer. The icons are drawn "fully" while the network has internet.
    - The screen's brightness: the simulator dims the phone with a CSS filter (manual: 0.5 at 0 up to 1 at 255; automatic:
-     the adjustment below the middle dims down to 0.5). */
+     the adjustment below the middle dims down to 0.5). Color inversion (DisplayAdjustmentUtils' MATRIX_INVERT_COLOR,
+     which inverts the lightness and keeps the hues) is the same filter's invert(1) hue-rotate(180deg). */
 (() => {
   'use strict';
   Object.assign(NG.defaults.settings, {wifi: true, wifiSsid: 'Home Network', bluetooth: true, airplane: false, zen: 0, zenFavorite: 3, zenUntil: 0, mobileData: true,
@@ -91,6 +92,12 @@
     },
     setMobileData(c, on) { c.data.settings.mobileData = on; c.save(); sys.changed(c); },
     setPowerSave(c, on) { c.data.settings.powerSave = on; c.save(); sys.changed(c); },
+    // LocationController.setLocationEnabled (Secure.LOCATION_MODE high accuracy / off).
+    setLocation(c, on) { c.data.settings.location = on; c.save(); sys.changed(c); },
+    // DataSaverController (NetworkPolicyManager.setRestrictBackground).
+    setDataSaver(c, on) { c.data.settings.dataSaver = on; c.save(); sys.changed(c); },
+    // Secure.ACCESSIBILITY_DISPLAY_INVERSION_ENABLED.
+    setInversion(c, on) { c.data.settings.inversion = on; c.save(); sys.changed(c); },
     // Wi-Fi: off, searching (a moment after switching it on, or with no network to join) or connected.
     wifiState(c) { const s = c.data.settings; return !s.wifi ? 'off' : live.wifiConnecting > Date.now() || !s.wifiSsid ? 'searching' : 'connected'; },
     setWifi(c, on) {
@@ -143,7 +150,12 @@
       if (s.brightnessAuto) return s.brightnessAdj < 0 ? 1 + s.brightnessAdj * 0.5 : 1;
       return 0.5 + 0.5 * (s.brightness / 255);
     },
-    applyBrightness(c) { const f = sys.brightness(c); c.el.screen.style.filter = f < 1 ? `brightness(${f.toFixed(3)})` : ''; },
+    applyBrightness(c) {
+      const f = sys.brightness(c), parts = [];
+      if (c.data.settings.inversion) parts.push('invert(1) hue-rotate(180deg)');
+      if (f < 1) parts.push(`brightness(${f.toFixed(3)})`);
+      c.el.screen.style.filter = parts.join(' ');
+    },
     // Something changed: the status bar and an open shade draw it again.
     changed(c) {
       sys.applyBrightness(c);
@@ -161,6 +173,7 @@
       // The status icons (PhoneStatusBarPolicy) and the signal cluster (SignalClusterView), for ng-statusbar.js.
       c.statusIcons = () => {
         const s = c.data.settings, out = [];
+        if (s.dataSaver) out.push('stat_sys_data_saver');
         if (s.hotspot) out.push('stat_sys_hotspot');
         if (s.bluetooth) out.push((s.btConnected || []).length ? 'stat_sys_data_bluetooth_connected' : 'stat_sys_data_bluetooth');
         if (s.zen) out.push(s.zen === 2 ? 'stat_sys_dnd_total_silence' : 'stat_sys_dnd');

@@ -417,6 +417,22 @@ NG.strings('qsdetail', {
 "fr": "%1$d s",
 "es": "%1$d s"
 },
+"quick_settings_cast_title": {
+"res": "angler:SystemUI:quick_settings_cast_title",
+"en": "Cast",
+"hu": "Tartalomátküldés",
+"de": "Übertragen",
+"fr": "Diffuser",
+"es": "Enviar"
+},
+"quick_settings_cast_detail_empty_text": {
+"res": "angler:SystemUI:quick_settings_cast_detail_empty_text",
+"en": "No devices available",
+"hu": "Nem áll rendelkezésre eszköz",
+"de": "Keine Geräte verfügbar",
+"fr": "Aucun appareil disponible.",
+"es": "No hay dispositivos disponibles"
+},
 "quick_settings_dnd_label": {
 "res": "angler:SystemUI:quick_settings_dnd_label",
 "en": "Do not disturb",

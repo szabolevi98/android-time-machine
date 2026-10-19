@@ -37,3 +37,14 @@ sui-ic_qs_bluetooth_detail_empty.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_blueto
 # framework Material RadioButton (btn_radio_material_anim: btn_radio_off_mtrl / btn_radio_on_mtrl), masks the CSS colours (ZenModePanel conditions)
 fw-btn_radio_off_mtrl.svg	framework/framework-res.apk	btn_radio_off_mtrl	-
 fw-btn_radio_on_mtrl.svg	framework/framework-res.apk	btn_radio_on_mtrl	-
+# Nougat tiles of quick_settings_tiles_stock beyond the default ones (DataSaverTile, CastTile, HotspotTile unavailable) and the data saver status icon
+sui-ic_data_saver.svg	priv-app/SystemUI/SystemUI.apk	ic_data_saver	-
+sui-ic_data_saver_off.svg	priv-app/SystemUI/SystemUI.apk	ic_data_saver_off	-
+sui-ic_qs_cast_off.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_cast_off	-
+sui-ic_qs_cast_on.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_cast_on	-
+sui-ic_qs_cast_detail_empty.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_cast_detail_empty	-
+sui-ic_hotspot_unavailable.svg	priv-app/SystemUI/SystemUI.apk	ic_hotspot_unavailable	-
+# QSCustomizer toolbar (Theme.DeviceDefault.Settings.Dark): homeAsUpIndicator and the overflow, masks the CSS colours
+fw-ic_ab_back_material.svg	framework/framework-res.apk	ic_ab_back_material	-
+fw-ic_menu_moreoverflow_material.svg	framework/framework-res.apk	ic_menu_moreoverflow_material	-
+sui-major_a_b.svg	priv-app/SystemUI/SystemUI.apk	major_a_b	-

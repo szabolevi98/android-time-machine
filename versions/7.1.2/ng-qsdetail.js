@@ -31,6 +31,7 @@
      as wide, tertiary_device_default_settings #455a64) to empty at the right edge; under it "… ago" and "… left". Then
      the 1 dp divider and the Battery Saver row (the BatteryMeterDrawable full with its plus, 16 sp title, the Switch);
      while charging it is dimmed to 0.7 with battery_detail_charging_summary. No header toggle (getToggleState null).
+   - CastDetailAdapter: the cast devices (none around the simulator: ic_qs_cast_detail_empty and its text), no toggle.
    - DndDetailAdapter: ZenModePanel (zen_mode_panel.xml): SegmentedButtons (8 dp above and below, 16 dp in;
      segmented_buttons_background #14ffffff with 2 dp corners; 72 dp high, 16 sp, the selected white sans-serif-medium,
      the others #b0bec5 sans-serif) Total silence / Alarms only / Priority only; for priority only and total silence until
@@ -48,12 +49,12 @@
   const BUCKETS = [15, 30, 45, ...Array.from({length: 12}, (_, i) => (i + 1) * 60)];
   const DEFAULT_BUCKET = BUCKETS.indexOf(60);
   // The settings page each detail's MORE SETTINGS opens (the adapters' getSettingsIntent).
-  const SETTINGS = {wifi: 'wifi', bt: 'bluetooth', cell: 'data-usage', battery: 'battery', dnd: 'zen'};
+  const SETTINGS = {wifi: 'wifi', bt: 'bluetooth', cell: 'data-usage', battery: 'battery', dnd: 'zen', cast: 'cast'};
 
   function title(c, id) {
     const t = T();
     return {wifi: () => t.t('quick_settings_wifi_label'), bt: () => t.t('quick_settings_bluetooth_label'), cell: () => t.t('quick_settings_cellular_detail_title'),
-      battery: () => t.t('battery_panel_title'), dnd: () => t.t('quick_settings_dnd_label')}[id]?.() || '';
+      battery: () => t.t('battery_panel_title'), dnd: () => t.t('quick_settings_dnd_label'), cast: () => t.t('quick_settings_cast_title')}[id]?.() || '';
   }
   // getToggleState: null for the battery (no switch).
   function toggleState(c, id) {
@@ -194,6 +195,8 @@
     if (id === 'cell') return dataUsage(c);
     if (id === 'battery') return battery(c);
     if (id === 'dnd') return zenPanel(c);
+    // CastDetailAdapter: no cast devices near the simulator, so QSDetailItems' empty state.
+    if (id === 'cast') return items(c, [], {icon: 'sui-ic_qs_cast_detail_empty.svg', text: t.t('quick_settings_cast_detail_empty_text')});
     return '';
   }
 

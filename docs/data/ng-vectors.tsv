@@ -44,3 +44,4 @@ sui-stat_sys_data_bluetooth_connected.svg	priv-app/SystemUI/SystemUI.apk	stat_sy
 sui-stat_sys_hotspot.svg	priv-app/SystemUI/SystemUI.apk	stat_sys_hotspot	DualToneLightTheme
 sui-stat_sys_cast.svg	priv-app/SystemUI/SystemUI.apk	stat_sys_cast	DualToneLightTheme
 sui-stat_sys_vpn_ic.svg	priv-app/SystemUI/SystemUI.apk	stat_sys_vpn_ic	DualToneLightTheme
+sui-stat_sys_data_saver.svg	priv-app/SystemUI/SystemUI.apk	stat_sys_data_saver	DualToneLightTheme

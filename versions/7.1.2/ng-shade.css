@@ -29,7 +29,18 @@
    first six tiles' icons wait while the quick tiles fly in (QSAnimator.mTopFiveQs). */
 .ngqs-grid{position:absolute;top:calc(54 * var(--dp));left:0;right:0;bottom:0;opacity:var(--qs-grid,1)}
 .ngqs-tile{position:absolute;display:flex;flex-direction:column;align-items:center;padding:calc(17.714 * var(--dp)) calc(4 * var(--dp)) 0;border:0;background:none;color:#fff;-webkit-tap-highlight-color:transparent}
-.ngsh:not(.qs-open) .ngqs-tile:nth-child(-n+6) .ngqs-icon{visibility:hidden}
+.ngsh:not(.qs-open) .ngqs-page:first-child .ngqs-tile:nth-child(-n+6) .ngqs-icon{visibility:hidden}
+/* PagedTileLayout's pages side by side, the current one in view (ViewPager's scroll: 300 ms, its quintic ease out). */
+.ngqs-grid{overflow:hidden}
+.ngqs-pages{position:absolute;inset:0;transform:translateX(calc(var(--page,0) * -100%));transition:transform .3s cubic-bezier(.23,1,.32,1)}
+.ngqs-pages.dragging{transition:none}
+.ngqs-page{position:absolute;top:0;bottom:0;width:100%}
+/* page_decor: 48 dp under the tiles, the PageIndicator's 8 dp dots centred in it. */
+.ngqs-decor{position:absolute;left:0;right:0;height:calc(48 * var(--dp));display:flex;align-items:center;justify-content:center}
+.ngqs-dots{position:relative;height:calc(8 * var(--dp))}
+.ngqs-dots img{position:absolute;top:0;width:calc(16 * var(--dp));height:calc(8 * var(--dp));transition:opacity .25s}
+/* HotspotTile in airplane mode: the label in qs_tile_tint_unavailable (#40ffffff). */
+.ngqs-label.dim{color:#ffffff40}
 .ngqs-tile .ngqs-icon{margin-bottom:calc(12 * var(--dp))}
 .ngqs-label{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-height:calc(30.57 * var(--dp));max-width:100%;font:400 calc(12 * var(--dp))/calc(15.29 * var(--dp)) 'Roboto Condensed',Roboto,sans-serif;color:#ffffffb3;text-align:center;overflow-wrap:anywhere}
 .ngqs-icon{position:relative;display:block;flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp))}

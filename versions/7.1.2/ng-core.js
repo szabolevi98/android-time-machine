@@ -232,8 +232,8 @@
     reveal = null; ui.backing = false;
   }
   /* An overlay window that goes (or gives way to another) plays its exit animation on a still copy above the screen:
-     a dialog dialog_exit (down to 0.9 in 220 ms decelerate_quint, fading in 150 ms decelerate_cubic, its dim with it),
-     anything else popup_exit_material (a 150 ms fade). The shade, Now on Tap and the volume panel close themselves. */
+     popup_exit_material, a 150 ms fade (decelerate_cubic), which N2G48C's Animation.Material.Dialog uses for dialogs
+     too. The shade, Now on Tap and the volume panel close themselves. */
   const SELF_CLOSING = ['shade', 'assist', 'volume'];
   let shownOverlay = '';
   function overlayExit() {
@@ -243,12 +243,8 @@
     ghost.className = 'ng-overlay-ghost';
     ghost.append(...overlayRoot.childNodes);
     overlayRoot.after(ghost);
-    const win = ghost.querySelector('.ngdlg-win'), fwd = {fill: 'forwards'};
-    if (win) {
-      win.animate([{transform: 'none'}, {transform: 'scale(.9)'}], {duration: 220, easing: E.decQuint, ...fwd});
-      ghost.animate([{opacity: 1}, {opacity: 0}], {duration: 150, easing: 'cubic-bezier(.215,.61,.355,1)', ...fwd});
-    } else ghost.animate([{opacity: 1}, {opacity: 0}], {duration: 150, easing: 'cubic-bezier(.215,.61,.355,1)', ...fwd});
-    setTimeout(() => ghost.remove(), 230);
+    ghost.animate([{opacity: 1}, {opacity: 0}], {duration: 150, easing: 'cubic-bezier(.215,.61,.355,1)', fill: 'forwards'});
+    setTimeout(() => ghost.remove(), 160);
   }
   function renderOverlay() {
     overlayExit();

@@ -555,6 +555,193 @@ NG.strings('shade', {
 "fr": "Aucun service",
 "es": "Sin servicio"
 },
+"quick_settings_location_label": {
+"res": "angler:SystemUI:quick_settings_location_label",
+"en": "Location",
+"hu": "Tartózkodási hely",
+"de": "Standort",
+"fr": "Localisation",
+"es": "Ubicación"
+},
+"accessibility_quick_settings_location_on": {
+"res": "angler:SystemUI:accessibility_quick_settings_location_on",
+"en": "Location reporting on.",
+"hu": "Tartózkodási hely jelentése bekapcsolva.",
+"de": "Standortbericht aktiviert",
+"fr": "Mise à jour de la position activée.",
+"es": "Informes de ubicación activados."
+},
+"accessibility_quick_settings_location_off": {
+"res": "angler:SystemUI:accessibility_quick_settings_location_off",
+"en": "Location reporting off.",
+"hu": "Tartózkodási hely jelentése kikapcsolva.",
+"de": "Standortbericht deaktiviert",
+"fr": "Mise à jour de la position désactivée.",
+"es": "Informes de ubicación desactivados."
+},
+"quick_settings_hotspot_label": {
+"res": "angler:SystemUI:quick_settings_hotspot_label",
+"en": "Hotspot",
+"hu": "Hotspot",
+"de": "Hotspot",
+"fr": "Point d'accès",
+"es": "Zona Wi-Fi"
+},
+"quick_settings_inversion_label": {
+"res": "angler:SystemUI:quick_settings_inversion_label",
+"en": "Invert colors",
+"hu": "Színek invertálása",
+"de": "Farben umkehren",
+"fr": "Inverser les couleurs",
+"es": "Invertir colores"
+},
+"data_saver": {
+"res": "angler:SystemUI:data_saver",
+"en": "Data Saver",
+"hu": "Adatforgalom-csökkentő",
+"de": "Datenverbrauch reduzieren",
+"fr": "Économiseur de données",
+"es": "Ahorro de datos"
+},
+"data_saver_enable_title": {
+"res": "angler:framework:data_saver_enable_title",
+"en": "Turn on Data Saver?",
+"hu": "Bekapcsolja az Adatforgalom-csökkentőt?",
+"de": "Datensparmodus aktivieren?",
+"fr": "Activer l'économiseur de données ?",
+"es": "¿Activar ahorro de datos?"
+},
+"data_saver_description": {
+"res": "angler:framework:data_saver_description",
+"en": "To help reduce data usage, Data Saver prevents some apps from sending or receiving data in the background. An app you’re currently using can access data, but may do so less frequently. This may mean, for example, that images don’t display until you tap them.",
+"hu": "Az adatforgalom csökkentése érdekében az Adatforgalom-csökkentő megakadályozza, hogy egyes alkalmazások adatokat küldjenek vagy fogadjanak a háttérben. Az Ön által aktuálisan használt alkalmazások hozzáférhetnek az adatokhoz, de csak ritkábban. Ez például azt jelentheti, hogy a képek csak rákoppintás után jelennek meg.",
+"de": "Mit dem Datensparmodus wird die Datennutzung verringert, indem verhindert wird, dass im Hintergrund Daten von Apps gesendet oder empfangen werden. Datenzugriffe sind mit einer aktiven App zwar möglich, erfolgen aber seltener. Als Folge davon könnten Bilder beispielsweise erst dann sichtbar werden, wenn sie angetippt werden.",
+"fr": "Pour réduire la consommation des données, l'économiseur de données empêche certaines applications d'envoyer ou de recevoir des données en arrière-plan. Ainsi, une application que vous utilisez actuellement peut accéder à des données, mais moins souvent. Par exemple, il se peut que les images ne s'affichent pas tant que vous n'appuyez pas dessus.",
+"es": "El ahorro de datos evita que algunas aplicaciones envíen o reciban datos en segundo plano, lo que permite reducir el uso de datos. Una aplicación activa podrá acceder a los datos, aunque con menos frecuencia. Esto significa que, por ejemplo, algunas imágenes no se muestren hasta que no las toques."
+},
+"data_saver_enable_button": {
+"res": "angler:framework:data_saver_enable_button",
+"en": "Turn on",
+"hu": "Bekapcsolás",
+"de": "Aktivieren",
+"fr": "Activer",
+"es": "Activar"
+},
+"cancel": {
+"res": "angler:SystemUI:cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"quick_settings_cast_title": {
+"res": "angler:SystemUI:quick_settings_cast_title",
+"en": "Cast",
+"hu": "Tartalomátküldés",
+"de": "Übertragen",
+"fr": "Diffuser",
+"es": "Enviar"
+},
+"accessibility_cast_name": {
+"res": "angler:SystemUI:accessibility_cast_name",
+"args": 1,
+"en": "Connected to %s.",
+"hu": "Csatlakozva a következőhöz: %s.",
+"de": "Verbunden mit %s.",
+"fr": "Connecté à %s.",
+"es": "Conectado a %s."
+},
+"quick_settings_connecting": {
+"res": "angler:SystemUI:quick_settings_connecting",
+"en": "Connecting...",
+"hu": "Csatlakozás…",
+"de": "Verbindung wird hergestellt…",
+"fr": "Connexion en cours...",
+"es": "Conectando..."
+},
+"accessibility_quick_settings_open_details": {
+"res": "angler:SystemUI:accessibility_quick_settings_open_details",
+"en": "Open details.",
+"hu": "A részletek megnyitása.",
+"de": "Details öffnen.",
+"fr": "Ouvrir les détails.",
+"es": "Abrir detalles."
+},
+"qs_edit": {
+"res": "angler:SystemUI:qs_edit",
+"en": "Edit",
+"hu": "Szerkesztés",
+"de": "Bearbeiten",
+"fr": "Modifier",
+"es": "Editar"
+},
+"reset": {
+"res": "angler:SystemUI:reset",
+"en": "Reset",
+"hu": "Alaphelyzet",
+"de": "Zurücksetzen",
+"fr": "Réinitialiser",
+"es": "Restablecer"
+},
+"drag_to_add_tiles": {
+"res": "angler:SystemUI:drag_to_add_tiles",
+"en": "Drag to add tiles",
+"hu": "Húzza csempe hozzáadásához",
+"de": "Zum Hinzufügen von Kacheln ziehen",
+"fr": "Faites glisser des tuiles ici pour les ajouter",
+"es": "Arrastra para añadir funciones"
+},
+"drag_to_remove_tiles": {
+"res": "angler:SystemUI:drag_to_remove_tiles",
+"en": "Drag here to remove",
+"hu": "Húzza ide az eltávolításhoz",
+"de": "Zum Entfernen hierher ziehen",
+"fr": "Faites glisser les tuiles ici pour les supprimer.",
+"es": "Arrastra aquí para quitar una función"
+},
+"accessibility_desc_quick_settings_edit": {
+"res": "angler:SystemUI:accessibility_desc_quick_settings_edit",
+"en": "Quick settings editor.",
+"hu": "Gyorsbeállítások szerkesztője",
+"de": "Editor für Schnelleinstellungen.",
+"fr": "Éditeur de configuration rapide.",
+"es": "Editor de ajustes rápidos."
+},
+"framework/action_bar_up_description": {
+"res": "angler:framework:action_bar_up_description",
+"en": "Navigate up",
+"hu": "Felfele mozgás",
+"de": "Nach oben navigieren",
+"fr": "Parcourir vers le haut",
+"es": "Desplazarse hacia arriba"
+},
+"framework/action_menu_overflow_description": {
+"res": "angler:framework:action_menu_overflow_description",
+"en": "More options",
+"hu": "További lehetőségek",
+"de": "Weitere Optionen",
+"fr": "Plus d'options",
+"es": "Más opciones"
+},
+"accessibility_qs_edit_tile_label": {
+"res": "angler:SystemUI:accessibility_qs_edit_tile_label",
+"args": 2,
+"en": "Position %1$d, %2$s. Double tap to edit.",
+"hu": "%1$d. pozíció: %2$s. Koppintson duplán a szerkesztéshez.",
+"de": "Position %1$d, %2$s. Zum Bearbeiten doppeltippen.",
+"fr": "Position %1$d, \"%2$s\". Appuyer deux fois pour modifier.",
+"es": "Posición %1$d, %2$s. Toca dos veces para cambiarla."
+},
+"accessibility_qs_edit_add_tile_label": {
+"res": "angler:SystemUI:accessibility_qs_edit_add_tile_label",
+"args": 1,
+"en": "%1$s. Double tap to add.",
+"hu": "%1$s. Koppintson duplán a hozzáadáshoz.",
+"de": "%1$s. Zum Hinzufügen doppeltippen.",
+"fr": "%1$s. Appuyer deux fois pour ajouter.",
+"es": "%1$s. Toca dos veces para añadirlo."
+},
 "carrier": {
 "own": true,
 "source": "the simulator's network operator, as in every version (5.1.1 networkOperator)",
