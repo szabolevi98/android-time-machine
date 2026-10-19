@@ -20,3 +20,5 @@ gel-ic_setting_pressed.png	priv-app/Velvet/Velvet.apk	drawable/ic_setting_presse
 gel-cling_bg.9.png	priv-app/Velvet/Velvet.apk	drawable/cling_bg
 gel-screenpanel.9.png	priv-app/Velvet/Velvet.apk	drawable/screenpanel
 gel-screenpanel_hover.9.png	priv-app/Velvet/Velvet.apk	drawable/screenpanel_hover
+# Overview: the navigation bar scrim (nav_bar_scrim)
+sui-recents_lower_gradient.9.png	priv-app/SystemUI/SystemUI.apk	drawable/recents_lower_gradient

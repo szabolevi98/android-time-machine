@@ -67,6 +67,11 @@ for cls in d.get_classes():
     if not any(p in cname for p in pats):
         continue
     fn = os.path.join(out, cname[1:-1].replace('/', '.') + '.java')
+    # Lambda classes can have names longer than Windows allows; such a name is cut and given a short hash.
+    if len(os.path.abspath(fn)) > 240:
+        import hashlib
+        base = cname[1:-1].replace('/', '.')
+        fn = os.path.join(out, base[:120] + '~' + hashlib.sha1(base.encode()).hexdigest()[:8] + '.java')
     try:
         dv = DvClass(cls, dx)
         dv.process()

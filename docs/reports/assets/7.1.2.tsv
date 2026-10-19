@@ -119,6 +119,10 @@ versions/7.1.2/assets/sui-ic_volume_ringer_vibrate.svg	2ad410e5284aacb9	vector	a
 versions/7.1.2/assets/sui-ic_volume_voice.svg	25de3ae228fc97ca	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_volume_voice.xml	drawable	vector drawable drawn as SVG	42e327c616fe655d
 versions/7.1.2/assets/sui-major_a_b.svg	001e75ce5e768bbe	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/major_a_b.xml	drawable	vector drawable drawn as SVG	d675ddef31f36f4a
 versions/7.1.2/assets/sui-qs_ic_wifi_lock.svg	451b12014d584876	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/qs_ic_wifi_lock.xml	drawable	vector drawable drawn as SVG	1157838be398b642
+versions/7.1.2/assets/sui-recents_dismiss_dark.svg	8c40beb89c915c31	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/recents_dismiss_dark.xml	drawable	vector drawable drawn as SVG	b7d844aa09a10dbf
+versions/7.1.2/assets/sui-recents_dismiss_light.svg	73a7d38775900df3	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/recents_dismiss_light.xml	drawable	vector drawable drawn as SVG	9bfa3437b651ecc8
+versions/7.1.2/assets/sui-recents_empty.svg	3b75331b8b3b9b0b	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/recents_empty.xml	drawable	vector drawable drawn as SVG	ee37363df5052f63
+versions/7.1.2/assets/sui-recents_lower_gradient.9.png	15e26034cab9215e	copy	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable-xxhdpi-v4/recents_lower_gradient.9.png	drawable-xxhdpi-v4		15e26034cab9215e
 versions/7.1.2/assets/sui-stat_sys_airplane_mode.svg	89f6d374a7bc611e	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/stat_sys_airplane_mode.xml	drawable	vector drawable drawn as SVG	b7979692c42b583f
 versions/7.1.2/assets/sui-stat_sys_alarm.svg	6dd329a826df01da	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/stat_sys_alarm.xml	drawable	vector drawable drawn as SVG	3ad0033d3ccc96de
 versions/7.1.2/assets/sui-stat_sys_cast.svg	09d1f784d088d454	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/stat_sys_cast.xml	drawable	vector drawable drawn as SVG	b5784f6a296912aa

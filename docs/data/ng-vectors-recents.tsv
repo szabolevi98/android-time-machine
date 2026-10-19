@@ -1,0 +1,4 @@
+# Overview (recents.xml, recents_task_view_header.xml, recents_empty.xml): the dismiss buttons and the empty state, drawn as their VectorDrawables
+sui-recents_dismiss_light.svg	priv-app/SystemUI/SystemUI.apk	recents_dismiss_light	-
+sui-recents_dismiss_dark.svg	priv-app/SystemUI/SystemUI.apk	recents_dismiss_dark	-
+sui-recents_empty.svg	priv-app/SystemUI/SystemUI.apk	recents_empty	-
