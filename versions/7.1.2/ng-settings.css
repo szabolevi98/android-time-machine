@@ -118,3 +118,18 @@ button.ngst-pref:active{background:#e5e5e5!important}
 .ngst-switchbar.disabled{cursor:default;opacity:.6}
 .ngst-missing{position:relative}
 .ngst-full{background:#fff}
+/* preference_volume_slider.xml: 64 dp at least, 8 dp above and below, the Subhead title, 6 dp under it the 24 dp icon in
+   colorControlNormal and the SeekBar 24 dp after its start (Widget.Material.SeekBar: 16 dp padding, the 2 dp track at
+   0.3 of colorControlNormal split around the thumb, the progress and the 12 dp thumb in colorAccent, 18 dp pressed). */
+.ngst-volume{min-height:calc(64 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));box-sizing:border-box;background:#fafafa}
+.ngst-volrow{position:relative;display:flex;align-items:center;margin-top:calc(6 * var(--dp));height:calc(32 * var(--dp))}
+.ngst-volicon{flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:#0000008a;-webkit-mask:center/100% no-repeat;mask:center/100% no-repeat}
+.ngst-seek{position:relative;flex:1;height:calc(32 * var(--dp));margin-left:calc(0 * var(--dp));touch-action:none;cursor:pointer}
+.ngst-seek-track,.ngst-seek-progress{position:absolute;top:calc(15 * var(--dp));height:calc(2 * var(--dp))}
+.ngst-seek-track{left:calc(16 * var(--dp));right:calc(16 * var(--dp));background:#0000008a;opacity:.3}
+.ngst-seek-progress{left:calc(16 * var(--dp));width:calc((100% - 32 * var(--dp)) * var(--v));background:#009688}
+.ngst-seek-thumb{position:absolute;top:calc(10 * var(--dp));left:calc(16 * var(--dp) + (100% - 32 * var(--dp)) * var(--v) - 6 * var(--dp));width:calc(12 * var(--dp));height:calc(12 * var(--dp));border-radius:50%;background:#009688;transition:transform .1s}
+.ngst-seek.pressed .ngst-seek-thumb{transform:scale(1.5)}
+.ngst-ruletype{display:flex;align-items:center;gap:calc(15 * var(--dp));min-height:calc(64 * var(--dp));font-size:calc(16 * var(--dp))}
+.ngst-ruleic{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
+.ngst-empty{padding:calc(32 * var(--dp)) calc(16 * var(--dp));text-align:center;color:#0000008a;font-size:calc(16 * var(--dp))}

@@ -101,3 +101,8 @@
 .ngnt-hun{position:absolute;left:0;right:0;top:0;z-index:19}
 .ngnt-hun .ngnt-row{margin:0;box-shadow:0 calc(2 * var(--dp)) calc(6 * var(--dp)) #0000004d}
 .screen.view-lock .ngnt-hun,.screen.sleeping .ngnt-hun{display:none}
+/* ng-brightness.js: BrightnessDialog at the top of the screen under the status bar, no dim behind it. */
+.ngbr{position:absolute;inset:0;z-index:30}
+.ngbr-out{position:absolute;inset:0}
+.ngbr-win{position:absolute;top:calc(40 * var(--dp));left:calc(16 * var(--dp));right:calc(16 * var(--dp));height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border-radius:calc(2 * var(--dp));background:#424242;box-shadow:0 calc(16 * var(--dp)) calc(24 * var(--dp)) #00000038,0 calc(6 * var(--dp)) calc(16 * var(--dp)) #00000024;animation:ngdlg-in 150ms cubic-bezier(.215,.61,.355,1)}
+.ngbr-slider{left:calc(16 * var(--dp));right:calc(16 * var(--dp))}

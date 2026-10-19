@@ -29,7 +29,7 @@ versions/7.1.2/assets/boot-part1.webp	f19881d52f757d52	generated	angler:/system/
 versions/7.1.2/assets/boot-part2.webp	8482865882f6cf6b	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
 versions/7.1.2/assets/boot-part3.webp	af9c0767dea06b7a	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
 versions/7.1.2/assets/dc-clock.ttf	d7bbc227ed36ee08	copy	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!assets/fonts/clock.ttf			d7bbc227ed36ee08
-versions/7.1.2/assets/device-nexus-6p.svg	b4dd8f6765bcacdd	own	drawn by docs/tools/device-frames.py: the outline measured from the maker's front render, the shading drawn			
+versions/7.1.2/assets/device-nexus-6p.svg	656300d21ccfb446	own	drawn by docs/tools/device-frames.py: the outline measured from the maker's front render, the shading drawn			
 versions/7.1.2/assets/fw-btn_checkbox_checked_mtrl.svg	da195ea42e715342	vector	angler:/system/framework/framework-res.apk!res/drawable/btn_checkbox_checked_mtrl.xml	drawable	vector drawable drawn as SVG	bb52e9558bc16dd0
 versions/7.1.2/assets/fw-btn_checkbox_unchecked_mtrl.svg	d29367c4d07be14f	vector	angler:/system/framework/framework-res.apk!res/drawable/btn_checkbox_unchecked_mtrl.xml	drawable	vector drawable drawn as SVG	d46fa2f2201d74fb
 versions/7.1.2/assets/fw-btn_radio_off_mtrl.svg	bca8ae8fdfbe60ee	vector	angler:/system/framework/framework-res.apk!res/drawable/btn_radio_off_mtrl.xml	drawable	vector drawable drawn as SVG	182f36dea142dbf4
@@ -39,8 +39,12 @@ versions/7.1.2/assets/fw-btn_switch_to_on_mtrl_00012.9.png	d2e2517ee93d11ad	copy
 versions/7.1.2/assets/fw-default_wallpaper.png	960888db8bdc6e1d	copy	angler:/system/framework/framework-res.apk!res/drawable-nodpi-v4/default_wallpaper.png	drawable-nodpi-v4		960888db8bdc6e1d
 versions/7.1.2/assets/fw-ic_ab_back_material.svg	b3eb88deea52b00e	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_ab_back_material.xml	drawable	vector drawable drawn as SVG	c0db042a016d5cbf
 versions/7.1.2/assets/fw-ic_audio_alarm.svg	0f02acdabb909d79	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_audio_alarm.xml	drawable	vector drawable drawn as SVG	e67036f06b7472ae
+versions/7.1.2/assets/fw-ic_audio_alarm_mute.svg	b374ed5968cb0154	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_audio_alarm_mute.xml	drawable	vector drawable drawn as SVG	d1019662a6386f5b
 versions/7.1.2/assets/fw-ic_audio_media.svg	b58b602a4b1fd641	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_audio_media.xml	drawable	vector drawable drawn as SVG	8621982ed0251627
+versions/7.1.2/assets/fw-ic_audio_media_mute.svg	aab3aa11a4d6874c	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_audio_media_mute.xml	drawable	vector drawable drawn as SVG	85424640adfb648d
 versions/7.1.2/assets/fw-ic_audio_ring_notif.svg	ab6c3a0640c803a1	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_audio_ring_notif.xml	drawable	vector drawable drawn as SVG	e9adbaabb5709b80
+versions/7.1.2/assets/fw-ic_audio_ring_notif_mute.svg	ddf56eb07d858071	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_audio_ring_notif_mute.xml	drawable	vector drawable drawn as SVG	67c70d4f4d4484f2
+versions/7.1.2/assets/fw-ic_audio_ring_notif_vibrate.svg	8444f5e7beb66327	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_audio_ring_notif_vibrate.xml	drawable	vector drawable drawn as SVG	de75656bfce79ae0
 versions/7.1.2/assets/fw-ic_lock_power_off.svg	5b4201f21766b0f3	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_lock_power_off.xml	drawable	vector drawable drawn as SVG	ec0bcae2cfacaf2f
 versions/7.1.2/assets/fw-ic_menu_moreoverflow_material.svg	1838187e20cd01ba	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_menu_moreoverflow_material.xml	drawable	vector drawable drawn as SVG	21c5d08046c0c1f8
 versions/7.1.2/assets/fw-ic_restart.svg	eed2155fe1231af1	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_restart.xml	drawable	vector drawable drawn as SVG	dde276bb089c0bc1
@@ -71,6 +75,7 @@ versions/7.1.2/assets/gms-ic_google_settings.png	1494bcd0498fcea9	copy	angler:/s
 versions/7.1.2/assets/gms-quantum_ic_directions_walk_googblue_24.png	c517eeefa3f462ca	copy	angler:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable/quantum_ic_directions_walk_googblue_24.png	drawable		c517eeefa3f462ca
 versions/7.1.2/assets/landing-home.jpg	f820daabc45af3ac	own	capture of the simulator's own home screen for the landing page card		closest: mean difference 7.68 (maguro:/system/media/bootanimation.zip!part0/f0003.jpg)	
 versions/7.1.2/assets/st-home.svg	73447c202c02bf07	vector	angler:/system/priv-app/EmergencyInfo/EmergencyInfo.apk!res/drawable/home.xml	drawable	vector drawable drawn as SVG	461faeba3e25f044
+versions/7.1.2/assets/st-ic_add.svg	b1adf8b5d4f856a6	vector	angler:/system/app/PrintSpooler/PrintSpooler.apk!res/drawable/ic_add.xml	drawable	vector drawable drawn as SVG	b5cf0f23d113feec
 versions/7.1.2/assets/st-ic_airplane.svg	c7f6ee6962a4a3b6	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_airplane.xml	drawable	vector drawable drawn as SVG	88e3cee09bf0ae71
 versions/7.1.2/assets/st-ic_cellular_off.svg	aaa9c34d4c2c470a	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_cellular_off.xml	drawable	vector drawable drawn as SVG	b390d2e868a8cd30
 versions/7.1.2/assets/st-ic_data_saver.svg	5b7ad717211802ba	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_data_saver.xml	drawable	vector drawable drawn as SVG	95303f8dc73fe916
@@ -78,6 +83,7 @@ versions/7.1.2/assets/st-ic_expand_less.svg	3d090f3d1de8b98a	vector	angler:/syst
 versions/7.1.2/assets/st-ic_expand_more.svg	89a670a00ec2dfb0	vector	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!res/drawable/ic_expand_more.xml	drawable	vector drawable drawn as SVG	3f301e4d742bff8e
 versions/7.1.2/assets/st-ic_help_24dp.svg	c63e88d4e36ea99f	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_help_24dp.xml	drawable	vector drawable drawn as SVG	e3451527002473cd
 versions/7.1.2/assets/st-ic_hotspot.svg	49496eba1565252c	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_hotspot.xml	drawable	vector drawable drawn as SVG	2a05182f1f40f870
+versions/7.1.2/assets/st-ic_label.svg	81460110379744b5	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_label.xml	drawable	vector drawable drawn as SVG	c43fc576d5c821dd
 versions/7.1.2/assets/st-ic_lightbulb_outline_24.svg	eadff994dc8f0db8	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_lightbulb_outline_24.xml	drawable	vector drawable drawn as SVG	732e42868d08ba62
 versions/7.1.2/assets/st-ic_lock_list_icon.svg	82cf7fc279a0b796	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_lock_list_icon.xml	drawable	vector drawable drawn as SVG	1ffb51b3785113b8
 versions/7.1.2/assets/st-ic_menu.svg	3caa4c2a06398f98	vector	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-v21/ic_menu.xml	drawable-v21	vector drawable drawn as SVG	27d55711141f7b74

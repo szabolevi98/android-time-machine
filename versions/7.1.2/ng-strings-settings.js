@@ -7032,6 +7032,493 @@ NG.strings('settings', {
 "fr": "Rechercher…",
 "es": "Buscar..."
 },
+"battery_saver_turn_on_automatically_never": {
+"res": "angler:SettingsGoogle:battery_saver_turn_on_automatically_never",
+"en": "Never",
+"hu": "Soha",
+"de": "Nie",
+"fr": "Jamais",
+"es": "Nunca"
+},
+"display_auto_rotate_rotate": {
+"res": "angler:SettingsGoogle:display_auto_rotate_rotate",
+"en": "Rotate the contents of the screen",
+"hu": "Az oldal tartalmának forgatása",
+"de": "Bildschirminhalte drehen",
+"fr": "Faire pivoter le contenu affiché à l'écran",
+"es": "Girar el contenido de la pantalla"
+},
+"display_auto_rotate_stay_in_portrait": {
+"res": "angler:SettingsGoogle:display_auto_rotate_stay_in_portrait",
+"en": "Stay in portrait view",
+"hu": "Álló nézet megtartása",
+"de": "Hochformat beibehalten",
+"fr": "Rester en mode portrait",
+"es": "Mantener vista vertical"
+},
+"screensaver_settings_summary_off": {
+"res": "angler:SettingsGoogle:screensaver_settings_summary_off",
+"en": "Off",
+"hu": "Ki",
+"de": "Aus",
+"fr": "Désactivé",
+"es": "No"
+},
+"display_vr_pref_low_persistence": {
+"res": "angler:SettingsGoogle:display_vr_pref_low_persistence",
+"en": "Reduce blur (recommended)",
+"hu": "Homályosítás csökkentése (ajánlott)",
+"de": "Unschärfe reduzieren (empfohlen)",
+"fr": "Réduire le flou (recommandé)",
+"es": "Reducir desenfoque (recomendado)"
+},
+"display_vr_pref_off": {
+"res": "angler:SettingsGoogle:display_vr_pref_off",
+"en": "Reduce flicker",
+"hu": "Vibrálás csökkentése",
+"de": "Flimmern reduzieren",
+"fr": "Réduire le scintillement",
+"es": "Reducir parpadeo"
+},
+"entries_font_size": {
+"res": "angler:SettingsGoogle:entries_font_size",
+"en": [
+"Small",
+"Default",
+"Large",
+"Largest"
+],
+"hu": [
+"Kicsi",
+"Alapértelmezett",
+"Nagy",
+"A legnagyobb"
+],
+"de": [
+"Klein",
+"Standard",
+"Groß",
+"Am größten"
+],
+"fr": [
+"Petite",
+"Par défaut",
+"Grande",
+"La plus grande"
+],
+"es": [
+"Pequeño",
+"Predeterminado",
+"Grande",
+"Lo más grande posible"
+]
+},
+"screen_zoom_summary_small": {
+"res": "angler:SettingsGoogle:screen_zoom_summary_small",
+"en": "Small",
+"hu": "Kicsi",
+"de": "Klein",
+"fr": "Petit",
+"es": "Pequeño"
+},
+"screen_zoom_summary_default": {
+"res": "angler:SettingsGoogle:screen_zoom_summary_default",
+"en": "Default",
+"hu": "Alapértelmezett",
+"de": "Standard",
+"fr": "Par défaut",
+"es": "Predeterminado"
+},
+"screen_zoom_summary_very_large": {
+"res": "angler:SettingsGoogle:screen_zoom_summary_very_large",
+"en": "Larger",
+"hu": "Nagyobb",
+"de": "Größer",
+"fr": "Plus grand",
+"es": "Más grande"
+},
+"screen_zoom_summary_extremely_large": {
+"res": "angler:SettingsGoogle:screen_zoom_summary_extremely_large",
+"en": "Largest",
+"hu": "Legnagyobb",
+"de": "Am größten",
+"fr": "Le plus grand",
+"es": "Lo más grande posible"
+},
+"framework/ringtone_silent": {
+"res": "angler:framework:ringtone_silent",
+"en": "None",
+"hu": "Egyik sem",
+"de": "Ohne",
+"fr": "Aucune",
+"es": "Ninguno"
+},
+"framework/ringtone_picker_title": {
+"res": "angler:framework:ringtone_picker_title",
+"en": "Ringtones",
+"hu": "Csengőhangok",
+"de": "Klingeltöne",
+"fr": "Sonneries",
+"es": "Tonos"
+},
+"muted_by": {
+"res": "angler:framework:muted_by",
+"args": 1,
+"en": "Muted by %1$s",
+"hu": "A(z) %1$s elnémította",
+"de": "Stummgeschaltet durch %1$s",
+"fr": "Son coupé par : %1$s",
+"es": "Silenciado por %1$s"
+},
+"join_many_items_middle": {
+"res": "angler:SettingsGoogle:join_many_items_middle",
+"args": 2,
+"en": "%1$s, %2$s",
+"hu": "%1$s, %2$s",
+"de": "%1$s, %2$s",
+"fr": "%1$s, %2$s",
+"es": "%1$s, %2$s"
+},
+"zen_mode_selected_messages": {
+"res": "angler:SettingsGoogle:zen_mode_selected_messages",
+"en": "Selected messages",
+"hu": "Kijelölt üzenetek",
+"de": "Ausgewählte Nachrichten",
+"fr": "Messages sélectionnés",
+"es": "Mensajes seleccionados"
+},
+"zen_mode_all_messages": {
+"res": "angler:SettingsGoogle:zen_mode_all_messages",
+"en": "All messages",
+"hu": "Minden üzenet",
+"de": "Alle Nachrichten",
+"fr": "Tous les messages",
+"es": "Todos los mensajes"
+},
+"zen_mode_selected_callers": {
+"res": "angler:SettingsGoogle:zen_mode_selected_callers",
+"en": "Selected callers",
+"hu": "Kijelölt hívók",
+"de": "Ausgewählte Anrufer",
+"fr": "Appelants sélectionnés",
+"es": "Contactos seleccionados"
+},
+"zen_mode_all_callers": {
+"res": "angler:SettingsGoogle:zen_mode_all_callers",
+"en": "All callers",
+"hu": "Minden hívó",
+"de": "Alle Anrufer",
+"fr": "Tous les appelants",
+"es": "Todas las llamadas"
+},
+"zen_mode_all_visual_interruptions": {
+"res": "angler:SettingsGoogle:zen_mode_all_visual_interruptions",
+"en": "Off",
+"hu": "Ki",
+"de": "Aus",
+"fr": "Désactivé",
+"es": "No"
+},
+"zen_mode_screen_on_visual_interruptions": {
+"res": "angler:SettingsGoogle:zen_mode_screen_on_visual_interruptions",
+"en": "When screen is on",
+"hu": "Ha a képernyő be van kapcsolva",
+"de": "Bei aktiviertem Display",
+"fr": "Lorsque l'écran est allumé",
+"es": "Con la pantalla activada"
+},
+"zen_mode_screen_off_visual_interruptions": {
+"res": "angler:SettingsGoogle:zen_mode_screen_off_visual_interruptions",
+"en": "When screen is off",
+"hu": "Ha a képernyő ki van kapcsolva",
+"de": "Bei deaktiviertem Display",
+"fr": "Lorsque l'écran est éteint",
+"es": "Con la pantalla desactivada"
+},
+"zen_mode_no_visual_interruptions": {
+"res": "angler:SettingsGoogle:zen_mode_no_visual_interruptions",
+"en": "When screen is on or off",
+"hu": "Amikor a képernyő be vagy ki van kapcsolva",
+"de": "Bei aktiviertem oder deaktiviertem Display",
+"fr": "Lorsque l'écran est allumé ou éteint",
+"es": "Con la pantalla activada o desactivada"
+},
+"zen_mode_from_anyone": {
+"res": "angler:SettingsGoogle:zen_mode_from_anyone",
+"en": "From anyone",
+"hu": "Bárkitől",
+"de": "Von beliebiger Person",
+"fr": "De tout le monde",
+"es": "De cualquier usuario"
+},
+"zen_mode_from_contacts": {
+"res": "angler:SettingsGoogle:zen_mode_from_contacts",
+"en": "From contacts only",
+"hu": "Csak a névjegyek között szereplőktől",
+"de": "Nur von Kontakten",
+"fr": "Des contacts uniquement",
+"es": "Solo de contactos"
+},
+"zen_mode_from_starred": {
+"res": "angler:SettingsGoogle:zen_mode_from_starred",
+"en": "From starred contacts only",
+"hu": "Csak a megcsillagozott névjegyektől",
+"de": "Nur von markierten Kontakten",
+"fr": "Des contacts favoris uniquement",
+"es": "Solo de contactos destacados"
+},
+"zen_mode_from_none": {
+"res": "angler:SettingsGoogle:zen_mode_from_none",
+"en": "None",
+"hu": "Senkitől",
+"de": "Keine",
+"fr": "Aucun",
+"es": "Ninguno"
+},
+"zen_mode_repeat_callers_summary": {
+"res": "angler:SettingsGoogle:zen_mode_repeat_callers_summary",
+"args": 1,
+"en": "If the same person calls a second time within a %d minute period, allow it",
+"hu": "Ha %d percen belül másodjára is hív valaki, akkor engedélyezze",
+"de": "Zulassen, falls dieselbe Person innerhalb von %d Minuten erneut anruft",
+"fr": "Si la même personne appelle deux fois en %d minute(s), autoriser le deuxième appel",
+"es": "Permitir llamadas que procedan de la misma persona si no han pasado más de %d minutos desde su primera llamada"
+},
+"zen_mode_add_rule": {
+"res": "angler:SettingsGoogle:zen_mode_add_rule",
+"en": "Add rule",
+"hu": "Szabály hozzáadása",
+"de": "Regel hinzufügen",
+"fr": "Ajouter une règle",
+"es": "Añadir regla"
+},
+"zen_mode_choose_rule_type": {
+"res": "angler:SettingsGoogle:zen_mode_choose_rule_type",
+"en": "Choose rule type",
+"hu": "Szabálytípus kiválasztása",
+"de": "Regeltyp auswählen",
+"fr": "Sélectionner le type de règle",
+"es": "Seleccionar tipo de regla"
+},
+"zen_event_rule_type_name": {
+"res": "angler:SettingsGoogle:zen_event_rule_type_name",
+"en": "Event rule",
+"hu": "Eseményszabály",
+"de": "Ereignisregel",
+"fr": "Règle de l'événement",
+"es": "Regla de evento"
+},
+"zen_schedule_rule_type_name": {
+"res": "angler:SettingsGoogle:zen_schedule_rule_type_name",
+"en": "Time rule",
+"hu": "Időfüggő szabály",
+"de": "Zeitregel",
+"fr": "Règle basée sur l'heure",
+"es": "Regla de hora"
+},
+"zen_mode_rule_name_hint": {
+"res": "angler:SettingsGoogle:zen_mode_rule_name_hint",
+"en": "Enter rule name",
+"hu": "Szabály nevének megadása",
+"de": "Regelnamen eingeben",
+"fr": "Saisissez le nom de la règle",
+"es": "Introduce un nombre"
+},
+"zen_mode_rule_name_warning": {
+"res": "angler:SettingsGoogle:zen_mode_rule_name_warning",
+"en": "Rule name already in use",
+"hu": "A szabálynév már használatban van",
+"de": "Regelname wird bereits verwendet.",
+"fr": "Ce nom de règle est déjà utilisé.",
+"es": "Nombre de regla ya en uso"
+},
+"okay": {
+"res": "angler:SettingsGoogle:okay",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"zen_event_rule_enabled_toast": {
+"res": "angler:SettingsGoogle:zen_event_rule_enabled_toast",
+"en": "Automatic rule set to turn on Do Not Disturb during specified events",
+"hu": "Automatikus szabály beállítva a „Ne zavarjanak” bekapcsolására adott események közben",
+"de": "Automatische Regel zur Aktivierung des Status \"Nicht stören\" während bestimmter Ereignisse eingestellt",
+"fr": "Règle automatique pour activer le mode \"Ne pas déranger\" pendant les événements indiqués",
+"es": "Regla automática establecida para activar el modo No molestar durante los eventos especificados"
+},
+"zen_schedule_rule_enabled_toast": {
+"res": "angler:SettingsGoogle:zen_schedule_rule_enabled_toast",
+"en": "Automatic rule set to turn on Do Not Disturb during specified times",
+"hu": "Automatikus szabály beállítva a „Ne zavarjanak” bekapcsolására adott időpontokban",
+"de": "Automatische Regel zur Aktivierung des Status \"Nicht stören\" zu bestimmten Zeiten eingestellt",
+"fr": "Règle automatique pour activer le mode \"Ne pas déranger\" aux heures indiquées",
+"es": "Regla automática para activar el modo No molestar durante las horas especificadas"
+},
+"zen_mode_rule_summary_enabled_combination": {
+"res": "angler:SettingsGoogle:zen_mode_rule_summary_enabled_combination",
+"args": 1,
+"en": "On / %1$s",
+"hu": "Bekapcsolva / %1$s",
+"de": "An/%1$s",
+"fr": "Activé/%1$s",
+"es": "Sí / %1$s"
+},
+"zen_mode_delete_rule": {
+"res": "angler:SettingsGoogle:zen_mode_delete_rule",
+"en": "Delete rule",
+"hu": "Szabály törlése",
+"de": "Regel löschen",
+"fr": "Supprimer la règle",
+"es": "Eliminar regla"
+},
+"zen_mode_delete_rule_confirmation": {
+"res": "angler:SettingsGoogle:zen_mode_delete_rule_confirmation",
+"args": 1,
+"en": "Delete “%1$s” rule?",
+"hu": "Törli a(z) „%1$s” szabályt?",
+"de": "Regel \"%1$s\" löschen?",
+"fr": "Supprimer la règle \"%1$s\" ?",
+"es": "¿Quieres eliminar la regla \"%1$s\"?"
+},
+"zen_mode_delete_rule_button": {
+"res": "angler:SettingsGoogle:zen_mode_delete_rule_button",
+"en": "Delete",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Supprimer",
+"es": "Eliminar"
+},
+"zen_mode_rule_not_found_text": {
+"res": "angler:SettingsGoogle:zen_mode_rule_not_found_text",
+"en": "Rule not found.",
+"hu": "Szabály nem található",
+"de": "Regel nicht gefunden",
+"fr": "Règle introuvable.",
+"es": "No se ha encontrado esa regla."
+},
+"zen_mode_event_rule_calendar_any": {
+"res": "angler:SettingsGoogle:zen_mode_event_rule_calendar_any",
+"en": "Any calendar",
+"hu": "Bármilyen naptár",
+"de": "Beliebiger Kalender",
+"fr": "Tous les agendas",
+"es": "Cualquier calendario"
+},
+"zen_mode_event_rule_reply_any_except_no": {
+"res": "angler:SettingsGoogle:zen_mode_event_rule_reply_any_except_no",
+"en": "Yes, Maybe, or Not replied",
+"hu": "Igen, talán vagy nincs válasz",
+"de": "\"Ja\", \"Vielleicht\" oder \"Keine Antwort\"",
+"fr": "\"Oui\", \"Peut-être\" ou \"Pas de réponse\"",
+"es": "Sí, quizás o sin respuesta"
+},
+"zen_mode_event_rule_reply_yes_or_maybe": {
+"res": "angler:SettingsGoogle:zen_mode_event_rule_reply_yes_or_maybe",
+"en": "Yes or Maybe",
+"hu": "Igen vagy talán",
+"de": "\"Ja\" oder \"Vielleicht\"",
+"fr": "\"Oui\" ou \"Peut-être\"",
+"es": "Sí o quizás"
+},
+"zen_mode_event_rule_reply_yes": {
+"res": "angler:SettingsGoogle:zen_mode_event_rule_reply_yes",
+"en": "Yes",
+"hu": "Igen",
+"de": "Ja",
+"fr": "Oui",
+"es": "Sí"
+},
+"zen_mode_schedule_rule_days_all": {
+"res": "angler:SettingsGoogle:zen_mode_schedule_rule_days_all",
+"en": "Every day",
+"hu": "Minden nap",
+"de": "Täglich",
+"fr": "Tous les jours",
+"es": "Todos los días"
+},
+"zen_mode_schedule_rule_days_none": {
+"res": "angler:SettingsGoogle:zen_mode_schedule_rule_days_none",
+"en": "None",
+"hu": "Nincs",
+"de": "Keine",
+"fr": "Aucun",
+"es": "Ninguno"
+},
+"zen_mode_start_time": {
+"res": "angler:SettingsGoogle:zen_mode_start_time",
+"en": "Start time",
+"hu": "Kezdés ideje",
+"de": "Startzeit",
+"fr": "Heure de début",
+"es": "Hora de inicio"
+},
+"zen_mode_end_time": {
+"res": "angler:SettingsGoogle:zen_mode_end_time",
+"en": "End time",
+"hu": "Befejezés ideje",
+"de": "Schlusszeit",
+"fr": "Heure de fin",
+"es": "Hora de finalización"
+},
+"zen_mode_end_time_next_day_summary_format": {
+"res": "angler:SettingsGoogle:zen_mode_end_time_next_day_summary_format",
+"args": 1,
+"en": "%s next day",
+"hu": "%s a következő napon",
+"de": "Am nächsten Tag um %s",
+"fr": "%s le lendemain",
+"es": "Día siguiente a las %s"
+},
+"framework/zen_mode_default_weeknights_name": {
+"res": "angler:framework:zen_mode_default_weeknights_name",
+"en": "Weeknight",
+"hu": "Hétköznap éjszaka",
+"de": "Abends unter der Woche",
+"fr": "Soirée de semaine",
+"es": "Noche de entre semana"
+},
+"framework/zen_mode_default_weekends_name": {
+"res": "angler:framework:zen_mode_default_weekends_name",
+"en": "Weekend",
+"hu": "Hétvége",
+"de": "Wochenende",
+"fr": "Week-end",
+"es": "Fin de semana"
+},
+"framework/zen_mode_default_events_name": {
+"res": "angler:framework:zen_mode_default_events_name",
+"en": "Event",
+"hu": "Esemény",
+"de": "Termin",
+"fr": "Événement",
+"es": "Evento"
+},
+"lock_screen_notifications_summary_show": {
+"res": "angler:SettingsGoogle:lock_screen_notifications_summary_show",
+"en": "Show all notification content",
+"hu": "Az összes értesítés jelenjen meg",
+"de": "Gesamten Benachrichtigungsinhalt anzeigen",
+"fr": "Afficher tout le contenu des notifications",
+"es": "Mostrar todo el contenido de las notificaciones"
+},
+"lock_screen_notifications_summary_hide": {
+"res": "angler:SettingsGoogle:lock_screen_notifications_summary_hide",
+"en": "Hide sensitive notification content",
+"hu": "Rejtse el a bizalmas tartalmat",
+"de": "Vertrauliche Benachrichtigungsinhalte ausblenden",
+"fr": "Masquer le contenu sensible des notifications",
+"es": "Ocultar notificaciones sensibles"
+},
+"lock_screen_notifications_summary_disable": {
+"res": "angler:SettingsGoogle:lock_screen_notifications_summary_disable",
+"en": "Don’t show notifications at all",
+"hu": "Semmilyen értesítés ne jelenjen meg",
+"de": "Keine Benachrichtigungen anzeigen",
+"fr": "N'afficher aucune notification",
+"es": "No mostrar notificaciones"
+},
 "PrebuiltGmsCore/common_google_platform_settings": {
 "res": "angler:PrebuiltGmsCore:common_google_platform_settings",
 "en": "Google",
