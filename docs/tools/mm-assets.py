@@ -75,8 +75,8 @@ def main():
             open(OUT + out, 'wb').write(open(SYSTEM + apk, 'rb').read())
             continue
         z = zips.setdefault(apk, zipfile.ZipFile(SYSTEM + apk))
-        # A file of the APK's assets/ folder is copied as it is.
-        if resource.startswith('assets/'):
+        # A file of the APK's assets/ folder or res/raw (a video) is copied as it is.
+        if resource.startswith(('assets/', 'res/raw/')):
             open(OUT + out, 'wb').write(z.read(resource))
             continue
         path, density = find(z, resource)

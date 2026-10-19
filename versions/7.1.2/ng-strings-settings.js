@@ -8179,6 +8179,232 @@ NG.strings('settings', {
 "fr": "OK",
 "es": "Listo"
 },
+"security_settings_fingerprint_enroll_introduction_title": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_introduction_title",
+"en": "Unlock with fingerprint",
+"hu": "Feloldás ujjlenyomattal",
+"de": "Mit Fingerabdruck entsperren",
+"fr": "Déverrouillage avec empreinte",
+"es": "Desbloqueo con huella"
+},
+"security_settings_fingerprint_enroll_introduction_message": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_introduction_message",
+"en": "Nexus Imprint uses your fingerprint to wake and unlock your phone, authorize purchases, or sign in to apps.\n\nBe careful whose fingerprints you add. Any fingerprints added will be able to do these things.\n\nNote: Your fingerprint may be less secure than a strong pattern or PIN. Learn more",
+"hu": "A Nexus Imprint az Ön ujjlenyomatát használja a telefon felébresztéséhez és feloldásához, vásárlások jóváhagyásához, illetve az alkalmazásokba való bejelentkezéshez.\n\nÜgyeljen arra, hogy kinek az ujjlenyomatát adja hozzá a telefonhoz. A megadott ujjlenyomatok feljogosítják tulajdonosukat a fentebb felsoroltakra.\n\nMegjegyzés: Az ujjlenyomat kevésbé lehet biztonságos, mint egy erős minta vagy PIN-kód. További információ.",
+"de": "Mithilfe deines Fingerabdrucks kann Nexus Imprint dein Smartphone aktivieren und entsperren, Käufe autorisieren oder sich in Apps anmelden.\n\nÜberlege genau, welche Fingerabdrücke du hinzufügen möchtest, da diese Aktionen mit allen Fingerabdrücken ausgeführt werden können, die du deinem Smartphone hinzufügst.\n\nHinweis: Dein Fingerabdruck ist unter Umständen nicht so sicher wie ein komplexes Muster oder eine PIN. Weitere Informationen",
+"fr": "Nexus Imprint utilise vos empreintes digitales pour activer et déverrouiller votre téléphone, autoriser des achats ou vous connecter à des applications.\n\nToutes les personnes dont les empreintes digitales sont ajoutées sur votre téléphone peuvent effectuer ces opérations. Choisissez donc ces personnes avec soin.\n\nRemarque : Vos empreintes digitales peuvent être moins sécurisées qu'un schéma ou un code fiables. En savoir plus",
+"es": "Nexus Imprint utiliza tu huella digital para activar y desbloquear tu teléfono, autorizar compras o iniciar sesión en aplicaciones.\n\nCualquier huella digital que añadas podrá realizar estas acciones, por lo que debes tener cuidado con las huellas que incluyes.\n\nNota: Es posible que tu huella digital sea menos segura que un buen patrón o PIN. Más información"
+},
+"security_settings_fingerprint_enroll_introduction_cancel": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_introduction_cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"suw_next_button_label": {
+"res": "angler:SettingsGoogle:suw_next_button_label",
+"en": "Next",
+"hu": "Következő",
+"de": "Weiter",
+"fr": "Suivant",
+"es": "Siguiente"
+},
+"security_settings_fingerprint_enroll_find_sensor_title": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_find_sensor_title",
+"en": "Find the sensor",
+"hu": "Keresse az érzékelőt",
+"de": "Sensor suchen",
+"fr": "Localiser le lecteur",
+"es": "Localiza el sensor"
+},
+"security_settings_fingerprint_enroll_find_sensor_message": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_find_sensor_message",
+"en": "Hint: It’s on the back of your phone.",
+"hu": "Tipp: A telefon hátoldalán találja.",
+"de": "Hinweis: Der Sensor befindet sich auf der Rückseite deines Smartphones.",
+"fr": "Astuce : Il se trouve à l'arrière de votre téléphone.",
+"es": "Sugerencia: Está en la parte trasera del teléfono."
+},
+"fingerprint_enroll_button_next": {
+"res": "angler:SettingsGoogle:fingerprint_enroll_button_next",
+"en": "Next",
+"hu": "Következő",
+"de": "Weiter",
+"fr": "Suivant",
+"es": "Siguiente"
+},
+"security_settings_fingerprint_enroll_start_title": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_start_title",
+"en": "Let’s start",
+"hu": "Lásson neki!",
+"de": "Los geht's",
+"fr": "Commencer",
+"es": "¡Empecemos!"
+},
+"security_settings_fingerprint_enroll_repeat_title": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_repeat_title",
+"en": "Keep going",
+"hu": "Folytassa",
+"de": "Berühre den Sensor noch einmal",
+"fr": "Continuer",
+"es": "Continuar"
+},
+"security_settings_fingerprint_enroll_start_message": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_start_message",
+"en": "Put your finger on the sensor and lift after you feel a vibration",
+"hu": "Helyezze az ujját az érzékelőre, és emelje fel a rezgést követően",
+"de": "Lege deinen Finger auf den Sensor und hebe ihn an, wenn du eine Vibration spürst.",
+"fr": "Placez votre doigt sur le lecteur, puis soulevez-le lorsque vous sentez une vibration.",
+"es": "Pon el dedo en el sensor y levántalo cuando notes una vibración."
+},
+"security_settings_fingerprint_enroll_repeat_message": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_repeat_message",
+"en": "Move your finger slightly to add all the different parts of your fingerprint",
+"hu": "Óvatosan mozgassa ujját a teljes ujjlenyomat levételéhez",
+"de": "Bewege deinen Finger etwas, um alle unterschiedlichen Teile deines Fingerabdrucks hinzuzufügen.",
+"fr": "Déplacez légèrement votre doigt pour ajouter toutes les parties de votre empreinte digitale.",
+"es": "Mueve el dedo ligeramente para añadir todas las partes de tu huella digital."
+},
+"security_settings_fingerprint_enroll_lift_touch_again": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_lift_touch_again",
+"en": "Lift finger, then touch sensor again",
+"hu": "Emelje fel ujját, majd érintse meg újra az érzékelőt",
+"de": "Hebe den Finger und tippe dann erneut auf den Sensor.",
+"fr": "Relevez le doigt, puis appuyez à nouveau sur le capteur.",
+"es": "Levanta el dedo y vuelve a tocar el sensor"
+},
+"security_settings_fingerprint_enroll_touch_dialog_title": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_touch_dialog_title",
+"en": "Whoops, that’s not the sensor",
+"hu": "Hoppá! Az nem az érzékelő",
+"de": "Das ist nicht der Sensor",
+"fr": "Petit problème… Il ne s'agit pas du capteur",
+"es": "¡Vaya! Ese no es el sensor"
+},
+"security_settings_fingerprint_enroll_touch_dialog_message": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_touch_dialog_message",
+"en": "Use the fingerprint sensor on your device.",
+"hu": "Használja az eszköz ujjlenyomat-érzékelőjét.",
+"de": "Fingerabdrucksensor auf Gerät verwenden",
+"fr": "Utilisez le lecteur d'empreintes intégré.",
+"es": "Usa el sensor de huellas digitales del dispositivo."
+},
+"security_settings_fingerprint_enroll_dialog_ok": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_dialog_ok",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"security_settings_fingerprint_enroll_finish_title": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_finish_title",
+"en": "Fingerprint added!",
+"hu": "Ujjlenyomat hozzáadva!",
+"de": "Abdruck hinzugefügt",
+"fr": "Empreinte ajoutée",
+"es": "Huella digital añadida"
+},
+"security_settings_fingerprint_enroll_finish_message": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_finish_message",
+"en": "Whenever you see this icon, you can use your fingerprint for identification or to authorize a purchase.",
+"hu": "Ha ezt az ikont látja, akkor lehetősége van arra, hogy ujjlenyomatával azonosítsa magát, vagy engedélyezze a vásárlást.",
+"de": "Wenn du dieses Symbol siehst, kannst du deinen Fingerabdruck zur Identifizierung oder zur Autorisierung eines Kaufs verwenden.",
+"fr": "Chaque fois que cette icône apparaît, vous pouvez utiliser votre empreinte pour vous identifier ou autoriser un achat.",
+"es": "Cuando aparezca este icono, puedes usar tu huella digital para identificarte o autorizar una compra."
+},
+"fingerprint_enroll_button_add": {
+"res": "angler:SettingsGoogle:fingerprint_enroll_button_add",
+"en": "Add another",
+"hu": "Még egy hozzáadása",
+"de": "Weitere hinzufügen",
+"fr": "Ajouter une empreinte",
+"es": "Añadir otra"
+},
+"security_settings_fingerprint_enroll_done": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_done",
+"en": "Done",
+"hu": "Kész",
+"de": "Fertig",
+"fr": "OK",
+"es": "Listo"
+},
+"fingerprint_add_title": {
+"res": "angler:SettingsGoogle:fingerprint_add_title",
+"en": "Add fingerprint",
+"hu": "Ujjlenyomat hozzáadása",
+"de": "Fingerabdruck hinzufügen",
+"fr": "Ajouter une empreinte digitale",
+"es": "Añadir huella digital"
+},
+"fingerprint_add_max": {
+"res": "angler:SettingsGoogle:fingerprint_add_max",
+"args": 1,
+"en": "You can add up to %d fingerprints",
+"hu": "Legfeljebb %d ujjlenyomatot adhat hozzá",
+"de": "Du kannst bis zu %d Fingerabdrücke hinzufügen.",
+"fr": "Vous pouvez ajouter jusqu'à %d empreintes digitales.",
+"es": "Puedes añadir hasta %d huellas digitales"
+},
+"security_settings_fingerprint_enroll_disclaimer": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_disclaimer",
+"en": "In addition to unlocking your phone, you can also use Nexus Imprint to authorize purchases and app access. Learn more",
+"hu": "A telefon feloldásán kívül vásárlások és alkalmazás-hozzáférések jóváhagyásához is használhatja a Nexus Imprint érzékelőt. További információ",
+"de": "Mit Nexus Imprint kannst du nicht nur dein Smartphone entsperren, sondern auch Käufe und App-Zugriffe autorisieren. Weitere Informationen",
+"fr": "En plus de déverrouiller votre téléphone, vous pouvez également utiliser Nexus Imprint pour autoriser des achats et l'accès à l'application. En savoir plus",
+"es": "Además de desbloquear tu teléfono, también puedes utilizar Nexus Imprint para autorizar compras y acceso a aplicaciones. Más información"
+},
+"security_settings_fingerprint_enroll_dialog_name_label": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_dialog_name_label",
+"en": "Name",
+"hu": "Név",
+"de": "Name",
+"fr": "Nom",
+"es": "Nombre"
+},
+"security_settings_fingerprint_enroll_dialog_delete": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_enroll_dialog_delete",
+"en": "Delete",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Supprimer",
+"es": "Eliminar"
+},
+"fingerprint_last_delete_title": {
+"res": "angler:SettingsGoogle:fingerprint_last_delete_title",
+"en": "Remove all fingerprints?",
+"hu": "Eltávolítja az összes ujjlenyomatot?",
+"de": "Alle Fingerabdrücke entfernen?",
+"fr": "Supprimer les empreintes digitales ?",
+"es": "¿Quitar todas las huellas?"
+},
+"fingerprint_last_delete_message": {
+"res": "angler:SettingsGoogle:fingerprint_last_delete_message",
+"en": "You won't be able to use your fingerprints to unlock your phone, authorize purchases, or sign in to apps with them.",
+"hu": "Nem tudja majd ujjlenyomatával feloldani telefonját, engedélyezni a vásárlásokat, illetve az alkalmazásokba sem tud majd belépni.",
+"de": "Du kannst dann deine Fingerabdrücke nicht verwenden, um dein Smartphone zu entsperren, Käufe zu autorisieren oder dich in Apps anzumelden.",
+"fr": "Vous ne pourrez pas utiliser vos empreintes digitales pour déverrouiller votre téléphone, autoriser vos achats ni vous connecter à des applications.",
+"es": "No podrás utilizar tus huellas digitales para desbloquear el teléfono, autorizar compras o iniciar sesión en las aplicaciones."
+},
+"fingerprint_last_delete_confirm": {
+"res": "angler:SettingsGoogle:fingerprint_last_delete_confirm",
+"en": "Yes, remove",
+"hu": "Igen, eltávolítom",
+"de": "Ja, entfernen",
+"fr": "Oui, supprimer",
+"es": "Sí, quitar"
+},
+"framework/fingerprint_name_template": {
+"res": "angler:framework:fingerprint_name_template",
+"args": 1,
+"en": "Finger %d",
+"hu": "%d. ujj",
+"de": "Finger %d",
+"fr": "Doigt %d",
+"es": "Dedo %d"
+},
 "PrebuiltGmsCore/common_google_platform_settings": {
 "res": "angler:PrebuiltGmsCore:common_google_platform_settings",
 "en": "Google",

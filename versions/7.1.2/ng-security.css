@@ -67,3 +67,24 @@
 .ngpt[data-mode="correct"] .ngpt-path{fill:none}
 .ngpt[data-mode="wrong"] .ngpt-path{stroke:var(--ngpt-error)}
 .ngpt[data-mode="wrong"] .ngpt-dot.on{fill:var(--ngpt-error)}
+
+/* Nexus Imprint (ng-fingerprint.js): the GLIF pages in Theme.FingerprintEnroll (ic_fingerprint_header in #4285f4), the
+   find-sensor video at the bottom, fingerprint_enroll_enrolling_content (the 88 dp picture on #12000000 that flashes the
+   accent at half alpha, the 192 dp ring of radius 92 dp and 4 dp in #20000000 under the accent), the error text
+   (TextAppearance.FingerprintErrorText, Body1 in system_error) 24 dp under it, fp_app_indicator (124 to 264 dp). */
+.ngfp .ngsc-gicon{background:#4285f4;-webkit-mask-image:url('assets/st-ic_fingerprint_header.svg');mask-image:url('assets/st-ic_fingerprint_header.svg')}
+.ngfp-video{flex:1;display:flex;align-items:flex-end;justify-content:center;margin:0 calc(-24 * var(--dp));min-height:calc(200 * var(--dp))}
+.ngfp-video video{width:100%;display:block;pointer-events:none}
+.ngfp-ring{position:relative;align-self:center;width:calc(192 * var(--dp));height:calc(192 * var(--dp));margin-top:calc(36 * var(--dp))}
+.ngfp-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ngfp-ring circle{fill:none;stroke-width:4}
+.ngfp-ring .bg{stroke:#00000020}
+.ngfp-ring .fg{stroke:#4285f4;transition:stroke-dashoffset .25s cubic-bezier(.4,0,.2,1)}
+.ngst .ngfp-print{position:absolute;left:50%;top:50%;width:calc(88 * var(--dp));height:calc(88 * var(--dp));margin:calc(-44 * var(--dp)) 0 0 calc(-44 * var(--dp));padding:0;border:0;border-radius:50%;background:#00000012;transition:background-color .3s;display:grid;place-items:center}
+.ngst .ngfp-print.flash{background:#4285f480;transition:none}
+.ngfp-print i{display:block;width:100%;height:100%;background:url('assets/st-fp_illustration_enrollment.svg') center/100% no-repeat}
+.ngfp-error{align-self:center;margin-top:calc(24 * var(--dp));min-height:calc(20 * var(--dp));font-size:calc(14 * var(--dp));color:#f4511e;text-align:center}
+.ngfp-gap{min-height:calc(24 * var(--dp))}
+.ngfp-indicator{align-self:center;flex:5;min-height:calc(124 * var(--dp));max-height:calc(264 * var(--dp));max-width:calc(264 * var(--dp));object-fit:contain}
+.ngfp-footer{padding:calc(16 * var(--dp));font-size:calc(14 * var(--dp));line-height:calc(20 * var(--dp));color:#0000008a}
+.ngfp-label{display:block;color:#0000008a;font-size:calc(12 * var(--dp))}

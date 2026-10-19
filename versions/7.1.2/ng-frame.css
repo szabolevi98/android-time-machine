@@ -72,3 +72,9 @@
 .ngscr-edge>i{position:absolute;border-radius:50%}
 .screen *{scrollbar-width:none}
 .screen *::-webkit-scrollbar{display:none}
+
+/* The Nexus 6P's rear fingerprint sensor, beside the phone (ng-fingerprint.js): a touch is a finger on the sensor. */
+.fp-sensor{position:absolute;left:408px;top:150px;width:40px;height:40px;padding:0;border:1px solid #3b4a50;border-radius:50%;background:#1d2327 url('assets/sui-ic_fingerprint.svg') center/24px no-repeat;cursor:pointer;z-index:2;opacity:.75}
+.fp-sensor:hover{opacity:1}
+.fp-sensor:active{background-color:#2c363b}
+@media(max-width:500px){.fp-sensor{display:none}}

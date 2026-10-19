@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
   <link rel="stylesheet" href="ng-site.css?v=1">
-  <link rel="stylesheet" href="ng-frame.css?v=2">
+  <link rel="stylesheet" href="ng-frame.css?v=3">
   <link rel="stylesheet" href="ng-ninepatch.css?v=1">
   <link rel="stylesheet" href="ng-statusbar.css?v=1">
   <link rel="stylesheet" href="ng-shade.css?v=4">
@@ -77,6 +77,7 @@
   <script defer src="ng-settings-sound.js?v=1"></script>
   <script defer src="ng-pattern.js?v=1"></script>
   <script defer src="ng-settings-security.js?v=1"></script>
+  <script defer src="ng-fingerprint.js?v=1"></script>
   <script defer src="ng-brightness.js?v=1"></script>
 </head>
 <body>
@@ -100,7 +101,7 @@
 
       <section class="device-area" aria-label="Android 7.1.2 simulator">
         <div class="device" id="device">
-          <div class="power-key" aria-hidden="true"></div><div class="volume-rocker" aria-hidden="true"></div>
+          <div class="power-key" aria-hidden="true"></div><div class="volume-rocker" aria-hidden="true"></div><button type="button" class="fp-sensor" id="fp-sensor" aria-label="Fingerprint sensor (on the back of the phone)" title="Fingerprint sensor (on the back of the phone)"></button>
           <div class="screen" id="screen">
             <div id="status-bar"></div>
             <div id="viewport"></div>

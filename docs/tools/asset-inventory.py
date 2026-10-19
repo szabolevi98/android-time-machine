@@ -30,7 +30,7 @@ VERSIONS = {'2.1': ('passion', 'hdpi'), '6.0.1': ('bullhead', 'xxhdpi'), '2.3.6'
 RELEASES = ['passion', 'crespo', 'maguro', 'mako', 'hammerhead', 'shamu', 'bullhead', 'angler']
 DENSITIES = ['xxxhdpi', 'xxhdpi', 'xhdpi', 'hdpi', 'mdpi', 'ldpi', 'nodpi']
 IMAGES = ('.png', '.jpg', '.jpeg', '.gif', '.webp')
-MEDIA = ('.png', '.jpg', '.jpeg', '.gif', '.webp', '.ogg', '.ttf', '.otf', '.xml')
+MEDIA = ('.png', '.jpg', '.jpeg', '.gif', '.webp', '.ogg', '.ttf', '.otf', '.xml', '.mp4')
 sha = lambda data: hashlib.sha256(data).hexdigest()
 
 
