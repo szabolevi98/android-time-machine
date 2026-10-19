@@ -42,7 +42,9 @@
     }
     if (sub === 'about') return {title: 'About phone', body: `${row('System updates', '', 'toast', 'Your system is up to date.')}${row('Status', t('Phone number, signal, etc.'), 'settings-sub', 'about-status')}${row('Legal information', '', 'settings-sub', 'about-legal')}${row('Model number', 'Nexus 6')}${row('Android version', '5.1.1', 'about-tap')}${row('Android security patch level', new Date(2015, 10, 1).toLocaleDateString(locale, {year: 'numeric', month: 'long', day: 'numeric'}))}${row('Baseband version', 'MDM9625_104662.22.05.34R')}${row('Kernel version', '3.10.40-gc16a3c6\nandroid-build@wpiy2.hot.corp.google.com #1\nTue Jul 28 17:58:25 UTC 2015')}${row('Build number', 'LMY48Y', 'build-tap')}`};
     if (sub === 'wireless') return {title: 'More', body: `${sw('Airplane mode', 'airplane')}${row('Default SMS app', t(labels?.messaging || 'Messenger'), 'kk-sms-app')}${sw('NFC', 'nfc', 'Allow data exchange when the phone touches another device', s.nfc !== false)}${row('Android Beam', t(s.androidBeam !== false ? 'Ready to transmit app content via NFC' : 'Off'), 'settings-sub', 'beam')}${row('Tethering & portable hotspot', '', 'settings-sub', 'tethering')}${row('VPN', '', 'settings-sub', 'vpn')}${row('Cellular networks', '', 'settings-sub', 'mobile-networks')}${row('Emergency broadcasts')}`};
-    if (sub === 'users') return {title: 'Users', body: `${cat('Users & profiles')}<button class="settings-row"><span class="lp-user-avatar"><img src="assets/lp-fw-ic_account_circle-dark.svg" alt=""></span><span class="row-copy">${e(t('You (Owner)'))}</span></button><button class="settings-row" data-action="toast" data-id="Only the owner can be signed in on this simulator."><span class="lp-user-avatar add">+</span><span class="row-copy">${e(t('Add user or profile'))}</span></button>${row('Guest', t('Remove guest'))}`};
+    // Users and UserDetailsSettings (lp-users.js).
+    if (sub === 'users' && window.LPUsers) return LPUsers.page();
+    if (sub?.startsWith('user:') && window.LPUsers) return LPUsers.detail(sub.slice(5), data);
     return null;
   }
   window.LPSettingsPages = {render};

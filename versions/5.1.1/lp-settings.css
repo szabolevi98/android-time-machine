@@ -195,3 +195,17 @@
 .lp-sync-row .lp-mswitch{flex:none}
 .lp-account-icon{width:calc(23.9956 * var(--dp));height:calc(23.9956 * var(--dp))}
 .lp-menu-check{display:flex!important;align-items:center;justify-content:space-between;gap:calc(16.0045 * var(--dp))}
+/* Users (lp-users.js): a user row is the row itself and, for the owner's other users, the manage button
+   (preference_user_delete_widget: a 2 dp divider, then ic_sysbar_quicksettings padded 16 dp); the guest's icon is the
+   default grey one; Profile info's avatar beside the name field. */
+.screen .lpu-row{display:flex;align-items:stretch;padding:0}
+.screen .lpu-main{flex:1;min-width:0;display:flex;align-items:center;padding:0 calc(16.0045 * var(--dp));border:0;background:none;color:inherit;text-align:left}
+.lpu-manage{flex:none;display:flex;align-items:center;cursor:pointer}
+.lpu-manage .lpu-divider{width:calc(2 * var(--dp));align-self:stretch;margin:calc(8 * var(--dp)) 0;background:#0000001f}
+.lpu-manage img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));padding:0 calc(16.0045 * var(--dp));box-sizing:content-box}
+.lp-user-avatar.guest img{filter:grayscale(1) brightness(1.2)}
+.lpu-host{position:absolute;inset:0;z-index:60}
+.screen .lpu-dialog p{white-space:pre-line}
+.lpu-profile{display:flex;align-items:center;gap:calc(16 * var(--dp));padding:0 calc(24 * var(--dp))}
+.lpu-profile img{width:calc(56 * var(--dp));height:calc(56 * var(--dp))}
+.screen .lpu-profile input{flex:1}

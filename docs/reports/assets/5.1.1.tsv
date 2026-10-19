@@ -690,6 +690,7 @@ versions/5.1.1/assets/lp-recents_status_gradient.png	c7c2d15582700684	same pixel
 versions/5.1.1/assets/lp-set-ic_menu_add_dark.png	6045162faaea989a	copy	shamu:/system/priv-app/GoogleBackupTransport/GoogleBackupTransport.apk!res/drawable-xxxhdpi-v4/ic_menu_add_dark.png	drawable-xxxhdpi-v4		6045162faaea989a
 versions/5.1.1/assets/lp-set-ic_sync_green_holo.png	6bac43640509c559	copy	shamu:/system/priv-app/Settings/Settings.apk!res/drawable-xxxhdpi-v4/ic_sync_green_holo.png	drawable-xxxhdpi-v4		6bac43640509c559
 versions/5.1.1/assets/lp-set-ic_sync_grey_holo.png	27c69498cbab0a16	copy	shamu:/system/priv-app/Settings/Settings.apk!res/drawable-xxxhdpi-v4/ic_sync_grey_holo.png	drawable-xxxhdpi-v4		27c69498cbab0a16
+versions/5.1.1/assets/lp-st-ic_sysbar_quicksettings.png	e1a6951a3e80ed05	copy	shamu:/system/priv-app/Settings/Settings.apk!res/drawable-xxxhdpi-v4/ic_sysbar_quicksettings.png	drawable-xxxhdpi-v4		e1a6951a3e80ed05
 versions/5.1.1/assets/lp-sysui-android.svg	5d0a129b1cfa5e1c	vector	shamu:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/android.xml	drawable	vector drawable drawn as SVG	9eb88eb09fe92142
 versions/5.1.1/assets/lp-sysui-cloud.svg	8b8082cdd134c881	vector	shamu:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/cloud.xml	drawable	vector drawable drawn as SVG	c4960a8ea4611174
 versions/5.1.1/assets/lp-sysui-cloud_off.svg	76d1a5f59ac6985d	vector	shamu:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/cloud_off.xml	drawable	vector drawable drawn as SVG	2ff1c0c6fe4da2a3

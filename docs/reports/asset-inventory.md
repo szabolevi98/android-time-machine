@@ -39,19 +39,18 @@ Not traced:
 
 ## 4.4.4 (hammerhead)
 
-same pixels: 388, copy: 378, resized: 181, own: 20, converted: 15, similar: 13, not traced: 3, generated: 2
+same pixels: 389, copy: 378, resized: 181, own: 20, converted: 15, similar: 13, generated: 2, not traced: 2
 
-From another release's image (the own image has no such file; to review): maguro 26, mako 13 — the source column of the TSV names each.
+From another release's image (the own image has no such file; to review): bullhead 1, maguro 26, mako 13 — the source column of the TSV names each.
 
 Not traced:
 
-- `versions/4.4.4/assets/aosp-calendar.png`
 - `versions/4.4.4/assets/camera-ic_settings_holo_light.png`
 - `versions/4.4.4/assets/jb-kg_widget_bg_padded.png`
 
 ## 5.1.1 (shamu)
 
-copy: 615, vector: 198, resized: 158, same pixels: 143, converted: 29, similar: 7, generated: 6, own: 3, not traced: 2, cropped: 1
+copy: 616, vector: 198, resized: 158, same pixels: 143, converted: 29, similar: 7, generated: 6, own: 3, not traced: 2, cropped: 1
 
 From another release's image (the own image has no such file; to review): hammerhead 26, maguro 30, mako 21, passion 1 — the source column of the TSV names each.
 

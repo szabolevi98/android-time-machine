@@ -2,7 +2,8 @@
 (() => {
   'use strict';
 
-  const STORE = 'android-time-machine-lp-v1';
+  // Each user of lp-users.js keeps a phone of its own: the owner's key, or the key with "-<id>" (sessionStorage lp-user).
+  const STORE = 'android-time-machine-lp-v1' + (() => { try { const u = sessionStorage.getItem('lp-user'); return u && u !== 'owner' ? `-${u}` : ''; } catch { return ''; } })();
   const localDate = (date = new Date()) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   const defaultData = {
     // The Google Now Launcher shows its long-press cling on the first run.
@@ -884,6 +885,7 @@
     if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserIndex > 0) { browserBack(); return; }
     if (ui.view === 'settings' && ['about-sim', 'about-imei'].includes(ui.sub)) { ui.sub = 'about-status'; render(); return; }
     if (ui.view === 'settings' && ['easter', 'lland', 'about-status', 'about-legal'].includes(ui.sub)) { ui.sub = 'about'; render(); return; }
+    if (ui.view === 'settings' && ui.sub?.startsWith('user:')) { ui.sub = 'users'; render(); return; }
     if (ui.view === 'settings' && ['vpn', 'tethering', 'beam', 'mobile-networks'].includes(ui.sub)) { ui.sub = 'wireless'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'wifi-advanced') { ui.sub = 'wifi'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'sync-account') { ui.sub = 'sync-google'; render(); return; }
@@ -1953,6 +1955,7 @@
     if (Date.now() < suppressClickUntil) return;
     const { action, id, app, url } = button.dataset;
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
+    if (action.startsWith('lpu-') && window.LPUsers?.handle(action, button, {data, save, render, open: sub => { ui.sub = sub; render(); }, back: () => { ui.sub = 'users'; render(); }})) return;
     if (ui.view === 'gallery' && ui.galleryPopup && action !== 'gallery-menu') ui.galleryPopup = '';
     // A tap outside the Recents popup menu only dismisses it.
     if (ui.overlay === 'recent' && ui.recentPopup && !['remove-recent', 'recent-app-info'].includes(action)) { ui.recentPopup = null; renderOverlay(); return; }

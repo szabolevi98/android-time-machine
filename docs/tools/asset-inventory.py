@@ -27,6 +27,7 @@ from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace(os.sep, '/') + '/'
 VERSIONS = {'2.1': ('passion', 'hdpi'), '6.0.1': ('bullhead', 'xxhdpi'), '2.3.6': ('crespo', 'hdpi'), '4.0.4': ('maguro', 'xhdpi'), '4.3': ('mako', 'xhdpi'), '4.4.4': ('hammerhead', 'xxhdpi'), '5.1.1': ('shamu', 'xxxhdpi')}
+RELEASES = ['passion', 'crespo', 'maguro', 'mako', 'hammerhead', 'shamu', 'bullhead']
 DENSITIES = ['xxxhdpi', 'xxhdpi', 'xhdpi', 'hdpi', 'mdpi', 'ldpi', 'nodpi']
 IMAGES = ('.png', '.jpg', '.jpeg', '.gif', '.webp')
 MEDIA = ('.png', '.jpg', '.jpeg', '.gif', '.webp', '.ogg', '.ttf', '.otf', '.xml')
@@ -82,8 +83,10 @@ def signatures(img):
 
 LOADED = {}
 def image(device, density='mdpi'):
-    if device not in LOADED: LOADED[device] = Image_(device, density)
-    return LOADED[device]
+    # Kept per density: an image is the own one of its version (its density first) and another's (mdpi first), and a
+    # run over several versions must trace each as a run over that version alone does.
+    if (device, density) not in LOADED: LOADED[device, density] = Image_(device, density)
+    return LOADED[device, density]
 
 
 class Image_:
@@ -253,10 +256,11 @@ def closest(images, out):
 
 def trace(own, path, data):
     """(status, image, source row, transform detail) for one output file: the version's own image first, then the
-    other four (a graphic taken over from another release)."""
+    others in release order (a graphic taken over from another release)."""
     file = path.rsplit('/', 1)[-1]
     names, digest, ext = wanted_names(file), sha(data), file.rsplit('.', 1)[-1].lower()
-    images = [own] + [image(d) for d, _ in VERSIONS.values() if d != own.device]
+    # The others in release order, so a later image (the 5X joined last) never takes a file an earlier one traced first.
+    images = [own] + [image(d) for d in RELEASES if d != own.device]
     for img in images:
         if digest in img.by_sha: return 'copy', img, sorted(img.by_sha[digest], key=lambda r: img.rank(r, names))[0], ''
     if re.match(r'boot-part\d+\.webp$', file):
@@ -288,7 +292,8 @@ def trace(own, path, data):
                     return 'copy', img, [os.path.relpath(p, f'{ROOT}_aosp/{img.device}/system/').replace(os.sep, '/'), '', len(data), digest], ''
         return None, None, None, ''
     if ext == 'svg':
-        for img in images:
+        # A VectorDrawable drawn as SVG comes from this release or an earlier one, never from a later image.
+        for img in [i for i in images if RELEASES.index(i.device) <= RELEASES.index(own.device)]:
             rows = [r for r in named(img, ('.xml',)) if r[1].startswith('res/drawable')]
             if rows: return 'vector', img, rows[0], 'vector drawable drawn as SVG'
         return None, None, None, ''

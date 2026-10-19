@@ -10,7 +10,7 @@ versions/4.4.4/assets/Roboto-Regular.ttf	f87925e2be4c38ab	copy	hammerhead:/syste
 versions/4.4.4/assets/Roboto-Thin.ttf	2bb66c948e89b9e7	copy	hammerhead:/system/fonts/Roboto-Thin.ttf			2bb66c948e89b9e7
 versions/4.4.4/assets/RobotoCondensed-Bold.ttf	ae01d956edc5a944	copy	hammerhead:/system/fonts/RobotoCondensed-Bold.ttf			ae01d956edc5a944
 versions/4.4.4/assets/RobotoCondensed-Regular.ttf	67aa909bf3d7aa3c	copy	hammerhead:/system/fonts/RobotoCondensed-Regular.ttf			67aa909bf3d7aa3c
-versions/4.4.4/assets/aosp-calendar.png	2688e6676f550066	not traced			closest: mean difference 2.99 (hammerhead:/system/app/CalendarGoogle.apk!res/drawable-xhdpi/app_icon.png)	
+versions/4.4.4/assets/aosp-calendar.png	2688e6676f550066	same pixels	bullhead:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/mipmap-xxhdpi-v4/ic_launcher_calendar.png	mipmap-xxhdpi-v4		76ebbefbb4a11ece
 versions/4.4.4/assets/aosp-wallpaper.jpg	ba4ff41f6784f77c	converted	mako:/system/app/Launcher2.apk!res/drawable-sw600dp-nodpi/wallpaper_11.jpg	drawable-sw600dp-nodpi	JPG, resized 1600×1280 → 960×800, mean difference 3.25	c77c43d495f292ab
 versions/4.4.4/assets/apps.png	8f0227e050e8703d	same pixels	maguro:/system/app/Launcher2.apk!res/drawable-xhdpi/ic_allapps.png	drawable-xhdpi		166e2806f8b98e6b
 versions/4.4.4/assets/appwidget_clock_dial.png	5277c9fa28b0579e	resized	hammerhead:/system/app/DeskClockGoogle.apk!res/drawable-xxhdpi/appwidget_clock_dial.png	drawable-xxhdpi	resized 720×720 → 360×360, mean difference 0.18	56b2df730efae45c
