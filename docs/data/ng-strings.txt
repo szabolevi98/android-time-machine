@@ -63,3 +63,9 @@ plurals:framework/zen_mode_duration_hours plurals:framework/zen_mode_duration_ho
 [apps] PrebuiltBugle
 # The app names notification headers show (notification_template_header's app_name_text)
 app_name
+[lock] SystemUI framework
+# The keyguard: KeyguardIndicationController, KeyguardBottomAreaView (voice assist / camera, LockIcon), KeyguardAffordanceHelper's
+# hints, the notifications' second tap, KeyguardStatusView's next alarm, CarrierText in airplane mode
+keyguard_unlock voice_hint camera_hint accessibility_voice_assist_button accessibility_camera_button accessibility_unlock_button
+notification_tap_again keyguard_charged keyguard_plugged_in keyguard_indication_charging_time+args1 keyguard_accessibility_next_alarm+args1
+airplane_mode

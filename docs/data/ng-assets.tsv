@@ -8,3 +8,6 @@ sui-ic_sysbar_menu.png	priv-app/SystemUI/SystemUI.apk	drawable/ic_sysbar_menu
 # framework Material Switch thumb (switch_thumb_material_anim: its off and on frames, tinted in CSS by multiply) for the quick settings details
 fw-btn_switch_to_on_mtrl_00001.9.png	framework/framework-res.apk	drawable/btn_switch_to_on_mtrl_00001
 fw-btn_switch_to_on_mtrl_00012.9.png	framework/framework-res.apk	drawable/btn_switch_to_on_mtrl_00012
+# The default wallpaper (framework default_wallpaper, the Nougat mountains) and the keyguard bottom area's bitmap (KeyguardAffordanceView camera_button)
+fw-default_wallpaper.png	framework/framework-res.apk	drawable/default_wallpaper
+sui-ic_camera_alt_24dp.png	priv-app/SystemUI/SystemUI.apk	drawable/ic_camera_alt_24dp

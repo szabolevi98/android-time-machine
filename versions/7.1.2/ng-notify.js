@@ -48,6 +48,8 @@
   function refresh(c) {
     c.renderStatus?.();
     if (c.ui.overlay === 'shade') NG.module('shade')?.refresh?.(c);
+    // The keyguard shows the rows too.
+    else if (c.ui.view === 'lock' && !c.ui.sleeping && !c.ui.overlay) c.render();
   }
   function notify(c, n) {
     const note = {id: Date.now() + Math.floor(Math.random() * 1000), time: Date.now(), ...n};

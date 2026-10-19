@@ -166,6 +166,20 @@
     }
   };
 
+  /* The alarms (c.data.clock.alarms, the Clock app's; AlarmManager's next alarm clock for the status bar, the keyguard
+     and quick settings): the simulator's demo alarm of every version, 7:00 on weekdays switched on (docs/demo-data.md),
+     with DeskClock's two default alarms (8:30 on weekdays, 9:00 at the weekend) off. days: Date.getDay() numbers. */
+  NG.defaults.clock = {alarms: [{id: 3, h: 7, m: 0, days: [1, 2, 3, 4, 5], on: true, vibrate: true, label: ''}, {id: 1, h: 8, m: 30, days: [1, 2, 3, 4, 5], on: false, vibrate: true, label: ''}, {id: 2, h: 9, m: 0, days: [6, 0], on: false, vibrate: true, label: ''}]};
+  function nextFire(a, from = new Date()) {
+    for (let i = 0; i < 8; i++) {
+      const d = new Date(from.getFullYear(), from.getMonth(), from.getDate() + i, a.h, a.m);
+      if (d > from && (!a.days.length || a.days.includes(d.getDay()))) return d;
+    }
+    return null;
+  }
+  // AlarmManager.getNextAlarmClock: the time (ms) of the next alarm that is on, 0 with none.
+  NG.clock = {nextFire, nextAlarm: c => (c.data.clock?.alarms || []).filter(a => a.on).map(a => nextFire(a)).filter(Boolean).sort((x, y) => x - y)[0]?.getTime() || 0};
+
   NG.register('system', {
     app: false,
     render: () => '',
