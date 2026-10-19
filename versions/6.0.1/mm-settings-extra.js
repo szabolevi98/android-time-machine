@@ -4,14 +4,15 @@
      of framework-res.apk, without the pseudo-locales of user builds), each in its own language, the country only for a
      language with several; picking one of the simulator's five languages switches it (the page follows), the others
      are listed as the phone lists them.
-   - SpellCheckersSettings (spellchecker_prefs.xml under the switch bar): Language (Use system language) and the Google
-     Spell Checker; UserDictionarySettings: the empty text and Add (UserDictionaryAddWordActivity's word, shortcut).
+   - SpellCheckersSettings (spellchecker_prefs.xml under the switch bar): Language (Use system language, or one of the
+     spell checker's locales) and the Google Spell Checker with its settings button; UserDictionarySettings: the empty text and Add (UserDictionaryAddWordActivity's word, shortcut).
    - Current Keyboard: InputMethodPicker's dialog (Change keyboard: Show input method, the enabled keyboards, Choose
      keyboards).
    - Date & time: Set date / Set time greyed while Automatic date & time is on (they open the framework's
      DatePickerDialog / TimePickerDialog, the chosen moment kept as an offset), Select time zone opens ZonePicker: the
      zones of timezones.xml with their GMT offsets, sorted by name or by offset; the names are the city names of the
      image's DeskClock (cities.xml, translated) for the zone, else the zone id's city.
+   - Accessibility > Captions: CaptionPropertiesFragment (see there).
    - Accessibility: ToggleAccessibilityServicePreferenceFragment for TalkBack and Switch Access (the switch bar, the
      service's description, Settings; turning one on asks enable_service_title with what it can do, off
      disable_service_title), ToggleScreenMagnificationPreferenceFragment and ToggleGlobalGesturePreferenceFragment (the
@@ -65,14 +66,33 @@
   };
 
   // -- Spell checker, personal dictionary ------------------------------------------------------------------------------
+  /* The spell checker's subtypes (LatinImeGoogle's res/xml/spellchecker.xml, label subtype_generic "%s": the locale's
+     name). Language opens showChooseLanguageDialog (phone_language: Use system language, then the subtypes, single
+     choice); the Google Spell Checker row is SpellCheckerPreference: its radio (the current spell checker), a divider
+     and the settings button (ic_sysbar_quicksettings) that opens its settingsActivity, SpellCheckerSettingsActivity. */
+  const SPELL_LOCALES = ['en', 'en_US', 'en_GB', 'cs', 'da', 'de', 'el', 'es', 'fi', 'fr', 'hr', 'it', 'iw', 'lt', 'lv', 'nb', 'nl', 'pl', 'pt_BR', 'pt_PT', 'ru', 'sl', 'sr', 'sv', 'tr'];
+  const spellName = (c, code) => { try { return new Intl.DisplayNames([c.locale()], {type: 'language'}).of(code.replace('iw', 'he').replace('_', '-')); } catch { return code; } };
   MM.settingsScreens.spellcheck = {
     title: () => T().t('spellcheckers_settings_title'),
     bar: c => bar(c, 'mmsx-spell', S(c).spellCheck ?? true),
     render(c) {
-      const t = T(), on = S(c).spellCheck ?? true;
-      return `<div class="mmst-list${on ? '' : ' off'}">${pref(c, 'mmsx-none', t.t('spellchecker_language'), t.t('use_system_language_to_select_input_method_subtypes'))}${pref(c, 'mmsx-none', MM.text('appprefs').t('LatinImeGoogle/spell_checker_service_name'))}</div>`;
+      const t = T(), on = S(c).spellCheck ?? true, lang = S(c).spellLang || '';
+      const gear = `<span class="mmst-widget mmsx-usermanage"><i class="mmsx-userdiv np-fw-divider_horizontal_dark"></i><span class="mmsx-usergear mmsx-spellgear" role="button" data-action="mmsx-spellsettings" aria-label="${esc(c, t.t('settings_label'))}"><img src="assets/st-ic_sysbar_quicksettings.png" alt=""></span></span>`;
+      return `<div class="mmst-list${on ? '' : ' off'}">${pref(c, 'mmsx-spelllang', t.t('spellchecker_language'), lang ? spellName(c, lang) : t.t('use_system_language_to_select_input_method_subtypes'))}`
+        + `<button type="button" class="mmst-pref" data-action="mmsx-none"><span class="mmst-iconframe"><i class="mmw-radio on"></i></span><span class="mmst-texts"><span class="mmst-title">${esc(c, MM.text('appprefs').t('LatinImeGoogle/spell_checker_service_name'))}</span></span>${gear}</button></div>`;
     },
-    action(c, name) { if (name === 'mmsx-spell') { S(c).spellCheck = !(S(c).spellCheck ?? true); c.save(); c.render(); return true; } return name === 'mmsx-none'; }
+    action(c, name) {
+      const t = T();
+      if (name === 'mmsx-spell') { S(c).spellCheck = !(S(c).spellCheck ?? true); c.save(); c.render(); return true; }
+      if (name === 'mmsx-spelllang') {
+        const cur = S(c).spellLang || '', codes = ['', ...SPELL_LOCALES];
+        c.dialog({title: t.t('phone_language'), items: codes.map(code => radio(c, code ? spellName(c, code) : t.t('use_system_language_to_select_input_method_subtypes'), code === cur)),
+          onItem: i => { S(c).spellLang = codes[i]; c.save(); c.render(); }});
+        return true;
+      }
+      if (name === 'mmsx-spellsettings') { MM.openPrefs(c, 'keyboard', 'spell_checker_settings', MM.text('appprefs').t('LatinImeGoogle/android_spell_checker_settings')); return true; }
+      return name === 'mmsx-none';
+    }
   };
   const words = c => S(c).userWords || (S(c).userWords = []);
   function addWord(c, edit) {
@@ -99,10 +119,11 @@
     }
   };
   // InputMethodManagerService.showInputMethodMenu: Change keyboard with the hardware keyboard's switch (no hardware
-  // keyboard: none), the enabled keyboards (Google Keyboard in the system language) and Choose keyboards.
+  // keyboard: none), the enabled keyboards (Google Keyboard in the system language) and Choose keyboards
+  // (showConfigureInputMethods: Settings' Language & input).
   MM.imePicker = c => {
     const t = T(), name = `${MM.systemLocaleName(c)} - ${MM.text('appprefs').t('LatinImeGoogle/english_ime_name')}`;
-    c.dialog({title: t.t('framework/select_input_method'), items: [radio(c, name, true)], buttons: [{label: t.t('framework/configure_input_methods'), action: () => {}}]});
+    c.dialog({title: t.t('framework/select_input_method'), items: [radio(c, name, true)], buttons: [{label: t.t('framework/configure_input_methods'), action: c => { if (c.ui.view === 'settings') MM.settingsGo(c, 'xml:language_settings', t.t('language_keyboard_settings_title')); else c.open('settings', 'xml:language_settings'); }}]});
   };
 
   // -- Date & time ---------------------------------------------------------------------------------------------------
@@ -212,4 +233,136 @@
       return true;
     }
   };
+  /* -- Captions (CaptionPropertiesFragment, captioning_settings.xml) -----------------------------------------------
+     captioning_preview over the list: caption_background (centerCrop, 200 dp), and at its bottom in 16 dp the
+     SubtitleView with captioning_preview_text in the user's style (applyCaptionProperties: 0.0533 of the larger of
+     width x 9 and height x 16, over 16, times the font scale; the window colour behind it). The switch bar turns
+     captions on (CaptioningManager.isEnabled); while off the whole screen is greyed out. Standard options: Language
+     (LocalePreference: Default, then the system's locales), Text size (captioning_font_size_selector_titles) and Caption
+     style (PresetPreference: Use app defaults, White on black, Black on white, Yellow on black, Yellow on blue, Custom);
+     Custom options only for Custom (refreshShowingCustom): Font family, Text color / opacity, Edge type / color (the
+     colour greyed out with no edge), Background color / opacity, Caption window color / opacity. The colour, preset and
+     edge rows open ListDialogPreference's grid_picker_dialog (96 dp columns): color_picker_item swatches over
+     transparency_tileable when not opaque, preset_picker_item samples ("Aa" at 32 dp). The values are the Settings.Secure
+     ones CaptionStyle reads: a colour and its opacity are kept apart as the fragment's parseColorOpacity splits them. */
+  const CAP_COLORS = [0x00ffffff, 0xffffffff, 0xff000000, 0xffff0000, 0xffffff00, 0xff00ff00, 0xff00ffff, 0xff0000ff, 0xffff00ff,
+    0xff000055, 0xff0000aa, 0xff005500, 0xff005555, 0xff0055aa, 0xff0055ff, 0xff00aa00, 0xff00aa55, 0xff00aaaa, 0xff00aaff, 0xff00ff55,
+    0xff00ffaa, 0xff550000, 0xff550055, 0xff5500aa, 0xff5500ff, 0xff555500, 0xff555555, 0xff5555aa, 0xff5555ff, 0xff55aa00, 0xff55aa55,
+    0xff55aaaa, 0xff55aaff, 0xff55ff00, 0xff55ff55, 0xff55ffaa, 0xff55ffff, 0xffaa0000, 0xffaa0055, 0xffaa00aa, 0xffaa00ff, 0xffaa5500,
+    0xffaa5555, 0xffaa55aa, 0xffaa55ff, 0xffaaaa00, 0xffaaaa55, 0xffaaaaaa, 0xffaaaaff, 0xffaaff00, 0xffaaff55, 0xffaaffaa, 0xffaaffff,
+    0xffff0055, 0xffff00aa, 0xffff5500, 0xffff5555, 0xffff55aa, 0xffff55ff, 0xffffaa00, 0xffffaa55, 0xffffaaaa, 0xffffaaff, 0xffffff55,
+    0xffffffaa];
+  const CAP_COLOR_TITLES = ['color_unspecified', 'color_white', 'color_black', 'color_red', 'color_yellow', 'color_green', 'color_cyan', 'color_blue', 'color_magenta'];
+  const CAP_OPACITY = [0x40ffffff, 0x80ffffff, 0xc0ffffff, 0xffffffff];
+  const CAP_PRESETS = [4, 0, 1, 2, 3, -1];
+  const CAP_EDGES = [-1, 0, 1, 2, 3, 4];
+  const CAP_SCALES = ['0.25', '0.5', '1.0', '1.5', '2.0'];
+  const CAP_FACES = ['', 'sans-serif', 'sans-serif-condensed', 'sans-serif-monospace', 'serif', 'serif-monospace', 'casual', 'cursive', 'sans-serif-smallcaps'];
+  // fonts.xml's families for those names (mm-settings.css loads the files).
+  const CAP_FONT = {'': 'Roboto', 'sans-serif': 'Roboto', 'sans-serif-condensed': "'Roboto Condensed'", 'sans-serif-monospace': "'Droid Sans Mono'", serif: "'Noto Serif'",
+    'serif-monospace': "'Cutive Mono'", casual: "'Coming Soon'", cursive: "'Dancing Script'", 'sans-serif-smallcaps': "'Carrois Gothic SC'"};
+  // CaptioningManager.CaptionStyle.PRESETS (white / black / yellow on black / yellow on blue; no edge, no window).
+  const CAP_STYLE = {0: [0xffffffff, 0xff000000], 1: [0xff000000, 0xffffffff], 2: [0xffffff00, 0xff000000], 3: [0xffffff00, 0xff0000ff]};
+  // The custom style's defaults: CaptionStyle.DEFAULT_CUSTOM (white on black, no edge, black edge colour, no window).
+  const capState = c => {
+    const a = S(c).a11y || (S(c).a11y = {});
+    return a.captions || (a.captions = {preset: 0, scale: '1.0', locale: '', typeface: '', fg: 0xffffffff, fgOp: 0xffffffff, bg: 0xff000000, bgOp: 0xffffffff,
+      edge: 0, edgeColor: 0xff000000, win: 0, winOp: 0xffffffff});
+  };
+  const capOn = c => !!(S(c).a11y || {}).captioning_preference_screen;
+  const rgba = (color, alpha) => `rgba(${color >>> 16 & 255},${color >>> 8 & 255},${color & 255},${(alpha / 255).toFixed(3)})`;
+  // A colour row's value over its opacity: Default (unspecified) falls back to the default style's, None is clear.
+  const capColor = (color, op, fallback) => color === 0x00ffffff ? fallback : color === 0 ? 'transparent' : rgba(color, op >>> 24);
+  function capStyle(c) {
+    const s = capState(c), dp = 'var(--dp)';
+    let fg, bg, win = 'transparent', edge = 0, edgeColor = '#000', face = 'Roboto';
+    if (s.preset === -1) {
+      fg = capColor(s.fg, s.fgOp, '#fff'); bg = capColor(s.bg, s.bgOp, '#000'); win = capColor(s.win, s.winOp, 'transparent');
+      edge = s.edge < 0 ? 0 : s.edge; edgeColor = capColor(s.edgeColor, 0xff000000, '#000'); face = CAP_FONT[s.typeface] || 'Roboto';
+    } else { const [f, b] = CAP_STYLE[s.preset] || CAP_STYLE[0]; fg = rgba(f, 255); bg = rgba(b, 255); }
+    return {fg, bg, win, face, smallcaps: s.preset === -1 && s.typeface === 'sans-serif-smallcaps', shadow: capEdge(edge, edgeColor, dp)};
+  }
+  // SubtitleView.onDraw's edges: an outline stroke, a drop shadow, or raised / depressed light and dark shadows.
+  function capEdge(edge, color, dp) {
+    if (edge === 1) return `-webkit-text-stroke:calc(2 * ${dp}) ${color};paint-order:stroke fill`;
+    if (edge === 2) return `text-shadow:calc(2 * ${dp}) calc(2 * ${dp}) calc(2 * ${dp}) ${color}`;
+    if (edge === 3 || edge === 4) { const up = edge === 3 ? '#fff' : color, down = edge === 3 ? color : '#fff'; return `text-shadow:calc(-1 * ${dp}) calc(-1 * ${dp}) calc(2 * ${dp}) ${up},${dp} ${dp} calc(2 * ${dp}) ${down}`; }
+    return '';
+  }
+  const capText = (style, text, size) => `<span class="mmsx-captext" style="color:${style.fg};background:${style.bg};font-family:${style.face},Roboto,sans-serif;font-size:calc(${size} * var(--dp));${style.smallcaps ? 'font-variant:small-caps;' : ''}${style.shadow}">${text}</span>`;
+  const capLocales = c => { const col = new Intl.Collator(c.locale()); return LOCALES.map(tag => ({value: tag.replace('-', '_'), name: localeName(tag)})).sort((a, b) => col.compare(a.name, b.name)); };
+  const colorTitle = (t, v, list) => { const i = list.indexOf(v), none = list[0] === 0; const k = none ? i - 1 : i;
+    if (none && i === 0) return t.t('color_none');
+    return k >= 0 && k < CAP_COLOR_TITLES.length ? t.t(CAP_COLOR_TITLES[k]) : t.fmt('color_custom', null, v >>> 16 & 255, v >>> 8 & 255, v & 255); };
+  const opTitle = (t, v) => t.t('captioning_opacity_selector_titles')[CAP_OPACITY.indexOf(v)] ?? '';
+  const ROWS = {
+    captioning_foreground_color: ['fg', 'color'], captioning_foreground_opacity: ['fgOp', 'opacity'], captioning_edge_type: ['edge', 'edge'],
+    captioning_edge_color: ['edgeColor', 'color'], captioning_background_color: ['bg', 'colornone'], captioning_background_opacity: ['bgOp', 'opacity'],
+    captioning_window_color: ['win', 'colornone'], captioning_window_opacity: ['winOp', 'opacity']
+  };
+  function capSummary(c, key) {
+    const t = T(), s = capState(c);
+    if (key === 'captioning_locale') return s.locale ? capLocales(c).find(l => l.value === s.locale)?.name || s.locale : t.t('locale_default');
+    if (key === 'captioning_font_size') return t.t('captioning_font_size_selector_titles')[CAP_SCALES.indexOf(s.scale)] ?? '';
+    if (key === 'captioning_preset') return t.t('captioning_preset_selector_titles')[CAP_PRESETS.indexOf(s.preset)] ?? '';
+    if (key === 'captioning_typeface') return t.t('captioning_typeface_selector_titles')[CAP_FACES.indexOf(s.typeface)] ?? '';
+    const [field, kind] = ROWS[key] || [];
+    if (kind === 'opacity') return opTitle(t, s[field]);
+    if (kind === 'edge') return t.t('captioning_edge_type_selector_titles')[CAP_EDGES.indexOf(s.edge)] ?? '';
+    if (kind === 'color') return colorTitle(t, s[field], CAP_COLORS);
+    if (kind === 'colornone') return colorTitle(t, s[field], [0, ...CAP_COLORS]);
+    return '';
+  }
+  // ListDialogPreference: the grid; picking an item sets it and closes.
+  function capGrid(c, title, items, onPick) {
+    c.dialog({title, html: `<div class="mmsx-capgrid">${items.map((it, i) => `<button type="button" class="mmsx-capitem" data-i="${i}">${it.html}<span class="mmsx-capname">${esc(c, it.title || '')}</span></button>`).join('')}</div>`,
+      buttons: [{label: T().t('cancel')}],
+      mount: (c, w) => { w.querySelectorAll('.mmsx-capitem').forEach(b => b.addEventListener('click', () => { onPick(+b.dataset.i); c.closeDialog(); c.render(); })); }});
+  }
+  function capDialog(c, key, n) {
+    const t = T(), s = capState(c), title = MM.settingsStr(n?.title) || '';
+    const list = (values, labels, cur, set) => c.dialog({title, items: values.map((v, i) => radio(c, labels[i], v === cur)), buttons: [{label: t.t('cancel')}], onItem: i => { set(values[i]); c.save(); c.render(); }});
+    if (key === 'captioning_locale') { const locs = capLocales(c); return list(['', ...locs.map(l => l.value)], [t.t('locale_default'), ...locs.map(l => l.name)], s.locale, v => { s.locale = v; }); }
+    if (key === 'captioning_font_size') return list(CAP_SCALES, t.t('captioning_font_size_selector_titles'), s.scale, v => { s.scale = v; });
+    if (key === 'captioning_typeface') return list(CAP_FACES, t.t('captioning_typeface_selector_titles'), s.typeface, v => { s.typeface = v; });
+    const aa = esc(c, t.t('captioning_preview_characters'));
+    if (key === 'captioning_preset') {
+      const titles = t.t('captioning_preset_selector_titles');
+      return capGrid(c, title, CAP_PRESETS.map((p, i) => {
+        const save = s.preset; s.preset = p === 4 ? 0 : p; const st = capStyle(c); s.preset = save;
+        return {title: titles[i], html: `<span class="mmsx-capsample">${capText(st, aa, 32)}</span>`};
+      }), i => { s.preset = CAP_PRESETS[i]; c.save(); });
+    }
+    const [field, kind] = ROWS[key] || [];
+    if (kind === 'edge') {
+      const titles = t.t('captioning_edge_type_selector_titles');
+      return capGrid(c, title, CAP_EDGES.map((e, i) => ({title: titles[i], html: `<span class="mmsx-capsample">${capText({fg: '#fff', bg: 'transparent', face: 'Roboto', shadow: capEdge(e < 0 ? 0 : e, '#000', 'var(--dp)')}, aa, 32)}</span>`})),
+        i => { s.edge = CAP_EDGES[i]; c.save(); });
+    }
+    const values = kind === 'opacity' ? CAP_OPACITY : kind === 'colornone' ? [0, ...CAP_COLORS] : CAP_COLORS;
+    return capGrid(c, title, values.map(v => {
+      const alpha = v >>> 24, label = kind === 'opacity' ? opTitle(t, v) : colorTitle(t, v, values);
+      return {title: label, html: `<span class="mmsx-swatch${alpha < 255 ? ' clear' : ''}"><i style="background:${rgba(v, alpha)}"></i></span>`};
+    }), i => { s[field] = values[i]; c.save(); });
+  }
+  MM.settingsScreens['xml:captioning_settings'] = {
+    bar: c => bar(c, 'mmsx-captions', capOn(c)),
+    render(c) {
+      const t = T(), s = capState(c), on = capOn(c), st = capStyle(c), node = MM.settingsXml.captioning_settings;
+      const size = (0.0533 * Math.max(411.4286 * 9, 200 * 16) / 16 * parseFloat(s.scale)).toFixed(3);
+      const preview = `<div class="mmsx-capview"><img src="assets/st-caption_background.jpg" alt=""><div class="mmsx-capwin"><span style="background:${st.win}">${capText(st, esc(c, t.t('captioning_preview_text')), size)}</span></div></div>`;
+      const rows = cat => cat.c.map(n => {
+        const disabled = n.key === 'captioning_edge_color' && s.edge === 0;
+        return `<button type="button" class="mmst-pref${disabled ? ' disabled' : ''}" data-action="mmsx-caprow" data-key="${n.key}"${disabled ? ' disabled' : ''}><span class="mmst-texts"><span class="mmst-title">${esc(c, MM.settingsStr(n.title))}</span><span class="mmst-summary">${esc(c, capSummary(c, n.key))}</span></span></button>`;
+      }).join('');
+      const cats = node.c.filter(cat => cat.key !== 'custom' || s.preset === -1);
+      return `${preview}<div class="mmst-list${on ? '' : ' off'}">${cats.map(cat => `<div class="mmst-cat">${esc(c, MM.settingsStr(cat.title))}</div>${rows(cat)}`).join('')}</div>`;
+    },
+    action(c, name, el) {
+      if (name === 'mmsx-captions') { const a = S(c).a11y || (S(c).a11y = {}); a.captioning_preference_screen = !a.captioning_preference_screen; c.save(); c.render(); return true; }
+      if (name === 'mmsx-caprow') { capDialog(c, el.dataset.key, findNode(el.dataset.key)); return true; }
+      return false;
+    }
+  };
+  const findNode = key => { const seek = n => n?.key === key ? n : (n?.c || []).reduce((r, x) => r || seek(x), null); return seek(MM.settingsXml.captioning_settings); };
 })();

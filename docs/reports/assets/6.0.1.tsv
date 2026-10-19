@@ -669,6 +669,7 @@ versions/6.0.1/assets/pv-ic_drawer_watchnow_selected.png	cd5afcc6443ae183	copy	b
 versions/6.0.1/assets/pv-ic_drawer_wishlist.png	6ffe031a0d340744	copy	bullhead:/system/app/Videos/Videos.apk!res/drawable-xxhdpi-v4/ic_drawer_wishlist.png	drawable-xxhdpi-v4		6ffe031a0d340744
 versions/6.0.1/assets/pv-ic_drawer_wishlist_selected.png	2874c22b8764c464	copy	bullhead:/system/app/Videos/Videos.apk!res/drawable-xxhdpi-v4/ic_drawer_wishlist_selected.png	drawable-xxhdpi-v4		2874c22b8764c464
 versions/6.0.1/assets/st-NOTICE.html.gz	506ca8d03b5e10e6	copy	bullhead:/system/etc/NOTICE.html.gz			506ca8d03b5e10e6
+versions/6.0.1/assets/st-caption_background.jpg	7b62f3ccbc515324	copy	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable-nodpi-v4/caption_background.jpg	drawable-nodpi-v4		7b62f3ccbc515324
 versions/6.0.1/assets/st-data_grid_border.9.png	9c43caeec6e89350	copy	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable-xxhdpi-v4/data_grid_border.9.png	drawable-xxhdpi-v4		9c43caeec6e89350
 versions/6.0.1/assets/st-data_sweep_warning_activated.9.png	bb81284d175fd12a	copy	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable-xxhdpi-v4/data_sweep_warning_activated.9.png	drawable-xxhdpi-v4		bb81284d175fd12a
 versions/6.0.1/assets/st-fingerprint_sensor_location.png	a6cccad42aee9f66	copy	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable-nodpi-v4/fingerprint_sensor_location.png	drawable-nodpi-v4		a6cccad42aee9f66
@@ -722,6 +723,7 @@ versions/6.0.1/assets/st-ic_wifi_signal_3.svg	3a961c52124d4c48	vector	bullhead:/
 versions/6.0.1/assets/st-ic_wifi_signal_4.svg	ba8832854d5bed94	vector	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable/ic_wifi_signal_4.xml	drawable	vector drawable drawn as SVG	a7c92c6598b27303
 versions/6.0.1/assets/st-ic_wifi_signal_lock.svg	e296e8539aea5e08	vector	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable/ic_wifi_signal_lock.xml	drawable	vector drawable drawn as SVG	0b91a8beb4274a19
 versions/6.0.1/assets/st-regulatory_info_lgh790.png	87e0bb273c123306	copy	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable-xhdpi-v4/regulatory_info_lgh790.png	drawable-xhdpi-v4		87e0bb273c123306
+versions/6.0.1/assets/st-transparency.png	f0548aa7a5ef56bc	copy	bullhead:/system/app/Videos/Videos.apk!res/drawable-xxhdpi-v4/transparency.png	drawable-xxhdpi-v4		f0548aa7a5ef56bc
 versions/6.0.1/assets/sui-ic_access_alarms_big.svg	54c66bc3509e3272	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_access_alarms_big.xml	drawable	vector drawable drawn as SVG	0ccaaf84a45203f4
 versions/6.0.1/assets/sui-ic_access_alarms_small.svg	47179ef1318c04db	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_access_alarms_small.xml	drawable	vector drawable drawn as SVG	af9011404059dd63
 versions/6.0.1/assets/sui-ic_add_circle_qs.svg	40f4e83a9edd44cf	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_add_circle_qs.xml	drawable	vector drawable drawn as SVG	3fbdb23a1bb849e0

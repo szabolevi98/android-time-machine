@@ -92,3 +92,11 @@ wifi_tether_failed_subtext usb_tethering_unavailable_subtext bluetooth_tethering
 bluetooth_turning_on array:wifi_ap_security array:wifi_ap_band_config_full wifi_ap_band_config credentials_password_too_short
 # Users: Add user once the phone has config_multiuserMaximumUsers (4) users
 user_add_max_count
+# Settings' settings button (SpellCheckerPreference, user rows: contentDescription settings_label)
+settings_label
+# Accessibility > Captions (CaptionPropertiesFragment, ColorPreference, PresetPreference, EdgeTypePreference, LocalePreference)
+captioning_preview_text captioning_preview_characters color_custom color_none locale_default color_unspecified color_white
+color_black color_red color_yellow color_green color_cyan color_blue color_magenta array:captioning_preset_selector_titles
+array:captioning_opacity_selector_titles array:captioning_edge_type_selector_titles
+# Text-to-speech output (TextToSpeechSettings) and Pointer speed
+tts_status_ok tts_status_not_supported pointer_speed ok cancel

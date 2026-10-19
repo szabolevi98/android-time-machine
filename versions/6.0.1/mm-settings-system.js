@@ -152,7 +152,8 @@
     hidden: ['hard_keyboard', 'game_controller_settings_category'],
     summary(c, key) {
       const t = T();
-      if (key === 'phone_language') return languageName(c);
+      // InputMethodAndLanguageSettings: the system locale's name in itself, as LocalePicker lists it ("English (United States)").
+      if (key === 'phone_language') return MM.systemLocaleName ? MM.systemLocaleName(c) : languageName(c);
       if (key === 'spellcheckers_settings') return t.t('LatinImeGoogle/spell_checker_service_name');
       if (key === 'current_input_method') return `${subtype(c)} - ${t.t('LatinImeGoogle/english_ime_name')}`;
       if (key === 'ime_latin') return subtype(c);
@@ -168,6 +169,22 @@
       if (key === 'spellcheckers_settings') { MM.settingsGo(c, 'spellcheck', t.t('spellcheckers_settings_title')); return true; }
       if (key === 'key_user_dictionary_settings') { MM.settingsGo(c, 'user-dictionary', t.t('user_dict_settings_title')); return true; }
       if (key === 'current_input_method') { MM.imePicker(c); return true; }
+      // PointerSpeedPreference: the SeekBar (max 14, the speed + 7); OK sets it, Cancel leaves the old one.
+      if (key === 'pointer_speed') {
+        let v = (S(c).pointerSpeed ?? 0) + 7;
+        c.dialog({title: t.t('pointer_speed'), html: `<div class="mmsx-seekdlg"><div class="mmst-seek" role="slider" aria-valuemin="0" aria-valuemax="14" aria-valuenow="${v}" style="--v:${(v / 14).toFixed(4)}"><i class="mmst-seek-track"></i><i class="mmst-seek-progress"></i><i class="mmst-seek-thumb"></i></div></div>`,
+          buttons: [{label: t.t('cancel')}, {label: t.t('ok'), action: c => { S(c).pointerSpeed = v - 7; c.save(); }}],
+          mount(c, win) {
+            const bar = win.querySelector('.mmst-seek');
+            bar.addEventListener('pointerdown', e => {
+              e.preventDefault(); try { bar.setPointerCapture(e.pointerId); } catch {}
+              const move = ev => { const r = bar.getBoundingClientRect(), pad = 16 * c.el.screen.clientWidth / 411.4286; v = Math.round(Math.min(1, Math.max(0, (ev.clientX - r.left - pad) / (r.width - 2 * pad))) * 14); bar.style.setProperty('--v', (v / 14).toFixed(4)); bar.setAttribute('aria-valuenow', v); };
+              move(e); bar.addEventListener('pointermove', move);
+              bar.addEventListener('pointerup', () => bar.removeEventListener('pointermove', move), {once: true});
+            });
+          }});
+        return true;
+      }
       return false;
     }
   };
@@ -429,6 +446,44 @@
     },
     click(c, key) {
       if (key === 'wifi_ap_ssid_and_security') { apDialog(c); return true; }
+      return false;
+    }
+  };
+
+  /* Text-to-speech output (TextToSpeechSettings, tts_settings.xml): Preferred engine lists the image's one engine,
+     GoogleTTS ("Google Text-to-speech Engine": TtsEnginePreference's radio, a divider and its settings button, which
+     opens the engine's settingsActivity, EngineSettings); Speech rate; Listen to an example speaks the engine's sample
+     for the default language (GoogleTTS's tts_demo_strings, by tts_demo_string_langs; here the browser's speech
+     synthesis says it); Default language status is tts_status_ok for a language the engine has, else
+     tts_status_not_supported, which also greys out the rate and the example (updateWidgetState(false)). */
+  const TTS_DEMO = {en: 'This is an example of speech synthesis in English.', fr: 'Voici un échantillon de synthèse vocale en français.',
+    de: 'Dies ist ein Beispiel für Sprachsynthese in Deutsch.', it: 'Questo è un esempio di sintesi vocale in italiano.', es: 'Este es un ejemplo de síntesis de voz en español.',
+    ko: '이것은 한국어 음성 합성의 예입니다.', pt: 'Isto é um exemplo de síntese de voz em português.', nl: 'Dit is een voorbeeld van spraaksynthese in het Nederlands.',
+    pl: 'To jest przykład syntezy mowy w języku polskim.', ru: 'Вы слушаете синтез речи на русском языке.', ja: 'こちらが日本語音声合成のサンプルです。',
+    hi: 'यह हिन्दी में भाषण संश्लेषण का एक उदाहरण है।', in: 'ini adalah contoh sintesis suara dalam bahasa Indonesia.'};
+  const ttsLocale = c => (S(c).locale || {en: 'en-US', hu: 'hu-HU', de: 'de-DE', fr: 'fr-FR', es: 'es-ES'}[c.lang] || 'en-US');
+  const ttsOk = c => !!TTS_DEMO[ttsLocale(c).split('-')[0]];
+  // Locale.getDisplayName(): the language, then the country in brackets, in the phone's language.
+  const displayName = (c, tag) => { try { const [l, r] = tag.split('-'); const n = new Intl.DisplayNames([c.locale()], {type: 'language'}).of(l.replace('in', 'id').replace('iw', 'he')), rn = r ? new Intl.DisplayNames([c.locale()], {type: 'region'}).of(r) : ''; return rn ? `${n} (${rn})` : n; } catch { return tag; } };
+  H.tts_settings = {
+    top(c) {
+      const t = T(), gear = `<span class="mmst-widget mmsx-usermanage"><i class="mmsx-userdiv np-fw-divider_horizontal_dark"></i><span class="mmsx-usergear" role="button" data-action="mmst-pref" data-key="tts_engine_settings" aria-label="${c.safe(t.t('settings_label'))}"><img src="assets/st-ic_sysbar_quicksettings.png" alt=""></span></span>`;
+      return `<div class="mmst-cat">${c.safe(t.t('tts_engine_preference_section_title'))}</div><button type="button" class="mmst-pref" data-action="mmst-pref" data-key="tts_engine"><span class="mmst-iconframe"><i class="mmw-radio on"></i></span><span class="mmst-texts"><span class="mmst-title">${c.safe(MM.text('appprefs').t('GoogleTTS/app_name'))}</span></span>${gear}</button>`;
+    },
+    disabled: (c, key) => (key === 'tts_default_rate' || key === 'tts_play_example') && !ttsOk(c),
+    summary(c, key) {
+      if (key === 'tts_status') return T().fmt(ttsOk(c) ? 'tts_status_ok' : 'tts_status_not_supported', null, displayName(c, ttsLocale(c)));
+      return undefined;
+    },
+    click(c, key) {
+      if (key === 'tts_engine') return true;
+      if (key === 'tts_engine_settings') { MM.openPrefs(c, 'tts', 'general_settings', MM.text('appprefs').t('GoogleTTS/app_name')); return true; }
+      if (key === 'tts_status') return true;
+      if (key === 'tts_play_example') {
+        const lang = ttsLocale(c).split('-')[0], text = TTS_DEMO[lang];
+        try { const u = new SpeechSynthesisUtterance(text); u.lang = ttsLocale(c); u.rate = (+(S(c).prefs || {}).tts_default_rate || 100) / 100; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch {}
+        return true;
+      }
       return false;
     }
   };

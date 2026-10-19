@@ -42,6 +42,8 @@
     },
     click(c, key) {
       const t = T(), s = S(c), entry = top(c);
+      // sendFeedback: ACTION_BUG_REPORT to oem_preferred_feedback_reporter, Google Play services' feedback.
+      if (key === 'device_feedback') { c.open('feedback', 'settings'); return true; }
       if (key === 'build_number') {
         if (entry.devHits == null) entry.devHits = s.devOptions ? -1 : 7;
         if (entry.devHits < 0) { c.toast(t.t('show_dev_already'), true); return true; }

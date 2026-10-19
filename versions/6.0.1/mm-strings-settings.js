@@ -10273,6 +10273,267 @@ MM.strings('settings', {
 "fr": "Vous pouvez ajouter jusqu'à %1$d utilisateurs.",
 "es": "Puedes añadir hasta %1$d usuarios"
 },
+"settings_label": {
+"res": "bullhead:Settings:settings_label",
+"en": "Settings",
+"hu": "Beállítások",
+"de": "Einstellungen",
+"fr": "Paramètres",
+"es": "Ajustes"
+},
+"captioning_preview_text": {
+"res": "bullhead:Settings:captioning_preview_text",
+"en": "Captions will look like this",
+"hu": "A feliratok így fognak kinézni",
+"de": "Untertitel sehen so aus.",
+"fr": "Aperçu des sous-titres",
+"es": "Así aparecerán los subtítulos"
+},
+"captioning_preview_characters": {
+"res": "bullhead:Settings:captioning_preview_characters",
+"en": "Aa",
+"hu": "Aa",
+"de": "Aa",
+"fr": "Aa",
+"es": "Aa"
+},
+"color_custom": {
+"res": "bullhead:Settings:color_custom",
+"en": "#%1$02X%2$02X%3$02X",
+"hu": "#%1$02X%2$02X%3$02X",
+"de": "#%1$02X%2$02X%3$02X",
+"fr": "#%1$02X%2$02X%3$02X",
+"es": "#%1$02X%2$02X%3$02X",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"color_none": {
+"res": "bullhead:Settings:color_none",
+"en": "None",
+"hu": "Semelyik",
+"de": "Keine",
+"fr": "Aucune",
+"es": "Ninguno"
+},
+"locale_default": {
+"res": "bullhead:Settings:locale_default",
+"en": "Default",
+"hu": "Alapértelmezett",
+"de": "Standard",
+"fr": "Par défaut",
+"es": "Predeterminado"
+},
+"color_unspecified": {
+"res": "bullhead:Settings:color_unspecified",
+"en": "Default",
+"hu": "Alapértelmezett",
+"de": "Standard",
+"fr": "Par défaut",
+"es": "Predeterminado"
+},
+"color_white": {
+"res": "bullhead:Settings:color_white",
+"en": "White",
+"hu": "Fehér",
+"de": "Weiß",
+"fr": "Blanc",
+"es": "Blanco"
+},
+"color_black": {
+"res": "bullhead:Settings:color_black",
+"en": "Black",
+"hu": "Fekete",
+"de": "Schwarz",
+"fr": "Noir",
+"es": "Negro"
+},
+"color_red": {
+"res": "bullhead:Settings:color_red",
+"en": "Red",
+"hu": "Piros",
+"de": "Rot",
+"fr": "Rouge",
+"es": "Rojo"
+},
+"color_yellow": {
+"res": "bullhead:Settings:color_yellow",
+"en": "Yellow",
+"hu": "Sárga",
+"de": "Gelb",
+"fr": "Jaune",
+"es": "Amarillo"
+},
+"color_green": {
+"res": "bullhead:Settings:color_green",
+"en": "Green",
+"hu": "Zöld",
+"de": "Grün",
+"fr": "Vert",
+"es": "Verde"
+},
+"color_cyan": {
+"res": "bullhead:Settings:color_cyan",
+"en": "Cyan",
+"hu": "Zöldeskék",
+"de": "Blaugrün",
+"fr": "Cyan",
+"es": "Cian"
+},
+"color_blue": {
+"res": "bullhead:Settings:color_blue",
+"en": "Blue",
+"hu": "Kék",
+"de": "Blau",
+"fr": "Bleu",
+"es": "Azul"
+},
+"color_magenta": {
+"res": "bullhead:Settings:color_magenta",
+"en": "Magenta",
+"hu": "Magenta",
+"de": "Magenta",
+"fr": "Magenta",
+"es": "Magenta"
+},
+"captioning_preset_selector_titles": {
+"res": "bullhead:Settings:captioning_preset_selector_titles",
+"en": [
+"Use app defaults",
+"White on black",
+"Black on white",
+"Yellow on black",
+"Yellow on blue",
+"Custom"
+],
+"hu": [
+"Alapbeállítások használata",
+"Fekete alapon fehér",
+"Fehér alapon fekete",
+"Fekete alapon sárga",
+"Kék alapon sárga",
+"Egyedi"
+],
+"de": [
+"App-Standard verwenden",
+"Weiß auf Schwarz",
+"Schwarz auf Weiß",
+"Gelb auf Schwarz",
+"Gelb auf Blau",
+"Personalisiert"
+],
+"fr": [
+"Paramètres par défaut de l'appli",
+"Texte blanc sur fond noir",
+"Texte noir sur fond blanc",
+"Texte jaune sur fond noir",
+"Texte jaune sur fond bleu",
+"Personnalisé"
+],
+"es": [
+"Por defecto",
+"Blanco sobre negro",
+"Negro sobre blanco",
+"Amarillo sobre negro",
+"Amarillo sobre azul",
+"Personalizado"
+]
+},
+"captioning_opacity_selector_titles": {
+"res": "bullhead:Settings:captioning_opacity_selector_titles",
+"en": [
+"25%",
+"50%",
+"75%",
+"100%"
+],
+"hu": [
+"25%",
+"50%",
+"75%",
+"100%"
+],
+"de": [
+"25 %",
+"50 %",
+"75 %",
+"100 %"
+],
+"fr": [
+"25 %",
+"50 %",
+"75 %",
+"100 %"
+],
+"es": [
+"25%",
+"50%",
+"75%",
+"100%"
+]
+},
+"captioning_edge_type_selector_titles": {
+"res": "bullhead:Settings:captioning_edge_type_selector_titles",
+"en": [
+"Default",
+"None",
+"Outline",
+"Drop shadow",
+"Raised",
+"Depressed"
+],
+"hu": [
+"Alapértelmezett",
+"Nincs",
+"Körvonal",
+"Árnyékolás",
+"Emelt",
+"Nyomott"
+],
+"de": [
+"Standard",
+"Keine",
+"Umriss",
+"Schlagschatten",
+"Erhöht",
+"Vertieft"
+],
+"fr": [
+"Par défaut",
+"Aucun",
+"Contour",
+"Ombre projetée",
+"Bord en relief",
+"Bord en retrait"
+],
+"es": [
+"Predeterminado",
+"Ninguno",
+"Contorno",
+"Sombra paralela",
+"Elevado",
+"Hundido"
+]
+},
+"tts_status_ok": {
+"res": "bullhead:Settings:tts_status_ok",
+"en": "%1$s is fully supported",
+"hu": "A(z) %1$s nyelv teljes támogatást élvez",
+"de": "%1$s wird vollständig unterstützt.",
+"fr": "Les paramètres régionaux %1$s sont compatibles.",
+"es": "El %1$s se admite completamente"
+},
+"tts_status_not_supported": {
+"res": "bullhead:Settings:tts_status_not_supported",
+"en": "%1$s is not supported",
+"hu": "A(z) %1$s nyelvet nem támogatja a rendszer",
+"de": "%1$s wird nicht unterstützt.",
+"fr": "Les paramètres régionaux %1$s ne sont pas compatibles.",
+"es": "No se admite el %1$s"
+},
 "animator_duration_scale_entries": {
 "res": "bullhead:Settings:animator_duration_scale_entries",
 "en": [

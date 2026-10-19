@@ -52,3 +52,6 @@ vv-ic_stat_notify_google.png	priv-app/Velvet/Velvet.apk	drawable/ic_stat_notify_
 # Settings > Users: a user row's manage button (preference_user_delete_widget: the divider, then ic_sysbar_quicksettings)
 st-ic_sysbar_quicksettings.png	priv-app/Settings/Settings.apk	drawable/ic_sysbar_quicksettings
 fw-divider_horizontal_dark.9.png	framework/framework-res.apk	drawable/divider_horizontal_dark
+# Settings > Accessibility > Captions (captioning_preview: caption_background; ColorPreference: transparency_tileable)
+st-caption_background.jpg	priv-app/Settings/Settings.apk	drawable/caption_background
+st-transparency.png	priv-app/Settings/Settings.apk	drawable/transparency

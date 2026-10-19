@@ -19,15 +19,16 @@
     return LANGS.includes(c) ? c : 'en';
   };
   // Android's formatter: positional %1$s / %2$d, sequential %s / %d, %% for a percent sign, a width with 0 padding (%02d),
-  // a precision (%.1f) and the grouping flag (%,d: callers pass the number already grouped); the Market's ^1 as well.
+  // a precision (%.1f), hexadecimal (%02X) and the grouping flag (%,d: callers pass the number already grouped); the Market's ^1 as well.
   function format(text, ...args) {
     let next = 0;
     return String(text ?? '')
-      .replace(/%(?:(\d+)\$)?([-#+0,]*)(\d*)(?:\.(\d+))?([sdfS%])/g, (all, pos, flags, width, precision, type) => {
+      .replace(/%(?:(\d+)\$)?([-#+0,]*)(\d*)(?:\.(\d+))?([sdfSxX%])/g, (all, pos, flags, width, precision, type) => {
         if (type === '%') return '%';
         const value = args[pos ? pos - 1 : next++];
         if (value === undefined) return all;
-        let out = type === 'f' && precision ? Number(value).toFixed(Number(precision)) : String(value);
+        let out = type === 'f' && precision ? Number(value).toFixed(Number(precision)) : type === 'x' || type === 'X' ? Number(value).toString(16) : String(value);
+        if (type === 'X') out = out.toUpperCase();
         if (width && out.length < Number(width)) out = flags.includes('-') ? out.padEnd(Number(width)) : out.padStart(Number(width), flags.includes('0') ? '0' : ' ');
         return out;
       })
