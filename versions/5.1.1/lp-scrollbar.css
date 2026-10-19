@@ -1,0 +1,6 @@
+/* Lollipop's fading scrollbar (lp-scrollbar.js); the page's own scrollbars never show on the phone. */
+.screen *{scrollbar-width:none!important}
+.screen ::-webkit-scrollbar{display:none}
+.lp-scrollbars{position:absolute;inset:0;z-index:59;pointer-events:none;overflow:hidden}
+.lp-scrollbar{position:absolute;opacity:0;transition:opacity .25s linear}
+.lp-scrollbar.on{opacity:1;transition:none}

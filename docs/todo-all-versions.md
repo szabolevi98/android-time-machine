@@ -18,8 +18,9 @@ where it has one). A version whose user picks a timeout keeps that behaviour.
 A deliberate change from the factory home screen: most people put the clock on first, so every version starts with
 its image's clock widget, as 5.1.1 already does.
 
-- [ ] 6.0.1
-- [ ] check the others
+- [x] 6.0.1: Clock's digital_gadget across the top of the first page (mm-launcher.js), added once to older saves
+- [x] 5.1.1 (DeskClock digital), 4.4.4 (digital), 4.3 and 4.0.4 (analog, on the default page) already have one
+- [ ] 2.3.6 and 2.1 keep their factory home screens (the owner's earlier "factory homes" decision); ask the owner whether the clock rule overrides it
 
 ## Android's own fading scrollbar (owner, 2026-10-18)
 
@@ -28,6 +29,6 @@ it moves, then fades it (View.onDrawScrollBars, the theme's scrollbarThumbVertic
 delay and duration).
 
 - [x] 6.0.1: mm-scroll.js (scrollbar_handle_material 4 dp, colorControlNormal tint, 300 ms + 250 ms fade)
-- [ ] 5.1.1 (same Material drawable as 6.0.1; check the image)
+- [x] 5.1.1: lp-scrollbar.js / .css (shamu's scrollbar_handle_material is the same 4 dp shape)
 - [ ] 4.4.4 / 4.3 / 4.0.4 (Holo scrollbar_handle_holo_dark / _light nine-patches)
 - [ ] 2.3.6 / 2.1 (scrollbar_handle_vertical / accelerated nine-patches)
