@@ -34,3 +34,6 @@ sui-ic_qs_minus.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_minus	systemui_theme
 sui-ic_qs_plus.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_plus	systemui_theme
 sui-ic_qs_wifi_detail_empty.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_wifi_detail_empty	systemui_theme
 sui-ic_qs_bluetooth_detail_empty.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_bluetooth_detail_empty	systemui_theme
+# framework Material RadioButton (btn_radio_material_anim: btn_radio_off_mtrl / btn_radio_on_mtrl), masks the CSS colours (ZenModePanel conditions)
+fw-btn_radio_off_mtrl.svg	framework/framework-res.apk	btn_radio_off_mtrl	-
+fw-btn_radio_on_mtrl.svg	framework/framework-res.apk	btn_radio_on_mtrl	-

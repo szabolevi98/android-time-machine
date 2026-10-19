@@ -1,0 +1,21 @@
+/* Android 7.1.2 framework widgets drawn from framework-res.apk (N2G48C), in dp:
+   - Switch (Widget.Material.CompoundButton.Switch): switch_track_material, a 14 dp track with 7 dp corners inset 4 dp at
+     both ends (white_disabled_material: the tint at 0.3), tinted with colorForeground off and colorControlActivated on;
+     switch_thumb_material_anim's first and last frames (btn_switch_to_on_mtrl_00001 / 00012, xxxhdpi 108 px = 27 dp with
+     3.5 dp of shadow padding at the sides, so the thumb is 20 dp), tinted by multiply (tintMode 14) with
+     colorSwitchThumbNormal or colorControlActivated. Switch.onMeasure: twice the thumb wide (40 dp), as high as the thumb
+     drawable (27 dp); the thumb slides over the track in 250 ms (THUMB_ANIMATION_DURATION).
+   - RadioButton (Widget.Material.CompoundButton.RadioButton): btn_radio_material_anim's btn_radio_off_mtrl /
+     btn_radio_on_mtrl (32 dp vectors) at the start, centred, tinted colorControlNormal off and colorControlActivated on.
+   The colours come from the theme the widget sits in: --ngw-fg (colorForeground), --ngw-thumb (colorSwitchThumbNormal),
+   --ngw-normal (colorControlNormal) and --ngw-accent; the defaults are SystemUI's dark systemui_theme (accent #80cbc4,
+   switch_thumb_normal_material_dark #bdbdbd, textColorSecondary of the dark theme #ffffffb3). */
+.ngw-switch{position:relative;display:inline-block;flex:none;width:calc(40 * var(--dp));height:calc(27 * var(--dp));vertical-align:middle;--ngw-fg:#fff;--ngw-thumb:#bdbdbd;--ngw-accent:#80cbc4}
+.ngw-switch::before{content:"";position:absolute;left:calc(4 * var(--dp));right:calc(4 * var(--dp));top:calc(6.5 * var(--dp));height:calc(14 * var(--dp));border-radius:calc(7 * var(--dp));background:var(--ngw-fg);opacity:.3;transition:background-color .25s}
+.ngw-switch.on::before{background:var(--ngw-accent)}
+.ngw-thumb{position:absolute;top:0;left:calc(-3.5 * var(--dp));width:calc(27 * var(--dp));height:calc(27 * var(--dp));isolation:isolate;background:url('assets/fw-btn_switch_to_on_mtrl_00001.9.png') 0 0/100% 100%;transition:left .25s cubic-bezier(.4,0,.2,1)}
+.ngw-thumb::after{content:"";position:absolute;inset:0;background:var(--ngw-thumb);mix-blend-mode:multiply;-webkit-mask:url('assets/fw-btn_switch_to_on_mtrl_00001.9.png') 0 0/100% 100%;mask:url('assets/fw-btn_switch_to_on_mtrl_00001.9.png') 0 0/100% 100%}
+.ngw-switch.on .ngw-thumb{left:calc(16.5 * var(--dp));background-image:url('assets/fw-btn_switch_to_on_mtrl_00012.9.png')}
+.ngw-switch.on .ngw-thumb::after{background:var(--ngw-accent);-webkit-mask-image:url('assets/fw-btn_switch_to_on_mtrl_00012.9.png');mask-image:url('assets/fw-btn_switch_to_on_mtrl_00012.9.png')}
+.ngw-radio{display:inline-block;flex:none;width:calc(32 * var(--dp));height:calc(32 * var(--dp));background:var(--ngw-normal,#ffffffb3);-webkit-mask:url('assets/fw-btn_radio_off_mtrl.svg') center/100% 100% no-repeat;mask:url('assets/fw-btn_radio_off_mtrl.svg') center/100% 100% no-repeat;transition:background-color .15s}
+.ngw-radio.on{background:var(--ngw-accent,#80cbc4);-webkit-mask-image:url('assets/fw-btn_radio_on_mtrl.svg');mask-image:url('assets/fw-btn_radio_on_mtrl.svg')}

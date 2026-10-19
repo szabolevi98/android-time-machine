@@ -1,0 +1,141 @@
+/* Android 7.1.2 quick settings details (ng-qsdetail.js), in dp: SystemUI's qs_detail.xml, qs_detail_header.xml,
+   qs_detail_buttons.xml, qs_detail_items.xml / qs_detail_item.xml, data_usage.xml, battery_detail.xml with settingslib's
+   usage_view.xml, zen_mode_panel.xml / zen_mode_condition.xml / zen_mode_button.xml of N2G48C. The text appearances are
+   TextAppearance.QS (qs_text white, sans-serif) and its children; Roboto's line is 1.328 em (includeFontPadding). */
+/* QSDetail fills QSContainer; qs_detail_background is a TransitionDrawable from qs_detail_transition (#ffffff66) to
+   colorPrimary (#263238), started over 0.6 of the reveal. QSDetailClipper: a circular reveal from the tile's centre to
+   the farthest corner, ViewAnimationUtils' default 300 ms times 1.5 (AccelerateDecelerateInterpolator). */
+.ngqd{position:absolute;inset:0;display:flex;flex-direction:column;padding-bottom:calc(8 * var(--dp));box-sizing:border-box;background:#263238;color:#fff;font-family:Roboto,sans-serif}
+.ngqd.reveal{animation:ngqd-reveal 450ms cubic-bezier(.37,0,.63,1) both,ngqd-fade 270ms linear both}
+@keyframes ngqd-reveal{from{clip-path:circle(0 at var(--rx,50%) var(--ry,0))}to{clip-path:circle(150% at var(--rx,50%) var(--ry,0))}}
+@keyframes ngqd-fade{from{background:#ffffff66}to{background:#263238}}
+.ngqd-space{flex:none;height:calc(28 * var(--dp))}
+/* qs_detail_header: the title (TextAppearance.QS.DetailHeader, qs_detail_header_text_size 20 sp sans-serif-medium) 16 dp
+   in, the Switch at the end before qs_panel_padding 16 dp; the whole header clickable on btn_borderless_rect. Under it
+   the indeterminate progress (indeterminate_anim, 2 dp high) at alpha 0, still taking its place. */
+.ngqd-header{flex:none;display:flex;align-items:center;min-height:calc(27 * var(--dp));margin-bottom:calc(2 * var(--dp));padding-right:calc(16 * var(--dp))}
+.ngqd-header.clickable{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ngqd-header.clickable:active{background:#ffffff33}
+.ngqd-title{flex:1;min-width:0;padding-left:calc(16 * var(--dp));font:500 calc(20 * var(--dp))/calc(26.56 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngqd-content{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+/* qs_detail_buttons: at the end, 8 dp in; QSBorderlessButton (12 dp padding, qs_btn_borderless_rect: a ripple inset
+   4 dp, borderless_button_radius 2 dp), TextAppearance.QS.DetailButton 14 sp sans-serif-medium all caps in
+   qs_detail_button (quaternary_material_settings, material_blue_grey_200 #b0bec5); MORE SETTINGS 132 dp wide at least and
+   8 dp before DONE, 88 dp. */
+.ngqd-buttons{flex:none;display:flex;justify-content:flex-end;padding-right:calc(8 * var(--dp))}
+.ngqd-buttons button{position:relative;min-width:calc(88 * var(--dp));padding:calc(12 * var(--dp));border:0;background:none;color:#b0bec5;font:500 calc(14 * var(--dp))/calc(18.59 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;text-align:center;-webkit-tap-highlight-color:transparent}
+.ngqd-buttons .ngqd-more{min-width:calc(132 * var(--dp));margin-right:calc(8 * var(--dp))}
+.ngqd-buttons button::before{content:"";position:absolute;inset:calc(4 * var(--dp));border-radius:calc(2 * var(--dp));background:#ffffff33;opacity:0;transition:opacity .2s}
+.ngqd-buttons button:active::before{opacity:1;transition:none}
+
+/* QSDetailItems: qs_detail_items_padding_top 16 dp (sw410dp), 16 dp at the sides. A row (qs_detail_item.xml) is 48 dp at
+   least: the 24 dp icon (its overlay, the lock, at its own 24 dp over it), 20 + 12 dp, the title (DetailItemPrimary 16 sp,
+   one line) and the summary 2 dp under it (DetailItemSecondary 14 sp in colorAccent #80cbc4); the 48 dp disconnect button
+   (ic_qs_cancel centred) at the end. */
+.ngqd-items{height:100%;padding:calc(16 * var(--dp)) calc(16 * var(--dp)) 0;box-sizing:border-box}
+.ngqd-item{display:flex;align-items:center;min-height:calc(48 * var(--dp));cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ngqd-item:active{background:#ffffff33}
+.ngqd-item.hidden{visibility:hidden}
+.ngqd-icon{position:relative;flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin-right:calc(20 * var(--dp))}
+.ngqd-icon img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.ngqd-text{flex:1;min-width:0;margin-left:calc(12 * var(--dp));display:flex;flex-direction:column}
+.ngqd-line1{font:400 calc(16 * var(--dp))/calc(21.25 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngqd-line2{margin-top:calc(2 * var(--dp));font:400 calc(14 * var(--dp))/calc(18.59 * var(--dp)) Roboto,sans-serif;color:#80cbc4}
+.ngqd-close{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+.ngqd-close img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngqd-close:active{background:#ffffff33}
+/* The empty view: the 56 dp icon and its text 20 dp under it (TextAppearance.QS.DetailEmpty 14 sp qs_subhead #ffffff99),
+   centred. */
+.ngqd-empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ngqd-empty img{width:calc(56 * var(--dp));height:calc(56 * var(--dp))}
+.ngqd-empty span{margin-top:calc(20 * var(--dp));font:400 calc(14 * var(--dp))/calc(18.59 * var(--dp)) Roboto,sans-serif;color:#ffffff99;text-align:center}
+
+/* DataUsageDetailView (data_usage.xml): 16 dp padding above and at the sides; the title (TextAppearance.QS.DataUsage
+   14 sp), the usage (qs_data_usage_usage_text_size 36 sp in colorAccent, over the limit system_warning_color #f4511e);
+   DataUsageGraph 8 dp high, 8 dp down and 16 dp above the texts (the track data_usage_graph_track #ffffff33, the usage in
+   the accent, the 4 dp warning marker in white); the carrier and the top info side by side, 4 dp under them the period
+   and the bottom info (DataUsage.Secondary, data_usage_secondary #ffffff99). */
+.ngqd-data{padding:calc(16 * var(--dp)) calc(16 * var(--dp)) 0;font:400 calc(14 * var(--dp))/calc(18.59 * var(--dp)) Roboto,sans-serif}
+.ngqd-usage{font-size:calc(36 * var(--dp));line-height:calc(47.81 * var(--dp))}
+.ngqd-graph{position:relative;height:calc(8 * var(--dp));margin:calc(8 * var(--dp)) 0 calc(16 * var(--dp));background:#ffffff33}
+.ngqd-graph i{position:absolute;left:0;top:0;bottom:0;background:#80cbc4}
+.ngqd-graph b{position:absolute;top:0;bottom:0;width:calc(4 * var(--dp));background:#fff}
+.ngqd-drow{display:flex}
+.ngqd-drow span{flex:1;min-width:0}
+.ngqd-dsec{margin-top:calc(4 * var(--dp));color:#ffffff99}
+
+/* BatteryDetail (battery_detail.xml): charge_and_estimation 16 dp in, textAppearanceSmall (14 sp) in colorAccent with the
+   level at 2.6 times (BatteryTile's RelativeSizeSpan); 27 dp of space, settingslib's UsageView 141 dp high, 16 dp from the
+   start and 24 dp from the end, 27 dp of space, the 1 dp listDivider (list_divider_material: #1f white) 8 dp above the
+   Battery Saver row (16 dp padding above and below; the 24 dp icon 16 dp in and 32 dp before the title,
+   DetailItemPrimary 16 sp; the Switch 16 dp from the end, at the top). */
+.ngqd-battery{padding-top:0}
+.ngqd-charge{padding-left:calc(16 * var(--dp));font:400 calc(14 * var(--dp))/1.328 Roboto,sans-serif;color:#80cbc4}
+.ngqd-pct{font-size:2.6em}
+.ngqd-usageview{height:calc(141 * var(--dp));margin:calc(27 * var(--dp)) calc(24 * var(--dp)) calc(27 * var(--dp)) calc(16 * var(--dp));display:flex;flex-direction:column;font:400 calc(14 * var(--dp))/calc(18.59 * var(--dp)) Roboto,sans-serif;color:#ffffff66}
+/* usage_view.xml: the labels (usage_side_label: textAppearanceSmall, UsageView's textColor #ffffff66) in their 56 dp
+   column, top, middle and bottom with weighted spaces between; UsageGraph 9 dp in from above and below
+   (usage_graph_margin_top_bottom) with its three 1 dp dividers (usage_graph_divider_size, listDivider) at the top, the
+   middle and the bottom; the level line 3 dp (usage_graph_line_width) round, over the accent fading from 0.2 to nothing
+   down to the bottom; the projection in dots 0.75 dp (usage_graph_dot_size) 7 dp apart (usage_graph_dot_interval), three
+   dots wide, in tertiary_device_default_settings (#455a64). Under it the start and end labels after the 56 dp space. */
+.ngqd-graphrow{flex:1;min-height:0;display:flex}
+.ngqd-side{flex:none;width:calc(56 * var(--dp));display:flex;flex-direction:column;justify-content:space-between}
+.ngqd-plot{position:relative;flex:1;margin:calc(9 * var(--dp)) 0}
+.ngqd-plot i{position:absolute;left:0;right:0;height:calc(1 * var(--dp));background:#ffffff1f}
+.ngqd-plot i:nth-child(1){top:0}
+.ngqd-plot i:nth-child(2){top:calc(50% - .5 * var(--dp))}
+.ngqd-plot i:nth-child(3){bottom:0}
+.ngqd-usagegraph{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.ngqd-line{fill:none;stroke:#80cbc4;stroke-width:calc(3 * var(--dp));stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.ngqd-proj{fill:none;stroke:#455a64;stroke-width:calc(2.25 * var(--dp));stroke-dasharray:calc(.75 * var(--dp)) calc(7 * var(--dp));vector-effect:non-scaling-stroke}
+.ngqd-bottom{flex:none;display:flex;justify-content:space-between;padding-left:calc(56 * var(--dp))}
+.ngqd-divider{display:block;height:calc(1 * var(--dp));margin-bottom:calc(8 * var(--dp));background:#ffffff1f}
+.ngqd-saver{position:relative;display:flex;align-items:flex-start;padding:calc(16 * var(--dp)) 0;-webkit-tap-highlight-color:transparent}
+.ngqd-saver[role=button]{cursor:pointer}
+.ngqd-saver[role=button]:active{background:#ffffff33}
+.ngqd-saver.charging{opacity:.7}
+.ngqd-saver-icon{flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin:0 calc(32 * var(--dp)) 0 calc(16 * var(--dp));display:grid;place-items:center}
+.ngqd-saver-icon svg{height:100%;width:auto}
+.ngqd-saver-title{flex:1;min-width:0;font:400 calc(16 * var(--dp))/calc(21.25 * var(--dp)) Roboto,sans-serif;color:#fff}
+.ngqd-saver .ngw-switch{margin-right:calc(16 * var(--dp))}
+
+/* ZenModePanel (zen_mode_panel.xml). SegmentedButtons 8 dp above and below, 16 dp in, on segmented_buttons_background
+   (#ffffff14, borderless_button_radius 2 dp): the three buttons share the width, 72 dp high (two lines), 16 sp
+   (TextAppearance.QS.SegmentedButton), the selected one segmented_button_selected white in sans-serif-medium, the others
+   segmented_button_unselected (#b0bec5) in sans-serif. */
+.ngzp-segs{display:flex;margin:calc(8 * var(--dp)) calc(16 * var(--dp));border-radius:calc(2 * var(--dp));background:#ffffff14}
+.ngzp-seg{flex:1;min-width:0;height:calc(72 * var(--dp));padding:0 calc(4 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;color:#b0bec5;font:400 calc(16 * var(--dp))/calc(21.25 * var(--dp)) Roboto,sans-serif;text-align:center;-webkit-tap-highlight-color:transparent}
+.ngzp-seg.on{color:#fff;font-weight:500}
+.ngzp-seg:active{background:#ffffff33}
+/* The introduction (zen_introduction, ThemeOverlay.DeviceDefault.Accent.Light: colorAccent #009688, 2 dp corners), 16 dp
+   in, 8 dp padding above and below: the 48 dp close button 8 dp from the end; the text (TextAppearance.QS.Introduction
+   14 sp, line spacing 1.2) 12 dp down, 24 dp in, before the close button; CUSTOMIZE under it at the end, 12 dp in
+   (DetailButton.White, qs_detail_button_white #ffffffb3); a 16 dp space under the text. */
+.ngzp-intro{position:relative;margin:0 calc(16 * var(--dp));padding:calc(8 * var(--dp)) 0;border-radius:calc(2 * var(--dp));background:#009688;display:flex;flex-direction:column}
+.ngzp-intro p{margin:calc(12 * var(--dp)) calc(56 * var(--dp)) 0 calc(24 * var(--dp));font:400 calc(14 * var(--dp))/calc(22.31 * var(--dp)) Roboto,sans-serif;color:#fff}
+.ngzp-intro>i{display:block;height:calc(16 * var(--dp))}
+.ngzp-confirm{position:absolute;top:calc(8 * var(--dp));right:calc(8 * var(--dp));width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+.ngzp-confirm img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngzp-confirm:active{background:#ffffff33}
+.ngzp-customize{order:2;align-self:flex-end;margin:0 calc(12 * var(--dp)) 0 0;padding:calc(12 * var(--dp));border:0;background:none;color:#ffffffb3;font:500 calc(14 * var(--dp))/calc(18.59 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;-webkit-tap-highlight-color:transparent}
+.ngzp-customize:active{background:#ffffff33}
+.ngzp-intro>i{order:1}
+.ngzp-intro .ngzp-customize+i{display:none}
+/* The conditions, 8 dp down, 4 dp in, zen_mode_condition_detail_bottom_padding 4 dp below: a RadioButton
+   (zen_mode_button.xml: 40 x 48 dp, 10 dp padding above and below, 7 dp in, 4 dp after it) and the condition (1 dp in):
+   text1 (DetailItemPrimary 16 sp, one line) and text2 4 dp under it (DetailItemSecondary 14 sp, the accent), centred; the
+   countdown's 48 dp minus and plus (QSBorderlessButton on ripple_drawable_20dp), half transparent at the ends. */
+.ngzp-conds{margin:calc(8 * var(--dp)) calc(4 * var(--dp)) 0;padding-bottom:calc(4 * var(--dp))}
+.ngzp-cond{display:flex;align-items:center;min-height:calc(48 * var(--dp));cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ngzp-radio{flex:none;width:calc(40 * var(--dp));height:calc(48 * var(--dp));margin:0 calc(4 * var(--dp)) 0 calc(7 * var(--dp));display:flex;align-items:center}
+.ngzp-lines{flex:1;min-width:0;margin-left:calc(1 * var(--dp));display:flex;flex-direction:column}
+.ngzp-l1{font:400 calc(16 * var(--dp))/calc(21.25 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngzp-l2{margin-top:calc(4 * var(--dp));font:400 calc(14 * var(--dp))/calc(18.59 * var(--dp)) Roboto,sans-serif;color:#80cbc4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngzp-time{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;border-radius:50%;background:none;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+.ngzp-time img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngzp-time.end{opacity:.5}
+.ngzp-time:active{background:#ffffff33}
+/* zen_alarm_warning: TextAppearance.QS.Warning 14 sp in system_warning_color (system_error #f4511e), 18 dp in from the
+   start, 16 dp from the end, line spacing 1.2. */
+.ngzp-warning{margin:0 calc(16 * var(--dp)) 0 calc(18 * var(--dp));font:400 calc(14 * var(--dp))/calc(22.31 * var(--dp)) Roboto,sans-serif;color:#f4511e}

@@ -5,3 +5,6 @@ sui-ic_sysbar_back_ime.png	priv-app/SystemUI/SystemUI.apk	drawable/ic_sysbar_bac
 sui-ic_sysbar_home.png	priv-app/SystemUI/SystemUI.apk	drawable/ic_sysbar_home
 sui-ic_sysbar_recent.png	priv-app/SystemUI/SystemUI.apk	drawable/ic_sysbar_recent
 sui-ic_sysbar_menu.png	priv-app/SystemUI/SystemUI.apk	drawable/ic_sysbar_menu
+# framework Material Switch thumb (switch_thumb_material_anim: its off and on frames, tinted in CSS by multiply) for the quick settings details
+fw-btn_switch_to_on_mtrl_00001.9.png	framework/framework-res.apk	drawable/btn_switch_to_on_mtrl_00001
+fw-btn_switch_to_on_mtrl_00012.9.png	framework/framework-res.apk	drawable/btn_switch_to_on_mtrl_00012

@@ -60,7 +60,8 @@
     const s = c.data.settings;
     return {wifi: s.wifi, bt: s.bluetooth, cell: s.mobileData, dnd: s.zen !== 0}[id] ?? null;
   }
-  const switchHtml = on => `<span class="ngqd-switch${on ? ' on' : ''}" aria-hidden="true"><i></i></span>`;
+  // The framework Switch (ng-widget.css).
+  const switchHtml = on => `<span class="ngw-switch${on ? ' on' : ''}" aria-hidden="true"><i class="ngw-thumb"></i></span>`;
 
   function items(c, list, empty, visible = true) {
     const safe = c.safe;
@@ -170,7 +171,7 @@
     const until = mode === 'countdown' ? s.zenUntil : Date.now() + BUCKETS[st.bucket] * 60000;
     const tc = timeCondition(c, until, mode === 'countdown' ? Math.round((s.zenUntil - Date.now()) / 60000) : BUCKETS[st.bucket], false);
     const alarm = nextAlarm(c), ac = alarm ? timeCondition(c, alarm, Math.round((alarm - Date.now()) / 60000), true) : null;
-    const radio = on => `<i class="ngzp-radio${on ? ' on' : ''}"></i>`;
+    const radio = on => `<span class="ngzp-radio"><i class="ngw-radio${on ? ' on' : ''}"></i></span>`;
     const row = (key, on, lines, extra = '') => `<div class="ngzp-cond" data-action="ngzp-cond" data-cond="${key}">${radio(on)}<span class="ngzp-lines"><span class="ngzp-l1">${c.safe(lines.line1)}</span>${lines.line2 ? `<span class="ngzp-l2">${c.safe(lines.line2)}</span>` : ''}</span>${extra}</div>`;
     const minus = st.bucket > 0, plus = st.bucket < BUCKETS.length - 1;
     const buttons = `<button type="button" class="ngzp-time${minus ? '' : ' end'}" data-action="ngzp-minus" aria-label="${c.safe(t.t('accessibility_quick_settings_less_time'))}"><img src="${A('sui-ic_qs_minus.svg')}" alt=""></button><button type="button" class="ngzp-time${plus ? '' : ' end'}" data-action="ngzp-plus" aria-label="${c.safe(t.t('accessibility_quick_settings_more_time'))}"><img src="${A('sui-ic_qs_plus.svg')}" alt=""></button>`;
@@ -196,9 +197,11 @@
     return '';
   }
 
-  function render(c, id) {
+  // origin: the tile's centre in QSContainer (dp), where QSDetailClipper's circular reveal starts.
+  function render(c, id, origin) {
     const t = T(), toggle = toggleState(c, id), settings = SETTINGS[id];
-    return `<div class="ngqd" role="region" aria-label="${c.safe(t.fmt('accessibility_quick_settings_detail', null, title(c, id)))}">
+    const at = origin ? ` style="--rx:calc(${origin.x.toFixed(2)} * var(--dp));--ry:calc(${origin.y.toFixed(2)} * var(--dp))"` : '';
+    return `<div class="ngqd${c.ui.shade.revealed ? '' : ' reveal'}"${at} role="region" aria-label="${c.safe(t.fmt('accessibility_quick_settings_detail', null, title(c, id)))}">
       <div class="ngqd-space"></div>
       <div class="ngqd-header${toggle === null ? '' : ' clickable'}"${toggle === null ? '' : ' data-action="ngqd-toggle" role="switch" aria-checked="' + toggle + '"'}><span class="ngqd-title">${c.safe(title(c, id))}</span>${toggle === null ? '' : switchHtml(toggle)}</div>
       <div class="ngqd-content">${content(c, id)}</div>

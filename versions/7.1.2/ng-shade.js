@@ -208,7 +208,7 @@
     const t = T(), list = tiles(c), geo = geometry(list.length);
     const notes = c.notifications?.() || [];
     const alarm = (c.data.clock?.alarms || []).some(x => x.on);
-    const detail = st.detail ? `<div class="ngqs-detail">${c.missing(`qs-${st.detail}`)}</div>` : '';
+    const detail = st.detail ? `<div class="ngqs-detail">${NG.qsDetail?.has(st.detail) ? NG.qsDetail.render(c, st.detail, st.origin) : c.missing(`qs-${st.detail}`)}</div>` : '';
     const stack = notes.length
       ? notes.map(n => NG.notifications.row(c, n)).join('') + `<div class="ngsh-dismiss"><button type="button" data-action="ngsh-clearall" aria-label="${c.safe(t.t('accessibility_clear_all'))}">${c.safe(t.t('clear_all_notifications_text'))}</button></div>`
       : `<div class="ngsh-empty">${c.safe(t.t('empty_shade_text'))}</div>`;
@@ -282,6 +282,8 @@
   function mount(c, root) {
     const st = c.ui.shade, shade = root.querySelector('.ngsh');
     const chev = root.querySelector('.ngqs-expand'); if (chev) chev.dataset.up = String(!!st.qs);
+    // The detail's circular reveal plays once.
+    if (st.detail) st.revealed = true;
     apply(c, root, st.qs ? 1 : 0);
     // Opening: the panel is laid out pulled up, then slides down (a forced layout makes the transition start).
     if (!st.opened && shade) { void shade.offsetHeight; st.opened = true; shade.classList.add('shown'); }
@@ -316,7 +318,8 @@
     setTimeout(() => { if (c.ui.overlay === 'shade') c.closeOverlay(); }, 250);
   }
   function refresh(c) {
-    if (c.ui.overlay !== 'shade') return;
+    // A detail closing redraws once its animation is over.
+    if (c.ui.overlay !== 'shade' || c.ui.shade?.closing) return;
     anim++;
     c.el.overlay.innerHTML = render(c);
     mount(c, c.el.overlay);
@@ -353,12 +356,27 @@
     c.closeOverlay(); c.open(to[0], to[1]);
   }
   // QSDetail over quick settings (QSPanel.showDetail): the panel opens fully under it.
+  // The reveal starts at the tile's centre in QSContainer (QSPanel.showDetail: the tile view's centre plus the grid's top).
   function showDetail(c, id) {
-    const st = c.ui.shade;
-    st.detail = id; st.qs = true;
+    const st = c.ui.shade, list = tiles(c), geo = geometry(list.length), i = list.findIndex(x => x.id === id), box = geo.grid[i];
+    st.detail = id; st.qs = true; st.revealed = false;
+    st.origin = box ? {x: box.x + box.w / 2, y: box.y + box.h / 2} : null;
     refresh(c);
   }
-  function closeDetail(c) { c.ui.shade.detail = ''; refresh(c); }
+  /* Closing runs the reveal backwards from the farthest corner to the tile (450 ms), the background turning back to
+     #66ffffff after 0.65 of it over 0.35 (QSDetailClipper.mReverseBackground). */
+  function closeDetail(c) {
+    const st = c.ui.shade, el = c.el.overlay.querySelector('.ngqd');
+    const finish = () => { st.detail = ''; st.revealed = false; st.closing = false; refresh(c); };
+    if (!el || !el.animate || st.closing) { finish(); return; }
+    st.closing = true;
+    const cs = getComputedStyle(el), at = `at ${cs.getPropertyValue('--rx').trim() || '50%'} ${cs.getPropertyValue('--ry').trim() || '0px'}`;
+    el.classList.remove('reveal');
+    el.animate([{clipPath: `circle(150% ${at})`}, {clipPath: `circle(0px ${at})`}], {duration: 450, easing: 'cubic-bezier(.37,0,.63,1)', fill: 'forwards'});
+    el.animate([{background: '#263238'}, {background: '#ffffff66'}], {duration: 158, delay: 292, fill: 'forwards'});
+    setTimeout(finish, 450);
+  }
+  const ctl = {refresh, close, closeDetail};
 
   /* Dragging the shade (PanelView / NotificationPanelView): one expansion under the finger, from closed through the
      notifications (the panel follows the pointer from the top, the scrim darkens with it) on to quick settings fully
@@ -456,6 +474,7 @@
       if (name === 'ngqs-click') { if (el.dataset.long) { delete el.dataset.long; return true; } click(c, el.dataset.tile); return true; }
       if (name === 'ngqs-quick') { quickClick(c, el.dataset.tile); return true; }
       if (name === 'ng-close' && st?.detail) { closeDetail(c); return true; }
+      if (/^ng(qd|zp)-/.test(name)) return !!NG.qsDetail?.action(c, name, el, ctl);
       return false;
     },
     tick(c, now) {
