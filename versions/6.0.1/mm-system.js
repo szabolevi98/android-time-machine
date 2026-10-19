@@ -6,6 +6,10 @@
      location on (def_location_providers_allowed "gps"), automatic brightness (def_screen_brightness_automatic_mode true,
      def_screen_brightness 78, screen_auto_brightness_adj 0).
    - Airplane mode turns the radios of airplane_mode_radios off (cell, bluetooth, wifi) and back on as they were.
+   - The portable hotspot (SystemUI's HotspotControllerImpl, Settings' WifiApEnabler): switching it on turns Wi-Fi off
+     and remembers it (WIFI_SAVED_STATE), switching it off turns that Wi-Fi back on; switching Wi-Fi on stops the hotspot
+     (WifiEnabler), so does airplane mode. It is "turning on" / "turning off" for a moment (WIFI_AP_STATE_ENABLING /
+     _DISABLING); each switch-on is the tile's use (HotspotTile.APChangedReceiver: UsageTracker.trackUsage).
    - PhoneStatusBarPolicy: the status icons in config_statusBarIcons order (cast, hotspot, location, bluetooth, zen,
      volume, alarm_clock …); with the DND tile shown (VolumeDialogController shows it) zen is stat_sys_dnd, or
      stat_sys_dnd_total_silence for total silence. Bluetooth shows while it is on (connected: its own icon).
@@ -19,7 +23,7 @@
   Object.assign(MM.defaults.settings, {wifi: true, wifiSsid: 'Home Network', bluetooth: false, airplane: false, zen: 0, zenFavorite: 3, zenUntil: 0, mobileData: true,
     rotationLocked: false, location: true, brightnessAuto: true, brightness: 78, brightnessAdj: 0});
   // What is not saved: the flashlight (it goes off with the camera service on a reboot) and the radios coming up.
-  const live = {flashlight: false, wifiConnecting: 0, btConnecting: {}, btPairing: null, btTurningOn: 0, btScanUntil: 0, bootAt: Date.now()};
+  const live = {flashlight: false, hotspotChanging: 0, wifiConnecting: 0, btConnecting: {}, btPairing: null, btTurningOn: 0, btScanUntil: 0, bootAt: Date.now()};
 
   // The simulator's Wi-Fi networks, as every version has them (names are data, not interface text): level is
   // WifiManager.calculateSignalLevel(rssi, 4), 0..3; saved ones connect without a password.
@@ -102,9 +106,28 @@
     wifiState(c) { const s = c.data.settings; return !s.wifi ? 'off' : live.wifiConnecting > Date.now() || !s.wifiSsid ? 'searching' : 'connected'; },
     setWifi(c, on) {
       const s = c.data.settings;
+      if (on && s.hotspot) { s.hotspot = false; s.wifiSavedState = false; }
       s.wifi = on; if (on) live.wifiConnecting = Date.now() + 2500;
       c.save(); sys.changed(c);
       if (on) setTimeout(() => sys.changed(c), 2600);
+    },
+    hotspotState(c) { return live.hotspotChanging > Date.now() ? (c.data.settings.hotspot ? 'enabling' : 'disabling') : c.data.settings.hotspot ? 'on' : 'off'; },
+    setHotspot(c, on) {
+      const s = c.data.settings;
+      if (on === !!s.hotspot) return;
+      if (on) { if (s.wifi) { s.wifi = false; s.wifiSavedState = true; } s.hotspotUsed = Date.now(); }
+      s.hotspot = on; live.hotspotChanging = Date.now() + 1200;
+      c.save(); sys.changed(c);
+      setTimeout(() => {
+        if (!on && s.wifiSavedState) { s.wifiSavedState = false; s.wifi = true; live.wifiConnecting = Date.now() + 2500; c.save(); setTimeout(() => sys.changed(c), 2600); }
+        sys.changed(c);
+      }, 1250);
+    },
+    // The access point WifiApConfigStore makes on the first boot: AndroidAP, WPA2 PSK with a random key.
+    hotspotConfig(c) {
+      const s = c.data.settings;
+      if (!s.hotspotConfig) { const u = crypto.randomUUID?.() || Math.random().toString(16).slice(2).padEnd(13, '0'); s.hotspotConfig = {ssid: '', security: 1, password: u.slice(0, 8) + u.slice(9, 13), band: 0}; c.save(); }
+      return s.hotspotConfig;
     },
     // BluetoothAdapter: STATE_TURNING_ON for a moment, then on with the bonded devices reconnecting; off drops them.
     setBluetooth(c, on) {
@@ -117,7 +140,7 @@
     setAirplane(c, on) {
       const s = c.data.settings;
       if (on === s.airplane) return;
-      if (on) { s.beforeAirplane = {wifi: s.wifi, bluetooth: s.bluetooth}; s.wifi = false; s.bluetooth = false; }
+      if (on) { s.beforeAirplane = {wifi: s.wifi, bluetooth: s.bluetooth}; s.wifi = false; s.bluetooth = false; s.hotspot = false; s.wifiSavedState = false; }
       else { const b = s.beforeAirplane || {}; s.wifi = !!b.wifi; s.bluetooth = !!b.bluetooth; if (s.wifi) live.wifiConnecting = Date.now() + 2500; delete s.beforeAirplane; }
       s.airplane = on; c.save(); sys.changed(c);
       if (!on && s.wifi) setTimeout(() => sys.changed(c), 2600);
@@ -146,6 +169,12 @@
     }
   };
 
+  // Tethering.showTetheredNotification: while the hotspot is on, an ongoing "Tethering or hotspot active" that opens
+  // TetherSettings.
+  (MM.notificationSources ||= []).push(c => c.data.settings.hotspot ? [{id: 'tether', icon: 'assets/fw-stat_sys_tether_wifi.svg', ongoing: true,
+    title: MM.text('shade').t('framework/tethered_notification_title'), text: MM.text('shade').t('framework/tethered_notification_message'),
+    click: c => c.open('settings', 'tether')}] : []);
+
   MM.register('system', {
     app: false,
     render: () => '',
@@ -153,6 +182,7 @@
       // The status icons (PhoneStatusBarPolicy) and the signal cluster (SignalClusterView), for mm-statusbar.js.
       c.statusIcons = () => {
         const s = c.data.settings, out = [];
+        if (s.hotspot) out.push('stat_sys_hotspot');
         if (s.bluetooth) out.push((s.btConnected || []).length ? 'stat_sys_data_bluetooth_connected' : 'stat_sys_data_bluetooth');
         if (s.zen) out.push(s.zen === 2 ? 'stat_sys_dnd_total_silence' : 'stat_sys_dnd');
         // The volume slot: vibrate unless total silence or alarms only (PhoneStatusBarPolicy.updateVolumeZen).

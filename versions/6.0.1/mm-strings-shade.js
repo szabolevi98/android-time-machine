@@ -421,6 +421,71 @@ MM.strings('shade', {
 "fr": "Point d'accès",
 "es": "Zona Wi-Fi"
 },
+"quick_settings_reset_confirmation_title": {
+"res": "bullhead:SystemUI:quick_settings_reset_confirmation_title",
+"args": 1,
+"en": "Hide %1$s?",
+"hu": "Elrejti ezt: %1$s?",
+"de": "%1$s ausblenden?",
+"fr": "Masquer %1$s ?",
+"es": "¿Ocultar %1$s?"
+},
+"quick_settings_reset_confirmation_message": {
+"res": "bullhead:SystemUI:quick_settings_reset_confirmation_message",
+"en": "It will reappear the next time you turn it on in settings.",
+"hu": "Újból megjelenik majd, amikor ismét engedélyezi a beállítások között.",
+"de": "Sie wird wieder eingeblendet, wenn du sie in den Einstellungen erneut aktivierst.",
+"fr": "Cet élément réapparaîtra la prochaine fois que vous l'activerez dans les paramètres.",
+"es": "Volverá a aparecer la próxima vez que actives esta opción en Ajustes."
+},
+"quick_settings_reset_confirmation_button": {
+"res": "bullhead:SystemUI:quick_settings_reset_confirmation_button",
+"en": "Hide",
+"hu": "Elrejtés",
+"de": "Ausblenden",
+"fr": "Masquer",
+"es": "Ocultar"
+},
+"accessibility_quick_settings_hotspot_changed_on": {
+"res": "bullhead:SystemUI:accessibility_quick_settings_hotspot_changed_on",
+"en": "Mobile hotspot turned on.",
+"hu": "A mobil hotspot bekapcsolva.",
+"de": "Der mobile Hotspot ist aktiviert.",
+"fr": "Point d'accès mobile activé.",
+"es": "Punto de acceso móvil activado."
+},
+"accessibility_quick_settings_hotspot_changed_off": {
+"res": "bullhead:SystemUI:accessibility_quick_settings_hotspot_changed_off",
+"en": "Mobile hotspot turned off.",
+"hu": "A mobil hotspot kikapcsolva.",
+"de": "Der mobile Hotspot ist deaktiviert.",
+"fr": "Point d'accès mobile désactivé.",
+"es": "Punto de acceso móvil desactivado."
+},
+"cancel": {
+"res": "bullhead:SystemUI:cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"framework/tethered_notification_title": {
+"res": "bullhead:framework:tethered_notification_title",
+"en": "Tethering or hotspot active",
+"hu": "Megosztás vagy aktív hotspot",
+"de": "Tethering oder Hotspot aktiv",
+"fr": "Partage de connexion ou point d'accès sans fil activé",
+"es": "Compartir Internet/Zona Wi-Fi activado"
+},
+"framework/tethered_notification_message": {
+"res": "bullhead:framework:tethered_notification_message",
+"en": "Touch to set up.",
+"hu": "Érintse meg a beállításhoz.",
+"de": "Zum Einrichten berühren",
+"fr": "Appuyez pour configurer.",
+"es": "Toca para configurar"
+},
 "framework/lockscreen_carrier_default": {
 "res": "bullhead:framework:lockscreen_carrier_default",
 "en": "No service.",

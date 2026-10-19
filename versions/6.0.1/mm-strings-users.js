@@ -281,5 +281,29 @@ MM.strings('users', {
 "de": "Entfernen",
 "fr": "Supprimer",
 "es": "Eliminar"
+},
+"Settings/profile_info_settings_title": {
+"res": "bullhead:Settings:profile_info_settings_title",
+"en": "Profile info",
+"hu": "Profiladatok",
+"de": "Profilinformationen",
+"fr": "Infos de profil",
+"es": "Información de perfil"
+},
+"Settings/settings_label": {
+"res": "bullhead:Settings:settings_label",
+"en": "Settings",
+"hu": "Beállítások",
+"de": "Einstellungen",
+"fr": "Paramètres",
+"es": "Ajustes"
+},
+"Settings/user_owner": {
+"res": "bullhead:Settings:user_owner",
+"en": "Owner",
+"hu": "Tulajdonos",
+"de": "Eigentümer",
+"fr": "Propriétaire",
+"es": "Propietario"
 }
 });

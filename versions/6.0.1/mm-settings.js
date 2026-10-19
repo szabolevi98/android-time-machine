@@ -73,7 +73,7 @@
   };
   // The screens other parts of the system open by a short name (Quick Settings' "More settings", the launcher's links).
   const ALIASES = {zen: 'xml:zen_mode_settings', 'zen-priority': 'xml:zen_mode_priority_settings', users: 'xml:user_settings',
-    cast: 'xml:wifi_display_settings', display: 'xml:display_settings', sound: 'xml:notification_settings'};
+    cast: 'xml:wifi_display_settings', display: 'xml:display_settings', sound: 'xml:notification_settings', tether: 'xml:tether_prefs'};
   // The screens whose fragment has a help resource (help_uri_* / help_url_*: Google Help's contexts): their overflow
   // ends with Help & feedback (HelpUtils.prepareHelpMenuItem), as the dashboard's does (help_uri_dashboard).
   const HELP = new Set(['wifi', 'bluetooth', 'data-usage', 'xml:wireless_settings', 'xml:tether_prefs', 'xml:vpn_settings2', 'xml:display_settings', 'wallpaper-type',
@@ -281,7 +281,8 @@
       if (name === 'mmst-pref' && cur?.xml) {
         const n = findKey(X()[cur.xml], el.dataset.key) || {};
         const hook = MM.settingsHooks[cur.xml] || {};
-        if (hook.click?.(c, n.key, n) === true) return true;
+        // A row the hook adds itself (its top()) is in no XML: its own data-key goes to the hook.
+        if (hook.click?.(c, n.key ?? el.dataset.key, n) === true) return true;
         if (n.t === 'SwitchPreference' || n.t === 'CheckBoxPreference' || hook.switch?.includes(n.key)) { const v = !value(c, n); setValue(c, n, v); hook.changed?.(c, n.key, v, n); c.render(); return true; }
         if (isList(n)) { listDialog(c, n, cur.xml); return true; }
         if (n.t === 'EditTextPreference') { textDialog(c, n, cur.xml); return true; }

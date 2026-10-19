@@ -307,6 +307,11 @@ div.mmst-pref:active{background:none}
 .mmsx-userinfo{display:flex;align-items:center;gap:calc(16 * var(--dp));padding:calc(16 * var(--dp)) calc(24 * var(--dp)) 0}
 .mmsx-userinfo img{width:calc(56 * var(--dp));height:calc(56 * var(--dp))}
 .mmsx-userinfo input{flex:1}
+/* A user row's manage button (preference_user_delete_widget): a 2 dp divider, then the gear padded 16 dp each side. */
+.mmsx-usermanage{align-self:stretch;margin-right:calc(-16 * var(--dp))}
+.mmsx-userdiv{display:block;width:calc(2 * var(--dp));align-self:stretch}
+.mmsx-usergear{display:flex;align-items:center;padding:0 calc(16 * var(--dp));cursor:pointer}
+.mmsx-usergear img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
 /* Screens of mm-settings-more.js: a battery entry's header (PowerUsageDetail), Running services' RAM bar
    (running_processes_header: running_processes_system/apps/free_ram), the account sign-in pages, System updates. */
 .mmsx-batthead{display:flex;align-items:center;gap:calc(16 * var(--dp));padding:calc(16 * var(--dp))}

@@ -7,7 +7,7 @@ import base64, os, re, time, urllib.error, urllib.request
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) + '/'
 OUT = ROOT + '_aosp/bullhead/refs/sui-avd-res/'
 BASE = 'https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-6.0.1_r81/packages/SystemUI/res/'
-START = ['ic_signal_airplane', 'ic_signal_flashlight', 'ic_signal_location']
+START = ['ic_signal_airplane', 'ic_signal_flashlight', 'ic_signal_location', 'ic_hotspot']
 NAMES = [f'drawable/{b}_{k}_animation' for b in START for k in ('enable', 'disable')]
 NAMES += [f'drawable/ic_portrait_{d}_auto_rotate_animation' for d in ('from', 'to')]
 NAMES += ['drawable/ic_dnd_disable_animation', 'drawable/ic_dnd_total_silence_disable_animation']

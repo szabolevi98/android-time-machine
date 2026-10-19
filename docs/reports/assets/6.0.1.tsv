@@ -296,6 +296,7 @@ versions/6.0.1/assets/fw-btn_radio_to_on_mtrl_015.png	259843ddf1ab113b	copy	bull
 versions/6.0.1/assets/fw-btn_switch_to_on_mtrl_00001.9.png	c4603dac2f0cd1d1	copy	bullhead:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/btn_switch_to_on_mtrl_00001.9.png	drawable-xxhdpi-v4		c4603dac2f0cd1d1
 versions/6.0.1/assets/fw-btn_switch_to_on_mtrl_00012.9.png	c808ca74b7fa7707	copy	bullhead:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/btn_switch_to_on_mtrl_00012.9.png	drawable-xxhdpi-v4		c808ca74b7fa7707
 versions/6.0.1/assets/fw-default_wallpaper.jpg	99fb3c77ca99c156	copy	bullhead:/system/framework/framework-res.apk!res/drawable-nodpi-v4/default_wallpaper.jpg	drawable-nodpi-v4		99fb3c77ca99c156
+versions/6.0.1/assets/fw-divider_horizontal_dark.9.png	65bf087161ef3bc6	copy	bullhead:/system/framework/framework-res.apk!res/drawable-xhdpi-v4/divider_horizontal_dark.9.png	drawable-xhdpi-v4		65bf087161ef3bc6
 versions/6.0.1/assets/fw-ic_ab_back_material.svg	b3eb88deea52b00e	vector	bullhead:/system/framework/framework-res.apk!res/drawable/ic_ab_back_material.xml	drawable	vector drawable drawn as SVG	c0db042a016d5cbf
 versions/6.0.1/assets/fw-ic_account_circle-guest.svg	8aec6d67489a5a97	vector	bullhead:/system/framework/framework-res.apk!res/drawable/ic_account_circle.xml	drawable	vector drawable drawn as SVG	9f6c373c9083fe54
 versions/6.0.1/assets/fw-ic_account_circle-user0.svg	cb030b42c57b7cef	vector	bullhead:/system/framework/framework-res.apk!res/drawable/ic_account_circle.xml	drawable	vector drawable drawn as SVG	9f6c373c9083fe54
@@ -322,6 +323,7 @@ versions/6.0.1/assets/fw-perm_group_phone_calls.svg	70b62e17d2ca36e0	vector	bull
 versions/6.0.1/assets/fw-perm_group_sensors.svg	e4fd7d19c6aa0355	vector	bullhead:/system/framework/framework-res.apk!res/drawable/perm_group_sensors.xml	drawable	vector drawable drawn as SVG	3e56810a0119bf7a
 versions/6.0.1/assets/fw-perm_group_sms.svg	3a76d8faa9d3dd34	vector	bullhead:/system/framework/framework-res.apk!res/drawable/perm_group_sms.xml	drawable	vector drawable drawn as SVG	e3b908c11a1dc6a2
 versions/6.0.1/assets/fw-perm_group_storage.svg	9aa5fee3ebff3c27	vector	bullhead:/system/framework/framework-res.apk!res/drawable/perm_group_storage.xml	drawable	vector drawable drawn as SVG	8454ab4fbb18e82f
+versions/6.0.1/assets/fw-stat_sys_tether_wifi.svg	ec3c81d1c46946d6	vector	bullhead:/system/framework/framework-res.apk!res/drawable/stat_sys_tether_wifi.xml	drawable	vector drawable drawn as SVG	740a3493d7ed3102
 versions/6.0.1/assets/fw-sym_def_app_icon.png	d3ae909287bd05da	copy	bullhead:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/sym_def_app_icon.png	drawable-xxhdpi-v4		d3ae909287bd05da
 versions/6.0.1/assets/fw-toast_frame.9.png	79dd93fbe750d293	copy	bullhead:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/toast_frame.9.png	drawable-xxhdpi-v4		79dd93fbe750d293
 versions/6.0.1/assets/gd-empty_call_log.png	e4c9cd59d6aa99e7	copy	bullhead:/system/priv-app/GoogleDialer/GoogleDialer.apk!res/drawable-xxhdpi-v4/empty_call_log.png	drawable-xxhdpi-v4		e4c9cd59d6aa99e7
@@ -706,6 +708,7 @@ versions/6.0.1/assets/st-ic_settings_security_alpha.png	da5ef595f81aa500	copy	bu
 versions/6.0.1/assets/st-ic_settings_storage_alpha.png	98cabf452ee50697	copy	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable-xxhdpi-v4/ic_settings_storage_alpha.png	drawable-xxhdpi-v4		98cabf452ee50697
 versions/6.0.1/assets/st-ic_settings_wireless_alpha.png	48d278deb6cbc4f9	copy	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable-xxhdpi-v4/ic_settings_wireless_alpha.png	drawable-xxhdpi-v4		48d278deb6cbc4f9
 versions/6.0.1/assets/st-ic_sim_sd.png	abfa3bb4cbde4403	copy	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable-xxhdpi-v4/ic_sim_sd.png	drawable-xxhdpi-v4		abfa3bb4cbde4403
+versions/6.0.1/assets/st-ic_sysbar_quicksettings.png	3a28714b8b13b942	copy	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable-xxhdpi-v4/ic_sysbar_quicksettings.png	drawable-xxhdpi-v4		3a28714b8b13b942
 versions/6.0.1/assets/st-ic_wifi_signal_1.svg	bc7123afa43c0506	vector	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable/ic_wifi_signal_1.xml	drawable	vector drawable drawn as SVG	14bc4e9362a84e96
 versions/6.0.1/assets/st-ic_wifi_signal_2.svg	52bd70bba214edda	vector	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable/ic_wifi_signal_2.xml	drawable	vector drawable drawn as SVG	5b07d16206259cbd
 versions/6.0.1/assets/st-ic_wifi_signal_3.svg	3a961c52124d4c48	vector	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable/ic_wifi_signal_3.xml	drawable	vector drawable drawn as SVG	cecf7b9459954c31
@@ -819,7 +822,7 @@ versions/6.0.1/assets/sui-stat_sys_signal_1.svg	e6c7eebb5cfcdbdc	vector	bullhead
 versions/6.0.1/assets/sui-stat_sys_signal_1_fully.svg	ebca723165b5fb8d	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/stat_sys_signal_1_fully.xml	drawable	vector drawable drawn as SVG	78da8dc4349994c1
 versions/6.0.1/assets/sui-stat_sys_signal_2.svg	ba301fc8c1864bfb	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/stat_sys_signal_2.xml	drawable	vector drawable drawn as SVG	f57d4f93ec254649
 versions/6.0.1/assets/sui-stat_sys_signal_2_fully.svg	bde9ede14af95e09	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/stat_sys_signal_2_fully.xml	drawable	vector drawable drawn as SVG	ccf62ea497b934a5
-versions/6.0.1/assets/sui-stat_sys_signal_3.svg	38101b60d7528f50	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/stat_sys_signal_3.xml	drawable	vector drawable drawn as SVG	7f39af46711bc333
+versions/6.0.1/assets/sui-stat_sys_signal_3.svg	9b73c33edc8f994e	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/stat_sys_signal_3.xml	drawable	vector drawable drawn as SVG	7f39af46711bc333
 versions/6.0.1/assets/sui-stat_sys_signal_3_fully.svg	40ee6cdb52c8fd8f	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/stat_sys_signal_3_fully.xml	drawable	vector drawable drawn as SVG	ba6694f6e27f3c45
 versions/6.0.1/assets/sui-stat_sys_signal_4.svg	626c7034f34dff3b	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/stat_sys_signal_4.xml	drawable	vector drawable drawn as SVG	38a862486e26ed61
 versions/6.0.1/assets/sui-stat_sys_signal_4_fully.svg	4a3275686fc4a7bb	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/stat_sys_signal_4_fully.xml	drawable	vector drawable drawn as SVG	bded6dd109727efa

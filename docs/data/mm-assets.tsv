@@ -49,3 +49,6 @@ gel-screenpanel.9.png	priv-app/Velvet/Velvet.apk	drawable/screenpanel
 # The keyguard bouncer (keyguard_pin_view.xml): the enter key
 sui-ic_done_wht.png	priv-app/SystemUI/SystemUI.apk	drawable/ic_done_wht
 vv-ic_stat_notify_google.png	priv-app/Velvet/Velvet.apk	drawable/ic_stat_notify_google
+# Settings > Users: a user row's manage button (preference_user_delete_widget: the divider, then ic_sysbar_quicksettings)
+st-ic_sysbar_quicksettings.png	priv-app/Settings/Settings.apk	drawable/ic_sysbar_quicksettings
+fw-divider_horizontal_dark.9.png	framework/framework-res.apk	drawable/divider_horizontal_dark

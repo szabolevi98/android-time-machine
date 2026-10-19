@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 
 RES = os.environ.get('AVD_RES') or '_aosp/bullhead/refs/sui-avd-res'
 A = '{http://schemas.android.com/apk/res/android}'
-ICONS = ['ic_signal_airplane', 'ic_signal_flashlight', 'ic_signal_location']
+ICONS = ['ic_signal_airplane', 'ic_signal_flashlight', 'ic_signal_location', 'ic_hotspot']
 NAMES = [f'{base}_{kind}_animation' for base in ICONS for kind in ('enable', 'disable')]
 NAMES += [f'ic_portrait_{d}_auto_rotate_animation' for d in ('from', 'to')] + ['ic_dnd_disable_animation', 'ic_dnd_total_silence_disable_animation']
 BUILTIN = {'fast_out_slow_in': (.4, 0, .2, 1), 'linear_out_slow_in': (0, 0, .2, 1), 'fast_out_linear_in': (.4, 0, 1, 1), 'linear': None}

@@ -10131,6 +10131,140 @@ MM.strings('settings', {
 "fr": "Fichier de certificat introuvable dans la mémoire de stockage USB",
 "es": "No se ha encontrado ningún archivo de certificado en el almacenamiento USB."
 },
+"wifi_tether_configure_subtext": {
+"res": "bullhead:Settings:wifi_tether_configure_subtext",
+"en": "%1$s %2$s portable Wi‑Fi hotspot",
+"hu": "%1$s %2$s hordozható Wi-Fi hotspot",
+"de": "%1$s %2$s mobiler WLAN-Hotspot",
+"fr": "Point d'accès Wi-Fi mobile : %1$s %2$s",
+"es": "Zona Wi-Fi portátil: %1$s (%2$s)"
+},
+"wifi_tether_configure_ssid_default": {
+"res": "bullhead:Settings:wifi_tether_configure_ssid_default",
+"en": "AndroidHotspot",
+"hu": "AndroidHotspot",
+"de": "AndroidHotspot",
+"fr": "AndroidHotspot",
+"es": "AndroidHotspot"
+},
+"wifi_tether_enabled_subtext": {
+"res": "bullhead:Settings:wifi_tether_enabled_subtext",
+"en": "Portable hotspot %1$s active",
+"hu": "A(z) %1$s hordozható hotspot aktív",
+"de": "Mobiler Hotspot %1$s aktiv",
+"fr": "Point d'accès Wi-Fi mobile %1$s actif",
+"es": "Zona Wi-Fi portátil %1$s activa"
+},
+"wifi_tether_starting": {
+"res": "bullhead:Settings:wifi_tether_starting",
+"en": "Turning hotspot on…",
+"hu": "Hotspot bekapcsolása...",
+"de": "Hotspot wird aktiviert…",
+"fr": "Activation du point d'accès Wi-Fi en cours…",
+"es": "Activando zona Wi-Fi…"
+},
+"wifi_tether_stopping": {
+"res": "bullhead:Settings:wifi_tether_stopping",
+"en": "Turning off hotspot…",
+"hu": "Hotspot kikapcsolása...",
+"de": "Hotspot wird deaktiviert…",
+"fr": "Désactivation du point d'accès Wi-Fi en cours…",
+"es": "Desactivando zona Wi-Fi…"
+},
+"wifi_tether_failed_subtext": {
+"res": "bullhead:Settings:wifi_tether_failed_subtext",
+"en": "Portable Wi‑Fi hotspot error",
+"hu": "A hordozható Wi-Fi hotspottal kapcsolatos hiba",
+"de": "Fehler beim mobilen WLAN-Hotspot",
+"fr": "Erreur liée au point d'accès Wi-Fi mobile.",
+"es": "Error de zona Wi-Fi portátil"
+},
+"usb_tethering_unavailable_subtext": {
+"res": "bullhead:Settings:usb_tethering_unavailable_subtext",
+"en": "USB not connected",
+"hu": "Nincs USB-kapcsolat",
+"de": "Keine USB-Verbindung",
+"fr": "USB non connecté",
+"es": "USB no conectado"
+},
+"bluetooth_tethering_available_subtext": {
+"res": "bullhead:Settings:bluetooth_tethering_available_subtext",
+"en": "Sharing this phone’s Internet connection",
+"hu": "A telefon internetkapcsolatának megosztása",
+"de": "Internetverbindung dieses Telefons freigeben",
+"fr": "Connexion Internet du téléphone partagée",
+"es": "Compartiendo conexión a Internet de este teléfono"
+},
+"bluetooth_tethering_off_subtext": {
+"res": "bullhead:Settings:bluetooth_tethering_off_subtext",
+"en": "Not sharing this phone’s Internet connection",
+"hu": "A telefon internetkapcsolata nincs megosztva",
+"de": "Internetverbindung dieses Telefons freigeben",
+"fr": "Connexion Internet du téléphone non partagée",
+"es": "No se comparte la conexión a Internet de este teléfono"
+},
+"wifi_ap_security": {
+"res": "bullhead:Settings:wifi_ap_security",
+"en": [
+"None",
+"WPA2 PSK"
+],
+"hu": [
+"None",
+"WPA2 PSK"
+],
+"de": [
+"None",
+"WPA2 PSK"
+],
+"fr": [
+"None",
+"WPA2 PSK"
+],
+"es": [
+"None",
+"WPA2 PSK"
+]
+},
+"wifi_ap_band_config_full": {
+"res": "bullhead:Settings:wifi_ap_band_config_full",
+"en": [
+"2.4 GHz Band",
+"5 GHz Band"
+],
+"hu": [
+"2,4 GHz-es sáv",
+"5 GHz-es sáv"
+],
+"de": [
+"2,4-GHz-Band",
+"5-GHz-Band"
+],
+"fr": [
+"Bande 2,4 GHz",
+"Bande 5 GHz"
+],
+"es": [
+"Banda de 2,4 GHz",
+"Banda de 5 GHz"
+]
+},
+"wifi_ap_band_config": {
+"res": "bullhead:Settings:wifi_ap_band_config",
+"en": "Select AP Band",
+"hu": "AP sáv kiválasztása",
+"de": "Band für Zugriffspunkt auswählen",
+"fr": "Sélectionner la bande du point d'accès",
+"es": "Seleccionar banda de AP"
+},
+"credentials_password_too_short": {
+"res": "bullhead:Settings:credentials_password_too_short",
+"en": "The password must have at least 8 characters.",
+"hu": "A jelszónak legalább 8 karakter hosszúnak kell lennie.",
+"de": "Das Passwort muss mindestens 8 Zeichen lang sein.",
+"fr": "Le mot de passe doit contenir au moins 8 caractères.",
+"es": "La contraseña debe tener al menos 8 caracteres."
+},
 "animator_duration_scale_entries": {
 "res": "bullhead:Settings:animator_duration_scale_entries",
 "en": [

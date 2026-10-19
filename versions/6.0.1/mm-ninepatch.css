@@ -80,3 +80,5 @@
 .npp-gel-cling_bg{padding:calc(4.66667 * var(--dp)) calc(5.66667 * var(--dp)) calc(18.3333 * var(--dp)) calc(5.66667 * var(--dp))}
 .np-gel-screenpanel{box-sizing:border-box;border-style:solid;border-color:transparent;border-width:calc(2.66667 * var(--dp)) calc(4 * var(--dp)) calc(3 * var(--dp)) calc(4 * var(--dp));border-image:url('assets/gel-screenpanel.9.png') 8 12 9 12 fill / calc(2.66667 * var(--dp)) calc(4 * var(--dp)) calc(3 * var(--dp)) calc(4 * var(--dp)) stretch;padding:0 0 0 0}  /* res/drawable-xxhdpi-v4/screenpanel.9.png 41x41 */
 .npp-gel-screenpanel{padding:0 calc(1 * var(--dp)) 0 calc(0.666667 * var(--dp))}
+.np-fw-divider_horizontal_dark{box-sizing:border-box;border-style:solid;border-color:transparent;border-width:0 0 0 0;border-image:url('assets/fw-divider_horizontal_dark.9.png') 0 0 0 0 fill / 0 0 0 0 stretch;padding:0 0 0 0}  /* res/drawable-xhdpi-v4/divider_horizontal_dark.9.png 1x1 */
+.npp-fw-divider_horizontal_dark{padding:0 0 0 0}

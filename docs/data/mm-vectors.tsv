@@ -175,3 +175,5 @@ egg-plus.svg	priv-app/SystemUI/SystemUI.apk	plus	-
 egg-minus.svg	priv-app/SystemUI/SystemUI.apk	minus	-
 egg-platlogo.svg	framework/framework-res.apk	platlogo	-
 egg-platlogo_m.svg	framework/framework-res.apk	platlogo_m	-
+# Tethering's ongoing notification while the hotspot is on (Tethering.showTetheredNotification)
+fw-stat_sys_tether_wifi.svg	framework/framework-res.apk	stat_sys_tether_wifi	-

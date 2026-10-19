@@ -16,7 +16,11 @@
      enabled input methods (Google Keyboard with its implicit subtype, Google voice typing with Automatic), no hardware
      keyboard and no game controller with a vibrator (both categories go), Pointer speed.
    - user_settings (UserSettings on a phone): You (Owner), Guest, Add user ("Add new user?", then "Set up user now?":
-     Not now leaves a "New user" that is "Not set up"). */
+     Not now leaves a "New user" that is "Not set up"). As the image's UserSettings.onPreferenceClick: the own row opens
+     Profile info (EditUserInfoController, the row's title in the field; in the guest session it reads Remove guest and
+     asks Remove guest?), another user's row switches to that user (one never set up asks Set up user now? first), the
+     guest's row switches to the guest; on a voice capable phone the owner's other rows carry the manage button
+     (preference_user_delete_widget: divider_horizontal_dark, ic_sysbar_quicksettings) that opens UserDetailsSettings. */
 (() => {
   'use strict';
   const T = () => MM.text('settings');
@@ -175,36 +179,51 @@
 
   // -- Users ---------------------------------------------------------------------------------------------------------
   // The guest's icon: UserIcons.getDefaultUserIcon(USER_NULL) in user_icon_default_gray #9e9e9e.
-  const userRow = (c, key, icon, title, summary) => `<button type="button" class="mmst-pref" data-action="mmst-pref" data-key="${key}"><span class="mmst-iconframe">${key === 'user_guest' ? `<i class="mmst-ic" style="background:#9e9e9e;-webkit-mask-image:url('assets/${icon}');mask-image:url('assets/${icon}')"></i>` : `<img class="mmst-ic" src="assets/${icon}" alt="">`}</span><span class="mmst-texts"><span class="mmst-title">${c.safe(title)}</span>${summary ? `<span class="mmst-summary">${c.safe(summary)}</span>` : ''}</span></button>`;
+  const userRow = (c, key, icon, title, summary, manage) => `<button type="button" class="mmst-pref" data-action="mmst-pref" data-key="${key}"><span class="mmst-iconframe">${icon === 'gray' ? `<i class="mmst-ic" style="background:#9e9e9e;-webkit-mask-image:url('assets/fw-ic_account_circle-guest.svg');mask-image:url('assets/fw-ic_account_circle-guest.svg')"></i>` : `<img class="mmst-ic" src="assets/${icon}" alt="">`}</span><span class="mmst-texts"><span class="mmst-title">${c.safe(title)}</span>${summary ? `<span class="mmst-summary">${c.safe(summary)}</span>` : ''}</span>${manage ? `<span class="mmst-widget mmsx-usermanage"><i class="mmsx-userdiv np-fw-divider_horizontal_dark"></i><span class="mmsx-usergear" role="button" data-action="mmst-pref" data-key="manage_${key.slice(5)}" aria-label="${c.safe(MM.text('users').t('Settings/settings_label'))}"><img src="assets/st-ic_sysbar_quicksettings.png" alt=""></span></span>` : ''}</button>`;
+  const setUp = id => { try { return id === 'owner' || localStorage.getItem(`android-time-machine-mm-v1-${id}`) !== null; } catch { return true; } };
   H.user_settings = {
     title(c, key) { return key === 'user_add' ? T().t('user_add_user_menu') : undefined; },
-    // The users of mm-users.js: the owner (You (Owner) for the owner), the users added, the guest.
+    // The users of mm-users.js in serial order: the owner, the users added, then the guest (not listed in the guest
+    // session); the own row first as user_me.
     top(c) {
-      const t = T(), U = MM.users, me = U.current(c), you = (id, name) => id === me ? t.fmt('user_you', null, name) : name;
-      return `<div class="mmst-cat">${c.safe(t.t('user_list_title'))}</div>${userRow(c, 'user_me', 'fw-ic_account_circle-user0.svg', you('owner', me === 'owner' ? t.t('user_owner') : U.ownerName()), '')}
-        ${U.list().map(u => userRow(c, `user_${u.id}`, 'fw-ic_account_circle-user0.svg', you(u.id, u.name), u.id === me ? '' : t.t('user_summary_not_set_up'))).join('')}
-        ${userRow(c, 'user_guest', 'fw-ic_account_circle-guest.svg', you('guest', t.t('user_guest')), '')}`;
+      const t = T(), u = MM.text('users'), U = MM.users, me = U.current(c), owner = me === 'owner';
+      const own = me === 'guest' ? u.t('Settings/user_exit_guest_title') : u.fmt('Settings/user_you', null, U.name(me));
+      const row = id => id === me ? userRow(c, 'user_me', me === 'guest' ? 'gray' : 'fw-ic_account_circle-user0.svg', own, owner ? u.t('Settings/user_owner') : '')
+        : userRow(c, `user_${id}`, 'fw-ic_account_circle-user0.svg', U.name(id), id === 'owner' ? u.t('Settings/user_owner') : setUp(id) ? '' : t.t('user_summary_not_set_up'), owner);
+      return `<div class="mmst-cat">${c.safe(t.t('user_list_title'))}</div>${['owner', ...U.list().map(x => x.id)].map(row).join('')}
+        ${me === 'guest' ? row('guest') : userRow(c, 'user_guest', 'gray', u.t('Settings/user_guest'), '', owner)}`;
     },
     hidden: ['user_list'],
     click(c, key) {
-      const t = T(), s = S(c);
+      const t = T(), u = MM.text('users'), U = MM.users, me = U.current(c);
       if (key === 'user_add') {
         c.dialog({title: t.t('user_add_user_title'), message: t.t('user_add_user_message_long'), buttons: [{label: t.t('cancel')}, {label: t.t('ok'), action: c => {
           c.dialog({title: t.t('user_setup_dialog_title'), message: t.t('user_setup_dialog_message'), buttons: [
-            {label: t.t('user_setup_button_setup_later'), action: c => { MM.users.addUser(c); c.render(); }},
-            {label: t.t('user_setup_button_setup_now'), action: c => MM.users.switchTo(c, MM.users.addUser(c))}]});
+            {label: t.t('user_setup_button_setup_later'), action: c => { U.addUser(c); c.render(); }},
+            {label: t.t('user_setup_button_setup_now'), action: c => U.switchTo(c, U.addUser(c))}]});
         }}]});
         return true;
       }
-      // EditUserInfoController's User info dialog for the owner; UserDetailsSettings for another user or the guest.
       if (key === 'user_me') {
-        const u = MM.text('users'); let name = MM.users.ownerName();
-        c.dialog({title: u.t('Settings/user_info_settings_title'), html: `<div class="mmsx-userinfo"><img src="assets/fw-ic_account_circle-user0.svg" alt=""><input class="mmst-input" value="${c.safe(name)}" spellcheck="false"></div>`,
+        if (me === 'guest') {
+          c.dialog({title: u.t('Settings/user_exit_guest_confirm_title'), message: u.t('Settings/user_exit_guest_confirm_message'), buttons: [{label: t.t('cancel')}, {label: u.t('Settings/user_exit_guest_dialog_remove'), action: c => U.removeGuest(c)}]});
+          return true;
+        }
+        // EditUserInfoController.createDialog gets the row's title ("You (Owner)") as the name; OK keeps a changed one.
+        const shown = u.fmt('Settings/user_you', null, U.name(me)); let name = shown;
+        c.dialog({title: u.t('Settings/profile_info_settings_title'), html: `<div class="mmsx-userinfo"><img src="assets/fw-ic_account_circle-user0.svg" alt=""><input class="mmst-input" value="${c.safe(name)}" spellcheck="false"></div>`,
           mount: (c, win) => { const i = win.querySelector('input'); i.addEventListener('input', () => { name = i.value; }); setTimeout(() => i.focus(), 50); },
-          buttons: [{label: t.t('cancel')}, {label: t.t('okay'), action: c => { if (name.trim()) { MM.users.setOwnerName(name.trim()); c.render(); } }}]});
+          buttons: [{label: t.t('cancel')}, {label: t.t('okay'), action: c => { if (name.trim() && name !== shown) { U.rename(me, name.trim()); c.render(); } }}]});
         return true;
       }
-      if (key?.startsWith('user_')) { MM.settingsGo(c, `user-detail:${key.slice(5)}`, key === 'user_guest' ? T().t('user_guest') : MM.users.name(key.slice(5))); return true; }
+      if (key?.startsWith('manage_')) { const id = key.slice(7); MM.settingsGo(c, `user-detail:${id}`, id === 'guest' ? u.t('Settings/user_guest') : U.name(id)); return true; }
+      if (key === 'user_guest') { U.guest(c); return true; }
+      if (key?.startsWith('user_')) {
+        const id = key.slice(5);
+        if (setUp(id)) U.switchTo(c, id);
+        else c.dialog({title: t.t('user_setup_dialog_title'), message: t.t('user_setup_dialog_message'), buttons: [{label: t.t('user_setup_button_setup_later')}, {label: t.t('user_setup_button_setup_now'), action: c => U.switchTo(c, id)}]});
+        return true;
+      }
       return false;
     }
   };
@@ -333,6 +352,77 @@
       // TeleService's MobileNetworkSettings and CellBroadcastReceiver's settings, apps of their own.
       if (key === 'mobile_network_settings') { MM.openPrefs(c, 'network', 'network_setting'); return true; }
       if (key === 'cell_broadcast_settings') { MM.openPrefs(c, 'cellbroadcast', 'preferences', MM.settingsStr(n.title)); return true; }
+      return false;
+    }
+  };
+
+  /* Tethering & portable hotspot (TetherSettings, WifiApEnabler, WifiApDialog): USB tethering is greyed out with
+     "USB not connected"; Portable Wi-Fi hotspot reads "Turning hotspot on…" / "…off…" for a moment, then "Portable
+     hotspot AndroidAP active" (greyed out in airplane mode); Set up Wi-Fi hotspot shows the access point
+     (wifi_tether_configure_subtext: its name and security) and opens WifiApDialog: Network name, Security (None / WPA2
+     PSK), the password with "The password must have at least 8 characters." and Show password, AP Band (the 5X is dual
+     band: 2.4 GHz / 5 GHz); Save is enabled while the name is set and a WPA2 password has 8 characters. Bluetooth
+     tethering turns Bluetooth on first, and is unchecked while Bluetooth is off. */
+  const apName = c => MM.system.hotspotConfig(c).ssid || T().t('wifi_tether_configure_ssid_default');
+  function apDialog(c) {
+    const t = T(), cfg = MM.system.hotspotConfig(c), opts = (arr, sel) => arr.map((o, i) => `<option${i === sel ? ' selected' : ''}>${c.safe(o)}</option>`).join('');
+    const html = `<div class="mmwf-dialog"><div class="mmwf-item"><span class="mmwf-label">${c.safe(t.t('wifi_ssid'))}</span><input class="mmwf-edit mmwf-ssid" type="text" maxlength="32" value="${c.safe(apName(c))}" placeholder="${c.safe(t.t('wifi_ssid_hint'))}" autocomplete="off" spellcheck="false"></div>
+      <div class="mmwf-item"><span class="mmwf-label">${c.safe(t.t('wifi_security'))}</span><select class="mmwf-spinner mmwf-sec">${opts(t.t('wifi_ap_security'), cfg.security)}</select></div>
+      <div class="mmwf-secfields"${cfg.security ? '' : ' hidden'}><div class="mmwf-item"><span class="mmwf-label">${c.safe(t.t('wifi_password'))}</span><input class="mmwf-edit mmwf-pw" type="password" maxlength="63" value="${c.safe(cfg.password)}" autocomplete="off" spellcheck="false"></div>
+      <div class="mmwf-item"><span class="mmwf-label mmwf-note">${c.safe(t.t('credentials_password_too_short'))}</span><label class="mmwf-check"><input type="checkbox" class="mmwf-show"><i class="mmst-check"></i><span>${c.safe(t.t('wifi_show_password'))}</span></label></div></div>
+      <div class="mmwf-item"><span class="mmwf-label">${c.safe(t.t('wifi_ap_band_config'))}</span><select class="mmwf-spinner mmwf-band">${opts(t.t('wifi_ap_band_config_full'), cfg.band)}</select></div></div>`;
+    let form = null;
+    c.dialog({title: t.t('wifi_tether_configure_ap_text'), html, buttons: [{label: t.t('wifi_cancel')}, {label: t.t('wifi_save'), action: c => {
+      if (!form) return;
+      // TetherSettings.onClick: the new configuration; a running hotspot restarts with it.
+      Object.assign(MM.system.hotspotConfig(c), form); c.save();
+      if (S(c).hotspot) { MM.system.setHotspot(c, false); setTimeout(() => MM.system.setHotspot(c, true), 1300); }
+      c.render();
+    }}], mount(c, win) {
+      const ssid = win.querySelector('.mmwf-ssid'), sec = win.querySelector('.mmwf-sec'), pw = win.querySelector('.mmwf-pw'), band = win.querySelector('.mmwf-band');
+      const save = [...win.querySelectorAll('.mmdlg-button')].at(-1);
+      // WifiApDialog.validate: no name, or WPA2 PSK with fewer than 8 characters, disables Save.
+      const sync = () => {
+        win.querySelector('.mmwf-secfields').hidden = sec.selectedIndex === 0;
+        form = {ssid: ssid.value, security: sec.selectedIndex, password: pw.value, band: band.selectedIndex};
+        if (save) save.disabled = !ssid.value || (sec.selectedIndex === 1 && pw.value.length < 8);
+      };
+      win.addEventListener('input', sync); win.addEventListener('change', sync);
+      win.querySelector('.mmwf-show').addEventListener('change', e => { pw.type = e.target.checked ? 'text' : 'password'; });
+      sync(); setTimeout(() => ssid.focus(), 50);
+    }});
+  }
+  H.tether_prefs = {
+    get(c, key) {
+      const s = S(c);
+      if (key === 'usb_tether_settings') return false;
+      if (key === 'enable_wifi_ap') return !!s.hotspot;
+      if (key === 'enable_bluetooth_tethering') return !!(s.btTether && s.bluetooth);
+      return undefined;
+    },
+    set(c, key, v) {
+      const s = S(c);
+      if (key === 'enable_wifi_ap') { MM.system.setHotspot(c, v); return true; }
+      if (key === 'enable_bluetooth_tethering') { s.btTether = v; if (v && !s.bluetooth) { MM.system.setBluetooth(c, true); setTimeout(() => c.render(), 1100); } return true; }
+      return key === 'usb_tether_settings';
+    },
+    disabled(c, key) {
+      const st = MM.system.hotspotState(c);
+      if (key === 'usb_tether_settings') return true;
+      if (key === 'enable_wifi_ap') return !!S(c).airplane || st === 'enabling' || st === 'disabling';
+      if (key === 'enable_bluetooth_tethering') return MM.system.live.btTurningOn > Date.now();
+      return false;
+    },
+    summary(c, key) {
+      const t = T(), s = S(c), st = MM.system.hotspotState(c);
+      if (key === 'usb_tether_settings') return t.t('usb_tethering_unavailable_subtext');
+      if (key === 'enable_wifi_ap') return st === 'enabling' ? t.t('wifi_tether_starting') : st === 'disabling' ? t.t('wifi_tether_stopping') : st === 'on' ? t.fmt('wifi_tether_enabled_subtext', null, apName(c)) : '';
+      if (key === 'wifi_ap_ssid_and_security') return t.fmt('wifi_tether_configure_subtext', null, apName(c), t.t('wifi_ap_security')[MM.system.hotspotConfig(c).security]);
+      if (key === 'enable_bluetooth_tethering') return MM.system.live.btTurningOn > Date.now() ? t.t('bluetooth_turning_on') : t.t(s.btTether && s.bluetooth ? 'bluetooth_tethering_available_subtext' : 'bluetooth_tethering_off_subtext');
+      return undefined;
+    },
+    click(c, key) {
+      if (key === 'wifi_ap_ssid_and_security') { apDialog(c); return true; }
       return false;
     }
   };

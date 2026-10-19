@@ -71,7 +71,11 @@
     out.push({id: 'location', label: t.t('quick_settings_location_label'), icon: s.location ? 'sui-ic_signal_location_enable_animation.svg' : 'sui-ic_signal_location_disable_animation.svg',
       desc: t.t(s.location ? 'accessibility_quick_settings_location_on' : 'accessibility_quick_settings_location_off')});
     out.push({id: 'cast', label: t.t('quick_settings_cast_title'), icon: 'sui-ic_qs_cast_off.svg', desc: t.t('quick_settings_cast_title')});
-    // hotspot: visible only when supported and recently used (UsageTracker); not yet.
+    // HotspotTile: visible for days_to_show_hotspot_tile (30) days after the hotspot was last switched on.
+    if (s.hotspotUsed && Date.now() - s.hotspotUsed < 30 * 864e5) {
+      const on = !!s.hotspot;
+      out.push({id: 'hotspot', label: t.t('quick_settings_hotspot_label'), icon: on ? 'sui-ic_hotspot_enable_animation.svg' : 'sui-ic_hotspot_disable_animation.svg', desc: t.t('quick_settings_hotspot_label')});
+    }
     return out;
   }
 
@@ -168,7 +172,7 @@
     return `<div class="mmsh-dismissall"><button type="button" class="mmsh-clearall" data-action="mmsh-clearall" aria-label="${c.safe(T().t('accessibility_clear_all'))}"><svg viewBox="0 0 260 48" aria-hidden="true"><g transform="translate(0 48) scale(1 -1)" fill="#fff"><g class="b1">${bar(48, 6)}</g><g class="b2">${bar(36, 24)}</g><g class="b3">${bar(24, 42)}</g></g></svg></button></div>`;
   }
   function noteHtml(c, n, i) {
-    return `<div class="mmsh-note" data-action="mmsh-noop"><div class="mmsh-nmain"><span class="mmsh-nicon"><img src="${n.icon}" alt=""></span><span class="mmsh-ntexts"><b>${c.safe(n.title)}</b><small>${c.safe(n.text)}</small></span></div>
+    return `<div class="mmsh-note" data-action="${n.click ? 'mmsh-nclick' : 'mmsh-noop'}" data-i="${i}"><div class="mmsh-nmain"><span class="mmsh-nicon"><img src="${n.icon}" alt=""></span><span class="mmsh-ntexts"><b>${c.safe(n.title)}</b><small>${c.safe(n.text)}</small></span></div>
       ${n.actions?.length ? `<div class="mmsh-nactions">${n.actions.map((a, j) => `<button type="button" data-action="mmsh-naction" data-i="${i}" data-j="${j}">${c.safe(a.label)}</button>`).join('')}</div>` : ''}</div>`;
   }
   function render(c) {
@@ -226,6 +230,13 @@
         if (!c.notifications().length) setTimeout(() => close(c), 360);
       });
     }, {up: false});
+    // A press held for ViewConfiguration's long press timeout (500 ms) is the tile's handleLongClick; its click is not.
+    const hot = root.querySelector('.mmqs-tile[data-tile="hotspot"]');
+    hot?.addEventListener('pointerdown', () => {
+      const timer = setTimeout(() => { hot.dataset.long = '1'; longClick(c, 'hotspot'); }, 500);
+      const stop = () => { clearTimeout(timer); hot.removeEventListener('pointerup', stop); hot.removeEventListener('pointerleave', stop); };
+      hot.addEventListener('pointerup', stop); hot.addEventListener('pointerleave', stop);
+    });
     // Dragging on the open shade moves the same expansion as pulling the status bar (see drag).
     shade?.addEventListener('pointerdown', ev => { if (ev.button || ev.target.closest('.mmqs-slider,.mmqs-detail')) return; drag(c, ev, false); });
   }
@@ -285,6 +296,14 @@
     else if (id === 'flashlight') { sy.live.flashlight = !sy.live.flashlight; refresh(c); }
     else if (id === 'location') { s.location = !s.location; c.save(); refresh(c); }
     else if (id === 'cast') showDetail(c, 'cast');
+    else if (id === 'hotspot') sy.setHotspot(c, !s.hotspot);
+  }
+  // HotspotTile.handleLongClick: while off, "Hide Hotspot?" (UsageTracker.showResetConfirmation); Hide forgets the use.
+  function longClick(c, id) {
+    const s = c.data.settings, t = T();
+    if (id !== 'hotspot' || s.hotspot) return;
+    c.dialog({title: t.fmt('quick_settings_reset_confirmation_title', null, t.t('quick_settings_hotspot_label')), message: t.t('quick_settings_reset_confirmation_message'),
+      buttons: [{label: t.t('cancel')}, {label: t.t('quick_settings_reset_confirmation_button'), action: c => { delete s.hotspotUsed; c.save(); refresh(c); }}]});
   }
   // A dual tile's label: switch the radio on and show its detail (WifiTile / BluetoothTile.handleSecondaryClick).
   function secondary(c, id) {
@@ -381,6 +400,7 @@
       if (st?.dragged) { st.dragged = false; return true; }
       if (name === 'mmsh-close') { close(c); return true; }
       if (name === 'mmsh-noop') return true;
+      if (name === 'mmsh-nclick') { const n = c.notifications()[+el.dataset.i]; close(c); n?.click?.(c); return true; }
       if (name === 'mmnt-open') { if (!el.dataset.swiped) { close(c); MM.notifications?.open(c, el.dataset.id); } return true; }
       if (name === 'mmsh-clearall') { clearAll(c, el); return true; }
       if (name === 'mmsh-naction') { const n = c.notifications()[+el.dataset.i]; close(c); n?.actions?.[+el.dataset.j]?.action(c); return true; }
@@ -388,7 +408,7 @@
       if (name === 'mmsh-settings') { if (!st.qs) { setQs(c, true); return true; } c.closeOverlay(); c.open('settings'); return true; }
       if (name === 'mmsh-battery') { if (!st.qs) { setQs(c, true); return true; } c.closeOverlay(); c.open('settings', 'battery'); return true; }
       if (name === 'mmsh-user') { if (!st.qs) { setQs(c, true); return true; } showDetail(c, 'user'); return true; }
-      if (name === 'mmqs-click') { click(c, el.dataset.tile); return true; }
+      if (name === 'mmqs-click') { if (el.dataset.long) { delete el.dataset.long; return true; } click(c, el.dataset.tile); return true; }
       if (name === 'mmqs-secondary') { secondary(c, el.dataset.tile); return true; }
       if (/^mm(qd|zp|ud)-/.test(name)) return !!MM.qsDetail?.action(c, name, el, ctl);
       return false;
