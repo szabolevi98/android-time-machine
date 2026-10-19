@@ -105,8 +105,8 @@
     // UserSwitcherController's records: the owner, the users added, the guest (Remove guest while it is the current
     // user), Add user (mm-users.js).
     const U = MM.users, me = U ? U.current(c) : 'owner';
-    const users = [{name: U ? U.ownerName() : t.t('owner_name'), icon: 'fw-ic_account_circle-user0.svg', current: me === 'owner', id: 'owner'},
-      ...(U ? U.list() : []).map(x => ({name: x.name, icon: 'fw-ic_account_circle-user0.svg', current: me === x.id, id: x.id})),
+    const users = [{name: U ? U.ownerName() : t.t('owner_name'), icon: U ? U.icon('owner') : 'fw-ic_account_circle-user0.svg', current: me === 'owner', id: 'owner'},
+      ...(U ? U.list() : []).map(x => ({name: x.name, icon: U.icon(x.id), current: me === x.id, id: x.id})),
       me === 'guest' ? {name: MM.text('users').t('guest_exit_guest'), icon: 'sui-ic_close.svg', current: true, id: 'guest'} : {name: t.t('guest_nickname'), icon: 'fw-ic_account_circle-guest.svg', id: 'guest'},
       {name: t.t('user_add_user'), icon: 'sui-ic_add_circle_qs.svg', id: 'add'}];
     return `<div class="mmud">${users.map(u => `<button type="button" class="mmud-item${u.current ? ' on' : ''}" data-action="mmud-user" data-user="${u.id}"><span class="mmud-avatar"><img src="${A(u.icon)}" alt=""></span><span class="mmud-name">${c.safe(u.name)}</span></button>`).join('')}</div>`;

@@ -27,6 +27,12 @@
     ownerName: () => read().ownerName || T().t('framework/owner_name'),
     name: id => id === 'owner' ? U.ownerName() : id === 'guest' ? T().t('guest_nickname') : (U.list().find(u => u.id === id)?.name || T().t('user_new_user_name')),
     setOwnerName: name => { const v = read(); v.ownerName = name; write(v); },
+    // UserIcons.getDefaultUserIcon: USER_ICON_COLORS[userId % 8]; the owner is user 0, the users added 10, 11 … (u1, u2 …).
+    icon(id) {
+      if (id === 'guest') return 'fw-ic_account_circle-guest.svg';
+      const n = id === 'owner' ? 1 : (9 + Number(String(id).slice(1))) % 8 + 1;
+      return n === 1 ? 'fw-ic_account_circle-user0.svg' : `fw-ic_account_circle-c${n}.svg`;
+    },
     rename(id, name) { if (id === 'owner') return U.setOwnerName(name); const v = read(); v.users = (v.users || []).map(u => u.id === id ? {...u, name} : u); write(v); },
     switchTo(c, id) {
       c.dialog({progress: T().fmt('framework/user_switching_message', null, U.name(id)), cancelable: false});

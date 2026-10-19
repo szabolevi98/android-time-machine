@@ -188,12 +188,18 @@
     top(c) {
       const t = T(), u = MM.text('users'), U = MM.users, me = U.current(c), owner = me === 'owner';
       const own = me === 'guest' ? u.t('Settings/user_exit_guest_title') : u.fmt('Settings/user_you', null, U.name(me));
-      const row = id => id === me ? userRow(c, 'user_me', me === 'guest' ? 'gray' : 'fw-ic_account_circle-user0.svg', own, owner ? u.t('Settings/user_owner') : '')
-        : userRow(c, `user_${id}`, 'fw-ic_account_circle-user0.svg', U.name(id), id === 'owner' ? u.t('Settings/user_owner') : setUp(id) ? '' : t.t('user_summary_not_set_up'), owner);
-      return `<div class="mmst-cat">${c.safe(t.t('user_list_title'))}</div>${['owner', ...U.list().map(x => x.id)].map(row).join('')}
+      const row = id => id === me ? userRow(c, 'user_me', me === 'guest' ? 'gray' : U.icon(me), own, owner ? u.t('Settings/user_owner') : '')
+        : userRow(c, `user_${id}`, U.icon(id), U.name(id), id === 'owner' ? u.t('Settings/user_owner') : setUp(id) ? '' : t.t('user_summary_not_set_up'), owner);
+      // On a phone (no restricted profiles) updateUserList puts the rows on the screen itself, with no category.
+      return `${['owner', ...U.list().map(x => x.id)].map(row).join('')}
         ${me === 'guest' ? row('guest') : userRow(c, 'user_guest', 'gray', u.t('Settings/user_guest'), '', owner)}`;
     },
     hidden: ['user_list'],
+    // Add user is the owner's (UserCapabilities.mCanAddUser); greyed out once canAddMoreUsers() is false (the guest not
+    // counted, config_multiuserMaximumUsers 4), with user_add_max_count naming getMaxRealUsers() (4 + 1).
+    hide: (c, key) => key === 'user_add' && MM.users.current(c) !== 'owner',
+    disabled: (c, key) => key === 'user_add' && 1 + MM.users.list().length >= 4,
+    summary: (c, key) => key === 'user_add' && 1 + MM.users.list().length >= 4 ? T().fmt('user_add_max_count', null, 5) : undefined,
     click(c, key) {
       const t = T(), u = MM.text('users'), U = MM.users, me = U.current(c);
       if (key === 'user_add') {
@@ -211,7 +217,7 @@
         }
         // EditUserInfoController.createDialog gets the row's title ("You (Owner)") as the name; OK keeps a changed one.
         const shown = u.fmt('Settings/user_you', null, U.name(me)); let name = shown;
-        c.dialog({title: u.t('Settings/profile_info_settings_title'), html: `<div class="mmsx-userinfo"><img src="assets/fw-ic_account_circle-user0.svg" alt=""><input class="mmst-input" value="${c.safe(name)}" spellcheck="false"></div>`,
+        c.dialog({title: u.t('Settings/profile_info_settings_title'), html: `<div class="mmsx-userinfo"><img src="assets/${U.icon(me)}" alt=""><input class="mmst-input" value="${c.safe(name)}" spellcheck="false"></div>`,
           mount: (c, win) => { const i = win.querySelector('input'); i.addEventListener('input', () => { name = i.value; }); setTimeout(() => i.focus(), 50); },
           buttons: [{label: t.t('cancel')}, {label: t.t('okay'), action: c => { if (name.trim() && name !== shown) { U.rename(me, name.trim()); c.render(); } }}]});
         return true;

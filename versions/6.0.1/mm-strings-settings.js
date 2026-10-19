@@ -10265,6 +10265,14 @@ MM.strings('settings', {
 "fr": "Le mot de passe doit contenir au moins 8 caractères.",
 "es": "La contraseña debe tener al menos 8 caracteres."
 },
+"user_add_max_count": {
+"res": "bullhead:Settings:user_add_max_count",
+"en": "You can add up to %1$d users",
+"hu": "Legfeljebb %1$d felhasználót adhat hozzá",
+"de": "Du kannst bis zu %1$d Nutzer hinzufügen.",
+"fr": "Vous pouvez ajouter jusqu'à %1$d utilisateurs.",
+"es": "Puedes añadir hasta %1$d usuarios"
+},
 "animator_duration_scale_entries": {
 "res": "bullhead:Settings:animator_duration_scale_entries",
 "en": [

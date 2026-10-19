@@ -110,6 +110,12 @@
   // A screen "xml:<name>" is a res/xml file; "xml:<name>#<key>" one of its nested PreferenceScreens.
   const current = c => { const s = state(c).stack.at(-1); if (!s) return null; const ref = s.screen.startsWith('xml:') ? s.screen.slice(4) : null; return {...s, xml: ref ? ref.split('#')[0] : null, nested: ref?.split('#')[1] || null}; };
   const nodeOf = cur => cur.nested ? findKey(X()[cur.xml], cur.nested) : X()[cur.xml];
+  // A screen opened by its short name (a notification, Quick settings) has the title of the row that links to it.
+  function linkTitle(screen) {
+    const seek = n => { if (n?.fragment && screenOf(n.fragment) === screen && n.title) return str(n.title); for (const k of n?.c || []) { const t = seek(k); if (t) return t; } return ''; };
+    for (const n of Object.values(X())) { const t = seek(n); if (t) return t; }
+    return '';
+  }
   function go(c, screen, title) { const st = state(c); st.stack.push({screen, title}); if (st.scroll) delete st.scroll[screen]; c.render(); }
   MM.settingsGo = go;
 
@@ -224,7 +230,7 @@
       // A screen of its own activity without the action bar (Theme.FingerprintEnroll's SetupWizardLayout) draws it all.
       if (custom?.full) return `<div class="mmst mmst-full">${custom.render(c, cur)}</div>`;
       if (custom?.render) { title = custom.title?.(c, cur) || cur.title; body = custom.render(c, cur); }
-      else if (cur.xml && X()[cur.xml]) { title = cur.title || str(nodeOf(cur).title) || title; body = `<div class="mmst-list">${cur.nested ? '' : MM.settingsHooks[cur.xml]?.top?.(c) || ''}${rows(c, nodeOf(cur), cur.xml)}</div>`; }
+      else if (cur.xml && X()[cur.xml]) { title = cur.title || str(nodeOf(cur).title) || linkTitle(cur.screen) || title; body = `<div class="mmst-list">${cur.nested ? '' : MM.settingsHooks[cur.xml]?.top?.(c) || ''}${rows(c, nodeOf(cur), cur.xml)}</div>`; }
       else { title = cur.title || title; body = `<div class="mmst-missing">${c.missing('settings', `<small>${c.safe(cur.screen.replace(/^missing:/, ''))}</small>`)}</div>`; }
     }
     const up = !!cur;

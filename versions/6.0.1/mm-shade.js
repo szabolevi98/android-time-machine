@@ -198,7 +198,7 @@
             <span class="mmsh-cluster">${MM.signalCluster ? MM.signalCluster(c) : ''}</span>
             <button type="button" class="mmsh-sys" data-action="mmsh-battery" aria-label="${c.safe(t.fmt('accessibility_battery_level', null, b.level))}"><span class="mmsh-batt"></span><span class="mmsh-level">${c.safe(level)}</span></button>
             <button type="button" class="mmsh-gear" data-action="mmsh-settings" aria-label="${c.safe(t.t('accessibility_desc_settings'))}"><img src="${A('sui-ic_settings.svg')}" alt=""></button>
-            <button type="button" class="mmsh-user" data-action="mmsh-user" aria-label="${c.safe(t.t('accessibility_multi_user_switch_quick_contact'))}"><img src="${A('fw-ic_account_circle-user0.svg')}" alt=""></button>
+            <button type="button" class="mmsh-user" data-action="mmsh-user" aria-label="${c.safe(t.t('accessibility_multi_user_switch_quick_contact'))}"><img src="${A(MM.users ? MM.users.icon(MM.users.current(c)) : 'fw-ic_account_circle-user0.svg')}" alt=""></button>
           </div>
         </div>
       </div>

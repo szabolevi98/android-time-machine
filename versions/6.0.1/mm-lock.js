@@ -48,7 +48,7 @@
       <div class="mmlk-panel">
         <div class="mmlk-bar" data-action="mmlk-pull"><span class="mmlk-carrier">${c.safe(carrier)}</span>
           <span class="mmlk-icons"><span class="mmlk-cluster">${MM.signalCluster ? MM.signalCluster(c) : ''}</span><span class="mmlk-batt"></span>${b.plugged ? `<span class="mmlk-level">${c.safe(new Intl.NumberFormat(c.locale(), {style: 'percent'}).format(b.level / 100))}</span>` : ''}</span>
-          <span class="mmlk-user"><img src="${A('fw-ic_account_circle-user0.svg')}" alt=""></span></div>
+          <span class="mmlk-user"><img src="${A(MM.users ? MM.users.icon(MM.users.current(c)) : 'fw-ic_account_circle-user0.svg')}" alt=""></span></div>
         <div class="mmlk-status" style="top:${(clockFraction(c) * 100).toFixed(2)}%">
           <div class="mmlk-clock">${clockText(c)}</div><div class="mmlk-date">${c.safe(dateText(c))}</div>
           ${s.lock?.ownerInfo ? `<div class="mmlk-owner">${c.safe(s.lock.ownerInfo)}</div>` : ''}</div>

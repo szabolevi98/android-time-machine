@@ -6,7 +6,7 @@ The Nexus 5X as Google's last Marshmallow build for it left it: the factory imag
 
 ## System
 
-- **Status bar, quick settings and notifications:** the Marshmallow status bar with its battery and signal drawing, the shade with the quick settings tiles and their detail panels (Wi-Fi, Bluetooth, Do not disturb, mobile data, cast, users), brightness, and Do not disturb with its priority and alarms-only modes.
+- **Status bar, quick settings and notifications:** the Marshmallow status bar with its battery and signal drawing, the shade with the quick settings tiles and their detail panels (Wi-Fi, Bluetooth, Do not disturb, mobile data, cast, users), the Hotspot tile for 30 days after the hotspot was used, brightness, and Do not disturb with its priority and alarms-only modes. Lists scroll with the image's fading 4 dp scrollbar.
 - **Lock screen:** the keyguard with the phone and camera shortcuts, the bouncer for pattern, PIN and password, the emergency dialer, the screen lock message, and Nexus Imprint: the fingerprint icon on the lock screen and unlocking (and waking) with the sensor.
 - **Power, volume and recents:** the power menu, the boot animation, the volume panel with its expanded streams and Do not disturb, and Overview's card stack.
 - **Now on Tap:** holding Home opens Google's assist layer with its opt-in card.
@@ -21,7 +21,7 @@ The Nexus 5X as Google's last Marshmallow build for it left it: the factory imag
 
 ## Settings
 
-Every screen of the image's Settings dashboard: Wi-Fi with its networks and advanced settings, Bluetooth, data usage, display, sound and notifications with Do not disturb, apps with app info and app permissions, battery with Doze optimisation, storage, memory, users, Nexus Imprint (enrollment from the introduction to Fingerprint added!, the backup screen lock, managing fingerprints), screen lock and encryption, accounts with the Google account, Google Settings (Play services 8.1), language, backup, date and time, accessibility, printing, daydream, and About phone with its status pages, the developer options countdown and the Marshmallow easter egg: PlatLogoActivity and Marshmallow Land for up to six players.
+Every screen of the image's Settings dashboard: Wi-Fi with its networks and advanced settings, Bluetooth, data usage, display, sound and notifications with Do not disturb, apps with app info and app permissions, battery with Doze optimisation, storage, memory, users (switching to another user or the guest, Profile info, each user's details), tethering and the portable hotspot (its access point dialog; the hotspot turns Wi-Fi off, shows its status icon and the "Tethering or hotspot active" notification), Nexus Imprint (enrollment from the introduction to Fingerprint added!, the backup screen lock, managing fingerprints), screen lock and encryption, accounts with the Google account, Google Settings (Play services 8.1), language, backup, date and time, accessibility, printing, daydream, and About phone with its status pages, the developer options countdown and the Marshmallow easter egg: PlatLogoActivity and Marshmallow Land for up to six players.
 
 ## Apps
 
