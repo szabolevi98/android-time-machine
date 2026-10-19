@@ -1,0 +1,40 @@
+# Texts the code of the 7.1.2 Settings screens uses (docs/tools/ng-prefs.py reads it: names as mm-strings.py takes them,
+# one or more per line, '#' starts a comment). Nothing here is read from 6.0.1's list.
+# SettingsActivity, SettingsDrawerActivity, DashboardContainerFragment, the dashboard (DashboardAdapter, SummaryLoader)
+settings_label_launcher dashboard_title search_menu framework/cancel framework/ok switch_on_text switch_off_text
+page_tab_title_summary page_tab_title_support home content_description_menu_button
+suggestions_title+args1 suggestions_summary+args1 suggestion_remove condition_expand_hide condition_expand_show
+plurals:settings_suggestion_header_summary_hidden_items
+# The dashboard's own drawables: the drawer (settingslib ic_menu, home), the suggestions' header and the conditions'
+# expand arrows, the conditions (AirplaneModeCondition … BackgroundDataCondition), the search item (options_menu.xml)
+drawable:priv-app/SettingsGoogle/SettingsGoogle.apk:st:ic_menu drawable:priv-app/SettingsGoogle/SettingsGoogle.apk:st:home
+drawable:priv-app/SettingsGoogle/SettingsGoogle.apk:st:ic_expand_more drawable:priv-app/SettingsGoogle/SettingsGoogle.apk:st:ic_expand_less
+drawable:priv-app/SettingsGoogle/SettingsGoogle.apk:st:ic_airplane drawable:priv-app/SettingsGoogle/SettingsGoogle.apk:st:ic_hotspot
+drawable:priv-app/SettingsGoogle/SettingsGoogle.apk:st:ic_zen drawable:priv-app/SettingsGoogle/SettingsGoogle.apk:st:ic_cellular_off
+drawable:priv-app/SettingsGoogle/SettingsGoogle.apk:st:ic_data_saver drawable:framework/framework-res.apk:fw:ic_search_api_material
+# The support tab (SupportItemAdapter)
+drawable:priv-app/SettingsGoogle/SettingsGoogle.apk:st:ic_help_24dp drawable:priv-app/SettingsGoogle/SettingsGoogle.apk:st:ic_lightbulb_outline_24
+# Condition cards (Condition subclasses)
+condition_turn_off condition_turn_on condition_airplane_title condition_airplane_summary condition_hotspot_title condition_hotspot_summary+args1
+condition_zen_title+args1 condition_battery_title condition_battery_summary condition_cellular_title condition_cellular_summary
+condition_bg_data_title condition_bg_data_summary zen_mode_option_alarms zen_mode_option_important_interruptions zen_mode_option_no_interruptions
+framework/zen_mode_forever_dnd framework/wifi_tether_configure_ssid_default
+# Tile summaries (the SummaryProvider of each top level screen, BatteryInfo, Formatter)
+disconnected wifi_disabled_generic bluetooth_disconnected bluetooth_connected bluetooth_disabled data_usage_summary_format+args1
+display_summary_on display_summary_off notification_summary_none plurals:notification_summary sound_settings_summary+args1
+sound_settings_summary_vibrate sound_settings_summary_silent apps_summary+args1 storage_summary+args2 memory_summary+args2
+user_summary+args1 location_off_summary location_on_summary+args1 location_mode_high_accuracy_title location_mode_battery_saving_title
+location_mode_sensors_only_title payment_summary+args1 plurals:print_settings_title about_summary+args1 power_charging+args2
+power_discharging_duration+args2 power_remaining_duration_only+args1
+framework/fileSizeSuffix+args2 framework/byteShort framework/kilobyteShort framework/megabyteShort framework/gigabyteShort
+# The support tab
+support_escalation_24_7_title support_escalation_24_7_summary support_escalation_by_phone support_escalation_by_chat
+support_help_feedback_title support_tips_and_tricks_title support_escalation_title support_escalation_summary
+# Formatter.formatShortElapsedTime
+framework/durationDays+args1 framework/durationDayHour+args2 framework/durationDayHours+args2 framework/durationHours+args1
+framework/durationHourMinute+args2 framework/durationHourMinutes+args2 framework/durationMinutes+args1 framework/durationMinuteSecond+args2
+framework/durationMinuteSeconds+args2 framework/durationSecond+args1 framework/durationSeconds+args1
+# The toolbar (Toolbar's navigation button, SearchView)
+framework/action_bar_up_description framework/searchview_description_search framework/search_hint
+# CheckBoxPreference's CheckBox (btn_check_material_anim's first and last states)
+drawable:framework/framework-res.apk:fw:btn_checkbox_unchecked_mtrl drawable:framework/framework-res.apk:fw:btn_checkbox_checked_mtrl

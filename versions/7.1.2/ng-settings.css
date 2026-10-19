@@ -1,0 +1,120 @@
+/* Android 7.1.2 Settings (ng-settings.js), in dp, from SettingsGoogle.apk and framework-res.apk of N2G48C (the layouts
+   and dimens named in ng-settings.js). Theme.Settings: colorPrimary #263238, colorPrimaryDark #21272b, colorAccent
+   #009688, the window #fafafa, textColorPrimary #de000000, textColorSecondary #8a000000; card_background #fafafa,
+   card_background_grey #eeeeee; listDivider and preference_list_divider_material 1 dp #1f000000; the ripples
+   colorControlHighlight #1f000000. */
+.ngst{position:absolute;inset:0;display:flex;flex-direction:column;background:#fafafa;color:#000000de;font-family:Roboto,sans-serif;overflow:hidden}
+.ngst button{font:inherit;color:inherit;border:0;background:none;text-align:left;padding:0;-webkit-tap-highlight-color:transparent}
+/* The Toolbar (Widget.Material.Toolbar in ThemeOverlay.Material.Dark.ActionBar), elevation 4 dp under it; on the
+   dashboard the tab header (also actionBarStyle) carries the shadow. */
+.ngst-ab{position:relative;z-index:3;flex:none;display:flex;align-items:center;height:calc(56 * var(--dp));background:#263238;color:#fff;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #00000040}
+.ngst.dash .ngst-ab{box-shadow:none}
+.ngst-nav{flex:none;width:calc(56 * var(--dp));height:calc(56 * var(--dp));display:grid;place-items:center;border-radius:50%}
+.ngst-nav:active{background:#ffffff33}
+.ngst-nav i,.ngst-ab-btn i{display:block;width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:#fff;-webkit-mask:center/100% no-repeat;mask:center/100% no-repeat}
+.ngst-abtitle{flex:1;min-width:0;margin-left:calc(16 * var(--dp));font:500 calc(20 * var(--dp))/calc(24 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngst-abtitle.nav{margin-left:calc(16 * var(--dp))}
+.ngst-actions{flex:none;display:flex;align-self:stretch;align-items:center}
+.ngst-ab-btn{width:calc(48 * var(--dp));height:calc(56 * var(--dp));display:grid;place-items:center;border-radius:50%}
+.ngst-ab-btn:active{background:#ffffff33}
+/* dashboard_container_header: SlidingTabLayout in colorPrimary. */
+.ngst-tabs{position:relative;z-index:2;flex:none;background:#263238;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #00000040}
+.ngst-tabtitles{display:flex}
+.ngst-tabtitles button{flex:1;min-width:0;padding:calc(16 * var(--dp));text-align:center;font:500 calc(14 * var(--dp))/calc(16.5 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;color:#ffffffb3!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngst-tabtitles button.on{color:#fff!important}
+.ngst-tabtitles button:active{background:#ffffff33}
+.ngst-tabind{position:absolute;left:0;bottom:0;width:50%;height:calc(3 * var(--dp));background:#80cbc4;transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.ngst-pager{flex:1;min-height:0;display:flex;transform:translateX(calc(var(--tab) * -100%));transition:transform .3s cubic-bezier(.4,0,.2,1);background:#e0e0e0}
+.ngst-pager>.ngst-page{flex:0 0 100%;width:100%;height:100%}
+.ngst-content{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+.ngst-content.grey{background:#eeeeee}
+.ngst-dash{background:#fafafa}
+/* condition_card.xml on colorAccent, elevation 2 dp. */
+.ngst-cond{position:relative;background:#009688;color:#fff;box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) #00000033}
+.ngst-cond-row{display:flex;align-items:center;height:calc(56 * var(--dp));cursor:pointer}
+.ngst-cond-row:active{background:#ffffff33}
+.ngst-cond-ic{flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin:0 calc(32 * var(--dp)) 0 calc(16 * var(--dp));background:#fff;-webkit-mask:center/contain no-repeat;mask:center/contain no-repeat}
+.ngst-cond-title{flex:1;min-width:0;font-size:calc(18 * var(--dp));line-height:calc(24 * var(--dp))}
+.ngst-cond-exp{flex:none;align-self:stretch;width:calc(56 * var(--dp));background:#fff;-webkit-mask:center/calc(24 * var(--dp)) no-repeat;mask:center/calc(24 * var(--dp)) no-repeat}
+.ngst-cond-detail{padding-left:calc(72 * var(--dp));animation:ngst-open .25s ease-out}
+@keyframes ngst-open{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+.ngst-cond-sum{padding:0 calc(24 * var(--dp)) calc(16 * var(--dp)) 0;font-size:calc(14 * var(--dp));line-height:calc(20 * var(--dp));opacity:.7}
+.ngst-cond-div{display:block;height:calc(.25 * var(--dp));background:#fff}
+.ngst-cond-btns{display:flex;padding:calc(8 * var(--dp)) calc(24 * var(--dp)) calc(8 * var(--dp)) 0}
+.ngst-cond-btns button{flex:1;min-height:calc(48 * var(--dp));color:#fff!important;opacity:.8;font:500 calc(14 * var(--dp))/1 Roboto,sans-serif;text-transform:uppercase;text-align:left}
+.ngst-cond-btns button:active{background:#ffffff33}
+.ngst-spacer{display:block;height:calc(8 * var(--dp));background:#eeeeee}
+/* suggestion_header.xml / suggestion_tile.xml on card_background_grey. */
+.ngst-shead{display:flex;align-items:center;width:100%;height:calc(48 * var(--dp));padding-top:calc(4 * var(--dp))!important;background:#eeeeee!important;color:#009688!important;font:500 calc(14 * var(--dp))/1 Roboto,sans-serif!important}
+.ngst-shead:active,.ngst-stile:active{background:#d9d9d9!important}
+.ngst-shead-ic{flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin:0 calc(32 * var(--dp)) 0 calc(16 * var(--dp));background:#0000008a;-webkit-mask:center/100% no-repeat;mask:center/100% no-repeat}
+.ngst-shead-sum{flex:1;text-align:right;padding-right:calc(18 * var(--dp))}
+.ngst-stile{display:flex;align-items:center;min-height:calc(72 * var(--dp));background:#eeeeee;cursor:pointer}
+.ngst-stile .ng-overflow{align-self:center;padding:calc(16 * var(--dp));min-width:0;border-radius:50%}
+.ngst-stile .ng-overflow i{background:#0000008a}
+.ngst-stile .ng-overflow:active{background:#0000001f}
+/* dashboard_category.xml / dashboard_tile.xml. */
+.ngst-dcat{display:flex;align-items:center;height:calc(40 * var(--dp));padding:0 0 calc(8 * var(--dp)) calc(16 * var(--dp));background:#fafafa;color:#0000008a;font:500 calc(14 * var(--dp))/1 Roboto,sans-serif;box-sizing:content-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngst-ddiv{display:block;height:calc(1 * var(--dp));background:#0000001f}
+.ngst-tile{display:flex;align-items:center;width:100%;min-height:calc(72 * var(--dp));background:#fafafa!important}
+.ngst-tile:active{background:#e5e5e5!important}
+.ngst-ic{flex:none;display:block;width:calc(24 * var(--dp));height:calc(24 * var(--dp));object-fit:contain}
+.ngst-ic.masked{-webkit-mask:center/contain no-repeat;mask:center/contain no-repeat}
+.ngst-tile>.ngst-ic,.ngst-stile>.ngst-ic{margin:0 calc(32 * var(--dp)) 0 calc(16 * var(--dp))}
+.ngst-texts{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.ngst-title{font-size:calc(16 * var(--dp));line-height:calc(21 * var(--dp));color:#000000de;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngst-summary{font-size:calc(14 * var(--dp));line-height:calc(19 * var(--dp));color:#0000008a}
+.ngst-tile .ngst-summary{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:calc(16 * var(--dp))}
+/* SupportFragment's escalation card (support_escalation_options) and tiles. */
+.ngst-supportpage{background:#eeeeee}
+.ngst-esc{padding:calc(24 * var(--dp)) calc(16 * var(--dp)) calc(8 * var(--dp));background:#fafafa}
+.ngst-esc-title{font:400 calc(24 * var(--dp))/calc(32 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.ngst-esc-sum{margin-top:calc(8 * var(--dp));font-size:calc(14 * var(--dp));line-height:calc(20 * var(--dp));color:#0000008a}
+.ngst-esc-btns{display:flex;gap:calc(8 * var(--dp));margin-top:calc(16 * var(--dp))}
+.ngst-esc-btns button{flex:1;height:calc(48 * var(--dp));border-radius:calc(2 * var(--dp));background:#009688!important;color:#fff!important;font:500 calc(14 * var(--dp))/1 Roboto,sans-serif;text-transform:uppercase;text-align:center;box-shadow:0 calc(2 * var(--dp)) calc(2 * var(--dp)) #00000033}
+.ngst-esc-btns button:active{background:#00897b!important}
+/* The drawer (settings_with_drawer.xml's left_drawer). */
+.ngst-drawer{position:absolute;inset:0;z-index:10;pointer-events:none;visibility:hidden}
+.ngst-drawer.open,.ngst-drawer.dragging{visibility:visible;pointer-events:auto}
+.ngst-scrim{position:absolute;inset:0;background:#00000099;opacity:0}
+.ngst-drawer.open .ngst-scrim{opacity:1}
+.ngst-dpanel{position:absolute;left:0;top:0;bottom:0;width:calc(300 * var(--dp));max-width:calc(100% - 56 * var(--dp));background:#fafafa;transform:translateX(-100%);box-shadow:0 0 calc(16 * var(--dp)) #00000059}
+.ngst-drawer.open .ngst-dpanel{transform:none}
+.ngst-dspacer{display:block;height:calc(32 * var(--dp))}
+.ngst-ditem{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp))}
+.ngst-ditem:active{background:#0000001f!important}
+.ngst-ditem .ngst-ic{margin:0 calc(32 * var(--dp)) 0 calc(16 * var(--dp))}
+.ngst-ditem span{font-size:calc(18 * var(--dp));line-height:calc(24 * var(--dp));color:#0000008a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngst-dcat2{padding-top:calc(8 * var(--dp))}
+.ngst-dcat2 i{display:block;height:calc(1 * var(--dp));background:#0000001f}
+.ngst-dcat2 span{display:block;padding:calc(16 * var(--dp));min-height:calc(48 * var(--dp));box-sizing:border-box;font-size:calc(14 * var(--dp));line-height:calc(16 * var(--dp));color:#0000008a}
+/* The start edge DrawerLayout watches for a drag (20 dp). */
+.ngst-edge{position:absolute;left:0;top:calc(56 * var(--dp));bottom:0;width:calc(20 * var(--dp));z-index:5;touch-action:none}
+/* preference_material.xml (layout-v21) and preference_category_material.xml. */
+.ngst-list{background:#fafafa}
+.ngst-pref{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp))!important;box-sizing:border-box;background:#fafafa!important}
+button.ngst-pref:active{background:#e5e5e5!important}
+.ngst-pref .ngst-texts{padding:calc(16 * var(--dp)) 0}
+.ngst-pref .ngst-summary{display:-webkit-box;-webkit-line-clamp:10;-webkit-box-orient:vertical;overflow:hidden}
+.ngst-pref.disabled .ngst-texts,.ngst-pref.disabled .ngst-iconframe{opacity:.38}
+.ngst-iconframe{flex:none;display:flex;align-items:center;min-width:calc(60 * var(--dp));margin-left:calc(-4 * var(--dp));padding:calc(4 * var(--dp)) calc(12 * var(--dp)) calc(4 * var(--dp)) 0;box-sizing:border-box}
+.ngst-widget{flex:none;display:flex;align-items:center;padding-left:calc(16 * var(--dp))}
+.ngst-cat{padding:calc(16 * var(--dp)) calc(16 * var(--dp)) 0;margin-bottom:calc(16 * var(--dp));color:#009688;font:500 calc(14 * var(--dp))/calc(16 * var(--dp)) Roboto,sans-serif}
+.ngst-pdiv{display:block;height:calc(1 * var(--dp));background:#0000001f}
+/* The Material light Switch, CheckBox and RadioButton in Theme.Settings. */
+.ngst-switch{--ngw-fg:#000;--ngw-thumb:#f1f1f1;--ngw-accent:#009688}
+.ngst-switch.disabled{opacity:.5}
+.ngst-radio{--ngw-normal:#0000008a;--ngw-accent:#009688}
+.ngst-check{display:block;width:calc(32 * var(--dp));height:calc(32 * var(--dp));background:#0000008a;-webkit-mask:url('assets/fw-btn_checkbox_unchecked_mtrl.svg') center/100% no-repeat;mask:url('assets/fw-btn_check_off_mtrl.svg') center/100% no-repeat}
+.ngst-check.on{background:#009688;-webkit-mask-image:url('assets/fw-btn_checkbox_checked_mtrl.svg');mask-image:url('assets/fw-btn_check_on_mtrl.svg')}
+.ngst-choice{display:flex;align-items:center;gap:calc(20 * var(--dp));margin-left:calc(-4 * var(--dp))}
+.ngst-edit{padding:0 calc(20 * var(--dp))}
+.ngst-input{width:100%;box-sizing:border-box;border:0;border-bottom:calc(2 * var(--dp)) solid #009688;padding:calc(6 * var(--dp)) calc(4 * var(--dp));font:calc(18 * var(--dp)) Roboto,sans-serif;background:none;outline:none;color:#000000de}
+/* switch_bar.xml. */
+.ngst-switchbar{position:relative;z-index:2;flex:none;display:flex;align-items:center;height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp)) 0 calc(72 * var(--dp));background:#37474f;color:#fff;cursor:pointer}
+.ngst-switchbar:active{background:#425560}
+.ngst-switchbar span{flex:1;font:500 calc(20 * var(--dp))/calc(24 * var(--dp)) Roboto,sans-serif}
+.ngst-switchbar .ngst-switch{--ngw-fg:#fff;--ngw-thumb:#bdbdbd;--ngw-accent:#80cbc4}
+.ngst-switchbar.disabled{cursor:default;opacity:.6}
+.ngst-missing{position:relative}
+.ngst-full{background:#fff}

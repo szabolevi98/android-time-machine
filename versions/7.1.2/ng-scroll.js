@@ -1,0 +1,185 @@
+/* Android 7.1.2: dragging a list with the mouse as a finger scrolls it, as on the other versions. The logic is 6.0.1's
+   (mm-scroll.js); the framework classes of N2G48C behave the same (android.widget.EdgeEffect of boot-framework.oat keeps
+   MAX_ALPHA 0.5, PULL_TIME 167, PULL_DECAY_TIME 2000, RECEDE_TIME 600, VELOCITY_GLOW_FACTOR 6, the 30 degree cap):
+   ScrollView / AbsListView / RecyclerView follow the pointer past the 8 dp touch slop, a release faster than 50 dp/s
+   flings with OverScroller's spline (SplineOverScroller: friction 0.015, DECELERATION_RATE ln 0.78 / ln 0.9, INFLEXION
+   0.35, physical coefficient g x 39.37 x 560 ppi (3.5 x 160, the 6P) x 0.84), a touch stops a running fling, and the
+   edges glow with EdgeEffect in the theme's colorEdgeEffect (colorPrimary) at up to 50 % alpha: pulling past an edge
+   grows it, releasing recedes it, a fling that hits an edge is absorbed into it. Velocities are in device pixels:
+   CSS px x 3.5 / (1 dp in CSS px).
+   View.onDrawScrollBars: while a view scrolls, scrollbar_handle_material (4 dp, #84ffffff tinted with the theme's
+   colorControlNormal: 54 % black on a light list, 70 % white on a dark one) runs down its end edge, as long as the shown
+   part of the content (at least twice its width); it stays 300 ms after the last move and fades out in 250 ms. */
+(() => {
+  'use strict';
+  const DP = () => { const s = globalThis.document?.querySelector?.('#screen'); return s?.clientWidth ? s.clientWidth / 411.43 : .852; };
+  const DEVICE = () => 3.5 / DP(), SLOP = () => 8 * DP();
+  const MIN_FLING = 50 * 3.5, MAX_FLING = 8000 * 3.5;
+  const FRICTION = 0.015, DECELERATION_RATE = Math.log(0.78) / Math.log(0.9), INFLEXION = 0.35;
+  const PHYSICAL = 9.80665 * 39.37 * 560 * 0.84;
+  const SAMPLES = 100, SPLINE = new Float64Array(SAMPLES + 1);
+  (() => {
+    const P1 = 0.5 * INFLEXION, P2 = 1 - 1 * (1 - INFLEXION);
+    let xMin = 0;
+    for (let i = 0; i < SAMPLES; i++) {
+      const alpha = i / SAMPLES; let xMax = 1, x, coef, tx;
+      for (;;) { x = xMin + (xMax - xMin) / 2; coef = 3 * x * (1 - x); tx = coef * ((1 - x) * P1 + x * P2) + x * x * x; if (Math.abs(tx - alpha) < 1e-5) break; if (tx > alpha) xMax = x; else xMin = x; }
+      SPLINE[i] = coef * ((1 - x) * 0.5 + x) + x * x * x;
+    }
+    SPLINE[SAMPLES] = 1;
+  })();
+  const splineAt = t => { const index = Math.min(SAMPLES - 1, Math.floor(SAMPLES * t)), t0 = index / SAMPLES, d = SPLINE[index + 1] - SPLINE[index]; return {distance: SPLINE[index] + (t - t0) * SAMPLES * d, velocity: d * SAMPLES}; };
+  const deceleration = v => Math.log(INFLEXION * Math.abs(v) / (FRICTION * PHYSICAL));
+  const flingDuration = v => 1000 * Math.exp(deceleration(v) / (DECELERATION_RATE - 1));
+  const flingDistance = v => FRICTION * PHYSICAL * Math.exp(DECELERATION_RATE / (DECELERATION_RATE - 1) * deceleration(v));
+
+  const SIN = Math.sin(Math.PI / 6), COS = Math.cos(Math.PI / 6);
+  class Edge {
+    constructor(layer, bottom) { this.node = document.createElement('div'); this.node.className = `ngscr-edge${bottom ? ' bottom' : ''}`; this.cap = document.createElement('i'); this.node.append(this.cap); layer.append(this.node); this.state = 'idle'; this.alpha = 0; this.scale = 0; this.pull = 0; this.displacement = .5; this.target = .5; }
+    size(rect, color, bottom) {
+      const r = rect.width * .75 / SIN, h = r - COS * r, or = rect.height * .75 / SIN, oh = or - COS * or;
+      this.base = h > 0 ? Math.min(oh / h, 1) : 1; this.height = Math.min(rect.height, h); this.radius = r; this.width = rect.width;
+      Object.assign(this.node.style, {left: `${rect.left}px`, top: `${bottom ? rect.top + rect.height - this.height : rect.top}px`, width: `${rect.width}px`, height: `${this.height}px`});
+      Object.assign(this.cap.style, {width: `${2 * r}px`, height: `${2 * r}px`, left: `${rect.width / 2 - r}px`, top: `${bottom ? 0 : this.height - 2 * r}px`, background: color});
+    }
+    begin(state, duration, alphaTo, scaleTo) { Object.assign(this, {state, start: performance.now(), duration, alpha0: this.alpha, scale0: this.scale, alpha1: alphaTo, scale1: scaleTo}); }
+    onPull(delta, displacement) {
+      this.target = displacement;
+      if (this.state === 'decay' && performance.now() - this.start < this.duration) return;
+      this.pull += delta;
+      const alpha = Math.min(.5, this.alpha + Math.abs(delta) * .8);
+      const scale = this.pull === 0 ? 0 : Math.max(0, 1 - 1 / Math.sqrt(Math.abs(this.pull) * this.height) - .3) / .7;
+      this.alpha = alpha; this.scale = scale; this.begin('pull', 167, alpha, scale);
+    }
+    onRelease() { this.pull = 0; if (this.state === 'pull' || this.state === 'decay') this.begin('recede', 600, 0, 0); }
+    onAbsorb(velocity) {
+      const v = Math.min(Math.max(100, Math.abs(velocity)), 10000);
+      this.begin('absorb', 0.15 + v * 0.02, .3, Math.min(0.025 + (v * Math.floor(v / 100) * 0.00015) / 2, 1));
+      this.alpha0 = .3; this.scale0 = Math.max(this.scale, 0);
+      this.alpha1 = Math.max(.3, Math.min(v * 6 * .00001, .5)); this.target = .5;
+    }
+    frame(now) {
+      if (this.state === 'idle') { this.node.style.opacity = '0'; return false; }
+      const t = Math.min((now - this.start) / this.duration, 1), k = 1 - (1 - t) * (1 - t);
+      this.alpha = this.alpha0 + (this.alpha1 - this.alpha0) * k; this.scale = this.scale0 + (this.scale1 - this.scale0) * k;
+      this.displacement = (this.displacement + this.target) / 2;
+      if (t >= 1 - 1e-3) {
+        if (this.state === 'absorb' || this.state === 'pull') this.begin(this.state === 'pull' ? 'decay' : 'recede', this.state === 'pull' ? 2000 : 600, 0, 0);
+        else if (this.state === 'decay') this.state = 'recede';
+        else if (this.state === 'recede') this.state = 'idle';
+      }
+      const shift = this.width * (Math.max(0, Math.min(this.displacement, 1)) - .5) / 2;
+      this.node.style.opacity = String(this.alpha);
+      this.cap.style.transform = `translateX(${shift.toFixed(1)}px)`;
+      this.node.style.transform = `scaleY(${(Math.min(this.scale, 1) * this.base).toFixed(4)})`;
+      return true;
+    }
+  }
+
+  // Surfaces with gestures of their own keep the pointer: the shade, Overview, the home screen, the keyguard.
+  const SKIP = '.ngsh, .ngqs, .ngrc, .ngh, .nglk, .ngvol, input, textarea, select, [contenteditable], .no-drag-scroll';
+  function scrollable(target, root) {
+    for (let node = target; node && node !== root; node = node.parentElement) {
+      if (node.scrollHeight > node.clientHeight + 1) { const y = getComputedStyle(node).overflowY; if (y === 'auto' || y === 'scroll') return node; }
+    }
+    return null;
+  }
+  function attach(screen, {color = () => '#666666', onScroll} = {}) {
+    const layer = document.createElement('div'); layer.className = 'ngscr-edges'; layer.setAttribute('aria-hidden', 'true'); screen.append(layer);
+    const edges = {top: new Edge(layer, false), bottom: new Edge(layer, true)};
+    let drag = null, fling = null, raf = 0, suppressClick = false;
+    const tick = now => { raf = 0; let busy = false; for (const edge of Object.values(edges)) busy = edge.frame(now) || busy; if (fling) busy = stepFling(now) || busy; if (busy) raf = requestAnimationFrame(tick); };
+    const wake = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    const pinned = el => [...el.children].filter(child => getComputedStyle(child).position === 'sticky' && child.offsetTop - el.scrollTop <= 1).reduce((sum, child) => sum + child.offsetHeight, 0);
+    const place = el => { const box = screen.getBoundingClientRect(), r = el.getBoundingClientRect(), skip = pinned(el); const rect = {left: r.left - box.left, top: r.top - box.top + skip, width: r.width, height: r.height - skip}; const c = color(el); edges.top.size(rect, c, false); edges.bottom.size(rect, c, true); };
+    function stepFling(now) {
+      const {el, start, distance, duration, min, max, sign} = fling;
+      const t = Math.min(1, (now - fling.t0) / duration), {distance: d, velocity: v} = splineAt(t);
+      const top = start + sign * distance * d;
+      const current = sign * v * distance / duration * 1000 * DEVICE();
+      if (top <= min || top >= max) {
+        el.scrollTop = top <= min ? min : max;
+        (top <= min ? edges.top : edges.bottom).onAbsorb(Math.abs(current)); fling = null; onScroll?.(el); return true;
+      }
+      el.scrollTop = top; onScroll?.(el);
+      if (t >= 1) { fling = null; return false; }
+      return true;
+    }
+    screen.addEventListener('pointerdown', event => {
+      if (fling) fling = null;
+      if (event.pointerType !== 'mouse' || event.button > 0 || event.target.closest(SKIP)) return;
+      const el = scrollable(event.target, screen);
+      if (!el) return;
+      drag = {el, id: event.pointerId, x: event.clientX, y: event.clientY, top: el.scrollTop, active: false, samples: [[performance.now(), event.clientY]]};
+    }, true);
+    window.addEventListener('pointermove', event => {
+      if (!drag || event.pointerId !== drag.id) return;
+      const dy = event.clientY - drag.y, dx = event.clientX - drag.x, now = performance.now();
+      if (!drag.active) {
+        if (Math.abs(dy) <= SLOP() || Math.abs(dy) < Math.abs(dx)) return;
+        drag.active = true; drag.y = event.clientY; drag.top = drag.el.scrollTop; place(drag.el); screen.classList.add('ngscr-dragging');
+      }
+      event.preventDefault(); event.stopImmediatePropagation();
+      drag.samples.push([now, event.clientY]); while (drag.samples.length > 2 && now - drag.samples[0][0] > 100) drag.samples.shift();
+      const el = drag.el, max = el.scrollHeight - el.clientHeight, want = drag.top - (event.clientY - drag.y);
+      el.scrollTop = Math.max(0, Math.min(max, want)); onScroll?.(el);
+      const rect = el.getBoundingClientRect(), x = (event.clientX - rect.left) / rect.width;
+      const over = want < 0 ? want : want > max ? want - max : 0, last = drag.over || 0;
+      if (over < 0) edges.top.onPull((last - over) / rect.height, x); else if (over > 0) edges.bottom.onPull((over - last) / rect.height, x);
+      else if (last) { edges.top.onRelease(); edges.bottom.onRelease(); }
+      drag.over = over; wake();
+    }, true);
+    const end = event => {
+      if (!drag || event.pointerId !== drag.id) return;
+      const {el, active, samples} = drag; drag = null;
+      if (!active) return;
+      screen.classList.remove('ngscr-dragging'); suppressClick = true; setTimeout(() => { suppressClick = false; }, 0);
+      edges.top.onRelease(); edges.bottom.onRelease();
+      const [t0, y0] = samples[0], [t1, y1] = samples[samples.length - 1];
+      const velocity = t1 > t0 ? -(y1 - y0) / (t1 - t0) * 1000 * DEVICE() : 0;
+      const v = Math.sign(velocity) * Math.min(MAX_FLING, Math.abs(velocity)), max = el.scrollHeight - el.clientHeight;
+      if (Math.abs(v) >= MIN_FLING && event.type === 'pointerup' && !(el.scrollTop <= 0 && v < 0) && !(el.scrollTop >= max && v > 0)) {
+        fling = {el, start: el.scrollTop, t0: performance.now(), duration: flingDuration(v), distance: flingDistance(v) / DEVICE(), sign: Math.sign(v), min: 0, max};
+      }
+      wake();
+    };
+    window.addEventListener('pointerup', end, true);
+    window.addEventListener('pointercancel', end, true);
+    window.addEventListener('click', event => { if (suppressClick) { suppressClick = false; event.preventDefault(); event.stopImmediatePropagation(); } }, true);
+    const bars = new WeakMap();
+    const darkBehind = el => {
+      for (let node = el; node && node !== screen; node = node.parentElement) {
+        const m = getComputedStyle(node).backgroundColor.match(/[\d.]+/g);
+        if (m && (m[3] === undefined || +m[3] > .5)) return .299 * m[0] + .587 * m[1] + .114 * m[2] < 128;
+      }
+      return true;
+    };
+    screen.addEventListener('scroll', event => {
+      const el = event.target;
+      if (!(el instanceof Element) || !screen.contains(el) || el.scrollHeight <= el.clientHeight + 1 || el.closest('.ng-leaving') || el.classList.contains('no-scrollbar')) return;
+      let bar = bars.get(el);
+      if (!bar || !bar.isConnected) { bar = document.createElement('i'); bar.className = 'ngscr-bar'; layer.append(bar); bars.set(el, bar); }
+      const box = screen.getBoundingClientRect(), r = el.getBoundingClientRect(), w = 4 * DP();
+      const len = Math.max(2 * w, r.height * el.clientHeight / el.scrollHeight), top = (r.height - len) * el.scrollTop / (el.scrollHeight - el.clientHeight);
+      Object.assign(bar.style, {left: `${r.right - box.left - w}px`, top: `${r.top - box.top + top}px`, width: `${w}px`, height: `${len}px`, background: darkBehind(el) ? 'rgba(255,255,255,.364)' : 'rgba(0,0,0,.284)'});
+      bar.classList.add('on');
+      clearTimeout(bar.timer); bar.timer = setTimeout(() => { bar.classList.remove('on'); setTimeout(() => { if (!bar.classList.contains('on')) { bar.remove(); bars.delete(el); } }, 300); }, 300);
+    }, true);
+    return {stop() { fling = null; }};
+  }
+  // colorEdgeEffect is the theme's colorPrimary: the colour of the bar above the list where there is one, or a colour
+  // the list names itself (data-edge).
+  function primary(el) {
+    const own = el.closest('[data-edge]')?.dataset.edge;
+    if (own) return own;
+    for (let node = el; node && node.id !== 'viewport'; node = node.parentElement) {
+      for (const sib of node.parentElement ? [...node.parentElement.children] : []) {
+        if (sib === node || sib.offsetTop > node.offsetTop) continue;
+        const bg = getComputedStyle(sib).backgroundColor, m = bg.match(/\d+(\.\d+)?/g);
+        if (m && (m[3] === undefined || +m[3] > .5) && !(+m[0] > 240 && +m[1] > 240 && +m[2] > 240)) return bg;
+      }
+    }
+    return '#666666';
+  }
+  NG.register('scroll', {app: false, init(c) { attach(c.el.screen, {color: primary}); }, render: () => ''});
+})();

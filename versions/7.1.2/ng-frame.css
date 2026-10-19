@@ -63,3 +63,12 @@
   .device::before,.power-key,.volume-rocker{display:none}
   .screen{--dp:calc(100vw / 411.4286);width:100%;height:auto;flex:1;min-height:0}
 }
+/* ng-scroll.js: EdgeEffect glows and the fading scrollbar over the screen; the page's own scrollbars are hidden. */
+.ngscr-edges{position:absolute;inset:0;z-index:55;pointer-events:none;overflow:hidden}
+.ngscr-bar{position:absolute;border-radius:0;opacity:0;transition:opacity .25s linear}
+.ngscr-bar.on{opacity:1;transition:none}
+.ngscr-edge{position:absolute;overflow:hidden;opacity:0;transform-origin:50% 0}
+.ngscr-edge.bottom{transform-origin:50% 100%}
+.ngscr-edge>i{position:absolute;border-radius:50%}
+.screen *{scrollbar-width:none}
+.screen *::-webkit-scrollbar{display:none}
