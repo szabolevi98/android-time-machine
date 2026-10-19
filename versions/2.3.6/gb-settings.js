@@ -9,7 +9,7 @@
   const R = AndroidStrings.resources(() => window.GBSettingsStrings), text = (lang, key) => R.t(key, lang), entries = (lang, name) => R.array(name, lang);
 
   // SettingsProvider defaults.xml and the 2.3.6 AudioService / PackageManager defaults.
-  const DEFAULTS = {vsLanguage: 0, vsSafeSearch: 1, vsProfanity: true, backgroundData: true, autoSync: true, syncContacts: true, syncCalendar: true, syncEmail: true, vibrateMode: 2, screenTimeout: 2, animationLevel: 2, emergencyTone: 0, installLocation: 2, notificationPulse: true, dtmfTone: true, soundEffects: false, lockSounds: false, autoBrightness: true, haptic: true, assistedGps: true, tactileFeedback: true, autoTime: true, powerButtonEndsCall: false, accessibility: false, dateFormat: 0};
+  const DEFAULTS = {vsLanguage: 0, vsSafeSearch: 1, vsProfanity: true, backgroundData: true, autoSync: true, syncContacts: true, syncCalendar: true, syncEmail: true, vibrateMode: 2, screenTimeout: 6, animationLevel: 2, emergencyTone: 0, installLocation: 2, notificationPulse: true, dtmfTone: true, soundEffects: false, lockSounds: false, autoBrightness: true, haptic: true, assistedGps: true, tactileFeedback: true, autoTime: true, powerButtonEndsCall: false, accessibility: false, dateFormat: 0};
   const value = (settings, key) => settings[key] ?? DEFAULTS[key];
 
   const cat = title => ({kind: 'category', title});
@@ -92,7 +92,8 @@
         go('brightness', '', 'brightness'),
         check('rotate', 'accelerometer_title', ''),
         list('animationLevel', 'animations_title', null, 'animations_entries'),
-        list('screenTimeout', 'screen_timeout', 'screen_timeout_summary', 'screen_timeout_entries')]},
+        // The simulator's rule (every version): Sleep starts at Never, an entry after the image's own (framework save_password_never).
+        list('screenTimeout', 'screen_timeout', 'screen_timeout_summary', 'screen_timeout_entries', {options: [...entries(ctx.lang, 'screen_timeout_entries'), text(ctx.lang, 'fw_save_password_never')]})]},
       security: {title: 'security_settings_title', items: [
         cat('location_title'),
         check('networkLocation', 'location_network_based', s.networkLocation ? 'location_neighborhood_level' : 'location_networks_disabled'),

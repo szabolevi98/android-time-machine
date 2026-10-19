@@ -14,7 +14,7 @@ ctx.clearAppData('calculator');assert.equal(ctx.data.calcHistory.length,0);
 ctx.clearAppData('play-store');assert.equal(ctx.data.playRatings,undefined);
 ctx.clearAppData('messaging');assert.equal(Object.keys(ctx.data.messageDrafts).length,0);assert.equal(ctx.data.messages[0].body,'Hello');
 ctx.data.events=[];ctx.clearAppData('calendar');assert.equal(ctx.data.events[0].title,'Sample');
-ctx.ui.music.playing=true;ctx.resetSimulator();assert.equal(ctx.ui.music.playing,false);assert.equal(ctx.data.mailbox[0].folder,'Inbox');assert.equal(ctx.data.settings.sleep,30);assert.equal(ctx.ui.recent.length,0);
+ctx.ui.music.playing=true;ctx.resetSimulator();assert.equal(ctx.ui.music.playing,false);assert.equal(ctx.data.mailbox[0].folder,'Inbox');assert.equal(ctx.data.settings.sleep,-1);assert.equal(ctx.ui.recent.length,0);
 const detail=ctx.ICSSettingsDetail;assert.equal(detail.sizes({appCacheCleared:['music']},'music').cache,0);assert.equal(detail.prefs({settings:{mediaVolume:15}}).mediaVolume,15);
 assert.ok(detail.render(ctx.data,{sub:'apps',settingsAppsTab:'Downloaded',recent:[]},[],x=>x).body.includes('No apps'));
 console.log('Settings checks passed: per-app clearing uses persisted keys, full reset initializes new modules, preference defaults, cache and empty downloaded list.');

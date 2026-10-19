@@ -306,7 +306,7 @@ GalleryGoogle:save_before_exit	Do you want to save before exiting?	Mentsük kil�
 GalleryGoogle:save_and_exit	Save and Exit	= | Speichern und beenden -> Speichern und schließen | = | =	[jb-gallery.js]
 GalleryGoogle:exit	Exit	= | Beenden -> Schließen | = | =	[jb-gallery.js]
 GalleryGoogle:no_albums_alert	No albums available.	Nincsenek elérhető albumok. -> Nincs elérhető album. | Keine Alben verfügbar. -> Keine Alben verfügbar | = | =	[jb-gallery.js]
-SystemUI:status_bar_recent_remove_item_title	Remove from list	Eltávolítás a listáról -> Eltávolítás a listából | = | = | =	[jb-recents.js]
+SystemUI:status_bar_recent_remove_item_title	Remove from list	Eltávolítás a listáról -> Eltávolítás a listából | = | = | =	[jb-recents.js simulator.js]
 Settings:local_backup_password_title	Desktop backup password	Asztali biztonsági mentés jelszava -> Asztali mentés jelszava | Passwort für Desktop-Sicherung -> Desktop-Sicherungspasswort | Mot de passe de sauvegarde ordinateur -> Mot de passe sauvegarde PC | Contraseña de copia de ordenador -> Contraseña para copias de ordenador	[jb-devopts.js]
 Settings:hdcp_checking_title	HDCP checking	HDCP-ellenőrzés -> HDCP ellenőrzés | = | = | Comprobación HDCP -> Comprobación de HDCP	[jb-devopts.js]
 Settings:enforce_read_external_title	Protect USB storage	USB-tár védelme -> USB-tár védetté tétele | = | Protéger la mémoire USB -> Protéger mémoire de stockage USB | =	[jb-devopts.js]

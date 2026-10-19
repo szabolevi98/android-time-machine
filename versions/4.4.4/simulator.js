@@ -134,6 +134,7 @@
   let data = load();
   AndroidState.onProblem(problem => setTimeout(() => toast(i18n.t({unreadable: 'The saved data could not be read, so the phone started fresh. A copy of it was kept.', repaired: 'Some saved data was damaged and has been reset.', upgrade: 'Your saved data was kept, but part of it could not be updated.', unsaved: 'Changes can’t be saved: this browser’s storage is full or turned off.'}[problem.kind])), 1200));
   data.settings={...ICSSettingsDetail.defaults,...ICSSystemSettings.defaults,...JBDeveloperOptions.DEFAULTS,spellChecker:true,imeLatin:true,...data.settings};
+  if(!data.sleepNever){data.sleepNever=true;if(data.settings.sleep===30)data.settings.sleep=-1;}
   ICSLockscreen.initialize(data);
   function save() { AndroidState.save(STORE, data); }
   const ui = {
@@ -3463,7 +3464,7 @@
     lockControls.tick();
     document.querySelectorAll('.status-clock').forEach(node => { node.textContent = clock(); });
     const now = deviceDate();
-    if(!document.hidden && !ui.sleeping && ui.view!=='lock' && !ui.overlay && !ui.activeCall && !dragState && Date.now()-lastActivity>=data.settings.sleep*1000){captureRecentView();lockScreen();lastActivity=Date.now();}
+    if(!document.hidden && !ui.sleeping && ui.view!=='lock' && !ui.overlay && !ui.activeCall && !dragState && data.settings.sleep>0&&Date.now()-lastActivity>=data.settings.sleep*1000){captureRecentView();lockScreen();lastActivity=Date.now();}
     if(ui.activeCall){
       const dialing=Date.now()<ui.activeCall.connected;
       const elapsed=viewport.querySelector('.incall-elapsed'),state=viewport.querySelector('.incall-state');

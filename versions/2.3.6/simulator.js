@@ -2911,7 +2911,7 @@
     lockControls.tick();
     document.querySelectorAll('.status-clock').forEach(node => { node.textContent = clock(); });
     const now = deviceDate();
-    if(!document.hidden && !ui.sleeping && ui.view!=='lock' && !ui.overlay && !ui.activeCall && !dragState && Date.now()-lastActivity>=SCREEN_TIMEOUT[data.settings.screenTimeout ?? GBSettings.DEFAULTS.screenTimeout]){captureRecentView();lockScreen();lastActivity=Date.now();}
+    if(!document.hidden && !ui.sleeping && ui.view!=='lock' && !ui.overlay && !ui.activeCall && !dragState && SCREEN_TIMEOUT[data.settings.screenTimeout ?? GBSettings.DEFAULTS.screenTimeout]!==undefined&&Date.now()-lastActivity>=SCREEN_TIMEOUT[data.settings.screenTimeout ?? GBSettings.DEFAULTS.screenTimeout]){captureRecentView();lockScreen();lastActivity=Date.now();}
     if(ui.activeCall){
       const screen=viewport.querySelector('.gbic'),state=GBPhone.callState(ui.activeCall);
       if(screen&&screen.dataset.state!==state)render();

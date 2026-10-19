@@ -371,8 +371,9 @@
 
     setInterval(() => {
       const now = c.now();
-      const timeout = data.settings.screenTimeout ?? 60000;
-      if (!document.hidden && !ui.sleeping && !ui.overlay && Date.now() - lastActivity >= timeout && !modules[ui.view]?.keepAwake?.(c)) lockScreen();
+      // The simulator's rule: no timeout unless one is chosen in Settings (-1 is Never).
+      const timeout = data.settings.screenTimeout ?? -1;
+      if (timeout >= 0 && !document.hidden && !ui.sleeping && !ui.overlay && Date.now() - lastActivity >= timeout && !modules[ui.view]?.keepAwake?.(c)) lockScreen();
       for (const mod of Object.values(modules)) mod.tick?.(c, now);
     }, 1000);
 

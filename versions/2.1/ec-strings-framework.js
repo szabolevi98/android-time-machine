@@ -108,5 +108,14 @@ EC.strings('framework', {
 "es": "Tonos",
 "hu": "Csengőhangok",
 "huFrom": "crespo:framework:ringtone_picker_title"
+},
+"save_password_never": {
+"res": "passion:framework:save_password_never",
+"en": "Never",
+"de": "Niemals",
+"fr": "Jamais",
+"es": "Nunca",
+"hu": "Soha",
+"huFrom": "crespo:framework:save_password_never"
 }
 });

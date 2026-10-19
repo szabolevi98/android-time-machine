@@ -18,8 +18,8 @@ assert.match(html,/data-id="wifi" role="checkbox" aria-checked="true"/);
 html=S.render('wireless',ctx({airplane:true})).html;assert.match(html,/data-id="wifi" role="checkbox" aria-checked="false" disabled/);
 // ListPreference: the summary is the chosen entry; the dialog is a single-choice list with Cancel.
 assert.match(S.render('display',ctx({animationLevel:1})).html,/Some animations/);
-const dialog=S.listDialog('screenTimeout',ctx({}));assert.equal(dialog.items.length,6);assert.equal(dialog.selected,2);assert.equal(dialog.items[2].title,'1 minute');
-assert.equal(S.entries('en','screen_timeout_entries')[S.value({},'screenTimeout')],'1 minute');
+const dialog=S.listDialog('screenTimeout',ctx({}));assert.equal(dialog.items.length,7);assert.equal(dialog.selected,6);assert.equal(dialog.items[2].title,'1 minute');assert.equal(dialog.items[6].title,'Never');
+assert.equal(S.value({},'screenTimeout'),6);
 // Location & security follows the lock type.
 assert.match(S.render('security',ctx({screenLock:'pattern'})).html,/Use visible pattern/);assert.doesNotMatch(S.render('security',ctx({screenLock:'slide'})).html,/Use visible pattern/);
 // About phone values and unknown screens.

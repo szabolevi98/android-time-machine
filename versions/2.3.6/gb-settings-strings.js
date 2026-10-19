@@ -682,11 +682,11 @@ window.GBSettingsStrings = {
 "es": "Ajustes de aplicaciones"
 },
 "applications_settings_summary": {
-"en": "Manage applications",
-"hu": "Alkalmazások kezelése",
-"de": "Anwendungen verwalten",
-"fr": "Gérer les applications",
-"es": "Administrar aplicaciones"
+"en": "Manage applications, set up quick launch shortcuts",
+"hu": "Alkalmazások kezelése, gyorsindító parancsikonok létrehozása",
+"de": "Anwendungen verwalten, Tastenkombinationen für Schnellstart",
+"fr": "Gérer les applications, configurer des raccourcis de lancement rapide",
+"es": "Administrar aplicaciones, configurar accesos directos de inicio rápido"
 },
 "install_applications": {
 "en": "Unknown sources",
@@ -2047,6 +2047,13 @@ window.GBSettingsStrings = {
 "de": "Speichern",
 "fr": "Définir",
 "es": "Establecer"
+},
+"fw_save_password_never": {
+"en": "Never",
+"hu": "Soha",
+"de": "Nie",
+"fr": "Jamais",
+"es": "Nunca"
 }
 },
 "arrays": {

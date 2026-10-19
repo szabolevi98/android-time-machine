@@ -14,7 +14,7 @@ GenieWidget/app_name Gmail/activity_gmail GoogleGoggles/app_name_icon Maps/MAPS_
 Settings/settings_label Talk/app_label Vending/homepage_activity_name VoiceDialer/voiceDialer VoiceSearchWithKeyboard/appName
 YouTube/application_name com.amazon.mp3/dmusic_main_launcher_name googlevoice/app_icon_name
 [framework] framework
-ok cancel yes no more_item_label dialog_alert_title date_time_set am pm ringtone_silent ringtone_default ringtone_picker_title
+ok cancel yes no more_item_label dialog_alert_title date_time_set am pm ringtone_silent ringtone_default ringtone_picker_title save_password_never
 [launcher] Launcher2
 menu_add menu_wallpaper menu_search menu_notifications menu_settings menu_item_add_item group_shortcuts group_widgets
 group_live_folders group_wallpapers group_applications group_folder chooser_wallpaper title_select_shortcut

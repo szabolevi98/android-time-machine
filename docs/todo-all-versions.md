@@ -9,12 +9,9 @@ setting at "Never", and the setting's list offers Never after the image's own en
 where it has one). A version whose user picks a timeout keeps that behaviour.
 
 - [x] 6.0.1: `screenTimeout` -1, Settings › Display › Sleep adds Never (Settings' battery_saver_turn_on_automatically_never); the keyguard's 10 s only with a timeout set
-- [ ] 5.1.1 (`data.settings.sleep`, simulator.js)
-- [ ] 4.4.4
-- [ ] 4.3
-- [ ] 4.0.4
-- [ ] 2.3.6 (gb-settings.js)
-- [ ] 2.1 (`screenTimeout`, ec-core.js / ec-settings.js)
+- [x] 5.1.1, 4.4.4, 4.3, 4.0.4: settings-detail.js `sleep: -1` with Never after the entries (i18n.js's Never, as the images' framework save_password_never), the timer only with a timeout, old saves' 30 s default moved to Never once (`data.sleepNever`)
+- [x] 2.3.6: gb-settings.js `screenTimeout: 6`, the 7th entry framework save_password_never; no timer for it
+- [x] 2.1: ec-core.js `screenTimeout ?? -1`, Screen timeout's list ends with framework save_password_never
 
 ## Clock widget on the home screen by default (owner, 2026-10-18)
 

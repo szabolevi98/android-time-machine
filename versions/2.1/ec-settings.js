@@ -241,7 +241,10 @@
     if (n.key === 'memory_sd_unmount') { c.ui.sdUnmounted = true; c.render(); return; }
     if (n.key === 'memory_sd_format') { EC.settingsTargets.MediaFormat(c); return; }
     if (n.t === 'ListPreference') {
-      const entries = arr(n.entries), values = n.entryValues || [], v = String(value(c, n.key, n.defaultValue) ?? '');
+      // The simulator's rule (every version): Screen timeout starts at Never (-1), an entry after the image's own.
+      const never = n.key === 'screen_timeout';
+      const entries = [...arr(n.entries), ...(never ? [EC.text('framework').t('save_password_never')] : [])], values = [...(n.entryValues || []), ...(never ? ['-1'] : [])];
+      const v = String(never ? c.data.settings.screenTimeout ?? -1 : value(c, n.key, n.defaultValue) ?? '');
       c.dialog({title: txt(n.dialogTitle || n.title), icon: null, items: entries, choice: 'single', checked: values.indexOf(v), closeOnChoice: true,
         buttons: [{label: EC.text('framework').t('cancel')}],
         onItem: i => { setValue(c, n.key, values[i]); if (n.key === 'screen_timeout') c.data.settings.screenTimeout = Number(values[i]); c.save(); c.render(); }});
