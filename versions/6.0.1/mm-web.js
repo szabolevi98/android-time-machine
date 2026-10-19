@@ -1,12 +1,14 @@
 /* Android 6.0.1: the simulator's own small offline web of 2016, made up in the spirit of the other versions'
    offline webs: the Google mobile home page and its results, www.android.com with Marshmallow, a Wikipedia
-   article, a tech news site and "the 2016 Web". Pages are web content, not the image's UI, so they stay in English like
+   article, a tech news site with a Nexus 5X story, "the 2016 Web" with its Marshmallow page and a sample map (the pages
+   5.1.1's offline web has for its own year), the My Account pages and the Now card history that the Google app's
+   Manage card history opens (NowCardsSettingsFragment: https://www.google.com/history/now). Pages are web content, not the image's UI, so they stay in English like
    the sites themselves. MM.web.page(url) → {title, html, secure} or null for an address the offline web does not have;
    MM.web.normalize(text) turns what the omnibox got into a URL (a Google search for anything that is not an address). */
 (() => {
   'use strict';
   const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[ch]);
-  const GOOGLE = 'https://www.google.com/', ANDROID = 'https://www.android.com/', WIKI = 'https://en.m.wikipedia.org/wiki/Android_(operating_system)', NEWS = 'http://news.example/', RETRO = 'http://retro.example/';
+  const GOOGLE = 'https://www.google.com/', HISTORY = 'https://www.google.com/history/now', STORY = 'http://news.example/nexus-5x', MARSHMALLOW = 'http://retro.example/marshmallow', MAP = 'http://maps.example/', ANDROID = 'https://www.android.com/', WIKI = 'https://en.m.wikipedia.org/wiki/Android_(operating_system)', NEWS = 'http://news.example/', RETRO = 'http://retro.example/';
   const link = (url, text) => `<a class="mmwb-a" data-action="mmcr-go" data-url="${esc(url)}">${esc(text)}</a>`;
   const logo = (cls = '') => `<div class="mmwb-logo ${cls}"><span style="color:#4285f4">G</span><span style="color:#ea4335">o</span><span style="color:#fbbc05">o</span><span style="color:#4285f4">g</span><span style="color:#34a853">l</span><span style="color:#ea4335">e</span></div>`;
   const box = (q = '') => `<form class="mmwb-search" data-form="mmcr-search"><input name="q" value="${esc(q)}" autocomplete="off" spellcheck="false" aria-label="Search"><button type="submit" aria-label="Search"><svg viewBox="0 0 24 24"><path fill="#4285f4" d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></button></form>`;
@@ -38,8 +40,22 @@
   const news = () => ({title: 'Tech News', secure: false, html: `<div class="mmwb-news"><div class="mmwb-nbar">Tech News</div><p class="mmwb-date">Demo archive · 2016</p>
     <h2>Monthly security updates keep arriving for Nexus phones</h2><p>The Nexus 5X and 6P get their patches straight from Google, month after month.</p>
     <h2>What Doze means for your battery</h2><p>Leave your phone on the desk overnight and it barely notices the time passing.</p>
-    <h2>Five apps to try this week</h2><p>From photo editing to note taking, a few favourites from the Play Store.</p><p>${link(RETRO, 'Visit The 2016 Web')}</p></div>`});
-  const retro = () => ({title: 'The 2016 Web', secure: false, html: `<div class="mmwb-retro"><h1>Welcome to the 2016 Web</h1><p>A little time capsule from the age of Material design and mobile-first sites.</p><ul><li>Responsive pages</li><li>Cards everywhere</li><li>Hamburger menus</li></ul><p>${link(GOOGLE, 'Back to Google')}</p></div>`});
+    <h2>Five apps to try this week</h2><p>From photo editing to note taking, a few favourites from the Play Store.</p><p>${link(STORY, 'Read the Nexus 5X story')}</p><p>${link(RETRO, 'Visit The 2016 Web')}</p></div>`});
+  const retro = () => ({title: 'The 2016 Web', secure: false, html: `<div class="mmwb-retro"><h1>Welcome to the 2016 Web</h1><p>A little time capsule from the age of Material design and mobile-first sites.</p><ul><li>Responsive pages</li><li>Cards everywhere</li><li>Hamburger menus</li></ul><p>${link(MARSHMALLOW, 'Explore Marshmallow')}</p><p>${link(MAP, 'Open the sample map')}</p><p>${link(GOOGLE, 'Back to Google')}</p></div>`});
+  // The two articles and the map of the offline web (as 5.1.1's news.example/nexus-6, retro.example/lollipop, maps.example).
+  const article = (title, body) => ({title, secure: false, html: `<div class="mmwb-news"><div class="mmwb-nbar">${esc(title)}</div><p class="mmwb-date">Demo archive · 2016</p>${body}<p>${link(GOOGLE, 'Back to Google')}</p></div>`});
+  const story = () => article('A month with the Nexus 5X', `<p>LG's Nexus 5X pairs a 5.2-inch screen with a 12.3-megapixel camera, a fingerprint sensor on the back and USB Type-C charging.</p>
+    <h2>Nexus Imprint</h2><p>Set up a fingerprint once and the phone wakes and unlocks the moment you touch the sensor, no button needed.</p>
+    <h2>Pure Android</h2><p>It runs Android as Google makes it and gets monthly security updates straight from Google.</p>`);
+  const marshmallow = () => article('A closer look at Marshmallow', `<p>Android 6.0 is about polish: fewer steps for everyday things and a battery that lasts longer.</p>
+    <h2>Ask for what you need</h2><p>Apps ask for a permission the first time they need it, and you can take it back in Settings.</p>
+    <h2>Now on Tap</h2><p>Hold Home in any app and Google offers cards about what is on the screen.</p>`);
+  const map = () => ({title: 'Maps', secure: false, html: `<div class="mmwb-news"><div class="mmwb-nbar">Maps</div><div class="mmwb-map"><span>Riverside · Demo map</span></div><p class="mmwb-date">Map data is a local illustration.</p></div>`});
+  // Google's Now card history page: the cards the Now page has shown (the simulator's weather and Calendar cards).
+  const history = () => ({title: 'Google Now card history', secure: true, html: `<div class="mmwb-acct"><div class="mmwb-abar2">${logo('small')}<b>History</b></div><h1>Google Now cards</h1>
+    <p>The cards Google Now showed you, newest first. Remove a card to stop seeing cards like it.</p>
+    ${[['Weather', 'Riverside · 18°, partly cloudy'], ['Upcoming event', 'From your Calendar'], ['Welcome to Google Now', 'Your first card']].map(([t, s]) => `<div class="mmwb-acard"><b>${esc(t)}</b><span>${esc(s)}</span></div>`).join('')}
+    <div class="mmwb-acard"><b>nexus5x.demo@gmail.com</b><span>Demo account · offline</span></div><p class="mmwb-date">Offline demo pages · 2016</p></div>`});
 
   // My Account (myaccount.google.com): the pages Google Settings' account rows open; the simulator's own short page.
   const ACCOUNT_PAGES = {security: ['Sign-in & security', 'Control your password and account access, along with backup options if you get locked out of your account.'],
@@ -61,10 +77,14 @@
   }
   function page(url) {
     const u = String(url || '').replace(/^https?:\/\/(?:www\.)?(google\.com|android\.com)/, 'https://www.$1').replace(/^http:\/\/(en\.(m\.)?wikipedia\.org)/, 'https://$1');
+    if (/^https:\/\/www\.google\.com\/history\/now\/?$/.test(u)) return {url: HISTORY, ...history()};
     if (/^https:\/\/(www\.)?google\.com\/(search|\?|$)/.test(u)) return {url: u, ...google(u)};
     if (/^https:\/\/www\.android\.com\/?$/.test(u)) return {url: ANDROID, ...android()};
     if (/^https:\/\/en\.(m\.)?wikipedia\.org\/wiki\/Android/.test(u)) return {url: WIKI, ...wiki()};
     if (/^http:\/\/news\.example\/?$/.test(u)) return {url: NEWS, ...news()};
+    if (/^http:\/\/news\.example\/nexus-5x\/?$/.test(u)) return {url: STORY, ...story()};
+    if (/^http:\/\/retro\.example\/marshmallow\/?$/.test(u)) return {url: MARSHMALLOW, ...marshmallow()};
+    if (/^http:\/\/maps\.example\/?$/.test(u)) return {url: MAP, ...map()};
     if (/^http:\/\/retro\.example\/?$/.test(u)) return {url: RETRO, ...retro()};
     if (/^https:\/\/myaccount\.google\.com\//.test(u)) return {url: u, ...myaccount(u)};
     return null;

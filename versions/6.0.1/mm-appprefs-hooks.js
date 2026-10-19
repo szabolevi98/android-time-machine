@@ -166,7 +166,8 @@
       if (key === 'relationships') { c.open('voice-nicknames'); return true; }
       if (key === 'downloadLanguagePacks') { c.open('voice-langpacks'); return true; }
       if (key === 'google_account_history') { c.open('chrome', 'url:https://myaccount.google.com/privacy#history'); return true; }
-      if (key === 'manageCardHistoryPreference') { c.open('chrome', 'url:https://myaccount.google.com/privacy#now'); return true; }
+      // NowCardsSettingsFragment: the card history page, https://%2$s/history/now (the Google domain).
+      if (key === 'manageCardHistoryPreference') { c.open('chrome', 'url:https://www.google.com/history/now'); return true; }
       // LanguagePreference: the voice locales (array languageCodes) in a single choice list, named in the device's language.
       if (key === 'language') {
         const codes = MM.velvetLanguageCodes || [], cur = MM.appPref(c, 'voice', 'language', '') || codes.find(x => x.toLowerCase() === c.locale().toLowerCase()) || 'en-US';
