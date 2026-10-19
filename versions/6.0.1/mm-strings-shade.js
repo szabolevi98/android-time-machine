@@ -502,5 +502,41 @@ MM.strings('shade', {
 "de": "Telekom",
 "fr": "Telekom",
 "es": "Telekom"
+},
+"demo_welcome_title": {
+"own": true,
+"source": "the simulator's first-boot notification, as every version (5.1.1 \"Welcome to Android 5.1\")",
+"en": "Welcome to Android 6.0",
+"hu": "Üdvözli az Android 6.0",
+"de": "Willkommen bei Android 6.0",
+"fr": "Bienvenue dans Android 6.0",
+"es": "Te damos la bienvenida a Android 6.0"
+},
+"demo_welcome_text": {
+"own": true,
+"source": "as 5.1.1 \"Your Nexus 6 is ready to explore.\"",
+"en": "Your Nexus 5X is ready to explore.",
+"hu": "A Nexus 5X készen áll a felfedezésre.",
+"de": "Ihr Nexus 5X ist bereit.",
+"fr": "Votre Nexus 5X est prêt à être exploré.",
+"es": "Tu Nexus 5X está listo para explorar."
+},
+"demo_message_title": {
+"own": true,
+"source": "the demo message notification of every version",
+"en": "New message from Alex",
+"hu": "Új üzenet Alextől",
+"de": "Neue Nachricht von Alex",
+"fr": "Nouveau message d’Alex",
+"es": "Nuevo mensaje de Alex"
+},
+"demo_message_text": {
+"own": true,
+"source": "the demo message notification of every version",
+"en": "See you at 11!",
+"hu": "Találkozunk 11-kor!",
+"de": "Bis um 11!",
+"fr": "À 11 heures !",
+"es": "¡Nos vemos a las 11!"
 }
 });

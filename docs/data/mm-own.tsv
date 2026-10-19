@@ -118,3 +118,7 @@ messenger	sim_reply_2	Got it, thanks!	Rendben, köszi!	Alles klar, danke!	C’es
 messenger	sim_reply_3	Haha, nice 😄	Haha, ez jó 😄	Haha, super 😄	Haha, génial 😄	Jaja, genial 😄	the simulator's own answer from a demo contact (as in the other versions)
 hangouts	sim_reply_1	Thanks! Talk soon 👋	Köszi! Beszélünk 👋	Danke! Bis bald 👋	Merci ! À bientôt 👋	¡Gracias! Hablamos 👋	the simulator's own answer from a demo contact (as in the other versions)
 hangouts	sim_reply_2	On my way!	Már indulok!	Bin unterwegs!	J’arrive !	¡Voy para allá!	the simulator's own answer from a demo contact (as in the other versions)
+shade	demo_welcome_title	Welcome to Android 6.0	Üdvözli az Android 6.0	Willkommen bei Android 6.0	Bienvenue dans Android 6.0	Te damos la bienvenida a Android 6.0	the simulator's first-boot notification, as every version (5.1.1 "Welcome to Android 5.1")
+shade	demo_welcome_text	Your Nexus 5X is ready to explore.	A Nexus 5X készen áll a felfedezésre.	Ihr Nexus 5X ist bereit.	Votre Nexus 5X est prêt à être exploré.	Tu Nexus 5X está listo para explorar.	as 5.1.1 "Your Nexus 6 is ready to explore."
+shade	demo_message_title	New message from Alex	Új üzenet Alextől	Neue Nachricht von Alex	Nouveau message d’Alex	Nuevo mensaje de Alex	the demo message notification of every version
+shade	demo_message_text	See you at 11!	Találkozunk 11-kor!	Bis um 11!	À 11 heures !	¡Nos vemos a las 11!	the demo message notification of every version

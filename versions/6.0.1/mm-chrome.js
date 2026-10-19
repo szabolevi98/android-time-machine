@@ -38,7 +38,9 @@
   const T = () => MM.text('chrome');
   const A = n => `assets/cr-${n}.png`;
   const NTP = 'chrome-native://newtab/', BOOKMARKS = 'chrome-native://bookmarks/', RECENT = 'chrome-native://recent-tabs/', HISTORY = 'chrome://history/';
-  const S = c => c.data.chrome || (c.data.chrome = {fre: false, history: [NTP], index: 0, bookmarks: [], visits: {}, desktop: false, report: true});
+  // The simulator's demo bookmarks, as every version's browser: Google, Android and the Wikipedia article of the offline web.
+  const DEMO_BOOKMARKS = ['https://www.google.com/', 'https://www.android.com/', 'https://en.m.wikipedia.org/wiki/Android_(operating_system)'];
+  const S = c => c.data.chrome || (c.data.chrome = {fre: false, history: [NTP], index: 0, bookmarks: [...DEMO_BOOKMARKS], visits: {}, desktop: false, report: true});
   // Chrome's bookmarks widget (mm-widgets.js) shows the bookmarks made with the star.
   MM.chromeBookmarks = c => S(c).bookmarks;
   const ui = c => c.ui.chrome || (c.ui.chrome = {editing: false, text: '', loading: 0, details: false});

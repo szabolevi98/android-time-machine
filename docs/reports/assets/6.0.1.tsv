@@ -727,6 +727,7 @@ versions/6.0.1/assets/st-transparency.png	f0548aa7a5ef56bc	copy	bullhead:/system
 versions/6.0.1/assets/sui-ic_access_alarms_big.svg	54c66bc3509e3272	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_access_alarms_big.xml	drawable	vector drawable drawn as SVG	0ccaaf84a45203f4
 versions/6.0.1/assets/sui-ic_access_alarms_small.svg	47179ef1318c04db	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_access_alarms_small.xml	drawable	vector drawable drawn as SVG	af9011404059dd63
 versions/6.0.1/assets/sui-ic_add_circle_qs.svg	40f4e83a9edd44cf	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_add_circle_qs.xml	drawable	vector drawable drawn as SVG	3fbdb23a1bb849e0
+versions/6.0.1/assets/sui-ic_android.svg	9946e88ee21d8e14	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_android.xml	drawable	vector drawable drawn as SVG	be178088772f73e6
 versions/6.0.1/assets/sui-ic_backspace_24dp.svg	a96a9a6022422598	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_backspace_24dp.xml	drawable	vector drawable drawn as SVG	668b55eab7a48f45
 versions/6.0.1/assets/sui-ic_brightness_thumb.svg	301fbccd11dc9368	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_brightness_thumb.xml	drawable	vector drawable drawn as SVG	8e7e39cd5876f9ea
 versions/6.0.1/assets/sui-ic_camera_alt_24dp.png	4f839535ed47ffa2	copy	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable-xxhdpi-v4/ic_camera_alt_24dp.png	drawable-xxhdpi-v4		4f839535ed47ffa2

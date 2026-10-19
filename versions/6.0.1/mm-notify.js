@@ -10,7 +10,7 @@
      own height in 650 ms (ANIMATION_DURATION_HEADS_UP_APPEAR, HeadsUpAppearInterpolator) and going back up in 230 ms
      (ANIMATION_DURATION_HEADS_UP_DISAPPEAR) after heads_up_notification_decay 5 s, at least heads_up_notification_
      minimum_time 2 s; swiped up or sideways it goes at once, tapped it opens.
-   - The simulator's own content: a demo contact answers a text (Messenger) or a chat (Hangouts) once a session, 4.5 s
+   - The simulator's own content: a new phone starts with the welcome and Alex's message, as every version; a demo contact answers a text (Messenger) or a chat (Hangouts) once a session, 4.5 s
      after it was sent, as in the other versions. */
 (() => {
   'use strict';
@@ -110,7 +110,9 @@
       let mode = '';
       const move = ev => {
         const dx = ev.clientX - x0, dy = ev.clientY - y0;
-        if (!mode) { if (Math.hypot(dx, dy) < 8 * DP()) return; mode = Math.abs(dx) > Math.abs(dy) ? 'x' : (up && dy < 0 ? 'y' : 'none'); if (mode === 'none') return; }
+        if (!mode) { if (Math.hypot(dx, dy) < 8 * DP()) return; mode = Math.abs(dx) > Math.abs(dy) ? 'x' : (up && dy < 0 ? 'y' : 'none'); }
+        // A drag that is not a swipe stays the panel's (pulling it on to quick settings).
+        if (mode === 'none') return;
         if (mode === 'x') { samples.push([performance.now(), ev.clientX]); if (samples.length > 6) samples.shift(); card.style.translate = `${dx}px 0`; card.style.opacity = String(Math.max(0, 1 - Math.abs(dx) / (w * .6))); }
         else if (mode === 'y') card.style.translate = `0 ${Math.min(0, dy)}px`;
         ev.preventDefault(); ev.stopPropagation();
@@ -139,7 +141,13 @@
 
   MM.notify = (c, n) => notify(c, n);
   MM.notifications = {row, cancel, open, bindSwipe, answer, list, hideHeadsUp: c => hideHeadsUp(c, 'up', true)};
-  (MM.notificationSources ||= []).push(c => list(c));
+  // The simulator's own first-boot notifications, as in every version: the welcome (SystemUI's ic_android) and Alex's
+  // message (Messenger, opening the thread); their texts follow the simulator's language (mm-own.tsv).
+  MM.defaults.notifications = [
+    {id: 1, own: 'demo_welcome', app: 'android', icon: 'assets/sui-ic_android.svg', time: Date.now() - 2 * 60000},
+    {id: 2, own: 'demo_message', app: 'messenger', icon: 'assets/bg-ic_sms_light.png', person: 1, open: ['messenger', 'conv:1'], time: Date.now() - 61 * 60000}];
+  const ownTexts = n => n.own ? {...n, title: MM.text('shade').t(`${n.own}_title`), text: MM.text('shade').t(`${n.own}_text`)} : n;
+  (MM.notificationSources ||= []).push(c => list(c).map(ownTexts));
 
   MM.register('notify', {
     app: false, render: () => '',

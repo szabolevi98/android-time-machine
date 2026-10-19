@@ -187,6 +187,8 @@
         if (s.zen) out.push(s.zen === 2 ? 'stat_sys_dnd_total_silence' : 'stat_sys_dnd');
         // The volume slot: vibrate unless total silence or alarms only (PhoneStatusBarPolicy.updateVolumeZen).
         if (s.ringerMode === 'vibrate' && s.zen !== 2 && s.zen !== 3) out.push('stat_sys_ringer_vibrate');
+        // alarm_clock: PhoneStatusBarPolicy.updateAlarm shows it while AlarmManager has a next alarm clock set.
+        if ((c.data.clock?.alarms || []).some(x => x.on)) out.push('stat_sys_alarm');
         return out;
       };
       c.signal = () => {

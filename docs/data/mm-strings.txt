@@ -25,7 +25,7 @@ accessibility_quick_settings_hotspot_changed_on accessibility_quick_settings_hot
 # Tethering's notification while the hotspot is on
 framework/tethered_notification_title framework/tethered_notification_message
 framework/lockscreen_carrier_default
-own:carrier
+own:carrier own:demo_welcome_title own:demo_welcome_text own:demo_message_title own:demo_message_text
 [qsdetail] SystemUI framework
 # QSPanel's detail (qs_detail.xml buttons) and the tiles' DetailAdapters: Wi-Fi, Bluetooth, cast, cellular data usage
 quick_settings_done quick_settings_more_settings accessibility_quick_settings_detail

@@ -25,7 +25,8 @@
   const HOUR_COLORS = ['#212121', '#20222a', '#202233', '#1f2242', '#1e224f', '#1d225c', '#1b236b', '#1a237e', '#1d2783', '#232e8b', '#283593', '#2c3998',
     '#303f9f', '#2c3998', '#283593', '#232e8b', '#1d2783', '#1a237e', '#1b236b', '#1d225c', '#1e224f', '#1f2242', '#202233', '#20222a'];
   const TABS = [['alarm', 'menu_alarm'], ['clock', 'menu_clock'], ['timer', 'menu_timer'], ['stopwatch', 'menu_stopwatch']];
-  const S = c => c.data.clock || (c.data.clock = {alarms: [{id: 1, h: 8, m: 30, days: [1, 2, 3, 4, 5], on: false, vibrate: true, label: ''}, {id: 2, h: 9, m: 0, days: [6, 0], on: false, vibrate: true, label: ''}]});
+  // ClockDatabaseHelper's two alarms, then the simulator's demo alarm of every version: 7:00 on weekdays, switched on.
+  const S = c => c.data.clock || (c.data.clock = {alarms: [{id: 3, h: 7, m: 0, days: [1, 2, 3, 4, 5], on: true, vibrate: true, label: ''}, {id: 1, h: 8, m: 30, days: [1, 2, 3, 4, 5], on: false, vibrate: true, label: ''}, {id: 2, h: 9, m: 0, days: [6, 0], on: false, vibrate: true, label: ''}]});
   const ui = c => c.ui.clock || (c.ui.clock = {tab: 'clock', expanded: null, timerDigits: '', sw: {start: 0, acc: 0, running: false, laps: []}, timer: null});
   const h24 = c => c.data.settings.time24 ?? !new Intl.DateTimeFormat(c.locale(), {hour: 'numeric'}).resolvedOptions().hour12;
 
