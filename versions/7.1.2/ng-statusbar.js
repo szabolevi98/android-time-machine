@@ -12,7 +12,9 @@
      10.5 % of the height and half the width; the body in batterymeter_frame_color #4dffffff; the level in white, in
      battery_saver_mode_color #f4511e at 15 % and below (batterymeter_color_levels); full from 96 %; at the critical level
      (5 %) empty with battery_meter_very_low_overlay_symbol "!"; charging, the bolt (batterymeter_bolt_points) is cut out
-     of the level once the level covers more than 30 % of it, drawn in white below that.
+     of the level once the level covers more than 30 % of it, drawn in white below that. Battery saver (unplugged): the
+     level in the last of batterymeter_color_values (white) and batterymeter_plus_points' plus, a square two thirds of the
+     body's width in its middle, cut out or drawn the same way.
    - navigation_bar: NavigationBarInflaterView with config_navBarLayout "space,back;home;recent,menu_ime": the
      navigation_side_padding space (sw400dp: 50 dp) at the start, Back, Home and Overview (KeyButtonView, navigation_key_width 80 dp,
      no padding) side by side in center_group (gravity center, a layer of its own over the ends), the menu / IME slot at the end. KeyButtonRipple: a
@@ -27,16 +29,23 @@
 
   // BatteryMeterDrawable.draw, in dp (9.5 x 14.5).
   const BOLT = [73, 0, 392, 0, 201, 259, 442, 259, 4, 703, 157, 334, 0, 334];
+  const PLUS = [3, 0, 5, 0, 5, 3, 8, 3, 8, 5, 5, 5, 5, 8, 3, 8, 3, 5, 0, 5, 0, 3, 3, 3];
   let clipIds = 0;
-  function batterySvg(level, plugged) {
+  function batterySvg(level, plugged, powerSave = false) {
     const W = 9.5, H = 14.5, button = H * 0.105, inset = Math.round(W * 0.25 * 3) / 3;
     const bf = {l: inset, t: 0, r: W - inset, b: button}, f = {l: 0, t: button, r: W, b: H};
     let frac = level / 100;
     if (level >= 96) frac = 1; else if (level <= 5) frac = 0;
     const levelTop = frac === 1 ? bf.t : f.t + (f.b - f.t) * (1 - frac);
     const shape = `M${bf.l} ${bf.t}H${bf.r}V${bf.b}H${f.r}V${f.b}H${f.l}V${f.t}H${bf.l}Z`;
-    const color = plugged ? '#fff' : level <= 15 ? '#f4511e' : '#fff';
+    const color = plugged || powerSave ? '#fff' : level <= 15 ? '#f4511e' : '#fff';
     let bolt = '', cut = false;
+    if (!plugged && powerSave) {
+      const side = (f.r - f.l) * 2 / 3, l = f.l + (f.r - f.l - side) / 2, t = f.t + (f.b - f.t - side) / 2, pts = [];
+      for (let i = 0; i < PLUS.length; i += 2) pts.push(`${l + PLUS[i] / 8 * side} ${t + PLUS[i + 1] / 8 * side}`);
+      bolt = `M${pts.join('L')}Z`;
+      cut = Math.min(1, Math.max(0, (t + side - levelTop) / side)) > 0.3;
+    }
     if (plugged) {
       const bl = f.l + (f.r - f.l) / 4.5, bt = f.t + (f.b - f.t) / 6, br = f.r - (f.r - f.l) / 7, bb = f.b - (f.b - f.t) / 10;
       const mx = 442, my = 703, pts = [];
@@ -48,10 +57,12 @@
     const clip = `<clipPath id="${id}"><rect x="0" y="${levelTop}" width="${W}" height="${H - levelTop}"/></clipPath>`;
     const body = cut ? `<path d="${shape} ${bolt}" fill-rule="evenodd"` : `<path d="${shape}"`;
     return `<svg class="ngsb-battery" viewBox="0 0 ${W} ${H}" aria-hidden="true"><defs>${clip}</defs>${body} fill="#ffffff" fill-opacity=".302"/>`
-      + `${body} fill="${color}" clip-path="url(#${id})"/>${plugged && !cut ? `<path d="${bolt}" fill="#fff"/>` : ''}`
-      + `${!plugged && level <= 5 ? `<text x="${W / 2}" y="${f.t + (f.b - f.t) * .75}" text-anchor="middle" font-size="${H * .75}" font-weight="700" fill="#f4511e">!</text>` : ''}</svg>`;
+      + `${body} fill="${color}" clip-path="url(#${id})"/>${bolt && !cut ? `<path d="${bolt}" fill="#fff"/>` : ''}`
+      + `${!plugged && !powerSave && level <= 5 ? `<text x="${W / 2}" y="${f.t + (f.b - f.t) * .75}" text-anchor="middle" font-size="${H * .75}" font-weight="700" fill="#f4511e">!</text>` : ''}</svg>`;
   }
-  NG.batteryMeter = () => { const b = NG.battery(); return batterySvg(b.level, b.plugged); };
+  // The battery as the status bar, the shade and the battery detail draw it (powerSave: Battery saver).
+  NG.batteryMeter = (powerSave = false) => { const b = NG.battery(); return batterySvg(b.level, b.plugged, powerSave); };
+  NG.batterySvg = batterySvg;
 
   const is24 = c => c.data.settings.time24 ?? !new Intl.DateTimeFormat(c.locale(), {hour: 'numeric'}).resolvedOptions().hour12;
   const clock = (c, now = new Date()) => is24(c) ? `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}` : `${now.getHours() % 12 || 12}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -75,7 +86,7 @@
       const b = NG.battery(), notes = (c.notifications?.() || []).map(n => `<img class="ngsb-note" src="${c.safe(n.icon)}" alt="">`).join('');
       const status = (c.statusIcons?.() || []).map(name => `<img class="ngsb-icon" src="${A(`${name}.svg`)}" alt="">`).join('');
       return `<div class="ngsb" style="background:${bg}" data-action="ngsb-pull"><div class="ngsb-notes">${notes}</div>
-        <div class="ngsb-system"><span class="ngsb-icons">${status}</span>${signalCluster(c)}${batterySvg(b.level, b.plugged)}</div>
+        <div class="ngsb-system"><span class="ngsb-icons">${status}</span>${signalCluster(c)}${batterySvg(b.level, b.plugged, !!c.data.settings.powerSave)}</div>
         <span class="ngsb-clock">${clock(c)}</span></div>`;
     },
     // Pulling the bar down opens the notification shade.

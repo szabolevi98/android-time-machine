@@ -21,3 +21,16 @@ sui-ic_access_alarms_small.svg	priv-app/SystemUI/SystemUI.apk	ic_access_alarms_s
 sui-ic_brightness_thumb.svg	priv-app/SystemUI/SystemUI.apk	ic_brightness_thumb	systemui_theme
 # The simulator's first-boot welcome notification (as every version): SystemUI's ic_android robot, a mask the header tints
 sui-ic_android.svg	priv-app/SystemUI/SystemUI.apk	ic_android	tint=#ffffffff
+# QSDetail: QSDetailItems' access point levels (AccessPointControllerImpl.ICONS) and the lock over a secured one, the disconnect
+# button, the empty states; ZenModePanel's introduction close and the countdown's minus / plus (theme: systemui_theme)
+sui-ic_qs_wifi_full_0.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_wifi_full_0	systemui_theme
+sui-ic_qs_wifi_full_1.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_wifi_full_1	systemui_theme
+sui-ic_qs_wifi_full_2.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_wifi_full_2	systemui_theme
+sui-ic_qs_wifi_full_3.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_wifi_full_3	systemui_theme
+sui-qs_ic_wifi_lock.svg	priv-app/SystemUI/SystemUI.apk	qs_ic_wifi_lock	systemui_theme
+sui-ic_qs_cancel.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_cancel	systemui_theme
+sui-ic_close.svg	priv-app/SystemUI/SystemUI.apk	ic_close	systemui_theme
+sui-ic_qs_minus.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_minus	systemui_theme
+sui-ic_qs_plus.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_plus	systemui_theme
+sui-ic_qs_wifi_detail_empty.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_wifi_detail_empty	systemui_theme
+sui-ic_qs_bluetooth_detail_empty.svg	priv-app/SystemUI/SystemUI.apk	ic_qs_bluetooth_detail_empty	systemui_theme

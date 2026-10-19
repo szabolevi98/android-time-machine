@@ -32,8 +32,8 @@ def table(apk):
             continue
         if not current: continue
         if current[1] == 'color':
-            v = re.match(r'\s+\(\) (#[0-9a-f]+|@\S+)', line)
-            if v and current[0] not in colors: colors[current[0]] = v.group(1)
+            v = re.match(r'\s+\(\) (#[0-9a-f]+|@\S+)', line) or re.match(r'\s+\(\) \(file\) (res/color\S*\.xml) type=XML', line)
+            if v and current[0] not in colors: colors[current[0]] = v.group(1) if not v.group(1).startswith('res/') else f'file:{v.group(1)}'
         elif current[1] == 'style':
             p = re.match(r'\s+\(\) \(style\) size=\d+ parent=(?:\S+ \()?(0x[0-9a-f]{8})', line)
             if p and current[0] not in parents: parents[current[0]] = p.group(1)
@@ -79,6 +79,14 @@ def color(value, apk, theme):
             rid = ref if ref.startswith('0x') else names.get(ref.split(':')[-1])
             value = colors[rid]
             continue
+        if value.startswith('file:'):
+            # A ColorStateList: its default item (the last, without states), its colour times its android:alpha.
+            text = subprocess.run([AAPT, 'dump', 'xmltree', SYSTEM + src, '--file', value[5:]], capture_output=True, text=True, encoding='utf-8', errors='replace').stdout
+            item = text.split('E: item')[-1]
+            ref = re.search(r'android:color\(0x[0-9a-f]+\)=(\S+)', item).group(1)
+            alpha = re.search(r'android:alpha\(0x[0-9a-f]+\)=([\d.e+-]+)', item)
+            c, a = color(ref if not ref.startswith('@0x01') else ref, src, theme)
+            return c, a * (float(alpha.group(1)) if alpha else 1)
         break
     v = value.lstrip('#')
     if len(v) == 8: return '#' + v[2:], int(v[:2], 16) / 255

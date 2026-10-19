@@ -78,6 +78,19 @@
       if (s.wifiSsid === ssid) s.wifiSsid = '';
       c.save(); sys.changed(c);
     },
+    // DataUsageController.getDataUsageInfo: the policy's cycle (NetworkPolicyManagerService starts it on the day the SIM
+    // was first seen; the simulator's on the 1st), the default 2 GB warning, no limit. The usage is the simulator's own:
+    // about 42 MB a day of the cycle.
+    dataUsage(c) {
+      const now = new Date(), start = new Date(now.getFullYear(), now.getMonth(), 1), end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      const usage = Math.round(now.getDate() * 41.7 * 1048576 + now.getHours() * 1.6 * 1048576);
+      let period;
+      try { period = new Intl.DateTimeFormat(c.locale(), {month: 'short', day: 'numeric'}).formatRange(start, end); }
+      catch { const f = new Intl.DateTimeFormat(c.locale(), {month: 'short', day: 'numeric'}); period = `${f.format(start)} – ${f.format(end)}`; }
+      return {usage, warning: 2147483648, limit: 0, period, carrier: c.data.settings.airplane ? '' : NG.text('shade').t('carrier')};
+    },
+    setMobileData(c, on) { c.data.settings.mobileData = on; c.save(); sys.changed(c); },
+    setPowerSave(c, on) { c.data.settings.powerSave = on; c.save(); sys.changed(c); },
     // Wi-Fi: off, searching (a moment after switching it on, or with no network to join) or connected.
     wifiState(c) { const s = c.data.settings; return !s.wifi ? 'off' : live.wifiConnecting > Date.now() || !s.wifiSsid ? 'searching' : 'connected'; },
     setWifi(c, on) {
