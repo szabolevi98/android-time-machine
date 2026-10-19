@@ -7519,6 +7519,666 @@ NG.strings('settings', {
 "fr": "N'afficher aucune notification",
 "es": "No mostrar notificaciones"
 },
+"security_settings_fingerprint_preference_summary": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_preference_summary",
+"en": {
+"other": "%1$d fingerprints set up",
+"one": "%1$d fingerprint set up"
+},
+"hu": {
+"other": "%1$d ujjlenyomat beállítása",
+"one": "%1$d ujjlenyomat beállítása"
+},
+"de": {
+"other": "%1$d Fingerabdrücke eingerichtet",
+"one": "%1$d Fingerabdrücke eingerichtet"
+},
+"fr": {
+"other": "%1$d empreintes digitales configurées",
+"one": "%1$d empreinte digitale configurée"
+},
+"es": {
+"other": "%1$d huellas digitales configuradas",
+"one": "%1$d huella digital configurada"
+}
+},
+"security_settings_fingerprint_preference_summary_none": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_preference_summary_none",
+"en": "Tap to set up fingerprint",
+"hu": "Koppintson az ujjlenyomat-olvasás beállításához",
+"de": "Zum Einrichten des Fingerabdrucks tippen",
+"fr": "Appuyez ici pour configurer une empreinte digitale.",
+"es": "Toca para configurar la huella digital"
+},
+"PrebuiltGmsCore/auth_google_trust_agent_title": {
+"res": "angler:PrebuiltGmsCore:auth_google_trust_agent_title",
+"en": "Smart Lock",
+"hu": "Smart Lock",
+"de": "Smart Lock",
+"fr": "Smart Lock",
+"es": "Smart Lock",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"disabled_because_no_backup_security": {
+"res": "angler:SettingsGoogle:disabled_because_no_backup_security",
+"en": "To use, first set a screen lock",
+"hu": "A használathoz előbb állítson be egy képernyőzárat",
+"de": "Lege zunächst eine Displaysperre fest, damit du die Option verwenden kannst.",
+"fr": "Pour continuer, vous devez tout d'abord verrouiller l'écran.",
+"es": "Para usarlo, debes establecer una pantalla de bloqueo"
+},
+"credential_storage_type_hardware": {
+"res": "angler:SettingsGoogle:credential_storage_type_hardware",
+"en": "Hardware-backed",
+"hu": "hardveresen támogatott",
+"de": "Hardware-gestützt",
+"fr": "Intégré au matériel",
+"es": "Almacenado en hardware"
+},
+"settings_button": {
+"res": "angler:SettingsGoogle:settings_button",
+"en": "Settings",
+"hu": "Beállítások",
+"de": "Einstellungen",
+"fr": "Paramètres",
+"es": "Ajustes"
+},
+"CertInstaller/no_cert_file_found": {
+"res": "angler:CertInstaller:no_cert_file_found",
+"en": "No certificate file found in USB storage.",
+"hu": "Nem található tanúsítványfájl az USB-táron.",
+"de": "Keine Zertifikatdatei auf USB-Speicher gefunden.",
+"fr": "Fichier de certificat introuvable dans la mémoire de stockage USB",
+"es": "No se ha encontrado ningún archivo de certificado en el almacenamiento USB."
+},
+"install_all_warning": {
+"res": "angler:SettingsGoogle:install_all_warning",
+"en": "Your phone and personal data are more vulnerable to attack by apps from unknown sources. You agree that you are solely responsible for any damage to your phone or loss of data that may result from using these apps.",
+"hu": "A telefonra és a személyes adatokra sokkal nagyobb veszélyt jelentenek az ismeretlen forrásból származó alkalmazások támadásai. Ön kijelenti, hogy egyedül Ön felel a telefonon bekövetkező minden olyan kárért vagy adatvesztésért, amely ezen alkalmazások használatából fakad.",
+"de": "Apps mit unbekannter Herkunft können gefährlich für dein Telefon und deine personenbezogenen Daten sein. Du erklärst dich damit einverstanden, dass du die Verantwortung für alle Schäden an deinem Telefon und jegliche Datenverluste trägst, die aus der Verwendung dieser Apps entstehen können.",
+"fr": "Votre téléphone et vos données personnelles sont plus vulnérables face aux attaques d'applications provenant de sources inconnues. Vous reconnaissez être seul responsable de tout dommage subi par votre téléphone ou de toute perte de données pouvant découler de l'utilisation de ces applications.",
+"es": "El teléfono y tus datos personales son más vulnerables a los ataques de aplicaciones de origen desconocido. Aceptas ser el único responsable de cualquier daño en el teléfono o pérdida de datos que se pueda derivar del uso de estas aplicaciones."
+},
+"yes": {
+"res": "angler:SettingsGoogle:yes",
+"en": "Yes",
+"hu": "Igen",
+"de": "Ja",
+"fr": "Oui",
+"es": "Sí"
+},
+"no": {
+"res": "angler:SettingsGoogle:no",
+"en": "No",
+"hu": "Nem",
+"de": "Nein",
+"fr": "Non",
+"es": "No"
+},
+"cancel": {
+"res": "angler:SettingsGoogle:cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"save": {
+"res": "angler:SettingsGoogle:save",
+"en": "Save",
+"hu": "Mentés",
+"de": "Speichern",
+"fr": "Enregistrer",
+"es": "Guardar"
+},
+"owner_info_settings_edit_text_hint": {
+"res": "angler:SettingsGoogle:owner_info_settings_edit_text_hint",
+"en": "E.g., Joe’s Android.",
+"hu": "pl. Péter Androidja.",
+"de": "Z. B. Peters Android",
+"fr": "Exemple : l'Android de Jean",
+"es": "p. ej., Android de Juan"
+},
+"lockpattern_settings_power_button_instantly_locks_summary": {
+"res": "angler:SettingsGoogle:lockpattern_settings_power_button_instantly_locks_summary",
+"args": 1,
+"en": "Except when kept unlocked by %1$s",
+"hu": "Kivéve, amikor %1$s feloldva tartja",
+"de": "Außer bei dauerhafter Entsperrung durch %1$s",
+"fr": "Sauf lorsque l'appareil est maintenu en activité par %1$s",
+"es": "Salvo si %1$s mantiene el dispositivo desbloqueado"
+},
+"lock_immediately_summary_with_exception": {
+"res": "angler:SettingsGoogle:lock_immediately_summary_with_exception",
+"args": 1,
+"en": "Immediately after sleep, except when kept unlocked by %1$s",
+"hu": "Rögtön az alvó mód bekapcsolása után, kivéve ha a(z) %1$s feloldva tartja",
+"de": "Unmittelbar nach Aktivierung des Ruhemodus, außer bei dauerhafter Entsperrung durch %1$s",
+"fr": "Immédiatement après la mise en veille, sauf lorsque l'appareil est maintenu en activité par %1$s",
+"es": "Inmediatamente después de activar el modo de suspensión (salvo si %1$s mantiene el dispositivo desbloqueado)"
+},
+"lock_after_timeout_summary_with_exception": {
+"res": "angler:SettingsGoogle:lock_after_timeout_summary_with_exception",
+"args": 2,
+"en": "%1$s after sleep, except when kept unlocked by %2$s",
+"hu": "%1$s alvó üzemmód után; kivéve akkor, amikor %2$s feloldva tartja",
+"de": "Nach %1$s im Ruhezustand, außer bei dauerhafter Entsperrung durch %2$s",
+"fr": "%1$s après la mise en veille, sauf lorsque l'appareil est maintenu en activité par %2$s",
+"es": "%1$s después de activar el modo de suspensión, salvo si %2$s mantiene el dispositivo desbloqueado"
+},
+"current_screen_lock": {
+"res": "angler:SettingsGoogle:current_screen_lock",
+"en": "Current screen lock",
+"hu": "Jelenlegi képernyőzár",
+"de": "Aktuelle Displaysperre",
+"fr": "Verrouillage de l'écran actuel",
+"es": "Bloqueo de pantalla actual"
+},
+"lock_settings_picker_fingerprint_message": {
+"res": "angler:SettingsGoogle:lock_settings_picker_fingerprint_message",
+"en": "Choose a backup screen lock to use with Nexus Imprint",
+"hu": "Válasszon másodlagos képernyőzárat Nexus Imprint eszközéhez",
+"de": "Alternative Methode für die Displaysperre für Nexus Imprint auswählen",
+"fr": "Choisissez un mode alternatif de verrouillage de l'écran avec Nexus Imprint.",
+"es": "Selecciona el bloqueo de pantalla alternativo que quieres usar con Nexus Imprint"
+},
+"fingerprint_unlock_set_unlock_pattern": {
+"res": "angler:SettingsGoogle:fingerprint_unlock_set_unlock_pattern",
+"en": "Nexus Imprint + Pattern",
+"hu": "Nexus Imprint + minta",
+"de": "Nexus Imprint + Muster",
+"fr": "Nexus Imprint + schéma",
+"es": "Nexus Imprint + patrón"
+},
+"fingerprint_unlock_set_unlock_pin": {
+"res": "angler:SettingsGoogle:fingerprint_unlock_set_unlock_pin",
+"en": "Nexus Imprint + PIN",
+"hu": "Nexus Imprint + PIN-kód",
+"de": "Nexus Imprint + PIN",
+"fr": "Nexus Imprint + code",
+"es": "Nexus Imprint + PIN"
+},
+"fingerprint_unlock_set_unlock_password": {
+"res": "angler:SettingsGoogle:fingerprint_unlock_set_unlock_password",
+"en": "Nexus Imprint + Password",
+"hu": "Nexus Imprint + jelszó",
+"de": "Nexus Imprint + Passwort",
+"fr": "Nexus Imprint + mot de passe",
+"es": "Nexus Imprint + contraseña"
+},
+"unlock_disable_frp_warning_title": {
+"res": "angler:SettingsGoogle:unlock_disable_frp_warning_title",
+"en": "Remove device protection?",
+"hu": "Kikapcsolja az eszközvédelmet?",
+"de": "Geräteschutz entfernen?",
+"fr": "Supprimer la protection de l'appareil ?",
+"es": "¿Quitar protección del dispositivo?"
+},
+"unlock_disable_frp_warning_ok": {
+"res": "angler:SettingsGoogle:unlock_disable_frp_warning_ok",
+"en": "Yes, remove",
+"hu": "Igen, kikapcsolom",
+"de": "Ja, entfernen",
+"fr": "Oui, supprimer",
+"es": "Sí, quitar"
+},
+"unlock_disable_frp_warning_content_pattern": {
+"res": "angler:SettingsGoogle:unlock_disable_frp_warning_content_pattern",
+"en": "Device protection features will not work without your pattern.",
+"hu": "Az eszközvédelmi funkciók nem működnek a minta nélkül.",
+"de": "Die Geräteschutzeinstellungen funktionieren ohne dein Muster nicht.",
+"fr": "Les fonctionnalités de protection de l'appareil ne fonctionnent pas sans votre schéma.",
+"es": "Las funciones de protección del dispositivo no funcionarán sin tu patrón."
+},
+"unlock_disable_frp_warning_content_pin": {
+"res": "angler:SettingsGoogle:unlock_disable_frp_warning_content_pin",
+"en": "Device protection features will not work without your PIN.",
+"hu": "Az eszközvédelmi funkciók nem működnek a PIN-kód nélkül.",
+"de": "Die Geräteschutzeinstellungen funktionieren ohne deine PIN nicht.",
+"fr": "Les fonctionnalités de protection de l'appareil ne fonctionnent pas sans votre code.",
+"es": "Las funciones de protección del dispositivo no funcionarán sin tu PIN."
+},
+"unlock_disable_frp_warning_content_password": {
+"res": "angler:SettingsGoogle:unlock_disable_frp_warning_content_password",
+"en": "Device protection features will not work without your password.",
+"hu": "Az eszközvédelmi funkciók nem működnek a jelszó nélkül.",
+"de": "Die Geräteschutzeinstellungen funktionieren ohne dein Passwort nicht.",
+"fr": "Les fonctionnalités de protection de l'appareil ne fonctionnent pas sans votre mot de passe.",
+"es": "Las funciones de protección del dispositivo no funcionarán sin tu contraseña."
+},
+"unlock_disable_frp_warning_content_pattern_fingerprint": {
+"res": "angler:SettingsGoogle:unlock_disable_frp_warning_content_pattern_fingerprint",
+"en": "Device protection features will not work without your pattern.\n\nYour saved fingerprints will also be removed from this device and you won't be able to unlock your phone, authorize purchases, or sign in to apps with them.",
+"hu": "Az eszközvédelmi funkciók nem működnek a minta nélkül. A mentett ujjlenyomatok is törlődnek az eszközről, és a segítségükkel nem fogja tudni feloldani a telefon zárolását, jóváhagyni a vásárlásokat, illetve bejelentkezni az alkalmazásokba.",
+"de": "Die Geräteschutzeinstellungen funktionieren ohne dein Muster nicht. Deine gespeicherten Fingerabdrücke werden ebenfalls von diesem Gerät entfernt und du kannst mit ihnen weder dein Smartphone entsperren noch Käufe autorisieren oder dich in Apps anmelden.\"",
+"fr": "Les fonctionnalités de protection de l'appareil ne fonctionnent pas sans votre schéma. Vos empreintes digitales enregistrées seront également supprimées de cet appareil, et vous ne pourrez plus les utiliser pour déverrouiller votre téléphone, autoriser des achats ni vous connecter à des applications.",
+"es": "Las funciones de protección del dispositivo no funcionarán sin tu patrón. Las huellas digitales guardadas también se eliminarán de este dispositivo y no podrás desbloquear el teléfono, autorizar compras ni iniciar sesión en las aplicaciones con ellas."
+},
+"unlock_disable_frp_warning_content_pin_fingerprint": {
+"res": "angler:SettingsGoogle:unlock_disable_frp_warning_content_pin_fingerprint",
+"en": "Device protection features will not work without your PIN.\n\nYour saved fingerprints will also be removed from this device and you won't be able to unlock your phone, authorize purchases, or sign in to apps with them.",
+"hu": "Az eszközvédelmi funkciók nem működnek a PIN-kód nélkül. A mentett ujjlenyomatok is törlődnek az eszközről, és a segítségükkel nem fogja tudni feloldani a telefon zárolását, jóváhagyni a vásárlásokat, illetve bejelentkezni az alkalmazásokba.",
+"de": "Die Geräteschutzeinstellungen funktionieren ohne deine PIN nicht. Deine gespeicherten Fingerabdrücke werden ebenfalls von diesem Gerät entfernt und du kannst mit ihnen weder dein Smartphone entsperren noch Käufe autorisieren oder dich in Apps anmelden.\"",
+"fr": "Les fonctionnalités de protection de l'appareil ne fonctionnent pas sans votre code. Vos empreintes digitales enregistrées seront également supprimées de cet appareil, et vous ne pourrez plus les utiliser pour déverrouiller votre téléphone, autoriser des achats ni vous connecter à des applications.",
+"es": "Las funciones de protección del dispositivo no funcionarán sin tu PIN. Las huellas digitales guardadas también se eliminarán de este dispositivo y no podrás desbloquear el teléfono, autorizar compras ni iniciar sesión en las aplicaciones con ellas."
+},
+"unlock_disable_frp_warning_content_password_fingerprint": {
+"res": "angler:SettingsGoogle:unlock_disable_frp_warning_content_password_fingerprint",
+"en": "Device protection features will not work without your password.\n\nYour saved fingerprints will also be removed from this device and you won't be able to unlock your phone, authorize purchases, or sign in to apps with them.",
+"hu": "Az eszközvédelmi funkciók nem működnek a jelszó nélkül. A mentett ujjlenyomatok is törlődnek az eszközről, és a segítségükkel nem fogja tudni feloldani a telefon zárolását, jóváhagyni a vásárlásokat, illetve bejelentkezni az alkalmazásokba.",
+"de": "Die Geräteschutzeinstellungen funktionieren ohne dein Passwort nicht. Deine gespeicherten Fingerabdrücke werden ebenfalls von diesem Gerät entfernt und du kannst mit ihnen weder dein Smartphone entsperren noch Käufe autorisieren oder dich in Apps anmelden.\"",
+"fr": "Les fonctionnalités de protection de l'appareil ne fonctionnent pas sans votre mot de passe. Vos empreintes digitales enregistrées seront également supprimées de cet appareil, et vous ne pourrez plus les utiliser pour déverrouiller votre téléphone, autoriser des achats ni vous connecter à des applications.",
+"es": "Las funciones de protección del dispositivo no funcionarán sin tu contraseña. Las huellas digitales guardadas también se eliminarán de este dispositivo y no podrás desbloquear el teléfono, autorizar compras ni iniciar sesión en las aplicaciones con ellas."
+},
+"encrypt_require_pin": {
+"res": "angler:SettingsGoogle:encrypt_require_pin",
+"en": "Require PIN to start device",
+"hu": "Az eszköz indításakor kérjen PIN-kódot",
+"de": "PIN zum Starten des Geräts erforderlich",
+"fr": "Exiger un code PIN pour démarrer l'appareil",
+"es": "Solicitar PIN para iniciar el dispositivo"
+},
+"encrypt_dont_require_pin": {
+"res": "angler:SettingsGoogle:encrypt_dont_require_pin",
+"en": "No thanks",
+"hu": "Nem, köszönöm",
+"de": "Nein danke",
+"fr": "Non, merci",
+"es": "No, gracias"
+},
+"encrypt_require_password": {
+"res": "angler:SettingsGoogle:encrypt_require_password",
+"en": "Require password to start device",
+"hu": "Az eszköz indításakor kérjen jelszót",
+"de": "Passwort zum Starten des Geräts erforderlich",
+"fr": "Exiger un mot de passe pour démarrer l'appareil",
+"es": "Requerir contraseña para iniciar dispositivo"
+},
+"encrypt_dont_require_password": {
+"res": "angler:SettingsGoogle:encrypt_dont_require_password",
+"en": "No thanks",
+"hu": "Nem, köszönöm",
+"de": "Nein danke",
+"fr": "Non, merci",
+"es": "No, gracias"
+},
+"encrypt_require_pattern": {
+"res": "angler:SettingsGoogle:encrypt_require_pattern",
+"en": "Require pattern to start device",
+"hu": "Az eszköz indításakor kérje minta megadását",
+"de": "Muster zum Starten des Geräts erforderlich",
+"fr": "Exiger un schéma pour démarrer l'appareil",
+"es": "Requerir patrón para iniciar dispositivo"
+},
+"encrypt_dont_require_pattern": {
+"res": "angler:SettingsGoogle:encrypt_dont_require_pattern",
+"en": "No thanks",
+"hu": "Nem, köszönöm",
+"de": "Nein danke",
+"fr": "Non, merci",
+"es": "No, gracias"
+},
+"encryption_interstitial_message_pin": {
+"res": "angler:SettingsGoogle:encryption_interstitial_message_pin",
+"en": "You can further protect this device by requiring your PIN before it starts up. Until the device starts up, it can’t receive calls, messages, or notifications, including alarms. \n\nThis helps protect data on lost or stolen devices.",
+"hu": "További védelmet adhat az eszköznek, ha annak elindítása előtt PIN-kódot kér. Amíg az eszköz el nem indul, nem fogadhat hívásokat, üzeneteket vagy értesítéseket, az ébresztőket is beleértve. \n\nEz segít megóvni adatait, ha ellopják eszközét.",
+"de": "Du kannst dieses Gerät noch weiter schützen, indem du festlegst, dass vor dem Gerätestart die Eingabe deiner PIN erforderlich ist. Bis das Gerät startet, können weder Anrufe noch Nachrichten, Benachrichtigungen oder Alarme empfangen werden. \n\nSo schützt du Daten auf verloren gegangenen oder gestohlenen Geräten.",
+"fr": "Pour améliorer la protection de cet appareil, vous pouvez exiger la saisie du code PIN avant le démarrage. Dans ce cas, l'appareil ne reçoit pas d'appels, de messages ni de notifications, y compris les alertes, tant qu'il n'a pas démarré. \n\nCette fonctionnalité permet de protéger les données en cas de perte ou de vol de l'appareil.",
+"es": "Para aumentar la protección del dispositivo, puedes solicitar un PIN al iniciarlo. Hasta que el dispositivo no se inicie, no podrá recibir llamadas, mensajes ni notificaciones (como alarmas). \n\nEsta opción ayuda a proteger los datos en caso de pérdida o robo del dispositivo."
+},
+"encryption_interstitial_message_password": {
+"res": "angler:SettingsGoogle:encryption_interstitial_message_password",
+"en": "You can further protect this device by requiring your password before it starts up. Until the device starts up, it can’t receive calls, messages, or notifications, including alarms. \n\nThis helps protect data on lost or stolen devices.",
+"hu": "További védelmet nyújthat az eszköz számára, ha annak elindítása előtt jelszót kér. Amíg az eszköz el nem indul, nem fogadhat hívásokat, üzeneteket vagy értesítéseket, az ébresztőket is beleértve. \n\nEz segít megóvni adatait, ha ellopják eszközét.",
+"de": "Du kannst dieses Gerät noch weiter schützen, indem du festlegst, dass vor dem Gerätestart die Eingabe deines Passworts erforderlich ist. Bis das Gerät startet, können weder Anrufe noch Nachrichten, Benachrichtigungen oder Alarme empfangen werden. \n\nSo schützt du Daten auf verloren gegangenen oder gestohlenen Geräten.",
+"fr": "Pour améliorer la protection de cet appareil, vous pouvez exiger la saisie du mot de passe avant le démarrage. L'appareil ne reçoit pas d'appels, de messages ni de notifications, y compris les alertes, tant qu'il n'a pas démarré. \n\nCette fonctionnalité permet de protéger les données en cas de perte ou de vol de l'appareil.",
+"es": "Puedes solicitar la contraseña del dispositivo antes de iniciarlo para aumentar la protección. Hasta que el dispositivo no se inicie, no podrá recibir llamadas, mensajes ni notificaciones, como alarmas. \n\nEsta opción ayuda a proteger los datos en dispositivos perdidos o robados."
+},
+"encryption_interstitial_message_pattern": {
+"res": "angler:SettingsGoogle:encryption_interstitial_message_pattern",
+"en": "You can further protect this device by requiring your pattern before it starts up. Until the device starts up, it can’t receive calls, messages, or notifications, including alarms. \n\nThis helps protect data on lost or stolen devices.",
+"hu": "További védelmet adhat az eszköznek, ha annak elindítása előtt mintát kér. Amíg az eszköz el nem indul, nem fogadhat hívásokat, üzeneteket vagy értesítéseket, az ébresztőket is beleértve. \n\nEz segít megóvni adatait, ha ellopják eszközét.",
+"de": "Du kannst dieses Gerät noch weiter schützen, indem du festlegst, dass vor dem Gerätestart die Eingabe deines Musters erforderlich ist. Bis das Gerät startet, können weder Anrufe noch Nachrichten, Benachrichtigungen oder Alarme empfangen werden. \n\nSo schützt du Daten auf verloren gegangenen oder gestohlenen Geräten.",
+"fr": "Pour améliorer la protection de cet appareil, vous pouvez exiger la saisie du schéma avant le démarrage. L'appareil ne reçoit pas d'appels, de messages ni de notifications, y compris les alertes, tant qu'il n'a pas démarré. \n\nCette fonctionnalité permet de protéger les données en cas de perte ou de vol de l'appareil.",
+"es": "Puedes solicitar el patrón del dispositivo antes de iniciarlo para aumentar la protección. Hasta que el dispositivo no se inicie, no podrá recibir llamadas, mensajes ni notificaciones, como alarmas. \n\nEsta opción ayuda a proteger los datos en dispositivos perdidos o robados."
+},
+"encryption_interstitial_message_pin_for_fingerprint": {
+"res": "angler:SettingsGoogle:encryption_interstitial_message_pin_for_fingerprint",
+"en": "In addition to using your fingerprint to unlock your device, you can further protect this device by requiring your PIN before it starts up. Until the device starts up, it can’t receive calls, messages, or notifications, including alarms.\n\nThis helps protect data on lost or stolen devices.",
+"hu": "Amellett, hogy ujjlenyomattal oldja fel eszköze zárolását, további védelmet nyújthat a számára, ha PIN-kódot kér a rendszerindítás előtt. Amíg a rendszer el nem indul, nem tud hívásokat, üzeneteket és értesítéseket fogadni (beleértve a riasztásokat is).\n\nEz segít az elvesztett vagy ellopott eszközökön lévő adatok védelmében.",
+"de": "Neben der Verwendung deines Fingerabdrucks zum Entsperren des Geräts kannst du es zusätzlich schützen, indem du für den Gerätestart deine PIN erforderlich machst. Erst wenn das Gerät gestartet wurde, kann es Anrufe, Nachrichten oder Benachrichtigungen, einschließlich Weckrufen, empfangen.\n\nDies trägt zum Schutz der Daten auf verlorenen oder gestohlenen Geräten bei.",
+"fr": "Vous pouvez ajouter un niveau de protection pour le déverrouillage de cet appareil en demandant la saisie de votre code PIN avant que l'appareil ne démarre, en plus de la lecture de votre empreinte digitale. L'appareil ne peut pas recevoir d'appel, de message, de notification ni d'alarme tant qu'il n'a pas démarré.\n\nCela permet de protéger les données de vos appareils en cas de perte ou de vol.",
+"es": "Además de desbloquear este dispositivo con tu huella digital, puedes protegerlo aún más haciendo que sea necesario introducir un PIN cuando se inicia. Hasta que el dispositivo se inicie, no podrá recibir llamadas, mensajes ni notificaciones, y tampoco sonarán las alarmas.\n\nEsto te permitirá proteger los datos del dispositivo en caso de pérdida o robo."
+},
+"encryption_interstitial_message_password_for_fingerprint": {
+"res": "angler:SettingsGoogle:encryption_interstitial_message_password_for_fingerprint",
+"en": "In addition to using your fingerprint to unlock your device, you can further protect this device by requiring your password before it starts up. Until the device starts up, it can’t receive calls, messages, or notifications, including alarms.\n\nThis helps protect data on lost or stolen devices.",
+"hu": "Amellett, hogy ujjlenyomattal oldja fel eszköze zárolását, további védelmet nyújthat a számára, ha jelszót kér a rendszerindítás előtt. Amíg a rendszer el nem indul, nem tud hívásokat, üzeneteket és értesítéseket fogadni (beleértve a riasztásokat is).\n\nEz segít az elvesztett vagy ellopott eszközökön lévő adatok védelmében.",
+"de": "Neben der Verwendung deines Fingerabdrucks zum Entsperren des Geräts kannst du es zusätzlich schützen, indem du für den Gerätestart dein Passwort erforderlich machst. Erst wenn das Gerät gestartet wurde, kann es Anrufe, Nachrichten oder Benachrichtigungen, einschließlich Weckrufen, empfangen.\n\nDies trägt zum Schutz der Daten auf verloren gegangenen oder gestohlenen Geräten bei.",
+"fr": "Vous pouvez ajouter un niveau de protection pour le déverrouillage de cet appareil en demandant la saisie de votre mot de passe avant que l'appareil ne démarre, en plus de la lecture de votre empreinte digitale. L'appareil ne peut pas recevoir d'appel, de message, de notification ni d'alarme tant qu'il n'a pas démarré.\n\nCela permet de protéger les données de vos appareils en cas de perte ou de vol.",
+"es": "Además de desbloquear este dispositivo con tu huella digital, puedes protegerlo aún más haciendo que sea necesario introducir una contraseña cuando se inicia. Hasta que el dispositivo se inicie, no podrá recibir llamadas, mensajes ni notificaciones, y tampoco sonarán las alarmas.\n\nEsto te permitirá proteger los datos del dispositivo en caso de pérdida o robo."
+},
+"encryption_interstitial_message_pattern_for_fingerprint": {
+"res": "angler:SettingsGoogle:encryption_interstitial_message_pattern_for_fingerprint",
+"en": "In addition to using your fingerprint to unlock your device, you can further protect this device by requiring your pattern before it starts up. Until the device starts up, it can’t receive calls, messages, or notifications, including alarms.\n\nThis helps protect data on lost or stolen devices.",
+"hu": "Amellett, hogy ujjlenyomattal oldja fel eszköze zárolását, további védelmet nyújthat a számára, ha mintát kér a rendszerindítás előtt. Amíg a rendszer el nem indul, nem tud hívásokat, üzeneteket és értesítéseket fogadni (beleértve a riasztásokat is).\n\nEz segít az elvesztett vagy ellopott eszközökön lévő adatok védelmében.",
+"de": "Neben der Verwendung deines Fingerabdrucks zum Entsperren des Geräts kannst du es zusätzlich schützen, indem du für den Gerätestart dein Muster erforderlich machst. Erst wenn das Gerät gestartet wurde, kann es Anrufe, Nachrichten oder Benachrichtigungen, einschließlich Weckrufen, empfangen.\n\nDies trägt zum Schutz der Daten auf verlorenen oder gestohlenen Geräten bei.",
+"fr": "Vous pouvez ajouter un niveau de protection pour le déverrouillage de cet appareil en demandant la saisie de votre schéma avant que l'appareil ne démarre, en plus de la lecture de votre empreinte digitale. L'appareil ne peut pas recevoir d'appel, de message, de notification ni d'alarme tant qu'il n'a pas démarré.\n\nCela permet de protéger les données de vos appareils en cas de perte ou de vol.",
+"es": "Además de desbloquear este dispositivo con tu huella digital, puedes protegerlo aún más haciendo que sea necesario introducir un patrón cuando se inicia. Hasta que el dispositivo se inicie, no podrá recibir llamadas, mensajes ni notificaciones, y tampoco sonarán las alarmas.\n\nEsto te permitirá proteger los datos del dispositivo en caso de pérdida o robo."
+},
+"lockpassword_illegal_character": {
+"res": "angler:SettingsGoogle:lockpassword_illegal_character",
+"en": "This can't include an invalid character",
+"hu": "Ez nem tartalmazhat érvénytelen karaktert",
+"de": "Es sind keine ungültigen Zeichen zulässig",
+"fr": "Vous ne pouvez pas inclure de caractère non valide.",
+"es": "No puede incluir un carácter que no sea válido"
+},
+"lockpassword_pin_contains_non_digits": {
+"res": "angler:SettingsGoogle:lockpassword_pin_contains_non_digits",
+"en": "Must contain only digits 0-9.",
+"hu": "Csak számokat tartalmazhat, 0-tól 9-ig.",
+"de": "Es dürfen nur Ziffern von 0 bis 9 enthalten sein.",
+"fr": "Veuillez n'utiliser que les chiffres de 0 à 9.",
+"es": "Solo debe tener dígitos comprendidos entre el 0 y el 9."
+},
+"lockpassword_password_requires_letters": {
+"res": "angler:SettingsGoogle:lockpassword_password_requires_letters",
+"en": {
+"other": "Must contain at least %d letters",
+"one": "Must contain at least 1 letter"
+},
+"hu": {
+"other": "Tartalmazzon legalább %d betűt",
+"one": "Tartalmazzon legalább 1 betűt"
+},
+"de": {
+"other": "Es müssen mindestens %d Buchstaben enthalten sein",
+"one": "Es muss mindestens ein Buchstabe enthalten sein"
+},
+"fr": {
+"other": "Veuillez inclure au moins %d lettres.",
+"one": "Veuillez inclure au moins %d lettre."
+},
+"es": {
+"other": "Debe tener al menos %d letras",
+"one": "Debe tener al menos 1 letra"
+}
+},
+"lockpassword_pin_too_short": {
+"res": "angler:SettingsGoogle:lockpassword_pin_too_short",
+"args": 1,
+"en": "PIN must be at least %d digits",
+"hu": "A PIN-kódnak legalább %d számjegyűnek kell lennie.",
+"de": "Die PIN muss mindestens %d Ziffern enthalten.",
+"fr": "Le code PIN doit comporter au moins %d chiffres.",
+"es": "El PIN debe tener al menos %d dígitos"
+},
+"lockpassword_password_too_short": {
+"res": "angler:SettingsGoogle:lockpassword_password_too_short",
+"args": 1,
+"en": "Must be at least %d characters",
+"hu": "Legyen legalább %d karakter hosszúságú",
+"de": "Es müssen mindestens %d Zeichen sein",
+"fr": "Veuillez utiliser au moins %d caractères.",
+"es": "Debe tener al menos %d caracteres"
+},
+"lockpassword_pin_too_long": {
+"res": "angler:SettingsGoogle:lockpassword_pin_too_long",
+"args": 1,
+"en": "Must be fewer than %d digits.",
+"hu": "Legyen rövidebb %d számjegynél.",
+"de": "Es müssen weniger als %d Ziffern sein.",
+"fr": "Veuillez utiliser moins de %d chiffres.",
+"es": "Debe tener menos de %d dígitos."
+},
+"lockpassword_password_too_long": {
+"res": "angler:SettingsGoogle:lockpassword_password_too_long",
+"args": 1,
+"en": "Must be fewer than %d characters.",
+"hu": "Legyen rövidebb %d karakternél.",
+"de": "Es müssen weniger als %d Zeichen sein.",
+"fr": "Veuillez utiliser moins de %d caractères.",
+"es": "Debe tener al menos %d caracteres."
+},
+"lockpassword_choose_your_pin_header": {
+"res": "angler:SettingsGoogle:lockpassword_choose_your_pin_header",
+"en": "Choose your PIN",
+"hu": "Adja meg PIN-kódját",
+"de": "PIN festlegen",
+"fr": "Choisir votre code PIN",
+"es": "Elige tu PIN"
+},
+"lockpassword_choose_your_password_header": {
+"res": "angler:SettingsGoogle:lockpassword_choose_your_password_header",
+"en": "Choose your password",
+"hu": "Adjon meg egy jelszót",
+"de": "Passwort festlegen",
+"fr": "Choisir votre mot de passe",
+"es": "Elige tu contraseña"
+},
+"lockpassword_choose_your_pattern_header": {
+"res": "angler:SettingsGoogle:lockpassword_choose_your_pattern_header",
+"en": "Choose your pattern",
+"hu": "Válassza ki a mintát",
+"de": "Muster wählen",
+"fr": "Choisir votre schéma",
+"es": "Elige un patrón"
+},
+"lockpassword_confirm_your_pin_header": {
+"res": "angler:SettingsGoogle:lockpassword_confirm_your_pin_header",
+"en": "Confirm your PIN",
+"hu": "PIN-kód megerősítése",
+"de": "PIN bestätigen",
+"fr": "Confirmez votre code PIN.",
+"es": "Confirma el número PIN"
+},
+"lockpassword_confirm_your_password_header": {
+"res": "angler:SettingsGoogle:lockpassword_confirm_your_password_header",
+"en": "Confirm your password",
+"hu": "Jelszó megerősítése",
+"de": "Passwort bestätigen",
+"fr": "Confirmez le mot de passe.",
+"es": "Confirma tu contraseña"
+},
+"lockpassword_confirm_your_pattern_header": {
+"res": "angler:SettingsGoogle:lockpassword_confirm_your_pattern_header",
+"en": "Confirm your pattern",
+"hu": "Erősítse meg a mintát",
+"de": "Muster bestätigen",
+"fr": "Confirmez votre schéma",
+"es": "Confirma el patrón"
+},
+"lockpassword_confirm_pins_dont_match": {
+"res": "angler:SettingsGoogle:lockpassword_confirm_pins_dont_match",
+"en": "PINs don’t match",
+"hu": "A PIN-kódok nem egyeznek",
+"de": "Die PINs stimmen nicht überein.",
+"fr": "Les codes PIN ne correspondent pas.",
+"es": "Los números PIN no coinciden"
+},
+"lockpassword_confirm_passwords_dont_match": {
+"res": "angler:SettingsGoogle:lockpassword_confirm_passwords_dont_match",
+"en": "Passwords don’t match",
+"hu": "A jelszavak nem egyeznek",
+"de": "Die Passwörter stimmen nicht überein.",
+"fr": "Les mots de passe ne correspondent pas.",
+"es": "Las contraseñas no coinciden"
+},
+"lockpassword_ok_label": {
+"res": "angler:SettingsGoogle:lockpassword_ok_label",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"lockpassword_continue_label": {
+"res": "angler:SettingsGoogle:lockpassword_continue_label",
+"en": "Continue",
+"hu": "Folytatás",
+"de": "Weiter",
+"fr": "Continuer",
+"es": "Continuar"
+},
+"lockpassword_cancel_label": {
+"res": "angler:SettingsGoogle:lockpassword_cancel_label",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"lockpattern_recording_intro_header": {
+"res": "angler:SettingsGoogle:lockpattern_recording_intro_header",
+"en": "Draw an unlock pattern",
+"hu": "Rajzoljon egy feloldási mintát",
+"de": "Zeichne ein Entsperrungsmuster.",
+"fr": "Dessinez un schéma de déverrouillage.",
+"es": "Dibuja un patrón de desbloqueo"
+},
+"lockpattern_recording_incorrect_too_short": {
+"res": "angler:SettingsGoogle:lockpattern_recording_incorrect_too_short",
+"args": 1,
+"en": "Connect at least %d dots. Try again.",
+"hu": "Kapcsoljon össze legalább %d pontot. Próbálja újra.",
+"de": "Verbinde mindestens %d Punkte. Bitte versuche es erneut.",
+"fr": "Reliez au moins %d points, puis réessayez.",
+"es": "Une al menos %d puntos. Inténtalo de nuevo."
+},
+"lockpattern_pattern_entered_header": {
+"res": "angler:SettingsGoogle:lockpattern_pattern_entered_header",
+"en": "Pattern recorded",
+"hu": "Minta rögzítve",
+"de": "Muster wurde aufgezeichnet.",
+"fr": "Schéma enregistré",
+"es": "Patrón guardado"
+},
+"lockpattern_need_to_confirm": {
+"res": "angler:SettingsGoogle:lockpattern_need_to_confirm",
+"en": "Draw pattern again to confirm",
+"hu": "Rajzolja újra a mintát a megerősítéshez",
+"de": "Zeichne das Muster zur Bestätigung erneut.",
+"fr": "Redessinez le schéma pour le confirmer.",
+"es": "Vuelve a dibujar el patrón para confirmarlo"
+},
+"lockpattern_need_to_unlock_wrong": {
+"res": "angler:SettingsGoogle:lockpattern_need_to_unlock_wrong",
+"en": "Wrong pattern",
+"hu": "Helytelen minta",
+"de": "Falsches Muster",
+"fr": "Schéma incorrect.",
+"es": "Patrón incorrecto"
+},
+"lockpattern_pattern_confirmed_header": {
+"res": "angler:SettingsGoogle:lockpattern_pattern_confirmed_header",
+"en": "Your new unlock pattern",
+"hu": "Az új feloldási minta",
+"de": "Dein neues Entsperrungsmuster:",
+"fr": "Votre nouveau schéma de déverrouillage",
+"es": "Tu nuevo patrón de desbloqueo"
+},
+"lockpattern_recording_inprogress": {
+"res": "angler:SettingsGoogle:lockpattern_recording_inprogress",
+"en": "Release finger when done",
+"hu": "Emelje fel az ujját, ha kész",
+"de": "Lasse die Tasten los, wenn du fertig bist.",
+"fr": "Relevez le doigt lorsque vous avez terminé.",
+"es": "Levanta el dedo cuando termines"
+},
+"lockpattern_tutorial_cancel_label": {
+"res": "angler:SettingsGoogle:lockpattern_tutorial_cancel_label",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"lockpattern_retry_button_text": {
+"res": "angler:SettingsGoogle:lockpattern_retry_button_text",
+"en": "Clear",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Effacer",
+"es": "Borrar"
+},
+"lockpattern_tutorial_continue_label": {
+"res": "angler:SettingsGoogle:lockpattern_tutorial_continue_label",
+"en": "Next",
+"hu": "Tovább",
+"de": "Weiter",
+"fr": "Suivant",
+"es": "Siguiente"
+},
+"lockpattern_confirm_button_text": {
+"res": "angler:SettingsGoogle:lockpattern_confirm_button_text",
+"en": "Confirm",
+"hu": "Megerősítés",
+"de": "Bestätigen",
+"fr": "Confirmer",
+"es": "Confirmar"
+},
+"lockpassword_confirm_your_pin_generic": {
+"res": "angler:SettingsGoogle:lockpassword_confirm_your_pin_generic",
+"en": "Enter your device PIN to continue",
+"hu": "A folytatáshoz írja be eszköze PIN-kódját",
+"de": "Gib zum Fortfahren die PIN für dein Gerät ein",
+"fr": "Saisissez le code de l'appareil pour continuer.",
+"es": "Introduce el PIN del dispositivo para continuar"
+},
+"lockpassword_confirm_your_password_generic": {
+"res": "angler:SettingsGoogle:lockpassword_confirm_your_password_generic",
+"en": "Enter your device password to continue",
+"hu": "A folytatáshoz írja be eszköze jelszavát",
+"de": "Gib zum Fortfahren das Passwort für dein Gerät ein",
+"fr": "Saisissez le mot de passe de l'appareil pour continuer.",
+"es": "Introduce la contraseña del dispositivo para continuar"
+},
+"lockpassword_confirm_your_pattern_generic": {
+"res": "angler:SettingsGoogle:lockpassword_confirm_your_pattern_generic",
+"en": "Use your device pattern to continue",
+"hu": "A folytatáshoz használja eszköze feloldó mintáját",
+"de": "Gib zum Fortfahren das Muster für dein Gerät ein",
+"fr": "Utilisez le schéma de l'appareil pour continuer.",
+"es": "Utiliza el patrón del dispositivo para continuar"
+},
+"lockpassword_invalid_pin": {
+"res": "angler:SettingsGoogle:lockpassword_invalid_pin",
+"en": "Wrong PIN",
+"hu": "Helytelen PIN-kód",
+"de": "Falsche PIN",
+"fr": "Code d'accès incorrect.",
+"es": "PIN incorrecto"
+},
+"lockpassword_invalid_password": {
+"res": "angler:SettingsGoogle:lockpassword_invalid_password",
+"en": "Wrong password",
+"hu": "Helytelen jelszó",
+"de": "Falsches Passwort",
+"fr": "Mot de passe incorrect.",
+"es": "Contraseña incorrecta"
+},
+"lock_screen_notifications_interstitial_message": {
+"res": "angler:SettingsGoogle:lock_screen_notifications_interstitial_message",
+"en": "When your device is locked, how do you want notifications to show?",
+"hu": "Ha az eszköz zárolva van, hogyan kívánja megjeleníteni az értesítéseket?",
+"de": "Wie sollen Benachrichtigungen angezeigt werden, wenn dein Gerät gesperrt ist?",
+"fr": "Lorsque votre appareil est verrouillé, comment voulez-vous que les notifications s'affichent ?",
+"es": "¿Cómo quieres que se muestren las notificaciones cuando el dispositivo esté bloqueado?"
+},
+"app_notifications_dialog_done": {
+"res": "angler:SettingsGoogle:app_notifications_dialog_done",
+"en": "Done",
+"hu": "Kész",
+"de": "Fertig",
+"fr": "OK",
+"es": "Listo"
+},
 "PrebuiltGmsCore/common_google_platform_settings": {
 "res": "angler:PrebuiltGmsCore:common_google_platform_settings",
 "en": "Google",

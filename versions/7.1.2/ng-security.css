@@ -1,0 +1,69 @@
+/* Android 7.1.2 Settings' screen lock pages (ng-settings-security.js), in dp, from SettingsGoogle.apk of N2G48C.
+   - The GLIF pages (SetupWizardTheme.Light, setupwizardlib's suw_glif_template_compact): the window #fafafa; suw_glif_header
+     (SuwGlifIcon: ic_lock, 32 dp at most, 48 dp down, 24 dp in, its fill android:colorPrimary #3367d6; SuwGlifHeaderTitle:
+     24 sp textColorPrimary, 15 dp under the icon, 2 dp above the content); SuwContentFrame 24 dp at the sides, 16 dp at the
+     bottom; SuwDescription.Glif (16 sp, 4 sp extra line spacing, 3 dp above and 12 dp under it); SuwRadioButton (the
+     description's text, 18 dp padding, -6 dp margin, 12 dp apart) in the GLIF accent #4285f4; SetupWizardButton.Negative
+     (borderless, the accent's text) and .Positive (Widget.Material.Button.Colored: the accent behind white text, 2 dp
+     corners, 36 dp inside its 4 / 6 dp insets, 88 dp wide at least; disabled #1f000000 behind #42000000).
+   - choose_lock_password.xml: the header text (textAppearanceMedium 18 sp, centred, two lines), the 24 sp entry centred,
+     password_requirement_item rows (14 sp, 4 dp in), then the buttons. choose_lock_pattern_common: the 18 sp header
+     centred (two lines at least, weight 1) over the LockPatternView (weight 4), the buttons under them; the pattern's
+     colours setup_lock_pattern_view_*_light: #37474f, success #3367d6, error system_error #f4511e.
+   - confirm_lock_password_base (Theme.ConfirmDeviceCredentials under the action bar): the header in colorAccent #009688
+     (TextAppearance.Material.Headline 24 sp) 16 dp in and down, the Body1 details 12 dp under it, the borderless Cancel
+     16 dp under them, then the 208 dp entry (16 sp, centred) and the error text (Body1 in system_error #f4511e) in the
+     bottom half. */
+.ngsc-glif{position:absolute;inset:0;display:flex;flex-direction:column;background:#fafafa;color:#000000de;font-family:Roboto,sans-serif}
+.ngsc-scroll{flex:1;min-height:0;display:flex;flex-direction:column;overflow-y:auto}
+.ngsc-ghead{flex:none;padding:0 calc(24 * var(--dp))}
+.ngsc-gicon{display:block;width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-top:calc(48 * var(--dp));background:#3367d6;-webkit-mask:url('assets/st-ic_lock.svg') center/contain no-repeat;mask:url('assets/st-ic_lock.svg') center/contain no-repeat}
+.ngsc-ghead h1{margin:calc(15 * var(--dp)) 0 calc(2 * var(--dp));font:400 calc(24 * var(--dp))/calc(32 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.ngsc-frame{flex:1;display:flex;flex-direction:column;padding:0 calc(24 * var(--dp)) calc(16 * var(--dp))}
+.ngsc-desc{margin:calc(3 * var(--dp)) 0 calc(12 * var(--dp));font-size:calc(16 * var(--dp));line-height:calc(23 * var(--dp));color:#000000de}
+.ngsc-frame.tight{flex:none;padding-bottom:0}
+.ngsc-prefs{flex:1;margin:0}
+.ngsc-prefs .ngst-pref{padding:0 calc(24 * var(--dp))!important}
+.ngsc-fill{flex:1}
+.ngsc-buttons{flex:none;display:flex;align-items:center;margin-top:calc(8 * var(--dp))}
+.ngsc-buttons i{flex:1}
+.ngsc-buttons.end{justify-content:flex-end}
+.ngst .ngsc-neg,.ngst .ngsc-pos{text-align:center;min-width:calc(88 * var(--dp));height:calc(36 * var(--dp));margin:calc(6 * var(--dp)) 0;padding:0 calc(16 * var(--dp));border:0;border-radius:calc(2 * var(--dp));font:500 calc(14 * var(--dp))/1 Roboto,sans-serif;text-transform:uppercase;-webkit-tap-highlight-color:transparent}
+.ngst .ngsc-neg{background:none;color:#4285f4;margin-left:calc(-16 * var(--dp))}
+.ngst .ngsc-neg:active{background:#4285f433}
+.ngst .ngsc-pos{background:#4285f4;color:#fff;box-shadow:0 calc(2 * var(--dp)) calc(2 * var(--dp)) #0000003d}
+.ngst .ngsc-pos:active{background:#3b78e7}
+.ngst .ngsc-pos:disabled{background:#0000001f;color:#00000042;box-shadow:none}
+.ngsc-pwheader{min-height:calc(48 * var(--dp));display:flex;align-items:center;justify-content:center;text-align:center;font-size:calc(18 * var(--dp));line-height:calc(24 * var(--dp));color:#000000de}
+.ngsc-entry{display:block;width:100%;box-sizing:border-box;margin-top:calc(8 * var(--dp));padding:calc(4 * var(--dp)) calc(4 * var(--dp)) calc(8 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #4285f4;background:none;outline:none;text-align:center;font:calc(24 * var(--dp)) Roboto,sans-serif;color:#000000de;letter-spacing:.1em}
+.ngsc-reqs{margin-top:calc(8 * var(--dp))}
+.ngsc-req{padding:calc(2 * var(--dp)) 0 calc(2 * var(--dp)) calc(4 * var(--dp));font-size:calc(14 * var(--dp));line-height:calc(20 * var(--dp));color:#0000008a}
+.ngsc-patheader{flex:1;min-height:calc(48 * var(--dp));display:flex;align-items:center;justify-content:center;text-align:center;font-size:calc(18 * var(--dp));line-height:calc(24 * var(--dp))}
+.ngsc-patwrap{flex:4;display:flex;align-items:center;justify-content:center;min-height:calc(240 * var(--dp))}
+.ngsc-patwrap .ngpt{width:calc(240 * var(--dp))}
+.ngsc-pattern{--ngpt-regular:#37474f;--ngpt-success:#3367d6;--ngpt-error:#f4511e}
+.ngst .ngsc-radios{display:flex;flex-direction:column;margin-top:calc(8 * var(--dp))}
+.ngst .ngsc-radio{display:flex;align-items:center;gap:calc(12 * var(--dp));margin:0 0 calc(12 * var(--dp)) calc(-6 * var(--dp));border:0;background:none;padding:0;text-align:left;font:calc(16 * var(--dp))/calc(23 * var(--dp)) Roboto,sans-serif;color:#000000de;-webkit-tap-highlight-color:transparent}
+.ngsc-gradio{--ngw-normal:#0000008a;--ngw-accent:#4285f4}
+.ngsc-fphead{display:flex;align-items:center;min-height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));font-size:calc(16 * var(--dp));line-height:calc(22 * var(--dp));color:#000000de;background:#fafafa}
+.ngsc-confirm{display:flex;flex-direction:column;min-height:100%;background:#fafafa}
+.ngsc-cheader{margin:calc(16 * var(--dp)) calc(16 * var(--dp)) 0;font:400 calc(24 * var(--dp))/calc(32 * var(--dp)) Roboto,sans-serif;color:#009688}
+.ngsc-details{margin:calc(12 * var(--dp)) calc(16 * var(--dp)) 0;font-size:calc(14 * var(--dp));line-height:calc(20 * var(--dp));color:#000000de}
+.ngsc-ccancel{align-self:flex-start;margin:calc(16 * var(--dp)) calc(16 * var(--dp)) 0!important;min-width:calc(64 * var(--dp));height:calc(36 * var(--dp));padding:0 calc(8 * var(--dp))!important;border-radius:calc(2 * var(--dp));color:#009688!important;font:500 calc(14 * var(--dp))/1 Roboto,sans-serif!important;text-transform:uppercase;text-align:center!important}
+.ngsc-ccancel:active{background:#0000001f!important}
+.ngsc-centry{align-self:center;width:calc(208 * var(--dp));padding:calc(4 * var(--dp)) 0 calc(8 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #009688;background:none;outline:none;text-align:center;font:calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.ngsc-error{flex:1;display:flex;align-items:center;justify-content:center;margin:0 calc(12 * var(--dp));min-height:calc(40 * var(--dp));font-size:calc(14 * var(--dp));color:#f4511e;text-align:center}
+.ngsc-confirm.pattern .ngsc-cpat{display:flex;justify-content:center;margin-top:calc(24 * var(--dp))}
+.ngsc-cpattern{width:calc(280 * var(--dp));--ngpt-regular:#37474f;--ngpt-success:#009688;--ngpt-error:#f4511e}
+.ngst-gear{display:grid;place-items:center;width:calc(40 * var(--dp));height:calc(40 * var(--dp));margin-right:calc(-8 * var(--dp));border-radius:50%}
+.ngst-gear:active{background:#0000001f}
+.ngst-gear i{display:block;width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:#0000008a;-webkit-mask:url('assets/st-ic_settings.svg') center/100% no-repeat;mask:url('assets/st-ic_settings.svg') center/100% no-repeat}
+/* LockPatternView (ng-pattern.js): the colours are the theme's, as --ngpt-regular / --ngpt-success / --ngpt-error. */
+.ngpt{position:relative;aspect-ratio:1;touch-action:none;--ngpt-regular:#37474f;--ngpt-success:#009688;--ngpt-error:#f4511e}
+.ngpt svg{display:block;width:100%;height:100%;overflow:visible}
+.ngpt-dot{fill:var(--ngpt-regular)}
+.ngpt-path{fill:none;stroke:var(--ngpt-regular);stroke-linecap:round;stroke-linejoin:round}
+.ngpt[data-mode="correct"] .ngpt-path,.ngpt[data-mode="correct"] .ngpt-dot.on{stroke:var(--ngpt-success);fill:var(--ngpt-success)}
+.ngpt[data-mode="correct"] .ngpt-path{fill:none}
+.ngpt[data-mode="wrong"] .ngpt-path{stroke:var(--ngpt-error)}
+.ngpt[data-mode="wrong"] .ngpt-dot.on{fill:var(--ngpt-error)}

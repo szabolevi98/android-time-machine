@@ -416,8 +416,9 @@
     if (isCheck(n)) widget = `<i class="ngst-check${v ? ' on' : ''}"></i>`;
     if (hook.widget) widget = hook.widget(c, n.key, n) ?? widget;
     const ic = n.icon?.icon ? `<span class="ngst-iconframe">${icon(n.icon)}</span>` : '';
-    const tag = selectable ? 'button' : 'div';
-    return `<${tag} ${tag === 'button' ? 'type="button" ' : ''}class="ngst-pref${disabled ? ' disabled' : ''}" data-action="ngst-pref" data-key="${c.safe(n.key || '')}" ${disabled ? 'disabled' : ''}>${ic}<span class="ngst-texts"><span class="ngst-title">${c.safe(title)}</span>${summary ? `<span class="ngst-summary">${c.safe(summary)}</span>` : ''}</span>${widget ? `<span class="ngst-widget">${widget}</span>` : ''}</${tag}>`;
+    // A row with a button of its own in its widget frame (GearPreference) cannot be a button itself.
+    const tag = selectable && !/<button/.test(widget) ? 'button' : 'div', role = tag === 'div' && selectable ? ' role="button"' : '';
+    return `<${tag}${role} ${tag === 'button' ? 'type="button" ' : ''}class="ngst-pref${disabled ? ' disabled' : ''}" data-action="ngst-pref" data-key="${c.safe(n.key || '')}" ${disabled ? 'disabled' : ''}>${ic}<span class="ngst-texts"><span class="ngst-title">${c.safe(title)}</span>${summary ? `<span class="ngst-summary">${c.safe(summary)}</span>` : ''}</span>${widget ? `<span class="ngst-widget">${widget}</span>` : ''}</${tag}>`;
   }
   NG.settingsPref = pref;
   // A plain preference row for screens that build their own lists: {key, title, summary, icon, widget, disabled, action}.
@@ -576,7 +577,8 @@
 
   NG.register('settings', {
     title: 'Settings',
-    statusColor: () => NG.settingsTheme?.colorPrimaryDark || '#21272b',
+    // The status bar behind the window: colorPrimaryDark, or what a page of its own theme puts there (the GLIF pages).
+    statusColor: c => custom(current(c))?.statusColor?.(c) || NG.settingsTheme?.colorPrimaryDark || '#21272b',
     render, mount,
     page(c) {
       const st = state(c), stack = c.ui.sub && c.ui.sub !== st.opened ? [{screen: ALIASES[c.ui.sub] || c.ui.sub}] : st.stack;

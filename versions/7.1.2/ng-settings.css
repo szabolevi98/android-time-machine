@@ -93,7 +93,7 @@
 /* preference_material.xml (layout-v21) and preference_category_material.xml. */
 .ngst-list{background:#fafafa}
 .ngst-pref{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp))!important;box-sizing:border-box;background:#fafafa!important}
-button.ngst-pref:active{background:#e5e5e5!important}
+button.ngst-pref:active,div.ngst-pref[role=button]:active:not(:has(.ngst-gear:active)){background:#e5e5e5!important}
 .ngst-pref .ngst-texts{padding:calc(16 * var(--dp)) 0}
 .ngst-pref .ngst-summary{display:-webkit-box;-webkit-line-clamp:10;-webkit-box-orient:vertical;overflow:hidden}
 .ngst-pref.disabled .ngst-texts,.ngst-pref.disabled .ngst-iconframe{opacity:.38}

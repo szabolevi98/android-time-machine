@@ -59,7 +59,7 @@
   const slowDown = (() => {
     // sSlowDownInterpolator: the path (0, 0) to (1, 1) through (0.3, 0.875) and (0.6, 1).
     const pts = Array.from({length: 101}, (_, i) => { const t = i / 100, u = 1 - t; return [3 * u * u * t * .3 + 3 * u * t * t * .6 + t ** 3, 3 * u * u * t * .875 + 3 * u * t * t + t ** 3]; });
-    return x => { if (x <= 0) return 0; if (x >= 1) return 1; const i = pts.findIndex(p => p[0] >= x), a = pts[i - 1], b = pts[i]; return a[1] + (b[1] - a[1]) * (x - a[0]) / ((b[0] - a[0]) || 1); };
+    return x => { if (!(x > 0)) return 0; if (x >= 1) return 1; const i = pts.findIndex(p => p[0] >= x), a = pts[i - 1], b = pts[i]; return a[1] + (b[1] - a[1]) * (x - a[0]) / ((b[0] - a[0]) || 1); };
   })();
   function position(count, H, statusH, d = 0) {
     const t = count / (MAX_NOTES + 44 / 92), tc = Math.min(t, 1);
@@ -75,9 +75,91 @@
     return {top, stack, scale, alpha};
   }
 
+  /* The bouncer (KeyguardBouncer over ScrimController's in-front scrim, black at 0.75, N2G48C's SCRIM_IN_FRONT_ALPHA):
+     keyguard_host_view's KeyguardSecurityContainer at the bottom above the navigation bar, keyguard_security_width 320 dp
+     wide, keyguard_security_view_margin 8 dp above the view; the logic is 6.0.1's:
+     - keyguard_pin_view.xml (keyguard_security_max_height 450 dp at most): keyguard_message_area (14 sp,
+       textColorSecondary), the PasswordTextView row (password_dot_size 9 dp dots password_char_padding 8 dp apart, the
+       ic_backspace_24dp key, a 1 dp #28ffffff divider), four rows of NumPadKey (Widget.TextView.NumPadKey 36 sp
+       sans-serif-light white, .Klondike 12 sp #80ffffff), the last with 0 and the ic_done_wht enter key;
+       keyguard_password_view.xml (keyguard_security_height 400 dp: 7 : 2 spaces around the 280 dp 16 sp field);
+       keyguard_pattern_view.xml (400 dp: the LockPatternView in white, wrong in system_error #f4511e);
+     - keyguard_eca's emergency button (lockscreen_emergency_call) at the bottom;
+     - a wrong entry: kg_wrong_pin / password / pattern; five in a row lock it for 30 s
+       (kg_too_many_failed_attempts_countdown); Back hides the bouncer. */
+  const KLONDIKE = ['+', '', 'ABC', 'DEF', 'GHI', 'JKL', 'MNO', 'PQRS', 'TUV', 'WXYZ'];
+  function bouncer(c) {
+    const s = c.data.settings, type = s.lock.type, st = c.ui.lockState, t = T();
+    const eca = `<div class="ngbo-eca"><button type="button" class="ngbo-emergency" data-action="ngbo-emergency">${c.safe(t.t('framework/lockscreen_emergency_call'))}</button></div>`;
+    const msg = `<div class="ngbo-msg">${c.safe(st.message || '')}</div>`;
+    let view;
+    if (type === 'pin') {
+      const key = d => `<button type="button" class="ngbo-key" data-action="ngbo-digit" data-d="${d}"><span class="ngbo-digit">${d}</span><span class="ngbo-letters">${KLONDIKE[d]}</span></button>`;
+      view = `<div class="ngbo-view pin">${msg}<div class="ngbo-rows"><div class="ngbo-row0"><span class="ngbo-entry">${'<i></i>'.repeat((st.entry || '').length)}</span><button type="button" class="ngbo-del" data-action="ngbo-del"><img src="${A('sui-ic_backspace_24dp.svg')}" alt=""></button></div>
+        ${[[1, 2, 3], [4, 5, 6], [7, 8, 9]].map(r => `<div class="ngbo-row">${r.map(key).join('')}</div>`).join('')}<div class="ngbo-row"><i></i>${key(0)}<button type="button" class="ngbo-key" data-action="ngbo-enter"><img src="${A('sui-ic_done_wht.png')}" alt=""></button></div></div>${eca}</div>`;
+    } else if (type === 'password') {
+      view = `<div class="ngbo-view password"><i class="ngbo-space7"></i>${msg}<input class="ngbo-field" type="password" autocomplete="off" spellcheck="false"><i class="ngbo-space2"></i>${eca}</div>`;
+    } else view = `<div class="ngbo-view pattern">${msg}<div class="ngbo-pat">${NG.pattern.markup('ngbo-pattern')}</div>${eca}</div>`;
+    return `<div class="ngbo"><div class="ngbo-scrim"></div><div class="ngbo-container${st.lockedUntil > Date.now() ? ' locked' : ''}">${view}</div></div>`;
+  }
+  function checked(c, ok) {
+    const st = c.ui.lockState, t = T(), type = c.data.settings.lock.type;
+    if (ok) { st.verified = true; st.fails = 0; st.entry = ''; st.message = ''; const then = st.bouncer; st.bouncer = null; c.unlock(); if (typeof then === 'function') then(); else if (then && then !== 'unlock') c.open(then); return; }
+    st.entry = ''; st.fails = (st.fails || 0) + 1;
+    st.message = t.t(type === 'pin' ? 'kg_wrong_pin' : type === 'password' ? 'kg_wrong_password' : 'kg_wrong_pattern');
+    if (st.fails >= 5) {
+      st.fails = 0; st.lockedUntil = Date.now() + 30000;
+      const tick = () => {
+        if (!c.ui.lockState?.bouncer) return;
+        const left = Math.ceil((st.lockedUntil - Date.now()) / 1000), el = c.el.viewport.querySelector('.ngbo-msg');
+        if (left <= 0) { st.message = ''; c.render(); return; }
+        st.message = t.fmt('kg_too_many_failed_attempts_countdown', null, left); if (el) el.textContent = st.message;
+        setTimeout(tick, 1000);
+      };
+      tick();
+    }
+    c.render();
+  }
+  NG.lockVerified = c => { const st = c.ui.lockState || (c.ui.lockState = {hint: ''}); checked(c, true); };
+  function mountBouncer(c, root) {
+    const st = c.ui.lockState, l = c.data.settings.lock, locked = () => st.lockedUntil > Date.now();
+    const box = root.querySelector('.ngbo');
+    box?.addEventListener('pointerdown', e => e.stopPropagation());
+    box?.addEventListener('click', e => {
+      const a = e.target.closest('[data-action]')?.dataset.action;
+      if (!a) return;
+      e.stopPropagation();
+      if (locked()) return;
+      if (a === 'ngbo-digit') { if ((st.entry || '').length < 16) st.entry = (st.entry || '') + e.target.closest('[data-d]').dataset.d; st.message = ''; c.render(); }
+      else if (a === 'ngbo-del') { st.entry = (st.entry || '').slice(0, -1); c.render(); }
+      else if (a === 'ngbo-enter') { if (st.entry) checked(c, st.entry === l.secret); }
+      else if (a === 'ngbo-emergency') { st.bouncer = null; c.open('phone', 'emergency'); }
+    });
+    const field = root.querySelector('.ngbo-field');
+    if (field) {
+      field.disabled = locked();
+      field.addEventListener('keydown', e => { if (e.key === 'Enter' && field.value) { e.preventDefault(); checked(c, field.value === l.secret); } });
+      setTimeout(() => field.focus(), 30);
+    }
+    const pat = root.querySelector('.ngbo-pattern');
+    if (pat) {
+      NG.pattern.init(pat);
+      NG.pattern.bind(pat, {enabled: () => !locked(), onStart: () => { st.message = ''; const m = root.querySelector('.ngbo-msg'); if (m) m.textContent = ''; },
+        onDone: cells => {
+          if (cells.join('') === l.secret) { NG.pattern.show(pat, cells, 'correct'); checked(c, true); }
+          else { NG.pattern.show(pat, cells, 'wrong'); setTimeout(() => checked(c, false), 600); }
+        }});
+    }
+  }
+
   function render(c) {
-    const t = T(), s = c.data.settings, st = c.ui.lockState || (c.ui.lockState = {hint: ''});
-    if (secure(c) && st.bouncer) return `<div class="nglk">${c.missing('lock', '<small>KeyguardBouncer</small>')}</div>`;
+    const st = c.ui.lockState || (c.ui.lockState = {hint: ''});
+    const html = keyguard(c);
+    // The panel is collapsed under the bouncer (StatusBarKeyguardViewManager.showBouncer): only the wallpaper stays.
+    return secure(c) && st.bouncer ? html.replace('<div class="nglk">', '<div class="nglk bouncing">').replace(/<\/div>$/, `${bouncer(c)}</div>`) : html;
+  }
+  function keyguard(c) {
+    const t = T(), s = c.data.settings, st = c.ui.lockState;
     const carrier = s.airplane ? t.t('airplane_mode') : NG.text('shade').t('carrier');
     const b = NG.battery(), alarm = NG.clock?.nextAlarm(c) || 0;
     const indication = st.hint || (b.plugged ? t.t(b.level >= 100 ? 'keyguard_charged' : 'keyguard_plugged_in') : '');
@@ -201,6 +283,9 @@
     const lk = root.querySelector('.nglk'), panel = root.querySelector('.nglk-panel');
     if (!lk || !panel) return;
     layout(c, root, 0);
+    // On a page that starts on the keyguard the screen may not be laid out yet: once more on the next frame.
+    requestAnimationFrame(() => layout(c, root, 0));
+    if (c.ui.lockState?.bouncer) mountBouncer(c, root);
     const dpPx = () => c.el.screen.clientWidth / W;
     let drag = null;
     lk.addEventListener('pointerdown', e => {
@@ -254,7 +339,7 @@
   let lastMinute = -1;
   NG.register('lock', {
     app: false,
-    noStatus: () => true, noNav: () => true,
+    noStatus: () => true, noNav: c => !c.ui.lockState?.bouncer,
     shouldLock: c => (c.data.settings.lock?.type || 'swipe') !== 'none',
     timeout: c => (c.data.settings.screenTimeout ?? -1) < 0 ? -1 : 10000,
     reset(c) { c.ui.lockState = {hint: ''}; },

@@ -44,3 +44,36 @@
 .nglk-icon{position:relative;display:block;opacity:var(--a,.5);background:color-mix(in srgb,#000 calc(var(--ink,0) * 100%),#fff);-webkit-mask:center/contain no-repeat;mask:center/contain no-repeat}
 .nglk-left .nglk-icon{width:calc(26 * var(--dp));height:calc(26 * var(--dp));-webkit-mask-image:url('assets/sui-ic_mic_26dp.svg');mask-image:url('assets/sui-ic_mic_26dp.svg')}
 .nglk-camera .nglk-icon{width:calc(24 * var(--dp));height:calc(24 * var(--dp));-webkit-mask-image:url('assets/sui-ic_camera_alt_24dp.png');mask-image:url('assets/sui-ic_camera_alt_24dp.png')}
+/* The bouncer (ng-lock.js bouncer()): the in-front scrim, KeyguardSecurityContainer at the bottom, the PIN pad, the
+   password field, the pattern and the emergency button, in N2G48C's dp. */
+.ngbo{position:absolute;inset:0;z-index:5;color:#fff}
+.ngbo-scrim{position:absolute;inset:0;background:#000000bf;animation:ngbo-in .2s}
+@keyframes ngbo-in{from{opacity:0}}
+.ngbo-container{position:absolute;left:50%;bottom:0;width:min(100%,calc(320 * var(--dp)));height:min(calc(100% - 24 * var(--dp)),calc(450 * var(--dp)));transform:translateX(-50%);padding-top:calc(8 * var(--dp));box-sizing:border-box;animation:ngbo-up .3s cubic-bezier(.4,0,.2,1)}
+@keyframes ngbo-up{from{transform:translate(-50%,calc(40 * var(--dp)));opacity:0}}
+.ngbo-view{display:flex;flex-direction:column;height:100%}
+.ngbo-view.password,.ngbo-view.pattern{height:min(100%,calc(400 * var(--dp)));margin-top:auto}
+.ngbo-container:has(.password),.ngbo-container:has(.pattern){display:flex;flex-direction:column;justify-content:flex-end}
+.ngbo-msg{flex:none;min-height:calc(19 * var(--dp));text-align:center;color:#ffffffb3;font-size:calc(14 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngbo-rows{flex:1;display:flex;flex-direction:column;min-height:0}
+.ngbo-row0,.ngbo-row{flex:1;display:flex;min-height:0}
+.ngbo-row0{position:relative;align-items:center;justify-content:center;padding-bottom:calc(16 * var(--dp));border-bottom:calc(1 * var(--dp)) solid #ffffff28}
+.ngbo-entry{display:flex;gap:calc(8 * var(--dp));align-items:center}
+.ngbo-entry i{width:calc(9 * var(--dp));height:calc(9 * var(--dp));border-radius:50%;background:#fff;animation:ngbo-dot .15s}
+@keyframes ngbo-dot{from{transform:scale(0)}}
+.ngbo-del{position:absolute;right:0;top:0;bottom:calc(16 * var(--dp));padding:calc(8 * var(--dp)) calc(8 * var(--dp)) calc(8 * var(--dp)) calc(24 * var(--dp));border:0;background:none;display:grid;place-items:center}
+.ngbo-del img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngbo-row>*{flex:1}
+.ngbo-key{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;border:0;border-radius:50%;background:none;color:#fff}
+.ngbo-key:active,.ngbo-del:active,.ngbo-emergency:active{background:#ffffff26}
+.ngbo-digit{font:300 calc(36 * var(--dp))/1 Roboto,sans-serif}
+.ngbo-letters{min-height:calc(14 * var(--dp));margin-top:calc(2 * var(--dp));color:#ffffff80;font-size:calc(12 * var(--dp))}
+.ngbo-key img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin-bottom:calc(11 * var(--dp))}
+.ngbo-eca{flex:none;display:flex;justify-content:center;margin-top:calc(-10 * var(--dp))}
+.ngbo-emergency{min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;color:#ffffffb3;font:calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.ngbo-space7{flex:7}.ngbo-space2{flex:2}
+.ngbo-field{align-self:center;width:calc(280 * var(--dp));padding:calc(8 * var(--dp)) 0;border:0;border-bottom:calc(2 * var(--dp)) solid #80cbc4;background:none;outline:none;text-align:center;color:#fff;font:calc(16 * var(--dp)) Roboto,sans-serif}
+.ngbo-pat{flex:1;display:flex;justify-content:center;align-items:center;min-height:0;margin:0 calc(8 * var(--dp)) calc(4 * var(--dp))}
+.ngbo-pat .ngpt{height:100%;max-width:100%;--ngpt-regular:#fff;--ngpt-success:#fff;--ngpt-error:#f4511e}
+.ngbo-container.locked .ngbo-rows,.ngbo-container.locked .ngbo-pat,.ngbo-container.locked .ngbo-field{opacity:.4}
+.nglk.bouncing .nglk-panel{visibility:hidden}

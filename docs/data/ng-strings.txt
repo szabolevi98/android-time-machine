@@ -69,6 +69,8 @@ app_name
 keyguard_unlock voice_hint camera_hint accessibility_voice_assist_button accessibility_camera_button accessibility_unlock_button
 notification_tap_again keyguard_charged keyguard_plugged_in keyguard_indication_charging_time+args1 keyguard_accessibility_next_alarm+args1
 airplane_mode
+# The bouncer: KeyguardAbsKeyInputView / KeyguardPatternView's wrong entries and lockout, EmergencyButton
+kg_wrong_pin kg_wrong_password kg_wrong_pattern kg_too_many_failed_attempts_countdown+args1 framework/lockscreen_emergency_call
 [power] framework
 # GlobalActions (PowerAction, RestartAction), ShutdownThread's dialogs, the safe_mode overlay
 global_action_power_off sim_restart_button power_off shutdown_progress reboot_safemode_title reboot_safemode_confirm cancel yes
