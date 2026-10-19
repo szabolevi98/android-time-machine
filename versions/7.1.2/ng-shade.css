@@ -95,3 +95,9 @@
 .ngnt-title,.ngnt-text{font:400 calc(14 * var(--dp))/calc(18.58 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ngnt-title{color:#000000de}
 .ngnt-text{margin-top:calc(.5 * var(--dp));color:#0000008a}
+
+/* The heads-up row: pinned at the top of the screen over the status bar, full width, raised (the row's elevation as
+   a pinned heads-up). */
+.ngnt-hun{position:absolute;left:0;right:0;top:0;z-index:19}
+.ngnt-hun .ngnt-row{margin:0;box-shadow:0 calc(2 * var(--dp)) calc(6 * var(--dp)) #0000004d}
+.screen.view-lock .ngnt-hun,.screen.sleeping .ngnt-hun{display:none}

@@ -348,6 +348,19 @@
       });
     }
     bindPages(c, root);
+    /* A row swiped away (SwipeHelper, ng-notify.js): the notification goes, the rows under it close up in
+       ANIMATION_DURATION_STANDARD 360 ms; the last one gone collapses the panel. */
+    for (const card of root.querySelectorAll('.ngsh-stack .ngnt-row')) NG.notifications?.bindSwipe(c, card, (dir, v) => {
+      const below = [...root.querySelectorAll('.ngsh-stack > *')].filter(x => x.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_PRECEDING);
+      const h = card.offsetHeight + .5 * (c.el.screen.clientWidth / W), dx = card.offsetWidth - Math.abs(parseFloat(card.style.translate) || 0);
+      const ms = v ? Math.min(200, Math.max(50, dx / (Math.abs(v) * (c.el.screen.clientWidth / W)) * 1000)) : 200;
+      card.animate([{translate: card.style.translate || '0 0'}, {translate: `${dir === 'left' ? -1 : 1}00% 0`}], {duration: ms, easing: 'linear', fill: 'forwards'}).finished.then(() => {
+        card.style.display = 'none';
+        below.forEach(x => x.animate([{transform: `translateY(${h}px)`}, {transform: 'none'}], {duration: 360, easing: 'cubic-bezier(.4,0,.2,1)'}));
+        c.data.notifications = (c.data.notifications || []).filter(n => n.id !== +card.dataset.id); c.save(); c.renderStatus?.();
+        if (!c.notifications().length) setTimeout(() => close(c), 360);
+      });
+    }, {up: false});
     if (st.edit) NG.qsEdit?.mount(c, root.querySelector('.ngqe'), ctl);
     if (st.dialog) NG.dialog.mountLong(c, root, st.dialog);
     // Dragging on the open shade moves the same expansion as pulling the status bar (see drag).
@@ -576,7 +589,7 @@
       const st = c.ui.shade;
       if (st?.dragged) { st.dragged = false; return true; }
       if (name === 'ngsh-close') { close(c); return true; }
-      if (name === 'ngnt-open') { close(c); NG.notifications.open(c, el.dataset.id); return true; }
+      if (name === 'ngnt-open') { if (!el.dataset.swiped) { close(c); NG.notifications.open(c, el.dataset.id); } return true; }
       if (name === 'ngsh-clearall') { clearAll(c); return true; }
       if (name === 'ngqs-expand') { setQs(c, !st.qs); return true; }
       if (name === 'ngqs-settings') { c.closeOverlay(); c.open('settings'); return true; }
