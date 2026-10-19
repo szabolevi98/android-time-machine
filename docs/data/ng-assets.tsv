@@ -1,0 +1,7 @@
+# Drawables copied by docs/tools/mm-assets.py (ERA=ng) from the Nexus 6P N2G48C image: <output> TAB <APK under system/> TAB <resource>
+# SystemUI's navigation bar keys (back, back_ime, home, recent, menu_ime: KeyButtonView src, xxxhdpi for the 560 dpi 6P)
+sui-ic_sysbar_back.png	priv-app/SystemUI/SystemUI.apk	drawable/ic_sysbar_back
+sui-ic_sysbar_back_ime.png	priv-app/SystemUI/SystemUI.apk	drawable/ic_sysbar_back_ime
+sui-ic_sysbar_home.png	priv-app/SystemUI/SystemUI.apk	drawable/ic_sysbar_home
+sui-ic_sysbar_recent.png	priv-app/SystemUI/SystemUI.apk	drawable/ic_sysbar_recent
+sui-ic_sysbar_menu.png	priv-app/SystemUI/SystemUI.apk	drawable/ic_sysbar_menu

@@ -215,6 +215,10 @@ def svg(apk, name, theme):
 if __name__ == '__main__':
     import glob
     rows = [l.rstrip('\n').split('\t') for f in sorted(glob.glob(ROOT + data('vectors') + '*.tsv')) for l in open(f, encoding='utf-8') if l.strip() and not l.startswith('#')]
+    missing = []
     for out, apk, name, theme in rows:
+        # A drawable the image does not have is named, not drawn (a list taken over from another version may hold one).
+        if tree(apk, name) is None: missing.append(f'{apk} {name}'); continue
         open(OUT + out, 'w', encoding='utf-8', newline='\n').write(svg(apk, name, None if theme == '-' else theme))
-    print(len(rows), 'vectors')
+    print(len(rows) - len(missing), 'vectors')
+    if missing: raise SystemExit('not in the image: ' + ', '.join(missing))

@@ -1,0 +1,29 @@
+/* Android 7.1.2 status bar and navigation bar (ng-statusbar.js), in dp: SystemUI's status_bar.xml, system_icons.xml,
+   signal_cluster_view.xml and the NavigationBarInflaterView layout of N2G48C. */
+.ngsb{display:flex;align-items:stretch;height:100%;padding:0 calc(8 * var(--dp)) 0 calc(6 * var(--dp));box-sizing:border-box;cursor:default}
+/* The notification icons: status_bar_icon_size 24 dp boxes, the icon drawn at status_bar_icon_drawing_size 17 dp with
+   status_bar_icon_drawing_alpha 0.9. */
+.ngsb-notes{flex:1;min-width:0;display:flex;align-items:center;overflow:hidden}
+.ngsb-note{flex:none;width:calc(17 * var(--dp));height:calc(17 * var(--dp));padding:0 calc(3.5 * var(--dp));opacity:.9;object-fit:contain}
+.ngsb-system{flex:none;display:flex;align-items:center}
+.ngsb-icons{display:flex;align-items:center}
+.ngsb-icon{height:calc(17 * var(--dp))}
+.ngsb-signal{display:flex;align-items:center;margin-left:calc(2.5 * var(--dp));padding-right:calc(7 * var(--dp))}
+.ngsb-wifi{width:calc(18.41 * var(--dp));height:calc(17 * var(--dp))}
+.ngsb-spacer{width:calc(4 * var(--dp))}
+.ngsb-mobile{position:relative;width:calc(17 * var(--dp));height:calc(17 * var(--dp))}
+.ngsb-mobile img{position:absolute;left:0;top:0;height:100%}
+.ngsb-airplane{width:calc(17.25 * var(--dp));height:calc(18 * var(--dp))}
+.ngsb-battery{width:calc(9.5 * var(--dp));height:calc(14.5 * var(--dp))}
+.ngsb-clock{flex:none;display:flex;align-items:center;padding-left:calc(7 * var(--dp));color:#fff;font:500 calc(14 * var(--dp)) Roboto,sans-serif}
+
+/* The navigation bar: 40 dp space at each end, Back / Home / Overview 80 dp wide side by side in the middle. */
+.ngnb{display:flex;height:100%;background:#000}
+.ngnb-side{flex:none;width:calc(40 * var(--dp))}
+.ngnb-center{flex:1;display:flex;justify-content:center}
+.ngnb-key{position:relative;flex:none;width:calc(80 * var(--dp));height:100%;border:0;padding:0;background:none;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
+.ngnb-key img{position:relative;width:calc(22 * var(--dp));height:calc(22 * var(--dp))}
+/* KeyButtonRipple: the white pill, key-high and 80 dp wide, alpha 0.2, stretched to 1.35 times (350 ms) while pressed,
+   fading in 450 ms. */
+.ngnb-ripple{position:absolute;left:50%;top:0;width:calc(80 * var(--dp));height:100%;margin-left:calc(-40 * var(--dp));border-radius:calc(24 * var(--dp));background:#fff;opacity:0;transition:opacity .45s linear,width .35s cubic-bezier(.4,0,.2,1),margin-left .35s cubic-bezier(.4,0,.2,1)}
+.ngnb-key.pressed .ngnb-ripple{opacity:.2;width:calc(108 * var(--dp));margin-left:calc(-54 * var(--dp));transition:opacity 0s,width .35s cubic-bezier(.4,0,.2,1),margin-left .35s cubic-bezier(.4,0,.2,1)}
