@@ -37,6 +37,8 @@
   const BT_DEVICES = [{id: 'headset', name: 'Wireless Headset', cls: 0x404, profiles: ['headset'], pairing: 'pin', rssi: -60},
     {id: 'car', name: 'Car Audio', cls: 0x408, profiles: ['headset', 'a2dp', 'pbap'], pairing: 'confirm', rssi: -70}];
 
+  // The phone's Google account (the demo data of every version: <device>.demo@gmail.com).
+  NG.account = {name: 'Nexus 6P', email: 'nexus6p.demo@gmail.com'};
   const sys = NG.system = {
     live,
     // CachedBluetoothDeviceManager's devices: bonded ones (connected first) and those the scan has found.

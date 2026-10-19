@@ -9309,6 +9309,516 @@ NG.strings('settings', {
 "fr": "Fonds d'écran animés",
 "es": "Fondos animados"
 },
+"location_menu_scanning": {
+"res": "angler:SettingsGoogle:location_menu_scanning",
+"en": "Scanning",
+"hu": "Beolvasás",
+"de": "Suche",
+"fr": "Recherche",
+"es": "Buscando"
+},
+"location_no_recent_apps": {
+"res": "angler:SettingsGoogle:location_no_recent_apps",
+"en": "No apps have requested location recently",
+"hu": "Az utóbbi időben egy alkalmazás sem kért le helyadatokat.",
+"de": "Keine App hat kürzlich den Standort abgefragt.",
+"fr": "Aucune demande d'accès à votre position n'a récemment été envoyée pour une application.",
+"es": "Ninguna aplicación ha solicitado la ubicación recientemente"
+},
+"PrebuiltGmsCore/location_ulr_setting_label": {
+"res": "angler:PrebuiltGmsCore:location_ulr_setting_label",
+"en": "Google Location History",
+"hu": "Google Helyelőzmények",
+"de": "Google-Standortverlauf",
+"fr": "Historique des positions Google",
+"es": "Historial de Ubicaciones de Google"
+},
+"PrebuiltGmsCore/header_set_backup_account": {
+"res": "angler:PrebuiltGmsCore:header_set_backup_account",
+"en": "Set backup account",
+"hu": "Biztonsági mentés helyének megadása",
+"de": "Sicherungskonto einrichten",
+"fr": "Définir le compte",
+"es": "Cuenta de copia de seguridad"
+},
+"PrebuiltGmsCore/add_account": {
+"res": "angler:PrebuiltGmsCore:add_account",
+"en": "Add account",
+"hu": "Fiók hozzáadása",
+"de": "Konto hinzufügen",
+"fr": "Ajouter un compte",
+"es": "Añadir cuenta"
+},
+"backup_configure_account_default_summary": {
+"res": "angler:SettingsGoogle:backup_configure_account_default_summary",
+"en": "No account is currently storing backed up data",
+"hu": "Jelenleg egyik fiók sem tárol biztonsági mentéseket",
+"de": "Zurzeit werden in keinem Konto gesicherte Daten gespeichert.",
+"fr": "Aucun compte ne stocke actuellement des données sauvegardées.",
+"es": "Ninguna cuenta está almacenando datos con copia de seguridad en estos momentos."
+},
+"backup_data_summary": {
+"res": "angler:SettingsGoogle:backup_data_summary",
+"en": "Back up app data, Wi-Fi passwords, and other settings to Google servers",
+"hu": "Biztonsági másolat készítése az alkalmazásadatokról, Wi-Fi-jelszavakról és egyéb beállításokról a Google szerverein",
+"de": "App-Daten, WLAN-Passwörter und andere Einstellungen auf Google-Servern sichern",
+"fr": "Sauvegarder les données des applications, les mots de passe Wi-Fi et d'autres paramètres sur les serveurs Google",
+"es": "Crear copia de seguridad de datos de aplicaciones, de contraseñas Wi-Fi y de otros ajustes en los servidores de Google"
+},
+"backup_erase_dialog_message": {
+"res": "angler:SettingsGoogle:backup_erase_dialog_message",
+"en": "Stop backing up your Wi‑Fi passwords, bookmarks, other settings, and app data, plus erase all copies on Google servers?",
+"hu": "Kikapcsolja a Wi-Fi-jelszavak, könyvjelzők, egyéb beállítások és alkalmazásadatok biztonsági mentését, illetve törli a Google szerverein lévő összes példányt?",
+"de": "Sicherung deiner WLAN-Passwörter, Lesezeichen, anderer Einstellungen und App-Daten beenden und alle Kopien auf Google-Servern löschen?",
+"fr": "Voulez-vous vraiment arrêter de sauvegarder vos mots de passe Wi-Fi, vos favoris, ainsi que d'autres paramètres et données d'applications, et en effacer toutes les copies des serveurs Google ?",
+"es": "¿Quieres dejar de crear copias de seguridad de las contraseñas Wi-Fi, de los marcadores y de otros ajustes y datos de aplicaciones, además de borrar todas las copias de los servidores de Google?"
+},
+"master_clear_desc": {
+"res": "angler:SettingsGoogle:master_clear_desc",
+"en": "This will erase all data from your phone’s internal storage, including:\n\nYour Google account\nSystem and app data and settings\nDownloaded apps",
+"hu": "Ez minden adatot töröl a telefon belső tárolójáról, többek között: \n \nGoogle-fiókját;\na rendszer- és alkalmazásadatokat és beállításokat; \n a letöltött alkalmazásokat.",
+"de": "Hierdurch werden alle Daten aus dem internen Speicher deines Telefons gelöscht, u. a.\n\ndein Google-Konto\nSystem- und App-Daten sowie entsprechende Einstellungen\nheruntergeladene Apps",
+"fr": "Cette action effacera toutes les données du stockage interne de votre téléphone, y compris :\n\nVotre compte Google\nLes données et paramètres du système et des applications\nLes applications téléchargées",
+"es": "Se borrarán todos los datos del almacenamiento interno del teléfono, como:\n\nTu cuenta de Google\nLos ajustes y los datos de aplicaciones y del sistema\nLas aplicaciones descargadas"
+},
+"master_clear_desc_also_erases_external": {
+"res": "angler:SettingsGoogle:master_clear_desc_also_erases_external",
+"en": "Music\nPhotos\nOther user data",
+"hu": "Zene\nFotók\nMás felhasználói adatok",
+"de": "Musik\nFotos\nSonstige Nutzerdaten",
+"fr": "Musique\nPhotos\nAutres données utilisateur",
+"es": "Música\nFotos\nOtros datos de usuario"
+},
+"master_clear_accounts": {
+"res": "angler:SettingsGoogle:master_clear_accounts",
+"en": "\n\nYou are currently signed into the following accounts:\n",
+"hu": "\n\nJelenleg a következő fiókokba van bejelentkezve:\n",
+"de": "\n\nDu bist zurzeit in folgenden Konten angemeldet:\n",
+"fr": "\n\nVous êtes actuellement connecté aux comptes suivants :\n",
+"es": "\n\nHas accedido a las cuentas que se indican a continuación:\n"
+},
+"master_clear_button_text": {
+"res": "angler:SettingsGoogle:master_clear_button_text",
+"en": "Reset phone",
+"hu": "Telefon visszaállítása",
+"de": "Telefon zurücksetzen",
+"fr": "Réinitialiser le téléphone",
+"es": "Restablecer teléfono"
+},
+"master_clear_confirm_title": {
+"res": "angler:SettingsGoogle:master_clear_confirm_title",
+"en": "Reset?",
+"hu": "Visszaállítás?",
+"de": "Zurücksetzen?",
+"fr": "Réinitialiser ?",
+"es": "¿Restablecer?"
+},
+"master_clear_final_desc": {
+"res": "angler:SettingsGoogle:master_clear_final_desc",
+"en": "Erase all your personal information and downloaded apps? You can’t undo this action!",
+"hu": "Törli az összes személyes információt és letöltött alkalmazást? A műveletet nem lehet visszavonni.",
+"de": "Alle personenbezogenen Daten und heruntergeladenen Apps löschen? Diese Aktion kann nicht rückgängig gemacht werden!",
+"fr": "Effacer toutes vos informations personnelles et les applications téléchargées ? Cette action est irréversible.",
+"es": "¿Quieres borrar toda tu información personal y todas las aplicaciones descargadas? Esta acción no se puede deshacer."
+},
+"master_clear_final_button_text": {
+"res": "angler:SettingsGoogle:master_clear_final_button_text",
+"en": "Erase everything",
+"hu": "Minden törlése",
+"de": "Alles löschen",
+"fr": "Tout effacer",
+"es": "Borrar todo"
+},
+"master_clear_progress_title": {
+"res": "angler:SettingsGoogle:master_clear_progress_title",
+"en": "Erasing",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Suppression en cours",
+"es": "Borrando"
+},
+"master_clear_progress_text": {
+"res": "angler:SettingsGoogle:master_clear_progress_text",
+"en": "Please wait...",
+"hu": "Kérjük, várjon…",
+"de": "Bitte warten...",
+"fr": "Veuillez patienter...",
+"es": "Espera..."
+},
+"pref_title_lang_selection": {
+"res": "angler:SettingsGoogle:pref_title_lang_selection",
+"en": "Language preferences",
+"hu": "Nyelvi beállítások",
+"de": "Spracheinstellungen",
+"fr": "Préférences de langue",
+"es": "Preferencias de idioma"
+},
+"locale_remove_menu": {
+"res": "angler:SettingsGoogle:locale_remove_menu",
+"en": "Remove",
+"hu": "Eltávolítás",
+"de": "Entfernen",
+"fr": "Supprimer",
+"es": "Quitar"
+},
+"locale_not_translated": {
+"res": "angler:SettingsGoogle:locale_not_translated",
+"en": "May not be available in some apps",
+"hu": "Lehet, hogy egyes alkalmazásokban nem áll majd rendelkezésre",
+"de": "Unter Umständen in manchen Apps nicht verfügbar",
+"fr": "Il est possible que cette langue ne soit pas disponible dans certaines applis.",
+"es": "Es posible que no esté disponible en algunas aplicaciones"
+},
+"add_a_language": {
+"res": "angler:SettingsGoogle:add_a_language",
+"en": "Add a language",
+"hu": "Nyelv hozzáadása",
+"de": "Sprache hinzufügen",
+"fr": "Ajouter une langue",
+"es": "Añadir un idioma"
+},
+"dlg_remove_locales_error_title": {
+"res": "angler:SettingsGoogle:dlg_remove_locales_error_title",
+"en": "Can’t remove all languages",
+"hu": "Nem lehet eltávolítani az összes nyelvet",
+"de": "Du kannst nicht alle Sprachen entfernen",
+"fr": "Impossible de supprimer toutes les langues",
+"es": "No puedes quitar todos los idiomas"
+},
+"dlg_remove_locales_error_message": {
+"res": "angler:SettingsGoogle:dlg_remove_locales_error_message",
+"en": "Keep at least one preferred language",
+"hu": "Legalább egy előnyben részesített nyelvet tartson meg",
+"de": "Behalte mindestens eine bevorzugte Sprache",
+"fr": "Conservez au moins une langue prioritaire.",
+"es": "Guarda al menos un idioma preferido"
+},
+"dlg_remove_locales_message": {
+"res": "angler:SettingsGoogle:dlg_remove_locales_message",
+"en": "Text will be displayed in another language.",
+"hu": "A szöveg más nyelven fog megjelenni.",
+"de": "Der Text wird in einer anderen Sprache angezeigt.",
+"fr": "Le texte s'affichera dans une autre langue.",
+"es": "El texto se mostrará en otro idioma."
+},
+"framework/language_selection_title": {
+"res": "angler:framework:language_selection_title",
+"en": "Add a language",
+"hu": "Nyelv hozzáadása",
+"de": "Sprache hinzufügen",
+"fr": "Ajouter une langue",
+"es": "Añade un idioma"
+},
+"framework/search_language_hint": {
+"res": "angler:framework:search_language_hint",
+"en": "Type language name",
+"hu": "Adja meg a nyelvet",
+"de": "Sprache eingeben",
+"fr": "Saisissez la langue",
+"es": "Nombre de idioma"
+},
+"framework/language_picker_section_suggested": {
+"res": "angler:framework:language_picker_section_suggested",
+"en": "Suggested",
+"hu": "Javasolt",
+"de": "Vorschläge",
+"fr": "Recommandations",
+"es": "Sugeridos"
+},
+"framework/language_picker_section_all": {
+"res": "angler:framework:language_picker_section_all",
+"en": "All languages",
+"hu": "Minden nyelv",
+"de": "Alle Sprachen",
+"fr": "Toutes les langues",
+"es": "Todos los idiomas"
+},
+"framework/region_picker_section_all": {
+"res": "angler:framework:region_picker_section_all",
+"en": "All regions",
+"hu": "Minden régió",
+"de": "Alle Regionen",
+"fr": "Toutes les régions",
+"es": "Todas las regiones"
+},
+"framework/dialog_alert_title": {
+"res": "angler:framework:dialog_alert_title",
+"en": "Attention",
+"hu": "Figyelem",
+"de": "Achtung",
+"fr": "Attention",
+"es": "Atención"
+},
+"LatinIMEGooglePrebuilt/ime_name": {
+"res": "angler:LatinIMEGooglePrebuilt:ime_name",
+"en": "Gboard",
+"hu": "Gboard",
+"de": "Gboard",
+"fr": "Gboard",
+"es": "Gboard"
+},
+"LatinIMEGooglePrebuilt/spell_checker_name": {
+"res": "angler:LatinIMEGooglePrebuilt:spell_checker_name",
+"en": "Google spell checker",
+"hu": "Google helyesírás-ellenőrző",
+"de": "Google-Rechtschreibprüfung",
+"fr": "Correcteur orthographique Google",
+"es": "Corrector ortográfico de Google"
+},
+"LatinIMEGooglePrebuilt/subtype_locale_en_US": {
+"res": "angler:LatinIMEGooglePrebuilt:subtype_locale_en_US",
+"en": "English (US)",
+"hu": "angol (USA)",
+"de": "Englisch (USA)",
+"fr": "Anglais (États-Unis)",
+"es": "Inglés (EE.UU.)"
+},
+"LatinIMEGooglePrebuilt/subtype_locale_en_GB": {
+"res": "angler:LatinIMEGooglePrebuilt:subtype_locale_en_GB",
+"en": "English (UK)",
+"hu": "angol (UK)",
+"de": "Englisch (UK)",
+"fr": "Anglais (Royaume-Uni)",
+"es": "Inglés (RU)"
+},
+"Velvet/ime_service_label": {
+"res": "angler:Velvet:ime_service_label",
+"en": "Google voice typing",
+"hu": "Google hangalapú gépelés",
+"de": "Google Spracheingabe",
+"fr": "Google voice typing",
+"es": "Dictado por voz de Google"
+},
+"Velvet/voice_ime_language_auto": {
+"res": "angler:Velvet:voice_ime_language_auto",
+"en": "Automatic",
+"hu": "Automatikus",
+"de": "Automatisch",
+"fr": "Automatique",
+"es": "Automático"
+},
+"GoogleHindiIME/ime_name": {
+"res": "angler:GoogleHindiIME:ime_name",
+"en": "Google Indic Keyboard",
+"hu": "Google indiai billentyűzet",
+"de": "Indische Google-Tastatur",
+"fr": "Clavier Google indique",
+"es": "Teclado índico de Google"
+},
+"GoogleHindiIME/spellchecker_name": {
+"res": "angler:GoogleHindiIME:spellchecker_name",
+"en": "Indic English spell checker",
+"hu": "Indic English spell checker",
+"de": "Indic English spell checker",
+"fr": "Indic English spell checker",
+"es": "Indic English spell checker",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"GoogleJapaneseInput/ime_name": {
+"res": "angler:GoogleJapaneseInput:ime_name",
+"en": "Google Japanese Input",
+"hu": "Google japán bevitel",
+"de": "Google Japanese Input",
+"fr": "Mode de saisie Google du japonais",
+"es": "Método de entrada de japonés de Google"
+},
+"KoreanIME/ime_name": {
+"res": "angler:KoreanIME:ime_name",
+"en": "Google Korean Input",
+"hu": "Google koreai bevitel",
+"de": "Google-Eingabe für Koreanisch",
+"fr": "Saisie Google en coréen",
+"es": "Método de entrada coreano de Google"
+},
+"GooglePinyinIME/ime_name": {
+"res": "angler:GooglePinyinIME:ime_name",
+"en": "Google Pinyin Input",
+"hu": "Google pinjin bevitel",
+"de": "Google-Eingabe für Pinyin",
+"fr": "Saisie Google en pinyin",
+"es": "Google Pinyin Input"
+},
+"GoogleTTS/app_name": {
+"res": "angler:GoogleTTS:app_name",
+"en": "Google Text-to-speech Engine",
+"hu": "Google Szövegfelolvasó",
+"de": "Google Text-in-Sprache",
+"fr": "Synthèse vocale Google",
+"es": "Síntesis de Google"
+},
+"default_spell_checker": {
+"res": "angler:SettingsGoogle:default_spell_checker",
+"en": "Default spell checker",
+"hu": "Szokásos helyesírás-ellenőrző",
+"de": "Standardrechtschreibprüfung",
+"fr": "Correcteur ortho par défaut",
+"es": "Corrector predeterminado"
+},
+"use_system_language_to_select_input_method_subtypes": {
+"res": "angler:SettingsGoogle:use_system_language_to_select_input_method_subtypes",
+"en": "Use system languages",
+"hu": "Rendszernyelvek használata",
+"de": "Systemsprache verwenden",
+"fr": "Utiliser les langues du système",
+"es": "Usar idiomas del sistema"
+},
+"choose_spell_checker": {
+"res": "angler:SettingsGoogle:choose_spell_checker",
+"en": "Choose spell checker",
+"hu": "Helyesírás-ellenőrző",
+"de": "Rechtschreibprüfung wählen",
+"fr": "Sélectionner correcteur ortho",
+"es": "Elige corrector ortográfico"
+},
+"spellchecker_security_warning": {
+"res": "angler:SettingsGoogle:spellchecker_security_warning",
+"en": "This spell checker may be able to collect all the text you type, including personal data like passwords and credit card numbers. It comes from the app %1$s. Use this spell checker?",
+"hu": "Lehetséges, hogy ez a helyesírás-ellenőrző összegyűjti a beírt szövegeket, beleértve a személyes adatokat, mint amilyenek a jelszavak és bankkártyaszámok. A(z) %1$s alkalmazástól származik. Használja ezt a helyesírás-ellenőrzőt?",
+"de": "Diese Rechtschreibprüfung kann den gesamten von dir eingegebenen Text erfassen, einschließlich personenbezogener Daten wie Passwörter und Kreditkartennummern. Sie ist Teil der App \"%1$s\". Möchtest du die Rechtschreibprüfung verwenden?",
+"fr": "Ce correcteur orthographique peut recueillir l'ensemble du texte saisi, y compris des données personnelles comme des mots de passe et des numéros de carte de paiement. Il provient de l'application %1$s. Utiliser ce correcteur orthographique ?",
+"es": "Este corrector ortográfico puede registrar todo lo que escribas, incluidos datos personales, como las contraseñas y los números de las tarjetas de crédito. Procede de la aplicación %1$s. ¿Quieres usar este corrector ortográfico?"
+},
+"user_dict_settings_add_word_option_name": {
+"res": "angler:SettingsGoogle:user_dict_settings_add_word_option_name",
+"en": "Word:",
+"hu": "Szó:",
+"de": "Wort:",
+"fr": "Mot :",
+"es": "Palabra:"
+},
+"user_dict_settings_add_word_hint": {
+"res": "angler:SettingsGoogle:user_dict_settings_add_word_hint",
+"en": "Type a word",
+"hu": "Szó beírása",
+"de": "Wort eingeben",
+"fr": "Saisissez un mot",
+"es": "Escribe una palabra"
+},
+"user_dict_settings_add_shortcut_option_name": {
+"res": "angler:SettingsGoogle:user_dict_settings_add_shortcut_option_name",
+"en": "Shortcut:",
+"hu": "Gyorsparancs:",
+"de": "Tastaturkürzel:",
+"fr": "Raccourci :",
+"es": "Texto de sustitución:"
+},
+"user_dict_settings_add_shortcut_hint": {
+"res": "angler:SettingsGoogle:user_dict_settings_add_shortcut_hint",
+"en": "Optional shortcut",
+"hu": "Választható gyorsparancs",
+"de": "Optionales Tastaturkürzel",
+"fr": "Raccourci facultatif",
+"es": "Introducir"
+},
+"user_dict_settings_context_menu_delete_title": {
+"res": "angler:SettingsGoogle:user_dict_settings_context_menu_delete_title",
+"en": "Delete",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Supprimer",
+"es": "Eliminar"
+},
+"user_dict_settings_add_dialog_confirm": {
+"res": "angler:SettingsGoogle:user_dict_settings_add_dialog_confirm",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"user_dict_settings_add_menu_title": {
+"res": "angler:SettingsGoogle:user_dict_settings_add_menu_title",
+"en": "Add",
+"hu": "Hozzáadás",
+"de": "Hinzufügen",
+"fr": "Ajouter",
+"es": "Añadir"
+},
+"user_dict_settings_empty_text": {
+"res": "angler:SettingsGoogle:user_dict_settings_empty_text",
+"en": "You don’t have any words in the user dictionary. To add a word, tap the Add (+) button.",
+"hu": "Nincsenek szavak a felhasználói szótárban. Új szavakat a Hozzáadás (+) gombra koppintva vehet fel.",
+"de": "Es sind noch keine Wörter in deinem Wörterbuch vorhanden. Du kannst Wörter hinzufügen, indem du auf das \"+\"-Symbol tippst.",
+"fr": "Votre dictionnaire personnel ne contient aucun mot. Pour ajouter un mot, appuyez sur le bouton d'ajout \"+\".",
+"es": "No tienes ninguna palabra en el diccionario del usuario. Para añadir una, toca el botón +."
+},
+"user_dict_settings_add_dialog_title": {
+"res": "angler:SettingsGoogle:user_dict_settings_add_dialog_title",
+"en": "Add to dictionary",
+"hu": "Hozzáadás a szótárhoz",
+"de": "Ins Wörterbuch",
+"fr": "Ajouter au dictionnaire",
+"es": "Añadir al diccionario"
+},
+"user_dict_settings_edit_dialog_title": {
+"res": "angler:SettingsGoogle:user_dict_settings_edit_dialog_title",
+"en": "Edit word",
+"hu": "Szó szerkesztése",
+"de": "Wort bearbeiten",
+"fr": "Modifier le mot",
+"es": "Editar palabra"
+},
+"tts_default_sample_string": {
+"res": "angler:SettingsGoogle:tts_default_sample_string",
+"en": "This is an example of speech synthesis",
+"hu": "Ez egy példa a beszédszintézisre",
+"de": "Dies ist ein Beispiel für Sprachsynthese.",
+"fr": "Voici un échantillon de synthèse vocale.",
+"es": "Este es un ejemplo de síntesis de voz"
+},
+"tts_status_ok": {
+"res": "angler:SettingsGoogle:tts_status_ok",
+"en": "%1$s is fully supported",
+"hu": "A(z) %1$s nyelv teljes támogatást élvez",
+"de": "%1$s wird vollständig unterstützt.",
+"fr": "Les paramètres régionaux %1$s sont compatibles.",
+"es": "El %1$s se admite completamente"
+},
+"tts_status_requires_network": {
+"res": "angler:SettingsGoogle:tts_status_requires_network",
+"en": "%1$s requires network connection",
+"hu": "A(z) %1$s nyelv használatához hálózati kapcsolatra van szükség",
+"de": "%1$s erfordert eine Netzwerkverbindung.",
+"fr": "Les paramètres régionaux %1$s nécessitent une connexion réseau.",
+"es": "El idioma %1$s requiere conexión a Internet"
+},
+"zone_list_menu_sort_alphabetically": {
+"res": "angler:SettingsGoogle:zone_list_menu_sort_alphabetically",
+"en": "Sort alphabetically",
+"hu": "Rendezés név szerint",
+"de": "Alphabetisch sortieren",
+"fr": "Trier par ordre alphabétique",
+"es": "Ordenar alfabéticamente"
+},
+"zone_list_menu_sort_by_timezone": {
+"res": "angler:SettingsGoogle:zone_list_menu_sort_by_timezone",
+"en": "Sort by time zone",
+"hu": "Rendezés időzóna szerint",
+"de": "Nach Zeitzone sortieren",
+"fr": "Trier par fuseau horaire",
+"es": "Ordenar por zona horaria"
+},
+"accessibility_feature_state_on": {
+"res": "angler:SettingsGoogle:accessibility_feature_state_on",
+"en": "On",
+"hu": "be",
+"de": "An",
+"fr": "Activé",
+"es": "Sí"
+},
+"accessibility_feature_state_off": {
+"res": "angler:SettingsGoogle:accessibility_feature_state_off",
+"en": "Off",
+"hu": "Ki",
+"de": "Aus",
+"fr": "Désactivé",
+"es": "No"
+},
 "settings_suggestion_header_summary_hidden_items": {
 "res": "angler:SettingsGoogle:settings_suggestion_header_summary_hidden_items",
 "en": {
@@ -9800,6 +10310,127 @@ NG.strings('settings', {
 "IPSec Xauth PSK",
 "IPSec Xauth RSA",
 "IPSec Hybrid RSA"
+],
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"dlg_remove_locales_title": {
+"res": "angler:SettingsGoogle:dlg_remove_locales_title",
+"en": {
+"other": "Remove selected languages?",
+"one": "Remove selected language?"
+},
+"hu": {
+"other": "Eltávolítja a kiválasztott nyelveket?",
+"one": "Eltávolítja a kiválasztott nyelvet?"
+},
+"de": {
+"other": "Ausgewählte Sprachen entfernen?",
+"one": "Ausgewählte Sprache entfernen?"
+},
+"fr": {
+"other": "Supprimer les langues sélectionnées ?",
+"one": "Supprimer la langue sélectionnée ?"
+},
+"es": {
+"other": "¿Quitar idiomas seleccionados?",
+"one": "¿Quitar idioma seleccionado?"
+}
+},
+"tts_demo_strings": {
+"res": "angler:SettingsGoogle:tts_demo_strings",
+"en": [
+"This is an example of speech synthesis in English.",
+"Voici un échantillon de synthèse vocale en français.",
+"Dies ist ein Beispiel für Sprachsynthese in Deutsch.",
+"Questo è un esempio di sintesi vocale in italiano.",
+"Este es un ejemplo de síntesis de voz en español.",
+"이것은 한국어 음성 합성의 예입니다."
+],
+"hu": [
+"This is an example of speech synthesis in English.",
+"Voici un échantillon de synthèse vocale en français.",
+"Dies ist ein Beispiel für Sprachsynthese in Deutsch.",
+"Questo è un esempio di sintesi vocale in italiano.",
+"Este es un ejemplo de síntesis de voz en español.",
+"이것은 한국어 음성 합성의 예입니다."
+],
+"de": [
+"This is an example of speech synthesis in English.",
+"Voici un échantillon de synthèse vocale en français.",
+"Dies ist ein Beispiel für Sprachsynthese in Deutsch.",
+"Questo è un esempio di sintesi vocale in italiano.",
+"Este es un ejemplo de síntesis de voz en español.",
+"이것은 한국어 음성 합성의 예입니다."
+],
+"fr": [
+"This is an example of speech synthesis in English.",
+"Voici un échantillon de synthèse vocale en français.",
+"Dies ist ein Beispiel für Sprachsynthese in Deutsch.",
+"Questo è un esempio di sintesi vocale in italiano.",
+"Este es un ejemplo de síntesis de voz en español.",
+"이것은 한국어 음성 합성의 예입니다."
+],
+"es": [
+"This is an example of speech synthesis in English.",
+"Voici un échantillon de synthèse vocale en français.",
+"Dies ist ein Beispiel für Sprachsynthese in Deutsch.",
+"Questo è un esempio di sintesi vocale in italiano.",
+"Este es un ejemplo de síntesis de voz en español.",
+"이것은 한국어 음성 합성의 예입니다."
+],
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"tts_demo_string_langs": {
+"res": "angler:SettingsGoogle:tts_demo_string_langs",
+"en": [
+"eng",
+"fra",
+"deu",
+"ita",
+"spa",
+"kor"
+],
+"hu": [
+"eng",
+"fra",
+"deu",
+"ita",
+"spa",
+"kor"
+],
+"de": [
+"eng",
+"fra",
+"deu",
+"ita",
+"spa",
+"kor"
+],
+"fr": [
+"eng",
+"fra",
+"deu",
+"ita",
+"spa",
+"kor"
+],
+"es": [
+"eng",
+"fra",
+"deu",
+"ita",
+"spa",
+"kor"
 ],
 "untranslated": [
 "hu",

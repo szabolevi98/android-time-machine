@@ -18,6 +18,11 @@ class Bundle:
         self.local_key_limit = keys_top * 4
         self.p16 = keys_top * 4                       # 16-bit units follow the key strings (format 2)
         self.pool_keys = (1 + count) * 4              # where a pool bundle's own keys start
+        # ICU 56+ (7.1.2's icudt56l): a bundle may use the pool bundle's 16-bit strings too. Offsets under these limits
+        # are pool strings; the others are local ones, shifted by the limit (uresdata.cpp, makeResourceFrom16).
+        att = self.indexes[5] if count > 5 else 0
+        self.pool_str_limit = (self.indexes[0] >> 8) | ((att & 0xf000) << 12) if count > 5 else 0
+        self.pool_str16_limit = att >> 16
 
     def u32(self, p): return struct.unpack_from('<I', self.d, p)[0]
     def i32(self, p): return struct.unpack_from('<i', self.d, p)[0]
@@ -41,6 +46,10 @@ class Bundle:
         return self.cstr(self.pool.d, self.pool.pool_keys + (off & 0x7fffffff))
 
     def string16(self, off):
+        if self.pool is not None and self.pool_str_limit:
+            if off < self.pool_str_limit:
+                return self.pool.string16(off)
+            off -= self.pool_str_limit
         p = self.p16 + off * 2
         first = self.u16(p)
         if first < 0xdc00:
@@ -54,6 +63,9 @@ class Bundle:
         else:
             n, p = (self.u16(p + 2) << 16) | self.u16(p + 4), p + 6
         return self.d[p:p + 2 * n].decode('utf-16-le')
+
+    def from16(self, res16):
+        return (6 << 28) | (res16 if res16 < self.pool_str16_limit else res16 - self.pool_str16_limit + self.pool_str_limit)
 
     def value(self, res):
         kind, off = res >> 28, res & 0x0fffffff
@@ -78,7 +90,7 @@ class Bundle:
             return {self.key16(keys[i]): (self, self.u32(items + 4 * i)) for i in range(n)}
         if kind == 5:                                  # TABLE16
             p = self.p16 + off * 2; n = self.u16(p)
-            return {self.key16(self.u16(p + 2 + 2 * i)): (self, (6 << 28) | self.u16(p + 2 + 2 * (n + i))) for i in range(n)}
+            return {self.key16(self.u16(p + 2 + 2 * i)): (self, self.from16(self.u16(p + 2 + 2 * (n + i)))) for i in range(n)}
         if kind == 4:                                  # TABLE32
             p = off * 4; n = self.i32(p)
             return {self.key32(self.i32(p + 4 + 4 * i)): (self, self.u32(p + 4 + 4 * (n + i))) for i in range(n)}
@@ -88,7 +100,7 @@ class Bundle:
             return [(self, self.u32(p + 4 + 4 * i)) for i in range(n)]
         if kind == 9:                                  # ARRAY16
             p = self.p16 + off * 2; n = self.u16(p)
-            return [(self, (6 << 28) | self.u16(p + 2 + 2 * i)) for i in range(n)]
+            return [(self, self.from16(self.u16(p + 2 + 2 * i))) for i in range(n)]
         raise ValueError(f'resource type {kind}')
 
 

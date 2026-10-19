@@ -8,7 +8,10 @@ fw-ic_audio_media_mute.svg	framework/framework-res.apk	ic_audio_media_mute	tint=
 fw-ic_audio_ring_notif.svg	framework/framework-res.apk	ic_audio_ring_notif	tint=#8a000000
 fw-ic_audio_ring_notif_mute.svg	framework/framework-res.apk	ic_audio_ring_notif_mute	tint=#8a000000
 fw-ic_audio_ring_notif_vibrate.svg	framework/framework-res.apk	ic_audio_ring_notif_vibrate	tint=#8a000000
+fw-ic_chevron_end.svg	framework/framework-res.apk	ic_chevron_end	tint=#8a000000
+fw-ic_chevron_start.svg	framework/framework-res.apk	ic_chevron_start	tint=#8a000000
 fw-ic_search_api_material.svg	framework/framework-res.apk	ic_search_api_material	tint=#8a000000
+st-drag_handle.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	drag_handle	-
 st-fp_illustration_enrollment.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	fp_illustration_enrollment	-
 st-home.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	home	tint=#ff009688
 st-ic_add.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_add	tint=#8a000000
@@ -18,6 +21,7 @@ st-ic_bt_headphones_a2dp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_bt_he
 st-ic_bt_headset_hfp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_bt_headset_hfp	tint=#ff009688
 st-ic_cellular_off.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_cellular_off	-
 st-ic_data_saver.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_data_saver	-
+st-ic_delete.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_delete	tint=#8a000000
 st-ic_expand_less.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_expand_less	tint=#8a000000
 st-ic_expand_more.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_expand_more	tint=#8a000000
 st-ic_fingerprint_24dp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_fingerprint_24dp	tint=#ff009688

@@ -45,3 +45,25 @@
 .ngdlg-spinner circle{fill:none;stroke:#009688;stroke-width:4;stroke-dasharray:90 30;stroke-linecap:square}
 @keyframes ngdlg-spin{to{transform:rotate(360deg)}}
 .ngdlg-message{white-space:pre-line}
+/* ng-pickers.js: TimePickerDialog (the 96 dp header, the 224 dp dial) and DatePickerDialog (the header, the month with
+   its ic_chevron_start / _end arrows, the day grid). */
+.ngtp{overflow:hidden}
+.ngtp-head{display:flex;align-items:center;justify-content:center;height:calc(96 * var(--dp));font:calc(60 * var(--dp))/1 Roboto,sans-serif}
+.ngtp-head>button{padding:0;border:0;background:none;font:inherit}
+.ngtp-ampm{display:flex;flex-direction:column;margin-left:calc(16 * var(--dp))}
+.ngtp-ampm button{padding:calc(2 * var(--dp)) 0;border:0;background:none;font:calc(16 * var(--dp))/1.2 Roboto,sans-serif;text-align:left;text-transform:uppercase}
+.ngtp-body{display:flex;justify-content:center;padding:calc(16 * var(--dp)) 0 calc(8 * var(--dp))}
+.ngtp-dial{width:calc(224 * var(--dp));height:calc(224 * var(--dp));font-family:Roboto,sans-serif;touch-action:none;cursor:pointer}
+.ngdp{overflow:hidden}
+.ngdp-head{display:flex;flex-direction:column;padding:calc(16 * var(--dp)) calc(24 * var(--dp));color:#fff}
+.ngdp-head small{font-size:calc(16 * var(--dp));color:#ffffffb3}
+.ngdp-head b{font:400 calc(36 * var(--dp))/1.2 Roboto,sans-serif}
+.ngdp-month{display:flex;align-items:center;justify-content:space-between;height:calc(48 * var(--dp));padding:0 calc(8 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.ngdp-month button{width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;border-radius:50%;background:none;display:grid;place-items:center}
+.ngdp-month button:active{background:#0000001f}
+.ngdp-month i{width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:#0000008a;-webkit-mask:url('assets/fw-ic_chevron_start.svg') center/100% no-repeat;mask:url('assets/fw-ic_chevron_start.svg') center/100% no-repeat}
+.ngdp-month button+span+button i{-webkit-mask-image:url('assets/fw-ic_chevron_end.svg');mask-image:url('assets/fw-ic_chevron_end.svg')}
+.ngdp-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:0 calc(12 * var(--dp)) calc(8 * var(--dp));text-align:center}
+.ngdp-grid i{font-style:normal;font-size:calc(12 * var(--dp));line-height:calc(32 * var(--dp));color:#0000008a}
+.ngdp-grid button{justify-self:center;width:calc(36 * var(--dp));height:calc(36 * var(--dp));padding:0;border:0;border-radius:50%;background:none;font:calc(12 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.ngdp-grid button.on{color:#fff}

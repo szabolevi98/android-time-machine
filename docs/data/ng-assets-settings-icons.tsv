@@ -1,3 +1,12 @@
 # Settings' screen saver and wallpaper lists: the dreams' and pickers' icons
 bd-colors_icon.png	app/BasicDreams/BasicDreams.apk	mipmap/colors_icon
 lw-ic_launcher_live_wallpaper.png	app/LiveWallpapersPicker/LiveWallpapersPicker.apk	mipmap/ic_launcher_live_wallpaper
+# Languages & input: the input methods' application icons (VirtualKeyboardFragment / AvailableVirtualKeyboardFragment)
+ime-gboard.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	mipmap/ic_app
+ime-hindi.png	app/GoogleHindiIME/GoogleHindiIME.apk	mipmap/app_icon
+ime-japanese.png	app/GoogleJapaneseInput/GoogleJapaneseInput.apk	mipmap/app_icon
+ime-korean.png	app/KoreanIME/KoreanIME.apk	mipmap/app_icon
+ime-pinyin.png	app/GooglePinyinIME/GooglePinyinIME.apk	mipmap/app_icon
+# Location: GMS Core's injected Location History (location_history_injected_setting.xml); Factory data reset: the Google authenticator's icon
+gms-ic_google.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/ic_google
+gms-auth_ic_google_account.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/auth_ic_google_account
