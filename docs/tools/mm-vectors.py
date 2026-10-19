@@ -9,11 +9,13 @@ Reads the compiled XML with aapt2 (xmltree) and the colours and styles with aapt
 scale(sx, sy) translate(-px, -py); a clip-path clips the siblings drawn after it in its group; fillAlpha / strokeAlpha
 multiply the colour's own alpha; the root alpha applies to the whole drawing."""
 import os, re, subprocess, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from era import DEVICE, VERSION, data
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace(os.sep, '/') + '/'
-SYSTEM = ROOT + '_aosp/bullhead/system/'
+SYSTEM = ROOT + f'_aosp/{DEVICE}/system/'
 AAPT = 'D:/android_sdk/build-tools/36.0.0/aapt2.exe'
-OUT = ROOT + 'versions/6.0.1/assets/'
+OUT = ROOT + f'versions/{VERSION}/assets/'
 FRAMEWORK = 'framework/framework-res.apk'
 _tables = {}
 
@@ -212,7 +214,7 @@ def svg(apk, name, theme):
 
 if __name__ == '__main__':
     import glob
-    rows = [l.rstrip('\n').split('\t') for f in sorted(glob.glob(ROOT + 'docs/data/mm-vectors*.tsv')) for l in open(f, encoding='utf-8') if l.strip() and not l.startswith('#')]
+    rows = [l.rstrip('\n').split('\t') for f in sorted(glob.glob(ROOT + data('vectors') + '*.tsv')) for l in open(f, encoding='utf-8') if l.strip() and not l.startswith('#')]
     for out, apk, name, theme in rows:
         open(OUT + out, 'w', encoding='utf-8', newline='\n').write(svg(apk, name, None if theme == '-' else theme))
     print(len(rows), 'vectors')
