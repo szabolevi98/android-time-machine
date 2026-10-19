@@ -133,3 +133,55 @@ button.ngst-pref:active,div.ngst-pref[role=button]:active:not(:has(.ngst-gear:ac
 .ngst-ruletype{display:flex;align-items:center;gap:calc(15 * var(--dp));min-height:calc(64 * var(--dp));font-size:calc(16 * var(--dp))}
 .ngst-ruleic{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
 .ngst-empty{padding:calc(32 * var(--dp)) calc(16 * var(--dp));text-align:center;color:#0000008a;font-size:calc(16 * var(--dp))}
+/* Wi-Fi (ng-settings-wifi.js): the signal level icon with the lock over it, the empty view (TextAppearance.Medium,
+   16 dp padding), the progress header under the switch bar (TrimmedHorizontalProgressBar 3 dp, indeterminate), WifiDialog's
+   wifi_item rows (8 dp margins, the 14 sp textColorSecondary label, the Subhead value, wifi_item_edit_content 18 sp). */
+.ngwf-signal{position:relative;display:block;width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngwf-signal img{position:absolute;inset:0;width:100%;height:100%}
+.ngst-emptyview{padding:calc(16 * var(--dp));font-size:calc(18 * var(--dp));line-height:calc(24 * var(--dp));color:#0000008a;background:#fafafa}
+.ngst-pinned{position:relative;z-index:2;flex:none;height:0}
+.ngst-progress{position:absolute;left:0;right:0;top:0;height:calc(3 * var(--dp));overflow:hidden;background:#00968840}
+.ngst-progress.static{position:relative;margin:calc(16 * var(--dp)) 0 0}
+.ngst-progress i{position:absolute;top:0;bottom:0;background:#009688;animation:ngst-ind1 2s infinite linear}
+.ngst-progress i+i{animation:ngst-ind2 2s infinite linear}
+@keyframes ngst-ind1{0%{left:-35%;right:100%}60%{left:100%;right:-90%}100%{left:100%;right:-90%}}
+@keyframes ngst-ind2{0%{left:-200%;right:100%}60%{left:107%;right:-8%}100%{left:107%;right:-8%}}
+.ngwf-dialog{padding:0 calc(16 * var(--dp)) calc(8 * var(--dp))}
+.ngwf-item{display:flex;flex-direction:column;margin-top:calc(8 * var(--dp));padding:0 calc(8 * var(--dp))}
+.ngwf-label{color:#0000008a;font-size:calc(14 * var(--dp));line-height:calc(19 * var(--dp))}
+.ngwf-value{color:#000000de;font-size:calc(16 * var(--dp));line-height:calc(22 * var(--dp))}
+.ngwf-edit{margin-left:calc(-4 * var(--dp));padding:calc(8 * var(--dp)) calc(4 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #009688;background:none;outline:none;color:#000000de;font:calc(18 * var(--dp)) Roboto,sans-serif}
+.ngwf-edit::placeholder{color:#00000061}
+.ngwf-check{display:flex;align-items:center;gap:calc(8 * var(--dp));min-height:calc(48 * var(--dp));color:#000000de;font-size:calc(14 * var(--dp))}
+.ngwf-check input{position:absolute;opacity:0;pointer-events:none}
+.ngwf-check input:checked+.ngst-check{background:#009688;-webkit-mask-image:url('assets/fw-btn_checkbox_checked_mtrl.svg');mask-image:url('assets/fw-btn_checkbox_checked_mtrl.svg')}
+.ngwf-spinner{margin:calc(4 * var(--dp)) 0 0;padding:calc(8 * var(--dp)) calc(4 * var(--dp));min-height:calc(48 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #00000061;background:none;color:#000000de;font:calc(16 * var(--dp)) Roboto,sans-serif}
+.ngwf-adv span{flex:1}
+.ngwf-expand{flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:#0000008a;-webkit-mask:url('assets/st-ic_expand_more.svg') center/100%;mask:url('assets/st-ic_expand_more.svg') center/100%}
+.ngwf-adv input:checked~.ngwf-expand{-webkit-mask-image:url('assets/st-ic_expand_less.svg');mask-image:url('assets/st-ic_expand_less.svg')}
+.ngwf-wps{padding:0 calc(24 * var(--dp)) calc(8 * var(--dp))}
+.ngwf-wpsmsg{font-size:calc(16 * var(--dp));line-height:calc(22 * var(--dp));color:#000000de}
+.ngst-dlgitem{display:block;padding:0 calc(8 * var(--dp))}
+/* Bluetooth (ng-settings-bluetooth.js): preference_bt_icon rows with preference_bluetooth's gear, the category's small
+   spinner while discovering. */
+.ngbt-row{display:flex;align-items:center;background:#fafafa;padding-right:calc(16 * var(--dp))}
+.ngbt-row.disabled .ngst-texts{opacity:.38}
+.ngbt-dev{flex:1;min-width:0;display:flex;align-items:center;min-height:calc(48 * var(--dp));padding-left:calc(16 * var(--dp))!important}
+.ngbt-row:has(.ngbt-dev:active){background:#e5e5e5}
+.ngbt-icon{flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin:0 calc(6 * var(--dp));background:#0000008a;-webkit-mask:center/contain no-repeat;mask:center/contain no-repeat}
+.ngbt-dev .ngst-texts{margin-left:calc(15 * var(--dp));padding:calc(16 * var(--dp)) 0}
+.ngbt-summary{font-size:calc(14 * var(--dp));line-height:calc(20 * var(--dp));color:#0000008a}
+.ngbt-widget{flex:none;min-width:calc(58 * var(--dp));display:flex;justify-content:flex-end}
+.ngbt-cat{display:flex;align-items:center;justify-content:space-between}
+.ngbt-spin{width:calc(16 * var(--dp));height:calc(16 * var(--dp));animation:ngbt-rot 1.3s linear infinite}
+.ngbt-spin circle{fill:none;stroke:#009688;stroke-width:5;stroke-dasharray:90 30}
+@keyframes ngbt-rot{to{transform:rotate(360deg)}}
+.ngbt-visible .ngst-summary{white-space:normal}
+.ngbt-pin{padding:0 calc(24 * var(--dp)) 0 calc(24 * var(--dp))}
+.ngbt-caption{margin-top:calc(8 * var(--dp));font-size:calc(14 * var(--dp));color:#0000008a}
+.ngbt-key{margin:0 0 calc(8 * var(--dp));font-size:calc(24 * var(--dp));line-height:calc(32 * var(--dp));color:#000000de}
+.ngbt-profiles{padding:0 calc(25 * var(--dp))}
+.ngbt-profiles .ngwf-edit{width:100%;box-sizing:border-box;margin-left:0}
+.ngbt-label{padding-top:calc(16 * var(--dp));font-size:calc(14 * var(--dp));color:#0000008a}
+.ngbt-label.use{padding-bottom:calc(4 * var(--dp))}
+.ngst-emptyview.center{text-align:center;padding-top:calc(32 * var(--dp))}

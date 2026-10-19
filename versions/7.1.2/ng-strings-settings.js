@@ -955,6 +955,7 @@ NG.strings('settings', {
 },
 "bluetooth_pairing_request": {
 "res": "angler:SettingsGoogle:bluetooth_pairing_request",
+"args": 1,
 "en": "Pair with %1$s?",
 "hu": "Párosítja a következővel: %1$s?",
 "de": "Mit %1$s koppeln?",
@@ -6387,29 +6388,6 @@ NG.strings('settings', {
 "fr": "Afficher",
 "es": "Mostrar"
 },
-"settings_suggestion_header_summary_hidden_items": {
-"res": "angler:SettingsGoogle:settings_suggestion_header_summary_hidden_items",
-"en": {
-"other": "Show %d hidden items",
-"one": "Show %d hidden item"
-},
-"hu": {
-"other": "%d rejtett elem megjelenítése",
-"one": "%d rejtett elem megjelenítése"
-},
-"de": {
-"other": "%d ausgeblendete Elemente anzeigen",
-"one": "%d ausgeblendetes Element anzeigen"
-},
-"fr": {
-"other": "Afficher %d éléments masqués",
-"one": "Afficher %d élément masqué"
-},
-"es": {
-"other": "Mostrar %d elementos ocultos",
-"one": "Mostrar %d elemento oculto"
-}
-},
 "condition_turn_off": {
 "res": "angler:SettingsGoogle:condition_turn_off",
 "en": "Turn off",
@@ -6635,29 +6613,6 @@ NG.strings('settings', {
 "fr": "Envoi autorisé pour toutes les applications",
 "es": "Todas las aplicaciones pueden mostrar notificaciones"
 },
-"notification_summary": {
-"res": "angler:SettingsGoogle:notification_summary",
-"en": {
-"other": "%d apps blocked from sending",
-"one": "%d app blocked from sending"
-},
-"hu": {
-"other": "%d alkalmazásnál letiltotta az értesítések küldését",
-"one": "%d alkalmazásnál letiltotta az értesítések küldését"
-},
-"de": {
-"other": "%d Apps, für die das Senden von Benachrichtigungen blockiert ist",
-"one": "%d App, für die das Senden von Benachrichtigungen blockiert ist"
-},
-"fr": {
-"other": "Envoi bloqué pour %d applications",
-"one": "Envoi bloqué pour %d application"
-},
-"es": {
-"other": "%d aplicaciones no pueden enviar contenido",
-"one": "%d aplicación no puede enviar contenido"
-}
-},
 "sound_settings_summary": {
 "res": "angler:SettingsGoogle:sound_settings_summary",
 "args": 1,
@@ -6744,29 +6699,6 @@ NG.strings('settings', {
 "de": "Standard: %1$s",
 "fr": "%1$s est l'application par défaut.",
 "es": "Aplicación predeterminada: %1$s"
-},
-"plurals:print_settings_title": {
-"res": "angler:SettingsGoogle:print_settings_title",
-"en": {
-"other": "%d print jobs",
-"one": "1 print job"
-},
-"hu": {
-"other": "%d nyomtatási feladat",
-"one": "1 nyomtatási feladat"
-},
-"de": {
-"other": "%d Druckaufträge",
-"one": "1 Druckauftrag"
-},
-"fr": {
-"other": "%d tâches d'impression",
-"one": "%d tâche d'impression"
-},
-"es": {
-"other": "%d trabajos de impresión",
-"one": "1 trabajo de impresión"
-}
 },
 "about_summary": {
 "res": "angler:SettingsGoogle:about_summary",
@@ -7079,39 +7011,6 @@ NG.strings('settings', {
 "de": "Flimmern reduzieren",
 "fr": "Réduire le scintillement",
 "es": "Reducir parpadeo"
-},
-"entries_font_size": {
-"res": "angler:SettingsGoogle:entries_font_size",
-"en": [
-"Small",
-"Default",
-"Large",
-"Largest"
-],
-"hu": [
-"Kicsi",
-"Alapértelmezett",
-"Nagy",
-"A legnagyobb"
-],
-"de": [
-"Klein",
-"Standard",
-"Groß",
-"Am größten"
-],
-"fr": [
-"Petite",
-"Par défaut",
-"Grande",
-"La plus grande"
-],
-"es": [
-"Pequeño",
-"Predeterminado",
-"Grande",
-"Lo más grande posible"
-]
 },
 "screen_zoom_summary_small": {
 "res": "angler:SettingsGoogle:screen_zoom_summary_small",
@@ -7519,29 +7418,6 @@ NG.strings('settings', {
 "fr": "N'afficher aucune notification",
 "es": "No mostrar notificaciones"
 },
-"security_settings_fingerprint_preference_summary": {
-"res": "angler:SettingsGoogle:security_settings_fingerprint_preference_summary",
-"en": {
-"other": "%1$d fingerprints set up",
-"one": "%1$d fingerprint set up"
-},
-"hu": {
-"other": "%1$d ujjlenyomat beállítása",
-"one": "%1$d ujjlenyomat beállítása"
-},
-"de": {
-"other": "%1$d Fingerabdrücke eingerichtet",
-"one": "%1$d Fingerabdrücke eingerichtet"
-},
-"fr": {
-"other": "%1$d empreintes digitales configurées",
-"one": "%1$d empreinte digitale configurée"
-},
-"es": {
-"other": "%1$d huellas digitales configuradas",
-"one": "%1$d huella digital configurada"
-}
-},
 "security_settings_fingerprint_preference_summary_none": {
 "res": "angler:SettingsGoogle:security_settings_fingerprint_preference_summary_none",
 "en": "Tap to set up fingerprint",
@@ -7886,29 +7762,6 @@ NG.strings('settings', {
 "de": "Es dürfen nur Ziffern von 0 bis 9 enthalten sein.",
 "fr": "Veuillez n'utiliser que les chiffres de 0 à 9.",
 "es": "Solo debe tener dígitos comprendidos entre el 0 y el 9."
-},
-"lockpassword_password_requires_letters": {
-"res": "angler:SettingsGoogle:lockpassword_password_requires_letters",
-"en": {
-"other": "Must contain at least %d letters",
-"one": "Must contain at least 1 letter"
-},
-"hu": {
-"other": "Tartalmazzon legalább %d betűt",
-"one": "Tartalmazzon legalább 1 betűt"
-},
-"de": {
-"other": "Es müssen mindestens %d Buchstaben enthalten sein",
-"one": "Es muss mindestens ein Buchstabe enthalten sein"
-},
-"fr": {
-"other": "Veuillez inclure au moins %d lettres.",
-"one": "Veuillez inclure au moins %d lettre."
-},
-"es": {
-"other": "Debe tener al menos %d letras",
-"one": "Debe tener al menos 1 letra"
-}
 },
 "lockpassword_pin_too_short": {
 "res": "angler:SettingsGoogle:lockpassword_pin_too_short",
@@ -8404,6 +8257,851 @@ NG.strings('settings', {
 "de": "Finger %d",
 "fr": "Doigt %d",
 "es": "Dedo %d"
+},
+"wifi_empty_list_wifi_off": {
+"res": "angler:SettingsGoogle:wifi_empty_list_wifi_off",
+"en": "To see available networks, turn Wi‑Fi on.",
+"hu": "Kapcsolja be a Wi-Fit a hálózatok megjelenítéséhez",
+"de": "WLAN aktivieren, um verfügbare Netze abzurufen",
+"fr": "Activez le Wi-Fi pour voir les réseaux disponibles.",
+"es": "Para ver redes disponibles, activa el Wi-Fi."
+},
+"wifi_starting": {
+"res": "angler:SettingsGoogle:wifi_starting",
+"en": "Turning Wi‑Fi on…",
+"hu": "Bekapcsolja a Wi-Fit?",
+"de": "WLAN wird aktiviert…",
+"fr": "Activation du Wi-Fi en cours…",
+"es": "Activando Wi‑Fi…"
+},
+"wifi_remembered": {
+"res": "angler:SettingsGoogle:wifi_remembered",
+"en": "Saved",
+"hu": "Mentve",
+"de": "Gespeichert",
+"fr": "Enregistré",
+"es": "Guardado"
+},
+"wifi_security_none": {
+"res": "angler:SettingsGoogle:wifi_security_none",
+"en": "None",
+"hu": "Nincs",
+"de": "Keine",
+"fr": "Aucune",
+"es": "Ninguna"
+},
+"wifi_security_wpa2": {
+"res": "angler:SettingsGoogle:wifi_security_wpa2",
+"en": "WPA2 PSK",
+"hu": "WPA2 PSK",
+"de": "WPA2 PSK",
+"fr": "WPA2 PSK",
+"es": "WPA2 PSK",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"wifi_password": {
+"res": "angler:SettingsGoogle:wifi_password",
+"en": "Password",
+"hu": "Jelszó",
+"de": "Passwort",
+"fr": "Mot de passe",
+"es": "Contraseña"
+},
+"wifi_show_password": {
+"res": "angler:SettingsGoogle:wifi_show_password",
+"en": "Show password",
+"hu": "Jelszó megjelenítése",
+"de": "Passwort anzeigen",
+"fr": "Afficher le mot de passe",
+"es": "Mostrar contraseña"
+},
+"wifi_show_advanced": {
+"res": "angler:SettingsGoogle:wifi_show_advanced",
+"en": "Advanced options",
+"hu": "Speciális beállítások",
+"de": "Erweiterte Optionen",
+"fr": "Options avancées",
+"es": "Opciones avanzadas"
+},
+"wifi_ip_settings": {
+"res": "angler:SettingsGoogle:wifi_ip_settings",
+"en": "IP settings",
+"hu": "IP-beállítások",
+"de": "IP-Einstellungen",
+"fr": "Paramètres IP",
+"es": "Ajustes de IP"
+},
+"wifi_ssid": {
+"res": "angler:SettingsGoogle:wifi_ssid",
+"en": "Network name",
+"hu": "Hálózat neve",
+"de": "Netzwerkname",
+"fr": "Nom du réseau",
+"es": "Nombre de la red"
+},
+"wifi_ssid_hint": {
+"res": "angler:SettingsGoogle:wifi_ssid_hint",
+"en": "Enter the SSID",
+"hu": "SSID megadása",
+"de": "SSID eingeben",
+"fr": "Saisissez le SSID",
+"es": "Introduce el SSID"
+},
+"wifi_save": {
+"res": "angler:SettingsGoogle:wifi_save",
+"en": "Save",
+"hu": "Mentés",
+"de": "Speichern",
+"fr": "Enregistrer",
+"es": "Guardar"
+},
+"wifi_cancel": {
+"res": "angler:SettingsGoogle:wifi_cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"wifi_connect": {
+"res": "angler:SettingsGoogle:wifi_connect",
+"en": "Connect",
+"hu": "Kapcsolódás",
+"de": "Verbinden",
+"fr": "Se connecter",
+"es": "Conectar"
+},
+"wifi_forget": {
+"res": "angler:SettingsGoogle:wifi_forget",
+"en": "Forget",
+"hu": "Elfelejt",
+"de": "Entfernen",
+"fr": "Retirer",
+"es": "Olvidar"
+},
+"wifi_status": {
+"res": "angler:SettingsGoogle:wifi_status",
+"en": "Status",
+"hu": "Állapot",
+"de": "Status",
+"fr": "État",
+"es": "Estado"
+},
+"wifi_signal": {
+"res": "angler:SettingsGoogle:wifi_signal",
+"en": "Signal strength",
+"hu": "Jelerősség",
+"de": "Signalstärke",
+"fr": "Intensité du signal",
+"es": "Intensidad de la señal"
+},
+"wifi_speed": {
+"res": "angler:SettingsGoogle:wifi_speed",
+"en": "Link speed",
+"hu": "Vonalsebesség",
+"de": "Geschwindigkeit",
+"fr": "Vitesse de connexion",
+"es": "Velocidad de enlace"
+},
+"link_speed": {
+"res": "angler:SettingsGoogle:link_speed",
+"args": 1,
+"en": "%1$d Mbps",
+"hu": "%1$d Mb/s",
+"de": "%1$d Mbit/s",
+"fr": "%1$d Mbit/s",
+"es": "%1$d Mbps"
+},
+"wifi_frequency": {
+"res": "angler:SettingsGoogle:wifi_frequency",
+"en": "Frequency",
+"hu": "Frekvencia",
+"de": "Frequenz",
+"fr": "Fréquence",
+"es": "Frecuencia"
+},
+"wifi_band_24ghz": {
+"res": "angler:SettingsGoogle:wifi_band_24ghz",
+"en": "2.4 GHz",
+"hu": "2,4 GHz",
+"de": "2,4 GHz",
+"fr": "2,4 GHz",
+"es": "2,4 GHz"
+},
+"wifi_band_5ghz": {
+"res": "angler:SettingsGoogle:wifi_band_5ghz",
+"en": "5 GHz",
+"hu": "5 GHz",
+"de": "5 GHz",
+"fr": "5 GHz",
+"es": "5 GHz"
+},
+"menu_stats_refresh": {
+"res": "angler:SettingsGoogle:menu_stats_refresh",
+"en": "Refresh",
+"hu": "Frissítés",
+"de": "Aktualisieren",
+"fr": "Actualiser",
+"es": "Actualizar"
+},
+"wifi_menu_advanced": {
+"res": "angler:SettingsGoogle:wifi_menu_advanced",
+"en": "Advanced",
+"hu": "Speciális",
+"de": "Erweitert",
+"fr": "Options avancées",
+"es": "Ajustes avanzados"
+},
+"help_label": {
+"res": "angler:SettingsGoogle:help_label",
+"en": "Help & feedback",
+"hu": "Súgó és visszajelzés",
+"de": "Hilfe & Feedback",
+"fr": "Aide et commentaires",
+"es": "Ayuda y sugerencias"
+},
+"wifi_menu_connect": {
+"res": "angler:SettingsGoogle:wifi_menu_connect",
+"en": "Connect to network",
+"hu": "Csatlakozás a hálózathoz",
+"de": "Mit Netzwerk verbinden",
+"fr": "Se connecter au réseau",
+"es": "Conectarse a la red"
+},
+"wifi_menu_forget": {
+"res": "angler:SettingsGoogle:wifi_menu_forget",
+"en": "Forget network",
+"hu": "Hálózat elfelejtése",
+"de": "Netzwerk entfernen",
+"fr": "Retirer le réseau",
+"es": "Olvidar red"
+},
+"wifi_menu_modify": {
+"res": "angler:SettingsGoogle:wifi_menu_modify",
+"en": "Modify network",
+"hu": "Hálózat módosítása",
+"de": "Netzwerk ändern",
+"fr": "Modifier le réseau",
+"es": "Modificar red"
+},
+"wifi_menu_configure": {
+"res": "angler:SettingsGoogle:wifi_menu_configure",
+"en": "Configure",
+"hu": "Beállítás",
+"de": "Konfigurieren",
+"fr": "Configurer",
+"es": "Configurar"
+},
+"status_unavailable": {
+"res": "angler:SettingsGoogle:status_unavailable",
+"en": "Unavailable",
+"hu": "Nem érhető el",
+"de": "Nicht verfügbar",
+"fr": "Non disponible",
+"es": "No disponible"
+},
+"wifi_p2p_settings_title": {
+"res": "angler:SettingsGoogle:wifi_p2p_settings_title",
+"en": "Wi‑Fi Direct",
+"hu": "Wi-Fi Direct",
+"de": "Wi-Fi Direct",
+"fr": "Wi-Fi Direct",
+"es": "Wi-Fi Direct"
+},
+"wifi_wps_onstart_pbc": {
+"res": "angler:SettingsGoogle:wifi_wps_onstart_pbc",
+"en": "Press the Wi‑Fi Protected Setup button on your router. It may be called “WPS” or marked with this symbol:",
+"hu": "Nyomja meg a Wi-Fi Protected Setup gombot a routeren. Ennek elnevezése lehet „WPS” is, illetve a következő szimbólum is jelölheti:",
+"de": "Wähle die Schaltfläche \"Wi-Fi Protected Setup\" auf deinem Router aus. Eventuell lautet sie auch \"WPS\" oder ist mit diesem Symbol gekennzeichnet:",
+"fr": "Appuyez sur le bouton \"Configuration Wi-Fi protégée\" de votre routeur. Celui-ci peut s'appeler \"WPS\" ou présenter ce symbole :",
+"es": "Pulsa el botón de configuración de WPS del router. Es posible que ponga WPS o que esté identificado con este símbolo:"
+},
+"wifi_wps_onstart_pin": {
+"res": "angler:SettingsGoogle:wifi_wps_onstart_pin",
+"args": 1,
+"en": "Enter pin %1$s on your Wi‑Fi router. The setup can take up to two minutes to complete.",
+"hu": "Írja be a Wi-Fi router PIN-kódját (%1$s). A telepítés legfeljebb 2 percet vesz igénybe.",
+"de": "Gib die PIN %1$s auf deinem WLAN-Router ein. Die Einrichtung kann bis zu 2 Minuten dauern.",
+"fr": "Saisissez le code d'accès \"%1$s\" sur votre routeur Wi-Fi. La configuration peut prendre jusqu'à deux minutes.",
+"es": "Introduce el código %1$s en el router Wi‑Fi. El proceso de configuración puede tardar hasta dos minutos."
+},
+"wifi_security": {
+"res": "angler:SettingsGoogle:wifi_security",
+"en": "Security",
+"hu": "Biztonság",
+"de": "Sicherheit",
+"fr": "Sécurité",
+"es": "Seguridad"
+},
+"bluetooth_empty_list_bluetooth_off": {
+"res": "angler:SettingsGoogle:bluetooth_empty_list_bluetooth_off",
+"en": "When Bluetooth is turned on, your device can communicate with other nearby Bluetooth devices.",
+"hu": "Ha a Bluetooth aktív, az eszköz képes kommunikálni a közelben lévő Bluetooth-eszközökkel.",
+"de": "Bei aktiviertem Bluetooth kann dein Gerät mit Bluetooth-Geräten in der Nähe kommunizieren.",
+"fr": "L'activation du Bluetooth permet à votre appareil de communiquer avec les appareils Bluetooth à proximité.",
+"es": "Bluetooth permite la comunicación con dispositivos Bluetooth cercanos."
+},
+"bluetooth_turning_on": {
+"res": "angler:SettingsGoogle:bluetooth_turning_on",
+"en": "Turning Bluetooth on…",
+"hu": "Bluetooth bekapcsolása...",
+"de": "Bluetooth wird aktiviert...",
+"fr": "Activation du Bluetooth...",
+"es": "Activando Bluetooth…"
+},
+"bluetooth_preference_paired_devices": {
+"res": "angler:SettingsGoogle:bluetooth_preference_paired_devices",
+"en": "Paired devices",
+"hu": "Párosított eszközök",
+"de": "Gekoppelte Geräte",
+"fr": "Périphériques associés",
+"es": "Dispositivos sincronizados"
+},
+"bluetooth_preference_found_devices": {
+"res": "angler:SettingsGoogle:bluetooth_preference_found_devices",
+"en": "Available devices",
+"hu": "Elérhető eszközök",
+"de": "Verfügbar",
+"fr": "Appareils",
+"es": "Dispositivos disponibles"
+},
+"bluetooth_is_visible_message": {
+"res": "angler:SettingsGoogle:bluetooth_is_visible_message",
+"args": 1,
+"en": "%1$s is visible to nearby devices while Bluetooth settings is open.",
+"hu": "A(z) %1$s látható a közeli eszközök számára, ha a Bluetooth-beállítások nyitva vannak.",
+"de": "%1$s ist bei aktiviertem Bluetooth für Geräte in der Nähe sichtbar.",
+"fr": "%1$s est visible par les appareils à proximité dont le Bluetooth a été activé.",
+"es": "%1$s será visible para dispositivos cercanos mientras los ajustes de Bluetooth estén abiertos."
+},
+"bluetooth_search_for_devices": {
+"res": "angler:SettingsGoogle:bluetooth_search_for_devices",
+"en": "Refresh",
+"hu": "Frissítés",
+"de": "Aktualisieren",
+"fr": "Actualiser",
+"es": "Actualizar"
+},
+"bluetooth_searching_for_devices": {
+"res": "angler:SettingsGoogle:bluetooth_searching_for_devices",
+"en": "Searching…",
+"hu": "Keresés...",
+"de": "Suche läuft...",
+"fr": "Recherche...",
+"es": "Buscando…"
+},
+"bluetooth_rename_device": {
+"res": "angler:SettingsGoogle:bluetooth_rename_device",
+"en": "Rename this device",
+"hu": "Eszköz átnevezése",
+"de": "Gerät umbenennen",
+"fr": "Renommer cet appareil",
+"es": "Cambiar nombre del dispositivo"
+},
+"bluetooth_show_received_files": {
+"res": "angler:SettingsGoogle:bluetooth_show_received_files",
+"en": "Show received files",
+"hu": "Fogadott fájlok megjelenítése",
+"de": "Empfangene Dateien anzeigen",
+"fr": "Afficher les fichiers reçus",
+"es": "Mostrar archivos recibidos"
+},
+"bluetooth_no_devices_found": {
+"res": "angler:SettingsGoogle:bluetooth_no_devices_found",
+"en": "No nearby Bluetooth devices were found.",
+"hu": "Nem található a közelben Bluetooth-eszköz.",
+"de": "Kein Bluetooth-Gerät in der Nähe gefunden",
+"fr": "Aucun appareil Bluetooth détecté.",
+"es": "No hay dispositivos Bluetooth cercanos."
+},
+"bluetooth_pairing": {
+"res": "angler:SettingsGoogle:bluetooth_pairing",
+"en": "Pairing…",
+"hu": "Párosítás...",
+"de": "Kopplung läuft…",
+"fr": "Association…",
+"es": "Vinculando…"
+},
+"bluetooth_connecting": {
+"res": "angler:SettingsGoogle:bluetooth_connecting",
+"en": "Connecting…",
+"hu": "Csatlakozás…",
+"de": "Verbindung wird hergestellt...",
+"fr": "Connexion…",
+"es": "Estableciendo conexión…"
+},
+"bluetooth_device_details": {
+"res": "angler:SettingsGoogle:bluetooth_device_details",
+"en": "Device settings",
+"hu": "Eszközbeállítások",
+"de": "Geräteeinstellungen",
+"fr": "Paramètres de l'appareil",
+"es": "Ajustes del dispositivo"
+},
+"bluetooth_disconnect_title": {
+"res": "angler:SettingsGoogle:bluetooth_disconnect_title",
+"en": "Disconnect?",
+"hu": "Leválasztja?",
+"de": "Verbindung trennen?",
+"fr": "Déconnecter ?",
+"es": "¿Desconectar?"
+},
+"bluetooth_disconnect_all_profiles": {
+"res": "angler:SettingsGoogle:bluetooth_disconnect_all_profiles",
+"args": 1,
+"en": "This will end your connection with:<br><b>%1$s</b>",
+"hu": "Ezzel befejezi a kapcsolatot a következővel:<br><b>%1$s</b>",
+"de": "Hierdurch wird die Verbindung mit<br><b>%1$s</b> getrennt.",
+"fr": "Cela va mettre fin à votre connexion avec :<br><b>%1$s</b>",
+"es": "Finalizará la conexión con<br><b>%1$s</b>."
+},
+"bluetooth_pairing_accept": {
+"res": "angler:SettingsGoogle:bluetooth_pairing_accept",
+"en": "Pair",
+"hu": "Párosítás",
+"de": "Koppeln",
+"fr": "Associer",
+"es": "Vincular"
+},
+"bluetooth_pairing_decline": {
+"res": "angler:SettingsGoogle:bluetooth_pairing_decline",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"bluetooth_pairing_key_msg": {
+"res": "angler:SettingsGoogle:bluetooth_pairing_key_msg",
+"en": "Bluetooth pairing code",
+"hu": "Bluetooth-párosítókód",
+"de": "Bluetooth-Kopplungscode",
+"fr": "Code d'association Bluetooth",
+"es": "Código de vinculación por Bluetooth"
+},
+"bluetooth_pairing_shares_phonebook": {
+"res": "angler:SettingsGoogle:bluetooth_pairing_shares_phonebook",
+"args": 1,
+"en": "Allow %1$s to access your contacts and call history",
+"hu": "A(z) %1$s engedélyezése a névjegyek és híváselőzmények eléréséhez",
+"de": "Zulassen, dass %1$s auf deine Kontakte und deine Anrufliste zugreifen kann",
+"fr": "Autoriser %1$s à accéder à vos contacts et à l'historique des appels",
+"es": "Permitir que %1$s acceda a tus contactos y al historial de llamadas"
+},
+"bluetooth_rename_button": {
+"res": "angler:SettingsGoogle:bluetooth_rename_button",
+"en": "Rename",
+"hu": "Átnevezés",
+"de": "Umbenennen",
+"fr": "Renommer",
+"es": "Cambiar nombre"
+},
+"progress_scanning": {
+"res": "angler:SettingsGoogle:progress_scanning",
+"en": "Searching",
+"hu": "Keresés",
+"de": "Suche läuft",
+"fr": "Recherche en cours",
+"es": "Buscando"
+},
+"bluetooth_preference_paired_dialog_name_label": {
+"res": "angler:SettingsGoogle:bluetooth_preference_paired_dialog_name_label",
+"en": "Name",
+"hu": "Név",
+"de": "Name",
+"fr": "Nom",
+"es": "Nombre"
+},
+"bluetooth_profile_headset": {
+"res": "angler:SettingsGoogle:bluetooth_profile_headset",
+"en": "Phone audio",
+"hu": "Telefon hangja",
+"de": "Telefon-Audio",
+"fr": "Appels et notifications",
+"es": "Audio del teléfono"
+},
+"bluetooth_profile_a2dp": {
+"res": "angler:SettingsGoogle:bluetooth_profile_a2dp",
+"en": "Media audio",
+"hu": "Média audió",
+"de": "Media-Audio",
+"fr": "Multimédia",
+"es": "Audio multimedia"
+},
+"bluetooth_profile_pbap": {
+"res": "angler:SettingsGoogle:bluetooth_profile_pbap",
+"en": "Contact sharing",
+"hu": "Névjegyek megosztása",
+"de": "Kontaktfreigabe",
+"fr": "Partage de contacts",
+"es": "Compartir contactos"
+},
+"forget": {
+"res": "angler:SettingsGoogle:forget",
+"en": "Forget",
+"hu": "Elfelejt",
+"de": "Entfernen",
+"fr": "Supprimer",
+"es": "Olvidar"
+},
+"Bluetooth/inbound_history_title": {
+"res": "angler:Bluetooth:inbound_history_title",
+"en": "Inbound transfers",
+"hu": "Bejövő átvitelek",
+"de": "Eingehende Übertragungen",
+"fr": "Transferts entrants",
+"es": "Transferencias entrantes"
+},
+"Bluetooth/no_transfers": {
+"res": "angler:Bluetooth:no_transfers",
+"en": "Transfer history is empty.",
+"hu": "Az átvitelek előzménye üres.",
+"de": "Übertragungsverlauf ist leer.",
+"fr": "L'historique des transferts est vide.",
+"es": "El historial de transferencias está vacío."
+},
+"settings_suggestion_header_summary_hidden_items": {
+"res": "angler:SettingsGoogle:settings_suggestion_header_summary_hidden_items",
+"en": {
+"other": "Show %d hidden items",
+"one": "Show %d hidden item"
+},
+"hu": {
+"other": "%d rejtett elem megjelenítése",
+"one": "%d rejtett elem megjelenítése"
+},
+"de": {
+"other": "%d ausgeblendete Elemente anzeigen",
+"one": "%d ausgeblendetes Element anzeigen"
+},
+"fr": {
+"other": "Afficher %d éléments masqués",
+"one": "Afficher %d élément masqué"
+},
+"es": {
+"other": "Mostrar %d elementos ocultos",
+"one": "Mostrar %d elemento oculto"
+}
+},
+"notification_summary": {
+"res": "angler:SettingsGoogle:notification_summary",
+"en": {
+"other": "%d apps blocked from sending",
+"one": "%d app blocked from sending"
+},
+"hu": {
+"other": "%d alkalmazásnál letiltotta az értesítések küldését",
+"one": "%d alkalmazásnál letiltotta az értesítések küldését"
+},
+"de": {
+"other": "%d Apps, für die das Senden von Benachrichtigungen blockiert ist",
+"one": "%d App, für die das Senden von Benachrichtigungen blockiert ist"
+},
+"fr": {
+"other": "Envoi bloqué pour %d applications",
+"one": "Envoi bloqué pour %d application"
+},
+"es": {
+"other": "%d aplicaciones no pueden enviar contenido",
+"one": "%d aplicación no puede enviar contenido"
+}
+},
+"plurals:print_settings_title": {
+"res": "angler:SettingsGoogle:print_settings_title",
+"en": {
+"other": "%d print jobs",
+"one": "1 print job"
+},
+"hu": {
+"other": "%d nyomtatási feladat",
+"one": "1 nyomtatási feladat"
+},
+"de": {
+"other": "%d Druckaufträge",
+"one": "1 Druckauftrag"
+},
+"fr": {
+"other": "%d tâches d'impression",
+"one": "%d tâche d'impression"
+},
+"es": {
+"other": "%d trabajos de impresión",
+"one": "1 trabajo de impresión"
+}
+},
+"entries_font_size": {
+"res": "angler:SettingsGoogle:entries_font_size",
+"en": [
+"Small",
+"Default",
+"Large",
+"Largest"
+],
+"hu": [
+"Kicsi",
+"Alapértelmezett",
+"Nagy",
+"A legnagyobb"
+],
+"de": [
+"Klein",
+"Standard",
+"Groß",
+"Am größten"
+],
+"fr": [
+"Petite",
+"Par défaut",
+"Grande",
+"La plus grande"
+],
+"es": [
+"Pequeño",
+"Predeterminado",
+"Grande",
+"Lo más grande posible"
+]
+},
+"security_settings_fingerprint_preference_summary": {
+"res": "angler:SettingsGoogle:security_settings_fingerprint_preference_summary",
+"en": {
+"other": "%1$d fingerprints set up",
+"one": "%1$d fingerprint set up"
+},
+"hu": {
+"other": "%1$d ujjlenyomat beállítása",
+"one": "%1$d ujjlenyomat beállítása"
+},
+"de": {
+"other": "%1$d Fingerabdrücke eingerichtet",
+"one": "%1$d Fingerabdrücke eingerichtet"
+},
+"fr": {
+"other": "%1$d empreintes digitales configurées",
+"one": "%1$d empreinte digitale configurée"
+},
+"es": {
+"other": "%1$d huellas digitales configuradas",
+"one": "%1$d huella digital configurada"
+}
+},
+"lockpassword_password_requires_letters": {
+"res": "angler:SettingsGoogle:lockpassword_password_requires_letters",
+"en": {
+"other": "Must contain at least %d letters",
+"one": "Must contain at least 1 letter"
+},
+"hu": {
+"other": "Tartalmazzon legalább %d betűt",
+"one": "Tartalmazzon legalább 1 betűt"
+},
+"de": {
+"other": "Es müssen mindestens %d Buchstaben enthalten sein",
+"one": "Es muss mindestens ein Buchstabe enthalten sein"
+},
+"fr": {
+"other": "Veuillez inclure au moins %d lettres.",
+"one": "Veuillez inclure au moins %d lettre."
+},
+"es": {
+"other": "Debe tener al menos %d letras",
+"one": "Debe tener al menos 1 letra"
+}
+},
+"array:wifi_status": {
+"res": "angler:SettingsGoogle:wifi_status",
+"en": [
+"",
+"Scanning…",
+"Connecting…",
+"Authenticating…",
+"Obtaining IP address…",
+"Connected",
+"Suspended",
+"Disconnecting…",
+"Disconnected",
+"Unsuccessful",
+"Blocked",
+"Temporarily avoiding poor connection"
+],
+"hu": [
+"",
+"Keresés...",
+"Kapcsolódás…",
+"Hitelesítés...",
+"IP-cím lekérése...",
+"Csatlakozva",
+"Felfüggesztve",
+"Kapcsolat bontása...",
+"Nincs kapcsolat",
+"Sikertelen",
+"Letiltva",
+"A rossz minőségű kapcsolatok átmeneti elkerülése"
+],
+"de": [
+"",
+"Scan läuft…",
+"Verbindung wird hergestellt...",
+"Authentifizierung...",
+"IP-Adresse wird abgerufen...",
+"Verbunden",
+"Angehalten",
+"Verbindung wird getrennt...",
+"Nicht verbunden",
+"Nicht erfolgreich",
+"Blockiert",
+"Schlechte Internetverbindung wird vorübergehend vermieden."
+],
+"fr": [
+"",
+"Recherche…",
+"Connexion…",
+"Authentification...",
+"Récupération de l'adresse IP…",
+"Connecté",
+"Interrompu",
+"Déconnexion…",
+"Déconnecté",
+"Échec",
+"Bloqué",
+"Mauvaise connexion évitée momentanément"
+],
+"es": [
+"",
+"Buscando...",
+"Estableciendo conexión...",
+"Autenticando...",
+"Obteniendo dirección IP…",
+"Conexión establecida",
+"Suspendida",
+"Desconectando...",
+"Desconectado",
+"Con error",
+"Bloqueada",
+"Inhabilitando conexión inestable temporalmente..."
+]
+},
+"wifi_proxy_settings": {
+"res": "angler:SettingsGoogle:wifi_proxy_settings",
+"en": [
+"None",
+"Manual",
+"Proxy Auto-Config"
+],
+"hu": [
+"Nincs",
+"Kézi",
+"Proxy auto. beállítása"
+],
+"de": [
+"Keiner",
+"Manuell",
+"Autom. Proxy-Konfig."
+],
+"fr": [
+"Aucun",
+"Manuel",
+"Configuration auto du proxy"
+],
+"es": [
+"Ninguno",
+"Manual",
+"Proxy autoconfigurado"
+]
+},
+"array:wifi_ip_settings": {
+"res": "angler:SettingsGoogle:wifi_ip_settings",
+"en": [
+"DHCP",
+"Static"
+],
+"hu": [
+"DHCP",
+"Statikus"
+],
+"de": [
+"DHCP",
+"Statisch"
+],
+"fr": [
+"Protocole DHCP",
+"Statique"
+],
+"es": [
+"Protocolo DHCP",
+"IP estática"
+]
+},
+"array:wifi_security": {
+"res": "angler:SettingsGoogle:wifi_security",
+"en": [
+"None",
+"WEP",
+"WPA/WPA2 PSK",
+"802.1x EAP"
+],
+"hu": [
+"Nincs",
+"WEP",
+"WPA/WPA2 PSK",
+"802.1x EAP"
+],
+"de": [
+"Keine",
+"WEP",
+"WPA/WPA2 PSK",
+"802.1x EAP"
+],
+"fr": [
+"Aucune",
+"WEP",
+"WPA/WPA2 PSK",
+"802.1x EAP"
+],
+"es": [
+"Ninguna",
+"WEP",
+"WPA/WPA2 PSK",
+"802.1x EAP"
+]
+},
+"array:wifi_signal": {
+"res": "angler:SettingsGoogle:wifi_signal",
+"en": [
+"Poor",
+"Fair",
+"Good",
+"Excellent"
+],
+"hu": [
+"Gyenge",
+"Közepes",
+"Jó",
+"Kiváló"
+],
+"de": [
+"Schwach",
+"Gut",
+"Gut",
+"Ausgezeichnet"
+],
+"fr": [
+"Faible",
+"Satisfaisante",
+"Bonne",
+"Excellente"
+],
+"es": [
+"Mala",
+"Aceptable",
+"Buena",
+"Excelente"
+]
 },
 "PrebuiltGmsCore/common_google_platform_settings": {
 "res": "angler:PrebuiltGmsCore:common_google_platform_settings",

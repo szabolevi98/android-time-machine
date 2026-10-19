@@ -93,7 +93,12 @@ class ImageRes:
                 configs[lang] = [value for _, value in entry.item.items]
         def text(value, lang):
             if value.data_type == 1:  # a reference to a string resource
-                return strings.get(lang, {}).get(value.data, strings['DEFAULT'][value.data])
+                got = strings.get(lang, {}).get(value.data, strings['DEFAULT'].get(value.data))
+                if got: return got
+                # A string that is itself a reference (Settings' wifi_security_psk_generic): resolved as string() does.
+                name = (r.get_resource_xml_name(value.data) or '').split('/')[-1]
+                full = self.string(apks, name) if name else None
+                return (full or {}).get(lang) or (full or {}).get('en') or ''
             return r.stringpool_main.getString(value.data)
         out = {}
         for lang in LANGS:

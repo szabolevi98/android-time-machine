@@ -103,6 +103,8 @@
     setWifi(c, on) {
       const s = c.data.settings;
       if (on && s.hotspot) { s.hotspot = false; s.wifiSavedState = false; }
+      // Switching on from off: WIFI_STATE_ENABLING for the first second (Settings' "Turning Wi-Fi on…").
+      if (on && !s.wifi) live.wifiStarting = Date.now() + 1000;
       s.wifi = on; if (on) live.wifiConnecting = Date.now() + 2500;
       c.save(); sys.changed(c);
       if (on) setTimeout(() => sys.changed(c), 2600);

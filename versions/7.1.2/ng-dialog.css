@@ -44,3 +44,4 @@
 .ngdlg-spinner{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin-right:calc(24 * var(--dp));animation:ngdlg-spin 1.333s linear infinite}
 .ngdlg-spinner circle{fill:none;stroke:#009688;stroke-width:4;stroke-dasharray:90 30;stroke-linecap:square}
 @keyframes ngdlg-spin{to{transform:rotate(360deg)}}
+.ngdlg-message{white-space:pre-line}

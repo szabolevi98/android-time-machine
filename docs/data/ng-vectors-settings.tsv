@@ -14,6 +14,8 @@ st-home.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	home	tint=#ff009688
 st-ic_add.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_add	tint=#8a000000
 st-ic_add_24dp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_add_24dp	tint=#ff009688
 st-ic_airplane.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_airplane	-
+st-ic_bt_headphones_a2dp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_bt_headphones_a2dp	tint=#ff009688
+st-ic_bt_headset_hfp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_bt_headset_hfp	tint=#ff009688
 st-ic_cellular_off.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_cellular_off	-
 st-ic_data_saver.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_data_saver	-
 st-ic_expand_less.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_expand_less	tint=#8a000000
@@ -31,6 +33,7 @@ st-ic_menu_add.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_menu_add	tint=#
 st-ic_menu_delete.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_menu_delete	tint=#ff009688
 st-ic_restore_googblue_48dp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_restore_googblue_48dp	-
 st-ic_settings.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_settings	tint=#ff009688
+st-ic_settings_24dp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_settings_24dp	-
 st-ic_settings_about.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_settings_about	tint=#ff009688
 st-ic_settings_accessibility.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_settings_accessibility	tint=#ff009688
 st-ic_settings_accounts.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_settings_accounts	tint=#ff009688
@@ -59,4 +62,9 @@ st-ic_shortcut_wireless.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_shortc
 st-ic_skip.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_skip	tint=#ff009688
 st-ic_suggestion_fingerprint.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_suggestion_fingerprint	tint=#ff009688
 st-ic_wallpaper.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_wallpaper	tint=#ff009688
+st-ic_wifi_signal_1.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_wifi_signal_1	tint=#ff009688
+st-ic_wifi_signal_2.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_wifi_signal_2	tint=#ff009688
+st-ic_wifi_signal_3.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_wifi_signal_3	tint=#ff009688
+st-ic_wifi_signal_4.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_wifi_signal_4	tint=#ff009688
+st-ic_wifi_signal_lock.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_wifi_signal_lock	tint=#ff009688
 st-ic_zen.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_zen	-

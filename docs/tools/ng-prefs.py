@@ -51,7 +51,9 @@ EXTRA = [w for line in open(ROOT + 'docs/data/ng-settings-extra.txt', encoding='
 # Drawables the code of the screens sets itself ("drawable:<APK under system/>:<asset prefix>:<name>") go to the asset
 # lists, not to the text table.
 DRAWABLES = [w.split(':')[1:] for w in EXTRA if w.startswith('drawable:')]
-EXTRA = [w for w in EXTRA if not w.startswith('drawable:')]
+# Strings before arrays and plurals: an array named like a string (wifi_status) keeps its kind in its key
+# ("array:wifi_status") only when the string came first.
+EXTRA = [w for w in EXTRA if not w.startswith(('drawable:', 'array:', 'plurals:'))] + [w for w in EXTRA if w.startswith(('array:', 'plurals:'))]
 strings, arrays, drawables = set(), set(), {}
 # The other APKs whose resources the dashboard names: {package: (path, table name for mm-strings.py, asset prefix)}.
 APPS = {}
