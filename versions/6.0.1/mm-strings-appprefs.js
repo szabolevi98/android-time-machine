@@ -4685,6 +4685,14 @@ MM.strings('appprefs', {
 "fr": "Cette action supprime les personnalisations apportées aux cartes et désactive les cartes Now sur tous vos appareils.",
 "es": "Se eliminarán las opciones personalizadas de las tarjetas y se desactivarán las tarjetas de Google Now en todos tus dispositivos"
 },
+"Velvet/manage_card_history_summary": {
+"res": "bullhead:Velvet:manage_card_history_summary",
+"en": "Sign in as %1$s in the web browser",
+"hu": "A böngészőben jelentkezzen be a(z) %1$s fiókkal",
+"de": "Als \"%1$s\" im Webbrowser anmelden",
+"fr": "Se connecter avec l'adresse %1$s dans le navigateur Web",
+"es": "Inicia sesión como %1$s en el navegador web"
+},
 "Velvet/emptyArray": {
 "res": "bullhead:Velvet:emptyArray",
 "en": [],

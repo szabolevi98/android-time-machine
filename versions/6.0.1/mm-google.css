@@ -96,3 +96,7 @@
 .mmvl-item b{font-weight:400;font-size:calc(16 * var(--dp));color:rgba(0,0,0,.87)}
 .mmvl-item small{font-size:calc(14 * var(--dp));color:rgba(0,0,0,.54)}
 .mmvl-none{padding:calc(24 * var(--dp)) calc(18 * var(--dp));color:rgba(0,0,0,.54);font-size:calc(16 * var(--dp))}
+/* Play Games settings: the Game profile visibility dialog (games_profile_visibility_dialog: 8 dp padding, the state 10 dp below). */
+.mmgp-vis{padding:0 calc(24 * var(--dp)) calc(8 * var(--dp));font-size:calc(16 * var(--dp));color:rgba(0,0,0,.541);line-height:1.4}
+.mmgp-vis p{margin:0}
+.mmgp-vis .mmgp-visstate{padding-top:calc(10 * var(--dp))}

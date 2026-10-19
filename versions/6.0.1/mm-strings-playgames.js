@@ -225,6 +225,102 @@ MM.strings('playgames', {
 "fr": "Play Jeux",
 "es": "Play Juegos"
 },
+"games_gcore_public_profile_hidden_status": {
+"res": "bullhead:PlayGames:games_gcore_public_profile_hidden_status",
+"en": "Hidden",
+"hu": "Rejtett",
+"de": "Verborgen",
+"fr": "Masqué",
+"es": "Oculto"
+},
+"games_profile_visibility_dialog_title": {
+"res": "bullhead:PlayGames:games_profile_visibility_dialog_title",
+"en": "Game profile visibility",
+"hu": "Játékprofil láthatósága",
+"de": "Sichtbarkeit des Spielprofils",
+"fr": "Visibilité du profil de jeu",
+"es": "Visibilidad del perfil"
+},
+"games_profile_visibility_dialog_content": {
+"res": "bullhead:PlayGames:games_profile_visibility_dialog_content",
+"en": "You can make your level, XP, and favorite genres public. This information will be based on all games that you've played. Learn more",
+"hu": "Nyilvánossá teheted az elért szintedet, az XP-t és kedvenc műfajaidat. A profilinformáció az összes általad játszott játékon alapul. További információ",
+"de": "Sie können Ihren Level, Ihre XP und Ihre Lieblingsgenres veröffentlichen. Diese Informationen basieren auf allen Spielen, die Sie gespielt haben. Weitere Informationen",
+"fr": "Vous pouvez rendre votre niveau, vos XP et vos genres préférés publics. Ces informations sont basées sur tous les jeux auxquels vous avez joué. En savoir plus",
+"es": "Puedes hacer públicos tu nivel, tus XP y tus géneros favoritos. Esta información se basará en todos los juegos a los que hayas jugado. Más información"
+},
+"games_profile_status_message_public": {
+"res": "bullhead:PlayGames:games_profile_status_message_public",
+"en": "Your Game Profile is currently public",
+"hu": "A játékprofil jelenleg nyilvános",
+"de": "Ihr Spielprofil ist momentan öffentlich.",
+"fr": "Votre profil de jeu est actuellement public.",
+"es": "Tu perfil de juego es público"
+},
+"games_profile_status_message_hidden": {
+"res": "bullhead:PlayGames:games_profile_status_message_hidden",
+"en": "Your Game Profile is currently hidden",
+"hu": "A játékprofil jelenleg rejtett",
+"de": "Ihr Spielprofil ist momentan verborgen.",
+"fr": "Votre profil de jeu est actuellement masqué.",
+"es": "Tu perfil de juego está oculto"
+},
+"games_profile_button_go_public": {
+"res": "bullhead:PlayGames:games_profile_button_go_public",
+"en": "Make public",
+"hu": "Legyen nyilvános",
+"de": "Öffentlich machen",
+"fr": "Rendre public",
+"es": "Hacer público"
+},
+"games_profile_button_hide_profile": {
+"res": "bullhead:PlayGames:games_profile_button_hide_profile",
+"en": "Hide",
+"hu": "Elrejtés",
+"de": "Ausblenden",
+"fr": "Masquer",
+"es": "Ocultar"
+},
+"games_profile_button_remain_hidden": {
+"res": "bullhead:PlayGames:games_profile_button_remain_hidden",
+"en": "Stay hidden",
+"hu": "Maradjon rejtve",
+"de": "Ausgeblendet lassen",
+"fr": "Laisser masqué",
+"es": "Mantener oculto"
+},
+"games_profile_button_remain_public": {
+"res": "bullhead:PlayGames:games_profile_button_remain_public",
+"en": "Stay public",
+"hu": "Maradjon nyilvános",
+"de": "Öffentlich lassen",
+"fr": "Laisser public",
+"es": "Mantener público"
+},
+"common_chips_label_your_circles": {
+"res": "bullhead:PlayGames:common_chips_label_your_circles",
+"en": "Your circles",
+"hu": "Az Ön körei",
+"de": "Meine Kreise",
+"fr": "Vos cercles",
+"es": "Tus círculos"
+},
+"common_chips_label_extended_circles": {
+"res": "bullhead:PlayGames:common_chips_label_extended_circles",
+"en": "Extended circles",
+"hu": "Tágabb körök",
+"de": "Erweiterte Kreise",
+"fr": "Cercles étendus",
+"es": "Círculos ampliados"
+},
+"common_chips_label_public": {
+"res": "bullhead:PlayGames:common_chips_label_public",
+"en": "Public",
+"hu": "Nyilvános",
+"de": "Öffentlich",
+"fr": "Public",
+"es": "Público"
+},
 "games_dest_nav_drawer_help": {
 "res": "bullhead:PlayGames:games_dest_nav_drawer_help",
 "en": "Help & Feedback",

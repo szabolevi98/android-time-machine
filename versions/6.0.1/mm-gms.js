@@ -19,7 +19,7 @@
 (() => {
   'use strict';
   const T = () => MM.text('gms'), G = () => MM.text('playgames');
-  const st = c => c.data.gms || (c.data.gms = {adid: uuid(), ads: false, nearby: false, data: 'wifi', locate: true, wipe: false, verify: true, games: {multi: true, quests: true, requests: true, level: true}});
+  const st = c => c.data.gms || (c.data.gms = {adid: uuid(), ads: false, nearby: false, data: 'wifi', locate: true, wipe: false, verify: true, games: {multi: true, quests: true, requests: true, level: true, public: true, scope: 'only_you'}});
   function uuid() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, ch => { const r = Math.random() * 16 | 0; return (ch === 'x' ? r : (r & 3 | 8)).toString(16); }); }
   const esc = (c, s) => c.safe(s);
   const row = (c, key, title, summary = '', widget = '') => `<button type="button" class="mmst-pref" data-action="mmgp-row" data-k="${key}"><span class="mmst-texts"><span class="mmst-title">${esc(c, title)}</span>${summary ? `<span class="mmst-summary">${esc(c, summary)}</span>` : ''}</span>${widget ? `<span class="mmst-widget">${widget}</span>` : ''}</button>`;
@@ -46,12 +46,14 @@
       + row(c, 'wipe', t.t('mdm_settings_wipe_title'), t.t('mdm_settings_wipe_summary'), sw(s.wipe)) + cat(c, t.t('verify_apps_section_title')) + row(c, 'verify', t.t('verify_apps_title'), t.t('verify_apps_summary'), sw(s.verify));
     if (page === 'games') {
       const g = G(), n = s.games;
-      return row(c, 'profile', g.t('games_gcore_public_profile'), g.t('games_gcore_public_profile_public_status'))
+      // PublicProfileListItem: Public in games_public_profile_public_visibility_text, Hidden in _hidden_visibility_text.
+      const pub = n.public !== false;
+      return row(c, 'profile', g.t('games_gcore_public_profile'), '').replace('</span></span>', `</span><span class="mmst-summary" style="color:${pub ? '#0a7e07' : '#990000'}">${esc(c, g.t(pub ? 'games_gcore_public_profile_public_status' : 'games_gcore_public_profile_hidden_status'))}</span></span>`)
         + row(c, 'g:multi', g.t('games_gcore_multiplayer_notifications'), g.t('games_gcore_multiplayer_notifications_summary'), sw(n.multi))
         + row(c, 'g:quests', g.t('games_gcore_quest_notifications'), g.t('games_gcore_quest_notifications_summary'), sw(n.quests))
         + row(c, 'g:requests', g.t('games_gcore_request_notifications'), g.t('games_gcore_request_notifications_summary'), sw(n.requests))
         + row(c, 'g:level', g.t('games_gcore_level_notifications'), g.t('games_gcore_level_notifications_summary'), sw(n.level))
-        + row(c, 'scope', g.t('games_gcore_notification_scope'), g.t('common_chips_label_only_you'))
+        + row(c, 'scope', g.t('games_gcore_notification_scope'), g.t(`common_chips_label_${n.scope || 'only_you'}`))
         + row(c, 'web:games/notifications', g.t('games_gcore_learn_more_notifications'))
         + cat(c, g.t('games_gcore_muted_games')) + `<div class="mmgp-note">${esc(c, g.t('games_gcore_muted_games_empty'))}</div>`
         + cat(c, g.t('games_gcore_about')) + `<div class="mmgp-note">${esc(c, AndroidStrings.format(g.t('games_gcore_build_version_title'), g.t('common_games_settings_title')))}<br>3.2.08 (2240318-030)</div>`;
@@ -87,6 +89,20 @@
       if (k === 'data') {
         const opts = [['wifi', 'common_settings_drive_network_usage_wifi'], ['all', 'common_settings_drive_network_usage_all']];
         c.dialog({title: t.t('common_google_settings_drive_network_usage'), items: opts.map(([v, key]) => ({html: `<span class="mmst-choice"><i class="mmw-radio${s.data === v ? ' on' : ''}"></i><span>${esc(c, t.t(key))}</span></span>`})), buttons: [{label: t.t('framework/cancel')}], onItem: i => { s.data = opts[i][0]; c.save(); c.render(); }});
+        return true;
+      }
+      // ProfileVisibilityDialogFragment: the state in its colour, Make public / Stay hidden or Hide / Stay public.
+      if (k === 'profile') {
+        const g = G(), pub = s.games.public !== false;
+        c.dialog({title: g.t('games_profile_visibility_dialog_title'), html: `<div class="mmgp-vis"><p>${esc(c, g.t('games_profile_visibility_dialog_content'))}</p><p class="mmgp-visstate" style="color:${pub ? '#0a7e07' : '#990000'}">${esc(c, g.t(pub ? 'games_profile_status_message_public' : 'games_profile_status_message_hidden'))}</p></div>`,
+          buttons: [{label: g.t(pub ? 'games_profile_button_remain_public' : 'games_profile_button_remain_hidden')}, {label: g.t(pub ? 'games_profile_button_hide_profile' : 'games_profile_button_go_public'), action: c => { s.games.public = !pub; c.save(); c.render(); }}]});
+        return true;
+      }
+      // The notification scope's ACL editor (CHOOSE_ACL): who may send priority notifications, as audience chips.
+      if (k === 'scope') {
+        const g = G(), opts = ['your_circles', 'extended_circles', 'public', 'only_you'];
+        c.dialog({title: g.t('games_gcore_notification_scope'), items: opts.map(o => ({html: `<span class="mmst-choice"><i class="mmw-radio${(s.games.scope || 'only_you') === o ? ' on' : ''}"></i><span>${esc(c, g.t(`common_chips_label_${o}`))}</span></span>`})),
+          buttons: [{label: t.t('framework/cancel')}], onItem: i => { s.games.scope = opts[i]; c.save(); c.render(); }});
         return true;
       }
       if (k.startsWith('g:')) { s.games[k.slice(2)] = !s.games[k.slice(2)]; c.save(); c.render(); return true; }

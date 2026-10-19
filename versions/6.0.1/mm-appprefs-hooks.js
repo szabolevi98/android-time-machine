@@ -180,12 +180,15 @@
       if (key === 'google_account') { c.dialog({title: P().t('Velvet/select_google_account'), items: [{html: `<span class="mmst-choice"><i class="mmw-radio on"></i><span>${c.safe(MM.account.email)}</span></span>`}]}); return true; }
       return false;
     },
+    enabled: (c, key) => key === 'manageCardHistoryPreference' ? true : undefined,
     summary(c, key) {
       if (key === 'language') { const code = MM.appPref(c, 'voice', 'language', ''); return new Intl.DisplayNames([c.locale()], {type: 'language'}).of(code || c.locale()) || c.locale(); }
       if (key === 'notificationOverride') return MM.text('settings').t(MM.appPref(c, 'voice', key, true) ? 'switch_on_text' : 'switch_off_text');
       if (key === 'notificationSoundPreference') return MM.appPref(c, 'voice', key, '') || MM.settingsRingtones?.notification.default || '';
       if (key === 'google_account') return MM.account.email;
       if (key === 'google_account_history') return P().t('Velvet/google_account_history_summary');
+      // NowCardsSettingsFragment.updateState: with an account, manage_card_history_summary names it and the row is enabled.
+      if (key === 'manageCardHistoryPreference') return AndroidStrings.format(P().t('Velvet/manage_card_history_summary'), MM.account.email);
       if (key === 'about_app_version') return MM.appsData?.search?.version || '';
     },
     get(c, key) { if (key === 'enableScreenAssistPreference') return !!c.data.nowOnTap; if (key === 'showCardsPreference') return c.data.now === 'on'; },

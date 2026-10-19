@@ -48,6 +48,8 @@
   }
   function setValue(c, n, v) { if (hooks(c).set?.(c, n.key, v, n) === true) { c.save(); return; } store(c)[n.key] = v; c.save(); }
   function disabled(c, n) {
+    // A row the app's code enables itself (setEnabled) although its XML starts it disabled.
+    const on = hooks(c).enabled?.(c, n.key, n); if (on !== undefined) return !on;
     if (n.enabled === 'false') return true;
     if (!n.dependency) return false;
     const dep = find(app(c).xml[cur(c).xml], n.dependency);
