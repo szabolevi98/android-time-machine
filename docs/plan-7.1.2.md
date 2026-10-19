@@ -45,7 +45,7 @@ The same rules as 6.0.1 ([plan-6.0.1.md](plan-6.0.1.md)), with 6.0.1 as the vers
 | --- | --- | --- |
 | 1 | Image (download, SHA-256, unpack), `oat2dex.py` on the image's odex / oat, strings index, this plan | done 2026-10-19 |
 | 2 | Scaffold: `versions/7.1.2/index.html` with the frame, the logic-only core, placeholders, leak checks; the preview page goes | done 2026-10-19 |
-| 3 | Status bar, quick settings and notification shade (bundled notifications, direct reply), lock screen, power menu, volume panel, the launcher with the drawer, recents with split-screen, dialogs and menus | in progress: status bar, navigation bar, the shade with QuickQSPanel / QSPanel and the notification rows done 2026-10-19 |
+| 3 | Status bar, quick settings and notification shade (bundled notifications, direct reply), lock screen, power menu, volume panel, the launcher with the drawer, recents with split-screen, dialogs and menus | in progress (2026-10-19): done: status bar, navigation bar, the shade (QuickQSPanel / QSPanel, notification rows, swipe to dismiss, heads-up), the quick settings details and the tile editor with all stock tiles and pages, the framework AlertDialog, the lock screen, the power menu with restart and the boot animation, the volume panel; left: the launcher with the drawer, recents, menus, toasts |
 | 4 | Settings (with the 7.x dashboard and its suggestions, Data Saver, Night mode where the image has it) and the core apps: Phone, Contacts, Messenger, Chrome, Gmail, Calendar, Camera, Photos, Clock, Calculator | |
 | 5 | Google apps and Play Store from the image's APKs with made-up offline content, widgets, the Google app | |
 | 6 | Language sweep, landing picture, `features-7.1.2.md`, catalogue status available, README and sitemap | |
@@ -61,3 +61,5 @@ Commits are pushed as each piece passes the gate.
 - The 6.0.1 generators take `ERA=ng` (`docs/tools/era.py`): mm-assets, mm-vectors (now following a theme's parent styles
   into the framework), mm-strings, mm-avd (now with path motions), dex-decompile (the era's framework).
 - Colours in the stylesheets: Android writes #AARRGGBB, CSS #RRGGBBAA (#b3ffffff is #ffffffb3).
+- `docs/tools/bootanimation.py angler` writes ng-boot-animation.js and the sprite sheets; `mm-avd.py` (ERA=ng) also draws
+  ic_invert_colors; the message notification's large icon waits for the shared contact avatars (step 4, Messenger).
