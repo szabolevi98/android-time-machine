@@ -490,7 +490,7 @@ versions/6.0.1/assets/ime-sym_keyboard_shift_locked_lxx_light.png	8c607f572da0a1
 versions/6.0.1/assets/ime-sym_keyboard_shift_lxx_light.png	b9982fd26986968d	copy	bullhead:/system/app/LatinImeGoogle/LatinImeGoogle.apk!res/drawable-xxhdpi-v4/sym_keyboard_shift_lxx_light.png	drawable-xxhdpi-v4		b9982fd26986968d
 versions/6.0.1/assets/ime-sym_keyboard_voice_lxx_light.png	4ffb02e86a04e9b7	copy	bullhead:/system/app/LatinImeGoogle/LatinImeGoogle.apk!res/drawable-xxhdpi-v4/sym_keyboard_voice_lxx_light.png	drawable-xxhdpi-v4		4ffb02e86a04e9b7
 versions/6.0.1/assets/in-bt_share.png	d6c10c37ed2142ec	copy	bullhead:/system/app/Bluetooth/Bluetooth.apk!res/mipmap-xxhdpi-v4/bt_share.png	mipmap-xxhdpi-v4		d6c10c37ed2142ec
-versions/6.0.1/assets/landing-home.jpg	bf40cbc3c53ec989	own	capture of the simulator's own home screen for the landing page card			
+versions/6.0.1/assets/landing-home.jpg	3d6a224d59015785	own	capture of the simulator's own home screen for the landing page card			
 versions/6.0.1/assets/lw-ic_launcher_live_wallpaper.png	06afb1f349962092	copy	bullhead:/system/app/LiveWallpapersPicker/LiveWallpapersPicker.apk!res/mipmap-xxhdpi-v4/ic_launcher_live_wallpaper.png	mipmap-xxhdpi-v4		06afb1f349962092
 versions/6.0.1/assets/mp-button_compass.png	2c0a0d3f5bfa279e	copy	bullhead:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/button_compass.png	drawable-xxhdpi-v4		2c0a0d3f5bfa279e
 versions/6.0.1/assets/mp-ic_qu_arrow_right.png	0d54a4df89da56b3	copy	bullhead:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/ic_qu_arrow_right.png	drawable-xxhdpi-v4		0d54a4df89da56b3
