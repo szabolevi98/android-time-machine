@@ -4,7 +4,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),crypto=require(
 // images: python docs/tools/asset-inventory.py --check.
 // An SVG counts with LF line ends, as Git stores it (a Windows checkout turns them into CRLF).
 const sha=file=>{const data=fs.readFileSync(file);return crypto.createHash('sha256').update(file.endsWith('.svg')?Buffer.from(data.toString('latin1').replace(/\r\n/g,'\n'),'latin1'):data).digest('hex').slice(0,16);};
-for(const v of ['2.1','2.3.6','4.0.4','4.3','4.4.4','5.1.1','6.0.1']){
+for(const v of ['2.1','2.3.6','4.0.4','4.3','4.4.4','5.1.1','6.0.1','7.1.2']){
   const rows=fs.readFileSync(`docs/reports/assets/${v}.tsv`,'utf8').trim().split('\n').slice(1).map(line=>line.split('\t'));
   const files=fs.readdirSync(`versions/${v}/assets`).map(f=>`versions/${v}/assets/${f}`)
     .concat(v==='2.3.6'?fs.readdirSync('assets/audio').map(f=>`assets/audio/${f}`):[]).sort();

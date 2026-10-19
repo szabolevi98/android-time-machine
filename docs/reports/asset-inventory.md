@@ -59,3 +59,7 @@ Not traced:
 - `versions/5.1.1/assets/calwidget-header_bg_cal_widget_pressed_holo.png`
 - `versions/5.1.1/assets/jb-kg_widget_bg_padded.png`
 
+## 7.1.2 (angler)
+
+own: 2
+

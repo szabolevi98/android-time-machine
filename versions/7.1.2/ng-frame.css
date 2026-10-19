@@ -1,0 +1,65 @@
+/* The Nexus 6P: the frame drawing, the display and the side keys.
+   The frame is assets/device-nexus-6p.svg (docs/tools/device-frames.py, measured on a Wikimedia Commons front view,
+   393.39 x 793.26, drawn to the Nexus 6's height). The display window is the 5.7" 1440 x 2560 panel at 350.67 x 623.41 px
+   from (21.09, 89.55). The image's density is 560 (ro.sf.lcd_density; most resources come as xxhdpi), so the screen is
+   1440 / 3.5 = 411.43 dp wide and every size of the ng- stylesheets is written as calc(<dp> * var(--dp)): 1 dp = 350.67 /
+   411.43 px here, and the full width of the phone's display in the mobile layout. status_bar_height 24 dp and
+   navigation_bar_height 48 dp (framework-res of N2G48C); the navigation bar is on the screen, so the frame has no keys. */
+@font-face{font-family:Roboto;src:url('fonts/Roboto-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Roboto;src:url('fonts/Roboto-Medium.ttf') format('truetype');font-weight:500;font-display:swap}
+@font-face{font-family:Roboto;src:url('fonts/Roboto-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+@font-face{font-family:Roboto;src:url('fonts/Roboto-Light.ttf') format('truetype');font-weight:300;font-display:swap}
+@font-face{font-family:'Roboto Condensed';src:url('fonts/RobotoCondensed-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+
+.device{position:relative;width:393.39px;height:793.26px;padding:89.55px 21.63px 80.29px 21.09px}
+.device::before{content:"";position:absolute;inset:0;background:url('assets/device-nexus-6p.svg?v=1') 0 0/100% 100% no-repeat;filter:drop-shadow(0 28px 40px #000c) drop-shadow(0 0 1px #000);pointer-events:none}
+.screen{--dp:.852327px;position:relative;width:350.67px;height:623.41px;overflow:hidden;background:#000;color:#fff;font:calc(14 * var(--dp))/1.25 Roboto,Arial,sans-serif;user-select:none;-webkit-user-select:none;touch-action:pan-y;z-index:1}
+/* Without specificity, so every module's own button and field rules win over these defaults. */
+:where(.screen) :where(button,input,textarea,select){font:inherit;color:inherit}
+:where(.screen) :where(button){cursor:pointer}
+#status-bar{position:absolute;top:0;left:0;right:0;height:calc(24 * var(--dp));z-index:8;touch-action:none}
+#nav-bar{position:absolute;bottom:0;left:0;right:0;height:calc(48 * var(--dp));z-index:8}
+#viewport{position:absolute;top:calc(24 * var(--dp));left:0;right:0;bottom:calc(48 * var(--dp));overflow:hidden;isolation:isolate}
+.screen.no-status #viewport{top:0}
+.screen.no-status #status-bar{display:none}
+.screen.no-nav #viewport{bottom:0}
+.screen.no-nav #nav-bar{display:none}
+#overlay-root{position:absolute;inset:0;z-index:20;pointer-events:none}
+.ng-overlay-ghost{position:absolute;inset:0;z-index:21;pointer-events:none}
+.ng-overlay-ghost *{pointer-events:none!important}
+#overlay-root>*{pointer-events:auto}
+/* Screen off: the panel is dark; the first touch or a key wakes it (ng-core.js). */
+.screen.sleeping::after{content:"";position:absolute;inset:0;background:#000;z-index:60}
+
+/* Side keys on the right edge, where the drawing has them (device-nexus-6p.svg: power at y 264.4, 46.9 long; the volume
+   rocker at y 343.1, 96.2 long): touch areas a little wider than the keys. */
+.power-key{position:absolute;left:382px;top:264.4px;width:12px;height:46.9px;z-index:2;cursor:pointer}
+.volume-rocker{position:absolute;left:382px;top:343.1px;width:12px;height:96.2px;z-index:2;cursor:pointer}
+
+/* A screen that is not rebuilt from the 7.1.2 image yet: a plain card in the project's own style, so a gap is visible and
+   never looks like an older Android (docs/plan-7.1.2.md, rule 2). */
+.ng-missing{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(6 * var(--dp));padding:calc(16 * var(--dp));background:repeating-linear-gradient(135deg,#15171c 0 calc(10 * var(--dp)),#1a1c22 calc(10 * var(--dp)) calc(20 * var(--dp)));color:#cfd7da;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:calc(13 * var(--dp))}
+.ng-missing b{color:#e6c46a;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.ng-missing span{color:#e9f1f3;font-size:calc(15 * var(--dp))}
+.ng-missing small{color:#6f858d;font-size:calc(11 * var(--dp))}
+.ng-missing button{margin-top:calc(8 * var(--dp));border:1px solid #6f858d;background:none;color:#cfdde1;padding:calc(6 * var(--dp)) calc(12 * var(--dp));font:inherit}
+[data-missing="home"]{justify-content:flex-start;overflow-y:auto}
+.ng-missing-list{display:grid;grid-template-columns:1fr 1fr;gap:calc(5 * var(--dp));width:100%;margin-top:calc(6 * var(--dp))}
+.ng-missing-list button{margin:0;padding:calc(6 * var(--dp)) calc(5 * var(--dp));font-size:calc(12 * var(--dp));text-align:left;border-color:#3b4a50}
+#status-bar .ng-missing{flex-direction:row;padding:0;gap:calc(6 * var(--dp));font-size:calc(10 * var(--dp))}
+#status-bar .ng-missing span{font-size:calc(10 * var(--dp))}
+/* The stand-in for the navigation bar: three plain text keys in the card's style. */
+.ng-missing-nav{display:flex;height:100%;background:#15171c;border-top:1px solid #3b4a50;font-family:Arial,Helvetica,sans-serif}
+.ng-missing-nav button{flex:1;border:0;background:none;color:#cfdde1;font-size:calc(12 * var(--dp))}
+.ng-missing-nav button:active{background:#22252b}
+/* The page's own scrollbars never show on the phone (Android's own comes with the scrolling module). */
+.screen *{scrollbar-width:none}
+.screen ::-webkit-scrollbar{display:none}
+
+/* Phones: the display fills the width and the height under the site header. */
+@media(max-width:500px){
+  .device{width:100vw;height:calc(100dvh - 48px);padding:0;display:flex;flex-direction:column;background:#000}
+  .is-fullscreen .device{height:100dvh}
+  .device::before,.power-key,.volume-rocker{display:none}
+  .screen{--dp:calc(100vw / 411.4286);width:100%;height:auto;flex:1;min-height:0}
+}

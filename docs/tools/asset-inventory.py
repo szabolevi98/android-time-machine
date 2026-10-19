@@ -26,8 +26,8 @@ import numpy as np
 from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace(os.sep, '/') + '/'
-VERSIONS = {'2.1': ('passion', 'hdpi'), '6.0.1': ('bullhead', 'xxhdpi'), '2.3.6': ('crespo', 'hdpi'), '4.0.4': ('maguro', 'xhdpi'), '4.3': ('mako', 'xhdpi'), '4.4.4': ('hammerhead', 'xxhdpi'), '5.1.1': ('shamu', 'xxxhdpi')}
-RELEASES = ['passion', 'crespo', 'maguro', 'mako', 'hammerhead', 'shamu', 'bullhead']
+VERSIONS = {'2.1': ('passion', 'hdpi'), '6.0.1': ('bullhead', 'xxhdpi'), '2.3.6': ('crespo', 'hdpi'), '4.0.4': ('maguro', 'xhdpi'), '4.3': ('mako', 'xhdpi'), '4.4.4': ('hammerhead', 'xxhdpi'), '5.1.1': ('shamu', 'xxxhdpi'), '7.1.2': ('angler', 'xxhdpi')}
+RELEASES = ['passion', 'crespo', 'maguro', 'mako', 'hammerhead', 'shamu', 'bullhead', 'angler']
 DENSITIES = ['xxxhdpi', 'xxhdpi', 'xhdpi', 'hdpi', 'mdpi', 'ldpi', 'nodpi']
 IMAGES = ('.png', '.jpg', '.jpeg', '.gif', '.webp')
 MEDIA = ('.png', '.jpg', '.jpeg', '.gif', '.webp', '.ogg', '.ttf', '.otf', '.xml')

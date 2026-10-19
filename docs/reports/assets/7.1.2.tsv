@@ -1,0 +1,3 @@
+file	sha256	status	source	qualifier	transform	source sha256
+versions/7.1.2/assets/device-nexus-6p.svg	b4dd8f6765bcacdd	own	drawn by docs/tools/device-frames.py: the outline measured from the maker's front render, the shading drawn			
+versions/7.1.2/assets/landing-home.jpg	f820daabc45af3ac	own	capture of the simulator's own home screen for the landing page card		closest: mean difference 7.68 (maguro:/system/media/bootanimation.zip!part0/f0003.jpg)	

@@ -1,0 +1,52 @@
+/* The site around the phone (header, intro, footer, full screen): the project's own page, shared in look with the other
+   versions. Nothing in this file draws Android; the phone is ng-frame.css and the ng- modules. */
+:root{color-scheme:dark;font-family:Arial,Helvetica,sans-serif;background:#080d13;color:#edf5f7}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 78% 47%,#153344 0,transparent 39%),radial-gradient(ellipse at 7% 20%,#102632 0,transparent 31%),#080d13}
+.page-shell{max-width:1440px;margin:auto;min-height:100vh;padding:0 42px;display:flex;flex-direction:column}
+.site-header{height:78px;border-bottom:1px solid #ffffff19;display:flex;align-items:center;justify-content:space-between}
+.site-header a{color:#91cbd3;text-decoration:none;font-size:12px;letter-spacing:.15em;font-weight:bold}
+.back-link span{font-size:21px;vertical-align:-2px;padding-right:8px}
+.site-title{font-size:12px;letter-spacing:.18em;font-weight:bold;color:#d9ebed}
+.site-title span{color:#73cde0}
+.header-actions{display:flex;gap:10px}
+.header-actions button{width:35px;height:35px;border:1px solid #63808a61;border-radius:50%;background:#122630;color:#8ad7e5;font-size:19px;cursor:pointer}
+.header-actions button:hover{background:#1c3a49}
+.workspace{display:grid;grid-template-columns:minmax(330px,1fr) minmax(400px,1.15fr);align-items:center;gap:32px;flex:1;min-height:760px}
+.intro-panel{padding:0 0 30px clamp(0px,4vw,75px)}
+.eyebrow{color:#f5c27a;font-size:11px;font-weight:bold;letter-spacing:.19em}
+.pulse{display:inline-block;height:7px;width:7px;border-radius:50%;background:#f0b35a;box-shadow:0 0 11px #f0b35a;margin-right:10px}
+.intro-panel h1{font-size:clamp(52px,5vw,82px);line-height:1.01;letter-spacing:-.055em;font-weight:400;margin:25px 0 17px}
+.intro-panel h1 strong{color:#75d3e3;font-weight:400}
+.version-number{color:#74d0e0;letter-spacing:.15em;font-size:12px;font-weight:bold}
+.version-number span{padding:0 7px;color:#476a75}
+.description{font-size:16px;color:#9eb3bd;line-height:1.75;max-width:450px;margin-top:25px}
+.key-list{border-top:1px solid #ffffff18;margin-top:34px;padding-top:23px;display:grid;gap:13px;color:#b8cbd0;font-size:13px}
+.key-list>div{display:flex;align-items:center;gap:15px}
+.key-icon{width:28px;height:28px;border:1px solid #54aabb7c;border-radius:5px;display:grid;place-items:center;color:#7de1ec;font-size:17px}
+.offline-note{color:#607f8a;font-size:12px;line-height:1.6;max-width:400px;margin-top:30px}
+.site-footer{display:flex;justify-content:space-between;gap:20px;border-top:1px solid #ffffff13;padding:20px 0 23px;color:#52727c;font-size:11px}
+@media(max-width:1000px){.workspace{grid-template-columns:1fr;gap:0;padding-top:28px}.intro-panel{padding:20px 0 0;text-align:center}.intro-panel h1{margin:15px 0}.description{margin:18px auto}.key-list,.offline-note{display:none}.site-footer{display:none}}
+@media(max-width:500px){.page-shell{padding:0}.site-header{height:48px;padding:0 15px}.site-title{display:none}.workspace{padding-top:0}.intro-panel{display:none}}
+.header-actions select{height:34px;border:1px solid #63808a61;background:#122630;color:#a9dae3;border-radius:5px;padding:0 5px;font-size:11px;cursor:pointer}
+@media(max-width:500px){.header-actions{gap:6px}}
+@media(max-width:500px){.page-shell{height:100dvh;min-height:0;overflow:hidden}.site-header{flex:0 0 48px}.workspace{display:block;min-height:0;min-width:0;padding:0}}
+.header-actions .header-key,.header-actions .volume-key{display:grid;place-items:center;padding:0}
+.header-actions button.header-key svg,.header-actions button.volume-key svg{width:18px;height:18px;vertical-align:0;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#fullscreen-button .fs-exit,.is-fullscreen #fullscreen-button .fs-enter{display:none}
+.is-fullscreen #fullscreen-button .fs-exit{display:inline}
+#fullscreen-button[hidden]{display:none}
+@media(max-width:360px){.header-actions{gap:4px}.header-actions button{width:31px;height:31px}.header-actions select{padding:0 2px}}
+.is-fullscreen .intro-panel,.is-fullscreen .site-footer{display:none}
+.is-fullscreen .workspace{grid-template-columns:1fr;min-height:0}
+.is-fullscreen .page-shell{min-height:100vh}
+#header-handle{display:none}
+@media(max-width:500px){.is-fullscreen .site-header{position:fixed;top:0;left:0;right:0;z-index:100;background:#080d13f0;box-shadow:0 2px 12px #000a;transform:translateY(-100%);transition:transform .25s ease}.is-fullscreen.header-peek .site-header{transform:none}.is-fullscreen #header-handle{display:block;position:fixed;top:0;left:50%;z-index:101;width:64px;height:18px;margin-left:-32px;border:0;padding:0;background:none;cursor:pointer}.is-fullscreen #header-handle::before{content:"";position:absolute;left:14px;right:14px;top:5px;height:4px;border-radius:2px;background:#ffffff59;box-shadow:0 0 0 1px #0006}.is-fullscreen.header-peek #header-handle{display:none}}
+.key-icon svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.device-area{display:grid;place-items:center;padding:28px 0}
+@media(max-width:1000px){.device-area{padding:20px 0 40px}}
+@media(max-width:500px){.device-area{padding:0;display:block}}
+.is-fullscreen .device-area{padding:6px 0}
+@media(max-width:500px){.is-fullscreen .device-area{padding:0}}
+/* As on the other versions' pages: on a narrow phone the back link keeps its arrow only. */
+@media(max-width:420px){.back-link [data-i18n]{display:none}}
