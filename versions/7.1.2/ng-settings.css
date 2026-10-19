@@ -105,8 +105,8 @@ button.ngst-pref:active,div.ngst-pref[role=button]:active:not(:has(.ngst-gear:ac
 .ngst-switch{--ngw-fg:#000;--ngw-thumb:#f1f1f1;--ngw-accent:#009688}
 .ngst-switch.disabled{opacity:.5}
 .ngst-radio{--ngw-normal:#0000008a;--ngw-accent:#009688}
-.ngst-check{display:block;width:calc(32 * var(--dp));height:calc(32 * var(--dp));background:#0000008a;-webkit-mask:url('assets/fw-btn_checkbox_unchecked_mtrl.svg') center/100% no-repeat;mask:url('assets/fw-btn_check_off_mtrl.svg') center/100% no-repeat}
-.ngst-check.on{background:#009688;-webkit-mask-image:url('assets/fw-btn_checkbox_checked_mtrl.svg');mask-image:url('assets/fw-btn_check_on_mtrl.svg')}
+.ngst-check{display:block;width:calc(32 * var(--dp));height:calc(32 * var(--dp));background:#0000008a;-webkit-mask:url('assets/fw-btn_checkbox_unchecked_mtrl.svg') center/100% no-repeat;mask:url('assets/fw-btn_checkbox_unchecked_mtrl.svg') center/100% no-repeat}
+.ngst-check.on{background:#009688;-webkit-mask-image:url('assets/fw-btn_checkbox_checked_mtrl.svg');mask-image:url('assets/fw-btn_checkbox_checked_mtrl.svg')}
 .ngst-choice{display:flex;align-items:center;gap:calc(20 * var(--dp));margin-left:calc(-4 * var(--dp))}
 .ngst-edit{padding:0 calc(20 * var(--dp))}
 .ngst-input{width:100%;box-sizing:border-box;border:0;border-bottom:calc(2 * var(--dp)) solid #009688;padding:calc(6 * var(--dp)) calc(4 * var(--dp));font:calc(18 * var(--dp)) Roboto,sans-serif;background:none;outline:none;color:#000000de}
@@ -225,3 +225,15 @@ button.ngst-pref:active,div.ngst-pref[role=button]:active:not(:has(.ngst-gear:ac
 .ngdu-bytes .ngst-input{flex:1}
 .ngdu-cycle{padding:0 calc(24 * var(--dp))}
 .ngdu-cyclesub{margin-bottom:calc(8 * var(--dp));font-size:calc(14 * var(--dp));color:#0000008a}
+/* ng-settings-system.js: reset_network.xml's text 12 dp in and the button, Android Beam's Medium text, dream_info_row. */
+.ngsx-text{padding:calc(12 * var(--dp));font-size:calc(14 * var(--dp));line-height:calc(20 * var(--dp));color:#000000de;white-space:pre-line;background:#fafafa}
+.ngsx-medium{padding:calc(20 * var(--dp)) calc(16 * var(--dp)) 0;font-size:calc(18 * var(--dp));line-height:calc(24 * var(--dp));color:#000000de}
+.ngsx-btnrow{display:flex;justify-content:center;padding:calc(20 * var(--dp)) 0 calc(12 * var(--dp))}
+.ngst .ngsx-btn{min-width:calc(88 * var(--dp));height:calc(36 * var(--dp));padding:0 calc(16 * var(--dp));border-radius:calc(2 * var(--dp));background:#009688;color:#fff;font:500 calc(14 * var(--dp))/1 Roboto,sans-serif;text-transform:uppercase;text-align:center;box-shadow:0 calc(2 * var(--dp)) calc(2 * var(--dp)) #0000003d}
+.ngst .ngsx-btn:active{background:#00897b}
+.ngdr-row{display:flex;align-items:center;padding:0 calc(16 * var(--dp));background:#fafafa}
+.ngst .ngdr-main{flex:1;min-width:0;display:flex;align-items:center;gap:calc(6 * var(--dp));min-height:calc(68 * var(--dp))}
+.ngdr-main img{width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin:calc(10 * var(--dp)) 0}
+.ngdr-main span{flex:1;font-size:calc(18 * var(--dp));color:#000000de}
+.ngdr-div{width:calc(1 * var(--dp));height:calc(32 * var(--dp));margin:0 calc(8 * var(--dp));background:#0000001f}
+.ngst-ic.big{width:calc(40 * var(--dp));height:calc(40 * var(--dp))}

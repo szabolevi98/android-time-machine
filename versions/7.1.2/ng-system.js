@@ -109,6 +109,13 @@
       c.save(); sys.changed(c);
       if (on) setTimeout(() => sys.changed(c), 2600);
     },
+    // WifiApConfigStore's default configuration (made on first use): no name of its own (the framework's AndroidAP),
+    // WPA2 PSK with a random 12 character password, the 2.4 GHz band.
+    hotspotConfig(c) {
+      const s = c.data.settings;
+      if (!s.hotspotConfig) { const u = globalThis.crypto?.randomUUID?.() || Math.random().toString(16).slice(2).padEnd(13, '0'); s.hotspotConfig = {ssid: '', security: 1, password: u.slice(0, 8) + u.slice(9, 13), band: 0}; c.save(); }
+      return s.hotspotConfig;
+    },
     hotspotState(c) { return live.hotspotChanging > Date.now() ? (c.data.settings.hotspot ? 'enabling' : 'disabling') : c.data.settings.hotspot ? 'on' : 'off'; },
     setHotspot(c, on) {
       const s = c.data.settings;

@@ -30,6 +30,7 @@ st-ic_lock.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_lock	tint=#ff263238
 st-ic_lock_list_icon.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_lock_list_icon	tint=#ff009688
 st-ic_menu.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_menu	-
 st-ic_menu_add.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_menu_add	tint=#ff009688
+st-ic_menu_add_white.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_menu_add_white	-
 st-ic_menu_delete.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_menu_delete	tint=#ff009688
 st-ic_restore_googblue_48dp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_restore_googblue_48dp	-
 st-ic_settings.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_settings	tint=#ff009688

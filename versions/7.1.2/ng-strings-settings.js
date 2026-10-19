@@ -8938,6 +8938,377 @@ NG.strings('settings', {
 "fr": "Services Google Play",
 "es": "Servicios de Google Play"
 },
+"android_beam_on_summary": {
+"res": "angler:SettingsGoogle:android_beam_on_summary",
+"en": "Ready to transmit app content via NFC",
+"hu": "Készen áll az alkalmazási tartalmak továbbítására kis hatósugarú vezeték nélküli kommunikáció segítségével",
+"de": "Bereit zur Übertragung von App-Inhalten über NFC",
+"fr": "Prêt à partager le contenu d'applications via NFC",
+"es": "Listo para compartir contenido de aplicaciones por NFC"
+},
+"android_beam_off_summary": {
+"res": "angler:SettingsGoogle:android_beam_off_summary",
+"en": "Off",
+"hu": "Ki",
+"de": "Aus",
+"fr": "Désactivé",
+"es": "No"
+},
+"credentials_password_too_short": {
+"res": "angler:SettingsGoogle:credentials_password_too_short",
+"en": "The password must have at least 8 characters.",
+"hu": "A jelszónak legalább 8 karakter hosszúnak kell lennie.",
+"de": "Das Passwort muss mindestens 8 Zeichen lang sein.",
+"fr": "Le mot de passe doit contenir au moins 8 caractères.",
+"es": "La contraseña debe tener al menos 8 caracteres."
+},
+"wifi_ap_band_config": {
+"res": "angler:SettingsGoogle:wifi_ap_band_config",
+"en": "Select AP Band",
+"hu": "AP sáv kiválasztása",
+"de": "Band für Zugriffspunkt auswählen",
+"fr": "Sélectionner la bande du point d'accès",
+"es": "Seleccionar banda de AP"
+},
+"usb_tethering_unavailable_subtext": {
+"res": "angler:SettingsGoogle:usb_tethering_unavailable_subtext",
+"en": "USB not connected",
+"hu": "Nincs USB-kapcsolat",
+"de": "Keine USB-Verbindung",
+"fr": "USB non connecté",
+"es": "USB no conectado"
+},
+"wifi_tether_starting": {
+"res": "angler:SettingsGoogle:wifi_tether_starting",
+"en": "Turning hotspot on…",
+"hu": "Hotspot bekapcsolása...",
+"de": "Hotspot wird aktiviert…",
+"fr": "Activation du point d'accès Wi-Fi en cours…",
+"es": "Activando zona Wi-Fi…"
+},
+"wifi_tether_stopping": {
+"res": "angler:SettingsGoogle:wifi_tether_stopping",
+"en": "Turning off hotspot…",
+"hu": "Hotspot kikapcsolása...",
+"de": "Hotspot wird deaktiviert…",
+"fr": "Désactivation du point d'accès Wi-Fi en cours…",
+"es": "Desactivando zona Wi-Fi…"
+},
+"wifi_tether_enabled_subtext": {
+"res": "angler:SettingsGoogle:wifi_tether_enabled_subtext",
+"args": 1,
+"en": "Portable hotspot %1$s active",
+"hu": "A(z) %1$s hordozható hotspot aktív",
+"de": "Mobiler Hotspot %1$s aktiv",
+"fr": "Point d'accès Wi-Fi mobile %1$s actif",
+"es": "Zona Wi-Fi portátil %1$s activa"
+},
+"wifi_tether_configure_subtext": {
+"res": "angler:SettingsGoogle:wifi_tether_configure_subtext",
+"args": 2,
+"en": "%1$s %2$s portable Wi‑Fi hotspot",
+"hu": "%1$s %2$s hordozható wifi-hotspot",
+"de": "%1$s %2$s mobiler WLAN-Hotspot",
+"fr": "Point d'accès Wi-Fi mobile : %1$s %2$s",
+"es": "Punto de acceso Wi-Fi: %1$s (%2$s)"
+},
+"bluetooth_tethering_available_subtext": {
+"res": "angler:SettingsGoogle:bluetooth_tethering_available_subtext",
+"en": "Sharing this phone’s Internet connection",
+"hu": "A telefon internetkapcsolatának megosztása",
+"de": "Internetverbindung dieses Telefons freigeben",
+"fr": "Connexion Internet du téléphone partagée",
+"es": "Compartiendo conexión a Internet de este teléfono"
+},
+"bluetooth_tethering_off_subtext": {
+"res": "angler:SettingsGoogle:bluetooth_tethering_off_subtext",
+"en": "Not sharing this phone’s Internet connection",
+"hu": "A telefon internetkapcsolata nincs megosztva",
+"de": "Internetverbindung dieses Telefons freigeben",
+"fr": "Connexion Internet du téléphone non partagée",
+"es": "No se comparte la conexión a Internet de este teléfono"
+},
+"vpn_create": {
+"res": "angler:SettingsGoogle:vpn_create",
+"en": "Add VPN profile",
+"hu": "VPN-profil hozzáadása",
+"de": "VPN-Profil hinzufügen",
+"fr": "Ajouter un profil VPN",
+"es": "Añadir perfil de VPN"
+},
+"vpn_no_vpns_added": {
+"res": "angler:SettingsGoogle:vpn_no_vpns_added",
+"en": "No VPNs added.",
+"hu": "Nincs VPN megadva.",
+"de": "Keine VPNs hinzugefügt.",
+"fr": "Aucun VPN ajouté",
+"es": "No se ha añadido ninguna VPN."
+},
+"vpn_edit": {
+"res": "angler:SettingsGoogle:vpn_edit",
+"en": "Edit VPN profile",
+"hu": "VPN-profil szerkesztése",
+"de": "VPN-Profil bearbeiten",
+"fr": "Modifier le profil VPN",
+"es": "Editar perfil de VPN"
+},
+"vpn_name": {
+"res": "angler:SettingsGoogle:vpn_name",
+"en": "Name",
+"hu": "Név",
+"de": "Name",
+"fr": "Nom",
+"es": "Nombre"
+},
+"vpn_type": {
+"res": "angler:SettingsGoogle:vpn_type",
+"en": "Type",
+"hu": "Típus",
+"de": "Typ",
+"fr": "Type",
+"es": "Tipo"
+},
+"vpn_server": {
+"res": "angler:SettingsGoogle:vpn_server",
+"en": "Server address",
+"hu": "Szerver címe",
+"de": "Serveradresse",
+"fr": "Adresse du serveur",
+"es": "Dirección del servidor"
+},
+"vpn_cancel": {
+"res": "angler:SettingsGoogle:vpn_cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"vpn_save": {
+"res": "angler:SettingsGoogle:vpn_save",
+"en": "Save",
+"hu": "Mentés",
+"de": "Speichern",
+"fr": "Enregistrer",
+"es": "Guardar"
+},
+"reset_network_confirm_title": {
+"res": "angler:SettingsGoogle:reset_network_confirm_title",
+"en": "Reset?",
+"hu": "Visszaállítja?",
+"de": "Zurücksetzen?",
+"fr": "Réinitialiser ?",
+"es": "¿Restablecer?"
+},
+"reset_network_desc": {
+"res": "angler:SettingsGoogle:reset_network_desc",
+"en": "This will reset all network settings, including:\n\nWi‑Fi\nCellular data\nBluetooth",
+"hu": "Ezzel minden hálózati beállítás alaphelyzetbe áll, beleértve a következőket:\n\nWi‑Fi\nMobiladatok\nBluetooth",
+"de": "Dadurch werden alle Netzwerkeinstellungen zurückgesetzt, einschließlich:\n\nWLAN\nMobilfunkdaten\nBluetooth",
+"fr": "Tous les paramètres réseau seront réinitialisés, y compris les suivants :\n\nWi‑Fi\nDonnées mobiles\nBluetooth",
+"es": "Se restablecerán todos los ajustes de red, incluidos los siguientes:\n\nWi‑Fi\nDatos móviles\nBluetooth"
+},
+"reset_network_button_text": {
+"res": "angler:SettingsGoogle:reset_network_button_text",
+"en": "Reset settings",
+"hu": "Beállítások visszaállítása",
+"de": "Einstellungen zurücksetzen",
+"fr": "Réinitialiser les paramètres",
+"es": "Restablecer ajustes"
+},
+"reset_network_final_desc": {
+"res": "angler:SettingsGoogle:reset_network_final_desc",
+"en": "Reset all network settings? You can’t undo this action!",
+"hu": "Visszaállítja az összes hálózati beállítást? Ezt a műveletet nem lehet visszavonni.",
+"de": "Alle Netzwerkeinstellungen zurücksetzen? Diese Aktion kann nicht rückgängig gemacht werden!",
+"fr": "Réinitialiser tous les paramètres réseau ? Cette action est irréversible.",
+"es": "¿Quieres restablecer todos los ajustes de red? Esta acción no se puede deshacer."
+},
+"reset_network_final_button_text": {
+"res": "angler:SettingsGoogle:reset_network_final_button_text",
+"en": "Reset settings",
+"hu": "Beállítások visszaállítása",
+"de": "Einstellungen zurücksetzen",
+"fr": "Réinitialiser les paramètres",
+"es": "Restablecer ajustes"
+},
+"reset_network_complete_toast": {
+"res": "angler:SettingsGoogle:reset_network_complete_toast",
+"en": "Network settings have been reset",
+"hu": "A hálózati beállítások vissza lettek állítva.",
+"de": "Die Netzwerkeinstellungen wurden zurückgesetzt.",
+"fr": "Les paramètres des réseaux ont bien été réinitialisés.",
+"es": "Se han restablecido los ajustes de red"
+},
+"android_beam_explained": {
+"res": "angler:SettingsGoogle:android_beam_explained",
+"en": "When this feature is turned on, you can beam app content to another NFC-capable device by holding the devices close together. For example, you can beam Browser pages, YouTube videos, People contacts, and more.\n\nJust bring the devices together (typically back to back) and then tap your screen. The app determines what gets beamed.",
+"hu": "Ha ez a funkció be van kapcsolva, alkalmazástartalmat sugározhat át egy másik NFC-kompatibilis eszközre úgy, hogy egymáshoz közel tartja az eszközöket. Például átsugározhat böngészőoldalakat, YouTube-videókat, névjegyeket stb.\n\nEgyszerűen érintse össze az eszközöket (általában a hátlapjaikat), majd koppintson a képernyőre. Az alkalmazás eldönti, hogy mit fog átsugározni.",
+"de": "Wenn diese Funktion aktiviert ist, kannst du App-Inhalte auf ein anderes NFC-fähiges Gerät beamen, indem du die Geräte dicht nebeneinander hältst. Du kannst beispielsweise Browserseiten, YouTube-Videos und Kontakte beamen.\n\nHalte die Geräte einfach dicht nebeneinander, am besten Rückseite an Rückseite, und tippe dann auf das Display. Was übertragen wird, richtet sich nach der App.",
+"fr": "Lorsque cette fonctionnalité est activée, vous pouvez partager le contenu d'une application avec un appareil compatible NFC en rapprochant les appareils. Vous pouvez, par exemple, partager des pages du navigateur, des vidéos YouTube, des contacts, etc.\n\nIl vous suffit de rapprocher les appareils (en les plaçant dos à dos), puis d'appuyer sur votre écran. L'application détermine le contenu à transférer.",
+"es": "Si esta función está activada, puedes compartir el contenido de la aplicación con otros dispositivos con NFC si los mantienes cerca. Por ejemplo, puedes compartir páginas del navegador, vídeos de YouTube, contactos de la aplicación Contactos y mucho más.\n\nSolo tienes que unir los dispositivos (normalmente por la parte trasera) y, a continuación, tocar la pantalla del dispositivo. La aplicación determina lo que se comparte."
+},
+"nfc_payment_default": {
+"res": "angler:SettingsGoogle:nfc_payment_default",
+"en": "Payment default",
+"hu": "Fizetéshez alapértelmezett",
+"de": "Standard-App für Zahlungen",
+"fr": "Application de paiement par défaut",
+"es": "Aplicación de pago predeterminada"
+},
+"nfc_payment_default_not_set": {
+"res": "angler:SettingsGoogle:nfc_payment_default_not_set",
+"en": "Not set",
+"hu": "Nincs megadva",
+"de": "Nicht festgelegt",
+"fr": "Non définie",
+"es": "No definida"
+},
+"nfc_payment_use_default": {
+"res": "angler:SettingsGoogle:nfc_payment_use_default",
+"en": "Use default",
+"hu": "Alapértelmezett használata",
+"de": "Standard-App verwenden",
+"fr": "Utiliser l'application par défaut",
+"es": "Usar aplicación predeterminada"
+},
+"nfc_payment_favor_open": {
+"res": "angler:SettingsGoogle:nfc_payment_favor_open",
+"en": "Except when another payment app is open",
+"hu": "Kivéve, ha meg van nyitva egy másik alkalmazás a fizetéshez",
+"de": "Außer wenn eine andere Zahlungs-App geöffnet ist",
+"fr": "Sauf si une autre application de paiement est ouverte",
+"es": "Excepto si hay otra aplicación de pago abierta"
+},
+"nfc_payment_favor_default": {
+"res": "angler:SettingsGoogle:nfc_payment_favor_default",
+"en": "Always",
+"hu": "Mindig",
+"de": "Immer",
+"fr": "Toujours",
+"es": "Siempre"
+},
+"nfc_payment_pay_with": {
+"res": "angler:SettingsGoogle:nfc_payment_pay_with",
+"en": "At a Tap & pay terminal, pay with:",
+"hu": "Érintéses fizetésre alkalmas terminál fizetés a következővel:",
+"de": "Am Terminal für das mobile Bezahlen mit folgender App bezahlen:",
+"fr": "Application à utiliser aux terminaux de paiement sans contact :",
+"es": "En un terminal Tocar y pagar, paga con:"
+},
+"nfc_payment_how_it_works": {
+"res": "angler:SettingsGoogle:nfc_payment_how_it_works",
+"en": "How it works",
+"hu": "Hogyan működik?",
+"de": "Funktionsweise",
+"fr": "Fonctionnement",
+"es": "Cómo funciona"
+},
+"nfc_how_it_works_content": {
+"res": "angler:SettingsGoogle:nfc_how_it_works_content",
+"en": "Set up a payment app. Then just hold the back of your phone up to any terminal with the contactless symbol.",
+"hu": "Állítson be egy alkalmazást a fizetéshez. Ezután elég csak telefonja hátulját odatartani az érintés nélküli fizetést jelző szimbólummal ellátott terminálhoz.",
+"de": "Richte eine Zahlungs-App ein. Halte die Rückseite deines Smartphones an eine beliebige Kasse mit dem Symbol zum mobilen Bezahlen.",
+"fr": "Configurez une application de paiement. Il suffit ensuite de poser l'arrière de votre téléphone sur n'importe quel terminal disposant du symbole Sans contact.",
+"es": "Configura una aplicación de pago. A continuación, solo tienes que sostener la parte trasera del teléfono sobre cualquier terminal con el símbolo de pago sin contacto."
+},
+"nfc_how_it_works_got_it": {
+"res": "angler:SettingsGoogle:nfc_how_it_works_got_it",
+"en": "Got it",
+"hu": "Értem",
+"de": "OK",
+"fr": "OK",
+"es": "Entendido"
+},
+"screensaver_settings_disabled_prompt": {
+"res": "angler:SettingsGoogle:screensaver_settings_disabled_prompt",
+"en": "To control what happens when the phone is docked and/or sleeping, turn screen saver on.",
+"hu": "A képernyővédő bekapcsolásával beállíthatja, hogy mit csináljon a telefon dokkolt, illetve alvó állapotban.",
+"de": "Um festzulegen, was geschieht, wenn dein Smartphone angedockt oder im Ruhemodus ist, aktiviere den Bildschirmschoner.",
+"fr": "Pour contrôler le comportement du téléphone lorsqu'il se trouve sur une station d'accueil et/ou lorsqu'il est en veille, activez l'économiseur d'écran.",
+"es": "Para controlar lo que ocurre cuando el teléfono está en un dock o inactivo, activa el salvapantallas."
+},
+"screensaver_settings_dream_start": {
+"res": "angler:SettingsGoogle:screensaver_settings_dream_start",
+"en": "Start now",
+"hu": "Indítás most",
+"de": "Jetzt starten",
+"fr": "Commencer",
+"es": "Iniciar ahora"
+},
+"screensaver_settings_when_to_dream": {
+"res": "angler:SettingsGoogle:screensaver_settings_when_to_dream",
+"en": "When to start screen saver",
+"hu": "Mikor induljon el a képernyővédő",
+"de": "Startzeitpunkt für Bildschirmschoner",
+"fr": "Quand activer l'économiseur d'écran",
+"es": "Cuándo iniciar el salvapantallas"
+},
+"screensaver_settings_summary_dock": {
+"res": "angler:SettingsGoogle:screensaver_settings_summary_dock",
+"en": "While docked",
+"hu": "Dokkolt állapotban",
+"de": "Bei angedocktem Gerät",
+"fr": "Sur la station d'accueil",
+"es": "Con el dispositivo en un dock"
+},
+"screensaver_settings_summary_sleep": {
+"res": "angler:SettingsGoogle:screensaver_settings_summary_sleep",
+"en": "While charging",
+"hu": "Töltés közben",
+"de": "Während des Ladevorgangs",
+"fr": "Pendant la charge",
+"es": "Durante la carga"
+},
+"screensaver_settings_summary_either_short": {
+"res": "angler:SettingsGoogle:screensaver_settings_summary_either_short",
+"en": "Either",
+"hu": "Bármelyik",
+"de": "In beiden Fällen",
+"fr": "Dans les deux cas",
+"es": "Ambos casos"
+},
+"BasicDreams/color_dream_name": {
+"res": "angler:BasicDreams:color_dream_name",
+"en": "Colors",
+"hu": "Színek",
+"de": "Farben",
+"fr": "Couleurs",
+"es": "Colores"
+},
+"Photos/photos_theme_google_photos": {
+"res": "angler:Photos:photos_theme_google_photos",
+"en": "Photos",
+"de": "Fotos",
+"fr": "Photos",
+"es": "Fotos",
+"hu": "Photos",
+"untranslated": [
+"hu"
+]
+},
+"Photos/photos_setwallpaper_app_name": {
+"res": "angler:Photos:photos_setwallpaper_app_name",
+"en": "Photos",
+"hu": "Photos",
+"de": "Photos",
+"fr": "Photos",
+"es": "Photos",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"LiveWallpapersPicker/live_wallpaper_picker_label": {
+"res": "angler:LiveWallpapersPicker:live_wallpaper_picker_label",
+"en": "Live Wallpapers",
+"hu": "Élő háttérképek",
+"de": "Live-Hintergründe",
+"fr": "Fonds d'écran animés",
+"es": "Fondos animados"
+},
 "settings_suggestion_header_summary_hidden_items": {
 "res": "angler:SettingsGoogle:settings_suggestion_header_summary_hidden_items",
 "en": {
@@ -9298,6 +9669,144 @@ NG.strings('settings', {
 "other": "%1$d aplicaciones pueden usar datos no restringidos cuando el ahorro de datos está activado",
 "one": "1 aplicación puede usar datos no restringidos cuando el ahorro de datos está activado"
 }
+},
+"wifi_ap_security": {
+"res": "angler:SettingsGoogle:wifi_ap_security",
+"en": [
+"None",
+"WPA2 PSK"
+],
+"hu": [
+"Nincs",
+"WPA2 PSK"
+],
+"de": [
+"Keine",
+"WPA2 PSK"
+],
+"fr": [
+"Aucune",
+"WPA2 PSK"
+],
+"es": [
+"Ninguna",
+"WPA2 PSK"
+]
+},
+"wifi_ap_band_config_full": {
+"res": "angler:SettingsGoogle:wifi_ap_band_config_full",
+"en": [
+"2.4 GHz Band",
+"5 GHz Band"
+],
+"hu": [
+"2,4 GHz-es sáv",
+"5 GHz-es sáv"
+],
+"de": [
+"2,4-GHz-Band",
+"5-GHz-Band"
+],
+"fr": [
+"Bande 2,4 GHz",
+"Bande 5 GHz"
+],
+"es": [
+"Banda de 2,4 GHz",
+"Banda de 5 GHz"
+]
+},
+"vpn_states": {
+"res": "angler:SettingsGoogle:vpn_states",
+"en": [
+"Disconnected",
+"Initializing…",
+"Connecting…",
+"Connected",
+"Timeout",
+"Unsuccessful"
+],
+"hu": [
+"Szétkapcsolva",
+"Inicializálás...",
+"Csatlakozás…",
+"Csatlakoztatva",
+"Időtúllépés",
+"Sikertelen"
+],
+"de": [
+"Verbindung getrennt",
+"Initialisierung läuft...",
+"Verbindung wird hergestellt...",
+"Verbunden",
+"Zeitüberschreitung",
+"Nicht erfolgreich"
+],
+"fr": [
+"Déconnecté",
+"Initialisation en cours...",
+"Connexion en cours...",
+"Connecté",
+"Expiration du délai",
+"Échec."
+],
+"es": [
+"Desconectado",
+"Iniciando...",
+"Conectando...",
+"Conectado",
+"Tiempo de espera superado",
+"Con error"
+]
+},
+"vpn_types": {
+"res": "angler:SettingsGoogle:vpn_types",
+"en": [
+"PPTP",
+"L2TP/IPSec PSK",
+"L2TP/IPSec RSA",
+"IPSec Xauth PSK",
+"IPSec Xauth RSA",
+"IPSec Hybrid RSA"
+],
+"hu": [
+"PPTP",
+"L2TP/IPSec PSK",
+"L2TP/IPSec RSA",
+"IPSec Xauth PSK",
+"IPSec Xauth RSA",
+"IPSec Hybrid RSA"
+],
+"de": [
+"PPTP",
+"L2TP/IPSec PSK",
+"L2TP/IPSec RSA",
+"IPSec Xauth PSK",
+"IPSec Xauth RSA",
+"IPSec Hybrid RSA"
+],
+"fr": [
+"PPTP",
+"L2TP/IPSec PSK",
+"L2TP/IPSec RSA",
+"IPSec Xauth PSK",
+"IPSec Xauth RSA",
+"IPSec Hybrid RSA"
+],
+"es": [
+"PPTP",
+"L2TP/IPSec PSK",
+"L2TP/IPSec RSA",
+"IPSec Xauth PSK",
+"IPSec Xauth RSA",
+"IPSec Hybrid RSA"
+],
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
 },
 "PrebuiltGmsCore/common_google_platform_settings": {
 "res": "angler:PrebuiltGmsCore:common_google_platform_settings",
