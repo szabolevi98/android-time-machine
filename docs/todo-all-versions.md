@@ -20,7 +20,8 @@ its image's clock widget, as 5.1.1 already does.
 
 - [x] 6.0.1: Clock's digital_gadget across the top of the first page (mm-launcher.js), added once to older saves
 - [x] 5.1.1 (DeskClock digital), 4.4.4 (digital), 4.3 and 4.0.4 (analog, on the default page) already have one
-- [ ] 2.3.6 and 2.1 keep their factory home screens (the owner's earlier "factory homes" decision); ask the owner whether the clock rule overrides it
+- [x] 2.3.6 and 2.1: no clock widget on purpose (owner, 2026-10-19: it looks wrong on those home screens); they keep
+  their factory home screens
 
 ## Android's own fading scrollbar (owner, 2026-10-18)
 
