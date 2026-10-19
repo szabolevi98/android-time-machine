@@ -30,5 +30,7 @@ delay and duration).
 
 - [x] 6.0.1: mm-scroll.js (scrollbar_handle_material 4 dp, colorControlNormal tint, 300 ms + 250 ms fade)
 - [x] 5.1.1: lp-scrollbar.js / .css (shamu's scrollbar_handle_material is the same 4 dp shape)
-- [ ] 4.4.4 / 4.3 / 4.0.4 (Holo scrollbar_handle_holo_dark / _light nine-patches)
-- [ ] 2.3.6 / 2.1 (scrollbar_handle_vertical / accelerated nine-patches)
+- [x] 4.4.4 / 4.3 / 4.0.4: kk- / jb- / ics-scrollbar.js / .css (the image's scrollbar_handle_holo_dark on dark screens,
+  _light on light ones, as a nine-patch border image 10 dp wide; 300 ms + 250 ms fade)
+- [x] 2.3.6 / 2.1: gb- / ec-scrollbar.js / .css (scrollbar_handle_vertical, the grey nine-patch, on every theme; the
+  fast-scroll thumb scrollbar_handle_accelerated_anim2 belongs to long lists with fastScrollEnabled and is not drawn)

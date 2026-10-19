@@ -482,6 +482,7 @@ versions/2.1/assets/fw-rate_star_med_on.png	cca9eafda5c01509	copy	passion:/syste
 versions/2.1/assets/fw-rate_star_small_half.png	4bd42ba036170efe	copy	passion:/system/framework/framework-res.apk!res/drawable-hdpi/rate_star_small_half.png	drawable-hdpi		4bd42ba036170efe
 versions/2.1/assets/fw-rate_star_small_off.png	c33e4a7542529c80	copy	passion:/system/framework/framework-res.apk!res/drawable-hdpi/rate_star_small_off.png	drawable-hdpi		c33e4a7542529c80
 versions/2.1/assets/fw-rate_star_small_on.png	9c91a550ef7f5c93	copy	passion:/system/framework/framework-res.apk!res/drawable-hdpi/rate_star_small_on.png	drawable-hdpi		9c91a550ef7f5c93
+versions/2.1/assets/fw-scrollbar_handle_vertical.png	c234e7837235ac2b	copy	passion:/system/framework/framework-res.apk!res/drawable-hdpi/scrollbar_handle_vertical.9.png	drawable-hdpi		c234e7837235ac2b
 versions/2.1/assets/fw-search_dropdown_background.9.png	b203c7ff891158b2	copy	passion:/system/app/VoiceSearchWithKeyboard.apk!res/drawable-hdpi/search_dropdown_background.9.png	drawable-hdpi		b203c7ff891158b2
 versions/2.1/assets/fw-search_plate_global.9.png	0d575461124c58cf	copy	passion:/system/app/VoiceSearchWithKeyboard.apk!res/drawable-hdpi/search_plate_global.9.png	drawable-hdpi		0d575461124c58cf
 versions/2.1/assets/fw-seek_thumb_normal.png	2e24207cce9fc0fa	copy	passion:/system/framework/framework-res.apk!res/drawable-hdpi/seek_thumb_normal.png	drawable-hdpi		2e24207cce9fc0fa

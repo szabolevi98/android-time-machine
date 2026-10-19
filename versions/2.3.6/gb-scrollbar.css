@@ -1,0 +1,7 @@
+/* Gingerbread's fading scrollbar (gb-scrollbar.js): gb-scrollbar_handle_vertical.png from the crespo image's
+   framework-res (drawable-hdpi), drawn as its nine-patch; the page's own scrollbars never show on the phone. */
+.screen *{scrollbar-width:none!important}
+.screen ::-webkit-scrollbar{display:none}
+.gb-scrollbars{position:absolute;inset:0;z-index:900;pointer-events:none;overflow:hidden}
+.gb-scrollbar{position:absolute;width:calc(10 * var(--dp));box-sizing:border-box;border:0 solid transparent;border-image:url(assets/gb-scrollbar_handle_vertical.png) 14 2 13 3 fill / calc(9.3333 * var(--dp)) calc(1.3333 * var(--dp)) calc(8.6667 * var(--dp)) calc(2 * var(--dp));opacity:0;transition:opacity .25s linear}
+.gb-scrollbar.on{opacity:1;transition:none}

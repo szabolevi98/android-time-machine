@@ -913,6 +913,8 @@ versions/4.3/assets/redbean0.png	d864888c1adb7d35	same pixels	mako:/system/app/S
 versions/4.3/assets/redbean1.png	6ba346f60d420407	same pixels	mako:/system/app/SystemUI.apk!res/drawable-nodpi/redbean1.png	drawable-nodpi		c19c83b4b1888009
 versions/4.3/assets/redbean2.png	a5bc613d5e1466c4	same pixels	mako:/system/app/SystemUI.apk!res/drawable-nodpi/redbean2.png	drawable-nodpi		422a4e0a735843d6
 versions/4.3/assets/redbeandroid.png	89a1341edf100f2c	same pixels	mako:/system/app/SystemUI.apk!res/drawable-nodpi/redbeandroid.png	drawable-nodpi		51388a1767b77536
+versions/4.3/assets/scrollbar_handle_holo_dark.png	6d5f42771e9b91de	copy	mako:/system/framework/framework-res.apk!res/drawable-xhdpi/scrollbar_handle_holo_dark.9.png	drawable-xhdpi		6d5f42771e9b91de
+versions/4.3/assets/scrollbar_handle_holo_light.png	6af6a533ef030e47	copy	mako:/system/framework/framework-res.apk!res/drawable-xhdpi/scrollbar_handle_holo_light.9.png	drawable-xhdpi		6af6a533ef030e47
 versions/4.3/assets/setting-about.png	bac4d0e017edbe76	resized	mako:/system/app/Settings.apk!res/drawable-xhdpi/ic_settings_about.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.65	2f7e557ec9e3dc6f
 versions/4.3/assets/setting-accessibility.png	1b37d9f5f21dfe5c	resized	mako:/system/app/Settings.apk!res/drawable-xhdpi/ic_settings_accessibility.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.71	4346641f7a4f9fd0
 versions/4.3/assets/setting-apps.png	5cce43892d39fa8c	resized	mako:/system/app/Settings.apk!res/drawable-xhdpi/ic_tab_selected_running.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.71	758a080fed476838

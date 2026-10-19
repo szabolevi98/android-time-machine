@@ -1,0 +1,8 @@
+/* KitKat's fading scrollbar (kk-scrollbar.js): scrollbar_handle_holo_dark / _light from the hammerhead image's
+   framework-res (drawable-xxhdpi), drawn as its nine-patch; the page's own scrollbars never show on the phone. */
+.screen *{scrollbar-width:none!important}
+.screen ::-webkit-scrollbar{display:none}
+.kk-scrollbars{position:absolute;inset:0;z-index:900;pointer-events:none;overflow:hidden}
+.kk-scrollbar{position:absolute;width:calc(10 * var(--dp));box-sizing:border-box;border:0 solid transparent;border-image:url(assets/scrollbar_handle_holo_dark.png) 12 12 12 12 fill / calc(4 * var(--dp)) calc(4 * var(--dp)) calc(4 * var(--dp)) calc(4 * var(--dp));opacity:0;transition:opacity .25s linear}
+.kk-scrollbar.kk-light{border-image-source:url(assets/scrollbar_handle_holo_light.png)}
+.kk-scrollbar.on{opacity:1;transition:none}

@@ -1,0 +1,8 @@
+/* Ice Cream Sandwich's fading scrollbar (ics-scrollbar.js): scrollbar_handle_holo_dark / _light from the maguro image's
+   framework-res (drawable-xhdpi), drawn as its nine-patch; the page's own scrollbars never show on the phone. */
+.screen *{scrollbar-width:none!important}
+.screen ::-webkit-scrollbar{display:none}
+.ics-scrollbars{position:absolute;inset:0;z-index:900;pointer-events:none;overflow:hidden}
+.ics-scrollbar{position:absolute;width:calc(10 * var(--dp));box-sizing:border-box;border:0 solid transparent;border-image:url(assets/scrollbar_handle_holo_dark.png) 8 8 8 8 fill / calc(4 * var(--dp)) calc(4 * var(--dp)) calc(4 * var(--dp)) calc(4 * var(--dp));opacity:0;transition:opacity .25s linear}
+.ics-scrollbar.ics-light{border-image-source:url(assets/scrollbar_handle_holo_light.png)}
+.ics-scrollbar.on{opacity:1;transition:none}
