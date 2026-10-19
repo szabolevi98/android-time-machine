@@ -56,3 +56,33 @@ button.mmsa-file:active{background:rgba(0,0,0,.08)}
 .mmsa-q::placeholder{color:rgba(255,255,255,.6)}
 .mmsa-docicon{display:grid!important;place-items:center;aspect-ratio:1;padding:0!important;background:#eceff1}
 .mmsa-docicon .mmsa-mime{width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin:0}
+/* Android Pay's How to pay and card form, Device Policy's account step. */
+.mmsa-htp{position:absolute;inset:0;display:flex;flex-direction:column;background:#00b8d4;color:#fff;font-family:Roboto,sans-serif}
+.mmsa-htpimg{flex:1;min-height:0;display:grid;place-items:center;padding:calc(24 * var(--dp))}
+.mmsa-htpimg img{width:calc(296 * var(--dp));max-width:100%;max-height:100%;object-fit:contain}
+.mmsa-htp p{margin:0 calc(24 * var(--dp)) calc(100 * var(--dp));font-size:calc(22 * var(--dp));line-height:1.3;text-align:center;white-space:pre-line}
+.mmsa-htpfoot{position:absolute;left:0;right:0;bottom:0;height:calc(56 * var(--dp));display:flex;align-items:center;justify-content:center}
+.mmsa-htpfoot button{position:absolute;top:50%;transform:translateY(-50%);min-width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0 calc(24 * var(--dp));border:0;background:none;color:#fff;font:500 calc(16 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.mmsa-htpfoot button.left{left:0}
+.mmsa-htpfoot button.right{right:0}
+.mmsa-htpfoot button.icon img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.mmsa-dots{display:flex;gap:calc(8 * var(--dp))}
+.mmsa-dots i{width:calc(8 * var(--dp));height:calc(8 * var(--dp));border-radius:50%;background:rgba(255,255,255,.5)}
+.mmsa-dots i.on{background:#fff}
+.mmsa-ocr{background:#000;color:#fff;align-items:center}
+.mmsa-ocrcam{position:relative;width:100%;flex:1;min-height:0;overflow:hidden;opacity:.6}
+.mmsa-ocrsvg{width:100%;height:100%;object-fit:cover}
+.mmsa-frame{position:absolute;left:10%;right:10%;top:30%;aspect-ratio:1.586;border:calc(2 * var(--dp)) solid #fff;border-radius:calc(8 * var(--dp))}
+.mmsa-ocr p{margin:calc(16 * var(--dp));font-size:calc(16 * var(--dp));text-align:center}
+.mmsa-manual{margin-bottom:calc(24 * var(--dp));padding:calc(12 * var(--dp)) calc(16 * var(--dp));border:0;background:none;color:#fff;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.mmsa-form{padding:calc(16 * var(--dp))}
+.mmsa-row{display:flex;gap:calc(16 * var(--dp))}
+.mmsa-field{flex:1;display:flex;flex-direction:column;margin-bottom:calc(16 * var(--dp));color:rgba(0,0,0,.54);font:calc(12 * var(--dp)) Roboto,sans-serif}
+.mmsa-field input{min-width:0;padding:calc(8 * var(--dp)) 0;border:0;border-bottom:1px solid rgba(0,0,0,.26);outline:0;background:none;color:rgba(0,0,0,.87);font:calc(16 * var(--dp)) Roboto,sans-serif}
+.mmsa-field input:focus{border-bottom:calc(2 * var(--dp)) solid #4285f4}
+.mmsa-err{display:block;color:#d50000;font-size:calc(12 * var(--dp))}
+.mmsa-dim{color:rgba(0,0,0,.54)}
+.mmsa-up{flex:none;width:calc(56 * var(--dp));height:calc(56 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center}
+.mmsa-up img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.mmsa-field{min-width:0}
+.mmsa-field input{width:100%;box-sizing:border-box}

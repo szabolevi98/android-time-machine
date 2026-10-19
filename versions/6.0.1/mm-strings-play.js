@@ -281,6 +281,118 @@ MM.strings('play', {
 "fr": "Commentaires",
 "es": "Opiniones"
 },
+"rent": {
+"res": "bullhead:Phonesky:rent",
+"en": "Rent %1$s",
+"hu": "Kölcsönzés – %1$s",
+"de": "Für %1$s ausleihen",
+"fr": "Louer (%1$s)",
+"es": "Alquilar por %1$s"
+},
+"buy": {
+"res": "bullhead:Phonesky:buy",
+"en": "Buy %1$s",
+"hu": "Vásárlás – %1$s",
+"de": "Für %1$s kaufen",
+"fr": "Acheter (%1$s)",
+"es": "Comprar por %1$s"
+},
+"my_wishlist_empty": {
+"res": "bullhead:Phonesky:my_wishlist_empty",
+"en": "There are no items in your wishlist. To add items, tap the bookmark whenever you see it in the menu above.",
+"hu": "A kívánságlista üres. Elemek hozzáadásához koppints a könyvjelzőre, amikor az megjelenik a menüben.",
+"de": "Es befinden sich keine Artikel auf Ihrer Wunschliste. Berühren Sie das Lesezeichen oben im Menü, um Artikel hinzuzufügen.",
+"fr": "Aucun article dans votre liste de souhaits. Pour en ajouter, appuyez sur l'icône d'ajout aux favoris si celle-ci est disponible dans le menu ci-dessus.",
+"es": "No tienes elementos en tu lista de deseos. Para añadir elementos, toca el marcador cuando aparezca en el menú de arriba."
+},
+"no_results": {
+"res": "bullhead:Phonesky:no_results",
+"en": "No results found.",
+"hu": "Nincs találat.",
+"de": "Keine Ergebnisse",
+"fr": "Aucun résultat trouvé.",
+"es": "No se han encontrado resultados."
+},
+"payment_methods": {
+"res": "bullhead:Phonesky:payment_methods",
+"en": "Payment methods",
+"hu": "Fizetési módok",
+"de": "Zahlungsmethoden",
+"fr": "Modes de paiement",
+"es": "Formas de pago"
+},
+"add_payment_method": {
+"res": "bullhead:Phonesky:add_payment_method",
+"en": "Add payment method",
+"hu": "Fiz. mód hozzáadása",
+"de": "Zahlungsmittel hinzufügen",
+"fr": "Ajouter mode paiement",
+"es": "Añadir forma de pago"
+},
+"no_order_history": {
+"res": "bullhead:Phonesky:no_order_history",
+"en": "You have no orders for this account.",
+"hu": "Nincsenek megrendelések ebben a fiókban.",
+"de": "Für dieses Konto liegen keine Bestellungen vor.",
+"fr": "Aucune commande n'a été passée avec ce compte.",
+"es": "Esta cuenta no tiene ningún pedido."
+},
+"redeem_screen_title": {
+"res": "bullhead:Phonesky:redeem_screen_title",
+"en": "Redeem your code",
+"hu": "Váltsd be a kódot",
+"de": "Code einlösen",
+"fr": "Utiliser votre code",
+"es": "Canjea tu código"
+},
+"gift_card_code_hint": {
+"res": "bullhead:Phonesky:gift_card_code_hint",
+"en": "Enter code",
+"hu": "Írd be a kódot",
+"de": "Code eingeben",
+"fr": "Saisissez le code",
+"es": "Introduce el código"
+},
+"redeem_gift_card_button": {
+"res": "bullhead:Phonesky:redeem_gift_card_button",
+"en": "Redeem",
+"hu": "Beváltás",
+"de": "Einlösen",
+"fr": "Utiliser",
+"es": "Canjear"
+},
+"invalid_entry": {
+"res": "bullhead:Phonesky:invalid_entry",
+"en": "Invalid entry",
+"hu": "Érvénytelen bevitel",
+"de": "Ungültiger Eintrag",
+"fr": "Saisie incorrecte",
+"es": "Entrada no válida"
+},
+"wishlist_add": {
+"res": "bullhead:Phonesky:wishlist_add",
+"en": "Add to wishlist",
+"hu": "Felvétel a kívánságlistára",
+"de": "Auf die Wunschliste",
+"fr": "Ajouter à la liste de souhaits",
+"es": "Añadir a la lista de deseos"
+},
+"wishlist_remove": {
+"res": "bullhead:Phonesky:wishlist_remove",
+"en": "Remove from wishlist",
+"hu": "Eltávolítás a listáról",
+"de": "Von Wunschliste entfernen",
+"fr": "Retirer de la liste de souhaits",
+"es": "Eliminar de lista de deseos"
+},
+"no_results_for_query": {
+"res": "bullhead:Phonesky:no_results_for_query",
+"en": "No results found for \"%1$s\".",
+"hu": "Nincs találat a következőre: \"%1$s\".",
+"de": "Keine Ergebnisse für \"%1$s\" gefunden",
+"fr": "Aucun résultat trouvé pour \"%1$s\".",
+"es": "No se han encontrado resultados de \"%1$s\"."
+},
 "details_description": {
 "res": "bullhead:Phonesky:details_description",
 "en": "Description",

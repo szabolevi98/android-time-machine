@@ -90,3 +90,13 @@
 .mmps-di.sec{font-weight:400}
 .mmps-ddiv{display:block;height:1px;margin:calc(8 * var(--dp)) 0;background:#e5e5e5}
 .mmps-bar.over{position:absolute;left:0;right:0;top:0;box-shadow:none;background:linear-gradient(rgba(0,0,0,.25),transparent)!important}
+/* Corpora, the drawer's pages, buying and an installed fictional app. */
+.mmps-empty{padding:calc(48 * var(--dp)) calc(24 * var(--dp));color:#616161;font-size:calc(16 * var(--dp));line-height:1.4;text-align:center}
+.mmps-acard{margin:calc(8 * var(--dp));padding:calc(16 * var(--dp));border-radius:calc(2 * var(--dp));background:#fff;box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) rgba(0,0,0,.2);font-family:Roboto,sans-serif}
+.mmps-acard b{display:block;margin-bottom:calc(8 * var(--dp));font-weight:500;font-size:calc(16 * var(--dp));color:#212121}
+.mmps-acard p{margin:0;color:#616161;font-size:calc(14 * var(--dp))}
+.mmps-arow{padding:calc(8 * var(--dp)) 0;border:0;background:none;color:#689f38;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.mmps-payrow{display:block;padding:calc(12 * var(--dp)) 0;font-size:calc(16 * var(--dp))}
+.mmps-fapp{position:absolute;inset:0;display:flex;flex-direction:column;background:#fafafa;font-family:Roboto,sans-serif}
+.mmps-fbar{flex:none;height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));display:flex;align-items:center;background:var(--fc);color:#fff;font:500 calc(20 * var(--dp)) Roboto,sans-serif}
+.mmps-fbody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(16 * var(--dp));padding:calc(24 * var(--dp));text-align:center;color:#616161;font-size:calc(16 * var(--dp))}

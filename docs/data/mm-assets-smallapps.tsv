@@ -10,3 +10,9 @@ wa-tp_placeholder_card_color_296x187dp.png	app/Wallet/Wallet.apk	drawable/tp_pla
 wa-ic_add.png	app/Wallet/Wallet.apk	drawable/ic_add
 wa-tp_logo_android_pay_color_48dp.png	app/Wallet/Wallet.apk	drawable/tp_logo_android_pay_color_48dp
 du-ic_doc_folder_alpha.png	app/DocumentsUI/DocumentsUI.apk	drawable/ic_doc_folder_alpha
+# Android Pay's How to pay (HowToPayFragment: the three pages' images, the pager's chevrons)
+wa-tp_howtopay_screen1_color_296dp.png	app/Wallet/Wallet.apk	drawable/tp_howtopay_screen1_color_296dp
+wa-tp_howtopay_screen2_color_296dp.png	app/Wallet/Wallet.apk	drawable/tp_howtopay_screen2_color_296dp
+wa-tp_howtopay_screen3_color_296dp.png	app/Wallet/Wallet.apk	drawable/tp_howtopay_screen3_color_296dp
+wa-quantum_ic_chevron_left_white_24.png	app/Wallet/Wallet.apk	drawable/quantum_ic_chevron_left_white_24
+wa-quantum_ic_chevron_right_white_24.png	app/Wallet/Wallet.apk	drawable/quantum_ic_chevron_right_white_24

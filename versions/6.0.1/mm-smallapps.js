@@ -138,17 +138,60 @@
       return false;
     }
   });
+  /* Android Pay's How to pay (HowToPayActivity: quantum_cyanA700 behind the window, the status bar 30 % darker): a pager
+     of HowToPayFragment's three pages (LOOK_FOR_NFC, UNLOCK_PHONE, TAP: tp_howtopay_screen1-3_color_296dp above the
+     22 sp white headline, 100 dp from the bottom), the PagingIndicator, CLOSE on the first page and GOT IT on the last
+     with the chevrons between. Adding a card (+, or Play's add payment method): Play services' card scanner
+     (ocr_cc_scan_card_details over the camera with the card frame, ocr_skip_scan "Add manually"), then its form
+     (wallet_add_new_card_title: wallet_card_number, wallet_exp_month / wallet_exp_year, wallet_cvc,
+     wallet_card_holder_name with the account's name); Save checks the fields (error_message_card_number_must_be_numeric,
+     wallet_error_month_invalid, wallet_error_cvc_invalid) and the simulator, which has no bank, answers with
+     wallet_error_creditcard_invalid. Nothing typed is kept. */
+  const HOWTO = [['tp_howtopay_screen1_color_296dp', 'look_for_nfc_headline'], ['tp_howtopay_screen2_color_296dp', 'unlock_phone_headline'], ['tp_howtopay_screen3_color_296dp', 'tap_headline']];
+  function howToPay(c) {
+    const t = T(), i = c.ui.payPage || 0, [img, key] = HOWTO[i];
+    return `<div class="mmsa-htp"><div class="mmsa-htpimg"><img src="assets/wa-${img}.png" alt=""></div><p>${esc(c, t.t(`Wallet/${key}`))}</p>
+      <div class="mmsa-htpfoot">${i === 0 ? `<button type="button" class="left" data-action="mmsa-htp-close">${esc(c, t.t('Wallet/how_to_pay_close'))}</button>` : `<button type="button" class="left icon" data-action="mmsa-htp-prev" aria-label="${esc(c, t.t('Wallet/warm_welcome_previous'))}"><img src="assets/wa-quantum_ic_chevron_left_white_24.png" alt=""></button>`}
+        <span class="mmsa-dots">${HOWTO.map((_, k) => `<i class="${k === i ? 'on' : ''}"></i>`).join('')}</span>
+        ${i === HOWTO.length - 1 ? `<button type="button" class="right" data-action="mmsa-htp-close">${esc(c, t.t('Wallet/warm_welcome_dismiss'))}</button>` : `<button type="button" class="right icon" data-action="mmsa-htp-next" aria-label="${esc(c, t.t('Wallet/warm_welcome_next'))}"><img src="assets/wa-quantum_ic_chevron_right_white_24.png" alt=""></button>`}</div></div>`;
+  }
+  const G = k => T().t(`PrebuiltGmsCore/${k}`);
+  function addCard(c) {
+    const t = T();
+    if (c.ui.sub === 'add-card') return `<div class="mmsa mmsa-ocr"><div class="mmsa-ocrcam">${MM.media?.svg ? MM.media.svg({id: 'payocr', seed: 9, time: Date.now()}, 'mmsa-ocrsvg', 9 / 16) : ''}<i class="mmsa-frame"></i></div><p>${esc(c, t.t('Wallet/ocr_cc_scan_card_details'))}</p><button type="button" class="mmsa-manual" data-action="mmsa-manual">${esc(c, t.t('Wallet/ocr_skip_scan'))}</button></div>`;
+    const f = (cls, label, type = 'text', value = '') => `<label class="mmsa-field ${cls}"><span>${esc(c, label)}</span><input type="${type}" inputmode="${type === 'tel' ? 'numeric' : 'text'}" class="mmsa-in-${cls}" value="${esc(c, value)}" autocomplete="off"></label>`;
+    return `<div class="mmsa">${bar(c, G('wallet_add_new_card_title'), '#fff', false, '', `<button type="button" class="mmsa-up" data-action="mmsa-up"><img src="assets/gm-ic_arrow_back_24dp.png" alt=""></button>`)}
+      <div class="mmsa-page mmsa-form">${f('num', G('wallet_card_number'), 'tel')}<div class="mmsa-row">${f('mm', G('wallet_exp_month'), 'tel')}${f('yy', G('wallet_exp_year'), 'tel')}${f('cvc', G('wallet_cvc'), 'tel')}</div>${f('name', G('wallet_card_holder_name'), 'text', MM.account.name)}<small class="mmsa-err"></small></div>
+      <div class="mmsa-foot"><button type="button" data-action="mmsa-up">${esc(c, G('wallet_cancel'))}</button><button type="button" data-action="mmsa-save">${esc(c, G('wallet_save_label'))}</button></div></div>`;
+  }
   MM.register('android-pay', {
-    statusColor: () => '#9e9e9e',
+    statusColor: c => c.ui.sub === 'how-to-pay' ? '#008194' : c.ui.sub === 'add-card' ? '#000' : c.ui.sub === 'add-card-form' ? '#9e9e9e' : '#9e9e9e',
+    page: c => MM.page('pay', c.ui.sub && c.ui.sub.replace('-form', '/form')),
+    back(c) { if (c.ui.sub && c.ui.payInner) { c.ui.sub = ''; c.ui.payInner = false; c.render(); return true; } if (c.ui.sub) c.ui.sub = ''; return false; },
     render(c) {
       const t = T();
+      if (c.ui.sub === 'how-to-pay') return howToPay(c);
+      if (c.ui.sub === 'add-card' || c.ui.sub === 'add-card-form') return addCard(c);
       return `<div class="mmsa">${bar(c, t.t('Wallet/application_name'), '#fff', false, MM.menu.button(c, 'mmsa-over light'), '<img class="mmsa-logo" src="assets/wa-tp_logo_android_pay_color_48dp.png" alt="">')}
         <div class="mmsa-page"><div class="mmsa-pay"><img src="assets/wa-tp_placeholder_card_color_296x187dp.png" alt=""><b>${esc(c, t.t('Wallet/add_payment_card_headline'))}</b></div></div>
         <button type="button" class="mmsa-fab" data-action="mmsa-addcard" aria-label="${esc(c, t.t('Wallet/action_add_payment_card'))}"><img src="assets/wa-ic_add.png" alt=""></button></div>`;
     },
     action(name, el, event, c) {
-      if (name === 'mmsa-addcard') { c.open('missing-android-pay-add-card'); return true; }
-      if (name === 'mm-menu') { c.menu([{label: T().t('Wallet/menu_item_warm_welcome'), action: c => c.open('missing-android-pay-how-to-pay')}]); return true; }
+      const t = T();
+      // Opened from Android Pay itself, Back comes back to its main screen; from Play (add payment method) to Play.
+      if (name === 'mmsa-addcard') { c.ui.payInner = true; c.open('android-pay', 'add-card'); return true; }
+      if (name === 'mm-menu') { c.menu([{label: t.t('Wallet/menu_item_warm_welcome'), action: c => { c.ui.payPage = 0; c.ui.payInner = true; c.open('android-pay', 'how-to-pay'); }}]); return true; }
+      if (name === 'mmsa-htp-next' || name === 'mmsa-htp-prev') { c.ui.payPage = Math.max(0, Math.min(HOWTO.length - 1, (c.ui.payPage || 0) + (name === 'mmsa-htp-next' ? 1 : -1))); c.render(); return true; }
+      if (name === 'mmsa-htp-close' || name === 'mmsa-up') { c.back(); return true; }
+      if (name === 'mmsa-manual') { c.open('android-pay', 'add-card-form', {replace: true}); return true; }
+      if (name === 'mmsa-save') {
+        const v = k => c.el.viewport.querySelector(`.mmsa-in-${k}`)?.value.trim() || '', err = c.el.viewport.querySelector('.mmsa-err');
+        const num = v('num').replace(/\s/g, ''), mm = +v('mm'), cvc = v('cvc');
+        const problem = !/^\d{12,19}$/.test(num) ? t.t('Wallet/error_message_card_number_must_be_numeric') : !(mm >= 1 && mm <= 12) ? G('wallet_error_month_invalid') : !/^\d{3,4}$/.test(cvc) ? G('wallet_error_cvc_invalid') : '';
+        if (problem) { if (err) err.textContent = problem; return true; }
+        c.dialog({message: G('wallet_error_creditcard_invalid'), buttons: [{label: MM.text('framework').t('ok'), action: c => c.back()}]});
+        return true;
+      }
       return false;
     }
   });
@@ -163,9 +206,18 @@
     statusColor: () => '#0099cc',
     render(c) {
       const t = T();
+      if (c.ui.sub === 'apps-account') return `<div class="mmsa">${bar(c, t.t('DMAgent/main_title'), '#3aa3db', true)}<div class="mmsa-page"><div class="mmsa-text"><p>${esc(c, t.t('DMAgent/add_apps_account'))}</p><p class="mmsa-dim">${esc(c, t.t('DMAgent/apps_account_example'))}</p></div></div>
+        <div class="mmsa-foot"><button type="button" data-action="mmsa-addacct">${esc(c, t.t('DMAgent/add_account'))}</button></div></div>`;
       return `<div class="mmsa">${bar(c, t.t('DMAgent/main_title'), '#3aa3db', true)}<div class="mmsa-page"><div class="mmsa-text"><p>${esc(c, t.t('DMAgent/introduction_text'))}</p><p>${esc(c, t.t('DMAgent/info_shared_admin'))}</p></div></div>
         <div class="mmsa-foot"><button type="button" data-action="mmsa-next">${esc(c, t.t('DMAgent/next_button_label'))}</button></div></div>`;
     },
-    action(name, el, event, c) { if (name === 'mmsa-next') { c.open('missing-device-policy-sign-in'); return true; } return false; }
+    // NEXT: Device Policy needs a Google Apps for Business, Education or Government account (add_apps_account,
+    // apps_account_example); the demo account is a gmail.com one, so it offers Add account (Settings' accounts).
+    page: c => MM.page('dm', c.ui.sub),
+    action(name, el, event, c) {
+      if (name === 'mmsa-next') { c.open('device-policy', 'apps-account'); return true; }
+      if (name === 'mmsa-addacct') { c.open('settings', 'accounts'); return true; }
+      return false;
+    }
   });
 })();

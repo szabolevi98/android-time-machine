@@ -4,7 +4,7 @@
 
 docs/data/mm-assets.tsv (and every docs/data/mm-assets-*.tsv a tool writes, e.g. mm-prefs.py's) lists one file per line: <output name> <TAB> <APK under _aosp/bullhead/system> <TAB> <resource>,
 e.g. "sui-ic_sysbar_back.png	priv-app/SystemUI/SystemUI.apk	drawable/ic_sysbar_back"; a source that is not an APK is a
-system file copied byte for byte. The Nexus 5X is 420 dpi and takes xxhdpi resources (480 dpi, scaled down by 420/480),
+system file copied byte for byte, and a resource "assets/…" the APK's own asset file. The Nexus 5X is 420 dpi and takes xxhdpi resources (480 dpi, scaled down by 420/480),
 so a resource is taken in the first density the APK has of xxhdpi, nodpi, xhdpi, xxxhdpi, hdpi, mdpi or none (with or
 without the -v4 / -v21 / -v23 suffix aapt adds) and copied byte for byte. VectorDrawables are not copied: they become
 SVG through docs/tools/mm-vectors.py.
@@ -71,6 +71,10 @@ def main():
             open(OUT + out, 'wb').write(open(SYSTEM + apk, 'rb').read())
             continue
         z = zips.setdefault(apk, zipfile.ZipFile(SYSTEM + apk))
+        # A file of the APK's assets/ folder is copied as it is.
+        if resource.startswith('assets/'):
+            open(OUT + out, 'wb').write(z.read(resource))
+            continue
         path, density = find(z, resource)
         data = z.read(path)
         open(OUT + out, 'wb').write(data)
