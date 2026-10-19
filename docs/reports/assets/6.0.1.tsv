@@ -849,6 +849,7 @@ versions/6.0.1/assets/vv-ic_arrow_back.png	9817c5d907f46d3a	copy	bullhead:/syste
 versions/6.0.1/assets/vv-ic_google_logo_ime.png	54ad7d2bb8f530f0	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v21/ic_google_logo_ime.png	drawable-xxhdpi-v21		54ad7d2bb8f530f0
 versions/6.0.1/assets/vv-ic_images.png	431958254f957dbc	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_images.png	drawable-xxhdpi-v4		431958254f957dbc
 versions/6.0.1/assets/vv-ic_ime_keyboard.png	de1cc87aca07f0cd	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v21/ic_ime_keyboard.png	drawable-xxhdpi-v21		de1cc87aca07f0cd
+versions/6.0.1/assets/vv-ic_stat_notify_google.png	2a59589b0f2991ca	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_stat_notify_google.png	drawable-xxhdpi-v4		2a59589b0f2991ca
 versions/6.0.1/assets/vv-ic_tick.svg	549ff548f6d76436	vector	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-v21/ic_tick.xml	drawable-v21	vector drawable drawn as SVG	932646c014b9700b
 versions/6.0.1/assets/vv-ime_background_holo.9.png	6e45e4ab21bb7c63	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v21/ime_background_holo.9.png	drawable-xxhdpi-v21		6e45e4ab21bb7c63
 versions/6.0.1/assets/vv-ime_btn_rec.png	1982f0eac148cd59	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ime_btn_rec.png	drawable-xxhdpi-v4		1982f0eac148cd59

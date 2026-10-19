@@ -132,6 +132,7 @@
     action(name, el, event, c) {
       if (name === 'mmpf-up') { if (!this.back(c)) c.back(); return true; }
       // A row a hook adds (after): data-xml opens that file of the app as the next screen.
+      if (name === 'mmvc-corpus') { const k = `corpus_${el.dataset.k}`; ((c.data.appPrefs ||= {}).voice ||= {})[k] = !(MM.appPref(c, 'voice', k, true)); c.save(); c.render(); return true; }
       if (name === 'mmpf-goto') { st(c).stack.push({xml: el.dataset.xml, path: [], title: el.dataset.title || ''}); c.render(); return true; }
       if (name !== 'mmpf-pref') return hooks(c).action?.(c, name, el) === true;
       let node = nodeOf(c);

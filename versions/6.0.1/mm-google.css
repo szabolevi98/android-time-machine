@@ -83,3 +83,16 @@
 .mmgp-empty{padding:calc(24 * var(--dp)) calc(16 * var(--dp));color:rgba(0,0,0,.54);font-size:calc(16 * var(--dp));line-height:1.4}
 .mmgp-note{padding:0 calc(16 * var(--dp)) calc(16 * var(--dp));color:rgba(0,0,0,.54);font-size:calc(14 * var(--dp));line-height:1.4}
 .mmgp .mmst-switchbar{background:#37474f}
+.mmsl-check{flex:none;width:calc(6 * var(--dp));height:calc(12 * var(--dp));margin-right:calc(6 * var(--dp));border:solid #4285f4;border-width:0 calc(2.5 * var(--dp)) calc(2.5 * var(--dp)) 0;transform:rotate(45deg)}
+/* The Google app's Nicknames and Download Languages. */
+.mmvn-empty{padding:calc(32 * var(--dp)) calc(24 * var(--dp));color:rgba(0,0,0,.54);font-size:calc(14 * var(--dp));line-height:1.4}
+.mmvn-empty b{display:block;margin-bottom:calc(8 * var(--dp));color:rgba(0,0,0,.87);font-weight:400;font-size:calc(18 * var(--dp))}
+.mmvn-empty button{margin-top:calc(16 * var(--dp));padding:0;border:0;background:none;color:#4285f4;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.mmvl-tabs{flex:none;display:flex;background:#4285f4;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) rgba(0,0,0,.2)}
+.mmvl-tabs button{flex:1;height:calc(48 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid transparent;background:none;color:rgba(255,255,255,.7);font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.mmvl-tabs button.on{color:#fff;border-bottom-color:#fff}
+.mmvl .mmgs-bar{box-shadow:none}
+.mmvl-item{display:flex;flex-direction:column;justify-content:center;width:100%;min-height:calc(56 * var(--dp));padding:calc(8 * var(--dp)) calc(18 * var(--dp));border:0;border-bottom:1px solid #eee;background:none;text-align:left;font-family:Roboto,sans-serif}
+.mmvl-item b{font-weight:400;font-size:calc(16 * var(--dp));color:rgba(0,0,0,.87)}
+.mmvl-item small{font-size:calc(14 * var(--dp));color:rgba(0,0,0,.54)}
+.mmvl-none{padding:calc(24 * var(--dp)) calc(18 * var(--dp));color:rgba(0,0,0,.54);font-size:calc(16 * var(--dp))}

@@ -4023,6 +4023,46 @@ MM.strings('appprefs', {
 "fr": "Partage d'infos trajet domicile-travail",
 "es": "Compartir información sobre desplazamientos cotidianos"
 },
+"Velvet/commute_sharing_choose_people": {
+"res": "bullhead:Velvet:commute_sharing_choose_people",
+"en": "Choose who can see your location using Google+",
+"hu": "Válassza ki, hogy ki láthatja az Ön tartózkodási helyét a Google+-on",
+"de": "Sichtbarkeit deines Standorts auf Google+ festlegen",
+"fr": "Sélectionner les contacts autorisés à voir votre position sur Google+",
+"es": "Elige quién puede ver tu ubicación con Google+"
+},
+"Velvet/commute_sharing_learn_more": {
+"res": "bullhead:Velvet:commute_sharing_learn_more",
+"en": "Learn more",
+"hu": "További információ",
+"de": "Weitere Informationen",
+"fr": "En savoir plus",
+"es": "Más información"
+},
+"Velvet/commute_sharing_learn_more_details": {
+"res": "bullhead:Velvet:commute_sharing_learn_more_details",
+"en": "You can use Google Now to share updates with people you care about",
+"hu": "A Google Asszisztens használatával most már megoszthat frissítéseket azokkal, akik fontosak az Ön számára",
+"de": "Über Google Now kannst du Updates mit Freunden teilen.",
+"fr": "Utilisez Google Now pour partager des informations avec les personnes qui comptent pour vous.",
+"es": "Google Now te permite compartir información actualizada con las personas que te importan"
+},
+"Velvet/commute_sharing_settings_header": {
+"res": "bullhead:Velvet:commute_sharing_settings_header",
+"en": "About Commute Sharing",
+"hu": "Az ingázás megosztásának beállításai",
+"de": "Über das Teilen der Pendelstrecke",
+"fr": "À propos du partage d'informations relatives au trajet domicile-travail",
+"es": "Acerca de las opciones para compartir viaje"
+},
+"Velvet/commute_sharing_settings_sub_header": {
+"res": "bullhead:Velvet:commute_sharing_settings_sub_header",
+"en": "Share Updates On Your Commute",
+"hu": "Ingázási frissítések megosztása",
+"de": "Updates zu meiner Pendelstrecke teilen",
+"fr": "Partager des informations relatives à votre trajet domicile-travail",
+"es": "Comparte información actualizada sobre tu viaje"
+},
 "Velvet/delete_card_preferences": {
 "res": "bullhead:Velvet:delete_card_preferences",
 "en": "Delete card preferences?",
@@ -4172,6 +4212,14 @@ MM.strings('appprefs', {
 "de": "Keine Konten eingerichtet",
 "fr": "Aucun compte configuré",
 "es": "No se ha configurado ninguna cuenta"
+},
+"Velvet/my_places_header": {
+"res": "bullhead:Velvet:my_places_header",
+"en": "Places",
+"hu": "Helyek",
+"de": "Orte",
+"fr": "Adresses",
+"es": "Sitios"
 },
 "Velvet/notifications_enabled_header": {
 "res": "bullhead:Velvet:notifications_enabled_header",
@@ -4365,6 +4413,22 @@ MM.strings('appprefs', {
 "fr": "Autoriser rech. si appareil verrouillé",
 "es": "Permitir con dispositivo bloqueado"
 },
+"Velvet/search_sources": {
+"res": "bullhead:Velvet:search_sources",
+"en": "Phone search",
+"hu": "Keresés a telefonon",
+"de": "Suche im Telefon",
+"fr": "Recherche sur le téléphone",
+"es": "Búsqueda en teléfono"
+},
+"Velvet/search_sources_summary": {
+"res": "bullhead:Velvet:search_sources_summary",
+"en": "Choose what to search on the phone",
+"hu": "Válassza ki, mire szeretne keresni a telefonján",
+"de": "Auswahl für die Suche auf dem Telefon",
+"fr": "Sélectionner les sources à explorer sur le téléphone lors d'une recherche",
+"es": "Elegir lo que se quiere buscar en el teléfono"
+},
 "Velvet/select_google_account": {
 "res": "bullhead:Velvet:select_google_account",
 "en": "Google Account",
@@ -4413,6 +4477,14 @@ MM.strings('appprefs', {
 "fr": "Conditions d'utilisation",
 "es": "Condiciones de servicio"
 },
+"Velvet/shared_commutes_enabled": {
+"res": "bullhead:Velvet:shared_commutes_enabled",
+"en": "Let them see your commute updates",
+"hu": "Láthatják az Ön ingázási frissítéseit",
+"de": "Updates zur Pendelstrecke teilen",
+"fr": "Partager les informations relatives à votre trajet domicile-travail",
+"es": "Permitir que vean información actualizada sobre tu viaje"
+},
 "Velvet/show_cards": {
 "res": "bullhead:Velvet:show_cards",
 "en": "Show cards",
@@ -4436,6 +4508,182 @@ MM.strings('appprefs', {
 "de": "Sprachsuche-Einstellungen",
 "fr": "Paramètres rech. vocale",
 "es": "Ajustes de Búsqueda por voz"
+},
+"Velvet/empty_relationship_title": {
+"res": "bullhead:Velvet:empty_relationship_title",
+"en": "Use Google Now to create nicknames for contacts on your device.",
+"hu": "A Google Asszisztens használatával beceneveket adhat az eszközén lévő névjegyekhez.",
+"de": "Mit Google Now Nicknamen für Kontakte auf deinem Gerät erstellen",
+"fr": "Utilisez Google Now pour créer des pseudos pour les contacts enregistrés sur votre appareil",
+"es": "Usa Google Now para crear apodos de tus contactos en tu dispositivo."
+},
+"Velvet/empty_relationship_subtitle": {
+"res": "bullhead:Velvet:empty_relationship_subtitle",
+"en": "You haven't set up any nicknames yet. From the Google app or any Home screen in the Google Now launcher, try tapping the microphone or saying \"Ok Google\" then \"Call Mom\".",
+"hu": "Még nem adott meg egy becenevet sem. A Google alkalmazásban vagy a Google Asszisztens Indító bármelyik kezdőképernyőjén koppintson a mikrofonra, vagy mondja, hogy „OK Google”, majd pedig, hogy „Call Mom” (Anya hívása).",
+"de": "Du hast noch keine Nicknamen festgelegt. Tippe in der Google App oder auf einem Startbildschirm im Google Now Launcher auf das Mikrofon oder sage \"Ok Google\" und anschließend \"Mama anrufen\".",
+"fr": "Vous n'avez encore défini aucun pseudo. À partir de l'application Google ou de n'importe quel écran d'accueil dans le lanceur d'applications Google Now, essayez d'appuyer sur le micro ou de dire \"Ok Google\", puis \"Appeler maman\".",
+"es": "No has configurado ningún apodo aún. Desde la aplicación Google o cualquier pantalla de inicio de Google Now Launcher, toca el micrófono o di “Ok Google” y, a continuación, “Llama a mamá”."
+},
+"Velvet/learn_more": {
+"res": "bullhead:Velvet:learn_more",
+"en": "Learn more",
+"hu": "További információ",
+"de": "Weitere Informationen",
+"fr": "En savoir plus",
+"es": "Más información"
+},
+"Velvet/language_pack_installer_title": {
+"res": "bullhead:Velvet:language_pack_installer_title",
+"en": "Download Languages",
+"hu": "Nyelvek letöltése",
+"de": "Sprachen herunterladen",
+"fr": "Télécharger les packs de langue",
+"es": "Descargar idiomas"
+},
+"Velvet/installed_language_packs": {
+"res": "bullhead:Velvet:installed_language_packs",
+"en": "Installed",
+"hu": "Telepítve",
+"de": "Installiert",
+"fr": "Installés",
+"es": "Instalados"
+},
+"Velvet/all_language_packs": {
+"res": "bullhead:Velvet:all_language_packs",
+"en": "All",
+"hu": "Összes",
+"de": "Alle",
+"fr": "Tout",
+"es": "Todo"
+},
+"Velvet/auto_update_language_packs": {
+"res": "bullhead:Velvet:auto_update_language_packs",
+"en": "Auto-update",
+"hu": "Auto. frissítés",
+"de": "Autom. Update",
+"fr": "Mise à jour auto",
+"es": "Actualizar"
+},
+"Velvet/auto_update_never": {
+"res": "bullhead:Velvet:auto_update_never",
+"en": "Do not auto-update languages",
+"hu": "Ne frissítse automatikusan a nyelveket",
+"de": "Sprachen nicht automatisch aktualisieren",
+"fr": "Ne pas mettre à jour les packs de langue automatiquement",
+"es": "No actualizar idiomas automáticamente"
+},
+"Velvet/auto_update_wifi_only": {
+"res": "bullhead:Velvet:auto_update_wifi_only",
+"en": "Auto-update languages over Wi-Fi only",
+"hu": "A nyelveket csak Wi-Fi-n keresztül frissítse automatikusan",
+"de": "Automatische Sprachen-Updates nur über WLAN zulassen",
+"fr": "Mettre à jour les packs de langue automatiquement via Wi-Fi uniquement",
+"es": "Actualizar idiomas solo a través de Wi-Fi"
+},
+"Velvet/auto_update_any_time": {
+"res": "bullhead:Velvet:auto_update_any_time",
+"en": "Auto-update languages at any time.\nData charges may apply.",
+"hu": "A nyelvek bármikor automatikusan frissíthetők.\nA szolgáltató adatforgalmi díjat számíthat fel.",
+"de": "Sprachen jederzeit automatisch aktualisieren.\nEs können Gebühren für die Datenübertragung anfallen.",
+"fr": "Mettre à jour les packs de langue automatiquement à tout moment.\nDes frais de connexion peuvent s'appliquer.",
+"es": "Actualizar idiomas automáticamente en cualquier momento.\nSe pueden aplicar cargos de datos"
+},
+"Velvet/no_installed_language_packs": {
+"res": "bullhead:Velvet:no_installed_language_packs",
+"en": "No languages installed",
+"hu": "Nincs telepített nyelv",
+"de": "Keine Sprachen installiert",
+"fr": "Aucun pack de langue installé.",
+"es": "No hay idiomas instalados"
+},
+"Velvet/language_pack_download_notification_title": {
+"res": "bullhead:Velvet:language_pack_download_notification_title",
+"en": "Downloading %1$s",
+"hu": "%1$s nyelv letöltése",
+"de": "%1$s wird heruntergeladen...",
+"fr": "Téléchargement des paramètres régionaux %1$s",
+"es": "Descargando %1$s"
+},
+"Velvet/language_pack_download_notification_description": {
+"res": "bullhead:Velvet:language_pack_download_notification_description",
+"en": "Offline speech recognition data",
+"hu": "Offline beszédfelismerési adatok",
+"de": "Offline-Spracherkennungsdaten",
+"fr": "Données de reconnaissance vocale hors connexion",
+"es": "Datos de reconocimiento de voz sin conexión"
+},
+"Velvet/icing_apps_corpus_label": {
+"res": "bullhead:Velvet:icing_apps_corpus_label",
+"en": "Apps",
+"hu": "Alkalmazások",
+"de": "Apps",
+"fr": "Applications",
+"es": "Aplicaciones"
+},
+"Velvet/icing_apps_corpus_description": {
+"res": "bullhead:Velvet:icing_apps_corpus_description",
+"en": "Names of installed apps",
+"hu": "A telepített alkalmazások neve",
+"de": "Namen der installierten Apps",
+"fr": "Noms des applications installées",
+"es": "Nombres de aplicaciones instaladas"
+},
+"Velvet/icing_contacts_corpus_label": {
+"res": "bullhead:Velvet:icing_contacts_corpus_label",
+"en": "Contacts",
+"hu": "Névjegyek",
+"de": "Kontakte",
+"fr": "Contacts",
+"es": "Contactos"
+},
+"Chrome/content_provider_search_description": {
+"res": "bullhead:Chrome:content_provider_search_description",
+"en": "Bookmarks and web history",
+"hu": "Könyvjelzők és böngészési előzm.",
+"de": "Lesezeichen und Webprotokoll",
+"fr": "Favoris et historique Web",
+"es": "Historial web y marcadores"
+},
+"Drive/search_description": {
+"res": "bullhead:Drive:search_description",
+"en": "Google Drive",
+"hu": "Google Drive - Megtekintő",
+"de": "Google Drive",
+"fr": "Google Drive",
+"es": "Google Drive"
+},
+"Videos/global_search_settings_description": {
+"res": "bullhead:Videos:global_search_settings_description",
+"en": "Movies in your library",
+"hu": "Filmek a könyvtárában",
+"de": "Meine Filme",
+"fr": "Films de votre bibliothèque",
+"es": "Películas de tu biblioteca"
+},
+"Music2/search_settings_description": {
+"res": "bullhead:Music2:search_settings_description",
+"en": "Artists, albums, and tracks",
+"hu": "Előadók, albumok és számok",
+"de": "Interpreten, Alben und Songs",
+"fr": "Artistes, albums et titres",
+"es": "Artistas, álbumes y canciones"
+},
+"GoogleContacts/search_settings_description": {
+"res": "bullhead:GoogleContacts:search_settings_description",
+"en": "Names of your contacts",
+"hu": "Ismerősök nevei",
+"de": "Namen meiner Kontakte",
+"fr": "Noms de vos contacts",
+"es": "Nombres de tus contactos"
+},
+"Velvet/delete_card_preferences_summary": {
+"res": "bullhead:Velvet:delete_card_preferences_summary",
+"en": "This will delete your card customizations and turn off Now cards on all your devices",
+"hu": "Ezzel törli a kártyák személyre szabását, és kikapcsolja az Asszisztens kártyákat az Ön valamennyi eszközén",
+"de": "Hiermit werden deine personalisierten Karteneinstellungen gelöscht und Google Now-Karten auf allen deinen Geräten deaktiviert.",
+"fr": "Cette action supprime les personnalisations apportées aux cartes et désactive les cartes Now sur tous vos appareils.",
+"es": "Se eliminarán las opciones personalizadas de las tarjetas y se desactivarán las tarjetas de Google Now en todos tus dispositivos"
 },
 "Velvet/emptyArray": {
 "res": "bullhead:Velvet:emptyArray",

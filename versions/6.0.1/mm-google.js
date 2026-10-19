@@ -125,6 +125,66 @@
   const esc = (c, s) => c.safe(s);
   const LAUNCHER = [['launcherPredictions', 'homescreen_settings_show_predictions', true], ['launcherRotation', 'allow_rotation_title', false]];
   const SEARCH = [['accounts', 'account_settings'], ['language', 'search_language'], ['voice', 'voice_settings'], ['sources', 'search_sources'], ['cards', 'now_cards'], ['about', 'about']];
+  /* SearchLanguageSettingsFragment (search_language_preference_screen.xml): one row per language with a check on the
+     current one. The list comes from the Google app's server configuration, which the image does not hold; here it is
+     the languages of the app's voice locales (array languageCodes), each named in itself, the device's first. */
+  const LANGS = () => { const codes = MM.velvetLanguageCodes || []; return [...new Set(codes.map(x => x.split('-')[0]))]; };
+  /* The Google app's Nicknames (RelationshipSettingsFragment, relationship_list.xml): none set yet, so its empty view
+     (empty_relationship_title, empty_relationship_subtitle, Learn more). Download Languages (language_pack_installer.xml,
+     LanguagePackListItem rows): the tabs Installed, All and Auto-update; nothing is installed at first
+     (no_installed_language_packs), All lists the app's voice locales (array languageCodes) named in the device's
+     language, a download posts language_pack_download_notification_* and installs it; Auto-update offers its three
+     choices. */
+  const V = () => { const p = MM.text('appprefs'); return k => p.t(`Velvet/${k}`); };
+  const vbar = (c, title, act) => `<div class="mmgs-bar"><button type="button" class="mmgs-up" data-action="${act}"><img src="assets/vv-ic_arrow_back.png" alt=""></button><span>${esc(c, title)}</span></div>`;
+  MM.register('voice-nicknames', {
+    statusColor: () => '#356ac3',
+    render(c) { const v = V(); return `<div class="mmgs">${vbar(c, v('relationships'), 'mmvn-up')}<div class="mmgs-list"><div class="mmvn-empty"><b>${esc(c, v('empty_relationship_title'))}</b><p>${esc(c, v('empty_relationship_subtitle'))}</p><button type="button" data-action="mmvn-more">${esc(c, v('learn_more'))}</button></div></div></div>`; },
+    action(name, el, event, c) { if (name === 'mmvn-up') { c.back(); return true; } if (name === 'mmvn-more') { c.open('help', 'search'); return true; } return false; }
+  });
+  const packs = c => c.data.langPacks || (c.data.langPacks = {installed: [], auto: 'wifi'});
+  const packName = (c, code) => { try { return new Intl.DisplayNames([c.locale()], {type: 'language'}).of(code); } catch { return code; } };
+  MM.register('voice-langpacks', {
+    statusColor: () => '#356ac3',
+    page: c => MM.page('langpacks', c.ui.langTab || 0),
+    render(c) {
+      const v = V(), tab = c.ui.langTab || 0, p = packs(c), tabs = ['installed_language_packs', 'all_language_packs', 'auto_update_language_packs'];
+      const item = code => { const st = p.installed.includes(code) ? v('installed_language_packs') : c.ui.langDl?.[code] ? AndroidStrings.format(v('language_pack_download_notification_title'), '').trim() : ''; return `<button type="button" class="mmvl-item" data-action="mmvl-dl" data-code="${code}"><b>${esc(c, packName(c, code))}</b>${st ? `<small>${esc(c, st)}</small>` : ''}</button>`; };
+      const body = tab === 0 ? (p.installed.length ? p.installed.map(item).join('') : `<div class="mmvl-none">${esc(c, v('no_installed_language_packs'))}</div>`)
+        : tab === 1 ? (MM.velvetLanguageCodes || []).map(item).join('')
+        : [['never', 'auto_update_never'], ['any', 'auto_update_any_time'], ['wifi', 'auto_update_wifi_only']].map(([k, key]) => `<button type="button" class="mmvl-item" data-action="mmvl-auto" data-k="${k}"><span class="mmst-choice"><i class="mmw-radio${p.auto === k ? ' on' : ''}"></i><span>${esc(c, v(key))}</span></span></button>`).join('');
+      return `<div class="mmgs mmvl">${vbar(c, v('language_pack_installer_title'), 'mmvl-up')}<div class="mmvl-tabs">${tabs.map((k, i) => `<button type="button" class="${i === tab ? 'on' : ''}" data-action="mmvl-tab" data-i="${i}">${esc(c, v(k))}</button>`).join('')}</div><div class="mmgs-list">${body}</div></div>`;
+    },
+    back(c) { c.ui.langTab = 0; return false; },
+    action(name, el, event, c) {
+      const v = V(), p = packs(c);
+      if (name === 'mmvl-up') { c.back(); return true; }
+      if (name === 'mmvl-tab') { c.ui.langTab = +el.dataset.i; c.render(); return true; }
+      if (name === 'mmvl-auto') { p.auto = el.dataset.k; c.save(); c.render(); return true; }
+      if (name === 'mmvl-dl') {
+        const code = el.dataset.code; if (p.installed.includes(code) || c.ui.langDl?.[code]) return true;
+        (c.ui.langDl ||= {})[code] = true; c.render();
+        MM.notify?.(c, {app: 'search', icon: 'assets/vv-ic_stat_notify_google.png', title: AndroidStrings.format(v('language_pack_download_notification_title'), packName(c, code)), text: v('language_pack_download_notification_description'), heads: false});
+        setTimeout(() => { delete c.ui.langDl[code]; p.installed.push(code); c.save(); const n = (c.data.notifications || []).find(x => x.title.includes(packName(c, code))); if (n) MM.notifications.cancel(c, n.id); if (c.ui.view === 'voice-langpacks') c.render(); }, 4000);
+        return true;
+      }
+      return false;
+    }
+  });
+  MM.register('search-language', {
+    statusColor: () => '#356ac3',
+    render(c) {
+      const t = T(), cur = c.data.searchLanguage || c.lang, list = LANGS(), name = code => { try { const n = new Intl.DisplayNames([code], {type: 'language'}).of(code); return n.charAt(0).toLocaleUpperCase(code) + n.slice(1); } catch { return code; } };
+      const ordered = [cur, ...list.filter(x => x !== cur)];
+      return `<div class="mmgs"><div class="mmgs-bar"><button type="button" class="mmgs-up" data-action="mmsl-up"><img src="assets/vv-ic_arrow_back.png" alt=""></button><span>${esc(c, t.t('search_language'))}</span></div>
+        <div class="mmgs-list">${ordered.map(code => `<button type="button" class="mmgs-row" data-action="mmsl-pick" data-code="${code}"><span>${esc(c, name(code))}</span>${code === cur ? '<i class="mmsl-check"></i>' : ''}</button>`).join('')}</div></div>`;
+    },
+    action(name, el, event, c) {
+      if (name === 'mmsl-up') { c.back(); return true; }
+      if (name === 'mmsl-pick') { c.data.searchLanguage = el.dataset.code; c.save(); c.back(); return true; }
+      return false;
+    }
+  });
   MM.register('home-settings', {
     statusColor: () => '#356ac3',
     render(c) {
@@ -137,7 +197,13 @@
     action(name, el, event, c) {
       if (name === 'mmgs-up') { c.back(); return true; }
       if (name === 'mmgs-switch') { const row = LAUNCHER.find(r => r[0] === el.dataset.key); c.data[row[0]] = !(c.data[row[0]] ?? row[2]); c.save(); c.render(); return true; }
-      if (name === 'mmgs-open') { c.open(`missing-google-settings-${el.dataset.id}`); return true; }
+      // The headers' fragments: the app's own preference XML (mm-appprefs.js); Search language its own list.
+      if (name === 'mmgs-open') {
+        const id = el.dataset.id, xml = {accounts: 'privacy_and_account_preferences', voice: 'voicesearch_preferences', sources: 'preferences_searchable_items', cards: 'now_cards_settings', about: 'about'}[id];
+        const title = T().t(SEARCH.find(r => r[0] === id)[1]);
+        if (xml) MM.openPrefs(c, 'voice', xml, title); else c.open('search-language');
+        return true;
+      }
       return false;
     }
   });

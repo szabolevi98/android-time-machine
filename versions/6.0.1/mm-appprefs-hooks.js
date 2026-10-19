@@ -147,11 +147,45 @@
 
   // The Google app's Voice settings and its other pages (Accounts & privacy, Now cards, About).
   H.voice = {
-    hidden: ['downloadLanguagePacks', 'npStreamPreference', 'notificationOverride', 'priorityNotificationsPreferenceCategory', 'cardCategoryNotificationCategory', 'relationships', 'commute_sharing', 'google_account_history', 'speaker_id_retrain_voice_model', 'speaker_id_delete_voice_model', 'pref_category_voice_model', 'hotword_from_lock_screen', 'hotword_from_lock_screen_2', 'alwaysOnHotword'],
-    fragments: {HotwordSettingsFragment: 'hotword_settings', HandsFreeSettingsFragment: 'hands_free_settings', LegalFragment: 'legal_settings'},
+    // No trained voice model and no always-on hotword hardware path on this image's setup; the Now stream toggle has no
+    // title (a dogfood row).
+    hidden: ['npStreamPreference', 'speaker_id_retrain_voice_model', 'speaker_id_delete_voice_model', 'pref_category_voice_model', 'hotword_from_lock_screen', 'hotword_from_lock_screen_2', 'alwaysOnHotword'],
+    fragments: {HotwordSettingsFragment: 'hotword_settings', HandsFreeSettingsFragment: 'hands_free_settings', LegalFragment: 'legal_settings', TrafficCardSettingsFragment: 'traffic_card_settings'},
+    /* SearchableItemsFragment fills preferences_searchable_items with a check box per corpus: the Google app's own (Apps,
+       Contacts) and the installed apps' searchables with includeInGlobalSearch (Chrome, Drive, Play Movies, Play Music),
+       each with its searchSettingsDescription. */
+    top(c, xml) {
+      if (xml !== 'preferences_searchable_items') return '';
+      const p = P(), V = 'Velvet/', on = k => MM.appPref(c, 'voice', `corpus_${k}`, true);
+      const rows = [['apps', p.t(V + 'icing_apps_corpus_label'), p.t(V + 'icing_apps_corpus_description')], ['chrome', MM.appLabel(c, 'chrome'), p.t('Chrome/content_provider_search_description')],
+        ['contacts', p.t(V + 'icing_contacts_corpus_label'), p.t('GoogleContacts/search_settings_description')], ['drive', MM.appLabel(c, 'drive'), p.t('Drive/search_description')],
+        ['movies', MM.appLabel(c, 'play-movies'), p.t('Videos/global_search_settings_description')], ['music', MM.appLabel(c, 'play-music'), p.t('Music2/search_settings_description')]];
+      return rows.map(([k, title, sum]) => `<button type="button" class="mmst-pref" data-action="mmvc-corpus" data-k="${k}"><span class="mmst-texts"><span class="mmst-title">${c.safe(title)}</span><span class="mmst-summary">${c.safe(sum)}</span></span><span class="mmst-widget"><i class="mmst-check${on(k) ? ' on' : ''}"></i></span></button>`).join('');
+    },
+    click(c, key, n) {
+      if (key === 'relationships') { c.open('voice-nicknames'); return true; }
+      if (key === 'downloadLanguagePacks') { c.open('voice-langpacks'); return true; }
+      if (key === 'google_account_history') { c.open('chrome', 'url:https://myaccount.google.com/privacy#history'); return true; }
+      if (key === 'manageCardHistoryPreference') { c.open('chrome', 'url:https://myaccount.google.com/privacy#now'); return true; }
+      // LanguagePreference: the voice locales (array languageCodes) in a single choice list, named in the device's language.
+      if (key === 'language') {
+        const codes = MM.velvetLanguageCodes || [], cur = MM.appPref(c, 'voice', 'language', '') || codes.find(x => x.toLowerCase() === c.locale().toLowerCase()) || 'en-US';
+        const name = code => { try { return new Intl.DisplayNames([c.locale()], {type: 'language'}).of(code); } catch { return code; } };
+        c.dialog({title: MM.appPrefStr(n.title), items: codes.map(code => ({html: `<span class="mmst-choice"><i class="mmw-radio${code === cur ? ' on' : ''}"></i><span>${c.safe(name(code))}</span></span>`})), buttons: [{label: MM.text('framework').t('cancel')}], onItem: i => set(c, 'voice', 'language', codes[i])});
+        return true;
+      }
+      if (key === 'deleteCardPreferencesPreference') { const p = P(); c.dialog({title: p.t('Velvet/delete_card_preferences'), message: p.t('Velvet/delete_card_preferences_summary'), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok')}]}); return true; }
+      if (key === 'notificationOverride') { set(c, 'voice', key, !MM.appPref(c, 'voice', key, true)); return true; }
+      if (key === 'notificationSoundPreference') { MM.ringtonePicker?.(c, {kind: 'notification', current: MM.appPref(c, 'voice', key, '') || 'default', onPick: (c, v) => set(c, 'voice', key, v === 'default' ? '' : v)}); return true; }
+      if (key === 'google_account') { c.dialog({title: P().t('Velvet/select_google_account'), items: [{html: `<span class="mmst-choice"><i class="mmw-radio on"></i><span>${c.safe(MM.account.email)}</span></span>`}]}); return true; }
+      return false;
+    },
     summary(c, key) {
-      if (key === 'language') return new Intl.DisplayNames([c.locale()], {type: 'language'}).of(c.locale()) || c.locale();
+      if (key === 'language') { const code = MM.appPref(c, 'voice', 'language', ''); return new Intl.DisplayNames([c.locale()], {type: 'language'}).of(code || c.locale()) || c.locale(); }
+      if (key === 'notificationOverride') return MM.text('settings').t(MM.appPref(c, 'voice', key, true) ? 'switch_on_text' : 'switch_off_text');
+      if (key === 'notificationSoundPreference') return MM.appPref(c, 'voice', key, '') || MM.settingsRingtones?.notification.default || '';
       if (key === 'google_account') return MM.account.email;
+      if (key === 'google_account_history') return P().t('Velvet/google_account_history_summary');
       if (key === 'about_app_version') return MM.appsData?.search?.version || '';
     },
     get(c, key) { if (key === 'enableScreenAssistPreference') return !!c.data.nowOnTap; if (key === 'showCardsPreference') return c.data.now === 'on'; },
