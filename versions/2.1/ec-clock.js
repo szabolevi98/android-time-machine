@@ -28,7 +28,9 @@
   'use strict';
   const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[ch]);
   const K = () => EC.text('clock'), F = () => EC.text('framework');
+  // AlarmProvider's two alarms, then the simulator's demo alarm of every version (docs/demo-data.md): 7:00 on weekdays, on.
   EC.defaults.alarms = [
+    {id: 3, time: '7:00', days: [0, 1, 2, 3, 4], enabled: true, vibrate: true, label: '', alert: null},
     {id: 1, time: '8:30', days: [0, 1, 2, 3, 4], enabled: false, vibrate: true, label: '', alert: null},
     {id: 2, time: '9:00', days: [5, 6], enabled: false, vibrate: true, label: '', alert: null}
   ];

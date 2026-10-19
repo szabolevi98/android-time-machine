@@ -360,6 +360,7 @@ versions/2.1/assets/fw-ic_input_get.png	1bc011192f2e7d33	copy	passion:/system/fr
 versions/2.1/assets/fw-ic_jog_dial_sound_off.png	dbdc712c0263440f	copy	passion:/system/app/Phone.apk!res/drawable-hdpi/ic_jog_dial_sound_off.png	drawable-hdpi		dbdc712c0263440f
 versions/2.1/assets/fw-ic_jog_dial_sound_on.png	711fc2f8365880d1	copy	passion:/system/app/Phone.apk!res/drawable-hdpi/ic_jog_dial_sound_on.png	drawable-hdpi		711fc2f8365880d1
 versions/2.1/assets/fw-ic_jog_dial_unlock.png	49a5e9cdd626fd48	copy	passion:/system/app/Phone.apk!res/drawable-hdpi/ic_jog_dial_unlock.png	drawable-hdpi		49a5e9cdd626fd48
+versions/2.1/assets/fw-ic_launcher_android.png	79ac39fa42793399	copy	passion:/system/framework/framework-res.apk!res/drawable-hdpi/ic_launcher_android.png	drawable-hdpi		79ac39fa42793399
 versions/2.1/assets/fw-ic_lock_airplane_mode.png	940a088d18f3693d	copy	passion:/system/framework/framework-res.apk!res/drawable-hdpi/ic_lock_airplane_mode.png	drawable-hdpi		940a088d18f3693d
 versions/2.1/assets/fw-ic_lock_airplane_mode_off.png	8ff4a38efa2128df	copy	passion:/system/framework/framework-res.apk!res/drawable-hdpi/ic_lock_airplane_mode_off.png	drawable-hdpi		8ff4a38efa2128df
 versions/2.1/assets/fw-ic_lock_idle_alarm.png	733f9b8c5fcce37b	copy	passion:/system/framework/framework-res.apk!res/drawable-hdpi/ic_lock_idle_alarm.png	drawable-hdpi		733f9b8c5fcce37b

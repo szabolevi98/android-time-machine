@@ -28,13 +28,13 @@ The account: `<device>.demo@gmail.com` (6.0.1: nexus5x.demo@gmail.com). Carrier:
   4.5 s after it was sent (6.0.1: Messenger and Hangouts; texts own:sim_reply_1…3).
 - **Hangouts (4.3 and later):** Sam, yesterday: "The photos from the hike are up!" — me: "They look amazing 😀".
 - **Notifications on a new phone:** "Welcome to Android <x.y>" / "Your <device> is ready to explore." and "New message
-  from Alex" / "See you at 11!" (opens the Alex thread). 2.3.6–6.0.1; 2.1 starts with none.
+  from Alex" / "See you at 11!" (opens the Alex thread). Every version (2.1 since 2026-10-19, owner's decision).
 - **E-mail / Gmail:** 2.3.6–5.1.1: one "Welcome to Android" mail from the Android Team. 6.0.1 Gmail: Alex "Hike on
   Saturday?", Taylor "Slides for Monday", Mom "Sunday lunch", Sam "Photos from the trip", Tech News newsletter.
 - **Calendar:** today 11:00 "Coffee with Alex". 6.0.1 adds Sunday "Sunday lunch at Mom’s" (12:30, Bring dessert),
   Saturday "Hike with Alex" (8:00, Ridge trail), in 9 days "Meetup slides due" (all day).
 - **Clock:** 7:00 alarm switched on (status bar alarm icon), 8:30 off. 6.0.1: 7:00 weekdays on, plus DeskClock's own
-  8:30 weekdays and 9:00 weekend, off. 2.1: only AlarmProvider's two, off. The home screen clock widget is on from 4.0.4
+  8:30 weekdays and 9:00 weekend, off. 2.1: the same 7:00 weekday alarm on, beside AlarmProvider's two. The home screen clock widget is on from 4.0.4
   on (owner's rule; not on 2.1 and 2.3.6 on purpose).
 - **Photos / Gallery:** four pictures (Mountain afternoon, City lights, By the sea, Sunset as drawn gradients; 6.0.1:
   four seeded drawings, the last a panorama, two days and nine days old).

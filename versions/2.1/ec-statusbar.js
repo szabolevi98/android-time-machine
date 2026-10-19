@@ -19,7 +19,11 @@
   const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[ch]);
   const icon = (file, cls = '') => `<span class="ecsb-icon${cls}"><img src="assets/${file}" alt=""></span>`;
 
-  EC.defaults.notifications = [];
+  // The simulator's own first-boot notifications, as in every version (docs/demo-data.md): the welcome (the framework's
+  // ic_launcher_android robot) and Alex's message, which opens the conversation; their texts are translated (i18n.js).
+  EC.defaults.notifications = [
+    {id: 'demo-welcome', icon: 'fw-ic_launcher_android.png', title: 'Welcome to Android 2.1', text: 'Your Nexus One is ready to explore.', when: Date.now() - 2 * 60000, demo: true},
+    {id: 'demo-alex', icon: 'mm-stat_notify_sms.png', title: 'New message from Alex', text: 'See you at 11!', when: Date.now() - 61 * 60000, demo: true, view: 'messaging', sub: 'compose', ui: {smsThread: '202-555-0148'}}];
   // SettingsProvider defaults of the image (def_wifi_on false, def_bluetooth_on false, def_airplane_mode_on false).
   Object.assign(EC.defaults.settings, {wifi: false, wifiConnected: false, bluetooth: false, airplane: false, ringer: '', battery: 80, charging: false, gps: false, hour24: null});
 
@@ -106,7 +110,7 @@
     const d = new Date(when), now = new Date();
     return d.toDateString() === now.toDateString() ? clockText(c, d) : d.toLocaleDateString(c.locale(), {month: 'numeric', day: 'numeric', year: '2-digit'});
   };
-  const item = (c, n) => `<div class="ecsh-event"><button type="button" class="ecsh-item" data-action="ecsh-open" data-id="${esc(n.id)}"><i class="ec-bg np-fw-status_bar_item_background_normal"></i><i class="ec-bg ec-pressed np-fw-status_bar_item_background_pressed"></i><i class="ec-bg ec-focused np-fw-status_bar_item_background_focus"></i><span class="ecsh-row"><img class="ecsh-icon" src="assets/${esc(n.icon)}" alt=""><span class="ecsh-title">${esc(n.title)}</span></span><span class="ecsh-row"><span class="ecsh-text">${esc(n.text)}</span>${n.when ? `<span class="ecsh-time">${esc(timeOf(c, n.when))}</span>` : ''}</span></button><i class="ecsh-divider"></i></div>`;
+  const item = (c, n) => `<div class="ecsh-event"><button type="button" class="ecsh-item" data-action="ecsh-open" data-id="${esc(n.id)}"><i class="ec-bg np-fw-status_bar_item_background_normal"></i><i class="ec-bg ec-pressed np-fw-status_bar_item_background_pressed"></i><i class="ec-bg ec-focused np-fw-status_bar_item_background_focus"></i><span class="ecsh-row"><img class="ecsh-icon" src="assets/${esc(n.icon)}" alt=""><span class="ecsh-title">${esc(n.demo ? c.t(n.title) : n.title)}</span></span><span class="ecsh-row"><span class="ecsh-text">${esc(n.demo ? c.t(n.text) : n.text)}</span>${n.when ? `<span class="ecsh-time">${esc(timeOf(c, n.when))}</span>` : ''}</span></button><i class="ecsh-divider"></i></div>`;
   function renderShade(c) {
     const list = c.data.notifications || [], ongoing = list.filter(n => n.ongoing), latest = list.filter(n => !n.ongoing);
     const title = key => `<div class="ecsh-title-bar"><i class="ec-bg np-fw-title_bar_portrait"></i><span>${esc(T().t(key))}</span></div>`;
@@ -230,6 +234,7 @@
         if (!n) return true;
         if (!n.ongoing) c.data.notifications = c.data.notifications.filter(x => x !== n);
         c.save(); c.ui.overlay = ''; panelY = 0;
+        if (n.ui) Object.assign(c.ui, n.ui);
         if (n.view) c.open(n.view, n.sub || ''); else if (n.overlay) c.overlay(n.overlay); else c.render();
         return true;
       }
