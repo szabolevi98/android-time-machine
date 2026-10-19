@@ -136,5 +136,268 @@ MM.strings('maps', {
 "de": "Route",
 "fr": "Itinéraire",
 "es": "Indicaciones"
+},
+"DA_STEP_DEPART_ON": {
+"res": "bullhead:Maps:DA_STEP_DEPART_ON",
+"en": "Head %1$s on %2$s",
+"hu": "Menjen %1$s irányba a(z) %2$s úton",
+"de": "Auf %2$s Richtung %1$s fahren",
+"fr": "Suivre la direction %1$s sur %2$s",
+"es": "Dirígete al %1$s por %2$s."
+},
+"DA_DIRECTION_NORTH": {
+"res": "bullhead:Maps:DA_DIRECTION_NORTH",
+"en": "north",
+"hu": "észak",
+"de": "Norden",
+"fr": "nord",
+"es": "norte"
+},
+"DA_DIRECTION_SOUTH": {
+"res": "bullhead:Maps:DA_DIRECTION_SOUTH",
+"en": "south",
+"hu": "dél",
+"de": "Süden",
+"fr": "sud",
+"es": "sur"
+},
+"DA_STEP_TURN_RIGHT_ONTO": {
+"res": "bullhead:Maps:DA_STEP_TURN_RIGHT_ONTO",
+"en": "Turn right onto %1$s",
+"hu": "Forduljon jobbra erre: %1$s",
+"de": "Nach rechts auf %1$s abbiegen",
+"fr": "Prendre à droite sur %1$s",
+"es": "Gira a la derecha en %1$s."
+},
+"DA_STEP_TURN_LEFT_ONTO": {
+"res": "bullhead:Maps:DA_STEP_TURN_LEFT_ONTO",
+"en": "Turn left onto %1$s",
+"hu": "Forduljon balra erre: %1$s",
+"de": "Nach links auf %1$s abbiegen",
+"fr": "Prendre à gauche sur %1$s",
+"es": "Gira a la izquierda en %1$s."
+},
+"DA_DESTINATION_REACHED": {
+"res": "bullhead:Maps:DA_DESTINATION_REACHED",
+"en": "You have arrived.",
+"hu": "Megérkezett.",
+"de": "Sie haben das Ziel erreicht",
+"fr": "Vous êtes arrivé.",
+"es": "Has llegado."
+},
+"DA_DISTANCE_FORMAT_METERS_ABBREVIATED": {
+"res": "bullhead:Maps:DA_DISTANCE_FORMAT_METERS_ABBREVIATED",
+"en": "%s m",
+"hu": "%s m",
+"de": "%s m",
+"fr": "%s m",
+"es": "%s m"
+},
+"DA_DISTANCE_FORMAT_KILOMETERS_ABBREVIATED": {
+"res": "bullhead:Maps:DA_DISTANCE_FORMAT_KILOMETERS_ABBREVIATED",
+"en": "%s km",
+"hu": "%s km",
+"de": "%s km",
+"fr": "%s km",
+"es": "%s km"
+},
+"DA_MINUTES_ABBREVIATED": {
+"res": "bullhead:Maps:DA_MINUTES_ABBREVIATED",
+"en": {
+"other": "%s min",
+"one": "%s min"
+},
+"hu": {
+"other": "%s p",
+"one": "%s p"
+},
+"de": {
+"other": "%s min",
+"one": "%s min"
+},
+"fr": {
+"other": "%s min",
+"one": "%s min"
+},
+"es": {
+"other": "%s min",
+"one": "%s min"
+}
+},
+"ARRIVE_AT_TIME": {
+"res": "bullhead:Maps:ARRIVE_AT_TIME",
+"en": "Arrive at %1$s",
+"hu": "Érkezési idő: %1$s",
+"de": "Ankunft um %1$s",
+"fr": "Arrivée à %1$s",
+"es": "Llegarás a las %1$s"
+},
+"DA_EXIT_NAVIGATION": {
+"res": "bullhead:Maps:DA_EXIT_NAVIGATION",
+"en": "Exit navigation",
+"hu": "Kilépés a navigációból",
+"de": "Navigation beenden",
+"fr": "Quitter la navigation",
+"es": "Salir de la navegación"
+},
+"LABELED_AS": {
+"res": "bullhead:Maps:LABELED_AS",
+"en": "Labeled as %s",
+"hu": "Címke: %s",
+"de": "Als %s gekennzeichnet",
+"fr": "Libellé : %s",
+"es": "Con la etiqueta %s"
+},
+"HOME_LOCATION": {
+"res": "bullhead:Maps:HOME_LOCATION",
+"en": "Home",
+"hu": "Otthon",
+"de": "Zuhause",
+"fr": "Domicile",
+"es": "Casa"
+},
+"WORK_LOCATION": {
+"res": "bullhead:Maps:WORK_LOCATION",
+"en": "Work",
+"hu": "Munkahely",
+"de": "Arbeit",
+"fr": "Travail",
+"es": "Trabajo"
+},
+"SET_HOME_LOCATION": {
+"res": "bullhead:Maps:SET_HOME_LOCATION",
+"en": "Enter home address",
+"hu": "Otthoni cím megadása",
+"de": "Privatadresse eingeben",
+"fr": "Saisir adresse domicile",
+"es": "Especificar dirección del hogar"
+},
+"SET_WORK_LOCATION": {
+"res": "bullhead:Maps:SET_WORK_LOCATION",
+"en": "Enter work address",
+"hu": "Munkahelyi cím megadása",
+"de": "Geschäftsadresse eingeben",
+"fr": "Saisir adresse travail",
+"es": "Especificar dirección del trabajo"
+},
+"SAVED_PLACES": {
+"res": "bullhead:Maps:SAVED_PLACES",
+"en": "Saved places",
+"hu": "Mentett helyek",
+"de": "Gespeicherte Orte",
+"fr": "Adresses enregistrées",
+"es": "Lugares guardados"
+},
+"TIMELINE": {
+"res": "bullhead:Maps:TIMELINE",
+"en": "Timeline",
+"hu": "Idővonal",
+"de": "Zeitleiste",
+"fr": "Vos trajets",
+"es": "Cronograma"
+},
+"LOCATION_HISTORY_TURN_ON": {
+"res": "bullhead:Maps:LOCATION_HISTORY_TURN_ON",
+"en": "Turn on",
+"hu": "Bekapcsolás",
+"de": "Aktivieren",
+"fr": "Activer",
+"es": "Activar"
+},
+"LOCATION_HISTORY_LETS_GO": {
+"res": "bullhead:Maps:LOCATION_HISTORY_LETS_GO",
+"en": "Let's go",
+"hu": "Rajta!",
+"de": "Los geht's!",
+"fr": "C'est parti !",
+"es": "Comencemos"
+},
+"OFFLINE_MAPS_HELP_TEXT": {
+"res": "bullhead:Maps:OFFLINE_MAPS_HELP_TEXT",
+"en": "When you're offline you can pan and zoom offline maps, but you can't search or get directions.",
+"hu": "Offline módban az offline térképeket lehet pásztázni és nagyítani/kicsinyíteni, de keresni és útvonalat tervezni nem lehet.",
+"de": "Wenn Sie offline sind, können Sie Karten schwenken und zoomen, Sie können jedoch weder Suchen durchführen noch Routen abrufen.",
+"fr": "Lorsque vous n'êtes pas connecté à Internet, vous pouvez faire des panoramiques et des zooms sur les plans hors connexion, mais vous ne pouvez pas effectuer de recherche ni obtenir d'itinéraire.",
+"es": "Cuando no estás conectado, puedes usar los controles de desplazamiento y zoom en los mapas sin conexión, pero no puedes hacer búsquedas ni obtener indicaciones."
+},
+"OFFLINE_CACHE_START_SELECTION_BUTTON_IN_MENU": {
+"res": "bullhead:Maps:OFFLINE_CACHE_START_SELECTION_BUTTON_IN_MENU",
+"en": "Download offline area",
+"hu": "Offline terület letöltése",
+"de": "Offlinebereich herunterladen",
+"fr": "Télécharger une zone hors connexion",
+"es": "Descargar área sin conexión"
+},
+"OFFLINE_CACHE_SELECT_AREA_TITLE": {
+"res": "bullhead:Maps:OFFLINE_CACHE_SELECT_AREA_TITLE",
+"en": "Download this area?",
+"hu": "Szeretné letölteni ezt a területet?",
+"de": "Bereich herunterladen?",
+"fr": "Télécharger cette zone ?",
+"es": "¿Descargar esta área?"
+},
+"OFFLINE_CACHE_SELECT_AREA_HELP": {
+"res": "bullhead:Maps:OFFLINE_CACHE_SELECT_AREA_HELP",
+"en": "Pan and zoom to adjust",
+"hu": "Pásztázhat és közelíthet",
+"de": "Anpassen: schwenken/zoomen",
+"fr": "Panoramique/Zoom pour ajuster",
+"es": "Mover y zoom para ajustar"
+},
+"OFFLINE_CACHE_SELECT_AREA_SIZE_STRING": {
+"res": "bullhead:Maps:OFFLINE_CACHE_SELECT_AREA_SIZE_STRING",
+"en": "Downloads are 30-2,500 MB",
+"hu": "Letöltések: 30–2500 MB",
+"de": "Größe: 30–2.500 MB",
+"fr": "Téléch. : 30 – 2 500 Mo",
+"es": "Descargas: 30 a 2,500 Mb"
+},
+"OFFLINE_DOWNLOAD": {
+"res": "bullhead:Maps:OFFLINE_DOWNLOAD",
+"en": "DOWNLOAD",
+"hu": "LETÖLTÉS",
+"de": "Herunterladen",
+"fr": "TÉLÉCHARGER",
+"es": "DESCARGAR"
+},
+"OFFLINE_NAME_AREA_TITLE": {
+"res": "bullhead:Maps:OFFLINE_NAME_AREA_TITLE",
+"en": "Name offline area",
+"hu": "Offline terület elnevezése",
+"de": "Offlinebereich benennen",
+"fr": "Attribuer un nom à la zone hors connexion",
+"es": "Nombre del área sin conexión"
+},
+"OFFLINE_CACHE_SAVING": {
+"res": "bullhead:Maps:OFFLINE_CACHE_SAVING",
+"en": "Downloading",
+"hu": "Letöltés folyamatban",
+"de": "Wird heruntergeladen",
+"fr": "Téléch. en cours…",
+"es": "Descargando"
+},
+"OFFLINE_CACHE_SAVED": {
+"res": "bullhead:Maps:OFFLINE_CACHE_SAVED",
+"en": "Area downloaded",
+"hu": "A terület letöltése befejeződött",
+"de": "Bereich heruntergeladen",
+"fr": "Zone téléchargée",
+"es": "Área descargada"
+},
+"OFFLINE_DOWNLOAD_SUCCEEDED": {
+"res": "bullhead:Maps:OFFLINE_DOWNLOAD_SUCCEEDED",
+"en": "Offline area download complete",
+"hu": "Az offline területek letöltése befejeződött",
+"de": "Der Offlinebereich wurde vollständig heruntergeladen.",
+"fr": "Téléchargement de la zone hors connexion terminé",
+"es": "Descarga completa del área sin conexión"
+},
+"GOOGLE_EARTH_NOT_AVAILABLE": {
+"res": "bullhead:Maps:GOOGLE_EARTH_NOT_AVAILABLE",
+"en": "Can't open Google Earth.",
+"hu": "Nem sikerült megnyitni a Google Earth alkalmazást.",
+"de": "Google Earth kann nicht geöffnet werden.",
+"fr": "Impossible d'ouvrir Google Earth.",
+"es": "No se puede abrir Google Earth."
 }
 });
