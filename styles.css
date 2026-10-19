@@ -85,3 +85,7 @@ h1{font-size:clamp(38px,4.6vw,60px)}
 .mini-phone-nexus5x{aspect-ratio:387.8/772.93;border:0;border-radius:0;background-image:url('versions/6.0.1/assets/device-nexus-5x.svg?v=5')}
 .mini-phone-nexus5x .mini-screen{top:10.28%;bottom:10.89%;left:5.8%;right:5.83%}
 .mini-phone-nexus5x .mini-earpiece,.mini-phone-nexus5x .mini-camera{display:none}
+/* Nexus 6P (7.1.2 preview): 393.39 x 793.26, the display window at (21.09, 89.55), 350.67 x 623.41. */
+.mini-phone-nexus6p{aspect-ratio:393.39/793.26;border:0;border-radius:0;background-image:url('versions/7.1.2/assets/device-nexus-6p.svg?v=1')}
+.mini-phone-nexus6p .mini-screen{top:11.289%;bottom:10.122%;left:5.361%;right:5.498%}
+.mini-phone-nexus6p .mini-earpiece,.mini-phone-nexus6p .mini-camera{display:none}

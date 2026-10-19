@@ -77,5 +77,16 @@ window.ANDROID_VERSIONS = [
     url: 'versions/6.0.1/',
     status: 'available',
     art: {shot: 'landing-home.jpg?v=3', phone: 'nexus5x'}
+  },
+  {
+    id: '7.1.2',
+    name: 'Nougat',
+    version: 'Android 7.1.2',
+    year: '2017',
+    device: 'Nexus 6P · Google',
+    description: 'Nougat on the Nexus 6P: split-screen multi-window, bundled notifications with direct reply, the quick settings editor and Doze on the go. Coming next.',
+    url: 'versions/7.1.2/',
+    status: 'preview',
+    art: {shot: 'landing-home.jpg?v=1', phone: 'nexus6p'}
   }
 ];

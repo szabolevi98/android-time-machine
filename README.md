@@ -42,6 +42,8 @@ What each version does, screen by screen:
 - [Android 5.1.1 Lollipop](docs/features-5.1.1.md) on the Nexus 6, as its LMY48Y factory image ships it
 - [Android 6.0.1 Marshmallow](docs/features-6.0.1.md) on the Nexus 5X, rebuilt from its MTC20K factory image
 
+Android 7.1.2 Nougat on the Nexus 6P is next: its landing card opens a preview page with the phone installing a system update in recovery (`versions/7.1.2/`).
+
 ## Social preview image
 
 `assets/og-cover.jpg` (1200 × 630) is the `og:image` of every page. Its source is `docs/tools/og-cover.html`, which lays out the phones from each version's frame and `landing-home.jpg`. To redraw it after a change, for example when a new version gets a landing shot, run the command below. It needs only Node and a local Chrome, or set `CHROME` to point at one. Then bump the `?v=` of `og-cover.jpg` in the `og:image` tags.

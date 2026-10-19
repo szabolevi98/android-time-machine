@@ -3,7 +3,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),crypto=require(
 // only files that exist there, and no two versions ship the same file byte for byte (line endings aside). The groups
 // below are the copies left when the rule came in (2026-10-06); the list may only shrink: a new identical pair fails,
 // and so does an entry whose files have since diverged (remove it then).
-const OWN={'2.1':'ec','2.3.6':'gb','4.0.4':'ics','4.3':'jb','4.4.4':'kk','5.1.1':'lp','6.0.1':'mm'},ERAS=Object.values(OWN),V=Object.keys(OWN);
+const OWN={'2.1':'ec','2.3.6':'gb','4.0.4':'ics','4.3':'jb','4.4.4':'kk','5.1.1':'lp','6.0.1':'mm','7.1.2':'ng'},ERAS=Object.values(OWN),V=Object.keys(OWN);
 const SHARED={
   // Logic and data without an era look.
   'calculator-engine.js':[['2.3.6','4.0.4','4.3','4.4.4','5.1.1']],'browser-session.js':[['4.0.4','4.3','4.4.4','5.1.1']],
