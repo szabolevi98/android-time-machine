@@ -201,7 +201,7 @@
             <button type="button" class="mmsh-user" data-action="mmsh-user" aria-label="${c.safe(t.t('accessibility_multi_user_switch_quick_contact'))}"><img src="${A(MM.users ? MM.users.icon(MM.users.current(c)) : 'fw-ic_account_circle-user0.svg')}" alt=""></button>
           </div>
         </div>
-      </div>
+      </div>${st.dialog ? MM.dialog.markup(c, st.dialog) : ''}
     </div>`;
   }
 
@@ -238,7 +238,7 @@
       hot.addEventListener('pointerup', stop); hot.addEventListener('pointerleave', stop);
     });
     // Dragging on the open shade moves the same expansion as pulling the status bar (see drag).
-    shade?.addEventListener('pointerdown', ev => { if (ev.button || ev.target.closest('.mmqs-slider,.mmqs-detail')) return; drag(c, ev, false); });
+    shade?.addEventListener('pointerdown', ev => { if (ev.button || ev.target.closest('.mmqs-slider,.mmqs-detail,.mmdlg')) return; drag(c, ev, false); });
   }
 
   /* Clear all (PhoneStatusBar.clearAllNotifications): the dismiss_all_shape_animation bars slide off to the right
@@ -270,6 +270,7 @@
     c.overlay('shade'); barDim(c, .62);
   }
   function close(c) {
+    if (c.ui.shade) c.ui.shade.dialog = null;
     const el = c.el.overlay.querySelector('.mmsh');
     barDim(c, 0);
     if (!el) { c.closeOverlay(); return; }
@@ -302,8 +303,9 @@
   function longClick(c, id) {
     const s = c.data.settings, t = T();
     if (id !== 'hotspot' || s.hotspot) return;
-    c.dialog({title: t.fmt('quick_settings_reset_confirmation_title', null, t.t('quick_settings_hotspot_label')), message: t.t('quick_settings_reset_confirmation_message'),
-      buttons: [{label: t.t('cancel')}, {label: t.t('quick_settings_reset_confirmation_button'), action: c => { delete s.hotspotUsed; c.save(); refresh(c); }}]});
+    c.ui.shade.dialog = {title: t.fmt('quick_settings_reset_confirmation_title', null, t.t('quick_settings_hotspot_label')), message: t.t('quick_settings_reset_confirmation_message'),
+      buttons: [{label: t.t('cancel')}, {label: t.t('quick_settings_reset_confirmation_button'), action: c => { delete s.hotspotUsed; c.save(); refresh(c); }}]};
+    refresh(c);
   }
   // A dual tile's label: switch the radio on and show its detail (WifiTile / BluetoothTile.handleSecondaryClick).
   function secondary(c, id) {
@@ -398,6 +400,8 @@
     action(name, el, event, c) {
       const st = c.ui.shade;
       if (st?.dragged) { st.dragged = false; return true; }
+      // A SystemUIDialog shown over the expanded panel (TYPE_STATUS_BAR_PANEL): the panel stays under it.
+      if (st?.dialog && /^mmdlg-/.test(name)) return MM.dialog.action(c, name, el, st.dialog, () => { st.dialog = null; refresh(c); });
       if (name === 'mmsh-close') { close(c); return true; }
       if (name === 'mmsh-noop') return true;
       if (name === 'mmsh-nclick') { const n = c.notifications()[+el.dataset.i]; close(c); n?.click?.(c); return true; }
