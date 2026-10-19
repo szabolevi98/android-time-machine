@@ -109,6 +109,10 @@
       ...(U ? U.list() : []).map(x => ({name: x.name, icon: U.icon(x.id), current: me === x.id, id: x.id})),
       me === 'guest' ? {name: MM.text('users').t('guest_exit_guest'), icon: 'sui-ic_close.svg', current: true, id: 'guest'} : {name: t.t('guest_nickname'), icon: 'fw-ic_account_circle-guest.svg', id: 'guest'},
       {name: t.t('user_add_user'), icon: 'sui-ic_add_circle_qs.svg', id: 'add'}];
+    // UserSwitcherController's refresh task puts the current user (the guest too) first, and Add user only while
+    // UserManager.canAddMoreUsers() (fewer than config_multiuserMaximumUsers, 4, users besides the guest).
+    const cur = users.findIndex(u => u.current); if (cur > 0) users.unshift(...users.splice(cur, 1));
+    if (U && 1 + U.list().length >= 4) users.pop();
     return `<div class="mmud">${users.map(u => `<button type="button" class="mmud-item${u.current ? ' on' : ''}" data-action="mmud-user" data-user="${u.id}"><span class="mmud-avatar"><img src="${A(u.icon)}" alt=""></span><span class="mmud-name">${c.safe(u.name)}</span></button>`).join('')}</div>`;
   }
 

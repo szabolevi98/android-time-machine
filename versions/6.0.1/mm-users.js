@@ -89,7 +89,7 @@
         {label: t.t('guest_wipe_session_wipe'), action: () => { try { localStorage.removeItem(store('guest')); } catch {} location.reload(); }},
         {label: t.t('guest_wipe_session_dontwipe')}]}), 1200);
       v.guestUsed = true; write(v);
-      (MM.notificationSources ||= []).push(c => [{id: 'guest', icon: 'assets/fw-ic_account_circle-guest.svg', title: t.t('guest_notification_title'), text: t.t('guest_notification_text'), ongoing: true,
+      (MM.notificationSources ||= []).push(c => [{id: 'guest', icon: 'assets/sui-ic_person.svg', title: t.t('guest_notification_title'), text: t.t('guest_notification_text'), ongoing: true,
         actions: [{label: t.t('guest_notification_remove_action'), action: c => U.exitGuestDialog(c)}]}]);
     }
   });
