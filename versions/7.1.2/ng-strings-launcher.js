@@ -137,5 +137,23 @@ NG.strings('launcher', {
 "de": "Sprachsuche",
 "fr": "Recherche vocale",
 "es": "Búsqueda por voz"
+},
+"all_apps_no_search_results": {
+"res": "angler:Velvet:all_apps_no_search_results",
+"args": 1,
+"en": "No Apps found matching \"%1$s\"",
+"hu": "Egy alkalmazás sem található a(z) „%1$s” lekérdezésre.",
+"de": "Keine Apps für \"%1$s\" gefunden",
+"fr": "Aucune application ne correspond à la requête \"%1$s\".",
+"es": "No se han encontrado aplicaciones que contengan \"%1$s\""
+},
+"all_apps_search_market_message": {
+"res": "angler:Velvet:all_apps_search_market_message",
+"args": 1,
+"en": "Search for more apps",
+"hu": "További alkalmazások keresése",
+"de": "Weitere Apps suchen",
+"fr": "Rechercher plus d'applications",
+"es": "Buscar más apps"
 }
 });

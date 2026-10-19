@@ -117,3 +117,28 @@ input.ngh-fname::placeholder{color:#808080}
 /* A widget's cell (LauncherAppWidgetHostView): the provider's view inside AppWidgetHostView's default 8 dp padding. */
 .ngh-wcell{margin:calc(68 * var(--dp)) 0 0 calc(4 * var(--dp))}
 .ngh-widget{position:absolute;inset:calc(8 * var(--dp))}
+
+/* The apps drawer (ng-drawer.js): the panel 8 dp in from the sides and the bars; the 60 dp search container at its top;
+   the 4-column list under it (the 224 px icon, 50 px #666 label, 8 dp above and below); the fast scroller at its end. */
+.ngd{position:absolute;inset:0;font-family:Roboto,sans-serif}
+.ngd-panel{position:absolute;inset:calc(8 * var(--dp));border-radius:calc(2 * var(--dp));background:#f5f5f5;overflow:hidden;box-shadow:0 calc(4 * var(--dp)) calc(10 * var(--dp)) #0000004d}
+.ngd-content{position:absolute;inset:0}
+.ngd-search{position:absolute;left:0;right:0;top:0;height:calc(60 * var(--dp));border-radius:calc(2 * var(--dp)) calc(2 * var(--dp)) 0 0;background:#f5f5f5;box-shadow:inset 0 calc(-1 * var(--dp)) 0 #0000001e;z-index:1}
+.ngd-input{position:absolute;left:calc(9 * var(--dp));right:calc(9 * var(--dp));top:0;height:100%;padding:0 calc(15.143 * var(--dp));box-sizing:border-box;border:0;background:none;outline:none;color:#4c4c4c;font:400 calc(16 * var(--dp)) Roboto,sans-serif}
+.ngd-input::placeholder{color:#9c9c9c}
+.ngd-scroll{position:absolute;left:0;right:0;top:calc(60 * var(--dp));bottom:0;overflow-y:auto;padding:calc(8 * var(--dp)) calc(9.143 * var(--dp));box-sizing:border-box;scrollbar-width:none;overscroll-behavior:contain}
+.ngd-scroll::-webkit-scrollbar{display:none}
+.ngd-grid,.ngd-row{display:grid;grid-template-columns:repeat(4,1fr)}
+.ngd-app{position:relative;display:flex;flex-direction:column;align-items:center;min-width:0;padding:calc(8 * var(--dp)) calc(4 * var(--dp));border:0;background:none;color:#666;font:400 calc(14.286 * var(--dp))/calc(18.96 * var(--dp)) 'Roboto Condensed',Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+.ngd-app img{width:calc(64 * var(--dp));height:calc(64 * var(--dp));margin-bottom:calc(4 * var(--dp))}
+.ngd-app span{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngd-app:active img{filter:brightness(.85)}
+.ngd-predicted .ngd-app{padding-bottom:calc(18 * var(--dp))}
+.ngd-divider{display:block;height:calc(1 * var(--dp));margin:0 calc(-9.143 * var(--dp)) calc(8 * var(--dp));background:#0000001e}
+.ngd-empty{padding:calc(40 * var(--dp)) calc(16 * var(--dp)) calc(8 * var(--dp));color:#212121;opacity:.56;font:500 calc(14 * var(--dp))/1.328 Roboto,sans-serif;text-align:center}
+.ngd-market{display:block;margin:0 auto;padding:calc(12 * var(--dp)) calc(8 * var(--dp));border:0;background:none;color:#009688;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.ngd-fast{position:absolute;right:0;top:calc(60 * var(--dp));bottom:0;width:calc(9 * var(--dp));touch-action:none}
+.ngd-fast[hidden]{display:none}
+.ngd-track{position:absolute;right:calc(2 * var(--dp));top:0;bottom:0;width:calc(5 * var(--dp));background:#0000001e}
+.ngd-thumb{position:absolute;right:calc(2 * var(--dp));top:0;width:calc(5 * var(--dp));height:calc(72 * var(--dp));background:#009688;transition:width .15s}
+.ngd-fast.held .ngd-thumb,.ngd-fast.held .ngd-track{width:calc(9 * var(--dp));right:0}

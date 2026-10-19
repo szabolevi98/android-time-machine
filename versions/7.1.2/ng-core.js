@@ -185,10 +185,13 @@
       viewport.animate([{clipPath: inset}, {clipPath: 'inset(0px 0px 0px 0px)'}], {duration: 300, easing: E.fosi});
       done(300);
     } else if (kind === 'unreveal') {
+      // LauncherStateTransitionAnimation back to the workspace: the panel shrinks into the all apps button
+      // (config_overlayRevealTime 220 ms, LogDecelerateInterpolator 100) as its contents fade in 100 ms.
       const panel = old.querySelector('.ngd'), cs = panel && getComputedStyle(panel);
       const at = cs ? `at ${cs.getPropertyValue('--rx').trim()} ${cs.getPropertyValue('--ry').trim()}` : 'at 50% 100%';
-      (panel || old).animate([{clipPath: `circle(150% ${at})`}, {clipPath: `circle(0px ${at})`}], {duration: 250, easing: E.fosi, ...fwd});
-      done(250);
+      (panel || old).animate([{clipPath: `circle(150% ${at})`}, {clipPath: `circle(${(23 * screen.clientWidth / 411.4286).toFixed(1)}px ${at})`, opacity: 0}], {duration: 220, easing: 'cubic-bezier(.15,.9,.3,1)', ...fwd});
+      old.querySelector('.ngd-content')?.animate([{opacity: 1}, {opacity: 0}], {duration: 100, ...fwd});
+      done(220);
     } else if (kind === 'to-recents') {
       const card = [...viewport.querySelectorAll('.ngrc-task')].pop(), ob = old.getBoundingClientRect();
       if (!card) { old.animate([{opacity: 1}, {opacity: 0}], {duration: 150, ...fwd}); done(150); return; }

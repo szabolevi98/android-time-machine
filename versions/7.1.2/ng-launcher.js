@@ -430,7 +430,7 @@
       if (name === 'ngh-folder') { st.folder = el.dataset.src; c.render(); return true; }
       if (name === 'ngh-sc') { const it = locate(home(c), el.dataset.src)?.item; if (st.folder) st.folder = null; if (it) NG.openShortcut?.(c, it); return true; }
       if (name === 'ngh-close-folder') { closeFolder(c); return true; }
-      if (name === 'ngh-allapps') { c.open('drawer', '', {from: el}); return true; }
+      if (name === 'ngh-allapps') { c.open('drawer'); return true; }
       if (name === 'ngh-search') { NG.googleOpen ? NG.googleOpen(c, false) : c.open('search'); return true; }
       if (name === 'ngh-voice') { NG.googleOpen ? NG.googleOpen(c, true) : c.open('search', 'voice'); return true; }
       if (name.startsWith('ngwg-') && NG.widgets) return NG.widgets.action(name, el, event, c);
