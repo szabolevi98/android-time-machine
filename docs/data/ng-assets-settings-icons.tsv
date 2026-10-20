@@ -10,3 +10,11 @@ ime-pinyin.png	app/GooglePinyinIME/GooglePinyinIME.apk	mipmap/app_icon
 # Location: GMS Core's injected Location History (location_history_injected_setting.xml); Factory data reset: the Google authenticator's icon
 gms-ic_google.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/ic_google
 gms-auth_ic_google_account.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/auth_ic_google_account
+# About phone's Regulatory labels (regulatory_info_<sku>, the US H1511) and Printing's Cloud Print (its application icon)
+st-regulatory_info_h1511.png	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/regulatory_info_h1511
+cp-ic_main.png	app/CloudPrint2/CloudPrint2.apk	drawable/ic_main
+# Accessibility: Captions' preview background, Magnification gestures' video, Display size's message bubbles (ConversationMessageView)
+st-caption_background.jpg	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/caption_background
+st-accessibility_screen_magnification.mp4	priv-app/SettingsGoogle/SettingsGoogle.apk	res/raw/accessibility_screen_magnification.mp4
+st-msg_bubble_incoming.9.png	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/msg_bubble_incoming
+st-msg_bubble_outgoing.9.png	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/msg_bubble_outgoing

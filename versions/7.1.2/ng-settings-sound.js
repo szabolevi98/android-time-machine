@@ -8,7 +8,7 @@
      view", config_allowAllRotations false) and vr_display_pref (the image declares android.hardware.vr.high_performance:
      "Reduce blur (recommended)" / "Reduce flicker"). The timeout's summary is screen_timeout_summary with the largest
      entry not over the value; font size shows entries_font_size, Display size ScreenZoomPreference's entry (the 6P's
-     DisplayDensityUtils: Small, Default, Larger, Largest around 560 dpi); the screen saver the active dream's name
+     DisplayDensityUtils: Small, Default, Large, Larger, Largest around 560 dpi; ng-settings-a11y.js); the screen saver the active dream's name
      (config_dreamsEnabledByDefault, the Clock's Screensaver) or "Off". Brightness level opens SystemUI's BrightnessDialog.
    - The simulator's rule (every version): the screen does not go off by itself unless a timeout is chosen, so Sleep
      starts at "Never", an entry after screen_timeout_entries in Settings' own Never text.
@@ -34,7 +34,6 @@
   const S = c => c.data.settings;
   const radio = (c, label, on) => ({html: `<span class="ngst-choice"><i class="ngw-radio ngst-radio${on ? ' on' : ''}"></i><span>${c.safe(label)}</span></span>`});
   const appLabel = (c, id) => { const a = NG.appsData?.[id]; return a ? a.label[c.lang] || a.label.en : ''; };
-  const ZOOM = ['screen_zoom_summary_small', 'screen_zoom_summary_default', 'screen_zoom_summary_very_large', 'screen_zoom_summary_extremely_large'];
 
   H.display_settings = {
     hidden: ['night_display', 'lift_to_wake', 'tap_to_wake', 'camera_gesture'],
@@ -64,8 +63,8 @@
       if (key === 'auto_rotate') return t.t(s.rotationLocked ? 'display_auto_rotate_stay_in_portrait' : 'display_auto_rotate_rotate');
       if (key === 'vr_display_pref') return t.t((s.vrDisplayMode ?? 0) ? 'display_vr_pref_off' : 'display_vr_pref_low_persistence');
       if (key === 'screensaver') return s.dreams === false ? t.t('screensaver_settings_summary_off') : NG.settingsDreamName?.(c) || appLabel(c, 'clock');
-      if (key === 'font_size') return t.t('entries_font_size')[s.fontSizeIndex ?? 1];
-      if (key === 'screen_zoom') return t.t(ZOOM[s.zoomIndex ?? 1]);
+      if (key === 'font_size') return NG.settingsFontSummary?.(c) ?? '';
+      if (key === 'screen_zoom') return NG.settingsZoomSummary?.(c) ?? '';
       return undefined;
     },
     click(c, key, n) {

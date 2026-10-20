@@ -95,6 +95,8 @@ class Image_:
         self.device, self.density, self.rows = device, density, index(device)
         self.by_sha, self.by_name, self.zips = {}, {}, {}
         for row in self.rows:
+            # An empty file of the image (the 6P's 0-byte gesture videos) traces nothing.
+            if row[2] == 0: continue
             self.by_sha.setdefault(row[3], []).append(row)
             self.by_name.setdefault(name_of(row[1] or row[0]), []).append(row)
 

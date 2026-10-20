@@ -43,7 +43,8 @@ APP_THEME = ST.get_android_manifest_xml().find('application').get(NS + 'theme')
 ATTRS = ['key', 'title', 'summary', 'summaryOn', 'summaryOff', 'entries', 'entryValues', 'dependency', 'defaultValue', 'icon',
          'dialogTitle', 'dialogMessage', 'order', 'disableDependentsState', 'persistent', 'enabled', 'selectable', 'layout',
          'widgetLayout', 'fragment', 'switchTextOn', 'switchTextOff', 'max', 'id', 'positiveButtonText', 'negativeButtonText',
-         'ringtoneType', 'showDefault', 'showSilent', 'singleLine', 'inputType', 'password', 'keywords']
+         'ringtoneType', 'showDefault', 'showSilent', 'singleLine', 'inputType', 'password', 'keywords', 'shouldDisableView',
+         'allowDividerAbove', 'allowDividerBelow']
 SKIP = {'appwidget_info', 'file_paths', 'suggestion_ordering'}
 # The texts the code of the screens uses (docs/data/ng-settings-extra.txt: names as mm-strings.py takes them, '#' starts
 # a comment).

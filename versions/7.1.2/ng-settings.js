@@ -58,7 +58,7 @@
     'com.android.settings.DisplaySettings': 'xml:display_settings', 'com.android.settings.applications.NotificationApps': 'notification-apps',
     'com.android.settings.notification.SoundSettings': 'xml:sound_settings', 'com.android.settings.applications.ManageApplications': 'apps',
     'com.android.settings.deviceinfo.StorageSettings': 'storage', 'com.android.settings.fuelgauge.PowerUsageSummary': 'battery',
-    'com.android.settings.applications.ProcessStatsSummary': 'memory', 'com.android.settings.users.UserSettings': 'users',
+    'com.android.settings.applications.ProcessStatsSummary': 'memory', 'com.android.settings.users.UserSettings': 'xml:user_settings',
     'com.android.settings.nfc.PaymentSettings': 'nfc-payment', 'com.android.settings.gestures.GestureSettings': 'gestures',
     'com.android.settings.location.LocationSettings': 'xml:location_settings', 'com.android.settings.SecuritySettings': 'security',
     'com.android.settings.accounts.AccountSettings': 'accounts', 'com.android.settings.inputmethod.InputMethodAndLanguageSettings': 'xml:language_settings',
@@ -90,7 +90,7 @@
   // The screens other parts of the system open by a short name (Quick settings, the shade, the launcher).
   const ALIASES = {zen: 'xml:zen_mode_settings', 'zen-priority': 'xml:zen_mode_priority_settings', display: 'xml:display_settings', sound: 'xml:sound_settings',
     wireless: 'xml:wireless_settings', location: 'xml:location_settings', accessibility: 'xml:accessibility_settings', 'data-saver': 'xml:data_saver',
-    cast: 'xml:wifi_display_settings', tether: 'xml:tether_prefs', users: 'users'};
+    cast: 'xml:wifi_display_settings', tether: 'xml:tether_prefs', users: 'xml:user_settings'};
   const screenOf = fragment => !fragment ? null : FRAGMENTS[fragment] || (XML_FRAGMENTS[fragment] ? `xml:${XML_FRAGMENTS[fragment]}` : `missing:${fragment}`);
   NG.settingsScreenOf = screenOf;
 
@@ -381,12 +381,13 @@
       const own = hook.row?.(c, n.key, n);
       if (own) { out.push({html: own, sel: !/ngst-nosel/.test(own)}); continue; }
       const selectable = hook.selectable?.(c, n.key, n) !== false && String(n.selectable) !== 'false';
-      out.push({html: pref(c, n, xml, selectable), sel: selectable});
+      // DividerPreference (allowDividerAbove / allowDividerBelow) decides its own dividers.
+      out.push({html: pref(c, n, xml, selectable), sel: selectable, above: n.allowDividerAbove ? n.allowDividerAbove === 'true' : undefined, below: n.allowDividerBelow ? n.allowDividerBelow === 'true' : undefined});
     }
     return out;
   }
-  // DividerDecoration: a divider below a selectable row when the next one is selectable too.
-  const joinRows = items => items.map((it, i) => it.html + (it.sel && items[i + 1]?.sel ? '<i class="ngst-pdiv"></i>' : '')).join('');
+  // DividerDecoration: a divider below a row that allows one below (a selectable one) when the next allows one above.
+  const joinRows = items => items.map((it, i) => { const next = items[i + 1]; return it.html + ((it.below ?? it.sel) && next && (next.above ?? next.sel) ? '<i class="ngst-pdiv"></i>' : ''); }).join('');
   NG.settingsJoinRows = joinRows;
   function rows(c, node, xml) { return joinRows(rowItems(c, node, xml)); }
   function summaryOf(c, n, xml) {
@@ -410,7 +411,8 @@
   function pref(c, n, xml, selectable = true) {
     const hook = NG.settingsHooks[xml] || {};
     const title = hook.title?.(c, n.key, n) ?? str(n.title), summary = summaryOf(c, n, xml);
-    const v = value(c, n), disabled = hook.disabled?.(c, n.key, n) || String(n.enabled) === 'false' || (n.dependency && dependentsOff(c, findKey(X()[xml], n.dependency)));
+    // hook.enabled lists the rows the code turns on (setEnabled(true)) over the XML's enabled="false".
+    const v = value(c, n), disabled = hook.disabled?.(c, n.key, n) || (String(n.enabled) === 'false' && !hook.enabled?.includes(n.key)) || (n.dependency && dependentsOff(c, findKey(X()[xml], n.dependency)));
     let widget = '';
     if (isSwitch(n) || hook.switch?.includes(n.key)) widget = switchHtml(!!v, disabled);
     if (isCheck(n)) widget = `<i class="ngst-check${v ? ' on' : ''}"></i>`;
@@ -418,7 +420,8 @@
     const ic = n.icon?.icon ? `<span class="ngst-iconframe">${icon(n.icon)}</span>` : '';
     // A row with a button of its own in its widget frame (GearPreference) cannot be a button itself.
     const tag = selectable && !/<button/.test(widget) ? 'button' : 'div', role = tag === 'div' && selectable ? ' role="button"' : '';
-    return `<${tag}${role} ${tag === 'button' ? 'type="button" ' : ''}class="ngst-pref${disabled ? ' disabled' : ''}" data-action="ngst-pref" data-key="${c.safe(n.key || '')}" ${disabled ? 'disabled' : ''}>${ic}<span class="ngst-texts"><span class="ngst-title">${c.safe(title)}</span>${summary ? `<span class="ngst-summary">${c.safe(summary)}</span>` : ''}</span>${widget ? `<span class="ngst-widget">${widget}</span>` : ''}</${tag}>`;
+    // shouldDisableView="false": a disabled row that does not look disabled.
+    return `<${tag}${role} ${tag === 'button' ? 'type="button" ' : ''}class="ngst-pref${disabled && n.shouldDisableView !== 'false' ? ' disabled' : ''}" data-action="ngst-pref" data-key="${c.safe(n.key || '')}" ${disabled ? 'disabled' : ''}>${ic}<span class="ngst-texts"><span class="ngst-title">${c.safe(title)}</span>${summary ? `<span class="ngst-summary">${c.safe(summary)}</span>` : ''}</span>${widget ? `<span class="ngst-widget">${widget}</span>` : ''}</${tag}>`;
   }
   NG.settingsPref = pref;
   // A plain preference row for screens that build their own lists: {key, title, summary, icon, widget, disabled, action}.

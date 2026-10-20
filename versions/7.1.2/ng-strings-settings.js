@@ -9819,6 +9819,1248 @@ NG.strings('settings', {
 "fr": "Désactivé",
 "es": "No"
 },
+"show_dev_already": {
+"res": "angler:SettingsGoogle:show_dev_already",
+"en": "No need, you are already a developer.",
+"hu": "Nincs rá szükség, Ön már fejlesztő.",
+"de": "Okay, du bist bereits Entwickler.",
+"fr": "Inutile, vous êtes déjà un développeur.",
+"es": "Las opciones de desarrollo ya están activadas."
+},
+"show_dev_on": {
+"res": "angler:SettingsGoogle:show_dev_on",
+"en": "You are now a developer!",
+"hu": "Ön mostantól már fejlesztő!",
+"de": "Du bist jetzt Entwickler!",
+"fr": "Vous êtes désormais un développeur !",
+"es": "¡Ahora están activadas las opciones de desarrollo!"
+},
+"sim_signal_strength": {
+"res": "angler:SettingsGoogle:sim_signal_strength",
+"en": "%1$d dBm %2$d asu",
+"hu": "%1$d dBm %2$d asu",
+"de": "%1$d dBm %2$d asu",
+"fr": "%1$d dBm %2$d asu",
+"es": "%1$d dBm %2$d asu"
+},
+"radioInfo_roaming_not": {
+"res": "angler:SettingsGoogle:radioInfo_roaming_not",
+"en": "Not Roaming",
+"hu": "Nem barangol",
+"de": "Kein Roaming",
+"fr": "Sans itinérance",
+"es": "Sin itinerancia"
+},
+"radioInfo_service_in": {
+"res": "angler:SettingsGoogle:radioInfo_service_in",
+"en": "In Service",
+"hu": "Szolgáltatás",
+"de": "In Betrieb",
+"fr": "En service",
+"es": "En servicio"
+},
+"radioInfo_service_off": {
+"res": "angler:SettingsGoogle:radioInfo_service_off",
+"en": "Radio Off",
+"hu": "Rádió kikapcsolva",
+"de": "Funkschnittstelle deaktiviert",
+"fr": "Signal radio désactivé",
+"es": "Señal móvil desactivada"
+},
+"radioInfo_data_connected": {
+"res": "angler:SettingsGoogle:radioInfo_data_connected",
+"en": "Connected",
+"hu": "Csatlakozva",
+"de": "Verbunden",
+"fr": "Connecté",
+"es": "Conectado"
+},
+"radioInfo_data_disconnected": {
+"res": "angler:SettingsGoogle:radioInfo_data_disconnected",
+"en": "Disconnected",
+"hu": "Szétkapcsolva",
+"de": "Nicht verbunden",
+"fr": "Déconnecté",
+"es": "Desconectada"
+},
+"battery_info_status_full": {
+"res": "angler:SettingsGoogle:battery_info_status_full",
+"en": "Full",
+"hu": "Feltöltve",
+"de": "Voll",
+"fr": "pleine",
+"es": "Completa"
+},
+"battery_info_status_charging": {
+"res": "angler:SettingsGoogle:battery_info_status_charging",
+"en": "Charging",
+"hu": "Töltés",
+"de": "Wird aufgeladen",
+"fr": "Batterie en charge",
+"es": "Cargando"
+},
+"battery_info_status_discharging": {
+"res": "angler:SettingsGoogle:battery_info_status_discharging",
+"en": "Not charging",
+"hu": "Nem tölt",
+"de": "Wird nicht geladen",
+"fr": "Pas en charge",
+"es": "No se está cargando"
+},
+"PrebuiltGmsCore/system_update_activity_title": {
+"res": "angler:PrebuiltGmsCore:system_update_activity_title",
+"en": "System updates",
+"hu": "Rendszerfrissítések",
+"de": "Systemupdates",
+"fr": "Mises à jour du système",
+"es": "Actualizaciones del sistema"
+},
+"PrebuiltGmsCore/system_update_checking_status_text": {
+"res": "angler:PrebuiltGmsCore:system_update_checking_status_text",
+"en": "Checking",
+"hu": "Keresés",
+"de": "Wird überprüft...",
+"fr": "Vérification en cours…",
+"es": "Buscando"
+},
+"PrebuiltGmsCore/system_update_no_update_content_text": {
+"res": "angler:PrebuiltGmsCore:system_update_no_update_content_text",
+"en": "Your system is up to date.",
+"hu": "Az Ön által használt rendszer naprakész.",
+"de": "Dein System ist momentan auf dem neuesten Stand.",
+"fr": "Votre système est à jour.",
+"es": "Tu sistema está actualizado"
+},
+"PrebuiltGmsCore/system_update_last_checkin": {
+"res": "angler:PrebuiltGmsCore:system_update_last_checkin",
+"en": "Last checked for update ^1.",
+"hu": "Frissítés utolsó ellenőrzése: ^1.",
+"de": "Letzte Überprüfung auf Updates ^1",
+"fr": "Dernière vérification : ^1",
+"es": "Última comprobación: ^1"
+},
+"PrebuiltGmsCore/system_update_check_now_button_text": {
+"res": "angler:PrebuiltGmsCore:system_update_check_now_button_text",
+"en": "Check for update",
+"hu": "Frissítés keresése",
+"de": "Auf Updates überprüfen",
+"fr": "Rechercher les mises à jour",
+"es": "Comprobar actualizaciones"
+},
+"settings_license_activity_unavailable": {
+"res": "angler:SettingsGoogle:settings_license_activity_unavailable",
+"en": "There is a problem loading the licenses.",
+"hu": "Gond van a licencek betöltésével.",
+"de": "Beim Laden der Lizenzen ist ein Problem aufgetreten.",
+"fr": "Un problème est survenu lors du chargement des licences.",
+"es": "Se ha producido un problema al intentar cargar las licencias."
+},
+"GoogleServicesFramework/gls_settings_tos_activity_title": {
+"res": "angler:GoogleServicesFramework:gls_settings_tos_activity_title",
+"en": "Google legal",
+"hu": "Google - jogi szabályozás",
+"de": "Rechtliche Hinweise",
+"fr": "Infos légales Google",
+"es": "Condiciones de Google"
+},
+"framework/owner_name": {
+"res": "angler:framework:owner_name",
+"en": "Owner",
+"hu": "Tulajdonos",
+"de": "Eigentümer",
+"fr": "Propriétaire",
+"es": "Propietario"
+},
+"framework/user_switching_message": {
+"res": "angler:framework:user_switching_message",
+"en": "Switching to %1$s…",
+"hu": "Átváltás erre: %1$s...",
+"de": "Wechseln zu %1$s…",
+"fr": "Chargement du profil de %1$s...",
+"es": "Cambiando a %1$s…"
+},
+"user_add_user_menu": {
+"res": "angler:SettingsGoogle:user_add_user_menu",
+"en": "Add user",
+"hu": "Felhasználó hozzáad.",
+"de": "Nutzer hinzufügen",
+"fr": "Ajouter un utilisateur",
+"es": "Añadir usuario"
+},
+"user_exit_guest_title": {
+"res": "angler:SettingsGoogle:user_exit_guest_title",
+"en": "Remove guest",
+"hu": "Vendég munkamenet eltávolítása",
+"de": "Gast entfernen",
+"fr": "Supprimer l'invité",
+"es": "Quitar invitado"
+},
+"user_you": {
+"res": "angler:SettingsGoogle:user_you",
+"en": "You (%s)",
+"hu": "Ön (%s)",
+"de": "Ich (%s)",
+"fr": "Vous (%s)",
+"es": "Tú (%s)"
+},
+"user_admin": {
+"res": "angler:SettingsGoogle:user_admin",
+"en": "Admin",
+"hu": "Rendszergazda",
+"de": "Administrator",
+"fr": "Administrateur",
+"es": "Administrador"
+},
+"user_summary_not_set_up": {
+"res": "angler:SettingsGoogle:user_summary_not_set_up",
+"en": "Not set up",
+"hu": "Nincs beállítva",
+"de": "Nicht eingerichtet",
+"fr": "Non configuré",
+"es": "Sin configurar"
+},
+"user_guest": {
+"res": "angler:SettingsGoogle:user_guest",
+"en": "Guest",
+"hu": "Vendég",
+"de": "Gast",
+"fr": "Invité",
+"es": "Invitado"
+},
+"user_add_max_count": {
+"res": "angler:SettingsGoogle:user_add_max_count",
+"en": "You can add up to %1$d users",
+"hu": "Legfeljebb %1$d felhasználót adhat hozzá",
+"de": "Du kannst bis zu %1$d Nutzer hinzufügen.",
+"fr": "Vous pouvez ajouter jusqu'à %1$d utilisateurs.",
+"es": "Puedes añadir hasta %1$d usuarios"
+},
+"user_new_user_name": {
+"res": "angler:SettingsGoogle:user_new_user_name",
+"en": "New user",
+"hu": "Új felhasználó",
+"de": "Neuer Nutzer",
+"fr": "Nouvel utilisateur",
+"es": "Nuevo usuario"
+},
+"user_exit_guest_confirm_title": {
+"res": "angler:SettingsGoogle:user_exit_guest_confirm_title",
+"en": "Remove guest?",
+"hu": "Eltávolítja a vendég munkamenetet?",
+"de": "Gast entfernen?",
+"fr": "Supprimer l'invité ?",
+"es": "¿Quitar invitado?"
+},
+"user_exit_guest_confirm_message": {
+"res": "angler:SettingsGoogle:user_exit_guest_confirm_message",
+"en": "All apps and data in this session will be deleted.",
+"hu": "A munkamenetben található összes alkalmazás és adat törlődni fog.",
+"de": "Alle Apps und Daten in dieser Sitzung werden gelöscht.",
+"fr": "Toutes les applications et les données de cette session seront supprimées.",
+"es": "Se eliminarán las aplicaciones y los datos de esta sesión."
+},
+"user_exit_guest_dialog_remove": {
+"res": "angler:SettingsGoogle:user_exit_guest_dialog_remove",
+"en": "Remove",
+"hu": "Eltávolítás",
+"de": "Entfernen",
+"fr": "Supprimer",
+"es": "Quitar"
+},
+"profile_info_settings_title": {
+"res": "angler:SettingsGoogle:profile_info_settings_title",
+"en": "Profile info",
+"hu": "Profiladatok",
+"de": "Profilinformationen",
+"fr": "Infos de profil",
+"es": "Información del perfil"
+},
+"user_setup_dialog_title": {
+"res": "angler:SettingsGoogle:user_setup_dialog_title",
+"en": "Set up user now?",
+"hu": "Beállít most egy felhasználót?",
+"de": "Nutzer jetzt einrichten?",
+"fr": "Configurer l'utilisateur ?",
+"es": "¿Configurar usuario ahora?"
+},
+"user_setup_dialog_message": {
+"res": "angler:SettingsGoogle:user_setup_dialog_message",
+"en": "Make sure the person is available to take the device and set up their space",
+"hu": "Győződjön meg arról, hogy a személy hozzá tud férni az eszközhöz, hogy beállíthassa a területét",
+"de": "Die Person muss Zugang zu dem Gerät haben und deinen Speicherplatz einrichten.",
+"fr": "Assurez-vous que la personne est disponible, et qu'elle peut utiliser l'appareil pour configurer son espace.",
+"es": "Asegúrate de que la persona pueda acceder al dispositivo y configurar su espacio"
+},
+"user_setup_button_setup_later": {
+"res": "angler:SettingsGoogle:user_setup_button_setup_later",
+"en": "Not now",
+"hu": "Most nem",
+"de": "Nicht jetzt",
+"fr": "Pas maintenant",
+"es": "Ahora no"
+},
+"user_setup_button_setup_now": {
+"res": "angler:SettingsGoogle:user_setup_button_setup_now",
+"en": "Set up now",
+"hu": "Beállítás most",
+"de": "Jetzt einrichten",
+"fr": "Configurer",
+"es": "Configurar ahora"
+},
+"user_confirm_remove_title": {
+"res": "angler:SettingsGoogle:user_confirm_remove_title",
+"en": "Remove this user?",
+"hu": "Törli a felhasználót?",
+"de": "Diesen Nutzer entfernen?",
+"fr": "Supprimer cet utilisateur ?",
+"es": "¿Quitar este usuario?"
+},
+"user_confirm_remove_message": {
+"res": "angler:SettingsGoogle:user_confirm_remove_message",
+"en": "All apps and data will be deleted.",
+"hu": "Az összes alkalmazás és adat törlődik.",
+"de": "Sämtliche Apps und Daten werden gelöscht.",
+"fr": "L'ensemble des applications et des données seront supprimées.",
+"es": "Se eliminarán los datos y las aplicaciones."
+},
+"user_delete_button": {
+"res": "angler:SettingsGoogle:user_delete_button",
+"en": "Delete",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Supprimer",
+"es": "Eliminar"
+},
+"user_add_user_title": {
+"res": "angler:SettingsGoogle:user_add_user_title",
+"en": "Add new user?",
+"hu": "Hozzáad új felhasználót?",
+"de": "Neuen Nutzer hinzufügen?",
+"fr": "Ajouter un utilisateur ?",
+"es": "¿Añadir nuevo usuario?"
+},
+"user_add_user_message_long": {
+"res": "angler:SettingsGoogle:user_add_user_message_long",
+"en": "You can share this device with other people by creating additional users. Each user has their own space, which they can customize with apps, wallpaper, and so on. Users can also adjust device settings like Wi‑Fi that affect everyone.\n\nWhen you add a new user, that person needs to set up their space.\n\nAny user can update apps for all other users.",
+"hu": "További felhasználók létrehozásával megoszthatja ezt az eszközt másokkal. Minden felhasználó saját tárterülettel rendelkezik, amelyet személyre szabhat saját alkalmazásaival, háttérképével stb. A felhasználók módosíthatják az eszköz beállításait is, például a Wi‑Fi használatát, amely mindenkit érint.\n\nHa új felhasználót ad hozzá, az illetőnek be kell állítania saját tárterületét.\n\nBármely felhasználó frissítheti az alkalmazásokat valamennyi felhasználó számára.",
+"de": "Du kannst dieses Gerät für andere Nutzer freigeben, indem du weitere Nutzer erstellst. Jeder Nutzer erhält einen eigenen Bereich, in dem er Apps, den Hintergrund usw. personalisieren kann. Jeder Nutzer kann zudem Geräteeinstellungen wie WLAN ändern, die sich auf alle Nutzer auswirken.\n\nWenn du einen neuen Nutzer hinzufügst, muss dieser seinen Bereich einrichten.\n\nJeder Nutzer kann Apps für alle anderen Nutzer aktualisieren.",
+"fr": "Vous pouvez partager cet appareil avec d'autres personnes en ajoutant des utilisateurs. Chaque utilisateur dispose de son propre espace, où il peut personnaliser ses applications et son fond d'écran, entre autres. Chacun des utilisateur peut également modifier les paramètres de l'appareil qui s'appliquent à tous les utilisateurs, tels que le Wi-Fi.\n\nLorsque vous ajoutez un utilisateur, celui-ci doit configurer son espace.\n\nN'importe quel utilisateur peut mettre à jour les applications pour tous les autres utilisateurs.",
+"es": "Puedes crear más usuarios para compartir este dispositivo con otras personas. Cada usuario tiene su propio espacio, que puede personalizar con aplicaciones, fondos de pantalla, etc., y puede modificar opciones de configuración del dispositivo que afectan a todos los usuarios, como la conexión Wi‑Fi.\n\nCuando se añade un usuario, este debe configurar su espacio.\n\nCualquier usuario puede actualizar las aplicaciones del resto de usuarios."
+},
+"user_enable_calling": {
+"res": "angler:SettingsGoogle:user_enable_calling",
+"en": "Turn on phone calls",
+"hu": "Hívások engedélyezése",
+"de": "Anrufe aktivieren",
+"fr": "Activer les appels téléphoniques",
+"es": "Activar llamadas"
+},
+"user_enable_calling_confirm_title": {
+"res": "angler:SettingsGoogle:user_enable_calling_confirm_title",
+"en": "Turn on phone calls?",
+"hu": "Engedélyezi a hívásokat?",
+"de": "Anrufe aktivieren?",
+"fr": "Activer les appels téléphoniques ?",
+"es": "¿Activar llamadas?"
+},
+"user_enable_calling_confirm_message": {
+"res": "angler:SettingsGoogle:user_enable_calling_confirm_message",
+"en": "Call history will be shared with this user.",
+"hu": "A rendszer megosztja a híváslistát ezzel a felhasználóval.",
+"de": "Die Anrufliste wird für diesen Nutzer freigegeben.",
+"fr": "L'historique des appels sera partagé avec cet utilisateur.",
+"es": "El historial de llamadas se compartirá con este usuario."
+},
+"user_enable_calling_and_sms_confirm_title": {
+"res": "angler:SettingsGoogle:user_enable_calling_and_sms_confirm_title",
+"en": "Turn on phone calls & SMS?",
+"hu": "Engedélyezi a hívásokat és SMS-eket?",
+"de": "Anrufe & SMS aktivieren?",
+"fr": "Activer les appels téléphoniques et les SMS ?",
+"es": "¿Activar llamadas y SMS?"
+},
+"user_enable_calling_and_sms_confirm_message": {
+"res": "angler:SettingsGoogle:user_enable_calling_and_sms_confirm_message",
+"en": "Call and SMS history will be shared with this user.",
+"hu": "A rendszer megosztja az SMS- és híváslistát ezzel a felhasználóval.",
+"de": "Anrufliste und SMS-Verlauf werden für diesen Nutzer freigegeben.",
+"fr": "L'historique des appels et des SMS sera partagé avec cet utilisateur.",
+"es": "El historial de SMS y de llamadas se compartirán con este usuario."
+},
+"SystemUI/user_add_user_message_short": {
+"res": "angler:SystemUI:user_add_user_message_short",
+"en": "When you add a new user, that person needs to set up their space.\n\nAny user can update apps for all other users.",
+"hu": "Ha új felhasználót ad hozzá, az illetőnek be kell állítania saját tárterületét.\n\nBármely felhasználó frissítheti az alkalmazásokat valamennyi felhasználó számára.",
+"de": "Wenn du einen neuen Nutzer hinzufügst, muss dieser seinen Bereich einrichten.\n\nJeder Nutzer kann Apps für alle anderen Nutzer aktualisieren.",
+"fr": "Lorsque vous ajoutez un utilisateur, celui-ci doit configurer son espace.\n\nN'importe quel utilisateur peut mettre à jour les applications pour tous les autres utilisateurs.",
+"es": "Al añadir un nuevo usuario, este debe configurar su espacio.\n\nCualquier usuario puede actualizar las aplicaciones del resto de usuarios."
+},
+"SystemUI/guest_exit_guest_dialog_title": {
+"res": "angler:SystemUI:guest_exit_guest_dialog_title",
+"en": "Remove guest?",
+"hu": "Eltávolítja a vendég munkamenetet?",
+"de": "Gast entfernen?",
+"fr": "Supprimer l'invité ?",
+"es": "¿Quitar invitado?"
+},
+"SystemUI/guest_exit_guest_dialog_message": {
+"res": "angler:SystemUI:guest_exit_guest_dialog_message",
+"en": "All apps and data in this session will be deleted.",
+"hu": "A munkamenetben található összes alkalmazás és adat törlődni fog.",
+"de": "Alle Apps und Daten in dieser Sitzung werden gelöscht.",
+"fr": "Toutes les applications et les données de cette session seront supprimées.",
+"es": "Se eliminarán las aplicaciones y los datos de esta sesión."
+},
+"SystemUI/guest_exit_guest_dialog_remove": {
+"res": "angler:SystemUI:guest_exit_guest_dialog_remove",
+"en": "Remove",
+"hu": "Eltávolítás",
+"de": "Entfernen",
+"fr": "Supprimer",
+"es": "Quitar"
+},
+"SystemUI/guest_wipe_session_title": {
+"res": "angler:SystemUI:guest_wipe_session_title",
+"en": "Welcome back, guest!",
+"hu": "Örülünk, hogy visszatért, vendég!",
+"de": "Willkommen zurück im Gastmodus",
+"fr": "Bienvenue à nouveau dans la session Invité",
+"es": "Hola de nuevo, invitado"
+},
+"SystemUI/guest_wipe_session_message": {
+"res": "angler:SystemUI:guest_wipe_session_message",
+"en": "Do you want to continue your session?",
+"hu": "Folytatja a munkamenetet?",
+"de": "Möchtest du deine Sitzung fortsetzen?",
+"fr": "Voulez-vous poursuivre la dernière session ?",
+"es": "¿Quieres continuar con la sesión?"
+},
+"SystemUI/guest_wipe_session_wipe": {
+"res": "angler:SystemUI:guest_wipe_session_wipe",
+"en": "Start over",
+"hu": "Újrakezdés",
+"de": "Von vorn",
+"fr": "Non, nouvelle session",
+"es": "Volver a empezar"
+},
+"SystemUI/guest_wipe_session_dontwipe": {
+"res": "angler:SystemUI:guest_wipe_session_dontwipe",
+"en": "Yes, continue",
+"hu": "Igen, folytatom",
+"de": "Ja, weiter",
+"fr": "Oui, continuer",
+"es": "Sí, continuar"
+},
+"SystemUI/demo_mode": {
+"res": "angler:SystemUI:demo_mode",
+"en": "Demo mode",
+"hu": "Demó mód",
+"de": "Demomodus",
+"fr": "Mode de démonstration",
+"es": "Modo de demostración"
+},
+"SystemUI/enable_demo_mode": {
+"res": "angler:SystemUI:enable_demo_mode",
+"en": "Enable demo mode",
+"hu": "Demó mód engedélyezése",
+"de": "Demomodus aktivieren",
+"fr": "Activer le mode de démonstration",
+"es": "Habilitar modo de demostración"
+},
+"SystemUI/show_demo_mode": {
+"res": "angler:SystemUI:show_demo_mode",
+"en": "Show demo mode",
+"hu": "Demó mód megjelenítése",
+"de": "Demomodus anzeigen",
+"fr": "Afficher le mode de démonstration",
+"es": "Mostrar modo de demostración"
+},
+"CloudPrint2/app_name": {
+"res": "angler:CloudPrint2:app_name",
+"en": "Cloud Print",
+"hu": "Cloud Print",
+"de": "Cloud Print",
+"fr": "Google Cloud Print",
+"es": "Cloud Print"
+},
+"print_menu_item_search": {
+"res": "angler:SettingsGoogle:print_menu_item_search",
+"en": "Search",
+"hu": "Keresés",
+"de": "Suchen",
+"fr": "Rechercher",
+"es": "Buscar"
+},
+"print_menu_item_add_printers": {
+"res": "angler:SettingsGoogle:print_menu_item_add_printers",
+"en": "Add printers",
+"hu": "Nyomtatók hozzáadása",
+"de": "Drucker hinzufügen",
+"fr": "Ajouter des imprimantes",
+"es": "Añadir impresoras"
+},
+"print_menu_item_settings": {
+"res": "angler:SettingsGoogle:print_menu_item_settings",
+"en": "Settings",
+"hu": "Beállítások",
+"de": "Einstellungen",
+"fr": "Paramètres",
+"es": "Ajustes"
+},
+"print_service_disabled": {
+"res": "angler:SettingsGoogle:print_service_disabled",
+"en": "Service disabled",
+"hu": "A szolgáltatás ki van kapcsolva.",
+"de": "Dienst deaktiviert",
+"fr": "Service désactivé",
+"es": "Servicio inhabilitado"
+},
+"print_menu_item_add_service": {
+"res": "angler:SettingsGoogle:print_menu_item_add_service",
+"en": "Add service",
+"hu": "Szolgáltatás hozzáadása",
+"de": "Dienst hinzufügen",
+"fr": "Ajouter un service",
+"es": "Añadir servicio"
+},
+"print_feature_state_on": {
+"res": "angler:SettingsGoogle:print_feature_state_on",
+"en": "On",
+"hu": "Be",
+"de": "An",
+"fr": "Activé",
+"es": "Sí"
+},
+"print_feature_state_off": {
+"res": "angler:SettingsGoogle:print_feature_state_off",
+"en": "Off",
+"hu": "Ki",
+"de": "Aus",
+"fr": "Désactivé",
+"es": "No"
+},
+"print_searching_for_printers": {
+"res": "angler:SettingsGoogle:print_searching_for_printers",
+"en": "Searching for printers",
+"hu": "Nyomtatók keresése",
+"de": "Suche nach Druckern…",
+"fr": "Recherche d'imprimantes en cours",
+"es": "Buscando impresoras"
+},
+"print_no_printers_found": {
+"res": "angler:SettingsGoogle:print_no_printers_found",
+"en": "No printers found",
+"hu": "Nem található nyomtató",
+"de": "Keine Drucker gefunden",
+"fr": "Aucune imprimante trouvée",
+"es": "No se encontraron impresoras"
+},
+"mock_location_app_not_set": {
+"res": "angler:SettingsGoogle:mock_location_app_not_set",
+"en": "No mock location app set",
+"hu": "Nincs kiválasztott helyimitáló alkalmazás",
+"de": "Keine App für simulierte Standorte eingerichtet",
+"fr": "Aucune application de position fictive définie",
+"es": "Aplicación para simular ubicación no establecida"
+},
+"debug_app_not_set": {
+"res": "angler:SettingsGoogle:debug_app_not_set",
+"en": "No debug application set",
+"hu": "Nincs beállítva alkalmazás hibakereséshez",
+"de": "Keine Debugging-App festgelegt",
+"fr": "Aucune application à déboguer définie",
+"es": "Aplicación de depuración no configurada"
+},
+"developer_density_summary": {
+"res": "angler:SettingsGoogle:developer_density_summary",
+"en": "%d dp",
+"hu": "%d dp",
+"de": "%d dp",
+"fr": "%d dp",
+"es": "%d dp"
+},
+"adb_warning_title": {
+"res": "angler:SettingsGoogle:adb_warning_title",
+"en": "Allow USB debugging?",
+"hu": "Engedélyezi az USB hibakeresést?",
+"de": "USB-Debugging zulassen?",
+"fr": "Autoriser le débogage USB ?",
+"es": "¿Permitir depuración por USB?"
+},
+"adb_warning_message": {
+"res": "angler:SettingsGoogle:adb_warning_message",
+"en": "USB debugging is intended for development purposes only. Use it to copy data between your computer and your device, install apps on your device without notification, and read log data.",
+"hu": "Az USB hibakeresés fejlesztési célokat szolgál. Használhatja adatok másolására a számítógép és a készülék között, alkalmazások a készülékre való értesítés nélküli telepítésére és naplózási adatok olvasására.",
+"de": "USB-Debugging ist nur für Entwicklungszwecke vorgesehen. Damit kannst du Daten zwischen deinem Computer und deinem Gerät kopieren, Apps auf deinem Gerät ohne Benachrichtigung installieren und Protokolldaten lesen.",
+"fr": "Le débogage USB est conçu uniquement pour le développement. Utilisez-le pour copier des données entre votre ordinateur et votre appareil, installer des applications sur votre appareil sans notification et lire les données de journal.",
+"es": "La depuración por USB solo está indicada para actividades de desarrollo. Puedes utilizarla para intercambiar datos entre el ordenador y el dispositivo, para instalar aplicaciones en el dispositivo sin recibir notificaciones y para leer datos de registro."
+},
+"confirm_enable_oem_unlock_title": {
+"res": "angler:SettingsGoogle:confirm_enable_oem_unlock_title",
+"en": "Allow OEM unlocking?",
+"hu": "Engedélyezi az OEM-feloldást?",
+"de": "OEM-Entsperrung zulassen?",
+"fr": "Autoriser le déverrouillage OEM ?",
+"es": "¿Permitir desbloqueo de OEM?"
+},
+"confirm_enable_oem_unlock_text": {
+"res": "angler:SettingsGoogle:confirm_enable_oem_unlock_text",
+"en": "WARNING: Device protection features will not work on this device while this setting is turned on.",
+"hu": "FIGYELEM! Az eszközvédelmi funkciók addig nem fognak működni ezen az eszközön, amíg ez a beállítás be van kapcsolva.",
+"de": "Achtung: Die Geräteschutzfunktionen funktionieren auf diesem Gerät nicht, solange diese Einstellung aktiviert ist.",
+"fr": "AVERTISSEMENT : Les fonctionnalités de protection de l'appareil sont désactivées tant que ce paramètre est activé.",
+"es": "ADVERTENCIA: Las funciones de protección no funcionarán en este dispositivo mientras esta opción esté activada."
+},
+"enable_text": {
+"res": "angler:SettingsGoogle:enable_text",
+"en": "Enable",
+"hu": "Engedélyezés",
+"de": "Aktivieren",
+"fr": "Activer",
+"es": "Habilitar"
+},
+"bugreport_option_interactive_title": {
+"res": "angler:framework:bugreport_option_interactive_title",
+"en": "Interactive report",
+"hu": "Interaktív jelentés",
+"de": "Interaktiver Bericht",
+"fr": "Rapport interactif",
+"es": "Informe interactivo"
+},
+"bugreport_option_interactive_summary": {
+"res": "angler:framework:bugreport_option_interactive_summary",
+"en": "Use this under most circumstances. It allows you to track progress of the report, enter more details about the problem, and take screenshots. It might omit some less-used sections that take a long time to report.",
+"hu": "Ezt használja a legtöbb esetben. Segítségével nyomon követheti a jelentés folyamatát, további részleteket adhat meg a problémáról, illetve képernyőképeket készíthet. A folyamat során kimaradhatnak az olyan kevésbé használt részek, amelyek jelentése túl sok időt igényel.",
+"de": "Diese Option kann in den meisten Fällen verwendet werden. Du kannst darüber den aktuellen Stand der Berichterstellung verfolgen, genauere Angaben zu dem Problem machen und Screenshots aufnehmen. Einige selten genutzte Bereiche, deren Berichterstellung längere Zeit in Anspruch nimmt, werden unter Umständen ausgelassen.",
+"fr": "Utilisez cette option dans la plupart des circonstances. Elle vous permet de suivre la progression du rapport, de saisir plus d'informations sur le problème et d'effectuer des captures d'écran. Certaines sections moins utilisées et dont le remplissage demande beaucoup de temps peuvent être omises.",
+"es": "Usa esta opción en la mayoría de los casos. Te permite realizar un seguimiento del progreso del informe, introducir más información sobre el problema y hacer capturas de pantalla. Es posible que se omitan algunas secciones menos utilizadas y que requieran más tiempo."
+},
+"bugreport_option_full_title": {
+"res": "angler:framework:bugreport_option_full_title",
+"en": "Full report",
+"hu": "Teljes jelentés",
+"de": "Vollständiger Bericht",
+"fr": "Rapport complet",
+"es": "Informe completo"
+},
+"bugreport_option_full_summary": {
+"res": "angler:framework:bugreport_option_full_summary",
+"en": "Use this option for minimal system interference when your device is unresponsive or too slow, or when you need all report sections. Does not allow you to enter more details or take additional screenshots.",
+"hu": "Ezt a beállítást minimális rendszerzavar esetén használja, amikor eszköze nem válaszol, túl lassú, illetve ha minden jelentésrészre szüksége van. A rendszer nem teszi lehetővé további részletek megadását, illetve további képernyőképek készítését.",
+"de": "Du kannst diese Option für minimale Störungen des Systems nutzen, wenn dein Gerät beispielsweise nicht reagiert oder zu langsam ist oder wenn du alle Bereiche für Berichte benötigst. Du kannst keine weiteren Angaben machen oder zusätzliche Screenshots aufnehmen.",
+"fr": "Utilisez cette option pour qu'il y ait le moins d'interférences système possible lorsque votre appareil ne répond pas ou qu'il est trop lent, ou lorsque vous avez besoin de toutes les sections du rapport de bug. Aucune capture d'écran supplémentaire ne peut être prise, et vous ne pouvez saisir aucune autre information.",
+"es": "Utiliza esta opción para que la interferencia del sistema sea mínima cuando el dispositivo no responda o funcione demasiado lento, o bien cuando necesites todas las secciones del informe. No permite introducir más detalles ni hacer más capturas de pantalla."
+},
+"report": {
+"res": "angler:framework:report",
+"en": "Report",
+"hu": "Jelentés",
+"de": "Melden",
+"fr": "Rapport",
+"es": "Informar"
+},
+"adb_keys_warning_message": {
+"res": "angler:SettingsGoogle:adb_keys_warning_message",
+"en": "Revoke access to USB debugging from all computers you’ve previously authorized?",
+"hu": "Visszavonja a hozzáférést az USB-s hibakereséshez az összes számítógépről, ahol korábban engedélyezte azt?",
+"de": "Zugriff auf USB-Debugging für alle zuvor autorisierten Computer aufheben?",
+"fr": "Voulez-vous vraiment désactiver l'accès au débogage USB de tous les ordinateurs précédemment autorisés ?",
+"es": "¿Quieres revocar el acceso a la depuración por USB de todos los ordenadores que has autorizado?"
+},
+"no_application": {
+"res": "angler:SettingsGoogle:no_application",
+"en": "Nothing",
+"hu": "Semmi",
+"de": "Keine",
+"fr": "Aucune",
+"es": "Ninguna"
+},
+"reset_shortcut_manager_throttling_complete": {
+"res": "angler:SettingsGoogle:reset_shortcut_manager_throttling_complete",
+"en": "ShortcutManager rate-limiting has been reset",
+"hu": "A ShortcutManager gyakoriságkorlátozása visszaállítva",
+"de": "Zugriffsbegrenzung im ShortcutManager zurückgesetzt",
+"fr": "La limitation de fréquence ShortcutManager a bien été réinitialisée.",
+"es": "Se ha restablecido el límite de frecuencia de ShortcutManager"
+},
+"dev_settings_warning_title": {
+"res": "angler:SettingsGoogle:dev_settings_warning_title",
+"en": "Allow development settings?",
+"hu": "Engedélyezi a fejlesztői beállításokat?",
+"de": "Entwicklungseinstellungen zulassen?",
+"fr": "Activer les paramètres de développement ?",
+"es": "¿Permitir ajustes de desarrollo?"
+},
+"dev_settings_warning_message": {
+"res": "angler:SettingsGoogle:dev_settings_warning_message",
+"en": "These settings are intended for development use only. They can cause your device and the applications on it to break or misbehave.",
+"hu": "Ezek a beállítások csak fejlesztői használatra szolgálnak. Használatuk esetén eszköze vagy alkalmazásai meghibásodhatnak, illetve nem várt módon viselkedhetnek.",
+"de": "Diese Einstellungen sind ausschließlich für Entwicklungszwecke gedacht. Sie können dein Gerät und die darauf installierten Apps beschädigen oder zu unerwünschtem Verhalten führen.",
+"fr": "Ces paramètres sont en cours de développement. Ils peuvent endommager votre appareil et les applications qui s'y trouvent, ou provoquer leur dysfonctionnement.",
+"es": "Estos ajustes están destinados únicamente a los desarrolladores. Pueden provocar que el dispositivo o las aplicaciones no funcionen correctamente."
+},
+"Chrome/app_name": {
+"res": "angler:Chrome:app_name",
+"en": "Chrome",
+"hu": "Chrome",
+"de": "Chrome",
+"fr": "Chrome",
+"es": "Chrome",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"local_backup_password_summary_change": {
+"res": "angler:SettingsGoogle:local_backup_password_summary_change",
+"en": "Tap to change or remove the password for desktop full backups",
+"hu": "Koppintson ide az asztali teljes mentések jelszavának módosításához vagy eltávolításához",
+"de": "Zum Ändern oder Entfernen des Passworts für vollständige Desktop-Sicherungen tippen",
+"fr": "Appuyez pour modifier ou supprimer le mot de passe utilisé pour les sauvegardes complètes sur PC.",
+"es": "Toca para cambiar o quitar la contraseña de las copias de seguridad completas del escritorio"
+},
+"current_backup_pw_prompt": {
+"res": "angler:SettingsGoogle:current_backup_pw_prompt",
+"en": "Type your current full backup password here",
+"hu": "Adja meg a teljes mentések jelenlegi jelszavát",
+"de": "Aktuelles Passwort für vollständige Sicherungen eingeben",
+"fr": "Saisissez le mot de passe actuel utilisé pour les sauvegardes complètes.",
+"es": "Introduce aquí la contraseña actual de la copia de seguridad completa."
+},
+"new_backup_pw_prompt": {
+"res": "angler:SettingsGoogle:new_backup_pw_prompt",
+"en": "Type a new password for full backups here",
+"hu": "Adja meg a teljes mentések új jelszavát",
+"de": "Neues Passwort für vollständige Sicherungen eingeben",
+"fr": "Saisissez votre nouveau mot de passe pour les sauvegardes complètes.",
+"es": "Introduce una contraseña nueva para las copias de seguridad completas."
+},
+"confirm_new_backup_pw_prompt": {
+"res": "angler:SettingsGoogle:confirm_new_backup_pw_prompt",
+"en": "Retype your new full backup password here",
+"hu": "Még egyszer írja be a teljes mentés új jelszavát",
+"de": "Neues Passwort für vollständige Sicherungen erneut eingeben",
+"fr": "Confirmez ici votre nouveau mot de passe de sauvegarde complète.",
+"es": "Vuelve a escribir aquí la nueva contraseña de la copia de seguridad completa."
+},
+"backup_pw_cancel_button_text": {
+"res": "angler:SettingsGoogle:backup_pw_cancel_button_text",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"backup_pw_set_button_text": {
+"res": "angler:SettingsGoogle:backup_pw_set_button_text",
+"en": "Set backup password",
+"hu": "Mentési jelszó beállítása",
+"de": "Passwort festlegen",
+"fr": "Définir le mot de passe de sauvegarde",
+"es": "Establecer contraseña"
+},
+"local_backup_password_toast_confirmation_mismatch": {
+"res": "angler:SettingsGoogle:local_backup_password_toast_confirmation_mismatch",
+"en": "New password and confirmation don’t match",
+"hu": "Az új jelszó és a megerősítése nem egyezik.",
+"de": "Das neue Passwort und die Bestätigung stimmen nicht überein.",
+"fr": "Le nouveau mot de passe et sa confirmation ne correspondent pas.",
+"es": "La nueva contraseña y la de confirmación no coinciden"
+},
+"local_backup_password_toast_validation_failure": {
+"res": "angler:SettingsGoogle:local_backup_password_toast_validation_failure",
+"en": "Failure setting backup password",
+"hu": "Hiba a mentési jelszó beállítása során",
+"de": "Fehler beim Festlegen des Sicherungspassworts",
+"fr": "Échec de la définition du mot de passe de secours.",
+"es": "Error al establecer la contraseña de seguridad"
+},
+"local_backup_password_toast_success": {
+"res": "angler:SettingsGoogle:local_backup_password_toast_success",
+"en": "New backup password set",
+"hu": "Új mentési jelszó beállítva",
+"de": "Neues Sicherungspasswort festgelegt",
+"fr": "Le nouveau mot de passe de secours a bien été défini.",
+"es": "Nueva contraseña de seguridad establecida"
+},
+"running_processes_header_title": {
+"res": "angler:SettingsGoogle:running_processes_header_title",
+"en": "Device memory",
+"hu": "Eszközmemória",
+"de": "Gerätespeicher",
+"fr": "Mémoire de l'appareil",
+"es": "Memoria del dispositivo"
+},
+"running_processes_header_system_prefix": {
+"res": "angler:SettingsGoogle:running_processes_header_system_prefix",
+"en": "System",
+"hu": "Rendszer",
+"de": "System",
+"fr": "Système",
+"es": "Sistema"
+},
+"running_processes_header_apps_prefix": {
+"res": "angler:SettingsGoogle:running_processes_header_apps_prefix",
+"en": "Apps",
+"hu": "Alkalmazások",
+"de": "Apps",
+"fr": "Applications",
+"es": "Aplicaciones"
+},
+"running_processes_header_free_prefix": {
+"res": "angler:SettingsGoogle:running_processes_header_free_prefix",
+"en": "Free",
+"hu": "Szabad",
+"de": "Frei",
+"fr": "Disponible",
+"es": "Libre"
+},
+"running_processes_header_footer": {
+"res": "angler:SettingsGoogle:running_processes_header_footer",
+"en": "App RAM usage",
+"hu": "Alkalmazás memóriahasználata",
+"de": "App-RAM-Nutzung",
+"fr": "Utilisation de la RAM par les applications",
+"es": "RAM usada por las aplicaciones"
+},
+"running_processes_item_description_s_s": {
+"res": "angler:SettingsGoogle:running_processes_item_description_s_s",
+"en": "%1$d process and %2$d service",
+"hu": "%1$d folyamat és %2$d szolgáltatás",
+"de": "%1$d Prozess und %2$d Dienst",
+"fr": "%1$d processus et %2$d service",
+"es": "%1$d proceso y %2$d servicio"
+},
+"inactive_app_inactive_summary": {
+"res": "angler:SettingsGoogle:inactive_app_inactive_summary",
+"en": "Inactive. Tap to toggle.",
+"hu": "Kikapcsolva. Koppintson ide a váltáshoz.",
+"de": "Inaktiv. Zum Wechseln tippen.",
+"fr": "Application inactive. Appuyez ici pour l'activer.",
+"es": "Inactiva. Toca para alternar."
+},
+"inactive_app_active_summary": {
+"res": "angler:SettingsGoogle:inactive_app_active_summary",
+"en": "Active. Tap to toggle.",
+"hu": "Bekapcsolva. Koppintson ide a váltáshoz.",
+"de": "Aktiv. Zum Wechseln tippen.",
+"fr": "Application active. Appuyez ici pour la désactiver.",
+"es": "Activa. Toca para alternar."
+},
+"accessibility_screen_magnification_summary": {
+"res": "angler:SettingsGoogle:accessibility_screen_magnification_summary",
+"en": "To zoom, quickly tap the screen 3 times with one finger.\nDrag 2 or more fingers to scroll\nPinch 2 or more fingers together or apart to adjust zoom\n\nTo zoom temporarily, quickly tap the screen 3 times and hold down your finger on the third tap.\nDrag your finger to move around the screen\nLift your finger to zoom out\n\nYou can't zoom in on the keyboard and navigation bar.",
+"hu": "Nagyításhoz gyorsan koppintson egy ujjal háromszor a képernyőre.\nA görgetéshez húzza végig legalább két ujját a képernyőn.\nA nagyítási/kicsinyítési szintet két vagy több ujjának össze- vagy széthúzásával állíthatja be.\n\nAz ideiglenes nagyításhoz gyorsan koppintson háromszor a képernyőre, és az utolsót követően ne emelje fel az ujját.\nHúzza az ujját a képernyőn való mozgáshoz.\nAz eredeti méret visszaállításához emelje fel az ujját.\n\nA billentyűzetre és a navigációs sávra nem lehet ráközelíteni.",
+"de": "Zoome, indem du 3-mal hintereinander schnell mit einem Finger tippst.\nScrolle, indem du 2 oder mehr Finger ziehst\nStelle den Zoom ein, indem du 2 oder mehr Finger zusammen- oder auseinanderziehst\n\nZoome vorübergehend, indem du 3-mal hintereinander schnell auf den Bildschirm tippst und deinen Finger beim dritten Mal auf dem Bildschirm hältst.\nZiehe deinen Finger, um auf dem Bildschirm zu navigieren\nNimm deinen Finger weg, um wieder herauszuzoomen\n\nTastatur und Navigationsleiste lassen sich nicht heranzoomen.",
+"fr": "Pour faire un zoom, appuyez rapidement sur l'écran à trois reprises avec un doigt.\nFaites glisser deux doigts ou plus pour faire défiler l'écran.\nPincez deux doigts ou plus ou écartez-les pour régler le niveau de zoom.\n\nPour faire un zoom temporaire, appuyez rapidement sur l'écran à trois reprises et de manière prolongée la troisième fois.\nFaites glisser un doigt pour vous déplacer sur l'écran.\nRelevez le doigt pour faire un zoom arrière.\n\nIl est impossible de faire un zoom avant sur le clavier et la barre de navigation.",
+"es": "Para hacer zoom, toca la pantalla 3 veces rápidamente con un dedo.\nArrastra 2 o más dedos para desplazarte\nPellizca la pantalla uniendo 2 o más dedos o sepáralos para cambiar el nivel de zoom\n\nPara hacer zoom temporalmente, toca la pantalla 3 veces rápidamente y mantenla pulsada en el tercer toque.\nArrastra el dedo para desplazarte por la pantalla\nLevántalo para alejar la imagen\n\nNo puedes acercar la imagen en el teclado y la barra de navegación."
+},
+"accessibility_global_gesture_preference_description": {
+"res": "angler:SettingsGoogle:accessibility_global_gesture_preference_description",
+"en": "When this feature is turned on, you can quickly activate accessibility features in two steps:\n\nStep 1: Press and hold the power button until you hear a sound or feel a vibration.\n\nStep 2: Touch and hold two fingers until you hear audio confirmation.\n\nIf the device has multiple users, using this shortcut on the lock screen temporarily enables accessibility until the device is unlocked.",
+"hu": "Ha ez a funkció be van kapcsolva, akkor két lépésben gyorsan aktiválhatja a kisegítő lehetőségeket\n\n1. lépés: Tartsa lenyomva a bekapcsológombot a hangjelzésig vagy rezgésig.\n\n2. lépés: Két ujját tartsa lenyomva a hangjelzéssel történő jóváhagyásig.\n\nHa az eszközt több felhasználó használja, akkor ennek a gyorsparancsnak a használata a lezárási képernyőn átmenetileg engedélyezi a kisegítő lehetőségeket az eszköz zárolásának feloldásáig.",
+"de": "Wenn diese Funktion aktiviert ist, kannst du Bedienungshilfen schnell in zwei Schritten aktivieren:\n\nSchritt 1: Halte die Ein-/Aus-Taste, bis du einen Ton hörst oder das Gerät vibriert.\n\nSchritt 2: Tippe mit zwei Fingern auf den Bildschirm, bis du eine Audiobestätigung hörst.\n\nWenn mehrere Nutzer auf dem Gerät eingerichtet sind, werden die Bedienungshilfen auf dem Sperrbildschirm so lange aktiviert, bis das Gerät entsperrt wird.",
+"fr": "Lorsque cette fonctionnalité est activée, vous pouvez rapidement activer les fonctionnalités d'accessibilité en deux étapes :\n\nÉtape 1 : Appuyez sur le bouton Marche/Arrêt jusqu'à ce que vous entendiez un son ou que vous ressentiez une vibration.\n\nÉtape 2 : Appuyez de manière prolongée avec deux doigts jusqu'à ce que vous entendiez la confirmation audio.\n\nSi l'appareil est utilisé par plusieurs personnes, l'utilisation de ce raccourci sur l'écran de verrouillage active l'accessibilité de manière temporaire jusqu'au déverrouillage de l'appareil.",
+"es": "Si esta función está activada, solo tienes que seguir dos pasos para activar rápidamente las funciones de accesibilidad.\n\nPaso 1: Mantén pulsado el botón de encendido hasta que escuches un sonido o notes una vibración.\n\nPaso 2: Mantén la pantalla pulsada con dos dedos hasta que escuches un sonido de confirmación.\n\nSi hay varios usuarios en el dispositivo, usar este acceso directo en la pantalla de bloqueo permite habilitar la accesibilidad de forma temporal hasta que el dispositivo se desbloquea."
+},
+"accessibility_service_default_description": {
+"res": "angler:SettingsGoogle:accessibility_service_default_description",
+"en": "No description provided.",
+"hu": "Nincs leírás.",
+"de": "Es wurde keine Beschreibung bereitgestellt.",
+"fr": "Aucune description fournie",
+"es": "No se ha especificado ninguna descripción."
+},
+"accessibility_menu_item_settings": {
+"res": "angler:SettingsGoogle:accessibility_menu_item_settings",
+"en": "Settings",
+"hu": "Beállítások",
+"de": "Einstellungen",
+"fr": "Paramètres",
+"es": "Ajustes"
+},
+"disable_service_title": {
+"res": "angler:SettingsGoogle:disable_service_title",
+"en": "Stop %1$s?",
+"hu": "Leállítja a következőt: %1$s?",
+"de": "%1$s beenden?",
+"fr": "Arrêter %1$s ?",
+"es": "¿Detener %1$s?"
+},
+"disable_service_message": {
+"res": "angler:SettingsGoogle:disable_service_message",
+"en": "Tapping OK will stop %1$s.",
+"hu": "Az OK gombra koppintva leállítja a következőt: %1$s.",
+"de": "Durch Tippen auf \"OK\" wird %1$s beendet.",
+"fr": "Si vous appuyez sur \"OK\", %1$s sera interrompu.",
+"es": "Si tocas Aceptar, se detendrá %1$s."
+},
+"enable_service_title": {
+"res": "angler:SettingsGoogle:enable_service_title",
+"en": "Use %1$s?",
+"hu": "Használja a(z) %1$s szolgáltatást?",
+"de": "%1$s verwenden?",
+"fr": "Utiliser %1$s ?",
+"es": "¿Usar %1$s?"
+},
+"capabilities_list_title": {
+"res": "angler:SettingsGoogle:capabilities_list_title",
+"en": "%1$s needs to:",
+"hu": "A(z) %1$s szolgáltatásnak a következőkre van szüksége:",
+"de": "%1$s muss:",
+"fr": "%1$s doit pouvoir :",
+"es": "%1$s necesita:"
+},
+"framework/capability_title_canRetrieveWindowContent": {
+"res": "angler:framework:capability_title_canRetrieveWindowContent",
+"en": "Retrieve window content",
+"hu": "Ablaktartalom lekérdezése",
+"de": "Fensterinhalte abrufen",
+"fr": "Récupérer le contenu d'une fenêtre",
+"es": "Recuperar el contenido de la ventana"
+},
+"framework/capability_desc_canRetrieveWindowContent": {
+"res": "angler:framework:capability_desc_canRetrieveWindowContent",
+"en": "Inspect the content of a window you're interacting with.",
+"hu": "A használt ablak tartalmának vizsgálata.",
+"de": "Die Inhalte eines Fensters, mit dem du interagierst, werden abgerufen.",
+"fr": "Inspecter le contenu d'une fenêtre avec laquelle vous interagissez",
+"es": "Inspecciona el contenido de una ventana con la que estés interactuando."
+},
+"talkback/talkback_title": {
+"res": "angler:talkback:talkback_title",
+"en": "TalkBack",
+"hu": "TalkBack",
+"de": "TalkBack",
+"fr": "TalkBack",
+"es": "TalkBack",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"talkback/talkback_service_description": {
+"res": "angler:talkback:talkback_service_description",
+"en": "When TalkBack is on, your device provides spoken feedback to help blind and low-vision users. For example, it describes what you touch, select, and activate.\n\nIf you have turned TalkBack on accidentally, turn it off by tapping the switch until the green outline is around it, then double-tapping it. Do the same interaction for the resulting confirmation dialog.",
+"hu": "Ha a TalkBack be van kapcsolva, az eszköz hangos visszajelzést ad a vakok és gyengénlátók számára. Elmondja például, hogy mit érint meg, mit választ ki és mit aktivál.\n\nHa véletlenül kapcsolta be a TalkBack funkciót, úgy kapcsolhatja ki, hogy rákoppint a kapcsolóra, amíg zöld körvonal nem jelenik meg körülötte, majd újra rákoppint duplán. Ugyanezt kell megtennie a megjelenő párbeszédpanelen is.",
+"de": "Wenn TalkBack aktiviert ist, gibt das Gerät blinden Nutzern und Nutzern mit geringem Sehvermögen gesprochenes Feedback. So werden etwa die Elemente beschrieben, die du berührst, auswählst und aktivierst.\n\nWenn du TalkBack versehentlich aktiviert hast, kannst du es deaktivieren, indem du den Schalter solange berührst, bis er grün umrandet ist. Tippe dann doppelt darauf. Mache dasselbe in dem angezeigten Bestätigungsfenster.",
+"fr": "Lorsque le service TalkBack est activé, votre appareil propose des commentaires audio pour aider les utilisateurs non voyants et malvoyants. Par exemple, il peut vous décrire ce que vous touchez, sélectionnez et activez.\n\nSi vous avez activé le service TalkBack accidentellement, vous pouvez le désactiver en appuyant sur le bouton jusqu'à ce qu'il soit entouré d'une bordure verte, puis en appuyant deux fois dessus. Faites de même pour la boîte de dialogue de confirmation.",
+"es": "Cuando TalkBack está activado, el dispositivo ofrece mensajes de voz para usuarios invidentes o con discapacidades visuales. Por ejemplo, describe el contenido que tocas, seleccionas o activas a través de mensajes de voz.\n\nSi has activado TalkBack por error, para desactivarlo tienes que tocar el interruptor hasta que aparezca un contorno de color verde y, a continuación, volver a tocarlo dos veces. Haz lo mismo con el cuadro de confirmación que aparece."
+},
+"talkback/switch_service_name": {
+"res": "angler:talkback:switch_service_name",
+"en": "Switch Access",
+"hu": "Kapcsolóalapú hozzáférés",
+"de": "Schalterzugriff",
+"fr": "Switch Access",
+"es": "Accesibilidad mediante interruptores"
+},
+"talkback/switch_access_service_description": {
+"res": "angler:talkback:switch_access_service_description",
+"en": "Switch Access lets you scan and select items using one or more switches.",
+"hu": "A kapcsolóalapú hozzáférés lehetővé teszi elemek keresését és kiválasztását egy vagy több kapcsoló használatával.",
+"de": "Mit dem Schalterzugriff kannst du Elemente über einen oder mehrere Schalter scannen und auswählen.",
+"fr": "Switch Access vous permet d'analyser et de sélectionner des éléments à l'aide d'un ou plusieurs boutons.",
+"es": "La opción Accesibilidad mediante interruptores te permite buscar y seleccionar elementos con uno o varios conmutadores."
+},
+"font_size_preview_text_headline": {
+"res": "angler:SettingsGoogle:font_size_preview_text_headline",
+"en": "Sample text",
+"hu": "Mintaszöveg",
+"de": "Beispieltext",
+"fr": "Exemple de texte",
+"es": "Texto de muestra"
+},
+"font_size_preview_text_title": {
+"res": "angler:SettingsGoogle:font_size_preview_text_title",
+"en": "The Wonderful Wizard of Oz",
+"hu": "Óz, a csodák csodája",
+"de": "Der Zauberer von Oz",
+"fr": "Le Magicien d'Oz",
+"es": "El maravilloso mago de Oz"
+},
+"font_size_preview_text_subtitle": {
+"res": "angler:SettingsGoogle:font_size_preview_text_subtitle",
+"en": "Chapter 11: The Wonderful Emerald City of Oz",
+"hu": "11. fejezet: A csodálatos Smaragdváros",
+"de": "Kapitel 11: Die wundervolle Smaragdstadt von Oz",
+"fr": "Chapitre 11 : La merveilleuse cité d'émeraude",
+"es": "Capítulo 11: La maravillosa Ciudad Esmeralda de Oz"
+},
+"font_size_preview_text_body": {
+"res": "angler:SettingsGoogle:font_size_preview_text_body",
+"en": "Even with eyes protected by the green spectacles Dorothy and her friends were at first dazzled by the brilliancy of the wonderful City. The streets were lined with beautiful houses all built of green marble and studded everywhere with sparkling emeralds. They walked over a pavement of the same green marble, and where the blocks were joined together were rows of emeralds, set closely, and glittering in the brighness of the sun. The window panes were of green glass; even the sky above the City had a green tint, and the rays of the sun were green. \n\nThere were many people, men, women and children, walking about, and these were all dressed in green clothes and had greenish skins. They looked at Dorothy and her strangely assorted company with wondering eyes, and the children all ran away and hid behind their mothers when they saw the Lion; but no one spoke to them. Many shops stood in the street, and Dorothy saw that everything in them was green. Green candy and green pop-corn were offered for sale, as well as green shoes, green hats and green clothes of all sorts. At one place a man was selling green lemonade, and when the children bought it Dorothy could see that they paid for it with green pennies. \n\nThere seemed to be no horses nor animals of any kind; the men carried things around in little green carts, which they pushed before them. Everyone seeemed happy and contented and prosperous.",
+"hu": "Dorothyt és barátait még a zöld szemüvegen át is lenyűgözte a csodálatos Város tündöklése. Az utcákat gyönyörű házak sora szegélyezte, melyek zöld márványból készültek, ragyogó smaragdokkal kirakva. Az utak ugyanebből a zöld márványból készültek, az utcaköveket pedig sűrűn rakott smaragdsorok választották el, melyek csak úgy sziporkáztak a napfényben. Az ablaktáblák zöld üvegből voltak, az ég zöldes színben tündökölt a Város fölött, és még a napsugarak is zöld színben játszottak. \n\nRengeteg ember járkált mindenfelé, férfiak, nők, gyerekek, mind zöld ruhákban, zöldes árnyalatú volt a bőrük is. Csodálkozó szemekkel néztek Dorothyra és furcsa kísérőire, és amikor a gyerekek meglátták az Oroszlánt, elszaladtak, és anyjuk mögé bújtak. De senki sem szólt hozzájuk. Az utcán sok bolt állt, és Dorothy észrevette, hogy ezekben is minden zöld. Lehetett kapni zöld cukorkát és zöld pattogatott kukoricát, zöld cipőt, zöld kalapot és mindenféle zöld ruhát. Az egyik helyen egy férfi zöld limonádét árult, és Dorothy látta, hogy a gyerekek zöld pennykkel fizetnek érte. \n\nNem voltak sehol lovak vagy más állatok; az emberek mindent kis zöld kocsikon hordtak, amit maguk előtt toltak. Mindenki boldognak, elégedettnek és jómódúnak tűnt.",
+"de": "Obwohl Dorothy und ihre Freunde zum Schutz die grünen Brillen trugen, waren sie anfangs geblendet von der strahlenden Helligkeit der wundervollen Stadt. An den Straßen entlang standen schöne Häuser aus grünem Marmor, die mit funkelnden Smaragden übersät waren. Dorothy und ihre Freunde liefen über ein Pflaster aus dem gleichen grünen Marmor, und zwischen den Steinen funkelten dicht besetzte Reihen aus Smaragden in der hellen Sonne. Die Fensterscheiben der Häuser waren aus grünem Glas. Sogar der Himmel über der Stadt hatte einen grünen Schimmer, und auch die Sonnenstrahlen waren grün. \n\nÜberall liefen Leute umher, Männer, Frauen und Kinder, alle grün gekleidet und mit einer grünlichen Hautfarbe. Sie sahen Dorothy und ihre seltsam anmutenden Gefährten mit großen Augen an, und beim Anblick des Löwen liefen die Kinder alle davon und versteckten sich hinter ihren Müttern. Dennoch sprach niemand sie an. Entlang der Straße standen viele Geschäfte, und Dorothy sah, dass drinnen alles grün war. Grüne Bonbons und grünes Popcorn wurden feilgeboten, außerdem grüne Schuhe, grüne Hüte und grüne Kleider aller Art. In einem Geschäft verkaufte ein Mann grüne Limonade, und Dorothy konnte sehen, dass die Kinder mit grünen Pfennigen dafür bezahlten. \n\nPferde oder andere Tiere waren nirgends zu sehen. Männer beförderten Sachen in kleinen, grünen Karren, die sie vor sich herschoben. Jeder schien glücklich und zufrieden und wohlhabend zu sein.",
+"fr": "Malgré leurs lunettes vertes, Dorothée et ses amis furent d'abord éblouis par l'éclat de la Cité merveilleuse. Les rues étaient bordées de splendides maisons, toutes de marbre vert et incrustées d'émeraudes étincelantes. Ils marchaient sur une chaussée du même marbre, et la jointure des dalles était sertie de rangs serrés d'émeraudes qui brillaient au soleil. \n\nDes gens déambulaient dans les rues, hommes, femmes et enfants ; ils étaient tous vêtus de vert et avaient le teint verdâtre. Étonnés, ils dévisageaient Dorothée et son escorte, les enfants couraient se cacher derrière leurs mères à la vue du Lion ; mais personne ne leur parlait. Dorothée remarqua que tout était vert à l'intérieur des nombreuses boutiques. Tout ce qu'on y vendait était vert : le sucre candi, le pop-corn, les souliers, les chapeaux et les vêtements. Dans une boutique, un homme vendait de la limonade verte et Dorothée vit que les enfants payaient avec de l'argent vert. \n\nIl semblait n'y avoir ni chevaux, ni animaux d'aucune sorte ; les hommes transportaient des choses dans de petites charrettes vertes. Tout le monde avait l'air heureux et satisfait, et chacun respirait la prospérité.",
+"es": "Aun con los ojos protegidos por las gafas verdes, Dorothy y sus amigos quedaron deslumbrados por el brillo de aquella maravillosa ciudad. Las calles estaban formadas por preciosas casas construidas con mármol verde y todo estaba salpicado de relucientes esmeraldas. Pasearon por un camino de mármol verde cuyas baldosas se unían con hileras de esmeraldas, colocadas muy juntas y que relucían bajo la luz del sol. Las ventanas eran de cristal verde y hasta el cielo de la ciudad y los rayos del sol tenían un tono verdoso. \n\nHabía muchos hombres, mujeres y niños paseando y todos tenían la piel verdosa y vestían ropa verde. Miraban con asombro a Dorothy y a sus extraños acompañantes, y los niños corrían a esconderse detrás de sus madres cuando veían al león, pero nadie les dirigía la palabra. Había también muchas tiendas y Dorothy observó que todo lo que había en ellas era verde. Vendían caramelos y palomitas de maíz verdes y también zapatos, sombreros y todo tipo de ropa del mismo color. En una de ellas, un hombre vendía limonada y Dorothy pudo comprobar que los niños pagaban con monedas verdes. \n\nNo parecía que en aquel lugar hubiese caballos ni animales de ningún tipo, pues los hombres lo transportaban todo empujando pequeños carros de este color. Todos parecían felices, satisfechos y afortunados."
+},
+"screen_zoom_preview_title": {
+"res": "angler:SettingsGoogle:screen_zoom_preview_title",
+"en": "Preview",
+"hu": "Előnézet",
+"de": "Vorschau",
+"fr": "Aperçu",
+"es": "Vista previa"
+},
+"screen_zoom_summary_large": {
+"res": "angler:SettingsGoogle:screen_zoom_summary_large",
+"en": "Large",
+"hu": "Nagy",
+"de": "Groß",
+"fr": "Grand",
+"es": "Grande"
+},
+"screen_zoom_summary": {
+"res": "angler:SettingsGoogle:screen_zoom_summary",
+"en": "Make the items on your screen smaller or larger. Some apps on your screen may change position.",
+"hu": "Nagyíthatja vagy kicsinyítheti a képernyőn megjelenő elemeket. Egyes alkalmazások más helyre kerülhetnek a képernyőn.",
+"de": "Elemente auf dem Bildschirm verkleinern oder vergrößern. Dadurch werden unter Umständen einige Apps auf dem Bildschirm verschoben.",
+"fr": "Agrandissez ou réduisez les éléments affichés. Certaines applications visibles sur l'écran peuvent changer de position.",
+"es": "Aumenta o disminuye el tamaño de los elementos de la pantalla. Puede que algunas aplicaciones cambien de sitio."
+},
+"font_size_summary": {
+"res": "angler:SettingsGoogle:font_size_summary",
+"en": "Make the text on screen smaller or larger.",
+"hu": "Kicsinyítheti vagy nagyíthatja a képernyőn megjelenő szöveget.",
+"de": "Text auf dem Display verkleinern oder vergrößern.",
+"fr": "Agrandissez ou réduisez le texte affiché.",
+"es": "Aumenta o disminuye el tamaño del texto de la pantalla."
+},
+"screen_zoom_make_smaller_desc": {
+"res": "angler:SettingsGoogle:screen_zoom_make_smaller_desc",
+"en": "Make smaller",
+"hu": "Kisebb",
+"de": "Verkleinern",
+"fr": "Réduire",
+"es": "Disminuir el tamaño"
+},
+"screen_zoom_make_larger_desc": {
+"res": "angler:SettingsGoogle:screen_zoom_make_larger_desc",
+"en": "Make larger",
+"hu": "Nagyobb",
+"de": "Vergrößern",
+"fr": "Agrandir",
+"es": "Aumentar el tamaño"
+},
+"font_size_make_smaller_desc": {
+"res": "angler:SettingsGoogle:font_size_make_smaller_desc",
+"en": "Make smaller",
+"hu": "Kisebb",
+"de": "Verkleinern",
+"fr": "Réduire",
+"es": "Disminuir el tamaño"
+},
+"font_size_make_larger_desc": {
+"res": "angler:SettingsGoogle:font_size_make_larger_desc",
+"en": "Make larger",
+"hu": "Nagyobb",
+"de": "Vergrößern",
+"fr": "Agrandir",
+"es": "Aumentar el tamaño"
+},
+"screen_zoom_conversation_message_1": {
+"res": "angler:SettingsGoogle:screen_zoom_conversation_message_1",
+"en": "Hi Pete!",
+"hu": "Szia, Péter!",
+"de": "Hallo Peter!",
+"fr": "Bonjour Pierre !",
+"es": "¡Hola, Pablo!"
+},
+"screen_zoom_conversation_message_2": {
+"res": "angler:SettingsGoogle:screen_zoom_conversation_message_2",
+"en": "Hey, want to grab coffee and catch up today?",
+"hu": "Van kedved inni ma egy kávét, és dumcsizni egy kicsit?",
+"de": "Hallo, Lust auf einen Kaffee heute?",
+"fr": "Et si on prenait un café aujourd'hui pour discuter ?",
+"es": "¿Tomamos un café y nos ponemos al día?"
+},
+"screen_zoom_conversation_message_3": {
+"res": "angler:SettingsGoogle:screen_zoom_conversation_message_3",
+"en": "Sounds great. I know of a good place not too far from here.",
+"hu": "Jó ötlet! Tudok a közelben egy jó helyet.",
+"de": "Klingt super. Ich kenne ein schönes Café in der Nähe.",
+"fr": "Bonne idée. Je connais un café sympa dans ce quartier.",
+"es": "¡Claro! Conozco un sitio que no está muy lejos."
+},
+"screen_zoom_conversation_message_4": {
+"res": "angler:SettingsGoogle:screen_zoom_conversation_message_4",
+"en": "Perfect!",
+"hu": "Szuper!",
+"de": "Perfekt!",
+"fr": "Parfait !",
+"es": "¡Perfecto!"
+},
+"screen_zoom_conversation_timestamp_1": {
+"res": "angler:SettingsGoogle:screen_zoom_conversation_timestamp_1",
+"en": "Tue 6:00PM",
+"hu": "Kedd 18:00",
+"de": "Di. 18:00 Uhr",
+"fr": "Mardi à 18:00",
+"es": "Martes a las 18:00"
+},
+"screen_zoom_conversation_timestamp_2": {
+"res": "angler:SettingsGoogle:screen_zoom_conversation_timestamp_2",
+"en": "Tue 6:01PM",
+"hu": "Kedd 18:01",
+"de": "Di. 18:01 Uhr",
+"fr": "Mardi à 18:01",
+"es": "Martes a las 18:01"
+},
+"screen_zoom_conversation_timestamp_3": {
+"res": "angler:SettingsGoogle:screen_zoom_conversation_timestamp_3",
+"en": "Tue 6:02PM",
+"hu": "Kedd 18:02",
+"de": "Di. 18:02 Uhr",
+"fr": "Mardi à 18:02",
+"es": "Martes a las 18:02"
+},
+"screen_zoom_conversation_timestamp_4": {
+"res": "angler:SettingsGoogle:screen_zoom_conversation_timestamp_4",
+"en": "Tue 6:03PM",
+"hu": "Kedd 18:03",
+"de": "Di. 18:03 Uhr",
+"fr": "Mardi à 18:03",
+"es": "Martes a las 18:03"
+},
+"screen_zoom_conversation_icon_alex": {
+"res": "angler:SettingsGoogle:screen_zoom_conversation_icon_alex",
+"en": "A",
+"hu": "A",
+"de": "A",
+"fr": "A",
+"es": "A"
+},
+"screen_zoom_conversation_icon_pete": {
+"res": "angler:SettingsGoogle:screen_zoom_conversation_icon_pete",
+"en": "P",
+"hu": "P",
+"de": "P",
+"fr": "P",
+"es": "P"
+},
+"color_none": {
+"res": "angler:SettingsGoogle:color_none",
+"en": "None",
+"hu": "Semelyik",
+"de": "Keine",
+"fr": "Aucune",
+"es": "Ninguno"
+},
+"color_custom": {
+"res": "angler:SettingsGoogle:color_custom",
+"en": "#%1$02X%2$02X%3$02X",
+"hu": "#%1$02X%2$02X%3$02X",
+"de": "#%1$02X%2$02X%3$02X",
+"fr": "#%1$02X%2$02X%3$02X",
+"es": "#%1$02X%2$02X%3$02X",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"color_unspecified": {
+"res": "angler:SettingsGoogle:color_unspecified",
+"en": "Default",
+"hu": "Alapértelmezett",
+"de": "Standard",
+"fr": "Par défaut",
+"es": "Predeterminado"
+},
+"color_white": {
+"res": "angler:SettingsGoogle:color_white",
+"en": "White",
+"hu": "Fehér",
+"de": "Weiß",
+"fr": "Blanc",
+"es": "Blanco"
+},
+"color_black": {
+"res": "angler:SettingsGoogle:color_black",
+"en": "Black",
+"hu": "Fekete",
+"de": "Schwarz",
+"fr": "Noir",
+"es": "Negro"
+},
+"color_red": {
+"res": "angler:SettingsGoogle:color_red",
+"en": "Red",
+"hu": "Piros",
+"de": "Rot",
+"fr": "Rouge",
+"es": "Rojo"
+},
+"color_yellow": {
+"res": "angler:SettingsGoogle:color_yellow",
+"en": "Yellow",
+"hu": "Sárga",
+"de": "Gelb",
+"fr": "Jaune",
+"es": "Amarillo"
+},
+"color_green": {
+"res": "angler:SettingsGoogle:color_green",
+"en": "Green",
+"hu": "Zöld",
+"de": "Grün",
+"fr": "Vert",
+"es": "Verde"
+},
+"color_cyan": {
+"res": "angler:SettingsGoogle:color_cyan",
+"en": "Cyan",
+"hu": "Zöldeskék",
+"de": "Blaugrün",
+"fr": "Cyan",
+"es": "Cian"
+},
+"color_blue": {
+"res": "angler:SettingsGoogle:color_blue",
+"en": "Blue",
+"hu": "Kék",
+"de": "Blau",
+"fr": "Bleu",
+"es": "Azul"
+},
+"color_magenta": {
+"res": "angler:SettingsGoogle:color_magenta",
+"en": "Magenta",
+"hu": "Magenta",
+"de": "Magenta",
+"fr": "Magenta",
+"es": "Magenta"
+},
+"locale_default": {
+"res": "angler:SettingsGoogle:locale_default",
+"en": "Default",
+"hu": "Alapértelmezett",
+"de": "Standard",
+"fr": "Par défaut",
+"es": "Predeterminado"
+},
+"captioning_preview_characters": {
+"res": "angler:SettingsGoogle:captioning_preview_characters",
+"en": "Aa",
+"hu": "Aa",
+"de": "Aa",
+"fr": "Aa",
+"es": "Aa"
+},
+"captioning_preview_text": {
+"res": "angler:SettingsGoogle:captioning_preview_text",
+"en": "Captions will look like this",
+"hu": "A feliratok így fognak kinézni",
+"de": "Untertitel sehen so aus.",
+"fr": "Aperçu des sous-titres",
+"es": "Así aparecerán los subtítulos"
+},
 "settings_suggestion_header_summary_hidden_items": {
 "res": "angler:SettingsGoogle:settings_suggestion_header_summary_hidden_items",
 "en": {
@@ -10439,6 +11681,359 @@ NG.strings('settings', {
 "es"
 ]
 },
+"show_dev_countdown": {
+"res": "angler:SettingsGoogle:show_dev_countdown",
+"en": {
+"other": "You are now %1$d steps away from being a developer.",
+"one": "You are now %1$d step away from being a developer."
+},
+"hu": {
+"other": "%1$d lépésre van attól, hogy fejlesztő legyen.",
+"one": "%1$d lépésre van attól, hogy fejlesztő legyen."
+},
+"de": {
+"other": "In %1$d Schritten bist du Entwickler.",
+"one": "In %1$d Schritt bist du Entwickler."
+},
+"fr": {
+"other": "Plus que %1$d étapes pour devenir développeur",
+"one": "Plus que %1$d étape pour devenir développeur"
+},
+"es": {
+"other": "Solo te quedan %1$d pasos de ser un desarrollador.",
+"one": "Solo te queda %1$d paso de ser un desarrollador."
+}
+},
+"accessibilty_autoclick_preference_subtitle_extremely_short_delay": {
+"res": "angler:SettingsGoogle:accessibilty_autoclick_preference_subtitle_extremely_short_delay",
+"en": {
+"other": "Extremely short delay (%1$d ms)",
+"one": "Extremely short delay (%1$d ms)"
+},
+"hu": {
+"other": "Rendkívül rövid késleltetés (%1$d ms)",
+"one": "Rendkívül rövid késleltetés (%1$d ms)"
+},
+"de": {
+"other": "Extrem kurze Verzögerung (%1$d ms)",
+"one": "Extrem kurze Verzögerung (%1$d ms)"
+},
+"fr": {
+"other": "Délai extrêmement court (%1$d ms)",
+"one": "Délai extrêmement court (%1$d ms)"
+},
+"es": {
+"other": "Retraso demasiado corto (%1$d ms)",
+"one": "Retraso demasiado corto (%1$d ms)"
+}
+},
+"accessibilty_autoclick_preference_subtitle_very_short_delay": {
+"res": "angler:SettingsGoogle:accessibilty_autoclick_preference_subtitle_very_short_delay",
+"en": {
+"other": "Very short delay (%1$d ms)",
+"one": "Very short delay (%1$d ms)"
+},
+"hu": {
+"other": "Nagyon rövid késleltetés (%1$d ms)",
+"one": "Nagyon rövid késleltetés (%1$d ms)"
+},
+"de": {
+"other": "Sehr kurze Verzögerung (%1$d ms)",
+"one": "Sehr kurze Verzögerung (%1$d ms)"
+},
+"fr": {
+"other": "Délai très court (%1$d ms)",
+"one": "Délai très court (%1$d ms)"
+},
+"es": {
+"other": "Retraso muy corto (%1$d ms)",
+"one": "Retraso muy corto (%1$d ms)"
+}
+},
+"accessibilty_autoclick_preference_subtitle_short_delay": {
+"res": "angler:SettingsGoogle:accessibilty_autoclick_preference_subtitle_short_delay",
+"en": {
+"other": "Short delay (%1$d ms)",
+"one": "Short delay (%1$d ms)"
+},
+"hu": {
+"other": "Rövid késleltetés (%1$d ms)",
+"one": "Rövid késleltetés (%1$d ms)"
+},
+"de": {
+"other": "Kurze Verzögerung (%1$d ms)",
+"one": "Kurze Verzögerung (%1$d ms)"
+},
+"fr": {
+"other": "Court délai (%1$d ms)",
+"one": "Court délai (%1$d ms)"
+},
+"es": {
+"other": "Retraso corto (%1$d ms)",
+"one": "Retraso corto (%1$d ms)"
+}
+},
+"accessibilty_autoclick_preference_subtitle_long_delay": {
+"res": "angler:SettingsGoogle:accessibilty_autoclick_preference_subtitle_long_delay",
+"en": {
+"other": "Long delay (%1$d ms)",
+"one": "Long delay (%1$d ms)"
+},
+"hu": {
+"other": "Hosszú késleltetés (%1$d ms)",
+"one": "Hosszú késleltetés (%1$d ms)"
+},
+"de": {
+"other": "Lange Verzögerung (%1$d ms)",
+"one": "Lange Verzögerung (%1$d ms)"
+},
+"fr": {
+"other": "Long délai (%1$d ms)",
+"one": "Long délai (%1$d ms)"
+},
+"es": {
+"other": "Retraso largo (%1$d ms)",
+"one": "Retraso largo (%1$d ms)"
+}
+},
+"accessibilty_autoclick_preference_subtitle_very_long_delay": {
+"res": "angler:SettingsGoogle:accessibilty_autoclick_preference_subtitle_very_long_delay",
+"en": {
+"other": "Very long delay (%1$d ms)",
+"one": "Very long delay (%1$d ms)"
+},
+"hu": {
+"other": "Nagyon hosszú késleltetés (%1$d ms)",
+"one": "Nagyon hosszú késleltetés (%1$d ms)"
+},
+"de": {
+"other": "Sehr lange Verzögerung (%1$d ms)",
+"one": "Sehr lange Verzögerung (%1$d ms)"
+},
+"fr": {
+"other": "Délai très long (%1$d ms)",
+"one": "Délai très long (%1$d ms)"
+},
+"es": {
+"other": "Retraso muy largo (%1$d ms)",
+"one": "Retraso muy largo (%1$d ms)"
+}
+},
+"captioning_opacity_selector_titles": {
+"res": "angler:SettingsGoogle:captioning_opacity_selector_titles",
+"en": [
+"25%",
+"50%",
+"75%",
+"100%"
+],
+"hu": [
+"25%",
+"50%",
+"75%",
+"100%"
+],
+"de": [
+"25 %",
+"50 %",
+"75 %",
+"100 %"
+],
+"fr": [
+"25 %",
+"50 %",
+"75 %",
+"100 %"
+],
+"es": [
+"25%",
+"50%",
+"75%",
+"100%"
+]
+},
+"captioning_font_size_selector_titles": {
+"res": "angler:SettingsGoogle:captioning_font_size_selector_titles",
+"en": [
+"Very small",
+"Small",
+"Normal",
+"Large",
+"Very large"
+],
+"hu": [
+"Nagyon kicsi",
+"Kicsi",
+"Normál",
+"Nagy",
+"Nagyon nagy"
+],
+"de": [
+"Sehr klein",
+"Klein",
+"Mittel",
+"Groß",
+"Sehr groß"
+],
+"fr": [
+"Très petite",
+"Petite",
+"Normale",
+"Grande",
+"Très grande"
+],
+"es": [
+"Muy pequeña",
+"Pequeña",
+"Mediana",
+"Grande",
+"Muy grande"
+]
+},
+"captioning_preset_selector_titles": {
+"res": "angler:SettingsGoogle:captioning_preset_selector_titles",
+"en": [
+"Use app defaults",
+"White on black",
+"Black on white",
+"Yellow on black",
+"Yellow on blue",
+"Custom"
+],
+"hu": [
+"Alapbeállítások használata",
+"Fekete alapon fehér",
+"Fehér alapon fekete",
+"Fekete alapon sárga",
+"Kék alapon sárga",
+"Egyedi"
+],
+"de": [
+"App-Standard verwenden",
+"Weiß auf Schwarz",
+"Schwarz auf Weiß",
+"Gelb auf Schwarz",
+"Gelb auf Blau",
+"Personalisiert"
+],
+"fr": [
+"Paramètres par défaut de l'appli",
+"Texte blanc sur fond noir",
+"Texte noir sur fond blanc",
+"Texte jaune sur fond noir",
+"Texte jaune sur fond bleu",
+"Personnalisé"
+],
+"es": [
+"Por defecto",
+"Blanco sobre negro",
+"Negro sobre blanco",
+"Amarillo sobre negro",
+"Amarillo sobre azul",
+"Personalizado"
+]
+},
+"captioning_typeface_selector_titles": {
+"res": "angler:SettingsGoogle:captioning_typeface_selector_titles",
+"en": [
+"Default",
+"Sans-serif",
+"Sans-serif condensed",
+"Sans-serif monospace",
+"Serif",
+"Serif monospace",
+"Casual",
+"Cursive",
+"Small capitals"
+],
+"hu": [
+"Alapértelmezett",
+"Sans-serif",
+"Sans-serif, sűrű betűköz",
+"Nem proporcionális sans-serif",
+"Serif",
+"Nem proporcionális serif",
+"Általános",
+"Kurzív",
+"Kiskapitális"
+],
+"de": [
+"Standard",
+"Sans Serif",
+"Sans Serif, schmal",
+"Sans Serif Monospace",
+"Serif",
+"Serif Monospace",
+"Casual",
+"Kursiv",
+"Kapitälchen"
+],
+"fr": [
+"Par défaut",
+"Sans Serif",
+"Sans Serif condensé",
+"Sans Serif monospace",
+"Serif",
+"Serif monospace",
+"Scripte",
+"Cursive",
+"Petites majuscules"
+],
+"es": [
+"Predeterminado",
+"Sans-serif",
+"Sans-serif condensed",
+"Sans-serif monospace",
+"Serif",
+"Serif monospace",
+"Casual",
+"Cursiva",
+"Versalitas"
+]
+},
+"captioning_edge_type_selector_titles": {
+"res": "angler:SettingsGoogle:captioning_edge_type_selector_titles",
+"en": [
+"Default",
+"None",
+"Outline",
+"Drop shadow",
+"Raised",
+"Depressed"
+],
+"hu": [
+"Alapértelmezett",
+"Nincs",
+"Körvonal",
+"Árnyékolás",
+"Emelt",
+"Nyomott"
+],
+"de": [
+"Standard",
+"Keine",
+"Umriss",
+"Schlagschatten",
+"Erhöht",
+"Vertieft"
+],
+"fr": [
+"Par défaut",
+"Aucun",
+"Contour",
+"Ombre projetée",
+"Bord en relief",
+"Bord en retrait"
+],
+"es": [
+"Predeterminado",
+"Ninguno",
+"Contorno",
+"Sombra paralela",
+"Elevado",
+"Hundido"
+]
+},
 "PrebuiltGmsCore/common_google_platform_settings": {
 "res": "angler:PrebuiltGmsCore:common_google_platform_settings",
 "en": "Google",
@@ -10810,7 +12405,7 @@ NG.strings('settings', {
 "IS95A"
 ]
 },
-"captioning_font_size_selector_titles": {
+"array:captioning_font_size_selector_titles": {
 "res": "angler:SettingsGoogle:captioning_font_size_selector_titles",
 "en": [
 "Very small",
@@ -10848,7 +12443,7 @@ NG.strings('settings', {
 "Muy grande"
 ]
 },
-"captioning_typeface_selector_titles": {
+"array:captioning_typeface_selector_titles": {
 "res": "angler:SettingsGoogle:captioning_typeface_selector_titles",
 "en": [
 "Default",

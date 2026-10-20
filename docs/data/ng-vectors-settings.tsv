@@ -11,6 +11,7 @@ fw-ic_audio_ring_notif_vibrate.svg	framework/framework-res.apk	ic_audio_ring_not
 fw-ic_chevron_end.svg	framework/framework-res.apk	ic_chevron_end	tint=#8a000000
 fw-ic_chevron_start.svg	framework/framework-res.apk	ic_chevron_start	tint=#8a000000
 fw-ic_search_api_material.svg	framework/framework-res.apk	ic_search_api_material	tint=#8a000000
+st-accessibility_screen_magnification_background.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	accessibility_screen_magnification_background	-
 st-drag_handle.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	drag_handle	-
 st-fp_illustration_enrollment.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	fp_illustration_enrollment	-
 st-home.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	home	tint=#ff009688
@@ -26,6 +27,8 @@ st-ic_expand_less.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_expand_less	
 st-ic_expand_more.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_expand_more	tint=#8a000000
 st-ic_fingerprint_24dp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_fingerprint_24dp	tint=#ff009688
 st-ic_fingerprint_header.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_fingerprint_header	tint=#ff263238
+st-ic_font_size_16dp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_font_size_16dp	tint=#ff009688
+st-ic_font_size_24dp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_font_size_24dp	tint=#ff009688
 st-ic_help_24dp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_help_24dp	tint=#ff009688
 st-ic_hotspot.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_hotspot	-
 st-ic_label.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_label	tint=#8a000000
@@ -36,6 +39,7 @@ st-ic_menu.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_menu	-
 st-ic_menu_add.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_menu_add	tint=#ff009688
 st-ic_menu_add_white.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_menu_add_white	-
 st-ic_menu_delete.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_menu_delete	tint=#ff009688
+st-ic_remove_24dp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_remove_24dp	tint=#ff009688
 st-ic_restore_googblue_48dp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_restore_googblue_48dp	-
 st-ic_settings.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_settings	tint=#ff009688
 st-ic_settings_24dp.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	ic_settings_24dp	-

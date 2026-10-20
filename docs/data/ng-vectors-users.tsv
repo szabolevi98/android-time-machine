@@ -1,0 +1,10 @@
+# Users (ng-users.js): UserIcons.getDefaultUserIcon, a user's icon in USER_ICON_COLORS[userId % 8] (user_icon_1 … _8), and USER_NULL's user_icon_default_gray for the guest and users without a photo
+fw-ic_account_circle-c1.svg	framework/framework-res.apk	ic_account_circle	tint=@android:color/user_icon_1
+fw-ic_account_circle-c2.svg	framework/framework-res.apk	ic_account_circle	tint=@android:color/user_icon_2
+fw-ic_account_circle-c3.svg	framework/framework-res.apk	ic_account_circle	tint=@android:color/user_icon_3
+fw-ic_account_circle-c4.svg	framework/framework-res.apk	ic_account_circle	tint=@android:color/user_icon_4
+fw-ic_account_circle-c5.svg	framework/framework-res.apk	ic_account_circle	tint=@android:color/user_icon_5
+fw-ic_account_circle-c6.svg	framework/framework-res.apk	ic_account_circle	tint=@android:color/user_icon_6
+fw-ic_account_circle-c7.svg	framework/framework-res.apk	ic_account_circle	tint=@android:color/user_icon_7
+fw-ic_account_circle-c8.svg	framework/framework-res.apk	ic_account_circle	tint=@android:color/user_icon_8
+fw-ic_account_circle-gray.svg	framework/framework-res.apk	ic_account_circle	tint=@android:color/user_icon_default_gray
