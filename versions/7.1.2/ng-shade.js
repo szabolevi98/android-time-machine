@@ -10,7 +10,8 @@
      qs_time_collapsed_size 14 sp, sans-serif-medium, white) 16 dp from the top and the start, the alarm icon after it
      while an alarm is set (ic_access_alarms_small, 6 dp before it), the date under it (DateView "EEEMMMd", 14 sp, 4 dp
      up) fading in with the expansion (QuickStatusBarHeader.mAnimator); at the end, 4 dp down and 12 dp from the edge,
-     48 dp buttons: the user switch (invisible with one user), Edit (ic_mode_edit, 14 dp padding; shown open, fading in
+     48 dp buttons: the user switch (MultiUserSwitch: UserManager.isUserSwitcherEnabled is true with the guest enabled, so
+     it shows the current user's 24 dp avatar while open, like Edit), Edit (ic_mode_edit, 14 dp padding; shown open, fading in
      with the expansion), Settings (ic_settings_20dp) and the ExpandableIndicator (12 dp padding), which turns its chevron
      (ic_volume_expand_animation / ic_volume_collapse_animation) once the expansion passes 0.93.
    - QuickQSPanel 52 dp down, 12 dp from both sides, its QSPanel padding 6 dp above: the first sysui_qqs_count (6) tiles
@@ -269,7 +270,7 @@
           <div class="ngqs-header">
             <div class="ngqs-datetime"><div class="ngqs-clock"><span class="ngqs-time">${headerClock(c)}</span>${alarm ? `<img class="ngqs-alarm" src="${A('sui-ic_access_alarms_small.svg')}" alt="">` : ''}</div><div class="ngqs-date">${c.safe(headerDate(c))}</div></div>
             <div class="ngqs-buttons">
-              <span class="ngqs-user"></span>
+              ${NG.users ? `<button type="button" class="ngqs-user" data-action="ngqs-user" aria-label="${c.safe(NG.text('qsdetail').fmt('accessibility_quick_settings_user', null, NG.users.name(NG.users.current(c))))}"><img src="${A(NG.users.icon(NG.users.current(c)))}" alt=""></button>` : '<span class="ngqs-user"></span>'}
               <button type="button" class="ngqs-edit" data-action="ngqs-edit" aria-label="${c.safe(t.t('accessibility_quick_settings_edit'))}"><img src="${A('sui-ic_mode_edit.svg')}" alt=""></button>
               <button type="button" class="ngqs-gear" data-action="ngqs-settings" aria-label="${c.safe(t.t('accessibility_quick_settings_settings'))}"><img src="${A('sui-ic_settings_20dp.svg')}" alt=""></button>
               <button type="button" class="ngqs-expand" data-action="ngqs-expand" aria-label="${c.safe(t.t(st.qs ? 'accessibility_quick_settings_collapse' : 'accessibility_quick_settings_expand'))}">${avd(st.qs ? 'ic_volume_expand_animation' : 'ic_volume_collapse_animation', 'ngqs-chevron').replace('<svg', '<svg data-play="expand"')}</button>
@@ -593,6 +594,8 @@
       if (name === 'ngsh-clearall') { clearAll(c); return true; }
       if (name === 'ngqs-expand') { setQs(c, !st.qs); return true; }
       if (name === 'ngqs-settings') { c.closeOverlay(); c.open('settings'); return true; }
+      // MultiUserSwitch: the user detail from the avatar's centre.
+      if (name === 'ngqs-user') { const b = el.getBoundingClientRect(), q = c.el.overlay.querySelector('.ngqs').getBoundingClientRect(), dp = c.el.screen.clientWidth / W; st.detail = 'user'; st.qs = true; st.revealed = false; st.origin = {x: (b.left + b.width / 2 - q.left) / dp, y: (b.top + b.height / 2 - q.top) / dp}; refresh(c); return true; }
       if (/^ngdlg-/.test(name) && st?.dialog) return NG.dialog.action(c, name, el, st.dialog, () => { st.dialog = null; refresh(c); });
       if (/^ngqe-/.test(name)) return !!NG.qsEdit?.action(c, name, el, ctl);
       // QSPanel.showEdit: the editor opens out of the Edit button's centre.

@@ -49,12 +49,12 @@
   const BUCKETS = [15, 30, 45, ...Array.from({length: 12}, (_, i) => (i + 1) * 60)];
   const DEFAULT_BUCKET = BUCKETS.indexOf(60);
   // The settings page each detail's MORE SETTINGS opens (the adapters' getSettingsIntent).
-  const SETTINGS = {wifi: 'wifi', bt: 'bluetooth', cell: 'data-usage', battery: 'battery', dnd: 'zen', cast: 'cast'};
+  const SETTINGS = {wifi: 'wifi', bt: 'bluetooth', cell: 'data-usage', battery: 'battery', dnd: 'zen', cast: 'cast', user: 'users'};
 
   function title(c, id) {
     const t = T();
     return {wifi: () => t.t('quick_settings_wifi_label'), bt: () => t.t('quick_settings_bluetooth_label'), cell: () => t.t('quick_settings_cellular_detail_title'),
-      battery: () => t.t('battery_panel_title'), dnd: () => t.t('quick_settings_dnd_label'), cast: () => t.t('quick_settings_cast_title')}[id]?.() || '';
+      battery: () => t.t('battery_panel_title'), dnd: () => t.t('quick_settings_dnd_label'), cast: () => t.t('quick_settings_cast_title'), user: () => t.t('quick_settings_user_title')}[id]?.() || '';
   }
   // getToggleState: null for the battery (no switch).
   function toggleState(c, id) {
@@ -197,6 +197,7 @@
     if (id === 'dnd') return zenPanel(c);
     // CastDetailAdapter: no cast devices near the simulator, so QSDetailItems' empty state.
     if (id === 'cast') return items(c, [], {icon: 'sui-ic_qs_cast_detail_empty.svg', text: t.t('quick_settings_cast_detail_empty_text')});
+    if (id === 'user') return userGrid(c);
     return '';
   }
 
@@ -215,6 +216,7 @@
   function action(c, name, el, ctl) {
     const s = c.data.settings, st = c.ui.shade, id = st.detail, sy = sys();
     if (name === 'ngqd-done') { ctl.closeDetail(c); return true; }
+    if (name === 'ngqd-user') { userAction(c, +el.dataset.index, ctl); return true; }
     if (name === 'ngqd-more') { ctl.close(c); c.open('settings', SETTINGS[id]); return true; }
     if (name === 'ngqd-toggle') {
       const on = !toggleState(c, id);
@@ -257,5 +259,27 @@
     return false;
   }
 
-  NG.qsDetail = {has: id => id in SETTINGS, render, action};
+  /* UserDetailView (qs_user_detail.xml, UserDetailView 3 columns, 4 dp spacing): UserSwitcherController's records in
+     serial order, each a qs_user_detail_item (112 dp at least, 16 dp down; UserAvatarView 54 dp with a 2 dp frame
+     2.5 dp out in colorAccent for the current one; the name 7 dp under it, 14 sp, the current one in the accent and
+     sans-serif-medium, the others #66ffffff): the users with their icons (UserIcons, light), the guest (Add guest
+     before one exists, in user_icon_default_white; Guest; Remove guest in the guest session) and Add user
+     (ic_add_circle_qs) while more users fit. A tap switches to that user; Add user asks AddUserDialog. */
+  function userRecords(c) {
+    const t = T(), U = NG.users, me = U.current(c), list = ['owner', ...U.list().map(u => u.id)].map(id => ({id, name: U.name(id), icon: U.icon(id), current: id === me}));
+    list.push(me === 'guest' ? {id: 'guest', name: t.t('guest_exit_guest'), icon: 'fw-ic_account_circle-white.svg', current: true}
+      : {id: 'guest', name: t.t(U.hasGuest() ? 'guest_nickname' : 'guest_new_guest'), icon: U.hasGuest() ? 'fw-ic_account_circle-gray.svg' : 'fw-ic_account_circle-white.svg'});
+    if (me === 'owner' && U.canAdd()) list.push({id: 'add', name: t.t('user_add_user'), icon: 'sui-ic_add_circle_qs.svg'});
+    return list;
+  }
+  NG.qsUserRecords = userRecords;
+  const userGrid = c => `<div class="ngqd-users">${userRecords(c).map((u, i) => `<div class="ngqd-user${u.current ? ' current' : ''}" role="button" data-action="ngqd-user" data-index="${i}"><span class="ngqd-avatar"><img src="${A(u.icon)}" alt=""></span><span class="ngqd-uname">${c.safe(u.name)}</span></div>`).join('')}</div>`;
+  const userAction = (c, i, ctl) => {
+    const u = userRecords(c)[i], U = NG.users; if (!u) return;
+    if (u.id === 'add') { ctl.close(c); U.addDialog(c, false); return; }
+    if (u.id === 'guest') { ctl.close(c); if (U.current(c) === 'guest') U.exitGuestDialog(c); else U.guest(c); return; }
+    if (!u.current) { ctl.close(c); U.switchTo(c, u.id); }
+  };
+
+  NG.qsDetail = {has: id => id in SETTINGS && (id !== 'user' || !!NG.users), render, action};
 })();

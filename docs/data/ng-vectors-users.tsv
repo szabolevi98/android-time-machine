@@ -8,3 +8,5 @@ fw-ic_account_circle-c6.svg	framework/framework-res.apk	ic_account_circle	tint=@
 fw-ic_account_circle-c7.svg	framework/framework-res.apk	ic_account_circle	tint=@android:color/user_icon_7
 fw-ic_account_circle-c8.svg	framework/framework-res.apk	ic_account_circle	tint=@android:color/user_icon_8
 fw-ic_account_circle-gray.svg	framework/framework-res.apk	ic_account_circle	tint=@android:color/user_icon_default_gray
+fw-ic_account_circle-white.svg	framework/framework-res.apk	ic_account_circle	tint=@android:color/user_icon_default_white
+sui-ic_add_circle_qs.svg	priv-app/SystemUI/SystemUI.apk	ic_add_circle_qs	-

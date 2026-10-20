@@ -60,6 +60,9 @@ accessibility_quick_settings_less_time accessibility_quick_settings_more_time ac
 zen_alarm_warning+args1 zen_alarm_warning_indef+args1 alarm_template+args1 alarm_template_far+args1
 framework/zen_mode_until+args1 plurals:framework/zen_mode_duration_minutes plurals:framework/zen_mode_duration_minutes_short
 plurals:framework/zen_mode_duration_hours plurals:framework/zen_mode_duration_hours_short
+# UserDetailView (qs_user_detail_item.xml) and MultiUserSwitch in the header
+quick_settings_user_title guest_new_guest guest_nickname guest_exit_guest user_add_user accessibility_quick_settings_user+args1
+
 [apps] PrebuiltBugle
 # The app names notification headers show (notification_template_header's app_name_text)
 app_name

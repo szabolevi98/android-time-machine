@@ -49,6 +49,7 @@ versions/7.1.2/assets/fw-ic_account_circle-c6.svg	d944f7e6ba43096f	vector	angler
 versions/7.1.2/assets/fw-ic_account_circle-c7.svg	052b90628f73834f	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_account_circle.xml	drawable	vector drawable drawn as SVG	9f6c373c9083fe54
 versions/7.1.2/assets/fw-ic_account_circle-c8.svg	5ae35a5f35e3c07b	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_account_circle.xml	drawable	vector drawable drawn as SVG	9f6c373c9083fe54
 versions/7.1.2/assets/fw-ic_account_circle-gray.svg	e344b1864e30c563	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_account_circle.xml	drawable	vector drawable drawn as SVG	9f6c373c9083fe54
+versions/7.1.2/assets/fw-ic_account_circle-white.svg	8aec6d67489a5a97	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_account_circle.xml	drawable	vector drawable drawn as SVG	9f6c373c9083fe54
 versions/7.1.2/assets/fw-ic_audio_alarm.svg	0f02acdabb909d79	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_audio_alarm.xml	drawable	vector drawable drawn as SVG	e67036f06b7472ae
 versions/7.1.2/assets/fw-ic_audio_alarm_mute.svg	b374ed5968cb0154	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_audio_alarm_mute.xml	drawable	vector drawable drawn as SVG	d1019662a6386f5b
 versions/7.1.2/assets/fw-ic_audio_media.svg	b58b602a4b1fd641	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_audio_media.xml	drawable	vector drawable drawn as SVG	8621982ed0251627
@@ -253,6 +254,7 @@ versions/7.1.2/assets/st-msg_bubble_outgoing.9.png	d7ba743b0ef65ffb	copy	angler:
 versions/7.1.2/assets/st-regulatory_info_h1511.png	e64b9967c67918e0	copy	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable-nodpi-v4/regulatory_info_h1511.png	drawable-nodpi-v4		e64b9967c67918e0
 versions/7.1.2/assets/sui-ic_access_alarms_big.svg	54c66bc3509e3272	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_access_alarms_big.xml	drawable	vector drawable drawn as SVG	96b70639bcec34c0
 versions/7.1.2/assets/sui-ic_access_alarms_small.svg	47179ef1318c04db	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_access_alarms_small.xml	drawable	vector drawable drawn as SVG	af9011404059dd63
+versions/7.1.2/assets/sui-ic_add_circle_qs.svg	40f4e83a9edd44cf	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_add_circle_qs.xml	drawable	vector drawable drawn as SVG	4b74c322b827e950
 versions/7.1.2/assets/sui-ic_android.svg	9946e88ee21d8e14	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_android.xml	drawable	vector drawable drawn as SVG	be178088772f73e6
 versions/7.1.2/assets/sui-ic_backspace_24dp.svg	a96a9a6022422598	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_backspace_24dp.xml	drawable	vector drawable drawn as SVG	8a4f8b3280fb980c
 versions/7.1.2/assets/sui-ic_brightness_thumb.svg	301fbccd11dc9368	vector	angler:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/ic_brightness_thumb.xml	drawable	vector drawable drawn as SVG	d56c691bc971df01

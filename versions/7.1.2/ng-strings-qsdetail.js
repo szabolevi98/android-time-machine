@@ -681,5 +681,54 @@ NG.strings('qsdetail', {
 "other": "Durante %d horas",
 "one": "Durante 1 hora"
 }
+},
+"quick_settings_user_title": {
+"res": "angler:SystemUI:quick_settings_user_title",
+"en": "User",
+"hu": "Felhasználó",
+"de": "Nutzer",
+"fr": "Utilisateur",
+"es": "Usuario"
+},
+"guest_new_guest": {
+"res": "angler:SystemUI:guest_new_guest",
+"en": "Add guest",
+"hu": "Vendég hozzáadása",
+"de": "Gast hinzufügen",
+"fr": "Ajouter un invité",
+"es": "Añadir invitado"
+},
+"guest_nickname": {
+"res": "angler:SystemUI:guest_nickname",
+"en": "Guest",
+"hu": "Vendég",
+"de": "Gast",
+"fr": "Invité",
+"es": "Invitado"
+},
+"guest_exit_guest": {
+"res": "angler:SystemUI:guest_exit_guest",
+"en": "Remove guest",
+"hu": "Vendég munkamenet eltávolítása",
+"de": "Gast entfernen",
+"fr": "Supprimer l'invité",
+"es": "Quitar invitado"
+},
+"user_add_user": {
+"res": "angler:SystemUI:user_add_user",
+"en": "Add user",
+"hu": "Felhasználó hozzáadása",
+"de": "Nutzer hinzufügen",
+"fr": "Ajouter un utilisateur",
+"es": "Añadir usuario"
+},
+"accessibility_quick_settings_user": {
+"res": "angler:SystemUI:accessibility_quick_settings_user",
+"args": 1,
+"en": "Signed in as %s",
+"hu": "Bejelentkezve mint %s",
+"de": "Angemeldet als %s",
+"fr": "Connecté en tant que %s",
+"es": "Has iniciado sesión como %s"
 }
 });

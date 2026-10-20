@@ -106,3 +106,15 @@
 .ngbr-out{position:absolute;inset:0}
 .ngbr-win{position:absolute;top:calc(40 * var(--dp));left:calc(16 * var(--dp));right:calc(16 * var(--dp));height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border-radius:calc(2 * var(--dp));background:#424242;box-shadow:0 calc(16 * var(--dp)) calc(24 * var(--dp)) #00000038,0 calc(6 * var(--dp)) calc(16 * var(--dp)) #00000024;animation:ngdlg-in 150ms cubic-bezier(.215,.61,.355,1)}
 .ngbr-slider{left:calc(16 * var(--dp));right:calc(16 * var(--dp))}
+/* MultiUserSwitch (multi_user_avatar_expanded_size 24 dp) and UserDetailView (qs_user_detail_item) */
+.ngqs-buttons .ngqs-user{opacity:var(--qsf);visibility:hidden}
+.ngsh.qs-moving .ngqs-user,.ngsh.qs-open .ngqs-user{visibility:visible}
+.ngqs-buttons .ngqs-user img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngqd-users{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(4 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp))}
+.ngqd-user{display:flex;flex-direction:column;align-items:center;min-height:calc(112 * var(--dp));padding-top:calc(16 * var(--dp));box-sizing:border-box;border-radius:calc(4 * var(--dp));cursor:pointer}
+.ngqd-user:active{background:#ffffff1f}
+.ngqd-avatar{display:grid;place-items:center;width:calc(54 * var(--dp));height:calc(54 * var(--dp));margin-bottom:calc(7 * var(--dp));border-radius:50%;box-sizing:border-box}
+.ngqd-user.current .ngqd-avatar{box-shadow:inset 0 0 0 calc(2 * var(--dp)) #80cbc4}
+.ngqd-avatar img{width:calc(44 * var(--dp));height:calc(44 * var(--dp))}
+.ngqd-uname{font-size:calc(14 * var(--dp));color:#ffffff66;text-align:center}
+.ngqd-user.current .ngqd-uname{color:#80cbc4;font-family:Roboto,sans-serif;font-weight:500}
