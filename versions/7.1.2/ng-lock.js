@@ -104,7 +104,7 @@
   }
   function checked(c, ok) {
     const st = c.ui.lockState, t = T(), type = c.data.settings.lock.type;
-    if (ok) { st.verified = true; st.fails = 0; st.entry = ''; st.message = ''; const then = st.bouncer; st.bouncer = null; c.unlock(); if (typeof then === 'function') then(); else if (then && then !== 'unlock') c.open(then); return; }
+    if (ok) { st.verified = true; st.confirmReturn = false; st.fails = 0; st.entry = ''; st.message = ''; const then = st.bouncer; st.bouncer = null; c.unlock(); if (typeof then === 'function') then(); else if (then && then !== 'unlock') c.open(then); return; }
     st.entry = ''; st.fails = (st.fails || 0) + 1;
     st.message = t.t(type === 'pin' ? 'kg_wrong_pin' : type === 'password' ? 'kg_wrong_password' : 'kg_wrong_pattern');
     if (st.fails >= 5) {
@@ -121,6 +121,12 @@
     c.render();
   }
   NG.lockVerified = c => { const st = c.ui.lockState || (c.ui.lockState = {hint: ''}); checked(c, true); };
+  NG.requireUnlock = (c, then) => {
+    if (!secure(c) || c.ui.lockState?.verified) { then(); return; }
+    c.ui.beforeLock = {view:c.ui.view,sub:c.ui.sub};
+    const st=c.ui.lockState||(c.ui.lockState={hint:''});st.bouncer=then;st.confirmReturn=true;c.ui.sleeping=false;
+    c.open('lock','',{replace:true});
+  };
   function mountBouncer(c, root) {
     const st = c.ui.lockState, l = c.data.settings.lock, locked = () => st.lockedUntil > Date.now();
     const box = root.querySelector('.ngbo');
@@ -344,7 +350,7 @@
     timeout: c => (c.data.settings.screenTimeout ?? -1) < 0 ? -1 : 10000,
     reset(c) { c.ui.lockState = {hint: ''}; },
     render, mount,
-    back(c) { if (c.ui.lockState?.bouncer) { c.ui.lockState.bouncer = null; c.render(); } return true; },
+    back(c) { if (c.ui.lockState?.bouncer) { c.ui.lockState.bouncer = null; if(c.ui.lockState.confirmReturn){c.ui.lockState.confirmReturn=false;c.unlock();}else c.render(); } return true; },
     tick(c, now) {
       if (c.ui.view !== 'lock' || now.getMinutes() === lastMinute) return;
       lastMinute = now.getMinutes();

@@ -98,7 +98,7 @@
       <button type="button" class="ngct-fab" data-action="ngct-new" aria-label="${esc(c, t.t('action_menu_add_new_contact_button'))}">${icon('ic_person_add_24dp')}</button></div>`;
   }
   function picker(c, title, action, exclude = null) {
-    const list = P().sorted(c).filter(p => p.id !== exclude);
+    const list = P().sorted(c).filter(p => p.id !== exclude && (!c.ui.contactPicker?.phoneOnly || p.phone));
     return `<div class="ngct"><div class="ngct-head">${bar(c, title, {back: 'ngct-up'})}</div><div class="ngct-page"><div class="ngct-list">${list.map(p => row(c, p, '', action)).join('')}</div></div></div>`;
   }
 
@@ -229,6 +229,7 @@
   NG.openShortcut ||= (c, it) => { if (it.target) c.open(it.target.view, it.target.sub || ''); };
 
   // ---- shell ---------------------------------------------------------------------------------------------------------
+  NG.pickContact = (c, spec = {}) => { c.ui.contactPicker = spec; c.open('contacts', 'pick'); };
   function consume(c) {
     const u = ui(c), sub = c.ui.sub || '';
     if (!sub) return;
@@ -236,6 +237,7 @@
     if (sub.startsWith('contact:')) { u.screen = `card:${sub.slice(8)}`; u.from = 'external'; }
     else if (sub === 'new' || sub.startsWith('new:')) { u.screen = ''; startEdit(c, null, sub.slice(4)); u.closeAfter = true; }
     else if (sub.startsWith('add:')) { u.screen = 'pick'; u.pickNumber = sub.slice(4); u.from = 'external'; }
+    else if (sub === 'pick') { u.screen = 'pick'; u.from = 'external'; }
   }
   const byId = (c, id) => id === 'me' ? c.data.profile : P().byId(c, id);
   function render(c) {
@@ -339,6 +341,7 @@
     },
     back(c) {
       const u = ui(c);
+      if(u.screen==='pick'&&c.ui.contactPicker){const spec=c.ui.contactPicker;c.ui.contactPicker=null;spec.onCancel?.(c);}
       if (u.screen === 'edit') { editorBack(c); return true; }
       if (u.screen.startsWith('join:')) { u.screen = u.joinFrom === 'edit' && u.draftKeep ? 'edit' : `card:${u.screen.slice(5)}`; if (u.draftKeep) { u.draft = u.draftKeep; u.draftKeep = null; } c.render(); return true; }
       if (u.from === 'external' && (u.screen.startsWith('card:') || u.screen === 'pick')) { u.from = ''; u.screen = ''; return false; }
@@ -366,7 +369,7 @@
         case 'ngct-save': save(c); return true;
         case 'ngct-more': u.draft.more = true; c.render(); return true;
         case 'ngct-profile': startEdit(c, c.data.profile || {id: 'me', name: ''}); c.render(); return true;
-        case 'ngct-pick': { const p = P().byId(c, el.dataset.id); startEdit(c, p); if (u.pickNumber) u.draft.phone = u.pickNumber; u.pickNumber = ''; u.editFrom = ''; u.closeAfter = true; c.render(); return true; }
+        case 'ngct-pick': { const p = P().byId(c, el.dataset.id);if(c.ui.contactPicker){const spec=c.ui.contactPicker;c.ui.contactPicker=null;u.screen='';u.from='';spec.onPick?.(c,p);c.back();return true;}startEdit(c, p); if (u.pickNumber) u.draft.phone = u.pickNumber; u.pickNumber = ''; u.editFrom = ''; u.closeAfter = true; c.render(); return true; }
         case 'ngct-joinpick': { const id = u.screen.slice(5); u.draft = null; u.draftKeep = null; join(c, id, el.dataset.id); return true; }
         case 'ngct-star': { const p = P().byId(c, el.dataset.id); p.starred = !p.starred; c.save(); c.toast(t.t(p.starred ? 'description_action_menu_add_star' : 'description_action_menu_remove_star')); c.render(); return true; }
         case 'ngct-call': if (event?.target?.closest('.ngct-alt')) return false; NG.phone?.call(c, el.dataset.n); return true;

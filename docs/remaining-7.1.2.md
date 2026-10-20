@@ -11,6 +11,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 ## Applications and connected activities
 
 - [x] Documents / Files / Downloads; pick/save intents; Gmail attachments.
+- [x] Emergency information, Contacts picker, keyguard-protected editing.
 - [ ] Google app 6.5.36: search, voice, Now, Now on Tap, launcher settings.
 - [ ] Gboard 6.0.84 and input method settings; TalkBack and relevant Settings external activities.
 - [ ] Maps 9.34.1 and Messenger's location chooser.
@@ -21,7 +22,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [ ] Play Music 6.13, Play Movies 3.20, Play Games 3.7.24.
 - [ ] Android Pay 1.4, Project Fi, Device Policy 7.05.
 - [ ] Google Play services settings, Location History, Help/feedback, print preview.
-- [ ] Daydream/GoogleVrCore, Emergency information, Live Wallpaper Picker, Nougat Easter egg.
+- [ ] Daydream/GoogleVrCore, Live Wallpaper Picker, Nougat Easter egg.
 
 ## System and remaining details
 

@@ -137,3 +137,17 @@ Validation: 169 module/model checks; seven new provider-operation cases; source 
 741 rebuilt files, zero problems. `node tests/browser/ng-documents.mjs` passes Downloads/preview,
 folder creation, grid/search, Gmail pick/send, attachment-only draft/reopen/remove, Files, phone
 width and all five languages. Remaining full-release work is tracked in remaining-7.1.2.md.
+
+## Emergency information continuation — 2026-10-20
+
+EmergencyInfo now opens through the emergency dialer's two-tap action. Its red ViewInfoActivity
+shows the owner's populated information and emergency contacts; EditInfoActivity has the image's
+Info / Contacts tabs, first-use consent, text fields, blood-type and organ-donor arrays, contact add /
+remove and Clear all. Medical values start blank. The Contacts activity now supports an ACTION_PICK
+callback and the emergency picker filters to contacts with phone numbers.
+
+`NG.requireUnlock` uses the existing Nougat keyguard before protected edits on a secure phone.
+Cancel returns to the public information view; the correct PIN/pattern/password resumes the editing
+flow. Browser validation covers the PIN path, cancellation, field persistence, consent, contact
+selection, all five languages and phone width. `npm test`: 169 passed. Inventory regeneration:
+751 files, zero problems.
