@@ -29,6 +29,7 @@ versions/7.1.2/assets/boot-part0.webp	f8727d04a326244f	generated	angler:/system/
 versions/7.1.2/assets/boot-part1.webp	f19881d52f757d52	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
 versions/7.1.2/assets/boot-part2.webp	8482865882f6cf6b	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
 versions/7.1.2/assets/boot-part3.webp	af9c0767dea06b7a	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
+versions/7.1.2/assets/calc-licenses.html	e6fca311f73ed96c	copy	angler:/system/app/CalculatorGooglePrebuilt/CalculatorGooglePrebuilt.apk!assets/licenses.html			e6fca311f73ed96c
 versions/7.1.2/assets/cp-ic_main.png	f8072f65d6d82b86	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxxhdpi-v4/ic_main.png	drawable-xxxhdpi-v4		f8072f65d6d82b86
 versions/7.1.2/assets/dc-clock.ttf	d7bbc227ed36ee08	copy	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!assets/fonts/clock.ttf			d7bbc227ed36ee08
 versions/7.1.2/assets/device-nexus-6p.svg	656300d21ccfb446	own	drawn by docs/tools/device-frames.py: the outline measured from the maker's front render, the shading drawn			

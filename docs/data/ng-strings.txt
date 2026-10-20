@@ -66,6 +66,12 @@ quick_settings_user_title guest_new_guest guest_nickname guest_exit_guest user_a
 [apps] PrebuiltBugle
 # The app names notification headers show (notification_template_header's app_name_text)
 app_name
+[calculator] CalculatorGooglePrebuilt
+# The Calculator (ExactCalculator 7.1.1): the pads, the modes, the errors, the menus and their dialogs
+app_name del clr eq dec_point digit_0 digit_1 digit_2 digit_3 digit_4 digit_5 digit_6 digit_7 digit_8 digit_9 op_div op_mul op_sub op_add op_pct op_fact op_pow op_sqrt op_sqr
+inv mode_deg mode_rad fun_sin fun_cos fun_tan fun_arcsin fun_arccos fun_arctan fun_ln fun_log fun_exp fun_10pow const_pi const_e lparen rparen exponential
+error_syntax error_zero_divide error_nan error_overflow menu_leading menu_fraction menu_licenses menu_feedback menu_help exact approximate dismiss
+
 [lock] SystemUI framework
 # The keyguard: KeyguardIndicationController, KeyguardBottomAreaView (voice assist / camera, LockIcon), KeyguardAffordanceHelper's
 # hints, the notifications' second tap, KeyguardStatusView's next alarm, CarrierText in airplane mode

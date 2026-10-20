@@ -1,0 +1,34 @@
+/* Android 7.1.2 Calculator (CalculatorGooglePrebuilt 7.1.1, ng-calculator.js): activity_calculator_port with
+   display_two_line (sw400dp-port: the formula 16 / 28 dp, the result 16 / 42 dp), the pads with values-port's
+   PadLayoutStyle paddings (numeric 12 12 20, operator 8 / 4 28 / 24, advanced 12 20 20, elevation 4 dp) and the
+   advanced page 7/9 of the width (CalculatorPadViewPager.getPageWidth), its edge 24 dp in (pad_page_margin −24 dp). */
+.ngca{position:absolute;inset:0;display:flex;flex-direction:column;background:#434343;font-family:Roboto,sans-serif;overflow:hidden}
+.ngca-display{position:relative;z-index:2;flex:none;background:#fff;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0000003d,0 0 calc(1 * var(--dp)) #0000001f}
+.ngca-toolbar{display:flex;align-items:center;height:calc(56 * var(--dp));padding-left:calc(16 * var(--dp))}
+.ngca-mode{flex:1;color:#0000008a;font:500 calc(16 * var(--dp))/1 Roboto,sans-serif;text-transform:uppercase}
+.ngca-formula{box-sizing:content-box;height:calc(74 * 1.17 * var(--dp));padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(28 * var(--dp));color:#0000008a;font-weight:300;line-height:calc(74 * 1.17 * var(--dp));text-align:right;white-space:nowrap;overflow:hidden;direction:ltr;display:flex;align-items:flex-end;justify-content:flex-end}
+.ngca-result{box-sizing:content-box;height:calc(42 * 1.17 * var(--dp));padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(42 * var(--dp));color:#0000006c;font:300 calc(42 * var(--dp))/1.17 Roboto,sans-serif;text-align:right;white-space:nowrap;overflow:hidden;direction:ltr}
+.ngca-exp{color:#00000040}
+.ngca-result.error{color:#c2185b}
+.ngca-reveal{position:absolute;inset:0;pointer-events:none;opacity:0}
+.ngca-pager{position:relative;flex:1;display:flex;min-height:0}
+.ngca-b{border:0;background:none;color:#fff;font:300 calc(36 * var(--dp))/1 Roboto,sans-serif;padding:0;border-radius:50%;-webkit-tap-highlight-color:transparent}
+.ngca-b:active{background:#ffffff33}
+.ngca-b.text{font-size:calc(20 * var(--dp));text-transform:uppercase}
+.ngca-b.medium{font-weight:500}
+.ngca-numeric{flex:264;display:grid;grid-template:repeat(4,1fr)/repeat(3,1fr);padding:calc(12 * var(--dp)) calc(12 * var(--dp)) calc(20 * var(--dp));background:#434343}
+.ngca-operator{flex:96;display:grid;grid-template-rows:repeat(5,1fr);padding:calc(8 * var(--dp)) calc(28 * var(--dp)) calc(24 * var(--dp)) calc(4 * var(--dp));background:#636363}
+.ngca-operator .ngca-b{font-size:calc(27 * var(--dp))}
+.ngca-operator .ngca-b.text{font-size:calc(20 * var(--dp))}
+.ngca-advanced{position:absolute;top:0;bottom:0;left:calc(100% - 24 * var(--dp));width:calc(700% / 9);display:grid;grid-template:repeat(5,1fr)/repeat(3,1fr);padding:calc(12 * var(--dp)) calc(20 * var(--dp)) calc(20 * var(--dp));box-sizing:border-box;background:#1de9b6;box-shadow:0 0 calc(4 * var(--dp)) #0000004d;transition:left .3s cubic-bezier(.4,0,.2,1)}
+.ngca-pager.adv .ngca-advanced{left:calc(200% / 9)}
+.ngca-advanced .ngca-b{color:#00000099;font-size:calc(23 * var(--dp))}
+.ngca-advanced .ngca-b.text{font-size:calc(20 * var(--dp))}
+.ngca-advanced .ngca-b:active,.ngca-advanced .ngca-b.on{background:#0000001a}
+.ngca-pager:not(.adv) .ngca-advanced .ngca-b{pointer-events:none}
+.ngca-lic{position:absolute;inset:0;display:flex;flex-direction:column;background:#fff}
+.ngca-licbar{flex:none;display:flex;align-items:center;height:calc(56 * var(--dp));background:#0097a7;color:#fff;font:500 calc(20 * var(--dp)) Roboto,sans-serif;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #00000033}
+.ngca-licbar button{width:calc(56 * var(--dp));height:calc(56 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center}
+.ngca-licbar i{width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:#fff;-webkit-mask:center/100% no-repeat;mask:center/100% no-repeat}
+.ngca-licbar span{padding-left:calc(16 * var(--dp))}
+.ngca-lic iframe{flex:1;width:100%;border:0}
