@@ -66,7 +66,14 @@
     calls: c => c.data.calls || (c.data.calls = JSON.parse(JSON.stringify(NG.defaults.calls))),
     byNumber: (c, n) => NG.people.list(c).find(p => same(p.phone, n)) || null,
     byId: (c, id) => NG.people.list(c).find(p => p.id === +id) || null,
-    sorted: (c, list = NG.people.list(c)) => [...list].sort((a, b) => a.name.localeCompare(b.name, c.locale())),
+    // ContactsPreferences (Contacts › Settings, shared with Phone): Sort by first or last name (sort_key / sort_key_alt)
+    // and the name format (display_name / display_name_alt, "Morgan, Alex").
+    alt: p => { const w = String(p?.name || '').trim().split(/\s+/); return w.length > 1 ? `${w.at(-1)}, ${w.slice(0, -1).join(' ')}` : p?.name || ''; },
+    displayName: (c, p) => NG.appPref?.(c, 'contacts', 'displayOrder', '1') === '2' ? NG.people.alt(p) : p?.name || '',
+    sorted: (c, list = NG.people.list(c)) => {
+      const key = NG.appPref?.(c, 'contacts', 'sortOrder', '1') === '2' ? NG.people.alt : p => p.name;
+      return [...list].sort((a, b) => key(a).localeCompare(key(b), c.locale()));
+    },
     typeLabel: () => NG.text('phone').t('framework/phoneTypeMobile'),
     log(c, entry) { const calls = NG.people.calls(c); calls.push({id: Math.max(0, ...calls.map(x => x.id)) + 1, ...entry}); c.save(); }
   };

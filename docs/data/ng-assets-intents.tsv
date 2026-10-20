@@ -1,0 +1,5 @@
+# ChooserActivity's targets (ng-intents.js): the activity icons of Android Beam, Bluetooth and Cloud Print; Drive's folder
+in-beam.png	app/NfcNci/NfcNci.apk	drawable/icon
+in-bt_share.png	app/Bluetooth/Bluetooth.apk	mipmap/bt_share
+in-cloudprint.png	app/CloudPrint2/CloudPrint2.apk	drawable/ic_main
+dr-ic_type_folder.png	app/Drive/Drive.apk	drawable/ic_type_folder

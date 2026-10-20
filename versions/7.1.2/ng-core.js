@@ -49,7 +49,8 @@
     'play-games': ['Play Games', 'PlayGames.apk'], 'android-pay': ['Android Pay', 'Wallet.apk'], 'project-fi': ['Project Fi', 'Tycho.apk'],
     'device-policy': ['Device Policy', 'DMAgent.apk'], documents: ['Downloads', 'DocumentsUI.apk · LauncherActivity'], files: ['Files', 'DocumentsUI.apk'],
     'live-wallpapers': ['Live wallpapers', 'LiveWallpapersPicker.apk'], 'google-settings': ['Google', 'PrebuiltGmsCore.apk'],
-    daydream: ['Daydream', 'GoogleVrCore.apk'], 'emergency-info': ['Emergency information', 'EmergencyInfo.apk']
+    daydream: ['Daydream', 'GoogleVrCore.apk'], 'emergency-info': ['Emergency information', 'EmergencyInfo.apk'],
+    'print-preview': ['Print', 'PrintSpooler.apk · PrintActivity'], help: ['Help & feedback', 'PrebuiltGmsCore.apk · GoogleHelp']
   };
   const SYSTEM = ['home', 'lock', 'statusbar', 'navbar', 'shade', 'power', 'recents', 'volume', 'drawer', 'widgets', 'now'];
 

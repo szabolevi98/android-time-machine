@@ -31,6 +31,28 @@ versions/7.1.2/assets/boot-part2.webp	8482865882f6cf6b	generated	angler:/system/
 versions/7.1.2/assets/boot-part3.webp	af9c0767dea06b7a	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
 versions/7.1.2/assets/calc-licenses.html	e6fca311f73ed96c	copy	angler:/system/app/CalculatorGooglePrebuilt/CalculatorGooglePrebuilt.apk!assets/licenses.html			e6fca311f73ed96c
 versions/7.1.2/assets/cp-ic_main.png	f8072f65d6d82b86	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxxhdpi-v4/ic_main.png	drawable-xxxhdpi-v4		f8072f65d6d82b86
+versions/7.1.2/assets/ct-fab_blue.png	a943c6d524e4f0f0	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/fab_blue.png	drawable-xxxhdpi-v4		a943c6d524e4f0f0
+versions/7.1.2/assets/ct-ic_ab_search.png	a06cfd7aa74235e5	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_ab_search.png	drawable-xxxhdpi-v4		a06cfd7aa74235e5
+versions/7.1.2/assets/ct-ic_arrow_back_24dp.png	09f257db61c7765a	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_arrow_back_24dp.png	drawable-xxxhdpi-v4		09f257db61c7765a
+versions/7.1.2/assets/ct-ic_business_black_24dp.png	e3b57620f2a9e03c	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_business_black_24dp.png	drawable-xxxhdpi-v4		e3b57620f2a9e03c
+versions/7.1.2/assets/ct-ic_call_arrow.png	ad9aafa8d12a9de4	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_call_arrow.png	drawable-xxxhdpi-v4		ad9aafa8d12a9de4
+versions/7.1.2/assets/ct-ic_close_dk.png	ff730d56a55cb8de	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_close_dk.png	drawable-xxxhdpi-v4		ff730d56a55cb8de
+versions/7.1.2/assets/ct-ic_create_24dp.png	5f3a7ef8d9c43063	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_create_24dp.png	drawable-xxxhdpi-v4		5f3a7ef8d9c43063
+versions/7.1.2/assets/ct-ic_directions_24dp.png	e83fdffb30c0aef8	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_directions_24dp.png	drawable-xxxhdpi-v4		e83fdffb30c0aef8
+versions/7.1.2/assets/ct-ic_done_wht_24dp.png	87bcfe7844b7a5c0	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_done_wht_24dp.png	drawable-xxxhdpi-v4		87bcfe7844b7a5c0
+versions/7.1.2/assets/ct-ic_email_24dp.png	a7840736dda5edee	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_email_24dp.png	drawable-xxxhdpi-v4		a7840736dda5edee
+versions/7.1.2/assets/ct-ic_insert_comment_black_24dp.png	595a2b85afaa550f	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_insert_comment_black_24dp.png	drawable-xxxhdpi-v4		595a2b85afaa550f
+versions/7.1.2/assets/ct-ic_message_24dp.png	22e615e1da83f425	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_message_24dp.png	drawable-xxxhdpi-v4		22e615e1da83f425
+versions/7.1.2/assets/ct-ic_person_24dp.png	f1768579f89c9b61	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_person_24dp.png	drawable-xxxhdpi-v4		f1768579f89c9b61
+versions/7.1.2/assets/ct-ic_person_add_24dp.png	f572a9b849dd6230	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_person_add_24dp.png	drawable-xxxhdpi-v4		f572a9b849dd6230
+versions/7.1.2/assets/ct-ic_phone_24dp.png	4ffb5b9076e0c0ab	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_phone_24dp.png	drawable-xxxhdpi-v4		4ffb5b9076e0c0ab
+versions/7.1.2/assets/ct-ic_photo_camera_white_24dp.png	02a4674e2604d4ad	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_photo_camera_white_24dp.png	drawable-xxxhdpi-v4		02a4674e2604d4ad
+versions/7.1.2/assets/ct-ic_place_24dp.png	40a6eb152a96b45c	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_place_24dp.png	drawable-xxxhdpi-v4		40a6eb152a96b45c
+versions/7.1.2/assets/ct-ic_public_black_24dp.png	eeeabfd54df25f19	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_public_black_24dp.png	drawable-xxxhdpi-v4		eeeabfd54df25f19
+versions/7.1.2/assets/ct-ic_star_24dp.png	d946b86c2877e886	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_star_24dp.png	drawable-xxxhdpi-v4		d946b86c2877e886
+versions/7.1.2/assets/ct-ic_star_black_128dp.png	dac484e85fca87dd	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_star_black_128dp.png	drawable-xxxhdpi-v4		dac484e85fca87dd
+versions/7.1.2/assets/ct-ic_star_outline_24dp.png	2de8f3a3b8b57fc9	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/ic_star_outline_24dp.png	drawable-xxxhdpi-v4		2de8f3a3b8b57fc9
+versions/7.1.2/assets/ct-person_white_540dp.png	13eca25b788f3f51	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/person_white_540dp.png	drawable-xxxhdpi-v4		13eca25b788f3f51
 versions/7.1.2/assets/dc-bg_day_selected.png	ce2401840f3b8503	copy	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!res/drawable-xxxhdpi-v4/bg_day_selected.png	drawable-xxxhdpi-v4		ce2401840f3b8503
 versions/7.1.2/assets/dc-clock.ttf	d7bbc227ed36ee08	copy	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!assets/fonts/clock.ttf			d7bbc227ed36ee08
 versions/7.1.2/assets/dc-ic_add_timer.svg	c8a8a073be9a9c1e	vector	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!res/drawable/ic_add_timer.xml	drawable	vector drawable drawn as SVG	010f39148cb8017f
@@ -57,6 +79,7 @@ versions/7.1.2/assets/dc-ic_tab_clock_static.svg	2062863afc4ec6cb	vector	angler:
 versions/7.1.2/assets/dc-ic_tab_stopwatch_static.svg	46ca411d2520b94c	vector	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!res/drawable/ic_tab_stopwatch_static.xml	drawable	vector drawable drawn as SVG	a03c1263ba37008f
 versions/7.1.2/assets/dc-ic_tab_timer_static.svg	2362d97e24d6961d	vector	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!res/drawable/ic_tab_timer_static.xml	drawable	vector drawable drawn as SVG	5979264a6d2dcc41
 versions/7.1.2/assets/device-nexus-6p.svg	656300d21ccfb446	own	drawn by docs/tools/device-frames.py: the outline measured from the maker's front render, the shading drawn			
+versions/7.1.2/assets/dr-ic_type_folder.png	7532c37934724d46	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_folder.png	drawable-xxxhdpi-v4		7532c37934724d46
 versions/7.1.2/assets/fw-btn_checkbox_checked_mtrl.svg	da195ea42e715342	vector	angler:/system/framework/framework-res.apk!res/drawable/btn_checkbox_checked_mtrl.xml	drawable	vector drawable drawn as SVG	bb52e9558bc16dd0
 versions/7.1.2/assets/fw-btn_checkbox_unchecked_mtrl.svg	d29367c4d07be14f	vector	angler:/system/framework/framework-res.apk!res/drawable/btn_checkbox_unchecked_mtrl.xml	drawable	vector drawable drawn as SVG	d46fa2f2201d74fb
 versions/7.1.2/assets/fw-btn_radio_off_mtrl.svg	bca8ae8fdfbe60ee	vector	angler:/system/framework/framework-res.apk!res/drawable/btn_radio_off_mtrl.xml	drawable	vector drawable drawn as SVG	182f36dea142dbf4
@@ -178,6 +201,9 @@ versions/7.1.2/assets/ime-hindi.png	4de41796f39beb20	copy	angler:/system/app/Goo
 versions/7.1.2/assets/ime-japanese.png	e2b4f1671c1806b4	copy	angler:/system/app/GoogleJapaneseInput/GoogleJapaneseInput.apk!res/mipmap-xxxhdpi-v4/app_icon.png	mipmap-xxxhdpi-v4		e2b4f1671c1806b4
 versions/7.1.2/assets/ime-korean.png	d90f51871c3067de	copy	angler:/system/app/KoreanIME/KoreanIME.apk!res/mipmap-xxxhdpi-v4/app_icon.png	mipmap-xxxhdpi-v4		d90f51871c3067de
 versions/7.1.2/assets/ime-pinyin.png	df3c112cbc0a2690	copy	angler:/system/app/GooglePinyinIME/GooglePinyinIME.apk!res/mipmap-xxxhdpi-v4/app_icon.png	mipmap-xxxhdpi-v4		df3c112cbc0a2690
+versions/7.1.2/assets/in-beam.png	85557a1e8fa398f3	copy	angler:/system/app/NfcNci/NfcNci.apk!res/drawable-xxxhdpi-v4/icon.png	drawable-xxxhdpi-v4		85557a1e8fa398f3
+versions/7.1.2/assets/in-bt_share.png	12f705c4046025b5	copy	angler:/system/app/Bluetooth/Bluetooth.apk!res/mipmap-xxxhdpi-v4/bt_share.png	mipmap-xxxhdpi-v4		12f705c4046025b5
+versions/7.1.2/assets/in-cloudprint.png	f8072f65d6d82b86	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxxhdpi-v4/ic_main.png	drawable-xxxhdpi-v4		f8072f65d6d82b86
 versions/7.1.2/assets/landing-home.jpg	f820daabc45af3ac	own	capture of the simulator's own home screen for the landing page card		closest: mean difference 7.68 (maguro:/system/media/bootanimation.zip!part0/f0003.jpg)	
 versions/7.1.2/assets/lw-ic_launcher_live_wallpaper.png	d9b111422a5e0ad9	copy	angler:/system/app/LiveWallpapersPicker/LiveWallpapersPicker.apk!res/mipmap-xxhdpi-v4/ic_launcher_live_wallpaper.png	mipmap-xxhdpi-v4		d9b111422a5e0ad9
 versions/7.1.2/assets/pk-com.android.bluetooth.png	12f705c4046025b5	copy	angler:/system/app/Bluetooth/Bluetooth.apk!res/mipmap-xxxhdpi-v4/bt_share.png	mipmap-xxxhdpi-v4		12f705c4046025b5

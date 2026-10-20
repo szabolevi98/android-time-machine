@@ -1,0 +1,23 @@
+# Google Contacts 1.4.22 (priv-app/GoogleContacts): PeopleActivity, QuickContactActivity, the compact editor (ng-contacts.js)
+ct-ic_person_add_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_person_add_24dp
+ct-ic_ab_search.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_ab_search
+ct-ic_phone_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_phone_24dp
+ct-ic_message_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_message_24dp
+ct-ic_email_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_email_24dp
+ct-ic_star_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_star_24dp
+ct-ic_star_outline_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_star_outline_24dp
+ct-ic_create_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_create_24dp
+ct-person_white_540dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/person_white_540dp
+ct-ic_arrow_back_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_arrow_back_24dp
+ct-ic_done_wht_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_done_wht_24dp
+ct-ic_close_dk.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_close_dk
+ct-ic_person_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_person_24dp
+ct-ic_photo_camera_white_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_photo_camera_white_24dp
+ct-fab_blue.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/fab_blue
+ct-ic_business_black_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_business_black_24dp
+ct-ic_place_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_place_24dp
+ct-ic_public_black_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_public_black_24dp
+ct-ic_insert_comment_black_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_insert_comment_black_24dp
+ct-ic_directions_24dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_directions_24dp
+ct-ic_star_black_128dp.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_star_black_128dp
+ct-ic_call_arrow.png	priv-app/GoogleContacts/GoogleContacts.apk	drawable/ic_call_arrow

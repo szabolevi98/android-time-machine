@@ -1,0 +1,31 @@
+/* Android 7.1.2 ChooserActivity (ng-intents.js): chooser_grid.xml's ResolverDrawerLayout, chooser_row.xml,
+   resolve_grid_item.xml; SendUi's shrunk screen; DevicePickerActivity's scanning category. */
+.ngin{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;justify-content:flex-end;font-family:Roboto,sans-serif}
+.ngin-dim{position:absolute;inset:0;background:#00000099;animation:ngin-fade .2s}
+@keyframes ngin-fade{from{opacity:0}}
+.ngin-sheet{position:relative;max-width:calc(480 * var(--dp));max-height:calc(100% - 56 * var(--dp));width:100%;margin:0 auto;display:flex;flex-direction:column;background:#fff;box-shadow:0 calc(-2 * var(--dp)) calc(8 * var(--dp)) #00000033;animation:ngin-up .25s cubic-bezier(0,0,.2,1)}
+@keyframes ngin-up{from{transform:translateY(100%)}}
+.ngin-title{flex:none;padding:calc(12 * var(--dp)) calc(16 * var(--dp));color:#000000de;font-size:calc(14 * var(--dp));line-height:calc(20 * var(--dp))}
+.ngin-grid{overflow-y:auto}
+.ngin-row{display:flex;min-height:calc(80 * var(--dp));padding:calc(8 * var(--dp)) 0}
+.ngin-item{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;padding:calc(8 * var(--dp)) 0;border:0;background:none;font-family:inherit;-webkit-tap-highlight-color:transparent}
+button.ngin-item:active{background:#0000001f}
+.ngin-item img{width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin:0 calc(3 * var(--dp)) calc(3 * var(--dp))}
+.ngin-item span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;margin:calc(8 * var(--dp)) calc(4 * var(--dp)) 0;color:#000000de;font:calc(12 * var(--dp))/1.3 'Roboto Condensed',Roboto,sans-serif;text-align:center}
+.ngin-empty{padding:calc(32 * var(--dp));color:#0000008a;font-size:calc(14 * var(--dp));text-align:center}
+.ngin-bt{padding:calc(20 * var(--dp)) calc(24 * var(--dp)) 0;color:#0000008a;font-size:calc(16 * var(--dp))}
+.ngin-bt p{margin:0 0 calc(8 * var(--dp))}
+.ngin-up{padding:calc(8 * var(--dp)) calc(24 * var(--dp)) 0}
+.ngin-uplabel{margin-top:calc(12 * var(--dp));color:#0000008a;font-size:calc(12 * var(--dp))}
+.ngin-upname{width:100%;box-sizing:border-box;padding:calc(6 * var(--dp)) 0;border:0;border-bottom:calc(2 * var(--dp)) solid #009688;outline:0;background:none;color:#000000de;font:calc(16 * var(--dp)) Roboto,sans-serif}
+.ngin-upspin{display:flex;align-items:center;gap:calc(8 * var(--dp));padding:calc(8 * var(--dp)) 0;border-bottom:calc(1 * var(--dp)) solid #0000001f;color:#000000de;font-size:calc(16 * var(--dp))}
+.ngin-upspin img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngin-beam{position:absolute;inset:0;z-index:30;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:ngin-fade .3s}
+.ngin-beamtext{position:absolute;top:calc(48 * var(--dp));left:0;right:0;color:#fff;font:300 calc(26 * var(--dp)) Roboto,sans-serif;text-align:center}
+.ngin-shot{position:relative;width:60%;height:60%;overflow:hidden;box-shadow:0 0 calc(24 * var(--dp)) #ffffff26;animation:ngin-shrink .4s cubic-bezier(.4,0,.2,1)}
+@keyframes ngin-shrink{from{width:100%;height:100%}}
+.ngin-shotin{position:absolute;left:0;top:0;width:calc(100% / .6);height:calc(100% / .6);transform:scale(.6);transform-origin:0 0;pointer-events:none}
+.ngin-btcat{display:flex;align-items:center;justify-content:space-between;padding-right:calc(16 * var(--dp))}
+.ngin-spin{width:calc(24 * var(--dp));height:calc(24 * var(--dp));animation:ngin-rot 1.2s linear infinite}
+.ngin-spin circle{fill:none;stroke:#009688;stroke-width:5;stroke-dasharray:90 30}
+@keyframes ngin-rot{to{transform:rotate(360deg)}}

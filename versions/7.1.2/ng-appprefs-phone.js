@@ -27,7 +27,7 @@
   const set = (c, id, key, v) => { NG.setAppPref(c, id, key, v); c.render(); };
 
   // ContactsPreferences: Sort by First name / Last name, Name format First name first / Last name first.
-  const order = (id, A) => ({
+  const order = (id, A, color = BLUE[0]) => ({
     get(c, key) { if (key === 'sortOrder' || key === 'displayOrder') return NG.appPref(c, 'contacts', key, '1'); },
     summary(c, key) {
       const t = P();
@@ -37,10 +37,11 @@
     click(c, key, n) {
       if (key !== 'sortOrder' && key !== 'displayOrder') return false;
       const t = P(), keys = (key === 'sortOrder' ? ['display_options_sort_by_given_name', 'display_options_sort_by_family_name'] : ['display_options_view_given_name_first', 'display_options_view_family_name_first']).map(k => A + k);
-      NG.appPrefsChoose(c, NG.appPrefStr(n.title), keys.map(k => t.t(k)), +NG.appPref(c, 'contacts', key, '1') - 1, (c, i) => set(c, 'contacts', key, String(i + 1)), BLUE[0]);
+      NG.appPrefsChoose(c, NG.appPrefStr(n.title), keys.map(k => t.t(k)), +NG.appPref(c, 'contacts', key, '1') - 1, (c, i) => set(c, 'contacts', key, String(i + 1)), color);
       return true;
     }
   });
+  NG.appPrefsOrder = order;
   NG.contactsOrder = c => ({sort: NG.appPref(c, 'contacts', 'sortOrder', '1'), display: NG.appPref(c, 'contacts', 'displayOrder', '1')});
 
   if (NG.appPrefsXml?.dialer) NG.appPrefsXml.dialer.xml.dialer_settings = {t: 'PreferenceScreen', c: [

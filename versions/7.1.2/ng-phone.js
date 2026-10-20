@@ -132,7 +132,7 @@
     return `<div class="ngph-digits">${start}<output style="font-size:calc(${px.toFixed(1)} * var(--dp))">${esc(c, value)}</output>${end}</div><i class="ngph-dline"></i>`;
   }
   function personRow(c, p, extra = '') {
-    return `<button type="button" class="ngph-crow" data-action="ngph-contact" data-id="${p.id}">${P().tile(c, p, 'ngph-photo')}<span class="ngph-cname">${esc(c, p.name)}${extra}</span></button>`;
+    return `<button type="button" class="ngph-crow" data-action="ngph-contact" data-id="${p.id}">${P().tile(c, p, 'ngph-photo')}<span class="ngph-cname">${esc(c, P().displayName(c, p))}${extra}</span></button>`;
   }
   function shortcuts(c, number) {
     const t = T(), list = [['ic_call_24dp', t.fmt('search_shortcut_call_number', null, P().format(number)), 'ngph-dial']];
@@ -177,7 +177,9 @@
     const t = T(), list = P().sorted(c);
     if (!list.length) return empty(c, 'empty_contacts', t.t('all_contacts_empty'), t.t('all_contacts_empty_add_contact_action'), 'ngph-newcontact');
     let letter = '';
-    return `<div class="ngph-clist">${list.map(p => { const l = p.name.charAt(0).toLocaleUpperCase(c.locale()); const head = l !== letter ? (letter = l) : ''; return `<div class="ngph-citem"><span class="ngph-sec">${esc(c, head)}</span>${personRow(c, p)}</div>`; }).join('')}</div>`;
+    // ContactsPreferences: the sort order picks the section letters, the name format the names.
+    const byLast = NG.appPref?.(c, 'contacts', 'sortOrder', '1') === '2';
+    return `<div class="ngph-clist">${list.map(p => { const l = (byLast ? P().alt(p) : p.name).charAt(0).toLocaleUpperCase(c.locale()); const head = l !== letter ? (letter = l) : ''; return `<div class="ngph-citem"><span class="ngph-sec">${esc(c, head)}</span>${personRow(c, p)}</div>`; }).join('')}</div>`;
   }
 
   // ---- screens ----------------------------------------------------------------------------------------------------
