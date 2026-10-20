@@ -1,0 +1,10 @@
+# DocumentsUI 7.1.2 and its framework MIME icons
+du-ic_doc_pdf.svg	framework/framework-res.apk	ic_doc_pdf	-
+du-ic_doc_generic.svg	framework/framework-res.apk	ic_doc_generic	-
+du-ic_doc_image.svg	framework/framework-res.apk	ic_doc_image	-
+du-ic_doc_video.svg	framework/framework-res.apk	ic_doc_video	-
+du-ic_doc_audio.svg	framework/framework-res.apk	ic_doc_audio	-
+du-ic_doc_folder.svg	priv-app/DocumentsUI/DocumentsUI.apk	ic_doc_folder	-
+du-ic_doc_text.svg	priv-app/DocumentsUI/DocumentsUI.apk	ic_doc_text	-
+du-ic_root_documents.svg	priv-app/DocumentsUI/DocumentsUI.apk	ic_root_documents	-
+du-ic_root_smartphone.svg	priv-app/DocumentsUI/DocumentsUI.apk	ic_root_smartphone	-

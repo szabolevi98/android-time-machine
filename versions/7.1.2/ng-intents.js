@@ -107,7 +107,7 @@
       if (id === 'photos') { photos(c); return; }
       if (id === 'beam') { beam(c); return; }
       if (id === 'cloudprint') { c.open('print-preview'); return; }
-      c.ui.shareData = {subject: s.subject || '', text: s.text || '', kind: s.kind, name: s.name || ''};
+      c.ui.shareData = {subject: s.subject || '', text: s.text || '', kind: s.kind, name: s.name || '', photo: s.photo};
       c.open(id, 'share');
     });
   }

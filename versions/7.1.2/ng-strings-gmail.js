@@ -338,6 +338,14 @@ NG.strings('gmail', {
 "fr": "moi",
 "es": "mí"
 },
+"remove_attachment_desc": {
+"res": "angler:PrebuiltGmail:remove_attachment_desc",
+"en": "Remove attachment %s",
+"hu": "Melléklet (%s) eltávolítása",
+"de": "Anhang \"%s\" entfernen",
+"fr": "Supprimer la pièce jointe %s",
+"es": "Eliminar el archivo adjunto %s"
+},
 "menu_move_to": {
 "res": "angler:PrebuiltGmail:menu_move_to",
 "en": "Move to",

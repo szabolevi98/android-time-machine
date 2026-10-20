@@ -130,8 +130,13 @@
     return `<div class="nggm nggm-conv"><div class="nggm-bar"><button type="button" class="nggm-btn" data-action="nggm-up">${icon(V('ic_arrow_back_wht_24dp'))}</button><i class="nggm-flex"></i>${btn(A('ic_archive_wht_24dp'), 'nggm-archive', 'archive')}${btn(V('ic_delete_wht_24dp'), 'nggm-delete', 'delete')}${btn(A('ic_mark_unread_wht_24dp'), 'nggm-unread', 'mark_unread')}${NG.menu.button(c, 'nggm-over')}</div>
       <div class="nggm-page nggm-cview"><div class="nggm-chead"><h1>${esc(c, m.subject)}${m.muted ? ` <span class="nggm-chip">${esc(c, t.t('label_ignored'))}</span>` : ''}</h1><button type="button" class="nggm-cstar" data-action="nggm-star" data-id="${m.id}">${icon(A(m.starred ? 'ic_star_20dp' : 'ic_star_outline_20dp'))}</button></div>
       <div class="nggm-msg"><div class="nggm-mhead">${avatar(c, who.name, who.email, 'nggm-av')}<div class="nggm-mwho"><b>${esc(c, who.name)}</b><span>${esc(c, mine ? `${t.t('to')} ${m.email}` : `${t.t('to')} ${t.t('me_object_pronoun')}`)}</span><span>${esc(c, date(c, m.time))}</span></div>
-        <button type="button" class="nggm-mbtn" data-action="nggm-reply" data-id="${m.id}" aria-label="${esc(c, t.t('reply'))}">${icon(A('ic_reply_24dp'))}</button><button type="button" class="nggm-mbtn" data-action="nggm-forward" data-id="${m.id}" aria-label="${esc(c, t.t('forward'))}">${icon(V('ic_overflow_24dp'))}</button></div><div class="nggm-body">${esc(c, m.body)}</div></div>
+        <button type="button" class="nggm-mbtn" data-action="nggm-reply" data-id="${m.id}" aria-label="${esc(c, t.t('reply'))}">${icon(A('ic_reply_24dp'))}</button><button type="button" class="nggm-mbtn" data-action="nggm-forward" data-id="${m.id}" aria-label="${esc(c, t.t('forward'))}">${icon(V('ic_overflow_24dp'))}</button></div><div class="nggm-body">${esc(c, m.body)}</div>${attachmentTiles(c,m.attachments)}</div>
       <div class="nggm-replies"><button type="button" data-action="nggm-reply" data-id="${m.id}">${icon(A('ic_reply_24dp'))}<span>${esc(c, t.t('reply'))}</span></button><button type="button" data-action="nggm-reply" data-id="${m.id}">${icon(A('ic_reply_all_24dp'))}<span>${esc(c, t.t('reply_all'))}</span></button><button type="button" data-action="nggm-forward" data-id="${m.id}">${icon(V('ic_forward_24dp'))}<span>${esc(c, t.t('forward'))}</span></button></div></div></div>`;
+  }
+  // compose_attachment_tile.xml / attachment_tile_body.xml of this Gmail: a 4dp tile background,
+  // optional thumbnail and a 48dp information row with the MIME icon, title and 48dp remove target.
+  function attachmentTiles(c, files = [], compose = false) {
+    return `<div class="nggm-attachments">${files.map((f,i)=>`<div class="nggm-attachment">${f.photo && NG.photoLibrary?.find(c,f.photo) ? NG.media.svg(NG.photoLibrary.find(c,f.photo),'nggm-attachment-thumb') : ''}<div class="nggm-attachment-info"><button type="button" class="nggm-attachment-open" data-action="nggm-open-attachment" data-index="${i}">${icon(A(`ic_file_${['pdf','text','image','video','audio'].includes(f.type)?f.type:'file'}`))}<span><b>${esc(c,f.name)}</b><small>${esc(c,NG.fileSize(c,f.size||0,true))}</small></span></button>${compose?`<button type="button" class="nggm-attachment-remove" data-action="nggm-remove-attachment" data-index="${i}" aria-label="${esc(c,T().fmt('remove_attachment_desc',null,f.name))}">${icon(A('ic_close_24dp'))}</button>`:''}</div></div>`).join('')}</div>`;
   }
   // ---- compose -----------------------------------------------------------------------------------------------------
   function compose(c) {
@@ -140,7 +145,7 @@
       <button type="button" class="nggm-btn" data-action="nggm-attach" aria-label="${esc(c, t.t('add_file_attachment'))}">${icon(A('ic_attach_file_wht_24dp'))}</button><button type="button" class="nggm-btn" data-action="nggm-send" aria-label="${esc(c, t.t('send'))}">${icon(A('ic_send_wht_24dp'))}</button>${NG.menu.button(c, 'nggm-over')}</div>
       <div class="nggm-page nggm-cform"><div class="nggm-cf"><span>${esc(c, t.t('from'))}</span><b>${esc(c, acct().email)}</b></div><i class="nggm-cdiv"></i>
       <label class="nggm-cf"><span>${esc(c, t.t('to'))}</span><input data-f="to" type="email" value="${esc(c, d.to)}" autocomplete="off" spellcheck="false">${icon(A('ic_expand_more_24dp'), 'nggm-ccbcc')}</label><i class="nggm-cdiv"></i>
-      <input class="nggm-csubj" data-f="subject" value="${esc(c, d.subject)}" placeholder="${esc(c, t.t('subject_hint'))}" autocomplete="off"><i class="nggm-cdiv"></i><textarea class="nggm-cbody" data-f="body" placeholder="${esc(c, t.t('body_hint'))}">${esc(c, d.body)}</textarea></div></div>`;
+      <input class="nggm-csubj" data-f="subject" value="${esc(c, d.subject)}" placeholder="${esc(c, t.t('subject_hint'))}" autocomplete="off"><i class="nggm-cdiv"></i><textarea class="nggm-cbody" data-f="body" placeholder="${esc(c, t.t('body_hint'))}">${esc(c, d.body)}</textarea>${attachmentTiles(c,d.attachments,true)}</div></div>`;
   }
   // Search (the toolbar's SearchView over the list): the recent searches while typing, the results once sent.
   function search(c) {
@@ -166,7 +171,7 @@
     c.ui.sub = '';
     const u = ui(c);
     // ComposeActivityGmail from ACTION_SEND: EXTRA_SUBJECT and EXTRA_TEXT fill the draft.
-    if (sub === 'share') { const d = NG.shareTake?.(c) || {}; u.draft = {to: '', subject: d.subject || '', body: d.text || ''}; u.screen = 'compose'; u.external = true; return; }
+    if (sub === 'share') { const d = NG.shareTake?.(c) || {}; u.draft = {to: '', subject: d.subject || '', body: d.text || '', attachments: d.kind==='image'?[{name:d.name||'Photo.jpg',type:'image',photo:d.photo,size:3200000}]:[]}; u.screen = 'compose'; u.external = true; return; }
     if (sub.startsWith('folder:')) { u.folder = sub.slice(7); u.screen = ''; u.drawer = false; return; }
     if (sub.startsWith('to:')) { u.draft = {to: sub.slice(3), subject: '', body: ''}; u.screen = 'compose'; u.external = true; }
   }
@@ -183,11 +188,13 @@
   }
   function closeCompose(c, save) {
     const u = ui(c), d = u.draft;
-    if (save && (d.to || d.subject || d.body)) { const all = mail(c); all.push({id: Math.max(0, ...all.map(x => x.id)) + 1, from: acct().name, email: d.to, subject: d.subject, body: d.body, time: Date.now(), unread: false, cat: 'primary', box: 'drafts'}); c.save(); }
+    if (save && (d.to || d.subject || d.body || d.attachments?.length)) storeCompose(c,d,'drafts');
+    else if(d.id){c.data.mail=mail(c).filter(m=>m.id!==d.id);c.save();}
     u.draft = null; u.screen = u.composeFrom || ''; u.composeFrom = '';
     if (u.external) { u.external = false; c.back(); return; }
     c.render();
   }
+  function storeCompose(c,d,box){const all=mail(c);let m=all.find(m=>m.id===d.id&&m.box==='drafts');if(!m){m={id:Math.max(0,...all.map(x=>x.id))+1};all.push(m);}Object.assign(m,{from:acct().name,email:d.to,subject:d.subject,body:d.body,attachments:d.attachments||[],time:Date.now(),unread:false,cat:'primary',box});c.save();}
   function menu(c, anchor) {
     const t = T(), u = ui(c);
     if (u.screen === 'compose') return c.menu([{label: t.t('save_draft'), action: c => closeCompose(c, true)}, {label: t.t('discard'), action: c => { c.toast(t.t('message_discarded')); closeCompose(c, false); }}], anchor);
@@ -313,7 +320,7 @@
         case 'nggm-sback': u.screen = ''; c.render(); return true;
         case 'nggm-sclear': u.q = ''; u.searched = false; c.render(); return true;
         case 'nggm-sugg': submit(c, el.dataset.q); return true;
-        case 'nggm-open': if (el.dataset.swiped || event?.target?.closest('.nggm-star')) return true; m.unread = false; c.save(); u.prev = u.screen === 'search' ? 'search' : ''; u.screen = `conv:${m.id}`; c.render(); return true;
+        case 'nggm-open': if (el.dataset.swiped || event?.target?.closest('.nggm-star')) return true; if(m.box==='drafts'){u.draft={id:m.id,to:m.email,subject:m.subject,body:m.body,attachments:(m.attachments||[]).map(f=>({...f}))};u.composeFrom='';u.screen='compose';c.render();return true;}m.unread = false; c.save(); u.prev = u.screen === 'search' ? 'search' : ''; u.screen = `conv:${m.id}`; c.render(); return true;
         case 'nggm-star': m.starred = !m.starred; c.save(); c.render(); return true;
         case 'nggm-undo': { const x = mail(c).find(y => y.id === u.leave?.id); if (x) x.box = u.leave.box; u.leave = null; c.save(); c.render(); return true; }
         case 'nggm-up': u.screen = u.prev || ''; u.prev = ''; c.render(); return true;
@@ -322,14 +329,16 @@
         case 'nggm-unread': m.unread = true; u.screen = ''; c.save(); c.render(); return true;
         case 'nggm-compose': u.draft = {to: '', subject: '', body: ''}; u.screen = 'compose'; c.render(); return true;
         case 'nggm-reply': u.composeFrom = u.screen; u.draft = {to: m.email, subject: /^Re:/i.test(m.subject) ? m.subject : `Re: ${m.subject}`, body: ''}; u.screen = 'compose'; c.render(); return true;
-        case 'nggm-forward': u.composeFrom = u.screen; u.draft = {to: '', subject: `Fwd: ${m.subject}`, body: `\n\n${m.body}`}; u.screen = 'compose'; c.render(); return true;
+        case 'nggm-forward': u.composeFrom = u.screen; u.draft = {to: '', subject: `Fwd: ${m.subject}`, body: `\n\n${m.body}`, attachments:(m.attachments||[]).map(f=>({...f}))}; u.screen = 'compose'; c.render(); return true;
         case 'nggm-cback': closeCompose(c, true); return true;
         // Attach file: DocumentsUI's GET_CONTENT picker.
-        case 'nggm-attach': c.open('documents', 'pick'); return true;
+        case 'nggm-attach': NG.pickDocument(c,{onPick:(c,files)=>{u.draft.attachments=[...(u.draft.attachments||[]),...files.map(n=>({...n}))];}}); return true;
+        case 'nggm-remove-attachment': u.draft.attachments.splice(+el.dataset.index,1); c.render(); return true;
+        case 'nggm-open-attachment': { const files=u.screen==='compose'?u.draft.attachments:m?.attachments;const file=files?.[+el.dataset.index];if(file)NG.viewDocument(c,file);return true; }
         case 'nggm-send': {
           const d = u.draft; if (!d.to.trim()) { c.el.viewport.querySelector('[data-f="to"]')?.focus(); return true; }
-          const all = mail(c); all.push({id: Math.max(0, ...all.map(x => x.id)) + 1, from: acct().name, email: d.to, subject: d.subject, body: d.body, time: Date.now(), unread: false, cat: 'primary', box: 'sent'});
-          c.save(); c.toast(t.t('sending')); u.draft = null; u.screen = u.composeFrom || ''; u.composeFrom = ''; if (u.external) { u.external = false; c.back(); return true; } c.render(); return true;
+          storeCompose(c,d,'sent');
+          c.toast(t.t('sending')); u.draft = null; u.screen = u.composeFrom || ''; u.composeFrom = ''; if (u.external) { u.external = false; c.back(); return true; } c.render(); return true;
         }
         case 'ng-menu': menu(c, el); return true;
       }

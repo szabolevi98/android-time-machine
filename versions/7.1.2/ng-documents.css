@@ -1,0 +1,52 @@
+/* DocumentsTheme and the N2G48C DocumentsUI layouts; see ng-documents.js for resource names. */
+.ngdocs{position:absolute;inset:0;background:#f1f1f1;color:#212121;overflow:hidden;font-family:Roboto,Arial,sans-serif;font-size:calc(14 * var(--dp))}
+.ngdocs button{border:0;color:inherit;font:inherit;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ngdocs button:active{background-color:#0001}
+.ngdocs button:focus-visible{outline:calc(2 * var(--dp)) solid #009688;outline-offset:calc(-2 * var(--dp))}
+.ngdocs-bar{position:absolute;inset:0 0 auto;height:calc(56 * var(--dp));background:#263238;color:#fff;display:flex;align-items:center;z-index:4;box-shadow:0 calc(4 * var(--dp)) calc(8 * var(--dp)) #0003}
+.ngdocs-bar.selected{background:#455a64}
+.ngdocs-btn{display:flex;align-items:center;justify-content:center;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;flex:none;font-size:calc(28 * var(--dp))!important}
+.ngdocs-mask{display:block;width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:currentColor;-webkit-mask:center/contain no-repeat;mask:center/contain no-repeat;pointer-events:none}
+.ngdocs-title{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:calc(20 * var(--dp))!important;text-align:left;padding:0 calc(8 * var(--dp))}
+.ngdocs-content{position:absolute;inset:calc(56 * var(--dp)) 0 0;overflow-y:auto;overscroll-behavior:contain}
+.ngdocs-items{background:#fafafa;min-height:100%}
+.ngdocs-item{display:flex;align-items:center;width:100%;min-height:calc(72 * var(--dp));padding:calc(12 * var(--dp)) calc(16 * var(--dp));box-sizing:border-box;text-align:left}
+.ngdocs-item.on{background:#cfd8dc}
+.ngdocs-icon{position:relative;flex:none;width:calc(40 * var(--dp));height:calc(40 * var(--dp));margin-right:calc(16 * var(--dp));display:flex;align-items:center;justify-content:center}
+.ngdocs-icon>img{width:100%;height:100%;object-fit:contain}
+.ngdocs-thumb{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.ngdocs-nametext{min-width:0;flex:1}
+.ngdocs-nametext strong{display:block;font-size:calc(16 * var(--dp));font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.5}
+.ngdocs-nametext small{display:block;color:#757575;font-size:calc(12 * var(--dp));margin-top:calc(4 * var(--dp));min-height:calc(14 * var(--dp))}
+.ngdocs-nametext small>span{margin-left:calc(16 * var(--dp))}
+.ngdocs-check{position:absolute;inset:calc(5 * var(--dp));display:flex;align-items:center;justify-content:center;background:#009688;color:#fff;border-radius:50%;font-size:calc(22 * var(--dp));font-style:normal}
+.ngdocs-items.grid{display:grid;grid-template-columns:1fr 1fr;align-content:start;gap:calc(8 * var(--dp));padding:calc(8 * var(--dp));box-sizing:border-box;background:#f1f1f1}
+.ngdocs-items.grid .ngdocs-item{display:flex;flex-direction:column;min-width:0;height:calc(180 * var(--dp));background:#fafafa;padding:0;box-shadow:0 calc(2 * var(--dp)) calc(3 * var(--dp)) #0003}
+.ngdocs-items.grid .ngdocs-item.on{background:#cfd8dc}
+.ngdocs-items.grid .ngdocs-icon{width:100%;height:calc(112 * var(--dp));margin:0}
+.ngdocs-items.grid .ngdocs-icon>img{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
+.ngdocs-items.grid .ngdocs-nametext{box-sizing:border-box;padding:calc(8 * var(--dp)) calc(12 * var(--dp));width:100%}
+.ngdocs-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(24 * var(--dp));height:100%;color:#757575;font-size:calc(20 * var(--dp));padding:calc(32 * var(--dp));box-sizing:border-box;text-align:center}
+.ngdocs-empty>img{width:calc(72 * var(--dp));height:calc(72 * var(--dp));opacity:.4}
+.ngdocs-dim{position:absolute;inset:0;background:#0006;z-index:7}
+.ngdocs-drawer{position:absolute;inset:0 auto 0 0;width:calc(256 * var(--dp));background:#f1f1f1;overflow-y:auto;box-shadow:calc(4 * var(--dp)) 0 calc(16 * var(--dp)) #0004;z-index:8}
+.ngdocs-drawertitle{height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));display:flex;align-items:center;font-size:calc(20 * var(--dp));background:#263238;color:#fff;box-shadow:0 calc(4 * var(--dp)) calc(8 * var(--dp)) #0003;margin-bottom:calc(8 * var(--dp))}
+.ngdocs-root{display:flex;align-items:center;min-height:calc(48 * var(--dp));width:100%;padding:calc(8 * var(--dp)) calc(16 * var(--dp));text-align:left}
+.ngdocs-root>img,.ngdocs-root>.ngdocs-mask{width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin-right:calc(16 * var(--dp));color:#737373}
+.ngdocs-root.on{background:#ddd;color:#009688}
+.ngdocs-search{flex:1;width:0;min-width:0;background:transparent;border:0;border-bottom:calc(1 * var(--dp)) solid #fff8;color:#fff;font:inherit;padding:calc(8 * var(--dp)) 0;outline:none}
+.ngdocs-search::placeholder{color:#fffb}
+.ngdocs-name{padding:0 calc(24 * var(--dp)) calc(16 * var(--dp))}
+.ngdocs-name input{width:100%;box-sizing:border-box;background:transparent;border:0;border-bottom:calc(2 * var(--dp)) solid #009688;color:#212121;padding:calc(8 * var(--dp)) 0;font:inherit}
+.ngdocs-error{color:#f44336}
+.ngdocs-preview{padding:calc(24 * var(--dp));background:#fafafa;min-height:100%;box-sizing:border-box}
+.ngdocs-previewname{display:flex;align-items:center;gap:calc(12 * var(--dp));flex-wrap:wrap;border-bottom:calc(1 * var(--dp)) solid #ddd;padding-bottom:calc(16 * var(--dp));overflow-wrap:anywhere}
+.ngdocs-previewname img{width:calc(40 * var(--dp));height:calc(40 * var(--dp))}
+.ngdocs-previewname strong{font-size:calc(18 * var(--dp));font-weight:400}
+.ngdocs-previewname small{color:#757575}
+.ngdocs-preview article{padding-top:calc(24 * var(--dp));font-size:calc(16 * var(--dp));line-height:1.6;overflow-wrap:anywhere}
+.ngdocs-save{position:absolute;left:0;right:0;bottom:0;background:#fafafa;min-height:calc(56 * var(--dp));display:flex;align-items:center;padding:calc(8 * var(--dp)) calc(16 * var(--dp));gap:calc(16 * var(--dp));box-sizing:border-box;box-shadow:0 calc(-2 * var(--dp)) calc(4 * var(--dp)) #0002}
+.ngdocs-save>img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngdocs-save input{flex:1;width:0;border:0;border-bottom:calc(2 * var(--dp)) solid #009688;background:transparent;color:#212121;font:inherit;padding:calc(8 * var(--dp)) 0}
+.ngdocs-save button{color:#009688;font-weight:500;text-transform:uppercase;min-height:calc(48 * var(--dp))}
+.ngdocs:has(.ngdocs-save) .ngdocs-content{bottom:calc(72 * var(--dp))}

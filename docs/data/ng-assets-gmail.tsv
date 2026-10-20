@@ -28,3 +28,9 @@ gm-ic_oobe_002.webp	app/PrebuiltGmail/PrebuiltGmail.apk	drawable/ic_oobe_002
 gm-ic_oobe_003.jpg	app/PrebuiltGmail/PrebuiltGmail.apk	drawable/ic_oobe_003
 gm-account_switcher_blue.jpg	app/PrebuiltGmail/PrebuiltGmail.apk	drawable/account_switcher_blue
 gm-ic_drawer_folder_24dp.png	app/PrebuiltGmail/PrebuiltGmail.apk	drawable/ic_drawer_folder_24dp
+gm-ic_file_file.png	app/PrebuiltGmail/PrebuiltGmail.apk	drawable/ic_file_file
+gm-ic_file_pdf.png	app/PrebuiltGmail/PrebuiltGmail.apk	drawable/ic_file_pdf
+gm-ic_file_text.png	app/PrebuiltGmail/PrebuiltGmail.apk	drawable/ic_file_text
+gm-ic_file_image.png	app/PrebuiltGmail/PrebuiltGmail.apk	drawable/ic_file_image
+gm-ic_file_audio.png	app/PrebuiltGmail/PrebuiltGmail.apk	drawable/ic_file_audio
+gm-ic_file_video.png	app/PrebuiltGmail/PrebuiltGmail.apk	drawable/ic_file_video
