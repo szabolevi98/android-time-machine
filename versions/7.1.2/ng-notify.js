@@ -9,6 +9,13 @@
      (TextAppearance.Material.Notification.Title, 14 sp #de000000) and the text (14 sp #8a000000), each one line. The
      small icon, the app name and the expand button take resolveContrastColor() of the notification's colour
      (notification_icon_default_color #757575 when the app sets none).
+   - An app may add to its rows (module.notification(c, n) gives {large, actions}): the large icon
+     (notification_template_right_icon.xml: 40 dp, 36 dp down, 16 dp from the end) and, on an expanded row (the first in
+     the shade, the heads-up), the actions (notification_material_action_list.xml: 56 dp on #eeeeee, 4 dp at the end;
+     notification_material_action.xml: 48 dp borderless buttons 4 dp apart in the notification's colour). An action with
+     an input is a RemoteInput: SystemUI's remote_input.xml takes the actions' place in the notification's colour (16 sp
+     white text, the #99ffffff hint, ic_send 12 / 24 dp in, the progress while it goes); the app's
+     module.notificationAction(c, n, id, text) does the rest.
    - The simulator's own content: a new phone starts with the welcome and Alex's message, as every version
      (docs/demo-data.md); their texts follow the simulator's language (docs/data/ng-own.tsv). */
 (() => {
@@ -37,12 +44,56 @@
     return t.plural('framework/duration_years_shortest', Math.floor(d / 31449600000));
   }
 
-  // One row of the shade (ng-shade.css draws it).
-  function row(c, n) {
-    const app = appOf(n), safe = c.safe;
-    return `<div class="ngnt-row" data-id="${n.id}" data-action="ngnt-open" style="--ngnt-color:${app.color}">
+  // One row of the shade (ng-shade.css draws it); expanded, it shows the app's actions.
+  let replying = null;
+  const extras = (c, n) => NG.module(n.app)?.notification?.(c, n) || null;
+  function row(c, n, {expanded = false} = {}) {
+    const app = appOf(n), safe = c.safe, x = extras(c, n);
+    const large = x?.large ? `<span class="ngnt-right">${x.large}</span>` : '';
+    let actions = '';
+    if (expanded && x?.actions?.length) {
+      const input = replying?.id === n.id && x.actions.find(a => a.id === replying.act && a.input);
+      actions = input
+        ? `<div class="ngnt-input" data-action="ngnt-input" style="background:${app.color}"><input type="text" class="ngnt-rinput" data-id="${n.id}" data-act="${input.id}" placeholder="${safe(input.input)}" autocomplete="off"${replying.sending ? ' disabled' : ''}>${replying.sending ? '<i class="ngnt-progress"></i>' : `<button type="button" class="ngnt-send" data-action="ngnt-send" data-id="${n.id}" data-act="${input.id}" aria-label="${safe(T().t('framework/ime_action_send'))}"><i></i></button>`}</div>`
+        : `<div class="ngnt-actions">${x.actions.map(a => `<button type="button" class="ngnt-act" data-action="ngnt-act" data-id="${n.id}" data-act="${a.id}">${safe(a.label)}</button>`).join('')}</div>`;
+    }
+    return `<div class="ngnt-row${large ? ' large' : ''}" data-id="${n.id}" data-action="ngnt-open" style="--ngnt-color:${app.color}">
       <div class="ngnt-header"><i class="ngnt-icon" style="-webkit-mask-image:url('${safe(n.icon)}');mask-image:url('${safe(n.icon)}')"></i><span class="ngnt-app">${safe(app.name())}</span><span class="ngnt-sep">${safe(T().t('framework/notification_header_divider_symbol'))}</span><time class="ngnt-time" data-time="${n.time}">${safe(relative(c, n.time))}</time></div>
-      <div class="ngnt-main"><div class="ngnt-title">${safe(n.title)}</div><div class="ngnt-text">${safe(n.text)}</div></div></div>`;
+      <div class="ngnt-main"><div class="ngnt-title">${safe(n.title)}</div><div class="ngnt-text">${safe(n.text)}</div></div>${large}${actions}</div>`;
+  }
+  // The rows' actions: a plain one runs (and the shade or the heads-up goes); one with an input opens the RemoteInput.
+  function redraw(c) {
+    if (c.ui.overlay === 'shade') NG.module('shade')?.refresh?.(c);
+    const hun = c.el.screen.querySelector('.ngnt-hun .ngnt-row');
+    if (hun && shown) {
+      hun.outerHTML = row(c, ownTexts(shown), {expanded: true});
+      const card = c.el.screen.querySelector('.ngnt-hun .ngnt-row'), note = shown;
+      bindSwipe(c, card, dir => { if (dir !== 'up') cancel(c, note.id); hideHeadsUp(c, dir, true); });
+    }
+    const f = c.el.screen.querySelector('.ngnt-rinput:not([disabled])');
+    if (f) { f.focus(); f.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); action('ngnt-send', f, c); } }); }
+  }
+  function action(name, el, c) {
+    if (name === 'ngnt-input') return true;
+    const n = list(c).find(x => x.id === +el.dataset.id);
+    if (!n) return false;
+    const mod = NG.module(n.app), x = extras(c, n), a = x?.actions?.find(y => y.id === el.dataset.act);
+    if (name === 'ngnt-act' && a) {
+      if (a.input) { replying = {id: n.id, act: a.id}; clearTimeout(timer); redraw(c); return true; }
+      if (c.ui.overlay === 'shade') c.closeOverlay();
+      hideHeadsUp(c, 'up', true);
+      mod?.notificationAction?.(c, n, a.id);
+      return true;
+    }
+    if (name === 'ngnt-send') {
+      const text = (c.el.screen.querySelector(`.ngnt-rinput[data-id="${n.id}"]`)?.value || '').trim();
+      if (!text) return true;
+      replying = {...replying, sending: true}; redraw(c);
+      mod?.notificationAction?.(c, n, el.dataset.act, text);
+      setTimeout(() => { replying = null; hideHeadsUp(c, 'up', true); cancel(c, n.id); }, 800);
+      return true;
+    }
+    return false;
   }
 
   function refresh(c) {
@@ -58,6 +109,7 @@
     return note;
   }
   function cancel(c, id) {
+    if (replying?.id === +id) replying = null;
     c.data.notifications = list(c).filter(n => n.id !== +id); c.save(); refresh(c);
   }
   // Tapping a row: its content intent (the screen it opens) and FLAG_AUTO_CANCEL.
@@ -96,7 +148,7 @@
   function headsUp(c, n) {
     if (c.ui.overlay === 'shade' || c.ui.view === 'lock' || c.ui.sleeping || c.ui.power) return;
     const el = layer(c);
-    el.innerHTML = row(c, ownTexts(n));
+    el.innerHTML = row(c, ownTexts(n), {expanded: true});
     const card = el.firstElementChild;
     shown = n; since = Date.now();
     if (card.animate && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
@@ -108,6 +160,7 @@
   }
   function hideHeadsUp(c, dir = 'up', now = false) {
     clearTimeout(timer);
+    if (!now && replying && shown && replying.id === shown.id) return;
     const card = c.el.screen.querySelector('.ngnt-hun .ngnt-row'); if (!card) { shown = null; return; }
     if (!now && Date.now() - since < 2000) { timer = setTimeout(() => hideHeadsUp(c, dir), 2000 - (Date.now() - since)); return; }
     shown = null;
@@ -151,7 +204,7 @@
   }
 
   NG.notify = (c, n) => notify(c, n);
-  NG.notifications = {row, relative, cancel, open, list, bindSwipe, hideHeadsUp: c => hideHeadsUp(c, 'up', true)};
+  NG.notifications = {row, relative, cancel, open, list, bindSwipe, action, hideHeadsUp: c => hideHeadsUp(c, 'up', true)};
   // The simulator's own first-boot notifications, as in every version: the welcome (SystemUI's ic_android, posted as
   // Android System) and Alex's message (Messenger's ic_sms_light, opening the thread).
   NG.defaults.notifications = [
@@ -169,7 +222,10 @@
       c.el.screen.addEventListener('click', e => {
         const hun = e.target.closest('.ngnt-hun .ngnt-row');
         if (!hun || hun.dataset.swiped) return;
-        e.stopPropagation(); hideHeadsUp(c, 'up', true); open(c, hun.dataset.id);
+        e.stopPropagation();
+        const act = e.target.closest('[data-action="ngnt-act"],[data-action="ngnt-send"],[data-action="ngnt-input"]');
+        if (act) { action(act.dataset.action, act, c); return; }
+        hideHeadsUp(c, 'up', true); open(c, hun.dataset.id);
       }, true);
     }
   });

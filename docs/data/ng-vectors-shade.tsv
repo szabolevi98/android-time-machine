@@ -48,3 +48,4 @@ sui-ic_hotspot_unavailable.svg	priv-app/SystemUI/SystemUI.apk	ic_hotspot_unavail
 fw-ic_ab_back_material.svg	framework/framework-res.apk	ic_ab_back_material	-
 fw-ic_menu_moreoverflow_material.svg	framework/framework-res.apk	ic_menu_moreoverflow_material	-
 sui-major_a_b.svg	priv-app/SystemUI/SystemUI.apk	major_a_b	-
+sui-ic_send.svg	priv-app/SystemUI/SystemUI.apk	ic_send	tint=#ffffff

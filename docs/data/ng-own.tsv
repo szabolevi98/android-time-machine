@@ -4,3 +4,6 @@ shade	demo_message_title	New message from Alex	Új üzenet Alextől	Neue Nachric
 shade	demo_message_text	See you at 11!	Találkozunk 11-kor!	Bis um 11!	À 11 heures !	¡Nos vemos a las 11!	the demo message notification of every version
 shade	demo_welcome_title	Welcome to Android 7.1	Üdvözli az Android 7.1	Willkommen bei Android 7.1	Bienvenue dans Android 7.1	Te damos la bienvenida a Android 7.1	the simulator's first-boot notification, as every version (6.0.1 "Welcome to Android 6.0")
 shade	demo_welcome_text	Your Nexus 6P is ready to explore.	A Nexus 6P készen áll a felfedezésre.	Ihr Nexus 6P ist bereit.	Votre Nexus 6P est prêt à être exploré.	Tu Nexus 6P está listo para explorar.	as 6.0.1 "Your Nexus 5X is ready to explore."
+messenger	sim_reply_1	Sounds good, see you then!	Rendben, akkor ott találkozunk!	Klingt gut, bis dann!	Parfait, à tout à l’heure !	¡Perfecto, nos vemos!	the simulator's own answer from a demo contact (as in the other versions)
+messenger	sim_reply_2	Got it, thanks!	Rendben, köszi!	Alles klar, danke!	C’est noté, merci !	¡Entendido, gracias!	the simulator's own answer from a demo contact (as in the other versions)
+messenger	sim_reply_3	Haha, nice 😄	Haha, ez jó 😄	Haha, super 😄	Haha, génial 😄	Jaja, genial 😄	the simulator's own answer from a demo contact (as in the other versions)

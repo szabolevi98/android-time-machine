@@ -256,7 +256,7 @@
     const alarm = (c.data.clock?.alarms || []).some(x => x.on);
     const detail = st.detail ? `<div class="ngqs-detail">${NG.qsDetail?.has(st.detail) ? NG.qsDetail.render(c, st.detail, st.origin) : c.missing(`qs-${st.detail}`)}</div>` : '';
     const stack = notes.length
-      ? notes.map(n => NG.notifications.row(c, n)).join('') + `<div class="ngsh-dismiss"><button type="button" data-action="ngsh-clearall" aria-label="${c.safe(t.t('accessibility_clear_all'))}">${c.safe(t.t('clear_all_notifications_text'))}</button></div>`
+      ? notes.map((n, i) => NG.notifications.row(c, n, {expanded: i === 0})).join('') + `<div class="ngsh-dismiss"><button type="button" data-action="ngsh-clearall" aria-label="${c.safe(t.t('accessibility_clear_all'))}">${c.safe(t.t('clear_all_notifications_text'))}</button></div>`
       : `<div class="ngsh-empty">${c.safe(t.t('empty_shade_text'))}</div>`;
     return `<div class="ngsh${st.qs ? ' qs' : ''}${st.detail ? ' detail' : ''}${st.opened ? ' shown' : ''}" style="--qsf:${st.qs ? 1 : 0};--qs-full:${geo.full.toFixed(3)};--qs-panel:${geo.panel.toFixed(3)}">
       <div class="ngsh-scrim" data-action="ngsh-close"></div>
@@ -590,6 +590,7 @@
       const st = c.ui.shade;
       if (st?.dragged) { st.dragged = false; return true; }
       if (name === 'ngsh-close') { close(c); return true; }
+      if ((name === 'ngnt-act' || name === 'ngnt-send' || name === 'ngnt-input') && NG.notifications.action(name, el, c)) return true;
       if (name === 'ngnt-open') { if (!el.dataset.swiped) { close(c); NG.notifications.open(c, el.dataset.id); } return true; }
       if (name === 'ngsh-clearall') { clearAll(c); return true; }
       if (name === 'ngqs-expand') { setQs(c, !st.qs); return true; }

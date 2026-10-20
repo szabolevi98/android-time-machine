@@ -145,6 +145,14 @@ NG.strings('shade', {
 "fr": "mainten.",
 "es": "ahora"
 },
+"framework/ime_action_send": {
+"res": "angler:framework:ime_action_send",
+"en": "Send",
+"hu": "Küldés",
+"de": "Senden",
+"fr": "Envoyer",
+"es": "Enviar"
+},
 "framework/duration_minutes_shortest": {
 "res": "angler:framework:duration_minutes_shortest",
 "en": {

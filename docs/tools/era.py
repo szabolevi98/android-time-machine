@@ -6,13 +6,13 @@ read the angler image, write versions/7.1.2 and take their lists from docs/data/
 import os
 
 ERAS = {
-    'mm': {'device': 'bullhead', 'version': '6.0.1', 'build': 'MTC20K', 'phone': 'Nexus 5X', 'js': 'MM'},
-    'ng': {'device': 'angler', 'version': '7.1.2', 'build': 'N2G48C', 'phone': 'Nexus 6P', 'js': 'NG'},
+    'mm': {'device': 'bullhead', 'version': '6.0.1', 'build': 'MTC20K', 'phone': 'Nexus 5X', 'js': 'MM', 'api': 23},
+    'ng': {'device': 'angler', 'version': '7.1.2', 'build': 'N2G48C', 'phone': 'Nexus 6P', 'js': 'NG', 'api': 25},
 }
 ERA = os.environ.get('ERA', 'mm')
 if ERA not in ERAS: raise SystemExit(f'ERA={ERA}: one of {", ".join(ERAS)}')
 E = ERAS[ERA]
-DEVICE, VERSION, BUILD, PHONE, JS = E['device'], E['version'], E['build'], E['phone'], E['js']
+DEVICE, VERSION, BUILD, PHONE, JS, API = E['device'], E['version'], E['build'], E['phone'], E['js'], E['api']
 
 
 def data(name):

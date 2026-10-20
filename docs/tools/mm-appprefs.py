@@ -19,7 +19,7 @@ from androguard.core.apk import APK
 from androguard.core.axml import AXMLPrinter
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from apk_theme import Themes
-from era import ERA, DEVICE, VERSION, BUILD, PHONE, JS, data as era_data, out as era_out
+from era import ERA, DEVICE, VERSION, BUILD, PHONE, JS, API, data as era_data, out as era_out
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace(os.sep, '/') + '/'
 SYSTEM = ROOT + f'_aosp/{DEVICE}/system/'
@@ -133,7 +133,9 @@ class Reader:
         xml = {}
         files = set(self.apk.get_files())
         for name in self.app['xml']:
-            path = next((p for p in (f'res/xml/{name}.xml', f'res/xml-v21/{name}.xml', f'res/xml-v14/{name}.xml') if p in files), None)
+            # The variant the phone loads: the highest res/xml-v<n> at or under the image's API level, else res/xml.
+            found = [(int(m.group(1) or 0), p) for p in files for m in [re.fullmatch(rf'res/xml(?:-v(\d+))?/{re.escape(name)}\.xml', p)] if m]
+            path = max((x for x in found if x[0] <= API), default=(0, None))[1]
             if not path: raise SystemExit(f'{self.name}: no res/xml/{name}.xml')
             xml[name] = self.node(AXMLPrinter(self.apk.get_file(path)).get_xml_obj())
         return {'apk': self.name, 'theme': self.theme(), 'xml': xml}
