@@ -435,3 +435,20 @@ button.ngst-pref:active,div.ngst-pref[role=button]:active:not(:has(.ngst-gear:ac
 .ngpu-itemline{display:flex;align-items:baseline;gap:calc(8 * var(--dp));font-size:calc(16 * var(--dp));color:#000000de}
 .ngpu-itemline span{flex:1}
 .ngpu-itemline small{font-size:calc(14 * var(--dp));color:#0000008a}
+/* Accounts (ng-settings-accounts.js): AccountSyncSettings' header, GMS Core's sign-in start, Gmail's Account setup */
+.ngac-head{display:flex;align-items:center;gap:calc(16 * var(--dp));padding:calc(16 * var(--dp));background:#fafafa;font-size:calc(16 * var(--dp));color:#000000de}
+.ngac-gsign{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:calc(48 * var(--dp)) calc(24 * var(--dp)) 0;background:#fff;box-sizing:border-box}
+.ngac-glogo{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
+.ngac-gsign h1{margin:calc(24 * var(--dp)) 0 calc(16 * var(--dp));font:400 calc(24 * var(--dp))/1.3 Roboto,sans-serif;color:#000000de;text-align:center}
+.ngac-gsign p{margin:0;font-size:calc(16 * var(--dp));line-height:1.5;color:#0000008a;text-align:center}
+.ngac-gspin{margin-top:calc(24 * var(--dp))}
+.ngac-gspin svg{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
+.ngac-gfoot{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:flex-end;padding:calc(8 * var(--dp)) calc(16 * var(--dp));border-top:calc(1 * var(--dp)) solid #0000001f}
+.ngst .ngac-gfoot button,.ngst .ngac-efoot button{height:calc(36 * var(--dp));padding:0 calc(8 * var(--dp));color:#4285f4;font:500 calc(14 * var(--dp))/1 Roboto,sans-serif;text-transform:uppercase}
+.ngac-esetup{position:absolute;inset:0;display:flex;flex-direction:column;background:#fff}
+.ngac-ebar{display:flex;align-items:center;height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));background:#db4437;color:#fff;font:500 calc(20 * var(--dp))/1 Roboto,sans-serif}
+.ngac-ebody{flex:1;padding:calc(24 * var(--dp)) calc(16 * var(--dp))}
+.ngac-ebody h2{margin:0 0 calc(24 * var(--dp));font:400 calc(20 * var(--dp))/1.3 Roboto,sans-serif;color:#000000de}
+.ngac-ebody input{width:100%}
+.ngac-efoot{display:flex;justify-content:space-between;padding:calc(8 * var(--dp)) calc(16 * var(--dp));border-top:calc(1 * var(--dp)) solid #0000001f}
+.ngst .ngac-efoot button{color:#db4437}

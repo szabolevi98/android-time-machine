@@ -11980,6 +11980,274 @@ NG.strings('settings', {
 "fr": "Le système comprend des fichiers qu'Android ne peut pas afficher individuellement.",
 "es": "El sistema incluye archivos que Android no puede mostrar de forma individual."
 },
+"PrebuiltGmsCore/auth_authenticator_label": {
+"res": "angler:PrebuiltGmsCore:auth_authenticator_label",
+"en": "Google",
+"hu": "Google",
+"de": "Google",
+"fr": "Google",
+"es": "Google",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"add_account_label": {
+"res": "angler:SettingsGoogle:add_account_label",
+"en": "Add account",
+"hu": "Fiók hozzáadása",
+"de": "Konto hinzufügen",
+"fr": "Ajouter un compte",
+"es": "Añadir cuenta"
+},
+"data_usage_menu_auto_sync": {
+"res": "angler:SettingsGoogle:data_usage_menu_auto_sync",
+"en": "Auto-sync data",
+"hu": "Adatok automatikus szinkronizálása",
+"de": "Daten automatisch synchronisieren",
+"fr": "Synchronisation automatique des données",
+"es": "Sincronización automática"
+},
+"sync_disabled": {
+"res": "angler:SettingsGoogle:sync_disabled",
+"en": "Sync is OFF",
+"hu": "Szinkr. KIKAPCSOLVA",
+"de": "Synchronisierung: AUS",
+"fr": "Synchronisation désactivée",
+"es": "La sincronización está desactivada"
+},
+"sync_in_progress": {
+"res": "angler:SettingsGoogle:sync_in_progress",
+"en": "Syncing now…",
+"hu": "Szinkronizálás...",
+"de": "Synchronisieren…",
+"fr": "Synchronisation en cours…",
+"es": "Sincronizando…"
+},
+"last_synced": {
+"res": "angler:SettingsGoogle:last_synced",
+"en": "Last synced %1$s",
+"hu": "Utolsó szinkronizálás: %1$s",
+"de": "Zuletzt synchronisiert: %1$s",
+"fr": "Dernière synchronisation : %1$s",
+"es": "Última sincronización: %1$s"
+},
+"sync_menu_sync_cancel": {
+"res": "angler:SettingsGoogle:sync_menu_sync_cancel",
+"en": "Cancel sync",
+"hu": "Szinkronizálás megszakítása",
+"de": "Synchronisierung abbrechen",
+"fr": "Annuler la synchronisation",
+"es": "Cancelar sincronización"
+},
+"sync_menu_sync_now": {
+"res": "angler:SettingsGoogle:sync_menu_sync_now",
+"en": "Sync now",
+"hu": "Szinkronizálás most",
+"de": "Jetzt synchronisieren",
+"fr": "Synchroniser maintenant",
+"es": "Sincronizar ahora"
+},
+"data_usage_auto_sync_off_dialog_title": {
+"res": "angler:SettingsGoogle:data_usage_auto_sync_off_dialog_title",
+"en": "Turn auto-sync data off?",
+"hu": "Kikapcsolja a szinkronizálást?",
+"de": "Automatische Synchronisierung deaktivieren?",
+"fr": "Désactiver synchro auto données ?",
+"es": "¿Desactivar sincronización automática?"
+},
+"data_usage_auto_sync_on_dialog_title": {
+"res": "angler:SettingsGoogle:data_usage_auto_sync_on_dialog_title",
+"en": "Turn auto-sync data on?",
+"hu": "Bekapcsolja a szinkronizálást?",
+"de": "Automatische Synchronisierung aktivieren?",
+"fr": "Activer synchro auto données ?",
+"es": "¿Activar sincronización automática?"
+},
+"data_usage_auto_sync_off_dialog": {
+"res": "angler:SettingsGoogle:data_usage_auto_sync_off_dialog",
+"en": "This will conserve data and battery usage, but you’ll need to sync each account manually to collect recent information. And you won’t receive notifications when updates occur.",
+"hu": "Ez mérsékelni fogja az adat- és akkumulátorhasználatot, de minden egyes fiókot manuálisan kell majd szinkronizálnia a legfrissebb információk begyűjtéséhez. Továbbá nem fog értesítéseket kapni a frissítésekről.",
+"de": "So reduzierst du den Datenverbrauch und schonst den Akku, musst jedoch jedes einzelne Konto manuell synchronisieren, um neue Informationen abzurufen. Außerdem erhältst du keine Benachrichtigungen, wenn Aktualisierungen erfolgen.",
+"fr": "Cette action limite la consommation des données et l'utilisation de la batterie, mais vous devrez synchroniser manuellement chaque compte pour obtenir les dernières informations. Vous ne recevrez pas non plus de notifications en cas de mise à jour.",
+"es": "Esto te permitirá ahorrar datos y batería, pero tendrás que sincronizar cada cuenta de forma manual para obtener información reciente y no recibirás notificaciones cuando haya actualizaciones."
+},
+"data_usage_auto_sync_on_dialog": {
+"res": "angler:SettingsGoogle:data_usage_auto_sync_on_dialog",
+"en": "Any changes you make to your accounts on the web will be automatically copied to your phone.\n\nSome accounts may also automatically copy any changes you make on the phone to the web. A Google Account works this way.",
+"hu": "A rendszer azonnal átmásolja telefonjára a fiókot érintő valamennyi módosítást, amelyet az interneten hajt végre.\n\nEgyes fiókok a telefonon végrehajtott módosításokat is automatikusan átmásolhatják az internetre. Ez a Google-fiókok működésének lényege.",
+"de": "Änderungen, die du im Web an deinem Konto vornimmst, werden automatisch auf dein Telefon kopiert.\n\nBei manchen Konten werden ggf. auch automatisch alle Änderungen, die du auf dem Telefon vornimmst, ins Web kopiert. Das ist die übliche Synchronisierungsfunktion eines Google-Kontos.",
+"fr": "Toutes les modifications que vous apportez à vos comptes sur le Web sont automatiquement copiées sur votre téléphone.\n\nPour certains comptes, les modifications effectuées sur le téléphone peuvent également être copiées automatiquement sur le Web. C'est le principe d'un compte Google.",
+"es": "Los cambios que hagas en tus cuentas en la Web se copiarán automáticamente en el teléfono.\n\nEs posible que algunas cuentas copien también en la Web los cambios que hagas en el teléfono. Así funcionan las cuentas de Google."
+},
+"remove_account_label": {
+"res": "angler:SettingsGoogle:remove_account_label",
+"en": "Remove account",
+"hu": "Fiók törlése",
+"de": "Konto entfernen",
+"fr": "Supprimer le compte",
+"es": "Quitar cuenta"
+},
+"really_remove_account_title": {
+"res": "angler:SettingsGoogle:really_remove_account_title",
+"en": "Remove account?",
+"hu": "Eltávolítja a fiókot?",
+"de": "Konto entfernen?",
+"fr": "Supprimer le compte ?",
+"es": "¿Quitar cuenta?"
+},
+"really_remove_account_message": {
+"res": "angler:SettingsGoogle:really_remove_account_message",
+"en": "Removing this account will delete all of its messages, contacts, and other data from the phone!",
+"hu": "A fiók eltávolításával törli valamennyi üzenetet, névjegyet és egyéb adatot a telefonról!",
+"de": "Durch das Entfernen dieses Kontos werden alle seine Nachrichten, Kontakte und andere Daten vom Telefon gelöscht!",
+"fr": "La suppression de ce compte entraînera la suppression de tous les messages, contacts et autres données du téléphone.",
+"es": "Si quitas esta cuenta, se eliminarán todos sus mensajes, contactos y otros datos del teléfono."
+},
+"remove_account_failed": {
+"res": "angler:SettingsGoogle:remove_account_failed",
+"en": "This change isn’t allowed by your administrator",
+"hu": "Rendszergazdája nem engedélyezi ezt a módosítást",
+"de": "Dein Administrator lässt diese Änderung nicht zu.",
+"fr": "Votre administrateur n'autorise pas cette modification.",
+"es": "El administrador no permite este cambio"
+},
+"ok": {
+"res": "angler:framework:ok",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"PrebuiltGmsCore/auth_show_error_activity_title": {
+"res": "angler:PrebuiltGmsCore:auth_show_error_activity_title",
+"en": "Couldn't sign in",
+"hu": "Sikertelen bejelentkezés",
+"de": "Anmeldung nicht möglich",
+"fr": "Impossible de se connecter",
+"es": "Error al iniciar sesión"
+},
+"PrebuiltGmsCore/auth_error_generic_server_error": {
+"res": "angler:PrebuiltGmsCore:auth_error_generic_server_error",
+"en": "There was a problem communicating with Google servers. \n\nTry again later.",
+"hu": "Hiba történt a Google szervereivel való kommunikáció során. \n\nPróbálja újra később.",
+"de": "Bei der Kommunikation mit den Google-Servern ist ein Problem aufgetreten. \n\nVersuche es später erneut.",
+"fr": "Un problème est survenu lors de la connexion aux serveurs Google. \n\nVeuillez réessayer plus tard.",
+"es": "Se ha producido un problema al establecer comunicación con los servidores de Google. \n\nInténtalo de nuevo más tarde."
+},
+"PrebuiltGmsCore/auth_gls_name_checking_info_title": {
+"res": "angler:PrebuiltGmsCore:auth_gls_name_checking_info_title",
+"en": "Checking info…",
+"hu": "Adatok ellenőrzése…",
+"de": "Daten werden überprüft…",
+"fr": "Vérification des informations…",
+"es": "Comprobando información…"
+},
+"PrebuiltGmail/exchange_eas_name": {
+"res": "angler:PrebuiltGmail:exchange_eas_name",
+"en": "Exchange",
+"hu": "Exchange",
+"de": "Exchange",
+"fr": "Exchange",
+"es": "Exchange",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"PrebuiltGmail/imap_name": {
+"res": "angler:PrebuiltGmail:imap_name",
+"en": "Personal (IMAP)",
+"hu": "Személyes (IMAP)",
+"de": "Privat (IMAP)",
+"fr": "Personnel (IMAP)",
+"es": "Personal (IMAP)"
+},
+"PrebuiltGmail/pop3_name": {
+"res": "angler:PrebuiltGmail:pop3_name",
+"en": "Personal (POP3)",
+"hu": "Személyes (POP3)",
+"de": "Privat (POP3)",
+"fr": "Personnel (POP3)",
+"es": "Personal (POP3)"
+},
+"PrebuiltGmail/account_setup_basics_title": {
+"res": "angler:PrebuiltGmail:account_setup_basics_title",
+"en": "Account setup",
+"hu": "Fiók beállítása",
+"de": "Kontoeinrichtung",
+"fr": "Configuration du compte",
+"es": "Configuración de la cuenta"
+},
+"PrebuiltGmail/account_setup_basics_headline": {
+"res": "angler:PrebuiltGmail:account_setup_basics_headline",
+"en": "Add your email address",
+"hu": "Adja hozzá e-mail-címét",
+"de": "Meine E-Mail-Adresse hinzufügen",
+"fr": "Ajouter votre adresse e-mail",
+"es": "Añade tu dirección de correo electrónico"
+},
+"PrebuiltGmail/account_setup_basics_email_label": {
+"res": "angler:PrebuiltGmail:account_setup_basics_email_label",
+"en": "Enter your email",
+"hu": "Írja be e-mail-címét",
+"de": "Geben Sie Ihre E-Mail-Adresse ein.",
+"fr": "Saisissez votre adresse e-mail.",
+"es": "Escribe tu dirección de correo"
+},
+"PrebuiltGmail/account_setup_basics_manual_setup_action": {
+"res": "angler:PrebuiltGmail:account_setup_basics_manual_setup_action",
+"en": "Manual setup",
+"hu": "Manuális beállítás",
+"de": "Manuell einrichten",
+"fr": "Config. manuelle",
+"es": "Configuración manual"
+},
+"PrebuiltGmail/next": {
+"res": "angler:PrebuiltGmail:next",
+"en": "Next",
+"hu": "Következő",
+"de": "Weiter",
+"fr": "Suivante",
+"es": "Siguiente"
+},
+"PrebuiltGmail/account_setup_check_settings_check_incoming_msg": {
+"res": "angler:PrebuiltGmail:account_setup_check_settings_check_incoming_msg",
+"en": "Validating server settings…",
+"hu": "Szerverbeállítások ellenőrzése…",
+"de": "Servereinstellungen werden überprüft…",
+"fr": "Validation des paramètres du serveur en cours…",
+"es": "Validando los ajustes del servidor…"
+},
+"PrebuiltGmail/account_setup_failed_dlg_title": {
+"res": "angler:PrebuiltGmail:account_setup_failed_dlg_title",
+"en": "Couldn't finish",
+"hu": "Nem sikerült befejezni",
+"de": "Fertigstellen nicht möglich",
+"fr": "Impossible de terminer l'opération",
+"es": "No se ha podido terminar la configuración"
+},
+"PrebuiltGmail/account_setup_failed_ioerror": {
+"res": "angler:PrebuiltGmail:account_setup_failed_ioerror",
+"en": "Couldn't open connection to server.",
+"hu": "Nem sikerült megnyitni a kapcsolatot a szerverrel.",
+"de": "Verbindung zum Server kann nicht hergestellt werden.",
+"fr": "Impossible d'établir la connexion avec le serveur.",
+"es": "No se ha podido conectar con el servidor."
+},
+"PrebuiltGmail/account_setup_failed_dlg_edit_details_action": {
+"res": "angler:PrebuiltGmail:account_setup_failed_dlg_edit_details_action",
+"en": "Edit details",
+"hu": "Részletek szerkesztése",
+"de": "Details bearbeiten",
+"fr": "Modifier les infos",
+"es": "Modificar detalles"
+},
 "settings_suggestion_header_summary_hidden_items": {
 "res": "angler:SettingsGoogle:settings_suggestion_header_summary_hidden_items",
 "en": {

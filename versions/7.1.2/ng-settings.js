@@ -59,7 +59,7 @@
     'com.android.settings.notification.SoundSettings': 'xml:sound_settings', 'com.android.settings.applications.ManageApplications': 'apps',
     'com.android.settings.deviceinfo.StorageSettings': 'storage', 'com.android.settings.fuelgauge.PowerUsageSummary': 'battery',
     'com.android.settings.applications.ProcessStatsSummary': 'memory', 'com.android.settings.users.UserSettings': 'xml:user_settings',
-    'com.android.settings.nfc.PaymentSettings': 'nfc-payment', 'com.android.settings.gestures.GestureSettings': 'gestures',
+    'com.android.settings.nfc.PaymentSettings': 'nfc-payment', 'com.android.settings.gestures.GestureSettings': 'xml:gesture_settings',
     'com.android.settings.location.LocationSettings': 'xml:location_settings', 'com.android.settings.SecuritySettings': 'security',
     'com.android.settings.accounts.AccountSettings': 'accounts', 'com.android.settings.inputmethod.InputMethodAndLanguageSettings': 'xml:language_settings',
     'com.android.settings.PrivacySettings': 'xml:privacy_settings', 'com.android.settings.DateTimeSettings': 'xml:date_time_prefs',

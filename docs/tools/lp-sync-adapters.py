@@ -1,10 +1,11 @@
 """Writes versions/5.1.1/lp-sync-adapters.js (or, with "maguro", versions/4.0.4/ics-sync-adapters.js): the switches /
 check boxes Settings' AccountSyncSettings lists for a Google account on the Nexus 6 LMY48Y (Galaxy Nexus IMM76I) image
-(with "bullhead": versions/6.0.1/mm-sync-adapters.js, MM.syncAdapters, from the Nexus 5X MTC20K image). Every APK's res/xml <sync-adapter accountType="com.google"> that is userVisible, with the label of
+(with "bullhead": versions/6.0.1/mm-sync-adapters.js, MM.syncAdapters, from the Nexus 5X MTC20K image; with "angler":
+versions/7.1.2/ng-sync-adapters.js, NG.syncAdapters, from the Nexus 6P N2G48C image). Every APK's res/xml <sync-adapter accountType="com.google"> that is userVisible, with the label of
 the content provider behind its contentAuthority (ProviderInfo.loadLabel, which falls back to the application label),
 in English, Hungarian, German, French and Spanish; providers declared android:syncable="false" are left out, one row per
 authority, sorted by the English label. Run from the repository root:
-    python docs/tools/lp-sync-adapters.py [maguro | bullhead]"""
+    python docs/tools/lp-sync-adapters.py [maguro | bullhead | angler]"""
 import glob, json, os, re, sys
 from loguru import logger; logger.remove()
 from androguard.core.apk import APK
@@ -13,7 +14,8 @@ ROOT = __file__.replace('\\', '/').rsplit('/docs/', 1)[0] + '/'
 LANGS = ['en', 'hu', 'de', 'fr', 'es']
 DEVICE = (sys.argv[1:] or ['shamu'])[0]
 OUT, VAR, NAME = {'shamu': ('5.1.1/lp-sync-adapters.js', 'window.LPSyncAdapters', 'Nexus 6 LMY48Y'), 'maguro': ('4.0.4/ics-sync-adapters.js', 'window.ICSSyncAdapters', 'Galaxy Nexus IMM76I'),
-                   'bullhead': ('6.0.1/mm-sync-adapters.js', 'MM.syncAdapters', 'Nexus 5X MTC20K')}[DEVICE]
+                   'bullhead': ('6.0.1/mm-sync-adapters.js', 'MM.syncAdapters', 'Nexus 5X MTC20K'),
+                   'angler': ('7.1.2/ng-sync-adapters.js', 'NG.syncAdapters', 'Nexus 6P N2G48C')}[DEVICE]
 adapters, providers, apks = [], {}, {}
 def text(apk, ref):
     """{lang: value} of a @7f... reference in an APK (or the literal)."""

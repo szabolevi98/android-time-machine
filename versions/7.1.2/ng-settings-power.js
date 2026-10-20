@@ -189,3 +189,19 @@
     }
   };
 })();
+/* GestureSettings (Moves) on the 6P: GesturePreference falls back to a plain switch row when its video does not play,
+   and the 6P's gesture_*.mp4 are empty files in SettingsGoogle; Jump to camera (config_cameraDoubleTapPowerGestureEnabled),
+   Swipe for notifications (config_supportSystemNavigationKeys), Flip camera (the vendor sensor HAL's "Double Twist"),
+   pick-up for Ambient display (config_dozePulsePickup); double-tap for Ambient display goes (no
+   config_dozeDoubleTapSensorType). Each keeps its Settings.Secure default: camera gestures on, swipe off, pick-up on (boolSettingDefaultOn). */
+(() => {
+  'use strict';
+  const S = c => c.data.settings;
+  const DEFAULTS = {gesture_double_tap_power: true, gesture_double_twist: true, gesture_swipe_down_fingerprint: false, gesture_pick_up: true};
+  NG.settingsHooks.gesture_settings = {
+    hidden: ['gesture_double_tap_screen'],
+    switch: Object.keys(DEFAULTS),
+    get: (c, key) => key in DEFAULTS ? (S(c).gestures?.[key] ?? DEFAULTS[key]) : undefined,
+    set(c, key, v) { if (!(key in DEFAULTS)) return false; S(c).gestures = {...(S(c).gestures || {}), [key]: v}; return true; }
+  };
+})();
