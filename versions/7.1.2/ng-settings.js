@@ -647,7 +647,7 @@
         const kind = el.dataset.kind;
         if (kind === 'help') { go(c, 'help', ''); return true; }
         if (kind === 'tips') { c.open('tips'); return true; }
-        go(c, `support:${kind}`, ''); return true;
+        NG.settingsSupportEscalation ? NG.settingsSupportEscalation(c, kind) : go(c, `support:${kind}`, ''); return true;
       }
       if (name === 'ngst-search') { NG.settingsSearch ? NG.settingsSearch(c) : go(c, 'search', T().t('search_menu'), 'up'); return true; }
       if (name === 'ngst-pref' && cur?.xml) {

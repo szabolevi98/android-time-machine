@@ -12248,6 +12248,62 @@ NG.strings('settings', {
 "fr": "Modifier les infos",
 "es": "Modificar detalles"
 },
+"search_results_label": {
+"res": "angler:SettingsGoogle:search_results_label",
+"en": "Results",
+"hu": "Találatok",
+"de": "Ergebnisse",
+"fr": "Résultats",
+"es": "Resultados"
+},
+"search_recents_queries_label": {
+"res": "angler:SettingsGoogle:search_recents_queries_label",
+"en": "Recent searches",
+"hu": "Legutóbbi keresések",
+"de": "Letzte Suchanfragen",
+"fr": "Recherches récentes",
+"es": "Búsquedas recientes"
+},
+"framework/searchview_description_clear": {
+"res": "angler:framework:searchview_description_clear",
+"en": "Clear query",
+"hu": "Lekérdezés törlése",
+"de": "Anfrage löschen",
+"fr": "Effacer la requête",
+"es": "Borrar consulta"
+},
+"support_loader_dialog_message": {
+"res": "angler:SettingsGoogle:support_loader_dialog_message",
+"en": "Just a sec…",
+"hu": "Egy pillanat...",
+"de": "Bitte warten…",
+"fr": "Un instant…",
+"es": "Un segundo…"
+},
+"support_disclaimer_title": {
+"res": "angler:SettingsGoogle:support_disclaimer_title",
+"en": "Send system information",
+"hu": "Rendszeradatok elküldése",
+"de": "Systeminformationen senden",
+"fr": "Envoyer des informations sur le système",
+"es": "Enviar información del sistema"
+},
+"support_disclaimer_content": {
+"res": "angler:SettingsGoogle:support_disclaimer_content",
+"en": "To address questions about your phone, system information, including app usage, will be sent to Google. \n\nFor more info, see Google's Privacy Policy and Terms of Service. ",
+"hu": "Annak érdekében, hogy segíthessünk a telefonjával kapcsolatos kérdésekben, a Google megkapja a rendszer-információkat (beleértve az alkalmazáshasználati adatokat is). \n\nHa további információt szeretne kapni, olvassa el a Google Adatvédelmi irányelveit és Általános Szerződési Feltételeit.",
+"de": "Damit wir Fragen zu deinem Smartphone beantworten können, werden Systeminformationen, einschließlich der App-Nutzung, an Google gesendet. \n\nWeitere Informationen findest du in der Datenschutzerklärung und den Nutzungsbedingungen von Google.",
+"fr": "Pour traiter les questions relatives à votre téléphone, les informations système, y compris celles concernant l'utilisation des applications, seront envoyées à Google. \n\nPour en savoir plus, consultez les Règles de confidentialité et les Conditions d'utilisation de Google.",
+"es": "Las preguntas sobre el teléfono, la información del sistema o el uso de las aplicaciones se enviarán a Google para resolverlas.\n\nPara más información, consulta la Política de Privacidad y las Condiciones de Servicio de Google."
+},
+"support_disclaimer_do_not_show": {
+"res": "angler:SettingsGoogle:support_disclaimer_do_not_show",
+"en": "Do not show again",
+"hu": "Ne jelenjen meg újra",
+"de": "Nicht noch einmal anzeigen",
+"fr": "Ne plus afficher",
+"es": "No volver a mostrar"
+},
 "settings_suggestion_header_summary_hidden_items": {
 "res": "angler:SettingsGoogle:settings_suggestion_header_summary_hidden_items",
 "en": {

@@ -58,6 +58,7 @@ versions/7.1.2/assets/fw-ic_audio_ring_notif_mute.svg	ddf56eb07d858071	vector	an
 versions/7.1.2/assets/fw-ic_audio_ring_notif_vibrate.svg	8444f5e7beb66327	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_audio_ring_notif_vibrate.xml	drawable	vector drawable drawn as SVG	de75656bfce79ae0
 versions/7.1.2/assets/fw-ic_chevron_end.svg	d1c79bc4e4b50441	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_chevron_end.xml	drawable	vector drawable drawn as SVG	760dc3b92a0f0120
 versions/7.1.2/assets/fw-ic_chevron_start.svg	6f1642d19032f31e	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_chevron_start.xml	drawable	vector drawable drawn as SVG	3a465d8cd1fbe4a1
+versions/7.1.2/assets/fw-ic_clear_material.svg	7483c33b90753c14	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_clear_material.xml	drawable	vector drawable drawn as SVG	e9fa71db7f173aca
 versions/7.1.2/assets/fw-ic_lock_power_off.svg	5b4201f21766b0f3	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_lock_power_off.xml	drawable	vector drawable drawn as SVG	ec0bcae2cfacaf2f
 versions/7.1.2/assets/fw-ic_menu_moreoverflow_material.svg	1838187e20cd01ba	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_menu_moreoverflow_material.xml	drawable	vector drawable drawn as SVG	21c5d08046c0c1f8
 versions/7.1.2/assets/fw-ic_restart.svg	eed2155fe1231af1	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_restart.xml	drawable	vector drawable drawn as SVG	dde276bb089c0bc1
@@ -205,6 +206,7 @@ versions/7.1.2/assets/st-ic_menu_refresh_holo_dark.png	d3ef7626faa5a539	copy	ang
 versions/7.1.2/assets/st-ic_power_system.png	7f2bcf47f3cdbbbd	copy	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable-xxxhdpi-v4/ic_power_system.png	drawable-xxxhdpi-v4		7f2bcf47f3cdbbbd
 versions/7.1.2/assets/st-ic_remove_24dp.svg	1eed25741a31d889	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_remove_24dp.xml	drawable	vector drawable drawn as SVG	a2f620bafe6f32a1
 versions/7.1.2/assets/st-ic_restore_googblue_48dp.svg	100e24a5d9deaa36	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_restore_googblue_48dp.xml	drawable	vector drawable drawn as SVG	1a17ebfe99f2ac2c
+versions/7.1.2/assets/st-ic_search_history_am.png	9cb761b0e1447bce	copy	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable-xxxhdpi-v4/ic_search_history_am.png	drawable-xxxhdpi-v4		9cb761b0e1447bce
 versions/7.1.2/assets/st-ic_settings.svg	e9c16f1dec073d0a	vector	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-v21/ic_settings.xml	drawable-v21	vector drawable drawn as SVG	fa0f24cfe2c4f2db
 versions/7.1.2/assets/st-ic_settings_24dp.svg	d2d8d70ca50fb715	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_settings_24dp.xml	drawable	vector drawable drawn as SVG	e3a719716b5953fe
 versions/7.1.2/assets/st-ic_settings_about.svg	ccc6894753efd993	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_settings_about.xml	drawable	vector drawable drawn as SVG	8db5f34f6914bf7e

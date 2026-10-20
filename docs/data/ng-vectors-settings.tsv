@@ -10,6 +10,7 @@ fw-ic_audio_ring_notif_mute.svg	framework/framework-res.apk	ic_audio_ring_notif_
 fw-ic_audio_ring_notif_vibrate.svg	framework/framework-res.apk	ic_audio_ring_notif_vibrate	tint=#8a000000
 fw-ic_chevron_end.svg	framework/framework-res.apk	ic_chevron_end	tint=#8a000000
 fw-ic_chevron_start.svg	framework/framework-res.apk	ic_chevron_start	tint=#8a000000
+fw-ic_clear_material.svg	framework/framework-res.apk	ic_clear_material	tint=#8a000000
 fw-ic_search_api_material.svg	framework/framework-res.apk	ic_search_api_material	tint=#8a000000
 fw-perm_group_calendar.svg	framework/framework-res.apk	perm_group_calendar	-
 fw-perm_group_camera.svg	framework/framework-res.apk	perm_group_camera	-
