@@ -1,0 +1,17 @@
+# Google Camera 4.3: its vector icons (ng-camera.js)
+cm-ic_camera.svg	app/GoogleCamera/GoogleCamera.apk	ic_camera	-
+cm-ic_videocam.svg	app/GoogleCamera/GoogleCamera.apk	ic_videocam	-
+cm-ic_refocus.svg	app/GoogleCamera/GoogleCamera.apk	ic_refocus	-
+cm-ic_photosphere_normal.svg	app/GoogleCamera/GoogleCamera.apk	ic_photosphere_normal	-
+cm-ic_panorama_normal.svg	app/GoogleCamera/GoogleCamera.apk	ic_panorama_normal	-
+cm-ic_slow_motion_video.svg	app/GoogleCamera/GoogleCamera.apk	ic_slow_motion_video	-
+cm-ic_settings_normal_nopadding.svg	app/GoogleCamera/GoogleCamera.apk	ic_settings_normal_nopadding	-
+cm-front_back_switch_button.svg	app/GoogleCamera/GoogleCamera.apk	front_back_switch_button	-
+cm-ic_chevron_left_white_24dp.svg	app/GoogleCamera/GoogleCamera.apk	ic_chevron_left_white_24dp	-
+cm-ic_videocam_thumbnail.svg	app/GoogleCamera/GoogleCamera.apk	ic_videocam_thumbnail	-
+cm-ic_panorama_horizontal_on_white_24.svg	app/GoogleCamera/GoogleCamera.apk	ic_panorama_horizontal_on_white_24	-
+cm-ic_panorama_vertical_on_white_24.svg	app/GoogleCamera/GoogleCamera.apk	ic_panorama_vertical_on_white_24	-
+cm-ic_panorama_wide_angle_on_white_24.svg	app/GoogleCamera/GoogleCamera.apk	ic_panorama_wide_angle_on_white_24	-
+cm-ic_panorama_fish_eye_on_white_24.svg	app/GoogleCamera/GoogleCamera.apk	ic_panorama_fish_eye_on_white_24	-
+cm-ic_pause_resume.svg	app/GoogleCamera/GoogleCamera.apk	ic_pause_resume	-
+cm-ic_resume_pause.svg	app/GoogleCamera/GoogleCamera.apk	ic_resume_pause	-

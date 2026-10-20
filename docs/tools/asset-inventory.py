@@ -392,10 +392,11 @@ def regenerate(version):
     files, which are put back afterwards."""
     device = VERSIONS[version][0]
     folder = f'{ROOT}versions/{version}/'
-    before = {f: open(folder + f, 'rb').read() for f in ['boot-animation.js'] + [f'assets/{n}' for n in os.listdir(folder + 'assets') if n.startswith('boot-part')]}
+    script = {'2.1': 'ec-boot-animation.js', '6.0.1': 'mm-boot-animation.js', '7.1.2': 'ng-boot-animation.js'}.get(version, 'boot-animation.js')
+    before = {f: open(folder + f, 'rb').read() for f in [script] + [f'assets/{n}' for n in os.listdir(folder + 'assets') if n.startswith('boot-part')]}
     try:
         subprocess.run([sys.executable, ROOT + 'docs/tools/bootanimation.py', device], check=True, capture_output=True)
-        after = {f: open(folder + f, 'rb').read() for f in ['boot-animation.js'] + [f'assets/{n}' for n in os.listdir(folder + 'assets') if n.startswith('boot-part')]}
+        after = {f: open(folder + f, 'rb').read() for f in [script] + [f'assets/{n}' for n in os.listdir(folder + 'assets') if n.startswith('boot-part')]}
     finally:
         for n in os.listdir(folder + 'assets'):
             if n.startswith('boot-part') and f'assets/{n}' not in before: os.remove(f'{folder}assets/{n}')

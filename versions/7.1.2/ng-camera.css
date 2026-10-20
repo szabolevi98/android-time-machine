@@ -1,0 +1,78 @@
+/* Google Camera 4.3.016 of angler N2G48C: bottom_bar_layout, optionsbar_closed_layout,
+   optionsbar_opened_layout, toybox_menu_item and ShutterButton.onDraw. Dimensions and colours
+   are from this image's resources and decompiled classes (see ng-camera.js). */
+.screen.view-camera #viewport{bottom:0}
+.screen.view-camera .ngnb{background:transparent}
+.ngcm{position:absolute;inset:0;background:#000;color:#fff;overflow:hidden;font-family:Roboto,Arial,sans-serif;touch-action:none}
+.ngcm button{display:flex;align-items:center;justify-content:center;border:0;padding:0;background:none;color:inherit;font:inherit;-webkit-tap-highlight-color:transparent}
+.ngcm button:focus-visible{outline:calc(2 * var(--dp)) solid #4285f4;outline-offset:calc(-2 * var(--dp))}
+.ngcm-preview{position:absolute;overflow:hidden;touch-action:none}
+.ngcm-scenebox,.ngcm-scene,.ngcm-grid,.ngcm-flashfx,.ngcm-scrim{position:absolute;inset:0;width:100%;height:100%}
+.ngcm-grid,.ngcm-flashfx,.ngcm-scrim{pointer-events:none}
+.ngcm-gv,.ngcm-gh{position:absolute;background:#ffffff80}
+.ngcm-gv{top:0;bottom:0;width:1px}
+.ngcm-gh{left:0;right:0;height:1px}
+.ngcm-flashfx{background:#fff;opacity:0}
+.ngcm-scrim{background:#000;opacity:0;transition:opacity .2s}
+.ngcm.menu .ngcm-scrim{opacity:.6}
+.ngcm-bar{position:absolute;display:flex;align-items:center;justify-content:space-between;box-sizing:border-box;padding:0 calc(20 * var(--dp));background:#000}
+.ngcm-bar.overlay{background:#00000032}
+.ngcm-place{display:flex;align-items:center;justify-content:center;width:calc(96 * var(--dp));height:calc(96 * var(--dp));transform:translateY(calc(-12 * var(--dp)))}
+.ngcm .ngcm-shutter{position:relative;width:calc(96 * var(--dp));height:calc(96 * var(--dp));border-radius:50%}
+.ngcm-shutter i{position:absolute;border-radius:50%;pointer-events:none}
+.ngcm-sring{width:calc(72 * var(--dp));height:calc(72 * var(--dp));background:#fff}
+.ngcm-sphoto{width:calc(56 * var(--dp));height:calc(56 * var(--dp));background:#cfd8dc}
+.ngcm-shutter:active .ngcm-sphoto{background:#4285f4}
+.ngcm-svideo{width:calc(16 * var(--dp));height:calc(16 * var(--dp));background:#db4437;display:none;transition:width .35s,height .35s}
+.ngcm-shutter.video .ngcm-sphoto{display:none}
+.ngcm-shutter.video .ngcm-svideo{display:block}
+.ngcm-shutter.rec .ngcm-svideo{width:calc(72 * var(--dp));height:calc(72 * var(--dp))}
+.ngcm-shutter .ngcm-sstop{display:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));border-radius:0;background:#fff}
+.ngcm-shutter.rec .ngcm-sstop{display:block}
+.ngcm-switch,.ngcm-hfr{width:calc(56 * var(--dp));height:calc(56 * var(--dp));border-radius:50%}
+.ngcm-switch img{width:100%;height:100%}
+.ngcm .ngcm-pause{width:calc(48 * var(--dp));height:calc(48 * var(--dp));border-radius:50%;background:#fff}
+.ngcm-pause img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngcm .ngcm-hfr{flex-direction:column;background:#0000004c}
+.ngcm-hfr b{font-size:calc(18 * var(--dp));font-weight:400}
+.ngcm-hfr span{font-size:calc(10 * var(--dp))}
+.ngcm .ngcm-thumb{position:relative;width:calc(48 * var(--dp));height:calc(48 * var(--dp));border-radius:50%;border:calc(2 * var(--dp)) solid #ffffff4d;box-sizing:border-box}
+.ngcm-thumb.empty{visibility:hidden}
+.ngcm-tsvg{width:100%;height:100%;border-radius:50%;overflow:hidden}
+.ngcm-thumb.landed::after{content:"";position:absolute;inset:0;border:calc(2 * var(--dp)) solid #fff;border-radius:50%;animation:ngcm-land .5s ease-out forwards}
+@keyframes ngcm-land{from{transform:scale(.83);opacity:1}to{transform:scale(2);opacity:0}}
+.ngcm-obar{position:absolute;left:0;right:0;top:calc(16 * var(--dp));height:calc(72 * var(--dp));display:flex;align-items:center;z-index:4}
+.ngcm-oplace{width:calc(56 * var(--dp));flex:none}
+.ngcm-opts{display:flex;justify-content:flex-end;flex:1;padding-right:calc(4 * var(--dp))}
+.ngcm .ngcm-opt{width:calc(48 * var(--dp));height:calc(56 * var(--dp))}
+.ngcm-opt img,.ngcm-xopt img{width:calc(32 * var(--dp));height:calc(32 * var(--dp));object-fit:contain}
+.ngcm-obar.open{background:#000000bc}
+.ngcm-expanded{display:flex;width:100%;height:100%;justify-content:space-evenly}
+.ngcm .ngcm-xopt{flex:1;min-width:0;flex-direction:column;gap:calc(3 * var(--dp));opacity:.5}
+.ngcm-xopt.on{opacity:1}
+.ngcm-xopt span{font-size:calc(12 * var(--dp));text-align:center;line-height:1.1}
+.ngcm-oscrim{position:absolute;inset:0;z-index:3}
+.ngcm .ngcm-burger,.ngcm .ngcm-close{position:absolute;top:calc(24 * var(--dp));left:calc(4 * var(--dp));width:calc(48 * var(--dp));height:calc(56 * var(--dp));z-index:6}
+.ngcm-burger i{position:absolute;width:calc(18 * var(--dp));height:calc(2 * var(--dp));background:#fff;box-shadow:0 calc(1.17 * var(--dp)) #00000057;transition:transform .2s}
+.ngcm-burger i:first-child{transform:translateY(calc(-6 * var(--dp)))}
+.ngcm-burger i:last-child{transform:translateY(calc(6 * var(--dp)))}
+.ngcm-burger.arrow i:first-child{transform:translate(calc(-4 * var(--dp)),calc(-4 * var(--dp))) rotate(-45deg);width:calc(12 * var(--dp))}
+.ngcm-burger.arrow i:last-child{transform:translate(calc(-4 * var(--dp)),calc(4 * var(--dp))) rotate(45deg);width:calc(12 * var(--dp))}
+.ngcm-close img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.ngcm-drawer{position:absolute;inset:calc(88 * var(--dp)) 0 calc(190 * var(--dp));z-index:5;overflow-y:auto}
+.ngcm .ngcm-ditem{width:100%;height:calc(64 * var(--dp));justify-content:flex-start;font-size:calc(16 * var(--dp));font-weight:500;text-align:left}
+.ngcm-ditem:active{background:#ffffff26}
+.ngcm-ditem>span{display:flex;align-items:center;justify-content:center;width:calc(56 * var(--dp));height:100%;margin-right:calc(16 * var(--dp));flex:none}
+.ngcm-ditem img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngcm .ngcm-pager{position:absolute;width:calc(72 * var(--dp));height:calc(38 * var(--dp));gap:calc(8 * var(--dp));z-index:2}
+.ngcm-pager i{width:calc(5 * var(--dp));height:calc(5 * var(--dp));border-radius:50%;background:#fff6}
+.ngcm-pager i.on{background:#fff}
+.ngcm-hint{position:absolute;left:0;right:0;height:calc(100 * var(--dp));display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,#0000008a,transparent);pointer-events:none}
+.ngcm-hint span{display:flex;align-items:center;font-size:calc(14 * var(--dp));text-shadow:0 1px 2px #000}
+.ngcm-hint img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin-right:calc(8 * var(--dp))}
+.ngcm-count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:calc(96 * var(--dp));font-weight:400;text-shadow:0 1px 3px #000}
+.ngcm-mswitch{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
+.ngcm-mswitch img{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
+.ngcm-rec{position:absolute;top:calc(24 * var(--dp));left:50%;transform:translateX(-50%);padding:calc(6 * var(--dp)) calc(12 * var(--dp));border-radius:calc(3 * var(--dp));background:#0009;font-size:calc(14 * var(--dp))}
+.ngcm-selfie{position:absolute;inset:0;background:#ffe8cf;opacity:0;pointer-events:none;z-index:7}
+@media(prefers-reduced-motion:reduce){.ngcm *{animation-duration:.01ms!important;transition:none!important}}

@@ -8,7 +8,7 @@
    - the site controls around the phone: language, full screen, reset
    Every screen is drawn by an ng- module that registers itself:
      NG.register(id, {title, app, render(c), mount(c, root), action(name, el, event, c), submit(form, event, c),
-                      back(c), tick(c, now), noStatus(c), noNav(c), keepAwake(c), timeout(c)})
+                      back(c), unmount(c), tick(c, now), noStatus(c), noNav(c), keepAwake(c), timeout(c)})
    render() returns the screen's HTML; the other hooks are optional and return true when they handled the event.
    A screen no module draws shows the "not built yet" card instead of an older version's screen. */
 (() => {
@@ -215,6 +215,8 @@
     } else old.remove();
   }
   function render() {
+    // Release activity resources before another screen (or the screen-off state) takes over.
+    if (shown.view && (shown.view !== ui.view || ui.sleeping)) modules[shown.view]?.unmount?.(c);
     snapshot();
     const mod = modules[ui.view];
     const page = mod?.page?.(c) ?? '';
