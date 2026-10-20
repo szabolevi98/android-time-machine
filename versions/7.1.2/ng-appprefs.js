@@ -9,6 +9,7 @@
      dialog. A nested PreferenceScreen opens as the next screen; a header or preference with a fragment opens the XML
      its hook names; a hook's custom screen (customs: {name: {title, render, action}}) draws a page of its own.
    Hooks (NG.appPrefsHooks[app]): {title(c, key, node), hide(c, key, node) or hidden: [keys], summary(c, key, node),
+   top(c, xml) / after(c, xml) (rows of the hook's own before / after the XML's),
    click(c, key, node), get(c, key), set(c, key, v), fragments: {class name: xml}, screens: {key: xml}, top(c, xml),
    color: [bar, status], customs}.
    Use: NG.openPrefs(c, app, xml, title). */
@@ -103,7 +104,7 @@
     const s = cur(c), custom = hooks(c).customs?.[s.xml], [primary] = colors(c), h = hooks(c);
     const n = custom ? null : nodeOf(c);
     const title = s.title || custom?.title?.(c) || (n && str(n.title)) || h.screenTitle?.(c, s.xml) || '';
-    const body = custom ? custom.render(c) : n ? `${h.top?.(c, s.xml) || ''}${rows(c, n)}` : c.missing('app-prefs');
+    const body = custom ? custom.render(c) : n ? `${h.top?.(c, s.xml) || ''}${rows(c, n)}${h.after?.(c, s.xml) || ''}` : c.missing('app-prefs');
     const bg = h.window || app(c).theme?.windowBackground || '#fafafa';
     return `<div class="ngst ngap" style="--ngap-primary:${primary};--ngap-accent:${accent(c)};--ngap-window:${bg}"><div class="ngst-ab"><button type="button" class="ngst-nav" data-action="ngap-up" aria-label="${esc(c, NG.text('settings').t('framework/action_bar_up_description'))}"><i style="-webkit-mask-image:url('assets/fw-ic_ab_back_material.svg');mask-image:url('assets/fw-ic_ab_back_material.svg')"></i></button>
       <span class="ngst-abtitle nav">${esc(c, title)}</span><span class="ngst-actions">${custom?.actions?.(c) || ''}</span></div><div class="ngst-content ngst-list ngap-list">${body}</div></div>`;

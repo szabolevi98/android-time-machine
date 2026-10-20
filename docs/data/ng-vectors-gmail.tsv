@@ -1,0 +1,17 @@
+# Gmail 6.9.25: its vector icons (ng-gmail.js)
+gm-ic_menu_wht_24dp.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_menu_wht_24dp	-
+gm-ic_arrow_back_wht_24dp.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_arrow_back_wht_24dp	-
+gm-ic_delete_wht_24dp.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_delete_wht_24dp	-
+gm-ic_forward_24dp.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_forward_24dp	-
+gm-ic_overflow_24dp.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_overflow_24dp	-
+gm-ic_next_24dp.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_next_24dp	-
+gm-ic_drawer_inbox_24dp.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_drawer_inbox_24dp	-
+gm-ic_drawer_promotions_24dp.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_drawer_promotions_24dp	-
+gm-ic_drawer_forums_24dp.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_drawer_forums_24dp	-
+gm-ic_drawer_drafts_24dp.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_drawer_drafts_24dp	-
+gm-ic_drawer_trash_24dp.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_drawer_trash_24dp	-
+gm-ic_empty_inbox_mat.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_empty_inbox_mat	-
+gm-ic_empty_search_mat.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_empty_search_mat	-
+gm-ic_empty_default_mat.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_empty_default_mat	-
+gm-abc_ic_clear_material.svg	app/PrebuiltGmail/PrebuiltGmail.apk	abc_ic_clear_material	-
+gm-ic_menu_search.svg	app/PrebuiltGmail/PrebuiltGmail.apk	ic_menu_search	-

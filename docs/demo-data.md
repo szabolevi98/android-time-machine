@@ -29,7 +29,7 @@ The account: `<device>.demo@gmail.com` (6.0.1: nexus5x.demo@gmail.com). Carrier:
 - **Hangouts (4.3 and later):** Sam, yesterday: "The photos from the hike are up!" — me: "They look amazing 😀".
 - **Notifications on a new phone:** "Welcome to Android <x.y>" / "Your <device> is ready to explore." and "New message
   from Alex" / "See you at 11!" (opens the Alex thread). Every version (2.1 since 2026-10-19, owner's decision).
-- **E-mail / Gmail:** 2.3.6–5.1.1: one "Welcome to Android" mail from the Android Team. 6.0.1 Gmail: Alex "Hike on
+- **E-mail / Gmail:** 2.3.6–5.1.1: one "Welcome to Android" mail from the Android Team. 6.0.1 and 7.1.2 Gmail: Alex "Hike on
   Saturday?", Taylor "Slides for Monday", Mom "Sunday lunch", Sam "Photos from the trip", Tech News newsletter.
 - **Calendar:** today 11:00 "Coffee with Alex". 6.0.1 adds Sunday "Sunday lunch at Mom’s" (12:30, Bring dessert),
   Saturday "Hike with Alex" (8:00, Ridge trail), in 9 days "Meetup slides due" (all day).
