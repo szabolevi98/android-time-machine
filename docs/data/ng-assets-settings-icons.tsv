@@ -18,3 +18,5 @@ st-caption_background.jpg	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/ca
 st-accessibility_screen_magnification.mp4	priv-app/SettingsGoogle/SettingsGoogle.apk	res/raw/accessibility_screen_magnification.mp4
 st-msg_bubble_incoming.9.png	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/msg_bubble_incoming
 st-msg_bubble_outgoing.9.png	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/msg_bubble_outgoing
+# Battery: PowerUsageBase's Refresh action
+st-ic_menu_refresh_holo_dark.png	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/ic_menu_refresh_holo_dark

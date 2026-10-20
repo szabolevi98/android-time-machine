@@ -11,6 +11,15 @@ fw-ic_audio_ring_notif_vibrate.svg	framework/framework-res.apk	ic_audio_ring_not
 fw-ic_chevron_end.svg	framework/framework-res.apk	ic_chevron_end	tint=#8a000000
 fw-ic_chevron_start.svg	framework/framework-res.apk	ic_chevron_start	tint=#8a000000
 fw-ic_search_api_material.svg	framework/framework-res.apk	ic_search_api_material	tint=#8a000000
+fw-perm_group_calendar.svg	framework/framework-res.apk	perm_group_calendar	-
+fw-perm_group_camera.svg	framework/framework-res.apk	perm_group_camera	-
+fw-perm_group_contacts.svg	framework/framework-res.apk	perm_group_contacts	-
+fw-perm_group_location.svg	framework/framework-res.apk	perm_group_location	-
+fw-perm_group_microphone.svg	framework/framework-res.apk	perm_group_microphone	-
+fw-perm_group_phone_calls.svg	framework/framework-res.apk	perm_group_phone_calls	-
+fw-perm_group_sensors.svg	framework/framework-res.apk	perm_group_sensors	-
+fw-perm_group_sms.svg	framework/framework-res.apk	perm_group_sms	-
+fw-perm_group_storage.svg	framework/framework-res.apk	perm_group_storage	-
 st-accessibility_screen_magnification_background.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	accessibility_screen_magnification_background	-
 st-drag_handle.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	drag_handle	-
 st-fp_illustration_enrollment.svg	priv-app/SettingsGoogle/SettingsGoogle.apk	fp_illustration_enrollment	-

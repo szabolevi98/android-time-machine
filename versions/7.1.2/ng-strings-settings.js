@@ -6729,7 +6729,6 @@ NG.strings('settings', {
 },
 "power_remaining_duration_only": {
 "res": "angler:SettingsGoogle:power_remaining_duration_only",
-"args": 1,
 "en": "Approx. %1$s left",
 "hu": "Kb. %1$s van hátra",
 "de": "Noch ca. %1$s verbleibend",
@@ -11061,6 +11060,926 @@ NG.strings('settings', {
 "fr": "Aperçu des sous-titres",
 "es": "Así aparecerán los subtítulos"
 },
+"filter_all_apps": {
+"res": "angler:SettingsGoogle:filter_all_apps",
+"en": "All apps",
+"hu": "Az összes alkalmazás",
+"de": "Alle Apps",
+"fr": "Toutes les applis",
+"es": "Todas las aplicaciones"
+},
+"filter_enabled_apps": {
+"res": "angler:SettingsGoogle:filter_enabled_apps",
+"en": "Enabled",
+"hu": "Engedélyezve",
+"de": "Aktiviert",
+"fr": "Activées",
+"es": "Habilitadas"
+},
+"filter_apps_disabled": {
+"res": "angler:SettingsGoogle:filter_apps_disabled",
+"en": "Disabled",
+"hu": "Nincs engedélyezve",
+"de": "Deaktiviert",
+"fr": "Désactivées",
+"es": "Inhabilitadas"
+},
+"reset_app_preferences_title": {
+"res": "angler:SettingsGoogle:reset_app_preferences_title",
+"en": "Reset app preferences?",
+"hu": "Visszaállítja a beállításokat?",
+"de": "App-Einstellungen zurücksetzen?",
+"fr": "Réinitialiser les préférences ?",
+"es": "¿Restablecer preferencias de las aplicaciones?"
+},
+"reset_app_preferences_desc": {
+"res": "angler:SettingsGoogle:reset_app_preferences_desc",
+"en": "This will reset all preferences for:\n\n Disabled apps\n Disabled app notifications\n Default applications for actions\n Background data restrictions for apps\n Any permission restrictions\n\n You will not lose any app data.",
+"hu": "Ez visszaállítja a következőkre vonatkozó összes beállítást:\n\n Letiltott alkalmazások\n Letiltott alkalmazásértesítések\n Alapértelmezett alkalmazások adott műveletekhez\n Alkalmazások háttéradat-korlátozása\n Minden engedélykorlátozás\n\n Az alkalmazásadatok nem vesznek el.",
+"de": "Dies wird die folgenden Einstellungen zurücksetzen:\n\n Deaktivierte Apps\n Deaktivierte App-Benachrichtigungen\n Standard-Apps für bestimmte Aktionen\n Einschränkungen der Hintergrunddaten für Apps\n Jegliche Zugriffsbeschränkungen\n\n Alle App-Daten bleiben erhalten.",
+"fr": "Cette opération a pour effet de réinitialiser toutes les préférences relatives aux éléments suivants :\n\n Applications désactivées\n Notifications associées aux applications désactivées\n Applications par défaut pour les actions\n Restrictions de données en arrière-plan pour les applications\n Restrictions d'autorisations\n\n Les données liées aux applications seront conservées.",
+"es": "Se restablecerán todas las preferencias de:\n\n Aplicaciones inhabilitadas\n Notificaciones de aplicaciones inhabilitadas\n Aplicaciones predeterminadas\n Restricciones de datos móviles de aplicaciones\n Restricciones de permisos\n\nNo se perderán los datos de las aplicaciones."
+},
+"dlg_cancel": {
+"res": "angler:SettingsGoogle:dlg_cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"dlg_ok": {
+"res": "angler:SettingsGoogle:dlg_ok",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"reset_app_preferences_button": {
+"res": "angler:SettingsGoogle:reset_app_preferences_button",
+"en": "Reset apps",
+"hu": "Alapbeállítások",
+"de": "Apps zurücksetzen",
+"fr": "Réinitialiser applis",
+"es": "Restablecer aplicaciones"
+},
+"no_applications": {
+"res": "angler:SettingsGoogle:no_applications",
+"en": "No apps.",
+"hu": "Nincsenek alkalmazások.",
+"de": "Keine Apps",
+"fr": "Aucune application",
+"es": "No hay aplicaciones."
+},
+"disabled": {
+"res": "angler:SettingsGoogle:disabled",
+"en": "Disabled",
+"hu": "Letiltva",
+"de": "Deaktiviert",
+"fr": "Désactivée",
+"es": "Inhabilitada"
+},
+"configure_apps": {
+"res": "angler:SettingsGoogle:configure_apps",
+"en": "Configure apps",
+"hu": "Alkalmazások konfigurálása",
+"de": "Apps konfigurieren",
+"fr": "Configurer les applis",
+"es": "Configurar aplicaciones"
+},
+"menu_show_system": {
+"res": "angler:SettingsGoogle:menu_show_system",
+"en": "Show system",
+"hu": "Rendszer megjelenítése",
+"de": "Systemprozesse anzeigen",
+"fr": "Afficher les processus système",
+"es": "Mostrar aplicaciones del sistema"
+},
+"reset_app_preferences": {
+"res": "angler:SettingsGoogle:reset_app_preferences",
+"en": "Reset app preferences",
+"hu": "Alapbeállítások",
+"de": "App-Einstell. zurücksetzen",
+"fr": "Réinitialiser les préférences",
+"es": "Restablecer preferencias"
+},
+"menu_hide_system": {
+"res": "angler:SettingsGoogle:menu_hide_system",
+"en": "Hide system",
+"hu": "Rendszer elrejtése",
+"de": "System ausblenden",
+"fr": "Masquer les processus système",
+"es": "Ocultar aplicaciones del sistema"
+},
+"runtime_permissions_summary_no_permissions_requested": {
+"res": "angler:SettingsGoogle:runtime_permissions_summary_no_permissions_requested",
+"en": "No permissions requested",
+"hu": "Nincsenek kért engedélyek",
+"de": "Keine Berechtigungen angefordert",
+"fr": "Aucune autorisation demandée",
+"es": "No se han solicitado permisos"
+},
+"runtime_permissions_summary_no_permissions_granted": {
+"res": "angler:SettingsGoogle:runtime_permissions_summary_no_permissions_granted",
+"en": "No permissions granted",
+"hu": "Nincsenek megadott engedélyek",
+"de": "Keine Berechtigungen gewährt",
+"fr": "Aucune autorisation accordée",
+"es": "No se han concedido permisos"
+},
+"GooglePackageInstaller/system_warning": {
+"res": "angler:GooglePackageInstaller:system_warning",
+"en": "If you deny this permission, basic features of your device may no longer function as intended.",
+"hu": "Ha ezt nem engedélyezi, akkor előfordulhat, hogy az eszköz egyes alapfunkciói nem megfelelően fognak működni.",
+"de": "Wenn du diese Berechtigung deaktivierst, funktionieren grundlegende Funktionen deines Geräts möglicherweise nicht mehr ordnungsgemäß.",
+"fr": "Si vous rejetez cette autorisation, il est possible que cela affecte certaines fonctionnalités de base de votre appareil.",
+"es": "Si deniegas este permiso, es posible que algunas funciones básicas de tu dispositivo dejen de funcionar correctamente."
+},
+"GooglePackageInstaller/cancel": {
+"res": "angler:GooglePackageInstaller:cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"GooglePackageInstaller/grant_dialog_button_deny": {
+"res": "angler:GooglePackageInstaller:grant_dialog_button_deny",
+"en": "Deny",
+"hu": "Elutasítás",
+"de": "Ablehnen",
+"fr": "Refuser",
+"es": "Rechazar"
+},
+"GooglePackageInstaller/app_permissions": {
+"res": "angler:GooglePackageInstaller:app_permissions",
+"en": "App permissions",
+"hu": "Alkalmazásengedélyek",
+"de": "App-Berechtigungen",
+"fr": "Autoris. des applis",
+"es": "Permisos de aplicaciones"
+},
+"GooglePackageInstaller/app_permissions_group_summary": {
+"res": "angler:GooglePackageInstaller:app_permissions_group_summary",
+"en": "%1$d of %2$d apps allowed",
+"hu": "%2$d/%1$d alkalmazás engedélyezve",
+"de": "%1$d von %2$d Apps sind berechtigt.",
+"fr": "%1$d application(s) autorisée(s) sur %2$d",
+"es": "%1$d de %2$d aplicaciones permitidas"
+},
+"GooglePackageInstaller/permission_title": {
+"res": "angler:GooglePackageInstaller:permission_title",
+"en": "%1$s permissions",
+"hu": "A(z) %1$s jogosultságai",
+"de": "Berechtigungen für %1$s",
+"fr": "Autorisations d'accès aux données \"%1$s\"",
+"es": "Permisos: %1$s"
+},
+"framework/permgrouplab_calendar": {
+"res": "angler:framework:permgrouplab_calendar",
+"en": "Calendar",
+"hu": "Naptár",
+"de": "Kalender",
+"fr": "Agenda",
+"es": "Calendario"
+},
+"framework/permgrouplab_camera": {
+"res": "angler:framework:permgrouplab_camera",
+"en": "Camera",
+"hu": "Fényképezőgép",
+"de": "Kamera",
+"fr": "Appareil photo",
+"es": "Cámara"
+},
+"framework/permgrouplab_contacts": {
+"res": "angler:framework:permgrouplab_contacts",
+"en": "Contacts",
+"hu": "Névjegyek",
+"de": "Kontakte",
+"fr": "Contacts",
+"es": "Contactos"
+},
+"framework/permgrouplab_location": {
+"res": "angler:framework:permgrouplab_location",
+"en": "Location",
+"hu": "Helyadatok",
+"de": "Standort",
+"fr": "Position",
+"es": "Ubicación"
+},
+"framework/permgrouplab_microphone": {
+"res": "angler:framework:permgrouplab_microphone",
+"en": "Microphone",
+"hu": "Mikrofon",
+"de": "Mikrofon",
+"fr": "Microphone",
+"es": "Micrófono"
+},
+"framework/permgrouplab_phone": {
+"res": "angler:framework:permgrouplab_phone",
+"en": "Phone",
+"hu": "Telefon",
+"de": "Telefon",
+"fr": "Téléphone",
+"es": "Teléfono"
+},
+"framework/permgrouplab_sensors": {
+"res": "angler:framework:permgrouplab_sensors",
+"en": "Body Sensors",
+"hu": "Testérzékelők",
+"de": "Körpersensoren",
+"fr": "Capteurs corporels",
+"es": "Sensores corporales"
+},
+"framework/permgrouplab_sms": {
+"res": "angler:framework:permgrouplab_sms",
+"en": "SMS",
+"hu": "SMS",
+"de": "SMS",
+"fr": "SMS",
+"es": "SMS"
+},
+"framework/permgrouplab_storage": {
+"res": "angler:framework:permgrouplab_storage",
+"en": "Storage",
+"hu": "Tárhely",
+"de": "Speicher",
+"fr": "Stockage",
+"es": "Almacenamiento"
+},
+"notifications_disabled": {
+"res": "angler:SettingsGoogle:notifications_disabled",
+"en": "Blocked",
+"hu": "Letiltva",
+"de": "Blockiert",
+"fr": "Bloquées",
+"es": "Bloqueada"
+},
+"notifications_silenced": {
+"res": "angler:SettingsGoogle:notifications_silenced",
+"en": "Silenced",
+"hu": "Lenémítva",
+"de": "Stumm geschaltet",
+"fr": "Désactivées",
+"es": "Silenciadas"
+},
+"notifications_redacted": {
+"res": "angler:SettingsGoogle:notifications_redacted",
+"en": "Sensitive content not on lock screen",
+"hu": "A lezárási képernyőn nem látható bizalmas tartalom",
+"de": "Keine vertraulichen Informationen auf Sperrbildschirm",
+"fr": "Aucun contenu sensible sur l'écran de verrouillage",
+"es": "Sin contenido sensible en la pantalla de bloqueo"
+},
+"notifications_hidden": {
+"res": "angler:SettingsGoogle:notifications_hidden",
+"en": "Not on lock screen",
+"hu": "Nem látható a lezárási képernyőn",
+"de": "Nicht auf Sperrbildschirm",
+"fr": "Pas sur l'écran de verrouillage",
+"es": "Ocultas en la pantalla de bloqueo"
+},
+"notifications_priority": {
+"res": "angler:SettingsGoogle:notifications_priority",
+"en": "Do Not Disturb overridden",
+"hu": "A „Ne zavarjanak” funkció felülbírálása",
+"de": "\"Nicht stören\" deaktiviert",
+"fr": "Ignorer le mode Ne pas déranger",
+"es": "Anulan No molestar"
+},
+"notifications_summary_divider": {
+"res": "angler:SettingsGoogle:notifications_summary_divider",
+"en": " / ",
+"hu": " / ",
+"de": " / ",
+"fr": " / ",
+"es": " / "
+},
+"version_text": {
+"res": "angler:SettingsGoogle:version_text",
+"en": "version %1$s",
+"hu": "Verzió: %1$s",
+"de": "Version %1$s",
+"fr": "version %1$s",
+"es": "versión %1$s"
+},
+"force_stop": {
+"res": "angler:SettingsGoogle:force_stop",
+"en": "Force stop",
+"hu": "Kényszerített leállítás",
+"de": "Beenden erzwingen",
+"fr": "Forcer l'arrêt",
+"es": "Forzar detención"
+},
+"disable_text": {
+"res": "angler:SettingsGoogle:disable_text",
+"en": "Disable",
+"hu": "Letiltás",
+"de": "Deaktivieren",
+"fr": "Désactiver",
+"es": "Inhabilitar"
+},
+"storage_summary_format": {
+"res": "angler:SettingsGoogle:storage_summary_format",
+"en": "%1$s used in %2$s",
+"hu": "%1$s felhasználva itt: %2$s",
+"de": "%1$s %2$s belegt",
+"fr": "Utilisation de la %2$s : %1$s",
+"es": "%1$s usados en %2$s"
+},
+"data_summary_format": {
+"res": "angler:SettingsGoogle:data_summary_format",
+"en": "%1$s used since %2$s",
+"hu": "%1$s %2$s óta",
+"de": "%1$s seit %2$s genutzt",
+"fr": "%1$s utilisés depuis %2$s",
+"es": "%1$s usados desde %2$s"
+},
+"no_data_usage": {
+"res": "angler:SettingsGoogle:no_data_usage",
+"en": "No data used",
+"hu": "Nincs felhasznált adatmennyiség",
+"de": "Keine Daten genutzt",
+"fr": "Aucune donnée utilisée",
+"es": "No se han usado datos"
+},
+"launch_defaults_none": {
+"res": "angler:SettingsGoogle:launch_defaults_none",
+"en": "No defaults set",
+"hu": "Nincs alapbeállítás",
+"de": "Keine Standardeinstellungen festgelegt",
+"fr": "Aucun paramètre par défaut défini",
+"es": "No se han establecido valores predeterminados"
+},
+"no_battery_summary": {
+"res": "angler:SettingsGoogle:no_battery_summary",
+"en": "No battery use since last full charge",
+"hu": "Nem használta az akkumulátort az utolsó teljes feltöltés óta",
+"de": "Kein Verbrauch seit dem letzten vollen Aufladen",
+"fr": "Aucune utilisation de la batterie depuis la dernière charge complète",
+"es": "No ha usado batería desde la última carga completa"
+},
+"no_memory_use_summary": {
+"res": "angler:SettingsGoogle:no_memory_use_summary",
+"en": "No memory used in last 3 hours",
+"hu": "Nem volt memóriahasználat az elmúlt 3 óra során",
+"de": "Kein Speicherverbrauch in den letzten drei Stunden",
+"fr": "Pas de mémoire utilisée au cours des trois dernières heures",
+"es": "No se ha usado memoria durante las últimas 3 horas"
+},
+"app_disable_dlg_text": {
+"res": "angler:SettingsGoogle:app_disable_dlg_text",
+"en": "If you disable this app, other apps may no longer function as intended.",
+"hu": "Ha letiltja ezt az alkalmazást, akkor lehet, hogy más alkalmazások nem megfelelően fognak működni.",
+"de": "Wenn du diese App deaktivierst, funktionieren andere Apps möglicherweise nicht mehr ordnungsgemäß.",
+"fr": "Si vous désactivez cette application, il est possible que d'autres applications ne fonctionnent plus comme prévu.",
+"es": "Si inhabilitas esta aplicación, es posible que otras aplicaciones no funcionen correctamente."
+},
+"app_disable_dlg_positive": {
+"res": "angler:SettingsGoogle:app_disable_dlg_positive",
+"en": "Disable app",
+"hu": "Alkalmazás letiltása",
+"de": "App deaktivieren",
+"fr": "Désactiver l'application",
+"es": "Inhabilitar aplicación"
+},
+"force_stop_dlg_title": {
+"res": "angler:SettingsGoogle:force_stop_dlg_title",
+"en": "Force stop?",
+"hu": "Kényszeríti a leállítást?",
+"de": "Beenden erzwingen?",
+"fr": "Forcer l'arrêt ?",
+"es": "¿Forzar detención?"
+},
+"force_stop_dlg_text": {
+"res": "angler:SettingsGoogle:force_stop_dlg_text",
+"en": "If you force stop an app, it may misbehave.",
+"hu": "Ha egy alkalmazást leállásra kényszerít, lehetséges, hogy az hibásan fog működni.",
+"de": "Das Beenden der App zu erzwingen kann zu unerwünschtem Verhalten führen.",
+"fr": "L'arrêt forcé d'une application peut provoquer un fonctionnement instable.",
+"es": "Si se detiene una aplicación, es posible que no funcione correctamente."
+},
+"data_usage_app_summary_title": {
+"res": "angler:SettingsGoogle:data_usage_app_summary_title",
+"en": "App data usage",
+"hu": "Alkalmazás adathasználata",
+"de": "Datennutzung durch Apps",
+"fr": "Conso données",
+"es": "Uso de datos de la aplicación"
+},
+"change": {
+"res": "angler:SettingsGoogle:change",
+"en": "Change",
+"hu": "Módosítás",
+"de": "Ändern",
+"fr": "Modifier",
+"es": "Cambiar"
+},
+"clear_user_data_text": {
+"res": "angler:SettingsGoogle:clear_user_data_text",
+"en": "Clear data",
+"hu": "Adatok törlése",
+"de": "Daten löschen",
+"fr": "Effacer les données",
+"es": "Borrar datos"
+},
+"clear_cache_btn_text": {
+"res": "angler:SettingsGoogle:clear_cache_btn_text",
+"en": "Clear cache",
+"hu": "A gyorsítótár törlése",
+"de": "Cache leeren",
+"fr": "Vider le cache",
+"es": "Borrar caché"
+},
+"clear_data_dlg_title": {
+"res": "angler:SettingsGoogle:clear_data_dlg_title",
+"en": "Delete app data?",
+"hu": "Törli az alkalmazás adatait?",
+"de": "App-Daten löschen?",
+"fr": "Supprimer les données de l'application ?",
+"es": "¿Eliminar datos de la aplicación?"
+},
+"clear_data_dlg_text": {
+"res": "angler:SettingsGoogle:clear_data_dlg_text",
+"en": "All this app’s data will be deleted permanently. This includes all files, settings, accounts, databases, etc.",
+"hu": "Az alkalmazás minden adatát véglegesen törölni fogja. Ez magában foglalja az összes fájlt, beállítást, fiókot, adatbázist stb.",
+"de": "Alle Daten dieser App werden endgültig gelöscht. Dazu zählen alle Dateien, Einstellungen, Konten, Datenbanken.",
+"fr": "Les données de cette application (fichiers, paramètres, comptes, bases de données, etc.) vont être définitivement supprimées.",
+"es": "Todos los datos de esta aplicación se eliminarán de forma permanente. Esto incluye todos los archivos, ajustes, cuentas, bases de datos, etc."
+},
+"auto_launch_disable_text": {
+"res": "angler:SettingsGoogle:auto_launch_disable_text",
+"en": "No defaults set.",
+"hu": "Nincs alapbeállítás.",
+"de": "Kein Standard",
+"fr": "Aucun paramètre par défaut défini",
+"es": "No se han establecido valores por defecto"
+},
+"clear_activities": {
+"res": "angler:SettingsGoogle:clear_activities",
+"en": "Clear defaults",
+"hu": "Alapértelmezések törlése",
+"de": "Aktionen auf Standard zurücksetzen",
+"fr": "Effacer les actions par défaut",
+"es": "Borrar valores por defecto"
+},
+"filter_notif_blocked_apps": {
+"res": "angler:SettingsGoogle:filter_notif_blocked_apps",
+"en": "Blocked",
+"hu": "Letiltva",
+"de": "Blockiert",
+"fr": "Bloquées",
+"es": "Bloqueadas"
+},
+"filter_notif_silent": {
+"res": "angler:SettingsGoogle:filter_notif_silent",
+"en": "Shown silently",
+"hu": "Megjelenik hangjelzés nélkül",
+"de": "Stummgeschaltete Apps anzeigen",
+"fr": "Affichées en mode silencieux",
+"es": "Silenciadas"
+},
+"filter_notif_sensitive_apps": {
+"res": "angler:SettingsGoogle:filter_notif_sensitive_apps",
+"en": "No sensitive content on lock screen",
+"hu": "Nem látható bizalmas tartalom",
+"de": "Keine vertraulichen Infos auf Sperrbildschirm",
+"fr": "Aucun contenu sensible écran verr.",
+"es": "Sin datos sensibles en la pantalla de bloqueo"
+},
+"filter_notif_priority_apps": {
+"res": "angler:SettingsGoogle:filter_notif_priority_apps",
+"en": "Overrides Do Not Disturb",
+"hu": "„Ne zavarjanak” felülbírálva",
+"de": "\"Nicht stören\" deaktiviert",
+"fr": "Ignorent \"Ne pas déranger\"",
+"es": "Prioritarias"
+},
+"Velvet/app_name": {
+"res": "angler:Velvet:app_name",
+"en": "Google App",
+"hu": "Google alkalmazás",
+"de": "Google App",
+"fr": "Appli Google",
+"es": "Aplicación de Google (predefinido)"
+},
+"Velvet/launcher_name": {
+"res": "angler:Velvet:launcher_name",
+"en": "Google Now Launcher",
+"hu": "Google Asszisztens Indító",
+"de": "Google Now Launcher",
+"fr": "Lanceur Google Now",
+"es": "Google Now Launcher"
+},
+"high_power_filter_on": {
+"res": "angler:SettingsGoogle:high_power_filter_on",
+"en": "Not optimized",
+"hu": "Nincs optimalizálva",
+"de": "Nicht optimiert",
+"fr": "Non optimisées",
+"es": "Sin optimizar"
+},
+"high_power_on": {
+"res": "angler:SettingsGoogle:high_power_on",
+"en": "Not optimized",
+"hu": "Nincs optimalizálva",
+"de": "Nicht optimiert",
+"fr": "Non optimisée",
+"es": "No optimizada"
+},
+"high_power_off": {
+"res": "angler:SettingsGoogle:high_power_off",
+"en": "Optimizing battery use",
+"hu": "Akkumulátorhasználat optimalizálása",
+"de": "Akkuverbrauch optimiert",
+"fr": "Utilisation de la batterie optimisée",
+"es": "Optimizando el uso de la batería"
+},
+"high_power_system": {
+"res": "angler:SettingsGoogle:high_power_system",
+"en": "Battery optimization not available",
+"hu": "Nincs lehetőség akkumulátoroptimalizálásra",
+"de": "Akku-Leistungsoptimierung nicht verfügbar",
+"fr": "Optimisation de la batterie non disponible",
+"es": "Optimización de la batería no disponible"
+},
+"ignore_optimizations_on": {
+"res": "angler:SettingsGoogle:ignore_optimizations_on",
+"en": "Don’t optimize",
+"hu": "Ne legyen optimalizálva",
+"de": "Nicht optimieren",
+"fr": "Ne pas optimiser",
+"es": "No optimizar"
+},
+"ignore_optimizations_on_desc": {
+"res": "angler:SettingsGoogle:ignore_optimizations_on_desc",
+"en": "May drain your battery more quickly",
+"hu": "Előfordulhat, hogy az akkumulátor gyorsabban merül le.",
+"de": "Dein Akku entleert sich hierdurch möglicherweise schneller.",
+"fr": "Risque de décharger la batterie plus rapidement.",
+"es": "La batería se puede agotar más rápido"
+},
+"ignore_optimizations_off": {
+"res": "angler:SettingsGoogle:ignore_optimizations_off",
+"en": "Optimize",
+"hu": "Optimalizálás",
+"de": "Optimieren",
+"fr": "Optimiser",
+"es": "Optimizar"
+},
+"ignore_optimizations_off_desc": {
+"res": "angler:SettingsGoogle:ignore_optimizations_off_desc",
+"en": "Recommended for better battery life",
+"hu": "Ajánlott a hosszabb akkumulátor-üzemidő érdekében.",
+"de": "Zur Verlängerung der Akkulaufzeit empfohlen",
+"fr": "Recommandé pour améliorer l'autonomie de la batterie",
+"es": "Recomendado para mejorar la duración de la batería"
+},
+"done": {
+"res": "angler:SettingsGoogle:done",
+"en": "Done",
+"hu": "Kész",
+"de": "Fertig",
+"fr": "OK",
+"es": "Listo"
+},
+"charge_length_format": {
+"res": "angler:SettingsGoogle:charge_length_format",
+"en": "%1$s ago",
+"hu": "Ennyi ideje: %1$s",
+"de": "Vor %1$s",
+"fr": "Il y a %1$s",
+"es": "Hace %1$s"
+},
+"remaining_length_format": {
+"res": "angler:SettingsGoogle:remaining_length_format",
+"en": "%1$s left",
+"hu": "%1$s van hátra",
+"de": "Noch %1$s verbleibend",
+"fr": "Il reste %1$s.",
+"es": "Tiempo restante: %1$s"
+},
+"power_screen": {
+"res": "angler:SettingsGoogle:power_screen",
+"en": "Screen",
+"hu": "Képernyő",
+"de": "Display",
+"fr": "Écran",
+"es": "Pantalla"
+},
+"power_cell": {
+"res": "angler:SettingsGoogle:power_cell",
+"en": "Cell standby",
+"hu": "Cella készenlét",
+"de": "Mobilfunk-Standby",
+"fr": "Veille GSM",
+"es": "Dispositivo inactivo"
+},
+"framework/android_system_label": {
+"res": "angler:framework:android_system_label",
+"en": "Android System",
+"hu": "Android rendszer",
+"de": "Android-System",
+"fr": "Système Android",
+"es": "Sistema Android"
+},
+"power_idle": {
+"res": "angler:SettingsGoogle:power_idle",
+"en": "Phone idle",
+"hu": "Telefon - tétlen",
+"de": "Ruhezustand",
+"fr": "Téléphone inactif",
+"es": "Teléfono inactivo"
+},
+"power_wifi": {
+"res": "angler:SettingsGoogle:power_wifi",
+"en": "Wi‑Fi",
+"hu": "Wi-Fi",
+"de": "WLAN",
+"fr": "Wi-Fi",
+"es": "Wi-Fi"
+},
+"details_title": {
+"res": "angler:SettingsGoogle:details_title",
+"en": "Use details",
+"hu": "Használat részletei",
+"de": "Infos zum Verbrauch",
+"fr": "Infos utilisation",
+"es": "Detalles de uso"
+},
+"usage_type_computed_power": {
+"res": "angler:SettingsGoogle:usage_type_computed_power",
+"en": "Computed power use",
+"hu": "Kalkulált energiahasználat",
+"de": "Berechneter Akkuverbrauch",
+"fr": "Consommation calculée",
+"es": "Uso de batería calculado"
+},
+"mah": {
+"res": "angler:SettingsGoogle:mah",
+"en": "%d mAh",
+"hu": "%d mAh",
+"de": "%d mAh",
+"fr": "%d mAh",
+"es": "%d mAh"
+},
+"battery_saver_on_summary": {
+"res": "angler:SettingsGoogle:battery_saver_on_summary",
+"en": "On / %1$s",
+"hu": "Be/%1$s",
+"de": "An/%1$s",
+"fr": "Activé/%1$s",
+"es": "Sí/%1$s"
+},
+"battery_saver_off_summary": {
+"res": "angler:SettingsGoogle:battery_saver_off_summary",
+"en": "Off / %1$s",
+"hu": "Ki/%1$s",
+"de": "Aus/%1$s",
+"fr": "Désactivé/%1$s",
+"es": "No/%1$s"
+},
+"battery_saver_turn_on_automatically_pct": {
+"res": "angler:SettingsGoogle:battery_saver_turn_on_automatically_pct",
+"en": "at %1$s battery",
+"hu": "%1$s-os töltöttségnél",
+"de": "bei Akku von %1$s",
+"fr": "Lorsque la batterie atteint %1$s",
+"es": "con un %1$s de batería"
+},
+"battery_desc_display": {
+"res": "angler:SettingsGoogle:battery_desc_display",
+"en": "Battery used by the display and backlight",
+"hu": "A kijelző és a háttérfény által felhasznált energia",
+"de": "Akkuverbrauch durch Display und Beleuchtung",
+"fr": "Batterie utilisée par l'affichage et le rétro-éclairage",
+"es": "Batería utilizada por la pantalla y por la retroiluminación"
+},
+"battery_sugg_display": {
+"res": "angler:SettingsGoogle:battery_sugg_display",
+"en": "Reduce the screen brightness and/or screen timeout",
+"hu": "Csökkentse a képernyő fényerejét és kikapcsolási idejét",
+"de": "Display-Helligkeit und/oder Display-Zeitlimit verringern",
+"fr": "Réduire la luminosité et/ou le délai de mise en veille de l'écran",
+"es": "Reduce el brillo y el tiempo que permanece encendida la pantalla."
+},
+"battery_desc_apps": {
+"res": "angler:SettingsGoogle:battery_desc_apps",
+"en": "Battery used by app",
+"hu": "Az alkalmazás által felhasznált energia",
+"de": "Akkuverbrauch durch App",
+"fr": "Batterie utilisée par l'application",
+"es": "Batería usada por la aplicación"
+},
+"battery_sugg_apps_info": {
+"res": "angler:SettingsGoogle:battery_sugg_apps_info",
+"en": "Stop or uninstall the app",
+"hu": "Alkalmazás leállítása vagy eltávolítása",
+"de": "App anhalten oder deinstallieren",
+"fr": "Arrêter ou désinstaller l'application",
+"es": "Detener o desinstalar la aplicación"
+},
+"battery_desc_standby": {
+"res": "angler:SettingsGoogle:battery_desc_standby",
+"en": "Battery used when phone is idle",
+"hu": "Akkumulátorhasználat, amíg a telefon tétlen volt",
+"de": "Akkuverbrauch in Ruhezustand",
+"fr": "Batterie utilisée lorsque le téléphone est inactif",
+"es": "Batería utilizada cuando el teléfono está inactivo"
+},
+"battery_sugg_radio": {
+"res": "angler:SettingsGoogle:battery_sugg_radio",
+"en": "Switch to airplane mode to save power in areas with no cell coverage",
+"hu": "Ahol nincs lefedettség, váltson repülési üzemmódra, hogy spóroljon az energiával",
+"de": "Flugmodus zum Energiesparen in Gebieten ohne Mobilfunkabdeckung",
+"fr": "Passez en mode Avion pour économiser la batterie dans les zones sans couverture cellulaire.",
+"es": "Cambia a modo avión para ahorrar batería en zonas sin cobertura."
+},
+"battery_desc_wifi": {
+"res": "angler:SettingsGoogle:battery_desc_wifi",
+"en": "Battery used by Wi‑Fi",
+"hu": "Wi-Fi által felhasznált energia",
+"de": "Akkuverbrauch durch WLAN",
+"fr": "Batterie utilisée par le Wi-Fi",
+"es": "Batería utilizada por la conexión Wi-Fi"
+},
+"battery_sugg_wifi": {
+"res": "angler:SettingsGoogle:battery_sugg_wifi",
+"en": "Turn off Wi‑Fi when not using it or when it isn’t available",
+"hu": "Kapcsolja ki a Wi-Fit, ha nem használja, vagy amikor nincs elérhető hálózat",
+"de": "WLAN bei Nichtverwendung oder Nichtverfügbarkeit deaktivieren",
+"fr": "Désactivez le Wi-Fi lorsque vous ne l'utilisez pas ou qu'il n'est pas disponible.",
+"es": "Desactiva la conexión Wi-Fi cuando no la estés usando o cuando no esté disponible."
+},
+"menu_duration_3h": {
+"res": "angler:SettingsGoogle:menu_duration_3h",
+"en": "3 hours",
+"hu": "3 óra",
+"de": "3 Stunden",
+"fr": "3 heures",
+"es": "3 horas"
+},
+"menu_duration_6h": {
+"res": "angler:SettingsGoogle:menu_duration_6h",
+"en": "6 hours",
+"hu": "6 óra",
+"de": "6 Stunden",
+"fr": "6 heures",
+"es": "6 horas"
+},
+"menu_duration_12h": {
+"res": "angler:SettingsGoogle:menu_duration_12h",
+"en": "12 hours",
+"hu": "12 óra",
+"de": "12 Stunden",
+"fr": "12 heures",
+"es": "12 horas"
+},
+"menu_duration_1d": {
+"res": "angler:SettingsGoogle:menu_duration_1d",
+"en": "1 day",
+"hu": "1 nap",
+"de": "1 Tag",
+"fr": "1 jour",
+"es": "1 día"
+},
+"storage_size_large": {
+"res": "angler:SettingsGoogle:storage_size_large",
+"en": "^1 ^2",
+"hu": "^1 ^2",
+"de": "^1 ^2",
+"fr": "^1 ^2",
+"es": "^1 ^2"
+},
+"framework/storage_internal": {
+"res": "angler:framework:storage_internal",
+"en": "Internal shared storage",
+"hu": "Belső közös tárhely",
+"de": "Interner gemeinsamer Speicher",
+"fr": "Espace de stockage interne partagé",
+"es": "Almacenamiento interno compartido"
+},
+"storage_volume_used": {
+"res": "angler:SettingsGoogle:storage_volume_used",
+"en": "Used of %1$s",
+"hu": "Összesen: %1$s",
+"de": "von %1$s verwendet",
+"fr": "Utilisés sur %1$s",
+"es": "En uso de %1$s"
+},
+"storage_detail_apps": {
+"res": "angler:SettingsGoogle:storage_detail_apps",
+"en": "Apps",
+"hu": "Alkalmazások",
+"de": "Apps",
+"fr": "Applications",
+"es": "Aplicaciones"
+},
+"storage_detail_images": {
+"res": "angler:SettingsGoogle:storage_detail_images",
+"en": "Images",
+"hu": "Képek",
+"de": "Bilder",
+"fr": "Images",
+"es": "Imágenes"
+},
+"storage_detail_videos": {
+"res": "angler:SettingsGoogle:storage_detail_videos",
+"en": "Videos",
+"hu": "Videók",
+"de": "Videos",
+"fr": "Vidéos",
+"es": "Vídeos"
+},
+"storage_detail_audio": {
+"res": "angler:SettingsGoogle:storage_detail_audio",
+"en": "Audio",
+"hu": "Hang",
+"de": "Audiodateien",
+"fr": "Audio",
+"es": "Audio"
+},
+"storage_detail_other": {
+"res": "angler:SettingsGoogle:storage_detail_other",
+"en": "Other",
+"hu": "Egyéb",
+"de": "Andere",
+"fr": "Autre",
+"es": "Otros"
+},
+"storage_detail_cached": {
+"res": "angler:SettingsGoogle:storage_detail_cached",
+"en": "Cached data",
+"hu": "Gyorsítótárazott adatok",
+"de": "Daten im Cache",
+"fr": "Données en cache",
+"es": "Datos almacenados en caché"
+},
+"storage_detail_system": {
+"res": "angler:SettingsGoogle:storage_detail_system",
+"en": "System",
+"hu": "Rendszer",
+"de": "System",
+"fr": "Système",
+"es": "Sistema"
+},
+"storage_menu_explore": {
+"res": "angler:SettingsGoogle:storage_menu_explore",
+"en": "Explore",
+"hu": "Felfedezés",
+"de": "Erkunden",
+"fr": "Explorer",
+"es": "Explorar"
+},
+"storage_menu_manage": {
+"res": "angler:SettingsGoogle:storage_menu_manage",
+"en": "Manage storage",
+"hu": "Tárhely kezelése",
+"de": "Speicher verwalten",
+"fr": "Gérer l'espace de stockage",
+"es": "Administrar almacenamiento"
+},
+"apps_storage": {
+"res": "angler:SettingsGoogle:apps_storage",
+"en": "Apps storage",
+"hu": "Alkalmazások tárhelye",
+"de": "Apps-Speicher",
+"fr": "Stockage pour les applications",
+"es": "Almacenamiento de aplicaciones"
+},
+"memory_clear_cache_title": {
+"res": "angler:SettingsGoogle:memory_clear_cache_title",
+"en": "Clear cached data?",
+"hu": "Törli a gyorsítótárban tárolt adatokat?",
+"de": "Daten im Cache löschen?",
+"fr": "Effacer les données mises en cache ?",
+"es": "¿Borrar datos almacenados en caché?"
+},
+"memory_clear_cache_message": {
+"res": "angler:SettingsGoogle:memory_clear_cache_message",
+"en": "This will clear cached data for all apps.",
+"hu": "Ez törli az alkalmazások gyorsítótárbeli adatait.",
+"de": "Daten im Cache werden für alle Apps gelöscht.",
+"fr": "Les données en cache des applications seront effacées.",
+"es": "Se borrarán los datos en caché de las aplicaciones."
+},
+"storage_detail_dialog_other": {
+"res": "angler:SettingsGoogle:storage_detail_dialog_other",
+"en": "Other includes shared files saved by apps, files downloaded from the Internet or Bluetooth, Android files, and so on. \n\nTo see the visible contents of this ^1, tap Explore.",
+"hu": "Az Egyéb kategóriába tartoznak az alkalmazások által mentett megosztott fájlok, az internetről, illetve Bluetooth-kapcsolaton keresztül letöltött fájlok, az androidos fájlok stb. \n\nAz adathordozó (^1) látható tartalmainak megtekintéséhez koppintson a Felfedezés lehetőségre.",
+"de": "\"Andere\" beinhaltet beispielsweise von Apps gespeicherte gemeinsam genutzte Dateien, aus dem Internet oder per Bluetooth heruntergeladene Dateien oder Android-Dateien. \n\nTippe zum Ansehen des gesamten Inhalts von ^1 auf \"Erkunden\".",
+"fr": "Le libellé \"Autre\" fait référence aux fichiers partagés enregistrés par les applications, aux fichiers téléchargés sur Internet ou via le Bluetooth, aux fichiers Android, etc. \n\nPour afficher l'intégralité du contenu de la mémoire de stockage \"^1\", appuyez sur \"Explorer\".",
+"es": "En Otros se incluyen los archivos compartidos que han guardado las aplicaciones, los archivos descargados de Internet o por Bluetooth, los archivos de Android, etc. \n\nPara ver el contenido visible de ^1, toca Explorar."
+},
+"storage_detail_dialog_system": {
+"res": "angler:SettingsGoogle:storage_detail_dialog_system",
+"en": "System includes files that Android can’t display individually.",
+"hu": "A Rendszer kategória olyan fájlokat tartalmaz, amelyeket az Android nem képes egyenként megjeleníteni.",
+"de": "System umfasst Dateien, die Android nicht einzeln anzeigen kann.",
+"fr": "Le système comprend des fichiers qu'Android ne peut pas afficher individuellement.",
+"es": "El sistema incluye archivos que Android no puede mostrar de forma individual."
+},
 "settings_suggestion_header_summary_hidden_items": {
 "res": "angler:SettingsGoogle:settings_suggestion_header_summary_hidden_items",
 "en": {
@@ -12033,6 +12952,95 @@ NG.strings('settings', {
 "Elevado",
 "Hundido"
 ]
+},
+"battery_labels": {
+"res": "angler:SettingsGoogle:battery_labels",
+"en": [
+"0%",
+"50%",
+"100%"
+],
+"hu": [
+"0%",
+"50%",
+"100%"
+],
+"de": [
+"0 %",
+"50 %",
+"100 %"
+],
+"fr": [
+"0 %",
+"50 %",
+"100 %"
+],
+"es": [
+"0%",
+"50%",
+"100%"
+]
+},
+"ram_states": {
+"res": "angler:SettingsGoogle:ram_states",
+"en": [
+"Normal",
+"Moderate",
+"Low",
+"Critical",
+"?"
+],
+"hu": [
+"Normál",
+"Közepes",
+"Alacsony",
+"Kritikus",
+"?"
+],
+"de": [
+"Normal",
+"Mittelmäßig",
+"Wenig",
+"Kritisch",
+"?"
+],
+"fr": [
+"Normale",
+"Moyenne",
+"Faible",
+"Critique",
+"?"
+],
+"es": [
+"Normal",
+"Moderada",
+"Baja",
+"Crítica",
+"(?)"
+]
+},
+"memory_usage_apps_summary": {
+"res": "angler:SettingsGoogle:memory_usage_apps_summary",
+"en": {
+"other": "%1$d apps used memory in the last %2$s",
+"one": "1 app used memory in the last %2$s"
+},
+"hu": {
+"other": "%1$d alkalmazás használta a memóriát az elmúlt %2$s során",
+"one": "1 alkalmazás használta a memóriát az elmúlt %2$s során"
+},
+"de": {
+"other": "%1$d Apps haben den Speicher in den letzten %2$s verbraucht.",
+"one": "1 App hat den Speicher in den letzten %2$s verbraucht."
+},
+"fr": {
+"other": "%1$d applications ont utilisé de la mémoire au cours de la période suivante : %2$s.",
+"one": "%1$d application a utilisé de la mémoire au cours de la période suivante : %2$s."
+},
+"es": {
+"other": "%1$d aplicaciones han utilizado memoria durante las últimas %2$s",
+"one": "1 aplicación ha utilizado memoria durante las últimas %2$s"
+}
 },
 "PrebuiltGmsCore/common_google_platform_settings": {
 "res": "angler:PrebuiltGmsCore:common_google_platform_settings",

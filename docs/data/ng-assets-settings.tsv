@@ -3,6 +3,9 @@ fw-sym_def_app_icon.png	framework/framework-res.apk	drawable/sym_def_app_icon
 gms-common_ic_googleplayservices.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/common_ic_googleplayservices
 gms-ic_google_settings.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/ic_google_settings
 gms-quantum_ic_directions_walk_googblue_24.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/quantum_ic_directions_walk_googblue_24
+st-ic_power_system.png	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/ic_power_system
+st-ic_settings_cell_standby.png	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/ic_settings_cell_standby
 st-ic_settings_development_alpha.png	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/ic_settings_development_alpha
 st-ic_settings_nfc_payment_am_alpha.png	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/ic_settings_nfc_payment_am_alpha
+st-ic_settings_phone_idle.png	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/ic_settings_phone_idle
 st-ic_sim_sd.png	priv-app/SettingsGoogle/SettingsGoogle.apk	drawable/ic_sim_sd
