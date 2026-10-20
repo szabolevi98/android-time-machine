@@ -1,0 +1,128 @@
+/* Photos.apk 1.25, N2G48C: home_fragment/tab_bar_fragment (56dp tabs, 24dp icons,
+   active 14sp blue / inactive 12sp grey), drawer_width 280dp, 48dp navigation rows,
+   photogrid_grid_spacing 4dp, photo_action_bar's 72dp gradient and 16dp vertical padding,
+   CPE's #212121 toolbar and 48dp tools. All sizes are the phone's dp. */
+.ngphotos{position:absolute;inset:0;overflow:hidden;background:#fff;color:#212121;font-family:Roboto,Arial,sans-serif;font-size:calc(14 * var(--dp))}
+.ngphotos button{border:0;background:none;color:inherit;font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ngphotos button:disabled{opacity:.35;cursor:default}
+.ngphotos button:focus-visible{outline:calc(2 * var(--dp)) solid #4285f4;outline-offset:calc(-2 * var(--dp))}
+.ngphotos button:active{background-color:#8882}
+.ngphotos-bar{position:absolute;inset:0 0 auto;height:calc(56 * var(--dp));display:flex;align-items:center;background:#fff;z-index:4;box-shadow:0 calc(1 * var(--dp)) calc(4 * var(--dp)) #0002}
+.ngphotos-title{font-size:calc(20 * var(--dp));flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-left:calc(16 * var(--dp))}
+.ngphotos-ib{display:inline-flex;align-items:center;justify-content:center;flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0}
+.ngphotos-ib img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));object-fit:contain;pointer-events:none}
+.ngphotos-textbtn{padding:0 calc(16 * var(--dp));height:calc(48 * var(--dp));font-weight:500!important;text-transform:uppercase}
+.ngphotos-bar.selection{background:#4285f4;color:#fff}
+.ngphotos-content{position:absolute;inset:calc(56 * var(--dp)) 0 0;overflow-y:auto;overscroll-behavior:contain}
+.ngphotos-content.tabbed{bottom:calc(56 * var(--dp))}
+.ngphotos-date{height:calc(48 * var(--dp));display:flex;align-items:center;padding:0 calc(16 * var(--dp));font-weight:500;color:#616161;font-size:calc(14 * var(--dp))}
+.ngphotos-grid{display:grid;grid-template-columns:repeat(var(--ngphotos-cols,3),minmax(0,1fr));gap:calc(4 * var(--dp));padding:0 calc(4 * var(--dp)) calc(4 * var(--dp))}
+.ngphotos-cell{position:relative;display:block;aspect-ratio:1;padding:0;overflow:hidden;background:#eee!important;touch-action:pan-y}
+.ngphotos-svg{display:block;width:100%;height:100%;pointer-events:none}
+.ngphotos-cell.selected .ngphotos-svg{transform:scale(.85);border-radius:calc(4 * var(--dp))}
+.ngphotos-check{position:absolute;left:calc(8 * var(--dp));top:calc(8 * var(--dp));width:calc(20 * var(--dp));height:calc(20 * var(--dp));border:calc(2 * var(--dp)) solid #fff;border-radius:50%;background:#0002;box-sizing:border-box;font-style:normal;color:#fff}
+.ngphotos-cell.selected .ngphotos-check{background:#4285f4;border-color:#4285f4}
+.ngphotos-duration{position:absolute;right:calc(6 * var(--dp));bottom:calc(6 * var(--dp));color:#fff;text-shadow:0 1px 3px #000;font-size:calc(12 * var(--dp))}
+.ngphotos-tabs{position:absolute;inset:auto 0 0;height:calc(56 * var(--dp));display:flex;justify-content:center;background:#fff;box-shadow:0 calc(-1 * var(--dp)) calc(5 * var(--dp)) #0003;z-index:3}
+.ngphotos-tabs button{flex:1;display:flex;flex-direction:column;align-items:center;padding:calc(8 * var(--dp)) 0;color:#757575;font-size:calc(12 * var(--dp))}
+.ngphotos-tabs img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin-bottom:calc(2 * var(--dp))}
+.ngphotos-tabs button.on{color:#4285f4;font-size:calc(14 * var(--dp));padding-top:calc(6 * var(--dp))}
+.ngphotos-empty{min-height:calc(280 * var(--dp));display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(32 * var(--dp));text-align:center;box-sizing:border-box;color:#757575}
+.ngphotos-empty>img{width:calc(180 * var(--dp));max-height:calc(132 * var(--dp));object-fit:contain;margin:calc(24 * var(--dp)) 0}
+.ngphotos-empty h2{font-size:calc(20 * var(--dp));font-weight:400;line-height:1.3;margin:calc(12 * var(--dp)) 0}
+.ngphotos-empty p{font-size:calc(14 * var(--dp));line-height:1.5;margin:0;max-width:calc(280 * var(--dp))}
+.ngphotos-dim,.ngphotos-info-dim{position:absolute;inset:0;background:#0006;z-index:8}
+.ngphotos-drawer{position:absolute;inset:0 auto 0 0;width:calc(280 * var(--dp));overflow-y:auto;background:#fff;z-index:9;box-shadow:calc(4 * var(--dp)) 0 calc(12 * var(--dp)) #0005}
+.ngphotos-account{display:flex;flex-direction:column;gap:calc(8 * var(--dp));padding:calc(16 * var(--dp));background:#4285f4;color:#fff}
+.ngphotos-account i{display:flex;align-items:center;justify-content:center;border-radius:50%;background:#5c6bc0;width:calc(56 * var(--dp));height:calc(56 * var(--dp));font-size:calc(24 * var(--dp));font-style:normal;margin-bottom:calc(8 * var(--dp))}
+.ngphotos-account strong{font-size:calc(14 * var(--dp));font-weight:500}
+.ngphotos-account span{font-size:calc(14 * var(--dp))}
+.ngphotos-lockup{height:calc(64 * var(--dp));display:flex;align-items:center;gap:calc(8 * var(--dp));padding:0 calc(16 * var(--dp));border-bottom:calc(.5 * var(--dp)) solid #ddd;color:#767676;font-size:calc(22 * var(--dp))}
+.ngphotos-lockup img{width:calc(74 * var(--dp));height:calc(24 * var(--dp));object-fit:contain}
+.ngphotos .ngphotos-drow{display:flex;align-items:center;gap:calc(32 * var(--dp));width:100%;height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));text-align:left;font-weight:500}
+.ngphotos-drow img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngphotos-drow.on{color:#4285f4;background:#eee}
+.ngphotos-types{display:flex;overflow-x:auto;border-bottom:calc(1 * var(--dp)) solid #eee;padding:calc(16 * var(--dp)) 0}
+.ngphotos-types button{flex:1;min-width:calc(88 * var(--dp));display:flex;flex-direction:column;align-items:center;gap:calc(8 * var(--dp));font-size:calc(12 * var(--dp))}
+.ngphotos-types img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));padding:calc(16 * var(--dp));background:#f1f3f4;border-radius:50%}
+.ngphotos-albums{display:grid;grid-template-columns:1fr 1fr;gap:calc(16 * var(--dp));padding:calc(16 * var(--dp))}
+.ngphotos-albums>button{text-align:left;min-width:0;padding:0}
+.ngphotos-cover{display:block;aspect-ratio:1;background:#eee;overflow:hidden}
+.ngphotos-cover>img{width:100%;height:100%;object-fit:contain}
+.ngphotos-albums strong,.ngphotos-albums small{display:block;margin-top:calc(8 * var(--dp));overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.ngphotos-albums strong{font-size:calc(16 * var(--dp));font-weight:500}
+.ngphotos-albums small{font-size:calc(14 * var(--dp));color:#757575}
+.ngphotos-device{display:block;width:calc(160 * var(--dp));height:calc(200 * var(--dp));margin:calc(16 * var(--dp));padding:0!important;text-align:left}
+.ngphotos-device>.ngphotos-svg{width:calc(160 * var(--dp));height:calc(160 * var(--dp))}
+.ngphotos-device span{display:block;margin-top:calc(8 * var(--dp))}
+.ngphotos-create{display:flex;flex-wrap:wrap;padding:calc(16 * var(--dp));border-bottom:calc(1 * var(--dp)) solid #ddd}
+.ngphotos-create p{width:100%;margin:0 0 calc(16 * var(--dp));color:#757575}
+.ngphotos-create button{flex:1;display:flex;flex-direction:column;align-items:center;gap:calc(12 * var(--dp));font-size:calc(12 * var(--dp));padding:0}
+.ngphotos-create img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:#f1f3f4;border-radius:50%;padding:calc(16 * var(--dp))}
+.ngphotos-card{margin:calc(16 * var(--dp));padding:calc(24 * var(--dp));border-radius:calc(2 * var(--dp));box-shadow:0 calc(1 * var(--dp)) calc(3 * var(--dp)) #0004;color:#616161}
+.ngphotos-card>img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.ngphotos-card h2{font-size:calc(20 * var(--dp));font-weight:400;color:#212121}
+.ngphotos-blue{color:#4285f4!important;text-transform:uppercase;font-weight:500!important;padding:calc(12 * var(--dp)) 0}
+.ngphotos-search{flex:1;width:0;border:0;outline:0;height:calc(48 * var(--dp));background:none;color:#212121;font:inherit;font-size:calc(18 * var(--dp))}
+.ngphotos-searchtypes{padding:calc(16 * var(--dp));display:grid;grid-template-columns:1fr 1fr;gap:calc(16 * var(--dp))}
+.ngphotos-searchtypes button{height:calc(100 * var(--dp));background:#f1f3f4;border-radius:calc(2 * var(--dp));font-size:calc(18 * var(--dp))}
+.ngphotos.black{background:#000;color:#fff}
+.ngphotos-bar.viewer{background:linear-gradient(#0009,transparent);box-shadow:none}
+.ngphotos-canvas{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none}
+.ngphotos-full{width:100%;height:100%;object-fit:contain;transform:scale(var(--ngphotos-zoom,1));pointer-events:none}
+.ngphotos-canvas .ngphotos-full{overflow:visible}
+.ngphotos-photobar{position:absolute;inset:auto 0 0;display:flex;align-items:flex-end;justify-content:space-evenly;padding:calc(72 * var(--dp)) calc(16 * var(--dp)) calc(8 * var(--dp));background:linear-gradient(transparent,#0009);pointer-events:none}
+.ngphotos-photobar button{height:calc(56 * var(--dp));flex:1;max-width:calc(100 * var(--dp));pointer-events:auto}
+.ngphotos.hidechrome>.ngphotos-bar,.ngphotos.hidechrome>.ngphotos-photobar{visibility:hidden;pointer-events:none}
+.ngphotos-info-dim{z-index:6;background:transparent}
+.ngphotos-info{position:absolute;inset:auto 0 0;background:#fff;color:#616161;padding:calc(16 * var(--dp));box-shadow:0 calc(-2 * var(--dp)) calc(8 * var(--dp)) #0004;z-index:7;box-sizing:border-box;max-height:75%;overflow-y:auto}
+.ngphotos-info header{display:flex;justify-content:space-between;align-items:center;font-size:calc(20 * var(--dp));color:#212121}
+.ngphotos-info p{margin:calc(16 * var(--dp)) 0;overflow-wrap:anywhere}
+.ngphotos-caption{border:0;border-bottom:1px solid #ddd;padding:calc(12 * var(--dp)) 0;background:#fff;color:#212121;width:100%;font:inherit;box-sizing:border-box}
+.ngphotos-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:calc(64 * var(--dp));height:calc(64 * var(--dp));background:#0004!important;border-radius:50%}
+.ngphotos-play img{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
+.ngphotos-video{position:absolute;left:calc(16 * var(--dp));right:calc(16 * var(--dp));bottom:calc(72 * var(--dp));display:flex;align-items:center;gap:calc(8 * var(--dp));background:#0004;padding:calc(8 * var(--dp));font-size:calc(12 * var(--dp))}
+.ngphotos-video input{flex:1;width:0;accent-color:#4285f4}
+.ngphotos.editing .ngphotos-bar{background:#0008;box-shadow:none}
+.ngphotos.editing .ngphotos-canvas{bottom:calc(200 * var(--dp));top:calc(56 * var(--dp))}
+.ngphotos-edittools{position:absolute;inset:auto 0 0;background:#212121;color:#fff}
+.ngphotos-toolbody{min-height:calc(116 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));box-sizing:border-box}
+.ngphotos-toolbody label{display:flex;align-items:center;gap:calc(16 * var(--dp));height:calc(40 * var(--dp))}
+.ngphotos-toolbody label input{flex:1;width:0;accent-color:#4285f4}
+.ngphotos-toolnav{height:calc(48 * var(--dp));display:flex;justify-content:space-around;border-top:calc(1 * var(--dp)) solid #ffffff1f}
+.ngphotos-toolnav button{flex:1;opacity:.5}
+.ngphotos-toolnav button.on{opacity:1}
+.ngphotos-toolnav img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngphotos-presets{display:flex;gap:calc(16 * var(--dp));overflow-x:auto}
+.ngphotos-presets button{width:calc(80 * var(--dp));height:calc(100 * var(--dp));padding:0;background:#2e2e2e;flex:none;font-size:calc(12 * var(--dp))}
+.ngphotos-presets .ngphotos-svg{height:calc(80 * var(--dp))}
+.ngphotos-presets span{display:block;padding-top:calc(4 * var(--dp))}
+.ngphotos-croptools{display:flex;align-items:center;justify-content:space-around;min-height:calc(100 * var(--dp))}
+.ngphotos-cropbox{position:absolute;inset:20%;box-sizing:border-box;border:calc(2 * var(--dp)) solid #fff;background:repeating-linear-gradient(0deg,transparent 0 32.5%,#ffffff60 33%,transparent 33.5% 66%,#ffffff60 66.5%,transparent 67%);touch-action:none;cursor:move}
+.ngphotos-cropbox i{position:absolute;width:calc(16 * var(--dp));height:calc(16 * var(--dp));border:calc(3 * var(--dp)) solid #fff;background:transparent}
+.ngphotos-cropbox i:first-child{left:calc(-3 * var(--dp));top:calc(-3 * var(--dp));border-right:0;border-bottom:0}
+.ngphotos-cropbox i:nth-child(2){right:calc(-3 * var(--dp));top:calc(-3 * var(--dp));border-left:0;border-bottom:0}
+.ngphotos-cropbox i:nth-child(3){left:calc(-3 * var(--dp));bottom:calc(-3 * var(--dp));border-right:0;border-top:0}
+.ngphotos-cropbox i:last-child{right:calc(-3 * var(--dp));bottom:calc(-3 * var(--dp));border-left:0;border-top:0}
+.ngphotos-albumtitle{padding:calc(24 * var(--dp)) calc(16 * var(--dp))}
+.ngphotos-albumtitle h1{font-size:calc(28 * var(--dp));font-weight:400;margin:0 0 calc(16 * var(--dp))}
+.ngphotos-albumtitle button{color:#4285f4;padding:0}
+.ngphotos-trashinfo{padding:calc(16 * var(--dp));margin:0;font-size:calc(14 * var(--dp));color:#757575;line-height:1.5}
+.ngphotos-snack{position:absolute;left:0;right:0;bottom:calc(56 * var(--dp));height:calc(48 * var(--dp));display:flex;align-items:center;justify-content:space-between;padding:0 calc(24 * var(--dp));background:#323232;color:#fff;z-index:5;box-sizing:border-box}
+.ngphotos-snack button{color:#82b1ff;text-transform:uppercase}
+.ngphotos-prefs{position:static;--ngst-accent:#4285f4;background:#fafafa;min-height:100%;color:#212121}
+.ngphotos-about{text-align:center;padding:calc(32 * var(--dp)) calc(16 * var(--dp))}
+.ngphotos-about img{width:calc(96 * var(--dp));height:calc(96 * var(--dp))}
+.ngphotos-about h2{font-weight:400;font-size:calc(24 * var(--dp))}
+.ngphotos-input{padding:0 calc(24 * var(--dp)) calc(16 * var(--dp))}
+.ngphotos-input input{width:100%;box-sizing:border-box;background:transparent;border:0;border-bottom:calc(2 * var(--dp)) solid #4285f4;font:inherit;padding:calc(8 * var(--dp)) 0;color:#212121}
+.ngphotos-onboard{position:absolute;inset:0;background:#4285f4;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(32 * var(--dp));box-sizing:border-box;text-align:center}
+.ngphotos-onboard>img{width:calc(144 * var(--dp));height:calc(144 * var(--dp));margin-bottom:calc(24 * var(--dp));background:#fff;border-radius:50%;padding:calc(16 * var(--dp));box-sizing:border-box}
+.ngphotos-onboard h1{font-size:calc(28 * var(--dp));font-weight:400;line-height:1.3}
+.ngphotos-onboard p{line-height:1.5;color:#ffffffb3}
+.ngphotos-onboard>button{margin-top:calc(24 * var(--dp));padding:calc(12 * var(--dp)) calc(24 * var(--dp));background:#fff;color:#212121;border-radius:calc(2 * var(--dp));min-width:calc(240 * var(--dp));text-transform:uppercase}
+.ngphotos-onboard.backup{background:#fff;color:#212121;text-align:left;justify-content:flex-start;overflow-y:auto}
+.ngphotos-onboard.backup p{color:#757575}
+.ngphotos-onboard .ngphotos-backuptoggle{display:flex;justify-content:space-between;align-items:center;gap:calc(24 * var(--dp));text-transform:none;width:100%;padding:calc(16 * var(--dp)) 0;text-align:left}
+.ngphotos-onboard.backup>button:last-child{background:#4285f4;color:#fff}
+.ngphotos-help{padding:calc(24 * var(--dp));color:#616161;line-height:1.5}

@@ -34,10 +34,23 @@
   // Width and height in the picture's own units; the caller scales the SVG with CSS. Each drawing gets its own gradient
   // id, so the same photo can be on the screen twice (a gallery cell and a message).
   let uid = 0;
-  function svg(p, cls = '', ratio = p.kind === 'pano' ? 3 : 4 / 3) {
-    const w = 400 * ratio, h = 400;
-    return `<svg class="${cls}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${p.front ? room(p, w, h) : landscape(p, w, h, ++uid)}</svg>`;
+  function svg(p, cls = '', ratio) {
+    const w = 400 * (p.ratio || (p.kind === 'pano' ? 3 : 4 / 3)), h = 400, ed = p.edits || {};
+    const turn = ((Math.round(+ed.turn || 0) % 4) + 4) % 4, rw = turn % 2 ? h : w, rh = turn % 2 ? w : h;
+    const crop = ed.crop || [0, 0, 1, 1];
+    let [x, y, cw, ch] = [crop[0] * rw, crop[1] * rh, crop[2] * rw, crop[3] * rh];
+    if (ratio) { if (cw / ch > ratio) { x += (cw - ch * ratio) / 2; cw = ch * ratio; } else { y += (ch - cw / ratio) / 2; ch = cw / ratio; } }
+    const transform = ['', `translate(${h} 0) rotate(90)`, `translate(${w} ${h}) rotate(180)`, `translate(0 ${w}) rotate(270)`][turn];
+    const val = k => Math.max(-100, Math.min(100, +ed[k] || 0));
+    const filter = `brightness(${1 + val('light') / 150}) contrast(${1 + val('pop') / 150}) saturate(${1 + val('color') / 100})`;
+    let scene = p.front ? room(p, w, h) : landscape(p, w, h, ++uid);
+    if (p.kind === 'collage' && p.frames?.length) {
+      const frames = p.frames.slice(0, 9), cols = Math.ceil(Math.sqrt(frames.length)), rows = Math.ceil(frames.length / cols);
+      scene = `<rect width="${w}" height="${h}" fill="#fff"/>` + frames.map((frame, i) => `<svg x="${i % cols * w / cols + 2}" y="${Math.floor(i / cols) * h / rows + 2}" width="${w / cols - 4}" height="${h / rows - 4}">${svg(frame)}</svg>`).join('');
+    }
+    return `<svg class="${cls}" viewBox="${x} ${y} ${cw} ${ch}" preserveAspectRatio="xMidYMid ${cls==='ngphotos-full'?'meet':'slice'}" aria-hidden="true"><g transform="${transform}" style="filter:${filter}">${scene}</g></svg>`;
   }
-  NG.media = {svg, photos: c => c.data.photos || (c.data.photos = JSON.parse(JSON.stringify(NG.defaults.photos))),
-    add(c, item) { const list = NG.media.photos(c); const p = {id: Math.max(0, ...list.map(x => x.id)) + 1, album: 'camera', ...item}; list.push(p); c.save(); return p; }};
+  const all = c => c.data.photos || (c.data.photos = JSON.parse(JSON.stringify(NG.defaults.photos)));
+  NG.media = {svg, all, photos: c => all(c).filter(p => !p.trashedAt),
+    add(c, item) { const list = all(c); const p = {id: Math.max(0, ...list.map(x => x.id)) + 1, album: 'camera', ...item}; list.push(p); c.save(); return p; }};
 })();

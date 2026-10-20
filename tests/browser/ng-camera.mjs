@@ -92,7 +92,7 @@ try {
   await click('#viewport [data-action="ngcm-mode"][data-m="photo"]'); await sleep(450);
   await click('#viewport [data-action="ngcm-thumb"]');
   assert.equal(await ev(`document.querySelector('#screen').classList.contains('view-photos')`), true);
-  // Photos is intentionally still a not-built card until the next planned app.
+  assert.equal(await ev(`!!document.querySelector('#viewport .ngphotos-full')`), true, 'Photos displays the captured picture');
   await open('camera');
   const artifacts = path.resolve('tests/browser/artifacts'); fs.mkdirSync(artifacts, {recursive: true});
   const desktop = await send('Page.captureScreenshot', {format: 'png'});
