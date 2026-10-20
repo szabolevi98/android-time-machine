@@ -384,6 +384,9 @@
       else if (event.key === 'Home' && !typing) { event.preventDefault(); keyPress('home'); }
     });
 
+    // An image's native drag would cancel the pointer (pointercancel) and so a pull on a status bar icon, a swipe or a long
+    // press that starts on one: the phone has no drag and drop of pictures.
+    screen.addEventListener('dragstart', event => event.preventDefault());
     screen.addEventListener('pointerdown', event => { if (ui.power) { event.preventDefault(); if (ui.power !== 'boot') event.stopPropagation(); return; } if (ui.sleeping) { event.preventDefault(); event.stopPropagation(); wake(); } }, true);
     for (const key of [document.querySelector('#power-button'), document.querySelector('.power-key')]) holdable(key, powerKey, powerHold);
     bindVolume(document.querySelector('#volume-down'), -1);

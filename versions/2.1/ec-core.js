@@ -334,6 +334,9 @@
     trackball.addEventListener('click', trackballPress);
     device.addEventListener('pointerdown', pokeKeylight, true);
     document.addEventListener('keydown', pokeKeylight, true);
+    // An image's native drag would cancel the pointer (pointercancel) and so a pull on a status bar icon, a swipe or a long
+    // press that starts on one: the phone has no drag and drop of pictures.
+    screen.addEventListener('dragstart', event => event.preventDefault());
     screen.addEventListener('pointerdown', event => { if (ui.sleeping) { event.preventDefault(); event.stopPropagation(); wake(); } }, true);
     for (const key of [document.querySelector('#power-button'), document.querySelector('.power-key')]) holdable(key, powerKey, powerHold);
     bindVolume(document.querySelector('#volume-down'), -1);
