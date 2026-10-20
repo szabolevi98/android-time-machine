@@ -1,0 +1,7 @@
+# DeskClock 4.6.1 (ng-clock.js): the FAB's bitmap icons, the alarm and timer sounds
+dc-ic_add_white_24dp.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/ic_add_white_24dp
+dc-ic_start_white_24dp.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/ic_start_white_24dp
+dc-ic_pause_white_24dp.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/ic_pause_white_24dp
+dc-ic_reset_white_24dp.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/ic_reset_white_24dp
+dc-ic_lap_white_24dp.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/ic_lap_white_24dp
+dc-bg_day_selected.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/bg_day_selected

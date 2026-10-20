@@ -31,6 +31,9 @@ def table(apk):
             if current[1] == 'style': styles[current[0]] = {}
             continue
         if not current: continue
+        if current[1] == 'dimen':
+            v = re.match(r'\s+\(\) ([\d.]+)(dp|dip|px)', line)
+            if v and current[0] not in colors: colors[current[0]] = v.group(1) + v.group(2)
         if current[1] == 'color':
             v = re.match(r'\s+\(\) (#[0-9a-f]+|@\S+)', line) or re.match(r'\s+\(\) \(file\) (res/color\S*\.xml) type=XML', line)
             if v and current[0] not in colors: colors[current[0]] = v.group(1) if not v.group(1).startswith('res/') else f'file:{v.group(1)}'
@@ -229,7 +232,9 @@ def svg(apk, name, theme):
         tag, attrs, kids, _ = kids[0]
     assert tag == 'vector', f'{name} is a {tag}'
     vw, vh = num(attrs.get('viewportWidth')), num(attrs.get('viewportHeight'))
-    w, h = num(attrs.get('width')), num(attrs.get('height'))
+    # A size given as a dimen (DeskClock's ic_tab_*_static: @dimen/tab_icon_size) is that dimen's default value.
+    dim = lambda v: v if v is None or not v.startswith('@') else table(apk)[0].get(v[1:], v)
+    w, h = num(dim(attrs.get('width'))), num(dim(attrs.get('height')))
     ux, uy = vw / w, vh / h
     x0, y0 = -inset['Left'] * ux, -inset['Top'] * uy
     vw += (inset['Left'] + inset['Right']) * ux; vh += (inset['Top'] + inset['Bottom']) * uy

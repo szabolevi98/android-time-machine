@@ -72,6 +72,17 @@ app_name del clr eq dec_point digit_0 digit_1 digit_2 digit_3 digit_4 digit_5 di
 inv mode_deg mode_rad fun_sin fun_cos fun_tan fun_arcsin fun_arccos fun_arctan fun_ln fun_log fun_exp fun_10pow const_pi const_e lparen rparen exponential
 error_syntax error_zero_divide error_nan error_overflow menu_leading menu_fraction menu_licenses menu_feedback menu_help exact approximate dismiss
 
+[clock] PrebuiltDeskClockGoogle framework
+# DeskClock 4.6.1: the tabs, the alarm rows, the clock page, the timer and the stopwatch, the cities
+app_label menu_alarm menu_clock menu_timer menu_stopwatch alarm_repeat alarm_vibrate label default_label no_alarms
+delete expand_alarm collapse_alarm button_alarms button_cities menu_item_settings menu_item_night_mode menu_item_help
+hours_label minutes_label seconds_label timer_start timer_delete timer_reset timer_add_timer timer_plus_one sw_start_button sw_reset_button sw_lap_button sw_share_button
+sw_share_main sw_share_laps array:sw_share_strings alarm_deleted every_day cities_activity_title selected_cities_label menu_item_sort_by_gmt_offset menu_item_sort_by_name
+array:alarm_set plurals:days plurals:hours plurals:minutes framework/search_go framework/ok framework/cancel
+settings clock_settings clock_style array:clock_style_entries automatic_home_clock automatic_home_clock_summary home_time_zone open_date_settings alarm_settings
+auto_silence_title array:auto_silence_entries snooze_duration_title plurals:snooze_duration alarm_volume_title crescendo_duration_title crescendo_duration no_crescendo_duration
+volume_button_setting_title array:volume_button_setting_entries week_start_title array:week_start_entries timer_settings timer_ringtone_title default_timer_ringtone_title timer_vibrate_title
+
 [lock] SystemUI framework
 # The keyguard: KeyguardIndicationController, KeyguardBottomAreaView (voice assist / camera, LockIcon), KeyguardAffordanceHelper's
 # hints, the notifications' second tap, KeyguardStatusView's next alarm, CarrierText in airplane mode
