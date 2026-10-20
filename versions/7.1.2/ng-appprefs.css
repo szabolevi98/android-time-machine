@@ -1,0 +1,18 @@
+/* Android 7.1.2 apps' settings (ng-appprefs.js): Settings' preference rows (ng-settings.css) under the app's action bar,
+   its accent on categories, switches, check boxes and fields, its window colour behind the list. */
+.ngap .ngst-ab{background:var(--ngap-primary)}
+.ngap .ngap-list{background:var(--ngap-window)}
+.ngap .ngst-cat{color:var(--ngap-accent)}
+.ngap .ngst-switch{--ngw-accent:var(--ngap-accent)}
+.ngap .ngst-check.on{background:var(--ngap-accent)}
+/* Telecom's BlockedNumbersActivity (activity_blocked_numbers, layout_blocked_number) */
+.ngap-blocked{padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(32 * var(--dp))}
+.ngap-blocked p{margin:0;padding-bottom:calc(32 * var(--dp));color:#000000ba;font-size:calc(16 * var(--dp));line-height:calc(24 * var(--dp))}
+.ngst .ngap-addblock{margin-bottom:calc(20 * var(--dp));color:#2a56c6;font-size:calc(16 * var(--dp));line-height:calc(24 * var(--dp));text-transform:uppercase}
+.ngap-bnum{display:flex;align-items:center;color:#000000de;font-size:calc(16 * var(--dp))}
+.ngap-bnum span{flex:1;min-width:0;padding-top:calc(12 * var(--dp));align-self:flex-start;direction:ltr;text-align:left}
+.ngst .ngap-bnum button{flex:none;display:grid;place-items:center;padding:calc(12 * var(--dp));border-radius:50%}
+.ngap-bnum img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngap-adddlg{padding:calc(24 * var(--dp)) calc(24 * var(--dp)) 0}
+.ngap-adddlg p{margin:0;padding-bottom:calc(16 * var(--dp));color:#000000ba;font-size:calc(16 * var(--dp));line-height:calc(24 * var(--dp))}
+.ngap .ngst-pref{background:transparent!important}

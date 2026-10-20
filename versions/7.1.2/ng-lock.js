@@ -133,7 +133,7 @@
       if (a === 'ngbo-digit') { if ((st.entry || '').length < 16) st.entry = (st.entry || '') + e.target.closest('[data-d]').dataset.d; st.message = ''; c.render(); }
       else if (a === 'ngbo-del') { st.entry = (st.entry || '').slice(0, -1); c.render(); }
       else if (a === 'ngbo-enter') { if (st.entry) checked(c, st.entry === l.secret); }
-      else if (a === 'ngbo-emergency') { st.bouncer = null; c.open('phone', 'emergency'); }
+      else if (a === 'ngbo-emergency') { st.bouncer = null; c.open('emergency-dialer'); }
     });
     const field = root.querySelector('.ngbo-field');
     if (field) {

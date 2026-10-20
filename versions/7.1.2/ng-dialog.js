@@ -12,12 +12,14 @@
 (() => {
   'use strict';
   function markup(c, d) {
+    // The colorAccent of the app's AlertDialog theme: the dialog's own, else the open screen's (module.dialogAccent).
+    const accent = d.accent || NG.module(c.ui.view)?.dialogAccent?.(c) || '';
     const head = d.title ? `<div class="ngdlg-title">${d.icon ? `<img src="${c.safe(d.icon)}" alt="">` : ''}<span>${c.safe(d.title)}</span></div>` : '';
     const message = d.message ? `<div class="ngdlg-message${d.title ? '' : ' first'}${d.buttons?.length ? '' : ' last'}">${c.safe(d.message)}</div>` : '';
     const progress = d.progress ? `<div class="ngdlg-progress"><svg class="ngdlg-spinner" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19"/></svg><span>${c.safe(d.progress)}</span></div>` : '';
     const items = d.items ? `<div class="ngdlg-list${d.title ? '' : ' first'}${d.buttons?.length ? '' : ' last'}">${d.items.map((item, i) => `<button type="button" class="ngdlg-item" data-action="ngdlg-item" data-index="${i}">${item.html}</button>`).join('')}</div>` : '';
     const buttons = d.buttons?.length ? `<div class="ngdlg-buttons">${d.buttons.map((b, i) => `${b.neutral ? '' : i === 0 || d.buttons[i - 1]?.neutral ? '<i class="ngdlg-spacer"></i>' : ''}<button type="button" class="ngdlg-button" data-action="ngdlg-button" data-index="${i}"${b.disabled ? ' disabled' : ''}>${c.safe(b.label)}</button>`).join('')}</div>` : '';
-    return `<div class="ngdlg"><div class="ngdlg-dim" data-action="ngdlg-cancel"></div><div class="ngdlg-win" role="dialog">${head}${message}${progress}${items}${d.html ? `<div class="ngdlg-body">${d.html}</div>` : ''}${buttons}</div></div>`;
+    return `<div class="ngdlg"><div class="ngdlg-dim" data-action="ngdlg-cancel"></div><div class="ngdlg-win" role="dialog"${accent ? ` style="--ngdlg-accent:${accent}"` : ''}>${head}${message}${progress}${items}${d.html ? `<div class="ngdlg-body">${d.html}</div>` : ''}${buttons}</div></div>`;
   }
   function close(c) { if (c.ui.overlay === 'dialog') { c.ui.dialogSpec = null; c.closeOverlay(); } }
   function action(c, name, el, d, done = () => close(c)) {

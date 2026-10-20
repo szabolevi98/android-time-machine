@@ -36,10 +36,12 @@
 .ngdlg-body{flex:none}
 .ngdlg-buttons{flex:none;display:flex;align-items:flex-end;padding:calc(4 * var(--dp)) calc(12 * var(--dp))}
 .ngdlg-spacer{flex:1}
-.ngdlg-button{position:relative;min-width:calc(64 * var(--dp));min-height:calc(48 * var(--dp));padding:calc(10 * var(--dp)) calc(12 * var(--dp));border:0;background:none;color:#009688;font:500 calc(14 * var(--dp))/calc(18.59 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;-webkit-tap-highlight-color:transparent}
+.ngdlg-button{position:relative;min-width:calc(64 * var(--dp));min-height:calc(48 * var(--dp));padding:calc(10 * var(--dp)) calc(12 * var(--dp));border:0;background:none;color:var(--ngdlg-accent,#009688);font:500 calc(14 * var(--dp))/calc(18.59 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;-webkit-tap-highlight-color:transparent}
 .ngdlg-button::before{content:"";position:absolute;inset:calc(6 * var(--dp)) calc(4 * var(--dp));border-radius:calc(2 * var(--dp));background:#0000001f;opacity:0;transition:opacity .2s}
 .ngdlg-button:active::before{opacity:1;transition:none}
 .ngdlg-button:disabled{color:#00968842}
+.ngdlg-win[style] .ngdlg-button:disabled{color:var(--ngdlg-accent);opacity:.26}
+.ngdlg-win[style] .ngst-radio{--ngw-accent:var(--ngdlg-accent)}
 .ngdlg-progress{display:flex;align-items:center;padding:calc(18 * var(--dp)) calc(24 * var(--dp));font:400 calc(16 * var(--dp))/calc(21.25 * var(--dp)) Roboto,sans-serif}
 .ngdlg-spinner{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin-right:calc(24 * var(--dp));animation:ngdlg-spin 1.333s linear infinite}
 .ngdlg-spinner circle{fill:none;stroke:#009688;stroke-width:4;stroke-dasharray:90 30;stroke-linecap:square}

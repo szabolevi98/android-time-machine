@@ -1,0 +1,9 @@
+/* Android 7.1.2 people (ng-people.js): ContactsCommon's LetterTileDrawable as Google Dialer 8.0 and Contacts draw it:
+   the colour behind the display name's first letter in sans-serif-medium white at letterToTileRatio 0.67 of the tile,
+   or the anonymous avatar; round as a contact photo, square on the speed dial tiles (scale 0.7, offset −0.12). */
+.ngpp-tile{position:relative;flex:none;display:grid;place-items:center;overflow:hidden;container-type:size;color:#fff}
+.ngpp-tile.round{border-radius:50%}
+.ngpp-tile b{font:500 67cqmin/1 Roboto,sans-serif}
+.ngpp-tile img{width:100%;height:100%;object-fit:contain}
+.ngpp-tile:not(.round) b{font-size:calc(67cqmin * .7);transform:translateY(-12cqh)}
+.ngpp-tile:not(.round) img{width:70%;height:70%;transform:translateY(-12cqh)}

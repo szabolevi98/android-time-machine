@@ -1,0 +1,204 @@
+/* Android 7.1.2 Phone (Google Dialer 8.0, ng-phone.js): DialtactsActivity, the dialpad, the call log, CallDetailActivity,
+   InCallUI and TeleService's emergency dialer, sized from the image's layouts and dimens (see ng-phone.js). */
+.ngph{position:absolute;inset:0;display:flex;flex-direction:column;background:#fafafa;color:#333;font-family:Roboto,sans-serif;overflow:hidden}
+.ngph button{font-family:inherit;-webkit-tap-highlight-color:transparent}
+.ngph-ic{display:block;flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:#fff;-webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat}
+.ngph-ic.dark{background:#00000089}
+.ngph-ic.hint{background:#737373}
+.ngph-ic.theme{background:#2a56c6}
+.ngph-ic.grey{background:#636363}
+.ngph-ic.dim{background:#0000008a}
+.ngph-ic.foot{background:#616161}
+
+/* lists_fragment.xml: the 64 dp bar with search_edittext.xml, the 48 dp tabs */
+.ngph-ab{position:relative;z-index:3;flex:none;height:calc(64 * var(--dp));background:#2a56c6;transition:margin-top .2s cubic-bezier(.4,0,.2,1)}
+.ngph-ab.up{margin-top:calc(-64 * var(--dp))}
+.ngph-search{display:flex;align-items:center;height:calc(48 * var(--dp));margin:calc(8 * var(--dp));padding-left:calc(8 * var(--dp));background:#fff;border-radius:calc(2 * var(--dp));box-shadow:0 calc(1.5 * var(--dp)) calc(3 * var(--dp)) #0000003d,0 0 calc(1 * var(--dp)) #0000001f}
+.ngph-sbox{flex:1;min-width:0;display:flex;align-items:center;height:100%;padding:0;border:0;background:none;text-align:left}
+.ngph-mag{margin:0 calc(12 * var(--dp))}
+.ngph-sbox span{margin-left:calc(22 * var(--dp));color:#737373;font-size:calc(14 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngph-sbox .ngph-mag+span{margin-left:calc(10 * var(--dp))}
+.ngph-sicon{flex:none;display:grid;place-items:center;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;background:none;border-radius:50%}
+.ngph-sicon:last-child{width:calc(56 * var(--dp));padding-right:calc(8 * var(--dp))}
+.ngph-search.exp{height:calc(64 * var(--dp));margin:0;padding-left:0;border-radius:0}
+.ngph-sback,.ngph-sclear{flex:none;display:grid;place-items:center;width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin-left:calc(4 * var(--dp));padding:0;border:0;background:none;border-radius:50%}
+.ngph-sclear{width:calc(56 * var(--dp));height:calc(56 * var(--dp));margin:0}
+.ngph-sinput{flex:1;min-width:0;height:calc(48 * var(--dp));margin-left:calc(15 * var(--dp));padding:0;border:0;outline:0;background:none;color:#000;font:calc(20 * var(--dp)) Roboto,sans-serif;caret-color:#2a56c6}
+.ngph-sinput::placeholder{color:#737373}
+.ngph-tabs{position:relative;z-index:2;flex:none;display:flex;height:calc(48 * var(--dp));background:#2a56c6;box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) #0000003d}
+.ngph-tabs.up{display:none}
+.ngph-tabs button{flex:1;display:grid;place-items:center;padding:0;border:0;background:none}
+.ngph-tabs .ngph-ic{background:#ffffffa6}
+.ngph-tabs [aria-selected="true"] .ngph-ic{background:#fff}
+.ngph-under{position:absolute;left:0;bottom:0;width:calc(100% / 3);height:calc(2 * var(--dp));background:#fff;transition:transform .2s}
+.ngph-pager,.ngph-results{position:relative;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.ngph-page{min-height:100%;box-sizing:border-box}
+.ngph-results{background:#fafafa;padding-bottom:calc(16 * var(--dp))}
+.ngph-results.dp{padding-bottom:calc(360 * var(--dp))}
+
+/* Speed dial: PhoneFavoriteSquareTileView */
+.ngph-tiles{display:grid;grid-template-columns:1fr 1fr;padding:calc(2 * var(--dp)) 0 calc(88 * var(--dp)) calc(1 * var(--dp))}
+.ngph-tile{position:relative;padding:0 calc(1 * var(--dp)) calc(1 * var(--dp)) 0}
+.ngph-tilebtn{position:relative;display:block;width:100%;aspect-ratio:1/.76;padding:0;border:0;background:#ccc;overflow:hidden}
+.ngph-tileimg{position:absolute;inset:0;width:100%;height:100%}
+.ngph-shade{position:absolute;left:0;right:0;bottom:0;height:40%;background:url('assets/gd-shadow_contact_photo.png') 0 0/100% 100%}
+.ngph-tname{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;padding:0 calc(12 * var(--dp)) calc(9 * var(--dp));color:#fff;text-align:left}
+.ngph-tname span{display:flex;align-items:center;min-width:0}
+.ngph-tname b{min-width:0;font:500 calc(15 * var(--dp))/1.3 Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngph-tname img{flex:none;width:calc(12 * var(--dp));height:calc(12 * var(--dp));margin-left:calc(3 * var(--dp))}
+.ngph-tname small{font-size:calc(11 * var(--dp));line-height:1.3}
+.ngph-tmore{position:absolute;top:0;right:calc(1 * var(--dp));width:calc(36 * var(--dp));height:calc(36 * var(--dp));padding:calc(8 * var(--dp)) calc(5 * var(--dp)) calc(4 * var(--dp)) calc(4 * var(--dp));border:0;background:none;box-sizing:border-box}
+.ngph-tmore img{display:block;width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+
+/* Call History: call_log_list_item.xml in CallLogCardStyle */
+.ngph-log{padding:0 calc(8 * var(--dp)) calc(88 * var(--dp))}
+.ngph-day{padding:calc(15 * var(--dp)) calc(8 * var(--dp)) calc(9 * var(--dp));color:#0000008a;font:500 calc(14 * var(--dp)) Roboto,sans-serif}
+.ngph-card{margin:calc(4 * var(--dp));background:#fff;border-radius:calc(2 * var(--dp));box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) #0000003d,0 0 calc(1 * var(--dp)) #0000001f;overflow:hidden}
+.ngph-row,.ngph-caller{display:flex;align-items:center;padding:calc(8 * var(--dp));cursor:default}
+.ngph-photo48{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
+.ngph-row .ngph-photo48{align-self:flex-start;margin-top:calc(2 * var(--dp))}
+.ngph-info{flex:1;min-width:0;display:flex;flex-direction:column;margin-left:calc(16 * var(--dp))}
+.ngph-info b{margin-bottom:calc(2 * var(--dp));color:#000000de;font-weight:400;font-size:calc(16 * var(--dp));line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngph-line{display:flex;align-items:center;min-width:0;color:#0000008a;font-size:calc(12 * var(--dp));line-height:1.33}
+.ngph-line>span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngph-line .ngph-arrow:last-of-type{margin-right:calc(8 * var(--dp))}
+.ngph-arrow{flex:none;display:inline-block;width:calc(8.5 * var(--dp));height:calc(8.5 * var(--dp));margin-right:calc(4 * var(--dp));background:#00c853;-webkit-mask:url('assets/gd-ic_call_arrow.png') center/contain no-repeat;mask:url('assets/gd-ic_call_arrow.png') center/contain no-repeat}
+.ngph-arrow.outgoing{transform:rotate(180deg)}
+.ngph-arrow.missed{background:#ff2e58}
+.ngph-callback{flex:none;display:grid;place-items:center;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;background:none;border-radius:50%}
+.ngph-acts{padding:calc(8 * var(--dp)) 0;border-top:calc(1 * var(--dp)) solid #eee}
+.ngph-act{display:flex;align-items:center;width:100%;height:calc(48 * var(--dp));padding:0 0 0 calc(16 * var(--dp));border:0;background:none;text-align:left}
+.ngph-act span{flex:1;min-width:0;padding:0 calc(24 * var(--dp));color:#000000b3;font-size:calc(16 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Contacts: ContactListItemView */
+.ngph-clist{padding:calc(18 * var(--dp)) 0 calc(88 * var(--dp))}
+.ngph-citem{display:flex;align-items:center}
+.ngph-sec{flex:none;width:calc(48 * var(--dp));margin-left:calc(16 * var(--dp));color:#888;font:500 calc(20 * var(--dp)) Roboto,sans-serif;text-align:center}
+.ngph-crow{flex:1;min-width:0;display:flex;align-items:center;min-height:calc(64 * var(--dp));padding:calc(12 * var(--dp)) calc(32 * var(--dp)) calc(12 * var(--dp)) 0;border:0;background:none;box-sizing:border-box;text-align:left}
+.ngph-citem .ngph-crow{margin-left:calc(8 * var(--dp))}
+.ngph-results .ngph-crow{width:100%;padding-left:calc(16 * var(--dp))}
+.ngph-photo{width:calc(40 * var(--dp));height:calc(40 * var(--dp))}
+.ngph-cname{flex:1;min-width:0;display:flex;flex-direction:column;margin-left:calc(15 * var(--dp));color:#333;font-size:calc(16 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngph-cname small{color:#636363;font-size:calc(14 * var(--dp))}
+.ngph-shic{margin:0 calc(8 * var(--dp));background:#636363}
+.ngph-short .ngph-cname{margin-left:calc(23 * var(--dp))}
+
+/* EmptyContentView */
+.ngph-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding-bottom:calc(88 * var(--dp));box-sizing:border-box}
+.ngph-empty img{width:calc(196 * var(--dp))}
+.ngph-empty p{margin:0;padding:calc(8 * var(--dp)) calc(16 * var(--dp));color:#b2b2b2;font-size:calc(16 * var(--dp));text-align:center}
+.ngph-empty button{height:calc(48 * var(--dp));padding:0 calc(24 * var(--dp));border:0;background:none;color:#2a56c6;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.ngph-empty i{height:calc(40 * var(--dp))}
+
+/* The FABs: dialer_fab (56 dp) and the dialpad's fab_green */
+.ngph-fab{position:absolute;z-index:4;left:50%;bottom:calc(16 * var(--dp));width:calc(56 * var(--dp));height:calc(56 * var(--dp));margin-left:calc(-28 * var(--dp));padding:0;border:0;background:url('assets/gd-dialer_fab.png') center/100% 100%;border-radius:50%;display:grid;place-items:center}
+.ngph-fab img{width:calc(56 * var(--dp));height:calc(56 * var(--dp))}
+.ngph-fab img.small{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngph-fab.green{background-image:url('assets/gd-fab_green.png')}
+
+/* The dialpad: dialpad_fragment.xml, dialpad_view_unthemed.xml in Dialpad.Light */
+.ngph-dialpad{position:absolute;z-index:3;left:0;right:0;bottom:0}
+.ngph-dialpad.in,.ngph-incallpad.in{animation:ngph-up .25s cubic-bezier(.4,0,.2,1)}
+@keyframes ngph-up{from{transform:translateY(100%)}}
+.ngph-fade{display:block;height:calc(10 * var(--dp));background:linear-gradient(to top,#0000001a,#0000)}
+.ngph-dpview{display:flex;flex-direction:column;background:#fcfcfc}
+.ngph-digits{display:flex;align-items:stretch;height:calc(60 * var(--dp))}
+.ngph-digits output{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;color:#333;font-weight:400;white-space:nowrap;overflow:hidden;direction:ltr}
+.ngph-dpside{flex:none;display:grid;place-items:center;margin:calc(8 * var(--dp));padding:0 calc(10 * var(--dp)) 0 calc(8 * var(--dp));border:0;background:none}
+.ngph-dpside.hide{visibility:hidden}
+.ngph-del{flex:none;display:grid;place-items:center;padding:0 calc(16 * var(--dp));border:0;background:none}
+.ngph-dline{display:block;height:calc(1 * var(--dp));background:#e3e3e3}
+.ngph-above{display:block;height:calc(14 * var(--dp))}
+.ngph-below{display:block;height:calc(8 * var(--dp))}
+.ngph-endspace{display:block;height:calc(80 * var(--dp))}
+.ngph-krow{display:flex;padding:0 calc(5 * var(--dp))}
+.ngph-key{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(64 * var(--dp));padding:0;border:0;background:none;border-radius:0}
+.ngph-key:active{background:#0000000f}
+.ngph-key b{margin-bottom:calc(3 * var(--dp));color:#2a56c6;font:300 calc(36 * var(--dp))/1.1 Roboto,sans-serif}
+.ngph-key.zero b{margin-bottom:calc(1 * var(--dp))}
+.ngph-key small{color:#737373;font-size:calc(12 * var(--dp));line-height:1.2;letter-spacing:.05em}
+.ngph-key.star b,.ngph-key.pound b{margin-bottom:calc(13 * var(--dp));color:#737373;opacity:.8}
+.ngph-key.pound b{font-size:calc(23 * var(--dp))}
+.ngph-vm{display:block;width:calc(16.75 * var(--dp));height:calc(7.75 * var(--dp));margin-top:calc(2 * var(--dp));background:#919191;-webkit-mask:url('assets/gd-ic_dialpad_voicemail.png') center/contain no-repeat;mask:url('assets/gd-ic_dialpad_voicemail.png') center/contain no-repeat}
+.ngph-returncall{position:relative;z-index:4;flex:none;height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:#00c853;color:#fff;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-align:left}
+
+/* CallDetailActivity */
+.ngph-bar{flex:none;display:flex;align-items:center;height:calc(56 * var(--dp));background:#2a56c6;color:#fff;font:500 calc(20 * var(--dp)) Roboto,sans-serif;box-shadow:0 calc(2 * var(--dp)) calc(3 * var(--dp)) #0000003d;position:relative;z-index:2}
+.ngph-bar>span{flex:1;min-width:0;padding-left:calc(16 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngph-up{flex:none;display:grid;place-items:center;width:calc(56 * var(--dp));height:calc(56 * var(--dp));padding:0;border:0;background:none}
+.ngph-detlist{flex:1;min-height:0;overflow-y:auto;background:#fafafa}
+.ngph-caller{padding:calc(16 * var(--dp)) 0 calc(16 * var(--dp)) calc(20 * var(--dp));background:#fff;box-shadow:0 calc(.5 * var(--dp)) calc(1 * var(--dp)) #0000002e;align-items:flex-start}
+.ngph-caller .ngph-photo48{margin-top:calc(3 * var(--dp))}
+.ngph-caller .ngph-info{margin:calc(2 * var(--dp)) 0 0 calc(20 * var(--dp))}
+.ngph-caller .ngph-info b{margin-bottom:calc(3 * var(--dp));color:#333}
+.ngph-caller .ngph-info span{color:#636363;font-size:calc(12 * var(--dp))}
+.ngph-caller .ngph-callback{margin:0 calc(4 * var(--dp)) 0 0;align-self:center}
+.ngph-hitem{display:flex;flex-direction:column;padding:calc(13 * var(--dp)) calc(8 * var(--dp)) calc(13 * var(--dp)) calc(20 * var(--dp));color:#636363;font-size:calc(12 * var(--dp));line-height:1.35}
+.ngph-htype{display:flex;align-items:center;color:#333}
+.ngph-htype b{margin-left:calc(4 * var(--dp));font-weight:400;font-size:calc(16 * var(--dp))}
+.ngph-htype .ngph-arrow{margin-right:0}
+.ngph-fline{display:block;height:calc(1 * var(--dp));background:#eee}
+.ngph-foot{display:flex;align-items:center;width:100%;padding:calc(16 * var(--dp)) calc(28 * var(--dp));border:0;background:none;color:#616161;font-size:calc(16 * var(--dp));text-align:left}
+.ngph-foot span{margin-left:calc(28 * var(--dp))}
+
+/* InCallUI: Theme.InCallScreen shows the wallpaper through incall_background_gradient, behind transparent bars */
+.screen.view-phone:has(.ngph-call){background:#000 var(--ng-wallpaper,url('assets/fw-default_wallpaper.png')) left top/auto 100% no-repeat}
+.screen.view-phone:has(.ngph-call)::before{content:'';position:absolute;inset:0;background:linear-gradient(#1141bbe9,#1141bbe9 50%,#229febcc)}
+.screen.view-phone:has(.ngph-call) .ngnb{background:transparent}
+.ngph-call{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;color:#fff;font-family:Roboto,sans-serif;overflow:hidden}
+.ngph-call button{font-family:inherit}
+.ngph-holdbar{align-self:stretch;flex:none;display:flex;align-items:center;padding:calc(16 * var(--dp)) calc(24 * var(--dp));background:#212121cc}
+.ngph-holdbar .ngph-ic{width:calc(18 * var(--dp));height:calc(18 * var(--dp))}
+.ngph-holdbar b{flex:1;min-width:0;margin:0 calc(24 * var(--dp)) 0 calc(8 * var(--dp));font-weight:400;font-size:calc(18 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngph-holdbar span{font-size:calc(18 * var(--dp));text-transform:uppercase}
+.ngph-contact{align-self:stretch;flex:none;display:flex;flex-direction:column;align-items:center;margin:calc(12 * var(--dp)) calc(24 * var(--dp)) 0}
+.ngph-top,.ngph-bottom{color:#ffffffdd;font-size:calc(18 * var(--dp));line-height:1.33;white-space:nowrap;min-height:1.33em}
+.ngph-top.none{visibility:hidden}
+.ngph-bottom{margin-bottom:calc(2 * var(--dp));direction:ltr}
+.ngph-name{max-width:100%;margin-bottom:calc(4 * var(--dp));font:300 calc(36 * var(--dp))/1.2 Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngph-pagerbox{align-self:stretch;flex:1;min-height:0;display:flex;align-items:center;margin:0 calc(24 * var(--dp))}
+.ngph-cgrid{flex:1;display:grid;grid-template-columns:repeat(3,1fr);row-gap:calc(8 * var(--dp))}
+.ngph-cbtn{display:flex;flex-direction:column;align-items:center;padding:calc(4 * var(--dp));border:0;background:none;color:#fff}
+.ngph-cbtn i{display:grid;place-items:center;width:calc(48 * var(--dp));height:calc(48 * var(--dp));border-radius:50%;background:transparent;position:relative}
+.ngph-cbtn i::after{content:'';width:calc(36 * var(--dp));height:calc(36 * var(--dp));background:#fff;-webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat}
+.ngph-cbtn.on i{background:#fff}
+.ngph-cbtn.on i::after{background:#01579b}
+.ngph-cbtn:active i{box-shadow:inset 0 0 0 calc(48 * var(--dp)) #ffffff33}
+.ngph-cbtn span{max-width:9em;margin-top:calc(8 * var(--dp));font-size:calc(12 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngph-cbtn:disabled i,.ngph-cbtn:disabled span{opacity:.3}
+.ngph-end{position:relative;z-index:3;flex:none;display:grid;place-items:center;width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin:calc(16 * var(--dp)) 0 calc(36 * var(--dp));padding:0;border:0;border-radius:50%;background:#df0000;box-shadow:0 calc(4 * var(--dp)) calc(8 * var(--dp)) #0000004d;transition:opacity .2s}
+.ngph-end:disabled{opacity:.3}
+.ngph-incallpad{position:absolute;z-index:2;left:0;right:0;bottom:0;top:calc(var(--ngph-grid, 124) * var(--dp));display:flex;flex-direction:column;justify-content:flex-end;background:#fff;color:#333}
+.ngph-incallpad .ngph-keys{flex:1;display:flex;flex-direction:column}
+.ngph-incallpad .ngph-krow{flex:1}
+.ngph-incallpad .ngph-key{height:auto;min-height:calc(48 * var(--dp))}
+.ngph-incallpad .ngph-endspace{height:calc(116 * var(--dp))}
+.ngph-incallpad .ngph-key:active{background:#2a56c633}
+
+/* TeleService's EmergencyDialer: #263238, Dialpad_Dark, the action group */
+.screen.view-emergency-dialer .ngnb{background:#263238}
+.ngph-emerg{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:0 calc(16 * var(--dp));background:#263238;color:#fff;font-family:Roboto,sans-serif;overflow:hidden}
+.ngph-eag{position:relative;flex:none;height:calc(64 * var(--dp));margin:calc(16 * var(--dp)) 0 calc(24 * var(--dp))}
+.ngph-eabtn{width:100%;height:100%;padding:0 calc(8 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:#5a595b;color:#fff;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) #0000004d}
+.ngph-esel{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0;border-radius:calc(2 * var(--dp));background:#e53935;color:#fff;animation:ngph-reveal .3s ease-out}
+.ngph-esel b{font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.ngph-esel span{font-style:italic;font-size:calc(14 * var(--dp))}
+@keyframes ngph-reveal{from{clip-path:circle(0 at 50% 50%)}to{clip-path:circle(75% at 50% 50%)}}
+.ngph-edp{display:flex;flex-direction:column}
+.ngph-edp .ngph-digits output{color:#fff}
+.ngph-edp .ngph-ic.dark{background:#fff}
+.ngph-edp .ngph-dline{background:#e3e3e3}
+.ngph-edp .ngph-above{height:calc(29 * var(--dp))}
+.ngph-edp .ngph-key b{color:#fff}
+.ngph-edp .ngph-key small{color:#d4d6d7}
+.ngph-edp .ngph-key.star b,.ngph-edp .ngph-key.pound b{color:#d4d6d7}
+.ngph-edp .ngph-vm{background:#d4d6d7}
+.ngph-edp .ngph-key:active{background:#ffffff1f}
+.ngph-efab{position:absolute;left:50%;bottom:calc(26 * var(--dp));width:calc(67 * var(--dp));height:calc(67 * var(--dp));margin-left:calc(-33.5 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center}
+.ngph-efab img{grid-area:1/1;width:calc(56 * var(--dp));height:calc(56 * var(--dp))}
+
+/* The Design library's Snackbar */
+.ngph-snack{position:absolute;z-index:20;left:0;right:0;bottom:0;padding:calc(14 * var(--dp)) calc(12 * var(--dp));background:#323232;color:#fff;font:calc(14 * var(--dp))/1.43 Roboto,sans-serif;box-shadow:0 calc(-1 * var(--dp)) calc(6 * var(--dp)) #0000003d;transform:translateY(100%);transition:transform .25s cubic-bezier(.4,0,.2,1)}
+.ngph-snack.in{transform:none}
+.ngph-fab{transition:transform .25s cubic-bezier(.4,0,.2,1)}
+.ngph-snacking .ngph-fab{transform:translateY(calc(-48 * var(--dp)))}
