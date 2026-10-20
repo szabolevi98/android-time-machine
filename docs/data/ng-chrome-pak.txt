@@ -1,0 +1,20 @@
+# Chrome 55 native texts (docs/tools/ng-chrome-pak.py): the New Tab page sections, the network error page, the history page, the bookmark folders
+ntp_articles	Articles for you
+ntp_bookmarks	Recent bookmarks
+neterror_title	This site can’t be reached
+neterror_dns	<strong jscontent="hostName"></strong>’s server <abbr jsvalues="title:dnsDefinition">DNS address</abbr> could not be found.
+neterror_try	Try:
+neterror_check_connection	Checking the connection
+neterror_reload	Reload
+neterror_details	Details
+neterror_hide_details	Hide details
+history_search	Search history
+history_clear	Clear browsing data…
+history_none	No history entries found
+history_no_results	No search results found
+history_remove	Remove from history
+history_today	Today
+history_this_device	Showing history from this device. <a href="https://support.google.com/chrome/?p=sync_history&hl=en">Learn more</a>.
+mobile_bookmarks	Mobile bookmarks
+other_bookmarks	Other bookmarks
+history_title	History

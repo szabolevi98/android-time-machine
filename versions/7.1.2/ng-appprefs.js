@@ -79,6 +79,8 @@
     for (const [i, n] of (node.c || []).entries()) {
       if (hidden(c, n)) continue;
       if (n.t === 'PreferenceCategory') {
+        // A category without children is a header before the rows that follow it (Chrome's main_preferences).
+        if (!n.c?.length) { if (n.title) out.push(NG.settingsCat(c, str(n.title))); continue; }
         const inner = rows(c, n, `${prefix}${i}.`);
         if (inner) out.push(`${n.title ? NG.settingsCat(c, str(n.title)) : ''}${inner}`);
         continue;
