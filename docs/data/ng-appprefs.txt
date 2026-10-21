@@ -58,3 +58,6 @@ preference_headers general_prefs offline_prefs pair_with_tv_prefs subtitles_pref
 [play] Phonesky com.google.android.finsky.activities.MainActivity
 settings
 +auto_update_value_disabled +auto_update_value_enabled +auto_update_value_wifi_only
+
+[music] Music2 com.google.android.music.activities.MusicSettingsActivity
+music_settings

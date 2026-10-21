@@ -98,6 +98,38 @@ Source inventory: 950 rebuilt files, zero problems; the full 199-check module su
 
 ## Tools added for 7.1.2
 
+## Play Music and store media — 2026-10-21
+
+Music2 6.13 now uses its own MusicActivityTheme (#fafafa toolbar, #e65100 status bar,
+#f5f5f5 window), library pager, track rows, empty screens, create/edit-playlist panel and
+now-playing controls. A fresh demo account has no music. Local Documents/MediaStore audio
+is grouped by artist/album/genre, searchable, and usable in saved playlists. The shared player
+handles background playback, seek, queue order/removal, repeat/shuffle, thumbs and a sleep timer;
+its notification has Previous/Play/Pause/Next. Deleted files are reconciled without stale queue
+indices. Reload pauses the saved media clock.
+
+Documents and Gmail audio VIEW intents use the native AudioPreview layout, with a temporary
+snapshot and separate preview clock. Uploading/downloading/copying audio through Drive and
+Documents now preserves duration and artist/album/genre/title metadata; copied PDF metadata is
+also independent. The native preferences, exact licenses, two Music widgets (small/large five-button
+layout and IFL dice) and all three native launcher shortcuts are connected. Cloud-only pages use
+the native connection-error state of this local account. MusicFX currently shows its native
+unavailable-effects response; its full effect panel is separately tracked in remaining-7.1.2.md.
+
+Play Store now also exposes the shared invented albums, movies, books and magazines through
+fresh 7.4 rendering and its V2 corpus colours. Shop opens Music directly; album samples use a
+temporary audio preview and never enter the library. Media cannot be installed as APKs, and
+Buy/Rent proceeds to the demo account's empty payment-method response. Recommendation widgets
+can display the same Music/Movies catalogue. Only the shared fictional content constants were
+reused from 6.0.1.
+
+Validation: 205 module checks passed, including four player cases, media/APK separation and
+audio metadata transfer. Music's browser flow covers library/grouping, playlists, background
+playback/notification, queue, preferences/sleep timer, licenses, Documents preview, both widget
+layouts and IFL, all shortcuts, Shop/sample/payment routing, phone width and five languages.
+Play Store and Play widget browser flows pass, as do Drive and Documents/Gmail regression flows.
+Source inventory: 977 files rebuilt, zero problems.
+
 - `docs/tools/layout-xml.py <apk> <res path>`: a compiled layout (or any XML resource) of the image with its resource ids
   named and their first value, for reading a screen's structure.
 - `docs/tools/res-xml.py <apk> <out dir> <glob>`: compiled XML written back as plain XML (the AVD tool reads

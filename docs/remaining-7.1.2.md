@@ -23,8 +23,9 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Hangouts 12.0 and demo replies.
 - [x] Drive 2.4.452: files/provider, sharing, audio/video preview, scan preferences/PDFs, native widget, cache and notification/legal/backup routes. Help stays in the shared service activity checklist below.
 - [x] YouTube 11.41.56: native home/tabs, watch/mini-player, search/history, reactions/subscriptions, playlists, local upload/edit/delete, settings, captions and licenses. Shared Help and dedicated media SEND receivers remain below.
-- [x] Play Store 7.4.31: offline storefront/search, install/update/cancel, My apps/library, wishlist/reviews, account empty states, settings/content PIN and licenses. Its three widget providers remain in the widget checklist below.
-- [ ] Play Music 6.13, Play Movies 3.20, Play Games 3.7.24.
+- [x] Play Store 7.4.31: offline storefront/search, install/update/cancel, My apps/library, wishlist/reviews, account empty states, settings/content PIN, licenses and all three native widget providers.
+- [x] Play Music 6.13: native light toolbar/library, local MediaStore audio, playlists, queue/player, background notification, sleep timer/settings, AudioPreview, both widgets and all three launcher shortcuts. MusicFX controls remain below.
+- [ ] Play Movies 3.20, Play Games 3.7.24.
 - [ ] Android Pay 1.4, Project Fi, Device Policy 7.05.
 - [ ] Google Play services settings, Location History, Help/feedback, print preview.
 - [ ] Daydream/GoogleVrCore, Live Wallpaper Picker, Nougat Easter egg.
@@ -36,15 +37,19 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Launcher shortcut popup / pinning, provider picker / drag placement, wallpaper picker and home settings.
 - [ ] Remaining widget provider implementations and configuration activities. All 18 enabled providers are listed
       with native previews; digital/analog Clock and Google Search/Feed run. Calendar schedule/month, Chrome bookmarks,
-      both Play Music widgets, both Messenger widgets, Gmail, Project Fi, all three Play Store widgets and
+      both Messenger widgets, Gmail, Project Fi and
       Sound Search still show an explicit not-built marker after placement. Complete them as their apps are finished.
       Drive now has its native widget with account configuration, upload/scan/create actions and cancellation cleanup.
+      Play Store's small rotating card, recommendation refresh/dismiss and My Library widgets are implemented;
+      configuration preserves the placement page and cleans up a cancelled new widget.
+      Play Music's five-control widget (small/large layouts) and I'm Feeling Lucky widget use the shared player.
       Static shortcuts for later apps already carry their source shortcut ID through `shortcut:<id>`.
 - [ ] Camera guided panorama / Photo Sphere / Lens Blur, Smartburst, volume key action.
 - [ ] Photos native CPE preset catalogue investigation and final polish.
 - [x] Chrome site settings category pages, per-site permissions, exceptions and reset.
 - [ ] Calendar Goal flow and any service-backed activity still left as a not-built card.
 - [ ] App info Clear data: connect the current storage-usage flags to each app's actual saved model and cancel stale work.
+- [ ] MusicFX's full effect-control panel. Play Music currently exposes its native unavailable-effects response because the simulated media clock has no DSP session.
 - [ ] Widget resize handles and minimum sizes from each provider's resize flags.
 - [ ] ACTION_SEND video/audio dedicated Hangouts/Messenger/Photos receivers; preserve media metadata and native MIME target filtering. PDF streams and image-to-Messenger attachment delivery are connected.
 - [ ] Preference leaf/intent routing audit: finish service-backed and non-toggle rows that still lack a click handler.

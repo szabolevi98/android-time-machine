@@ -15,6 +15,7 @@
     {id:'file-3',parent:'documents',name:'Weekend.txt',type:'text',size:180,time:Date.now()-3*DAY,content:'Coffee with Alex at 11.\nHike on Saturday.\nBring dessert to Mom on Sunday.'}
   ]};
   const state=c=>c.data.documents||(c.data.documents=JSON.parse(JSON.stringify(NG.defaults.documents)));
+  const metadata=n=>JSON.parse(JSON.stringify(Object.fromEntries(['duration','title','artist','album','genre','art','scanPages','pdfOptions','mime'].filter(k=>n[k]!==undefined).map(k=>[k,n[k]]))));
   const mime=type=>({text:'text/plain',pdf:'application/pdf',image:'image/jpeg',video:'video/mp4',audio:'audio/mpeg',dir:'vnd.android.document/directory'})[type]||'application/octet-stream';
   function nodes(c){
     const photos=NG.media.photos(c).map(p=>({id:`photo:${p.id}`,parent:p.folder||'camera',name:p.fileName||`${p.kind==='video'?'VID':'IMG'}_${p.id}.${p.kind==='video'?'mp4':'jpg'}`,type:p.kind==='video'?'video':'image',photo:p.id,duration:p.duration,size:p.kind==='video'?Math.max(1e6,(p.duration||1000)*1200):3200000,time:p.time}));
@@ -55,7 +56,7 @@
     if(roots.some(id=>{const n=find(c,id);return !n||!available(c,parent,n.name,copy?undefined:id);}))return false;
     if(NG.driveModel&&(parent==='drive'||parent.startsWith('drive:')||roots.some(id=>id.startsWith('drive:'))))return transferDrive(c,roots,parent,copy);
     const clone=(n,target)=>{if(n.photo){const {id,...p}=NG.photoLibrary.find(c,n.photo);return NG.media.add(c,{...JSON.parse(JSON.stringify(p)),folder:target}).id;}
-      const fresh=create(c,target,n.name,n.type,n.content||'');if(!fresh)return null;Object.assign(fresh,{size:n.size,time:n.time});for(const child of nodes(c).filter(x=>x.parent===n.id))clone(child,fresh.id);return fresh.id;};
+      const fresh=create(c,target,n.name,n.type,n.content||'');if(!fresh)return null;Object.assign(fresh,{size:n.size,time:n.time,...metadata(n)});for(const child of nodes(c).filter(x=>x.parent===n.id))clone(child,fresh.id);return fresh.id;};
     const originals=roots.map(id=>find(c,id)),removedDrive=new Set();
     for(const n of originals){const id=n.id;if(!copy&&n.parent===parent)continue;if(copy)clone(n,parent);else if(n.photo)NG.photoLibrary.find(c,n.photo).folder=parent;else if(id.startsWith('drive:')){const fresh=create(c,parent,n.name,n.type,n.content||'');if(fresh){fresh.size=n.size;removedDrive.add(+id.slice(6));}}else state(c).nodes.find(x=>x.id===id).parent=parent;}
     if(removedDrive.size)c.data.driveFiles=c.data.driveFiles.filter((_,i)=>!removedDrive.has(i));
@@ -72,7 +73,7 @@
       const media=n.mediaSnapshot||(n.photo&&NG.photoLibrary.find(c,n.photo));
       if(media&&target!=='drive'&&!target.startsWith('drive:')){const {id,trashedAt,appPrivate,...snapshot}=JSON.parse(JSON.stringify(media)),p=NG.media.add(c,{...snapshot,fileName:n.name,folder:target});created.push('photo:'+p.id);return find(c,'photo:'+p.id);}
       const out=create(c,target,n.name,n.type,n.content||'');if(!out)return null;created.push(out.id);
-      const meta={size:n.size,time:n.time,duration:n.duration,scanPages:n.scanPages,pdfOptions:n.pdfOptions,...(media?{mediaSnapshot:JSON.parse(JSON.stringify(media))}:{})};
+      const meta={size:n.size,time:n.time,...metadata(n),...(media?{mediaSnapshot:JSON.parse(JSON.stringify(media))}:{})};
       if(out.driveId){const raw=D.find(c,out.driveId);Object.assign(raw,meta);if(media){raw.photoSnapshot=meta.mediaSnapshot;delete raw.mediaSnapshot;}}
       else Object.assign(state(c).nodes.find(f=>f.id===out.id),meta);
       for(const child of source.filter(f=>f.parent===n.id))if(!duplicate(child,out.id))return null;
@@ -83,5 +84,5 @@
     }}
     if(!copy)remove(c,roots.filter(id=>source.find(n=>n.id===id)?.parent!==parent));c.save();return true;
   }
-  NG.documents={state,nodes,find,list,mime,valid,available,create,rename,remove,transfer,descendants};
+  NG.documents={state,nodes,find,list,mime,valid,available,create,rename,remove,transfer,descendants,metadata};
 })();

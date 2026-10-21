@@ -1022,5 +1022,55 @@ NG.strings('play', {
 "de": "Fertig",
 "fr": "OK",
 "es": "Listo"
+},
+"corpus_title_books": {
+"res": "angler:Phonesky:corpus_title_books",
+"en": "Books",
+"hu": "Könyvek",
+"de": "Bücher",
+"fr": "Livres",
+"es": "Libros"
+},
+"corpus_title_newsstand": {
+"res": "angler:Phonesky:corpus_title_newsstand",
+"en": "Newsstand",
+"hu": "Újságos",
+"de": "Kiosk",
+"fr": "Kiosque",
+"es": "Play Kiosco"
+},
+"buy": {
+"res": "angler:Phonesky:buy",
+"args": 1,
+"en": "Buy %1$s",
+"hu": "Vásárlás – %1$s",
+"de": "Für %1$s kaufen",
+"fr": "Acheter (%1$s)",
+"es": "Comprar por %1$s"
+},
+"rent": {
+"res": "angler:Phonesky:rent",
+"args": 1,
+"en": "Rent %1$s",
+"hu": "Kölcsönzés – %1$s",
+"de": "Für %1$s ausleihen",
+"fr": "Louer (%1$s)",
+"es": "Alquilar por %1$s"
+},
+"sample": {
+"res": "angler:Phonesky:sample",
+"en": "Free sample",
+"hu": "Ingyenes minta",
+"de": "Vorschau",
+"fr": "Extrait gratuit",
+"es": "Muestra gratuita"
+},
+"continue_text": {
+"res": "angler:Phonesky:continue_text",
+"en": "Continue",
+"hu": "Folytatás",
+"de": "Weiter",
+"fr": "Continuer",
+"es": "Continuar"
 }
 });
