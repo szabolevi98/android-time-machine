@@ -14,10 +14,10 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Documents / Files / Downloads; pick/save intents; Gmail attachments.
 - [x] Emergency information, Contacts picker, keyguard-protected editing.
 - [x] Gboard editor and native preferences milestone; advanced items below remain.
-- [ ] Google app 6.5.36: search, voice, Now, Now on Tap, launcher settings.
+- [x] Google app 6.5.36: search, voice examples, Now, screen search (Now on Tap), launcher settings.
 - [ ] Gboard 6.0.84 and input method settings; TalkBack and relevant Settings external activities.
       Core IME, layouts/accents/emoji, light/dark themes and preferences are implemented. Remaining:
-      predictive/glide dictionary decoding, voice/search access points, additional native theme packages,
+      predictive/glide dictionary decoding, inline search access point, additional native theme packages,
       TalkBack and other enabled external input/settings activities.
 - [ ] Maps 9.34.1 and Messenger's location chooser.
 - [ ] Hangouts 12.0 and demo replies.
@@ -34,6 +34,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [ ] Split-screen/docked stack in Overview.
 - [ ] Bundled notifications.
 - [ ] Launcher long-press shortcuts, widgets picker, wallpaper picker and home settings.
+      Home settings are implemented; shortcuts, widgets and wallpapers remain.
 - [ ] Camera guided panorama / Photo Sphere / Lens Blur, Smartburst, volume key action.
 - [ ] Photos native CPE preset catalogue investigation and final polish.
 - [ ] Chrome site settings category pages.

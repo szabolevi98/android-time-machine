@@ -1,0 +1,15 @@
+# Google app 6.5.36 (Velvet), angler N2G48C
+gg-logo.png	priv-app/Velvet/Velvet.apk	drawable/ic_logo_color
+gg-g.png	priv-app/Velvet/Velvet.apk	drawable/googleg_standard_color_24
+gg-mic.png	priv-app/Velvet/Velvet.apk	drawable/ic_mic
+gg-search.png	priv-app/Velvet/Velvet.apk	drawable/ic_search
+gg-history.png	priv-app/Velvet/Velvet.apk	drawable/quantum_ic_history_grey600_24
+gg-menu.png	priv-app/Velvet/Velvet.apk	drawable/quantum_ic_menu_black_24
+gg-more.png	priv-app/Velvet/Velvet.apk	drawable/quantum_ic_more_vert_grey600_24
+gg-settings.png	priv-app/Velvet/Velvet.apk	drawable/ic_settings
+gg-customize.png	priv-app/Velvet/Velvet.apk	drawable/ic_customize
+gg-reminder.png	priv-app/Velvet/Velvet.apk	drawable/ic_reminder
+gg-add.png	priv-app/Velvet/Velvet.apk	drawable/quantum_ic_add_white_24
+gg-back.png	priv-app/Velvet/Velvet.apk	drawable/quantum_ic_arrow_back_grey600_24
+gg-clear.png	priv-app/Velvet/Velvet.apk	drawable/ic_search_clear_normal
+gg-weather.png	priv-app/Velvet/Velvet.apk	drawable/optin_minicard_ic_weather

@@ -400,6 +400,20 @@ versions/7.1.2/assets/gel-quantum_panel_bitmap.9.png	a9b44f692f71ebbc	copy	angle
 versions/7.1.2/assets/gel-screenpanel.9.png	5367af4067b16862	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/screenpanel.9.png	drawable-xxhdpi-v4		5367af4067b16862
 versions/7.1.2/assets/gel-screenpanel_hover.9.png	3a9d25444ea43a11	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/screenpanel_hover.9.png	drawable-xxhdpi-v4		3a9d25444ea43a11
 versions/7.1.2/assets/gel-search_bg.9.png	023562590363b025	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/search_bg.9.png	drawable-xxhdpi-v4		023562590363b025
+versions/7.1.2/assets/gg-add.png	ad5ab5925130405c	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_add_white_24.png	drawable-xxxhdpi-v4		ad5ab5925130405c
+versions/7.1.2/assets/gg-back.png	dc88c631c0d89f54	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_arrow_back_grey600_24.png	drawable-xxxhdpi-v4		dc88c631c0d89f54
+versions/7.1.2/assets/gg-clear.png	26a05e4d8c2eda9c	copy	angler:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_search_clear_normal.png	drawable-xxhdpi-v4		26a05e4d8c2eda9c
+versions/7.1.2/assets/gg-customize.png	d3e043f54e4dbad7	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/ic_customize.png	drawable-xxxhdpi-v4		d3e043f54e4dbad7
+versions/7.1.2/assets/gg-g.png	9e7db20b11ed261c	copy	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable-xxhdpi-v4/googleg_standard_color_24.png	drawable-xxhdpi-v4		9e7db20b11ed261c
+versions/7.1.2/assets/gg-history.png	ff0dcff86b50633a	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/quantum_ic_history_grey600_24.png	drawable-xxxhdpi-v4		ff0dcff86b50633a
+versions/7.1.2/assets/gg-logo.png	f64cd910e005e91d	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/ic_logo_color.png	drawable-xxxhdpi-v4		f64cd910e005e91d
+versions/7.1.2/assets/gg-menu.png	126b22cc9e4d0a5a	copy	angler:/system/priv-app/DocumentsUI/DocumentsUI.apk!res/drawable-xxxhdpi-v4/ic_hamburger_alpha.png	drawable-xxxhdpi-v4		126b22cc9e4d0a5a
+versions/7.1.2/assets/gg-mic.png	95e716e16ee712a8	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/ic_mic.png	drawable-xxxhdpi-v4		95e716e16ee712a8
+versions/7.1.2/assets/gg-more.png	0d8dec7123b8cdad	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_more_vert_grey600_24.png	drawable-xxxhdpi-v4		0d8dec7123b8cdad
+versions/7.1.2/assets/gg-reminder.png	3f125fcb2278a473	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/ic_reminder.png	drawable-xxxhdpi-v4		3f125fcb2278a473
+versions/7.1.2/assets/gg-search.png	079cb0ed1f9dde45	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/ic_search.png	drawable-xxxhdpi-v4		079cb0ed1f9dde45
+versions/7.1.2/assets/gg-settings.png	93056439490c9c87	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/ic_settings.png	drawable-xxxhdpi-v4		93056439490c9c87
+versions/7.1.2/assets/gg-weather.png	d479476908b255ee	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/optin_minicard_ic_weather.png	drawable-nodpi-v4		d479476908b255ee
 versions/7.1.2/assets/gm-abc_ic_clear_material.svg	7a0c724f1b1e7a20	vector	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable/abc_ic_clear_material.xml	drawable	vector drawable drawn as SVG	321c4d481a47acec
 versions/7.1.2/assets/gm-account_switcher_blue.jpg	47d1a562f387a616	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xhdpi-v4/account_switcher_blue.jpg	drawable-xhdpi-v4		47d1a562f387a616
 versions/7.1.2/assets/gm-avatar_placeholder.png	e5a4072a512488e5	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/avatar_placeholder.png	drawable-xxhdpi-v4		e5a4072a512488e5

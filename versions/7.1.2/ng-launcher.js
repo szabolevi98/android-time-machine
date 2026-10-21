@@ -331,6 +331,7 @@
     if (!el) return;
     const st = c.ui.home, h = home(c), last = h.pages.length;
     NG.widgets?.mount?.(c, el);
+    NG.google?.mount?.(c, el.querySelector('.ngh-nowpage'));
     if (st.folder && st.folderShown !== st.folder) { st.folderShown = st.folder; folderOpenAnim(c, el.querySelector('.ngh-fpanel')); }
     if (!st.folder) st.folderShown = null;
     const name = el.querySelector('.ngh-fname');
@@ -339,7 +340,7 @@
     let press = null;
     el.addEventListener('pointerdown', e => {
       if (e.button || st.dragging) return;
-      if (e.target.closest('.ngh-qsb,.ngh-overview,.ngh-cling,.ngh-fname,.ngh-allapps')) return;
+      if (e.target.closest('.ngh-qsb,.ngh-overview,.ngh-cling,.ngh-fname,.ngh-allapps,.nggoogle-card,.nggoogle-drawer,.nggoogle-plate,.nggoogle-feedtabs')) return;
       const src = e.target.closest('[data-src]');
       press = {x: e.clientX, y: e.clientY, moved: false, w: el.clientWidth, src, timer: 0};
       // ViewConfiguration's long press timeout, 500 ms.
@@ -421,9 +422,10 @@
     render, mount,
     statusColor: () => 'transparent',
     reset(c) { if (c.ui.home) { Object.assign(c.ui.home, {folder: null, overview: false}); if (!c.ui.home.pendingDrag) c.ui.home.page = 1; } },
-    back(c) { const st = c.ui.home; if (st?.folder) { closeFolder(c); return true; } if (st?.overview) { st.overview = false; c.render(); } return true; },
+    back(c) { const st = c.ui.home; if (st?.folder) { closeFolder(c); return true; } if (st?.overview) { st.overview = false; c.render(); } else if (c.ui.google?.drawer) { c.ui.google.drawer=false; c.render(); } else if(st?.page===0){st.page=1;c.render();} return true; },
     action(name, el, event, c) {
       const st = c.ui.home;
+      if (name.startsWith('nggoogle-') && NG.google) return NG.google.action(name, el, event, c);
       if (st?.suppressClick) { st.suppressClick = false; return true; }
       if (st?.overview && name !== 'ngh-ov') { st.overview = false; c.render(); return true; }
       if (name === 'ngh-app') { if (st.folder) st.folder = null; c.open(el.dataset.app, '', {from: el.querySelector('img')}); return true; }

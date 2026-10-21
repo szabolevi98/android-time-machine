@@ -114,6 +114,10 @@ class Reader:
             elif ch.tag == 'extra': out.setdefault('extras', {})[ch.get(NS + 'name')] = ch.get(NS + 'value')
             else: kids.append(self.node(ch))
         if kids: out['c'] = kids
+        # Google app HeaderAdapter creates a switch from these native header extras.
+        if out.get('extras', {}).get('TYPE_SWITCH') == 'yes':
+            out['key'] = out['extras'].get('LAUNCHER_PREF_KEY', out.get('key'))
+            out['defaultValue'] = 'true' if out['extras'].get('ENABLE_BY_DEFAULT') == 'yes' else 'false'
         return out
 
     def theme(self):

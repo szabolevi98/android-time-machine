@@ -22,6 +22,8 @@ try {
  assert.equal(await b.ev(`!!document.querySelector('.ngboard-preview.choices')`),true,'long press opens native accent choices');await key('text:é');assert.equal(await value('#viewport [data-f="subject"]'),'haéo','accent is inserted at the current caret');
  await focus('#viewport [data-f="body"]');await key('emoji');await key('text:😀');await key('text:😀');await key('delete');assert.equal(await value('#viewport [data-f="body"]'),'😀','backspace removes one complete emoji');
  await key('alpha');await key('enter');assert.equal(await value('#viewport [data-f="body"]'),'😀\n','textarea Enter inserts a line break');
+ await key('voice');assert.equal(await b.ev(`!!document.querySelector('#viewport .nggoogle-voice')`),true);await b.click('#viewport [data-action="nggoogle-query"]');assert.equal(await value('#viewport [data-f="body"]'),'😀\nWeather in Riverside','voice input returns to the originating editor and caret');
+ await key('voice');await back();assert.equal(await value('#viewport [data-f="body"]'),'😀\nWeather in Riverside','cancelled dictation preserves the draft');await focus('#viewport [data-f="body"]');
  await sleep(150);await b.shot('7.1.2-gboard');
  const before=await b.ev(`document.querySelector('#viewport').clientHeight`);await back();assert.equal(await b.ev(`!!document.querySelector('.ngboard')`),false);assert.equal(await b.ev(`!!document.querySelector('.nggm-compose')`),true,'first Back leaves compose open');assert.ok(await b.ev(`document.querySelector('#viewport').clientHeight`)>before);
  await focus(to);await b.act('ng-key',{key:'home'});assert.equal(await b.ev(`!!document.querySelector('.ngboard')`),false,'Home dismisses the editor');

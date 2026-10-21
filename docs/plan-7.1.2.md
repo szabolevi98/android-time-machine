@@ -175,3 +175,29 @@ search field, preference persistence, five layouts/languages and phone width. Do
 and protected emergency editing browser flows also passed with the IME enabled. The headless harness
 now explicitly emulates window focus so focus-driven editor behaviour is exercised. Source inventory:
 761 rebuilt files, zero problems. No older release's keyboard artwork or CSS was copied.
+
+## Google search / Now continuation — 2026-10-21
+
+Google 6.5.36.21.arm64 now supplies launcher search, the Google app, the left-hand Now page,
+voice search examples and held-Home screen search. SearchPlate is 48dp; suggestion rows use
+core_suggestion_view (56dp, primary/secondary text and refine action). Queries find the phone's
+apps and contacts and search the shared invented 2017 web. Search history persists, de-duplicates
+case variants and supports removal. Result links open Chrome; image results open the same Photos
+library. Voice is explicitly offered as sample phrases and never records audio.
+
+The native 248dp Now header, 304dp drawer and 2dp cards hold the demo Riverside weather, the actual
+next Calendar event and the offline news stories. Weather units, Feed/Upcoming, card dismissal
+(menu or swipe), restore and feed preferences are saved. Google reminders use Calendar's event
+store, so add/edit/complete/delete stay consistent. Screen search has Velvet's own opt-in layout
+and uses the selected text or current page title only inside the local simulator.
+
+The APK's preference headers and sixteen XML screens are available through Settings; the launcher's
+two switch-header extras now control app suggestions and save the rotation preference. Google voice
+IME settings also open their actual preference XML. Gboard's voice access point now returns its
+sample text to the original field and selection, including Google's own editor; cancellation and
+leaving the voice activity clear the pending callback.
+
+Validation: 169 module/model checks passed, Google and Gboard browser flows pass five languages and
+phone width, history, contact/Chrome/Photos routing, reminder CRUD, preferences, screen-search opt-in,
+dictation return and cancellation. Source inventory: 775 rebuilt files, zero problems. Remaining
+system/service activities and the full-release gates are still listed in remaining-7.1.2.md.

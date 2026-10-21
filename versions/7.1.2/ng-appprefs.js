@@ -45,7 +45,7 @@
   const find = (n, key) => { if (!n) return null; if (n.key === key) return n; for (const k of n.c || []) { const f = find(k, key); if (f) return f; } return null; };
   const isList = n => /ListPreference$|DropDownPreference$/.test(n.t);
   const isEdit = n => /EditTextPreference$/.test(n.t);
-  const isToggle = n => /(Switch|CheckBox)Preference$/.test(n.t);
+  const isToggle = n => /(Switch|CheckBox)Preference$/.test(n.t) || n.extras?.TYPE_SWITCH === 'yes';
   function value(c, n) {
     const h = hooks(c).get?.(c, n.key, n); if (h !== undefined) return h;
     const s = store(c); if (n.key in s) return s[n.key];
@@ -79,6 +79,7 @@
     const h = hooks(c), out = [];
     for (const [i, n] of (node.c || []).entries()) {
       if (hidden(c, n)) continue;
+      if (n.t === 'header' && !n.fragment && !n.intent && !isToggle(n)) { if (n.title) out.push(NG.settingsCat(c, str(n.title))); continue; }
       if (/PreferenceCategory(?:Header)?$/.test(n.t)) {
         // A category without children is a header before the rows that follow it (Chrome's main_preferences).
         if (!n.c?.length) { if (n.title) out.push(NG.settingsCat(c, str(n.title))); continue; }
@@ -90,7 +91,7 @@
       const title = h.title?.(c, n.key, n) ?? (str(n.title) || (isEdit(n) ? value(c, n) : '')), sum = summary(c, n), off = disabled(c, n);
       if (!title && !sum) continue;
       let widget = '';
-      if (/SwitchPreference$/.test(n.t)) widget = NG.settingsSwitch(!!value(c, n), off);
+      if (/SwitchPreference$/.test(n.t) || n.extras?.TYPE_SWITCH === 'yes') widget = NG.settingsSwitch(!!value(c, n), off);
       else if (/CheckBoxPreference$/.test(n.t)) widget = `<i class="ngst-check${value(c, n) ? ' on' : ''}"></i>`;
       out.push(NG.settingsRow(c, {title, summary: sum, widget, disabled: off, action: 'ngap-pref', data: ` data-p="${prefix}${i}"`}));
     }

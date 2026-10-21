@@ -64,7 +64,7 @@
     const langName = new Intl.DisplayNames([c.locale()], {type:'language'}).of(lang());
     const bottom = numeric() ? `${charKey(field?.type === 'tel' ? '*' : '.')}${charKey('0')}${button('delete', icon('delete'), 'function', 'delete_key_content_desc')}${end}` :
       `${button(mode === 'alpha' ? 'symbols' : 'alpha', mode === 'alpha' ? '?123' : 'ABC', 'function', 'symbol_keyboard_key_content_desc')}${button('emoji', icon('emoji'), 'function', 'emoji_keyboard_key_content_desc')}${charKey(',')}${button('space', c.safe(langName), 'space', 'space_key_content_desc')}${charKey('.')}${mode === 'emoji' ? button('delete', icon('delete'), 'function', 'delete_key_content_desc') : ''}${end}`;
-    root.innerHTML = `<div class="ngboard-inner"><div class="ngboard-header">${button('settings', icon('menu'), 'tool', 'open_access_points_menu_content_desc')}<span class="ngboard-word"></span>${button('language', icon('globe'), 'tool', 'next_language_key_content_desc')}</div><div class="ngboard-body">${body}<div class="ngboard-row bottom">${bottom}</div></div></div>`;
+    root.innerHTML = `<div class="ngboard-inner"><div class="ngboard-header">${button('settings', icon('menu'), 'tool', 'open_access_points_menu_content_desc')}<span class="ngboard-word"></span>${!secret()&&pref('enable_voice_input',true)?button('voice',icon('mic'),'tool','voice_input_key_content_desc'):''}${button('language', icon('globe'), 'tool', 'next_language_key_content_desc')}</div><div class="ngboard-body">${body}<div class="ngboard-row bottom">${bottom}</div></div></div>`;
     resize(); suggestions();
   }
   function remember(el) {
@@ -175,6 +175,14 @@
     else if (['alpha','symbols','emoji'].includes(key)) { mode=key; shift=0; draw(); }
     else if (key.startsWith('category:')) { category=key.slice(9); draw(); }
     else if (key === 'language') chooseLanguage();
+    else if (key === 'voice' && NG.googleVoiceInput) {
+      const to=remember(field);hide();
+      NG.googleVoiceInput(c,(ctx,text)=>{
+        const editor=document.querySelector(to.scope)?.querySelectorAll('input,textarea')[to.index];
+        if(!eligible(editor)||ctx.ui.view!==to.view||editor.tagName!==to.tag||editor.type!==to.type)return;
+        editor.focus();show(editor);try{editor.setSelectionRange(to.start,to.end);}catch{}insert(text);
+      });
+    }
     else if (key === 'settings') { hide(); NG.openPrefs(c,'gboard','settings',tr('ime_name')); }
   }
   function popup(key, choices) {
