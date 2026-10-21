@@ -538,3 +538,6 @@ framework/cancel framework/ok framework/action_bar_up_description
 
 [fi] Tycho framework
 app_name activation_sign_up_title activation_sign_up_or_retry+args1 activation_sign_up_on_web choose_account_body next cancel
+
+[dmagent] DMAgent framework
+app_name no_apps_account add_apps_account apps_account_example button_add_account

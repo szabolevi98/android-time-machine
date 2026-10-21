@@ -29,7 +29,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Play Games 3.7.24: tutorial, Gamer ID setup, Play Now, My Games, Notifications, Players, Explore, game/player detail, settings.
 - [x] Android Pay 1.4: splash, speed dial, OCR/manual card form, verification states, how-to, details/removal, settings.
 - [x] Project Fi: activation sign-up page, account chooser, web sign-up (no Fi account on the demo phone).
-- [ ] Device Policy 7.05.
+- [x] Device Policy 7.05: the no-work-account page with Add account.
 - [ ] Google Play services settings, Location History, Help/feedback, print preview.
 - [ ] Daydream/GoogleVrCore, Live Wallpaper Picker, Nougat Easter egg.
 

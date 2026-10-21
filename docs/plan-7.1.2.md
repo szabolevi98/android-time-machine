@@ -585,3 +585,10 @@ google_blue_500 accent): "Sign up for Project Fi" with the phone's account, frag
 own "use a different account." link, and "Sign up at fi.google.com" in Chrome. The image has these texts only in
 English (Fi was US-only), so every language shows them so. `docs/tools/mm-vectors.py` takes `VECTORS=-<name>` to draw
 one list quickly. `node tests/browser/ng-fi.mjs` covers it.
+
+## Device Policy continuation — 2026-10-21
+
+DMAgent 7.05's DMAgentActivity finds no Google Apps for Business, Education or Government account on the demo phone
+and shows add_account_activity in DMAgentTheme (DMAgent.Toolbar #3aa3db, status #0099cc): the two explanations, the
+example address and the bottom bar's Add account, which opens Settings › Add an account. The image has DMAgent's texts
+in English (and French) only. `node tests/browser/ng-dmagent.mjs` covers it.
