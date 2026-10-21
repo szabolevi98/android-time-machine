@@ -98,6 +98,9 @@
     return out.join('');
   }
   const colors = c => { const h = hooks(c).color, th = app(c).theme || {}; return h || [th.colorPrimary || '#607d8b', th.colorPrimaryDark || '#455a64']; };
+  // Light action-bar themes use the activity's dark foreground; coloured bars
+  // use the inverse foreground. A hook may name an explicit source barText.
+  const barText = c => {if(hooks(c).barText)return hooks(c).barText;const hex=String(colors(c)[0]).replace('#',''),rgb=hex.length===6?[0,2,4].map(i=>parseInt(hex.slice(i,i+2),16)):[];return rgb.length&&rgb[0]*.299+rgb[1]*.587+rgb[2]*.114>180?(app(c).theme?.textColorPrimary||'#333333'):'#ffffff';};
   const accent = c => hooks(c).accent || app(c).theme?.colorAccent || '#009688';
 
   function render(c) {
@@ -107,7 +110,7 @@
     const title = s.title || custom?.title?.(c) || (n && str(n.title)) || h.screenTitle?.(c, s.xml) || '';
     const body = custom ? custom.render(c) : n ? `${h.top?.(c, s.xml) || ''}${rows(c, n)}${h.after?.(c, s.xml) || ''}` : c.missing('app-prefs');
     const bg = h.window || app(c).theme?.windowBackground || '#fafafa';
-    return `<div class="ngst ngap" style="--ngap-primary:${primary};--ngap-accent:${accent(c)};--ngap-window:${bg}"><div class="ngst-ab"><button type="button" class="ngst-nav" data-action="ngap-up" aria-label="${esc(c, NG.text('settings').t('framework/action_bar_up_description'))}"><i style="-webkit-mask-image:url('assets/fw-ic_ab_back_material.svg');mask-image:url('assets/fw-ic_ab_back_material.svg')"></i></button>
+    return `<div class="ngst ngap" style="--ngap-primary:${primary};--ngap-accent:${accent(c)};--ngap-window:${bg};--ngap-bar-text:${barText(c)}"><div class="ngst-ab"><button type="button" class="ngst-nav" data-action="ngap-up" aria-label="${esc(c, NG.text('settings').t('framework/action_bar_up_description'))}"><i style="-webkit-mask-image:url('assets/fw-ic_ab_back_material.svg');mask-image:url('assets/fw-ic_ab_back_material.svg')"></i></button>
       <span class="ngst-abtitle nav">${esc(c, title)}</span><span class="ngst-actions">${custom?.actions?.(c) || ''}</span></div><div class="ngst-content ngst-list ngap-list">${body}</div></div>`;
   }
   // The list dialog's radios take the app's accent (its AlertDialog theme).

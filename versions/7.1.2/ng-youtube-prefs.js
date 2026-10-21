@@ -9,7 +9,7 @@
   xml.youtube_notifications={t:'PreferenceScreen',c:[{...row('video_notifications_enabled','pref_video_notifications_enabled_title','SwitchPreference'),defaultValue:'true'}]};
   xml.youtube_about={t:'PreferenceScreen',c:[{...row('version','application_name'),summary:'11.41.56'},row('privacy','menu_privacy_policy'),{...row('licenses','open_source_licenses_title'),summary:t('open_source_licenses_description')}]};
   const caption=xml.preference_headers.c.find(n=>n.title==='string/YouTube/pref_subtitles_category'&&!n.fragment);if(caption)caption.fragment='system-captions';
-  NG.appPrefsHooks.youtube={color:['#e62117','#ba1b12'],accent:'#4285f4',
+  NG.appPrefsHooks.youtube={
     hide(c,key,n){return /DogfoodPrefsFragment|DeveloperPrefsFragment|SubtitlesLegacyPrefsFragment|OfflinePrefsFragment/.test(n.fragment||'')||key==='innertube_managed_restricted_mode';},
     title(c,key,n){if(n.fragment?.endsWith('NotificationPrefsFragment'))return t('pref_video_notifications_enabled_title');},
     fragments:{GeneralPrefsFragment:'general_prefs',SendToTvPrefsFragment:'pair_with_tv_prefs',PrivacyPrefsFragment:'youtube_privacy',NotificationPrefsFragment:'youtube_notifications',AboutPrefsFragment:'youtube_about'},

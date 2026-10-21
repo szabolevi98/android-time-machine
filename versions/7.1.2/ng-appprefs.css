@@ -1,6 +1,7 @@
 /* Android 7.1.2 apps' settings (ng-appprefs.js): Settings' preference rows (ng-settings.css) under the app's action bar,
    its accent on categories, switches, check boxes and fields, its window colour behind the list. */
-.ngap .ngst-ab{background:var(--ngap-primary)}
+.ngap .ngst-ab{background:var(--ngap-primary);color:var(--ngap-bar-text,#fff)}
+.ngap .ngst-nav i,.ngap .ngst-ab-btn i{background:var(--ngap-bar-text,#fff)}
 .ngap .ngap-list{background:var(--ngap-window)}
 .ngap .ngst-cat{color:var(--ngap-accent)}
 .ngap .ngst-switch{--ngw-accent:var(--ngap-accent)}
