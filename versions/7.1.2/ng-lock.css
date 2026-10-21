@@ -3,7 +3,7 @@
    ends above the navigation bar (683.43 dp), whose keys the keyguard hides. */
 .nglk{position:absolute;inset:0;overflow:hidden;color:#fff;font-family:Roboto,sans-serif;touch-action:none;user-select:none}
 /* The wallpaper as WallpaperManager draws it: the full display high (2560 px = 731.43 dp), scrolled with the launcher. */
-.nglk-wall{position:absolute;inset:0;background:#000 url('assets/fw-default_wallpaper.png') var(--ng-wp-x,0) 0/auto 100% no-repeat}
+.nglk-wall{position:absolute;inset:0;background:#000 var(--ng-lock-wallpaper,url('assets/fw-default_wallpaper.png')) var(--ng-lock-position,left top)/var(--ng-lock-size,auto 100%) no-repeat}
 .nglk-scrim{position:absolute;inset:0;background:#000;opacity:.45}
 .nglk-panel{position:absolute;left:0;right:0;top:0;bottom:calc(48 * var(--dp))}
 /* KeyguardStatusBarView: 40 dp; the carrier 16 dp in (textAppearanceSmall 14 sp), the system icons centred in the bar

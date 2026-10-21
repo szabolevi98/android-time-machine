@@ -8,9 +8,9 @@ Reads the compiled XML with aapt2 (xmltree) and the colours and styles with aapt
 (@0x01…) come from framework-res.apk. VectorDrawable 6.0 semantics: a group is translate(tx + px, ty + py) rotate(r)
 scale(sx, sy) translate(-px, -py); a clip-path clips the siblings drawn after it in its group; fillAlpha / strokeAlpha
 multiply the colour's own alpha; the root alpha applies to the whole drawing."""
-import os, re, subprocess, sys
+import os, re, subprocess, sys, zipfile
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from era import DEVICE, VERSION, data
+from era import DEVICE, VERSION, API, data
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace(os.sep, '/') + '/'
 SYSTEM = ROOT + f'_aosp/{DEVICE}/system/'
@@ -97,14 +97,21 @@ def color(value, apk, theme):
     if len(v) == 4: return '#' + ''.join(ch * 2 for ch in v[1:]), int(v[0] * 2, 16) / 255
     return '#' + ''.join(ch * 2 for ch in v), 1.0
 
+_xml_paths = {}
+_tree_sources = {}
 def tree(apk, name, folder='drawable'):
     """The drawable's (or animator's) XML as nested [tag, {attr: value}, children]."""
     text = ''
     # The folder as given, else its -v21 / -anydpi-v21 / -nodpi-v4 variants (GMS Core's ic_google_settings is
     # drawable-anydpi-v21, the Marshmallow egg's pictures drawable-nodpi-v4).
-    for f in (folder, f'{folder}-v21', f'{folder}-anydpi-v21', f'{folder}-nodpi-v4'):
-        text = subprocess.run([AAPT, 'dump', 'xmltree', SYSTEM + apk, '--file', f'res/{f}/{name}.xml'], capture_output=True, text=True, encoding='utf-8', errors='replace').stdout
-        if text.strip(): break
+    if apk not in _xml_paths: _xml_paths[apk] = zipfile.ZipFile(SYSTEM + apk).namelist()
+    candidates = []
+    for path in _xml_paths[apk]:
+        hit = re.fullmatch(rf'res/{re.escape(folder)}(?:-(anydpi|nodpi))?(?:-v(\d+))?/{re.escape(name)}\.xml', path)
+        if hit and int(hit[2] or 0) <= API: candidates.append((int(hit[2] or 0), hit[1] == 'anydpi', path))
+    for _, _, path in sorted(candidates, reverse=True):
+        text = subprocess.run([AAPT, 'dump', 'xmltree', SYSTEM + apk, '--file', path], capture_output=True, text=True, encoding='utf-8', errors='replace').stdout
+        if text.strip(): _tree_sources[(apk,name,folder)] = path; break
     root, stack = None, []
     for line in text.splitlines():
         indent = len(line) - len(line.lstrip())
@@ -243,7 +250,7 @@ def svg(apk, name, theme):
     inner = body(kids, apk, theme, [0])
     if alpha < 1: inner = f'<g opacity="{fmt(alpha)}">{inner}</g>'
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{fmt(w)}" height="{fmt(h)}" viewBox="{fmt(x0)} {fmt(y0)} {fmt(vw)} {fmt(vh)}">'
-            f'<!-- {apk} res/drawable/{name}.xml ({("AnimatedVectorDrawable, not started" if started is False else "AnimatedVectorDrawable, the end state") if base else "VectorDrawable"}), drawn by docs/tools/mm-vectors.py -->{inner}</svg>\n')
+            f'<!-- {apk} {_tree_sources.get((apk,name,"drawable"),"res/drawable/"+name+".xml")} ({("AnimatedVectorDrawable, not started" if started is False else "AnimatedVectorDrawable, the end state") if base else "VectorDrawable"}), drawn by docs/tools/mm-vectors.py -->{inner}</svg>\n')
 
 if __name__ == '__main__':
     import glob

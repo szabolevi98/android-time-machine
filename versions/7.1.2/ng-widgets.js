@@ -67,7 +67,7 @@
       if (now.getMinutes() === lastMinute) return;
       lastMinute = now.getMinutes();
       if (c.ui.view !== 'home') return;
-      c.el.viewport.querySelectorAll('.ngh-widget[data-w="digital"]').forEach(el => { el.innerHTML = home(c, {w: 'digital', spanX: 5, spanY: 2}); });
+      c.el.viewport.querySelectorAll('.ngh-widget[data-w="digital"]').forEach(el => { const [,page,index]=(el.dataset.src||'').split(':');const item=c.data.home?.pages?.[+page-1]?.[+index];el.innerHTML = home(c, item||{w: 'digital', spanX: 5, spanY: 2}); });
     }
   });
 })();

@@ -201,3 +201,37 @@ Validation: 169 module/model checks passed, Google and Gboard browser flows pass
 phone width, history, contact/Chrome/Photos routing, reminder CRUD, preferences, screen-search opt-in,
 dictation return and cancellation. Source inventory: 775 rebuilt files, zero problems. Remaining
 system/service activities and the full-release gates are still listed in remaining-7.1.2.md.
+
+## Launcher pickers / Nougat shortcuts continuation — 2026-10-21
+
+ng-launcher-data.py reads N2G48C manifests, compiled provider XML and android.app.shortcuts directly.
+The image enables 18 widget providers, declares 30 static shortcuts and installs zero live wallpaper
+services. Disabled duplicate Gmail and Settings power-control providers are not offered. Widget labels,
+minimum spans, configuration activity names and native previews are retained in the generated catalogue.
+
+The dark Launcher3 widget list now groups all enabled providers, shows native previews and supports
+held-drag placement into vacant cells. Digital clock, analog clock (native dial/hands), Google Search
+and Google Feed have live renderers. Other providers retain an explicit not-built marker and remain
+on the release checklist. A digital clock's minute refresh now respects each instance's saved span.
+
+Long-pressing a home/drawer app opens its source shortcut pills. Existing apps accept their native
+Chrome new/private tab, Camera selfie/video, Calendar event/reminder, Gmail compose, Contacts add,
+Google search/voice and Settings intents. Shortcut rows can be dragged out and pinned; pinned labels
+follow the locale. Remaining apps receive their source ID as a shortcut sub-route. Launcher drag
+listeners are now disposed on activity changes: otherwise an old detached workspace could consume
+the next drop after visiting an app. The regression test pins a shortcut after app transitions.
+
+Velvet's wallpaper array is empty in this image, so its picker offers the framework default, My photos
+and the actual live-wallpaper picker. Photo pan/zoom becomes a persisted SVG snapshot; Home only
+preserves the old lock wallpaper, Lock only preserves Home, and Both updates both. Cancel discards
+the unapplied crop. The live picker shows its native empty list. Home and keyguard use the saved
+wallpaper independently after reload.
+
+Resource tools now select up to the active era API (25 here) instead of rejecting v25 bitmap/vector
+shortcuts. Vector provenance includes the actual qualified XML path; the inventory reads that exact
+declaration before trying output-name heuristics. This avoids falsely attributing renamed Nougat
+icons to an older image. Inventory regeneration has zero untraced files; 820 files rebuild with zero
+problems. Browser checks cover wallpaper targets/cancel/persistence, shortcut launch/pinning after
+transitions, real widget placement and spans, five languages and mobile bounds.
+The full 169-test module/model suite also passes with four concurrent test files; the isolated
+text-entry audit passes with 19,408 entries. Google search regression checks remain green.

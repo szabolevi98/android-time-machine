@@ -261,6 +261,14 @@ def trace(own, path, data):
     others in release order (a graphic taken over from another release)."""
     file = path.rsplit('/', 1)[-1]
     names, digest, ext = wanted_names(file), sha(data), file.rsplit('.', 1)[-1].lower()
+    # A generator's exact APK/XML declaration is stronger evidence than a renamed output's basename.
+    # In particular launcher shortcut IDs need not resemble their drawable names, and v25 matters on angler.
+    if ext == 'svg':
+        declared = re.search(rb'<!-- ([^ ]+\.apk) (res/[^ ]+\.xml) \(', data)
+        if declared:
+            apk, entry = (x.decode('utf-8') for x in declared.groups())
+            row = next((r for r in own.rows if r[0] == apk and r[1] == entry), None)
+            if row: return 'vector', own, row, 'vector drawable drawn as SVG (declared APK and configuration)'
     # The others in release order, so a later image (the 5X joined last) never takes a file an earlier one traced first.
     images = [own] + [image(d) for d in RELEASES if d != own.device]
     for img in images:

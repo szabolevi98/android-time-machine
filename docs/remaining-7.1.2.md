@@ -33,8 +33,12 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 
 - [ ] Split-screen/docked stack in Overview.
 - [ ] Bundled notifications.
-- [ ] Launcher long-press shortcuts, widgets picker, wallpaper picker and home settings.
-      Home settings are implemented; shortcuts, widgets and wallpapers remain.
+- [x] Launcher shortcut popup / pinning, provider picker / drag placement, wallpaper picker and home settings.
+- [ ] Remaining widget provider implementations and configuration activities. All 18 enabled providers are listed
+      with native previews; digital/analog Clock and Google Search/Feed run. Calendar schedule/month, Chrome bookmarks,
+      Drive, both Play Music widgets, both Messenger widgets, Gmail, Project Fi, all three Play Store widgets and
+      Sound Search still show an explicit not-built marker after placement. Complete them as their apps are finished.
+      Static shortcuts for later apps already carry their source shortcut ID through `shortcut:<id>`.
 - [ ] Camera guided panorama / Photo Sphere / Lens Blur, Smartburst, volume key action.
 - [ ] Photos native CPE preset catalogue investigation and final polish.
 - [ ] Chrome site settings category pages.

@@ -103,6 +103,7 @@
   }
 
   function render(c) {
+    if(c.ui.sub==='shortcut:selfie'||c.ui.sub==='shortcut:video'){const selfie=c.ui.sub==='shortcut:selfie';S(c).front=selfie;S(c).mode=selfie?'photo':'video';c.ui.sub='';c.save();}
     const t = T(), s = S(c), u = ui(c), last = NG.media.photos(c).at(-1), video = isVideo(s.mode);
     const wide = video || s.mode === 'photo' && NG.appPref(c, 'camera', s.front ? 'pref_camera_picturesize_front_key' : 'pref_camera_picturesize_back_key', 'large') === 'medium';
     const [w, h] = windowDp(c), L = layout(w, h, wide ? 16 / 9 : 4 / 3);

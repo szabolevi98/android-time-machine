@@ -155,5 +155,121 @@ NG.strings('launcher', {
 "de": "Weitere Apps suchen",
 "fr": "Rechercher plus d'applications",
 "es": "Buscar más apps"
+},
+"pick_image": {
+"res": "angler:Velvet:pick_image",
+"en": "My photos",
+"hu": "Saját fotók",
+"de": "Meine Fotos",
+"fr": "Mes photos",
+"es": "Mis fotos"
+},
+"wallpaper_instructions": {
+"res": "angler:Velvet:wallpaper_instructions",
+"en": "Set wallpaper",
+"hu": "Háttérkép beállítása",
+"de": "Hintergrund auswählen",
+"fr": "Définir comme fond d'écran",
+"es": "Establecer fondo"
+},
+"wallpaper_load_fail": {
+"res": "angler:Velvet:wallpaper_load_fail",
+"en": "Couldn't load image as wallpaper",
+"hu": "A kép betöltése háttérképként nem sikerült",
+"de": "Bild konnte nicht als Hintergrund geladen werden.",
+"fr": "Impossible de charger l'image comme fond d'écran.",
+"es": "No se ha podido cargar la imagen como fondo de pantalla"
+},
+"wallpaper_set_fail": {
+"res": "angler:Velvet:wallpaper_set_fail",
+"en": "Couldn't set image as wallpaper",
+"hu": "A kép beállítása háttérképként nem sikerült",
+"de": "Bild konnte nicht als Hintergrund festgelegt werden.",
+"fr": "Impossible de définir l'image comme fond d'écran.",
+"es": "No se ha podido establecer la imagen como fondo de pantalla"
+},
+"which_wallpaper_option_home_screen": {
+"res": "angler:Velvet:which_wallpaper_option_home_screen",
+"en": "Home screen",
+"hu": "Kezdőképernyő",
+"de": "Startbildschirm",
+"fr": "Écran d'accueil",
+"es": "Pantalla de inicio"
+},
+"which_wallpaper_option_lock_screen": {
+"res": "angler:Velvet:which_wallpaper_option_lock_screen",
+"en": "Lock screen",
+"hu": "Lezárási képernyő",
+"de": "Sperrbildschirm",
+"fr": "Écran de verrouillage",
+"es": "Pantalla de bloqueo"
+},
+"which_wallpaper_option_home_screen_and_lock_screen": {
+"res": "angler:Velvet:which_wallpaper_option_home_screen_and_lock_screen",
+"en": "Home screen and lock screen",
+"hu": "Kezdőképernyő és lezárási képernyő",
+"de": "Start- und Sperrbildschirm",
+"fr": "Écran d'accueil et écran de verrouillage",
+"es": "Pantalla de inicio y de bloqueo"
+},
+"which_wallpaper_options": {
+"res": "angler:Velvet:which_wallpaper_options",
+"en": [
+"Home screen",
+"Lock screen",
+"Home screen and lock screen"
+],
+"hu": [
+"Kezdőképernyő",
+"Lezárási képernyő",
+"Kezdőképernyő és lezárási képernyő"
+],
+"de": [
+"Startbildschirm",
+"Sperrbildschirm",
+"Start- und Sperrbildschirm"
+],
+"fr": [
+"Écran d'accueil",
+"Écran de verrouillage",
+"Écran d'accueil et écran de verrouillage"
+],
+"es": [
+"Pantalla de inicio",
+"Pantalla de bloqueo",
+"Pantalla de inicio y de bloqueo"
+]
+},
+"long_press_widget_to_add": {
+"res": "angler:Velvet:long_press_widget_to_add",
+"en": "Touch & hold to pick up a widget.",
+"hu": "Modul felvételéhez érintse meg, és tartsa lenyomva",
+"de": "Zum Hinzufügen Widget berühren und halten",
+"fr": "App. de manière prolongée pour sélectionner widget.",
+"es": "Mantén pulsado el widget que quieras seleccionar."
+},
+"LiveWallpapersPicker/live_wallpaper_picker_title": {
+"res": "angler:LiveWallpapersPicker:live_wallpaper_picker_title",
+"en": "Select live wallpaper",
+"hu": "Élő háttérkép kiválasztása",
+"de": "Live-Hintergrund auswählen",
+"fr": "Sélectionner un fond d'écran animé",
+"es": "Seleccionar fondo de pantalla animado"
+},
+"LiveWallpapersPicker/live_wallpaper_picker_label": {
+"res": "angler:LiveWallpapersPicker:live_wallpaper_picker_label",
+"en": "Live Wallpapers",
+"hu": "Élő háttérképek",
+"de": "Live-Hintergründe",
+"fr": "Fonds d'écran animés",
+"es": "Fondos animados"
+},
+"LiveWallpapersPicker/live_wallpaper_empty": {
+"res": "angler:LiveWallpapersPicker:live_wallpaper_empty",
+"en": "No live wallpapers.",
+"hu": "Nincsenek élő háttérképek.",
+"de": "Keine Live-Hintergründe",
+"fr": "Aucun fond d'écran animé.",
+"es": "No hay ningún fondo de pantalla animado."
 }
 });

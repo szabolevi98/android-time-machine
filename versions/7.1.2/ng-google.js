@@ -187,7 +187,7 @@
     if(text)deliver?.(c,text);
   }
   const back=c=>{const u=U(c);if(u.voiceReturn){finishVoice(c);return true;}if(u.drawer){u.drawer=false;c.render();return true;}if(u.mode!=='feed'){u.mode='feed';u.q='';c.render();return true;}return false;};
-  NG.google={nowPage,action,mount,back};
+  NG.google={nowPage,action,mount,back,nextEvent};
   NG.googleOpen=(c,voiceMode=false)=>{Object.assign(U(c),{mode:voiceMode?'voice':'edit',focus:!voiceMode,q:'',drawer:false,tab:'websearch'});c.open('search');};
   NG.googleVoiceInput=(c,deliver)=>{
     const u=U(c);u.voiceReturn=deliver;u.voiceSame=c.ui.view==='search';u.voicePrior={mode:u.mode,q:u.q,tab:u.tab,focus:true};

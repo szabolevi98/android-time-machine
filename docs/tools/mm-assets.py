@@ -16,7 +16,7 @@ nodpi 3 like the density Android loads it at, mdpi 1), written as calc(n * var(-
 of the nine-patch, for a view whose background it is. Run it again after changing the list; do not edit the CSS."""
 import glob, os, re, struct, sys, zipfile
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from era import ERA, DEVICE, VERSION, PHONE, data as era_data, out as era_out
+from era import ERA, DEVICE, VERSION, PHONE, API, data as era_data, out as era_out
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) + '/'
 SYSTEM = ROOT + f'_aosp/{DEVICE}/system/'
@@ -36,7 +36,7 @@ def find(z, resource):
         m = re.match(rf'res/{kind}(?:-([a-z]+))?(?:-v(\d+))?/{re.escape(name)}(\.9\.png|\.png|\.opng|\.jpg|\.webp|\.gif)$', path)
         if not m or (m.group(1) or '') not in DENSITIES: continue
         d, v = m.group(1) or '', int(m.group(2) or 0)
-        if v <= 23 and v >= ver.get(d, -1): best[d], ver[d] = path, v
+        if v <= API and v >= ver.get(d, -1): best[d], ver[d] = path, v
     for d in DENSITIES:
         if d in best: return best[d], d
     raise KeyError(f'{resource} (no bitmap; a vector goes through mm-vectors.py)')

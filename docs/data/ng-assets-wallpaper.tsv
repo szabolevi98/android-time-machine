@@ -1,0 +1,7 @@
+# Velvet 6.5.36 WallpaperPickerActivity native actions
+wp-accept.png	priv-app/Velvet/Velvet.apk	drawable/ic_actionbar_accept
+wp-images.png	priv-app/Velvet/Velvet.apk	drawable/ic_images
+wid-clock-dial.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/appwidget_clock_dial
+wid-clock-hour.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/appwidget_clock_hour
+wid-clock-minute.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/appwidget_clock_minute
+wid-now-frame.9.png	priv-app/Velvet/Velvet.apk	drawable/widget_card_frame

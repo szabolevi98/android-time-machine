@@ -338,6 +338,7 @@
     const sub = c.ui.sub || '';
     if (!sub) return;
     c.ui.sub = '';
+    if(sub==='shortcut:new-tab'||sub==='shortcut:incognito'){const s=S(c),inc=sub==='shortcut:incognito';s.fre=2;s.incognito=inc;ui(c).switcher=false;newTab(c,NTP,inc);c.save();return;}
     // An address from another app (a shortcut, a link): a new tab in the normal model, past the first run.
     if (sub.startsWith('url:')) { const s = S(c), target = NG.web.normalize(sub.slice(4)), p = NG.web.page(target); s.fre = 2; ui(c).switcher = false; s.incognito = false; newTab(c, p ? p.url : target, false); c.save(); }
   }

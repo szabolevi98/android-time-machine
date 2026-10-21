@@ -1,0 +1,20 @@
+/* Velvet WallpaperPicker: CropView, overlay actionbar, thumbnails106.5x94.5dp,
+   wallpaper_picker_translucent_gray #66000000. LiveWallpaperPicker empty ListView. */
+.screen.view-wallpapers{background:#000 var(--ng-wallpaper-preview,var(--ng-wallpaper)) center/cover no-repeat}
+.screen.view-wallpapers .ngnb{background:transparent}
+.ngwp{position:absolute;inset:0;background:#000;color:#fff;font-family:Roboto,sans-serif}
+.ngwp-crop{position:absolute;inset:0;background:center/cover no-repeat;touch-action:none;cursor:grab}
+.ngwp-crop:active{cursor:grabbing}
+.ngwp-bar{position:absolute;top:0;left:0;right:0;height:calc(56 * var(--dp));display:flex;align-items:center;background:#0006}
+.ngwp-bar button{border:0;background:none;color:#fff;padding:0;display:flex;align-items:center;justify-content:center;height:100%;font:500 calc(14 * var(--dp))/1.3 Roboto,sans-serif;text-transform:uppercase}
+.ngwp-bar>button:first-child{width:calc(56 * var(--dp));flex:none}
+.ngwp-bar img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));object-fit:contain}
+.ngwp-bar .ngwp-set{flex:1;justify-content:flex-start;padding-right:calc(20 * var(--dp));gap:calc(8 * var(--dp))}
+.ngwp-strip{position:absolute;bottom:0;left:0;right:0;display:flex;overflow-x:auto;background:#0006;border-top:calc(2 * var(--dp)) solid #0004;border-bottom:calc(2 * var(--dp)) solid #0004}
+.ngwp .ngwp-tile{position:relative;flex:0 0 calc(106.5 * var(--dp));width:calc(106.5 * var(--dp));height:calc(94.5 * var(--dp));border:0;padding:0;background:#0006;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(4 * var(--dp));font:400 calc(14 * var(--dp))/1.25 Roboto,sans-serif;text-align:center}
+.ngwp-tile.selected::after{content:'';position:absolute;inset:0;border:calc(4 * var(--dp)) solid #fff;pointer-events:none}
+.ngwp-tile img{width:calc(32 * var(--dp));height:calc(32 * var(--dp));object-fit:contain}
+.ngwp-tile span{padding:0 calc(4 * var(--dp))}
+.ngwp-tile .ngwp-thumb{width:100%;height:100%;object-fit:cover}
+.ngwp-live{background:#000!important}
+.ngwp-empty{display:flex;align-items:center;justify-content:center;text-align:center;padding:calc(24 * var(--dp));box-sizing:border-box;color:#0000008a;font-size:calc(18 * var(--dp))}

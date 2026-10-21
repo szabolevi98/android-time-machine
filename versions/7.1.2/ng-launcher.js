@@ -84,7 +84,7 @@
   // An item's view; src names where it lives for the drag code ("ws:<page>:<index>", "hs:<rank>", "fd:<index>").
   function icon(c, item, where, src = '') {
     if (item.type === 'folder') return folderIcon(c, item, where, src);
-    if (item.type === 'shortcut') return `<button type="button" class="ngh-icon ngh-sc ${where}" data-action="ngh-sc" data-src="${src}"><img src="${c.safe(item.icon || '')}" alt=""><span>${c.safe(item.label)}</span></button>`;
+    if (item.type === 'shortcut') return `<button type="button" class="ngh-icon ngh-sc ${where}" data-action="ngh-sc" data-src="${src}"><img src="${c.safe(item.icon || '')}" alt=""><span>${c.safe(item.deepId?NG.shortcuts?.label(c,item.app,item.deepId)||item.label:item.label)}</span></button>`;
     if (NG.appDisabled(c, item.app)) return '';
     const a = NG.appsData?.[item.app];
     return `<button type="button" class="ngh-icon ${where}" data-action="ngh-app" data-app="${item.app}" data-src="${src}"><img src="${a?.icon}" alt=""><span>${c.safe(label(c, item.app))}</span></button>`;
@@ -330,6 +330,7 @@
     const el = root.querySelector('.ngh'), strip = root.querySelector('.ngh-strip');
     if (!el) return;
     const st = c.ui.home, h = home(c), last = h.pages.length;
+    st.listenersOff?.();
     NG.widgets?.mount?.(c, el);
     NG.google?.mount?.(c, el.querySelector('.ngh-nowpage'));
     if (st.folder && st.folderShown !== st.folder) { st.folderShown = st.folder; folderOpenAnim(c, el.querySelector('.ngh-fpanel')); }
@@ -353,7 +354,9 @@
           let item, from = s.split(':')[0], folder = null, index = 0;
           if (from === 'fd') { folder = st.folder; index = +s.split(':')[1]; item = {type: 'app', app: folderOf(c, folder).item.items[index]}; }
           else item = locate(h, s).item;
-          startDrag(c, root, {src: s, from, item, folder, index, srcEl: src});
+          const origin={x:press.x,y:press.y},drag={src:s,from,item,folder,index,srcEl:src};
+          if(item.type==='app'&&NG.shortcuts?.show(c,item.app,src,origin,(x,y)=>{startDrag(c,root,drag);moveDrag(c,root,x,y);})){press=null;return;}
+          startDrag(c, root, drag);
           moveDrag(c, root, press.x, press.y);
         } else if (st.page > 0 && !st.overview) {
           // Launcher.onLongClick on the workspace: overview mode (and the long-press cling is done).
@@ -390,8 +393,7 @@
     };
     document.addEventListener('pointermove', move);
     document.addEventListener('pointerup', end, true);
-    root._nghOff?.();
-    root._nghOff = () => { document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', end, true); };
+    st.listenersOff = () => { clearTimeout(press?.timer); press=null; document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', end, true); };
     // A drag the drawer or the widgets list started continues here.
     if (st.pendingDrag) {
       const d = st.pendingDrag; st.pendingDrag = null;
@@ -420,6 +422,7 @@
   NG.register('home', {
     app: false,
     render, mount,
+    unmount(c){c.ui.home?.listenersOff?.();if(c.ui.home)c.ui.home.listenersOff=null;},
     statusColor: () => 'transparent',
     reset(c) { if (c.ui.home) { Object.assign(c.ui.home, {folder: null, overview: false}); if (!c.ui.home.pendingDrag) c.ui.home.page = 1; } },
     back(c) { const st = c.ui.home; if (st?.folder) { closeFolder(c); return true; } if (st?.overview) { st.overview = false; c.render(); } else if (c.ui.google?.drawer) { c.ui.google.drawer=false; c.render(); } else if(st?.page===0){st.page=1;c.render();} return true; },

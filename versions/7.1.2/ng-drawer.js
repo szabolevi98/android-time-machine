@@ -106,7 +106,7 @@
       const x0 = e.clientX, y0 = e.clientY;
       const cancel = () => { clearTimeout(timer); document.removeEventListener('pointermove', mv); document.removeEventListener('pointerup', cancel); };
       const mv = ev => { if (Math.hypot(ev.clientX - x0, ev.clientY - y0) > 10) cancel(); };
-      const timer = setTimeout(() => { cancel(); st.held = true; NG.launcherDragFromDrawer?.(c, app.dataset.app, x0, y0); }, 500);
+      const timer = setTimeout(() => { cancel(); st.held = true; if(!NG.shortcuts?.show(c,app.dataset.app,app,{x:x0,y:y0},(x,y)=>NG.launcherDragFromDrawer(c,app.dataset.app,x,y))) NG.launcherDragFromDrawer?.(c, app.dataset.app, x0, y0); }, 500);
       document.addEventListener('pointermove', mv); document.addEventListener('pointerup', cancel);
     });
     const input = root.querySelector('.ngd-input'), scroll = root.querySelector('.ngd-scroll');

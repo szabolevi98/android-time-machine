@@ -199,6 +199,7 @@
   }
 
   function render(c) {
+    if(c.ui.sub==='shortcut:event'||c.ui.sub==='shortcut:reminder'){const task=c.ui.sub==='shortcut:reminder';c.ui.sub='';c.data.calendarOobe=true;startEdit(c,null,task);c.save();}
     if (!c.data.calendarOobe) return oobe(c);
     const u = ui(c);
     if (u.screen === 'edit' && u.draft) return editor(c);
