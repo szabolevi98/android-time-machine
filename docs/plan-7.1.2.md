@@ -561,3 +561,18 @@ the Play store card. A game's detail installs through Play Store's own page and 
 player detail shows the new profile's level and XP. Settings (built in code): the signed-in account, Switch account,
 Edit profile and Delete Play Games profile. `node tests/browser/ng-games.mjs` covers it in five languages and at phone
 width.
+
+## Android Pay continuation — 2026-10-21
+
+Wallet 1.4 is card_list_activity on quantum_grey50 with the account-spinner toolbar; with no card it shows the
+cyanA700 #00b8d4 splash (tp_placeholder_card, "Add a credit or debit card") and the white FAB, whose speed dial
+(card_list_fab_fragment) offers a credit or debit card, a store gift card and a loyalty program. A card goes through the
+OCR screen (Theme.Ocr, "Line up your card with the frame", Add manually) to Google Payments' add-instrument form from
+PrebuiltGmsCore (Scan credit or debit card, Card number with 4-digit grouping, MM/YY, CVC, Cardholder name, billing
+address), validated with the form's own messages (Luhn, expiry, CVC length by network, ZIP). With no issuer to ask, the
+new card is "Contacting your bank…" and then "Verification needed"; the first one opens warm_welcome's three how-to
+pages. The card's details show the virtual account number state, no transactions, Set as default (refused with the
+app's verification message) and Remove card. Gift card and loyalty search find no programs offline. cards_menu
+(Settings with the five setting_switch rows and the APK's third_party_licenses, How it works, Nearby stores and the
+web pages), the NFC-off and "Always use Android Pay in stores?" prompts read Settings' NFC and Tap & pay values.
+`node tests/browser/ng-pay.mjs` covers it in five languages and at phone width.

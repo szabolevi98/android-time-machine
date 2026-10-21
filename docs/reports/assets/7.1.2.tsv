@@ -616,6 +616,27 @@ versions/7.1.2/assets/mv-wish-empty.png	a6648a2a3dff0141	copy	angler:/system/app
 versions/7.1.2/assets/mv-wish-on.svg	aa7c1a218216fd5a	vector	angler:/system/app/Videos/Videos.apk!res/drawable/ic_wishlist_added_primary_24dp.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	85366a846ad38f46
 versions/7.1.2/assets/mv-wish-white.svg	c47280b5e04ecba6	vector	angler:/system/app/Videos/Videos.apk!res/drawable/ic_wishlist_add_white_24dp.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	325f580036fd2d02
 versions/7.1.2/assets/mv-wish.svg	8b69df5a0068009e	vector	angler:/system/app/Videos/Videos.apk!res/drawable/ic_wishlist_add_24dp.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	de42112fcda6caf0
+versions/7.1.2/assets/pay-account.png	feb73d6eb7126a89	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_account_circle_grey600_36.png	drawable-xxhdpi-v4		feb73d6eb7126a89
+versions/7.1.2/assets/pay-add.png	c6122508e04958cd	copy	angler:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c6122508e04958cd
+versions/7.1.2/assets/pay-amex.png	4b701cfb4e4b39e7	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_networklogo_amex_color_98dp.png	drawable-xxhdpi-v4		4b701cfb4e4b39e7
+versions/7.1.2/assets/pay-back-white.png	0c4493c91c0cb467	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/quantum_ic_arrow_back_white_24.png	drawable-xxhdpi-v4		0c4493c91c0cb467
+versions/7.1.2/assets/pay-card-art.png	0313413f4904eb99	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_generic_card_art_pattern_color_360x227dp.png	drawable-xxhdpi-v4		0313413f4904eb99
+versions/7.1.2/assets/pay-close-white.png	93b3126fb85e3934	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/quantum_ic_close_white_24.png	drawable-xxhdpi-v4		93b3126fb85e3934
+versions/7.1.2/assets/pay-close.png	f1ee80bd0cec8467	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/chips_ic_close_24dp.png	drawable-xxhdpi-v4		f1ee80bd0cec8467
+versions/7.1.2/assets/pay-discover.png	ce88ab643162baa1	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_networklogo_discover_color_98dp.png	drawable-xxhdpi-v4		ce88ab643162baa1
+versions/7.1.2/assets/pay-fab-card.png	ef91d7d6d14f0099	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_credit_card_white_24.png	drawable-xxhdpi-v4		ef91d7d6d14f0099
+versions/7.1.2/assets/pay-fab-gift.png	65c5ccc8f2289c1e	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_wallet_giftcard_white_24.png	drawable-xxhdpi-v4		65c5ccc8f2289c1e
+versions/7.1.2/assets/pay-fab-loyalty.png	4e7f25a34415c58f	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_local_play_white_24.png	drawable-xxhdpi-v4		4e7f25a34415c58f
+versions/7.1.2/assets/pay-howto-1.png	25c22203f63d6aca	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_howtopay_screen1_color_400x417dp.png	drawable-xxhdpi-v4		25c22203f63d6aca
+versions/7.1.2/assets/pay-howto-2.png	5fed58a5633090df	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_howtopay_screen2_color_400x417dp.png	drawable-xxhdpi-v4		5fed58a5633090df
+versions/7.1.2/assets/pay-howto-3.png	5046c57fbaaf45a9	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_howtopay_screen3_color_400x417dp.png	drawable-xxhdpi-v4		5046c57fbaaf45a9
+versions/7.1.2/assets/pay-licenses.txt	b35279f6e21cfdfe	copy	angler:/system/app/Wallet/Wallet.apk!res/raw/third_party_licenses	raw		b35279f6e21cfdfe
+versions/7.1.2/assets/pay-logo.png	e4e5fa476de6e369	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/product_logo_android_pay_color_192.png	drawable-xxhdpi-v4		e4e5fa476de6e369
+versions/7.1.2/assets/pay-mastercard.png	5b09c4dda9675ef3	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_networklogo_mastercard_color_98dp.png	drawable-xxhdpi-v4		5b09c4dda9675ef3
+versions/7.1.2/assets/pay-more-white.png	c25bb5277a272a06	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_more_vert_white_24.png	drawable-xxhdpi-v4		c25bb5277a272a06
+versions/7.1.2/assets/pay-more.png	66d58e1fa20395d4	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_more_vert_grey600_24.png	drawable-xxhdpi-v4		66d58e1fa20395d4
+versions/7.1.2/assets/pay-placeholder.png	78345f5d72480722	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_placeholder_card_color_296x187dp.png	drawable-xxhdpi-v4		78345f5d72480722
+versions/7.1.2/assets/pay-visa.png	61e4ddfe3c6ff470	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_networklogo_visa_color_98dp.png	drawable-xxhdpi-v4		61e4ddfe3c6ff470
 versions/7.1.2/assets/pg-avatar.png	dc94d4cb766fc6b2	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/pict_player_no_image.png	drawable-xxhdpi-v4		dc94d4cb766fc6b2
 versions/7.1.2/assets/pg-banner.png	5b895f7a48441ab2	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/banner_bg_default_games_profile_trans.png	drawable-xxhdpi-v4		5b895f7a48441ab2
 versions/7.1.2/assets/pg-drawer-explore-on.png	9e56e65a6bf87278	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_drawer_explore_selected.png	drawable-xxhdpi-v4		9e56e65a6bf87278

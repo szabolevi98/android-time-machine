@@ -1,0 +1,22 @@
+# Android Pay 1.4 (Wallet): splash, card art, network logos, how-to pages, FAB and toolbar icons (ng-pay.js).
+pay-logo.png	app/Wallet/Wallet.apk	drawable/product_logo_android_pay_color_192
+pay-placeholder.png	app/Wallet/Wallet.apk	drawable/tp_placeholder_card_color_296x187dp
+pay-card-art.png	app/Wallet/Wallet.apk	drawable/tp_generic_card_art_pattern_color_360x227dp
+pay-visa.png	app/Wallet/Wallet.apk	drawable/tp_networklogo_visa_color_98dp
+pay-mastercard.png	app/Wallet/Wallet.apk	drawable/tp_networklogo_mastercard_color_98dp
+pay-amex.png	app/Wallet/Wallet.apk	drawable/tp_networklogo_amex_color_98dp
+pay-discover.png	app/Wallet/Wallet.apk	drawable/tp_networklogo_discover_color_98dp
+pay-howto-1.png	app/Wallet/Wallet.apk	drawable/tp_howtopay_screen1_color_400x417dp
+pay-howto-2.png	app/Wallet/Wallet.apk	drawable/tp_howtopay_screen2_color_400x417dp
+pay-howto-3.png	app/Wallet/Wallet.apk	drawable/tp_howtopay_screen3_color_400x417dp
+pay-add.png	app/Wallet/Wallet.apk	drawable/quantum_ic_add_grey600_24
+pay-fab-card.png	app/Wallet/Wallet.apk	drawable/quantum_ic_credit_card_white_24
+pay-fab-gift.png	app/Wallet/Wallet.apk	drawable/quantum_ic_wallet_giftcard_white_24
+pay-fab-loyalty.png	app/Wallet/Wallet.apk	drawable/quantum_ic_local_play_white_24
+pay-more.png	app/Wallet/Wallet.apk	drawable/quantum_ic_more_vert_grey600_24
+pay-more-white.png	app/Wallet/Wallet.apk	drawable/quantum_ic_more_vert_white_24
+pay-back-white.png	app/Wallet/Wallet.apk	drawable/quantum_ic_arrow_back_white_24
+pay-close.png	app/Wallet/Wallet.apk	drawable/quantum_ic_close_grey600_24
+pay-close-white.png	app/Wallet/Wallet.apk	drawable/quantum_ic_close_white_24
+pay-account.png	app/Wallet/Wallet.apk	drawable/quantum_ic_account_circle_grey600_36
+pay-licenses.txt	app/Wallet/Wallet.apk	res/raw/third_party_licenses
