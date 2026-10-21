@@ -281,3 +281,34 @@ imperial units, actual drag/marker pointer events, source notices, Messenger sen
 five languages and phone width. Chrome and Google browser regressions also pass.
 The full module/model suite passes 174 checks. Asset inventory regeneration has zero
 untraced files; the source rebuild check passes 845 files with zero problems.
+
+## Hangouts continuation — 2026-10-21
+
+Hangouts 12.0 now draws its 72dp conversation list, 40dp avatars, account drawer,
+15sp chat text, compose/attachment strip and call controls from the N2G48C APK's
+layouts and resources. Incoming/outgoing/grouped bubble masks are the APK's actual
+nine-patches. MessageBubbleView's SRC_IN tint is applied to the background alone:
+white incoming and bluegrey100 outgoing, retaining the image's alpha/tail and the
+photo/emoji colours. No older app's render function, stylesheet or text table was copied.
+
+Sam's shared hike demo starts the saved chat. Text, photo and location attachments,
+group creation/rename/leave, message copy/forward/details/delete, archive/unarchive,
+conversation notification levels, block/unblock, DND and account/general settings
+are wired. Photos/Documents/shared image intents retain the media ID. Photo and
+location cards open Photos/Maps. Native audio/video call screens use local timers,
+mute/speaker/camera toggles and an ended-call message; no device media is captured.
+The group-left status is explicitly an own offline-model text. Hungarian follows
+the APK's English fallback where its resources lack that translation.
+
+A known demo contact answers once per session, after 4.5 seconds. Replies respect
+block, sign-out, DND and conversation notification settings; a deleted thread cannot
+be resurrected by a pending reply. The source notification icon/large avatar and
+RemoteInput reply are connected. A notification reply preserves the in-app draft
+and pending attachments. Hangouts has no enabled static shortcut entries in this image.
+
+Validation: the full suite passes 177 checks; source regeneration rebuilds 869 files
+with zero problems. Browser coverage includes the seed, delayed reply/notification,
+RemoteInput with draft preservation, real held-message forwarding, Documents and
+Photos share integration, call controls, block/mute, groups/rename/leave, archive,
+settings/sign-in, all five languages and phone width. Screenshots were inspected
+to verify native bubble tints and that photos are not tinted with their backgrounds.

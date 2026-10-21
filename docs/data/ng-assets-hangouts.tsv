@@ -1,0 +1,25 @@
+# Hangouts 12.0, N2G48C. All artwork is copied from this image's own APK.
+ho-add.png	app/Hangouts/Hangouts.apk	drawable/quantum_ic_add_white_24
+ho-back.png	app/Hangouts/Hangouts.apk	drawable/quantum_ic_arrow_back_white_24
+ho-search.png	app/Hangouts/Hangouts.apk	drawable/quantum_ic_search_black_24
+ho-video.png	app/Hangouts/Hangouts.apk	drawable/quantum_ic_videocam_white_24
+ho-phone.png	app/Hangouts/Hangouts.apk	drawable/quantum_ic_call_white_24
+ho-end.png	app/Hangouts/Hangouts.apk	drawable/quantum_ic_call_end_white_24
+ho-mic.png	app/Hangouts/Hangouts.apk	drawable/quantum_ic_mic_white_24
+ho-mic-off.png	app/Hangouts/Hangouts.apk	drawable/quantum_ic_mic_off_white_24
+ho-speaker.png	app/Hangouts/Hangouts.apk	drawable/quantum_ic_volume_up_white_24
+ho-video-off.png	app/Hangouts/Hangouts.apk	drawable/quantum_ic_videocam_off_white_24
+ho-attach.png	app/Hangouts/Hangouts.apk	drawable/quantum_ic_attachment_grey600_24
+ho-photo.png	app/Hangouts/Hangouts.apk	drawable/quantum_ic_photo_library_grey600_24
+ho-send.png	app/Hangouts/Hangouts.apk	drawable/ic_send_green_24
+ho-send-off.png	app/Hangouts/Hangouts.apk	drawable/ic_send_grey_24
+ho-stat.png	app/Hangouts/Hangouts.apk	drawable/stat_notify_hangout
+ho-avatar.png	app/Hangouts/Hangouts.apk	drawable/default_avatar
+ho-group.png	app/Hangouts/Hangouts.apk	drawable/default_avatar_circles
+ho-avatar-large.png	app/Hangouts/Hangouts.apk	drawable/default_avatar_large
+ho-archive.png	app/Hangouts/Hangouts.apk	drawable/quantum_ic_archive_white_24
+ho-incoming.9.png	app/Hangouts/Hangouts.apk	drawable/msg_bubble_incoming
+ho-incoming-grouped.9.png	app/Hangouts/Hangouts.apk	drawable/msg_bubble_incoming_grouped
+ho-outgoing.9.png	app/Hangouts/Hangouts.apk	drawable/msg_bubble_outgoing
+ho-outgoing-grouped.9.png	app/Hangouts/Hangouts.apk	drawable/msg_bubble_outgoing_grouped
+ho-location.png	app/Hangouts/Hangouts.apk	drawable/quantum_ic_my_location_grey600_24
