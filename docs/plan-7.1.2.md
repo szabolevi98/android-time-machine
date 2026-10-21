@@ -356,3 +356,16 @@ framework dialog renderer.
 Drive's audio/video previews, scan preference effects and remaining service-backed
 settings/activity/help routes are still in the release checklist; this milestone
 does not mark the application or the whole version finished.
+
+
+Drive cache-size source follow-up: dequickened Drive.odex has Lfti.d() installing
+ListPreference entries from Lfts.f()/q(). The base sizes in Lfts.<clinit> are
+1,2,5,10,25,50,100,250,500,1000 MB; q() divides the cache filesystem's block-count
+capacity by 10 MiB, caps at 1000 and selects nearby entries. With the simulator's
+26,503,790,080-byte data filesystem this yields 100/250/500/1000 MB. Lftr$a clamps
+max/3 to the preceding choice, so the initial selection is 250 MB. The preference
+now displays those choices and persists the selected value. The original algorithm
+and decoded instruction extracts are retained under tests/browser/artifacts/drive-cache-*;
+extracted dex is in ignored _aosp/ngdrive. Cache-size browser coverage verifies the
+four labels and persistence of 500 MB. Enforcing preview-cache capacity remains a
+model follow-up; cloud records and pinned files must never be evicted.

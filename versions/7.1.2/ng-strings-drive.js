@@ -1302,5 +1302,18 @@ NG.strings('drive', {
 "hu",
 "de"
 ]
+},
+"prefs_cache_size_choice_format_string": {
+"res": "angler:Drive:prefs_cache_size_choice_format_string",
+"args": 1,
+"en": "%1$d MB",
+"fr": "%1$d Mo",
+"es": "%1$d MB",
+"hu": "%1$d MB",
+"de": "%1$d MB",
+"untranslated": [
+"hu",
+"de"
+]
 }
 });
