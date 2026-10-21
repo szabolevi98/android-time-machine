@@ -151,3 +151,27 @@ Cancel returns to the public information view; the correct PIN/pattern/password 
 flow. Browser validation covers the PIN path, cancellation, field persistence, consent, contact
 selection, all five languages and phone width. `npm test`: 169 passed. Inventory regeneration:
 751 files, zero problems.
+
+## Gboard input continuation — 2026-10-21
+
+Gboard 6.0.84 now supplies the on-screen editor in apps and framework dialogs. Its five language
+layouts, accent popups, two symbol pages and 1,347 emoji entries are generated from this APK's own
+compiled XML by ng-keyboard-data.py; icons and NotoColorEmoji.ttf come from N2G48C. The material
+light/dark colours and sw400dp keyboard dimensions were read from the same APK. Selection replacement,
+grapheme deletion, shift/caps lock, textarea Enter, app-specific Enter handlers, number/password fields,
+double-space period, Back/Home and focus restoration across an app redraw are connected.
+
+Settings opens the native Gboard preference XML, including its custom category classes, headers,
+fragment extras, toggles and list dependencies. Languages, native light/dark previews, key borders,
+number row, keyboard height, one-handed placement, custom layout variants and keypress timing controls
+are wired to persistent preferences. The generic preference reader now follows referenced string
+defaults, and disabled preferences reject actions. The native dictionary list and system personal
+dictionary route are connected; predictive/glide decoding, voice/search access points and remaining
+theme packages still need the Google-app continuation before this checklist item is closed.
+
+Validation: 169 module/model checks passed. The Gboard browser flow checks Gmail address entry,
+selection, a real held-pointer accent popup, emoji deletion, newline, Back/Home, Messenger's rebuilding
+search field, preference persistence, five layouts/languages and phone width. Documents/Gmail attachments
+and protected emergency editing browser flows also passed with the IME enabled. The headless harness
+now explicitly emulates window focus so focus-driven editor behaviour is exercised. Source inventory:
+761 rebuilt files, zero problems. No older release's keyboard artwork or CSS was copied.

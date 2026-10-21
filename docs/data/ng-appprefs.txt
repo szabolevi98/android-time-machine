@@ -37,3 +37,6 @@ calendar_settings_headers
 camera_preferences additional_preferences
 +setting_summary_aspect_ratio_and_megapixels +pref_video_quality_entry_2160p +pref_video_quality_entry_1080p +pref_video_quality_entry_720p
 +pref_video_quality_entry_480p
+[gboard] LatinIMEGooglePrebuilt com.google.android.apps.inputmethod.latin.preference.SettingsActivity
+settings setting_preferences setting_correction setting_gesture setting_dictionary setting_search setting_advanced setting_about
++ime_name +subtype_generic +subtype_locale_en_US

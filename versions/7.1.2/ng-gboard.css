@@ -1,0 +1,57 @@
+/* Gboard 6.0.84 material light: base #eceff1, candidate #e4e7e9, labels #37474f.
+   keyboard_height/sw400dp 282dp, bottom inset 12dp, horizontal softkey inset 2.5dp,
+   corners 2dp. Source: LatinIMEGooglePrebuilt res/layout/keyboard_latin_10_9_9_body.xml,
+   res/values dimensions/styles and the XML key mappings generated in ng-keyboard-data.js. */
+@font-face{font-family:'Nougat Emoji';src:url('fonts/NotoColorEmoji.ttf') format('truetype');font-display:swap}
+.screen.ngboard-open #viewport{bottom:calc((48 + var(--ngboard-height)) * var(--dp))}
+.screen.ngboard-open #overlay-root{bottom:calc(var(--ngboard-height) * var(--dp))}
+.ngboard{position:absolute;left:0;right:0;bottom:calc(48 * var(--dp));height:calc(var(--ngboard-height) * var(--dp));z-index:35;color:#37474f;background:#eceff1;touch-action:none;user-select:none;font-family:Roboto,sans-serif;box-shadow:0 calc(-1 * var(--dp)) calc(3 * var(--dp)) #0002}
+.ngboard-inner{height:100%;display:flex;flex-direction:column}
+.ngboard-header{flex:none;height:calc(40 * var(--dp));display:flex;align-items:center;background:#e4e7e9;border-bottom:calc(.5 * var(--dp)) solid #cfd4d7}
+.ngboard-key{position:relative;display:flex;align-items:center;justify-content:center;flex:1;min-width:0;border:0;padding:0;background:none;color:inherit;border-radius:calc(2 * var(--dp));font:400 calc(22 * var(--dp))/1 Roboto,'Nougat Emoji',sans-serif;-webkit-tap-highlight-color:transparent;touch-action:none}
+.ngboard-key img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));object-fit:contain;pointer-events:none}
+.ngboard-key.pressed,.ngboard-key:active{background:#37474f26}
+.ngboard-header .tool{flex:0 0 calc(42 * var(--dp));height:100%}
+.ngboard-word{flex:1;text-align:center;font:400 calc(17 * var(--dp))/1 Roboto,sans-serif;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.ngboard-body{flex:1;min-height:0;display:flex;flex-direction:column;padding:0 calc(2.5 * var(--dp)) calc(12 * var(--dp))}
+.ngboard-row{display:flex;flex:1;min-height:0;gap:calc(5 * var(--dp));padding:calc(2 * var(--dp)) 0}
+.ngboard-row.row1{padding-left:calc(18 * var(--dp));padding-right:calc(18 * var(--dp))}
+.ngboard-row .function{flex:1.25;font-size:calc(14 * var(--dp))}
+.ngboard-row .shift{margin-right:calc(5 * var(--dp))}
+.ngboard-row .shift.locked::after{content:'';position:absolute;width:calc(13 * var(--dp));height:calc(2 * var(--dp));background:currentColor;bottom:calc(8 * var(--dp))}
+.ngboard-row .enter{background:#5cb5ab;border-radius:50%;flex:0 0 calc(40 * var(--dp));height:calc(40 * var(--dp));align-self:center;margin:0 calc(3 * var(--dp))}
+.ngboard-row .enter img{filter:brightness(0) invert(1)}
+.ngboard-row .space{flex:4;font-size:calc(13 * var(--dp));color:#37474fb3;margin:calc(8 * var(--dp)) calc(2.5 * var(--dp)) calc(5 * var(--dp));background:#37474f33}
+.ngboard .bottom .char{flex:.7;font-size:calc(20 * var(--dp))}
+.ngboard .bottom .function{flex:1.1}
+.ngboard .number-row .char{font-size:calc(18 * var(--dp))}
+.ngboard.numbers .ngboard-header{display:none}
+.ngboard.numbers .row1{padding-left:0;padding-right:0}
+.ngboard.numbers .char{font-size:calc(28 * var(--dp))}
+.ngboard-emojis{flex:1;min-height:0;overflow:auto;display:grid;grid-template-columns:repeat(8,1fr);grid-auto-rows:calc(44 * var(--dp));touch-action:pan-y}
+.ngboard-emojis .char{font:calc(28 * var(--dp))/1 'Nougat Emoji',sans-serif}
+.ngboard-emojis .ngboard-key{touch-action:pan-y}
+.ngboard-categories{flex:none;display:flex;height:calc(30 * var(--dp));border-bottom:calc(1 * var(--dp)) solid #cbd1d5}
+.ngboard-categories .ngboard-key{font-size:calc(20 * var(--dp))}
+.ngboard-categories .selected{border-bottom:calc(2 * var(--dp)) solid #009688}
+.ngboard-preview{position:absolute;display:flex;height:calc(64 * var(--dp));background:#e4e7e9;box-shadow:0 calc(2 * var(--dp)) calc(5 * var(--dp)) #0006;border-radius:calc(3 * var(--dp));z-index:2}
+.ngboard-preview .ngboard-key{font-size:calc(30 * var(--dp))}
+.ngboard-preview.choices{height:calc(52 * var(--dp))}
+.ngboard-preview.choices .ngboard-key{font-size:calc(23 * var(--dp))}
+.ngboard.borders .ngboard-row .char{background:#fff;box-shadow:0 calc(1 * var(--dp)) calc(1 * var(--dp)) #0005}
+.ngboard.dark{background:#263238;color:#ffffffcc}
+.ngboard.dark .ngboard-header,.ngboard.dark .ngboard-preview{background:#21272b}
+.ngboard.dark .ngboard-key img{filter:brightness(0) invert(.9)}
+.ngboard.dark .space{color:#eceff1b3;background:#ffffff30}
+.ngboard.dark.borders .char{background:#455a64}
+.ngboard.left .ngboard-inner{margin-right:18%}
+.ngboard.right .ngboard-inner{margin-left:18%}
+.ngboard-slider{padding:calc(24 * var(--dp));display:flex;align-items:center;gap:calc(16 * var(--dp));color:#000000de}
+.ngboard-slider input{min-width:0;flex:1;accent-color:#009688}
+.ngboard-slider output{min-width:calc(54 * var(--dp));font-size:calc(14 * var(--dp));text-align:right}
+.ngboard-themes{padding:calc(16 * var(--dp));display:grid;grid-template-columns:1fr 1fr;gap:calc(16 * var(--dp))}
+.ngboard-swatch{border:calc(2 * var(--dp)) solid transparent;border-radius:calc(2 * var(--dp));padding:0;overflow:hidden;background:#eceff1;color:#37474f;text-align:center}
+.ngboard-swatch.dark{background:#263238;color:#ffffffcc}
+.ngboard-swatch.selected{border-color:#009688}
+.ngboard-swatch span{display:block;font:calc(15 * var(--dp))/2 Roboto,sans-serif;padding:calc(10 * var(--dp))}
+.ngboard-swatch b{display:block;background:#fff;color:#000000de;padding:calc(12 * var(--dp)) calc(4 * var(--dp));font:400 calc(14 * var(--dp))/1.3 Roboto,sans-serif}

@@ -79,7 +79,7 @@
     const h = hooks(c), out = [];
     for (const [i, n] of (node.c || []).entries()) {
       if (hidden(c, n)) continue;
-      if (n.t === 'PreferenceCategory') {
+      if (/PreferenceCategory(?:Header)?$/.test(n.t)) {
         // A category without children is a header before the rows that follow it (Chrome's main_preferences).
         if (!n.c?.length) { if (n.title) out.push(NG.settingsCat(c, str(n.title))); continue; }
         const inner = rows(c, n, `${prefix}${i}.`);
@@ -137,7 +137,7 @@
       if (name !== 'ngap-pref') return hooks(c).action?.(c, name, el) === true;
       let node = nodeOf(c);
       for (const i of el.dataset.p.split('.')) node = node?.c?.[+i];
-      if (!node) return true;
+      if (!node || disabled(c, node)) return true;
       if (hooks(c).click?.(c, node.key, node) === true) return true;
       if (isToggle(node)) { setValue(c, node, !value(c, node)); c.render(); return true; }
       if (isList(node)) { choose(c, node); return true; }

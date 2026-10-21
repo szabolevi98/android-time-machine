@@ -86,6 +86,7 @@ class Reader:
             if (config.get_qualifier() or '') == '':
                 d = entry.key
                 if d.data_type == 3: return res.stringpool_main.getString(d.data)
+                if d.data_type == 1: return self.raw('@%08x' % d.data)
                 if d.data_type == 18: return 'true' if d.data else 'false'
                 return str(d.data)
         return self.ref(value)

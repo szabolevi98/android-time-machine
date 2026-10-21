@@ -374,7 +374,7 @@
     },
     action(c, name, el) {
       if (name === 'ngpe-manage') { NG.settingsGo(c, 'keyboards-all', T().t('add_virtual_keyboard')); return true; }
-      if (name === 'ngpe-ime') { const ime = IMES.find(x => x[0] === el.dataset.id); NG.settingsGo(c, `missing:${ime[3]}`, T().t(ime[1])); return true; }
+      if (name === 'ngpe-ime') { const ime = IMES.find(x => x[0] === el.dataset.id); if (ime[0] === 'gboard') NG.openPrefs(c, 'gboard', 'settings', T().t(ime[1])); else NG.settingsGo(c, `missing:${ime[3]}`, T().t(ime[1])); return true; }
       return false;
     }
   };

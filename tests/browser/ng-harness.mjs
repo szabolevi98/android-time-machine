@@ -24,6 +24,7 @@ export async function nougat() {
     const open=async(view,sub='')=>{await act('ng-open',{view,sub});await sleep(400);};
     const shot=async name=>{fs.mkdirSync('tests/browser/artifacts',{recursive:true});const r=await send('Page.captureScreenshot',{format:'png'});fs.writeFileSync(`tests/browser/artifacts/${name}.png`,Buffer.from(r.result.data,'base64'));};
     await send('Runtime.enable');await send('Network.enable');await send('Network.setCacheDisabled',{cacheDisabled:true});
+    await send('Emulation.setFocusEmulationEnabled',{enabled:true});
     await send('Emulation.setDeviceMetricsOverride',{width:1280,height:1000,deviceScaleFactor:1,mobile:false});
     await send('Page.navigate',{url:`${base}/versions/7.1.2/`});
     await until(`!!window.NG?.module('boot') && !!document.querySelector('#screen')`);

@@ -215,6 +215,7 @@
     } else old.remove();
   }
   function render() {
+    window.NG.ime?.beforeRender?.();
     // Release activity resources before another screen (or the screen-off state) takes over.
     if (shown.view && (shown.view !== ui.view || ui.sleeping)) modules[shown.view]?.unmount?.(c);
     snapshot();

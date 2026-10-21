@@ -1,0 +1,11 @@
+# Gboard 6.0.84, N2G48C. Native light material keyboard icons.
+gb-shift-off.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_key_shift_narrow_off_material_light
+gb-shift-on.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_key_shift_narrow_on_material_light
+gb-delete.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/quantum_ic_keyboard_backspace_grey600_24
+gb-enter.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_key_enter
+gb-search.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_key_search
+gb-globe.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_key_globe_material_light_theme
+gb-emoji.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_key_sub_category_smiley_emoji_material_light_theme
+gb-mic.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/quantum_ic_mic_black_24
+gb-settings.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_access_point_setting_light_theme
+gb-menu.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_open_access_points_light_theme
