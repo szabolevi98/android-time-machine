@@ -67,7 +67,7 @@
     click(c, key) {
       const t = T(), s = S(c), entry = top(c);
       if (key === 'system_update_settings') { go(c, 'system-update', ''); return true; }
-      if (key === 'device_feedback') { go(c, 'missing:com.google.android.gms.feedback.FeedbackActivity', t.t('device_feedback')); return true; }
+      if (key === 'device_feedback') { c.open('help', 'feedback:settings'); return true; }
       if (key === 'security_patch') { c.open('chrome', 'https://source.android.com/security/bulletin/'); return true; }
       if (key === 'build_number') {
         if (entry.devHits == null) entry.devHits = s.devOptions ? -1 : 7;
@@ -204,7 +204,7 @@
     click(c, key) {
       const t = T(), u = U(), me = u.current(c);
       if (key === 'user_add') { u.addDialog(c, true); return true; }
-      if (key === 'emergency_info') { go(c, 'missing:com.android.emergency.view.ViewInfoActivity', t.t('emergency_info_title')); return true; }
+      if (key === 'emergency_info') { c.open('emergency-info'); return true; }
       if (key === 'user_me') {
         if (me === 'guest') { c.dialog({title: t.t('user_exit_guest_confirm_title'), message: t.t('user_exit_guest_confirm_message'), buttons: [{label: t.t('framework/cancel')}, {label: t.t('user_exit_guest_dialog_remove'), action: c => u.removeGuest(c)}]}); return true; }
         // EditUserInfoController.createDialog: the photo and the name (the row's title in the field); OK keeps a change.

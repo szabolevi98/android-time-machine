@@ -7576,5 +7576,263 @@ NG.strings('appprefs', {
 "Analógico",
 "Digital"
 ]
+},
+"TeleService/apn_settings": {
+"res": "angler:TeleService:apn_settings",
+"en": "Access Point Names",
+"hu": "Hozzáférési pontok nevei",
+"de": "Zugangspunkte (APNs)",
+"fr": "Noms des points d'accès",
+"es": "APN"
+},
+"TeleService/carrier_settings_title": {
+"res": "angler:TeleService:carrier_settings_title",
+"en": "Carrier settings",
+"hu": "Szolgáltatói beállítások",
+"de": "Anbietereinstellungen",
+"fr": "Paramètres de l'opérateur",
+"es": "Ajustes del operador"
+},
+"TeleService/cdma_lte_data_service": {
+"res": "angler:TeleService:cdma_lte_data_service",
+"en": "Set up data service",
+"hu": "Adatszolgáltatás beállítása",
+"de": "Datendienst einrichten",
+"fr": "Configurer service données",
+"es": "Configurar servicio de datos"
+},
+"TeleService/enhanced_4g_lte_mode_summary": {
+"res": "angler:TeleService:enhanced_4g_lte_mode_summary",
+"en": "Use LTE services to improve voice and other communications (recommended)",
+"hu": "LTE-szolgáltatások használata hang- és egyéb kommunikáció javításához (ajánlott)",
+"de": "Zur Verbesserung von Sprache und Kommunikation LTE-Dienste verwenden (empfohlen)",
+"fr": "Utiliser services LTE pour améliorer communications vocales et autres (recommandé)",
+"es": "Usar servicios LTE para mejorar la voz y otras comunicaciones (recomendado)"
+},
+"TeleService/enhanced_4g_lte_mode_title": {
+"res": "angler:TeleService:enhanced_4g_lte_mode_title",
+"en": "Enhanced 4G LTE Mode",
+"hu": "Javított 4G LTE mód",
+"de": "Erweiterter 4G LTE-Modus",
+"fr": "Mode LTE 4G avancé",
+"es": "Modo 4G LTE mejorado"
+},
+"TeleService/label_available": {
+"res": "angler:TeleService:label_available",
+"en": "Available networks",
+"hu": "Elérhető hálózatok",
+"de": "Verfügbare Netzwerke",
+"fr": "Réseaux disponibles",
+"es": "Redes disponibles"
+},
+"TeleService/mobile_networks": {
+"res": "angler:TeleService:mobile_networks",
+"en": "Cellular network settings",
+"hu": "Mobilhálózati beállítások",
+"de": "Einstellungen für Mobilfunknetze",
+"fr": "Paramètres réseau mobile",
+"es": "Ajustes de red móvil"
+},
+"TeleService/networks": {
+"res": "angler:TeleService:networks",
+"en": "Network operators",
+"hu": "Mobilszolgáltatók",
+"de": "Mobilfunkanbieter",
+"fr": "Opérateurs de réseau",
+"es": "Operadores de red"
+},
+"TeleService/preferred_network_mode_dialogtitle": {
+"res": "angler:TeleService:preferred_network_mode_dialogtitle",
+"en": "Preferred network type",
+"hu": "Preferált hálózattípus",
+"de": "Bevorzugter Netzwerktyp",
+"fr": "Type de réseau préféré",
+"es": "Tipo de red preferida"
+},
+"TeleService/preferred_network_mode_summary": {
+"res": "angler:TeleService:preferred_network_mode_summary",
+"en": "Change the network operating mode",
+"hu": "A hálózati üzemmód megváltoztatása",
+"de": "Netzwerkbetriebsmodus ändern",
+"fr": "Changer le mode de fonctionnement du réseau",
+"es": "Cambiar el modo operativo de la red"
+},
+"TeleService/preferred_network_mode_title": {
+"res": "angler:TeleService:preferred_network_mode_title",
+"en": "Preferred network type",
+"hu": "Preferált hálózattípus",
+"de": "Bevorzugter Netzwerktyp",
+"fr": "Type de réseau préféré",
+"es": "Tipo de red preferida"
+},
+"TeleService/roaming": {
+"res": "angler:TeleService:roaming",
+"en": "Data roaming",
+"hu": "Adatbarangolás",
+"de": "Daten-Roaming",
+"fr": "Itinérance des données",
+"es": "Itinerancia de datos"
+},
+"TeleService/roaming_disable": {
+"res": "angler:TeleService:roaming_disable",
+"en": "Connect to data services when roaming",
+"hu": "Csatlakozás adatszolgáltatásokhoz barangolás során",
+"de": "Bei Roaming mit Datendienst verbinden",
+"fr": "Se connecter aux services de données lors de l'itinérance",
+"es": "Conectarse a servicios de datos en itinerancia"
+},
+"TeleService/roaming_enable": {
+"res": "angler:TeleService:roaming_enable",
+"en": "Connect to data services when roaming",
+"hu": "Csatlakozás adatszolgáltatásokhoz barangolás során",
+"de": "Bei Roaming mit Datendienst verbinden",
+"fr": "Se connecter aux services de données lors de l'itinérance",
+"es": "Conectarse a servicios de datos en itinerancia"
+},
+"TeleService/search_networks": {
+"res": "angler:TeleService:search_networks",
+"en": "Search networks",
+"hu": "Hálózatkeresés",
+"de": "Netzwerke suchen",
+"fr": "Rechercher les réseaux",
+"es": "Buscar redes"
+},
+"TeleService/select_automatically": {
+"res": "angler:TeleService:select_automatically",
+"en": "Choose automatically",
+"hu": "Automatikus választás",
+"de": "Automatisch auswählen",
+"fr": "Sélectionner automatiquement",
+"es": "Seleccionar automáticamente"
+},
+"TeleService/sum_carrier_select": {
+"res": "angler:TeleService:sum_carrier_select",
+"en": "Choose a network operator",
+"hu": "Válassza ki a hálózat üzemeltetőjét",
+"de": "Mobilfunkanbieter auswählen",
+"fr": "Sélectionner un opérateur réseau",
+"es": "Selecciona un operador de red"
+},
+"TeleService/sum_search_networks": {
+"res": "angler:TeleService:sum_search_networks",
+"en": "Search for all available networks",
+"hu": "Az összes elérhető hálózat megkeresése",
+"de": "Nach allen verfügbaren Netzwerken suchen",
+"fr": "Chercher tous les réseaux disponibles",
+"es": "Buscar todas las redes disponibles"
+},
+"TeleService/sum_select_automatically": {
+"res": "angler:TeleService:sum_select_automatically",
+"en": "Automatically choose preferred network",
+"hu": "Preferált hálózat automatikus kiválasztása",
+"de": "Bevorzugtes Netzwerk automatisch auswählen",
+"fr": "Sélectionner automatiquement le réseau préféré",
+"es": "Seleccionar red preferida automáticamente"
+},
+"TeleService/enabled_networks_choices": {
+"res": "angler:TeleService:enabled_networks_choices",
+"en": [
+"LTE (recommended)",
+"3G",
+"2G"
+],
+"hu": [
+"LTE (javasolt)",
+"3G",
+"2G"
+],
+"de": [
+"LTE (empfohlen)",
+"3G",
+"2G"
+],
+"fr": [
+"LTE (recommandé)",
+"3G",
+"2G"
+],
+"es": [
+"LTE (recomendado)",
+"3G",
+"2G"
+]
+},
+"TeleService/preferred_network_mode_choices": {
+"res": "angler:TeleService:preferred_network_mode_choices",
+"en": [
+"LTE / WCDMA",
+"LTE",
+"Global",
+"GSM/WCDMA/LTE",
+"CDMA + LTE/EvDo",
+"CDMA/EvDo/GSM/WCDMA",
+"EvDo only",
+"CDMA w/o EvDo",
+"CDMA/EvDo auto",
+"GSM/WCDMA auto",
+"WCDMA only",
+"GSM only",
+"GSM/WCDMA preferred"
+],
+"hu": [
+"LTE/WCDMA",
+"LTE",
+"Globális",
+"GSM/WCDMA/LTE",
+"CDMA + LTE/EvDo",
+"CDMA/EvDo/GSM/WCDMA",
+"Csak EvDo",
+"CDMA EvDo nélkül",
+"CDMA/EvDo automatikus",
+"GSM/WCDMA automatikus",
+"Csak WCDMA",
+"Csak GSM",
+"GSM/WCDMA a preferált"
+],
+"de": [
+"LTE/WCDMA",
+"LTE",
+"Global",
+"GSM/WCDMA/LTE",
+"CDMA + LTE/EvDo",
+"CDMA/EvDo/GSM/WCDMA",
+"Nur EvDo",
+"CDMA ohne EvDo",
+"CDMA/EvDo (automatisch)",
+"GSM/WCDMA (automatisch)",
+"Nur WCDMA",
+"Nur GSM",
+"GSM/WCDMA bevorzugt"
+],
+"fr": [
+"LTE/WCDMA",
+"LTE",
+"Général",
+"GSM/WCDMA/LTE",
+"CDMA + LTE/EvDo",
+"CDMA/EvDo/GSM/WCDMA",
+"EvDo uniquement",
+"CDMA sans EvDo",
+"CDMA/EvDo automatique",
+"GSM/WCDMA automatique",
+"WCDMA uniquement",
+"GSM uniquement",
+"GSM/WCDMA de préférence"
+],
+"es": [
+"LTE/WCDMA",
+"LTE",
+"Global",
+"GSM/WCDMA/LTE",
+"CDMA + LTE/EvDo",
+"CDMA/EvDo/GSM/WCDMA",
+"Solo EvDo",
+"CDMA sin EvDo",
+"Modo automático de CDMA/EvDo",
+"GSM/WCDMA (modo automático)",
+"Solo WCDMA",
+"Solo GSM",
+"Preferencia de GSM/WCDMA"
+]
 }
 });

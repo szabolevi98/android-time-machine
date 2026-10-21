@@ -67,3 +67,6 @@ preferences preferences_caption
 
 [clocksaver] PrebuiltDeskClockGoogle com.android.deskclock.settings.ScreensaverSettingsActivity
 screensaver_settings
+
+[mobilenet] TeleService com.android.phone.MobileNetworkSettings
+network_setting gsm_umts_options carrier_select

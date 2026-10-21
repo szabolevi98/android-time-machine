@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {nougat,sleep} from './ng-harness.mjs';
+const b=await nougat(),back=()=>b.click('#nav-bar [data-key="back"]');
+const text=sel=>b.ev(`document.querySelector(${JSON.stringify(sel)})?.textContent||''`);
+const pref=async label=>assert.equal(await b.ev(`(()=>{const el=[...document.querySelectorAll('#viewport [data-action="ngap-pref"], #viewport .ngst-pref')].find(el=>el.textContent.includes(${JSON.stringify(label)}));el?.click();return !!el;})()`),true,label);
+const ok=()=>b.click('#overlay-root [data-action="ngdlg-button"][data-index="1"]');
+try{
+ await b.language('en');await b.open('settings','xml:wireless_settings');await pref('Cellular networks');await b.until(`!!document.querySelector('#viewport .ngap')`);
+ const page=await text('#viewport .ngap');assert.ok(page.includes('Data roaming'));assert.ok(page.includes('Access Point Names'));assert.ok(!page.includes('Set up data service'));await b.shot('7.1.2-mobile-networks');
+ await pref('Data roaming');assert.ok((await text('#overlay-root')).includes('Allow data roaming?'));await ok();assert.equal((await b.save()).settings.dataRoaming,true);
+ await pref('Preferred network type');await b.click('#overlay-root .ngdlg-item[data-index="1"]');assert.equal((await b.save()).settings.networkMode,'0');
+ await pref('Network operators');await pref('Search networks');await b.until(`!!document.querySelector('#overlay-root .ngdlg-item')`);await b.click('#overlay-root .ngdlg-item[data-index="2"]');assert.equal((await b.save()).settings.networkManual,'Vodafone');await pref('Choose automatically');await sleep(1400);assert.equal((await b.save()).settings.networkManual,undefined);await back();
+ await pref('Access Point Names');await b.until(`document.querySelector('#screen').classList.contains('view-settings')`);
+ await b.open('settings','wifi');await b.ev(`(()=>{const m=document.querySelector('#viewport [data-action="ng-menu"]');m&&m.click();})()`);await sleep(200);await b.ev(`(()=>{const el=[...document.querySelectorAll('#overlay-root .ngmenu-item')].find(e=>e.textContent==='Advanced');el&&el.click();})()`);await sleep(300);await pref('Wi‑Fi Direct');assert.ok((await text('#viewport')).includes('Peer devices'));assert.ok((await text('#viewport')).includes('Android_3a8f'));await b.click('#viewport [data-action="ng-menu"]');await b.ev(`[...document.querySelectorAll('#overlay-root .ngmenu-item')].find(e=>e.textContent==='Search for devices').click()`);assert.ok(await b.ev(`!!document.querySelector('#viewport .ngxs-p2p-search')`));await b.click('#viewport [data-action="ngxs-p2p-rename"]');await b.ev(`(()=>{const f=document.querySelector('#overlay-root input');f.value='Nexus 6P';f.dispatchEvent(new Event('input',{bubbles:true}));})()`);await ok();assert.equal((await b.save()).settings.p2pName,'Nexus 6P');
+ await b.open('settings','xml:device_info_settings');await pref('Send feedback about this device');await b.until(`!!document.querySelector('#viewport .nghp-fb')`);
+ for(const lang of ['en','hu','de','fr','es']){await b.language(lang);await b.open('settings','xml:wireless_settings');await b.click('#viewport [data-key="mobile_network_settings"]');await b.until(`!!document.querySelector('#viewport .ngap')`);await b.ev(`document.querySelector('#viewport [data-action="ngxs-carrier"]').click()`);await sleep(200);assert.deepEqual(await b.ev(`[...AndroidStrings.misses]`),[],lang);}
+ b.check();console.log('Settings extra passed: Cellular network settings (roaming warning, network type, operators search/automatic, APN), Wi-Fi Direct (search, rename), device feedback.');
+}catch(error){await b.shot('7.1.2-settings-extra-failure');throw error;}finally{b.close();}

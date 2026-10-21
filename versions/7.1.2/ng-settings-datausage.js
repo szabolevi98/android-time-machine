@@ -70,7 +70,7 @@
     },
     action(c, name, el) {
       const t = T(), s = S(c);
-      if (name === 'ng-menu') { c.menu([{label: t.t('data_usage_menu_cellular_networks'), action: c => NG.settingsGo(c, 'missing:com.android.phone.MobileNetworkSettings', t.t('data_usage_menu_cellular_networks'))}, {label: t.t('help_label'), action: c => c.open('help', 'settings')}], el); return true; }
+      if (name === 'ng-menu') { c.menu([{label: t.t('data_usage_menu_cellular_networks'), action: c => NG.openMobileNetworks(c)}, {label: t.t('help_label'), action: c => c.open('help', 'settings')}], el); return true; }
       if (name === 'ngdu-list') { NG.settingsGo(c, `data-list:${el.dataset.tab}`, ''); return true; }
       if (name === 'ngdu-saver') { NG.settingsGo(c, 'xml:data_saver', t.t('data_saver_title')); return true; }
       if (name === 'ngdu-billing') { NG.settingsGo(c, 'xml:billing_cycle', t.t('billing_cycle')); return true; }

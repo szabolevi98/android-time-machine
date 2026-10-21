@@ -655,3 +655,15 @@ ng-egg-parts.js) are tinted in CatParts' order, the icon is the cat in its value
 them by hue in three columns: tap to rename, long press for Forget %s? and share (the picture is saved to Photos'
 Pictures/Cats, ng-media.js now draws a picture's own SVG markup, and sent through the share sheet).
 `node tests/browser/ng-egg.mjs` covers it.
+
+## Settings rows into other packages — 2026-10-21
+
+Settings › More › Cellular networks (and Data usage's menu) open TeleService's MobileNetworkSettings through the
+app-prefs engine (`[mobilenet]`: network_setting, gsm_umts_options, carrier_select): Data roaming with "Allow data
+roaming?", Preferred network type (enabled_networks_choices: 4G / 3G / 2G), Enhanced 4G LTE Mode, Access Point Names and
+Network operators (Search networks lists the radio's scan of the simulated area, Choose automatically registers again).
+The CDMA row, the GSM-only network mode list and the empty Carrier settings target stay hidden as the code hides them on
+this phone. Wi-Fi › Advanced › Wi-Fi Direct (`wifi-direct`) shows the P2P device name (Android_ and four characters of
+the Android ID by default), Peer devices while searching, Remembered groups, Search for devices and Rename device.
+About phone's Send feedback about this device opens Google Feedback, Emergency information the Emergency information app.
+`node tests/browser/ng-settings-extra.mjs` covers it.

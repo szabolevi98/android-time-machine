@@ -216,7 +216,7 @@
     click(c, key) {
       const t = T();
       if (key === 'install_credentials') { c.toast(t.t('CertInstaller/no_cert_file_found')); return true; }
-      if (key === 'wifi_direct') { NG.settingsGo(c, 'missing:com.android.settings.wifi.p2p.WifiP2pSettings', t.t('wifi_p2p_settings_title')); return true; }
+      if (key === 'wifi_direct') { NG.settingsGo(c, 'wifi-direct', t.t('wifi_p2p_settings_title')); return true; }
       if (key === 'wps_push_button' || key === 'wps_pin_entry') {
         c.dialog({title: t.t(key === 'wps_push_button' ? 'wifi_menu_wps_pbc' : 'wifi_menu_wps_pin'), html: `<div class="ngwf-wps"><div class="ngwf-wpsmsg">${c.safe(key === 'wps_push_button' ? t.t('wifi_wps_onstart_pbc') : t.fmt('wifi_wps_onstart_pin', null, '18930675'))}</div><div class="ngst-progress static"><i></i><i></i></div></div>`, buttons: [{label: t.t('cancel')}]});
         return true;

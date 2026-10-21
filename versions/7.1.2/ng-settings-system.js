@@ -55,7 +55,7 @@
       return undefined;
     },
     click(c, key, n) {
-      if (key === 'mobile_network_settings') { NG.settingsGo(c, 'missing:com.android.phone.MobileNetworkSettings', NG.settingsStr(n.title)); return true; }
+      if (key === 'mobile_network_settings') { NG.openMobileNetworks(c); return true; }
       return false;
     }
   };
