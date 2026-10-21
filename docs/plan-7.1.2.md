@@ -639,3 +639,19 @@ albums one after another, slowly panning; DreamSettingsActivity as a Settings pa
 device, Albums in Google Photos). A touch wakes it to the screen it covered. The image's GoogleVrCore (Google VR
 Services) has no screen of its own (the 6P is not Daydream-ready); its app info is Settings' generic page. The class
 prefix is `ngsv-` (`ngdm-` is Device Policy's). `node tests/browser/ng-dreams.mjs` covers it.
+
+## Nougat easter egg — 2026-10-21
+
+Read from frameworks/base android-7.1.2_r1 (PlatLogoActivity, packages/EasterEgg's neko/*, kept in _aosp/aosp712/egg):
+Settings › About phone › Android version tapped three times opens `platlogo` (Theme.Wallpaper.NoTitleBar.Fullscreen,
+the framework's platlogo vector scaling in after 800 ms); a long press after five taps runs NekoActivationActivity,
+which turns the Neko tile on or off with a borderless 🐱 / 🚫 toast (the toast now takes {plain: true}). Quick
+settings take other packages' tiles through NG.qsCustom (available, state, click, long click), so the tile shows in the
+editor once enabled; it shows the dish's food, a tap empties the dish or opens NekoDialog's food grid, and the food
+schedules NekoService for its food_intervals minutes ±25 %. When the job runs a cat comes (new with food_new_cat_prob,
+else a known one) with "A cat is here." from Android Neko. Cats are drawn as Cat.java does: java.util.Random seeded
+with the cat's seed picks the colours, the 27 parts (docs/tools/ng-egg-parts.py writes their shapes into
+ng-egg-parts.js) are tinted in CatParts' order, the icon is the cat in its value-shifted circle. `neko` (NekoLand) lists
+them by hue in three columns: tap to rename, long press for Forget %s? and share (the picture is saved to Photos'
+Pictures/Cats, ng-media.js now draws a picture's own SVG markup, and sent through the share sheet).
+`node tests/browser/ng-egg.mjs` covers it.

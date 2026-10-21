@@ -6,11 +6,13 @@
 (() => {
   'use strict';
   let layer = null, timer = 0;
+  // long may be {plain: true}: a toast whose view has no background (NekoActivationActivity's setBackgroundDrawable(null)).
   function show(c, text, long = false) {
+    const plain = typeof long === 'object' && !!long?.plain; if (plain) long = false;
     if (!layer) { layer = document.createElement('div'); layer.className = 'ngtoast-layer'; c.el.screen.append(layer); }
     clearTimeout(timer);
     const fresh = !layer.firstElementChild || layer.firstElementChild.classList.contains('out');
-    layer.innerHTML = `<div class="ngtoast np-fw-toast_frame${fresh ? ' in' : ''}"><span>${c.safe(text)}</span></div>`;
+    layer.innerHTML = `<div class="ngtoast${plain ? ' plain' : ' np-fw-toast_frame'}${fresh ? ' in' : ''}"><span>${c.safe(text)}</span></div>`;
     timer = setTimeout(() => {
       const el = layer.querySelector('.ngtoast'); if (!el) return;
       el.classList.remove('in'); el.classList.add('out');

@@ -43,7 +43,8 @@
     const transform = ['', `translate(${h} 0) rotate(90)`, `translate(${w} ${h}) rotate(180)`, `translate(0 ${w}) rotate(270)`][turn];
     const val = k => Math.max(-100, Math.min(100, +ed[k] || 0));
     const filter = `brightness(${1 + val('light') / 150}) contrast(${1 + val('pop') / 150}) saturate(${1 + val('color') / 100})`;
-    let scene = p.front ? room(p, w, h) : landscape(p, w, h, ++uid);
+    // A picture an app saved as SVG markup (the Neko cats in Pictures/Cats).
+    let scene = p.markup ? `<svg width="${w}" height="${h}" viewBox="0 0 48 48" preserveAspectRatio="xMidYMid meet">${p.markup.replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg>` : p.front ? room(p, w, h) : landscape(p, w, h, ++uid);
     if (p.kind === 'collage' && p.frames?.length) {
       const frames = p.frames.slice(0, 9), cols = Math.ceil(Math.sqrt(frames.length)), rows = Math.ceil(frames.length / cols);
       scene = `<rect width="${w}" height="${h}" fill="#fff"/>` + frames.map((frame, i) => `<svg x="${i % cols * w / cols + 2}" y="${Math.floor(i / cols) * h / rows + 2}" width="${w / cols - 4}" height="${h / rows - 4}">${svg(frame)}</svg>`).join('');

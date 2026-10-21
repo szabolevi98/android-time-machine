@@ -28,7 +28,7 @@
 
   // TileAdapter.recalcSpecs: the current tiles, the divider (null), the other available system tiles.
   function order(c) {
-    const cur = NG.qsTiles.specs(c), rest = NG.qsTiles.STOCK.filter(id => !cur.includes(id));
+    const cur = NG.qsTiles.specs(c), rest = NG.qsTiles.available(c).filter(id => !cur.includes(id));
     return [...cur, null, ...rest];
   }
   // GridLayoutManager: tiles one span, the divider all three on a row of its own.
@@ -166,7 +166,7 @@
     }
     if (name === 'ngqe-menu') { e.menu = true; ctl.refresh(c); return true; }
     if (name === 'ngqe-menu-close') { e.menu = false; ctl.refresh(c); return true; }
-    if (name === 'ngqe-reset') { e.menu = false; e.order = [...NG.qsTiles.DEFAULT, null, ...NG.qsTiles.STOCK.filter(id => !NG.qsTiles.DEFAULT.includes(id))]; save(c); ctl.refresh(c); return true; }
+    if (name === 'ngqe-reset') { e.menu = false; e.order = [...NG.qsTiles.DEFAULT, null, ...NG.qsTiles.available(c).filter(id => !NG.qsTiles.DEFAULT.includes(id))]; save(c); ctl.refresh(c); return true; }
     return true;
   }
 

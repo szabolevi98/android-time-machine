@@ -34,7 +34,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Print preview (Save as PDF, options, All printers) from Cloud Print, Gmail and GoogleHelp.
 - [x] Google settings (GmsCore) and Location History.
 - [x] Screen savers (Clock, Colors, Photos with their settings); GoogleVrCore has no UI on the 6P.
-- [ ] Live Wallpaper Picker check, Nougat Easter egg.
+- [x] Live Wallpaper Picker (built with the launcher pickers) and the Nougat easter egg (PlatLogo, Neko tile, cats, NekoLand).
 
 ## System and remaining details
 

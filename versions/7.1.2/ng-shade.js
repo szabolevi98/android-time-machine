@@ -76,7 +76,10 @@
      and "night" no config_nightDisplayAvailable (false in N2G48C), so their isAvailable() leaves them out. */
   const DEFAULT_TILES = ['wifi', 'cell', 'battery', 'dnd', 'flashlight', 'rotation', 'bt', 'airplane'];
   const STOCK = ['wifi', 'cell', 'battery', 'dnd', 'flashlight', 'rotation', 'bt', 'airplane', 'location', 'hotspot', 'inversion', 'saver', 'cast'];
-  const specs = c => (c.data.settings.qsTiles || DEFAULT_TILES).filter(id => STOCK.includes(id));
+  // Tiles of other packages (TileService: NG.qsCustom[id] = {available(c), state(c), click(c, shade), longClick(c)}).
+  const custom = () => NG.qsCustom || {};
+  const available = c => [...STOCK, ...Object.keys(custom()).filter(id => custom()[id].available(c))];
+  const specs = c => { const ok = available(c); return (c.data.settings.qsTiles || DEFAULT_TILES).filter(id => ok.includes(id)); };
 
   // A tile as its handleUpdateState reports it.
   function tileState(c, id) {
@@ -139,10 +142,10 @@
     if (id === 'saver') return {id, label: t.t('data_saver'), icon: s.dataSaver ? 'sui-ic_data_saver.svg' : 'sui-ic_data_saver_off.svg', desc: t.t('data_saver')};
     // CastTile: no cast devices around the simulator, so "Cast" with ic_qs_cast_off.
     if (id === 'cast') return {id, label: t.t('quick_settings_cast_title'), icon: 'sui-ic_qs_cast_off.svg', desc: `${t.t('quick_settings_cast_title')},${t.t('accessibility_quick_settings_open_details')}`};
-    return null;
+    return custom()[id]?.available(c) ? custom()[id].state(c) : null;
   }
   const tiles = c => specs(c).map(id => tileState(c, id)).filter(Boolean);
-  NG.qsTiles = {DEFAULT: DEFAULT_TILES, STOCK, specs, state: tileState};
+  NG.qsTiles = {DEFAULT: DEFAULT_TILES, STOCK, available, specs, state: tileState};
 
   /* PagedTileLayout: TilePages of quick_settings_num_columns 3 and three rows in portrait (TilePage.getRows), filled in
      order (distributeTiles); TileLayout.onMeasure / onLayout of a page and QuickQSPanel's HeaderTileLayout, in pixels,
@@ -459,6 +462,7 @@
       } else sy.setDataSaver(c, !s.dataSaver);
     }
     else if (id === 'cast') showDetail(c, 'cast');
+    else custom()[id]?.click(c, {refresh, close});
   }
   // A quick tile's click is QSTile.secondaryClick: Wi-Fi and Bluetooth switch (handleSecondaryClick), the rest click.
   function quickClick(c, id) {
@@ -474,6 +478,7 @@
       flashlight: ['camera', ''], rotation: ['settings', 'display'], bt: ['settings', 'bluetooth'], airplane: ['settings', 'wireless'],
       location: ['settings', 'location'], hotspot: ['settings', 'wireless'], inversion: ['settings', 'accessibility'], saver: ['settings', 'data-saver'], cast: ['settings', 'cast']}[id];
     if (id === 'flashlight') { click(c, id); return; }   // FlashlightTile.handleLongClick is its click
+    if (custom()[id]) { custom()[id].longClick?.(c); return; }
     if (!to) return;
     c.closeOverlay(); c.open(to[0], to[1]);
   }

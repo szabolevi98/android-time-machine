@@ -50,7 +50,7 @@
     'device-policy': ['Device Policy', 'DMAgent.apk'], documents: ['Downloads', 'DocumentsUI.apk · LauncherActivity'], files: ['Files', 'DocumentsUI.apk'],
     'live-wallpapers': ['Live wallpapers', 'LiveWallpapersPicker.apk'],
     daydream: ['Screen saver', 'DreamManagerService · DeskClock, BasicDreams, Photos'], 'emergency-info': ['Emergency information', 'EmergencyInfo.apk'],
-    'print-preview': ['Print', 'PrintSpooler.apk · PrintActivity'], help: ['Help & feedback', 'PrebuiltGmsCore.apk · GoogleHelp']
+    'print-preview': ['Print', 'PrintSpooler.apk · PrintActivity'], platlogo: ['Android 7.1.2', 'framework-res.apk · PlatLogoActivity'], neko: ['Android Neko', 'EasterEgg.apk · NekoLand'], help: ['Help & feedback', 'PrebuiltGmsCore.apk · GoogleHelp']
   };
   const SYSTEM = ['home', 'lock', 'statusbar', 'navbar', 'shade', 'power', 'recents', 'volume', 'drawer', 'widgets', 'now'];
 

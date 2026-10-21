@@ -568,3 +568,6 @@ framework/cancel framework/ok
 
 [dreams] Photos PrebuiltDeskClockGoogle framework
 photos_daydream_general_settings_header photos_daydream_local_photos_header photos_daydream_remote_photos_header photos_daydream_use_only_wifi photos_localmedia_core_camera_label
+
+[egg] EasterEgg framework
+app_name notification_name default_tile_name notification_title default_cat_name+args1 confirm_delete+args1 array:food_names
