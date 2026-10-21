@@ -32,7 +32,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Device Policy 7.05: the no-work-account page with Add account.
 - [x] Help/feedback (GoogleHelp + Google Feedback for every caller).
 - [x] Print preview (Save as PDF, options, All printers) from Cloud Print, Gmail and GoogleHelp.
-- [ ] Google Play services settings, Location History.
+- [x] Google settings (GmsCore) and Location History.
 - [ ] Daydream/GoogleVrCore, Live Wallpaper Picker, Nougat Easter egg.
 
 ## System and remaining details

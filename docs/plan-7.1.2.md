@@ -615,3 +615,16 @@ round print_button in colorAccent #009688 with ic_menu_savetopdf and the preview
 selector. The default paper follows mediasize_standard: Letter for en-US, ISO A4 elsewhere. All printers… finds no
 printers (Add service opens Play Store). Save to PDF writes the PDF (pages, paper, orientation, colour, copies)
 through Documents' save dialog, whose save now takes the caller's type. `node tests/browser/ng-print.mjs` covers it.
+
+## Google settings and Location History — 2026-10-21
+
+The dashboard's Google tile (GoogleSettingsActivity of PrebuiltGmsCore 9.8) now opens Settings pages (`gms*`, ng-gms.js)
+instead of a not-built card: Account (Sign-in & security, Personal info & privacy, Account preferences on
+myaccount.google.com) and Services: Ads (advertising ID, reset, Opt out of Ads Personalization), Connected apps (none),
+Data management (Drive-enabled app files over Wi-Fi only / Wi-Fi or Cellular), Location (Google location settings:
+Access location, Google Location History, Location Sharing), Nearby (switch bar), Play Games (its settings), Search &
+Now (the Google app's preferences), Security (Android Device Manager's two switches, Verify apps), Set up nearby device
+(Getting started, searching, No nearby devices found) and Smart Lock for Passwords (switches, the never-save apps).
+Google Fit is not on the image, so its row is left out. Settings › Location › Google Location History opens the same
+Location History page (the account, the summary, pause confirmation, Manage activities, Delete Location History).
+`node tests/browser/ng-gms.mjs` covers it.

@@ -276,15 +276,14 @@
   }
   // Opening a sub page (a SubSettings activity over the current one).
   function go(c, screen, title, nav = 'up') {
-    if (screen === 'app:google-settings') { c.open('google-settings'); return; }
+    if (screen === 'app:google-settings') screen = 'gms';
     const st = state(c); st.stack.push({screen, title: title || '', nav}); if (st.scroll) delete st.scroll[screen]; st.drawer = false; c.render();
   }
   NG.settingsGo = go;
   NG.settingsBack = c => NG.module('settings').back(c);
   function openTile(c, t, fromDashboard) {
     const screen = tileScreen(t), st = state(c);
-    if (screen === 'app:google-settings') { st.drawer = false; c.open('google-settings'); return; }
-    const entry = {screen, title: T().t(t.title), nav: 'menu'};
+    const entry = {screen: screen === 'app:google-settings' ? 'gms' : screen, title: T().t(t.title), nav: 'menu'};
     if (fromDashboard || !st.stack.length || st.stack.at(-1).screen === 'dashboard') st.stack.push(entry);
     else st.stack[st.stack.length - 1] = entry;
     st.drawer = false; if (st.scroll) delete st.scroll[screen];

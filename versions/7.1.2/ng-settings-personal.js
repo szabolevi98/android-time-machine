@@ -149,7 +149,7 @@
     },
     click(c, key) {
       if (key === 'location_mode') { NG.settingsGo(c, 'xml:location_mode', T().t('location_mode_screen_title')); return true; }
-      if (key === 'location_history') { NG.settingsGo(c, 'missing:com.google.android.location.settings.LocationHistorySettingsActivity', T().t('PrebuiltGmsCore/location_ulr_setting_label')); return true; }
+      if (key === 'location_history') { NG.settingsGo(c, 'gms-location-history', T().t('PrebuiltGmsCore/location_ulr_setting_label')); return true; }
       return false;
     },
     bar: c => NG.settingsSwitchBar(c, !!S(c).location, 'ngpe-loc'),
