@@ -404,3 +404,46 @@ seek/pause, video completion, native backup settings, scanner preferences, A3
 landscape PDF, Gmail PDF snapshot, Messenger image stream, dependent notification
 preferences and original license content. Audio/PDF screenshots were inspected.
 Source inventory: 903 files rebuilt with zero problems.
+
+
+## YouTube continuation — 2026-10-21
+
+YouTube 11.41.56 is drawn from Theme.YouTube.Home/Light (#e62117 toolbar,
+#ba1b12 status, #4285f4 accent, #fefefe window), AppTabsBar above the feed,
+video_feed_entry, slim_metadata, player_controller, account_item,
+create_playlist_dialog and upload_form_details. Original xxhdpi icons and the
+APK's extensionless third_party_licenses are copied byte for byte. Native strings
+cover the controls and preferences. Labels/content normally provided by YouTube's
+server catalogue are explicitly own rows in ng-own.tsv; six invented video entries
+and drawn frames are offline demonstration content, with no external stream.
+
+Home, Trending, Subscriptions and Account tabs, global search, viewing/search history
+and pause/clear controls, channel lists, mutually exclusive like/dislike state,
+subscribe/unsubscribe, Watch later, liked videos and playlist create/edit/delete/
+remove/share are connected. Creation uses the source's 50-character name and Private
+checkbox. The player has time/seek, play/pause/next, fullscreen, captions, speed,
+quality and optional native Stats overlay. Its 180dp mini player follows the source's
+8dp padding and 90dp horizontal dismissal threshold, tested with a real pointer drag.
+Leaving the app pauses playback; reaching the stored duration stops or follows Autoplay.
+
+My videos accepts a local DocumentsUI video, clones its source snapshot, and uses the
+native 105x66 thumbnail, 100-character title, 5000-character description and privacy
+spinner. Local upload, metadata editing, cancellation and deletion work without a
+remote publish. Deleted uploads lose their history, rating and playlist references;
+the original MediaStore video remains. Native Java-installed settings rows are joined
+to the generated XML. General/privacy/notifications/about and framework captioning
+routes work; Watch on TV shows the native no-TV state in this offline environment.
+Shared Help remains a common service activity task.
+
+Visual inspection caught 1x1 transparent compatibility resources for nominal play/
+pause/next icons; the visible buttons now use ic_media_play_light,
+ic_media_pause_light and ic_vidcontrol_next. The Cast control uses the real media
+route drawable, tinted as the action bar does, rather than the Live broadcast icon.
+A regression check rejects dummy control images. Home, watch, upload and phone
+screenshots were inspected. The browser flow covers reactions/subscriptions, saved
+playlists, fullscreen, speed/captions, real mini-player drag, search, native preferences,
+licenses, local upload/edit/delete/cancel, all five languages and phone width.
+
+Validation: 194 module checks pass. Source inventory rebuilds 930 files with zero
+problems. The earlier usage stop threshold is suspended by the owner's latest
+instruction; continue with the remaining applications and release gates.

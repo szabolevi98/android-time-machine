@@ -51,3 +51,6 @@ preferences drive_preferences ds_preferences notification_preferences backup_pre
 +backup_and_reset +backup_and_reset_summary +prefs_notification_enable +prefs_notification_enable_summary +prefs_notification_vibrate
 +prefs_notification_ringtone +prefs_notification_access_request +prefs_notification_comment +prefs_notification_shared_items
 +preferences_license_title +preferences_license_summary +policy_privacy +drive_terms_service
+
+[youtube] YouTube com.google.android.apps.youtube.app.settings.SettingsActivity
+preference_headers general_prefs offline_prefs pair_with_tv_prefs subtitles_prefs
