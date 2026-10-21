@@ -221,7 +221,7 @@
       const t = T(), s = S(c);
       if (name === 'ngdr-toggle') { s.dreams = s.dreams === false; c.save(); c.transition('none'); c.render(); return true; }
       if (name === 'ngdr-pick') { s.dream = el.dataset.id; c.save(); c.transition('none'); c.render(); return true; }
-      if (name === 'ngdr-settings') { NG.settingsGo(c, el.dataset.id === 'clock' ? 'missing:com.android.deskclock.settings.ScreensaverSettingsActivity' : 'missing:com.google.android.apps.photos.daydream.DaydreamSettingsActivity', ''); return true; }
+      if (name === 'ngdr-settings') { const d = DREAMS.find(x => x[0] === el.dataset.id); if (el.dataset.id === 'clock') NG.openPrefs(c, 'clocksaver', 'screensaver_settings', d[1](c)); else NG.settingsGo(c, 'photos-dream', d[1](c)); return true; }
       if (name === 'ng-menu') {
         const on = s.dreams !== false, when = s.dreamWhen || 'dock';
         c.menu([{label: t.t('screensaver_settings_dream_start'), disabled: !on, action: c => c.open('daydream', s.dream || 'clock')},

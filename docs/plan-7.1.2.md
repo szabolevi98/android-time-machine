@@ -628,3 +628,14 @@ Now (the Google app's preferences), Security (Android Device Manager's two switc
 Google Fit is not on the image, so its row is left out. Settings › Location › Google Location History opens the same
 Location History page (the account, the summary, pause confirmation, Manage activities, Delete Location History).
 `node tests/browser/ng-gms.mjs` covers it.
+
+## Screen savers — 2026-10-21
+
+`daydream` is the screen saver DreamManagerService starts (Settings › Display › Screen saver › Start now): DeskClock
+4.6.1's Screensaver (desk_clock_saver: the 64 sp digital clock or the clock_analog_* dial, date and next alarm; its
+screensaver_settings through the app-prefs engine: Style, digital by default, and Night mode, on by default, the very
+dim display; moved to a new place each minute with a fade), BasicDreams' Colors and Google Photos' daydream (the device
+albums one after another, slowly panning; DreamSettingsActivity as a Settings page: Only use Wifi for data, Albums on
+device, Albums in Google Photos). A touch wakes it to the screen it covered. The image's GoogleVrCore (Google VR
+Services) has no screen of its own (the 6P is not Daydream-ready); its app info is Settings' generic page. The class
+prefix is `ngsv-` (`ngdm-` is Device Policy's). `node tests/browser/ng-dreams.mjs` covers it.

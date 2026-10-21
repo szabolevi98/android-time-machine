@@ -64,3 +64,6 @@ music_settings
 
 [movies] Videos com.google.android.videos.mobile.usecase.settings.SettingsActivity
 preferences preferences_caption
+
+[clocksaver] PrebuiltDeskClockGoogle com.android.deskclock.settings.ScreensaverSettingsActivity
+screensaver_settings

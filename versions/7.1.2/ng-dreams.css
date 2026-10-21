@@ -1,0 +1,8 @@
+/* Screen savers of N2G48C: DeskClock's desk_clock_saver, BasicDreams' Colors and Google Photos' daydream. */
+.ngsv{position:relative;width:100%;height:100%;overflow:hidden;background:#000;color:#fff;font-family:Roboto,sans-serif;cursor:pointer}
+.ngsv-clock{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;transition:opacity .5s;white-space:nowrap}.ngsv-clock.fade{opacity:0}.ngsv-clock.night{opacity:.25}
+.ngsv-digital{font:100 calc(64 * var(--dp))/1 'ng-dc-clock',Roboto,sans-serif;letter-spacing:calc(-1 * var(--dp))}
+.ngsv-analog{position:relative;width:calc(180 * var(--dp));height:calc(180 * var(--dp));margin-bottom:calc(14 * var(--dp))}.ngsv-analog img{position:absolute;inset:0;width:100%;height:100%}
+.ngsv-date{display:flex;align-items:center;gap:calc(12 * var(--dp));margin-top:calc(8 * var(--dp));font-size:calc(14 * var(--dp));text-transform:uppercase;letter-spacing:calc(.5 * var(--dp))}.ngsv-alarm{display:flex;align-items:center;gap:calc(4 * var(--dp))}.ngsv-alarm img{width:calc(14 * var(--dp));height:calc(14 * var(--dp));filter:brightness(0) invert(1)}
+.ngsv-colors{position:absolute;inset:-50%;background:conic-gradient(#f44336,#ff9800,#ffeb3b,#4caf50,#2196f3,#9c27b0,#f44336);animation:ngsv-turn 60s linear infinite;filter:blur(calc(40 * var(--dp)))}@keyframes ngsv-turn{to{transform:rotate(360deg)}}
+.ngsv-photo{position:absolute;inset:0;animation:ngsv-pan 6s linear both}.ngsv-photo .ngsv-svg,.ngsv-photo svg{width:100%;height:100%;object-fit:cover}@keyframes ngsv-pan{0%{opacity:0;transform:scale(1.05)}8%{opacity:1}92%{opacity:1}100%{opacity:0;transform:scale(1.15)}}
