@@ -1,7 +1,7 @@
 # Remaining work for the full 7.1.2 release
 
 Owner authorization 2026-10-20: continue until the version is fully built; commit and push validated milestones.
-Latest user limit 2026-10-21: monitor the Codex 300-minute usage window; stop work when remaining usage reaches 18% (usedPercent >= 82), and wait for the user's explicit permission to continue. This replaces the earlier 22% limit and its temporary suspension. Check before work and regularly between bounded work batches.
+Latest owner instruction 2026-10-21: continue; usage limit does not apply. This explicitly suspends the earlier 18% stop threshold until the user reinstates a limit.
 The source and completion rules remain in plan-7.1.2.md. This is a concrete continuation checklist, not a replacement scope.
 
 ## Completed milestones
@@ -21,7 +21,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
       TalkBack and other enabled external input/settings activities.
 - [x] Maps 9.34.1 and Messenger's location chooser.
 - [x] Hangouts 12.0 and demo replies.
-- [ ] Drive 2.4.452: core file/share/provider/scan/widget milestone implemented; finish audio/video viewers, scan preference effects, account backup/activity/help routes and remaining native preference leaves.
+- [x] Drive 2.4.452: files/provider, sharing, audio/video preview, scan preferences/PDFs, native widget, cache and notification/legal/backup routes. Help stays in the shared service activity checklist below.
 - [ ] YouTube 11.41.56.
 - [ ] Play Store 7.4.31 with offline storefront/install/My apps.
 - [ ] Play Music 6.13, Play Movies 3.20, Play Games 3.7.24.
@@ -46,6 +46,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [ ] Calendar Goal flow and any service-backed activity still left as a not-built card.
 - [ ] App info Clear data: connect the current storage-usage flags to each app's actual saved model and cancel stale work.
 - [ ] Widget resize handles and minimum sizes from each provider's resize flags.
+- [ ] ACTION_SEND video/audio dedicated Hangouts/Messenger/Photos receivers; preserve media metadata and native MIME target filtering. PDF streams and image-to-Messenger attachment delivery are connected.
 - [ ] Preference leaf/intent routing audit: finish service-backed and non-toggle rows that still lack a click handler.
 - [ ] Sweep all direct `missing(...)` branches and external activity routes; no unfinished card may remain at release.
 

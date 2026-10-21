@@ -29,12 +29,12 @@
   const esc = (c, s) => c.safe(s);
   const icon = id => NG.appsData?.[id]?.icon || '';
   const TARGETS = [
-    {id: 'beam', label: 'NfcNci/android_beam', icon: () => 'assets/in-beam.png', kinds: ['text', 'image', 'vcard']},
-    {id: 'bluetooth', label: 'Bluetooth/bt_share_picker_label', icon: () => 'assets/in-bt_share.png', kinds: ['text', 'image', 'vcard']},
+    {id: 'beam', label: 'NfcNci/android_beam', icon: () => 'assets/in-beam.png', kinds: ['text', 'image', 'vcard', 'file']},
+    {id: 'bluetooth', label: 'Bluetooth/bt_share_picker_label', icon: () => 'assets/in-bt_share.png', kinds: ['text', 'image', 'vcard', 'file']},
     {id: 'cloudprint', label: 'CloudPrint2/app_name', icon: () => 'assets/in-cloudprint.png', kinds: ['text', 'image', 'vcard']},
     {id: 'clipboard', label: 'Drive/send_to_clipboard_activity_title', icon: () => icon('drive'), kinds: ['text']},
-    {id: 'drive', label: 'Drive/upload_shared_item_title', icon: () => icon('drive'), kinds: ['text', 'image', 'vcard']},
-    {id: 'gmail', label: 'PrebuiltGmail/app_name', icon: () => icon('gmail'), kinds: ['text', 'image', 'vcard']},
+    {id: 'drive', label: 'Drive/upload_shared_item_title', icon: () => icon('drive'), kinds: ['text', 'image', 'vcard', 'file']},
+    {id: 'gmail', label: 'PrebuiltGmail/app_name', icon: () => icon('gmail'), kinds: ['text', 'image', 'vcard', 'file']},
     {id: 'hangouts', label: 'Hangouts/home_screen_babel_label', icon: () => icon('hangouts'), kinds: ['text', 'image']},
     {id: 'messenger', label: 'PrebuiltBugle/share_intent_label', icon: () => icon('messenger'), kinds: ['text', 'image', 'vcard']},
     {id: 'photos', label: 'Photos/photos_uploadtoalbum_title', icon: () => icon('photos'), kinds: ['image']}
@@ -81,7 +81,7 @@
       win.querySelector('.folder').addEventListener('click',()=>{if(!NG.driveFolderPick)return;c.closeDialog();NG.driveFolderPick(c,parent,(c,chosen)=>drive(c,s,chosen===undefined?parent:chosen,name));});
     }, buttons: [{label: t.t('Drive/upload_cancel')}, {label: t.t('Drive/upload_shared_item_confirm'), action: c => {
       const n=name.trim()||untitled;
-      if(NG.driveModel){const snapshot=s.photoSnapshot||(s.photo&&NG.photoLibrary.find(c,s.photo));NG.driveModel.upload(c,{name:n,type:s.kind==='image'?'image':'text',content:s.text||'',size:snapshot?3200000:(s.text||'').length,mediaSnapshot:snapshot},parent);}
+      if(NG.driveModel){const snapshot=s.photoSnapshot||(s.photo&&NG.photoLibrary.find(c,s.photo));NG.driveModel.upload(c,s.document?{...s.document,name:n}:{name:n,type:s.kind==='image'?'image':'text',content:s.text||'',size:snapshot?3200000:(s.text||'').length,mediaSnapshot:snapshot},parent);}
       else (c.data.driveFiles ||= []).push({type:s.kind==='image'?'image':'file',name:n});
       c.save();c.toast(t.fmt('Drive/upload_completed_announcement',null,n));
     }}]});
@@ -112,7 +112,8 @@
       if (id === 'beam') { beam(c); return; }
       if (id === 'cloudprint') { c.open('print-preview'); return; }
       const photo=s.kind==='image'&&['gmail','messenger','hangouts'].includes(id)?NG.media.fromDocument(c,{name:s.name,photo:s.photo,mediaSnapshot:s.photoSnapshot},id):s.photo;
-      c.ui.shareData = {subject: s.subject || '', text: s.text || '', kind: s.kind, name: s.name || '', photo};
+      const document=s.document?JSON.parse(JSON.stringify(s.document)):undefined;if(document&&photo){document.photo=photo;delete document.mediaSnapshot;}
+      c.ui.shareData = {subject: s.subject || '', text: s.text || '', kind: s.kind, name: s.name || '', photo,document};
       c.open(id, 'share');
     });
   }

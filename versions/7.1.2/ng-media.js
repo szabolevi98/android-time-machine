@@ -34,7 +34,7 @@
   // Width and height in the picture's own units; the caller scales the SVG with CSS. Each drawing gets its own gradient
   // id, so the same photo can be on the screen twice (a gallery cell and a message).
   let uid = 0;
-  function svg(p, cls = '', ratio) {
+  function svg(p, cls = '', ratio, fit) {
     const w = 400 * (p.ratio || (p.kind === 'pano' ? 3 : 4 / 3)), h = 400, ed = p.edits || {};
     const turn = ((Math.round(+ed.turn || 0) % 4) + 4) % 4, rw = turn % 2 ? h : w, rh = turn % 2 ? w : h;
     const crop = ed.crop || [0, 0, 1, 1];
@@ -48,7 +48,7 @@
       const frames = p.frames.slice(0, 9), cols = Math.ceil(Math.sqrt(frames.length)), rows = Math.ceil(frames.length / cols);
       scene = `<rect width="${w}" height="${h}" fill="#fff"/>` + frames.map((frame, i) => `<svg x="${i % cols * w / cols + 2}" y="${Math.floor(i / cols) * h / rows + 2}" width="${w / cols - 4}" height="${h / rows - 4}">${svg(frame)}</svg>`).join('');
     }
-    return `<svg class="${cls}" viewBox="${x} ${y} ${cw} ${ch}" preserveAspectRatio="xMidYMid ${cls==='ngphotos-full'?'meet':'slice'}" aria-hidden="true"><g transform="${transform}" style="filter:${filter}">${scene}</g></svg>`;
+    return `<svg class="${cls}" viewBox="${x} ${y} ${cw} ${ch}" preserveAspectRatio="xMidYMid ${fit||(cls==='ngphotos-full'?'meet':'slice')}" aria-hidden="true"><g transform="${transform}" style="filter:${filter}">${scene}</g></svg>`;
   }
   const all = c => c.data.photos || (c.data.photos = JSON.parse(JSON.stringify(NG.defaults.photos)));
   NG.media = {svg, all, photos: c => all(c).filter(p => !p.trashedAt && !p.appPrivate),

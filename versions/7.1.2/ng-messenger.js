@@ -337,7 +337,7 @@
     if (!sub) return;
     c.ui.sub = ''; u.search = null; u.sel = null; u.msel = null; u.csearch = null;
     // ShareIntentActivity ("Select conversation"): what was shared waits in the conversation picked next.
-    if (sub === 'share') { const d = NG.shareTake?.(c); u.carry = d?.kind === 'vcard' ? {attach: {vcard: d.subject || d.name || ''}} : {text: d?.text || ''}; u.mode = 'share'; u.screen = ''; u.external = true; return; }
+    if (sub === 'share') { const d = NG.shareTake?.(c); u.carry = d?.kind === 'vcard' ? {attach: {vcard: d.subject || d.name || ''}} : {text: d?.text || '',...(d?.photo?{attach:{photo:d.photo}}:{})}; u.mode = 'share'; u.screen = ''; u.external = true; return; }
     if (sub.startsWith('conv:')) { const x = thread(c, sub.slice(5)); if (x) { openThread(c, x.number); u.external = true; } return; }
     if (sub.startsWith('to:')) { const n = sub.slice(3); if (n) { openThread(c, n); u.external = true; } else { u.screen = 'pick'; u.to = ''; u.external = true; } }
   }

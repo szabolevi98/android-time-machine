@@ -1315,5 +1315,450 @@ NG.strings('drive', {
 "hu",
 "de"
 ]
+},
+"desc_audio_play": {
+"res": "angler:Drive:desc_audio_play",
+"en": "Play",
+"fr": "Lire",
+"es": "Reproducir",
+"hu": "Play",
+"de": "Play",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"desc_audio_pause": {
+"res": "angler:Drive:desc_audio_pause",
+"en": "Pause",
+"fr": "Mettre en pause",
+"es": "Pausar",
+"hu": "Pause",
+"de": "Pause",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"desc_audio_next": {
+"res": "angler:Drive:desc_audio_next",
+"en": "Next",
+"fr": "Suivant",
+"es": "Siguiente",
+"hu": "Next",
+"de": "Next",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"desc_audio_previous": {
+"res": "angler:Drive:desc_audio_previous",
+"en": "Previous",
+"fr": "Précédent",
+"es": "Anterior",
+"hu": "Previous",
+"de": "Previous",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"desc_audio_forward": {
+"res": "angler:Drive:desc_audio_forward",
+"en": "Forward 30 seconds",
+"fr": "Avancer de 30 secondes",
+"es": "Avanzar 30 segundos",
+"hu": "Forward 30 seconds",
+"de": "Forward 30 seconds",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"desc_audio_replay": {
+"res": "angler:Drive:desc_audio_replay",
+"en": "Replay 30 seconds",
+"fr": "Réécouter sur 30 secondes",
+"es": "Volver a reproducir 30 segundos",
+"hu": "Replay 30 seconds",
+"de": "Replay 30 seconds",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"desc_video_player": {
+"res": "angler:Drive:desc_video_player",
+"en": "Video player",
+"fr": "Lecteur vidéo",
+"es": "Reproductor de vídeo",
+"hu": "Video player",
+"de": "Video player",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"document_type_audio": {
+"res": "angler:Drive:document_type_audio",
+"en": "Audio",
+"fr": "Audio",
+"es": "Audio",
+"hu": "Audio",
+"de": "Audio",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"ds_menu_enhance": {
+"res": "angler:Drive:ds_menu_enhance",
+"en": "Enhance",
+"fr": "Optimiser",
+"es": "Mejorar",
+"hu": "Enhance",
+"de": "Enhance",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"ds_menu_enhance_none": {
+"res": "angler:Drive:ds_menu_enhance_none",
+"en": "None",
+"fr": "Désactivé",
+"es": "Ninguna",
+"hu": "None",
+"de": "None",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"ds_menu_enhance_color_drawing": {
+"res": "angler:Drive:ds_menu_enhance_color_drawing",
+"en": "Color Drawing",
+"fr": "Dessin en couleur",
+"es": "Dibujo a color",
+"hu": "Color Drawing",
+"de": "Color Drawing",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"ds_menu_delete_page": {
+"res": "angler:Drive:ds_menu_delete_page",
+"en": "Delete page",
+"fr": "Supprimer la page",
+"es": "Eliminar página",
+"hu": "Delete page",
+"de": "Delete page",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"ds_menu_settings": {
+"res": "angler:Drive:ds_menu_settings",
+"en": "Settings",
+"fr": "Paramètres",
+"es": "Configuración",
+"hu": "Settings",
+"de": "Settings",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"empty_backup_title": {
+"res": "angler:Drive:empty_backup_title",
+"en": "No backups",
+"fr": "Aucune sauvegarde",
+"es": "No hay copias de seguridad",
+"hu": "No backups",
+"de": "No backups",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"empty_backup_content": {
+"res": "angler:Drive:empty_backup_content",
+"en": "Backups of device and app data are shown here.",
+"fr": "Les sauvegardes de l'appareil et des données d'application s'affichent ici.",
+"es": "Las copias de seguridad de los datos de las aplicaciones y de los dispositivos se muestran aquí.",
+"hu": "Backups of device and app data are shown here.",
+"de": "Backups of device and app data are shown here.",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"no_backup_help_card_button": {
+"res": "angler:Drive:no_backup_help_card_button",
+"en": "BACKUP SETTINGS",
+"fr": "PARAMÈTRES DE SAUVEGARDE",
+"es": "AJUSTES DE COPIA DE SEGURIDAD",
+"hu": "BACKUP SETTINGS",
+"de": "BACKUP SETTINGS",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"backup_disabled_for_device": {
+"res": "angler:Drive:backup_disabled_for_device",
+"en": "No backup data available. Be sure to enable backup for this device and wait 24 hours for the data to be saved.",
+"fr": "Pas de données de sauvegarde disponibles. Activez la sauvegarde pour cet appareil, puis patientez 24 heures, le temps que les données soient sauvegardées.",
+"es": "No hay datos de copia de seguridad disponibles. Habilita la copia de seguridad para este dispositivo y espera 24 horas para que se guarden los datos.",
+"hu": "No backup data available. Be sure to enable backup for this device and wait 24 hours for the data to be saved.",
+"de": "No backup data available. Be sure to enable backup for this device and wait 24 hours for the data to be saved.",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"backup_off_help_card_title": {
+"res": "angler:Drive:backup_off_help_card_title",
+"en": "Backup is turned off for this device",
+"fr": "La sauvegarde est désactivée pour cet appareil",
+"es": "La copia de seguridad está desactivada en este dispositivo",
+"hu": "Backup is turned off for this device",
+"de": "Backup is turned off for this device",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"notification_home_empty_title": {
+"res": "angler:Drive:notification_home_empty_title",
+"en": "No recent notifications",
+"fr": "Aucune notification récente",
+"es": "No hay notificaciones recientes",
+"hu": "No recent notifications",
+"de": "No recent notifications",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"notification_home_empty_content": {
+"res": "angler:Drive:notification_home_empty_content",
+"en": "Find details here about files recently shared with you, requests for access, and other important events.",
+"fr": "Vous trouverez ici des informations détaillées sur les fichiers récemment partagés avec vous, les demandes d'accès et d'autres événements importants.",
+"es": "Aquí encontrarás información sobre archivos compartidos contigo recientemente, solicitudes de acceso y otros eventos importantes.",
+"hu": "Find details here about files recently shared with you, requests for access, and other important events.",
+"de": "Find details here about files recently shared with you, requests for access, and other important events.",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"backup_and_reset": {
+"res": "angler:Drive:backup_and_reset",
+"en": "Backup and reset",
+"fr": "Sauvegarde et réinitialisation",
+"es": "Copia de seguridad y restablecer",
+"hu": "Backup and reset",
+"de": "Backup and reset",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"backup_and_reset_summary": {
+"res": "angler:Drive:backup_and_reset_summary",
+"en": "Backup settings for your device",
+"fr": "Paramètres de sauvegarde de votre appareil",
+"es": "Ajustes de copia de seguridad de tu dispositivo",
+"hu": "Backup settings for your device",
+"de": "Backup settings for your device",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"prefs_cache_size_summary_format_string": {
+"res": "angler:Drive:prefs_cache_size_summary_format_string",
+"args": 1,
+"en": "Cache size is set to %1$s MB.",
+"fr": "La taille du cache est de %1$s Mo.",
+"es": "El tamaño de la memoria caché está establecido en %1$s MB.",
+"hu": "Cache size is set to %1$s MB.",
+"de": "Cache size is set to %1$s MB.",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"prefs_notification_category": {
+"res": "angler:Drive:prefs_notification_category",
+"en": "Notifications",
+"fr": "Notifications",
+"es": "Notificaciones",
+"hu": "Notifications",
+"de": "Notifications",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"prefs_notification_enable": {
+"res": "angler:Drive:prefs_notification_enable",
+"en": "Show notifications",
+"fr": "Afficher les notifications",
+"es": "Mostrar notificaciones",
+"hu": "Show notifications",
+"de": "Show notifications",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"prefs_notification_enable_summary": {
+"res": "angler:Drive:prefs_notification_enable_summary",
+"en": "Show Drive, Docs, Sheets, and Slides notifications for %1$s",
+"fr": "Afficher les notifications relatives à Google Drive, Docs, Sheets, et Slides pour l'adresse %1$s",
+"es": "Mostrar las notificaciones de Drive, Documentos, Hojas de Cálculo y Presentaciones de %1$s",
+"hu": "Show Drive, Docs, Sheets, and Slides notifications for %1$s",
+"de": "Show Drive, Docs, Sheets, and Slides notifications for %1$s",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"prefs_notification_vibrate": {
+"res": "angler:Drive:prefs_notification_vibrate",
+"en": "Vibrate",
+"fr": "Vibreur",
+"es": "Vibración",
+"hu": "Vibrate",
+"de": "Vibrate",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"prefs_notification_ringtone": {
+"res": "angler:Drive:prefs_notification_ringtone",
+"en": "Sound",
+"fr": "Signal sonore",
+"es": "Sonido",
+"hu": "Sound",
+"de": "Sound",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"prefs_notification_access_request": {
+"res": "angler:Drive:prefs_notification_access_request",
+"en": "Requests for access",
+"fr": "Demandes d'accès",
+"es": "Solicitudes de acceso",
+"hu": "Requests for access",
+"de": "Requests for access",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"prefs_notification_comment": {
+"res": "angler:Drive:prefs_notification_comment",
+"en": "Comments",
+"fr": "Commentaires",
+"es": "Comentarios",
+"hu": "Comments",
+"de": "Comments",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"prefs_notification_shared_items": {
+"res": "angler:Drive:prefs_notification_shared_items",
+"en": "Shared items",
+"fr": "Éléments partagés",
+"es": "Elementos compartidos",
+"hu": "Shared items",
+"de": "Shared items",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"prefs_notification_types_subheading": {
+"res": "angler:Drive:prefs_notification_types_subheading",
+"en": "Notify me about",
+"fr": "Types de notifications à envoyer",
+"es": "Enviarme notificaciones sobre",
+"hu": "Notify me about",
+"de": "Notify me about",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"preferences_license_title": {
+"res": "angler:Drive:preferences_license_title",
+"en": "Open source licenses",
+"fr": "Licences Open Source",
+"es": "Licencias de código abierto",
+"hu": "Open source licenses",
+"de": "Open source licenses",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"preferences_license_summary": {
+"res": "angler:Drive:preferences_license_summary",
+"en": "License details for open source software",
+"fr": "Informations sur les licences des logiciels Open Source",
+"es": "Detalles de las licencias de software de código abierto",
+"hu": "License details for open source software",
+"de": "License details for open source software",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"policy_privacy": {
+"res": "angler:Drive:policy_privacy",
+"en": "Privacy",
+"fr": "Confidentialité",
+"es": "Privacidad",
+"hu": "Privacy",
+"de": "Privacy",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"drive_terms_service": {
+"res": "angler:Drive:drive_terms_service",
+"en": "Google Drive Terms of Service",
+"fr": "Conditions d'utilisation de Google Drive",
+"es": "Condiciones de Servicio de Google Drive",
+"hu": "Google Drive Terms of Service",
+"de": "Google Drive Terms of Service",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"policy_terms": {
+"res": "angler:Drive:policy_terms",
+"en": "Terms",
+"fr": "Cond. d'utilis.",
+"es": "Condiciones",
+"hu": "Terms",
+"de": "Terms",
+"untranslated": [
+"hu",
+"de"
+]
 }
 });

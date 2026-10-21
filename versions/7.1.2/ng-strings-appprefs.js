@@ -5039,6 +5039,162 @@ NG.strings('appprefs', {
 "de"
 ]
 },
+"Drive/backup_and_reset": {
+"res": "angler:Drive:backup_and_reset",
+"en": "Backup and reset",
+"fr": "Sauvegarde et réinitialisation",
+"es": "Copia de seguridad y restablecer",
+"hu": "Backup and reset",
+"de": "Backup and reset",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"Drive/backup_and_reset_summary": {
+"res": "angler:Drive:backup_and_reset_summary",
+"en": "Backup settings for your device",
+"fr": "Paramètres de sauvegarde de votre appareil",
+"es": "Ajustes de copia de seguridad de tu dispositivo",
+"hu": "Backup settings for your device",
+"de": "Backup settings for your device",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"Drive/prefs_notification_enable": {
+"res": "angler:Drive:prefs_notification_enable",
+"en": "Show notifications",
+"fr": "Afficher les notifications",
+"es": "Mostrar notificaciones",
+"hu": "Show notifications",
+"de": "Show notifications",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"Drive/prefs_notification_enable_summary": {
+"res": "angler:Drive:prefs_notification_enable_summary",
+"en": "Show Drive, Docs, Sheets, and Slides notifications for %1$s",
+"fr": "Afficher les notifications relatives à Google Drive, Docs, Sheets, et Slides pour l'adresse %1$s",
+"es": "Mostrar las notificaciones de Drive, Documentos, Hojas de Cálculo y Presentaciones de %1$s",
+"hu": "Show Drive, Docs, Sheets, and Slides notifications for %1$s",
+"de": "Show Drive, Docs, Sheets, and Slides notifications for %1$s",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"Drive/prefs_notification_vibrate": {
+"res": "angler:Drive:prefs_notification_vibrate",
+"en": "Vibrate",
+"fr": "Vibreur",
+"es": "Vibración",
+"hu": "Vibrate",
+"de": "Vibrate",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"Drive/prefs_notification_ringtone": {
+"res": "angler:Drive:prefs_notification_ringtone",
+"en": "Sound",
+"fr": "Signal sonore",
+"es": "Sonido",
+"hu": "Sound",
+"de": "Sound",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"Drive/prefs_notification_access_request": {
+"res": "angler:Drive:prefs_notification_access_request",
+"en": "Requests for access",
+"fr": "Demandes d'accès",
+"es": "Solicitudes de acceso",
+"hu": "Requests for access",
+"de": "Requests for access",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"Drive/prefs_notification_comment": {
+"res": "angler:Drive:prefs_notification_comment",
+"en": "Comments",
+"fr": "Commentaires",
+"es": "Comentarios",
+"hu": "Comments",
+"de": "Comments",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"Drive/prefs_notification_shared_items": {
+"res": "angler:Drive:prefs_notification_shared_items",
+"en": "Shared items",
+"fr": "Éléments partagés",
+"es": "Elementos compartidos",
+"hu": "Shared items",
+"de": "Shared items",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"Drive/preferences_license_title": {
+"res": "angler:Drive:preferences_license_title",
+"en": "Open source licenses",
+"fr": "Licences Open Source",
+"es": "Licencias de código abierto",
+"hu": "Open source licenses",
+"de": "Open source licenses",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"Drive/preferences_license_summary": {
+"res": "angler:Drive:preferences_license_summary",
+"en": "License details for open source software",
+"fr": "Informations sur les licences des logiciels Open Source",
+"es": "Detalles de las licencias de software de código abierto",
+"hu": "License details for open source software",
+"de": "License details for open source software",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"Drive/policy_privacy": {
+"res": "angler:Drive:policy_privacy",
+"en": "Privacy",
+"fr": "Confidentialité",
+"es": "Privacidad",
+"hu": "Privacy",
+"de": "Privacy",
+"untranslated": [
+"hu",
+"de"
+]
+},
+"Drive/drive_terms_service": {
+"res": "angler:Drive:drive_terms_service",
+"en": "Google Drive Terms of Service",
+"fr": "Conditions d'utilisation de Google Drive",
+"es": "Condiciones de Servicio de Google Drive",
+"hu": "Google Drive Terms of Service",
+"de": "Google Drive Terms of Service",
+"untranslated": [
+"hu",
+"de"
+]
+},
 "Drive/ds_image_enhancement_method_names": {
 "res": "angler:Drive:ds_image_enhancement_method_names",
 "en": [

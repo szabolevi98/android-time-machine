@@ -26,3 +26,10 @@ dv-widget-logo.png	app/Drive/Drive.apk	drawable/widget_app_logo
 dv-widget-new.png	app/Drive/Drive.apk	drawable/widget_newdoc
 dv-widget-scan.png	app/Drive/Drive.apk	drawable/widget_newdocfromcamera
 dv-widget-upload.png	app/Drive/Drive.apk	drawable/widget_upload
+dv-media-play.png	app/Drive/Drive.apk	drawable/quantum_ic_play_circle_outline_white_48
+dv-media-pause.png	app/Drive/Drive.apk	drawable/quantum_ic_pause_circle_outline_white_48
+dv-media-replay.png	app/Drive/Drive.apk	drawable/quantum_ic_replay_30_white_48
+dv-media-forward.png	app/Drive/Drive.apk	drawable/quantum_ic_forward_30_white_48
+dv-audio-big.png	app/Drive/Drive.apk	drawable/ic_type_audio_black_big
+dv-cloud-empty.png	app/Drive/Drive.apk	drawable/quantum_ic_cloud_grey600_48
+dv-licenses.txt	app/Drive/Drive.apk	res/raw/third_party_licenses

@@ -369,3 +369,38 @@ and decoded instruction extracts are retained under tests/browser/artifacts/driv
 extracted dex is in ignored _aosp/ngdrive. Cache-size browser coverage verifies the
 four labels and persistence of 500 MB. Enforcing preview-cache capacity remains a
 model follow-up; cloud records and pinned files must never be evicted.
+
+
+## Drive completion of local screens — 2026-10-21
+
+The file_viewer_audio/video and media_controls XML now drive audio/video previews:
+black window, 56dp audio metadata strip, 80dp #b3000000 controller, 48dp play and
+36dp 30-second skip controls. Invented media runs on the local playback clock,
+stops at its stored duration, supports seeking, and pauses on leaving the app.
+Image previews use meet rather than a cropped square. Scanner settings now affect
+new-page enhancement, saved PDF paper size/orientation and JPEG-quality metadata/size;
+PDF copies, downloads and re-uploads preserve the pages and options. Delete-page,
+retake/capture Back and the scanner settings activity preserve the remaining draft.
+
+Preview cache limits now evict oldest unpinned entries; clear-cache and eviction
+retain cloud records and offline pins. Notification preferences include the enable
+switch, dependent notification types/vibration and framework sound picker. Encryption
+preference dependency is wired. Native empty Notifications and Backups screens replace
+the unrelated generic empty view; Backups opens Settings' PrivacySettings.
+Privacy/terms open Chrome; the APK's exact 463452-byte third_party_licenses is shown
+locally. The inventory can now trace explicitly declared extensionless raw assets
+without adding arbitrary APK files to the media fingerprint index.
+
+ACTION_SEND PDF streams retain independent attachment snapshots in Gmail and Drive,
+rather than sending their extracted text. Image sharing now populates Messenger's
+MMS attachment tray and its provider cache. Native SEND filters were inspected for
+Bluetooth/Gmail/Drive/Hangouts/Bugle/Photos; dedicated audio/video receiving activities
+remain in the shared intent checklist. The shared Help activity also remains a
+release-wide task, rather than a duplicate app-specific replacement.
+
+Validation: 188 module checks, Drive and Documents/Gmail browser workflows, five
+languages and phone bounds pass. The Drive browser additionally exercises audio
+seek/pause, video completion, native backup settings, scanner preferences, A3
+landscape PDF, Gmail PDF snapshot, Messenger image stream, dependent notification
+preferences and original license content. Audio/PDF screenshots were inspected.
+Source inventory: 903 files rebuilt with zero problems.

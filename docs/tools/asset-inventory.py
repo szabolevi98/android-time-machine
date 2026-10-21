@@ -82,6 +82,31 @@ def signatures(img):
 
 
 LOADED = {}
+RAW_DECLARATIONS = None
+
+
+def declared_raw(img, filename, data):
+    """Exact raw/asset declarations also cover extensionless APK license files,
+    which the media-only source index intentionally does not enumerate."""
+    global RAW_DECLARATIONS
+    if RAW_DECLARATIONS is None:
+        RAW_DECLARATIONS = {}
+        for manifest in sorted(glob.glob(ROOT + 'docs/data/*assets*.tsv')):
+            for line in open(manifest, encoding='utf-8'):
+                fields = line.strip().split('\t')
+                if len(fields) != 3 or line.startswith('#'): continue
+                out, apk, entry = fields
+                if apk.endswith('.apk') and entry.startswith(('assets/', 'res/raw/')):
+                    RAW_DECLARATIONS.setdefault(out, []).append((apk, entry))
+    for apk, entry in RAW_DECLARATIONS.get(filename, []):
+        if not os.path.isfile(f'{ROOT}_aosp/{img.device}/system/{apk}'): continue
+        row = [apk, entry, len(data), sha(data)]
+        try:
+            if img.read(row) == data: return row
+        except (KeyError, zipfile.BadZipFile): continue
+    return None
+
+
 def image(device, density='mdpi'):
     # Kept per density: an image is the own one of its version (its density first) and another's (mdpi first), and a
     # run over several versions must trace each as a run over that version alone does.
@@ -261,6 +286,9 @@ def trace(own, path, data):
     others in release order (a graphic taken over from another release)."""
     file = path.rsplit('/', 1)[-1]
     names, digest, ext = wanted_names(file), sha(data), file.rsplit('.', 1)[-1].lower()
+    if ext not in ('png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'):
+        raw = declared_raw(own, file, data)
+        if raw: return 'copy', own, raw, ''
     # A generator's exact APK/XML declaration is stronger evidence than a renamed output's basename.
     # In particular launcher shortcut IDs need not resemble their drawable names, and v25 matters on angler.
     if ext == 'svg':

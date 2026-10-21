@@ -17,7 +17,7 @@
   const state=c=>c.data.documents||(c.data.documents=JSON.parse(JSON.stringify(NG.defaults.documents)));
   const mime=type=>({text:'text/plain',pdf:'application/pdf',image:'image/jpeg',video:'video/mp4',audio:'audio/mpeg',dir:'vnd.android.document/directory'})[type]||'application/octet-stream';
   function nodes(c){
-    const photos=NG.media.photos(c).map(p=>({id:`photo:${p.id}`,parent:p.folder||'camera',name:p.fileName||`${p.kind==='video'?'VID':'IMG'}_${p.id}.${p.kind==='video'?'mp4':'jpg'}`,type:p.kind==='video'?'video':'image',photo:p.id,size:p.kind==='video'?Math.max(1e6,(p.duration||1000)*1200):3200000,time:p.time}));
+    const photos=NG.media.photos(c).map(p=>({id:`photo:${p.id}`,parent:p.folder||'camera',name:p.fileName||`${p.kind==='video'?'VID':'IMG'}_${p.id}.${p.kind==='video'?'mp4':'jpg'}`,type:p.kind==='video'?'video':'image',photo:p.id,duration:p.duration,size:p.kind==='video'?Math.max(1e6,(p.duration||1000)*1200):3200000,time:p.time}));
     const drive=NG.driveModel?NG.driveModel.nodes(c):(c.data.driveFiles||[]).map((p,i)=>({id:`drive:${i}`,parent:'drive',name:p.name||'Untitled',type:p.type==='image'?'image':'text',size:p.size||2048,time:p.time||0,content:p.content||''}));
     return [...state(c).nodes,...photos,...drive];
   }
@@ -72,7 +72,7 @@
       const media=n.mediaSnapshot||(n.photo&&NG.photoLibrary.find(c,n.photo));
       if(media&&target!=='drive'&&!target.startsWith('drive:')){const {id,trashedAt,appPrivate,...snapshot}=JSON.parse(JSON.stringify(media)),p=NG.media.add(c,{...snapshot,fileName:n.name,folder:target});created.push('photo:'+p.id);return find(c,'photo:'+p.id);}
       const out=create(c,target,n.name,n.type,n.content||'');if(!out)return null;created.push(out.id);
-      const meta={size:n.size,time:n.time,...(media?{mediaSnapshot:JSON.parse(JSON.stringify(media))}:{})};
+      const meta={size:n.size,time:n.time,duration:n.duration,scanPages:n.scanPages,pdfOptions:n.pdfOptions,...(media?{mediaSnapshot:JSON.parse(JSON.stringify(media))}:{})};
       if(out.driveId){const raw=D.find(c,out.driveId);Object.assign(raw,meta);if(media){raw.photoSnapshot=meta.mediaSnapshot;delete raw.mediaSnapshot;}}
       else Object.assign(state(c).nodes.find(f=>f.id===out.id),meta);
       for(const child of source.filter(f=>f.parent===n.id))if(!duplicate(child,out.id))return null;
