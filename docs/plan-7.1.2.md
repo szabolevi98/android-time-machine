@@ -545,3 +545,19 @@ Settings is res/xml/preferences with its code's rows: parental controls (Allow m
 (preferences_caption with a preview), manage downloads (instructions_no_offline_content), storage, version, licenses
 (the APK's license.html). Dogfood, TV pairing and Disney Movies Anywhere stay hidden (internal build, no set-top box,
 no linked account). `node tests/browser/ng-movies.mjs` covers all of it in five languages and at phone width.
+
+## Play Games continuation — 2026-10-21
+
+PlayGames 3.7.24 follows Games.DestinationActivityTheme: Games.ActionBar.Dest #4e802b, status #446f26, the #eeeeee
+window and the DrawerLayout with Play Now / My Games / Notifications / Players / Explore (games_ic_drawer_* for the
+three the APK draws) and Settings / Help & Feedback. The first start runs the onboarding tutorial (games_on_board_bg,
+games_ww_logo / friends / levelup, Skip, Done) and the Gamer ID setup: games_profile_setup_info's three rows, then
+games_profile_setup (avatar pict_player_no_image, the Gamer ID field with its "%1$d / %2$d" counter, the 3–15 letters
+and numbers check, both privacy check boxes, the sign-in footnote). Play Now has games_profile_summary_card (tiled
+banner, level 1 and its XP bar, View profile), the green Onyx "got it" card and the Featured / Continue Playing clusters
+of the invented store's games (games_onyx_small_card with Not installed / Continue Playing). My Games (Installed / All my
+games), Notifications and Players show the APK's empty states; Explore has Featured / Popular / Popular multiplayer and
+the Play store card. A game's detail installs through Play Store's own page and then plays the installed demo app; the
+player detail shows the new profile's level and XP. Settings (built in code): the signed-in account, Switch account,
+Edit profile and Delete Play Games profile. `node tests/browser/ng-games.mjs` covers it in five languages and at phone
+width.

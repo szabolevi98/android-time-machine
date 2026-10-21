@@ -1,0 +1,26 @@
+# Play Games 3.7.24: drawer, banners, empty states and avatars (ng-games.js).
+pg-logo.png	app/PlayGames/PlayGames.apk	drawable/games_quantum_logo_play_games_color_192
+pg-drawer-explore.png	app/PlayGames/PlayGames.apk	drawable/games_ic_drawer_explore
+pg-drawer-explore-on.png	app/PlayGames/PlayGames.apk	drawable/games_ic_drawer_explore_selected
+pg-drawer-inbox.png	app/PlayGames/PlayGames.apk	drawable/games_ic_drawer_inbox
+pg-drawer-inbox-on.png	app/PlayGames/PlayGames.apk	drawable/games_ic_drawer_inbox_selected
+pg-drawer-players.png	app/PlayGames/PlayGames.apk	drawable/games_ic_drawer_players
+pg-drawer-players-on.png	app/PlayGames/PlayGames.apk	drawable/games_ic_drawer_players_selected
+pg-banner.png	app/PlayGames/PlayGames.apk	drawable/banner_bg_default_games_profile_trans
+pg-avatar.png	app/PlayGames/PlayGames.apk	drawable/pict_player_no_image
+pg-null-search.png	app/PlayGames/PlayGames.apk	drawable/games_ic_search_null_game
+pg-null-invites.png	app/PlayGames/PlayGames.apk	drawable/games_null_invites
+pg-null-people.png	app/PlayGames/PlayGames.apk	drawable/games_edu_pymk_circles_null
+pg-search.png	app/PlayGames/PlayGames.apk	drawable/games_ic_search
+pg-search-close.png	app/PlayGames/PlayGames.apk	drawable/games_ic_search_close
+pg-play.png	app/PlayGames/PlayGames.apk	drawable/games_ic_play_green_sm
+pg-shop.png	app/PlayGames/PlayGames.apk	drawable/games_ic_shop
+pg-onboard-bg.jpg	app/PlayGames/PlayGames.apk	drawable/games_on_board_bg
+pg-ww-logo.png	app/PlayGames/PlayGames.apk	drawable/games_ww_logo
+pg-ww-friends.png	app/PlayGames/PlayGames.apk	drawable/games_ww_friends
+pg-ww-levelup.png	app/PlayGames/PlayGames.apk	drawable/games_ww_levelup
+pg-edit.png	app/PlayGames/PlayGames.apk	drawable/games_ic_edit_sm
+pg-info-1.png	app/PlayGames/PlayGames.apk	drawable/games_ic_play_green_tiny
+pg-info-2.png	app/PlayGames/PlayGames.apk	drawable/games_ic_leaderboards_green
+pg-info-3.png	app/PlayGames/PlayGames.apk	drawable/games_ic_achievement_sm
+pg-menu.png	app/PlayGames/PlayGames.apk	drawable/ic_drawer_white

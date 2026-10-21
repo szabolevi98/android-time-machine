@@ -616,6 +616,31 @@ versions/7.1.2/assets/mv-wish-empty.png	a6648a2a3dff0141	copy	angler:/system/app
 versions/7.1.2/assets/mv-wish-on.svg	aa7c1a218216fd5a	vector	angler:/system/app/Videos/Videos.apk!res/drawable/ic_wishlist_added_primary_24dp.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	85366a846ad38f46
 versions/7.1.2/assets/mv-wish-white.svg	c47280b5e04ecba6	vector	angler:/system/app/Videos/Videos.apk!res/drawable/ic_wishlist_add_white_24dp.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	325f580036fd2d02
 versions/7.1.2/assets/mv-wish.svg	8b69df5a0068009e	vector	angler:/system/app/Videos/Videos.apk!res/drawable/ic_wishlist_add_24dp.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	de42112fcda6caf0
+versions/7.1.2/assets/pg-avatar.png	dc94d4cb766fc6b2	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/pict_player_no_image.png	drawable-xxhdpi-v4		dc94d4cb766fc6b2
+versions/7.1.2/assets/pg-banner.png	5b895f7a48441ab2	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/banner_bg_default_games_profile_trans.png	drawable-xxhdpi-v4		5b895f7a48441ab2
+versions/7.1.2/assets/pg-drawer-explore-on.png	9e56e65a6bf87278	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_drawer_explore_selected.png	drawable-xxhdpi-v4		9e56e65a6bf87278
+versions/7.1.2/assets/pg-drawer-explore.png	191a99f28687db70	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_drawer_explore.png	drawable-xxhdpi-v4		191a99f28687db70
+versions/7.1.2/assets/pg-drawer-inbox-on.png	718c37735c8e0fd4	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_drawer_inbox_selected.png	drawable-xxhdpi-v4		718c37735c8e0fd4
+versions/7.1.2/assets/pg-drawer-inbox.png	ed1e269d5ccc35a1	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_drawer_inbox.png	drawable-xxhdpi-v4		ed1e269d5ccc35a1
+versions/7.1.2/assets/pg-drawer-players-on.png	49c3d6a5140f0fdd	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_drawer_players_selected.png	drawable-xxhdpi-v4		49c3d6a5140f0fdd
+versions/7.1.2/assets/pg-drawer-players.png	4e878e934ddd648d	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_drawer_players.png	drawable-xxhdpi-v4		4e878e934ddd648d
+versions/7.1.2/assets/pg-edit.png	e4042086c043a87b	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_edit_sm.png	drawable-xxhdpi-v4		e4042086c043a87b
+versions/7.1.2/assets/pg-info-1.png	657c15dbf48a3164	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_play_green_tiny.png	drawable-xxhdpi-v4		657c15dbf48a3164
+versions/7.1.2/assets/pg-info-2.png	23aca618ca86031e	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-nodpi-v4/games_ic_leaderboards_green.png	drawable-nodpi-v4		23aca618ca86031e
+versions/7.1.2/assets/pg-info-3.png	8a27d383fd697f00	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_achievement_sm.png	drawable-xxhdpi-v4		8a27d383fd697f00
+versions/7.1.2/assets/pg-logo.png	5513f2ae5bed5136	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_quantum_logo_play_games_color_192.png	drawable-xxhdpi-v4		5513f2ae5bed5136
+versions/7.1.2/assets/pg-menu.png	20e0e1f02621bbb0	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/ic_drawer_white.png	drawable-xxhdpi-v4		20e0e1f02621bbb0
+versions/7.1.2/assets/pg-null-invites.png	7f581ada45a8905b	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_null_invites.png	drawable-xxhdpi-v4		7f581ada45a8905b
+versions/7.1.2/assets/pg-null-people.png	50932b244f72c3e4	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_edu_pymk_circles_null.png	drawable-xxhdpi-v4		50932b244f72c3e4
+versions/7.1.2/assets/pg-null-search.png	f659be72273653f3	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_search_null_game.png	drawable-xxhdpi-v4		f659be72273653f3
+versions/7.1.2/assets/pg-onboard-bg.jpg	29f0edf7470d8ced	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-nodpi-v4/games_on_board_bg.jpg	drawable-nodpi-v4		29f0edf7470d8ced
+versions/7.1.2/assets/pg-play.png	2de217ee3659b3cf	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_play_green_sm.png	drawable-xxhdpi-v4		2de217ee3659b3cf
+versions/7.1.2/assets/pg-search-close.png	cced182400027d74	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_search_close.png	drawable-xxhdpi-v4		cced182400027d74
+versions/7.1.2/assets/pg-search.png	1a15c06b4bdd92ca	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_search.png	drawable-xxhdpi-v4		1a15c06b4bdd92ca
+versions/7.1.2/assets/pg-shop.png	092285caf0a0c5a2	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_shop.png	drawable-xxhdpi-v4		092285caf0a0c5a2
+versions/7.1.2/assets/pg-ww-friends.png	d97fab19da1228c5	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ww_friends.png	drawable-xxhdpi-v4		d97fab19da1228c5
+versions/7.1.2/assets/pg-ww-levelup.png	f258c98c681d9fef	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ww_levelup.png	drawable-xxhdpi-v4		f258c98c681d9fef
+versions/7.1.2/assets/pg-ww-logo.png	0d83c232ea2c0410	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ww_logo.png	drawable-xxhdpi-v4		0d83c232ea2c0410
 versions/7.1.2/assets/ph-googlelogo_standard_color_74x24.png	33521e8e8cc7d382	copy	angler:/system/app/Photos/Photos.apk!res/drawable-xxhdpi-v4/googlelogo_standard_color_74x24.png	drawable-xxhdpi-v4		33521e8e8cc7d382
 versions/7.1.2/assets/ph-null_album_color_276x88dp.png	b4250344cdb74bad	copy	angler:/system/app/Photos/Photos.apk!res/drawable-xxhdpi-v4/null_album_color_276x88dp.png	drawable-xxhdpi-v4		b4250344cdb74bad
 versions/7.1.2/assets/ph-null_shared_albums_color_132x132dp.png	14e1fc7f33c4b9b3	copy	angler:/system/app/Photos/Photos.apk!res/drawable-xxhdpi-v4/null_shared_albums_color_132x132dp.png	drawable-xxhdpi-v4		14e1fc7f33c4b9b3
