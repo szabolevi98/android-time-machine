@@ -902,5 +902,125 @@ NG.strings('play', {
 "de": "Du kannst deine Downloadeinstellungen jederzeit in den Einstellungen ändern.",
 "fr": "Vous pouvez modifier vos préférences de téléchargement à tout moment dans les paramètres",
 "es": "Puedes cambiar tus preferencias de descarga en cualquier momento en Ajustes"
+},
+"widget_apps": {
+"res": "angler:Phonesky:widget_apps",
+"en": "Play Store",
+"hu": "Play Áruház",
+"de": "Play Store",
+"fr": "Play Store",
+"es": "Play Store"
+},
+"widget_now_playing": {
+"res": "angler:Phonesky:widget_now_playing",
+"en": "My Library",
+"hu": "Könyvtáram",
+"de": "Meine Bibliothek",
+"fr": "Ma bibliothèque",
+"es": "Mi colección"
+},
+"widget_recommended": {
+"res": "angler:Phonesky:widget_recommended",
+"en": "Play Recommendations",
+"hu": "Google Play -- ajánlások",
+"de": "Play-Empfehlungen",
+"fr": "Lire les recommandations",
+"es": "Recomendaciones"
+},
+"widget_music_now_playing": {
+"res": "angler:Phonesky:widget_music_now_playing",
+"en": "My Music",
+"hu": "Zenéim",
+"de": "Meine Musik",
+"fr": "Ma musique",
+"es": "Mi música"
+},
+"widget_movies_now_playing": {
+"res": "angler:Phonesky:widget_movies_now_playing",
+"en": "My Movies",
+"hu": "Saját filmek",
+"de": "Meine Filme",
+"fr": "Mes films",
+"es": "Mis películas"
+},
+"widget_games_now_playing": {
+"res": "angler:Phonesky:widget_games_now_playing",
+"en": "My Games",
+"hu": "Saját játékok",
+"de": "Meine Spiele",
+"fr": "Mes jeux",
+"es": "Mis juegos"
+},
+"widget_welcome_empty_legend": {
+"res": "angler:Phonesky:widget_welcome_empty_legend",
+"en": "Your recent Google Play items will appear here",
+"hu": "Itt jelennek meg legutóbb letöltött Google Play-elemeid",
+"de": "Deine kürzlich gekauften Google Play-Artikel werden hier erscheinen.",
+"fr": "Vos articles Google Play récents s'affichent ici.",
+"es": "Aquí aparecerán tus elementos recientes de Google Play"
+},
+"widget_hotseat_title": {
+"res": "angler:Phonesky:widget_hotseat_title",
+"en": "Explore great content on Google Play",
+"hu": "Fedezz fel nagyszerű tartalmakat a Google Playen",
+"de": "Entdecke tolle Inhalte bei Google Play",
+"fr": "Découvrez du contenu de qualité sur Google Play",
+"es": "Descubre contenido fantástico en Google Play"
+},
+"no_recommendation_data_error": {
+"res": "angler:Phonesky:no_recommendation_data_error",
+"en": "No recommendations",
+"hu": "Nincsenek ajánlások",
+"de": "Keine Empfehlungen",
+"fr": "Aucune recommandation.",
+"es": "Sin recomendaciones"
+},
+"content_description_recommendation_refresh": {
+"res": "angler:Phonesky:content_description_recommendation_refresh",
+"en": "Refresh to show next recommendation",
+"hu": "Frissítés a következő ajánlás megjelenítéséhez",
+"de": "Aktualisieren, um nächste Empfehlung einzublenden",
+"fr": "Actualiser pour afficher la recommandation suivante",
+"es": "Actualizar página para mostrar la siguiente recomendación"
+},
+"content_description_recommendation_dismiss": {
+"res": "angler:Phonesky:content_description_recommendation_dismiss",
+"en": "Dismiss",
+"hu": "Elvetés",
+"de": "Schließen",
+"fr": "Ignorer",
+"es": "Ignorar"
+},
+"corpus_title_music": {
+"res": "angler:Phonesky:corpus_title_music",
+"en": "Music",
+"hu": "Zene",
+"de": "Musik",
+"fr": "Musique",
+"es": "Música"
+},
+"corpus_title_movies": {
+"res": "angler:Phonesky:corpus_title_movies",
+"en": "Movies & TV",
+"hu": "Filmek",
+"de": "Filme & Serien",
+"fr": "Films et séries",
+"es": "Películas"
+},
+"games_corpus_title": {
+"res": "angler:Phonesky:games_corpus_title",
+"en": "Games",
+"hu": "Játékok",
+"de": "Spiele",
+"fr": "Jeux",
+"es": "Juegos"
+},
+"done": {
+"res": "angler:Phonesky:done",
+"en": "Done",
+"hu": "Kész",
+"de": "Fertig",
+"fr": "OK",
+"es": "Listo"
 }
 });

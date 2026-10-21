@@ -82,6 +82,20 @@ library/reinstall, reviews, history, PIN rejection/confirmation, licenses, reloa
 and phone width. Source inventory: 943 files rebuilt, zero problems. Light preference toolbar
 foreground was also corrected and checked in Drive and YouTube.
 
+## Play Store widgets — 2026-10-21
+
+All three providers now use their own native layout resources. The small 2×2 card flips every
+seven seconds using the exact top/bottom nine-patches. The recommendation panel has its native
+tiled background, title, corpus strip and refresh/dismiss controls, with a five-minute automatic
+flip interval. My Library shows the APK's empty state, exploration shortcuts and installed game
+tiles, with a provider hook for the remaining media apps.
+
+The three-column configuration activity saves the selected corpus; cancelling removes only the
+new placement and returns to the launcher's original page. Widget artwork and all labels were
+extracted from this Phonesky APK. The dedicated browser flow covers configuration/cancel, timed
+flip, refresh/dismiss/open, empty/populated library, persistence, five languages and phone width.
+Source inventory: 950 rebuilt files, zero problems; the full 199-check module suite passes.
+
 ## Tools added for 7.1.2
 
 - `docs/tools/layout-xml.py <apk> <res path>`: a compiled layout (or any XML resource) of the image with its resource ids

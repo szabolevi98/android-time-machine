@@ -12,3 +12,10 @@ ps-settings.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_google_settings
 ps-help.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_help_outline_24px
 ps-download.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_file_download_grey
 ps-licenses.txt	priv-app/Phonesky/Phonesky.apk	res/raw/third_party_licenses
+ps-widget-top.9.png	priv-app/Phonesky/Phonesky.apk	drawable/phonesky_widget_top
+ps-widget-bottom.9.png	priv-app/Phonesky/Phonesky.apk	drawable/phonesky_widget_bottom
+ps-widget-empty.png	priv-app/Phonesky/Phonesky.apk	drawable/flo_widget_empty_logo
+ps-widget-refresh.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_play_widgets_refresh
+ps-widget-dismiss.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_play_widgets_dismiss
+ps-widget-shadow.9.png	priv-app/Phonesky/Phonesky.apk	drawable/shadow_nowplaying_widget
+ps-widget-tile.png	priv-app/Phonesky/Phonesky.apk	drawable/panel_widget_metadata

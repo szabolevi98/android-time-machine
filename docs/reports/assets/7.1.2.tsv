@@ -672,6 +672,13 @@ versions/7.1.2/assets/ps-search-white.png	aad661086a62e5bc	copy	angler:/system/a
 versions/7.1.2/assets/ps-search.png	7e463136f868a20d	copy	angler:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_search.png	drawable-xxhdpi-v4		7e463136f868a20d
 versions/7.1.2/assets/ps-settings.png	23202df5dcc6a207	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-hdpi-v4/ic_google_settings.png	drawable-hdpi-v4		23202df5dcc6a207
 versions/7.1.2/assets/ps-share.png	8a6d14a42b679304	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xhdpi-v4/ic_share.png	drawable-xhdpi-v4		8a6d14a42b679304
+versions/7.1.2/assets/ps-widget-bottom.9.png	3cd963cf6e9fcb99	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-hdpi-v4/phonesky_widget_bottom.9.png	drawable-hdpi-v4		3cd963cf6e9fcb99
+versions/7.1.2/assets/ps-widget-dismiss.png	638ff0f53e833664	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xhdpi-v4/ic_play_widgets_dismiss.png	drawable-xhdpi-v4		638ff0f53e833664
+versions/7.1.2/assets/ps-widget-empty.png	88e175b7db93f695	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xhdpi-v4/flo_widget_empty_logo.png	drawable-xhdpi-v4		88e175b7db93f695
+versions/7.1.2/assets/ps-widget-refresh.png	8761bbc05e4d2358	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xhdpi-v4/ic_play_widgets_refresh.png	drawable-xhdpi-v4		8761bbc05e4d2358
+versions/7.1.2/assets/ps-widget-shadow.9.png	b9437d805533f1f0	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-hdpi-v4/shadow_nowplaying_widget.9.png	drawable-hdpi-v4		b9437d805533f1f0
+versions/7.1.2/assets/ps-widget-tile.png	f4a94cff5040f166	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-nodpi-v4/panel_widget_metadata.png	drawable-nodpi-v4		f4a94cff5040f166
+versions/7.1.2/assets/ps-widget-top.9.png	4d9fa1dc658ad33c	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-hdpi-v4/phonesky_widget_top.9.png	drawable-hdpi-v4		4d9fa1dc658ad33c
 versions/7.1.2/assets/ps-wish-on.png	bcd7d69e726ceb01	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xxhdpi-v4/ic_menu_wish_apps_on_v2.png	drawable-xxhdpi-v4		bcd7d69e726ceb01
 versions/7.1.2/assets/ps-wish.png	4912f24395979d32	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xxhdpi-v4/ic_menu_wish_apps_off_v2.png	drawable-xxhdpi-v4		4912f24395979d32
 versions/7.1.2/assets/sc-chrome-new-incognito-tab-shortcut.png	e2127d9ca211545e	copy	angler:/system/app/Chrome/Chrome.apk!res/drawable-xxxhdpi-v4/shortcut_incognito.png	drawable-xxxhdpi-v4		e2127d9ca211545e
