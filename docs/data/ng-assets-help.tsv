@@ -1,0 +1,5 @@
+# GoogleHelp / Google Feedback in PrebuiltGmsCore 9.8 (ng-help.js).
+gh-card.9.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/gh_card_background
+gh-feedback.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/gh_feedback
+gh-search-clear.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/gh_search_clear_normal
+gh-send.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/gf_ic_menu_send_material_light

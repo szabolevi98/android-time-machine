@@ -449,6 +449,10 @@ versions/7.1.2/assets/gg-reminder.png	3f125fcb2278a473	copy	angler:/system/priv-
 versions/7.1.2/assets/gg-search.png	079cb0ed1f9dde45	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/ic_search.png	drawable-xxxhdpi-v4		079cb0ed1f9dde45
 versions/7.1.2/assets/gg-settings.png	93056439490c9c87	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/ic_settings.png	drawable-xxxhdpi-v4		93056439490c9c87
 versions/7.1.2/assets/gg-weather.png	d479476908b255ee	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-nodpi-v4/optin_minicard_ic_weather.png	drawable-nodpi-v4		d479476908b255ee
+versions/7.1.2/assets/gh-card.9.png	ffdc0afc6e6412af	copy	angler:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable-xxhdpi-v4/gh_card_background.9.png	drawable-xxhdpi-v4		ffdc0afc6e6412af
+versions/7.1.2/assets/gh-feedback.png	a19624983e27f3a7	copy	angler:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable/gh_feedback.png	drawable		a19624983e27f3a7
+versions/7.1.2/assets/gh-search-clear.png	447c14de89fbc604	copy	angler:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable-xxhdpi-v4/gh_search_clear_normal.png	drawable-xxhdpi-v4		447c14de89fbc604
+versions/7.1.2/assets/gh-send.png	a082a5fd62c49045	copy	angler:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable-xxhdpi-v4/gf_ic_menu_send_material_light.png	drawable-xxhdpi-v4		a082a5fd62c49045
 versions/7.1.2/assets/gm-abc_ic_clear_material.svg	7a0c724f1b1e7a20	vector	angler:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable/abc_ic_clear_material.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	ac10a8dd23f36cc7
 versions/7.1.2/assets/gm-account_switcher_blue.jpg	47d1a562f387a616	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xhdpi-v4/account_switcher_blue.jpg	drawable-xhdpi-v4		47d1a562f387a616
 versions/7.1.2/assets/gm-avatar_placeholder.png	e5a4072a512488e5	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/avatar_placeholder.png	drawable-xxhdpi-v4		e5a4072a512488e5

@@ -61,5 +61,5 @@ Not traced:
 
 ## 7.1.2 (angler)
 
-copy: 743, vector: 299, generated: 4, own: 2
+copy: 747, vector: 299, generated: 4, own: 2
 

@@ -592,3 +592,14 @@ DMAgent 7.05's DMAgentActivity finds no Google Apps for Business, Education or G
 and shows add_account_activity in DMAgentTheme (DMAgent.Toolbar #3aa3db, status #0099cc): the two explanations, the
 example address and the bottom bar's Add account, which opens Settings › Add an account. The image has DMAgent's texts
 in English (and French) only. `node tests/browser/ng-dmagent.mjs` covers it.
+
+## Help & feedback continuation — 2026-10-21
+
+Every app's Help & feedback now opens GoogleHelp of PrebuiltGmsCore 9.8 (`help`, sub = the calling app): the #e5e5e5
+console under the light header, the Search help card (gh_card_background nine-patch), "<app> Help" with BROWSE ALL
+ARTICLES (support.google.com in Chrome), Contact us with Send feedback, and the overflow's Version info (the app's
+version, ©2016 Google Inc.), Clear help history and View in Google Play Store. Help articles come from Google's server,
+so a search shows its "No results found." Send feedback opens feedback_ui under gf_action_bar_fill #00bbd3: the
+account, Write your feedback (Send refuses an empty one with gf_invalid_description_text), Include system logs and the
+screenshot preview; Send shows "Sending feedback..." and returns to the app. The class prefix is `nghp-` (the
+launcher already uses `ngh-`). `node tests/browser/ng-help.mjs` covers it.
