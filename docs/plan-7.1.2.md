@@ -52,6 +52,36 @@ The same rules as 6.0.1 ([plan-6.0.1.md](plan-6.0.1.md)), with 6.0.1 as the vers
 
 Commits are pushed as each piece passes the gate.
 
+## Play Store continuation — 2026-10-21
+
+Phonesky 7.4.31 now uses its V2 Apps corpus resources (green #0f9d58, status #0d854b),
+MainActivityTheme, 48dp tabs and the small-card/detail/My apps layouts. The invented offline
+server selects this branch among the APK's server-configured variants. Twelve shared fictional
+listings provide the content and runtime SVG icons; native Google entries use angler's package
+metadata. No previous release's rendering, stylesheet, string table or artwork was copied.
+
+Search/history, category/top lists, wishlist, ratings/edit/delete, install/update/cancel and
+My apps Updates/Installed/Library/Beta are connected. Jobs continue while another app is open,
+pause without a permitted network and survive reloads. Completion registers launcher/App info
+metadata and optional home icons; uninstall removes folders/shortcuts, recents and app settings
+while retaining library membership. Factory packages remain installed and can be re-enabled.
+An unavailable package such as a Drive editor has an item-not-found result.
+
+The actual settings XML supplies general, notification, user-control and About rows. Download
+network choices, automatic updates, home shortcuts, history clearing, purchase authentication
+choice and local parental PIN/filtering persist. Restricted listings are filtered and direct
+install requests rejected. The account has empty payment/order/subscription/reward responses;
+redeeming an unknown offline code returns the native invalid-entry response. The open-source
+license resource is preserved byte for byte. Payment processing and real APK downloads are
+outside this browser-local catalogue. The three native widget providers are still tracked below
+the application milestone in remaining-7.1.2.md.
+
+Validation: 199 module checks passed, including five install/state cases. The new Play browser
+flow covers background installation, cancellation, launcher integration, App info uninstall,
+library/reinstall, reviews, history, PIN rejection/confirmation, licenses, reload, five languages
+and phone width. Source inventory: 943 files rebuilt, zero problems. Light preference toolbar
+foreground was also corrected and checked in Drive and YouTube.
+
 ## Tools added for 7.1.2
 
 - `docs/tools/layout-xml.py <apk> <res path>`: a compiled layout (or any XML resource) of the image with its resource ids

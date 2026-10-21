@@ -23,7 +23,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Hangouts 12.0 and demo replies.
 - [x] Drive 2.4.452: files/provider, sharing, audio/video preview, scan preferences/PDFs, native widget, cache and notification/legal/backup routes. Help stays in the shared service activity checklist below.
 - [x] YouTube 11.41.56: native home/tabs, watch/mini-player, search/history, reactions/subscriptions, playlists, local upload/edit/delete, settings, captions and licenses. Shared Help and dedicated media SEND receivers remain below.
-- [ ] Play Store 7.4.31 with offline storefront/install/My apps.
+- [x] Play Store 7.4.31: offline storefront/search, install/update/cancel, My apps/library, wishlist/reviews, account empty states, settings/content PIN and licenses. Its three widget providers remain in the widget checklist below.
 - [ ] Play Music 6.13, Play Movies 3.20, Play Games 3.7.24.
 - [ ] Android Pay 1.4, Project Fi, Device Policy 7.05.
 - [ ] Google Play services settings, Location History, Help/feedback, print preview.

@@ -182,7 +182,7 @@
       const off = disabled(c, id), bytes = NG.appDataUsage?.(c, id) || 0;
       const row = (key, title, summary, dim = false) => ({html: NG.settingsRow(c, {key, title, summary, disabled: dim, action: 'ngap-pref'}), sel: true});
       const head = `<div class="ngap-head"><div class="ngap-row static"><img src="${a.icon}" alt=""><span class="ngap-texts"><span class="ngap-line"><span class="ngap-label">${c.safe(label(c, id))}</span></span><span class="ngap-sub">${c.safe(t.fmt('version_text', null, a.version))}</span></span></div>
-        <div class="ngap-buttons"><button type="button" class="ngsx-btn" data-action="ngap-disable"${PLATFORM.includes(id) ? ' disabled' : ''}>${c.safe(t.t(off ? 'enable_text' : 'disable_text'))}</button><i></i><button type="button" class="ngsx-btn" data-action="ngap-stop"${running(c, id) ? '' : ' disabled'}>${c.safe(t.t('force_stop'))}</button></div></div>`;
+        <div class="ngap-buttons"><button type="button" class="ngsx-btn" data-action="ngap-disable"${PLATFORM.includes(id) ? ' disabled' : ''}>${c.safe(a.storeId ? NG.text('play-appinfo').t('uninstall_text') : t.t(off ? 'enable_text' : 'disable_text'))}</button><i></i><button type="button" class="ngsx-btn" data-action="ngap-stop"${running(c, id) ? '' : ' disabled'}>${c.safe(t.t('force_stop'))}</button></div></div>`;
       return `<div class="ngst-list">${head}${NG.settingsJoinRows([
         row('storage_settings', t.t('storage_settings'), t.fmt('storage_summary_format', null, NG.fileSize(c, total(c, id)), t.t('storage_type_internal'))),
         row('data_settings', t.t('data_usage_summary_title'), bytes ? t.fmt('data_summary_format', null, NG.fileSize(c, bytes), NG.dataCycleRange?.(c) || '') : t.t('no_data_usage')),
@@ -195,6 +195,7 @@
     action(c, name, el, cur) {
       const t = T(), id = cur.screen.slice(4), s = S(c);
       if (name === 'ngap-disable') {
+        if (NG.appsData[id]?.storeId) { NG.playUI.uninstall(c, NG.appsData[id].storeId, c => { c.ui.settings.stack.pop(); }); return true; }
         if (disabled(c, id)) { s.disabledApps = (s.disabledApps || []).filter(x => x !== id); c.save(); c.render(); return true; }
         c.dialog({message: t.t('app_disable_dlg_text'), buttons: [{label: t.t('dlg_cancel')}, {label: t.t('app_disable_dlg_positive'), action: c => {
           s.disabledApps = [...new Set([...(s.disabledApps || []), id])]; c.data.recentApps = (c.data.recentApps || []).filter(x => x !== id); c.save(); c.render();

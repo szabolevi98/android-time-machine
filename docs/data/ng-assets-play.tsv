@@ -1,0 +1,14 @@
+# Phonesky 7.4.31, angler N2G48C. Store V2 corpus branch.
+ps-menu.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_drawer
+ps-search.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_search
+ps-search-white.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_search_white
+ps-clear.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_menu_close_clear_cancel_light
+ps-wish.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_menu_wish_apps_off_v2
+ps-wish-on.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_menu_wish_apps_on_v2
+ps-installed.png	priv-app/Phonesky/Phonesky.apk	drawable/stat_notify_installed
+ps-share.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_share
+ps-library.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_library_apps
+ps-settings.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_google_settings
+ps-help.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_help_outline_24px
+ps-download.png	priv-app/Phonesky/Phonesky.apk	drawable/ic_file_download_grey
+ps-licenses.txt	priv-app/Phonesky/Phonesky.apk	res/raw/third_party_licenses

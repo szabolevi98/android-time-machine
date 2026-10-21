@@ -54,3 +54,7 @@ preferences drive_preferences ds_preferences notification_preferences backup_pre
 
 [youtube] YouTube com.google.android.apps.youtube.app.settings.SettingsActivity
 preference_headers general_prefs offline_prefs pair_with_tv_prefs subtitles_prefs
+
+[play] Phonesky com.google.android.finsky.activities.MainActivity
+settings
++auto_update_value_disabled +auto_update_value_enabled +auto_update_value_wifi_only

@@ -661,6 +661,19 @@ versions/7.1.2/assets/pk-com.google.android.videos.png	29384dce6415f26d	copy	ang
 versions/7.1.2/assets/pk-com.google.android.youtube.png	410baa2ebad0aeb5	copy	angler:/system/app/YouTube/YouTube.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		410baa2ebad0aeb5
 versions/7.1.2/assets/pk-com.google.vr.vrcore.png	b2006f7995bca4af	copy	angler:/system/app/GoogleVrCore/GoogleVrCore.apk!res/drawable-xxxhdpi-v4/app_icon.png	drawable-xxxhdpi-v4		b2006f7995bca4af
 versions/7.1.2/assets/pk-com.huawei.mmitest.png	ed242c427a2e4061	copy	angler:/system/app/HwMMITest/HwMMITest.apk!res/drawable/mmi_test.png	drawable		ed242c427a2e4061
+versions/7.1.2/assets/ps-clear.png	6d16824f60ff35fb	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xhdpi-v4/ic_menu_close_clear_cancel_light.png	drawable-xhdpi-v4		6d16824f60ff35fb
+versions/7.1.2/assets/ps-download.png	2b46fcfebd7246bf	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xxhdpi-v4/ic_file_download_grey.png	drawable-xxhdpi-v4		2b46fcfebd7246bf
+versions/7.1.2/assets/ps-help.png	72e3fd36206fda14	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xhdpi-v4/ic_help_outline_24px.png	drawable-xhdpi-v4		72e3fd36206fda14
+versions/7.1.2/assets/ps-installed.png	e71e74e091e24322	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xxhdpi-v4/stat_notify_installed.png	drawable-xxhdpi-v4		e71e74e091e24322
+versions/7.1.2/assets/ps-library.png	48c95dc486a9d1c5	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xxhdpi-v4/ic_library_apps.png	drawable-xxhdpi-v4		48c95dc486a9d1c5
+versions/7.1.2/assets/ps-licenses.txt	b78487c3eaa58899	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/raw/third_party_licenses	raw		b78487c3eaa58899
+versions/7.1.2/assets/ps-menu.png	26e3fae53029b54d	copy	angler:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_drawer.png	drawable-xxhdpi-v4		26e3fae53029b54d
+versions/7.1.2/assets/ps-search-white.png	aad661086a62e5bc	copy	angler:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_search_white.png	drawable-xxhdpi-v4		aad661086a62e5bc
+versions/7.1.2/assets/ps-search.png	7e463136f868a20d	copy	angler:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_search.png	drawable-xxhdpi-v4		7e463136f868a20d
+versions/7.1.2/assets/ps-settings.png	23202df5dcc6a207	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-hdpi-v4/ic_google_settings.png	drawable-hdpi-v4		23202df5dcc6a207
+versions/7.1.2/assets/ps-share.png	8a6d14a42b679304	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xhdpi-v4/ic_share.png	drawable-xhdpi-v4		8a6d14a42b679304
+versions/7.1.2/assets/ps-wish-on.png	bcd7d69e726ceb01	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xxhdpi-v4/ic_menu_wish_apps_on_v2.png	drawable-xxhdpi-v4		bcd7d69e726ceb01
+versions/7.1.2/assets/ps-wish.png	4912f24395979d32	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xxhdpi-v4/ic_menu_wish_apps_off_v2.png	drawable-xxhdpi-v4		4912f24395979d32
 versions/7.1.2/assets/sc-chrome-new-incognito-tab-shortcut.png	e2127d9ca211545e	copy	angler:/system/app/Chrome/Chrome.apk!res/drawable-xxxhdpi-v4/shortcut_incognito.png	drawable-xxxhdpi-v4		e2127d9ca211545e
 versions/7.1.2/assets/sc-chrome-new-tab-shortcut.png	46d91f507e817db8	copy	angler:/system/app/Chrome/Chrome.apk!res/drawable-xxxhdpi-v4/shortcut_newtab.png	drawable-xxxhdpi-v4		46d91f507e817db8
 versions/7.1.2/assets/sc-drag-handle.svg	2e821caf748fafcc	vector	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable/deep_shortcuts_drag_handle.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	4c29460cacc13b6d
