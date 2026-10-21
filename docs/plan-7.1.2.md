@@ -576,3 +576,12 @@ app's verification message) and Remove card. Gift card and loyalty search find n
 (Settings with the five setting_switch rows and the APK's third_party_licenses, How it works, Nearby stores and the
 web pages), the NFC-off and "Always use Android Pay in stores?" prompts read Settings' NFC and Tap & pay values.
 `node tests/browser/ng-pay.mjs` covers it in five languages and at phone width.
+
+## Project Fi continuation — 2026-10-21
+
+Tycho K.2.7.20's launcher activity (AccountDetailsActivity) needs a Project Fi account; the demo Google account has
+none, so it opens the activation flow in SuwThemeGlif.Light (suw_glif_template_compact, ic_fi_logo, the
+google_blue_500 accent): "Sign up for Project Fi" with the phone's account, fragment_account_chooser behind the text's
+own "use a different account." link, and "Sign up at fi.google.com" in Chrome. The image has these texts only in
+English (Fi was US-only), so every language shows them so. `docs/tools/mm-vectors.py` takes `VECTORS=-<name>` to draw
+one list quickly. `node tests/browser/ng-fi.mjs` covers it.
