@@ -1,0 +1,26 @@
+# Maps 9.34.1, angler N2G48C. Maps' own raster resources.
+mp-menu.png	app/Maps/Maps.apk	drawable/ic_qu_menu_grabber
+mp-mic.png	app/Maps/Maps.apk	drawable/ic_qu_mic
+mp-close.png	app/Maps/Maps.apk	drawable/ic_qu_close
+mp-directions.png	app/Maps/Maps.apk	drawable/ic_qu_directions
+mp-directions-white.png	app/Maps/Maps.apk	drawable/ic_qu_directions_white
+mp-navigation.png	app/Maps/Maps.apk	drawable/ic_qu_navigation_white
+mp-place.png	app/Maps/Maps.apk	drawable/ic_qu_place
+mp-star.png	app/Maps/Maps.apk	drawable/ic_qu_star_outlined_34
+mp-star-saved.png	app/Maps/Maps.apk	drawable/ic_qu_star_orange_34
+mp-locate.png	app/Maps/Maps.apk	drawable/quantum_ic_location_searching_black_24
+mp-driving.png	app/Maps/Maps.apk	drawable/quantum_ic_directions_car_white_24
+mp-transit.png	app/Maps/Maps.apk	drawable/quantum_ic_directions_transit_white_24
+mp-walking.png	app/Maps/Maps.apk	drawable/quantum_ic_directions_walk_white_24
+mp-bicycling.png	app/Maps/Maps.apk	drawable/quantum_ic_directions_bike_white_24
+mp-logo.png	app/Maps/Maps.apk	drawable/googlelogo_dark20_color_120x44
+mp-share.png	app/Maps/Maps.apk	drawable/ic_qu_share
+mp-bookmark.png	app/Maps/Maps.apk	drawable/ic_qu_bookmark
+mp-timeline.png	app/Maps/Maps.apk	drawable/quantum_ic_timeline_black_24
+mp-offline.png	app/Maps/Maps.apk	drawable/quantum_ic_offline_bolt_grey600_24
+mp-traffic.png	app/Maps/Maps.apk	drawable/ic_qu_traffic
+mp-satellite.png	app/Maps/Maps.apk	drawable/ic_qu_satellite
+mp-settings.png	app/Maps/Maps.apk	drawable/ic_qu_settings
+mp-help.png	app/Maps/Maps.apk	drawable/ic_qu_help
+mp-gmm_license_notices.txt	app/Maps/Maps.apk	res/raw/gmm_license_notices.txt
+mp-test.ogg	app/Maps/Maps.apk	res/raw/test_sound.ogg

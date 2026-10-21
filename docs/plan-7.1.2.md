@@ -249,3 +249,35 @@ simulator's saved permission exceptions. No real device/network permission is re
 Validation: the browser flow passes category navigation, saved switches, wildcard exceptions,
 per-site permission/reset, page-info routing, phone width and all five languages. Added model
 checks cover permission precedence, unrelated host boundaries and Chrome app-data reset.
+
+## Maps / Messenger locations continuation — 2026-10-21
+
+Maps 9.34.1 uses N2G48C's qu_* palette, 48dp targets, 24dp raster icons, native
+card/FAB dimensions, SheetPage/base_header/navigation layouts, settings XML and localized
+strings. Maps in this image lacks Hungarian resources; that locale deliberately uses
+its native English fallback. The Riverside streets, six places and route geometry are
+invented offline content, drawn afresh for this release. No map/GPS/account requests run.
+
+Search accepts Google and Contacts' q: intents. The map pans with a real pointer, zooms
+with wheel/two fingers and selects place markers. Place cards save/share, Your places
+keeps Home/Work, saved places and recent visits, layers show traffic/transit/bicycling/
+satellite, and directions accept endpoints, reverse them and choose four transport modes.
+Navigation advances along the drawn route and cancels when the activity is left. Native
+distance-unit preferences affect route/guidance formatting. Offline areas select a map
+rectangle, save its camera, show persistent download progress/expiry and allow rename/delete.
+The app's navigation preferences, sound test, Google voice settings, driving shortcut,
+system location and notification routes are connected. Open-source notices are copied
+byte for byte from gmm_license_notices.txt; terms/privacy open their Chrome URLs.
+
+Messenger's PlacePickerFragment uses the source 72dp list rows and PlaceCard's map/title/
+address layout. Locations wait with other attachments, survive send/reload, forward/share
+their place information and open Maps on a tap. The common Help/feedback activities remain
+on the separate release checklist, alongside other apps that use them.
+
+Validation: model checks cover endpoint validation, mode-dependent route timing, saved/
+recent place deduplication, text search and download progress after reload. Browser checks
+cover search/save, routes/modes, all navigation steps, Home label, area create/rename,
+imperial units, actual drag/marker pointer events, source notices, Messenger send/open,
+five languages and phone width. Chrome and Google browser regressions also pass.
+The full module/model suite passes 174 checks. Asset inventory regeneration has zero
+untraced files; the source rebuild check passes 845 files with zero problems.

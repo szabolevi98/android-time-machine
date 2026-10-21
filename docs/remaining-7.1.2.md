@@ -20,7 +20,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
       Core IME, layouts/accents/emoji, light/dark themes and preferences are implemented. Remaining:
       predictive/glide dictionary decoding, inline search access point, additional native theme packages,
       TalkBack and other enabled external input/settings activities.
-- [ ] Maps 9.34.1 and Messenger's location chooser.
+- [x] Maps 9.34.1 and Messenger's location chooser.
 - [ ] Hangouts 12.0 and demo replies.
 - [ ] Drive 2.4.452 and shared/uploaded files.
 - [ ] YouTube 11.41.56.
