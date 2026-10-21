@@ -85,6 +85,7 @@
   }
   function albumOf(c) { return state(c).albums.find(a => a.id === +U(c).album); }
   function shown(c) {
+    if(hasPhoto(c)&&current(c)?.appPrivate)return [current(c)];
     const u=U(c); let list=L().list(c,u.page==='trash' || u.page==='photo' && !!current(c)?.trashedAt);
     if (u.page==='album' || u.page==='photo' && u.fromAlbum) { const a=state(c).albums.find(a=>a.id===+(u.fromAlbum || u.album)); list=list.filter(p=>a?.ids.includes(p.id)); }
     if (u.page==='search') {

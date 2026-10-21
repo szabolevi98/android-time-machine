@@ -29,3 +29,5 @@ button.ngin-item:active{background:#0000001f}
 .ngin-spin{width:calc(24 * var(--dp));height:calc(24 * var(--dp));animation:ngin-rot 1.2s linear infinite}
 .ngin-spin circle{fill:none;stroke:#009688;stroke-width:5;stroke-dasharray:90 30}
 @keyframes ngin-rot{to{transform:rotate(360deg)}}
+
+button.ngin-upspin.folder { width:100%; border:0; color:inherit; text-align:left; font:inherit; background:transparent; cursor:pointer; }

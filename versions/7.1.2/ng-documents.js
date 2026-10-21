@@ -32,6 +32,7 @@
   NG.viewDocument=(c,file)=>{if(file.photo){c.open('photos',`photo:${file.photo}`);return;}c.open('documents');U(c).preview=file;c.render();};
   function open(c,n){const u=U(c);if(n.type==='dir'){u.path.push(n.id);u.selected=[];u.search=false;u.query='';c.render();return;}
     if(picker(c)?.mode==='pick'){finish(c,[n]);return;}
+    if(n.driveId){c.open('drive','file:'+n.driveId);return;}
     if(n.photo){c.open('photos',`photo:${n.photo}`);return;}
     u.preview=n;u.search=false;c.render();
   }

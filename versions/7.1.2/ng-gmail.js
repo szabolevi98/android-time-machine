@@ -334,7 +334,7 @@
         case 'nggm-forward': u.composeFrom = u.screen; u.draft = {to: '', subject: `Fwd: ${m.subject}`, body: `\n\n${m.body}`, attachments:(m.attachments||[]).map(f=>({...f}))}; u.screen = 'compose'; c.render(); return true;
         case 'nggm-cback': closeCompose(c, true); return true;
         // Attach file: DocumentsUI's GET_CONTENT picker.
-        case 'nggm-attach': NG.pickDocument(c,{onPick:(c,files)=>{u.draft.attachments=[...(u.draft.attachments||[]),...files.map(n=>({...n}))];}}); return true;
+        case 'nggm-attach': NG.pickDocument(c,{onPick:(c,files)=>{u.draft.attachments=[...(u.draft.attachments||[]),...files.map(n=>({...n,...(n.photo||n.mediaSnapshot?{photo:NG.media.fromDocument(c,n,'gmail')}:{})}))];}}); return true;
         case 'nggm-remove-attachment': u.draft.attachments.splice(+el.dataset.index,1); c.render(); return true;
         case 'nggm-open-attachment': { const files=u.screen==='compose'?u.draft.attachments:m?.attachments;const file=files?.[+el.dataset.index];if(file)NG.viewDocument(c,file);return true; }
         case 'nggm-send': {

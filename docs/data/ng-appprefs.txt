@@ -46,3 +46,5 @@ preferences_searchable_items preferences_searchable_items_in_apps background_ret
 topdeck_preferences suggest_preferences legal_settings hotword_settings hands_free_settings my_places_settings
 [maps] Maps com.google.android.maps.MapsActivity
 settings settings_navigation_prefs settings_tutorials_prefs
+[drive] Drive DocsPreferencesActivity
+preferences drive_preferences ds_preferences notification_preferences backup_preferences apps_predict_preferences

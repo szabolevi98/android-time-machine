@@ -71,15 +71,15 @@
         case 'group-done':{const thread=M().create(c,u.people.map(id=>P().byId(c,id)));if(thread){u.draftGroup=false;open(c,thread);}return true;}
         case 'open':if(Date.now()<(u.suppressUntil||0))return true;if(u.selected.length){const id=+el.dataset.id;u.selected=u.selected.includes(id)?u.selected.filter(v=>v!==id):[...u.selected,id];break;}open(c,M().find(c,el.dataset.id));return true;
         case 'archive':for(const id of u.selected){const thread=M().find(c,id);if(thread)thread.archived=!thread.archived;}u.selected=[];c.save();break;
-        case 'page':u.drawer=false;if(el.dataset.page==='dnd'){c.dialog({title:t('dnd_dialog_title'),items:[{label:t('dnd_off')},...[1,8,48].map(n=>({label:T().plural('dnd_hours',n,null,n)}))],onItem:(i,c)=>{p.dndUntil=i?Date.now()+[1,8,48][i-1]*36e5:0;c.save();c.render();}});return true;}if(el.dataset.page==='help'){c.open('help','hangouts');return true;}u.screen=el.dataset.page;break;
+        case 'page':u.drawer=false;if(el.dataset.page==='dnd'){c.dialog({title:t('dnd_dialog_title'),items:[{html:esc(c,t('dnd_off'))},...[1,8,48].map(n=>({html:esc(c,T().plural('dnd_hours',n,null,n))}))],onItem:(i,c)=>{p.dndUntil=i?Date.now()+[1,8,48][i-1]*36e5:0;c.save();c.render();}});return true;}if(el.dataset.page==='help'){c.open('help','hangouts');return true;}u.screen=el.dataset.page;break;
         case 'send':send(c,x);return true;
-        case 'attach-photo':NG.pickDocument(c,{mime:'image/*',onPick(c,nodes){const photo=nodes.find(n=>n.photo)?.photo;if(photo)(u.attach[x.id] ||= []).push({photo});}});return true;
-        case 'attach-location':c.dialog({title:NG.text('maps').t('PrebuiltBugle/place_picker_nearby_places'),items:NG.mapsModel.places.map(p=>({label:p.name})),onItem:(i,c)=>{const p=NG.mapsModel.places[i];(u.attach[x.id] ||= []).push({location:{id:p.id,name:p.name,address:p.address}});c.render();}});return true;
+        case 'attach-photo':NG.pickDocument(c,{mime:'image/*',onPick(c,nodes){const node=nodes.find(n=>n.photo||n.mediaSnapshot),photo=node&&NG.media.fromDocument(c,node,'hangouts');if(photo)(u.attach[x.id] ||= []).push({photo});}});return true;
+        case 'attach-location':c.dialog({title:NG.text('maps').t('PrebuiltBugle/place_picker_nearby_places'),items:NG.mapsModel.places.map(p=>({html:esc(c,p.name)})),onItem:(i,c)=>{const p=NG.mapsModel.places[i];(u.attach[x.id] ||= []).push({location:{id:p.id,name:p.name,address:p.address}});c.render();}});return true;
         case 'unattach':u.attach[x.id].splice(+el.dataset.index,1);break;
         case 'photo':c.open('photos','photo:'+el.dataset.id);return true;
         case 'map':c.open('maps','place:'+el.dataset.id);return true;
         case 'rename':edit(c,t('realtimechat_conversation_rename_dialog_title'),M().title(x),text=>x.name=text);return true;
-        case 'notifications':{const values=['all','important_only','none'];c.dialog({title:t('conversation_notifications_option'),items:values.map(v=>({label:t('conversation_notifications_option_'+v)})),onItem:(i,c)=>{x.notifications=values[i];c.save();c.render();}});return true;}
+        case 'notifications':{const values=['all','important_only','none'];c.dialog({title:t('conversation_notifications_option'),items:values.map(v=>({html:esc(c,t('conversation_notifications_option_'+v))})),onItem:(i,c)=>{x.notifications=values[i];c.save();c.render();}});return true;}
         case 'leave':x.left=true;x.archived=true;u.screen='';c.save();break;
         case 'delete':confirmDelete(c,[x.id]);return true;
         case 'contact':c.open('contacts','contact:'+el.dataset.id);return true;

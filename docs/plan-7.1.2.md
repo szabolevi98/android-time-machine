@@ -312,3 +312,47 @@ RemoteInput with draft preservation, real held-message forwarding, Documents and
 Photos share integration, call controls, block/mute, groups/rename/leave, archive,
 settings/sign-in, all five languages and phone width. Screenshots were inspected
 to verify native bubble tints and that photos are not tinted with their backgrounds.
+
+
+## Drive file/provider/widget continuation — 2026-10-21
+
+Drive 2.4.452.15.46 uses the angler APK's white toolbar, grey200 document list,
+72dp rows and 40dp type icons, native create panel, scanner controls and widget.
+The asset manifest adds 27 original raster resources, including its widget 9-patch.
+Texts follow the APK's own fallback where Hungarian/German resources are absent.
+PreferenceActivity combines the base preferences with drive_preferences at runtime;
+release UI excludes the developer-tools category. The widget's white text was
+verified against Widget.Text, not inferred from the main app's colours.
+
+The browser-local Drive model has stable IDs, folders, upload, rename, star/offline,
+search/sort/list/grid, move, trash/restore/permanent deletion, file details,
+collaborator roles and link-sharing metadata. Shared-upload dialogs select a target
+folder and retain the edited file name. Native editor-install prompts cover Google
+Docs/Sheets/Slides, whose editor APKs are absent from the image. Cloud operations
+are local demonstrations; no invitations or real cloud requests are sent.
+
+DocumentsUI and Drive share stable provider URIs. Cross-provider copy/move rolls
+back failures before removing any source. Image uploads own independent snapshots;
+mail/chat attachments own private cache copies hidden from Photos and media roots.
+Messenger retains a provider snapshot when an outgoing MMS references a local photo.
+Downloaded image copies become public MediaStore entries. Clearing Drive's preview
+cache preserves Drive records and pinned/offline files.
+
+The scanner captures an invented meetup page, supports multiple pages, rotation,
+colour/B&W, pointer crop handles aligned with the letterboxed page and retake in
+place. Saved PDF previews retain their page edits. The native 4x1 widget configures
+the demo account; cancelling removes only the new widget. Home/upload/scan/create
+buttons route to the app, and repeated entry discards stale scanner state.
+
+Validation: 184 module checks pass; the inventory rebuilds 896 files with zero
+problems. Drive browser coverage includes sharing, folder destinations, image export,
+scan crop/rotate/retake order, provider URIs, cache clearing, five languages and
+phone width. Photos, Documents/Gmail and Hangouts regressions pass. Real held-drag
+widget placement, cancelled and accepted configuration, scan/create/upload and native
+clock widgets pass. Screenshots were inspected for the phone list, scanned pages and
+widget. Three Hangouts list dialogs now use escaped item HTML as required by the
+framework dialog renderer.
+
+Drive's audio/video previews, scan preference effects and remaining service-backed
+settings/activity/help routes are still in the release checklist; this milestone
+does not mark the application or the whole version finished.

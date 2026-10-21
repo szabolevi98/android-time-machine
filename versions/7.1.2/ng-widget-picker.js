@@ -4,7 +4,7 @@
 (() => {
   'use strict';
   const old=NG.widgets, providers=()=>NG.widgetProviders||[], label=(c,w)=>w.label?.[c.lang]||w.label?.en||w.id;
-  const known=id=>id==='digital'||id==='analog'||id==='search-search_widget_info'||id==='search-predictive_cards_widget_info';
+  const known=id=>!!NG.widgetViews?.[id]||id==='digital'||id==='analog'||id==='search-search_widget_info'||id==='search-predictive_cards_widget_info';
   function search(c){return `<div class="ngwc-search np-gel-search_bg"><button type="button" data-action="ngwg-search"><img src="assets/gel-ic_searchbox_google.png" alt="Google"></button><button type="button" data-action="ngwg-voice" aria-label="${c.safe(NG.text('launcher').t('accessibility_voice_search_button'))}"><img src="assets/gel-ic_mic.png" alt=""></button></div>`;}
   function analog(c){const now=new Date(),h=(now.getHours()%12)*30+now.getMinutes()/2,m=now.getMinutes()*6;return `<button type="button" class="ngwc-analog" data-action="ngwg-open" data-app="clock"><img src="assets/wid-clock-dial.png" alt=""><img class="hour" src="assets/wid-clock-hour.png" alt="" style="transform:rotate(${h}deg)"><img class="minute" src="assets/wid-clock-minute.png" alt="" style="transform:rotate(${m}deg)"></button>`;}
   function now(c){const e=NG.google.nextEvent(c),temp=c.data.google?.units==='f'?'64°':'18°';return `<div class="ngwc-now np-wid-now-frame"><button type="button" data-action="ngwg-now"><span>Riverside</span><div><img src="assets/gg-weather.png" alt=""><b>${temp}</b><small>${c.safe(NG.text('google').t('weather_conditions'))}</small></div></button>${e?`<button type="button" data-action="ngwg-open" data-app="calendar"><b>${c.safe(e.title)}</b><small>${c.safe(e.date)} ${c.safe(e.start||'')}</small></button>`:''}</div>`;}
@@ -12,11 +12,13 @@
     ...old,
     info:id=>providers().find(w=>w.id===id)||old.info(id),
     implemented:known,
+    configure(c,it,done){const view=NG.widgetViews?.[it.w];if(view?.configure)view.configure(c,it,done);else done(true);},
     home(c,it){
+      if(NG.widgetViews?.[it.w])return NG.widgetViews[it.w].render(c,it);
       if(it.w==='digital')return old.home(c,it);if(it.w==='analog')return analog(c);if(it.w==='search-search_widget_info')return search(c);if(it.w==='search-predictive_cards_widget_info')return now(c);
       const p=providers().find(w=>w.id===it.w);return p?`<button type="button" class="ngwc-pending" data-action="ngwg-open" data-app="${p.app}"><img src="${c.safe(p.preview||NG.appsData[p.app]?.icon||'')}" alt=""><b>${c.safe(label(c,p))}</b><span>${c.safe(c.t('Not built yet'))}</span></button>`:'';
     },
-    action(name,el,e,c){if(name==='ngwg-search'){NG.googleOpen(c,false);return true;}if(name==='ngwg-voice'){NG.googleOpen(c,true);return true;}if(name==='ngwg-now'){c.open('now');return true;}return old.action(name,el,e,c);}
+    action(name,el,e,c){for(const view of Object.values(NG.widgetViews||{}))if(view.action?.(name,el,e,c))return true;if(name==='ngwg-search'){NG.googleOpen(c,false);return true;}if(name==='ngwg-voice'){NG.googleOpen(c,true);return true;}if(name==='ngwg-now'){c.open('now');return true;}return old.action(name,el,e,c);}
   };
   NG.register('widgets',{
     app:false,statusColor:()=> 'transparent',

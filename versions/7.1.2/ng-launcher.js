@@ -296,8 +296,10 @@
       const at = nearest(list, t.fx - wi.spanX / 2 + .5, t.fy - wi.spanY / 2 + .5, wi.spanX, wi.spanY, self);
       if (!at) { strip(); c.render(); c.toast(T().t('out_of_space'), false); return; }
       take();
-      h.pages[page - 1].push({...(d.from === 'ws' ? fresh : {}), type: 'widget', w: wi.id || d.item.w, spanX: wi.spanX, spanY: wi.spanY, x: at.x, y: at.y});
-      saveRender(); return;
+      const placed={...(d.from === 'ws' ? fresh : {}), type: 'widget', w: wi.id || d.item.w, spanX: wi.spanX, spanY: wi.spanY, x: at.x, y: at.y};
+      h.pages[page - 1].push(placed);saveRender();
+      if(d.from!=='ws')NG.widgets?.configure?.(c,placed,ok=>{if(!ok){const list=h.pages.find(p=>p.includes(placed));if(list)list.splice(list.indexOf(placed),1);}saveRender();});
+      return;
     }
     if (wi) { strip(); c.render(); return; }
     if (t?.kind === 'ws') {
@@ -438,7 +440,7 @@
       if (name === 'ngh-allapps') { c.open('drawer'); return true; }
       if (name === 'ngh-search') { NG.googleOpen ? NG.googleOpen(c, false) : c.open('search'); return true; }
       if (name === 'ngh-voice') { NG.googleOpen ? NG.googleOpen(c, true) : c.open('search', 'voice'); return true; }
-      if (name.startsWith('ngwg-') && NG.widgets) return NG.widgets.action(name, el, event, c);
+      if (NG.widgets?.action(name, el, event, c)) return true;
       if (name === 'ngh-cling') { c.data.homeClingSeen = true; c.save(); c.render(); return true; }
       if (name === 'ngh-ov') { st.overview = false; c.open({wallpaper: 'wallpapers', widget: 'widgets', setting: 'home-settings'}[el.dataset.ov]); return true; }
       return false;

@@ -69,18 +69,22 @@
     }}]});
   }
   // Drive's UploadSharedItemActivity: the dialog with the document's title, the account and the folder.
-  function drive(c, s) {
-    const t = T(), untitled = t.t('Drive/upload_untitled_file_title'), title = s.name || s.subject || untitled;
+  function drive(c, s, parent = '', retainedName) {
+    const t = T(), untitled = t.t('Drive/upload_untitled_file_title'), title = retainedName ?? s.name ?? s.subject ?? untitled;
+    const folder=NG.driveModel?.find(c,parent)?.name||t.t('Drive/menu_my_drive');
     const html = `<div class="ngin-up"><div class="ngin-uplabel">${esc(c, t.t('Drive/upload_document_title'))}</div><input class="ngin-upname" value="${esc(c, title)}" autocomplete="off">
       <div class="ngin-uplabel">${esc(c, t.t('Drive/upload_account'))}</div><div class="ngin-upspin">${esc(c, NG.account?.email || '')}</div>
-      <div class="ngin-uplabel">${esc(c, t.t('Drive/upload_folder'))}</div><div class="ngin-upspin folder"><img src="assets/dr-ic_type_folder.png" alt="">${esc(c, t.t('Drive/menu_my_drive'))}</div></div>`;
+      <div class="ngin-uplabel">${esc(c, t.t('Drive/upload_folder'))}</div><button type="button" class="ngin-upspin folder"><img src="assets/dr-ic_type_folder.png" alt="">${esc(c,folder)}</button></div>`;
     let name = title;
-    c.dialog({title: t.t('Drive/upload_shared_item_title'), html, mount: (c, win) => { const f = win.querySelector('.ngin-upname'); f.addEventListener('input', () => { name = f.value; }); },
-      buttons: [{label: t.t('Drive/upload_cancel')}, {label: t.t('Drive/upload_shared_item_confirm'), action: c => {
-        const files = c.data.driveFiles || (c.data.driveFiles = []), n = name.trim() || untitled;
-        files.push({type: s.kind === 'image' ? 'image' : 'file', name: n}); c.save();
-        c.toast(t.fmt('Drive/grid_sync_upload_label_format', null, n));
-      }}]});
+    c.dialog({title: t.t('Drive/upload_shared_item_title'), html, mount: (c, win) => {
+      const f = win.querySelector('.ngin-upname'); f.addEventListener('input', () => { name = f.value; });
+      win.querySelector('.folder').addEventListener('click',()=>{if(!NG.driveFolderPick)return;c.closeDialog();NG.driveFolderPick(c,parent,(c,chosen)=>drive(c,s,chosen===undefined?parent:chosen,name));});
+    }, buttons: [{label: t.t('Drive/upload_cancel')}, {label: t.t('Drive/upload_shared_item_confirm'), action: c => {
+      const n=name.trim()||untitled;
+      if(NG.driveModel){const snapshot=s.photoSnapshot||(s.photo&&NG.photoLibrary.find(c,s.photo));NG.driveModel.upload(c,{name:n,type:s.kind==='image'?'image':'text',content:s.text||'',size:snapshot?3200000:(s.text||'').length,mediaSnapshot:snapshot},parent);}
+      else (c.data.driveFiles ||= []).push({type:s.kind==='image'?'image':'file',name:n});
+      c.save();c.toast(t.fmt('Drive/upload_completed_announcement',null,n));
+    }}]});
   }
   // Photos' UploadContentActivity: the account to upload to, then Upload.
   function photos(c) {
@@ -107,7 +111,8 @@
       if (id === 'photos') { photos(c); return; }
       if (id === 'beam') { beam(c); return; }
       if (id === 'cloudprint') { c.open('print-preview'); return; }
-      c.ui.shareData = {subject: s.subject || '', text: s.text || '', kind: s.kind, name: s.name || '', photo: s.photo};
+      const photo=s.kind==='image'&&['gmail','messenger','hangouts'].includes(id)?NG.media.fromDocument(c,{name:s.name,photo:s.photo,mediaSnapshot:s.photoSnapshot},id):s.photo;
+      c.ui.shareData = {subject: s.subject || '', text: s.text || '', kind: s.kind, name: s.name || '', photo};
       c.open(id, 'share');
     });
   }

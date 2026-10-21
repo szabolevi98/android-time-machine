@@ -217,14 +217,14 @@ NG.strings('intents', {
 "de"
 ]
 },
-"Drive/grid_sync_upload_label_format": {
-"res": "angler:Drive:grid_sync_upload_label_format",
+"Drive/upload_completed_announcement": {
+"res": "angler:Drive:upload_completed_announcement",
 "args": 1,
-"en": "Uploading\n%1$s / %2$s",
-"fr": "Importation \n%1$s/%2$s",
-"es": "Subiendo\n%1$s / %2$s",
-"hu": "Uploading\n%1$s / %2$s",
-"de": "Uploading\n%1$s / %2$s",
+"en": "%1$s has uploaded successfully.",
+"fr": "Le transfert de %1$s est terminé.",
+"es": "%1$s se ha subido correctamente.",
+"hu": "%1$s has uploaded successfully.",
+"de": "%1$s has uploaded successfully.",
 "untranslated": [
 "hu",
 "de"

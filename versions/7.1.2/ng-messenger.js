@@ -207,7 +207,7 @@
     const sending = m.status === 'sending', selected = u.msel === m.id;
     const showMeta = sending || !next || u.details[m.id];
     const meta = sending ? `${esc(c, t.t('message_status_sending'))}<i class="ngms-dots"><i></i><i></i><i></i></i>` : esc(c, m.mine ? when(c, m.time, false) + t.t('message_metadata_separator') + t.t('sms_text') : when(c, m.time, false));
-    const photo = m.photo && (NG.media?.photos(c) || []).find(p => p.id === m.photo);
+    const photo = m.photo && NG.photoLibrary.find(c,m.photo);
     let text = m.text ? esc(c, m.text) : '';
     if (text && hits && u.csearch?.q) { const q = u.csearch.q.toLowerCase(), raw = m.text, low = raw.toLowerCase(); let out = '', k = 0, j; while ((j = low.indexOf(q, k)) >= 0) { out += esc(c, raw.slice(k, j)) + `<mark${hits.cur === hits.n ? ' class="cur"' : ''}>${esc(c, raw.slice(j, j + q.length))}</mark>`; hits.n++; k = j + q.length; } text = out + esc(c, raw.slice(k)); }
     const att = m.location ? `<button type="button" class="ngmaps-message" data-action="ngms-location-open" data-place="${esc(c,m.location.id)}">${NG.mapsPreview(c,m.location.id)}<b>${esc(c,m.location.name)}</b><small>${esc(c,m.location.address)}</small></button>` : photo ? `<div class="ngms-att${m.text ? ' with' : ''}">${NG.media.svg(photo, 'ngms-photo', 4 / 3)}</div>` : m.sticker ? `<div class="ngms-att sticker"><img src="${A(`foodies_static_${m.sticker}`)}" alt=""></div>` : '';
@@ -231,7 +231,7 @@
     const hits = u.csearch?.q ? {n: 0, cur: u.csearch.cur || 0} : null;
     const msgs = x.messages.map((m, i) => messageView(c, x, m, i, color, hits)).join('');
     const details = hits ? `<div class="ngms-sdetails"><span>${esc(c, hits.n ? t.fmt('search_matches', null, Math.min(hits.cur, hits.n - 1) + 1, hits.n) : '')}</span>${iconBtn(c, 'ngms-sprev', 'ic_keyboard_arrow_left_light', t.t('search_prev_content_description'))}${iconBtn(c, 'ngms-snext', 'ic_keyboard_arrow_right_light', t.t('search_next_content_description'))}</div>` : '';
-    const pend = pending.length ? `<div class="ngms-pending">${pending.map((a, i) => { const p = a.photo && (NG.media?.photos(c) || []).find(q => q.id === a.photo); const inner = a.location ? NG.mapsPreview(c,a.location.id) : p ? NG.media.svg(p, '', 1) : a.sticker ? `<img src="${A(`foodies_static_${a.sticker}`)}" alt="">` : `<span class="ngms-pvcard">${icon('ic_person_light')}</span>`; return `<span class="ngms-pthumb">${inner}<button type="button" data-action="ngms-unattach" data-i="${i}">${icon('ic_remove_small_light')}</button></span>`; }).join('')}</div>` : '';
+    const pend = pending.length ? `<div class="ngms-pending">${pending.map((a, i) => { const p = a.photo && NG.photoLibrary.find(c,a.photo); const inner = a.location ? NG.mapsPreview(c,a.location.id) : p ? NG.media.svg(p, '', 1) : a.sticker ? `<img src="${A(`foodies_static_${a.sticker}`)}" alt="">` : `<span class="ngms-pvcard">${icon('ic_person_light')}</span>`; return `<span class="ngms-pthumb">${inner}<button type="button" data-action="ngms-unattach" data-i="${i}">${icon('ic_remove_small_light')}</button></span>`; }).join('')}</div>` : '';
     const canSend = !!(draft.trim() || pending.length);
     const hint = pending.length ? 'compose_message_view_hint_text_with_attachment' : 'compose_message_view_sms_hint_text';
     return `<div class="ngms ngms-convscreen" style="--pal:${color}">${head}${details}
@@ -299,6 +299,7 @@
     let id = nextId(c) - 1;
     // An MMS: each attachment its own part (bubble), the text with the last one.
     const out = pending.length ? pending.map((a, i) => ({id: ++id, mine: true, ...a, text: i === pending.length - 1 ? text : '', time: Date.now(), status: 'sending'})) : [{id: ++id, mine: true, text, time: Date.now(), status: 'sending'}];
+    for(const message of out)if(message.photo)message.photo=NG.media.fromDocument(c,{photo:message.photo,name:'Photo.jpg'},'sms-provider');
     x.messages.push(...out); x.read = true; u.draft[x.id] = ''; u.attach[x.id] = []; u.panel = ''; c.save(); c.render();
     deliver(c, x, out);
     answer(c, x);

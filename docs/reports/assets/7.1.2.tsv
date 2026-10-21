@@ -272,6 +272,33 @@ versions/7.1.2/assets/du-ic_root_documents.svg	551b4c7770305cca	vector	angler:/s
 versions/7.1.2/assets/du-ic_root_download_alpha.png	89717f83eced4d8f	copy	angler:/system/priv-app/DocumentsUI/DocumentsUI.apk!res/drawable-xxxhdpi-v4/ic_root_download_alpha.png	drawable-xxxhdpi-v4		89717f83eced4d8f
 versions/7.1.2/assets/du-ic_root_recent_alpha.png	a1d90935faf73b77	copy	angler:/system/priv-app/DocumentsUI/DocumentsUI.apk!res/drawable-xxxhdpi-v4/ic_root_recent_alpha.png	drawable-xxxhdpi-v4		a1d90935faf73b77
 versions/7.1.2/assets/du-ic_root_smartphone.svg	965db07a8b1235cf	vector	angler:/system/priv-app/DocumentsUI/DocumentsUI.apk!res/drawable/ic_root_smartphone.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	6e4ca91e71490962
+versions/7.1.2/assets/dv-add.png	41a8b716cdfc392d	copy	angler:/system/app/DMAgent/DMAgent.apk!res/drawable-xxxhdpi-v4/ic_add.png	drawable-xxxhdpi-v4		41a8b716cdfc392d
+versions/7.1.2/assets/dv-back.png	dc88c631c0d89f54	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_arrow_back_grey600_24.png	drawable-xxxhdpi-v4		dc88c631c0d89f54
+versions/7.1.2/assets/dv-check.png	bbc56583930a1b66	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xhdpi-v4/ds_checkmark_holo_light.png	drawable-xhdpi-v4		bbc56583930a1b66
+versions/7.1.2/assets/dv-create-doc.png	eb448c3058b63370	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_createpanel_doc.png	drawable-xxxhdpi-v4		eb448c3058b63370
+versions/7.1.2/assets/dv-create-sheet.png	6e91de6e09bcb693	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_createpanel_sheet.png	drawable-xxxhdpi-v4		6e91de6e09bcb693
+versions/7.1.2/assets/dv-create-slide.png	5de83648bdbc9960	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_createpanel_slide.png	drawable-xxxhdpi-v4		5de83648bdbc9960
+versions/7.1.2/assets/dv-empty.png	fb404cc1c506e679	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_empty_drive.png	drawable-xxxhdpi-v4		fb404cc1c506e679
+versions/7.1.2/assets/dv-menu.png	89fe65e345669d57	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_menu_grey600_24.png	drawable-xxxhdpi-v4		89fe65e345669d57
+versions/7.1.2/assets/dv-more.png	0d8dec7123b8cdad	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_more_vert_grey600_24.png	drawable-xxxhdpi-v4		0d8dec7123b8cdad
+versions/7.1.2/assets/dv-retake.png	8961315517a8812b	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xhdpi-v4/ds_retake_shutter_holo.png	drawable-xhdpi-v4		8961315517a8812b
+versions/7.1.2/assets/dv-search.png	db483f0c839f1420	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_menu_search_alpha.png	drawable-xxxhdpi-v4		db483f0c839f1420
+versions/7.1.2/assets/dv-shutter.png	0c19310579db5aac	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xhdpi-v4/ds_shutter_holo.png	drawable-xhdpi-v4		0c19310579db5aac
+versions/7.1.2/assets/dv-type-audio.png	1e2dca6637b4c0d6	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_audio.png	drawable-xxxhdpi-v4		1e2dca6637b4c0d6
+versions/7.1.2/assets/dv-type-doc.png	cc9fbec7cac2a9e1	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_doc.png	drawable-xxxhdpi-v4		cc9fbec7cac2a9e1
+versions/7.1.2/assets/dv-type-file.png	7ebb3ae587678114	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_file.png	drawable-xxxhdpi-v4		7ebb3ae587678114
+versions/7.1.2/assets/dv-type-image.png	9b6a87e34c66fdba	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_image.png	drawable-xxxhdpi-v4		9b6a87e34c66fdba
+versions/7.1.2/assets/dv-type-pdf.png	799ff7746fe2d761	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/file_type_small_pdf.png	drawable-xxxhdpi-v4		799ff7746fe2d761
+versions/7.1.2/assets/dv-type-sheet.png	55e136646d75205e	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_sheet.png	drawable-xxxhdpi-v4		55e136646d75205e
+versions/7.1.2/assets/dv-type-slide.png	82654d5c293320cd	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_presentation.png	drawable-xxxhdpi-v4		82654d5c293320cd
+versions/7.1.2/assets/dv-type-text.png	7ebb3ae587678114	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_file.png	drawable-xxxhdpi-v4		7ebb3ae587678114
+versions/7.1.2/assets/dv-type-video.png	6ab0cc8e090e3871	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_video.png	drawable-xxxhdpi-v4		6ab0cc8e090e3871
+versions/7.1.2/assets/dv-upload.png	f2c700bb6e544e37	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_file_upload_googblue_24.png	drawable-xxxhdpi-v4		f2c700bb6e544e37
+versions/7.1.2/assets/dv-widget-background.9.png	11653f85b1f77d84	copy	angler:/system/app/Drive/Drive.apk!res/drawable-hdpi-v4/widget_background.9.png	drawable-hdpi-v4		11653f85b1f77d84
+versions/7.1.2/assets/dv-widget-logo.png	1b01830f7cbc3b85	copy	angler:/system/app/Drive/Drive.apk!res/drawable-hdpi-v4/widget_app_logo.png	drawable-hdpi-v4		1b01830f7cbc3b85
+versions/7.1.2/assets/dv-widget-new.png	00f6fbcb539fa8b5	copy	angler:/system/app/Drive/Drive.apk!res/drawable-hdpi-v4/widget_newdoc.png	drawable-hdpi-v4		00f6fbcb539fa8b5
+versions/7.1.2/assets/dv-widget-scan.png	cd6e64f2d51e5bd0	copy	angler:/system/app/Drive/Drive.apk!res/drawable-hdpi-v4/widget_newdocfromcamera.png	drawable-hdpi-v4		cd6e64f2d51e5bd0
+versions/7.1.2/assets/dv-widget-upload.png	72ed989a7153e213	copy	angler:/system/app/Drive/Drive.apk!res/drawable-hdpi-v4/widget_upload.png	drawable-hdpi-v4		72ed989a7153e213
 versions/7.1.2/assets/ei-ic_account_circle.svg	3837c755b29bfeb0	vector	angler:/system/priv-app/EmergencyInfo/EmergencyInfo.apk!res/drawable/ic_account_circle.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	507a3820e27fdca0
 versions/7.1.2/assets/ei-ic_add_24dp.svg	85a60e58477ab7f8	vector	angler:/system/priv-app/EmergencyInfo/EmergencyInfo.apk!res/drawable/ic_add_24dp.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	ad1675d0b8777efe
 versions/7.1.2/assets/ei-ic_address_black_24dp.svg	b24a43b62aec8157	vector	angler:/system/priv-app/EmergencyInfo/EmergencyInfo.apk!res/drawable/ic_address_black_24dp.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	40d6337962623ea9

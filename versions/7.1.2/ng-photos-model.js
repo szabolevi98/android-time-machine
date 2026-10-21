@@ -18,7 +18,7 @@
     const ids = all(c).filter(p => p.trashedAt && now - p.trashedAt >= 60 * DAY).map(p => p.id);
     if (ids.length) purge(c, ids);
   }
-  const list = (c, trash = false) => all(c).filter(p => !!p.trashedAt === trash).slice().sort((a, b) => b.time - a.time || b.id - a.id);
+  const list = (c, trash = false) => all(c).filter(p => !p.appPrivate && !!p.trashedAt === trash).slice().sort((a, b) => b.time - a.time || b.id - a.id);
   function trash(c, ids, now = Date.now()) { for (const id of ids) { const p = find(c, id); if (p && !p.trashedAt) p.trashedAt = now; } c.save(); }
   function restore(c, ids) { for (const id of ids) { const p = find(c, id); if (p) delete p.trashedAt; } c.save(); }
   function album(c, name, ids, shared = false) {
@@ -37,7 +37,7 @@
   }
   function saveEdit(c, id, e, copy = false) {
     const p = find(c, id); if (!p || p.trashedAt) return null;
-    if (copy) { const {id: oldId, ...item} = clone(p); return NG.media.add(c, {...item, edits: edits(e), time: Date.now()}); }
+    if (copy) { const {id: oldId, appPrivate, ...item} = clone(p); return NG.media.add(c, {...item, edits: edits(e), time: Date.now()}); }
     p.edits = edits(e); c.save(); return p;
   }
   NG.photoLibrary = {state, find, list, trash, restore, purge, expire, album, addTo, edits, saveEdit};
