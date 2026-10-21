@@ -23,3 +23,6 @@
 .ngyt-stats { position:absolute; z-index:2; top:calc(32 * var(--dp)); left:calc(8 * var(--dp)); padding:calc(8 * var(--dp)); background:#000b; color:white; font:calc(11 * var(--dp))/1.5 monospace; }.ngyt-stats button { float:right; color:white; background:none; border:0; margin-left:calc(8 * var(--dp)); }
 
 .ngyt-bar [data-action="ngyt-cast"] img { filter:brightness(0) invert(1); }
+
+/* The player applies its white control tint to the light-library glyph alpha. */
+.ngyt-cmiddle .ngyt-icon img { filter:brightness(0) invert(1); }
