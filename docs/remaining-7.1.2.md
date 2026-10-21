@@ -2,6 +2,7 @@
 
 Owner authorization 2026-10-20: continue until the version is fully built; commit and push validated milestones.
 User limit 2026-10-21: monitor the Codex 300-minute usage window; stop work when remaining usage reaches 22% (usedPercent >= 78), and wait for the user's explicit permission to continue. Check before work and regularly between bounded work batches.
+Owner update 2026-10-21: suspend this usage stop until the owner explicitly asks to apply it again.
 The source and completion rules remain in plan-7.1.2.md. This is a concrete continuation checklist, not a replacement scope.
 
 ## Completed milestones
@@ -41,7 +42,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
       Static shortcuts for later apps already carry their source shortcut ID through `shortcut:<id>`.
 - [ ] Camera guided panorama / Photo Sphere / Lens Blur, Smartburst, volume key action.
 - [ ] Photos native CPE preset catalogue investigation and final polish.
-- [ ] Chrome site settings category pages.
+- [x] Chrome site settings category pages, per-site permissions, exceptions and reset.
 - [ ] Calendar Goal flow and any service-backed activity still left as a not-built card.
 - [ ] Sweep all direct `missing(...)` branches and external activity routes; no unfinished card may remain at release.
 

@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {nougat,sleep} from './ng-harness.mjs';
+const b=await nougat(),back=()=>b.click('#nav-bar [data-key="back"]');
+const settings=async()=>{await b.act('ngcr-menu');await b.click('#overlay-root [data-action="ngcr-m-settings"]');};
+try{
+ await b.language('en');await b.open('chrome','url:https://www.android.com/');await settings();
+ const root=await b.ev(`(()=>{const el=[...document.querySelectorAll('.ngap [data-action="ngap-pref"]')].find(e=>e.textContent.includes('Site settings'));return el?.dataset.p})()`);assert.ok(root);await b.click(`[data-action="ngap-pref"][data-p="${root}"]`);
+ const js=await b.ev(`(()=>{const el=[...document.querySelectorAll('.ngap [data-action="ngap-pref"]')].find(e=>e.textContent.includes('JavaScript'));return el?.dataset.p})()`);await b.click(`[data-action="ngap-pref"][data-p="${js}"]`);await b.click('[data-action="ngcs-toggle"]');
+ assert.equal((await b.save()).chrome.siteSettings.defaults.javascript,'block');await b.click('[data-action="ngcs-add"]');await b.ev(`(()=>{const i=document.querySelector('#overlay-root input');i.value='[*.]example.com';i.dispatchEvent(new Event('input',{bubbles:true}));})()`);await b.click('[data-action="ngdlg-button"][data-index="1"]');
+ assert.equal((await b.save()).chrome.siteSettings.sites['[*.]example.com'].javascript,'allow');await b.click('[data-action="ngcs-site"]');await b.click('[data-action="ngcs-permission"][data-permission="camera"]');await b.click('[data-action="ngdlg-item"][data-index="1"]');assert.equal((await b.save()).chrome.siteSettings.sites['[*.]example.com'].camera,'block');
+ await b.click('[data-action="ngcs-reset"]');await b.click('[data-action="ngdlg-button"][data-index="1"]');assert.deepEqual((await b.save()).chrome.siteSettings.sites,{});await b.shot('7.1.2-chrome-sites');
+ for(const lang of ['en','hu','de','fr','es']){await b.language(lang);await b.open('chrome','url:https://www.android.com/');await settings();await b.click(`[data-action="ngap-pref"][data-p="${root}"]`);const paths=await b.ev(`[...document.querySelectorAll('.ngap [data-action="ngap-pref"]')].map(e=>e.dataset.p)`);for(const p of paths){await b.click(`[data-action="ngap-pref"][data-p="${p}"]`);await back();}assert.deepEqual(await b.ev(`[...AndroidStrings.misses]`),[],lang);}
+ await b.open('chrome','url:https://www.android.com/');await b.act('ngcr-menu');await b.click('#overlay-root [data-action="ngcr-m-info"]');await b.click('#overlay-root [data-action="ngdlg-button"]');assert.equal(await b.ev(`document.querySelector('.ngap-bar')?.textContent.includes('www.android.com') || document.querySelector('#viewport').textContent.includes('www.android.com')`),true);
+ await b.send('Emulation.setDeviceMetricsOverride',{width:375,height:812,deviceScaleFactor:1,mobile:true});await sleep(250);assert.equal(await b.ev(`document.querySelector('#viewport').scrollWidth<=document.querySelector('#viewport').clientWidth+1`),true);await b.shot('7.1.2-chrome-sites-phone');
+ b.check();console.log('Chrome site settings checks passed: category navigation, persistent global switches, wildcard exception, per-site permission/reset, page-info routing, phone width and five languages.');
+}catch(error){await b.shot('7.1.2-chrome-sites-failure');throw error;}finally{b.close();}

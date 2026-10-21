@@ -235,3 +235,17 @@ problems. Browser checks cover wallpaper targets/cancel/persistence, shortcut la
 transitions, real widget placement and spans, five languages and mobile bounds.
 The full 169-test module/model suite also passes with four concurrent test files; the isolated
 text-entry audit passes with 19,408 entries. Google search regression checks remain green.
+
+## Chrome site settings continuation — 2026-10-21
+
+Chrome 55's website_preferences.xml and single_website_preferences.xml now supply category
+switches, cookie/vibration dependants, allowed/blocked exception groups, all sites, storage,
+USB's native empty state and per-site permission lists with Clear & reset. Exceptions persist
+under Chrome's app data. Exact hosts override wildcards; the longest matching wildcard wins
+before the category default. Page info opens the current site's permissions directly.
+The offline pages do not generate browser cookies or USB grants; these lists contain the
+simulator's saved permission exceptions. No real device/network permission is requested.
+
+Validation: the browser flow passes category navigation, saved switches, wildcard exceptions,
+per-site permission/reset, page-info routing, phone width and all five languages. Added model
+checks cover permission precedence, unrelated host boundaries and Chrome app-data reset.

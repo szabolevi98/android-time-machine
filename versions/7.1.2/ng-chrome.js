@@ -295,7 +295,7 @@
   function siteInfo(c) {
     const t = T(), cur = url(c), key = native(cur) ? 'page_info_connection_internal_page' : /^https:/.test(cur) && NG.web.page(cur) ? 'page_info_connection_https' : 'page_info_connection_http';
     c.dialog({html: `<div class="ngcr-info"><div class="ngcr-iurl">${emphasized(c, cur)}</div><p>${esc(c, t.t(key))}</p></div>`,
-      buttons: [{label: t.t('page_info_site_settings_button'), action: c => NG.openPrefs?.(c, 'chrome', 'site_settings_preferences', t.t('page_info_site_settings_button'))}]});
+      buttons: [{label: t.t('page_info_site_settings_button'), action: c => NG.chromeOpenSite(c, cur)}]});
   }
   // AddToHomescreenDialog: the title to give the shortcut, then Add; the icon RoundedIconGenerator's letter tile.
   function homescreen(c) {
@@ -380,6 +380,7 @@
     popups: ['popup_permission_title', 'website_settings_category_blocked'], background_sync: ['background_sync_permission_title', 'website_settings_category_allowed'],
     fullscreen: ['website_settings_fullscreen', 'website_settings_category_allowed'], protected_content: ['protected_content', 'website_settings_category_ask'],
     autoplay: ['autoplay_title', 'website_settings_category_allowed']};
+  NG.chromeSiteCategories=SITE;NG.chromeState=S;
   if (NG.appPrefsHooks) NG.appPrefsHooks.chrome = {
     fragments: {'PrivacyPreferences': 'privacy_preferences', 'AccessibilityPreferences': 'accessibility_preferences',
       'SiteSettingsPreferences': 'site_settings_preferences', 'AutofillPreferences': 'autofill_preferences',
