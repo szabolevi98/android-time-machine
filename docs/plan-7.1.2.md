@@ -603,3 +603,15 @@ so a search shows its "No results found." Send feedback opens feedback_ui under 
 account, Write your feedback (Send refuses an empty one with gf_invalid_description_text), Include system logs and the
 screenshot preview; Send shows "Sending feedback..." and returns to the app. The class prefix is `nghp-` (the
 launcher already uses `ngh-`). `node tests/browser/ng-help.mjs` covers it.
+
+## Print continuation — 2026-10-21
+
+PrintSpooler 7.1.2's PrintActivity (`print-preview`) prints the job an app hands over (c.ui.printJob): Cloud Print's
+share alias, Gmail's conversation menu Print and GoogleHelp's Print… (gh_print_job_name). Theme.PrintActivity is
+Theme.Material.Light: the destination spinner (Save as PDF, All printers…) and the "Copies: / Paper size:" summary in
+#f5f5f5, print_activity_controls (Copies, Paper size from the framework's media size names, Color, Orientation, Pages
+with the "All n / Range of n" choice and the page range field; an invalid count or range disables the button), the
+round print_button in colorAccent #009688 with ic_menu_savetopdf and the preview pages on #f2f1f2 with the page
+selector. The default paper follows mediasize_standard: Letter for en-US, ISO A4 elsewhere. All printers… finds no
+printers (Add service opens Play Store). Save to PDF writes the PDF (pages, paper, orientation, colour, copies)
+through Documents' save dialog, whose save now takes the caller's type. `node tests/browser/ng-print.mjs` covers it.

@@ -220,6 +220,7 @@
       {label: t.t(m.starred ? 'remove_star' : 'add_star'), action: c => { m.starred = !m.starred; c.save(); c.render(); }},
       important(m) ? {label: t.t('mark_not_important'), action: c => { m.important = false; leave(c, t.plural('conversation_not_important', 1, null, 1)); }} : {label: t.t('mark_important'), action: c => { m.important = true; c.save(); c.render(); }},
       {label: t.t('mute'), action: c => { m.muted = true; if (m.box === 'inbox') m.box = 'archive'; leave(c, t.plural('conversation_muted', 1, null, 1)); }},
+      {label: t.t('print'), action: c => { c.ui.printJob = {title: m.subject || '', text: [m.subject, m.from || m.name || '', '', m.body || ''].filter(x => x !== undefined).join('\n')}; c.ui.print = null; c.open('print-preview'); }},
       {label: t.t('report_spam'), action: c => { m.box = 'spam'; leave(c, t.plural('conversation_spammed', 1, null, 1)); }}, {label: t.t('help_and_feedback'), action: c => c.open('help', 'gmail')}], anchor);
   }
   // A search sent: remembered first among the recent searches (ten at most).

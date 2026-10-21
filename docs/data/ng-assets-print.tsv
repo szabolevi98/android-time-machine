@@ -1,0 +1,5 @@
+# PrintSpooler 7.1.2: the Save as PDF button and the printer list (ng-print.js).
+pr-savetopdf.png	app/PrintSpooler/PrintSpooler.apk	drawable/ic_menu_savetopdf
+pr-printer.png	app/PrintSpooler/PrintSpooler.apk	drawable/ic_grayedout_printer
+pr-expand-more.png	app/PrintSpooler/PrintSpooler.apk	drawable/ic_expand_more
+pr-expand-less.png	app/PrintSpooler/PrintSpooler.apk	drawable/ic_expand_less

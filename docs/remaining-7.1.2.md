@@ -31,7 +31,8 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Project Fi: activation sign-up page, account chooser, web sign-up (no Fi account on the demo phone).
 - [x] Device Policy 7.05: the no-work-account page with Add account.
 - [x] Help/feedback (GoogleHelp + Google Feedback for every caller).
-- [ ] Google Play services settings, Location History, print preview (then GoogleHelp's Print… menu item).
+- [x] Print preview (Save as PDF, options, All printers) from Cloud Print, Gmail and GoogleHelp.
+- [ ] Google Play services settings, Location History.
 - [ ] Daydream/GoogleVrCore, Live Wallpaper Picker, Nougat Easter egg.
 
 ## System and remaining details

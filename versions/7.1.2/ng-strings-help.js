@@ -81,6 +81,23 @@ NG.strings('help', {
 "fr": "Informations sur la version",
 "es": "Información sobre la versión"
 },
+"gh_menu_print": {
+"res": "angler:PrebuiltGmsCore:gh_menu_print",
+"en": "Print…",
+"hu": "Nyomtatás…",
+"de": "Drucken…",
+"fr": "Imprimer…",
+"es": "Imprimir..."
+},
+"gh_print_job_name": {
+"res": "angler:PrebuiltGmsCore:gh_print_job_name",
+"args": 1,
+"en": "Help - %1$s",
+"hu": "Súgó – %1$s",
+"de": "Hilfe – %1$s",
+"fr": "Aide – %1$s",
+"es": "Ayuda - %1$s"
+},
 "gh_menu_clear_history": {
 "res": "angler:PrebuiltGmsCore:gh_menu_clear_history",
 "en": "Clear help history",

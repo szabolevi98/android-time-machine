@@ -110,7 +110,7 @@
       if (id === 'drive') { drive(c, s); return; }
       if (id === 'photos') { photos(c); return; }
       if (id === 'beam') { beam(c); return; }
-      if (id === 'cloudprint') { c.open('print-preview'); return; }
+      if (id === 'cloudprint') { c.ui.printJob = {title: s.subject || s.name || '', text: s.text || '', photo: s.photo}; c.ui.print = null; c.open('print-preview'); return; }
       const photo=s.kind==='image'&&['gmail','messenger','hangouts'].includes(id)?NG.media.fromDocument(c,{name:s.name,photo:s.photo,mediaSnapshot:s.photoSnapshot},id):s.photo;
       const document=s.document?JSON.parse(JSON.stringify(s.document)):undefined;if(document&&photo){document.photo=photo;delete document.mediaSnapshot;}
       c.ui.shareData = {subject: s.subject || '', text: s.text || '', kind: s.kind, name: s.name || '', photo,document};
