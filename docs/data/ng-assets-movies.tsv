@@ -1,0 +1,13 @@
+# Videos 3.20, native controls and empty states from N2G48C.
+mv-menu.png	app/Videos/Videos.apk	drawable/ic_drawer_white
+mv-search.png	app/Videos/Videos.apk	drawable/ic_search_white
+mv-clear.png	app/Videos/Videos.apk	drawable/ic_search_clear_normal
+mv-library-empty.png	app/Videos/Videos.apk	drawable/ic_on_device_empty
+mv-wish-empty.png	app/Videos/Videos.apk	drawable/ic_wishlist_empty
+mv-cc.png	app/Videos/Videos.apk	drawable/ic_subtitles_playcontrol_normal_24dp
+mv-licenses.html	app/Videos/Videos.apk	assets/license.html
+mv-logo.png	app/Videos/Videos.apk	drawable/product_logo_play_movies_color_192
+mv-mylibrary.png	app/Videos/Videos.apk	drawable/ic_mylibrary_phone
+mv-family.png	app/Videos/Videos.apk	drawable/ic_family_library_welcome_card_phone
+mv-fab-play.png	app/Videos/Videos.apk	drawable/ic_fab_play_small
+mv-fab-pause.png	app/Videos/Videos.apk	drawable/ic_fab_pause_small

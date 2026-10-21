@@ -523,3 +523,25 @@ licenses, local upload/edit/delete/cancel, all five languages and phone width.
 Validation: 194 module checks pass. Source inventory rebuilds 930 files with zero
 problems. The earlier usage stop threshold is suspended by the owner's latest
 instruction; continue with the remaining applications and release gates.
+
+## Play Movies continuation — 2026-10-21
+
+Videos 3.20.10 is drawn from AppTheme.Drawer: the PlayHeaderListLayout header in play_movies_primary #ff1744 under
+the drawer's #2e000000 status overlay (#d11338), the #eeeeee window, the Play drawer with Watch now / My library /
+Wishlist / Shop (ic_drawer_* vectors) and Settings / Help & feedback (settings_and_help_menu). The first start shows
+onboarding_layout (#ff1744, BlueButton "Get started"). Watch now has welcome_card_narrow's generic card (Shop TV /
+Shop Movies) and the dismissable Family Library card on play_movies_secondary, the "Trailers, trailers, trailers"
+channel card and a Movies cluster of the shared invented store titles (cluster_item_movie: 0.693 poster, year and
+movie_duration, price, wishlist toggle). The demo account owns nothing, so My library's Movies / TV Shows tabs show
+no_content_narrow ("No movies", "No TV shows"). The wishlist is Play Store's own list (cluster_item_wishlist_movie with
+its overflow: Remove from wishlist, Play trailer). Search filters the catalogue (no_results_label). A card opens the
+store details; Play Store now returns to the calling app when it was started for a detail, corpus or search.
+
+The trailer player is WatchTheme on black: the 48 dp action bar overlay, controller_overlay's #cc000000 bar with
+the time / TimeBar (4 dp rail, 6 dp scrubber, play_movies_primary) row, the 40 dp play/pause FAB (ic_fab_*_small),
+skip previous / next, the wishlist button and the captions button (Off / the language), auto-hiding after 3 s with
+the status and navigation bars. Trailers of the invented titles run on a local clock; leaving pauses them.
+Settings is res/xml/preferences with its code's rows: parental controls (Allow movies rated up to), caption settings
+(preferences_caption with a preview), manage downloads (instructions_no_offline_content), storage, version, licenses
+(the APK's license.html). Dogfood, TV pairing and Disney Movies Anywhere stay hidden (internal build, no set-top box,
+no linked account). `node tests/browser/ng-movies.mjs` covers all of it in five languages and at phone width.

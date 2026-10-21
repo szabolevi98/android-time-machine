@@ -61,3 +61,6 @@ settings
 
 [music] Music2 com.google.android.music.activities.MusicSettingsActivity
 music_settings
+
+[movies] Videos com.google.android.videos.mobile.usecase.settings.SettingsActivity
+preferences preferences_caption

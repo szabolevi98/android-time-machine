@@ -25,7 +25,8 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] YouTube 11.41.56: native home/tabs, watch/mini-player, search/history, reactions/subscriptions, playlists, local upload/edit/delete, settings, captions and licenses. Shared Help and dedicated media SEND receivers remain below.
 - [x] Play Store 7.4.31: offline storefront/search, install/update/cancel, My apps/library, wishlist/reviews, account empty states, settings/content PIN, licenses and all three native widget providers.
 - [x] Play Music 6.13: native light toolbar/library, local MediaStore audio, playlists, queue/player, background notification, sleep timer/settings, AudioPreview, both widgets and all three launcher shortcuts. MusicFX controls remain below.
-- [ ] Play Movies 3.20, Play Games 3.7.24.
+- [x] Play Movies 3.20: onboarding, Watch now, drawer, library tabs, shared wishlist, search, trailer player, settings/captions/parental controls/licenses.
+- [ ] Play Games 3.7.24.
 - [ ] Android Pay 1.4, Project Fi, Device Policy 7.05.
 - [ ] Google Play services settings, Location History, Help/feedback, print preview.
 - [ ] Daydream/GoogleVrCore, Live Wallpaper Picker, Nougat Easter egg.
