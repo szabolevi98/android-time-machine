@@ -711,3 +711,19 @@ the children as rows (up to 8) under 0.5 dp #616161 dividers at 50 % with only t
 (NotificationHeaderUtil). A bundle swiped away takes all its notifications; collapsing the panel collapses every
 bundle (NotificationStackScrollLayout.setIsExpanded); the status bar shows one icon for it.
 `node tests/browser/ng-bundles.mjs` covers it.
+
+## Split screen — 2026-10-22
+
+From android-7.1.2_r1 (DividerView, DividerHandleView, DividerSnapAlgorithm, TaskStack.DockState, RecentsView,
+RecentsViewTouchHandler, Recents.dockTopTask, kept in _aosp/aosp712/divider and recents) — ng-split.js:
+Overview held in an app docks it at the top with Overview below (an undockable app: "App doesn't support split
+screen"; Camera is the image's only launcher activity with resizeableActivity="false"; target SDK 23 apps show "App
+may not work with split-screen."); in Overview a task held for 500 ms and dragged into the top 12.5 % ("Drag here to
+use split screen", the white 80 / 255 overlay growing to the docked bounds) docks too, an undockable one shows the
+incompatible app overlay. The 10 dp black divider with its 16 x 2 dp handle (a 6 dp circle while held) snaps to the
+16:9, middle and 16:9 targets (SNAP_MODE_16_9: 894 / 1221 / 1547 px) and dismisses at the ends (top: the docked app
+goes; bottom: it takes the screen) with the 400 / 600 dp/s fling rules; Overview below lays its stack out in the
+bottom window and leaves the docked task out (undockable tasks carry the incompatible toast). Home minimizes the docked
+stack (an 8 dp strip with MinimizedDockShadow), an app from the launcher restores the split; Overview held again
+undocks; the Overview key shows ic_sysbar_docked. One side is live and the other shows its last drawing laid out in
+its window; a tap makes it the live side. `node tests/browser/ng-split.mjs` covers it.

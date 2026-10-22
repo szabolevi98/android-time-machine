@@ -1,3 +1,4 @@
-# The notification header's NotificationExpandButton (ng-notify.js bundles).
+# The notification header's NotificationExpandButton (ng-notify.js bundles) and Recents' incompatible-app overlay (ng-split.js).
 fw-ic_expand_notification.svg	framework/framework-res.apk	ic_expand_notification	-
 fw-ic_collapse_notification.svg	framework/framework-res.apk	ic_collapse_notification	-
+sui-recents_info_light.svg	priv-app/SystemUI/SystemUI.apk	recents_info_light	-

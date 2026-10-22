@@ -234,6 +234,8 @@
     viewport.innerHTML = mod ? mod.render(c) : ui.view === 'home' ? missingHome() : missing(ui.view);
     mod?.mount?.(c, viewport);
     shown = {view: ui.view, sub: ui.sub, page};
+    // Split screen (ng-split.js): the other side, the divider and the windows' bounds.
+    window.NG.split?.after(c);
     renderOverlay();
     if (old) animateTransition(kind, old);
     reveal = null; ui.backing = false;
@@ -265,6 +267,7 @@
   // from: an element the screen opens out of (the launcher's ActivityOptions.makeClipRevealAnimation from the icon).
   function open(view, sub = '', {replace = false, from = null, zoom = false} = {}) {
     if (ui.view !== view && !replace && ui.view !== 'home' && ui.view !== 'lock') ui.history.push({view: ui.view, sub: ui.sub});
+    window.NG.split?.opened?.(c, view);
     ui.view = view; ui.sub = sub; ui.overlay = '';
     if (modules[view]?.app !== false && SCREENS[view] && !SYSTEM.includes(view)) ui.recent = [view, ...ui.recent.filter(id => id !== view)].slice(0, 20);
     // The launcher's predicted apps follow what was opened last (kept with the saved state).
@@ -276,6 +279,7 @@
   }
   function home() {
     if (ui.view === 'lock') return;
+    if (window.NG.split?.home?.(c)) return;
     ui.view = 'home'; ui.sub = ''; ui.overlay = ''; ui.history = [];
     modules.home?.reset?.(c);
     render();
@@ -294,7 +298,7 @@
     if (handled) return;
     if (ui.view === 'home' || ui.view === 'lock') return;
     const prev = ui.history.pop();
-    if (prev) { ui.view = prev.view; ui.sub = prev.sub; ui.backing = true; render(); } else home();
+    if (prev) { ui.view = prev.view; ui.sub = prev.sub; ui.backing = true; render(); } else if (!window.NG.split?.backEmpty?.(c)) home();
   }
 
   // Toasts: drawn by the toast module once it exists; until then the text goes to the console.
@@ -330,7 +334,8 @@
     if (ui.sleeping) { wake(); return; }
     if (key === 'back') back();
     else if (key === 'home') { if (ui.view !== 'lock') home(); }
-    else if (key === 'recents') { if (ui.view === 'lock') return; if (ui.view === 'recents' && modules.recents?.recentsKey) modules.recents.recentsKey(c); else { ui.recentsState = null; ui.overlay = ''; open('recents'); } }
+    else if (key === 'dock') window.NG.split?.toggle?.(c);
+    else if (key === 'recents') { if (ui.view === 'lock' || window.NG.split?.recents?.(c)) return; if (ui.view === 'recents' && modules.recents?.recentsKey) modules.recents.recentsKey(c); else { ui.recentsState = null; ui.overlay = ''; open('recents'); } }
     else if (key === 'assist') { if (ui.view !== 'lock') modules.assist?.show?.(c); }
   }
   // ui.power: '' on, 'off' (shut down: the key boots it, ng-power.js), 'boot' or 'shutdown' (keys do nothing).

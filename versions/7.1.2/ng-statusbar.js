@@ -82,7 +82,7 @@
   let lastMinute = -1;
   NG.register('statusbar', {
     render(c) {
-      const mod = NG.module(c.ui.view), bg = c.ui.view === 'home' ? 'transparent' : mod?.statusColor?.(c) || '#000';
+      const mod = NG.module(c.ui.view), bg = NG.split?.statusColor?.(c) || (c.ui.view === 'home' ? 'transparent' : mod?.statusColor?.(c) || '#000');
       const b = NG.battery(), notes = (NG.notifications?.icons(c) || []).map(icon => `<img class="ngsb-note" src="${c.safe(icon)}" alt="">`).join('');
       const status = (c.statusIcons?.() || []).map(name => `<img class="ngsb-icon" src="${A(`${name}.svg`)}" alt="">`).join('');
       return `<div class="ngsb" style="background:${bg}" data-action="ngsb-pull"><div class="ngsb-notes">${notes}</div>
@@ -108,7 +108,7 @@
     render(c) {
       const key = (id, img, label) => `<button type="button" class="ngnb-key" data-key="${id}" aria-label="${c.safe(c.t(label))}"><i class="ngnb-ripple"></i><img src="${A(`${img}.png`)}" alt=""></button>`;
       const back = NG.ime?.open() ? 'ic_sysbar_back_ime' : 'ic_sysbar_back';
-      return `<div class="ngnb"><span class="ngnb-side"></span><span class="ngnb-center">${key('back', back, 'Back')}${key('home', 'ic_sysbar_home', 'Home')}${key('recents', 'ic_sysbar_recent', 'Overview')}</span><span class="ngnb-side"></span></div>`;
+      return `<div class="ngnb"><span class="ngnb-side"></span><span class="ngnb-center">${key('back', back, 'Back')}${key('home', 'ic_sysbar_home', 'Home')}${key('recents', NG.split?.active(c) ? 'ic_sysbar_docked' : 'ic_sysbar_recent', 'Overview')}</span><span class="ngnb-side"></span></div>`;
     },
     mount(c, root) {
       for (const el of root.querySelectorAll('.ngnb-key')) {
@@ -116,6 +116,8 @@
         el.addEventListener('pointerdown', () => press(true));
         for (const type of ['pointerup', 'pointercancel', 'pointerleave']) el.addEventListener(type, () => press(false));
         if (el.dataset.key === 'home') c.holdable(el, () => c.key('home'), () => c.key('assist'));
+        // Overview held: split screen (PhoneStatusBar.toggleSplitScreenMode).
+        else if (el.dataset.key === 'recents') c.holdable(el, () => c.key('recents'), () => c.key('dock'));
         else el.addEventListener('click', () => c.key(el.dataset.key));
       }
     }

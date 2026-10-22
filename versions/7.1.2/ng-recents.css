@@ -30,3 +30,19 @@
 .ngrc-bottom{position:absolute;left:0;right:0;bottom:calc(-48 * var(--dp));height:calc(78 * var(--dp));background:url('assets/sui-recents_lower_gradient.9.png') 0 0/100% 100%;pointer-events:none}
 .ngrc-empty{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:calc(25 * var(--dp));color:#fff;font:400 calc(16 * var(--dp))/calc(21.25 * var(--dp)) Roboto,sans-serif}
 .ngrc-empty img{width:calc(100 * var(--dp));height:calc(132 * var(--dp))}
+/* Docking from Overview (ng-recents.js dockStart): DockState.NONE's overlay over the top 12.5 % of the display, the
+   docked bounds (to the middle snap target) once the task is in it; the incompatible app overlay; the incompatible
+   app toast on a task that cannot join a split (recents_task_view_incompatible_app_toast: 48 dp down, centred). */
+.ngrc-dock{position:absolute;left:0;right:0;top:calc(-24 * var(--dp));height:calc(91.43 * var(--dp));z-index:50;display:flex;align-items:center;justify-content:center;background:#ffffff00;transition:background-color .25s cubic-bezier(.4,0,.2,1),height .25s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.ngrc-dock.shown{background:#ffffff50}
+.ngrc-dock span{padding-top:calc(24 * var(--dp));color:#fff;font:400 calc(14 * var(--dp)) Roboto,sans-serif;opacity:0;transition:opacity .15s}
+.ngrc-dock.shown span{opacity:1}
+.ngrc-dock.docked{height:calc(348.86 * var(--dp))}
+.ngrc-dock.docked span{opacity:0}
+.ngrc-incompatible{position:absolute;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:#00000088;opacity:0;transition:opacity .25s;pointer-events:none}
+.ngrc-incompatible.shown{opacity:1}
+.ngrc-incompatible span{display:flex;flex-direction:column;align-items:center;gap:calc(8 * var(--dp));color:#fff;font:400 calc(14 * var(--dp)) Roboto,sans-serif}
+.ngrc-incompatible img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngrc-task.dragging{transform:translateZ(0);filter:drop-shadow(0 calc(8 * var(--dp)) calc(12 * var(--dp)) #00000066)}
+.ngrc-incompat{position:absolute;left:50%;top:calc(48 * var(--dp));transform:translateX(-50%);max-width:calc(100% - 32 * var(--dp));z-index:3;pointer-events:none}
+.ngrc-incompat span{display:block;margin:calc(-10 * var(--dp)) 0;color:#fff;font:400 calc(16 * var(--dp))/calc(21.25 * var(--dp)) 'Roboto Condensed',Roboto,sans-serif;text-shadow:0 0 calc(.786 * var(--dp)) #bb000000;text-align:center;white-space:nowrap}

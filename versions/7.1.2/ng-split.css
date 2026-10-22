@@ -1,0 +1,28 @@
+/* Split screen (ng-split.js): the docked app above the 10 dp divider, the other window below it; --sp-pos is the
+   divider's top edge from the top of the screen (DividerSnapAlgorithm's targets). The side that is not live shows how
+   it was last drawn. */
+.screen.split #viewport{top:calc(24 * var(--dp));bottom:auto;height:calc(var(--sp-pos) - 24 * var(--dp))}
+.screen.split.split-b #viewport{top:calc(var(--sp-pos) + 10 * var(--dp));bottom:calc(48 * var(--dp));height:auto}
+#split-other{position:absolute;left:0;right:0;overflow:hidden;isolation:isolate;cursor:pointer;background:#000}
+.screen.split-b #split-other{top:calc(24 * var(--dp));height:calc(var(--sp-pos) - 24 * var(--dp))}
+.screen.split-a #split-other{top:calc(var(--sp-pos) + 10 * var(--dp));bottom:calc(48 * var(--dp))}
+/* The resized app: its last drawing laid out again in the window it has now. */
+.ngsp-shot{position:absolute;inset:0;pointer-events:none}
+/* Minimized the docked window keeps its size and slides up: its bottom edge shows. */
+.screen.split-min #split-other .ngsp-shot{top:auto;height:calc(var(--sp-split) - 24 * var(--dp))}
+.screen.split-anim #viewport,.screen.split-anim #split-other,.screen.split-anim #split-divider{transition:top .25s cubic-bezier(.4,0,.2,1),height .25s cubic-bezier(.4,0,.2,1)}
+/* DividerView: the 48 dp window 19 dp over the bar; the bar and the handle grow while touched. */
+#split-divider{position:absolute;left:0;right:0;top:calc(var(--sp-pos) - 19 * var(--dp));height:calc(48 * var(--dp));z-index:6;touch-action:none;cursor:row-resize}
+.ngsp-bar{position:absolute;left:0;right:0;top:calc(19 * var(--dp));height:calc(10 * var(--dp));background:#000;transition:transform .2s cubic-bezier(.4,0,.2,1),box-shadow .2s}
+.ngsp-handle{position:absolute;left:50%;top:50%;width:calc(16 * var(--dp));height:calc(2 * var(--dp));border-radius:calc(1 * var(--dp));background:#fff;transform:translate(-50%,-50%);transition:width .2s cubic-bezier(.4,0,.2,1),height .2s cubic-bezier(.4,0,.2,1),border-radius .2s}
+#split-divider.touching .ngsp-bar{transform:scaleY(1.4);box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0000004d;transition-duration:.15s;transition-timing-function:cubic-bezier(.4,0,.2,1)}
+#split-divider.touching .ngsp-handle{width:calc(6 * var(--dp));height:calc(6 * var(--dp));border-radius:50%;transition-duration:.15s}
+.ngsp-shadow{display:none}
+/* Minimized (Home): the launcher fills the screen, an 8 dp strip of the docked app stays under the status bar with
+   MinimizedDockShadow below it; the divider and its handle go. */
+.screen.split-min #viewport{top:calc(24 * var(--dp))}
+.screen.split-min #split-other{z-index:5;height:calc(8 * var(--dp));box-shadow:0 calc(8 * var(--dp)) calc(8 * var(--dp)) #00000040}
+.screen.split-min #split-divider{top:calc(32 * var(--dp) - 19 * var(--dp));pointer-events:none}
+.screen.split-min .ngsp-bar{transform:scaleY(0)}
+.screen.split-min .ngsp-handle{opacity:0}
+.screen.split-min .ngsp-shadow{display:block;position:absolute;left:0;right:0;top:calc(19 * var(--dp));height:calc(8 * var(--dp));background:linear-gradient(#60000000,#00000000)}

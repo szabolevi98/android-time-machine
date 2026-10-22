@@ -59,10 +59,14 @@
   // Range.
   const range = (rmin, rmax) => ({rmin, rmax, origin: 0, offset(x) { this.origin = x; }, norm(x) { return x < this.origin ? .5 + .5 * (x - this.origin) / -this.rmin : .5 + .5 * (x - this.origin) / this.rmax; }, abs(n) { return n < .5 ? (n - .5) / .5 * -this.rmin : (n - .5) / .5 * this.rmax; }});
 
-  // TaskStackLayoutAlgorithm.initialize for the 6P in portrait.
-  const L = (() => {
-    const side = 56, topMargin = 56, minMargin = 56, peekTop = 168, initialTop = 448, bottomOffset = NAV + 56;
-    const stack = {left: side, right: SW - side, top: STATUS + topMargin, bottom: SH};
+  // TaskStackLayoutAlgorithm.initialize for the 6P in portrait, for the window from winTop to the display's bottom:
+  // the whole screen, or the bottom side of a split (ng-split.js), where getScaleForExtent scales the top margin and
+  // the initial top offset by the window's share of the display height (not below recents_layout_min_margin 16 dp).
+  const layouts = {};
+  const layout = (winTop = 0) => layouts[winTop] ||= (() => {
+    const k = Math.min(1, (SH - winTop) / SH), inset = winTop ? 0 : STATUS;
+    const side = 56, minMargin = 56, topMargin = Math.max(minMargin, Math.trunc(k * 56)), peekTop = 168, initialTop = Math.max(minMargin, Math.trunc(k * 448)), bottomOffset = NAV + Math.max(minMargin, Math.trunc(k * 56));
+    const stack = {left: side, right: SW - side, top: winTop + inset + topMargin, bottom: SH};
     stack.height = stack.bottom - stack.top;
     const task = {left: stack.left, top: stack.top, width: stack.right - stack.left, height: stack.height - initialTop - bottomOffset};
     const unfocused = range(-2, 2.5);
@@ -71,9 +75,12 @@
     const normFromTop = y => curve.getX((stack.height - y) / stack.height);
     const focusX = normFromTop(initialTop), c2x = focusX + (1 - focusX) / 2;
     const dim = freePath([[0, .25], [focusX * .5, .25, focusX * .75, .25 * .75, focusX, 0], [c2x, 0, c2x, .15, 1, .15]]);
-    return {stack, task, unfocused, curve, dim, initialTop, bottomOffset, peekTop, topMargin, zMin: 10.5, zMax: 84};
+    return {stack, task, unfocused, curve, dim, initialTop, bottomOffset, peekTop, topMargin, winTop, zMin: 10.5, zMax: 84};
   })();
-  const tasks = c => c.ui.recent.filter(id => NG.appsData?.[id] || c.screens[id]).slice().reverse();
+  let L = layout();
+  const useLayout = c => { L = layout(NG.split?.window?.(c)?.top || 0); return L; };
+  // The docked task is not in the stack below it.
+  const tasks = c => c.ui.recent.filter(id => (NG.appsData?.[id] || c.screens[id]) && id !== NG.split?.docked?.(c)).slice().reverse();
   // TaskStackLayoutAlgorithm.update: the scroll bounds and where it starts.
   // From the home screen it scrolls to the front task; from an app the task behind it shows at the initial offset.
   function bounds(n, fromHome = false) {
@@ -121,8 +128,8 @@
     const app = NG.appsData?.[id], color = app?.color || '#e6e6e6', light = lightText(color);
     const label = app ? NG.appLabel(c, id) : c.t(c.screens[id]?.[0] || id);
     const thumb = c.ui.thumbs?.[id];
-    return `<div class="ngrc-task" data-task="${id}" style="left:${dp(L.task.left)};top:${dp(tr.y - STATUS)};width:${dp(L.task.width)};height:${dp(L.task.height)};z-index:${i + 1};--z:${dp(tr.z)};--dim:${tr.dim.toFixed(3)};--hl:${lighter(color)}">
-      <div class="ngrc-thumb"><div class="ngrc-shot" style="--k:${(L.task.width / SW).toFixed(4)}"><div class="ngrc-vp">${thumb?.html || ''}</div></div><i class="ngrc-dim"></i></div>
+    return `<div class="ngrc-task" data-task="${id}" style="left:${dp(L.task.left)};top:${dp(tr.y - (L.winTop || STATUS))};width:${dp(L.task.width)};height:${dp(L.task.height)};z-index:${i + 1};--z:${dp(tr.z)};--dim:${tr.dim.toFixed(3)};--hl:${lighter(color)}">
+      <div class="ngrc-thumb"><div class="ngrc-shot" style="--k:${(L.task.width / SW).toFixed(4)}"><div class="ngrc-vp">${thumb?.html || ''}</div></div><i class="ngrc-dim"></i>${NG.split?.active(c) && !NG.split.dockable(id) ? `<div class="ngrc-incompat np-fw-toast_frame"><span>${c.safe(NG.text('split').t('recents_incompatible_app_message'))}</span></div>` : ''}</div>
       <div class="ngrc-head${light ? ' light' : ''}" style="background:${color}"><button type="button" class="ngrc-icon" data-action="ngrc-info" aria-label="${c.safe(T().t('recents_app_info_button_label'))}">${app ? `<img src="${app.icon}" alt="">` : ''}</button><span class="ngrc-label">${c.safe(label)}</span>
         <button type="button" class="ngrc-dismiss" data-action="ngrc-dismiss" aria-label="${c.safe(T().fmt('accessibility_recents_item_will_be_dismissed', null, label))}"><img src="assets/sui-recents_dismiss_${light ? 'light' : 'dark'}.svg" alt=""></button></div></div>`;
   }
@@ -134,14 +141,16 @@
   }
   // The stack action button: mStackActionButtonRect's end, centred in (the stack's top less the top margin .. plus the
   // top peek); shown below the 0.3 scroll threshold.
-  const clearAll = c => `<button type="button" class="ngrc-clear${(c.ui.recentsState.scroll < .3 && tasks(c).length) ? ' shown' : ''}" style="top:${dp(L.stack.top - L.topMargin - STATUS + (L.topMargin + L.peekTop) / 2)};right:${dp(SW - L.stack.right)}" data-action="ngrc-clear">${c.safe(T().t('recents_stack_action_button_label'))}</button>`;
+  const clearAll = c => `<button type="button" class="ngrc-clear${(c.ui.recentsState.scroll < .3 && tasks(c).length) ? ' shown' : ''}" style="top:${dp(L.stack.top - L.topMargin - (L.winTop || STATUS) + (L.topMargin + L.peekTop) / 2)};right:${dp(SW - L.stack.right)}" data-action="ngrc-clear">${c.safe(T().t('recents_stack_action_button_label'))}</button>`;
 
   function render(c) {
+    useLayout(c);
     const list = tasks(c);
     if (!c.ui.recentsState) c.ui.recentsState = {scroll: bounds(list.length, c.ui.prevView === 'home').initial, fresh: true};
     return `<div class="ngrc"><i class="ngrc-scrim"></i><div class="ngrc-stack">${cards(c)}</div>${clearAll(c)}<i class="ngrc-bottom"></i></div>`;
   }
   function redraw(c) {
+    useLayout(c);
     const el = c.el.viewport.querySelector('.ngrc-stack'); if (el) el.innerHTML = cards(c);
     c.el.viewport.querySelector('.ngrc-clear')?.classList.toggle('shown', c.ui.recentsState.scroll < .3 && tasks(c).length > 0);
   }
@@ -168,14 +177,17 @@
       if (e.button || drag || e.target.closest('.ngrc-clear')) return;
       const t = e.target.closest('.ngrc-task');
       drag = {id: e.pointerId, x: e.clientX, y: e.clientY, task: t, mode: '', scroll: st.scroll, samples: [[performance.now(), e.clientX, e.clientY]]};
+      // A task held for the long-press timeout (500 ms) starts a drag (TaskView.onLongClick → DragStartEvent).
+      if (t && !e.target.closest('button')) { const d = drag; d.timer = setTimeout(() => { if (drag === d && !d.mode) dockStart(c, el, d); }, 500); }
       try { el.setPointerCapture(e.pointerId); } catch {}
     });
     el.addEventListener('pointermove', e => {
       if (!drag || e.pointerId !== drag.id) return;
       const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
       drag.samples.push([performance.now(), e.clientX, e.clientY]); if (drag.samples.length > 6) drag.samples.shift();
-      if (!drag.mode && Math.hypot(dx, dy) > 10) drag.mode = drag.task && Math.abs(dx) > Math.abs(dy) ? 'swipe' : 'scroll';
-      if (drag.mode === 'swipe') {
+      if (!drag.mode && Math.hypot(dx, dy) > 10) { clearTimeout(drag.timer); drag.mode = drag.task && Math.abs(dx) > Math.abs(dy) ? 'swipe' : 'scroll'; }
+      if (drag.mode === 'dock') dockMove(c, el, drag, e);
+      else if (drag.mode === 'swipe') {
         drag.task.style.transition = 'none'; drag.task.style.translate = `${dx}px 0`; drag.task.style.opacity = String(1 - Math.min(1, Math.abs(dx) / (el.clientWidth * .6)));
       } else if (drag.mode === 'scroll') {
         const b = bounds(tasks(c).length);
@@ -188,8 +200,10 @@
     });
     const end = e => {
       if (!drag || e.pointerId !== drag.id) return;
-      const d = drag; drag = null;
+      const d = drag; drag = null; clearTimeout(d.timer);
       try { el.releasePointerCapture(e.pointerId); } catch {}
+      if (d.mode === 'dock') { st.suppress = true; setTimeout(() => { st.suppress = false; }); dockEnd(c, el, d, e.type === 'pointerup'); return; }
+      if (d.mode === 'held') return;
       if (d.mode) { st.suppress = true; setTimeout(() => { st.suppress = false; }); }
       const [t0, x0, y0] = d.samples[0], [t1, x1, y1] = d.samples[d.samples.length - 1];
       if (d.mode === 'swipe') {
@@ -209,6 +223,39 @@
       } else if (d.task && e.type === 'pointerup' && !e.target.closest('button')) open(c, d.task.dataset.task);
     };
     el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end); el.addEventListener('lostpointercapture', end);
+  }
+  /* Dragging a task to dock it (RecentsViewTouchHandler, RecentsView.updateVisibleDockRegions, TaskStack.DockState):
+     the card follows the finger; DockState.NONE's overlay (white at 80 / 255 over the top 12.5 % with "Drag here to use
+     split screen" in 14 sp white) fades in over SLOW_SYNC_STACK_DURATION 250 ms; in that area (then within the top half,
+     expandedTouchDockArea) the overlay grows to the docked bounds and the hint goes (150 ms). Dropped there the task
+     docks; elsewhere the card goes back. A task that is not dockable shows the incompatible app overlay (#88000000,
+     recents_info_light and "App doesn't support split screen") while it is dragged, and nothing docks. */
+  function dockStart(c, el, d) {
+    if (NG.split?.active(c)) { d.mode = 'held'; return; }
+    d.mode = 'dock';
+    const card = d.task, id = card.dataset.task, ok = NG.split?.dockable(id) !== false;
+    d.dockable = ok; d.inside = false;
+    card.style.transition = 'none'; card.style.zIndex = 99; card.classList.add('dragging');
+    const t = NG.text('split');
+    const over = document.createElement('div');
+    over.className = ok ? 'ngrc-dock' : 'ngrc-incompatible';
+    over.innerHTML = ok ? `<span>${c.safe(t.t('recents_drag_hint_message'))}</span>` : `<span><img src="assets/sui-recents_info_light.svg" alt="">${c.safe(t.t('recents_incompatible_app_message'))}</span>`;
+    el.append(over); d.over = over;
+    requestAnimationFrame(() => over.classList.add('shown'));
+  }
+  function dockMove(c, el, d, e) {
+    d.task.style.translate = `${e.clientX - d.x}px ${e.clientY - d.y}px`;
+    if (!d.dockable) return;
+    const r = el.getBoundingClientRect(), y = (e.clientY - r.top) / r.height, inside = y < (d.inside ? .5 : .125);
+    if (inside !== d.inside) { d.inside = inside; d.over.classList.toggle('docked', inside); }
+  }
+  function dockEnd(c, el, d, up) {
+    const card = d.task, id = card.dataset.task;
+    card.classList.remove('dragging');
+    if (up && d.dockable && d.inside) { d.over?.remove(); NG.split.dock(c, id, c.ui.thumbs?.[id]?.sub || ''); return; }
+    d.over?.classList.remove('shown', 'docked'); setTimeout(() => d.over?.remove(), 250);
+    if (card.animate) card.animate([{translate: card.style.translate || '0 0'}, {translate: '0 0'}], {duration: 250, easing: 'cubic-bezier(.4,0,.2,1)'});
+    card.style.translate = ''; card.style.zIndex = ''; card.style.transition = '';
   }
   let anim = 0;
   function settle(c, to) {
