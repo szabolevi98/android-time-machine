@@ -1,0 +1,4 @@
+# Calendar and Chrome native widget controls, N2G48C.
+cw-prev.png	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	drawable/quantum_ic_chevron_left_white_24
+cw-next.png	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	drawable/quantum_ic_chevron_right_white_24
+cw-bookmark-folder.png	app/Chrome/Chrome.apk	drawable/bookmark_folder

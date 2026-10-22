@@ -45,6 +45,7 @@
   })();
   const events = c => c.data.events || (c.data.events = JSON.parse(JSON.stringify(NG.defaults.events)));
   NG.calendarEvents = events;
+  NG.calendarWidgetOpen = (c, target) => { const u=ui(c);c.data.calendarOobe=true;Object.assign(u,{screen:target.id?'event:'+target.id:'',drawer:false,search:null,dial:false,picker:false,gridScroll:null});if(target.date){u.date=target.date;u.view='day';}else if(!target.id){u.date='';u.view='schedule';}c.save();c.open('calendar'); };
   const ui = c => c.ui.calendar || (c.ui.calendar = {screen: '', drawer: false, oobe: 0, draft: null, dial: false});
   const esc = (c, s) => c.safe(s);
   const parse = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };

@@ -833,3 +833,21 @@ and https://android.googlesource.com/platform/frameworks/av/+/android-7.1.2_r39/
 Validation: four new model/lifecycle cases (224 module checks pass), Music regression and a dedicated browser flow:
 opening from Music settings, enable/bypass, presets/User preservation, A2DP gating, strength persistence, separate
 callers, reload, desktop/phone and all five languages with no missing texts/assets.
+
+
+## Calendar and Chrome widgets — 2026-10-23
+
+Calendar's Schedule widget now renders native widget_initial/header and normal/narrow chips from CalendarGooglePrebuilt
+5.7: 12/22 sp header, 46 dp day column, 60/36 sp normal rows and 50/30 sp narrow rows, 2 dp coloured chips, scrollable
+upcoming local provider events and the native empty state. Month uses widgetmonth_layout's 48 dp blue header,
+48 dp previous/next controls, 24 dp weekday band, 10 sp day numbers, 17 dp today circle and 14 dp short event chips.
+Week start follows the locale; five/six-week grids and per-widget saved month offsets are supported. Event, day and
+header taps open the corresponding Calendar event/day/schedule. Ended events are filtered, ongoing/overnight events
+and exclusive all-day end boundaries stay correct, and civil-day arithmetic avoids DST drift. Month rows adapt their
+chip capacity to the host's available height and expose overflow-day taps.
+Chrome's bookmark_widget/item/icons_only now displays the shared bookmark model in its native translucent-white
+48 dp rows, 64 dp favicon column and 16 sp titles. Mobile-bookmark folder navigation is widget-local and saved;
+URL taps open normal Chrome tabs, and deleted/all-cleared bookmarks produce the native empty-folder state.
+Validation: three new date/provider cases; dedicated browser flow uses actual pointer taps after dismissing the
+launcher's first-run cling, and covers events/day launch, month navigation/persistence, folders/URL/empty, phone
+width and five languages. All 227 module checks pass. Three source bitmaps added; inventory rebuilds 1139 files with zero problems.
