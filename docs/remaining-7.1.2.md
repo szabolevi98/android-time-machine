@@ -55,7 +55,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [ ] Photos native CPE preset catalogue investigation and final polish.
 - [x] Chrome site settings category pages, per-site permissions, exceptions and reset.
 - [x] Calendar Goal creation, scheduling and session actions (`3108b381`). Remaining service activity cards are tracked by the routing audit below.
-- [ ] App info Clear data: connect the current storage-usage flags to each app's actual saved model and cancel stale work.
+- [x] App info Clear data/Force stop: private model/preferences reset, package task cancellation, stopped background services, provider data preserved.
 - [ ] MusicFX's full effect-control panel. Play Music currently exposes its native unavailable-effects response because the simulated media clock has no DSP session.
 - [ ] Widget resize handles and minimum sizes from each provider's resize flags.
 - [ ] ACTION_SEND video/audio dedicated Hangouts/Messenger/Photos receivers; preserve media metadata and native MIME target filtering. PDF streams and image-to-Messenger attachment delivery are connected.

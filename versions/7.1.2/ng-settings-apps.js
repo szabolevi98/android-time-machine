@@ -173,7 +173,7 @@
   }
   NG.appNotifSummary = notifSummary;
   NG.appNotifBlocked = (c, id) => !!notif(c, id).block;
-  const running = (c, id) => (c.data.recentApps || []).includes(id) && !disabled(c, id);
+  const running = (c, id) => !NG.appData?.stopped(c, id) && ((c.data.recentApps || []).includes(id) || id === 'play-music' && c.data.music?.playing || id === 'play-store' && Object.keys(c.data.playStore?.jobs || {}).length) && !disabled(c, id);
   NG.settingsScreens.app = {
     title: () => T().t('application_info_label'),
     render(c, cur) {
@@ -198,12 +198,12 @@
         if (NG.appsData[id]?.storeId) { NG.playUI.uninstall(c, NG.appsData[id].storeId, c => { c.ui.settings.stack.pop(); }); return true; }
         if (disabled(c, id)) { s.disabledApps = (s.disabledApps || []).filter(x => x !== id); c.save(); c.render(); return true; }
         c.dialog({message: t.t('app_disable_dlg_text'), buttons: [{label: t.t('dlg_cancel')}, {label: t.t('app_disable_dlg_positive'), action: c => {
-          s.disabledApps = [...new Set([...(s.disabledApps || []), id])]; c.data.recentApps = (c.data.recentApps || []).filter(x => x !== id); c.save(); c.render();
+          s.disabledApps = [...new Set([...(s.disabledApps || []), id])]; NG.appData.stop(c, id); c.save(); c.render();
         }}]});
         return true;
       }
       if (name === 'ngap-stop') {
-        c.dialog({title: t.t('force_stop_dlg_title'), message: t.t('force_stop_dlg_text'), buttons: [{label: t.t('dlg_cancel')}, {label: t.t('dlg_ok'), action: c => { c.data.recentApps = (c.data.recentApps || []).filter(x => x !== id); c.save(); c.render(); }}]});
+        c.dialog({title: t.t('force_stop_dlg_title'), message: t.t('force_stop_dlg_text'), buttons: [{label: t.t('dlg_cancel')}, {label: t.t('dlg_ok'), action: c => { NG.appData.stop(c, id); c.render(); }}]});
         return true;
       }
       if (name === 'ngap-pref') {
@@ -231,14 +231,13 @@
       const t = T(), id = cur.screen.split(':')[1], u = usage(c, id), f = n => NG.fileSize(c, n);
       return `<div class="ngst-list"><i class="ngap-space"></i>${pair(c, t.t('storage_used'), t.t('storage_type_internal'))}${button(c, 'ngap-change', t.t('change'), true)}
         ${NG.settingsCat(c, t.t('storage_label'))}${pair(c, t.t('total_size_label'), f(u.app + u.data))}${pair(c, t.t('application_size_label'), f(u.app))}${pair(c, t.t('external_code_size_label'), f(0))}
-        ${pair(c, t.t('data_size_label'), f(u.data))}${pair(c, t.t('external_data_size_label'), f(0))}${button(c, 'ngap-cleardata', t.t('clear_user_data_text'), !u.data)}
+        ${pair(c, t.t('data_size_label'), f(u.data))}${pair(c, t.t('external_data_size_label'), f(0))}${button(c, 'ngap-cleardata', t.t('clear_user_data_text'), !u.data || !NG.appData.canClear(id))}
         <i class="ngap-space"></i>${pair(c, t.t('cache_size_label'), f(u.cache))}${button(c, 'ngap-clearcache', t.t('clear_cache_btn_text'), !u.cache)}</div>`;
     },
     action(c, name, el, cur) {
       const t = T(), id = cur.screen.split(':')[1], s = S(c);
-      const clear = (...what) => { const cur = {...((s.appCleared || {})[id] || {})}; for (const w of what) cur[w] = true; s.appCleared = {...(s.appCleared || {}), [id]: cur}; c.save(); c.render(); };
-      if (name === 'ngap-cleardata') { c.dialog({title: t.t('clear_data_dlg_title'), message: t.t('clear_data_dlg_text'), buttons: [{label: t.t('dlg_cancel')}, {label: t.t('dlg_ok'), action: () => clear('data', 'cache')}]}); return true; }
-      if (name === 'ngap-clearcache') { clear('cache'); return true; }
+      if (name === 'ngap-cleardata') { if (!NG.appData.canClear(id)) return true; c.dialog({title: t.t('clear_data_dlg_title'), message: t.t('clear_data_dlg_text'), buttons: [{label: t.t('dlg_cancel')}, {label: t.t('dlg_ok'), action: c => { NG.appData.clear(c, id); c.render(); }}]}); return true; }
+      if (name === 'ngap-clearcache') { NG.appData.clearCache(c, id); c.render(); return true; }
       return false;
     }
   };

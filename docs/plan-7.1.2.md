@@ -758,3 +758,20 @@ Texts come from SettingsGoogle, TeleService, GoogleDialer and framework; debug c
 intent (both Testing's keyless sibling rows were inert before). Validation: `ng-testing.mjs` covers codes, radio power,
 SMSC, IMS/bands/SIM lists, measured usage, all Wi-Fi screens and disable/enable, phone width and all five languages;
 `ng-settings-extra.mjs` passed, all 205 module checks passed, and the source inventory was regenerated.
+
+## App data and package lifetime — 2026-10-22
+
+App info's Clear data now clears the package's private model/preferences instead of only changing a storage counter.
+`ng-app-data.js` maps the launcher apps to their private fields and shared provider/service records. SMS, contacts,
+calendar events/goals, local photos/audio/Documents nodes, Drive's cloud files and PackageManager's installed apps stay;
+queues, drafts, onboarding, private settings and offline/cache copies reset as appropriate. Clock loses its alarms,
+Chrome its unsynced local tabs/bookmarks/history and site settings, Music its queue/playlists/player, and Pay its
+device cards. Settings' Clear data is disabled. Clear cache has a separate scope (Drive's offline files stay).
+Force stop and disabling a package stop its player/work, cancel its notifications and discard its recent tasks,
+history, split snapshot and private screen state. Stopped packages' tick hooks stay stopped across reloads until an
+explicit app launch (including its settings activity) reopens the package. Shared `NG.appTasks` owns Messenger,
+Hangouts and Calendar Goal delayed jobs so clearing/stopping cancels old callbacks; pending message delivery can resume
+on launch without replaying a cancelled demo answer. Opening an app resets its zeroed usage flags as private data grows
+again. Hangouts' browser test now scopes queries to the live viewport so animation snapshots cannot supply the old
+draft field. Validation: six new lifecycle/model checks (211 module checks total); browser Clear data/Force stop flow,
+Music, Hangouts and Calendar Goals; phone width and all five languages in the new flow.

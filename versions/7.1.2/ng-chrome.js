@@ -402,6 +402,7 @@
   };
 
   NG.register('chrome', {
+    clearData(c) { delete c.data.chrome; S(c).bookmarks = []; },
     // ChromeActivity leaves the status bar black on the default theme.
     statusColor: () => '#000',
     page: c => NG.page('chrome', S(c).fre !== 2 ? `fre${S(c).fre}` : ui(c).switcher ? 'switcher' : url(c) === BOOKMARKS ? 'bookmarks' : ''),

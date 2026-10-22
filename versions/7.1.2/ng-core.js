@@ -269,6 +269,7 @@
     if (ui.view !== view && !replace && ui.view !== 'home' && ui.view !== 'lock') ui.history.push({view: ui.view, sub: ui.sub});
     window.NG.split?.opened?.(c, view);
     ui.view = view; ui.sub = sub; ui.overlay = '';
+    window.NG.appData?.opened(c, view);
     if (modules[view]?.app !== false && SCREENS[view] && !SYSTEM.includes(view)) ui.recent = [view, ...ui.recent.filter(id => id !== view)].slice(0, 20);
     // The launcher's predicted apps follow what was opened last (kept with the saved state).
     if (window.NG.appsData?.[view]) { data.recentApps = [view, ...(data.recentApps || []).filter(id => id !== view)].slice(0, 12); save(); }
@@ -436,7 +437,7 @@
       // The simulator's rule: no timeout unless one is chosen in Settings › Display › Sleep (-1 is Never).
       const timeout = modules[ui.view]?.timeout?.(c) ?? data.settings.screenTimeout ?? -1;
       if (timeout >= 0 && !document.hidden && !ui.sleeping && !ui.power && !ui.overlay && Date.now() - lastActivity >= timeout && !modules[ui.view]?.keepAwake?.(c)) lockScreen();
-      for (const mod of Object.values(modules)) mod.tick?.(c, now);
+      for (const [id, mod] of Object.entries(modules)) if (!window.NG.appData?.stopped(c, id)) mod.tick?.(c, now);
     }, 1000);
 
     i18n.translateDOM(document.body);

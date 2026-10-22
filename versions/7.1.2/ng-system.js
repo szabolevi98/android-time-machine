@@ -189,7 +189,7 @@
     return null;
   }
   // AlarmManager.getNextAlarmClock: the time (ms) of the next alarm that is on, 0 with none.
-  NG.clock = {nextFire, nextAlarm: c => (c.data.clock?.alarms || []).filter(a => a.on).map(a => nextFire(a)).filter(Boolean).sort((x, y) => x - y)[0]?.getTime() || 0};
+  NG.clock = {nextFire, nextAlarm: c => NG.appData?.stopped(c, 'clock') ? 0 : (c.data.clock?.alarms || []).filter(a => a.on).map(a => nextFire(a)).filter(Boolean).sort((x, y) => x - y)[0]?.getTime() || 0};
 
   NG.register('system', {
     app: false,
@@ -205,7 +205,7 @@
         // The volume slot: vibrate unless total silence or alarms only (PhoneStatusBarPolicy.updateVolumeZen).
         if (s.ringerMode === 'vibrate' && s.zen !== 2 && s.zen !== 3) out.push('stat_sys_ringer_vibrate');
         // alarm_clock: shown while AlarmManager has a next alarm clock set.
-        if ((c.data.clock?.alarms || []).some(x => x.on)) out.push('stat_sys_alarm');
+        if (NG.clock.nextAlarm(c)) out.push('stat_sys_alarm');
         return out;
       };
       c.signal = () => {

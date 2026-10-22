@@ -144,10 +144,10 @@
   function create(c) {
     const u = U(c), g = {...u.draft, id: Date.now(), created: Date.now(), done: []};
     u.creating = true; u.wait = 0; c.render();
-    const cycle = () => { if (!U(c).creating || c.ui.view !== 'calendar-goal') return; u.wait = (u.wait + 1) % 4; const p = c.el.viewport.querySelector('.ngcg-waiting'); if (p) p.textContent = T().t('groove_checking_schedule_array')[u.wait]; u.timer = setTimeout(cycle, 2500); };
-    u.timer = setTimeout(cycle, 2500);
+    const cycle = () => { if (!U(c).creating || c.ui.view !== 'calendar-goal') return; u.wait = (u.wait + 1) % 4; const p = c.el.viewport.querySelector('.ngcg-waiting'); if (p) p.textContent = T().t('groove_checking_schedule_array')[u.wait]; u.timer = NG.appTasks.later(c, 'calendar', cycle, 2500); };
+    u.timer = NG.appTasks.later(c, 'calendar', cycle, 2500);
     // GrooveSyncTracker: the activity finishes once the first sessions have synced.
-    setTimeout(() => {
+    NG.appTasks.later(c, 'calendar', () => {
       if (!U(c).creating || c.ui.view !== 'calendar-goal') return;
       clearTimeout(u.timer);
       goals(c).push(g);
@@ -185,7 +185,7 @@
     if (name === 'ngcg-undone') { g.done = g.done.filter(x => x !== e.id); c.save(); c.render(); return true; }
     if (name === 'ngcg-later') {
       NG.snackbar?.(c, t('goal_session_deferred'));
-      setTimeout(() => {
+      NG.appTasks.later(c, 'calendar', () => {
         const day = parse(e.date); let s = -1;
         for (let i = 0; i < 7 && s < 0; i++) { day.setDate(day.getDate() + 1); s = freeStart(c, day, g); }
         if (s < 0) return;

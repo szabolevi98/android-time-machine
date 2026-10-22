@@ -281,7 +281,8 @@
     const who = P().byNumber(c, x.number);
     if (!who || answered.has(x.id)) return;
     answered.add(x.id);
-    setTimeout(() => {
+    NG.appTasks.later(c, 'messenger', () => {
+      if (!threads(c).includes(x)) return;
       const t = T(), text = t.t(`sim_reply_${(who.id + x.id) % 3 + 1}`), open = c.ui.view === 'messenger' && ui(c).screen === `conv:${x.id}` && !c.ui.sleeping;
       if (isBlocked(c, x.number)) return;
       x.messages.push({id: nextId(c), mine: false, text, time: Date.now()});
@@ -292,7 +293,7 @@
     }, 4500);
   }
   function deliver(c, x, out) {
-    setTimeout(() => { for (const m of out) { delete m.status; m.time = Date.now(); } c.save(); if (c.ui.view === 'messenger') c.render(); }, out.some(m => m.photo || m.sticker) ? 2400 : 1200);
+    NG.appTasks.later(c, 'messenger', () => { if (!threads(c).includes(x)) return; for (const m of out) { delete m.status; m.time = Date.now(); } c.save(); if (c.ui.view === 'messenger') c.render(); }, out.some(m => m.photo || m.sticker) ? 2400 : 1200);
   }
   function send(c, x) {
     const u = ui(c), text = (u.draft[x.id] || '').trim(), pending = u.attach[x.id] || []; if (!text && !pending.length) return;
@@ -464,6 +465,8 @@
   }
 
   NG.register('messenger', {
+    stop() { answered.clear(); },
+    resume(c) { for (const x of threads(c)) { const pending = x.messages.filter(m => m.status === 'sending'); if (pending.length) deliver(c, x, pending); } },
     // The window animation's page (ng-core.js): deeper screens open over the ones they came from.
     page: c => NG.page('messenger', c.ui.messenger?.screen),
     statusColor: c => { consume(c); const u = ui(c); if (u.screen.startsWith('conv:')) { const x = thread(c, u.screen.slice(5)); if (x) return colorOf(c, x.number)[1]; } return u.screen === 'archived' ? '#838383' : '#1c3aa9'; },
