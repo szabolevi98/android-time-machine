@@ -73,13 +73,14 @@ for path in sorted(SYSTEM.glob('*/*/*.apk')):
         node=xml(meta);key=name(meta).split('/')[-1]
         ident='digital' if apk=='PrebuiltDeskClockGoogle' and 'digital' in key else 'analog' if apk=='PrebuiltDeskClockGoogle' else APPS.get(apk,apk.lower())+'-'+key
         if any(w['id']==ident for w in widgets):continue
-        dim=lambda k:float(re.match(r'[0-9.]+',str(raw(node.get(N+k,'0'))))[0])
+        dim=lambda k, fallback=0:float(re.match(r'[0-9.]+',str(raw(node.get(N+k,str(fallback)))))[0])
         width,height=dim('minWidth'),dim('minHeight')
         entry={'id':ident,'app':APPS.get(apk,apk.lower()),'apk':apk,'receiver':receiver.get(N+'name'),'source':name(meta),
                'label':text(receiver.get(N+'label') or app.get(N+'label')),'minW':width,'minH':height,
                'spanX':min(5,max(1,math.ceil((width+16)/80.686))), 'spanY':min(5,max(1,math.ceil((height+16)/96.686))),
                'layout':name(node.get(N+'initialLayout')),'configure':node.get(N+'configure'),
-               'resize':node.get(N+'resizeMode','0'),'minResizeW':dim('minResizeWidth'),'minResizeH':dim('minResizeHeight'),
+               # AppWidgetServiceImpl falls back to minWidth/minHeight when resize minima are absent.
+               'resize':node.get(N+'resizeMode','0'),'minResizeW':dim('minResizeWidth',width),'minResizeH':dim('minResizeHeight',height),
                'preview':picture(node.get(N+'previewImage'),'wid-'+ident)}
         widgets.append(entry)
     for meta in shortcuts_meta:

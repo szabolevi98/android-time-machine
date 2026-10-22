@@ -108,8 +108,8 @@ NG.widgetProviders = [
     "layout": "layout/music_widget_small",
     "configure": null,
     "resize": "0x00000003",
-    "minResizeW": 0.0,
-    "minResizeH": 0.0,
+    "minResizeW": 240.0,
+    "minResizeH": 40.0,
     "preview": "assets/wid-play-music-music_widget_info.png"
   },
   {
@@ -132,8 +132,8 @@ NG.widgetProviders = [
     "layout": "layout/widget_ifl",
     "configure": null,
     "resize": "0x00000000",
-    "minResizeW": 0.0,
-    "minResizeH": 0.0,
+    "minResizeW": 40.0,
+    "minResizeH": 40.0,
     "preview": "assets/wid-play-music-widget_ifl_info.png"
   },
   {
@@ -296,8 +296,8 @@ NG.widgetProviders = [
     "layout": "layout/widget_layout",
     "configure": "com.google.android.finsky.widget.MarketWidgetTrampolineActivity",
     "resize": "0",
-    "minResizeW": 0.0,
-    "minResizeH": 0.0,
+    "minResizeW": 110.0,
+    "minResizeH": 110.0,
     "preview": "assets/wid-play-store-widget_info.png"
   },
   {
@@ -345,7 +345,7 @@ NG.widgetProviders = [
     "configure": "com.google.android.finsky.widget.recommendation.RecommendedTrampoline",
     "resize": "0x00000001",
     "minResizeW": 180.0,
-    "minResizeH": 0.0,
+    "minResizeH": 110.0,
     "preview": "assets/wid-play-store-recommendation_widget_info.png"
   },
   {
@@ -393,7 +393,7 @@ NG.widgetProviders = [
     "configure": null,
     "resize": "0x00000001",
     "minResizeW": 80.0,
-    "minResizeH": 0.0,
+    "minResizeH": 40.0,
     "preview": "assets/wid-search-search_widget_info.png"
   },
   {
@@ -412,8 +412,8 @@ NG.widgetProviders = [
     "layout": "layout/soundsearch_intent_widget",
     "configure": null,
     "resize": "0",
-    "minResizeW": 0.0,
-    "minResizeH": 0.0,
+    "minResizeW": 60.0,
+    "minResizeH": 60.0,
     "preview": "assets/wid-search-soundsearch_intent_appwidget.png"
   }
 ];

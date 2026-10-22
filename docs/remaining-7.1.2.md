@@ -57,7 +57,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Calendar Goal creation, scheduling and session actions (`3108b381`). Remaining service activity cards are tracked by the routing audit below.
 - [x] App info Clear data/Force stop: private model/preferences reset, package task cancellation, stopped background services, provider data preserved.
 - [ ] MusicFX's full effect-control panel. Play Music currently exposes its native unavailable-effects response because the simulated media clock has no DSP session.
-- [ ] Widget resize handles and minimum sizes from each provider's resize flags.
+- [x] Widget resize: native frame/handles, provider flags/minima, transactional cell reorder, pointer/touch commit and cancel, persisted dimensions.
 - [ ] ACTION_SEND video/audio dedicated Hangouts/Messenger/Photos receivers; preserve media metadata and native MIME target filtering. PDF streams and image-to-Messenger attachment delivery are connected.
 - [ ] Preference leaf/intent routing audit: finish service-backed and non-toggle rows that still lack a click handler.
 - [ ] Sweep all direct `missing(...)` branches and external activity routes; no unfinished card may remain at release.

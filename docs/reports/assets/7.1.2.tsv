@@ -481,11 +481,14 @@ versions/7.1.2/assets/gel-ic_wallpaper.png	2cde42a09fbf6f99	copy	angler:/system/
 versions/7.1.2/assets/gel-ic_wallpaper_pressed.png	c1e14453f57c16e2	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_wallpaper_pressed.png	drawable-xxhdpi-v4		c1e14453f57c16e2
 versions/7.1.2/assets/gel-ic_widget.png	ec402c741dc6aa06	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_widget.png	drawable-xxhdpi-v4		ec402c741dc6aa06
 versions/7.1.2/assets/gel-ic_widget_pressed.png	cb2c206581e193db	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_widget_pressed.png	drawable-xxhdpi-v4		cb2c206581e193db
+versions/7.1.2/assets/gel-ic_widget_resize_handle.png	5167b47ab8229383	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/ic_widget_resize_handle.png	drawable-xxxhdpi-v4		5167b47ab8229383
 versions/7.1.2/assets/gel-portal_ring_inner.png	8e417f796ed5cad8	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/portal_ring_inner.png	drawable-xxxhdpi-v4		8e417f796ed5cad8
 versions/7.1.2/assets/gel-quantum_panel_bitmap.9.png	a9b44f692f71ebbc	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/quantum_panel_bitmap.9.png	drawable-xxxhdpi-v4		a9b44f692f71ebbc
 versions/7.1.2/assets/gel-screenpanel.9.png	5367af4067b16862	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/screenpanel.9.png	drawable-xxhdpi-v4		5367af4067b16862
 versions/7.1.2/assets/gel-screenpanel_hover.9.png	3a9d25444ea43a11	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/screenpanel_hover.9.png	drawable-xxhdpi-v4		3a9d25444ea43a11
 versions/7.1.2/assets/gel-search_bg.9.png	023562590363b025	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/search_bg.9.png	drawable-xxhdpi-v4		023562590363b025
+versions/7.1.2/assets/gel-widget_resize_frame.9.png	f1ce85ef190f941e	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/widget_resize_frame.9.png	drawable-xxxhdpi-v4		f1ce85ef190f941e
+versions/7.1.2/assets/gel-widget_resize_shadow.9.png	7f29eb7d294cdd8e	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/widget_resize_shadow.9.png	drawable-xxxhdpi-v4		7f29eb7d294cdd8e
 versions/7.1.2/assets/gg-add.png	ad5ab5925130405c	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_add_white_24.png	drawable-xxxhdpi-v4		ad5ab5925130405c
 versions/7.1.2/assets/gg-back.png	dc88c631c0d89f54	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_arrow_back_grey600_24.png	drawable-xxxhdpi-v4		dc88c631c0d89f54
 versions/7.1.2/assets/gg-clear.png	26a05e4d8c2eda9c	copy	angler:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_search_clear_normal.png	drawable-xxhdpi-v4		26a05e4d8c2eda9c

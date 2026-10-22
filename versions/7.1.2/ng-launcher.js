@@ -221,6 +221,7 @@
 
   // Drag and drop (DragController, Workspace / Hotseat as drop targets, DeleteDropTarget, InfoDropTarget).
   function startDrag(c, root, d) {
+    NG.widgetResize?.dismiss(c);
     const st = c.ui.home, el = root.querySelector('.ngh');
     st.dragging = d;
     el.classList.add('dragging');
@@ -228,9 +229,11 @@
     const view = document.createElement('div');
     view.className = 'ngh-dragview';
     if (d.item.type === 'widget') {
-      const wi = NG.widgets?.info(d.item.w) || {spanX: d.item.spanX || 1, spanY: d.item.spanY || 1}, w = G.cellW * wi.spanX, h = G.cellH * wi.spanY;
+      const wi = d.from === 'ws' ? d.item : NG.widgets?.info(d.item.w) || d.item, w = G.cellW * (wi.spanX || 1), h = G.cellH * (wi.spanY || 1);
       view.classList.add('widget');
-      Object.assign(view.style, {width: dp(w), height: dp(h), margin: `calc(${(-h / 2 / P).toFixed(3)} * var(--dp)) 0 0 calc(${(-w / 2 / P).toFixed(3)} * var(--dp))`});
+      const cell = d.srcEl?.closest('.ngh-cell')?.getBoundingClientRect(), scale = el.clientWidth / G.W;
+      d.grab = cell && d.start ? {x: (d.start.x - cell.left) / scale, y: (d.start.y - cell.top) / scale} : {x: w / 2, y: h / 2};
+      Object.assign(view.style, {width: dp(w), height: dp(h), margin: `${dp(-d.grab.y)} 0 0 ${dp(-d.grab.x)}`});
       view.innerHTML = d.from === 'ws' ? (NG.widgets?.home(c, d.item) || '') : `<div class="ngh-wprev">${NG.widgets?.preview?.(c, wi) || ''}</div>`;
     } else if (d.item.type === 'shortcut') view.innerHTML = `<img src="${c.safe(d.item.icon || '')}" alt="">`;
     else view.innerHTML = `<img src="${NG.appsData?.[d.item.type === 'folder' ? d.item.items[0] : d.item.app]?.icon}" alt="">`;
@@ -287,18 +290,20 @@
       else if (d.from === 'hs') h.hotseat[+d.src.split(':')[1]] = null;
       else if (d.from === 'fd') { const loc = folderOf(c, d.folder); loc.item.items.splice(d.index, 1); tidyFolder(h, loc); }
     };
-    const wi = d.item.type === 'widget' ? (NG.widgets?.info(d.item.w) || {id: d.item.w, spanX: d.item.spanX, spanY: d.item.spanY}) : null;
+    const provider = d.item.type === 'widget' ? (NG.widgets?.info(d.item.w) || {id: d.item.w, spanX: d.item.spanX, spanY: d.item.spanY}) : null;
+    const wi = provider && {...provider, ...(d.from === 'ws' ? {spanX: d.item.spanX, spanY: d.item.spanY} : {})};
     if (t?.kind === 'info' && (app || wi?.app)) { strip(); c.render(); c.open('settings', `app:${app || wi.app}`); return; }
     if (t?.kind === 'remove' && d.from !== 'drawer') { take(); saveRender(); return; }
     const fresh = {...d.item};
     if (wi && t?.kind === 'ws') {
       const list = h.pages[page - 1], self = d.from === 'ws' ? locate(h, d.src).item : null;
-      const at = nearest(list, t.fx - wi.spanX / 2 + .5, t.fy - wi.spanY / 2 + .5, wi.spanX, wi.spanY, self);
+      const at = nearest(list, t.fx + wi.spanX / 2 - d.grab.x / G.cellW, t.fy + wi.spanY / 2 - d.grab.y / G.cellH, wi.spanX, wi.spanY, self);
       if (!at) { strip(); c.render(); c.toast(T().t('out_of_space'), false); return; }
       take();
       const placed={...(d.from === 'ws' ? fresh : {}), type: 'widget', w: wi.id || d.item.w, spanX: wi.spanX, spanY: wi.spanY, x: at.x, y: at.y};
       h.pages[page - 1].push(placed);saveRender();
-      if(d.from!=='ws')NG.widgets?.configure?.(c,placed,ok=>{if(!ok){const list=h.pages.find(p=>p.includes(placed));if(list)list.splice(list.indexOf(placed),1);}saveRender();});
+      if(d.from!=='ws')NG.widgets?.configure?.(c,placed,ok=>{if(!ok){const list=h.pages.find(p=>p.includes(placed));if(list)list.splice(list.indexOf(placed),1);}saveRender();if(ok)NG.widgetResize?.show(c,placed);});
+      else NG.widgetResize?.show(c,placed);
       return;
     }
     if (wi) { strip(); c.render(); return; }
@@ -334,6 +339,7 @@
     const st = c.ui.home, h = home(c), last = h.pages.length;
     st.listenersOff?.();
     NG.widgets?.mount?.(c, el);
+    NG.widgetResize?.mount(c, el);
     NG.google?.mount?.(c, el.querySelector('.ngh-nowpage'));
     if (st.folder && st.folderShown !== st.folder) { st.folderShown = st.folder; folderOpenAnim(c, el.querySelector('.ngh-fpanel')); }
     if (!st.folder) st.folderShown = null;
@@ -356,7 +362,7 @@
           let item, from = s.split(':')[0], folder = null, index = 0;
           if (from === 'fd') { folder = st.folder; index = +s.split(':')[1]; item = {type: 'app', app: folderOf(c, folder).item.items[index]}; }
           else item = locate(h, s).item;
-          const origin={x:press.x,y:press.y},drag={src:s,from,item,folder,index,srcEl:src};
+          const origin={x:press.x,y:press.y},drag={src:s,from,item,folder,index,srcEl:src,start:origin};
           if(item.type==='app'&&NG.shortcuts?.show(c,item.app,src,origin,(x,y)=>{startDrag(c,root,drag);moveDrag(c,root,x,y);})){press=null;return;}
           startDrag(c, root, drag);
           moveDrag(c, root, press.x, press.y);
@@ -424,10 +430,10 @@
   NG.register('home', {
     app: false,
     render, mount,
-    unmount(c){c.ui.home?.listenersOff?.();if(c.ui.home)c.ui.home.listenersOff=null;},
+    unmount(c){NG.widgetResize?.dismiss(c);c.ui.home?.listenersOff?.();if(c.ui.home)c.ui.home.listenersOff=null;},
     statusColor: () => 'transparent',
-    reset(c) { if (c.ui.home) { Object.assign(c.ui.home, {folder: null, overview: false}); if (!c.ui.home.pendingDrag) c.ui.home.page = 1; } },
-    back(c) { const st = c.ui.home; if (st?.folder) { closeFolder(c); return true; } if (st?.overview) { st.overview = false; c.render(); } else if (c.ui.google?.drawer) { c.ui.google.drawer=false; c.render(); } else if(st?.page===0){st.page=1;c.render();} return true; },
+    reset(c) { NG.widgetResize?.dismiss(c); if (c.ui.home) { Object.assign(c.ui.home, {folder: null, overview: false}); if (!c.ui.home.pendingDrag) c.ui.home.page = 1; } },
+    back(c) { const st = c.ui.home; if (NG.widgetResize?.dismiss(c, true)) return true; if (st?.folder) { closeFolder(c); return true; } if (st?.overview) { st.overview = false; c.render(); } else if (c.ui.google?.drawer) { c.ui.google.drawer=false; c.render(); } else if(st?.page===0){st.page=1;c.render();} return true; },
     action(name, el, event, c) {
       const st = c.ui.home;
       if (name.startsWith('nggoogle-') && NG.google) return NG.google.action(name, el, event, c);

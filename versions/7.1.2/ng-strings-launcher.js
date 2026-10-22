@@ -271,5 +271,14 @@ NG.strings('launcher', {
 "de": "Keine Live-Hintergründe",
 "fr": "Aucun fond d'écran animé.",
 "es": "No hay ningún fondo de pantalla animado."
+},
+"widget_resized": {
+"res": "angler:Velvet:widget_resized",
+"args": 2,
+"en": "Widget resized to width %1$s height %2$s",
+"hu": "Modul átméretezve %1$s szélességre és %2$s magasságra",
+"de": "Größe des Widgets zu Breite %1$s und Höhe %2$s geändert",
+"fr": "Le widget a bien été redimensionné (largeur : %1$s, hauteur : %2$s).",
+"es": "Se ha modificado el tamaño del widget a %1$s de ancho y %2$s de alto"
 }
 });

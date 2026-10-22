@@ -775,3 +775,21 @@ on launch without replaying a cancelled demo answer. Opening an app resets its z
 again. Hangouts' browser test now scopes queries to the live viewport so animation snapshots cannot supply the old
 draft field. Validation: six new lifecycle/model checks (211 module checks total); browser Clear data/Force stop flow,
 Music, Hangouts and Calendar Goals; phone width and all five languages in the new flow.
+
+## Widget resize — 2026-10-22
+
+Launcher3's AppWidgetResizeFrame (`ng-widget-resize.js/css`) now appears after a resizable widget is dropped, including
+after successful configuration: Velvet's widget_resize_shadow/frame nine-patches and 19 dp ic_widget_resize_handle,
+24 dp background padding, 13 dp handle margins, 48 dp touch regions, the 0.66-cell threshold and 150 ms snap. Resize
+flags control which handles appear; minResizeWidth/minResizeHeight plus the host's 16 dp padding determine the minimum
+spans. The provider generator now follows AppWidgetServiceImpl's minWidth/minHeight fallback when those attributes
+are absent (not zero, which would have made Music shrink below its native minimum). Resizing previews a complete
+reorder transaction outside the saved model; the grid commits on release, rolls back on pointer cancellation and rejects
+an area that cannot fit all items. Other widgets keep their spans when displaced. Back, Home and leaving the launcher
+dismiss the frame. Moving an existing widget preserves its resized dimensions and grab point; nearest placement takes
+the widget's centre once, so a hold/release does not shift it. The digital clock's font sizer now subtracts the host's
+padding, keeping its minimum 2x1 clock inside the available space.
+Validation: five new geometry/transaction checks (216 total module checks), `ng-widget-resize.mjs` (desktop preview/
+commit, minima, reordering, moving, horizontal-only and fixed providers, reload, five languages, actual phone touch
+resize and touch cancellation), and the existing provider picker and Play Store widget flows. Three native bitmaps
+were added to the source inventory.

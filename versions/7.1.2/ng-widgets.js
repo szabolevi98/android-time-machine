@@ -47,7 +47,8 @@
     if (it.w !== 'digital') return '';
     const alarm = nextAlarm(c);
     // The launcher's portrait cell is 80.686 x 96.686 dp: appWidgetMinWidth 5 cells, appWidgetMaxHeight 2 cells.
-    const g = NG.launcherGrid, s = fit(c, (it.spanX || 5) * g.cellW / D, (it.spanY || 2) * g.cellH / D);
+    // AppWidgetHostView.updateAppWidgetSize removes the host padding before reporting the available dimensions.
+    const g = NG.launcherGrid, s = fit(c, Math.max(1, (it.spanX || 5) * g.cellW / D - 16), Math.max(1, (it.spanY || 2) * g.cellH / D - 16));
     const px = v => `calc(${(v / D).toFixed(3)} * var(--dp))`;
     return `<button type="button" class="ngwg-digital" data-action="ngwg-open" data-app="clock" style="--k:${px(s.k)};--j:${px(s.j)};--l:${px(s.l)};--m:${px(s.m)}"><b class="ngwg-time">${c.safe(time(c))}</b><span class="ngwg-row"><i class="ngwg-date">${c.safe(date(c))}</i>${alarm ? `<em class="ngwg-aicon">A</em><i class="ngwg-alarm">${c.safe(alarm)}</i>` : ''}</span></button>`;
   }

@@ -1,0 +1,4 @@
+# AppWidgetResizeFrame in the N2G48C Google Now Launcher (Velvet): shadow, foreground border and handles.
+gel-widget_resize_frame.9.png	priv-app/Velvet/Velvet.apk	drawable/widget_resize_frame
+gel-widget_resize_shadow.9.png	priv-app/Velvet/Velvet.apk	drawable/widget_resize_shadow
+gel-ic_widget_resize_handle.png	priv-app/Velvet/Velvet.apk	drawable/ic_widget_resize_handle
