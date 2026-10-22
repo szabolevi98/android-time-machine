@@ -847,6 +847,14 @@ versions/7.1.2/assets/sc-videos-manifest-shortcut-wishlist.svg	d932d059b670734d	
 versions/7.1.2/assets/sc-youtube-search-shortcut.png	b677ff8ab46e71a9	copy	angler:/system/app/YouTube/YouTube.apk!res/drawable-xxhdpi-v4/ic_shortcut_search.png	drawable-xxhdpi-v4		b677ff8ab46e71a9
 versions/7.1.2/assets/sc-youtube-subscriptions-shortcut.png	c142debfc559a228	copy	angler:/system/app/YouTube/YouTube.apk!res/drawable-xxhdpi-v4/ic_shortcut_subscriptions.png	drawable-xxhdpi-v4		c142debfc559a228
 versions/7.1.2/assets/sc-youtube-trending-shortcut.png	1bccf3b5bfaef6e2	copy	angler:/system/app/YouTube/YouTube.apk!res/drawable-xxhdpi-v4/ic_shortcut_trending.png	drawable-xxhdpi-v4		1bccf3b5bfaef6e2
+versions/7.1.2/assets/sl-add.png	5a2cf2037db9d49d	copy	angler:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable-xxhdpi-v4/auth_btn_add_trusted.png	drawable-xxhdpi-v4		5a2cf2037db9d49d
+versions/7.1.2/assets/sl-face-allset.png	48897ee3a8dc4e0a	copy	angler:/system/app/FaceLock/FaceLock.apk!res/drawable-xxxhdpi-v4/bg_trustedface_allset_illustration_header.png	drawable-xxxhdpi-v4		48897ee3a8dc4e0a
+versions/7.1.2/assets/sl-face-done.png	846ada0b8d3bdbfa	copy	angler:/system/app/FaceLock/FaceLock.apk!res/drawable-xxhdpi-v4/ic_faceunlock_done.png	drawable-xxhdpi-v4		846ada0b8d3bdbfa
+versions/7.1.2/assets/sl-face-setup.png	ef37ab527c7e4b0c	copy	angler:/system/app/FaceLock/FaceLock.apk!res/drawable-xxxhdpi-v4/bg_trustedface_setup_illustration_header.png	drawable-xxxhdpi-v4		ef37ab527c7e4b0c
+versions/7.1.2/assets/sl-lock-open.png	663b86fdccd4bdab	copy	angler:/system/app/FaceLock/FaceLock.apk!res/drawable-xxxhdpi-v4/ic_lock_open_black_24dp.png	drawable-xxxhdpi-v4		663b86fdccd4bdab
+versions/7.1.2/assets/sl-lock.png	95550064a65dfb35	copy	angler:/system/app/FaceLock/FaceLock.apk!res/drawable-xxxhdpi-v4/ic_lock_black_24dp.png	drawable-xxxhdpi-v4		95550064a65dfb35
+versions/7.1.2/assets/sl-on-body.png	a6af992d6ea358f8	copy	angler:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable-xxhdpi-v4/auth_illustration_on_body_detection.png	drawable-xxhdpi-v4		a6af992d6ea358f8
+versions/7.1.2/assets/sl-tile.png	5c8ffb5df37b5ebe	copy	angler:/system/app/FaceLock/FaceLock.apk!res/drawable-xxxhdpi-v4/bg_tile.png	drawable-xxxhdpi-v4		5c8ffb5df37b5ebe
 versions/7.1.2/assets/st-NOTICE.html.gz	0a367c933b82d8dc	copy	angler:/system/etc/NOTICE.html.gz			0a367c933b82d8dc
 versions/7.1.2/assets/st-accessibility_screen_magnification.mp4	161bbfef9c9bce2e	copy	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/raw/accessibility_screen_magnification.mp4	raw		161bbfef9c9bce2e
 versions/7.1.2/assets/st-accessibility_screen_magnification_background.svg	b3328c13c8197f61	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/accessibility_screen_magnification_background.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	20c24644ecda9840

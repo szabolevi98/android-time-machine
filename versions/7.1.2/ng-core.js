@@ -8,7 +8,7 @@
    - the site controls around the phone: language, full screen, reset
    Every screen is drawn by an ng- module that registers itself:
      NG.register(id, {title, app, render(c), mount(c, root), action(name, el, event, c), submit(form, event, c),
-                      back(c), unmount(c), tick(c, now), noStatus(c), noNav(c), keepAwake(c), timeout(c)})
+                      back(c), unmount(c), tick(c, now), noStatus(c), underStatus(c), noNav(c), keepAwake(c), timeout(c)})
    render() returns the screen's HTML; the other hooks are optional and return true when they handled the event.
    A screen no module draws shows the "not built yet" card instead of an older version's screen. */
 (() => {
@@ -225,8 +225,8 @@
     pending = '';
     const old = kind ? leave(kind) : null;
     ui.prevView = shown.view;
-    const noStatus = !!mod?.noStatus?.(c), noNav = !!mod?.noNav?.(c);
-    screen.className = `screen${ui.sleeping ? ' sleeping' : ''}${noStatus ? ' no-status' : ''}${noNav ? ' no-nav' : ''} view-${ui.view}`;
+    const noStatus = !!mod?.noStatus?.(c), under = !noStatus && !!mod?.underStatus?.(c), noNav = !!mod?.noNav?.(c);
+    screen.className = `screen${ui.sleeping ? ' sleeping' : ''}${noStatus ? ' no-status' : ''}${under ? ' under-status' : ''}${noNav ? ' no-nav' : ''} view-${ui.view}`;
     if (modules.statusbar) { statusRoot.innerHTML = modules.statusbar.render(c); modules.statusbar.mount?.(c, statusRoot); }
     else statusRoot.innerHTML = missing('statusbar');
     if (modules.navbar) { navRoot.innerHTML = modules.navbar.render(c); modules.navbar.mount?.(c, navRoot); }

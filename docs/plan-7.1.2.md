@@ -667,3 +667,19 @@ this phone. Wi-Fi › Advanced › Wi-Fi Direct (`wifi-direct`) shows the P2P de
 the Android ID by default), Peer devices while searching, Remembered groups, Search for devices and Rename device.
 About phone's Send feedback about this device opens Google Feedback, Emergency information the Emergency information app.
 `node tests/browser/ng-settings-extra.mjs` covers it.
+
+## Smart Lock and Trusted face — 2026-10-22
+
+Settings › Security › Smart Lock (GmsCore 9.8's GoogleTrustAgentPersonalUnlockingSettings) asks for the screen lock
+first and opens Settings pages (`smartlock*`, ng-smartlock.js): On-body detection (the switch bar over
+auth_on_body_detection_prompt's #007166 area with the illustration; turning it on asks "Keep in mind"), Trusted places
+(Home from Google Maps, places added by name and address, duplicates refused), Trusted devices (Bluetooth: the bonded
+devices, "Add trusted device?", Connected / Not connected, removal; NFC), Trusted face and Trusted voice (the Google
+app's hotword setup). Trusted face is FaceLock's own setup, read from its decompiled code (_aosp/ngfl): SetupIntro,
+SetupInstructionsScreen, SetupEnrollmentScreen (the front camera under the white Scrim with the ProgressRing's opening,
+"Starting up…", a frame every 660 ms filling the ring's 10 steps, then "Face added" and SetupEndScreen) and the end
+screen with Licenses; once set up, Improve face matching runs AddToSetup and the enrollment again, Remove trusted face
+forgets it. Each FaceLock activity lays out under the transparent status bar (setSystemUiVisibility 1280): modules can
+now say `underStatus(c)` (Settings pages too). The agents keep the phone unlocked (open lock icon, no bouncer) once
+the screen lock has been used since boot: on-body detection, a trusted face, or a trusted Bluetooth device that is
+connected. `node tests/browser/ng-smartlock.mjs` covers it.

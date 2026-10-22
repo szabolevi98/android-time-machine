@@ -1,0 +1,9 @@
+# Smart Lock (GmsCore) and Trusted Face (FaceLock) illustrations (ng-smartlock.js).
+sl-on-body.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/auth_illustration_on_body_detection
+sl-face-setup.png	app/FaceLock/FaceLock.apk	drawable/bg_trustedface_setup_illustration_header
+sl-face-allset.png	app/FaceLock/FaceLock.apk	drawable/bg_trustedface_allset_illustration_header
+sl-face-done.png	app/FaceLock/FaceLock.apk	drawable/ic_faceunlock_done
+sl-tile.png	app/FaceLock/FaceLock.apk	drawable/bg_tile
+sl-lock-open.png	app/FaceLock/FaceLock.apk	drawable/ic_lock_open_black_24dp
+sl-lock.png	app/FaceLock/FaceLock.apk	drawable/ic_lock_black_24dp
+sl-add.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/auth_btn_add_trusted

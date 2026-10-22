@@ -104,7 +104,8 @@
   }
   function checked(c, ok) {
     const st = c.ui.lockState, t = T(), type = c.data.settings.lock.type;
-    if (ok) { st.verified = true; st.confirmReturn = false; st.fails = 0; st.entry = ''; st.message = ''; const then = st.bouncer; st.bouncer = null; c.unlock(); if (typeof then === 'function') then(); else if (then && then !== 'unlock') c.open(then); return; }
+    // The first unlock since boot arms the trust agents (TrustManagerService: no trust before the user has authenticated).
+    if (ok) { c.ui.trustArmed = true; st.verified = true; st.confirmReturn = false; st.fails = 0; st.entry = ''; st.message = ''; const then = st.bouncer; st.bouncer = null; c.unlock(); if (typeof then === 'function') then(); else if (then && then !== 'unlock') c.open(then); return; }
     st.entry = ''; st.fails = (st.fails || 0) + 1;
     st.message = t.t(type === 'pin' ? 'kg_wrong_pin' : type === 'password' ? 'kg_wrong_password' : 'kg_wrong_pattern');
     if (st.fails >= 5) {
@@ -122,7 +123,7 @@
   }
   NG.lockVerified = c => { const st = c.ui.lockState || (c.ui.lockState = {hint: ''}); checked(c, true); };
   NG.requireUnlock = (c, then) => {
-    if (!secure(c) || c.ui.lockState?.verified) { then(); return; }
+    if (!secure(c) || c.ui.lockState?.verified || NG.trustAgent?.trusted(c)) { then(); return; }
     c.ui.beforeLock = {view:c.ui.view,sub:c.ui.sub};
     const st=c.ui.lockState||(c.ui.lockState={hint:''});st.bouncer=then;st.confirmReturn=true;c.ui.sleeping=false;
     c.open('lock','',{replace:true});
@@ -184,7 +185,7 @@
         <div class="nglk-bottom">
           <div class="nglk-indication">${c.safe(indication)}</div>
           <button type="button" class="nglk-aff nglk-left" data-aff="voice" aria-label="${c.safe(t.t('accessibility_voice_assist_button'))}"><i class="nglk-circle"></i><i class="nglk-icon"></i></button>
-          <button type="button" class="nglk-lock" aria-label="${c.safe(t.t('accessibility_unlock_button'))}"><img src="${A(secure(c) ? 'sui-ic_lock_24dp.svg' : 'sui-ic_lock_open_24dp.svg')}" alt=""></button>
+          <button type="button" class="nglk-lock" aria-label="${c.safe(t.t('accessibility_unlock_button'))}"><img src="${A(secure(c) && !NG.trustAgent?.trusted(c) ? 'sui-ic_lock_24dp.svg' : 'sui-ic_lock_open_24dp.svg')}" alt=""></button>
           <button type="button" class="nglk-aff nglk-camera" data-aff="camera" aria-label="${c.safe(t.t('accessibility_camera_button'))}"><i class="nglk-circle"></i><i class="nglk-icon"></i></button>
         </div>
       </div></div>`;
@@ -220,7 +221,7 @@
   // Unlocking: the panel collapses (PanelView's fling closed, about 250 ms), then the keyguard goes and the window
   // behind plays its enter animation.
   function unlock(c, root, then) {
-    if (secure(c) && !c.ui.lockState.verified) { c.ui.lockState.bouncer = then || 'unlock'; c.render(); return; }
+    if (secure(c) && !c.ui.lockState.verified && !NG.trustAgent?.trusted(c)) { c.ui.lockState.bouncer = then || 'unlock'; c.render(); return; }
     const panel = root.querySelector('.nglk-panel'), lk = root.querySelector('.nglk');
     if (panel?.animate) panel.animate([{transform: getComputedStyle(panel).transform}, {transform: 'translateY(-100%)'}], {duration: 250, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards'});
     lk?.querySelector('.nglk-scrim')?.animate?.([{opacity: getComputedStyle(lk.querySelector('.nglk-scrim')).opacity}, {opacity: 0}], {duration: 250, fill: 'forwards'});

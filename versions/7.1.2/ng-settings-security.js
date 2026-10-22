@@ -97,7 +97,7 @@
       }
       if (key === 'fingerprint_settings') { NG.fingerprint ? NG.fingerprint.open(c) : NG.settingsGo(c, 'missing:FingerprintSettings', t.t('security_settings_fingerprint_preference_title')); return true; }
       if (key === 'credentials_install') { c.toast(t.t('CertInstaller/no_cert_file_found')); return true; }
-      if (key === 'trust_agent') { NG.settingsGo(c, 'missing:com.google.android.gms.auth.trustagent.GoogleTrustAgentPersonalUnlockingSettings', trustTitle()); return true; }
+      if (key === 'trust_agent') { NG.requireUnlock(c, () => { c.open('settings'); NG.settingsGo(c, 'smartlock', trustTitle()); }); return true; }
       if (key === 'sim_lock_settings') { NG.settingsGo(c, 'xml:sim_lock_settings', t.t('sim_lock_settings')); return true; }
       if (key === 'crypt_keeper_encrypt_title') return true;
       if (key === 'toggle_install_applications' && !s.unknownSources) {

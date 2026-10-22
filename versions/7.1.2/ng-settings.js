@@ -581,6 +581,8 @@
     title: 'Settings',
     // The status bar behind the window: colorPrimaryDark, or what a page of its own theme puts there (the GLIF pages).
     statusColor: c => custom(current(c))?.statusColor?.(c) || NG.settingsTheme?.colorPrimaryDark || '#21272b',
+    // A page laid out under the status bar (SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN, e.g. FaceLock's setup).
+    underStatus: c => !!custom(current(c))?.underStatus?.(c),
     render, mount,
     page(c) {
       const st = state(c), stack = c.ui.sub && c.ui.sub !== st.opened ? [{screen: ALIASES[c.ui.sub] || c.ui.sub}] : st.stack;
