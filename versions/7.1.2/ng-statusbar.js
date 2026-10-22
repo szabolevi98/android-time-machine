@@ -83,7 +83,7 @@
   NG.register('statusbar', {
     render(c) {
       const mod = NG.module(c.ui.view), bg = c.ui.view === 'home' ? 'transparent' : mod?.statusColor?.(c) || '#000';
-      const b = NG.battery(), notes = (c.notifications?.() || []).map(n => `<img class="ngsb-note" src="${c.safe(n.icon)}" alt="">`).join('');
+      const b = NG.battery(), notes = (NG.notifications?.icons(c) || []).map(icon => `<img class="ngsb-note" src="${c.safe(icon)}" alt="">`).join('');
       const status = (c.statusIcons?.() || []).map(name => `<img class="ngsb-icon" src="${A(`${name}.svg`)}" alt="">`).join('');
       return `<div class="ngsb" style="background:${bg}" data-action="ngsb-pull"><div class="ngsb-notes">${notes}</div>
         <div class="ngsb-system"><span class="ngsb-icons">${status}</span>${signalCluster(c)}${batterySvg(b.level, b.plugged, !!c.data.settings.powerSave)}</div>

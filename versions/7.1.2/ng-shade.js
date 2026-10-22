@@ -259,7 +259,7 @@
     const alarm = (c.data.clock?.alarms || []).some(x => x.on);
     const detail = st.detail ? `<div class="ngqs-detail">${NG.qsDetail?.has(st.detail) ? NG.qsDetail.render(c, st.detail, st.origin) : c.missing(`qs-${st.detail}`)}</div>` : '';
     const stack = notes.length
-      ? notes.map((n, i) => NG.notifications.row(c, n, {expanded: i === 0})).join('') + `<div class="ngsh-dismiss"><button type="button" data-action="ngsh-clearall" aria-label="${c.safe(t.t('accessibility_clear_all'))}">${c.safe(t.t('clear_all_notifications_text'))}</button></div>`
+      ? NG.notifications.groups(c, notes).map((n, i) => n.group ? NG.notifications.groupRow(c, n, {expanded: i === 0}) : NG.notifications.row(c, n, {expanded: i === 0})).join('') + `<div class="ngsh-dismiss"><button type="button" data-action="ngsh-clearall" aria-label="${c.safe(t.t('accessibility_clear_all'))}">${c.safe(t.t('clear_all_notifications_text'))}</button></div>`
       : `<div class="ngsh-empty">${c.safe(t.t('empty_shade_text'))}</div>`;
     return `<div class="ngsh${st.qs ? ' qs' : ''}${st.detail ? ' detail' : ''}${st.opened ? ' shown' : ''}" style="--qsf:${st.qs ? 1 : 0};--qs-full:${geo.full.toFixed(3)};--qs-panel:${geo.panel.toFixed(3)}">
       <div class="ngsh-scrim" data-action="ngsh-close"></div>
@@ -354,14 +354,17 @@
     bindPages(c, root);
     /* A row swiped away (SwipeHelper, ng-notify.js): the notification goes, the rows under it close up in
        ANIMATION_DURATION_STANDARD 360 ms; the last one gone collapses the panel. */
-    for (const card of root.querySelectorAll('.ngsh-stack .ngnt-row')) NG.notifications?.bindSwipe(c, card, (dir, v) => {
+    // A bundle swiped away takes all its notifications; an expanded bundle's children go one by one.
+    for (const card of root.querySelectorAll('.ngsh-stack > .ngnt-row, .ngsh-stack > .ngnt-group, .ngsh-stack .ngnt-group.open .ngnt-row')) NG.notifications?.bindSwipe(c, card, (dir, v) => {
       const below = [...root.querySelectorAll('.ngsh-stack > *')].filter(x => x.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_PRECEDING);
       const h = card.offsetHeight + .5 * (c.el.screen.clientWidth / W), dx = card.offsetWidth - Math.abs(parseFloat(card.style.translate) || 0);
       const ms = v ? Math.min(200, Math.max(50, dx / (Math.abs(v) * (c.el.screen.clientWidth / W)) * 1000)) : 200;
       card.animate([{translate: card.style.translate || '0 0'}, {translate: `${dir === 'left' ? -1 : 1}00% 0`}], {duration: ms, easing: 'linear', fill: 'forwards'}).finished.then(() => {
         card.style.display = 'none';
         below.forEach(x => x.animate([{transform: `translateY(${h}px)`}, {transform: 'none'}], {duration: 360, easing: 'cubic-bezier(.4,0,.2,1)'}));
-        c.data.notifications = (c.data.notifications || []).filter(n => n.id !== +card.dataset.id); c.save(); c.renderStatus?.();
+        const gone = card.dataset.group ? new Set(NG.notifications.groups(c, c.notifications()).find(g => g.group === card.dataset.group)?.notes.map(n => n.id) || []) : new Set([+card.dataset.id]);
+        c.data.notifications = (c.data.notifications || []).filter(n => !gone.has(n.id)); c.save(); c.renderStatus?.();
+        if (card.closest('.ngnt-group') && card.classList.contains('ngnt-row')) refresh(c);
         if (!c.notifications().length) setTimeout(() => close(c), 360);
       });
     }, {up: false});
@@ -421,6 +424,8 @@
     c.overlay('shade');
   }
   function close(c) {
+    // NotificationStackScrollLayout.setIsExpanded(false): the collapsing panel collapses every bundle.
+    c.ui.openGroups = [];
     anim++;
     const el = c.el.overlay.querySelector('.ngsh');
     if (!el) { c.closeOverlay(); return; }
@@ -570,7 +575,7 @@
   /* Clear all (NotificationStackScrollLayout.clearAllNotifications): the rows fly off to the right from the bottom one
      up, 10 ms apart in 260 ms, then the panel collapses. */
   function clearAll(c) {
-    const rows = [...c.el.overlay.querySelectorAll('.ngsh-stack .ngnt-row')].reverse();
+    const rows = [...c.el.overlay.querySelectorAll('.ngsh-stack > .ngnt-row, .ngsh-stack > .ngnt-group')].reverse();
     rows.forEach((r, i) => r.animate?.([{translate: '0 0'}, {translate: `${r.offsetWidth}px 0`}], {duration: 260, delay: i * 10, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards'}));
     setTimeout(() => {
       c.data.notifications = (c.data.notifications || []).filter(n => n.ongoing); c.save(); c.renderStatus?.();
@@ -597,6 +602,8 @@
       if (name === 'ngsh-close') { close(c); return true; }
       if ((name === 'ngnt-act' || name === 'ngnt-send' || name === 'ngnt-input') && NG.notifications.action(name, el, c)) return true;
       if (name === 'ngnt-open') { if (!el.dataset.swiped) { close(c); NG.notifications.open(c, el.dataset.id); } return true; }
+      // Tapping a bundle expands or collapses its children (ExpandableNotificationRow's summary click).
+      if (name === 'ngnt-group') { if (!el.dataset.swiped) { const k = el.dataset.group, open = c.ui.openGroups ||= []; open.includes(k) ? open.splice(open.indexOf(k), 1) : open.push(k); refresh(c); } return true; }
       if (name === 'ngsh-clearall') { clearAll(c); return true; }
       if (name === 'ngqs-expand') { setQs(c, !st.qs); return true; }
       if (name === 'ngqs-settings') { c.closeOverlay(); c.open('settings'); return true; }

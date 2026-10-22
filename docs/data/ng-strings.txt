@@ -1,6 +1,8 @@
 # Android 7.1.2 text tables (docs/tools/mm-strings.py with ERA=ng): [table] then the APKs of the angler image to read, then
 # resource names; "name+args<n>" a text the code formats with n arguments, "own:<key>" a text of docs/data/ng-own.tsv.
 [shade] SystemUI framework
+# NotificationChildrenContainer / HybridGroupManager: the collapsed group's overflow number
+notification_group_overflow_indicator+args1 plurals:notification_group_overflow_description
 # QuickStatusBarHeader (quick_status_bar_expanded_header.xml) and its ExpandableIndicator, QSPanel, PageIndicator
 accessibility_quick_settings_expand accessibility_quick_settings_collapse accessibility_quick_settings_settings
 accessibility_quick_settings_edit accessibility_quick_settings_alarm+args1 accessibility_brightness emergency_calls_only

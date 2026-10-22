@@ -181,7 +181,7 @@
           <div class="nglk-clock">${c.safe(clockText(c))}</div>
           <div class="nglk-area"><span class="nglk-date">${c.safe(dateText(c, !!alarm))}</span>${alarm ? `<span class="nglk-alarm" aria-label="${c.safe(t.fmt('keyguard_accessibility_next_alarm', null, alarmText(c, alarm)))}"><img src="${A('sui-ic_access_alarms_big.svg')}" alt="">${c.safe(alarmText(c, alarm))}</span>` : ''}</div>
           ${s.lock?.ownerInfo ? `<div class="nglk-owner">${c.safe(s.lock.ownerInfo)}</div>` : ''}</div>
-        ${notes.length ? `<div class="nglk-notes">${notes.map(n => NG.notifications.row(c, n)).join('')}</div>` : ''}
+        ${notes.length ? `<div class="nglk-notes">${NG.notifications.groups(c, notes).map(n => n.group ? NG.notifications.groupRow(c, n) : NG.notifications.row(c, n)).join('')}</div>` : ''}
         <div class="nglk-bottom">
           <div class="nglk-indication">${c.safe(indication)}</div>
           <button type="button" class="nglk-aff nglk-left" data-aff="voice" aria-label="${c.safe(t.t('accessibility_voice_assist_button'))}"><i class="nglk-circle"></i><i class="nglk-icon"></i></button>

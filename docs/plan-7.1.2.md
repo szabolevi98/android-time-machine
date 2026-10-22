@@ -700,3 +700,14 @@ the user dictionary, captions, Google location settings, and the licences (Licen
 LicenseMenuActivity's third_party_licenses by its metadata, else the whole text); hooks can give an XML screen action
 bar buttons (`actions(c, xml)`); Gboard's overflow has Usage tips, About and Help & feedback. mm-appprefs.py now
 resolves intent data references and tolerates complex entries. `node tests/browser/ng-imes.mjs` covers it.
+
+## Bundled notifications — 2026-10-22
+
+From android-7.1.2_r1 (kept in _aosp/aosp712/sui): GoogleExtServices' Ranker bundles an app's ungrouped notifications
+at AUTOBUNDLE_AT_COUNT 4 (NotificationManagerService posts a textless summary); an app's own group bundles from two.
+The shade and the keyguard draw a bundle as NotificationChildrenContainer does: the header with the expand button,
+2 HybridNotificationView lines collapsed (5 when it is the first, system expanded row; the last ends in "+ n"), tapped
+the children as rows (up to 8) under 0.5 dp #616161 dividers at 50 % with only the time left in their headers
+(NotificationHeaderUtil). A bundle swiped away takes all its notifications; collapsing the panel collapses every
+bundle (NotificationStackScrollLayout.setIsExpanded); the status bar shows one icon for it.
+`node tests/browser/ng-bundles.mjs` covers it.

@@ -47,7 +47,7 @@
   // One row of the shade (ng-shade.css draws it); expanded, it shows the app's actions.
   let replying = null;
   const extras = (c, n) => NG.module(n.app)?.notification?.(c, n) || null;
-  function row(c, n, {expanded = false} = {}) {
+  function row(c, n, {expanded = false, child = false} = {}) {
     const app = appOf(n), safe = c.safe, x = extras(c, n);
     const large = x?.large ? `<span class="ngnt-right">${x.large}</span>` : '';
     let actions = '';
@@ -57,10 +57,45 @@
         ? `<div class="ngnt-input" data-action="ngnt-input" style="background:${app.color}"><input type="text" class="ngnt-rinput" data-id="${n.id}" data-act="${input.id}" placeholder="${safe(input.input)}" autocomplete="off"${replying.sending ? ' disabled' : ''}>${replying.sending ? '<i class="ngnt-progress"></i>' : `<button type="button" class="ngnt-send" data-action="ngnt-send" data-id="${n.id}" data-act="${input.id}" aria-label="${safe(T().t('framework/ime_action_send'))}"><i></i></button>`}</div>`
         : `<div class="ngnt-actions">${x.actions.map(a => `<button type="button" class="ngnt-act" data-action="ngnt-act" data-id="${n.id}" data-act="${a.id}">${safe(a.label)}</button>`).join('')}</div>`;
     }
-    return `<div class="ngnt-row${large ? ' large' : ''}" data-id="${n.id}" data-action="ngnt-open" style="--ngnt-color:${app.color}">
+    return `<div class="ngnt-row${large ? ' large' : ''}${child ? ' child' : ''}" data-id="${n.id}" data-action="ngnt-open" style="--ngnt-color:${app.color}">
       <div class="ngnt-header"><i class="ngnt-icon" style="-webkit-mask-image:url('${safe(n.icon)}');mask-image:url('${safe(n.icon)}')"></i><span class="ngnt-app">${safe(app.name())}</span><span class="ngnt-sep">${safe(T().t('framework/notification_header_divider_symbol'))}</span><time class="ngnt-time" data-time="${n.time}">${safe(relative(c, n.time))}</time></div>
       <div class="ngnt-main"><div class="ngnt-title">${safe(n.title)}</div><div class="ngnt-text">${safe(n.text)}</div></div>${large}${actions}</div>`;
   }
+  /* ---- bundled notifications ----------------------------------------------------------------------------------
+     GoogleExtServices' Ranker (AUTOBUNDLE_AT_COUNT 4) bundles an app's ungrouped notifications once it has four:
+     NotificationManagerService posts the autogroup summary (the first one's small icon and colour, no text, the app's
+     launch intent), and SystemUI draws the summary with its children (NotificationChildrenContainer): collapsed the
+     header and NUMBER_OF_CHILDREN_WHEN_COLLAPSED 2 children as HybridNotificationView lines (the title, 4 dp, the text,
+     one line each, notification_children_padding 4 dp apart, from notification_content_margin_top 37.5 dp), the last
+     line ending in the overflow number ("+ n") when more are hidden; the first row of the shade is system expanded
+     (NUMBER_OF_CHILDREN_WHEN_SYSTEM_EXPANDED 5 lines). Tapped, the children expand (up to 8): their own rows under
+     notification_children_container_top_padding 8 dp and 0.5 dp #616161 dividers at 50 %, the headers keeping only
+     what differs from the summary's (NotificationHeaderUtil: the time). An app's own group (n.group) bundles from two. */
+  function groups(c, notes) {
+    const byApp = {}, out = [];
+    for (const n of notes) if (!n.ongoing) { const k = n.group ? 'g:' + n.app + ':' + n.group : 'a:' + n.app; (byApp[k] ||= []).push(n); }
+    const done = new Set();
+    for (const n of notes) {
+      const k = n.ongoing ? null : n.group ? 'g:' + n.app + ':' + n.group : 'a:' + n.app, list = k && byApp[k];
+      if (list && list.length >= (n.group ? 2 : 4)) { if (!done.has(k)) { done.add(k); out.push({group: k, app: n.app, icon: list[0].icon, color: list[0].color, appName: list[0].appName, time: list[0].time, notes: list}); } }
+      else out.push(n);
+    }
+    return out;
+  }
+  function groupRow(c, g, {expanded = false} = {}) {
+    const app = appOf(g), safe = c.safe, t = T(), open = c.ui.openGroups?.includes(g.group);
+    const header = `<div class="ngnt-header"><i class="ngnt-icon" style="-webkit-mask-image:url('${safe(g.icon)}');mask-image:url('${safe(g.icon)}')"></i><span class="ngnt-app">${safe(app.name())}</span><span class="ngnt-sep">${safe(t.t('framework/notification_header_divider_symbol'))}</span><span class="ngnt-time" data-time="${g.time}">${safe(relative(c, g.time))}</span><i class="ngnt-expand${open ? ' up' : ''}"></i></div>`;
+    let body;
+    if (open) body = `<div class="ngnt-children">${g.notes.slice(0, 8).map(n => `<i class="ngnt-divider"></i>${row(c, n, {child: true})}`).join('')}</div>`;
+    else {
+      const max = expanded ? 5 : 2, shownNotes = g.notes.slice(0, max), more = g.notes.length - shownNotes.length;
+      body = `<div class="ngnt-hybrids">${shownNotes.map((n, i) => `<div class="ngnt-hybrid"><span class="ngnt-htitle">${safe(n.title)}</span><span class="ngnt-htext">${safe(n.text)}</span>${more && i === shownNotes.length - 1 ? `<span class="ngnt-more" aria-label="${safe(t.plural('notification_group_overflow_description', more))}">${safe(t.fmt('notification_group_overflow_indicator', null, more))}</span>` : ''}</div>`).join('')}</div>`;
+    }
+    return `<div class="ngnt-group${open ? ' open' : ''}" data-group="${safe(g.group)}" data-action="ngnt-group" style="--ngnt-color:${app.color}">${header}${body}</div>`;
+  }
+  // The status bar shows one icon for a bundle (NotificationIconAreaController skips a group's children).
+  const icons = c => groups(c, c.notifications?.() || []).map(x => x.icon);
+
   // The rows' actions: a plain one runs (and the shade or the heads-up goes); one with an input opens the RemoteInput.
   function redraw(c) {
     if (c.ui.overlay === 'shade') NG.module('shade')?.refresh?.(c);
@@ -204,7 +239,7 @@
   }
 
   NG.notify = (c, n) => notify(c, n);
-  NG.notifications = {row, relative, cancel, open, list, bindSwipe, action, hideHeadsUp: c => hideHeadsUp(c, 'up', true)};
+  NG.notifications = {row, groupRow, groups, icons, relative, cancel, open, list, bindSwipe, action, hideHeadsUp: c => hideHeadsUp(c, 'up', true)};
   // The simulator's own first-boot notifications, as in every version: the welcome (SystemUI's ic_android, posted as
   // Android System) and Alex's message (Messenger's ic_sms_light, opening the thread).
   NG.defaults.notifications = [

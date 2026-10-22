@@ -136,3 +136,21 @@
 .ngqd-avatar img{width:calc(44 * var(--dp));height:calc(44 * var(--dp))}
 .ngqd-uname{font-size:calc(14 * var(--dp));color:#ffffff66;text-align:center}
 .ngqd-user.current .ngqd-uname{color:#80cbc4;font-family:Roboto,sans-serif;font-weight:500}
+/* Bundled notifications (ng-notify.js groups): the summary's header with the expand button, the collapsed children as
+   HybridNotificationView lines (the 14 sp title, 4 dp, the text) from 37.5 dp, 4 dp apart, 16 dp below the last; the
+   expanded children as rows under 8 dp and 0.5 dp #616161 dividers at 50 %, their headers showing only the time. */
+.ngnt-group{position:relative;margin-bottom:calc(.5 * var(--dp));background:#fff;color:#000;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ngsh:not(.dragging) .ngnt-group:not(.open):active{background:linear-gradient(#00000028,#00000028),#fff}
+.ngnt-expand{flex:none;width:calc(14 * var(--dp));height:calc(14 * var(--dp));margin:calc(1 * var(--dp)) 0 0 calc(2 * var(--dp));background:var(--ngnt-color);-webkit-mask:url('assets/fw-ic_expand_notification.svg') center/contain no-repeat;mask:url('assets/fw-ic_expand_notification.svg') center/contain no-repeat}
+.ngnt-expand.up{-webkit-mask-image:url('assets/fw-ic_collapse_notification.svg');mask-image:url('assets/fw-ic_collapse_notification.svg')}
+.ngnt-hybrids{padding:calc(37.5 * var(--dp)) calc(12 * var(--dp)) calc(16 * var(--dp)) calc(16 * var(--dp))}
+.ngnt-hybrid{display:flex;align-items:baseline;font:400 calc(14 * var(--dp))/calc(18.58 * var(--dp)) Roboto,sans-serif;white-space:nowrap}
+.ngnt-hybrid+.ngnt-hybrid{margin-top:calc(4 * var(--dp))}
+.ngnt-htitle{flex:none;max-width:60%;padding-right:calc(4 * var(--dp));overflow:hidden;text-overflow:ellipsis;color:#000000de}
+.ngnt-htext{flex:1;min-width:0;padding-right:calc(4 * var(--dp));overflow:hidden;text-overflow:ellipsis;color:#0000008a}
+.ngnt-more{flex:none;padding-right:calc(4 * var(--dp));color:#0000008a}
+.ngnt-children{padding-top:calc(45.5 * var(--dp))}
+.ngnt-divider{display:block;height:calc(.5 * var(--dp));background:#616161;opacity:.5}
+.ngnt-row.child{margin:0;min-height:0}
+.ngnt-row.child .ngnt-icon,.ngnt-row.child .ngnt-app,.ngnt-row.child .ngnt-sep{display:none}
+.ngnt-row.child .ngnt-time{margin-left:0}
