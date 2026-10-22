@@ -1,0 +1,24 @@
+/* framework Theme.Material.Light / music_main.xml and music_eq.xml, N2G48C. */
+.ngfx{position:absolute;inset:0;background:#fafafa;color:#000000de;font-family:Roboto,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+.ngfx button{border:0;background:none;color:inherit;cursor:pointer;font:inherit}
+.ngfx header{flex:none;height:calc(56 * var(--dp));display:flex;align-items:center;background:#f5f5f5;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #00000040;z-index:1}
+.ngfx h1{flex:1;font:500 calc(20 * var(--dp)) Roboto,sans-serif;margin:0 0 0 calc(16 * var(--dp))}
+.ngfx header button{height:100%;padding:0 calc(16 * var(--dp));display:grid;place-items:center}
+.ngfx main{overflow:auto;flex:1;min-height:0}
+.ngfx .ngfx-preset{display:flex;align-items:center;justify-content:space-between;gap:calc(16 * var(--dp));min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));font:calc(16 * var(--dp)) Roboto,sans-serif}
+.ngfx-preset i{width:0;height:0;border:calc(4 * var(--dp)) solid transparent;border-bottom:0;border-top-color:#0000008a}
+.ngfx-eq{display:flex;justify-content:center;min-width:0}
+.ngfx-levels{display:flex;flex-direction:column;justify-content:space-between;font:calc(14 * var(--dp)) Roboto,sans-serif;height:calc(160 * var(--dp));margin:calc(10 * var(--dp)) 0 calc(32 * var(--dp))}
+.ngfx-band{flex:0 1 calc(50 * var(--dp));min-width:0;text-align:center;font:calc(14 * var(--dp)) Roboto,sans-serif}
+.ngfx-band>div{height:calc(180 * var(--dp));position:relative;display:grid;place-items:center}
+.ngfx input[type=range]{appearance:none;-webkit-appearance:none;background:none;cursor:pointer;margin:0;height:calc(48 * var(--dp));padding:0;touch-action:none;--fx-accent:#009688;--fx-track:#00000042;--fx-thumb:#009688}
+.ngfx input[type=range]::-webkit-slider-runnable-track{height:calc(2 * var(--dp));border-radius:calc(1 * var(--dp));background:linear-gradient(to right,var(--fx-accent) var(--fx-value),var(--fx-track) var(--fx-value))}
+.ngfx input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:calc(12 * var(--dp));height:calc(12 * var(--dp));border-radius:50%;background:var(--fx-thumb);margin-top:calc(-5 * var(--dp))}
+.ngfx input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 calc(3 * var(--dp)) #00968833}
+.ngfx input[type=range]:disabled{cursor:default;--fx-accent:#00000042;--fx-thumb:#bdbdbd}
+.ngfx-band input{position:absolute;width:calc(170 * var(--dp));transform:rotate(-90deg)}
+.ngfx-strength{display:flex;align-items:center;min-height:calc(48 * var(--dp));margin:calc(6 * var(--dp)) calc(6 * var(--dp)) calc(6 * var(--dp)) calc(15 * var(--dp));padding-right:calc(6 * var(--dp));font:calc(18 * var(--dp)) Roboto,sans-serif}
+.ngfx-strength>span{flex:1;min-width:0}
+.ngfx-strength input{box-sizing:border-box;flex:0 1 calc(170 * var(--dp));min-width:0;width:calc(170 * var(--dp));padding:calc(2 * var(--dp)) calc(20 * var(--dp)) 0}
+.ngfx .disabled>span,.ngfx .ngfx-preset:disabled{color:#00000042}
+.ngfx .disabled .ngfx-levels{color:#00000042}

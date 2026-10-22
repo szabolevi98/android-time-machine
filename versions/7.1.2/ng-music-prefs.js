@@ -23,7 +23,7 @@
       if(key==='my_devices_setting_key'){NG.appPrefsGo(c,'music-devices',NG.appPrefStr(n.title));return true;}
       if(key==='licenses'){Object.assign(NG.musicUI.state(c),{route:'licenses',query:null,scope:null,pid:''});c.open('play-music');return true;}
       if(key==='lmark_licenses'){NG.appPrefsGo(c,'music-other-licenses',t('other_license_title'));return true;}
-      if(key==='equalizer_settings_key'){c.dialog({title:NG.text('musicfx').t('eq_dialog_title'),message:NG.text('musicfx').t('no_effects'),buttons:[{label:t('framework/ok')}]});return true;}
+      if(key==='equalizer_settings_key'){c.open('musicfx','com.google.android.music');return true;}
       if(key==='gift_subscription_setting_key'){NG.musicUI.go(c,'gift');c.open('play-music');return true;}
       return false;
     },

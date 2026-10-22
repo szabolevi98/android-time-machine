@@ -5,6 +5,7 @@
   'use strict';
   const policies = {
     calculator: {ui: ['calc']},
+    musicfx: {data: ['musicFx'], ui: ['musicFx']},
     calendar: {data: ['calendarOobe'], ui: ['calendar', 'goal']},
     chrome: {data: ['chrome'], ui: ['chrome', 'chromeSite']},
     'device-policy': {},
@@ -30,7 +31,7 @@
     settings: {protected: true}
   };
   const aliases = {'files': 'documents', 'downloads': 'documents', now: 'search', 'calendar-goal': 'calendar',
-    'clock-cities': 'clock', 'clock-settings': 'clock', 'music-preview': 'play-music', 'emergency-dialer': 'phone'};
+    'com.android.musicfx': 'musicfx', 'clock-cities': 'clock', 'clock-settings': 'clock', 'music-preview': 'play-music', 'emergency-dialer': 'phone'};
   const owner = id => aliases[id] || id;
   const pkg = id => NG.appsData?.[owner(id)]?.pkg || owner(id);
   const related = id => Object.keys(NG.appsData || {}).filter(k => pkg(k) === pkg(id));

@@ -24,5 +24,135 @@ NG.strings('musicfx', {
 "de": "Effekte nicht verfügbar",
 "fr": "Effets indisponibles.",
 "es": "Efectos no disponibles"
+},
+"headset_plug": {
+"res": "angler:MusicFX:headset_plug",
+"en": "Plug in headphones for these effects.",
+"hu": "Dugd be a fejhallgatót ezekhez az effektekhez.",
+"de": "Für diese Effekte brauchst du Kopfhörer.",
+"fr": "Veuillez brancher un casque pour ces effets.",
+"es": "Para disfrutar de los efectos, debes conectar los auriculares."
+},
+"bass_boost_strength": {
+"res": "angler:MusicFX:bass_boost_strength",
+"en": "Bass boost",
+"hu": "Mélyhangkiemelő",
+"de": "Bassverstärkung",
+"fr": "Amplification des basses",
+"es": "Refuerzo de graves"
+},
+"virtualizer_strength": {
+"res": "angler:MusicFX:virtualizer_strength",
+"en": "Surround sound",
+"hu": "Térhatású hangzás",
+"de": "Surround-Sound",
+"fr": "Son surround",
+"es": "Sonido envolvente"
+},
+"ci_extreme": {
+"res": "angler:MusicFX:ci_extreme",
+"en": "FX booster",
+"hu": "FX booster",
+"de": "FX-Verstärker",
+"fr": "FX booster",
+"es": "FX booster"
+},
+"user": {
+"res": "angler:MusicFX:user",
+"en": "User",
+"hu": "Felhasználó",
+"de": "Nutzer",
+"fr": "Utilisateur",
+"es": "Usuario"
+},
+"preset_0": {
+"own": true,
+"source": "AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation",
+"en": "Normal",
+"hu": "Normal",
+"de": "Normal",
+"fr": "Normal",
+"es": "Normal"
+},
+"preset_1": {
+"own": true,
+"source": "AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation",
+"en": "Classical",
+"hu": "Classical",
+"de": "Classical",
+"fr": "Classical",
+"es": "Classical"
+},
+"preset_2": {
+"own": true,
+"source": "AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation",
+"en": "Dance",
+"hu": "Dance",
+"de": "Dance",
+"fr": "Dance",
+"es": "Dance"
+},
+"preset_3": {
+"own": true,
+"source": "AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation",
+"en": "Flat",
+"hu": "Flat",
+"de": "Flat",
+"fr": "Flat",
+"es": "Flat"
+},
+"preset_4": {
+"own": true,
+"source": "AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation",
+"en": "Folk",
+"hu": "Folk",
+"de": "Folk",
+"fr": "Folk",
+"es": "Folk"
+},
+"preset_5": {
+"own": true,
+"source": "AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation",
+"en": "Heavy Metal",
+"hu": "Heavy Metal",
+"de": "Heavy Metal",
+"fr": "Heavy Metal",
+"es": "Heavy Metal"
+},
+"preset_6": {
+"own": true,
+"source": "AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation",
+"en": "Hip Hop",
+"hu": "Hip Hop",
+"de": "Hip Hop",
+"fr": "Hip Hop",
+"es": "Hip Hop"
+},
+"preset_7": {
+"own": true,
+"source": "AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation",
+"en": "Jazz",
+"hu": "Jazz",
+"de": "Jazz",
+"fr": "Jazz",
+"es": "Jazz"
+},
+"preset_8": {
+"own": true,
+"source": "AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation",
+"en": "Pop",
+"hu": "Pop",
+"de": "Pop",
+"fr": "Pop",
+"es": "Pop"
+},
+"preset_9": {
+"own": true,
+"source": "AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation",
+"en": "Rock",
+"hu": "Rock",
+"de": "Rock",
+"fr": "Rock",
+"es": "Rock"
 }
 });

@@ -48,7 +48,7 @@
     'play-store': ['Play Store', 'Phonesky.apk'], 'play-music': ['Play Music', 'Music2.apk'], 'play-movies': ['Play Movies & TV', 'Videos.apk'],
     'play-games': ['Play Games', 'PlayGames.apk'], 'android-pay': ['Android Pay', 'Wallet.apk'], 'project-fi': ['Project Fi', 'Tycho.apk'],
     'device-policy': ['Device Policy', 'DMAgent.apk'], documents: ['Downloads', 'DocumentsUI.apk · LauncherActivity'], files: ['Files', 'DocumentsUI.apk'],
-    'live-wallpapers': ['Live wallpapers', 'LiveWallpapersPicker.apk'],
+    'live-wallpapers': ['Live wallpapers', 'LiveWallpapersPicker.apk'], musicfx: ['Equalizer', 'MusicFX.apk · ActivityMusic'],
     daydream: ['Screen saver', 'DreamManagerService · DeskClock, BasicDreams, Photos'], 'emergency-info': ['Emergency information', 'EmergencyInfo.apk'],
     'print-preview': ['Print', 'PrintSpooler.apk · PrintActivity'], platlogo: ['Android 7.1.2', 'framework-res.apk · PlatLogoActivity'], neko: ['Android Neko', 'EasterEgg.apk · NekoLand'], help: ['Help & feedback', 'PrebuiltGmsCore.apk · GoogleHelp']
   };

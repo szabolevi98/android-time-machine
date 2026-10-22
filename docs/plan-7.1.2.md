@@ -812,3 +812,24 @@ Validation: four new model cases (220 module checks total); Documents, Hangouts 
 new media flow covers native target sets, SMS audio/video and resharing, volume keys/tint, Hangouts video,
 Photos/YouTube upload, Gmail/Drive audio, Cloud Print failure, source independence, five languages and phone width.
 Four native control bitmaps are recorded in the regenerated asset inventory.
+
+
+## MusicFX — 2026-10-23
+
+Play Music's Equalizer now opens MusicFX 1.4 ActivityMusic rather than the unavailable-effects dialog. The panel is
+rebuilt from N2G48C's music_main/music_eq and framework Theme.Material.Light: light action bar with a right switch,
+180 dp rotated band sliders, 50 dp frequency columns, 15/6 dp effect-row margins and 170 dp strength sliders.
+The image's audio_effects.conf selects libbundlewrapper; android-7.1.2_r39 EffectBundle.h supplies its exact five-band
+soft curves and untranslated driver preset names. ControlPanelEffect supplies disabled-by-default processing,
+FX booster [0,800,400,100,1000] mB, stored User curve, bass 667 and surround 0; ActivityMusic clamps its UI to +/-10 dB.
+Editing a band preserves the other active-preset levels in User. Preferences are isolated per calling package and
+belong to MusicFX for Clear data. Bass/surround follow wired/A2DP routing and bypass on disconnect without discarding
+saved strengths; HFP-only pairing does not enable media effects. The native plug-headphones response is wired.
+Preset reverb remains hidden: this APK's music_main marks its spinner GONE and ActivityMusic never shows it.
+As with the other simulated players, these are media-session parameters around a simulated clock; no real decoded
+waveform/DSP graph is claimed.
+Sources: https://android.googlesource.com/platform/packages/apps/MusicFX/+/android-7.1.2_r39/src/com/android/musicfx/
+and https://android.googlesource.com/platform/frameworks/av/+/android-7.1.2_r39/media/libeffects/lvm/wrapper/Bundle/EffectBundle.h
+Validation: four new model/lifecycle cases (224 module checks pass), Music regression and a dedicated browser flow:
+opening from Music settings, enable/bypass, presets/User preservation, A2DP gating, strength persistence, separate
+callers, reload, desktop/phone and all five languages with no missing texts/assets.

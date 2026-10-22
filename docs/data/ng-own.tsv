@@ -37,3 +37,15 @@ play	refresh	Check for updates	Frissítések keresése	Nach Updates suchen	Reche
 play	on_phone	Apps on your phone	Alkalmazások a telefonodon	Apps auf deinem Smartphone	Applis sur votre téléphone	Aplicaciones de tu teléfono	the offline Play Store server catalogue and section headings, not APK UI strings
 play	not_found	Item not found	Az elem nem található	Artikel nicht gefunden	Élément introuvable	Elemento no encontrado	the offline Play Store server catalogue and section headings, not APK UI strings
 play	no_payment_methods	You have no payment methods for this account	Ehhez a fiókhoz nem tartozik fizetési mód	Für dieses Konto sind keine Zahlungsmethoden vorhanden	Aucun mode de paiement pour ce compte	No hay métodos de pago para esta cuenta	empty payment-method response of the invented offline account
+
+# MusicFX runtime preset names from the N2G48C libbundlewrapper equalizer; native driver labels are untranslated.
+musicfx	preset_0	Normal	Normal	Normal	Normal	Normal	AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation
+musicfx	preset_1	Classical	Classical	Classical	Classical	Classical	AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation
+musicfx	preset_2	Dance	Dance	Dance	Dance	Dance	AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation
+musicfx	preset_3	Flat	Flat	Flat	Flat	Flat	AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation
+musicfx	preset_4	Folk	Folk	Folk	Folk	Folk	AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation
+musicfx	preset_5	Heavy Metal	Heavy Metal	Heavy Metal	Heavy Metal	Heavy Metal	AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation
+musicfx	preset_6	Hip Hop	Hip Hop	Hip Hop	Hip Hop	Hip Hop	AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation
+musicfx	preset_7	Jazz	Jazz	Jazz	Jazz	Jazz	AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation
+musicfx	preset_8	Pop	Pop	Pop	Pop	Pop	AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation
+musicfx	preset_9	Rock	Rock	Rock	Rock	Rock	AOSP android-7.1.2_r39 EffectBundle.h gEqualizerPresets; angler audio_effects.conf bundle implementation

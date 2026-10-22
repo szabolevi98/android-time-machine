@@ -490,7 +490,8 @@ container_title_ifl widget_album_art_accessibility dash
 framework/cancel framework/ok framework/action_bar_up_description
 
 [musicfx] MusicFX
-app_name eq_dialog_title no_effects
+app_name eq_dialog_title no_effects headset_plug bass_boost_strength virtualizer_strength ci_extreme user
+own:preset_0 own:preset_1 own:preset_2 own:preset_3 own:preset_4 own:preset_5 own:preset_6 own:preset_7 own:preset_8 own:preset_9
 
 [movies] Videos framework
 application_name_with_tv tab_watch_now tab_my_library tab_wishlist tab_movies tab_shows menu_shop menu_settings menu_help_and_feedback menu_search

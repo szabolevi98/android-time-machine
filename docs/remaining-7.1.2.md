@@ -56,7 +56,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Chrome site settings category pages, per-site permissions, exceptions and reset.
 - [x] Calendar Goal creation, scheduling and session actions (`3108b381`). Remaining service activity cards are tracked by the routing audit below.
 - [x] App info Clear data/Force stop: private model/preferences reset, package task cancellation, stopped background services, provider data preserved.
-- [ ] MusicFX's full effect-control panel. Play Music currently exposes its native unavailable-effects response because the simulated media clock has no DSP session.
+- [x] MusicFX's native effect-control panel: per-caller presets/User curve, five bands, enable/bypass, headset-gated bass/surround, persistence and Clear data.
 - [x] Widget resize: native frame/handles, provider flags/minima, transactional cell reorder, pointer/touch commit and cancel, persisted dimensions.
 - [x] ACTION_SEND video/audio native MIME receivers, immutable metadata, Messenger audio/video/resharing, Hangouts video, Photos/YouTube upload, Gmail/Drive streams and Cloud Print failure.
 - [ ] Preference leaf/intent routing audit: finish service-backed and non-toggle rows that still lack a click handler.
