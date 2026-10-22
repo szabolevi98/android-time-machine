@@ -11,7 +11,7 @@
    Hooks (NG.appPrefsHooks[app]): {title(c, key, node), hide(c, key, node) or hidden: [keys], summary(c, key, node),
    top(c, xml) / after(c, xml) (rows of the hook's own before / after the XML's),
    click(c, key, node), get(c, key), set(c, key, v), fragments: {class name: xml}, screens: {key: xml}, top(c, xml),
-   color: [bar, status], customs}.
+   color: [bar, status], customs, actions(c, xml) (the action bar's buttons of an XML screen)}.
    Use: NG.openPrefs(c, app, xml, title). */
 (() => {
   'use strict';
@@ -103,15 +103,53 @@
   const barText = c => {if(hooks(c).barText)return hooks(c).barText;const hex=String(colors(c)[0]).replace('#',''),rgb=hex.length===6?[0,2,4].map(i=>parseInt(hex.slice(i,i+2),16)):[];return rgb.length&&rgb[0]*.299+rgb[1]*.587+rgb[2]*.114>180?(app(c).theme?.textColorPrimary||'#333333'):'#ffffff';};
   const accent = c => hooks(c).accent || app(c).theme?.colorAccent || '#009688';
 
+  // Open source licences: the input methods' LicenseActivity is a WebView of the APK's assets/licenses.html; the
+  // social.licenses LicenseMenuActivity lists res/raw/third_party_license_metadata ("offset:length name", byte offsets
+  // into third_party_licenses) and shows one; without the metadata the whole text.
+  const LICENSES = {imehindi: {html: 'ime-hindi-licenses.html'}, imejapanese: {html: 'ime-japanese-licenses.html'}, imekorean: {html: 'ime-korean-licenses.html'},
+    imepinyin: {html: 'ime-pinyin-licenses.html'}, gboard: {text: 'lime-third-party-licenses.txt'}, google: {text: 'gs-third-party-licenses.txt'},
+    dialer: {text: 'dl-third-party-licenses.txt', meta: 'dl-third-party-license-metadata.txt'}};
+  const licenseCache = {};
+  const loadLicense = (c, id) => {
+    const l = LICENSES[id], k = id; if (licenseCache[k]) return licenseCache[k];
+    licenseCache[k] = {loading: true};
+    Promise.all([fetch('assets/' + l.text).then(r => r.arrayBuffer()), l.meta ? fetch('assets/' + l.meta).then(r => r.text()) : null]).then(([buf, meta]) => {
+      const bytes = new Uint8Array(buf), dec = new TextDecoder();
+      const items = meta ? meta.split('\n').map(line => line.match(/^(\d+):(\d+) (.+)$/)).filter(Boolean).map(m => ({name: m[3], text: dec.decode(bytes.subarray(+m[1], +m[1] + +m[2]))})) : null;
+      licenseCache[k] = {items, text: items ? '' : dec.decode(bytes)};
+      if (c.ui.view === 'app-prefs') c.render();
+    });
+    return licenseCache[k];
+  };
+  function licensePage(c, s) {
+    const l = LICENSES[s.app];
+    if (l.html) return `<iframe class="ngap-licframe" src="assets/${l.html}" title=""></iframe>`;
+    const d = loadLicense(c, s.app);
+    if (d.loading) return '';
+    if (s.xml === '@license' && d.items) return `<pre class="ngap-lictext">${esc(c, d.items[s.path[0]]?.text || '')}</pre>`;
+    if (d.items) return d.items.map((x, i) => NG.settingsRow(c, {title: x.name, action: 'ngap-license', data: ` data-i="${i}"`})).join('');
+    return `<pre class="ngap-lictext">${esc(c, d.text)}</pre>`;
+  }
+  // The intents of rows no hook takes: a web page in Chrome, the system's settings pages, the licences.
+  function openIntent(c, n) {
+    const i = n.intent || {}, cls = i.targetClass || '';
+    if (i.action === 'android.intent.action.VIEW' && /^https?:/.test(i.data || '')) { c.open('chrome', 'url:' + i.data); return true; }
+    if (i.action === 'android.settings.USER_DICTIONARY_SETTINGS') { c.open('settings', 'user-dictionary'); return true; }
+    if (i.action === 'android.settings.CAPTIONING_SETTINGS') { c.open('settings', 'xml:captioning_settings'); return true; }
+    if (i.action === 'com.google.android.gms.location.settings.GOOGLE_LOCATION_SETTINGS') { c.open('settings', 'gms-location'); return true; }
+    if (/License(Menu)?Activity$|LicensesActivity$/.test(cls) && LICENSES[appId(c)]) { st(c).stack.push({app: appId(c), xml: '@licenses', path: [], title: str(n.title)}); c.render(); return true; }
+    return false;
+  }
+
   function render(c) {
     if (!st(c)) return '';
-    const s = cur(c), custom = hooks(c).customs?.[s.xml], [primary] = colors(c), h = hooks(c);
-    const n = custom ? null : nodeOf(c);
+    const s = cur(c), lic = s.xml.startsWith('@license'), custom = lic ? null : hooks(c).customs?.[s.xml], [primary] = colors(c), h = hooks(c);
+    const n = custom || lic ? null : nodeOf(c);
     const title = s.title || custom?.title?.(c) || (n && str(n.title)) || h.screenTitle?.(c, s.xml) || '';
-    const body = custom ? custom.render(c) : n ? `${h.top?.(c, s.xml) || ''}${rows(c, n)}${h.after?.(c, s.xml) || ''}` : c.missing('app-prefs');
+    const body = lic ? licensePage(c, s) : custom ? custom.render(c) : n ? `${h.top?.(c, s.xml) || ''}${rows(c, n)}${h.after?.(c, s.xml) || ''}` : c.missing('app-prefs');
     const bg = h.window || app(c).theme?.windowBackground || '#fafafa';
     return `<div class="ngst ngap" style="--ngap-primary:${primary};--ngap-accent:${accent(c)};--ngap-window:${bg};--ngap-bar-text:${barText(c)}"><div class="ngst-ab"><button type="button" class="ngst-nav" data-action="ngap-up" aria-label="${esc(c, NG.text('settings').t('framework/action_bar_up_description'))}"><i style="-webkit-mask-image:url('assets/fw-ic_ab_back_material.svg');mask-image:url('assets/fw-ic_ab_back_material.svg')"></i></button>
-      <span class="ngst-abtitle nav">${esc(c, title)}</span><span class="ngst-actions">${custom?.actions?.(c) || ''}</span></div><div class="ngst-content ngst-list ngap-list">${body}</div></div>`;
+      <span class="ngst-abtitle nav">${esc(c, title)}</span><span class="ngst-actions">${custom ? custom.actions?.(c) || '' : lic ? '' : h.actions?.(c, s.xml) || ''}</span></div><div class="ngst-content ngst-list ngap-list">${body}</div></div>`;
   }
   // The list dialog's radios take the app's accent (its AlertDialog theme).
   NG.appPrefsChoose = (c, title, entries, curIndex, onPick, color = '#009688') => c.dialog({title, items: entries.map((e, i) => ({html: `<span class="ngst-choice"><i class="ngw-radio ngst-radio${i === curIndex ? ' on' : ''}" style="--ngw-accent:${color}"></i><span>${esc(c, e)}</span></span>`})),
@@ -138,6 +176,7 @@
       if (name === 'ngap-up') { if (!this.back(c)) c.back(); return true; }
       const custom = hooks(c).customs?.[cur(c)?.xml];
       if (custom?.action?.(c, name, el) === true) return true;
+      if (name === 'ngap-license') { const d = licenseCache[appId(c)]; st(c).stack.push({app: appId(c), xml: '@license', path: [+el.dataset.i], title: d?.items?.[+el.dataset.i]?.name || ''}); c.render(); return true; }
       if (name !== 'ngap-pref') return hooks(c).action?.(c, name, el) === true;
       let node = nodeOf(c);
       for (const i of el.dataset.p.split('.')) node = node?.c?.[+i];
@@ -150,6 +189,7 @@
       if (to) { st(c).stack.push({app: appId(c), xml: to, path: [], title: str(node.title)}); c.render(); return true; }
       if (node.c && node.t === 'PreferenceScreen') { const s = cur(c); st(c).stack.push({app: s.app, xml: s.xml, path: [...s.path, node.key], title: ''}); c.render(); return true; }
       if (node.fragment) { const x = hooks(c).fragments?.[node.fragment.split('.').pop()] || hooks(c).fragment?.(c, node.fragment, node); if (x) { st(c).stack.push({app: appId(c), xml: x, path: [], title: str(node.title)}); c.render(); } return true; }
+      if (node.intent) openIntent(c, node);
       return true;
     }
   });

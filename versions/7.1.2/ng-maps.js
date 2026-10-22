@@ -111,7 +111,7 @@
         case 'exit':u.nav=null;u.z=.9;focus(c,M().find(u.place)||M().me);break;
         case 'settings':u.menu=false;NG.openPrefs(c,'maps','settings',t('SETTINGS'));return true;
         case 'help':c.open('help','maps');return true;
-        case 'feedback':c.open('feedback','maps');return true;
+        case 'feedback':c.open('help','feedback:maps');return true;
         case 'label':{const k=el.dataset.label;edit(c,t(k==='home'?'SET_HOME_LOCATION':'SET_WORK_LOCATION'),d[k],text=>d[k]=text);return true;}
         case 'history-toggle':d.historyEnabled=!d.historyEnabled;c.save();break;
         case 'clear-history':d.visits=[];c.save();break;

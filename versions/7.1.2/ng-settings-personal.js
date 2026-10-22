@@ -356,10 +356,10 @@
   // none of these has one), settings activity, enabled by default].
   const IMES = [['gboard', 'LatinIMEGooglePrebuilt/ime_name', 'ime-gboard.png', 'com.google.android.apps.inputmethod.latin.preference.SettingsActivity', true],
     ['voice', 'Velvet/ime_service_label', 'app-search.png', 'com.google.android.apps.gsa.velvet.ui.settings.VoiceSearchPreferences', true],
-    ['hindi', 'GoogleHindiIME/ime_name', 'ime-hindi.png', 'com.google.android.apps.inputmethod.hindi.preference.SettingsActivity', false],
+    ['hindi', 'GoogleHindiIME/ime_name', 'ime-hindi.png', 'com.google.android.apps.inputmethod.hindi.SettingsActivity', false],
     ['japanese', 'GoogleJapaneseInput/ime_name', 'ime-japanese.png', 'com.google.android.apps.inputmethod.japanese.preference.SettingsActivity', false],
-    ['korean', 'KoreanIME/ime_name', 'ime-korean.png', 'com.google.android.inputmethod.korean.KoreanImePreferences', false],
-    ['pinyin', 'GooglePinyinIME/ime_name', 'ime-pinyin.png', 'com.google.android.inputmethod.pinyin.SettingsActivity', false]];
+    ['korean', 'KoreanIME/ime_name', 'ime-korean.png', 'com.google.android.apps.inputmethod.korean.preference.SettingsActivity', false],
+    ['pinyin', 'GooglePinyinIME/ime_name', 'ime-pinyin.png', 'com.google.android.apps.inputmethod.pinyin.preference.SettingsActivity', false]];
   const enabled = c => S(c).imes || IMES.filter(x => x[4]).map(x => x[0]);
   const imeSummary = (c, id) => id === 'gboard' ? gboardSubtype(c) : id === 'voice' ? T().t('Velvet/voice_ime_language_auto') : '';
   const sortedImes = (c, list) => { const col = new Intl.Collator(c.locale()); return [...list].sort((a, b) => col.compare(T().t(a[1]), T().t(b[1]))); };
@@ -374,7 +374,7 @@
     },
     action(c, name, el) {
       if (name === 'ngpe-manage') { NG.settingsGo(c, 'keyboards-all', T().t('add_virtual_keyboard')); return true; }
-      if (name === 'ngpe-ime') { const ime = IMES.find(x => x[0] === el.dataset.id); if (ime[0] === 'gboard') NG.openPrefs(c, 'gboard', 'settings', T().t(ime[1])); else if (ime[0] === 'voice') NG.openPrefs(c, 'google', 'voicesearch_preferences', T().t(ime[1])); else NG.settingsGo(c, `missing:${ime[3]}`, T().t(ime[1])); return true; }
+      if (name === 'ngpe-ime') { const ime = IMES.find(x => x[0] === el.dataset.id); if (ime[0] === 'gboard') NG.openPrefs(c, 'gboard', 'settings', T().t(ime[1])); else if (ime[0] === 'voice') NG.openPrefs(c, 'google', 'voicesearch_preferences', T().t(ime[1])); else NG.openPrefs(c, 'ime' + ime[0], 'settings', T().t(ime[1])); return true; }
       return false;
     }
   };
@@ -460,7 +460,7 @@
           onItem: i => { S(c).spellLang = codes[i]; c.save(); c.render(); }});
         return true;
       }
-      if (name === 'ngpe-spellsettings') { NG.settingsGo(c, 'missing:com.google.android.apps.inputmethod.latin.preference.SettingsActivity', t.t('LatinIMEGooglePrebuilt/spell_checker_name')); return true; }
+      if (name === 'ngpe-spellsettings') { /* the spell checker's settingsActivity is Gboard's SettingsActivity */ NG.openPrefs(c, 'gboard', 'settings', t.t('LatinIMEGooglePrebuilt/ime_name')); return true; }
       return false;
     }
   };
@@ -532,8 +532,26 @@
         try { const u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = (S(c).ttsRate ?? 100) / 100; u.pitch = Math.min(2, (S(c).ttsPitch ?? 100) / 100); speechSynthesis.cancel(); speechSynthesis.speak(u); } catch {}
         return true;
       }
-      if (key === 'tts_engine_settings') { NG.settingsGo(c, 'missing:com.google.android.tts.local.voicepack.ui.VoiceDataInstallActivity', T().t('GoogleTTS/app_name')); return true; }
+      // TtsEnginePreference's settings button: the engine's settingsActivity (tts_engine.xml), GoogleTTS's EngineSettings.
+      if (key === 'tts_engine_settings') { NG.openPrefs(c, 'tts', 'general_settings', NG.appPrefStr('string/GoogleTTS/tts_settings_label')); return true; }
       return false;
     }
+  };
+  // GoogleTTS 3.x EngineSettings (GeneralSettingsFragment): general_settings without process_text and voices_type, which
+  // onCreate removes; Anonymous usage reports opens AnalyticsPreferenceScreen (the analytics layout: the #37474f switch
+  // bar with analytics_summary_on / off and analytics_screen_explanation), Feedback Google Feedback.
+  const tts = k => NG.appPrefStr('string/GoogleTTS/' + k);
+  (NG.appPrefsHooks ||= {}).tts = {
+    hidden: ['process_text', 'voices_type'],
+    summary: (c, key) => key === 'analytics' ? tts(NG.appPref(c, 'tts', 'analytics', true) ? 'analytics_summary_on' : 'analytics_summary_off') : undefined,
+    click(c, key) {
+      if (key === 'analytics') { NG.appPrefsGo(c, 'analytics', tts('analytics_title')); return true; }
+      if (key === 'feedback') { c.open('help', 'feedback:com.google.android.tts'); return true; }
+      return false;
+    },
+    customs: {analytics: {
+      render: c => { const on = NG.appPref(c, 'tts', 'analytics', true); return `<div class="ngst-switchbar ngpe-ttsbar" data-action="ngpe-tts-analytics" role="switch" aria-checked="${on}"><span>${c.safe(tts(on ? 'analytics_summary_on' : 'analytics_summary_off'))}</span>${NG.settingsSwitch(on)}</div><p class="ngpe-ttstext">${c.safe(tts('analytics_screen_explanation'))}</p>`; },
+      action(c, name) { if (name !== 'ngpe-tts-analytics') return false; NG.setAppPref(c, 'tts', 'analytics', !NG.appPref(c, 'tts', 'analytics', true)); c.transition('none'); c.render(); return true; }
+    }}
   };
 })();

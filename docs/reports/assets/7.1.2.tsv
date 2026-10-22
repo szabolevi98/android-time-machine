@@ -251,6 +251,8 @@ versions/7.1.2/assets/dc-ic_tab_clock_static.svg	2062863afc4ec6cb	vector	angler:
 versions/7.1.2/assets/dc-ic_tab_stopwatch_static.svg	46ca411d2520b94c	vector	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!res/drawable/ic_tab_stopwatch_static.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	a03c1263ba37008f
 versions/7.1.2/assets/dc-ic_tab_timer_static.svg	2362d97e24d6961d	vector	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!res/drawable/ic_tab_timer_static.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	5979264a6d2dcc41
 versions/7.1.2/assets/device-nexus-6p.svg	656300d21ccfb446	own	drawn by docs/tools/device-frames.py: the outline measured from the maker's front render, the shading drawn			
+versions/7.1.2/assets/dl-third-party-license-metadata.txt	6d9309ad440f56c1	copy	angler:/system/priv-app/GoogleDialer/GoogleDialer.apk!res/raw/third_party_license_metadata	raw		6d9309ad440f56c1
+versions/7.1.2/assets/dl-third-party-licenses.txt	603d0b98a64f5660	copy	angler:/system/priv-app/GoogleDialer/GoogleDialer.apk!res/raw/third_party_licenses	raw		603d0b98a64f5660
 versions/7.1.2/assets/dr-ic_type_folder.png	7532c37934724d46	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_folder.png	drawable-xxxhdpi-v4		7532c37934724d46
 versions/7.1.2/assets/du-ic_doc_audio.svg	253d6bf19a52e3d4	vector	angler:/system/framework/framework-res.apk!res/drawable/ic_doc_audio.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	36e6ad98393ee7e0
 versions/7.1.2/assets/du-ic_doc_folder.svg	32bf85d971da36cc	vector	angler:/system/priv-app/DocumentsUI/DocumentsUI.apk!res/drawable/ic_doc_folder.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	693d162bc7657882
@@ -547,6 +549,7 @@ versions/7.1.2/assets/gms-common_ic_googleplayservices.png	241e662a9a723b8c	copy
 versions/7.1.2/assets/gms-ic_google.png	2fa6a22c3f245701	copy	angler:/system/priv-app/GmsCoreSetupPrebuilt/GmsCoreSetupPrebuilt.apk!res/drawable-xxhdpi-v4/ic_google.png	drawable-xxhdpi-v4		2fa6a22c3f245701
 versions/7.1.2/assets/gms-ic_google_settings.png	1494bcd0498fcea9	copy	angler:/system/priv-app/GmsCoreSetupPrebuilt/GmsCoreSetupPrebuilt.apk!res/drawable-xxhdpi-v4/ic_google_settings.png	drawable-xxhdpi-v4		1494bcd0498fcea9
 versions/7.1.2/assets/gms-quantum_ic_directions_walk_googblue_24.png	c517eeefa3f462ca	copy	angler:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable/quantum_ic_directions_walk_googblue_24.png	drawable		c517eeefa3f462ca
+versions/7.1.2/assets/gs-third-party-licenses.txt	89d399e6d6f76af0	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/raw/third_party_licenses	raw		89d399e6d6f76af0
 versions/7.1.2/assets/gsf-additional_terms_of_service-es.html	7cd99e629acb35ee	copy	angler:/system/priv-app/GoogleServicesFramework/GoogleServicesFramework.apk!res/raw-es/additional_terms_of_service.html	raw-es		7cd99e629acb35ee
 versions/7.1.2/assets/gsf-additional_terms_of_service-fr.html	121b64b62a73509a	copy	angler:/system/priv-app/GoogleServicesFramework/GoogleServicesFramework.apk!res/raw-fr/additional_terms_of_service.html	raw-fr		121b64b62a73509a
 versions/7.1.2/assets/gsf-additional_terms_of_service.html	fa9a6a5e6e9d9fce	copy	angler:/system/priv-app/GoogleServicesFramework/GoogleServicesFramework.apk!res/raw/additional_terms_of_service.html	raw		fa9a6a5e6e9d9fce
@@ -575,14 +578,21 @@ versions/7.1.2/assets/ho-stat.png	808dd3d279c89819	copy	angler:/system/app/Hango
 versions/7.1.2/assets/ho-video-off.png	3b7bcab3226475f1	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/quantum_ic_videocam_off_white_24.png	drawable-xxxhdpi-v4		3b7bcab3226475f1
 versions/7.1.2/assets/ho-video.png	034a9212b42f8a52	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/quantum_ic_videocam_white_24.png	drawable-xxxhdpi-v4		034a9212b42f8a52
 versions/7.1.2/assets/ime-gboard.png	ff13cbada197d507	copy	angler:/system/app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk!res/mipmap-xxxhdpi-v4/ic_app.png	mipmap-xxxhdpi-v4		ff13cbada197d507
+versions/7.1.2/assets/ime-hindi-licenses.html	f296ae9210f5d4c3	copy	angler:/system/app/GoogleHindiIME/GoogleHindiIME.apk!assets/licenses.html			f296ae9210f5d4c3
 versions/7.1.2/assets/ime-hindi.png	4de41796f39beb20	copy	angler:/system/app/GoogleHindiIME/GoogleHindiIME.apk!res/mipmap-xxxhdpi-v4/app_icon.png	mipmap-xxxhdpi-v4		4de41796f39beb20
+versions/7.1.2/assets/ime-ic_menu_add.png	d4030b568ffa4dd0	copy	angler:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/ic_menu_add.png	drawable-xxhdpi-v4		d4030b568ffa4dd0
+versions/7.1.2/assets/ime-ic_menu_delete.png	e78f456bed99b9b8	copy	angler:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/ic_menu_delete.png	drawable-xxhdpi-v4		e78f456bed99b9b8
+versions/7.1.2/assets/ime-japanese-licenses.html	56b26c5d603a9a6c	copy	angler:/system/app/GoogleJapaneseInput/GoogleJapaneseInput.apk!assets/licenses.html			56b26c5d603a9a6c
 versions/7.1.2/assets/ime-japanese.png	e2b4f1671c1806b4	copy	angler:/system/app/GoogleJapaneseInput/GoogleJapaneseInput.apk!res/mipmap-xxxhdpi-v4/app_icon.png	mipmap-xxxhdpi-v4		e2b4f1671c1806b4
+versions/7.1.2/assets/ime-korean-licenses.html	5bce1b7ff272a6f4	copy	angler:/system/app/KoreanIME/KoreanIME.apk!assets/licenses.html			5bce1b7ff272a6f4
 versions/7.1.2/assets/ime-korean.png	d90f51871c3067de	copy	angler:/system/app/KoreanIME/KoreanIME.apk!res/mipmap-xxxhdpi-v4/app_icon.png	mipmap-xxxhdpi-v4		d90f51871c3067de
+versions/7.1.2/assets/ime-pinyin-licenses.html	5bce1b7ff272a6f4	copy	angler:/system/app/GooglePinyinIME/GooglePinyinIME.apk!assets/licenses.html			5bce1b7ff272a6f4
 versions/7.1.2/assets/ime-pinyin.png	df3c112cbc0a2690	copy	angler:/system/app/GooglePinyinIME/GooglePinyinIME.apk!res/mipmap-xxxhdpi-v4/app_icon.png	mipmap-xxxhdpi-v4		df3c112cbc0a2690
 versions/7.1.2/assets/in-beam.png	85557a1e8fa398f3	copy	angler:/system/app/NfcNci/NfcNci.apk!res/drawable-xxxhdpi-v4/icon.png	drawable-xxxhdpi-v4		85557a1e8fa398f3
 versions/7.1.2/assets/in-bt_share.png	12f705c4046025b5	copy	angler:/system/app/Bluetooth/Bluetooth.apk!res/mipmap-xxxhdpi-v4/bt_share.png	mipmap-xxxhdpi-v4		12f705c4046025b5
 versions/7.1.2/assets/in-cloudprint.png	f8072f65d6d82b86	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxxhdpi-v4/ic_main.png	drawable-xxxhdpi-v4		f8072f65d6d82b86
 versions/7.1.2/assets/landing-home.jpg	f820daabc45af3ac	own	capture of the simulator's own home screen for the landing page card		closest: mean difference 7.68 (maguro:/system/media/bootanimation.zip!part0/f0003.jpg)	
+versions/7.1.2/assets/lime-third-party-licenses.txt	050f823a8f867c6f	copy	angler:/system/app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk!res/raw/third_party_licenses	raw		050f823a8f867c6f
 versions/7.1.2/assets/lw-ic_launcher_live_wallpaper.png	d9b111422a5e0ad9	copy	angler:/system/app/LiveWallpapersPicker/LiveWallpapersPicker.apk!res/mipmap-xxhdpi-v4/ic_launcher_live_wallpaper.png	mipmap-xxhdpi-v4		d9b111422a5e0ad9
 versions/7.1.2/assets/mp-bicycling.png	c528afa93b08b0dd	copy	angler:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/quantum_ic_directions_bike_white_24.png	drawable-xxhdpi-v4		c528afa93b08b0dd
 versions/7.1.2/assets/mp-bookmark.png	947534662cfc8b2e	copy	angler:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/ic_qu_bookmark.png	drawable-xxhdpi-v4		947534662cfc8b2e

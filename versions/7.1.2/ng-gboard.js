@@ -221,6 +221,17 @@
   const prefRow = (ctx,title,summary,action,data='',widget='') => NG.settingsRow(ctx,{title,summary,action,data,widget});
   const set = (ctx,key,value) => { NG.setAppPref(ctx,'gboard',key,value); ctx.render(); };
   NG.appPrefsHooks.gboard = {
+    // AbstractSettingsActivity's overflow (menu_settings: Usage tips, About, Help & feedback); About is
+    // AboutPreferenceFragment over setting_about with the version in setting_about_key.
+    actions: (ctx,xml) => xml==='settings' ? NG.menu.button(ctx) : '',
+    action(ctx,name,el) {
+      if(name!=='ng-menu')return false;
+      const ap=k=>NG.appPrefStr('string/LatinIMEGooglePrebuilt/'+k);
+      // Usage tips: the support page (fallback_support_url, https://support.google.com, on this offline phone).
+      ctx.menu([{label:ap('setting_tutorial_title'),action:ctx=>ctx.open('chrome','url:https://support.google.com')},{label:ap('setting_about_title'),action:ctx=>NG.appPrefsGo(ctx,'setting_about',ap('setting_about_title'))},{label:ap('setting_help_and_feedback'),action:ctx=>ctx.open('help','gboard')}],el);
+      return true;
+    },
+    summary: (ctx,key) => key==='setting_about_key' ? '6.0.84.145092135-preload-arm64-v8a' : undefined,
     fragment(ctx,name,node) { return node.extras?.PREFERENCE_FRAGMENT || (name.endsWith('CustomInputStyleSettingsFragment') ? 'styles' : name.endsWith('AddOnDictionaryFragment') ? 'dictionaries' : null); },
     get(ctx,key) {
       const stored=NG.appPref(ctx,'gboard',key,undefined); if(stored!==undefined)return stored;

@@ -647,7 +647,8 @@
       if (name === 'ngst-support') {
         const kind = el.dataset.kind;
         if (kind === 'help') { go(c, 'help', ''); return true; }
-        if (kind === 'tips') { c.open('tips'); return true; }
+        // SupportFeatureProviderImpl.getTipsAndTricksIntent: settingsgoogle:tips_and_tricks_url, by default www.android.com, in a new tab.
+        if (kind === 'tips') { c.open('chrome', 'url:https://www.android.com/'); return true; }
         NG.settingsSupportEscalation ? NG.settingsSupportEscalation(c, kind) : go(c, `support:${kind}`, ''); return true;
       }
       if (name === 'ngst-search') { NG.settingsSearch ? NG.settingsSearch(c) : go(c, 'search', T().t('search_menu'), 'up'); return true; }

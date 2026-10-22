@@ -84,6 +84,7 @@ class Reader:
         res = RF if rid >> 24 == 1 else self.res
         for config, entry in res.get_res_configs(rid):
             if (config.get_qualifier() or '') == '':
+                if not hasattr(entry, 'key'): break  # a complex entry (an array or a style): keep the reference
                 d = entry.key
                 if d.data_type == 3: return res.stringpool_main.getString(d.data)
                 if d.data_type == 1: return self.raw('@%08x' % d.data)
@@ -110,7 +111,7 @@ class Reader:
             elif name in ATTRS: out[name] = self.ref(v)
         kids = []
         for ch in e:
-            if ch.tag == 'intent': out['intent'] = {k.split('}')[-1]: v for k, v in ch.attrib.items()}
+            if ch.tag == 'intent': out['intent'] = {k.split('}')[-1]: self.raw(v) if re.fullmatch(r'@(android:)?[0-9A-Fa-f]{8}', v) else v for k, v in ch.attrib.items()}
             elif ch.tag == 'extra': out.setdefault('extras', {})[ch.get(NS + 'name')] = ch.get(NS + 'value')
             else: kids.append(self.node(ch))
         if kids: out['c'] = kids

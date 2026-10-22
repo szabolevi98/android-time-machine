@@ -1,0 +1,10 @@
+# Open source licenses the apps' settings show (ng-appprefs.js): LicenseActivity of the input methods (a WebView of
+# assets/licenses.html) and the social.licenses LicenseMenuActivity (res/raw/third_party_licenses, its metadata).
+ime-hindi-licenses.html	app/GoogleHindiIME/GoogleHindiIME.apk	assets/licenses.html
+ime-japanese-licenses.html	app/GoogleJapaneseInput/GoogleJapaneseInput.apk	assets/licenses.html
+ime-korean-licenses.html	app/KoreanIME/KoreanIME.apk	assets/licenses.html
+ime-pinyin-licenses.html	app/GooglePinyinIME/GooglePinyinIME.apk	assets/licenses.html
+lime-third-party-licenses.txt	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	res/raw/third_party_licenses
+gs-third-party-licenses.txt	priv-app/Velvet/Velvet.apk	res/raw/third_party_licenses
+dl-third-party-licenses.txt	priv-app/GoogleDialer/GoogleDialer.apk	res/raw/third_party_licenses
+dl-third-party-license-metadata.txt	priv-app/GoogleDialer/GoogleDialer.apk	res/raw/third_party_license_metadata

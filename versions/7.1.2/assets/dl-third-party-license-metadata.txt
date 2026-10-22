@@ -1,0 +1,32 @@
+40:10695 Android Annotations Support Library
+10770:10695 Android Design Support Library
+21502:10695 Android Graphics Support Library
+32236:10691 Android Transition Support Library
+42965:10695 Android Compatibility Library v13
+53697:10695 Android Compatibility Library v4
+64429:10695 Android Compatibility Library v7
+75143:11358 Android Common
+86511:4771 Glide
+91297:11358 Guava JDK5
+102673:12847 jibercsclient
+115539:10173 libphonenumber
+125730:1732 Protobuf Nano
+127481:10699 shortcutbadger
+138199:1096 Animal Sniffer
+139319:1473 Auth client library
+140808:11358 Google Auto
+152177:11358 Dagger
+163551:11357 Error Prone
+174917:1472 gRPC
+176409:11358 instrumentation
+187778:11358 J2ObjC
+199159:11358 FasterXML Jackson2
+210542:11358 Apache Commons Codec
+221912:11358 JSR 250
+233282:1602 JSR 305
+234896:11365 JSR 330
+246272:11358 OkHttp
+257639:11358 Okio
+269031:12847 rcsclientlib
+269031:12847 carrierservices
+281893:11362 Guava JDK7

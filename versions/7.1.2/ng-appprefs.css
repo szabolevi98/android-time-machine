@@ -17,3 +17,6 @@
 .ngap-adddlg{padding:calc(24 * var(--dp)) calc(24 * var(--dp)) 0}
 .ngap-adddlg p{margin:0;padding-bottom:calc(16 * var(--dp));color:#000000ba;font-size:calc(16 * var(--dp));line-height:calc(24 * var(--dp))}
 .ngap .ngst-pref{background:transparent!important}
+/* Open source licences (LicenseActivity / LicenseMenuActivity). */
+.ngap-licframe{display:block;width:100%;height:100%;border:0;background:#fff}
+.ngap-lictext{margin:0;padding:calc(16 * var(--dp));white-space:pre-wrap;word-break:break-word;font:calc(12 * var(--dp))/1.4 "Roboto Mono",monospace;color:#000000de}

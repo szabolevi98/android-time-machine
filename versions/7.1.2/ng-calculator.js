@@ -215,7 +215,7 @@
         const result = s.state === 'result', frac = result && s.rational ? fraction(s.value) : null, items = [];
         if (result) items.push({label: t.t('menu_leading'), action: c => { const f = format(c, s.value, 17); message(c, `${f.mant}${f.exp} ${t.t(s.rational ? 'exact' : 'approximate')}`); }});
         if (frac) items.push({label: t.t('menu_fraction'), action: c => message(c, frac)});
-        items.push({label: t.t('menu_licenses'), action: c => c.open('calculator-licenses')}, {label: t.t('menu_feedback'), action: c => c.open('feedback', 'calculator')}, {label: t.t('menu_help'), action: c => c.open('help', 'calculator')});
+        items.push({label: t.t('menu_licenses'), action: c => c.open('calculator-licenses')}, {label: t.t('menu_feedback'), action: c => c.open('help', 'feedback:calculator')}, {label: t.t('menu_help'), action: c => c.open('help', 'calculator')});
         c.menu(items, el);
         return true;
       }

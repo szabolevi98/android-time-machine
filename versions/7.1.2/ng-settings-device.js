@@ -263,7 +263,7 @@
     },
     click(c, key) {
       if (key === 'print_cloud') { go(c, 'cloudprint', T().t('CloudPrint2/app_name')); return true; }
-      if (key === 'print_add_service') { c.open('store', 'search:print service'); return true; }
+      if (key === 'print_add_service') { c.open('play-store', 'search:print service'); return true; }
       return false;
     }
   };

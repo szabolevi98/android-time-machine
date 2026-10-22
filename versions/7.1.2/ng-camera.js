@@ -205,7 +205,7 @@
         return true;
       }
       if (key === 'pref_launch_help') { c.open('help', 'camera'); return true; }
-      if (key === 'pref_launch_feedback') { c.open('feedback', 'camera'); return true; }
+      if (key === 'pref_launch_feedback') { c.open('help', 'feedback:camera'); return true; }
       return false;
     }
   };

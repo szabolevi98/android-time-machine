@@ -480,7 +480,7 @@
         case 'ngcr-clear': u.text = ''; c.render(); c.el.viewport.querySelector('.ngcr-input')?.focus(); return true;
         case 'ngcr-go': go(c, el.dataset.url); return true;
         case 'ngcr-menu': c.overlay('chrome-menu'); return true;
-        case 'ngcr-voice': c.open('google', 'voice'); return true;
+        case 'ngcr-voice': c.open('search', 'voice'); return true;
         case 'ngcr-info': siteInfo(c); return true;
         case 'ngcr-help': c.open('help', 'chrome'); return true;
         case 'ngcr-switcher': u.switcher = !u.switcher; u.editing = false; u.find = null; if (!u.switcher && !tab(c)) u.switcher = true; c.render(); return true;

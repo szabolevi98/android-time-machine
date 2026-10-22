@@ -683,3 +683,20 @@ forgets it. Each FaceLock activity lays out under the transparent status bar (se
 now say `underStatus(c)` (Settings pages too). The agents keep the phone unlocked (open lock icon, no bouncer) once
 the screen lock has been used since boot: on-body detection, a trusted face, or a trusted Bluetooth device that is
 connected. `node tests/browser/ng-smartlock.mjs` covers it.
+
+## Rows that reached no screen — 2026-10-22
+
+A sweep of `c.open` targets and `missing:` cards: Calculator's, Camera's and Maps' Send feedback now open Google
+Feedback, Chrome's microphone the Google app's voice search, Printing's Add service the Play Store search, Settings'
+Explore tips & tricks www.android.com in Chrome (SupportFeatureProviderImpl's default tips_and_tricks_url). The spell
+checker's settings are Gboard's SettingsActivity. Text-to-speech's engine gear opens GoogleTTS's EngineSettings
+("Google TTS Options": GeneralSettingsFragment without process_text and voices_type, AnalyticsPreferenceScreen,
+Feedback). The other input methods (Google Indic Keyboard, Japanese Input, Korean Input, Pinyin Input) have their
+settings once enabled (ng-imes.js: headers with PREFERENCE_FRAGMENT, the shared library's seek bars, theme selector,
+the overflow's Send feedback and About with the version), Japanese Input its Dictionary tool (Mozc's
+UserDictionaryToolActivity: dictionaries, words with the 43 categories, export through the share sheet, import,
+undo), keyboard layout and Clear … dialogs. The app-prefs engine opens the intents no hook takes: web pages in Chrome,
+the user dictionary, captions, Google location settings, and the licences (LicenseActivity's assets/licenses.html;
+LicenseMenuActivity's third_party_licenses by its metadata, else the whole text); hooks can give an XML screen action
+bar buttons (`actions(c, xml)`); Gboard's overflow has Usage tips, About and Help & feedback. mm-appprefs.py now
+resolves intent data references and tolerates complex entries. `node tests/browser/ng-imes.mjs` covers it.

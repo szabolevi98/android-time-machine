@@ -1,0 +1,3 @@
+# Google Japanese Input Dictionary tool action bar icons (ng-imes.js): the framework drawables its menu names.
+ime-ic_menu_add.png	framework/framework-res.apk	drawable/ic_menu_add
+ime-ic_menu_delete.png	framework/framework-res.apk	drawable/ic_menu_delete
