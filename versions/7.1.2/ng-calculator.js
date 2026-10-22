@@ -141,7 +141,7 @@
         <div class="ngca-result${s.state === 'error' ? ' error' : ''}">${res ? `${c.safe(res.mant)}${res.exp ? `<span class="ngca-exp">${c.safe(res.exp)}</span>` : ''}` : ''}</div><i class="ngca-reveal"></i></div>
       <div class="ngca-pager${s.adv ? ' adv' : ''}">
         <div class="ngca-numeric">${['7', '8', '9', '4', '5', '6', '1', '2', '3'].map(digit).join('')}${btn('ngca-in', '.', sep(c))}${digit('0')}${btn('ngca-eq', '', t.t('eq'))}</div>
-        <div class="ngca-operator">${clear ? btn('ngca-clr', '', t.t('clr'), ' text') : btn('ngca-del', '', t.t('del'), ' text')}${btn('ngca-in', '÷', t.t('op_div'))}${btn('ngca-in', '×', t.t('op_mul'))}${btn('ngca-in', '−', t.t('op_sub'))}${btn('ngca-in', '+', t.t('op_add'))}</div>
+        <div class="ngca-operator">${clear ? btn('ngca-clr', '', t.t('clr'), ' text') : btn('ngca-del', '', t.t('del'), ' text')}${btn('ngca-in', '÷', t.t('op_div'))}${btn('ngca-in', '×', t.t('op_mul'))}${btn('ngca-in', '−', t.t('op_sub'))}${btn('ngca-in', '+', t.t('op_add'))}${btn('ngca-eq', '', t.t('eq'), ' eq2')}</div>
         <div class="ngca-advanced" data-action="ngca-open">${adv.flat().join('')}</div>
       </div></div>`;
   }

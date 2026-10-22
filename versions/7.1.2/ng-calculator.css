@@ -32,3 +32,29 @@
 .ngca-licbar i{width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:#fff;-webkit-mask:center/100% no-repeat;mask:center/100% no-repeat}
 .ngca-licbar span{padding-left:calc(16 * var(--dp))}
 .ngca-lic iframe{flex:1;width:100%;border:0}
+/* The window's height picks the configuration (activity_calculator in w375dp-h375dp / -h275dp, as in a split screen
+   window): display_two_line with the formula and the result at 32 dp (12 / 18 dp, the formula 2 / 10 dp) or 28 dp
+   with no padding, pad_operator_two_col (÷ del, ×, −, + =; the numeric pad's = gone) beside the numeric pad at weights
+   5 : 3, the numeric keys 27 / 20 dp, the operators 24 / 17 dp, their texts 15 / 14 dp, the pads' padding 8 (2) dp. */
+.ngca{container-type:size}
+.ngca-operator .eq2{display:none}
+@container (max-height:499px){
+  .ngca-formula{height:calc(32 * 1.17 * var(--dp));padding:calc(2 * var(--dp)) calc(16 * var(--dp)) calc(10 * var(--dp));font-size:calc(32 * var(--dp)) !important;line-height:calc(32 * 1.17 * var(--dp))}
+  .ngca-result{height:calc(32 * 1.17 * var(--dp));padding:calc(12 * var(--dp)) calc(16 * var(--dp)) calc(18 * var(--dp));font-size:calc(32 * var(--dp))}
+  .ngca-numeric{flex:5;padding:calc(8 * var(--dp))}
+  .ngca-numeric .ngca-b{font-size:calc(27 * var(--dp))}
+  .ngca-numeric [data-action="ngca-eq"]{visibility:hidden}
+  .ngca-operator{flex:3;grid-template:repeat(4,1fr)/repeat(2,1fr);grid-auto-flow:column;padding:calc(8 * var(--dp)) calc(28 * var(--dp)) calc(8 * var(--dp)) calc(4 * var(--dp))}
+  .ngca-operator .ngca-b{font-size:calc(24 * var(--dp))}
+  .ngca-operator .ngca-b.text{font-size:calc(15 * var(--dp));grid-area:1/2}
+  .ngca-operator .eq2{display:block;grid-area:4/2}
+}
+@container (max-height:374px){
+  .ngca-formula{height:calc(28 * 1.17 * var(--dp));padding:0 calc(16 * var(--dp));font-size:calc(28 * var(--dp)) !important;line-height:calc(28 * 1.17 * var(--dp))}
+  .ngca-result{height:calc(28 * 1.17 * var(--dp));padding:0 calc(16 * var(--dp));font-size:calc(28 * var(--dp))}
+  .ngca-numeric{padding:calc(2 * var(--dp)) calc(8 * var(--dp)) calc(8 * var(--dp))}
+  .ngca-numeric .ngca-b{font-size:calc(20 * var(--dp))}
+  .ngca-operator{padding-top:calc(2 * var(--dp))}
+  .ngca-operator .ngca-b{font-size:calc(17 * var(--dp))}
+  .ngca-operator .ngca-b.text{font-size:calc(14 * var(--dp))}
+}
