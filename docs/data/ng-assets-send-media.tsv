@@ -1,0 +1,5 @@
+# ACTION_SEND media attachments, the N2G48C clients' own controls.
+bg-ic_audio_play.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_audio_play
+bg-ic_audio_pause.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_audio_pause
+bg-ic_play_circle_filled.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_play_circle_filled
+ho-share-video-play.png	app/Hangouts/Hangouts.apk	drawable/ov_play_video_48

@@ -1,7 +1,7 @@
 # Remaining work for the full 7.1.2 release
 
 Owner authorization 2026-10-20: continue until the version is fully built; commit and push validated milestones.
-Latest owner instruction 2026-10-21: continue; usage limit does not apply. This explicitly suspends the earlier 18% stop threshold until the user reinstates a limit.
+Latest owner instruction 2026-10-23: continue until the full 7.1 is finished; commit/push anytime; usage limit does not apply. This explicitly suspends the earlier 18% stop threshold until the user reinstates a limit.
 The source and completion rules remain in plan-7.1.2.md. This is a concrete continuation checklist, not a replacement scope.
 
 ## Completed milestones
@@ -58,7 +58,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] App info Clear data/Force stop: private model/preferences reset, package task cancellation, stopped background services, provider data preserved.
 - [ ] MusicFX's full effect-control panel. Play Music currently exposes its native unavailable-effects response because the simulated media clock has no DSP session.
 - [x] Widget resize: native frame/handles, provider flags/minima, transactional cell reorder, pointer/touch commit and cancel, persisted dimensions.
-- [ ] ACTION_SEND video/audio dedicated Hangouts/Messenger/Photos receivers; preserve media metadata and native MIME target filtering. PDF streams and image-to-Messenger attachment delivery are connected.
+- [x] ACTION_SEND video/audio native MIME receivers, immutable metadata, Messenger audio/video/resharing, Hangouts video, Photos/YouTube upload, Gmail/Drive streams and Cloud Print failure.
 - [ ] Preference leaf/intent routing audit: finish service-backed and non-toggle rows that still lack a click handler.
 - [ ] Sweep all direct `missing(...)` branches and external activity routes; no unfinished card may remain at release.
 

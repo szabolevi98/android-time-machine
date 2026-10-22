@@ -53,6 +53,6 @@
   }
   const all = c => c.data.photos || (c.data.photos = JSON.parse(JSON.stringify(NG.defaults.photos)));
   NG.media = {svg, all, photos: c => all(c).filter(p => !p.trashedAt && !p.appPrivate),
-    fromDocument(c,node,app) { const source=node.mediaSnapshot||(node.photo&&NG.photoLibrary?.find(c,node.photo));if(!source)return null;if(node.photo&&source.appPrivate===app)return node.photo;const {id,trashedAt,appPrivate,...snapshot}=JSON.parse(JSON.stringify(source));return NG.media.add(c,{...snapshot,appPrivate:app,fileName:node.name,time:Date.now()}).id; },
+    fromDocument(c,node,app) { const source=node.mediaSnapshot||(node.photo&&NG.photoLibrary?.find(c,node.photo));if(!source)return null;if(node.photo&&source.appPrivate===app)return node.photo;const {id,trashedAt,appPrivate,...snapshot}=JSON.parse(JSON.stringify(source));return NG.media.add(c,{...snapshot,appPrivate:app,fileName:node.name||snapshot.fileName,duration:node.duration??snapshot.duration,time:snapshot.time??node.time??Date.now()}).id; },
     add(c, item) { const list = all(c); const p = {id: Math.max(0, ...list.map(x => x.id)) + 1, album: 'camera', ...item}; list.push(p); c.save(); return p; }};
 })();

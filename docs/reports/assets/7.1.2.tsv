@@ -51,6 +51,8 @@ versions/7.1.2/assets/bg-ic_archive_undo_small_dark.png	1734b05b995f56b1	copy	an
 versions/7.1.2/assets/bg-ic_arrow_back_dark.png	1a879beec3d39d47	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_arrow_back_dark.png	drawable-xxxhdpi-v4		1a879beec3d39d47
 versions/7.1.2/assets/bg-ic_arrow_back_light.png	7689ef871e40da28	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_arrow_back_light.png	drawable-xxxhdpi-v4		7689ef871e40da28
 versions/7.1.2/assets/bg-ic_audio_light.png	de5086dd32c7c61a	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_audio_light.png	drawable-xxxhdpi-v4		de5086dd32c7c61a
+versions/7.1.2/assets/bg-ic_audio_pause.png	c1d6131bdbaa9c89	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_audio_pause.png	drawable-xxxhdpi-v4		c1d6131bdbaa9c89
+versions/7.1.2/assets/bg-ic_audio_play.png	12cada4f8382edab	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_audio_play.png	drawable-xxxhdpi-v4		12cada4f8382edab
 versions/7.1.2/assets/bg-ic_camera_light.png	eeccd71bbd3f006d	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_camera_light.png	drawable-xxxhdpi-v4		eeccd71bbd3f006d
 versions/7.1.2/assets/bg-ic_checkmark_circle_blue.png	e7161dbfcbebc10f	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_checkmark_circle_blue.png	drawable-xxxhdpi-v4		e7161dbfcbebc10f
 versions/7.1.2/assets/bg-ic_content_copy_dark.png	9a9fac6a288f2421	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_content_copy_dark.png	drawable-xxxhdpi-v4		9a9fac6a288f2421
@@ -71,6 +73,7 @@ versions/7.1.2/assets/bg-ic_numeric_dialpad.png	fe4c5983e71473c9	copy	angler:/sy
 versions/7.1.2/assets/bg-ic_person_add_dark.png	7641a4610275fa59	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_person_add_dark.png	drawable-xxxhdpi-v4		7641a4610275fa59
 versions/7.1.2/assets/bg-ic_person_light.png	f31d8fb791eec633	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_person_light.png	drawable-xxxhdpi-v4		f31d8fb791eec633
 versions/7.1.2/assets/bg-ic_phone_small_light.png	3437289e37d06789	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_phone_small_light.png	drawable-xxxhdpi-v4		3437289e37d06789
+versions/7.1.2/assets/bg-ic_play_circle_filled.png	05d84e94e13ca023	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_play_circle_filled.png	drawable-xxxhdpi-v4		05d84e94e13ca023
 versions/7.1.2/assets/bg-ic_remove_small_light.png	6f2e91fee2b7a677	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_remove_small_light.png	drawable-xxxhdpi-v4		6f2e91fee2b7a677
 versions/7.1.2/assets/bg-ic_search_light.png	7c6e51f8e017124c	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_search_light.png	drawable-xxxhdpi-v4		7c6e51f8e017124c
 versions/7.1.2/assets/bg-ic_send_grey.png	00d8884fccee1579	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_send_grey.png	drawable-xxxhdpi-v4		00d8884fccee1579
@@ -587,6 +590,7 @@ versions/7.1.2/assets/ho-photo.png	68db9c96c5ad15db	copy	angler:/system/app/Hang
 versions/7.1.2/assets/ho-search.png	da72705bd6b1f269	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/quantum_ic_search_black_24.png	drawable-xxxhdpi-v4		da72705bd6b1f269
 versions/7.1.2/assets/ho-send-off.png	b6ddfbb922f3f438	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_send_grey_24.png	drawable-xxhdpi-v4		b6ddfbb922f3f438
 versions/7.1.2/assets/ho-send.png	5a470af84bb06817	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_send_green_24.png	drawable-xxhdpi-v4		5a470af84bb06817
+versions/7.1.2/assets/ho-share-video-play.png	96d791c3a81d2cd6	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ov_play_video_48.png	drawable-xxhdpi-v4		96d791c3a81d2cd6
 versions/7.1.2/assets/ho-speaker.png	c5d8a5f29a58729f	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/quantum_ic_volume_up_white_24.png	drawable-xxxhdpi-v4		c5d8a5f29a58729f
 versions/7.1.2/assets/ho-stat.png	808dd3d279c89819	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/stat_notify_hangout.png	drawable-xxhdpi-v4		808dd3d279c89819
 versions/7.1.2/assets/ho-video-off.png	3b7bcab3226475f1	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/quantum_ic_videocam_off_white_24.png	drawable-xxxhdpi-v4		3b7bcab3226475f1

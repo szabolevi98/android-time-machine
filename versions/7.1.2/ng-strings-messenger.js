@@ -1022,5 +1022,69 @@ NG.strings('messenger', {
 "de": "Nach oben navigieren",
 "fr": "Parcourir vers le haut",
 "es": "Desplazarse hacia arriba"
+},
+"audio_attachment_content_description": {
+"res": "angler:PrebuiltBugle:audio_attachment_content_description",
+"en": "Audio attachment",
+"hu": "Hangmelléklet",
+"de": "Audioanhang",
+"fr": "Pièce jointe audio",
+"es": "Archivo de audio adjunto"
+},
+"audio_play_content_description": {
+"res": "angler:PrebuiltBugle:audio_play_content_description",
+"en": "Play audio attachment",
+"hu": "Hangmelléklet lejátszása",
+"de": "Audioanhang wiedergeben",
+"fr": "Jouer le contenu audio joint",
+"es": "Reproducir archivo de audio adjunto"
+},
+"audio_pause_content_description": {
+"res": "angler:PrebuiltBugle:audio_pause_content_description",
+"en": "Pause",
+"hu": "Szünet",
+"de": "Pausieren",
+"fr": "Pause",
+"es": "Pausar"
+},
+"video_attachment_content_description": {
+"res": "angler:PrebuiltBugle:video_attachment_content_description",
+"en": "Video attachment",
+"hu": "Videómelléklet",
+"de": "Videoanhang",
+"fr": "Vidéo en pièce jointe",
+"es": "Archivo de vídeo adjunto"
+},
+"video_thumbnail_view_play_button_content_description": {
+"res": "angler:PrebuiltBugle:video_thumbnail_view_play_button_content_description",
+"en": "Play video",
+"hu": "Videó lejátszása",
+"de": "Video abspielen",
+"fr": "Lire la vidéo",
+"es": "Reproducir vídeo"
+},
+"conversation_list_snippet_video": {
+"res": "angler:PrebuiltBugle:conversation_list_snippet_video",
+"en": "Video",
+"hu": "Videó",
+"de": "Video",
+"fr": "Vidéo",
+"es": "Vídeo"
+},
+"multimedia_message": {
+"res": "angler:PrebuiltBugle:multimedia_message",
+"en": "Multimedia message",
+"hu": "Multimédiás üzenet",
+"de": "MMS",
+"fr": "MMS",
+"es": "Mensaje multimedia"
+},
+"message_size_label": {
+"res": "angler:PrebuiltBugle:message_size_label",
+"en": "Size: ",
+"hu": "Méret: ",
+"de": "Größe: ",
+"fr": "Taille : ",
+"es": "Tamaño: "
 }
 });

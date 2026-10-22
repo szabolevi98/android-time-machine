@@ -1,0 +1,17 @@
+.ngms-audio{display:flex;align-items:center;gap:calc(16 * var(--dp));box-sizing:border-box;width:calc(250 * var(--dp));max-width:100%;height:calc(70 * var(--dp));padding:0 calc(16 * var(--dp));border-radius:calc(18 * var(--dp));background:white;color:#263238}
+.ngms-audio>button{flex:none;display:grid;place-items:center;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;background:none;cursor:pointer}
+.ngms-audio-icon{display:block;width:calc(37 * var(--dp));height:calc(36.75 * var(--dp));background:var(--audio-accent);mask:var(--audio-mask) center/contain no-repeat;-webkit-mask:var(--audio-mask) center/contain no-repeat}
+.ngms-audio.incoming{background:var(--audio-accent);color:white}
+.ngms-audio.incoming .ngms-audio-icon{background:white}
+.ngms-audio time{font:calc(14 * var(--dp)) Roboto,sans-serif;white-space:nowrap}
+.ngms-audio-progress{display:block;flex:1;height:calc(6 * var(--dp));box-sizing:border-box;border-radius:calc(3 * var(--dp));background:#eceff1;min-width:calc(16 * var(--dp));overflow:hidden}
+.ngms-audio-progress i{display:block;height:100%;border-radius:calc(3 * var(--dp));background:var(--audio-accent)}
+.ngms-audio.incoming .ngms-audio-progress{border:calc(1 * var(--dp)) solid #eceff1;background:transparent}
+.ngms-audio.incoming .ngms-audio-progress i{background:white}
+.ngms-audio.compact{justify-content:center;width:calc(72 * var(--dp));height:calc(72 * var(--dp));padding:0;border-radius:0;background:#eceff1}
+.ngms-audio.compact time,.ngms-audio.compact .ngms-audio-progress{display:none}
+.ngms-pthumb .ngms-audio>button{position:static}
+.ngms-att{position:relative;border:0;padding:0;background:none;cursor:pointer}
+.ngms-video-overlay{position:absolute;right:calc(8 * var(--dp));bottom:calc(8 * var(--dp));display:flex;align-items:center;gap:calc(4 * var(--dp));color:white;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-shadow:0 1px 1px black;pointer-events:none}
+.ngms-video-overlay img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngho-photo{position:relative}.ngho-video-overlay{position:absolute;inset:50% auto auto 50%;width:calc(48 * var(--dp));height:calc(48 * var(--dp));transform:translate(-50%,-50%);pointer-events:none}

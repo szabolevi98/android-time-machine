@@ -103,7 +103,7 @@
     if (now - date < 364 * 864e5) return t.fmt('posted_this_year', null, new Intl.DateTimeFormat(loc, {weekday: 'long', month: 'short', day: 'numeric'}).format(date), sep, time_);
     return t.fmt('posted_over_a_year', null, new Intl.DateTimeFormat(loc, {weekday: 'long', month: 'short', day: 'numeric', year: 'numeric'}).format(date), sep, time_);
   }
-  const snippetOf = (c, m) => m.text || m.location?.name || T().t(m.photo ? 'conversation_list_snippet_picture' : m.sticker ? 'conversation_list_snippet_picture' : m.vcard ? 'conversation_list_snippet_vcard' : m.audio ? 'conversation_list_snippet_audio_clip' : 'conversation_list_snippet_picture');
+  const snippetOf = (c, m) => m.text || m.location?.name || T().t(m.photo ? (NG.photoLibrary.find(c,m.photo)?.kind==='video'?'conversation_list_snippet_video':'conversation_list_snippet_picture') : m.sticker ? 'conversation_list_snippet_picture' : m.vcard ? 'conversation_list_snippet_vcard' : m.audio ? 'conversation_list_snippet_audio_clip' : 'conversation_list_snippet_picture');
 
   // ---- pieces ----------------------------------------------------------------------------------------------------
   const icon = (n, cls = '') => `<img class="ngms-ic ${cls}" src="${A(n)}" alt="">`;
@@ -206,11 +206,11 @@
     const cp = cluster(prev, m), cn = cluster(m, next), sep = !prev || m.time - prev.time >= H;
     const sending = m.status === 'sending', selected = u.msel === m.id;
     const showMeta = sending || !next || u.details[m.id];
-    const meta = sending ? `${esc(c, t.t('message_status_sending'))}<i class="ngms-dots"><i></i><i></i><i></i></i>` : esc(c, m.mine ? when(c, m.time, false) + t.t('message_metadata_separator') + t.t('sms_text') : when(c, m.time, false));
+    const meta = sending ? `${esc(c, t.t('message_status_sending'))}<i class="ngms-dots"><i></i><i></i><i></i></i>` : esc(c, m.mine ? when(c, m.time, false) + t.t('message_metadata_separator') + t.t(m.photo||m.audio||m.sticker||m.vcard||m.location?'mms_text':'sms_text') : when(c, m.time, false));
     const photo = m.photo && NG.photoLibrary.find(c,m.photo);
     let text = m.text ? esc(c, m.text) : '';
     if (text && hits && u.csearch?.q) { const q = u.csearch.q.toLowerCase(), raw = m.text, low = raw.toLowerCase(); let out = '', k = 0, j; while ((j = low.indexOf(q, k)) >= 0) { out += esc(c, raw.slice(k, j)) + `<mark${hits.cur === hits.n ? ' class="cur"' : ''}>${esc(c, raw.slice(j, j + q.length))}</mark>`; hits.n++; k = j + q.length; } text = out + esc(c, raw.slice(k)); }
-    const att = m.location ? `<button type="button" class="ngmaps-message" data-action="ngms-location-open" data-place="${esc(c,m.location.id)}">${NG.mapsPreview(c,m.location.id)}<b>${esc(c,m.location.name)}</b><small>${esc(c,m.location.address)}</small></button>` : photo ? `<div class="ngms-att${m.text ? ' with' : ''}">${NG.media.svg(photo, 'ngms-photo', 4 / 3)}</div>` : m.sticker ? `<div class="ngms-att sticker"><img src="${A(`foodies_static_${m.sticker}`)}" alt=""></div>` : '';
+    const att = m.location ? `<button type="button" class="ngmaps-message" data-action="ngms-location-open" data-place="${esc(c,m.location.id)}">${NG.mapsPreview(c,m.location.id)}<b>${esc(c,m.location.name)}</b><small>${esc(c,m.location.address)}</small></button>` : photo ? `<button type="button" class="ngms-att${m.text ? ' with' : ''}" data-action="ngms-media-open" data-photo="${m.photo}" aria-label="${esc(c,t.t(photo.kind==='video'?'video_thumbnail_view_play_button_content_description':'mediapicker_galleryChooserDescription'))}">${NG.media.svg(photo, 'ngms-photo', 4 / 3)}${photo.kind==='video'?NG.smsMedia.video(c,photo):''}</button>` : m.audio ? NG.smsMedia.render(c,m.audio,`m:${x.id}:${m.id}`,false,!m.mine,color) : m.sticker ? `<div class="ngms-att sticker"><img src="${A(`foodies_static_${m.sticker}`)}" alt=""></div>` : '';
     const vcard = m.vcard ? `<span class="ngms-vcard">${icon('ic_person_light')}<b>${esc(c, m.vcard)}</b></span>` : '';
     const bubble = text || vcard ? `<div class="ngms-bubble${cp ? ' cp' : ''}${cn ? ' cn' : ''}"${!m.mine && !selected ? ` style="background:${color}"` : ''}>${vcard}${text ? `<span class="ngms-mtext">${text}</span>` : ''}</div>` : '';
     return `${sep ? `<div class="ngms-sep">${esc(c, separator(c, m.time))}</div>` : ''}<div class="ngms-msg ${m.mine ? 'out' : 'in'}${cp && !sep ? ' cp' : ''}${selected ? ' selected' : ''}" data-action="ngms-msg" data-id="${m.id}">
@@ -231,7 +231,7 @@
     const hits = u.csearch?.q ? {n: 0, cur: u.csearch.cur || 0} : null;
     const msgs = x.messages.map((m, i) => messageView(c, x, m, i, color, hits)).join('');
     const details = hits ? `<div class="ngms-sdetails"><span>${esc(c, hits.n ? t.fmt('search_matches', null, Math.min(hits.cur, hits.n - 1) + 1, hits.n) : '')}</span>${iconBtn(c, 'ngms-sprev', 'ic_keyboard_arrow_left_light', t.t('search_prev_content_description'))}${iconBtn(c, 'ngms-snext', 'ic_keyboard_arrow_right_light', t.t('search_next_content_description'))}</div>` : '';
-    const pend = pending.length ? `<div class="ngms-pending">${pending.map((a, i) => { const p = a.photo && NG.photoLibrary.find(c,a.photo); const inner = a.location ? NG.mapsPreview(c,a.location.id) : p ? NG.media.svg(p, '', 1) : a.sticker ? `<img src="${A(`foodies_static_${a.sticker}`)}" alt="">` : `<span class="ngms-pvcard">${icon('ic_person_light')}</span>`; return `<span class="ngms-pthumb">${inner}<button type="button" data-action="ngms-unattach" data-i="${i}">${icon('ic_remove_small_light')}</button></span>`; }).join('')}</div>` : '';
+    const pend = pending.length ? `<div class="ngms-pending">${pending.map((a, i) => { const p = a.photo && NG.photoLibrary.find(c,a.photo); const inner = a.audio ? NG.smsMedia.render(c,a.audio,`p:${x.id}:${i}`,true,false,color) : a.location ? NG.mapsPreview(c,a.location.id) : p ? NG.media.svg(p, '', 1) : a.sticker ? `<img src="${A(`foodies_static_${a.sticker}`)}" alt="">` : `<span class="ngms-pvcard">${icon('ic_person_light')}</span>`; return `<span class="ngms-pthumb">${inner}<button type="button" data-action="ngms-unattach" data-i="${i}">${icon('ic_remove_small_light')}</button></span>`; }).join('')}</div>` : '';
     const canSend = !!(draft.trim() || pending.length);
     const hint = pending.length ? 'compose_message_view_hint_text_with_attachment' : 'compose_message_view_sms_hint_text';
     return `<div class="ngms ngms-convscreen" style="--pal:${color}">${head}${details}
@@ -300,7 +300,8 @@
     let id = nextId(c) - 1;
     // An MMS: each attachment its own part (bubble), the text with the last one.
     const out = pending.length ? pending.map((a, i) => ({id: ++id, mine: true, ...a, text: i === pending.length - 1 ? text : '', time: Date.now(), status: 'sending'})) : [{id: ++id, mine: true, text, time: Date.now(), status: 'sending'}];
-    for(const message of out)if(message.photo)message.photo=NG.media.fromDocument(c,{photo:message.photo,name:'Photo.jpg'},'sms-provider');
+    for(const message of out)if(message.photo){const source=NG.photoLibrary.find(c,message.photo);message.photo=NG.media.fromDocument(c,{...message.document,photo:message.photo,name:message.document?.name||source?.fileName||(source?.kind==='video'?'Video.mp4':'Photo.jpg')},'sms-provider');if(message.document){message.document.photo=message.photo;delete message.document.mediaSnapshot;}}
+    NG.smsMedia.stop(c);
     x.messages.push(...out); x.read = true; u.draft[x.id] = ''; u.attach[x.id] = []; u.panel = ''; c.save(); c.render();
     deliver(c, x, out);
     answer(c, x);
@@ -338,7 +339,7 @@
     if (!sub) return;
     c.ui.sub = ''; u.search = null; u.sel = null; u.msel = null; u.csearch = null;
     // ShareIntentActivity ("Select conversation"): what was shared waits in the conversation picked next.
-    if (sub === 'share') { const d = NG.shareTake?.(c); u.carry = d?.kind === 'vcard' ? {attach: {vcard: d.subject || d.name || ''}} : {text: d?.text || '',...(d?.photo?{attach:{photo:d.photo}}:{})}; u.mode = 'share'; u.screen = ''; u.external = true; return; }
+    if (sub === 'share') { const d = NG.shareTake?.(c); u.carry = d?.kind === 'vcard' ? {attach: {vcard: d.subject || d.name || ''}} : {text: d?.text || '',...(d?.kind==='audio'&&d.document?{attach:{audio:JSON.parse(JSON.stringify(d.document))}}:d?.photo?{attach:{photo:d.photo,document:d.document}}:{})}; u.mode = 'share'; u.screen = ''; u.external = true; return; }
     if (sub.startsWith('conv:')) { const x = thread(c, sub.slice(5)); if (x) { openThread(c, x.number); u.external = true; } return; }
     if (sub.startsWith('to:')) { const n = sub.slice(3); if (n) { openThread(c, n); u.external = true; } else { u.screen = 'pick'; u.to = ''; u.external = true; } }
   }
@@ -451,12 +452,14 @@
     const t = T(), u = ui(c), x = thread(c, u.screen.slice(5)), m = x?.messages.find(y => y.id === u.msel);
     if (!m) { u.msel = null; c.render(); return; }
     const done = () => { u.msel = null; c.render(); };
-    if (name === 'ngms-m-share') { done(); NG.share?.(c, {kind: 'text', text: m.location ? [m.text,m.location.name,m.location.address,'https://maps.example/?place='+m.location.id].filter(Boolean).join('\n') : m.text || ''}); return; }
-    if (name === 'ngms-m-forward') { u.msel = null; u.carry = m.photo || m.sticker || m.vcard || m.location ? {text: m.text || '', attach: m.location ? {location:{...m.location}} : m.photo ? {photo: m.photo} : m.sticker ? {sticker: m.sticker} : {vcard: m.vcard}} : {text: m.text || ''}; u.mode = 'forward'; u.prev = u.screen; u.screen = ''; c.render(); return; }
+      if (name === 'ngms-m-share') { done(); const p=m.photo&&NG.photoLibrary.find(c,m.photo); NG.share?.(c, m.audio ? {kind:'audio',name:m.audio.name,text:m.text||'',document:JSON.parse(JSON.stringify(m.audio))} : p ? {kind:p.kind==='video'?'video':'image',photo:m.photo,name:m.document?.name||p.fileName,text:m.text||'',document:m.document} : {kind: 'text', text: m.location ? [m.text,m.location.name,m.location.address,'https://maps.example/?place='+m.location.id].filter(Boolean).join('\n') : m.text || ''}); return; }
+    if (name === 'ngms-m-forward') { u.msel = null; u.carry = m.photo || m.audio || m.sticker || m.vcard || m.location ? {text: m.text || '', attach: m.audio ? {audio:JSON.parse(JSON.stringify(m.audio))} : m.location ? {location:{...m.location}} : m.photo ? {photo: m.photo, document:m.document?JSON.parse(JSON.stringify(m.document)):undefined} : m.sticker ? {sticker: m.sticker} : {vcard: m.vcard}} : {text: m.text || ''}; u.mode = 'forward'; u.prev = u.screen; u.screen = ''; c.render(); return; }
     if (name === 'ngms-m-copy') { NG.clipboard = m.text || ''; done(); return; }
     if (name === 'ngms-m-details') {
-      const lines = [`${t.t('message_type_label')}${t.t('text_message')}`, `${t.t(m.mine ? 'to_address_label' : 'from_label')}${nameOf(c, x.number)}`,
+      const multimedia = !!(m.photo || m.audio || m.sticker || m.vcard || m.location), file = m.audio || m.document;
+      const lines = [`${t.t('message_type_label')}${t.t(multimedia ? 'multimedia_message' : 'text_message')}`, `${t.t(m.mine ? 'to_address_label' : 'from_label')}${nameOf(c, x.number)}`,
         `${t.t(m.mine ? 'sent_label' : 'received_label')}${new Intl.DateTimeFormat(c.locale(), {dateStyle: 'medium', timeStyle: 'short', hour12: h12(c)}).format(new Date(m.time))}`];
+      if (file?.size) lines.push(`${t.t('message_size_label')}${NG.fileSize(c, file.size)}`);
       done(); c.dialog({title: t.t('message_details_title'), message: lines.join('\n'), buttons: [{label: t.t('framework/ok')}]}); return;
     }
     if (name === 'ngms-m-delete') {
@@ -465,7 +468,9 @@
   }
 
   NG.register('messenger', {
-    stop() { answered.clear(); },
+    stop(c) { answered.clear(); NG.smsMedia?.stop(c); },
+    unmount(c) { NG.smsMedia?.stop(c); },
+    tick(c) { NG.smsMedia?.tick(c); },
     resume(c) { for (const x of threads(c)) { const pending = x.messages.filter(m => m.status === 'sending'); if (pending.length) deliver(c, x, pending); } },
     // The window animation's page (ng-core.js): deeper screens open over the ones they came from.
     page: c => NG.page('messenger', c.ui.messenger?.screen),
@@ -498,6 +503,7 @@
       return false;
     },
     action(name, el, event, c) {
+      if (NG.smsMedia?.action(name, el, c)) return true;
       const u = ui(c), t = T();
       switch (name) {
         case 'ngms-open': {

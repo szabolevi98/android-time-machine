@@ -43,7 +43,18 @@
   const st = {showing: false, expanded: false, active: 'ring'};
 
   const vol = c => c.data.settings.volume || (c.data.settings.volume = {voice: 4, ring: 5, music: 11, alarm: 6});
-  const activeStream = c => c.ui.inCall ? 'voice' : c.ui.musicPlaying ? 'music' : 'ring';
+  const activeStream = c => {
+    if (c.ui.inCall || NG.phone?.active?.(c)) return 'voice';
+    const u = c.ui;
+    const media = u.musicPlaying || c.data.music?.playing ||
+      (u.overlay === 'music-preview' && u.musicPreview?.playing) ||
+      (u.view === 'messenger' && u.messenger?.audio?.playing) ||
+      (u.view === 'photos' && u.photos?.playing) ||
+      (u.view === 'youtube' && u.youtube?.player?.playing) ||
+      (u.view === 'drive' && u.drive?.player?.playing) ||
+      (u.view === 'play-movies' && u.movies?.player?.playing);
+    return media ? 'music' : 'ring';
+  };
 
   // VolumeDialog.updateVolumeRowH: the icon, the level the slider shows and whether it follows.
   function rowState(c, stream) {

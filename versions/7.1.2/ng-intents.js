@@ -9,10 +9,10 @@
      without recent folders.
    - The targets: every enabled activity of the image whose ACTION_SEND filter takes the type (docs: the manifests):
      NfcNci's BeamShareActivity (android_beam; any type), Bluetooth's BluetoothOppLauncherActivity (bt_share_picker_label;
-     text, images, vCards), CloudPrint2's share-to-print alias (share_to_cloud_print_enabled is true; text/*, images),
+     its explicitly declared MIME types), CloudPrint2's share-to-print alias (share_to_cloud_print_enabled is true; any MIME type),
      Drive's SendTextToClipboardActivity (Copy to clipboard; text/plain) and UploadMenuActivity (Save to Drive; any type),
-     Gmail's ComposeActivityGmail (any type), Hangouts' ShareIntentActivity (text, images), Messenger's ShareIntentActivity
-     (share_intent_label; text, images, vCards) and Photos' UploadContentActivity (images). Chrome's PrintShareActivity
+     Gmail's ComposeActivityGmail (any type), Hangouts' and Messenger's ShareIntentActivity and separate video aliases,
+     Photos' UploadContentActivity and YouTube's upload alias (the exact MIME sets are in ng-send-model.js). Chrome's PrintShareActivity
      and Nearby's SendActivity start disabled. ResolverComparator orders them by use; with no usage stats yet that is
      the labels' collation order.
    - What each does: Gmail opens its compose screen with the subject and text; Messenger and Hangouts their list of
@@ -22,27 +22,28 @@
      FILTER_TYPE_TRANSFER scan finds no device with the object push profile; BeamShareActivity asks to turn NFC on
      (beam_requires_nfc_enabled, the framework's yes / no) and then SendUi shows the screen shrunk to 0.6 with "Tap to
      beam" until it is cancelled; Cloud Print hands the content to the print framework.
-   Use: NG.share(c, {title, kind: 'text' | 'image' | 'vcard', subject, text, name, exclude: [target ids]}). */
+   Use: NG.share(c, {title, kind: 'text' | 'image' | 'video' | 'audio' | 'vcard' | 'file', subject, text, name, exclude: [target ids]}). */
 (() => {
   'use strict';
   const T = () => NG.text('intents');
   const esc = (c, s) => c.safe(s);
   const icon = id => NG.appsData?.[id]?.icon || '';
   const TARGETS = [
-    {id: 'beam', label: 'NfcNci/android_beam', icon: () => 'assets/in-beam.png', kinds: ['text', 'image', 'vcard', 'file']},
-    {id: 'bluetooth', label: 'Bluetooth/bt_share_picker_label', icon: () => 'assets/in-bt_share.png', kinds: ['text', 'image', 'vcard', 'file']},
-    {id: 'cloudprint', label: 'CloudPrint2/app_name', icon: () => 'assets/in-cloudprint.png', kinds: ['text', 'image', 'vcard']},
-    {id: 'clipboard', label: 'Drive/send_to_clipboard_activity_title', icon: () => icon('drive'), kinds: ['text']},
-    {id: 'drive', label: 'Drive/upload_shared_item_title', icon: () => icon('drive'), kinds: ['text', 'image', 'vcard', 'file']},
-    {id: 'gmail', label: 'PrebuiltGmail/app_name', icon: () => icon('gmail'), kinds: ['text', 'image', 'vcard', 'file']},
-    {id: 'hangouts', label: 'Hangouts/home_screen_babel_label', icon: () => icon('hangouts'), kinds: ['text', 'image']},
-    {id: 'messenger', label: 'PrebuiltBugle/share_intent_label', icon: () => icon('messenger'), kinds: ['text', 'image', 'vcard']},
-    {id: 'photos', label: 'Photos/photos_uploadtoalbum_title', icon: () => icon('photos'), kinds: ['image']}
+    {id: 'beam', label: 'NfcNci/android_beam', icon: () => 'assets/in-beam.png'},
+    {id: 'bluetooth', label: 'Bluetooth/bt_share_picker_label', icon: () => 'assets/in-bt_share.png'},
+    {id: 'cloudprint', label: 'CloudPrint2/app_name', icon: () => 'assets/in-cloudprint.png'},
+    {id: 'clipboard', label: 'Drive/send_to_clipboard_activity_title', icon: () => icon('drive')},
+    {id: 'drive', label: 'Drive/upload_shared_item_title', icon: () => icon('drive')},
+    {id: 'gmail', label: 'PrebuiltGmail/app_name', icon: () => icon('gmail')},
+    {id: 'hangouts', label: 'Hangouts/home_screen_babel_label', icon: () => icon('hangouts')},
+    {id: 'messenger', label: 'PrebuiltBugle/share_intent_label', icon: () => icon('messenger')},
+    {id: 'photos', label: 'Photos/photos_uploadtoalbum_title', icon: () => icon('photos')},
+    {id: 'youtube', label: 'YouTube/application_name', icon: () => icon('youtube')}
   ];
-  const targets = (c, s) => TARGETS.filter(x => x.kinds.includes(s.kind || 'text') && !(s.exclude || []).includes(x.id))
+  const targets = (c, s) => TARGETS.filter(x => NG.sendModel.accepts(x.id, NG.sendModel.mime(s)) && !(s.exclude || []).includes(x.id) && !(NG.appsData?.[x.id] && NG.appDisabled?.(c, x.id)))
     .sort((a, b) => new Intl.Collator(c.locale()).compare(T().t(a.label), T().t(b.label)));
 
-  NG.share = (c, spec) => { c.ui.shareSpec = {kind: 'text', ...spec}; c.overlay('share'); };
+  NG.share = (c, spec) => { c.ui.shareSpec = NG.sendModel.normalize(c, {kind: 'text', ...spec}); c.overlay('share'); };
   // What the receiving app picks up (Gmail's compose, a draft in Messenger or Hangouts), cleared once it has.
   NG.shareTake = c => { const s = c.ui.shareData; c.ui.shareData = null; return s; };
 
@@ -87,12 +88,20 @@
     }}]});
   }
   // Photos' UploadContentActivity: the account to upload to, then Upload.
-  function photos(c) {
+  function photos(c, spec) {
     const t = T();
     c.dialog({title: t.t('Photos/photos_uploadtoalbum_title'), html: `<div class="ngin-up"><div class="ngin-uplabel">${esc(c, t.t('Photos/photos_uploadtoalbum_account_label'))}</div><div class="ngin-upspin">${esc(c, NG.account?.email || '')}</div></div>`,
       buttons: [{label: t.t('framework/cancel')}, {label: t.t('Photos/photos_uploadtoalbum_upload'), action: c => {
         c.dialog({progress: t.t('Photos/photos_uploadtoalbum_progress_title'), cancelable: false});
-        setTimeout(() => { if (c.ui.overlay === 'dialog') c.closeDialog(); c.toast(t.t('Photos/photos_uploadtoalbum_upload_complete')); }, 1200);
+        const progress = c.ui.dialogSpec;
+        NG.appTasks.later(c, 'photos', () => {
+          const existing = spec.photo && NG.photoLibrary.find(c, spec.photo);
+          if (!existing || existing.appPrivate) {
+            const id = NG.media.fromDocument(c, spec.document || {name:spec.name,mediaSnapshot:spec.photoSnapshot}, 'photos-upload');
+            const media = id && NG.photoLibrary.find(c,id); if (media) { delete media.appPrivate; media.album = 'photos'; media.uploaded = true; c.save(); }
+          } else { existing.uploaded = true; c.save(); }
+          if (c.ui.overlay === 'dialog' && c.ui.dialogSpec === progress) c.closeDialog(); c.toast(t.t('Photos/photos_uploadtoalbum_upload_complete'));
+        }, 1200);
       }}]});
   }
   // BeamShareActivity: NFC off asks first; then SendUi (the screen at 0.6 over black, "Tap to beam").
@@ -104,16 +113,17 @@
   }
   function pick(c, id) {
     const s = c.ui.shareSpec, t = T();
+    if (!s || !targets(c, s).some(x => x.id === id)) return;
     close(c, () => {
       if (id === 'clipboard') { NG.clipboard = s.text || ''; try { navigator.clipboard?.writeText(s.text || ''); } catch {} c.toast(t.t('Drive/send_to_clipboard_success')); return; }
       if (id === 'bluetooth') { bluetooth(c); return; }
       if (id === 'drive') { drive(c, s); return; }
-      if (id === 'photos') { photos(c); return; }
+      if (id === 'photos') { NG.appData.opened(c, 'photos'); photos(c, s); return; }
       if (id === 'beam') { beam(c); return; }
-      if (id === 'cloudprint') { c.ui.printJob = {title: s.subject || s.name || '', text: s.text || '', photo: s.photo}; c.ui.print = null; c.open('print-preview'); return; }
-      const photo=s.kind==='image'&&['gmail','messenger','hangouts'].includes(id)?NG.media.fromDocument(c,{name:s.name,photo:s.photo,mediaSnapshot:s.photoSnapshot},id):s.photo;
+      if (id === 'cloudprint') { if (s.kind === 'audio' || s.kind === 'video') { c.dialog({title:t.t('CloudPrint2/document_submit_failed_title'),message:t.t('CloudPrint2/failure_msg_request_failed'),buttons:[{label:NG.text('settings').t('framework/ok')}]}); return; } c.ui.printJob = {title: s.subject || s.name || '', text: s.text || s.document?.content || '', photo: s.photo, document:s.document}; c.ui.print = null; c.open('print-preview'); return; }
+      const photo=['image','video'].includes(s.kind)&&['gmail','messenger','hangouts'].includes(id)?NG.media.fromDocument(c,{...s.document,name:s.name||s.document?.name,photo:s.photo,mediaSnapshot:s.photoSnapshot},id):s.photo;
       const document=s.document?JSON.parse(JSON.stringify(s.document)):undefined;if(document&&photo){document.photo=photo;delete document.mediaSnapshot;}
-      c.ui.shareData = {subject: s.subject || '', text: s.text || '', kind: s.kind, name: s.name || '', photo,document};
+      c.ui.shareData = {subject: s.subject || '', text: s.text || (['messenger','hangouts'].includes(id) && s.kind==='text' ? s.document?.content : '') || '', kind: s.kind, mime:s.mime, name: s.name || document?.name || '', photo,document};
       c.open(id, 'share');
     });
   }

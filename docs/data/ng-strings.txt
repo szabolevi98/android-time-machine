@@ -166,7 +166,7 @@ nicknameLabelsGroup ghostData_company ghostData_title websiteLabelsGroup listCus
 display_ungrouped activity_title_contacts_filter list_filter_all_accounts list_filter_customize dialog_import_export import_from_sim
 import_from_vcf_file export_to_vcf_file share_visible_contacts
 
-[intents] framework Bluetooth Drive Photos SettingsGoogle NfcNci PrebuiltBugle CloudPrint2 PrebuiltGmail Hangouts
+[intents] framework Bluetooth Drive Photos SettingsGoogle NfcNci PrebuiltBugle CloudPrint2 PrebuiltGmail Hangouts YouTube
 # ChooserActivity and its targets: the labels of the image's ACTION_SEND activities, Bluetooth's enable dialog, Drive's
 # Save to Drive and Copy to clipboard, Photos' upload, BeamShareActivity, Settings' DevicePickerActivity
 framework/whichSendApplication framework/noApplications framework/yes framework/no framework/cancel
@@ -181,6 +181,8 @@ SettingsGoogle/device_picker SettingsGoogle/bluetooth_preference_found_devices S
 SettingsGoogle/bluetooth_search_for_devices SettingsGoogle/bluetooth_searching_for_devices
 NfcNci/android_beam NfcNci/beam_requires_nfc_enabled NfcNci/tap_to_beam PrebuiltBugle/share_intent_label CloudPrint2/app_name PrebuiltGmail/app_name
 Hangouts/home_screen_babel_label
+
+YouTube/application_name CloudPrint2/document_submit_failed_title CloudPrint2/failure_msg_request_failed
 
 [messenger] PrebuiltBugle framework
 # Messenger 2.0.906: the conversation list and its menu, the conversation and its menu, the compose bar, the contact
@@ -216,6 +218,8 @@ participant_list_title share_intent_activity_label unknown_sender
 notification_reply notification_reply_prompt notification_call notification_self plurals:notification_new_messages
 mms_text search_matches+args2 search_prev_content_description search_next_content_description search_hint
 compose_message_view_hint_text_with_attachment framework/action_bar_up_description
+
+audio_attachment_content_description audio_play_content_description audio_pause_content_description video_attachment_content_description video_thumbnail_view_play_button_content_description conversation_list_snippet_video multimedia_message message_size_label
 
 [chrome] Chrome framework
 # Chrome 55: first run (fre_tosanduma.xml, account_signin_view.xml), the toolbar and the omnibox, the New Tab page's cards,

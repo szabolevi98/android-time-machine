@@ -793,3 +793,22 @@ Validation: five new geometry/transaction checks (216 total module checks), `ng-
 commit, minima, reordering, moving, horizontal-only and fixed providers, reload, five languages, actual phone touch
 resize and touch cancellation), and the existing provider picker and Play Store widget flows. Three native bitmaps
 were added to the source inventory.
+
+
+## Audio/video SEND receivers — 2026-10-23
+
+ACTION_SEND now resolves the enabled N2G48C manifest MIME filters, including Messenger/Hangouts' separate video
+aliases, Photos' video/panorama filter and YouTube's upload alias. Hangouts has no audio receiver; Messenger accepts
+application/ogg in addition to audio/*. Cloud Print's wildcard receiver responds with its native submission failure
+for audio/video. Disabled packages are excluded, and a target outside the resolved set cannot be selected.
+Share-time snapshots preserve capture time, duration, filename, edits and audio tags. Receiver-owned visual media,
+provider-sent MMS and uploaded Photos/Drive/YouTube copies remain usable after deleting the source. Messenger handles
+inline audio play/pause/elapsed progress and video overlays, forwarding and resharing retain media types, Hangouts
+shows its native video overlay, and Photos, Gmail, Drive and YouTube consume the appropriate stream metadata.
+PrebuiltBugle's audio bitmaps are alpha masks tinted like ConversationDrawables (conversation colour outgoing,
+white incoming), with native progress backgrounds and timer colours. Playing inline audio pauses Play Music and
+volume keys follow actual active call/media state. A YouTube upload resets stale fullscreen/search/license state.
+Validation: four new model cases (220 module checks total); Documents, Hangouts and YouTube browser regressions;
+new media flow covers native target sets, SMS audio/video and resharing, volume keys/tint, Hangouts video,
+Photos/YouTube upload, Gmail/Drive audio, Cloud Print failure, source independence, five languages and phone width.
+Four native control bitmaps are recorded in the regenerated asset inventory.
