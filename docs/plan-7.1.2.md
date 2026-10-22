@@ -742,3 +742,19 @@ groove_checking_schedule_array. The sessions are placed at free times in the cho
 sessions carry the flag, and a session shows the goal segment (Session n this week, n/m done) with LATER / DID IT.
 Screens can ask for the light status bar (`lightStatus(c)`: dark icons, #99000000).
 `node tests/browser/ng-calendar-goals.mjs` covers it.
+
+## Testing menu and keyless preferences — 2026-10-22
+
+Finished the in-progress Dialer SpecialCharSequenceMgr paths: `*#06#` shows the device IMEI, `*#07#` reuses the regulatory
+labels, and `*#*#4636#*#*` opens Settings' TestingSettings. RadioInfo follows the shared mobile/Wi-Fi state: radio power
+affects the status bar, SMSC Update/Refresh store/read the simulated SIM address, the menu has the IMS status, band mode
+selection/result and the demo SIM's empty ADN/FDN/SDN lists. The OEM button is disabled because the image has no receiver;
+carrier provisioning broadcasts likewise have no receiver. Ping results describe the simulated network, never the host's.
+WifiAPITest's disable/enable accept a saved network ID; blank/invalid input cannot accidentally select network zero,
+and the IDs stay stable when Settings sorts the connected AP first. UsageStatsActivity records foreground time and last use
+at one-second intervals, with the native sort choices, rather than inventing usage from the launcher's predictions.
+Texts come from SettingsGoogle, TeleService, GoogleDialer and framework; debug constants come from the AOSP classes in
+`_aosp/aosp712/settings/testing`. Keyless Settings preference rows now carry their XML position so each resolves its own
+intent (both Testing's keyless sibling rows were inert before). Validation: `ng-testing.mjs` covers codes, radio power,
+SMSC, IMS/bands/SIM lists, measured usage, all Wi-Fi screens and disable/enable, phone width and all five languages;
+`ng-settings-extra.mjs` passed, all 205 module checks passed, and the source inventory was regenerated.

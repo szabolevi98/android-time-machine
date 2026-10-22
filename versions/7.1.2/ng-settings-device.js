@@ -50,6 +50,8 @@
   // -- About phone ----------------------------------------------------------------------------------------------------
   const KERNEL = '3.10.73-g5b0be8f02fe\nandroid-build@wphs1.hot.corp.google.com #1\nThu Jun 8 18:03:16 UTC 2017';
   const IDS = {serial: '84B7N16226000751', bt: 'ac:37:43:6b:1e:57', wifiMac: 'ac:37:43:6b:1e:58', ip: '192.168.1.105', imei: '867981020754412', imeiSv: '03'};
+  NG.deviceIds = IDS;
+  NG.regulatoryDialog = c => { const t = T(); c.dialog({title: t.t('regulatory_labels'), html: `<div class="ngdv-regulatory"><img src="${A('st-regulatory_info_h1511.png')}" alt=""></div>`, buttons: [{label: t.t('framework/ok')}]}); };
   H.device_info_settings = {
     hidden: ['fcc_equipment_id', 'manual', 'additional_system_update_settings', 'safety_info', 'selinux_status'],
     // onCreate's setEnabled(true) (the taps count on them); the other information rows stay disabled, not greyed
@@ -82,10 +84,7 @@
         if (entry.logoHits.length === 3 && entry.logoHits[0] >= now - 500) { entry.logoHits = []; c.has('platlogo') ? c.open('platlogo') : go(c, 'missing:com.android.internal.app.PlatLogoActivity', ''); }
         return true;
       }
-      if (key === 'regulatory_info') {
-        c.dialog({title: t.t('regulatory_labels'), html: `<div class="ngdv-regulatory"><img src="${A('st-regulatory_info_h1511.png')}" alt=""></div>`, buttons: [{label: t.t('framework/ok')}]});
-        return true;
-      }
+      if (key === 'regulatory_info') { NG.regulatoryDialog(c); return true; }
       return false;
     }
   };

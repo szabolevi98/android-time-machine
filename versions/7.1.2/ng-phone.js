@@ -415,7 +415,8 @@
         case 'ngph-tab': u.tab = +el.dataset.tab; u.expanded = null; c.render(); return true;
         case 'ngph-fab': if (u.tab === 2) c.open('contacts', 'new'); else { u.dialpad = true; c.render(); } return true;
         case 'ngph-makecall': u.dialpad = true; c.render(); return true;
-        case 'ngph-key': if (u.digits.length < 40) u.digits += el.dataset.k; c.render(); return true;
+        // SpecialCharSequenceMgr.handleChars: a recognised code runs and the digits clear.
+        case 'ngph-key': if (u.digits.length < 40) u.digits += el.dataset.k; if (NG.dialerSpecialChars?.(c, u.digits)) { u.digits = ''; if (c.ui.view === 'phone') c.render(); return true; } c.render(); return true;
         case 'ngph-del': u.digits = u.digits.slice(0, -1); c.render(); return true;
         case 'ngph-dialcall':
           // An empty dialpad's call button brings back the last number dialled.

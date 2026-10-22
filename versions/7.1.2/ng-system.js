@@ -152,7 +152,7 @@
     // The mobile network: no service in airplane mode; connected to data when Wi-Fi is not.
     mobile(c) {
       const s = c.data.settings;
-      if (s.airplane) return {service: false};
+      if (s.airplane || live.radioPower === false) return {service: false, data: false};
       return {service: true, data: s.mobileData && sys.wifiState(c) !== 'connected'};
     },
     // The screen's brightness factor for the filter.

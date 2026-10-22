@@ -38,8 +38,9 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 
 ## System and remaining details
 
-- [ ] Split-screen/docked stack in Overview.
-- [ ] Bundled notifications.
+- [x] Split-screen/docked stack in Overview (`7988e600`).
+- [x] Bundled notifications (`34381579`).
+- [x] Dialer special codes and Settings Testing: phone/radio information, measured usage statistics, Wi-Fi API/config/status.
 - [x] Launcher shortcut popup / pinning, provider picker / drag placement, wallpaper picker and home settings.
 - [ ] Remaining widget provider implementations and configuration activities. All 18 enabled providers are listed
       with native previews; digital/analog Clock and Google Search/Feed run. Calendar schedule/month, Chrome bookmarks,
@@ -53,7 +54,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [ ] Camera guided panorama / Photo Sphere / Lens Blur, Smartburst, volume key action.
 - [ ] Photos native CPE preset catalogue investigation and final polish.
 - [x] Chrome site settings category pages, per-site permissions, exceptions and reset.
-- [ ] Calendar Goal flow and any service-backed activity still left as a not-built card.
+- [x] Calendar Goal creation, scheduling and session actions (`3108b381`). Remaining service activity cards are tracked by the routing audit below.
 - [ ] App info Clear data: connect the current storage-usage flags to each app's actual saved model and cancel stale work.
 - [ ] MusicFX's full effect-control panel. Play Music currently exposes its native unavailable-effects response because the simulated media clock has no DSP session.
 - [ ] Widget resize handles and minimum sizes from each provider's resize flags.

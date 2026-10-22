@@ -421,7 +421,10 @@
     // A row with a button of its own in its widget frame (GearPreference) cannot be a button itself.
     const tag = selectable && !/<button/.test(widget) ? 'button' : 'div', role = tag === 'div' && selectable ? ' role="button"' : '';
     // shouldDisableView="false": a disabled row that does not look disabled.
-    return `<${tag}${role} ${tag === 'button' ? 'type="button" ' : ''}class="ngst-pref${disabled && n.shouldDisableView !== 'false' ? ' disabled' : ''}" data-action="ngst-pref" data-key="${c.safe(n.key || '')}" ${disabled ? 'disabled' : ''}>${ic}<span class="ngst-texts"><span class="ngst-title">${c.safe(title)}</span>${summary ? `<span class="ngst-summary">${c.safe(summary)}</span>` : ''}</span>${widget ? `<span class="ngst-widget">${widget}</span>` : ''}</${tag}>`;
+    // Android preferences need no key when they only open an activity. Keep their XML position so two keyless
+    // siblings (Testing's Usage statistics / Wi-Fi information, for example) still resolve to their own intents.
+    const path = nodePath(X()[xml], n);
+    return `<${tag}${role} ${tag === 'button' ? 'type="button" ' : ''}class="ngst-pref${disabled && n.shouldDisableView !== 'false' ? ' disabled' : ''}" data-action="ngst-pref" data-key="${c.safe(n.key || '')}"${path !== null ? ` data-node="${path}"` : ''} ${disabled ? 'disabled' : ''}>${ic}<span class="ngst-texts"><span class="ngst-title">${c.safe(title)}</span>${summary ? `<span class="ngst-summary">${c.safe(summary)}</span>` : ''}</span>${widget ? `<span class="ngst-widget">${widget}</span>` : ''}</${tag}>`;
   }
   NG.settingsPref = pref;
   // A plain preference row for screens that build their own lists: {key, title, summary, icon, widget, disabled, action}.
@@ -439,6 +442,16 @@
     return null;
   }
   NG.settingsFind = findKey;
+  function nodePath(node, target, path = '') {
+    if (!node) return null;
+    if (node === target) return path;
+    for (let i = 0; i < (node.c || []).length; i++) {
+      const found = nodePath(node.c[i], target, path ? `${path}.${i}` : String(i));
+      if (found !== null) return found;
+    }
+    return null;
+  }
+  const nodeAt = (node, path) => path === '' ? node : path.split('.').reduce((n, i) => n?.c?.[+i], node);
   // The switch bar above a screen's list.
   NG.settingsSwitchBar = (c, on, action, disabled = false) => `<div class="ngst-switchbar${disabled ? ' disabled' : ''}" data-action="${action}" role="button"><span>${c.safe(T().t(on ? 'switch_on_text' : 'switch_off_text'))}</span>${switchHtml(on, disabled)}</div>`;
 
@@ -654,7 +667,7 @@
       }
       if (name === 'ngst-search') { NG.settingsSearch ? NG.settingsSearch(c) : go(c, 'search', T().t('search_menu'), 'up'); return true; }
       if (name === 'ngst-pref' && cur?.xml) {
-        const n = findKey(X()[cur.xml], el.dataset.key) || {};
+        const n = (el.dataset.node !== undefined ? nodeAt(X()[cur.xml], el.dataset.node) : findKey(X()[cur.xml], el.dataset.key)) || {};
         const hook = NG.settingsHooks[cur.xml] || {};
         if (hook.click?.(c, n.key ?? el.dataset.key, n) === true) return true;
         if (isSwitch(n) || isCheck(n) || hook.switch?.includes(n.key)) { const v = !value(c, n); setValue(c, n, v); hook.changed?.(c, n.key, v, n); c.transition('none'); c.render(); return true; }

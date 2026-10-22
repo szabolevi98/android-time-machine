@@ -1,0 +1,16 @@
+/* Settings' testing menu (ng-settings-testing.js): RadioInfo's and WifiStatusTest's label / value lines
+   (radio_info.xml: the label, then the value after it, 14 sp), their buttons, spinners and switches; usage_stats.xml. */
+.ngts{padding:calc(8 * var(--dp)) calc(16 * var(--dp)) calc(24 * var(--dp));font:calc(14 * var(--dp))/1.45 Roboto,sans-serif;color:#000000de;background:#fafafa;min-height:100%;box-sizing:border-box}
+.ngts-row{display:flex;flex-wrap:wrap;gap:0 calc(6 * var(--dp));padding:calc(2 * var(--dp)) 0}
+.ngts-row span{color:#000000de}.ngts-row b{font-weight:400;color:#0000008a;word-break:break-all}
+.ngts-sel{display:block;margin:calc(2 * var(--dp)) 0 calc(8 * var(--dp));padding:calc(6 * var(--dp)) 0;border:0;border-bottom:1px solid #0000004d;background:none;font:calc(14 * var(--dp)) Roboto,sans-serif;color:#000000de;max-width:100%}
+.ngts-btn{display:inline-block;margin:calc(8 * var(--dp)) calc(8 * var(--dp)) calc(8 * var(--dp)) 0;padding:0 calc(16 * var(--dp));height:calc(36 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:#d6d7d7;box-shadow:0 1px calc(2 * var(--dp)) #0000003d;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;color:#000000de;cursor:pointer}
+.ngts-btns{display:flex}
+.ngts-switch{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:calc(48 * var(--dp));padding:0;border:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.ngts-input{display:block;width:100%;box-sizing:border-box;padding:calc(6 * var(--dp)) 0;border:0;border-bottom:1px solid #0000004d;background:none;font:calc(14 * var(--dp)) Roboto,sans-serif}
+.ngts-pre{margin:0;white-space:pre-wrap;font:calc(13 * var(--dp))/1.45 Roboto,sans-serif;color:#0000008a}
+.ngts-sort{display:flex;align-items:center;gap:calc(8 * var(--dp))}
+.ngts-uhead,.ngts-urow{display:grid;grid-template-columns:2fr 1fr 1fr;gap:calc(8 * var(--dp));padding:calc(6 * var(--dp)) 0}
+.ngts-uhead b{font-weight:500}
+.ngts-urow span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ngts-btn:disabled{color:#00000042;box-shadow:none;cursor:default}.ngts-empty{display:flex;align-items:center;justify-content:center;min-height:100%;padding:calc(16 * var(--dp));box-sizing:border-box;text-align:center;font:calc(14 * var(--dp)) Roboto,sans-serif}
