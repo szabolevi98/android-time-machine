@@ -9,3 +9,7 @@ mw-reply.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_widget_fab_reply
 mw-list.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_widget_list
 gw-background.9.png	app/PrebuiltGmail/PrebuiltGmail.apk	drawable/gradient_bg_widget_holo
 mw-open.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_open_in_new
+sw-sound-normal.png	priv-app/Velvet/Velvet.apk	drawable/sound_id_widget_normal
+sw-sound-pressed.png	priv-app/Velvet/Velvet.apk	drawable/sound_id_widget_pressed
+sw-music-note.png	priv-app/Velvet/Velvet.apk	drawable/quantum_ic_music_note_white_48
+sw-ime.9.png	priv-app/Velvet/Velvet.apk	drawable/ime_background_holo

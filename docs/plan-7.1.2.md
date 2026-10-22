@@ -873,3 +873,20 @@ Validation: the dedicated flow uses real pointer taps and covers config/cancel/r
 quick reply with Gboard, send/draft handoff, Gmail account/folder/mail/compose, reload, phone and five languages.
 Documents/Gmail regression and all 227 module checks pass. Six native assets added; inventory rebuilds 1145 files,
 zero problems. Source excerpts remain in ignored _aosp/ngbg-widget-java for audit.
+
+
+## Project Fi and Sound Search widgets — 2026-10-23
+
+The final two enabled providers are implemented, so the full N2G48C catalogue of 18 has working views. Project Fi
+uses Tycho's actual no-account response, not the phone's unrelated cellular-usage estimate. Its provider bytecode
+selects widget_data_usage_1x1_no_account below 133 dp and scales the larger circular illustration against 133 dp;
+logo size/offset and Sign in size/padding now follow that code. The widget opens the existing Fi activation flow.
+Velvet's soundsearch_intent_widget uses both native selector bitmaps and opens its intent_api_soundsearch capture
+layout: native IME background, 24 sp light capture text, 90 dp recognizer, 68 dp listening orb and 96 dp audio renderer.
+The local simulator resolves an empty capture to the native no-recognition response; retry resets its capture token,
+Back cancels its visible activity, and package-owned work cannot return a stale result after leaving or Force stop.
+No microphone capture or real song-identification backend is represented by the simulated listening state.
+Validation: service-widget browser flow covers all providers implemented, large/1x1 Fi and Sign in, listening/
+no-match/retry/cancel, persistence, phone width and five languages; the native picker/real held-drag regression and
+all 227 module checks pass. Four native bitmaps/nine-patch and Fi's vector added: 1150 rebuilt source files, zero
+inventory problems. Three labels untranslated in the source APK intentionally retain their native English fallback.

@@ -42,15 +42,10 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Bundled notifications (`34381579`).
 - [x] Dialer special codes and Settings Testing: phone/radio information, measured usage statistics, Wi-Fi API/config/status.
 - [x] Launcher shortcut popup / pinning, provider picker / drag placement, wallpaper picker and home settings.
-- [ ] Remaining widget provider implementations and configuration activities. All 18 enabled providers are listed
-      with native previews; digital/analog Clock, Google Search/Feed, Calendar schedule/month and Chrome bookmarks run.
-      Both Messenger widgets (including conversation configuration/quick reply) and Gmail (account/folder configuration) run.
-      Project Fi and Sound Search still show an explicit not-built marker after placement. Complete them as their apps are finished.
-      Drive now has its native widget with account configuration, upload/scan/create actions and cancellation cleanup.
-      Play Store's small rotating card, recommendation refresh/dismiss and My Library widgets are implemented;
-      configuration preserves the placement page and cleans up a cancelled new widget.
-      Play Music's five-control widget (small/large layouts) and I'm Feeling Lucky widget use the shared player.
-      Static shortcuts for later apps already carry their source shortcut ID through `shortcut:<id>`.
+- [x] All 18 enabled widget providers and their configuration activities: Clock, Google Search/Now,
+      Calendar schedule/month, Chrome bookmarks, Messenger list/conversation/quick reply, Gmail account/folder,
+      Drive, Play Music, Play Store, Project Fi no-account large/1x1 and Sound Search.
+      Native previews, placement/configuration/cancellation, provider data, saved state and widget resize are connected.
 - [ ] Camera guided panorama / Photo Sphere / Lens Blur, Smartburst, volume key action.
 - [ ] Photos native CPE preset catalogue investigation and final polish.
 - [x] Chrome site settings category pages, per-site permissions, exceptions and reset.

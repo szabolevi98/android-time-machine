@@ -1,0 +1,20 @@
+/* Project Fi no-account widget: provider scales its larger layout against 133dp;
+   below it the native 1x1 layout uses 10x14dp logo and 10sp Sign in on a white circle. */
+.ngfiwg{display:grid;place-items:center;width:100%;height:100%;border:0;padding:0;background:none;cursor:pointer;font-family:Roboto,sans-serif}
+.ngfiwg-circle{position:relative;display:block;width:calc(var(--fi-size) * var(--dp));height:calc(var(--fi-size) * var(--dp));max-width:100%;max-height:100%;border-radius:50%;overflow:hidden}
+.ngfiwg-bg{position:absolute;inset:0;width:100%;height:100%}
+.ngfiwg-logo{position:absolute;left:50%;top:calc(50% - 30 * var(--fi-scale) * var(--dp));width:calc(16 * var(--fi-scale) * var(--dp));height:calc(22 * var(--fi-scale) * var(--dp));transform:translate(-50%,-50%)}
+.ngfiwg-circle>span{position:absolute;top:calc(50% + 39 * var(--fi-scale) * var(--dp));left:0;right:0;text-align:center;color:#0000008a;font:calc(10 * var(--fi-scale) * var(--dp))/1.2 Roboto,sans-serif}
+.ngfiwg.small .ngfiwg-circle{background:white}.ngfiwg.small .ngfiwg-logo{top:calc(50% - 4 * var(--dp));width:calc(10 * var(--dp));height:calc(14 * var(--dp))}
+.ngfiwg.small .ngfiwg-circle>span{top:calc(50% + 5 * var(--dp));font-size:calc(10 * var(--dp))}
+.ngfiwg:active .ngfiwg-circle{filter:brightness(.94)}
+/* Velvet soundsearch_intent_widget's centered native selector, no resize flags. */
+.ngsound-widget{position:relative;display:grid;place-items:center;width:100%;height:100%;padding:0;border:0;background:none;cursor:pointer}
+.ngsound-widget img{max-width:100%;max-height:100%;object-fit:contain;position:absolute;inset:0;margin:auto}.ngsound-widget img.pressed{display:none}.ngsound-widget:active img{display:none}.ngsound-widget:active img.pressed{display:block}
+/* intent_api_soundsearch: 24sp sans-serif-light, 35dp text margins / 100dp
+   recognizer reserve, 90dp recognizer container at 3dp top/5dp end, 96dp audio renderer. */
+.ngsound{position:absolute;inset:0;box-sizing:border-box;font-family:Roboto,sans-serif;color:#000000de}
+.ngsound p{font:300 calc(24 * var(--dp))/1.12941 Roboto,sans-serif;margin:calc(35 * var(--dp)) calc(100 * var(--dp)) calc(35 * var(--dp)) calc(35 * var(--dp))}
+.ngsound-recognizer{position:absolute;right:calc(5 * var(--dp));top:calc(3 * var(--dp));width:calc(90 * var(--dp));height:calc(90 * var(--dp));border:0;padding:0;display:grid;place-items:center;background:none;cursor:pointer}
+.ngsound-recognizer>span{width:calc(68 * var(--dp));height:calc(68 * var(--dp));border-radius:50%;display:grid;place-items:center;background:#ff3e3e}.ngsound-recognizer img{width:calc(45 * var(--dp));height:calc(45 * var(--dp));object-fit:contain}
+.ngsound-wave{height:calc(96 * var(--dp));margin:calc(15 * var(--dp)) calc(35 * var(--dp)) calc(35 * var(--dp));display:flex;align-items:center}.ngsound-wave i{display:block;width:100%;height:calc(2 * var(--dp));background:#0000000f}

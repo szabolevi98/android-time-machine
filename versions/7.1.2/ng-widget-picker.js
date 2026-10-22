@@ -1,6 +1,6 @@
 /* N2G48C Launcher3 WidgetsContainerView / widget_cell. The complete enabled provider
    catalogue and each provider's previews/minimum sizes come from ng-launcher-data.js.
-   Provider implementations are explicit: unbuilt providers retain a visible not-built label. */
+   Each enabled N2G48C provider registers its own implementation by ID. */
 (() => {
   'use strict';
   const old=NG.widgets, providers=()=>NG.widgetProviders||[], label=(c,w)=>w.label?.[c.lang]||w.label?.en||w.id;

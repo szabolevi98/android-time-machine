@@ -27,10 +27,10 @@
     contacts: {data: ['contactsFilter', 'contactsTab', 'contactsUngrouped'], ui: ['contacts']},
     phone: {data: ['lastDialed', 'frequentsCleared'], ui: ['phone', 'call', 'heldCall'], prefs: ['dialer']},
     'play-store': {ui: ['play'], prefs: ['play']},
-    search: {data: ['google'], ui: ['google'], prefs: ['google']},
+    search: {data: ['google'], ui: ['google', 'soundSearch'], prefs: ['google']},
     settings: {protected: true}
   };
-  const aliases = {'files': 'documents', 'downloads': 'documents', now: 'search', 'calendar-goal': 'calendar',
+  const aliases = {'files': 'documents', 'downloads': 'documents', now: 'search', 'sound-search': 'search', 'calendar-goal': 'calendar',
     'com.android.musicfx': 'musicfx', 'messenger-widget-reply': 'messenger', 'clock-cities': 'clock', 'clock-settings': 'clock', 'music-preview': 'play-music', 'emergency-dialer': 'phone'};
   const owner = id => aliases[id] || id;
   const pkg = id => NG.appsData?.[owner(id)]?.pkg || owner(id);
