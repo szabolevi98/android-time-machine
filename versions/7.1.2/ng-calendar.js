@@ -20,7 +20,7 @@
      rotating as it opens): the speed dial over speed_dial_fade_color (#f2f2f2 at 90 %): Goal and Reminder
      (speed_dial_*_view.xml: the 52 dp mini buttons fab_small_blue with quantum_ic_flag / quantum_ic_reminders_alt, 18 dp
      from the end, their titles 14 sp bold #757575 on a white label) and Event over the main button. Event and Reminder
-     open the editor; a goal needs Google's goal service and is not built.
+     open the editor; Goal opens the goal wizard (ng-calendar-goals.js).
    - An event (event_info.xml): event_info_headline.xml's 96 dp headline in the event's colour (the title 24 dp white,
      72 dp in, 18 dp from the bottom), the When, Where, note and calendar segments (24 dp icons 16 dp in, 72 dp text),
      edit (ic_edit_white) and delete. The editor (edit_fragment.xml): the header in the event's colour with
@@ -64,7 +64,7 @@
 
   // ---- the Schedule view --------------------------------------------------------------------------------------------
   const firstDow = c => (new Intl.Locale(c.locale()).weekInfo?.firstDay ?? (c.locale().startsWith('en') ? 7 : 1)) % 7;
-  const chip = (c, e, cls = '') => `<button type="button" class="ngcl-chip${e.allDay ? '' : ' two'} ${cls}" style="background:${colorOf(e)}" data-action="ngcl-event" data-id="${e.id}"><b>${esc(c, e.title)}</b>${e.allDay ? '' : `<span>${esc(c, e.task ? time(c, e.start) : `${time(c, e.start)} – ${time(c, e.end)}`)}${e.where ? `, ${esc(c, e.where)}` : ''}</span>`}</button>`;
+  const chip = (c, e, cls = '') => `<button type="button" class="ngcl-chip${e.allDay ? '' : ' two'} ${cls}" style="background:${colorOf(e)}" data-action="ngcl-event" data-id="${e.id}"><b>${e.goal ? '<i class="ngcl-goalflag"></i>' : ''}${esc(c, e.title)}</b>${e.allDay ? '' : `<span>${esc(c, e.task ? time(c, e.start) : `${time(c, e.start)} – ${time(c, e.end)}`)}${e.where ? `, ${esc(c, e.where)}` : ''}</span>`}</button>`;
   function schedule(c) {
     const t = T(), today = day0(), byDay = new Map();
     for (const e of events(c)) { if (!byDay.has(e.date)) byDay.set(e.date, []); byDay.get(e.date).push(e); }
@@ -170,8 +170,8 @@
   function info(c, e) {
     const t = T(), color = colorOf(e);
     return `<div class="ngcl ngcl-info"><div class="ngcl-head" style="background:${color}"><div class="ngcl-hbar"><button type="button" class="ngcl-btn" data-action="ngcl-up"><img src="assets/gm-ic_arrow_back_wht_24dp.svg" alt=""></button><i class="ngcl-flex"></i><button type="button" class="ngcl-btn" data-action="ngcl-delete" aria-label="${esc(c, t.t('edit_event_delete'))}"><img src="assets/gm-ic_delete_wht_24dp.svg" alt=""></button></div><h1>${esc(c, e.title)}</h1></div>
-      <button type="button" class="ngcl-efab" style="background:${color}" data-action="ngcl-edit" aria-label="${esc(c, t.t('edit_label'))}">${ic(A('ic_edit_white'))}</button>
-      <div class="ngcl-page ngcl-ibody"><div class="ngcl-row">${ic(A('ic_date'))}<span>${esc(c, when(c, e))}</span></div>${e.where ? `<div class="ngcl-row">${ic(A('ic_location'))}<span>${esc(c, e.where)}</span></div>` : ''}${e.note ? `<div class="ngcl-row">${ic(A('ic_notes'))}<span>${esc(c, e.note)}</span></div>` : ''}<div class="ngcl-row">${ic(A('ic_calendar'))}<span>${esc(c, t.t(e.task ? 'reminders_calendar_name' : 'my_events'))}<small>${esc(c, acct().email)}</small></span></div></div></div>`;
+      ${e.goal ? '' : `<button type="button" class="ngcl-efab" style="background:${color}" data-action="ngcl-edit" aria-label="${esc(c, t.t('edit_label'))}">${ic(A('ic_edit_white'))}</button>`}
+      <div class="ngcl-page ngcl-ibody"><div class="ngcl-row">${ic(A('ic_date'))}<span>${esc(c, when(c, e))}</span></div>${e.goal ? NG.calendarGoals?.sessionInfo(c, e) || '' : ''}${e.where ? `<div class="ngcl-row">${ic(A('ic_location'))}<span>${esc(c, e.where)}</span></div>` : ''}${e.note ? `<div class="ngcl-row">${ic(A('ic_notes'))}<span>${esc(c, e.note)}</span></div>` : ''}<div class="ngcl-row">${ic(A('ic_calendar'))}<span>${esc(c, t.t(e.task ? 'reminders_calendar_name' : 'my_events'))}<small>${esc(c, acct().email)}</small></span></div></div>${e.goal ? NG.calendarGoals?.commandBar(c, e) || '' : ''}</div>`;
   }
   function editor(c) {
     const t = T(), d = ui(c).draft, color = colorOf(d);
@@ -205,7 +205,9 @@
     if (u.screen === 'edit' && u.draft) return editor(c);
     if (u.screen.startsWith('event:')) { const e = events(c).find(x => x.id === +u.screen.slice(6)); if (e) return info(c, e); u.screen = ''; }
     if (u.search !== undefined && u.search !== null) return searchView(c);
-    return main(c);
+    // GroovePostCreationBottomSheet after a goal was made (ng-calendar-goals.js).
+    const sheetEvent = u.goalSheet && events(c).find(x => x.id === u.goalSheet);
+    return main(c) + (sheetEvent ? NG.calendarGoals?.sheet(c, sheetEvent) || '' : '');
   }
   NG.register('calendar', {
     // The window animation's page (ng-core.js): deeper screens open over the ones they came from.
@@ -243,7 +245,10 @@
         case 'ngcl-oobedone': c.data.calendarOobe = true; c.save(); c.render(); return true;
         case 'ngcl-drawer': u.drawer = !u.drawer; c.render(); return true;
         case 'ngcl-dial': u.dial = !u.dial; c.render(); return true;
-        case 'ngcl-goal': u.dial = false; c.open('calendar-goal'); return true;
+        case 'ngcl-goal': u.dial = false; c.ui.goal = null; c.open('calendar-goal'); return true;
+        case 'ngcg-sheet-ok': u.goalSheet = null; c.render(); return true;
+        case 'ngcg-sheet-adjust': u.goalSheet = null; u.screen = `event:${el.dataset.id}`; c.render(); return true;
+        case 'ngcg-did': case 'ngcg-later': case 'ngcg-undone': return !!NG.calendarGoals?.sessionAction(c, name, el);
         case 'ngcl-newtask': startEdit(c, null, true); c.render(); return true;
         case 'ngcl-today': if ((u.view || 'schedule') !== 'schedule' || u.date) { u.date = ''; u.gridScroll = null; c.render(); return true; } { const s = c.el.viewport.querySelector('.ngcl-sched'), d = c.el.viewport.querySelector('#ngcl-today'); if (s && d) s.scrollTo({top: Math.max(0, d.offsetTop - 120), behavior: 'smooth'}); return true; }
         case 'ngcl-picker': u.picker = !u.picker; u.pickerMonth = ''; c.render(); return true;

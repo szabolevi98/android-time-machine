@@ -1,0 +1,10 @@
+# Google Calendar 5.7 Goals (ng-calendar-goals.js): the categories' pictures, the back arrow, the mini button, the goal icon
+ca-groove_exercise.jpg	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	drawable/groove_exercise
+ca-groove_skill.jpg	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	drawable/groove_skill
+ca-groove_friends.jpg	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	drawable/groove_friends
+ca-groove_metime.jpg	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	drawable/groove_metime
+ca-groove_organize.jpg	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	drawable/groove_organize
+ca-quantum_ic_arrow_back_black_24.png	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	drawable/quantum_ic_arrow_back_black_24
+ca-quantum_ic_done_white_24.png	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	drawable/quantum_ic_done_white_24
+ca-quantum_ic_flag_grey600_24.png	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	drawable/quantum_ic_flag_grey600_24
+ca-ic_notification.png	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	drawable/ic_notification

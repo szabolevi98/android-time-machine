@@ -85,7 +85,9 @@
       const mod = NG.module(c.ui.view), bg = NG.split?.statusColor?.(c) || (c.ui.view === 'home' ? 'transparent' : mod?.statusColor?.(c) || '#000');
       const b = NG.battery(), notes = (NG.notifications?.icons(c) || []).map(icon => `<img class="ngsb-note" src="${c.safe(icon)}" alt="">`).join('');
       const status = (c.statusIcons?.() || []).map(name => `<img class="ngsb-icon" src="${A(`${name}.svg`)}" alt="">`).join('');
-      return `<div class="ngsb" style="background:${bg}" data-action="ngsb-pull"><div class="ngsb-notes">${notes}</div>
+      // A window asking for SYSTEM_UI_FLAG_LIGHT_STATUS_BAR gets the dark icons (dark_mode_icon_color_single_tone).
+      const light = !NG.split?.statusColor?.(c) && !!mod?.lightStatus?.(c);
+      return `<div class="ngsb${light ? ' light' : ''}" style="background:${bg}" data-action="ngsb-pull"><div class="ngsb-notes">${notes}</div>
         <div class="ngsb-system"><span class="ngsb-icons">${status}</span>${signalCluster(c)}${batterySvg(b.level, b.plugged, !!c.data.settings.powerSave)}</div>
         <span class="ngsb-clock">${clock(c)}</span></div>`;
     },

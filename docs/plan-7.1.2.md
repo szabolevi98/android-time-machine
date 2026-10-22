@@ -727,3 +727,18 @@ bottom window and leaves the docked task out (undockable tasks carry the incompa
 stack (an 8 dp strip with MinimizedDockShadow), an app from the launcher restores the split; Overview held again
 undocks; the Overview key shows ic_sysbar_docked. One side is live and the other shows its last drawing laid out in
 its window; a tap makes it the live side. `node tests/browser/ng-split.mjs` covers it.
+
+## Calendar Goals — 2026-10-22
+
+The speed dial's Goal no longer shows a not-built card: CreateGrooveActivity is `calendar-goal` (ng-calendar-goals.js),
+read from Calendar 5.7's com.google.android.calendar.groove (not obfuscated; decompiled into _aosp/ngcal): the store
+(five GrooveCategories cards with their pictures), the subcategories (getNumSubcategoriesToDisplay 4 / 3 and Custom…
+on the illustration colour with the picture at the bottom), CustomGrooveFragment (the question as hint, the rest of
+the subcategories or the language / instrument / art / hobby suggestions, the mini button once there is text), How
+often? (the monthly set for GrooveFrequencySelectionView's types, More options…), For how long?, Best time?, the
+summary (groove_n_times_a_week, "duration, time", MORE OPTIONS: the goal's editor) and the creation with
+groove_checking_schedule_array. The sessions are placed at free times in the chosen part of the day for four weeks
+(eight for monthly goals); Calendar shows the post-creation sheet ("First time is …", ADJUST TIME / LOOKS GOOD), the
+sessions carry the flag, and a session shows the goal segment (Session n this week, n/m done) with LATER / DID IT.
+Screens can ask for the light status bar (`lightStatus(c)`: dark icons, #99000000).
+`node tests/browser/ng-calendar-goals.mjs` covers it.

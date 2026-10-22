@@ -27,3 +27,6 @@
    fading in 450 ms. */
 .ngnb-ripple{position:absolute;left:50%;top:0;width:calc(80 * var(--dp));height:100%;margin-left:calc(-40 * var(--dp));border-radius:calc(24 * var(--dp));background:#fff;opacity:0;transition:opacity .45s linear,width .35s cubic-bezier(.4,0,.2,1),margin-left .35s cubic-bezier(.4,0,.2,1)}
 .ngnb-key.pressed .ngnb-ripple{opacity:.2;width:calc(108 * var(--dp));margin-left:calc(-54 * var(--dp));transition:opacity 0s,width .35s cubic-bezier(.4,0,.2,1),margin-left .35s cubic-bezier(.4,0,.2,1)}
+/* SYSTEM_UI_FLAG_LIGHT_STATUS_BAR: the icons and the clock in dark_mode_icon_color_single_tone #99000000. */
+.ngsb.light .ngsb-notes,.ngsb.light .ngsb-system{filter:brightness(0) opacity(.6)}
+.ngsb.light .ngsb-clock{color:#00000099}

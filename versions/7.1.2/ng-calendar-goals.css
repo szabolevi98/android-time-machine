@@ -1,0 +1,88 @@
+/* Google Calendar 5.7 Goals (ng-calendar-goals.js): groove_category_selection_fragment, groove_category_view,
+   groove_subcategory_selection_fragment, custom_groove_fragment, groove_schedule_fragment's pages, groove_summary_view,
+   the session's segment and command bar, groove_post_creation_bottom_sheet_body. */
+.ngcg{position:absolute;inset:0;overflow:hidden;background:#fff;color:#000;font-family:Roboto,sans-serif}
+.ngcg button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ngcg-back{position:absolute;left:0;top:0;z-index:3;height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;display:flex;align-items:center}
+.ngcg-back:active{background:#0000001a}
+.ngcg-back img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+/* the store */
+.ngcg-bar{position:absolute;left:0;right:0;top:0;z-index:2;height:calc(56 * var(--dp));background:#fff;transition:box-shadow .2s}
+.ngcg-bar.raised{box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #00000033}
+.ngcg-bartitle{position:absolute;left:calc(72 * var(--dp));top:0;line-height:calc(56 * var(--dp));font-size:calc(20 * var(--dp));color:#212121;opacity:0;transform:translateY(calc(10 * var(--dp)));transition:opacity .2s,transform .2s}
+.ngcg-bar.raised .ngcg-bartitle{opacity:1;transform:none}
+.ngcg-scroll{position:absolute;left:0;right:0;top:calc(56 * var(--dp));bottom:0;overflow-y:auto;scrollbar-width:none}
+.ngcg-scroll::-webkit-scrollbar{display:none}
+.ngcg-head{height:calc(112 * var(--dp));display:flex;flex-direction:column;justify-content:center;gap:calc(4 * var(--dp));padding:0 calc(16 * var(--dp));box-sizing:border-box;font-size:calc(16 * var(--dp))}
+.ngcg-head b{font-weight:400;color:#212121}.ngcg-head span{color:#757575}
+.ngcg-cat{position:relative;display:block;width:100%;margin:0 0 calc(8 * var(--dp));padding:0;border:0;text-align:left}
+.ngcg-cat img{display:block;width:100%}
+.ngcg-cattext{position:absolute;left:0;right:0;bottom:0;height:calc(72 * var(--dp));display:flex;flex-direction:column;justify-content:center;padding:0 calc(16 * var(--dp))}
+.ngcg-cattext b{font-weight:400;font-size:calc(20 * var(--dp));color:#fff}
+.ngcg-cattext small{font-size:calc(14 * var(--dp));color:#ffffffa8}
+/* the wizard's frames: the category colour, its picture at the bottom */
+.ngcg-frame .ngcg-art{position:absolute;left:0;right:0;bottom:0;width:100%;pointer-events:none}
+.ngcg-text,.ngcg-page,.ngcg-custom{position:relative;z-index:1;padding-top:calc(56 * var(--dp))}
+.ngcg h1,.ngcg-sumtitle{margin:0;padding:calc(12 * var(--dp)) calc(16 * var(--dp)) calc(44 * var(--dp)) calc(72 * var(--dp));font-size:calc(24 * var(--dp));font-weight:400;color:#000}
+.ngcg-opt{display:block;width:100%;min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp)) 0 calc(72 * var(--dp));border:0;background:none;text-align:left;font-size:calc(16 * var(--dp));font-weight:500;color:#000}
+.ngcg-opt:active{background:#0000001a}
+.ngcg-text.enter{animation:ngcg-enter .195s cubic-bezier(.4,0,.2,1) .2s both}
+@keyframes ngcg-enter{from{opacity:0;transform:translateY(calc(-10 * var(--dp)))}to{opacity:1;transform:none}}
+.ngcg-scrollpage{position:absolute;inset:0;overflow-y:auto}
+/* custom and the summary: the title over the divider, the mini button on it */
+.ngcg-titlebox{position:relative}
+.ngcg-title{display:block;width:100%;box-sizing:border-box;margin:0;padding:calc(12 * var(--dp)) calc(72 * var(--dp)) calc(28 * var(--dp));border:0;outline:0;background:none;font:400 calc(24 * var(--dp)) Roboto,sans-serif;color:#000;caret-color:#000}
+.ngcg-title::placeholder{color:#00000061}
+.ngcg-divider{display:block;height:1px;background:#33000000}
+.ngcg-fab{position:absolute;right:calc(10 * var(--dp));bottom:calc(-29 * var(--dp));z-index:2;width:calc(52 * var(--dp));height:calc(52 * var(--dp));border:0;border-radius:50%;display:grid;place-items:center;box-shadow:0 calc(3 * var(--dp)) calc(6 * var(--dp)) #00000040;transition:transform .2s cubic-bezier(.4,0,.2,1)}
+.ngcg-fab.hidden{transform:scale(0)}
+.ngcg-fab img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngcg-spin{display:none;position:absolute;inset:calc(5 * var(--dp));border:calc(3 * var(--dp)) solid #ffffff4d;border-top-color:#fff;border-radius:50%;animation:ngcg-spin .8s linear infinite}
+@keyframes ngcg-spin{to{transform:rotate(360deg)}}
+.ngcg-sugg{padding-top:calc(15 * var(--dp))}
+.ngcg-sumtitle{padding-bottom:calc(28 * var(--dp));padding-right:calc(72 * var(--dp));font-size:calc(34 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngcg-contract{padding:calc(36 * var(--dp)) calc(72 * var(--dp)) 0;transition:opacity .2s}
+.ngcg-contract p{margin:0;font-size:calc(16 * var(--dp));line-height:1.4;color:#000}
+.ngcg-contract p:first-child{margin-bottom:calc(8 * var(--dp))}
+.ngcg-moreopt{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;height:calc(56 * var(--dp));margin:calc(24 * var(--dp)) 0 0 calc(-72 * var(--dp));padding:0 0 0 calc(72 * var(--dp));width:calc(100% + 72 * var(--dp));border:0;background:none;color:#000;text-align:left}
+.ngcg-moreopt span{font-size:calc(16 * var(--dp))}
+.ngcg-moreopt small{font-size:calc(14 * var(--dp));font-weight:500;text-transform:uppercase}
+.ngcg-waiting{display:none;margin:0;padding:calc(36 * var(--dp)) calc(72 * var(--dp)) 0;font-size:calc(24 * var(--dp));color:#000}
+.ngcg-summary.creating .ngcg-contract{display:none}
+.ngcg-summary.creating .ngcg-waiting{display:block}
+.ngcg-summary.creating .ngcg-fab img{opacity:0}
+.ngcg-summary.creating .ngcg-spin{display:block}
+/* the goal's editor (More options) */
+.ngcg-edit{overflow-y:auto}
+.ngcg-ehead{padding-bottom:calc(16 * var(--dp))}
+.ngcg-ebar{display:flex;align-items:center;height:calc(56 * var(--dp))}
+.ngcg-ebar i{flex:1}
+.ngcg-ebtn{width:calc(56 * var(--dp));height:calc(56 * var(--dp));border:0;background:none;display:grid;place-items:center}
+.ngcg-ebtn img{width:calc(24 * var(--dp))}
+.ngcg-esave{height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;color:#fff;font-size:calc(14 * var(--dp));font-weight:500;text-transform:uppercase}
+.ngcg-ename{display:block;width:100%;box-sizing:border-box;padding:calc(8 * var(--dp)) calc(16 * var(--dp)) 0 calc(72 * var(--dp));border:0;outline:0;background:none;color:#fff;font:400 calc(24 * var(--dp)) Roboto,sans-serif}
+.ngcg-erow{display:flex;align-items:flex-start;padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(16 * var(--dp)) 0;border-bottom:1px solid #e0e0e0}
+.ngcg-erow>img{flex:none;width:calc(24 * var(--dp));margin:0 calc(32 * var(--dp)) 0 calc(16 * var(--dp));opacity:.54}
+.ngcg-erow>div{flex:1;display:flex;flex-direction:column;gap:calc(8 * var(--dp));font-size:calc(16 * var(--dp));color:#000000de}
+.ngcg-erow b{font-weight:400}
+.ngcg-sel{width:fit-content;border:0;background:none;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de;padding:calc(4 * var(--dp)) 0}
+.ngcg-switchrow{display:flex;align-items:center;gap:calc(16 * var(--dp));padding:0;border:0;background:none;text-align:left;color:inherit;font:inherit}
+.ngcg-switchrow span{flex:1;display:flex;flex-direction:column}
+.ngcg-switchrow small{font-size:calc(14 * var(--dp));color:#0000008a}
+/* in Calendar: the session chip's flag, the goal segment, the command bar, the post-creation sheet */
+.ngcl-goalflag{display:inline-block;width:calc(14 * var(--dp));height:calc(14 * var(--dp));margin-right:calc(4 * var(--dp));vertical-align:-2px;background:url('assets/ca-quantum_ic_flag_white_24.png') center/contain no-repeat}
+.ngcg-info span{display:flex;flex-direction:column}
+.ngcg-info b{font-weight:400}
+.ngcg-info small{margin-bottom:calc(8 * var(--dp))}
+.ngcg-cmd{display:flex;justify-content:flex-end;gap:calc(8 * var(--dp));height:calc(48 * var(--dp));padding:0 calc(8 * var(--dp));border-top:1px solid #e0e0e0;background:#fff}
+.ngcg-cmd button{padding:0 calc(16 * var(--dp));border:0;background:none;color:#4285f4;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;cursor:pointer}
+.ngcg-sheetscrim{position:absolute;inset:0;z-index:40;background:#00000033}
+.ngcg-sheet{position:absolute;left:0;right:0;bottom:0;z-index:41;background:#fff;box-shadow:0 calc(-2 * var(--dp)) calc(8 * var(--dp)) #00000033;animation:ngcg-up .25s cubic-bezier(0,0,.2,1)}
+@keyframes ngcg-up{from{transform:translateY(100%)}to{transform:none}}
+.ngcg-tile{display:flex;align-items:flex-start;padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(16 * var(--dp)) 0}
+.ngcg-tile img{flex:none;width:calc(24 * var(--dp));margin:0 calc(32 * var(--dp)) 0 calc(16 * var(--dp))}
+.ngcg-tile span{display:flex;flex-direction:column;gap:calc(4 * var(--dp))}
+.ngcg-tile b{font-weight:400;font-size:calc(16 * var(--dp));color:#000000de}
+.ngcg-tile small{font-size:calc(14 * var(--dp));color:#0000008a}
+.ngcg-sheetbtns{display:flex;justify-content:flex-end;gap:calc(8 * var(--dp));padding:0 calc(8 * var(--dp)) calc(8 * var(--dp))}
+.ngcg-sheetbtns button{height:calc(36 * var(--dp));padding:0 calc(8 * var(--dp));border:0;background:none;color:#4285f4;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;cursor:pointer}
