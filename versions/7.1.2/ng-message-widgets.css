@@ -1,0 +1,47 @@
+/* PrebuiltBugle widget XML: 8dp host margin, 48dp header, 72dp list rows,
+   native message nine-patches; Gmail widget: 48dp header and 72sp message rows. */
+.ngmw{height:100%;box-sizing:border-box;padding:calc(8 * var(--dp));font-family:Roboto,sans-serif;color:#263238;display:flex;flex-direction:column;min-height:0}
+.ngmw button,.nggw button{border:0;padding:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;min-width:0}
+.ngmw header,.nggw header{height:calc(48 * var(--dp));flex:none;display:flex;align-items:stretch;color:white;border-radius:calc(2 * var(--dp)) calc(2 * var(--dp)) 0 0;background:#2a56c6;padding-left:calc(8 * var(--dp));box-sizing:border-box}
+.ngmw header>button:first-child,.nggw header>button:first-child{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:500 calc(20 * var(--dp)) Roboto,sans-serif}
+.ngmw header>button:last-child{width:calc(48 * var(--dp));display:grid;place-items:center}.ngmw header img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngmw-list{flex:1;min-height:0;overflow:auto;background:white;border-radius:0 0 calc(2 * var(--dp)) calc(2 * var(--dp))}
+.ngmw .ngmw-thread{width:100%;height:calc(72 * var(--dp));display:flex;align-items:center;padding:0 calc(8 * var(--dp));border-bottom:calc(1 * var(--dp)) solid #eceff1;box-sizing:border-box}
+.ngmw-avatar{flex:none;width:calc(40 * var(--dp));height:calc(40 * var(--dp));border-radius:50%;font-size:calc(22 * var(--dp));margin-right:calc(8 * var(--dp));overflow:hidden;display:grid;place-items:center}.ngmw-avatar>img{width:100%;height:100%;object-fit:contain}
+.ngmw-thread>span:last-child{flex:1;min-width:0}.ngmw-from{display:flex;gap:calc(4 * var(--dp));align-items:baseline}
+.ngmw-from b{flex:1;min-width:0;font:400 calc(18 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ngmw-from time{font:calc(12 * var(--dp)) Roboto,sans-serif;color:#546e7a;white-space:nowrap}
+.ngmw-thread small{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font:calc(13 * var(--dp))/calc(16 * var(--dp)) Roboto,sans-serif;margin-top:calc(4 * var(--dp))}
+.ngmw-thread.unread b{font-weight:700}.ngmw p,.nggw p{padding:calc(16 * var(--dp));font-size:calc(14 * var(--dp))}
+.ngmw.conversation header{background:transparent;padding:0 calc(10 * var(--dp))}.ngmw.conversation header>button:first-child{font-size:calc(18 * var(--dp));text-shadow:0 calc(2 * var(--dp)) calc(1 * var(--dp)) black}
+.ngmw-messages{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;padding-top:calc(2 * var(--dp))}
+.ngmw .ngmw-message{flex:none;width:100%;display:flex;align-items:flex-start;padding:calc(4 * var(--dp)) calc(8 * var(--dp));box-sizing:border-box;gap:calc(2 * var(--dp))}
+.ngmw-message .ngmw-avatar{margin:calc(2 * var(--dp)) calc(2 * var(--dp)) 0 0}.ngmw-message.out{justify-content:flex-end}.ngmw-message.out .ngmw-avatar{margin-left:calc(2 * var(--dp));margin-right:0}
+.ngmw-bubble{display:flex;flex-direction:column;min-width:0;max-width:calc(100% - 50 * var(--dp));padding:calc(6 * var(--dp));box-sizing:border-box;color:white;font:calc(16 * var(--dp))/calc(20 * var(--dp)) Roboto,sans-serif}
+.ngmw-bubble>span{overflow-wrap:anywhere}.ngmw-message.out .ngmw-bubble{color:#424242}.ngmw-bubble time{margin-top:calc(3 * var(--dp));font:calc(12 * var(--dp))/calc(16 * var(--dp)) Roboto,sans-serif;color:#ffffff99}.ngmw-message.out time{color:#32323299}
+.ngmw-photo,.ngmw-sticker{max-width:100%;width:calc(140 * var(--dp));height:auto}.ngmw footer{position:relative;flex:none;height:calc(40 * var(--dp));border-top:calc(1 * var(--dp)) solid #ffffff66;margin-top:calc(8 * var(--dp))}
+.ngmw footer button{position:absolute;right:0;bottom:0;width:calc(49.5 * var(--dp));height:calc(49.5 * var(--dp))}.ngmw footer img{width:100%;height:100%}
+.ngmw .ngmw-deleted{flex:1;padding:calc(20 * var(--dp));font:calc(18 * var(--dp)) Roboto,sans-serif;color:white;text-shadow:0 calc(2 * var(--dp)) calc(1 * var(--dp)) black}
+.ngmw .ngmw-more{text-align:center;padding:calc(12 * var(--dp));background:white;color:#2a56c6;font-size:calc(14 * var(--dp))}
+.ngmw-pick{display:flex;align-items:center;min-height:calc(64 * var(--dp));font-family:Roboto,sans-serif}.ngmw-pick>span:last-child{flex:1;min-width:0}.ngmw-pick b{display:block;font:calc(16 * var(--dp)) Roboto,sans-serif}.ngmw-pick small{display:block;font:calc(14 * var(--dp)) Roboto,sans-serif;color:#546e7a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nggw{height:100%;min-height:0;display:flex;flex-direction:column;font-family:Roboto,sans-serif;background:white;color:black}
+.nggw header{background:#db4437;border-radius:0;padding-left:calc(16 * var(--dp))}.nggw header>button:first-child{display:flex;flex-direction:column;justify-content:center;gap:calc(2 * var(--dp))}.nggw header b{font:500 calc(20 * var(--dp)) Roboto,sans-serif}.nggw header small{font:calc(12 * var(--dp)) Roboto,sans-serif}
+.nggw header>button:last-child{width:calc(56 * var(--dp));display:grid;place-items:center}.nggw header img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.nggw-list{flex:1;min-height:0;overflow:auto}.nggw .nggw-mail{display:block;width:100%;height:calc(72 * var(--dp));box-sizing:border-box;padding:calc(10 * var(--dp)) calc(16 * var(--dp));background:#ffffffdd;border-bottom:calc(1 * var(--dp)) solid #e0e0e0}
+.nggw-mail>span{display:flex;align-items:baseline;gap:calc(8 * var(--dp))}.nggw-mail b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:calc(18 * var(--dp)) Roboto,sans-serif}.nggw-mail time{font-size:calc(12 * var(--dp));white-space:nowrap}.nggw-mail strong,.nggw-mail small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:calc(13 * var(--dp))/calc(16 * var(--dp)) Roboto,sans-serif}.nggw-mail small{color:#757575}.nggw-mail.unread b,.nggw-mail.unread strong{font-weight:700}
+/* widget_reply_view: black 85% scrim, 100dp Reply-to inset and 38dp text start,
+   native ComposeMessageView with a 30dp Open Messenger margin and 13sp medium button. */
+.ngmwr{position:absolute;inset:0;background:#000000d9;color:#ffffffde;font-family:Roboto,sans-serif;overflow:auto;box-sizing:border-box;padding-top:calc(100 * var(--dp))}
+.ngmwr button{border:0;background:none;cursor:pointer}.ngmwr-back{position:absolute;top:calc(10 * var(--dp));left:0;width:calc(48 * var(--dp));height:calc(48 * var(--dp));display:grid;place-items:center}.ngmwr-back img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngmwr-to{margin:0 calc(38 * var(--dp));font-size:calc(16 * var(--dp))}.ngmwr-compose{display:flex;align-items:flex-end;padding-top:calc(12 * var(--dp));margin:0 calc(8 * var(--dp)) 0 calc(38 * var(--dp))}
+.ngmwr textarea{flex:1;min-width:0;resize:none;max-height:calc(140 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #ffffff8a;outline:none;background:none;color:white;font:calc(16 * var(--dp))/calc(24 * var(--dp)) Roboto,sans-serif;padding:calc(8 * var(--dp)) 0}.ngmwr textarea::placeholder{color:#ffffff8a}
+.ngmwr-send{display:flex;flex-direction:column;align-items:center;justify-content:center;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;color:#fff}.ngmwr-send img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));filter:brightness(0) invert(1)}.ngmwr-send small{font:calc(9 * var(--dp)) Roboto,sans-serif}.ngmwr-send:disabled{opacity:.3}
+.ngmwr .ngmwr-open{margin:calc(16 * var(--dp)) 0 0 calc(30 * var(--dp));min-height:calc(48 * var(--dp));color:white;opacity:.56;display:inline-flex;align-items:center;white-space:pre;font:500 calc(13 * var(--dp)) Roboto,sans-serif}
+
+.screen.ngboard-open .ngmwr{padding-top:calc(23 * var(--dp))}
+.screen.ngboard-open .ngmwr-to,.screen.ngboard-open .ngmwr-compose{margin-left:calc(50 * var(--dp))}
+
+.ngmwr-open img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+
+/* WidgetReplyActivity is explicitly windowIsTranslucent with transparent windowBackground. */
+.screen.view-messenger-widget-reply{background:#000 var(--ng-wallpaper,url('assets/fw-default_wallpaper.png')) var(--ng-home-position,left top)/var(--ng-home-size,auto 100%) no-repeat}
+.ngmwr-backdrop{position:absolute;inset:0;overflow:hidden;pointer-events:none}

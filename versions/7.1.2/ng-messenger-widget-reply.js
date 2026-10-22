@@ -1,0 +1,11 @@
+/* WidgetReplyActivity, PrebuiltBugle's widget_reply_view.xml and QuickReply styles. */
+(() => {
+  'use strict';
+  const T=()=>NG.text('appwidgets'),U=c=>c.ui.widgetReply ||= {thread:0,text:''};
+  NG.register('messenger-widget-reply',{app:false,statusColor:()=> '#000000',
+    render(c){const u=U(c),x=NG.messengerWidget.thread(c,u.thread);if(!x)return '';return `<div class="ngmwr-backdrop" aria-hidden="true" inert>${u.backdrop||''}</div><div class="ngmwr"><button type="button" class="ngmwr-back" data-action="ngmwr-close" aria-label="${c.safe(T().t('PrebuiltBugle/widget_reply_exit_content_description'))}"><img src="assets/bg-ic_arrow_back_light.png" alt=""></button><div class="ngmwr-to">${c.safe(T().fmt('PrebuiltBugle/widget_reply_to',null,NG.messengerWidget.name(c,x.number)))}</div><div class="ngmwr-compose"><textarea rows="1" aria-label="${c.safe(NG.text('messenger').t('compose_message_view_sms_hint_text'))}" placeholder="${c.safe(NG.text('messenger').t('compose_message_view_sms_hint_text'))}">${c.safe(u.text)}</textarea><button type="button" class="ngmwr-send" data-action="ngmwr-send" aria-label="${c.safe(NG.text('messenger').t('send_button_content_description'))}" ${u.text.trim()?'':'disabled'}><img src="assets/bg-ic_send_grey.png" alt=""><small>${c.safe(NG.text('messenger').t('sms_text'))}</small></button></div><button type="button" class="ngmwr-open" data-action="ngmwr-open"><img src="assets/mw-open.png" alt="">${c.safe(T().t('PrebuiltBugle/widget_reply_open'))}</button></div>`;},
+    mount(c,root){const field=root.querySelector('textarea');field?.addEventListener('input',e=>{U(c).text=e.target.value;NG.messengerWidget.draft(c,U(c).thread,e.target.value);root.querySelector('.ngmwr-send').disabled=!e.target.value.trim();});if(field)queueMicrotask(()=>{if(field.isConnected)field.focus();});},
+    tick(c){if(c.ui.view==='messenger-widget-reply'&&!NG.messengerWidget.thread(c,U(c).thread))c.back();},
+    action(name,el,e,c){if(!name.startsWith('ngmwr-'))return false;const u=U(c);if(name==='ngmwr-open'){NG.ime?.hide();c.back();c.open('messenger','conv:'+u.thread);return true;}if(name==='ngmwr-send'&&!NG.messengerWidget.reply(c,u.thread,u.text))return true;NG.ime?.hide();u.text='';c.back();return true;}
+  });
+})();

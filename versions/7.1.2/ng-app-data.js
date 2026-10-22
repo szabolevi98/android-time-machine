@@ -16,7 +16,7 @@
     'play-music': {data: ['music'], ui: ['music', 'musicPreview'], prefs: ['music']},
     photos: {data: ['photoLibrary'], ui: ['photos']},
     'play-games': {ui: ['games']},
-    messenger: {ui: ['messenger']},
+    messenger: {ui: ['messenger', 'widgetReply']},
     clock: {ui: ['clock', 'clockCities'], prefs: ['clocksaver']},
     gmail: {data: ['gmailSetup', 'gmailSearches', 'gmailTeaserGone'], ui: ['gmail']},
     'project-fi': {ui: ['fi']},
@@ -31,7 +31,7 @@
     settings: {protected: true}
   };
   const aliases = {'files': 'documents', 'downloads': 'documents', now: 'search', 'calendar-goal': 'calendar',
-    'com.android.musicfx': 'musicfx', 'clock-cities': 'clock', 'clock-settings': 'clock', 'music-preview': 'play-music', 'emergency-dialer': 'phone'};
+    'com.android.musicfx': 'musicfx', 'messenger-widget-reply': 'messenger', 'clock-cities': 'clock', 'clock-settings': 'clock', 'music-preview': 'play-music', 'emergency-dialer': 'phone'};
   const owner = id => aliases[id] || id;
   const pkg = id => NG.appsData?.[owner(id)]?.pkg || owner(id);
   const related = id => Object.keys(NG.appsData || {}).filter(k => pkg(k) === pkg(id));

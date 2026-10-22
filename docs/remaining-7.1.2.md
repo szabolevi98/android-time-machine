@@ -44,7 +44,8 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Launcher shortcut popup / pinning, provider picker / drag placement, wallpaper picker and home settings.
 - [ ] Remaining widget provider implementations and configuration activities. All 18 enabled providers are listed
       with native previews; digital/analog Clock, Google Search/Feed, Calendar schedule/month and Chrome bookmarks run.
-      Both Messenger widgets, Gmail, Project Fi and Sound Search still show an explicit not-built marker after placement. Complete them as their apps are finished.
+      Both Messenger widgets (including conversation configuration/quick reply) and Gmail (account/folder configuration) run.
+      Project Fi and Sound Search still show an explicit not-built marker after placement. Complete them as their apps are finished.
       Drive now has its native widget with account configuration, upload/scan/create actions and cancellation cleanup.
       Play Store's small rotating card, recommendation refresh/dismiss and My Library widgets are implemented;
       configuration preserves the placement page and cleans up a cancelled new widget.

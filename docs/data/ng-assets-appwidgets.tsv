@@ -2,3 +2,10 @@
 cw-prev.png	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	drawable/quantum_ic_chevron_left_white_24
 cw-next.png	app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk	drawable/quantum_ic_chevron_right_white_24
 cw-bookmark-folder.png	app/Chrome/Chrome.apk	drawable/bookmark_folder
+
+mw-incoming.9.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/widget_msg_bubble_incoming
+mw-outgoing.9.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/widget_msg_bubble_outgoing
+mw-reply.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_widget_fab_reply
+mw-list.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_widget_list
+gw-background.9.png	app/PrebuiltGmail/PrebuiltGmail.apk	drawable/gradient_bg_widget_holo
+mw-open.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_open_in_new

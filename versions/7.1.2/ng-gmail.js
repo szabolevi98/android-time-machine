@@ -51,6 +51,7 @@
     ['outbox', 'mailbox_name_display_outbox', A('ic_drawer_outbox_24dp')], ['drafts', 'mailbox_name_display_drafts', V('ic_drawer_drafts_24dp')], ['all', 'label_all', A('ic_drawer_allmail_24dp')],
     ['spam', 'label_spam', A('ic_drawer_junk_24dp')], ['trash', 'mailbox_name_display_trash', V('ic_drawer_trash_24dp')]];
   function inFolder(m, f) {
+    if (f === 'inbox') return m.box === 'inbox';
     if (FOLDERS.some(x => x[0] === f)) return m.box === 'inbox' && m.cat === f;
     if (f === 'starred') return m.starred && m.box !== 'trash';
     if (f === 'important') return m.box === 'inbox' && important(m);
@@ -59,7 +60,7 @@
   }
   // Important: Gmail's own guess (the Primary mail) until marked otherwise.
   const important = m => m.important ?? m.cat === 'primary';
-  const folderName = (c, f) => T().t([...FOLDERS, ...LABELS].find(x => x[0] === f)[1]);
+  const folderName = (c, f) => T().t(f==='inbox'?'mailbox_name_display_inbox':[...FOLDERS, ...LABELS].find(x => x[0] === f)?.[1]||'mailbox_name_display_inbox');
   function date(c, time) {
     const d = new Date(time), now = new Date(), loc = c.locale();
     if (d.toDateString() === now.toDateString()) return new Intl.DateTimeFormat(loc, {hour: 'numeric', minute: '2-digit'}).format(d);
@@ -271,6 +272,9 @@
     summary(c, key) { if (key === 'signature') return NG.appPref(c, 'gmail', key, '') || NG.text('appprefs').t('PrebuiltGmail/preferences_signature_summary_not_set'); return undefined; }
   };
 
+  NG.gmailWidget = {mail, inFolder, folderName,
+    open(c,folder='inbox',id,compose=false){const u=ui(c);c.data.gmailSetup=2;Object.assign(u,{folder,drawer:false,screen:id?'conv:'+id:compose?'compose':'',prev:'',composeFrom:''});if(compose)u.draft={to:'',subject:'',body:''};const m=id&&mail(c).find(x=>x.id===id);if(m)m.unread=false;c.save();c.open('gmail');}
+  };
   NG.register('gmail', {
     // The window animation's page (ng-core.js): deeper screens open over the ones they came from.
     page: c => NG.page('gmail', c.ui.gmail?.screen),

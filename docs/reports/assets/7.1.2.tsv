@@ -573,6 +573,7 @@ versions/7.1.2/assets/gs-third-party-licenses.txt	89d399e6d6f76af0	copy	angler:/
 versions/7.1.2/assets/gsf-additional_terms_of_service-es.html	7cd99e629acb35ee	copy	angler:/system/priv-app/GoogleServicesFramework/GoogleServicesFramework.apk!res/raw-es/additional_terms_of_service.html	raw-es		7cd99e629acb35ee
 versions/7.1.2/assets/gsf-additional_terms_of_service-fr.html	121b64b62a73509a	copy	angler:/system/priv-app/GoogleServicesFramework/GoogleServicesFramework.apk!res/raw-fr/additional_terms_of_service.html	raw-fr		121b64b62a73509a
 versions/7.1.2/assets/gsf-additional_terms_of_service.html	fa9a6a5e6e9d9fce	copy	angler:/system/priv-app/GoogleServicesFramework/GoogleServicesFramework.apk!res/raw/additional_terms_of_service.html	raw		fa9a6a5e6e9d9fce
+versions/7.1.2/assets/gw-background.9.png	12b710dd8481e683	copy	angler:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/gradient_bg_widget_holo.9.png	drawable-xxhdpi-v4		12b710dd8481e683
 versions/7.1.2/assets/ho-add.png	ad5ab5925130405c	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_add_white_24.png	drawable-xxxhdpi-v4		ad5ab5925130405c
 versions/7.1.2/assets/ho-archive.png	e5be0c8862618e7e	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/quantum_ic_archive_white_24.png	drawable-xxxhdpi-v4		e5be0c8862618e7e
 versions/7.1.2/assets/ho-attach.png	c93dc257bd7353dd	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/quantum_ic_attachment_grey600_24.png	drawable-xxxhdpi-v4		c93dc257bd7353dd
@@ -690,6 +691,11 @@ versions/7.1.2/assets/mv-wish-empty.png	a6648a2a3dff0141	copy	angler:/system/app
 versions/7.1.2/assets/mv-wish-on.svg	aa7c1a218216fd5a	vector	angler:/system/app/Videos/Videos.apk!res/drawable/ic_wishlist_added_primary_24dp.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	85366a846ad38f46
 versions/7.1.2/assets/mv-wish-white.svg	c47280b5e04ecba6	vector	angler:/system/app/Videos/Videos.apk!res/drawable/ic_wishlist_add_white_24dp.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	325f580036fd2d02
 versions/7.1.2/assets/mv-wish.svg	8b69df5a0068009e	vector	angler:/system/app/Videos/Videos.apk!res/drawable/ic_wishlist_add_24dp.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	de42112fcda6caf0
+versions/7.1.2/assets/mw-incoming.9.png	ff40a353419a0407	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/widget_msg_bubble_incoming.9.png	drawable-xxxhdpi-v4		ff40a353419a0407
+versions/7.1.2/assets/mw-list.png	a14560e567515705	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_widget_list.png	drawable-xxxhdpi-v4		a14560e567515705
+versions/7.1.2/assets/mw-open.png	083657b2f30e3ca1	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_open_in_new.png	drawable-xxxhdpi-v4		083657b2f30e3ca1
+versions/7.1.2/assets/mw-outgoing.9.png	04a96bee5a286962	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/widget_msg_bubble_outgoing.9.png	drawable-xxxhdpi-v4		04a96bee5a286962
+versions/7.1.2/assets/mw-reply.png	af1548a69fa9bb0b	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_widget_fab_reply.png	drawable-xxxhdpi-v4		af1548a69fa9bb0b
 versions/7.1.2/assets/pay-account.png	feb73d6eb7126a89	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_account_circle_grey600_36.png	drawable-xxhdpi-v4		feb73d6eb7126a89
 versions/7.1.2/assets/pay-add.png	c6122508e04958cd	copy	angler:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c6122508e04958cd
 versions/7.1.2/assets/pay-amex.png	4b701cfb4e4b39e7	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_networklogo_amex_color_98dp.png	drawable-xxhdpi-v4		4b701cfb4e4b39e7

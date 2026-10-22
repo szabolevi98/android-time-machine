@@ -339,6 +339,7 @@
     if (!sub) return;
     c.ui.sub = ''; u.search = null; u.sel = null; u.msel = null; u.csearch = null;
     // ShareIntentActivity ("Select conversation"): what was shared waits in the conversation picked next.
+    if (sub === 'widget:list' || sub === 'widget:new') { u.screen=sub.endsWith('new')?'pick':'';u.mode='';u.external=false;u.sel=null;u.search=null;u.to='';return; }
     if (sub === 'share') { const d = NG.shareTake?.(c); u.carry = d?.kind === 'vcard' ? {attach: {vcard: d.subject || d.name || ''}} : {text: d?.text || '',...(d?.kind==='audio'&&d.document?{attach:{audio:JSON.parse(JSON.stringify(d.document))}}:d?.photo?{attach:{photo:d.photo,document:d.document}}:{})}; u.mode = 'share'; u.screen = ''; u.external = true; return; }
     if (sub.startsWith('conv:')) { const x = thread(c, sub.slice(5)); if (x) { openThread(c, x.number); u.external = true; } return; }
     if (sub.startsWith('to:')) { const n = sub.slice(3); if (n) { openThread(c, n); u.external = true; } else { u.screen = 'pick'; u.to = ''; u.external = true; } }
@@ -467,6 +468,10 @@
     }
   }
 
+  NG.messengerWidget = {threads: c => sorted(c,false), thread, name:nameOf, avatar, snippet:snippetOf, when,
+    draft(c,id,text){const d=ui(c).draft;if(text!==undefined)d[id]=String(text);return d[id]||'';},
+    reply(c,id,text){const x=thread(c,id);if(!x||!String(text).trim()||isBlocked(c,x.number))return false;NG.appData.opened(c,'messenger');replyFromNotification(c,{open:['messenger','conv:'+id]},String(text));ui(c).draft[id]='';return true;}
+  };
   NG.register('messenger', {
     stop(c) { answered.clear(); NG.smsMedia?.stop(c); },
     unmount(c) { NG.smsMedia?.stop(c); },

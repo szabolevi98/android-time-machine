@@ -851,3 +851,25 @@ URL taps open normal Chrome tabs, and deleted/all-cleared bookmarks produce the 
 Validation: three new date/provider cases; dedicated browser flow uses actual pointer taps after dismissing the
 launcher's first-run cling, and covers events/day launch, month navigation/persistence, folders/URL/empty, phone
 width and five languages. All 227 module checks pass. Three source bitmaps added; inventory rebuilds 1139 files with zero problems.
+
+
+## Messenger and Gmail widgets — 2026-10-23
+
+Messenger's native 8 dp padded list (48 dp blue header, 72 dp rows) shares the actual provider conversations, names,
+read flags and previews. Its conversation widget uses transparent header/title, native incoming/outgoing nine-patches,
+40 dp avatars, a 25-message window with View more, and the exact reply/list controls. The provider's deleted-thread
+response starts reconfiguration. WidgetPickConversationActivity was checked in the image's dex: it opens
+ShareIntentFragment with hide_conv_button_key, so configuration uses Select conversation with no new-thread control.
+Back/Cancel removes an uncommitted placement; selecting stores the widget's own conversation reference.
+WidgetReplyActivity uses widget_reply_view/QuickReply styles, the 85% black scrim, normal/compressed keyboard insets,
+13 sp Open Messenger and Gboard. Its translucent window keeps the workspace visible beneath the scrim. Attach-media is GONE in this activity's onCreate (confirmed in N2G48C's code).
+Reply uses Messenger's existing delivery/demo-reply jobs, stops with its package, preserves a draft when opening the
+full conversation and finishes its activity rather than leaving a stale reply screen in Back history.
+Gmail's 48 dp red header, 72 sp sender/subject/snippet rows, native gradient background and compose action are wired.
+Choose account then Choose folder stores independent widget configuration; Inbox includes all inbox categories,
+mail taps mark the provider record read and compose opens a new draft. Background provider changes refresh visible
+widgets, with the conversation stacked at its newest messages.
+Validation: the dedicated flow uses real pointer taps and covers config/cancel/reconfigure, list/conversation launch,
+quick reply with Gboard, send/draft handoff, Gmail account/folder/mail/compose, reload, phone and five languages.
+Documents/Gmail regression and all 227 module checks pass. Six native assets added; inventory rebuilds 1145 files,
+zero problems. Source excerpts remain in ignored _aosp/ngbg-widget-java for audit.
