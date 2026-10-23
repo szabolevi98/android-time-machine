@@ -87,7 +87,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 #### T03 — Naptár beállításai és látható naptárak
 
 - **Ütem:** Mag.
-- **Állapot:** Nyitott — aktuális fejlesztési kör.
+- **Állapot:** Kész — `f4023b42`. calendar-prefs.js mindhárom verzió saját képernyőivel: 4.3/4.4.4 Settings (fejlécek, general_preferences.xml sorai, fiók szinkronizált naptárai, About Calendar) és Calendars to display; 5.1.1 Settings (General szegmensek, Events from Gmail, a fiók naptárai Sync kapcsolóval). Hatások: rejtett/nem szinkronizált naptár eseményei eltűnnek a nézetekből, widgetből, Now-kártyáról; hét kezdőnapja, hétszámok, új esemény alapértelmezett emlékeztetője/időtartama, értesítések kikapcsolása. Ellenőrzés: `limits-regression.mjs T03` (4.3, 4.4.4, 5.1.1) asztali és telefonszélességen zöld; magyar képernyőképek; `npm test` 247/247. Korlát marad: Add account, Send feedback, Help. Az 5.1.1 „No end time” alapidőtartam az új esemény szerkesztőjében 60 percet ad, mert a szerkesztő vég nélküli eseményt nem tud.
 - **Verziók:** 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.3-06, 4.4.4-06, 5.1.1-06.
 - **Elkészítendő és határ:** 4.3, 4.4.4 és 5.1.1: Settings helyi általános/fiók/naptár-preferenciái; 4.3/4.4.4: Calendars to display kijelölés. A fiókfelvétel, szerveroldali szinkron és súgó külön korlát marad.
