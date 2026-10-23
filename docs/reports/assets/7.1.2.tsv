@@ -542,6 +542,14 @@ versions/7.1.2/assets/gh-card.9.png	ffdc0afc6e6412af	copy	angler:/system/priv-ap
 versions/7.1.2/assets/gh-feedback.png	a19624983e27f3a7	copy	angler:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable/gh_feedback.png	drawable		a19624983e27f3a7
 versions/7.1.2/assets/gh-search-clear.png	447c14de89fbc604	copy	angler:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable-xxhdpi-v4/gh_search_clear_normal.png	drawable-xxhdpi-v4		447c14de89fbc604
 versions/7.1.2/assets/gh-send.png	a082a5fd62c49045	copy	angler:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable-xxhdpi-v4/gf_ic_menu_send_material_light.png	drawable-xxhdpi-v4		a082a5fd62c49045
+versions/7.1.2/assets/ghome-wp_001.jpg	0b21889427b6bc60	copy	angler:/system/app/GoogleHome/GoogleHome.apk!res/drawable-nodpi-v4/wp_001.jpg	drawable-nodpi-v4		0b21889427b6bc60
+versions/7.1.2/assets/ghome-wp_001_small.png	973d1921dba86e71	copy	angler:/system/app/GoogleHome/GoogleHome.apk!res/drawable-nodpi-v4/wp_001_small.png	drawable-nodpi-v4		973d1921dba86e71
+versions/7.1.2/assets/ghome-wp_002.jpg	c76c468b9fc896eb	copy	angler:/system/app/GoogleHome/GoogleHome.apk!res/drawable-nodpi-v4/wp_002.jpg	drawable-nodpi-v4		c76c468b9fc896eb
+versions/7.1.2/assets/ghome-wp_002_small.png	24ad8010a9b0adf4	copy	angler:/system/app/GoogleHome/GoogleHome.apk!res/drawable-nodpi-v4/wp_002_small.png	drawable-nodpi-v4		24ad8010a9b0adf4
+versions/7.1.2/assets/ghome-wp_003.jpg	52b49c67004f066c	copy	angler:/system/app/GoogleHome/GoogleHome.apk!res/drawable-nodpi-v4/wp_003.jpg	drawable-nodpi-v4		52b49c67004f066c
+versions/7.1.2/assets/ghome-wp_003_small.png	dd68083039dd0959	copy	angler:/system/app/GoogleHome/GoogleHome.apk!res/drawable-nodpi-v4/wp_003_small.png	drawable-nodpi-v4		dd68083039dd0959
+versions/7.1.2/assets/ghome-wp_004.jpg	de65c756eb5113d5	copy	angler:/system/app/GoogleHome/GoogleHome.apk!res/drawable-nodpi-v4/wp_004.jpg	drawable-nodpi-v4		de65c756eb5113d5
+versions/7.1.2/assets/ghome-wp_004_small.jpg	498edc0ecf012789	copy	angler:/system/app/GoogleHome/GoogleHome.apk!res/drawable-nodpi-v4/wp_004_small.jpg	drawable-nodpi-v4		498edc0ecf012789
 versions/7.1.2/assets/gm-abc_ic_clear_material.svg	7a0c724f1b1e7a20	vector	angler:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable/abc_ic_clear_material.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	ac10a8dd23f36cc7
 versions/7.1.2/assets/gm-account_switcher_blue.jpg	47d1a562f387a616	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xhdpi-v4/account_switcher_blue.jpg	drawable-xhdpi-v4		47d1a562f387a616
 versions/7.1.2/assets/gm-avatar_placeholder.png	e5a4072a512488e5	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/avatar_placeholder.png	drawable-xxhdpi-v4		e5a4072a512488e5

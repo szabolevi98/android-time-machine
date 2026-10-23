@@ -1136,3 +1136,17 @@ list keeps alert_reminder_interval_active_values (`tests/browser/ng-cellbroadcas
 Validation: `tests/browser/ng-special-access.mjs` (real taps through each list,
 dialog cancel/confirm, auto-approval, admin deactivate/cancel/activate from both
 sides, five languages, phone width).
+
+## Bundled launcher wallpapers — 2026-10-23
+
+The owner remembered more wallpapers than the picker offered. Velvet's
+GelWallpaperPickerActivity.getWallpaperArrayResourceId reads the "wallpapers"
+meta-data of com.google.android.launcher: GoogleHome 1.4 is a code-less stub whose
+array/wallpapers lists wp_001 … wp_004 (three aerial photographs and a brown
+abstract) with their _small tiles. Earlier notes had looked only at Velvet's empty
+array. The four are extracted byte for byte (`ghome-wp_*`), and the strip now
+follows WallpaperPickerActivity.init: My photos, the framework default, the
+bundled four, the picture being placed, Live Wallpapers. A photo wallpaper never
+decoded as an image (its SVG had no namespace) and so left the home screen
+blank; fixed, including older saves. The 6.0 set the owner linked (nine, in
+bullhead's GoogleHome 1.2) belongs to 6.0.1; Nougat's GoogleHome replaced it.

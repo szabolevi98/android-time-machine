@@ -1,5 +1,8 @@
-/* N2G48C Velvet WallpaperPicker / CropView. Its wallpapers array is empty on angler:
-   offer the framework default, My photos and the installed live-wallpaper picker.
+/* N2G48C Velvet's GelWallpaperPickerActivity (Launcher3 WallpaperPickerActivity) / CropView. Its
+   getWallpaperArrayResourceId reads the "wallpapers" meta-data of com.google.android.launcher (GoogleHome 1.4):
+   array/wallpapers = wp_001 … wp_004, each with its wp_00N_small tile (addWallpapers). The strip, as init() builds it:
+   My photos (PickImageInfo, added at index 0 of master_wallpaper_list), the framework default (added at index 0 of the
+   bundled list), the bundled four, the picture being placed, then the live-wallpaper picker.
    Applied photos are local snapshots, independent of later edits/deletion in Photos. */
 (() => {
   'use strict';
@@ -8,7 +11,10 @@
   const S=c=>c.data.wallpapers ||= {home:{...DEFAULT},lock:null};
   const clone=x=>JSON.parse(JSON.stringify(x));
   const U=c=>c.ui.wallpaper ||= {draft:clone(S(c).home||DEFAULT)};
-  const image=s=>s?.kind==='photo'&&s.image?.startsWith('data:image/svg+xml')?s.image:'assets/fw-default_wallpaper.png';
+  const BUNDLED=['wp_001','wp_002','wp_003','wp_004'],SMALL={wp_004:'jpg'};
+  // An SVG used as an image needs its namespace (NG.media.svg writes inline markup without it); older saves lack it.
+  const NS='xmlns="http://www.w3.org/2000/svg" ',OPEN=encodeURIComponent('<svg '),withNs=u=>{const i=u.indexOf(OPEN);return u.includes('xmlns')||i<0?u:u.slice(0,i+OPEN.length)+encodeURIComponent(NS)+u.slice(i+OPEN.length);};
+  const image=s=>s?.kind==='photo'&&s.image?.startsWith('data:image/svg+xml')?withNs(s.image):s?.kind==='bundled'&&BUNDLED.includes(s.res)?`assets/ghome-${s.res}.jpg`:'assets/fw-default_wallpaper.png';
   function size(c,s) {const aspect=s?.aspect||1.125,screen=c.el.screen.clientWidth/c.el.screen.clientHeight,zoom=Math.max(1,Math.min(3,+s?.scale||1));return aspect>=screen?`auto ${100*zoom}%`:`${100*zoom}% auto`;}
   function apply(c) {
     const s=S(c),home=s.home||DEFAULT,lock=s.lock||home,style=c.el.screen.style;
@@ -26,7 +32,7 @@
     NG.pickDocument(c,{mode:'pick',mime:'image/*',onPick(c,files){
       const photo=NG.media.photos(c).find(p=>p.id===files[0]?.photo);if(!photo){c.toast(t('wallpaper_load_fail'));return;}
       const svg=NG.media.svg(photo),box=svg.match(/viewBox="([^"]+)"/)?.[1]?.split(/\s+/).map(Number)||[0,0,960,720];
-      U(c).draft={kind:'photo',photo:photo.id,image:'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg),aspect:box[2]/box[3],x:50,y:50,scale:1};
+      U(c).draft={kind:'photo',photo:photo.id,image:withNs('data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)),aspect:box[2]/box[3],x:50,y:50,scale:1};
     }});
   }
   function set(c,where) {
@@ -40,7 +46,7 @@
   NG.register('wallpapers',{
     app:false,noStatus:()=>true,statusColor:()=> 'transparent',
     unmount(c){if(!c.ui.documentPicker&&!['documents','files','live-wallpapers'].includes(c.ui.view))c.ui.wallpaper=null;},
-    render(c){const draft=U(c).draft,safe=c.safe;return `<div class="ngwp"><div class="ngwp-crop" aria-label="${safe(t('wallpaper_instructions'))}"></div><div class="ngwp-bar"><button type="button" data-action="ngwp-back" aria-label="${safe(NG.text('settings').t('framework/cancel'))}"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button><button type="button" class="ngwp-set" data-action="ngwp-set"><img src="assets/wp-accept.png" alt=""><span>${safe(t('wallpaper_instructions'))}</span></button></div><div class="ngwp-strip"><button type="button" class="ngwp-tile ${draft.kind==='default'?'selected':''}" data-action="ngwp-default"><img class="ngwp-thumb" src="assets/fw-default_wallpaper.png" alt=""></button><button type="button" class="ngwp-tile ngwp-photos" data-action="ngwp-photos"><img src="assets/wp-images.png" alt=""><span>${safe(t('pick_image'))}</span></button>${draft.kind==='photo'?`<button type="button" class="ngwp-tile selected" data-action="ngwp-current"><img class="ngwp-thumb" src="${safe(image(draft))}" alt=""></button>`:''}<button type="button" class="ngwp-tile ngwp-live" data-action="ngwp-live"><img src="assets/lw-ic_launcher_live_wallpaper.png" alt=""><span>${safe(t('LiveWallpapersPicker/live_wallpaper_picker_label'))}</span></button></div></div>`;},
+    render(c){const draft=U(c).draft,safe=c.safe;return `<div class="ngwp"><div class="ngwp-crop" aria-label="${safe(t('wallpaper_instructions'))}"></div><div class="ngwp-bar"><button type="button" data-action="ngwp-back" aria-label="${safe(NG.text('settings').t('framework/cancel'))}"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button><button type="button" class="ngwp-set" data-action="ngwp-set"><img src="assets/wp-accept.png" alt=""><span>${safe(t('wallpaper_instructions'))}</span></button></div><div class="ngwp-strip"><button type="button" class="ngwp-tile ngwp-photos" data-action="ngwp-photos"><img src="assets/wp-images.png" alt=""><span>${safe(t('pick_image'))}</span></button><button type="button" class="ngwp-tile ${draft.kind==='default'?'selected':''}" data-action="ngwp-default"><img class="ngwp-thumb" src="assets/fw-default_wallpaper.png" alt=""></button>${BUNDLED.map(res=>`<button type="button" class="ngwp-tile ${draft.kind==='bundled'&&draft.res===res?'selected':''}" data-action="ngwp-bundled" data-res="${res}"><img class="ngwp-thumb" src="assets/ghome-${res}_small.${SMALL[res]||'png'}" alt=""></button>`).join('')}${draft.kind==='photo'?`<button type="button" class="ngwp-tile selected" data-action="ngwp-current"><img class="ngwp-thumb" src="${safe(image(draft))}" alt=""></button>`:''}<button type="button" class="ngwp-tile ngwp-live" data-action="ngwp-live"><img src="assets/lw-ic_launcher_live_wallpaper.png" alt=""><span>${safe(t('LiveWallpapersPicker/live_wallpaper_picker_label'))}</span></button></div></div>`;},
     mount(c,root){
       paint(c);const el=root.querySelector('.ngwp-crop'),points=new Map();let start;
       const distance=()=>{const a=[...points.values()];return a.length===2?Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]):0;};
@@ -49,7 +55,7 @@
       const end=e=>{points.delete(e.pointerId);start=null;};el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
       el.addEventListener('wheel',e=>{e.preventDefault();const p=U(c).draft;p.scale=Math.max(1,Math.min(3,(p.scale||1)*Math.exp(-e.deltaY*.001)));paint(c);},{passive:false});
     },
-    action(name,el,e,c){if(name==='ngwp-back'){c.back();return true;}if(name==='ngwp-default'){U(c).draft={...DEFAULT};c.render();return true;}if(name==='ngwp-photos'){choosePhoto(c);return true;}if(name==='ngwp-live'){c.open('live-wallpapers');return true;}if(name==='ngwp-current')return true;if(name==='ngwp-set'){c.dialog({title:t('wallpaper_instructions'),items:T().t('which_wallpaper_options').map(label=>({label})),onItem:i=>set(c,i)});return true;}return false;}
+    action(name,el,e,c){if(name==='ngwp-back'){c.back();return true;}if(name==='ngwp-default'){U(c).draft={...DEFAULT};c.render();return true;}if(name==='ngwp-bundled'){U(c).draft={kind:'bundled',res:el.dataset.res,aspect:2880/2560,x:50,y:50,scale:1};c.render();return true;}if(name==='ngwp-photos'){choosePhoto(c);return true;}if(name==='ngwp-live'){c.open('live-wallpapers');return true;}if(name==='ngwp-current')return true;if(name==='ngwp-set'){c.dialog({title:t('wallpaper_instructions'),items:T().t('which_wallpaper_options').map(label=>({label})),onItem:i=>set(c,i)});return true;}return false;}
   });
   NG.register('live-wallpapers',{
     app:false,statusColor:()=> '#21272b',

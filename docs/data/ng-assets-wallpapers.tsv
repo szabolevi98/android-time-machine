@@ -1,0 +1,9 @@
+# GoogleHome 1.4's bundled wallpapers (application meta-data "wallpapers" = array/wallpapers, read by Velvet's GelWallpaperPickerActivity) and their _small tiles
+ghome-wp_001.jpg	app/GoogleHome/GoogleHome.apk	drawable/wp_001
+ghome-wp_002.jpg	app/GoogleHome/GoogleHome.apk	drawable/wp_002
+ghome-wp_003.jpg	app/GoogleHome/GoogleHome.apk	drawable/wp_003
+ghome-wp_004.jpg	app/GoogleHome/GoogleHome.apk	drawable/wp_004
+ghome-wp_001_small.png	app/GoogleHome/GoogleHome.apk	drawable/wp_001_small
+ghome-wp_002_small.png	app/GoogleHome/GoogleHome.apk	drawable/wp_002_small
+ghome-wp_003_small.png	app/GoogleHome/GoogleHome.apk	drawable/wp_003_small
+ghome-wp_004_small.jpg	app/GoogleHome/GoogleHome.apk	drawable/wp_004_small
