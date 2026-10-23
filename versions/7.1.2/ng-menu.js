@@ -26,6 +26,15 @@
     },
     render: c => { const at = c.ui.menuAt || {top: 24, right: 4}; return `<div class="ngmenu"><div class="ngmenu-out" data-action="ngmenu-close"></div><div class="ngmenu-pop" role="menu" style="top:calc(${at.top.toFixed(2)} * var(--dp));right:calc(${at.right.toFixed(2)} * var(--dp))">${items(c).map((it, i) =>
       `<button type="button" class="ngmenu-item" role="menuitem" data-action="ngmenu-item" data-index="${i}"${it.disabled ? ' disabled' : ''}><span>${c.safe(it.label)}</span>${'checked' in it ? `<i class="ngmenu-check${it.checked ? ' on' : ''}"></i>` : ''}</button>`).join('')}</div></div>`; },
+    mount(c,root) {
+      const pop=root.querySelector('.ngmenu-pop'),area=root.querySelector('.ngmenu');if(!pop||!area)return;
+      // ListPopupWindow keeps its popup inside the display's available frame,
+      // including when the anchor is beside the left edge or bottom toolbar.
+      const frame=area.getBoundingClientRect(),box=pop.getBoundingClientRect(),dp=c.el.screen.clientWidth/(1440/3.5),pad=4*dp,top=24*dp,bottom=frame.height-48*dp;
+      const left=Math.max(pad,Math.min(frame.width-box.width-pad,box.left-frame.left));
+      const y=Math.max(top,Math.min(bottom-box.height,box.top-frame.top));
+      Object.assign(pop.style,{left:left+'px',right:'auto',top:y+'px',maxHeight:Math.max(48*dp,bottom-top)+'px',overflowY:'auto'});
+    },
     action(name, el, event, c) {
       if (name === 'ngmenu-close') { c.closeOverlay(); return true; }
       if (name === 'ngmenu-item') { const it = items(c)[+el.dataset.index]; if (it?.disabled) return true; c.closeOverlay(); it?.action?.(c); return true; }

@@ -1868,5 +1868,38 @@ NG.strings('photos', {
 "untranslated": [
 "hu"
 ]
+},
+"cpe_adjustments_style": {
+"res": "angler:Photos:cpe_adjustments_style",
+"en": "Style",
+"de": "Stil",
+"fr": "Style",
+"es": "Estilo",
+"hu": "Style",
+"untranslated": [
+"hu"
+]
+},
+"cpe_none_preset": {
+"res": "angler:Photos:cpe_none_preset",
+"en": "None",
+"de": "Keiner",
+"fr": "Aucun",
+"es": "Sin",
+"hu": "None",
+"untranslated": [
+"hu"
+]
+},
+"cpe_crop_and_rotate_done": {
+"res": "angler:Photos:cpe_crop_and_rotate_done",
+"en": "Done",
+"de": "Fertig",
+"fr": "OK",
+"es": "Listo",
+"hu": "Done",
+"untranslated": [
+"hu"
+]
 }
 });

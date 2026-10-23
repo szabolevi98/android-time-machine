@@ -65,7 +65,7 @@
     const u = U(c);
     if (u.sub !== c.ui.sub) {
       u.sub = c.ui.sub;
-      if (/^(photo|edit):\d+$/.test(c.ui.sub)) { u.photo = +c.ui.sub.split(':')[1]; u.page='photo'; u.stack=[{page:'photos'}]; u.chrome=true; u.info=false;if(c.ui.sub.startsWith('edit:')){const p=current(c);if(p){u.stack.push({page:'photo'});Object.assign(u,editorState(c,p));u.page='editor';}} }
+      if (/^(photo|edit):\d+$/.test(c.ui.sub)) { u.photo = +c.ui.sub.split(':')[1]; u.page='photo'; u.stack=[{page:'photos'}]; u.chrome=true; u.info=false;if(c.ui.sub.startsWith('edit:')){const p=current(c);if(p){u.stack.push({page:'photo'});Object.assign(u,editorState(c,p));u.page='editor';}}c.ui.sub='';u.sub=''; }
     }
     L().expire(c);
   }
@@ -133,9 +133,12 @@
   function details(c,p) {
     return `<div class="ngphotos-info-dim" data-action="ngphotos-info"></div><section class="ngphotos-info"><header>${esc(c,t('details'))}${button(c,'info','quantum_ic_close_grey600_24','cancel')}</header><input class="ngphotos-caption" placeholder="${esc(c,t('description'))}" value="${esc(c,p.caption||'')}" aria-label="${esc(c,t('description'))}"><p>${esc(c,date(c,p.time,true))}</p><p>${esc(c,fileName(p))}</p><p>${p.kind==='video'?duration(p.duration||0):'4032 × 3024'} · Nexus 6P</p><p>${esc(c,t('deviceOnly'))}</p></section>`;
   }
+  function editorPicture(c) {const u=U(c),p=current(c);return {...p,edits:{...u.edits,...(u.tool==='crop'?{crop:[0,0,1,1]}:{})}};}
+  const adjustmentGroups=[['light',['exposure','contrast','highlights','midtones','shadows','blackPoint','vignette']],['color',['saturation','temperature','tint','skinTone','deepBlue']],['pop',[]],['style',[]]];
+  const adjustmentLabel=k=>'cpe_adjustments_'+({blackPoint:'black_point',skinTone:'saturation_skin_tone',deepBlue:'saturation_deep_blue'}[k]||k);
   function viewer(c) {
     const u=U(c), p=current(c); if(!p)return empty(c,'empty');
-    const ed=u.page==='editor', pic=ed?{...p,edits:{...u.edits,...(u.tool==='crop'?{crop:[0,0,1,1]}:{})}}:p, video=p.kind==='video'||p.kind==='animation', playing=video&&u.playing;
+    const ed=u.page==='editor', pic=ed?editorPicture(c):p, video=p.kind==='video'||p.kind==='animation', playing=video&&u.playing;
     const frame=playing&&p.frames?.length?{...p.frames[Math.floor(u.position/(p.kind==='animation'?500:2000))%p.frames.length],edits:p.edits}:pic;
     return `<div class="ngphotos-canvas${ed&&u.tool==='crop'?' cropping':''}" data-action="ngphotos-toggle" style="--ngphotos-zoom:${u.zoom}">${NG.media.svg(frame,'ngphotos-full')}${ed&&u.tool==='crop'?'<div class="ngphotos-cropbox"><i></i><i></i><i></i><i></i></div>':''}</div>${video&&!ed?`<button type="button" class="ngphotos-play" data-action="ngphotos-play" aria-label="${esc(c,t(playing?'pause':'play'))}">${image(`quantum_ic_${playing?'pause':'play_arrow'}_white_24`)}</button><div class="ngphotos-video"><span>${duration(u.position)}</span><input type="range" min="0" max="${p.duration||2000}" value="${u.position}" aria-label="${esc(c,t('videos'))}"><span>${duration(p.duration||2000)}</span></div>`:''}${ed?editor(c,p):p.trashedAt?`<div class="ngphotos-photobar"><button type="button" data-action="ngphotos-restore">${esc(c,t('restore'))}</button><button type="button" data-action="ngphotos-delete">${esc(c,t('permanent'))}</button></div>`:`<div class="ngphotos-photobar">${button(c,'share','quantum_ic_share_white_24','share')}${button(c,'edit','quantum_ic_edit_white_24','edit')}${button(c,'info','quantum_ic_info_white_24','details')}${button(c,'delete','quantum_ic_delete_white_24','moveTrash')}</div>`}${u.info?details(c,p):''}`;
   }
@@ -144,10 +147,13 @@
     const range=(k,label,min=-100,max=100)=>`<label>${esc(c,t(label))}<input type="range" data-edit="${k}" min="${min}" max="${max}" value="${e[k]||0}" aria-label="${esc(c,t(label))}"></label>`;
     let body='';
     if(p.kind==='video')body=`<div class="ngphotos-trim">${range('start','play',0,Math.max(0,(p.duration||2000)-100))}${range('end','pause',100,p.duration||2000)}</div>`;
-    else if(u.tool==='adjustments')body=`<button type="button" class="ngphotos-textbtn" data-action="ngphotos-auto">${esc(c,t('cpe_adjustments_auto'))}</button>`+['light','color','pop'].map(k=>range(k,k)).join('');
-    else if(u.tool==='crop')body=`<div class="ngphotos-croptools">${button(c,'aspect','quantum_ic_image_aspect_ratio_white_24','aspect')}${button(c,'rotate','quantum_ic_rotate_90_degrees_ccw_white_24','rotate')}<button type="button" class="ngphotos-textbtn" data-action="ngphotos-reset-crop">${esc(c,t('reset'))}</button></div>`;
+    else if(u.tool==='adjustments'){
+      const row=(k,child=false)=>{const positive=['pop','style','vignette'].includes(k),children=adjustmentGroups.find(a=>a[0]===k)?.[1],expanded=u.expanded?.includes(k);return `<div class="ngphotos-adjustment${child?' child':''}"><label for="ngphotos-adjust-${k}">${esc(c,t(adjustmentLabel(k)))}</label><input id="ngphotos-adjust-${k}" type="range" min="0" max="1000" value="${Math.round(positive?(e[k]||0)*10:((e[k]||0)+100)*5)}" data-edit="${k}" data-native="${positive?'positive':'centered'}" aria-label="${esc(c,t(adjustmentLabel(k)))}">${children?.length?`<button type="button" data-action="ngphotos-expand" data-group="${k}" aria-expanded="${!!expanded}" aria-label="${esc(c,t(adjustmentLabel(k)))}">${image('quantum_ic_expand_more_grey600_24',expanded?'expanded':'')}</button>`:'<i></i>'}</div>`;};
+      body=`<div class="ngphotos-adjustments"><button type="button" class="ngphotos-textbtn" data-action="ngphotos-auto">${esc(c,t('cpe_adjustments_auto'))}</button>${adjustmentGroups.map(([k,children])=>`<section>${row(k)}${u.expanded?.includes(k)?children.map(child=>row(child,true)).join(''):''}</section>`).join('')}</div>`;
+    }
+    else if(u.tool==='crop')body=`<div class="ngphotos-croptools">${button(c,'aspect','quantum_ic_image_aspect_ratio_white_24','aspect')}<label class="ngphotos-straighten"><span>${Math.round(e.straighten||0)}°</span><input type="range" min="-45" max="45" step=".1" value="${e.straighten||0}" data-edit="straighten" aria-label="${esc(c,t('cpe_a11y_controls_tilt'))}" aria-valuetext="${esc(c,T().fmt('cpe_a11y_controls_tilt_value',null,Math.round(e.straighten||0)))}"></label>${button(c,'rotate','quantum_ic_rotate_90_degrees_ccw_white_24','rotate')}</div><div class="ngphotos-cropdone"><button type="button" data-action="ngphotos-reset-crop">${esc(c,t('reset'))}</button><button type="button" data-action="ngphotos-crop-done">${esc(c,t('cpe_crop_and_rotate_done'))}</button></div>`;
     else body=`<div class="ngphotos-presets">${(NG.photoPresets||[]).map(preset=>{const id=preset.id,on=(+e.look||0)===id;return `<button type="button" class="${on?'on':''}" data-action="ngphotos-filter" data-filter="${id?'look:'+id:'original'}" data-look="${id}" aria-label="${esc(c,T().fmt(on?'cpe_a11y_filter_name_selected':'cpe_a11y_filter_name',null,t(preset.label)))}">${NG.media.svg({...p,edits:{...e,look:id,lookIntensity:1}},'ngphotos-svg',1)}<span>${esc(c,t(preset.label))}</span></button>`;}).join('')}</div>${e.look?`<div class="ngphotos-look-strength"><input type="range" min="0" max="1000" value="${Math.round((e.lookIntensity??.5)*1000)}" data-edit="lookIntensity" aria-label="${esc(c,t('cpe_a11y_preset_slider'))}"></div>`:''}`;
-    return `<div class="ngphotos-edittools"><div class="ngphotos-toolbody${u.tool==='filters'&&p.kind!=='video'?' preset-body':''}">${body}</div><div class="ngphotos-toolnav">${[['filters','photo_filter'],['adjustments','tune'],['crop','crop_rotate']].map(([tool,icon])=>`<button type="button" data-action="ngphotos-tool" data-tool="${tool}" class="${u.tool===tool?'on':''}" aria-label="${esc(c,t(tool))}">${image(`quantum_ic_${icon}_white_24`)}</button>`).join('')}</div></div>`;
+    return `<div class="ngphotos-edittools"><div class="ngphotos-toolbody${u.tool==='filters'&&p.kind!=='video'?' preset-body':u.tool==='adjustments'?' adjustment-body':u.tool==='crop'?' crop-body':''}">${body}</div><div class="ngphotos-toolnav">${[['filters','photo_filter'],['adjustments','tune'],['crop','crop_rotate']].map(([tool,icon])=>`<button type="button" data-action="ngphotos-tool" data-tool="${tool}" class="${u.tool===tool?'on':''}" aria-label="${esc(c,t(tool))}">${image(`quantum_ic_${icon}_white_24`)}</button>`).join('')}</div></div>`;
   }
   function preferences(c) {
     const u=U(c), s=state(c), row=(key,label,summary='',toggle=false)=>NG.settingsRow(c,{title:K[label]?t(label):label,summary:summary?t(summary):'',action:'ngphotos-pref',key,widget:toggle?NG.settingsSwitch(!!s[key]):''});
@@ -193,7 +199,7 @@
       u.selected=[];u.selecting=false;if(u.page==='photo')back(c);else c.render();
     }}]});
   }
-  function editorState(c,p){return {photo:p.id,edits:{...L().edits(p.edits),start:0,end:p.duration||2000},baseline:JSON.stringify(L().edits(p.edits)),trimChanged:false,tool:'filters',lookLevels:{[+p.edits?.look||0]:p.edits?.lookIntensity??.5},presetScroll:0};}
+  function editorState(c,p){return {photo:p.id,edits:{...L().edits(p.edits),start:0,end:p.duration||2000},baseline:JSON.stringify(L().edits(p.edits)),trimChanged:false,tool:'filters',lookLevels:{[+p.edits?.look||0]:p.edits?.lookIntensity??.5},presetScroll:0,expanded:[],adjustScroll:0,aspect:null};}
   function edit(c) { const p=current(c); if(p)go(c,'editor',editorState(c,p)); }
   function leaveEditor(c) {
     const u=U(c),leave=()=>{const prev=u.stack.pop()||{page:'photo'};Object.assign(u,prev);c.render();};
@@ -231,18 +237,26 @@
     noStatus:c=>{sync(c);return hasPhoto(c);}, statusColor:()=> '#9e9e9e', dialogAccent:()=> '#4285f4',
     render(c){sync(c);if(U(c).page==='help')return `<div class="ngphotos">${bar(c)}<div class="ngphotos-content"><div class="ngphotos-help"><h2>${esc(c,t('welcome'))}</h2>${['backupTitle','backupDescription','emptyCaption','trashInfo'].map(k=>`<p>${esc(c,t(k))}</p>`).join('')}</div></div></div>`;return render(c);},
     back,
-    unmount(c){const u=U(c);u.playing=false;u.slideshow=false;u.drawer=false;},
+    unmount(c){const u=U(c);u.cancelCompare?.();u.cancelCompare=null;u.playing=false;u.slideshow=false;u.drawer=false;},
     tick(c){const u=U(c);if(c.ui.view!=='photos')return;const now=Date.now();if(u.slideshow&&now-(u.lastFrame||now)>=2500){u.lastFrame=now;next(c,1);}if(u.playing){const p=current(c);u.position=Math.min(p?.duration||2000,u.position+now-(u.lastTick||now));u.lastTick=now;if(u.position>=(p?.duration||2000)){if(u.loop)u.position=0;else u.playing=false;}c.render();}},
     mount(c,root){
-      const u=U(c),f=root.querySelector('.ngphotos-search');if(f){f.addEventListener('input',()=>{const start=f.selectionStart;u.query=f.value;c.render();const n=c.el.viewport.querySelector('.ngphotos-search');n.focus();try{n.setSelectionRange(start,start);}catch{}});}
+      const u=U(c);u.cancelCompare?.();u.cancelCompare=null;const adjustments=root.querySelector('.ngphotos-adjustments');if(adjustments){adjustments.scrollTop=u.adjustScroll||0;adjustments.addEventListener('scroll',()=>u.adjustScroll=adjustments.scrollTop);}const f=root.querySelector('.ngphotos-search');if(f){f.addEventListener('input',()=>{const start=f.selectionStart;u.query=f.value;c.render();const n=c.el.viewport.querySelector('.ngphotos-search');n.focus();try{n.setSelectionRange(start,start);}catch{}});}
       const presets=root.querySelector('.ngphotos-presets');if(presets){presets.scrollLeft=u.presetScroll||0;presets.addEventListener('scroll',()=>u.presetScroll=presets.scrollLeft);let drag=null;presets.addEventListener('pointerdown',e=>{drag={x:e.clientX,left:presets.scrollLeft,active:false};});presets.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x;if(!drag.active&&Math.abs(dx)<7)return;drag.active=true;presets.setPointerCapture(e.pointerId);presets.scrollLeft=drag.left-dx;e.preventDefault();});for(const ev of ['pointerup','pointercancel'])presets.addEventListener(ev,e=>{if(drag?.active){e.preventDefault();e.stopPropagation();}drag=null;});}
       root.querySelector('.ngphotos-caption')?.addEventListener('change',e=>{current(c).caption=e.target.value;c.save();});
-      for(const r of root.querySelectorAll('[data-edit]'))r.addEventListener('input',()=>{let value=+r.value;const key=r.dataset.edit;if(key==='start'){value=Math.min(value,u.edits.end-100);u.trimChanged=true;}if(key==='end'){value=Math.max(value,u.edits.start+100);u.trimChanged=true;}if(key==='lookIntensity')value/=1000;u.edits[key]=value;const svg=root.querySelector('.ngphotos-full');if(svg)svg.outerHTML=NG.media.svg({...current(c),edits:u.edits},'ngphotos-full');});
+      for(const r of root.querySelectorAll('[data-edit]'))r.addEventListener('input',()=>{let value=+r.value;const key=r.dataset.edit;if(key==='start'){value=Math.min(value,u.edits.end-100);u.trimChanged=true;}if(key==='end'){value=Math.max(value,u.edits.start+100);u.trimChanged=true;}if(key==='lookIntensity')value/=1000;if(r.dataset.native)value=r.dataset.native==='positive'?value/10:value/5-100;u.edits[key]=value;if(key==='straighten'){r.setAttribute('aria-valuetext',T().fmt('cpe_a11y_controls_tilt_value',null,Math.round(value)));r.previousElementSibling.textContent=Math.round(value)+'°';}const svg=root.querySelector('.ngphotos-full');if(svg)svg.outerHTML=NG.media.svg(editorPicture(c),'ngphotos-full');});
       root.querySelector('.ngphotos-video input')?.addEventListener('input',e=>{u.position=+e.target.value;u.lastTick=Date.now();c.render();});
       for(const cell of root.querySelectorAll('.ngphotos-cell')){
         let timer;const cancel=()=>clearTimeout(timer);cell.addEventListener('pointerdown',e=>{if(e.button)return;timer=setTimeout(()=>{u.selecting=true;if(!u.selected.includes(+cell.dataset.id))u.selected.push(+cell.dataset.id);c.render();},500);});for(const event of ['pointerup','pointercancel','pointerleave'])cell.addEventListener(event,cancel);
       }
       const canvas=root.querySelector('.ngphotos-canvas');if(canvas){let start=null;canvas.addEventListener('pointerdown',e=>{start=[e.clientX,e.clientY];});canvas.addEventListener('pointercancel',()=>start=null);canvas.addEventListener('pointerup',e=>{if(!start)return;const dx=e.clientX-start[0],dy=e.clientY-start[1];start=null;if(u.page==='photo'&&Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5){u.ignoreTap=true;next(c,dx<0?1:-1);}});canvas.addEventListener('dblclick',()=>{u.zoom=u.zoom===1?2:1;c.render();});}
+      if(canvas&&u.page==='editor'&&u.tool!=='crop'){
+        let timer=null,held=false,start=null;
+        const end=()=>{clearTimeout(timer);timer=null;start=null;if(held){held=false;canvas.classList.remove('comparing');canvas.querySelector('.ngphotos-original')?.remove();const svg=canvas.querySelector('.ngphotos-full');if(svg&&canvas.isConnected)svg.outerHTML=NG.media.svg(editorPicture(c),'ngphotos-full');}};
+        u.cancelCompare=end;
+        canvas.addEventListener('pointerdown',e=>{if(e.button)return;start=[e.clientX,e.clientY];canvas.setPointerCapture(e.pointerId);timer=setTimeout(()=>{held=true;canvas.classList.add('comparing');const svg=canvas.querySelector('.ngphotos-full');if(svg)svg.outerHTML=NG.media.svg({...current(c),edits:{}},'ngphotos-full');const badge=document.createElement('span');badge.className='ngphotos-original';badge.setAttribute('role','status');badge.textContent=t('cpe_a11y_original_image_shown');canvas.append(badge);},500);});
+        canvas.addEventListener('pointermove',e=>{if(start&&Math.hypot(e.clientX-start[0],e.clientY-start[1])>8)end();});
+        for(const name of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(name,end);
+      }
       const cropbox=root.querySelector('.ngphotos-cropbox');
       if(cropbox&&canvas){
         const p=current(c),base=p.ratio||(p.kind==='pano'?3:4/3),ratio=u.edits.turn%2?1/base:base;
@@ -252,7 +266,7 @@
         cropbox.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();const corner=[...cropbox.children].indexOf(e.target);drag={x:e.clientX,y:e.clientY,crop:[...u.edits.crop],corner};cropbox.setPointerCapture(e.pointerId);});
         cropbox.addEventListener('pointermove',e=>{if(!drag)return;const dx=(e.clientX-drag.x)/w,dy=(e.clientY-drag.y)/h,[x,y,rw,rh]=drag.crop,clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
           if(drag.corner<0)u.edits.crop=[clamp(x+dx,0,1-rw),clamp(y+dy,0,1-rh),rw,rh];
-          else{let l=x,r=x+rw,t=y,b=y+rh;if([0,2].includes(drag.corner))l=clamp(x+dx,0,r-.1);else r=clamp(x+rw+dx,l+.1,1);if([0,1].includes(drag.corner))t=clamp(y+dy,0,b-.1);else b=clamp(y+rh+dy,t+.1,1);u.edits.crop=[l,t,r-l,b-t];}paint();});
+          else{let l=x,r=x+rw,t=y,b=y+rh;if([0,2].includes(drag.corner))l=clamp(x+dx,0,r-.1);else r=clamp(x+rw+dx,l+.1,1);if([0,1].includes(drag.corner))t=clamp(y+dy,0,b-.1);else b=clamp(y+rh+dy,t+.1,1);if(u.aspect){const normalized=u.aspect/ratio,anchorX=[0,2].includes(drag.corner)?x+rw:x,anchorY=[0,1].includes(drag.corner)?y+rh:y,signX=[0,2].includes(drag.corner)?-1:1,signY=[0,1].includes(drag.corner)?-1:1;let nw=Math.max(.1,r-l),nh=Math.max(.1,b-t);if(Math.abs(dx)>Math.abs(dy)*normalized)nh=nw/normalized;else nw=nh*normalized;const maxW=signX<0?anchorX:1-anchorX,maxH=signY<0?anchorY:1-anchorY,scale=Math.min(1,maxW/nw,maxH/nh);nw*=scale;nh*=scale;l=signX<0?anchorX-nw:anchorX;r=l+nw;t=signY<0?anchorY-nh:anchorY;b=t+nh;}u.edits.crop=[l,t,r-l,b-t];}paint();});
         for(const name of ['pointerup','pointercancel'])cropbox.addEventListener(name,()=>{if(!drag)return;drag=null;c.render();});
       }
     },
@@ -284,11 +298,13 @@
         case 'play':u.playing=!u.playing;u.lastTick=Date.now();if(u.position>=(p.duration||2000))u.position=0;c.render();break;
         case 'edit':edit(c);break;
         case 'tool':u.tool=el.dataset.tool;c.render();break;
+        case 'expand':{const k=el.dataset.group;u.expanded=u.expanded?.includes(k)?u.expanded.filter(x=>x!==k):[...(u.expanded||[]),k];c.render();break;}
+        case 'crop-done':u.tool='filters';c.render();break;
         case 'auto':Object.assign(u.edits,{light:15,color:12,pop:18});c.render();break;
         case 'filter':{const id=+(el.dataset.look||0),old=+u.edits.look||0;u.lookLevels||={};if(old)u.lookLevels[old]=u.edits.lookIntensity??.5;if(id){u.edits.look=id;u.edits.lookIntensity=u.lookLevels[id]??.5;}else{delete u.edits.look;delete u.edits.lookIntensity;}const list=el.closest('.ngphotos-presets');if(list){const a=el.getBoundingClientRect(),b=list.getBoundingClientRect();u.presetScroll=Math.max(0,list.scrollLeft+a.left-b.left+a.width/2-b.width/2);}c.render();break;}
-        case 'rotate':u.edits.turn=(u.edits.turn+3)%4;u.edits.crop=[0,0,1,1];c.render();break;
-        case 'reset-crop':u.edits.turn=0;u.edits.crop=[0,0,1,1];c.render();break;
-        case 'aspect':c.menu([['original',0],['square',1],['cpe_aspect_ratio_4_3',4/3],['cpe_aspect_ratio_16_9',16/9],['cpe_aspect_ratio_3_2',3/2]].map(([key,ratio])=>({label:t(key),action:c=>{const r=(p.ratio||(p.kind==='pano'?3:4/3)),natural=u.edits.turn%2?1/r:r;if(!ratio)u.edits.crop=[0,0,1,1];else if(natural>ratio){const w=ratio/natural;u.edits.crop=[(1-w)/2,0,w,1];}else{const h=natural/ratio;u.edits.crop=[0,(1-h)/2,1,h];}c.render();}})),el);break;
+        case 'rotate':u.aspect=null;u.edits.turn=(u.edits.turn+3)%4;u.edits.crop=[0,0,1,1];c.render();break;
+        case 'reset-crop':u.edits.turn=0;u.edits.straighten=0;u.aspect=null;u.edits.crop=[0,0,1,1];c.render();break;
+        case 'aspect':c.menu([['free',null],['original',0],['square',1],['cpe_aspect_ratio_4_3',4/3],['cpe_aspect_ratio_16_9',16/9],['cpe_aspect_ratio_3_2',3/2]].map(([key,ratio])=>({label:t(key),action:c=>{const r=(p.ratio||(p.kind==='pano'?3:4/3)),natural=u.edits.turn%2?1/r:r;u.aspect=ratio===0?natural:ratio;if(!ratio)u.edits.crop=[0,0,1,1];else if(natural>ratio){const w=ratio/natural;u.edits.crop=[(1-w)/2,0,w,1];}else{const h=natural/ratio;u.edits.crop=[0,(1-h)/2,1,h];}c.render();}})),el);break;
         case 'save':save(c);break;
         case 'pref':pref(c,el.dataset.key);break;
       }

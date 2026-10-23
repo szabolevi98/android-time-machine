@@ -59,8 +59,9 @@
       const radius = Math.min(w, h) * (.52 - strength * .32);
       scene = `<defs><g id="${id}">${scene}</g><filter id="${id}blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="${strength * 12}"/></filter><radialGradient id="${id}gradient"><stop offset="45%" stop-color="white"/><stop offset="100%" stop-color="black"/></radialGradient><mask id="${id}mask" maskUnits="userSpaceOnUse" x="0" y="0" width="${w}" height="${h}"><rect width="${w}" height="${h}" fill="black"/><ellipse cx="${fx}" cy="${fy}" rx="${radius}" ry="${radius}" fill="url(#${id}gradient)"/></mask></defs><use href="#${id}" filter="url(#${id}blur)"/><use href="#${id}" mask="url(#${id}mask)"/>`;
     }
-    const base=`<svg class="${cls}" viewBox="${x} ${y} ${cw} ${ch}" preserveAspectRatio="xMidYMid ${fit||(cls==='ngphotos-full'?'meet':'slice')}" aria-hidden="true"><g transform="${transform}" style="filter:${filter}">${scene}</g></svg>`;
-    return !skipLook&&ed.look&&NG.photoColors?NG.photoColors.render(p,cls,ratio,fit,base,[x,y,cw,ch],snapshot=>svg(snapshot,cls,ratio,fit,true)):base;
+    const tilt=NG.photoLibrary?.tilt(ed,rw,rh),straighten=tilt?.angle?`translate(${rw/2} ${rh/2}) rotate(${tilt.angle}) scale(${tilt.scale}) translate(${-rw/2} ${-rh/2})`:'';
+    const base=`<svg class="${cls}" viewBox="${x} ${y} ${cw} ${ch}" preserveAspectRatio="xMidYMid ${fit||(cls==='ngphotos-full'?'meet':'slice')}" aria-hidden="true"><g transform="${straighten}"><g transform="${transform}" style="filter:${filter}">${scene}</g></g></svg>`;
+    return !skipLook&&NG.photoColors?NG.photoColors.render(p,cls,ratio,fit,base,[x,y,cw,ch],snapshot=>svg(snapshot,cls,ratio,fit,true)):base;
   }
   const all = c => c.data.photos || (c.data.photos = JSON.parse(JSON.stringify(NG.defaults.photos)));
   NG.media = {svg, all, photos: c => all(c).filter(p => !p.trashedAt && !p.appPrivate),

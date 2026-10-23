@@ -15,3 +15,5 @@
 .ngmenu-item:disabled{color:#00000042}
 .ngmenu-check{flex:none;width:calc(18 * var(--dp));height:calc(18 * var(--dp));margin-left:calc(16 * var(--dp));box-sizing:border-box;border:calc(2 * var(--dp)) solid #0000008a;border-radius:calc(2 * var(--dp))}
 .ngmenu-check.on{border-color:#009688;background:#009688}
+
+.ngmenu-item{flex-shrink:0}

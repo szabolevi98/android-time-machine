@@ -1025,3 +1025,37 @@ Validation: all 240 module checks passed; three native-pixel/model checks, the e
 a new pointer flow cover LUTs/strength/per-look state, carousel dragging, save,
 discard, copy, immutable sharing, pending-job isolation, phone width and five
 languages. Source inventory rebuilt 1192 assets with zero problems.
+
+
+## Photos expanded adjustments and geometry — 2026-10-23
+
+Photos.apk AdjustmentsFragment/bik defines four groups: Light (Exposure, Contrast,
+Highlights, Midtones, Shadows, Black point, Vignette), Color (Saturation,
+Temperature, Tint, Skin tone, Deep blue), Pop and Style. The separate Brightness
+parameter is deliberately absent from the native list. CPE.Adjustments* layouts
+supply the 200dp list, 56dp sections, 96dp child labels, 24dp relative sliders,
+sticky master headers and #1a1a1a subsection background. Native subclasses use
+0..1000 progress with signed centred values except positive Pop/Style/Vignette.
+The native expand bitmap and three additional strings are extracted from this APK.
+
+All sixteen visible parameters affect the drawn media; detailed tone and selective
+colour processing are our synthetic scene approximation, while the native preset
+LUTs remain byte-exact. Values persist nondestructively through save, copies and
+all existing media consumers. Hold/release on the editing picture compares the
+unmodified source without changing the edit or losing an active colour job.
+
+StraightenSliderView bounds are +/-45 degrees. cpe_crop_toolbar_fragment supplies
+the 53dp aspect/48dp tilt/rotate row and Reset/Done row. Rotation scales to cover
+the canvas, crop handles retain the selected aspect, and RGBZ focus coordinates
+invert both tilt and quarter turns. Reset only resets geometry. The saved image
+clips at its crop bounds. Repeated identical Photos edit intents are consumed and
+can reopen the editor. The common ListPopupWindow now constrains left/bottom
+anchors inside the display frame; this fixed the crop aspect menu escaping the
+screen during real pointer selection.
+
+Validation: 243 module checks passed, including geometry inverse/coverage, signed
+parameter persistence, and distinct/selective synthetic colour effects. Real
+pointer browser flows cover all groups, live slider attachment, hold/release,
+straighten, locked-square dragging, Reset/Done/save/discard, repeated edit intents,
+phone width and five languages. Photos library, native LUT and Camera advanced /
+RGBZ browser regressions passed. Inventory: 1193 assets rebuilt, zero problems.

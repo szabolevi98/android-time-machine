@@ -2,7 +2,7 @@
 NG.photoPresets = [
   {
     "id": 0,
-    "label": "cpe_none_filter",
+    "label": "cpe_none_preset",
     "asset": "assets/ph-lut-0.png",
     "color": "#212121"
   },
