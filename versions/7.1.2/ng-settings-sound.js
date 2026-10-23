@@ -165,7 +165,8 @@
       if (key === 'ringtone') { picker(c, 'ringtone'); return true; }
       if (key === 'notification_ringtone') { picker(c, 'notification'); return true; }
       if (key === 'alarm_ringtone') { picker(c, 'alarm'); return true; }
-      if (key === 'cell_broadcast_settings') { NG.settingsGo(c, 'cell-broadcast', T().t('cell_broadcast_settings')); return true; }
+      // The row's intent: CellBroadcastReceiver's CellBroadcastSettings activity (ng-cellbroadcast.js), titled with its label.
+      if (key === 'cell_broadcast_settings') { NG.openPrefs(c, 'cellbroadcast', 'preferences', NG.appPrefStr('string/CellBroadcastReceiver/sms_cb_settings')); return true; }
       return false;
     }
   };

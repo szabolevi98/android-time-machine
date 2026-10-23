@@ -1126,7 +1126,12 @@ components, so Android Device Manager (wipe-data, reset-password, force-lock in
 DeviceAdminInfo's display order) is the one row. It is active while Google
 settings' "Allow remote lock and erase" is on; turning that switch on now asks
 with DeviceAdminAdd. Premium SMS and user credentials are honestly empty.
-Still open from the crawl: Trusted credentials and Emergency broadcasts.
+Still open from the crawl: Trusted credentials. Emergency broadcasts followed:
+CellBroadcastReceiver's CellBroadcastSettings through the app-preferences engine
+(`ng-cellbroadcast.js`): show_etws_settings / show_brazil_settings false and
+show_cmas_settings true remove the rows the code removes, developer options bring
+back the ETWS and developer categories, severe follows extreme, and the reminder
+list keeps alert_reminder_interval_active_values (`tests/browser/ng-cellbroadcast.mjs`).
 
 Validation: `tests/browser/ng-special-access.mjs` (real taps through each list,
 dialog cancel/confirm, auto-approval, admin deactivate/cancel/activate from both

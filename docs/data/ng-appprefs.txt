@@ -86,3 +86,7 @@ settings setting_keyboard setting_suggestion setting_advanced setting_about +ime
 
 [imepinyin] GooglePinyinIME com.google.android.apps.inputmethod.pinyin.preference.SettingsActivity
 settings setting_input setting_keyboard setting_dictionary setting_fuzzy_pinyin setting_other setting_about +ime_name +setting_send_feedback_title +setting_about_title +setting_theme +kb_theme_material_light +kb_theme_material_dark
+
+[cellbroadcast] CellBroadcastReceiver CellBroadcastSettings
+preferences
++sms_cb_settings
