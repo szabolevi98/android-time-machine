@@ -286,6 +286,46 @@ const gmailSettingsICS = async h => {
   h.check('Back from Label settings returns to the list', await h.until(`!document.querySelector('#viewport .g4p-app')`));
   h.check('the reload keeps it', await h.reload() && (await prefs()).labels?.Inbox?.sync === 'none');
 };
+
+// Ice Cream Sandwich camera: Video records and stops into the Camera album and plays in the Gallery; Panorama sweeps,
+// saves, and its Cancel keeps nothing.
+const cameraModesICS = async h => {
+  const shots = () => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));return (JSON.parse(localStorage.getItem(k)).photos||[]).map(p=>p.name)})()`);
+  const mode = async id => { await h.tap('#viewport .camera-mode'); await h.tap(`#viewport .camera-mode-selection [data-id="${id}"]`); };
+  await h.openApp('camera');
+  h.check('opens the camera', await h.until(`!!document.querySelector('#viewport .camera-app')`));
+  await mode('video');
+  h.check('the picker switches to video', await h.until(`!!document.querySelector('#viewport .camera-video .camera-shutter.video')`));
+  await h.tap('#viewport .camera-shutter');
+  h.check('the shutter starts recording', await h.until(`!!document.querySelector('#viewport .camera-shutter.recording') && !!document.querySelector('#viewport [data-camera-rec]')`));
+  await h.sleep(1600);
+  h.check('the recording time runs', await h.ev(`document.querySelector('#viewport [data-camera-rec]').textContent === '00:01'`));
+  await h.tap('#viewport .camera-shutter');
+  const afterVideo = await shots();
+  h.check('stopping keeps the clip', /^VID_\d{8}_\d{6}$/.test(afterVideo[0]), JSON.stringify(afterVideo.slice(0, 2)));
+  await h.tap('#viewport .camera-thumbnail');
+  h.check('the clip opens in the Gallery with its play button', await h.until(`!!document.querySelector('#viewport .icm-photo-play')`));
+  await h.tap('#viewport .icm-photo-play');
+  h.check('it plays in the movie player', await h.until(`!!document.querySelector('#viewport [data-icm] [data-icm-bar]')`));
+  await h.key('Escape'); await h.key('Escape'); await h.key('Escape');
+  await h.openApp('camera');
+  await h.until(`!!document.querySelector('#viewport .camera-app')`);
+  await mode('panorama');
+  h.check('the picker switches to panorama', await h.until(`!!document.querySelector('#viewport [data-icp][data-state="idle"]')`));
+  await h.tap('#viewport .camera-shutter');
+  h.check('the shutter starts the sweep', await h.until(`!!document.querySelector('#viewport [data-icp][data-state="capture"]')`));
+  await h.sleep(800);
+  await h.tap('#viewport .camera-shutter');
+  h.check('stopping shows the review', await h.until(`!!document.querySelector('#viewport [data-icp][data-state="review"]')`));
+  await h.tap('#viewport [data-icp-cancel]');
+  h.check('Cancel keeps nothing', await h.until(`!!document.querySelector('#viewport [data-icp][data-state="idle"]')`) && (await shots()).length === afterVideo.length);
+  await h.tap('#viewport .camera-shutter');
+  await h.sleep(800);
+  await h.tap('#viewport .camera-shutter');
+  h.check('the saved panorama joins the album', await h.until(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));return /^PANO_/.test(JSON.parse(localStorage.getItem(k)).photos[0].name)})()`, 8000));
+  await h.tap('#viewport .camera-thumbnail');
+  h.check('the panorama opens in the Gallery', await h.until(`document.querySelector('#viewport .gallery-image img')?.naturalWidth === 3072`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -346,6 +386,7 @@ const CASES = [
   {id: 'T03', version: '4.3', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
   {id: 'T03', version: '4.4.4', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
   {id: 'T03', version: '5.1.1', name: 'Calendar › Settings: General, Events from Gmail, Sync', run: calendarSettingsLP},
+  {id: 'T05', version: '4.0.4', name: 'Camera › Video and Panorama', run: cameraModesICS},
   {id: 'T04', version: '2.3.6', name: 'Google Mail › Settings: account, confirm actions, label sync', run: gmailSettingsGB},
   {id: 'T04', version: '4.0.4', name: 'Gmail › Settings, Manage labels, Label settings', run: gmailSettingsICS},
   {id: 'T04', version: '4.3', name: 'Gmail › Settings: label sound, labels, days to sync', run: gmailSettings},

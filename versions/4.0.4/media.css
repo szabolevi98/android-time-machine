@@ -54,3 +54,60 @@
 .camera-switch{position:relative;width:calc(60 * var(--dp));height:calc(25.8824 * var(--dp));border-radius:calc(2.353 * var(--dp));background:#ffffff33}
 .camera-switch::after{content:'OFF';position:absolute;left:0;top:0;width:calc(32.9412 * var(--dp));height:calc(25.8824 * var(--dp));display:grid;place-items:center;background:#555;font:700 calc(11.7648 * var(--dp)) Roboto,sans-serif}
 .camera-switch.on::after{content:'ON';left:auto;right:0;background:#33b5e5}
+/* VideoCamera and PanoramaActivity (media.js, ics-pano.js): the bright current mode in the mode picker, the video and
+   panorama shutters (pressed and recording states), the red recording indicator with the white elapsed time;
+   pano_capture.xml's bars (PanoViewHorizontalBar, 1 : 1.67 : 1) with the PanoProgressBar (#2E2E2E empty, #33525E done,
+   the #0099CC mark) and its arrows, pano_review.xml's "Saving…" bar, 240 dp mosaic and 12 sp CANCEL. */
+.camera-mode img{opacity:.55}
+.camera-mode img.on{opacity:1}
+.screen .camera-mode:disabled{opacity:.5}
+.camera-shutter.video{background-image:url('assets/camera-btn_video_shutter_holo.png')}
+.camera-shutter.video:active{background-image:url('assets/camera-btn_video_shutter_pressed_holo.png')}
+.camera-shutter.video.recording{background-image:url('assets/camera-btn_video_shutter_recording_holo.png')}
+.camera-shutter.video.recording:active{background-image:url('assets/camera-btn_video_shutter_recording_pressed_holo.png')}
+.camera-shutter.panorama{background-image:url('assets/camera-btn_pan_shutter_holo.png')}
+.camera-shutter.panorama:active{background-image:url('assets/camera-btn_pan_shutter_pressed_holo.png')}
+.camera-shutter.panorama.recording{background-image:url('assets/camera-btn_pan_shutter_recording_holo.png')}
+.camera-shutter.panorama.recording:active{background-image:url('assets/camera-btn_pan_shutter_recording_pressed_holo.png')}
+.camera-rec{position:absolute;left:calc(16 * var(--dp));top:calc(16 * var(--dp));display:flex;align-items:center;gap:calc(6 * var(--dp));font:400 calc(20 * var(--dp)) Roboto,sans-serif;color:#fff;text-shadow:0 0 calc(3 * var(--dp)) #000;pointer-events:none}
+.camera-rec img{width:calc(16 * var(--dp));height:calc(16 * var(--dp))}
+.icp{position:absolute;inset:0;display:flex;flex-direction:column;background:#000}
+.icp-bar{flex:1;min-height:0;display:grid;place-items:center;background:#000}
+.icp-area{flex:1.67;min-height:0;position:relative;overflow:hidden;background:#121b21}
+.icp-strip{position:absolute;left:0;top:0;height:100%;width:auto;max-width:none;display:block}
+.icp-pan{display:flex;align-items:center;gap:calc(5 * var(--dp))}
+.icp-pan[hidden],.icp-capturing[hidden]{display:none}
+.icp-pan>img{width:calc(24 * var(--dp));height:auto}
+.icp-progress{position:relative;display:block;width:calc(150 * var(--dp));height:calc(46 * var(--dp));background:#2e2e2e;overflow:hidden}
+.icp-progress>img{position:absolute;inset:0;width:100%;height:100%}
+.icp-done{position:absolute;left:0;top:0;bottom:0;width:0;background:#33525e}
+.icp-mark{position:absolute;top:0;bottom:0;left:0;width:calc(10 * var(--dp));margin-left:calc(-5 * var(--dp));background:#0099cc}
+.icp-capturing{display:flex;align-items:center;gap:calc(8 * var(--dp));font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#fff}
+.icp-capturing img{width:calc(16 * var(--dp));height:calc(16 * var(--dp))}
+.camera-review .camera-bottom{visibility:hidden}
+.camera-review .camera-preview{position:absolute;inset:0;z-index:3}
+.icp-review{justify-content:center;gap:calc(12 * var(--dp))}
+.icp-saving{display:flex;flex-direction:column;align-items:center;gap:calc(8 * var(--dp));font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#fff}
+.icp-mosaic{height:calc(240 * var(--dp));display:grid;place-items:center;overflow:hidden}
+.icp-mosaic img{max-width:100%;max-height:100%}
+.screen .icp-cancel{align-self:center;min-width:calc(70 * var(--dp));min-height:calc(45 * var(--dp));padding:0 calc(12 * var(--dp));border:0;background:none;color:#fff;font:400 calc(12 * var(--dp)) Roboto,sans-serif}
+.screen .icp-cancel:active{background:#33b5e5}
+/* Videos in the Gallery (ics-movie.js): the film strip and play marks, the play button on a video and MovieActivity. */
+.gallery-photo-grid>button{position:relative}
+.icm-strip{position:absolute;left:0;top:0;bottom:0;width:18%;background:url('assets/gallery-ic_video_thumb.png') left/auto 100% repeat-y}
+.icm-slot-play{position:absolute;left:50%;top:50%;width:33%;height:auto;transform:translate(-50%,-50%)}
+.screen .icm-photo-play{position:absolute;left:50%;top:50%;z-index:2;width:calc(96 * var(--dp));height:calc(96 * var(--dp));padding:0;border:0;background:none;transform:translate(-50%,-50%)}
+.icm-photo-play img{width:100%;height:100%}
+.icm{position:relative;background:#000}
+.icm-frame{position:absolute;inset:0;display:grid;place-items:center;transition:transform .2s linear}
+.icm-frame>img{max-width:100%;max-height:100%;object-fit:contain}
+.icm-bar{position:relative;z-index:2;transition:opacity .5s}
+.icm-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;transition:opacity .5s}
+.icm:not(.bars) .icm-bar,.icm:not(.bars) .icm-overlay,.icm.fading .icm-bar,.icm.fading .icm-overlay{opacity:0}
+.icm-overlay>*{pointer-events:auto}
+.screen .icm-button{position:absolute;left:50%;top:50%;width:calc(76 * var(--dp));height:calc(76 * var(--dp));padding:0;border:0;background:url('assets/gallery-bg_vidcontrol.png') center/contain no-repeat;transform:translate(-50%,-50%)}
+.icm-button img{width:100%;height:100%}
+.icm-timebar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:calc(10 * var(--dp));padding:calc(30 * var(--dp)) calc(10 * var(--dp));background:#000000c1;font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#cecece;touch-action:none}
+.icm-track{position:relative;flex:1;height:calc(4 * var(--dp));background:#808080}
+.icm-played{position:absolute;left:0;top:0;bottom:0;width:0;background:#fff}
+.icm-knob{position:absolute;top:50%;left:0;width:calc(30 * var(--dp));height:calc(30 * var(--dp));transform:translate(-50%,-50%)}

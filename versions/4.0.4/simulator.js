@@ -321,7 +321,29 @@
     if (nyanRoot && !ui.nyandroid) requestAnimationFrame(() => { if (nyanRoot.isConnected && !ui.nyandroid) ui.nyandroid = {...ICSNyandroid.start(nyanRoot), root: nyanRoot}; });
     if (ui.view === 'browser' && !ui.sub && ui.browserFind) highlightBrowserText();
     if(ui.view==='calendar' && viewport.querySelector('.cal-time-scroll'))viewport.querySelector('.cal-time-scroll').scrollTop=dp(8*48/.85);
+    cameraAttach();
   }
+  /* VideoCamera and PanoramaActivity (media.js, ics-pano.js) and the Gallery's MovieActivity (ics-movie.js): a
+     controller per screen, rebuilt when its root is redrawn. Leaving the camera while recording stops and keeps the clip. */
+  let panoCtl = null, movieCtl = null, recTimer = 0;
+  function cameraAttach() {
+    if (ui.cameraRec && ui.view !== 'camera') cameraStop();
+    if (panoCtl && !viewport.querySelector('[data-icp]')?.isSameNode(panoCtl.root)) { panoCtl.destroy(); panoCtl = null; }
+    const icp = viewport.querySelector('[data-icp]');
+    if (icp && !panoCtl) panoCtl = {...ICSPano.attach(icp, {ui, rerender: render, shoot: cameraSave}), root: icp};
+    if (movieCtl && !viewport.querySelector('[data-icm]')?.isSameNode(movieCtl.root)) { movieCtl.destroy(); movieCtl = null; }
+    const icm = viewport.querySelector('[data-icm]'), clip = data.photos.find(p => p.id === ui.selectedPhoto);
+    if (icm && clip && !movieCtl) movieCtl = {...ICSMovie.attach(icm, {photo: clip, ui, rerender: render, reduced: matchMedia('(prefers-reduced-motion: reduce)').matches}), root: icm};
+    clearInterval(recTimer);
+    if (ui.cameraRec && ui.view === 'camera') { const paint = () => { const el = viewport.querySelector('[data-camera-rec]'); if (el) el.textContent = ICSMovie.time(Date.now() - ui.cameraRec.start); }; paint(); recTimer = setInterval(paint, 250); }
+  }
+  // A clip or panorama into the Camera album, named as VideoCamera / PanoramaActivity name them.
+  function cameraSave(clip) {
+    const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
+    const photo = {...ICSMedia.scene(data), id: Date.now(), name: `${clip.pano ? 'PANO' : 'VID'}_${stamp.slice(0, 8)}_${stamp.slice(8)}`, album: 'camera', created: Date.now(), ...(clip.pano ? {pano: true} : {video: true, duration: Math.max(1000, Math.round(clip.duration))})};
+    data.photos.unshift(photo); save(); return photo;
+  }
+  function cameraStop() { const rec = ui.cameraRec; ui.cameraRec = null; clearInterval(recTimer); if (rec) cameraSave({duration: Date.now() - rec.start}); }
   function restoreWidgetScroll() {
     ui.widgetScroll = ui.widgetScroll || {};
     viewport.querySelectorAll('.home-widget .calw-list').forEach(list => {
@@ -600,6 +622,9 @@
     if(ui.view==='phone' && ui.activeCall){if(ui.activeCall.keypad){ui.activeCall.keypad=false;render();}else home(false);return;}
     if (ui.view === 'gallery' && ui.galleryCrop) { ui.galleryCrop=null;render();return; }
     if (ui.view === 'gallery' && ui.gallerySlideshow) { ui.gallerySlideshow=false;render();return; }
+    if (ui.view === 'camera' && ui.cameraRec && !ui.overlay) { cameraStop(); render(); return; }
+    if (ui.view === 'camera' && ui.icsPano?.state === 'capture' && !ui.overlay) { ui.icsPano = null; render(); return; }
+    if (ui.view === 'gallery' && ui.sub === 'movie') { ui.sub='photo';ui.galleryMovie=null;render();return; }
     if (ui.view === 'gallery' && ui.sub === 'photo') { ui.sub='album';ui.galleryZoom=false;render();return; }
     if (ui.view === 'calendar' && ui.sub === 'event-edit') { ui.sub=ui.eventDraft?.id?'event':'';ui.eventDraft=null;calendarRender();return; }
     if(ui.view==='settings' && ['apn','operators','tether-help','device-admin'].includes(ui.sub)){ui.sub={apn:'mobile-networks',operators:'mobile-networks','tether-help':'tethering','device-admin':'security'}[ui.sub];render();return;}
@@ -1540,6 +1565,9 @@
       }
       case 'photo-wallpaper': {const photo=data.photos.find(p=>p.id===Number(id));if(!photo)break;data.wallpaper=11;delete data.liveWallpaper;data.customWallpaper=photo.colors;data.customWallpaperPhoto=clone(photo);save();ui.overlay='';render();toast('Wallpaper set');break;}
       case 'shoot': {
+        // Video: the shutter starts and stops recording; Panorama: it starts and stops the sweep.
+        if (ui.cameraMode === 'video') { if (ui.cameraRec) cameraStop(); else ui.cameraRec = {start: Date.now()}; render(); break; }
+        if (ui.cameraMode === 'panorama') { panoCtl?.toggle(); break; }
         const photo={...ICSMedia.scene(data),id:Date.now(),name:`IMG_${new Date().toISOString().replace(/[-:T]/g,'').slice(0,14)}`,album:'camera',created:Date.now()};
         data.photos.unshift(photo);save();render();screen.animate([{opacity:1},{opacity:.4},{opacity:1}],{duration:240});toast('Photo saved to Gallery');break;
       }
@@ -1548,7 +1576,8 @@
       case 'camera-flip': data.cameraSettings=ICSMedia.settings(data);data.cameraSettings.front=!data.cameraSettings.front;save();render();break;
       case 'camera-level': ui.cameraLevel2=!ui.cameraLevel2;render();break;
       case 'camera-modes': ui.cameraModes=!ui.cameraModes;render();break;
-      case 'camera-mode': ui.cameraModes=false;render();if(id!=='camera')toast(i18n.t('This feature is not part of the simulator.'));break;
+      case 'camera-mode': ui.cameraModes=false;ui.cameraLevel2=false;if(['camera','video','panorama'].includes(id)&&!ui.cameraRec){ui.cameraMode=id;ui.icsPano=null;}render();break;
+      case 'gallery-movie': ui.sub='movie';ui.galleryMovie=null;render();break;
       case 'camera-setting': ui.cameraSetting=id;ui.overlay='camera-setting';renderOverlay();break;
       case 'camera-pick': {data.cameraSettings=ICSMedia.settings(data);const key=ui.cameraSetting;data.cameraSettings[key]=key==='exposure'?Number(id):id;save();ui.overlay='';renderOverlay();render();break;}
       case 'camera-knob': {data.cameraSettings=ICSMedia.settings(data);const [key,step]=id.split(':'),values=ICSMedia.PREF[key].values,i=values.indexOf(data.cameraSettings[key]);data.cameraSettings[key]=values[Math.max(0,Math.min(values.length-1,i+Number(step)))];save();renderOverlay();break;}

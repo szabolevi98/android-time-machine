@@ -40,16 +40,31 @@ versions/4.0.4/assets/camera-bg_switcher.png	967a7b431c3db1b2	copy	maguro:/syste
 versions/4.0.4/assets/camera-btn_camera_shutter_holo.png	4875395edcb6ab9f	resized	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/btn_camera_shutter_holo.png	drawable-xhdpi	resized 134×134 → 101×101, mean difference 2.10	76053bec6b2900ac
 versions/4.0.4/assets/camera-btn_camera_shutter_pressed_holo.png	5250c04bd0d38eaa	resized	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/btn_camera_shutter_pressed_holo.png	drawable-xhdpi	resized 134×134 → 101×101, mean difference 2.21	75d405eaf1397dd5
 versions/4.0.4/assets/camera-btn_close_settings.png	fddb45600bf11cae	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/btn_close_settings.png	drawable-xhdpi		fddb45600bf11cae
+versions/4.0.4/assets/camera-btn_pan_shutter_holo.png	f4a6ac52d9d3340b	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/btn_pan_shutter_holo.png	drawable-xhdpi		f4a6ac52d9d3340b
+versions/4.0.4/assets/camera-btn_pan_shutter_pressed_holo.png	c734ece33a94d9a8	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/btn_pan_shutter_pressed_holo.png	drawable-xhdpi		c734ece33a94d9a8
+versions/4.0.4/assets/camera-btn_pan_shutter_recording_holo.png	0e4e6fedd5b35d93	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/btn_pan_shutter_recording_holo.png	drawable-xhdpi		0e4e6fedd5b35d93
+versions/4.0.4/assets/camera-btn_pan_shutter_recording_pressed_holo.png	303854fb5af444c0	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/btn_pan_shutter_recording_pressed_holo.png	drawable-xhdpi		303854fb5af444c0
+versions/4.0.4/assets/camera-btn_video_shutter_holo.png	c34d573eb9437d05	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/btn_video_shutter_holo.png	drawable-xhdpi		c34d573eb9437d05
+versions/4.0.4/assets/camera-btn_video_shutter_pressed_holo.png	417f89d708a0cc21	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/btn_video_shutter_pressed_holo.png	drawable-xhdpi		417f89d708a0cc21
+versions/4.0.4/assets/camera-btn_video_shutter_recording_holo.png	ed87af64fbaebc96	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/btn_video_shutter_recording_holo.png	drawable-xhdpi		ed87af64fbaebc96
+versions/4.0.4/assets/camera-btn_video_shutter_recording_pressed_holo.png	d7ab689cbea5e492	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/btn_video_shutter_recording_pressed_holo.png	drawable-xhdpi		d7ab689cbea5e492
 versions/4.0.4/assets/camera-ic_exposure_holo_light.png	0ce129ffbe487c9e	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_exposure_holo_light.png	drawable-xhdpi		0ce129ffbe487c9e
 versions/4.0.4/assets/camera-ic_flash_auto_holo_light.png	207cd0d1fbafb3f0	resized	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_flash_auto_holo_light.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.57	6d36e030f944d0c2
 versions/4.0.4/assets/camera-ic_flash_off_holo_light.png	fbe1a982e1726356	resized	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_flash_off_holo_light.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.46	b9e87cd65e5a8885
 versions/4.0.4/assets/camera-ic_flash_on_holo_light.png	4ddc25ea24d29502	resized	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_flash_on_holo_light.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.41	d5a7c0f72eef38ff
+versions/4.0.4/assets/camera-ic_menu_cancel_holo_light.png	c0cf8b237145e045	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_menu_cancel_holo_light.png	drawable-xhdpi		c0cf8b237145e045
 versions/4.0.4/assets/camera-ic_menu_overflow.png	b0192b8dc17e0798	copy	maguro:/system/app/BrowserGoogle.apk!res/drawable-xhdpi/ic_menu_overflow.png	drawable-xhdpi		b0192b8dc17e0798
+versions/4.0.4/assets/camera-ic_pan_left_indicator.png	d9c4a40d1501c81c	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_pan_left_indicator.png	drawable-xhdpi		d9c4a40d1501c81c
+versions/4.0.4/assets/camera-ic_pan_progression.png	0b8da56b898c07c4	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_pan_progression.png	drawable-xhdpi		0b8da56b898c07c4
+versions/4.0.4/assets/camera-ic_pan_recording_indicator.png	2f9f67ca6413ede2	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_pan_recording_indicator.png	drawable-xhdpi		2f9f67ca6413ede2
+versions/4.0.4/assets/camera-ic_pan_right_indicator.png	2cd9edc1c327611c	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_pan_right_indicator.png	drawable-xhdpi		2cd9edc1c327611c
+versions/4.0.4/assets/camera-ic_recording_indicator.png	74dce5ba0c16a37c	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_recording_indicator.png	drawable-xhdpi		74dce5ba0c16a37c
 versions/4.0.4/assets/camera-ic_scn_holo_light.png	f31561be585aae3e	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_scn_holo_light.png	drawable-xhdpi		f31561be585aae3e
 versions/4.0.4/assets/camera-ic_settings_holo_light.png	9d80ac018a2daa28	not traced				
 versions/4.0.4/assets/camera-ic_switch_camera_holo_light.png	3f35f841bfc670c7	resized	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_switch_camera_holo_light.png	drawable-xhdpi	resized 96×96 → 72×72, mean difference 0.99	3e48692cce3433a6
 versions/4.0.4/assets/camera-ic_switch_pan_holo_light.png	e619f3980e9fe6d1	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_switch_pan_holo_light.png	drawable-xhdpi		e619f3980e9fe6d1
 versions/4.0.4/assets/camera-ic_switch_photo_facing_holo_light.png	2e71824621428f03	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_switch_photo_facing_holo_light.png	drawable-xhdpi		2e71824621428f03
+versions/4.0.4/assets/camera-ic_switch_video_facing_holo_light.png	2c0696d6ef837b7f	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_switch_video_facing_holo_light.png	drawable-xhdpi		2c0696d6ef837b7f
 versions/4.0.4/assets/camera-ic_switch_video_holo_light.png	ef5133f053a615dd	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_switch_video_holo_light.png	drawable-xhdpi		ef5133f053a615dd
 versions/4.0.4/assets/camera-ic_white_balance_auto_holo_light.png	ad74642728604284	resized	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_white_balance_auto_holo_light.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.54	606b65b22788bff1
 versions/4.0.4/assets/camera-ic_white_balance_cloudy_holo_light.png	c13deb86d972d394	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/ic_white_balance_cloudy_holo_light.png	drawable-xhdpi		c13deb86d972d394
@@ -294,15 +309,23 @@ versions/4.0.4/assets/ga-yt-tab_solid_selected.png	b514d8272288eee3	copy	maguro:
 versions/4.0.4/assets/ga-yt-tab_solid_unselected.png	6fc061a79a82a473	copy	maguro:/system/app/YouTube.apk!res/drawable/tab_solid_unselected.9.png	drawable		6fc061a79a82a473
 versions/4.0.4/assets/ga-yt-tab_unselected_holo.png	b513cdfc5383394a	copy	maguro:/system/app/YouTube.apk!res/drawable/tab_unselected_holo.9.png	drawable		b513cdfc5383394a
 versions/4.0.4/assets/gallery-appwidget_photo_border.png	72af089a65ecc9c7	same pixels	maguro:/system/app/GalleryGoogle.apk!res/drawable-hdpi/appwidget_photo_border.9.png	drawable-hdpi		97799d0b87c9b0d3
+versions/4.0.4/assets/gallery-bg_vidcontrol.png	432cf0ccbcc2bb30	copy	maguro:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/bg_vidcontrol.png	drawable-xhdpi		432cf0ccbcc2bb30
 versions/4.0.4/assets/gallery-border_photo_frame_widget_holo.png	1079b6a8acc4e359	same pixels	maguro:/system/app/GalleryGoogle.apk!res/drawable-hdpi/border_photo_frame_widget_holo.9.png	drawable-hdpi		2af39a645955e171
 versions/4.0.4/assets/gallery-border_photo_frame_widget_pressed_holo.png	24494ae7d2a59861	same pixels	maguro:/system/app/GalleryGoogle.apk!res/drawable-hdpi/border_photo_frame_widget_pressed_holo.9.png	drawable-hdpi		ed26a11c71c17861
 versions/4.0.4/assets/gallery-camera_crop_holo.png	459fd68ed176e453	copy	maguro:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/camera_crop_holo.png	drawable-xhdpi		459fd68ed176e453
 versions/4.0.4/assets/gallery-frame_overlay_gallery_camera.png	d44646bf454e6210	same pixels	maguro:/system/app/GalleryGoogle.apk!res/drawable-hdpi/frame_overlay_gallery_camera.png	drawable-hdpi		4f9d066afca60faa
 versions/4.0.4/assets/gallery-frame_overlay_gallery_folder.png	04d5cac2820f0f83	same pixels	maguro:/system/app/GalleryGoogle.apk!res/drawable-hdpi/frame_overlay_gallery_folder.png	drawable-hdpi		1b4e4e2772a5dd27
+versions/4.0.4/assets/gallery-ic_control_play.png	4d7cff2f623fa520	copy	maguro:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_control_play.png	drawable-hdpi		4d7cff2f623fa520
+versions/4.0.4/assets/gallery-ic_gallery_play.png	849b1f881ada33b1	copy	maguro:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_gallery_play.png	drawable-xhdpi		849b1f881ada33b1
 versions/4.0.4/assets/gallery-ic_menu_camera_holo_light.png	d89a3aa38ec661ef	same pixels	maguro:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_menu_camera_holo_light.png	drawable-hdpi		993d35698d79458a
 versions/4.0.4/assets/gallery-ic_menu_share_holo_light.png	e2064ea7bc8af520	same pixels	maguro:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_menu_share_holo_light.png	drawable-hdpi		d34720613de9c270
 versions/4.0.4/assets/gallery-ic_menu_slideshow_holo_light.png	957179a455e992b5	same pixels	maguro:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_menu_slideshow_holo_light.png	drawable-hdpi		1aebefc6aeb2a0f6
 versions/4.0.4/assets/gallery-ic_menu_trash_holo_light.png	75140ca2b9e4527e	same pixels	maguro:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_menu_trash_holo_light.png	drawable-hdpi		9ebd785f6120cc41
+versions/4.0.4/assets/gallery-ic_vidcontrol_pause.png	0d3cc15eeacbc4ae	copy	maguro:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_vidcontrol_pause.png	drawable-xhdpi		0d3cc15eeacbc4ae
+versions/4.0.4/assets/gallery-ic_vidcontrol_play.png	100c25f19444b419	copy	maguro:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_vidcontrol_play.png	drawable-xhdpi		100c25f19444b419
+versions/4.0.4/assets/gallery-ic_vidcontrol_reload.png	e3880e06a27bad1c	copy	maguro:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_vidcontrol_reload.png	drawable-xhdpi		e3880e06a27bad1c
+versions/4.0.4/assets/gallery-ic_video_thumb.png	6ea74c2bd338626a	copy	maguro:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_video_thumb.png	drawable-xhdpi		6ea74c2bd338626a
+versions/4.0.4/assets/gallery-scrubber_knob.png	2cc195c7969d7220	copy	maguro:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/scrubber_knob.png	drawable-xhdpi		2cc195c7969d7220
 versions/4.0.4/assets/gallery-widget_preview.png	8399834bd135d230	same pixels	maguro:/system/app/GalleryGoogle.apk!res/drawable-hdpi/preview.png	drawable-hdpi		85b1509de1c75c62
 versions/4.0.4/assets/gallery.png	7f70433a87a2b37b	copy	maguro:/system/app/GalleryGoogle.apk!res/mipmap-hdpi/ic_launcher_gallery.png	mipmap-hdpi		7f70433a87a2b37b
 versions/4.0.4/assets/gmail.png	a7efcd1d082d4d6c	copy	maguro:/system/app/Gmail.apk!res/mipmap-xhdpi/ic_launcher_mail.png	mipmap-xhdpi		a7efcd1d082d4d6c

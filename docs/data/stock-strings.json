@@ -2950,7 +2950,10 @@
    "pref_exposure_title": "CameraGoogle:pref_exposure_title",
    "switch_to_camera_label": "CameraGoogle:switch_to_camera_label",
    "switch_to_video_label": "CameraGoogle:switch_to_video_label",
-   "switch_to_panorama_label": "CameraGoogle:switch_to_panorama_label"
+   "switch_to_panorama_label": "CameraGoogle:switch_to_panorama_label",
+   "pano_capture_indication": "CameraGoogle:pano_capture_indication",
+   "pano_review_saving_indication_str": "CameraGoogle:pano_review_saving_indication_str",
+   "review_cancel": "CameraGoogle:review_cancel"
   },
   "calculator": {
    "DELETE": "Calculator:del",

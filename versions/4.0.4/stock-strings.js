@@ -224,7 +224,10 @@ window.StockStrings = {
   "pref_exposure_title": {"res": "CameraGoogle:pref_exposure_title", "hu": "Expozíció", "de": "Belichtung", "fr": "Exposition", "es": "Exposición", "en": "Exposure"},
   "switch_to_camera_label": {"res": "CameraGoogle:switch_to_camera_label", "hu": "Váltás kamerára", "de": "Zu Kamera wechseln", "fr": "Passer en mode photo", "es": "Cambiar a cámara", "en": "Switch to camera"},
   "switch_to_video_label": {"res": "CameraGoogle:switch_to_video_label", "hu": "Váltás videóra", "de": "Zu Video wechseln", "fr": "Passer en mode vidéo", "es": "Cambiar a vídeo", "en": "Switch to video"},
-  "switch_to_panorama_label": {"res": "CameraGoogle:switch_to_panorama_label", "hu": "Váltás panoráma módra", "de": "Zu Panorama wechseln", "fr": "Passer en mode panoramique", "es": "Cambiar a modo panorámico", "en": "Switch to panorama"}
+  "switch_to_panorama_label": {"res": "CameraGoogle:switch_to_panorama_label", "hu": "Váltás panoráma módra", "de": "Zu Panorama wechseln", "fr": "Passer en mode panoramique", "es": "Cambiar a modo panorámico", "en": "Switch to panorama"},
+  "pano_capture_indication": {"res": "CameraGoogle:pano_capture_indication", "hu": "Panoráma rögzítése", "de": "Panorama wird aufgenommen...", "fr": "Capture vue panoramique…", "es": "Capturando panorámica", "en": "Capturing panorama"},
+  "pano_review_saving_indication_str": {"res": "CameraGoogle:pano_review_saving_indication_str", "hu": "Mentés...", "de": "Speichert...", "fr": "Enreg…", "es": "Guardando...", "en": "Saving…"},
+  "review_cancel": {"res": "CameraGoogle:review_cancel", "hu": "MÉGSE", "de": "Abbrechen", "fr": "ANNULER", "es": "CANCELAR", "en": "CANCEL"}
  },
  "calculator": {
   "DELETE": {"res": "Calculator:del", "hu": "TÖRLÉS", "de": "Entfernen", "fr": "SUPPRIMER", "es": "BORRAR"},
