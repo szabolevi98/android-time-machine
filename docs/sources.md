@@ -136,3 +136,32 @@ texts. `ng-assets-accessibility.tsv` records the drawable sources; the highest
 density this APK provides is xhdpi. The browser uses local pointer/key events
 and optional Web Speech for tutorial practice; Android service/sensor backends
 are outside this static simulator.
+
+### Nexus 6P retained Marshmallow wallpaper (owner exception, 2026-10-23)
+
+The used-phone Nougat demo now carries one saved pre-OTA image from the same
+phone's original Marshmallow firmware. It is not claimed as part of N2G48C.
+The four native GoogleHome tiles and N2G48C's pink framework default remain.
+Only fresh profiles start with the retained image; existing home/lock choices
+are left intact. The landing card is recaptured from this fresh demo.
+
+- Official package: [angler-mdb08k-factory-46550886.zip](https://dl.google.com/dl/android/aosp/angler-mdb08k-factory-46550886.zip).
+- Package SHA-256: `4655088655f64e4f778adebe9e0ac8099447af643cf983262a95a1abf4401053`.
+- Fingerprint: `google/angler/angler:6.0/MDB08K/2343511:user/release-keys`.
+- `/system/framework/framework-res.apk` SHA-256: `c0e3a915d5b92c07b15d8d47e19507f22ed0ade2d1a7bc3148c551616b5a55f2`.
+- APK member: `res/drawable-nodpi-v4/default_wallpaper.jpg`, 1634 x 2560,
+  1,186,226 bytes; copied without conversion, cropping or resampling.
+- Output: `versions/7.1.2/assets/saved-nexus-6p-marshmallow.jpg`, SHA-256
+  `8e8782b9e47ea0c14a966b32296d27172c4a5ec1c85dc5293be5aee5c2928f15`.
+
+Unpack the official archive with the existing `extract-image.py` into a
+separate `_aosp/angler-marshmallow` folder (do not replace `_aosp/angler`). Then:
+
+```sh
+python docs/tools/ng-retained-wallpaper.py _aosp/angler-marshmallow/system/framework/framework-res.apk
+python docs/tools/ng-retained-wallpaper.py --check
+```
+
+The helper verifies both APK and JPEG hashes before writing. The asset inventory
+records this external historical source via `docs/data/asset-sources.tsv`;
+its `own` category means outside the indexed N2G48C image, not simulator artwork.

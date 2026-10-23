@@ -44,6 +44,13 @@ The account: `<device>.demo@gmail.com` (6.0.1: nexus5x.demo@gmail.com). Carrier:
 - **Wi-Fi:** the saved network (5.1.1: AndroidAP; 6.0.1: Home Network) and nearby AndroidAP, CoffeeShop, Library
   Wi-Fi. **Bluetooth:** a headset that pairs (per version's own list).
 
+The 7.1.2 Nexus 6P demo keeps its original Marshmallow wallpaper as a saved
+image after an imagined OTA update (owner decision, 2026-10-23). New profiles
+start with the green coast image from the Nexus 6P MDB08K framework; N2G48C's
+pink default and four bundled images remain available. Existing saved home
+and lock wallpapers are preserved. This deliberately models a used phone,
+not the wallpaper state after a clean 7.1.2 factory flash.
+
 ## The offline web
 
 The browser reaches a small invented web of its year (no network): www.google.com (home and results),

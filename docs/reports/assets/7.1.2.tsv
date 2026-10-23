@@ -650,7 +650,7 @@ versions/7.1.2/assets/ime-pinyin.png	df3c112cbc0a2690	copy	angler:/system/app/Go
 versions/7.1.2/assets/in-beam.png	85557a1e8fa398f3	copy	angler:/system/app/NfcNci/NfcNci.apk!res/drawable-xxxhdpi-v4/icon.png	drawable-xxxhdpi-v4		85557a1e8fa398f3
 versions/7.1.2/assets/in-bt_share.png	12f705c4046025b5	copy	angler:/system/app/Bluetooth/Bluetooth.apk!res/mipmap-xxxhdpi-v4/bt_share.png	mipmap-xxxhdpi-v4		12f705c4046025b5
 versions/7.1.2/assets/in-cloudprint.png	f8072f65d6d82b86	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxxhdpi-v4/ic_main.png	drawable-xxxhdpi-v4		f8072f65d6d82b86
-versions/7.1.2/assets/landing-home.jpg	edcd72d6f21962c5	own	capture of the simulator's own home screen for the landing page card			
+versions/7.1.2/assets/landing-home.jpg	82ce0e6f65ff992b	own	capture of the simulator's own home screen for the landing page card			
 versions/7.1.2/assets/lime-third-party-licenses.txt	050f823a8f867c6f	copy	angler:/system/app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk!res/raw/third_party_licenses	raw		050f823a8f867c6f
 versions/7.1.2/assets/lw-ic_launcher_live_wallpaper.png	d9b111422a5e0ad9	copy	angler:/system/app/LiveWallpapersPicker/LiveWallpapersPicker.apk!res/mipmap-xxhdpi-v4/ic_launcher_live_wallpaper.png	mipmap-xxhdpi-v4		d9b111422a5e0ad9
 versions/7.1.2/assets/mp-bicycling.png	c528afa93b08b0dd	copy	angler:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/quantum_ic_directions_bike_white_24.png	drawable-xxhdpi-v4		c528afa93b08b0dd
@@ -915,6 +915,7 @@ versions/7.1.2/assets/ps-widget-tile.png	f4a94cff5040f166	copy	angler:/system/pr
 versions/7.1.2/assets/ps-widget-top.9.png	4d9fa1dc658ad33c	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-hdpi-v4/phonesky_widget_top.9.png	drawable-hdpi-v4		4d9fa1dc658ad33c
 versions/7.1.2/assets/ps-wish-on.png	bcd7d69e726ceb01	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xxhdpi-v4/ic_menu_wish_apps_on_v2.png	drawable-xxhdpi-v4		bcd7d69e726ceb01
 versions/7.1.2/assets/ps-wish.png	4912f24395979d32	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xxhdpi-v4/ic_menu_wish_apps_off_v2.png	drawable-xxhdpi-v4		4912f24395979d32
+versions/7.1.2/assets/saved-nexus-6p-marshmallow.jpg	8e8782b9e47ea0c1	own	Google Nexus 6P MDB08K (Android 6.0) framework-res.apk!res/drawable-nodpi-v4/default_wallpaper.jpg, byte-for-byte; owner-approved pre-OTA saved wallpaper exception, 2026-10-23; SHA-256 8e8782b9e47ea0c14a966b32296d27172c4a5ec1c85dc5293be5aee5c2928f15; docs/tools/ng-retained-wallpaper.py			
 versions/7.1.2/assets/sc-chrome-new-incognito-tab-shortcut.png	e2127d9ca211545e	copy	angler:/system/app/Chrome/Chrome.apk!res/drawable-xxxhdpi-v4/shortcut_incognito.png	drawable-xxxhdpi-v4		e2127d9ca211545e
 versions/7.1.2/assets/sc-chrome-new-tab-shortcut.png	46d91f507e817db8	copy	angler:/system/app/Chrome/Chrome.apk!res/drawable-xxxhdpi-v4/shortcut_newtab.png	drawable-xxxhdpi-v4		46d91f507e817db8
 versions/7.1.2/assets/sc-drag-handle.svg	2e821caf748fafcc	vector	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable/deep_shortcuts_drag_handle.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	4c29460cacc13b6d

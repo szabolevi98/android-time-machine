@@ -18,6 +18,8 @@ try{
  assert.deepEqual(data.notifications.map(x=>x.own),['demo_welcome','demo_message']);assert.deepEqual(data.notifications[1].open,['messenger','conv:1']);
  assert.equal(data.mail.length,5);assert.equal(data.events.length,4);assert.equal(data.events[0].title,'Coffee with Alex');assert.equal(data.events[0].start,'11:00');
  assert.ok(data.clock.alarms.some(x=>x.h===7&&x.m===0&&x.on));assert.equal(data.photos.length,4);assert.equal(data.photos[3].kind,'pano');assert.equal(data.settings.wifiSsid,'Home Network');
+ assert.equal(data.wallpapers.home.kind,'saved');assert.equal(data.wallpapers.home.res,'nexus-6p-marshmallow','fresh used-phone demo keeps its pre-OTA wallpaper');
+ assert.equal(await b.ev(`(async()=>{const i=new Image();i.src=NG.wallpaper.image(JSON.parse(localStorage.getItem('android-time-machine-ng-v1')).wallpapers.home);await i.decode();return i.naturalWidth>0;})()`),true,'retained wallpaper decodes');
  await b.ev(`NG.hangoutsModel.state(__release);__release.save()`);assert.match((await b.save()).hangouts.threads[0].messages[0].text,/photos from the hike/);
  await b.open('chrome');await b.ev(`__release.save()`);assert.equal((await b.save()).chrome.bookmarks.length,3);await home();assert.equal(await b.ev(`!!__release.data.home.pages[0].find(x=>x.w==='digital')`),true);
  // Older saves acquire only missing modules; user edits and provider data survive twice.

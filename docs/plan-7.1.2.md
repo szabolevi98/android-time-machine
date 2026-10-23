@@ -29,6 +29,13 @@ The same rules as 6.0.1 ([plan-6.0.1.md](plan-6.0.1.md)), with 6.0.1 as the vers
 7. **The simulator's rules of every version:** the screen stays on unless a timeout is chosen, the clock widget on the
    home screen, the image's own fading scrollbar, desktop drag and phone width both work.
 
+Owner-approved exception (2026-10-23): the used-phone demo retains the original
+Nexus 6P MDB08K Marshmallow coast wallpaper as a saved pre-OTA image and starts
+new profiles with it. It follows the four native bundled tiles; N2G48C's own
+default and bundled resources remain intact. Existing user wallpaper choices
+are not migrated. Exact source, hashes and reproduction: docs/sources.md and
+docs/tools/ng-retained-wallpaper.py.
+
 ## What the image holds
 
 - Fingerprint `google/angler/angler:7.1.2/N2G48C/4104010:user/release-keys`, security patch 2017-08-05.

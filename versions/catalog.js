@@ -87,6 +87,6 @@ window.ANDROID_VERSIONS = [
     description: 'Split-screen apps, bundled notifications with direct reply, editable quick settings, launcher shortcuts and the Nougat cat easter egg.',
     url: 'versions/7.1.2/',
     status: 'available',
-    art: {shot: 'landing-home.jpg?v=2', phone: 'nexus6p'}
+    art: {shot: 'landing-home.jpg?v=3', phone: 'nexus6p'}
   }
 ];

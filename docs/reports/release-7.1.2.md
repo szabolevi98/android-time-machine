@@ -16,8 +16,9 @@ Image: angler N2G48C, Android 7.1.2, security patch 2017-08-05.
 | `ng-accessibility.py --check` | Both source keymaps and five-lesson catalogue reproduce exactly |
 | `asset-inventory.py --check 7.1.2` | 1207 rebuilt files, 0 problems; run after browser checks |
 
-The version inventory contains 1208 assets: 850 copies, 352 vectors, four
-generated asset files and two simulator-owned files. The regeneration command
+The version inventory contains 1209 assets: 850 copies, 352 vectors, four
+generated asset files, two simulator-owned files and the documented saved
+Marshmallow wallpaper exception. The regeneration command
 also verifies the generated boot metadata. The two tutorial arrows are exact
 copies from this TalkBack APK; the new 720×1280 landing JPEG captures the fresh
 home screen after dismissing its welcome cling.
@@ -42,3 +43,12 @@ reach the third and fourth bundled images, which were previously offscreen.
 The N2G48C GoogleHome APK's `array/wallpapers` (`nodpi-v4`) was rechecked:
 `wp_001` through `wp_004`, including the turquoise surf image `wp_003`, plus
 the separately inserted framework default. No images were added or removed.
+
+Owner-approved demo change (2026-10-23): add the exact Nexus 6P MDB08K (Android
+6.0) green coast wallpaper as a saved pre-OTA tile after the four native bundled
+images, and use it for fresh demo profiles. Existing home and lock wallpaper
+selections remain unchanged. The official factory package, framework APK and
+JPEG hashes are recorded in `docs/sources.md`; `ng-retained-wallpaper.py` checks
+or restores the unmodified 1634 x 2560 JPEG. The landing card is recaptured.
+The wallpaper browser regression checks the fresh demo, restoring the retained
+image, and preservation of factory, bundled and photo choices across reloads.

@@ -10,7 +10,7 @@ try {
  // Real mouse gestures expose the tiles that DOM .click() can select while still offscreen.
  await b.drag('.ngwp-strip',-180,0);await b.drag('.ngwp-strip',-120,0);
  assert.ok(await b.ev(`document.querySelector('.ngwp-strip').scrollLeft>200`),'mouse drag scrolls the wallpaper strip');
- assert.equal(await b.ev(`document.querySelector('.ngwp-tile.selected').dataset.action`),'ngwp-default','drag does not select a tile');
+ assert.equal(await b.ev(`document.querySelector('.ngwp-tile.selected').dataset.action`),'ngwp-retained','drag does not select a tile');
  await tap('.ngwp-tile[data-res="wp_003"]');
  assert.ok(await b.ev(`document.querySelector('.ngwp-strip').scrollLeft>200`),'selection preserves strip position');
  await b.drag('.ngwp-strip',-100,0);await tap('.ngwp-tile[data-res="wp_004"]');
@@ -18,21 +18,27 @@ try {
  const wheel=await b.ev(`(()=>{const r=document.querySelector('.ngwp-strip').getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
  await b.send('Input.dispatchMouseEvent',{type:'mouseWheel',...wheel,deltaX:0,deltaY:-1000});await sleep(150);
  assert.equal(await b.ev(`document.querySelector('.ngwp-strip').scrollLeft`),0,'mouse wheel returns to the first tiles');
+ await click('default');await set(2);await b.language('en');
+ assert.equal((await b.save()).wallpapers.home.kind,'default','existing factory wallpaper survives the new demo default');
+ await b.open('wallpapers');await click('retained');await set(2);
+ assert.equal((await b.save()).wallpapers.home.res,'nexus-6p-marshmallow','saved Marshmallow wallpaper can be restored');
+ await b.open('wallpapers');
  await photo();assert.equal(await b.ev(`!!document.querySelector('#viewport .ngwp-tile.selected .ngwp-thumb[src^="data:"]')`),true);
  await b.drag('.ngwp-crop',-60,15);await set(0);
- let data=await b.save();assert.equal(data.wallpapers.home.kind,'photo');assert.equal(data.wallpapers.lock.kind,'default','home-only preserves the previous lock wallpaper');assert.ok(data.wallpapers.home.x>50);assert.ok(data.wallpapers.home.image.startsWith('data:image/svg+xml'));
+ let data=await b.save();assert.equal(data.wallpapers.home.kind,'photo');assert.equal(data.wallpapers.lock.kind,'saved','home-only preserves the retained lock wallpaper');assert.ok(data.wallpapers.home.x>50);assert.ok(data.wallpapers.home.image.startsWith('data:image/svg+xml'));
  assert.equal(await b.ev(`getComputedStyle(document.querySelector('#screen')).backgroundImage.includes('data:image/svg+xml')`),true);
  // The photo wallpaper decodes as an image (its SVG carries the namespace).
  assert.equal(await b.ev(`(async()=>{const i=new Image();i.src=NG.wallpaper.image(JSON.parse(localStorage.getItem('android-time-machine-ng-v1')).wallpapers.home);try{await i.decode();return i.naturalWidth>0;}catch{return false;}})()`),true,'photo wallpaper decodes');
- await b.open('lock');assert.equal(await b.ev(`getComputedStyle(document.querySelector('.nglk-wall')).backgroundImage.includes('fw-default_wallpaper')`),true);
+ await b.open('lock');assert.equal(await b.ev(`getComputedStyle(document.querySelector('.nglk-wall')).backgroundImage.includes('saved-nexus-6p-marshmallow')`),true);
  await b.open('wallpapers');await click('default');await set(1);assert.equal((await b.save()).wallpapers.home.kind,'photo');assert.equal((await b.save()).wallpapers.lock.kind,'default');
  await b.open('wallpapers');await photo();await set(2);data=await b.save();assert.deepEqual(data.wallpapers.home,data.wallpapers.lock,'both targets receive the same crop');
  await b.open('wallpapers');await click('default');await back();await b.open('wallpapers');assert.equal(await b.ev(`!!document.querySelector('.ngwp-tile.selected .ngwp-thumb[src^="data:"]')`),true,'cancel discards an unapplied selection');
  // GoogleHome's four bundled wallpapers follow My photos and the default, in array/wallpapers order.
- await b.open('wallpapers');assert.deepEqual(await b.ev(`[...document.querySelectorAll('#viewport .ngwp-tile')].map(x=>x.dataset.action+(x.dataset.res?':'+x.dataset.res:''))`),['ngwp-photos','ngwp-default','ngwp-bundled:wp_001','ngwp-bundled:wp_002','ngwp-bundled:wp_003','ngwp-bundled:wp_004','ngwp-current','ngwp-live']);
+ await b.open('wallpapers');assert.deepEqual(await b.ev(`[...document.querySelectorAll('#viewport .ngwp-tile')].map(x=>x.dataset.action+(x.dataset.res?':'+x.dataset.res:''))`),['ngwp-photos','ngwp-default','ngwp-bundled:wp_001','ngwp-bundled:wp_002','ngwp-bundled:wp_003','ngwp-bundled:wp_004','ngwp-retained','ngwp-current','ngwp-live']);
  assert.equal(await b.ev(`Promise.all([...document.querySelectorAll('#viewport .ngwp-tile[data-res] img')].map(i=>i.decode().then(()=>i.naturalWidth>0,()=>i.src)))`).then(a=>a.every(x=>x===true)),true,'every bundled tile loads');
  await b.click('#viewport [data-action="ngwp-bundled"][data-res="wp_003"]');await set(2);data=await b.save();assert.equal(data.wallpapers.home.res,'wp_003');assert.equal(data.wallpapers.lock.res,'wp_003');
  assert.equal(await b.ev(`getComputedStyle(document.querySelector('#screen')).getPropertyValue('--ng-wallpaper').includes('ghome-wp_003.jpg')`),true);
+ await b.language('en');assert.equal((await b.save()).wallpapers.home.res,'wp_003','existing bundled wallpaper survives reload');
  await b.open('wallpapers');await photo();await set(2);data=await b.save();await b.open('wallpapers');await sleep(400);await b.shot('7.1.2-wallpaper-picker');
 await click('live');assert.equal(await b.ev(`document.querySelector('#viewport').textContent.includes('No live wallpapers.')`),true);assert.deepEqual(await b.ev(`NG.liveWallpaperServices`),[],'the image installs no live wallpaper service');await back();
  await b.ev('location.reload()');await b.until(`document.querySelector('#screen')?.classList.contains('view-home')`);assert.equal((await b.save()).wallpapers.home.image,data.wallpapers.home.image,'wallpaper snapshot survives reload');

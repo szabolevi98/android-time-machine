@@ -24,6 +24,9 @@ apps' code. Source classes, generators and validation are recorded in the
   Sound Search, Gmail, Messenger, Drive, Play Music, Play Store and Project Fi.
   Configuration, cancellation, placement, resizing and saved state are connected.
 - The framework's default wallpaper and GoogleHome 1.4's four bundled pictures.
+  The fresh used-phone demo keeps the Nexus 6P's original Marshmallow coast
+  wallpaper as a saved image after an imagined OTA update (owner-approved
+  exception, not an N2G48C bundled resource). Existing wallpaper choices survive.
   My photos uses Documents and saves an independent wallpaper image. The image
   ships no live wallpaper service, so its picker has the native empty state.
 - PlatLogo and the Android Neko easter egg: the cat tile, food, visits and NekoLand.
