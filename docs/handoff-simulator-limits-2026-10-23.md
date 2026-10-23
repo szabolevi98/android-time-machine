@@ -32,12 +32,14 @@ Az audit forrásvizsgálat és célzott futó ellenőrzés. Nem az összes gomb 
 ## Javasolt javítási sorrend
 
 1. **5.1.1 Google Photos › Edit.** Konkrét visszalépés: 4.4.4 alatt a Photos Edit a Galéria szerkesztőjére ad át; 5.1.1 alatt a `photos-edit` generikus elutasítást mutat. Reprodukálás után vizsgáld meg a korhű 5.1-es megoldást, a mentést és a visszanavigálást is.
-2. **Naptár beállításai 4.3 / 4.4.4 / 5.1.1.** A Settings elutasít; 4.3/4.4 alatt a Calendars to display is. Már 2.3.6-ban van működő beállításút, 6/7-ben saját részletes felület. Ne másold át az újabb verzió teljes UI-ját a régebbibe.
-3. **Gmail-beállítások.** 2.3.6/4.0.4 alatt a Settings belépés is elutasít; 4.3–5.1 alatt egyes sorok, például szinkronnapok, címkék és értesítések hiányoznak. Az Email külön alkalmazás, ne keverd a Gmaillel.
-4. **Chrome-beállítások 4.3–5.1.1.** A Privacy és About mellett több kategória elutasít. Az adott verzió valódi beállításait és meglévő forrásait ellenőrizd.
-5. **5.1.1 Gmail › Attach file.** Elutasít, miközben Attach picture működik; 6/7-ben már van Documents-alapú csatolás. Ellenőrizd a fájltípust, az adatátadást és a csatolmány megjelenítését.
-6. **További helyi funkciók a részletes listából.** Például Keep másolás/küldés, Drive listaműveletek, Docs/Sheets/Slides menük, Telefon/Névjegyek beállítások. Az egyes útvonalakat külön reprodukáld; egy alkalmazás nem teljesen hiányos attól, hogy néhány menüje elutasít.
-7. **Feltételes tartalékágak elérhetőségének vizsgálata.** A 2.1/6.0.1/7.1.2 `missing` rendererei hibavédelmi ágak is lehetnek. Csak konkrét, normál UI-ból elérhető reprodukció után kezeld őket hiányzó funkcióként.
+2. **4.3 Email › Settings.** Konkrét visszalépés: a külön Email app Settings belépése elutasít (`email-settings` a 4.3 `simulator.js`-ben csak toast), miközben 4.0.4 alatt (`email.js`, `openSettings`) és 4.4.4/5.1.1 alatt (`em-settings`, `email-prefs.js`) van saját beállításképernyő. A 4.3-as JB Email gyári beállításait használd; a 4.4.4-es megoldás referencia.
+3. **Naptár beállításai 4.3 / 4.4.4 / 5.1.1.** A Settings elutasít; 4.3/4.4 alatt a Calendars to display is. Már 2.3.6-ban van működő beállításút, 6/7-ben saját részletes felület. Ne másold át az újabb verzió teljes UI-ját a régebbibe.
+4. **Gmail-beállítások.** 2.3.6/4.0.4 alatt a Settings belépés is elutasít; 4.3–5.1 alatt egyes sorok, például szinkronnapok, címkék és értesítések hiányoznak. Az Email külön alkalmazás, ne keverd a Gmaillel.
+5. **4.0.4 Kamera › Video és Panorama.** Konkrét verzióközi hiány: a módválasztóban mindkettő elutasít (`camera-mode` csak a `camera` azonosítót engedi), miközben 4.3 alatt a videó és a panoráma (`camera-pano.js`) működik. Az ICS-es gyári kamera módjait és felületét kövesd.
+6. **Chrome-beállítások 4.3–5.1.1.** A Privacy és About mellett több kategória elutasít. Az adott verzió valódi beállításait és meglévő forrásait ellenőrizd.
+7. **5.1.1 Gmail › Attach file.** Elutasít, miközben Attach picture működik; 6/7-ben már van Documents-alapú csatolás. Ellenőrizd a fájltípust, az adatátadást és a csatolmány megjelenítését.
+8. **További helyi funkciók a részletes listából.** Például Keep másolás/küldés, Drive listaműveletek, Docs/Sheets/Slides menük, Telefon/Névjegyek beállítások. Az egyes útvonalakat külön reprodukáld; egy alkalmazás nem teljesen hiányos attól, hogy néhány menüje elutasít.
+9. **Feltételes tartalékágak elérhetőségének vizsgálata.** A 2.1/6.0.1/7.1.2 `missing` rendererei hibavédelmi ágak is lehetnek. Csak konkrét, normál UI-ból elérhető reprodukció után kezeld őket hiányzó funkcióként.
 
 Minden tételnél legyen világos: megvalósítandó helyi működés, szándékos szolgáltatási korlát vagy nem elérhető tartalékág. A valódi Google-szolgáltatás, fizetés vagy telefonhálózat hiányát ne „javítsd” egy eredményt színlelő toasttal.
 
