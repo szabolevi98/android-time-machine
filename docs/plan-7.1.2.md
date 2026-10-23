@@ -1174,3 +1174,12 @@ A first-level sweep of every app (each tap and each overflow-menu item) found on
 not-built target: Documents' "Storage settings". DocumentsUI shows it only for a
 root with FLAG_HAS_SETTINGS, which ExternalStorageProvider sets for TYPE_PUBLIC
 volumes alone; the 6P has none, so the item is gone.
+
+The crawls also look for raw format placeholders (%s, %1$s) on screen. Every app
+preference screen was opened: four texts the apps format at runtime were shown
+raw and are now filled as their code does: Drive's storage row (storage_used
+with the files against the 15 GB free quota) and notification summary (the
+account), Gboard's "Improve Gboard" category and its share-snippets summary
+(ime_name), and the Google app's "Say "Ok Google" any time" row (the hotword
+phrase, an own text: the hotword model's phrase is no resource). Category titles
+now go through the preference hooks' title.

@@ -259,7 +259,9 @@
       ctx.menu([{label:ap('setting_tutorial_title'),action:ctx=>ctx.open('chrome','url:https://support.google.com')},{label:ap('setting_about_title'),action:ctx=>NG.appPrefsGo(ctx,'setting_about',ap('setting_about_title'))},{label:ap('setting_help_and_feedback'),action:ctx=>ctx.open('help','gboard')}],el);
       return true;
     },
-    summary: (ctx,key) => key==='setting_about_key' ? '6.0.84.145092135-preload-arm64-v8a' : undefined,
+    summary: (ctx,key,node) => key==='setting_about_key' ? '6.0.84.145092135-preload-arm64-v8a' : key==='enable_share_snippets' ? AndroidStrings.format(NG.appPrefStr(node.summary),NG.appPrefStr('string/LatinIMEGooglePrebuilt/ime_name')) : undefined,
+    // The "Improve …" category names the keyboard (ime_name) in its title.
+    title: (ctx,key,node) => key==='setting_improve_google_keyboard_category_key' ? AndroidStrings.format(NG.appPrefStr(node.title),NG.appPrefStr('string/LatinIMEGooglePrebuilt/ime_name')) : undefined,
     fragment(ctx,name,node) { return node.extras?.PREFERENCE_FRAGMENT || (name.endsWith('CustomInputStyleSettingsFragment') ? 'styles' : name.endsWith('AddOnDictionaryFragment') ? 'dictionaries' : null); },
     get(ctx,key) {
       const stored=NG.appPref(ctx,'gboard',key,undefined); if(stored!==undefined)return stored;

@@ -82,9 +82,10 @@
       if (n.t === 'header' && !n.fragment && !n.intent && !isToggle(n)) { if (n.title) out.push(NG.settingsCat(c, str(n.title))); continue; }
       if (/PreferenceCategory(?:Header)?$/.test(n.t)) {
         // A category without children is a header before the rows that follow it (Chrome's main_preferences).
-        if (!n.c?.length) { if (n.title) out.push(NG.settingsCat(c, str(n.title))); continue; }
+        const cat = h.title?.(c, n.key, n) ?? str(n.title);
+        if (!n.c?.length) { if (cat) out.push(NG.settingsCat(c, cat)); continue; }
         const inner = rows(c, n, `${prefix}${i}.`);
-        if (inner) out.push(`${n.title ? NG.settingsCat(c, str(n.title)) : ''}${inner}`);
+        if (inner) out.push(`${cat ? NG.settingsCat(c, cat) : ''}${inner}`);
         continue;
       }
       // An edit text without a title shows its value as the title (Telecom's quick responses).

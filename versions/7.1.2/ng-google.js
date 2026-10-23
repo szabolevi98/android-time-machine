@@ -156,11 +156,12 @@
       BackgroundRetrySettingsFragment:'background_retry_settings',NowCardsSettingsFragment:'now_cards_settings',ScreenAssistSettingsFragment:'screen_assist_settings',
       TopdeckSettingsFragment:'topdeck_preferences',SuggestSettingsFragment:'suggest_preferences',AboutFragment:'about'
     }[short];},
-    title(ctx,key,node){return {enableScreenAssistPreference:t('enable_screen_assist_title'),donateScreenshotPreference:t('donate_screenshot_title'),npStreamPreference:t('np_stream')}[key];},
+    // HotwordSettingsFragment fills the hotword phrase into hotword_pref_title_opa.
+    title(ctx,key,node){if(key==='opa_hotword_enabled')return AndroidStrings.format(NG.appPrefStr(node.title),t('own:hotword_phrase'));return {enableScreenAssistPreference:t('enable_screen_assist_title'),donateScreenshotPreference:t('donate_screenshot_title'),npStreamPreference:t('np_stream')}[key];},
     get(ctx,key){if(key==='pref_show_predictions')return ctx.data.launcherPredictions!==false;if(key==='pref_allowRotation')return !!ctx.data.launcherRotation;if(key==='showCardsPreference')return S(ctx).feed!==false;if(key==='enableScreenAssistPreference')return !!S(ctx).assistOptIn;},
     set(ctx,key,v){if(key==='pref_show_predictions'){ctx.data.launcherPredictions=v;return true;}if(key==='pref_allowRotation'){ctx.data.launcherRotation=v;return true;}if(key==='showCardsPreference'){S(ctx).feed=v;return true;}if(key==='enableScreenAssistPreference'){S(ctx).assistOptIn=v;return true;}return false;},
     enabled(ctx,key){if(['enableScreenAssistPreference','donateScreenshotPreference','manageCardHistoryPreference'].includes(key))return true;},
-    summary(ctx,key){if(key==='google_account')return NG.account?.email||'';if(key==='manageCardHistoryPreference')return '';return {enableScreenAssistPreference:t('enable_screen_assist_summary_now_emphasis'),donateScreenshotPreference:t('donate_screenshot_summary'),npStreamPreference:t('np_stream_summary')}[key];},
+    summary(ctx,key,node){if(key==='opa_hotword_enabled')return AndroidStrings.format(NG.appPrefStr(node.summary),t('own:hotword_phrase'));if(key==='google_account')return NG.account?.email||'';if(key==='manageCardHistoryPreference')return '';return {enableScreenAssistPreference:t('enable_screen_assist_summary_now_emphasis'),donateScreenshotPreference:t('donate_screenshot_summary'),npStreamPreference:t('np_stream_summary')}[key];},
     click(ctx,key,node){
       if(key==='google_account'){ctx.open('settings','accounts');return true;}
       if(key==='hotword'){NG.appPrefsGo(ctx,'hotword_settings',prefLabel(ctx,node));return true;}
