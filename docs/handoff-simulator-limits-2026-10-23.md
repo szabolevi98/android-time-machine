@@ -4,7 +4,7 @@ Dátum: 2026-10-23. A fájl az átadáskori állapotot rögzíti; kezdéskor ell
 
 ## Következő sessionben bemásolható kérés
 
-> Folytasd a D:\xampp\htdocs\android-simulator fejlesztését az alábbi átadó és hiányaudit alapján. Először ellenőrizd az aktuális git-állapotot és a projekt saját utasításait. A cél a verziók közötti indokolatlan funkcióhiányok csökkentése. Először végezd el a 125 korlátcsoport egyszeri besorolását a riportban, majd kezdd az 5.1.1 Photos Edit reprodukálásával és javításával, és haladj a prioritáslista szerint. Az eredeti Android-verzióhoz illő működést építsd meg a gyári image és az AOSP alapján; a többi verzió kész helyi megoldásai csak referenciák. Minden javított tételt ellenőrizz, vedd fel a közös regressziós tesztbe, és az állapotot a riportban vezesd. Commit és push mehet. VPS-deployra nincs külön felhatalmazás.
+> Folytasd a D:\xampp\htdocs\android-simulator fejlesztését az alábbi átadó és hiányaudit alapján. Először ellenőrizd az aktuális git-állapotot és a projekt saját utasításait. A cél a verziók közötti indokolatlan funkcióhiányok csökkentése. A teljes besorolás már elkészült a riportban; ne ismételd meg. Olvasd el a lezárt döntéseket és a T01–T49 feladatlistát, majd kezdd az 5.1.1 Photos Edit reprodukálásával és javításával, és haladj a prioritáslista szerint. Az eredeti Android-verzióhoz illő működést építsd meg a gyári image és az AOSP alapján; a többi verzió kész helyi megoldásai csak referenciák. Minden javított tételt ellenőrizz, vedd fel a közös regressziós tesztbe, és az állapotot a riportban vezesd. Commit és push mehet. VPS-deployra nincs külön felhatalmazás.
 
 Ez a kezdőkérés javasolt munkasorrend; a felhasználó a következő sessionben átírhatja.
 
@@ -29,34 +29,34 @@ A kérés: verziónként gyűjtsük össze az „Ez a funkció nem része a szim
 
 Az audit forrásvizsgálat és célzott futó ellenőrzés. Nem az összes gomb és minden belső beállítás teljes kattintásos bejárása. A 6.0.1/7.1.2 nulla konkrét találata nem jelenti, hogy minden elképzelhető funkció kész.
 
-## Első lépés: a teljes lista besorolása
+## A tervezés lezárva — 2026-10-23
 
-A javítások előtt egyszer menj végig mind a 125 konkrét korlátcsoporton, és a lenti szűrési szabály szerint sorold be mindegyiket: **javítandó**, **szándékos korlát** vagy **tartalékág**. A besorolás a `docs/reports/simulator-limits-2026-10-23.md` riportba kerül, csoportonként. Ebből lesz a véges munkalista: a haladást a javítandó tételek száma méri, nem a 125 csoport. A besorolás közben talált új verzióközi eltéréseket a prioritáslistába is vedd fel.
+A teljes besorolás elkészült a `docs/reports/simulator-limits-2026-10-23.md` „Lezárt besorolás és véges fejlesztési lista” részében. **Nem kell újra első munkalépésként besorolni a 125 csoportot.** Mind a 153 eredeti sorhoz egyedi azonosító és döntés tartozik; a vegyes sorok javítandó és meghagyott része külön szerepel. A további Maps/Settings utak N01–N05 alatt vannak.
 
-## Javasolt javítási sorrend
+Az állapot és a végleges részletes terjedelem egyetlen helye a riport: **49 nyitott feladatcsomag (T01–T49)**, mindhez verziólista, forráscsoport és készfeltétel. Ez nem 49 session vagy 49 külön gomb. A besorolás kész; a javítások ebben a tervezési körben nem kezdődtek el.
 
-1. **5.1.1 Google Photos › Edit.** 5.1.1 alatt a `photos-edit` generikus elutasítást mutat, 4.4.4 alatt működik. **A 4.4.4-es megoldás itt nem minta:** ott a Photos Edit a Galéria szerkesztőjére ad át, de a Nexus 6 image-ében nincs Galéria (az 5.1.1 `simulator.js` el is távolítja a `gallery` appot, és az `lp-gallery.js` fejkommentje is ezt rögzíti; a `_aosp/shamu` image-ben `Photos` és `PlusOne` van). Korhűen a Photos app saját szerkesztője kell. Először a gyári Photos APK-ból (`_aosp/shamu`) állapítsd meg, milyen szerkesztőt és eszközöket adott az akkori verzió; a 6.0.1/7.1.2 saját Photos-szerkesztője közelebbi referencia, mint a 4.4.4. A mentést és a visszanavigálást is ellenőrizd.
-2. **4.3 Email › Settings.** Konkrét visszalépés: a külön Email app Settings belépése elutasít (`email-settings` a 4.3 `simulator.js`-ben csak toast), miközben 4.0.4 alatt (`email.js`, `openSettings`) és 4.4.4/5.1.1 alatt (`em-settings`, `email-prefs.js`) van saját beállításképernyő. A 4.3-as JB Email gyári beállításait használd; a 4.4.4-es megoldás referencia.
-3. **Naptár beállításai 4.3 / 4.4.4 / 5.1.1.** A Settings elutasít; 4.3/4.4 alatt a Calendars to display is. Már 2.3.6-ban van működő beállításút, 6/7-ben saját részletes felület. Ne másold át az újabb verzió teljes UI-ját a régebbibe.
-4. **Gmail-beállítások.** 2.3.6/4.0.4 alatt a Settings belépés is elutasít; 4.3–5.1 alatt egyes sorok, például szinkronnapok, címkék és értesítések hiányoznak. Az Email külön alkalmazás, ne keverd a Gmaillel.
-5. **4.0.4 Kamera › Video és Panorama.** Konkrét verzióközi hiány: a módválasztóban mindkettő elutasít (`camera-mode` csak a `camera` azonosítót engedi), miközben 4.3 alatt a videó és a panoráma (`camera-pano.js`) működik. Az ICS-es gyári kamera módjait és felületét kövesd.
-6. **5.1.1 Gmail › Attach file.** Elutasít, miközben Attach picture működik; 6/7-ben már van Documents-alapú csatolás. Ellenőrizd a fájltípust, az adatátadást és a csatolmány megjelenítését. Kicsi, konkrét tétel, ezért a Chrome előtt van.
-7. **Chrome-beállítások 4.3–5.1.1, szűkítve.** A Privacy és About mellett több kategória elutasít. Ez a lista legnagyobb tétele, ezért csak a helyben értelmes kategóriákat építsd meg, az adott verzió valódi beállításai szerint: például keresőmotor, tartalombeállítások, akadálymentesség, sávszélesség. A Passwords, Autofill és a fiókhoz kötött sorok a szűrési szabály szerint elutasítók maradhatnak.
-8. **További helyi funkciók a részletes listából.** Például Keep másolás/küldés, Drive listaműveletek, Docs/Sheets/Slides menük, Telefon/Névjegyek beállítások. Az egyes útvonalakat külön reprodukáld; egy alkalmazás nem teljesen hiányos attól, hogy néhány menüje elutasít.
-9. **Feltételes tartalékágak elérhetőségének vizsgálata.** A 2.1/6.0.1/7.1.2 `missing` rendererei hibavédelmi ágak is lehetnek. Csak konkrét, normál UI-ból elérhető reprodukció után kezeld őket hiányzó funkcióként.
+## Rögzített végrehajtási sorrend
 
-Minden tételnél legyen világos: megvalósítandó helyi működés, szándékos szolgáltatási korlát vagy nem elérhető tartalékág. A valódi Google-szolgáltatás, fizetés vagy telefonhálózat hiányát ne „javítsd” egy eredményt színlelő toasttal.
+1. Közös regressziós teszt kerete a `flows.mjs` mintájára; majd **T01–T07**: 5.1 Photos saját Edit, 4.3 Email Settings, három verzió Naptár, Gmail beállítások, ICS kamera video/pano, 5.1 Attach file és a pontosan felsorolt Chrome-kategóriák.
+2. **T08–T17:** kijelölés, Email helyi prefsorok, kamerás appátadás, Névjegyek, Maps, MMS, GB Zene/Car Home/Voice/Talk.
+3. **T18–T30:** Books, Earth, YouTube, Store, ICS Play Music, Google+, Movies, keresés, régi Messenger, Movie Studio, Navigation és helyi rendszerbeállítások.
+4. **T31–T46 és T49:** Galéria videó, Hangouts/Óra, Drive/Keep/tartalmi appok, Now/Photos, Quickoffice/Docs/Fit, Play-könyvtárak, Telefon, közös Print/PDF/shortcut, Gmail About és különleges kameramódok.
+5. **T47–T48:** a jelenlegi regiszterből elérhető tartalékcélok bejárása és a szöveges/regressziós lezárás. A szövegeket közben apponként, külön commitban is javítsd.
 
-### Szűrési szabály a 125 csoporthoz
+Függőségek és a tényleges műveletlisták a riportban vannak. **A korábbi nyitott 8. pont megszűnt:** nem maradt „további helyi funkciók később eldöntendők” gyűjtőkategória. A T-csomagokból ne hagyj el műveletet időnyerés céljából, és ne bővítsd őket észrevétlenül teljes új alkalmazásokkal.
 
-A 125 konkrét korlátcsoport nem mind javítandó. Szándékos korlát marad, és továbbra is elutasít:
+## Rögzített terjedelmi döntések
 
-- Help, Help & feedback, Send feedback, Contact us;
-- Terms, Privacy policy, jogi és egyéb webes tájékoztató linkek;
-- Sign out, Add/Remove account és más valódi fiókműveletek;
-- Wallet-fizetés, vásárlás, pénzküldés és más valódi szolgáltatást igénylő utak.
+- Help/Feedback/Contact us, külső jogi/tájékoztató link, valódi fiókművelet és pénzügyi szolgáltatás korlát marad. Az újabb verziókban már kész ilyen oldalt nem kell eltávolítani.
+- Chrome Passwords/Autofill az előző átadóban engedett szűkítés alapján marad ki, nem azért, mert minden helyi modellje technikailag lehetetlen volna.
+- A helyi szervermező-/szinkronpreferencia szerkesztés javítandó; a valódi újfiókos bejelentkezés és hálózati szinkron nem. A helyi Print/PDF javítandó; a fizikai nyomtatás nem.
+- Movie Studio és Photo Sphere/Lens Blur helyi folyamata külön nevesített feladat. A nagy munkaigény nem indok a szándékos korláttá átminősítésre.
+- 4.3/4.4.4 alatt About Gmail ténylegesen szerepel; 5.1.1 alatt nem, ezért oda nem épül új menüpont.
+- A feltételes missing renderer megmarad. Csak normál UI-ból elérhető, konkrét hibás cél javítandó a T47 ellenőrzés alapján.
 
-A munka a helyben szimulálható beállításokra és szerkesztésre koncentráljon: beállításképernyők és -sorok, szerkesztők, csatolás, kamera- és médiamódok, listaműveletek. Ha egy tétel mindkét csoportba illik, a verziók közötti eltérés dönt: ami egy másik verzióban már helyi működésként kész, az javítandó.
+## Időkeret és státusz
+
+A korábban elhangzott 7–12 és 15–22 session nem igazolt vállalás; a commitokat tartalmazó ötórás ablakok nem mérik a projekt tényleges sessionfogyasztását. A 7 session célkeret lehet, de a teljes listára nincs ilyen garantált határ. A tervezés lezárásához nem kell új időbecslést elfogadtatni; a feladatlista most tételes és véges.
 
 ### Elutasító szövegek egységesítése
 

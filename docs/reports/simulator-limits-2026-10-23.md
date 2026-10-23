@@ -6,6 +6,666 @@ A felmérés a felhasználónak kiírt „nem része a szimulátornak”, „nem
 
 Ez nem az összes inaktív/noop gomb vagy teljes funkcióteljesség auditja. Több funkció egyetlen közös elutasító kezelőt használ, ezért a forrássorok száma nem azonos a hiányzó funkciók számával.
 
+## Lezárt besorolás és véges fejlesztési lista — 2026-10-23
+
+Besorolási alap: `3e1201b86eb457e49b7dd04e79c14c4d1c75e42a`. **A tervezési besorolás elkészült; alkalmazáskódot ebben a körben nem módosítottunk.** Az eredeti 125 konkrét korlátcsoport és a további 28 auditcsoport mind egyedi azonosítót és döntést kapott. A vegyes sorokban a javítandó és meghagyott műveletek külön oszlopban vannak. Az eredeti bizonyítéktáblák lent változatlan pillanatképként maradnak.
+
+Az eredeti 125 csoport döntése: **16 teljesen javítandó, 91 vegyes és 18 teljesen szándékos korlát**. Javításban érintett eredeti csoport: **107**. Emellett három Maps- és két Settings-csoport került be N01–N05 azonosítóval; ezek nem írják át az eredeti 125-ös auditdarabszámot.
+
+A véges munkalista **49 feladatcsomag**: T01–T46 és T49 funkciós feladat, T47 elérhetőségi ellenőrzés, T48 szöveges/regressziós lezárás. A csomag több alkalmazást/verziót vagy műveletet foghat össze, ezért nem 49 gomb, és nem 49 session. **Mind nyitott; a besorolás elkészülte nem funkciójavítás.**
+
+### A döntések értelmezése és a terjedelem határa
+
+- **Javítandó:** a csoport felsorolt helyi műveletei a megadott T-feladatokba kerültek.
+- **Vegyes:** csak a Javítandó rész oszlop készül el; a másik oszlop nevesített korlátként megmarad.
+- **Szándékos korlát:** távoli fiók/pénzügyi/szolgáltatási vagy az átadóban kifejezetten kizárt út. Ez nem azt jelenti, hogy technikailag lehetetlen lenne több demófelületet építeni.
+- **Tartalékág:** ismeretlen cél vagy hiányzó modul védelme; csak a T47-ben leírt, jelenlegi regiszterből elérhető célokat kell ellenőrizni. A guard általános törlése nem feladat.
+- **Kiszűrt találat:** nem aktív hiány. Kivételes függőség: a 4.3-01 Email prefsorokat a T02 belépés megépítésekor kötjük be, új auditcsoportként nem számoljuk őket.
+
+A korábbi átadó szabályai közül a Help/Feedback/Contact us, külső Terms/Privacy/jogi linkek, valódi Add/Remove account/Sign out és pénzügyi műveletek kizárását megtartjuk. Az újabb verzióban meglévő működés akkor átemelendő referencia, ha **helyi funkcióról** van szó; nem kényszeríti minden régi online súgó vagy jogi oldal újraépítését. Chrome Passwords/Autofill a korábban engedett szűkítés miatt marad ki: tudatos terjedelmi döntés, nem hálózati szükségszerűség. A helyi Email szervermező-szerkesztés viszont elkészül; a valódi újfiókos bejelentkezés nem.
+
+A már működő részek nem épülnek újra. Offline/pin/cache/sync elnevezésű helyi művelet csak a szimulátor saját adatmodelljét változtatja; nem jelezhet sikeres távoli szolgáltatást. Nyomtatásnál a helyi előnézet/PDF része a munkának, a fizikai nyomtató nem. A nagyobb Movie Studio/Photo Sphere/Lens Blur feladatokat nem minősítettük át korláttá pusztán azért, hogy kijöjjön egy időkeret.
+
+Ez a kör az auditált elutasító utak véges javítási terve. Nem minden elképzelhető Android-funkció és nem az összes noop/hardver/emulátor megépítése. Új, kívül eső hiány külön N-azonosítóval rögzítendő, és nem kerülhet észrevétlenül valamelyik „egyéb” csomagba. Nincs megmaradt „további funkciók később eldöntendők” kategória.
+
+### Végrehajtási sorrend és függőségek
+
+Induláskor készüljön a közös `tests/browser/limits-regression.mjs` kerete a `flows.mjs` alapján, verzió/app/UI-út/pozitív eredmény adatmezőkkel. Az új tesztet a `package.json` `test:browser` parancsába is fel kell venni. Csak az implementált esetek kerüljenek zöldként jelentett tesztbe; az üres vagy skipelt keret nem igazol elkészült funkciót.
+
+- **A. Alap és az első hét konkrét prioritás:** T01, T02, T03, T04, T05, T06, T07.
+- **B. Közös helyi adatátadás és alapappok:** T08, T09, T10, T11, T12, T13, T14, T15, T16, T17.
+- **C. Google/Play és régi külön appok:** T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30.
+- **D. Média, üzenetek, fájlok és tartalom:** T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45, T46, T49.
+- **E. Elérhetőség és szövegek végső ellenőrzése:** T47, T48.
+
+Az A–E betűk munkafázisok, nem sessionbecslések. Függőségek: T02 magába foglalja a 4.3 Email prefsorokat; T11 import/exportját T44 újrahasználja; T10/T13 a meglévő kamerát és helyi médiát használja; T23/T43 beállításaihoz T25 csak belépést köt; T34 fájlmodelljére épülhet T39/T40. T45 közös nyomtatás/shortcut infrastruktúrája T38/T40 részfeladatai előtt készülhet el. T49 a már kész kameramotorra épül. T48 apponként a funkciós commit után, külön szöveges commitban fut, majd E-ben összesítve zárul.
+
+**Időkeret:** a korábbi 7–12 vagy 15–22 session számot ez a terv nem tekinti igazolt becslésnek. Commit-időablakból nem vezetünk le sessionfogyasztást. A 7 session lehet felhasználói cél, de e teljes terjedelemre nem vállalt határ; a lista tartalmát nem szűkítjük ehhez hallgatólagosan. A lezárt terjedelem mellett az APK pontos eszközkészletének feltárása, implementáció és teszt még munka.
+
+### Feladatcsomagok és készfeltételek
+
+A T-feladat státusza itt vezetendő; az auditcsoport-táblák döntések, nem ismételt státuszlisták. Lezáráskor ide kerüljön a javító commit és a tényleges ellenőrzés. Egy csomag akkor kész, ha minden felsorolt verzió és forráscsoport teljesült. Részleges készültség esetén nevezzük meg a kész verziót, a többi nyitott marad.
+
+#### T01 — 5.1.1 Photos saját szerkesztő
+
+- **Állapot:** Nyitott.
+- **Verziók:** 5.1.1.
+- **Forráscsoportok:** 5.1.1-21.
+- **Elkészítendő és határ:** A shamu gyári Photos/PlusOne APK-jának Edit belépése és az ottani helyi képszerkesztő: eszközválasztás, beállítás, előnézet, mentés és elvetés. A 4.4-es Galéria-híd nem vihető át, mert 5.1-en nincs ilyen gyári app. Az eszközkészletet az adott APK rögzíti, nem a 7.1-es UI másolata.
+- **Kész, ha:** A Photos Edit valódi képet kap; legalább egy módosítás mentve visszajelenik a könyvtárban és újranyitva is megmarad; Cancel nem módosítja az eredetit; Back nem veszti el észrevétlenül a munkát.
+
+#### T02 — 4.3 Email Settings belépés és mögöttes helyi sorok
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.3.
+- **Forráscsoportok:** 4.3-01, 4.3-09, 4.3-15.
+- **Elkészítendő és határ:** A külön Email app beállításfája a mako gyári Email alapján. A már definiált Quick responses, Choose ringtone, Incoming settings és Outgoing settings is ide tartozik, bár az audit idején a belépés elfedte őket. A Remove account szolgáltatási korlát marad.
+- **Kész, ha:** Az Email menüből a saját fiók beállításai nyílnak; sablonválasz, csengőhang és szervermező menthető, újranyitva megmarad. Nincs valódi hitelesítés vagy levélkiszolgáló-kapcsolat.
+
+#### T03 — Naptár beállításai és látható naptárak
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.3-06, 4.4.4-06, 5.1.1-06.
+- **Elkészítendő és határ:** 4.3, 4.4.4 és 5.1.1: Settings helyi általános/fiók/naptár-preferenciái; 4.3/4.4.4: Calendars to display kijelölés. A fiókfelvétel, szerveroldali szinkron és súgó külön korlát marad.
+- **Kész, ha:** A naptár láthatósága ténylegesen szűri az eseményeket; az értesítési/megjelenítési értékek menthetők; visszanavigáláskor az eredeti naptárnézet marad.
+
+#### T04 — Gmail helyi beállítások és címkék
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 2.3.6-02, 4.0.4-01, 4.3-04, 4.4.4-04, 5.1.1-04.
+- **Elkészítendő és határ:** 2.3.6 és 4.0.4: teljes korabeli Settings belépés és helyi preferenciák; 4.0.4 Manage labels/Label settings. 4.3, 4.4.4, 5.1.1: Inbox sound & vibrate, Days of mail to sync, Manage labels; 5.1.1 Vacation responder szerkesztés helyi mentéssel. Valódi szinkron és automatikus email-küldés nincs.
+- **Kész, ha:** Általános és fiókértékek elkülönülnek; választás és címkénkénti értesítés újranyitva megmarad; a szabadságválasz űrlap érvényesít és ment, de nem állít szerveroldali aktiválást.
+
+#### T05 — 4.0.4 kamera videó és panoráma
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.0.4.
+- **Forráscsoportok:** 4.0.4-03.
+- **Elkészítendő és határ:** ICS Video és Panorama módválasztás, a gyári módhoz illő felvételi folyamat, megszakítás és helyi eredmény; a 4.3 meglévő felvételi modellje referencia.
+- **Kész, ha:** Mindkét mód a kamera látható választójából nyitható; indul/leáll vagy végigvezet a panorámán; a befejezett média megnyitható a Galériában; Cancel nem hoz létre elemet.
+
+#### T06 — 5.1.1 Gmail általános fájlcsatolás
+
+- **Állapot:** Nyitott.
+- **Verziók:** 5.1.1.
+- **Forráscsoportok:** 5.1.1-22.
+- **Elkészítendő és határ:** Attach file bekötése az adott verzió helyi fájlválasztójába; több fájltípus adatainak átadása, csatolmány megjelenítése és törlése. Az Attach picture megmarad.
+- **Kész, ha:** Kép és nem képfájl is csatolható; név/típus/méret helyes; Cancel és csatolmánytörlés működik; a piszkozatot nem nullázza új megosztás.
+
+#### T07 — Chrome helyi kategóriák, pontos verziónkénti körrel
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.3-02, 4.4.4-02, 5.1.1-02.
+- **Elkészítendő és határ:** 4.3/4.4.4/5.1.1: Search engine, Accessibility, Content/Site settings, Bandwidth management/Reduce data usage és a meglévő Privacy alatti Do Not Track. 4.3: Developer tools; 4.4.4/5.1.1: Home page; 5.1.1: Merge tabs and apps és Touch to Search. A forrásbeli kulcsok: search_engine, accessibility, content, bandwidth, devtools, homepage, tabs_apps, dnt, contextual. Passwords, Autofill, Sign in, Help és Legal information e körben meghagyott korlát.
+- **Kész, ha:** A felsorolt kategóriák saját korabeli oldalt nyitnak; értékeik menthetők; ahol a helyi böngésző viselkedését érintik (kezdőlap, szövegmérték, JavaScript stb.), a hatás ellenőrzött. Adattömörítés vagy távoli hibakeresés aktív hálózati működését nem színleli.
+
+#### T08 — Szövegkijelölés a Gingerbread appokban
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.3.6.
+- **Forráscsoportok:** 2.3.6-01, 2.3.6-02.
+- **Elkészítendő és határ:** 2.3.6 böngésző Select text és Gmail beszélgetés Select text: a megjelenített szöveg kijelölése és másolási művelete. Nem a böngésző teljes Android-szövegkezelő rendszerének újraírása.
+- **Kész, ha:** Látható szövegrész kijelölhető és kimásolható asztali egérrel, illetve telefonszélességen; kilépés visszaadja a szokásos görgetést.
+
+#### T09 — Email helyi szervermezők és hiányzó prefsorok
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.3.6, 4.0.4, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 2.3.6-03, 4.0.4-19, 4.4.4-01, 4.4.4-09, 5.1.1-01, 5.1.1-09.
+- **Elkészítendő és határ:** 2.3.6 Incoming/Outgoing settings. 4.0.4, 4.4.4, 5.1.1 Quick responses, Choose ringtone, Incoming/Outgoing settings. 4.3 ugyanezt a T02 keretében kapja meg. A 2.3.6 újfiókos Manual setup és a Remove account továbbra is valódi fiókműveleti korlát.
+- **Kész, ha:** Sablonválasz hozzáadás/szerkesztés, csengőhangválasztás és helyi szervermező-validáció/mentés működik; jelszó nem kerül tesztlogba; valós email-fiókot nem hoz létre.
+
+#### T10 — Névjegykép és Hangouts kamerás csatolás
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.3.6, 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 2.3.6-05, 4.3-08, 4.4.4-08, 5.1.1-08.
+- **Elkészítendő és határ:** 2.3.6 névjegyszerkesztő Take photo; 4.3/4.4.4/5.1.1 Hangouts Take photo. A már meglévő helyi kamerafolyamat bekötése az eredmény fogadójába, nem új kameramotor.
+- **Kész, ha:** A felvétel a megfelelő névjegyhez/beszélgetéshez tér vissza; a kép megjelenik és menthető; megszakításkor nincs üres kép vagy új beszélgetés.
+
+#### T11 — Névjegyek helyi menüműveletei
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.0.4, 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.0.4-02, 4.3-10, 4.4.4-10, 5.1.1-10, 5.1.1-15.
+- **Elkészítendő és határ:** 4.0.4, 4.3, 4.4.4, 5.1.1: Share (vCard/chooser), Place on Home screen, Contacts to display, Import/export és Settings. Set ringtone a 4.0.4/4.3/4.4.4 látható sorain. A fizikai SIM-re írás és Accounts/Help nem része; a helyi fájlimport/export igen.
+- **Kész, ha:** A címzett helyes névjegyadatot kap; a shortcut megnyitja a névjegyet; listaszűrő és csengőhang megmarad; vCard ki-/beolvasás nem duplikál és nem veszít mezőket észrevétlenül.
+
+#### T12 — Maps/Navigation helyi beállítások és mentett elemek
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 2.3.6-06, 2.3.6-16, 2.3.6-17, 4.0.4-16, N01, N02, N03.
+- **Elkészítendő és határ:** 2.3.6 Maps Labs/Cache settings, Navigation Settings; rétegek Transit Lines/Bicycling/Wikipedia helyi mintarétege; Places Add kategória. 4.0.4 Maps Settings és Latitude előző/következő helyi elem. A triage során külön azonosított 4.3 My Places, 5.1.1 Your places és a három verzió Maps Settings sorai is itt szerepelnek (N01–N03). Latitude Add friends, valós forgalom, hálózati térképletöltés és hangfelismerés nem része. 2.3.6 Galéria Show on map a helyi Maps-pontra ad át.
+- **Kész, ha:** A réteg láthatóan megváltozik, a helyi helylista és kategória menthető, a navigációs választások megmaradnak. Az üres helyi cache törlése nem állít távoli letöltést.
+
+#### T13 — Gingerbread MMS mellékletek és Jelly Bean hanglejátszás
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.3.6, 4.3.
+- **Forráscsoportok:** 2.3.6-07, 2.3.6-08, 4.3-17.
+- **Elkészítendő és határ:** 2.3.6: video kiválasztás/felvétel, audio kiválasztás/felvétel, slideshow összeállítás és a képmelléklet View. 4.3: az audio editor Play gombja és a kirajzolt helyi mellékletforrások bekötése. Valódi MMS-küldés nem része.
+- **Kész, ha:** A kiválasztott vagy felvett helyi média megjelenik, lejátszható, cserélhető és törölhető; slideshow sorrendje menthető; küldés csak a meglévő helyi beszélgetésmodellben történik.
+
+#### T14 — 2.3.6 Zene helyi fájlműveletei
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.3.6.
+- **Forráscsoportok:** 2.3.6-09.
+- **Elkészítendő és határ:** Use as ringtone és Delete a szám/lejátszó menüjében; a helyi demókönyvtár módosítása és a Beállítások csengőhangértékének összekötése.
+- **Kész, ha:** A választott szám lesz a mentett csengőhang; törlés megerősítéssel a megfelelő számot távolítja el; érvényes következő szám/üres lista állapot marad.
+
+#### T15 — 2.3.6 Car Home és Dock settings
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.3.6.
+- **Forráscsoportok:** 2.3.6-10, 2.3.6-14.
+- **Elkészítendő és határ:** Car Home Settings és Desk clock Dock settings korabeli helyi preferenciái, köztük az app által kezelt éjszakai/dokkolt viselkedés. Fizikai dokkoló/Bluetooth kapcsolat nem készül.
+- **Kész, ha:** A menü saját beállításoldalt nyit; az értékek menthetők; az éjszakai/nézetértékek a demón belül érvényesülnek.
+
+#### T16 — 2.3.6 Google Voice helyi beállítások
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.3.6.
+- **Forráscsoportok:** 2.3.6-13.
+- **Elkészítendő és határ:** A Settings út helyi értesítési, hang- és megjelenítési preferenciái a crespo gyári APK alapján. Balance, fizetés, szolgáltatói aktiválás és Help korlát marad.
+- **Kész, ha:** A Settings saját oldalt nyit és helyi értékeket ment; nem kéri valódi Google Voice aktiválását és nem állít át szolgáltatói híváskezelést.
+
+#### T17 — Talk helyi beszélgetés- és beállításműveletei
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.3.6, 4.0.4.
+- **Forráscsoportok:** 2.3.6-15, 4.0.4-08.
+- **Elkészítendő és határ:** 2.3.6 Settings és Add to chat a demó névjegyeivel. 4.0.4 Talk settings, Display options, Friend info és Add to chat. Sign out/Help/Feedback és valódi voice/video hívás korlát marad.
+- **Kész, ha:** A résztvevőválasztó módosítja a helyi beszélgetés résztvevőit; információ megnyílik; nézet- és értesítési beállítás menthető. Nem jelenik meg fiktív valós híváskapcsolat.
+
+#### T18 — Books helyi könyvtári műveletek
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.3.6, 4.0.4.
+- **Forráscsoportok:** 2.3.6-18, 4.0.4-10.
+- **Elkészítendő és határ:** 2.3.6 About és Manage eBooks helyi könyvkezelő. 4.0.4 Search, About the book, Share, Available offline/Make available offline, Read aloud és Refresh. A valódi áruházi beszerzés, Accounts és Help nem része; Read aloud a demószöveget használja és megállítható.
+- **Kész, ha:** A keresés a helyi könyveket szűri; könyvadatok helyesek; offline jelölés és könyvtárválasztás megmarad; megosztás a megfelelő könyvazonosítót kapja; felolvasás nem marad futva kilépés után.
+
+#### T19 — Earth helyi eszközök és beállítások
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 2.3.6-18, 4.0.4-16, 4.3-20, 4.4.4-20, 5.1.1-27.
+- **Elkészítendő és határ:** 2.3.6 Settings; 4.0.4 Search, Layers, North up, My Location, Settings; 4.3/4.4.4/5.1.1 Reset to north, My location, Share és Settings/drawer beállításoldal. A jelenlegi demótérkép/földgömb és előre tárolt helyek, nem élő GPS vagy új online földgömbmotor. Help/Feedback/Tutorial/Terms webes út korlát marad.
+- **Kész, ha:** A keresett mintapont kiválasztódik, hely/irány/réteg ténylegesen változik a nézetben; Share a jelenlegi helyet adja át; preferenciák menthetők.
+
+#### T20 — YouTube helyi műveletek
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 2.3.6-19, 4.0.4-09, 4.3-20, 4.4.4-20, 5.1.1-27.
+- **Elkészítendő és határ:** 2.3.6 Settings. 4.0.4 Search, Record helyi kameraeredménnyel, Add to helyi lista, Share, csatornaoldal és Settings. 4.3 Add to, Share, Dislike, Copy URL és Settings; 4.4.4/5.1.1 Settings. Nincs valódi upload, stream, Flag/Feedback/Help vagy fiókművelet.
+- **Kész, ha:** A demóvideók kereshetők; helyi lista és értékelés megmarad; URL másolás/megosztás helyes; a rögzített demóvideó helyi elemként nyitható; beállítások menthetők.
+
+#### T21 — Market/Play Store helyi megosztás és szűrés
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 2.3.6-21, 4.0.4-06, 4.3-11, 4.4.4-11, 5.1.1-11, 5.1.1-34.
+- **Elkészítendő és határ:** 2.3.6 Developer Info helyi adatlap, Sharing, Market content és PIN-szűrés. 4.0.4 Content filtering/PIN. 4.3/4.4.4/5.1.1 Share. 5.1.1 READ MORE helyi leírás és Send email átadás a helyi levélírónak. Redeem, vásárlás, fiók, People, Flag és webes jogi/súgólinkek korlát maradnak.
+- **Kész, ha:** A tartalomszűrő/PIN valóban szabályozza a demólistát; Share és email a megfelelő app metaadatait viszi; READ MORE megmutatja a teljes tárolt leírást.
+
+#### T22 — 4.0.4 Play Music helyi keresés, mix és beállítások
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.0.4.
+- **Forráscsoportok:** 4.0.4-05.
+- **Elkészítendő és határ:** Search music, Make instant mix a helyi zenékből és Settings helyi preferenciái. Help és hálózati fiók/szinkron nem része.
+- **Kész, ha:** Keresés szűr, mix nem üres ha van zene és lejátszható; beállítások mentve újranyitáskor megmaradnak; nem állít szerveroldali ajánlást.
+
+#### T23 — Google+ helyi posztolás és beállítások
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.0.4, 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.0.4-07, 4.3-14, 4.3-20, 4.4.4-14, 4.4.4-20, 5.1.1-14, 5.1.1-27.
+- **Elkészítendő és határ:** 4.0.4 New post. 4.3 Photo/Check in/Mood/Write, New post, Share photos, Share your location, Reshare, értesítési lista és Settings. 4.4.4 a kirajzolt poszt/értesítés/új bejegyzés műveletei és Settings; 5.1.1 Settings. Google Settings Google+ belépés ezekre irányít. A poszt és hely helyi demóadat, nem publikálás.
+- **Kész, ha:** Szöveg/kép/hely poszt helyben létrejön, újranyitva megmarad; Reshare és értesítési lista értelmes helyi eredményt ad; Cancel nem posztol; fiók és Feedback/Help korlát marad.
+
+#### T24 — 4.0.4 Play Movies helyi offline kezelés
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.0.4.
+- **Forráscsoportok:** 4.0.4-11.
+- **Elkészítendő és határ:** Manage offline rentals helyi mintaelem-listája, Settings helyi preferenciák és Retry natív offline hibaállapot újbóli megnyitással. Valódi kölcsönzés, Accounts, stream és támogatás nem része.
+- **Kész, ha:** A helyi offline lista és beállítás menthető; Retry visszajut az adott elem valós demó/offline állapotába generikus szimulátor-toast nélkül; nem állít sikeres hálózati lejátszást.
+
+#### T25 — Google keresés helyi beállítások
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.0.4, 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.0.4-12, 4.3-14, 4.4.4-14, 5.1.1-14.
+- **Elkészítendő és határ:** 4.0.4 Searchable items. 4.3 Google Now, Notifications, My stuff, Voice, Phone search, Privacy & accounts helyi részei. 4.4.4/5.1.1 a Google Settings Play Games belépése a T43 helyi beállítására mutat; Google+ a T23-ra. A webes Ads by Google/Ads Settings/Learn more és valódi fiók/személyre szabás marad korlát.
+- **Kész, ha:** A kereshető források kijelölése szűri a helyi keresést; értesítés/Now/saját mintatartalom beállítása menthető; a Google Settings belépések helyes app-oldalra térnek vissza.
+
+#### T26 — 4.0.4/4.3 Google+ Messenger helyi beszélgetések
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.0.4, 4.3.
+- **Forráscsoportok:** 4.0.4-13, 4.3-22.
+- **Elkészítendő és határ:** Beszélgetés megnyitása, New conversation és Settings a mintanévjegyekkel; meglévő helyi üzenetmodellre építve. Nincs valódi Google+ üzenetküldés, Sign out, Help vagy Feedback.
+- **Kész, ha:** A listáról megnyíló szál és az új helyi szál üzenetet fogad és ment; megfelelő címzettek és visszanavigálás; beállítás megmarad.
+
+#### T27 — 4.0.4/4.3 Movie Studio helyi projektek
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.0.4, 4.3.
+- **Forráscsoportok:** 4.0.4-14, 4.3-22.
+- **Elkészítendő és határ:** Create new project névvel, helyi kép/videó hozzáadás, idővonalon sorrend/csonkolás, előnézet, projektmentés/újranyitás/törlés a gyári VideoEditor UI alapján. Ez egy önálló nagyobb szerkesztőfeladat; nem soroljuk át szolgáltatási korláttá az időigény miatt. Új natív kodek/MP4 renderelő nem része; a helyi projekt és előnézet igen.
+- **Kész, ha:** A létrehozott projekt két médiaelemmel menthető és újranyitva visszaáll; sorrend/csonkolás láthatóan hat az előnézetre; törlés és üres projekt kezelése működik.
+
+#### T28 — 4.0.4 Navigation/Places helyi választók
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.0.4.
+- **Forráscsoportok:** 4.0.4-15.
+- **Elkészítendő és határ:** Navigation Contacts és Starred places; Places keresés és Restaurants/Coffee/Bars/Hotels/Attractions/ATMs/Gas stations kategóriák a már tárolt helyekből. Speak destination az offline hangszolgáltatás korlátja marad. A Type destination már működik.
+- **Kész, ha:** Névjegy/mentett hely kiválasztása a létező útvonalkezelőbe ad célt; kategória és keresés helyi találatot/üres állapotot ad; Back a választóhoz tér vissza.
+
+#### T29 — 4.0.4 System updates és TalkBack helyi felülete
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.0.4.
+- **Forráscsoportok:** 4.0.4-17.
+- **Elkészítendő és határ:** System updates eredeti frissítési állapotképernyő; a tényleges OTA letöltés/telepítés nem része. TalkBack szolgáltatásrészletek, engedélyezési figyelmeztetés és saját prefsorok a maguro APK alapján; új, teljes rendszerű képernyőolvasó-motor nem része.
+- **Kész, ha:** Nem a generikus elutasítás jelenik meg: az update oldal őszinte offline állapotot mutat, a TalkBack helyi engedélyezés/konfiguráció menthető és a kapcsoló/szolgáltatáslista konzisztens.
+
+#### T30 — Settings dev-info valódi helyi céljai
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.0.4, 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.0.4-18, 5.1.1-18, N04, N05.
+- **Elkészítendő és határ:** 4.0.4 Music effects választó; 4.3/4.4.4 Music effects és Wi-Fi Install certificates; 5.1.1 Wi-Fi Install certificates. A 4.0.4 közös kódjában definiált certs sor az ICS visszatérési ágban nincs kirajzolva, oda nem kerül új Wi-Fi sor. 5.1.1-ben a régi Music effects renderút helyett az LP Sound & notification aktív, oda sem találunk ki új sort. A tanúsítványfolyamat a demó fájltárat és hitelesítő-tárat kezeli, nem a host rendszerét. A readonly/információs dev-info céloknak statikus részlet/noop kell, új hardverfunkció nem.
+- **Kész, ha:** A zenei effektválasztó menthető; helyi minta tanúsítvány import és hibás fájl validáció működik; a readonly adatok nem adnak félrevezető hiányüzenetet. A host rendszer konfigurációja változatlan.
+
+#### T31 — 4.3/4.4.4 Galéria videó Trim és Mute
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.3, 4.4.4.
+- **Forráscsoportok:** 4.3-16, 4.4.4-15.
+- **Elkészítendő és határ:** A meglévő helyi videóhoz vágási tartományválasztó, előnézet, mentés másolatként és némított másolat a gyári Galéria szerint. A fizikai média újrakódolása csak a projekt meglévő médiamodelljének szintjén szükséges; nem elég egy sikertoast.
+- **Kész, ha:** A mentett elem tartománya/hangállapota ténylegesen visszaköszön a lejátszóban és újranyitva is megmarad; eredeti megmarad; érvénytelen tartomány nem menthető.
+
+#### T32 — Hangouts és 5.1 Messenger helyi opciók
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.3-07, 4.4.4-07, 5.1.1-07, 5.1.1-36.
+- **Elkészítendő és határ:** 4.3/4.4.4/5.1.1 Hangouts Settings, Invites helyi üres/minta lista, People & options és Add people mintanévjegyekből; 5.1.1 Blocked people kezelése. 5.1.1 SMS/Messenger People & options értesítéskapcsoló. A Google+ photos távoli könyvtár és valódi Video call korlát marad; kameracsatolás T10.
+- **Kész, ha:** Résztvevő és tiltás változtatása menthető; értesítéskapcsoló állapota hat a helyi értesítési modellre; a látható listák megfelelő elemet mutatnak; nincs puszta „notifications stay on” helyettesítés.
+
+#### T33 — 4.3–5.1.1 Óra beállítások és városkeresés
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.3-13, 4.4.4-13, 5.1.1-13, 5.1.1-23.
+- **Elkészítendő és határ:** 4.3/4.4.4/5.1.1 More options valódi menüje és Settings helyi preferenciák; 5.1.1 Cities keresés a meglévő városlistában. Help korlát marad. A Cities-keresés két auditcsoportja ugyanaz a munka.
+- **Kész, ha:** Órastílus/otthoni időzóna/ébresztőértékek a gyári verziónak megfelelően menthetők; 5.1 keresés szűr és kiválasztható a találat; kiválasztott világóra megjelenik.
+
+#### T34 — 4.3–5.1.1 Drive helyi fájlműveletek
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.3-18, 4.4.4-19, 5.1.1-25.
+- **Elkészítendő és határ:** 4.3 New, Search, overflow, mappa megnyitás, fájl Share/overflow; 4.4.4 Create/Add new, Refresh, Filter by, Sort by, Settings és fájlmenü; 5.1.1 Create, Refresh, Filter by, Sort by és az elutasító új/keresés vezérlők. Műveletek: helyi mappa/fájl létrehozás, név/move/delete/offline jelölés, megosztás a helyi chooserrel. Product Tour és webes support nem része.
+- **Kész, ha:** Fájllétrehozás/mappa és keresés/szűrés/rendezés működik a tárolt fájllistán; célzott fájlműveletek menthetők, a megosztott tartalom helyes. Refresh újraolvassa a helyi állapotot, nem színlel felhőszinkront.
+
+#### T35 — Keep helyi megosztás, felvétel és beállítás
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.3-19, 4.4.4-20, 5.1.1-26.
+- **Elkészítendő és határ:** 4.3 New recording, Share és Settings; 4.4.4 Share/Settings; 5.1.1 Make a copy, Send és New recording. A hangfelvétel a meglévő demófelvételi modellből jegyzetcsatolmányt hoz létre. Help/Feedback nem része.
+- **Kész, ha:** Másolat új azonosítóval készül; Share/Send a jegyzet tartalmát adja át; a hangjegyzet visszajátszható és megmarad; helyi preferenciák menthetők.
+
+#### T36 — Currents/Magazines/Newsstand helyi tartalmi utak
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.3-21, 4.4.4-21, 5.1.1-32.
+- **Elkészítendő és határ:** 4.3 Currents Search/Sync now/Settings, Featured/Saved/Add edition helyi mintaelemek; Play Magazines keresés, magazin megnyitás, Refresh, On device only, Settings. 4.4.4 Newsstand Search, My News/My Magazines/Saved/Explore, Settings, On device only. 5.1.1 Newsstand Search/My Library/Bookmarks/Explore/Settings. Online előfizetés és Help korlát marad.
+- **Kész, ha:** A mintacikk/magazin megnyílik; keresés szűr; mentés/könyvjelző/saját kiadás megmarad; szekcióváltás külön helyi tartalmat vagy korrekt üres állapotot mutat; nem fiktív hálózati sync.
+
+#### T37 — 4.4.4/5.1.1 Google Now emlékeztetők
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.4.4-18, 5.1.1-24.
+- **Elkészítendő és határ:** Eseménykártya menü releváns helyi elrejtés/szerkesztés; Where helyi mintapontválasztó és One-time helyett ismétlődés mentése. Nem folyamatos GPS/geofencing vagy élő naptárszolgáltatás.
+- **Kész, ha:** Kártyaművelet tényleg változtatja a listát; hely és ismétlés az emlékeztetőben mentve visszajelenik; megszakítás és szerkesztés stabil; helyalapú háttérriasztást nem állít valósnak.
+
+#### T38 — 4.4.4/5.1.1 Photos helyi menüműveletek
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.4.4-17, 5.1.1-21.
+- **Elkészítendő és határ:** Slideshow, Download a helyi médiatárba, Select photos többes kijelöléssel és az APK szerinti helyi Settings értékek. Az online backup/bejelentkezés nem része. Print T45, 5.1 Edit T01. 4.4 Edit működő regressziós referencia marad.
+- **Kész, ha:** A slideshow léptet és leáll; kijelölés helyes elemekre vonatkozik; helyi mentés megnyitható; Settings megmarad; a már működő 4.4 szerkesztés nem romlik el.
+
+#### T39 — 4.4.4 Quickoffice helyi fájlforrások
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.4.4.
+- **Forráscsoportok:** 4.4.4-22.
+- **Elkészítendő és határ:** Drive a demó Drive-listával, Device a helyi tárral; overflow adott APK-ban szereplő helyi rendezési/nézet/beállítás műveletei. Valós Google Drive hozzáférés, fiók és webes support nem része. Create new file már működik.
+- **Kész, ha:** Mindkét forrásból megfelelő helyi dokumentum nyílik meg; a menü tényleges helyi műveletet végez; új fájl továbbra is létrehozható; Cancel visszatér az eredeti listához.
+
+#### T40 — 5.1.1 Docs/Sheets/Slides listák és fájlmenük
+
+- **Állapot:** Nyitott.
+- **Verziók:** 5.1.1.
+- **Forráscsoportok:** 5.1.1-29, 5.1.1-30.
+- **Elkészítendő és határ:** Drawer helyi gyűjteményei, View as Grid, Sort by, Open document helyi picker, Refresh; Share link helyi dokumentumazonosítóval, Send file, Keep on device, Move, Add to home screen. Print T45. Rename/Remove meglévő működését védeni kell; teljes irodai fájlformátum-motor és valós linkjogosultság nincs.
+- **Kész, ha:** Mindhárom appban listaállapot, rendezés és offline jelölés mentve helyes; Move célmappát változtat; küldés a dokumentum tartalmát viszi; shortcut a jó dokumentumot nyitja; Rename/Remove továbbra is működik.
+
+#### T41 — 5.1.1 Fit helyi adatbevitel
+
+- **Állapot:** Nyitott.
+- **Verziók:** 5.1.1.
+- **Forráscsoportok:** 5.1.1-31.
+- **Elkészítendő és határ:** Add activity, Add your weight és Settings helyi értékek. Google Fit felhő, élő lépésszámláló és külső szenzor nem része.
+- **Kész, ha:** Érvényes aktivitás/súly hozzáadása megváltoztatja a helyi listát/összesítést és újranyitva megmarad; negatív/hibás érték nem menthető; helyi cél és mértékegység beállítás érvényesül.
+
+#### T42 — 5.1.1 News & Weather helyi szekciókezelés
+
+- **Állapot:** Nyitott.
+- **Verziók:** 5.1.1.
+- **Forráscsoportok:** 5.1.1-28.
+- **Elkészítendő és határ:** Open in browser a tárolt cikk URL-jének átadásával a szimulált böngészőnek; Change editions és Manage sections a helyi mintaszekciókon. Nem új hírletöltés.
+- **Kész, ha:** A megfelelő cikk/URL nyílik; kiadás és szekcióválasztás a helyi tabokat/listát ténylegesen módosítja és mentve visszaáll.
+
+#### T43 — 4.3–5.1.1 Play-appok helyi overflow és könyvtárak
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.3, 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.3-12, 4.4.4-12, 4.4.4-14, 5.1.1-12, 5.1.1-14.
+- **Elkészítendő és határ:** Music: helyi keresési More listák, overflow sor/album/queue műveletek, helyi Settings. Movies: helyi pin/offline jelölés, TV-mintaelem megnyitás, Settings. Books: könyvtár/olvasó overflow helyi könyvadatok/megosztás/offline/Sort/Settings. Games: mintajáték/mintajátékos részlet és overflow, helyi Settings. Cast, Search online, számlázás és tényleges külső játékindítás marad korlát. A műveletkészletet e négy felsorolás zárja, nem általános „minden pa-unsupported”.
+- **Kész, ha:** A More lista nem csonkolt találatot mutat; helyi média/listaművelet és offline jelölés menthető; könyvrendezés, mintajátékos-részlet és apponkénti preferencia működik. Külső játék futtatását nem színleli.
+
+#### T44 — 5.1.1 Telefon beállítások és Import/export
+
+- **Állapot:** Nyitott.
+- **Verziók:** 5.1.1.
+- **Forráscsoportok:** 5.1.1-15.
+- **Elkészítendő és határ:** Import/export a T11 közös helyi névjegyfolyamatára mutat; Settings a shamu gyári Dialer helyi megjelenítési/hang/hívásbeállítási értékeivel. Valódi szolgáltatói hívásátirányítás, SIM-írás nincs.
+- **Kész, ha:** A Telefon saját menüjéből mindkét helyi cél megnyílik; preferenciák menthetők és a helyi tárcsázóban alkalmazhatók; Call History/New contact működése megmarad.
+
+#### T45 — 4.4.4/5.1.1 helyi nyomtatási folyamat és webshortcut
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.4.4-03, 4.4.4-15, 4.4.4-17, 5.1.1-03, 5.1.1-21, 5.1.1-22, 5.1.1-30.
+- **Elkészítendő és határ:** 4.4.4 Galéria/Photos/Chrome Print; 5.1.1 Photos/Gmail/Chrome/Docs/Sheets/Slides Print: saját korabeli PrintSpooler előnézet, helyi Save as PDF, megszakítás. 4.4.4/5.1.1 Chrome Add to homescreen. A 6/7 print modul adatátadási referencia, nem átmásolandó UI. Fizikai nyomtató és print service telepítés nem része.
+- **Kész, ha:** Az előnézet a forrás képét/szövegét kapja, a mentett helyi PDF elem megnyitható; Cancel nem ment; webshortcut a jó URL-t nyitja. Minden felsorolt belépés külön teszteset.
+
+#### T46 — Gmail helyi About oldal
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.3, 4.4.4.
+- **Forráscsoportok:** 4.3-05, 4.4.4-05.
+- **Elkészítendő és határ:** 4.3 Gmail 4.5.1 és 4.4.4 Gmail 4.6.1: a már kirajzolt About Gmail sor helyi verzió/build oldala. 5.1.1-en a headers csak general/account, ezért ott nincs About feladat és nem kerül be új menüpont. Welcome/Learn more és külső jogi/súgólink marad korlát.
+- **Kész, ha:** 4.3 és 4.4.4 alatt a létező About Gmail sor a megfelelő gyári verziót mutatja; 5.1.1-en nem jelenik meg új, forrás nélküli About menüpont.
+
+#### T47 — Tartalékágak egyszeri elérhetőségi ellenőrzése
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.1, 6.0.1, 7.1.2.
+- **Forráscsoportok:** 2.1-02, 2.1-03, 2.1-04, 6.0.1-01, 6.0.1-02, 6.0.1-03, 6.0.1-04, 7.1.2-01, 7.1.2-02, 7.1.2-03, 7.1.2-04.
+- **Elkészítendő és határ:** 2.1 összes jegyzett app/widget/Settings-cél; 6.0.1 app/widget/Settings/Quick Settings/Now célok; 7.1.2 app/widget/Settings/app-prefs célok. A 4.3/4.4 Safety information és ismerten inaktív ágak megtartják besorolásukat. Ez véges belépési-/preferencia-/providerjegyzék bejárás, nem minden lehetséges hibás intent generálása.
+- **Kész, ha:** A jelenlegi jegyzékből elérhető célokhoz nincs indokolatlan missing fallback. Az ismeretlen célokra továbbra is van védelmi renderer. Ha konkrét normál UI-út hibás, útvonallal és új azonosítóval dokumentálandó; nem indokol általános fallbacktörlést.
+
+#### T48 — Elutasító szövegek és regressziós kör lezárása
+
+- **Állapot:** Nyitott.
+- **Verziók:** 2.1, 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1, 6.0.1, 7.1.2.
+- **Forráscsoportok:** Az összes megmaradó üzenet és javított út; közös lezáró feladat.
+- **Elkészítendő és határ:** A megmaradó azonos értelmű F/U/N/D/V/C/H üzenetek közös lefordított kulcsra vezetése; indokolt kamera/segélyhívás/offline/fallback külön szöveg maradhat. A projekt öt UI-nyelvén legyen feloldható szöveg. Apponként a funkciós commit után, végül maradékellenőrzés. A közös regressziós teszt bevezetése induláskor történik, nem csak a végén.
+- **Kész, ha:** Nincs nyers undefined/fordítatlan kulcs vagy azonos jelentésű véletlen változat; a szándékos korlát nem lett eltüntetve sikertoasttal. A javított utak pozitív eredményt, perzisztenciát és Cancel/Back működést is ellenőrző közös tesztben szerepelnek.
+
+#### T49 — 4.4.4 Photo Sphere és 5.1.1 Photo Sphere/Lens Blur
+
+- **Állapot:** Nyitott.
+- **Verziók:** 4.4.4, 5.1.1.
+- **Forráscsoportok:** 4.4.4-16, 5.1.1-19.
+- **Elkészítendő és határ:** A gyári kamera vezetett Photo Sphere felvételi útja 4.4.4/5.1.1-en, Lens Blur 5.1.1-en: módhoz illő útmutatás, előrehaladás, megszakítás és helyi mentett eredmény; a meglevő 6/7 guided capture modell referenciaként. Nincs új fizikai szenzorfúzió, általános képfűző vagy valós mélységrekonstrukció. A mentett helyi kép és a módnak megfelelő nézeti/szerkesztési adatok igen.
+- **Kész, ha:** A folyamat normál módválasztásból végigjárható; eredmény a könyvtárban megnyitható és a módhoz tartozó helyi megjelenítést kapja; Lens Blur hatása módosítható a mentett demóképen; Cancel nem ment. Nem elég a mód nevének átírása vagy sikerüzenet.
+
+### Csoportonkénti döntések
+
+Az azonosító a verzió és az eredeti audit adott verzión belüli sorszáma. Így a forrás és az eredeti részletes leírás a lenti bizonyítéktáblában egyértelműen visszakereshető. A „Meghagyott rész” minden sorban tudatos döntés; nem elfelejtett feladat.
+
+#### Döntések — 2.1
+
+| Csoport | App | Besorolás | Javítandó rész / feladat | Meghagyott rész | Indok / pontosítás |
+|---|---|---|---|---|---|
+| 2.1-01 | Android Market | Szándékos korlát | — | Vásárlás | Valódi fizetés; szándékos szolgáltatási korlát. |
+| 2.1-02 | Beállítások | Tartalékág | Normál Settings-célok véges bejárása — T47 | Ismeretlen intent/típus védelmi renderer | Tartalékág, nem bizonyított aktív hiány. |
+| 2.1-03 | Kezdőképernyő | Tartalékág | Jegyzett widgetek ellenőrzése — T47 | Ismeretlen widget fallback | Tartalékág. |
+| 2.1-04 | Rendszer | Tartalékág | Jegyzett app/overlay célok ellenőrzése — T47 | Ismeretlen képernyő fallback | Moduljegyzék korábban rendben; általános guard megmarad. |
+| 2.1-05 | Fiókok, Email, Facebook, böngésző | Szándékos korlát | — | Valódi belépés, élő internet/szolgáltatás | Offline korlát, nem új helyi funkciófeladat. |
+
+#### Döntések — 2.3.6
+
+| Csoport | App | Besorolás | Javítandó rész / feladat | Meghagyott rész | Indok / pontosítás |
+|---|---|---|---|---|---|
+| 2.3.6-01 | Böngésző | Javítandó | Böngésző Select text — T08 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 2.3.6-02 | Gmail | Vegyes | Gmail Settings; beszélgetés Select text — T04, T08 | Help | Vegyes: a helyi művelet javítandó, az online súgó korlát. |
+| 2.3.6-03 | Email | Vegyes | Incoming/Outgoing settings helyi szerkesztése — T09 | Valódi szerverkapcsolat | Helyi működés; a generikus elutasítás nem indokolt. |
+| 2.3.6-04 | Email | Szándékos korlát | — | Új fiók Manual setup | Újfiókos belépési folyamat; az átadó fiókműveleti kizárása érvényes, a meglévő fiók helyi mezői T09. |
+| 2.3.6-05 | Névjegyszerkesztő | Javítandó | Take photo → névjegykép — T10 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 2.3.6-06 | Galéria | Javítandó | Show on map → a helyi Maps megfelelő pontja — T12 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 2.3.6-07 | Üzenetek | Vegyes | Video/audio választás és felvétel; slideshow — T13 | Valódi MMS-küldés | Helyi működés; a generikus elutasítás nem indokolt. |
+| 2.3.6-08 | Üzenetek | Javítandó | Csatolt kép View — T13 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 2.3.6-09 | Zene | Javítandó | Use as ringtone; Delete — T14 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 2.3.6-10 | Óra | Vegyes | Dock settings helyi preferenciák — T15 | Fizikai dokkoló kezelése | Helyi működés; a generikus elutasítás nem indokolt. |
+| 2.3.6-11 | Beállítások | Szándékos korlát | — | Add account | Valódi rendszerszintű fiókművelet. |
+| 2.3.6-12 | Beállítások | Szándékos korlát | — | Manage personalization webes fiókoldal | Google-fiók személyre szabás, nem a helyi keresőpreferenciák. |
+| 2.3.6-13 | Google Voice | Vegyes | Google Voice Settings helyi értékek — T16 | Balance; Help; aktiválás/fizetés | Vegyes: lokális prefsor igen, távoli egyenleg nem. |
+| 2.3.6-14 | Car Home | Javítandó | Car Home Settings — T15 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 2.3.6-15 | Talk | Vegyes | Talk Settings; Add to chat helyi résztvevőkkel — T17 | Sign out; Help | Helyi működés; a generikus elutasítás nem indokolt. |
+| 2.3.6-16 | Maps / Navigation | Vegyes | Maps Labs/Cache settings; Navigation Settings helyi része — T12 | Help; Terms; tényleges térképletöltés | Helyi működés; a generikus elutasítás nem indokolt. |
+| 2.3.6-17 | Maps / Latitude / Places | Vegyes | Transit/Bicycling/Wikipedia helyi réteg; Places Add kategória — T12 | Latitude Add friends távoli kapcsolat | Helyi működés; a generikus elutasítás nem indokolt. |
+| 2.3.6-18 | Books / Earth | Vegyes | Books About/Manage eBooks; Earth Settings — T18, T19 | Books Help; online könyvvásárlás | Helyi működés; a generikus elutasítás nem indokolt. |
+| 2.3.6-19 | YouTube | Vegyes | YouTube Settings — T20 | Flag | Helyi működés; a generikus elutasítás nem indokolt. |
+| 2.3.6-20 | News & Weather | Szándékos korlát | — | News terms of service; Mobile privacy policy | Külső jogi tájékoztató linkek. |
+| 2.3.6-21 | Android Market | Vegyes | Developer Info helyi adatok; Sharing; Market content; PIN — T21 | Külső fejlesztői weboldal | A tárolt adatlap és helyi szűrés nem igényel online szolgáltatást. |
+| 2.3.6-22 | Android Market | Szándékos korlát | — | Market Help | Online súgó. |
+| 2.3.6-23 | Zárolás / Telefon | Szándékos korlát | — | Emergency call | Valódi telefonhálózat; offline korlát. |
+
+#### Döntések — 4.0.4
+
+| Csoport | App | Besorolás | Javítandó rész / feladat | Meghagyott rész | Indok / pontosítás |
+|---|---|---|---|---|---|
+| 4.0.4-01 | Gmail | Vegyes | Gmail Settings; Manage labels; Label settings — T04 | Help; Send feedback | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-02 | Névjegyek | Vegyes | Share; ringtone; Home shortcut; lista szűrés/import/export/Settings — T11 | Accounts; Help; fizikai SIM-írás | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-03 | Kamera | Javítandó | Kamera Video; Panorama — T05 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-04 | Billentyűzet / hangbevitel | Szándékos korlát | — | Kiegészítő/online beszédnyelv letöltése | Távoli csomagletöltés és beszédfelismerő szolgáltatás; meglévő helyi nyelvválasztás nem hiányzik. |
+| 4.0.4-05 | Play Music | Vegyes | Play Music Search music; Make instant mix; Settings — T22 | Help | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-06 | Play Store | Vegyes | Play Store Content filtering/PIN — T21 | Accounts; Help | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-07 | Google+ | Javítandó | Google+ New post helyi demóposzt — T23 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-08 | Talk | Vegyes | Talk Friend info; Add to chat; Display options; Settings — T17 | Voice/video chat; Sign out; Help; Feedback | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-09 | YouTube | Vegyes | YouTube Search; Record helyben; Add to; Share; csatorna; Settings — T20 | Valódi upload; Feedback; Help | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-10 | Play Books | Vegyes | Books Search; About the book; Share; offline jelölés; Read aloud; Refresh — T18 | Help; Accounts | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-11 | Play Movies | Vegyes | Movies helyi offline lista; Settings; Retry natív hibaállapot — T24 | Accounts; Help; Contact us; Feedback; valódi kölcsönzés/stream | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-12 | Google keresés | Javítandó | Searchable items — T25 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-13 | Google+ Messenger | Vegyes | Google+ Messenger szál; New conversation; Settings — T26 | Feedback; Help | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-14 | Movie Studio | Vegyes | Movie Studio projekt és helyi szerkesztő — T27 | Új natív kodek/MP4 renderelő | Helyi szerkesztő; a nagyobb munkaigény nem szolgáltatási korlát. |
+| 4.0.4-15 | Navigation / Places | Vegyes | Navigation Contacts/Starred; Places keresés és kategóriák — T28 | Speak destination valódi hangfelismerés | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-16 | Maps / Earth | Vegyes | Maps Settings; Earth Search/Layers/North up/My Location/Settings — T12, T19 | Help; Terms; élő helyadat | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-17 | Beállítások | Vegyes | System updates helyi állapot; TalkBack konfiguráció — T29 | OTA telepítés; Accounts Add/Remove; jogi weboldalak | Vegyes: helyi activity és valódi szolgáltatási művelet elkülönítve. |
+| 4.0.4-18 | Beállítások / fejlesztői és Wi-Fi sorok | Vegyes | Music effects választó; readonly/információs célok megfelelő kezelése — T30 | Host OS tanúsítványtár/hardver átállítása | Az eredeti példa pontosítva: a certs sor definíciója létezik, de az if(ICS) Advanced Wi-Fi visszatérés nem rajzolja ki. Ezért az ICS Wi-Fi tanúsítványsor nem új funkciófeladat. |
+| 4.0.4-19 | Email | Vegyes | Email Quick responses; Choose ringtone; Incoming/Outgoing settings — T09 | Remove account | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.0.4-20 | Zárolás / Telefon | Szándékos korlát | — | Emergency call | Telefonhálózati korlát. |
+| 4.0.4-21 | News & Weather | Szándékos korlát | — | News & Weather jogi linkek | Külső tájékoztató linkek. |
+
+#### Döntések — 4.3
+
+| Csoport | App | Besorolás | Javítandó rész / feladat | Meghagyott rész | Indok / pontosítás |
+|---|---|---|---|---|---|
+| 4.3-01 | Email | Kiszűrt találat | 4.3: az eddig elfedett helyi Email prefsorok a T02 részei — T02 | Remove account | 4.3-ban kiszűrt forráság volt, nem újabb konkrét korlátcsoport; a Settings megnyitásakor ezt is be kell kötni. |
+| 4.3-02 | Chrome | Vegyes | A T07-ben felsorolt pontos kategóriák, továbbá DNT és 5.1 Touch to Search — T07 | Passwords; Autofill; Sign in; Help; Legal information | A Chrome szűkítését a korábbi átadó már megengedte. Passwords/Autofill technikailag lehetne helyi modell, itt tudatos terjedelmi kizárás, nem technikai lehetetlenség. |
+| 4.3-03 | Chrome | Szándékos korlát | — | Help | 4.3-ban ez a csoport csak Help; Print/Home shortcut ebben a menüben nincs. |
+| 4.3-04 | Gmail | Vegyes | Inbox sound & vibrate; Days of mail to sync; Manage labels — T04 | Tényleges szerveroldali sync/automatikus válasz | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.3-05 | Gmail | Vegyes | A ténylegesen kirajzolt About Gmail helyi verzióoldala — T46 | Welcome/Learn more webes út | A gmail.js:68 headers tömbben az About Gmail ténylegesen szerepel; helyi információ, nem online tájékoztató. |
+| 4.3-06 | Naptár | Vegyes | Settings; Calendars to display — T03 | Help/Feedback | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.3-07 | Hangouts | Vegyes | Invites helyi lista; Settings; People & options; Add people — T32 | Help; Feedback | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.3-08 | Hangouts | Vegyes | Take photo → helyi csatolmány — T10 | Google+ photos távoli könyvtár | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.3-09 | Email / Gmail | Vegyes | Sync options → meglévő helyi fiók szinkronpreferenciái — T02 | Help; Help & feedback; valódi szinkron | A helyi választó nem azonos egy szerverrel végzett szinkronizálással. |
+| 4.3-10 | Névjegyek | Vegyes | Share; Home shortcut; lista szűrés/import/export/Settings; Set ringtone — T11 | Accounts; Help; fizikai SIM-írás | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.3-11 | Play Store | Vegyes | Play Store Share — T21 | Redeem; Help; Open source licenses külső link; Flag | A jogi webes link a terv által szándékosan megtartott korlát, nem új jogi tartalomgyűjtési feladat. |
+| 4.3-12 | Play Music / Movies / Books / Games | Vegyes | A T43 zárt Music/Movies/Books/Games helyi műveletlistája — T43 | Cast; online keresés/beszerzés; külső játék tényleges indítása; Help/fiók | Nem minden pa-unsupported ugyanaz: helyi overflow és szolgáltatás külön döntést kapott. |
+| 4.3-13 | Óra | Vegyes | Óra More options menü és Settings — T33 | Help | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.3-14 | Google Settings / Google keresés | Vegyes | Google keresés helyi fejléc-beállítások; Google+ belépés — T25, T23 | Ads by Google/Ads Settings/Learn more; Help; Feedback; távoli fiók | A gms-settings már működő kapcsolóit nem kell újraépíteni. |
+| 4.3-15 | Email | Javítandó | Email Settings és helyi prefsorok — T02 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.3-16 | Galéria | Javítandó | Galéria videó Trim; Mute — T31 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.3-17 | SMS/MMS | Javítandó | MMS audio Play; a kirajzolt helyi mellékletforrások — T13 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.3-18 | Drive | Vegyes | Drive New/Search/mappa/overflow/Share helyi fájlműveletek — T34 | Felhőszinkron és online jogosultságkezelés | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.3-19 | Keep | Vegyes | Keep New recording; Share; Settings — T35 | Send feedback; Help | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.3-20 | Google+ / YouTube / Earth | Vegyes | Google+ helyi poszt/Settings; YouTube helyi lista/megosztás/értékelés/URL/Settings; Earth helyi eszközök — T23, T20, T19 | Online publikálás; YouTube Flag; webes Help/Feedback/Tutorial; Sign out | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.3-21 | Currents / Play Magazines | Vegyes | Currents és Magazines helyi keresés/tartalom/Sync now/Refresh/offline/Settings — T36 | Manage subscriptions; Help; valódi friss tartalomletöltés | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.3-22 | Google+ Messenger / Wallet / Movie Studio | Vegyes | Messenger helyi szál/új szál/Settings; Movie Studio helyi projekt — T26, T27 | Wallet dashboard pénzügyi/fiókszolgáltatás | Vegyes három app: a Wallet nem szolgál ürügyül a két helyi app hiányának megtartására. |
+| 4.3-23 | Sound Search | Szándékos korlát | — | Sound Search fiókválasztás | Valódi fiókművelet. |
+| 4.3-24 | Beállítások | Tartalékág | — | Safety information offline tájékoztató renderút | Tartalék/nem igazolt normál menücél; nincs új javítási feladat. |
+| 4.3-25 | Zárolás / Telefon | Szándékos korlát | — | Emergency call | Telefonhálózati korlát. |
+| 4.3-26 | News & Weather | Szándékos korlát | — | News & Weather jogi linkek | Külső tájékoztatás. |
+| 4.3-27 | Megosztott régi Settings-kód | Kiszűrt találat | — | ICS-only kód ág | Kiszűrt/inaktív; nem kell az ICS felületet Jelly Beanbe bevinni. |
+
+#### Döntések — 4.4.4
+
+| Csoport | App | Besorolás | Javítandó rész / feladat | Meghagyott rész | Indok / pontosítás |
+|---|---|---|---|---|---|
+| 4.4.4-01 | Email | Vegyes | Quick responses; Choose ringtone; Incoming/Outgoing settings — T09 | Valódi szerverkapcsolat | Helyi űrlapok és választók. |
+| 4.4.4-02 | Chrome | Vegyes | A T07-ben felsorolt pontos kategóriák, továbbá DNT és 5.1 Touch to Search — T07 | Passwords; Autofill; Sign in; Help; Legal information | A Chrome szűkítését a korábbi átadó már megengedte. Passwords/Autofill technikailag lehetne helyi modell, itt tudatos terjedelmi kizárás, nem technikai lehetetlenség. |
+| 4.4.4-03 | Chrome | Vegyes | Print helyi előnézet/PDF; Add to homescreen — T45 | Help; inkognitó Learn more | A fizikai nyomtatás helyett a korabeli helyi PrintSpooler/PDF folyamat készül. |
+| 4.4.4-04 | Gmail | Vegyes | Inbox sound & vibrate; Days of mail to sync; Manage labels — T04 | Tényleges szerveroldali sync/automatikus válasz | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.4.4-05 | Gmail | Vegyes | A ténylegesen kirajzolt About Gmail helyi verzióoldala — T46 | Welcome/Learn more webes út | A gmail.js:68 headers tömbben az About Gmail ténylegesen szerepel; helyi információ, nem online tájékoztató. |
+| 4.4.4-06 | Naptár | Vegyes | Settings; Calendars to display — T03 | Help/Feedback | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.4.4-07 | Hangouts | Vegyes | Invites helyi lista; Settings; People & options; Add people — T32 | Help; Feedback | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.4.4-08 | Hangouts | Vegyes | Take photo → helyi csatolmány — T10 | Google+ photos távoli könyvtár | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.4.4-09 | Email / Gmail | Vegyes | Sync options → meglévő helyi fiók szinkronpreferenciái — T09 | Help; Help & feedback; valódi szinkron | A helyi választó nem azonos egy szerverrel végzett szinkronizálással. |
+| 4.4.4-10 | Névjegyek | Vegyes | Share; Home shortcut; lista szűrés/import/export/Settings; Set ringtone — T11 | Accounts; Help; fizikai SIM-írás | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.4.4-11 | Play Store | Vegyes | Play Store Share — T21 | Redeem; Help; Open source licenses külső link; Flag | A jogi webes link a terv által szándékosan megtartott korlát, nem új jogi tartalomgyűjtési feladat. |
+| 4.4.4-12 | Play Music / Movies / Books / Games | Vegyes | A T43 zárt Music/Movies/Books/Games helyi műveletlistája — T43 | Cast; online keresés/beszerzés; külső játék tényleges indítása; Help/fiók | Nem minden pa-unsupported ugyanaz: helyi overflow és szolgáltatás külön döntést kapott. |
+| 4.4.4-13 | Óra | Vegyes | Óra More options menü és Settings — T33 | Help | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.4.4-14 | Google Settings / Google keresés | Vegyes | Google keresés helyi fejléc-beállítások; Google+ belépés; Play Games helyi prefs-belépés — T25, T23, T43 | Ads by Google/Ads Settings/Learn more; Help; Feedback; távoli fiók | A gms-settings már működő kapcsolóit nem kell újraépíteni. |
+| 4.4.4-15 | Galéria | Vegyes | Galéria Trim/Mute; Print helyi PDF-folyamat — T31, T45 | Fizikai nyomtatás | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.4.4-16 | Kamera | Vegyes | Photo Sphere helyi vezetett felvétel és mentés — T49 | Valódi szenzorfúzió/hardveres fotóillesztő | Helyi kameramód; részletes készfeltétel a T49 alatt. |
+| 4.4.4-17 | Photos | Vegyes | Photos Slideshow/Download/Select photos/Settings; Print — T38, T45 | Feedback; Help; valódi felhős backup | Edit már működik, nem új feladat. |
+| 4.4.4-18 | Google Now | Vegyes | Google Now kártyamenü; Where; ismétlődés — T37 | Valódi háttér-geofencing | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.4.4-19 | Drive | Vegyes | Drive Create/Refresh/Filter/Sort/Settings/helyi fájlműveletek — T34 | Product Tour; felhőszolgáltatás | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.4.4-20 | Keep / Google+ / YouTube / Earth | Vegyes | Keep Share/Settings; Google+ helyi közösségi műveletek/Settings; YouTube Settings; Earth hely/Share/Settings — T35, T23, T20, T19 | Help/Feedback/Tutorial; valódi publikálás/fiókművelet | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.4.4-21 | Newsstand | Vegyes | Newsstand Search/My News/My Magazines/Saved/Explore/Settings/On device only — T36 | Help; távoli előfizetés | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.4.4-22 | Quickoffice | Vegyes | Quickoffice helyi Drive/Device és helyi overflow — T39 | Valódi Drive-fiók és webes support | Helyi működés; a generikus elutasítás nem indokolt. |
+| 4.4.4-23 | Wallet | Szándékos korlát | — | Wallet Send money/Transactions/Balance/Add card és fiókmenü | Valódi pénzügyi szolgáltatás; új pénzügyi demó-adatmodell nem része ennek a tervnek. |
+| 4.4.4-24 | Beállítások | Tartalékág | — | Safety information offline renderút | Tartalék/nem igazolt menücél. |
+| 4.4.4-25 | Zárolás / Telefon | Szándékos korlát | — | Emergency call | Telefonhálózati korlát. |
+| 4.4.4-26 | News & Weather | Szándékos korlát | — | News & Weather jogi linkek | Külső tájékoztatás. |
+| 4.4.4-27 | Megosztott régi Settings-kód | Kiszűrt találat | — | ICS-only ág | Kiszűrt/inaktív. |
+| 4.4.4-28 | Launcher | Kiszűrt találat | — | Üres GEL_UNSIMULATED guard | Kiszűrt; jelenleg nem tilt appot. |
+
+#### Döntések — 5.1.1
+
+| Csoport | App | Besorolás | Javítandó rész / feladat | Meghagyott rész | Indok / pontosítás |
+|---|---|---|---|---|---|
+| 5.1.1-01 | Email | Vegyes | Quick responses; Choose ringtone; Incoming/Outgoing settings — T09 | Valódi szerverkapcsolat | Helyi űrlapok és választók. |
+| 5.1.1-02 | Chrome | Vegyes | A T07-ben felsorolt pontos kategóriák, továbbá DNT és 5.1 Touch to Search — T07 | Passwords; Autofill; Sign in; Help; Legal information | A Chrome szűkítését a korábbi átadó már megengedte. Passwords/Autofill technikailag lehetne helyi modell, itt tudatos terjedelmi kizárás, nem technikai lehetetlenség. |
+| 5.1.1-03 | Chrome | Vegyes | Print helyi előnézet/PDF; Add to homescreen — T45 | Help; inkognitó Learn more | A fizikai nyomtatás helyett a korabeli helyi PrintSpooler/PDF folyamat készül. |
+| 5.1.1-04 | Gmail | Vegyes | Inbox sound & vibrate; Days of mail to sync; Manage labels; Vacation responder — T04 | Tényleges szerveroldali sync/automatikus válasz | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-05 | Gmail | Szándékos korlát | — | Welcome/Learn more | Az About Gmail csak a 4.3/4.4.4 headers tömbben szerepel. 5.1.1 gmail.js:61 general/account, ezért az eredeti feltételes audit itt nem jelent helyi About-hiányt. |
+| 5.1.1-06 | Naptár | Vegyes | Settings — T03 | Help/Feedback | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-07 | Hangouts | Vegyes | Invites helyi lista; Settings; People & options; Add people; Blocked people — T32 | Help; Feedback; valódi Video call | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-08 | Hangouts | Vegyes | Take photo → helyi csatolmány — T10 | Google+ photos távoli könyvtár | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-09 | Email / Gmail | Vegyes | Sync options → meglévő helyi fiók szinkronpreferenciái — T09 | Help; Help & feedback; valódi szinkron | A helyi választó nem azonos egy szerverrel végzett szinkronizálással. |
+| 5.1.1-10 | Névjegyek | Vegyes | Share; Home shortcut; lista szűrés/import/export/Settings — T11 | Accounts; Help; fizikai SIM-írás | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-11 | Play Store | Vegyes | Play Store Share — T21 | Redeem; Help; Open source licenses külső link; Flag | A jogi webes link a terv által szándékosan megtartott korlát, nem új jogi tartalomgyűjtési feladat. |
+| 5.1.1-12 | Play Music / Movies / Books / Games | Vegyes | A T43 zárt Music/Movies/Books/Games helyi műveletlistája — T43 | Cast; online keresés/beszerzés; külső játék tényleges indítása; Help/fiók | Nem minden pa-unsupported ugyanaz: helyi overflow és szolgáltatás külön döntést kapott. |
+| 5.1.1-13 | Óra | Vegyes | Óra More options menü és Settings; Cities keresés (azonos az 5.1.1-23 tétellel) — T33 | Help | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-14 | Google Settings / Google keresés | Vegyes | Google keresés helyi fejléc-beállítások; Google+ belépés; Play Games helyi prefs-belépés — T25, T23, T43 | Ads by Google/Ads Settings/Learn more; Help; Feedback; távoli fiók | A gms-settings már működő kapcsolóit nem kell újraépíteni. |
+| 5.1.1-15 | Telefon | Vegyes | Telefon Settings; Import/export közös helyi névjegyfolyamattal — T44, T11 | Valódi szolgáltatói beállítás és SIM-írás | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-16 | Beállítások | Szándékos korlát | — | Open source licenses / Google legal külső tájékoztató út | A korábbi átadó jogi linkekre vonatkozó szándékos kizárása. Az újabb verziók jogi oldalai ettől még megmaradnak; itt nincs új tartalomgyűjtés. |
+| 5.1.1-17 | Beállítások | Szándékos korlát | — | Accounts Add/Remove account | Valódi fiókművelet. |
+| 5.1.1-18 | Beállítások | Vegyes | Wi-Fi tanúsítványválasztó és helyi tárolás; readonly sorok kezelése — T30 | Host OS/hardver átállítása | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-19 | Kamera | Vegyes | Photo Sphere és Lens Blur vezetett helyi felvételi mód — T49 | Valódi szenzorfúzió/mélységrekonstrukció | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-20 | Kamera | Szándékos korlát | — | Kamera súgóikon | Online súgó. |
+| 5.1.1-21 | Photos | Vegyes | Photos saját Edit; Slideshow/Download/Select photos/Settings; Print — T01, T38, T45 | Feedback; Help; valódi felhős backup | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-22 | Gmail | Vegyes | Gmail Attach file; Print helyi PDF-folyamat — T06, T45 | Fizikai nyomtatás | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-23 | Óra | Javítandó | Cities keresés — T33 | — | Ugyanaz a vezérlő, mint az 5.1.1-13 csoport egyik része; nincs kétszer számolt munka. |
+| 5.1.1-24 | Google Now | Vegyes | Now kártyamenü; Where; ismétlődés — T37 | Valódi háttér-geofencing | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-25 | Drive | Vegyes | Drive Create/Refresh/Filter/Sort és új/keresés gombok — T34 | Felhőszolgáltatás | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-26 | Keep | Javítandó | Keep Make a copy; Send; New recording — T35 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-27 | Google+ / YouTube / Earth | Vegyes | Google+ Settings; YouTube Settings; Earth hely/Share és helyi drawer/prefs — T23, T20, T19 | Feedback; Help; Sign out; távoli publikálás | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-28 | News & Weather | Vegyes | News & Weather Open in browser; Change editions; Manage sections — T42 | Új hírek hálózati letöltése | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-29 | Docs / Sheets / Slides | Javítandó | Docs/Sheets/Slides drawer/Grid/Sort/Open document/Refresh — T40 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-30 | Docs / Sheets / Slides | Vegyes | Docs/Sheets/Slides Share link/Send file/offline/Move/Home shortcut/Print — T40, T45 | Távoli jogosultság és fizikai nyomtatás | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-31 | Fit | Vegyes | Fit Add activity; Add your weight; Settings — T41 | Élő szenzor és Fit-felhő; Help | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-32 | Newsstand | Vegyes | Newsstand Search/My Library/Bookmarks/Explore/Settings — T36 | Help & Feedback; távoli tartalom/előfizetés | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-33 | Wallet | Szándékos korlát | — | Wallet fiók/pénzügyi vezérlők és wal-finish | A köztes már működő helyi oldalak megmaradnak; valódi véglegesítés/új pénzügyi modell nincs. |
+| 5.1.1-34 | Play Store | Vegyes | Play READ MORE és Send email → helyi compose — T21 | Visit webpage; Privacy policy; People; My account | Tárolt leírás és helyi appátadás nem online szolgáltatás; a többi távoli út marad korlát. |
+| 5.1.1-35 | Hangkeresés | Szándékos korlát | — | Voice search unavailable offline | Valódi hangfelismerő szolgáltatás; nem új helyi UI-hiány. |
+| 5.1.1-36 | SMS/Messenger | Javítandó | SMS/Messenger People & options értesítési beállítás — T32 | — | Helyi működés; a generikus elutasítás nem indokolt. |
+| 5.1.1-37 | Zárolás / Telefon | Szándékos korlát | — | Emergency call | Telefonhálózati korlát. |
+| 5.1.1-38 | Megosztott régi Settings-kód | Kiszűrt találat | — | ICS-only ág | Kiszűrt/inaktív. |
+| 5.1.1-39 | Launcher | Kiszűrt találat | — | Üres GEL_UNSIMULATED guard | Kiszűrt; nem tilt appot. |
+
+#### Döntések — 6.0.1
+
+| Csoport | App | Besorolás | Javítandó rész / feladat | Meghagyott rész | Indok / pontosítás |
+|---|---|---|---|---|---|
+| 6.0.1-01 | Rendszer | Tartalékág | A jelenlegi jegyzék normál UI-céljainak egyszeri ellenőrzése — T47 | Ismeretlen cél/missing modul védelmi renderer | Tartalékág; nem bizonyított, elérhető funkcióhiány. |
+| 6.0.1-02 | Beállítások | Tartalékág | A jelenlegi jegyzék normál UI-céljainak egyszeri ellenőrzése — T47 | Ismeretlen cél/missing modul védelmi renderer | Tartalékág; nem bizonyított, elérhető funkcióhiány. |
+| 6.0.1-03 | Widgetek | Tartalékág | A jelenlegi jegyzék normál UI-céljainak egyszeri ellenőrzése — T47 | Ismeretlen cél/missing modul védelmi renderer | Tartalékág; nem bizonyított, elérhető funkcióhiány. |
+| 6.0.1-04 | Gyorsbeállítások / Google Now | Tartalékág | A jelenlegi jegyzék normál UI-céljainak egyszeri ellenőrzése — T47 | Ismeretlen cél/missing modul védelmi renderer | Tartalékág; nem bizonyított, elérhető funkcióhiány. |
+| 6.0.1-05 | Documents / Downloads | Kiszűrt találat | — | Kiszűrt félrevezető akciónév/komment | 6.0.1 keresés már működik; 7.1.2 location megosztás már működik. Nincs új feladat. |
+
+#### Döntések — 7.1.2
+
+| Csoport | App | Besorolás | Javítandó rész / feladat | Meghagyott rész | Indok / pontosítás |
+|---|---|---|---|---|---|
+| 7.1.2-01 | Rendszer | Tartalékág | A jelenlegi jegyzék normál UI-céljainak egyszeri ellenőrzése — T47 | Ismeretlen cél/missing modul védelmi renderer | Tartalékág; nem bizonyított, elérhető funkcióhiány. |
+| 7.1.2-02 | Beállítások | Tartalékág | A jelenlegi jegyzék normál UI-céljainak egyszeri ellenőrzése — T47 | Ismeretlen cél/missing modul védelmi renderer | Tartalékág; nem bizonyított, elérhető funkcióhiány. |
+| 7.1.2-03 | Widgetek | Tartalékág | A jelenlegi jegyzék normál UI-céljainak egyszeri ellenőrzése — T47 | Ismeretlen cél/missing modul védelmi renderer | Tartalékág; nem bizonyított, elérhető funkcióhiány. |
+| 7.1.2-04 | App-beállítások | Tartalékág | A jelenlegi jegyzék normál UI-céljainak egyszeri ellenőrzése — T47 | Ismeretlen cél/missing modul védelmi renderer | Tartalékág; nem bizonyított, elérhető funkcióhiány. |
+| 7.1.2-05 | Messenger | Kiszűrt találat | — | Kiszűrt félrevezető akciónév/komment | 6.0.1 keresés már működik; 7.1.2 location megosztás már működik. Nincs új feladat. |
+
+### A besoroláskor konkretizált további Maps- és Settings-utak
+
+Ezek a jelenlegi kód tényleges, korábban nem külön csoportosított elutasító helyi sorai. A forrás megnyitva ellenőrizve, nem egy másik verzióból feltételezve. N01–N03 a T12, N04–N05 a T30 része. Az ICS tanúsítványsor és az LP Music effects közös, de nem kirajzolt kódja nem kerül ide.
+
+| Azonosító | Verzió | Javítandó rész | Meghagyott rész | Forrás |
+|---|---|---|---|---|
+| N01 | 4.3 | My Places és Maps Settings helyi oldalak — T12 | Help/Send feedback, távoli helyelőzmény/fiók; 5.1 mikrofon valódi hangfelismerése | [stock-apps.js:283](https://github.com/szabolevi98/android-time-machine/blob/3e1201b86eb457e49b7dd04e79c14c4d1c75e42a/versions/4.3/stock-apps.js#L283) |
+| N02 | 4.4.4 | Maps Settings helyi oldalak — T12 | Help/Send feedback, távoli helyelőzmény/fiók; 5.1 mikrofon valódi hangfelismerése | [stock-apps.js:88](https://github.com/szabolevi98/android-time-machine/blob/3e1201b86eb457e49b7dd04e79c14c4d1c75e42a/versions/4.4.4/stock-apps.js#L88) |
+| N03 | 5.1.1 | Your places és Maps Settings helyi oldalak — T12 | Help/Send feedback, távoli helyelőzmény/fiók; 5.1 mikrofon valódi hangfelismerése | [stock-apps.js:89](https://github.com/szabolevi98/android-time-machine/blob/3e1201b86eb457e49b7dd04e79c14c4d1c75e42a/versions/5.1.1/stock-apps.js#L89) |
+| N04 | 4.3 | Music effects és Advanced Wi-Fi Install certificates helyi folyamat — T30 | Host OS tanúsítványtár/hardver átállítása | [settings-detail.js:29](https://github.com/szabolevi98/android-time-machine/blob/3e1201b86eb457e49b7dd04e79c14c4d1c75e42a/versions/4.3/settings-detail.js#L29); [settings-system.js:280](https://github.com/szabolevi98/android-time-machine/blob/3e1201b86eb457e49b7dd04e79c14c4d1c75e42a/versions/4.3/settings-system.js#L280) |
+| N05 | 4.4.4 | Music effects és Advanced Wi-Fi Install certificates helyi folyamat — T30 | Host OS tanúsítványtár/hardver átállítása | [settings-detail.js:29](https://github.com/szabolevi98/android-time-machine/blob/3e1201b86eb457e49b7dd04e79c14c4d1c75e42a/versions/4.4.4/settings-detail.js#L29); [settings-system.js:282](https://github.com/szabolevi98/android-time-machine/blob/3e1201b86eb457e49b7dd04e79c14c4d1c75e42a/versions/4.4.4/settings-system.js#L282) |
+
+### Minden javított út közös készfeltétele
+
+1. A saját verzió gyári APK/AOSP forrása és a használt erőforrás/menü/sorrend azonosítva; nincs újabb UI indokolatlan visszamásolása.
+2. A normál UI belépéstől végigjárható, asztali egérrel és telefonszélességű érintéssel; a toast hiányán túl pozitív eredményt is ellenőrzünk.
+3. Mentést ígérő művelet újranyitás/újratöltés után visszaáll; Cancel és Back nem módosít adatot vagy veszít munkát észrevétlenül.
+4. A megosztás/picker/nyomtatás helyes objektumot és metaadatot ad át. A valódi hálózati szolgáltatást nem színleljük.
+5. A közös regressziós teszt konkrét esete és a változáshoz indokolt meglévő ellenőrzések átmentek. Az elutasító stringek megmaradó eseteire nincs általános „sehol nem lehet toast” követelmény.
+6. E riport T-feladat státusza, commitja és ellenőrzési eredménye frissült. A régi bizonyítéksorok történeti tényként maradnak.
+
+### A besorolás ellenőrzése
+
+- Mind a 153 eredeti auditcsoport egyedi azonosítóval szerepel; ebből pontosan 125 volt konkrét korlát. Nincs besorolatlan vagy kétszer felvett eredeti sor.
+- Minden javítandó/vegyes sor létező T-feladatra mutat; minden funkciós csomagnak van forráscsoportja, konkrét terjedelme és pozitív készfeltétele.
+- Az 5.1.1 Cities keresés két eredeti audit sora egy T33 feladatra mutat. A 4.3 elfedett Email prefsorok T02-höz tartoznak. Így nincs felfújt feladatszám a kettős találatok miatt.
+- A 4.3/4.4.4 About Gmail helyi oldal; az 5.1.1 headers nem tartalmazza. Az audit feltételes mondatát a döntési tábla pontosítja.
+- A besorolás dokumentumellenőrzés és célzott forrásolvasás. Új teljes böngészős auditot és implementációs teszteredményt nem állít.
+
+---
+
 ## Megállapítás
 
 Van eltérés a verziók részletességében. Különösen a régebbi Gmail, Chrome, Naptár, Photos és egyes Google-alkalmazások menüi között vannak elutasító utak, miközben az újabb verziók megfelelő felületei helyi demóként meg vannak építve. A „kiadási checklist kész” ezért nem jelenti, hogy mind a nyolc verzió minden funkciója azonos mélységű.
