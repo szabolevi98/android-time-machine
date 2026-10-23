@@ -31,3 +31,14 @@ CI setup includes Python 3.12 and pinned Pillow for the native Photos LUT pixel
 fixtures. `test-ci.mjs` preserves TAP output and annotates failed checks with
 their diagnostics. A raw Git snapshot also passes all 247 checks locally with
 Node 22 and UTC, without unpacked factory images.
+
+Wallpaper follow-up (2026-10-23): the destination dialog passed `label` where
+the dialog renderer requires escaped `html`, so all three visible options read
+`undefined` despite selecting the correct destination. Corrected and covered
+with exact visible-label assertions in all five languages. The horizontal
+thumbnail strip now supports mouse dragging and the wheel, preserves its
+position on selection, and retains native touch scrolling. Real pointer tests
+reach the third and fourth bundled images, which were previously offscreen.
+The N2G48C GoogleHome APK's `array/wallpapers` (`nodpi-v4`) was rechecked:
+`wp_001` through `wp_004`, including the turquoise surf image `wp_003`, plus
+the separately inserted framework default. No images were added or removed.
