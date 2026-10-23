@@ -4,6 +4,7 @@
 (() => {
   'use strict';
   let c, root, field, target, mode = 'alpha', shift = 0, lastShift = 0, category = 'smiley_people', held = false, timer, repeat;
+  let candidateOverride=null,lastCorrection=null,gestureState=null,lastGlide=false;
   const T = () => NG.text('gboard'), tr = key => T().t(key), A = name => `assets/gb-${name}.png`;
   const pref = (key, def) => NG.appPref(c, 'gboard', key, NG.keyboardDefaults[key] ?? def);
   const lang = () => pref('use_system_language', true) ? c.lang : pref('language', c.lang);
@@ -42,10 +43,23 @@
   }
   function word() {
     if (!field || secret() || numeric()) return '';
-    return field.value.slice(0, field.selectionStart ?? field.value.length).match(/[\p{L}\p{M}]+$/u)?.[0] || '';
+    return field.value.slice(0, field.selectionStart ?? field.value.length).match(/[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]*)?$/u)?.[0] || '';
   }
+  const predictive=()=>!!field&&!secret()&&!numeric()&&!['email','url'].includes(field.type);
+  const wordOptions=()=>({block:pref('block_offensive_words',true),personal:[...(c.data.settings.userWords||[]),...(pref('pref_key_use_personalized_dicts',true)?pref('learned_words',[]).filter(p=>p.lang===lang()&&(!pref('block_offensive_words',true)||!wordModel()?.isBlocked(p.word))):[])],learned:pref('learned_words',[]).filter(p=>p.lang===lang())});
+  const wordModel=()=>NG.keyboardWords?.get(lang());
+  function capital(text,typed){return typed&&typed.length>1&&typed===typed.toLocaleUpperCase(lang())?text.toLocaleUpperCase(lang()):typed&&typed[0]===typed[0].toLocaleUpperCase(lang())?text[0].toLocaleUpperCase(lang())+text.slice(1):text;}
   function suggestions() {
-    const el = root?.querySelector('.ngboard-word'), text = word(); if (el && el.textContent !== text) el.textContent = text;
+    const el=root?.querySelector('.ngboard-word');if(!el)return;const text=word(),enabled=predictive()&&pref('show_suggestions',NG.keyboardDefaults.latin_show_suggestion),opts=wordOptions(),model=wordModel();let items=[];
+    if(enabled){if(candidateOverride)items=candidateOverride;else if(text){const corrections=model?.correct(text,opts)||[],prefix=model?.prefix(text,opts)||[];items=[text,...prefix.slice(0,1),...corrections,...prefix.slice(1)].filter(Boolean).map(w=>capital(w,text));}else if(pref('next_word_prediction',true))items=model?.predict(field.value.slice(0,field.selectionStart??field.value.length),opts)||[];}
+    items=[...new Set(items)].slice(0,3);const signature=JSON.stringify(items);if(el.dataset.words===signature)return;el.dataset.words=signature;el.innerHTML=items.map((w,i)=>`<button type="button" class="ngboard-candidate${i===1?' preferred':''}" data-gb="candidate:${c.safe(w)}">${c.safe(w)}</button>`).join('');
+  }
+  function ensureWords(){const expected=lang();NG.keyboardWords?.load(expected).then(()=>{if(root&&field&&lang()===expected)suggestions();});}
+  function replaceWord(text,space=false){if(!field)return;const old=word(),pos=field.selectionStart??field.value.length;try{field.setSelectionRange(pos-old.length,pos);}catch{}candidateOverride=null;insert(text+(space?' ':''));}
+  function learnWord(text){if(!predictive()||!pref('pref_key_use_personalized_dicts',true)||!text||pref('block_offensive_words',true)&&wordModel()?.isBlocked(text))return;const pos=field.selectionStart??field.value.length,before=field.value.slice(0,pos-text.length),after=(before.match(/([\p{L}\p{M}]+)\s+$/u)?.[1]||'').toLocaleLowerCase(lang()),list=JSON.parse(JSON.stringify(pref('learned_words',[]))),lower=text.toLocaleLowerCase(lang()),item=list.find(x=>x.lang===lang()&&x.word.toLocaleLowerCase(lang())===lower&&x.after===after);if(item)item.count++;else list.unshift({word:text,after,lang:lang(),count:1});NG.setAppPref(c,'gboard','learned_words',list.slice(0,300));}
+  function space(){const value=field?.value||'',pos=field?.selectionStart??value.length,text=word(),candidate=predictive()&&field.spellcheck!==false&&pref('pref_key_auto_correction',true)?wordModel()?.correct(text,wordOptions())?.[0]:null;let correction=null;
+    if(candidate){const replacement=capital(candidate,text);replaceWord(replacement);correction={start:pos-text.length,before:text,after:replacement};}
+    learnWord(word());if(!secret()&&pref('enable_double_space_period',true)&&/\S $/.test(value.slice(0,pos))){insert('',true);insert('. ');}else insert(' ');lastGlide=false;if(correction)lastCorrection={...correction,cursor:field?.selectionStart};
   }
   function draw() {
     if (!root) return;
@@ -96,23 +110,24 @@
       const selection = replacing && {start:target.start,end:target.end};
       restoreMode(field); bind(el);
       if (selection) { try { el.setSelectionRange(selection.start,selection.end); } catch {} target=remember(el); }
-      else { mode = 'alpha'; shift = 0; autoShift(); }
+      else {mode='alpha';shift=0;candidateOverride=null;lastCorrection=null;lastGlide=false;autoShift();}
     }
     if (!root) {
       root = document.createElement('div'); root.className = 'ngboard'; root.setAttribute('role','group'); root.setAttribute('aria-label',tr('ime_name'));
       c.el.screen.append(root);
       root.addEventListener('pointerdown', down);
       root.addEventListener('pointerup', up);
-      root.addEventListener('pointercancel', cancelPress);
+      root.addEventListener('pointermove', glideMove);
+      root.addEventListener('pointercancel', ()=>{cancelPress();gestureState=null;root?.querySelector('.ngboard-trail')?.remove();});
       root.addEventListener('click', e => { e.stopPropagation(); if (e.detail === 0) { const key = e.target.closest('[data-gb]'); if (key) press(key.dataset.gb); } });
       root.addEventListener('mousedown', e => e.preventDefault());
     }
-    draw();
+    draw();ensureWords();
     requestAnimationFrame(() => field?.scrollIntoView({block:'nearest',inline:'nearest'}));
   }
   function cancelPress() { clearTimeout(timer); clearInterval(repeat); root?.querySelector('.pressed')?.classList.remove('pressed'); root?.querySelector('.ngboard-preview')?.remove(); }
   function hide() {
-    cancelPress(); root?.remove(); root = null;
+    cancelPress();gestureState=null;candidateOverride=null;lastCorrection=null;lastGlide=false; root?.remove(); root = null;
     restoreMode(field); const old = field; field = null; target = null;
     if (document.activeElement === old) old.blur();
     c?.el.screen.classList.remove('ngboard-open'); c?.el.screen.style.removeProperty('--ngboard-height'); if(c) nav();
@@ -130,6 +145,7 @@
   }
   function insert(text, deleting = false) {
     reconcile(); if (!field) return;
+    if(!deleting)lastCorrection=null;
     const editor = field, value = editor.value;
     let start = editor.selectionStart ?? value.length, end = editor.selectionEnd ?? value.length;
     if (deleting && start === end && start > 0) {
@@ -165,14 +181,12 @@
     });
   }
   function press(key) {
-    if (key.startsWith('text:')) insert(key.slice(5));
-    else if (key === 'space') {
-      const value = field?.value || '', pos = field?.selectionStart ?? value.length;
-      if (!secret() && pref('enable_double_space_period',true) && /\S $/.test(value.slice(0,pos))) { insert('',true); insert('. '); } else insert(' ');
-    }
-    else if (key === 'delete') insert('',true);
+    if(key.startsWith('candidate:')){replaceWord(key.slice(10),true);lastGlide=false;}
+    else if (key.startsWith('text:')) {candidateOverride=null;if(lastGlide&&word())insert(' ');lastGlide=false;insert(key.slice(5));}
+    else if (key === 'space') {candidateOverride=null;space();}
+    else if (key === 'delete') {candidateOverride=null;lastGlide=false;if(lastCorrection&&field?.selectionStart===lastCorrection.cursor&&field.selectionEnd===lastCorrection.cursor){const item=lastCorrection;lastCorrection=null;field.setSelectionRange(item.start,item.cursor);insert(item.before);}else insert('',true);}
     else if (key === 'shift') { const now=Date.now(); shift = now-lastShift < 350 && shift === 1 ? 2 : shift ? 0 : 1; lastShift=now; draw(); }
-    else if (key === 'enter') enter();
+    else if (key === 'enter') {learnWord(word());candidateOverride=null;lastGlide=false;enter();}
     else if (['alpha','symbols','emoji'].includes(key)) { mode=key; shift=0; draw(); }
     else if (key.startsWith('category:')) { category=key.slice(9); draw(); }
     else if (key === 'language') chooseLanguage();
@@ -203,6 +217,7 @@
     const key=e.target.closest('[data-gb]'); if(!key) return;
     if(key.closest('.ngboard-preview.choices')) { e.preventDefault(); e.stopPropagation(); const value=key.dataset.gb; cancelPress(); held=true; press(value); return; }
     if(!key.closest('.ngboard-emojis'))e.preventDefault(); e.stopPropagation(); cancelPress(); held=false; key.classList.add('pressed');
+    gestureState=mode==='alpha'&&predictive()&&pref('enable_gesture_input',true)&&key.dataset.gb.startsWith('text:')?{key:key.dataset.gb,points:[{x:e.clientX,y:e.clientY}],active:false,pointer:e.pointerId}:null;
     if (key.dataset.gb.startsWith('text:') && pref('enable_popup_on_keypress',true)) popup(key,[key.dataset.gb.slice(5)]);
     timer=setTimeout(() => {
       if(key.dataset.gb==='delete') { held=true; press('delete'); repeat=setInterval(()=>press('delete'),65); }
@@ -210,7 +225,12 @@
       else if(key.dataset.gb.startsWith('text:')) { const choices=accents(key.dataset.gb.slice(5)); if(choices.length) { held=true; popup(key,choices); } }
     },Math.max(150,Math.min(700,+pref('key_long_press_delay',300)||300)));
   }
+  function glideMove(e){const g=gestureState;if(!g||g.pointer!==e.pointerId||held)return;const first=g.points[0];if(!g.active&&Math.hypot(e.clientX-first.x,e.clientY-first.y)<12*c.el.screen.clientWidth/411.4286)return;
+    if(!g.active){g.active=true;clearTimeout(timer);clearInterval(repeat);root.querySelector('.ngboard-preview')?.remove();root.setPointerCapture?.(e.pointerId);}g.points.push({x:e.clientX,y:e.clientY});e.preventDefault();
+    if(pref('pref_gesture_preview_trail',true)){const r=root.getBoundingClientRect();let svg=root.querySelector('.ngboard-trail');if(!svg){svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.classList.add('ngboard-trail');svg.innerHTML='<polyline fill="none" stroke-linecap="round" stroke-linejoin="round"/>';root.append(svg);}svg.setAttribute('viewBox',`0 0 ${r.width} ${r.height}`);svg.firstChild.setAttribute('points',g.points.map(p=>`${p.x-r.left},${p.y-r.top}`).join(' '));}
+  }
   function up(e) {
+    const g=gestureState;gestureState=null;if(g?.active){e.preventDefault();e.stopPropagation();cancelPress();root?.querySelector('.ngboard-trail')?.remove();const r=root.getBoundingClientRect(),unit=r.width/10,keys={};root.querySelectorAll('.ngboard-row .char[data-gb]').forEach(el=>{const k=el.dataset.gb.slice(5).toLocaleLowerCase(lang()),b=el.getBoundingClientRect();if(k.length===1)keys[NG.keyboardWords.fold(k)]={x:(b.left+b.width/2-r.left)/unit,y:(b.top+b.height/2-r.top)/unit};});const points=g.points.map(p=>({x:(p.x-r.left)/unit,y:(p.y-r.top)/unit})),items=wordModel()?.gesture(points,keys,wordOptions())||[];if(items.length){const before=word();if(before)insert(' ');const first=shift?capital(items[0],'A'):items[0];candidateOverride=null;insert(first);lastGlide=true;candidateOverride=[first,...items.slice(1)];suggestions();}return;}
     const key=e.target.closest('[data-gb]'), choice=key?.closest('.ngboard-preview.choices');
     clearTimeout(timer); clearInterval(repeat); e.preventDefault(); e.stopPropagation();
     if(choice) { const text=key.dataset.gb; cancelPress(); press(text); return; }

@@ -942,3 +942,32 @@ Validation: original Gboard editor/language/browser regression and the new real
 pointer theme flow passed, including live red/cyan palettes, borders, crop,
 brightness, snapshot independence, editing/cancellation/deletion, phone width and
 five languages. Source inventory: 1174 rebuilt files, zero problems.
+
+## Gboard D3 dictionaries and composing words — 2026-10-23
+
+The native D3 dictionaries embed MARISA tries, mapped symbol tables (16- or 24-bit
+trie-key+1 indices), blocked label IDs and weighted initial-candidate protobufs.
+ng-keyboard-dictionaries.py decodes the exact compressed resources and records their
+SHA-256; --check rebuilds and compares all four outputs. English has 169151 symbols;
+German 64081, French 64109 and Spanish 64087. There is no bundled Hungarian pack,
+so Hungarian uses the shared personal dictionary and learned words. Generated JSON
+is loaded locally on demand, without contacting a dictionary service.
+
+Candidate buttons, prefix completion, transposition/spelling correction, correction
+undo, personal shortcuts and next-word learning are connected to the browser editor
+contract. Native initial predictions and blocked lists are preserved. Password,
+e-mail and numeric editors do not suggest or learn words; automatic correction also
+respects spellcheck=false. The native preferences control predictions, correction,
+learning, blocked words, gesture input and gesture trail. Secret text is never
+added to the learned model.
+
+Pointer/touch gliding decodes a sampled path against the current layout's actual
+key coordinates, including repeated-letter paths and alternative candidates.
+GestureOverlayView's light/dark track colours come from this APK. Prefix scoring,
+edit distance and geometric path comparison are simulator algorithms over the
+native vocabulary, not a claim to reproduce Google's proprietary decoder/LM.
+
+Validation: all 237 module checks passed; three model checks use the real four extracted packs and a real
+pointer browser flow cover native completions, correction/undo, a hello glide,
+personal shortcut expansion, preference changes, private editor contracts, all
+five languages and phone width. The original Gboard browser regression passed.

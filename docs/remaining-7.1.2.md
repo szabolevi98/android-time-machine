@@ -6,7 +6,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 
 ## Completed milestones
 
-- [x] Camera integration and lifecycle (`b5496458`). Advanced capture sequences below remain.
+- [x] Camera integration/lifecycle (`b5496458`), guided captures and Smartburst (`3166c94c`).
 - [x] Photos library, viewer, albums, trash and basic CPE (`8c4d7f56`). Native preset catalogue below remains.
 
 ## Applications and connected activities
@@ -16,8 +16,8 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Gboard editor and native preferences milestone; advanced items below remain.
 - [x] Google app 6.5.36: search, voice examples, Now, screen search (Now on Tap), launcher settings.
 - [ ] Gboard 6.0.84 and input method settings; TalkBack and relevant Settings external activities.
-      Core IME, layouts/accents/emoji, all 17 native themes, image theme builder and preferences are implemented. Remaining:
-      predictive/glide dictionary decoding, inline search access point,
+      Core IME, layouts/accents/emoji, all 17 native themes, image theme builder, native dictionary completion/correction/glide and preferences are implemented. Remaining:
+      inline search access point,
       TalkBack and other enabled external input/settings activities.
 - [x] Maps 9.34.1 and Messenger's location chooser.
 - [x] Hangouts 12.0 and demo replies.
