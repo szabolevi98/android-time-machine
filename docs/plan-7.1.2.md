@@ -1076,7 +1076,10 @@ own name; Photos imports every item; YouTube queues the videos and offers the ne
 upload after each save, and cancelling abandons the whole queue; Beam and the
 Bluetooth device picker keep the full list. Every stream keeps its own snapshot,
 edits and tags. Fixed on the way: a share arriving while a Gmail compose is open
-stored the open draft with no arguments and threw.
+stored the open draft with no arguments and threw. The Burst editor's frame selection
+uses the same route. The chooser window now ends above the navigation bar, which
+stays visible over apps that hid it: Theme.DeviceDefault.Resolver sets no
+windowTranslucentNavigation and ChooserActivity is a window of its own.
 
 Validation: 246 module checks (three new send-model checks); the real-pointer
 browser flow `tests/browser/ng-send-multiple.mjs` covers Photos and Documents

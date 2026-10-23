@@ -54,7 +54,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] MusicFX's native effect-control panel: per-caller presets/User curve, five bands, enable/bypass, headset-gated bass/surround, persistence and Clear data.
 - [x] Widget resize: native frame/handles, provider flags/minima, transactional cell reorder, pointer/touch commit and cancel, persisted dimensions.
 - [x] ACTION_SEND video/audio native MIME receivers, immutable metadata, Messenger audio/video/resharing, Hangouts video, Photos/YouTube upload, Gmail/Drive streams and Cloud Print failure.
-- [ ] Shared SEND_MULTIPLE: preserve every selected photo/stream through each native receiver (Photos and Burst editor currently dispatch the leading stream).
+- [x] Shared SEND_MULTIPLE: Photos, Documents and the Burst editor send every selected stream through each package's native SEND_MULTIPLE filter (`d8f7bddc`).
 - [ ] Preference leaf/intent routing audit: finish service-backed and non-toggle rows that still lack a click handler.
 - [ ] Sweep all direct `missing(...)` branches and external activity routes; no unfinished card may remain at release.
 

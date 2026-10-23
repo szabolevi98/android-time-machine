@@ -1,6 +1,8 @@
 /* Android 7.1.2 ChooserActivity (ng-intents.js): chooser_grid.xml's ResolverDrawerLayout, chooser_row.xml,
    resolve_grid_item.xml; SendUi's shrunk screen; DevicePickerActivity's scanning category. */
-.ngin{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;justify-content:flex-end;font-family:Roboto,sans-serif}
+/* Theme.DeviceDefault.Resolver has no windowTranslucentNavigation: the chooser window ends above the navigation bar,
+   which stays visible (and is not dimmed) even over an app that hid it, since ChooserActivity is a window of its own. */
+.ngin{position:absolute;top:0;left:0;right:0;bottom:calc(48 * var(--dp));z-index:30;display:flex;flex-direction:column;justify-content:flex-end;font-family:Roboto,sans-serif}
 .ngin-dim{position:absolute;inset:0;background:#00000099;animation:ngin-fade .2s}
 @keyframes ngin-fade{from{opacity:0}}
 .ngin-sheet{position:relative;max-width:calc(480 * var(--dp));max-height:calc(100% - 56 * var(--dp));width:100%;margin:0 auto;display:flex;flex-direction:column;background:#fff;box-shadow:0 calc(-2 * var(--dp)) calc(8 * var(--dp)) #00000033;animation:ngin-up .25s cubic-bezier(0,0,.2,1)}
@@ -34,3 +36,5 @@ button.ngin-upspin.folder { width:100%; border:0; color:inherit; text-align:left
 
 /* UploadSharedItemActivity switches the title editor to this native multi-line label. */
 .ngin-upnames{padding:calc(8 * var(--dp)) 0;font-size:calc(16 * var(--dp));color:#000000de;line-height:1.5;overflow-wrap:anywhere}
+
+.screen.no-nav:has(#overlay-root .ngin) #nav-bar{display:block}

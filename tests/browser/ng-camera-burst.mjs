@@ -22,7 +22,12 @@ try{
  }
  await tap('#viewport .ngbu-cell [data-action="ngbu-photo"]');await tap('#viewport [data-action="ngbu-edit"]');await b.until(`document.querySelector('#viewport .ngphotos-edittools')`);
  await b.open('camera');await tap('#viewport [data-action="ngcm-thumb"]');await b.until(`document.querySelector('#viewport .ngbu-grid')`);
- await tap('#viewport .ngbu-cell [data-action="ngbu-photo"]');await tap('#viewport [data-action="ngbu-share"]');assert.equal(await b.ev(`!!document.querySelector('#overlay-root .ngin')`),true);await tap('#nav-bar [data-key="back"]');
+ await tap('#viewport .ngbu-cell [data-action="ngbu-photo"]');await tap('#viewport [data-action="ngbu-share"]');await sleep(400);assert.equal(await b.ev(`!!document.querySelector('#overlay-root .ngin')`),true);await tap('#nav-bar [data-key="back"]');
+  // A multi-frame selection leaves as SEND_MULTIPLE: Hangouts has no such filter, so it drops out of the chooser.
+ const chooser=()=>b.ev(`[...document.querySelectorAll('#overlay-root [data-action="ngin-pick"]')].map(x=>x.dataset.id)`);
+ await tap('#viewport [data-action="ngbu-share"]');await sleep(400);assert.equal((await chooser()).includes('hangouts'),true);await tap('#nav-bar [data-key="back"]');await tap('#nav-bar [data-key="back"]');await b.until(`document.querySelector('#viewport .ngbu-grid')`);
+ const picks=await b.ev(`[...document.querySelectorAll('#viewport [data-action="ngbu-select"]')].slice(0,2).map(x=>x.dataset.id)`);assert.equal(picks.length,2);
+ for(const id of picks)await tap(`#viewport [data-action="ngbu-select"][data-id="${id}"]`);await tap('#viewport [data-action="ngbu-share"]');await sleep(400);const multi=await chooser();assert.equal(multi.includes('hangouts'),false);assert.equal(multi.includes('gmail'),true);await tap('#nav-bar [data-key="back"]');
  for(const lang of ['en','hu','de','fr','es']){await b.language(lang);await b.open('camera');await tap('#viewport [data-action="ngcm-thumb"]');await b.until(`document.querySelector('#viewport .ngbu-grid')`);await tap('#viewport [data-action="ngbu-menu"]');assert.deepEqual(await b.ev(`[...AndroidStrings.misses]`),[],lang);}
  await b.send('Emulation.setDeviceMetricsOverride',{width:375,height:812,deviceScaleFactor:1,mobile:true});await b.shot('7.1.2-camera-burst-phone');assert.equal(await b.ev(`document.documentElement.scrollWidth<=innerWidth+1`),true);b.check();console.log('Burst editor passed: auto creation, best/all sections, selection/deletion, four creation types, playback, edit/share, phone and five languages.');
 }finally{b.close();}
