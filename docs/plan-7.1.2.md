@@ -1104,3 +1104,30 @@ to N2G48C framework-res `res/drawable-nodpi-v4/default_wallpaper.png`, and
 shamu 5.1.1, bullhead 6.0.1 or angler 7.1.2 images declares a WallpaperService
 (of the five images only hammerhead's SunBeam does); 6.0.1 uses bullhead's
 default_wallpaper.jpg byte for byte and 5.1.1 shamu's at half resolution.
+
+## Settings rows that still reached "not built" — 2026-10-23
+
+A crawl of every Settings screen (298 reached by clicking every row) found ten
+targets that still showed the not-built card. Fixed here: the Support tab's
+"Search help & send feedback" now starts GoogleHelp with the settings context;
+Status' IMEI information row (Settings$ImeiInformationActivity) reaches its
+screen; `ng-settings-access.js` builds NotificationAccessSettings and
+VrListenerSettings (ManagedServiceSettings with their scary and friendly
+dialogs), ZenAccessSettings, PremiumSmsAccess, UserCredentialsSettings and
+DeviceAdminSettings with DeviceAdminAdd, all from the android-7.1.2_r1 sources.
+
+Content comes from the image's manifests: Google VR Services holds the only
+notification-listener and VR-listener services (enabled on API 24 by its
+is_n_or_above); Camera and VR Services request DND access and framework
+config_defaultDndAccessPackages grants Camera; a package with notification
+access is approved and its switch disabled. Of five BIND_DEVICE_ADMIN receivers,
+DMAgent's and Gmail's are visible="false" and two GmsCore ones are disabled
+components, so Android Device Manager (wipe-data, reset-password, force-lock in
+DeviceAdminInfo's display order) is the one row. It is active while Google
+settings' "Allow remote lock and erase" is on; turning that switch on now asks
+with DeviceAdminAdd. Premium SMS and user credentials are honestly empty.
+Still open from the crawl: Trusted credentials and Emergency broadcasts.
+
+Validation: `tests/browser/ng-special-access.mjs` (real taps through each list,
+dialog cancel/confirm, auto-approval, admin deactivate/cancel/activate from both
+sides, five languages, phone width).

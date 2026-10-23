@@ -56,6 +56,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] ACTION_SEND video/audio native MIME receivers, immutable metadata, Messenger audio/video/resharing, Hangouts video, Photos/YouTube upload, Gmail/Drive streams and Cloud Print failure.
 - [x] Shared SEND_MULTIPLE: Photos, Documents and the Burst editor send every selected stream through each package's native SEND_MULTIPLE filter (`d8f7bddc`).
 - [ ] Preference leaf/intent routing audit: finish service-backed and non-toggle rows that still lack a click handler.
+      Settings crawl 2026-10-23: help, IMEI, notification/VR/DND access, premium SMS, user credentials and device admins done; Trusted credentials and Emergency broadcasts remain.
 - [ ] Sweep all direct `missing(...)` branches and external activity routes; no unfinished card may remain at release.
 
 ## Release gate

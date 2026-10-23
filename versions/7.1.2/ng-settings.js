@@ -82,7 +82,7 @@
     'com.android.settings.ApnSettings': 'apn_settings', 'com.android.settings.ScreenPinningSettings': 'screen_pinning_settings',
     'com.android.settings.TrustAgentSettings': 'trust_agent_settings', 'com.android.settings.fuelgauge.BatterySaverSettings': 'battery_saver_settings',
     'com.android.settings.wfd.WifiDisplaySettings': 'wifi_display_settings', 'com.android.settings.notification.ConfigureNotificationSettings': 'configure_notification_settings',
-    'com.android.settings.deviceinfo.ImeiInformation': 'device_info_phone_status', 'com.android.settings.notification.ZenModeAutomationSettings': 'zen_mode_automation_settings',
+    'com.android.settings.deviceinfo.ImeiInformation': 'device_info_phone_status', 'com.android.settings.Settings$ImeiInformationActivity': 'device_info_phone_status', 'com.android.settings.notification.ZenModeAutomationSettings': 'zen_mode_automation_settings',
     'com.android.settings.datausage.DataSaverSummary': 'data_saver', 'com.android.settings.applications.SpecialAccessSettings': 'special_access',
     'com.android.settings.accessibility.AccessibilitySettingsForSetupWizard': 'accessibility_settings_for_setup_wizard', 'com.android.settings.wifi.WifiCallingSettings': 'wifi_calling_settings',
     'com.android.settings.WifiCallingSettings': 'wifi_calling_settings', 'com.android.settings.inputmethod.VirtualKeyboardFragment': 'virtual_keyboard_settings',
@@ -660,7 +660,8 @@
       }
       if (name === 'ngst-support') {
         const kind = el.dataset.kind;
-        if (kind === 'help') { go(c, 'help', ''); return true; }
+        // SupportFeatureProviderImpl: "Search help & send feedback" starts GoogleHelp with the settings help context.
+        if (kind === 'help') { c.open('help', 'settings'); return true; }
         // SupportFeatureProviderImpl.getTipsAndTricksIntent: settingsgoogle:tips_and_tricks_url, by default www.android.com, in a new tab.
         if (kind === 'tips') { c.open('chrome', 'url:https://www.android.com/'); return true; }
         NG.settingsSupportEscalation ? NG.settingsSupportEscalation(c, kind) : go(c, `support:${kind}`, ''); return true;

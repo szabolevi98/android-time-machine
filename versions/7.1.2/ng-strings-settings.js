@@ -12304,6 +12304,279 @@ NG.strings('settings', {
 "fr": "Ne plus afficher",
 "es": "No volver a mostrar"
 },
+"no_notification_listeners": {
+"res": "angler:SettingsGoogle:no_notification_listeners",
+"en": "No installed apps have requested notification access.",
+"hu": "Egy telepített alkalmazás sem kért hozzáférést az értesítésekhez",
+"de": "Keine installierte App hat Benachrichtigungszugriff angefordert.",
+"fr": "Aucune demande d'accès aux notifications n'a été envoyée pour les applications installées.",
+"es": "Ninguna aplicación instalada ha solicitado acceso a las notificaciones."
+},
+"notification_listener_security_warning_title": {
+"res": "angler:SettingsGoogle:notification_listener_security_warning_title",
+"args": 1,
+"en": "Allow notification access for %1$s?",
+"hu": "Engedélyezi az értesítések elérését a(z) %1$s számára?",
+"de": "Benachrichtigungszugriff für %1$s zulassen?",
+"fr": "Autoriser %1$s à accéder aux notifications ?",
+"es": "¿Permitir el acceso de %1$s a las notificaciones?"
+},
+"notification_listener_security_warning_summary": {
+"res": "angler:SettingsGoogle:notification_listener_security_warning_summary",
+"args": 1,
+"en": "%1$s will be able to read all notifications, including personal information such as contact names and the text of messages you receive. It will also be able to dismiss notifications or trigger action buttons they contain. \n\nThis will also give the app the ability to turn Do Not Disturb on or off and change related settings.",
+"hu": "%1$s elolvashatja az összes értesítést, beleértve a személyes adatokat, például az ismerősök neveit és a fogadott üzeneteket. Továbbá az értesítéseket el is vetheti, illetve a bennük lévő műveletgombokat is aktiválhatja. \n\nEzzel az alkalmazás egyúttal képes lesz a „Ne zavarjanak” jelzés be- vagy kikapcsolására, továbbá a kapcsolódó beállítások módosítására.",
+"de": "%1$s kann alle Benachrichtigungen lesen, darunter auch persönliche Informationen wie Kontaktnamen und eingehende Nachrichten. Außerdem können Benachrichtigungen geschlossen und damit verbundene Aktionen ausgelöst werden. \n\nZusätzlich kann durch die App die \"Nicht stören\"-Funktion aktiviert bzw. deaktiviert werden. Verwandte Einstellungen können ebenfalls geändert werden.",
+"fr": "%1$s pourra lire toutes les notifications, y compris des informations personnelles, telles que le nom des contacts et le texte des messages que vous recevez. Il pourra également fermer des notifications ou déclencher les boutons d'action que celles-ci contiennent. \n\nL'application pourra aussi activer ou désactiver le mode Ne pas déranger, et modifier les paramètres associés.",
+"es": "%1$s podrá leer todas las notificaciones, incluidas las relativas a información personal, como nombres de contactos y texto de mensajes que hayas recibido. También podrá ignorar las notificaciones o utilizar los botones de acción que incluyan. \n\nTambién concede a la aplicación la capacidad de activar o desactivar el modo No molestar y de cambiar las opciones de configuración relacionadas."
+},
+"notification_listener_disable_warning_summary": {
+"res": "angler:SettingsGoogle:notification_listener_disable_warning_summary",
+"args": 1,
+"en": "If you turn off notification access for %1$s, Do Not Disturb access may also be turned off.",
+"hu": "Ha kikapcsolja a(z) %1$s hozzáférését az értesítésekhez, azzal lehet, hogy kikapcsolja a „Ne zavarjanak” módhoz való hozzáférést is.",
+"de": "Wenn du den Benachrichtigungszugriff für %1$s deaktivierst, wird möglicherweise auch der \"Nicht stören\"-Zugriff deaktiviert.",
+"fr": "Si vous désactivez l'accès aux notifications pour %1$s, l'accès au mode Ne pas déranger peut également être désactivé.",
+"es": "Si desactivas el acceso a las notificaciones de %1$s, también puede desactivarse el acceso al modo No molestar."
+},
+"notification_listener_disable_warning_confirm": {
+"res": "angler:SettingsGoogle:notification_listener_disable_warning_confirm",
+"en": "Turn off",
+"hu": "Kikapcsolás",
+"de": "Deaktivieren",
+"fr": "Désactiver",
+"es": "Desactivar"
+},
+"notification_listener_disable_warning_cancel": {
+"res": "angler:SettingsGoogle:notification_listener_disable_warning_cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"allow": {
+"res": "angler:SettingsGoogle:allow",
+"en": "Allow",
+"hu": "Engedélyezés",
+"de": "Zulassen",
+"fr": "Autoriser",
+"es": "Permitir"
+},
+"deny": {
+"res": "angler:SettingsGoogle:deny",
+"en": "Deny",
+"hu": "Elutasítás",
+"de": "Ablehnen",
+"fr": "Refuser",
+"es": "Denegar"
+},
+"no_vr_listeners": {
+"res": "angler:SettingsGoogle:no_vr_listeners",
+"en": "No installed apps have requested to be run as VR helper services.",
+"hu": "Egy telepített alkalmazás sem kérte, hogy virtuálisvalóság-segédszolgáltatásként legyen futtatva.",
+"de": "Keine installierte App hat die Ausführung als VR-Hilfedienst angefordert.",
+"fr": "Aucune demande d'exécution en tant que services de soutien de réalité virtuelle n'a été envoyée pour les applications installées.",
+"es": "Ninguna aplicación instalada ha solicitado ejecutarse como servicios de ayuda de RV."
+},
+"vr_listener_security_warning_title": {
+"res": "angler:SettingsGoogle:vr_listener_security_warning_title",
+"args": 1,
+"en": "Allow VR service access for %1$s?",
+"hu": "Engedélyezi a(z) %1$s számára a hozzáférést a virtuálisvalóság-szolgáltatáshoz?",
+"de": "VR-Dienstzugriff für %1$s erlauben?",
+"fr": "Autoriser %1$s à accéder au service de réalité virtuelle ?",
+"es": "¿Permitir que el servicio de RV acceda a %1$s?"
+},
+"vr_listener_security_warning_summary": {
+"res": "angler:SettingsGoogle:vr_listener_security_warning_summary",
+"args": 1,
+"en": "%1$s will be able to run when you are using applications in virtual reality mode.",
+"hu": "A(z) %1$s futtatható lesz, ha Ön virtuális valóság módban használ alkalmazásokat.",
+"de": "%1$s kann ausgeführt werden, wenn der Modus für virtuelle Realität für Apps aktiviert wird.",
+"fr": "L'écouteur \"%1$s\" pourra être exécuté lorsque vous utiliserez des applications en mode Réalité virtuelle.",
+"es": "%1$s podrá ejecutarse cuando utilices aplicaciones en el modo de realidad virtual."
+},
+"zen_access_empty_text": {
+"res": "angler:SettingsGoogle:zen_access_empty_text",
+"en": "No installed apps have requested Do Not Disturb access",
+"hu": "Egy telepített alkalmazás sem kért „Ne zavarjanak” elérést",
+"de": "Keine installierte App hat während \"Nicht stören\" Zugriff angefordert.",
+"fr": "Aucune demande d'accès \"Ne pas déranger\" n'a été envoyée par les applications installées.",
+"es": "Ninguna aplicación instalada ha solicitado acceso de No molestar"
+},
+"zen_access_warning_dialog_title": {
+"res": "angler:SettingsGoogle:zen_access_warning_dialog_title",
+"args": 1,
+"en": "Allow access to Do Not Disturb for %1$s?",
+"hu": "Engedélyezi a(z) %1$s számára a hozzáférést a „Ne zavarjanak” funkcióhoz?",
+"de": "Zugriff auf \"Nicht stören\" für %1$s zulassen?",
+"fr": "Autoriser l'accès au mode Ne pas déranger pour %1$s ?",
+"es": "¿Permitir acceso de %1$s a No molestar?"
+},
+"zen_access_warning_dialog_summary": {
+"res": "angler:SettingsGoogle:zen_access_warning_dialog_summary",
+"en": "The app will be able to turn on/off Do Not Disturb and make changes to related settings.",
+"hu": "Az alkalmazás be- és kikapcsolhatja a „Ne zavarjanak” funkciót, és módosíthatja a vonatkozó beállításokat.",
+"de": "Die App kann \"Nicht stören\" aktivieren/deaktivieren und Änderungen an verwandten Einstellungen vornehmen.",
+"fr": "L'application disposera d'une autorisation d'activation ou de désactivation du mode Ne pas déranger et de modification des paramètres associés.",
+"es": "La aplicación podrá activar o desactivar No molestar y realizar cambios en los ajustes relacionados."
+},
+"zen_access_revoke_warning_dialog_title": {
+"res": "angler:SettingsGoogle:zen_access_revoke_warning_dialog_title",
+"args": 1,
+"en": "Revoke access to Do Not Disturb for %1$s?",
+"hu": "Visszavonja a(z) %1$s hozzáférését a „Ne zavarjanak” szabályhoz?",
+"de": "Zugriff auf \"Bitte nicht stören\" für %1$s aufheben?",
+"fr": "Révoquer l'accès au mode Ne pas déranger pour %1$s ?",
+"es": "¿Quieres revocar el acceso a No molestar de %1$s?"
+},
+"zen_access_revoke_warning_dialog_summary": {
+"res": "angler:SettingsGoogle:zen_access_revoke_warning_dialog_summary",
+"en": "All Do Not Disturb rules created by this app will be removed.",
+"hu": "Az alkalmazás által létrehozott összes „Ne zavarjanak” szabály eltávolításra kerül.",
+"de": "Alle von dieser App erstellten \"Bitte nicht stören\"-Regeln werden entfernt.",
+"fr": "Toutes les règles \"Ne pas déranger\" créés par cette application seront supprimées.",
+"es": "Se quitarán todas las reglas de No molestar que esta aplicación haya creado."
+},
+"zen_access_disabled_package_warning": {
+"res": "angler:SettingsGoogle:zen_access_disabled_package_warning",
+"en": "Must stay turned on because notification access is on",
+"hu": "Bekapcsolva kell hagyni, mert az értesítési hozzáférés be van kapcsolva",
+"de": "Muss aktiviert bleiben, weil der Benachrichtigungszugriff aktiviert ist",
+"fr": "Doit rester activé, car l'accès aux notifications est activé.",
+"es": "Debe activarse porque el acceso a las notificaciones está activado"
+},
+"premium_sms_none": {
+"res": "angler:SettingsGoogle:premium_sms_none",
+"en": "No installed apps have requested Premium SMS access",
+"hu": "Egy telepített alkalmazás sem kért hozzáférést a Prémium sms-ekhez",
+"de": "Keine installierte App hat Zugriff auf Premium-SMS angefordert",
+"fr": "Aucune demande d'accès aux SMS premium n'a été envoyée pour les applications installées.",
+"es": "Ninguna aplicación instalada ha solicitado acceso SMS premium"
+},
+"no_device_admins": {
+"res": "angler:SettingsGoogle:no_device_admins",
+"en": "No available device administrators",
+"hu": "Nincs elérhető eszközkezelő",
+"de": "Keine Geräteadministratoren verfügbar",
+"fr": "Aucun administrateur disponible.",
+"es": "No hay ningún administrador de dispositivos disponible."
+},
+"add_device_admin_msg": {
+"res": "angler:SettingsGoogle:add_device_admin_msg",
+"en": "Activate device administrator?",
+"hu": "Aktiválja az eszközkezelőt?",
+"de": "Geräteadministrator aktivieren?",
+"fr": "Activer l'administrateur de l'appareil ?",
+"es": "¿Activar administrador de dispositivos?"
+},
+"active_device_admin_msg": {
+"res": "angler:SettingsGoogle:active_device_admin_msg",
+"en": "Device administrator",
+"hu": "Eszközkezelő",
+"de": "Geräteadministrator",
+"fr": "Administrateur de l'appareil",
+"es": "Administrador de dispositivos"
+},
+"device_admin_warning": {
+"res": "angler:SettingsGoogle:device_admin_warning",
+"args": 1,
+"en": "Activating this administrator will allow the app %1$s to perform the following operations:",
+"hu": "A kezelő aktiválásával lehetővé teszi a(z) %1$s számára a következő műveletek végrehajtását:",
+"de": "Die Aktivierung dieses Administrators ermöglicht der App \"%1$s\", folgende Vorgänge auszuführen:",
+"fr": "L'activation de cet administrateur permettra à l'application %1$s d'effectuer les opérations suivantes :",
+"es": "Al activar este administrador, la aplicación %1$s podrá llevar a cabo las siguientes operaciones:"
+},
+"device_admin_status": {
+"res": "angler:SettingsGoogle:device_admin_status",
+"args": 1,
+"en": "This administrator is active and allows the app %1$s to perform the following operations:",
+"hu": "Ez a kezelő aktív, és lehetővé teszi a(z) %1$s számára a következő műveletek végrehajtását:",
+"de": "Dieser Administrator ist aktiv und ermöglicht der App \"%1$s\", folgende Vorgänge auszuführen:",
+"fr": "Cet administrateur est activé et permet à l'application %1$s d'effectuer les opérations suivantes :",
+"es": "Este administrador está activo y permite que la aplicación %1$s realice las siguientes operaciones:"
+},
+"add_device_admin": {
+"res": "angler:SettingsGoogle:add_device_admin",
+"en": "Activate this device administrator",
+"hu": "Eszközkezelő aktiválása",
+"de": "Diesen Geräteadministrator aktivieren",
+"fr": "Activer cet administrateur de l'appareil",
+"es": "Activar este administrador de dispositivos"
+},
+"remove_device_admin": {
+"res": "angler:SettingsGoogle:remove_device_admin",
+"en": "Deactivate this device administrator",
+"hu": "Eszközkezelő kikapcsolása",
+"de": "Diesen Geräteadministrator deaktivieren",
+"fr": "Désactiver cet administrateur de l'appareil",
+"es": "Desactivar este administrador de dispositivos"
+},
+"framework/policylab_wipeData": {
+"res": "angler:framework:policylab_wipeData",
+"en": "Erase all data",
+"hu": "Minden adat törlése",
+"de": "Alle Daten löschen",
+"fr": "Effacer toutes les données",
+"es": "Borrar todos los datos"
+},
+"framework/policydesc_wipeData": {
+"res": "angler:framework:policydesc_wipeData",
+"en": "Erase the phone's data without warning by performing a factory data reset.",
+"hu": "Figyelmeztetés nélkül törli a telefon összes adatát, visszaállítva a gyári adatokat.",
+"de": "Auf Werkseinstellungen zurücksetzen und damit Daten auf dem Telefon ohne Warnung löschen",
+"fr": "Effacer les données du téléphone sans avertissement, en rétablissant la configuration d'usine",
+"es": "Borrar los datos del teléfono sin avisar restableciendo datos de fábrica"
+},
+"framework/policylab_resetPassword": {
+"res": "angler:framework:policylab_resetPassword",
+"en": "Change the screen lock",
+"hu": "A képernyőzár módosítása",
+"de": "Displaysperre ändern",
+"fr": "Modifier le verrouillage de l'écran",
+"es": "Cambiar el bloqueo de pantalla"
+},
+"framework/policydesc_resetPassword": {
+"res": "angler:framework:policydesc_resetPassword",
+"en": "Change the screen lock.",
+"hu": "A képernyőzár módosítása.",
+"de": "Displaysperre ändern",
+"fr": "Modifier le verrouillage de l'écran",
+"es": "Cambiar el bloqueo de pantalla"
+},
+"framework/policylab_forceLock": {
+"res": "angler:framework:policylab_forceLock",
+"en": "Lock the screen",
+"hu": "A képernyő zárolása",
+"de": "Bildschirm sperren",
+"fr": "Verrouiller l'écran",
+"es": "Bloquear la pantalla"
+},
+"framework/policydesc_forceLock": {
+"res": "angler:framework:policydesc_forceLock",
+"en": "Control how and when the screen locks.",
+"hu": "A képernyőzárolás módjának és idejének vezérlése.",
+"de": "Festlegen, wie und wann der Bildschirm gesperrt wird",
+"fr": "Gérer le mode et les conditions de verrouillage de l'écran",
+"es": "Controlar cómo y cuándo se bloquea la pantalla"
+},
+"PrebuiltGmsCore/common_mdm_feature_name": {
+"res": "angler:PrebuiltGmsCore:common_mdm_feature_name",
+"en": "Android Device Manager",
+"hu": "Android Eszközkezelő",
+"de": "Android Geräte-Manager",
+"fr": "Gestionnaire d'appareils Android",
+"es": "Administrador de dispositivos"
+},
+"PrebuiltGmsCore/mdm_device_admin_desc_2": {
+"res": "angler:PrebuiltGmsCore:mdm_device_admin_desc_2",
+"en": "Allow Android Device Manager to lock or erase a lost device",
+"hu": "Az Android Eszközkezelő zárolhatja vagy törölheti az eltűnt eszközt",
+"de": "Sperren des Geräts oder Löschen deiner Daten über Android Geräte-Manager zulassen",
+"fr": "Autoriser le Gestionnaire à verrouiller un appareil ou à en effacer les données",
+"es": "Permitir que el Administrador de dispositivos de Android bloquee o borre un dispositivo perdido"
+},
 "settings_suggestion_header_summary_hidden_items": {
 "res": "angler:SettingsGoogle:settings_suggestion_header_summary_hidden_items",
 "en": {

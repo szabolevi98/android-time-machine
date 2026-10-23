@@ -9,6 +9,8 @@
   'use strict';
   const T=()=>NG.text('gms'),t=k=>T().t(k),f=(k,...a)=>T().fmt(k,null,...a);
   const S=c=>c.data.gms ||= {adid:'',adsOptOut:false,drive:'wifi',access:true,history:false,nearby:true,locate:true,wipe:true,verify:true,smartlock:true,autoSignin:true,neverSave:[]};
+  // "Allow remote lock and erase" turned on asks with DeviceAdminAdd for MdmDeviceAdminReceiver (ng-settings-access.js).
+  NG.gmsState=S;
   const adid=c=>{const s=S(c);if(!s.adid){const h=()=>Math.floor(Math.random()*16).toString(16);s.adid=[8,4,4,4,12].map(n=>Array.from({length:n},h).join('')).join('-');c.save();}return s.adid;};
   const row=(c,r)=>({html:NG.settingsRow(c,r),sel:true});
   const sw=(c,key,title,summary,disabled)=>row(c,{title,summary,widget:NG.settingsSwitch(!!S(c)[key],disabled),action:'ngms-toggle',data:` data-k="${key}"`,disabled});
@@ -40,7 +42,7 @@
       case 'web':web(c,el.dataset.url);return true;
       case 'games':c.open('play-games');NG.gamesUI&&Object.assign(NG.gamesUI.state(c),{route:'settings',stack:[]});return true;
       case 'search':NG.openPrefs(c,'google','preferences_headers',NG.text('google').t('settings'));return true;
-      case 'toggle':{const k=el.dataset.k;if(k==='adsOptOut'&&!s.adsOptOut){c.dialog({title:t('ads_prefs_toggle_interest_based_ads_dialog_title'),buttons:[{label:t('framework/cancel')},{label:t('framework/ok'),action:c=>{s.adsOptOut=true;c.save();c.render();}}]});return true;}s[k]=!s[k];c.save();c.render();return true;}
+      case 'toggle':{const k=el.dataset.k;if(k==='adsOptOut'&&!s.adsOptOut){c.dialog({title:t('ads_prefs_toggle_interest_based_ads_dialog_title'),buttons:[{label:t('framework/cancel')},{label:t('framework/ok'),action:c=>{s.adsOptOut=true;c.save();c.render();}}]});return true;}if(k==='wipe'&&!s.wipe&&NG.deviceAdminOpen){NG.deviceAdminOpen(c);return true;}s[k]=!s[k];c.save();c.render();return true;}
       case 'reset-adid':c.dialog({title:t('ads_prefs_reset_adid_dialog_title'),message:t('ads_prefs_reset_adid_dialog_msg'),buttons:[{label:t('framework/cancel')},{label:t('framework/ok'),action:c=>{s.adid='';adid(c);c.render();}}]});return true;
       case 'drive':{const values=['wifi','all'];NG.appPrefsChoose(c,t('common_google_settings_drive_network_usage'),values.map(v=>t(v==='all'?'common_settings_drive_network_usage_all':'common_settings_drive_network_usage_wifi')),values.indexOf(s.drive),(c,i)=>{s.drive=values[i];c.save();c.render();},'#009688');return true;}
       case 'history':if(!s.history){s.history=true;c.save();c.render();}else c.dialog({title:t('location_settings_confirm_location_history_pause_title'),buttons:[{label:t('framework/cancel')},{label:t('framework/ok'),action:c=>{s.history=false;c.save();c.render();}}]});return true;

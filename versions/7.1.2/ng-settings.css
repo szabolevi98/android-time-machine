@@ -469,3 +469,36 @@ button.ngst-pref:active,div.ngst-pref[role=button]:active:not(:has(.ngst-gear:ac
 /* GoogleTTS AnalyticsPreferenceScreen (layout analytics): the actionBarSize #37474f bar, the 20 sp title 20 dp in, the switch 20 dp from the end; the explanation in textAppearanceMedium with 20 dp margins. */
 .ngst-switchbar.ngpe-ttsbar{padding:0 calc(20 * var(--dp));justify-content:space-between}.ngpe-ttsbar span{font:500 calc(20 * var(--dp)) Roboto,sans-serif}
 .ngpe-ttstext{margin:calc(20 * var(--dp));font-size:calc(18 * var(--dp));line-height:1.35;color:#000000de}
+
+/* Special access (ng-settings-access.js): EmptyTextSettings' centred textAppearanceMedium; the package icons as in the
+   other app lists. */
+.ngsa-empty{display:flex;align-items:center;justify-content:center;min-height:100%;box-sizing:border-box;padding:calc(16 * var(--dp));text-align:center;font-size:calc(18 * var(--dp));line-height:calc(24 * var(--dp));color:#0000008a;background:#fafafa}
+.ngsa-appic{flex:none;width:calc(40 * var(--dp));height:calc(40 * var(--dp))}
+/* device_admin_item.xml: listPreferredItemPadding 16 dp, the 48 dp app_icon_size icon 8 dp before the texts, the name
+   in textAppearanceMedium on one line, the description 4 dp below in textAppearanceSmall (4 lines), the CheckBox 16 dp after. */
+.ngsa-admin{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:#fafafa;text-align:left;font:inherit;box-sizing:border-box}
+.ngsa-admin:active{background:#e5e5e5}
+.ngsa-adminic{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin-right:calc(8 * var(--dp))}
+.ngsa-admintexts{flex:1;min-width:0;display:flex;flex-direction:column;margin:calc(8 * var(--dp)) 0}
+.ngsa-adminname{font-size:calc(18 * var(--dp));line-height:calc(24 * var(--dp));color:#000000de;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngsa-admindesc{margin-top:calc(4 * var(--dp));font-size:calc(14 * var(--dp));line-height:calc(19 * var(--dp));color:#0000008a;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.ngsa-admin .ngst-check{flex:none;margin-left:calc(16 * var(--dp))}
+/* device_admin_add.xml: the scrolling header and texts, then the vertical buttonBarStyle panel (borderless coloured
+   buttons, start-aligned, not all caps, dividerHorizontal before, between and after). */
+.ngsa-add{display:flex;flex-direction:column;height:100%;background:#fafafa;color:#000000de}
+.ngsa-addscroll{flex:1;overflow-y:auto}
+.ngsa-addhead{display:flex;align-items:center;margin-top:calc(16 * var(--dp));padding:0 calc(16 * var(--dp))}
+.ngsa-addhead img{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin-right:calc(16 * var(--dp))}
+.ngsa-addhead b{font-size:calc(18 * var(--dp));line-height:calc(24 * var(--dp))}
+.ngsa-addbody{padding:0 calc(16 * var(--dp))}
+.ngsa-addbody p{margin:0;font-size:calc(14 * var(--dp));line-height:calc(20 * var(--dp));color:#0000008a}
+.ngsa-addbody p.ngsa-warning{padding:calc(10 * var(--dp));font-size:calc(18 * var(--dp));line-height:calc(24 * var(--dp));color:#000000de}
+.ngsa-policies{padding:0 calc(12 * var(--dp)) 0 calc(16 * var(--dp))}
+.ngsa-policy{display:flex;align-items:flex-start}
+.ngsa-policy img{flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngsa-policy span{display:flex;flex-direction:column;padding-left:calc(6 * var(--dp))}
+.ngsa-policy b{font-size:calc(18 * var(--dp));line-height:calc(24 * var(--dp))}
+.ngsa-policy small{margin-top:calc(-4 * var(--dp));padding-bottom:calc(8 * var(--dp));font-size:calc(14 * var(--dp));line-height:calc(20 * var(--dp));color:#0000008a}
+.ngsa-buttons{flex:none;display:flex;flex-direction:column;border-top:1px solid #0000001f}
+.ngsa-buttons button{min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;border-bottom:1px solid #0000001f;background:none;text-align:left;font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#009688}
+.ngsa-buttons button:active{background:#0000001f}

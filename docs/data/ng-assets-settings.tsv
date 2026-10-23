@@ -1,4 +1,5 @@
 # Settings drawables named by its preference screens, dashboard and suggestions (written by docs/tools/ng-prefs.py)
+fw-ic_bullet_key_permission.png	framework/framework-res.apk	drawable/ic_bullet_key_permission
 fw-sym_def_app_icon.png	framework/framework-res.apk	drawable/sym_def_app_icon
 gms-common_ic_googleplayservices.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/common_ic_googleplayservices
 gms-ic_google_settings.png	priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk	drawable/ic_google_settings
