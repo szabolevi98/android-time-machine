@@ -4,7 +4,7 @@ Dátum: 2026-10-23. A fájl az átadáskori állapotot rögzíti; kezdéskor ell
 
 ## Következő sessionben bemásolható kérés
 
-> Folytasd a D:\xampp\htdocs\android-simulator fejlesztését az alábbi átadó és hiányaudit alapján. Először ellenőrizd az aktuális git-állapotot és a projekt saját utasításait. A cél a verziók közötti indokolatlan funkcióhiányok csökkentése. A teljes besorolás már elkészült a riportban; ne ismételd meg. Olvasd el a lezárt döntéseket és a T01–T49 feladatlistát, majd kezdd az 5.1.1 Photos Edit reprodukálásával és javításával, és haladj a prioritáslista szerint. Az eredeti Android-verzióhoz illő működést építsd meg a gyári image és az AOSP alapján; a többi verzió kész helyi megoldásai csak referenciák. Minden javított tételt ellenőrizz, vedd fel a közös regressziós tesztbe, és az állapotot a riportban vezesd. Commit és push mehet. VPS-deployra nincs külön felhatalmazás.
+> Folytasd a D:\xampp\htdocs\android-simulator fejlesztését az alábbi átadó és hiányaudit alapján. Először ellenőrizd az aktuális git-állapotot és a projekt saját utasításait. A cél a verziók közötti indokolatlan funkcióhiányok csökkentése. A teljes besorolás már elkészült a riportban; ne ismételd meg. Olvasd el az aktuális Mag / Későbbi lista felosztást; csak a mag kijelölt részeit valósítsd meg. A későbbi csomagokat ne kezdd el automatikusan. Ezután kezdd az 5.1.1 Photos Edit reprodukálásával és javításával, és haladj a prioritáslista szerint. Az eredeti Android-verzióhoz illő működést építsd meg a gyári image és az AOSP alapján; a többi verzió kész helyi megoldásai csak referenciák. Minden javított tételt ellenőrizz, vedd fel a közös regressziós tesztbe, és az állapotot a riportban vezesd. Commit és push mehet. VPS-deployra nincs külön felhatalmazás.
 
 Ez a kezdőkérés javasolt munkasorrend; a felhasználó a következő sessionben átírhatja.
 
@@ -29,44 +29,48 @@ A kérés: verziónként gyűjtsük össze az „Ez a funkció nem része a szim
 
 Az audit forrásvizsgálat és célzott futó ellenőrzés. Nem az összes gomb és minden belső beállítás teljes kattintásos bejárása. A 6.0.1/7.1.2 nulla konkrét találata nem jelenti, hogy minden elképzelhető funkció kész.
 
-## A tervezés lezárva — 2026-10-23
+## Aktuális vállalás: a mag, nem a teljes 49 csomag
 
-A teljes besorolás elkészült a `docs/reports/simulator-limits-2026-10-23.md` „Lezárt besorolás és véges fejlesztési lista” részében. **Nem kell újra első munkalépésként besorolni a 125 csoportot.** Mind a 153 eredeti sorhoz egyedi azonosító és döntés tartozik; a vegyes sorok javítandó és meghagyott része külön szerepel. A további Maps/Settings utak N01–N05 alatt vannak.
+A 153 auditcsoport besorolása és a T01–T49 csomagok leírása megmarad a `docs/reports/simulator-limits-2026-10-23.md` riportban. **A besorolást nem kell újrakezdeni, és nem kell mind a 49 csomagot megépíteni.** A riport „Ütem” mezője és részcsomagnál a „Mostani rész” az irányadó.
 
-Az állapot és a végleges részletes terjedelem egyetlen helye a riport: **49 nyitott feladatcsomag (T01–T49)**, mindhez verziólista, forráscsoport és készfeltétel. Ez nem 49 session vagy 49 külön gomb. A besorolás kész; a javítások ebben a tervezési körben nem kezdődtek el.
+## Visszaállított szűrési szabály
 
-## Rögzített végrehajtási sorrend
+**A munka a helyi beállításokra és szerkesztésre koncentráljon. Vitás esetben a verziók közötti eltérés dönt: ami másik verzióban már helyi működésként kész, itt viszont elutasít, az lehet a mag része. Ami egyik verzióban sincs kész, azt ebből a fejlesztési körből kihagyjuk.**
 
-1. Közös regressziós teszt kerete a `flows.mjs` mintájára; majd **T01–T07**: 5.1 Photos saját Edit, 4.3 Email Settings, három verzió Naptár, Gmail beállítások, ICS kamera video/pano, 5.1 Attach file és a pontosan felsorolt Chrome-kategóriák.
-2. **T08–T17:** kijelölés, Email helyi prefsorok, kamerás appátadás, Névjegyek, Maps, MMS, GB Zene/Car Home/Voice/Talk.
-3. **T18–T30:** Books, Earth, YouTube, Store, ICS Play Music, Google+, Movies, keresés, régi Messenger, Movie Studio, Navigation és helyi rendszerbeállítások.
-4. **T31–T46 és T49:** Galéria videó, Hangouts/Óra, Drive/Keep/tartalmi appok, Now/Photos, Quickoffice/Docs/Fit, Play-könyvtárak, Telefon, közös Print/PDF/shortcut, Gmail About és különleges kameramódok.
-5. **T47–T48:** a jelenlegi regiszterből elérhető tartalékcélok bejárása és a szöveges/regressziós lezárás. A szövegeket közben apponként, külön commitban is javítsd.
+A másik verzióban létező referencia nem jelent automatikus vállalást minden régi verziós alrendszer átépítésére. Az aktuális mag név szerint az alábbi lista. A későbbi jelölt nem kész és nem szándékos korlát: külön fejlesztési döntést igénylő feladat.
 
-Függőségek és a tényleges műveletlisták a riportban vannak. **A korábbi nyitott 8. pont megszűnt:** nem maradt „további helyi funkciók később eldöntendők” gyűjtőkategória. A T-csomagokból ne hagyj el műveletet időnyerés céljából, és ne bővítsd őket észrevétlenül teljes új alkalmazásokkal.
+## A mag rögzített sorrendje
 
-## Rögzített terjedelmi döntések
+1. Közös regressziós keret a `flows.mjs` alapján; majd **T01–T07**: 5.1 Photos saját Edit, 4.3 Email Settings, Naptár, Gmail beállítások, ICS kamera video/pano, 5.1 Attach file és a név szerint szűkített Chrome-kategóriák.
+2. **T33:** Óra helyi Settings és 5.1 városkeresés.
+3. **T11 csak részben:** helyi névjegy import/export és a 4.0.4/4.3/4.4.4 Set ringtone. A többi Contacts menü későbbi lista.
+4. **T44 csak részben:** 5.1 Telefon Import/export belépés és Settings alapjai (helyi megjelenítés/rendezés, hang/rezgés, gyorsválaszok). A teljes haladó hívásbeállításfa későbbi lista.
+5. **T49 csak Photo Sphere:** 4.4.4/5.1.1 irányított helyi felvétel és mentés; Lens Blur későbbi lista.
+6. **T48 csak a mag kísérő része:** a ténylegesen javított utak regressziója és érintett üzenetei. Teljes nyolcverziós szöveg-újraaudit nem kötelező ebben a körben.
 
-- Help/Feedback/Contact us, külső jogi/tájékoztató link, valódi fiókművelet és pénzügyi szolgáltatás korlát marad. Az újabb verziókban már kész ilyen oldalt nem kell eltávolítani.
-- Chrome Passwords/Autofill az előző átadóban engedett szűkítés alapján marad ki, nem azért, mert minden helyi modellje technikailag lehetetlen volna.
-- A helyi szervermező-/szinkronpreferencia szerkesztés javítandó; a valódi újfiókos bejelentkezés és hálózati szinkron nem. A helyi Print/PDF javítandó; a fizikai nyomtatás nem.
-- Movie Studio és Photo Sphere/Lens Blur helyi folyamata külön nevesített feladat. A nagy munkaigény nem indok a szándékos korláttá átminősítésre.
-- 4.3/4.4.4 alatt About Gmail ténylegesen szerepel; 5.1.1 alatt nem, ezért oda nem épül új menüpont.
-- A feltételes missing renderer megmarad. Csak normál UI-ból elérhető, konkrét hibás cél javítandó a T47 ellenőrzés alapján.
+Ez **8 teljes csomag és 4 kijelölt csomagrész**. Működő referenciák, pontos határok és készfeltételek a riportban. A részcsomag magrésze önállóan lezárható, a többi halasztott marad.
 
-## Időkeret és státusz
+## Későbbi lista — külön döntés nélkül ne kezdd el
 
-A korábban elhangzott 7–12 és 15–22 session nem igazolt vállalás; a commitokat tartalmazó ötórás ablakok nem mérik a projekt tényleges sessionfogyasztását. A 7 session célkeret lehet, de a teljes listára nincs ilyen garantált határ. A tervezés lezárásához nem kell új időbecslést elfogadtatni; a feladatlista most tételes és véges.
+**37 teljes csomag**, továbbá T11/T44/T49/T48 fent nem kijelölt részei. Kifejezetten ide tartozik **T23 Google+ posztolás, T24 Play Movies offline kezelés, T27 Movie Studio, T29 ICS System updates/TalkBack, T41 Fit adatbevitel és T45 régi nyomtatás/PDF**. Ezek nem feltételei a mag késznek jelentésének. T47 teljes tartalékcél-bejárása is későbbi feladat; a mag saját útjait természetesen tesztelni kell.
+
+A 6/7-ben már meglévő helyi nyomtatás/PDF és TalkBack felületek megmaradnak. A T45/T29 halasztás oka a mostani kör szűkítése, nem az, hogy egyik verzióban sem létezne ilyen megoldás.
+
+## Terjedelem és munkamennyiség
+
+A felhasználó nem kér fix 7 sessiones határt, de nem akar 20+ sessionesre növő teljes újraépítést. A szűk magot végezzük el, a későbbi listát nem indítjuk automatikusan. Az első kész prioritások alapján jelezd, ha a maradék mag ténylegesen jelentősen nagyobbnak bizonyul. Ne alakítsd vissza ezt a listát teljes 49 csomagos vállalássá, és ne csökkentsd helyette a kijelölt funkciók tesztelését.
+
+Az eredeti Help/Feedback/Contact us, külső jogi/tájékoztató, valódi fiók/pénzügyi/hálózati/hardver korlátok megmaradnak. Az üzenet átírása nem helyettesít funkciójavítást. A 7 vagy 20 sessionről nem következtetünk commit-időablakokból, és nem állítunk új, mérés nélküli pontos időbecslést.
 
 ### Elutasító szövegek egységesítése
 
-Az elutasító üzenetek verziónként eltérnek (lásd a „Megtalált szövegváltozatok” táblát: generikus F, U, N, D, V, B, valamint alkalmazásspecifikus C, H, L, P), és több szövegnek nincs magyar fordítása, például „Calendar settings are not part of this simulation.”, „Help is not available offline.”, „Lens Blur capture is not simulated”, „Not available in this simulator”. Ezt nem egyszerre, mind a nyolc verzió fájljain kell rendbe tenni a funkciójavítások közben, hanem alkalmazásonként: amikor egy appot amúgy is javítasz, annak az elutasító szövegeit is egységesítsd, külön commitban. A végén egy záró átnézés kezeli a maradékot. Szempontok:
+Az elutasító üzenetek verziónként eltérnek (lásd a „Megtalált szövegváltozatok” táblát: generikus F, U, N, D, V, B, valamint alkalmazásspecifikus C, H, L, P), és több szövegnek nincs magyar fordítása, például „Calendar settings are not part of this simulation.”, „Help is not available offline.”, „Lens Blur capture is not simulated”, „Not available in this simulator”. Ezt nem egyszerre, mind a nyolc verzió fájljain kell rendbe tenni a funkciójavítások közben, hanem alkalmazásonként: amikor egy appot amúgy is javítasz, annak az elutasító szövegeit is egységesítsd, külön commitban. A mostani záró átnézés csak a mag által érintett appokra vonatkozik; a teljes maradék a későbbi T48-rész. Szempontok:
 
 - egy közös, lefordított szövegkulcsra kell vezetni azokat a helyeket, amelyek ugyanazt jelentik;
 - a szándékosan megmaradó, alkalmazásspecifikus szövegek (pl. Photo Sphere, segélyhívás) kapjanak magyar fordítást;
 - a „Not available in this demo” és hasonló eltéréseket ne hagyd külön változatként, ha ugyanazt jelentik.
 
-Az egységesítés nem helyettesíti a funkció megépítését: egy javítandó tételt nem az üzenet átírása zár le.
+Az egységesítés nem helyettesíti a funkció megépítését: egy magba kijelölt tételt nem az üzenet átírása zár le.
 
 ### Munkaszabályok
 
