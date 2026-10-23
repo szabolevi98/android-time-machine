@@ -30,7 +30,8 @@
     if (!root) return;
     const rows = pref('enable_number_row', false) && mode === 'alpha' && !numeric();
     const ratio = Math.max(.8, Math.min(1.2, +pref('keyboard_height_ratio', '1.0') || 1));
-    const height = (numeric() ? 249 : 282) * ratio * (rows ? 1.2 : 1);
+    const height = (numeric() ? 249 : 282) * ratio * (rows ? 1.2 : 1)+(NG.keyboardFeatures?.isSearch()?8:0);
+    root.classList.toggle('searching',!!NG.keyboardFeatures?.isSearch());
     c.el.screen.style.setProperty('--ngboard-height', `${height}`);
     c.el.screen.classList.add('ngboard-open');
     root.classList.toggle('numbers', numeric());
@@ -79,8 +80,10 @@
     const langName = new Intl.DisplayNames([c.locale()], {type:'language'}).of(lang());
     const bottom = numeric() ? `${charKey(field?.type === 'tel' ? '*' : '.')}${charKey('0')}${button('delete', icon('delete'), 'function', 'delete_key_content_desc')}${end}` :
       `${button(mode === 'alpha' ? 'symbols' : 'alpha', mode === 'alpha' ? '?123' : 'ABC', 'function', 'symbol_keyboard_key_content_desc')}${button('emoji', icon('emoji'), 'function', 'emoji_keyboard_key_content_desc')}${charKey(',')}${button('space', c.safe(langName), 'space', 'space_key_content_desc')}${charKey('.')}${mode === 'emoji' ? button('delete', icon('delete'), 'function', 'delete_key_content_desc') : ''}${end}`;
-    root.innerHTML = `${NG.keyboardThemeBackground?.(c,pref('theme','light'))||''}<div class="ngboard-inner"><div class="ngboard-header">${button('settings', icon('menu'), 'tool', 'open_access_points_menu_content_desc')}<span class="ngboard-word"></span>${!secret()&&pref('enable_voice_input',true)?button('voice',icon('mic'),'tool','voice_input_key_content_desc'):''}${button('language', icon('globe'), 'tool', 'next_language_key_content_desc')}</div><div class="ngboard-body">${body}<div class="ngboard-row bottom">${bottom}</div></div></div>`;
-    resize(); suggestions();
+    const header=NG.keyboardFeatures?.header()||`${button('features', icon(pref('enable_one_tap_to_search',false)?'feature-search':'menu'), 'tool', 'open_access_points_menu_content_desc')}<span class="ngboard-word"></span>${!secret()&&pref('enable_voice_input',true)?button('voice',icon('mic'),'tool','voice_input_key_content_desc'):''}${button('language', icon('globe'), 'tool', 'next_language_key_content_desc')}`;
+    const featureBody=NG.keyboardFeatures?.body();
+    root.innerHTML = `${NG.keyboardThemeBackground?.(c,pref('theme','light'))||''}<div class="ngboard-inner"><div class="ngboard-header">${header}</div><div class="ngboard-body">${featureBody??`${body}<div class="ngboard-row bottom">${bottom}</div>`}</div></div>`;
+    resize(); suggestions();NG.keyboardFeatures?.mount();
   }
   function remember(el) {
     const scope = el.closest('#overlay-root') ? '#overlay-root' : '#viewport';
@@ -110,7 +113,7 @@
       const selection = replacing && {start:target.start,end:target.end};
       restoreMode(field); bind(el);
       if (selection) { try { el.setSelectionRange(selection.start,selection.end); } catch {} target=remember(el); }
-      else {mode='alpha';shift=0;candidateOverride=null;lastCorrection=null;lastGlide=false;autoShift();}
+      else {mode='alpha';shift=0;candidateOverride=null;lastCorrection=null;lastGlide=false;NG.keyboardFeatures?.reset();autoShift();}
     }
     if (!root) {
       root = document.createElement('div'); root.className = 'ngboard'; root.setAttribute('role','group'); root.setAttribute('aria-label',tr('ime_name'));
@@ -120,14 +123,14 @@
       root.addEventListener('pointermove', glideMove);
       root.addEventListener('pointercancel', ()=>{cancelPress();gestureState=null;root?.querySelector('.ngboard-trail')?.remove();});
       root.addEventListener('click', e => { e.stopPropagation(); if (e.detail === 0) { const key = e.target.closest('[data-gb]'); if (key) press(key.dataset.gb); } });
-      root.addEventListener('mousedown', e => e.preventDefault());
+      root.addEventListener('mousedown',e=>{if(!e.target.closest('.ngboard-search-query'))e.preventDefault();});
     }
     draw();ensureWords();
     requestAnimationFrame(() => field?.scrollIntoView({block:'nearest',inline:'nearest'}));
   }
   function cancelPress() { clearTimeout(timer); clearInterval(repeat); root?.querySelector('.pressed')?.classList.remove('pressed'); root?.querySelector('.ngboard-preview')?.remove(); }
   function hide() {
-    cancelPress();gestureState=null;candidateOverride=null;lastCorrection=null;lastGlide=false; root?.remove(); root = null;
+    cancelPress();gestureState=null;candidateOverride=null;lastCorrection=null;lastGlide=false;NG.keyboardFeatures?.reset(); root?.remove(); root = null;
     restoreMode(field); const old = field; field = null; target = null;
     if (document.activeElement === old) old.blur();
     c?.el.screen.classList.remove('ngboard-open'); c?.el.screen.style.removeProperty('--ngboard-height'); if(c) nav();
@@ -157,7 +160,7 @@
     const type = deleting ? 'deleteContentBackward' : 'insertText';
     if (!editor.dispatchEvent(new InputEvent('beforeinput',{bubbles:true,cancelable:true,inputType:type,data:deleting ? null : text}))) return;
     try { editor.setRangeText(text,start,end,'end'); } catch { editor.value = value.slice(0,start)+text+value.slice(end); }
-    target = {...remember(editor), start:start+text.length, end:start+text.length};
+    target = {...remember(editor), start:editor.selectionStart??start+text.length,end:editor.selectionEnd??start+text.length};
     editor.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:type,data:deleting ? null : text}));
     reconcile();
     if (shift === 1) shift = 0;
@@ -181,6 +184,7 @@
     });
   }
   function press(key) {
+    if(NG.keyboardFeatures?.press(key)){if(key.startsWith('text:')&&shift===1){shift=0;draw();}return;}
     if(key.startsWith('candidate:')){replaceWord(key.slice(10),true);lastGlide=false;}
     else if (key.startsWith('text:')) {candidateOverride=null;if(lastGlide&&word())insert(' ');lastGlide=false;insert(key.slice(5));}
     else if (key === 'space') {candidateOverride=null;space();}
@@ -214,6 +218,7 @@
     return layout().accents[text] || [];
   }
   function down(e) {
+    NG.keyboardFeatures?.pointerDown(e);
     const key=e.target.closest('[data-gb]'); if(!key) return;
     if(key.closest('.ngboard-preview.choices')) { e.preventDefault(); e.stopPropagation(); const value=key.dataset.gb; cancelPress(); held=true; press(value); return; }
     if(!key.closest('.ngboard-emojis'))e.preventDefault(); e.stopPropagation(); cancelPress(); held=false; key.classList.add('pressed');
@@ -225,11 +230,12 @@
       else if(key.dataset.gb.startsWith('text:')) { const choices=accents(key.dataset.gb.slice(5)); if(choices.length) { held=true; popup(key,choices); } }
     },Math.max(150,Math.min(700,+pref('key_long_press_delay',300)||300)));
   }
-  function glideMove(e){const g=gestureState;if(!g||g.pointer!==e.pointerId||held)return;const first=g.points[0];if(!g.active&&Math.hypot(e.clientX-first.x,e.clientY-first.y)<12*c.el.screen.clientWidth/411.4286)return;
+  function glideMove(e){if(NG.keyboardFeatures?.pointerMove(e)){cancelPress();e.preventDefault();return;}const g=gestureState;if(!g||g.pointer!==e.pointerId||held)return;const first=g.points[0];if(!g.active&&Math.hypot(e.clientX-first.x,e.clientY-first.y)<12*c.el.screen.clientWidth/411.4286)return;
     if(!g.active){g.active=true;clearTimeout(timer);clearInterval(repeat);root.querySelector('.ngboard-preview')?.remove();root.setPointerCapture?.(e.pointerId);}g.points.push({x:e.clientX,y:e.clientY});e.preventDefault();
     if(pref('pref_gesture_preview_trail',true)){const r=root.getBoundingClientRect();let svg=root.querySelector('.ngboard-trail');if(!svg){svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.classList.add('ngboard-trail');svg.innerHTML='<polyline fill="none" stroke-linecap="round" stroke-linejoin="round"/>';root.append(svg);}svg.setAttribute('viewBox',`0 0 ${r.width} ${r.height}`);svg.firstChild.setAttribute('points',g.points.map(p=>`${p.x-r.left},${p.y-r.top}`).join(' '));}
   }
   function up(e) {
+    if(NG.keyboardFeatures?.pointerUp()){cancelPress();e.preventDefault();e.stopPropagation();return;}
     const g=gestureState;gestureState=null;if(g?.active){e.preventDefault();e.stopPropagation();cancelPress();root?.querySelector('.ngboard-trail')?.remove();const r=root.getBoundingClientRect(),unit=r.width/10,keys={};root.querySelectorAll('.ngboard-row .char[data-gb]').forEach(el=>{const k=el.dataset.gb.slice(5).toLocaleLowerCase(lang()),b=el.getBoundingClientRect();if(k.length===1)keys[NG.keyboardWords.fold(k)]={x:(b.left+b.width/2-r.left)/unit,y:(b.top+b.height/2-r.top)/unit};});const points=g.points.map(p=>({x:(p.x-r.left)/unit,y:(p.y-r.top)/unit})),items=wordModel()?.gesture(points,keys,wordOptions())||[];if(items.length){const before=word();if(before)insert(' ');const first=shift?capital(items[0],'A'):items[0];candidateOverride=null;insert(first);lastGlide=true;candidateOverride=[first,...items.slice(1)];suggestions();}return;}
     const key=e.target.closest('[data-gb]'), choice=key?.closest('.ngboard-preview.choices');
     clearTimeout(timer); clearInterval(repeat); e.preventDefault(); e.stopPropagation();
@@ -237,7 +243,8 @@
     if(held && root?.querySelector('.choices')) { root.querySelector('.pressed')?.classList.remove('pressed'); return; }
     cancelPress(); if(key && !held) press(key.dataset.gb);
   }
-  NG.ime = {open:()=>!!root, hide, back(){if(!root)return false;hide();return true;}, beforeRender(){ if(root && target && (c.ui.view!==target.view || c.ui.sub!==target.sub || c.ui.sleeping || c.ui.power)) hide(); }};
+  NG.keyboardFeatures?.connect({context:()=>c,root:()=>root,draw,hide,insert,press,multiline:()=>field?.tagName==='TEXTAREA',alpha:()=>{mode='alpha';shift=0;},focus:()=>{autoShift();field?.focus({preventScroll:true});}});
+  NG.ime = {open:()=>!!root, hide, back(){if(!root)return false;if(NG.keyboardFeatures?.back())return true;hide();return true;}, beforeRender(){ if(root && target && (c.ui.view!==target.view || c.ui.sub!==target.sub || c.ui.sleeping || c.ui.power)) hide(); }};
   const languageNames = ctx => ['en','hu','de','fr','es'].map(l=>new Intl.DisplayNames([ctx.locale()],{type:'language'}).of(l));
   const prefRow = (ctx,title,summary,action,data='',widget='') => NG.settingsRow(ctx,{title,summary,action,data,widget});
   const set = (ctx,key,value) => { NG.setAppPref(ctx,'gboard',key,value); ctx.render(); };
@@ -292,7 +299,7 @@
     init(ctx) {
       c=ctx;
       document.addEventListener('focusin',e=>{if(eligible(e.target))show(e.target);});
-      document.addEventListener('focusout',()=>setTimeout(()=>{if(root && field?.isConnected && document.activeElement!==field && !eligible(document.activeElement)) hide();},60));
+      document.addEventListener('focusout',()=>setTimeout(()=>{if(root && field?.isConnected && document.activeElement!==field && !root.contains(document.activeElement) && !eligible(document.activeElement)) hide();},60));
       document.addEventListener('input',e=>{if(e.target===field){target=remember(field);suggestions();}});
       document.addEventListener('selectionchange',()=>{if(root && field===document.activeElement)target=remember(field);});
       new MutationObserver(reconcile).observe(c.el.screen,{childList:true,subtree:true});

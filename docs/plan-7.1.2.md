@@ -971,3 +971,27 @@ Validation: all 237 module checks passed; three model checks use the real four e
 pointer browser flow cover native completions, correction/undo, a hello glide,
 personal shortcut expansion, preference changes, private editor contracts, all
 five languages and phone width. The original Gboard browser regression passed.
+
+## Gboard Search and access points — 2026-10-23
+
+The native access-point row now opens Search, voice typing, one-handed mode,
+ThemeSelector and Settings. The Show G button preference switches the default
+chevron/menu access point to direct search. Search uses Gboard's 48dp white
+EditTextOnKeyboard header, native labels/icons, card container and default query
+chips. Search card contents are invented responses from the existing offline
+2017 web/weather service; no live Google search or external queries are performed.
+The native no-results response handles unknown demo queries.
+
+The query editor is separate from the originating app's text. Soft and hardware
+input edit only the query; Share restores the original caret/selection and inserts
+the result title/link (space in a single-line editor, newline in a textarea).
+Result cards and query chips support real pointer/touch horizontal scrolling,
+results open their offline Chrome page, and Back restores query then original
+keyboard without leaking the search text into the draft. Home/other activities
+clear the transient search panel. Search history is private Gboard preference data.
+
+Validation: real pointer browser checks cover caret/suffix preservation, card
+scrolling/sharing/opening, native empty/default responses, Back, one-handed/theme
+access, direct G preference, all five languages and phone width. Both the original
+Gboard and dictionary/glide browser regressions passed. Inventory: 1177 rebuilt
+assets from N2G48C, zero problems.

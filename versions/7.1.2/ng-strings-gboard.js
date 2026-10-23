@@ -438,5 +438,117 @@ NG.strings('gboard', {
 "de": "SPEICHERN",
 "fr": "ENREGISTRER",
 "es": "GUARDAR"
+},
+"close_access_points_menu_content_desc": {
+"res": "angler:LatinIMEGooglePrebuilt:close_access_points_menu_content_desc",
+"en": "Close features menu",
+"hu": "Funkciók menü bezárása",
+"de": "Funktionsmenü schließen",
+"fr": "Fermer le menu des fonctionnalités",
+"es": "Cerrar el menú de funciones"
+},
+"search_access_point_content_desc": {
+"res": "angler:LatinIMEGooglePrebuilt:search_access_point_content_desc",
+"en": "Search",
+"hu": "Keresés",
+"de": "Suche",
+"fr": "Recherche",
+"es": "Búsqueda"
+},
+"one_handed_access_point_content_desc": {
+"res": "angler:LatinIMEGooglePrebuilt:one_handed_access_point_content_desc",
+"en": "One handed mode",
+"hu": "Egykezes mód",
+"de": "Tastatur seitlich fixieren",
+"fr": "Mode Une seule main libre",
+"es": "Modo de un solo lado"
+},
+"theme_settings_access_point_content_desc": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_settings_access_point_content_desc",
+"en": "Theme settings",
+"hu": "Témabeállítások",
+"de": "Design-Einstellungen",
+"fr": "Paramètres des thèmes",
+"es": "Configuración de temas"
+},
+"gbot_search_results_hint": {
+"res": "angler:LatinIMEGooglePrebuilt:gbot_search_results_hint",
+"en": "Search",
+"hu": "Keresés",
+"de": "Suche",
+"fr": "Recherche",
+"es": "Búsqueda"
+},
+"gbot_share_chip_text": {
+"res": "angler:LatinIMEGooglePrebuilt:gbot_share_chip_text",
+"en": "Share",
+"hu": "Megosztás",
+"de": "Teilen",
+"fr": "Partager",
+"es": "Compartir"
+},
+"gboard_no_results_header": {
+"res": "angler:LatinIMEGooglePrebuilt:gboard_no_results_header",
+"en": "No results found",
+"hu": "Nincs találat",
+"de": "Keine Ergebnisse gefunden",
+"fr": "Aucun résultat trouvé",
+"es": "No se encontraron resultados"
+},
+"gboard_no_results_message": {
+"res": "angler:LatinIMEGooglePrebuilt:gboard_no_results_message",
+"en": "Make sure all words are spelled correctly or try different keywords.",
+"hu": "Ellenőrizze, hogy minden szót helyesen írt-e be, illetve próbálkozzon más keresőszavakkal.",
+"de": "Achten Sie darauf, dass alle Wörter richtig geschrieben sind, oder versuchen Sie es mit anderen Suchbegriffen.",
+"fr": "Assurez-vous que tous les mots sont correctement orthographiés ou saisissez d'autres mots clés.",
+"es": "Revisa la ortografía o usa otras palabras clave."
+},
+"gbot_keyboard_default_candidate_0": {
+"res": "angler:LatinIMEGooglePrebuilt:gbot_keyboard_default_candidate_0",
+"en": "News",
+"hu": "Hírek",
+"de": "Nachrichten",
+"fr": "Actualités",
+"es": "Noticias"
+},
+"gbot_keyboard_default_candidate_1": {
+"res": "angler:LatinIMEGooglePrebuilt:gbot_keyboard_default_candidate_1",
+"en": "Weather",
+"hu": "Időjárás",
+"de": "Wetter",
+"fr": "Météo",
+"es": "Clima"
+},
+"gbot_keyboard_default_candidate_2": {
+"res": "angler:LatinIMEGooglePrebuilt:gbot_keyboard_default_candidate_2",
+"en": "What time does the sun set",
+"hu": "Mikor megy le a nap",
+"de": "Wann geht die Sonne unter",
+"fr": "Heure du coucher du soleil",
+"es": "¿A qué hora se oculta el sol?"
+},
+"abc_searchview_description_clear": {
+"res": "angler:LatinIMEGooglePrebuilt:abc_searchview_description_clear",
+"en": "Clear query",
+"hu": "Lekérdezés törlése",
+"de": "Suchanfrage löschen",
+"fr": "Effacer la requête",
+"es": "Borrar consulta"
+},
+"abc_searchview_description_search": {
+"res": "angler:LatinIMEGooglePrebuilt:abc_searchview_description_search",
+"en": "Search",
+"hu": "Keresés",
+"de": "Suchen",
+"fr": "Rechercher",
+"es": "Buscar"
+},
+"setting_search": {
+"res": "angler:LatinIMEGooglePrebuilt:setting_search",
+"en": "Search",
+"hu": "Keresés",
+"de": "Suche",
+"fr": "Recherche",
+"es": "Búsqueda"
 }
 });

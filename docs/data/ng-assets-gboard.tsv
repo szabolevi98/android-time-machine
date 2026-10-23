@@ -15,3 +15,6 @@ gb-theme-image.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawabl
 gb-theme-image-background.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/bg_theme_selector_builder_launcher
 gb-theme-edit.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/quantum_ic_edit_white_24
 gb-theme-delete.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/quantum_ic_delete_white_24
+gb-feature-search.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_access_point_search_light_theme
+gb-feature-theme.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_access_point_theme_setting_light_theme
+gb-feature-hand.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_access_point_one_handed_light_theme
