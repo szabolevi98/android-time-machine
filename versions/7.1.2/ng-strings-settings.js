@@ -12577,6 +12577,174 @@ NG.strings('settings', {
 "fr": "Autoriser le Gestionnaire à verrouiller un appareil ou à en effacer les données",
 "es": "Permitir que el Administrador de dispositivos de Android bloquee o borre un dispositivo perdido"
 },
+"trusted_credentials_system_tab": {
+"res": "angler:SettingsGoogle:trusted_credentials_system_tab",
+"en": "System",
+"hu": "Rendszer",
+"de": "System",
+"fr": "Système",
+"es": "Sistema"
+},
+"trusted_credentials_user_tab": {
+"res": "angler:SettingsGoogle:trusted_credentials_user_tab",
+"en": "User",
+"hu": "Felhasználó",
+"de": "Nutzer",
+"fr": "Utilisateur",
+"es": "Usuario"
+},
+"trusted_credentials_disable_label": {
+"res": "angler:SettingsGoogle:trusted_credentials_disable_label",
+"en": "Disable",
+"hu": "Letiltás",
+"de": "Deaktivieren",
+"fr": "Désactiver",
+"es": "Inhabilitar"
+},
+"trusted_credentials_enable_label": {
+"res": "angler:SettingsGoogle:trusted_credentials_enable_label",
+"en": "Enable",
+"hu": "Engedélyezés",
+"de": "Aktivieren",
+"fr": "Activer",
+"es": "Habilitar"
+},
+"trusted_credentials_disable_confirmation": {
+"res": "angler:SettingsGoogle:trusted_credentials_disable_confirmation",
+"en": "Disable the system CA certificate?",
+"hu": "Letiltja a rendszer CA tanúsítványát?",
+"de": "System-CA-Zertifikat deaktivieren?",
+"fr": "Désactiver le certificat d'autorité du système ?",
+"es": "¿Quieres inhabilitar el certificado de CA del sistema?"
+},
+"trusted_credentials_enable_confirmation": {
+"res": "angler:SettingsGoogle:trusted_credentials_enable_confirmation",
+"en": "Enable the system CA certificate?",
+"hu": "Engedélyezi a rendszer CA tanúsítványát?",
+"de": "System-CA-Zertifikat aktivieren?",
+"fr": "Activer le certificat d'autorité du système ?",
+"es": "¿Quieres habilitar el certificado de CA del sistema?"
+},
+"framework/ssl_certificate": {
+"res": "angler:framework:ssl_certificate",
+"en": "Security certificate",
+"hu": "Biztonsági tanúsítvány",
+"de": "Sicherheitszertifikat",
+"fr": "Certificat de sécurité",
+"es": "Certificado de seguridad"
+},
+"framework/issued_to": {
+"res": "angler:framework:issued_to",
+"en": "Issued to:",
+"hu": "Kiállítva a következőnek:",
+"de": "Ausgestellt für:",
+"fr": "Délivré à :",
+"es": "Emitido para:"
+},
+"framework/common_name": {
+"res": "angler:framework:common_name",
+"en": "Common name:",
+"hu": "Név:",
+"de": "Allgemeiner Name:",
+"fr": "Nom commun :",
+"es": "Nombre común:"
+},
+"framework/org_name": {
+"res": "angler:framework:org_name",
+"en": "Organization:",
+"hu": "Szervezet:",
+"de": "Organisation:",
+"fr": "Organisation :",
+"es": "Organización:"
+},
+"framework/org_unit": {
+"res": "angler:framework:org_unit",
+"en": "Organizational unit:",
+"hu": "Szervezeti egység:",
+"de": "Organisationseinheit:",
+"fr": "Unité organisationnelle :",
+"es": "Departamento:"
+},
+"framework/serial_number": {
+"res": "angler:framework:serial_number",
+"en": "Serial number:",
+"hu": "Sorozatszám:",
+"de": "Seriennummer:",
+"fr": "Numéro de série :",
+"es": "Número de serie:"
+},
+"framework/issued_by": {
+"res": "angler:framework:issued_by",
+"en": "Issued by:",
+"hu": "Kiállította:",
+"de": "Ausgestellt von:",
+"fr": "Émis par :",
+"es": "Emitido por:"
+},
+"framework/validity_period": {
+"res": "angler:framework:validity_period",
+"en": "Validity:",
+"hu": "Érvényesség:",
+"de": "Gültigkeit:",
+"fr": "Validité :",
+"es": "Validez:"
+},
+"framework/issued_on": {
+"res": "angler:framework:issued_on",
+"en": "Issued on:",
+"hu": "Kiállítva:",
+"de": "Ausgegeben am:",
+"fr": "Date d'émission :",
+"es": "Fecha de emisión:"
+},
+"framework/expires_on": {
+"res": "angler:framework:expires_on",
+"en": "Expires on:",
+"hu": "Lejár:",
+"de": "Läuft ab am:",
+"fr": "Date d'expiration :",
+"es": "Fecha de caducidad:"
+},
+"framework/fingerprints": {
+"res": "angler:framework:fingerprints",
+"en": "Fingerprints:",
+"hu": "Ujjlenyomatok:",
+"de": "Fingerabdrücke:",
+"fr": "Empreintes :",
+"es": "Huellas digitales:"
+},
+"framework/sha256_fingerprint": {
+"res": "angler:framework:sha256_fingerprint",
+"en": "SHA-256 fingerprint:",
+"hu": "SHA-256 ujjlenyomat:",
+"de": "SHA-256-Fingerabdruck:",
+"fr": "Empreinte SHA-256 :",
+"es": "Huella digital SHA-256:"
+},
+"framework/sha1_fingerprint": {
+"res": "angler:framework:sha1_fingerprint",
+"en": "SHA-1 fingerprint:",
+"hu": "SHA-1 ujjlenyomat:",
+"de": "SHA-1-Fingerabdruck:",
+"fr": "Empreinte SHA-1 :",
+"es": "Huella digital SHA-1:"
+},
+"framework/yes": {
+"res": "angler:framework:yes",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"framework/no": {
+"res": "angler:framework:no",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
 "settings_suggestion_header_summary_hidden_items": {
 "res": "angler:SettingsGoogle:settings_suggestion_header_summary_hidden_items",
 "en": {

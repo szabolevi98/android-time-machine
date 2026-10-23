@@ -34,7 +34,8 @@
     'com.android.settings.applications.VrListenerSettings': 'vr-listeners',
     'com.android.settings.notification.ZenAccessSettings': 'zen-access',
     'com.android.settings.applications.PremiumSmsAccess': 'premium-sms',
-    'com.android.settings.UserCredentialsSettings': 'user-credentials',
+    'com.android.settings.UserCredentialsSettings': 'user-credentials', 'com.android.settings.TrustedCredentialsSettings': 'trusted-credentials',
+    'com.android.settings.Settings$TrustedCredentialsSettingsActivity': 'trusted-credentials',
     'com.android.settings.DeviceAdminSettings': 'device-admins', 'com.android.settings.Settings$DeviceAdminSettingsActivity': 'device-admins'
   });
 
@@ -75,6 +76,40 @@
       if ((s.nls || []).includes(pkg)) return true;
       if ((s.zen || []).includes(pkg)) c.dialog({title: f('zen_access_revoke_warning_dialog_title', title), message: t('zen_access_revoke_warning_dialog_summary'), buttons: [{label: t('cancel')}, {label: t('okay'), action: () => set(false)}]});
       else c.dialog({title: f('zen_access_warning_dialog_title', title), message: t('zen_access_warning_dialog_summary'), buttons: [{label: t('deny')}, {label: t('allow'), action: () => set(true)}]});
+      return true;
+    }
+  };
+  // TrustedCredentialsSettings: the System and User tabs (trusted_credentials.xml's TabWidget); System lists the image's
+  // 156 CAs (ng-cacerts.js) as CertHolder names them (O first and CN, else OU, as the second line; no O: CN alone, else
+  // the whole DName), sorted ignoring case, with the status switch (not clickable itself). A row opens
+  // TrustedCredentialsDialogBuilder: "Security certificate" with the spinner of the chain's CNs over
+  // SslCertificate.inflateCertificateView, Disable / Enable (asking first) and OK. The keystore has no user CA.
+  const holder = x => { const [cn, o, ou] = x.to; return o ? [o, cn || ou] : [cn || x.dname, '']; };
+  const certs = c => (NG.caCerts || []).map(x => ({x, name: holder(x)})).sort((a, b) => {
+    const p = a.name[0].toLowerCase().localeCompare(b.name[0].toLowerCase(), 'en'); return p || a.name[1].toLowerCase().localeCompare(b.name[1].toLowerCase(), 'en');
+  });
+  const certDate = (c, ms) => new Intl.DateTimeFormat(c.locale(), {dateStyle: 'short'}).format(new Date(ms));
+  function certView(c, x) {
+    const head = k => `<b>${c.safe(t(k))}</b>`, field = (k, v) => `<span>${c.safe(t(k))}</span><span class="ngsa-certval">${c.safe(v)}</span>`;
+    return `<div class="ngsa-cert"><div class="ngsa-certspin">${c.safe(x.to[0])}</div>${head('framework/issued_to')}${field('framework/common_name', x.to[0])}${field('framework/org_name', x.to[1])}${field('framework/org_unit', x.to[2])}${field('framework/serial_number', x.serial)}
+      ${head('framework/issued_by')}${field('framework/common_name', x.by[0])}${field('framework/org_name', x.by[1])}${field('framework/org_unit', x.by[2])}
+      ${head('framework/validity_period')}${field('framework/issued_on', certDate(c, x.from))}${field('framework/expires_on', certDate(c, x.to_))}
+      ${head('framework/fingerprints')}${field('framework/sha256_fingerprint', x.sha256)}${field('framework/sha1_fingerprint', x.sha1)}</div>`;
+  }
+  NG.settingsScreens['trusted-credentials'] = {
+    render(c) {
+      const u = c.ui.trustedTab || 0, off = S(c).caDisabled || [];
+      const tabs = `<div class="ngsa-tabs">${['trusted_credentials_system_tab', 'trusted_credentials_user_tab'].map((k, i) => `<button type="button" class="${u === i ? 'on' : ''}" data-action="ngsa-ctab" data-tab="${i}">${c.safe(t(k))}</button>`).join('')}</div>`;
+      const list = u ? '' : certs(c).map(({x, name}) => `<button type="button" class="ngsa-ca" data-action="ngsa-ca" data-alias="${c.safe(x.alias)}"><span class="ngsa-catexts"><span class="ngsa-ca1">${c.safe(name[0])}</span><span class="ngsa-ca2">${c.safe(name[1])}</span></span>${NG.settingsSwitch(!off.includes(x.alias))}</button>`).join('');
+      return `<div class="ngsa-trusted">${tabs}<div class="ngsa-calist">${list}</div></div>`;
+    },
+    action(c, name, el) {
+      if (name === 'ngsa-ctab') { c.ui.trustedTab = +el.dataset.tab; c.transition('none'); c.render(); return true; }
+      if (name !== 'ngsa-ca') return false;
+      const s = S(c), alias = el.dataset.alias, x = NG.caCerts.find(y => y.alias === alias), deleted = (s.caDisabled || []).includes(alias);
+      c.dialog({title: t('framework/ssl_certificate'), html: certView(c, x), buttons: [
+        {label: t(deleted ? 'trusted_credentials_enable_label' : 'trusted_credentials_disable_label'), action: c => c.dialog({message: t(deleted ? 'trusted_credentials_enable_confirmation' : 'trusted_credentials_disable_confirmation'), buttons: [{label: t('framework/no')}, {label: t('framework/yes'), action: () => { s.caDisabled = toggle(s.caDisabled || [], alias, !deleted); redraw(c); }}]})},
+        {label: t('framework/ok')}]});
       return true;
     }
   };

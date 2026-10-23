@@ -502,3 +502,26 @@ button.ngst-pref:active,div.ngst-pref[role=button]:active:not(:has(.ngst-gear:ac
 .ngsa-buttons{flex:none;display:flex;flex-direction:column;border-top:1px solid #0000001f}
 .ngsa-buttons button{min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;border-bottom:1px solid #0000001f;background:none;text-align:left;font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#009688}
 .ngsa-buttons button:active{background:#0000001f}
+/* TrustedCredentialsSettings: the Material TabWidget (48 dp, TextAppearance.Material.Widget.TabWidget, the selected tab's
+   colorAccent bar), trusted_credential.xml rows (textAppearanceMedium / Small, listPreferredItemPadding) and the
+   ssl_certificate.xml view in the dialog (bold section headers 12 dp apart). */
+.ngsa-trusted{display:flex;flex-direction:column;height:100%;background:#fafafa}
+.ngsa-tabs{flex:none;display:flex}
+.ngsa-tabs button{flex:1;height:calc(48 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid transparent;background:none;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;color:#0000008a}
+.ngsa-tabs button.on{color:#000000de;border-bottom-color:#009688}
+.ngsa-calist{flex:1;overflow-y:auto}
+.ngsa-ca{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;background:none;text-align:left;font:inherit;box-sizing:border-box}
+.ngsa-ca:active{background:#0000001f}
+.ngsa-catexts{flex:1;min-width:0;display:flex;flex-direction:column}
+.ngsa-ca1{font-size:calc(18 * var(--dp));line-height:calc(24 * var(--dp));color:#000000de}
+.ngsa-ca2{font-size:calc(14 * var(--dp));line-height:calc(19 * var(--dp));color:#0000008a}
+.ngsa-ca .ngst-switch{flex:none;margin-left:calc(16 * var(--dp))}
+.ngdlg-win:has(.ngsa-cert){overflow:hidden}
+.ngdlg-win .ngdlg-body:has(.ngsa-cert){flex:1 1 auto;min-height:0;overflow-y:auto}
+/* ssl_certificate.xml: every line 20 dp from the sides in the default TextAppearance.Material (14 sp, primary), the
+   section headers bold 12 dp below the last value, 7 dp under a header and under each value. */
+.ngsa-cert{display:flex;flex-direction:column;padding-bottom:calc(8 * var(--dp));font-size:calc(14 * var(--dp));line-height:calc(19 * var(--dp));color:#000000de;overflow-wrap:anywhere}
+.ngsa-cert>b,.ngsa-cert>span{margin:0 calc(20 * var(--dp))}
+.ngsa-cert>b{margin-top:calc(12 * var(--dp));margin-bottom:calc(7 * var(--dp))}
+.ngsa-cert .ngsa-certval{margin-bottom:calc(7 * var(--dp))}
+.ngsa-certspin{margin:0 calc(16 * var(--dp));padding:calc(8 * var(--dp)) calc(4 * var(--dp));border-bottom:1px solid #00000061;color:#000000de;font-size:calc(16 * var(--dp))}

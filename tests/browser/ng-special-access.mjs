@@ -35,8 +35,15 @@ try{
  assert.equal(await b.ev(`!!document.querySelector('#viewport .ngsa-add')`),true);await b.click('#viewport [data-action="ngsa-admin-act"]');await sleep(300);assert.equal((await save()).gms.wipe,true);
  // Security's rows and Device info's IMEI row reach their screens.
  await b.open('settings','xml:security');for(const label of ['Device administrators','User credentials']){await row(label);await sleep(200);assert.equal(await missing(),false,label);await back();await sleep(300);}
+ // TrustedCredentialsSettings: the image's 156 system CAs sorted as CertHolder names them; a row's dialog disables after asking.
+ await row('Trusted credentials');assert.equal(await missing(),false);assert.equal(await b.ev(`document.querySelectorAll('#viewport .ngsa-ca').length`),156);
+ const names=await b.ev(`[...document.querySelectorAll('#viewport .ngsa-ca1')].map(x=>x.textContent)`);assert.deepEqual(names,[...names].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase(),'en')));
+ await b.click('#viewport .ngsa-ca');await sleep(200);assert.match(await dialog(),/Security certificate.*Issued to:.*SHA-256 fingerprint:/);await b.shot('7.1.2-trusted-credential');
+ await btn(0);assert.match(await dialog(),/Disable the system CA certificate\?/);await btn(1);assert.equal(await b.ev(`!!document.querySelector('#viewport .ngsa-ca .ngst-switch:not(.on)')`),true);assert.equal((await save()).settings.access.caDisabled.length,1);
+ await b.click('#viewport .ngsa-ca');await sleep(200);await btn(0);assert.match(await dialog(),/Enable the system CA certificate\?/);await btn(1);assert.equal((await save()).settings.access.caDisabled.length,0);
+ await b.click('#viewport [data-action="ngsa-ctab"][data-tab="1"]');assert.equal(await b.ev(`document.querySelectorAll('#viewport .ngsa-ca').length`),0);await back();await sleep(300);
  await b.open('settings','xml:device_info_status');await row('IMEI information');await sleep(200);assert.equal(await missing(),false,'IMEI');
- for(const lang of ['en','hu','de','fr','es']){await b.language(lang);for(const s of ['notification-access','zen-access','vr-listeners','premium-sms','device-admins','device-admin'])await b.open('settings',s);assert.deepEqual(await b.ev('[...AndroidStrings.misses]'),[],lang);}
+ for(const lang of ['en','hu','de','fr','es']){await b.language(lang);for(const s of ['notification-access','zen-access','vr-listeners','premium-sms','device-admins','device-admin','trusted-credentials'])await b.open('settings',s);await b.click('#viewport .ngsa-ca');assert.deepEqual(await b.ev('[...AndroidStrings.misses]'),[],lang);}
  await b.send('Emulation.setDeviceMetricsOverride',{width:375,height:812,deviceScaleFactor:1,mobile:true});await b.open('settings','device-admin');await b.shot('7.1.2-device-admin-phone');assert.equal(await b.ev('document.documentElement.scrollWidth<=innerWidth+1'),true);
  b.check();console.log('Special access passed: notification access, Do Not Disturb access, VR helpers, premium SMS, device administrators with Google settings, IMEI, five languages and phone width.');
 }catch(e){await b.shot('7.1.2-special-access-failure');throw e;}finally{b.close();}

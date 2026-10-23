@@ -1126,7 +1126,10 @@ components, so Android Device Manager (wipe-data, reset-password, force-lock in
 DeviceAdminInfo's display order) is the one row. It is active while Google
 settings' "Allow remote lock and erase" is on; turning that switch on now asks
 with DeviceAdminAdd. Premium SMS and user credentials are honestly empty.
-Still open from the crawl: Trusted credentials. Emergency broadcasts followed:
+Trusted credentials followed: `docs/tools/ng-cacerts.py` reads the image's 156
+system CAs as SslCertificate does (RFC 2253 order, first CN/O/OU; fingerprint hex),
+CertHolder's names and sort, the System/User tabs, the certificate dialog with
+Disable/Enable confirmation. Emergency broadcasts followed:
 CellBroadcastReceiver's CellBroadcastSettings through the app-preferences engine
 (`ng-cellbroadcast.js`): show_etws_settings / show_brazil_settings false and
 show_cmas_settings true remove the rows the code removes, developer options bring
