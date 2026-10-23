@@ -153,6 +153,61 @@ const calendarSettingsLP = async h => {
   await h.key('Escape');
   h.check('the reload keeps the settings', await h.reload() && (await prefs()).duration === 30);
 };
+
+// Gmail › Settings › the account: Inbox sound & vibrate, Manage labels, Days of mail to sync (and on Lollipop the
+// Vacation responder); a label synced for None leaves its list empty.
+const gmailSettings = async h => {
+  const prefs = () => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));return JSON.parse(localStorage.getItem(k)).gmailPrefs||{}})()`);
+  const account = async () => {
+    const overflow = '#viewport [data-action="email-menu"]:not([data-id="message"])', drawer = '#viewport [data-action="email-drawer"]';
+    h.check('opens Gmail', await h.until(`!!document.querySelector('${overflow}, ${drawer}')`));
+    await h.tap(await h.ev(`!!document.querySelector('${overflow}')`) ? overflow : drawer);
+    await h.tap('[role="menu"] [data-action="email-settings"], .holo-menu [data-action="email-settings"], nav [data-action="email-settings"]');
+    h.check('Settings opens', await h.until(`!!document.querySelector('#viewport .gmp-row[data-id="account"]')`));
+    await h.tap('#viewport .gmp-row[data-id="account"]');
+    h.check('the account\'s settings open', await h.until(`!!document.querySelector('#viewport .gmp-row[data-id="labels"]')`));
+  };
+  await h.openApp('gmail');
+  const rows = () => h.ev(`document.querySelectorAll('#viewport [data-action="email-read"]').length`);
+  h.check('the inbox lists mail', await h.until(`document.querySelectorAll('#viewport [data-action="email-read"]').length > 0`));
+  await account();
+  await h.tap('#viewport .gmp-row[data-id="label:Primary"]');
+  h.check('Inbox sound & vibrate opens the inbox\'s label settings', await h.until(`!!document.querySelector('#viewport .gmp-row[data-action="gmx-vibrate"]')`));
+  await h.tap('#viewport .gmp-row[data-action="gmx-vibrate"]');
+  await h.tap('#viewport .gmp-dialog .gmp-choice[data-id="1"]');
+  await h.tap('#viewport .gmp-row[data-action="gmx-tone"]');
+  h.check('the sound list opens', await h.until(`document.querySelectorAll('#viewport .gmp-dialog .gmp-choice').length > 3`));
+  const tone = await h.ev(`document.querySelectorAll('#viewport .gmp-dialog .gmp-choice')[2].textContent`);
+  await h.tap('#viewport .gmp-dialog .gmp-choice:nth-child(3)');
+  await h.tap('#viewport [data-action="gmx-tone-ok"]');
+  await h.key('Escape');
+  await h.tap('#viewport .gmp-row[data-id="labels"]');
+  h.check('Manage labels lists the labels', await h.until(`document.querySelectorAll('#viewport .gmp-row[data-id^="label:"]').length >= 10`));
+  await h.tap('#viewport .gmp-row[data-id="label:Primary"]');
+  await h.tap('#viewport .gmp-row[data-action="gmx-sync"]');
+  await h.tap('#viewport .gmp-dialog .gmp-choice[data-id="none"]');
+  await h.key('Escape');
+  h.check('Back returns to Manage labels', await h.until(`!!document.querySelector('#viewport .gmp-row[data-id="label:Trash"]')`));
+  await h.key('Escape');
+  await h.tap('#viewport .gmp-row[data-action="gmx-days"]');
+  await h.type('#viewport [data-gmx-days]', '7');
+  await h.tap('#viewport [data-action="gmx-days-ok"]');
+  const p = await prefs();
+  h.check('the label settings are kept', p.labels?.Primary?.vibrate === true && p.labels.Primary.tone === tone && p.labels.Primary.sync === 'none' && p.days === 7, JSON.stringify(p));
+  if (h.vacation) {
+    await h.tap('#viewport .gmp-row[data-id="vacation"]');
+    h.check('the vacation responder opens', await h.until(`!!document.querySelector('#viewport [data-gmx-vac]')`));
+    await h.tap('#viewport [data-gmx-vac] .gmx-switch');
+    await h.tap('#viewport [data-action="gmx-vac-done"]');
+    h.check('without a subject or message it stays open', await h.until(`!!document.querySelector('#viewport [data-gmx-vac]')`) && !(await prefs()).vacation);
+    await h.type('#viewport [data-gmx-vac] [name="subject"]', 'Away this week');
+    await h.tap('#viewport [data-action="gmx-vac-done"]');
+    h.check('Done saves it and shows it on', await h.until(`!!document.querySelector('#viewport .gmp-row[data-id="vacation"] small')`) && (await prefs()).vacation?.subject === 'Away this week' && (await prefs()).vacation.on === true);
+  }
+  await h.key('Escape'); await h.key('Escape');
+  h.check('the inbox synced for None shows no mail', await h.until(`!document.querySelector('#viewport .gmp-app') && !!document.querySelector('#viewport .kem-list, #viewport .lem-list, #viewport .kem')`) && await rows() === 0);
+  h.check('the reload keeps it', await h.reload() && (await prefs()).labels?.Primary?.sync === 'none');
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -213,6 +268,9 @@ const CASES = [
   {id: 'T03', version: '4.3', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
   {id: 'T03', version: '4.4.4', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
   {id: 'T03', version: '5.1.1', name: 'Calendar › Settings: General, Events from Gmail, Sync', run: calendarSettingsLP},
+  {id: 'T04', version: '4.3', name: 'Gmail › Settings: label sound, labels, days to sync', run: gmailSettings},
+  {id: 'T04', version: '4.4.4', name: 'Gmail › Settings: label sound, labels, days to sync', run: gmailSettings},
+  {id: 'T04', version: '5.1.1', name: 'Gmail › Settings: label sound, labels, days to sync, vacation responder', run: h => gmailSettings({...h, vacation: true})},
   {id: 'T09', version: '4.4.4', name: 'Email › Settings: quick responses, ringtone, server settings', run: emailSettings},
   {id: 'T09', version: '5.1.1', name: 'Email › Settings: quick responses, ringtone, server settings', run: emailSettings}
 ];
