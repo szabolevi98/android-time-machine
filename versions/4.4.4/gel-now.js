@@ -86,7 +86,7 @@
   function render({data, t, locale, now, ui = {}}) {
     const s = key => S(t, locale, key);
     const today = now.toISOString().slice(0, 10);
-    const event = (data.events || []).filter(item => !item.date || item.date >= today).sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')) || String(a.time || '').localeCompare(String(b.time || '')))[0];
+    const event = (window.CalendarPrefs ? CalendarPrefs.events(data) : data.events || []).filter(item => !item.date || item.date >= today).sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')) || String(a.time || '').localeCompare(String(b.time || '')))[0];
     // next_appointment_card.xml: the title, appt_time in CardText.Large, then the View in Calendar button.
     const when = event ? `${new Date(`${event.date || today}T00:00`).toLocaleDateString(locale, {weekday: 'long', month: 'long', day: 'numeric'})}${event.time ? ', ' + event.time : ''}` : '';
     const eventCard = event ? `<section class="gnow-card gnow-appt"><h3>${e(event.title)}</h3>${menu(s)}<p class="gnow-appt-time">${e(when)}</p>${event.location ? `<p>${e(event.location)}</p>` : ''}<button class="gnow-action" data-action="open-app" data-app="calendar">${e(s('View in Calendar'))}</button></section>` : '';

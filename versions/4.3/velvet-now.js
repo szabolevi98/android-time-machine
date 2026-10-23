@@ -22,7 +22,7 @@
   }
   function render({data, t, locale, now, s}) {
     const today = now.toISOString().slice(0, 10);
-    const event = (data.events || []).filter(item => !item.date || item.date >= today).sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')) || String(a.time || '').localeCompare(String(b.time || '')))[0];
+    const event = (window.CalendarPrefs ? CalendarPrefs.events(data) : data.events || []).filter(item => !item.date || item.date >= today).sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')) || String(a.time || '').localeCompare(String(b.time || '')))[0];
     // next_appointment_card.xml: the title, appt_time in CardTitle, the location; it opens the event in Calendar.
     const when = event ? `${new Date(`${event.date || today}T00:00`).toLocaleDateString(locale, {weekday: 'long', month: 'long', day: 'numeric'})}${event.time ? ', ' + event.time : ''}` : '';
     const eventCard = event ? `<section class="vn-card vn-appt" data-action="open-app" data-app="calendar" role="button"><h3>${e(event.title)}</h3><p class="vn-appt-time">${e(when)}</p>${event.location ? `<p>${e(event.location)}</p>` : ''}<i></i></section>` : '';

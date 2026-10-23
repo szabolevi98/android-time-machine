@@ -837,6 +837,7 @@
     // News & Weather: a dialog, then the article page, then an expanded story.
     if (ui.view === 'news-weather' && !ui.overlay && (ui.newsDialog || ui.newsWeb)) { if (ui.newsDialog) { ui.newsDialog = ''; ui.newsPick = undefined; } else ui.newsWeb = ''; render(); return; }
     if (ui.view === 'settings' && ['a11y-magnification', 'a11y-shortcut'].includes(ui.sub) && !ui.overlay) { ui.sub = 'accessibility'; render(); return; }
+    if (ui.view === 'calendar' && ui.sub === 'calendar-settings' && !ui.overlay) { if (CalendarPrefs.back(ui) === 'leave') { ui.sub = ''; ui.calPref = ''; } render(); return; }
     if (ui.view === 'email' && ui.sub === 'em-settings' && !ui.overlay) { if (ui.emPrefList || ui.emPrefEdit) { ui.emPrefList = ''; ui.emPrefEdit = ''; ui.emPrefTone = undefined; window.SystemSounds?.stop(); } else if (ui.emPref) ui.emPref = EmailPrefs.parent(ui.emPref); else ui.sub = ''; render(); return; }
     if(ui.view==='settings'&&ui.sub==='lock-setup'){lockControls.cancel();return;}
     if (ui.overlay.startsWith('widget-photo')) { cancelPhotoWidget(); return; }
@@ -1618,6 +1619,8 @@
   }
 
   function renderCalendar() {
+    // Settings (calendar-prefs.js).
+    if (ui.sub === 'calendar-settings') return CalendarPrefs.render(data, ui, key => i18n.t(key), 'nexus6.demo@gmail.com', i18n.locale());
     return ICSCalendar.render(data,ui,key=>i18n.t(key),i18n.locale(),deviceDate());
   }
   function calendarRender() {
@@ -1644,7 +1647,7 @@
     const snoozed=(data.calendarSnoozes||[]).filter(item=>item.at<=now.getTime());
     if(snoozed.length){data.calendarSnoozes=data.calendarSnoozes.filter(item=>!snoozed.includes(item));snoozed.forEach(item=>data.notifications.unshift({id:Date.now()+data.notifications.length,title:item.title,detail:item.detail,kind:'calendar',eventId:item.eventId,date:item.date}));save();renderStatus();if(ui.overlay==='shade')renderOverlay();}
     data.calendarFired=Array.isArray(data.calendarFired)?data.calendarFired.slice(-60):[];
-    for(const {key,event} of ICSCalendar.dueReminders(data.events,now,data.calendarFired)) {
+    for(const {key,event} of ICSCalendar.dueReminders(CalendarPrefs.prefs(data).alerts?CalendarPrefs.events(data):[],now,data.calendarFired)) {
       data.calendarFired.push(key);
       const when=event.allDay?i18n.t('All day'):`${event.time} – ${event.endTime}`;
       data.notifications.unshift({id:Date.now()+data.notifications.length,title:event.title,detail:[when,event.location].filter(Boolean).join(' · '),kind:'calendar',eventId:event.id,date:event.date});
@@ -1652,7 +1655,8 @@
     }
   }
   function calendarEdit(item) {
-    ui.eventDraft=ICSCalendar.normalize(item || {date:ui.selectedDate,time:'12:00',title:''});
+    const length=CalendarPrefs.prefs(data).duration>0?CalendarPrefs.prefs(data).duration:60;
+    ui.eventDraft=ICSCalendar.normalize(item || {date:ui.selectedDate,time:'12:00',endTime:`${String(12+Math.floor(length/60)).padStart(2,'0')}:${String(length%60).padStart(2,'0')}`,title:''});
     ui.calendarError='';ui.overlay='';ui.sub='event-edit';render();
   }
   // 4.2 DeskClock pages; the alarm list and editor keep the ICS AlarmClock/SetAlarm screens.
@@ -1966,6 +1970,7 @@
     if (Date.now() < suppressClickUntil) return;
     const { action, id, app, url } = button.dataset;
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
+    if (action.startsWith('calpref-') && CalendarPrefs.handle(action, id, {data, ui, save, render, toast, root: viewport, pickZone: zone => { ui.tzp = TimeZonePicker.open(zone, Date.now()); ui.tzpFor = 'home'; ui.overlay = 'tzpicker'; renderTzPicker(true); }})) return;
     // Email's Quick responses, ringtone and server screens (email-prefs.js).
     if (action.startsWith('empx-') && EmailPrefs.handle(action, id, {data, ui, save, render, root: viewport, account: ICSEmail.account})) return;
     if (action.startsWith('pe-') && window.PlusEditor?.handle(action, button, peContext())) return;
@@ -2617,11 +2622,13 @@
       // EditEventView, moves the end with the start so the event keeps its length.
       // The repeat / reminder spinners (calendar.js): the list opens under the field (a dialog on 5.1) and the pick goes
       // straight into the form's hidden input, as the date and time pickers do.
-      case 'caltz': ui.tzp = TimeZonePicker.open(id, Number(button.dataset.ms) || Date.now()); ui.overlay = 'tzpicker'; renderTzPicker(true); break;
+      case 'caltz': ui.tzpFor = ''; ui.tzp = TimeZonePicker.open(id, Number(button.dataset.ms) || Date.now()); ui.overlay = 'tzpicker'; renderTzPicker(true); break;
       case 'tzp-field': TimeZonePicker.focus(ui.tzp, tzpContext()); renderTzPicker(true); break;
       case 'tzp-filter': TimeZonePicker.filter(ui.tzp, id); renderTzPicker(false); break;
       case 'tzp-clear': TimeZonePicker.clear(ui.tzp); renderTzPicker(true); break;
       case 'tzp-pick': {
+        // Settings › Time zone takes the zone (calendar-prefs.js).
+        if (ui.tzpFor === 'home') { data.calendarPrefs = {...(data.calendarPrefs || {}), homeTz: id}; ui.tzpFor = ''; data.calRecentTimezones = TimeZonePicker.saveRecent(data.calRecentTimezones, id); save(); ui.overlay = ''; renderOverlay(); render(); break; }
         // onTimeZoneSet: the event takes the zone, the button its label; saveRecentTimezone keeps the last three.
         const form = viewport.querySelector('form[data-form="event"]'), field = form?.querySelector('[data-action="caltz"]');
         if (form) { form.elements.tz.value = id; if (ui.eventDraft) ui.eventDraft.tz = id; }
@@ -2666,6 +2673,7 @@
       case 'calendar-search': ui.calendarMode='Agenda';ui.calendarSearch='';ui.overlay='';render();viewport.querySelector('.cal-search input')?.focus();break;
       case 'calendar-slot': {const [date,time]=id.split('|');calendarEdit({date,time,title:''});break;}
       case 'event-new': calendarEdit();break;
+      case 'calendar-settings': ui.overlay=''; renderOverlay(); ui.sub='calendar-settings'; ui.calPref=''; ui.calPrefDialog=''; render(); break;
       case 'event-open': ui.selectedEvent=Number(id);ui.selectedInstance=button.dataset.date||'';ui.sub='event';render();break;
       case 'event-edit': { const series=data.events.find(item=>item.id===ui.selectedEvent); if(series&&ICSCalendar.normalize(series).repeat!=='none'){ui.overlay='calendar-edit-scope';renderOverlay();} else calendarEdit(series); break; }
       case 'event-edit-scope': { const series=data.events.find(item=>item.id===ui.selectedEvent); if(!series)break; const item=ICSCalendar.instance(series,ui.selectedInstance); calendarEdit({...series,date:item.date,endDate:item.endDate,...(id==='this'?{repeat:'none'}:{})}); ui.eventDraft.scope=id; ui.eventDraft.instance=item.date; ui.eventDraft.seriesStart=item.seriesStart; render(); break; }

@@ -71,6 +71,88 @@ const emailSettings = async h => {
   await h.tap('#viewport .emp-row[data-id="incoming"]');
   h.check('the saved server is shown again', await h.until(`document.querySelector('#viewport .emp-input[data-emp-field="server"]')?.value === 'mail.example.org'`));
 };
+
+// Calendar › Settings (General) and Calendars to display (Jelly Bean / KitKat Google Calendar): the choices take effect.
+const calendarSettingsJB = async h => {
+  const prefs = () => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));return JSON.parse(localStorage.getItem(k)).calendarPrefs||{}})()`);
+  const menu = async item => {
+    await h.tap('#viewport .cal-bar [data-action="calendar-menu"]');
+    await h.tap(`.cal-menu [data-action="${item}"]`);
+  };
+  await h.openApp('calendar');
+  h.check('opens Calendar in Month', await h.until(`!!document.querySelector('#viewport .cal-month')`));
+  const busy = () => h.ev(`document.querySelectorAll('#viewport .cal-month .cal-busy i').length`);
+  h.check('the demo event shows', await busy() > 0);
+  await menu('calendar-settings');
+  h.check('Settings opens its headers', await h.until(`!!document.querySelector('#viewport .cpf-row[data-id="general"]')`));
+  await h.tap('#viewport .cpf-row[data-id="general"]');
+  h.check('General settings open', await h.until(`!!document.querySelector('#viewport .cpf-row[data-id="weekNum"]')`));
+  await h.tap('#viewport .cpf-row[data-id="weekNum"]');
+  await h.tap('#viewport .cpf-row[data-id="weekStart"]');
+  h.check('Week starts on lists four choices', await h.until(`document.querySelectorAll('#viewport .cpf-dialog .cpf-choice').length === 4`));
+  await h.tap('#viewport .cpf-dialog .cpf-choice[data-id="1"]');
+  await h.tap('#viewport .cpf-row[data-id="reminder"]');
+  await h.tap('#viewport .cpf-dialog .cpf-choice[data-id="8"]');
+  await h.tap('#viewport .cpf-row[data-id="quick"]');
+  h.check('Quick responses list the four defaults', await h.until(`document.querySelectorAll('#viewport .cpf-row[data-action="calpref-quick"]').length === 4`));
+  await h.key('Escape'); await h.key('Escape'); await h.key('Escape');
+  h.check('Back returns to the calendar', await h.until(`!!document.querySelector('#viewport .cal-month')`));
+  const p = await prefs();
+  h.check('the choices are saved', p.weekNum === true && p.weekStart === 1 && p.reminder === 30, JSON.stringify(p));
+  h.check('Month shows week numbers', await h.ev(`document.querySelectorAll('#viewport .cal-weeknum').length === 6`));
+  h.check('the week starts on Saturday', await h.ev(`(()=>{const d=new Date(document.querySelector('#viewport .cal-month [data-action="calendar-day"]').dataset.id+'T12:00:00');return d.getDay()===6})()`));
+  await h.tap('#viewport .cal-bar [data-action="calendar-menu"]');
+  await h.tap('.cal-menu [data-action="event-new"]');
+  h.check('a new event gets the default reminder', await h.until(`document.querySelector('#viewport form[data-form="event"] [name="reminder"]')?.value === '30'`));
+  await h.key('Escape');
+  await h.until(`!!document.querySelector('#viewport .cal-month')`);
+  await menu('calendar-visible');
+  h.check('Calendars to display lists the account\'s calendar', await h.until(`!!document.querySelector('#viewport .cpf-cal')`));
+  await h.tap('#viewport .cpf-cal');
+  await h.key('Escape');
+  h.check('a hidden calendar\'s events leave Month', await h.until(`!!document.querySelector('#viewport .cal-month')`) && await busy() === 0);
+  h.check('the reload keeps it hidden', await h.reload() && (await prefs()).hidden?.includes('primary'));
+};
+
+// Calendar 5.0 (Lollipop) › the drawer's Settings: General, Events from Gmail and a calendar's Sync take effect.
+const calendarSettingsLP = async h => {
+  const prefs = () => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));return JSON.parse(localStorage.getItem(k)).calendarPrefs||{}})()`);
+  const settings = async () => {
+    await h.tap('#viewport .gc-bar .gc-nav');
+    await h.tap('.gc-drawer [data-action="calendar-settings"]');
+    h.check('the drawer\'s Settings opens', await h.until(`!!document.querySelector('#viewport .cpf-row[data-id="general"]')`));
+  };
+  await h.openApp('calendar');
+  h.check('opens Calendar', await h.until(`!!document.querySelector('#viewport .gc-bar .gc-nav')`));
+  const events = () => h.ev(`document.querySelectorAll('#viewport [data-action="event-open"]').length`);
+  h.check('the demo event shows in Schedule', await h.until(`document.querySelectorAll('#viewport [data-action="event-open"]').length > 0`));
+  await settings();
+  await h.tap('#viewport .cpf-row[data-id="general"]');
+  h.check('General opens', await h.until(`!!document.querySelector('#viewport .cpf-row[data-id="weekStart"]')`));
+  await h.tap('#viewport .cpf-row[data-id="weekStart"]');
+  await h.tap('#viewport .cpf-dialog .cpf-choice[data-id="0"]');
+  await h.tap('#viewport .cpf-row[data-id="duration"]');
+  h.check('Default event duration lists six choices', await h.until(`document.querySelectorAll('#viewport .cpf-dialog .cpf-choice').length === 6`));
+  await h.tap('#viewport .cpf-dialog .cpf-choice[data-id="2"]');
+  await h.tap('#viewport .cpf-row[data-id="alerts"]');
+  h.check('Notify off disables Tone and Vibrate', await h.ev(`document.querySelector('#viewport .cpf-row[data-id="tone"]').disabled && document.querySelector('#viewport .cpf-row[data-id="vibrate"]').disabled`));
+  await h.key('Escape');
+  await h.tap('#viewport .cpf-row[data-id="gmail"]');
+  await h.tap('#viewport .cpf-row[data-action="calpref-gmail"]');
+  await h.tap('#viewport [data-action="calpref-gmail-ok"]');
+  await h.key('Escape');
+  await h.tap('#viewport .cpf-row[data-id="cal:primary"]');
+  await h.tap('#viewport .cpf-row[data-action="calpref-sync"]');
+  await h.key('Escape'); await h.key('Escape');
+  h.check('Back returns to the calendar', await h.until(`!!document.querySelector('#viewport .gc-bar .gc-nav')`));
+  const p = await prefs();
+  h.check('the choices are saved', p.weekStart === 0 && p.duration === 30 && p.alerts === false && p.gmail === false && p.unsynced?.includes('primary'), JSON.stringify(p));
+  h.check('an unsynced calendar\'s events leave the views', await events() === 0);
+  await h.tap('#viewport .gc-fab, #viewport [data-action="event-new"]');
+  h.check('a new event lasts the default duration', await h.until(`document.querySelector('#viewport form[data-form="event"] [name="endTime"]')?.value === '12:30'`));
+  await h.key('Escape');
+  h.check('the reload keeps the settings', await h.reload() && (await prefs()).duration === 30);
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -128,6 +210,9 @@ const CASES = [
     h.check('Exit leaves without saving', await h.until(`!!document.querySelector('#viewport .ph-viewer-view')`) && (await editOf(id))?.steps?.length === 1);
   }},
   {id: 'T02', version: '4.3', name: 'Email › Settings: quick responses, ringtone, server settings', run: emailSettings},
+  {id: 'T03', version: '4.3', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
+  {id: 'T03', version: '4.4.4', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
+  {id: 'T03', version: '5.1.1', name: 'Calendar › Settings: General, Events from Gmail, Sync', run: calendarSettingsLP},
   {id: 'T09', version: '4.4.4', name: 'Email › Settings: quick responses, ringtone, server settings', run: emailSettings},
   {id: 'T09', version: '5.1.1', name: 'Email › Settings: quick responses, ringtone, server settings', run: emailSettings}
 ];

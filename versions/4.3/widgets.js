@@ -45,7 +45,7 @@
     return `${part(event.date,event.time)} – ${part(event.endDate,event.endTime)}`;
   }
   function calendar(data,t,locale,now,hour24) {
-    const rows=calendarRows(data.events,now);
+    const rows=calendarRows(window.CalendarPrefs?CalendarPrefs.events(data):data.events,now);
     const list=rows.map(row=>{
       if(row.type==='day') {
         const label=cal().parse(row.date).toLocaleDateString(locale,row.tomorrow?{month:'short',day:'numeric'}:{weekday:'short',month:'short',day:'numeric'});

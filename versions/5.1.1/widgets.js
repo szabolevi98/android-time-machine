@@ -45,7 +45,7 @@
     return `${part(event.date,event.time)} – ${part(event.endDate,event.endTime)}`;
   }
   function calendar(data,t,locale,now,hour24) {
-    const rows=calendarRows(data.events,now);
+    const rows=calendarRows(window.CalendarPrefs?CalendarPrefs.events(data):data.events,now);
     const list=rows.map(row=>{
       if(row.type==='day') {
         const label=cal().parse(row.date).toLocaleDateString(locale,row.tomorrow?{month:'short',day:'numeric'}:{weekday:'short',month:'short',day:'numeric'});
@@ -117,7 +117,7 @@
   function calendarLP(data,t,locale,now,hour24,color='#4285f4') {
     const C=cal(),today=C.iso(now);let day=today,first=true;
     const column=date=>{const d=C.parse(date);return `<span class="lpcw-day${date===today?' today':''}"><b>${d.getDate()}</b><small>${e(d.toLocaleDateString(locale,{weekday:'short'}))}</small></span>`;};
-    const rows=calendarRows(data.events,now);
+    const rows=calendarRows(window.CalendarPrefs?CalendarPrefs.events(data):data.events,now);
     let list=rows.length&&rows[0].type==='event'?'':`<div class="lpcw-row">${column(today)}<span class="lpcw-none">${e(t('No events today.'))}</span></div>`;
     rows.forEach(row=>{
       if(row.type==='day'){day=row.date;first=true;list+='<div class="lpcw-gap"></div>';return;}
