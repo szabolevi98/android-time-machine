@@ -15,9 +15,10 @@
      of the level once the level covers more than 30 % of it, drawn in white below that. Battery saver (unplugged): the
      level in the last of batterymeter_color_values (white) and batterymeter_plus_points' plus, a square two thirds of the
      body's width in its middle, cut out or drawn the same way.
-   - navigation_bar: NavigationBarInflaterView with config_navBarLayout "space,back;home;recent,menu_ime": the
-     navigation_side_padding space (sw400dp: 50 dp) at the start, Back, Home and Overview (KeyButtonView, navigation_key_width 80 dp,
-     no padding) side by side in center_group (gravity center, a layer of its own over the ends), the menu / IME slot at the end. KeyButtonRipple: a
+   - navigation_bar: NavigationBarInflaterView with config_navBarLayout "space,back;home;recent,menu_ime" (";" splits the
+     start, centre and end groups): ends_group holds the navigation_side_padding space (sw400dp: 50 dp) and Back, a weight-1
+     gravity spacer, then Overview and the 50 dp menu / IME slot; center_group (gravity center, a layer of its own over the
+     ends) holds Home alone. Every KeyButtonView is navigation_key_width 80 dp, no padding. KeyButtonRipple: a
      white pill as tall as the key and min(width, key_button_ripple_max_width 95 dp) wide, alpha 0.2, stretched to 1.35
      times in 350 ms while pressed, fading in 450 ms. Home held: the assist gesture. */
 (() => {
@@ -105,12 +106,12 @@
     }
   });
 
-  // NavigationBarInflaterView: space, then back;home;recent in the centre group, then the menu / IME slot.
+  // NavigationBarInflaterView: space and Back at the start, Home centred over the ends, Overview and the menu / IME slot at the end.
   NG.register('navbar', {
     render(c) {
       const key = (id, img, label) => `<button type="button" class="ngnb-key" data-key="${id}" aria-label="${c.safe(c.t(label))}"><i class="ngnb-ripple"></i><img src="${A(`${img}.png`)}" alt=""></button>`;
       const back = NG.ime?.open() ? 'ic_sysbar_back_ime' : 'ic_sysbar_back';
-      return `<div class="ngnb"><span class="ngnb-side"></span><span class="ngnb-center">${key('back', back, 'Back')}${key('home', 'ic_sysbar_home', 'Home')}${key('recents', NG.split?.active(c) ? 'ic_sysbar_docked' : 'ic_sysbar_recent', 'Overview')}</span><span class="ngnb-side"></span></div>`;
+      return `<div class="ngnb"><span class="ngnb-side"></span>${key('back', back, 'Back')}<span class="ngnb-center">${key('home', 'ic_sysbar_home', 'Home')}</span><span class="ngnb-gap"></span>${key('recents', NG.split?.active(c) ? 'ic_sysbar_docked' : 'ic_sysbar_recent', 'Overview')}<span class="ngnb-side"></span></div>`;
     },
     mount(c, root) {
       for (const el of root.querySelectorAll('.ngnb-key')) {

@@ -18,9 +18,12 @@
 .ngsb-clock{flex:none;display:flex;align-items:center;padding-left:calc(7 * var(--dp));color:#fff;font:500 calc(14 * var(--dp)) Roboto,sans-serif}
 
 /* The navigation bar: navigation_side_padding (sw400dp: 50 dp) at each end, Back / Home / Overview 80 dp wide side by side in the middle. */
-.ngnb{display:flex;height:100%;background:#000}
+.ngnb{position:relative;display:flex;height:100%;background:#000}
 .ngnb-side{flex:none;width:calc(50 * var(--dp))}
-.ngnb-center{flex:1;display:flex;justify-content:center}
+.ngnb-gap{flex:1}
+/* center_group: a match_parent layer over ends_group, Home centred in the whole bar. */
+.ngnb-center{position:absolute;inset:0;display:flex;justify-content:center;pointer-events:none}
+.ngnb-center .ngnb-key{pointer-events:auto}
 .ngnb-key{position:relative;flex:none;width:calc(80 * var(--dp));height:100%;border:0;padding:0;background:none;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}
 .ngnb-key img{position:relative;width:calc(22 * var(--dp));height:calc(22 * var(--dp))}
 /* KeyButtonRipple: the white pill, key-high and 80 dp wide, alpha 0.2, stretched to 1.35 times (350 ms) while pressed,

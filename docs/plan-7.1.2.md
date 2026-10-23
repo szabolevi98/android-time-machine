@@ -1086,3 +1086,21 @@ browser flow `tests/browser/ng-send-multiple.mjs` covers Photos and Documents
 selection, every receiver above, mixed and audio-only batches, five languages
 and phone width; Drive, Hangouts, SEND media, Documents, Photos and YouTube
 browser regressions passed.
+
+## Navigation bar key positions — 2026-10-23
+
+The owner noticed the keys sat too close together. NavigationBarInflaterView
+(android-7.1.2_r1, fetched into `_aosp/aosp712/sui`) splits config_navBarLayout
+"space,back;home;recent,menu_ime" at ";" into start, centre and end groups:
+ends_group holds the 50 dp nav_key_space and Back, a weight-1 gravity spacer,
+then Overview and the 50 dp menu_ime frame; center_group, a layer over it, holds
+Home alone. The keys were all side by side in the centre (80 dp apart); they now
+sit at 90, 205.5 and 321 dp of the 411 dp bar, measured headless at desktop and
+phone width.
+
+Wallpaper check (owner's question): `fw-default_wallpaper.png` is byte-identical
+to N2G48C framework-res `res/drawable-nodpi-v4/default_wallpaper.png`, and
+`default_wallpaper_component` is @null, so ImageWallpaper shows it. No APK in the
+shamu 5.1.1, bullhead 6.0.1 or angler 7.1.2 images declares a WallpaperService
+(of the five images only hammerhead's SunBeam does); 6.0.1 uses bullhead's
+default_wallpaper.jpg byte for byte and 5.1.1 shamu's at half resolution.
