@@ -1443,5 +1443,430 @@ NG.strings('photos', {
 "untranslated": [
 "hu"
 ]
+},
+"cpe_none_filter": {
+"res": "angler:Photos:cpe_none_filter",
+"en": "None",
+"de": "Ohne",
+"fr": "Aucun",
+"es": "Ninguno",
+"hu": "None",
+"untranslated": [
+"hu"
+]
+},
+"cpe_mars_filter": {
+"res": "angler:Photos:cpe_mars_filter",
+"en": "Mars",
+"de": "Mars",
+"fr": "Mars",
+"es": "Mars",
+"hu": "Mars",
+"untranslated": [
+"hu"
+]
+},
+"cpe_phobos_filter": {
+"res": "angler:Photos:cpe_phobos_filter",
+"en": "Phobos",
+"de": "Phobos",
+"fr": "Phobos",
+"es": "Phobos",
+"hu": "Phobos",
+"untranslated": [
+"hu"
+]
+},
+"cpe_deimos_filter": {
+"res": "angler:Photos:cpe_deimos_filter",
+"en": "Deimos",
+"de": "Deimos",
+"fr": "Deimos",
+"es": "Deimos",
+"hu": "Deimos",
+"untranslated": [
+"hu"
+]
+},
+"cpe_ceres_filter": {
+"res": "angler:Photos:cpe_ceres_filter",
+"en": "Ceres",
+"de": "Ceres",
+"fr": "Ceres",
+"es": "Ceres",
+"hu": "Ceres",
+"untranslated": [
+"hu"
+]
+},
+"cpe_juno_filter": {
+"res": "angler:Photos:cpe_juno_filter",
+"en": "Juno",
+"de": "Juno",
+"fr": "Juno",
+"es": "Juno",
+"hu": "Juno",
+"untranslated": [
+"hu"
+]
+},
+"cpe_saturn_filter": {
+"res": "angler:Photos:cpe_saturn_filter",
+"en": "Saturn",
+"de": "Saturn",
+"fr": "Saturn",
+"es": "Saturn",
+"hu": "Saturn",
+"untranslated": [
+"hu"
+]
+},
+"cpe_mimas_filter": {
+"res": "angler:Photos:cpe_mimas_filter",
+"en": "Mimas",
+"de": "Mimas",
+"fr": "Mimas",
+"es": "Mimas",
+"hu": "Mimas",
+"untranslated": [
+"hu"
+]
+},
+"cpe_rhea_filter": {
+"res": "angler:Photos:cpe_rhea_filter",
+"en": "Rhea",
+"de": "Rhea",
+"fr": "Rhea",
+"es": "Rhea",
+"hu": "Rhea",
+"untranslated": [
+"hu"
+]
+},
+"cpe_dione_filter": {
+"res": "angler:Photos:cpe_dione_filter",
+"en": "Dione",
+"de": "Dione",
+"fr": "Dione",
+"es": "Dione",
+"hu": "Dione",
+"untranslated": [
+"hu"
+]
+},
+"cpe_ariel_filter": {
+"res": "angler:Photos:cpe_ariel_filter",
+"en": "Ariel",
+"de": "Ariel",
+"fr": "Ariel",
+"es": "Ariel",
+"hu": "Ariel",
+"untranslated": [
+"hu"
+]
+},
+"cpe_triton_filter": {
+"res": "angler:Photos:cpe_triton_filter",
+"en": "Triton",
+"de": "Triton",
+"fr": "Triton",
+"es": "Triton",
+"hu": "Triton",
+"untranslated": [
+"hu"
+]
+},
+"cpe_venus_filter": {
+"res": "angler:Photos:cpe_venus_filter",
+"en": "Venus",
+"de": "Venus",
+"fr": "Venus",
+"es": "Venus",
+"hu": "Venus",
+"untranslated": [
+"hu"
+]
+},
+"cpe_pluto_filter": {
+"res": "angler:Photos:cpe_pluto_filter",
+"en": "Pluto",
+"de": "Pluto",
+"fr": "Pluto",
+"es": "Pluto",
+"hu": "Pluto",
+"untranslated": [
+"hu"
+]
+},
+"cpe_eris_filter": {
+"res": "angler:Photos:cpe_eris_filter",
+"en": "Eris",
+"de": "Eris",
+"fr": "Eris",
+"es": "Eris",
+"hu": "Eris",
+"untranslated": [
+"hu"
+]
+},
+"cpe_a11y_preset_slider": {
+"res": "angler:Photos:cpe_a11y_preset_slider",
+"en": "Filter slider. Grab to adjust.",
+"de": "Filterregler. Zum Anpassen ziehen.",
+"fr": "Curseur de filtre à utiliser pour régler le paramètre.",
+"es": "Con este control ajustas el filtro.",
+"hu": "Filter slider. Grab to adjust.",
+"untranslated": [
+"hu"
+]
+},
+"cpe_a11y_filter_slider_value": {
+"res": "angler:Photos:cpe_a11y_filter_slider_value",
+"args": 1,
+"en": "Seek control %1$d percent.",
+"de": "Angestrebter Wert: %1$d Prozent",
+"fr": "Le curseur est défini sur %1$d %%.",
+"es": "Control del %1$d%%.",
+"hu": "Seek control %1$d percent.",
+"untranslated": [
+"hu"
+]
+},
+"cpe_a11y_filter_name": {
+"res": "angler:Photos:cpe_a11y_filter_name",
+"args": 1,
+"en": "filter %s",
+"de": "Filter \"%s\"",
+"fr": "Filtre %s",
+"es": "filtro %s",
+"hu": "filter %s",
+"untranslated": [
+"hu"
+]
+},
+"cpe_a11y_filter_name_selected": {
+"res": "angler:Photos:cpe_a11y_filter_name_selected",
+"args": 1,
+"en": "filter %s selected",
+"de": "Filter \"%s\" ausgewählt",
+"fr": "Filtre %s sélectionné.",
+"es": "filtro %s seleccionado",
+"hu": "filter %s selected",
+"untranslated": [
+"hu"
+]
+},
+"cpe_adjustments_vignette": {
+"res": "angler:Photos:cpe_adjustments_vignette",
+"en": "Vignette",
+"de": "Vignette",
+"fr": "Vignet.",
+"es": "Viñeta",
+"hu": "Vignette",
+"untranslated": [
+"hu"
+]
+},
+"cpe_adjustments_exposure": {
+"res": "angler:Photos:cpe_adjustments_exposure",
+"en": "Exposure",
+"hu": "Exposure",
+"de": "Exposure",
+"fr": "Exposure",
+"es": "Exposure",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"cpe_adjustments_brightness": {
+"res": "angler:Photos:cpe_adjustments_brightness",
+"en": "Brightness",
+"hu": "Brightness",
+"de": "Brightness",
+"fr": "Brightness",
+"es": "Brightness",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"cpe_adjustments_contrast": {
+"res": "angler:Photos:cpe_adjustments_contrast",
+"en": "Contrast",
+"hu": "Contrast",
+"de": "Contrast",
+"fr": "Contrast",
+"es": "Contrast",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"cpe_adjustments_highlights": {
+"res": "angler:Photos:cpe_adjustments_highlights",
+"en": "Highlights",
+"hu": "Highlights",
+"de": "Highlights",
+"fr": "Highlights",
+"es": "Highlights",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"cpe_adjustments_midtones": {
+"res": "angler:Photos:cpe_adjustments_midtones",
+"en": "Midtones",
+"hu": "Midtones",
+"de": "Midtones",
+"fr": "Midtones",
+"es": "Midtones",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"cpe_adjustments_shadows": {
+"res": "angler:Photos:cpe_adjustments_shadows",
+"en": "Shadows",
+"hu": "Shadows",
+"de": "Shadows",
+"fr": "Shadows",
+"es": "Shadows",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"cpe_adjustments_black_point": {
+"res": "angler:Photos:cpe_adjustments_black_point",
+"en": "Black point",
+"hu": "Black point",
+"de": "Black point",
+"fr": "Black point",
+"es": "Black point",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"cpe_adjustments_saturation": {
+"res": "angler:Photos:cpe_adjustments_saturation",
+"en": "Saturation",
+"hu": "Saturation",
+"de": "Saturation",
+"fr": "Saturation",
+"es": "Saturation",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"cpe_adjustments_temperature": {
+"res": "angler:Photos:cpe_adjustments_temperature",
+"en": "Temperature",
+"hu": "Temperature",
+"de": "Temperature",
+"fr": "Temperature",
+"es": "Temperature",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"cpe_adjustments_tint": {
+"res": "angler:Photos:cpe_adjustments_tint",
+"en": "Tint",
+"hu": "Tint",
+"de": "Tint",
+"fr": "Tint",
+"es": "Tint",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"cpe_adjustments_saturation_skin_tone": {
+"res": "angler:Photos:cpe_adjustments_saturation_skin_tone",
+"en": "Skin tone",
+"hu": "Skin tone",
+"de": "Skin tone",
+"fr": "Skin tone",
+"es": "Skin tone",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"cpe_adjustments_saturation_deep_blue": {
+"res": "angler:Photos:cpe_adjustments_saturation_deep_blue",
+"en": "Deep blue",
+"hu": "Deep blue",
+"de": "Deep blue",
+"fr": "Deep blue",
+"es": "Deep blue",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"cpe_a11y_controls_tilt": {
+"res": "angler:Photos:cpe_a11y_controls_tilt",
+"en": "Controls tilt.",
+"de": "Regelt die Neigung",
+"fr": "Régler l'inclinaison",
+"es": "Controla la inclinación.",
+"hu": "Controls tilt.",
+"untranslated": [
+"hu"
+]
+},
+"cpe_a11y_controls_tilt_value": {
+"res": "angler:Photos:cpe_a11y_controls_tilt_value",
+"args": 1,
+"en": "Tilt angle %1$d degrees.",
+"de": "Neigungswinkel: %1$d Grad",
+"fr": "L'angle d'inclinaison est de %1$d degrés.",
+"es": "Ángulo de inclinación: %1$d grados.",
+"hu": "Tilt angle %1$d degrees.",
+"untranslated": [
+"hu"
+]
+},
+"cpe_a11y_original_image_shown": {
+"res": "angler:Photos:cpe_a11y_original_image_shown",
+"en": "Original image shown",
+"de": "Originalbild wird angezeigt",
+"fr": "L'image d'origine est actuellement affichée",
+"es": "Se muestra la imagen original",
+"hu": "Original image shown",
+"untranslated": [
+"hu"
+]
 }
 });

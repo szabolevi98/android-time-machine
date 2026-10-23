@@ -34,7 +34,7 @@
   // Width and height in the picture's own units; the caller scales the SVG with CSS. Each drawing gets its own gradient
   // id, so the same photo can be on the screen twice (a gallery cell and a message).
   let uid = 0;
-  function svg(p, cls = '', ratio, fit) {
+  function svg(p, cls = '', ratio, fit, skipLook=false) {
     const w = 400 * (p.ratio || (p.kind === 'pano' ? 3 : 4 / 3)), h = 400, ed = p.edits || {};
     const turn = ((Math.round(+ed.turn || 0) % 4) + 4) % 4, rw = turn % 2 ? h : w, rh = turn % 2 ? w : h;
     const crop = ed.crop || [0, 0, 1, 1];
@@ -59,7 +59,8 @@
       const radius = Math.min(w, h) * (.52 - strength * .32);
       scene = `<defs><g id="${id}">${scene}</g><filter id="${id}blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="${strength * 12}"/></filter><radialGradient id="${id}gradient"><stop offset="45%" stop-color="white"/><stop offset="100%" stop-color="black"/></radialGradient><mask id="${id}mask" maskUnits="userSpaceOnUse" x="0" y="0" width="${w}" height="${h}"><rect width="${w}" height="${h}" fill="black"/><ellipse cx="${fx}" cy="${fy}" rx="${radius}" ry="${radius}" fill="url(#${id}gradient)"/></mask></defs><use href="#${id}" filter="url(#${id}blur)"/><use href="#${id}" mask="url(#${id}mask)"/>`;
     }
-    return `<svg class="${cls}" viewBox="${x} ${y} ${cw} ${ch}" preserveAspectRatio="xMidYMid ${fit||(cls==='ngphotos-full'?'meet':'slice')}" aria-hidden="true"><g transform="${transform}" style="filter:${filter}">${scene}</g></svg>`;
+    const base=`<svg class="${cls}" viewBox="${x} ${y} ${cw} ${ch}" preserveAspectRatio="xMidYMid ${fit||(cls==='ngphotos-full'?'meet':'slice')}" aria-hidden="true"><g transform="${transform}" style="filter:${filter}">${scene}</g></svg>`;
+    return !skipLook&&ed.look&&NG.photoColors?NG.photoColors.render(p,cls,ratio,fit,base,[x,y,cw,ch],snapshot=>svg(snapshot,cls,ratio,fit,true)):base;
   }
   const all = c => c.data.photos || (c.data.photos = JSON.parse(JSON.stringify(NG.defaults.photos)));
   NG.media = {svg, all, photos: c => all(c).filter(p => !p.trashedAt && !p.appPrivate),

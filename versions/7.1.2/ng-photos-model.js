@@ -33,7 +33,7 @@
     const crop = e.crop || [0, 0, 1, 1], clamp = (n, min, max) => Math.max(min, Math.min(max, +n || 0));
     const x = clamp(crop[0], 0, .9), y = clamp(crop[1], 0, .9);
     return {turn: ((Math.round(+e.turn || 0) % 4) + 4) % 4, crop: [x, y, clamp(crop[2], .1, 1 - x), clamp(crop[3], .1, 1 - y)],
-      light: clamp(e.light, -100, 100), color: clamp(e.color, -100, 100), pop: clamp(e.pop, -100, 100)};
+      light: clamp(e.light, -100, 100), color: clamp(e.color, -100, 100), pop: clamp(e.pop, -100, 100),...(+e.look>0?{look:Math.round(clamp(e.look,1,14)),lookIntensity:e.lookIntensity===undefined?.5:clamp(e.lookIntensity,0,1)}:{})};
   }
   function saveEdit(c, id, e, copy = false) {
     const p = find(c, id); if (!p || p.trashedAt) return null;

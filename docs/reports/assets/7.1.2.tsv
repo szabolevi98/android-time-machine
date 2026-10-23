@@ -771,6 +771,21 @@ versions/7.1.2/assets/pg-ww-friends.png	d97fab19da1228c5	copy	angler:/system/app
 versions/7.1.2/assets/pg-ww-levelup.png	f258c98c681d9fef	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ww_levelup.png	drawable-xxhdpi-v4		f258c98c681d9fef
 versions/7.1.2/assets/pg-ww-logo.png	0d83c232ea2c0410	copy	angler:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ww_logo.png	drawable-xxhdpi-v4		0d83c232ea2c0410
 versions/7.1.2/assets/ph-googlelogo_standard_color_74x24.png	33521e8e8cc7d382	copy	angler:/system/app/Photos/Photos.apk!res/drawable-xxhdpi-v4/googlelogo_standard_color_74x24.png	drawable-xxhdpi-v4		33521e8e8cc7d382
+versions/7.1.2/assets/ph-lut-0.png	877116662666aa9c	copy	angler:/system/app/Photos/Photos.apk!assets/luts/0.png			877116662666aa9c
+versions/7.1.2/assets/ph-lut-1.png	8899d9b376088f7e	copy	angler:/system/app/Photos/Photos.apk!assets/luts/1.png			8899d9b376088f7e
+versions/7.1.2/assets/ph-lut-10.png	768053b16177616b	copy	angler:/system/app/Photos/Photos.apk!assets/luts/10.png			768053b16177616b
+versions/7.1.2/assets/ph-lut-11.png	e11b35712e56f3a0	copy	angler:/system/app/Photos/Photos.apk!assets/luts/11.png			e11b35712e56f3a0
+versions/7.1.2/assets/ph-lut-12.png	5bb7ab0310818e4e	copy	angler:/system/app/Photos/Photos.apk!assets/luts/12.png			5bb7ab0310818e4e
+versions/7.1.2/assets/ph-lut-13.png	ee8ac65a25b4052b	copy	angler:/system/app/Photos/Photos.apk!assets/luts/13.png			ee8ac65a25b4052b
+versions/7.1.2/assets/ph-lut-14.png	d13d610816721325	copy	angler:/system/app/Photos/Photos.apk!assets/luts/14.png			d13d610816721325
+versions/7.1.2/assets/ph-lut-2.png	18b3ad0408e11ec9	copy	angler:/system/app/Photos/Photos.apk!assets/luts/2.png			18b3ad0408e11ec9
+versions/7.1.2/assets/ph-lut-3.png	6aae6e8e1a6458c7	copy	angler:/system/app/Photos/Photos.apk!assets/luts/3.png			6aae6e8e1a6458c7
+versions/7.1.2/assets/ph-lut-4.png	35c334aaf94944f8	copy	angler:/system/app/Photos/Photos.apk!assets/luts/4.png			35c334aaf94944f8
+versions/7.1.2/assets/ph-lut-5.png	097649fd161942bf	copy	angler:/system/app/Photos/Photos.apk!assets/luts/5.png			097649fd161942bf
+versions/7.1.2/assets/ph-lut-6.png	aa26ea09a60d53b0	copy	angler:/system/app/Photos/Photos.apk!assets/luts/6.png			aa26ea09a60d53b0
+versions/7.1.2/assets/ph-lut-7.png	9d4873590bf2c33e	copy	angler:/system/app/Photos/Photos.apk!assets/luts/7.png			9d4873590bf2c33e
+versions/7.1.2/assets/ph-lut-8.png	bd366d2bddca7498	copy	angler:/system/app/Photos/Photos.apk!assets/luts/8.png			bd366d2bddca7498
+versions/7.1.2/assets/ph-lut-9.png	2719bb4c6a03bb72	copy	angler:/system/app/Photos/Photos.apk!assets/luts/9.png			2719bb4c6a03bb72
 versions/7.1.2/assets/ph-null_album_color_276x88dp.png	b4250344cdb74bad	copy	angler:/system/app/Photos/Photos.apk!res/drawable-xxhdpi-v4/null_album_color_276x88dp.png	drawable-xxhdpi-v4		b4250344cdb74bad
 versions/7.1.2/assets/ph-null_shared_albums_color_132x132dp.png	14e1fc7f33c4b9b3	copy	angler:/system/app/Photos/Photos.apk!res/drawable-xxhdpi-v4/null_shared_albums_color_132x132dp.png	drawable-xxhdpi-v4		14e1fc7f33c4b9b3
 versions/7.1.2/assets/ph-product_logo_photos_color_144.png	86d55d1a2dcbac7c	copy	angler:/system/app/Photos/Photos.apk!res/drawable-xxhdpi-v4/product_logo_photos_color_144.png	drawable-xxhdpi-v4		86d55d1a2dcbac7c

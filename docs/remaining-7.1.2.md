@@ -7,7 +7,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 ## Completed milestones
 
 - [x] Camera integration/lifecycle (`b5496458`), guided captures and Smartburst (`3166c94c`).
-- [x] Photos library, viewer, albums, trash and basic CPE (`8c4d7f56`). Native preset catalogue below remains.
+- [x] Photos library, viewer, albums, trash and basic CPE (`8c4d7f56`). Native preset catalogue is integrated; final CPE polish below remains.
 
 ## Applications and connected activities
 
@@ -46,7 +46,8 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
       Drive, Play Music, Play Store, Project Fi no-account large/1x1 and Sound Search.
       Native previews, placement/configuration/cancellation, provider data, saved state and widget resize are connected.
 - [x] Camera guided panorama / Photo Sphere / Lens Blur and RGBZ editor, Smartburst capture/group/creations, volume key action.
-- [ ] Photos native CPE preset catalogue investigation and final polish.
+- [x] Photos native CPE look catalogue/LUTs, strength, remembered levels, save/copy/share and native preset strip.
+- [ ] Photos CPE final polish: native expandable adjustment groups, crop/straighten and original comparison.
 - [x] Chrome site settings category pages, per-site permissions, exceptions and reset.
 - [x] Calendar Goal creation, scheduling and session actions (`3108b381`). Remaining service activity cards are tracked by the routing audit below.
 - [x] App info Clear data/Force stop: private model/preferences reset, package task cancellation, stopped background services, provider data preserved.

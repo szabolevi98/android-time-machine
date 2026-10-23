@@ -144,10 +144,10 @@
     const range=(k,label,min=-100,max=100)=>`<label>${esc(c,t(label))}<input type="range" data-edit="${k}" min="${min}" max="${max}" value="${e[k]||0}" aria-label="${esc(c,t(label))}"></label>`;
     let body='';
     if(p.kind==='video')body=`<div class="ngphotos-trim">${range('start','play',0,Math.max(0,(p.duration||2000)-100))}${range('end','pause',100,p.duration||2000)}</div>`;
-    else if(u.tool==='adjustments')body=['light','color','pop'].map(k=>range(k,k)).join('');
+    else if(u.tool==='adjustments')body=`<button type="button" class="ngphotos-textbtn" data-action="ngphotos-auto">${esc(c,t('cpe_adjustments_auto'))}</button>`+['light','color','pop'].map(k=>range(k,k)).join('');
     else if(u.tool==='crop')body=`<div class="ngphotos-croptools">${button(c,'aspect','quantum_ic_image_aspect_ratio_white_24','aspect')}${button(c,'rotate','quantum_ic_rotate_90_degrees_ccw_white_24','rotate')}<button type="button" class="ngphotos-textbtn" data-action="ngphotos-reset-crop">${esc(c,t('reset'))}</button></div>`;
-    else body=`<div class="ngphotos-presets">${[['original',{}],['auto',{light:15,color:12,pop:18}]].map(([key,values])=>`<button type="button" data-action="ngphotos-filter" data-filter="${key}">${NG.media.svg({...p,edits:{...e,...values}},'ngphotos-svg',1)}<span>${esc(c,t(key))}</span></button>`).join('')}</div>`;
-    return `<div class="ngphotos-edittools"><div class="ngphotos-toolbody">${body}</div><div class="ngphotos-toolnav">${[['filters','photo_filter'],['adjustments','tune'],['crop','crop_rotate']].map(([tool,icon])=>`<button type="button" data-action="ngphotos-tool" data-tool="${tool}" class="${u.tool===tool?'on':''}" aria-label="${esc(c,t(tool))}">${image(`quantum_ic_${icon}_white_24`)}</button>`).join('')}</div></div>`;
+    else body=`<div class="ngphotos-presets">${(NG.photoPresets||[]).map(preset=>{const id=preset.id,on=(+e.look||0)===id;return `<button type="button" class="${on?'on':''}" data-action="ngphotos-filter" data-filter="${id?'look:'+id:'original'}" data-look="${id}" aria-label="${esc(c,T().fmt(on?'cpe_a11y_filter_name_selected':'cpe_a11y_filter_name',null,t(preset.label)))}">${NG.media.svg({...p,edits:{...e,look:id,lookIntensity:1}},'ngphotos-svg',1)}<span>${esc(c,t(preset.label))}</span></button>`;}).join('')}</div>${e.look?`<div class="ngphotos-look-strength"><input type="range" min="0" max="1000" value="${Math.round((e.lookIntensity??.5)*1000)}" data-edit="lookIntensity" aria-label="${esc(c,t('cpe_a11y_preset_slider'))}"></div>`:''}`;
+    return `<div class="ngphotos-edittools"><div class="ngphotos-toolbody${u.tool==='filters'&&p.kind!=='video'?' preset-body':''}">${body}</div><div class="ngphotos-toolnav">${[['filters','photo_filter'],['adjustments','tune'],['crop','crop_rotate']].map(([tool,icon])=>`<button type="button" data-action="ngphotos-tool" data-tool="${tool}" class="${u.tool===tool?'on':''}" aria-label="${esc(c,t(tool))}">${image(`quantum_ic_${icon}_white_24`)}</button>`).join('')}</div></div>`;
   }
   function preferences(c) {
     const u=U(c), s=state(c), row=(key,label,summary='',toggle=false)=>NG.settingsRow(c,{title:K[label]?t(label):label,summary:summary?t(summary):'',action:'ngphotos-pref',key,widget:toggle?NG.settingsSwitch(!!s[key]):''});
@@ -193,7 +193,7 @@
       u.selected=[];u.selecting=false;if(u.page==='photo')back(c);else c.render();
     }}]});
   }
-  function editorState(c,p){return {photo:p.id,edits:{...L().edits(p.edits),start:0,end:p.duration||2000},baseline:JSON.stringify(L().edits(p.edits)),trimChanged:false,tool:'filters'};}
+  function editorState(c,p){return {photo:p.id,edits:{...L().edits(p.edits),start:0,end:p.duration||2000},baseline:JSON.stringify(L().edits(p.edits)),trimChanged:false,tool:'filters',lookLevels:{[+p.edits?.look||0]:p.edits?.lookIntensity??.5},presetScroll:0};}
   function edit(c) { const p=current(c); if(p)go(c,'editor',editorState(c,p)); }
   function leaveEditor(c) {
     const u=U(c),leave=()=>{const prev=u.stack.pop()||{page:'photo'};Object.assign(u,prev);c.render();};
@@ -235,8 +235,9 @@
     tick(c){const u=U(c);if(c.ui.view!=='photos')return;const now=Date.now();if(u.slideshow&&now-(u.lastFrame||now)>=2500){u.lastFrame=now;next(c,1);}if(u.playing){const p=current(c);u.position=Math.min(p?.duration||2000,u.position+now-(u.lastTick||now));u.lastTick=now;if(u.position>=(p?.duration||2000)){if(u.loop)u.position=0;else u.playing=false;}c.render();}},
     mount(c,root){
       const u=U(c),f=root.querySelector('.ngphotos-search');if(f){f.addEventListener('input',()=>{const start=f.selectionStart;u.query=f.value;c.render();const n=c.el.viewport.querySelector('.ngphotos-search');n.focus();try{n.setSelectionRange(start,start);}catch{}});}
+      const presets=root.querySelector('.ngphotos-presets');if(presets){presets.scrollLeft=u.presetScroll||0;presets.addEventListener('scroll',()=>u.presetScroll=presets.scrollLeft);let drag=null;presets.addEventListener('pointerdown',e=>{drag={x:e.clientX,left:presets.scrollLeft,active:false};});presets.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x;if(!drag.active&&Math.abs(dx)<7)return;drag.active=true;presets.setPointerCapture(e.pointerId);presets.scrollLeft=drag.left-dx;e.preventDefault();});for(const ev of ['pointerup','pointercancel'])presets.addEventListener(ev,e=>{if(drag?.active){e.preventDefault();e.stopPropagation();}drag=null;});}
       root.querySelector('.ngphotos-caption')?.addEventListener('change',e=>{current(c).caption=e.target.value;c.save();});
-      for(const r of root.querySelectorAll('[data-edit]'))r.addEventListener('input',()=>{let value=+r.value;const key=r.dataset.edit;if(key==='start'){value=Math.min(value,u.edits.end-100);u.trimChanged=true;}if(key==='end'){value=Math.max(value,u.edits.start+100);u.trimChanged=true;}u.edits[key]=value;const svg=root.querySelector('.ngphotos-full');if(svg)svg.outerHTML=NG.media.svg({...current(c),edits:u.edits},'ngphotos-full');});
+      for(const r of root.querySelectorAll('[data-edit]'))r.addEventListener('input',()=>{let value=+r.value;const key=r.dataset.edit;if(key==='start'){value=Math.min(value,u.edits.end-100);u.trimChanged=true;}if(key==='end'){value=Math.max(value,u.edits.start+100);u.trimChanged=true;}if(key==='lookIntensity')value/=1000;u.edits[key]=value;const svg=root.querySelector('.ngphotos-full');if(svg)svg.outerHTML=NG.media.svg({...current(c),edits:u.edits},'ngphotos-full');});
       root.querySelector('.ngphotos-video input')?.addEventListener('input',e=>{u.position=+e.target.value;u.lastTick=Date.now();c.render();});
       for(const cell of root.querySelectorAll('.ngphotos-cell')){
         let timer;const cancel=()=>clearTimeout(timer);cell.addEventListener('pointerdown',e=>{if(e.button)return;timer=setTimeout(()=>{u.selecting=true;if(!u.selected.includes(+cell.dataset.id))u.selected.push(+cell.dataset.id);c.render();},500);});for(const event of ['pointerup','pointercancel','pointerleave'])cell.addEventListener(event,cancel);
@@ -283,7 +284,8 @@
         case 'play':u.playing=!u.playing;u.lastTick=Date.now();if(u.position>=(p.duration||2000))u.position=0;c.render();break;
         case 'edit':edit(c);break;
         case 'tool':u.tool=el.dataset.tool;c.render();break;
-        case 'filter':Object.assign(u.edits,el.dataset.filter==='auto'?{light:15,color:12,pop:18}:{light:0,color:0,pop:0});c.render();break;
+        case 'auto':Object.assign(u.edits,{light:15,color:12,pop:18});c.render();break;
+        case 'filter':{const id=+(el.dataset.look||0),old=+u.edits.look||0;u.lookLevels||={};if(old)u.lookLevels[old]=u.edits.lookIntensity??.5;if(id){u.edits.look=id;u.edits.lookIntensity=u.lookLevels[id]??.5;}else{delete u.edits.look;delete u.edits.lookIntensity;}const list=el.closest('.ngphotos-presets');if(list){const a=el.getBoundingClientRect(),b=list.getBoundingClientRect();u.presetScroll=Math.max(0,list.scrollLeft+a.left-b.left+a.width/2-b.width/2);}c.render();break;}
         case 'rotate':u.edits.turn=(u.edits.turn+3)%4;u.edits.crop=[0,0,1,1];c.render();break;
         case 'reset-crop':u.edits.turn=0;u.edits.crop=[0,0,1,1];c.render();break;
         case 'aspect':c.menu([['original',0],['square',1],['cpe_aspect_ratio_4_3',4/3],['cpe_aspect_ratio_16_9',16/9],['cpe_aspect_ratio_3_2',3/2]].map(([key,ratio])=>({label:t(key),action:c=>{const r=(p.ratio||(p.kind==='pano'?3:4/3)),natural=u.edits.turn%2?1/r:r;if(!ratio)u.edits.crop=[0,0,1,1];else if(natural>ratio){const w=ratio/natural;u.edits.crop=[(1-w)/2,0,w,1];}else{const h=natural/ratio;u.edits.crop=[0,(1-h)/2,1,h];}c.render();}})),el);break;

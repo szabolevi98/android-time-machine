@@ -995,3 +995,33 @@ scrolling/sharing/opening, native empty/default responses, Back, one-handed/them
 access, direct G preference, all five languages and phone width. Both the original
 Gboard and dictionary/glide browser regressions passed. Inventory: 1177 rebuilt
 assets from N2G48C, zero problems.
+
+## Photos native CPE look catalogue — 2026-10-23
+
+The native libnative.so constant table supplies None and all 14 planet/moon looks:
+Mars, Phobos, Deimos, Ceres, Juno, Saturn, Mimas, Rhea, Dione, Ariel, Triton, Venus,
+Pluto and Eris. ng-photos-presets.py recovers the names, colours and LUT paths from
+this APK's native table. All 15 34×289 RGB PNGs are copied byte for byte from
+assets/luts. These contain paired 17³ colour lookup tables: the native strength
+worker blends identity to the first table below 0.5, then the first to the second
+above 0.5; Pluto/Eris use a 0.30/0.59/0.11 monochrome base. The browser samples the
+native LUTs with trilinear interpolation over our drawn scenes.
+
+The CPE strip uses 80dp previews/28dp title bars, native 4dp spacing, 88/80 selected
+scale, title colours/elevation and the 44dp, 0–1000 RelativeSeekBar. Intensities are
+remembered per look during one edit session. None removes the look without
+resetting independent adjustments. Auto enhancement remains in Adjustments.
+Saved look metadata is nondestructive and retained in copied/shared media.
+
+Filtered scenes are rasterized asynchronously with a bounded cache; completion
+replaces only its matching SVG, preserving active slider/pointer nodes. Each job
+owns an immutable snapshot, so a later slider change cannot corrupt an earlier
+cache entry. Nested edited collage frames are awaited before rasterization.
+The native photo-processing backend is not ported; local legacy adjustments and
+synthetic media remain simulator logic. The remaining adjustment/crop polish is
+tracked explicitly before release.
+
+Validation: all 240 module checks passed; three native-pixel/model checks, the existing Photos browser flow and
+a new pointer flow cover LUTs/strength/per-look state, carousel dragging, save,
+discard, copy, immutable sharing, pending-job isolation, phone width and five
+languages. Source inventory rebuilt 1192 assets with zero problems.

@@ -13,7 +13,7 @@ try {
  assert.equal(await b.ev(`document.querySelector('#screen').classList.contains('no-status')`),true);
  await click('info');await b.ev(`(()=>{const i=document.querySelector('.ngphotos-caption');i.value='Lake at sunset';i.dispatchEvent(new Event('change',{bubbles:true}));})()`);
  assert.equal((await b.save()).photos.find(p=>p.id===1).caption,'Lake at sunset');await back();
- await click('edit');await b.click('[data-action="ngphotos-filter"][data-filter="auto"]');
+ await click('edit');await b.click('[data-action="ngphotos-tool"][data-tool="adjustments"]');await click('auto');
  await b.click('[data-action="ngphotos-tool"][data-tool="crop"]');await click('rotate');
  await b.drag('#viewport .ngphotos-cropbox i:last-child',-25,-15);await click('save');
  assert.equal((await b.save()).photos.find(p=>p.id===1).edits.turn,3);
@@ -38,7 +38,7 @@ try {
  assert.equal(await b.ev(`document.querySelectorAll('#viewport .ngphotos-cell').length`),1);
  await b.click('#viewport .ngphotos-cell');await click('restore');
  assert.equal((await b.save()).photos.filter(p=>p.trashedAt).length,0);
- await b.open('photos','photo:1');await click('edit');await b.click('[data-action="ngphotos-filter"][data-filter="original"]');await back();
+ await b.open('photos','photo:1');await click('edit');await b.click('[data-action="ngphotos-filter"][data-look="1"]');await back();
  assert.equal(await b.ev(`!!document.querySelector('#overlay-root [role="dialog"]')`),true,'unsaved edit confirmation');await confirm();
  await b.send('Emulation.setDeviceMetricsOverride',{width:375,height:812,deviceScaleFactor:1,mobile:true});
  await b.shot('7.1.2-photos-viewer-phone');
