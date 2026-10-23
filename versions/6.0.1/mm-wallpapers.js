@@ -67,6 +67,23 @@
     app: false,
     statusColor: () => 'rgba(0,0,0,.25)',
     render,
+    mount(c, root) {
+      const strip = root.querySelector('.mmwl-tiles'); if (!strip) return;
+      const u = ui(c); let drag = null, suppress = false;
+      strip.scrollLeft = u.scrollLeft || 0;
+      strip.addEventListener('scroll', () => u.scrollLeft = strip.scrollLeft);
+      strip.addEventListener('pointerdown', e => { suppress = false; if (e.pointerType === 'mouse' && !e.button) drag = {id: e.pointerId, x: e.clientX, left: strip.scrollLeft, active: false}; });
+      strip.addEventListener('pointermove', e => {
+        if (!drag || drag.id !== e.pointerId) return;
+        const dx = e.clientX - drag.x, scale = strip.getBoundingClientRect().width / strip.clientWidth || 1;
+        if (!drag.active && Math.abs(dx) < 8 * c.el.screen.getBoundingClientRect().width / 411) return;
+        drag.active = true; strip.setPointerCapture(e.pointerId); strip.scrollLeft = drag.left - dx / scale; u.scrollLeft = strip.scrollLeft; e.preventDefault();
+      });
+      const end = e => { if (drag?.id === e.pointerId) { suppress = drag.active; drag = null; } };
+      strip.addEventListener('pointerup', end); strip.addEventListener('pointercancel', end);
+      strip.addEventListener('click', e => { if (suppress) { e.preventDefault(); e.stopPropagation(); suppress = false; } }, true);
+      strip.addEventListener('wheel', e => { if (e.ctrlKey) return; const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY; strip.scrollLeft += d * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? strip.clientWidth : 1); u.scrollLeft = strip.scrollLeft; e.preventDefault(); }, {passive: false});
+    },
     back(c) { c.ui.wallpapers = null; return false; },
     action(name, el, event, c) {
       const u = ui(c);

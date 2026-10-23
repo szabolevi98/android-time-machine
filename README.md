@@ -83,7 +83,8 @@ npm test
 The browser flows open each version in headless Chrome (boot, unlock, an app, Back, the power menu, a language switch
 and a reload, at desktop and phone width) against a server for the repository root, e.g. `php -S localhost:8090 -t .`.
 Nougat's release gate also checks fresh demo data, old saves, every launcher app and every extracted preference screen
-in five languages; its detailed integration flows live in `tests/browser/ng-*.mjs`:
+in five languages; its detailed integration flows live in `tests/browser/ng-*.mjs`.
+Wallpaper regressions also check real mouse dragging, wheel scrolling, selection and phone touch in 5.1.1, 6.0.1 and 7.1.2:
 
 ```bash
 npm run test:browser

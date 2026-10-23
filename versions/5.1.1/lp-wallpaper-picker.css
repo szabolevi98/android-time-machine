@@ -18,7 +18,9 @@
 .kwp-shadow{display:block;height:calc(1.9978 * var(--dp))}
 .kwp-shadow.top{background:linear-gradient(transparent,#0000002a)}
 .kwp-shadow.bottom{background:linear-gradient(#0000002a,transparent)}
-.kwp-scroll{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior:contain}
+.screen.lp-wallpaper-picker{touch-action:pan-x}
+.kwp-scroll{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior:contain;touch-action:pan-x;cursor:grab}
+.kwp-scroll:active{cursor:grabbing}
 .kwp-scroll::-webkit-scrollbar{display:none}
 .kwp-list{display:flex;width:max-content}
 .screen .kwp-tile{position:relative;flex:none;width:calc(106.5122 * var(--dp));height:calc(94.4813 * var(--dp));padding:0;border:0;background:#000;overflow:hidden;cursor:pointer}

@@ -20,6 +20,7 @@ The stock Nexus 6 as the factory image `shamu-lmy48y` (build LMY48Y, August 2015
 ## Launcher and apps
 
 - **Google Now Launcher 1.1:** the Nexus 6 home screen with the Google search bar, the circular-reveal app drawer, folders that reveal from their icon, the DeskClock and Calendar widgets, the wallpaper picker and Google Now.
+  The wallpaper strip supports mouse dragging, the wheel and phone touch; selecting a picture keeps the strip's scroll position.
 - **Phone and Contacts:** Google Dialer 2.1 with speed dial, recents and the dial pad, InCallUI, and Google Contacts 1.1.
 - **Messages:** Messenger 1.1 for SMS with coloured conversations, and Hangouts 2.5 for chats.
 - **Mail:** Gmail 5.0 and Email 7.0 (UnifiedEmail) with the drawer, conversation view and compose.

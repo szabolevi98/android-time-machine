@@ -7,7 +7,9 @@
 .mmwl-set img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
 .mmwl-strip{position:absolute;left:0;right:0;bottom:0}
 .mmwl-strip>i{display:block;height:calc(2 * var(--dp))}
-.mmwl-tiles{display:flex;overflow-x:auto;scrollbar-width:none}
+.screen.view-wallpapers{touch-action:pan-x}
+.mmwl-tiles{display:flex;overflow-x:auto;scrollbar-width:none;touch-action:pan-x;user-select:none;cursor:grab}
+.mmwl-tiles:active{cursor:grabbing}
 .mmwl-tile{position:relative;flex:none;width:calc(106.5 * var(--dp));height:calc(94.5 * var(--dp));padding:0;border:0;background:#000 center/cover no-repeat;overflow:hidden}
 .mmwl-tile.def{background-image:url('assets/fw-default_wallpaper.jpg')}
 .mmwl-svg{position:absolute;inset:0;width:100%;height:100%}

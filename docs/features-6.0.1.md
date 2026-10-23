@@ -17,7 +17,7 @@ The Nexus 5X as Google's last Marshmallow build for it left it: the factory imag
 - **Google Now Launcher:** the default workspace with the Google search bar, folders, the hotseat, drag and drop with Remove and App info, Overview mode, and the Google Now page on the left.
 - **Apps drawer:** the vertically scrolling list with app predictions and search.
 - **Widgets:** the image's own list (grouped by app, with their previews and sizes) and the widgets drawn on the home screen: Calendar, Gmail, Chrome bookmarks, Drive, Play Music, Messenger, Hangouts, Google Now, the analog and digital clocks, Sound Search and I'm Feeling Lucky. Dragging to the edge opens a new page.
-- **Wallpapers:** the launcher's picker as it is in this image (My photos through Documents, the default wallpaper and the pictures set before); a photo becomes the wallpaper of the home screen, Overview and the lock screen. The image has no live wallpapers, and Live Wallpapers says so.
+- **Wallpapers:** the launcher's picker as it is in this image (My photos through Documents, the default wallpaper, GoogleHome's nine bundled pictures and the pictures set before); a photo becomes the wallpaper of the home screen, Overview and the lock screen. The thumbnail strip scrolls with mouse dragging, the wheel and phone touch, and keeps its position when a picture is selected. The image has no live wallpapers, and Live Wallpapers says so.
 
 ## Settings
 
