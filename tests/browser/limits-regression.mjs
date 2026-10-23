@@ -22,6 +22,55 @@ const REFUSAL = /not part of the simulator|not part of this simulation|(?:un)?av
 
 // Each case: the T package, the version, what it proves, and run(h) driving the path from the unlocked home screen.
 // h.check(name, ok, detail) records a step; a false one fails the case.
+
+// Email › Settings › the account: Quick responses, the ringtone and the server screens, kept and reloaded.
+const emailSettings = async h => {
+  const prefs = () => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));return JSON.parse(localStorage.getItem(k)).emailPrefs||{}})()`);
+  const account = async () => {
+    await h.openApp('email');
+    // The overflow's Settings (4.3, 4.4); Lollipop's Email has it in the navigation drawer.
+    const overflow = '#viewport [data-action="email-menu"]:not([data-id="message"])', drawer = '#viewport [data-action="email-drawer"]';
+    h.check('opens Email', await h.until(`!!document.querySelector('${overflow}, ${drawer}')`));
+    await h.tap(await h.ev(`!!document.querySelector('${overflow}')`) ? overflow : drawer);
+    await h.tap('[role="menu"] [data-action="email-settings"], .holo-menu [data-action="email-settings"], nav [data-action="email-settings"]');
+    h.check('Settings opens Email\'s own settings', await h.until(`!!document.querySelector('#viewport .emp-app [data-id="account"]')`));
+    await h.tap('#viewport .emp-row[data-id="account"]');
+    h.check('the account\'s settings open', await h.until(`!!document.querySelector('#viewport .emp-row[data-id="incoming"]')`));
+  };
+  await account();
+  await h.tap('#viewport .emp-row[data-id="account_quick_responses"]');
+  h.check('Quick responses open empty', await h.until(`!!document.querySelector('#viewport .emp-empty')`));
+  await h.tap('#viewport .emp-button[data-action="empx-quick"]');
+  await h.type('#viewport [data-email-pref-edit]', 'See you at nine.');
+  await h.tap('#viewport [data-action="empx-quick-save"]');
+  h.check('a created quick response is listed', await h.until(`[...document.querySelectorAll('#viewport .emp-quick')].some(b=>b.textContent==='See you at nine.')`));
+  await h.key('Escape');
+  h.check('Back returns to the account', await h.until(`!!document.querySelector('#viewport .emp-row[data-id="incoming"]')`));
+  const tone = await h.ev(`document.querySelector('#viewport .emp-row[data-id$="ringtone"]')?.dataset.id`);
+  await h.tap(`#viewport .emp-row[data-id="${tone}"]`);
+  h.check('the ringtone list opens', await h.until(`document.querySelectorAll('#viewport .emp-tones .emp-choice').length > 3`));
+  const picked = await h.ev(`document.querySelectorAll('#viewport .emp-tones .emp-choice')[2].textContent`);
+  await h.tap('#viewport .emp-tones .emp-choice:nth-child(3)');
+  await h.tap('#viewport [data-action="empx-tone-ok"]');
+  h.check('the chosen sound is the summary', await h.until(`document.querySelector('#viewport .emp-row[data-id="${tone}"] small')?.textContent === ${JSON.stringify(picked)}`));
+  await h.tap('#viewport .emp-row[data-id="incoming"]');
+  h.check('Incoming settings show the IMAP fields', await h.until(`document.querySelectorAll('#viewport .emp-form .emp-input').length >= 4`));
+  await h.type('#viewport .emp-input[data-emp-field="server"]', 'mail.example.org');
+  await h.tap('#viewport [data-action="empx-server-save"]');
+  h.check('Done returns to the account', await h.until(`!!document.querySelector('#viewport .emp-row[data-id="outgoing"]')`));
+  await h.tap('#viewport .emp-row[data-id="outgoing"]');
+  await h.until(`!!document.querySelector('#viewport .emp-checkrow input')`);
+  await h.tap('#viewport .emp-checkrow input');
+  h.check('without sign-in the user fields hide', await h.ev(`getComputedStyle(document.querySelector('#viewport .emp-login')).display === 'none'`));
+  await h.tap('#viewport [data-action="empx-server-cancel"]');
+  await h.until(`!!document.querySelector('#viewport .emp-row[data-id="outgoing"]')`);
+  const kept = await prefs();
+  h.check('the settings are kept', kept.quickResponses?.[0] === 'See you at nine.' && kept[tone] === picked && kept.incoming?.server === 'mail.example.org' && !kept.outgoing, JSON.stringify(kept));
+  h.check('the reload keeps them', await h.reload() && (await prefs()).incoming?.server === 'mail.example.org');
+  await account();
+  await h.tap('#viewport .emp-row[data-id="incoming"]');
+  h.check('the saved server is shown again', await h.until(`document.querySelector('#viewport .emp-input[data-emp-field="server"]')?.value === 'mail.example.org'`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -77,7 +126,10 @@ const CASES = [
     await h.until(`!!document.querySelector('#viewport .pe-dialog')`);
     await h.tap('#viewport .pe-dialog button[data-id="exit"]');
     h.check('Exit leaves without saving', await h.until(`!!document.querySelector('#viewport .ph-viewer-view')`) && (await editOf(id))?.steps?.length === 1);
-  }}
+  }},
+  {id: 'T02', version: '4.3', name: 'Email › Settings: quick responses, ringtone, server settings', run: emailSettings},
+  {id: 'T09', version: '4.4.4', name: 'Email › Settings: quick responses, ringtone, server settings', run: emailSettings},
+  {id: 'T09', version: '5.1.1', name: 'Email › Settings: quick responses, ringtone, server settings', run: emailSettings}
 ];
 
 const args = process.argv.slice(2), picked = args.filter(a => /^T\d+/i.test(a)).map(a => a.toUpperCase());
@@ -109,7 +161,7 @@ await send('Page.addScriptToEvaluateOnNewDocument', {source: `window.__refusals=
 
 const until = async (expr, ms = 15000) => { for (const end = Date.now() + ms; Date.now() < end; await sleep(150)) if (await ev(expr)) return true; return false; };
 // Of the matching elements (a screen being replaced can still be in the page), the one a touch at its centre reaches.
-const center = selector => ev(`(()=>{const all=[...document.querySelectorAll(${JSON.stringify(selector)})];if(!all.length)return null;let last=null;for(const el of all){const r0=el.getBoundingClientRect(),strip=el.closest('[data-pe-strip],.pe-strip');if(strip){const sr=strip.getBoundingClientRect();if(r0.left<sr.left||r0.right>sr.right)strip.scrollLeft+=r0.left-sr.left-(sr.width-r0.width)/2;}else if(r0.top<0||r0.bottom>innerHeight)el.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});const b=el.getBoundingClientRect();if(!b.width||!b.height)continue;const x=b.left+b.width/2,y=b.top+b.height/2,hit=document.elementFromPoint(x,y);last={x,y,hit:!!hit&&(hit===el||el.contains(hit)),what:hit?(hit.tagName+'.'+hit.className+' in '+(hit.parentElement?.className||'')):'none'};if(last.hit)return last;}return last})()`);
+const center = selector => ev(`(()=>{const all=[...document.querySelectorAll(${JSON.stringify(selector)})];if(!all.length)return null;let last=null;for(const el of all){const r0=el.getBoundingClientRect(),strip=el.closest('[data-pe-strip],.pe-strip');if(strip){const sr=strip.getBoundingClientRect();if(r0.left<sr.left||r0.right>sr.right)strip.scrollLeft+=r0.left-sr.left-(sr.width-r0.width)/2;}else el.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});const b=el.getBoundingClientRect();if(!b.width||!b.height)continue;const x=b.left+b.width/2,y=b.top+b.height/2,hit=document.elementFromPoint(x,y);last={x,y,hit:!!hit&&(hit===el||el.contains(hit)),what:hit?(hit.tagName+'.'+hit.className+' in '+(hit.parentElement?.className||'')):'none'};if(last.hit)return last;}return last})()`);
 const mouse = (type, x, y, buttons) => send('Input.dispatchMouseEvent', {type, x, y, button: 'left', buttons, clickCount: type === 'mouseMoved' ? 0 : 1});
 // A tap where a visitor would touch: the element's centre, which must not be covered by another element.
 // Screen transitions settle first (a view zooming in is not where it will stay).
@@ -129,6 +181,8 @@ async function drag(selector, dx, dy) {
   for (let i = 1; i <= 12; i++) { await mouse('mouseMoved', c.x + dx * i / 12, c.y + dy * i / 12, 1); await sleep(16); }
   await mouse('mouseReleased', c.x + dx, c.y + dy, 0); await sleep(250);
 }
+// Typing into a field as a keyboard does: a tap on it, its text selected, then the new text.
+async function type(selector, text) { await tap(selector); await ev(`document.activeElement?.select?.()`); await send('Input.insertText', {text}); await sleep(100); }
 const key = k => ev(`(document.activeElement || document.body).dispatchEvent(new KeyboardEvent('keydown',{key:${JSON.stringify(k)},bubbles:true}))`);
 // The launcher's own open-app action (the home screens differ per version; the path under test starts in the app).
 const openApp = app => ev(`(()=>{const el=document.createElement('button');el.dataset.action='open-app';el.dataset.app=${JSON.stringify(app)};const host=document.querySelector('#viewport').firstElementChild;host.append(el);el.click();el.remove();return true})()`);
@@ -154,7 +208,7 @@ async function run(c, width) {
   // A fresh phone, already switched on in this tab (the cold-boot animation is not part of these paths).
   await ev(`localStorage.clear(); sessionStorage.clear(); sessionStorage.setItem('android-sim-booted-${c.version}', '1'); localStorage.setItem('android-time-machine-language', 'en')`);
   check('boots and unlocks', await boot(c.version));
-  await c.run({ev, send, until, tap, drag, key, openApp, sleep, check, phone, save: () => ev(SAVE), reload: () => boot(c.version)});
+  await c.run({ev, send, until, tap, drag, type, key, openApp, sleep, check, phone, save: () => ev(SAVE), reload: () => boot(c.version)});
   await sleep(400);
   const refusals = await ev(`window.__refusals || []`);
   check('no refusal on the way', !refusals.length, refusals.join(' | '));

@@ -188,3 +188,23 @@
 .emp-buttons{display:flex;border-top:calc(1.1743 * var(--dp)) solid #0000001a}
 .screen .emp-buttons button{flex:1;min-height:calc(47.9099 * var(--dp));border:0;background:none;font:400 calc(15.97 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
 .emp-buttons button+button{border-left:calc(1.1743 * var(--dp)) solid #0000001a}
+/* Email's Quick responses (account_settings_edit_quick_responses_fragment.xml: the list, the empty view, Create new) and
+   the server screens (account_setup_incoming_fragment.xml / account_setup_outgoing_fragment.xml: textAppearanceSmall
+   labels over Holo Light text fields and spinners, Require sign-in, the 160 x 40 sp accountSettingsButton pair). */
+.emp-form{display:flex;flex-direction:column;padding:calc(8 * var(--dp)) calc(16 * var(--dp)) 0}
+.emp-label{margin-top:calc(12 * var(--dp));font:400 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#323232}
+.screen .emp-input,.screen .emp-spinner{display:block;width:100%;box-sizing:border-box;margin:0;padding:calc(8 * var(--dp)) calc(4 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #b0b0b0;border-radius:0;background:transparent;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000;outline:0}
+.screen .emp-input:focus{border-bottom:calc(2 * var(--dp)) solid #33b5e5}
+.screen .emp-spinner{appearance:none;-webkit-appearance:none;padding-right:calc(24 * var(--dp));background:linear-gradient(135deg,transparent 50%,#8a8a8a 50%) right calc(4 * var(--dp)) bottom calc(4 * var(--dp))/calc(9 * var(--dp)) calc(9 * var(--dp)) no-repeat}
+.emp-checkrow{display:flex;align-items:center;gap:calc(4 * var(--dp));margin-top:calc(12 * var(--dp));font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
+.emp-checkrow input{appearance:none;-webkit-appearance:none;flex:none;width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin:0;background:url('assets/btn_check_off_holo_light.png') center/contain no-repeat}
+.emp-checkrow input:checked{background-image:url('assets/btn_check_on_holo_light.png')}
+.emp-form:has([data-emp-field="login"]:not(:checked)) .emp-login{display:none}
+.emp-login{display:flex;flex-direction:column}
+.emp-actions{display:flex;justify-content:center;gap:calc(8 * var(--dp));padding:calc(16 * var(--dp))}
+.screen .emp-button{width:calc(160 * var(--dp));min-height:calc(40 * var(--dp));padding:0 calc(8 * var(--dp));border:calc(1 * var(--dp)) solid #c6c6c6;border-radius:calc(2 * var(--dp));background:#e8e8e8;box-shadow:0 calc(1 * var(--dp)) 0 #0000001f;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
+.screen .emp-button:active{background:#33b5e5}
+.screen .emp-quick{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #e3e3e3;background:none;text-align:left;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
+.screen .emp-quick:active{background:#33b5e566}
+.emp-empty{margin:0;padding:calc(32 * var(--dp)) calc(16 * var(--dp));text-align:center;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#727272}
+.emp-tone-list{max-height:calc(330 * var(--dp));overflow-y:auto;scrollbar-width:none}

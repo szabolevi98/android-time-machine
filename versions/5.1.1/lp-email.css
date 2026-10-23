@@ -260,3 +260,23 @@
 .emp-choice.on i::before{border-color:#e7790d;background:radial-gradient(#e7790d 0 calc(5 * var(--dp)), transparent calc(5.4967 * var(--dp)))}
 .emp-buttons{display:flex;justify-content:flex-end;gap:calc(8.0023 * var(--dp));padding:calc(8.0023 * var(--dp)) calc(8.0023 * var(--dp)) 0}
 .screen .emp-buttons button{min-width:calc(63.9956 * var(--dp));height:calc(36.0045 * var(--dp));padding:0 calc(8.0023 * var(--dp));border:0;border-radius:calc(1.9978 * var(--dp));background:none;font:500 calc(13.9956 * var(--dp)) Roboto,sans-serif;color:#e7790d;text-transform:uppercase}
+/* Email 6's Quick responses and server screens in Theme.Material.Light with the app's #e7790d accent: caps labels in
+   the accent over underlined fields, the Require signin check box, flat Cancel / Done. */
+.emp-form{display:flex;flex-direction:column;padding:calc(8 * var(--dp)) calc(16 * var(--dp)) 0}
+.emp-label{margin-top:calc(16 * var(--dp));font:500 calc(12 * var(--dp)) Roboto,sans-serif;color:#e7790d}
+.screen .emp-input,.screen .emp-spinner{display:block;width:100%;box-sizing:border-box;margin:0;padding:calc(8 * var(--dp)) 0;border:0;border-bottom:calc(1 * var(--dp)) solid #0000008a;border-radius:0;background:transparent;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de;outline:0}
+.screen .emp-input:focus{border-bottom:calc(2 * var(--dp)) solid #e7790d}
+.screen .emp-spinner{appearance:none;-webkit-appearance:none;padding-right:calc(24 * var(--dp));background:linear-gradient(45deg,transparent 50%,#0000008a 50%) right calc(6 * var(--dp)) center/calc(6 * var(--dp)) calc(6 * var(--dp)) no-repeat,linear-gradient(-45deg,transparent 50%,#0000008a 50%) right 0 center/calc(6 * var(--dp)) calc(6 * var(--dp)) no-repeat}
+.emp-checkrow{display:flex;align-items:center;gap:calc(16 * var(--dp));margin-top:calc(16 * var(--dp));font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.emp-checkrow input{appearance:none;-webkit-appearance:none;position:relative;flex:none;width:calc(18 * var(--dp));height:calc(18 * var(--dp));margin:0 0 0 calc(3 * var(--dp));box-sizing:border-box;border:calc(2 * var(--dp)) solid #0000008a;border-radius:calc(2 * var(--dp))}
+.emp-checkrow input:checked{border-color:#e7790d;background:#e7790d}
+.emp-checkrow input:checked::after{content:'';position:absolute;left:calc(4 * var(--dp));top:calc(.5 * var(--dp));width:calc(5 * var(--dp));height:calc(10 * var(--dp));border:solid #fff;border-width:0 calc(2 * var(--dp)) calc(2 * var(--dp)) 0;transform:rotate(45deg)}
+.emp-form:has([data-emp-field="login"]:not(:checked)) .emp-login{display:none}
+.emp-login{display:flex;flex-direction:column}
+.emp-actions{display:flex;justify-content:flex-end;gap:calc(8 * var(--dp));padding:calc(16 * var(--dp)) calc(8 * var(--dp))}
+.screen .emp-button{min-width:calc(64 * var(--dp));height:calc(36 * var(--dp));padding:0 calc(8 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#e7790d;text-transform:uppercase}
+.screen .emp-button:active{background:#0000001a}
+.screen .emp-quick{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:calc(12 * var(--dp)) calc(16 * var(--dp));border:0;background:none;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.screen .emp-quick:active{background:#0000001a}
+.emp-empty{margin:0;padding:calc(32 * var(--dp)) calc(16 * var(--dp));text-align:center;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#0000008a}
+.emp-tone-list{max-height:calc(330 * var(--dp));overflow-y:auto;scrollbar-width:none}
