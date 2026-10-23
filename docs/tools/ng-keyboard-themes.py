@@ -47,7 +47,8 @@ def main():
      argb=vals[1][0];rgb=argb&0xffffff;alpha=argb>>24
      colors[key]=f'#{rgb:06x}'+(f'{alpha:02x}' if alpha!=255 else '')
    return colors
-  themes[name]={'label':'kb_theme_'+name,'colors':palette(layers),'bordered':palette(bordered),'sources':[path]+['assets/'+s for s in bordered]}
+  # These are paths inside the source APK, never browser asset requests.
+  themes[name]={'label':'kb_theme_'+name,'colors':palette(layers),'bordered':palette(bordered),'sources':['apk:'+path]+['apk:assets/'+s for s in bordered]}
  out=ROOT/'versions/7.1.2/ng-keyboard-themes.js'
  out.write_text('/* Generated from N2G48C Gboard theme_package_metadata / style_sheet protobufs by docs/tools/ng-keyboard-themes.py. */\nNG.keyboardThemes = '+json.dumps(themes,ensure_ascii=False,indent=2)+';\n',encoding='utf-8')
  print(len(themes),'native theme packages')

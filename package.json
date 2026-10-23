@@ -1,10 +1,10 @@
 {
   "name": "android-time-machine",
   "private": true,
-  "description": "Five Android releases in the browser, each rebuilt from its own factory image.",
+  "description": "Eight Android releases in the browser, each rebuilt from its own factory image.",
   "scripts": {
     "test": "node --test tests/*.cjs",
-    "test:browser": "node tests/browser/flows.mjs",
+    "test:browser": "node tests/browser/flows.mjs && node tests/browser/ng-release.mjs",
     "check:texts": "node docs/tools/text-check.mjs",
     "check:assets": "node docs/tools/asset-check.mjs",
     "check:fonts": "node docs/tools/font-check.mjs",

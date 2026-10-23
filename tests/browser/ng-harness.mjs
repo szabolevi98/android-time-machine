@@ -32,7 +32,7 @@ export async function nougat() {
     await until(`document.querySelector('#screen')?.classList.contains('view-home') && !document.querySelector('.ngpw-boot')`);
     return {ev,send,until,click,act,drag,open,shot,close,errors,failed,
       save:()=>ev(`JSON.parse(localStorage.getItem('android-time-machine-ng-v1'))`),
-      async language(lang){await ev(`AndroidI18n.setLanguage(${JSON.stringify(lang)});location.reload()`);await until(`document.querySelector('#screen')?.classList.contains('view-home') && document.documentElement.lang===${JSON.stringify(lang)}`);},
+      async language(lang){await ev(`window.__ngReloadPending=true;AndroidI18n.setLanguage(${JSON.stringify(lang)});location.reload()`);await until(`!window.__ngReloadPending && document.querySelector('#screen')?.classList.contains('view-home') && document.documentElement.lang===${JSON.stringify(lang)}`);},
       check(){assert.deepEqual(errors,[],'JavaScript exceptions');assert.deepEqual(failed,[],'failed local requests');}
     };
   } catch(error){close();throw error;}

@@ -99,7 +99,7 @@
     },
     action(c, name, el, cur) {
       const t = T(), k = cur.screen.split(':')[1], a = a11y(c), svc = SERVICE[k];
-      if (name === 'ng-menu') { c.menu([{label: t.t('accessibility_menu_item_settings'), action: c => go(c, `missing:${k === 'a11y_talkback' ? 'com.android.talkback.TalkBackPreferencesActivity' : 'com.android.switchaccess.SwitchAccessPreferenceActivity'}`, t.t(svc.title))}], el); return true; }
+      if (name === 'ng-menu') { c.menu([{label: t.t('accessibility_menu_item_settings'), action: c => NG.openPrefs(c, k === 'a11y_talkback' ? 'talkback' : 'switchaccess', k === 'a11y_talkback' ? 'preferences' : 'switch_access_preferences', t.t(svc.title))}], el); return true; }
       if (name !== 'nga1-toggle') return false;
       const field = k === 'enable_global_gesture_preference_screen' ? 'shortcut' : k;
       const flip = c => { a[field] = !a[field]; c.save(); c.transition('none'); c.render(); };

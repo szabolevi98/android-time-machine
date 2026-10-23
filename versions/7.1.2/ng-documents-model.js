@@ -16,7 +16,7 @@
   ]};
   const state=c=>c.data.documents||(c.data.documents=JSON.parse(JSON.stringify(NG.defaults.documents)));
   const metadata=n=>JSON.parse(JSON.stringify(Object.fromEntries(['duration','title','artist','album','genre','art','scanPages','pdfOptions','mime'].filter(k=>n[k]!==undefined).map(k=>[k,n[k]]))));
-  const mime=type=>({text:'text/plain',pdf:'application/pdf',image:'image/jpeg',video:'video/mp4',audio:'audio/mpeg',dir:'vnd.android.document/directory'})[type]||'application/octet-stream';
+  const mime=type=>({text:'text/plain',json:'application/json',pdf:'application/pdf',image:'image/jpeg',video:'video/mp4',audio:'audio/mpeg',dir:'vnd.android.document/directory'})[type]||'application/octet-stream';
   function nodes(c){
     const photos=NG.media.photos(c).map(p=>({id:`photo:${p.id}`,parent:p.folder||'camera',name:p.fileName||`${p.kind==='video'?'VID':'IMG'}_${p.id}.${p.kind==='video'?'mp4':'jpg'}`,type:p.kind==='video'?'video':'image',photo:p.id,duration:p.duration,size:p.kind==='video'?Math.max(1e6,(p.duration||1000)*1200):3200000,time:p.time}));
     const drive=NG.driveModel?NG.driveModel.nodes(c):(c.data.driveFiles||[]).map((p,i)=>({id:`drive:${i}`,parent:'drive',name:p.name||'Untitled',type:p.type==='image'?'image':'text',size:p.size||2048,time:p.time||0,content:p.content||''}));

@@ -77,7 +77,8 @@ else {
   let text = fs.readFileSync(md, 'utf8');
   for (const version of Object.keys(report)) {
     const section = out.join('\n').match(new RegExp(`## ${version.replace(/\./g, '\\.')}\\n[\\s\\S]*?(?=\\n## |$)`))[0];
-    text = text.replace(new RegExp(`## ${version.replace(/\./g, '\\.')}\\n[\\s\\S]*?(?=\\n## |$)`), section.trimEnd() + '\n');
+    const existing = new RegExp(`## ${version.replace(/\./g, '\\.')}\\n[\\s\\S]*?(?=\\n## |$)`);
+    text = existing.test(text) ? text.replace(existing, section.trimEnd() + '\n') : text.trimEnd() + '\n\n' + section.trimEnd() + '\n';
   }
   fs.writeFileSync(md, text);
 }

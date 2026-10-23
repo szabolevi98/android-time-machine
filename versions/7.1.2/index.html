@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <meta name="theme-color" content="#080b10">
-  <meta name="description" content="Készülőben: Android 7.1.2 Nougat a Nexus 6P-n – a következő verzió az Android Time Machine-ben.">
+  <meta name="description" content="Android 7.1.2 Nougat a Nexus 6P-n, a böngészőben: osztott képernyő, csoportosított értesítések, közvetlen válasz, alkalmazások és beállítások. Telepítés nélkül.">
   <title>Android 7.1.2 · Android Time Machine</title>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Android Time Machine">
   <meta property="og:locale" content="hu_HU">
-  <meta property="og:title" content="Android 7.1.2 Nougat – Nexus 6P (készülőben)">
-  <meta property="og:description" content="A következő verzió: Android 7.1.2 Nougat a Nexus 6P-n. Hamarosan az Android Time Machine-ben.">
+  <meta property="og:title" content="Android 7.1.2 Nougat – Nexus 6P">
+  <meta property="og:description" content="Próbáld ki a Nougatot a Nexus 6P-n: osztott képernyő, közvetlen válasz az értesítésekben, gyorsbeállítások, Gboard és a korabeli Google-alkalmazások, a böngészőben.">
   <meta property="og:url" content="https://android.levente.net/versions/7.1.2/">
   <meta property="og:image" content="https://android.levente.net/assets/og-cover.jpg?v=17">
   <meta property="og:image:type" content="image/jpeg">
@@ -50,6 +50,7 @@
   <link rel="stylesheet" href="ng-people.css?v=1">
   <link rel="stylesheet" href="ng-phone.css?v=1">
   <link rel="stylesheet" href="ng-appprefs.css?v=3">
+  <link rel="stylesheet" href="ng-accessibility.css?v=1">
   <link rel="stylesheet" href="ng-contacts.css?v=1">
   <link rel="stylesheet" href="ng-intents.css?v=4">
   <link rel="stylesheet" href="ng-messenger.css?v=1">
@@ -87,7 +88,7 @@
   <link rel="stylesheet" href="ng-gboard.css?v=3">
   <link rel="stylesheet" href="ng-imes.css?v=1">
   <link rel="stylesheet" href="ng-google.css?v=1">
-  <script defer src="../../i18n.js?v=108"></script>
+  <script defer src="../../i18n.js?v=109"></script>
   <script defer src="../../strings.js?v=9"></script>
   <script defer src="../../state.js?v=2"></script>
   <script defer src="ng-core.js?v=16"></script>
@@ -110,7 +111,7 @@
   <script defer src="ng-strings-volume.js?v=1"></script>
   <script defer src="ng-volume.js?v=2"></script>
   <script defer src="ng-apps.js?v=1"></script>
-  <script defer src="ng-app-data.js?v=5"></script>
+  <script defer src="ng-app-data.js?v=6"></script>
   <script defer src="ng-strings-launcher.js?v=3"></script>
   <script defer src="ng-launcher-data.js?v=2"></script>
   <script defer src="ng-widgets.js?v=3"></script>
@@ -145,7 +146,7 @@
   <script defer src="ng-settings-device.js?v=5"></script>
   <script defer src="ng-strings-testing.js?v=1"></script>
   <script defer src="ng-settings-testing.js?v=1"></script>
-  <script defer src="ng-settings-a11y.js?v=1"></script>
+  <script defer src="ng-settings-a11y.js?v=2"></script>
   <script defer src="ng-packages.js?v=1"></script>
   <script defer src="ng-settings-apps.js?v=4"></script>
   <script defer src="ng-settings-power.js?v=1"></script>
@@ -161,13 +162,16 @@
   <script defer src="ng-strings-phone.js?v=1"></script>
   <script defer src="ng-strings-emergency.js?v=1"></script>
   <script defer src="ng-phone.js?v=3"></script>
-  <script defer src="ng-appprefs-data.js?v=19"></script>
-  <script defer src="ng-strings-appprefs.js?v=21"></script>
-  <script defer src="ng-appprefs.js?v=11"></script>
+  <script defer src="ng-appprefs-data.js?v=20"></script>
+  <script defer src="ng-strings-appprefs.js?v=22"></script>
+  <script defer src="ng-appprefs.js?v=12"></script>
+  <script defer src="ng-strings-accessibility.js?v=1"></script>
+  <script defer src="ng-accessibility-data.js?v=1"></script>
+  <script defer src="ng-accessibility.js?v=1"></script>
   <script defer src="ng-cellbroadcast.js?v=1"></script>
   <script defer src="ng-strings-gboard.js?v=3"></script>
   <script defer src="ng-keyboard-data.js?v=1"></script>
-  <script defer src="ng-keyboard-themes.js?v=1"></script>
+  <script defer src="ng-keyboard-themes.js?v=2"></script>
   <script defer src="ng-gboard-words.js?v=1"></script>
   <script defer src="ng-gboard-search.js?v=1"></script>
   <script defer src="ng-gboard.js?v=7"></script>
@@ -190,7 +194,7 @@
   <script defer src="ng-maps.js?v=3"></script>
   <script defer src="ng-strings-hangouts.js?v=2"></script>
   <script defer src="ng-hangouts-model.js?v=2"></script>
-  <script defer src="ng-hangouts.js?v=7"></script>
+  <script defer src="ng-hangouts.js?v=8"></script>
   <script defer src="ng-web.js?v=1"></script>
   <script defer src="ng-strings-google.js?v=2"></script>
   <script defer src="ng-google.js?v=3"></script>
@@ -220,7 +224,7 @@
   <script defer src="ng-photos-model.js?v=5"></script>
   <script defer src="ng-photos.js?v=8"></script>
   <script defer src="ng-strings-documents.js?v=1"></script>
-  <script defer src="ng-documents-model.js?v=6"></script>
+  <script defer src="ng-documents-model.js?v=7"></script>
   <script defer src="ng-documents.js?v=9"></script>
   <script defer src="ng-strings-drive.js?v=4"></script>
   <script defer src="ng-drive-model.js?v=4"></script>
@@ -293,10 +297,10 @@
 
     <main class="workspace">
       <section class="intro-panel" aria-labelledby="sim-title">
-        <span class="eyebrow"><span class="pulse"></span> <span data-i18n="WORK IN PROGRESS">WORK IN PROGRESS</span></span>
+        <span class="eyebrow"><span class="pulse"></span> <span data-i18n="ANDROID IN THE BROWSER">ANDROID IN THE BROWSER</span></span>
         <h1 id="sim-title">Nou<br><strong>gat</strong></h1>
         <p class="version-number" data-no-translate>ANDROID 7.1.2 <span>·</span> NEXUS 6P <span>·</span> 2017</p>
-        <p class="description" data-i18n="Android 7.1.2 Nougat on the Nexus 6P is being built from its N2G48C factory image. A screen that is not ready yet says so.">Android 7.1.2 Nougat on the Nexus 6P is being built from its N2G48C factory image. A screen that is not ready yet says so.</p>
+        <p class="description" data-i18n="Android 7.1.2 Nougat as it ran on the Nexus 6P in 2017. Open Overview to use two apps together, reply in the notification shade, or hold an app icon for shortcuts.">Android 7.1.2 Nougat as it ran on the Nexus 6P in 2017. Open Overview to use two apps together, reply in the notification shade, or hold an app icon for shortcuts.</p>
         <div class="key-list"><div><span class="key-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M8 8l-4 4 4 4M16 8l4 4-4 4"/></svg></span><span data-i18n="Swipe between home screens">Swipe between home screens</span></div><div><span class="key-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg></span><span data-i18n="Pull down notifications">Pull down notifications</span></div><div><span class="key-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5M6.5 10v9h11v-9"/></svg></span><span data-i18n="Back · Home · Overview">Back · Home · Overview</span></div></div>
         <p class="offline-note" data-i18n="Calls, messages and websites are simulated. Your changes are saved in this browser.">Calls, messages and websites are simulated. Your changes are saved in this browser.</p>
       </section>

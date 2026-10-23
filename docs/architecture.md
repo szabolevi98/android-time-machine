@@ -73,7 +73,7 @@ file's header comment; and the shared root files contain no version's look.
 | Command | What it checks |
 | --- | --- |
 | `npm test` | All module tests (also run on every push by `.github/workflows/tests.yml`). |
-| `npm run test:browser` | Boot, unlock, Settings, Back, the power menu, a language switch and a reload on every version (needs a local server, `php -S localhost:8090 -t .`). |
+| `npm run test:browser` | Boot, unlock, Settings, Back, power, languages and saved-state checks, including Nougat's fresh demo, two old-save upgrades and five-language app/preferences sweep (needs a local server, `php -S localhost:8090 -t .`). |
 | `npm run regenerate:texts` | Reruns every text generator; fails if a generated file would change. |
 | `npm run regenerate:assets` | Rebuilds the asset inventory from the images; fails on any difference. |
 | `npm run check:unused-assets` | Asset files nothing uses. |

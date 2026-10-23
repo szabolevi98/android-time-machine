@@ -650,7 +650,7 @@ versions/7.1.2/assets/ime-pinyin.png	df3c112cbc0a2690	copy	angler:/system/app/Go
 versions/7.1.2/assets/in-beam.png	85557a1e8fa398f3	copy	angler:/system/app/NfcNci/NfcNci.apk!res/drawable-xxxhdpi-v4/icon.png	drawable-xxxhdpi-v4		85557a1e8fa398f3
 versions/7.1.2/assets/in-bt_share.png	12f705c4046025b5	copy	angler:/system/app/Bluetooth/Bluetooth.apk!res/mipmap-xxxhdpi-v4/bt_share.png	mipmap-xxxhdpi-v4		12f705c4046025b5
 versions/7.1.2/assets/in-cloudprint.png	f8072f65d6d82b86	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxxhdpi-v4/ic_main.png	drawable-xxxhdpi-v4		f8072f65d6d82b86
-versions/7.1.2/assets/landing-home.jpg	f820daabc45af3ac	own	capture of the simulator's own home screen for the landing page card		closest: mean difference 7.68 (maguro:/system/media/bootanimation.zip!part0/f0003.jpg)	
+versions/7.1.2/assets/landing-home.jpg	edcd72d6f21962c5	own	capture of the simulator's own home screen for the landing page card			
 versions/7.1.2/assets/lime-third-party-licenses.txt	050f823a8f867c6f	copy	angler:/system/app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk!res/raw/third_party_licenses	raw		050f823a8f867c6f
 versions/7.1.2/assets/lw-ic_launcher_live_wallpaper.png	d9b111422a5e0ad9	copy	angler:/system/app/LiveWallpapersPicker/LiveWallpapersPicker.apk!res/mipmap-xxhdpi-v4/ic_launcher_live_wallpaper.png	mipmap-xxhdpi-v4		d9b111422a5e0ad9
 versions/7.1.2/assets/mp-bicycling.png	c528afa93b08b0dd	copy	angler:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/quantum_ic_directions_bike_white_24.png	drawable-xxhdpi-v4		c528afa93b08b0dd
@@ -1152,6 +1152,8 @@ versions/7.1.2/assets/sw-ime.9.png	34a4ec725705c341	copy	angler:/system/priv-app
 versions/7.1.2/assets/sw-music-note.png	586ae92fa28021df	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/quantum_ic_music_note_white_48.png	drawable-xxxhdpi-v4		586ae92fa28021df
 versions/7.1.2/assets/sw-sound-normal.png	486284e64e8fff03	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/sound_id_widget_normal.png	drawable-xxxhdpi-v4		486284e64e8fff03
 versions/7.1.2/assets/sw-sound-pressed.png	d7b481d742316d45	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxxhdpi-v4/sound_id_widget_pressed.png	drawable-xxxhdpi-v4		d7b481d742316d45
+versions/7.1.2/assets/tb-down-right-arrow.png	e5e7d7f3f6265459	copy	angler:/system/app/talkback/talkback.apk!res/drawable-xhdpi-v4/down_right_arrow.png	drawable-xhdpi-v4		e5e7d7f3f6265459
+versions/7.1.2/assets/tb-up-right-arrow.png	50709fd2f84e3a09	copy	angler:/system/app/talkback/talkback.apk!res/drawable-xhdpi-v4/up_right_arrow.png	drawable-xhdpi-v4		50709fd2f84e3a09
 versions/7.1.2/assets/tl-ic_close_grey_24dp.png	14fd192e13807693	copy	angler:/system/priv-app/Telecom/Telecom.apk!res/drawable-xxxhdpi-v4/ic_close_grey_24dp.png	drawable-xxxhdpi-v4		14fd192e13807693
 versions/7.1.2/assets/ts-fab_green.png	2de9409e87cc2ebf	copy	angler:/system/priv-app/GoogleDialer/GoogleDialer.apk!res/drawable-xxxhdpi-v4/fab_green.png	drawable-xxxhdpi-v4		2de9409e87cc2ebf
 versions/7.1.2/assets/ts-fab_ic_call.png	a6eb54abc1abf933	copy	angler:/system/priv-app/GoogleDialer/GoogleDialer.apk!res/drawable-xxhdpi-v4/fab_ic_call.png	drawable-xxhdpi-v4		a6eb54abc1abf933

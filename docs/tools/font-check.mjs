@@ -8,7 +8,7 @@ import {createHash} from 'node:crypto';
 import {inflateRawSync} from 'node:zlib';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '../..');
-const DEVICES = {'2.3.6': 'crespo', '4.0.4': 'maguro', '4.3': 'mako', '4.4.4': 'hammerhead', '5.1.1': 'shamu'};
+const DEVICES = {'2.1': 'passion', '2.3.6': 'crespo', '4.0.4': 'maguro', '4.3': 'mako', '4.4.4': 'hammerhead', '5.1.1': 'shamu', '6.0.1': 'bullhead', '7.1.2': 'angler'};
 const hash = buf => createHash('sha1').update(buf).digest('hex');
 
 // The entries of a zip (APK): name -> stored or deflated data, read from the central directory.

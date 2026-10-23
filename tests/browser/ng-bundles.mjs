@@ -7,8 +7,8 @@ try{
  // Five Play Store notifications (ungrouped) and the two first-boot ones: the Ranker bundles the five.
  await b.ev(`(()=>{const key='android-time-machine-ng-v1',d=JSON.parse(localStorage.getItem(key));const now=Date.now();
    d.notifications=[...['Drive','Maps','YouTube','Hangouts','Calendar'].map((a,i)=>({id:100+i,app:'play-store',appName:'Google Play Store',color:'#0f9d58',icon:'assets/sui-ic_android.svg',title:a,text:'Successfully installed',time:now-i*60000})),...(d.notifications||[])];
-   localStorage.setItem(key,JSON.stringify(d));location.reload();})()`);
- await b.until(`document.querySelector('#screen')?.classList.contains('view-home')`);
+   localStorage.setItem(key,JSON.stringify(d));window.__bundleReloadPending=true;location.reload();})()`);
+ await b.until(`!window.__bundleReloadPending && document.querySelector('#screen')?.classList.contains('view-home')`);
  assert.equal(await count('#status-bar .ngsb-note'),3,'one icon for the bundle');
  await b.drag('#status-bar',0,700);await sleep(800);
  assert.equal(await count('.ngsh-stack > .ngnt-group'),1,'one bundle');

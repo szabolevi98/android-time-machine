@@ -106,3 +106,33 @@ What a screen shows comes from its APK and code; these find it.
   app opens, and the asset folders' inventory → `docs/reports/asset-check.md`.
 
 The runtime checks need a server for the repository root (`php -S localhost:8090 -t .`, or `BASE=…`).
+# Nougat accessibility activities (release continuation, 2026-10-23)
+
+`angler/system/app/talkback/talkback.apk` is TalkBack 5.0.4 (version code
+50004003). It also supplies Switch Access. The activity layouts/preferences,
+themes, translated texts and tutorial arrows all come from this N2G48C APK.
+`ng-appprefs.txt` adds its API-21 preference variant, gesture/classic/default
+keymap XML and Switch Access XML to the normal `mm-appprefs.py` generator.
+
+The pre-optimised classes are recovered with:
+
+```powershell
+$env:ERA='ng'
+python docs/tools/oat2dex.py _aosp/angler/system/app/talkback/oat/arm64/talkback.odex _aosp/angler/talkback-dex
+python docs/tools/dex-decompile.py _aosp/angler/talkback-dex/classes.dex _aosp/angler/talkback-java _aosp/angler/system/app/talkback/talkback.apk KeyComboModelApp DefaultKeyComboModel
+python docs/tools/ng-accessibility.py --check
+```
+
+`ng-accessibility.py` evaluates the two constant `getDefaultKeyComboCode` decision
+trees for a non-ARC phone and reads the APK's `res/raw/tutorial.json`: 15 classic
+and 63 default shortcut entries, five lessons. Its generated data records the
+APK SHA-256. `TalkBackDumpAccessibilityEventFragment` fills its empty XML at run
+time using `AccessibilityEventUtils.getAllEventTypes` (25 API-25 event names).
+`CustomLabelMigrationManager` supplies the `labels_array` JSON format.
+
+The normal `ERA=ng` `mm-assets.py` and `mm-strings.py accessibility` commands
+regenerate the two tutorial arrow PNGs and the event-menu/reading-granularity
+texts. `ng-assets-accessibility.tsv` records the drawable sources; the highest
+density this APK provides is xhdpi. The browser uses local pointer/key events
+and optional Web Speech for tutorial practice; Android service/sensor backends
+are outside this static simulator.

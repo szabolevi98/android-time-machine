@@ -29,6 +29,7 @@
     phone: {data: ['lastDialed', 'frequentsCleared'], ui: ['phone', 'call', 'heldCall'], prefs: ['dialer']},
     'play-store': {ui: ['play'], prefs: ['play']},
     search: {data: ['google'], ui: ['google', 'soundSearch'], prefs: ['google']},
+    'com.google.android.marvin.talkback': {data: ['accessibilityLabels', 'accessibilityLabelUndo'], ui: ['accessibilityTutorial'], prefs: ['talkback', 'switchaccess']},
     settings: {protected: true}
   };
   const aliases = {'files': 'documents', 'downloads': 'documents', now: 'search', 'sound-search': 'search', 'gboard-theme-builder': 'gboard', 'refocus-editor': 'camera', 'burst-editor': 'camera', 'calendar-goal': 'calendar',
@@ -76,10 +77,10 @@
       const pref = c.ui.appPrefs?.stack?.at(-1)?.app;
       id = Object.keys(policies).find(k => (policies[k].prefs || [k]).includes(pref)) || id;
     }
-    if (!NG.appsData?.[id]) return;
+    if (!NG.appsData?.[id] && !NG.systemPackages?.some(p => p.pkg === id)) return;
     const s = c.data.settings, wasStopped = stopped(c, id);
     s.stoppedApps = (s.stoppedApps || []).filter(x => pkg(x) !== pkg(id));
-    for (const key of related(id)) if (s.appCleared?.[key]) s.appCleared[key] = {data: false, cache: false};
+    for (const key of [id, ...related(id)]) if (s.appCleared?.[key]) s.appCleared[key] = {data: false, cache: false};
     if (wasStopped) NG.module(id)?.resume?.(c);
     c.save();
   }

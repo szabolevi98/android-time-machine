@@ -15,9 +15,9 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Emergency information, Contacts picker, keyguard-protected editing.
 - [x] Gboard editor and native preferences milestone; advanced items below remain.
 - [x] Google app 6.5.36: search, voice examples, Now, screen search (Now on Tap), launcher settings.
-- [ ] Gboard 6.0.84 and input method settings; TalkBack and relevant Settings external activities.
-      Core IME, layouts/accents/emoji, all 17 native themes, image theme builder, native dictionary completion/correction/glide, inline Search/access points and preferences are implemented. Remaining:
-      TalkBack and other enabled external input/settings activities.
+- [x] Gboard 6.0.84 and input method settings; TalkBack and relevant Settings external activities.
+      Core IME, layouts/accents/emoji, all 17 native themes, image theme builder, native dictionary completion/correction/glide, inline Search/access points and preferences are implemented.
+      TalkBack 5.0.4 / Switch Access preference activities, gesture/key assignments, event filters, label migration and tutorial activities are connected; the other bundled IMEs and TTS pass their browser regression.
 - [x] Maps 9.34.1 and Messenger's location chooser.
 - [x] Hangouts 12.0 and demo replies.
 - [x] Drive 2.4.452: files/provider, sharing, audio/video preview, scan preferences/PDFs, native widget, cache and notification/legal/backup routes. Help stays in the shared service activity checklist below.
@@ -57,13 +57,14 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Shared SEND_MULTIPLE: Photos, Documents and the Burst editor send every selected stream through each package's native SEND_MULTIPLE filter (`d8f7bddc`).
 - [x] Preference leaf/intent routing audit: the Settings crawl (every row of 309 screens) finds no not-built target and no unexplained no-op row.
       Settings crawl 2026-10-23: help, IMEI, notification/VR/DND access, premium SMS, user credentials and device admins done; Emergency broadcasts and Trusted credentials done: the Settings crawl finds no not-built target.
-- [ ] Sweep all direct `missing(...)` branches and external activity routes; no unfinished card may remain at release.
-      Settings side done 2026-10-23 (every registered screen has a module; Settings crawl clean); apps' own menus still to sweep.
+- [x] Sweep all direct `missing(...)` branches and external activity routes; no unfinished card may remain at release.
+      Settings screens have modules; the earlier Settings crawl is clean. The final app/menu sweep has zero missing cards or raw format placeholders. TalkBack and Switch Access overflow targets now open their native preference activities.
 
 ## Release gate
 
-- [ ] Demo-data checklist on a fresh phone, upgrades and saved state.
-- [ ] Desktop and phone browser flows, five-language sweep, missing-asset/text checks.
-- [ ] Full module suite and source inventory regeneration (run regeneration separately from tests/browser: it temporarily rewrites boot assets).
-- [ ] Landing screenshot, features-7.1.2.md, README, catalogue available, sitemap.
+- [x] Demo-data checklist on a fresh phone, upgrades and saved state.
+- [x] Desktop and phone browser flows, five-language sweep, missing-asset/text checks.
+- [x] Full module suite and source inventory regeneration (run regeneration separately from tests/browser: it temporarily rewrites boot assets).
+      247 module checks pass; the inventory verifies 1207 regenerated files with zero problems. All eight releases' fonts match their source images.
+- [x] Landing screenshot, features-7.1.2.md, README, catalogue available, sitemap.
 - [ ] Commit and push release; verify clean relevant working tree and remote state.

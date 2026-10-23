@@ -39,7 +39,9 @@
 
   function nodeOf(c) {
     const s = cur(c); let n = app(c).xml[s.xml];
-    for (const k of s.path) n = (n?.c || []).find(x => x.key === k) || n;
+    // PreferenceCategories group rows visually; they are not navigation levels.
+    // A nested screen inside one must still resolve by its preference key.
+    for (const k of s.path) n = find(n, k) || n;
     return n;
   }
   const find = (n, key) => { if (!n) return null; if (n.key === key) return n; for (const k of n.c || []) { const f = find(k, key); if (f) return f; } return null; };
@@ -146,7 +148,7 @@
     if (!st(c)) return '';
     const s = cur(c), lic = s.xml.startsWith('@license'), custom = lic ? null : hooks(c).customs?.[s.xml], [primary] = colors(c), h = hooks(c);
     const n = custom || lic ? null : nodeOf(c);
-    const title = s.title || custom?.title?.(c) || (n && str(n.title)) || h.screenTitle?.(c, s.xml) || '';
+    const title = custom?.title?.(c) || (n && h.title?.(c, n.key, n)) || s.title || (n && str(n.title)) || h.screenTitle?.(c, s.xml) || '';
     const body = lic ? licensePage(c, s) : custom ? custom.render(c) : n ? `${h.top?.(c, s.xml) || ''}${rows(c, n)}${h.after?.(c, s.xml) || ''}` : c.missing('app-prefs');
     if(custom?.fullscreen)return body;
     const bg = h.window || app(c).theme?.windowBackground || '#fafafa';

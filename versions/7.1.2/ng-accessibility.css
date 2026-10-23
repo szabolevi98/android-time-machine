@@ -1,0 +1,28 @@
+/* talkback.apk: Material preference activities and tutorial_* layouts/colors. */
+.ngax-keyvalue{margin:calc(16 * var(--dp)) calc(24 * var(--dp));min-height:calc(48 * var(--dp));white-space:pre-line;font-size:calc(18 * var(--dp));outline:0}
+.ngax-textbutton{background:transparent;border:0;color:#009688;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;min-height:calc(48 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));cursor:pointer}
+.ngax-textbutton:disabled{color:#00000042;cursor:default}
+.ngap-list:has(>.ngax-labels){display:flex;flex-direction:column}
+.ngax-labels{order:2;margin:calc(16 * var(--dp));padding:calc(16 * var(--dp));font-size:calc(18 * var(--dp));white-space:pre-line}
+.ngax-labelbuttons{order:1;display:flex;flex-direction:column}
+.ngax-labelbuttons button{margin:calc(20 * var(--dp));color:#000000de;background:#e0e0e0;box-shadow:0 calc(2 * var(--dp)) calc(2 * var(--dp)) #0003}
+.ngax-lesson{border-bottom:calc(1 * var(--dp)) solid #0000001f}
+.ngax-lesson h3{margin:0;padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(4 * var(--dp));font-size:calc(20 * var(--dp));font-weight:500}
+.ngax-lesson p{margin:0;padding:calc(4 * var(--dp)) calc(16 * var(--dp)) calc(10 * var(--dp));font-size:calc(14 * var(--dp));color:#0000008a}
+.ngax-tutorial{min-height:100%;display:flex;flex-direction:column}
+.ngax-tutorial header{padding:calc(16 * var(--dp));min-height:calc(160 * var(--dp));background:#37474f;color:#fff}
+.ngax-tutorial h3{font-size:calc(16 * var(--dp));font-weight:400;margin:calc(6 * var(--dp)) 0}
+.ngax-tutorial header p{font-size:calc(14 * var(--dp));line-height:1.5;color:#ffffffb3;white-space:pre-line}
+.ngax-practice{flex:1;display:grid;grid-template-columns:repeat(3,1fr);padding:calc(16 * var(--dp));gap:calc(8 * var(--dp))}
+.ngax-practice.list{display:flex;flex-direction:column;max-height:calc(280 * var(--dp));overflow:auto}
+.ngax-practice button{min-height:calc(90 * var(--dp));background:transparent;border:0;font-size:calc(14 * var(--dp));color:#000000de;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(8 * var(--dp))}
+.ngax-practice:not(.list) button:before{content:'';display:block;width:calc(45 * var(--dp));height:calc(45 * var(--dp));border-radius:50%;background:#80cbc4}
+.ngax-practice:not(.list) button.selected:before{background:#00897b}
+.ngax-practice.list button{min-height:calc(48 * var(--dp));text-align:left}
+.ngax-practice textarea{grid-column:1/-1;width:100%;min-height:calc(140 * var(--dp));font:calc(18 * var(--dp)) Roboto,sans-serif;border:0;border-bottom:calc(2 * var(--dp)) solid #009688;background:transparent;resize:none}
+.ngax-tutorial footer{display:flex;justify-content:space-between;background:#eee;padding:0 calc(8 * var(--dp))}
+.ngax-tutorial footer button{border:0;background:transparent;color:#444;font:500 calc(12 * var(--dp)) Roboto,sans-serif;min-height:calc(48 * var(--dp));max-width:calc(150 * var(--dp));text-transform:uppercase}
+.ngax-tutorial footer button:disabled{opacity:.3}
+.ngax-arrow{flex:1;border:0;background:transparent;padding:calc(16 * var(--dp));min-height:calc(160 * var(--dp));cursor:pointer}
+.ngax-arrow img{width:calc(120 * var(--dp));max-width:80%;height:auto}
+.ngax-reading{flex:1;padding:calc(16 * var(--dp));font-size:calc(18 * var(--dp));line-height:1.5;white-space:pre-line}

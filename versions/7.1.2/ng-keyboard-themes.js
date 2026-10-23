@@ -85,14 +85,14 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#ffffff99"
     },
     "sources": [
-      "assets/theme_package_metadata_color_black.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_color_label_white.binarypb",
-      "assets/style_sheet_color_black.binarypb",
-      "assets/style_sheet_color_gif_dark.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_color_label_white_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_color_black.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_color_label_white.binarypb",
+      "apk:assets/style_sheet_color_black.binarypb",
+      "apk:assets/style_sheet_color_gif_dark.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_color_label_white_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   },
   "color_blue": {
@@ -180,14 +180,14 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#ffffff99"
     },
     "sources": [
-      "assets/theme_package_metadata_color_blue.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_color_label_white.binarypb",
-      "assets/style_sheet_color_blue.binarypb",
-      "assets/style_sheet_color_gif_dark.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_color_label_white_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_color_blue.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_color_label_white.binarypb",
+      "apk:assets/style_sheet_color_blue.binarypb",
+      "apk:assets/style_sheet_color_gif_dark.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_color_label_white_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   },
   "color_blue_grey": {
@@ -275,14 +275,14 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#ffffff99"
     },
     "sources": [
-      "assets/theme_package_metadata_color_blue_grey.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_color_label_white.binarypb",
-      "assets/style_sheet_color_blue_grey.binarypb",
-      "assets/style_sheet_color_gif_dark.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_color_label_white_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_color_blue_grey.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_color_label_white.binarypb",
+      "apk:assets/style_sheet_color_blue_grey.binarypb",
+      "apk:assets/style_sheet_color_gif_dark.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_color_label_white_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   },
   "color_brown": {
@@ -370,14 +370,14 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#ffffff99"
     },
     "sources": [
-      "assets/theme_package_metadata_color_brown.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_color_label_white.binarypb",
-      "assets/style_sheet_color_brown.binarypb",
-      "assets/style_sheet_color_gif_dark.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_color_label_white_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_color_brown.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_color_label_white.binarypb",
+      "apk:assets/style_sheet_color_brown.binarypb",
+      "apk:assets/style_sheet_color_gif_dark.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_color_label_white_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   },
   "color_cyan": {
@@ -465,14 +465,14 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#37474f"
     },
     "sources": [
-      "assets/theme_package_metadata_color_cyan.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_color_label_black.binarypb",
-      "assets/style_sheet_color_cyan.binarypb",
-      "assets/style_sheet_color_gif_light.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_color_label_black_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_color_cyan.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_color_label_black.binarypb",
+      "apk:assets/style_sheet_color_cyan.binarypb",
+      "apk:assets/style_sheet_color_gif_light.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_color_label_black_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   },
   "color_deep_purple": {
@@ -560,15 +560,15 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#ffffff99"
     },
     "sources": [
-      "assets/theme_package_metadata_color_deep_purple.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_color_label_white.binarypb",
-      "assets/style_sheet_color_deep_purple.binarypb",
-      "assets/style_sheet_color_gif_dark.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_color_deep_purple_override.binarypb",
-      "assets/style_sheet_color_label_white_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_color_deep_purple.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_color_label_white.binarypb",
+      "apk:assets/style_sheet_color_deep_purple.binarypb",
+      "apk:assets/style_sheet_color_gif_dark.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_color_deep_purple_override.binarypb",
+      "apk:assets/style_sheet_color_label_white_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   },
   "color_green": {
@@ -656,14 +656,14 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#ffffff99"
     },
     "sources": [
-      "assets/theme_package_metadata_color_green.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_color_label_white.binarypb",
-      "assets/style_sheet_color_green.binarypb",
-      "assets/style_sheet_color_gif_dark.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_color_label_white_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_color_green.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_color_label_white.binarypb",
+      "apk:assets/style_sheet_color_green.binarypb",
+      "apk:assets/style_sheet_color_gif_dark.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_color_label_white_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   },
   "color_light_pink": {
@@ -751,14 +751,14 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#37474f"
     },
     "sources": [
-      "assets/theme_package_metadata_color_light_pink.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_color_label_black.binarypb",
-      "assets/style_sheet_color_light_pink.binarypb",
-      "assets/style_sheet_color_gif_light.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_color_label_black_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_color_light_pink.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_color_label_black.binarypb",
+      "apk:assets/style_sheet_color_light_pink.binarypb",
+      "apk:assets/style_sheet_color_gif_light.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_color_label_black_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   },
   "color_pink": {
@@ -846,14 +846,14 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#ffffff99"
     },
     "sources": [
-      "assets/theme_package_metadata_color_pink.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_color_label_white.binarypb",
-      "assets/style_sheet_color_pink.binarypb",
-      "assets/style_sheet_color_gif_dark.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_color_label_white_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_color_pink.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_color_label_white.binarypb",
+      "apk:assets/style_sheet_color_pink.binarypb",
+      "apk:assets/style_sheet_color_gif_dark.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_color_label_white_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   },
   "color_red": {
@@ -941,14 +941,14 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#ffffff99"
     },
     "sources": [
-      "assets/theme_package_metadata_color_red.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_color_label_white.binarypb",
-      "assets/style_sheet_color_red.binarypb",
-      "assets/style_sheet_color_gif_dark.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_color_label_white_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_color_red.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_color_label_white.binarypb",
+      "apk:assets/style_sheet_color_red.binarypb",
+      "apk:assets/style_sheet_color_gif_dark.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_color_label_white_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   },
   "color_teal": {
@@ -1036,14 +1036,14 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#ffffff99"
     },
     "sources": [
-      "assets/theme_package_metadata_color_teal.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_color_label_white.binarypb",
-      "assets/style_sheet_color_teal.binarypb",
-      "assets/style_sheet_color_gif_dark.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_color_label_white_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_color_teal.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_color_label_white.binarypb",
+      "apk:assets/style_sheet_color_teal.binarypb",
+      "apk:assets/style_sheet_color_gif_dark.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_color_label_white_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   },
   "google_blue_dark": {
@@ -1137,14 +1137,14 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#ffffff99"
     },
     "sources": [
-      "assets/theme_package_metadata_google_blue_dark.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_google_blue_dark.binarypb",
-      "assets/style_sheet_color_gif_dark.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_google_blue_rules.binarypb",
-      "assets/style_sheet_google_blue_dark_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_google_blue_dark.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_google_blue_dark.binarypb",
+      "apk:assets/style_sheet_color_gif_dark.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_google_blue_rules.binarypb",
+      "apk:assets/style_sheet_google_blue_dark_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   },
   "google_blue_light": {
@@ -1238,14 +1238,14 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#37474f"
     },
     "sources": [
-      "assets/theme_package_metadata_google_blue_light.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_google_blue_light.binarypb",
-      "assets/style_sheet_color_gif_light.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_google_blue_rules.binarypb",
-      "assets/style_sheet_google_blue_light_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_google_blue_light.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_google_blue_light.binarypb",
+      "apk:assets/style_sheet_color_gif_light.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_google_blue_rules.binarypb",
+      "apk:assets/style_sheet_google_blue_light_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   },
   "holo_blue": {
@@ -1345,16 +1345,16 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#ffffff99"
     },
     "sources": [
-      "assets/theme_package_metadata_holo_blue.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_color_label_white.binarypb",
-      "assets/style_sheet_holo_blue.binarypb",
-      "assets/style_sheet_color_gif_dark.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_holo_rules.binarypb",
-      "assets/style_sheet_color_label_white_border.binarypb",
-      "assets/style_sheet_holo_blue_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_holo_blue.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_color_label_white.binarypb",
+      "apk:assets/style_sheet_holo_blue.binarypb",
+      "apk:assets/style_sheet_color_gif_dark.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_holo_rules.binarypb",
+      "apk:assets/style_sheet_color_label_white_border.binarypb",
+      "apk:assets/style_sheet_holo_blue_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   },
   "holo_white": {
@@ -1454,16 +1454,16 @@ NG.keyboardThemes = {
       "color_gif_search_bar_query_hint": "#ffffff99"
     },
     "sources": [
-      "assets/theme_package_metadata_holo_white.binarypb",
-      "assets/style_sheet_color_common.binarypb",
-      "assets/style_sheet_color_label_white.binarypb",
-      "assets/style_sheet_holo_white.binarypb",
-      "assets/style_sheet_color_gif_dark.binarypb",
-      "assets/style_sheet_color_rules.binarypb",
-      "assets/style_sheet_holo_rules.binarypb",
-      "assets/style_sheet_color_label_white_border.binarypb",
-      "assets/style_sheet_holo_white_border.binarypb",
-      "assets/style_sheet_color_rules_border.binarypb"
+      "apk:assets/theme_package_metadata_holo_white.binarypb",
+      "apk:assets/style_sheet_color_common.binarypb",
+      "apk:assets/style_sheet_color_label_white.binarypb",
+      "apk:assets/style_sheet_holo_white.binarypb",
+      "apk:assets/style_sheet_color_gif_dark.binarypb",
+      "apk:assets/style_sheet_color_rules.binarypb",
+      "apk:assets/style_sheet_holo_rules.binarypb",
+      "apk:assets/style_sheet_color_label_white_border.binarypb",
+      "apk:assets/style_sheet_holo_white_border.binarypb",
+      "apk:assets/style_sheet_color_rules_border.binarypb"
     ]
   }
 };

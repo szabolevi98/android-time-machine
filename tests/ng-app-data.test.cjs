@@ -39,3 +39,16 @@ test('Protected Settings refuses clearing, and Force stop retains the app data',
  const {NG,c}=phone();assert.equal(NG.appData.canClear('settings'),false);assert.equal(NG.appData.clear(c,'settings'),false);assert.equal(c.data.settings.stoppedApps,undefined);
  c.data.music={playing:true,queue:['audio'],playlists:[{id:1}]};c.ui.appPrefs={stack:[{app:'music'}]};c.ui.history=[{view:'app-prefs'},{view:'maps'}];NG.appData.stop(c,'play-music');assert.equal(c.data.music.playing,false);assert.equal(c.data.music.queue.length,1);assert.equal(c.data.music.playlists.length,1);assert.equal(c.ui.appPrefs,undefined);assert.equal(c.ui.history.length,1);
 });
+
+test('TalkBack and Switch Access share one package sandbox and reopening a system preference clears stopped state',()=>{
+ const {NG,c}=phone(),pkg='com.google.android.marvin.talkback';NG.systemPackages=[{pkg}];
+ c.data.appPrefs={talkback:{pref_speech_volume:'50'},switchaccess:{legacy:true},music:{keep:true}};
+ c.data.accessibilityLabels=[{label_text:'Custom label'}];c.data.accessibilityLabelUndo=[];
+ c.ui.appPrefs={stack:[{app:'switchaccess'}]};c.ui.accessibilityTutorial={lesson:1};
+ NG.appData.clear(c,pkg);
+ assert.equal(c.data.appPrefs.talkback,undefined);assert.equal(c.data.appPrefs.switchaccess,undefined);assert.equal(c.data.appPrefs.music.keep,true);
+ assert.equal(c.data.accessibilityLabels,undefined);assert.equal(c.data.accessibilityLabelUndo,undefined);assert.equal(c.ui.appPrefs,undefined);assert.equal(c.ui.accessibilityTutorial,undefined);
+ assert.equal(NG.appData.stopped(c,pkg),true);assert.equal(c.data.settings.appCleared[pkg].data,true);
+ c.ui.appPrefs={stack:[{app:'talkback'}]};NG.appData.opened(c,'app-prefs');
+ assert.equal(NG.appData.stopped(c,pkg),false);assert.equal(c.data.settings.appCleared[pkg].data,false);
+});

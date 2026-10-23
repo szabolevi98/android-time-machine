@@ -84,9 +84,9 @@ window.ANDROID_VERSIONS = [
     version: 'Android 7.1.2',
     year: '2017',
     device: 'Nexus 6P · Google',
-    description: 'Nougat on the Nexus 6P: split-screen multi-window, bundled notifications with direct reply, the quick settings editor and Doze on the go. Coming next.',
+    description: 'Split-screen apps, bundled notifications with direct reply, editable quick settings, launcher shortcuts and the Nougat cat easter egg.',
     url: 'versions/7.1.2/',
-    status: 'preview',
-    art: {shot: 'landing-home.jpg?v=1', phone: 'nexus6p'}
+    status: 'available',
+    art: {shot: 'landing-home.jpg?v=2', phone: 'nexus6p'}
   }
 ];
