@@ -912,8 +912,7 @@ current APK resources. Available landscape creations are collage, animation, vid
 and a four-frame Photo Booth strip. Group Smiles is unavailable because these drawn
 scenes have no detected faces. Creations snapshot source media and remain usable
 after a source frame is deleted. The viewer supports playback, deletion, share and
-direct Photos editing. The shared SEND_MULTIPLE routing audit remains separately
-tracked before release. Volume keys now obey Camera's shutter/zoom/nothing preference;
+direct Photos editing. SEND_MULTIPLE routing is covered in its own section below. Volume keys now obey Camera's shutter/zoom/nothing preference;
 pinch and digital zoom crop the saved synthetic scene (simulated 1–4x capability).
 
 Validation: all 234 module checks passed; seven new model/media checks, guided capture and burst editor pointer
@@ -1059,3 +1058,28 @@ pointer browser flows cover all groups, live slider attachment, hold/release,
 straighten, locked-square dragging, Reset/Done/save/discard, repeated edit intents,
 phone width and five languages. Photos library, native LUT and Camera advanced /
 RGBZ browser regressions passed. Inventory: 1193 assets rebuilt, zero problems.
+
+## SEND_MULTIPLE — 2026-10-23
+
+Selecting several photos in Photos or several files in Documents now sends one
+ACTION_SEND_MULTIPLE stream list instead of the first item. Receivers come from
+each package's own SEND_MULTIPLE filter, not its SEND filter: Hangouts, Cloud
+Print and Drive's clipboard declare none, Messenger (Bugle) takes only images,
+Bluetooth's batch set leaves audio out. The chooser's MIME is the honest common
+type (`image/jpeg`, `video/*` or `*/*`), as ShareCompat builds it. A single
+selected document still goes out as plain SEND with its own filter.
+
+Gmail attaches every stream; Messenger places each image as its own MMS part;
+Drive's UploadSharedItemActivity swaps the title editor for the native "Document
+titles" list (`upload_multiple_document_titles`) and uploads each file under its
+own name; Photos imports every item; YouTube queues the videos and offers the next
+upload after each save, and cancelling abandons the whole queue; Beam and the
+Bluetooth device picker keep the full list. Every stream keeps its own snapshot,
+edits and tags. Fixed on the way: a share arriving while a Gmail compose is open
+stored the open draft with no arguments and threw.
+
+Validation: 246 module checks (three new send-model checks); the real-pointer
+browser flow `tests/browser/ng-send-multiple.mjs` covers Photos and Documents
+selection, every receiver above, mixed and audio-only batches, five languages
+and phone width; Drive, Hangouts, SEND media, Documents, Photos and YouTube
+browser regressions passed.

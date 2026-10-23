@@ -10,6 +10,9 @@
     photos: ['application/vnd.google.panorama360+jpg', 'image/*', 'video/*'], youtube: ['video/*']
   };
   const clone = value => JSON.parse(JSON.stringify(value));
+  // SEND_MULTIPLE filters differ from SEND: Hangouts/Cloud Print/clipboard have
+  // none, Bugle only accepts images, and Bluetooth's batch set excludes audio.
+  const MULTIPLE={beam:['*/*'],bluetooth:['image/*','video/*','x-mixmedia/*','text/x-vcard'],drive:['*/*'],gmail:['*/*'],messenger:['image/*'],photos:['application/vnd.google.panorama360+jpg','image/*','video/*'],youtube:['video/*']};
   const fallback = {image:'image/jpeg', video:'video/mp4', audio:'audio/mpeg', vcard:'text/x-vcard', text:'text/plain', pdf:'application/pdf', file:'application/octet-stream'};
   function mime(spec) {
     const explicit = spec.mime || spec.document?.mime;
@@ -19,8 +22,8 @@
   }
   const kind = type => type.startsWith('video/') ? 'video' : type.startsWith('audio/') || type === 'application/ogg' ? 'audio' : type.startsWith('image/') || type === 'application/vnd.google.panorama360+jpg' ? 'image' : type.toLowerCase() === 'text/x-vcard' ? 'vcard' : type.startsWith('text/') ? 'text' : 'file';
   const matches = (filter, type) => filter === '*/*' || filter === type || filter.endsWith('/*') && filter.split('/')[0] === type.split('/')[0];
-  function accepts(id, type) { return (TYPES[id] || []).some(filter => matches(filter, type)); }
-  function normalize(c, spec) {
+  function accepts(id, type, multiple=false) { return ((multiple?MULTIPLE:TYPES)[id] || []).some(filter => matches(filter, type)); }
+  function normalizeOne(c, spec) {
     const out = {...spec};
     const source = spec.photoSnapshot || spec.document?.mediaSnapshot || (spec.photo && NG.photoLibrary?.find(c, spec.photo));
     if (source) out.photoSnapshot = clone(source);
@@ -41,5 +44,14 @@
     }
     return out;
   }
-  NG.sendModel = {types: TYPES, mime, kind, matches, accepts, normalize};
+  const streams=s=>s.streams?.length?s.streams:[s];
+  function normalize(c,spec) {
+    const items=spec.streams?.length?spec.streams:spec.photos?.map(id=>{const p=NG.photoLibrary?.find(c,id);return p?{photo:id,kind:p.kind==='video'?'video':'image',name:p.fileName||`${p.kind==='video'?'VID':'IMG'}_${id}.${p.kind==='video'?'mp4':'jpg'}`}:null;}).filter(Boolean);
+    if(!items?.length)return normalizeOne(c,spec);
+    const normalized=items.map(item=>normalizeOne(c,item)),first=normalized[0],out={...normalizeOne(c,{...spec,...first}),...spec};
+    if(normalized.length===1)return {...out,...first,streams:undefined,photos:undefined,multiple:false,action:'android.intent.action.SEND'};
+    const types=normalized.map(mime),category=types[0].split('/')[0],type=types.every(t=>t===types[0])?types[0]:types.every(t=>t.startsWith(category+'/'))?category+'/*':'*/*';
+    return {...out,photo:first.photo,document:first.document,photoSnapshot:first.photoSnapshot,streams:normalized,photos:undefined,mime:type,kind:kind(type),multiple:true,action:'android.intent.action.SEND_MULTIPLE'};
+  }
+  NG.sendModel = {types: TYPES, multipleTypes:MULTIPLE, mime, kind, matches, accepts, normalize, streams};
 })();

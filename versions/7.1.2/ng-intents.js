@@ -40,7 +40,7 @@
     {id: 'photos', label: 'Photos/photos_uploadtoalbum_title', icon: () => icon('photos')},
     {id: 'youtube', label: 'YouTube/application_name', icon: () => icon('youtube')}
   ];
-  const targets = (c, s) => TARGETS.filter(x => NG.sendModel.accepts(x.id, NG.sendModel.mime(s)) && !(s.exclude || []).includes(x.id) && !(NG.appsData?.[x.id] && NG.appDisabled?.(c, x.id)))
+  const targets = (c, s) => TARGETS.filter(x => NG.sendModel.accepts(x.id, NG.sendModel.mime(s),s.multiple) && !(s.exclude || []).includes(x.id) && !(NG.appsData?.[x.id] && NG.appDisabled?.(c, x.id)))
     .sort((a, b) => new Intl.Collator(c.locale()).compare(T().t(a.label), T().t(b.label)));
 
   NG.share = (c, spec) => { c.ui.shareSpec = NG.sendModel.normalize(c, {kind: 'text', ...spec}); c.overlay('share'); };
@@ -60,8 +60,8 @@
   function close(c, then) { c.closeOverlay(); c.ui.shareSpec = null; then?.(); }
 
   // Bluetooth: BluetoothOppLauncherActivity checks the adapter, BluetoothOppBtEnableActivity asks to turn it on.
-  function bluetooth(c) {
-    const t = T(), pick = () => c.open('bt-picker');
+  function bluetooth(c,spec) {
+    const t = T(), pick = () => {c.ui.btPicker={until:0,sendSpec:JSON.parse(JSON.stringify(spec))};c.open('bt-picker');};
     if (c.data.settings.bluetooth) { pick(); return; }
     c.dialog({html: `<div class="ngin-bt"><p>${esc(c, t.t('Bluetooth/bt_enable_line1'))}</p><p>${esc(c, t.t('Bluetooth/bt_enable_line2'))}</p></div>`, buttons: [{label: t.t('Bluetooth/bt_enable_cancel')}, {label: t.t('Bluetooth/bt_enable_ok'), action: c => {
       NG.system?.setBluetooth(c, true);
@@ -72,18 +72,20 @@
   // Drive's UploadSharedItemActivity: the dialog with the document's title, the account and the folder.
   function drive(c, s, parent = '', retainedName) {
     const t = T(), untitled = t.t('Drive/upload_untitled_file_title'), title = retainedName ?? s.name ?? s.subject ?? untitled;
-    const folder=NG.driveModel?.find(c,parent)?.name||t.t('Drive/menu_my_drive');
-    const html = `<div class="ngin-up"><div class="ngin-uplabel">${esc(c, t.t('Drive/upload_document_title'))}</div><input class="ngin-upname" value="${esc(c, title)}" autocomplete="off">
+    const folder=NG.driveModel?.find(c,parent)?.name||t.t('Drive/menu_my_drive'),items=NG.sendModel.streams(s),multiple=items.length>1;
+    const html = `<div class="ngin-up"><div class="ngin-uplabel">${esc(c, t.t(multiple?'Drive/upload_multiple_document_titles':'Drive/upload_document_title'))}</div>${multiple?`<div class="ngin-upnames">${items.map(item=>esc(c,item.document?.name||item.name||untitled)).join('<br>')}</div>`:`<input class="ngin-upname" value="${esc(c, title)}" autocomplete="off">`}
       <div class="ngin-uplabel">${esc(c, t.t('Drive/upload_account'))}</div><div class="ngin-upspin">${esc(c, NG.account?.email || '')}</div>
       <div class="ngin-uplabel">${esc(c, t.t('Drive/upload_folder'))}</div><button type="button" class="ngin-upspin folder"><img src="assets/dr-ic_type_folder.png" alt="">${esc(c,folder)}</button></div>`;
     let name = title;
     c.dialog({title: t.t('Drive/upload_shared_item_title'), html, mount: (c, win) => {
-      const f = win.querySelector('.ngin-upname'); f.addEventListener('input', () => { name = f.value; });
+      const f = win.querySelector('.ngin-upname'); f?.addEventListener('input', () => { name = f.value; });
       win.querySelector('.folder').addEventListener('click',()=>{if(!NG.driveFolderPick)return;c.closeDialog();NG.driveFolderPick(c,parent,(c,chosen)=>drive(c,s,chosen===undefined?parent:chosen,name));});
     }, buttons: [{label: t.t('Drive/upload_cancel')}, {label: t.t('Drive/upload_shared_item_confirm'), action: c => {
       const n=name.trim()||untitled;
-      if(NG.driveModel){const snapshot=s.photoSnapshot||(s.photo&&NG.photoLibrary.find(c,s.photo));NG.driveModel.upload(c,s.document?{...s.document,name:n}:{name:n,type:s.kind==='image'?'image':'text',content:s.text||'',size:snapshot?3200000:(s.text||'').length,mediaSnapshot:snapshot},parent);}
-      else (c.data.driveFiles ||= []).push({type:s.kind==='image'?'image':'file',name:n});
+      for(const item of items){const fileName=multiple?(item.document?.name||item.name||untitled):n;
+        if(NG.driveModel){const snapshot=item.photoSnapshot||(item.photo&&NG.photoLibrary.find(c,item.photo));NG.driveModel.upload(c,item.document?{...item.document,name:fileName}:{name:fileName,type:item.kind==='image'?'image':'text',content:item.text||'',size:snapshot?3200000:(item.text||'').length,mediaSnapshot:snapshot},parent);}
+        else (c.data.driveFiles ||= []).push({type:item.kind==='image'?'image':'file',name:fileName});
+      }
       c.save();c.toast(t.fmt('Drive/upload_completed_announcement',null,n));
     }}]});
   }
@@ -95,19 +97,19 @@
         c.dialog({progress: t.t('Photos/photos_uploadtoalbum_progress_title'), cancelable: false});
         const progress = c.ui.dialogSpec;
         NG.appTasks.later(c, 'photos', () => {
-          const existing = spec.photo && NG.photoLibrary.find(c, spec.photo);
+          for(const item of NG.sendModel.streams(spec)){const existing = item.photo && NG.photoLibrary.find(c, item.photo);
           if (!existing || existing.appPrivate) {
-            const id = NG.media.fromDocument(c, spec.document || {name:spec.name,mediaSnapshot:spec.photoSnapshot}, 'photos-upload');
+            const id = NG.media.fromDocument(c, item.document || {name:item.name,mediaSnapshot:item.photoSnapshot}, 'photos-upload');
             const media = id && NG.photoLibrary.find(c,id); if (media) { delete media.appPrivate; media.album = 'photos'; media.uploaded = true; c.save(); }
-          } else { existing.uploaded = true; c.save(); }
+          } else { existing.uploaded = true; c.save(); }}
           if (c.ui.overlay === 'dialog' && c.ui.dialogSpec === progress) c.closeDialog(); c.toast(t.t('Photos/photos_uploadtoalbum_upload_complete'));
         }, 1200);
       }}]});
   }
   // BeamShareActivity: NFC off asks first; then SendUi (the screen at 0.6 over black, "Tap to beam").
-  function beam(c) {
+  function beam(c,spec) {
     const t = T(), s = c.data.settings;
-    const send = c => { c.ui.beamShot = c.el.viewport.innerHTML; c.overlay('beam'); };
+    const send = c => { c.ui.beamData=JSON.parse(JSON.stringify(spec));c.ui.beamShot = c.el.viewport.innerHTML; c.overlay('beam'); };
     if (s.nfc ?? true) { if (s.beam ?? true) send(c); return; }
     c.dialog({message: t.t('NfcNci/beam_requires_nfc_enabled'), buttons: [{label: t.t('framework/no')}, {label: t.t('framework/yes'), action: c => { s.nfc = true; c.save(); if (s.beam ?? true) send(c); }}]});
   }
@@ -116,14 +118,17 @@
     if (!s || !targets(c, s).some(x => x.id === id)) return;
     close(c, () => {
       if (id === 'clipboard') { NG.clipboard = s.text || ''; try { navigator.clipboard?.writeText(s.text || ''); } catch {} c.toast(t.t('Drive/send_to_clipboard_success')); return; }
-      if (id === 'bluetooth') { bluetooth(c); return; }
+      if (id === 'bluetooth') { bluetooth(c,s); return; }
       if (id === 'drive') { drive(c, s); return; }
       if (id === 'photos') { NG.appData.opened(c, 'photos'); photos(c, s); return; }
-      if (id === 'beam') { beam(c); return; }
+      if (id === 'beam') { beam(c,s); return; }
       if (id === 'cloudprint') { if (s.kind === 'audio' || s.kind === 'video') { c.dialog({title:t.t('CloudPrint2/document_submit_failed_title'),message:t.t('CloudPrint2/failure_msg_request_failed'),buttons:[{label:NG.text('settings').t('framework/ok')}]}); return; } c.ui.printJob = {title: s.subject || s.name || '', text: s.text || s.document?.content || '', photo: s.photo, document:s.document}; c.ui.print = null; c.open('print-preview'); return; }
-      const photo=['image','video'].includes(s.kind)&&['gmail','messenger','hangouts'].includes(id)?NG.media.fromDocument(c,{...s.document,name:s.name||s.document?.name,photo:s.photo,mediaSnapshot:s.photoSnapshot},id):s.photo;
-      const document=s.document?JSON.parse(JSON.stringify(s.document)):undefined;if(document&&photo){document.photo=photo;delete document.mediaSnapshot;}
-      c.ui.shareData = {subject: s.subject || '', text: s.text || (['messenger','hangouts'].includes(id) && s.kind==='text' ? s.document?.content : '') || '', kind: s.kind, mime:s.mime, name: s.name || document?.name || '', photo,document};
+      const delivered=NG.sendModel.streams(s).map(item=>{
+        const photo=['image','video'].includes(item.kind)&&['gmail','messenger','hangouts'].includes(id)?NG.media.fromDocument(c,{...item.document,name:item.document?.name||item.name,photo:item.photo,mediaSnapshot:item.photoSnapshot},id):item.photo;
+        const document=item.document?JSON.parse(JSON.stringify(item.document)):undefined;if(document&&photo){document.photo=photo;delete document.mediaSnapshot;}
+        return {kind:item.kind,mime:item.mime,name:item.name||document?.name||'',photo,document};
+      });
+      c.ui.shareData = {...delivered[0],subject:s.subject||'',text:s.text||(['messenger','hangouts'].includes(id)&&s.kind==='text'?s.document?.content:'')||'',...(s.multiple?{streams:delivered,multiple:true}:{} )};
       c.open(id, 'share');
     });
   }
@@ -141,8 +146,8 @@
   NG.register('beam', {
     app: false,
     render: c => `<div class="ngin-beam" data-action="ngin-beamoff"><div class="ngin-beamtext">${esc(c, T().t('NfcNci/tap_to_beam'))}</div><div class="ngin-shot"><div class="ngin-shotin">${c.ui.beamShot || ''}</div></div></div>`,
-    back(c) { c.ui.beamShot = ''; c.closeOverlay(); return true; },
-    action(name, el, event, c) { if (name === 'ngin-beamoff') { c.ui.beamShot = ''; c.closeOverlay(); } return true; }
+    back(c) { c.ui.beamShot = '';c.ui.beamData=null; c.closeOverlay(); return true; },
+    action(name, el, event, c) { if (name === 'ngin-beamoff') { c.ui.beamShot = '';c.ui.beamData=null; c.closeOverlay(); } return true; }
   });
 
   // Settings' DevicePickerActivity (device_picker.xml in Theme.Settings): the Available devices category scanning, then
@@ -166,7 +171,7 @@
       if (name === 'ngin-btup') { c.ui.btPicker = null; c.back(); return true; }
       if (name === 'ng-menu') {
         const scanning = u?.until > Date.now();
-        c.menu([{label: t.t(scanning ? 'SettingsGoogle/bluetooth_searching_for_devices' : 'SettingsGoogle/bluetooth_search_for_devices'), disabled: scanning, action: c => { c.ui.btPicker = {until: 0}; c.render(); }}], el);
+        c.menu([{label: t.t(scanning ? 'SettingsGoogle/bluetooth_searching_for_devices' : 'SettingsGoogle/bluetooth_search_for_devices'), disabled: scanning, action: c => { c.ui.btPicker = {...c.ui.btPicker,until: 0}; c.render(); }}], el);
         return true;
       }
       return false;

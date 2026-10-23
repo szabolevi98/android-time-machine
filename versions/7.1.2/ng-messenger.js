@@ -270,7 +270,7 @@
     if (!x) { const all = threads(c); x = {id: Math.max(0, ...all.map(y => y.id)) + 1, number, read: true, messages: []}; all.push(x); }
     x.read = true; x.archived = false; c.save();
     u.screen = `conv:${x.id}`; u.panel = ''; u.msel = null;
-    if (u.carry) { if (u.carry.text) u.draft[x.id] = u.carry.text; if (u.carry.attach) u.attach[x.id] = [...(u.attach[x.id] || []), u.carry.attach]; u.carry = null; u.mode = ''; }
+    if (u.carry) { if (u.carry.text) u.draft[x.id] = u.carry.text; if (u.carry.attach||u.carry.attachments) u.attach[x.id] = [...(u.attach[x.id] || []), ...(u.carry.attachments||[u.carry.attach])]; u.carry = null; u.mode = ''; }
     NG.notifications?.list(c).filter(n => n.app === 'messenger' && n.open?.[1] === `conv:${x.id}`).forEach(n => NG.notifications.cancel(c, n.id));
     return x;
   }
@@ -340,7 +340,7 @@
     c.ui.sub = ''; u.search = null; u.sel = null; u.msel = null; u.csearch = null;
     // ShareIntentActivity ("Select conversation"): what was shared waits in the conversation picked next.
     if (sub === 'widget:list' || sub === 'widget:new') { u.screen=sub.endsWith('new')?'pick':'';u.mode='';u.external=false;u.sel=null;u.search=null;u.to='';return; }
-    if (sub === 'share') { const d = NG.shareTake?.(c); u.carry = d?.kind === 'vcard' ? {attach: {vcard: d.subject || d.name || ''}} : {text: d?.text || '',...(d?.kind==='audio'&&d.document?{attach:{audio:JSON.parse(JSON.stringify(d.document))}}:d?.photo?{attach:{photo:d.photo,document:d.document}}:{})}; u.mode = 'share'; u.screen = ''; u.external = true; return; }
+    if (sub === 'share') { const d = NG.shareTake?.(c); u.carry = d?.multiple ? {text:d.text||'',attachments:NG.sendModel.streams(d).map(item=>({photo:item.photo,document:item.document}))} : d?.kind === 'vcard' ? {attach: {vcard: d.subject || d.name || ''}} : {text: d?.text || '',...(d?.kind==='audio'&&d.document?{attach:{audio:JSON.parse(JSON.stringify(d.document))}}:d?.photo?{attach:{photo:d.photo,document:d.document}}:{})}; u.mode = 'share'; u.screen = ''; u.external = true; return; }
     if (sub.startsWith('conv:')) { const x = thread(c, sub.slice(5)); if (x) { openThread(c, x.number); u.external = true; } return; }
     if (sub.startsWith('to:')) { const n = sub.slice(3); if (n) { openThread(c, n); u.external = true; } else { u.screen = 'pick'; u.to = ''; u.external = true; } }
   }

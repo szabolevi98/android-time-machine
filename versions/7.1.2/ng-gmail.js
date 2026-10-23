@@ -172,9 +172,9 @@
     c.ui.sub = '';
     const u = ui(c);
     // ComposeActivityGmail from ACTION_SEND: EXTRA_SUBJECT and EXTRA_TEXT fill the draft.
-    if((sub==='shortcut:compose'||sub==='share'||sub.startsWith('to:'))&&u.screen==='compose'&&u.draft)storeCompose(c);
+    if((sub==='shortcut:compose'||sub==='share'||sub.startsWith('to:'))&&u.screen==='compose'&&u.draft){const d=u.draft;if(d.to||d.subject||d.body||d.attachments?.length)storeCompose(c,d,'drafts');}
     if(sub==='shortcut:compose'){c.data.gmailSetup=2;u.draft={to:'',subject:'',body:''};u.screen='compose';u.external=true;c.save();return;}
-    if (sub === 'share') { const d = NG.shareTake?.(c) || {}; u.draft = {to: '', subject: d.subject || '', body: d.text || '', attachments: d.document?[d.document]:d.kind==='image'?[{name:d.name||'Photo.jpg',type:'image',photo:d.photo,size:3200000}]:[]}; u.screen = 'compose'; u.external = true; return; }
+    if (sub === 'share') { const d = NG.shareTake?.(c) || {}; u.draft = {to: '', subject: d.subject || '', body: d.text || '', attachments: NG.sendModel.streams(d).flatMap(item=>item.document?[item.document]:item.kind==='image'?[{name:item.name||'Photo.jpg',type:'image',photo:item.photo,size:3200000}]:[])}; u.screen = 'compose'; u.external = true; return; }
     if (sub.startsWith('folder:')) { u.folder = sub.slice(7); u.screen = ''; u.drawer = false; return; }
     if (sub.startsWith('to:')) { u.draft = {to: sub.slice(3), subject: '', body: ''}; u.screen = 'compose'; u.external = true; }
   }

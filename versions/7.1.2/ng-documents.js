@@ -61,7 +61,7 @@
       case 'ngdocs-search':u.search=!u.search;u.query='';c.render();return true;
       case 'ngdocs-grid':s.grid=!s.grid;c.save();c.render();return true;
       case 'ngdocs-delete':remove(c);return true;
-      case 'ngdocs-share':{const n=D().find(c,u.selected[0]);if(n)NG.share(c,{kind:n.type==='image'?'image':n.type==='video'?'video':n.type==='audio'?'audio':'file',name:n.name,mime:n.mime,text:'',photo:n.photo,photoSnapshot:n.mediaSnapshot,document:JSON.parse(JSON.stringify(n))});return true;}
+      case 'ngdocs-share':{const nodes=u.selected.map(id=>D().find(c,id)).filter(n=>n&&n.type!=='dir');if(nodes.length)NG.share(c,{kind:'file',text:'',streams:nodes.map(n=>({kind:n.type==='image'?'image':n.type==='video'?'video':n.type==='audio'?'audio':'file',name:n.name,mime:n.mime,photo:n.photo,photoSnapshot:n.mediaSnapshot,document:JSON.parse(JSON.stringify(n))}))});return true;}
       case 'ngdocs-save':{const spec=picker(c),target=here(c)==='recent'?'download':here(c),n=D().create(c,target,u.saveName||spec.name||'Untitled.txt',spec.type||'text',spec.content||'');if(n&&spec.extra){Object.assign(n,spec.extra);c.save();}if(n)finish(c,[n]);else c.toast(t('save_error'));return true;}
       case 'ngdocs-target':{const spec=picker(c);if(D().transfer(c,spec.ids,here(c),spec.copy)){c.ui.documentPicker=null;u.path=spec.origin;u.root=u.path[0];c.render();}else c.toast(t('clipboard_files_cannot_paste'));return true;}
       case 'ng-menu':menu(c,el);return true;

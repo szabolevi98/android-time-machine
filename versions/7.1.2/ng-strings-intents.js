@@ -145,6 +145,18 @@ NG.strings('intents', {
 "de"
 ]
 },
+"Drive/upload_multiple_document_titles": {
+"res": "angler:Drive:upload_multiple_document_titles",
+"en": "Document titles",
+"fr": "Titre des documents",
+"es": "Títulos del documento",
+"hu": "Document titles",
+"de": "Document titles",
+"untranslated": [
+"hu",
+"de"
+]
+},
 "Drive/upload_account": {
 "res": "angler:Drive:upload_account",
 "en": "Account",

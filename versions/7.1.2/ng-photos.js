@@ -65,7 +65,7 @@
     const u = U(c);
     if (u.sub !== c.ui.sub) {
       u.sub = c.ui.sub;
-      if (/^(photo|edit):\d+$/.test(c.ui.sub)) { u.photo = +c.ui.sub.split(':')[1]; u.page='photo'; u.stack=[{page:'photos'}]; u.chrome=true; u.info=false;if(c.ui.sub.startsWith('edit:')){const p=current(c);if(p){u.stack.push({page:'photo'});Object.assign(u,editorState(c,p));u.page='editor';}}c.ui.sub='';u.sub=''; }
+      if (/^(photo|edit):\d+$/.test(c.ui.sub)) { u.photo = +c.ui.sub.split(':')[1];u.selected=[];u.selecting=false;u.picking=''; u.page='photo'; u.stack=[{page:'photos'}]; u.chrome=true; u.info=false;if(c.ui.sub.startsWith('edit:')){const p=current(c);if(p){u.stack.push({page:'photo'});Object.assign(u,editorState(c,p));u.page='editor';}}c.ui.sub='';u.sub=''; }
     }
     L().expire(c);
   }
@@ -292,7 +292,7 @@
         case 'delete':remove(c);break;
         case 'restore':L().restore(c,u.selected.length?u.selected:[u.photo]);u.selected=[];u.selecting=false;if(u.page==='photo')back(c);else c.render();break;
         case 'undo':L().restore(c,u.undo||[]);u.undo=null;c.render();break;
-        case 'share':{const ids=u.selected.length?u.selected:[u.photo],first=L().find(c,ids[0]);if(first)NG.share(c,{kind:first.kind==='video'?'video':'image',title:t('share'),name:fileName(first),photo:first.id,exclude:['photos']});break;}
+        case 'share':{const ids=u.selected.length?u.selected:[u.photo],first=L().find(c,ids[0]);if(first)NG.share(c,{kind:first.kind==='video'?'video':'image',title:t('share'),name:fileName(first),photo:first.id,photos:ids,exclude:['photos']});break;}
         case 'info':u.info=!u.info;c.render();break;
         case 'toggle':if(u.ignoreTap){u.ignoreTap=false;break;}if(u.page==='photo'){u.chrome=!u.chrome;u.slideshow=false;c.render();}break;
         case 'play':u.playing=!u.playing;u.lastTick=Date.now();if(u.position>=(p.duration||2000))u.position=0;c.render();break;

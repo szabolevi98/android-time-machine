@@ -31,3 +31,6 @@ button.ngin-item:active{background:#0000001f}
 @keyframes ngin-rot{to{transform:rotate(360deg)}}
 
 button.ngin-upspin.folder { width:100%; border:0; color:inherit; text-align:left; font:inherit; background:transparent; cursor:pointer; }
+
+/* UploadSharedItemActivity switches the title editor to this native multi-line label. */
+.ngin-upnames{padding:calc(8 * var(--dp)) 0;font-size:calc(16 * var(--dp));color:#000000de;line-height:1.5;overflow-wrap:anywhere}
