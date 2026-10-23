@@ -13,7 +13,7 @@ Ez a kezdőkérés javasolt munkasorrend; a felhasználó a következő sessionb
 - Helyi repó: `D:\xampp\htdocs\android-simulator`
 - Távoli repó: https://github.com/szabolevi98/android-time-machine
 - Ág: `main`.
-- Legutóbbi commit, feltöltve: `d9c3aec74ee73a7719bb92882a347e1376097024` — a verziónkénti korlátaudit dokumentuma.
+- Az audit dokumentumának commitja: `d9c3aec74ee73a7719bb92882a347e1376097024`. Azóta az átadó terv több commitban módosult; a pillanatnyi állapotot kezdéskor a `git log` mutatja.
 - Az auditban vizsgált alkalmazáskód: `f4a72fe404051cde4275aa982641104e38baee7f`. A forráshivatkozások ehhez a rögzített állapothoz tartoznak; javításkor a jelenlegi fájlokat is olvasd el.
 - Audit a repóban: `docs/reports/simulator-limits-2026-10-23.md`.
 - Az audit során nem módosult alkalmazáskód, és a felsorolt hiányokat még nem javítottuk.
@@ -72,7 +72,7 @@ Az egységesítés nem helyettesíti a funkció megépítését: egy javítandó
 
 - **Forrás, nem fejből.** A szövegek, a menüsorrend és a felület a gyári image-ekből és az AOSP-ből jöjjön (`_aosp/<eszköz>`, a projektben gitignored). A forrást a commitban vagy a kódkommentben nevezd meg.
 - **Kész csak akkor, ha ki van próbálva.** Egy tétel csak akkor zárható le, ha asztali nézetben (egérhúzással) és telefonszélességen is végig lett kattintva, és a korábban elutasító út a valódi felületen működik.
-- **Közös regressziós teszt.** Készüljön egy közös, adatvezérelt böngészőteszt (például `tests/browser/limits-regression.mjs`), amely felsorolja az összes javított utat (verzió, app, kattintási út), és ellenőrzi, hogy egyiken sem jelenik meg elutasító toast vagy Még nincs kész képernyő. Minden javított tétel ebbe kerül be, így egy későbbi változtatás nem rontja el csendben a korábbi javításokat.
+- **Közös regressziós teszt.** Készüljön egy közös, adatvezérelt böngészőteszt (például `tests/browser/limits-regression.mjs`), amely felsorolja az összes javított utat (verzió, app, kattintási út), és ellenőrzi, hogy egyiken sem jelenik meg elutasító toast vagy Még nincs kész képernyő. Minden javított tétel ebbe kerül be, így egy későbbi változtatás nem rontja el csendben a korábbi javításokat. Mintának a `tests/browser/flows.mjs` szolgál, mert az bármelyik verziót betölti (`/versions/${version}/`). Az untracked `_audit.mjs`, `_appaudit.mjs`, `_prefaudit.mjs` nem alkalmas alapnak: csak 7.1.2-n futnak (`ng-harness.mjs`). Az új tesztet vedd fel a `package.json` `test:browser` parancsába is.
 - **Az állapot egy helyen.** A besorolás és a javítások állapota csak a `docs/reports/simulator-limits-2026-10-23.md` riportban van vezetve. Az átadó beágyazott auditmásolata átadáskori pillanatkép, azt nem kell frissíteni.
 
 ## Fontos pontosítások — ne indíts újra már lezárt munkát
