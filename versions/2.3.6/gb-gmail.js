@@ -141,6 +141,15 @@
   }
   const unread = (mail, label) => list(mail, label).filter(c => !c.read).length;
   const labelName = (lang, label) => USER_LABELS[label] ? label : T(lang, label);
+  // Settings › Sync inboxes and labels (gb-prefs.js): a label synced for none lists nothing, Sync last N days only those
+  // days of mail (counted from the newest message, the last sync).
+  function synced(data, label, items, searching) {
+    const v = data.appPrefs?.['gmail-sync'] || {}, choice = v[`sync|${label}`] ?? (['All Mail', 'Chats', 'Spam', 'Trash'].includes(label) ? 2 : 1);
+    if (searching || choice === 0) return items;
+    if (choice === 2) return [];
+    const newest = Math.max(0, ...(data.gmail23 || []).flatMap(c => c.messages.map(m => m.created || 0))), since = newest - (Number(v.days) || 30) * D;
+    return items.filter(c => c.messages.some(m => (m.created || 0) >= since));
+  }
   // The list's date: the time for today's mail, the month and day this year, otherwise the numeric date.
   function when(created, ctx) {
     const d = new Date(created), now = ctx.now;
@@ -168,7 +177,7 @@
   function conversationList(ctx) {
     const {data, ui, lang} = ctx, mail = data.gmail23, label = ui.gmLabel || 'Inbox', selected = ui.gmSelected || [];
     const searching = ui.gmQuery !== undefined;
-    const items = list(mail, label, searching ? ui.gmQuery : '');
+    const items = synced(data, label, list(mail, label, searching ? ui.gmQuery : ''), searching);
     const n = unread(mail, label);
     const rows = items.map(c => {
       const m = last(c), labels = label === 'Inbox' || USER_LABELS[label] ? userLabels(c).filter(l => l !== label) : userLabels(c);
@@ -236,14 +245,14 @@
       {action: 'gm-send', title: t('Send'), icon: 'ic_menu_send'}, {action: 'gm-save', title: t('Save draft'), icon: 'ic_menu_save'},
       {action: 'gm-cc', title: t(ui.gmCc ? 'Remove Cc/Bcc' : 'Add Cc/Bcc'), icon: g('ic_menu_cc')}, {action: 'gm-attach', title: t('Attach'), icon: g('ic_menu_attachment')},
       {action: 'gm-discard', title: t('Discard'), icon: 'ic_menu_close_clear_cancel'}, {action: 'gm-unsupported', title: t('Help'), icon: 'ic_menu_help'}];
-    if (ui.gmView === 'labels') return [{action: 'gm-unsupported', title: t('Settings'), icon: 'ic_menu_preferences'}, {action: 'gm-unsupported', title: t('Help'), icon: 'ic_menu_help'}];
+    if (ui.gmView === 'labels') return [{action: 'gbpref-open', id: 'gmail', title: t('Settings'), icon: 'ic_menu_preferences'}, {action: 'gm-unsupported', title: t('Help'), icon: 'ic_menu_help'}];
     if (ui.gmView === 'conversation') {
       const c = data.gmail23.find(x => x.id === ui.gmId) || {};
       return [{action: 'gm-labels', title: t('Change labels'), icon: g('ic_menu_navigate')}, {action: 'gm-mark-unread', title: t('Mark unread'), icon: g('ic_menu_gmail_mark_unread')},
         {action: 'gm-important', title: t(c.important ? 'Not important' : 'Mark important'), icon: g(c.important ? 'ic_menu_mark_unimportant' : 'ic_menu_mark_important')},
         {action: 'gm-label', id: 'Inbox', title: t('Go to inbox'), icon: g('ic_menu_inbox')}, {action: 'gm-mute', title: t('Mute'), icon: g('ic_menu_mute')},
         {action: 'gm-star', id: c.id, title: t(c.starred ? 'Remove star' : 'Add star'), icon: g('ic_menu_star')}, {action: 'gm-spam', title: t('Report spam'), icon: g('ic_menu_report_spam')},
-        {action: 'gm-unsupported', title: t('Settings'), icon: 'ic_menu_preferences'}, {action: 'gm-unsupported', title: t('Help'), icon: 'ic_menu_help'}, {action: 'gm-unsupported', title: t('Select text')}];
+        {action: 'gbpref-open', id: 'gmail', title: t('Settings'), icon: 'ic_menu_preferences'}, {action: 'gm-unsupported', title: t('Help'), icon: 'ic_menu_help'}, {action: 'gm-unsupported', title: t('Select text')}];
     }
     if ((ui.gmSelected || []).length) return [
       {action: 'gm-star-selected', title: t('Star'), icon: g('ic_menu_star')}, {action: 'gm-read-unread', title: t('Read/unread'), icon: g('ic_menu_gmail_mark_read')},
@@ -253,7 +262,7 @@
     return [{action: 'gm-refresh', title: t('Refresh'), icon: g('ic_menu_refresh')}, {action: 'gm-compose', title: t('Compose'), icon: g('ic_menu_compose')},
       {action: 'gm-accounts', title: t('Accounts'), icon: g('ic_mailboxes_accounts')}, {action: 'gm-labels', title: t('Go to labels'), icon: g('ic_menu_navigate')},
       {action: 'gm-search', title: t('Search'), icon: 'ic_menu_search'}, ...((ui.gmLabel || 'Inbox') !== 'Inbox' || ui.gmQuery !== undefined ? [{action: 'gm-label', id: 'Inbox', title: t('Go to inbox'), icon: g('ic_menu_inbox')}] : []),
-      {action: 'gm-unsupported', title: t('Settings'), icon: 'ic_menu_preferences'}, {action: 'gm-unsupported', title: t('Help'), icon: 'ic_menu_help'}, {action: 'gm-about', title: t('About')}];
+      {action: 'gbpref-open', id: 'gmail', title: t('Settings'), icon: 'ic_menu_preferences'}, {action: 'gm-unsupported', title: t('Help'), icon: 'ic_menu_help'}, {action: 'gm-about', title: t('About')}];
   }
   // The Change labels check list, the account list, the reply-mode picker and the About box (InfoDialog).
   function dialog(kind, ctx) {
@@ -398,5 +407,5 @@
     if (!resume) { ui.gmView = ''; ui.gmLabel = 'Inbox'; ui.gmSelected = []; ui.gmQuery = undefined; ui.gmUndo = null; }
   }
   GBApps.register('gmail', {render, menu, dialog, handle, submit, back, open, keep});
-  window.GBGmail = {ACCOUNT, restore, list, unread, attach};
+  window.GBGmail = {ACCOUNT, restore, list, unread, attach, labelName};
 })();

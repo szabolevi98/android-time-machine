@@ -77,6 +77,8 @@ def from_arsc(path):
         for config, entry in res.get_res_configs(int(rid, 16), None):
             try: lang, region, text = config.get_language(), config.get_country(), entry.get_key_data()
             except Exception: continue
+            # A network-code configuration (mcc262: Germany's "Google Mail") is not the default value.
+            if 'mcc' in (config.get_qualifier() or ''): continue
             if '\x00' in lang: lang = ''
             if region and '\x00' not in region: lang = f'{lang}-r{region}'
             out.append(f'      ({lang}) {json.dumps(text, ensure_ascii=False)}')
@@ -102,7 +104,8 @@ for v, apps in spec.items():
     for app, rows in apps.items():
         for key, ref in rows.items():
             apk, _, name = ref.partition(':')
-            hit = from_array(DEVICES[v], apk, name) if name.startswith('@array/') else from_plural(DEVICES[v], apk, name) if name.startswith('@plurals/') else by.get((apk, name)) or from_aapt(DEVICES[v], apk, name)
+            # "Apk:!name" reads the APK itself: the index can file a string under a regional variant (Gmail 4.0's "Google Mail").
+            hit = from_array(DEVICES[v], apk, name) if name.startswith('@array/') else from_plural(DEVICES[v], apk, name) if name.startswith('@plurals/') else from_aapt(DEVICES[v], apk, name[1:]) if name.startswith('!') else by.get((apk, name)) or from_aapt(DEVICES[v], apk, name)
             if not hit: missing.append(f'{app}: {ref}'); continue
             en, tr = hit
             # The named form strings.js reads: {res, hu, de, fr, es, en?}, en when the image words it apart from the key.

@@ -119,3 +119,45 @@
 .g4-att-copy small{font:400 calc(14.8236 * var(--dp)) RobotoICS,sans-serif;color:#555}
 .g4-att-remove{flex:none;width:calc(25.4118 * var(--dp));height:calc(25.4118 * var(--dp));margin-right:calc(8.4706 * var(--dp));padding:0;border:0;background:none}
 .g4-att-remove img{width:100%;height:100%}
+/* Gmail 4.0.4's Settings, Manage labels and label settings (ics-gmail-prefs.js): Holo Light preference rows, the grey
+   caps category line, Holo check boxes and radio dialogs, as the 4.x Gmail settings draw them. */
+.g4p-app{position:absolute;inset:0;display:flex;flex-direction:column;background:#fff;font-family:RobotoICS,Roboto,sans-serif}
+.g4p-bar{flex:none;display:flex;align-items:center}
+.g4p-bar b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.screen .g4p-up{display:flex;align-items:center;height:100%;padding:0;border:0;background:none}
+.g4p-scroll{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.screen .g4p-row{display:flex;align-items:center;width:100%;min-height:calc(48.0038 * var(--dp));padding:calc(7.9968 * var(--dp)) calc(16.0052 * var(--dp));border:0;background:none;text-align:left}
+.g4p-text{flex:1;min-width:0;display:flex;flex-direction:column}
+.g4p-text small{margin-top:calc(1.9963 * var(--dp));white-space:pre-line;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical}
+.g4p-scrim{position:absolute;inset:0;z-index:40;border:0;background:#0009}
+.g4p-dialog{position:absolute;z-index:41;top:50%;transform:translateY(-50%);background:#fff}
+.g4p-dialog h3{margin:0}
+.screen .g4p-choice{display:flex;align-items:center;width:100%;min-height:calc(48.0038 * var(--dp));border:0;background:none;text-align:left}
+.g4p-choice span{flex:1}
+.g4p-choice i{flex:none;width:calc(31.9986 * var(--dp));height:calc(31.9986 * var(--dp))}
+.screen .g4p-input{display:block;width:calc(100% - calc(32.0104 * var(--dp)));margin:calc(7.9968 * var(--dp)) calc(16.0052 * var(--dp));padding:calc(7.9968 * var(--dp)) calc(4.0043 * var(--dp));border:0;border-bottom:calc(1.9963 * var(--dp)) solid #33b5e5;background:none;outline:none;resize:none;font:400 calc(18.0015 * var(--dp))/1.3 RobotoICS,Roboto,sans-serif;color:#000}
+/* Holo Light (Gmail 4.5 / 4.6): the #f2f2f2 bar with the caret and the Gmail icon, list separators, 18 sp titles over
+   14 sp #727272 summaries, the Holo check box and radio buttons, the holo blue dialog title. */
+.g4p-bar{height:calc(48.0038 * var(--dp));background:#f2f2f2;border-bottom:calc(1.9963 * var(--dp)) solid #d6d6d6}
+.g4p-caret{width:calc(16.0052 * var(--dp));height:calc(31.9986 * var(--dp));object-fit:cover;object-position:left}
+.g4p-icon{width:calc(31.9986 * var(--dp));height:calc(31.9986 * var(--dp));margin-right:calc(7.9968 * var(--dp))}
+.g4p-bar b{font:400 calc(18.0015 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#333}
+.g4p-cat{margin:calc(16.0052 * var(--dp)) calc(16.0052 * var(--dp)) 0;padding:0 calc(7.9968 * var(--dp)) calc(4.0043 * var(--dp));border-bottom:calc(1.9963 * var(--dp)) solid #cfcfcf;font:700 calc(13.9972 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#8f8f8f;text-transform:uppercase}
+.g4p-text b{font:400 calc(18.0015 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
+.g4p-text small{font:400 calc(13.9972 * var(--dp))/1.3 RobotoICS,Roboto,sans-serif;color:#727272}
+.g4p-row+.g4p-row{border-top:calc(1.1743 * var(--dp)) solid #e3e3e3}
+.g4p-check{flex:none;width:calc(31.9986 * var(--dp));height:calc(31.9986 * var(--dp));margin-left:calc(7.9968 * var(--dp));background:url('assets/btn_check_off_holo_light.png') center/contain no-repeat}
+.g4p-check.on{background-image:url('assets/btn_check_on_holo_light.png')}
+.screen .g4p-up:active,.screen .g4p-row:active,.screen .g4p-dialog button:active{background:#33b5e566}
+.g4p-dialog{left:calc(16.0052 * var(--dp));right:calc(16.0052 * var(--dp));box-shadow:0 calc(2.3486 * var(--dp)) calc(11.7427 * var(--dp)) #0006}
+.g4p-dialog h3{padding:calc(16.0052 * var(--dp));border-bottom:calc(1.9963 * var(--dp)) solid #33b5e5;font:400 calc(22.0057 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#33b5e5}
+.screen .g4p-choice{padding:0 calc(7.9968 * var(--dp)) 0 calc(16.0052 * var(--dp));font:400 calc(18.0015 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
+.g4p-choice i{background:url('assets/btn_radio_off_holo_light.png') center/contain no-repeat}
+.g4p-choice.on i{background-image:url('assets/btn_radio_on_holo_light.png')}
+.g4p-buttons{display:flex;border-top:calc(1.1743 * var(--dp)) solid #0000001a}
+.screen .g4p-buttons button{flex:1;min-height:calc(48.0038 * var(--dp));border:0;background:none;font:400 calc(16.0052 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
+.g4p-buttons button+button{border-left:calc(1.1743 * var(--dp)) solid #0000001a}
+.g4p-row.off{opacity:.45}
+.g4p-static{cursor:default}
+.g4p-list{max-height:calc(330 * var(--dp));overflow-y:auto;scrollbar-width:none}
+.screen input.g4p-input{text-align:center;background:transparent;color:#000;color-scheme:light}

@@ -78,6 +78,23 @@ bookmark_page switch_to_thumbnails switch_to_list set_as_homepage contextmenu_op
 contextmenu_copylink remove_history_item create_shortcut_bookmark'''.split(),
         'arrays': ['pref_text_size_choices', 'pref_default_zoom_choices', 'pref_default_text_encoding_choices', 'pref_content_plugins_choices'],
     },
+    # Google Mail 2.3.5.1's Settings (preferences_root.xml, preferences.xml, LabelsSynchronizationSettings,
+    # LabelsNotificationSettings) for gb-prefs.js.
+    'gmail': {
+        'apks': ['Gmail'],
+        'keys': '''activity_preferences global_preferences_title preferences_disable_snap_headers_title clear_history_title clear_history_summary
+clear_display_images_whitelist_title clear_display_images_whitelist_summary activity_account_preferences add_account preferences_title
+preferences_priority_inbox preferences_priority_inbox_summary preferences_signature_title preferences_signature_summary preferences_signature_dialog_title
+preferences_confirm_actions_title preferences_confirm_actions_summary prefDialogTitle_confirmActions preferences_actionStrip_action_title
+preferences_actionStrip_action_summary preferences_auto_advance_title preferences_auto_advance_summary preferences_message_text_size_title
+preferences_allow_batch_title preferences_allow_batch_summary preferences_synchronization_title preferences_synchronization_summary
+preferences_synchronization_settings preferences_notifications preferences_notifications_enable preferences_notifications_summary
+preferences_label_notification_title preferences_label_notification_summary preferences_notification_settings preferences_synchronization labels
+set_number_of_days sync_all sync_none not_synchronized preferences_ring_enable preferences_ring_summary preferences_ringtone preferences_vibrateWhen
+prefDialogTitle_vibrateWhen prefDialogMessage_vibrateWhen preferences_unobtrusive_enable preferences_unobtrusive_summary silent_ringtone'''.split(),
+        'arrays': ['prefEntries_snapHeader', 'prefEntries_confirmActions', 'prefEntries_autoAdvance', 'prefEntries_messageTextSize', 'prefEntries_vibrateWhen'],
+        'plurals': ['sync_recent', 'number_of_days'],
+    },
     'email': {
         'apks': ['EmailGoogle'],
         'keys': '''accounts_welcome account_setup_basics_title account_setup_basics_email_hint account_setup_basics_password_hint

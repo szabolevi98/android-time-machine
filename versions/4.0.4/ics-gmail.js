@@ -130,7 +130,8 @@
   function listView(ctx) {
     const {data, ui, lang} = ctx, mail = data.gmail40, label = ui.g4Label || 'Inbox', selected = ui.g4Selected || [];
     const searching = ui.g4Query !== undefined;
-    const items = list(mail, label, searching ? ui.g4Query : '');
+    // Settings › Manage labels: a label synced for None lists nothing, Last N days only those days.
+    const items = searching || !window.ICSGmailPrefs ? list(mail, label, searching ? ui.g4Query : '') : ICSGmailPrefs.synced(data, label, list(mail, label, ''));
     const picked = mail.filter(m => selected.includes(m.id));
     // The selection's action mode: Done and the count; conversation_list_selection_actions_menu.xml in the split bar.
     const head = selected.length
@@ -181,13 +182,15 @@
   function labelsView(ctx) {
     const {data, ui, lang} = ctx;
     const row = l => { const n = l === 'Drafts' || l === 'Outbox' ? list(data.gmail40, l).length : unread(data.gmail40, l); return `<button type="button" class="g4-label${l === (ui.g4Label || 'Inbox') ? ' on' : ''}" data-action="g4-label" data-id="${e(l)}"><span>${e(T(lang, l))}</span>${n ? `<em>${count(n)}</em>` : ''}</button>`; };
-    const actions = `<button type="button" class="g4-text-btn" data-action="g4-unsupported">${e(T(lang, 'Manage labels'))}</button>` + more(ctx, 'labels');
+    const actions = `<button type="button" class="g4-text-btn" data-action="g4-manage-labels">${e(T(lang, 'Manage labels'))}</button>` + more(ctx, 'labels');
     return `<div class="app-view g4-app">${top(ctx, T(lang, 'Labels'), account, {up: true})}<div class="g4-scroll g4-labels"><h4>${e(T(lang, 'Recent labels'))}</h4>${RECENT.map(row).join('')}<h4>${e(T(lang, 'All labels'))}</h4>${LABELS.map(row).join('')}</div>${bottom(actions)}</div>`;
   }
   function render(ctx) {
     if (ctx.ui.sub === 'conversation') return conversation(ctx);
     if (ctx.ui.sub === 'compose') return compose(ctx);
     if (ctx.ui.sub === 'labels') return labelsView(ctx);
+    // Settings, Manage labels and Label settings (ics-gmail-prefs.js).
+    if (ctx.ui.sub === 'g4-prefs' && window.ICSGmailPrefs) return ICSGmailPrefs.render(ctx);
     return listView(ctx);
   }
   // The overflow menus (conversation_list_menu, conversation_list_selection_actions_menu, conversation_actions,
@@ -195,9 +198,9 @@
   function menuItems(ctx, menu) {
     const {data, ui} = ctx, picked = menu === 'selection' ? data.gmail40.filter(m => (ui.g4Selected || []).includes(m.id)) : data.gmail40.filter(m => m.id === ui.g4Id);
     const important = picked.length && picked.every(m => m.important);
-    const help = [['g4-unsupported', 'Settings'], ['g4-unsupported', 'Help'], ['g4-unsupported', 'Send feedback']];
+    const help = [['g4-settings', 'Settings'], ['g4-unsupported', 'Help'], ['g4-unsupported', 'Send feedback']];
     const mark = [important ? ['g4-not-important', 'Mark not important'] : ['g4-important', 'Mark important'], ['g4-mute', 'Mute'], ['g4-spam', 'Report spam']];
-    if (menu === 'list') return [['g4-unsupported', 'Label settings'], ...help];
+    if (menu === 'list') return [['g4-label-settings', 'Label settings'], ...help];
     if (menu === 'selection') return mark;
     if (menu === 'conversation') return [...mark, ...help];
     if (menu === 'compose') return [['g4-attach', 'Attach file'], ...(ui.g4Cc ? [] : [['g4-cc', 'Add Cc/Bcc']]), ['g4-save', 'Save draft'], ['g4-discard', 'Discard'], ...help];
@@ -252,6 +255,7 @@
       case 'g4-cc': ctx.keep(); ui.g4Cc = true; ui.overlay = ''; ctx.renderOverlay(); ctx.render(); break;
       case 'g4-save': ctx.keep(); ui.sub = ''; ui.overlay = ''; ctx.renderOverlay(); ctx.render(); ctx.toast(T(ctx.lang, 'Message saved as draft.')); break;
       case 'g4-discard': { const i = mail.findIndex(m => m.id === ui.g4Id); if (i >= 0) mail.splice(i, 1); ui.sub = ''; ui.overlay = ''; ctx.save(); ctx.renderOverlay(); ctx.render(); break; }
+      case 'g4-settings': case 'g4-label-settings': case 'g4-manage-labels': return !!window.ICSGmailPrefs?.handle(action, id, ctx);
       case 'g4-unsupported': ui.overlay = ''; ctx.renderOverlay(); ctx.toast('This feature is not part of the simulator.'); break;
       default: return false;
     }
@@ -271,5 +275,5 @@
     if (!/\S+@\S+\.\S+/.test(draft.to)) { ctx.toast(T(ctx.lang, 'To')); ctx.focus('.g4-form [name=to]'); return true; }
     draft.label = 'Sent'; draft.created = Date.now(); ui.sub = ''; ctx.save(); ctx.render(); ctx.toast(T(ctx.lang, 'Sending…')); return true;
   }
-  window.ICSGmail = {account, restore, list, unread, render, overlay, handle, submit, keepDraft, attach};
+  window.ICSGmail = {account, restore, list, unread, render, overlay, handle, submit, keepDraft, attach, labelName: (lang, label) => T(lang, label)};
 })();

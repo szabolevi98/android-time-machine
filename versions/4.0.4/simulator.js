@@ -552,7 +552,7 @@
   }
   // The context Gmail's module renders and acts with.
   function gmailContext() {
-    return {data, ui, lang: i18n.language, locale: i18n.locale(), now: deviceDate().getTime(), save, render, renderOverlay, toast,
+    return {data, ui, lang: i18n.language, locale: i18n.locale(), now: deviceDate().getTime(), save, render, renderOverlay, toast, t: key => i18n.t(key), account: ICSGmail.account, root: viewport,
       focus: selector => viewport.querySelector(selector)?.focus(), submit: selector => viewport.querySelector(selector)?.requestSubmit(),
       keep: () => ICSGmail.keepDraft(data, ui, viewport.querySelector('.g4-form')), photo: photo => ICSMedia.art(photo),
       pickPicture: () => { openApp('gallery'); ui.galleryPick = 'gmail'; ui.galleryAlbum = ''; render(); }};
@@ -584,6 +584,7 @@
     if (ui.view === 'play-books' && ui.gaSub === 'read' && (ui.gaBkSpin || ui.gaBkOptions || ui.gaBkToc)) { if (ui.gaBkSpin) ui.gaBkSpin = ''; else if (ui.gaBkOptions) ui.gaBkOptions = false; else ui.gaBkToc = false; render(); return; }
     if (ui.view === 'play-books') { ui.gaBkSpin = ''; ui.gaBkOptions = false; ui.gaBkToc = false; }
     if (ICSGoogleApps.APPS.includes(ui.view) && ui.gaSub) { ui.gaSub = ''; render(); return; }
+    if (ui.view === 'gmail' && ui.sub === 'g4-prefs' && !ui.overlay) { ICSGmailPrefs.back(ui); render(); return; }
     if (ui.view === 'gmail') {
       if (ui.overlay) { ui.overlay = ''; renderOverlay(); return; }
       if (ui.sub === 'compose') { ICSGmail.keepDraft(data, ui, viewport.querySelector('.g4-form')); save(); }
@@ -1230,6 +1231,7 @@
     if(ui.locked&&!['back','alarm-dismiss','alarm-snooze'].includes(action))return;
     if (ui.view === 'downloads' && action.startsWith('hdl-') && HoloDownloads.handle(action, id, dlContext())) return;
     if (ui.view === 'gmail' && action.startsWith('g4-') && ICSGmail.handle(action, id, gmailContext())) return;
+    if (ui.view === 'gmail' && action.startsWith('g4p-') && ICSGmailPrefs.handle(action, id, gmailContext())) return;
     if (ui.view === 'email' && action.startsWith('email-') && ICSEmail.handle(action, id, emailContext())) return;
     // Maps, Earth, News & Weather and the simple extras.
     if (['maps', 'latitude', 'earth', 'news-weather', 'messenger', 'navigation', 'local', 'movie-studio'].includes(ui.view)) {

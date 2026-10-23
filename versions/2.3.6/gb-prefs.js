@@ -2,7 +2,11 @@
    (browser_preferences.xml), Calendar's CalendarPreferenceActivity (preferences.xml), Clock's SettingsActivity (settings.xml) and Email's AccountSettings
    (account_settings_preferences.xml). Values live in data.appPrefs[app][key]; a list stores the entry index. Summaries
    follow the activities: Browser shows the text size, zoom and encoding entries and the home page, Calendar the home
-   time zone and the version, Email the description, name, signature and check frequency. */
+   time zone and the version, Email the description, name, signature and check frequency.
+   Google Mail 2.3.5.1's Settings: preferences_root.xml (General preferences, the account, Add account), the account's
+   preferences.xml, LabelsSynchronizationSettings (Amount of mail to sync and each label's Sync all / Sync last N days /
+   Sync none) and LabelsNotificationSettings (each synced label's notifications); an item with `open` shows another
+   screen, a `multi` item is a MultiListPreference (Confirm actions). */
 (() => {
   'use strict';
   const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -12,7 +16,12 @@
   const check = (key, title, summary, def = true, extra = {}) => ({kind: 'check', key, title, summary, def, ...extra});
   const list = (key, title, options, def, extra = {}) => ({kind: 'list', key, title, options, def, ...extra});
   const action = (key, title, summary, extra = {}) => ({kind: 'action', key, title, summary, ...extra});
+  const multi = (key, title, summary, options, extra = {}) => ({kind: 'multi', key, title, summary, options, def: [], ...extra});
   const SEARCH_ENGINES = ['Google', 'Yahoo!', 'Bing'];
+  // Google Mail's labels (gb-gmail.js) and their default sync: All Mail, Chats, Spam and Trash are not synced.
+  const GMAIL_LABELS = ['Priority Inbox', 'Inbox', 'Starred', 'Chats', 'Sent', 'Outbox', 'Drafts', 'All Mail', 'Spam', 'Trash', 'Friends', 'Travel', 'Work'];
+  const gmailSyncDefault = label => ['All Mail', 'Chats', 'Spam', 'Trash'].includes(label) ? 2 : 1;
+  const gmailLabel = (lang, label) => window.GBGmail?.labelName?.(lang, label) || label;
   const TZ_DEFAULT = 'America/Los_Angeles';
   const SCREENS = {
     browser(ctx) {
@@ -79,6 +88,69 @@
         list('volume_button_setting', T('volume_button_setting_title'), A('deskclock', ctx.lang, 'volume_button_setting_entries'), 2, {dialogTitle: T('volume_button_dialog_title'), summary: T('volume_button_setting_summary')})
       ]};
     },
+    gmail(ctx) {
+      const T = key => S('gmail', ctx.lang, key);
+      return {set: 'gmail', title: T('activity_preferences'), items: [
+        action('general', T('global_preferences_title'), '', {open: 'gmail-general'}),
+        cat(T('activity_account_preferences')),
+        action('account', ctx.gmailAccount, '', {open: 'gmail-account'}),
+        action('add-account', T('add_account'), '', {toast: true})
+      ]};
+    },
+    'gmail-general'(ctx) {
+      const T = key => S('gmail', ctx.lang, key);
+      return {set: 'gmail', title: T('global_preferences_title'), items: [
+        list('snap-headers', T('preferences_disable_snap_headers_title'), A('gmail', ctx.lang, 'prefEntries_snapHeader'), 2, {dialogTitle: T('preferences_disable_snap_headers_title'), showValue: true}),
+        action('clear-search-history', T('clear_history_title'), T('clear_history_summary'), {done: true}),
+        action('clear-display-images-whitelist', T('clear_display_images_whitelist_title'), T('clear_display_images_whitelist_summary'), {done: true})
+      ]};
+    },
+    'gmail-account'(ctx) {
+      const T = key => S('gmail', ctx.lang, key), v = ctx.values;
+      return {set: 'gmail', title: ctx.gmailAccount, items: [
+        cat(T('preferences_title')),
+        check('priority-inbox', T('preferences_priority_inbox'), T('preferences_priority_inbox_summary'), false),
+        action('signature', T('preferences_signature_title'), v.signature || T('preferences_signature_summary'), {edit: {title: T('preferences_signature_dialog_title'), value: v.signature || ''}}),
+        multi('confirm-actions', T('preferences_confirm_actions_title'), T('preferences_confirm_actions_summary'), A('gmail', ctx.lang, 'prefEntries_confirmActions'), {dialogTitle: T('prefDialogTitle_confirmActions')}),
+        check('action-strip-action-reply-all', T('preferences_actionStrip_action_title'), T('preferences_actionStrip_action_summary'), false),
+        list('auto-advance', T('preferences_auto_advance_title'), A('gmail', ctx.lang, 'prefEntries_autoAdvance'), 2, {dialogTitle: T('preferences_auto_advance_title'), summary: T('preferences_auto_advance_summary')}),
+        list('message-text', T('preferences_message_text_size_title'), A('gmail', ctx.lang, 'prefEntries_messageTextSize'), 2, {dialogTitle: T('preferences_message_text_size_title'), showValue: true}),
+        check('allow-batch', T('preferences_allow_batch_title'), T('preferences_allow_batch_summary')),
+        action('labels-sync', T('preferences_synchronization_title'), T('preferences_synchronization_summary'), {open: 'gmail-sync'}),
+        cat(T('preferences_notifications')),
+        check('enable-notifications', T('preferences_notifications_enable'), T('preferences_notifications_summary')),
+        {...action('labels-notification', T('preferences_label_notification_title'), T('preferences_label_notification_summary'), {open: 'gmail-notify'}), dependency: 'enable-notifications'}
+      ]};
+    },
+    // LabelsSynchronizationSettings: the days for "Sync last N days", then every label's choice.
+    'gmail-sync'(ctx) {
+      const T = key => S('gmail', ctx.lang, key), days = Number(ctx.values.days) || 30, recent = AndroidStrings.format(T(AndroidStrings.quantity(days, ctx.lang) === 'one' ? 'sync_recent_one' : 'sync_recent_other'), days);
+      const choices = [T('sync_all'), recent, T('sync_none')];
+      return {set: 'gmail', title: T('preferences_synchronization_settings'), items: [
+        cat(T('preferences_synchronization')),
+        action('days', T('set_number_of_days'), recent, {edit: {title: T('set_number_of_days'), value: String(days), number: true}}),
+        cat(T('labels')),
+        ...GMAIL_LABELS.map(label => { const i = ctx.values[`sync|${label}`] ?? gmailSyncDefault(label); return list(`sync|${label}`, gmailLabel(ctx.lang, label), choices, gmailSyncDefault(label), {dialogTitle: gmailLabel(ctx.lang, label), summary: i === 2 ? T('not_synchronized') : choices[i]}); })
+      ]};
+    },
+    // LabelsNotificationSettings: the synced labels, each with its own notification screen.
+    'gmail-notify'(ctx) {
+      const T = key => S('gmail', ctx.lang, key), sync = ctx.gmailSync || {};
+      return {set: 'gmail', title: T('preferences_label_notification_title'), items: [
+        cat(T('preferences_label_notification_summary')),
+        ...GMAIL_LABELS.filter(label => (sync[`sync|${label}`] ?? gmailSyncDefault(label)) !== 2).map(label => action(`label|${label}`, gmailLabel(ctx.lang, label), '', {open: `gmail-label|${label}`}))
+      ]};
+    },
+    'gmail-label'(ctx) {
+      const T = key => S('gmail', ctx.lang, key), label = ctx.app.slice('gmail-label|'.length);
+      return {set: 'gmail', title: gmailLabel(ctx.lang, label), items: [
+        check('notify', T('preferences_notifications_enable'), T('preferences_notifications_summary'), label === 'Inbox'),
+        {...check('ring', T('preferences_ring_enable'), T('preferences_ring_summary')), dependency: 'notify'},
+        {...action('ringtone', T('preferences_ringtone'), '', {ringtone: true}), dependency: 'ring'},
+        {...list('vibrate', T('preferences_vibrateWhen'), A('gmail', ctx.lang, 'prefEntries_vibrateWhen'), 2, {dialogTitle: T('prefDialogTitle_vibrateWhen'), showValue: true}), dependency: 'notify'},
+        {...check('unobtrusive', T('preferences_unobtrusive_enable'), T('preferences_unobtrusive_summary')), dependency: 'notify'}
+      ]};
+    },
     email(ctx) {
       const T = key => S('email', ctx.lang, key), v = ctx.values, freq = A('email', ctx.lang, 'account_settings_check_frequency_entries');
       const text = (key, label, fallback, hint) => action(key, T(label), (v[key] ?? fallback) || (hint ? T(hint) : ''), {edit: {title: T(label), value: v[key] ?? fallback}});
@@ -99,7 +171,7 @@
       ]};
     }
   };
-  const screen = ctx => SCREENS[ctx.app]?.(ctx);
+  const screen = ctx => (SCREENS[ctx.app] || (String(ctx.app).startsWith('gmail-label|') ? SCREENS['gmail-label'] : null))?.(ctx);
   const get = (item, values) => values[item.key] ?? item.def;
   const enabled = (item, s, values) => !item.disabled && (!item.dependency || !!get(s.items.find(i => i.key === item.dependency), values));
   function row(item, s, ctx) {
@@ -107,6 +179,7 @@
     const on = enabled(item, s, ctx.values), dis = on ? '' : ' disabled aria-disabled="true"', id = `${ctx.app}:${item.key}`;
     const body = summary => `<span class="gbset-text"><span class="gbset-title">${e(item.title)}</span>${summary ? `<span class="gbset-sum">${e(summary)}</span>` : ''}</span>`;
     if (item.kind === 'check') { const value = !!get(item, ctx.values); return `<button class="gbset-row" data-action="gbpref-check" data-id="${e(id)}" role="checkbox" aria-checked="${value}"${dis}>${body(item.summary)}<img class="gbset-check" src="assets/gb-btn_check_${value ? 'on' : 'off'}${on ? '' : '_disable'}.png" alt=""></button>`; }
+    if (item.kind === 'multi') return `<button class="gbset-row" data-action="gbpref-list" data-id="${e(id)}"${dis}>${body(item.summary)}</button>`;
     if (item.kind === 'list') return `<button class="gbset-row" data-action="gbpref-list" data-id="${e(id)}"${dis}>${body(item.showValue ? item.options[get(item, ctx.values)] : item.summary)}</button>`;
     if (item.info) return `<div class="gbset-row gbset-info">${body(item.summary)}</div>`;
     return `<button class="gbset-row" data-action="gbpref-action" data-id="${e(id)}"${dis}>${body(item.summary)}</button>`;
@@ -121,11 +194,13 @@
   function dialog(ctx, key) {
     const item = find(ctx, key); if (!item) return null;
     const id = `${ctx.app}:${key}`, ok = fw(ctx.lang, 'ok'), cancel = fw(ctx.lang, 'cancel');
+    // MultiListPreference: check boxes, OK keeps the choice (ctx.multi is the open dialog's draft).
+    if (item.kind === 'multi') { const draft = ctx.multi ?? get(item, ctx.values); return {title: item.dialogTitle || item.title, items: item.options.map((label, i) => ({action: 'gbpref-multi', id: `${id}:${i}`, title: label, checked: draft.includes(i)})), choice: 'multi', buttons: [{action: 'gbpref-multi-ok', id, title: ok}, {action: 'close-overlay', title: cancel}]}; }
     if (item.kind === 'list') return {title: item.dialogTitle || item.title, items: item.options.map((label, i) => ({action: 'gbpref-pick', id: `${id}:${i}`, title: label})), choice: 'single', selected: get(item, ctx.values), buttons: [{action: 'close-overlay', title: cancel}]};
     // VolumePreference: the stream's seek bar with OK / Cancel.
     if (item.volume) return {title: item.title, custom: `<div class="gbvols"><label class="gbvol"><input type="range" min="0" max="100" data-vol="${item.volume.key}" value="${Number(ctx.settings?.[item.volume.key] ?? item.volume.fallback)}" aria-label="${e(item.title)}"></label></div>`, buttons: [{action: 'gbset-volume-ok', title: ok}, {action: 'close-overlay', title: cancel}]};
     if (item.confirm) return {title: item.confirm.title, icon: 'ic_dialog_alert', message: item.confirm.message, buttons: [{action: 'gbpref-confirm', id, title: ok}, {action: 'close-overlay', title: cancel}]};
-    if (item.edit) return {title: item.edit.title, custom: `<label class="gbdlg-field"><input data-pref-edit maxlength="200" value="${e(item.edit.value || '')}"></label>`, buttons: [{action: 'gbpref-edit-ok', id, title: ok}, {action: 'close-overlay', title: cancel}]};
+    if (item.edit) return {title: item.edit.title, custom: `<label class="gbdlg-field"><input data-pref-edit maxlength="200"${item.edit.number ? ' type="number" inputmode="numeric" min="1" max="999"' : ''} value="${e(item.edit.value || '')}"></label>`, buttons: [{action: 'gbpref-edit-ok', id, title: ok}, {action: 'close-overlay', title: cancel}]};
     if (item.ringtone) {
       const sounds = ['default', '', ...(window.GBSettings?.NOTIFICATIONS || [])], current = ctx.values[key] ?? 'default';
       const name = n => n === 'default' ? fw(ctx.lang, 'ringtone_default') : n ? window.GBSettings.soundTitle(n) : fw(ctx.lang, 'ringtone_silent');

@@ -208,6 +208,84 @@ const gmailSettings = async h => {
   h.check('the inbox synced for None shows no mail', await h.until(`!document.querySelector('#viewport .gmp-app') && !!document.querySelector('#viewport .kem-list, #viewport .lem-list, #viewport .kem')`) && await rows() === 0);
   h.check('the reload keeps it', await h.reload() && (await prefs()).labels?.Primary?.sync === 'none');
 };
+
+// Google Mail 2.3 (Gingerbread) › Menu › Settings: the account's settings, Confirm actions, Sync inboxes and labels and
+// Labels to notify; a label synced for none lists no mail.
+const gmailSettingsGB = async h => {
+  const prefs = app => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));return (JSON.parse(localStorage.getItem(k)).appPrefs||{})[${JSON.stringify(app)}]||{}})()`);
+  const row = key => `#viewport .gbset-row[data-id$=":${key}"]`;
+  await h.openApp('gmail');
+  const rows = () => h.ev(`document.querySelectorAll('#viewport .gm-row').length`);
+  h.check('the inbox lists mail', await h.until(`document.querySelectorAll('#viewport .gm-row').length > 0`));
+  await h.tap('#nav-root .touch-menu, .touch-menu');
+  await h.until(`!!document.querySelector('.gbmenu')`);
+  if (!await h.ev(`!!document.querySelector('.gbmenu [data-action="gbpref-open"]')`)) await h.tap('.gbmenu [data-action="gb-menu-more"]');
+  await h.tap('[data-action="gbpref-open"][data-id="gmail"]');
+  h.check('Settings opens', await h.until(`!!document.querySelector('${row('account')}')`));
+  await h.tap(row('account'));
+  h.check('the account\'s settings open', await h.until(`!!document.querySelector('${row('priority-inbox')}')`));
+  await h.tap(row('priority-inbox'));
+  await h.tap(row('confirm-actions'));
+  h.check('Confirm actions offers three boxes', await h.until(`document.querySelectorAll('.gbdlg [data-action="gbpref-multi"]').length === 3`));
+  await h.tap('.gbdlg [data-action="gbpref-multi"]:nth-child(1)');
+  await h.tap('.gbdlg [data-action="gbpref-multi-ok"]');
+  await h.tap(row('labels-sync'));
+  h.check('Sync inboxes and labels lists the labels', await h.until(`!!document.querySelector('${row('sync|Inbox')}')`));
+  await h.tap(row('sync|Inbox'));
+  await h.tap('.gbdlg [data-action="gbpref-pick"]:last-of-type');
+  await h.key('Escape');
+  await h.tap(row('labels-notification'));
+  h.check('Labels to notify lists the synced labels', await h.until(`!!document.querySelector('${row('label|Starred')}')`));
+  await h.key('Escape'); await h.key('Escape'); await h.key('Escape');
+  h.check('Back returns to the inbox', await h.until(`!document.querySelector('#viewport .gbset')`));
+  const account = await prefs('gmail-account'), sync = await prefs('gmail-sync');
+  h.check('the settings are kept', account['priority-inbox'] === true && JSON.stringify(account['confirm-actions']) === '[0]' && sync['sync|Inbox'] === 2, JSON.stringify({account, sync}));
+  h.check('the inbox synced for none lists no mail', await rows() === 0);
+  h.check('the reload keeps it', await h.reload() && (await prefs('gmail-sync'))['sync|Inbox'] === 2);
+};
+
+// Gmail 4.0.4 (Ice Cream Sandwich) › Settings, Manage labels and the list's Label settings.
+const gmailSettingsICS = async h => {
+  const prefs = () => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));return JSON.parse(localStorage.getItem(k)).gmail40Prefs||{}})()`);
+  const menu = async item => {
+    await h.tap('#viewport [data-action="g4-more"]');
+    await h.tap(`[data-action="${item}"]`);
+  };
+  await h.openApp('gmail');
+  const rows = () => h.ev(`document.querySelectorAll('#viewport [data-action="g4-open"]').length`);
+  h.check('the inbox lists mail', await h.until(`document.querySelectorAll('#viewport [data-action="g4-open"]').length > 0`));
+  await menu('g4-settings');
+  h.check('Settings opens its headers', await h.until(`!!document.querySelector('#viewport .g4p-row[data-id="account"]')`));
+  await h.tap('#viewport .g4p-row[data-id="general"]');
+  await h.tap('#viewport .g4p-row[data-id="reply-all"]');
+  await h.tap('#viewport .g4p-row[data-id="text-size"]');
+  await h.tap('#viewport .g4p-dialog .g4p-choice[data-id="3"]');
+  await h.key('Escape');
+  await h.tap('#viewport .g4p-row[data-id="account"]');
+  h.check('the account\'s settings open', await h.until(`!!document.querySelector('#viewport .g4p-row[data-action="g4p-days"]')`));
+  await h.tap('#viewport .g4p-row[data-action="g4p-label"][data-id="Inbox"]');
+  await h.tap('#viewport .g4p-row[data-id="vibrate"]');
+  await h.tap('#viewport .g4p-dialog .g4p-choice[data-id="0"]');
+  await h.key('Escape');
+  await h.tap('#viewport .g4p-row[data-action="g4p-days"]');
+  await h.type('#viewport [data-g4p-days]', '7');
+  await h.tap('#viewport [data-action="g4p-days-ok"]');
+  await h.tap('#viewport .g4p-row[data-id="labels"]');
+  h.check('Manage labels lists the labels', await h.until(`document.querySelectorAll('#viewport .g4p-row[data-action="g4p-label"]').length >= 10`));
+  await h.tap('#viewport .g4p-row[data-action="g4p-label"][data-id="Inbox"]');
+  await h.tap('#viewport .g4p-row[data-id="sync"]');
+  await h.tap('#viewport .g4p-dialog .g4p-choice[data-id="none"]');
+  await h.key('Escape'); await h.key('Escape'); await h.key('Escape'); await h.key('Escape');
+  h.check('Back returns to the mail', await h.until(`!document.querySelector('#viewport .g4p-app')`));
+  const p = await prefs();
+  h.check('the settings are kept', p['reply-all'] === true && p['text-size'] === 3 && p.days === 7 && p.labels?.Inbox?.vibrate === 0 && p.labels.Inbox.sync === 'none', JSON.stringify(p));
+  h.check('the inbox synced for None lists no mail', await rows() === 0);
+  await menu('g4-label-settings');
+  h.check('Label settings opens the inbox\'s', await h.until(`!!document.querySelector('#viewport .g4p-row[data-id="sync"]')`));
+  await h.key('Escape');
+  h.check('Back from Label settings returns to the list', await h.until(`!document.querySelector('#viewport .g4p-app')`));
+  h.check('the reload keeps it', await h.reload() && (await prefs()).labels?.Inbox?.sync === 'none');
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -268,6 +346,8 @@ const CASES = [
   {id: 'T03', version: '4.3', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
   {id: 'T03', version: '4.4.4', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
   {id: 'T03', version: '5.1.1', name: 'Calendar › Settings: General, Events from Gmail, Sync', run: calendarSettingsLP},
+  {id: 'T04', version: '2.3.6', name: 'Google Mail › Settings: account, confirm actions, label sync', run: gmailSettingsGB},
+  {id: 'T04', version: '4.0.4', name: 'Gmail › Settings, Manage labels, Label settings', run: gmailSettingsICS},
   {id: 'T04', version: '4.3', name: 'Gmail › Settings: label sound, labels, days to sync', run: gmailSettings},
   {id: 'T04', version: '4.4.4', name: 'Gmail › Settings: label sound, labels, days to sync', run: gmailSettings},
   {id: 'T04', version: '5.1.1', name: 'Gmail › Settings: label sound, labels, days to sync, vacation responder', run: h => gmailSettings({...h, vacation: true})},
