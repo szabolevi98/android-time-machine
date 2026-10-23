@@ -72,9 +72,11 @@ Each version keeps its interface and saved state separate, so adding a release d
 
 ## Checks
 
-Every test runs with plain Node, without packages:
+Module tests use Node.js. Nougat's Photos pixel fixtures also require Python
+and Pillow (the CI installs the same pinned version):
 
 ```bash
+python -m pip install -r .github/requirements-tests.txt
 npm test
 ```
 

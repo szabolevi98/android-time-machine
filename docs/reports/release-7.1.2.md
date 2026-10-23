@@ -26,3 +26,8 @@ The release is listed as available in the catalogue and sitemap. Its feature
 list documents browser-local content, synthetic media and the limits of the
 Android-service/backend reconstruction. The release gate is part of
 `npm run test:browser` and the existing push/PR workflow.
+
+CI setup includes Python 3.12 and pinned Pillow for the native Photos LUT pixel
+fixtures. `test-ci.mjs` preserves TAP output and annotates failed checks with
+their diagnostics. A raw Git snapshot also passes all 247 checks locally with
+Node 22 and UTC, without unpacked factory images.
