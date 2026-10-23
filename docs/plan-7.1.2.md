@@ -1169,3 +1169,8 @@ shortcuts helper now opens SystemUI's KeyboardShortcuts dialog (android-7.1.2_r1
 source): the System group and the default Applications group, whose six
 categories each resolve to one app of the image, keys as the code draws them
 (Meta / Enter / Backspace icons from SystemUI, Alt, Tab and Space as text).
+
+A first-level sweep of every app (each tap and each overflow-menu item) found one
+not-built target: Documents' "Storage settings". DocumentsUI shows it only for a
+root with FLAG_HAS_SETTINGS, which ExternalStorageProvider sets for TYPE_PUBLIC
+volumes alone; the 6P has none, so the item is gone.
