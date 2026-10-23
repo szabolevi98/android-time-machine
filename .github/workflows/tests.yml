@@ -13,7 +13,8 @@ jobs:
         with:
           node-version: 22
       # The module tests (tests/*.cjs).
-      - run: npm test
+      - name: Module tests
+        run: node docs/tools/test-ci.mjs
       # The eight releases, including Nougat's demo/save/five-language release gate.
       - name: Browser flows
         run: |
