@@ -96,7 +96,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 #### T04 — Gmail helyi beállítások és címkék
 
 - **Ütem:** Mag.
-- **Állapot:** Nyitott — aktuális fejlesztési kör.
+- **Állapot:** Kész — `2d3f42bc` (4.3, 4.4.4, 5.1.1) és `aa780314` (2.3.6, 4.0.4). 2.3.6: Google Mail 2.3.5.1 Settings a gb-prefs.js-ben (preferences_root.xml, a fiók preferences.xml sorai, Confirm actions többes választással, Sync inboxes and labels címkénként, Labels to notify címkénkénti értesítéssel). 4.0.4: ics-gmail-prefs.js (fejlécek, general_preferences.xml, account_preferences.xml, Ringtone & vibrate, Days of mail to sync, Manage labels, a lista Label settings menüpontja). 4.3/4.4.4/5.1.1: Inbox sound & vibrate, Manage labels, Days of mail to sync (label_preferences.xml), 5.1.1-en Vacation responder (tárgy vagy üzenet nélkül nem ment, nem küld semmit). Hatás: None szinkronú címke listája üres, az utolsó N nap korlátozza a listát. Ellenőrzés: `limits-regression.mjs T04` mind az öt verzión asztali és telefonszélességen zöld; magyar képernyőképek; `npm test` 247/247. Mellékjavítás: 5.1.1 Gmail Starred/Sent/Outbox/Drafts/Trash nevei (üres label_* helyett mailbox_name_display_*), stock-strings.py mcc-konfiguráció hiba. Korlát marad: Add account, About Gmail, Help.
 - **Verziók:** 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 2.3.6-02, 4.0.4-01, 4.3-04, 4.4.4-04, 5.1.1-04.
 - **Elkészítendő és határ:** 2.3.6 és 4.0.4: teljes korabeli Settings belépés és helyi preferenciák; 4.0.4 Manage labels/Label settings. 4.3, 4.4.4, 5.1.1: Inbox sound & vibrate, Days of mail to sync, Manage labels; 5.1.1 Vacation responder szerkesztés helyi mentéssel. Valódi szinkron és automatikus email-küldés nincs.
