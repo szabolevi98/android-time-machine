@@ -69,7 +69,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 #### T01 — 5.1.1 Photos saját szerkesztő
 
 - **Ütem:** Mag.
-- **Állapot:** Nyitott — aktuális fejlesztési kör.
+- **Állapot:** Kész — `2b9f5839`. A Photos Edit a Google+ 4.9 saját szerkesztőjét nyitja (PlusOne.apk: PhotoEditorActivity, a 15 eszköz cdf sorrendjében, paraméterek ceq.d szerint, stíluslisták, Looks 15 előbeállítása, Compare, Revert, mentetlen-változás párbeszéd). A szerkesztés a képpel együtt mentődik, a könyvtárban, a nézegetőben és megosztáskor is látszik. Ellenőrzés: `tests/browser/limits-regression.mjs T01` asztali és telefonszélességen zöld (eszköz alkalmazása, mentés, újratöltés utáni megmaradás, Back eszközelvetés, kilépési párbeszéd Continue/Exit, nincs elutasító üzenet), kézi képernyőképek angolul és magyarul; `npm test` 247/247. A szűrők matematikája a natív könyvtárban van, ezért a hatások a szimulátor SVG-közelítései; a Vintage/Retrolux színei az APK stílusikonjaiból.
 - **Verziók:** 5.1.1.
 - **Forráscsoportok:** 5.1.1-21.
 - **Elkészítendő és határ:** A shamu gyári Photos/PlusOne APK-jának Edit belépése és az ottani helyi képszerkesztő: eszközválasztás, beállítás, előnézet, mentés és elvetés. A 4.4-es Galéria-híd nem vihető át, mert 5.1-en nincs ilyen gyári app. Az eszközkészletet az adott APK rögzíti, nem a 7.1-es UI másolata.
