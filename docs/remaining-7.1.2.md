@@ -55,9 +55,10 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Widget resize: native frame/handles, provider flags/minima, transactional cell reorder, pointer/touch commit and cancel, persisted dimensions.
 - [x] ACTION_SEND video/audio native MIME receivers, immutable metadata, Messenger audio/video/resharing, Hangouts video, Photos/YouTube upload, Gmail/Drive streams and Cloud Print failure.
 - [x] Shared SEND_MULTIPLE: Photos, Documents and the Burst editor send every selected stream through each package's native SEND_MULTIPLE filter (`d8f7bddc`).
-- [ ] Preference leaf/intent routing audit: finish service-backed and non-toggle rows that still lack a click handler.
+- [x] Preference leaf/intent routing audit: the Settings crawl (every row of 309 screens) finds no not-built target and no unexplained no-op row.
       Settings crawl 2026-10-23: help, IMEI, notification/VR/DND access, premium SMS, user credentials and device admins done; Emergency broadcasts and Trusted credentials done: the Settings crawl finds no not-built target.
 - [ ] Sweep all direct `missing(...)` branches and external activity routes; no unfinished card may remain at release.
+      Settings side done 2026-10-23 (every registered screen has a module; Settings crawl clean); apps' own menus still to sweep.
 
 ## Release gate
 

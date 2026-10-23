@@ -1163,6 +1163,9 @@ Data Saver, location rows with location off) and the information rows of About
 and Status. One was wrong: App info › Storage showed "Storage used" with a
 disabled Change button, but AppStorageSettings.initMoveDialog removes
 storage_space, storage_used and change_storage_button when
-getPackageCandidateVolumes has one volume, as on the 6P. Left from the list:
-Physical keyboard › Keyboard shortcuts helper and Text-to-speech › Listen to an
-example.
+getPackageCandidateVolumes has one volume, as on the 6P. Listen to an example
+already speaks (Web Speech, no markup change). Physical keyboard › Keyboard
+shortcuts helper now opens SystemUI's KeyboardShortcuts dialog (android-7.1.2_r1
+source): the System group and the default Applications group, whose six
+categories each resolve to one app of the image, keys as the code draws them
+(Meta / Enter / Backspace icons from SystemUI, Alt, Tab and Space as text).

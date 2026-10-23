@@ -516,8 +516,8 @@ button.ngst-pref:active,div.ngst-pref[role=button]:active:not(:has(.ngst-gear:ac
 .ngsa-ca1{font-size:calc(18 * var(--dp));line-height:calc(24 * var(--dp));color:#000000de}
 .ngsa-ca2{font-size:calc(14 * var(--dp));line-height:calc(19 * var(--dp));color:#0000008a}
 .ngsa-ca .ngst-switch{flex:none;margin-left:calc(16 * var(--dp))}
-.ngdlg-win:has(.ngsa-cert){overflow:hidden}
-.ngdlg-win .ngdlg-body:has(.ngsa-cert){flex:1 1 auto;min-height:0;overflow-y:auto}
+.ngdlg-win:has(.ngsa-cert,.ngsa-ks){overflow:hidden}
+.ngdlg-win .ngdlg-body:has(.ngsa-cert,.ngsa-ks){flex:1 1 auto;min-height:0;overflow-y:auto}
 /* ssl_certificate.xml: every line 20 dp from the sides in the default TextAppearance.Material (14 sp, primary), the
    section headers bold 12 dp below the last value, 7 dp under a header and under each value. */
 .ngsa-cert{display:flex;flex-direction:column;padding-bottom:calc(8 * var(--dp));font-size:calc(14 * var(--dp));line-height:calc(19 * var(--dp));color:#000000de;overflow-wrap:anywhere}
@@ -525,3 +525,17 @@ button.ngst-pref:active,div.ngst-pref[role=button]:active:not(:has(.ngst-gear:ac
 .ngsa-cert>b{margin-top:calc(12 * var(--dp));margin-bottom:calc(7 * var(--dp))}
 .ngsa-cert .ngsa-certval{margin-bottom:calc(7 * var(--dp))}
 .ngsa-certspin{margin:0 calc(16 * var(--dp));padding:calc(8 * var(--dp)) calc(4 * var(--dp));border-bottom:1px solid #00000061;color:#000000de;font-size:calc(16 * var(--dp))}
+/* KeyboardShortcuts (keyboard_shortcuts_category_title.xml, keyboard_shortcut_app_item.xml, keyboard_shortcuts_key_view /
+   key_icon_view.xml): 14 sp medium titles 24 dp in, 20 dp above and 10 dp below; 48 dp rows with the 24 dp app icon 24 dp
+   before the 16 sp keyword (ksh_keyword_color #d9000000) and the keys at the end, each 4 dp padded, 4 dp apart. */
+.ngsa-ks{padding-bottom:calc(8 * var(--dp))}
+.ngsa-kstitle{padding:calc(20 * var(--dp)) calc(24 * var(--dp)) calc(10 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif}
+.ngsa-kstitle.system{color:#009688}
+.ngsa-kstitle.apps{color:#f44336}
+.ngsa-ksrow{display:flex;align-items:center;min-height:calc(48 * var(--dp));padding:0 calc(24 * var(--dp)) calc(8 * var(--dp));box-sizing:border-box}
+.ngsa-ksicon{flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin-right:calc(24 * var(--dp))}
+.ngsa-ksword{flex:1;min-width:0;padding-right:calc(12 * var(--dp));font-size:calc(16 * var(--dp));line-height:calc(21 * var(--dp));color:#000000d9}
+.ngsa-kskeys{flex:none;display:flex;align-items:center}
+.ngsa-key{margin-left:calc(4 * var(--dp));padding:calc(4 * var(--dp));border-radius:calc(2 * var(--dp));background:#f5f5f5;color:#757575;font-size:calc(14 * var(--dp));line-height:calc(19 * var(--dp));text-transform:uppercase;white-space:nowrap}
+.ngsa-key.icon{display:flex;padding:calc(4 * var(--dp))}
+.ngsa-key.icon img{width:calc(19 * var(--dp));height:calc(19 * var(--dp))}

@@ -114,6 +114,29 @@
     }
   };
   NG.settingsScreens['premium-sms'] = {render: c => empty(c, 'premium_sms_none')};
+
+  // SystemUI's KeyboardShortcuts (Physical keyboard › Keyboard shortcuts helper → requestShowKeyboardShortcuts): an
+  // AlertDialog in Theme.DeviceDefault.Light of keyboard_shortcuts_view.xml with Done. Settings provides no shortcuts of
+  // its own, so the groups are getSystemShortcuts (titled in colorAccent) and getDefaultApplicationShortcuts (in
+  // ksh_application_group_color #f44336): the assistant and the MAIN activities of APP_BROWSER / CONTACTS / EMAIL /
+  // MESSAGING / MUSIC / CALENDAR, which resolve to one app each on angler, sorted by label. Keys: the modifiers first
+  // (Meta as ic_ksh_key_meta, Alt as text), then the key: Enter and Backspace as their icons, Tab and Space by name,
+  // others by their display label; each on ksh_key_item_background (material_grey_100, 2 dp corners).
+  const KEY = {enter: ['icon', 'enter'], del: ['icon', 'backspace'], tab: ['text', 'SystemUI/keyboard_key_tab'], space: ['text', 'SystemUI/keyboard_key_space']};
+  const SYSTEM = [['home', 'enter', 'meta'], ['back', 'del', 'meta'], ['recents', 'tab', 'alt'], ['notifications', 'N', 'meta'], ['shortcuts_helper', '/', 'meta'], ['switch_input', 'space', 'meta']];
+  const APPS = [['assist', '', 'search'], ['browser', 'B', 'chrome'], ['contacts', 'C', 'contacts'], ['email', 'E', 'gmail'], ['im', 'T', 'messenger'], ['music', 'P', 'play-music'], ['calendar', 'L', 'calendar']];
+  const keyHtml = (c, mod, key) => {
+    const icon = n => `<span class="ngsa-key icon"><img src="assets/sui-ic_ksh_key_${n}.svg" alt=""></span>`, text = v => `<span class="ngsa-key">${c.safe(v)}</span>`;
+    const k = KEY[key];
+    return (mod === 'meta' ? icon('meta') : text('Alt')) + (!key ? '' : k ? (k[0] === 'icon' ? icon(k[1]) : text(t(k[1]))) : text(key));
+  };
+  NG.keyboardShortcuts = c => {
+    const row = (c, label, keys, appIcon) => `<div class="ngsa-ksrow">${appIcon ? `<img class="ngsa-ksicon" src="${appIcon}" alt="">` : ''}<span class="ngsa-ksword">${c.safe(label)}</span><span class="ngsa-kskeys">${keys}</span></div>`;
+    const apps = APPS.map(([k, key, id]) => ({label: t(`SystemUI/keyboard_shortcut_group_applications_${k}`), key, id})).sort((a, b) => a.label.toLowerCase().localeCompare(b.label.toLowerCase(), c.locale()));
+    const html = `<div class="ngsa-ks"><div class="ngsa-kstitle system">${c.safe(t('SystemUI/keyboard_shortcut_group_system'))}</div>${SYSTEM.map(([k, key, mod]) => row(c, t(`SystemUI/keyboard_shortcut_group_system_${k}`), keyHtml(c, mod, key))).join('')}
+      <div class="ngsa-kstitle apps">${c.safe(t('SystemUI/keyboard_shortcut_group_applications'))}</div>${apps.map(a => row(c, a.label, keyHtml(c, 'meta', a.key), NG.appsData[a.id]?.icon)).join('')}</div>`;
+    c.dialog({html, buttons: [{label: t('SystemUI/quick_settings_done')}]});
+  };
   NG.settingsScreens['user-credentials'] = {render: () => '<div class="ngst-list"></div>'};
 
   // Device administrators. Android Device Manager is GmsCore's MdmDeviceAdminReceiver (device_admin.xml: wipe-data,

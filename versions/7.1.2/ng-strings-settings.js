@@ -12745,6 +12745,150 @@ NG.strings('settings', {
 "fr": "Annuler",
 "es": "Cancelar"
 },
+"SystemUI/keyboard_shortcut_group_system": {
+"res": "angler:SystemUI:keyboard_shortcut_group_system",
+"en": "System",
+"hu": "Rendszer",
+"de": "System",
+"fr": "Système",
+"es": "Sistema"
+},
+"SystemUI/keyboard_shortcut_group_system_home": {
+"res": "angler:SystemUI:keyboard_shortcut_group_system_home",
+"en": "Home",
+"hu": "Otthon",
+"de": "Startseite",
+"fr": "Accueil",
+"es": "Inicio"
+},
+"SystemUI/keyboard_shortcut_group_system_back": {
+"res": "angler:SystemUI:keyboard_shortcut_group_system_back",
+"en": "Back",
+"hu": "Vissza",
+"de": "Zurück",
+"fr": "Précédent",
+"es": "Atrás"
+},
+"SystemUI/keyboard_shortcut_group_system_recents": {
+"res": "angler:SystemUI:keyboard_shortcut_group_system_recents",
+"en": "Recents",
+"hu": "Legutóbbiak",
+"de": "Letzte",
+"fr": "Récents",
+"es": "Recientes"
+},
+"SystemUI/keyboard_shortcut_group_system_notifications": {
+"res": "angler:SystemUI:keyboard_shortcut_group_system_notifications",
+"en": "Notifications",
+"hu": "Értesítések",
+"de": "Benachrichtigungen",
+"fr": "Notifications",
+"es": "Notificaciones"
+},
+"SystemUI/keyboard_shortcut_group_system_shortcuts_helper": {
+"res": "angler:SystemUI:keyboard_shortcut_group_system_shortcuts_helper",
+"en": "Keyboard Shortcuts",
+"hu": "Billentyűkódok",
+"de": "Tastenkombinationen",
+"fr": "Raccourcis clavier",
+"es": "Combinaciones de teclas"
+},
+"SystemUI/keyboard_shortcut_group_system_switch_input": {
+"res": "angler:SystemUI:keyboard_shortcut_group_system_switch_input",
+"en": "Switch input method",
+"hu": "Beviteli mód váltása",
+"de": "Eingabemethode wechseln",
+"fr": "Changer le mode de saisie",
+"es": "Cambiar método de introducción"
+},
+"SystemUI/keyboard_shortcut_group_applications": {
+"res": "angler:SystemUI:keyboard_shortcut_group_applications",
+"en": "Applications",
+"hu": "Alkalmazások",
+"de": "Apps",
+"fr": "Applications",
+"es": "Aplicaciones"
+},
+"SystemUI/keyboard_shortcut_group_applications_assist": {
+"res": "angler:SystemUI:keyboard_shortcut_group_applications_assist",
+"en": "Assist",
+"hu": "Segédalkalmazás",
+"de": "Assistent",
+"fr": "Assistance",
+"es": "Asistencia"
+},
+"SystemUI/keyboard_shortcut_group_applications_browser": {
+"res": "angler:SystemUI:keyboard_shortcut_group_applications_browser",
+"en": "Browser",
+"hu": "Böngésző",
+"de": "Browser",
+"fr": "Navigateur",
+"es": "Navegador"
+},
+"SystemUI/keyboard_shortcut_group_applications_contacts": {
+"res": "angler:SystemUI:keyboard_shortcut_group_applications_contacts",
+"en": "Contacts",
+"hu": "Névjegyek",
+"de": "Kontakte",
+"fr": "Contacts",
+"es": "Contactos"
+},
+"SystemUI/keyboard_shortcut_group_applications_email": {
+"res": "angler:SystemUI:keyboard_shortcut_group_applications_email",
+"en": "Email",
+"hu": "E-mail",
+"de": "E-Mail",
+"fr": "Messagerie",
+"es": "Correo electrónico"
+},
+"SystemUI/keyboard_shortcut_group_applications_im": {
+"res": "angler:SystemUI:keyboard_shortcut_group_applications_im",
+"en": "IM",
+"hu": "Azonnali üzenetküldés",
+"de": "IM",
+"fr": "Messagerie instantanée",
+"es": "MI"
+},
+"SystemUI/keyboard_shortcut_group_applications_music": {
+"res": "angler:SystemUI:keyboard_shortcut_group_applications_music",
+"en": "Music",
+"hu": "Zene",
+"de": "Music",
+"fr": "Musique",
+"es": "Música"
+},
+"SystemUI/keyboard_shortcut_group_applications_calendar": {
+"res": "angler:SystemUI:keyboard_shortcut_group_applications_calendar",
+"en": "Calendar",
+"hu": "Naptár",
+"de": "Kalender",
+"fr": "Agenda",
+"es": "Calendario"
+},
+"SystemUI/keyboard_key_tab": {
+"res": "angler:SystemUI:keyboard_key_tab",
+"en": "Tab",
+"hu": "Tab",
+"de": "Tabulatortaste",
+"fr": "Tabulation",
+"es": "Tabulador"
+},
+"SystemUI/keyboard_key_space": {
+"res": "angler:SystemUI:keyboard_key_space",
+"en": "Space",
+"hu": "Szóköz",
+"de": "Leertaste",
+"fr": "Espace",
+"es": "Espacio"
+},
+"SystemUI/quick_settings_done": {
+"res": "angler:SystemUI:quick_settings_done",
+"en": "Done",
+"hu": "Kész",
+"de": "Fertig",
+"fr": "OK",
+"es": "Listo"
+},
 "settings_suggestion_header_summary_hidden_items": {
 "res": "angler:SettingsGoogle:settings_suggestion_header_summary_hidden_items",
 "en": {

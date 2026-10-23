@@ -395,7 +395,8 @@
   H.physical_keyboard_settings = {
     get: (c, key) => key === 'show_virtual_keyboard_switch' ? !!S(c).showImeWithHardKeyboard : undefined,
     set(c, key, v) { if (key !== 'show_virtual_keyboard_switch') return false; S(c).showImeWithHardKeyboard = v; return true; },
-    click: (c, key) => key === 'keyboard_shortcuts_helper'
+    // PhysicalKeyboardFragment.toggleKeyboardShortcutsMenu: the activity asks SystemUI for its shortcuts dialog.
+    click: (c, key) => { if (key !== 'keyboard_shortcuts_helper') return false; NG.keyboardShortcuts?.(c); return true; }
   };
   // A seek bar that follows the pointer (Widget.Material.SeekBar: 16 dp in at each end).
   function bindSeek(c, bar, max, onChange, onDone) {
