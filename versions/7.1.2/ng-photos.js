@@ -65,7 +65,7 @@
     const u = U(c);
     if (u.sub !== c.ui.sub) {
       u.sub = c.ui.sub;
-      if (/^photo:\d+$/.test(c.ui.sub)) { u.photo = +c.ui.sub.split(':')[1]; u.page='photo'; u.stack=[{page:'photos'}]; u.chrome=true; u.info=false; }
+      if (/^(photo|edit):\d+$/.test(c.ui.sub)) { u.photo = +c.ui.sub.split(':')[1]; u.page='photo'; u.stack=[{page:'photos'}]; u.chrome=true; u.info=false;if(c.ui.sub.startsWith('edit:')){const p=current(c);if(p){u.stack.push({page:'photo'});Object.assign(u,editorState(c,p));u.page='editor';}} }
     }
     L().expire(c);
   }
@@ -193,7 +193,8 @@
       u.selected=[];u.selecting=false;if(u.page==='photo')back(c);else c.render();
     }}]});
   }
-  function edit(c) { const u=U(c),p=current(c); if(!p)return; go(c,'editor',{photo:p.id,edits:{...L().edits(p.edits),start:0,end:p.duration||2000},baseline:JSON.stringify(L().edits(p.edits)),trimChanged:false,tool:'filters'}); }
+  function editorState(c,p){return {photo:p.id,edits:{...L().edits(p.edits),start:0,end:p.duration||2000},baseline:JSON.stringify(L().edits(p.edits)),trimChanged:false,tool:'filters'};}
+  function edit(c) { const p=current(c); if(p)go(c,'editor',editorState(c,p)); }
   function leaveEditor(c) {
     const u=U(c),leave=()=>{const prev=u.stack.pop()||{page:'photo'};Object.assign(u,prev);c.render();};
     if(JSON.stringify(L().edits(u.edits))===u.baseline && !u.trimChanged){leave();return;}

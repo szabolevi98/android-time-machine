@@ -86,7 +86,7 @@
 
   function optionsBar(c, s, u) {
     const t = T();
-    if (u.rec) return '';
+    if (u.rec || u.guide || u.burst) return '';
     if (u.open) {
       const list = optList(s, u.open), cur = optValue(s, u.open);
       return `<div class="ngcm-obar open"><div class="ngcm-expanded">${list.map(([v, label, icon]) => `<button type="button" class="ngcm-xopt${String(v) === String(cur) ? ' on' : ''}" data-action="ngcm-pick" data-o="${u.open}" data-v="${v}" aria-label="${esc(c, t.t(label))}"><img src="${A(icon)}.png" alt=""><span>${u.open === 'timer' && v ? `${v} ` : ''}${esc(c, t.t(label))}</span></button>`).join('')}</div></div>`;
@@ -98,6 +98,7 @@
 
   function shutter(c, s, u) {
     const t = T(), video = isVideo(s.mode);
+    if(u.guide&&u.guide.mode!=='refocus')return `<button type="button" class="ngcm-shutter ngcm-guide-done" data-action="ngcm-shutter" aria-label="${esc(c,t.t('refocus_editor_button_text_done'))}"><img src="assets/cm-done.png" alt=""></button>`;
     const label = video ? t.t(u.rec ? 'accessibility_capture_video_stop' : 'accessibility_capture_video_start') : t.t('accessibility_capture_photo');
     return `<button type="button" class="ngcm-shutter${video ? ' video' : ''}${u.rec ? ' rec' : ''}" data-action="ngcm-shutter" aria-label="${esc(c, label)}"><i class="ngcm-sring"></i><i class="ngcm-sphoto"></i><i class="ngcm-svideo"></i><i class="ngcm-sstop"></i></button>`;
   }
@@ -111,22 +112,22 @@
     const filter = [WB[s.wb] || '', s.hdr === 'on' && s.mode === 'photo' ? 'contrast(1.06) saturate(1.08)' : ''].filter(Boolean).join(' ');
     const grid = GRID[s.grid] ? GRID[s.grid].map(f => `<i class="ngcm-gv" style="left:${(f * 100).toFixed(3)}%"></i><i class="ngcm-gh" style="top:${(f * 100).toFixed(3)}%"></i>`).join('') : '';
     const toybox = s.mode !== 'photo' && s.mode !== 'video';
-    const menuBtn = u.rec ? '' : toybox && !u.menu
+    const menuBtn = u.guide ? `<button type="button" class="ngcm-close" data-action="ngcm-guide-cancel" aria-label="${esc(c,t.t('cancel_panorama'))}"><img src="${A('ic_close.png')}" alt=""></button>` : u.rec || u.burst ? '' : toybox && !u.menu
       ? `<button type="button" class="ngcm-close" data-action="ngcm-mode" data-m="photo" aria-label="${esc(c, t.t('accessibility_close_button'))}"><img src="${A('ic_close.png')}" alt=""></button>`
       : `<button type="button" class="ngcm-burger${u.menu ? ' arrow' : ''}" data-action="ngcm-menu" aria-label="${esc(c, t.t(u.menu ? 'hamburger_menu_close' : 'hamburger_menu_open'))}"><i></i><i></i><i></i></button>`;
     const drawer = u.menu ? `<div class="ngcm-drawer" data-action="ngcm-menu">${TOYBOX.map(m => `<button type="button" class="ngcm-ditem" data-action="ngcm-mode" data-m="${m}" aria-label="${esc(c, t.t(MODES[m][1]))}"><span><img src="${A(MODES[m][2])}" alt=""></span>${esc(c, t.t(MODES[m][0]))}</button>`).join('')}</div>` : '';
     // The left place: recording's pause / resume, slow motion's frame rate, else the camera switch (slow motion and
     // the panoramas use the back camera only).
-    const left = u.rec && s.mode === 'video' ? `<button type="button" class="ngcm-pause" data-action="ngcm-pause" aria-label="${esc(c, t.t(u.paused ? 'resume_video_recording' : 'pause_video_recording'))}"><img src="${A(u.paused ? 'ic_resume_pause.svg' : 'ic_pause_resume.svg')}" alt=""></button>`
+    const left = u.guide || u.burst ? '' : u.rec && s.mode === 'video' ? `<button type="button" class="ngcm-pause" data-action="ngcm-pause" aria-label="${esc(c, t.t(u.paused ? 'resume_video_recording' : 'pause_video_recording'))}"><img src="${A(u.paused ? 'ic_resume_pause.svg' : 'ic_pause_resume.svg')}" alt=""></button>`
       : s.mode === 'slomo' ? (u.rec ? '' : `<button type="button" class="ngcm-hfr" data-action="ngcm-hfr" aria-label="${esc(c, t.t(`hfr_mode_${s.hfr}fps`))}"><b>${esc(c, t.t(`hfr_fps_${s.hfr}`))}</b><span>FPS</span></button>`)
       : u.rec || ['panorama', 'photosphere'].includes(s.mode) ? '' : `<button type="button" class="ngcm-switch" data-action="ngcm-switch" aria-label="${esc(c, t.t(s.front ? 'camera_id_front_desc' : 'camera_id_back_desc'))}"><img src="${A('front_back_switch_button.svg')}" alt=""></button>`;
-    const right = u.rec ? '' : `<button type="button" class="ngcm-thumb${last ? '' : ' empty'}" data-action="ngcm-thumb" aria-label="${esc(c, t.t('accessibility_filmstrip_toggle'))}">${last ? NG.media.svg(last, 'ngcm-tsvg', 1) : ''}</button>`;
-    const showPager = !u.rec && !u.menu && (s.mode === 'photo' || s.mode === 'video');
+    const right = u.rec || u.guide || u.burst ? '' : `<button type="button" class="ngcm-thumb${last ? '' : ' empty'}" data-action="ngcm-thumb" aria-label="${esc(c, t.t('accessibility_filmstrip_toggle'))}">${last ? NG.media.svg(last, 'ngcm-tsvg', 1) : ''}${(last?.burst||last?.burstCreation)?'<img class="ngcm-burst-badge" src="assets/cm-burst-badge.png" alt="">':''}</button>`;
+    const showPager = !u.rec && !u.guide && !u.burst && !u.menu && (s.mode === 'photo' || s.mode === 'video');
     const pager = showPager ? `<button type="button" class="ngcm-pager" style="left:calc(${(L.preview[0] + (L.preview[2] - 72) / 2).toFixed(2)} * var(--dp));top:calc(${(L.bar[1] - (L.overlay ? 38 : 0)).toFixed(2)} * var(--dp))" data-action="ngcm-flip" aria-label="${esc(c, t.t(s.mode === 'video' ? 'accessibility_open_photo_mode' : 'accessibility_open_video_mode'))}"><i class="${s.mode === 'photo' ? 'on' : ''}"></i><i class="${s.mode === 'video' ? 'on' : ''}"></i></button>` : '';
-    const hint = s.mode === 'photo' && !s.videoSeen && !u.menu && !u.open ? `<div class="ngcm-hint" style="top:calc(${(L.bar[1] - 250).toFixed(2)} * var(--dp))"><span><img src="${A('ic_chevron_left_white_24dp.svg')}" alt="">${esc(c, t.t('video_swipe_hint'))}</span></div>` : '';
+    const hint = s.mode === 'photo' && !s.videoSeen && !u.guide && !u.burst && !u.menu && !u.open ? `<div class="ngcm-hint" style="top:calc(${(L.bar[1] - 250).toFixed(2)} * var(--dp))"><span><img src="${A('ic_chevron_left_white_24dp.svg')}" alt="">${esc(c, t.t('video_swipe_hint'))}</span></div>` : '';
     return `<div class="ngcm${u.menu ? ' menu' : ''}">
       <div class="ngcm-preview" style="${box(L.preview)}"><div class="ngcm-scenebox"${filter ? ` style="filter:${filter}"` : ''}>${scene}</div>${grid ? `<div class="ngcm-grid">${grid}</div>` : ''}<i class="ngcm-flashfx"></i><i class="ngcm-scrim"></i>
-        ${u.count ? `<b class="ngcm-count">${u.count}</b>` : ''}${u.switching ? `<div class="ngcm-mswitch"><img src="${A(MODES[u.switching][2])}" alt=""></div>` : ''}</div>
+        <div class="ngcm-capture-overlay">${NG.cameraAdvanced?.overlay(c)||''}</div><span class="ngcm-zoom" hidden></span>${u.count ? `<b class="ngcm-count">${u.count}</b>` : ''}${u.switching ? `<div class="ngcm-mswitch"><img src="${A(MODES[u.switching][2])}" alt=""></div>` : ''}</div>
       ${hint}
       <div class="ngcm-bar${L.overlay ? ' overlay' : ''}" style="${box(L.bar)}"><span class="ngcm-place">${left}</span><span class="ngcm-place">${shutter(c, s, u)}</span><span class="ngcm-place">${right}</span></div>
       ${pager}${optionsBar(c, s, u)}${u.open ? '<div class="ngcm-oscrim" data-action="ngcm-collapse"></div>' : ''}
@@ -145,18 +146,19 @@
   function cancelCountdown(c) { clearInterval(countdown); countdown = 0; ui(c).count = 0; }
   function stopRecording(c) {
     const s = S(c), u = ui(c);
-    if (u.rec) NG.media.add(c, {seed: u.seed, time: Date.now(), front: s.front, kind: 'video', duration: recTime(u), ...(s.mode === 'slomo' ? {fps: s.hfr} : {})});
+    if (u.rec) NG.media.add(c, {seed: u.seed, time: Date.now(), front: s.front, kind: 'video', zoom:u.zoom||1, duration: recTime(u), ...(s.mode === 'slomo' ? {fps: s.hfr} : {})});
     u.rec = 0; u.paused = 0; u.held = 0; clearInterval(timer); timer = 0;
   }
   function capture(c) {
     const s = S(c), u = ui(c);
+    if(NG.cameraAdvanced?.shutter(c))return;
     if (isVideo(s.mode)) {
       if (!u.rec) { u.rec = Date.now(); u.paused = 0; u.held = 0; tick(c); c.render(); return; }
       stopRecording(c); c.render(); landed(c); return;
     }
     const shoot = () => {
       u.count = 0;
-      NG.media.add(c, {seed: u.seed, time: Date.now(), front: s.front, kind: s.mode === 'panorama' || s.mode === 'photosphere' ? 'pano' : 'photo'});
+      NG.media.add(c, {seed: u.seed, time: Date.now(), front: s.front, zoom:u.zoom||1, kind: s.mode === 'panorama' || s.mode === 'photosphere' ? 'pano' : 'photo'});
       c.render(); flash(c); landed(c);
     };
     const secs = s.mode === 'photo' ? s.timer : 0;
@@ -168,7 +170,7 @@
   // PhotoVideoModeSwitchView: black with the next mode's icon while the module changes.
   function switchTo(c, mode) {
     const s = S(c), u = ui(c);
-    if (s.mode === mode || u.rec) return;
+    if (s.mode === mode || u.rec || u.guide || u.burst) return;
     if (mode === 'video') s.videoSeen = true;
     if (['slomo', 'panorama', 'photosphere'].includes(mode)) s.front = false;
     s.mode = mode; u.open = ''; u.menu = false; u.switching = mode; c.save(); c.render();
@@ -210,6 +212,8 @@
     }
   };
 
+  NG.cameraAdvanced?.connect({state:S,ui,capture,flash,landed});
+  const volumeRow=NG.appPrefsXml?.camera?.xml.camera_preferences.c.flatMap(n=>n.c||[]).find(n=>n.key==='pref_volume_key_action');if(volumeRow)volumeRow.defaultValue='shutter';
   NG.register('camera', {
     init(c) {
       let previous = '';
@@ -222,10 +226,13 @@
     },
     noStatus: () => true,
     statusColor: () => '#000',
-    keepAwake: c => !!ui(c).rec,
-    unmount(c) { cancelCountdown(c); stopRecording(c); const u = ui(c); u.open = ''; u.menu = false; u.switching = ''; },
+    keepAwake: c => !!(ui(c).rec||ui(c).guide||ui(c).burst),
+    volumeKey(c,dir){return NG.cameraAdvanced?.volume(c,dir)||false;},
+    stop(c){cancelCountdown(c);stopRecording(c);NG.cameraAdvanced?.cleanup(c,false);},
+    unmount(c) { cancelCountdown(c); stopRecording(c); NG.cameraAdvanced?.cleanup(c); const u = ui(c); u.open = ''; u.menu = false; u.switching = ''; },
     render,
     mount(c, rootEl) {
+      NG.cameraAdvanced?.mount(c,rootEl);
       // A sideways swipe across the preview changes between photo and video (left: video).
       const pv = rootEl.querySelector('.ngcm-preview');
       if (!pv) return;
@@ -235,13 +242,14 @@
       pv.addEventListener('pointerup', e => {
         if (x0 === null) return;
         const dx = e.clientX - x0, dy = e.clientY - y0, s = S(c); x0 = null;
-        if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.5 || ui(c).menu || ui(c).rec || ui(c).count) return;
+        if (Date.now()-(ui(c).pinchAt||0)<600 || ui(c).guide || Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.5 || ui(c).menu || ui(c).rec || ui(c).count) return;
         if (dx < 0 && s.mode === 'photo') switchTo(c, 'video');
         else if (dx > 0 && s.mode === 'video') switchTo(c, 'photo');
       });
     },
     back(c) {
       const u = ui(c), s = S(c);
+      if(u.guide){NG.cameraAdvanced.cancel(c);return true;}
       if (u.count) { cancelCountdown(c); c.render(); return true; }
       if (u.open) { u.open = ''; c.render(); return true; }
       if (u.menu) { u.menu = false; c.render(); return true; }
@@ -253,6 +261,7 @@
       const s = S(c), u = ui(c);
       if (u.count) return name.startsWith('ngcm-');
       switch (name) {
+        case 'ngcm-guide-cancel':NG.cameraAdvanced.cancel(c);return true;
         case 'ngcm-shutter': if (!u.count) capture(c); return true;
         case 'ngcm-switch': s.front = !s.front; if (s.front && s.hdr) u.open = ''; c.save(); c.render(); return true;
         case 'ngcm-option': u.open = el.dataset.o; c.render(); return true;
@@ -270,7 +279,7 @@
         case 'ngcm-pause':
           if (u.paused) { u.held += Date.now() - u.paused; u.paused = 0; } else u.paused = Date.now();
           c.render(); return true;
-        case 'ngcm-thumb': { const last = NG.media.photos(c).at(-1); if (last) c.open('photos', `photo:${last.id}`); return true; }
+        case 'ngcm-thumb': { const last = NG.media.photos(c).at(-1); if(last){if(last.burst||last.burstCreation)c.open('burst-editor',last.burst?.id||last.burstCreation.id);else c.open(last.refocus?'refocus-editor':'photos',last.refocus?String(last.id):`photo:${last.id}`);} return true; }
       }
       return false;
     }

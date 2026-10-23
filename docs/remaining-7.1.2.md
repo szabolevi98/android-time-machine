@@ -46,7 +46,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
       Calendar schedule/month, Chrome bookmarks, Messenger list/conversation/quick reply, Gmail account/folder,
       Drive, Play Music, Play Store, Project Fi no-account large/1x1 and Sound Search.
       Native previews, placement/configuration/cancellation, provider data, saved state and widget resize are connected.
-- [ ] Camera guided panorama / Photo Sphere / Lens Blur, Smartburst, volume key action.
+- [x] Camera guided panorama / Photo Sphere / Lens Blur and RGBZ editor, Smartburst capture/group/creations, volume key action.
 - [ ] Photos native CPE preset catalogue investigation and final polish.
 - [x] Chrome site settings category pages, per-site permissions, exceptions and reset.
 - [x] Calendar Goal creation, scheduling and session actions (`3108b381`). Remaining service activity cards are tracked by the routing audit below.
@@ -54,6 +54,7 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] MusicFX's native effect-control panel: per-caller presets/User curve, five bands, enable/bypass, headset-gated bass/surround, persistence and Clear data.
 - [x] Widget resize: native frame/handles, provider flags/minima, transactional cell reorder, pointer/touch commit and cancel, persisted dimensions.
 - [x] ACTION_SEND video/audio native MIME receivers, immutable metadata, Messenger audio/video/resharing, Hangouts video, Photos/YouTube upload, Gmail/Drive streams and Cloud Print failure.
+- [ ] Shared SEND_MULTIPLE: preserve every selected photo/stream through each native receiver (Photos and Burst editor currently dispatch the leading stream).
 - [ ] Preference leaf/intent routing audit: finish service-backed and non-toggle rows that still lack a click handler.
 - [ ] Sweep all direct `missing(...)` branches and external activity routes; no unfinished card may remain at release.
 

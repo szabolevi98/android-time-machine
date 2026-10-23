@@ -890,3 +890,34 @@ Validation: service-widget browser flow covers all providers implemented, large/
 no-match/retry/cancel, persistence, phone width and five languages; the native picker/real held-drag regression and
 all 227 module checks pass. Four native bitmaps/nine-patch and Fi's vector added: 1150 rebuilt source files, zero
 inventory problems. Three labels untranslated in the source APK intentionally retain their native English fallback.
+
+## Guided Camera captures and Smartburst — 2026-10-23
+
+GoogleCamera 4.3's panorama types and Photo Sphere now run a multi-frame guided
+capture: pointer/touch motion supplies the simulated orientation, dwell samples an
+aligned target, Done requires two frames, Cancel/Home discard unfinished captures,
+and a complete grid finishes automatically. Saved media retain poses, coverage and
+projection. These are synthetic scenes, not stitched sensor images; the deterministic
+target map is simulator logic. Lens Blur uses the native RefocusProgressView geometry,
+phone/warning/success assets and instructions, rejects fast/lateral motion and saves
+only after upward travel completes. The native RGBZ viewer exposes focus and bokeh
+strength with a synthetic depth mask; Done commits, Back discards its draft.
+
+A held shutter starts a capped five-second/40-frame synthetic Smartburst. The native
+preference retains the ranked best eight or all chronological frames; a second
+preference controls automatic animation creation. Ranking and creation choices are
+deterministic simulator logic rather than Google's proprietary image analysis.
+BurstEditorFragment's grid/section/selection toolbar and AddCreationFabMenu use their
+current APK resources. Available landscape creations are collage, animation, video
+and a four-frame Photo Booth strip. Group Smiles is unavailable because these drawn
+scenes have no detected faces. Creations snapshot source media and remain usable
+after a source frame is deleted. The viewer supports playback, deletion, share and
+direct Photos editing. The shared SEND_MULTIPLE routing audit remains separately
+tracked before release. Volume keys now obey Camera's shutter/zoom/nothing preference;
+pinch and digital zoom crop the saved synthetic scene (simulated 1–4x capability).
+
+Validation: all 234 module checks passed; seven new model/media checks, guided capture and burst editor pointer
+browser flows, all five languages and phone width; existing Camera and Photos
+browser regressions passed. Source inventory rebuilt all 1168 assets with zero problems. Image assets were extracted from N2G48C, never
+from an earlier release. No real camera, stitching, depth capture or face-analysis
+backend is claimed.

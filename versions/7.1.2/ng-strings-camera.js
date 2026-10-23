@@ -576,5 +576,251 @@ NG.strings('camera', {
 "de": "OK",
 "fr": "OK",
 "es": "Aceptar"
+},
+"cancel_panorama": {
+"res": "angler:GoogleCamera:cancel_panorama",
+"en": "Discard Panorama",
+"hu": "Panorámakép elvetése",
+"de": "Panorama verwerfen",
+"fr": "Supprimer le panorama",
+"es": "Descartar panorámica"
+},
+"pano_too_fast_prompt": {
+"res": "angler:GoogleCamera:pano_too_fast_prompt",
+"en": "Too fast",
+"hu": "Túl gyors",
+"de": "Zu schnell",
+"fr": "Trop rapide",
+"es": "Demasiado rápido"
+},
+"refocus_instructions": {
+"res": "angler:GoogleCamera:refocus_instructions",
+"en": "Slowly raise your device.\nKeep subject centered.",
+"hu": "Lassan emelje fel az eszközt.\nA téma maradjon középen.",
+"de": "Gerät langsam heben.\nObjekt zentrieren.",
+"fr": "Levez lentement l'appareil\n et centrez le sujet.",
+"es": "Sube el dispositivo lentamente.\nMantén el objeto centrado."
+},
+"error_fast_motion": {
+"res": "angler:GoogleCamera:error_fast_motion",
+"en": "Device moved too fast",
+"hu": "Túl gyorsan mozgatta",
+"de": "Gerät zu schnell bewegt",
+"fr": "Mouvement trop rapide.",
+"es": "Dispositivo movido muy rápido"
+},
+"error_viewport": {
+"res": "angler:GoogleCamera:error_viewport",
+"en": "Framing changed too much",
+"hu": "Túlzott keretmódosítás",
+"de": "Bewegter Bildausschnitt",
+"fr": "Nouveau cadrage hors champ.",
+"es": "Marcos demasiado cambiados"
+},
+"refocus_editor_button_text_done": {
+"res": "angler:GoogleCamera:refocus_editor_button_text_done",
+"en": "Done",
+"hu": "Kész",
+"de": "Fertig",
+"fr": "OK",
+"es": "Listo"
+},
+"cling_text_for_refocus_editor_button": {
+"res": "angler:GoogleCamera:cling_text_for_refocus_editor_button",
+"en": "To refocus, tap here",
+"hu": "Az újrafókuszáláshoz koppintson ide",
+"de": "Zum Neufokussieren hier tippen",
+"fr": "Appuyez ici pour effectuer une nouvelle mise au point.",
+"es": "Tocar aquí para volver a enfocar"
+},
+"refocus_slider_cling_text": {
+"res": "angler:GoogleCamera:refocus_slider_cling_text",
+"en": "To adjust blur, drag slider",
+"hu": "Az életlenítés beállításához húzza a csúszkát",
+"de": "Fokuseffekt über Schieberegler anpassen",
+"fr": "Pour régler le flou, faites glisser le curseur.",
+"es": "Para ajustar el desenfoque, arrastra el control deslizante"
+},
+"burst": {
+"res": "angler:GoogleCamera:burst",
+"args": 1,
+"en": "Burst (%1$s Photos)",
+"hu": "Sorozat (%1$s kép)",
+"de": "Bilderfolge (%1$s Bilder)",
+"fr": "Rafale (%1$s photos)",
+"es": "Ráfaga (%1$s fotos)"
+},
+"burst_text": {
+"res": "angler:GoogleCamera:burst_text",
+"en": "Smartburst",
+"hu": "Smartburst",
+"de": "Smartburst",
+"fr": "Smartburst",
+"es": "Smartburst",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"processing_notification": {
+"res": "angler:GoogleCamera:processing_notification",
+"en": "Processing Lens Blur",
+"hu": "Életlenítés feldolgozása",
+"de": "Fokuseffekt wird verarbeitet",
+"fr": "Traitement de l'effet focus…",
+"es": "Procesando efecto de enfoque"
+},
+"pano_review_saving_indication_str": {
+"res": "angler:GoogleCamera:pano_review_saving_indication_str",
+"en": "Saving…",
+"hu": "Mentés…",
+"de": "Wird gespeichert…",
+"fr": "Enregistrement…",
+"es": "Guardando…"
+},
+"framework/cancel": {
+"res": "angler:framework:cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"burst_editor_navigate_up": {
+"res": "angler:GoogleCamera:burst_editor_navigate_up",
+"en": "Navigate up",
+"hu": "Fel",
+"de": "Nach oben",
+"fr": "Revenir en haut de la page",
+"es": "Desplazarse hacia arriba"
+},
+"burst_editor_section_header_all": {
+"res": "angler:GoogleCamera:burst_editor_section_header_all",
+"en": "All Photos",
+"hu": "Az összes fotó",
+"de": "Alle Fotos",
+"fr": "Toutes les photos",
+"es": "Todas las fotos"
+},
+"burst_editor_section_header_best": {
+"res": "angler:GoogleCamera:burst_editor_section_header_best",
+"en": "Best Photos",
+"hu": "Legjobb fotók",
+"de": "Beste Fotos",
+"fr": "Meilleures photos",
+"es": "Mejores fotos"
+},
+"burst_editor_frame_description": {
+"res": "angler:GoogleCamera:burst_editor_frame_description",
+"args": 1,
+"en": "Burst frame %1$s",
+"hu": "%1$s. kép a sorozatból",
+"de": "Bilderfolgenframe %1$s",
+"fr": "Image prise en rafale %1$s",
+"es": "Marco de ráfaga %1$s"
+},
+"burst_editor_open_speed_dial_description": {
+"res": "angler:GoogleCamera:burst_editor_open_speed_dial_description",
+"en": "Add creations",
+"hu": "Alkotások hozzáadása",
+"de": "Kreationen hinzufügen",
+"fr": "Ajouter des créations",
+"es": "Añadir creaciones"
+},
+"burst_editor_close_speed_dial_description": {
+"res": "angler:GoogleCamera:burst_editor_close_speed_dial_description",
+"en": "Close creations menu",
+"hu": "Alkotási menü bezárása",
+"de": "Menü für Kreationen schließen",
+"fr": "Fermer le menu des créations",
+"es": "Cerrar menú de creaciones"
+},
+"burst_creations": {
+"res": "angler:GoogleCamera:burst_creations",
+"en": "Creations",
+"hu": "Creations",
+"de": "Creations",
+"fr": "Creations",
+"es": "Creations",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"creation_collage": {
+"res": "angler:GoogleCamera:creation_collage",
+"en": "Collage",
+"hu": "Kollázs",
+"de": "Collage",
+"fr": "Montage",
+"es": "Collage"
+},
+"creation_gif": {
+"res": "angler:GoogleCamera:creation_gif",
+"en": "Animation",
+"hu": "Animáció",
+"de": "Animation",
+"fr": "Animation",
+"es": "Animación"
+},
+"creation_photo_booth": {
+"res": "angler:GoogleCamera:creation_photo_booth",
+"en": "Photo Booth",
+"hu": "Fényképautomata-kollázs",
+"de": "Photo Booth",
+"fr": "Cabine photos",
+"es": "Photo Booth"
+},
+"creation_video": {
+"res": "angler:GoogleCamera:creation_video",
+"en": "Video",
+"hu": "Videó",
+"de": "Video",
+"fr": "Vidéo",
+"es": "Vídeo"
+},
+"share_button_description": {
+"res": "angler:GoogleCamera:share_button_description",
+"en": "Share",
+"hu": "Megosztás",
+"de": "Teilen",
+"fr": "Partager",
+"es": "Compartir"
+},
+"edit_button_description": {
+"res": "angler:GoogleCamera:edit_button_description",
+"en": "Edit",
+"hu": "Szerkesztés",
+"de": "Bearbeiten",
+"fr": "Modifier",
+"es": "Editar"
+},
+"delete_button_description": {
+"res": "angler:GoogleCamera:delete_button_description",
+"en": "Delete",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Supprimer",
+"es": "Eliminar"
+},
+"filmstrip_item_deleted": {
+"res": "angler:GoogleCamera:filmstrip_item_deleted",
+"en": "Item deleted",
+"hu": "Elem törölve",
+"de": "Element gelöscht",
+"fr": "Élément supprimé",
+"es": "Elemento eliminado"
+},
+"burst_process_creation": {
+"res": "angler:GoogleCamera:burst_process_creation",
+"en": "Saving",
+"hu": "Mentés",
+"de": "Wird gespeichert",
+"fr": "Enregistrement…",
+"es": "Guardando"
 }
 });

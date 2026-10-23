@@ -1,0 +1,16 @@
+# Guided capture / RGBZ viewer bitmaps from N2G48C GoogleCamera 4.3.
+cm-pano-target.png	app/GoogleCamera/GoogleCamera.apk	drawable/pano_target_activated
+cm-pano-sampled.png	app/GoogleCamera/GoogleCamera.apk	drawable/pano_target_default
+cm-done.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_done_normal
+cm-refocus-top.9.png	app/GoogleCamera/GoogleCamera.apk	drawable/refocus_arrow_top
+cm-refocus-bottom.9.png	app/GoogleCamera/GoogleCamera.apk	drawable/refocus_arrow_bottom
+cm-refocus-phone.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_phone_graphic
+cm-refocus-warning.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_warning_graphic
+cm-refocus-success.png	app/GoogleCamera/GoogleCamera.apk	drawable/refocus_successful
+cm-burst-badge.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_view_burst
+cm-ic_arrow_back.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_arrow_back
+cm-ic_auto_awesome.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_auto_awesome
+cm-ic_auto_awesome_mix.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_auto_awesome_mix
+cm-ic_auto_awesome_motion.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_auto_awesome_motion
+cm-ic_auto_awesome_video.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_auto_awesome_video
+cm-ic_insert_emoticon.png	app/GoogleCamera/GoogleCamera.apk	drawable/ic_insert_emoticon

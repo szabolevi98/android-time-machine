@@ -10,7 +10,7 @@
     chrome: {data: ['chrome'], ui: ['chrome', 'chromeSite']},
     'device-policy': {},
     drive: {data: ['drive'], ui: ['drive']},
-    camera: {data: ['camera'], ui: ['camera']},
+    camera: {data: ['camera'], ui: ['camera', 'refocusEditor', 'burstEditor']},
     hangouts: {ui: ['hangouts']},
     maps: {ui: ['maps']},
     'play-music': {data: ['music'], ui: ['music', 'musicPreview'], prefs: ['music']},
@@ -30,7 +30,7 @@
     search: {data: ['google'], ui: ['google', 'soundSearch'], prefs: ['google']},
     settings: {protected: true}
   };
-  const aliases = {'files': 'documents', 'downloads': 'documents', now: 'search', 'sound-search': 'search', 'calendar-goal': 'calendar',
+  const aliases = {'files': 'documents', 'downloads': 'documents', now: 'search', 'sound-search': 'search', 'refocus-editor': 'camera', 'burst-editor': 'camera', 'calendar-goal': 'calendar',
     'com.android.musicfx': 'musicfx', 'messenger-widget-reply': 'messenger', 'clock-cities': 'clock', 'clock-settings': 'clock', 'music-preview': 'play-music', 'emergency-dialer': 'phone'};
   const owner = id => aliases[id] || id;
   const pkg = id => NG.appsData?.[owner(id)]?.pkg || owner(id);

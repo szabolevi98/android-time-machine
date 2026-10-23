@@ -40,14 +40,24 @@
     const crop = ed.crop || [0, 0, 1, 1];
     let [x, y, cw, ch] = [crop[0] * rw, crop[1] * rh, crop[2] * rw, crop[3] * rh];
     if (ratio) { if (cw / ch > ratio) { x += (cw - ch * ratio) / 2; cw = ch * ratio; } else { y += (ch - cw / ratio) / 2; ch = cw / ratio; } }
+    const zoom = Math.max(1, Math.min(4, +p.zoom || 1));
+    x += cw * (1 - 1 / zoom) / 2; y += ch * (1 - 1 / zoom) / 2; cw /= zoom; ch /= zoom;
     const transform = ['', `translate(${h} 0) rotate(90)`, `translate(${w} ${h}) rotate(180)`, `translate(0 ${w}) rotate(270)`][turn];
     const val = k => Math.max(-100, Math.min(100, +ed[k] || 0));
     const filter = `brightness(${1 + val('light') / 150}) contrast(${1 + val('pop') / 150}) saturate(${1 + val('color') / 100})`;
     // A picture an app saved as SVG markup (the Neko cats in Pictures/Cats).
     let scene = p.markup ? `<svg width="${w}" height="${h}" viewBox="0 0 48 48" preserveAspectRatio="xMidYMid meet">${p.markup.replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg>` : p.front ? room(p, w, h) : landscape(p, w, h, ++uid);
     if (p.kind === 'collage' && p.frames?.length) {
-      const frames = p.frames.slice(0, 9), cols = Math.ceil(Math.sqrt(frames.length)), rows = Math.ceil(frames.length / cols);
+      const frames = p.frames.slice(0, 9), cols = p.burstCreation?.type === 'photo_booth' ? 1 : Math.ceil(Math.sqrt(frames.length)), rows = Math.ceil(frames.length / cols);
       scene = `<rect width="${w}" height="${h}" fill="#fff"/>` + frames.map((frame, i) => `<svg x="${i % cols * w / cols + 2}" y="${Math.floor(i / cols) * h / rows + 2}" width="${w / cols - 4}" height="${h / rows - 4}">${svg(frame)}</svg>`).join('');
+    }
+    // Simulated depth: soften the drawn background and keep the selected plane sharp.
+    // Each instance owns its definitions, including duplicated thumbnails of the same capture.
+    if (p.refocus) {
+      const id = 'ngdepth' + (++uid), strength = Math.max(0, Math.min(1, +p.refocus.strength || 0));
+      const focus = p.refocus.focus || [.5, .5], fx = Math.max(0, Math.min(1, +focus[0])) * w, fy = Math.max(0, Math.min(1, +focus[1])) * h;
+      const radius = Math.min(w, h) * (.52 - strength * .32);
+      scene = `<defs><g id="${id}">${scene}</g><filter id="${id}blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="${strength * 12}"/></filter><radialGradient id="${id}gradient"><stop offset="45%" stop-color="white"/><stop offset="100%" stop-color="black"/></radialGradient><mask id="${id}mask" maskUnits="userSpaceOnUse" x="0" y="0" width="${w}" height="${h}"><rect width="${w}" height="${h}" fill="black"/><ellipse cx="${fx}" cy="${fy}" rx="${radius}" ry="${radius}" fill="url(#${id}gradient)"/></mask></defs><use href="#${id}" filter="url(#${id}blur)"/><use href="#${id}" mask="url(#${id}mask)"/>`;
     }
     return `<svg class="${cls}" viewBox="${x} ${y} ${cw} ${ch}" preserveAspectRatio="xMidYMid ${fit||(cls==='ngphotos-full'?'meet':'slice')}" aria-hidden="true"><g transform="${transform}" style="filter:${filter}">${scene}</g></svg>`;
   }
