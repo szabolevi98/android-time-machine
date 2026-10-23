@@ -78,7 +78,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 #### T02 — 4.3 Email Settings belépés és mögöttes helyi sorok
 
 - **Ütem:** Mag.
-- **Állapot:** Nyitott — aktuális fejlesztési kör.
+- **Állapot:** Kész — `c67a7a43`. A 4.3 Email menü › Settings a saját beállításfát nyitja (email-prefs.js, mako EmailGoogle 4.1). Quick responses (lista, Create new, szerkesztő párbeszéd Cancel/Delete/Save), Choose ringtone (az image értesítési hangjai, érintésre lejátszva, Cancel/OK) és az Incoming/Outgoing settings (IMAP-mezők, biztonsági típus, Require sign-in, Cancel/Done) helyben menthető, újratöltés után megmarad; szerverkapcsolat nincs. Remove account korlát marad. Ellenőrzés: `limits-regression.mjs T02` asztali és telefonszélességen zöld; magyar képernyőképek; `npm test` 247/247.
 - **Verziók:** 4.3.
 - **Forráscsoportok:** 4.3-01, 4.3-09, 4.3-15.
 - **Elkészítendő és határ:** A külön Email app beállításfája a mako gyári Email alapján. A már definiált Quick responses, Choose ringtone, Incoming settings és Outgoing settings is ide tartozik, bár az audit idején a belépés elfedte őket. A Remove account szolgáltatási korlát marad.
@@ -141,7 +141,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 #### T09 — Email helyi szervermezők és hiányzó prefsorok
 
 - **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Részben kész — `c67a7a43`: a közös email-prefs.py miatt 4.4.4 és 5.1.1 alatt is működik a Quick responses, a csengőhang és az Incoming/Outgoing settings (`limits-regression.mjs T09` asztali és telefonszélességen zöld). Nyitott: 2.3.6 Incoming/Outgoing settings, 4.0.4 (az Email Settings ott nem az email-prefs.js-t nyitja), valamint a szervermezők tartalmi validációja (pl. port).
 - **Verziók:** 2.3.6, 4.0.4, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 2.3.6-03, 4.0.4-19, 4.4.4-01, 4.4.4-09, 5.1.1-01, 5.1.1-09.
 - **Elkészítendő és határ:** 2.3.6 Incoming/Outgoing settings. 4.0.4, 4.4.4, 5.1.1 Quick responses, Choose ringtone, Incoming/Outgoing settings. 4.3 ugyanezt a T02 keretében kapja meg. A 2.3.6 újfiókos Manual setup és a Remove account továbbra is valódi fiókműveleti korlát.
