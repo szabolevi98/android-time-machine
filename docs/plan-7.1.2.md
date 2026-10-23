@@ -1153,3 +1153,16 @@ bundled four, the picture being placed, Live Wallpapers. A photo wallpaper never
 decoded as an image (its SVG had no namespace) and so left the home screen
 blank; fixed, including older saves. The 6.0 set the owner linked (nine, in
 bullhead's GoogleHome 1.2) belongs to 6.0.1; Nougat's GoogleHome replaced it.
+
+## Rows that do nothing — 2026-10-23
+
+The Settings crawl now also records taps that change nothing (no screen, dialog,
+data or markup change). Nearly all are correct: rows the code disables (Force
+stop of a stopped app, Battery / Memory without use, rows under an off switch or
+Data Saver, location rows with location off) and the information rows of About
+and Status. One was wrong: App info › Storage showed "Storage used" with a
+disabled Change button, but AppStorageSettings.initMoveDialog removes
+storage_space, storage_used and change_storage_button when
+getPackageCandidateVolumes has one volume, as on the 6P. Left from the list:
+Physical keyboard › Keyboard shortcuts helper and Text-to-speech › Listen to an
+example.

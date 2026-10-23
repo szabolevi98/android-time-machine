@@ -229,8 +229,9 @@
     bar: (c, cur) => header(c, cur.screen.split(':')[1]),
     render(c, cur) {
       const t = T(), id = cur.screen.split(':')[1], u = usage(c, id), f = n => NG.fileSize(c, n);
-      return `<div class="ngst-list"><i class="ngap-space"></i>${pair(c, t.t('storage_used'), t.t('storage_type_internal'))}${button(c, 'ngap-change', t.t('change'), true)}
-        ${NG.settingsCat(c, t.t('storage_label'))}${pair(c, t.t('total_size_label'), f(u.app + u.data))}${pair(c, t.t('application_size_label'), f(u.app))}${pair(c, t.t('external_code_size_label'), f(0))}
+      // initMoveDialog: the 6P has one volume (getPackageCandidateVolumes size 1), so storage_space, storage_used and
+      // change_storage_button are removed.
+      return `<div class="ngst-list">${NG.settingsCat(c, t.t('storage_label'))}${pair(c, t.t('total_size_label'), f(u.app + u.data))}${pair(c, t.t('application_size_label'), f(u.app))}${pair(c, t.t('external_code_size_label'), f(0))}
         ${pair(c, t.t('data_size_label'), f(u.data))}${pair(c, t.t('external_data_size_label'), f(0))}${button(c, 'ngap-cleardata', t.t('clear_user_data_text'), !u.data || !NG.appData.canClear(id))}
         <i class="ngap-space"></i>${pair(c, t.t('cache_size_label'), f(u.cache))}${button(c, 'ngap-clearcache', t.t('clear_cache_btn_text'), !u.cache)}</div>`;
     },
