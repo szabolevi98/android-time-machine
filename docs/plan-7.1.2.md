@@ -1,5 +1,11 @@
 # Android 7.1.2 on the Nexus 6P — plan
 
+**Release complete 2026-10-23.** The implementation is committed as `6cb85987` and
+published to `origin/main`; the checklist in [remaining-7.1.2.md](remaining-7.1.2.md)
+is closed. The dated development notes below preserve the earlier checkpoints.
+The current scope and verification are in [features-7.1.2.md](features-7.1.2.md)
+and [reports/release-7.1.2.md](reports/release-7.1.2.md).
+
 Started 2026-10-19 (owner: "kezdd el a Nougatot"). Build: **N2G48C** (`angler-n2g48c-factory-6a21e528.zip`, "7.1.2
 (N2G48C, Aug 2017)", SHA-256 `6a21e52889246aee2be75479af1a684d4e1c78259dfc88a73a1e57e786cd771b`), the last 7.1.2 build
 Google published for the Nexus 6P before 8.0. Folder `versions/7.1.2`, era prefix `ng-` (Nougat). The frame

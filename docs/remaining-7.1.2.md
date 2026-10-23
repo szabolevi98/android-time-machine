@@ -67,4 +67,5 @@ The source and completion rules remain in plan-7.1.2.md. This is a concrete cont
 - [x] Full module suite and source inventory regeneration (run regeneration separately from tests/browser: it temporarily rewrites boot assets).
       247 module checks pass; the inventory verifies 1207 regenerated files with zero problems. All eight releases' fonts match their source images.
 - [x] Landing screenshot, features-7.1.2.md, README, catalogue available, sitemap.
-- [ ] Commit and push release; verify clean relevant working tree and remote state.
+- [x] Commit and push release; verify clean relevant working tree and remote state.
+      Release implementation: `6cb85987`, pushed and verified on origin/main. Only the owner's pre-existing local audit scripts and `.claude/` remain untracked; the sitemap and final checklist are recorded in the following release-metadata commit.
