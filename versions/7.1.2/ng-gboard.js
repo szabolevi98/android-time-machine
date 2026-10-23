@@ -35,6 +35,7 @@
     root.classList.toggle('numbers', numeric());
     root.classList.toggle('borders', !!pref('key_borders', false));
     root.classList.toggle('dark', pref('theme', 'light') === 'dark');
+    if(NG.keyboardThemeStyle){root.setAttribute('style',NG.keyboardThemeStyle(c,pref('theme','light'),!!pref('key_borders',false)));root.classList.add('native-palette');}
     const hand = pref('one_handed_mode', '0');
     root.classList.toggle('left', hand === '2'); root.classList.toggle('right', hand === '1');
     nav();
@@ -64,7 +65,7 @@
     const langName = new Intl.DisplayNames([c.locale()], {type:'language'}).of(lang());
     const bottom = numeric() ? `${charKey(field?.type === 'tel' ? '*' : '.')}${charKey('0')}${button('delete', icon('delete'), 'function', 'delete_key_content_desc')}${end}` :
       `${button(mode === 'alpha' ? 'symbols' : 'alpha', mode === 'alpha' ? '?123' : 'ABC', 'function', 'symbol_keyboard_key_content_desc')}${button('emoji', icon('emoji'), 'function', 'emoji_keyboard_key_content_desc')}${charKey(',')}${button('space', c.safe(langName), 'space', 'space_key_content_desc')}${charKey('.')}${mode === 'emoji' ? button('delete', icon('delete'), 'function', 'delete_key_content_desc') : ''}${end}`;
-    root.innerHTML = `<div class="ngboard-inner"><div class="ngboard-header">${button('settings', icon('menu'), 'tool', 'open_access_points_menu_content_desc')}<span class="ngboard-word"></span>${!secret()&&pref('enable_voice_input',true)?button('voice',icon('mic'),'tool','voice_input_key_content_desc'):''}${button('language', icon('globe'), 'tool', 'next_language_key_content_desc')}</div><div class="ngboard-body">${body}<div class="ngboard-row bottom">${bottom}</div></div></div>`;
+    root.innerHTML = `${NG.keyboardThemeBackground?.(c,pref('theme','light'))||''}<div class="ngboard-inner"><div class="ngboard-header">${button('settings', icon('menu'), 'tool', 'open_access_points_menu_content_desc')}<span class="ngboard-word"></span>${!secret()&&pref('enable_voice_input',true)?button('voice',icon('mic'),'tool','voice_input_key_content_desc'):''}${button('language', icon('globe'), 'tool', 'next_language_key_content_desc')}</div><div class="ngboard-body">${body}<div class="ngboard-row bottom">${bottom}</div></div></div>`;
     resize(); suggestions();
   }
   function remember(el) {

@@ -921,3 +921,24 @@ browser flows, all five languages and phone width; existing Camera and Photos
 browser regressions passed. Source inventory rebuilt all 1168 assets with zero problems. Image assets were extracted from N2G48C, never
 from an earlier release. No real camera, stitching, depth capture or face-analysis
 backend is claimed.
+
+## Gboard theme packages and image themes — 2026-10-23
+
+The 15 additional Gboard 6.0.84 theme packages are decoded from the APK's protobuf
+metadata and layered style sheets, including each optional bordered palette. The
+existing Material light/dark themes remain; all 17 use native names and colours.
+ThemeSelectorActivity now has its native dark preview holder, 128×92dp fixed grid
+candidates, native checked foreground and My Image launcher. Miniature keys are
+runtime previews of this image's keyboard mappings, rather than copied screenshots.
+
+The image builder selects a local image through Documents, snapshots it, supports
+drag/pinch crop (mouse wheel on desktop), brightness, save/edit/cancel/delete and
+automatic fallback to Material light on deletion. The saved theme remains intact
+when its source photo is removed. Theme metadata and the frame/editor dimensions
+come only from this Gboard APK. Fullscreen preference customs allow the native
+special-purpose activity to retain its own header and status colour.
+
+Validation: original Gboard editor/language/browser regression and the new real
+pointer theme flow passed, including live red/cyan palettes, borders, crop,
+brightness, snapshot independence, editing/cancellation/deletion, phone width and
+five languages. Source inventory: 1174 rebuilt files, zero problems.

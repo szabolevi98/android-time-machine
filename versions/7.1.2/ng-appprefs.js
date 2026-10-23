@@ -147,6 +147,7 @@
     const n = custom || lic ? null : nodeOf(c);
     const title = s.title || custom?.title?.(c) || (n && str(n.title)) || h.screenTitle?.(c, s.xml) || '';
     const body = lic ? licensePage(c, s) : custom ? custom.render(c) : n ? `${h.top?.(c, s.xml) || ''}${rows(c, n)}${h.after?.(c, s.xml) || ''}` : c.missing('app-prefs');
+    if(custom?.fullscreen)return body;
     const bg = h.window || app(c).theme?.windowBackground || '#fafafa';
     return `<div class="ngst ngap" style="--ngap-primary:${primary};--ngap-accent:${accent(c)};--ngap-window:${bg};--ngap-bar-text:${barText(c)}"><div class="ngst-ab"><button type="button" class="ngst-nav" data-action="ngap-up" aria-label="${esc(c, NG.text('settings').t('framework/action_bar_up_description'))}"><i style="-webkit-mask-image:url('assets/fw-ic_ab_back_material.svg');mask-image:url('assets/fw-ic_ab_back_material.svg')"></i></button>
       <span class="ngst-abtitle nav">${esc(c, title)}</span><span class="ngst-actions">${custom ? custom.actions?.(c) || '' : lic ? '' : h.actions?.(c, s.xml) || ''}</span></div><div class="ngst-content ngst-list ngap-list">${body}</div></div>`;
@@ -168,7 +169,7 @@
     // The window animation's page (ng-core.js): deeper screens open over the ones they came from.
     page: c => NG.page('prefs', ...(c.ui.appPrefs?.stack || []).map(s => `${s.app}.${s.xml}.${s.path.join('.')}`)),
     app: false,
-    statusColor: c => st(c) ? colors(c)[1] : '#000',
+    statusColor: c => st(c) ? hooks(c).customs?.[cur(c).xml]?.statusColor?.(c) || colors(c)[1] : '#000',
     dialogAccent: c => st(c) ? accent(c) : '',
     render,
     back(c) { const s = st(c); if (s && s.stack.length > 1) { s.stack.pop(); c.render(); return true; } c.ui.appPrefs = null; return false; },

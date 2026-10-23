@@ -190,5 +190,253 @@ NG.strings('gboard', {
 "de": "Gebündelt",
 "fr": "Intégré",
 "es": "Adherido"
+},
+"kb_theme_color_black": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_color_black",
+"en": "Black Theme",
+"hu": "Fekete téma",
+"de": "Schwarzes Design",
+"fr": "Thème noir",
+"es": "Tema negro"
+},
+"kb_theme_color_blue": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_color_blue",
+"en": "Blue Theme",
+"hu": "Kék téma",
+"de": "Blaues Design",
+"fr": "Thème bleu",
+"es": "Tema azul"
+},
+"kb_theme_color_blue_grey": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_color_blue_grey",
+"en": "Blue Grey Theme",
+"hu": "Kékesszürke téma",
+"de": "Blaugraues Design",
+"fr": "Thème gris-bleu",
+"es": "Tema gris azulado"
+},
+"kb_theme_color_brown": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_color_brown",
+"en": "Brown Theme",
+"hu": "Barna téma",
+"de": "Braunes Design",
+"fr": "Thème marron",
+"es": "Tema marrón"
+},
+"kb_theme_color_cyan": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_color_cyan",
+"en": "Cyan Theme",
+"hu": "Ciánkék téma",
+"de": "Zyanblaues Design",
+"fr": "Thème cyan",
+"es": "Tema cian"
+},
+"kb_theme_color_deep_purple": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_color_deep_purple",
+"en": "Deep Purple Theme",
+"hu": "Mélylila téma",
+"de": "Dunkellila Design",
+"fr": "Thème violet profond",
+"es": "Tema púrpura oscuro"
+},
+"kb_theme_color_green": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_color_green",
+"en": "Green Theme",
+"hu": "Zöld téma",
+"de": "Grünes Design",
+"fr": "Thème vert",
+"es": "Tema verde"
+},
+"kb_theme_color_light_pink": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_color_light_pink",
+"en": "Light Pink Theme",
+"hu": "Világos rózsaszín téma",
+"de": "Hellrosa Design",
+"fr": "Thème rose clair",
+"es": "Tema rosa claro"
+},
+"kb_theme_color_pink": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_color_pink",
+"en": "Pink Theme",
+"hu": "Rózsaszín téma",
+"de": "Rosa Design",
+"fr": "Thème rose",
+"es": "Tema rosa"
+},
+"kb_theme_color_red": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_color_red",
+"en": "Red Theme",
+"hu": "Vörös téma",
+"de": "Rotes Design",
+"fr": "Thème rouge",
+"es": "Tema rojo"
+},
+"kb_theme_color_teal": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_color_teal",
+"en": "Teal Theme",
+"hu": "Pávakék téma",
+"de": "Blaugrünes Design",
+"fr": "Thème turquoise",
+"es": "Tema verde azulado"
+},
+"kb_theme_google_blue_dark": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_google_blue_dark",
+"en": "Google Dark Theme",
+"hu": "Google Dark téma",
+"de": "Dunkles Google-Design",
+"fr": "Thème foncé Google",
+"es": "Tema oscuro de Google"
+},
+"kb_theme_google_blue_light": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_google_blue_light",
+"en": "Google Light Theme",
+"hu": "Google Light téma",
+"de": "Helles Google-Design",
+"fr": "Thème clair Google",
+"es": "Tema claro de Google"
+},
+"kb_theme_holo_blue": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_holo_blue",
+"en": "Holo Blue Theme",
+"hu": "Kék holo téma",
+"de": "Blaues Holo-Design",
+"fr": "Thème Holo bleu",
+"es": "Tema Holo azul"
+},
+"kb_theme_holo_white": {
+"res": "angler:LatinIMEGooglePrebuilt:kb_theme_holo_white",
+"en": "Holo White Theme",
+"hu": "Fehér holo téma",
+"de": "Weißes Holo-Design",
+"fr": "Thème Holo blanc",
+"es": "Tema Holo blanco"
+},
+"theme_selector_title": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_selector_title",
+"en": "Set Keyboard Theme",
+"hu": "Billentyűzettéma beállítása",
+"de": "Tastaturdesign wählen",
+"fr": "Définir le thème du clavier",
+"es": "Establecer tema del teclado"
+},
+"theme_selector_navigate_up": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_selector_navigate_up",
+"en": "Navigate up",
+"hu": "Navigálás felfelé",
+"de": "Nach oben",
+"fr": "Remonter",
+"es": "Navegar hacia arriba"
+},
+"theme_selector_launch_theme_builder": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_selector_launch_theme_builder",
+"en": "My Image",
+"hu": "Saját kép",
+"de": "Mein Bild",
+"fr": "Mon image",
+"es": "Mi imagen"
+},
+"theme_builder_title": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_builder_title",
+"en": "Create Keyboard Theme",
+"hu": "Billentyűzettéma létrehozása",
+"de": "Tastaturdesign erstellen",
+"fr": "Créer un thème de clavier",
+"es": "Crear tema del teclado"
+},
+"theme_builder_cropping_view_instruction": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_builder_cropping_view_instruction",
+"en": "Pinch to Scale, Drag to Move",
+"hu": "Ujjai összehúzásával átméretezheti a képet, húzással pedig mozgathatja",
+"de": "Zum Skalieren Finger zusammen- oder auseinanderziehen, zum Bewegen am Bild ziehen",
+"fr": "Pincer pour redimensionner, faire glisser pour déplacer",
+"es": "Pellizca para modificar la escala, arrastra para mover"
+},
+"theme_builder_cropping_view_next": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_builder_cropping_view_next",
+"en": "NEXT",
+"hu": "TOVÁBB",
+"de": "WEITER",
+"fr": "SUIVANT",
+"es": "SIGUIENTE"
+},
+"theme_builder_brightness_view_text": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_builder_brightness_view_text",
+"en": "Adjust Brightness",
+"hu": "Fényerő módosítása",
+"de": "Helligkeit anpassen",
+"fr": "Régler la luminosité",
+"es": "Ajustar brillo"
+},
+"theme_builder_brightness_view_done": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_builder_brightness_view_done",
+"en": "DONE",
+"hu": "KÉSZ",
+"de": "FERTIG",
+"fr": "OK",
+"es": "LISTO"
+},
+"theme_builder_brightness_bar_value_text_template": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_builder_brightness_bar_value_text_template",
+"args": 1,
+"en": "%d%%",
+"hu": "%d%%",
+"de": "%d%%",
+"fr": "%d%%",
+"es": "%d%%",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"theme_builder_edit_button_text": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_builder_edit_button_text",
+"en": "Edit theme",
+"hu": "Téma szerkesztése",
+"de": "Design bearbeiten",
+"fr": "Modifier le thème",
+"es": "Editar tema"
+},
+"theme_builder_delete_button_text": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_builder_delete_button_text",
+"en": "Delete theme",
+"hu": "Téma törlése",
+"de": "Design löschen",
+"fr": "Supprimer le thème",
+"es": "Borrar tema"
+},
+"theme_builder_delete_dialog_message": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_builder_delete_dialog_message",
+"en": "Are you sure you want to delete the theme?",
+"hu": "Biztosan törli a témát?",
+"de": "Möchten Sie dieses Design wirklich löschen?",
+"fr": "Voulez-vous vraiment supprimer le thème ?",
+"es": "¿Seguro que deseas borrar el tema?"
+},
+"user_theme_name_format": {
+"res": "angler:LatinIMEGooglePrebuilt:user_theme_name_format",
+"args": 2,
+"en": "Theme (%1$d) created on %2$s",
+"hu": "Téma (%1$d) létrehozva: %2$s",
+"de": "Design (%1$d) erstellt am %2$s",
+"fr": "Thème (%1$d) créé le %2$s",
+"es": "Tema (%1$d) creado el %2$s"
+},
+"theme_editor_title": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_editor_title",
+"en": "Edit Keyboard Theme",
+"hu": "Billentyűzettéma szerkesztése",
+"de": "Tastaturdesign bearbeiten",
+"fr": "Modifier le thème du clavier",
+"es": "Editar tema del teclado"
+},
+"theme_builder_edit_save": {
+"res": "angler:LatinIMEGooglePrebuilt:theme_builder_edit_save",
+"en": "SAVE",
+"hu": "MENTÉS",
+"de": "SPEICHERN",
+"fr": "ENREGISTRER",
+"es": "GUARDAR"
 }
 });

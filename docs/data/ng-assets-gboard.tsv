@@ -9,3 +9,9 @@ gb-emoji.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_k
 gb-mic.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/quantum_ic_mic_black_24
 gb-settings.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_access_point_setting_light_theme
 gb-menu.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_open_access_points_light_theme
+gb-theme-check.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/quantum_ic_check_white_48
+gb-theme-border.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_theme_selector_key_border
+gb-theme-image.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/ic_theme_selector_builder_launcher
+gb-theme-image-background.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/bg_theme_selector_builder_launcher
+gb-theme-edit.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/quantum_ic_edit_white_24
+gb-theme-delete.png	app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk	drawable/quantum_ic_delete_white_24
