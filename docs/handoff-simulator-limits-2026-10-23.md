@@ -4,7 +4,7 @@ Dátum: 2026-10-23. A fájl az átadáskori állapotot rögzíti; kezdéskor ell
 
 ## Következő sessionben bemásolható kérés
 
-> Folytasd a D:\xampp\htdocs\android-simulator fejlesztését az alábbi átadó és hiányaudit alapján. Először ellenőrizd az aktuális git-állapotot és a projekt saját utasításait. A cél a verziók közötti indokolatlan funkcióhiányok csökkentése. Kezdd az 5.1.1 Photos Edit visszalépésének reprodukálásával és javításával, majd haladj a prioritáslista szerint. Az eredeti Android-verzióhoz illő működést építsd meg, az újabb verziók kész helyi megoldásait referenciaként használva. Minden javított tételt ellenőrizz, és frissítsd a hiánylistát. Commit és push mehet. VPS-deployra nincs külön felhatalmazás.
+> Folytasd a D:\xampp\htdocs\android-simulator fejlesztését az alábbi átadó és hiányaudit alapján. Először ellenőrizd az aktuális git-állapotot és a projekt saját utasításait. A cél a verziók közötti indokolatlan funkcióhiányok csökkentése. Először végezd el a 125 korlátcsoport egyszeri besorolását a riportban, majd kezdd az 5.1.1 Photos Edit reprodukálásával és javításával, és haladj a prioritáslista szerint. Az eredeti Android-verzióhoz illő működést építsd meg a gyári image és az AOSP alapján; a többi verzió kész helyi megoldásai csak referenciák. Minden javított tételt ellenőrizz, vedd fel a közös regressziós tesztbe, és az állapotot a riportban vezesd. Commit és push mehet. VPS-deployra nincs külön felhatalmazás.
 
 Ez a kezdőkérés javasolt munkasorrend; a felhasználó a következő sessionben átírhatja.
 
@@ -29,15 +29,19 @@ A kérés: verziónként gyűjtsük össze az „Ez a funkció nem része a szim
 
 Az audit forrásvizsgálat és célzott futó ellenőrzés. Nem az összes gomb és minden belső beállítás teljes kattintásos bejárása. A 6.0.1/7.1.2 nulla konkrét találata nem jelenti, hogy minden elképzelhető funkció kész.
 
+## Első lépés: a teljes lista besorolása
+
+A javítások előtt egyszer menj végig mind a 125 konkrét korlátcsoporton, és a lenti szűrési szabály szerint sorold be mindegyiket: **javítandó**, **szándékos korlát** vagy **tartalékág**. A besorolás a `docs/reports/simulator-limits-2026-10-23.md` riportba kerül, csoportonként. Ebből lesz a véges munkalista: a haladást a javítandó tételek száma méri, nem a 125 csoport. A besorolás közben talált új verzióközi eltéréseket a prioritáslistába is vedd fel.
+
 ## Javasolt javítási sorrend
 
-1. **5.1.1 Google Photos › Edit.** Konkrét visszalépés: 4.4.4 alatt a Photos Edit a Galéria szerkesztőjére ad át; 5.1.1 alatt a `photos-edit` generikus elutasítást mutat. Reprodukálás után vizsgáld meg a korhű 5.1-es megoldást, a mentést és a visszanavigálást is.
+1. **5.1.1 Google Photos › Edit.** 5.1.1 alatt a `photos-edit` generikus elutasítást mutat, 4.4.4 alatt működik. **A 4.4.4-es megoldás itt nem minta:** ott a Photos Edit a Galéria szerkesztőjére ad át, de a Nexus 6 image-ében nincs Galéria (az 5.1.1 `simulator.js` el is távolítja a `gallery` appot, és az `lp-gallery.js` fejkommentje is ezt rögzíti; a `_aosp/shamu` image-ben `Photos` és `PlusOne` van). Korhűen a Photos app saját szerkesztője kell. Először a gyári Photos APK-ból (`_aosp/shamu`) állapítsd meg, milyen szerkesztőt és eszközöket adott az akkori verzió; a 6.0.1/7.1.2 saját Photos-szerkesztője közelebbi referencia, mint a 4.4.4. A mentést és a visszanavigálást is ellenőrizd.
 2. **4.3 Email › Settings.** Konkrét visszalépés: a külön Email app Settings belépése elutasít (`email-settings` a 4.3 `simulator.js`-ben csak toast), miközben 4.0.4 alatt (`email.js`, `openSettings`) és 4.4.4/5.1.1 alatt (`em-settings`, `email-prefs.js`) van saját beállításképernyő. A 4.3-as JB Email gyári beállításait használd; a 4.4.4-es megoldás referencia.
 3. **Naptár beállításai 4.3 / 4.4.4 / 5.1.1.** A Settings elutasít; 4.3/4.4 alatt a Calendars to display is. Már 2.3.6-ban van működő beállításút, 6/7-ben saját részletes felület. Ne másold át az újabb verzió teljes UI-ját a régebbibe.
 4. **Gmail-beállítások.** 2.3.6/4.0.4 alatt a Settings belépés is elutasít; 4.3–5.1 alatt egyes sorok, például szinkronnapok, címkék és értesítések hiányoznak. Az Email külön alkalmazás, ne keverd a Gmaillel.
 5. **4.0.4 Kamera › Video és Panorama.** Konkrét verzióközi hiány: a módválasztóban mindkettő elutasít (`camera-mode` csak a `camera` azonosítót engedi), miközben 4.3 alatt a videó és a panoráma (`camera-pano.js`) működik. Az ICS-es gyári kamera módjait és felületét kövesd.
-6. **Chrome-beállítások 4.3–5.1.1.** A Privacy és About mellett több kategória elutasít. Az adott verzió valódi beállításait és meglévő forrásait ellenőrizd.
-7. **5.1.1 Gmail › Attach file.** Elutasít, miközben Attach picture működik; 6/7-ben már van Documents-alapú csatolás. Ellenőrizd a fájltípust, az adatátadást és a csatolmány megjelenítését.
+6. **5.1.1 Gmail › Attach file.** Elutasít, miközben Attach picture működik; 6/7-ben már van Documents-alapú csatolás. Ellenőrizd a fájltípust, az adatátadást és a csatolmány megjelenítését. Kicsi, konkrét tétel, ezért a Chrome előtt van.
+7. **Chrome-beállítások 4.3–5.1.1, szűkítve.** A Privacy és About mellett több kategória elutasít. Ez a lista legnagyobb tétele, ezért csak a helyben értelmes kategóriákat építsd meg, az adott verzió valódi beállításai szerint: például keresőmotor, tartalombeállítások, akadálymentesség, sávszélesség. A Passwords, Autofill és a fiókhoz kötött sorok a szűrési szabály szerint elutasítók maradhatnak.
 8. **További helyi funkciók a részletes listából.** Például Keep másolás/küldés, Drive listaműveletek, Docs/Sheets/Slides menük, Telefon/Névjegyek beállítások. Az egyes útvonalakat külön reprodukáld; egy alkalmazás nem teljesen hiányos attól, hogy néhány menüje elutasít.
 9. **Feltételes tartalékágak elérhetőségének vizsgálata.** A 2.1/6.0.1/7.1.2 `missing` rendererei hibavédelmi ágak is lehetnek. Csak konkrét, normál UI-ból elérhető reprodukció után kezeld őket hiányzó funkcióként.
 
@@ -56,7 +60,7 @@ A munka a helyben szimulálható beállításokra és szerkesztésre koncentrál
 
 ### Elutasító szövegek egységesítése
 
-Az elutasító üzenetek verziónként eltérnek (lásd a „Megtalált szövegváltozatok” táblát: generikus F, U, N, D, V, B, valamint alkalmazásspecifikus C, H, L, P), és több szövegnek nincs magyar fordítása, például „Calendar settings are not part of this simulation.”, „Help is not available offline.”, „Lens Blur capture is not simulated”, „Not available in this simulator”. Ezt a fenti javításokkal párhuzamosan, olcsó külön commitokban kell rendbe tenni:
+Az elutasító üzenetek verziónként eltérnek (lásd a „Megtalált szövegváltozatok” táblát: generikus F, U, N, D, V, B, valamint alkalmazásspecifikus C, H, L, P), és több szövegnek nincs magyar fordítása, például „Calendar settings are not part of this simulation.”, „Help is not available offline.”, „Lens Blur capture is not simulated”, „Not available in this simulator”. Ezt nem egyszerre, mind a nyolc verzió fájljain kell rendbe tenni a funkciójavítások közben, hanem alkalmazásonként: amikor egy appot amúgy is javítasz, annak az elutasító szövegeit is egységesítsd, külön commitban. A végén egy záró átnézés kezeli a maradékot. Szempontok:
 
 - egy közös, lefordított szövegkulcsra kell vezetni azokat a helyeket, amelyek ugyanazt jelentik;
 - a szándékosan megmaradó, alkalmazásspecifikus szövegek (pl. Photo Sphere, segélyhívás) kapjanak magyar fordítást;
@@ -68,6 +72,8 @@ Az egységesítés nem helyettesíti a funkció megépítését: egy javítandó
 
 - **Forrás, nem fejből.** A szövegek, a menüsorrend és a felület a gyári image-ekből és az AOSP-ből jöjjön (`_aosp/<eszköz>`, a projektben gitignored). A forrást a commitban vagy a kódkommentben nevezd meg.
 - **Kész csak akkor, ha ki van próbálva.** Egy tétel csak akkor zárható le, ha asztali nézetben (egérhúzással) és telefonszélességen is végig lett kattintva, és a korábban elutasító út a valódi felületen működik.
+- **Közös regressziós teszt.** Készüljön egy közös, adatvezérelt böngészőteszt (például `tests/browser/limits-regression.mjs`), amely felsorolja az összes javított utat (verzió, app, kattintási út), és ellenőrzi, hogy egyiken sem jelenik meg elutasító toast vagy Még nincs kész képernyő. Minden javított tétel ebbe kerül be, így egy későbbi változtatás nem rontja el csendben a korábbi javításokat.
+- **Az állapot egy helyen.** A besorolás és a javítások állapota csak a `docs/reports/simulator-limits-2026-10-23.md` riportban van vezetve. Az átadó beágyazott auditmásolata átadáskori pillanatkép, azt nem kell frissíteni.
 
 ## Fontos pontosítások — ne indíts újra már lezárt munkát
 
@@ -80,7 +86,7 @@ Az egységesítés nem helyettesíti a funkció megépítését: egy javítandó
 
 ## Mire figyelj a lista értelmezésénél?
 
-- 4.4.4 Photos Edit **működik**; 5.1.1 Photos Edit **elutasít**.
+- 4.4.4 Photos Edit **működik**; 5.1.1 Photos Edit **elutasít**. Az 5.1.1-ben nincs Galéria, ezért a 4.4.4-es átadás oda nem vihető át.
 - A 4.3/4.4.4/5.1.1 közösen örökölt `settings-system.js` egyes korlátozásai `if (ICS)` alatt vannak, ezért nem aktívak automatikusan minden verzióban.
 - A 4.4.4/5.1.1 `GEL_UNSIMULATED` lista üres; a hozzá tartozó appindítási guard önmagában nem tilt alkalmazást.
 - A 6.0.1 `mmsa-missing` akció neve félrevezető: keresési módot indít, nem hiányüzenetet.
@@ -93,13 +99,13 @@ Az egységesítés nem helyettesíti a funkció megépítését: egy javítandó
 1. Aktuális git-állapot, utasítások, csomagszkriptek és a kiválasztott modul elolvasása.
 2. Az adott verzió pontos UI-útjának reprodukálása; a másik verzió működő megoldásának összehasonlítása.
 3. Az adott korabeli felülethez illő helyi működés megépítése a projekt meglévő mintáival.
-4. Célzott viselkedési ellenőrzés, majd a változáshoz szükséges meglévő tesztkör. Böngészőtesztből valós kattintási út igazolja a korábban elutasító funkciót.
-5. A javított tételt a riportban jelöld meg commitazonosítóval és ellenőrzési eredménnyel. A történeti bizonyítékot ne írd át úgy, mintha a hiány sosem létezett volna.
+4. Célzott viselkedési ellenőrzés, majd a változáshoz szükséges meglévő tesztkör. A javított út kerüljön be a közös regressziós tesztbe; az valós kattintással igazolja a korábban elutasító funkciót.
+5. A javított tételt a riportban (`docs/reports/simulator-limits-2026-10-23.md`, nem az átadó másolatában) jelöld meg commitazonosítóval és ellenőrzési eredménnyel. A történeti bizonyítékot ne írd át úgy, mintha a hiány sosem létezett volna.
 6. Áttekinthető commitok és push; a felhasználó ezt már engedélyezte.
 
 ## A teljes audit beágyazva
 
-Az alábbi rész az eredeti audit másolata, hogy ez az egy Markdown-fájl önmagában is használható legyen. A forráslinkek rögzített commitra mutatnak. A 473 nyers kódrészletet a külön JSON/HTML melléklet tartalmazza; a verziónkénti teljes csoportosított lista itt is benne van.
+Az alábbi rész az eredeti audit **átadáskori pillanatképe**, hogy ez az egy Markdown-fájl önmagában is használható legyen. Nem frissül: a besorolás és a javítások állapota a `docs/reports/simulator-limits-2026-10-23.md` riportban van. A forráslinkek rögzített commitra mutatnak. A 473 nyers kódrészletet a külön JSON/HTML melléklet tartalmazza; a verziónkénti teljes csoportosított lista itt is benne van.
 
 ---
 
