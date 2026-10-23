@@ -75,6 +75,8 @@
     const {ui} = ctx;
     ctx.list = list(ctx);
     if (ui.sub === 'photo') return viewer(ctx);
+    // Edit: Google+'s photo editor (plus-editor.js).
+    if (ui.sub === 'edit' && window.PlusEditor) return PlusEditor.render(ctx);
     // VideoViewActivity (photos-video.js).
     if (ui.sub === 'video') { const photo = ctx.list[ui.photosIndex]; if (photo?.video) return window.GPVideo.render(photo, ctx); }
     if (ui.sub === 'search') return search(ctx);

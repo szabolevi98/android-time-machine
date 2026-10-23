@@ -422,6 +422,7 @@
     if (ui.view === 'clock' && viewport.querySelector('.jbclock-app')) clockTicker();
     if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserFind) highlightBrowserText();
     if (ui.view === 'photos' && ui.sub === 'photo') attachPhotosSwipe();
+    if (ui.view === 'photos' && ui.sub === 'edit') PlusEditor.attach(viewport.querySelector('[data-pe-root]'), peContext());
     // VideoViewActivity's player (photos-video.js).
     if (ui.gpv && !viewport.querySelector('[data-gpv-root]')?.isSameNode(ui.gpv.root)) { ui.gpv.destroy(); ui.gpv = null; }
     const gpvRoot = viewport.querySelector('[data-gpv-root]');
@@ -861,6 +862,7 @@
     if (ui.view === 'play-books' && ui.sub === 'reader' && (ui.bkSpin || ui.bkOptions || ui.bkToc)) { if (ui.bkSpin) ui.bkSpin = ''; else if (ui.bkOptions) ui.bkOptions = false; else ui.bkToc = false; render(); return; }
     if (ui.view === 'play-books' && ui.sub === 'reader') { ui.bkOptions = false; ui.bkToc = false; ui.bkSpin = ''; }
     if (PLAY_APPS.includes(ui.view) && ui.sub) { ui.sub = ui.sub === 'queue' ? 'player' : ui.sub === 'player' ? ui.paReturn || '' : ui.sub === 'album' && ui.paFromSearch ? 'search' : ''; if (ui.sub !== 'album') ui.paFromSearch = ui.sub === 'search' && ui.paFromSearch; ui.paBars = true; render(); return; }
+    if (ui.view === 'photos' && ui.sub === 'edit' && PlusEditor.back(peContext())) return;
     if (ui.view === 'photos' && ui.photosSpinner) { ui.photosSpinner = false; render(); return; }
     if (ui.view === 'photos' && ui.sub === 'video') { ui.sub = 'photo'; ui.photosVideo = null; render(); return; }
     if (ui.view === 'photos' && ui.sub) { ui.sub = ui.sub === 'photo' ? ui.photosReturn || '' : ui.sub === 'folder' ? 'folders' : ''; ui.photosChrome = true; render(); return; }
@@ -1560,6 +1562,8 @@
   }
   // Google+ Photos (the Nexus 6's Photos) over the simulator's pictures.
   const photosContext = () => ({data, ui, t: key => i18n.t(key), locale: i18n.locale(), media: ICSMedia, groups: LPGallery.groups(data, 'album', i18n.locale())});
+  // Google+'s photo editor (plus-editor.js) over the same pictures.
+  const peContext = () => ({...photosContext(), save, render, toast});
   function photosCurrent() { const list = PhotosApp.list(photosContext()); return list[ui.photosIndex] || null; }
   function photosShare(photo) { if (!photo) return; ui.overlay = ''; renderOverlay(); openApp('messaging'); ui.sub = 'new'; messageDraft().attachment = clone(photo); save(); render(); }
   // Swipe between pictures in the viewer; a tap shows or hides the bars.
@@ -1962,6 +1966,7 @@
     if (Date.now() < suppressClickUntil) return;
     const { action, id, app, url } = button.dataset;
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
+    if (action.startsWith('pe-') && window.PlusEditor?.handle(action, button, peContext())) return;
     if (action.startsWith('lpu-') && window.LPUsers?.handle(action, button, {data, save, render, open: sub => { ui.sub = sub; render(); }, back: () => { ui.sub = 'users'; render(); }})) return;
     if (ui.view === 'gallery' && ui.galleryPopup && action !== 'gallery-menu') ui.galleryPopup = '';
     // A tap outside the Recents popup menu only dismisses it.
@@ -2466,7 +2471,8 @@
       case 'photos-drawer': ui.photosSpinner = !ui.photosSpinner; render(); break;
       case 'photos-view': ui.photosView = id; ui.photosSpinner = false; render(); break;
       case 'photos-search': ui.sub = 'search'; ui.photosQuery = ''; render(); viewport.querySelector('[data-photos-search]')?.focus(); break;
-      case 'photos-edit': case 'photos-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
+      case 'photos-edit': { const photo = photosCurrent(); ui.overlay = ''; renderOverlay(); if (!photo || photo.video) break; PlusEditor.open(ui, photo); ui.sub = 'edit'; render(); break; }
+      case 'photos-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
       case 'chrome-close-all': ui.browserSession = {tabs: [{history: [ChromeApp.NTP], index: 0}], active: 0}; ui.sub = ''; ui.overlay = ''; renderOverlay(); saveBrowserState(); render(); break;
       case 'chrome-ntp': chromeSection(id); break;
       case 'chrome-bookmarks': chromeSection('bookmarks'); break;

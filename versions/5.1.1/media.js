@@ -46,7 +46,9 @@
     const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="${sky}"/><stop offset="1" stop-color="${sun}"/></linearGradient></defs><rect width="${width}" height="${height}" fill="url(#sky)"/><circle cx="1790" cy="200" r="65" fill="${sun}"/>${hills}<g transform="translate(2048 0) scale(-1 1)">${hills}</g><g transform="translate(2048 0)">${hills}</g></svg>`;
     return 'data:image/svg+xml,'+encodeURIComponent(svg);
   }
+  // An edit made in Google+'s editor (plus-editor.js) is drawn over the picture it was made on.
   function image(photo) {
+    if(photo.plusEdit?.steps?.length&&window.PlusEditor){const plain=image({...photo,plusEdit:undefined}),turned=!photo.pano&&((Number(photo.rotation)||0)%180);return PlusEditor.compose(plain,photo.pano?3072:turned?768:1024,photo.pano?768:turned?1024:768,photo.plusEdit.steps);}
     if(photo.pano)return panoImage(photo);
     const colors=(photo.colors||palettes[0]).map((c,i)=>/^#[\da-f]{6}$/i.test(c)?c:palettes[0][i%3]);
     const [sky,sun,land]=[...colors,...palettes[0]];
