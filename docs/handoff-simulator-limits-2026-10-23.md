@@ -4,7 +4,7 @@ Dátum: 2026-10-23. A fájl az átadáskori állapotot rögzíti; kezdéskor ell
 
 ## Következő sessionben bemásolható kérés
 
-> Folytasd a D:\xampp\htdocs\android-simulator fejlesztését az alábbi átadó és hiányaudit alapján. Először ellenőrizd az aktuális git-állapotot és a projekt saját utasításait. A cél a verziók közötti indokolatlan funkcióhiányok csökkentése. Kezdd az 5.1.1 Photos Edit visszalépésének reprodukálásával és javításával, majd haladj a prioritáslista szerint. Az eredeti Android-verzióhoz illő működést építsd meg, az újabb verziók kész helyi megoldásait referenciaként használva. Minden javított tételt ellenőrizz, és frissítsd a hiánylistát. Commit és push mehet; a heti limitet nem kell figyelembe venni. VPS-deployra nincs külön felhatalmazás.
+> Folytasd a D:\xampp\htdocs\android-simulator fejlesztését az alábbi átadó és hiányaudit alapján. Először ellenőrizd az aktuális git-állapotot és a projekt saját utasításait. A cél a verziók közötti indokolatlan funkcióhiányok csökkentése. Kezdd az 5.1.1 Photos Edit visszalépésének reprodukálásával és javításával, majd haladj a prioritáslista szerint. Az eredeti Android-verzióhoz illő működést építsd meg, az újabb verziók kész helyi megoldásait referenciaként használva. Minden javított tételt ellenőrizz, és frissítsd a hiánylistát. Commit és push mehet. VPS-deployra nincs külön felhatalmazás.
 
 Ez a kezdőkérés javasolt munkasorrend; a felhasználó a következő sessionben átírhatja.
 
@@ -20,7 +20,6 @@ Ez a kezdőkérés javasolt munkasorrend; a felhasználó a következő sessionb
 - Átadáskor csak a korábbról megmaradt `.claude/` és `tests/browser/_audit.mjs`, `_appaudit.mjs`, `_prefaudit.mjs` voltak untracked állapotban. Ezek nem az új hiányaudit módosításai; ne töröld vagy commitold őket automatikusan.
 - Az előző ellenőrzés nem talált AGENTS.md-t; kezdéskor ellenőrizd újra, mert ez változhatott.
 - Commit/push engedélyezett. A GitHub Pages push után automatikusan publikálhat; VPS-re ebben a munkamenetben nem deployoltunk.
-- A felhasználó visszavonta a korábbi heti százalékos leállási határt.
 
 ## Mit kért a felhasználó, és mit találtunk?
 
@@ -41,6 +40,32 @@ Az audit forrásvizsgálat és célzott futó ellenőrzés. Nem az összes gomb 
 7. **Feltételes tartalékágak elérhetőségének vizsgálata.** A 2.1/6.0.1/7.1.2 `missing` rendererei hibavédelmi ágak is lehetnek. Csak konkrét, normál UI-ból elérhető reprodukció után kezeld őket hiányzó funkcióként.
 
 Minden tételnél legyen világos: megvalósítandó helyi működés, szándékos szolgáltatási korlát vagy nem elérhető tartalékág. A valódi Google-szolgáltatás, fizetés vagy telefonhálózat hiányát ne „javítsd” egy eredményt színlelő toasttal.
+
+### Szűrési szabály a 125 csoporthoz
+
+A 125 konkrét korlátcsoport nem mind javítandó. Szándékos korlát marad, és továbbra is elutasít:
+
+- Help, Help & feedback, Send feedback, Contact us;
+- Terms, Privacy policy, jogi és egyéb webes tájékoztató linkek;
+- Sign out, Add/Remove account és más valódi fiókműveletek;
+- Wallet-fizetés, vásárlás, pénzküldés és más valódi szolgáltatást igénylő utak.
+
+A munka a helyben szimulálható beállításokra és szerkesztésre koncentráljon: beállításképernyők és -sorok, szerkesztők, csatolás, kamera- és médiamódok, listaműveletek. Ha egy tétel mindkét csoportba illik, a verziók közötti eltérés dönt: ami egy másik verzióban már helyi működésként kész, az javítandó.
+
+### Elutasító szövegek egységesítése
+
+Az elutasító üzenetek verziónként eltérnek (lásd a „Megtalált szövegváltozatok” táblát: generikus F, U, N, D, V, B, valamint alkalmazásspecifikus C, H, L, P), és több szövegnek nincs magyar fordítása, például „Calendar settings are not part of this simulation.”, „Help is not available offline.”, „Lens Blur capture is not simulated”, „Not available in this simulator”. Ezt a fenti javításokkal párhuzamosan, olcsó külön commitokban kell rendbe tenni:
+
+- egy közös, lefordított szövegkulcsra kell vezetni azokat a helyeket, amelyek ugyanazt jelentik;
+- a szándékosan megmaradó, alkalmazásspecifikus szövegek (pl. Photo Sphere, segélyhívás) kapjanak magyar fordítást;
+- a „Not available in this demo” és hasonló eltéréseket ne hagyd külön változatként, ha ugyanazt jelentik.
+
+Az egységesítés nem helyettesíti a funkció megépítését: egy javítandó tételt nem az üzenet átírása zár le.
+
+### Munkaszabályok
+
+- **Forrás, nem fejből.** A szövegek, a menüsorrend és a felület a gyári image-ekből és az AOSP-ből jöjjön (`_aosp/<eszköz>`, a projektben gitignored). A forrást a commitban vagy a kódkommentben nevezd meg.
+- **Kész csak akkor, ha ki van próbálva.** Egy tétel csak akkor zárható le, ha asztali nézetben (egérhúzással) és telefonszélességen is végig lett kattintva, és a korábban elutasító út a valódi felületen működik.
 
 ## Fontos pontosítások — ne indíts újra már lezárt munkát
 
