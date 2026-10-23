@@ -105,7 +105,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 #### T05 — 4.0.4 kamera videó és panoráma
 
 - **Ütem:** Mag.
-- **Állapot:** Nyitott — aktuális fejlesztési kör.
+- **Állapot:** Kész — `6cff485d`. A 4.0.4 kamera módválasztója Video és Panorama módba vált: videó a btn_video_shutter gombbal, piros rögzítésjelzővel és eltelt idővel, a gomb vagy a Vissza leállítja és VID_ elemet ment; panoráma (ics-pano.js) a pano_capture.xml / pano_review.xml szerint (PanoProgressBar, „Panoráma rögzítése”, „Mentés…”, MÉGSE), mentés PANO_ elemként, MÉGSE után nincs elem. A Galéria megjeleníti a panorámát, a videót rácsjelöléssel és lejátszó gombbal, lejátszás MovieActivity-ként (ics-movie.js). Ellenőrzés: `limits-regression.mjs T05` asztali és telefonszélességen zöld; képernyőképek; `npm test` 247/247. A videóbeállítások (minőség, időzített felvétel, effektek) nem részei ennek a körnek.
 - **Verziók:** 4.0.4.
 - **Forráscsoportok:** 4.0.4-03.
 - **Elkészítendő és határ:** ICS Video és Panorama módválasztás, a gyári módhoz illő felvételi folyamat, megszakítás és helyi eredmény; a 4.3 meglévő felvételi modellje referencia.
