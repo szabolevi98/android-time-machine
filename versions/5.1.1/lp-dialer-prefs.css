@@ -1,0 +1,46 @@
+/* The Phone app's Settings (lp-dialer-prefs.js): the 56 dp #0288D1 toolbar, Material light preference rows (16 sp
+   titles, 14 sp #0000008a summaries, the accent categories), check boxes and radio rows in #0288D1, the Material
+   dialogs; and GoogleContacts' Import/export dialogs and SimContacts (people-io) in the same light Material. */
+.ldp2-app{display:flex;flex-direction:column;background:#fafafa;color:#000000de}
+.ldp2-bar{flex:none;height:calc(56 * var(--dp));display:flex;align-items:center;background:#0288d1;color:#fff;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0003}
+.screen .ldp2-up{width:calc(56 * var(--dp));height:100%;padding:0;border:0;background:none;display:grid;place-items:center}
+.ldp2-up img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ldp2-bar h2{margin:0 0 0 calc(16 * var(--dp));font:500 calc(20 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ldp2-list{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.ldp2-cat{margin:0;padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(8 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#0288d1}
+.screen .ldp2-row{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:calc(12 * var(--dp)) calc(16 * var(--dp));border:0;background:none;color:#000000de;text-align:left;cursor:pointer}
+.screen .ldp2-row:active{background:#0000001f}
+.ldp2-copy{flex:1;min-width:0;display:flex;flex-direction:column}
+.ldp2-copy b{font:400 calc(16 * var(--dp))/1.4 Roboto,sans-serif}
+.ldp2-copy small{font:400 calc(14 * var(--dp))/1.4 Roboto,sans-serif;color:#0000008a}
+.ldp2-check{flex:none;position:relative;width:calc(18 * var(--dp));height:calc(18 * var(--dp));margin:0 calc(3 * var(--dp)) 0 calc(16 * var(--dp));border:calc(2 * var(--dp)) solid #0000008a;border-radius:calc(2 * var(--dp))}
+.ldp2-check.on{border-color:#0288d1;background:#0288d1}
+.ldp2-check.on::after{content:'';position:absolute;left:calc(4 * var(--dp));top:0;width:calc(5 * var(--dp));height:calc(10 * var(--dp));border:solid #fff;border-width:0 calc(2 * var(--dp)) calc(2 * var(--dp)) 0;transform:rotate(45deg)}
+.ldp2-scrim{position:absolute;inset:0;z-index:30;background:#00000080}
+.ldp2-dlg{position:absolute;z-index:31;left:calc(24 * var(--dp));right:calc(24 * var(--dp));top:50%;transform:translateY(-50%);border-radius:calc(2 * var(--dp));background:#fff;box-shadow:0 calc(12 * var(--dp)) calc(24 * var(--dp)) #0005}
+.ldp2-dlg h3{margin:0;padding:calc(24 * var(--dp)) calc(24 * var(--dp)) calc(12 * var(--dp));font:500 calc(20 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.screen .ldp2-radio{display:flex;align-items:center;gap:calc(32 * var(--dp));width:100%;min-height:calc(48 * var(--dp));padding:0 calc(24 * var(--dp));border:0;background:none;color:#000000de;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif}
+.ldp2-radio i{flex:none;width:calc(20 * var(--dp));height:calc(20 * var(--dp));border:calc(2 * var(--dp)) solid #0000008a;border-radius:50%}
+.ldp2-radio.on i{border-color:#0288d1;background:radial-gradient(#0288d1 0 calc(5 * var(--dp)),transparent calc(5.5 * var(--dp)))}
+.ldp2-edit{padding:0 calc(24 * var(--dp))}
+.ldp2-edit input{width:100%;padding:calc(8 * var(--dp)) 0;border:0;border-bottom:calc(2 * var(--dp)) solid #0288d1;background:none;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de;outline:none}
+.ldp2-buttons{display:flex;justify-content:flex-end;gap:calc(8 * var(--dp));padding:calc(8 * var(--dp))}
+.screen .ldp2-buttons button{min-width:calc(64 * var(--dp));height:calc(36 * var(--dp));padding:0 calc(8 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;color:#0288d1;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.screen .ldp2-buttons button:active,.screen .ldp2-radio:active{background:#0000001f}
+.vcf-dialog{max-height:80%;display:flex;flex-direction:column}
+.vcf-dialog h3{flex:none;margin:0;padding:calc(24 * var(--dp)) calc(24 * var(--dp)) calc(12 * var(--dp));font:500 calc(20 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.vcf-list{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.screen .vcf-item{display:flex;align-items:center;gap:calc(16 * var(--dp));width:100%;min-height:calc(48 * var(--dp));padding:calc(8 * var(--dp)) calc(24 * var(--dp));border:0;background:none;color:#000000de;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif;white-space:pre-line}
+.vcf-item small{display:block;font-size:calc(14 * var(--dp));color:#0000008a}
+.screen .vcf-item:active{background:#0000001f}
+.vcf-radio,.vcf-check{flex:none;order:-1;width:calc(20 * var(--dp));height:calc(20 * var(--dp));border:calc(2 * var(--dp)) solid #0000008a;border-radius:50%}
+.vcf-check{width:calc(18 * var(--dp));height:calc(18 * var(--dp));border-radius:calc(2 * var(--dp))}
+.vcf-radio.on{border-color:#0288d1;background:radial-gradient(#0288d1 0 calc(5 * var(--dp)),transparent calc(5.5 * var(--dp)))}
+.vcf-check.on{border-color:#0288d1;background:#0288d1}
+.vcf-sim{display:flex;flex-direction:column;background:#fafafa;color:#000000de}
+.vcf-sim-bar{flex:none;height:calc(56 * var(--dp));display:flex;align-items:center;background:#0288d1;color:#fff;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0003}
+.screen .vcf-sim-up{width:calc(56 * var(--dp));height:100%;padding:0;border:0;background:none;display:grid;place-items:center}
+.vcf-sim-up img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.vcf-sim-bar h2{margin:0 0 0 calc(16 * var(--dp));font:500 calc(20 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vcf-sim-empty{margin:auto;padding:calc(16 * var(--dp));font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#0000008a;text-align:center}
+.vcf-text{flex:1;min-width:0;display:flex;flex-direction:column}

@@ -65,5 +65,5 @@
     const html=shell(title,`<div class="sd-choice-list">${choices.map(([id,name])=>`<label><span>${e(t(name))}</span><input type="radio" name="choice" value="${id}" ${String(id)===String(value)?'checked':''}></label>`).join('')}</div>${actions}`,'sd-choice');
     return field==='ringtone'||field==='notificationTone'?html.replace('data-form="sd-choice"',`data-form="sd-choice" data-sound="${field}"`):html;
   }
-  window.ICSSettingsDetail={defaults,prefs,sizes,render,overlay,animationScaleLabel};
+  window.ICSSettingsDetail={defaults,prefs,sizes,render,overlay,animationScaleLabel,RINGTONES};
 })();

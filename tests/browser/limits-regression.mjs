@@ -523,6 +523,107 @@ const clockSettings = spec => async h => {
   await h.tap('[data-action="cpref-help"]');
   h.check('Help opens the article in the browser', await h.until(`/support\\.google\\.com/.test(document.querySelector('#viewport .chr-omnibox input')?.value || '')`));
 };
+
+const store = (h, key) => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));const d=k&&JSON.parse(localStorage.getItem(k));return d?d[${JSON.stringify(key)}]:undefined})()`);
+// Contacts' Import/export (T11): Export to storage asks first and Cancel writes nothing; OK writes 00001.vcf; a deleted
+// contact comes back from the card with its fields and nobody is duplicated; with two cards "Import all" still does
+// not duplicate; Import from SIM card shows the empty SIM; up to 4.4 Set ringtone keeps the choice and Cancel does not.
+const contactsImportExport = spec => async h => {
+  const listMenu = async () => { await h.tap(`#viewport [data-action="${spec.listMenu}"]`); await h.tap('[data-action="vcf-open"]'); h.check('Import/export opens its dialog', await h.until(`document.querySelectorAll('.vcf-dialog .vcf-item').length === 4`)); };
+  // A contact by its content: the name, its numbers and addresses whatever the shape, and the other fields.
+  const values = (c, many, one) => (c[many]?.length ? c[many].map(x => x.value) : c[one] ? [c[one]] : []).sort();
+  const strip = list => JSON.stringify((list || []).map(c => ({name: c.name, phones: values(c, 'phones', 'phone'), emails: values(c, 'emails', 'email'), company: c.company || '', notes: c.notes || '', title: c.title || ''})).sort((a, b) => a.name.localeCompare(b.name)));
+  await h.openApp('people');
+  h.check('opens Contacts', await h.until(`!!document.querySelector('#viewport [data-action="${spec.listMenu}"]')`));
+  await listMenu();
+  await h.tap('.vcf-dialog [data-action="vcf-export"]');
+  h.check('Export asks with the file name', await h.until(`/00001\\.vcf/.test(document.querySelector('.vcf-dialog p')?.textContent || '')`));
+  await h.tap('.vcf-dialog [data-action="vcf-cancel"]');
+  h.check('Cancel writes no file', !((await store(h, 'vcards')) || []).length);
+  await listMenu();
+  await h.tap('.vcf-dialog [data-action="vcf-export"]');
+  await h.tap('.vcf-dialog [data-action="vcf-export-ok"]');
+  const files = await store(h, 'vcards'), before = await store(h, 'contacts');
+  h.check('OK writes 00001.vcf with every contact', files?.length === 1 && files[0].name === '00001.vcf' && (files[0].text.match(/BEGIN:VCARD/g) || []).length === before.length);
+  h.check('the export is notified', (await store(h, 'notifications')).some(n => /00001\.vcf/.test(n.title)));
+  // Delete a contact, then read the card back.
+  const gone = before.find(c => c.name === spec.victim);
+  await h.tap(`#viewport [data-action="contact"][data-id="${gone.id}"]`);
+  await h.tap('#viewport [data-action="people-menu"]');
+  await h.tap('[data-action="people-delete"]');
+  await h.tap('[data-action="people-confirm-delete"]');
+  h.check('the contact is deleted', await h.until(`!document.querySelector('#viewport [data-action="contact"][data-id="${gone.id}"]')`) && (await store(h, 'contacts')).length === before.length - 1);
+  await listMenu();
+  await h.tap('.vcf-dialog [data-action="vcf-import"]');
+  h.check('one card is imported at once, with every field and no duplicate', await h.until(`!document.querySelector('.vcf-dialog')`) && strip(await store(h, 'contacts')) === strip(before), JSON.stringify(await store(h, 'contacts')));
+  await listMenu();
+  await h.tap('.vcf-dialog [data-action="vcf-export"]');
+  await h.tap('.vcf-dialog [data-action="vcf-export-ok"]');
+  await listMenu();
+  await h.tap('.vcf-dialog [data-action="vcf-import"]');
+  h.check('two cards ask how many to import', await h.until(`!!document.querySelector('.vcf-dialog [data-action="vcf-mode"][data-id="all"]')`));
+  await h.tap('.vcf-dialog [data-action="vcf-mode"][data-id="all"]');
+  await h.tap('.vcf-dialog [data-action="vcf-mode-ok"]');
+  h.check('Import all does not duplicate', await h.until(`!document.querySelector('.vcf-dialog')`) && strip(await store(h, 'contacts')) === strip(before));
+  await listMenu();
+  await h.tap('.vcf-dialog [data-action="vcf-sim"]');
+  h.check('Import from SIM card shows the empty SIM', await h.until(`!!document.querySelector('#viewport .vcf-sim-empty')`));
+  await h.key('Escape');
+  h.check('Back returns to the list', await h.until(`!!document.querySelector('#viewport [data-action="${spec.listMenu}"]')`));
+  if (spec.ringtone) {
+    const person = (await store(h, 'contacts')).find(c => c.name === spec.victim);
+    await h.tap(`#viewport [data-action="contact"][data-id="${person.id}"]`);
+    const ring = async () => { await h.tap('#viewport [data-action="people-menu"]'); await h.tap('[data-action="people-ringtone"]'); h.check('Set ringtone opens the picker', await h.until(`!!document.querySelector('.vcf-ringtone')`)); };
+    await ring();
+    const tone = await h.ev(`document.querySelector('.vcf-ringtone label:nth-child(4) input').value`);
+    await h.tap('.vcf-ringtone label:nth-child(4)');
+    await h.tap('.vcf-ringtone [type="submit"]');
+    h.check('OK keeps the ringtone on the contact', (await store(h, 'contacts')).find(c => c.id === person.id).ringtone === tone, tone);
+    await ring();
+    h.check('the picker shows it again', await h.ev(`document.querySelector('.vcf-ringtone input[value="${tone}"]').checked`));
+    await h.tap('.vcf-ringtone label:nth-child(5)');
+    await h.tap('.vcf-ringtone [data-action="close-overlay"]');
+    h.check('Cancel keeps it', (await store(h, 'contacts')).find(c => c.id === person.id).ringtone === tone);
+  }
+};
+// The 5.1 Phone app (T44): Import/export from its menu, its Settings (General: Sort by / Name format acting on the
+// Phone and Contacts lists, Phone ringtone, Dialpad tones and Also vibrate shared with Settings, Quick responses).
+const phoneSettings = async h => {
+  const menu = async () => { await h.tap('#viewport [data-action="phone-menu"]:not([data-id])'); };
+  await h.openApp('phone');
+  h.check('opens the Phone', await h.until(`!!document.querySelector('#viewport [data-action="phone-menu"]:not([data-id])')`));
+  await menu();
+  await h.tap('[data-action="vcf-open"]');
+  h.check('Import/export opens from the Phone', await h.until(`document.querySelectorAll('.vcf-dialog .vcf-item').length === 4`));
+  await h.key('Escape');
+  h.check('Back closes it', await h.until(`!document.querySelector('.vcf-dialog')`));
+  await menu();
+  await h.tap('[data-action="dpr-settings"]');
+  h.check('Settings lists General, Calls and Advanced', await h.until(`document.querySelectorAll('#viewport .ldp2-row').length === 3`));
+  await h.tap('#viewport .ldp2-row[data-id="dialer-general"]');
+  const pick = async (row, id) => { await h.tap(`#viewport .ldp2-row[data-id="${row}"]`); await h.tap(`#viewport .ldp2-radio[data-id="${id}"]`); };
+  await pick('order', 'family');
+  await pick('sort', 'family');
+  h.check('Sort by and Name format save', JSON.stringify(await store(h, 'contactPrefs')) === '{"order":"family","sort":"family"}');
+  await h.tap('#viewport .ldp2-row[data-id="dialTones"]');
+  h.check('Dialpad tones is the system setting', (await store(h, 'settings')).dialTones === false);
+  await h.tap('#viewport .ldp2-row[data-action="dpr-ringtone"]');
+  h.check('Phone ringtone opens the ringtone picker', await h.until(`!!document.querySelector('form[data-sound="ringtone"]')`));
+  await h.tap('form[data-sound="ringtone"] label:nth-child(3)');
+  const tone = await h.ev(`document.querySelector('form[data-sound="ringtone"] input:checked').value`);
+  await h.tap('form[data-sound="ringtone"] [type="submit"]');
+  h.check('the ringtone is the system ringtone', (await store(h, 'settings')).ringtone === tone && await h.until(`document.querySelector('#viewport .ldp2-row[data-action="dpr-ringtone"] small')?.textContent === ${JSON.stringify(tone)}`), tone);
+  await h.tap('#viewport .ldp2-row[data-id="dialer-quick"]');
+  await h.tap('#viewport .ldp2-row[data-id="quick:1"]');
+  await h.type('#viewport .ldp2-edit input', 'Driving, call you soon');
+  await h.tap('#viewport [data-action="dpr-quick-ok"]');
+  h.check('a quick response is edited', (await store(h, 'quickResponses'))?.[1] === 'Driving, call you soon' && await h.until(`/Driving, call you soon/.test(document.querySelector('#viewport .ldp2-list').textContent)`));
+  await h.key('Escape'); await h.key('Escape'); await h.key('Escape');
+  await h.tap('#viewport [data-action="lpd-tab"][data-id="contacts"]');
+  h.check('the Phone lists by last name in Last, First form', await h.until(`(()=>{const n=[...document.querySelectorAll('#viewport .lpd-contact-name')].map(x=>x.textContent);return n.includes('Morgan, Alex')&&n.indexOf('Lee, Taylor')<n.indexOf('Morgan, Alex')})()`));
+  await h.openApp('people');
+  h.check('Contacts follows the same format', await h.until(`[...document.querySelectorAll('#viewport .lpp-name')].some(x=>x.textContent==='Morgan, Alex')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -583,6 +684,11 @@ const CASES = [
   {id: 'T03', version: '4.3', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
   {id: 'T03', version: '4.4.4', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
   {id: 'T03', version: '5.1.1', name: 'Calendar › Settings: General, Events from Gmail, Sync', run: calendarSettingsLP},
+  {id: 'T11', version: '4.0.4', name: 'Contacts › Import/export and Set ringtone', run: contactsImportExport({listMenu: 'people-list-menu', victim: 'Taylor Lee', ringtone: true})},
+  {id: 'T11', version: '4.3', name: 'Contacts › Import/export and Set ringtone', run: contactsImportExport({listMenu: 'people-list-menu', victim: 'Taylor Lee', ringtone: true})},
+  {id: 'T11', version: '4.4.4', name: 'Contacts › Import/export and Set ringtone', run: contactsImportExport({listMenu: 'people-list-menu', victim: 'Taylor Lee', ringtone: true})},
+  {id: 'T11', version: '5.1.1', name: 'Contacts › Import/export', run: contactsImportExport({listMenu: 'people-menu', victim: 'Taylor Lee', ringtone: false})},
+  {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T33', version: '5.1.1', name: 'Clock › menu, Settings, Night mode, Cities search', run: clockSettings({home: 'Home', search: true})},
   {id: 'T33', version: '4.4.4', name: 'Clock › menu, Settings, Night mode, Cities search', run: clockSettings({home: 'Home', search: true})},
   {id: 'T33', version: '4.3', name: 'Clock › menu, Settings, Night mode', run: clockSettings({home: 'Home', search: false})},

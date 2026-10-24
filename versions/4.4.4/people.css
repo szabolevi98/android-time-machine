@@ -21,3 +21,20 @@
 .people-alert-buttons button{flex:1;min-height:calc(47.6822 * var(--dp));border:0;background:none;color:#000!important;font:calc(15.8941 * var(--dp)) RobotoICS,sans-serif}
 .people-alert-buttons button+button{border-left:calc(1.1038 * var(--dp)) solid #0000001a}
 .people-alert button:active{background:#33b5e566}
+
+/* Import/export (people-io): the Holo light list dialogs of ImportExportDialogFragment and ImportVCardActivity (64 dp
+   items, the two-line file rows, btn_radio / btn_check holo_light), the export / no-file messages, and SimContacts
+   ("Select contacts to import": the people_app_theme_color #33b5e5 action bar over Holo light, the empty text). */
+.vcf-dialog{max-height:80%;display:flex;flex-direction:column}
+.vcf-list{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.screen .vcf-item{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:calc(8 * var(--dp)) calc(8 * var(--dp)) calc(8 * var(--dp)) calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #0000001a;background:none;color:#000;text-align:left;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;white-space:pre-line}
+.vcf-item small{display:block;margin-top:calc(2 * var(--dp));font-size:calc(14 * var(--dp));color:#777}
+.vcf-item img{flex:none;width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-left:auto}
+.screen .vcf-item:active{background:#33b5e566}
+.vcf-sim{display:flex;flex-direction:column;background:#f3f3f3;color:#000}
+.vcf-sim-bar{flex:none;height:calc(48 * var(--dp));display:flex;align-items:center;background:#33b5e5;color:#fff}
+.screen .vcf-sim-up{height:100%;padding:0 calc(4 * var(--dp));border:0;background:none;display:flex;align-items:center}
+.vcf-sim-up img{width:calc(16 * var(--dp));height:calc(32 * var(--dp));object-fit:cover;object-position:left}
+.vcf-sim-bar h2{margin:0 0 0 calc(8 * var(--dp));font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vcf-sim-empty{margin:auto;padding:calc(16 * var(--dp));font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#777;text-align:center}
+.vcf-text{flex:1;min-width:0;display:flex;flex-direction:column}

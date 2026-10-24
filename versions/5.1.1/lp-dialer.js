@@ -160,10 +160,12 @@
     return calls.map(call => { const g = dayGroup(call.time); const head = g !== group ? `<h3 class="lpd-day">${e(t(g))}</h3>` : ''; group = g; return head + logRow(call, byPhone(call.number), ui, t, locale); }).join('');
   }
   function contactsPage(data, t) {
-    const sorted = [...data.contacts].sort((a, b) => a.name.localeCompare(b.name));
+    // Sort by and Name format (lp-dialer-prefs): the provider's sort key and display name.
+    const P = window.LPDialerPrefs, key = person => P ? P.sortKey(person, data) : person.name, named = person => P ? P.displayName(person, data) : person.name;
+    const sorted = [...data.contacts].sort((a, b) => key(a).localeCompare(key(b)));
     if (!sorted.length) return `<div class="lpd-empty"><img src="assets/gd-empty_contacts.png" alt=""><p>${e(t('No contacts'))}</p></div>`;
     let last = '';
-    return `<div class="lpd-contacts">${sorted.map(person => { const head = letter(person.name) || '#'; const shown = head !== last; last = head; return `<button class="lpd-contact" data-action="contact" data-id="${person.id}"><span class="lpd-section">${shown ? e(head) : ''}</span>${letterTile(person, 'lpd-photo')}<span class="lpd-contact-name">${e(person.name)}</span></button>`; }).join('')}</div>`;
+    return `<div class="lpd-contacts">${sorted.map(person => { const head = letter(key(person)) || '#'; const shown = head !== last; last = head; return `<button class="lpd-contact" data-action="contact" data-id="${person.id}"><span class="lpd-section">${shown ? e(head) : ''}</span>${letterTile(person, 'lpd-photo')}<span class="lpd-contact-name">${e(named(person))}</span></button>`; }).join('')}</div>`;
   }
   function dialpad(dial, t) {
     return `<div class="lpd-dialpad" role="group" aria-label="${e(t('Dial pad'))}"><div class="lpd-digits"><button class="lpd-digits-menu" data-action="phone-menu" data-id="dialpad" aria-label="${e(t('More options'))}" ${dial ? '' : 'hidden'}><img src="assets/gd-ic_overflow_menu.png" alt=""></button><output aria-label="${e(t('Phone number'))}">${e(dial)}</output><button class="lpd-delete" data-action="dial-delete" aria-label="${e(t('Delete'))}" ${dial ? '' : 'disabled'}><img src="assets/gd-ic_dialpad_delete.png" alt=""></button></div><div class="lpd-keys">${KEYS.map(([digit, letters]) => `<button class="lpd-key${digit === '*' ? ' star' : digit === '#' ? ' pound' : ''}" data-action="dial" data-id="${digit}" aria-label="${digit}"><span class="lpd-key-num">${digit}</span>${digit === '1' ? '<img src="assets/gd-ic_dialpad_voicemail.png" alt="">' : letters ? `<span class="lpd-key-letters">${e(letters)}</span>` : ''}</button>`).join('')}</div><button class="lpd-fab lpd-fab-call" data-action="call" aria-label="${e(t('dial'))}"><img src="assets/gd-fab_ic_call.png" alt=""></button></div>`;
@@ -177,11 +179,10 @@
      list. CallDetailActivity: call_details_options.xml's overflow keeps "Edit number before call" (the delete item is
      the action bar icon; Delete voicemail only for voicemail). */
   function menu(kind, {data, t, byPhone}) {
-    const unavailable = 'This feature is not part of the simulator.';
     if (kind === 'dialpad') return [['phone-add-contact', t('Add to contacts')], ['dial-pause', t('Add 2-sec pause')], ['dial-wait', t('Add wait')], ['phone-dial-sms', t('Send SMS')]];
     if (kind === 'history') return (data.callHistory || []).length ? [['lpd-clear-log', t('Clear call history')]] : [];
     if (kind === 'detail') return [['lpd-edit-before-call', t('Edit number before call')]];
-    return [['kk-dialer-history', t('Call History')], [`toast:${unavailable}`, t('Import/export')], ...(hasFrequents(data, byPhone) ? [['lpd-clear-frequents', t('Clear frequents')]] : []), ['phone-new-contact', t('New contact')], [`toast:${unavailable}`, t('Settings')]];
+    return [['kk-dialer-history', t('Call History')], ['vcf-open', t('Import/export')], ...(hasFrequents(data, byPhone) ? [['lpd-clear-frequents', t('Clear frequents')]] : []), ['phone-new-contact', t('New contact')], ['dpr-settings', t('Settings')]];
   }
   // ClearFrequentsDialog / ClearCallLogDialog: the Material alert in the dialer's #0288D1 accent (AlertDialogTheme).
   function confirm(kind, t) {
