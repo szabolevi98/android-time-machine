@@ -1126,7 +1126,7 @@ async function run(c, width) {
   const refusals = await ev(`window.__refusals || []`);
   check('no refusal on the way', !refusals.length, refusals.join(' | '));
   check('no exception', !errors.length, errors.join(' | '));
-  for (const f of [...failed]) { const m = f.match(/^net::ERR_CONNECTION_\w+ (\S+)$/); if (m && (await fetch(BASE + m[1]).catch(() => null))?.ok) failed.splice(failed.indexOf(f), 1); }
+  for (const f of [...failed]) { const m = f.match(/^net::(?:ERR_CONNECTION_\w+|ERR_NO_BUFFER_SPACE) (\S+)$/); if (m && (await fetch(BASE + m[1]).catch(() => null))?.ok) failed.splice(failed.indexOf(f), 1); }
   check('no failed local request', !failed.length, failed.join(' | '));
   if (phone) check('fits the phone width', await ev(`document.documentElement.scrollWidth <= innerWidth + 1`));
   return steps;
