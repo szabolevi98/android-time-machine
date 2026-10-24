@@ -500,7 +500,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 #### T48 — Elutasító szövegek és regressziós kör lezárása
 
 - **Ütem:** Mag, részben; a többi későbbi lista.
-- **Állapot:** A mostani rész nyitott; a későbbi rész halasztott.
+- **Állapot:** A mostani rész kész (fb8f1af0): a mag minden útja a közös tests/browser/limits-regression.mjs-ben, pozitív eredménnyel, mentéssel és Cancel/Back ellenőrzéssel; a teljes kör 2026-10-24-én 54 futásból (27 eset × asztali/telefon) zöld (a T07 egyetlen asztali futása egy átmeneti ERR_NO_BUFFER_SPACE hálózati hiba miatt bukott, egyedül újrafuttatva mind a 6 T07-futás zöld). Az érintett appokban (Névjegyek menük és Import/export, Email, Naptár, 4.4 Galéria Print, 5.1 kamera Lens Blur) a fordítatlan „Not available in this simulator” és „… capture is not simulated” helyett a lefordított közös „This feature is not part of the simulator.” kulcs áll; a megszűnt 4.4 Photo Sphere elutasítás kikerült az i18n.js-ből. Ellenőrzés: tests/limits-messages.test.cjs, npm test 252/252, text-check 4.4.4/5.1.1 0 hiányzó kulcs. Későbbi rész: a többi app (pl. 4.0.4/4.3 Üzenetek menü) azonos értelmű üzeneteinek egységesítése, halasztott.
 - **Mostani rész:** Közös regressziós teszt a mag útjaihoz; kizárólag a javított appokban érintett elutasító szövegek közös, lefordított kulcsainak rendezése. Nem teljes, nyolcverziós szöveg-újraaudit.
 - **Mostani készfeltétel:** Minden elkészült mag-út pozitív eredményre, mentésre, Cancel/Back működésre is tesztelt; az érintett üzenetkulcsok a projekt öt nyelvén feloldhatók; a halasztott tétel nem szerepel kész/skipelt sikernek jelentett funkcióként.
 - **Későbbi rész:** Az összes verzió/app megmaradó üzenetének teljes körű egységesítése és a későbbi csomagok regressziós esetei.
@@ -513,7 +513,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 #### T49 — 4.4.4 Photo Sphere és 5.1.1 Photo Sphere/Lens Blur
 
 - **Ütem:** Mag, részben; a többi későbbi lista.
-- **Állapot:** A mostani rész nyitott; a későbbi rész halasztott.
+- **Állapot:** A mostani rész kész (fb8f1af0): 4.4.4 és 5.1.1 Photo Sphere a módválasztóból — LightCycle célpontjai (3×8 pont 45°-onként), a célkeresztben/körben tartott pont kockát rögzít, a 4.4 Undo, az 5.1 Discard és Back, valamint a módváltás nem ment; Done két kocka után feldolgoz és PANO_ ekvirektanguláris gömbképet ment (a le nem fedett rész szürke); a 4.4 Galéria View Photo Sphere gombja, az 5.1 Photos érintésre (Loading photo sphere…) gömbnézetet nyit, húzással körülnézhető, Back visszavisz. Ellenőrzés: tests/photo-sphere.test.cjs; limits-regression T49 (4.4.4, 5.1.1) asztali és telefonos szélességen zöld; en/hu képernyőképek. A Lens Blur a későbbi rész, halasztott.
 - **Mostani rész:** 4.4.4 és 5.1.1 Photo Sphere irányított helyi felvétel, megszakítás, mentett kép és gömbnézet a már meglévő 7.1-es guided capture modell korabeli megfelelőjeként.
 - **Mostani készfeltétel:** A módválasztóból végigjárható Photo Sphere; a mentett eredmény a könyvtárban megnyitható és megfelelő gömbnézetet kap; Cancel nem ment.
 - **Későbbi rész:** 5.1.1 Lens Blur, mélység/szerkesztési folyamat, valamint bármilyen új illesztő- vagy mélységrekonstrukciós motor.
