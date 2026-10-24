@@ -22,7 +22,7 @@ for(const v of ['4.0.4','4.3','4.4.4']){
   assert.ok(src.includes('data-form="sd-choice" data-sound="${field}"'),v);
   for(const list of ['RINGTONES','NOTIFICATIONS']){const m=src.match(new RegExp(`(?:const |,)${list}=(\\[[^\\]]*\\])`));for(const title of JSON.parse(m[1]))assert.ok(S.asset(list==='RINGTONES'?'ringtones':'notifications',title),`${v} ${title}`);}
 }
-{const src=fs.readFileSync('versions/5.1.1/settings-detail.js','utf8'),S=load('5.1.1');assert.ok(src.includes('data-sound="${field}"'));
+{const src=fs.readFileSync('versions/5.1.1/settings-detail.js','utf8'),S=load('5.1.1');assert.ok(src.includes(`data-sound="\${field==='vmTone'?'notificationTone':field}"`));
   for(const [cat,list] of [['ringtones',src.match(/\['None',('Atria'[^\]]*)\]/)[1]],['notifications',src.match(/\['None',('Ariel'[^\]]*)\]/)[1]]])for(const title of list.split(',').map(x=>x.trim().slice(1,-1)))assert.ok(S.asset(cat,title),`5.1.1 ${title}`);}
 // Gingerbread's list passes file names (gbset-sound-pick ringtone:<file>).
 {const src=fs.readFileSync('versions/2.3.6/gb-settings.js','utf8'),S=load('2.3.6');
