@@ -1,0 +1,48 @@
+/* clock-prefs (DeskClock 3.0.4): SettingsActivity in SettingsTheme (DeskClockParentTheme over the hour colour,
+   label_text_size, white_69p text, sans-serif-medium), the Material popup and dialogs (hot_pink #ff4081 controls),
+   CitiesActivity's SearchView; AnalogClock (clock_analog_dial with its hour, minute and sweeping second hand, 294 dp at
+   most); ScreensaverActivity (Night mode): the clock dimmed to #40ffffff on black. */
+.cpref-app{display:flex;flex-direction:column;background:var(--dc);color:#fff}
+.cpref-list{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.cpref-cat{margin:0;padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(8 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#fff}
+.screen .cpref-row{display:flex;align-items:center;width:100%;min-height:calc(72 * var(--dp));padding:calc(12 * var(--dp)) calc(16 * var(--dp));border:0;background:none;color:#ffffffb0;text-align:left;cursor:pointer}
+.screen .cpref-row:active{background:#ffffff1f}
+.screen .cpref-row:disabled{opacity:.4;cursor:default}
+.cpref-copy{flex:1;min-width:0;display:flex;flex-direction:column}
+.cpref-copy b{font:500 calc(16 * var(--dp))/1.4 Roboto,sans-serif;color:#ffffffb0}
+.cpref-copy small{font:400 calc(14 * var(--dp))/1.4 Roboto,sans-serif;color:#ffffff80}
+.cpref-check{flex:none;position:relative;width:calc(18 * var(--dp));height:calc(18 * var(--dp));margin:0 calc(3 * var(--dp)) 0 calc(16 * var(--dp));border:calc(2 * var(--dp)) solid #ffffffb0;border-radius:calc(2 * var(--dp))}
+.cpref-check.on{border-color:#ff4081;background:#ff4081}
+.cpref-check.on::after{content:'';position:absolute;left:calc(4 * var(--dp));top:0;width:calc(5 * var(--dp));height:calc(10 * var(--dp));border:solid #fff;border-width:0 calc(2 * var(--dp)) calc(2 * var(--dp)) 0;transform:rotate(45deg)}
+.cpref-scrim{position:absolute;inset:0;z-index:30;background:#00000080}
+.cpref-scrim.clear{background:none}
+.cpref-menu{position:absolute;z-index:31;top:calc(4 * var(--dp));right:calc(4 * var(--dp));min-width:calc(180 * var(--dp));padding:calc(8 * var(--dp)) 0;border-radius:calc(2 * var(--dp));background:#fff;box-shadow:0 calc(2 * var(--dp)) calc(8 * var(--dp)) #0005}
+.screen .cpref-menu button{display:block;width:100%;min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;color:#000000de;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif}
+.cpref-dlg{position:absolute;z-index:31;left:calc(24 * var(--dp));right:calc(24 * var(--dp));top:50%;max-height:80%;display:flex;flex-direction:column;transform:translateY(-50%);border-radius:calc(2 * var(--dp));background:#fff;box-shadow:0 calc(12 * var(--dp)) calc(24 * var(--dp)) #0005;color:#000000de}
+.cpref-dlg h3{flex:none;margin:0;padding:calc(24 * var(--dp)) calc(24 * var(--dp)) calc(12 * var(--dp));font:500 calc(20 * var(--dp)) Roboto,sans-serif}
+.cpref-dlg-list{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.screen .cpref-radio{display:flex;flex-direction:row-reverse;align-items:center;gap:calc(20 * var(--dp));width:100%;min-height:calc(48 * var(--dp));padding:0 calc(24 * var(--dp));border:0;background:none;color:#000000de;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif}
+.cpref-radio span{flex:1;min-width:0}
+.cpref-radio i{flex:none;width:calc(20 * var(--dp));height:calc(20 * var(--dp));border:calc(2 * var(--dp)) solid #0000008a;border-radius:50%}
+.cpref-radio.on i{border-color:#ff4081;background:radial-gradient(#ff4081 0 calc(5 * var(--dp)),transparent calc(5.5 * var(--dp)))}
+.cpref-dlg-buttons{flex:none;display:flex;justify-content:flex-end;gap:calc(8 * var(--dp));padding:calc(8 * var(--dp))}
+.screen .cpref-dlg-buttons button{min-width:calc(64 * var(--dp));height:calc(36 * var(--dp));padding:0 calc(8 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;color:#ff4081;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.screen .cpref-dlg-buttons button:active,.screen .cpref-radio:active,.screen .cpref-menu button:active{background:#0000001a}
+.cpref-picker{display:flex;align-items:center;justify-content:center;gap:calc(16 * var(--dp));padding:calc(16 * var(--dp));font:400 calc(16 * var(--dp)) Roboto,sans-serif}
+.cpref-np{display:flex;flex-direction:column;align-items:center}
+.screen .cpref-np button{width:calc(64 * var(--dp));height:calc(48 * var(--dp));border:0;background:none;color:#00000042;font:400 calc(20 * var(--dp)) Roboto,sans-serif}
+.cpref-np b{display:block;min-width:calc(64 * var(--dp));padding:calc(6 * var(--dp)) 0;border-top:calc(2 * var(--dp)) solid #ff4081;border-bottom:calc(2 * var(--dp)) solid #ff4081;text-align:center;font:400 calc(24 * var(--dp)) Roboto,sans-serif}
+.cpref-volume{padding:calc(24 * var(--dp))}
+.cpref-volume input{width:100%;accent-color:#ff4081}
+.cpref-analog{position:relative;width:min(calc(294 * var(--dp)),80%);aspect-ratio:1;margin:0 auto}
+.cpref-analog>img{position:absolute;inset:0;width:100%;height:100%}
+.cpref-hand.second{animation:cpref-sweep 60s linear infinite}
+@keyframes cpref-sweep{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.screen .cpref-night{position:absolute;inset:0;z-index:5;display:grid;place-items:center;width:100%;height:100%;padding:0;border:0;background:#000;cursor:none}
+.cpref-night-clock{display:flex;flex-direction:column;align-items:center;gap:calc(8 * var(--dp));color:#40ffffff}
+.cpref-night-time{font:200 calc(96 * var(--dp))/1 Roboto,sans-serif}
+.cpref-night-date{font:400 calc(16 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;color:#40ffffff}
+.cpref-analog.night{width:calc(294 * var(--dp));max-width:80vw;opacity:.25}
+.lpdc-city-search{flex:1;min-width:0;height:calc(40 * var(--dp));margin:0 calc(8 * var(--dp));padding:0;border:0;background:none;color:#fff;font:400 calc(18 * var(--dp)) Roboto,sans-serif;outline:none;caret-color:#fff}
+.lpdc-city-search::-webkit-search-cancel-button{display:none}
+.screen .cpref-night .cpref-night-date,.screen .cpref-night .cpref-night-time{color:#40ffffff}

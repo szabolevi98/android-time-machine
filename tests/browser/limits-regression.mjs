@@ -462,6 +462,67 @@ const chromeSettings = spec => async h => {
   h.check('the search goes to Bing', await h.until(`document.querySelector('#viewport .web-engine')?.textContent === 'Bing'`));
   h.check('the page text is scaled', await h.ev(`document.querySelector('#viewport .chr-app .browser-page')?.style.fontSize`) === `${scale}%`);
 };
+
+// DeskClock's More options (T33): the menu (Night mode, Settings, Help), Settings' values saved and shown in their
+// summaries, the analog style and the Home clock on the clock page, Night mode, Help opening the article, the Cities
+// search (KitKat and Lollipop), and the reload keeping everything.
+const clockSettings = spec => async h => {
+  const prefs = () => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));return (JSON.parse(localStorage.getItem(k)).jbClock||{}).prefs||{}})()`);
+  const summary = id => h.ev(`document.querySelector('#viewport .cpref-row[data-id="${id}"] small')?.textContent || ''`);
+  const pick = async (row, value) => { await h.tap(`#viewport .cpref-row[data-id="${row}"]`); h.check(`${row} opens its dialog`, await h.until(`!!document.querySelector('#viewport .cpref-dlg')`)); await h.tap(`#viewport .cpref-radio[data-id="${value}"]`); };
+  const menu = async () => { await h.tap('#viewport [data-action="jbclock-menu"]'); h.check('More options opens the menu', await h.until(`!!document.querySelector('[data-action="cpref-open"]')`)); };
+  await h.openApp('clock');
+  h.check('opens the clock', await h.until(`!!document.querySelector('#viewport [data-action="jbclock-tab"][data-id="clock"]')`));
+  await h.tap('#viewport [data-action="jbclock-tab"][data-id="clock"]');
+  await menu();
+  h.check('the menu holds Night mode, Settings and Help', await h.ev(`[...document.querySelectorAll('[data-action^="cpref-"]')].map(b=>b.dataset.action).join()`) === 'cpref-night,cpref-open,cpref-help');
+  await h.tap('[data-action="cpref-open"]');
+  h.check('Settings opens', await h.until(`document.querySelectorAll('#viewport .cpref-row').length === 7`));
+  await pick('style', 'analog');
+  h.check('Style saves Analog', await h.until(`/Analog/.test(document.querySelector('#viewport .cpref-row[data-id="style"] small')?.textContent || '')`) && (await prefs()).style === 'analog');
+  await pick('silence', '5');
+  h.check('Silence after shows 5 minutes', /^5\b/.test(await summary('silence')));
+  await pick('buttons', '1');
+  h.check('Volume buttons saves Snooze', (await prefs()).buttons === '1');
+  await h.tap('#viewport .cpref-row[data-id="snooze"]');
+  await h.tap('#viewport .cpref-np [data-id="1"]');
+  await h.tap('#viewport .cpref-np [data-id="1"]');
+  await h.tap('#viewport .cpref-dlg [data-action="cpref-save"]');
+  h.check('Snooze length saves 12 minutes', (await prefs()).snooze === 12 && /^12\b/.test(await summary('snooze')));
+  await h.tap('#viewport .cpref-row[data-id="volume"]');
+  await h.drag('#viewport [data-cpref-volume]', -150, 0);
+  await h.tap('#viewport .cpref-dlg [data-action="cpref-save"]');
+  h.check('Alarm volume saves the slider', (await prefs()).volume < 6, JSON.stringify(await prefs()));
+  await pick('zone', 'Asia/Tokyo');
+  h.check('Home time zone shows Tokyo', /Tokyo/.test(await summary('zone')));
+  await h.tap('#viewport .cpref-row[data-id="autoHome"]');
+  h.check('the home time zone follows the automatic home clock', await h.ev(`document.querySelector('#viewport .cpref-row[data-id="zone"]').disabled`) && (await prefs()).autoHome === false);
+  await h.tap('#viewport .cpref-row[data-id="autoHome"]');
+  await h.key('Escape');
+  h.check('the clock page draws the analog clock', await h.until(`!!document.querySelector('#viewport .jbclock-clock [data-cpref-analog]')`));
+  h.check('the Home clock leads the world clocks', await h.ev(`/${spec.home}/.test(document.querySelector('#viewport .jbclock-world, #viewport .lpdc-world')?.textContent || '')`));
+  await menu();
+  await h.tap('[data-action="cpref-night"]');
+  h.check('Night mode dims the clock', await h.until(`!!document.querySelector('#viewport .cpref-night [data-cpref-analog]')`));
+  await h.tap('#viewport .cpref-night');
+  h.check('a tap ends Night mode', await h.until(`!!document.querySelector('#viewport .jbclock-clock')`));
+  if (spec.search) {
+    await h.tap('#viewport [data-action="jbclock-cities"]');
+    await h.tap('#viewport [data-action="jbclock-city-search"]');
+    await h.type('#viewport [data-city-search]', 'bu');
+    h.check('the search keeps the cities starting with it', await h.until(`(()=>{const n=[...document.querySelectorAll('#viewport [data-action="jbclock-city"] b')].map(b=>b.textContent);return n.length>0&&n.every(x=>/^bu/i.test(x))})()`));
+    await h.key('Escape');
+    h.check('Back closes the search', await h.until(`!document.querySelector('#viewport [data-city-search]') && document.querySelectorAll('#viewport [data-action="jbclock-city"]').length > 50`));
+    await h.key('Escape');
+  }
+  const kept = await prefs();
+  h.check('the reload keeps the settings', await h.reload() && JSON.stringify(await prefs()) === JSON.stringify(kept));
+  await h.openApp('clock');
+  await h.until(`!!document.querySelector('#viewport [data-action="jbclock-menu"]')`);
+  await menu();
+  await h.tap('[data-action="cpref-help"]');
+  h.check('Help opens the article in the browser', await h.until(`/support\\.google\\.com/.test(document.querySelector('#viewport .chr-omnibox input')?.value || '')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -522,6 +583,9 @@ const CASES = [
   {id: 'T03', version: '4.3', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
   {id: 'T03', version: '4.4.4', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
   {id: 'T03', version: '5.1.1', name: 'Calendar › Settings: General, Events from Gmail, Sync', run: calendarSettingsLP},
+  {id: 'T33', version: '5.1.1', name: 'Clock › menu, Settings, Night mode, Cities search', run: clockSettings({home: 'Home', search: true})},
+  {id: 'T33', version: '4.4.4', name: 'Clock › menu, Settings, Night mode, Cities search', run: clockSettings({home: 'Home', search: true})},
+  {id: 'T33', version: '4.3', name: 'Clock › menu, Settings, Night mode', run: clockSettings({home: 'Home', search: false})},
   {id: 'T07', version: '5.1.1', name: 'Chrome › local settings pages', run: chromeSettings({engines: 5, content: 'content', siteToggle: true, extraPages: [['sites:all', 'All sites'], ['protected', 'Protected content'], ['translate', 'Google Translate'], ['sites:storage', 'Storage']], switches: [['', 'tabs_apps', 'document_mode', true], ['', 'bandwidth', 'reduce_data'], ['privacy', 'dnt', 'dnt'], ['privacy', 'contextual', 'contextual_search']]})},
   {id: 'T07', version: '4.4.4', name: 'Chrome › local settings pages', run: chromeSettings({engines: 5, content: 'content', extraPages: [['sites:all', 'Website settings']], external: `!!document.querySelector('#viewport .settings-app') && !document.querySelector('#viewport .chr-prefs')`, switches: [['bandwidth', 'reduce', 'reduce_data'], ['privacy', 'dnt', 'dnt'], ['content', 'protected', 'protected_content'], ['content', 'translate', 'translate']]})},
   {id: 'T07', version: '4.3', name: 'Chrome › local settings pages', run: chromeSettings({engines: 3, bing: 2, content: 'content', extraPages: [['sites:all', 'Website settings']], external: `!!document.querySelector('#viewport .gms-app') && !document.querySelector('#viewport .chr-prefs')`, switches: [['bandwidth', 'reduce', 'reduce_data'], ['privacy', 'dnt', 'dnt'], ['content', 'translate', 'translate']], checks: [['devtools', 'enable_remote_debugging']]})},

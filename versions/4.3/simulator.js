@@ -737,6 +737,7 @@
       navigate: run => { ui.mapsRoute = ui.mapsRoute ? {...ui.mapsRoute, screen: 'map'} : null; openApp('navigation'); MapsRoute.startNav(mrContext(), run); render(); }};
   }
   function navigateBack() {
+    if (ui.view === 'clock' && !ui.overlay && ClockPrefs.back(ui)) { render(); return; }
     if (ui.chromeReturn && ui.view === ui.chromeReturn.view && ui.sub === ui.chromeReturn.sub && !ui.overlay) { const back = ui.chromeReturn; ui.chromeReturn = null; openApp('chrome'); ui.sub = 'chrome-settings'; ui.chromePrefStack = back.stack; render(); return; }
     if (ui.view === 'google-settings' && GMSSettings.back(ui)) { render(); return; }
     if (ui.view === 'maps' && !ui.overlay && ui.mapsRoute && MapsRoute.back(mrContext())) return;
@@ -930,8 +931,9 @@
     } else if (ui.overlay === 'jba-menu') {
       const A = key => AndroidStrings.table('', window.AlarmStrings || {}).t(key, i18n.language);
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu" data-no-translate>${['menu_item_settings', 'menu_item_help'].map(key => `<button data-action="toast" data-id="This feature is not part of the simulator.">${safe(A(key))}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'jbclock-cities-menu') {
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${[['toast', 'Settings'], ['toast', 'Help']].map(([action, label]) => `<button data-action="${action}"${action === 'toast' ? ' data-id="Not available in this demo"' : ''}>${safe(i18n.t(label))}</button>`).join('')}</div>`;
+    } else if (ui.overlay === 'jbclock-cities-menu' || ui.overlay === 'cpref-main') {
+      const items = ClockPrefs.menu(ui.overlay === 'cpref-main' ? 'main' : 'cities', {data, t: key => i18n.t(key), locale: i18n.locale(), tab: jbClockState().tab});
+      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${items.map(([action, id, label]) => `<button data-action="${action}" data-id="${id}">${safe(label)}</button>`).join('')}</div>`;
     } else if (ui.overlay.startsWith('clock-')) {
       overlayRoot.innerHTML = ICSDeskClock.overlay(ui,key=>i18n.t(key),{hour24:!!data.settings.hour24,locale:i18n.locale(),now:deviceDate()});
       if(ui.overlay==='clock-ringing')ICSDeskClock.bindRinging?.(overlayRoot);
@@ -1501,14 +1503,18 @@
   }
   // 4.2 DeskClock pages; the alarm list and editor keep the ICS AlarmClock/SetAlarm screens.
   const jbClockState = () => { data.jbClock ||= {tab: 'clock', timers: [], stopwatch: {accumulated: 0, started: null, laps: []}}; return {...data.jbClock, timerDigits: ui.timerDigits || '', timerSetup: !!ui.timerSetup}; };
+  // DeskClock's settings (clock-prefs): the analog style and the Home clock reach the clock page through its state.
+  const clockExtras = state => ({...state, home: ClockPrefs.home(data, Date.now(), i18n.locale()), analog: ClockPrefs.prefs(data).style === 'analog' ? ClockPrefs.analog(deviceDate()) : ''});
   function renderClock() {
+    if (ui.sub === 'clock-settings') return ClockPrefs.settings({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
+    if (ui.sub === 'night') return ClockPrefs.night({data, ui, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), hour24: !!data.settings.hour24, date: deviceDate().toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'})});
     if (ui.sub === 'cities') return JBDeskClock.cities(jbClockState(), key => i18n.t(key), {locale: i18n.locale(), now: deviceDate(), hour24: !!data.settings.hour24, words: {title: i18n.t('Cities'), selected: i18n.t('Selected Cities')}});
     // The 4.3 AlarmClock activity (jb-alarms.js); alarm-edit is the old SetAlarm screen the list no longer opens.
     if (ui.sub === 'alarms') return JBAlarms.page(data.alarms, {expandedId: ui.jbaExpanded, locale: i18n.locale(), hour24: !!data.settings.hour24, normalize: ICSDeskClock.normalize});
     if (ui.sub === 'alarm-edit') return ICSDeskClock.render(data,ui,key=>i18n.t(key),i18n.locale(),deviceDate());
-    return JBDeskClock.render(jbClockState(), key => i18n.t(key), {locale: i18n.locale(), now: deviceDate(), hour24: !!data.settings.hour24, alarm: nextAlarmLabel(), date: deviceDate().toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).toLocaleUpperCase(i18n.locale())});
+    return JBDeskClock.render(clockExtras(jbClockState()), key => i18n.t(key), {locale: i18n.locale(), now: deviceDate(), hour24: !!data.settings.hour24, alarm: nextAlarmLabel(), date: deviceDate().toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).toLocaleUpperCase(i18n.locale())});
   }
-  let clockFrame = 0;
+  let clockFrame = 0, clockSilenceTimer = 0;
   function clockTicker() {
     cancelAnimationFrame(clockFrame);
     const step = () => {
@@ -1550,6 +1556,8 @@
     delete alarm.snoozedUntil;
     if(!ICSDeskClock.normalize(alarm).days.length)alarm.enabled=false;
     ui.ringingAlarm=clone(alarm); save(); ui.overlay='clock-ringing'; renderOverlay();
+    // Silence after: an alarm left ringing stops by itself.
+    clearTimeout(clockSilenceTimer); { const after = Number(ClockPrefs.prefs(data).silence), ringing = ui.ringingAlarm; if (after > 0) clockSilenceTimer = setTimeout(() => { if (ui.overlay === 'clock-ringing' && ui.ringingAlarm === ringing) { ui.overlay = ''; render(); } }, after * 60000); }
   }
 
   function renderCalculator() {
@@ -1809,6 +1817,13 @@
         if (result.open) { ui.sub = ''; ui.chromePrefStack = []; chromeNewTab(false); navigateBrowser(result.open); return; }
         render(); if (result.toast) toast(result.toast); return;
       }
+    }
+    if (action.startsWith('cpref-') && ui.view === 'clock') {
+      const result = ClockPrefs.handle(action, id, {data, ui});
+      if (['cpref-main', 'jbclock-cities-menu'].includes(ui.overlay)) { ui.overlay = ''; renderOverlay(); }
+      if (result === 'save') save();
+      if (result?.open) { openApp('chrome'); navigateBrowser(result.open); return; }
+      if (result) { render(); return; }
     }
     switch (action) {
       case 'open-app': {
@@ -2413,7 +2428,7 @@
       case 'jba-vibrate': { const alarm=data.alarms.find(item=>item.id===Number(id)); if(!alarm)break; alarm.vibrate=!ICSDeskClock.normalize(alarm).vibrate; save(); render(); break; }
       case 'jba-label': case 'jba-tone': { const alarm=data.alarms.find(item=>item.id===Number(id)); if(!alarm)break; ui.alarmDraft=ICSDeskClock.normalize(alarm); ui.jbaEditing=alarm.id; ui.overlay=action==='jba-label'?'clock-label':'clock-tone'; renderOverlay(); break; }
       case 'jba-menu': ui.overlay='jba-menu'; renderOverlay(); break;
-      case 'jbclock-menu': toast('Not available in this demo'); break;
+      case 'jbclock-menu': ui.overlay = 'cpref-main'; renderOverlay(); break;
       // CitiesActivity: the chosen cities are kept in the clock state; the list keeps its place while ticking them.
       case 'jbclock-cities': ui.sub = 'cities'; ui.overlay = ''; render(); break;
       case 'jbclock-city': { const list = viewport.querySelector('.jbclock-city-list'), top = list?.scrollTop || 0; jbClockState(); const chosen = data.jbClock.cities ||= []; const at = chosen.indexOf(id); if (at >= 0) chosen.splice(at, 1); else chosen.push(id); save(); render(); const after = viewport.querySelector('.jbclock-city-list'); if (after) after.scrollTop = top; break; }
@@ -2439,8 +2454,8 @@
       case 'alarm-confirm-delete': data.alarms=data.alarms.filter(alarm=>alarm.id!==ui.alarmDraft.id); save(); ui.alarmDraft=null; ui.overlay=''; ui.sub='alarms'; render(); break;
       case 'alarm-snooze': {
         const alarm=data.alarms.find(item=>item.id===ui.ringingAlarm.id);
-        if(alarm){alarm.enabled=true;alarm.snoozedUntil=deviceDate().getTime()+10*60000;save();}
-        ui.overlay='';render();{const message=ICSDeskClock.snoozeMessage(new Date(alarm?.snoozedUntil||deviceDate().getTime()+600000),{hour24:!!data.settings.hour24,locale:i18n.locale()});if(message)toast(message);}break;
+        if(alarm){alarm.enabled=true;alarm.snoozedUntil=deviceDate().getTime()+ClockPrefs.prefs(data).snooze*60000;save();}
+        ui.overlay='';render();{const message=ICSDeskClock.snoozeMessage(new Date(alarm?.snoozedUntil||deviceDate().getTime()+ClockPrefs.prefs(data).snooze*60000),{hour24:!!data.settings.hour24,locale:i18n.locale()});if(message)toast(message);}break;
       }
       case 'alarm-dismiss': ui.overlay=''; render(); break;
       case 'alarm-toggle': { const alarm = data.alarms.find(item => item.id === Number(id)); if (alarm) { alarm.enabled = !alarm.enabled; delete alarm.snoozedUntil; } save(); render(); break; }
@@ -2591,6 +2606,7 @@
   document.addEventListener('submit', event => hangoutsScope(() => handleSubmit(event)));
   document.addEventListener('input', event => hangoutsScope(() => handleInput(event)));
   function handleInput(event) {
+    if (event.target.matches?.('[data-cpref-volume]')) { ui.clockDraft = Number(event.target.value); return; }
     if (event.target.matches?.('[data-chr-seek]')) { const ctx = {ui, data, locale: i18n.locale()}; ChromeApp.prefSeek(event.target.value, ctx); ChromeApp.seekPaint(viewport, ctx); save(); return; }
     if (event.target.matches('[data-tzp-search]') && ui.tzp) { TimeZonePicker.input(ui.tzp, event.target.value, tzpContext()); renderTzPicker(true); return; }
     if (event.target.matches('[data-pa-search]')) { ui.paQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-pa-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
@@ -3454,6 +3470,8 @@
   let volumeTimer = 0, volumePrevious = 0;
   const volumeStream = () => VolumePanel.activeStream({inCall: !!ui.activeCall, musicActive: !!ui.music?.playing});
   function volumeKey(direction) {
+    const buttons = ClockPrefs.prefs(data).buttons;
+    if (ui.overlay === 'clock-ringing' && buttons !== '0') { const b = document.createElement('button'); b.dataset.action = buttons === '1' ? 'alarm-snooze' : 'alarm-dismiss'; viewport.append(b); b.click(); b.remove(); return; }
     if (ui.power) return;
     const stream = volumeStream();
     // With the screen off the keys only reach music that is playing, and no panel is shown.

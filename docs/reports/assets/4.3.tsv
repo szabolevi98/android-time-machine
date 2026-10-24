@@ -510,6 +510,10 @@ versions/4.3/assets/jbcam-ic_wb_fluorescent.png	dcf56ad0c929d0cc	same pixels	mak
 versions/4.3/assets/jbcam-ic_wb_incandescent.png	cd75c88d138964ee	same pixels	mako:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_wb_incandescent.png	drawable-hdpi		5b1ef2b14ab86b80
 versions/4.3/assets/jbcam-ic_wb_sunlight.png	e6c7ab295eb1bc66	same pixels	mako:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_wb_sunlight.png	drawable-hdpi		56088814269bdc7d
 versions/4.3/assets/jbclock-appwidget_digital_clock_preview.png	db10c0e5789a4bea	same pixels	mako:/system/app/DeskClockGoogle.apk!res/drawable-nodpi/appwidget_digital_clock_preview.png	drawable-nodpi		49a84d7cb77ba17c
+versions/4.3/assets/jbclock-clock_analog_dial.png	8ee615de3a4c3d97	copy	mako:/system/app/DeskClockGoogle.apk!res/drawable-xhdpi/clock_analog_dial.png	drawable-xhdpi		8ee615de3a4c3d97
+versions/4.3/assets/jbclock-clock_analog_hour.png	eae5f5eec83a4108	copy	mako:/system/app/DeskClockGoogle.apk!res/drawable-xhdpi/clock_analog_hour.png	drawable-xhdpi		eae5f5eec83a4108
+versions/4.3/assets/jbclock-clock_analog_minute.png	c2e1f5a362100e5d	copy	mako:/system/app/DeskClockGoogle.apk!res/drawable-xhdpi/clock_analog_minute.png	drawable-xhdpi		c2e1f5a362100e5d
+versions/4.3/assets/jbclock-clock_analog_second.png	b456708f05b85b4d	copy	mako:/system/app/DeskClockGoogle.apk!res/drawable-xhdpi/clock_analog_second.png	drawable-xhdpi		b456708f05b85b4d
 versions/4.3/assets/jbclock-ic_add.png	19509227db28be34	resized	mako:/system/app/DeskClockGoogle.apk!res/drawable-xhdpi/ic_add.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 1.87	2001287cd4da8dcd
 versions/4.3/assets/jbclock-ic_alarm.png	d35f636941ac8195	resized	mako:/system/app/DeskClockGoogle.apk!res/drawable-xhdpi/ic_alarm.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 1.22	0b18717286eefb9a
 versions/4.3/assets/jbclock-ic_alarm_small.png	0d1e58700beeb6b4	resized	mako:/system/app/DeskClockGoogle.apk!res/drawable-xhdpi/ic_alarm_small.png	drawable-xhdpi	resized 36×36 → 27×27, mean difference 0.81	c722dcb83b6ad053
