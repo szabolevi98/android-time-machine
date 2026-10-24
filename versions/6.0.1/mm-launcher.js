@@ -449,6 +449,9 @@
 
   MM.register('home', {
     app: false,
+    // fit() reads the viewport's height when the home renders; a later resize (the frame settling, a rotated phone, a
+    // browser's device toolbar) renders it again so the five rows share the new height.
+    init(c) { let size = ''; new ResizeObserver(() => { const vp = c.el.viewport, next = `${vp.clientWidth}/${vp.clientHeight}`; if (next === size) return; size = next; if (c.ui.view === 'home' && !c.ui.home?.dragging && !c.ui.home?.folder) c.render(); }).observe(c.el.screen); },
     render, mount,
     reset(c) { if (c.ui.home) { Object.assign(c.ui.home, {folder: null, overview: false}); if (!c.ui.home.pendingDrag) c.ui.home.page = 1; } },
     back(c) { const st = c.ui.home; if (st?.folder) { closeFolder(c); return true; } if (st?.overview) { st.overview = false; c.render(); } return true; },

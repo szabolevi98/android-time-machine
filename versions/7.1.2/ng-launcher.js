@@ -429,6 +429,9 @@
 
   NG.register('home', {
     app: false,
+    // fit() reads the viewport's height when the home renders; a later resize (the frame settling, a rotated phone, a
+    // browser's device toolbar) renders it again so the five rows share the new height.
+    init(c) { let size = ''; new ResizeObserver(() => { const vp = c.el.viewport, next = `${vp.clientWidth}/${vp.clientHeight}`; if (next === size) return; size = next; if (c.ui.view === 'home' && !c.ui.home?.dragging && !c.ui.home?.folder) c.render(); }).observe(c.el.screen); },
     render, mount,
     unmount(c){NG.widgetResize?.dismiss(c);c.ui.home?.listenersOff?.();if(c.ui.home)c.ui.home.listenersOff=null;},
     statusColor: () => 'transparent',
