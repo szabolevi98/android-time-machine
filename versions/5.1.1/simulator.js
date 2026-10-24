@@ -758,7 +758,7 @@
     return `<div class="app-view lp-lw-empty"><p>${safe(i18n.t('No live wallpapers.'))}</p></div>`;
   }
   function renderApp() {
-    if (ui.view === 'phone' && ['dialer-settings', 'dialer-general', 'dialer-quick'].includes(ui.sub)) return LPDialerPrefs.render({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
+    if (ui.view === 'phone' && LPDialerPrefs.PAGES.includes(ui.sub)) return LPDialerPrefs.render({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
     if (ui.sub === 'sim-import' && ['people', 'phone'].includes(ui.view)) return PeopleIO.sim({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
     switch (ui.view) {
       case 'play-store': return JBPlay.render(jbPlayContext());
@@ -2047,7 +2047,11 @@
     if ((action.startsWith('dpr-')) && ui.view === 'phone') {
       if (action === 'dpr-settings') { ui.overlay = ''; renderOverlay(); ui.dialerBack = [ui.sub || '']; ui.sub = 'dialer-settings'; ui.dialerDialog = ''; render(); return; }
       if (action === 'dpr-ringtone') { ui.settingsField = 'ringtone'; ui.overlay = 'sd-dialog'; renderOverlay(); return; }
+      // Voicemail's Sound: a notification sound of its own; Nearby places' button opens Settings › Location.
+      if (action === 'dpr-vmtone') { ui.settingsField = 'vmTone'; ui.overlay = 'sd-dialog'; renderOverlay(); return; }
+      if (action === 'dpr-location') { openApp('settings'); ui.sub = 'location'; render(); return; }
       const result = LPDialerPrefs.handle(action, id, {data, ui, t: key => i18n.t(key), locale: i18n.locale()});
+      if (result?.vmnumber) { LPDialerPrefs.saveVoicemail(viewport.querySelector('.ldp2-edit input')?.value || '', {data, ui}); save(); render(); return; }
       if (result?.submit) { LPDialerPrefs.saveQuick(viewport.querySelector('.ldp2-edit input')?.value || '', {data, ui, t: key => i18n.t(key), locale: i18n.locale()}); save(); render(); return; }
       if (result === 'save') save();
       if (result) { render(); return; }
@@ -2862,6 +2866,7 @@
     if (!form || !screen.contains(form)) return;
     event.preventDefault(); const values = new FormData(form);
     if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, mrContext()); return; }
+    if (form.dataset.form === 'dpr-vmnumber') { LPDialerPrefs.saveVoicemail(values.get('text') || '', {data, ui}); save(); render(); return; }
     if (form.dataset.form === 'dpr-quick') { LPDialerPrefs.saveQuick(values.get('text') || '', {data, ui, t: key => i18n.t(key), locale: i18n.locale()}); save(); render(); return; }
     if (form.dataset.form === 'ldp-search') { LPDocPicker.search(values.get('q'), docContext()); render(); return; }
     if(form.dataset.form==='folder-name'){event.target.querySelector('input')?.blur();render();return;}

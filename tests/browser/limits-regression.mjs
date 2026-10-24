@@ -751,6 +751,73 @@ const emailServersGB = async h => {
   await h.tap(row('incoming'));
   h.check('the saved server is shown again', await h.until(`document.querySelector('#viewport .gbem-server [name="server"]')?.value === 'mail.example.org'`));
 };
+
+// The 5.1 Phone app's Calls and Advanced (T44): CallFeaturesSetting as the shamu shows it (no DTMF tones, Auto-retry or
+// video calling), TTY mode, Hearing aids, Calling accounts' SIP settings, Voicemail's number (OK keeps, Cancel not) and
+// Sound, Call forwarding Off, Additional settings' Caller ID and Call waiting; Advanced's Caller ID by Google and
+// Nearby places switches. Kept on the phone and after a reload.
+const phoneCallSettings = async h => {
+  const call = async () => (await store(h, 'callPrefs')) || {};
+  const open = id => h.tap(`#viewport .ldp2-row[data-id="${id}"]`);
+  const title = () => h.ev(`document.querySelector('#viewport .ldp2-bar h2')?.textContent`);
+  await h.openApp('phone');
+  await h.until(`!!document.querySelector('#viewport [data-action="phone-menu"]:not([data-id])')`);
+  await h.tap('#viewport [data-action="phone-menu"]:not([data-id])');
+  await h.tap('[data-action="dpr-settings"]');
+  await open('dialer-calls');
+  h.check('Calls opens Call settings', await h.until(`document.querySelector('#viewport .ldp2-bar h2')?.textContent === 'Call settings'`));
+  h.check('the shamu\'s rows, without DTMF tones or Auto-retry', await h.ev(`[...document.querySelectorAll('#viewport .ldp2-row b')].map(b=>b.textContent).join('|')`) === 'Calling accounts|Voicemail|Fixed Dialing Numbers|TTY mode|Hearing aids|GSM call settings');
+  await open('tty');
+  await h.tap('#viewport .ldp2-radio[data-id="1"]');
+  h.check('TTY mode keeps TTY Full as its summary', (await call()).tty === 1 && await h.until(`document.querySelector('#viewport .ldp2-row[data-id="tty"] small')?.textContent === 'TTY Full'`));
+  await open('hac');
+  h.check('Hearing aids turns on', (await call()).hac === true);
+  await open('dialer-accounts');
+  h.check('Calling accounts shows the SIP settings', await h.until(`!!document.querySelector('#viewport .ldp2-row[data-id="sipReceive"]')`) && await h.ev(`document.querySelector('#viewport .ldp2-row[data-id="sip"] small').textContent`) === 'Only for SIP calls');
+  await open('sipReceive');
+  h.check('Receive incoming calls turns on', (await call()).sipReceive === true);
+  await h.key('Escape');
+  await open('dialer-voicemail');
+  await open('dialer-vmsetup');
+  h.check('the voicemail number is not set', await h.until(`document.querySelector('#viewport .ldp2-row[data-id="vmnumber"] small')?.textContent === '<Not set>'`));
+  await open('vmnumber');
+  await h.type('#viewport .ldp2-edit input', '+36 1 234 5678');
+  await h.tap('#viewport [data-action="dpr-dialog"][data-id=""]:not(.ldp2-scrim)');
+  h.check('Cancel keeps no number', !(await call()).vmNumber);
+  await open('vmnumber');
+  await h.type('#viewport .ldp2-edit input', '+36 1 234 5678');
+  await h.tap('#viewport [data-action="dpr-vmnumber-ok"]');
+  h.check('OK keeps the voicemail number', (await call()).vmNumber === '+36 1 234 5678' && await h.until(`document.querySelector('#viewport .ldp2-row[data-id="vmnumber"] small')?.textContent === '+36 1 234 5678'`));
+  await h.key('Escape');
+  await h.tap('#viewport .ldp2-row[data-action="dpr-vmtone"]');
+  h.check('Sound opens the notification sounds', await h.until(`!!document.querySelector('form[data-sound="notificationTone"]')`));
+  await h.tap('form[data-sound="notificationTone"] label:nth-child(3)');
+  const tone = await h.ev(`document.querySelector('form[data-sound="notificationTone"] input:checked').value`);
+  await h.tap('form[data-sound="notificationTone"] [type="submit"]');
+  h.check('the voicemail sound is kept', (await store(h, 'settings')).vmTone === tone && await h.until(`document.querySelector('#viewport .ldp2-row[data-action="dpr-vmtone"] small')?.textContent === ${JSON.stringify(tone)}`));
+  await h.key('Escape');
+  await open('dialer-gsm');
+  await open('dialer-cf');
+  h.check('call forwarding reads Off', await h.until(`document.querySelectorAll('#viewport .ldp2-row small').length === 4`) && await h.ev(`document.querySelector('#viewport .ldp2-row small').textContent`) === 'Off');
+  await h.key('Escape');
+  await open('dialer-additional');
+  await open('clir');
+  await h.tap('#viewport .ldp2-radio[data-id="1"]');
+  h.check('Caller ID hides the number', (await call()).clir === 1 && await h.until(`document.querySelector('#viewport .ldp2-row[data-id="clir"] small')?.textContent === 'Number hidden in outgoing calls'`));
+  await open('cw');
+  h.check('Call waiting turns off', (await call()).cw === false);
+  for (const page of ['Additional settings', 'GSM call settings', 'Call settings']) { await h.key('Escape'); await h.until(`document.querySelector('#viewport .ldp2-bar h2')?.textContent !== ${JSON.stringify(page)}`); }
+  h.check('Back returns to Settings', await title() === 'Settings');
+  await open('dialer-advanced');
+  h.check('Advanced lists Caller ID by Google and Nearby places, both on', await h.until(`document.querySelector('#viewport .ldp2-row[data-id="dialer-nearby"] small')?.textContent === 'Display search results for nearby places'`));
+  await open('dialer-nearby');
+  await h.tap('#viewport .ldp2-switchrow');
+  h.check('the Nearby places switch turns off', (await call()).nearby === false && await h.ev(`document.querySelector('#viewport .ldp2-switchrow').getAttribute('aria-checked')`) === 'false');
+  await h.key('Escape');
+  h.check('its summary reads Off', await h.until(`document.querySelector('#viewport .ldp2-row[data-id="dialer-nearby"] small')?.textContent === 'Off'`));
+  const before = JSON.stringify(await call());
+  h.check('the reload keeps them', await h.reload() && JSON.stringify(await call()) === before);
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -816,6 +883,7 @@ const CASES = [
   {id: 'T11', version: '4.4.4', name: 'Contacts › Import/export and Set ringtone', run: contactsImportExport({listMenu: 'people-list-menu', victim: 'Taylor Lee', ringtone: true})},
   {id: 'T11', version: '5.1.1', name: 'Contacts › Import/export', run: contactsImportExport({listMenu: 'people-menu', victim: 'Taylor Lee', ringtone: false})},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
+  {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},
   {id: 'T49', version: '5.1.1', name: 'Camera › Photo Sphere capture and the Photos viewer', run: photoSphere({kk: false, hint: 'To start, keep dot inside circle', rendering: 'Processing photo sphere'})},
   {id: 'T33', version: '5.1.1', name: 'Clock › menu, Settings, Night mode, Cities search', run: clockSettings({home: 'Home', search: true})},

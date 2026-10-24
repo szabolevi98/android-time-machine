@@ -44,3 +44,17 @@
 .vcf-sim-bar h2{margin:0 0 0 calc(16 * var(--dp));font:500 calc(20 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vcf-sim-empty{margin:auto;padding:calc(16 * var(--dp));font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#0000008a;text-align:center}
 .vcf-text{flex:1;min-width:0;display:flex;flex-direction:column}
+/* SipSettings' Add account in the toolbar; the Advanced fragments (google_caller_id_setting.xml /
+   local_search_setting.xml): the 16 sp Switch 20 dp in on a light Material switch in the Dialer's #0288D1, the 1 dp
+   #dedede rule, the 14 sp secondary text 20 dp in, Go to location settings on #eeeeee. */
+.screen .ldp2-act{margin-left:auto;height:100%;padding:0 calc(16 * var(--dp));border:0;background:none;color:#fff;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.screen .ldp2-act:active{background:#ffffff33}
+.screen .ldp2-switchrow{display:flex;align-items:center;width:100%;min-height:calc(56 * var(--dp));padding:0 calc(20 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #dedede;background:none;color:#000000de;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif;cursor:pointer}
+.ldp2-switchrow span{flex:1}
+.ldp2-switch{position:relative;flex:none;width:calc(36 * var(--dp));height:calc(20 * var(--dp))}
+.ldp2-switch::before{content:'';position:absolute;left:calc(1 * var(--dp));right:calc(1 * var(--dp));top:calc(3 * var(--dp));height:calc(14 * var(--dp));border-radius:calc(7 * var(--dp));background:#0000004d}
+.ldp2-switch::after{content:'';position:absolute;left:0;top:0;width:calc(20 * var(--dp));height:calc(20 * var(--dp));border-radius:50%;background:#f1f1f1;box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) #0006;transition:transform .2s cubic-bezier(.4,0,.2,1),background .2s}
+.ldp2-switch.on::before{background:#0288d180}
+.ldp2-switch.on::after{transform:translateX(calc(16 * var(--dp)));background:#0288d1}
+.ldp2-prose{margin:0;padding:calc(16 * var(--dp)) calc(20 * var(--dp));font:400 calc(14 * var(--dp))/1.45 Roboto,sans-serif;color:#0000008a}
+.screen .ldp2-button{margin:0 calc(18 * var(--dp));padding:0 calc(18 * var(--dp));min-height:calc(36 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:#eeeeee;box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) #0003;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;color:#000000de}
