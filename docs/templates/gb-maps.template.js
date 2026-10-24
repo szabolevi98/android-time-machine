@@ -36,7 +36,8 @@
     "imperial": "da_distance_format_mode", "north": "da_direction_north", "east": "da_direction_east", "south": "da_direction_south", "west": "da_direction_west",
     "Getting driving directions": "da_waiting_for_directions", "Navigate to": "da_navigate_to", "Cancel": "da_dialog_cancel", "OK": "da_dialog_ok",
     "Report a Problem": "da_report_a_problem", "Voice guidance": "da_voice_guidance", "Choose Destination": "da_picker_choose_destination",
-    "Route options": "da_route_options", "Avoid tolls": "da_avoid_tolls", "Avoiding highways": "da_avoiding_highways", "Avoiding tolls": "da_avoiding_tolls"
+    "Route options": "da_route_options", "Avoid tolls": "da_avoid_tolls", "Avoiding highways": "da_avoiding_highways", "Avoiding tolls": "da_avoiding_tolls",
+    "1-click report a problem": "da_one_button_map_issue_reporting"
   });
   // Navigation's route options offer highways and tolls; the image only has "Avoid tolls" for the check box, so the
   // highways one is Maps 7.5's DIRECTIONS_OPTIONS_AVOID_HIGHWAYS (Nexus 5 image) in the same languages.
@@ -72,6 +73,22 @@
   const minutes = (lang, m) => m >= 60 ? AndroidStrings.format(T(lang, '%1$s hr  %2$s min'), Math.floor(m / 60), m % 60) : AndroidStrings.format(T(lang, '%1$s min'), Math.max(1, m));
   const stars = r => Array.from({length: 5}, (_, i) => `<img src="${A(i < Math.round(r) ? 'hotpot_small_star_on' : 'hotpot_small_star_off')}" alt="">`).join('');
   const poi = id => POIS.find(p => p.id === id);
+  /* The layers that came from Google's server (LAYERS_REQUEST: Transit Lines, Bicycling, Wikipedia) are drawn over the
+     city like 2.1's: two transit lines along the avenues with their stops, bike paths (dark green: trails along the river
+     and through the parks; dashed: bike-friendly avenues) and Wikipedia's "W" pins on the articles' places. */
+  const riverFx = fy => .56 + Math.sin(fy * Math.PI * 1.4 + .6) * .05;
+  const TRANSIT = [
+    {color: '#2a63c8', stops: [[.02, .298], [.14, .286], [.3, .27], [.45, .263], [riverFx(.26), .26], [.7, .238], [.86, .218], [.98, .203]]},
+    {color: '#2c9b48', stops: [[.205, .04], [.215, .16], [.228, .3], [.24, .5], [.222, .66], [.2, .82], [.185, .96]]}
+  ];
+  const BIKE = {trails: [Array.from({length: 21}, (_, i) => [riverFx(i / 20) - .035, i / 20]), [[.13, .2], [.2, .24], [.27, .21]], [[.31, .64], [.35, .7], [.39, .76]], [[.87, .72], [.91, .78], [.95, .83]]],
+    lanes: [[[0, .74], [.4, .7], [riverFx(.68), .68], [1, .62]]]};
+  const WIKI = [
+    {id: 'w1', name: 'City Museum', article: 'Museum', fx: .465, fy: .345}, {id: 'w2', name: 'Old Town Bridge', article: 'Arch_bridge', fx: .575, fy: .255},
+    {id: 'w3', name: 'Riverside Park', article: 'Urban_park', fx: .345, fy: .7}, {id: 'w4', name: 'Harbor District', article: 'Harbor', fx: .655, fy: .4}
+  ];
+  // Maps' Labs (data.appPrefs['maps-labs']) as the last map view saw them; the map draws the scale bar and measure lines.
+  let labs = {}, currentLang = 'en';
   const state = ui => (ui.mp ||= {cx: .5, cy: .52, z: 1.5, mode: 'normal', traffic: false, results: [], query: '', selected: '', page: '', route: null, zoomShown: false});
 
   // ---------- The map (canvas + positioned markers) ----------
@@ -90,6 +107,13 @@
     g.fillStyle = m.mode === 'satellite' ? '#3d4a31' : '#e9e5dc'; g.fillRect(0, 0, w, h);
     const [x0, y0] = project(m, w, h, {fx: 0, fy: 0});
     g.drawImage(sheet, x0, y0, 2 * w * m.z, h * m.z);
+    // The layers: transit lines with their stops, bike paths.
+    const path = (pts, width, color, dash) => { g.setLineDash(dash || []); g.strokeStyle = color; g.lineWidth = width; g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath(); pts.forEach((p, i) => { const [x, y] = project(m, w, h, {fx: p[0], fy: p[1]}); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); g.setLineDash([]); };
+    if (m.bike) { for (const t of BIKE.trails) path(t, 3.4783 * d, '#1f6b2a'); for (const l of BIKE.lanes) path(l, 2.8986 * d, '#3e9b3a', [4.6377 * d, 3.4783 * d]); }
+    if (m.transit) for (const l of TRANSIT) {
+      path(l.stops, 3.4783 * d, l.color);
+      for (const s of l.stops) { const [x, y] = project(m, w, h, {fx: s[0], fy: s[1]}); g.fillStyle = '#fff'; g.strokeStyle = l.color; g.lineWidth = 1.7391 * d; g.beginPath(); g.arc(x, y, 3.4783 * d, 0, Math.PI * 2); g.fill(); g.stroke(); }
+    }
     // The route: the blue line along the streets from my location.
     if (m.route) {
       const pts = m.route.path.map(p => project(m, w, h, p));
@@ -104,17 +128,45 @@
     if (chevron?.complete) { g.drawImage(chevron, mx - 25.5073 * d, my - 25.5073 * d, 51.0145 * d, 51.0145 * d); return; }
     const dot = root.querySelector('.mp-dotimg');
     if (dot?.complete) g.drawImage(dot, mx - 8 * d, my - 8 * d, 16 * d, 16 * d); else { g.fillStyle = '#2f80ed'; g.beginPath(); g.arc(mx, my, 6.9566 * d, 0, Math.PI * 2); g.fill(); }
+    // Labs: Measure's points (the first blue, the others red) and the Scale Bar in the lower left.
+    if (m.measure?.length) {
+      const pts = m.measure.map(p => project(m, w, h, p));
+      g.strokeStyle = '#1c3f9a'; g.lineWidth = 2.8986 * d; g.lineCap = 'round'; g.beginPath(); pts.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.stroke();
+      pts.forEach(([x, y], i) => { g.fillStyle = i ? '#e2231a' : '#1a4fd8'; g.strokeStyle = '#fff'; g.lineWidth = 1.1594 * d; g.beginPath(); g.arc(x, y, 5.2174 * d, 0, Math.PI * 2); g.fill(); g.stroke(); });
+    }
+    if (labs.scale) scaleBar(g, w, h, m, d);
     // Markers and the bubble are buttons over the canvas.
     root.querySelectorAll('[data-fx]').forEach(el => { const [x, y] = project(m, w, h, {fx: +el.dataset.fx, fy: +el.dataset.fy}); el.style.transform = `translate(${x}px, ${y}px)`; });
+  }
+  // Scale Bar (lab_scale): feet above the line, metres below, each with its tick, up to about 100 dp long.
+  function scaleBar(g, w, h, m, d) {
+    const pxKm = 2 * w * m.z / 4, most = 100 * d;
+    const pick = (list, perKm) => list.filter(v => v / perKm * pxKm <= most).pop() || list[0];
+    const metres = pick([10, 20, 50, 100, 200, 500, 1000, 2000, 5000], 1000), feet = pick([50, 100, 200, 500, 1000, 2000, 5280, 10560], 3280.84);
+    const lm = metres / 1000 * pxKm, lf = feet / 3280.84 * pxKm, x = 6.9566 * d, y = h - 20.8696 * d, end = x + Math.max(lm, lf);
+    const label = (text, ty) => { g.font = `${12 * d}px DroidSans, sans-serif`; g.textBaseline = 'alphabetic'; g.lineWidth = 2.8986 * d; g.strokeStyle = '#ffffffcc'; g.lineJoin = 'round'; g.strokeText(text, x + 2.3189 * d, ty); g.fillStyle = '#000'; g.fillText(text, x + 2.3189 * d, ty); };
+    for (const [width, color] of [[3.4783 * d, '#ffffffcc'], [1.7391 * d, '#000']]) {
+      g.strokeStyle = color; g.lineWidth = width; g.lineCap = 'square'; g.beginPath();
+      g.moveTo(x, y - 9.2754 * d); g.lineTo(x, y + 9.2754 * d); g.moveTo(x, y); g.lineTo(end, y);
+      g.moveTo(x + lf, y); g.lineTo(x + lf, y - 9.2754 * d); g.moveTo(x + lm, y); g.lineTo(x + lm, y + 9.2754 * d); g.stroke();
+    }
+    label(feet >= 5280 ? `${feet / 5280} mi` : `${feet} ft`, y - 3.4783 * d);
+    label(metres >= 1000 ? `${metres / 1000} km` : `${metres} m`, y + 12.7537 * d);
   }
   function markers(ctx, m) {
     const {lang} = ctx;
     const list = m.results.map((id, i) => { const p = poi(id) || m.custom; return p ? `<button class="mp-marker" data-fx="${p.fx}" data-fy="${p.fy}" data-action="mp-select" data-id="${e(p.id)}" aria-label="${e(p.name)}"><i style="background-position:calc(${-8 * (i % 10)} * var(--dp)) 0"></i></button>` : ''; }).join('');
     const friends = m.friends ? FRIENDS.map(f => `<button class="mp-friend" data-fx="${f.fx}" data-fy="${f.fy}" data-action="mp-friend" data-id="${f.id}" aria-label="${e(f.name)}"><img src="${A('avatar_unknown')}" alt=""></button>`).join('') : '';
     const sel = m.selected && (poi(m.selected) || (m.custom?.id === m.selected ? m.custom : null) || FRIENDS.find(f => f.id === m.selected));
+    const wiki = m.wiki ? WIKI.map(p => `<button class="mp-wiki" data-fx="${p.fx}" data-fy="${p.fy}" data-action="mp-select" data-id="${p.id}" aria-label="${e(p.name)}">W</button>`).join('') : '';
+    const article = !sel && m.selected && m.wiki ? WIKI.find(p => p.id === m.selected) : null;
+    // Bubble Buttons (lab_bubble_buttons): the place's bubble calls it or navigates there in one tap.
+    const place = sel && labs.bubble && poi(sel.id);
+    if (article) return `<div class="mp-layer">${list}${friends}${wiki}<button class="mp-bubble" data-fx="${article.fx}" data-fy="${article.fy}" data-action="mp-wiki-open" data-id="${article.id}"><span><b>${e(article.name)}</b><small>${e(ctx.t('Wikipedia'))}</small></span><img src="${A('directions_arrow_gray')}" alt=""></button></div>`;
+    if (place) return `<div class="mp-layer">${m.route ? `<span class="mp-dest" data-fx="${m.route.to.fx}" data-fy="${m.route.to.fy}"><img src="${A('places_icon')}" alt=""></span>` : ''}${list}${friends}${wiki}<div class="mp-bubble mp-bb" data-fx="${place.fx}" data-fy="${place.fy}">${place.phone ? `<button class="mp-bbbtn" data-action="mp-call" data-id="${e(place.id)}" aria-label="${e(ctx.t('Call'))}"><img src="${A('sym_action_call')}" alt=""></button><img class="mp-bbdiv" src="${A('bubble_divider')}" alt="">` : ''}<button class="mp-bbmain" data-action="mp-page" data-id="${e(place.id)}"><span><b>${e(place.name)}</b><small>${e(place.address)}</small></span></button><img class="mp-bbdiv" src="${A('bubble_divider')}" alt=""><button class="mp-bbbtn" data-action="mp-navigate" data-id="${e(place.id)}" aria-label="${e(T(ctx.lang, 'Navigation'))}"><img src="${A('btn_navigate')}" alt=""></button></div></div>`;
     const bubble = sel ? `<button class="mp-bubble" data-fx="${sel.fx}" data-fy="${sel.fy}" data-action="mp-page" data-id="${e(sel.id)}"><span><b>${e(sel.name)}</b><small>${e(sel.address || sel.place || '')}</small></span><img src="${A('directions_arrow_gray')}" alt=""></button>` : '';
     const dest = m.route ? `<span class="mp-dest" data-fx="${m.route.to.fx}" data-fy="${m.route.to.fy}"><img src="${A('places_icon')}" alt=""></span>` : '';
-    return `<div class="mp-layer">${dest}${list}${friends}${bubble}</div>`;
+    return `<div class="mp-layer">${dest}${list}${friends}${wiki}${bubble}</div>`;
   }
   function header(ctx, m) {
     const {lang} = ctx, divider = '<i class="mp-hdiv"></i>';
@@ -125,7 +177,7 @@
     if (m.page) return placePage(ctx, m);
     const ribbon = m.route ? `<div class="mp-ribbon"><img src="${A(m.route.mode === 'walk' ? 'mode_walking' : m.route.mode === 'bike' ? 'mode_biking' : m.route.mode === 'transit' ? 'mode_transit_icon' : 'mode_drive')}" alt=""><span><b>${e(m.route.to.name)}</b><small>${e(distance(lang, m.route.km))} – ${e(minutes(lang, m.route.min))}</small></span><button data-action="mp-navigate" data-id="${e(m.route.to.id)}" aria-label="${e(T(lang, 'Navigation'))}"><img src="${A('btn_navigate')}" alt=""></button></div>` : '';
     const directions = m.dirOpen ? directionsPanel(ctx, m) : '';
-    return `<div class="app-view mp" data-no-translate>${header(ctx, m)}<div class="mp-map${m.zoomShown ? ' zoom' : ''}"><img class="mp-dotimg" src="${A('blue_location')}" alt="" hidden><canvas class="mp-canvas"></canvas>${markers(ctx, m)}${ribbon}<div class="mp-zoom"><button class="mp-zoomout" data-action="mp-zoom" data-id="-1" aria-label="-"${m.z <= .75 ? ' disabled' : ''}></button><button class="mp-zoomin" data-action="mp-zoom" data-id="1" aria-label="+"${m.z >= 4 ? ' disabled' : ''}></button></div></div>${directions}</div>`;
+    return `<div class="app-view mp" data-no-translate>${header(ctx, m)}<div class="mp-map${m.zoomShown ? ' zoom' : ''}"><img class="mp-dotimg" src="${A('blue_location')}" alt="" hidden><canvas class="mp-canvas"></canvas>${markers(ctx, m)}${ribbon}${labs.measure ? `<button class="mp-measure${m.measuring ? ' on' : ''}" data-action="mp-measure" aria-label="${e(ctx.t('Measure'))}" aria-pressed="${!!m.measuring}"></button>${m.measure?.length > 1 ? `<span class="mp-measure-total">${e(distance(lang, measured(m)))}</span>` : ''}` : ''}<div class="mp-zoom"><button class="mp-zoomout" data-action="mp-zoom" data-id="-1" aria-label="-"${m.z <= .75 ? ' disabled' : ''}></button><button class="mp-zoomin" data-action="mp-zoom" data-id="1" aria-label="+"${m.z >= 4 ? ' disabled' : ''}></button></div></div>${directions}</div>`;
   }
   // directions_input_dialog.xml: from / to fields, the travel modes and Go.
   function directionsPanel(ctx, m) {
@@ -143,16 +195,19 @@
   }
 
   // ---------- Places ----------
+  // A category's places by distance; a tile of one's own lists its search's results.
+  const customCat = ctx => String(ctx.ui.mpCat).startsWith('custom:') ? (ctx.data.placesCustom || [])[Number(String(ctx.ui.mpCat).slice(7))] ?? null : null;
+  function catList(ctx) { const q = customCat(ctx); return (q !== null ? search(q).map(poi) : POIS.filter(p => p.cat === ctx.ui.mpCat)).sort((a, b) => km(ME, a) - km(ME, b)); }
   function places(ctx) {
     const {ui, lang} = ctx, m = state(ui);
     if (m.page) return placePage(ctx, m);
     if (ui.mpCat) {
-      const list = POIS.filter(p => p.cat === ui.mpCat).sort((a, b) => km(ME, a) - km(ME, b));
+      const list = catList(ctx), custom = customCat(ctx);
       const label = CATS.find(c => c[0] === ui.mpCat)?.[1] || '';
-      return `<div class="app-view mp mp-places" data-no-translate><div class="mp-header mp-ptitle"><span>${e(label === 'Restaurants' || label === 'Attractions' || label === 'Gas Stations' ? T(lang, label) : ctx.t(label))}</span><i class="mp-hdiv"></i><button class="mp-hbtn" data-action="mp-show-cat" aria-label="${e(T(lang, 'Map'))}"><img src="${A('btn_show_map')}" alt=""></button></div><div class="mp-scroll">${list.map((p, i) => `<button class="mp-result" data-action="mp-page" data-id="${p.id}"><i class="mp-letter" style="background-position:calc(${-8 * i} * var(--dp)) 0"></i><span><span class="mp-rtop"><b>${e(p.name)}</b><small>${e(distance(lang, km(ME, p)))}</small></span><small>${e(p.address)}</small><span class="mp-stars">${stars(p.rating)}</span></span></button>`).join('')}</div></div>`;
+      return `<div class="app-view mp mp-places" data-no-translate><div class="mp-header mp-ptitle"><span>${e(custom ?? (label === 'Restaurants' || label === 'Attractions' || label === 'Gas Stations' ? T(lang, label) : ctx.t(label)))}</span><i class="mp-hdiv"></i><button class="mp-hbtn" data-action="mp-show-cat" aria-label="${e(T(lang, 'Map'))}"><img src="${A('btn_show_map')}" alt=""></button></div><div class="mp-scroll">${list.map((p, i) => `<button class="mp-result" data-action="mp-page" data-id="${p.id}"><i class="mp-letter" style="background-position:calc(${-16 * i} * var(--dp)) calc(3.4783 * var(--dp))"></i><span><span class="mp-rtop"><b>${e(p.name)}</b><small>${e(distance(lang, km(ME, p)))}</small></span><small>${e(p.address)}</small><span class="mp-stars">${stars(p.rating)}</span></span></button>`).join('')}</div></div>`;
     }
     const tile = (id, label, img) => `<button class="mp-tile" data-action="mp-cat" data-id="${id}"><img src="${A(img)}" alt=""><span>${e(label)}</span></button>`;
-    return `<div class="app-view mp mp-places" data-no-translate><div class="mp-header"><form class="mp-search" data-form="mp-psearch"><img src="${A('magnifying_glass_grey')}" alt=""><input name="q" placeholder="${e(T(lang, 'Search'))} ${e(T(lang, 'Places'))}" aria-label="${e(T(lang, 'Search'))}" autocomplete="off"></form></div><div class="mp-scroll mp-grid">${CATS.map(([id, label]) => tile(id, ['Restaurants', 'Attractions', 'Gas Stations'].includes(label) ? T(lang, label) : ctx.t(label), `icon_${id}`)).join('')}${tile('add', ctx.t('Add'), 'icon_add')}</div></div>`;
+    return `<div class="app-view mp mp-places" data-no-translate><div class="mp-header"><form class="mp-search" data-form="mp-psearch"><img src="${A('magnifying_glass_grey')}" alt=""><input name="q" placeholder="${e(T(lang, 'Search'))} ${e(T(lang, 'Places'))}" aria-label="${e(T(lang, 'Search'))}" autocomplete="off"></form></div><div class="mp-scroll mp-grid">${CATS.map(([id, label]) => tile(id, ['Restaurants', 'Attractions', 'Gas Stations'].includes(label) ? T(lang, label) : ctx.t(label), `icon_${id}`)).join('')}${(ctx.data.placesCustom || []).map((q, i) => tile(`custom:${i}`, q, 'icon_star')).join('')}${tile('add', ctx.t('Add'), 'icon_add')}</div></div>`;
   }
 
   // ---------- Latitude ----------
@@ -195,6 +250,7 @@
 
   function render(ctx) {
     const view = ctx.view;
+    labs = ctx.data.appPrefs?.['maps-labs'] || {};
     if (view === 'places') return places(ctx);
     if (view === 'latitude') return latitude(ctx);
     if (view === 'navigation') return navigation(ctx);
@@ -221,6 +277,9 @@
       clearTimeout(navTimer); requestAnimationFrame(tick);
       return;
     }
+    currentLang = ctx.lang; labs = ctx.data.appPrefs?.['maps-labs'] || {};
+    // The map's tiles are now in the cache (Cache settings' Clear cache has something to clear).
+    if (root.querySelector('.mp-map') && !ctx.data.mapsCache) { ctx.data.mapsCache = true; ctx.save(); }
     if (root.querySelector('.mp-map')) requestAnimationFrame(() => draw(root, m));
   }
   function along(path, t) {
@@ -248,24 +307,26 @@
   function menu(ctx) {
     const {ui, lang, view} = ctx, m = state(ui), t = ctx.t;
     if (view === 'navigation' && ui.mpNav) return [{action: 'mp-route-info', title: T(lang, 'Route Info'), icon: 'mp-da_ic_menu_route_info.png'}, {action: 'mp-nav-list', title: T(lang, 'Directions List'), icon: 'mp-da_ic_menu_listview.png'}, {action: 'mp-layers', title: T(lang, 'Layers'), icon: 'mp-da_ic_menu_layers.png'}, {action: 'mp-mute', title: T(lang, ui.mpMuted ? 'Unmute' : 'Mute'), icon: 'mp-da_ic_menu_mute.png'}, {action: 'mp-nav-search', title: T(lang, 'Search'), icon: 'mp-da_ic_menu_search.png'}, {action: 'mp-exit-nav', title: T(lang, 'Exit Navigation'), icon: 'mp-da_ic_menu_close_clear_cancel.png'}];
-    if (view === 'navigation') return [{action: 'mp-unsupported', title: T(lang, 'Settings'), icon: 'ic_menu_preferences'}, {action: 'mp-unsupported', title: T(lang, 'Help'), icon: 'ic_menu_help'}, {action: 'mp-unsupported', title: T(lang, 'Terms, Privacy & Notices'), icon: 'mp-ic_menu_terms.png'}];
+    if (view === 'navigation') return [{action: 'gbpref-open', id: 'maps-navigation', title: T(lang, 'Settings'), icon: 'ic_menu_preferences'}, {action: 'mp-unsupported', title: T(lang, 'Help'), icon: 'ic_menu_help'}, {action: 'mp-unsupported', title: T(lang, 'Terms, Privacy & Notices'), icon: 'mp-ic_menu_terms.png'}];
     if (view === 'latitude') return [{action: 'mp-friends-map', title: T(lang, 'Map'), icon: 'mp-ic_menu_see_map.png'}, {action: 'mp-refresh', title: t('Refresh'), icon: 'mp-ic_menu_refresh.png'}, {action: 'mp-addfriend', title: t('Add friends'), icon: 'ic_menu_add'}, {action: 'mp-checkin', title: t('Check in'), icon: 'mp-ic_menu_latitude_checkin.png'}, {action: 'mp-unsupported', title: T(lang, 'Settings'), icon: 'ic_menu_preferences'}];
     if (view === 'places') return [{action: 'mp-open-maps', title: T(lang, 'Map'), icon: 'mp-ic_menu_see_map.png'}, {action: 'mp-unsupported', title: T(lang, 'Help'), icon: 'mp-ic_menu_help.png'}];
     return [{action: 'mp-focus-search', title: T(lang, 'Search'), icon: 'mp-ic_menu_search.png'}, {action: 'mp-directions', title: t('Directions'), icon: 'mp-ic_menu_directions.png'}, {action: 'mp-starred', title: T(lang, 'Starred Places'), icon: 'mp-ic_menu_star.png'}, {action: 'mp-clear', title: T(lang, 'Clear Map'), icon: 'mp-ic_menu_delete.png'}, {action: 'mp-open-latitude', title: T(lang, 'Latitude'), icon: 'mp-ic_menu_latitude.png'},
-      {action: 'mp-unsupported', title: t('Labs'), icon: 'mp-ic_menu_labs.png'}, {action: 'mp-unsupported', title: t('Cache settings'), icon: 'mp-ic_menu_cache_settings.png'}, {action: 'mp-unsupported', title: T(lang, 'Help'), icon: 'mp-ic_menu_help.png'}, {action: 'mp-unsupported', title: T(lang, 'Terms, Privacy & Notices'), icon: 'mp-ic_menu_terms.png'}, {action: 'mp-about', title: t('About'), icon: 'mp-ic_menu_about.png'}];
+      {action: 'gbpref-open', id: 'maps-labs', title: t('Labs'), icon: 'mp-ic_menu_labs.png'}, {action: 'gbpref-open', id: 'maps-cache', title: t('Cache settings'), icon: 'mp-ic_menu_cache_settings.png'}, {action: 'mp-unsupported', title: T(lang, 'Help'), icon: 'mp-ic_menu_help.png'}, {action: 'mp-unsupported', title: T(lang, 'Terms, Privacy & Notices'), icon: 'mp-ic_menu_terms.png'}, {action: 'mp-about', title: t('About'), icon: 'mp-ic_menu_about.png'}];
   }
   function dialog(kind, ctx) {
     const {ui, lang, data} = ctx, m = state(ui), t = ctx.t;
     if (kind === 'layers') return {title: T(lang, 'Layers'), items: [
       {action: 'mp-layer', id: 'traffic', title: T(lang, 'Traffic'), checked: m.traffic}, {action: 'mp-layer', id: 'satellite', title: T(lang, 'Satellite'), checked: m.mode === 'satellite'},
       {action: 'mp-layer', id: 'terrain', title: T(lang, 'Terrain'), checked: m.mode === 'terrain'}, {action: 'mp-layer', id: 'latitude', title: T(lang, 'Latitude'), checked: !!m.friends},
-      {action: 'mp-unsupported', title: t('Transit Lines')}, {action: 'mp-unsupported', title: t('Bicycling')}, {action: 'mp-unsupported', title: 'Wikipedia'}, {action: 'mp-clear', title: T(lang, 'Clear Map')}], choice: 'multi'};
+      {action: 'mp-layer', id: 'transit', title: t('Transit Lines'), checked: !!m.transit}, {action: 'mp-layer', id: 'bike', title: t('Bicycling'), checked: !!m.bike}, {action: 'mp-layer', id: 'wiki', title: t('Wikipedia'), checked: !!m.wiki}, {action: 'mp-clear', title: T(lang, 'Clear Map')}], choice: 'multi'};
     if (kind === 'starred') { const list = (data.mapsStarred || []).map(poi).filter(Boolean); return {title: T(lang, 'Starred Places'), items: list.length ? list.map(p => ({action: ctx.view === 'navigation' ? 'mp-navigate' : 'mp-page', id: p.id, title: p.name, summary: p.address})) : [{action: 'close-overlay', title: t('No starred places')}]}; }
     if (kind === 'contacts') return {title: T(lang, 'Contacts'), items: (ctx.contacts || []).slice(0, 4).map((c, i) => ({action: 'mp-navigate', id: POIS[(i * 5 + 2) % POIS.length].id, title: c.name, summary: POIS[(i * 5 + 2) % POIS.length].address}))};
     if (kind === 'type') return {title: T(lang, 'Type Destination'), custom: `<form data-form="mp-type"><input class="gbdlg-input" name="q" placeholder="${e(T(lang, 'Destination'))}" aria-label="${e(T(lang, 'Destination'))}" autocomplete="off"></form>`, buttons: [{action: 'mp-type-go', title: T(lang, 'Go')}, {action: 'close-overlay', title: T(lang, 'Cancel')}]};
     if (kind === 'exit') return {title: T(lang, 'Exit navigation?'), icon: 'ic_dialog_alert', message: T(lang, 'This will end all route guidance.'), buttons: [{action: 'mp-exit-ok', title: T(lang, 'OK')}, {action: 'close-overlay', title: T(lang, 'Cancel')}]};
     if (kind === 'route-options') { const d = ui.mpAvoidDraft || {}; return {title: T(lang, 'Route options'), items: [['highways', 'Avoid highways'], ['tolls', 'Avoid tolls']].map(([id, key]) => ({action: 'mp-avoid', id, title: T(lang, key), checked: !!d[id]})), choice: 'multi', buttons: [{action: 'mp-avoid-ok', title: T(lang, 'OK')}, {action: 'close-overlay', title: T(lang, 'Cancel')}]}; }
     if (kind === 'route') { const nav = ui.mpNav, to = nav && (poi(nav.to) || nav.custom); return {title: T(lang, 'Route Info'), message: to ? `${to.name}\n${distance(lang, nav.km)} – ${minutes(lang, nav.min)}${avoiding(ctx.data).map(k => `\n${T(lang, k === 'highways' ? 'Avoiding highways' : 'Avoiding tolls')}`).join('')}` : '', buttons: [{action: 'close-overlay', title: T(lang, 'OK')}]}; }
+    // Places' Add: a search of one's own as a new tile (data.placesCustom).
+    if (kind === 'add') return {title: t('Add'), custom: `<form data-form="mp-add"><input class="gbdlg-input" name="q" placeholder="${e(T(lang, 'Search'))}" aria-label="${e(t('Add'))}" autocomplete="off"></form>`, buttons: [{action: 'mp-add-ok', title: T(lang, 'OK')}, {action: 'close-overlay', title: T(lang, 'Cancel')}]};
     if (kind === 'about') return {title: T(lang, 'Maps'), message: 'Google Maps 5.4.0', buttons: [{action: 'close-overlay', title: T(lang, 'OK')}]};
     return null;
   }
@@ -288,6 +349,7 @@
       case 'mp-layer':
         if (id === 'traffic') m.traffic = !m.traffic;
         else if (id === 'latitude') m.friends = !m.friends;
+        else if (['transit', 'bike', 'wiki'].includes(id)) m[id] = !m[id];
         else m.mode = m.mode === id ? 'normal' : id;
         close(); ctx.save(); ctx.render(); break;
       case 'mp-select': m.selected = m.selected === id ? '' : id; ctx.render(); break;
@@ -301,14 +363,18 @@
       case 'mp-directions': { const p = poi(id) || (id === 'q' ? m.custom : null); close(); m.page = ''; m.dirOpen = true; m.dirTo = p ? p.name : ''; m.dirMode ||= 'drive'; if (ctx.view !== 'maps') ctx.openApp('maps'); else ctx.render(); break; }
       case 'mp-mode': m.dirMode = id; m.dirTo = ctx.root.querySelector('.mp-dir [name=to]')?.value ?? m.dirTo; ctx.render(); break;
       case 'mp-navigate': { const p = poi(id) || (id === 'q' ? m.custom : null); if (p) startNav(ctx, p, p.id === 'q' ? p : undefined); break; }
-      case 'mp-clear': close(); Object.assign(m, {results: [], selected: '', route: null, query: '', custom: null, dirOpen: false, friends: false}); ctx.render(); break;
+      case 'mp-clear': close(); Object.assign(m, {results: [], selected: '', route: null, query: '', custom: null, dirOpen: false, friends: false, transit: false, bike: false, wiki: false, measure: []}); ctx.render(); break;
       case 'mp-focus-search': close(); ctx.focus('.mp-search input'); break;
       case 'mp-starred': ctx.dialog('starred'); break;
       case 'mp-open-latitude': close(); ctx.openApp('latitude'); break;
       case 'mp-open-maps': close(); ctx.openApp('maps'); break;
       case 'mp-about': ctx.dialog('about'); break;
-      case 'mp-cat': if (id === 'add') { ctx.toast('This feature is not part of the simulator.'); break; } ui.mpCat = id; ctx.render(); break;
-      case 'mp-show-cat': { const list = POIS.filter(p => p.cat === ui.mpCat).sort((a, b) => km(ME, a) - km(ME, b)); Object.assign(m, {results: list.map(p => p.id), selected: '', query: '', page: '', cx: ME.fx, cy: ME.fy}); ctx.openApp('maps'); break; }
+      case 'mp-cat': if (id === 'add') { ctx.dialog('add'); ctx.focus('.gbdlg [name=q]'); break; } ui.mpCat = id; ctx.render(); break;
+      case 'mp-add-ok': document.querySelector('.gbdlg form[data-form="mp-add"]')?.requestSubmit(); break;
+      case 'mp-wiki-open': { const p = WIKI.find(x => x.id === id); if (p) ctx.browse(`http://en.m.wikipedia.org/wiki/${p.article}`); break; }
+      // Measure: the button starts measuring; while points are down it clears them and stops (btn_measure_up_clear).
+      case 'mp-measure': m.measuring = !m.measuring; m.measure = []; ctx.render(); break;
+      case 'mp-show-cat': { const list = catList(ctx); Object.assign(m, {results: list.map(p => p.id), selected: '', query: '', page: '', cx: ME.fx, cy: ME.fy}); ctx.openApp('maps'); break; }
       case 'mp-checkin': data.latitudeCheckin = 'Riverside Park'; ctx.save(); ctx.toast(`${ctx.t('Check in')}: Riverside Park`); ctx.render(); break;
       case 'mp-addfriend': ctx.toast('This feature is not part of the simulator.'); break;
       case 'mp-refresh': ctx.render(); break;
@@ -348,6 +414,10 @@
       m.route = route(to, m.dirMode || 'drive'); m.dirOpen = false; m.selected = ''; m.results = ids.length ? [to.id] : []; Object.assign(m, {cx: (ME.fx + to.fx) / 2, cy: (ME.fy + to.fy) / 2});
       ctx.render(); return true;
     }
+    if (form === 'mp-add') {
+      const q = String(values.get('q') || '').trim(); ctx.ui.overlay = ''; ctx.renderOverlay(); if (!q) return true;
+      const list = ctx.data.placesCustom ||= []; if (!list.includes(q)) list.push(q); ctx.save(); ctx.render(); return true;
+    }
     if (form === 'mp-type') {
       const q = String(values.get('q') || '').trim(); if (!q) return true;
       const ids = search(q), to = ids.length ? poi(ids[0]) : geocode(q);
@@ -370,7 +440,8 @@
   document.addEventListener('pointerdown', event => {
     const canvas = event.target.closest?.('.mp-map .mp-canvas'); if (!canvas) return;
     const ui = currentUI; if (!ui) return;
-    drag = {x: event.clientX, y: event.clientY, cx: ui.mp.cx, cy: ui.mp.cy, moved: false, canvas, scale: canvas.getBoundingClientRect().width / canvas.clientWidth || 1};
+    const box = canvas.getBoundingClientRect();
+    drag = {left: box.left, top: box.top, x: event.clientX, y: event.clientY, cx: ui.mp.cx, cy: ui.mp.cy, moved: false, canvas, scale: canvas.getBoundingClientRect().width / canvas.clientWidth || 1};
     canvas.setPointerCapture?.(event.pointerId);
   });
   document.addEventListener('pointermove', event => {
@@ -382,9 +453,25 @@
   });
   document.addEventListener('pointerup', () => {
     if (!drag) return; const d = drag; drag = null;
+    if (!d.moved && currentUI?.mp?.measuring) { measureTap(d); return; }
     if (!d.moved) { const map = d.canvas.closest('.mp-map'); map?.classList.add('zoom'); clearTimeout(zoomTimer); zoomTimer = setTimeout(() => map?.classList.remove('zoom'), 3500); const ui = currentUI; if (ui?.mp?.selected) { ui.mp.selected = ''; map?.querySelector('.mp-bubble')?.remove(); } }
   });
   const module = {render, mounted, menu, dialog, handle, submit, back, open};
   for (const id of APPS) GBApps.register(id, module);
-  window.GBMaps = {POIS, FRIENDS, ME, search, route, km, distance, T};
+  // Measure: a tap puts a point where it lands (project() backwards); the total is shown over the map.
+  const measured = m => (m.measure || []).slice(1).reduce((sum, p, i) => sum + km(m.measure[i], p), 0);
+  function measureTap(d) {
+    const m = currentUI.mp, c = d.canvas, w = c.clientWidth, h = c.clientHeight, x = (d.x - d.left) / d.scale, y = (d.y - d.top) / d.scale;
+    (m.measure ||= []).push({fx: (x - w / 2) / (2 * w * m.z) + m.cx, fy: (y - h * .5) / (h * m.z) + m.cy});
+    const map = c.closest('.mp-map'); draw(map, m);
+    let total = map.querySelector('.mp-measure-total');
+    if (m.measure.length > 1) { if (!total) { total = document.createElement('span'); total.className = 'mp-measure-total'; map.querySelector('.mp-measure')?.after(total); } total.textContent = distance(currentLang, measured(m)); }
+  }
+  // A geo: point from another app (Gallery's Show on map, Util.openMaps): the map centred on it with its marker.
+  function showPoint(ui, p) {
+    const m = state(ui);
+    m.custom = {id: 'q', name: p.name, address: p.address, fx: p.fx, fy: p.fy, rating: 0};
+    Object.assign(m, {results: [], selected: 'q', cx: p.fx, cy: p.fy, page: '', route: null, dirOpen: false});
+  }
+  window.GBMaps = {POIS, FRIENDS, ME, WIKI, search, route, km, distance, T, showPoint, place: (fx, fy) => [...POIS].sort((a, b) => km({fx, fy}, a) - km({fx, fy}, b))[0]};
 })();

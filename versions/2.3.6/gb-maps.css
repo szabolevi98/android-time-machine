@@ -131,3 +131,21 @@
 .mp-navstep span{padding:calc(12 * var(--dp)) calc(12 * var(--dp)) calc(12 * var(--dp)) 0;font-size:calc(18.0058 * var(--dp))}
 .mp-navstep b{font-weight:400}
 .mp-navstep.now{background:#444466}
+/* Layers: Wikipedia's pins, drawn (the server's icon is not in the image). */
+.screen .mp-wiki{position:absolute;left:0;top:0;width:calc(20 * var(--dp));height:calc(20 * var(--dp));margin:calc(-10 * var(--dp)) 0 0 calc(-10 * var(--dp));padding:0;border:calc(1 * var(--dp)) solid #777;border-radius:calc(2 * var(--dp));background:#fff;color:#000;font:bold calc(14 * var(--dp))/1 Georgia,'Times New Roman',serif;box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) #0006;cursor:pointer}
+/* Labs › Bubble Buttons (lab_bubble_buttons): sym_action_call and btn_navigate either side of the text, split by bubble_divider. */
+.screen .mp-bubble.mp-bb{gap:calc(2.6667 * var(--dp));padding-left:calc(4 * var(--dp));padding-right:calc(4 * var(--dp));cursor:default}
+.screen .mp-bubble.mp-bb:active{border-image-source:url('assets/mp-popup_pointer_button_normal.png')}
+.screen .mp-bb button{display:flex;align-items:center;margin:0;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.screen .mp-bb .mp-bbmain{flex:1;min-width:0}
+.screen .mp-bb .mp-bbbtn{flex:none;padding:calc(2 * var(--dp))}
+.screen .mp-bb .mp-bbbtn:active,.screen .mp-bb .mp-bbmain:active{background:#ffa50055}
+.mp-bb .mp-bbbtn img{width:calc(30 * var(--dp));height:calc(30 * var(--dp));transform:none}
+.mp-bb .mp-bbdiv{width:calc(1.3334 * var(--dp));height:calc(30 * var(--dp));transform:none}
+/* Labs › Measure (lab_measure): btn_measure (65 x 60 px, hdpi) over the right end of the zoom buttons; measuring shows
+   btn_measure_up_clear, a press btn_measure_down_pressed. The total distance is the simulator's own label. */
+.screen .mp-measure{position:absolute;left:calc(50% + calc(18.3362 * var(--dp)));bottom:calc(44.9972 * var(--dp));width:calc(43.3334 * var(--dp));height:calc(40 * var(--dp));padding:0;border:0;background:url('assets/mp-btn_measure_up_normal.png') 0 0/100% 100%;opacity:0;pointer-events:none;transition:opacity .4s;cursor:pointer}
+.mp-map.zoom .mp-measure,.screen .mp-measure.on{opacity:1;pointer-events:auto;transition:opacity .1s}
+.screen .mp-measure.on{background-image:url('assets/mp-btn_measure_up_clear.png')}
+.screen .mp-measure:active{background-image:url('assets/mp-btn_measure_down_pressed.png')}
+.mp-measure-total{position:absolute;left:50%;top:calc(8 * var(--dp));translate:-50% 0;padding:calc(4 * var(--dp)) calc(10 * var(--dp));border-radius:calc(3 * var(--dp));background:#000000b3;color:#fff;font-size:calc(15 * var(--dp));white-space:nowrap;pointer-events:none}

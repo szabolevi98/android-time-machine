@@ -12,7 +12,13 @@
    spinner, IMAP path prefix and Require sign-in, Next on the bottom bar. Next is enabled by validateFields (the user
    name and password, a server name, a port) and a new security type sets its port (updatePortFromSecurityType). The
    image then checks the server (AccountSetupCheckSettings); offline nothing is checked and the settings are kept on
-   the phone, without the password, which is never stored (a set password shows as a mask). */
+   the phone, without the password, which is never stored (a set password shows as a mask).
+   Google Maps 5.4: Navigation's Settings (da_preferences.xml: RmiPreference, a CheckBoxPreference, "1-click report a
+   problem"), Cache settings (cache_settings_preference.xml: the check box cache_settings_prefetch_over_mobile_networks
+   and cache_settings_clear_cache, which empties the cache at once and has nothing to clear until the map is shown again)
+   and Labs (list_item_lab_action.xml: the lab's picture, lab_*, 7 dip from the text, with its check). The Labs list and
+   the cache rows' texts came from Google's server and the downloaded language pack, so they are the simulator's own; the
+   labs are the ones the image has pictures for and the simulator draws: Scale Bar, Measure and Bubble Buttons. */
 (() => {
   'use strict';
   const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -176,6 +182,21 @@
         action('outgoing', T('account_settings_outgoing_label'), '', {open: 'email-outgoing'})
       ]};
     },
+    'maps-navigation'(ctx) { return {set: 'maps', title: GBMaps.T(ctx.lang, 'Settings'), items: [check('OneButtonRmi', GBMaps.T(ctx.lang, '1-click report a problem'), '', false)]}; },
+    'maps-cache'(ctx) {
+      return {set: 'maps', title: ctx.t('Cache settings'), items: [
+        check('cache_settings_prefetch_over_mobile_networks', ctx.t('Prefetch over mobile networks'), '', false),
+        action('cache_settings_clear_cache', ctx.t('Clear cache'), '', {done: true, disabled: !ctx.mapsCache})
+      ]};
+    },
+    'maps-labs'(ctx) {
+      const lab = (key, img, title, summary) => check(key, ctx.t(title), ctx.t(summary), false, {image: `assets/mp-${img}.png`});
+      return {set: 'maps', title: ctx.t('Labs'), items: [
+        lab('scale', 'lab_scale', 'Scale Bar', 'Shows the map scale in the lower left corner.'),
+        lab('measure', 'lab_measure', 'Measure', 'Tap two or more points on the map to measure the distance between them.'),
+        lab('bubble', 'lab_bubble_buttons', 'Bubble Buttons', 'Call or navigate to a place right from its bubble.')
+      ]};
+    },
     'email-incoming'(ctx) { return {set: 'email', title: S('email', ctx.lang, 'account_setup_incoming_title'), form: serverForm(ctx, 'incoming')}; },
     'email-outgoing'(ctx) { return {set: 'email', title: S('email', ctx.lang, 'account_setup_outgoing_title'), form: serverForm(ctx, 'outgoing')}; }
   };
@@ -230,7 +251,7 @@
   function row(item, s, ctx) {
     if (item.kind === 'category') return `<div class="gbset-cat">${e(item.title)}</div>`;
     const on = enabled(item, s, ctx.values), dis = on ? '' : ' disabled aria-disabled="true"', id = `${ctx.app}:${item.key}`;
-    const body = summary => `<span class="gbset-text"><span class="gbset-title">${e(item.title)}</span>${summary ? `<span class="gbset-sum">${e(summary)}</span>` : ''}</span>`;
+    const body = summary => `${item.image ? `<img class="gbset-img" src="${e(item.image)}" alt="">` : ''}<span class="gbset-text"><span class="gbset-title">${e(item.title)}</span>${summary ? `<span class="gbset-sum">${e(summary)}</span>` : ''}</span>`;
     if (item.kind === 'check') { const value = !!get(item, ctx.values); return `<button class="gbset-row" data-action="gbpref-check" data-id="${e(id)}" role="checkbox" aria-checked="${value}"${dis}>${body(item.summary)}<img class="gbset-check" src="assets/gb-btn_check_${value ? 'on' : 'off'}${on ? '' : '_disable'}.png" alt=""></button>`; }
     if (item.kind === 'multi') return `<button class="gbset-row" data-action="gbpref-list" data-id="${e(id)}"${dis}>${body(item.summary)}</button>`;
     if (item.kind === 'list') return `<button class="gbset-row" data-action="gbpref-list" data-id="${e(id)}"${dis}>${body(item.showValue ? item.options[get(item, ctx.values)] : item.summary)}</button>`;

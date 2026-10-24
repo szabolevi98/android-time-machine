@@ -27,7 +27,12 @@ assert.match(html,/Select All/);assert.match(html,/1 item selected/);assert.matc
 assert.match(G.render(ctx({selecting:true,selected:['camera','pictures']})),/2 albums selected/);
 assert.match(G.render(ctx({sub:'album',selecting:true,selected:['2'],popup:'delete'})),/Confirm Delete/);
 html=G.render(ctx({sub:'photo',selecting:true,selected:['2'],popup:'more'}));
-for(const t of ['Details','Show on map','Rotate Left','Rotate Right','Set as wallpaper','Crop'])assert.match(html,new RegExp(t));
+for(const t of ['Details','Rotate Left','Rotate Right','Set as wallpaper','Crop'])assert.match(html,new RegExp(t));
+// HudLayer.buildMoreOptions: Show on map only for an item with a location (a picture taken with Store location).
+assert.doesNotMatch(html,/Show on map/);
+data.photos[2].location={fx:.5,fy:.52};
+assert.match(G.render(ctx({sub:'photo',selecting:true,selected:['3'],popup:'more'})),/data-action="gbg-show-map"[^>]*><img src="assets\/gb-g3-ic_menu_mapmode.png" alt=""><span>Show on map/);
+delete data.photos[2].location;
 assert.doesNotMatch(G.render(ctx({selecting:true,selected:['camera'],popup:'more'})),/Rotate Left/);
 // Details dialog and translations.
 assert.match(G.details(ctx()).message,/Title: P2\nType: image\/jpeg\nAlbum: Pictures/);

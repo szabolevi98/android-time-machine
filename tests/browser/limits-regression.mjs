@@ -992,6 +992,81 @@ const gbSelectText = async h => {
   await h.drag('#viewport .gm-body', 80, 0);
   h.check('Google Mail\'s Select text copies the message text', await copied());
 };
+
+// 2.3.6 Maps (T12): the server's layers drawn over the city, Labs (Scale Bar, Measure, Bubble Buttons), Cache settings'
+// Clear cache, Places' Add, Navigation's Settings, and the Gallery's Show on map for a picture taken with Store location.
+const gbMapsLocal = async h => {
+  const touch = async (selector, fx, fy) => {
+    const r = await h.ev(`(()=>{const b=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return [b.left,b.top,b.width,b.height]})()`);
+    const x = r[0] + r[2] * fx, y = r[1] + r[3] * fy;
+    await h.send('Input.dispatchMouseEvent', {type: 'mousePressed', x, y, button: 'left', buttons: 1, clickCount: 1}); await h.sleep(40);
+    await h.send('Input.dispatchMouseEvent', {type: 'mouseReleased', x, y, button: 'left', buttons: 0, clickCount: 1}); await h.sleep(250);
+  };
+  const menu = async (action, id) => {
+    const item = `.gbmenu [data-action="${action}"]${id ? `[data-id="${id}"]` : ''}`;
+    await h.tap('.touch-menu');
+    await h.until(`!!document.querySelector('.gbmenu')`);
+    if (!await h.ev(`!!document.querySelector(${JSON.stringify(item)})`)) await h.tap('.gbmenu [data-action="gb-menu-more"]');
+    await h.tap(item.replace('.gbmenu ', ''));
+  };
+  const pixels = `document.querySelector('#viewport .mp-canvas').toDataURL()`;
+  await h.openApp('maps');
+  await h.until(`!!document.querySelector('#viewport .mp-canvas')`); await h.sleep(500);
+  const plain = await h.ev(pixels);
+  await h.tap('#viewport [data-action="mp-layers"]');
+  await h.tap('[data-action="mp-layer"][data-id="transit"]');
+  await h.sleep(400);
+  h.check('Transit Lines draws on the map', await h.ev(pixels) !== plain);
+  await h.tap('#viewport [data-action="mp-layers"]');
+  h.check('the layer stays checked', await h.until(`document.querySelector('[data-action="mp-layer"][data-id="transit"]')?.getAttribute('aria-checked') === 'true'`));
+  await h.tap('[data-action="mp-layer"][data-id="wiki"]');
+  h.check('Wikipedia puts its pins on the map', await h.until(`document.querySelectorAll('#viewport .mp-wiki').length === 4`));
+  // Labs: the picture rows' checks are kept; Measure's button and the scale bar appear on the map.
+  await menu('gbpref-open', 'maps-labs');
+  h.check('Labs lists the image\'s labs', await h.until(`document.querySelectorAll('#viewport .gbset-row .gbset-img').length === 3`));
+  await h.tap('#viewport [data-action="gbpref-check"][data-id="maps-labs:measure"]');
+  await h.tap('#viewport [data-action="gbpref-check"][data-id="maps-labs:bubble"]');
+  h.check('the labs are saved', (await store(h, 'appPrefs'))?.['maps-labs']?.measure === true);
+  await h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='back';document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove();return 1})()`);
+  await h.until(`!!document.querySelector('#viewport .mp-measure')`);
+  await touch('#viewport .mp-canvas', .5, .5);
+  await h.tap('#viewport .mp-measure');
+  await touch('#viewport .mp-canvas', .3, .3); await touch('#viewport .mp-canvas', .7, .7);
+  h.check('Measure gives the distance of the taps', await h.until(`/\\d/.test(document.querySelector('#viewport .mp-measure-total')?.textContent || '')`));
+  await h.tap('#viewport .mp-measure');
+  h.check('a second press clears the measure', !await h.ev(`!!document.querySelector('#viewport .mp-measure-total')`));
+  // Bubble Buttons: the place's bubble calls and navigates.
+  await h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='mp-select';el.dataset.id='p1';document.querySelector('#viewport .mp-map').append(el);el.click();el.remove();return 1})()`);
+  h.check('Bubble Buttons gives the bubble its call and navigate buttons', await h.until(`!!document.querySelector('#viewport .mp-bb [data-action="mp-call"]') && !!document.querySelector('#viewport .mp-bb [data-action="mp-navigate"]')`));
+  // Cache settings: the shown map is in the cache; Clear cache empties it and has nothing more to clear.
+  await menu('gbpref-open', 'maps-cache');
+  h.check('Clear cache has the map to clear', await h.until(`document.querySelector('#viewport [data-id="maps-cache:cache_settings_clear_cache"]')?.disabled === false`));
+  await h.tap('#viewport [data-id="maps-cache:cache_settings_clear_cache"]');
+  h.check('Clear cache empties it', await h.until(`document.querySelector('#viewport [data-id="maps-cache:cache_settings_clear_cache"]')?.disabled === true`) && await store(h, 'mapsCache') === false);
+  // Places' Add: a search of one's own as a tile that lists its places.
+  await h.openApp('places');
+  await h.tap('#viewport [data-action="mp-cat"][data-id="add"]');
+  await h.type('.gbdlg [name=q]', 'pizza');
+  await h.tap('[data-action="mp-add-ok"]');
+  h.check('Add puts the search on the grid', await h.until(`document.querySelector('#viewport [data-action="mp-cat"][data-id="custom:0"]')?.textContent.trim() === 'pizza'`) && (await store(h, 'placesCustom'))?.[0] === 'pizza');
+  await h.tap('#viewport [data-action="mp-cat"][data-id="custom:0"]');
+  h.check('the tile lists its places', await h.until(`document.querySelectorAll('#viewport .mp-result').length > 0`));
+  // Navigation's Settings: 1-click report a problem is kept.
+  await h.openApp('navigation');
+  await menu('gbpref-open', 'maps-navigation');
+  await h.tap('#viewport [data-action="gbpref-check"][data-id="maps-navigation:OneButtonRmi"]');
+  h.check('Navigation\'s Settings keeps its check', (await store(h, 'appPrefs'))?.['maps-navigation']?.OneButtonRmi === true);
+  // The Gallery: a picture taken with Store location has Show on map; it opens Maps on the place.
+  await h.openApp('camera'); await h.sleep(800);
+  const act = (a, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(a)};${id ? `el.dataset.id=${JSON.stringify(id)};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove();return 1})()`);
+  await act('gbcam-set', 'gps:on'); await act('gbcam-shutter');
+  h.check('the picture keeps its location', await h.until(`${SAVE}?.photos?.[0]?.location?.fx > 0`, 5000));
+  await act('camera-review'); await h.sleep(800);
+  await act('gbg-select-current'); await act('gbg-more');
+  h.check('Show on map is offered', await h.until(`!!document.querySelector('#viewport [data-action="gbg-show-map"]')`));
+  await h.tap('#viewport [data-action="gbg-show-map"]');
+  h.check('Maps opens on the picture\'s place', await h.until(`!!document.querySelector('#viewport .mp-map .mp-bubble')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1068,6 +1143,7 @@ const CASES = [
   {id: 'T11', version: '4.4.4', name: 'Contacts › Place on Home screen', run: contactsShortcut({page: 1})},
   {id: 'T11', version: '5.1.1', name: 'Contacts › Place on Home screen', run: contactsShortcut({page: 1})},
   {id: 'T08', version: '2.3.6', name: 'Browser and Google Mail › Select text', run: gbSelectText},
+  {id: 'T12', version: '2.3.6', name: 'Maps › layers, Labs, cache, Places Add, Navigation Settings, Show on map', run: gbMapsLocal},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

@@ -1376,8 +1376,12 @@ versions/2.3.6/assets/mp-btn_compass_mode.png	a3b91933fcad46f7	copy	crespo:/syst
 versions/2.3.6/assets/mp-btn_latitude_add_friends.png	43d4177e30cd0972	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/btn_latitude_add_friends.png	drawable-240dpi		43d4177e30cd0972
 versions/2.3.6/assets/mp-btn_latitude_checkin.png	0ef3940861765ef0	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/btn_latitude_checkin.png	drawable-240dpi		0ef3940861765ef0
 versions/2.3.6/assets/mp-btn_latitude_refresh_friends.png	7b77035d851d6ee4	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/btn_latitude_refresh_friends.png	drawable-240dpi		7b77035d851d6ee4
+versions/2.3.6/assets/mp-btn_measure_down_pressed.png	2f65ef446415a4a5	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/btn_measure_down_pressed.png	drawable-240dpi		2f65ef446415a4a5
+versions/2.3.6/assets/mp-btn_measure_up_clear.png	615061d1f996eb8c	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/btn_measure_up_clear.png	drawable-240dpi		615061d1f996eb8c
+versions/2.3.6/assets/mp-btn_measure_up_normal.png	3540ea963716e8b4	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/btn_measure_up_normal.png	drawable-240dpi		3540ea963716e8b4
 versions/2.3.6/assets/mp-btn_navigate.png	6c83e2aa90ed71d6	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/btn_navigate.png	drawable-240dpi		6c83e2aa90ed71d6
 versions/2.3.6/assets/mp-btn_show_layers.png	e00b272039a58d50	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/btn_show_layers.png	drawable-240dpi		e00b272039a58d50
+versions/2.3.6/assets/mp-btn_show_map.png	bbb48f9194bbcf2d	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/btn_show_map.png	drawable-240dpi		bbb48f9194bbcf2d
 versions/2.3.6/assets/mp-btn_show_myl.png	13c722935ee5ccee	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/btn_show_myl.png	drawable-240dpi		13c722935ee5ccee
 versions/2.3.6/assets/mp-btn_show_places.png	0f75b7d8588bdd74	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/btn_show_places.png	drawable-240dpi		0f75b7d8588bdd74
 versions/2.3.6/assets/mp-btn_zoom_down_normal.png	83e0e53fdc13eaef	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/btn_zoom_down_normal.png	drawable-240dpi		83e0e53fdc13eaef
@@ -1486,6 +1490,9 @@ versions/2.3.6/assets/mp-icon_gas.png	b008045969d90602	copy	crespo:/system/app/M
 versions/2.3.6/assets/mp-icon_hotels.png	93e93a9df4856aa1	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/icon_hotels.png	drawable-240dpi		93e93a9df4856aa1
 versions/2.3.6/assets/mp-icon_restaurants.png	f35c16f524c492bc	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/icon_restaurants.png	drawable-240dpi		f35c16f524c492bc
 versions/2.3.6/assets/mp-icon_star.png	9c2ab2b825764246	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/icon_star.png	drawable-240dpi		9c2ab2b825764246
+versions/2.3.6/assets/mp-lab_bubble_buttons.png	2cd086720521497b	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/lab_bubble_buttons.png	drawable-240dpi		2cd086720521497b
+versions/2.3.6/assets/mp-lab_measure.png	af88681279f572bf	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/lab_measure.png	drawable-240dpi		af88681279f572bf
+versions/2.3.6/assets/mp-lab_scale.png	e95d56b38ce3488b	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/lab_scale.png	drawable-240dpi		e95d56b38ce3488b
 versions/2.3.6/assets/mp-latitude_checkin_icon.png	399ec7ae505595f8	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/latitude_checkin_icon.png	drawable-240dpi		399ec7ae505595f8
 versions/2.3.6/assets/mp-latitude_photo_frame.png	e8809ea8e3c02523	copy	crespo:/system/app/Maps.apk!res/drawable-160dpi/latitude_photo_frame.9.png	drawable-160dpi		e8809ea8e3c02523
 versions/2.3.6/assets/mp-letters.png	903409f7036cb454	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/letters.png	drawable-240dpi		903409f7036cb454
@@ -1506,6 +1513,7 @@ versions/2.3.6/assets/mp-places_icon.png	f0574b8ffdc5b396	copy	crespo:/system/ap
 versions/2.3.6/assets/mp-popup_pointer_button_normal.png	c1101cb2df9e6dc6	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/popup_pointer_button_normal.9.png	drawable-240dpi		c1101cb2df9e6dc6
 versions/2.3.6/assets/mp-popup_pointer_button_selected.png	6342286be3529438	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/popup_pointer_button_selected.9.png	drawable-240dpi		6342286be3529438
 versions/2.3.6/assets/mp-search_markers.png	9ec59e217db884d3	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/search_markers.png	drawable-240dpi		9ec59e217db884d3
+versions/2.3.6/assets/mp-sym_action_call.png	850ea0fc402f451a	copy	crespo:/system/app/Maps.apk!res/drawable-240dpi/sym_action_call.png	drawable-240dpi		850ea0fc402f451a
 versions/2.3.6/assets/music-albumart_mp_unknown.png	6dff74bea505b877	same pixels	crespo:/system/app/MusicGoogle.apk!res/drawable-hdpi-finger/albumart_mp_unknown.png	drawable-hdpi-finger		4985fe260b14bc24
 versions/2.3.6/assets/music-albumart_mp_unknown_list.png	174fad34566f6f1d	same pixels	crespo:/system/app/MusicGoogle.apk!res/drawable-hdpi-finger/albumart_mp_unknown_list.png	drawable-hdpi-finger		fa959e978e790c4e
 versions/2.3.6/assets/music-appwidget_bg.png	a67f70cb5cada8de	same pixels	crespo:/system/app/Browser.apk!res/drawable-hdpi/appwidget_bg.9.png	drawable-hdpi		bc472b6f41224f84

@@ -81,7 +81,9 @@
     if (ctx.popup === 'delete') return `<div class="gbg-popup at-1"><button data-action="gbg-confirm-delete"><img src="assets/gb-g3-icon_delete.png" alt=""><span>${e(T('confirm_delete'))}</span></button><button data-action="gbg-popup-close"><img src="assets/gb-g3-icon_cancel.png" alt=""><span>${e(T('cancel'))}</span></button></div>`;
     if (ctx.popup === 'more') {
       const single = ctx.sub !== '' && ctx.selected.length === 1;
-      const options = [['gallery-details', T('details'), 'gb-g3-ic_menu_view_details.png'], ...(single ? [['gbset-toast', T('show_on_map'), 'gb-g3-ic_menu_mapmode.png', 'Unavailable in this simulator']] : []), ...(ctx.sub !== '' ? [['gbg-rotate', T('rotate_left'), 'gb-g3-ic_menu_rotate_left.png', '-90'], ['gbg-rotate', T('rotate_right'), 'gb-g3-ic_menu_rotate_right.png', '90']] : []), ...(single ? [['gbg-wallpaper', T('set_as_wallpaper'), 'gb-g3-ic_menu_set_as.png'], ['gbg-crop', T('crop'), 'gb-g3-ic_menu_crop.png']] : [])];
+      // HudLayer.buildMoreOptions: Show on map only for an item with a location (the camera's Store location).
+      const located = single && ctx.data.photos.find(p => String(p.id) === String(ctx.selected[0]))?.location;
+      const options = [['gallery-details', T('details'), 'gb-g3-ic_menu_view_details.png'], ...(located ? [['gbg-show-map', T('show_on_map'), 'gb-g3-ic_menu_mapmode.png']] : []), ...(ctx.sub !== '' ? [['gbg-rotate', T('rotate_left'), 'gb-g3-ic_menu_rotate_left.png', '-90'], ['gbg-rotate', T('rotate_right'), 'gb-g3-ic_menu_rotate_right.png', '90']] : []), ...(single ? [['gbg-wallpaper', T('set_as_wallpaper'), 'gb-g3-ic_menu_set_as.png'], ['gbg-crop', T('crop'), 'gb-g3-ic_menu_crop.png']] : [])];
       return `<div class="gbg-popup at-2">${options.map(([action, label, icon, id]) => `<button data-action="${action}"${id ? ` data-id="${e(id)}"` : ''}><img src="assets/${icon}" alt=""><span>${e(label)}</span></button>`).join('')}</div>`;
     }
     if (ctx.popup === 'share') return `<div class="gbg-popup at-0"><button data-action="gallery-share-message"><img src="assets/messaging.png" alt=""><span>Messaging</span></button><button data-action="gbg-share-email"><img src="assets/email.png" alt=""><span>Email</span></button></div>`;
@@ -137,7 +139,7 @@
   function details(ctx) {
     const T = key => text(ctx.lang, key), p = ctx.photo;
     if (!p) return null;
-    return {title: T('details'), icon: 'ic_dialog_info', message: `${T('title')}: ${p.name}\n${T('type')}: image/jpeg\n${T('album')}: ${albumName(M().album(p), ctx.lang)}\n${T('taken_on')}: ${T('date_unknown')}\n${T('location')}: ${T('location_unknown')}`, buttons: [{action: 'close-overlay', title: T('details_ok')}]};
+    return {title: T('details'), icon: 'ic_dialog_info', message: `${T('title')}: ${p.name}\n${T('type')}: image/jpeg\n${T('album')}: ${albumName(M().album(p), ctx.lang)}\n${T('taken_on')}: ${T('date_unknown')}\n${T('location')}: ${p.location && window.GBMaps ? GBMaps.place(p.location.fx, p.location.fy).address : T('location_unknown')}`, buttons: [{action: 'close-overlay', title: T('details_ok')}]};
   }
   window.GBGallery = {DP, ITEM_W, ITEM_H, ALBUMS, CROP, text, albumName, render, details, cropDefault, cropDrag};
 })();

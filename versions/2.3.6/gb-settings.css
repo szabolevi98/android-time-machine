@@ -60,3 +60,7 @@
 /* DatePickerDialog (date_picker.xml): the month and day NumberPickers are 80 dip wide, the year 95 dip. */
 .gbtp-date .gbtp-picker{width:calc(80 * var(--dp))}
 .gbtp-date .gbtp-y{width:calc(95.0029 * var(--dp))}
+/* Maps' Labs rows (list_item_lab_action.xml): the lab's 113 px (hdpi) picture 7 dip down, 7 dip before the text. */
+.screen .gbset-row:has(.gbset-img){align-items:flex-start;padding-top:calc(10 * var(--dp));padding-bottom:calc(10 * var(--dp))}
+.gbset-img{flex:none;width:calc(75.3334 * var(--dp));height:calc(75.3334 * var(--dp));margin:calc(7 * var(--dp)) calc(7 * var(--dp)) 0 0}
+.gbset-row:has(.gbset-img) .gbset-check{align-self:center}
