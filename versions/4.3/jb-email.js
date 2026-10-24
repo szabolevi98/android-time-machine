@@ -10,7 +10,8 @@
    Android 4.4 Email: the first AOSP Email built on UnifiedEmail (packages/apps/Email + packages/apps/UnifiedEmail,
    android-4.4.4_r1; UnifiedEmailTheme = Theme.Holo.Light). Rebuilt from the sources:
    - MailActionBarView: the drawer indicator, the folder name over the account; Compose and Search as actions, Refresh /
-     Sync options / Settings / Help in the overflow (conversation_list_menu). In a conversation Delete and Mark unread
+     Settings / Help in the overflow (conversation_list_menu; Sync options, folder_options, is offered only where the
+     service has offerLookback, Exchange, never for this IMAP account). In a conversation Delete and Mark unread
      are promoted (archive is unsupported for IMAP/POP), the rest overflows.
    - FolderListFragment (flat, not divided): the account row with its radio button and unread count, then the folders.
    - ConversationItemView (conversation_item_view_normal): a 48 dp sender image, LetterTileProvider tiles (first letter,
@@ -144,7 +145,7 @@
       if (kind === 'compose') return menu([['email-attach', 'Attach picture'], ['email-cc', 'Add Cc/Bcc'], ['email-save', 'Save draft'], ['email-discard', 'Discard'], ['email-settings', 'Settings'], ['email-unavailable', 'Help']]);
       if (kind === 'conversation') return menu([['email-folders', 'Move to'], ['email-settings', 'Settings'], ['email-unavailable', 'Help']]);
       if (kind === 'message') return menu([['email-reply-all', 'Reply all'], ['email-forward', 'Forward']]);
-      return menu([['email-refresh', 'Refresh'], ['email-unavailable', 'Sync options'], ['email-settings', 'Settings'], ['email-unavailable', 'Help']]);
+      return menu([['email-refresh', 'Refresh'], ['email-settings', 'Settings'], ['email-unavailable', 'Help']]);
     }
     if (ui.overlay === 'email-folders') return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="kem-dialog" role="dialog" aria-label="${e(T('Move to'))}"><h3>${e(T('Move to'))}</h3>${['Inbox', 'Drafts', 'Sent', 'Trash'].map(name => `<button data-action="email-move" data-id="${name}">${e(T(name))}</button>`).join('')}</div>`;
     // The picture list for Attach picture and the discard question (formerly email.js's, which now draws the AOSP Email).

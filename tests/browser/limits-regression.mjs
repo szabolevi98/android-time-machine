@@ -32,6 +32,7 @@ const emailSettings = async h => {
     const overflow = '#viewport [data-action="email-menu"]:not([data-id="message"])', drawer = '#viewport [data-action="email-drawer"]';
     h.check('opens Email', await h.until(`!!document.querySelector('${overflow}, ${drawer}')`));
     await h.tap(await h.ev(`!!document.querySelector('${overflow}')`) ? overflow : drawer);
+    h.check('the IMAP account offers no Sync options', !await h.ev(`[...document.querySelectorAll('[role="menu"] button, .holo-menu button')].some(b => /Sync options/.test(b.textContent))`));
     await h.tap('[role="menu"] [data-action="email-settings"], .holo-menu [data-action="email-settings"], nav [data-action="email-settings"]');
     h.check('Settings opens Email\'s own settings', await h.until(`!!document.querySelector('#viewport .emp-app [data-id="account"]')`));
     await h.tap('#viewport .emp-row[data-id="account"]');
@@ -55,6 +56,18 @@ const emailSettings = async h => {
   h.check('the chosen sound is the summary', await h.until(`document.querySelector('#viewport .emp-row[data-id="${tone}"] small')?.textContent === ${JSON.stringify(picked)}`));
   await h.tap('#viewport .emp-row[data-id="incoming"]');
   h.check('Incoming settings show the IMAP fields', await h.until(`document.querySelectorAll('#viewport .emp-form .emp-input').length >= 4`));
+  const done = () => h.ev(`!document.querySelector('#viewport [data-action="empx-server-save"]').disabled`);
+  const set = (field, value) => h.ev(`(()=>{const f=document.querySelector('#viewport [data-emp-field="${field}"]');f.value=${JSON.stringify(value)};f.dispatchEvent(new Event('input',{bubbles:true}));return true})()`);
+  h.check('a set password shows as a mask and Done is enabled', await done() && await h.ev(`document.querySelector('#viewport [data-emp-field="password"]').value.length > 0`));
+  await h.type('#viewport .emp-input[data-emp-field="port"]', '70000');
+  h.check('a port above 65535 disables Done', !await done());
+  await h.type('#viewport .emp-input[data-emp-field="port"]', '993');
+  h.check('a valid port enables it again', await done());
+  await set('password', '');
+  h.check('an empty password disables Done', !await done());
+  await h.type('#viewport .emp-input[data-emp-field="password"]', 'not-a-real-password');
+  await set('security', '0');
+  h.check('security None sets the IMAP port 143', await h.ev(`document.querySelector('#viewport [data-emp-field="port"]').value`) === '143' && await done());
   await h.type('#viewport .emp-input[data-emp-field="server"]', 'mail.example.org');
   await h.tap('#viewport [data-action="empx-server-save"]');
   h.check('Done returns to the account', await h.until(`!!document.querySelector('#viewport .emp-row[data-id="outgoing"]')`));
@@ -65,7 +78,8 @@ const emailSettings = async h => {
   await h.tap('#viewport [data-action="empx-server-cancel"]');
   await h.until(`!!document.querySelector('#viewport .emp-row[data-id="outgoing"]')`);
   const kept = await prefs();
-  h.check('the settings are kept', kept.quickResponses?.[0] === 'See you at nine.' && kept[tone] === picked && kept.incoming?.server === 'mail.example.org' && !kept.outgoing, JSON.stringify(kept));
+  h.check('the settings are kept', kept.quickResponses?.[0] === 'See you at nine.' && kept[tone] === picked && kept.incoming?.server === 'mail.example.org' && kept.incoming?.port === '143' && !kept.outgoing, JSON.stringify({...kept, incoming: {...kept.incoming, password: undefined}}));
+  h.check('the password is not stored', kept.incoming?.passwordSet === true && !('password' in kept.incoming) && !JSON.stringify(kept).includes('not-a-real-password'));
   h.check('the reload keeps them', await h.reload() && (await prefs()).incoming?.server === 'mail.example.org');
   await account();
   await h.tap('#viewport .emp-row[data-id="incoming"]');
@@ -687,6 +701,56 @@ const photoSphere = spec => async h => {
   await h.key('Escape');
   h.check('Back returns to the picture', await h.until(`!document.querySelector('#viewport [data-sph-band]') && !!document.querySelector('#viewport ${spec.kk ? '[data-jbgal-sphere]' : '.ph-viewer'}')`));
 };
+
+// 2.3.6 Email › Account settings › Incoming / Outgoing settings (AccountSetupIncoming / AccountSetupOutgoing): Next
+// follows validateFields, a security type sets its port, Next keeps the fields (never the password), Back keeps nothing.
+const emailServersGB = async h => {
+  const servers = () => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));const d=k&&JSON.parse(localStorage.getItem(k));return (d&&d.appPrefs||{})['email-servers']||{}})()`);
+  const row = key => `#viewport .gbset-row[data-id$=":${key}"]`;
+  const next = () => h.ev(`!document.querySelector('#viewport .gbem-server .next').disabled`);
+  const set = (name, value) => h.ev(`(()=>{const f=document.querySelector('#viewport .gbem-server [name="${name}"]');f.value=${JSON.stringify(value)};f.dispatchEvent(new Event('input',{bubbles:true}));return true})()`);
+  const settings = async () => {
+    await h.openApp('email');
+    await h.until(`!!document.querySelector('#viewport .gbem')`);
+    await h.tap('#nav-root .touch-menu, .touch-menu');
+    await h.until(`!!document.querySelector('.gbmenu')`);
+    if (!await h.ev(`!!document.querySelector('.gbmenu [data-action="gbpref-open"]')`)) await h.tap('.gbmenu [data-action="gb-menu-more"]');
+    await h.tap('[data-action="gbpref-open"][data-id="email"]');
+    h.check('Account settings open', await h.until(`!!document.querySelector('${row('incoming')}')`));
+  };
+  await settings();
+  await h.tap(row('incoming'));
+  h.check('Incoming settings show the IMAP fields', await h.until(`!!document.querySelector('#viewport .gbem-server [name="prefix"]') && /IMAP/.test(document.querySelector('#viewport .gbem-server').textContent)`));
+  h.check('Next is enabled for the account as it is', await next());
+  await h.type('#viewport .gbem-server [name="port"]', '0');
+  h.check('port 0 disables Next', !await next());
+  await set('security', '3');
+  h.check('TLS sets port 143 and enables Next', await h.ev(`document.querySelector('#viewport .gbem-server [name="port"]').value`) === '143' && await next());
+  await h.type('#viewport .gbem-server [name="server"]', 'bad host');
+  h.check('a server name with a space disables Next', !await next());
+  await h.type('#viewport .gbem-server [name="server"]', 'mail.example.org');
+  await h.key('Escape');
+  h.check('Back returns without keeping anything', await h.until(`!!document.querySelector('${row('incoming')}')`) && !(await servers()).incoming);
+  await h.tap(row('incoming'));
+  await h.until(`!!document.querySelector('#viewport .gbem-server')`);
+  await h.type('#viewport .gbem-server [name="server"]', 'mail.example.org');
+  await set('security', '0');
+  await h.tap('#viewport .gbem-server .next');
+  h.check('Next keeps the fields and returns', await h.until(`!!document.querySelector('${row('outgoing')}')`) && (await servers()).incoming?.server === 'mail.example.org' && (await servers()).incoming?.port === '143');
+  h.check('the password is not stored', (await servers()).incoming?.passwordSet === true && !('password' in (await servers()).incoming));
+  await h.tap(row('outgoing'));
+  h.check('Outgoing settings open', await h.until(`!!document.querySelector('#viewport .gbem-server [name="login"]')`));
+  await h.tap('#viewport .gbem-server .gbem-login');
+  h.check('without sign-in the user fields hide', await h.ev(`getComputedStyle(document.querySelector('#viewport .gbem-login-fields')).display === 'none'`) && await next());
+  await set('security', '1');
+  h.check('SSL sets the SMTP port 465', await h.ev(`document.querySelector('#viewport .gbem-server [name="port"]').value`) === '465');
+  await h.tap('#viewport .gbem-server .next');
+  h.check('the outgoing settings are kept', await h.until(`!!document.querySelector('${row('outgoing')}')`) && (await servers()).outgoing?.login === false);
+  h.check('the reload keeps them', await h.reload() && (await servers()).incoming?.server === 'mail.example.org');
+  await settings();
+  await h.tap(row('incoming'));
+  h.check('the saved server is shown again', await h.until(`document.querySelector('#viewport .gbem-server [name="server"]')?.value === 'mail.example.org'`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -767,6 +831,8 @@ const CASES = [
   {id: 'T04', version: '4.3', name: 'Gmail › Settings: label sound, labels, days to sync', run: gmailSettings},
   {id: 'T04', version: '4.4.4', name: 'Gmail › Settings: label sound, labels, days to sync', run: gmailSettings},
   {id: 'T04', version: '5.1.1', name: 'Gmail › Settings: label sound, labels, days to sync, vacation responder', run: h => gmailSettings({...h, vacation: true})},
+  {id: 'T09', version: '2.3.6', name: 'Email › Incoming and Outgoing settings', run: emailServersGB},
+  {id: 'T09', version: '4.0.4', name: 'Email › Settings: quick responses, ringtone, server settings', run: emailSettings},
   {id: 'T09', version: '4.4.4', name: 'Email › Settings: quick responses, ringtone, server settings', run: emailSettings},
   {id: 'T09', version: '5.1.1', name: 'Email › Settings: quick responses, ringtone, server settings', run: emailSettings}
 ];

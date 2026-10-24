@@ -163,6 +163,9 @@
 .emp-actions{display:flex;justify-content:center;gap:calc(8 * var(--dp));padding:calc(16 * var(--dp))}
 .screen .emp-button{width:calc(160 * var(--dp));min-height:calc(40 * var(--dp));padding:0 calc(8 * var(--dp));border:calc(1 * var(--dp)) solid #c6c6c6;border-radius:calc(2 * var(--dp));background:#e8e8e8;box-shadow:0 calc(1 * var(--dp)) 0 #0000001f;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
 .screen .emp-button:active{background:#33b5e5}
+/* A server screen's Done waits for valid fields (validateFields). */
+.screen .emp-button:disabled{color:#0000004d;cursor:default}
+.screen .emp-button:disabled:active{background:#e8e8e8}
 .screen .emp-quick{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #e3e3e3;background:none;text-align:left;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
 .screen .emp-quick:active{background:#33b5e566}
 .emp-empty{margin:0;padding:calc(32 * var(--dp)) calc(16 * var(--dp));text-align:center;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#727272}

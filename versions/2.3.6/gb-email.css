@@ -101,3 +101,12 @@
 .screen .gbem-setup-bar button:disabled{color:#00000066;cursor:default}
 .gbem-setup-bar button:disabled img{opacity:.5}
 .gbem-setup-bar img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+/* AccountSetupIncoming / AccountSetupOutgoing (account_setup_incoming.xml / account_setup_outgoing.xml): the default
+   TextView labels (textAppearanceSmall), the EditTexts, the Security type spinner on btn_dropdown, Require sign-in. */
+.gbem-server-body{padding:0 calc(4.9972 * var(--dp)) calc(10.0058 * var(--dp))}
+.gbem-label{display:block;margin-top:calc(6.6667 * var(--dp));padding:0 calc(4.9972 * var(--dp));font-size:calc(14 * var(--dp));color:#bebebe}
+.gbem-server-body .gbem-field{margin:0}
+.screen .gbem-spinner{display:block;width:100%;box-sizing:border-box;min-height:calc(48.6725 * var(--dp));margin:0;padding:calc(7.3392 * var(--dp)) calc(51.3392 * var(--dp)) calc(11.3392 * var(--dp)) calc(10.6667 * var(--dp));border:0 solid transparent;border-image:url('assets/gb-btn_dropdown_normal.png') 8 46 14 11 fill / calc(5.3334 * var(--dp)) calc(30.6667 * var(--dp)) calc(9.3334 * var(--dp)) calc(7.3392 * var(--dp)) stretch;background:none;color:#000;font:400 calc(18.0058 * var(--dp)) DroidSans,Arial,sans-serif;appearance:none;-webkit-appearance:none;cursor:pointer}
+.screen .gbem-spinner:active{border-image:url('assets/gb-btn_dropdown_pressed.png') 24 89 28 29 fill / calc(16 * var(--dp)) calc(59.3392 * var(--dp)) calc(18.6667 * var(--dp)) calc(19.3392 * var(--dp)) stretch}
+.gbem-server .gbem-login{padding:0}
+.gbem-server:has([name="login"]:not(:checked)) .gbem-login-fields{display:none}

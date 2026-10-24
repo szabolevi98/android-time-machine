@@ -611,6 +611,146 @@ window.GBStrings["email"] = {
 "fr": "Erreur de connexion",
 "es": "Error de conexión"
 },
+"account_setup_incoming_title": {
+"en": "Incoming server settings",
+"hu": "Bejövő üzeneteket kezelő szerver beállításai",
+"de": "Einstellungen für Eingangsserver",
+"fr": "Paramètres de serveur entrant",
+"es": "Ajustes del servidor de entrada"
+},
+"account_setup_incoming_username_label": {
+"en": "Username",
+"hu": "Felhasználónév",
+"de": "Nutzername",
+"fr": "Nom d'utilisateur",
+"es": "Nombre de usuario"
+},
+"account_setup_incoming_password_label": {
+"en": "Password",
+"hu": "Jelszó",
+"de": "Passwort",
+"fr": "Mot de passe",
+"es": "Contraseña"
+},
+"account_setup_incoming_imap_server_label": {
+"en": "IMAP server",
+"hu": "IMAP-szerver",
+"de": "IMAP-Server",
+"fr": "Serveur IMAP",
+"es": "Servidor IMAP"
+},
+"account_setup_incoming_port_label": {
+"en": "Port",
+"hu": "Port",
+"de": "Port",
+"fr": "Port",
+"es": "Puerto"
+},
+"account_setup_incoming_security_label": {
+"en": "Security type",
+"hu": "Biztonság típusa",
+"de": "Sicherheitstyp",
+"fr": "Type de sécurité",
+"es": "Tipo de seguridad"
+},
+"account_setup_incoming_security_none_label": {
+"en": "None",
+"hu": "Nincs",
+"de": "Keine",
+"fr": "Aucun",
+"es": "Ninguno"
+},
+"account_setup_incoming_security_ssl_label": {
+"en": "SSL",
+"hu": "SSL",
+"de": "SSL",
+"fr": "SSL",
+"es": "SSL"
+},
+"account_setup_incoming_security_ssl_trust_certificates_label": {
+"en": "SSL (Accept all certificates)",
+"hu": "SSL (minden tanúsítvány elfogadása)",
+"de": "SSL (Alle Zertifikate akzeptieren)",
+"fr": "SSL (accepter tous les certificats)",
+"es": "SSL (aceptar todos los certificados)"
+},
+"account_setup_incoming_security_tls_label": {
+"en": "TLS",
+"hu": "TLS",
+"de": "TLS",
+"fr": "TLS",
+"es": "TLS"
+},
+"account_setup_incoming_security_tls_trust_certificates_label": {
+"en": "TLS (Accept all certificates)",
+"hu": "TLS (minden tanúsítvány elfogadása)",
+"de": "TLS (Alle Zertifikate akzeptieren)",
+"fr": "TLS (accepter tous les certificats)",
+"es": "TLS (aceptar todos los certificados)"
+},
+"account_setup_incoming_imap_path_prefix_label": {
+"en": "IMAP path prefix",
+"hu": "IMAP-alapú elérési út előtagja",
+"de": "IMAP-Pfadpräfix",
+"fr": "Préfixe du chemin IMAP",
+"es": "Prefijo de ruta IMAP"
+},
+"account_setup_incoming_imap_path_prefix_hint": {
+"en": "Optional",
+"hu": "Opcionális",
+"de": "Optional",
+"fr": "Facultatif",
+"es": "Opcional"
+},
+"account_setup_outgoing_title": {
+"en": "Outgoing server settings",
+"hu": "Kimenő üzenetek szerverének beállításai",
+"de": "Einstellungen für Postausgangsserver",
+"fr": "Paramètres de serveur sortant",
+"es": "Ajustes del servidor de salida"
+},
+"account_setup_outgoing_smtp_server_label": {
+"en": "SMTP server",
+"hu": "SMTP-szerver",
+"de": "SMTP-Server",
+"fr": "Serveur SMTP",
+"es": "Servidor SMTP"
+},
+"account_setup_outgoing_port_label": {
+"en": "Port",
+"hu": "Port",
+"de": "Port",
+"fr": "Port",
+"es": "Puerto"
+},
+"account_setup_outgoing_security_label": {
+"en": "Security type",
+"hu": "Biztonság típusa",
+"de": "Sicherheitstyp",
+"fr": "Type de sécurité",
+"es": "Tipo de seguridad"
+},
+"account_setup_outgoing_require_login_label": {
+"en": "Require sign-in.",
+"hu": "Bejelentkezés szükséges.",
+"de": "Anmeldung erforderlich",
+"fr": "Connexion obligatoire.",
+"es": "Acceso obligatorio"
+},
+"account_setup_outgoing_username_label": {
+"en": "Username",
+"hu": "Felhasználónév",
+"de": "Nutzername",
+"fr": "Nom d'utilisateur",
+"es": "Nombre de usuario"
+},
+"account_setup_outgoing_password_label": {
+"en": "Password",
+"hu": "Jelszó",
+"de": "Passwort",
+"fr": "Mot de passe",
+"es": "Contraseña"
+},
 "message_deleted_toast_one": {
 "en": "Message deleted.",
 "de": "Nachricht gelöscht",

@@ -6,7 +6,13 @@
    Google Mail 2.3.5.1's Settings: preferences_root.xml (General preferences, the account, Add account), the account's
    preferences.xml, LabelsSynchronizationSettings (Amount of mail to sync and each label's Sync all / Sync last N days /
    Sync none) and LabelsNotificationSettings (each synced label's notifications); an item with `open` shows another
-   screen, a `multi` item is a MultiListPreference (Confirm actions). */
+   screen, a `multi` item is a MultiListPreference (Confirm actions).
+   Email's Incoming / Outgoing settings are AccountSetupIncoming / AccountSetupOutgoing in edit mode
+   (account_setup_incoming.xml / account_setup_outgoing.xml for the IMAP account): the fields, the Security type
+   spinner, IMAP path prefix and Require sign-in, Next on the bottom bar. Next is enabled by validateFields (the user
+   name and password, a server name, a port) and a new security type sets its port (updatePortFromSecurityType). The
+   image then checks the server (AccountSetupCheckSettings); offline nothing is checked and the settings are kept on
+   the phone, without the password, which is never stored (a set password shows as a mask). */
 (() => {
   'use strict';
   const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -166,11 +172,58 @@
         {...action('account_ringtone', T('account_settings_ringtone'), '', {ringtone: true}), dependency: 'account_notify'},
         list('account_settings_vibrate_when', T('account_settings_vibrate_when_label'), A('email', ctx.lang, 'account_settings_vibrate_when_entries'), 2, {dialogTitle: T('account_settings_vibrate_when_dlg_title'), summary: T('account_settings_vibrate_when_summary'), dependency: 'account_notify'}),
         cat(T('account_settings_servers')),
-        action('incoming', T('account_settings_incoming_label'), '', {toast: true}),
-        action('outgoing', T('account_settings_outgoing_label'), '', {toast: true})
+        action('incoming', T('account_settings_incoming_label'), '', {open: 'email-incoming'}),
+        action('outgoing', T('account_settings_outgoing_label'), '', {open: 'email-outgoing'})
       ]};
-    }
+    },
+    'email-incoming'(ctx) { return {set: 'email', title: S('email', ctx.lang, 'account_setup_incoming_title'), form: serverForm(ctx, 'incoming')}; },
+    'email-outgoing'(ctx) { return {set: 'email', title: S('email', ctx.lang, 'account_setup_outgoing_title'), form: serverForm(ctx, 'outgoing')}; }
   };
+  // The IMAP account's server settings: IMAP_PORTS / SMTP_PORTS by security type (None, SSL, SSL (Accept all
+  // certificates), TLS, TLS (Accept all certificates)).
+  const PORTS = {incoming: [143, 993, 993, 143, 143], outgoing: [587, 465, 465, 587, 587]}, MASK = '\u2022'.repeat(8);
+  const SECURITY = ['none', 'ssl', 'ssl_trust_certificates', 'tls', 'tls_trust_certificates'];
+  function server(ctx, page) {
+    const domain = String(ctx.account).split('@')[1] || 'example.com', saved = ctx.servers?.[page] || {};
+    const base = page === 'incoming' ? {user: ctx.account, passwordSet: true, server: `imap.${domain}`, port: '993', security: 1, prefix: ''} : {server: `smtp.${domain}`, port: '465', security: 1, login: true, user: ctx.account, passwordSet: true};
+    return {...base, ...saved};
+  }
+  const hostOk = v => /^[^\s\/:?#@\\]+$/.test(String(v).trim()), portOk = v => /^\d{1,5}$/.test(String(v).trim()) && Number(v) > 0 && Number(v) < 65536;
+  function serverValid(page, f) {
+    if (!hostOk(f.server || '') || !portOk(f.port || '')) return false;
+    return page === 'outgoing' && !f.login ? true : !!String(f.user || '').trim() && !!f.password;
+  }
+  function serverForm(ctx, page) {
+    const T = key => S('email', ctx.lang, key), v = server(ctx, page), pre = page === 'incoming' ? 'account_setup_incoming_' : 'account_setup_outgoing_';
+    const label = key => `<span class="gbem-label">${e(T(key))}</span>`;
+    const input = (name, type, extra = '') => `<input class="gbem-field" name="${name}" type="${type}" value="${e(name === 'password' ? (v.passwordSet ? MASK : '') : v[name])}" autocomplete="${type === 'password' ? 'new-password' : 'off'}" spellcheck="false"${extra}>`;
+    const security = `<select class="gbem-spinner" name="security">${SECURITY.map((key, i) => `<option value="${i}"${Number(v.security) === i ? ' selected' : ''}>${e(T(`account_setup_incoming_security_${key}_label`))}</option>`).join('')}</select>`;
+    const login = `${label(pre + 'username_label')}${input('user', 'email')}${label(pre + 'password_label')}${input('password', 'password')}`;
+    const fields = page === 'incoming'
+      ? `${login}${label('account_setup_incoming_imap_server_label')}${input('server', 'text')}${label('account_setup_incoming_port_label')}${input('port', 'text', ' inputmode="numeric"')}${label('account_setup_incoming_security_label')}${security}${label('account_setup_incoming_imap_path_prefix_label')}${input('prefix', 'text', ` placeholder="${e(T('account_setup_incoming_imap_path_prefix_hint'))}"`)}`
+      : `${label('account_setup_outgoing_smtp_server_label')}${input('server', 'text')}${label('account_setup_outgoing_port_label')}${input('port', 'text', ' inputmode="numeric"')}${label('account_setup_outgoing_security_label')}${security}<label class="gbem-setup-default gbem-login"><input type="checkbox" name="login"${v.login ? ' checked' : ''}><span></span>${e(T('account_setup_outgoing_require_login_label'))}</label><div class="gbem-login-fields">${login}</div>`;
+    const ok = serverValid(page, {...v, password: v.passwordSet ? MASK : ''});
+    return `<form class="app-view gbem gbem-setup gbem-server" data-form="gbem-server" data-page="${page}" data-no-translate><div class="gb-titlebar">${e(page === 'incoming' ? T('account_setup_incoming_title') : T('account_setup_outgoing_title'))}</div><div class="gbem-setup-body gbem-server-body">${fields}</div><div class="gbem-setup-bar"><span></span><button type="submit" class="next"${ok ? '' : ' disabled'}>${e(T('next_action'))}<img src="assets/gb-em-button_indicator_next.png" alt=""></button></div></form>`;
+  }
+  // The form's values: the password only says whether one is set.
+  function serverValues(form) {
+    const f = form.elements;
+    return {user: f.user?.value.trim() ?? '', password: f.password?.value ?? '', server: f.server.value.trim(), port: f.port.value.trim(), security: Number(f.security.value), ...(f.prefix ? {prefix: f.prefix.value.trim()} : {}), ...(f.login ? {login: f.login.checked} : {})};
+  }
+  // validateFields on every change; a new security type first sets its port.
+  function serverInput(form, target) {
+    const page = form.dataset.page;
+    if (target?.name === 'security') form.elements.port.value = PORTS[page][Number(target.value)];
+    const ok = serverValid(page, serverValues(form));
+    form.querySelector('.gbem-setup-bar .next').disabled = !ok;
+    return ok;
+  }
+  function serverSave(form, servers) {
+    const page = form.dataset.page, {password, ...values} = serverValues(form);
+    if (!serverValid(page, {...values, password})) return false;
+    servers[page] = {...values, passwordSet: !!password};
+    return true;
+  }
   const screen = ctx => (SCREENS[ctx.app] || (String(ctx.app).startsWith('gmail-label|') ? SCREENS['gmail-label'] : null))?.(ctx);
   const get = (item, values) => values[item.key] ?? item.def;
   const enabled = (item, s, values) => !item.disabled && (!item.dependency || !!get(s.items.find(i => i.key === item.dependency), values));
@@ -186,6 +239,7 @@
   }
   function render(ctx) {
     const s = screen(ctx); if (!s) return '';
+    if (s.form) return s.form;
     return `<div class="app-view gbset" data-no-translate><div class="gb-titlebar">${e(s.title)}</div><div class="gbset-list">${s.items.map(item => row(item, s, ctx)).join('')}</div></div>`;
   }
   const find = (ctx, key) => screen(ctx)?.items.find(item => item.key === key);
@@ -208,5 +262,5 @@
     }
     return null;
   }
-  window.GBPrefs = {SCREENS, render, dialog, find, get};
+  window.GBPrefs = {SCREENS, render, dialog, find, get, server, serverValid, serverInput, serverSave, PORTS};
 })();

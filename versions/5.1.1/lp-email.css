@@ -272,6 +272,9 @@
 .emp-actions{display:flex;justify-content:flex-end;gap:calc(8 * var(--dp));padding:calc(16 * var(--dp)) calc(8 * var(--dp))}
 .screen .emp-button{min-width:calc(64 * var(--dp));height:calc(36 * var(--dp));padding:0 calc(8 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#e7790d;text-transform:uppercase}
 .screen .emp-button:active{background:#0000001a}
+/* A server screen's Done waits for valid fields (validateFields). */
+.screen .emp-button:disabled{color:#0000004d;cursor:default}
+.screen .emp-button:disabled:active{background:none}
 .screen .emp-quick{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:calc(12 * var(--dp)) calc(16 * var(--dp));border:0;background:none;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
 .screen .emp-quick:active{background:#0000001a}
 .emp-empty{margin:0;padding:calc(32 * var(--dp)) calc(16 * var(--dp));text-align:center;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#0000008a}

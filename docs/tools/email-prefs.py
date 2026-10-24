@@ -78,20 +78,42 @@ RENDERER = r'''(() => {
     return `${rows || `<p class="emp-empty">${e(W(T, 'noQuick', 'No quick responses'))}</p>`}<div class="emp-actions"><button type="button" class="emp-button" data-action="empx-quick" data-id="-1">${e(W(T, 'create', 'Create new'))}</button></div>`;
   }
   // The server screens of an IMAP account: its own fields, kept on the phone.
+  // The account's password is never kept: the field shows a mask while one is set, as the existing account has.
+  const MASK = '\u2022'.repeat(8);
   function server(data, page, account) {
-    const domain = account.split('@')[1] || 'example.com', saved = data.emailPrefs?.[page] || {};
-    const base = page === 'incoming' ? {user: account, password: '', server: `imap.${domain}`, port: '993', security: 1, prefix: ''} : {server: `smtp.${domain}`, port: '465', security: 1, login: true, user: account, password: ''};
-    return {...base, ...saved};
+    const domain = account.split('@')[1] || 'example.com', {password, ...saved} = data.emailPrefs?.[page] || {};
+    const base = page === 'incoming' ? {user: account, passwordSet: true, server: `imap.${domain}`, port: '993', security: 1, prefix: ''} : {server: `smtp.${domain}`, port: '465', security: 1, login: true, user: account, passwordSet: true};
+    return {...base, ...(password !== undefined ? {passwordSet: !!password} : {}), ...saved};
+  }
+  /* AccountSetupIncomingFragment / AccountSetupOutgoingFragment.validateFields: Done follows the user name and password
+     (outgoing only with Require sign-in), Utility.isServerNameValid (a host a URI takes) and isPortFieldValid (1 to
+     65535). updatePortFromSecurityType: a new security type sets its port (IMAP 993 / 143, SMTP 465 / 587). */
+  const PORTS = {incoming: [143, 993], outgoing: [587, 465]}, ssl = i => i === 1 || i === 2;
+  const hostOk = v => /^[^\s\/:?#@\\]+$/.test(String(v).trim()), portOk = v => /^\d{1,5}$/.test(String(v).trim()) && Number(v) > 0 && Number(v) < 65536;
+  function valid(page, f) {
+    if (!hostOk(f.server || '') || !portOk(f.port || '')) return false;
+    return page === 'outgoing' && !f.login ? true : !!String(f.user || '').trim() && !!f.password;
+  }
+  const fieldsOf = form => { const out = {}; form.querySelectorAll('[data-emp-field]').forEach(field => { out[field.dataset.empField] = field.type === 'checkbox' ? field.checked : field.dataset.empField === 'security' ? Number(field.value) : field.dataset.empField === 'password' ? field.value : field.value.trim(); }); return out; };
+  if (!window.__emailPrefsInput && typeof document !== 'undefined') {
+    window.__emailPrefsInput = true;
+    document.addEventListener('input', event => {
+      const form = event.target.closest?.('[data-emp-form]'); if (!form) return;
+      const page = form.dataset.empForm;
+      if (event.target.dataset.empField === 'security') { const port = form.querySelector('[data-emp-field="port"]'); if (port) port.value = PORTS[page][ssl(Number(event.target.value)) ? 1 : 0]; }
+      const done = form.parentNode.querySelector('[data-action="empx-server-save"]'); if (done) done.disabled = !valid(page, fieldsOf(form));
+    });
   }
   function serverPage(data, page, T, account) {
     const v = server(data, page, account), f = D.form || {};
     const label = key => `<span class="emp-label">${e(f[key] ? T(f[key]) : key)}</span>`;
-    const input = (key, type, extra = '') => `<input class="emp-input" data-emp-field="${key}" type="${type}" value="${e(v[key])}" autocomplete="off" spellcheck="false"${extra}>`;
+    const input = (key, type, extra = '') => `<input class="emp-input" data-emp-field="${key}" type="${type}" value="${e(key === 'password' ? (v.passwordSet ? MASK : '') : v[key])}" autocomplete="${type === 'password' ? 'new-password' : 'off'}" spellcheck="false"${extra}>`;
     const security = `<select class="emp-spinner" data-emp-field="security">${(D.security || []).map((row, i) => `<option value="${i}"${Number(v.security) === i ? ' selected' : ''}>${e(T(row))}</option>`).join('')}</select>`;
     const fields = page === 'incoming'
       ? `${label('username')}${input('user', 'email')}${label('password')}${input('password', 'password')}${label('imapServer')}${input('server', 'text')}${label('port')}${input('port', 'text', ' inputmode="numeric"')}${label('security')}${security}${label('prefix')}${input('prefix', 'text', f.prefixHint ? ` placeholder="${e(T(f.prefixHint))}"` : '')}`
       : `${label('smtpServer')}${input('server', 'text')}${label('port')}${input('port', 'text', ' inputmode="numeric"')}${label('security')}${security}<label class="emp-checkrow"><input type="checkbox" data-emp-field="login"${v.login ? ' checked' : ''}><span>${e(f.login ? T(f.login) : 'Require sign-in.')}</span></label><div class="emp-login">${label('username')}${input('user', 'email')}${label('password')}${input('password', 'password')}</div>`;
-    return `<form class="emp-form" data-emp-form>${fields}</form><div class="emp-actions"><button type="button" class="emp-button" data-action="empx-server-cancel">${e(W(T, 'cancel', tr('Cancel')))}</button><button type="button" class="emp-button" data-action="empx-server-save" data-id="${page}">${e(W(T, 'done', tr('Done')))}</button></div>`;
+    const ok = valid(page, {...v, password: v.passwordSet ? MASK : ''});
+    return `<form class="emp-form" data-emp-form="${page}">${fields}</form><div class="emp-actions"><button type="button" class="emp-button" data-action="empx-server-cancel">${e(W(T, 'cancel', tr('Cancel')))}</button><button type="button" class="emp-button" data-action="empx-server-save" data-id="${page}"${ok ? '' : ' disabled'}>${e(W(T, 'done', tr('Done')))}</button></div>`;
   }
   // The image's notification sounds (sounds.js), Silent first; the default is ro.config.notification_sound.
   const toneNames = () => ['', ...Object.values(window.SystemSounds?.SOUNDS?.notifications || {}).map(([title]) => title)];
@@ -112,15 +134,17 @@ RENDERER = r'''(() => {
       }
       case 'empx-quick-delete': { const list = [...quickList(data)]; list.splice(ui.emPrefQuick, 1); prefs().quickResponses = list; ui.emPrefEdit = ''; ctx.save(); ctx.render(); return true; }
       case 'empx-server-save': {
-        const out = {};
-        root.querySelector('[data-emp-form]')?.querySelectorAll('[data-emp-field]').forEach(field => { out[field.dataset.empField] = field.type === 'checkbox' ? field.checked : field.dataset.empField === 'security' ? Number(field.value) : field.value.trim(); });
-        prefs()[id] = {...server(data, id, ctx.account), ...out}; ui.emPref = 'account'; ctx.save(); ctx.render(); return true;
+        const form = root.querySelector('[data-emp-form]'); if (!form) return true;
+        const {password, ...out} = fieldsOf(form);
+        if (!valid(id, {...out, password})) return true;
+        const {password: old, ...kept} = data.emailPrefs?.[id] || {};
+        prefs()[id] = {...server(data, id, ctx.account), ...kept, ...out, passwordSet: !!password}; ui.emPref = 'account'; ctx.save(); ctx.render(); return true;
       }
       case 'empx-server-cancel': ui.emPref = 'account'; ctx.render(); return true;
       default: return false;
     }
   }
-  window.EmailPrefs = {render, value, signatureBody, find, handle, parent, version: D.version};
+  window.EmailPrefs = {render, value, signatureBody, find, handle, parent, server, valid, version: D.version};
 })();
 '''
 for v, (device, apk_name, general_title) in VERSIONS.items():
