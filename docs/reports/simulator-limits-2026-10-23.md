@@ -218,7 +218,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T11 — Névjegyek helyi menüműveletei
 
 - **Ütem:** Mag, részben; a maradék a második kör #4. tétele (jóváhagyva 2026-10-24).
-- **Állapot:** Folyamatban (második kör #4). Kész: Import/export és Set ringtone (`8e1b3316`); Contacts to display, Customize és Settings › Display options mind a négy verzióban (`c739a50b`: AccountFilterActivity, CustomContactListFilterActivity csoport-jelölőkkel és Mégse/OK, a lista szűrése a fejléccel; Sort list by / View contact names as rendez és ír, a Telefonnal közös) — limits-regression T11 Contacts to display 4×2 zöld, people-io.test. Hátra: Share és Share visible contacts (vCard a megosztóba), Place on Home screen.
+- **Állapot:** Folyamatban (második kör #4). Kész: Import/export és Set ringtone (`8e1b3316`); Contacts to display, Customize és Settings › Display options (`c739a50b`); Share és Share visible contacts a „Share contact via” választóval Email/Gmail levélíróba vCard-melléklettel (`10747e9d`) — mind a négy verzióban; limits-regression T11 (12 eset × asztali/telefon) zöld, people-io.test. Hátra: Place on Home screen (parancsikon a négy indítóban).
 - **Mostani rész:** 4.0.4/4.3/4.4.4/5.1.1 Import/export helyi vCard-fájllal; 4.0.4/4.3/4.4.4 Set ringtone a meglévő hangválasztóval.
 - **Mostani készfeltétel:** Helyi vCard export/import megőrzi a mintanévjegy mezőit; a csengőhang a megfelelő névjegyhez mentve visszaáll; Cancel nem ír adatot.
 - **Későbbi rész:** Share, Place on Home screen, Contacts to display és az általános Contacts Settings megépítése; új shortcut/chooser vagy teljes névjegybeállításfa nem része a magnak.
