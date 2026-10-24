@@ -433,6 +433,7 @@ versions/4.4.4/assets/jbcam-ic_indicator_wb_tungsten.png	9cb2a434e5386fc7	same p
 versions/4.4.4/assets/jbcam-ic_location.png	6f907c3c1e47e7d7	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_location.png	drawable-hdpi		59d4f349d90bb129
 versions/4.4.4/assets/jbcam-ic_location_off.png	0b28693643d3f761	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_location_off.png	drawable-hdpi		384ecd7746e6228d
 versions/4.4.4/assets/jbcam-ic_menu_cancel_holo_light.png	186f795d98670bb3	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_menu_cancel_holo_light.png	drawable-xhdpi		214eedfeef087ec2
+versions/4.4.4/assets/jbcam-ic_menu_revert_holo_dark.png	5adfba8b0f0861b1	copy	hammerhead:/system/app/DeskClockGoogle.apk!res/drawable-xhdpi/ic_menu_revert_holo_dark.png	drawable-xhdpi		5adfba8b0f0861b1
 versions/4.4.4/assets/jbcam-ic_pan_left_indicator.png	d1ab5474b70a9717	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_pan_left_indicator.png	drawable-xhdpi		d9c4a40d1501c81c
 versions/4.4.4/assets/jbcam-ic_pan_left_indicator_fast.png	fb2f153beea4c7a3	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_pan_left_indicator_fast.png	drawable-xhdpi		b6566b3285d9790f
 versions/4.4.4/assets/jbcam-ic_pan_progression.png	f7bd8f800d9cf00d	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_pan_progression.png	drawable-xhdpi		0b8da56b898c07c4
@@ -459,6 +460,12 @@ versions/4.4.4/assets/jbcam-ic_wb_cloudy.png	dfcce48a98d7612b	same pixels	hammer
 versions/4.4.4/assets/jbcam-ic_wb_fluorescent.png	dcf56ad0c929d0cc	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_wb_fluorescent.png	drawable-hdpi		981d5790de61ef3d
 versions/4.4.4/assets/jbcam-ic_wb_incandescent.png	cd75c88d138964ee	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_wb_incandescent.png	drawable-hdpi		5b1ef2b14ab86b80
 versions/4.4.4/assets/jbcam-ic_wb_sunlight.png	e6c7ab295eb1bc66	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_wb_sunlight.png	drawable-hdpi		56088814269bdc7d
+versions/4.4.4/assets/jbcam-pano_alignhint_down.png	1d419d10f94ff62d	copy	hammerhead:/system/app/GoogleCamera.apk!res/drawable-xhdpi/pano_alignhint_down.png	drawable-xhdpi		1d419d10f94ff62d
+versions/4.4.4/assets/jbcam-pano_alignhint_up.png	4e0da14b68aae182	copy	hammerhead:/system/app/GoogleCamera.apk!res/drawable-xhdpi/pano_alignhint_up.png	drawable-xhdpi		4e0da14b68aae182
+versions/4.4.4/assets/jbcam-pano_reticule_activated.png	9e099b2319daafb0	copy	hammerhead:/system/app/GoogleCamera.apk!res/drawable-xhdpi/pano_reticule_activated.png	drawable-xhdpi		9e099b2319daafb0
+versions/4.4.4/assets/jbcam-pano_reticule_default.png	c8190df1a5be489e	copy	hammerhead:/system/app/GoogleCamera.apk!res/drawable-xhdpi/pano_reticule_default.png	drawable-xhdpi		c8190df1a5be489e
+versions/4.4.4/assets/jbcam-pano_target_activated.png	6c2605ca99dd485b	copy	hammerhead:/system/app/GoogleCamera.apk!res/drawable-xhdpi/pano_target_activated.png	drawable-xhdpi		6c2605ca99dd485b
+versions/4.4.4/assets/jbcam-pano_target_default.png	8089e5c2397bfe22	copy	hammerhead:/system/app/GoogleCamera.apk!res/drawable-xhdpi/pano_target_default.png	drawable-xhdpi		8089e5c2397bfe22
 versions/4.4.4/assets/jbclock-appwidget_digital_clock_preview.png	d4de5738160b78d1	resized	hammerhead:/system/app/DeskClockGoogle.apk!res/drawable-nodpi/appwidget_digital_clock_preview.png	drawable-nodpi	resized 545×240 → 547×240, mean difference 0.00	4354ef2168fecb16
 versions/4.4.4/assets/jbclock-clock_analog_dial.png	450add8604db7c49	copy	hammerhead:/system/app/DeskClockGoogle.apk!res/drawable-xxhdpi/clock_analog_dial.png	drawable-xxhdpi		450add8604db7c49
 versions/4.4.4/assets/jbclock-clock_analog_hour.png	4dae78edc3f81b5e	copy	hammerhead:/system/app/DeskClockGoogle.apk!res/drawable-xxhdpi/clock_analog_hour.png	drawable-xxhdpi		4dae78edc3f81b5e
@@ -497,6 +504,7 @@ versions/4.4.4/assets/jbgal-ic_photoeditor_border.png	8689a4a798c62b07	same pixe
 versions/4.4.4/assets/jbgal-ic_photoeditor_color.png	c4d13dbdf49e9045	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_photoeditor_color.png	drawable-hdpi		958c189d21c66f91
 versions/4.4.4/assets/jbgal-ic_photoeditor_effects.png	f8f45ad025a4a7f6	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_photoeditor_effects.png	drawable-hdpi		ae9bf763020fc644
 versions/4.4.4/assets/jbgal-ic_photoeditor_fix.png	49f42107731b6262	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_photoeditor_fix.png	drawable-hdpi		10c2896eea48a05d
+versions/4.4.4/assets/jbgal-ic_view_photosphere.png	8d7c0c2d839025b5	copy	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_view_photosphere.png	drawable-xhdpi		8d7c0c2d839025b5
 versions/4.4.4/assets/jbgal-overflow.png	e91a6ae6e64755b0	same pixels	hammerhead:/system/app/Music2.apk!res/drawable-hdpi/abc_ic_menu_moreoverflow_normal_holo_dark.png	drawable-hdpi		0ff4a1dab780b183
 versions/4.4.4/assets/jbgal-spinner_ab_default_holo_dark.png	63cb1e9c3ec97f0f	same pixels	hammerhead:/system/app/PlayGames.apk!res/drawable-hdpi/spinner_ab_default_holo_dark.9.png	drawable-hdpi		16fb5d78804000ad
 versions/4.4.4/assets/jbgal-spinner_ab_pressed_holo_dark.png	311983916d8400a9	same pixels	hammerhead:/system/app/PlayGames.apk!res/drawable-hdpi/spinner_ab_pressed_holo_dark.9.png	drawable-hdpi		a815a9f0b643ff45

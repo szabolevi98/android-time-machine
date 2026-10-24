@@ -1219,7 +1219,6 @@
     'HDR+ ON': {own: true, hu: 'HDR+ BEKAPCSOLVA', de: 'HDR+ an', fr: 'HDR+ ACTIVÉ', es: 'HDR+ ACTIVADO'},
     'HDR+ OFF': {own: true, hu: 'HDR+ KIKAPCSOLVA', de: 'HDR+ aus', fr: 'HDR+ DÉSACTIVÉ', es: 'HDR+ DESACTIVADO'},
     'Switch to Photo Sphere': {own: true, hu: 'Váltás körpanorámakép módra', de: 'Zu Photo Sphere wechseln', fr: 'Passer en mode Photo Sphere', es: 'Cambiar a fotografía esférica'},
-    'Photo Sphere capture is not simulated': {own: true, hu: 'A körpanorámakép készítése nincs szimulálva', de: 'Photo-Sphere-Aufnahmen werden nicht simuliert', fr: 'La capture Photo Sphere n’est pas simulée', es: 'La captura de fotografía esférica no está simulada'},
     'Phase Beam': {own: true, hu: 'Elmosódott cseppek', de: 'Phase Beam', fr: 'Phase Beam', es: 'Phase Beam'},
     'Holo Spiral': {own: true, hu: 'Holografikus spirál', de: 'Holo Spiral', fr: 'Holo Spiral', es: 'Espiral de galaxia'},
     'Bubbles': {own: true, hu: 'Buborékok', de: 'Blasen', fr: 'Bulles', es: 'Burbujas'},

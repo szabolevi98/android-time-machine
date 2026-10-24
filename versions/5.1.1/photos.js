@@ -56,7 +56,7 @@
   function viewer(ctx) {
     const {ui, list} = ctx, photo = list[ui.photosIndex] || list[0];
     if (!photo) return '';
-    return `<div class="app-view ph-app ph-viewer-view${ui.photosChrome === false ? ' ph-bare' : ''}"><div class="ph-viewer" data-action="photos-toggle-bars"><img src="${ctx.media.image(photo)}" alt="${e(photo.name)}" draggable="false">${window.GPVideo.viewerIcon(photo, ctx.t('Play video'))}</div>${bar(ctx, {up: true})}<nav class="ph-actionbar">${photo.video ? '' : `<button class="ph-edit" data-action="photos-edit" aria-label="${e(P(ctx, 'Edit'))}"><img src="assets/gp4-quantum_ic_create_white_24.png" alt=""></button>`}<button data-action="gallery-share-message" aria-label="${e(P(ctx, 'Share'))}"><img src="assets/gp4-quantum_ic_share_white_24.png" alt=""></button><button data-action="photos-delete" aria-label="${e(P(ctx, 'Delete'))}"><img src="assets/gp4-quantum_ic_delete_white_24.png" alt=""></button></nav></div>`;
+    return `<div class="app-view ph-app ph-viewer-view${ui.photosChrome === false ? ' ph-bare' : ''}"><div class="ph-viewer" data-action="${photo.sphere ? 'photos-sphere' : 'photos-toggle-bars'}"><img src="${ctx.media.image(photo)}" alt="${e(photo.name)}" draggable="false">${window.GPVideo.viewerIcon(photo, ctx.t('Play video'))}</div>${bar(ctx, {up: true})}<nav class="ph-actionbar">${photo.video ? '' : `<button class="ph-edit" data-action="photos-edit" aria-label="${e(P(ctx, 'Edit'))}"><img src="assets/gp4-quantum_ic_create_white_24.png" alt=""></button>`}<button data-action="gallery-share-message" aria-label="${e(P(ctx, 'Share'))}"><img src="assets/gp4-quantum_ic_share_white_24.png" alt=""></button><button data-action="photos-delete" aria-label="${e(P(ctx, 'Delete'))}"><img src="assets/gp4-quantum_ic_delete_white_24.png" alt=""></button></nav></div>`;
   }
   function list(ctx) {
     const {data, ui, groups} = ctx;
@@ -75,6 +75,8 @@
     const {ui} = ctx;
     ctx.list = list(ctx);
     if (ui.sub === 'photo') return viewer(ctx);
+    // A photo sphere: the touch on it opens the photo sphere view (lp-sphere.js).
+    if (ui.sub === 'sphere') { const photo = ctx.list[ui.photosIndex]; if (photo?.sphere) return window.LPSphere.viewer(photo, ctx.media, ctx.t); return viewer(ctx); }
     // Edit: Google+'s photo editor (plus-editor.js).
     if (ui.sub === 'edit' && window.PlusEditor) return PlusEditor.render(ctx);
     // VideoViewActivity (photos-video.js).

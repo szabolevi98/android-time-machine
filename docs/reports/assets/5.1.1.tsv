@@ -271,9 +271,12 @@ versions/5.1.1/assets/gc5-ic_visibility.png	89e3aabbd56af7f4	copy	shamu:/system/
 versions/5.1.1/assets/gc5-ic_week.png	97cdc801ae3df1e6	copy	shamu:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/ic_week.png	drawable-xxhdpi-v4		97cdc801ae3df1e6
 versions/5.1.1/assets/gcam-btn_shutter_default.png	32b78ce55b4408ee	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xhdpi-v4/btn_shutter_default.png	drawable-xhdpi-v4		32b78ce55b4408ee
 versions/5.1.1/assets/gcam-ic_camera_normal.png	8743e37e1b23d7ef	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_camera_normal.png	drawable-xxxhdpi-v4		8743e37e1b23d7ef
+versions/5.1.1/assets/gcam-ic_cancel_normal.png	37ee5b5e475a120f	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_cancel_normal.png	drawable-xxhdpi-v4		37ee5b5e475a120f
 versions/5.1.1/assets/gcam-ic_capture_camera_normal.png	43fc750970e24986	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_capture_camera_normal.png	drawable-xxxhdpi-v4		43fc750970e24986
 versions/5.1.1/assets/gcam-ic_capture_pano.png	980b70c0cc2e031c	same pixels	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_capture_pano.png	drawable-xxxhdpi-v4		be0d0838e41f0033
 versions/5.1.1/assets/gcam-ic_capture_video.png	0d5a135913609806	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_capture_video.png	drawable-xxxhdpi-v4		0d5a135913609806
+versions/5.1.1/assets/gcam-ic_done_disabled.png	698ef3b1d57ee611	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_done_disabled.png	drawable-xxhdpi-v4		698ef3b1d57ee611
+versions/5.1.1/assets/gcam-ic_done_normal.png	2c1b1faafc554663	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_done_normal.png	drawable-xxhdpi-v4		2c1b1faafc554663
 versions/5.1.1/assets/gcam-ic_exposure_0.png	7abac18429ed2522	same pixels	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_exposure_0.png	drawable-xxxhdpi-v4		df9d6e27c5bf1589
 versions/5.1.1/assets/gcam-ic_exposure_n1.png	783a6d0b388a47a2	same pixels	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_exposure_n1.png	drawable-xxxhdpi-v4		4c3c408f4762c412
 versions/5.1.1/assets/gcam-ic_exposure_n2.png	20e8306a8cb7f4c9	same pixels	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_exposure_n2.png	drawable-xxxhdpi-v4		a7e8b50544e352a2
@@ -289,6 +292,7 @@ versions/5.1.1/assets/gcam-ic_hdr_plus_off_normal.png	32ea10ce0b656597	copy	sham
 versions/5.1.1/assets/gcam-ic_hdr_plus_on_normal.png	a7b2d5acbf632443	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_hdr_plus_on_normal.png	drawable-xxxhdpi-v4		a7b2d5acbf632443
 versions/5.1.1/assets/gcam-ic_pano_blanket.png	7db22fbad4e5022b	same pixels	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_pano_blanket.png	drawable-xxxhdpi-v4		4b6b240e2d124ddf
 versions/5.1.1/assets/gcam-ic_panorama_normal.png	2087ee0b8c0a73fe	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_panorama_normal.png	drawable-xxxhdpi-v4		2087ee0b8c0a73fe
+versions/5.1.1/assets/gcam-ic_photosphere_blanket.png	dd91f759fba03445	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_photosphere_blanket.png	drawable-xxxhdpi-v4		dd91f759fba03445
 versions/5.1.1/assets/gcam-ic_photosphere_normal.png	708066494cdf1a6a	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_photosphere_normal.png	drawable-xxxhdpi-v4		708066494cdf1a6a
 versions/5.1.1/assets/gcam-ic_refocus_normal.png	c20463bd3bc53656	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_refocus_normal.png	drawable-xxhdpi-v4		c20463bd3bc53656
 versions/5.1.1/assets/gcam-ic_settings_normal.png	ece69c89d8e370de	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_settings_normal.png	drawable-xxhdpi-v4		ece69c89d8e370de
@@ -298,6 +302,8 @@ versions/5.1.1/assets/gcam-ic_timer_10s_normal.png	6ffdb27cff069fe8	copy	shamu:/
 versions/5.1.1/assets/gcam-ic_timer_3s_normal.png	af646317ebcb3136	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_timer_3s_normal.png	drawable-xxxhdpi-v4		af646317ebcb3136
 versions/5.1.1/assets/gcam-ic_timer_off_normal.png	23cb4285a2fa5601	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_timer_off_normal.png	drawable-xxxhdpi-v4		23cb4285a2fa5601
 versions/5.1.1/assets/gcam-ic_video_normal.png	1233dbd3471d0178	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_video_normal.png	drawable-xxxhdpi-v4		1233dbd3471d0178
+versions/5.1.1/assets/gcam-pano_alignhint_down.png	315891c0f11d2527	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/pano_alignhint_down.png	drawable-xxhdpi-v4		315891c0f11d2527
+versions/5.1.1/assets/gcam-pano_alignhint_up.png	cf360df0c11eba8a	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/pano_alignhint_up.png	drawable-xxhdpi-v4		cf360df0c11eba8a
 versions/5.1.1/assets/gcam-pano_target_activated.png	54bddd6f0425e5ab	same pixels	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/pano_target_activated.png	drawable-xxhdpi-v4		552e2319f879b0a0
 versions/5.1.1/assets/gcam-pano_target_default.png	9fb7fe02fef36308	same pixels	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/pano_target_default.png	drawable-xxhdpi-v4		18fb5cab4d08db90
 versions/5.1.1/assets/gcs-dialog_full_holo_light.png	f6d8c9ae507ed25d	same pixels	shamu:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/dialog_full_holo_light.9.png	drawable-xxhdpi-v4		a704fb4f7b9d3e3c

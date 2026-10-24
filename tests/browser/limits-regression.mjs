@@ -624,6 +624,69 @@ const phoneSettings = async h => {
   await h.openApp('people');
   h.check('Contacts follows the same format', await h.until(`[...document.querySelectorAll('#viewport .lpp-name')].some(x=>x.textContent==='Morgan, Alex')`));
 };
+
+// Photo Sphere (T49): the mode starts with the hint; dragging the preview turns the camera onto the dots, each held one
+// is a frame; Undo (4.4) / Discard (5.1) and leaving the mode save nothing; Done after two frames renders and saves a
+// PANO_ sphere, which the Gallery's View Photo Sphere button (4.4) or a touch in Photos (5.1) shows in the viewer,
+// where dragging looks around and Back returns to the picture.
+const photoSphere = spec => async h => {
+  const sel = spec.kk ? '[data-kks]' : '[data-lps]', frames = () => h.ev(`Number(document.querySelector('#viewport ${sel}')?.dataset.frames)`);
+  const unit = () => h.ev(`document.querySelector('#viewport ${sel}').getBoundingClientRect().width / 0.8`);
+  const spheres = async () => ((await store(h, 'photos')) || []).filter(p => p.sphere);
+  const choose = async () => {
+    if (spec.kk) { await h.tap('#viewport [data-jbcam-switcher]'); await h.tap('#viewport [data-jbcam-module="photosphere"]'); }
+    else { await h.tap('#viewport [data-gcam-modes]'); await h.tap('#viewport [data-gcam-mode="photosphere"]'); }
+    h.check('Photo Sphere starts with the hint', await h.until(`/${spec.hint}/.test(document.querySelector('#viewport ${sel} p')?.textContent || '')`));
+  };
+  // The first dot sits just above the circle; the next one a step (45 degrees) to the right.
+  const twoFrames = async () => {
+    await h.drag(`#viewport ${sel}`, 0, .12 * await unit());
+    h.check('holding the first dot in the circle takes a frame', await h.until(`document.querySelector('#viewport ${sel}')?.dataset.frames === '1'`, 4000));
+    await h.drag(`#viewport ${sel}`, -.34 * await unit(), 0);
+    h.check('turning to the next dot takes the second', await h.until(`document.querySelector('#viewport ${sel}')?.dataset.frames === '2'`, 4000));
+  };
+  await h.openApp('camera');
+  h.check('opens the camera', await h.until(`!!document.querySelector('#viewport ${spec.kk ? '[data-jbcam-switcher]' : '[data-gcam-modes]'}')`));
+  await choose();
+  await twoFrames();
+  if (spec.kk) {
+    await h.tap('#viewport [data-kks-undo]');
+    h.check('Undo takes back the last frame', await frames() === 1);
+    await h.sleep(600);
+    h.check('the undone frame is not retaken while the dot stays in the reticle', await frames() === 1);
+    await h.tap('#viewport [data-jbcam-switcher]'); await h.tap('#viewport [data-jbcam-module="photo"]');
+    await choose();
+  } else {
+    await h.tap('#viewport [data-lps-cancel]');
+    h.check('Discard photo sphere starts over', await h.until(`document.querySelector('#viewport [data-lps]')?.dataset.frames === '0'`));
+  }
+  h.check('nothing is saved on the way', !(await spheres()).length);
+  await twoFrames();
+  await h.tap(`#viewport ${spec.kk ? '[data-jbcam-shutter]' : '[data-gcam-shutter]'}`);
+  h.check('Done renders the sphere', await h.until(`/${spec.rendering}/.test(document.querySelector('#viewport ${sel}')?.textContent || '')`, 3000));
+  h.check('a PANO_ photo sphere joins the camera roll', await h.until(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));const d=k&&JSON.parse(localStorage.getItem(k)),p=d&&d.photos.find(p=>p.sphere);return !!p&&/^PANO_\\d{8}_\\d{6}$/.test(p.name)&&p.frames.length===2})()`, 8000));
+  const [photo] = await spheres();
+  if (spec.kk) {
+    await h.openApp('gallery');
+    await h.tap('#viewport [data-jbgal-album="camera"]');
+    await h.tap(`#viewport [data-action="photo"][data-id="${photo.id}"]`);
+    h.check('the Gallery offers View Photo Sphere', await h.until(`!!document.querySelector('#viewport [data-jbgal-sphere]')`));
+    await h.tap('#viewport [data-jbgal-sphere]');
+  } else {
+    await h.openApp('photos');
+    await h.tap(`#viewport .ph-thumb[data-id="${photo.id}"]`);
+    h.check('the picture opens in Photos', await h.until(`!!document.querySelector('#viewport .ph-viewer[data-action="photos-sphere"]')`));
+    await h.tap('#viewport .ph-viewer');
+    h.check('Loading photo sphere… comes first', await h.ev(`/Loading photo sphere/.test(document.querySelector('#viewport [data-lps-loading]')?.textContent || '')`));
+    await h.sleep(1000);
+  }
+  h.check('the viewer shows the sphere', await h.until(`!!document.querySelector('#viewport [data-sph-band]')`));
+  const before = await h.ev(`document.querySelector('#viewport [data-sph-band]').style.backgroundPosition`);
+  await h.drag('#viewport [data-sph-band]', -120, 40);
+  h.check('dragging looks around', await h.ev(`document.querySelector('#viewport [data-sph-band]').style.backgroundPosition`) !== before);
+  await h.key('Escape');
+  h.check('Back returns to the picture', await h.until(`!document.querySelector('#viewport [data-sph-band]') && !!document.querySelector('#viewport ${spec.kk ? '[data-jbgal-sphere]' : '.ph-viewer'}')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -689,6 +752,8 @@ const CASES = [
   {id: 'T11', version: '4.4.4', name: 'Contacts › Import/export and Set ringtone', run: contactsImportExport({listMenu: 'people-list-menu', victim: 'Taylor Lee', ringtone: true})},
   {id: 'T11', version: '5.1.1', name: 'Contacts › Import/export', run: contactsImportExport({listMenu: 'people-menu', victim: 'Taylor Lee', ringtone: false})},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
+  {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},
+  {id: 'T49', version: '5.1.1', name: 'Camera › Photo Sphere capture and the Photos viewer', run: photoSphere({kk: false, hint: 'To start, keep dot inside circle', rendering: 'Processing photo sphere'})},
   {id: 'T33', version: '5.1.1', name: 'Clock › menu, Settings, Night mode, Cities search', run: clockSettings({home: 'Home', search: true})},
   {id: 'T33', version: '4.4.4', name: 'Clock › menu, Settings, Night mode, Cities search', run: clockSettings({home: 'Home', search: true})},
   {id: 'T33', version: '4.3', name: 'Clock › menu, Settings, Night mode', run: clockSettings({home: 'Home', search: false})},

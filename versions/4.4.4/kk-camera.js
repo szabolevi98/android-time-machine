@@ -14,7 +14,7 @@
   const SIZES = [['5mp', '5M pixels'], ['3mp', '3M pixels'], ['2mp', '2M pixels'], ['1_3mp', '1.3M pixels'], ['1mp', '1M pixels'], ['vga', 'VGA'], ['qvga', 'QVGA']];
   const DURATIONS = [0, 1, 2, 3, 4, 5, 10, 15, 20, 30, 60];
   // ModuleSwitcher 4.4.4: photo, video, wide-angle panorama and, as GoogleCamera has LightCycle, Photo Sphere (the GCam
-  // index is never listed; HDR+ is the pie's switch).
+  // index is never listed; HDR+ is the pie's switch). Panorama is camera-pano.js, Photo Sphere kk-sphere.js.
   const MODULES = [['photo', 'ic_switch_camera', 'Switch to photo'], ['video', 'ic_switch_video', 'Switch to video'], ['panorama', 'ic_switch_pan', 'Switch to panorama'], ['photosphere', 'ic_switch_photosphere', 'Switch to Photo Sphere']];
   const sweeping = module => module === 'panorama' || module === 'photosphere';
   const icon = name => `assets/jbcam-${name}.png`;
@@ -122,7 +122,7 @@
     const shutter = module === 'video' ? (recording ? 'btn_shutter_video_recording' : 'btn_shutter_video_default') : 'btn_shutter_default';
     const current = MODULES.find(m => m[0] === module) || MODULES[0];
     return `<div class="app-view camera-app jbcam" data-jbcam data-module="${module}" data-no-translate>
-      <div class="jbcam-preview" data-jbcam-preview>${media.art(media.scene(data))}</div>${module === 'panorama' ? window.JBPano.render(data, ui, t, media) : ''}
+      <div class="jbcam-preview" data-jbcam-preview>${media.art(media.scene(data))}</div>${module === 'panorama' ? window.JBPano.render(data, ui, t, media) : ''}${module === 'photosphere' ? window.KKSphere.render(data, ui, t, media) : ''}
       <svg class="jbcam-overlay" data-jbcam-overlay aria-hidden="true"></svg><div class="jbcam-icons" data-jbcam-icons></div><div class="jbcam-label" data-jbcam-label aria-live="polite"></div>
       <div class="jbcam-countdown" data-jbcam-countdown hidden><span class="jbcam-count-title">${e(t('Counting down to take a photo'))}</span><span class="jbcam-count-n"></span></div>
       <div class="jbcam-rec" data-jbcam-rec ${recording ? '' : 'hidden'}><img src="${icon('ic_recording_indicator')}" alt=""><span>00:00</span></div>
@@ -147,6 +147,8 @@
     let s = settings(media, data), module = ui.jbcamModule || 'photo', destroyed = false;
     // The panorama module (camera-pano.js).
     const pano = module === 'panorama' && root.querySelector('[data-pnm]') ? window.JBPano.attach(root, {ui, rerender, shoot}) : null;
+    // Photo Sphere (kk-sphere.js): the shutter ends the capture.
+    const sphere = module === 'photosphere' && root.querySelector('[data-kks]') ? window.KKSphere.attach(root, {ui, rerender, shoot}) : null;
     const timers = new Set(), later = (fn, ms) => { const id = setTimeout(() => { timers.delete(id); if (!destroyed) fn(); }, ms); timers.add(id); return id; };
     const cancel = id => { clearTimeout(id); timers.delete(id); };
     const box = () => ({w: root.clientWidth, h: root.clientHeight});
@@ -276,7 +278,7 @@
         return;
       }
       if (module === 'panorama') { pano?.toggle(); return; }
-      if (sweeping(module)) { toast(t('Photo Sphere capture is not simulated')); return; }
+      if (module === 'photosphere') { sphere?.shutter(); return; }
       if (countdown) { cancel(countdown.timer); countdown = null; root.querySelector('[data-jbcam-countdown]').hidden = true; return; }
       if (s.timer) {
         const node = root.querySelector('[data-jbcam-countdown]'), number = node.querySelector('.jbcam-count-n');
@@ -379,7 +381,7 @@
       if (target.closest('[data-jbcam-menu]')) { event.preventDefault(); if (pie.open && pie.tap) { hidePie(); return; } const b = box(); showPie(b.w / 2, b.h - 2.5 * P.dead, true); return; }
       if (target.closest('[data-jbcam-switcher]')) { event.preventDefault(); toggleSwitcher(popup.hidden); return; }
       const choice = target.closest('[data-jbcam-module]');
-      if (choice) { event.preventDefault(); toggleSwitcher(false); if (choice.dataset.jbcamModule !== module) { ui.jbcamModule = choice.dataset.jbcamModule; ui.jbcamRecording = null; ui.jbPano = null; rerender(); } return; }
+      if (choice) { event.preventDefault(); toggleSwitcher(false); if (choice.dataset.jbcamModule !== module) { ui.jbcamModule = choice.dataset.jbcamModule; ui.jbcamRecording = null; ui.jbPano = null; ui.kkSphere = null; rerender(); } return; }
       const thumb = target.closest('[data-jbcam-thumb]');
       if (thumb) { event.preventDefault(); gallery(Number(thumb.dataset.photo)); }
     });
@@ -389,7 +391,7 @@
       tick();
     }
     draw();
-    return {destroy() { destroyed = true; pano?.destroy(); timers.forEach(clearTimeout); timers.clear(); }, pie: () => ({open: pie.open, tap: pie.tap, level: level(), current: pie.current, label: labelNode.textContent}), focus: () => focus && {...focus}};
+    return {destroy() { destroyed = true; pano?.destroy(); sphere?.destroy(); timers.forEach(clearTimeout); timers.clear(); }, pie: () => ({open: pie.open, tap: pie.tap, level: level(), current: pie.current, label: labelNode.textContent}), focus: () => focus && {...focus}};
   }
   window.JBCamera = {P, SIZES, DURATIONS, MODULES, settings, tree, indicators, centerAngle, frame, itemAngle, itemPoint, labelPoint, polar, findItem, pulledToCenter, slicePath, arcPath, captureFrame, render, attach};
 })();

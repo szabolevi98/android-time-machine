@@ -19,7 +19,8 @@
    natively, so that part is an approximation built from the APK's pieces: the dimmed preview with the stitched band
    growing in the middle, pano_target_default (63 dp) turning into pano_target_activated as each next frame's dot
    reaches it; then "Processing panorama …" over ic_pano_blanket with bottom_progress_bar (3 dp, white over 30 %
-   white) before the PANO_ picture joins the camera roll. The sweep is a demonstration at a steady pace. */
+   white) before the PANO_ picture joins the camera roll. The sweep is a demonstration at a steady pace.
+   Photo Sphere is lp-sphere.js (its overlay, Done on the shutter, Discard beside it). */
 (() => {
   'use strict';
   const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -70,7 +71,7 @@
     const s = settings(media, data), mode = MODES.some(m => m[0] === ui.jbcamModule) ? ui.jbcamModule : 'photo', recording = !!ui.jbcamRecording;
     const [pw, ph] = (s.front ? s.pictureFront : s.pictureBack).split('x').map(Number);
     const [, , color] = MODES.find(m => m[0] === mode);
-    const shutterIcon = mode === 'video' ? (recording ? '' : 'ic_capture_video') : mode === 'panorama' ? 'ic_capture_pano' : 'ic_capture_camera_normal';
+    const shutterIcon = mode === 'video' ? (recording ? '' : 'ic_capture_video') : mode === 'panorama' ? 'ic_capture_pano' : mode === 'photosphere' ? window.LPSphere.shutterIcon(ui) : 'ic_capture_camera_normal';
     const pano = mode === 'panorama' && ui.lpPano?.state !== 'idle' ? ui.lpPano : null, panoArt = pano ? media.image({...media.scene(data), pano: true}) : '';
     const options = [...(s.exposure ? [['exposure', 'ic_exposure_normal', 'Manual Exposure Compensation']] : []), ['timer', `ic_timer_${s.timer ? s.timer + 's' : 'off'}_normal`, s.timer ? `Countdown timer duration is set to ${s.timer} seconds` : 'Countdown timer is off'], ['grid', s.grid ? 'ic_grid_on_normal' : 'ic_grid_off_normal', s.grid ? 'Grid lines on' : 'Grid lines off'], ['hdr', s.hdr ? 'ic_hdr_plus_on_normal' : 'ic_hdr_plus_off_normal', s.hdr ? 'HDR Plus on' : 'HDR Plus off'], ['flash', `ic_flash_${s.flash}_normal`, `Flash ${s.flash}`], ['front', s.front ? 'ic_switch_camera_front_normal' : 'ic_switch_camera_back_normal', s.front ? 'Front camera' : 'Back camera']];
     const evName = v => v < 0 ? `n${-v}` : v > 0 ? `p${v}` : '0', exposure = ui.gcamExposure && s.exposure;
@@ -79,13 +80,14 @@
       : options.map(([key, file, label]) => `<button type="button" data-gcam-option="${key}" aria-label="${e(t(label))}"><img src="${icon(file)}" alt=""></button>`).join('');
     return `<div class="app-view camera-app gcam${ui.gcamModes ? ' modes-open' : ''}" data-gcam data-module="${mode}" style="--mode:${color}" data-no-translate>
       <div class="gcam-preview${s.front ? ' front' : ''}${Math.abs(pw / ph - 4 / 3) < .05 ? ' r43' : ''}" data-gcam-preview style="--ev:${s.ev}">${media.art(media.scene(data))}${s.grid ? '<div class="gcam-grid" aria-hidden="true"></div>' : ''}</div>
+      ${mode === 'photosphere' ? window.LPSphere.render(data, ui, t, media) : ''}
       ${pano?.state === 'capture' ? `<div class="gpano" data-gpano="capture"><div class="gpano-band"><img class="gpano-strip" data-gpano-strip src="${panoArt}" alt=""></div><img class="gpano-target" data-gpano-target src="${icon('pano_target_default')}" alt=""><i class="gpano-dot" data-gpano-dot></i></div>` : ''}
       ${pano?.state === 'process' ? `<div class="gpano" data-gpano="process"><div class="gpano-card"><img src="${icon('ic_pano_blanket')}" alt=""><span>${e(t('Processing panorama …'))}</span><span class="gpano-progress"><i data-gpano-progress></i></span></div></div>` : ''}
       <div class="gcam-focus" data-gcam-focus hidden></div><div class="gcam-flash" data-gcam-flash></div>
       <div class="gcam-countdown" data-gcam-countdown hidden></div>
       <div class="gcam-rec" data-gcam-rec ${recording ? '' : 'hidden'}><i></i><span>00:00</span></div>
       <div class="gcam-options${ui.gcamOptions ? ' open' : ''}">${ui.gcamOptions ? optionButtons : ''}<button type="button" class="gcam-options-toggle" data-gcam-options aria-label="${e(t('Options'))}" aria-expanded="${!!ui.gcamOptions}"><i></i><i></i><i></i></button></div>
-      <div class="gcam-bar"><span></span><button type="button" class="gcam-shutter${recording ? ' recording' : ''}" data-gcam-shutter aria-label="${e(t(mode === 'video' ? (recording ? 'Stop recording' : 'Start recording') : 'Shutter'))}">${shutterIcon ? `<img src="${icon(shutterIcon)}" alt="">` : '<i></i>'}</button><span></span></div>
+      <div class="gcam-bar">${mode === 'photosphere' ? window.LPSphere.cancelButton(ui, t) : '<span></span>'}<button type="button" class="gcam-shutter${recording ? ' recording' : ''}" data-gcam-shutter aria-label="${e(t(mode === 'video' ? (recording ? 'Stop recording' : 'Start recording') : mode === 'photosphere' && window.LPSphere.capturing(ui) ? 'Done' : 'Shutter'))}">${shutterIcon ? `<img src="${icon(shutterIcon)}" alt="">` : '<i></i>'}</button><span></span></div>
       <button type="button" class="gcam-edge" data-gcam-modes aria-label="${e(t('Toggle mode list'))}"></button>
       <div class="gcam-modes-scrim" data-gcam-modes-close></div>
       <nav class="gcam-modes" aria-label="${e(t('Toggle mode list'))}">${MODES.map(([id, label, c, file]) => `<button type="button" data-gcam-mode="${id}" ${id === mode ? 'aria-current="true"' : ''}><span class="gcam-mode-icon" style="--c:${c}"><img src="${icon(file)}" alt=""></span><span>${e(t(label))}</span></button>`).join('')}<button type="button" class="gcam-settings" data-gcam-settings aria-label="${e(t('Settings'))}"><img src="${icon('ic_settings_normal')}" alt=""></button></nav>
@@ -93,6 +95,7 @@
   }
   // Back / Up in the settings: the dialog, then the sub screen, then the camera.
   function back(ui) {
+    if (!ui.gcsPage && ui.jbcamModule === 'photosphere' && window.LPSphere.back(ui)) return true;
     if (ui.gcsDialog) ui.gcsDialog = ''; else if (ui.gcsPage && ui.gcsPage !== 'root') ui.gcsPage = 'root'; else if (ui.gcsPage) ui.gcsPage = ''; else return false;
     return true;
   }
@@ -128,6 +131,8 @@
     };
     if (p.state === 'capture') { p.last = performance.now(); panoPaint(); panoFrame = requestAnimationFrame(panoTick); }
     if (p.state === 'process') panoFrame = requestAnimationFrame(panoProcess);
+    // Photo Sphere (lp-sphere.js): Done on the shutter.
+    const sphere = ui.jbcamModule === 'photosphere' && root.querySelector('[data-lps]') ? window.LPSphere.attach(root, {ui, rerender, shoot}) : null;
     let destroyed = false, start = null, countdown = 0, recTimer = 0;
     const update = patch => { data.cameraSettings = {...settings(media, data), ...patch}; save(); rerender(); };
     const focusRing = (x, y) => {
@@ -148,7 +153,8 @@
         return;
       }
       if (mode === 'panorama') { panoToggle(); return; }
-      if (mode !== 'photo') { toast(t(`${MODES.find(m => m[0] === mode)[1]} capture is not simulated`)); return; }
+      if (mode === 'photosphere') { sphere?.shutter(); return; }
+      if (mode !== 'photo') { toast(t('This feature is not part of the simulator.')); return; }
       const s = settings(media, data);
       if (!s.timer) { capture(); return; }
       if (countdown) return;
@@ -188,7 +194,7 @@
       if (el.closest('[data-gcam-modes]')) { ui.gcamModes = true; root.classList.add('modes-open'); return; }
       if (el.closest('[data-gcam-modes-close]')) { ui.gcamModes = false; root.classList.remove('modes-open'); return; }
       const chosen = el.closest('[data-gcam-mode]')?.dataset.gcamMode;
-      if (chosen) { ui.gcamModes = false; ui.gcamOptions = false; if (chosen !== ui.jbcamModule) { ui.jbcamModule = chosen; ui.jbcamRecording = null; ui.lpPano = null; } rerender(); return; }
+      if (chosen) { ui.gcamModes = false; ui.gcamOptions = false; if (chosen !== ui.jbcamModule) { ui.jbcamModule = chosen; ui.jbcamRecording = null; ui.lpPano = null; ui.lpSphere = null; } rerender(); return; }
       if (el.closest('[data-gcam-settings]')) { ui.gcamModes = false; ui.gcamOptions = false; ui.gcamExposure = false; ui.gcsPage = 'root'; rerender(); return; }
     };
     const down = event => {
@@ -213,7 +219,7 @@
       const tick = () => { if (!ui.jbcamRecording || destroyed) return; const sec = Math.floor((Date.now() - ui.jbcamRecording) / 1000); label.textContent = `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`; };
       tick(); recTimer = setInterval(tick, 500);
     }
-    return {root, destroy() { destroyed = true; cancelAnimationFrame(panoFrame); clearInterval(countdown); clearInterval(recTimer); root.removeEventListener('click', click); root.removeEventListener('pointerdown', down); root.removeEventListener('pointerup', up); }};
+    return {root, destroy() { destroyed = true; cancelAnimationFrame(panoFrame); sphere?.destroy(); clearInterval(countdown); clearInterval(recTimer); root.removeEventListener('click', click); root.removeEventListener('pointerdown', down); root.removeEventListener('pointerup', up); }};
   }
   window.LPCamera = {MODES, SIZES, settings, sizeLabel, render, attach, back};
 })();

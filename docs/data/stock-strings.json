@@ -833,6 +833,13 @@
   }
  },
  "4.4.4": {
+  "sphere": {
+   "Align to start": "GoogleCamera:hit_target_to_start",
+   "Too fast": "GoogleCamera:pano_too_fast_prompt",
+   "Rendering photo sphere": "GoogleCamera:rendering_photo_sphere",
+   "Review done": "GoogleCamera:accessibility_review_ok",
+   "View Photo Sphere": "GalleryGoogle:pano_play_photo_sphere_description"
+  },
   "vcard": {
    "Import/export contacts": "Contacts:dialog_import_export",
    "Import from SIM card": "Contacts:import_from_sim",
@@ -1830,6 +1837,13 @@
   }
  },
  "5.1.1": {
+  "sphere": {
+   "To start, keep dot inside circle": "GoogleCamera:hit_target_to_start",
+   "Too fast": "GoogleCamera:too_fast",
+   "Processing photo sphere …": "GoogleCamera:processing_photo_sphere",
+   "Discard photo sphere": "GoogleCamera:cancel_photo_sphere",
+   "Loading photo sphere…": "PlusOne:loading_panorama"
+  },
   "dialerprefs": {
    "Settings": "GoogleDialer:dialer_settings_label",
    "General": "GoogleDialer:general_settings_label",

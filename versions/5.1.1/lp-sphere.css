@@ -1,0 +1,20 @@
+/* Photo Sphere in Google Camera 2.4 and the Photos photo sphere view (lp-sphere.js). */
+.lps{position:absolute;inset:0;background:#000;overflow:hidden;touch-action:none;cursor:grab}
+.lps-world,.lps-shot{position:absolute;inset:0;background-repeat:repeat-x;pointer-events:none}
+.lps-world{opacity:.4}
+.lps-circle{position:absolute;left:50%;top:50%;width:calc(80 * var(--dp));height:calc(80 * var(--dp));margin:calc(-40 * var(--dp)) 0 0 calc(-40 * var(--dp));box-sizing:border-box;border:calc(3 * var(--dp)) solid #fff;border-radius:50%;pointer-events:none}
+.lps-target{position:absolute;width:calc(63.0023 * var(--dp));height:calc(63.0023 * var(--dp));margin:calc(-31.5012 * var(--dp)) 0 0 calc(-31.5012 * var(--dp));pointer-events:none}
+.lps-target[hidden],.lps-hint[hidden]{display:none}
+.lps-hint{position:absolute;left:50%;top:calc(80 * var(--dp));width:calc(80 * var(--dp));height:calc(40 * var(--dp));margin-left:calc(-40 * var(--dp));pointer-events:none}
+.lps-hint.down{top:auto;bottom:calc(136 * var(--dp))}
+.lps-msg{position:absolute;left:0;right:0;top:calc(50% + calc(56 * var(--dp)));margin:0;padding:0 calc(16 * var(--dp));text-align:center;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#fff;text-shadow:0 0 calc(4 * var(--dp)) #000;pointer-events:none}
+/* Discard photo sphere beside the Done disc. */
+.screen .lps-cancel{justify-self:center;width:calc(56 * var(--dp));height:calc(56 * var(--dp));padding:0;border:0;border-radius:50%;background:transparent;display:grid;place-items:center;cursor:pointer}
+.lps-cancel:active{background:#ffffff33}
+.lps-cancel img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.lps-progress{width:0}
+/* The photo sphere view. */
+.lps-viewer{position:relative;height:100%;background:#000;overflow:hidden}
+.lps-band{position:absolute;inset:0;background-repeat:repeat-x;touch-action:none;cursor:grab}
+.lps-loading{position:absolute;inset:0;margin:0;display:grid;place-items:center;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#fff;background:#000;pointer-events:none;animation:lps-loaded .25s .6s forwards}
+@keyframes lps-loaded{to{opacity:0;visibility:hidden}}

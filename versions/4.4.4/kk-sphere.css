@@ -1,0 +1,30 @@
+/* Photo Sphere in the KitKat camera and its viewer (kk-sphere.js); dp x 0.9 like kk-camera.css. */
+.kks{position:absolute;inset:0;background:#000;overflow:hidden;touch-action:none;cursor:grab}
+.kks-world,.kks-shot{position:absolute;inset:0;background-repeat:repeat-x;pointer-events:none}
+.kks-world{opacity:.4}
+.kks-reticule{position:absolute;left:50%;top:50%;width:calc(79.4702 * var(--dp));height:calc(79.4702 * var(--dp));margin:calc(-39.7351 * var(--dp)) 0 0 calc(-39.7351 * var(--dp));pointer-events:none}
+.kks-target{position:absolute;width:calc(27.8146 * var(--dp));height:calc(27.8146 * var(--dp));margin:calc(-13.9073 * var(--dp)) 0 0 calc(-13.9073 * var(--dp));pointer-events:none}
+.kks-target[hidden],.kks-hint[hidden],.screen .kks-undo[hidden]{display:none}
+.kks-hint{position:absolute;left:50%;top:calc(9.9338 * var(--dp));width:calc(79.4702 * var(--dp));height:calc(39.7351 * var(--dp));margin-left:calc(-39.7351 * var(--dp));pointer-events:none}
+.kks-hint.down{top:auto;bottom:calc(99.3377 * var(--dp))}
+.kks-msg{position:absolute;left:0;right:0;top:calc(50% + calc(49.6689 * var(--dp)));margin:0;text-align:center;font:400 calc(17.8808 * var(--dp)) Roboto,sans-serif;color:#fff;text-shadow:0 0 calc(3.3113 * var(--dp)) #000;pointer-events:none}
+/* undo_button: bottom|right with 2 dp below, the SwitcherButton size; above the controls' blocker. */
+.screen .kks-undo{position:absolute;z-index:3;right:0;bottom:calc(1.9868 * var(--dp));width:calc(71.5232 * var(--dp));height:calc(71.5232 * var(--dp));padding:0;border:0;background:transparent;display:grid;place-items:center;cursor:pointer}
+.kks-undo:active{background:#33b5e566}
+.kks-undo img{width:calc(31.7881 * var(--dp));height:calc(31.7881 * var(--dp))}
+.kks-render{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(15.894 * var(--dp));cursor:default}
+.kks-render p{margin:0;font:400 calc(17.8808 * var(--dp)) Roboto,sans-serif;color:#fff}
+.kks-progress{position:relative;width:60%;height:calc(3.9735 * var(--dp));overflow:hidden;background:#2e2e2e}
+.kks-progress i{position:absolute;top:0;bottom:0;left:0;width:0;background:#0099cc;animation:kks-fill 1.6s linear forwards}
+@keyframes kks-fill{to{width:100%}}
+/* While a sphere is captured the module switcher stays; while it renders the controls give way. */
+.jbcam:has(.kks-render) .jbcam-controls,.jbcam:has(.kks) .jbcam-thumb{display:none}
+/* The viewer: black, the picture panned by dragging. */
+.kks-viewer{position:relative;height:100%;background:#000;overflow:hidden}
+.kks-band{position:absolute;inset:0;background-repeat:repeat-x;touch-action:none;cursor:grab}
+/* photopage_bottom_control_panorama: 70 dp, 5 dp padding, at the bottom centre of the 10 dp padded bar. */
+.screen .jbgal-sphere{position:absolute;left:50%;bottom:calc(9.9338 * var(--dp));width:calc(69.5364 * var(--dp));height:calc(69.5364 * var(--dp));margin-left:calc(-34.7682 * var(--dp));padding:calc(4.9669 * var(--dp));border:0;border-radius:0;background:transparent;z-index:2;cursor:pointer}
+.jbgal-sphere:active{background:#33b5e566}
+.jbgal-photo:not(.bars) .jbgal-sphere{opacity:0;pointer-events:none}
+.jbgal-photo.film .jbgal-sphere,.jbgal-photo.slideshow .jbgal-sphere{display:none}
+.jbgal-sphere img{width:100%;height:100%;display:block}

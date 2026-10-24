@@ -233,7 +233,7 @@
   const state = ui => ui.pe;
   const photoOf = ctx => (ctx.data.photos || []).find(p => p.id === state(ctx.ui)?.photo);
   const original = (ctx, photo) => ctx.media.image({...photo, plusEdit: undefined});
-  const size = (ctx, photo) => photo.pano ? [3072, 768] : (((Number(photo.rotation) || 0) % 180) ? [768, 1024] : [1024, 768]);
+  const size = (ctx, photo) => photo.sphere ? [4096, 2048] : photo.pano ? [3072, 768] : (((Number(photo.rotation) || 0) % 180) ? [768, 1024] : [1024, 768]);
   function preview(ctx, steps) {
     const photo = photoOf(ctx); if (!photo) return '';
     const [w, h] = size(ctx, photo);

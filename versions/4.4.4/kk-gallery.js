@@ -41,7 +41,7 @@
   }
   // PositionController film mode: the picture fits in 70% x 48% of a portrait screen.
   function fit(photo, width, height, film) {
-    const rotated = ((Number(photo.rotation) || 0) % 180 + 180) % 180 !== 0, w = photo.pano ? 3072 : rotated ? 768 : 1024, h = rotated && !photo.pano ? 1024 : 768;
+    const rotated = ((Number(photo.rotation) || 0) % 180 + 180) % 180 !== 0, w = photo.sphere ? 4096 : photo.pano ? 3072 : rotated ? 768 : 1024, h = photo.sphere ? 2048 : rotated && !photo.pano ? 1024 : 768;
     const k = Math.min((film ? G.filmWidth : 1) * width / w, (film ? G.filmHeight : 1) * height / h);
     return {w: w * k, h: h * k};
   }
@@ -65,6 +65,8 @@
     const sub = ui.sub || '', cluster = ui.galleryCluster || 'album';
     if (sub === 'edit') return renderEditor(data, ui, t, media);
     if (sub === 'photo') return renderPhoto(data, ui, t, media, locale);
+    // A photo sphere in LightCycle's viewer (kk-sphere.js).
+    if (sub === 'sphere') { const photo = data.photos.find(p => p.id === ui.selectedPhoto); if (photo?.sphere) return `<div class="app-view gallery-app jbgal" data-jbgal data-page="sphere">${window.KKSphere.viewer(photo, media, t)}</div>`; return renderPhoto(data, ui, t, media, locale); }
     // MovieActivity for a video (gallery-video.js) under the Holo.ActionBar with the title and Share.
     if (sub === 'movie') {
       const photo = data.photos.find(p => p.id === ui.selectedPhoto);
@@ -91,7 +93,7 @@
     if (open === 'set-menu') body = item('data-jbgal-toast="Select album"', 'Select album') + item('data-jbgal-toast="Settings"', 'Settings');
     if (open === 'album-menu') body = item('data-action="gallery-slideshow"', 'Slideshow') + item('data-jbgal-toast="Select item"', 'Select item') + item('data-jbgal-open="cluster"', 'Group by');
     if (open === 'photo-menu' && video) body = item('data-jbgal-delete', 'Delete') + item('data-action="gallery-slideshow"', 'Slideshow') + item('data-jbgal-toast="This feature is not part of the simulator."', 'Trim') + item('data-jbgal-toast="This feature is not part of the simulator."', 'Mute') + item('data-action="gallery-details"', 'Details');
-    else if (open === 'photo-menu') body = item('data-jbgal-delete', 'Delete') + item('data-action="gallery-slideshow"', 'Slideshow') + item('data-jbgal-edit', 'Edit') + item('data-action="gallery-rotate" data-id="-90"', 'Rotate left') + item('data-action="gallery-rotate" data-id="90"', 'Rotate right') + item('data-jbgal-edit="geometry"', 'Crop') + item('data-jbgal-setas', 'Set picture as') + item('data-action="gallery-details"', 'Details') + `<button type="button" data-action="toast" data-id="Not available in this simulator">${e(AndroidStrings.pick(PRINT, window.AndroidI18n?.language, 'Print'))}</button>`;
+    else if (open === 'photo-menu') body = item('data-jbgal-delete', 'Delete') + item('data-action="gallery-slideshow"', 'Slideshow') + item('data-jbgal-edit', 'Edit') + item('data-action="gallery-rotate" data-id="-90"', 'Rotate left') + item('data-action="gallery-rotate" data-id="90"', 'Rotate right') + item('data-jbgal-edit="geometry"', 'Crop') + item('data-jbgal-setas', 'Set picture as') + item('data-action="gallery-details"', 'Details') + `<button type="button" data-action="toast" data-id="This feature is not part of the simulator.">${e(AndroidStrings.pick(PRINT, window.AndroidI18n?.language, 'Print'))}</button>`;
     return `<div class="jbgal-popup-scrim" data-jbgal-close></div><div class="${cls}" role="menu">${body}</div>`;
   }
 
@@ -106,6 +108,7 @@
       <div class="jbgal-stage" data-jbgal-stage>${camera}${pictures}</div>
       ${bar(up(t) + `<h2>${e(title)}</h2>`, iconButton('data-action="gallery-share"', 'Share', 'gallery-ic_menu_share_holo_light.png', t) + iconButton('data-jbgal-open="photo-menu"', 'More options', 'jbgal-overflow.png', t), t)}
       <div class="jbgal-bottom"${photo.video ? ' hidden' : ''}><button type="button" class="jbgal-icon" data-jbgal-edit aria-label="${e(t('Edit'))}"><img src="assets/jbgal-ic_menu_edit_holo_dark.png" alt=""></button></div>
+      ${photo.sphere ? `<button type="button" class="jbgal-sphere" data-jbgal-sphere aria-label="${e(AndroidStrings.pick(window.StockStrings?.sphere?.['View Photo Sphere'] || {}, window.AndroidI18n?.language, 'View Photo Sphere'))}"><img src="assets/jbgal-ic_view_photosphere.png" alt=""></button>` : ''}
       ${ui.galleryUndo ? `<div class="jbgal-undo" role="status"><span>${e(t('Deleted'))}</span><button type="button" data-jbgal-undo>${e(t('UNDO'))}</button></div>` : ''}
       ${ui.gallerySlideshow ? `<button type="button" class="gallery-stop" data-action="gallery-stop">${e(t('Stop slideshow'))}</button>` : ''}
       ${popups(ui, t, !!photo.video)}</div>`;
@@ -149,6 +152,7 @@
       ui.sub = 'photo'; ui.galleryEdit = null; return true;
     }
     if (ui.sub === 'movie') { ui.sub = 'photo'; ui.galleryMovie = null; return true; }
+    if (ui.sub === 'sphere') { ui.sub = 'photo'; return true; }
     if (ui.sub === 'photo' && ui.galleryFilm && !ui.galleryFromCamera) { ui.galleryFilm = false; return true; }
     if (ui.sub === 'photo') { if (ui.galleryFromCamera) return 'camera'; ui.sub = 'album'; return true; }
     if (ui.sub === 'album') { ui.sub = ''; return true; }
@@ -158,6 +162,7 @@
   function attach(root, {data, ui, t, media, locale, save, render: rerender, toast, openCamera, setWallpaper, reduced}) {
     const page = root.dataset.page;
     if (page === 'movie') return window.G2Video.attach(root, {photo: data.photos.find(p => p.id === ui.selectedPhoto), ui, rerender, reduced});
+    if (page === 'sphere') { window.KKSphere.attachViewer(root); return {destroy() {}}; }
     let hideTimer = 0, destroyed = false;
     const refresh = () => { if (!destroyed) rerender(); };
     // Horizontal slot views: vertical wheel scrolls sideways, like the GL SlotView on a phone.
@@ -179,6 +184,7 @@
       const note = hit('[data-jbgal-toast]'); if (note) { ui.galleryPopup = ''; refresh(); toast(t(note.dataset.jbgalToast)); return; }
       if (hit('[data-jbgal-delete]')) { ui.galleryPopup = ''; remove(); return; }
       if (hit('[data-jbgal-undo]')) { const undo = ui.galleryUndo; if (undo) { data.photos.splice(undo.position, 0, undo.photo); ui.selectedPhoto = undo.photo.id; ui.galleryUndo = null; save(); refresh(); } return; }
+      if (hit('[data-jbgal-sphere]')) { ui.sub = 'sphere'; refresh(); return; }
       if (hit('[data-jbgal-setas]')) { ui.galleryPopup = ''; const photo = data.photos.find(p => p.id === ui.selectedPhoto); if (photo) setWallpaper(photo); return; }
       const edit = hit('[data-jbgal-edit]');
       if (edit) { const photo = data.photos.find(p => p.id === ui.selectedPhoto); if (!photo) return; ui.galleryPopup = ''; ui.galleryEdit = {...editState(photo), panel: edit.dataset.jbgalEdit || 'fx'}; ui.sub = 'edit'; refresh(); return; }

@@ -47,8 +47,27 @@
     return 'data:image/svg+xml,'+encodeURIComponent(svg);
   }
   // An edit made in Google+'s editor (plus-editor.js) is drawn over the picture it was made on.
+  /* A photo sphere (PANO_* from Photo Sphere): the scene all round in an equirectangular 4096 x 2048 picture. frames
+     lists the cells taken ({col, row}: eight columns of 45 degrees, row 0 the horizon band, 1 above, 2 below; 'all' for
+     every one); the rest is grey, or left clear for the capture view's layer. A cap over a ring comes with the whole ring. */
+  function sphereImage(photo,clear=false) {
+    const colors=(photo.colors||palettes[0]).map((c,i)=>/^#[\da-f]{6}$/i.test(c)?c:palettes[0][i%3]);
+    const [sky,sun,land]=[...colors,...palettes[0]],W=4096,H=2048,cw=W/8;
+    const all=photo.frames==='all',taken=new Set(all?[]:(photo.frames||[]).map(f=>`${f.col}:${f.row}`));
+    const has=(col,row)=>all||taken.has(`${col}:${row}`),ring=row=>[0,1,2,3,4,5,6,7].every(col=>has(col,row));
+    const band={0:[768,512],1:[256,512],2:[1280,512]},cells=[];
+    for(const row of [0,1,2])for(let col=0;col<8;col++)if(has(col,row)===clear)for(const x of [col*cw-cw/2,col*cw-cw/2+W])cells.push(`<rect x="${x}" y="${band[row][0]}" width="${cw}" height="${band[row][1]}"/>`);
+    if(ring(1)===clear)cells.push(`<rect width="${W}" height="256"/>`);
+    if(ring(2)===clear)cells.push(`<rect y="1792" width="${W}" height="256"/>`);
+    const tile=`<path d="M0 610 260 250 565 580 780 320 1024 610V768H0Z" fill="${land}"/><path d="m170 375 90-125 105 126-98-40Z" fill="#ffffffa0"/><path d="M0 630Q260 510 510 665T1024 610V768H0Z" fill="${sky}" opacity=".7"/>`;
+    const scene=`<rect width="${W}" height="${H}" fill="url(#sky)"/><rect y="1200" width="${W}" height="848" fill="${land}"/><circle cx="1500" cy="560" r="70" fill="${sun}"/>${[0,1,2,3].map(i=>`<g transform="translate(${i*1024} 470)">${tile}</g>`).join('')}`;
+    const body=clear?`<clipPath id="taken" shape-rendering="crispEdges">${cells.join('')}</clipPath><g clip-path="url(#taken)">${scene}</g>`:`${scene}<g fill="#808080" shape-rendering="crispEdges">${cells.join('')}</g>`;
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="${sky}"/><stop offset=".6" stop-color="${sun}"/></linearGradient></defs>${body}</svg>`;
+    return 'data:image/svg+xml,'+encodeURIComponent(svg);
+  }
   function image(photo) {
-    if(photo.plusEdit?.steps?.length&&window.PlusEditor){const plain=image({...photo,plusEdit:undefined}),turned=!photo.pano&&((Number(photo.rotation)||0)%180);return PlusEditor.compose(plain,photo.pano?3072:turned?768:1024,photo.pano?768:turned?1024:768,photo.plusEdit.steps);}
+    if(photo.plusEdit?.steps?.length&&window.PlusEditor){const plain=image({...photo,plusEdit:undefined}),turned=!photo.pano&&!photo.sphere&&((Number(photo.rotation)||0)%180);return PlusEditor.compose(plain,photo.sphere?4096:photo.pano?3072:turned?768:1024,photo.sphere?2048:photo.pano?768:turned?1024:768,photo.plusEdit.steps);}
+    if(photo.sphere)return sphereImage(photo);
     if(photo.pano)return panoImage(photo);
     const colors=(photo.colors||palettes[0]).map((c,i)=>/^#[\da-f]{6}$/i.test(c)?c:palettes[0][i%3]);
     const [sky,sun,land]=[...colors,...palettes[0]];
@@ -68,8 +87,8 @@
     const menu=body=>`<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu media-menu">${body}</div>`;
     const item=(action,label,id='')=>`<button data-action="${action}" data-id="${e(id)}">${e(t(label))}</button>`;
     if(ui.overlay==='gallery-share')return menu(item('gallery-share-message','Messaging'));
-    if(ui.overlay==='gallery-details')return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog media-details" role="dialog" aria-label="Details"><h3>Details</h3><dl><dt>Name</dt><dd>${e(p?.name)}</dd><dt>Album</dt><dd>${e(t(album(p||{})==='camera'?'Camera':'Pictures'))}</dd><dt>Dimensions</dt><dd>${(p?.rotation||0)%180?'768 × 1024':'1024 × 768'}</dd><dt>Rotation</dt><dd>${p?.rotation||0}°</dd>${p?.created?`<dt>Date</dt><dd>${e(new Date(p.created).toLocaleString(locale))}</dd>`:''}</dl><div class="settings-dialog-actions">${item('close-overlay','OK')}</div></div>`;
+    if(ui.overlay==='gallery-details')return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog media-details" role="dialog" aria-label="Details"><h3>Details</h3><dl><dt>Name</dt><dd>${e(p?.name)}</dd><dt>Album</dt><dd>${e(t(album(p||{})==='camera'?'Camera':'Pictures'))}</dd><dt>Dimensions</dt><dd>${p?.sphere?'4096 × 2048':p?.pano?'3072 × 768':(p?.rotation||0)%180?'768 × 1024':'1024 × 768'}</dd><dt>Rotation</dt><dd>${p?.rotation||0}°</dd>${p?.created?`<dt>Date</dt><dd>${e(new Date(p.created).toLocaleString(locale))}</dd>`:''}</dl><div class="settings-dialog-actions">${item('close-overlay','OK')}</div></div>`;
     return '';
   }
-  window.ICSMedia={image,art,album,photos,settings,scene,overlay,LOOKS,LOOK_NAMES};
+  window.ICSMedia={image,sphereImage,art,album,photos,settings,scene,overlay,LOOKS,LOOK_NAMES};
 })();
