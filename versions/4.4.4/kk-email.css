@@ -170,3 +170,5 @@
 .screen .emp-quick:active{background:#33b5e566}
 .emp-empty{margin:0;padding:calc(32 * var(--dp)) calc(16 * var(--dp));text-align:center;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#727272}
 .emp-tone-list{max-height:calc(330 * var(--dp));overflow-y:auto;scrollbar-width:none}
+/* A file the compose carries (a shared contact card): ic_attachment_holo_light in the thumbnail's place. */
+.kem-attachment .kem-att-file{object-fit:contain;padding:calc(10 * var(--dp));box-sizing:border-box;background:#e5e5e5}

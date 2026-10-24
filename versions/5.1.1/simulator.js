@@ -1515,9 +1515,10 @@
        display, Import/export, Accounts, Settings, Help; Clear frequents only with frequent contacts), and
        ContactDeletionInteraction's Material alert (the message, then Cancel / OK in the #0288D1 accent), in this image's
        words (people-strings.js). */
+    if (ui.overlay === 'people-share') return PeopleIO.shareOverlay({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
     if (ui.overlay === 'people-vcard') return PeopleIO.overlay({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
     const P = key => PeopleStrings.t(key), unavailable = 'This feature is not part of the simulator.';
-    if (ui.overlay === 'people-menu') { const items = ui.sub === 'detail' ? [['people-delete', 'Delete'], ['toast', 'Share'], ['toast', 'Place on Home screen']] : [['pfl-open', 'Contacts to display'], ['vcf-open', 'Import/export'], ['open-settings-sync', 'Accounts'], ['pst-open', 'Settings'], ['toast', 'Help']]; return `<div class="menu-scrim" data-action="close-overlay"></div><div class="lp-popup-menu" role="menu" data-no-translate>${items.map(([action, title]) => `<button role="menuitem" data-action="${action}"${action === 'toast' ? ` data-id="${safe(unavailable)}"` : ''}>${safe(P(title))}</button>`).join('')}</div>`; }
+    if (ui.overlay === 'people-menu') { const items = ui.sub === 'detail' ? [['people-delete', 'Delete'], ['psh-open', 'Share'], ['toast', 'Place on Home screen']] : [['pfl-open', 'Contacts to display'], ['vcf-open', 'Import/export'], ['open-settings-sync', 'Accounts'], ['pst-open', 'Settings'], ['toast', 'Help']]; return `<div class="menu-scrim" data-action="close-overlay"></div><div class="lp-popup-menu" role="menu" data-no-translate>${items.map(([action, title]) => `<button role="menuitem" data-action="${action}"${action === 'toast' ? ` data-id="${safe(unavailable)}"` : ''}>${safe(P(title))}</button>`).join('')}</div>`; }
     if (ui.overlay === 'people-delete') return `<div class="lpp-alert-scrim" data-action="close-overlay"></div><div class="lpp-alert" role="alertdialog" aria-label="${safe(P('This contact will be deleted.'))}" data-no-translate><p>${safe(P('This contact will be deleted.'))}</p><div class="lpp-alert-buttons"><button data-action="close-overlay">${safe(P('Cancel'))}</button><button data-action="people-confirm-delete">${safe(P('OK'))}</button></div></div>`;
     const group = data.contactGroups.find(g=>g.id===ui.peopleEditGroup);
     return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><form class="settings-dialog mms-dialog people-editor" role="dialog" aria-label="${group?'Edit group':'New group'}" data-form="people-group"><h3>${group?'Edit group':'New group'}</h3><label>Group name<input name="name" required maxlength="50" value="${safe(group?.name||'')}"></label>${data.contacts.map(p=>`<label class="people-membership"><input type="checkbox" name="members" value="${p.id}" ${group?.members.includes(p.id)?'checked':''}>${safe(p.name)}</label>`).join('')}<div class="settings-dialog-actions"><button type="button" data-action="close-overlay">Cancel</button><button type="submit">Save</button></div></form>`;
@@ -1841,6 +1842,8 @@
     const state = ui.mailStates[app] || {folder: app === 'gmail' ? 'Primary' : 'Inbox', id: null};
     ui.emailFolder = state.folder; ui.emailId = state.id; ui.emailSelected = []; ui.emailQuery = undefined; ui.mailApp = app;
   }
+  // Share contact via Email or Gmail: the app's compose with the contact card among its files.
+  function shareVcard(app, file) { ui.overlay = ''; renderOverlay(); openApp(app); composeEmail(); const d = mailbox().find(m => m.id === ui.emailId); if (d) (d.files ||= []).push({name: file.name, mime: file.mime, size: file.size, text: file.text}); save(); render(); }
   function composeEmail(source=null,forward=false,to='') {
     const draft=ICSEmail.draft(source,forward);if(to)draft.to=to;
     if(ui.view==='gmail'){draft.from=draft.address=GmailApp.account;}
@@ -2061,7 +2064,7 @@
       if (result === 'save') save();
       if (result) { render(); return; }
     }
-    if (/^(pfl|pst)-/.test(action)) { const result = PeopleIO.pageAction(action, id, {data, ui}); if (result) { if (result.save) save(); renderOverlay(); render(); return; } }
+    if (/^(pfl|pst|psh)-/.test(action)) { const result = PeopleIO.pageAction(action, id, {data, ui}); if (result) { if (result.share) { shareVcard(result.share.app, result.share.file); return; } if (result.save) save(); renderOverlay(); render(); return; } }
     if (action.startsWith('vcf-')) {
       const result = PeopleIO.handle(action, id, {data, ui, t: key => i18n.t(key), locale: i18n.locale()});
       if (result) { if (result.save) save(); for (const title of result.notify || []) addNotification(title, ''); renderOverlay(); render(); if (result.toast) toast(result.toast); return; }

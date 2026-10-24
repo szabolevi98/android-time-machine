@@ -161,7 +161,7 @@
   // (textAppearanceSmall, black) over the #555555 size, and ic_cancel_holo_light 8 dp from the end while composing.
   function attachmentRow(ctx, item, removable) {
     const {lang} = ctx;
-    return `<div class="g4-attachment"><span class="g4-att-thumb"><img src="assets/g4-ic_attachment_holo_light.png" alt="">${ctx.photo ? `<span class="g4-att-photo">${ctx.photo(item)}</span>` : ''}</span><span class="g4-att-copy"><b>${e(item.name || 'IMG.jpg')}</b><small>${e(item.size || '')}</small></span>${removable ? `<button type="button" class="g4-att-remove" data-action="g4-remove-attachment" aria-label="${e(T(lang, 'Discard'))}"><img src="assets/g4-ic_cancel_holo_light.png" alt=""></button>` : ''}</div>`;
+    return `<div class="g4-attachment"><span class="g4-att-thumb"><img src="assets/g4-ic_attachment_holo_light.png" alt="">${ctx.photo && !item.vcard ? `<span class="g4-att-photo">${ctx.photo(item)}</span>` : ''}</span><span class="g4-att-copy"><b>${e(item.name || 'IMG.jpg')}</b><small>${e(item.size || '')}</small></span>${removable ? `<button type="button" class="g4-att-remove" data-action="g4-remove-attachment" aria-label="${e(T(lang, 'Discard'))}"><img src="assets/g4-ic_cancel_holo_light.png" alt=""></button>` : ''}</div>`;
   }
   // Attach file → the Gallery's GET_CONTENT picker hands back a picture.
   function attach(ctx, photo) {

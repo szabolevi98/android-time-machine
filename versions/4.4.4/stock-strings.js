@@ -8,6 +8,7 @@ window.StockStrings = {
   "View Photo Sphere": {"res": "GalleryGoogle:pano_play_photo_sphere_description", "hu": "Photo Sphere megtekintése", "de": "Photo Sphere aufrufen", "fr": "Affichage Photo Sphere", "es": "Ver Photo Sphere"}
  },
  "vcard": {
+  "Share contact via": {"res": "Contacts:share_via", "hu": "Névjegy megosztása a következőn:", "de": "Kontakt teilen über", "fr": "Partager contact via", "es": "Compartir contacto a través de"},
   "Contacts to display": {"res": "Contacts:activity_title_contacts_filter", "hu": "Megjelenítendő névjegyek", "de": "Kontakte zum Anzeigen", "fr": "Contacts à afficher", "es": "Contactos que mostrar"},
   "All contacts": {"res": "Contacts:list_filter_all_accounts", "hu": "Összes névjegy", "de": "Alle Kontakte", "fr": "Tous les contacts", "es": "Todos los contactos"},
   "Customize": {"res": "Contacts:list_filter_customize", "hu": "Személyre szabás", "de": "Personalisieren", "fr": "Personnaliser", "es": "Personalizar"},

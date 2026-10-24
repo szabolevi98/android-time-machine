@@ -81,3 +81,8 @@
 .screen .pio-buttons button{min-width:calc(64 * var(--dp));height:calc(36 * var(--dp));padding:0 calc(8 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;color:#0288d1;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
 .screen .pio-buttons button:active{background:#0000001f}
 .people-filter-header{margin:0;padding:calc(8 * var(--dp)) calc(16 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#0288d1}
+/* "Share contact via" (ResolverActivity's list): the title, the 48 dp app icons and their names. */
+.pio-share h3{margin:0;padding:calc(24 * var(--dp)) calc(24 * var(--dp)) calc(8 * var(--dp));font:500 calc(20 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.screen .pio-share-row{display:flex;align-items:center;gap:calc(16 * var(--dp));width:100%;min-height:calc(64 * var(--dp));padding:0 calc(24 * var(--dp));border:0;background:none;color:#000000de;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif}
+.screen .pio-share-row:active{background:#0000001f}
+.pio-share-row img{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}

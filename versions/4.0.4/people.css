@@ -50,3 +50,8 @@
 .screen .pio-buttons button:active{background:#33b5e566}
 .pio-dialog .pio-row{min-height:calc(48 * var(--dp))}
 .people-filter-header{margin:0;padding:calc(6 * var(--dp)) calc(16 * var(--dp));border-bottom:calc(1 * var(--dp)) solid #33b5e5;font:400 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#33b5e5}
+/* "Share contact via": the chooser's rows (the app's icon and name). */
+.pio-share h3{margin:0;padding:calc(16 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #33b5e5;color:#33b5e5;font:400 calc(20 * var(--dp)) RobotoICS,Roboto,sans-serif}
+.screen .pio-share-row{display:flex;align-items:center;gap:calc(16 * var(--dp));width:100%;min-height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #0000001f;background:none;color:#000;text-align:left;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif}
+.screen .pio-share-row:active{background:#33b5e566}
+.pio-share-row img{width:calc(40 * var(--dp));height:calc(40 * var(--dp))}

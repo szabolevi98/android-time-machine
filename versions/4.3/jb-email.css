@@ -106,3 +106,5 @@
 .email-photo-picker button{background:none;color:inherit;border:0;padding:calc(5.8714 * var(--dp));min-width:0}
 .email-photo-picker img{width:100%;height:calc(99.8122 * var(--dp));object-fit:cover}
 .email-photo-picker span{display:block;font-size:calc(12.9169 * var(--dp));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* A file the compose carries (a shared contact card): ic_attachment_holo_light in the thumbnail's place. */
+.kem-attachment .kem-att-file{object-fit:contain;padding:calc(10 * var(--dp));box-sizing:border-box;background:#e5e5e5}

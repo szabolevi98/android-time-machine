@@ -913,6 +913,35 @@ const contactsDisplay = spec => async h => {
   h.check('the list sorts by last name, last name first', await h.until(`(()=>{const n=[...document.querySelectorAll('#viewport ${spec.row}')].map(x=>x.textContent.trim());return n.indexOf('Lee, Taylor')>-1&&n.indexOf('Lee, Taylor')<n.indexOf('Morgan, Alex')&&n.indexOf('Morgan, Alex')<n.indexOf('Rivera, Sam')})()`), JSON.stringify(await names()));
   h.check('the reload keeps it', await h.reload() && JSON.stringify(await store(h, 'contactPrefs')) === '{"sort":"family","order":"family"}' && (await store(h, 'contactsFilter')) === 'all');
 };
+
+// Contacts › Share and Share visible contacts (T11): the chooser "Share contact via" offers Email and Gmail; leaving it
+// shares nothing; Gmail's compose carries "<name>.vcf" with the contact's card; Import/export's Share visible contacts
+// gives Email "vcards_….vcf" with every visible contact's card.
+const contactsShare = spec => async h => {
+  const cards = () => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));const d=k&&JSON.parse(localStorage.getItem(k))||{};const out=[];for(const box of ['mailbox','gmailbox','gmail40'])for(const m of d[box]||[]){if(m.attachment?.vcard)out.push({box,name:m.attachment.name,text:m.attachment.text});for(const f of m.files||[])if(f.mime==='text/x-vcard')out.push({box,name:f.name,text:f.text});}return out})()`);
+  await h.openApp('people');
+  await h.until(`!!document.querySelector('#viewport [data-action="contact"][data-id="1"]')`);
+  await h.tap('#viewport [data-action="contact"][data-id="1"]');
+  await h.tap('#viewport [data-action="people-menu"]');
+  await h.tap('[data-action="psh-open"]');
+  h.check('Share opens "Share contact via" with Email and Gmail', await h.until(`document.querySelectorAll('.pio-share .pio-share-row').length === 2 && /Share contact via/.test(document.querySelector('.pio-share h3').textContent)`));
+  await h.key('Escape');
+  h.check('leaving the chooser shares nothing', await h.until(`!document.querySelector('.pio-share')`) && !(await cards()).length);
+  await h.tap('#viewport [data-action="people-menu"]');
+  await h.tap('[data-action="psh-open"]');
+  await h.tap('.pio-share [data-action="psh-to"][data-id="gmail"]');
+  const one = (await cards())[0];
+  h.check('Gmail\'s compose carries the contact\'s card', !!one && one.name === 'Alex Morgan.vcf' && (one.text.match(/BEGIN:VCARD/g) || []).length === 1 && /FN:Alex Morgan/.test(one.text), JSON.stringify(one));
+  h.check('the compose shows it', await h.until(`/Alex Morgan\\.vcf/.test(document.querySelector('#viewport').textContent)`));
+  await h.openApp('people');
+  await h.tap(`#viewport [data-action="${spec.listMenu}"]`);
+  await h.tap('[data-action="vcf-open"]');
+  await h.tap('.vcf-dialog [data-action="vcf-share"]');
+  await h.tap('.pio-share [data-action="psh-to"][data-id="email"]');
+  const all = (await cards()).find(c => /^vcards_\d{8}_\d{6}\.vcf$/.test(c.name));
+  const count = await store(h, 'contacts');
+  h.check('Share visible contacts gives Email every card', !!all && (all.text.match(/BEGIN:VCARD/g) || []).length === count.length, JSON.stringify(all?.name));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -981,6 +1010,10 @@ const CASES = [
   {id: 'T11', version: '4.3', name: 'Contacts › Contacts to display and Settings', run: contactsDisplay({listMenu: 'people-list-menu', row: '.people-row > span:last-of-type'})},
   {id: 'T11', version: '4.4.4', name: 'Contacts › Contacts to display and Settings', run: contactsDisplay({listMenu: 'people-list-menu', row: '.people-row > span:last-of-type'})},
   {id: 'T11', version: '5.1.1', name: 'Contacts › Contacts to display and Settings', run: contactsDisplay({listMenu: 'people-menu', row: '.lpp-row[data-action="contact"] .lpp-name'})},
+  {id: 'T11', version: '4.0.4', name: 'Contacts › Share and Share visible contacts', run: contactsShare({listMenu: 'people-list-menu'})},
+  {id: 'T11', version: '4.3', name: 'Contacts › Share and Share visible contacts', run: contactsShare({listMenu: 'people-list-menu'})},
+  {id: 'T11', version: '4.4.4', name: 'Contacts › Share and Share visible contacts', run: contactsShare({listMenu: 'people-list-menu'})},
+  {id: 'T11', version: '5.1.1', name: 'Contacts › Share and Share visible contacts', run: contactsShare({listMenu: 'people-menu'})},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

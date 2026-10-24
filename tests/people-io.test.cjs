@@ -31,7 +31,10 @@ for(const [v,p,full] of [['4.0.4','ics',true],['4.3','jb',true],['4.4.4','kk',tr
   assert.equal(IO.nextName({vcards:[{name:'00001.vcf'},{name:'00003.vcf'}]}),'00002.vcf');
   const ui={},ctx={data:{contacts:[{id:1,name:'A'}],settings:{}},ui,t:k=>k,locale:'en'};
   IO.handle('vcf-open','',ctx);assert.equal(ui.overlay,'people-vcard');
-  assert.deepEqual([...IO.overlay(ctx).matchAll(/data-action="(vcf-[a-z]+|toast)"/g)].map(m=>m[1]).slice(1),['vcf-sim','vcf-import','vcf-export','toast']);
+  assert.deepEqual([...IO.overlay(ctx).matchAll(/data-action="(vcf-[a-z]+|toast)"/g)].map(m=>m[1]).slice(1),['vcf-sim','vcf-import','vcf-export','vcf-share']);
+  // Share: one card named after the contact, several as vcards_yyyyMMdd_HHmmss.vcf.
+  assert.equal(IO.shareFile([{name:'Alex Morgan',phone:'1'}]).name,'Alex Morgan.vcf');
+  const many=IO.shareFile([{name:'A B'},{name:'C D'}],new Date(2026,9,24,8,5,9));assert.equal(many.name,'vcards_20261024_080509.vcf');assert.equal((many.text.match(/BEGIN:VCARD/g)||[]).length,2);assert.equal(many.mime,'text/x-vcard');
   IO.handle('vcf-import','',ctx);assert.equal(ui.vcard.step,'none');assert.match(IO.overlay(ctx),/No vCard file found in storage\./);
   IO.handle('vcf-cancel','',ctx);IO.handle('vcf-open','',ctx);IO.handle('vcf-export','',ctx);
   assert.match(IO.overlay(ctx),new RegExp(`${v==='4.0.4'?'/mnt/sdcard':'/storage/emulated/0'}/00001\\.vcf`));

@@ -8,7 +8,7 @@
      aggregation), so a card read back does not duplicate it.
    - Export to storage: ExportVCardActivity's "Export contacts?" names the next free %05d.vcf in /storage/emulated/0, then
      vcard_export_will_start_message and the exporting_vcard_finished_title notification.
-   - Share visible contacts stays a limit of the simulator (the share chooser is later work).
+   - Share visible contacts shares the visible contacts' cards (see Share below).
    The cards are VCardComposer's default vCard 2.1 (N, FN, TEL, EMAIL, ADR, ORG, TITLE, URL, NOTE, the IM X- types,
    X-SIP, the nickname as X-ANDROID-CUSTOM; non-ASCII text in CHARSET=UTF-8 quoted-printable) kept in data.vcards. */
 (() => {
@@ -140,7 +140,7 @@
     const check = on => `<i class="vcf-check${on ? ' on' : ''}"></i>`;
     const box = (title, body, buttons = '') => `<div class="lpp-alert-scrim" data-action="vcf-cancel"></div><div class="lpp-alert vcf-dialog" role="dialog" aria-label="${e(title)}" data-no-translate>${title ? `<h3>${e(title)}</h3>` : ''}${body}${buttons ? `<div class="lpp-alert-buttons">${buttons}</div>` : ''}</div>`;
     const button = (action, label) => `<button type="button" data-action="${action}">${e(label)}</button>`;
-    if (v.step === 'menu') return box(S(ctx, 'Import/export contacts'), `<div class="vcf-list">${item('vcf-sim', '', S(ctx, 'Import from SIM card'))}${item('vcf-import', '', S(ctx, 'Import from storage'))}${item('vcf-export', '', S(ctx, 'Export to storage'))}${item('toast', 'This feature is not part of the simulator.', S(ctx, 'Share visible contacts'))}</div>`);
+    if (v.step === 'menu') return box(S(ctx, 'Import/export contacts'), `<div class="vcf-list">${item('vcf-sim', '', S(ctx, 'Import from SIM card'))}${item('vcf-import', '', S(ctx, 'Import from storage'))}${item('vcf-export', '', S(ctx, 'Export to storage'))}${item('vcf-share', '', S(ctx, 'Share visible contacts'))}</div>`);
     if (v.step === 'export') return box(S(ctx, 'Export contacts?'), `<p>${e(AndroidStrings.format(S(ctx, 'Export message'), `${ROOT}/${nextName(data)}`))}</p>`, button('vcf-cancel', S(ctx, 'Cancel')) + button('vcf-export-ok', S(ctx, 'OK')));
     if (v.step === 'none') return box('', `<p>${e(S(ctx, 'No vCard file found in storage.'))}</p>`, button('vcf-cancel', S(ctx, 'OK')));
     if (v.step === 'choose') return box(S(ctx, 'Choose vCard file'), `<div class="vcf-list">${[['one', 'Import one vCard file'], ['many', 'Import multiple vCard files'], ['all', 'Import all vCard files']].map(([id, label]) => item('vcf-mode', id, S(ctx, label), radio(v.mode === id))).join('')}</div>`, button('vcf-cancel', S(ctx, 'Cancel')) + button('vcf-mode-ok', S(ctx, 'OK')));
@@ -164,6 +164,7 @@
     };
     if (action === 'vcf-open') { ui.vcard = {step: 'menu'}; ui.overlay = 'people-vcard'; return {render: true}; }
     if (action === 'vcf-cancel') { ui.overlay = ''; ui.vcard = null; return {render: true}; }
+    if (action === 'vcf-share') { ui.vcard = null; ui.peopleShare = data.contacts.filter(p => visible(data, p)).map(p => p.id); ui.overlay = 'people-share'; return {render: true}; }
     if (action === 'vcf-sim') { ui.overlay = ''; ui.vcard = null; ui.peopleBack = ui.sub || ''; ui.sub = 'sim-import'; return {render: true}; }
     if (action === 'vcf-export') { v.step = 'export'; return {render: true}; }
     if (action === 'vcf-export-ok') {
@@ -239,6 +240,8 @@
     }
     if (action === 'pfl-toggle') { const draft = ui.peopleCustom ||= {}; draft[id] = draft[id] === false; return {render: true}; }
     if (action === 'pfl-ok') { data.contactsCustom = {...ui.peopleCustom}; data.contactsFilter = 'custom'; ui.peopleCustom = null; ui.sub = ui.peopleBack || ''; return {save: true}; }
+    if (action === 'psh-open') { ui.peopleShare = [Number(id) || ui.selectedContact]; ui.overlay = 'people-share'; return {render: true}; }
+    if (action === 'psh-to') { const people = data.contacts.filter(p => (ui.peopleShare || []).includes(p.id)); ui.overlay = ''; ui.peopleShare = null; return people.length ? {share: {app: id, file: shareFile(people)}} : {render: true}; }
     if (action === 'pst-dialog') { ui.peopleDialog = id; return {render: true}; }
     if (action === 'pst-pick') { data.contactPrefs = {...data.contactPrefs, [ui.peopleDialog]: id}; ui.peopleDialog = ''; return {save: true}; }
     return null;
@@ -249,5 +252,21 @@
     if (PAGES.includes(ui.sub)) { ui.sub = ui.peopleBack || ''; return true; }
     return false;
   }
-  window.PeopleIO = {card, compose, parse, merge, nextName, overlay, sim, handle, PAGES, visible, filterHeader, displayName, sortKey, page, pageAction, back};
+  /* Share (the contact's menu_share) and Share visible contacts: an ACTION_SEND of text/x-vcard through the chooser
+     "Share contact via" (share_via). The simulator offers the image's mail apps, which take any file: Email and Gmail,
+     whose compose then carries the card — one contact as ContactsProvider names it ("<name>.vcf"), several as
+     "vcards_yyyyMMdd_HHmmss.vcf". */
+  function shareFile(people, now = new Date()) {
+    const text = compose(people), pad = n => String(n).padStart(2, '0');
+    const stamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+    return {vcard: true, mime: 'text/x-vcard', name: people.length === 1 ? `${people[0].name}.vcf` : `vcards_${stamp}.vcf`, size: new TextEncoder().encode(text).length, text};
+  }
+  function shareOverlay(ctx) {
+    const {t} = ctx, title = e(S(ctx, 'Share contact via'));
+    const rows = [['email', 'Email'], ['gmail', 'Gmail']].map(([app, name]) => `<button type="button" class="pio-share-row" data-action="psh-to" data-id="${app}"><img src="assets/${app}.png" alt=""><span>${e(t(name))}</span></button>`).join('');
+    return ERA === 'lp'
+      ? `<div class="lpp-alert-scrim" data-action="close-overlay"></div><div class="lpp-alert pio-share" role="dialog" aria-label="${title}" data-no-translate><h3>${title}</h3>${rows}</div>`
+      : `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog pio-share" role="dialog" aria-label="${title}" data-no-translate><h3>${title}</h3>${rows}</div>`;
+  }
+  window.PeopleIO = {card, compose, parse, merge, nextName, overlay, sim, handle, PAGES, visible, filterHeader, displayName, sortKey, page, pageAction, back, shareFile, shareOverlay};
 })();

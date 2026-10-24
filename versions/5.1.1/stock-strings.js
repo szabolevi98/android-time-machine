@@ -99,6 +99,7 @@ window.StockStrings = {
   "OK": {"res": "framework:ok", "hu": "OK", "de": "OK", "fr": "OK", "es": "Aceptar"}
  },
  "vcard": {
+  "Share contact via": {"res": "GoogleContacts:share_via", "hu": "Névjegy megosztása a következőn:", "de": "Kontakt teilen über", "fr": "Partager contact via", "es": "Compartir contacto a través de"},
   "Contacts to display": {"res": "GoogleContacts:activity_title_contacts_filter", "hu": "Megjelenítendő névjegyek", "de": "Kontakte zum Anzeigen", "fr": "Contacts à afficher", "es": "Contactos que mostrar"},
   "All contacts": {"res": "GoogleContacts:list_filter_all_accounts", "hu": "Összes névjegy", "de": "Alle Kontakte", "fr": "Tous les contacts", "es": "Todos los contactos"},
   "Customize": {"res": "GoogleContacts:list_filter_customize", "hu": "Személyre szabás", "de": "Personalisieren", "fr": "Personnaliser", "es": "Personalizar"},
