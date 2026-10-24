@@ -873,6 +873,46 @@ const lensBlur = async h => {
   h.check('Done keeps the new focus and blur', kept.strength === .3 && Math.abs(kept.focus[0] - .2) < .05 && Math.abs(kept.focus[1] - .7) < .05, JSON.stringify(kept));
   h.check('Done returns to the picture', await h.until(`!!document.querySelector('#viewport .ph-viewer')`));
 };
+
+// Contacts › Contacts to display and Settings (T11): the account filter shows its header; Customize's check boxes (Cancel
+// keeps the old view, OK applies it) hide a group's contacts; All contacts brings them back; Settings' Sort list by
+// and View contact names as order and spell the list; kept after a reload.
+const contactsDisplay = spec => async h => {
+  const names = () => h.ev(`[...document.querySelectorAll('#viewport ${spec.row}')].map(x=>x.textContent.trim())`);
+  const menu = async item => { await h.tap(`#viewport [data-action="${spec.listMenu}"]`); await h.tap(`[data-action="${item}"]`); };
+  await h.openApp('people');
+  h.check('opens Contacts', await h.until(`document.querySelectorAll('#viewport ${spec.row}').length >= 4`));
+  const all = await names();
+  await menu('pfl-open');
+  h.check('Contacts to display lists All contacts, the account and Customize', await h.until(`document.querySelectorAll('#viewport .pio-row').length === 3`));
+  await h.tap('#viewport .pio-row[data-id="account"]');
+  h.check('the account filter heads the list', await h.until(`/Contacts in .+@/.test(document.querySelector('#viewport .people-filter-header')?.textContent || '')`) && (await names()).length === all.length);
+  await menu('pfl-open');
+  await h.tap('#viewport .pio-row[data-id="customize"]');
+  h.check('Customize shows the groups and All other contacts', await h.until(`!!document.querySelector('#viewport .pio-row[data-id="ungrouped"]') && !!document.querySelector('#viewport .pio-row[data-id="friends"]')`));
+  await h.tap('#viewport .pio-row[data-id="friends"]');
+  await h.key('Escape');
+  await h.key('Escape');
+  h.check('Cancel keeps the view', await h.until(`/Contacts in .+@/.test(document.querySelector('#viewport .people-filter-header')?.textContent || '')`) && (await names()).length === all.length);
+  await menu('pfl-open');
+  await h.tap('#viewport .pio-row[data-id="customize"]');
+  await h.tap('#viewport .pio-row[data-id="friends"]');
+  await h.tap('#viewport .pio-buttons [data-action="pfl-ok"]');
+  h.check('OK hides the Friends group\'s contacts', await h.until(`document.querySelector('#viewport .people-filter-header')?.textContent === 'Contacts in custom view'`) && JSON.stringify(await names()) === '["Mom"]', JSON.stringify(await names()));
+  await menu('pfl-open');
+  await h.tap('#viewport .pio-row[data-id="all"]');
+  h.check('All contacts shows everyone again', await h.until(`!document.querySelector('#viewport .people-filter-header')`) && (await names()).length === all.length);
+  await menu('pst-open');
+  h.check('Settings shows the display options', await h.until(`document.querySelectorAll('#viewport .pio-row').length === 2`));
+  await h.tap('#viewport .pio-row[data-id="sort"]');
+  await h.tap(`#viewport [data-action="pst-pick"][data-id="family"]`);
+  await h.tap('#viewport .pio-row[data-id="order"]');
+  await h.tap(`#viewport [data-action="pst-pick"][data-id="family"]`);
+  h.check('the choices are kept and summarised', JSON.stringify(await store(h, 'contactPrefs')) === '{"sort":"family","order":"family"}' && await h.until(`/^(Last|Family) name first$/.test(document.querySelector('#viewport .pio-row[data-id="order"] small')?.textContent || '')`));
+  await h.key('Escape');
+  h.check('the list sorts by last name, last name first', await h.until(`(()=>{const n=[...document.querySelectorAll('#viewport ${spec.row}')].map(x=>x.textContent.trim());return n.indexOf('Lee, Taylor')>-1&&n.indexOf('Lee, Taylor')<n.indexOf('Morgan, Alex')&&n.indexOf('Morgan, Alex')<n.indexOf('Rivera, Sam')})()`), JSON.stringify(await names()));
+  h.check('the reload keeps it', await h.reload() && JSON.stringify(await store(h, 'contactPrefs')) === '{"sort":"family","order":"family"}' && (await store(h, 'contactsFilter')) === 'all');
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -937,6 +977,10 @@ const CASES = [
   {id: 'T11', version: '4.3', name: 'Contacts › Import/export and Set ringtone', run: contactsImportExport({listMenu: 'people-list-menu', victim: 'Taylor Lee', ringtone: true})},
   {id: 'T11', version: '4.4.4', name: 'Contacts › Import/export and Set ringtone', run: contactsImportExport({listMenu: 'people-list-menu', victim: 'Taylor Lee', ringtone: true})},
   {id: 'T11', version: '5.1.1', name: 'Contacts › Import/export', run: contactsImportExport({listMenu: 'people-menu', victim: 'Taylor Lee', ringtone: false})},
+  {id: 'T11', version: '4.0.4', name: 'Contacts › Contacts to display and Settings', run: contactsDisplay({listMenu: 'people-list-menu', row: '.people-row > span:last-of-type'})},
+  {id: 'T11', version: '4.3', name: 'Contacts › Contacts to display and Settings', run: contactsDisplay({listMenu: 'people-list-menu', row: '.people-row > span:last-of-type'})},
+  {id: 'T11', version: '4.4.4', name: 'Contacts › Contacts to display and Settings', run: contactsDisplay({listMenu: 'people-list-menu', row: '.people-row > span:last-of-type'})},
+  {id: 'T11', version: '5.1.1', name: 'Contacts › Contacts to display and Settings', run: contactsDisplay({listMenu: 'people-menu', row: '.lpp-row[data-action="contact"] .lpp-name'})},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

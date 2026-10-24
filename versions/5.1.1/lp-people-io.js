@@ -185,5 +185,69 @@
     if (action === 'vcf-many-ok') return (v.picked || []).length ? read(v.picked) : {render: true};
     return null;
   }
-  window.PeopleIO = {card, compose, parse, merge, nextName, overlay, sim, handle};
+  /* Contacts to display (AccountFilterActivity: All contacts, the Google account, Customize) and Customize
+     (CustomContactListFilterActivity: the account's groups and All other contacts as check boxes, Cancel / OK); the
+     All contacts list then shows only those contacts under the filter's header (listAllContactsInAccount /
+     listCustomView). Settings (ContactsPreferenceActivity): Display options — Sort list by and View contact names as,
+     the ContactsPreferences the Phone app shares. The simulator's contacts are all in the Google account. */
+  const PAGES = ['people-filter', 'people-customize', 'people-settings'];
+  const account = () => window.GmailApp?.account || window.ICSGmail?.account || '';
+  const filterOf = data => data.contactsFilter || 'all';
+  function visible(data, person) {
+    if (filterOf(data) !== 'custom') return true;
+    const custom = data.contactsCustom || {}, groups = (data.contactGroups || []).filter(g => g.members.includes(person.id));
+    return groups.length ? groups.some(g => custom[g.id] !== false) : custom.ungrouped !== false;
+  }
+  function filterHeader(ctx) { const f = filterOf(ctx.data); return f === 'account' ? AndroidStrings.format(S(ctx, 'Contacts in %s'), account()) : f === 'custom' ? S(ctx, 'Contacts in custom view') : ''; }
+  const order = data => ({sort: data.contactPrefs?.sort || 'given', order: data.contactPrefs?.order || 'given'});
+  // ContactsProvider's display_name / display_name_alt and sort_key / sort_key_alt.
+  function displayName(person, data) { const {given, family} = split(person.name); return order(data).order === 'family' && family ? `${family}, ${given}` : person.name; }
+  function sortKey(person, data) { const {given, family} = split(person.name); return order(data).sort === 'family' && family ? `${family} ${given}` : person.name; }
+  function page(ctx) {
+    const {ui, data, t} = ctx, sub = ui.sub, MAT = ERA === 'lp';
+    const mark = (kind, on) => MAT ? `<i class="pio-${kind}${on ? ' on' : ''}"></i>` : `<img class="pio-mark" src="assets/btn_${kind}_${on ? 'on' : 'off'}_holo_light.png" alt="">`;
+    const row = (action, id, label, small = '', right = '') => `<button type="button" class="pio-row" data-action="${action}" data-id="${e(id)}"><span class="pio-text"><b>${e(label)}</b>${small ? `<small>${e(small)}</small>` : ''}</span>${right}</button>`;
+    const shell = (title, body, foot = '') => `<div class="app-view vcf-sim pio-page" data-no-translate><header class="vcf-sim-bar"><button type="button" class="vcf-sim-up" data-action="back" aria-label="${e(t('Navigate up'))}"><img src="assets/${MAT ? 'lp-fw-ic_ab_back_material.svg' : 'ic_ab_back_holo_dark.png'}" alt=""></button><h2>${e(title)}</h2></header><div class="pio-list">${body}</div>${foot}</div>`;
+    if (sub === 'people-filter') {
+      const f = filterOf(data);
+      return shell(S(ctx, 'Contacts to display'), row('pfl-pick', 'all', S(ctx, 'All contacts'), '', mark('radio', f === 'all')) + row('pfl-pick', 'account', account(), '', mark('radio', f === 'account')) + row('pfl-pick', 'customize', S(ctx, 'Customize')));
+    }
+    if (sub === 'people-customize') {
+      const draft = ui.peopleCustom || {}, on = key => draft[key] !== false;
+      const body = `<div class="pio-head"><b>${e(account())}</b><small>Google</small></div>` + (data.contactGroups || []).map(g => row('pfl-toggle', g.id, t(g.name), '', mark('check', on(g.id)))).join('') + row('pfl-toggle', 'ungrouped', S(ctx, 'All other contacts'), '', mark('check', on('ungrouped')));
+      return shell(S(ctx, 'Define custom view'), body, `<div class="pio-buttons"><button type="button" data-action="back">${e(S(ctx, 'Cancel'))}</button><button type="button" data-action="pfl-ok">${e(S(ctx, 'OK'))}</button></div>`);
+    }
+    if (sub === 'people-settings') {
+      const o = order(data), d = ui.peopleDialog;
+      const choices = d === 'sort' ? [['given', 'First name'], ['family', 'Last name']] : [['given', 'First name first'], ['family', 'Last name first']];
+      // Lollipop: the Material list dialog the Phone's settings use.
+      if (MAT && d) return shell(S(ctx, 'Settings'), `<h4 class="pio-cat">${e(S(ctx, 'Display options'))}</h4>` + row('pst-dialog', 'sort', S(ctx, 'Sort list by'), S(ctx, o.sort === 'family' ? 'Last name' : 'First name')) + row('pst-dialog', 'order', S(ctx, 'View contact names as'), S(ctx, o.order === 'family' ? 'Last name first' : 'First name first')))
+        .replace(/<\/div>$/, `<div class="ldp2-scrim" data-action="pst-dialog" data-id=""></div><div class="ldp2-dlg" role="dialog" aria-label="${e(S(ctx, d === 'sort' ? 'Sort list by' : 'View contact names as'))}"><h3>${e(S(ctx, d === 'sort' ? 'Sort list by' : 'View contact names as'))}</h3><div class="ldp2-radios">${choices.map(([id, label]) => `<button type="button" class="ldp2-radio${o[d] === id ? ' on' : ''}" data-action="pst-pick" data-id="${id}" role="radio" aria-checked="${o[d] === id}"><i></i><span>${e(S(ctx, label))}</span></button>`).join('')}</div><div class="ldp2-buttons"><button type="button" data-action="pst-dialog" data-id="">${e(S(ctx, 'Cancel'))}</button></div></div></div>`);
+      const dialog = d ? `<div class="settings-dialog-scrim" data-action="pst-dialog" data-id=""></div><div class="people-alert vcf-dialog pio-dialog" role="dialog"><h3>${e(S(ctx, d === 'sort' ? 'Sort list by' : 'View contact names as'))}</h3><div class="vcf-list">${(d === 'sort' ? [['given', 'First name'], ['family', 'Last name']] : [['given', 'First name first'], ['family', 'Last name first']]).map(([id, label]) => row('pst-pick', id, S(ctx, label), '', mark('radio', o[d] === id))).join('')}</div><div class="people-alert-buttons"><button type="button" data-action="pst-dialog" data-id="">${e(S(ctx, 'Cancel'))}</button></div></div>` : '';
+      return shell(S(ctx, 'Settings'), `<h4 class="pio-cat">${e(S(ctx, 'Display options'))}</h4>` + row('pst-dialog', 'sort', S(ctx, 'Sort list by'), S(ctx, o.sort === 'family' ? 'Last name' : 'First name')) + row('pst-dialog', 'order', S(ctx, 'View contact names as'), S(ctx, o.order === 'family' ? 'Last name first' : 'First name first'))) .replace(/<\/div>$/, `${dialog}</div>`);
+    }
+    return '';
+  }
+  // The pages' actions (the simulator renders and saves as told); Back climbs Customize -> filter -> list.
+  function pageAction(action, id, ctx) {
+    const {ui, data} = ctx;
+    if (action === 'pfl-open') { ui.overlay = ''; ui.peopleBack = ui.sub || ''; ui.sub = 'people-filter'; return {render: true}; }
+    if (action === 'pst-open') { ui.overlay = ''; ui.peopleBack = ui.sub || ''; ui.sub = 'people-settings'; ui.peopleDialog = ''; return {render: true}; }
+    if (action === 'pfl-pick') {
+      if (id === 'customize') { ui.peopleCustom = {...data.contactsCustom}; ui.sub = 'people-customize'; return {render: true}; }
+      data.contactsFilter = id; ui.sub = ui.peopleBack || ''; return {save: true};
+    }
+    if (action === 'pfl-toggle') { const draft = ui.peopleCustom ||= {}; draft[id] = draft[id] === false; return {render: true}; }
+    if (action === 'pfl-ok') { data.contactsCustom = {...ui.peopleCustom}; data.contactsFilter = 'custom'; ui.peopleCustom = null; ui.sub = ui.peopleBack || ''; return {save: true}; }
+    if (action === 'pst-dialog') { ui.peopleDialog = id; return {render: true}; }
+    if (action === 'pst-pick') { data.contactPrefs = {...data.contactPrefs, [ui.peopleDialog]: id}; ui.peopleDialog = ''; return {save: true}; }
+    return null;
+  }
+  function back(ui) {
+    if (ui.sub === 'people-settings' && ui.peopleDialog) { ui.peopleDialog = ''; return true; }
+    if (ui.sub === 'people-customize') { ui.peopleCustom = null; ui.sub = 'people-filter'; return true; }
+    if (PAGES.includes(ui.sub)) { ui.sub = ui.peopleBack || ''; return true; }
+    return false;
+  }
+  window.PeopleIO = {card, compose, parse, merge, nextName, overlay, sim, handle, PAGES, visible, filterHeader, displayName, sortKey, page, pageAction, back};
 })();

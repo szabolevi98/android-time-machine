@@ -6,6 +6,7 @@
     const members = data.contactGroups.find(g=>g.id===group)?.members || [];
     return data.contacts.filter(p=>(tab!=='favorites'||p.favorite) && (!group || members.includes(p.id)))
       .filter(p=>`${p.name} ${p.phone} ${p.email}`.toLocaleLowerCase().includes(query.toLocaleLowerCase()))
+      .filter(p=>tab==='favorites'||group||!window.PeopleIO?.visible||PeopleIO.visible(data,p))
       .sort((a,b)=>{const key=p=>window.LPDialerPrefs?LPDialerPrefs.sortKey(p,data):p.name;return key(a).localeCompare(key(b),locale);});
   }
   function remove(data,id) {
@@ -59,7 +60,8 @@
     } else {
       const me=searching?'':`<div class="lpp-me"><span class="lpp-me-label">${e(t('Me'))}</span><button class="lpp-row" data-action="toast" data-id="${e(t('Set up my profile'))}"><span class="lpp-letter-col"></span><span class="lpd-letter lpd-photo lpp-me-photo">${icon('gc-ic_account_circle_black_24dp.png')}</span><span class="lpp-name">${e(t('Set up my profile'))}</span></button></div>`;
       const P=window.LPDialerPrefs;const rows=items.map(p=>{const first=((P?P.sortKey(p,data):p.name).match(/^\p{L}/u)?.[0]||'#').toLocaleUpperCase();const shown=first!==initial;initial=first;return `<button class="lpp-row" data-action="contact" data-id="${p.id}"><span class="lpp-letter-col">${shown?e(first):''}</span>${tile(p,'lpd-photo')}<span class="lpp-name">${e(P?P.displayName(p,data):p.name)}</span></button>`;}).join('');
-      body=`${me}${rows||`<p class="lpp-empty">${e(t(searching?'No contacts.':'No contacts.'))}</p>`}`;
+      const filterHead=searching||!window.PeopleIO?.filterHeader?'':PeopleIO.filterHeader({data,t,locale});
+      body=`${filterHead?`<p class="people-filter-header">${e(filterHead)}</p>`:''}${me}${rows||`<p class="lpp-empty">${e(t(searching?'No contacts.':'No contacts.'))}</p>`}`;
     }
     return `<div class="app-view lpp-app">${bar}${tabs}<div class="lpp-scroll lpp-list">${body}</div>${searching?'':`<button class="lpd-fab end lpp-fab" data-action="new-contact" aria-label="${e(t('Add new contact'))}">${icon('gc-ic_person_add_24dp.png')}</button>`}</div>`;
   }

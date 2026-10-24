@@ -6,7 +6,8 @@
     const members = data.contactGroups.find(g=>g.id===group)?.members || [];
     return data.contacts.filter(p=>(tab!=='favorites'||p.favorite) && (!group || members.includes(p.id)))
       .filter(p=>`${p.name} ${p.phone} ${p.email}`.toLocaleLowerCase().includes(query.toLocaleLowerCase()))
-      .sort((a,b)=>a.name.localeCompare(b.name,locale));
+      .filter(p=>tab==='favorites'||group||!window.PeopleIO?.visible||PeopleIO.visible(data,p))
+      .sort((a,b)=>{const key=p=>window.PeopleIO?.sortKey?PeopleIO.sortKey(p,data):p.name;return key(a).localeCompare(key(b),locale);});
   }
   function remove(data,id) {
     const person = data.contacts.find(p=>p.id===id);
@@ -41,8 +42,8 @@
     if(tab==='groups' && ui.sub!=='group') return `<div class="app-view people-app">${header}${tabs}<div class="people-scroll">${data.contactGroups.map(g=>`<button class="people-group" data-action="people-group" data-id="${e(g.id)}"><strong>${e(t(g.name))}</strong><small>${g.members.filter(id=>data.contacts.some(p=>p.id===id)).length} ${e(t('contacts'))}</small></button>`).join('')||'<p class="empty-note">No groups</p>'}</div>${toolbar}</div>`;
     const items=list(data,tab,ui.peopleQuery||'',ui.sub==='group'?ui.peopleGroup:'',locale);
     let initial='';
-    const rows=tab==='favorites' ? items.map(p=>`<button class="people-favorite-tile" data-action="contact" data-id="${p.id}"><img src="assets/people-ic_contact_picture_180_holo_light.png" alt=""><span>${e(p.name)}</span></button>`).join('') : items.map(p=>{const first=p.name.slice(0,1).toLocaleUpperCase();const separator=first!==initial?`<h4 class="people-section">${e(first)}</h4>`:'';initial=first;return `${separator}<button class="people-row" data-action="contact" data-id="${p.id}"><span>${e(p.name)}</span><img src="${e(p.photo!=null&&photoUrl(data,p.photo)||'assets/people-ic_contact_picture_holo_light.png')}" alt=""></button>`;}).join('');
-    return `<div class="app-view people-app">${header}${tabs}${ui.peopleSearching?`<form class="people-search" data-form="people-search"><input name="query" type="search" aria-label="Search contacts" placeholder="Search contacts" value="${e(ui.peopleQuery||'')}"><button type="submit">Search</button></form>`:''}<div class="people-scroll ${tab==='favorites'?'people-favorites':''}">${rows||`<p class="empty-note">${e(t(tab==='favorites'?'No favorites yet':'No contacts found'))}</p>`}</div>${toolbar}</div>`;
+    const rows=tab==='favorites' ? items.map(p=>`<button class="people-favorite-tile" data-action="contact" data-id="${p.id}"><img src="assets/people-ic_contact_picture_180_holo_light.png" alt=""><span>${e(p.name)}</span></button>`).join('') : items.map(p=>{const first=(window.PeopleIO?.sortKey?PeopleIO.sortKey(p,data):p.name).slice(0,1).toLocaleUpperCase();const separator=first!==initial?`<h4 class="people-section">${e(first)}</h4>`:'';initial=first;return `${separator}<button class="people-row" data-action="contact" data-id="${p.id}"><span>${e(window.PeopleIO?.displayName?PeopleIO.displayName(p,data):p.name)}</span><img src="${e(p.photo!=null&&photoUrl(data,p.photo)||'assets/people-ic_contact_picture_holo_light.png')}" alt=""></button>`;}).join('');
+    return `<div class="app-view people-app">${header}${tabs}${ui.peopleSearching?`<form class="people-search" data-form="people-search"><input name="query" type="search" aria-label="Search contacts" placeholder="Search contacts" value="${e(ui.peopleQuery||'')}"><button type="submit">Search</button></form>`:''}<div class="people-scroll ${tab==='favorites'?'people-favorites':''}">${tab==='all'&&ui.sub!=='group'&&!ui.peopleSearching&&window.PeopleIO?.filterHeader&&PeopleIO.filterHeader({data,t,locale})?`<p class="people-filter-header">${e(PeopleIO.filterHeader({data,t,locale}))}</p>`:''}${rows||`<p class="empty-note">${e(t(tab==='favorites'?'No favorites yet':'No contacts found'))}</p>`}</div>${toolbar}</div>`;
   }
   window.ICSPeople={render,list,remove};
 })();

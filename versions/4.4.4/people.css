@@ -38,3 +38,22 @@
 .vcf-sim-bar h2{margin:0 0 0 calc(8 * var(--dp));font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vcf-sim-empty{margin:auto;padding:calc(16 * var(--dp));font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#777;text-align:center}
 .vcf-text{flex:1;min-width:0;display:flex;flex-direction:column}
+/* Contacts to display, Customize and Settings (people-io.js pages): Holo light list rows with radio / check marks, the
+   account header, the Cancel / OK button bar; the filter's header over the All contacts list. */
+.pio-list{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.screen .pio-row{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:calc(8 * var(--dp)) calc(8 * var(--dp)) calc(8 * var(--dp)) calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #0000001f;background:none;color:#000;text-align:left;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif}
+.screen .pio-row:active{background:#33b5e566}
+.pio-text{flex:1;min-width:0;display:flex;flex-direction:column}
+.pio-text b{font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pio-text small{font-size:calc(14 * var(--dp));color:#727272}
+.pio-mark{flex:none;width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.pio-head{display:flex;flex-direction:column;padding:calc(12 * var(--dp)) calc(16 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #33b5e5;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif}
+.pio-head b{font-weight:400}
+.pio-head small{font-size:calc(14 * var(--dp));color:#727272}
+.pio-cat{margin:0;padding:calc(12 * var(--dp)) calc(16 * var(--dp)) calc(4 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #33b5e5;font:700 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#33b5e5;text-transform:uppercase}
+.pio-buttons{flex:none;display:flex;border-top:calc(1 * var(--dp)) solid #0000001f}
+.screen .pio-buttons button{flex:1;min-height:calc(48 * var(--dp));border:0;background:none;font:400 calc(16 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
+.pio-buttons button+button{border-left:calc(1 * var(--dp)) solid #0000001f}
+.screen .pio-buttons button:active{background:#33b5e566}
+.pio-dialog .pio-row{min-height:calc(48 * var(--dp))}
+.people-filter-header{margin:0;padding:calc(6 * var(--dp)) calc(16 * var(--dp));border-bottom:calc(1 * var(--dp)) solid #33b5e5;font:400 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#33b5e5}

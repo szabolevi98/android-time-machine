@@ -38,6 +38,15 @@ for(const [v,p,full] of [['4.0.4','ics',true],['4.3','jb',true],['4.4.4','kk',tr
   const done=plain(IO.handle('vcf-export-ok','',ctx));assert.equal(done.notify[0],'Finished exporting 00001.vcf.');assert.equal(ctx.data.vcards[0].name,'00001.vcf');
   assert.match(IO.sim(ctx),/No contacts on your SIM card\./);assert.match(IO.sim({...ctx,data:{...ctx.data,settings:{airplane:true}}}),/Airplane mode/);
   assert.equal(typeof IO.ringtone,full?'function':'undefined');
+  // Contacts to display / Customize: a hidden group hides its members; ungrouped people follow All other contacts.
+  const fd={contacts:[{id:1,name:'Alex Morgan'},{id:5,name:'Zed'}],contactGroups:[{id:'friends',name:'Friends',members:[1]}]};
+  assert.equal(IO.visible(fd,fd.contacts[0]),true);fd.contactsFilter='custom';fd.contactsCustom={friends:false};
+  assert.equal(IO.visible(fd,fd.contacts[0]),false);assert.equal(IO.visible(fd,fd.contacts[1]),true);fd.contactsCustom.ungrouped=false;assert.equal(IO.visible(fd,fd.contacts[1]),false);
+  assert.equal(IO.filterHeader({data:fd,t:k=>k,locale:'en'}),'Contacts in custom view');
+  fd.contactPrefs={sort:'family',order:'family'};assert.equal(IO.sortKey(fd.contacts[0],fd),'Morgan Alex');assert.equal(IO.displayName(fd.contacts[0],fd),'Morgan, Alex');
+  const pu={sub:''};IO.pageAction('pfl-open','',{data:fd,ui:pu});assert.equal(pu.sub,'people-filter');IO.pageAction('pfl-pick','customize',{data:fd,ui:pu});assert.equal(pu.sub,'people-customize');
+  IO.pageAction('pfl-toggle','friends',{data:fd,ui:pu});assert.equal(IO.back(pu),true);assert.equal(fd.contactsCustom.friends,false,'Back keeps the old view');assert.equal(pu.sub,'people-filter');
+  IO.pageAction('pfl-pick','all',{data:fd,ui:pu});assert.equal(fd.contactsFilter,'all');assert.equal(pu.sub,'');
   const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');
   assert.ok(sim.includes("if (action.startsWith('vcf-'))")&&sim.includes("PeopleIO.sim("),v);
   if(full)assert.ok(sim.includes("case 'people-ringtone': { const person = contact(ui.selectedContact)")&&!sim.includes("option('toast', 'Set ringtone'"),v);

@@ -58,3 +58,26 @@
 .ldp2-switch.on::after{transform:translateX(calc(16 * var(--dp)));background:#0288d1}
 .ldp2-prose{margin:0;padding:calc(16 * var(--dp)) calc(20 * var(--dp));font:400 calc(14 * var(--dp))/1.45 Roboto,sans-serif;color:#0000008a}
 .screen .ldp2-button{margin:0 calc(18 * var(--dp));padding:0 calc(18 * var(--dp));min-height:calc(36 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:#eeeeee;box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) #0003;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;color:#000000de}
+/* Contacts to display, Customize and Settings (lp-people-io.js pages) in the light Material of the Contacts app:
+   radio and check marks in #0288D1 (GoogleContacts' accent here as in the Phone's settings), the account header,
+   CANCEL / OK; the filter's header over the list. */
+.pio-list{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.screen .pio-row{display:flex;align-items:center;width:100%;min-height:calc(56 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;background:none;color:#000000de;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif;cursor:pointer}
+.screen .pio-row:active{background:#0000001f}
+.pio-text{flex:1;min-width:0;display:flex;flex-direction:column}
+.pio-text b{font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pio-text small{font-size:calc(14 * var(--dp));color:#0000008a}
+.pio-radio,.pio-check{flex:none;width:calc(20 * var(--dp));height:calc(20 * var(--dp));margin-left:calc(16 * var(--dp));box-sizing:border-box;border:calc(2 * var(--dp)) solid #0000008a;border-radius:50%}
+.pio-check{width:calc(18 * var(--dp));height:calc(18 * var(--dp));border-radius:calc(2 * var(--dp))}
+.pio-radio.on{border-color:#0288d1;background:radial-gradient(#0288d1 0 calc(5 * var(--dp)),transparent calc(5.5 * var(--dp)))}
+.pio-check.on{border-color:#0288d1;background:#0288d1}
+.pio-check{position:relative}
+.pio-check.on::after{content:'';position:absolute;left:calc(4 * var(--dp));top:0;width:calc(5 * var(--dp));height:calc(10 * var(--dp));border:solid #fff;border-width:0 calc(2 * var(--dp)) calc(2 * var(--dp)) 0;transform:rotate(45deg)}
+.pio-head{display:flex;flex-direction:column;padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(8 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#0288d1}
+.pio-head b{font-weight:500}
+.pio-head small{font-weight:400;color:#0000008a}
+.pio-cat{margin:0;padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(8 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#0288d1}
+.pio-buttons{flex:none;display:flex;justify-content:flex-end;gap:calc(8 * var(--dp));padding:calc(8 * var(--dp))}
+.screen .pio-buttons button{min-width:calc(64 * var(--dp));height:calc(36 * var(--dp));padding:0 calc(8 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;color:#0288d1;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.screen .pio-buttons button:active{background:#0000001f}
+.people-filter-header{margin:0;padding:calc(8 * var(--dp)) calc(16 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#0288d1}
