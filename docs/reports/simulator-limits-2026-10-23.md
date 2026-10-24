@@ -361,7 +361,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 #### T33 — 4.3–5.1.1 Óra beállítások és városkeresés
 
 - **Ütem:** Mag.
-- **Állapot:** Nyitott — aktuális fejlesztési kör.
+- **Állapot:** Kész — `d9db7c9e`. A DeskClock 2.0.3 (4.3), 3.0.0 (4.4.4) és 3.0.4 (5.1.1) „More options” menüje a gyári desk_clock_menu.xml szerint (Night mode — 3.x-ben az Alarm fülön rejtve —, Settings, Help), a Cities menü Settings/Help sora is működik. A SettingsActivity (settings.xml) az APK saját szövegeivel és tömbjeivel (docs/tools/clock-prefs-strings.py): Style, Automatic home clock, Home time zone („(GMT+H:MM) név” lista eltolás szerint, az automatikus otthoni órától függően engedélyezve), Silence after, Snooze length (1–30 választó), Alarm volume, Volume buttons; mentve data.jbClock.prefs-be. Hatások: Analóg stílus az óra oldalon és Night módban (AnalogClock számlap/mutatók), Home óra a világórák elején, ha a telefon zónája eltér az otthonitól, a szundi a beállított hosszt várja, a csörgő ébresztő a Silence after után elhallgat, a hangerőgombok szundiznak/elvetnek. Night mode a ScreensaverActivity tompított órája. 4.4.4/5.1.1 Cities: SearchView szűrés (CitiesActivity: a név a beírt szöveggel kezdődik). Help: desk_clock_help_url a böngészőben. Ellenőrzés: `limits-regression.mjs T33` mindhárom verzión asztali és telefonos szélességen, `tests/clock-prefs.test.cjs`, `npm test` 249/249, képernyőképek angolul és magyarul.
 - **Verziók:** 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.3-13, 4.4.4-13, 5.1.1-13, 5.1.1-23.
 - **Elkészítendő és határ:** 4.3/4.4.4/5.1.1 More options valódi menüje és Settings helyi preferenciák; 5.1.1 Cities keresés a meglévő városlistában. Help korlát marad. A Cities-keresés két auditcsoportja ugyanaz a munka.
