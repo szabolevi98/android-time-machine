@@ -1567,6 +1567,8 @@
       case 'gbset-list': ui.overlay = 'gb-dialog-list'; ui.gbListKey = id; renderOverlay(); break;
       case 'gbset-list-pick': { const [key, index] = id.split(':'); data.settings[key] = Number(index); ui.overlay = ''; save(); render(); break; }
       case 'gbset-toast': toast(id); break;
+      // Select text arms the page (Browser / Google Mail): the next touch there selects (gb-browser.js).
+      case 'gb-select-text': ui.overlay = ''; ui.gbMenuItems = null; renderOverlay(); ui.gbSelecting = ui.view; break;
       case 'gbset-dialog': if (id === 'date' || id === 'time') { const now = deviceDate(); ui.gbDtDraft = {y: now.getFullYear(), m: now.getMonth(), d: now.getDate(), h: now.getHours(), mi: now.getMinutes()}; } ui.overlay = 'gb-dialog-set'; ui.gbSetDialog = id; renderOverlay(); break;
       // The pickers wrap like NumberPicker; Set moves the device clock by the difference (data.settings.timeOffset).
       case 'gbset-dt-step': { const [field, delta] = id.split(':'), d = ui.gbDtDraft, step = Number(delta); const range = {m: 12, h: 24, mi: 60}[field]; if (field === 'y') d.y = Math.min(2037, Math.max(1970, d.y + step)); else if (field === 'd') { const days = new Date(d.y, d.m + 1, 0).getDate(); d.d = (d.d - 1 + step + days) % days + 1; } else d[field] = (d[field] + step + range) % range; d.d = Math.min(d.d, new Date(d.y, d.m + 1, 0).getDate()); renderOverlay(); break; }
@@ -2082,6 +2084,14 @@
       default: break;
     }
   });
+  // Select text: a touch on the Browser page or the Google Mail message while the mode is armed.
+  document.addEventListener('pointerdown', event => {
+    if (!ui.gbSelecting) return;
+    const page = event.target.closest('#viewport .gbbr-page, #viewport .gm-body');
+    if (!page || ui.gbSelecting !== ui.view) { ui.gbSelecting = null; return; }
+    ui.gbSelecting = null;
+    GBBrowser.selectDrag(page, event, text => { if (!text) return; ui.clipboard = text; navigator.clipboard?.writeText(text).catch(() => {}); toast(AndroidStrings.resources(() => window.GBStrings?.framework).t('text_copied', i18n.language)); });
+  }, true);
   document.addEventListener('input', event => {
     if (event.target.matches('[data-bk-bright]')) { data.booksPrefs = {...GBGoogleApps.bookPrefs(data), brightness: Number(event.target.value)}; delete data.booksNight; save(); viewport.querySelector('.bk-prefs')?.style.setProperty('--bk-dim', ((100 - Number(event.target.value)) / 100 * .7).toFixed(3)); return; }
     if (event.target.closest('.gbqs-field') && ui.qsb) { ui.qsb.query = event.target.value; gbSearchRefresh(); return; }

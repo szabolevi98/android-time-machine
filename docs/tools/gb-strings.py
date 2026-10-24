@@ -144,7 +144,7 @@ pref_exposure_title zoom_control_title switch_to_camera_lable switch_to_video_la
     },
     'framework': {
         'apks': ['framework'],
-        'keys': 'recent_tasks_title no_recent_tasks ringtone_default ringtone_silent ringtone_picker_title ok cancel yes no volume_ringtone volume_music volume_call volume_alarm volume_notification volume_unknown volume_music_hint_silent_ringtone_selected'.split(),
+        'keys': 'text_copied recent_tasks_title no_recent_tasks ringtone_default ringtone_silent ringtone_picker_title ok cancel yes no volume_ringtone volume_music volume_call volume_alarm volume_notification volume_unknown volume_music_hint_silent_ringtone_selected'.split(),
     },
     'settings2': {
         'apks': ['Settings', 'framework'],

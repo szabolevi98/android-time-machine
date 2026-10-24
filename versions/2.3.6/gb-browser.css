@@ -121,3 +121,6 @@
 .gbbr-field input:focus{border-image-source:url('assets/gb-textfield_selected.png')}
 .gbbr-info{display:flex;flex-direction:column;gap:calc(10.0058 * var(--dp));font-size:calc(14.0058 * var(--dp));color:#fff;word-break:break-all}
 .gbbr-info b{font-size:calc(14.0058 * var(--dp))}
+/* Select text (gb-browser.js selectDrag): the page takes a selection while armed, drawn in drawSelectionRegion's 0x40ff33cc. */
+.screen .gb-selecting,.screen .gb-selecting *{-webkit-user-select:text;user-select:text}
+.gb-selecting ::selection{background:#ff33cc40;color:inherit}

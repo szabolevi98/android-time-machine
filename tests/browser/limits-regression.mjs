@@ -966,6 +966,32 @@ const contactsShortcut = spec => async h => {
   await h.tap(`#viewport .home-grid[data-home-page="${page}"] .contact-shortcut`);
   h.check('a tap opens the contact', await h.until(`!!document.querySelector('#viewport [data-action="people-menu"]') && /Alex Morgan/.test(document.querySelector('#viewport').textContent)`));
 };
+
+// 2.3.6 Select text (T08): Browser's and Google Mail's menu arm the page; a drag over the text then copies it ("Text
+// copied to clipboard."); an unarmed drag copies nothing.
+const gbSelectText = async h => {
+  const copied = () => h.until(`/Text copied to clipboard/.test(document.querySelector('.toast')?.textContent || '')`, 3000);
+  const select = async () => {
+    await h.tap('#nav-root .touch-menu, .touch-menu');
+    await h.until(`!!document.querySelector('.gbmenu')`);
+    if (!await h.ev(`!!document.querySelector('.gbmenu [data-action="gb-select-text"]')`)) await h.tap('.gbmenu [data-action="gb-menu-more"]');
+    await h.tap('[data-action="gb-select-text"]');
+  };
+  await h.openApp('browser');
+  h.check('the Browser shows its page', await h.until(`[...document.querySelectorAll('#viewport .gbbr-page p')].some(p => p.textContent.trim().length > 20)`));
+  const text = '#viewport .gbbr-page p';
+  await h.drag(text, 60, 0);
+  h.check('an unarmed drag copies nothing', !await h.until(`/Text copied/.test(document.querySelector('.toast')?.textContent || '')`, 800));
+  await select();
+  await h.drag(text, 60, 0);
+  h.check('Select text then a drag copies the text', await copied());
+  await h.openApp('gmail');
+  await h.tap('#viewport [data-action="gm-open"][data-id="gm-1"]');
+  h.check('Google Mail opens the conversation', await h.until(`!!document.querySelector('#viewport .gm-body')`));
+  await select();
+  await h.drag('#viewport .gm-body', 80, 0);
+  h.check('Google Mail\'s Select text copies the message text', await copied());
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1041,6 +1067,7 @@ const CASES = [
   {id: 'T11', version: '4.3', name: 'Contacts › Place on Home screen', run: contactsShortcut({page: 2})},
   {id: 'T11', version: '4.4.4', name: 'Contacts › Place on Home screen', run: contactsShortcut({page: 1})},
   {id: 'T11', version: '5.1.1', name: 'Contacts › Place on Home screen', run: contactsShortcut({page: 1})},
+  {id: 'T08', version: '2.3.6', name: 'Browser and Google Mail › Select text', run: gbSelectText},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

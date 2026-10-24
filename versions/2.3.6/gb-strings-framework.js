@@ -2,6 +2,13 @@
 window.GBStrings = window.GBStrings || {};
 window.GBStrings["framework"] = {
 "strings": {
+"text_copied": {
+"en": "Text copied to clipboard.",
+"hu": "A szöveg bemásolva a vágólapra.",
+"de": "Text in Zwischenablage kopiert.",
+"fr": "Le texte a été copié dans le presse-papier.",
+"es": "Texto copiado al portapapeles."
+},
 "recent_tasks_title": {
 "en": "Recent",
 "hu": "Legutóbbiak",

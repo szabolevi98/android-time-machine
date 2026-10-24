@@ -84,7 +84,7 @@
       {action: 'browser-forward', title: T('forward'), icon: 'ic_menu_forward', disabled: !ctx.canForward},
       {action: 'gbbr-add-bookmark', title: T('save_to_bookmarks'), icon: 'gb-br-ic_menu_add_bookmark.png'},
       {action: 'browser-find', title: T('find_dot')},
-      {action: 'gbset-toast', id: na, title: T('select_dot')},
+      {action: 'gb-select-text', title: T('select_dot')},
       {action: 'gbbr-page-info', title: T('page_info')},
       {action: 'gbbr-share', title: T('share_page')},
       {action: 'open-app', id: 'downloads', title: T('menu_view_download')},
@@ -101,5 +101,30 @@
     return null;
   }
 
-  window.GBBrowser = {MAX_TABS, text, render, menu, dialog, suggestions};
+  /* Select text (Browser's select_dot, Google Mail's "Select text"): WebView.emulateShiftHeld. The next touch on the page
+     drags a selection (drawSelectionRegion's 0x40ff33cc); lifting the finger copies it (commitCopy: the framework's
+     "Text copied to clipboard.") and ends the mode; a touch that selects nothing just ends it. */
+  function selectDrag(pageEl, event, copied) {
+    const caret = e => document.caretRangeFromPoint?.(e.clientX, e.clientY);
+    const start = caret(event);
+    if (!start) return false;
+    event.preventDefault();
+    const sel = window.getSelection();
+    pageEl.classList.add('gb-selecting');
+    const move = e => {
+      const end = caret(e);
+      if (!end || !pageEl.contains(end.startContainer)) return;
+      const r = document.createRange(), forward = start.compareBoundaryPoints(Range.START_TO_START, end) <= 0, [a, b] = forward ? [start, end] : [end, start];
+      r.setStart(a.startContainer, a.startOffset); r.setEnd(b.startContainer, b.startOffset);
+      sel.removeAllRanges(); sel.addRange(r);
+    };
+    const up = () => {
+      document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up);
+      const text = sel.toString(); sel.removeAllRanges(); pageEl.classList.remove('gb-selecting');
+      copied(text);
+    };
+    document.addEventListener('pointermove', move); document.addEventListener('pointerup', up);
+    return true;
+  }
+  window.GBBrowser = {MAX_TABS, text, render, menu, dialog, suggestions, selectDrag};
 })();

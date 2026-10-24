@@ -252,7 +252,7 @@
         {action: 'gm-important', title: t(c.important ? 'Not important' : 'Mark important'), icon: g(c.important ? 'ic_menu_mark_unimportant' : 'ic_menu_mark_important')},
         {action: 'gm-label', id: 'Inbox', title: t('Go to inbox'), icon: g('ic_menu_inbox')}, {action: 'gm-mute', title: t('Mute'), icon: g('ic_menu_mute')},
         {action: 'gm-star', id: c.id, title: t(c.starred ? 'Remove star' : 'Add star'), icon: g('ic_menu_star')}, {action: 'gm-spam', title: t('Report spam'), icon: g('ic_menu_report_spam')},
-        {action: 'gbpref-open', id: 'gmail', title: t('Settings'), icon: 'ic_menu_preferences'}, {action: 'gm-unsupported', title: t('Help'), icon: 'ic_menu_help'}, {action: 'gm-unsupported', title: t('Select text')}];
+        {action: 'gbpref-open', id: 'gmail', title: t('Settings'), icon: 'ic_menu_preferences'}, {action: 'gm-unsupported', title: t('Help'), icon: 'ic_menu_help'}, {action: 'gb-select-text', title: t('Select text')}];
     }
     if ((ui.gmSelected || []).length) return [
       {action: 'gm-star-selected', title: t('Star'), icon: g('ic_menu_star')}, {action: 'gm-read-unread', title: t('Read/unread'), icon: g('ic_menu_gmail_mark_read')},
