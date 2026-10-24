@@ -1,0 +1,26 @@
+/* Lens Blur (lp-refocus.js): refocus_module.xml's overlay and RefocusActivity's viewer_activity.xml. */
+.lpr{position:absolute;inset:0;touch-action:none;cursor:grab}
+.lpr-msg{position:absolute;left:calc(16 * var(--dp));right:calc(16 * var(--dp));top:calc(28 * var(--dp));margin:0;text-align:center;font:400 calc(22 * var(--dp))/1.25 Roboto,sans-serif;color:#fff;text-shadow:0 0 calc(4 * var(--dp)) #0008;pointer-events:none}
+/* RefocusProgressView: 100 x 150 dp in the middle. */
+.lpr-progress{position:absolute;left:50%;top:50%;width:calc(100 * var(--dp));height:calc(150 * var(--dp));margin:calc(-75 * var(--dp)) 0 0 calc(-50 * var(--dp));pointer-events:none}
+.lpr-line{position:absolute;left:50%;bottom:0;width:calc(2 * var(--dp));height:0;margin-left:calc(-1 * var(--dp));background:#fff}
+.lpr-head{position:absolute;left:50%;bottom:0;width:calc(17.5 * var(--dp));height:calc(9.5 * var(--dp));margin:0 0 calc(-4.75 * var(--dp)) calc(-8.75 * var(--dp))}
+.lpr-tail{position:absolute;left:50%;bottom:0;width:calc(3.5 * var(--dp));height:calc(3.5 * var(--dp));margin:0 0 calc(-1.75 * var(--dp)) calc(-1.75 * var(--dp))}
+.lpr[data-state=success]{display:grid;place-items:center;pointer-events:none}
+.lpr-success{width:calc(200 * var(--dp));height:auto}
+.lpr-bar{width:0}
+/* The viewer: black, Done at the top, the picture, the 48 dp bokeh bar with its 20 dp white dot. */
+.lpr-viewer{display:flex;flex-direction:column;height:100%;background:#000;color:#fff}
+.screen .lpr-done{flex:none;align-self:flex-start;display:flex;align-items:center;gap:calc(4 * var(--dp));height:calc(48 * var(--dp));margin-top:calc(24 * var(--dp));padding:0 calc(12 * var(--dp)) 0 0;border:0;background:none;color:#fff;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;cursor:pointer}
+.lpr-done:active{background:#ffffff26}
+.lpr-done img{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
+.lpr-picture{position:relative;flex:1;min-height:0;display:grid;place-items:center;overflow:hidden;cursor:crosshair}
+.lpr-picture img{max-width:100%;max-height:100%;display:block;-webkit-user-drag:none}
+.lpr-ring{position:absolute;width:calc(64 * var(--dp));height:calc(64 * var(--dp));margin:calc(-32 * var(--dp)) 0 0 calc(-32 * var(--dp));box-sizing:border-box;border:calc(2 * var(--dp)) solid #fff;border-radius:50%;pointer-events:none;animation:lpr-ring .7s ease-out forwards}
+@keyframes lpr-ring{from{transform:scale(1.4);opacity:1}to{transform:scale(1);opacity:0}}
+.lpr-bokeh{flex:none;display:flex;align-items:center;height:calc(48 * var(--dp));margin-bottom:var(--nb,0);padding:0 calc(16 * var(--dp))}
+.lpr-bokeh input{flex:1;height:calc(48 * var(--dp));margin:0;background:none;-webkit-appearance:none;appearance:none;cursor:pointer}
+.lpr-bokeh input::-webkit-slider-runnable-track{height:calc(2 * var(--dp));background:#ffffff80}
+.lpr-bokeh input::-moz-range-track{height:calc(2 * var(--dp));background:#ffffff80}
+.lpr-bokeh input::-webkit-slider-thumb{-webkit-appearance:none;width:calc(20 * var(--dp));height:calc(20 * var(--dp));margin-top:calc(-9 * var(--dp));border:0;border-radius:50%;background:#fff}
+.lpr-bokeh input::-moz-range-thumb{width:calc(20 * var(--dp));height:calc(20 * var(--dp));border:0;border-radius:50%;background:#fff}

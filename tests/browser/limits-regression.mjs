@@ -818,6 +818,61 @@ const phoneCallSettings = async h => {
   const before = JSON.stringify(await call());
   h.check('the reload keeps them', await h.reload() && JSON.stringify(await call()) === before);
 };
+
+// Lens Blur (T49, 5.1.1): the mode's shutter starts the sweep with its instructions; a sideways drag does not count,
+// raising (a drag up) fills it; Cancel on the shutter and Back save nothing; a full sweep processes and saves the
+// picture; in Photos it opens the viewer, where a touch moves the focus and the bar the blur; Back drops the edit,
+// Done keeps it.
+const lensBlur = async h => {
+  const blurred = async () => ((await store(h, 'photos')) || []).filter(p => p.refocus);
+  const state = () => h.ev(`document.querySelector('#viewport [data-lpr]')?.dataset.state || 'idle'`);
+  const height = () => h.ev(`document.querySelector('#viewport [data-lpr]').getBoundingClientRect().height`);
+  await h.openApp('camera');
+  await h.until(`!!document.querySelector('#viewport [data-gcam-modes]')`);
+  await h.tap('#viewport [data-gcam-modes]'); await h.tap('#viewport [data-gcam-mode="refocus"]');
+  h.check('Lens Blur has its shutter', await h.until(`/ic_capture_refocus/.test(document.querySelector('#viewport [data-gcam-shutter] img')?.src || '')`));
+  await h.tap('#viewport [data-gcam-shutter]');
+  h.check('the shutter starts the sweep with its instructions', await h.until(`/Slowly raise your device/.test(document.querySelector('#viewport .lpr-msg')?.textContent || '')`) && await h.ev(`/ic_cancel_normal/.test(document.querySelector('#viewport [data-gcam-shutter] img').src)`));
+  await h.drag('#viewport [data-lpr]', 160, 0);
+  h.check('a sideways drag does not count', Number(await h.ev(`document.querySelector('#viewport [data-lpr]').dataset.progress`)) === 0);
+  await h.drag('#viewport [data-lpr]', 0, -(await height()) * .12);
+  h.check('raising fills the progress', Number(await h.ev(`document.querySelector('#viewport [data-lpr]').dataset.progress`)) > .3);
+  await h.tap('#viewport [data-gcam-shutter]');
+  h.check('Cancel stops without saving', await h.until(`!document.querySelector('#viewport [data-lpr]')`) && !(await blurred()).length);
+  await h.tap('#viewport [data-gcam-shutter]');
+  await h.until(`!!document.querySelector('#viewport [data-lpr][data-state="capture"]')`);
+  await h.key('Escape');
+  h.check('Back stops it too', await h.until(`!document.querySelector('#viewport [data-lpr]')`) && !(await blurred()).length);
+  await h.tap('#viewport [data-gcam-shutter]');
+  await h.until(`!!document.querySelector('#viewport [data-lpr][data-state="capture"]')`);
+  const full = (await height()) * .3;
+  await h.drag('#viewport [data-lpr]', 0, -full / 2);
+  await h.drag('#viewport [data-lpr]', 0, -full / 2);
+  h.check('a full sweep succeeds and processes', await h.until(`['success','process'].includes(document.querySelector('#viewport [data-lpr]')?.dataset.state)`, 3000));
+  h.check('the Lens Blur picture is saved', await h.until(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));const d=k&&JSON.parse(localStorage.getItem(k));return !!d&&d.photos.some(p=>p.refocus)})()`, 8000));
+  const [photo] = await blurred();
+  await h.openApp('photos');
+  await h.tap(`#viewport .ph-thumb[data-id="${photo.id}"]`);
+  await h.until(`!!document.querySelector('#viewport .ph-viewer[data-action="photos-refocus"]')`);
+  await h.tap('#viewport .ph-viewer');
+  h.check('the picture opens the Lens Blur viewer', await h.until(`!!document.querySelector('#viewport [data-lpr-viewer] [data-lpr-strength]')`));
+  const src = () => h.ev(`document.querySelector('#viewport [data-lpr-picture] img').src`);
+  const first = await src();
+  await h.ev(`(()=>{const r=document.querySelector('#viewport [data-lpr-strength]');r.value='0.9';r.dispatchEvent(new Event('input',{bubbles:true}));return 1})()`);
+  h.check('the bar changes the blur', await src() !== first);
+  await h.key('Escape');
+  h.check('Back drops the edit', await h.until(`!!document.querySelector('#viewport .ph-viewer')`) && (await blurred())[0].refocus.strength === .6);
+  await h.tap('#viewport .ph-viewer');
+  await h.until(`!!document.querySelector('#viewport [data-lpr-picture] img')`);
+  const box = await h.ev(`(()=>{const r=document.querySelector('#viewport [data-lpr-picture] img').getBoundingClientRect();return [r.left,r.top,r.width,r.height]})()`);
+  await h.send('Input.dispatchMouseEvent', {type: 'mousePressed', x: box[0] + box[2] * .2, y: box[1] + box[3] * .7, button: 'left', buttons: 1, clickCount: 1});
+  await h.send('Input.dispatchMouseEvent', {type: 'mouseReleased', x: box[0] + box[2] * .2, y: box[1] + box[3] * .7, button: 'left', buttons: 0, clickCount: 1});
+  await h.ev(`(()=>{const r=document.querySelector('#viewport [data-lpr-strength]');r.value='0.3';r.dispatchEvent(new Event('input',{bubbles:true}));return 1})()`);
+  await h.tap('#viewport [data-action="photos-refocus-done"]');
+  const kept = (await blurred())[0].refocus;
+  h.check('Done keeps the new focus and blur', kept.strength === .3 && Math.abs(kept.focus[0] - .2) < .05 && Math.abs(kept.focus[1] - .7) < .05, JSON.stringify(kept));
+  h.check('Done returns to the picture', await h.until(`!!document.querySelector('#viewport .ph-viewer')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -885,6 +940,7 @@ const CASES = [
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},
+  {id: 'T49', version: '5.1.1', name: 'Camera › Lens Blur capture and the refocus viewer', run: lensBlur},
   {id: 'T49', version: '5.1.1', name: 'Camera › Photo Sphere capture and the Photos viewer', run: photoSphere({kk: false, hint: 'To start, keep dot inside circle', rendering: 'Processing photo sphere'})},
   {id: 'T33', version: '5.1.1', name: 'Clock › menu, Settings, Night mode, Cities search', run: clockSettings({home: 'Home', search: true})},
   {id: 'T33', version: '4.4.4', name: 'Clock › menu, Settings, Night mode, Cities search', run: clockSettings({home: 'Home', search: true})},

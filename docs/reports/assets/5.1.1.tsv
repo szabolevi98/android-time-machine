@@ -274,6 +274,7 @@ versions/5.1.1/assets/gcam-ic_camera_normal.png	8743e37e1b23d7ef	copy	shamu:/sys
 versions/5.1.1/assets/gcam-ic_cancel_normal.png	37ee5b5e475a120f	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_cancel_normal.png	drawable-xxhdpi-v4		37ee5b5e475a120f
 versions/5.1.1/assets/gcam-ic_capture_camera_normal.png	43fc750970e24986	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_capture_camera_normal.png	drawable-xxxhdpi-v4		43fc750970e24986
 versions/5.1.1/assets/gcam-ic_capture_pano.png	980b70c0cc2e031c	same pixels	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_capture_pano.png	drawable-xxxhdpi-v4		be0d0838e41f0033
+versions/5.1.1/assets/gcam-ic_capture_refocus.png	4988ed72937f8c8b	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_capture_refocus.png	drawable-xxxhdpi-v4		4988ed72937f8c8b
 versions/5.1.1/assets/gcam-ic_capture_video.png	0d5a135913609806	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_capture_video.png	drawable-xxxhdpi-v4		0d5a135913609806
 versions/5.1.1/assets/gcam-ic_done_disabled.png	698ef3b1d57ee611	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_done_disabled.png	drawable-xxhdpi-v4		698ef3b1d57ee611
 versions/5.1.1/assets/gcam-ic_done_normal.png	2c1b1faafc554663	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_done_normal.png	drawable-xxhdpi-v4		2c1b1faafc554663
@@ -294,6 +295,7 @@ versions/5.1.1/assets/gcam-ic_pano_blanket.png	7db22fbad4e5022b	same pixels	sham
 versions/5.1.1/assets/gcam-ic_panorama_normal.png	2087ee0b8c0a73fe	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_panorama_normal.png	drawable-xxxhdpi-v4		2087ee0b8c0a73fe
 versions/5.1.1/assets/gcam-ic_photosphere_blanket.png	dd91f759fba03445	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_photosphere_blanket.png	drawable-xxxhdpi-v4		dd91f759fba03445
 versions/5.1.1/assets/gcam-ic_photosphere_normal.png	708066494cdf1a6a	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_photosphere_normal.png	drawable-xxxhdpi-v4		708066494cdf1a6a
+versions/5.1.1/assets/gcam-ic_refocus_blanket.png	160bf304e37ad522	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_refocus_blanket.png	drawable-xxxhdpi-v4		160bf304e37ad522
 versions/5.1.1/assets/gcam-ic_refocus_normal.png	c20463bd3bc53656	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_refocus_normal.png	drawable-xxhdpi-v4		c20463bd3bc53656
 versions/5.1.1/assets/gcam-ic_settings_normal.png	ece69c89d8e370de	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/ic_settings_normal.png	drawable-xxhdpi-v4		ece69c89d8e370de
 versions/5.1.1/assets/gcam-ic_switch_camera_back_normal.png	d3219041223231d2	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxxhdpi-v4/ic_switch_camera_back_normal.png	drawable-xxxhdpi-v4		d3219041223231d2
@@ -306,6 +308,9 @@ versions/5.1.1/assets/gcam-pano_alignhint_down.png	315891c0f11d2527	copy	shamu:/
 versions/5.1.1/assets/gcam-pano_alignhint_up.png	cf360df0c11eba8a	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/pano_alignhint_up.png	drawable-xxhdpi-v4		cf360df0c11eba8a
 versions/5.1.1/assets/gcam-pano_target_activated.png	54bddd6f0425e5ab	same pixels	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/pano_target_activated.png	drawable-xxhdpi-v4		552e2319f879b0a0
 versions/5.1.1/assets/gcam-pano_target_default.png	9fb7fe02fef36308	same pixels	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xxhdpi-v4/pano_target_default.png	drawable-xxhdpi-v4		18fb5cab4d08db90
+versions/5.1.1/assets/gcam-refocus_arrow_bottom.png	19014ebac731bc70	converted	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xhdpi-v4/refocus_arrow_bottom.9.png	drawable-xhdpi-v4	nine-patch border removed, mean difference 0.00	4f32ad715d241995
+versions/5.1.1/assets/gcam-refocus_arrow_top.png	83b5b762ec5751b0	converted	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xhdpi-v4/refocus_arrow_top.9.png	drawable-xhdpi-v4	nine-patch border removed, mean difference 0.00	ecaa30553f690bbb
+versions/5.1.1/assets/gcam-refocus_successful.png	ae89b1f915af106f	copy	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/drawable-xhdpi-v4/refocus_successful.png	drawable-xhdpi-v4		ae89b1f915af106f
 versions/5.1.1/assets/gcs-dialog_full_holo_light.png	f6d8c9ae507ed25d	same pixels	shamu:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/dialog_full_holo_light.9.png	drawable-xxhdpi-v4		a704fb4f7b9d3e3c
 versions/5.1.1/assets/gcs-ic_ab_back_holo_dark_am.png	d4f36e29f4480af5	same pixels	shamu:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/ic_ab_back_holo_dark_am.png	drawable-xxhdpi-v4		52328838d12d81fd
 versions/5.1.1/assets/gcs-switch_bg_holo_light.png	4ee4a5b7d9421ef2	same pixels	shamu:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/switch_bg_holo_light.9.png	drawable-xxhdpi-v4		3b2003faad1f9636

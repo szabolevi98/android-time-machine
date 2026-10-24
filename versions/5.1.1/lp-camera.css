@@ -28,10 +28,11 @@
 .gcam-shutter.recording i{width:calc(23.9956 * var(--dp));height:calc(23.9956 * var(--dp));border-radius:calc(2.2076 * var(--dp));background:#fff}
 .gcam-edge{position:absolute;left:0;top:25%;bottom:25%;width:calc(19.8676 * var(--dp));border:0;background:none;padding:0}
 .gcam-modes-scrim{position:absolute;inset:0;background:#00000066;opacity:0;pointer-events:none;transition:opacity .25s}
-.gcam-modes{position:absolute;left:0;top:0;bottom:var(--nb);width:calc(200 * var(--dp));padding:calc(var(--sb) + calc(16.0045 * var(--dp))) 0 calc(16.0045 * var(--dp));display:flex;flex-direction:column;gap:calc(8.0023 * var(--dp));background:linear-gradient(90deg,#000000b3,#0000);transform:translateX(-100%);transition:transform .25s cubic-bezier(.4,0,.2,1)}
+.gcam-modes{position:absolute;left:0;top:0;bottom:var(--nb);width:max-content;min-width:calc(200 * var(--dp));padding:calc(var(--sb) + calc(16.0045 * var(--dp))) 0 calc(16.0045 * var(--dp));display:flex;flex-direction:column;gap:calc(8.0023 * var(--dp));background:linear-gradient(90deg,#000000b3,#0000);transform:translateX(-100%);transition:transform .25s cubic-bezier(.4,0,.2,1)}
 .gcam.modes-open .gcam-modes{transform:none}
+/* The list is as wide as its longest label (Körpanorámakép), so closed it hides whole. */
 .gcam.modes-open .gcam-modes-scrim{opacity:1;pointer-events:auto}
-.gcam-modes button{display:flex;align-items:center;gap:calc(16.0045 * var(--dp));border:0;background:none;padding:calc(3.9956 * var(--dp)) calc(16.0045 * var(--dp));color:#fff;font:400 calc(16.0045 * var(--dp)) Roboto,sans-serif;text-align:left}
+.gcam-modes button{white-space:nowrap;display:flex;align-items:center;gap:calc(16.0045 * var(--dp));border:0;background:none;padding:calc(3.9956 * var(--dp)) calc(16.0045 * var(--dp));color:#fff;font:400 calc(16.0045 * var(--dp)) Roboto,sans-serif;text-align:left}
 .gcam-mode-icon{flex:none;width:calc(56.0045 * var(--dp));height:calc(56.0045 * var(--dp));border-radius:50%;background:#0000004c;display:grid;place-items:center;transition:background .2s}
 .gcam-modes button[aria-current=true] .gcam-mode-icon,.gcam-modes button:active .gcam-mode-icon{background:var(--c)}
 .gcam-mode-icon img{width:calc(28.0023 * var(--dp));height:calc(28.0023 * var(--dp))}

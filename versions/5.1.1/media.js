@@ -67,6 +67,13 @@
   }
   function image(photo) {
     if(photo.plusEdit?.steps?.length&&window.PlusEditor){const plain=image({...photo,plusEdit:undefined}),turned=!photo.pano&&!photo.sphere&&((Number(photo.rotation)||0)%180);return PlusEditor.compose(plain,photo.sphere?4096:photo.pano?3072:turned?768:1024,photo.sphere?2048:photo.pano?768:turned?1024:768,photo.plusEdit.steps);}
+    // Lens Blur: the picture blurred by strength, kept sharp in a soft circle round the focus (a simulated depth map).
+    if(photo.refocus&&!photo.sphere&&!photo.pano){
+      const plain=image({...photo,refocus:undefined}),turned=((Number(photo.rotation)||0)%180+180)%180,w=turned?768:1024,h=turned?1024:768;
+      const s=Math.max(0,Math.min(1,Number(photo.refocus.strength)||0)),[fx,fy]=(photo.refocus.focus||[.5,.5]).map(v=>Math.max(0,Math.min(1,Number(v)||0))),r=Math.min(w,h)*(.52-s*.32);
+      const svg=`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><filter id="b" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="${(s*22).toFixed(2)}"/></filter><radialGradient id="g"><stop offset="45%" stop-color="#fff"/><stop offset="100%" stop-color="#000"/></radialGradient><mask id="m" maskUnits="userSpaceOnUse" x="0" y="0" width="${w}" height="${h}"><rect width="${w}" height="${h}"/><ellipse cx="${fx*w}" cy="${fy*h}" rx="${r}" ry="${r}" fill="url(#g)"/></mask></defs><image xlink:href="${plain}" width="${w}" height="${h}" filter="url(#b)"/><image xlink:href="${plain}" width="${w}" height="${h}" mask="url(#m)"/></svg>`;
+      return 'data:image/svg+xml,'+encodeURIComponent(svg);
+    }
     if(photo.sphere)return sphereImage(photo);
     if(photo.pano)return panoImage(photo);
     const colors=(photo.colors||palettes[0]).map((c,i)=>/^#[\da-f]{6}$/i.test(c)?c:palettes[0][i%3]);

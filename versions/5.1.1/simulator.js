@@ -423,6 +423,7 @@
     if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserFind) highlightBrowserText();
     if (ui.view === 'photos' && ui.sub === 'photo') attachPhotosSwipe();
     if (ui.view === 'photos' && ui.sub === 'sphere') LPSphere.attachViewer(viewport);
+    if (ui.view === 'photos' && ui.sub === 'refocus' && ui.refocusEdit) { const photo = PhotosApp.list(photosContext())[ui.photosIndex]; if (photo) LPRefocus.attachViewer(viewport, {photo, edit: ui.refocusEdit, media: ICSMedia}); }
     if (ui.view === 'photos' && ui.sub === 'edit') PlusEditor.attach(viewport.querySelector('[data-pe-root]'), peContext());
     // VideoViewActivity's player (photos-video.js).
     if (ui.gpv && !viewport.querySelector('[data-gpv-root]')?.isSameNode(ui.gpv.root)) { ui.gpv.destroy(); ui.gpv = null; }
@@ -874,6 +875,7 @@
     if (ui.view === 'photos' && ui.photosSpinner) { ui.photosSpinner = false; render(); return; }
     if (ui.view === 'photos' && ui.sub === 'video') { ui.sub = 'photo'; ui.photosVideo = null; render(); return; }
     if (ui.view === 'photos' && ui.sub === 'sphere') { ui.sub = 'photo'; render(); return; }
+    if (ui.view === 'photos' && ui.sub === 'refocus') { ui.refocusEdit = null; ui.sub = 'photo'; render(); return; }
     if (ui.view === 'photos' && ui.sub) { ui.sub = ui.sub === 'photo' ? ui.photosReturn || '' : ui.sub === 'folder' ? 'folders' : ''; ui.photosChrome = true; render(); return; }
     if (ui.view === 'calendar' && ui.sub === 'event-edit') { ui.sub=ui.eventDraft?.id?'event':'';ui.eventDraft=null;calendarRender();return; }
     if(ui.view==='settings' && ['apn','operators','tether-help','device-admin','wifi-direct','wifi-display','location-mode'].includes(ui.sub)){ui.sub={apn:'mobile-networks',operators:'mobile-networks','tether-help':'tethering','device-admin':'security','wifi-direct':'wifi','wifi-display':'display','location-mode':'location'}[ui.sub];render();return;}
@@ -1630,7 +1632,7 @@
   // with clip = {sphere: frames} a photo sphere (PANO_... too), into the Camera album.
   function cameraShoot(clip) {
     const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
-    const photo = {...ICSMedia.scene(data), id: Date.now(), name: clip?.pano || clip?.sphere ? `PANO_${stamp.slice(0, 8)}_${stamp.slice(8)}` : clip ? `VID_${stamp.slice(0, 8)}_${stamp.slice(8)}` : `IMG_${stamp}`, album: 'camera', created: Date.now(), ...(clip?.sphere ? {sphere: true, frames: clip.sphere} : clip?.pano ? {pano: true} : clip ? {video: true, duration: Math.max(1000, Math.round(clip.duration))} : {})};
+    const photo = {...ICSMedia.scene(data), id: Date.now(), name: clip?.pano || clip?.sphere ? `PANO_${stamp.slice(0, 8)}_${stamp.slice(8)}` : clip ? `VID_${stamp.slice(0, 8)}_${stamp.slice(8)}` : `IMG_${stamp}`, album: 'camera', created: Date.now(), ...(clip?.refocus ? {refocus: {focus: [.5, .5], strength: .6}} : clip?.sphere ? {sphere: true, frames: clip.sphere} : clip?.pano ? {pano: true} : clip ? {video: true, duration: Math.max(1000, Math.round(clip.duration))} : {})};
     data.photos.unshift(photo); save(); return photo;
   }
   // Camera review: LMY48Y has no Gallery, so the picture opens in the Photos viewer.
@@ -2540,6 +2542,9 @@
       case 'photos-open': { ui.photosList = ['folder', 'search', 'videos'].includes(button.dataset.list) ? button.dataset.list : 'all'; ui.photosReturn = ui.sub; const list = PhotosApp.list(photosContext()); ui.photosIndex = Math.max(0, list.findIndex(photo => String(photo.id) === id)); ui.selectedPhoto = list[ui.photosIndex]?.id; ui.sub = 'photo'; ui.photosChrome = true; render(); break; }
       case 'photos-play': ui.photosVideo = null; ui.sub = 'video'; render(); break;
       case 'photos-sphere': ui.sub = 'sphere'; render(); break;
+      // Lens Blur's viewer edits a copy; Done keeps it, Back drops it.
+      case 'photos-refocus': { const photo = PhotosApp.list(photosContext())[ui.photosIndex]; if (photo?.refocus) { ui.refocusEdit = JSON.parse(JSON.stringify(photo.refocus)); ui.sub = 'refocus'; render(); } break; }
+      case 'photos-refocus-done': { const photo = PhotosApp.list(photosContext())[ui.photosIndex]; if (photo?.refocus && ui.refocusEdit) { photo.refocus = ui.refocusEdit; save(); } ui.refocusEdit = null; ui.sub = 'photo'; render(); break; }
       case 'photos-toggle-bars': ui.photosChrome = ui.photosChrome === false; viewport.querySelector('.ph-viewer-view')?.classList.toggle('ph-bare', ui.photosChrome === false); break;
       case 'photos-menu': ui.overlay = 'photos-menu'; renderOverlay(); break;
       case 'photos-share-day': photosShare(data.photos.find(photo => String(photo.id) === id)); break;

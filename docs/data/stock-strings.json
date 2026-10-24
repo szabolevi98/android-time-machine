@@ -1837,6 +1837,11 @@
   }
  },
  "5.1.1": {
+  "refocus": {
+   "Slowly raise your device.\nKeep subject centered.": "GoogleCamera:refocus_instructions",
+   "Done": "GoogleCamera:refocus_editor_button_text_done",
+   "To adjust blur, drag slider": "GoogleCamera:refocus_slider_cling_text"
+  },
   "sphere": {
    "To start, keep dot inside circle": "GoogleCamera:hit_target_to_start",
    "Too fast": "GoogleCamera:too_fast",
