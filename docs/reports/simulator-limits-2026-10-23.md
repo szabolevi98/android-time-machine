@@ -43,6 +43,8 @@ A forráshivatkozások meglévő implementációra mutatnak; ebben a tervezési 
 
 ### Későbbi lista — nem automatikusan végrehajtandó
 
+*2026-10-24 óta a „Második kör” szakasz érvényes: 36 tétel jóváhagyva, 5 kimarad.*
+
 | Csomagok | Döntés |
 |---|---|
 | T08–T10, T12–T22, T25–T26, T28, T30–T32, T34–T40, T42–T43, T46–T47 | A leírás és a forráscsoport megmarad; ebben a magban nem kezdjük el. Külön döntés kell a megépítéshez. |
@@ -61,6 +63,63 @@ Pontosítás a „sehol sincs kész” állításhoz: a 6/7-ben a helyi nyomtat�
 A felhasználó **nem kér fix 7 sessiont, de nem szeretne 20+ sessiones munkává növő tervet**. Ezt a szűk mag és a külön későbbi lista szolgálja; a teljes 49 csomagot nem hajtjuk végre egy menetben. Nem adunk új, commit-időablakokból számolt sessionbecslést. Az első kész prioritások tényleges munkaigénye alapján kell jelezni, ha a maradék mag is jelentősen nagyobbnak bizonyul; ilyenkor a későbbi lista nem válik automatikusan kötelezővé, és az eltérésről még a terjedelem bővítése előtt számot adunk.
 
 A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálási viselkedést. A méretet a funkciók kijelölt körével tartjuk kézben. A későbbi feladatok nincsenek késznek vagy szándékosan tiltott funkciónak jelentve.
+
+### Második kör — jóváhagyva 2026-10-24
+
+A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt hagyta jóvá, ebben a sorrendben. **Ez a szakasz felülírja a fenti „Későbbi lista — nem automatikusan végrehajtandó” táblát és a T23/T24/T27/T29/T41/T45 korábbi kizárását a felsorolt tételekre.** A rendezés elve: előbb az, ami egy másik verzióban már helyben működik (a működő párja forrás és adatmodell), aztán ami részben, végül ami sehol; a két átfésülő audit a végén. A „Máshol kész” oszlop 2026-10-24-i kódkeresés eredménye; a tétel elején ellenőrizni kell. A becslés munkaórában értendő, a mag tapasztalata szerint a valós idő ennek nagyjából fele-kétharmada.
+
+**Folytatás új sessionben:** `python docs/tools/limits-status.py --next` kiírja a sorrend első, még nem kész tételét. Az adott T-feladatlap (lent, „Feladatcsomagok és készfeltételek”) adja a pontos terjedelmet és a „Kész, ha” feltételt; a közös készfeltétel a „Minden most javított mag-út közös készfeltétele” szakasz. Részben kész csomagnál (T09, T11, T44, T49, T48) csak a még hiányzó rész a feladat. Egy tétel akkor kész, ha az Állapot sora „Kész —” kezdetű.
+
+| # | Csomag | Mit | Itt hiányzik | Máshol kész (referencia) | Becslés |
+|---|---|---|---|---|---|
+| 1 | T09 | Email szervermezők, Quick responses, csengőhang (maradék) | 2.3.6, 4.0.4, 4.4.4, 5.1.1 | 4.3 `email-prefs.js` (T02) | 1–2 ó |
+| 2 | T44 | Telefon Calls/Advanced beállításfa (maradék) | 5.1.1 | 7.1.2 `ng-appprefs-phone.js` | 3–4 ó |
+| 3 | T49 | Lens Blur (maradék) | 5.1.1 | 7.1.2 `ng-refocus-editor.js` | 3–4 ó |
+| 4 | T11 | Névjegyek: Share, Place on Home screen, Contacts to display (maradék) | 4.0.4–5.1.1 | 6.0.1 `mm-contacts.js`, 7.1.2 `ng-contacts.js` | 2–3 ó |
+| 5 | T08 | Gingerbread szövegkijelölés | 2.3.6 | 2.1 `ec-browser.js` | 3–5 ó |
+| 6 | T12 | Maps/Navigation beállítások, rétegek, mentett helyek | 2.3.6–5.1.1 | 2.1 `ec-maps.js`, 6.0.1 `mm-maps.js` | 4–6 ó |
+| 7 | T13 | GB MMS-mellékletek, JB hanglejátszás | 2.3.6, 4.3 | 2.1 `ec-mms-attach.js` | 2–3 ó |
+| 8 | T15 | Car Home és Dock settings | 2.3.6 | 2.1 `ec-cardock.js` | 1–2 ó |
+| 9 | T17 | Talk beállítások, Add to chat | 2.3.6, 4.0.4 | 2.1 `ec-talk.js` | 2–3 ó |
+| 10 | T20 | YouTube műveletek és beállítások | 2.3.6–5.1.1 | 2.1 `ec-youtube.js`, 6.0.1 `mm-youtube.js`, 7.1.2 `ng-youtube*.js` | 4–6 ó |
+| 11 | T25 | Google keresés beállításai | 4.0.4–5.1.1 | 2.1 `ec-settings-extra.js`, 2.3.6, 6.0.1 `mm-google.js`, 7.1.2 `ng-google.js` | 2–4 ó |
+| 12 | T28 | Navigation/Places választók | 4.0.4 | 4.3 `jb-extra-apps.js` | 1–2 ó |
+| 13 | T32 | Hangouts és 5.1 Messenger opciók | 4.3, 4.4.4, 5.1.1 | 6.0.1 `mm-hangouts.js` | 2–4 ó |
+| 14 | T34 | Drive fájlműveletek | 4.3, 4.4.4, 5.1.1 | 6.0.1 `mm-drive.js`, 7.1.2 `ng-drive*.js` | 3–4 ó |
+| 15 | T43 | Play-appok overflow, könyvtárak, beállítások | 4.3, 4.4.4, 5.1.1 | 6.0.1 `mm-playmedia.js`, 7.1.2 `ng-music*`/`ng-movies*`/`ng-games.js` | 2–4 ó |
+| 16 | T29 | System updates és TalkBack | 4.0.4 | 6.0.1 `mm-settings*.js`, 7.1.2 `ng-accessibility.js` | 3–5 ó |
+| 17 | T10 | Névjegykép és Hangouts kamerás csatolás | 2.3.6, 4.3, 4.4.4, 5.1.1 | részben: névjegyfotó 4.0.4–4.4.4 `contact-editor.js` | 3–4 ó |
+| 18 | T21 | Market/Play Store megosztás és szűrés | 2.3.6–5.1.1 | részben: Content filtering 4.3/4.4.4 `jb-play.js`, `kk-play.js` | 3–5 ó |
+| 19 | T22 | 4.0.4 Play Music keresés, mix, beállítások | 4.0.4 | részben: keresés/beállítás 6.0.1, 7.1.2 | 2–3 ó |
+| 20 | T30 | Music effects, Wi-Fi tanúsítványtelepítés | 4.0.4–5.1.1 | részben: 7.1.2 `ng-musicfx.js`; `lp-cacerts.js`, `mm-cacerts.js`, `ng-cacerts.js` | 2–3 ó |
+| 21 | T37 | Google Now emlékeztetők | 4.4.4, 5.1.1 | részben: 7.1.2 `ng-google.js` | 2–3 ó |
+| 22 | T38 | Photos menüműveletek | 4.4.4, 5.1.1 | részben: 6.0.1 `mm-photos.js`, 7.1.2 `ng-photos.js` | 1–2 ó |
+| 23 | T45 | Nyomtatás/PDF és Chrome Add to homescreen | 4.4.4, 5.1.1 | részben: nyomtatás 6.0.1 `mm-print.js`, 7.1.2 `ng-print.js` | 3–5 ó |
+| 24 | T24 | Play Movies offline lista és beállítások | 4.0.4 | részben: beállítás 7.1.2 `ng-movies-prefs.js` | 2–3 ó |
+| 25 | T18 | Books könyvtári műveletek | 2.3.6, 4.0.4 | részben: 4.3 Play Books olvasó és mintakönyvek | 2–3 ó |
+| 26 | T46 | Gmail About oldal | 4.3, 4.4.4 | sehol | 0,5–1 ó |
+| 27 | T14 | 2.3.6 Zene: Use as ringtone, Delete | 2.3.6 | sehol | 1–2 ó |
+| 28 | T16 | 2.3.6 Google Voice beállítások | 2.3.6 | sehol | 1–2 ó |
+| 29 | T31 | Galéria videó Trim és Mute | 4.3, 4.4.4 | sehol | 2–3 ó |
+| 30 | T35 | Keep megosztás, hangfelvétel, beállítás | 4.3, 4.4.4, 5.1.1 | sehol | 2–4 ó |
+| 31 | T39 | Quickoffice fájlforrások (a T34 Drive-modelljére) | 4.4.4 | sehol | 1–2 ó |
+| 32 | T40 | Docs/Sheets/Slides listák és fájlmenük (a T34 után) | 5.1.1 | sehol | 2–3 ó |
+| 33 | T42 | News & Weather szekciókezelés | 5.1.1 | sehol | 1–2 ó |
+| 34 | T41 | Fit helyi adatbevitel | 5.1.1 | sehol | 2–4 ó |
+| 35 | T47 | Tartalékágak elérhetőségi ellenőrzése (audit) | 2.1, 6.0.1, 7.1.2 | – | 3–5 ó |
+| 36 | T48 | Az összes megmaradó üzenet egységesítése (audit, maradék) | minden verzió | – | 4–6 ó |
+
+Összesen kb. 78–129 munkaóra.
+
+**Kimarad, nem építjük meg** (2026-10-24-i döntés; egyik verzióban sincs működő párjuk, és kitalált tartalmat vagy új nagy alrendszert igényelnének): T19 Earth (3–5 ó), T36 Currents/Magazines/Newsstand (2–4 ó), T26 Google+ Messenger (2–3 ó), T23 Google+ posztolás (5–8 ó), T27 Movie Studio (5–8 ó). Ezek Állapota „Halasztott” marad.
+
+**Munkamód tételenként** (ugyanaz, mint a magban):
+1. Forrás: a saját verzió gyári képe (`_aosp/<device>`: APK, odex/dex, strings; `docs/tools/layout-xml.py`, `apk-strings.py`, `odex2dex.py`, `dex-uses.py`), az AOSP; a referencia-verzió kódja csak adatmodell és viselkedés, a UI a saját verzióé. Becslés, kitalált szöveg vagy kép nincs.
+2. Szövegek: `docs/data/stock-strings.json` csoportjai, utána `python docs/tools/stock-strings.py` (a JSON-t szövegesen kell szerkeszteni, nem újraírni); helyi `%` csere helyett `AndroidStrings.format`.
+3. Új asset: verzióelőtag (pl. `jbcam-`, `gcam-`), majd `python docs/tools/asset-inventory.py <verzió>`; két verzióban nem lehet bájtra azonos fájl.
+4. Módosított fájl: `python docs/tools/bump-version.py <verzió> <fájl>...`; új fájl kézzel `?v=1`-gyel az index.html-be.
+5. Teszt: minden javított út esete a `tests/browser/limits-regression.mjs` CASES listájába (asztali és telefonos szélességen fut, pozitív eredmény, mentés, Cancel/Back); szükség szerint `tests/*.test.cjs`; `npm test`, `node tests/browser/limits-regression.mjs <T-id>`; a `check:texts`-et ne futtasd a regresszióval egy időben.
+6. Commit (Co-Authored-By sor nélkül) és push a `main`-re; utána `python docs/tools/limits-status.py <T-id> "Kész — `commit`. …"` és külön docs-commit. VPS-deploy csak kérésre.
 
 ### Feladatcsomagok és készfeltételek
 
@@ -131,7 +190,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T08 — Szövegkijelölés a Gingerbread appokban
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #5. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 2.3.6.
 - **Forráscsoportok:** 2.3.6-01, 2.3.6-02.
@@ -140,7 +199,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T09 — Email helyi szervermezők és hiányzó prefsorok
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #1. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Részben kész — `c67a7a43`: a közös email-prefs.py miatt 4.4.4 és 5.1.1 alatt is működik a Quick responses, a csengőhang és az Incoming/Outgoing settings (`limits-regression.mjs T09` asztali és telefonszélességen zöld). Nyitott: 2.3.6 Incoming/Outgoing settings, 4.0.4 (az Email Settings ott nem az email-prefs.js-t nyitja), valamint a szervermezők tartalmi validációja (pl. port).
 - **Verziók:** 2.3.6, 4.0.4, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 2.3.6-03, 4.0.4-19, 4.4.4-01, 4.4.4-09, 5.1.1-01, 5.1.1-09.
@@ -149,7 +208,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T10 — Névjegykép és Hangouts kamerás csatolás
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #17. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 2.3.6, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 2.3.6-05, 4.3-08, 4.4.4-08, 5.1.1-08.
@@ -158,7 +217,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T11 — Névjegyek helyi menüműveletei
 
-- **Ütem:** Mag, részben; a többi későbbi lista.
+- **Ütem:** Mag, részben; a maradék a második kör #4. tétele (jóváhagyva 2026-10-24).
 - **Állapot:** A mostani rész kész — `8e1b3316`; a későbbi rész (Share, Place on Home screen, Contacts to display, Contacts Settings, Share visible contacts) halasztott. 4.0.4/4.3/4.4.4/5.1.1 Import/export (ImportExportDialogFragment): Export to storage a „Export contacts?” kérdéssel a következő szabad %05d.vcf fájlba (4.0.4: /mnt/sdcard, később /storage/emulated/0) VCardComposer-féle vCard 2.1-et ír (név, típusos számok/e-mailek/címek, ORG, TITLE, URL, NOTE, IM, SIP, becenév, ékezetek quoted-printable); a Mégse nem ír. Import from storage: egy fájlt azonnal, több esetén one/multiple/all választóval olvas; az azonos nevű névjegybe olvad (a provider aggregációja), így nem duplikál, a mezők megmaradnak. Import from SIM card: SimContacts üres SIM-mel. 4.0.4/4.3/4.4.4 Set ringtone: RingtonePickerActivity (Default ringtone, Silent/None, a kép csengőhangjai), a választás a névjegyen marad, a Mégse nem módosít. Szövegek az APK-kból. Ellenőrzés: `limits-regression.mjs T11` mind a négy verzión asztali és telefonos szélességen (export/mégse, törlés + visszaolvasás mezőegyezéssel, két fájl „all” importja duplikáció nélkül, SIM, csengőhang mentés/visszaállás/mégse), `tests/people-io.test.cjs`, `npm test` 250/250, magyar képernyőkép.
 - **Mostani rész:** 4.0.4/4.3/4.4.4/5.1.1 Import/export helyi vCard-fájllal; 4.0.4/4.3/4.4.4 Set ringtone a meglévő hangválasztóval.
 - **Mostani készfeltétel:** Helyi vCard export/import megőrzi a mintanévjegy mezőit; a csengőhang a megfelelő névjegyhez mentve visszaáll; Cancel nem ír adatot.
@@ -171,7 +230,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T12 — Maps/Navigation helyi beállítások és mentett elemek
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #6. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 2.3.6-06, 2.3.6-16, 2.3.6-17, 4.0.4-16, N01, N02, N03.
@@ -180,7 +239,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T13 — Gingerbread MMS mellékletek és Jelly Bean hanglejátszás
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #7. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 2.3.6, 4.3.
 - **Forráscsoportok:** 2.3.6-07, 2.3.6-08, 4.3-17.
@@ -189,7 +248,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T14 — 2.3.6 Zene helyi fájlműveletei
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #27. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 2.3.6.
 - **Forráscsoportok:** 2.3.6-09.
@@ -198,7 +257,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T15 — 2.3.6 Car Home és Dock settings
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #8. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 2.3.6.
 - **Forráscsoportok:** 2.3.6-10, 2.3.6-14.
@@ -207,7 +266,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T16 — 2.3.6 Google Voice helyi beállítások
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #28. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 2.3.6.
 - **Forráscsoportok:** 2.3.6-13.
@@ -216,7 +275,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T17 — Talk helyi beszélgetés- és beállításműveletei
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #9. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 2.3.6, 4.0.4.
 - **Forráscsoportok:** 2.3.6-15, 4.0.4-08.
@@ -225,7 +284,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T18 — Books helyi könyvtári műveletek
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #25. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 2.3.6, 4.0.4.
 - **Forráscsoportok:** 2.3.6-18, 4.0.4-10.
@@ -234,7 +293,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T19 — Earth helyi eszközök és beállítások
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Kimarad — a 2026-10-24-i döntés szerint nem építjük meg (lásd „Második kör”).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 2.3.6-18, 4.0.4-16, 4.3-20, 4.4.4-20, 5.1.1-27.
@@ -243,7 +302,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T20 — YouTube helyi műveletek
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #10. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 2.3.6-19, 4.0.4-09, 4.3-20, 4.4.4-20, 5.1.1-27.
@@ -252,7 +311,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T21 — Market/Play Store helyi megosztás és szűrés
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #18. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 2.3.6-21, 4.0.4-06, 4.3-11, 4.4.4-11, 5.1.1-11, 5.1.1-34.
@@ -261,7 +320,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T22 — 4.0.4 Play Music helyi keresés, mix és beállítások
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #19. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.0.4.
 - **Forráscsoportok:** 4.0.4-05.
@@ -270,7 +329,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T23 — Google+ helyi posztolás és beállítások
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Kimarad — a 2026-10-24-i döntés szerint nem építjük meg (lásd „Második kör”).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.0.4, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.0.4-07, 4.3-14, 4.3-20, 4.4.4-14, 4.4.4-20, 5.1.1-14, 5.1.1-27.
@@ -279,7 +338,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T24 — 4.0.4 Play Movies helyi offline kezelés
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #24. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.0.4.
 - **Forráscsoportok:** 4.0.4-11.
@@ -288,7 +347,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T25 — Google keresés helyi beállítások
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #11. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.0.4, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.0.4-12, 4.3-14, 4.4.4-14, 5.1.1-14.
@@ -297,7 +356,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T26 — 4.0.4/4.3 Google+ Messenger helyi beszélgetések
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Kimarad — a 2026-10-24-i döntés szerint nem építjük meg (lásd „Második kör”).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.0.4, 4.3.
 - **Forráscsoportok:** 4.0.4-13, 4.3-22.
@@ -306,7 +365,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T27 — 4.0.4/4.3 Movie Studio helyi projektek
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Kimarad — a 2026-10-24-i döntés szerint nem építjük meg (lásd „Második kör”).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.0.4, 4.3.
 - **Forráscsoportok:** 4.0.4-14, 4.3-22.
@@ -315,7 +374,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T28 — 4.0.4 Navigation/Places helyi választók
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #12. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.0.4.
 - **Forráscsoportok:** 4.0.4-15.
@@ -324,7 +383,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T29 — 4.0.4 System updates és TalkBack helyi felülete
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #16. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.0.4.
 - **Forráscsoportok:** 4.0.4-17.
@@ -333,7 +392,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T30 — Settings dev-info valódi helyi céljai
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #20. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.0.4, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.0.4-18, 5.1.1-18, N04, N05.
@@ -342,7 +401,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T31 — 4.3/4.4.4 Galéria videó Trim és Mute
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #29. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.3, 4.4.4.
 - **Forráscsoportok:** 4.3-16, 4.4.4-15.
@@ -351,7 +410,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T32 — Hangouts és 5.1 Messenger helyi opciók
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #13. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.3-07, 4.4.4-07, 5.1.1-07, 5.1.1-36.
@@ -369,7 +428,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T34 — 4.3–5.1.1 Drive helyi fájlműveletek
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #14. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.3-18, 4.4.4-19, 5.1.1-25.
@@ -378,7 +437,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T35 — Keep helyi megosztás, felvétel és beállítás
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #30. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.3-19, 4.4.4-20, 5.1.1-26.
@@ -387,7 +446,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T36 — Currents/Magazines/Newsstand helyi tartalmi utak
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Kimarad — a 2026-10-24-i döntés szerint nem építjük meg (lásd „Második kör”).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.3-21, 4.4.4-21, 5.1.1-32.
@@ -396,7 +455,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T37 — 4.4.4/5.1.1 Google Now emlékeztetők
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #21. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.4.4-18, 5.1.1-24.
@@ -405,7 +464,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T38 — 4.4.4/5.1.1 Photos helyi menüműveletek
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #22. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.4.4-17, 5.1.1-21.
@@ -414,7 +473,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T39 — 4.4.4 Quickoffice helyi fájlforrások
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #31. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.4.4.
 - **Forráscsoportok:** 4.4.4-22.
@@ -423,7 +482,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T40 — 5.1.1 Docs/Sheets/Slides listák és fájlmenük
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #32. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 5.1.1.
 - **Forráscsoportok:** 5.1.1-29, 5.1.1-30.
@@ -432,7 +491,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T41 — 5.1.1 Fit helyi adatbevitel
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #34. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 5.1.1.
 - **Forráscsoportok:** 5.1.1-31.
@@ -441,7 +500,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T42 — 5.1.1 News & Weather helyi szekciókezelés
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #33. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 5.1.1.
 - **Forráscsoportok:** 5.1.1-28.
@@ -450,7 +509,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T43 — 4.3–5.1.1 Play-appok helyi overflow és könyvtárak
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #15. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.3-12, 4.4.4-12, 4.4.4-14, 5.1.1-12, 5.1.1-14.
@@ -459,7 +518,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T44 — 5.1.1 Telefon beállítások és Import/export
 
-- **Ütem:** Mag, részben; a többi későbbi lista.
+- **Ütem:** Mag, részben; a maradék a második kör #2. tétele (jóváhagyva 2026-10-24).
 - **Állapot:** A mostani rész kész — `8e1b3316`; a későbbi rész (Calls / Advanced teljes beállításfa) halasztott. Az 5.1.1 Telefon menüjéből megnyílik a T11 Import/export és a GoogleDialer Settings (General, Calls, Advanced fejlécek a GoogleDialerSettingsActivity szerint; Calls/Advanced korlát). General: Sort by és Name format (a Telefon és a Névjegyek listáját rendezi és „Vezetéknév, Utónév” formában írja), Phone ringtone (a rendszer csengőhangja és választója), Dialpad tones és Also vibrate for calls (a rendszerbeállítás kulcsai), Quick responses (Telecom RespondViaSmsSettings: négy szerkeszthető válasz). Call History / New contact változatlan. Ellenőrzés: `limits-regression.mjs T44` asztali és telefonos szélességen, `tests/people-io.test.cjs`, `npm test` 250/250.
 - **Mostani rész:** 5.1.1 Telefon Import/export a T11 helyi folyamatára kötve; Settings belépés, valamint a gyári Dialer helyi megjelenítési/rendezési, hang/rezgés és gyorsválasz-preferenciái.
 - **Mostani készfeltétel:** A Telefonból megnyílik a helyi import/export és a saját Settings; a felsorolt preferenciák menthetők és hatnak a helyi megjelenítésre/hang/gyorsválasz-modellre; History és New contact változatlanul működik.
@@ -472,7 +531,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T45 — 4.4.4/5.1.1 helyi nyomtatási folyamat és webshortcut
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #23. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.4.4-03, 4.4.4-15, 4.4.4-17, 5.1.1-03, 5.1.1-21, 5.1.1-22, 5.1.1-30.
@@ -481,7 +540,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T46 — Gmail helyi About oldal
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #26. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 4.3, 4.4.4.
 - **Forráscsoportok:** 4.3-05, 4.4.4-05.
@@ -490,7 +549,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T47 — Tartalékágak egyszeri elérhetőségi ellenőrzése
 
-- **Ütem:** Későbbi lista — külön fejlesztési döntés szükséges.
+- **Ütem:** Második kör, #35. tétel (jóváhagyva 2026-10-24).
 - **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
 - **Verziók:** 2.1, 6.0.1, 7.1.2.
 - **Forráscsoportok:** 2.1-02, 2.1-03, 2.1-04, 6.0.1-01, 6.0.1-02, 6.0.1-03, 6.0.1-04, 7.1.2-01, 7.1.2-02, 7.1.2-03, 7.1.2-04.
@@ -499,7 +558,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T48 — Elutasító szövegek és regressziós kör lezárása
 
-- **Ütem:** Mag, részben; a többi későbbi lista.
+- **Ütem:** Mag, részben; a maradék a második kör #36. tétele (jóváhagyva 2026-10-24).
 - **Állapot:** A mostani rész kész (fb8f1af0): a mag minden útja a közös tests/browser/limits-regression.mjs-ben, pozitív eredménnyel, mentéssel és Cancel/Back ellenőrzéssel; a teljes kör 2026-10-24-én 54 futásból (27 eset × asztali/telefon) zöld (a T07 egyetlen asztali futása egy átmeneti ERR_NO_BUFFER_SPACE hálózati hiba miatt bukott, egyedül újrafuttatva mind a 6 T07-futás zöld). Az érintett appokban (Névjegyek menük és Import/export, Email, Naptár, 4.4 Galéria Print, 5.1 kamera Lens Blur) a fordítatlan „Not available in this simulator” és „… capture is not simulated” helyett a lefordított közös „This feature is not part of the simulator.” kulcs áll; a megszűnt 4.4 Photo Sphere elutasítás kikerült az i18n.js-ből. Ellenőrzés: tests/limits-messages.test.cjs, npm test 252/252, text-check 4.4.4/5.1.1 0 hiányzó kulcs. Későbbi rész: a többi app (pl. 4.0.4/4.3 Üzenetek menü) azonos értelmű üzeneteinek egységesítése, halasztott.
 - **Mostani rész:** Közös regressziós teszt a mag útjaihoz; kizárólag a javított appokban érintett elutasító szövegek közös, lefordított kulcsainak rendezése. Nem teljes, nyolcverziós szöveg-újraaudit.
 - **Mostani készfeltétel:** Minden elkészült mag-út pozitív eredményre, mentésre, Cancel/Back működésre is tesztelt; az érintett üzenetkulcsok a projekt öt nyelvén feloldhatók; a halasztott tétel nem szerepel kész/skipelt sikernek jelentett funkcióként.
@@ -512,7 +571,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 #### T49 — 4.4.4 Photo Sphere és 5.1.1 Photo Sphere/Lens Blur
 
-- **Ütem:** Mag, részben; a többi későbbi lista.
+- **Ütem:** Mag, részben; a maradék a második kör #3. tétele (jóváhagyva 2026-10-24).
 - **Állapot:** A mostani rész kész (fb8f1af0): 4.4.4 és 5.1.1 Photo Sphere a módválasztóból — LightCycle célpontjai (3×8 pont 45°-onként), a célkeresztben/körben tartott pont kockát rögzít, a 4.4 Undo, az 5.1 Discard és Back, valamint a módváltás nem ment; Done két kocka után feldolgoz és PANO_ ekvirektanguláris gömbképet ment (a le nem fedett rész szürke); a 4.4 Galéria View Photo Sphere gombja, az 5.1 Photos érintésre (Loading photo sphere…) gömbnézetet nyit, húzással körülnézhető, Back visszavisz. Ellenőrzés: tests/photo-sphere.test.cjs; limits-regression T49 (4.4.4, 5.1.1) asztali és telefonos szélességen zöld; en/hu képernyőképek. A Lens Blur a későbbi rész, halasztott.
 - **Mostani rész:** 4.4.4 és 5.1.1 Photo Sphere irányított helyi felvétel, megszakítás, mentett kép és gömbnézet a már meglévő 7.1-es guided capture modell korabeli megfelelőjeként.
 - **Mostani készfeltétel:** A módválasztóból végigjárható Photo Sphere; a mentett eredmény a könyvtárban megnyitható és megfelelő gömbnézetet kap; Cancel nem ment.
