@@ -114,7 +114,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 #### T06 — 5.1.1 Gmail általános fájlcsatolás
 
 - **Ütem:** Mag.
-- **Állapot:** Nyitott — aktuális fejlesztési kör.
+- **Állapot:** Kész — `0f8e206c`. Az 5.1.1 Gmail és Email „Attach file” a DocumentsUI 5.1.1 ACTION_GET_CONTENT választóját nyitja (lp-docpicker.js): „Open from” gyökérfiók (Recent, Internal storage ha látszik, Images, Videos, Audio, Downloads a RootsAdapter sorrendjében), MediaDocumentsProvider vödrök és előadó/album/dal fa, morzsamenü, Sort by, Grid/List view, Show internal storage, Show file size, keresés az Internal storage-ban, más típusú dokumentum letiltva, az utolsó hely alkalmazásonként megjegyezve; a Vissza a veremben lép, majd fájl nélkül visszatér. A kép compose_attachment_tile csempeként, más fájl attachment.xml sorként jelenik meg névvel és AttachmentUtils-mérettel, eltávolító gombbal; az elküldött levél megtartja. Az Attach picture megmaradt; a háttérkép-választó és a Keep „Pick image” ugyanezt a választót használja image/* szűréssel. Ellenőrzés: `limits-regression.mjs T06` asztali és telefonos szélességen (kép + hangfájl csatolása, név/méret, verem visszaállítása, Vissza/Mégse, törlés, piszkozat tárgya megmarad, elküldött levél), `tests/lp-docpicker.test.cjs`, `npm test` 248/248, magyar képernyőképek.
 - **Verziók:** 5.1.1.
 - **Forráscsoportok:** 5.1.1-22.
 - **Elkészítendő és határ:** Attach file bekötése az adott verzió helyi fájlválasztójába; több fájltípus adatainak átadása, csatolmány megjelenítése és törlése. Az Attach picture megmarad.
