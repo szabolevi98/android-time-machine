@@ -191,7 +191,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T08 — Szövegkijelölés a Gingerbread appokban
 
 - **Ütem:** Második kör, #5. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `dd7fd3fb`. 2.3.6 Böngésző Select text és Google Mail beszélgetés Select text: a WebView.emulateShiftHeld módja szerint a következő érintés húzással kijelöl (0x40ff33cc), felengedéskor másol a keretrendszer „Text copied to clipboard.” toastjával (a 2.1 Böngésző mintájára); élesítés nélküli húzás nem másol. Mellékesen: a 2.3.6 Google Mail menüikonjai a drawable-hdpi-v9 (Gingerbread) változatra cserélve, a hiányzó Not important ikon pótolva. Ellenőrzés: limits-regression T08 asztali/telefon zöld; npm test 254/254.
 - **Verziók:** 2.3.6.
 - **Forráscsoportok:** 2.3.6-01, 2.3.6-02.
 - **Elkészítendő és határ:** 2.3.6 böngésző Select text és Gmail beszélgetés Select text: a megjelenített szöveg kijelölése és másolási művelete. Nem a böngésző teljes Android-szövegkezelő rendszerének újraírása.
