@@ -114,3 +114,31 @@
 .chr-globe img{width:calc(16.0045 * var(--dp));height:calc(16.0045 * var(--dp))}
 .chr-devices img{width:calc(48.0023 * var(--dp));height:calc(48.0023 * var(--dp))}
 .chr-card-ntp img.chr40-card-incognito{width:calc(70.6402 * var(--dp));height:auto}
+/* Settings pages (chrome.js settings()): Preference icons (24 dp) in the 56 dp start column, TextMessagePreference
+   texts, the empty site list, the Material switches of the action bar and of read_write_toggle (36 x 14 dp track,
+   20 dp thumb; accent #03a9f4), FontSizePreview's 180 dp box (#e6e6e6, 1 dp #d2d2d2), the Text scaling seek bar with its
+   percentage, data_reduction_statistics_layout's 50 sp bold figure, and the dialogs' message. */
+.screen .chr-pref.with-icon{padding-left:calc(16 * var(--dp))}
+.chr-pref-icon{flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin-right:calc(32 * var(--dp));opacity:.54}
+.chr-pref-note{margin:0;padding:calc(16 * var(--dp));font:400 calc(14 * var(--dp))/1.45 Roboto,sans-serif;color:#0000008a;white-space:pre-line}
+.chr-pref-empty{margin:0;padding:calc(24 * var(--dp)) calc(16 * var(--dp));font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#0000008a;text-align:center}
+.chr-pref-switch{flex:none;position:relative;display:block;width:calc(36 * var(--dp));height:calc(14 * var(--dp));margin-left:calc(16 * var(--dp));border-radius:calc(7 * var(--dp));background:#00000042}
+.chr-pref-switch>i{position:absolute;top:calc(-3 * var(--dp));left:calc(-2 * var(--dp));width:calc(20 * var(--dp));height:calc(20 * var(--dp));border-radius:50%;background:#f1f1f1;box-shadow:0 calc(1 * var(--dp)) calc(3 * var(--dp)) #0000006b;transition:left .15s}
+.chr-pref-switch.on{background:#03a9f480}
+.chr-pref-switch.on>i{left:calc(18 * var(--dp));background:#03a9f4}
+.chr-pref-switch.bar{margin:0;background:#ffffff4d}
+.chr-pref-switch.bar>i{background:#bdbdbd}
+.chr-pref-switch.bar.on{background:#03a9f480}
+.chr-pref-switch.bar.on>i{background:#03a9f4}
+.screen .chr-pref-barswitch{flex:none;display:grid;place-items:center;height:100%;padding:0 calc(16 * var(--dp));border:0;background:none}
+.chr-pref-preview{padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(8 * var(--dp))}
+.chr-pref-preview b,.chr-pref-seek b{display:block;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.chr-pref-preview p{height:calc(180 * var(--dp));margin:calc(8 * var(--dp)) 0 0;padding:calc(5 * var(--dp));overflow:hidden;border:calc(1 * var(--dp)) solid #d2d2d2;background:#e6e6e6;color:#000000de;font-family:Roboto,sans-serif;line-height:1.25}
+.chr-pref-seek{padding:calc(8 * var(--dp)) calc(16 * var(--dp)) calc(16 * var(--dp))}
+.chr-pref-seek label{display:flex;align-items:center;gap:calc(8 * var(--dp));margin-top:calc(8 * var(--dp))}
+.chr-pref-seek span{flex:none;min-width:calc(40 * var(--dp));font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#0000008a}
+.chr-pref-seek input{flex:1;min-width:0;accent-color:#03a9f4}
+.chr-pref-stats{display:flex;flex-direction:column;padding:0 calc(16 * var(--dp)) calc(16 * var(--dp));font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#0000008a}
+.chr-pref-stats b{font:700 calc(50 * var(--dp)) Roboto,sans-serif;color:#03a9f4}
+.chr-dlg-message p{margin:0;padding:0 calc(24 * var(--dp)) calc(16 * var(--dp));font:400 calc(16 * var(--dp))/1.4 Roboto,sans-serif;color:#0000008a}
+.web-engine{margin:0 0 calc(8 * var(--dp));font:700 calc(20 * var(--dp)) Roboto,sans-serif;color:#555}

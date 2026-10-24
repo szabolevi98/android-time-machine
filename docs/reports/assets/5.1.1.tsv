@@ -110,8 +110,17 @@ versions/5.1.1/assets/chr40-ic_suggestion_page.png	f6b4c676d92671aa	same pixels	
 versions/5.1.1/assets/chr40-incognito_splash.png	671d87fe595b0cc5	copy	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/incognito_splash.png	drawable-xxhdpi-v4		671d87fe595b0cc5
 versions/5.1.1/assets/chr40-omnibox_https_valid.png	48fa21d3f9563509	copy	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/omnibox_https_valid.png	drawable-xxhdpi-v4		48fa21d3f9563509
 versions/5.1.1/assets/chr40-pageinfo_info.png	830688c965846292	copy	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/pageinfo_info.png	drawable-xxhdpi-v4		830688c965846292
+versions/5.1.1/assets/chr40-permission_cookie.png	ef27c3bf5aa65f48	copy	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/permission_cookie.png	drawable-xxhdpi-v4		ef27c3bf5aa65f48
+versions/5.1.1/assets/chr40-permission_javascript.png	9d3b83de6b617181	copy	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/permission_javascript.png	drawable-xxhdpi-v4		9d3b83de6b617181
+versions/5.1.1/assets/chr40-permission_location.png	607fb0d540fedf87	copy	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/permission_location.png	drawable-xxhdpi-v4		607fb0d540fedf87
+versions/5.1.1/assets/chr40-permission_media.png	613debd5dc89bd0d	copy	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/permission_media.png	drawable-xxhdpi-v4		613debd5dc89bd0d
+versions/5.1.1/assets/chr40-permission_popups.png	88d3703d9fedddd9	copy	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/permission_popups.png	drawable-xxhdpi-v4		88d3703d9fedddd9
+versions/5.1.1/assets/chr40-permission_protected_media.png	db23f2932779feff	copy	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/permission_protected_media.png	drawable-xxhdpi-v4		db23f2932779feff
 versions/5.1.1/assets/chr40-recent_laptop.png	015ff6a0b22a731a	same pixels	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/recent_laptop.png	drawable-xxhdpi-v4		fa03a586ecbdd34d
 versions/5.1.1/assets/chr40-recent_phone.png	4ede221860c3f092	same pixels	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/recent_phone.png	drawable-xxhdpi-v4		97ea09871391eea4
+versions/5.1.1/assets/chr40-settings_all_sites.png	b43288a02a6a6c74	copy	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/settings_all_sites.png	drawable-xxhdpi-v4		b43288a02a6a6c74
+versions/5.1.1/assets/chr40-settings_storage.png	4522d3631eae229f	copy	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/settings_storage.png	drawable-xxhdpi-v4		4522d3631eae229f
+versions/5.1.1/assets/chr40-settings_translate.png	a1d3d6f952d443fa	copy	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/settings_translate.png	drawable-xxhdpi-v4		a1d3d6f952d443fa
 versions/5.1.1/assets/chrome.png	a7bd6cfabfa90aff	same pixels	shamu:/system/app/Chrome/Chrome.apk!res/mipmap-xxxhdpi-v4/app_icon.png	mipmap-xxxhdpi-v4		54e3f0cf8f26918b
 versions/5.1.1/assets/clock-ic_menu_add.png	71b6b64679925e52	resized	shamu:/system/app/PlusOne/PlusOne.apk!res/drawable-xxhdpi-v4/ic_add_pressed.png	drawable-xxhdpi-v4	resized 96×96 → 48×48, mean difference 0.25	d8222ef75b72544c
 versions/5.1.1/assets/clock.png	39cef4c798e39cb2	same pixels	shamu:/system/app/DeskClockGoogle/DeskClockGoogle.apk!res/mipmap-xxxhdpi-v4/ic_launcher_alarmclock.png	mipmap-xxxhdpi-v4		9fc433feaaede5c5

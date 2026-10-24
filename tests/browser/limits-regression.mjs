@@ -384,6 +384,84 @@ const gmailAttachLP = async h => {
       && await h.ev(`(()=>{if(!document.querySelector('#viewport .ldp-drawer'))document.querySelector('#viewport .ldu-nav').click();return [...document.querySelectorAll('#viewport .ldp-root')].map(b=>b.dataset.id).join()})()`) === 'recent,images,downloads');
   } else h.check('the wallpaper picker opens', false);
 };
+
+// Chrome's local settings pages (T07): Search engine changes where the omnibox searches, Text scaling scales the web
+// page and drags Force enable zoom along, the content toggles and the action-bar switches save, and the reload keeps
+// them. spec: the version's page ids, the switches (with the page that leads to each), and its extra pages.
+const chromeSettings = spec => async h => {
+  const prefs = () => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));return JSON.parse(localStorage.getItem(k)).chromePrefs||{}})()`);
+  const settings = async () => {
+    await h.openApp('chrome');
+    h.check('opens Chrome', await h.until(`!!document.querySelector('#viewport [data-action="browser-menu"]')`));
+    await h.tap('#viewport [data-action="browser-menu"]');
+    await h.tap('[data-action="chrome-settings"]');
+    h.check('Settings opens', await h.until(`!!document.querySelector('#viewport .chr-prefs')`));
+  };
+  const page = async (id, label = id) => {
+    await h.tap(`#viewport .chr-pref[data-action="chrome-pref"][data-id="${id}"]`);
+    h.check(`${label} opens its page`, await h.until(`document.querySelector('#viewport .chr-prefs')?.dataset.chrPage === ${JSON.stringify(id)}`));
+  };
+  const summary = id => h.ev(`document.querySelector('#viewport .chr-pref[data-id="${id}"] small')?.textContent || ''`);
+  const up = () => h.tap('#viewport .chr-pref-up');
+  await settings();
+  h.check('no Home page row (no partner home page on the image)', !(await h.ev(`!!document.querySelector('#viewport .chr-pref[data-id="homepage"]')`)));
+  await page('search_engine');
+  h.check('the engines are listed, Google current', await h.ev(`document.querySelectorAll('#viewport [data-action="chrome-engine"]').length`) === spec.engines && /\S/.test(await h.ev(`document.querySelector('#viewport [data-action="chrome-engine"][data-id="0"] small')?.textContent || ''`)));
+  const bing = spec.bing ?? 1;
+  await h.tap(`#viewport [data-action="chrome-engine"][data-id="${bing}"]`);
+  h.check('picking Bing makes it current', await h.until(`/\\S/.test(document.querySelector('#viewport [data-action="chrome-engine"][data-id="${bing}"] small')?.textContent || '') && !document.querySelector('#viewport [data-action="chrome-engine"][data-id="0"] small')`));
+  await up();
+  h.check('the header shows the engine', /^Bing \(bing\.com\)$/.test(await summary('search_engine')), await summary('search_engine'));
+  await page('accessibility');
+  await h.drag('#viewport [data-chr-seek]', 90, 0);
+  const scale = Number((await h.ev(`document.querySelector('#viewport [data-chr-seek]').value`)));
+  h.check('the slider raises Text scaling', scale >= 130 && (await prefs()).text_scale === scale / 100, String(scale));
+  h.check('Force enable zoom follows past 130 %', await h.ev(`document.querySelector('#viewport .chr-pref[data-id="force_enable_zoom"] .chr-pref-check').classList.contains('on')`));
+  await up();
+  await page(spec.content, 'Content settings');
+  await h.tap('#viewport .chr-pref[data-action="chrome-pref-toggle"][data-id="enable_javascript"]');
+  h.check('JavaScript turns off', (await prefs()).enable_javascript === false);
+  for (const [id, label] of spec.extraPages || []) { await page(id, label); await up(); }
+  if (spec.external) {
+    await h.tap('#viewport .chr-pref[data-action="chrome-pref-ext"]');
+    h.check('the location row opens the location settings page', await h.until(spec.external));
+    await h.key('Escape');
+    h.check('Back returns to Content settings', await h.until(`document.querySelector('#viewport .chr-prefs')?.dataset.chrPage === ${JSON.stringify(spec.content)}`));
+  }
+  if (spec.siteToggle) {
+    await page('site:location', 'Location');
+    await h.tap('#viewport .chr-pref[data-action="chrome-pref-toggle"][data-id="site_location"]');
+    h.check('the Location toggle blocks', await h.until(`document.querySelector('#viewport .chr-pref[data-id="site_location"] small')?.textContent === 'Blocked'`));
+    await up();
+    h.check('Site settings shows Blocked', await summary('site:location') === 'Blocked');
+  }
+  await up();
+  for (const [via, id, key, confirm] of spec.switches) {
+    if (via) await page(via);
+    await page(id);
+    const before = await h.ev(`document.querySelector('#viewport .chr-pref-barswitch')?.getAttribute('aria-checked')`);
+    await h.tap('#viewport .chr-pref-barswitch');
+    if (confirm) { h.check(`${id} asks first`, await h.until(`!!document.querySelector('#viewport .chr-dlg-message')`)); await h.tap('#viewport .chr-dlg-message [data-id="ok"]'); }
+    h.check(`the ${id} switch saves`, await h.until(`document.querySelector('#viewport .chr-pref-barswitch')?.getAttribute('aria-checked') === ${JSON.stringify(before === 'true' ? 'false' : 'true')}`) && (await prefs())[key] === (before !== 'true'), JSON.stringify(await prefs()));
+    await up(); if (via) await up();
+  }
+  for (const [id, key] of spec.checks || []) {
+    await page(id);
+    await h.tap(`#viewport .chr-pref[data-action="chrome-pref-toggle"][data-id="${key}"]`);
+    h.check(`${key} turns on`, (await prefs())[key] === true);
+    await up();
+  }
+  const kept = await prefs();
+  h.check('the reload keeps the settings', await h.reload() && JSON.stringify(await prefs()) === JSON.stringify(kept));
+  // The omnibox now searches with Bing, and the page's text is scaled.
+  await h.openApp('chrome');
+  h.check('Chrome reopens', await h.until(`!!document.querySelector('#viewport .chr-omnibox input')`));
+  await h.type('#viewport .chr-omnibox input', 'android lollipop');
+  await h.send('Input.dispatchKeyEvent', {type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, text: '\r'});
+  await h.send('Input.dispatchKeyEvent', {type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13});
+  h.check('the search goes to Bing', await h.until(`document.querySelector('#viewport .web-engine')?.textContent === 'Bing'`));
+  h.check('the page text is scaled', await h.ev(`document.querySelector('#viewport .chr-app .browser-page')?.style.fontSize`) === `${scale}%`);
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -444,6 +522,9 @@ const CASES = [
   {id: 'T03', version: '4.3', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
   {id: 'T03', version: '4.4.4', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
   {id: 'T03', version: '5.1.1', name: 'Calendar › Settings: General, Events from Gmail, Sync', run: calendarSettingsLP},
+  {id: 'T07', version: '5.1.1', name: 'Chrome › local settings pages', run: chromeSettings({engines: 5, content: 'content', siteToggle: true, extraPages: [['sites:all', 'All sites'], ['protected', 'Protected content'], ['translate', 'Google Translate'], ['sites:storage', 'Storage']], switches: [['', 'tabs_apps', 'document_mode', true], ['', 'bandwidth', 'reduce_data'], ['privacy', 'dnt', 'dnt'], ['privacy', 'contextual', 'contextual_search']]})},
+  {id: 'T07', version: '4.4.4', name: 'Chrome › local settings pages', run: chromeSettings({engines: 5, content: 'content', extraPages: [['sites:all', 'Website settings']], external: `!!document.querySelector('#viewport .settings-app') && !document.querySelector('#viewport .chr-prefs')`, switches: [['bandwidth', 'reduce', 'reduce_data'], ['privacy', 'dnt', 'dnt'], ['content', 'protected', 'protected_content'], ['content', 'translate', 'translate']]})},
+  {id: 'T07', version: '4.3', name: 'Chrome › local settings pages', run: chromeSettings({engines: 3, bing: 2, content: 'content', extraPages: [['sites:all', 'Website settings']], external: `!!document.querySelector('#viewport .gms-app') && !document.querySelector('#viewport .chr-prefs')`, switches: [['bandwidth', 'reduce', 'reduce_data'], ['privacy', 'dnt', 'dnt'], ['content', 'translate', 'translate']], checks: [['devtools', 'enable_remote_debugging']]})},
   {id: 'T06', version: '5.1.1', name: 'Gmail › Attach file through DocumentsUI', run: gmailAttachLP},
   {id: 'T05', version: '4.0.4', name: 'Camera › Video and Panorama', run: cameraModesICS},
   {id: 'T04', version: '2.3.6', name: 'Google Mail › Settings: account, confirm actions, label sync', run: gmailSettingsGB},

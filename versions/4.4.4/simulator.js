@@ -751,6 +751,7 @@
   const officeFiles = () => data.driveFiles || StockApps.FILES;
   const QO = key => { const row = window.StockStrings?.quickoffice?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : key; };
   function navigateBack() {
+    if (ui.chromeReturn && ui.view === ui.chromeReturn.view && ui.sub === ui.chromeReturn.sub && !ui.overlay) { const back = ui.chromeReturn; ui.chromeReturn = null; openApp('chrome'); ui.sub = 'chrome-settings'; ui.chromePrefStack = back.stack; render(); return; }
     if (ui.view === 'google-settings' && GMSSettings.back(ui)) { render(); return; }
     if (ui.view === 'quickoffice' && ui.sub === 'qo-new' && !ui.overlay) { ui.sub = ''; render(); return; }
     if (ui.view === 'maps' && !ui.overlay && (ui.mapsRoute || ui.navRun) && MapsRoute.back(mrContext())) return;
@@ -803,8 +804,8 @@
     // Gmail settings: the dialogs, then the pages, then back to the mail.
     if (ui.view === 'gmail' && ui.sub === 'gm-settings' && GmailApp.prefBack(ui, {data, root: viewport, toast})) { render(); return; }
     if (ui.view === 'gmail' && ui.sub === 'gm-settings') { if (ui.gmPrefList || ui.gmSignature !== undefined) { ui.gmPrefList = ''; ui.gmSignature = undefined; } else if (ui.gmPref === 'categories') ui.gmPref = 'account'; else if (ui.gmPref) ui.gmPref = ''; else ui.sub = ''; render(); return; }
-    if (['browser', 'chrome'].includes(ui.view) && (ui.chromeClear || ui.chromeList || ui.chromePrefMenu) && !ui.chromeClear?.busy) { ui.chromeClear = null; ui.chromeList = ''; ui.chromePrefMenu = false; render(); return; }
-    if (['browser', 'chrome'].includes(ui.view) && ui.sub === 'chrome-settings') { if (ui.chromePref) ui.chromePref = ''; else ui.sub = ''; render(); return; }
+    if (['browser', 'chrome'].includes(ui.view) && (ui.chromeClear || ui.chromeList || ui.chromePrefMenu || ui.chromeConfirm) && !ui.chromeClear?.busy) { ui.chromeClear = null; ui.chromeList = ''; ui.chromePrefMenu = false; ui.chromeConfirm = ''; render(); return; }
+    if (['browser', 'chrome'].includes(ui.view) && ui.sub === 'chrome-settings') { if (!ChromeApp.prefBack(ui)) ui.sub = ''; render(); return; }
     if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserFind !== undefined) { ui.browserFind = undefined; render(); return; }
     if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserIndex > 0) { browserBack(); return; }
     if (ui.view === 'settings' && ['easter', 'dessert', 'about-status', 'about-legal', 'about-safety'].includes(ui.sub)) { ui.sub = 'about'; render(); return; }
@@ -1144,7 +1145,7 @@
     const value = raw.trim().replace(/^https?:\/\//i, '').replace(/\/$/, '');
     if (!value) return 'www.google.com';
     if (value.startsWith('search:') || value.startsWith('chrome://')) return value;
-    if (value.includes(' ') || !value.includes('.')) return `search:${value}`;
+    if (value.includes(' ') || !value.includes('.')) return ui.browserOwner === 'chrome' ? ChromeApp.searchUrl(value, {data, locale: i18n.locale()}) : `search:${value}`;
     return value.toLowerCase();
   }
   function syncBrowserState() {
@@ -1197,9 +1198,10 @@
   function browserLink(url, title, subtitle = '') { return `<div class="web-result"><a href="#" data-action="browser-link" data-url="${safe(url)}"><strong>${safe(title)}</strong></a><small>${safe(url)}</small><p>${safe(subtitle)}</p></div>`; }
   function renderWebsite(url) {
     if (url === 'www.google.com') return `<div class="google-logo"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></div><form class="search-form" data-form="web-search"><input name="query" aria-label="Search the web" placeholder="Search the web" required><button type="submit">Search</button></form><div class="browser-tiles">${[['www.android.com','Android'],['en.wikipedia.org/wiki/Android','Wikipedia'],['news.example','News'],['retro.example','2014 Web']].map(item => `<button data-action="browser-link" data-url="${item[0]}">${item[1]}</button>`).join('')}</div><p style="font-size:calc(12.1413 * var(--dp));color:#888;margin-top:calc(26.4901 * var(--dp))">Offline demo pages · 2014</p>`;
-    if (url.startsWith('search:')) {
-      const term = url.slice(7);
-      return `<h2>Search results</h2><p>Results for <strong>${safe(term)}</strong></p>${browserLink('www.android.com', 'Android – Discover Android 4.4, KitKat', 'KitKat brings immersive mode, a smarter Phone app, printing and Tap & pay to more devices.')}${browserLink('en.wikipedia.org/wiki/Android', 'Android (operating system) – Wikipedia', 'An overview of the Android mobile operating system.')}${browserLink('news.example', 'Tech News', `Stories related to ${term}.`)}`;
+    const engineHit = window.ChromeApp?.searchResult(url);
+    if (url.startsWith('search:') || engineHit) {
+      const term = engineHit ? engineHit.term : url.slice(7);
+      return `${engineHit ? `<p class="web-engine">${safe(engineHit.name)}</p>` : ''}<h2>Search results</h2><p>Results for <strong>${safe(term)}</strong></p>${browserLink('www.android.com', 'Android – Discover Android 4.4, KitKat', 'KitKat brings immersive mode, a smarter Phone app, printing and Tap & pay to more devices.')}${browserLink('en.wikipedia.org/wiki/Android', 'Android (operating system) – Wikipedia', 'An overview of the Android mobile operating system.')}${browserLink('news.example', 'Tech News', `Stories related to ${term}.`)}`;
     }
     if (url.includes('android.com')) return `<h2 style="color:#79b93f">android</h2><h3>Meet Android 4.4, KitKat</h3><p>Smart, simple and truly yours: a cleaner look with translucent bars, immersive full-screen apps, caller ID for businesses, printing and Tap &amp; pay — and it runs well on phones with as little as 512 MB of memory.</p><div style="background:#ed1d24;color:white;padding:calc(27.5939 * var(--dp));text-align:center;font-size:calc(41.9427 * var(--dp))">🤖<br><small style="font-size:calc(18.7638 * var(--dp))">KitKat</small></div>${browserLink('en.wikipedia.org/wiki/Android','Learn about Android','The story of Android.')}`;
     if (url.includes('wikipedia.org')) return `<h2>Android (operating system)</h2><p><small>From Wikipedia, the free encyclopedia</small></p><hr><p>Android is a mobile operating system based on a modified version of the Linux kernel. Android 4.0, known as Ice Cream Sandwich, introduced the Holo interface and virtual navigation buttons; versions 4.1–4.3, Jelly Bean, added Project Butter, Google Now and expandable notifications; Android 4.4, KitKat, was tuned to run on devices with 512 MB of RAM and introduced immersive mode and the Storage Access Framework.</p><h3>Versions</h3><p>Gingerbread · Ice Cream Sandwich · Jelly Bean · KitKat</p>${browserLink('www.android.com','Official Android website')}`;
@@ -1653,6 +1655,15 @@
     if (ui.view === 'people' && action.startsWith('hce-') && HoloContactEditor.handle(action, id, {draft: ui.peopleDraft, form: viewport.querySelector('#people-editor'), ui, render, renderOverlay,
       focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
       takePhoto: () => { const photo = {...ICSMedia.scene(data), id: Date.now(), name: `IMG_${new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14)}`, album: 'camera', created: Date.now()}; data.photos.unshift(photo); save(); ui.peopleDraft.photo = photo.id; render(); }})) return;
+    if (action.startsWith('chrome-') && ui.sub === 'chrome-settings') {
+      const result = ChromeApp.prefAction(action, id, {ui, data, locale: i18n.locale(), t: key => i18n.t(key)});
+      if (result) {
+        if (result === 'save' || result.toast) save();
+        if (result.external) { const stack = [...(ui.chromePrefStack || [])]; openApp('settings'); ui.sub = 'location'; ui.chromeReturn = {stack, view: ui.view, sub: ui.sub}; render(); return; }
+        if (result.open) { ui.sub = ''; ui.chromePrefStack = []; chromeNewTab(false); navigateBrowser(result.open); return; }
+        render(); if (result.toast) toast(result.toast); return;
+      }
+    }
     switch (action) {
       case 'open-app': if (GEL_UNSIMULATED.includes(app)) { toast(i18n.t('This app is not part of the simulator.')); break; } {
         const icon = button.closest('.launcher-icon, .drawer-app, .dock-app') || button;
@@ -2092,10 +2103,8 @@
       case 'chrome-history': ui.chromeHistoryQuery = ''; navigateBrowser(ChromeApp.HISTORY); break;
       case 'chrome-share': { const link = ui.browserUrl; ui.overlay = ''; renderOverlay(); if (ChromeApp.internal(link)) break; openApp('hangouts'); ui.sub = 'new'; messageDraft().body = link.startsWith('search:') ? link.slice(7) : `http://${link}`; save(); render(); break; }
       case 'chrome-desktop': ui.chromeDesktop = !ui.chromeDesktop; ui.overlay = ''; renderOverlay(); render(); break;
-      case 'chrome-settings': ui.overlay = ''; renderOverlay(); ui.sub = 'chrome-settings'; ui.chromePref = ''; ui.chromePrefMenu = false; render(); break;
-      case 'chrome-pref': ui.chromePref = id; ui.chromePrefMenu = false; render(); break;
+      case 'chrome-settings': ui.overlay = ''; renderOverlay(); ui.sub = 'chrome-settings'; ui.chromePrefStack = []; ui.chromePrefMenu = false; ui.chromeConfirm = ''; render(); break;
       case 'chrome-pref-menu': ui.chromePrefMenu = !ui.chromePrefMenu; render(); break;
-      case 'chrome-pref-toggle': { const prefs = data.chromePrefs ||= {}; prefs[id] = !(prefs[id] ?? true); save(); render(); break; }
       case 'chrome-list-open': ui.chromeList = id; render(); break;
       case 'chrome-list-pick': { const [key, value] = id.split(':'); (data.chromePrefs ||= {})[key] = Number(value); ui.chromeList = ''; save(); render(); break; }
       case 'chrome-list-close': ui.chromeList = ''; render(); break;
@@ -2481,6 +2490,7 @@
     }
   });
   document.addEventListener('input', event => {
+    if (event.target.matches?.('[data-chr-seek]')) { const ctx = {ui, data, locale: i18n.locale()}; ChromeApp.prefSeek(event.target.value, ctx); ChromeApp.seekPaint(viewport, ctx); save(); return; }
     if (event.target.matches('[data-tzp-search]') && ui.tzp) { TimeZonePicker.input(ui.tzp, event.target.value, tzpContext()); renderTzPicker(true); return; }
     if (event.target.matches('[data-photos-search]')) { ui.photosQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-photos-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
     if (event.target.matches('[data-pa-search]')) { ui.paQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-pa-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }

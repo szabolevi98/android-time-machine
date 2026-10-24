@@ -164,3 +164,25 @@
 .chr-dlg-buttons button+button{border-left:calc(1.1743 * var(--dp)) solid #0000001a}
 .chr-dlg-busy p{font:400 calc(18.0015 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
 .chr-spinner{border-top-color:#33b5e5}
+/* Settings pages (chrome.js settings()): TextMessagePreferenceCategory texts, the empty site list, the Holo Light Switch
+   (xhdpi switch_bg / switch_thumb(_activated) nine-patches, ON / OFF on the thumb) in the action bar and on rows,
+   FontSizePreview's 180 dp box (#e6e6e6, 1 dp #d2d2d2), the Text scaling seek bar with its percentage, the Data savings
+   figure, and the dialogs' message. */
+.chr-pref-note{margin:0;padding:calc(8 * var(--dp)) calc(16 * var(--dp)) calc(12 * var(--dp));font:400 calc(14 * var(--dp))/1.45 RobotoICS,Roboto,sans-serif;color:#727272;white-space:pre-line}
+.chr-pref-empty{margin:0;padding:calc(24 * var(--dp)) calc(16 * var(--dp));font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#727272;text-align:center}
+.chr-pref-switch.holo{position:relative;flex:none;display:block;width:calc(96 * var(--dp));height:calc(28 * var(--dp));margin-left:calc(8 * var(--dp));border-style:solid;border-color:transparent;border-width:calc(14 * var(--dp)) calc(10 * var(--dp)) calc(13.5 * var(--dp)) calc(9.5 * var(--dp));border-image:url('assets/gms-switch_bg_holo_light.png') 28 20 27 19 fill / calc(14 * var(--dp)) calc(10 * var(--dp)) calc(13.5 * var(--dp)) calc(9.5 * var(--dp)) stretch;box-sizing:border-box}
+.chr-pref-switch.holo>i{position:absolute;top:calc(-14 * var(--dp));bottom:calc(-13.5 * var(--dp));left:calc(-19 * var(--dp));width:calc(79 * var(--dp));display:grid;place-items:center;border-style:solid;border-color:transparent;border-width:calc(2 * var(--dp)) calc(24 * var(--dp));border-image:url('assets/gms-switch_thumb_holo_light.png') 4 48 fill / calc(2 * var(--dp)) calc(24 * var(--dp)) stretch;box-sizing:border-box;font:400 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;font-style:normal;color:#fff;line-height:1;transition:left .15s ease-out}
+.chr-pref-switch.holo.on>i{left:calc(32 * var(--dp));border-image-source:url('assets/gms-switch_thumb_activated_holo_light.png')}
+.chr-pref-switch.holo.bar{margin:0}
+.screen .chr-pref-barswitch{flex:none;display:grid;place-items:center;height:100%;padding:0 calc(8 * var(--dp));border:0;background:none}
+.chr-pref-preview{padding:calc(12 * var(--dp)) calc(16 * var(--dp)) calc(8 * var(--dp))}
+.chr-pref-preview b,.chr-pref-seek b{display:block;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
+.chr-pref-preview p{height:calc(180 * var(--dp));margin:calc(8 * var(--dp)) 0 0;padding:calc(5 * var(--dp));overflow:hidden;border:calc(1 * var(--dp)) solid #d2d2d2;background:#e6e6e6;color:#000;font-family:RobotoICS,Roboto,sans-serif;line-height:1.25}
+.chr-pref-seek{padding:calc(8 * var(--dp)) calc(16 * var(--dp)) calc(12 * var(--dp));border-top:calc(1.1038 * var(--dp)) solid #e3e3e3}
+.chr-pref-seek label{display:flex;align-items:center;gap:calc(8 * var(--dp));margin-top:calc(8 * var(--dp))}
+.chr-pref-seek span{flex:none;min-width:calc(40 * var(--dp));font:400 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#727272}
+.chr-pref-seek input{flex:1;min-width:0;accent-color:#33b5e5}
+.chr-pref-stats{display:flex;flex-direction:column;padding:calc(8 * var(--dp)) calc(16 * var(--dp)) calc(16 * var(--dp));font:400 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#727272}
+.chr-pref-stats b{font:700 calc(50 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#33b5e5}
+.chr-dlg-message p{margin:0;padding:calc(16 * var(--dp));font:400 calc(16 * var(--dp))/1.4 RobotoICS,Roboto,sans-serif;color:#333}
+.web-engine{margin:0 0 calc(8 * var(--dp));font:700 calc(20 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#555}

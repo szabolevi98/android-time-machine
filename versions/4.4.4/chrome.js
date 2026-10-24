@@ -72,16 +72,6 @@
     const cards = tabs.map((tab, i) => `<article class="chr-card${i === active ? ' current' : ''}${tab.incognito ? ' incognito' : ''}" style="--i:${i}"><div class="chr-card-page" role="button" tabindex="0" data-action="browser-tab" data-id="${i}" aria-label="${e(ctx.title(tab.url))}">${tab.url === NTP ? `<div class="chr-card-ntp"></div>` : thumb(ctx, tab.url)}</div><div class="chr-card-tab">${img(tab.incognito ? 'globe_incognito_favicon' : 'globe_favicon')}<button type="button" data-action="browser-tab" data-id="${i}">${e(tab.url === NTP ? CS(ctx, 'New tab') : ctx.title(tab.url))}</button><button type="button" class="chr-card-close" data-action="browser-close-tab" data-id="${i}" aria-label="${e(ctx.t('Close tab'))}">${img(tab.incognito ? 'close_tab_incognito' : 'close_tab')}</button></div></article>`).join('');
     return `<div class="app-view ics-browser chr-app chr-switcher-view"><div class="chr-switcher-bar"><button type="button" class="chr-new-tab" data-action="browser-new-tab">${img('new_tab_light')}<span>${e(CS(ctx, 'New tab'))}</span></button>${tabsButton(ctx, tabs.length, true)}${menuButton(ctx, true)}</div><div class="chr-stack">${cards}</div></div>`;
   }
-  /* Settings (audit step 5), Chrome 32.0.1700.99: preference_headers_phone.xml (Basics: Search engine, Autofill forms, Save passwords, Homepage; Advanced: Privacy, Accessibility, Content settings, Bandwidth management, About Chrome) in Theme.Holo.Light. privacy_preferences.xml: the check boxes with their summaries, the
-     Usage and crash reports list and 'Do Not Track'; PRIVACY_MENU's Clear browsing data is the action bar button that opens
-     the dialog: Clear browsing history, Clear the cache and Clear cookies, site data ticked, Clear saved passwords and
-     Clear autofill data not, Cancel / Clear, then "Clearing browsing data" / "Please wait…". The history page's link
-     opens the same dialog. Clearing the history empties the history page and Most visited. About Chrome lists the
-     application version and the operating system. Texts come from the image's Chrome (stock-strings.js). */
-  const PREFS = {version: '32.0.1700.99', os: 'Android 4.4.4; Nexus 5 Build/KTU84P', material: false,
-    headers: [['cat', 'Basics'], ['search_engine', 'Search engine', 'Google'], ['autofill', 'Autofill forms'], ['passwords', 'Save passwords'], ['homepage', 'Home page'], ['cat', 'Advanced'], ['privacy', 'Privacy'], ['accessibility', 'Accessibility'], ['content', 'Content settings'], ['bandwidth', 'Bandwidth management'], ['about', 'About Chrome']],
-    privacy: [['check', 'navigation_error', 'Navigation error suggestions', 'Navigation error summary'], ['check', 'search_suggestions', 'Search and URL suggestions', 'Search suggestions summary'], ['check', 'network_predictions', 'Network action predictions', 'Network predictions summary'], ['list', 'crash', 'Usage and crash reports', ['Always send', 'Only send on Wi-Fi', 'Never send'], 2], ['screen', 'dnt', "'Do Not Track'", 'Off']],
-    topMenu: [['chrome-unsupported', 'Help']], clearInBar: true};
   const CLEAR_ITEMS = [['history', 'Clear browsing history', true], ['cache', 'Clear the cache', true], ['cookies', 'Clear cookies, site data', true], ['passwords', 'Clear saved passwords', false], ['formdata', 'Clear autofill data', false]];
   const prefValue = (ctx, key, fallback) => (ctx.data.chromePrefs || {})[key] ?? fallback;
   function clearDialog(ctx) {
@@ -91,34 +81,163 @@
     const rows = CLEAR_ITEMS.map(([key, label]) => `<button type="button" class="chr-dlg-check${c[key] ? ' on' : ''}" data-action="chrome-clear-toggle" data-id="${key}" role="checkbox" aria-checked="${!!c[key]}"><span>${e(s(label))}</span><i></i></button>`).join('');
     return `<button type="button" class="chr-dlg-scrim" data-action="chrome-clear-cancel" aria-label="${e(s('Cancel'))}"></button><div class="chr-dlg" role="dialog"><h3>${e(s('Clear browsing data'))}</h3><div class="chr-dlg-list">${rows}</div><div class="chr-dlg-buttons"><button type="button" data-action="chrome-clear-cancel">${e(s('Cancel'))}</button><button type="button" data-action="chrome-clear-run"${CLEAR_ITEMS.some(([key]) => c[key]) ? '' : ' disabled'}>${e(s('Clear'))}</button></div></div>`;
   }
+  /* Settings, Chrome 32.0.1700.99: preference_headers_phone.xml in Theme.Holo.Light (the #f2f2f2 bar, holo blue),
+     with ChromePreferences' summaries (the search engine as "%1$s (%2$s)") and without Homepage, as
+     HomepageManager.shouldShowHomepageSetting() is false on an image without a partner home page provider. The pages:
+     - SearchEnginePreference: TemplateUrlService's engines for the device's country, the current one with
+       current_search_engine; the omnibox then searches there.
+     - DoNotTrackPreference, ProtectedContentPreferences, TranslatePreferences and BandwidthReductionPreferences put a
+       Holo Switch in the action bar (addSwitchToActionBar) over their TextMessagePreferenceCategory texts; Learn more,
+       Reset device credentials, Reset translate settings and Help come from preferences_menu.xml (Help opens the
+       article). Reduce data usage, when on, shows the Data savings category with nothing compressed (the simulator
+       has no Google proxy to send pages through).
+     - AccessibilityPreferences: FontSizePreview (13 dp x the factor), the Text scaling SeekBarPreference (0.5–2.0 in
+       0.05 steps, percent) and Force enable zoom, which follows the slider across 1.3; the factor scales web page text.
+     - ContentPreferences (content_preferences.xml): Accept cookies, Enable JavaScript, Block pop-ups, Voice and video
+       calling, Protected content and Google Translate (On / Off), the location row that
+       GoogleLocationSettingsUtil makes "Location settings" on KitKat (it opens the system Location page instead of
+       Enable location), and Website settings with its empty list (no_saved_website_settings).
+     - BandwidthPreferences: Preload webpages (bandwidth_entries) and Reduce data usage ("%1$s data savings" / Off).
+     privacy_preferences.xml keeps its check boxes, Usage and crash reports and 'Do Not Track'; CLEAR BROWSING DATA in
+     the bar opens the dialog. About Chrome lists the version and the operating system. Texts are the image's Chrome
+     strings (stock-strings.js, group chrome). */
+  const PREFS = {version: '32.0.1700.99', os: 'Android 4.4.4; Nexus 5 Build/KTU84P', material: false,
+    headers: [['cat', 'Basics'], ['search_engine', 'Search engine'], ['autofill', 'Autofill forms'], ['passwords', 'Save passwords'], ['cat', 'Advanced'], ['privacy', 'Privacy'], ['accessibility', 'Accessibility'], ['content', 'Content settings'], ['bandwidth', 'Bandwidth management'], ['about', 'About Chrome']],
+    privacy: [['check', 'navigation_error', 'Navigation error suggestions', 'Navigation error summary'], ['check', 'search_suggestions', 'Search and URL suggestions', 'Search suggestions summary'], ['check', 'network_predictions', 'Network action predictions', 'Network predictions summary'], ['list', 'crash', 'Usage and crash reports', ['Always send', 'Only send on Wi-Fi', 'Never send'], 2], ['screen', 'dnt', "'Do Not Track'"]],
+    topMenu: [['chrome-unsupported', 'Help']], clearInBar: true};
+  // TemplateUrlService's prepopulated engines by country (Chromium 32.0.1700.99 template_url_prepopulate_data.cc and
+  // prepopulated_engines.json): the name, the keyword and the results page the omnibox opens (none: Google's own).
+  const ENGINES = {
+    US: [['Google', 'google.com'], ['Bing', 'bing.com', 'www.bing.com/search?setmkt=en-US&q='], ['Yahoo!', 'yahoo.com', 'search.yahoo.com/search?ei=UTF-8&fr=crmas&p='], ['AOL', 'aol.com', 'search.aol.com/aol/search?query='], ['Ask', 'ask.com', 'www.ask.com/web?q=']],
+    HU: [['Google', 'google.com'], ['Bing', 'bing.com', 'www.bing.com/search?q='], ['Yahoo!', 'yahoo.com', 'search.yahoo.com/search?ei=UTF-8&fr=crmas&p=']],
+    DE: [['Google', 'google.com'], ['Bing', 'bing.com', 'www.bing.com/search?setmkt=de-DE&q='], ['Yahoo! Deutschland', 'de.yahoo.com', 'de.search.yahoo.com/search?ei=UTF-8&fr=crmas&p=']],
+    FR: [['Google', 'google.com'], ['Bing', 'bing.com', 'www.bing.com/search?setmkt=fr-FR&q='], ['Yahoo! France', 'fr.yahoo.com', 'fr.search.yahoo.com/search?ei=UTF-8&fr=crmas&p=']],
+    ES: [['Google', 'google.com'], ['Bing', 'bing.com', 'www.bing.com/search?setmkt=es-ES&q='], ['Yahoo! España', 'es.yahoo.com', 'es.search.yahoo.com/search?ei=UTF-8&fr=crmas&p=']]};
+  const COUNTRY = {en: 'US', hu: 'HU', de: 'DE', fr: 'FR', es: 'ES'};
+  const lang = ctx => String(ctx.locale || 'en').slice(0, 2);
+  const engines = ctx => ENGINES[COUNTRY[lang(ctx)]] || ENGINES.US;
+  const engine = ctx => engines(ctx)[prefValue(ctx, 'search_engine', 0)] || engines(ctx)[0];
+  // The omnibox's search: Google's own results stay the simulator's search: page, another engine gets its results URL.
+  function searchUrl(term, ctx) { const [, , url] = engine(ctx); return url ? url + encodeURIComponent(term).split('%20').join('+') : `search:${term}`; }
+  function searchResult(url) {
+    for (const list of Object.values(ENGINES)) for (const [name, , base] of list) if (base && url.startsWith(base)) return {name, term: decodeURIComponent(url.slice(base.length).replace(/\+/g, ' '))};
+    return null;
+  }
+  const DEFAULTS = {dnt: false, protected_content: true, translate: true, reduce_data: false, force_enable_zoom: false, accept_cookies: true, enable_javascript: true, block_popups: false, voice_and_video_calling: true, text_scale: 1};
+  const prefDefault = key => key in DEFAULTS ? DEFAULTS[key] : true;
+  const pref = (ctx, key) => prefValue(ctx, key, prefDefault(key));
+  const textScale = ctx => Number(pref(ctx, 'text_scale')) || 1;
+  const LEARN = {dnt: 'https://support.google.com/chrome/?p=settings_do_not_track', protected: 'https://support.google.com/chrome/?p=mobile_protected_content', bandwidth: 'https://support.google.com/chrome/?p=mobile_bandwidth', translate: 'https://support.google.com/chrome/?p=mobile_translate'};
+  function pages(ctx) {
+    const on = key => pref(ctx, key), onOff = key => on(key) ? 'On' : 'Off';
+    return {
+      search_engine: {title: 'Search engine', rows: engines(ctx).map((item, i) => ['engine', i])},
+      privacy: {title: 'Privacy', rows: PREFS.privacy},
+      dnt: {title: "'Do Not Track'", sw: 'dnt', rows: [['text', 'Do Not Track description']], menu: [['chrome-pref-link', 'Learn more', LEARN.dnt]]},
+      accessibility: {title: 'Accessibility', rows: [['preview'], ['seek'], ['check', 'force_enable_zoom', 'Force enable zoom', 'Force enable zoom summary']]},
+      content: {title: 'Content settings', rows: [['check', 'accept_cookies', 'Accept cookies', 'Allow sites to save and read cookie data'], ['check', 'enable_javascript', 'Enable JavaScript', 'Allow sites to run JavaScript'], ['check', 'block_popups', 'Block pop-ups', 'Block pop-ups from all sites'], ['check', 'voice_and_video_calling', 'Voice and video calling', 'Allow sites to access microphone and camera'], ['screen', 'protected', 'Protected content', onOff('protected_content')], ['screen', 'translate', 'Google Translate', onOff('translate')], ['external', 'location', 'Location settings', 'Allow sites to request access to your location'], ['screen', 'sites:all', 'Website settings', 'Advanced settings for individual websites']]},
+      'sites:all': {title: 'Website settings', rows: [['sites']]},
+      protected: {title: 'Protected content', sw: 'protected_content', rows: [['text', 'Protected content description'], ['link', 'Learn more', LEARN.protected]], menu: [['chrome-pref-reset', 'Reset device credentials', 'protected']]},
+      translate: {title: 'Google Translate', sw: 'translate', rows: [['text', 'Translate description']], menu: [['chrome-pref-reset', 'Reset translate settings', 'translate'], ['chrome-pref-link', 'Help', LEARN.translate]]},
+      bandwidth: {title: 'Bandwidth management', rows: [['list', 'prefetch_bandwidth', 'Preload webpages', ['Always', 'Only on Wi-Fi', 'Never'], 1], ['screen', 'reduce', 'Reduce data usage']]},
+      reduce: {title: 'Reduce data usage', sw: 'reduce_data', rows: on('reduce_data') ? [['stats']] : [['text', 'Reduce data usage description'], ['text', 'Safe Browsing description'], ['text', 'Data reduction caveats']], menu: [['chrome-pref-link', 'Learn more', LEARN.bandwidth]]},
+      about: {title: 'About Chrome', rows: [['info', 'Application version', `Chrome ${PREFS.version}`], ['info', 'Operating system', PREFS.os], ['screen-limit', 'legal', 'Legal information']]}
+    };
+  }
+  // The summaries ChromePreferences, ContentPreferences, BandwidthPreferences and PrivacyPreferences set.
+  function summary(ctx, id) {
+    const s = key => CS(ctx, key), onOff = value => s(value ? 'On' : 'Off');
+    if (id === 'search_engine') { const [name, keyword] = engine(ctx); return AndroidStrings.format(s('%1$s (%2$s)'), name, keyword); }
+    if (id === 'reduce') return pref(ctx, 'reduce_data') ? AndroidStrings.format(s('%1$s data savings'), `${(0).toLocaleString(ctx.locale)}%`) : onOff(false);
+    if (id === 'dnt') return onOff(pref(ctx, 'dnt'));
+    return '';
+  }
+  function listRow(ctx, key) { for (const page of Object.values(pages(ctx))) for (const row of page.rows) if (row[0] === 'list' && row[1] === key) return row; return null; }
   function listDialog(ctx) {
-    const open = ctx.ui.chromeList, s = key => CS(ctx, key);
-    const item = open && PREFS.privacy.find(row => row[0] === 'list' && row[1] === open);
+    const open = ctx.ui.chromeList, s = key => CS(ctx, key), item = open && listRow(ctx, open);
     if (!item) return '';
     const value = prefValue(ctx, item[1], item[4]);
     return `<button type="button" class="chr-dlg-scrim" data-action="chrome-list-close" aria-label="${e(s('Cancel'))}"></button><div class="chr-dlg" role="dialog"><h3>${e(s(item[2]))}</h3><div class="chr-dlg-list">${item[3].map((label, i) => `<button type="button" class="chr-dlg-radio${value === i ? ' on' : ''}" data-action="chrome-list-pick" data-id="${item[1]}:${i}" role="radio" aria-checked="${value === i}"><span>${e(s(label))}</span><i></i></button>`).join('')}</div><div class="chr-dlg-buttons"><button type="button" data-action="chrome-list-close">${e(s('Cancel'))}</button></div></div>`;
   }
+  // DocumentModeEnabler's confirmation and the Reset device credentials confirmation.
+  function confirmDialog(ctx) {
+    const c = ctx.ui.chromeConfirm, s = key => CS(ctx, key);
+    if (!c) return '';
+    const [title, message] = c === 'document_mode' ? (pref(ctx, 'document_mode') ? ['Separate tabs and apps', 'Tabs will move to a tab switcher inside Chrome.'] : ['Merge tabs and apps', 'Tabs will live together with recent apps.']) : ['Confirm device credential deletion', 'Protected content reset message'];
+    return `<button type="button" class="chr-dlg-scrim" data-action="chrome-confirm" data-id="cancel" aria-label="${e(s('Cancel'))}"></button><div class="chr-dlg chr-dlg-message" role="alertdialog"><h3>${e(s(title))}</h3><p>${e(s(message))}</p><div class="chr-dlg-buttons"><button type="button" data-action="chrome-confirm" data-id="cancel">${e(s('Cancel'))}</button><button type="button" data-action="chrome-confirm" data-id="ok">${e(s('OK'))}</button></div></div>`;
+  }
+  const check = on => `<i class="chr-pref-check${on ? ' on' : ''}" role="checkbox" aria-checked="${on}"></i>`;
+  // Theme.Holo.Light's Switch: the thumb carries ON / OFF (framework capital_on / capital_off).
+  const toggle = (on, cls = '', label = '') => `<i class="chr-pref-switch holo${cls}${on ? ' on' : ''}" role="switch" aria-checked="${on}"><i>${e(label)}</i></i>`;
   function settings(ctx) {
-    const {ui} = ctx, s = key => CS(ctx, key), page = ui.chromePref || '';
-    const title = page === 'privacy' ? s('Privacy') : page === 'about' ? s('About Chrome') : s('Settings');
-    const row = (action, id, label, summary = '', extra = '') => `<button type="button" class="chr-pref" data-action="${action}" data-id="${id}"><span class="chr-pref-text"><b>${e(label)}</b>${summary ? `<small>${e(summary)}</small>` : ''}</span>${extra}</button>`;
+    const {ui} = ctx, s = key => CS(ctx, key), stack = ui.chromePrefStack || [], id = stack[stack.length - 1] || '', all = pages(ctx), page = all[id];
+    const row = (action, rowId, label, small = '', extra = '', icon = '') => `<button type="button" class="chr-pref${icon ? ' with-icon' : ''}" data-action="${action}" data-id="${e(rowId)}">${icon ? `<img class="chr-pref-icon" src="assets/${icon}.png" alt="">` : ''}<span class="chr-pref-text"><b>${e(label)}</b>${small ? `<small>${e(small)}</small>` : ''}</span>${extra}</button>`;
+    const percent = value => Math.round(value * 100).toLocaleString(ctx.locale) + '%';
+    const draw = item => {
+      const [kind, key, label] = item;
+      if (kind === 'cat') return `<h4 class="chr-pref-cat">${e(s(key))}</h4>`;
+      if (kind === 'check') { const value = pref(ctx, key); return row('chrome-pref-toggle', key, s(label), s(item[3]), check(value), item[4]); }
+      if (kind === 'list') return row('chrome-list-open', key, s(label), s(item[3][prefValue(ctx, key, item[4])]));
+      if (kind === 'screen') return row(all[key] ? 'chrome-pref' : 'chrome-unsupported', key, s(label), item[3] ? s(item[3]) : summary(ctx, key), '', item[4]);
+      if (kind === 'screen-limit') return row('chrome-unsupported', key, s(label));
+      if (kind === 'external') return row('chrome-pref-ext', key, s(label), s(item[3]));
+      if (kind === 'info') return row('chrome-noop', key, s(key), label);
+      if (kind === 'text') return `<p class="chr-pref-note">${e(s(key))}</p>`;
+      if (kind === 'link') return row('chrome-pref-link', item[2], s(key));
+      if (kind === 'engine') { const [name, keyword] = engines(ctx)[key], current = engines(ctx).indexOf(engine(ctx)) === key; return row('chrome-engine', key, AndroidStrings.format(s('%1$s (%2$s)'), name, keyword), current ? s('Currently selected search engine') : ''); }
+      if (kind === 'toggle') { const value = pref(ctx, key); return row('chrome-pref-toggle', key, s(label), s(value ? item[3] : item[4]), toggle(value, '', s(value ? 'ON' : 'OFF'))); }
+      if (kind === 'sites') return `<p class="chr-pref-empty">${e(s('You have no saved website settings.'))}</p>`;
+      if (kind === 'preview') return `<div class="chr-pref-preview"><b>${e(s('Preview'))}</b><p style="font-size:calc(${13 * textScale(ctx)} * var(--dp))">${e(s('Font size preview text'))}</p></div>`;
+      if (kind === 'seek') return `<div class="chr-pref-seek"><b>${e(s('Text scaling'))}</b><label><span data-chr-scale>${e(percent(textScale(ctx)))}</span><input type="range" min="50" max="200" step="5" value="${Math.round(textScale(ctx) * 100)}" data-chr-seek aria-label="${e(s('Text scaling'))}"></label></div>`;
+      if (kind === 'stats') return `<h4 class="chr-pref-cat">${e(s('Data savings'))}</h4><div class="chr-pref-stats"><b>${e(`${(0).toLocaleString(ctx.locale)}%`)}</b><span>${e(AndroidStrings.format(s('%1$s original size'), '0 KB'))}</span><span>${e(AndroidStrings.format(s('%1$s after compression'), '0 KB'))}</span></div>`;
+      return '';
+    };
     let body;
-    if (page === 'privacy') body = PREFS.privacy.map(item => item[0] === 'check'
-      ? row('chrome-pref-toggle', item[1], s(item[2]), s(item[3]), `<i class="chr-pref-check${prefValue(ctx, item[1], true) ? ' on' : ''}" role="checkbox" aria-checked="${!!prefValue(ctx, item[1], true)}"></i>`)
-      : item[0] === 'list' ? row('chrome-list-open', item[1], s(item[2]), s(item[3][prefValue(ctx, item[1], item[4])]))
-      : row('chrome-unsupported', item[1], s(item[2]), item[3] ? s(item[3]) : '')).join('');
-    else if (page === 'about') body = row('chrome-noop', 'version', s('Application version'), `Chrome ${PREFS.version}`) + row('chrome-noop', 'os', s('Operating system'), PREFS.os) + row('chrome-unsupported', 'legal', s('Legal information'));
-    else body = PREFS.headers.map(([id, label, summary]) => id === 'cat' ? `<h4 class="chr-pref-cat">${e(s(label))}</h4>` : row(['privacy', 'about'].includes(id) ? 'chrome-pref' : 'chrome-unsupported', id, s(label), summary || '')).join('');
-    const menuItems = page === 'privacy' ? [...(PREFS.clearInBar ? [] : [['chrome-clear-open', 'Clear browsing data']]), ['chrome-unsupported', 'Help']] : page ? [] : PREFS.topMenu;
-    const clearButton = page === 'privacy' && PREFS.clearInBar ? `<button type="button" class="chr-pref-action" data-action="chrome-clear-open">${e(s('Clear browsing data'))}</button>` : '';
+    if (page) body = page.rows.map(draw).join('');
+    else body = PREFS.headers.map(([hid, label]) => hid === 'cat' ? `<h4 class="chr-pref-cat">${e(s(label))}</h4>` : row(all[hid] ? 'chrome-pref' : 'chrome-unsupported', hid, s(label), summary(ctx, hid))).join('');
+    const title = page ? s(page.title) : s('Settings');
+    const menuItems = id === 'privacy' ? [...(PREFS.clearInBar ? [] : [['chrome-clear-open', 'Clear browsing data']]), ['chrome-unsupported', 'Help']] : page ? page.menu || [] : PREFS.topMenu;
+    const clearButton = id === 'privacy' && PREFS.clearInBar ? `<button type="button" class="chr-pref-action" data-action="chrome-clear-open">${e(s('Clear browsing data'))}</button>` : '';
+    const sw = page?.sw ? `<button type="button" class="chr-pref-barswitch" data-action="chrome-pref-switch" data-id="${page.sw}" role="switch" aria-checked="${!!pref(ctx, page.sw)}" aria-label="${e(title)}">${toggle(pref(ctx, page.sw), ' bar', s(pref(ctx, page.sw) ? 'ON' : 'OFF'))}</button>` : '';
     const overflow = menuItems.length ? `<button type="button" class="chr-pref-more" data-action="chrome-pref-menu" aria-label="${e(ctx.t('More options'))}"><i></i><i></i><i></i></button>` : '';
-    const popup = ui.chromePrefMenu && menuItems.length ? `<button type="button" class="chr-pref-popup-scrim" data-action="chrome-pref-menu" aria-label="${e(ctx.t('Close'))}"></button><div class="chr-pref-popup" role="menu">${menuItems.map(([action, label, id]) => `<button type="button" role="menuitem" data-action="${action}"${id ? ` data-id="${id}"` : ''}>${e(s(label))}</button>`).join('')}</div>` : '';
-    return `<div class="app-view chr-prefs${PREFS.material ? ' material' : ''}"><header class="chr-pref-bar"><button type="button" class="chr-pref-up" data-action="back" aria-label="${e(ctx.t('Navigate up'))}">${PREFS.material ? '<i></i>' : '<img class="chr-pref-caret" src="assets/ic_ab_back_holo_light.png" alt=""><img class="chr-pref-icon" src="assets/chrome.png" alt="">'}</button><b>${e(title)}</b>${clearButton}${overflow}</header><div class="chr-pref-scroll">${body}</div>${popup}${listDialog(ctx)}${clearDialog(ctx)}</div>`;
+    const popup = ui.chromePrefMenu && menuItems.length ? `<button type="button" class="chr-pref-popup-scrim" data-action="chrome-pref-menu" aria-label="${e(ctx.t('Close'))}"></button><div class="chr-pref-popup" role="menu">${menuItems.map(([action, label, mid]) => `<button type="button" role="menuitem" data-action="${action}"${mid ? ` data-id="${e(mid)}"` : ''}>${e(s(label))}</button>`).join('')}</div>` : '';
+    return `<div class="app-view chr-prefs${PREFS.material ? ' material' : ''}" data-chr-page="${e(id)}"><header class="chr-pref-bar"><button type="button" class="chr-pref-up" data-action="back" aria-label="${e(ctx.t('Navigate up'))}">${PREFS.material ? '<i></i>' : '<img class="chr-pref-caret" src="assets/ic_ab_back_holo_light.png" alt=""><img class="chr-pref-icon" src="assets/chrome.png" alt="">'}</button><b>${e(title)}</b>${sw}${clearButton}${overflow}</header><div class="chr-pref-scroll">${body}</div>${popup}${listDialog(ctx)}${confirmDialog(ctx)}${clearDialog(ctx)}</div>`;
+  }
+  /* Actions of the settings pages; returns true when it handled one. A switch with a confirmation (Merge tabs and apps)
+     waits for OK; the Text scaling slider saves as it moves and Force enable zoom follows it across 130 %. */
+  function prefAction(action, id, ctx) {
+    const {ui, data} = ctx, prefs = data.chromePrefs ||= {};
+    if (action === 'chrome-pref') { ui.chromePrefStack = [...(ui.chromePrefStack || []), id]; ui.chromePrefMenu = false; return 'render'; }
+    if (action === 'chrome-pref-toggle') { prefs[id] = !pref(ctx, id); return 'save'; }
+    if (action === 'chrome-pref-switch') { if (id === 'document_mode') { ui.chromeConfirm = id; return 'render'; } prefs[id] = !pref(ctx, id); return 'save'; }
+    if (action === 'chrome-confirm') { const c = ui.chromeConfirm; ui.chromeConfirm = ''; if (id === 'ok' && c === 'document_mode') prefs.document_mode = !pref(ctx, 'document_mode'); return id === 'ok' ? 'save' : 'render'; }
+    if (action === 'chrome-engine') { prefs.search_engine = Number(id); return 'save'; }
+    if (action === 'chrome-pref-reset') { ui.chromePrefMenu = false; if (id === 'protected') { ui.chromeConfirm = 'protected'; return 'render'; } return {toast: CS(ctx, 'Your translate settings have been reset.')}; }
+    if (action === 'chrome-pref-link') { ui.chromePrefMenu = false; return {open: id}; }
+    if (action === 'chrome-pref-ext') return {external: id};
+    return '';
+  }
+  function prefSeek(value, ctx) {
+    const prefs = ctx.data.chromePrefs ||= {}, before = textScale(ctx), scale = Math.round(Number(value)) / 100;
+    prefs.text_scale = scale;
+    if (before < 1.3 && scale >= 1.3) prefs.force_enable_zoom = true; else if (before >= 1.3 && scale < 1.3) prefs.force_enable_zoom = false;
+  }
+  // While the slider moves, only its percentage, the preview and Force enable zoom change (a redraw would end the drag).
+  function seekPaint(root, ctx) {
+    const scale = textScale(ctx), label = root.querySelector('[data-chr-scale]'), preview = root.querySelector('.chr-pref-preview p'), zoom = root.querySelector('.chr-pref[data-id="force_enable_zoom"] .chr-pref-check');
+    if (label) label.textContent = Math.round(scale * 100).toLocaleString(ctx.locale) + '%';
+    if (preview) preview.style.fontSize = `calc(${13 * scale} * var(--dp))`;
+    if (zoom) { const on = !!pref(ctx, 'force_enable_zoom'); zoom.classList.toggle('on', on); zoom.setAttribute('aria-checked', String(on)); }
+  }
+  function prefBack(ui) {
+    if (ui.chromeConfirm) { ui.chromeConfirm = ''; return true; }
+    if (ui.chromePrefStack?.length) { ui.chromePrefStack = ui.chromePrefStack.slice(0, -1); return true; }
+    return false;
   }
   function render(ctx) {
     if (ctx.ui.sub === 'chrome-settings') return settings(ctx);
     if (ctx.ui.sub === 'tabs') return switcher(ctx);
-    const content = ctx.url === NTP ? newTabPage(ctx) : ctx.url === HISTORY ? historyPage(ctx) : `<div class="browser-page">${ctx.page(ctx.url)}</div>`;
+    const content = ctx.url === NTP ? newTabPage(ctx) : ctx.url === HISTORY ? historyPage(ctx) : `<div class="browser-page"${textScale(ctx) !== 1 ? ` style="font-size:${Math.round(textScale(ctx) * 100)}%"` : ''}>${ctx.page(ctx.url)}</div>`;
     return `<div class="app-view ics-browser chr-app${ctx.incognito ? ' chr-incognito' : ''}">${toolbar(ctx)}${find(ctx)}${content}${clearDialog(ctx)}</div>`;
   }
   // main_menu.xml through Main.prepareMenu: the icon row and PAGE_MENU on a page, PHONE_OVERVIEW_MODE_MENU in the tab
@@ -132,5 +251,5 @@
     const items = [item('browser-new-tab', 'New tab'), item('chrome-incognito', 'New incognito tab'), item('chrome-bookmarks', 'Bookmarks'), ctx.incognito ? '' : item('chrome-devices', 'Other devices'), item('chrome-history', 'History'), page ? item('chrome-share', 'Share…') : '', item('chrome-unsupported', 'Print…'), item('browser-find', 'Find in page'), page && !ctx.incognito ? item('chrome-unsupported', 'Add to homescreen') : '', ctx.url !== NTP ? item('chrome-desktop', 'Request desktop site', `<img class="chr-check" src="assets/btn_check_${ui.chromeDesktop ? 'on' : 'off'}_holo_light.png" alt="">`) : '', item('chrome-settings', 'Settings'), item('chrome-unsupported', 'Help')];
     return `<div class="menu-scrim" data-action="close-overlay"></div><div class="chr-menu" role="menu">${top}${items.join('')}</div>`;
   }
-  window.ChromeApp = {render, menu, NTP, HISTORY, internal, CLEAR_ITEMS};
+  window.ChromeApp = {render, menu, NTP, HISTORY, internal, CLEAR_ITEMS, searchUrl, searchResult, prefAction, prefSeek, seekPaint, prefBack, prefDefault, DEFAULTS};
 })();
