@@ -326,6 +326,64 @@ const cameraModesICS = async h => {
   await h.tap('#viewport .camera-thumbnail');
   h.check('the panorama opens in the Gallery', await h.until(`document.querySelector('#viewport .gallery-image img')?.naturalWidth === 3072`));
 };
+
+// Gmail 5's Attach file: DocumentsUI's GET_CONTENT picker (the roots drawer, Images' buckets, Audio's artists, albums
+// and songs), a picture as a tile and a song as a file row with name and size, the stack remembered for the next
+// time, Back climbing out without a file, Remove, and the attachment kept in the sent mail. The wallpaper picker's Pick
+// image goes through the same picker for image/* (no Audio root).
+const gmailAttachLP = async h => {
+  const attach = async () => {
+    await h.tap('#viewport .lem-bar [data-action="email-menu"][data-id="attach"]');
+    await h.tap('[role="menu"] [data-action="email-attach-file"]');
+    h.check('Attach file opens DocumentsUI', await h.until(`!!document.querySelector('#viewport .ldp-app')`));
+  };
+  await h.openApp('gmail');
+  h.check('opens Gmail', await h.until(`!!document.querySelector('#viewport .lem-fab')`));
+  await h.tap('#viewport .lem-fab');
+  h.check('Compose opens', await h.until(`!!document.querySelector('#viewport .lem-compose')`));
+  await h.type('#viewport .lem-compose input[name="subject"]', 'Weekend files');
+  await attach();
+  h.check('the roots drawer opens on its own, under Open from', await h.until(`!!document.querySelector('#viewport .ldp-drawer .ldp-root.on[data-id="recent"]')`)
+    && await h.ev(`[...document.querySelectorAll('#viewport .ldp-root')].map(b=>b.dataset.id).join()`) === 'recent,images,videos,audio,downloads');
+  await h.tap('#viewport .ldp-root[data-id="images"]');
+  h.check('Images lists its buckets in grid mode', await h.until(`!!document.querySelector('#viewport .ldu-grid .ldp-doc[data-id="images/pictures"] img')`));
+  await h.tap('#viewport .ldp-doc[data-id="images/pictures"]');
+  h.check('the bucket opens under the breadcrumb', await h.until(`document.querySelector('#viewport .ldp-crumb')?.textContent === 'Pictures'`));
+  const picture = await h.ev(`document.querySelector('#viewport .ldp-doc[data-id^="photo:"] .ldu-title').textContent`);
+  await h.tap('#viewport .ldp-doc[data-id^="photo:"]');
+  h.check('the picture comes back as a tile with its size', await h.until(`document.querySelector('#viewport .lem-compose .lem-att-tile b')?.textContent === ${JSON.stringify(picture)}`)
+    && /^\d+([.,]\d)?\sMB$/.test(await h.ev(`document.querySelector('#viewport .lem-att-tile small').textContent`)), `${picture} / ${await h.ev(`document.querySelector('#viewport .lem-compose .lem-att-tile')?.textContent`)}`);
+  await attach();
+  h.check('the next Attach file returns to that bucket, drawer closed', await h.until(`document.querySelector('#viewport .ldp-crumb')?.textContent === 'Pictures'`) && !(await h.ev(`!!document.querySelector('#viewport .ldp-drawer')`)));
+  await h.tap('#viewport .ldu-nav');
+  await h.tap('#viewport .ldp-root[data-id="audio"]');
+  await h.tap('#viewport .ldp-doc[data-id="audio/The Demo Tapes"]');
+  h.check('an artist lists the albums', await h.until(`document.querySelectorAll('#viewport .ldp-doc[data-id^="audio/The Demo Tapes/"]').length === 2`));
+  await h.tap('#viewport .ldp-doc[data-id="audio/The Demo Tapes/After Hours"]');
+  await h.tap('#viewport .ldp-doc[data-id^="track:"]');
+  h.check('the song comes back as a file row', await h.until(`document.querySelector('#viewport .lem-file b')?.textContent === 'Night Drive'`)
+    && /^3[.,]8\sMB$/.test(await h.ev(`document.querySelector('#viewport .lem-file small').textContent`)));
+  await attach();
+  await h.key('Escape'); await h.key('Escape'); await h.key('Escape');
+  h.check('Back climbs out and cancels without a file', await h.until(`!!document.querySelector('#viewport .lem-compose')`)
+    && await h.ev(`document.querySelectorAll('#viewport .lem-att-tile, #viewport .lem-file').length`) === 2
+    && await h.ev(`document.querySelector('#viewport .lem-compose input[name="subject"]').value`) === 'Weekend files');
+  await h.tap('#viewport .lem-file .lem-att-x');
+  h.check('Remove drops the file', await h.until(`!document.querySelector('#viewport .lem-file') && !!document.querySelector('#viewport .lem-att-tile')`));
+  await h.type('#viewport .lem-compose input[name="to"]', 'alex@example.com');
+  await h.tap('#viewport .lem-compose [type="submit"]');
+  h.check('the sent mail keeps the picture', await h.until(`!!document.querySelector('#viewport .lem-conversation .lem-att-tile') && !document.querySelector('#viewport .lem-conversation .lem-att-x')`));
+  // Pick image: the same picker for image/*, without Videos and Audio.
+  await h.key('Escape'); await h.key('Escape');
+  await h.tap('[data-action="home"]');
+  await h.hold('#viewport .home-slot:not(:has(*))');
+  await h.tap('#viewport [data-action="open-wallpapers"]');
+  if (await h.until(`!!document.querySelector('#viewport .kwp-tile.pick')`)) {
+    await h.tap('#viewport .kwp-tile.pick');
+    h.check('Pick image opens the picker without Videos and Audio', await h.until(`!!document.querySelector('#viewport .ldp-app')`)
+      && await h.ev(`(()=>{if(!document.querySelector('#viewport .ldp-drawer'))document.querySelector('#viewport .ldu-nav').click();return [...document.querySelectorAll('#viewport .ldp-root')].map(b=>b.dataset.id).join()})()`) === 'recent,images,downloads');
+  } else h.check('the wallpaper picker opens', false);
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -386,6 +444,7 @@ const CASES = [
   {id: 'T03', version: '4.3', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
   {id: 'T03', version: '4.4.4', name: 'Calendar › Settings and Calendars to display', run: calendarSettingsJB},
   {id: 'T03', version: '5.1.1', name: 'Calendar › Settings: General, Events from Gmail, Sync', run: calendarSettingsLP},
+  {id: 'T06', version: '5.1.1', name: 'Gmail › Attach file through DocumentsUI', run: gmailAttachLP},
   {id: 'T05', version: '4.0.4', name: 'Camera › Video and Panorama', run: cameraModesICS},
   {id: 'T04', version: '2.3.6', name: 'Google Mail › Settings: account, confirm actions, label sync', run: gmailSettingsGB},
   {id: 'T04', version: '4.0.4', name: 'Gmail › Settings, Manage labels, Label settings', run: gmailSettingsICS},
@@ -437,6 +496,13 @@ async function tap(selector) {
   if (!c.hit) throw new Error(`covered: ${selector} (by ${c.what})`);
   await mouse('mousePressed', c.x, c.y, 1); await sleep(40); await mouse('mouseReleased', c.x, c.y, 0); await sleep(250);
 }
+// A long press: held a second where a finger would rest.
+async function hold(selector, ms = 1000) {
+  await settled();
+  const c = await center(selector);
+  if (!c) throw new Error(`nothing to hold: ${selector}`);
+  await mouse('mousePressed', c.x, c.y, 1); await sleep(ms); await mouse('mouseReleased', c.x, c.y, 0); await sleep(250);
+}
 async function drag(selector, dx, dy) {
   await settled();
   const c = await center(selector);
@@ -472,7 +538,7 @@ async function run(c, width) {
   // A fresh phone, already switched on in this tab (the cold-boot animation is not part of these paths).
   await ev(`localStorage.clear(); sessionStorage.clear(); sessionStorage.setItem('android-sim-booted-${c.version}', '1'); localStorage.setItem('android-time-machine-language', 'en')`);
   check('boots and unlocks', await boot(c.version));
-  await c.run({ev, send, until, tap, drag, type, key, openApp, sleep, check, phone, save: () => ev(SAVE), reload: () => boot(c.version)});
+  await c.run({ev, send, until, tap, hold, drag, type, key, openApp, sleep, check, phone, save: () => ev(SAVE), reload: () => boot(c.version)});
   await sleep(400);
   const refusals = await ev(`window.__refusals || []`);
   check('no refusal on the way', !refusals.length, refusals.join(' | '));

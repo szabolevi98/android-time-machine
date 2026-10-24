@@ -186,10 +186,6 @@
 .lem-msg-footer{display:flex;border-top:var(--dp) solid #0000001f;margin:0 calc(8.0023 * var(--dp))}
 .lem-msg-footer button{flex:1;display:flex;flex-direction:column;align-items:center;gap:calc(3.9956 * var(--dp));border:0;background:none;padding:calc(11.9978 * var(--dp)) 0;font:400 calc(13.0023 * var(--dp)) Roboto,sans-serif;color:#757575}
 .lem-msg-footer img{width:calc(23.9956 * var(--dp));height:calc(23.9956 * var(--dp));opacity:.54}
-.lem-attachment{position:relative;margin:calc(8.0023 * var(--dp)) calc(16.0045 * var(--dp));display:flex;align-items:center;gap:calc(11.0376 * var(--dp));border:var(--dp) solid #0000001f;border-radius:calc(2.2076 * var(--dp));padding:calc(6.6226 * var(--dp))}
-.lem-attachment>:first-child{width:calc(70.6402 * var(--dp));height:calc(52.9802 * var(--dp));flex:none;overflow:hidden}
-.lem-attachment span{font:400 calc(13.9956 * var(--dp)) Roboto,sans-serif;color:#212121}
-.lem-attachment button{margin-left:auto;border:0;background:none;font-size:calc(19.8676 * var(--dp));color:#757575}
 /* Compose */
 .lem-compose .lem-scroll{padding:0}
 .lem-field{display:flex;align-items:center;gap:calc(16.0045 * var(--dp));min-height:calc(48.0023 * var(--dp));margin:0 calc(16.0045 * var(--dp));border-bottom:var(--dp) solid #0000001f}
@@ -280,3 +276,31 @@
 .screen .emp-quick:active{background:#0000001a}
 .emp-empty{margin:0;padding:calc(32 * var(--dp)) calc(16 * var(--dp));text-align:center;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#0000008a}
 .emp-tone-list{max-height:calc(330 * var(--dp));overflow-y:auto;scrollbar-width:none}
+/* Attachments (lp-email.js attachments()): the tile grid (attachment_tile_min_size 120 dp, attachment_tile_padding 8 dp),
+   the file rows of compose and the conversation's attachment bars. */
+.lem-attachments{display:flex;flex-direction:column;gap:calc(8 * var(--dp));margin:calc(8 * var(--dp)) calc(16 * var(--dp))}
+.lem-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(120 * var(--dp)),1fr));gap:calc(8 * var(--dp))}
+.lem-att-tile{position:relative;aspect-ratio:1;overflow:hidden;background:#ddd;border-image:url('assets/gm5-attachment_bg_holo.png') 4 fill / calc(1.3333 * var(--dp)) stretch}
+.lem-att-tile-art{position:absolute;inset:0;display:block}
+.lem-att-tile-art>*{width:100%;height:100%;object-fit:cover}
+.lem-att-tile-band{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;padding-left:calc(8 * var(--dp));background:#7f000000}
+.lem-att-tile-band>span,.lem-file>span,.lem-file-bar>span:not(.lem-file-icon){flex:1;min-width:0;display:flex;flex-direction:column}
+.lem-att-tile-band b{font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lem-att-tile-band small{font:400 calc(12 * var(--dp)) Roboto,sans-serif;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .lem-att-x{flex:none;display:grid;place-items:center;padding:0;border:0;background:none;cursor:pointer}
+.screen .lem-att-x:active{background:#0000001f}
+.lem-att-tile-band .lem-att-x{width:calc(44 * var(--dp));height:calc(44 * var(--dp))}
+.lem-att-tile-band .lem-att-x img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.lem-file{display:flex;align-items:center;height:calc(48 * var(--dp));border-image:url('assets/gm5-attachment_bg_holo.png') 4 fill / calc(1.3333 * var(--dp)) stretch}
+.lem-file>img{flex:none;width:calc(18 * var(--dp));height:calc(10 * var(--dp));margin-left:calc(8 * var(--dp))}
+.lem-file>span{padding-left:calc(8 * var(--dp))}
+.lem-file b{font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lem-file small{font:400 calc(12 * var(--dp)) Roboto,sans-serif;color:#949494;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lem-file .lem-att-x{width:calc(48 * var(--dp));height:100%}
+.lem-file .lem-att-x img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.lem-file-bar{display:flex;align-items:stretch;min-height:calc(48 * var(--dp));border-image:url('assets/gm5-attachment_bg_holo.png') 4 fill / calc(1.3333 * var(--dp)) stretch}
+.lem-file-icon{flex:none;width:calc(48 * var(--dp));display:grid;place-items:center;background:#e5e5e5}
+.lem-file-icon img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.lem-file-bar>span:not(.lem-file-icon){justify-content:center;padding:0 calc(8 * var(--dp))}
+.lem-file-bar b{font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lem-file-bar small{font:400 calc(12 * var(--dp)) Roboto,sans-serif;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

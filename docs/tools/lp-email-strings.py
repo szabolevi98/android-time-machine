@@ -26,6 +26,8 @@ ENTRIES = {
     'Discard this message?': 'confirm_discard_text', 'Message saved as draft.': 'message_saved', 'Cancel': 'cancel', 'OK': 'ok',
     'Attach file': 'add_file_attachment', 'Attach picture': 'add_photo_attachment', 'From': 'from', 'To': 'to', 'Cc': 'cc',
     'Bcc': 'bcc', '+ Cc/Bcc': 'add_cc_label', 'Subject': 'subject_hint', 'Compose email': 'body_hint',
+    # compose_attachments: AttachmentUtils.convertToHumanReadableSize and the remove button's description.
+    '%s B': 'bytes', '%s KB': 'kilobytes', '%s MB': 'megabytes', 'Remove attachment %s': 'remove_attachment_desc',
     # ConversationListEmptyView (EmptyStateUtils) and EmptyFolderDialogFragment.
     'Empty inbox': 'empty_inbox', 'Empty search': 'empty_search', 'Empty spam': 'empty_spam_folder',
     'Empty trash': 'empty_trash_folder', 'Empty folder': 'empty_folder', 'Empty Trash?': 'empty_trash_dialog_title',

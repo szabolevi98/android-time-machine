@@ -9,7 +9,7 @@
    after ThirdPartyWallpaperPickerListAdapter drops the live picker and image pickers. Selecting a tile previews it full
    screen; until something is picked the current wallpaper shows. Tapping the preview hides or shows the strip. A long
    press on a picked or saved image starts the "%d selected" CAB with Delete. Pick image sends ACTION_GET_CONTENT
-   image/*, answered here by DocumentsUI "Open from" on Recent. */
+   image/*, answered by DocumentsUI (lp-docpicker.js). */
 (() => {
   'use strict';
   const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -42,28 +42,5 @@
       : `<div class="kwp-bar"><button class="kwp-set" data-action="kwp-set"><img src="assets/kwp-ic_actionbar_accept.png" alt="">${e(t('Set wallpaper'))}</button></div>`;
     return `<div class="app-view kwp" data-no-translate><button class="kwp-crop${preview ? ' on' : ''}" data-action="kwp-tap" aria-label="${e(t('Wallpapers'))}" style="${preview ? `background-image:${preview}` : ''}"></button>${bar}<div class="kwp-strip${wp.stripHidden ? ' hidden' : ''}"><i class="kwp-shadow top"></i><div class="kwp-scroll"><div class="kwp-list">${pick}${list.map(tile).join('')}</div></div><i class="kwp-shadow bottom"></i></div></div>`;
   }
-  // DocumentsUI 5.1.1 (shamu) in ACTION_GET_CONTENT mode for image/*, on the Recent root. DocumentsActivity.updateActionBar
-  // on a phone: the ic_hamburger navigation icon ("Show roots") and, with at most one stack entry, the root's title in
-  // the DocumentsTheme Toolbar (the roots drawer itself is not simulated: the button leaves like Back). Recent has no
-  // current directory, so onPrepareOptionsMenu hides Search and Sort by; the overflow keeps Grid / List view and the
-  // "Show internal storage" and "Show file size" toggles (all showAsAction never). A visual MIME filter (image/*) makes
-  // Recent start in grid mode (MimePredicate.VISUAL_MIMES). item_doc_grid: the centerCrop thumbnail fills the cell under
-  // the #88000000 band; item_doc_list: the thumbnail in the 40 dp icon box.
-  function openFrom(ctx) {
-    const {data, ui, t} = ctx, photos = [...data.photos].reverse(), list = !!ui.pickList;
-    const thumb = p => `<img class="kwp-doc-thumb" src="${e(ctx.image(p))}" alt="">`;
-    const title = p => `<span class="ldu-title">${e(p.name || '')}</span>`;
-    const item = p => list
-      ? `<button class="ldu-item kwp-doc" data-action="kwp-picked" data-id="${p.id}"><span class="ldu-icon">${thumb(p)}</span><span class="ldu-copy">${title(p)}</span></button>`
-      : `<button class="ldu-cell kwp-doc" data-action="kwp-picked" data-id="${p.id}">${thumb(p)}<span class="ldu-band">${title(p)}</span></button>`;
-    const icon = file => `<i class="ldu-ab-icon" style="--icon:url('assets/${file}.png')"></i>`;
-    const body = photos.length ? `<div class="ldu-${list ? 'list' : 'grid'}">${photos.map(item).join('')}</div>` : `<p class="ldu-empty">${e(t('No items'))}</p>`;
-    return `<div class="app-view ldu-app kwp-open" data-no-translate><header class="ldu-toolbar"><button class="ldu-nav" data-action="back" aria-label="${e(t('Show roots'))}">${icon('ldu-ic_hamburger')}</button><h2>${e(t('Recent'))}</h2><button data-action="kwp-open-menu" aria-label="${e(t('More options'))}">${icon('ldu-ic_menu_overflow')}</button></header><div class="ldu-content">${body}</div></div>`;
-  }
-  // The overflow as a Material popup, in menu/activity.xml order; the toggles read "Hide …" once on (LocalPreferences).
-  function openFromMenu(ui, t) {
-    const row = (action, id, label) => `<button role="menuitem" data-action="${action}" data-id="${id}">${e(t(label))}</button>`;
-    return `<div class="menu-scrim" data-action="close-overlay"></div><div class="lp-popup-menu ldu-popup" role="menu">${ui.pickList ? row('kwp-open-view', 'grid', 'Grid view') : row('kwp-open-view', 'list', 'List view')}${row('kwp-open-pref', 'advanced', ui.pickAdvanced ? 'Hide internal storage' : 'Show internal storage')}${row('kwp-open-pref', 'size', ui.pickSize ? 'Hide file size' : 'Show file size')}</div>`;
-  }
-  window.KKWallpaperPicker = {tiles, render, openFrom, openFromMenu};
+  window.KKWallpaperPicker = {tiles, render};
 })();

@@ -761,7 +761,7 @@
       case 'play-store': return JBPlay.render(jbPlayContext());
       case 'live-wallpapers': return renderLiveWallpapers();
       case 'wallpaper-picker': return KKWallpaperPicker.render(wallpaperPickerContext());
-      case 'kk-doc-picker': return KKWallpaperPicker.openFrom(wallpaperPickerContext());
+      case 'kk-doc-picker': return LPDocPicker.render(docContext());
       case 'settings': return renderSettings();
       case 'chrome': return renderChrome();
       case 'photos': return PhotosApp.render(photosContext());
@@ -877,7 +877,7 @@
     if (ui.view === 'drawer' && ui.drawerWidgets) { ui.drawerWidgets = false; ui.drawerPage = 0; home(false); ui.overview = true; render(); return; }
     if (ui.view === 'home' && ui.overview) { ui.overview = false; render(); return; }
     if (ui.view === 'wallpaper-picker' && ui.wp?.checked?.length) { ui.wp.checked = []; wallpaperPickerRender(); return; }
-    if (ui.view === 'kk-doc-picker') { ui.view = ui.docPickFor === 'keep' ? 'keep' : 'wallpaper-picker'; ui.docPickFor = ''; render(); return; }
+    if (ui.view === 'kk-doc-picker') { if (LPDocPicker.back(docContext()) !== 'render') docReturn(); render(); return; }
     if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return; }
     // Chrome settings: dialogs first, then the page, then back to the browser.
     // Gmail settings: the dialogs, then the pages, then back to the mail.
@@ -1002,8 +1002,8 @@
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu"><button data-action="kk-cast-enable" role="menuitemcheckbox" aria-checked="${!!data.settings.wifiDisplay}" class="kk-check-item">${safe(i18n.t('Enable wireless display'))}<img src="assets/btn_check_${data.settings.wifiDisplay ? 'on' : 'off'}_holo_dark.png" alt=""></button></div>`;
     } else if (ui.overlay === 'ldu-sort' || ui.overlay === 'ldu-overflow') {
       overlayRoot.innerHTML = LPDownloads.menu(ui.overlay.slice(4), ui, key => i18n.t(key));
-    } else if (ui.overlay === 'kwp-open-menu') {
-      overlayRoot.innerHTML = KKWallpaperPicker.openFromMenu(ui, key => i18n.t(key));
+    } else if (ui.overlay.startsWith?.('ldp-') && ui.docs) {
+      overlayRoot.innerHTML = LPDocPicker.menu(ui.overlay.slice(4), docContext());
     } else if (ui.overlay === 'lp-zen-drop') {
       overlayRoot.innerHTML = LPZen.dropdown(ui.zenDrop, data.settings, key => i18n.t(key));
       // overlapAnchor: the list covers the preference, from its start padding.
@@ -1588,6 +1588,22 @@
   const galleryItems = () => LPGallery.items(data, ui, i18n.locale());
   function galleryWallpaper(photo, quiet) { data.wallpaper = 11; data.customWallpaper = photo.colors; data.customWallpaperPhoto = clone(photo); save(); if (quiet) return; render(); toast('Wallpaper set'); }
   const wallpaperPickerContext = () => ({data, ui, t: key => i18n.t(key), image: photo => ICSMedia.image(photo), bundled: wallpaperFiles.slice(1)});
+  /* DocumentsUI's GET_CONTENT picker (lp-docpicker.js) for the wallpaper picker, Keep (image/*) and Gmail / Email's
+     Attach file (any type). It runs as its own screen in the asking app's task; ui.docPickFor names that app. The
+     free space of Internal storage is the Storage screen's Available figure (settings-detail.js). */
+  const docContext = () => ({data, ui, t: key => { const row = window.StockStrings?.docsui?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, locale: i18n.locale(), image: photo => ICSMedia.image(photo), album: ICSMedia.album, tracks: ICSMusic.tracks, now: deviceDate().getTime(), free: `${(9.93).toLocaleString(i18n.locale(), {minimumFractionDigits: 2})} GB`});
+  function docPick(caller, accept) { ui.overlay = ''; renderOverlay(); LPDocPicker.start(data, ui, caller, accept, docContext()); ui.docPickFor = caller; ui.view = 'kk-doc-picker'; render(); }
+  function docReturn() { const caller = ui.docPickFor; ui.docs = null; ui.docPickFor = ''; ui.view = {wallpaper: 'wallpaper-picker'}[caller] || caller || 'wallpaper-picker'; return caller; }
+  // The document picked goes back to the app that asked: a picture to the wallpaper strip or a Keep note, any file to
+  // the message being written.
+  function docPicked(file) {
+    const caller = docReturn();
+    if (caller === 'keep') { keepAttach(file.photo.id, ui.keepPhotoTo); return; }
+    if (caller === 'wallpaper') { const wp = ui.wp ||= {selected: '', temp: [], checked: []}, pid = file.photo.id; wp.temp = [pid, ...(wp.temp || []).filter(x => x !== pid)]; wp.selected = `photo:${pid}`; render(); return; }
+    const item = mailbox().find(item => item.id === ui.emailId);
+    if (item) item.files = [...(item.files || []), {name: file.name, mime: file.mime, size: file.size, ...(file.photo ? {photo: clone(file.photo)} : {})}];
+    save(); render();
+  }
   // Re-render the picker but keep the strip where it was scrolled.
   function wallpaperPickerRender() { const left = viewport.querySelector('.kwp-scroll')?.scrollLeft || 0; render(); const strip = viewport.querySelector('.kwp-scroll'); if (strip) strip.scrollLeft = left; }
   screen.addEventListener('wheel', event => {
@@ -1977,6 +1993,14 @@
     // Email's Quick responses, ringtone and server screens (email-prefs.js).
     if (action.startsWith('empx-') && EmailPrefs.handle(action, id, {data, ui, save, render, root: viewport, account: ICSEmail.account})) return;
     if (action.startsWith('pe-') && window.PlusEditor?.handle(action, button, peContext())) return;
+    if (action.startsWith('ldp-') && ui.docs) {
+      const result = LPDocPicker.act(action, id, docContext());
+      if (result.save) save();
+      if (result.overlay) { ui.overlay = `ldp-${result.overlay}`; renderOverlay(); return; }
+      ui.overlay = ''; renderOverlay();
+      if (result.pick) { docPicked(result.pick); return; }
+      render(); if (result.focus) viewport.querySelector('.ldp-search input')?.focus(); return;
+    }
     if (action.startsWith('lpu-') && window.LPUsers?.handle(action, button, {data, save, render, open: sub => { ui.sub = sub; render(); }, back: () => { ui.sub = 'users'; render(); }})) return;
     if (ui.view === 'gallery' && ui.galleryPopup && action !== 'gallery-menu') ui.galleryPopup = '';
     // A tap outside the Recents popup menu only dismisses it.
@@ -2057,8 +2081,7 @@
         wp.selected = id; wp.stripHidden = false; wallpaperPickerRender(); break;
       }
       case 'kwp-tap': if (ui.wp) { ui.wp.stripHidden = !ui.wp.stripHidden; viewport.querySelector('.kwp-strip')?.classList.toggle('hidden', ui.wp.stripHidden); } break;
-      case 'kwp-pick': ui.docPickFor = ''; ui.view = 'kk-doc-picker'; render(); break;
-      case 'kwp-picked': if (ui.docPickFor === 'keep') { ui.docPickFor = ''; keepAttach(Number(id), ui.keepPhotoTo); break; } { const wp = ui.wp ||= {selected: '', temp: [], checked: []}, pid = Number(id); wp.temp = [pid, ...(wp.temp || []).filter(x => x !== pid)]; wp.selected = `photo:${pid}`; ui.view = 'wallpaper-picker'; render(); break; }
+      case 'kwp-pick': docPick('wallpaper', 'image/*'); break;
       case 'kwp-cab-done': if (ui.wp) { ui.wp.checked = []; wallpaperPickerRender(); } break;
       case 'kwp-delete': { const wp = ui.wp, gone = new Set((wp?.checked || []).map(k => Number(k.slice(6)))); if (!wp) break; data.kkSavedWallpapers = (data.kkSavedWallpapers || []).filter(x => !gone.has(x)); wp.temp = (wp.temp || []).filter(x => !gone.has(x)); if (wp.checked.includes(wp.selected)) wp.selected = ''; wp.checked = []; save(); wallpaperPickerRender(); break; }
       case 'kwp-set': {
@@ -2198,9 +2221,6 @@
       case 'ldu-sort': ui.dlSort = id; ui.overlay = ''; render(); break;
       case 'ldu-view': ui.dlGrid = id === 'grid'; ui.overlay = ''; render(); break;
       case 'ldu-search': toast('No items'); break;
-      case 'kwp-open-menu': ui.overlay = 'kwp-open-menu'; renderOverlay(); break;
-      case 'kwp-open-view': ui.pickList = id === 'list'; ui.overlay = ''; render(); break;
-      case 'kwp-open-pref': if (id === 'advanced') ui.pickAdvanced = !ui.pickAdvanced; else ui.pickSize = !ui.pickSize; ui.overlay = ''; renderOverlay(); break;
       case 'settings-sub': ui.overlay = ''; if (id === 'development' && !data.settings.developerUnlocked) break; if (ui.view === 'settings' && !ui.sub) ui.settingsRootScroll = viewport.querySelector('.settings-app')?.scrollTop || 0; ui.sub = id; render(); break;
       case 'sd-dialog': ui.settingsField=id;ui.overlay='sd-dialog';renderOverlay();break;
       case 'sd-apps-tab': ui.settingsAppsTab=id;render();break;
@@ -2373,7 +2393,7 @@
       case 'keep-hide-keep': case 'keep-hide-delete': { const note = keepCurrent(); ui.keepDialog = ''; if (note?.list) keepToText(note, action === 'keep-hide-delete'); save(); render(); break; }
       case 'keep-picture': saveKeepNote(); ui.keepDialog = 'picture'; render(); break;
       case 'keep-photo-take': { ui.keepDialog = ''; saveKeepNote(); keepAttach(cameraShoot().id, ui.sub === 'note' ? ui.keepNote : ''); break; }
-      case 'keep-photo-choose': ui.keepDialog = ''; saveKeepNote(); ui.keepPhotoTo = ui.sub === 'note' ? ui.keepNote : ''; ui.docPickFor = 'keep'; ui.view = 'kk-doc-picker'; render(); break;
+      case 'keep-photo-choose': ui.keepDialog = ''; saveKeepNote(); ui.keepPhotoTo = ui.sub === 'note' ? ui.keepNote : ''; docPick('keep', 'image/*'); break;
       case 'keep-photo-remove': saveKeepNote(); ui.keepDialog = 'remove-photo'; render(); break;
       case 'keep-photo-delete': { ui.keepDialog = ''; const note = keepCurrent(); if (note) { delete note.photo; save(); } render(); break; }
       case 'keep-dialog-close': ui.keepDialog = ''; render(); break;
@@ -2769,6 +2789,8 @@
       case 'email-attach': ui.overlay='email-attach';renderOverlay();break;
       case 'email-attach-photo': {const item=mailbox().find(item=>item.id===ui.emailId),photo=data.photos.find(photo=>photo.id===Number(id));if(item&&photo)item.attachment=clone(photo);ui.overlay='';save();render();break;}
       case 'email-remove-attachment': {const item=mailbox().find(item=>item.id===ui.emailId);if(item)delete item.attachment;save();render();break;}
+      case 'email-attach-file': docPick(ui.view, '*/*'); break;
+      case 'email-remove-file': {const item=mailbox().find(item=>item.id===ui.emailId);if(item?.files)item.files.splice(Number(id),1);save();render();break;}
       case 'email-discard': ui.overlay='email-discard';renderOverlay();break;
       case 'email-confirm-discard': ICSEmail.trash(mailbox(),[ui.emailId]);ui.sub='';ui.overlay='';save();render();break;
       // Gmail: Archive leaves the inbox (the conversation stays in All mail); tips and teaser links.
@@ -2795,6 +2817,7 @@
     if (!form || !screen.contains(form)) return;
     event.preventDefault(); const values = new FormData(form);
     if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, mrContext()); return; }
+    if (form.dataset.form === 'ldp-search') { LPDocPicker.search(values.get('q'), docContext()); render(); return; }
     if(form.dataset.form==='folder-name'){event.target.querySelector('input')?.blur();render();return;}
     if(form.dataset.form==='sx-save'){ui.systemError=ICSSystemSettings.submit(data,ui,values);if(ui.systemError){ui.systemValues=Object.fromEntries(values);renderOverlay();return;}save();ui.overlay='';render();return;}
     if(form.dataset.form==='sx-vpn-connect'){ui.vpnConnected=ui.vpnConnected===ui.systemId?null:ui.systemId;ui.overlay='';render();return;}

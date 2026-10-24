@@ -50,7 +50,7 @@ Not traced:
 
 ## 5.1.1 (shamu)
 
-copy: 734, vector: 198, resized: 158, same pixels: 143, converted: 29, similar: 7, generated: 6, own: 3, not traced: 2, cropped: 1
+copy: 746, vector: 198, resized: 158, same pixels: 143, converted: 29, similar: 7, generated: 6, own: 3, not traced: 2, cropped: 1
 
 From another release's image (the own image has no such file; to review): hammerhead 26, maguro 30, mako 21, passion 1 — the source column of the TSV names each.
 

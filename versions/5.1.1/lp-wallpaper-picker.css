@@ -34,14 +34,6 @@
 .kwp-pick-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(3.9956 * var(--dp));color:#fff;font:400 calc(13.9956 * var(--dp)) RobotoICS,Arial,sans-serif}
 .screen .kwp-pick-label img{width:calc(31.9978 * var(--dp));height:calc(31.9978 * var(--dp));object-fit:contain}
 
-/* DocumentsUI "Open from" for image/* (lp-downloads.css draws the Toolbar, rows and cells): item_doc_grid's centerCrop
-   thumbnail fills the cell under the caption band; in item_doc_list it fills the 40 dp icon box. */
-.screen .ldu-cell.kwp-doc{justify-content:flex-end;overflow:hidden}
-.screen .ldu-cell.kwp-doc>img.kwp-doc-thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.ldu-cell.kwp-doc .ldu-band{position:relative}
-.screen .ldu-item.kwp-doc .ldu-icon{overflow:hidden}
-.screen .ldu-item.kwp-doc img.kwp-doc-thumb{width:100%;height:100%;object-fit:cover}
-
 /* Settings > Display > Wallpaper (WallpaperTypeSettings): preference rows with the 48 dp app icons. */
 .screen .kk-wallpaper-type{gap:calc(16.0045 * var(--dp));min-height:calc(71.9647 * var(--dp))}
 .screen .kk-wallpaper-type img.kk-wallpaper-type-icon{flex:none;width:calc(48.0023 * var(--dp));height:calc(48.0023 * var(--dp))}

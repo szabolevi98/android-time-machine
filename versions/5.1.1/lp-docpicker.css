@@ -1,0 +1,40 @@
+/* DocumentsUI 5.1.1 for ACTION_GET_CONTENT (lp-docpicker.js); lp-downloads.css draws the Toolbar, the rows and the
+   cells. Thumbnails: item_doc_grid's centerCrop image fills the cell under the band, item_doc_list's fills the 40 dp
+   icon box; a document of another type gets the #88ffffff item_doc_*_overlay_disabled. The breadcrumb Spinner carries
+   the white spinner_mtrl_am_alpha arrow. The roots drawer: 256 dp on white with 16 dp elevation, its own 56 dp
+   colorPrimary Toolbar, item_root rows (48 dp, 16 dp padding, the 24 dp icon in a 40 dp box, Subhead title and Body1
+   summary) tinted secondary_text_material_light, and the current root on colorAccent with white icon and title
+   (item_root_background, item_root_icon, item_root_primary_text). */
+.ldp-app{position:relative}
+.screen .ldp-doc{position:relative;overflow:hidden}
+.screen .ldu-cell.ldp-doc{justify-content:flex-end}
+.screen .ldu-cell.ldp-doc>.ldp-thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ldu-cell.ldp-doc .ldu-band{position:relative}
+.screen .ldu-item.ldp-doc .ldu-icon{overflow:hidden}
+.screen .ldu-item.ldp-doc .ldp-thumb{width:100%;height:100%;object-fit:cover}
+.screen .ldp-doc.off{cursor:default}
+.ldp-doc.off::after{content:'';position:absolute;inset:0;background:#88ffffff}
+.ldp-doc.off:active{background:inherit}
+.screen .ldp-crumb{flex:1;min-width:0;width:auto;justify-content:start;display:flex;align-items:center;gap:calc(4 * var(--dp));margin-left:calc(4 * var(--dp));padding:0 calc(4 * var(--dp))}
+.ldp-crumb span{min-width:0;font:500 calc(20 * var(--dp)) Roboto,sans-serif;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ldp-crumb i{flex:none;width:calc(18 * var(--dp));height:calc(24 * var(--dp));background:#fff;-webkit-mask:url('assets/ldu-spinner_mtrl_am.png') center/contain no-repeat;mask:url('assets/ldu-spinner_mtrl_am.png') center/contain no-repeat}
+.ldp-search{flex:1;min-width:0;margin-left:calc(16 * var(--dp))}
+.ldp-search input{width:100%;height:calc(40 * var(--dp));padding:0;border:0;border-bottom:1px solid #ffffffb3;background:none;color:#fff;font:400 calc(16 * var(--dp)) Roboto,sans-serif;outline:none;caret-color:#fff}
+.ldp-search input::-webkit-search-cancel-button{display:none}
+.lp-popup-menu.ldu-popup.ldp-crumbs{left:calc(60 * var(--dp));right:auto}
+.ldp-crumbs [role="menuitem"]{display:flex;align-items:center;gap:calc(8 * var(--dp))}
+.ldp-crumb-arrow{flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:#0000008a;-webkit-mask:var(--icon) center/contain no-repeat;mask:var(--icon) center/contain no-repeat}
+.ldp-scrim{position:absolute;inset:0;z-index:3;background:#00000099}
+.ldp-drawer{position:absolute;left:0;top:0;bottom:0;z-index:4;width:min(calc(256 * var(--dp)),calc(100% - calc(56 * var(--dp))));display:flex;flex-direction:column;background:#fff;box-shadow:0 calc(16 * var(--dp)) calc(32 * var(--dp)) #0000004d}
+.ldp-drawer-bar{flex:none;height:calc(56 * var(--dp));display:flex;align-items:center;padding:0 calc(16 * var(--dp));background:#37474f;box-shadow:0 calc(3 * var(--dp)) calc(6 * var(--dp)) #0000003d}
+.ldp-drawer-bar h2{margin:0;font:500 calc(20 * var(--dp)) Roboto,sans-serif;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ldp-roots{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.screen .ldp-root{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;text-align:left;cursor:pointer}
+.ldp-root:active{background:#1f000000}
+.ldp-root.on{background:#009688}
+.ldp-root-icon{flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin:0 calc(24 * var(--dp)) 0 calc(8 * var(--dp));background:#0000008a;-webkit-mask:var(--icon) center/contain no-repeat;mask:var(--icon) center/contain no-repeat}
+.ldp-root>span{flex:1;min-width:0;display:flex;flex-direction:column;padding:calc(8 * var(--dp)) 0}
+.ldp-root b{font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ldp-root small{font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#0000008a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ldp-root.on .ldp-root-icon{background:#fff}
+.ldp-root.on b,.ldp-root.on small{color:#fff}

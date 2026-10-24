@@ -33,6 +33,7 @@ for(const [v,max,checked] of [['4.3',4,'kp-ic_checked_dark.png'],['4.4.4',4,'kp2
   // simulator.js: the actions, the list item form and the picture flows.
   const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');
   for(const a of ['keep-new-list','keep-li-check','keep-li-delete','keep-checkboxes','keep-hide-delete','keep-photo-take','keep-photo-delete','keep-li-add'])assert.ok(sim.includes(`case '${a}'`),`${v} ${a}`);
-  if(v!=='4.3')assert.ok(sim.includes("case 'keep-photo-choose'")&&sim.includes("if (ui.docPickFor === 'keep')"),v);
+  // Choose photo goes through the image's document picker: 4.4.4's own, 5.1.1's DocumentsUI (lp-docpicker.js).
+  if(v!=='4.3')assert.ok(sim.includes("case 'keep-photo-choose'")&&(v==='5.1.1'?sim.includes("docPick('keep', 'image/*')")&&sim.includes("if (caller === 'keep')"):sim.includes("if (ui.docPickFor === 'keep')")),v);
 }
 console.log('keep-notes ok');
