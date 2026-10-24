@@ -171,3 +171,8 @@
 .home-search{height:calc(39.7351 * var(--dp));margin:calc(15.4526 * var(--dp)) calc(11.0376 * var(--dp)) 0;border:calc(5.9603 * var(--dp)) solid transparent;border-image:url('assets/jb-search_frame.png') 9 fill / calc(5.9603 * var(--dp)) stretch;background:none;box-shadow:none;border-radius:0;padding:0 0 0 calc(4.4151 * var(--dp))}
 .home-search .voice-search{width:calc(39.7351 * var(--dp));flex:none;display:grid;place-items:center}
 .home-search .search-microphone{width:calc(21.8544 * var(--dp));height:calc(31.7881 * var(--dp));object-fit:contain}
+/* A contact's shortcut (Place on Home screen): ShortcutIntentBuilder draws the contact's LetterTileDrawable, the
+   letter on its colour, as the launcher icon. */
+.app-icon.contact-shortcut-icon{overflow:hidden}
+.contact-shortcut-icon>.contact-shortcut-tile{width:100%;height:100%;font:400 calc(34 * var(--dp)) Roboto,sans-serif}
+.screen .launcher-icon .contact-shortcut-tile>span{display:block;margin:0;font:300 calc(40 * var(--dp))/1 RobotoLight,RobotoICS,sans-serif;color:#fff;text-shadow:none;white-space:nowrap}

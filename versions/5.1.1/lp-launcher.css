@@ -295,3 +295,7 @@
 .lpcw-none{flex:1;padding:calc(11.0045 * var(--dp)) calc(8.0023 * var(--dp)) calc(3.9956 * var(--dp));font:400 calc(11.9978 * var(--dp)) Roboto,sans-serif;color:#777}
 .lpcw-gap{height:calc(10 * var(--dp))}
 .lpcw-footer{height:calc(3.9956 * var(--dp))}
+/* A contact's shortcut (Place on Home screen): ShortcutIntentBuilder's letter tile, round as Lollipop's contact
+   pictures, as the launcher icon. */
+.contact-shortcut-icon>.contact-shortcut-tile{width:100%;height:100%;border-radius:50%;font:400 calc(30 * var(--dp)) Roboto,sans-serif}
+.screen .launcher-icon .contact-shortcut-tile>span{display:block;margin:0;font:300 calc(32 * var(--dp))/1 Roboto,sans-serif;color:#fff;text-shadow:none;white-space:nowrap}

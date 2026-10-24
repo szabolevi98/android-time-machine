@@ -942,6 +942,30 @@ const contactsShare = spec => async h => {
   const count = await store(h, 'contacts');
   h.check('Share visible contacts gives Email every card', !!all && (all.text.match(/BEGIN:VCARD/g) || []).length === count.length, JSON.stringify(all?.name));
 };
+
+// Contacts › Place on Home screen (T11; 4.1 added it, ICS's contact menu has none): the toast names the shortcut, InstallShortcutReceiver's screen gets it (Launcher2:
+// the default screen first; Launcher3: from the second screen on), it shows the contact's name and opens the contact.
+const contactsShortcut = spec => async h => {
+  await h.openApp('people');
+  await h.until(`!!document.querySelector('#viewport [data-action="contact"][data-id="1"]')`);
+  await h.tap('#viewport [data-action="contact"][data-id="1"]');
+  await h.tap('#viewport [data-action="people-menu"]');
+  await h.tap('[data-action="people-place-home"]');
+  h.check('the toast names the shortcut', await h.until(`/Alex Morgan/.test(document.querySelector('.toast')?.textContent || '')`));
+  const pages = await store(h, 'homePages'), page = pages.findIndex(p => p.includes('contact:1'));
+  h.check(`it lands on screen ${spec.page}`, page === spec.page, JSON.stringify(page));
+  // The launcher's first-run clings are not this path: they are marked seen, then the phone reloads onto its home.
+  await h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));const d=JSON.parse(localStorage.getItem(k));d.clings={firstRun:true,workspace:true,folder:true};localStorage.setItem(k,JSON.stringify(d));return 1})()`);
+  await h.reload();
+  await h.until(`!!document.querySelector('#viewport .home-view')`);
+  // The first-run clings step aside, then the shortcut's screen is shown.
+  await h.ev(`(()=>{document.querySelectorAll('[data-action*="cling"]').forEach(b=>b.click());const m=document.querySelector('[data-action="page"][data-id="${page}"]');m?.click();return 1})()`);
+  h.check('the shortcut shows the contact', await h.until(`document.querySelector('#viewport .home-grid[data-home-page="${page}"] .contact-shortcut > span:last-child')?.textContent.trim() === 'Alex Morgan'`));
+  await h.sleep(600);
+  // (The launcher's first-run clings were marked seen before the reload above.)
+  await h.tap(`#viewport .home-grid[data-home-page="${page}"] .contact-shortcut`);
+  h.check('a tap opens the contact', await h.until(`!!document.querySelector('#viewport [data-action="people-menu"]') && /Alex Morgan/.test(document.querySelector('#viewport').textContent)`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1014,6 +1038,9 @@ const CASES = [
   {id: 'T11', version: '4.3', name: 'Contacts › Share and Share visible contacts', run: contactsShare({listMenu: 'people-list-menu'})},
   {id: 'T11', version: '4.4.4', name: 'Contacts › Share and Share visible contacts', run: contactsShare({listMenu: 'people-list-menu'})},
   {id: 'T11', version: '5.1.1', name: 'Contacts › Share and Share visible contacts', run: contactsShare({listMenu: 'people-menu'})},
+  {id: 'T11', version: '4.3', name: 'Contacts › Place on Home screen', run: contactsShortcut({page: 2})},
+  {id: 'T11', version: '4.4.4', name: 'Contacts › Place on Home screen', run: contactsShortcut({page: 1})},
+  {id: 'T11', version: '5.1.1', name: 'Contacts › Place on Home screen', run: contactsShortcut({page: 1})},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

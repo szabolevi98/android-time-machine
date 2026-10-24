@@ -99,6 +99,8 @@ window.StockStrings = {
   "OK": {"res": "framework:ok", "hu": "OK", "de": "OK", "fr": "OK", "es": "Aceptar"}
  },
  "vcard": {
+  "Shortcut \"%s\" created.": {"res": "Velvet:shortcut_installed", "hu": "A(z) „%s” parancsikon létrehozva.", "de": "Verknüpfung \"%s\" wurde erstellt.", "fr": "Le raccourci \"%s\" a été créé.", "es": "Se ha creado el acceso directo \"%s\"."},
+  "No room": {"res": "Velvet:completely_out_of_space", "hu": "Nincs több hely a kezdőképernyőkön.", "de": "Auf Ihren Startbildschirmen ist kein Platz mehr vorhanden.", "fr": "Vous n'avez plus d'espace libre sur vos écrans d'accueil.", "es": "No queda espacio en las pantallas de inicio.", "en": "No more room on your Home screens."},
   "Share contact via": {"res": "GoogleContacts:share_via", "hu": "Névjegy megosztása a következőn:", "de": "Kontakt teilen über", "fr": "Partager contact via", "es": "Compartir contacto a través de"},
   "Contacts to display": {"res": "GoogleContacts:activity_title_contacts_filter", "hu": "Megjelenítendő névjegyek", "de": "Kontakte zum Anzeigen", "fr": "Contacts à afficher", "es": "Contactos que mostrar"},
   "All contacts": {"res": "GoogleContacts:list_filter_all_accounts", "hu": "Összes névjegy", "de": "Alle Kontakte", "fr": "Tous les contacts", "es": "Todos los contactos"},

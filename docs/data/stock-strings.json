@@ -1,6 +1,8 @@
 {
  "4.3": {
   "vcard": {
+   "Shortcut \"%s\" created.": "Launcher2:shortcut_installed",
+   "No room": "Launcher2:completely_out_of_space",
    "Share contact via": "Contacts:share_via",
    "Contacts to display": "Contacts:activity_title_contacts_filter",
    "All contacts": "Contacts:list_filter_all_accounts",
@@ -857,6 +859,8 @@
    "View Photo Sphere": "GalleryGoogle:pano_play_photo_sphere_description"
   },
   "vcard": {
+   "Shortcut \"%s\" created.": "Velvet:shortcut_installed",
+   "No room": "Velvet:completely_out_of_space",
    "Share contact via": "Contacts:share_via",
    "Contacts to display": "Contacts:activity_title_contacts_filter",
    "All contacts": "Contacts:list_filter_all_accounts",
@@ -1968,6 +1972,8 @@
    "OK": "framework:ok"
   },
   "vcard": {
+   "Shortcut \"%s\" created.": "Velvet:shortcut_installed",
+   "No room": "Velvet:completely_out_of_space",
    "Share contact via": "GoogleContacts:share_via",
    "Contacts to display": "GoogleContacts:activity_title_contacts_filter",
    "All contacts": "GoogleContacts:list_filter_all_accounts",
@@ -3118,6 +3124,8 @@
  },
  "4.0.4": {
   "vcard": {
+   "Shortcut \"%s\" created.": "Launcher2:shortcut_installed",
+   "No room": "Launcher2:out_of_space",
    "Share contact via": "Contacts:share_via",
    "Contacts to display": "Contacts:activity_title_contacts_filter",
    "All contacts": "Contacts:list_filter_all_accounts",

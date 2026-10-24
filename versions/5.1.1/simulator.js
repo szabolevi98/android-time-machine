@@ -234,6 +234,8 @@
   const shadeDate = () => deviceDate().toLocaleDateString(i18n.locale(), { weekday: 'short', month: 'short', day: 'numeric' });
   const contact = id => data.contacts.find(item => item.id === Number(id));
   const appIcon = id => {
+    const person = contactShortcut(id);
+    if (person) return `<span class="app-icon contact-shortcut-icon">${window.LPDialer ? LPDialer.letterTile(person, 'contact-shortcut-tile') : ''}</span>`;
     if (id === 'apps') return '<span class="app-icon"><img src="assets/gnl-ic_allapps.png" alt=""></span>';
     const folder=ICSLauncherFolders.folder(data,id);
     if(folder)return `<span class="app-icon launcher-folder-icon">${folder.items.slice(0,3).map(app=>`<span class="folder-preview-item">${appIcon(app)}</span>`).join('')}</span>`;
@@ -245,7 +247,21 @@
   };
   // The default folders keep their name as a string key until renamed, so they follow the language (google_folder_name…).
   const folderName=id=>{const folder=ICSLauncherFolders.folder(data,id);return folder?.name?(folder.nameKey?i18n.t(folder.name):folder.name):i18n.t('Unnamed folder');};
-  const launcherIcon = id => ICSLauncherFolders.folder(data,id)
+  /* Contacts' Place on Home screen: an INSTALL_SHORTCUT whose shortcut opens the contact (QuickContact), its photo or
+     the image's contact picture as the icon, the name as the label. Launcher3's InstallShortcutReceiver adds it on the first free cell from the second screen on (startSearchPageIndex), a new screen when all are full; the toast names it (shortcut_installed). */
+  const contactShortcut = id => String(id).startsWith('contact:') ? data.contacts.find(p => p.id === Number(String(id).slice(8))) || {name: ''} : null;
+  const VCARD = key => { const row = window.StockStrings?.vcard?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : key; };
+  function placeContactShortcut(person) {
+    if (!person) return;
+    const free = page => (data.homePages[page] || []).findIndex((id, index) => !id && !(data.homeWidgets[page] || []).some(w => { const s = widgetSize(w); return index % 4 >= w.x && index % 4 < w.x + s.width && Math.floor(index / 4) >= w.y && Math.floor(index / 4) < w.y + s.height; }));
+    const count = homePageCount ? homePageCount() : data.homePages.length;
+    const order = Array.from({length: Math.max(0, count - 1)}, (_, i) => i + 1);
+    let page = order.find(i => free(i) >= 0);
+    if (page === undefined) { data.homePages.splice(count, 0, Array(16).fill(null)); data.homeWidgets.splice(count, 0, []); page = count; }
+    data.homePages[page][free(page)] = `contact:${person.id}`; save();
+    toast(AndroidStrings.format(VCARD('Shortcut "%s" created.'), person.name));
+  }
+  const launcherIcon = id => contactShortcut(id) ? `<button class="launcher-icon contact-shortcut" data-action="open-contact" data-id="${safe(String(id).slice(8))}" aria-label="${safe(contactShortcut(id).name)}" data-no-translate>${appIcon(id)}<span>${safe(contactShortcut(id).name)}</span></button>` : ICSLauncherFolders.folder(data,id)
     ? `<button class="launcher-icon" data-action="folder-open" data-folder-id="${safe(id)}" aria-label="${safe(folderName(id))}" data-no-translate>${appIcon(id)}<span>${safe(folderName(id))}</span></button>`
     : `<button class="launcher-icon" data-action="${id==='apps'?'drawer':'open-app'}" ${id==='apps'?'':`data-app="${id}"`} aria-label="${safe(appNames[id]||'Apps')}">${appIcon(id)}<span>${safe(appNames[id]||'Apps')}</span></button>`;
   /* Settings 5.1 toolbar (Widget.Material.Light.ActionBar.Solid on colorPrimary #263238): the up arrow
@@ -1518,7 +1534,7 @@
     if (ui.overlay === 'people-share') return PeopleIO.shareOverlay({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
     if (ui.overlay === 'people-vcard') return PeopleIO.overlay({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
     const P = key => PeopleStrings.t(key), unavailable = 'This feature is not part of the simulator.';
-    if (ui.overlay === 'people-menu') { const items = ui.sub === 'detail' ? [['people-delete', 'Delete'], ['psh-open', 'Share'], ['toast', 'Place on Home screen']] : [['pfl-open', 'Contacts to display'], ['vcf-open', 'Import/export'], ['open-settings-sync', 'Accounts'], ['pst-open', 'Settings'], ['toast', 'Help']]; return `<div class="menu-scrim" data-action="close-overlay"></div><div class="lp-popup-menu" role="menu" data-no-translate>${items.map(([action, title]) => `<button role="menuitem" data-action="${action}"${action === 'toast' ? ` data-id="${safe(unavailable)}"` : ''}>${safe(P(title))}</button>`).join('')}</div>`; }
+    if (ui.overlay === 'people-menu') { const items = ui.sub === 'detail' ? [['people-delete', 'Delete'], ['psh-open', 'Share'], ['people-place-home', 'Place on Home screen']] : [['pfl-open', 'Contacts to display'], ['vcf-open', 'Import/export'], ['open-settings-sync', 'Accounts'], ['pst-open', 'Settings'], ['toast', 'Help']]; return `<div class="menu-scrim" data-action="close-overlay"></div><div class="lp-popup-menu" role="menu" data-no-translate>${items.map(([action, title]) => `<button role="menuitem" data-action="${action}"${action === 'toast' ? ` data-id="${safe(unavailable)}"` : ''}>${safe(P(title))}</button>`).join('')}</div>`; }
     if (ui.overlay === 'people-delete') return `<div class="lpp-alert-scrim" data-action="close-overlay"></div><div class="lpp-alert" role="alertdialog" aria-label="${safe(P('This contact will be deleted.'))}" data-no-translate><p>${safe(P('This contact will be deleted.'))}</p><div class="lpp-alert-buttons"><button data-action="close-overlay">${safe(P('Cancel'))}</button><button data-action="people-confirm-delete">${safe(P('OK'))}</button></div></div>`;
     const group = data.contactGroups.find(g=>g.id===ui.peopleEditGroup);
     return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><form class="settings-dialog mms-dialog people-editor" role="dialog" aria-label="${group?'Edit group':'New group'}" data-form="people-group"><h3>${group?'Edit group':'New group'}</h3><label>Group name<input name="name" required maxlength="50" value="${safe(group?.name||'')}"></label>${data.contacts.map(p=>`<label class="people-membership"><input type="checkbox" name="members" value="${p.id}" ${group?.members.includes(p.id)?'checked':''}>${safe(p.name)}</label>`).join('')}<div class="settings-dialog-actions"><button type="button" data-action="close-overlay">Cancel</button><button type="submit">Save</button></div></form>`;
@@ -2393,6 +2409,8 @@
       case 'a11y-hold': ui.overlay = 'a11y-hold'; renderOverlay(); break;
       case 'a11y-hold-pick': data.settings.longPressTimeout = Number(id); ui.overlay = ''; save(); renderOverlay(); render(); break;
       case 'toast': toast(id); break;
+      case 'people-place-home': ui.overlay = ''; renderOverlay(); placeContactShortcut(data.contacts.find(p => p.id === (Number(id) || ui.selectedContact))); break;
+      case 'open-contact': { const person = data.contacts.find(p => p.id === Number(id)); openApp('people'); if (person) { ui.selectedContact = person.id; ui.sub = 'detail'; render(); } break; }
       // Security's sub-pages (lp-security.js).
       case 'lps-toast': toast(i18n.t(id)); break;
       case 'lps-sim': ui.lpsPin = {mode: id, step: 'pin'}; ui.overlay = 'lps-pin'; renderOverlay(); break;
