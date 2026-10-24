@@ -1497,6 +1497,9 @@
     'Tap two or more points on the map to measure the distance between them.': {own: true, hu: 'Koppintson két vagy több pontra a térképen a köztük lévő távolság méréséhez.', de: 'Tippen Sie auf zwei oder mehr Punkte der Karte, um die Entfernung zwischen ihnen zu messen.', fr: 'Appuyez sur deux points ou plus de la carte pour mesurer la distance qui les sépare.', es: 'Toca dos o más puntos del mapa para medir la distancia entre ellos.'},
     'Bubble Buttons': {own: true, hu: 'Buborékgombok', de: 'Schaltflächen in Infofeldern', fr: 'Boutons des info-bulles', es: 'Botones de burbuja'},
     'Call or navigate to a place right from its bubble.': {own: true, hu: 'Hívás vagy navigáció egy helyhez közvetlenül a buborékjából.', de: 'Einen Ort direkt aus seinem Infofeld anrufen oder dorthin navigieren.', fr: 'Appelez un lieu ou lancez la navigation directement depuis son info-bulle.', es: 'Llama a un sitio o navega hasta él directamente desde su burbuja.'},
+    // Maps 6.x Settings (4.0.4, 4.3): Switch account in Maps 7.5's own words (SWITCH_ACCOUNT, hammerhead).
+    'Switch account': {own: true, hu: 'Fiók váltása', de: 'Konto wechseln', fr: 'Changer de compte', es: 'Cambiar cuenta'},
+    'Use cached tiles only': {own: true, hu: 'Csak a gyorsítótárban lévő csempék használata', de: 'Nur zwischengespeicherte Kacheln verwenden', fr: 'Utiliser uniquement les tuiles en cache', es: 'Usar solo mosaicos en caché'},
     'Prefetch over mobile networks': {own: true, hu: 'Előzetes letöltés mobilhálózaton', de: 'Vorabruf über Mobilfunknetze', fr: 'Prélecture via les réseaux mobiles', es: 'Precarga en redes móviles'},
     'Check in': {own: true, hu: 'Bejelentkezés', de: 'Check-in', fr: 'Check-in', es: 'Check-in'},
     'Add friends': {own: true, hu: 'Ismerősök hozzáadása', de: 'Freunde hinzufügen', fr: 'Ajouter des amis', es: 'Añadir amigos'},

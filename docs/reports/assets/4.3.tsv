@@ -732,6 +732,8 @@ versions/4.3/assets/mp6-ic_menu_directions.png	7e4436e6e313886e	copy	mako:/syste
 versions/4.3/assets/mp6-ic_menu_layers.png	73f5ee7e4cabed7e	copy	mako:/system/app/Maps.apk!res/drawable-320dpi-v14/ic_menu_layers.png	drawable-320dpi-v14		73f5ee7e4cabed7e
 versions/4.3/assets/mp6-ic_menu_places.png	d3608323e47eb5bc	copy	mako:/system/app/Maps.apk!res/drawable-320dpi-v14/ic_menu_places.png	drawable-320dpi-v14		d3608323e47eb5bc
 versions/4.3/assets/mp6-ic_menu_search.png	49e738f6c2a00c9a	copy	mako:/system/app/Maps.apk!res/drawable-320dpi-v14/ic_menu_search.png	drawable-320dpi-v14		49e738f6c2a00c9a
+versions/4.3/assets/mp6-ic_menu_star.png	56567dc5648ea190	copy	mako:/system/app/Maps.apk!res/drawable-320dpi/ic_menu_star.png	drawable-320dpi		56567dc5648ea190
+versions/4.3/assets/mp6-ic_menu_star_on.png	9b1e4847fce73c01	copy	mako:/system/app/Maps.apk!res/drawable-320dpi/ic_menu_star_on.png	drawable-320dpi		9b1e4847fce73c01
 versions/4.3/assets/mp6r-bottom_panel_gray.png	e5cf71f6381b506b	copy	mako:/system/app/Maps.apk!res/drawable/bottom_panel_gray.9.png	drawable		e5cf71f6381b506b
 versions/4.3/assets/mp6r-bottombar_portrait_565.png	fb91934c24ac5a2d	copy	mako:/system/app/Maps.apk!res/drawable-240dpi/bottombar_portrait_565.png	drawable-240dpi		fb91934c24ac5a2d
 versions/4.3/assets/mp6r-btn_default_normal.png	200b9b2937c9e8a3	copy	mako:/system/app/Maps.apk!res/drawable-240dpi/btn_default_normal.9.png	drawable-240dpi		200b9b2937c9e8a3

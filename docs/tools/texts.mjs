@@ -56,6 +56,7 @@ const JOBS = [
   {cmd: ['python', 'docs/tools/aosp-music-strings.py'], out: ['versions/4.0.4/music-strings.js', 'versions/4.3/music-strings.js']},
   {cmd: ['python', 'docs/tools/email-prefs.py'], out: ['versions/4.0.4/email-prefs.js', 'versions/4.3/email-prefs.js', 'versions/4.4.4/email-prefs.js', 'versions/5.1.1/email-prefs.js']},
   {cmd: ['python', 'docs/tools/stock-strings.py'], out: ['versions/4.0.4/stock-strings.js', 'versions/4.3/stock-strings.js', 'versions/4.4.4/stock-strings.js', 'versions/5.1.1/stock-strings.js']},
+  {cmd: ['python', 'docs/tools/maps-prefs.py'], out: ['versions/4.0.4/maps-prefs.js', 'versions/4.3/maps-prefs.js', 'versions/4.4.4/maps-prefs.js', 'versions/5.1.1/maps-prefs.js']},
   {cmd: ['python', 'docs/tools/news-prefs.py'], out: ['versions/2.3.6/news-prefs.js', 'versions/4.0.4/news-prefs.js', 'versions/4.3/news-prefs.js', 'versions/4.4.4/news-prefs.js']},
   {cmd: ['python', 'docs/tools/dc-cities.py'], out: ['versions/4.3/dc-cities.js', 'versions/4.4.4/dc-cities.js', 'versions/5.1.1/dc-cities.js']},
   {cmd: ['python', 'docs/tools/chrome-pak.py'], out: ['versions/4.3/chrome-pak.js', 'versions/4.4.4/chrome-pak.js']},

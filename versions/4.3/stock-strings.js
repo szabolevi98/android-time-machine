@@ -93,6 +93,10 @@ window.StockStrings = {
   "Clear query": {"res": "framework:searchview_description_clear", "hu": "Lekérdezés törlése", "de": "Anfrage löschen", "fr": "Effacer la requête", "es": "Borrar consulta"}
  },
  "maps": {
+  "Delete": {"res": "Maps:MY_PLACES_DELETE_CONFIRM_TITLE", "hu": "Törlés", "de": "Löschen", "fr": "Supprimer", "es": "Eliminar"},
+  "<b>{0}</b> will be removed from My Places.": {"res": "Maps:MY_PLACES_DELETE_CONFIRM", "hu": "<b>{0}</b> kikerül a Saját helyek közül.", "de": "<b>{0}</b> wird aus Meine Orte entfernt.", "fr": "<b>{0}</ b> sera retiré de Mes adresses.", "es": "<b> {0} </ b> se eliminará de Mis sitios."},
+  "Starred": {"res": "Maps:MY_PLACES_ITEM_IS_STARRED", "hu": "Csillagozva", "de": "Markiert", "fr": "Favori", "es": "Destacado"},
+  "You have no starred places.": {"res": "Maps:MY_PLACES_NO_STARRED_ITEM_MESSAGE", "hu": "Nincsenek csillagozott helyei.", "de": "Sie haben keine markierten Orte.", "fr": "Aucune adresse enregistrée.", "es": "No has puntuado ningún sitio."},
   "Maps": {"res": "Maps:MAPS_APP_NAME", "hu": "Térkép", "de": "Maps", "fr": "Maps", "es": "Maps"},
   "Search": {"res": "Maps:da_search_label", "hu": "Keresés", "de": "Suchen", "fr": "Rechercher", "es": "Buscar"},
   "Search Maps": {"res": "Maps:SEARCH_HINT", "hu": "Keresés", "de": "Maps-Suche", "fr": "Rechercher", "es": "Buscar en Maps"},

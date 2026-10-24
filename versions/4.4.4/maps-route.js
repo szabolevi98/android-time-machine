@@ -27,7 +27,8 @@
   }
   const fmt = (pattern, ...args) => AndroidStrings.format(pattern, ...args);
   function distance(ctx, km) {
-    if (S(ctx, 'imperial') === 'imperial') { const mi = km * .621; return mi < .1 ? fmt(S(ctx, '%s ft'), Math.round(mi * 5280 / 50) * 50) : fmt(S(ctx, '%s mi'), mi.toFixed(1)); }
+    // Maps' Distance units (maps-prefs.js), else the language's.
+    if (window.MapsPrefs ? MapsPrefs.imperial(ctx.data, S(ctx, 'imperial') === 'imperial') : S(ctx, 'imperial') === 'imperial') { const mi = km * .621; return mi < .1 ? fmt(S(ctx, '%s ft'), Math.round(mi * 5280 / 50) * 50) : fmt(S(ctx, '%s mi'), mi.toFixed(1)); }
     return km < 1 ? fmt(S(ctx, '%s m'), Math.round(km * 100) * 10) : fmt(S(ctx, '%s km'), km.toFixed(1));
   }
   // DA_MINUTES / DA_HOURS, joined by DA_TIME_FORMAT_HOURS_AND_MINUTES.

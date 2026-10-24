@@ -38,7 +38,7 @@
   // ---- Maps 6.4.0 (with Latitude): the drawn map ----
   function mapSvg(ctx) {
     const pin = ctx.ui.mapsQuery ? '<g transform="translate(222 190)"><path d="M0-34a14 14 0 0 0-14 14c0 11 14 26 14 26s14-15 14-26A14 14 0 0 0 0-34z" fill="#db4437"/><circle cy="-20" r="5" fill="#fff"/></g>' : '';
-    return `<svg class="sa-map" viewBox="0 0 360 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="360" height="600" fill="#ece8df"/><path d="M-10 430c80-20 120 10 200-10s140-60 180-50v240H-10z" fill="#a9cdee"/><rect x="30" y="80" width="110" height="90" fill="#cde5b4"/><rect x="230" y="300" width="90" height="70" fill="#cde5b4"/><g stroke="#fff" stroke-width="7" fill="none"><path d="M-10 200H370M-10 330H370M90 -10V620M260 -10V620"/></g><g stroke="#f7d36b" stroke-width="10" fill="none"><path d="M-10 260C80 250 140 280 200 240S320 200 370 210"/><path d="M180 -10C170 120 200 200 190 300S160 460 170 620"/></g><g stroke="#fff" stroke-width="3" fill="none"><path d="M-10 120H370M-10 380H370M40 -10V620M150 -10V620M320 -10V620"/></g><text x="50" y="130" font-family="Arial" font-size="12" fill="#5b8a46">${e(ctx.t('City Park'))}</text><text x="210" y="470" font-family="Arial" font-size="12" fill="#4a77a8" font-style="italic">${e(ctx.t('Bay'))}</text>${window.MapsRoute?.svg(ctx) || pin}<circle cx="180" cy="300" r="22" fill="#4285f4" opacity=".18"/><circle cx="180" cy="300" r="8" fill="#4285f4" stroke="#fff" stroke-width="3"/></svg>`;
+    return `<svg class="sa-map" viewBox="0 0 360 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="360" height="600" fill="#ece8df"/><path d="M-10 430c80-20 120 10 200-10s140-60 180-50v240H-10z" fill="#a9cdee"/><rect x="30" y="80" width="110" height="90" fill="#cde5b4"/><rect x="230" y="300" width="90" height="70" fill="#cde5b4"/><g stroke="#fff" stroke-width="7" fill="none"><path d="M-10 200H370M-10 330H370M90 -10V620M260 -10V620"/></g><g stroke="#f7d36b" stroke-width="10" fill="none"><path d="M-10 260C80 250 140 280 200 240S320 200 370 210"/><path d="M180 -10C170 120 200 200 190 300S160 460 170 620"/></g><g stroke="#fff" stroke-width="3" fill="none"><path d="M-10 120H370M-10 380H370M40 -10V620M150 -10V620M320 -10V620"/></g><text x="50" y="130" font-family="Arial" font-size="12" fill="#5b8a46">${e(ctx.t('City Park'))}</text><text x="210" y="470" font-family="Arial" font-size="12" fill="#4a77a8" font-style="italic">${e(ctx.t('Bay'))}</text>${window.MapsRoute?.svg(ctx) || pin}${ctx.latitude ? latPins(ctx) : ''}<circle cx="180" cy="300" r="22" fill="#4285f4" opacity=".18"/><circle cx="180" cy="300" r="8" fill="#4285f4" stroke="#fff" stroke-width="3"/></svg>`;
   }
   // Maps 6.4.0 (IMM76I): res/menu/map_view_default.xml puts Search, Directions, Places and Layers in the bar
   // (ic_menu_* at 320 dpi) and Clear map, Settings and Help in the overflow; the Maps title opens
@@ -48,17 +48,29 @@
   /* Latitude (LatitudeActivity, a translucent trampoline into MapsActivity): the same map under map_view_latitude.xml,
      whose bar holds the prev / next friend arrows (ic_menu_prev_normal / ic_menu_next_normal, 240 dpi v14) and whose
      never items fill the overflow (Clear map, Directions, Layers, Settings, Help). Its "list" item has no icon and
-     takes its title from Maps' server-side text bundle, so it is left out; the friends are server data too, so the
-     demo account's map shows only its own location. The title opens the same feature switcher. */
+     takes its title from Maps' server-side text bundle, so it is left out. The friends are server data, so they are
+     made up (2.3.6 Latitude's): their pins on the map, and the bar's arrows step through me and them, the one on show
+     in the card (name, where, how long ago). The title opens the same feature switcher. */
+  const LAT_FRIENDS = [{name: 'Alex Morgan', place: 'City Park', x: 88, y: 140, minutes: 4}, {name: 'Sam Rivera', place: 'Market St', x: 118, y: 232, minutes: 12}, {name: 'Taylor Lee', place: 'Harbor Rd', x: 268, y: 405, minutes: 38}, {name: 'Mom', place: 'Elm St', x: 300, y: 150, minutes: 95}];
+  const latPins = ctx => LAT_FRIENDS.map((f, i) => `<g class="sa-lat-pin${ctx.ui.latIndex === i + 1 ? ' on' : ''}" transform="translate(${f.x} ${f.y})"><circle r="${ctx.ui.latIndex === i + 1 ? 15 : 12}" fill="${['#e8710a', '#0f9d58', '#ab47bc', '#db4437'][i]}" stroke="#fff" stroke-width="3"/><text y="5" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">${e(f.name[0])}</text></g>`).join('');
+  function latCard(ctx) {
+    const i = ctx.ui.latIndex; if (i == null || i < 0) return '';
+    const f = i ? LAT_FRIENDS[i - 1] : null, ago = n => n < 60 ? AndroidStrings.format(ctx.t('%d min ago'), n) : AndroidStrings.format(ctx.t('%d hours ago'), Math.round(n / 60));
+    return `<div class="sa-maps-card sa-lat-card"><b>${e(f ? f.name : ctx.t('Me'))}</b><small>${e(f ? `${f.place} · ${ago(f.minutes)}` : ctx.t('My Location'))}</small></div>`;
+  }
   function maps(ctx) {
+    // Settings (and My Places / Your places): maps-prefs.js.
+    if (window.MapsPrefs?.active(ctx.ui)) return MapsPrefs.render({...ctx, account: 'icecream.demo@gmail.com', bar: title => bar(ctx, {title, up: true, icon: 'maps.png'})});
+    // The tiles the map shows are in the cache (Cache settings' Clear cache); kept with the next save.
+    ctx.data.mapsCache = true;
     // Directions: the input panel and the route list of maps-route.js.
     if (window.MapsRoute?.has(ctx.ui)) return MapsRoute.render({...ctx, bar: o => bar(ctx, o)});
     const q = ctx.ui.mapsQuery || '', searching = ctx.ui.mapsSearching || q, mp = key => S(ctx, 'maps', key), layer = ctx.data.mapsLayer || '';
     const lat = ctx.latitude;
-    const actions = lat ? img('sa-unsupported', 'Previous', 'mp6-ic_menu_prev_normal.png') + img('sa-unsupported', 'Next', 'mp6-ic_menu_next_normal.png') + btn('sa-menu', ctx.t('More options'), 'overflow')
+    const actions = lat ? img('maps-lat-step', 'Previous', 'mp6-ic_menu_prev_normal.png').replace('data-action="maps-lat-step"', 'data-action="maps-lat-step" data-id="-1"') + img('maps-lat-step', 'Next', 'mp6-ic_menu_next_normal.png').replace('data-action="maps-lat-step"', 'data-action="maps-lat-step" data-id="1"') + btn('sa-menu', ctx.t('More options'), 'overflow')
       : img('maps-search-open', mp('Search'), 'mp6-ic_menu_search.png') + img('mr-open', mp('Directions'), 'mp6-ic_menu_directions.png') + img('maps-places', mp('Local'), 'mp6-ic_menu_places.png') + img('maps-layers', mp('Layers'), 'mp6-ic_menu_layers.png') + btn('sa-menu', ctx.t('More options'), 'overflow');
     const head = bar(ctx, {title: mp(lat ? 'Latitude' : 'Maps'), icon: lat ? 'latitude.png' : 'maps.png', actions}).replace('<span class="sa-title">', '<span class="sa-title sa-maps6-switcher" data-action="maps-switcher" role="button">');
-    return `<div class="app-view sa-app sa-maps sa-maps6">${head}<div class="sa-maps6-map${layer ? ' layer-' + layer : ''}">${mapSvg(ctx)}${window.MapsRoute?.banner(ctx) || ''}<button class="sa-maps6-myl" data-action="maps-locate" aria-label="My Location"><img src="assets/mp6-btn_myl_normal.png" alt=""></button><span class="sa-maps6-zoom"><button data-action="maps-zoom" data-id="1" aria-label="+"><img src="assets/mp6-btn_zoom_up_normal.png" alt=""></button><button data-action="maps-zoom" data-id="-1" aria-label="-"><img src="assets/mp6-btn_zoom_down_normal.png" alt=""></button></span></div>${searching ? `<form class="sa-maps6-search" data-form="maps-search"><input name="query" autocomplete="off" placeholder="${e(mp('Search Maps'))}" aria-label="${e(mp('Search Maps'))}" value="${e(q)}"></form>` : ''}${q ? `<div class="sa-maps-card"><b>${e(q)}</b><small>${e(ctx.t('0.8 mi · 4 min drive'))}</small>${img('mr-open', mp('Directions'), 'mp6-ic_menu_directions.png').replace('data-action="mr-open"', `data-action="mr-open" data-id="${e(q)}"`)}</div>` : ''}</div>`;
+    return `<div class="app-view sa-app sa-maps sa-maps6">${head}<div class="sa-maps6-map${layer ? ' layer-' + layer : ''}">${mapSvg(ctx)}${window.MapsRoute?.banner(ctx) || ''}${lat ? latCard(ctx) : ''}<button class="sa-maps6-myl" data-action="maps-locate" aria-label="My Location"><img src="assets/mp6-btn_myl_normal.png" alt=""></button><span class="sa-maps6-zoom"><button data-action="maps-zoom" data-id="1" aria-label="+"><img src="assets/mp6-btn_zoom_up_normal.png" alt=""></button><button data-action="maps-zoom" data-id="-1" aria-label="-"><img src="assets/mp6-btn_zoom_down_normal.png" alt=""></button></span></div>${searching ? `<form class="sa-maps6-search" data-form="maps-search"><input name="query" autocomplete="off" placeholder="${e(mp('Search Maps'))}" aria-label="${e(mp('Search Maps'))}" value="${e(q)}"></form>` : ''}${q ? `<div class="sa-maps-card"><b>${e(q)}</b><small>${e(ctx.t('0.8 mi · 4 min drive'))}</small>${img('mr-open', mp('Directions'), 'mp6-ic_menu_directions.png').replace('data-action="mr-open"', `data-action="mr-open" data-id="${e(q)}"`)}</div>` : ''}</div>`;
   }
 
 
@@ -113,17 +125,17 @@
   function render(app, ctx) { return (APPS[app] || maps)(ctx); }
   // The overflow of the screen on show. GenieWidget 1.3.04 (IMM76I) res/menu/main_menu.xml: Refresh and Settings have no showAsAction, so both sit in the overflow.
   function menu(view, ctx) {
-    if (view === 'latitude' && ctx.ui?.mapsMenu !== 'switcher') return [{action: 'maps-clear', title: S(ctx, 'maps', 'Clear map')}, {action: 'mr-open', title: S(ctx, 'maps', 'Directions')}, {action: 'maps-layers', title: S(ctx, 'maps', 'Layers')}, {action: 'sa-unsupported', title: S(ctx, 'maps', 'Settings')}, {action: 'sa-unsupported', title: S(ctx, 'maps', 'Help')}];
+    if (view === 'latitude' && ctx.ui?.mapsMenu !== 'switcher') return [{action: 'maps-clear', title: S(ctx, 'maps', 'Clear map')}, {action: 'mr-open', title: S(ctx, 'maps', 'Directions')}, {action: 'maps-layers', title: S(ctx, 'maps', 'Layers')}, {action: 'mps-settings', id: 'settings', title: S(ctx, 'maps', 'Settings')}, {action: 'sa-unsupported', title: S(ctx, 'maps', 'Help')}];
     if (view === 'maps' || view === 'latitude') {
       const mp = key => S(ctx, 'maps', key);
       if (ctx.ui?.mapsMenu === 'switcher') return [{action: 'maps-feature', id: 'map', title: mp('Map')}, {action: 'maps-feature', id: 'local', title: `${mp('Local')} — ${mp('Find restaurants, bars & more')}`}, {action: 'maps-feature', id: 'latitude', title: `${mp('Latitude')} — ${mp('Find family & friends')}`}, {action: 'maps-feature', id: 'navigation', title: mp('GPS navigation')}, {action: 'maps-feature', id: 'traffic', title: mp('Traffic')}];
       if (ctx.ui?.mapsMenu === 'layers') return [['traffic', 'Traffic'], ['satellite', 'Satellite'], ['terrain', 'Terrain'], ['bicycling', 'Bicycling']].map(([id, key]) => ({action: 'maps-layer', id, title: mp(key)})).concat([{action: 'maps-layer', id: '', title: mp('Clear map')}]);
-      return [{action: 'maps-clear', title: mp('Clear map')}, {action: 'sa-unsupported', title: mp('Settings')}, {action: 'sa-unsupported', title: mp('Help')}];
+      return [{action: 'maps-clear', title: mp('Clear map')}, {action: 'mps-settings', id: 'settings', title: mp('Settings')}, {action: 'sa-unsupported', title: mp('Help')}];
     }
     if (view === 'earth') { const ea = key => S(ctx, 'earth', key); return ['Settings', 'Help', 'Terms Of Service'].map(key => ({action: 'sa-unsupported', title: ea(key)})); }
     // main_menu.xml (Refresh, Settings), webview_menu.xml on a story (Share story), none on the settings.
     if (view === 'news-weather') { const n = key => S(ctx, 'news', key); return ctx.ui?.newsSub === 'settings' ? [] : ctx.ui?.newsSub === 'story' ? [{action: 'news-share', title: n('Share story')}] : [{action: 'sa-news-refresh', title: n('Refresh')}, {action: 'news-settings', title: n('Settings')}]; }
     return [];
   }
-  window.StockApps = {mapSvg, render, menu};
+  window.StockApps = {mapSvg, render, menu, LAT_FRIENDS};
 })();

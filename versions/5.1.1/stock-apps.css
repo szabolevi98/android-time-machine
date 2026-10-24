@@ -453,3 +453,34 @@
 .nw2-dark .nw2-dialog-buttons button,.nw2-dark .nw2-more{color:#a1c2fa}
 .nw2-dark .nw2-radio i{border-color:#ffffff92}
 .nw2-dark .nw2-radio.on i{border-color:#a1c2fa;background:radial-gradient(#a1c2fa 0 calc(5 * var(--dp)),transparent calc(5 * var(--dp)))}
+/* Maps' settings screens (maps-prefs.js): Material light preferences (16 dp in, 16 sp title, 14 sp summary at 54 %),
+   the Material check box in the framework accent (material_deep_teal_500) and Material dialogs. */
+.mps{display:flex;flex-direction:column;background:#fafafa;color:#000000de}
+.mps-list{flex:1;min-height:0;overflow-y:auto}
+.screen .mps-row{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:calc(16 * var(--dp));border:0;background:none;color:#000000de;text-align:left;font-family:Roboto,sans-serif}
+.screen .mps-row:active:not(.mps-info):not(.disabled),.screen .mps-item button:active{background:#0000001f}
+.mps-row span{flex:1;min-width:0;display:flex;flex-direction:column}
+.mps-row b{font-weight:400;font-size:calc(16 * var(--dp))}
+.mps-row small{margin-top:calc(2 * var(--dp));font-size:calc(14 * var(--dp));color:#0000008a;overflow-wrap:anywhere}
+.mps-row.disabled b,.mps-row.disabled small{color:#00000042}
+.screen .mps-item{padding:0}
+.screen .mps-item .mps-main{flex:1;min-width:0;display:flex;align-self:stretch;align-items:center;padding:calc(16 * var(--dp));border:0;background:none;color:inherit;text-align:left;font:inherit}
+.screen .mps-del{flex:none;width:calc(48 * var(--dp));align-self:stretch;border:0;background:none;color:#0000008a;font-size:calc(22 * var(--dp))}
+.mps-check{flex:none;position:relative;width:calc(18 * var(--dp));height:calc(18 * var(--dp));margin:0 calc(3 * var(--dp)) 0 calc(16 * var(--dp));border:calc(2 * var(--dp)) solid #0000008a;border-radius:calc(2 * var(--dp))}
+.mps-check.on{border-color:#009688;background:#009688}
+.mps-check.on::after{content:'';position:absolute;left:calc(4 * var(--dp));top:0;width:calc(5 * var(--dp));height:calc(10 * var(--dp));border:solid #fff;border-width:0 calc(2 * var(--dp)) calc(2 * var(--dp)) 0;transform:rotate(45deg)}
+.mps-empty{margin:0;padding:calc(24 * var(--dp)) calc(16 * var(--dp));font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#0000008a;text-align:center}
+.screen .mps-scrim{position:absolute;inset:0;z-index:30;border:0;background:#00000080}
+.mps-dialog{position:absolute;z-index:31;left:calc(24 * var(--dp));right:calc(24 * var(--dp));top:50%;transform:translateY(-50%);border-radius:calc(2 * var(--dp));background:#fff;color:#000000de;box-shadow:0 calc(8 * var(--dp)) calc(24 * var(--dp)) #0006}
+.mps-dialog h3{margin:0;padding:calc(24 * var(--dp)) calc(24 * var(--dp)) calc(12 * var(--dp));font:500 calc(20 * var(--dp)) Roboto,sans-serif}
+.mps-dialog p{margin:0;padding:0 calc(24 * var(--dp)) calc(12 * var(--dp));font:400 calc(16 * var(--dp))/1.4 Roboto,sans-serif;color:#0000008a}
+.mps-dialog input{display:block;width:calc(100% - calc(48 * var(--dp)));margin:calc(4 * var(--dp)) calc(24 * var(--dp)) calc(12 * var(--dp));padding:calc(6 * var(--dp)) 0;border:0;border-bottom:calc(2 * var(--dp)) solid #009688;background:none;color:#000000de;font:400 calc(16 * var(--dp)) Roboto,sans-serif;outline:0}
+.mps-choices{max-height:calc(330 * var(--dp));overflow-y:auto}
+.screen .mps-choices button{display:flex;align-items:center;gap:calc(24 * var(--dp));width:100%;min-height:calc(48 * var(--dp));padding:0 calc(24 * var(--dp));border:0;background:none;color:#000000de;font:400 calc(16 * var(--dp)) Roboto,sans-serif;text-align:left}
+.mps-choices span{flex:1;order:2}
+.mps-radio{order:1;flex:none;position:relative;width:calc(20 * var(--dp));height:calc(20 * var(--dp));border:calc(2 * var(--dp)) solid #0000008a;border-radius:50%}
+.mps-radio.on{border-color:#009688}
+.mps-radio.on::after{content:'';position:absolute;inset:calc(3 * var(--dp));border-radius:50%;background:#009688}
+.mps-buttons{display:flex;justify-content:flex-end;padding:calc(8 * var(--dp))}
+.screen .mps-buttons button{min-width:calc(64 * var(--dp));min-height:calc(36 * var(--dp));padding:0 calc(8 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;color:#009688;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.screen .mps-buttons button:active,.screen .mps-choices button:active{background:#0000001f}

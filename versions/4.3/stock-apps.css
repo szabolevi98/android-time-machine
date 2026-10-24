@@ -406,3 +406,36 @@
 .nwp-story p{margin:calc(12.001 * var(--dp)) 0 0;font:400 calc(16.0052 * var(--dp))/1.5 RobotoICS,Roboto,sans-serif}
 .nwp-picture{display:block;width:100%;aspect-ratio:16/9;overflow:hidden;background:#ddd}
 .nwp-picture>*{width:100%;height:100%;object-fit:cover}
+/* Maps' settings screens (maps-prefs.js): Theme.Holo.Light preference rows (64 dip, 18 sp title, 14 sp summary), the
+   Holo Light check box and the ListPreference / edit / delete dialogs. */
+.mps{display:flex;flex-direction:column;background:#f3f3f3;color:#000}
+.mps-list{flex:1;min-height:0;overflow-y:auto}
+.screen .mps-row{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:calc(6 * var(--dp)) calc(8 * var(--dp)) calc(6 * var(--dp)) calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #0000001f;background:none;color:#000;text-align:left;font-family:RobotoICS,Roboto,sans-serif}
+.screen .mps-row:active:not(.mps-info):not(.disabled),.screen .mps-item button:active{background:#33b5e566}
+.mps-row span{flex:1;min-width:0;display:flex;flex-direction:column}
+.mps-row b{font-weight:400;font-size:calc(18 * var(--dp))}
+.mps-row small{margin-top:calc(2 * var(--dp));font-size:calc(14 * var(--dp));color:#5f5f5f;overflow-wrap:anywhere}
+.mps-row.disabled b,.mps-row.disabled small{color:#00000059}
+.screen .mps-item{padding:0}
+.screen .mps-item .mps-main{flex:1;min-width:0;display:flex;align-self:stretch;align-items:center;padding:calc(6 * var(--dp)) calc(8 * var(--dp)) calc(6 * var(--dp)) calc(16 * var(--dp));border:0;background:none;color:inherit;text-align:left;font:inherit}
+.screen .mps-del{flex:none;width:calc(48 * var(--dp));align-self:stretch;border:0;background:none;color:#5f5f5f;font-size:calc(22 * var(--dp))}
+.mps-check{flex:none;width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-left:calc(8 * var(--dp));background:url('assets/btn_check_off_holo_light.png') center/contain no-repeat}
+.mps-check.on{background-image:url('assets/btn_check_on_holo_light.png')}
+.mps-empty{margin:0;padding:calc(24 * var(--dp)) calc(16 * var(--dp));font:400 calc(16 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#5f5f5f;text-align:center}
+.screen .mps-scrim{position:absolute;inset:0;z-index:30;border:0;background:#0009}
+.mps-dialog{position:absolute;z-index:31;left:calc(16 * var(--dp));right:calc(16 * var(--dp));top:50%;transform:translateY(-50%);background:#fff;color:#000;box-shadow:0 calc(4 * var(--dp)) calc(16 * var(--dp)) #0008}
+.mps-dialog h3{margin:0;padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(12 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #33b5e5;font:400 calc(22 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#33b5e5}
+.mps-dialog p{margin:0;padding:calc(16 * var(--dp));font:400 calc(16 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#323232}
+.mps-dialog input{display:block;width:calc(100% - calc(32 * var(--dp)));margin:calc(16 * var(--dp));padding:calc(4 * var(--dp)) 0;border:0;border-bottom:calc(2 * var(--dp)) solid #33b5e5;background:none;color:#000;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;outline:0}
+.mps-choices{max-height:calc(330 * var(--dp));overflow-y:auto}
+.screen .mps-choices button{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:0 calc(8 * var(--dp)) 0 calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #0000001f;background:none;color:#000;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;text-align:left}
+.mps-choices span{flex:1}
+.mps-radio{width:calc(32 * var(--dp));height:calc(32 * var(--dp));background:url('assets/btn_radio_off_holo_light.png') center/contain no-repeat}
+.mps-radio.on{background-image:url('assets/btn_radio_on_holo_light.png')}
+.mps-buttons{display:flex;border-top:calc(1 * var(--dp)) solid #0000001f}
+.screen .mps-buttons button{flex:1;min-height:calc(48 * var(--dp));border:0;background:none;color:#000;font:400 calc(16 * var(--dp)) RobotoICS,Roboto,sans-serif}
+.screen .mps-buttons button+button{border-left:calc(1 * var(--dp)) solid #0000001f}
+.screen .mps-buttons button:active,.screen .mps-choices button:active{background:#33b5e566}
+/* The found place's star (ic_menu_star / _on, 48 px at 320 dpi) left of Directions. */
+.sa-maps-card .sa-btn.sa-maps-star{right:calc(66.2283 * var(--dp))}
+.sa-maps-star img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}

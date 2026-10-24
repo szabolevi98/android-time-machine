@@ -1067,6 +1067,94 @@ const gbMapsLocal = async h => {
   await h.tap('#viewport [data-action="gbg-show-map"]');
   h.check('Maps opens on the picture\'s place', await h.until(`!!document.querySelector('#viewport .mp-map .mp-bubble')`));
 };
+
+// Maps' settings (T12, maps-prefs.js). Maps 6.x (4.0.4, 4.3): Cache settings' check and Clear cache; 4.3's My Places
+// (the search card's star, delete with confirmation); 4.0.4 Latitude's arrows. Maps 7.5 / 9.3 (4.4.4, 5.1.1):
+// Distance units, Shake to send feedback, Maps history, Edit home or work, About and Google location settings;
+// 5.1.1's Your places.
+const mapsSettings = spec => async h => {
+  const prefs = async () => (await store(h, 'mapsPrefs')) || {};
+  const search = async q => {
+    if (spec.maps6) await h.tap('#viewport [data-action="maps-search-open"]');
+    await h.type('#viewport [data-form="maps-search"] input', q);
+    await h.ev(`document.querySelector('#viewport [data-form="maps-search"]').requestSubmit()`);
+    await h.sleep(300);
+  };
+  const open = async id => {
+    if (spec.maps6) { await h.tap('#viewport [data-action="sa-menu"]'); await h.tap(`.holo-menu [data-action="mps-settings"][data-id="${id}"]`); }
+    else { await h.tap('#viewport [data-action="maps-panel"]'); await h.tap(`#viewport [data-action="mps-settings"][data-id="${id}"]`); }
+    h.check(`the ${id} screen opens`, await h.until(`!!document.querySelector('#viewport .mps-${id}')`));
+  };
+  const back = () => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='back';document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove();return 1})()`);
+  await h.openApp('maps');
+  await h.until(`!!document.querySelector('#viewport .sa-maps')`);
+  if (spec.maps6) {
+    await search('Pizza');
+    if (spec.places) {
+      await h.tap('#viewport .sa-maps-star');
+      h.check('the star keeps the place', (await store(h, 'mapsStarred'))?.[0] === 'Pizza');
+      await open('places');
+      h.check('My Places lists it', await h.until(`/Pizza/.test(document.querySelector('#viewport .mps-item')?.textContent || '')`));
+      await h.tap('#viewport .mps-item .mps-del');
+      h.check('Delete asks first', await h.until(`/will be removed from My Places/.test(document.querySelector('#viewport .mps-dialog')?.textContent || '')`));
+      await h.tap('#viewport .mps-buttons [data-action="mps-del-ok"]');
+      h.check('the place is gone', await h.until(`!!document.querySelector('#viewport .mps-empty')`) && !(await store(h, 'mapsStarred'))?.length);
+      await back();
+      await h.until(`!!document.querySelector('#viewport .sa-maps')`);
+    }
+    await open('settings');
+    h.check('Switch account names the account', await h.ev(`/demo@gmail\\.com/.test(document.querySelector('#viewport .mps-settings').textContent)`));
+    await h.tap('#viewport [data-action="mps-open"][data-id="cache"]');
+    await h.tap('#viewport [data-action="mps-check"][data-id="map_tile_settings_use_cached_tiles_only"]');
+    h.check('Use cached tiles only is kept', (await prefs()).map_tile_settings_use_cached_tiles_only === true);
+    h.check('Clear cache has the shown map to clear', await h.ev(`document.querySelector('#viewport [data-action="mps-act"][data-id="clear"]')?.disabled === false`));
+    await h.tap('#viewport [data-action="mps-act"][data-id="clear"]');
+    h.check('Clear cache empties it', await h.until(`document.querySelector('#viewport [data-action="mps-act"][data-id="clear"]')?.disabled === true`) && await store(h, 'mapsCache') === false);
+    await back(); await back();
+    h.check('Back returns to the map', await h.until(`!!document.querySelector('#viewport .sa-maps6-map')`));
+    if (spec.latitude) {
+      await h.openApp('latitude');
+      await h.until(`!!document.querySelector('#viewport [data-action="maps-lat-step"]')`);
+      await h.tap('#viewport [data-action="maps-lat-step"][data-id="1"]'); await h.tap('#viewport [data-action="maps-lat-step"][data-id="1"]');
+      h.check('Next steps to a friend', await h.until(`/Alex Morgan/.test(document.querySelector('#viewport .sa-lat-card')?.textContent || '')`));
+      await h.tap('#viewport [data-action="maps-lat-step"][data-id="-1"]');
+      h.check('Previous steps back to me', await h.until(`!/Alex/.test(document.querySelector('#viewport .sa-lat-card')?.textContent || 'Alex')`));
+    }
+    return;
+  }
+  await search('Coffee');
+  h.check('the search joins Maps history', (await store(h, 'mapsHistory'))?.[0] === 'Coffee');
+  await open('settings');
+  await h.tap('#viewport [data-action="mps-list"][data-id="distance_units"]');
+  await h.tap('#viewport [data-action="mps-pick"][data-id="distance_units:2"]');
+  h.check('Distance units keeps Miles', (await prefs()).distance_units === 'MILES');
+  await h.tap('#viewport [data-action="mps-check"][data-id="shake_to_send_feedback"]');
+  h.check('Shake to send feedback turns off', (await prefs()).shake_to_send_feedback === false);
+  await h.tap('#viewport [data-action="mps-open"][data-id="history"]');
+  h.check('Maps history lists the search', await h.until(`/Coffee/.test(document.querySelector('#viewport .mps-item')?.textContent || '')`));
+  await h.tap('#viewport .mps-item .mps-del');
+  await h.tap('#viewport .mps-buttons [data-action="mps-del-ok"]');
+  h.check('Delete removes it', await h.until(`!document.querySelector('#viewport .mps-item')`) && !(await store(h, 'mapsHistory'))?.length);
+  await back();
+  await h.tap('#viewport [data-action="mps-open"][data-id="homework"]');
+  await h.tap('#viewport [data-action="mps-act"][data-id="home"]');
+  await h.type('#viewport [data-mps-input]', '1 Main St');
+  await h.tap('#viewport .mps-buttons [data-action="mps-edit-ok"]');
+  h.check('Home keeps the address', await h.until(`/1 Main St/.test(document.querySelector('#viewport [data-id="home"]')?.textContent || '')`) && await store(h, 'mapsHome') === '1 Main St');
+  await back();
+  await h.tap('#viewport [data-action="mps-open"][data-id="about"]');
+  h.check('About shows the version', await h.until(`/${spec.version.replace(/\./g, '\\.')} \\(#\\d+\\)/.test(document.querySelector('#viewport .mps-about')?.textContent || '')`));
+  await back();
+  if (spec.places) {
+    await back();
+    await open('places');
+    h.check('Your places shows Home', await h.until(`/1 Main St/.test(document.querySelector('#viewport .mps-places')?.textContent || '')`));
+    await back();
+    await open('settings');
+  }
+  await h.tap('#viewport [data-action="mps-act"][data-id="location"]');
+  h.check('Google location settings opens Google Settings', await h.until(`!!document.querySelector('#viewport .gms-app, #viewport .gms6-app') && /Google location settings/.test(document.querySelector('#viewport').textContent)`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1144,6 +1232,10 @@ const CASES = [
   {id: 'T11', version: '5.1.1', name: 'Contacts › Place on Home screen', run: contactsShortcut({page: 1})},
   {id: 'T08', version: '2.3.6', name: 'Browser and Google Mail › Select text', run: gbSelectText},
   {id: 'T12', version: '2.3.6', name: 'Maps › layers, Labs, cache, Places Add, Navigation Settings, Show on map', run: gbMapsLocal},
+  {id: 'T12', version: '4.0.4', name: 'Maps › Settings, Cache settings; Latitude arrows', run: mapsSettings({maps6: true, latitude: true})},
+  {id: 'T12', version: '4.3', name: 'Maps › My Places, Settings, Cache settings', run: mapsSettings({maps6: true, places: true})},
+  {id: 'T12', version: '4.4.4', name: 'Maps › Settings, Maps history, Edit home or work, About', run: mapsSettings({version: '7.5.0'})},
+  {id: 'T12', version: '5.1.1', name: 'Maps › Settings, Maps history, Your places, About', run: mapsSettings({version: '9.3.0', places: true})},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},
