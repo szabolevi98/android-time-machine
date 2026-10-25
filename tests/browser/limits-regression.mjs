@@ -1565,6 +1565,48 @@ const kkYouTubeSettings = async h => {
   await h.key('Escape'); await h.key('Escape'); await h.key('Escape');
   h.check('Back leaves Settings', await h.until(`!document.querySelector('#viewport .yt5-prefs') && !!document.querySelector('#viewport .yt5-feed')`));
 };
+
+// 5.1.1 YouTube 10.03.5 (T20): Settings › General, Captions (the Custom style's options and the preview), Privacy's
+// clears, Pause search history, About's licenses.
+const lpYouTubeSettings = async h => {
+  await h.openApp('youtube');
+  await h.tap('#viewport .yt10-bar [data-action="yt-search-open"]');
+  await h.type('#viewport .yt-sv input, #viewport input[name="query"]', 'nexus');
+  await h.ev(`document.querySelector('#viewport form[data-form="yt-search"]').requestSubmit()`);
+  h.check('a search is kept', await h.until(`true`) && (await store(h, 'yt10Searches'))?.[0] === 'nexus');
+  await h.key('Escape'); await h.sleep(300);
+  if (await h.ev(`!!document.querySelector('#viewport form[data-form="yt-search"]')`)) await h.key('Escape');
+  await h.tap('#viewport [data-action="sa-menu"]');
+  await h.tap('.holo-menu [data-action="yt10-settings"]');
+  h.check('Settings lists its headers', await h.until(`document.querySelectorAll('#viewport [data-action="yt10-page"]').length === 5`));
+  await h.tap('#viewport [data-action="yt10-page"][data-id="general"]');
+  await h.tap('#viewport [data-id="innertube_safety_mode_enabled"]');
+  await h.tap('#viewport [data-id="upload_policy"]');
+  await h.tap('#viewport [data-action="yt10-pref-pick"][data-id="any"]');
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="yt10-page"][data-id="captions"]');
+  h.check('Captions has no custom options for a preset style', await h.until(`!!document.querySelector('#viewport .yt10-preview') && !document.querySelector('#viewport [data-id="subtitles_font"]')`));
+  await h.tap('#viewport [data-id="subtitles_style"]');
+  await h.tap('#viewport [data-action="yt10-pref-pick"][data-id="4"]');
+  h.check('the Custom style shows its options, Edge color off without an edge', await h.until(`!!document.querySelector('#viewport [data-id="subtitles_font"]') && document.querySelector('#viewport [data-id="subtitles_edge_color"]')?.disabled === true`));
+  await h.tap('#viewport [data-id="subtitles_text_color"]');
+  await h.tap('#viewport [data-action="yt10-pref-pick"][data-id="-256"]');
+  h.check('the preview takes the text color', await h.until(`/rgb\\(255, 255, 0\\)/.test(getComputedStyle(document.querySelector('#viewport .yt10-window>span')).color)`));
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="yt10-page"][data-id="privacy"]');
+  await h.tap('#viewport [data-id="clear_search_history"]');
+  await h.tap('#viewport [data-action="yt10-clear-ok"]');
+  h.check('Clear search history empties the queries', !(await store(h, 'yt10Searches'))?.length);
+  await h.tap('#viewport [data-id="no_search_history"]');
+  const p = await store(h, 'yt10Prefs');
+  h.check('the settings are kept', p.innertube_safety_mode_enabled === true && p.upload_policy === 'any' && p.subtitles_style === '4' && p.subtitles_text_color === '-256' && p.no_search_history === true, JSON.stringify(p));
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="yt10-page"][data-id="about"]');
+  await h.tap('#viewport [data-id="open_source_licenses"]');
+  h.check('Open source licenses shows licenses.html', await h.until(`!!document.querySelector('#viewport .yt10-licenses iframe')`));
+  await h.key('Escape'); await h.key('Escape'); await h.key('Escape');
+  h.check('Back leaves Settings', await h.until(`!document.querySelector('#viewport .yt10-prefs')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1655,6 +1697,7 @@ const CASES = [
   {id: 'T20', version: '4.0.4', name: 'YouTube › Search, Add to, Share, Copy URL, channel, Record and upload, Settings', run: icsYouTube},
   {id: 'T20', version: '4.3', name: 'YouTube › Add to, Like / Dislike, Copy URL, Share, Settings', run: jbYouTube},
   {id: 'T20', version: '4.4.4', name: 'YouTube › Settings', run: kkYouTubeSettings},
+  {id: 'T20', version: '5.1.1', name: 'YouTube › Settings: General, Captions, Privacy, About', run: lpYouTubeSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

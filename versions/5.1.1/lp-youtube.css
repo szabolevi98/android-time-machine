@@ -1,0 +1,15 @@
+/* YouTube 10.03.5's Settings (lp-youtube.js): Theme.YouTube.Settings' #f5f5f5 bar and #333 title on the #fefefe window,
+   the Material Light mps- rows and dialogs. */
+.yt10-prefs{background:#fefefe}
+.yt10-prefsbar>b{color:#333}
+.screen .yt10-prefs .yt10-header{min-height:calc(56 * var(--dp))}
+.yt10-category{margin:0;padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(4 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#009688}
+.yt10-footer{margin:0;padding:calc(16 * var(--dp));font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#0000008a}
+.yt10-licenses iframe{flex:1;width:100%;border:0;background:#fff}
+/* pref_subtitles_preference.xml: the sample caption over a dark frame. */
+.yt10-preview{flex:none;display:flex;align-items:center;justify-content:center;height:calc(96 * var(--dp));background:#424242 linear-gradient(135deg,#5d6d7e,#2c3e50)}
+.yt10-window{display:inline-block;padding:calc(2 * var(--dp)) calc(4 * var(--dp));font-size:calc(16 * var(--dp) * var(--yt10-scale,1))}
+.yt10-window>span{padding:0 calc(2 * var(--dp))}
+.yt10-swatch{order:3;flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin:0 calc(16 * var(--dp));border:calc(1 * var(--dp)) solid #0000003d}
+.yt10-swatch.none{background:linear-gradient(135deg,transparent 46%,#d32f2f 46%,#d32f2f 54%,transparent 54%)!important}
+.yt10-prefs .mps-dialog>p:first-child{padding-top:calc(24 * var(--dp))}
