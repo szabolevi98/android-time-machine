@@ -258,7 +258,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T15 — 2.3.6 Car Home és Dock settings
 
 - **Ütem:** Második kör, #8. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész (39c6c0ef) — Car Home Settings (settings.xml, bt_launch_settings.xml): Always show disclaimer belépési párbeszéddel, Hide Status bar (a Car Home képernyőn), Colorize icons (9 palettaszín az ikonokon), Wallpaper (Home / Galéria), Bluetooth starts Car Home (rendszer Bluetooth, Timeout, párosított eszköz nélküli tipp), Reset to defaults, Android settings. Óra › Dock settings = Settings DockSettings: Audio (Phone not docked → Dock not found) és Dock insertion sound. Fizikai dokkoló/BT-párosítás nincs. Regresszió: limits-regression T15 (asztali+telefon).
 - **Verziók:** 2.3.6.
 - **Forráscsoportok:** 2.3.6-10, 2.3.6-14.
 - **Elkészítendő és határ:** Car Home Settings és Desk clock Dock settings korabeli helyi preferenciái, köztük az app által kezelt éjszakai/dokkolt viselkedés. Fizikai dokkoló/Bluetooth kapcsolat nem készül.
