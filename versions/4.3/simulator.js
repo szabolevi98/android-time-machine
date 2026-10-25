@@ -719,7 +719,7 @@
     // A capture for Messaging lasts while the Camera is open; Messaging opens on its compose screen, not over it.
     if (!resume) { ui.jbmaCapture = null; if (app === 'messaging') ui.jbmaScreen = null; }
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
-    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt4Dialog = null; ui.gsPage = ''; ui.gsStack = []; ui.gsDialog = null; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; }
+    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt4Dialog = null; ui.gsPage = ''; ui.gsStack = []; ui.gsDialog = null; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.paStack = []; ui.paMore = ''; }
     if(ui.locked)return;
     if (app === 'news-weather' && !resume) { ui.newsSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
     if (app === 'google-keyboard') { openApp('settings'); ui.sub = 'language'; render(); return; }
@@ -810,6 +810,8 @@
     // Play Books' reader: a dropdown, then the Display options popup, then Contents close before the reader does.
     if (ui.view === 'play-books' && ui.sub === 'reader' && (ui.bkSpin || ui.bkOptions || ui.bkToc)) { if (ui.bkSpin) ui.bkSpin = ''; else if (ui.bkOptions) ui.bkOptions = false; else ui.bkToc = false; render(); return; }
     if (ui.view === 'play-books' && ui.sub === 'reader') { ui.bkOptions = false; ui.bkToc = false; ui.bkSpin = ''; }
+    // The Play apps' own pages (jb-play-more.js) go back to where they were opened.
+    if (PLAY_APPS.includes(ui.view) && PlayMore.back(ui)) { render(); return; }
     if (PLAY_APPS.includes(ui.view) && ui.sub) { ui.sub = ui.sub === 'queue' ? 'player' : ui.sub === 'player' ? ui.paReturn || '' : ui.sub === 'album' && ui.paFromSearch ? 'search' : ''; if (ui.sub !== 'album') ui.paFromSearch = ui.sub === 'search' && ui.paFromSearch; ui.paBars = true; render(); return; }
     // Chrome settings: dialogs first, then the page, then back to the browser.
     // Gmail settings: the dialogs, then the pages, then back to the mail.
@@ -995,7 +997,10 @@
     } else if (ui.overlay === 'pa-drawer') {
       overlayRoot.innerHTML = PlayApps.drawer(playContext(ui.view));
     } else if (ui.overlay === 'pa-menu') {
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu${ui.view === 'play-movies' ? '' : ' holo-menu-light'}">${PlayApps.menu(playContext(ui.view)).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
+      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu${ui.view === 'play-movies' ? '' : ' holo-menu-light'}">${PlayApps.menu(playContext(ui.view)).map(item => `<button data-action="${item.action}"${item.id ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
+    } else if (ui.overlay === 'pa-more') {
+      // The Play apps' card, now playing and reader menus and their dialogs (jb-play-more.js).
+      overlayRoot.innerHTML = PlayMore.overlay(playContext(ui.view));
     } else if (ui.overlay === 'browser-menu' && ui.view === 'chrome') {
       overlayRoot.innerHTML = ChromeApp.menu({ui, data, t: key => i18n.t(key), locale: i18n.locale(), url: ui.browserUrl, incognito: !!ICSBrowserSession.current(ui.browserSession)?.incognito});
     } else if (ui.overlay === 'browser-menu') {
@@ -1780,6 +1785,11 @@
         save(); render();
       }};
   }
+  // Text shared from an app (Play Books' Share): a new Gmail or Email message with the subject and the text.
+  function shareText(app, text, subject) {
+    ui.overlay = ''; renderOverlay(); openApp(app); if (app === 'gmail') composeGmail(); else composeEmail();
+    const d = (app === 'gmail' ? data.gmailbox : data.mailbox).find(m => m.id === ui.emailId); if (d) { d.subject = subject; d.body = text; } save(); render();
+  }
   function shareVcard(app, file) { ui.overlay = ''; renderOverlay(); openApp(app); if (app === 'gmail') composeGmail(); else composeEmail(); const d = (app === 'gmail' ? data.gmailbox : data.mailbox).find(m => m.id === ui.emailId); if (d) d.attachment = file; save(); render(); }
   function composeEmail(source=null,forward=false,to='') {
     ICSEmail.startCompose(emailContext(),source,source?(forward?'forward':'reply'):'',to);
@@ -1878,6 +1888,9 @@
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Gmail's label settings, Days of mail to sync and the vacation responder (gmail.js).
     if (action.startsWith('gmx-') && GmailApp.handlePref(action, id, {data, ui, save, render, toast, root: viewport})) return;
+    // A choice in a Play app's menu closes it before its action runs (jb-play-more.js handles its own).
+    if (ui.overlay === 'pa-more' && !action.startsWith('px-') && action !== 'close-overlay') { ui.overlay = ''; ui.paMore = ''; renderOverlay(); }
+    if (action.startsWith('px-') && PlayMore.handle(action, id, {...playContext(ui.view), save, saveMusic, render, renderOverlay, toast, root: viewport, openApp, shareText})) return;
     if (action.startsWith('hgp-') && HangoutsPrefs.handle(action, id, {data, ui, save, render, renderOverlay, toast, root: viewport, openApp, openThread: key => openMessageThread(key)})) return;
     if (action.startsWith('calpref-') && CalendarPrefs.handle(action, id, {data, ui, save, render, toast, root: viewport, pickZone: zone => { ui.tzp = TimeZonePicker.open(zone, Date.now()); ui.tzpFor = 'home'; ui.overlay = 'tzpicker'; renderTzPicker(true); }})) return;
     // Email's Quick responses, ringtone and server screens (email-prefs.js).

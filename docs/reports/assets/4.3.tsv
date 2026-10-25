@@ -834,6 +834,7 @@ versions/4.3/assets/music.png	213e04f992c28dc4	same pixels	passion:/system/app/M
 versions/4.3/assets/mv25-ic_chevron_right.png	bba49120986072e1	copy	mako:/system/app/Videos.apk!res/drawable-xhdpi/ic_chevron_right.png	drawable-xhdpi		bba49120986072e1
 versions/4.3/assets/mv25-ic_download.png	65ca2735bde12964	copy	mako:/system/app/Videos.apk!res/drawable-xhdpi/ic_download.png	drawable-xhdpi		65ca2735bde12964
 versions/4.3/assets/mv25-ic_download_background.png	552c3e2d51b9d9b4	copy	mako:/system/app/Videos.apk!res/drawable-xhdpi/ic_download_background.png	drawable-xhdpi		552c3e2d51b9d9b4
+versions/4.3/assets/mv25-ic_download_complete.png	3ab5d8abb5d15fa2	copy	mako:/system/app/Videos.apk!res/drawable-xhdpi/ic_download_complete.png	drawable-xhdpi		3ab5d8abb5d15fa2
 versions/4.3/assets/mv25-ic_launcher_videos.png	ca0d74bfc730438b	copy	mako:/system/app/Videos.apk!res/mipmap-xhdpi/ic_launcher_videos.png	mipmap-xhdpi		ca0d74bfc730438b
 versions/4.3/assets/mv25-ic_menu_search.png	305fd9ffddd7143a	copy	mako:/system/framework/framework-res.apk!res/drawable-xhdpi/ic_menu_search.png	drawable-xhdpi		305fd9ffddd7143a
 versions/4.3/assets/mv25-ic_menu_shop_holo_dark.png	e3508e32a5b3f012	copy	mako:/system/app/Music2.apk!res/drawable-hdpi/ic_menu_shop_holo_dark.png	drawable-hdpi		e3508e32a5b3f012
