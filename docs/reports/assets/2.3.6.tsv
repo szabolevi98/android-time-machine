@@ -376,9 +376,16 @@ versions/2.3.6/assets/gb-cam-bg_camera_pattern.png	df855ef970f81a24	same pixels	
 versions/2.3.6/assets/gb-cam-border_last_picture_normal.png	854f985b6252eada	same pixels	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/border_last_picture_normal.9.png	drawable-hdpi		8d68d77ff5ec6692
 versions/2.3.6/assets/gb-cam-border_last_picture_pressed.png	554ec81f412dae26	same pixels	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/border_last_picture_pressed.9.png	drawable-hdpi		11ec6928379ccca3
 versions/2.3.6/assets/gb-cam-border_view_finder.png	c813e8806e311f69	same pixels	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/border_view_finder.9.png	drawable-hdpi		1db77cf64a906dc0
+versions/2.3.6/assets/gb-cam-btn_camera_review_normal.png	c29a51164bee6df3	converted	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/btn_camera_review_normal.9.png	drawable-hdpi	nine-patch border removed, mean difference 0.00	7a712d6d95461c69
+versions/2.3.6/assets/gb-cam-btn_camera_review_pressed.png	6aacb973ca7e19eb	converted	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/btn_camera_review_pressed.9.png	drawable-hdpi	nine-patch border removed, mean difference 0.00	9784365fea9dc258
 versions/2.3.6/assets/gb-cam-btn_ic_camera_shutter.png	65661983e630ece1	same pixels	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/btn_ic_camera_shutter.png	drawable-hdpi		1ccd8bbe1096fab8
 versions/2.3.6/assets/gb-cam-btn_ic_mode_switch_camera.png	6e20e9aadba42617	same pixels	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/btn_ic_mode_switch_camera.png	drawable-hdpi		7da74c43ca5e3a4d
 versions/2.3.6/assets/gb-cam-btn_ic_mode_switch_video.png	93c1eb6e02364a9d	same pixels	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/btn_ic_mode_switch_video.png	drawable-hdpi		883ab793887b7251
+versions/2.3.6/assets/gb-cam-btn_ic_review_cancel.png	0824d6199ef53631	copy	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/btn_ic_review_cancel.png	drawable-hdpi		0824d6199ef53631
+versions/2.3.6/assets/gb-cam-btn_ic_review_done.png	ed683081f3768623	copy	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/btn_ic_review_done.png	drawable-hdpi		ed683081f3768623
+versions/2.3.6/assets/gb-cam-btn_ic_review_play.png	b44492f73e2b7756	copy	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/btn_ic_review_play.png	drawable-hdpi		b44492f73e2b7756
+versions/2.3.6/assets/gb-cam-btn_ic_review_retake_photo.png	b718eba60c301f24	copy	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/btn_ic_review_retake_photo.png	drawable-hdpi		b718eba60c301f24
+versions/2.3.6/assets/gb-cam-btn_ic_review_retake_video.png	06b9c2384369da19	copy	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/btn_ic_review_retake_video.png	drawable-hdpi		06b9c2384369da19
 versions/2.3.6/assets/gb-cam-btn_ic_video_record.png	92711a453ac4040e	same pixels	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/btn_ic_video_record.png	drawable-hdpi		dada91aad156e1b1
 versions/2.3.6/assets/gb-cam-btn_ic_video_record_stop.png	d4ae36f0f4cbdd49	same pixels	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/btn_ic_video_record_stop.png	drawable-hdpi		081cb1cce7861a0b
 versions/2.3.6/assets/gb-cam-btn_mode_switch_bg-p.png	57357720d85a8f04	rotated	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/btn_mode_switch_bg.9.png	drawable-hdpi	rotated 270°, mean difference 0.00	27d6413fa0370fcc

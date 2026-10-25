@@ -50,3 +50,12 @@
 .gbcam-zoom{display:flex;align-items:center;gap:calc(6.9566 * var(--dp));padding:calc(9.2754 * var(--dp)) calc(4.6377 * var(--dp))}
 .gbcam-zoom input{flex:none;width:calc(149.5653 * var(--dp));accent-color:#9fc742}
 .gbcam-zoom span{font-size:calc(18.0058 * var(--dp));color:#ffffffa8;min-width:calc(44.058 * var(--dp));text-align:right}
+/* attach_camera_control.xml (a capture request): the shutter, then OK, at the bar's bottom end (left when held upright),
+   CANCEL / RETAKE / PLAY from its top end (right), each group 15 dp apart and turned 90 degrees with the landscape
+   layout; ReviewControlIcon's btn_camera_review (66 x 46.67 dp) behind the 36 dp icon, 12 sp text under it. */
+.gbcam-control.capture{justify-content:space-between}
+.gbcam-review-set{display:flex;flex-direction:row-reverse;align-items:center;gap:calc(15 * var(--dp))}
+.screen .gbcam-review{display:flex;flex-direction:column;align-items:center;width:calc(66 * var(--dp));padding:0;border:0;background:none;color:#fff;font:400 calc(12 * var(--dp)) Roboto,'Droid Sans',sans-serif;transform:rotate(90deg);cursor:pointer}
+.gbcam-review-icon{display:flex;align-items:center;justify-content:center;width:calc(66 * var(--dp));height:calc(46.6667 * var(--dp));background:url('assets/gb-cam-btn_camera_review_normal.png') 0 0/100% 100%}
+.screen .gbcam-review:active .gbcam-review-icon{background-image:url('assets/gb-cam-btn_camera_review_pressed.png')}
+.gbcam-review-icon img{width:calc(36 * var(--dp));height:calc(36 * var(--dp))}

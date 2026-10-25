@@ -1189,6 +1189,8 @@ const gbMmsAttach = async h => {
   await attach('take-photo');
   await h.until(`!!document.querySelector('#viewport [data-action="gbcam-shutter"]')`); await h.sleep(500);
   await h.tap('#viewport [data-action="gbcam-shutter"]');
+  h.check('the capture shows OK, Retake and Cancel', await h.until(`!!document.querySelector('#viewport [data-action="gbcam-cap-ok"]') && !!document.querySelector('#viewport [data-action="gbcam-cap-retake"]')`, 6000));
+  await h.tap('#viewport [data-action="gbcam-cap-ok"]');
   h.check('Capture picture comes back with the picture', await h.until(`!!document.querySelector('#viewport .gbma-image')`, 8000) && await kind() === 'image');
   await h.tap('#viewport .gbma [data-action="gbma-replace"]');
   h.check('Replace offers the pictures', await h.until(`!!document.querySelector('.gbdlg [data-action="gbma-picked"]')`));
@@ -1197,6 +1199,8 @@ const gbMmsAttach = async h => {
   await attach('record-video');
   await h.until(`!!document.querySelector('#viewport [data-action="gbcam-shutter"]')`); await h.sleep(500);
   await h.tap('#viewport [data-action="gbcam-shutter"]'); await h.sleep(1300); await h.tap('#viewport [data-action="gbcam-shutter"]');
+  await h.until(`!!document.querySelector('#viewport [data-action="gbcam-cap-play"]')`, 6000);
+  await h.tap('#viewport [data-action="gbcam-cap-ok"]');
   h.check('Capture video comes back with the video', await h.until(`!!document.querySelector('#viewport .gbma-video')`, 8000) && await kind() === 'video');
   // With an attachment shown the menu has no Add attachment, so the video is removed first; a second slide gets 3 seconds.
   await h.sleep(2500);
@@ -2571,6 +2575,40 @@ const icsA11y = async h => {
   const st = await settings();
   h.check('OK stops TalkBack and Explore by touch', st.talkback === false && st.touchExploration === false);
 };
+// 2.3.6 contact photo (T10): the editor's Take photo opens the Camera as a capture request; Cancel leaves the editor
+// without a photo, Retake goes back to the shutter, OK returns the picture as the contact's photo, Done keeps it.
+const gbContactPhoto = async h => {
+  const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  await h.openApp('people');
+  await h.until(`!!document.querySelector('#viewport [data-action="gbp-contact"]')`);
+  const person = {id: Number(await h.ev(`document.querySelector('#viewport [data-action="gbp-contact"]').dataset.id`))};
+  await act('contact', person.id); await act('people-edit');
+  h.check('the editor opens', await h.until(`!!document.querySelector('#viewport .gbce-photo')`));
+  const shoot = async () => {
+    await h.tap('#viewport .gbce-photo');
+    await h.tap('[data-action="gbce-photo-take"]');
+    h.check('Take photo opens the Camera with Cancel', await h.until(`!!document.querySelector('#viewport .gbcam-control.capture [data-action="gbcam-cap-cancel"]')`));
+    await h.sleep(400);
+    await h.tap('#viewport [data-action="gbcam-shutter"]');
+    return h.until(`!!document.querySelector('#viewport [data-action="gbcam-cap-ok"]')`, 6000);
+  };
+  h.check('the shutter takes a picture for review', await shoot());
+  await h.shot('gb-capture-review');
+  await h.tap('#viewport [data-action="gbcam-cap-cancel"]');
+  h.check('Cancel returns to the editor without a photo', await h.until(`!!document.querySelector('#viewport .gbce-photo:not(.has-photo)')`));
+  h.check('the gallery got no picture from the request', !((await store(h, 'photos')) || []).some(p => p.created > Date.now() - 60000));
+  await shoot();
+  await h.tap('#viewport [data-action="gbcam-cap-retake"]');
+  h.check('Retake goes back to the shutter', await h.until(`!!document.querySelector('#viewport .gbcam-control.capture [data-action="gbcam-shutter"]')`));
+  await h.sleep(400);
+  await h.tap('#viewport [data-action="gbcam-shutter"]');
+  await h.until(`!!document.querySelector('#viewport [data-action="gbcam-cap-ok"]')`, 6000);
+  await h.tap('#viewport [data-action="gbcam-cap-ok"]');
+  h.check('OK returns the picture as the photo', await h.until(`!!document.querySelector('#viewport .gbce-photo.has-photo img')`));
+  await h.tap('#viewport .gbce-buttonbar button[type="submit"]');
+  const saved = (await store(h, 'contacts')).find(c => c.id === person.id), photos = (await store(h, 'contactPhotos')) || [];
+  h.check('Done keeps the photo with the contact', !!saved?.photo && photos.some(p => p.id === saved.photo), JSON.stringify(saved?.photo));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -2652,6 +2690,7 @@ const CASES = [
   {id: 'T12', version: '4.3', name: 'Maps › My Places, Settings, Cache settings', run: mapsSettings({maps6: true, places: true})},
   {id: 'T12', version: '4.4.4', name: 'Maps › Settings, Maps history, Edit home or work, About', run: mapsSettings({version: '7.5.0'})},
   {id: 'T12', version: '5.1.1', name: 'Maps › Settings, Maps history, Your places, About', run: mapsSettings({version: '9.3.0', places: true})},
+  {id: 'T10', version: '2.3.6', name: 'Contacts › Take photo through the Camera capture request', run: gbContactPhoto},
   {id: 'T13', version: '2.3.6', name: 'Messaging › Audio, Record audio, Capture picture / video, Slideshow', run: gbMmsAttach},
   {id: 'T13', version: '4.3', name: 'Messaging › Audio Play, Capture picture / video, Slideshow', run: jbMmsAttach},
   {id: 'T15', version: '2.3.6', name: 'Car Home Settings and Dock settings', run: gbCarDock},
@@ -2785,7 +2824,9 @@ async function run(c, width) {
   // A fresh phone, already switched on in this tab (the cold-boot animation is not part of these paths).
   await ev(`localStorage.clear(); sessionStorage.clear(); sessionStorage.setItem('android-sim-booted-${c.version}', '1'); localStorage.setItem('android-time-machine-language', 'en')`);
   check('boots and unlocks', await boot(c.version));
-  await c.run({ev, send, until, tap, hold, drag, type, key, openApp, sleep, check, phone, save: () => ev(SAVE), reload: () => boot(c.version)});
+  // h.shot(name): with SHOTS=1 in the environment, a screenshot of the step in tests/browser/artifacts/ to look at.
+  const shot = async name => { if (!process.env.SHOTS) return; fs.mkdirSync(ARTIFACTS, {recursive: true}); const r = await send('Page.captureScreenshot', {format: 'png'}); if (r.result?.data) fs.writeFileSync(path.join(ARTIFACTS, `shot-${c.version}-${name}-${width}.png`), Buffer.from(r.result.data, 'base64')); };
+  await c.run({ev, send, until, tap, hold, drag, type, key, openApp, sleep, check, phone, shot, save: () => ev(SAVE), reload: () => boot(c.version)});
   await sleep(400);
   const refusals = await ev(`window.__refusals || []`);
   check('no refusal on the way', !refusals.length, refusals.join(' | '));

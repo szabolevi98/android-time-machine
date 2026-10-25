@@ -142,7 +142,7 @@ crop_discard_text saving_image running_face_detection'''.split(),
     },
     'camera': {
         'apks': ['CameraGoogle'],
-        'keys': '''camera_label video_camera_label confirm_restore_title confirm_restore_message switch_camera_id pref_camera_id_title
+        'keys': '''camera_label video_camera_label review_cancel review_retake review_play review_ok confirm_restore_title confirm_restore_message switch_camera_id pref_camera_id_title
 pref_camera_id_entry_back pref_camera_id_entry_front pref_camera_recordlocation_title pref_camera_recordlocation_entry_off
 pref_camera_recordlocation_entry_on pref_video_quality_title pref_camera_settings_category pref_camcorder_settings_category
 pref_camera_picturesize_title pref_camera_jpegquality_title pref_camera_focusmode_title pref_camera_flashmode_title

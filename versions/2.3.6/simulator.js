@@ -257,7 +257,7 @@
     if (ui.view === 'search') { const items = GBSearch.menu(gbSearchContext()); if (items.length) { ui.qsb.selecting = false; ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); render(); } return; }
     if (ui.view === 'play-store') { const items = GBMarket.menu(gbMarketContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'settings' && GBSettingsPages.has(ui.sub)) { const items = GBSettingsPages.menu(ui.sub, gbPagesContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
-    if (ui.view === 'camera') { ui.gbcamPopup = ''; ui.gbMenuItems = GBCamera.menu(gbCameraContext()); ui.overlay = 'gb-menu-settings'; render(); renderOverlay(); return; }
+    if (ui.view === 'camera') { const items = GBCamera.menu(gbCameraContext()); if (!items.length) return; ui.gbcamPopup = ''; ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; render(); renderOverlay(); return; }
     if (ui.view === 'email') { gbEmSync(); const items = GBEmail.menu(gbEmailContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'calendar') { gbCalSyncDraft(); const items = GBCalendar.menu(gbCalContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'browser') { if (ui.gbBrEdit) return; const items = GBBrowser.menu(gbBrowserContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
@@ -657,7 +657,7 @@
     if(ui.locked)return;
     if (!appNames[app]) return;
     // A capture for Messaging lasts while the Camera is open; Messaging opens on its compose screen, not over it.
-    if (!resume) { ui.gbmaCapture = null; if (app === 'messaging') ui.gbmaScreen = null; }
+    if (!resume) { ui.gbmaCapture = null; ui.gbceCapture = null; if (app === 'messaging') ui.gbmaScreen = null; }
     captureRecentView();
     if (app === 'play-store' && !resume) { ui.play = ICSPlayStore.initial(); ui.playHistory = []; ui.market = {page: 'home'}; ui.marketHistory = []; ui.marketSearching = false; }
     ui.view = app; ui.sub = resume ? ui.recentState?.[app]?.sub || '' : ''; if (!resume) { ui.gbPrefs = null; ui.gbCalSel = null; ui.gbEmSetup = null; } ui.overlay = ''; if (app === 'settings' && !resume) ui.settingsRootScroll = 0;
@@ -702,6 +702,8 @@
     if(ui.view==='phone' && ui.activeCall && !ui.gbCallBackground){if(ui.activeCall.keypad){ui.activeCall.keypad=false;render();}else home(false);return;}
     if (ui.view === 'people' && (ui.sub === 'edit' || ui.sub === 'new') && viewport.querySelector('.gbce')) { viewport.querySelector('.gbce').requestSubmit(); return; }
     if (ui.view === 'camera' && ui.gbcamPopup) { ui.gbcamPopup = ''; render(); return; }
+    // Back in a capture request cancels it (RESULT_CANCELED), a recording included.
+    if (ui.view === 'camera' && gbCapture()) { gbcamStopRecording(false); ui.gbcamPopup = ''; if (ui.gbmaCapture) gbmaCancel(); else gbceReturn(null); return; }
     if (ui.view === 'camera' && ui.gbcamRec) { gbcamStopRecording(); render(); return; }
     if (ui.view === 'gallery' && ui.gbgPick && !ui.sub && ui.gbgmPick) { ui.gbgPick = false; ui.gbgmPick = false; ui.view = 'gmail'; render(); return; }
     if (ui.view === 'gallery' && ui.gbgPick && !ui.sub && ui.gbcePick) { ui.gbgPick = false; ui.view = 'people'; ui.sub = ui.gbcePick.sub; ui.gbcePick = null; render(); return; }
@@ -1150,7 +1152,7 @@
   }
   function gbceContext() { return {lang: i18n.language, draft: ui.peopleDraft, isNew: ui.sub === 'new', moreName: !!ui.gbceMoreName, secondary: !!ui.gbceSecondary, familyFirst: false}; }
   // The editor's fields are kept on the draft whenever a button changes the form.
-  window.GBContactPhoto = person => { const photo = person?.photo && data.photos.find(p => p.id === person.photo); return photo ? ICSMedia.image(photo) : ''; };
+  window.GBContactPhoto = person => { const photo = person?.photo && (data.photos.find(p => p.id === person.photo) || (data.contactPhotos || []).find(p => p.id === person.photo)); return photo ? ICSMedia.image(photo) : ''; };
   function gbceSync() {
     const form = viewport.querySelector('.gbce'); if (!form || !ui.peopleDraft) return;
     for (const key of ['given', 'family', 'prefix', 'middle', 'suffix', 'phone', 'email', 'company', 'notes']) if (form.elements[key]) ui.peopleDraft[key] = form.elements[key].value;
@@ -1189,6 +1191,20 @@
     ui.gbmaCapture = {type, target, ret: {sub: ui.sub, thread: ui.thread, screen: ui.gbmaScreen, slide: ui.gbmaSlide}};
     const capture = ui.gbmaCapture; openApp('camera'); ui.gbmaCapture = capture; ui.gbcamMode = type === 'video' ? 'video' : 'photo'; render();
   }
+  // A capture request open in the Camera: Messaging's (gbmaCapture) or the contact editor's Take photo (gbceCapture).
+  const gbCapture = () => ui.gbmaCapture || ui.gbceCapture || null;
+  function gbmaCancel() {
+    const c = ui.gbmaCapture; ui.gbmaCapture = null; if (!c) return;
+    openApp('messaging'); Object.assign(ui, {sub: c.ret.sub, thread: c.ret.thread, gbmaScreen: c.ret.screen, gbmaSlide: c.ret.slide}); render(); scrollMessages();
+  }
+  // EditContactActivity's camera request returns the picture as the contact's photo (kept with the contacts, not in the
+  // Gallery); Cancel or Back leaves the editor as it was.
+  function gbceReturn(photo) {
+    const c = ui.gbceCapture; ui.gbceCapture = null; if (!c) return;
+    captureRecentView(); ui.view = 'people'; ui.sub = c.ret.sub;
+    if (photo && ui.peopleDraft) { data.contactPhotos = [...(data.contactPhotos || []), photo]; ui.peopleDraft.photo = photo.id; save(); }
+    render();
+  }
   function gbmaReturn(part) {
     const c = ui.gbmaCapture; ui.gbmaCapture = null; if (!c) return;
     openApp('messaging'); Object.assign(ui, {sub: c.ret.sub, thread: c.ret.thread, gbmaScreen: c.ret.screen, gbmaSlide: c.ret.slide});
@@ -1226,7 +1242,7 @@
   function renderCamera() { return GBCamera.render(gbCameraContext()); }
   function gbCameraContext() {
     const saved = data.cameraSettings || {}, s = GBCamera.settings(saved);
-    return {lang: i18n.language, saved: {...saved, ...s}, mode: ui.gbcamMode || 'photo', popup: ui.gbcamPopup || '', focus: ui.gbcamFocus || '', recording: !!ui.gbcamRec, recordTime: gbcamClock(), last: ICSMedia.photos(data, 'camera')[0], effectFilter: GBCamera.EFFECTS[s.effect] || 'none'};
+    return {lang: i18n.language, saved: {...saved, ...s}, mode: ui.gbcamMode || 'photo', popup: ui.gbcamPopup || '', focus: ui.gbcamFocus || '', recording: !!ui.gbcamRec, recordTime: gbcamClock(), last: ICSMedia.photos(data, 'camera')[0], effectFilter: GBCamera.EFFECTS[s.effect] || 'none', capture: gbCapture() && {video: gbCapture().type === 'video', taken: gbCapture().taken}};
   }
   const gbcamClock = () => { if (!ui.gbcamRec) return '00:00'; const t = Math.floor((Date.now() - ui.gbcamRec) / 1000); return `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`; };
   function gbcamSet(changes) { const s = {...GBCamera.settings(data.cameraSettings || {}), ...changes}; data.cameraSettings = {...s, front: s.facing === 'front', exposure: Number(s.exposure)}; save(); }
@@ -1238,7 +1254,7 @@
   function gbcamStopRecording(keep = true) {
     if (!ui.gbcamRec) return;
     clearInterval(ui.gbcamRecTimer); const started = ui.gbcamRec; ui.gbcamRec = 0;
-    if (keep) { const stamp = new Date(started).toISOString().replace(/[-:T]/g, '').slice(0, 14); data.photos.unshift({...ICSMedia.scene(data), ...(GBCamera.settings(data.cameraSettings || {}).gps === 'on' ? {location: {fx: GBMaps.ME.fx, fy: GBMaps.ME.fy}} : {}), id: Date.now(), name: `VID_${stamp.slice(0, 8)}_${stamp.slice(8)}`, album: 'camera', created: Date.now(), video: true, duration: Math.round((Date.now() - started) / 1000)}); save(); }
+    if (keep) { const stamp = new Date(started).toISOString().replace(/[-:T]/g, '').slice(0, 14), cap = gbCapture(), item = {...ICSMedia.scene(data), ...(GBCamera.settings(data.cameraSettings || {}).gps === 'on' ? {location: {fx: GBMaps.ME.fx, fy: GBMaps.ME.fy}} : {}), id: Date.now(), name: `VID_${stamp.slice(0, 8)}_${stamp.slice(8)}`, album: 'camera', created: Date.now(), video: true, duration: Math.round((Date.now() - started) / 1000)}; if (cap) cap.taken = item; else { data.photos.unshift(item); save(); } }
   }
   function galleryStep(direction) {
     const items=ICSMedia.photos(data,ui.galleryAlbum); if(!items.length)return;
@@ -1670,7 +1686,11 @@
       case 'gbem-setup-manual': toast('Unavailable in this simulator'); break;
       case 'gbem-setup-cancel': clearTimeout(ui.gbEmSetupTimer); ui.overlay = ''; renderOverlay(); break;
       case 'gbce-photo': gbceSync(); ui.gbceDialog = ui.peopleDraft?.photo ? 'photo-edit' : 'photo'; ui.overlay = 'gb-dialog-ce'; renderOverlay(); break;
-      case 'gbce-photo-take': ui.overlay = ''; renderOverlay(); toast('Unavailable in this simulator'); break;
+      case 'gbce-photo-take': { gbceSync(); ui.overlay = ''; renderOverlay(); const ret = {sub: ui.sub}; openApp('camera'); ui.gbceCapture = {type: 'image', ret, taken: null}; ui.gbcamMode = 'photo'; render(); break; }
+      case 'gbcam-cap-ok': { const cap = gbCapture(); if (!cap?.taken) break; if (ui.gbmaCapture) gbmaReturn(cap.type === 'video' ? {video: clone(cap.taken)} : {image: clone(cap.taken)}); else gbceReturn(cap.taken); break; }
+      case 'gbcam-cap-retake': { const cap = gbCapture(); if (cap) cap.taken = null; render(); break; }
+      case 'gbcam-cap-cancel': gbcamStopRecording(false); if (ui.gbmaCapture) gbmaCancel(); else gbceReturn(null); break;
+      case 'gbcam-cap-play': toast('This feature is not part of the simulator.'); break;
       // Gallery's GET_CONTENT pick returns to the editor with the picture (Back returns without one).
       case 'gbce-photo-pick': { ui.overlay = ''; const sub = ui.sub; captureRecentView(); ui.gbcePick = {sub}; ui.view = 'gallery'; ui.sub = ''; ui.gbgPick = true; render(); break; }
       case 'gbce-photo-remove': if (ui.peopleDraft) ui.peopleDraft.photo = null; ui.overlay = ''; render(); break;
@@ -1884,11 +1904,11 @@
       case 'gbcam-shutter':
         ui.gbcamPopup = '';
         if (ui.gbcamMode === 'video') {
-          if (ui.gbcamRec) { gbcamStopRecording(); if (ui.gbmaCapture?.type === 'video' && data.photos[0]?.video) { gbmaReturn({video: clone(data.photos[0])}); break; } render(); break; }
+          if (ui.gbcamRec) { gbcamStopRecording(); render(); break; }
           ui.gbcamRec = Date.now(); render(); ui.gbcamRecTimer = setInterval(() => { const label = viewport.querySelector('.gbcam-rec span'); if (label) label.textContent = gbcamClock(); else clearInterval(ui.gbcamRecTimer); }, 500); break;
         }
         // ShutterButton: autofocus, then the capture; the new picture slides into the review thumbnail.
-        gbcamFocus(() => { const photo = {...ICSMedia.scene(data), ...(GBCamera.settings(data.cameraSettings || {}).gps === 'on' ? {location: {fx: GBMaps.ME.fx, fy: GBMaps.ME.fy}} : {}), id: Date.now(), name: `IMG_${new Date().toISOString().replace(/[-:T]/g, '').slice(0, 8)}_${new Date().toISOString().replace(/[-:T]/g, '').slice(8, 14)}`, album: 'camera', created: Date.now()}; data.photos.unshift(photo); save(); if (ui.gbmaCapture?.type === 'image') { gbmaReturn({image: clone(photo)}); return; } render(); viewport.querySelector('.gbcam-preview')?.animate([{opacity: 1}, {opacity: .15}, {opacity: 1}], {duration: 260}); viewport.querySelector('.gbcam-thumb img')?.animate([{transform: 'scale(1.6)', opacity: .3}, {transform: 'none', opacity: 1}], {duration: 380}); });
+        gbcamFocus(() => { const photo = {...ICSMedia.scene(data), ...(GBCamera.settings(data.cameraSettings || {}).gps === 'on' ? {location: {fx: GBMaps.ME.fx, fy: GBMaps.ME.fy}} : {}), id: Date.now(), name: `IMG_${new Date().toISOString().replace(/[-:T]/g, '').slice(0, 8)}_${new Date().toISOString().replace(/[-:T]/g, '').slice(8, 14)}`, album: 'camera', created: Date.now()}; const cap = gbCapture(); if (cap) { cap.taken = photo; render(); return; } data.photos.unshift(photo); save(); render(); viewport.querySelector('.gbcam-preview')?.animate([{opacity: 1}, {opacity: .15}, {opacity: 1}], {duration: 260}); viewport.querySelector('.gbcam-thumb img')?.animate([{transform: 'scale(1.6)', opacity: .3}, {transform: 'none', opacity: 1}], {duration: 380}); });
         break;
       case 'camera-review': {gbcamStopRecording();const photo=ICSMedia.photos(data,'camera')[0];openApp('gallery');if(photo){ui.galleryAlbum='camera';ui.selectedPhoto=photo.id;ui.sub='photo';render();}break;}
       case 'calendar-prev': calendarMove(-1); break;

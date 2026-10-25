@@ -16,6 +16,34 @@ window.GBStrings["camera"] = {
 "fr": "Caméra",
 "es": "Videocámara"
 },
+"review_cancel": {
+"en": "CANCEL",
+"hu": "MÉGSE",
+"de": "Abbrechen",
+"fr": "ANNULER",
+"es": "CANCELAR"
+},
+"review_retake": {
+"en": "RETAKE",
+"hu": "ÚJ FELVÉTEL",
+"de": "Erneut aufnehmen",
+"fr": "AUTRE PHOTO",
+"es": "VOLVER A REALIZAR"
+},
+"review_play": {
+"en": "PLAY",
+"hu": "LEJÁTSZÁS",
+"de": "Wiedergeben",
+"fr": "LIRE",
+"es": "REPRODUCIR"
+},
+"review_ok": {
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
 "confirm_restore_title": {
 "en": "Restore defaults",
 "hu": "Alapértelmezés visszaállítása",

@@ -58,8 +58,19 @@
     const index = ['settings', 'gps', 'balance', 'flash', 'zoom', 'facing'].indexOf(which), width = (which === 'settings' ? 210 : which === 'zoom' ? 190 : 165) / .8625, ax = (100 - (index + .5) * 100 / 6).toFixed(3);
     return `<div class="gbcam-scrim" data-action="gbcam-popup-close"></div><div class="gbcam-popup at-${e(which)}" style="--ax:${ax}%;--w:calc(${width.toFixed(4)} * var(--dp))"><div class="gbcam-popup-list">${body}</div></div><i class="gbcam-triangle" style="--ax:${ax}%"></i>`;
   }
+  // attach_camera_control.xml, the control bar of a capture request (Contacts' Take photo, Messaging's Capture picture /
+  // video): CANCEL (with RETAKE and, for a video, PLAY once something is taken) at the top of the landscape bar, the
+  // shutter at the bottom until a capture, then OK. Its ImageView / TextView groups do not rotate, so held upright they
+  // read turned 90 degrees like the rest of the landscape layout. ReviewControlIcon: btn_camera_review behind the 36 dp
+  // icon; ReviewControlText: 12 sp under it.
+  const review = (lang, action, icon, label) => `<button class="gbcam-review" data-action="${action}"><span class="gbcam-review-icon"><img src="assets/gb-cam-${icon}.png" alt=""></span><span>${e(text(lang, label))}</span></button>`;
+  function captureControl(ctx, video) {
+    const cap = ctx.capture, taken = cap.taken, lang = ctx.lang;
+    const bottom = taken ? review(lang, 'gbcam-cap-ok', 'btn_ic_review_done', 'review_ok') : `<button class="gbcam-shutter${ctx.recording ? ' stop' : ''}" data-action="gbcam-shutter" aria-label="${e(text(lang, video ? 'video_camera_label' : 'camera_label'))}"></button>`;
+    return `<div class="gbcam-control capture">${bottom}<div class="gbcam-review-set">${review(lang, 'gbcam-cap-cancel', 'btn_ic_review_cancel', 'review_cancel')}${taken ? review(lang, 'gbcam-cap-retake', video ? 'btn_ic_review_retake_video' : 'btn_ic_review_retake_photo', 'review_retake') : ''}${taken && video ? review(lang, 'gbcam-cap-play', 'btn_ic_review_play', 'review_play') : ''}</div></div>`;
+  }
   function render(ctx) {
-    const T = key => text(ctx.lang, key), s = settings(ctx.saved), video = ctx.mode === 'video';
+    const T = key => text(ctx.lang, key), s = settings(ctx.saved), video = ctx.capture ? ctx.capture.video : ctx.mode === 'video', taken = ctx.capture?.taken;
     const scene = window.ICSMedia.scene({cameraSettings: {...ctx.saved, front: s.facing === 'front', zoom: s.zoom, balance: s.balance, exposure: Number(s.exposure)}});
     const last = ctx.last;
     // IndicatorBar order from CameraHeadUpDisplay: other settings, GPS, white balance, flash, zoom, camera id (top to bottom).
@@ -76,15 +87,17 @@
     const recording = video && ctx.recording ? `<div class="gbcam-rec"><img src="assets/gb-cam-ic_recording_indicator.png" alt=""><span>${e(ctx.recordTime || '00:00')}</span></div>` : '';
     const thumb = last ? `<img src="${window.ICSMedia.image(last)}" alt="">` : '';
     return `<div class="app-view gbcam${video ? ' video' : ''}" data-no-translate>
-      <div class="gbcam-frame"><div class="gbcam-preview" data-action="gbcam-focus"><div class="gbcam-scene" style="filter:${ctx.effectFilter || 'none'}">${window.ICSMedia.art(scene)}</div>${focus}${recording}</div>${bar}</div>
-      <div class="gbcam-control">
+      <div class="gbcam-frame"><div class="gbcam-preview" data-action="gbcam-focus"><div class="gbcam-scene" style="filter:${taken ? 'none' : ctx.effectFilter || 'none'}">${window.ICSMedia.art(taken || scene)}</div>${focus}${recording}</div>${bar}</div>
+      ${ctx.capture ? captureControl(ctx, video) : `<div class="gbcam-control">
         <button class="gbcam-shutter${ctx.recording ? ' stop' : ''}" data-action="gbcam-shutter" aria-label="${e(T(video ? 'video_camera_label' : 'camera_label'))}"></button>
         <div class="gbcam-switch-set"><img src="assets/gb-cam-btn_ic_mode_switch_camera.png" alt=""><button class="gbcam-switch${video ? ' video' : ''}" data-action="gbcam-mode" aria-label="${e(T(video ? 'switch_to_camera_lable' : 'switch_to_video_lable'))}"><i></i></button><img src="assets/gb-cam-btn_ic_mode_switch_video.png" alt=""></div>
         <button class="gbcam-thumb" data-action="camera-review" aria-label="${e(T('camera_gallery_photos_text'))}"${last ? '' : ' disabled'}>${thumb}</button>
-      </div>${popup(ctx, s)}</div>`;
+      </div>`}${popup(ctx, s)}</div>`;
   }
-  // Camera.addBaseMenuItems: Switch to video / camera, Gallery, Switch Camera (two cameras on the Nexus S).
+  // Camera.addBaseMenuItems: Switch to video / camera, Gallery, Switch Camera (two cameras on the Nexus S). A capture
+  // request has no options menu.
   function menu(ctx) {
+    if (ctx.capture) return [];
     const T = key => text(ctx.lang, key), video = ctx.mode === 'video';
     return [{action: 'gbcam-mode', title: T(video ? 'switch_to_camera_lable' : 'switch_to_video_lable'), icon: video ? 'ic_menu_camera' : 'gb-cam-ic_menu_camera_video_view.png'}, {action: 'camera-review', title: T('camera_gallery_photos_text'), icon: 'gb-cam-ic_menu_gallery.png'}, {action: 'gbcam-switch-camera', title: T('switch_camera_id'), icon: 'ic_menu_camera'}];
   }
