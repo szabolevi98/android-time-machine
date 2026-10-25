@@ -1,0 +1,70 @@
+/* Messaging attachments (jb-mms-attach.js): the AttachmentEditor views on attachment_editor_bg like the audio editor's,
+   the media 135 dp high, buttonStyleSmall 100 x 45 dp buttons 8 dp in from the right. */
+.jbma{display:flex;align-items:center;flex-shrink:0;margin:calc(4.6971 * var(--dp)) calc(7.0456 * var(--dp));padding:calc(6 * var(--dp)) calc(5.0024 * var(--dp)) calc(7 * var(--dp)) calc(6 * var(--dp));border:0 solid transparent;border-width:calc(10.0047 * var(--dp)) calc(16.0052 * var(--dp)) calc(17.0033 * var(--dp));border-image:url('assets/mms-attachment_editor_bg.png') 20 32 34 32 fill / calc(10.0047 * var(--dp)) calc(16.0052 * var(--dp)) calc(17.0033 * var(--dp)) stretch;color:#333;font-family:Roboto,sans-serif}
+.jbma-media{position:relative;flex:1;min-width:0;height:calc(135 * var(--dp));display:flex;align-items:center;justify-content:center;overflow:hidden}
+.jbma-media>.media-photo,.jbma-framepic>.media-photo,.jbma-epic>.media-photo,.jbma-slidemedia>.media-photo{object-fit:contain}
+.jbma-overlay{position:absolute;inset:0;margin:auto;width:calc(25.5 * var(--dp));height:calc(25.5 * var(--dp))}
+.jbma-btns{flex:none;display:flex;flex-direction:column;justify-content:center;padding-right:calc(8 * var(--dp))}
+.screen .jbma-btn,.screen .jbma-small,.screen .jbma-done{width:calc(100 * var(--dp));height:calc(45 * var(--dp));padding:0;border:0 solid transparent;border-width:calc(7.9968 * var(--dp)) calc(12.001 * var(--dp)) calc(6.9986 * var(--dp));border-image:url('assets/bk28-btn_default_normal_holo_light.png') 32 24 28 24 fill / calc(7.9968 * var(--dp)) calc(12.001 * var(--dp)) calc(6.9986 * var(--dp)) stretch;background:none;color:#000!important;font:400 calc(15 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .jbma-btn:active,.screen .jbma-small:active:not(:disabled),.screen .jbma-done:active{border-image-source:url('assets/bk28-btn_default_pressed_holo_light.png')}
+.jbma-sound{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;font-size:calc(16 * var(--dp))}
+.jbma-sound img{width:calc(32 * var(--dp));height:calc(32 * var(--dp));padding-bottom:calc(10 * var(--dp))}
+.jbma-sound b,.jbma-sound small{max-width:100%;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jbma-showbox{flex:1;min-width:0;display:flex;justify-content:center}
+.jbma-frame{position:relative;width:min(calc(240 * var(--dp)),100%);aspect-ratio:4/3;border:0 solid transparent;border-width:calc(5.5 * var(--dp)) calc(9.5 * var(--dp)) calc(8.5 * var(--dp)) calc(6.5 * var(--dp));border-image:url('assets/fw-picture_frame.png') 11 19 17 13 fill / calc(5.5 * var(--dp)) calc(9.5 * var(--dp)) calc(8.5 * var(--dp)) calc(6.5 * var(--dp)) stretch;box-sizing:border-box}
+.jbma-framebody{display:flex;flex-direction:column;width:100%;height:100%;font-size:calc(14 * var(--dp))}
+.jbma-framebody.top{flex-direction:column-reverse}
+.jbma-framepic{flex:1;min-height:0;display:flex;overflow:hidden}
+.jbma-frametext{flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .jbma-play{position:absolute;left:50%;top:50%;z-index:2;translate:-50% -50%;padding:0;border:0;background:none;cursor:pointer}
+.jbma-play img{display:block;width:calc(65.5 * var(--dp));height:calc(65.5 * var(--dp))}
+.mms-compose-bar.jbma-hidden{visibility:hidden}
+/* A message's attachment with mms_play_btn over it. */
+.jbma-row{position:relative;display:block}
+.jbma-rowaudio{min-height:calc(65.5 * var(--dp))}
+.jbma-rowaudio .jbma-play{left:auto;right:0;translate:0 -50%}
+.jbma-rowicon{display:block;width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.mms-dialog-list>button{position:relative}
+/* SlideshowActivity. */
+.jbma-slideshow{position:absolute;inset:0;display:flex;flex-direction:column;background:#000;color:#fff;font-family:Roboto,sans-serif}
+.jbma-slideshow.top{flex-direction:column-reverse}
+.jbma-slidemedia{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.jbma-slidemedia>.media-photo{width:100%;height:100%}
+.jbma-slidetext{flex:none;padding:calc(5 * var(--dp));font-size:calc(18 * var(--dp));text-align:center}
+.jbma-playing{display:flex;align-items:center;gap:calc(5 * var(--dp));font-size:calc(18 * var(--dp))}
+.jbma-playing img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+/* SlideshowEditActivity and SlideEditorActivity (Holo dark, the app's action bar with the overflow). */
+#viewport>.app-view.mms-app.jbma-slides,#viewport>.app-view.mms-app.jbma-editor{display:flex;flex-direction:column;background:#000;color:#fff}
+.jbma-slist{flex:1;min-height:0;overflow-y:auto}
+.screen .jbma-srow{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:0;border:0;border-bottom:calc(1 * var(--dp)) solid #ffffff1f;background:none;color:#fff!important;text-align:left;font-family:Roboto,sans-serif}
+.screen .jbma-srow:active{background:#33b5e566}
+.jbma-sthumb{flex:none;width:calc(60 * var(--dp));height:calc(60 * var(--dp));padding-left:calc(2 * var(--dp));display:flex;align-items:center;justify-content:center;overflow:hidden;box-sizing:border-box}
+img.jbma-sthumb.icon{object-fit:none}
+.jbma-stext{flex:1;min-width:0;display:flex;flex-direction:column}
+.jbma-stext b{padding-left:calc(5 * var(--dp));font-weight:400;font-size:calc(18 * var(--dp))}
+.jbma-sline{display:flex;font-size:calc(22 * var(--dp))}
+.jbma-sprev{min-width:0;padding:0 calc(5 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jbma-sdur{flex:none;margin-left:auto;padding:0 calc(10 * var(--dp))}
+.jbma-epanel{flex:1;min-height:0;display:flex;align-items:center;margin:calc(4 * var(--dp));border:0 solid transparent;border-width:calc(6 * var(--dp)) calc(10 * var(--dp)) calc(6 * var(--dp)) calc(9.5 * var(--dp));border-image:url('assets/fw-editbox_background_normal.png') 12 20 12 19 fill / calc(6 * var(--dp)) calc(10 * var(--dp)) calc(6 * var(--dp)) calc(9.5 * var(--dp)) stretch;color:#000}
+.jbma-eleft{flex:1;min-width:0;align-self:stretch;display:flex;flex-direction:column;margin:calc(10 * var(--dp)) calc(20 * var(--dp))}
+.jbma-epic{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;border:0 solid transparent;border-width:calc(5.5 * var(--dp)) calc(9.5 * var(--dp)) calc(8.5 * var(--dp)) calc(6.5 * var(--dp));border-image:url('assets/fw-picture_frame.png') 11 19 17 13 fill / calc(5.5 * var(--dp)) calc(9.5 * var(--dp)) calc(8.5 * var(--dp)) calc(6.5 * var(--dp)) stretch}
+.jbma-eaudio{display:flex;align-items:center;gap:calc(4 * var(--dp));font-size:calc(14 * var(--dp))}
+.jbma-eaudio img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.jbma-ectl{flex:none;display:flex;flex-direction:column}
+.jbma-enav{display:flex}
+.screen .jbma-small{width:auto;min-width:calc(100 * var(--dp));height:calc(50 * var(--dp))}
+.screen .jbma-enav .jbma-small{flex:1;min-width:0}
+.jbma-small:disabled{opacity:.5}
+.jbma-small img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.jbma-ebottom{flex:none;display:flex;align-items:center;gap:calc(4 * var(--dp));padding:calc(4 * var(--dp));background:#fff}
+.jbma-etext{flex:1;min-width:0;height:calc(40 * var(--dp));padding:0 calc(4 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #33b5e5;background:none;color:#000;font:400 calc(16 * var(--dp)) Roboto,sans-serif;outline:0}
+.screen .jbma-done{width:auto;padding:0 calc(8 * var(--dp))}
+/* The lists of the dialogs: the sounds with radio buttons, durations, layouts with their icons. */
+.jbma-choices{display:flex;flex-direction:column;max-height:calc(330 * var(--dp));overflow-y:auto}
+.screen .jbma-choices button{display:flex;align-items:center;gap:calc(9 * var(--dp));min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #ddd;background:none;text-align:left;font:400 calc(18 * var(--dp)) Roboto,sans-serif}
+.jbma-choices span{flex:1}
+.jbma-choices img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.jbma-radio{width:calc(32 * var(--dp));height:calc(32 * var(--dp));background:url('assets/btn_radio_off_holo_light.png') center/contain no-repeat}
+.jbma-radio.on{background-image:url('assets/btn_radio_on_holo_light.png')}
+.jbma-dialog h3 img{width:calc(32 * var(--dp));height:calc(32 * var(--dp));vertical-align:middle;margin-right:calc(8 * var(--dp))}
+.jbma-number{display:block;width:calc(100% - calc(32 * var(--dp)));margin:calc(16 * var(--dp));font-size:calc(18 * var(--dp))}

@@ -367,6 +367,7 @@
     else if (ui.view === 'home') { viewport.innerHTML = renderHome(); restoreWidgetScroll(); }
     else if (ui.view === 'drawer') viewport.innerHTML = renderDrawer();
     else viewport.innerHTML = renderApp();
+    if (ui.view === 'messaging') window.JBMmsAttach?.mounted(jbmaContext());
     snapResting(viewport);
     renderOverlay();
     i18n.translateDOM(screen);
@@ -714,6 +715,8 @@
     }
   }
   function openApp(app, resume = false) {
+    // A capture for Messaging lasts while the Camera is open; Messaging opens on its compose screen, not over it.
+    if (!resume) { ui.jbmaCapture = null; if (app === 'messaging') ui.jbmaScreen = null; }
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
     if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; }
     if(ui.locked)return;
@@ -760,6 +763,7 @@
   // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
   const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
   function navigateBack() {
+    if (ui.view === 'messaging' && !ui.overlay && window.JBMmsAttach?.back(jbmaContext())) { render(); return; }
     if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
     if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
     if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return; }
@@ -867,8 +871,8 @@
   function srFinish(keep) {
     clearInterval(ui.srTimer);
     const back = ui.srReturn || {view: 'messaging', sub: ''};
-    ui.view = back.view; ui.sub = back.sub; ui.thread = back.thread;
-    if (keep && ui.sr.length > 0) { const draft = messageDraft(); draft.attachment = SoundRecorder.sample(ui.sr, i18n.language); draft.updated = Date.now(); save(); }
+    ui.view = back.view; ui.sub = back.sub; ui.thread = back.thread; ui.jbmaScreen = back.screen || null; ui.jbmaSlide = back.slide;
+    if (keep && ui.sr.length > 0) { if (back.target === 'slide') JBMmsAttach.apply(jbmaContext(), 'slide', {audio: SoundRecorder.sample(ui.sr, i18n.language)}); else { const draft = messageDraft(); draft.attachment = SoundRecorder.sample(ui.sr, i18n.language); draft.updated = Date.now(); save(); } }
     ui.sr = SoundRecorder.initial(); render();
   }
   function earsPaint() { viewport.querySelectorAll('.widget-ears').forEach(node => { const id = node.dataset.widgetId; node.innerHTML = Ears.widget(ui.ears, i18n.language) + (node.querySelector('[data-resize-frame]')?.outerHTML || ''); }); }
@@ -991,7 +995,7 @@
       overlayRoot.innerHTML = ChromeApp.menu({ui, data, t: key => i18n.t(key), locale: i18n.locale(), url: ui.browserUrl, incognito: !!ICSBrowserSession.current(ui.browserSession)?.incognito});
     } else if (ui.overlay === 'browser-menu') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu web-menu"><button data-action="browser-forward" ${ui.browserIndex >= ui.browserHistory.length-1?'disabled':''}>Forward</button><button data-action="browser-refresh">Refresh</button><button data-action="browser-new-tab">New tab</button><button data-action="browser-save">Bookmark</button><button data-action="browser-bookmarks">Bookmarks</button><button data-action="browser-saved">Saved pages</button><button data-action="browser-save-page">Save for offline reading</button><button data-action="browser-find">Find on page</button></div>`;
-    } else if (ui.overlay.startsWith('mms-')) {
+    } else if (ui.overlay.startsWith('mms-') || ui.overlay.startsWith('jbma-')) {
       overlayRoot.innerHTML = hangoutsScope(renderMessageOverlay);
     } else if (ui.overlay === 'play-menu') {
       // The action bar overflow: a Holo Light popup below the overflow button.
@@ -1450,6 +1454,7 @@
        AttachmentTypeSelectorAdapter's icon_list_item rows in its order. Pictures lists the simulator's photos; Record
        audio starts Sound Recorder; the other sources are not part of the simulator. */
     if (ui.overlay === 'mms-attach') { const M = key => MmsStrings.t(key); const types = [['pictures', 'Pictures', 'ic_attach_picture_holo_light'], ['capture-picture', 'Capture picture', 'ic_attach_capture_picture_holo_light'], ['videos', 'Videos', 'ic_attach_video_holo_light'], ['capture-video', 'Capture video', 'ic_attach_capture_video_holo_light'], ['audio', 'Audio', 'ic_attach_audio_holo_light'], ['record-audio', 'Record audio', 'ic_attach_capture_audio_holo_light'], ['slideshow', 'Slideshow', 'ic_attach_slideshow_holo_light']]; return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog mms-dialog mms-attach-types" role="dialog" aria-label="${safe(M('Attach'))}" data-no-translate><h3><img src="assets/mms-ic_dialog_attach.png" alt="">${safe(M('Attach'))}</h3><div class="mms-dialog-list">${types.map(([id, label, icon]) => `<button data-action="mms-attach-type" data-id="${id}"><img src="assets/mms-${icon}.png" alt=""><span>${safe(M(label))}</span></button>`).join('')}</div></div>`; }
+    if (ui.overlay?.startsWith('jbma-')) return JBMmsAttach.overlay(ui.overlay, jbmaContext()) || '';
     if (ui.overlay === 'mms-attach-pick') return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog mms-dialog" role="dialog" aria-label="${safe(MmsStrings.t('Attach'))}" data-no-translate><h3>${safe(MmsStrings.t('Attach'))}</h3><div class="mms-dialog-list">${data.photos.map(p => `<button data-action="mms-photo" data-id="${p.id}">${ICSMessaging.photo(p)}</button>`).join('') || `<p>${safe(i18n.t('No photos'))}</p>`}</div></div>`;
     if (ui.overlay === 'mms-smiley') return alert(M('Insert smiley'), `<div class="mms-smileys">${MmsStrings.SMILEYS.map(([name, text, icon]) => `<button data-action="mms-insert-smiley" data-id="${safe(text)}"><img src="assets/mms-emo_im_${icon}.png" alt=""><span>${safe(M(name))}</span><b>${safe(text)}</b></button>`).join('')}</div>`);
     if (ui.overlay === 'mms-delete-confirm') {
@@ -1478,7 +1483,18 @@
   function cameraShoot(clip) {
     const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
     const photo = {...ICSMedia.scene(data), id: Date.now(), name: clip?.pano ? `PANO_${stamp.slice(0, 8)}_${stamp.slice(8)}` : clip ? `VID_${stamp.slice(0, 8)}_${stamp.slice(8)}` : `IMG_${stamp}`, album: 'camera', created: Date.now(), ...(clip?.pano ? {pano: true} : clip ? {video: true, duration: Math.max(1000, Math.round(clip.duration))} : {})};
-    data.photos.unshift(photo); save(); return photo;
+    data.photos.unshift(photo); save();
+    // IMAGE_CAPTURE / VIDEO_CAPTURE for Messaging: back with what was taken.
+    if (ui.jbmaCapture && !clip?.pano && (ui.jbmaCapture.type === 'video') === !!clip) { const c = ui.jbmaCapture; ui.jbmaCapture = null; setTimeout(() => jbmaReturn(c, photo), 450); }
+    return photo;
+  }
+  // Messaging's attachments (jb-mms-attach.js): the draft, the shell, the Camera's capture, Sound Recorder and Back.
+  const jbmaContext = () => ({ui, data, t: key => i18n.t(key), root: viewport, draftOf: messageDraft, save, render, renderOverlay, toast, back,
+    capture(type, target) { const c = {type, target, ret: {sub: ui.sub, thread: ui.thread, screen: ui.jbmaScreen, slide: ui.jbmaSlide}}; openApp('camera'); ui.jbmaCapture = c; ui.jbcamModule = type === 'video' ? 'video' : 'photo'; render(); },
+    record(target) { ui.overlay = ''; renderOverlay(); ui.srReturn = {view: ui.view, sub: ui.sub, thread: ui.thread, target, screen: ui.jbmaScreen, slide: ui.jbmaSlide}; ui.sr = SoundRecorder.initial(); ui.view = 'sound-recorder'; ui.sub = ''; render(); }});
+  function jbmaReturn(c, photo) {
+    openApp('messaging'); Object.assign(ui, {sub: c.ret.sub, thread: c.ret.thread, jbmaScreen: c.ret.screen, jbmaSlide: c.ret.slide});
+    JBMmsAttach.apply(jbmaContext(), c.target, photo.video ? {video: clone(photo)} : {image: clone(photo)}); render(); scrollMessages();
   }
   function cameraGallery(id) {
     const photo = data.photos.find(item => item.id === id) || ICSMedia.photos(data, 'camera')[0];
@@ -1862,6 +1878,7 @@
       if (result) { if (result.save) save(); for (const title of result.notify || []) addNotification(title, ''); renderOverlay(); render(); if (result.toast) toast(result.toast); return; }
     }
     if (action.startsWith('mps-') && window.MapsPrefs?.handle(action, id, mapsPrefsContext())) return;
+    if (ui.view === 'messaging' && action.startsWith('jbma-') && JBMmsAttach.handle(action, id, jbmaContext())) return;
     switch (action) {
       case 'open-app': {
         const icon = button.closest('.launcher-icon, .drawer-app, .dock-app') || button;
@@ -2309,7 +2326,7 @@
       case 'hg-dnd-cancel': delete data.hgSnooze; save(); render(); break;
       case 'mms-search': ui.sub = 'search'; ui.overlay = ''; ui.mmsSearch = ''; render(); viewport.querySelector('.mms-search input')?.focus(); break;
       case 'mms-menu': case 'mms-attach': case 'mms-smiley': ui.overlay = action; renderOverlay(); break;
-      case 'mms-attach-type': if (id === 'pictures') { ui.overlay = 'mms-attach-pick'; renderOverlay(); } else if (id === 'record-audio') { ui.overlay = ''; renderOverlay(); ui.srReturn = {view: ui.view, sub: ui.sub, thread: ui.thread}; ui.sr = SoundRecorder.initial(); ui.view = 'sound-recorder'; ui.sub = ''; render(); } else { ui.overlay = ''; renderOverlay(); toast('This feature is not part of the simulator.'); } break;
+      case 'mms-attach-type': if (id === 'pictures') { ui.overlay = 'mms-attach-pick'; renderOverlay(); } else JBMmsAttach.start(jbmaContext(), id); break;
       case 'sr-record': srStart(); break;
       case 'sr-play': if (ui.sr.state === 'idle' && ui.sr.length) { ui.sr = {...ui.sr, state: 'playing', started: Date.now(), interrupted: false, error: ''}; srTick(); } break;
       case 'sr-stop': srStop(); break;

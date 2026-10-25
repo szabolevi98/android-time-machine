@@ -234,7 +234,9 @@ versions/4.3/assets/email-ic_menu_trash_holo_light.png	1175d7fc70f40383	copy	mak
 versions/4.3/assets/email-ic_reply.png	5faac039ca1fe95a	resized	mako:/system/app/EmailGoogle.apk!res/drawable-xhdpi/ic_reply.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.30	ba8fe41db0ba3ab0
 versions/4.3/assets/email-ic_reply_all.png	f472e79fbf873e96	resized	mako:/system/app/EmailGoogle.apk!res/drawable-xhdpi/ic_reply_all.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.38	a652f9cee7ded67c
 versions/4.3/assets/email.png	53468f5b7ac0b621	same pixels	mako:/system/app/EmailGoogle.apk!res/mipmap-xhdpi/ic_launcher_email.png	mipmap-xhdpi		add080ea69ee09a2
+versions/4.3/assets/fw-editbox_background_normal.png	6586c2cf718e467c	copy	mako:/system/framework/framework-res.apk!res/drawable-xhdpi/editbox_background_normal.9.png	drawable-xhdpi		6586c2cf718e467c
 versions/4.3/assets/fw-magnified_region_frame.png	377acb8f0ee81c4a	copy	mako:/system/framework/framework-res.apk!res/drawable-xhdpi/magnified_region_frame.9.png	drawable-xhdpi		377acb8f0ee81c4a
+versions/4.3/assets/fw-picture_frame.png	935c6bd73c8f703f	copy	mako:/system/framework/framework-res.apk!res/drawable-xhdpi/picture_frame.9.png	drawable-xhdpi		935c6bd73c8f703f
 versions/4.3/assets/ga-dialog_full_holo_dark.png	3126dc6fcc5b42c0	copy	mako:/system/framework/framework-res.apk!res/drawable-xhdpi/dialog_full_holo_dark.9.png	drawable-xhdpi		3126dc6fcc5b42c0
 versions/4.3/assets/ga-ic_audio_phone.png	6b75f3d1e7bc6cdb	copy	mako:/system/framework/framework-res.apk!res/drawable-xhdpi/ic_audio_phone.png	drawable-xhdpi		6b75f3d1e7bc6cdb
 versions/4.3/assets/ga-ic_audio_ring_notif.png	d1d2d68b2f15c829	copy	mako:/system/framework/framework-res.apk!res/drawable-xhdpi/ic_audio_ring_notif.png	drawable-xhdpi		d1d2d68b2f15c829
@@ -715,13 +717,22 @@ versions/4.3/assets/mms-ic_attach_video_holo_light.png	93e6082483b3746a	copy	mak
 versions/4.3/assets/mms-ic_contact_picture.png	5f9b8ffe18169c78	same pixels	mako:/system/app/CalendarGoogle.apk!res/drawable-hdpi/ic_contact_picture.png	drawable-hdpi		e3b34f9124fe0431
 versions/4.3/assets/mms-ic_dialog_alert_holo_light.png	0cc296ff215265c5	copy	mako:/system/framework/framework-res.apk!res/drawable-xhdpi/ic_dialog_alert_holo_light.png	drawable-xhdpi		0cc296ff215265c5
 versions/4.3/assets/mms-ic_dialog_attach.png	afe163d9fd057670	copy	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_dialog_attach.png	drawable-xhdpi		afe163d9fd057670
+versions/4.3/assets/mms-ic_gallery_video_overlay.png	4f9bdde0e7476f72	copy	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_gallery_video_overlay.png	drawable-xhdpi		4f9bdde0e7476f72
 versions/4.3/assets/mms-ic_lock_message_sms.png	e6f99129b8aec188	copy	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_lock_message_sms.png	drawable-xhdpi		e6f99129b8aec188
+versions/4.3/assets/mms-ic_maps_back.png	394bcf79eba410b4	copy	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_maps_back.png	drawable-xhdpi		394bcf79eba410b4
+versions/4.3/assets/mms-ic_maps_next.png	c7752582e71dd23d	copy	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_maps_next.png	drawable-xhdpi		c7752582e71dd23d
 versions/4.3/assets/mms-ic_menu_attachment.png	2216150d74fe1618	resized	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_menu_attachment.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.53	3ff746dd792f8430
 versions/4.3/assets/mms-ic_menu_call.png	5d2a8a53144ded26	resized	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_menu_call.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.26	76105472dc706ca4
 versions/4.3/assets/mms-ic_menu_msg_compose_holo_dark.png	5052e2203f979f2b	resized	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_menu_msg_compose_holo_dark.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.79	2fcaf5103c6e3a99
 versions/4.3/assets/mms-ic_menu_search_holo_dark.png	f05de6317a5688d1	resized	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_menu_search_holo_dark.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.45	f6c15bffbc6db298
+versions/4.3/assets/mms-ic_mms_duration.png	e0efa935a710ddab	copy	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_mms_duration.png	drawable-xhdpi		e0efa935a710ddab
+versions/4.3/assets/mms-ic_mms_layout.png	84d38f7b91ab386c	copy	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_mms_layout.png	drawable-xhdpi		84d38f7b91ab386c
+versions/4.3/assets/mms-ic_mms_music.png	3feaca40d76db4ee	copy	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_mms_music.png	drawable-xhdpi		3feaca40d76db4ee
+versions/4.3/assets/mms-ic_mms_text_bottom.png	13914479c90061f9	copy	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_mms_text_bottom.png	drawable-xhdpi		13914479c90061f9
+versions/4.3/assets/mms-ic_mms_text_top.png	6c3038717111dea4	copy	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_mms_text_top.png	drawable-xhdpi		6c3038717111dea4
 versions/4.3/assets/mms-ic_send_disabled_holo_light.png	c8c8d4cd6bd700fc	resized	mako:/system/app/Mms.apk!res/drawable-xhdpi/ic_send_disabled_holo_light.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.18	2b163756381fc56a
 versions/4.3/assets/mms-ic_send_holo_light.png	875633c8ab72d166	same pixels	mako:/system/app/Velvet.apk!res/drawable-hdpi/ic_send_holo_light.png	drawable-hdpi		b079855956d14940
+versions/4.3/assets/mms-mms_play_btn.png	929e3a867281aa57	copy	mako:/system/app/Mms.apk!res/drawable-xhdpi/mms_play_btn.png	drawable-xhdpi		929e3a867281aa57
 versions/4.3/assets/mms-msg_bubble_left.png	2644f9f92241a589	resized	mako:/system/app/Mms.apk!res/drawable-xhdpi/msg_bubble_left.png	drawable-xhdpi	resized 12×32 → 9×24, mean difference 1.87	118cc43958b32b8f
 versions/4.3/assets/mms-msg_bubble_right.png	1aa8386ca6bba948	resized	mako:/system/app/Mms.apk!res/drawable-xhdpi/msg_bubble_right.png	drawable-xhdpi	resized 12×32 → 9×24, mean difference 1.87	87920c621075d15b
 versions/4.3/assets/movie-studio.png	e2849e338ef8ab8f	copy	mako:/system/app/VideoEditorGoogle.apk!res/mipmap-xhdpi/ic_launcher_moviestudio.png	mipmap-xhdpi		e2849e338ef8ab8f

@@ -1218,6 +1218,47 @@ const gbMmsAttach = async h => {
   await h.tap('#viewport .gbmms-msg [data-action="gbma-rowplay"]');
   h.check('its play button plays it', await h.until(`!!document.querySelector('#viewport .gbma-slideshow')`));
 };
+
+// 4.3 Messaging attachments (T13, jb-mms-attach.js): Audio with Play, Capture picture / video through the Camera, and a
+// slideshow (Edit slideshow, a slide's Duration from the overflow) sent and played.
+const jbMmsAttach = async h => {
+  const act = a => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(a)};document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove();return 1})()`);
+  const attach = async type => { await h.tap('#viewport .mms-header [data-action="mms-attach"]'); await h.tap(`[data-action="mms-attach-type"][data-id="${type}"]`); };
+  const kind = () => h.ev(`(()=>{const d=Object.values(${SAVE}.messageDrafts||{}).find(x=>x.attachment);const a=d&&d.attachment;return a?a.kind||(a.video?'video':'image'):''})()`);
+  const shutter = async () => { await h.until(`!!document.querySelector('#viewport .jbcam-shutter')`); await h.sleep(600); await h.tap('#viewport .jbcam-shutter'); };
+  await h.openApp('messaging');
+  await h.tap('#viewport [data-action="thread"][data-id="1"]');
+  await h.until(`!!document.querySelector('#viewport .mms-compose')`);
+  await attach('audio');
+  await h.tap('.jbma-dialog [data-action="jbma-audio-pick"][data-id="Aquila"]');
+  await h.tap('.jbma-dialog [data-action="jbma-audio-ok"]');
+  h.check('Audio attaches the sound', await h.until(`/Aquila/.test(document.querySelector('#viewport .jbma-audio')?.textContent || '')`) && await kind() === 'audio');
+  await h.tap('#viewport .jbma-audio [data-action="jbma-view"]');
+  h.check('Play plays it', await h.until(`!!document.querySelector('#viewport .jbma-slideshow')`));
+  await act('back');
+  await h.tap('#viewport .jbma [data-action="mms-remove-attachment"]');
+  await attach('capture-picture');
+  await shutter();
+  h.check('Capture picture comes back with the picture', await h.until(`!!document.querySelector('#viewport .jbma-image')`, 8000) && await kind() === 'image');
+  await h.tap('#viewport .jbma [data-action="mms-remove-attachment"]');
+  await attach('capture-video');
+  await shutter(); await h.sleep(1300); await h.tap('#viewport .jbcam-shutter');
+  h.check('Capture video comes back with the video', await h.until(`!!document.querySelector('#viewport .jbma-video')`, 8000) && await kind() === 'video');
+  await attach('slideshow');
+  h.check('Slideshow makes the video its first slide', await h.until(`document.querySelectorAll('#viewport .jbma-srow').length === 2`));
+  await h.tap('#viewport [data-action="jbma-menu"]'); await h.tap('.holo-menu [data-action="jbma-add-slide"]');
+  await h.tap('#viewport [data-action="jbma-open-slide"][data-id="1"]');
+  await h.tap('#viewport [data-action="jbma-menu"]'); await h.tap('.holo-menu [data-action="jbma-duration"]');
+  await h.tap('.jbma-dialog [data-action="jbma-duration-pick"][data-id="2"]');
+  await act('back');
+  h.check('the slide keeps its duration', await h.until(`/3 secs/.test(document.querySelectorAll('#viewport .jbma-srow')[1]?.textContent || '')`));
+  await act('back');
+  h.check('the compose screen shows the slideshow', await h.until(`!!document.querySelector('#viewport .jbma-show')`) && await kind() === 'slideshow');
+  await h.tap('#viewport .jbma-show [data-action="mms-send-now"]');
+  h.check('Send puts it in the conversation', await h.until(`!!document.querySelector('#viewport .mms-message [data-action="jbma-rowplay"]')`));
+  await h.tap('#viewport .mms-message [data-action="jbma-rowplay"]');
+  h.check('its play button plays it', await h.until(`!!document.querySelector('#viewport .jbma-slideshow')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1300,6 +1341,7 @@ const CASES = [
   {id: 'T12', version: '4.4.4', name: 'Maps › Settings, Maps history, Edit home or work, About', run: mapsSettings({version: '7.5.0'})},
   {id: 'T12', version: '5.1.1', name: 'Maps › Settings, Maps history, Your places, About', run: mapsSettings({version: '9.3.0', places: true})},
   {id: 'T13', version: '2.3.6', name: 'Messaging › Audio, Record audio, Capture picture / video, Slideshow', run: gbMmsAttach},
+  {id: 'T13', version: '4.3', name: 'Messaging › Audio Play, Capture picture / video, Slideshow', run: jbMmsAttach},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},
