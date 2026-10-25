@@ -2,6 +2,62 @@
 window.GBStrings = window.GBStrings || {};
 window.GBStrings["settings2"] = {
 "strings": {
+"dock_settings_title": {
+"en": "Dock settings",
+"hu": "Dokkolási beállítások",
+"de": "Dock-Einstellungen",
+"fr": "Paramètres station d'accueil",
+"es": "Ajustes del conector"
+},
+"dock_audio_settings_title": {
+"en": "Audio",
+"hu": "Hang",
+"de": "Audio",
+"fr": "Audio",
+"es": "Audio"
+},
+"dock_audio_summary_none": {
+"en": "Phone not docked",
+"hu": "A telefon nincs dokkolva",
+"de": "Telefon nicht angedockt",
+"fr": "Le téléphone n'est pas inséré dans la station d'accueil.",
+"es": "Teléfono no conectado"
+},
+"dock_not_found_title": {
+"en": "Dock not found",
+"hu": "A dokkoló nem található",
+"de": "Dock nicht gefunden",
+"fr": "Station d'accueil introuvable",
+"es": "No se ha encontrado el conector"
+},
+"dock_not_found_text": {
+"en": "The phone must be docked to configure dock audio",
+"hu": "A dokkolóegység hangjának beállításához dokkolni kell a telefont",
+"de": "Zur Konfiguration des Dock-Audios muss das Telefon angedockt sein.",
+"fr": "Pour configurer les paramètres audio de la station d'accueil, vous devez placer le téléphone sur cette dernière.",
+"es": "El teléfono debe estar conectado para configurar el audio del conector."
+},
+"dock_sounds_enable_title": {
+"en": "Dock insertion sound",
+"hu": "Dokkolási hang",
+"de": "Ton bei Dock-Anschluss",
+"fr": "Insertion dans la station d'accueil",
+"es": "Reproducir sonido"
+},
+"dock_sounds_enable_summary_on": {
+"en": "Play sound when inserting or removing phone from dock",
+"hu": "Hang lejátszása a telefon dokkolóba helyezésekor és kivételekor",
+"de": "Beim Anschließen oder Trennen des Telefons vom Dock Ton abspielen",
+"fr": "Émettre un son lorsque le téléphone est inséré dans la station d'accueil ou retiré de celle-ci",
+"es": "Reproducir sonido al insertar o extraer el teléfono del conector"
+},
+"dock_sounds_enable_summary_off": {
+"en": "Don't play sound when inserting or removing phone from dock",
+"hu": "Ne játsszon le hangot a telefon dokkolóba helyezésekor és kivételekor",
+"de": "Beim Anschließen oder Trennen des Telefons vom Dock keinen Ton abspielen",
+"fr": "N'émettre aucun son lorsque le téléphone est inséré dans la station d'accueil ou retiré de celle-ci",
+"es": "No reproducir sonido al insertar o extraer el teléfono del conector"
+},
 "manageapplications_settings_title": {
 "en": "Manage applications",
 "hu": "Alkalmazások kezelése",

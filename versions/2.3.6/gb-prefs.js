@@ -18,7 +18,12 @@
    and cache_settings_clear_cache, which empties the cache at once and has nothing to clear until the map is shown again)
    and Labs (list_item_lab_action.xml: the lab's picture, lab_*, 7 dip from the text, with its check). The Labs list and
    the cache rows' texts came from Google's server and the downloaded language pack, so they are the simulator's own; the
-   labs are the ones the image has pictures for and the simulator draws: Scale Bar, Measure and Bubble Buttons. */
+   labs are the ones the image has pictures for and the simulator draws: Scale Bar, Measure and Bubble Buttons.
+   Car Home 2.2.1.2's Settings (CarHomeGoogle.apk res/xml/settings.xml): Always show disclaimer, Hide Status bar,
+   Colorize icons, Wallpaper, Bluetooth starts Car Home (bt_launch_settings.xml: the system's Bluetooth, the disconnect
+   Timeout, and no paired device: bt_launch_settings_hint), Reset to defaults and Android settings; rows with an `act`
+   are Car Home's own dialogs (gb-extra-apps.js). The Clock's Dock settings is Settings' DockSettings (dock_settings.xml):
+   Audio with "Phone not docked" (no dock event: a touch gives "Dock not found") and Dock insertion sound. */
 (() => {
   'use strict';
   const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -197,6 +202,35 @@
         lab('bubble', 'lab_bubble_buttons', 'Bubble Buttons', 'Call or navigate to a place right from its bubble.')
       ]};
     },
+    'car-settings'(ctx) {
+      const C = key => window.GBExtraApps.T(ctx.lang, key), act = (key, title, summary, a, extra = {}) => action(key, C(title), summary ? C(summary) : '', {act: a, ...extra});
+      return {set: 'car', title: C('Settings'), items: [
+        check('settings.always_show_disclaimer', C('Always show disclaimer'), '', true),
+        check('settings.hide_statusbar', C('Hide Status bar'), '', false),
+        act('settings.tint_color', 'Colorize icons', '', 'ch-tint'),
+        act('settings.wallpaper', 'Wallpaper', '', 'ch-wallpaper'),
+        action('settings.bt_launch', C('Bluetooth starts Car Home'), C('Select paired device to automatically start Car Home when in range.'), {open: 'car-bt'}),
+        act('settings.reset_screens', 'Reset to defaults', '', 'ch-reset'),
+        act('android', 'Android settings', '', 'ch-android-settings')
+      ]};
+    },
+    'car-bt'(ctx) {
+      const C = key => window.GBExtraApps.T(ctx.lang, key);
+      return {set: 'car', title: C('Bluetooth starts Car Home'), items: [
+        check('toggle_bluetooth', C('Bluetooth'), '', false, {value: !!ctx.settings?.bluetooth, act: 'ch-bluetooth'}),
+        cat(C('Stop Car Home on disconnect')),
+        list('disconnect', C('Timeout'), ['Never', 'Immediately', 'After 5 seconds', 'After 10 seconds', 'After 30 seconds'].map(C), -1, {dialogTitle: C('Timeout')}),
+        cat(C('Start Car Home on connect with:')),
+        action('bt_hint', '', C('Before a device can be used here, it needs to be paired and Bluetooth has to be enabled.'), {info: true})
+      ]};
+    },
+    dock(ctx) {
+      const D = key => S('settings2', ctx.lang, key), on = !!ctx.values.dock_sounds;
+      return {set: 'dock', title: D('dock_settings_title'), items: [
+        action('dock_audio', D('dock_audio_settings_title'), D('dock_audio_summary_none'), {alert: {title: D('dock_not_found_title'), message: D('dock_not_found_text')}}),
+        check('dock_sounds', D('dock_sounds_enable_title'), D(on ? 'dock_sounds_enable_summary_on' : 'dock_sounds_enable_summary_off'), false)
+      ]};
+    },
     'email-incoming'(ctx) { return {set: 'email', title: S('email', ctx.lang, 'account_setup_incoming_title'), form: serverForm(ctx, 'incoming')}; },
     'email-outgoing'(ctx) { return {set: 'email', title: S('email', ctx.lang, 'account_setup_outgoing_title'), form: serverForm(ctx, 'outgoing')}; }
   };
@@ -246,16 +280,18 @@
     return true;
   }
   const screen = ctx => (SCREENS[ctx.app] || (String(ctx.app).startsWith('gmail-label|') ? SCREENS['gmail-label'] : null))?.(ctx);
-  const get = (item, values) => values[item.key] ?? item.def;
+  const get = (item, values) => item.value ?? values[item.key] ?? item.def;
   const enabled = (item, s, values) => !item.disabled && (!item.dependency || !!get(s.items.find(i => i.key === item.dependency), values));
   function row(item, s, ctx) {
     if (item.kind === 'category') return `<div class="gbset-cat">${e(item.title)}</div>`;
     const on = enabled(item, s, ctx.values), dis = on ? '' : ' disabled aria-disabled="true"', id = `${ctx.app}:${item.key}`;
     const body = summary => `${item.image ? `<img class="gbset-img" src="${e(item.image)}" alt="">` : ''}<span class="gbset-text"><span class="gbset-title">${e(item.title)}</span>${summary ? `<span class="gbset-sum">${e(summary)}</span>` : ''}</span>`;
-    if (item.kind === 'check') { const value = !!get(item, ctx.values); return `<button class="gbset-row" data-action="gbpref-check" data-id="${e(id)}" role="checkbox" aria-checked="${value}"${dis}>${body(item.summary)}<img class="gbset-check" src="assets/gb-btn_check_${value ? 'on' : 'off'}${on ? '' : '_disable'}.png" alt=""></button>`; }
+    if (item.kind === 'check') { const value = !!get(item, ctx.values); return `<button class="gbset-row" data-action="${item.act || 'gbpref-check'}" data-id="${e(id)}" role="checkbox" aria-checked="${value}"${dis}>${body(item.summary)}<img class="gbset-check" src="assets/gb-btn_check_${value ? 'on' : 'off'}${on ? '' : '_disable'}.png" alt=""></button>`; }
     if (item.kind === 'multi') return `<button class="gbset-row" data-action="gbpref-list" data-id="${e(id)}"${dis}>${body(item.summary)}</button>`;
     if (item.kind === 'list') return `<button class="gbset-row" data-action="gbpref-list" data-id="${e(id)}"${dis}>${body(item.showValue ? item.options[get(item, ctx.values)] : item.summary)}</button>`;
     if (item.info) return `<div class="gbset-row gbset-info">${body(item.summary)}</div>`;
+    // A row whose action is the app's own (Car Home's color, wallpaper and reset dialogs).
+    if (item.act) return `<button class="gbset-row" data-action="${e(item.act)}" data-id="${e(id)}"${dis}>${body(item.summary)}</button>`;
     return `<button class="gbset-row" data-action="gbpref-action" data-id="${e(id)}"${dis}>${body(item.summary)}</button>`;
   }
   function render(ctx) {
@@ -274,6 +310,8 @@
     if (item.kind === 'list') return {title: item.dialogTitle || item.title, items: item.options.map((label, i) => ({action: 'gbpref-pick', id: `${id}:${i}`, title: label})), choice: 'single', selected: get(item, ctx.values), buttons: [{action: 'close-overlay', title: cancel}]};
     // VolumePreference: the stream's seek bar with OK / Cancel.
     if (item.volume) return {title: item.title, custom: `<div class="gbvols"><label class="gbvol"><input type="range" min="0" max="100" data-vol="${item.volume.key}" value="${Number(ctx.settings?.[item.volume.key] ?? item.volume.fallback)}" aria-label="${e(item.title)}"></label></div>`, buttons: [{action: 'gbset-volume-ok', title: ok}, {action: 'close-overlay', title: cancel}]};
+    // An AlertDialog with OK alone (DockSettings' DIALOG_NOT_DOCKED).
+    if (item.alert) return {title: item.alert.title, icon: 'ic_dialog_alert', message: item.alert.message, buttons: [{action: 'close-overlay', title: ok}]};
     if (item.confirm) return {title: item.confirm.title, icon: 'ic_dialog_alert', message: item.confirm.message, buttons: [{action: 'gbpref-confirm', id, title: ok}, {action: 'close-overlay', title: cancel}]};
     if (item.edit) return {title: item.edit.title, custom: `<label class="gbdlg-field"><input data-pref-edit maxlength="200"${item.edit.number ? ' type="number" inputmode="numeric" min="1" max="999"' : ''} value="${e(item.edit.value || '')}"></label>`, buttons: [{action: 'gbpref-edit-ok', id, title: ok}, {action: 'close-overlay', title: cancel}]};
     if (item.ringtone) {

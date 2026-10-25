@@ -1259,6 +1259,44 @@ const jbMmsAttach = async h => {
   await h.tap('#viewport .mms-message [data-action="jbma-rowplay"]');
   h.check('its play button plays it', await h.until(`!!document.querySelector('#viewport .jbma-slideshow')`));
 };
+
+// 2.3.6 Car Home's Settings and the Clock's Dock settings (T15): the disclaimer on entry, Hide Status bar, Colorize
+// icons, Reset to defaults; DockSettings' "Dock not found" and Dock insertion sound.
+const gbCarDock = async h => {
+  const menu = async (action, id) => {
+    await h.tap('.touch-menu'); await h.until(`!!document.querySelector('.gbmenu')`);
+    const item = `[data-action="${action}"][data-id="${id}"]`;
+    if (!await h.ev(`!!document.querySelector('.gbmenu ${item}')`)) await h.tap('.gbmenu [data-action="gb-menu-more"]');
+    await h.tap(item);
+  };
+  const prefs = async key => (await store(h, 'appPrefs'))?.[key] || {};
+  const back = () => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='back';document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove();return 1})()`);
+  await h.openApp('car-home');
+  h.check('the disclaimer opens Car Home', await h.until(`!!document.querySelector('.ch-disclaimer')`));
+  await h.tap('[data-action="ch-disclaimer-ok"]');
+  await menu('gbpref-open', 'car-settings');
+  h.check('Settings opens its screen', await h.until(`!!document.querySelector('#viewport [data-id="car-settings:settings.hide_statusbar"]')`));
+  await h.tap('#viewport [data-id="car-settings:settings.hide_statusbar"]');
+  h.check('Hide Status bar is kept', (await prefs('car-settings'))['settings.hide_statusbar'] === true);
+  await h.tap('#viewport [data-action="ch-tint"]');
+  await h.tap('.ch-palette [data-id="#0070ff"]');
+  h.check('Colorize icons keeps the color', await store(h, 'carTint') === '#0070ff');
+  await back();
+  h.check('Car Home hides the status bar and tints its icons', await h.until(`document.querySelector('#screen').classList.contains('gb-fullscreen') && !!document.querySelector('#viewport .ch-cell img.ch-tint')`));
+  await menu('gbpref-open', 'car-settings');
+  await h.tap('#viewport [data-id="car-settings:settings.always_show_disclaimer"]');
+  await h.tap('#viewport [data-action="ch-reset"]');
+  await h.tap('[data-action="ch-reset-ok"]');
+  h.check('Reset to defaults drops the color and the settings', await store(h, 'carTint') === undefined && !Object.keys(await prefs('car-settings')).length);
+  await h.openApp('clock');
+  await menu('gbpref-open', 'dock');
+  h.check('Dock settings opens', await h.until(`!!document.querySelector('#viewport [data-id="dock:dock_audio"]')`));
+  await h.tap('#viewport [data-id="dock:dock_audio"]');
+  h.check('Audio says the dock is not found', await h.until(`/docked to configure dock audio/.test(document.querySelector('.gbdlg')?.textContent || '')`));
+  await h.tap('.gbdlg [data-action="close-overlay"]');
+  await h.tap('#viewport [data-id="dock:dock_sounds"]');
+  h.check('Dock insertion sound is kept', (await prefs('dock')).dock_sounds === true && await h.until(`/Play sound when inserting/.test(document.querySelector('#viewport [data-id="dock:dock_sounds"]')?.textContent || '')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1342,6 +1380,7 @@ const CASES = [
   {id: 'T12', version: '5.1.1', name: 'Maps › Settings, Maps history, Your places, About', run: mapsSettings({version: '9.3.0', places: true})},
   {id: 'T13', version: '2.3.6', name: 'Messaging › Audio, Record audio, Capture picture / video, Slideshow', run: gbMmsAttach},
   {id: 'T13', version: '4.3', name: 'Messaging › Audio Play, Capture picture / video, Slideshow', run: jbMmsAttach},
+  {id: 'T15', version: '2.3.6', name: 'Car Home Settings and Dock settings', run: gbCarDock},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

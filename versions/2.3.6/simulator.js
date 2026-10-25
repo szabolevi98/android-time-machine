@@ -396,7 +396,7 @@
     viewport.querySelectorAll('.home-widget .calw-list').forEach(list => { (ui.widgetScroll ||= {})[list.closest('.home-widget').dataset.widgetId] = list.scrollTop; });
     if(ui.locked)ui.view='lock';
     const outgoing = viewport.firstElementChild;
-    screen.className = `screen${activeTransition ? ' transitioning' : ''} wallpaper-${data.wallpaper}${data.settings.largeText ? ' large-text' : ''}${ui.sleeping?' sleeping':''}${ui.locked?' credential-locked':''}${(ui.view==='camera'||ui.view==='settings'&&ui.sub==='easter')&&!ui.locked?' gb-fullscreen':''}`;
+    screen.className = `screen${activeTransition ? ' transitioning' : ''} wallpaper-${data.wallpaper}${data.settings.largeText ? ' large-text' : ''}${ui.sleeping?' sleeping':''}${ui.locked?' credential-locked':''}${(ui.view==='camera'||ui.view==='settings'&&ui.sub==='easter'||ui.view==='car-home'&&!ui.gbPrefs&&data.appPrefs?.['car-settings']?.['settings.hide_statusbar'])&&!ui.locked?' gb-fullscreen':''}`;
     screen.style.background = data.wallpaper === 99 && data.customWallpaperPhoto ? `#080d14 url('${ICSMedia.image(data.customWallpaperPhoto)}') center / cover no-repeat` : data.wallpaper === 99 && data.customWallpaper ? `linear-gradient(160deg, ${data.customWallpaper[0]}, ${data.customWallpaper[1]} 53%, ${data.customWallpaper[2]})` : `#000 url('assets/gb-wallpaper_${wallpaperFiles[data.wallpaper] || 'street_lights'}.jpg') ${ui.page * 25}% center / auto 100% no-repeat`;
     screen.style.filter = `brightness(${.5 + data.settings.brightness / 135})`;
     renderStatus(); renderNav(); syncLiveWallpaper();

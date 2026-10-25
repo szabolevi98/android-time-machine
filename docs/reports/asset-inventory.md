@@ -12,7 +12,7 @@ copy: 728, vector: 210, generated: 9, own: 2
 
 ## 2.3.6 (crespo)
 
-same pixels: 1066, copy: 595, transcoded: 241, resized: 52, converted: 31, own: 10, similar: 4, rotated: 4, generated: 2
+same pixels: 1066, copy: 599, transcoded: 241, resized: 52, converted: 31, own: 10, similar: 4, rotated: 4, generated: 2
 
 From another release's image (the own image has no such file; to review): maguro 69, mako 6 — the source column of the TSV names each.
 

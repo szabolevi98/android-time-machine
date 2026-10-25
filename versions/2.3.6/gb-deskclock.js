@@ -70,7 +70,7 @@
     const T = key => text(ctx.lang, key);
     if (ctx.sub === 'alarm-edit') return [];
     if (ctx.sub === 'alarms') return [{action: 'back', title: T('menu_desk_clock'), icon: 'gb-dc-ic_menu_desk_clock.png'}, {action: 'alarm-new', title: T('add_alarm'), icon: 'gb-dc-ic_menu_add.png'}, {action: 'gbpref-open', id: 'clock', title: T('settings'), icon: 'ic_menu_preferences'}];
-    return [{action: 'clock-alarms', title: T('alarm_list_title'), icon: 'gb-dc-ic_menu_alarms.png'}, {action: 'alarm-new', title: T('add_alarm'), icon: 'gb-dc-ic_menu_add.png'}, {action: 'gbset-toast', id: 'Unavailable in this simulator', title: T('menu_item_dock_settings'), icon: 'ic_menu_preferences'}];
+    return [{action: 'clock-alarms', title: T('alarm_list_title'), icon: 'gb-dc-ic_menu_alarms.png'}, {action: 'alarm-new', title: T('add_alarm'), icon: 'gb-dc-ic_menu_add.png'}, {action: 'gbpref-open', id: 'dock', title: T('menu_item_dock_settings'), icon: 'ic_menu_preferences'}];
   }
 
   // Dialogs: TimePickerDialog (title = the picked time, ic_dialog_time, two 70 dip NumberPickers and the AM/PM button,

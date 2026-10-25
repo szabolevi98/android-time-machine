@@ -1,7 +1,10 @@
 /* The last Google apps of the Nexus S image (GRK39F) as working 2011 screens, from their APKs:
    - Car Home 2.2.1.2 (CarHomeGoogle.apk): res/xml/default_carhome.xml (screen 1: Navigate, Phone, Voice Search, Contacts,
      Music, Exit car mode; screen 2: Maps, Places, Settings, Day/Night mode), the 160 x 133.3 dip cells on the
-     container 9-patch over the home wallpaper ("Same as Home screen"), the 130 x 53.3 dip screen arrows and Add shortcut.
+     container 9-patch over the home wallpaper ("Same as Home screen"), the 130 x 53.3 dip screen arrows and Add shortcut;
+     the disclaimer.xml dialog on entry (Always show), and Settings' own dialogs: Colorize icons (color_palette.xml's nine
+     Automotive.Color.Palette colors over the icons), Wallpaper (Same as Home screen / Select from Gallery) and Reset to
+     defaults (gb-prefs.js draws the Settings screens).
    - Google Voice 0.4.2.30 (googlevoice.apk, Theme.Light): conversation_item.xml rows (the 54 dip picture with its
      voicemail / text / call badge, the 18 sp bold name with the count and time, the star, the 14 sp message), the
      labels (label_item.xml), a conversation with the transcript and playback, and Compose; English only, as the
@@ -31,7 +34,35 @@
     "Navigate": "CarHomeGoogle:navigate", "Phone": "CarHomeGoogle:phone", "Voice Search": "CarHomeGoogle:speech", "Contacts": "CarHomeGoogle:contacts",
     "Music": "CarHomeGoogle:music", "Exit car mode": "CarHomeGoogle:exit", "Maps": "CarHomeGoogle:maps", "Places": "CarHomeGoogle:places",
     "Car Home": "CarHomeGoogle:app_name", "Add shortcut": "CarHomeGoogle:label_add_shortcut", "Day/Night mode": "CarHomeGoogle:ui_mode_night_label",
-    "Car applications": "CarHomeGoogle:shortcut_item_car_apps"
+    "Car applications": "CarHomeGoogle:shortcut_item_car_apps",
+    "Always show disclaimer": "CarHomeGoogle:settings_always_show_disclaimer",
+    "Hide Status bar": "CarHomeGoogle:settings_hide_statusbar",
+    "Colorize icons": "CarHomeGoogle:settings_tint_color",
+    "Pick a color": "CarHomeGoogle:dlg_title_tint_color",
+    "Wallpaper": "CarHomeGoogle:settings_wallpaper",
+    "Car Home Wallpaper": "CarHomeGoogle:chooser_wallpaper",
+    "Select from Gallery": "CarHomeGoogle:pick_sdcard_wallpaper",
+    "Same as Home screen": "CarHomeGoogle:system_wallpaper",
+    "Bluetooth starts Car Home": "CarHomeGoogle:bt_launch_settings",
+    "Select paired device to automatically start Car Home when in range.": "CarHomeGoogle:bt_launch_settings_summary",
+    "Start Car Home on connect with:": "CarHomeGoogle:bt_launch_settings_category",
+    "Before a device can be used here, it needs to be paired and Bluetooth has to be enabled.": "CarHomeGoogle:bt_launch_settings_hint",
+    "Bluetooth": "CarHomeGoogle:bluetooth",
+    "Stop Car Home on disconnect": "CarHomeGoogle:disconnect_category_title",
+    "Timeout": "CarHomeGoogle:disconnect_title",
+    "Never": "CarHomeGoogle:disconnect_entry_never",
+    "Immediately": "CarHomeGoogle:disconnect_entry_immediately",
+    "After 5 seconds": "CarHomeGoogle:disconnect_entry_5",
+    "After 10 seconds": "CarHomeGoogle:disconnect_entry_10",
+    "After 30 seconds": "CarHomeGoogle:disconnect_entry_30",
+    "Reset to defaults": "CarHomeGoogle:settings_reset_screens_section",
+    "Delete all custom settings and shortcuts ?": "CarHomeGoogle:reset_screen_message",
+    "Android settings": "CarHomeGoogle:settings_android_settings_title",
+    "Disclaimer": "CarHomeGoogle:disclaimer_title",
+    "Please exercise caution": "CarHomeGoogle:disclaimer_agreement",
+    "Terms of Service": "CarHomeGoogle:disclaimer_tos",
+    "Always show": "CarHomeGoogle:disclaimer_checkbox",
+    "Continue": "CarHomeGoogle:btn_accept"
   });
   const T = GBApps.texts(STRINGS);
 
@@ -39,15 +70,19 @@
   const CA = name => `assets/ch-${name}.png`;
   const CAR = [[['navigate', 'Navigate', 'ic_navigate', 'navigation'], ['phone', 'Phone', 'ic_phone', 'phone'], ['voice', 'Voice Search', 'ic_voicesearch', 'voice-search'], ['contacts', 'Contacts', 'ic_contacts', 'people'], ['music', 'Music', 'ic_music', 'music'], ['exit', 'Exit car mode', 'ic_exit_carhome', '']],
     [['maps', 'Maps', 'ic_maps', 'maps'], ['places', 'Places', 'ic_places', 'places'], null, null, ['settings', 'Settings', 'ic_settings', ''], ['night', 'Day/Night mode', 'ic_brightness_auto', '']], [null, null, null, null, null, null], [null, null, null, null, null, null]];
+  const PALETTE = ['#ff1600', '#ff6900', '#98fd00', '#00d285', '#8e9dfe', '#ffffff', '#7fcbff', '#0070ff', '#afbde9'];
+  const carPrefs = data => data.appPrefs?.['car-settings'] || {};
   function carHome(ctx) {
     const {ui, lang, data} = ctx, screen = ui.chScreen || 0, custom = data.carHome || {};
     const cells = CAR[screen].map((cell, i) => {
       const item = custom[`${screen}:${i}`] ? [custom[`${screen}:${i}`], ctx.t(ctx.appName(custom[`${screen}:${i}`])), null, custom[`${screen}:${i}`]] : cell;
       if (!item) return `<button class="ch-cell add" data-action="ch-add" data-id="${screen}:${i}"><img src="${CA('ic_add_shortcut_semi')}" alt=""><span>${e(T(lang, 'Add shortcut'))}</span></button>`;
       const [id, label, icon, app] = item;
-      return `<button class="ch-cell" data-action="ch-open" data-id="${e(id)}" data-app="${e(app)}"><img src="${icon ? CA(icon) : `assets/${app}.png`}" alt=""><span>${e(icon ? T(lang, label) : label)}</span></button>`;
+      const tint = icon && data.carTint ? ` class="ch-tint" style="--tint:${e(data.carTint)};-webkit-mask-image:url('${CA(icon)}');mask-image:url('${CA(icon)}')"` : '';
+      return `<button class="ch-cell" data-action="ch-open" data-id="${e(id)}" data-app="${e(app)}"><img src="${icon ? CA(icon) : `assets/${app}.png`}" alt=""${tint}><span>${e(icon ? T(lang, label) : label)}</span></button>`;
     }).join('');
-    return `<div class="app-view ch${data.carNight ? ' night' : ''}" data-no-translate><div class="ch-grid">${cells}</div><div class="ch-arrows"><button class="ch-prev" data-action="ch-screen" data-id="-1"${screen ? '' : ' disabled'} aria-label="‹"><img src="${CA(screen ? 'arrow_left_normal' : 'arrow_empty')}" alt=""></button><span class="ch-dots">${CAR.map((_, i) => `<i class="${i === screen ? 'on' : ''}"></i>`).join('')}</span><button class="ch-next" data-action="ch-screen" data-id="1"${screen < CAR.length - 1 ? '' : ' disabled'} aria-label="›"><img src="${CA(screen < CAR.length - 1 ? 'arrow_right_normal' : 'arrow_empty')}" alt=""></button></div></div>`;
+    const photo = data.carWallpaper && data.photos.find(p => String(p.id) === String(data.carWallpaper));
+    return `<div class="app-view ch${data.carNight ? ' night' : ''}"${photo ? ` style="background-image:linear-gradient(#00000059,#00000059),url('${e(ICSMedia.image(photo))}')"` : ''} data-no-translate><div class="ch-grid">${cells}</div><div class="ch-arrows"><button class="ch-prev" data-action="ch-screen" data-id="-1"${screen ? '' : ' disabled'} aria-label="‹"><img src="${CA(screen ? 'arrow_left_normal' : 'arrow_empty')}" alt=""></button><span class="ch-dots">${CAR.map((_, i) => `<i class="${i === screen ? 'on' : ''}"></i>`).join('')}</span><button class="ch-next" data-action="ch-screen" data-id="1"${screen < CAR.length - 1 ? '' : ' disabled'} aria-label="›"><img src="${CA(screen < CAR.length - 1 ? 'arrow_right_normal' : 'arrow_empty')}" alt=""></button></div></div>`;
   }
 
   // ---------- Google Voice ----------
@@ -136,12 +171,17 @@
       ? [{action: 'gv-call', title: 'Call', icon: 'gv-ic_menu_call_gingerbread.png'}, {action: 'gv-sms-open', title: 'Text', icon: 'gv-ic_menu_sms_gingerbread.png'}, {action: 'gv-archive', title: 'Archive', icon: 'gv-ic_menu_archive_gingerbread.png'}, {action: 'gv-delete', title: 'Delete', icon: 'gv-ic_menu_delete_gingerbread.png'}, {action: 'gv-star', id: ui.gvOpen, title: 'Add star', icon: 'gv-ic_menu_star_gingerbread.png'}]
       : [{action: 'gv-compose', title: 'Compose', icon: 'gv-ic_menu_compose_gingerbread.png'}, {action: 'gv-labels', title: 'Labels', icon: 'gv-ic_menu_labels_gingerbread.png'}, {action: 'gv-refresh', title: 'Refresh', icon: 'gv-ic_menu_refresh_gingerbread.png'}, {action: 'gv-search', title: 'Search', icon: 'gv-ic_menu_search_gingerbread.png'}, {action: 'gv-unsupported', title: 'Balance', icon: 'gv-ic_menu_balance_gingerbread.png'}, {action: 'gv-unsupported', title: 'Settings', icon: 'ic_menu_preferences'}, {action: 'gv-unsupported', title: 'Help', icon: 'ic_menu_help'}];
     if (view === 'tags') return ui.tgOpen ? [{action: 'tg-delete', id: ui.tgOpen, title: t('Delete tag'), icon: 'ic_menu_delete'}, {action: 'tg-intro', id: '0', title: t('Help'), icon: 'ic_menu_help'}] : [{action: 'tg-intro', id: '0', title: t('Help'), icon: 'ic_menu_help'}, {action: 'tg-settings', title: t('Settings'), icon: 'ic_menu_preferences'}];
-    if (view === 'car-home') return [{action: 'ch-open', id: 'exit', title: T(lang, 'Exit car mode'), icon: 'ch-ic_exit_carhome.png'}, {action: 'ch-open', id: 'settings', title: t('Settings'), icon: 'ic_menu_preferences'}];
+    if (view === 'car-home') return [{action: 'ch-open', id: 'exit', title: T(lang, 'Exit car mode'), icon: 'ch-ic_exit_carhome.png'}, {action: 'gbpref-open', id: 'car-settings', title: t('Settings'), icon: 'ic_menu_preferences'}];
     return [];
   }
   function dialog(kind, ctx) {
     const {lang} = ctx, t = k => T(lang, k);
     if (kind === 'nfc') return {title: t('NFC turned off'), icon: 'ic_dialog_alert', message: t('You must turn on NFC to scan tags.'), buttons: [{action: 'tg-settings', title: t('Settings')}, {action: 'close-overlay', title: t('Cancel')}]};
+    if (kind === 'car-tint') return {title: t('Pick a color'), icon: 'ch-ic_settings.png', custom: `<div class="ch-palette">${PALETTE.map(c => `<button type="button" data-action="ch-tint-pick" data-id="${c}" style="--swatch:${c}" aria-label="${c}"><img src="assets/ch-ic_color_pick_normal.png" alt=""></button>`).join('')}</div>`, buttons: [{action: 'close-overlay', title: ctx.cancel}]};
+    if (kind === 'car-wallpaper') return {title: t('Car Home Wallpaper'), items: [{action: 'ch-wallpaper-pick', id: 'system', title: t('Same as Home screen'), icon: 'ch-ic_system_wallpaper.png'}, {action: 'ch-wallpaper-pick', id: 'gallery', title: t('Select from Gallery'), icon: 'ch-ic_sdcard_wallpaper.png'}]};
+    if (kind === 'car-pictures') return {title: t('Select from Gallery'), custom: `<div class="gbmms-pictures">${ctx.data.photos.filter(p => !p.video).map(p => `<button type="button" data-action="ch-wallpaper-photo" data-id="${p.id}">${window.ICSMessaging.photo(p)}</button>`).join('')}</div>`, buttons: [{action: 'close-overlay', title: ctx.cancel}]};
+    if (kind === 'car-reset') return {title: t('Reset to defaults'), icon: 'ic_dialog_alert', message: t('Delete all custom settings and shortcuts ?'), buttons: [{action: 'ch-reset-ok', title: ctx.ok}, {action: 'close-overlay', title: ctx.cancel}]};
+    if (kind === 'car-disclaimer') return {title: t('Disclaimer'), custom: `<div class="ch-disclaimer"><p>${e(t('Please exercise caution'))}</p><button type="button" class="ch-tos" data-action="ch-tos">${e(t('Terms of Service'))}</button><button type="button" class="ch-always" data-action="ch-disclaimer-check" role="checkbox" aria-checked="${!!ctx.ui.chDisclaimer}"><img src="assets/gb-btn_check_${ctx.ui.chDisclaimer ? 'on' : 'off'}.png" alt="">${e(t('Always show'))}</button></div>`, buttons: [{action: 'ch-disclaimer-ok', title: t('Continue')}]};
     if (kind === 'car-add') return {title: t('Car applications'), items: ['navigation', 'maps', 'places', 'music', 'phone', 'people', 'voice-search', 'talk', 'gmail', 'news-weather'].map(app => ({action: 'ch-add-pick', id: app, title: ctx.t(ctx.appName(app)), icon: `${app}.png`}))};
     if (kind === 'gv-compose') return {title: 'Compose', custom: `<form data-form="gv-new"><input class="gbdlg-input" name="to" placeholder="To" aria-label="To" autocomplete="off"><input class="gbdlg-input" name="text" placeholder="Type to compose" aria-label="Type to compose" autocomplete="off"></form>`, buttons: [{action: 'gv-new-send', title: 'Send'}, {action: 'close-overlay', title: 'Cancel'}]};
     return null;
@@ -153,11 +193,25 @@
       case 'ch-open': close();
         if (id === 'exit') { ui.chScreen = 0; ctx.home(); }
         else if (id === 'night') { data.carNight = !data.carNight; ctx.save(); ctx.render(); }
-        else if (id === 'settings') ctx.toast('This feature is not part of the simulator.');
+        else if (id === 'settings') { ui.gbPrefs = {app: 'car-settings', view: 'car-home'}; ctx.render(); }
         else if (button?.dataset.app) ctx.openApp(button.dataset.app);
         else ctx.openApp(id);
         break;
       case 'ch-add': ui.chSlot = id; ctx.dialog('car-add'); break;
+      // Settings' Colorize icons, Wallpaper, Reset to defaults, Android settings and Bluetooth (gb-prefs.js rows).
+      case 'ch-tint': ctx.dialog('car-tint'); break;
+      case 'ch-tint-pick': data.carTint = id; close(); ctx.save(); ctx.render(); break;
+      case 'ch-wallpaper': ctx.dialog('car-wallpaper'); break;
+      case 'ch-wallpaper-pick': if (id === 'gallery') { ctx.dialog('car-pictures'); break; } delete data.carWallpaper; close(); ctx.save(); ctx.render(); break;
+      case 'ch-wallpaper-photo': data.carWallpaper = id; close(); ctx.save(); ctx.render(); break;
+      case 'ch-reset': ctx.dialog('car-reset'); break;
+      case 'ch-reset-ok': delete data.carHome; delete data.carTint; delete data.carWallpaper; (data.appPrefs ||= {})['car-settings'] = {}; close(); ctx.save(); ctx.render(); break;
+      case 'ch-android-settings': ui.gbPrefs = null; ctx.openApp('settings'); break;
+      case 'ch-bluetooth': data.settings.bluetooth = !data.settings.bluetooth; ctx.save(); ctx.render(); break;
+      // The disclaimer: Always show unticked turns it off; Continue closes it; Terms of Service opens the link.
+      case 'ch-disclaimer-check': ui.chDisclaimer = !ui.chDisclaimer; ctx.renderOverlay(); break;
+      case 'ch-disclaimer-ok': ((data.appPrefs ||= {})['car-settings'] ||= {})['settings.always_show_disclaimer'] = !!ui.chDisclaimer; close(); ctx.save(); break;
+      case 'ch-tos': close(); ctx.browse('http://m.google.com/toscountry'); break;
       case 'ch-add-pick': (data.carHome ||= {})[ui.chSlot] = id; close(); ctx.save(); ctx.render(); break;
       case 'gv-open': { const c = gvStore(data).find(x => x.id === id); if (c) { c.read = true; ui.gvOpen = id; ctx.save(); ctx.render(); } break; }
       case 'gv-star': { const c = gvStore(data).find(x => x.id === id); if (c) c.starred = !c.starred; close(); ctx.save(); ctx.render(); break; }
@@ -212,7 +266,7 @@
     if (view === 'google-voice') { ui.gvOpen = ''; ui.gvLabels = false; ui.gvLabel = 'inbox'; ui.gvQuery = ''; ui.gvSearching = false; }
     if (view === 'tags') { ui.tgOpen = ''; ui.tgIntro = undefined; if (data.settings?.nfc === false) setTimeout(() => ctx.dialog('nfc')); }
     if (view === 'voice-dialer') ui.vdState = 'starting';
-    if (view === 'car-home') ui.chScreen = 0;
+    if (view === 'car-home') { ui.chScreen = 0; if (carPrefs(data)['settings.always_show_disclaimer'] !== false) { ui.chDisclaimer = true; requestAnimationFrame(() => ctx.dialog('car-disclaimer')); } }
   }
   const module = {render, mounted, menu, dialog, handle, submit, back, open};
   for (const id of ['car-home', 'google-voice', 'tags', 'voice-dialer']) GBApps.register(id, module);

@@ -120,3 +120,18 @@
 .vd-tip i{display:block;height:calc(1.1595 * var(--dp));margin:calc(6.9566 * var(--dp)) 0;background:#555}
 .vd-tip p{display:flex;align-items:center;gap:calc(6.9566 * var(--dp));margin:0;font-weight:700;font-size:calc(13.9943 * var(--dp))}
 .vd-tip img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+/* Car Home's Colorize icons: the icons drawn in the chosen Automotive.Color.Palette color (ColorFilter over the white art). */
+.ch-cell img.ch-tint{object-position:-9999px 0;background:var(--tint);-webkit-mask-size:100% 100%;mask-size:100% 100%}
+/* Pick a color (color_palette.xml): three rows of three ic_color_pick swatches 47 dip high, 4 dip apart, 4 dip in. */
+.ch-palette{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(8 * var(--dp));padding:calc(4 * var(--dp)) calc(8 * var(--dp))}
+.screen .ch-palette button{position:relative;height:calc(47 * var(--dp));padding:0;border:0 solid transparent;border-width:calc(4.6667 * var(--dp)) calc(16 * var(--dp)) calc(6 * var(--dp)) calc(17.3333 * var(--dp));border-image:url('assets/ch-ic_color_pick_normal.png') 7 24 9 26 fill / calc(4.6667 * var(--dp)) calc(16 * var(--dp)) calc(6 * var(--dp)) calc(17.3333 * var(--dp)) stretch;background:none;cursor:pointer}
+.screen .ch-palette button:active{border-image-source:url('assets/ch-ic_color_pick_selected.png')}
+.ch-palette button img{display:none}
+.ch-palette button::after{content:'';position:absolute;inset:0;background:var(--swatch);mix-blend-mode:multiply}
+/* disclaimer.xml: the agreement, the Terms of Service link and Always show (Automotive.Disclaimer, white). */
+.ch-disclaimer{padding:calc(5 * var(--dp));color:#fff;font:calc(15 * var(--dp))/1.35 DroidSans,Arial,sans-serif;white-space:pre-line}
+.ch-disclaimer p{margin:0;padding:calc(5 * var(--dp))}
+.screen .ch-tos{display:block;padding:calc(5 * var(--dp));border:0;background:none;color:#5bc0ff;text-decoration:underline;font:inherit;cursor:pointer}
+.screen .ch-always{display:flex;align-items:center;gap:calc(4 * var(--dp));margin-top:calc(5 * var(--dp));padding:0;border:0;background:none;color:#fff;font:inherit;cursor:pointer}
+.ch-always img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.ch{background-size:cover;background-position:center}

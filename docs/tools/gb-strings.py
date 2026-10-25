@@ -158,7 +158,8 @@ pref_exposure_title zoom_control_title switch_to_camera_lable switch_to_video_la
     },
     'settings2': {
         'apks': ['Settings', 'framework'],
-        'keys': '''manageapplications_settings_title runningservices_settings_title filter_apps_all filter_apps_third_party filter_apps_running
+        'keys': '''dock_settings_title dock_audio_settings_title dock_audio_summary_none dock_not_found_title dock_not_found_text dock_sounds_enable_title
+dock_sounds_enable_summary_on dock_sounds_enable_summary_off manageapplications_settings_title runningservices_settings_title filter_apps_all filter_apps_third_party filter_apps_running
 filter_apps_onsdcard no_applications sort_order_alpha sort_order_size internal_storage sd_card_storage service_background_processes
 service_foreground_processes no_running_services running_processes_item_description_s_s running_processes_item_description_s_p
 running_processes_item_description_p_s running_processes_item_description_p_p application_info_label storage_label total_size_label

@@ -84,6 +84,8 @@ versions/2.3.6/assets/ch-container_normal.png	65c18aaf21820756	copy	crespo:/syst
 versions/2.3.6/assets/ch-container_pressed.png	2a5c64ffff1073ff	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable-hdpi/container_pressed.9.png	drawable-hdpi		2a5c64ffff1073ff
 versions/2.3.6/assets/ch-ic_add_shortcut_semi.png	01b4c5dc1c40b6e9	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable-hdpi/ic_add_shortcut_semi.png	drawable-hdpi		01b4c5dc1c40b6e9
 versions/2.3.6/assets/ch-ic_brightness_auto.png	a8ce7b63f94cb964	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable-hdpi/ic_brightness_auto.png	drawable-hdpi		a8ce7b63f94cb964
+versions/2.3.6/assets/ch-ic_color_pick_normal.png	4f14e106f50c8b24	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable/ic_color_pick_normal.9.png	drawable		4f14e106f50c8b24
+versions/2.3.6/assets/ch-ic_color_pick_selected.png	55f95e2490dc9218	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable/ic_color_pick_selected.9.png	drawable		55f95e2490dc9218
 versions/2.3.6/assets/ch-ic_contacts.png	a9c44cede6aa1200	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable-hdpi/ic_contacts.png	drawable-hdpi		a9c44cede6aa1200
 versions/2.3.6/assets/ch-ic_exit_carhome.png	0302de731d4610e9	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable-hdpi/ic_exit_carhome.png	drawable-hdpi		0302de731d4610e9
 versions/2.3.6/assets/ch-ic_maps.png	bf94221b5e9929e3	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable-hdpi/ic_maps.png	drawable-hdpi		bf94221b5e9929e3
@@ -91,7 +93,9 @@ versions/2.3.6/assets/ch-ic_music.png	8d3a29def527c51b	copy	crespo:/system/app/C
 versions/2.3.6/assets/ch-ic_navigate.png	5c4c05053fb18ba1	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable-hdpi/ic_navigate.png	drawable-hdpi		5c4c05053fb18ba1
 versions/2.3.6/assets/ch-ic_phone.png	a1b6c1aad7b8fadc	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable-hdpi/ic_phone.png	drawable-hdpi		a1b6c1aad7b8fadc
 versions/2.3.6/assets/ch-ic_places.png	395e596b77efb372	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable-hdpi/ic_places.png	drawable-hdpi		395e596b77efb372
+versions/2.3.6/assets/ch-ic_sdcard_wallpaper.png	2d23c625f183368b	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable-hdpi/ic_sdcard_wallpaper.png	drawable-hdpi		2d23c625f183368b
 versions/2.3.6/assets/ch-ic_settings.png	23d9b0f978ed510e	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable-hdpi/ic_settings.png	drawable-hdpi		23d9b0f978ed510e
+versions/2.3.6/assets/ch-ic_system_wallpaper.png	120dad82f9dcb70e	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable-hdpi/ic_system_wallpaper.png	drawable-hdpi		120dad82f9dcb70e
 versions/2.3.6/assets/ch-ic_voicesearch.png	91c78505b757df7f	copy	crespo:/system/app/CarHomeGoogle.apk!res/drawable-hdpi/ic_voicesearch.png	drawable-hdpi		91c78505b757df7f
 versions/2.3.6/assets/clock-ic_lock_idle_alarm.png	68fba134ddc10de9	same pixels	crespo:/system/app/DeskClockGoogle.apk!res/drawable-hdpi/ic_lock_idle_alarm.png	drawable-hdpi		680a2fbe7183e280
 versions/2.3.6/assets/clock-ic_menu_add.png	afc0c1bf19ed207d	resized	crespo:/system/app/DeskClockGoogle.apk!res/drawable-hdpi/ic_menu_add.png	drawable-hdpi	resized 72×72 → 48×48, mean difference 0.00	faa82d6f7db54d7f
