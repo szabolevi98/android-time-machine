@@ -276,7 +276,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T17 — Talk helyi beszélgetés- és beállításműveletei
 
 - **Ütem:** Második kör, #9. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész (a08d4ee0) — 2.3.6: Add to chat (Select friend to invite → csoportos csevegés a group_chat_invited / convert_to_groupchat jegyzetekkel), Settings (gtalk_preferences.xml; Notifications Off szürkíti a függő sorokat). 4.0.4: Display options (Availability/Name/Recency), Add to chat, Friend info (becenév, Block/Remove), Talk settings (gtalk_preferences.xml, Blocked friends). Korlát marad: Sign out, Help/Feedback, Manage account, Terms, valódi hang/videohívás. Regresszió: limits-regression T17 (2.3.6, 4.0.4; asztali+telefon).
 - **Verziók:** 2.3.6, 4.0.4.
 - **Forráscsoportok:** 2.3.6-15, 4.0.4-08.
 - **Elkészítendő és határ:** 2.3.6 Settings és Add to chat a demó névjegyeivel. 4.0.4 Talk settings, Display options, Friend info és Add to chat. Sign out/Help/Feedback és valódi voice/video hívás korlát marad.
