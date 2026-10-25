@@ -2035,6 +2035,90 @@ const jbHangoutsOptions = async h => {
   await h.tap('#viewport [data-action="hgp-leave"]');
   h.check('Leave removes the group', await h.until(`!!document.querySelector('#viewport .hg-threads') && !document.querySelector('#viewport .hg-thread[data-id="g1"]')`));
 };
+// 4.4.4 Drive 1.2 (T34): Add new makes a folder and a document; Sort by and Filter by reorder and narrow the list; a
+// held item moves into a folder, is renamed, made available offline (the Offline entry lists it) and removed; the
+// detail panel stars it; Send hands it to Gmail; Refresh reads the list again; Settings keep Wi-Fi only.
+const kkDriveFiles = async h => {
+  const files = async () => (await store(h, 'driveFiles')) || [];
+  const menu = async () => { await h.tap('#viewport [data-action="sa-menu"]'); await h.until(`!!document.querySelector('.holo-menu')`); };
+  const names = () => h.ev(`[...document.querySelectorAll('#viewport .dr-text b')].map(b => b.textContent)`);
+  await h.openApp('drive');
+  h.check('opens My Drive', await h.until(`!!document.querySelector('#viewport .dr-row')`));
+  await menu();
+  h.check('the overflow has the APK\'s items', await h.ev(`[...document.querySelectorAll('.holo-menu button')].map(b => b.textContent).join('|')`) === 'Add new|Refresh|Filter by|Sort by|Settings|Product Tour');
+  await h.tap('.holo-menu [data-action="drv-dialog"][data-id="add"]');
+  h.check('Add new lists Folder, Document, Spreadsheet, Scan, Upload', await h.until(`[...document.querySelectorAll('#viewport .drv-item')].map(b => b.textContent).join('|') === 'Folder|Document|Spreadsheet|Scan|Upload'`));
+  await h.tap('#viewport .drv-item[data-id="folder"]');
+  await h.type('#viewport [data-drv-edit]', 'Receipts');
+  await h.tap('#viewport [data-action="drv-folder-ok"]');
+  h.check('the folder is listed', await h.until(`[...document.querySelectorAll('#viewport .dr-text b')].some(b => b.textContent === 'Receipts')`) && (await files()).some(f => f.name === 'Receipts' && f.kind === 'folder'));
+  await menu();
+  await h.tap('.holo-menu [data-action="drv-dialog"][data-id="add"]');
+  await h.tap('#viewport .drv-item[data-id="doc"]');
+  h.check('Document opens an untitled document', await h.until(`/Untitled document/.test(document.querySelector('#viewport .sa-title, #viewport .sa-bar')?.textContent || '')`));
+  await h.key('Escape');
+  await menu();
+  await h.tap('.holo-menu [data-action="drv-dialog"][data-id="sort"]');
+  await h.tap('#viewport .drv-item[data-id="title"]');
+  const sortedNames = await names();
+  h.check('Sort by Title puts folders first, then names', sortedNames[0] === 'Photos' || sortedNames[0] === 'Receipts', JSON.stringify(sortedNames));
+  h.check('the sort is kept', (await store(h, 'drivePrefs'))?.sort === 'title');
+  await menu();
+  await h.tap('.holo-menu [data-action="drv-dialog"][data-id="filter"]');
+  await h.tap('#viewport .drv-item[data-id="sheet"]');
+  h.check('Filter by Spreadsheets lists only Budget', await h.until(`/Filter: Spreadsheets/.test(document.querySelector('#viewport .sa-title')?.textContent || '')`) && JSON.stringify(await names()) === '["Budget"]');
+  await h.key('Escape');
+  h.check('Back leaves the filter', await h.until(`/My Drive/.test(document.querySelector('#viewport .sa-title')?.textContent || '')`));
+  // Hold Trip plan: Move to Receipts, Rename, Available offline.
+  const trip = (await files()).find(f => f.name === 'Trip plan 2014').id, receipts = (await files()).find(f => f.name === 'Receipts').id;
+  await h.hold(`#viewport [data-drive-hold="${trip}"]`); await h.sleep(600);
+  h.check('holding an item opens its menu', await h.until(`/Trip plan 2014/.test(document.querySelector('#viewport .drv-context h3')?.textContent || '')`));
+  await h.tap('#viewport .drv-context [data-action="drv-move"]');
+  await h.tap(`#viewport .drv-pick[data-id="${receipts}"]`);
+  await h.tap('#viewport [data-action="drv-move-ok"]');
+  h.check('Move to puts it in the folder', await h.until(`![...document.querySelectorAll('#viewport .dr-text b')].some(b => b.textContent === 'Trip plan 2014')`) && (await files()).find(f => f.id === trip).parent === receipts);
+  await h.tap(`#viewport .dr-main[data-id="${receipts}"]`);
+  h.check('the folder opens on its item', await h.until(`/Receipts/.test(document.querySelector('#viewport .sa-title')?.textContent || '') && JSON.stringify([...document.querySelectorAll('#viewport .dr-text b')].map(b => b.textContent)) === '["Trip plan 2014"]'`));
+  await h.hold(`#viewport [data-drive-hold="${trip}"]`); await h.sleep(600);
+  await h.tap('#viewport .drv-context [data-action="drv-rename"]');
+  await h.type('#viewport [data-drv-edit]', 'Lisbon trip');
+  await h.tap('#viewport [data-action="drv-rename-ok"]');
+  h.check('Rename renames it', await h.until(`[...document.querySelectorAll('#viewport .dr-text b')].some(b => b.textContent === 'Lisbon trip')`));
+  await h.tap(`#viewport .dr-info[data-id="${trip}"]`);
+  h.check('the detail panel shows its general info', await h.until(`/General info/i.test(document.querySelector('#viewport .drv-detail')?.textContent || '')`));
+  await h.tap('#viewport .drv-pin-row');
+  await h.tap('#viewport .drv-star');
+  h.check('Available offline and the star are kept', (await files()).some(f => f.id === trip && f.pinned && f.starred));
+  await h.tap('#viewport .drv-close');
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="drive-nav"]');
+  await h.tap('#viewport .dr-nav [data-id="offline"]');
+  h.check('Offline lists the pinned item', await h.until(`/Offline/.test(document.querySelector('#viewport .sa-title')?.textContent || '') && [...document.querySelectorAll('#viewport .dr-text b')].some(b => b.textContent === 'Lisbon trip')`));
+  await h.tap('#viewport [data-action="drive-nav"]');
+  await h.tap('#viewport .dr-nav [data-id="my"]');
+  // Remove Budget, Refresh, then Send Meetup slides to Gmail.
+  const budget = (await files()).find(f => f.name === 'Budget').id;
+  await h.hold(`#viewport [data-drive-hold="${budget}"]`); await h.sleep(600);
+  await h.tap('#viewport .drv-context [data-action="drv-remove"]');
+  await h.tap('#viewport [data-action="drv-remove-ok"]');
+  h.check('Remove takes it off the list', await h.until(`![...document.querySelectorAll('#viewport .dr-text b')].some(b => b.textContent === 'Budget')`) && (await files()).find(f => f.id === budget).trashed === true);
+  await menu();
+  await h.tap('.holo-menu [data-action="drv-refresh"]');
+  h.check('Refresh shows its progress and lists the same items', await h.until(`!!document.querySelector('#viewport .drv-spinner')`, 2000) && await h.until(`!document.querySelector('#viewport .drv-spinner') && !![...document.querySelectorAll('#viewport .dr-text b')].length`));
+  h.check('reloads', await h.reload());
+  await h.openApp('drive');
+  h.check('the changes stay after a reload', await h.until(`[...document.querySelectorAll('#viewport .dr-text b')].some(b => b.textContent === 'Receipts') && ![...document.querySelectorAll('#viewport .dr-text b')].some(b => b.textContent === 'Budget')`));
+  const slides = (await files()).find(f => f.name === 'Meetup slides').id;
+  await h.hold(`#viewport [data-drive-hold="${slides}"]`); await h.sleep(600);
+  await h.tap('#viewport .drv-context [data-action="drv-send"]');
+  await h.tap('#viewport .drv-app[data-id="gmail"]');
+  h.check('Send opens Gmail with the item attached', await h.until(`/Meetup slides/.test(document.querySelector('#viewport .kem-attachment')?.textContent || '')`));
+  await h.openApp('drive');
+  await menu();
+  await h.tap('.holo-menu [data-action="drv-settings"]');
+  await h.tap('#viewport .drv-row[data-action="drv-wifi"]');
+  h.check('Settings keep Transfer files only over Wi-Fi', (await store(h, 'drivePrefs'))?.wifiOnly === false && await h.until(`!document.querySelector('#viewport .drv-row[data-action="drv-wifi"] .drv-check.on')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -2134,6 +2218,7 @@ const CASES = [
   {id: 'T32', version: '4.3', name: 'Hangouts › Settings, Hangout requests, Blocked People, People & options, Add people', run: jbHangoutsOptions},
   {id: 'T32', version: '4.4.4', name: 'Hangouts › Settings, SMS, Invites, Blocked People, People & options, New group MMS', run: kkHangoutsOptions},
   {id: 'T32', version: '5.1.1', name: 'Hangouts › Settings, People & options, Blocked people, Add people; Messenger › People & options', run: lpHangoutsOptions},
+  {id: 'T34', version: '4.4.4', name: 'Drive › Add new, Sort by, Filter by, Move to, Rename, Offline, Remove, Refresh, Send, Settings', run: kkDriveFiles},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

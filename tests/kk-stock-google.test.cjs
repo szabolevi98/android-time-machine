@@ -1,7 +1,7 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // 4.4.4 stock Google apps checked against the KTU84P APKs (audit step 4).
-const w={window:{GELNow:{render:()=>'<div class="gnow-page"></div>'}}};for(const f of ['stock-strings.js','news-prefs.js','stock-apps.js'])vm.runInNewContext(fs.readFileSync('versions/4.4.4/'+f,'utf8'),w);
+const w={window:{GELNow:{render:()=>'<div class="gnow-page"></div>'}}};for(const f of ['stock-strings.js','news-prefs.js','kk-drive.js','stock-apps.js'])vm.runInNewContext(fs.readFileSync('versions/4.4.4/'+f,'utf8'),w);
 const A=w.window.StockApps,css=fs.readFileSync('versions/4.4.4/stock-apps.css','utf8'),ctx=(ui={},locale='en')=>({ui,data:{},t:k=>k,locale,now:new Date(2014,5,20,10)});
 // Google Settings: GoogleSettingsActivity's rows in GMS 4.3.23's order, no section headers.
 const gs=A.render('google-settings',ctx({},'de'));assert.ok(!gs.includes('<h4>'));

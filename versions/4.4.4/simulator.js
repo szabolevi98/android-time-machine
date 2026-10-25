@@ -728,14 +728,14 @@
       case 'clock': return renderClock();
       case 'calculator': return renderCalculator();
       case 'email': return renderEmail();
-      case 'newsstand': case 'quickoffice': case 'wallet': return KKExtraApps.render(ui.view, {files: officeFiles(), ui, t: key => i18n.t(key)});
+      case 'newsstand': case 'quickoffice': case 'wallet': return KKExtraApps.render(ui.view, {files: officeFiles().filter(f => !f.trashed), ui, t: key => i18n.t(key)});
       case 'downloads': return KKDownloads.render(data.downloads || [], ui, key => i18n.t(key), i18n.locale());
       default: return renderHome();
     }
   }
   function openApp(app, resume = false) {
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
-    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt5Dialog = null; ui.ksPage = ''; ui.ksDialog = null; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; }
+    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt5Dialog = null; ui.ksPage = ''; ui.ksDialog = null; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.driveFolder = ''; ui.driveFilter = ''; ui.driveNavItem = 'my'; ui.driveStack = []; ui.driveDialog = ''; ui.driveDetail = ''; }
     if(ui.locked)return;
     if (app === 'news-weather' && !resume) { ui.newsSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
     if (GEL_ALIASES[app]) app = GEL_ALIASES[app];
@@ -849,6 +849,8 @@
     if (ui.view === 'hangouts' && ui.sub === 'thread' && ui.hgLocation) { ui.hgLocation = false; render(); return; }
     // Hangouts' own pages (hangouts-prefs.js) step back through what opened them.
     if (ui.view === 'hangouts' && ui.hgPage) { HangoutsPrefs.back(ui); render(); return; }
+    // Drive's dialogs, detail panel, Settings, folders and filters (kk-drive.js).
+    if (ui.view === 'drive' && window.KKDrive && KKDrive.back(ui)) { render(); return; }
     if (ui.view === 'hangouts' && ui.sub === 'archived') { ui.sub = ''; render(); return; }
     if (['messaging', 'hangouts'].includes(ui.view) && ui.sub === 'thread') { ui.sub = ui.mmsListMode || ''; render(); return; }
     if (ui.view === 'clock' && ui.sub === 'cities') { ui.sub = ''; render(); return; }
@@ -1611,6 +1613,13 @@
       closeOverlay() { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } },
       unsupported: () => toast(i18n.t('This feature is not part of the simulator.'))};
   }
+  // Drive's Send (the item as an attachment) and Send link (its link as the text) in Gmail, Email or Hangouts.
+  function driveShareFile(app, file) { if (file.photo) { const photo = data.photos.find(p => p.id === file.photo); ui.overlay = ''; renderOverlay(); openApp(app); composeEmail(); const d = mailbox().find(m => m.id === ui.emailId); if (d && photo) d.attachment = clone(photo); save(); render(); return; } shareVcard(app, file); }
+  function driveShareText(app, text, subject) {
+    ui.overlay = ''; renderOverlay();
+    if (app === 'hangouts') { openApp('hangouts'); ui.sub = 'new'; messageDraft().body = text; save(); render(); return; }
+    openApp(app); composeEmail(); const d = mailbox().find(m => m.id === ui.emailId); if (d) { d.subject = subject; d.body = text; } save(); render();
+  }
   function shareVcard(app, file) { ui.overlay = ''; renderOverlay(); openApp(app); composeEmail(); const d = mailbox().find(m => m.id === ui.emailId); if (d) d.attachment = file; save(); render(); }
   function composeEmail(source=null,forward=false,to='') {
     const draft=ICSEmail.draft(source,forward);if(to)draft.to=to;
@@ -1715,6 +1724,7 @@
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Gmail's label settings, Days of mail to sync and the vacation responder (gmail.js).
     if (action.startsWith('gmx-') && GmailApp.handlePref(action, id, {data, ui, save, render, toast, root: viewport})) return;
+    if (action.startsWith('drv-') && KKDrive.handle(action, id, {data, ui, save, render, renderOverlay, toast, root: viewport, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), shareFile: driveShareFile, shareText: driveShareText})) return;
     if (action.startsWith('hgp-') && HangoutsPrefs.handle(action, id, {data, ui, save, render, renderOverlay, toast, root: viewport, openApp, openThread: key => openMessageThread(key),
       smsApp: () => { ui.overlay = 'kk-sms-app'; renderOverlay(); }, openApn: () => { openApp('settings'); ui.sub = 'apn'; render(); }})) return;
     if (action.startsWith('calpref-') && CalendarPrefs.handle(action, id, {data, ui, save, render, toast, root: viewport, pickZone: zone => { ui.tzp = TimeZonePicker.open(zone, Date.now()); ui.tzpFor = 'home'; ui.overlay = 'tzpicker'; renderTzPicker(true); }})) return;
@@ -3171,6 +3181,8 @@
     if (message && !ui.overlay) { ui.mmsMessage = message.dataset.id; ui.overlay = 'mms-message'; renderOverlay(); }
     const qo = event.target.closest('[data-qo-hold]');
     if (qo && !ui.overlay) { ui.qoFile = qo.dataset.qoHold; ui.overlay = 'qo-file'; renderOverlay(); }
+    const driveItem = event.target.closest('[data-drive-hold]');
+    if (driveItem && !ui.overlay && !ui.driveDialog) KKDrive.handle('drv-hold', driveItem.dataset.driveHold, {data, ui, save, render, toast, root: viewport});
     if (!dragState && ui.view === 'home' && !ui.overlay && !ui.overview && event.button === 2 && event.target.closest('.home-slot') && !event.target.closest('.launcher-icon')) { ui.overview = true; render(); }
   });
   // Older WebKit versions may still start page rubber-banding during a custom
@@ -3290,6 +3302,9 @@
     if (message && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.mmsMessage = message.dataset.id; ui.overlay = 'mms-message'; suppressReleaseClick(); renderOverlay(); }, holdDelay(550));
     const heldQo = event.target.closest('[data-qo-hold]');
     if (heldQo && !ui.overlay) messageHoldTimer = setTimeout(() => { suppressReleaseClick(); ui.qoFile = heldQo.dataset.qoHold; ui.overlay = 'qo-file'; renderOverlay(); }, holdDelay(550));
+    // Drive: a held item opens menu_doclist_context.xml for it (kk-drive.js).
+    const heldDrive = event.target.closest('[data-drive-hold]');
+    if (heldDrive && !ui.overlay && !ui.driveDialog) messageHoldTimer = setTimeout(() => { suppressReleaseClick(); KKDrive.handle('drv-hold', heldDrive.dataset.driveHold, {data, ui, save, render, toast, root: viewport}); }, holdDelay(550));
     if (pointerStart.lockDrag) { clearTimeout(ui.lockReleaseTimer); viewport.querySelectorAll('.lock-chevron').forEach(chevron => chevron.getAnimations().forEach(animation => animation.cancel())); screen.classList.remove('lock-releasing'); screen.classList.add('lock-dragging'); try { screen.setPointerCapture(event.pointerId); } catch {} }
     else if (ui.view === 'lock' && !ui.locked && event.target.closest('.lock-wave')) lockPing();
     if (ui.view === 'calculator' && !ui.overlay && event.target.closest('.calc-pager')) pointerStart.calculatorSwipe = true;

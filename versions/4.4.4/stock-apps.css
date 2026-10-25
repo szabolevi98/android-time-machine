@@ -443,3 +443,68 @@
 .mps .mps-row small{font-size:calc(18 * var(--dp))}
 /* With a place's card at the bottom, the views tab (views_entry_point) sits above it rather than under it. */
 .sa-maps7:has(.sa-maps-card) .mp7-tab{bottom:calc(126 * var(--dp))}
+/* kk-drive.js: the pinned mark, the Refresh spinner, the Holo Light dialogs (Add new, Filter by, Sort by, the held
+   item's menu, Rename, Remove, Send), Move to's pick_entry_dialog_header.xml (the up affordance, the #33b5e5 title, the
+   new-folder button over a 2 dp #33b5e5 line) and its 54 dp folder rows, the detail panel (detail_fragment.xml: #eee,
+   24 dp padding, the 16 dp type icon and 14 sp #333 title, the 190 dp thumbnail, the section titles over a thick
+   rule) and Settings. */
+.drv-pin{flex:none;align-self:center;width:calc(8 * var(--dp));height:calc(8 * var(--dp));margin-right:calc(6 * var(--dp));border-radius:50%;background:#33b5e5}
+.drv-spinner{flex:none;width:calc(20 * var(--dp));height:calc(20 * var(--dp));margin:0 calc(10 * var(--dp));border:calc(2.5 * var(--dp)) solid #33b5e533;border-top-color:#33b5e5;border-radius:50%;animation:drv-spin .8s linear infinite}
+@keyframes drv-spin{to{transform:rotate(360deg)}}
+.drv-scrim,.drv-detail-scrim{position:absolute;inset:0;z-index:30;border:0;background:#0009}
+.drv-detail-scrim{background:#0006}
+.drv-dialog{position:absolute;z-index:31;left:calc(16 * var(--dp));right:calc(16 * var(--dp));top:50%;transform:translateY(-50%);max-height:80%;display:flex;flex-direction:column;background:#fff;box-shadow:0 calc(2 * var(--dp)) calc(11 * var(--dp)) #0006}
+.drv-dialog h3{flex:none;margin:0;padding:calc(16 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #33b5e5;font:400 calc(22 * var(--dp)) Roboto,sans-serif;color:#33b5e5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .drv-item{display:flex;align-items:center;flex:none;width:100%;min-height:calc(48 * var(--dp));padding:0 calc(8 * var(--dp)) 0 calc(16 * var(--dp));border:0;border-top:calc(1 * var(--dp)) solid #e3e3e3;background:none;text-align:left;font:400 calc(18 * var(--dp)) Roboto,sans-serif;color:#000}
+.drv-item:first-of-type{border-top:0}
+.drv-item span{flex:1}
+.drv-app img{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-right:calc(16 * var(--dp))}
+.drv-radio,.drv-check{flex:none;width:calc(32 * var(--dp));height:calc(32 * var(--dp));background:url('assets/btn_radio_off_holo_light.png') center/contain no-repeat}
+.drv-radio.on{background-image:url('assets/btn_radio_on_holo_light.png')}
+.drv-check{background-image:url('assets/btn_check_off_holo_light.png')}
+.drv-check.on{background-image:url('assets/btn_check_on_holo_light.png')}
+.drv-msg{margin:0;padding:calc(16 * var(--dp));font:400 calc(16 * var(--dp))/1.4 Roboto,sans-serif;color:#333}
+.screen .drv-edit{display:block;width:calc(100% - calc(32 * var(--dp)));margin:calc(16 * var(--dp));padding:calc(6 * var(--dp)) calc(4 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #33b5e5;font:400 calc(18 * var(--dp)) Roboto,sans-serif;outline:0}
+.drv-buttons{flex:none;display:flex;border-top:calc(1 * var(--dp)) solid #0000001a}
+.screen .drv-buttons button{flex:1;min-height:calc(48 * var(--dp));border:0;background:none;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000}
+.drv-buttons button+button{border-left:calc(1 * var(--dp)) solid #0000001a}
+.drv-buttons button:disabled{color:#0000004d}
+.drv-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(4 * var(--dp));padding:calc(8 * var(--dp));overflow-y:auto}
+.screen .drv-photos button{aspect-ratio:1;padding:0;border:0;background:#eee;overflow:hidden}
+.drv-photos button>*{width:100%;height:100%}
+.drv-pick-head{flex:none;display:flex;align-items:center;min-height:calc(56 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #33b5e5}
+.drv-pick-head b{flex:1;min-width:0;padding:0 calc(16 * var(--dp));font:400 calc(22 * var(--dp)) Roboto,sans-serif;color:#33b5e5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .drv-pick-head button{flex:none;width:calc(48 * var(--dp));height:calc(56 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center}
+.drv-pick-head button img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.drv-pick-head button:first-child img{width:calc(16 * var(--dp));height:calc(16 * var(--dp))}
+.drv-pick-list{flex:1;min-height:calc(54 * var(--dp));overflow-y:auto}
+.screen .drv-pick{display:flex;align-items:center;width:100%;height:calc(54 * var(--dp));padding:0 calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #e3e3e3;background:none;text-align:left;font:400 calc(18 * var(--dp)) Roboto,sans-serif;color:#000}
+.drv-pick img{width:calc(16 * var(--dp));height:calc(16 * var(--dp));margin-right:calc(16 * var(--dp))}
+.drv-detail{position:absolute;z-index:31;top:calc(48 * var(--dp));right:0;bottom:0;width:min(calc(320 * var(--dp)),88%);overflow-y:auto;scrollbar-width:none;background:#eee;box-shadow:calc(-2 * var(--dp)) 0 calc(8 * var(--dp)) #0003}
+.screen .drv-close{position:absolute;right:0;top:0;padding:calc(29 * var(--dp)) calc(24 * var(--dp)) calc(8 * var(--dp)) calc(8 * var(--dp));border:0;background:none}
+.drv-close img{display:block;width:calc(21 * var(--dp));height:calc(21 * var(--dp))}
+.drv-detail-in{padding:calc(24 * var(--dp))}
+.drv-title{display:flex;align-items:center;padding:calc(5 * var(--dp)) calc(40 * var(--dp)) calc(5 * var(--dp)) 0;font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#333}
+.screen .drv-star{flex:none;padding:0;margin-right:calc(7 * var(--dp));border:0;background:none}
+.drv-star img{display:block;width:calc(22 * var(--dp));height:calc(22 * var(--dp))}
+.drv-doc-icon{flex:none;width:calc(16 * var(--dp));height:calc(16 * var(--dp));margin-right:calc(7 * var(--dp))}
+.drv-title span{min-width:0;overflow-wrap:anywhere}
+.drv-thumb{height:calc(190 * var(--dp));margin:calc(8 * var(--dp)) 0 calc(15 * var(--dp));display:grid;place-items:center;overflow:hidden;background:#fff;border:calc(1 * var(--dp)) solid #ddd}
+.drv-thumb>*:not(.drv-thumb-icon){width:100%;height:100%}
+.drv-thumb-icon{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
+.drv-thumb-page{box-sizing:border-box;padding:calc(12 * var(--dp));font:400 calc(9 * var(--dp))/1.4 Roboto,sans-serif;color:#555;text-align:left;align-self:start}
+.drv-thumb-page p{margin:0 0 calc(4 * var(--dp))}
+.drv-sec{margin:calc(12 * var(--dp)) 0 0;padding:0 0 calc(4 * var(--dp)) calc(8 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #ccc;font:700 calc(14 * var(--dp)) Roboto,sans-serif;color:#555;text-transform:uppercase}
+.screen .drv-pin-row{display:flex;align-items:center;width:100%;padding:calc(4 * var(--dp)) 0 calc(4 * var(--dp)) calc(4 * var(--dp));border:0;background:none;text-align:left;font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#333}
+.drv-pin-row span{flex:1;margin-left:calc(4 * var(--dp))}
+.drv-pin-row small{color:#888;margin-right:calc(4 * var(--dp))}
+.drv-line{display:flex;justify-content:space-between;gap:calc(8 * var(--dp));margin:0;padding:calc(10 * var(--dp)) 0 0 calc(8 * var(--dp));font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#333;overflow-wrap:anywhere}
+.drv-line small{color:#888}
+.drv-settings{background:#fff}
+.drv-cat{margin:calc(16 * var(--dp)) calc(16 * var(--dp)) 0;padding:0 calc(8 * var(--dp)) calc(4 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #cfcfcf;font:700 calc(14 * var(--dp)) Roboto,sans-serif;color:#8f8f8f;text-transform:uppercase}
+.screen .drv-row{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;background:none;text-align:left}
+.drv-row+.drv-row{border-top:calc(1 * var(--dp)) solid #e3e3e3}
+.drv-row span{flex:1;min-width:0;display:flex;flex-direction:column}
+.drv-row b{font:400 calc(18 * var(--dp)) Roboto,sans-serif;color:#000}
+.drv-row small{margin-top:calc(2 * var(--dp));font:400 calc(14 * var(--dp))/1.3 Roboto,sans-serif;color:#727272}
+.screen .drv-item:active,.screen .drv-row:active,.screen .drv-pick:active,.screen .drv-buttons button:active,.screen .drv-pin-row:active,.screen .drv-pick-head button:active{background:#33b5e566}

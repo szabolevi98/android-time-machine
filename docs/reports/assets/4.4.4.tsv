@@ -150,6 +150,7 @@ versions/4.4.4/assets/dial_background_texture.png	209fcf5c34dfde2f	similar	hamme
 versions/4.4.4/assets/downloads.png	ab480c3038a6a152	same pixels	hammerhead:/system/app/DownloadProviderUi.apk!res/mipmap-xxhdpi/ic_launcher_download.png	mipmap-xxhdpi		7544a8e1619f88f0
 versions/4.4.4/assets/dr-action_search.png	d9b7ed79ce3c7bc6	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/action_search.png	drawable-xhdpi		d9b7ed79ce3c7bc6
 versions/4.4.4/assets/dr-ic_actionbar_overflow.png	4d600c2c5ee39df9	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_actionbar_overflow.png	drawable-xhdpi		4d600c2c5ee39df9
+versions/4.4.4/assets/dr-ic_close.png	4daca5c26327714f	copy	hammerhead:/system/app/Drive.apk!res/drawable-xxhdpi/ic_close.png	drawable-xxhdpi		4daca5c26327714f
 versions/4.4.4/assets/dr-ic_drawer.png	8c04d4b2f6f8e0b3	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_drawer.png	drawable-xhdpi		8c04d4b2f6f8e0b3
 versions/4.4.4/assets/dr-ic_drive_my_drive_inactive.png	9cfea4b6cc97173e	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_drive_my_drive_inactive.png	drawable-xhdpi		9cfea4b6cc97173e
 versions/4.4.4/assets/dr-ic_drive_offline_inactive.png	0437ba828cfa1556	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_drive_offline_inactive.png	drawable-xhdpi		0437ba828cfa1556
@@ -159,11 +160,16 @@ versions/4.4.4/assets/dr-ic_drive_starred_inactive.png	b4ec3dd652da98c0	copy	ham
 versions/4.4.4/assets/dr-ic_drive_upload_inactive.png	d93685532f6b3d99	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_drive_upload_inactive.png	drawable-xhdpi		d93685532f6b3d99
 versions/4.4.4/assets/dr-ic_grid_toggle.png	31f1e6297e211424	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_grid_toggle.png	drawable-xhdpi		31f1e6297e211424
 versions/4.4.4/assets/dr-ic_information_gray_small.png	209ef9d28fa47cde	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_information_gray_small.png	drawable-xhdpi		209ef9d28fa47cde
+versions/4.4.4/assets/dr-ic_new_folder.png	ebef8ebc2941d908	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_new_folder.png	drawable-xhdpi		ebef8ebc2941d908
+versions/4.4.4/assets/dr-ic_star_off.png	f15a09b4bb8f89e1	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_star_off.png	drawable-hdpi		f15a09b4bb8f89e1
+versions/4.4.4/assets/dr-ic_star_on.png	3bba7683adb14fdb	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_star_on.png	drawable-hdpi		3bba7683adb14fdb
 versions/4.4.4/assets/dr-ic_type_doc.png	ebd64f5df4d301fe	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_doc.png	drawable-hdpi		ebd64f5df4d301fe
 versions/4.4.4/assets/dr-ic_type_folder.png	fe71678baad7ce41	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_folder.png	drawable-hdpi		fe71678baad7ce41
+versions/4.4.4/assets/dr-ic_type_image.png	838be3c400ee4e48	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_image.png	drawable-hdpi		838be3c400ee4e48
 versions/4.4.4/assets/dr-ic_type_pdf.png	52d81a1b6adcd5d9	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_pdf.png	drawable-hdpi		52d81a1b6adcd5d9
 versions/4.4.4/assets/dr-ic_type_presentation.png	3cab05fcccd0de58	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_presentation.png	drawable-hdpi		3cab05fcccd0de58
 versions/4.4.4/assets/dr-ic_type_sheet.png	9e11067be63a04fd	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_sheet.png	drawable-hdpi		9e11067be63a04fd
+versions/4.4.4/assets/dr-ic_upaffordance.png	b337b8aae35678b0	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_upaffordance.png	drawable-xhdpi		b337b8aae35678b0
 versions/4.4.4/assets/drive.png	868acbd5d39f5f96	copy	hammerhead:/system/priv-app/PrebuiltGmsCore.apk!res/drawable-xxhdpi/launcher_drive_icon.png	drawable-xxhdpi		868acbd5d39f5f96
 versions/4.4.4/assets/ea7-ic_menu_northup.png	0fbcfff631376396	copy	hammerhead:/system/app/GoogleEarth.apk!res/drawable-xhdpi/ic_menu_northup.png	drawable-xhdpi		0fbcfff631376396
 versions/4.4.4/assets/ea7-ic_menu_search_holo_dark.png	d0ab4bb668282af3	copy	hammerhead:/system/framework/framework-res.apk!res/drawable-xxhdpi/ic_menu_search_holo_dark.png	drawable-xxhdpi		d0ab4bb668282af3
