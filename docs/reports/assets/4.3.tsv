@@ -1016,9 +1016,13 @@ versions/4.3/assets/youtube.png	fdc247f49abb8c3d	copy	mako:/system/app/YouTube.a
 versions/4.3/assets/yt4-bg_stripes_dark.png	549c1babc8edd7c5	copy	mako:/system/app/YouTube.apk!res/drawable-xhdpi/bg_stripes_dark.png	drawable-xhdpi		549c1babc8edd7c5
 versions/4.3/assets/yt4-compat_spinner_default.png	7fe55a99262c30d1	copy	mako:/system/app/YouTube.apk!res/drawable-xhdpi/compat_spinner_default.9.png	drawable-xhdpi		7fe55a99262c30d1
 versions/4.3/assets/yt4-ic_clear_normal.png	8e8eaf9222d03b48	copy	mako:/system/app/Books.apk!res/drawable-hdpi/ic_clear_normal.png	drawable-hdpi		8e8eaf9222d03b48
+versions/4.3/assets/yt4-ic_list_add_new.png	96ebe83a1428bd18	copy	mako:/system/app/YouTube.apk!res/drawable-xhdpi/ic_list_add_new.png	drawable-xhdpi		96ebe83a1428bd18
+versions/4.3/assets/yt4-ic_list_favorite.png	8cc0d35d3cd43177	copy	mako:/system/app/YouTube.apk!res/drawable-xhdpi/ic_list_favorite.png	drawable-xhdpi		8cc0d35d3cd43177
+versions/4.3/assets/yt4-ic_list_watch_later.png	d8b7c76f9727add7	copy	mako:/system/app/YouTube.apk!res/drawable-xhdpi/ic_list_watch_later.png	drawable-xhdpi		d8b7c76f9727add7
 versions/4.3/assets/yt4-ic_logo_wide.png	442f16630f1684ee	copy	mako:/system/app/YouTube.apk!res/drawable-xhdpi/ic_logo_wide.png	drawable-xhdpi		442f16630f1684ee
 versions/4.3/assets/yt4-ic_menu_add_to_playlist.png	24d57d4978ddc1df	copy	mako:/system/app/YouTube.apk!res/drawable-xhdpi/ic_menu_add_to_playlist.png	drawable-xhdpi		24d57d4978ddc1df
 versions/4.3/assets/yt4-ic_menu_search.png	ad9e09ab001cb974	copy	mako:/system/app/YouTube.apk!res/drawable-xhdpi/ic_menu_search.png	drawable-xhdpi		ad9e09ab001cb974
 versions/4.3/assets/yt4-ic_menu_share.png	7a3f8f0fc2dfa940	copy	mako:/system/app/SystemUI.apk!res/drawable-xhdpi/ic_menu_share.png	drawable-xhdpi		7a3f8f0fc2dfa940
+versions/4.3/assets/yt4-licenses.html	8998d298557e4ca1	copy	mako:/system/app/YouTube.apk!assets/licenses.html			8998d298557e4ca1
 versions/4.3/assets/yt4-missing_avatar.png	7a0f70ac162a8c1f	copy	mako:/system/app/YouTube.apk!res/drawable-xhdpi/missing_avatar.png	drawable-xhdpi		7a0f70ac162a8c1f
 versions/4.3/assets/yt4-textfield_search_selected_holo_dark.png	4e1ea97e4c1769e6	copy	mako:/system/app/Books.apk!res/drawable-xhdpi/textfield_search_selected_holo_dark.9.png	drawable-xhdpi		4e1ea97e4c1769e6

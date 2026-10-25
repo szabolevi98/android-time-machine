@@ -28,7 +28,7 @@ Not traced:
 
 ## 4.3 (mako)
 
-copy: 453, same pixels: 333, resized: 196, converted: 19, own: 8, similar: 7, generated: 3, not traced: 2, cropped: 2
+copy: 457, same pixels: 333, resized: 196, converted: 19, own: 8, similar: 7, generated: 3, not traced: 2, cropped: 2
 
 From another release's image (the own image has no such file; to review): maguro 17, passion 26, shamu 1 — the source column of the TSV names each.
 

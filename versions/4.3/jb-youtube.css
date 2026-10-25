@@ -1,0 +1,14 @@
+/* YouTube 4.5.17's Settings and the watch page's dialogs (jb-youtube.js) on the mps- Holo Light rows and dialogs. */
+.yt4-prefs{background:#f3f3f3}
+.screen .yt4-prefs .yt4-header{min-height:calc(48 * var(--dp))}
+.yt4-licenses iframe{flex:1;width:100%;border:0;background:#fff}
+/* add_to_dialog.xml: playlist_chooser_item.xml rows (textAppearanceLarge, 15 dp in, the icon in the 60 dp right panel). */
+.screen .yt4-chooser button{min-height:calc(64 * var(--dp));padding:0 0 0 calc(15 * var(--dp));font-size:calc(22 * var(--dp))}
+.yt4-chooser img{flex:none;width:calc(40 * var(--dp));height:calc(40 * var(--dp));margin:0 calc(10 * var(--dp))}
+/* create_playlist_dialog.xml: the Title field and the Private check box. */
+.yt4-private{display:flex;align-items:center;gap:calc(4 * var(--dp));padding:0 calc(16 * var(--dp)) calc(12 * var(--dp));font-size:calc(18 * var(--dp))}
+.mps-dialog .yt4-private input{appearance:none;flex:none;width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin:0;padding:0;border:0;background:url('assets/btn_check_off_holo_light.png') center/contain no-repeat}
+.mps-dialog .yt4-private input:checked{background-image:url('assets/btn_check_on_holo_light.png')}
+/* The chooser "Share this video via" (ResolverActivity): resolve_list_item.xml's 48 dp icon and the label. */
+.screen .yt4-share .nwp-choices button{gap:calc(12 * var(--dp));min-height:calc(64 * var(--dp))}
+.yt4-share img{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}

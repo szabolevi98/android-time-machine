@@ -1470,6 +1470,67 @@ const icsYouTube = async h => {
   h.check('the settings are kept', p.default_hq === true && p.subtitles_size === 2 && p.safe_search === 2, JSON.stringify(p));
   h.check('Clear search history empties the queries', !(await yt()).searches.length);
 };
+
+// 4.3 YouTube 4.5.17 (T20): Add to (Watch later, a new playlist), Like then Dislike, Copy URL, Share into Gmail, and
+// Settings' General / Search pages (a search is kept unless Never remember history is on).
+const jbYouTube = async h => {
+  const yt = async () => (await store(h, 'yt4')) || {};
+  const menu = async (action, id) => { await h.tap('#viewport [data-action="sa-menu"]'); await h.tap(`.holo-menu [data-action="${action}"]${id ? `[data-id="${id}"]` : ''}`); };
+  const toast = re => h.until(`${re}.test(document.querySelector('.toast')?.textContent || '')`, 4000);
+  await h.openApp('youtube');
+  await h.tap('#viewport [data-action="yt-search-open"]');
+  await h.type('#viewport .yt-sv input', 'nexus');
+  await h.ev(`document.querySelector('#viewport .yt-sv').requestSubmit()`);
+  h.check('a search is kept', await h.until(`true`) && (await yt()).searches?.[0] === 'nexus');
+  await h.tap('#viewport .sa-yt-item[data-id="v1"]');
+  h.check('the video opens', await h.until(`!!document.querySelector('#viewport .sa-yt-player')`));
+  await h.tap('#viewport [data-action="yt4-addto"]');
+  await h.tap('#viewport [data-action="yt4-addto-pick"][data-id="later"]');
+  h.check('Add to › Watch later', await toast('/Watch Later playlist/') && (await yt()).later?.[0] === 'v1');
+  await h.tap('#viewport [data-action="yt4-addto"]');
+  await h.tap('#viewport [data-action="yt4-addto-pick"][data-id="later"]');
+  h.check('a second time it is already there', await toast('/already in your Watch Later/') && (await yt()).later.length === 1);
+  await h.tap('#viewport [data-action="yt4-addto"]');
+  await h.tap('#viewport [data-action="yt4-addto-pick"][data-id="new"]');
+  await h.type('#viewport [data-yt4-newlist]', 'Phones');
+  await h.tap('#viewport [data-action="yt4-newlist-ok"]');
+  h.check('New playlist takes the video', await toast('/Video added to Phones playlist/') && (await yt()).playlists?.[0]?.videos?.[0] === 'v1');
+  await h.tap('#viewport [data-action="yt4-addto"]');
+  h.check('the playlist is offered next time', await h.until(`[...document.querySelectorAll('#viewport [data-action="yt4-addto-pick"]')].some(b => b.textContent === 'Phones')`));
+  await h.key('Escape');
+  await menu('yt4-rate', 'like');
+  h.check('Like', await toast('/You like this video/') && (await yt()).ratings?.v1 === 'like');
+  await menu('yt4-rate', 'dislike');
+  h.check('Dislike replaces it', await toast('/You dislike this video/') && (await yt()).ratings?.v1 === 'dislike');
+  await menu('yt4-copy');
+  h.check('Copy URL', await toast('/URL copied/'));
+  await h.tap('#viewport [data-action="yt4-share"]');
+  await h.tap('#viewport [data-action="yt4-share-to"][data-id="gmail"]');
+  const draft = (await store(h, 'gmailbox'))?.[0];
+  h.check('Share writes the link into Gmail', /Nexus 4/.test(draft?.subject || '') && /youtube\.com\/watch\?v=/.test(draft?.body || ''), JSON.stringify(draft?.subject));
+  await h.openApp('youtube');
+  await menu('yt4-settings');
+  await h.tap('#viewport [data-action="yt4-page"][data-id="general"]');
+  await h.tap('#viewport [data-id="default_hq"]');
+  await h.tap('#viewport [data-id="country"]');
+  await h.tap('#viewport [data-action="yt4-pref-pick"][data-id="HU"]');
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="yt4-page"][data-id="search"]');
+  await h.tap('#viewport [data-id="safe_search"]');
+  h.check('SafeSearch has its own dialog title', await h.until(`document.querySelector('#viewport .mps-dialog h3')?.textContent === 'SafeSearch'`));
+  await h.tap('#viewport [data-action="yt4-pref-pick"][data-id="2"]');
+  await h.tap('#viewport [data-id="clear_history"]');
+  await h.tap('#viewport [data-action="yt4-clear-ok"]');
+  h.check('Clear search history empties the queries', !(await yt()).searches.length);
+  await h.tap('#viewport [data-id="no_search_history"]');
+  const p = await store(h, 'yt4Prefs');
+  h.check('the settings are kept', p.default_hq === true && p.country === 'HU' && p.safe_search === '2' && p.no_search_history === true, JSON.stringify(p));
+  await h.key('Escape'); await h.key('Escape');
+  await h.tap('#viewport [data-action="yt-search-open"]');
+  await h.type('#viewport .yt-sv input', 'jelly');
+  await h.ev(`document.querySelector('#viewport .yt-sv').requestSubmit()`);
+  h.check('Never remember history keeps no search', await h.until(`!!document.querySelector('#viewport .yt-filters')`) && !(await yt()).searches.length);
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1558,6 +1619,7 @@ const CASES = [
   {id: 'T17', version: '4.0.4', name: 'Talk › Display options, Add to chat, Friend info, Talk settings', run: icsTalk},
   {id: 'T20', version: '2.3.6', name: 'YouTube › Settings', run: gbYouTubeSettings},
   {id: 'T20', version: '4.0.4', name: 'YouTube › Search, Add to, Share, Copy URL, channel, Record and upload, Settings', run: icsYouTube},
+  {id: 'T20', version: '4.3', name: 'YouTube › Add to, Like / Dislike, Copy URL, Share, Settings', run: jbYouTube},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

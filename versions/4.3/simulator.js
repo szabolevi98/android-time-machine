@@ -718,7 +718,7 @@
     // A capture for Messaging lasts while the Camera is open; Messaging opens on its compose screen, not over it.
     if (!resume) { ui.jbmaCapture = null; if (app === 'messaging') ui.jbmaScreen = null; }
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
-    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; }
+    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt4Dialog = null; }
     if(ui.locked)return;
     if (app === 'news-weather' && !resume) { ui.newsSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
     if (app === 'google-keyboard') { openApp('settings'); ui.sub = 'language'; render(); return; }
@@ -800,6 +800,7 @@
     if (ui.view === 'play-store' && ui.marketHistory?.length) { const prev = ui.marketHistory.pop(); ui.market = prev; render(); const list = viewport.querySelector('.jbp-scroll'); if (list) list.scrollTop = prev.scroll || 0; return; }
     if (ui.view === 'calculator' && ui.calcPanel) { setCalculatorPanel(0); return; }
     if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return; }
+    if (ui.view === 'youtube' && !ui.overlay && JBYouTube.back(ytContext())) return;
     if (ui.view === 'youtube' && ui.sub === 'video' && ui.ytFrom === 'results') { ui.sub = 'results'; ui.ytFrom = ''; render(); return; }
     if (ui.view === 'keep' && ui.keepDialog) { ui.keepDialog = ''; render(); return; }
     if (StockApps.APPS.includes(ui.view) && ui.sub) { if (ui.view === 'keep') saveKeepNote(true); ui.sub = ''; render(); return; }
@@ -1755,6 +1756,20 @@
     return ICSEmail.render(emailContext());
   }
   // Share contact via Email or Gmail: the app's compose with the contact card attached.
+  // YouTube 4.5's watch page (jb-youtube.js): ACTION_SEND text/plain puts the subject and the link into the app's new message.
+  function ytContext() {
+    return {ui, data, t: key => i18n.t(key), locale: i18n.locale(), save, render, toast,
+      focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
+      closeOverlay() { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } },
+      unsupported: () => toast(i18n.t('This feature is not part of the simulator.')),
+      video: vid => StockApps.VIDEOS.find(v => v.id === vid),
+      share(app, subject, text) {
+        openApp(app);
+        if (app === 'gmail' || app === 'email') { if (app === 'gmail') composeGmail(); else composeEmail(); const d = (app === 'gmail' ? data.gmailbox : data.mailbox).find(m => m.id === ui.emailId); if (d) Object.assign(d, {subject, body: text + (d.body || '')}); }
+        else { ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); }
+        save(); render();
+      }};
+  }
   function shareVcard(app, file) { ui.overlay = ''; renderOverlay(); openApp(app); if (app === 'gmail') composeGmail(); else composeEmail(); const d = (app === 'gmail' ? data.gmailbox : data.mailbox).find(m => m.id === ui.emailId); if (d) d.attachment = file; save(); render(); }
   function composeEmail(source=null,forward=false,to='') {
     ICSEmail.startCompose(emailContext(),source,source?(forward?'forward':'reply'):'',to);
@@ -1879,6 +1894,7 @@
     }
     if (action.startsWith('mps-') && window.MapsPrefs?.handle(action, id, mapsPrefsContext())) return;
     if (ui.view === 'messaging' && action.startsWith('jbma-') && JBMmsAttach.handle(action, id, jbmaContext())) return;
+    if (ui.view === 'youtube' && action.startsWith('yt4-') && JBYouTube.handle(action, id, ytContext())) return;
     switch (action) {
       case 'open-app': {
         const icon = button.closest('.launcher-icon, .drawer-app, .dock-app') || button;
@@ -2616,7 +2632,7 @@
       case 'chrome-history-search': ui.chromeHistoryQuery = String(values.get('query') || '').trim(); render(); break;
       case 'mms-search': ui.mmsSearch = String(values.get('query') || '').trim(); render(); break;
       case 'maps-search': ui.mapsQuery = String(values.get('query') || '').trim().slice(0, 60); window.MapsPrefs?.remember(data, ui.mapsQuery); save(); render(); break;
-      case 'yt-search': { const query = String(values.get('query') || '').trim(); if (!query) return; ui.ytQuery = query; ui.sub = 'results'; render(); break; }
+      case 'yt-search': { const query = String(values.get('query') || '').trim(); if (!query) return; JBYouTube.searched(query, data); save(); ui.ytQuery = query; ui.sub = 'results'; render(); break; }
       case 'keep-li-add': { const text = String(values.get('text') || '').trim(), note = keepCurrent(); if (!text || !note?.list) return; note.list.push({text, checked: false}); save(); render(); viewport.querySelector('.kp-ed-add input')?.focus(); break; }
       case 'keep-add': { const text = String(values.get('text') || '').trim(); if (!text) return; data.keepNotes = [{id: 'k' + Date.now(), text, color: (data.keepNotes || []).length % 5}, ...(data.keepNotes || [])]; save(); render(); break; }
       case 'earth-search': ui.earthQuery = String(values.get('query') || '').trim().slice(0, 60); ui.earthSearching = false; render(); break;
