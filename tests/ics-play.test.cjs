@@ -23,7 +23,7 @@ html=P.render(ctx({page:'permissions',selected:'orbit'}));assert.match(html,/Per
 assert.match(P.render(ctx({page:'my-apps'})),/icsp-group"><span>Installed<\/span>/);
 // Settings (res/layout/settings.xml): Unlock settings (disabled without a PIN), the AdMob note with Learn more, build 3.4.7.
 html=P.render(ctx({page:'settings'}));
-assert.match(html,/data-action="icsp-unavailable" disabled><span><b>Unlock settings/);assert.match(html,/Choose whether to personalize ads from Google and AdMob[^<]*Learn more/);assert.match(html,/Version: 3\.4\.7/);
+assert.match(html,/data-action="icsp-unlock" disabled><span><b>Unlock settings/);assert.match(html,/Choose whether to personalize ads from Google and AdMob[^<]*Learn more/);assert.match(html,/Version: 3\.4\.7/);
 assert.doesNotMatch(P.render(ctx({page:'settings',prefs:{pinSet:true,admob:true}})),/disabled><span><b>Unlock settings/);
 assert.deepEqual([...P.menu(ctx()).map(m=>m.title)],['My apps','Accounts','Settings','Help']);
 for(const lang of ['hu','de','fr','es'])for(const page of ['home','settings','my-apps'])assert.doesNotMatch(P.render(ctx({lang,page})),/undefined/);
