@@ -2192,6 +2192,12 @@ const lpDriveFiles = async h => {
   await h.tap('#viewport .drv2-app[data-id="gmail"]');
   h.check('Send file opens Gmail with the item attached', await h.until(`/Meetup slides/.test(document.querySelector('#viewport')?.textContent || '') && /compose|Compose/.test(document.querySelector('#viewport').innerHTML)`));
 };
+// 4.3 Drive (T34): the JWR66Y image has no Drive and the launcher lists none, so Drive does not open on the Nexus 4.
+const jbNoDrive = async h => {
+  h.check('the launcher has no Drive', !await h.ev(`[...document.querySelectorAll('[data-app="drive"]')].length`) && !await h.ev(`(window.StockApps?.APPS || []).includes('drive')`));
+  await h.openApp('drive');
+  h.check('opening Drive stays on the home screen', await h.until(`!!document.querySelector('#viewport .home-view')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -2291,6 +2297,7 @@ const CASES = [
   {id: 'T32', version: '4.3', name: 'Hangouts › Settings, Hangout requests, Blocked People, People & options, Add people', run: jbHangoutsOptions},
   {id: 'T32', version: '4.4.4', name: 'Hangouts › Settings, SMS, Invites, Blocked People, People & options, New group MMS', run: kkHangoutsOptions},
   {id: 'T32', version: '5.1.1', name: 'Hangouts › Settings, People & options, Blocked people, Add people; Messenger › People & options', run: lpHangoutsOptions},
+  {id: 'T34', version: '4.3', name: 'Drive is not on the Nexus 4 image', run: jbNoDrive},
   {id: 'T34', version: '4.4.4', name: 'Drive › Add new, Sort by, Filter by, Move to, Rename, Offline, Remove, Refresh, Send, Settings', run: kkDriveFiles},
   {id: 'T34', version: '5.1.1', name: 'Drive › Create, Sort by, Filter by, Move, Rename, Keep on device, Remove, Refresh, Send file', run: lpDriveFiles},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
