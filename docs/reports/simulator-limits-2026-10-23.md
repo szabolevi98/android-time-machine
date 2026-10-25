@@ -321,7 +321,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T22 — 4.0.4 Play Music helyi keresés, mix és beállítások
 
 - **Ütem:** Második kör, #19. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `e0c946f6`. 4.0.4 Play Music 4.1.513: Search music az action bar keresőjével, a találatok a track_list_item_search szakaszaiban (ARTISTS, ALBUMS, SONGS, PLAYLISTS), előadó/album/lista megnyitható, dal lejátszható; Make instant mix a create_instant_mix folyamatjelzőjével a lejátszott dalból „%s Mix” listát készít (azonos előadó, majd műfaj, majd a többi), hozzáadja a Playlistshez és lejátssza — szerveres ajánlás nincs; Music settings a music_settings.xml jelölőnégyzeteivel (újraindítás után is megmaradnak), Refresh, Download queue (üres), verzió; a fiók és a licencek korlát. Ellenőrzés: limits-regression T22 asztali/telefon zöld; npm test 255/255.
 - **Verziók:** 4.0.4.
 - **Forráscsoportok:** 4.0.4-05.
 - **Elkészítendő és határ:** Search music, Make instant mix a helyi zenékből és Settings helyi preferenciái. Help és hálózati fiók/szinkron nem része.
