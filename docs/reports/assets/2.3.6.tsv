@@ -1231,6 +1231,7 @@ versions/2.3.6/assets/gbm234-menu_divider.png	993d71ccb317bc47	copy	crespo:/syst
 versions/2.3.6/assets/gbm234-promo_frame_normal.png	9b93d4320cc5a39a	copy	crespo:/system/app/Vending.apk!res/drawable-hdpi/promo_frame_normal.9.png	drawable-hdpi		9b93d4320cc5a39a
 versions/2.3.6/assets/gbm234-promo_frame_pressed.png	cb160e7cc42ea2f7	copy	crespo:/system/app/Vending.apk!res/drawable-hdpi/promo_frame_pressed.9.png	drawable-hdpi		cb160e7cc42ea2f7
 versions/2.3.6/assets/gbm234-settings_lock.png	1979f15890173d11	copy	crespo:/system/app/Vending.apk!res/drawable/settings_lock.png	drawable		1979f15890173d11
+versions/2.3.6/assets/gbm234-settings_unlock.png	d1ab84bd078a69cf	copy	crespo:/system/app/Vending.apk!res/drawable/settings_unlock.png	drawable		d1ab84bd078a69cf
 versions/2.3.6/assets/gbvol-ic_vibrate.png	ac1c88fdf30d0b5a	copy	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/ic_vibrate.png	drawable-hdpi		ac1c88fdf30d0b5a
 versions/2.3.6/assets/gbvol-ic_volume.png	c8154f5c6232a60a	copy	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/ic_volume.png	drawable-hdpi		c8154f5c6232a60a
 versions/2.3.6/assets/gbvol-ic_volume_off.png	94467cf6abf4691b	copy	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/ic_volume_off.png	drawable-hdpi		94467cf6abf4691b

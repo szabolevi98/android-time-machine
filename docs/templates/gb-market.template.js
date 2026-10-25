@@ -38,6 +38,10 @@
     "Developer Info": "info_developer_label", "Learn more about the creator and designer.": "info_developer_description", "Sharing": "share_app_label",
     "Let your friends know about this application.": "share_app_description", "Market content": "info_market_content_label",
     "A chance to give us some feedback.": "info_market_content_description", "Flag as inappropriate": "flagging_title",
+    "View more applications": "view_applications_label", "Send email to developer": "send_email_label", "Visit the developer's web page": "view_website_label",
+    "Share via": "share_app_via", "Set PIN": "set_pin", "Set a numeric password (PIN) code to control changes to content filtering": "set_pin_description",
+    "Change PIN": "change_pin", "Change PIN that controls content filtering": "change_pin_description", "Enter PIN": "enter_pin",
+    "Enter PIN to change content filtering": "enter_pin_description", "Content rating: %1$s": "info_content_rating_format",
     "Currently downloading": "downloading_section", "Downloads": "my_downloads_section", "No downloads from Android Market.": "empty_downloads",
     "Update all": "update_all", "Search": "search", "Settings": "settings", "settings": "settings_title", "Help": "help_and_info", "Home": "home",
     "Security": "security_settings_menu", "Clear my review": "clear_my_review", "Content filtering": "content_filtering_label",
@@ -77,6 +81,15 @@
   const catalog = () => (window.ICSPlayStore?.catalog || []).map((item, i) => ({...item, kind: item.category === 'Games' ? 'games' : 'apps', category: CATEGORY[item.category] || 'Tools', price: 'FREE', downloads: ['1,000,000 - 5,000,000', '100,000 - 500,000', '50,000 - 100,000', '10,000 - 50,000'][i % 4], votes: 1200 + i * 417, version: `1.${i}.${(i * 3) % 7}`, updated: ['Aug 2, 2011', 'Jul 21, 2011', 'Jun 14, 2011', 'May 30, 2011'][i % 4]}));
   const all = () => [...catalog(), ...EXTRA.map(item => ({downloads: '5,000 - 10,000', votes: 81, version: '1.0', updated: 'Jul 9, 2011', ...item}))];
   const find = id => all().find(item => item.id === id);
+  // The content rating each item carries (the storefront's own; the image's apps are rated Everyone) and the filter of
+  // the settings activity: the ticked ratings; "Show all apps" lifts the filter.
+  const MATURITY = {orbit: 'Medium maturity', 'lunar-golf': 'Low maturity'};
+  const maturity = item => MATURITY[item.id] || 'Everyone';
+  const shown = ctx => { const f = ctx.prefs?.filter; return all().filter(item => !f || f.includes('Show all apps') || f.includes(maturity(item))); };
+  // The developer's address for Send email to developer and the package the share link names (the storefront's own).
+  const slug = text => String(text).toLowerCase().replace(/[^a-z0-9]+/g, '');
+  const developerEmail = item => `${slug(item.developer)}@example.com`;
+  const packageName = item => item.app ? `com.android.${slug(item.app)}` : `com.${slug(item.developer)}.${slug(item.name)}`;
   const installedState = (item, ctx) => item.app ? 'installed' : ctx.installed.includes(item.id) ? 'installed' : ctx.downloading === item.id ? ctx.phase : '';
   // MarketRatingBarSmall: 14 dp stars (ic_market_star_*).
   const stars = rating => `<span class="gbmk-stars" aria-label="${rating}">${[1, 2, 3, 4, 5].map(n => `<i class="${rating >= n - .25 ? 'on' : rating >= n - .75 ? 'half' : ''}"></i>`).join('')}</span>`;
@@ -106,7 +119,7 @@
   const row = (item, ctx) => `<button class="gbmk-row" data-action="gbmk-detail" data-id="${e(item.id)}">${icon(item)}<span class="gbmk-row-copy"><b>${e(item.name)}</b><small>${e(item.developer)}</small></span><span class="gbmk-row-side"><em>${e(stateLabel(item, ctx))}</em>${stars(item.rating)}</span></button>`;
 
   function home(ctx) {
-    const t = T(ctx), items = all().filter(item => !item.app), featured = all().filter(item => item.kind === 'apps' || item.kind === 'games');
+    const t = T(ctx), items = shown(ctx).filter(item => !item.app), featured = shown(ctx).filter(item => item.kind === 'apps' || item.kind === 'games');
     const index = Math.max(0, Math.min(items.length - 1, ctx.carousel || 0)), cur = items[index];
     const tiles = items.map((item, i) => { const d = i - index; return Math.abs(d) > 2 ? '' : `<button class="gbmk-car-tile d${d < 0 ? 'm' : 'p'}${Math.abs(d)}" data-action="${d ? 'gbmk-carousel' : 'gbmk-detail'}" data-id="${d ? i : e(item.id)}">${promo(item)}</button>`; }).join('');
     const nav = [['gbmk-section', 'apps', 'apps', 'Apps'], ['gbmk-section', 'games', 'games', 'Games'], ['gbmk-my-apps', '', 'downloads', 'My apps']];
@@ -115,7 +128,7 @@
   }
   // CategoriesWithAppsListActivity: the 168 dp arc with the carousel snippet, the categories with their featured apps.
   function section(ctx) {
-    const t = T(ctx), id = ctx.section === 'games' ? 'games' : 'apps', label = id === 'games' ? 'Games' : 'Apps', items = all().filter(item => item.kind === id);
+    const t = T(ctx), id = ctx.section === 'games' ? 'games' : 'apps', label = id === 'games' ? 'Games' : 'Apps', items = shown(ctx).filter(item => item.kind === id);
     const lead = items.find(item => !item.app) || items[0];
     const inner = lead ? `<button class="gbmk-car-snippet small" data-action="gbmk-detail" data-id="${e(lead.id)}"><b>${e(lead.name)}</b>${stars(lead.rating)}<em>${e(stateLabel(lead, ctx))}</em></button>` : '';
     const cats = CATEGORIES[id].map(name => { const apps = items.filter(item => item.category === name); return `<button class="gbmk-cat" data-action="gbmk-category" data-id="${e(id + ':' + name)}"><b>${e(name)}</b><small>${e(apps.map(item => item.name).join(', '))}</small></button>`; }).join('');
@@ -124,7 +137,7 @@
   // carousel_tabbed_app_browser: the 74 dp arc with the radio tabs, the list of the chosen tab.
   function category(ctx) {
     const t = T(ctx), [kind, name] = String(ctx.category || 'apps:').split(':'), tab = TABS.includes(ctx.tab) ? ctx.tab : 'Top paid';
-    let items = all().filter(item => item.kind === kind && (!name || item.category === name));
+    let items = shown(ctx).filter(item => item.kind === kind && (!name || item.category === name));
     items = tab === 'Top paid' ? items.filter(item => item.price !== 'FREE') : tab === 'Top free' ? items.filter(item => item.price === 'FREE') : [...items].reverse();
     const tabs = `<div class="gbmk-tabs">${TABS.map(id => `<button class="${id === tab ? 'on' : ''}" data-action="gbmk-tab" data-id="${e(id)}">${e(t(id))}</button>`).join('')}</div>`;
     return view('gbmk-category', `${arc(ctx, 'tabs', name || t(kind === 'games' ? 'Games' : 'Apps'), tabs)}<div class="gbmk-scroll"><div class="gbmk-list">${items.length ? items.map(item => row(item, ctx)).join('') : `<p class="gbmk-empty">${e(t('No matching content in Android Market.'))}</p>`}</div></div>`);
@@ -148,13 +161,18 @@
     const rated = ctx.rated?.[item.id] || 0;
     const review = state === 'installed' && !item.app ? `<button class="gbmk-myreview" data-action="gbmk-rate"><span class="gbmk-stars big">${[1, 2, 3, 4, 5].map(n => `<i class="${n <= rated ? 'on' : ''}"></i>`).join('')}</span><small>${e(t('Rate it!'))}</small></button>` : '';
     const auto = state === 'installed' && !item.app ? `<label class="gbmk-auto"><span>${e(t('Allow automatic updating'))}</span><input type="checkbox" data-gbmk-auto="${e(item.id)}"${ctx.autoUpdate.includes(item.id) ? ' checked' : ''}><img src="assets/gb-btn_check_${ctx.autoUpdate.includes(item.id) ? 'on' : 'off'}.png" alt=""></label>` : '';
-    const desc = `<div class="gbmk-desc"><div class="gbmk-desc-head"><b>${e(t('Description'))}</b><p>${e(item.description || '')}</p></div><div class="gbmk-more"><i></i><button data-action="gbmk-noop">${e(t('More'))}</button></div><p class="gbmk-meta">${e(fmt(t('Version %1$s'), item.version || '1.0'))} · ${e(item.size || '')}</p><p class="gbmk-meta">${e(fmt(t('%1$s downloads'), item.downloads))}</p><div class="gbmk-shots">${[0, 1].map(n => `<span class="gbmk-shot n${n}" style="--a:${(item.colors || ['#2a3a4a', '#9fc33b'])[0]};--b:${(item.colors || ['#2a3a4a', '#9fc33b'])[1]}">${icon(item, 'gbmk-shot-icon')}</span>`).join('')}</div></div>`;
+    const desc = `<div class="gbmk-desc"><div class="gbmk-desc-head"><b>${e(t('Description'))}</b><p>${e(item.description || '')}</p></div><div class="gbmk-more"><i></i><button data-action="gbmk-noop">${e(t('More'))}</button></div><p class="gbmk-meta">${e(fmt(t('Version %1$s'), item.version || '1.0'))} · ${e(item.size || '')}</p><p class="gbmk-meta">${e(fmt(t('%1$s downloads'), item.downloads))}</p><p class="gbmk-meta">${e(fmt(t('Content rating: %1$s').replace(/<[^>]*>/g, ''), t(maturity(item))))}</p><div class="gbmk-shots">${[0, 1].map(n => `<span class="gbmk-shot n${n}" style="--a:${(item.colors || ['#2a3a4a', '#9fc33b'])[0]};--b:${(item.colors || ['#2a3a4a', '#9fc33b'])[1]}">${icon(item, 'gbmk-shot-icon')}</span>`).join('')}</div></div>`;
     const groups = item.kind === 'games' ? [['Network communication', 'full Internet access'], ['Hardware controls', 'control vibrator']] : [['Network communication', 'full Internet access'], ['Storage', 'modify/delete SD card contents']];
     const perms = `<div class="gbmk-perms"><p>${e(t('Allow this application to access:'))}</p><p>${groups.map(([g, p]) => `${e(t(g))} – ${e(t(p))}`).join('<br>')}</p><div class="gbmk-more light"><i></i><button data-action="gbmk-noop">${e(t('More'))}</button></div></div>`;
     const comments = `${sectionHead(t('Reviews'), t('The most recent reviews are shown here, touch More below to read all reviews.'))}${REVIEWS.map(r => `<div class="gbmk-comment"><div><b>${e(r.author)}</b><small>${e(r.date)}</small>${stars(r.stars)}</div><p>${e(r.text)}</p></div>`).join('')}`;
-    const related = all().filter(x => x.kind === item.kind && x.id !== item.id).slice(0, 2);
+    const related = shown(ctx).filter(x => x.kind === item.kind && x.id !== item.id).slice(0, 2);
     const similar = `${sectionHead(t('Related'), t('The most relevant applications are shown here. Touch More below to see all related applications.'))}<div class="gbmk-list">${related.map(x => row(x, ctx)).join('')}</div>`;
-    const more = `${sectionHead(t('Developer Info'), t('Learn more about the creator and designer.'), 'gbmk-unavailable')}${sectionHead(t('Sharing'), t('Let your friends know about this application.'), 'gbmk-unavailable')}${sectionHead(t('Market content'), t('A chance to give us some feedback.'), 'gbmk-unavailable')}`;
+    // AboutDeveloperSection (asset_info_simple_2_medium, then asset_info_simple_1_medium rows: View more applications,
+    // Send email to developer, Visit the developer's web page; the storefront has no developer phone), ShareSection
+    // (AssetInfoActivityController.handleShare: ACTION_SEND text/plain in a "Share via" chooser) and Market content
+    // (Flag as inappropriate, a report to the server).
+    const devRow = (action, label) => `<button class="gbmk-devrow" data-action="${action}" data-id="${e(item.id)}">${e(t(label))}</button>`;
+    const more = `${sectionHead(t('Developer Info'), t('Learn more about the creator and designer.'))}${devRow('gbmk-dev-apps', 'View more applications')}${devRow('gbmk-dev-email', 'Send email to developer')}${devRow('gbmk-unavailable', "Visit the developer's web page")}${sectionHead(t('Sharing'), t('Let your friends know about this application.'), 'gbmk-share', item.id)}${sectionHead(t('Market content'), t('A chance to give us some feedback.'), 'gbmk-unavailable')}`;
     return view('gbmk-detail', `<div class="gbmk-scroll">${arc(ctx, 'fat', t('Market'), fat)}${progress}${review}${auto}${desc}${perms}${comments}${similar}${more}</div>`);
   }
   // confirm_permissions: the asset snippet (SlimFlatView), "Allow this application to access:" and the groups with the
@@ -182,18 +200,18 @@
     return view('gbmk-myapps', `${arc(ctx, 'flat', t('My apps'))}<div class="gbmk-scroll gbmk-shadow">${body || `<p class="gbmk-empty">${e(t('No downloads from Android Market.'))}</p>`}</div>`);
   }
   function search(ctx) {
-    const t = T(ctx), q = String(ctx.query || '').trim(), lq = q.toLocaleLowerCase(ctx.locale), items = q ? all().filter(item => `${item.name} ${item.developer}`.toLocaleLowerCase(ctx.locale).includes(lq)) : [];
+    const t = T(ctx), q = String(ctx.query || '').trim(), lq = q.toLocaleLowerCase(ctx.locale), items = q ? shown(ctx).filter(item => `${item.name} ${item.developer}`.toLocaleLowerCase(ctx.locale).includes(lq)) : [];
     const none = `<div class="gbmk-noresults"><p>${e(fmt(t('There are no matches in Android Market for the search: ^1'), q).replace(/<[^>]*>/g, ''))}</p><b>${e(t('Suggestions:'))}</b>${['Make sure all words are spelled correctly.', 'Try different search words.', 'Try more general search words.'].map(s => `<p>${e(t(s))}</p>`).join('')}</div>`;
     return view('gbmk-results', `${arc(ctx, 'flat', q)}<div class="gbmk-scroll gbmk-shadow">${items.length ? `<div class="gbmk-list">${items.map(item => row(item, ctx)).join('')}</div>` : none}</div>`);
   }
   // settings_activity: Content filtering (the lock button and "Allow apps rated"), Notifications with its spinner.
   function settings(ctx) {
     const t = T(ctx), s = ctx.prefs;
-    return view('gbmk-settings', `${arc(ctx, 'flat', t('settings'))}<div class="gbmk-scroll gbmk-shadow"><h3 class="gbmk-head">${e(t('Content filtering'))}</h3><p class="gbmk-set-text">${e(t('Set the content filtering level to restrict applications that can be downloaded.'))}</p><div class="gbmk-filter"><button class="gbmk-lock" data-action="gbmk-unavailable" aria-label="PIN"></button><button class="gbmk-spinner" data-action="gbmk-filter">${e(t('Allow apps rated'))}</button></div><h3 class="gbmk-head">${e(t('Notifications'))}</h3><p class="gbmk-set-text">${e(t('Choose whether to be notified if there are updates to apps or games that you have downloaded'))}</p><button class="gbmk-spinner wide" data-action="gbmk-notify">${e(t(s.notify === false ? 'Do not notify me' : 'Notify me'))}</button></div>`);
+    return view('gbmk-settings', `${arc(ctx, 'flat', t('settings'))}<div class="gbmk-scroll gbmk-shadow"><h3 class="gbmk-head">${e(t('Content filtering'))}</h3><p class="gbmk-set-text">${e(t('Set the content filtering level to restrict applications that can be downloaded.'))}</p><div class="gbmk-filter"><button class="gbmk-lock${s.pinCode ? '' : ' open'}" data-action="gbmk-pin" aria-label="${e(t(s.pinCode ? 'Change PIN' : 'Set PIN'))}"></button><button class="gbmk-spinner" data-action="gbmk-filter">${e(t('Allow apps rated'))}</button></div><h3 class="gbmk-head">${e(t('Notifications'))}</h3><p class="gbmk-set-text">${e(t('Choose whether to be notified if there are updates to apps or games that you have downloaded'))}</p><button class="gbmk-spinner wide" data-action="gbmk-notify">${e(t(s.notify === false ? 'Do not notify me' : 'Notify me'))}</button></div>`);
   }
   function searchDialog(ctx) {
     const t = T(ctx), q = String(ctx.editValue || '').trim().toLocaleLowerCase(ctx.locale);
-    const sugg = q ? all().filter(item => item.name.toLocaleLowerCase(ctx.locale).includes(q)).slice(0, 4) : ctx.history.slice(0, 4).map(h => ({id: '', name: h}));
+    const sugg = q ? shown(ctx).filter(item => item.name.toLocaleLowerCase(ctx.locale).includes(q)).slice(0, 4) : ctx.history.slice(0, 4).map(h => ({id: '', name: h}));
     return `<div class="gbbr-search-scrim" data-action="gbmk-search-cancel"></div><form class="gbbr-search" data-form="gbmk-search"><div class="gbbr-search-row"><img class="gbbr-search-app" src="assets/gbm234-ic_launcher_androidmarket.png" alt=""><input name="query" autocomplete="off" aria-label="${e(t('Search Android Market'))}" placeholder="${e(t('Search Android Market'))}" value="${e(ctx.editValue || '')}"><button class="gbbr-go" type="submit" aria-label="${e(t('Search'))}"><img src="assets/gb-ic_btn_search_go.png" alt=""></button></div>${sugg.length ? `<div class="gbbr-search-list">${sugg.map(s => `<button type="button" data-action="${s.id ? 'gbmk-detail' : 'gbmk-search-run'}" data-id="${e(s.id || s.name)}"><span>${e(s.name)}</span></button>`).join('')}</div>` : ''}</form>`;
   }
   function render(ctx) {
@@ -230,11 +248,18 @@
       const levels = ['Everyone', 'Low maturity', 'Medium maturity', 'High maturity', 'Show all apps'], f = ctx.filterDraft || ctx.prefs.filter || levels;
       return {title: t('Allow apps rated'), choice: 'multi', items: levels.map(level => ({action: 'gbmk-filter-pick', id: level, title: t(level), checked: f.includes(level)})), buttons: [{action: 'gbmk-filter-ok', title: t('OK')}, {action: 'close-overlay', title: t('Cancel')}]};
     }
+    // SettingsActivity.PinCodeAccessor's PinCodeDialog: Set PIN without one, Enter PIN before the filter or a new PIN
+    // changes, then Change PIN; an empty Change PIN removes it.
+    if (kind === 'pin-set' || kind === 'pin-enter' || kind === 'pin-change') {
+      const [title, line] = {'pin-set': ['Set PIN', 'Set a numeric password (PIN) code to control changes to content filtering'], 'pin-enter': ['Enter PIN', 'Enter PIN to change content filtering'], 'pin-change': ['Change PIN', 'Change PIN that controls content filtering']}[kind];
+      return {title: t(title), custom: `<p class="gbmk-pin-text">${e(t(line))}</p><input class="gbmk-pin" data-gbmk-pin type="password" inputmode="numeric" maxlength="8" autocomplete="off" aria-label="${e(t(title))}">`, buttons: [{action: 'gbmk-pin-ok', id: kind, title: t('OK')}, {action: 'close-overlay', title: t('Cancel')}]};
+    }
+    if (kind === 'share' && item) return {title: t('Share via'), items: [['email', 'Email'], ['messaging', 'Messaging']].map(([id, name]) => ({action: 'gbmk-share-to', id: `${id}|${item.id}`, title: ctx.t?.(name) || name, icon: `${id}.png`}))};
     if (kind === 'security' && item) {
       const groups = item.kind === 'games' ? [['Network communication', 'full Internet access'], ['Hardware controls', 'control vibrator']] : [['Network communication', 'full Internet access'], ['Storage', 'modify/delete SD card contents']];
       return {title: t('Security'), message: `${t('Allow this application to access:')}\n${groups.map(([g, p]) => `${t(g)} – ${t(p)}`).join('\n')}`, buttons: [{action: 'close-overlay', title: t('OK')}]};
     }
     return null;
   }
-  window.GBMarket = {SECTIONS, TABS, EXTRA, VERSION, text, fmt, all, find, installedState, render, menu, dialog};
+  window.GBMarket = {SECTIONS, TABS, EXTRA, VERSION, text, fmt, all, shown, maturity, developerEmail, packageName, find, installedState, render, menu, dialog};
 })();

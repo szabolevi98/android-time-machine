@@ -1110,7 +1110,7 @@
   // Android Market 3.x state: page, section, tab, selected item, query; the downloads run on a timer.
   function gbMarketContext() {
     const m = ui.market || {page: 'home'};
-    return {lang: i18n.language, locale: i18n.locale(), ...m, installed: data.marketInstalled || [], downloading: ui.marketDownload?.id || '', phase: ui.marketDownload?.phase || '', progress: ui.marketDownload?.progress || 0, plussed: data.marketPlus || [], autoUpdate: data.marketAuto || [], prefs: {notify: true, pin: false, ...(data.marketPrefs || {})}, rated: data.marketRated || {}, rateDraft: ui.marketRateDraft, filterDraft: ui.marketFilterDraft, searching: !!ui.marketSearching, editValue: ui.marketEdit || '', history: data.marketSearches || []};
+    return {lang: i18n.language, locale: i18n.locale(), t: key => i18n.t(key), ...m, installed: data.marketInstalled || [], downloading: ui.marketDownload?.id || '', phase: ui.marketDownload?.phase || '', progress: ui.marketDownload?.progress || 0, plussed: data.marketPlus || [], autoUpdate: data.marketAuto || [], prefs: {notify: true, pin: false, ...(data.marketPrefs || {})}, rated: data.marketRated || {}, rateDraft: ui.marketRateDraft, filterDraft: ui.marketFilterDraft, searching: !!ui.marketSearching, editValue: ui.marketEdit || '', history: data.marketSearches || []};
   }
   function gbMarketGo(next) { (ui.marketHistory ||= []).push({...(ui.market || {page: 'home'}), scroll: viewport.querySelector('.gbmk-scroll')?.scrollTop || 0}); ui.market = {...(ui.market || {}), ...next}; ui.overlay = ''; ui.marketSearching = false; render(); }
   function gbMarketDownload(id) {
@@ -1517,7 +1517,30 @@
       case 'gbmk-security': ui.gbmkDialog = 'security'; ui.overlay = 'gb-dialog-gbmk'; renderOverlay(); break;
       case 'gbmk-notify': ui.gbmkDialog = 'notify'; ui.overlay = 'gb-dialog-gbmk'; renderOverlay(); break;
       case 'gbmk-notify-pick': data.marketPrefs = {notify: true, pin: false, ...(data.marketPrefs || {}), notify: id === 'on'}; save(); ui.overlay = ''; renderOverlay(); render(); break;
-      case 'gbmk-filter': ui.marketFilterDraft = undefined; ui.gbmkDialog = 'filter'; ui.overlay = 'gb-dialog-gbmk'; renderOverlay(); break;
+      // A PIN guards the filter: Enter PIN first, then the filter or Change PIN (GBMarket.dialog).
+      case 'gbmk-filter': ui.marketFilterDraft = undefined; ui.gbmkPinNext = 'filter'; ui.gbmkDialog = data.marketPrefs?.pinCode ? 'pin-enter' : 'filter'; ui.overlay = 'gb-dialog-gbmk'; renderOverlay(); break;
+      case 'gbmk-pin': ui.gbmkPinNext = 'change'; ui.gbmkDialog = data.marketPrefs?.pinCode ? 'pin-enter' : 'pin-set'; ui.overlay = 'gb-dialog-gbmk'; renderOverlay(); overlayRoot.querySelector('[data-gbmk-pin]')?.focus(); break;
+      case 'gbmk-pin-ok': {
+        const field = overlayRoot.querySelector('[data-gbmk-pin]'), value = String(field?.value || '').trim(), prefs = {notify: true, ...(data.marketPrefs || {})};
+        if (value && !/^\d+$/.test(value)) { field.value = ''; field.focus(); break; }
+        if (id === 'pin-enter') {
+          if (value !== prefs.pinCode) { field.value = ''; field.focus(); break; }
+          ui.gbmkDialog = ui.gbmkPinNext === 'filter' ? 'filter' : 'pin-change'; renderOverlay(); overlayRoot.querySelector('[data-gbmk-pin]')?.focus(); break;
+        }
+        if (id === 'pin-set' && !value) { field.focus(); break; }
+        if (value) prefs.pinCode = value; else delete prefs.pinCode;
+        prefs.pin = !!prefs.pinCode; data.marketPrefs = prefs; save(); ui.overlay = ''; renderOverlay(); render(); break;
+      }
+      case 'gbmk-dev-apps': { const item = GBMarket.find(id); if (item) gbMarketGo({page: 'search', query: item.developer}); break; }
+      case 'gbmk-dev-email': { const item = GBMarket.find(id); if (!item) break; openApp('email'); composeEmail(null, false, GBMarket.developerEmail(item)); const d = data.mailbox.find(m => m.id === ui.emailId); if (d) d.subject = item.name; save(); render(); break; }
+      case 'gbmk-share': ui.gbmkDialog = 'share'; ui.overlay = 'gb-dialog-gbmk'; renderOverlay(); break;
+      case 'gbmk-share-to': {
+        const [app, itemId] = String(id).split('|'), item = GBMarket.find(itemId); ui.overlay = ''; if (!item) break;
+        const link = `http://market.android.com/details?id=${GBMarket.packageName(item)}`;
+        if (app === 'email') { openApp('email'); composeEmail(); const d = data.mailbox.find(m => m.id === ui.emailId); if (d) { d.subject = item.name; d.body = link; } save(); render(); }
+        else { openApp('messaging'); ui.sub = 'new'; data.messageDrafts ||= {}; data.messageDrafts.new = {...(data.messageDrafts.new || {}), body: link, updated: Date.now()}; save(); render(); }
+        break;
+      }
       case 'gbmk-filter-pick': { const levels = ['Everyone', 'Low maturity', 'Medium maturity', 'High maturity', 'Show all apps'], cur = ui.marketFilterDraft || gbMarketContext().prefs.filter || levels; let next = cur.includes(id) ? cur.filter(x => x !== id && (id !== 'Show all apps' ? x !== 'Show all apps' : true)) : [...cur, id]; if (id === 'Show all apps') next = cur.includes(id) ? [] : levels; else if (levels.slice(0, 4).every(l => next.includes(l))) next = levels; ui.marketFilterDraft = next; renderOverlay(); break; }
       case 'gbmk-filter-ok': data.marketPrefs = {notify: true, pin: false, ...(data.marketPrefs || {}), filter: ui.marketFilterDraft || gbMarketContext().prefs.filter}; save(); ui.overlay = ''; renderOverlay(); break;
       case 'gbmk-unavailable': toast(GBMarket.text(i18n.language, 'Unavailable')); break;

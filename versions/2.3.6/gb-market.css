@@ -173,3 +173,10 @@
 .screen .gbmk-setrating button{width:calc(57.2754 * var(--dp));height:calc(57.2754 * var(--dp));padding:0;border:0;background:url('assets/gb-btn_rating_star_off_normal.png') center/contain no-repeat;cursor:pointer}
 .screen .gbmk-setrating button.on{background-image:url('assets/gb-btn_rating_star_on_normal.png')}
 .gbmk-setrating p{margin:calc(4.6377 * var(--dp)) 0 0;font-size:calc(22.029 * var(--dp));color:#fff}
+/* AboutDeveloperSection's asset_info_simple_1_medium rows (12 dp in, TextAppearance.Medium), the open lock without a
+   PIN (settings_unlock) and the PinCodeDialog's text and numeric field. */
+.screen .gbmk-devrow{display:block;width:100%;padding:calc(10 * var(--dp)) calc(12 * var(--dp));border:0;background:#fff;text-align:left;font-size:calc(18 * var(--dp));color:#000}
+.screen .gbmk-devrow:active{background:#ff9a00}
+.screen .gbmk-lock.open{background-image:url('assets/gbm234-settings_unlock.png'),url('assets/gbm234-btn_square_normal.png')}
+.gbmk-pin-text{margin:0 0 calc(8 * var(--dp));font-size:calc(16 * var(--dp));color:#fff}
+.screen .gbmk-pin{display:block;width:100%;box-sizing:border-box;height:calc(44 * var(--dp));padding:0 calc(8 * var(--dp));border:calc(1 * var(--dp)) solid #888;border-radius:calc(4 * var(--dp));background:#fff;font-size:calc(18 * var(--dp));color:#000}

@@ -2648,6 +2648,41 @@ const hangoutsTakePhoto = async h => {
   h.check('Done puts the picture into the draft', await h.until(`!!document.querySelector('#viewport .mms-compose')`) && !!(await draft()));
   h.check('the picture stays out of the Gallery', ((await store(h, 'photos')) || []).length === before);
 };
+// 2.3.6 Market (T21): the details page's content rating, Developer Info (View more applications, Send email to
+// developer), Sharing through "Share via", and the content filter behind a PIN that really hides what it filters.
+const gbMarketMore = async h => {
+  const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  const prefs = async () => (await store(h, 'marketPrefs')) || {};
+  const detail = async () => { await h.openApp('play-store'); await act('gbmk-detail', 'orbit'); return h.until(`!!document.querySelector('#viewport .gbmk-devrow')`); };
+  h.check('the details page shows the developer rows', await detail());
+  h.check('the content rating is shown', await h.ev(`/Content rating: Medium maturity/.test(document.querySelector('#viewport .gbmk-desc')?.textContent || '')`));
+  await h.tap('#viewport .gbmk-devrow[data-action="gbmk-dev-apps"]');
+  h.check('View more applications lists the developer apps', await h.until(`[...document.querySelectorAll('#viewport .gbmk-row b')].some(b => b.textContent === 'Orbit Hopper')`));
+  await detail();
+  await h.tap('#viewport .gbmk-devrow[data-action="gbmk-dev-email"]');
+  h.check('Send email to developer opens a message to the developer', await h.until(`[...document.querySelectorAll('#viewport input, #viewport textarea')].some(f => f.value === 'moonlightstudio@example.com')`));
+  await detail();
+  await h.tap('#viewport [data-action="gbmk-share"]');
+  await h.tap('[data-action="gbmk-share-to"][data-id="messaging|orbit"]');
+  h.check('Share via Messaging carries the Market link', await h.until(`!!document.querySelector('#viewport .mms-compose, #viewport .gbmms')`) && /market\.android\.com\/details\?id=com\.moonlightstudio\.orbithopper/.test((await store(h, 'messageDrafts'))?.new?.body || ''));
+  await h.openApp('play-store'); await act('gbmk-settings');
+  await h.until(`!!document.querySelector('#viewport .gbmk-lock.open')`);
+  await h.tap('#viewport .gbmk-lock');
+  await h.type('[data-gbmk-pin]', '1234'); await h.tap('[data-action="gbmk-pin-ok"]');
+  h.check('Set PIN keeps the PIN and closes the lock', (await prefs()).pinCode === '1234' && await h.until(`!!document.querySelector('#viewport .gbmk-lock:not(.open)')`));
+  await h.tap('#viewport [data-action="gbmk-filter"]');
+  h.check('the filter asks for the PIN first', await h.until(`!!document.querySelector('[data-action="gbmk-pin-ok"][data-id="pin-enter"]')`));
+  await h.type('[data-gbmk-pin]', '99'); await h.tap('[data-action="gbmk-pin-ok"]');
+  h.check('a wrong PIN keeps the filter closed', await h.until(`!!document.querySelector('[data-action="gbmk-pin-ok"][data-id="pin-enter"]')`));
+  await h.type('[data-gbmk-pin]', '1234'); await h.tap('[data-action="gbmk-pin-ok"]');
+  await h.until(`!!document.querySelector('[data-action="gbmk-filter-pick"]')`);
+  await h.tap('[data-action="gbmk-filter-pick"][data-id="Medium maturity"]');
+  await h.tap('[data-action="gbmk-filter-ok"]');
+  await act('gbmk-section', 'games');
+  await h.until(`!!document.querySelector('#viewport .gbmk-cat')`);
+  const games = await h.ev(`document.querySelector('#viewport .gbmk-cat small')?.textContent || ''`);
+  h.check('the filter hides the Medium maturity game', !games.includes('Orbit Hopper') && games.includes('Pixel Blocks'), games);
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -2732,6 +2767,7 @@ const CASES = [
   {id: 'T10', version: '4.3', name: 'Hangouts › Take photo through the Camera capture request', run: hangoutsTakePhoto},
   {id: 'T10', version: '4.4.4', name: 'Hangouts › Take photo through the Camera capture request', run: hangoutsTakePhoto},
   {id: 'T10', version: '5.1.1', name: 'Hangouts › Take photo through the Camera capture request', run: hangoutsTakePhoto},
+  {id: 'T21', version: '2.3.6', name: 'Market › Developer Info, Sharing, content rating and the PIN-guarded filter', run: gbMarketMore},
   {id: 'T10', version: '2.3.6', name: 'Contacts › Take photo through the Camera capture request', run: gbContactPhoto},
   {id: 'T13', version: '2.3.6', name: 'Messaging › Audio, Record audio, Capture picture / video, Slideshow', run: gbMmsAttach},
   {id: 'T13', version: '4.3', name: 'Messaging › Audio Play, Capture picture / video, Slideshow', run: jbMmsAttach},
