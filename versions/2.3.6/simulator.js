@@ -1690,7 +1690,7 @@
         if (item.toast) { toast('Unavailable in this simulator'); break; }
         if (item.open) { ui.gbPrefs = {app: item.open, view: ui.gbPrefs.view || ui.view, parent: ui.gbPrefs}; render(); break; }
         // Google Mail's Clear search history / Clear "Show pictures" act at once.
-        if (item.done) { if (key === 'clear-search-history') data.gmailSearches = []; if (key === 'clear-display-images-whitelist') data.gmailShowPictures = []; if (key === 'cache_settings_clear_cache') data.mapsCache = false; save(); gbPrefRender(); break; }
+        if (item.done) { if (key === 'clear-search-history') data.gmailSearches = []; if (key === 'clear-display-images-whitelist') data.gmailShowPictures = []; if (key === 'pref_gtalk_clear_history_key' && data.talk23) data.talk23.searches = []; if (key === 'cache_settings_clear_cache') data.mapsCache = false; save(); gbPrefRender(); break; }
         ui.gbMulti = null;
         ui.gbPrefDialog = key; ui.overlay = 'gb-dialog-pref'; renderOverlay(); break; }
       case 'gbpref-pick': { const [app, key, ...rest] = String(id).split(':'), item = GBPrefs.find(gbPrefsContext(app), key), value = rest.join(':'); if (item) gbPrefSet(key, item.kind === 'list' ? Number(value) : value); ui.overlay = ''; gbPrefRender(); break; }

@@ -66,7 +66,36 @@
     "Blocked friends": "blocked_title",
     "Blocked": "menu_show_blocked_contacts",
     "Help": "menu_help",
-    "View contact": "menu_view_contact"
+    "View contact": "menu_view_contact",
+    "Select friend to invite": "group_chat_add_contact",
+    "Invitation sent to %s": "group_chat_invited",
+    "This is now a group chat.": "convert_to_groupchat",
+    "Group chat": "group_chat",
+    "General settings": "gtalk_general_settings",
+    "Sign in automatically": "auto_login",
+    "Sign into Talk when you turn on this Android device": "auto_login_summary",
+    "Mobile indicator": "mobile_indicator_title",
+    "Show mobile indicator to friends": "mobile_indicator_summary",
+    "Automatic away status": "show_away_on_idle_title",
+    "Set status to away when the screen is turned off": "show_away_on_idle_summary",
+    "Clear search history": "pref_gtalk_clear_search_history_title",
+    "Clear previous Google Talk chat searches from showing up in the Search box": "pref_gtalk_clear_search_history_summary",
+    "Invitation notifications": "friend_invite_notification_title",
+    "Notify in Status bar when friend invitations are received": "friend_invite_notification_summary",
+    "Text chat settings": "notification_group_title",
+    "Notifications": "notification_enabled_title",
+    "Ringtone": "notification_ringtone_title",
+    "Vibrate": "notification_vibrateWhen_title",
+    "Also vibrate with notification": "notification_vibrateWhen_summary_always",
+    "Voice & video chat settings": "video_chat_group_title",
+    "About": "preferences_about",
+    "Terms & privacy": "preferences_terms_title",
+    "Pop-up alert": "@array/prefEntries_text_notifications:0",
+    "Status bar notification": "@array/prefEntries_text_notifications:1",
+    "Off": "@array/prefEntries_text_notifications:2",
+    "Always": "@array/prefEntries_vibrateWhen:0",
+    "Only when silent": "@array/prefEntries_vibrateWhen:1",
+    "Never": "@array/prefEntries_vibrateWhen:2"
   });
   const T = GBApps.texts(STRINGS);
   const A = name => `assets/tk-${name}.png`;
@@ -94,9 +123,10 @@
     if (!f) return roster(ctx);
     const msgs = s.chats[f.id] || [], off = s.offRecord[f.id];
     const buttons = f.kind === 'video' || f.kind === 'voice' ? `${f.kind === 'video' ? `<i class="tk-msep"></i><button data-action="tk-call" data-id="video" aria-label="${e(T(lang, 'Video chat'))}"><img src="${A('ic_start_video_holo_light')}" alt=""></button>` : ''}<i class="tk-msep"></i><button data-action="tk-call" data-id="voice" aria-label="${e(T(lang, 'Voice chat'))}"><img src="${A('ic_start_audio_gray_holo_light')}" alt=""></button>` : '';
-    const rows = msgs.map(m => `<div class="tk-msg${m.me ? ' me' : ''}"><img class="tk-badge" src="${A('ic_contact_picture')}" alt=""><p><b>${e(m.me ? 'me' : f.name.split(' ')[0])}:</b> ${smileys(m.body)}</p></div>`).join('');
+    const group = (s.groups?.[f.id] || []).map(id => friend(ctx, id)).filter(Boolean);
+    const rows = msgs.map(m => m.system ? `<p class="tk-note">${e(m.system === 'invited' ? AndroidStrings.format(T(lang, 'Invitation sent to %s'), m.name) : T(lang, 'This is now a group chat.'))}</p>` : `<div class="tk-msg${m.me ? ' me' : ''}"><img class="tk-badge" src="${A('ic_contact_picture')}" alt=""><p><b>${e(m.me ? 'me' : f.name.split(' ')[0])}:</b> ${smileys(m.body)}</p></div>`).join('');
     const note = off ? `<p class="tk-note">${e(T(lang, 'Chat off record'))}</p>` : '';
-    return `<div class="app-view tk tk-chatview" data-no-translate><div class="tk-bar"><span class="tk-who"><b>${e(f.name)}</b><small>${e(f.status || label(lang, f.presence))}</small></span><img class="tk-pres" src="${presenceIcon(f)}" alt="">${buttons}</div><div class="tk-scroll tk-history">${note}${rows}</div><form class="tk-compose" data-form="tk-send"><input name="body" placeholder="${e(T(lang, 'Type to compose'))}" aria-label="${e(T(lang, 'Type to compose'))}" autocomplete="off"><button type="submit">${e(T(lang, 'Send'))}</button></form></div>`;
+    return `<div class="app-view tk tk-chatview" data-no-translate><div class="tk-bar"><span class="tk-who"><b>${e(group.length ? T(lang, 'Group chat') : f.name)}</b><small>${e(group.length ? [f, ...group].map(x => x.name).join(', ') : f.status || label(lang, f.presence))}</small></span><img class="tk-pres" src="${presenceIcon(f)}" alt="">${buttons}</div><div class="tk-scroll tk-history">${note}${rows}</div><form class="tk-compose" data-form="tk-send"><input name="body" placeholder="${e(T(lang, 'Type to compose'))}" aria-label="${e(T(lang, 'Type to compose'))}" autocomplete="off"><button type="submit">${e(T(lang, 'Send'))}</button></form></div>`;
   }
   // Search (audit step 5): the framework SearchDialog with Talk's hint and history, then search_results.xml.
   function searchDialog(ctx) {
@@ -132,18 +162,23 @@
       return [
         {action: 'tk-record', title: t(s.offRecord[ui.tkChat] ? 'Chat on record' : 'Chat off record'), icon: s.offRecord[ui.tkChat] ? 'tk-ic_menu_chat_on_record.png' : 'tk-ic_menu_chat_off_record.png'},
         {action: 'tk-switch', title: t('Switch chats'), icon: 'tk-ic_menu_chat_dashboard.png'}, {action: 'tk-roster', title: t('Friends list'), icon: 'tk-ic_menu_friendslist.png'},
-        {action: 'tk-unsupported', title: t('Add to chat'), icon: 'ic_menu_add'}, {action: 'tk-end', title: t('End chat'), icon: 'tk-ic_menu_end_conversation.png'},
+        {action: 'tk-add-to-chat', title: t('Add to chat'), icon: 'ic_menu_add'}, {action: 'tk-end', title: t('End chat'), icon: 'tk-ic_menu_end_conversation.png'},
         ...(f && (f.kind === 'voice' || f.kind === 'video') ? [{action: 'tk-call', id: 'voice', title: t('Voice chat')}] : []),
         {action: 'tk-clear', title: t('Clear chat history'), icon: 'tk-ic_menu_end_conversation.png'}, {action: 'tk-smiley', title: t('Insert smiley'), icon: 'tk-ic_menu_emoticons.png'},
         {action: 'tk-contact', title: t('View contact'), icon: 'tk-ic_menu_contact.png'}, {action: 'tk-unsupported', title: t('Help'), icon: 'ic_menu_help'}];
     }
     return [{action: 'tk-popular', title: t(s.popular ? 'All friends' : 'Most popular'), icon: 'tk-ic_menu_allfriends.png'}, {action: 'tk-add', title: t('Add friend'), icon: 'tk-ic_menu_invite.png'},
       {action: 'tk-search', title: t('Search'), icon: 'ic_menu_search'}, {action: 'tk-unsupported', title: t('Sign out'), icon: 'tk-ic_menu_logout.png'},
-      {action: 'tk-unsupported', title: t('Settings'), icon: 'ic_menu_preferences'}, {action: 'tk-end-all', title: t('End all chats'), icon: 'tk-ic_menu_end_all_conversations.png'},
+      {action: 'gbpref-open', id: 'talk', title: t('Settings'), icon: 'ic_menu_preferences'}, {action: 'tk-end-all', title: t('End all chats'), icon: 'tk-ic_menu_end_all_conversations.png'},
       {action: 'tk-invites', title: t('Invites'), icon: 'tk-ic_menu_invites.png'}, {action: 'tk-blocked', title: t('Blocked'), icon: 'tk-ic_menu_blocked_user.png'},
       {action: 'tk-unsupported', title: t('Help'), icon: 'ic_menu_help'}];
   }
   function dialog(kind, ctx) {
+    if (kind === 'tk-add-to-chat') {
+      const {lang, data, ui} = ctx, s = store(data), inChat = [String(ui.tkChat), ...(s.groups?.[ui.tkChat] || [])];
+      const list = (ctx.contacts || []).map(c => friend(ctx, c.id)).filter(f => f && f.presence !== 'offline' && !inChat.includes(String(f.id)));
+      return {title: T(lang, 'Select friend to invite'), items: list.map(f => ({action: 'tk-invite-pick', id: f.id, title: f.name}))};
+    }
     const {lang, data, ui} = ctx, s = store(data), t = k => T(lang, k);
     if (kind === 'status') return {title: t('Set Status'), items: ['available', 'busy', 'invisible'].map(p => ({action: 'tk-presence', id: p, title: label(lang, p), icon: `gb-presence_${p === 'available' ? 'online' : p}.png`})), custom: `<form data-form="tk-message"><input class="gbdlg-input" name="message" value="${e(s.message)}" placeholder="${e(t('Status message'))}" aria-label="${e(t('Status message'))}" autocomplete="off"></form>`, buttons: [{action: 'tk-message-ok', title: ctx.ok}, {action: 'close-overlay', title: ctx.cancel}]};
     if (kind === 'switch') { const ids = Object.keys(s.chats).filter(id => s.chats[id].length); return {title: t('Switch chats'), items: ids.length ? ids.map(id => ({action: 'tk-chat', id, title: friend(ctx, id)?.name || id, icon: 'tk-status_chat.png'})) : [{action: 'close-overlay', title: t('No active chats')}]}; }
@@ -174,6 +209,13 @@
       case 'tk-search': close(); ui.tkSearching = true; ctx.render(); ctx.focus('.gbbr-search input'); break;
       case 'tk-search-cancel': ui.tkSearching = false; ctx.render(); break;
       case 'tk-search-run': ui.tkSearching = false; ui.tkQuery = id; ctx.render(); break;
+      // Add to chat (menu_add_contact): "Select friend to invite" over the available friends not in the chat yet; the
+      // chat turns into a group chat with the invitation (group_chat_invited) and convert_to_groupchat notes.
+      case 'tk-add-to-chat': close(); ctx.dialog('tk-add-to-chat'); break;
+      case 'tk-invite-pick': { const s = store(data), host = ui.tkChat, f = friend(ctx, id); close(); if (!f || !host) break;
+        const list = (s.groups ||= {})[host] ||= [], chat = s.chats[host] ||= [];
+        if (!list.includes(String(f.id))) { if (!list.length) chat.push({system: 'group', time: Date.now()}); list.push(String(f.id)); chat.push({system: 'invited', name: f.name, time: Date.now()}); }
+        ctx.save(); ctx.render(); break; }
       case 'tk-unsupported': close(); ctx.toast('This feature is not part of the simulator.'); break;
       case 'tk-popular': s.popular = !s.popular; ctx.save(); close(); ctx.render(); break;
       case 'tk-add': close(); ui.tkSub = 'add'; ui.tkInvite = ''; ctx.render(); ctx.focus('.tk-add input'); break;

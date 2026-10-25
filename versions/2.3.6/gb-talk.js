@@ -66,7 +66,35 @@
     "Blocked friends": {"res": "Talk2:blocked_title", "hu": "Letiltott ismerősök", "de": "Blockierte Freunde", "fr": "Amis bloqués", "es": "Amigos bloqueados"},
     "Blocked": {"res": "Talk2:menu_show_blocked_contacts", "hu": "Letiltva", "de": "Blockiert", "fr": "Bloqués", "es": "Bloqueados"},
     "Help": {"res": "Talk2:menu_help", "hu": "Súgó", "de": "Hilfe", "fr": "Aide", "es": "Ayuda"},
-    "View contact": {"res": "Talk2:menu_view_contact", "hu": "Névjegy megtekintése", "de": "Kontakt anzeigen", "fr": "Afficher le contact", "es": "Ver contacto"}
+    "View contact": {"res": "Talk2:menu_view_contact", "hu": "Névjegy megtekintése", "de": "Kontakt anzeigen", "fr": "Afficher le contact", "es": "Ver contacto"},
+    "Select friend to invite": {"res": "Talk2:group_chat_add_contact", "hu": "A meghívni kívánt ismerős kijelölése", "de": "Freund zum Einladen auswählen", "fr": "Sélectionner un ami à inviter", "es": "Seleccionar un amigo/a para invitarlo"},
+    "Invitation sent to %s": {"res": "Talk2:group_chat_invited", "hu": "A meghívó elküldve %s felhasználónak", "de": "Einladung an %s gesendet", "fr": "Invitation envoyée à %s", "es": "Invitación enviada a %s"},
+    "This is now a group chat.": {"res": "Talk2:convert_to_groupchat", "hu": "Csoportos csevegés zajlik.\nTovábbi személyek meghívásához válassza a Menü, majd a \"Hozzáadás a csevegéshez\" elemet.", "de": "Dies ist nun ein Gruppen-Chat.\nDrücken Sie die Menütaste und wählen Sie anschließend \"Zum Chatten einladen\".", "fr": "Ce chat est désormais un chat en groupe.\nPour inviter d'autres personnes, appuyez sur Menu et sélectionnez \"Ajouter au chat\".", "es": "Esto es un chat de grupo.\nPara invitar a alguien, pulsa la tecla de menú y, a continuación, selecciona \"Añadir al chat\".", "en": "This is now a group chat.\nTo invite others, press Menu and select \"Add to chat\"."},
+    "Group chat": {"res": "Talk2:group_chat", "hu": "Csoportos csevegés", "de": "Gruppen-Chat", "fr": "Chat en groupe", "es": "Chat de grupo"},
+    "General settings": {"res": "Talk2:gtalk_general_settings", "hu": "Általános beállítások", "de": "Allgemeine Einstellungen", "fr": "Paramètres généraux", "es": "Configuración general"},
+    "Sign in automatically": {"res": "Talk2:auto_login", "hu": "Automatikus bejelentkezés", "de": "Automatisch anmelden", "fr": "Se connecter automatiquement", "es": "Acceder automáticamente"},
+    "Sign into Talk when you turn on this Android device": {"res": "Talk2:auto_login_summary", "hu": "Bejelentkezés a Google Csevegőbe az eszköz bekapcsolásakor", "de": "Beim Einschalten dieses Android-Geräts in Google Talk anmelden", "fr": "Se connecter à Google Talk lorsque ce mobile Android est allumé", "es": "Acceder a Google Talk al activar este dispositivo Android."},
+    "Show mobile indicator to friends": {"res": "Talk2:mobile_indicator_summary", "hu": "Mobil állapot jelzése az ismerősöknek", "de": "Mobilen Status für Freunde anzeigen", "fr": "Afficher l'indicateur de mobile pour mes amis", "es": "Mostrar el indicador móvil a los amigos"},
+    "Automatic away status": {"res": "Talk2:show_away_on_idle_title", "hu": "Automatikus nincs a gépnél státusz", "de": "Automatischer Abwesenheitsstatus", "fr": "Absence automatique", "es": "Estado ausente automático"},
+    "Set status to away when the screen is turned off": {"res": "Talk2:show_away_on_idle_summary", "hu": "Nincs a gépnél állapot beállítása a képernyő kikapcsolásakor", "de": "Status auf \"Abwesend\" setzen, wenn der Bildschirm ausgeschaltet ist", "fr": "Configurer votre disponibilité sur \"absent\" lorsque l'écran est éteint", "es": "Establecer estado en \"ausente\" cuando la pantalla esté apagada"},
+    "Clear search history": {"res": "Talk2:pref_gtalk_clear_search_history_title", "hu": "Keresési előzmények törlése", "de": "Suchverlauf löschen", "fr": "Historique des recherches", "es": "Borrar historial de búsquedas"},
+    "Clear previous Google Talk chat searches from showing up in the Search box": {"res": "Talk2:pref_gtalk_clear_search_history_summary", "hu": "Korábbi Google Csevegő üzenetkeresések törlése a keresőmezőből", "de": "Frühere Chat-Suchen in Google Talk aus Suchfeld löschen", "fr": "Supprimer l'historique de recherches Google Talk pour qu'elles ne s'affichent pas dans le champ de recherche", "es": "Borrar búsquedas anteriores de chats de Google Talk para que no aparezcan en el cuadro de búsqueda"},
+    "Invitation notifications": {"res": "Talk2:friend_invite_notification_title", "hu": "Meghívások értesítései", "de": "Einladungsbenachrichtigungen", "fr": "Notifications relatives aux invitations reçues", "es": "Notificaciones de invitaciones"},
+    "Notify in Status bar when friend invitations are received": {"res": "Talk2:friend_invite_notification_summary", "hu": "Értesítés az állapotsoron ismerőstől érkező meghívás esetén", "de": "Beim Eingang von Einladungen von Freunden Benachrichtigung in der Statusleiste anzeigen", "fr": "Signaler la réception d'invitations dans la barre d'état", "es": "Notificar en la barra de estado cuando lleguen invitaciones de amigos"},
+    "Text chat settings": {"res": "Talk2:notification_group_title", "hu": "Szöveges csevegés beállításai", "de": "SMS-Chat-Einstellungen", "fr": "Paramètres du chat textuel", "es": "Ajustes de chat de texto"},
+    "Notifications": {"res": "Talk2:notification_enabled_title", "hu": "Értesítések", "de": "Benachrichtigungen", "fr": "Notifications", "es": "Notificaciones"},
+    "Ringtone": {"res": "Talk2:notification_ringtone_title", "hu": "Csengőhang", "de": "Klingelton", "fr": "Sonnerie", "es": "Tono"},
+    "Vibrate": {"res": "Talk2:notification_vibrateWhen_title", "hu": "Rezgés", "de": "Vibration", "fr": "Vibreur", "es": "Vibrar"},
+    "Also vibrate with notification": {"res": "Talk2:notification_vibrateWhen_summary_always", "hu": "Rezegjen is az értesítéskor", "de": "Auch bei Benachrichtigung vibrieren", "fr": "Vibrer, en plus de la notification", "es": "Vibrar también al recibir notificación"},
+    "Voice & video chat settings": {"res": "Talk2:video_chat_group_title", "hu": "Audio- és videocsevegés beállításai", "de": "Sprach- und Video-Chat-Einstellungen", "fr": "Paramètres de chat audio et vidéo", "es": "Ajustes de chat de vídeo y de voz"},
+    "About": {"res": "Talk2:preferences_about", "hu": "Névjegy", "de": "Info", "fr": "À propos de", "es": "Acerca de"},
+    "Terms & privacy": {"res": "Talk2:preferences_terms_title", "hu": "Feltételek és adatvédelem", "de": "Nutzungsb. & Datenschutz", "fr": "Conditions d'utilisation et confidentialité", "es": "Condiciones y privacidad"},
+    "Pop-up alert": {"res": "Talk2:@array/prefEntries_text_notifications:0", "hu": "Előugró értesítés", "de": "Pop-up-Warnmeldung", "fr": "Alerte dans une fenêtre pop-up", "es": "Alerta emergente"},
+    "Status bar notification": {"res": "Talk2:@array/prefEntries_text_notifications:1", "hu": "Állapotsor-értesítés", "de": "Benachrichtigung in Statusleiste", "fr": "Notification de barre d'état", "es": "Notificación en la barra de estado"},
+    "Off": {"res": "Talk2:@array/prefEntries_text_notifications:2", "hu": "Ki", "de": "Aus", "fr": "Désactiver", "es": "Desactivadas"},
+    "Always": {"res": "Talk2:@array/prefEntries_vibrateWhen:0", "hu": "Mindig", "de": "Immer", "fr": "Toujours", "es": "Siempre"},
+    "Only when silent": {"res": "Talk2:@array/prefEntries_vibrateWhen:1", "hu": "Csak néma üzemmódban", "de": "Nur im Lautlosmodus", "fr": "En mode silencieux", "es": "Solo en modo silencio"},
+    "Never": {"res": "Talk2:@array/prefEntries_vibrateWhen:2", "hu": "Soha", "de": "Nie", "fr": "Jamais", "es": "Nunca"}
   };
   const T = GBApps.texts(STRINGS);
   const A = name => `assets/tk-${name}.png`;
@@ -94,9 +122,10 @@
     if (!f) return roster(ctx);
     const msgs = s.chats[f.id] || [], off = s.offRecord[f.id];
     const buttons = f.kind === 'video' || f.kind === 'voice' ? `${f.kind === 'video' ? `<i class="tk-msep"></i><button data-action="tk-call" data-id="video" aria-label="${e(T(lang, 'Video chat'))}"><img src="${A('ic_start_video_holo_light')}" alt=""></button>` : ''}<i class="tk-msep"></i><button data-action="tk-call" data-id="voice" aria-label="${e(T(lang, 'Voice chat'))}"><img src="${A('ic_start_audio_gray_holo_light')}" alt=""></button>` : '';
-    const rows = msgs.map(m => `<div class="tk-msg${m.me ? ' me' : ''}"><img class="tk-badge" src="${A('ic_contact_picture')}" alt=""><p><b>${e(m.me ? 'me' : f.name.split(' ')[0])}:</b> ${smileys(m.body)}</p></div>`).join('');
+    const group = (s.groups?.[f.id] || []).map(id => friend(ctx, id)).filter(Boolean);
+    const rows = msgs.map(m => m.system ? `<p class="tk-note">${e(m.system === 'invited' ? AndroidStrings.format(T(lang, 'Invitation sent to %s'), m.name) : T(lang, 'This is now a group chat.'))}</p>` : `<div class="tk-msg${m.me ? ' me' : ''}"><img class="tk-badge" src="${A('ic_contact_picture')}" alt=""><p><b>${e(m.me ? 'me' : f.name.split(' ')[0])}:</b> ${smileys(m.body)}</p></div>`).join('');
     const note = off ? `<p class="tk-note">${e(T(lang, 'Chat off record'))}</p>` : '';
-    return `<div class="app-view tk tk-chatview" data-no-translate><div class="tk-bar"><span class="tk-who"><b>${e(f.name)}</b><small>${e(f.status || label(lang, f.presence))}</small></span><img class="tk-pres" src="${presenceIcon(f)}" alt="">${buttons}</div><div class="tk-scroll tk-history">${note}${rows}</div><form class="tk-compose" data-form="tk-send"><input name="body" placeholder="${e(T(lang, 'Type to compose'))}" aria-label="${e(T(lang, 'Type to compose'))}" autocomplete="off"><button type="submit">${e(T(lang, 'Send'))}</button></form></div>`;
+    return `<div class="app-view tk tk-chatview" data-no-translate><div class="tk-bar"><span class="tk-who"><b>${e(group.length ? T(lang, 'Group chat') : f.name)}</b><small>${e(group.length ? [f, ...group].map(x => x.name).join(', ') : f.status || label(lang, f.presence))}</small></span><img class="tk-pres" src="${presenceIcon(f)}" alt="">${buttons}</div><div class="tk-scroll tk-history">${note}${rows}</div><form class="tk-compose" data-form="tk-send"><input name="body" placeholder="${e(T(lang, 'Type to compose'))}" aria-label="${e(T(lang, 'Type to compose'))}" autocomplete="off"><button type="submit">${e(T(lang, 'Send'))}</button></form></div>`;
   }
   // Search (audit step 5): the framework SearchDialog with Talk's hint and history, then search_results.xml.
   function searchDialog(ctx) {
@@ -132,18 +161,23 @@
       return [
         {action: 'tk-record', title: t(s.offRecord[ui.tkChat] ? 'Chat on record' : 'Chat off record'), icon: s.offRecord[ui.tkChat] ? 'tk-ic_menu_chat_on_record.png' : 'tk-ic_menu_chat_off_record.png'},
         {action: 'tk-switch', title: t('Switch chats'), icon: 'tk-ic_menu_chat_dashboard.png'}, {action: 'tk-roster', title: t('Friends list'), icon: 'tk-ic_menu_friendslist.png'},
-        {action: 'tk-unsupported', title: t('Add to chat'), icon: 'ic_menu_add'}, {action: 'tk-end', title: t('End chat'), icon: 'tk-ic_menu_end_conversation.png'},
+        {action: 'tk-add-to-chat', title: t('Add to chat'), icon: 'ic_menu_add'}, {action: 'tk-end', title: t('End chat'), icon: 'tk-ic_menu_end_conversation.png'},
         ...(f && (f.kind === 'voice' || f.kind === 'video') ? [{action: 'tk-call', id: 'voice', title: t('Voice chat')}] : []),
         {action: 'tk-clear', title: t('Clear chat history'), icon: 'tk-ic_menu_end_conversation.png'}, {action: 'tk-smiley', title: t('Insert smiley'), icon: 'tk-ic_menu_emoticons.png'},
         {action: 'tk-contact', title: t('View contact'), icon: 'tk-ic_menu_contact.png'}, {action: 'tk-unsupported', title: t('Help'), icon: 'ic_menu_help'}];
     }
     return [{action: 'tk-popular', title: t(s.popular ? 'All friends' : 'Most popular'), icon: 'tk-ic_menu_allfriends.png'}, {action: 'tk-add', title: t('Add friend'), icon: 'tk-ic_menu_invite.png'},
       {action: 'tk-search', title: t('Search'), icon: 'ic_menu_search'}, {action: 'tk-unsupported', title: t('Sign out'), icon: 'tk-ic_menu_logout.png'},
-      {action: 'tk-unsupported', title: t('Settings'), icon: 'ic_menu_preferences'}, {action: 'tk-end-all', title: t('End all chats'), icon: 'tk-ic_menu_end_all_conversations.png'},
+      {action: 'gbpref-open', id: 'talk', title: t('Settings'), icon: 'ic_menu_preferences'}, {action: 'tk-end-all', title: t('End all chats'), icon: 'tk-ic_menu_end_all_conversations.png'},
       {action: 'tk-invites', title: t('Invites'), icon: 'tk-ic_menu_invites.png'}, {action: 'tk-blocked', title: t('Blocked'), icon: 'tk-ic_menu_blocked_user.png'},
       {action: 'tk-unsupported', title: t('Help'), icon: 'ic_menu_help'}];
   }
   function dialog(kind, ctx) {
+    if (kind === 'tk-add-to-chat') {
+      const {lang, data, ui} = ctx, s = store(data), inChat = [String(ui.tkChat), ...(s.groups?.[ui.tkChat] || [])];
+      const list = (ctx.contacts || []).map(c => friend(ctx, c.id)).filter(f => f && f.presence !== 'offline' && !inChat.includes(String(f.id)));
+      return {title: T(lang, 'Select friend to invite'), items: list.map(f => ({action: 'tk-invite-pick', id: f.id, title: f.name}))};
+    }
     const {lang, data, ui} = ctx, s = store(data), t = k => T(lang, k);
     if (kind === 'status') return {title: t('Set Status'), items: ['available', 'busy', 'invisible'].map(p => ({action: 'tk-presence', id: p, title: label(lang, p), icon: `gb-presence_${p === 'available' ? 'online' : p}.png`})), custom: `<form data-form="tk-message"><input class="gbdlg-input" name="message" value="${e(s.message)}" placeholder="${e(t('Status message'))}" aria-label="${e(t('Status message'))}" autocomplete="off"></form>`, buttons: [{action: 'tk-message-ok', title: ctx.ok}, {action: 'close-overlay', title: ctx.cancel}]};
     if (kind === 'switch') { const ids = Object.keys(s.chats).filter(id => s.chats[id].length); return {title: t('Switch chats'), items: ids.length ? ids.map(id => ({action: 'tk-chat', id, title: friend(ctx, id)?.name || id, icon: 'tk-status_chat.png'})) : [{action: 'close-overlay', title: t('No active chats')}]}; }
@@ -174,6 +208,13 @@
       case 'tk-search': close(); ui.tkSearching = true; ctx.render(); ctx.focus('.gbbr-search input'); break;
       case 'tk-search-cancel': ui.tkSearching = false; ctx.render(); break;
       case 'tk-search-run': ui.tkSearching = false; ui.tkQuery = id; ctx.render(); break;
+      // Add to chat (menu_add_contact): "Select friend to invite" over the available friends not in the chat yet; the
+      // chat turns into a group chat with the invitation (group_chat_invited) and convert_to_groupchat notes.
+      case 'tk-add-to-chat': close(); ctx.dialog('tk-add-to-chat'); break;
+      case 'tk-invite-pick': { const s = store(data), host = ui.tkChat, f = friend(ctx, id); close(); if (!f || !host) break;
+        const list = (s.groups ||= {})[host] ||= [], chat = s.chats[host] ||= [];
+        if (!list.includes(String(f.id))) { if (!list.length) chat.push({system: 'group', time: Date.now()}); list.push(String(f.id)); chat.push({system: 'invited', name: f.name, time: Date.now()}); }
+        ctx.save(); ctx.render(); break; }
       case 'tk-unsupported': close(); ctx.toast('This feature is not part of the simulator.'); break;
       case 'tk-popular': s.popular = !s.popular; ctx.save(); close(); ctx.render(); break;
       case 'tk-add': close(); ui.tkSub = 'add'; ui.tkInvite = ''; ctx.render(); ctx.focus('.tk-add input'); break;

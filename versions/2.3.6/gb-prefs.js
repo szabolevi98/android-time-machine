@@ -224,6 +224,29 @@
         action('bt_hint', '', C('Before a device can be used here, it needs to be paired and Bluetooth has to be enabled.'), {info: true})
       ]};
     },
+    // Google Talk's Settings (Talk2.apk res/xml/gtalk_preferences.xml): Notifications are DependentListPreferences whose
+    // rows below go grey on "Off"; Terms & privacy is Google's page.
+    talk(ctx) {
+      const K = key => window.GBTalk.T(ctx.lang, key), vibrate = ['Always', 'Only when silent', 'Never'].map(K);
+      return {set: 'talk', title: K('Settings'), items: [
+        cat(K('General settings')),
+        check('gtalk-auto-login', K('Sign in automatically'), K('Sign into Talk when you turn on this Android device')),
+        check('gtalk-mobile-indicator', K('Mobile indicator'), K('Show mobile indicator to friends')),
+        check('gtalk-show-away-on-idle', K('Automatic away status'), K('Set status to away when the screen is turned off')),
+        action('pref_gtalk_clear_history_key', K('Clear search history'), K('Clear previous Google Talk chat searches from showing up in the Search box'), {done: true}),
+        check('gtalk-show-friend-notifications', K('Invitation notifications'), K('Notify in Status bar when friend invitations are received')),
+        cat(K('Text chat settings')),
+        list('gtalk-enable-notifications', K('Notifications'), ['Pop-up alert', 'Status bar notification', 'Off'].map(K), 1, {showValue: true, off: 2}),
+        {...action('gtalk-text-ringtone', K('Ringtone'), '', {ringtone: true}), dependency: 'gtalk-enable-notifications'},
+        list('gtalk-vibrate-when', K('Vibrate'), vibrate, 2, {summary: K('Also vibrate with notification'), dependency: 'gtalk-enable-notifications'}),
+        cat(K('Voice & video chat settings')),
+        list('gtalk-video-enable-notifications', K('Notifications'), ['Pop-up alert', 'Status bar notification'].map(K), 0, {showValue: true}),
+        {...action('gtalk-video-ringtone', K('Ringtone'), '', {ringtone: true}), dependency: 'gtalk-video-enable-notifications'},
+        list('gtalk-video-vibrate-when', K('Vibrate'), vibrate, 2, {summary: K('Also vibrate with notification'), dependency: 'gtalk-video-enable-notifications'}),
+        cat(K('About')),
+        action('gtalk-terms-key', K('Terms & privacy'), '', {toast: true})
+      ]};
+    },
     dock(ctx) {
       const D = key => S('settings2', ctx.lang, key), on = !!ctx.values.dock_sounds;
       return {set: 'dock', title: D('dock_settings_title'), items: [
@@ -281,7 +304,7 @@
   }
   const screen = ctx => (SCREENS[ctx.app] || (String(ctx.app).startsWith('gmail-label|') ? SCREENS['gmail-label'] : null))?.(ctx);
   const get = (item, values) => item.value ?? values[item.key] ?? item.def;
-  const enabled = (item, s, values) => !item.disabled && (!item.dependency || !!get(s.items.find(i => i.key === item.dependency), values));
+  const enabled = (item, s, values) => { if (item.disabled) return false; if (!item.dependency) return true; const dep = s.items.find(i => i.key === item.dependency), v = get(dep, values); return dep.off !== undefined ? v !== dep.off : dep.kind === 'list' ? v != null : !!v; };
   function row(item, s, ctx) {
     if (item.kind === 'category') return `<div class="gbset-cat">${e(item.title)}</div>`;
     const on = enabled(item, s, ctx.values), dis = on ? '' : ' disabled aria-disabled="true"', id = `${ctx.app}:${item.key}`;

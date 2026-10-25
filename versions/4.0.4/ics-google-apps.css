@@ -276,3 +276,22 @@
 .ga-bk-open span{display:flex;flex-direction:column;min-width:0;padding-left:calc(16 * var(--dp))}
 .ga-bk-open b{font:700 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
 .ga-bk-open small{font:400 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000;opacity:.75}
+/* Talk: the group-chat notes (group_chat_invited, convert_to_groupchat) in chat_view_status grey. */
+.ga-talk-chat p.ga-tk-note{color:#777;font-size:calc(14 * var(--dp));text-align:center;white-space:pre-line}
+/* Friend info (buddy_info_phone.xml): the 64 dp picture and the nickname field, the presence and status in
+   textAppearanceLarge, Block / Remove as the bottom button bar. */
+.ga-tk-info{display:flex;flex-direction:column;background:#f3f3f3;color:#000}
+.ga-tk-info-top{display:flex;align-items:center;gap:calc(12 * var(--dp));padding:calc(12 * var(--dp))}
+.ga-tk-info-top img{width:calc(64 * var(--dp));height:calc(64 * var(--dp))}
+.ga-tk-nick{flex:1;min-width:0;padding:calc(6 * var(--dp)) 0;border:0;border-bottom:calc(2 * var(--dp)) solid #33b5e5;background:none;color:#000;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;outline:0}
+.ga-tk-info-status{display:flex;align-items:center;gap:calc(10 * var(--dp));min-height:calc(64 * var(--dp));padding:0 calc(12 * var(--dp));font:400 calc(22 * var(--dp)) RobotoICS,Roboto,sans-serif}
+.ga-tk-info-space{flex:1}
+.ga-tk-info-buttons{display:flex;border-top:calc(1 * var(--dp)) solid #0000001f}
+.screen .ga-tk-info-buttons button{flex:1;min-height:calc(48 * var(--dp));border:0;background:none;color:#000;font:400 calc(22 * var(--dp)) RobotoICS,Roboto,sans-serif}
+.screen .ga-tk-info-buttons button+button{border-left:calc(1 * var(--dp)) solid #0000001f}
+.screen .ga-tk-info-buttons button:active{background:#33b5e566}
+.ga-tk-empty{margin:0;padding:calc(24 * var(--dp)) calc(16 * var(--dp));color:#777;font:400 calc(16 * var(--dp)) RobotoICS,Roboto,sans-serif;text-align:center}
+.ga-talk.nwp{display:flex;flex-direction:column}
+/* Talk settings and Blocked friends: GTalkPreferencesActivity's Theme.Holo.Light action bar. */
+.ga-tk-lightbar{background:#f3f3f3;border-bottom:calc(1 * var(--dp)) solid #0000001f}
+.ga-tk-lightbar h2{color:#000}

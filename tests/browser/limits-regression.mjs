@@ -1297,6 +1297,55 @@ const gbCarDock = async h => {
   await h.tap('#viewport [data-id="dock:dock_sounds"]');
   h.check('Dock insertion sound is kept', (await prefs('dock')).dock_sounds === true && await h.until(`/Play sound when inserting/.test(document.querySelector('#viewport [data-id="dock:dock_sounds"]')?.textContent || '')`));
 };
+
+// Google Talk (T17). 2.3.6: Add to chat makes a group chat; Settings (gtalk_preferences.xml) keeps its values and greys
+// the rows under Notifications "Off". 4.0.4: Display options, Add to chat, Friend info (nickname, Block), Talk settings
+// and Blocked friends.
+const gbTalk = async h => {
+  const menu = async (action, id = '') => {
+    await h.tap('.touch-menu'); await h.until(`!!document.querySelector('.gbmenu')`);
+    const item = `[data-action="${action}"]${id ? `[data-id="${id}"]` : ''}`;
+    if (!await h.ev(`!!document.querySelector('.gbmenu ${item}')`)) await h.tap('.gbmenu [data-action="gb-menu-more"]');
+    await h.tap(item);
+  };
+  await h.openApp('talk');
+  await h.tap('#viewport [data-action="tk-chat"][data-id="1"]');
+  await menu('tk-add-to-chat');
+  h.check('Add to chat lists the friends to invite', await h.until(`!!document.querySelector('.gbdlg [data-action="tk-invite-pick"][data-id="4"]')`));
+  await h.tap('.gbdlg [data-action="tk-invite-pick"][data-id="4"]');
+  h.check('the chat becomes a group chat', await h.until(`/Invitation sent to/.test(document.querySelector('#viewport .tk-history')?.textContent || '') && /,/.test(document.querySelector('#viewport .tk-who small')?.textContent || '')`) && (await store(h, 'talk23'))?.groups?.[1]?.includes('4'));
+  await h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='back';document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove();return 1})()`);
+  await menu('gbpref-open', 'talk');
+  await h.tap('#viewport [data-id="talk:gtalk-auto-login"]');
+  h.check('Sign in automatically is kept', (await store(h, 'appPrefs'))?.talk?.['gtalk-auto-login'] === false);
+  await h.tap('#viewport [data-id="talk:gtalk-enable-notifications"]');
+  await h.tap('.gbdlg [data-action="gbpref-pick"][data-id="talk:gtalk-enable-notifications:2"]');
+  h.check('Notifications Off greys its ringtone', await h.until(`document.querySelector('#viewport [data-id="talk:gtalk-text-ringtone"]')?.disabled === true`));
+};
+const icsTalk = async h => {
+  const menu = async action => { await h.tap('#viewport [data-action="ga-menu"]'); await h.tap(`.holo-menu [data-action="${action}"]`); };
+  await h.openApp('talk');
+  await h.until(`!!document.querySelector('#viewport .ga-buddy')`);
+  await menu('ga-talk-display');
+  await h.tap('#viewport [data-action="ga-talk-sort-pick"][data-id="1"]');
+  h.check('Display options sorts by name', await store(h, 'talkSort') === 1 && await h.ev(`[...document.querySelectorAll('#viewport .ga-buddy b')].map(b=>b.textContent).join('|') === [...document.querySelectorAll('#viewport .ga-buddy b')].map(b=>b.textContent).sort((a,b)=>a.localeCompare(b)).join('|')`));
+  await h.tap('#viewport .ga-buddy[data-id="1"]');
+  await menu('ga-talk-add-to-chat');
+  await h.tap('#viewport [data-action="ga-talk-invite-pick"][data-id="2"]');
+  h.check('Add to chat makes a group chat', await h.until(`/Invitation sent to/.test(document.querySelector('#viewport .ga-talk-chat')?.textContent || '')`) && (await store(h, 'talkGroups'))?.[1]?.includes('2'));
+  await menu('ga-talk-info');
+  await h.type('#viewport .ga-tk-nick', 'Alex M.');
+  h.check('Friend info keeps the nickname', await h.until(`true`) && (await store(h, 'talkNick'))?.[1] === 'Alex M.');
+  await h.tap('#viewport [data-action="ga-talk-block"]');
+  h.check('Block takes the friend off the list', await h.until(`!document.querySelector('#viewport .ga-buddy[data-id="1"]')`));
+  await menu('ga-talk-settings');
+  await h.tap('#viewport [data-action="ga-tks-list"][data-id="gtalk-enable-notifications"]');
+  await h.tap('#viewport [data-action="ga-tks-pick"][data-id="2"]');
+  h.check('IM notifications Off greys its ringtone', await h.until(`document.querySelector('#viewport [data-id="gtalk-text-ringtone"]')?.disabled === true`) && (await store(h, 'talkPrefs'))?.['gtalk-enable-notifications'] === 2);
+  await h.tap('#viewport [data-action="ga-tks-blocked"]');
+  await h.tap('#viewport [data-action="ga-talk-unblock"][data-id="1"]');
+  h.check('Blocked friends gives the friend back', await h.until(`!document.querySelector('#viewport [data-action="ga-talk-unblock"]')`) && !(await store(h, 'talkBlocked'))?.length);
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1381,6 +1430,8 @@ const CASES = [
   {id: 'T13', version: '2.3.6', name: 'Messaging › Audio, Record audio, Capture picture / video, Slideshow', run: gbMmsAttach},
   {id: 'T13', version: '4.3', name: 'Messaging › Audio Play, Capture picture / video, Slideshow', run: jbMmsAttach},
   {id: 'T15', version: '2.3.6', name: 'Car Home Settings and Dock settings', run: gbCarDock},
+  {id: 'T17', version: '2.3.6', name: 'Talk › Add to chat, Settings', run: gbTalk},
+  {id: 'T17', version: '4.0.4', name: 'Talk › Display options, Add to chat, Friend info, Talk settings', run: icsTalk},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

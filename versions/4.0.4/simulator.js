@@ -631,6 +631,8 @@
     // Play Books' reader: a dropdown, Display options, then the Contents popup close before the reader does.
     if (ui.view === 'play-books' && ui.gaSub === 'read' && (ui.gaBkSpin || ui.gaBkOptions || ui.gaBkToc)) { if (ui.gaBkSpin) ui.gaBkSpin = ''; else if (ui.gaBkOptions) ui.gaBkOptions = false; else ui.gaBkToc = false; render(); return; }
     if (ui.view === 'play-books') { ui.gaBkSpin = ''; ui.gaBkOptions = false; ui.gaBkToc = false; }
+    // Talk: an open dialog first; Friend info returns to its chat, Blocked friends to Talk settings.
+    if (ui.view === 'talk' && (ui.gaTkDialog || ui.gaSub === 'info' || ui.gaSub === 'blocked')) { if (ui.gaTkDialog) ui.gaTkDialog = null; else ui.gaSub = ui.gaSub === 'info' ? 'chat' : 'settings'; render(); return; }
     if (ICSGoogleApps.APPS.includes(ui.view) && ui.gaSub) { ui.gaSub = ''; render(); return; }
     if (ui.view === 'gmail' && ui.sub === 'g4-prefs' && !ui.overlay) { ICSGmailPrefs.back(ui); render(); return; }
     if (ui.view === 'gmail') {

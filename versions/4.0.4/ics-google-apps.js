@@ -123,6 +123,51 @@
     "CANCEL": {"res": "Talk:invite_label_cancel", "hu": "MÉGSE", "de": "Abbrechen", "fr": "ANNULER", "es": "CANCELAR"},
     "Invitation sent.": {"res": "Talk:invitation_sent", "hu": "Meghívó elküldve.", "de": "Einladung gesendet", "fr": "Invitation envoyée.", "es": "Invitación enviada"},
     "Talk settings": {"res": "Talk:menu_settings", "hu": "Beállítások", "de": "Einstellungen", "fr": "Paramètres", "es": "Ajustes", "en": "Settings"},
+    "Cancel": {"res": "Talk:cancel", "hu": "Mégse", "de": "Abbrechen", "fr": "Annuler", "es": "Cancelar"},
+    "Sort friends by": {"res": "Talk:sort_friends_dialog_title", "hu": "Ismerősök rendezése:", "de": "Freunde sortieren nach", "fr": "Trier mes amis par", "es": "Ordenar amigos por"},
+    "Availability": {"res": "Talk:@array/sort_choices:0", "hu": "Elérhetőség szerint", "de": "Verfügbarkeit", "fr": "Disponibilité", "es": "Disponibilidad"},
+    "Name": {"res": "Talk:@array/sort_choices:1", "hu": "Név", "de": "Name", "fr": "Nom", "es": "Nombre"},
+    "Recency": {"res": "Talk:@array/sort_choices:2", "hu": "Frissesség szerint", "de": "Aktualität", "fr": "Dernière visite", "es": "Fecha más reciente"},
+    "Choose friend to invite": {"res": "Talk:group_chat_add_contact", "hu": "A meghívni kívánt ismerős kiválasztása", "de": "Freund auswählen", "fr": "Sélectionner un ami à inviter", "es": "Seleccionar un amigo/a para invitarlo"},
+    "Invitation sent to %s": {"res": "Talk:group_chat_invited", "hu": "A meghívó elküldve %s felhasználónak", "de": "Einladung an %s gesendet", "fr": "Invitation envoyée à %s", "es": "Invitación enviada a %s"},
+    "This is now a group chat.": {"res": "Talk:convert_to_groupchat", "hu": "Csoportos csevegés zajlik.\nTovábbi személyek meghívásához érintse meg a Csevegő menüt, majd a Hozzáadás a csevegéshez parancsot.", "de": "Dies ist nun ein Gruppen-Chat.\nTippen Sie zum Einladen weiterer Personen auf das Menü \"Chat\" und dann auf \"Zum Chatten einladen\".", "fr": "Ce chat est désormais un chat en groupe.\nPour inviter d'autres personnes, appuyez sur le menu \"Chat\", puis sur \"Ajouter au chat\".", "es": "Esto es un chat de grupo.\nPara invitar a alguien, toca el menú de chat y, a continuación, selecciona Añadir al chat.", "en": "This is now a group chat.\nTo invite others, touch the Chat menu then touch Add to Chat."},
+    "Group chat": {"res": "Talk:group_chat", "hu": "Csoportos csevegés", "de": "Gruppen-Chat", "fr": "Chat en groupe", "es": "Chat de grupo"},
+    "Block": {"res": "Talk:block_button", "hu": "Letiltás", "de": "Blockieren", "fr": "Bloquer", "es": "Bloquear"},
+    "Remove": {"res": "Talk:button_remove", "hu": "Törlés", "de": "Entfernen", "fr": "Supprimer", "es": "Eliminar"},
+    "General": {"res": "Talk:gtalk_general_settings", "hu": "Általános", "de": "Allgemein", "fr": "Paramètres généraux", "es": "General"},
+    "Mobile indicator": {"res": "Talk:mobile_indicator_title", "hu": "Mobil állapot jelzése", "de": "Mobilanzeige", "fr": "Indicateur de mobile", "es": "Indicar que usas móvil"},
+    "Show mobile indicator to friends": {"res": "Talk:mobile_indicator_summary", "hu": "Mobil állapot jelzése az ismerősöknek", "de": "Freunden meinen mobilen Status anzeigen", "fr": "Afficher l'indicateur de mobile pour mes amis", "es": "Mostrar el indicador de que estás usando el móvil a los amigos"},
+    "Away when screen off": {"res": "Talk:show_away_on_idle_title", "hu": "Kép. kikapcs. -- Nincs itt", "de": "Abwesend, wenn Bildschirm aus", "fr": "\"Absent\" si écran éteint", "es": "Ausente al apagarse pant"},
+    "Change status to away when the screen turns off": {"res": "Talk:show_away_on_idle_summary", "hu": "Nincs a gépnél állapot beállítása, ha a képernyő kikapcsol", "de": "Status in \"Abwesend\" ändern, wenn der Bildschirm ausgeschaltet wird", "fr": "Afficher \"Absent\" lorsque l'écran est éteint", "es": "Cambiar estado a Ausente cuando se apague la pantalla"},
+    "Invitation notifications": {"res": "Talk:friend_invite_notification_title", "hu": "Meghívások értesítései", "de": "Einladungsbenachrichtigungen", "fr": "Notifications d'invitations", "es": "Notificaciones de invitaciones"},
+    "Show notification when a friend invitation arrives": {"res": "Talk:friend_invite_notification_summary", "hu": "Értesítés megjelenítése ismerősi meghívás érkezésekor", "de": "Bei Eingang einer Einladung von einem Freund Benachrichtigung einblenden", "fr": "Afficher une notification à la réception de l'invitation d'un ami", "es": "Mostrar notificación cuando lleguen invitaciones de amigos"},
+    "Chat notifications": {"res": "Talk:notification_group_title", "hu": "Csevegési értesítések", "de": "Chat-Benachrichtigungen", "fr": "Notifications du chat", "es": "Notificaciones de chat"},
+    "IM notifications": {"res": "Talk:notification_enabled_title", "hu": "Üzenetküldés – figyelmeztetések", "de": "Chat-Benachrichtigung", "fr": "Notifications", "es": "Notificaciones de MI"},
+    "Open dialog": {"res": "Talk:@array/prefEntries_text_notifications:0", "hu": "Párbeszéd megnyitása", "de": "Dialog öffnen", "fr": "Ouvrir une boîte de dialogue", "es": "Abrir cuadro de diálogo"},
+    "Show notification": {"res": "Talk:@array/prefEntries_text_notifications:1", "hu": "Értesítés megjelenítése", "de": "Benachrichtigung einblenden", "fr": "Afficher une notification", "es": "Mostrar notificación"},
+    "Off": {"res": "Talk:@array/prefEntries_text_notifications:2", "hu": "Ki", "de": "Aus", "fr": "Désactiver", "es": "Desactivadas"},
+    "Notification ringtone": {"res": "Talk:notification_ringtone_title", "hu": "Értesítési csengőhang", "de": "Klingelton für Benachrichtigungen", "fr": "Sonnerie de notification", "es": "Tono de notificación"},
+    "Vibrate": {"res": "Talk:notification_vibrateWhen_title", "hu": "Rezgés", "de": "Vibration", "fr": "Vibreur", "es": "Vibrar"},
+    "Always": {"res": "Talk:@array/prefEntries_vibrateWhen:0", "hu": "Mindig", "de": "Immer", "fr": "Toujours", "es": "Siempre"},
+    "Only when silent": {"res": "Talk:@array/prefEntries_vibrateWhen:1", "hu": "Csak néma üzemmódban", "de": "Nur im Lautlos-Modus", "fr": "En mode silencieux", "es": "Solo en modo silencio"},
+    "Never": {"res": "Talk:@array/prefEntries_vibrateWhen:2", "hu": "Soha", "de": "Nie", "fr": "Jamais", "es": "Nunca"},
+    "Also vibrate with notification": {"res": "Talk:notification_vibrateWhen_summary_always", "hu": "Rezegjen is az értesítéskor", "de": "Bei Benachrichtigung auch vibrieren", "fr": "Vibrer, en plus de la notification", "es": "Vibrar también al recibir notificación"},
+    "Voice & video chat": {"res": "Talk:video_chat_group_title", "hu": "Audio- és videocsevegés", "de": "Sprach- und Video-Chats", "fr": "Chat audio et vidéo", "es": "Chat de voz y de vídeo"},
+    "Video chat notifications": {"res": "Talk:video_notification_enabled_title", "hu": "Videocsevegés-értesítések", "de": "Benachrichtig. zu Video-Chat", "fr": "Notifications de chat vidéo", "es": "Notificaciones de chat de vídeo"},
+    "Video chat ringtone": {"res": "Talk:videochat_ringtone_title", "hu": "Videocsevegés csengőhangja", "de": "Klingelton für Video-Chat", "fr": "Sonnerie du chat vidéo", "es": "Tono de chat de vídeo"},
+    "Default video effect": {"res": "Talk:image_stabilization_title", "hu": "Alapértelmezett videoeffekt", "de": "Standard-Videoeffekt", "fr": "Effet vidéo par défaut", "es": "Efecto de vídeo predeterminado"},
+    "None": {"res": "Talk:@array/prefEntries_image_stabilization_entries:0", "hu": "Nincs", "de": "Keine", "fr": "Aucune", "es": "Sin estabilización"},
+    "Image stabilization: Low": {"res": "Talk:@array/prefEntries_image_stabilization_entries:1", "hu": "Képstabilizálás: alacsony", "de": "Bildstabilisierung: niedrig", "fr": "Stabilisation de l'image : faible", "es": "Estabilización de imagen: baja"},
+    "Image stabilization: Medium": {"res": "Talk:@array/prefEntries_image_stabilization_entries:2", "hu": "Képstabilizálás: közepes", "de": "Bildstabilisierung: mittel", "fr": "Stabilisation de l'image : moyenne", "es": "Estabilización de imagen: media"},
+    "Face tracking: On": {"res": "Talk:@array/prefEntries_image_stabilization_entries:3", "hu": "Arckövetés: bekapcsolva", "de": "Gesichtserkennung: Ein", "fr": "Détection des visages : activée", "es": "Detección de caras: activada"},
+    "Talk account": {"res": "Talk:preferences_account", "hu": "Fiók", "de": "Konto", "fr": "Compte", "es": "Cuenta", "en": "Account"},
+    "Blocked friends": {"res": "Talk:pref_gtalk_blocked_buddies_title", "hu": "Letiltott ismerősök", "de": "Gesperrte Freunde", "fr": "Amis bloqués", "es": "Usuarios bloqueados"},
+    "You haven't blocked any friends.": {"res": "Talk:blocked_empty", "hu": "Még nem tiltott le ismerőst.", "de": "Sie haben keine Freunde blockiert.", "fr": "Vous n'avez bloqué aucun ami.", "es": "No has bloqueado a ningún amigo."},
+    "Clear search history": {"res": "Talk:pref_gtalk_clear_search_history_title", "hu": "Keresési előzmények törlése", "de": "Suchverlauf löschen", "fr": "Historique des recherches", "es": "Borrar historial de búsquedas"},
+    "Clear previous Google Talk chat searches from the Search box": {"res": "Talk:pref_gtalk_clear_search_history_summary", "hu": "A Google Csevegő-üzenetek korábbi kereséseinek törlése a keresőmezőből", "de": "Frühere Chat-Suchen in Google Talk aus Suchfeld löschen", "fr": "Supprimer l'historique des recherches Google Talk du champ de recherche", "es": "Borrar búsquedas anteriores de chats de Google Talk del cuadro de búsqueda"},
+    "Manage account": {"res": "Talk:pref_gtalk_manage_account_title", "hu": "Fiók kezelése", "de": "Konto verwalten", "fr": "Gérer le compte", "es": "Administrar cuenta"},
+    "About": {"res": "Talk:preferences_about", "hu": "Névjegy", "de": "Info", "fr": "À propos de", "es": "Acerca de"},
+    "Terms & privacy": {"res": "Talk:preferences_terms_title", "hu": "Feltételek és adatvédelem", "de": "Nutzungsb. & Datenschutz", "fr": "Conditions d'utilisation et confidentialité", "es": "Condiciones y privacidad"},
     "Talk help": {"res": "Talk:menu_help", "hu": "Súgó", "de": "Hilfe", "fr": "Aide", "es": "Ayuda", "en": "Help"},
     "Send feedback": {"res": "Talk:menu_feedback", "hu": "Visszajelzés küldése", "de": "Feedback geben", "fr": "Envoyer des commentaires", "es": "Enviar comentarios"}
   };
@@ -138,7 +183,7 @@
   const art = (title, cls) => `<span class="ga-art ${cls}" style="--c:${COLORS[hash(title) % COLORS.length]}"><em>${e(title)}</em></span>`;
   // Action bars: the framework's up caret (ic_ab_back_holo_dark, or _light on the light bar of Books), the
   // apps' own menu icons (ga-<app>-*.png from their APKs) and the Holo overflow button.
-  const LIGHT_BARS = ['ga-books-bar'];
+  const LIGHT_BARS = ['ga-books-bar', 'ga-tk-lightbar'];
   const head = (cls, icon, title, actions = '', up = false) => `<header class="ga-bar ${cls}"><button class="ga-home" data-action="${up ? 'back' : 'home'}" aria-label="${e(title)}">${up ? `<img class="ga-back" src="assets/ga-fw-ic_ab_back_holo_${LIGHT_BARS.includes(cls) ? 'light' : 'dark'}.png" alt="">` : ''}<img src="assets/${icon}.png" alt=""></button><h2>${e(title)}</h2>${actions}</header>`;
   const tabs = (items, current, action) => `<nav class="ga-tabs">${items.map(([id, label]) => `<button class="${id === current ? 'on' : ''}" data-action="${action}" data-id="${e(id)}">${e(label)}</button>`).join('')}</nav>`;
   const icon = (action, label, src) => `<button class="ga-icon" data-action="${action}" aria-label="${e(label)}"><img src="assets/${src}.png" alt=""></button>`;
@@ -165,13 +210,87 @@
   }
 
   // ---- Google Talk ----
+  /* Display options (menu_sort_header): "Sort friends by" sort_choices (Availability, Name, Recency). Friend info
+     (buddy_info_phone.xml): the 64 dp picture beside the nickname field, the presence and status in
+     textAppearanceLarge, Block / Remove at the bottom. Add to chat: "Choose friend to invite", then group_chat_invited
+     and convert_to_groupchat in the chat under "Group chat". Talk settings: gtalk_preferences.xml (Theme.Holo
+     preferences on GTalkPreferencesActivity's Theme.Holo.Light, the DependentListPreference greying its rows on Off),
+     Blocked friends listing the blocked ones (BuddyInfo is Theme.Holo.Light.DarkActionBar);
+     Manage account and Terms & privacy are Google's pages. */
+  const TALK_PREFS = lang => [
+    ['cat', 'General'], ['check', 'gtalk-mobile-indicator', 'Mobile indicator', 'Show mobile indicator to friends', true],
+    ['check', 'gtalk-show-away-on-idle', 'Away when screen off', 'Change status to away when the screen turns off', true],
+    ['check', 'gtalk-show-friend-notifications', 'Invitation notifications', 'Show notification when a friend invitation arrives', true],
+    ['cat', 'Chat notifications'], ['list', 'gtalk-enable-notifications', 'IM notifications', ['Open dialog', 'Show notification', 'Off'], 1, '', 'value'],
+    ['ring', 'gtalk-text-ringtone', 'Notification ringtone', 'gtalk-enable-notifications'],
+    ['list', 'gtalk-vibrate-when', 'Vibrate', ['Always', 'Only when silent', 'Never'], 2, 'Also vibrate with notification', '', 'gtalk-enable-notifications'],
+    ['cat', 'Voice & video chat'], ['list', 'gtalk-video-enable-notifications', 'Video chat notifications', ['Open dialog', 'Show notification'], 0, '', 'value'],
+    ['ring', 'gtalk-video-ringtone', 'Video chat ringtone'],
+    ['list', 'gtalk-video-vibrate-when', 'Vibrate', ['Always', 'Only when silent', 'Never'], 2, 'Also vibrate with notification'],
+    ['list', 'gtalk-video-image-image-stabilization', 'Default video effect', ['None', 'Image stabilization: Low', 'Image stabilization: Medium', 'Face tracking: On'], 2, '', 'value'],
+    ['cat', 'Talk account'], ['open', 'blocked', 'Blocked friends'], ['clear', 'pref_gtalk_clear_history_key', 'Clear search history', 'Clear previous Google Talk chat searches from the Search box'],
+    ['remote', 'manage', 'Manage account'], ['cat', 'About'], ['remote', 'terms', 'Terms & privacy']];
+  const talkPref = (data, key, def) => data.talkPrefs?.[key] ?? def;
+  function talkSettings(ctx) {
+    const {lang, data} = ctx, rows = TALK_PREFS(lang), row = r => {
+      const [kind, key, title, a, b, c, d, dep] = r;
+      if (kind === 'cat') return `<h4 class="nwp-category">${e(T(lang, key))}</h4>`;
+      const on = kind === 'ring' ? a : dep, off = on && talkPref(data, on, 1) === 2, dis = off ? ' disabled' : '';
+      const sum = kind === 'check' ? T(lang, a) : kind === 'list' ? (d === 'value' ? T(lang, a[talkPref(data, key, b)] || '') : c ? T(lang, c) : '') : kind === 'clear' ? T(lang, a) : kind === 'ring' ? (talkPref(data, key, '') ? window.SystemSounds?.SOUNDS?.notifications?.[talkPref(data, key, '')]?.[0] || '' : '') : '';
+      const action = kind === 'check' ? 'ga-tks-check' : kind === 'list' ? 'ga-tks-list' : kind === 'ring' ? 'ga-tks-ring' : kind === 'open' ? 'ga-tks-blocked' : kind === 'clear' ? 'ga-tks-clear' : 'ga-unsupported';
+      const box = kind === 'check' ? `<i class="nwp-check${talkPref(data, key, b) ? ' on' : ''}"></i>` : '';
+      return `<button class="nwp-row${off ? ' disabled' : ''}" data-action="${off ? '' : action}" data-id="${e(key)}"${dis}${kind === 'check' ? ` role="checkbox" aria-checked="${!!talkPref(data, key, b)}"` : ''}><span><b>${e(T(lang, title))}</b>${sum ? `<small>${e(sum)}</small>` : ''}</span>${box}</button>`;
+    };
+    return `<div class="app-view ga-app ga-talk nwp">${head('ga-tk-lightbar', 'talk', T(lang, 'Talk settings'), '', true)}<div class="nwp-list">${rows.map(row).join('')}</div>${talkDialog(ctx)}</div>`;
+  }
+  // The Holo dark dialogs (nwp- styles): the sort list, a list preference, a ringtone, the friend to invite.
+  function talkDialog(ctx) {
+    const {ui, lang, data} = ctx, d = ui.gaTkDialog; if (!d) return '';
+    const shell = (title, body, buttons) => `<div class="nwp-scrim" data-action="ga-tks-cancel"></div><div class="nwp-dialog" role="dialog" aria-label="${e(title)}"><h3>${e(title)}</h3>${body}${buttons ? `<div class="nwp-buttons">${buttons}</div>` : ''}</div>`;
+    const radios = (items, current, action) => `<div class="nwp-choices">${items.map(([id, label]) => `<button data-action="${action}" data-id="${e(id)}" role="radio" aria-checked="${String(id) === String(current)}"><span>${e(label)}</span><i class="nwp-radio${String(id) === String(current) ? ' on' : ''}"></i></button>`).join('')}</div>`;
+    const cancel = `<button data-action="ga-tks-cancel">${e(T(lang, 'Cancel'))}</button>`;
+    if (d.kind === 'sort') return shell(T(lang, 'Sort friends by'), radios(['Availability', 'Name', 'Recency'].map((k, i) => [i, T(lang, k)]), data.talkSort ?? 0, 'ga-talk-sort-pick'), cancel);
+    if (d.kind === 'invite') {
+      const inChat = [String(ui.gaChat), ...(data.talkGroups?.[ui.gaChat] || [])];
+      const list = talkFriends(ctx).filter(c => (PRESENCE[c.id] || 'Offline') !== 'Offline' && !inChat.includes(String(c.id)));
+      return shell(T(lang, 'Choose friend to invite'), `<div class="nwp-choices">${list.map(c => `<button data-action="ga-talk-invite-pick" data-id="${c.id}"><span>${e(talkName(data, c))}</span></button>`).join('')}</div>`, cancel);
+    }
+    if (d.kind === 'list') { const r = TALK_PREFS(lang).find(x => x[1] === d.key); return shell(T(lang, r[2]), radios(r[3].map((k, i) => [i, T(lang, k)]), talkPref(data, d.key, r[4]), 'ga-tks-pick'), cancel); }
+    if (d.kind === 'ring') { const sounds = Object.entries(window.SystemSounds?.SOUNDS?.notifications || {}); const r = TALK_PREFS(lang).find(x => x[1] === d.key); return shell(T(lang, r[2]), radios(sounds.map(([file, [title]]) => [file, title]), talkPref(data, d.key, ''), 'ga-tks-ring-pick'), cancel); }
+    return '';
+  }
+  // The roster without blocked or removed friends, in Display options' order, nicknames first.
+  const talkName = (data, c) => data.talkNick?.[c.id] || c.name;
+  function talkFriends(ctx) {
+    const {data} = ctx, gone = [...(data.talkBlocked || []), ...(data.talkRemoved || [])].map(String), chats = data.talkChats || [];
+    const list = data.contacts.filter(c => !gone.includes(String(c.id)));
+    const sort = data.talkSort ?? 0, rank = c => ['Available', 'Away', 'Busy', 'Offline'].indexOf(PRESENCE[c.id] || 'Offline');
+    const recent = c => chats.map(m => String(m.contact)).lastIndexOf(String(c.id));
+    return [...list].sort((a, b) => sort === 1 ? talkName(data, a).localeCompare(talkName(data, b)) : sort === 2 ? recent(b) - recent(a) : rank(a) - rank(b) || talkName(data, a).localeCompare(talkName(data, b)));
+  }
+  // Friend info's nickname field keeps what is typed (the roster and the chat show it).
+  let talkCtx = null;
+  globalThis.document?.addEventListener('input', event => { const field = event.target.closest?.('[data-ga-tk-nick]'); if (!field || !talkCtx) return; (talkCtx.data.talkNick ||= {})[field.dataset.gaTkNick] = field.value.trim().slice(0, 60); talkCtx.save(); });
+  function talkInfo(ctx) {
+    const {ui, lang, data} = ctx, c = data.contacts.find(x => String(x.id) === String(ui.gaChat)); if (!c) return '';
+    const p = PRESENCE[c.id] || 'Offline';
+    return `<div class="app-view ga-app ga-talk ga-tk-info">${head('ga-talk-bar', 'talk', talkName(data, c), '', true)}<div class="ga-tk-info-top"><img src="${AVATAR.talk}" alt=""><input class="ga-tk-nick" data-ga-tk-nick="${c.id}" value="${e(talkName(data, c))}" aria-label="${e(c.name)}" autocomplete="off"></div><div class="ga-tk-info-status"><i class="dot ${p.toLowerCase()}"></i><span>${e(T(lang, p))}</span></div><div class="ga-tk-info-space"></div><div class="ga-tk-info-buttons"><button data-action="ga-talk-block" data-id="${c.id}">${e(T(lang, 'Block'))}</button><button data-action="ga-talk-remove" data-id="${c.id}">${e(T(lang, 'Remove'))}</button></div></div>`;
+  }
+  function talkBlocked(ctx) {
+    const {lang, data} = ctx, list = data.contacts.filter(c => (data.talkBlocked || []).map(String).includes(String(c.id)));
+    return `<div class="app-view ga-app ga-talk nwp">${head('ga-tk-lightbar', 'talk', T(lang, 'Blocked friends'), '', true)}<div class="nwp-list">${list.length ? list.map(c => `<button class="nwp-row" data-action="ga-talk-unblock" data-id="${c.id}"><span><b>${e(c.name)}</b></span></button>`).join('') : `<p class="ga-tk-empty">${e(T(lang, "You haven't blocked any friends."))}</p>`}</div></div>`;
+  }
   const PRESENCE = {1: 'Available', 2: 'Away', 3: 'Busy', 4: 'Offline'};
   function talk(ctx) {
     const {ui, lang, data} = ctx, chats = data.talkChats || [];
+    talkCtx = ctx;
+    if (ui.gaSub === 'settings') return talkSettings(ctx);
+    if (ui.gaSub === 'blocked') return talkBlocked(ctx);
+    if (ui.gaSub === 'info') return talkInfo(ctx);
     if (ui.gaSub === 'chat') {
       const person = data.contacts.find(c => String(c.id) === String(ui.gaChat)) || {name: '?'};
-      const msgs = chats.filter(m => String(m.contact) === String(ui.gaChat));
-      return `<div class="app-view ga-app ga-talk">${head('ga-talk-bar', 'talk', person.name, icon('ga-unsupported', T(lang, 'Video chat'), 'ga-tk-ic_video_default_holo_dark') + icon('ga-unsupported', T(lang, 'Voice chat'), 'ga-tk-ic_audio_default_holo_dark') + more(), true)}<div class="ga-scroll ga-talk-chat">${msgs.map(m => `<p class="${m.mine ? 'me' : 'from'}"><b>${e(m.mine ? 'me' : person.name.split(' ')[0])}:</b> ${e(m.body)}</p>`).join('')}</div><form class="ga-talk-compose" data-form="ga-talk"><input name="body" autocomplete="off" placeholder="${e(T(lang, 'Type message'))}" aria-label="${e(T(lang, 'Type message'))}"><button type="submit" aria-label="Send"><img src="assets/ga-tk-ic_send_holo_light.png" alt=""></button></form></div>`;
+      const msgs = chats.filter(m => String(m.contact) === String(ui.gaChat)), group = (data.talkGroups?.[ui.gaChat] || []).map(id => data.contacts.find(c => String(c.id) === String(id))).filter(Boolean);
+      return `<div class="app-view ga-app ga-talk">${head('ga-talk-bar', 'talk', group.length ? T(lang, 'Group chat') : talkName(data, person), icon('ga-unsupported', T(lang, 'Video chat'), 'ga-tk-ic_video_default_holo_dark') + icon('ga-unsupported', T(lang, 'Voice chat'), 'ga-tk-ic_audio_default_holo_dark') + more(), true)}<div class="ga-scroll ga-talk-chat">${msgs.map(m => m.system ? `<p class="ga-tk-note">${e(m.system === 'invited' ? AndroidStrings.format(T(lang, 'Invitation sent to %s'), m.name) : T(lang, 'This is now a group chat.'))}</p>` : `<p class="${m.mine ? 'me' : 'from'}"><b>${e(m.mine ? 'me' : person.name.split(' ')[0])}:</b> ${e(m.body)}</p>`).join('')}</div><form class="ga-talk-compose" data-form="ga-talk"><input name="body" autocomplete="off" placeholder="${e(T(lang, 'Type message'))}" aria-label="${e(T(lang, 'Type message'))}"><button type="submit" aria-label="Send"><img src="assets/ga-tk-ic_send_holo_light.png" alt=""></button></form>${talkDialog(ctx)}</div>`;
     }
     if (ui.gaSub === 'add') {
       const value = ui.gaInvite || '';
@@ -188,7 +307,7 @@
       return `<div class="app-view ga-app ga-talk">${head('ga-talk-bar', 'talk', AndroidStrings.format(T(lang, 'Chats matching "%1$s"'), ui.gaTalkQ || ''), '', true)}<div class="ga-tk-results-head"><span></span><span>${hits.length}</span></div><div class="ga-scroll ga-tk-results">${hits.map(({c, m}) => `<button class="ga-tk-hit" data-action="ga-talk-open" data-id="${c.id}"><b>${e(c.name)}</b><span>${e(m.body)}</span><small><img src="assets/ga-tk-ic_email_caret_double.png" alt="">${e(m.mine ? ctx.account : c.name)}</small></button>`).join('')}</div></div>`;
     }
     const status = ctx.ui.gaPresence || 'Available';
-    return `<div class="app-view ga-app ga-talk">${head('ga-talk-bar', 'talk', T(lang, 'Friends list'), icon('ga-talk-search', T(lang, 'Search'), 'ga-tk-ic_menu_search_holo_dark') + icon('ga-talk-add', T(lang, 'Add friend'), 'ga-tk-ic_menu_add_buddy_holo_light') + more())}<button class="ga-talk-self" data-action="ga-presence"><img src="${AVATAR.talk}" alt=""><span><b>${e(ctx.account)}</b><small><i class="dot ${status.toLowerCase()}"></i>${e(T(lang, status))}</small></span></button><div class="ga-scroll">${data.contacts.map(c => { const p = PRESENCE[c.id] || 'Offline'; return `<button class="ga-buddy ${p === 'Offline' ? 'off' : ''}" data-action="ga-talk-open" data-id="${c.id}"><img src="${AVATAR.talk}" alt=""><span><b>${e(c.name)}</b><small>${e(T(lang, p))}</small></span><i class="dot ${p.toLowerCase()}"></i></button>`; }).join('')}</div></div>`;
+    return `<div class="app-view ga-app ga-talk">${head('ga-talk-bar', 'talk', T(lang, 'Friends list'), icon('ga-talk-search', T(lang, 'Search'), 'ga-tk-ic_menu_search_holo_dark') + icon('ga-talk-add', T(lang, 'Add friend'), 'ga-tk-ic_menu_add_buddy_holo_light') + more())}<button class="ga-talk-self" data-action="ga-presence"><img src="${AVATAR.talk}" alt=""><span><b>${e(ctx.account)}</b><small><i class="dot ${status.toLowerCase()}"></i>${e(T(lang, status))}</small></span></button><div class="ga-scroll">${talkFriends(ctx).map(c => { const p = PRESENCE[c.id] || 'Offline'; return `<button class="ga-buddy ${p === 'Offline' ? 'off' : ''}" data-action="ga-talk-open" data-id="${c.id}"><img src="${AVATAR.talk}" alt=""><span><b>${e(talkName(data, c))}</b><small>${e(T(lang, p))}</small></span><i class="dot ${p.toLowerCase()}"></i></button>`; }).join('')}</div>${talkDialog(ctx)}</div>`;
   }
 
   // ---- YouTube 3.5.5 ----
@@ -228,8 +347,8 @@
     if (ctx.view === 'play-books') return [['ga-unsupported', 'Refresh'], ['ga-unsupported', 'Accounts'], ['ga-unsupported', 'Help'], ['ga-unsupported', 'Make available offline'], ctx.data?.gaBkView === 'list' ? ['ga-bk-view', 'View as carousel'] : ['ga-bk-view', 'View as list']].map(([action, key]) => ({action, title: BS(lang, key), id: ''}));
     if (ctx.view === 'play-movies') return ['Manage offline rentals', 'Movies: Accounts', 'Movies: Settings', 'Movies: Help', 'Movies: Contact us', 'Movies: Send feedback'].map(key => item('ga-unsupported', key));
     if (ctx.view === 'youtube') return ui.gaSub === 'watch' ? [item('ga-yt-rate', 'Like', 'like'), item('ga-yt-rate', 'Dislike', 'dislike')] : [item('ga-unsupported', 'Settings'), item('ga-unsupported', 'Feedback'), item('ga-unsupported', 'Help')];
-    if (ctx.view === 'talk') return ui.gaSub === 'chat' ? [item('ga-talk-end', 'End chat'), item('ga-unsupported', 'Friend info'), item('ga-unsupported', 'Add to chat'), item('ga-talk-clear', 'Clear chat history')]
-      : [item('ga-unsupported', 'Display options'), item('ga-talk-end-all', 'End all chats'), item('ga-unsupported', 'Sign out'), item('ga-unsupported', 'Talk settings'), item('ga-unsupported', 'Talk help'), item('ga-unsupported', 'Send feedback')];
+    if (ctx.view === 'talk') return ui.gaSub === 'chat' ? [item('ga-talk-end', 'End chat'), item('ga-talk-info', 'Friend info'), item('ga-talk-add-to-chat', 'Add to chat'), item('ga-talk-clear', 'Clear chat history')]
+      : [item('ga-talk-display', 'Display options'), item('ga-talk-end-all', 'End all chats'), item('ga-unsupported', 'Sign out'), item('ga-talk-settings', 'Talk settings'), item('ga-unsupported', 'Talk help'), item('ga-unsupported', 'Send feedback')];
     return [];
   }
 
@@ -356,6 +475,27 @@
       case 'ga-talk-add-cancel': ui.gaSub = ''; ctx.render(); break;
       case 'ga-menu': ui.overlay = 'ga-menu'; ctx.renderOverlay(); break;
       case 'ga-talk-end': case 'ga-talk-end-all': ctx.closeOverlay(); ui.gaSub = ''; ctx.render(); break;
+      // Display options, Friend info, Add to chat and Talk settings.
+      case 'ga-talk-display': ctx.closeOverlay(); ui.gaTkDialog = {kind: 'sort'}; ctx.render(); break;
+      case 'ga-talk-sort-pick': data.talkSort = Number(id); ui.gaTkDialog = null; ctx.save(); ctx.render(); break;
+      case 'ga-talk-info': ctx.closeOverlay(); ui.gaSub = 'info'; ctx.render(); break;
+      case 'ga-talk-block': (data.talkBlocked ||= []).push(String(id)); ui.gaSub = ''; ctx.save(); ctx.render(); break;
+      case 'ga-talk-remove': (data.talkRemoved ||= []).push(String(id)); ui.gaSub = ''; ctx.save(); ctx.render(); break;
+      case 'ga-talk-unblock': data.talkBlocked = (data.talkBlocked || []).filter(x => String(x) !== String(id)); ctx.save(); ctx.render(); break;
+      case 'ga-talk-add-to-chat': ctx.closeOverlay(); ui.gaTkDialog = {kind: 'invite'}; ctx.render(); break;
+      case 'ga-talk-invite-pick': { const c = data.contacts.find(x => String(x.id) === String(id)), host = String(ui.gaChat); ui.gaTkDialog = null; if (!c) { ctx.render(); break; }
+        const list = (data.talkGroups ||= {})[host] ||= []; data.talkChats ||= [];
+        if (!list.includes(String(c.id))) { if (!list.length) data.talkChats.push({contact: host, system: 'group'}); list.push(String(c.id)); data.talkChats.push({contact: host, system: 'invited', name: talkName(data, c)}); }
+        ctx.save(); ctx.render(); break; }
+      case 'ga-talk-settings': ctx.closeOverlay(); ui.gaSub = 'settings'; ctx.render(); break;
+      case 'ga-tks-check': { const r = TALK_PREFS().find(x => x[1] === id); (data.talkPrefs ||= {})[id] = !talkPref(data, id, r?.[4]); ctx.save(); ctx.render(); break; }
+      case 'ga-tks-list': ui.gaTkDialog = {kind: 'list', key: id}; ctx.render(); break;
+      case 'ga-tks-pick': (data.talkPrefs ||= {})[ui.gaTkDialog.key] = Number(id); ui.gaTkDialog = null; ctx.save(); ctx.render(); break;
+      case 'ga-tks-ring': ui.gaTkDialog = {kind: 'ring', key: id}; ctx.render(); break;
+      case 'ga-tks-ring-pick': (data.talkPrefs ||= {})[ui.gaTkDialog.key] = id; window.SystemSounds?.play('notifications', id); ui.gaTkDialog = null; ctx.save(); ctx.render(); break;
+      case 'ga-tks-cancel': window.SystemSounds?.stop(); ui.gaTkDialog = null; ctx.render(); break;
+      case 'ga-tks-blocked': ui.gaSub = 'blocked'; ctx.render(); break;
+      case 'ga-tks-clear': data.talkSearches = []; ctx.save(); break;
       case 'ga-talk-clear': ctx.closeOverlay(); data.talkChats = (data.talkChats || []).filter(m => String(m.contact) !== String(ui.gaChat)); ctx.save(); ctx.render(); break;
       case 'ga-yt-tab': ui.gaYtTab = id; ctx.render(); break;
       case 'ga-yt-watch': ui.gaVideo = id; ui.gaPaused = false; ui.gaYtWatchTab = 'info'; ui.gaSub = 'watch'; ctx.render(); break;
