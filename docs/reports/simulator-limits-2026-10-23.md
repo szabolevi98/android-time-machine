@@ -209,7 +209,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T10 — Névjegykép és Hangouts kamerás csatolás
 
 - **Ütem:** Második kör, #17. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `e20cd3d2` (2.3.6), `d9adb3ff` (4.3, 4.4.4), `9ab70b53` (5.1.1). A felvétel a gyári kamera capture-intent felületén megy át: 2.3.6 attach_camera_control.xml (CANCEL, a felvétel után RETAKE és OK; a nem forgó nézetek a fekvő elrendezéssel 90°-ban elforgatva), 4.3/4.4.4 review_module_control.xml (Cancel balra, felvétel után Retake középen és Done jobbra, a kép a keresőn marad), 5.1.1 Google Camera 2.4 (módlista nélkül; felvétel után intent_review_imageview és a #191919 bottombar_intent_review: Retake, Done, Cancel). 2.3.6: a névjegyszerkesztő Take photo-ja a képet a névjegyhez adja (a névjegyekkel tárolva, nem a Galériában); 4.3/4.4.4/5.1.1: a Hangouts Take photo a beszélgetés piszkozatához csatolja. Cancel vagy Back mindig üresen tér vissza, a Galéria nem kap képet. Mellékesen: a 2.3.6 és 4.3 Messaging Capture picture ugyanezen az áttekintésen megy át; a 4.3 Hangouts „Other photos” hiányzó fotólistája pótolva; az 5.1.1 Hangouts csatolólistája a dex szerint Take photo-val kezdődik. Ellenőrzés: limits-regression T10 (2.3.6, 4.3, 4.4.4, 5.1.1) és T13 (2.3.6, 4.3) asztali/telefon zöld; npm test 255/255.
 - **Verziók:** 2.3.6, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 2.3.6-05, 4.3-08, 4.4.4-08, 5.1.1-08.
 - **Elkészítendő és határ:** 2.3.6 névjegyszerkesztő Take photo; 4.3/4.4.4/5.1.1 Hangouts Take photo. A már meglévő helyi kamerafolyamat bekötése az eredmény fogadójába, nem új kameramotor.
