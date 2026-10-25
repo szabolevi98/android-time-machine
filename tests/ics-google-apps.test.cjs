@@ -24,10 +24,11 @@ assert.match(home,/ga-yt-ic_menu_search/);assert.match(home,/ga-yt-ic_menu_captu
 let watch=G.render('youtube',base('youtube',{gaSub:'watch',gaVideo:'v1'}));
 assert.match(watch,/ga-yt-ic_menu_add_to_playlist/);assert.match(watch,/ga-yt-ic_menu_share/);assert.match(watch,/ic_plusone_standard_off/);
 assert.match(watch,/ga-yt-ic_like\.png/);assert.match(watch,/1,204,311 views \| 8,312 likes \| 214 dislikes/);
-// A rating is final: both buttons disabled, the count includes it; the overflow offers Like / Dislike.
+// A rating is final: both buttons disabled, the count includes it; the overflow is watch_menu.xml's Like / Dislike /
+// Copy URL / Flag, then menu.xml's Settings / Feedback / Help.
 watch=G.render('youtube',base('youtube',{gaSub:'watch',gaVideo:'v1'},{gaYtRatings:{v1:'like'}}));
 assert.match(watch,/ic_like_disabled/);assert.match(watch,/ic_dislike_disabled/);assert.match(watch,/8,313 likes/);
-assert.deepEqual([...G.menu(base('youtube',{gaSub:'watch'})).map(i=>i.title)],['Like','Dislike']);
+assert.deepEqual([...G.menu(base('youtube',{gaSub:'watch'})).map(i=>i.title)],['Like','Dislike','Copy URL','Flag','Settings','Feedback','Help']);
 assert.deepEqual([...G.menu(base('youtube')).map(i=>i.title)],['Settings','Feedback','Help']);
 // Talk: Search and Add friend; in a chat Video / Voice chat, End chat in the overflow; dark action bar.
 assert.match(G.render('talk',base('talk')),/ga-tk-ic_menu_add_buddy_holo_light/);

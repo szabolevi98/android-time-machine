@@ -12,7 +12,9 @@
    - YouTube 3.5.5 (Theme.Holo.Light.DarkActionBar on #e6e6e6): the bg_stripes_dark action bar with Search and Record,
      the Home / Browse / Account tabs, video_item.xml rows, and the watch page (watch_activity.xml): the player, the
      #3d3d3d Info / Related / Comments tab row, watch_info.xml with the +1 panel and the Like / Dislike image buttons;
-     Add to and Share in the action bar, Like and Dislike in its overflow.
+     Add to and Share in the action bar, Like, Dislike and Copy URL in its overflow. Search (the SearchView with the
+     kept queries, ResultsActivity's time filter), the uploader's channel with Subscribe, the Account tab's lists
+     (Uploads, Favorites, History, Playlists, Subscriptions), Record into UploadActivity's form, and Settings.
    - Play Books 2.3.6 (BooksTablet.apk): the library as VolumeCarouselFragment shows it (since audit step 9: the
      carousel or, from the overflow, the list, with each book's offline pin) and a reader. Play Movies 1.4.11 (Videos.apk; since audit step 9 from its layouts):
      VideosActivity on its background.png under the logo-only action bar (ActionBar: displayOptions useLogo|showHome),
@@ -80,6 +82,116 @@
     "Channel views": "YouTube:channel_stats_views_empty",
     "Uploaded": "YouTube:channel_stats_uploaded_empty",
     "Subscribers": "YouTube:channel_stats_subscribers_empty",
+    "Results": "YouTube:results",
+    "No videos found.": "YouTube:no_videos_found",
+    "Time filter": "YouTube:time_filter_dialog_title",
+    "Today": "YouTube:time_filter_today",
+    "This week": "YouTube:time_filter_this_week",
+    "This month": "YouTube:time_filter_this_month",
+    "All time": "YouTube:time_filter_all_time",
+    "Copy URL": "YouTube:menu_copy_url",
+    "URL copied.": "YouTube:url_copied",
+    "Flag": "YouTube:menu_flag",
+    "Share this video via": "YouTube:send_video",
+    "Watch \"%1$s\" on YouTube": "YouTube:share_subject",
+    "YT Add to": "YouTube:add_to",
+    "Watch later": "YouTube:channel_watch_later",
+    "Favorites": "YouTube:channel_favorites",
+    "New playlist…": "YouTube:create_playlist_entry",
+    "New playlist": "YouTube:create_playlist_dialog_title",
+    "Playlist title": "YouTube:create_playlist_name",
+    "Playlist private": "YouTube:create_playlist_private",
+    "Video added to favorites.": "YouTube:add_favorite_done",
+    "Video is already in your favorites.": "YouTube:add_favorite_duplicate",
+    "Video added to Watch Later playlist.": "YouTube:watch_later_done",
+    "Video is already in your Watch Later playlist.": "YouTube:watch_later_duplicate",
+    "Video added to %1$s playlist.": "YouTube:add_to_playlist_done",
+    "No playlists found.": "YouTube:no_playlists_found",
+    "Uploads": "YouTube:channel_uploads",
+    "Activity": "YouTube:channel_activity",
+    "Playlists": "YouTube:channel_playlists",
+    "History": "YouTube:channel_watch_history",
+    "Subscriptions": "YouTube:channel_subscriptions",
+    "No uploads found.": "YouTube:no_uploads_found",
+    "No favorites found.": "YouTube:no_favorites_found",
+    "No recent activity.": "YouTube:no_events_found",
+    "No watch history.": "YouTube:no_watch_history_found",
+    "No subscriptions found.": "YouTube:no_subscriptions_found",
+    "No videos to watch later.": "YouTube:no_watch_later_found",
+    "Subscribe": "YouTube:menu_subscribe",
+    "Unsubscribe": "YouTube:menu_unsubscribe",
+    "Subscribe to": "YouTube:subscribe_dialog_title",
+    "All activity": "YouTube:subscribe_to_user_activity",
+    "Video uploads only": "YouTube:subscribe_to_channel",
+    "Subscribed to %1$s's activity.": "YouTube:subscribed_to_activity",
+    "Subscribed to %1$s's uploads.": "YouTube:subscribed_to_uploads",
+    "Unsubscribed.": "YouTube:unsubscribed",
+    "Upload video": "YouTube:upload_form_title",
+    "Title": "YouTube:video_title_label",
+    "You can set the title here": "YouTube:video_title_hint",
+    "Video description": "YouTube:video_description_label",
+    "Privacy": "YouTube:video_privacy_label",
+    "Tags": "YouTube:video_keywords_label",
+    "Comma separated list of tags": "YouTube:video_keywords_hint",
+    "Upload button": "YouTube:start_upload_button",
+    "By uploading you agree to YouTube's Terms of Service.": "YouTube:upload_terms",
+    "Public": "YouTube:video_privacy_public",
+    "Unlisted": "YouTube:video_privacy_unlisted",
+    "Private": "YouTube:video_privacy_private",
+    "Anyone can find it and view it.": "YouTube:video_privacy_public_description",
+    "Only people who know the link can view it.": "YouTube:video_privacy_unlisted_description",
+    "Only you can view it.": "YouTube:video_privacy_private_description",
+    "Upload": "YouTube:upload",
+    "Depending on your data plan, uploading videos when not connected to Wi-Fi may result in additional charges.": "YouTube:upload_dialog_message",
+    "Only when on Wi-Fi": "YouTube:upload_when_on_wifi",
+    "On any network": "YouTube:upload_on_any_network",
+    "You can change this setting at anytime in the app settings.": "YouTube:upload_dialog_modify_message",
+    "Video uploaded successfully.": "YouTube:upload_finished_notification_title",
+    "OK": "YouTube:ok",
+    "YT General": "YouTube:pref_general_category",
+    "YT Search": "YouTube:pref_search_category",
+    "YT About": "YouTube:pref_about_category",
+    "High quality on mobile": "YouTube:pref_default_hq_title",
+    "Start videos in high quality when connected to a mobile network. Startup may take longer.": "YouTube:pref_default_hq_summary",
+    "Caption font size": "YouTube:pref_subtitles_size_title",
+    "Sets the font size to use for captions": "YouTube:pref_subtitles_size_summary",
+    "Small": "YouTube:@array/subtitles_size_entries:0",
+    "Medium": "YouTube:@array/subtitles_size_entries:1",
+    "Large": "YouTube:@array/subtitles_size_entries:2",
+    "Huge": "YouTube:@array/subtitles_size_entries:3",
+    "YT Uploads setting": "YouTube:pref_upload_policy_title",
+    "Specify network preferences for uploads": "YouTube:pref_upload_policy_summary",
+    "YT Clear search history": "YouTube:pref_clear_search_history_title",
+    "Clear previous YouTube searches from showing in the Search box": "YouTube:pref_clear_search_history_summary",
+    "Clear": "YouTube:confirm_clear_search_title",
+    "Search history will be cleared": "YouTube:confirm_clear_search_text",
+    "SafeSearch filtering": "YouTube:pref_safe_search_title",
+    "Block videos containing restricted content from showing in search results": "YouTube:pref_safe_search_summary",
+    "SafeSearch": "YouTube:safe_search_dialog_title",
+    "Don't filter": "YouTube:@array/safe_search_levels:0",
+    "Moderate": "YouTube:@array/safe_search_levels:1",
+    "Strict": "YouTube:@array/safe_search_levels:2",
+    "YT Help": "YouTube:pref_help_title",
+    "Find answers to your YouTube questions here": "YouTube:pref_help_summary",
+    "YT Feedback": "YouTube:pref_feedback_title",
+    "Help us make YouTube better": "YouTube:pref_feedback_summary",
+    "Google Mobile Terms of Service": "YouTube:pref_mobile_terms_title",
+    "Read Google Mobile Terms of Service": "YouTube:pref_mobile_terms_summary",
+    "YouTube Terms of Service": "YouTube:pref_youtube_terms_title",
+    "Read YouTube's Terms of Service": "YouTube:pref_youtube_terms_summary",
+    "Google Mobile Privacy Policy": "YouTube:pref_mobile_privacy_title",
+    "Read Google Mobile Privacy Policy": "YouTube:pref_mobile_privacy_summary",
+    "YouTube Privacy Policy": "YouTube:pref_youtube_privacy_title",
+    "Read YouTube's Privacy Policy": "YouTube:pref_youtube_privacy_summary",
+    "Open source licenses": "YouTube:open_source_licenses_title",
+    "License details for open source software": "YouTube:open_source_licenses_description",
+    "App version": "YouTube:pref_version_title",
+    "Create playlist": "YouTube:menu_add_playlist",
+    "Playlist created.": "YouTube:create_playlist_done",
+    "%1$s's activity": "YouTube:subscription_user",
+    "by %1$s": "YouTube:playlist_details_without_videos",
+    "by %1$s | 1 video": "YouTube:playlist_details_with_one_video",
+    "by %1$s | %2$d videos": "YouTube:playlist_details_with_several_videos",
     "Video chat": "Talk:menu_video_chat",
     "Voice chat": "Talk:menu_voice_chat",
     "Display options": "Talk:menu_sort_header",
@@ -311,33 +423,225 @@
   }
 
   // ---- YouTube 3.5.5 ----
+  // key: the demo video's id in its watch URL (http://www.youtube.com/watch?v=…, the app's watchUri).
   const VIDEOS = [
-    {id: 'v1', title: 'Galaxy Nexus — hands-on and first impressions', channel: 'Gadget Weekly', views: 1204311, likes: 8312, dislikes: 214, len: '8:42', hd: true, added: '2011-11-21', category: 'Science & Technology', text: 'Our first day with the Galaxy Nexus and Ice Cream Sandwich: the screen, the camera and Face Unlock.'},
-    {id: 'v2', title: 'Ice Cream Sandwich: 10 tips for Android 4.0', channel: 'Droid Corner', views: 486020, likes: 5120, dislikes: 61, len: '6:15', hd: true, added: '2012-01-09', category: 'Howto & Style', text: 'Folders, the people app, screenshots, data usage and six more things to try.'},
-    {id: 'v3', title: 'Panorama mode test on a mountain trail', channel: 'Trail & Summit', views: 52977, likes: 640, dislikes: 9, len: '3:08', hd: false, added: '2012-03-18', category: 'Travel & Events', text: 'One sweep from the ridge with the stock camera.'}
+    {id: 'v1', key: 'Gx7nQ2pLk4E', title: 'Galaxy Nexus — hands-on and first impressions', channel: 'Gadget Weekly', views: 1204311, likes: 8312, dislikes: 214, len: '8:42', hd: true, added: '2011-11-21', category: 'Science & Technology', text: 'Our first day with the Galaxy Nexus and Ice Cream Sandwich: the screen, the camera and Face Unlock.'},
+    {id: 'v2', key: 'tR5mW8vJc1A', title: 'Ice Cream Sandwich: 10 tips for Android 4.0', channel: 'Droid Corner', views: 486020, likes: 5120, dislikes: 61, len: '6:15', hd: true, added: '2012-01-09', category: 'Howto & Style', text: 'Folders, the people app, screenshots, data usage and six more things to try.'},
+    {id: 'v3', key: 'Zb3yH6dNf9U', title: 'Panorama mode test on a mountain trail', channel: 'Trail & Summit', views: 52977, likes: 640, dislikes: 9, len: '3:08', hd: false, added: '2012-03-18', category: 'Travel & Events', text: 'One sweep from the ridge with the stock camera.'}
   ];
   const num = (lang, n) => Number(n).toLocaleString(lang === 'en' ? 'en-US' : lang);
   const ytRating = (data, id) => (data.gaYtRatings || {})[id] || ((data.gaYtLikes || []).includes(id) ? 'like' : '');
+  /* What the app keeps on the phone (data.gaYt): the SearchView's recent queries (SuggestionProvider), Watch later,
+     Favorites and the playlists of the Add to dialog, the channels subscribed to with their kind, the watch history and
+     the videos uploaded from the phone; SettingsActivity's "youtube" preferences are data.gaYtPrefs. */
+  const ytStore = data => { const s = data.gaYt ||= {}; for (const k of ['searches', 'later', 'favorites', 'playlists', 'uploads', 'history']) s[k] ||= []; s.subs ||= {}; return s; };
+  const ytPref = (data, key, def) => data.gaYtPrefs?.[key] ?? def;
+  const watchUrl = v => `http://www.youtube.com/watch?v=${v.key}`;
+  // An upload is a video of the account's channel; its thumbnail is the clip's frame in the Gallery.
+  const ytUploads = ctx => ytStore(ctx.data).uploads.map(u => ({...u, channel: ctx.account, views: 0, likes: 0, dislikes: 0, hd: false, mine: true}));
+  const ytVideos = ctx => [...VIDEOS, ...ytUploads(ctx)];
+  const ytVideo = (ctx, id) => ytVideos(ctx).find(v => v.id === id);
+  // Video.Privacy: PUBLIC 0, UNLISTED 1, PRIVATE 2; only a public upload is found by search or seen on its channel.
+  const ytListed = v => !v.mine || !v.privacy;
+  const ytThumb = (ctx, v, cls) => { const p = v.photo != null && ctx.data.photos?.find(x => x.id === v.photo); return p && window.ICSMedia ? `<span class="ga-art ${cls}" style="background:#000 url('${ICSMedia.image(p)}') center/cover"></span>` : art(v.title, cls); };
   // The bar is bg_stripes_dark tiled; the top level shows the launcher icon (ActionBar.TopLevel has no logo), other
-  // screens the up caret and ic_logo_square, with no title (displayOptions useLogo | showHome).
-  const ytBar = (up, actions) => `<header class="ga-bar ga-yt-bar"><button class="ga-home" data-action="${up ? 'back' : 'home'}" aria-label="YouTube">${up ? '<img class="ga-back" src="assets/ga-fw-ic_ab_back_holo_dark.png" alt=""><img src="assets/ga-yt-ic_logo_square.png" alt="">' : '<img src="assets/youtube.png" alt="">'}</button><span class="ga-yt-fill"></span>${actions}</header>`;
-  const ytItem = (lang, v) => `<button class="ga-yt-row" data-action="ga-yt-watch" data-id="${v.id}"><span class="ga-yt-thumb">${art(v.title, 'thumb')}<i>${e(v.len)}</i></span><span class="ga-yt-details"><b>${e(v.title)}</b><small>${e(v.channel)}</small><small>${e(AndroidStrings.format(T(lang, '%1$,d views | %2$,d likes | %3$,d dislikes').split(' | ')[0], num(lang, v.views)))}${v.hd ? '<img src="assets/ga-yt-ic_hd.png" alt="HD">' : ''}</small></span></button>`;
-  function youtube(ctx) {
-    const {ui, lang, data} = ctx;
-    if (ui.gaSub === 'watch') {
-      const v = VIDEOS.find(x => x.id === ui.gaVideo) || VIDEOS[0], rating = ytRating(data, v.id), plus = (data.gaYtPlus || []).includes(v.id);
-      const wtab = ui.gaYtWatchTab || 'info', likes = v.likes + (rating === 'like'), dislikes = v.dislikes + (rating === 'dislike');
-      const stats = AndroidStrings.format(T(lang, '%1$,d views | %2$,d likes | %3$,d dislikes'), num(lang, v.views), num(lang, likes), num(lang, dislikes));
-      const rate = (kind, label) => `<button class="ga-yt-rate" data-action="ga-yt-rate" data-id="${kind}" aria-label="${e(T(lang, label))}"${rating ? ' disabled' : ''}><img src="assets/ga-yt-ic_${kind}${rating ? '_disabled' : ''}.png" alt=""></button>`;
-      const info = `<div class="ga-yt-info"><h3>${e(v.title)}</h3><small>${e(new Date(v.added + 'T12:00').toLocaleDateString(lang === 'en' ? 'en-US' : lang, {year: 'numeric', month: 'short', day: 'numeric'}))}</small><small>${e(stats)}</small><div class="ga-yt-panel"><button class="ga-yt-plus" data-action="ga-yt-plus" aria-label="+1"><img src="assets/ga-yt-ic_plusone_standard_${plus ? 'on' : 'off'}.png" alt=""></button><i></i>${rate('like', 'Like')}${rate('dislike', 'Dislike')}</div><button class="ga-yt-channel" data-action="ga-unsupported">${e(T(lang, 'by'))} <b>${e(v.channel)}</b></button><h4>${e(T(lang, 'Description'))}</h4><p>${e(v.text)}</p><h4>${e(T(lang, 'Category'))}</h4><p class="dim">${e(v.category)}</p></div>`;
-      const pane = wtab === 'related' ? VIDEOS.filter(x => x.id !== v.id).map(x => ytItem(lang, x)).join('') : wtab === 'comments' ? `<p class="ga-yt-none">${e(T(lang, 'No comments found.'))}</p>` : info;
-      return `<div class="app-view ga-app ga-yt">${ytBar(true, icon('ga-unsupported', T(lang, 'Add to'), 'ga-yt-ic_menu_add_to_playlist') + icon('ga-unsupported', T(lang, 'Share'), 'ga-yt-ic_menu_share') + more())}<button class="ga-yt-video${ui.gaPaused ? ' paused' : ''}" data-action="ga-yt-toggle">${art(v.title, 'wide')}<img src="assets/ga-yt-ic_vidcontrol_${ui.gaPaused ? 'play' : 'pause'}.png" alt=""></button><nav class="ga-yt-tabrow">${[['info', 'Info'], ['related', 'Related'], ['comments', 'Comments']].map(([id, label]) => `<button class="${id === wtab ? 'on' : ''}" data-action="ga-yt-wtab" data-id="${id}">${e(T(lang, label))}</button>`).join('')}</nav><div class="ga-scroll ga-yt-pane">${pane}</div></div>`;
+  // screens the up caret and ic_logo_square, with no title (displayOptions useLogo | showHome) unless the activity
+  // sets one (SettingsActivity adds showTitle).
+  const ytBar = (up, actions, title = '') => `<header class="ga-bar ga-yt-bar"><button class="ga-home" data-action="${up ? 'back' : 'home'}" aria-label="YouTube">${up ? '<img class="ga-back" src="assets/ga-fw-ic_ab_back_holo_dark.png" alt=""><img src="assets/ga-yt-ic_logo_square.png" alt="">' : '<img src="assets/youtube.png" alt="">'}</button>${title ? `<h2>${e(title)}</h2>` : '<span class="ga-yt-fill"></span>'}${actions}</header>`;
+  const ytItem = (ctx, v) => `<button class="ga-yt-row" data-action="ga-yt-watch" data-id="${v.id}"><span class="ga-yt-thumb">${ytThumb(ctx, v, 'thumb')}<i>${e(v.len)}</i></span><span class="ga-yt-details"><b>${e(v.title)}</b><small>${e(v.channel)}</small><small>${e(AndroidStrings.format(T(ctx.lang, '%1$,d views | %2$,d likes | %3$,d dislikes').split(' | ')[0], num(ctx.lang, v.views)))}${v.hd ? '<img src="assets/ga-yt-ic_hd.png" alt="HD">' : ''}</small></span></button>`;
+  const ytNone = (lang, key) => `<p class="ga-yt-none">${e(T(lang, key))}</p>`;
+  // A spinner's open dropdown closes on a touch outside it.
+  const ytScrim = '<button type="button" class="ga-yt-drop-scrim" data-action="ga-yt-drop" aria-label="Close"></button>';
+  // Each screen is an activity of its own (WatchActivity, ResultsActivity, ChannelActivity, the My… lists, UploadActivity,
+  // SettingsActivity): Back returns to the one under it.
+  const YT_STATE = ['gaSub', 'gaVideo', 'gaYtWatchTab', 'gaYtQ', 'gaYtChannel', 'gaYtChTab', 'gaYtList', 'gaYtPrefPage'];
+  function ytGo(ui, sub, extra = {}) { (ui.gaYtStack ||= []).push(Object.fromEntries(YT_STATE.map(k => [k, ui[k]]))); Object.assign(ui, {gaSub: sub, gaYtDialog: null, gaYtDrop: ''}, extra); }
+  function back(ctx) {
+    const {ui} = ctx; if (ctx.view !== 'youtube') return false;
+    if (ui.gaYtDialog || ui.gaYtDrop) { ui.gaYtDialog = null; ui.gaYtDrop = ''; ctx.render(); return true; }
+    const prev = (ui.gaYtStack || []).pop(); if (!prev) return false;
+    Object.assign(ui, prev); ctx.render(); return true;
+  }
+
+  // menu.xml's Search: the SearchView expanded in the bar (searchable.xml's hint) over the recent queries that start with
+  // the text, as SearchRecentSuggestions lists them (ic_menu_recent_history).
+  const ytSuggestions = (ctx, q) => ytStore(ctx.data).searches.filter(s => s.toLocaleLowerCase().startsWith(q.toLocaleLowerCase())).map(s => `<button class="ga-yt-suggest" data-action="ga-yt-search-run" data-id="${e(s)}"><img src="assets/ga-fw-ic_menu_recent_history.png" alt=""><span>${e(s)}</span></button>`).join('');
+  function ytSearch(ctx) {
+    const {lang, ui} = ctx, q = ui.gaYtQ || '';
+    return `<div class="app-view ga-app ga-yt"><form class="ga-bar ga-yt-bar ga-yt-sv" data-form="ga-yt-search"><button type="button" class="ga-home" data-action="back" aria-label="YouTube"><img class="ga-back" src="assets/ga-fw-ic_ab_back_holo_dark.png" alt=""><img src="assets/ga-yt-ic_logo_square.png" alt=""></button><input name="query" value="${e(q)}" placeholder="${e(T(lang, 'Search YouTube'))}" autocomplete="off" spellcheck="false" aria-label="${e(T(lang, 'Search YouTube'))}"></form><div class="ga-scroll ga-yt-suggestions">${ytSuggestions(ctx, q)}</div></div>`;
+  }
+  // A query is kept for the suggestions (the newest first) and opens ResultsActivity in place of the SearchView.
+  function ytRunSearch(ctx, q) {
+    const s = ytStore(ctx.data); s.searches = [q, ...s.searches.filter(x => x !== q)].slice(0, 20); ctx.save();
+    if (ctx.ui.gaSub !== 'search') ytGo(ctx.ui, 'results');
+    Object.assign(ctx.ui, {gaSub: 'results', gaYtQ: q, gaYtTime: 3, gaYtDrop: ''}); ctx.render();
+  }
+  // ResultsActivity (results_activity.xml): the ics_dark_grey "Results" row with the time filter (DropdownSpinner: Today,
+  // This week, This month, All time), then the videos whose title, channel, description or category hold every word.
+  const TIME_FILTERS = [['Today', 1], ['This week', 7], ['This month', 31], ['All time', 0]];
+  function ytResults(ctx) {
+    const {lang, ui} = ctx, at = ui.gaYtTime ?? 3, days = TIME_FILTERS[at][1], words = (ui.gaYtQ || '').toLocaleLowerCase().split(/\s+/).filter(Boolean);
+    const hits = ytVideos(ctx).filter(ytListed).filter(v => words.every(w => `${v.title} ${v.channel} ${v.text || ''} ${v.category || ''}`.toLocaleLowerCase().includes(w)))
+      .filter(v => !days || ctx.now - new Date(`${v.added}T00:00`).getTime() < days * 864e5);
+    const open = ui.gaYtDrop === 'time', drop = open ? `<div class="ga-yt-drop" role="listbox">${TIME_FILTERS.map(([label], i) => `<button type="button" data-action="ga-yt-time" data-id="${i}" role="option" aria-selected="${i === at}">${e(T(lang, label))}</button>`).join('')}</div>` : '';
+    return `<div class="app-view ga-app ga-yt">${ytBar(true, icon('ga-yt-search', T(lang, 'Search'), 'ga-yt-ic_menu_search') + more())}${open ? ytScrim : ''}<div class="ga-yt-results-head"><span>${e(T(lang, 'Results'))}</span><button class="ga-yt-spin" data-action="ga-yt-drop" data-id="time">${e(T(lang, TIME_FILTERS[at][0]))}</button>${drop}</div><div class="ga-scroll">${hits.length ? hits.map(v => ytItem(ctx, v)).join('') : ytNone(lang, 'No videos found.')}</div></div>`;
+  }
+
+  // The watch page (watch_activity.xml): the player, the #3d3d3d Info / Related / Comments tab row, watch_info.xml with
+  // the +1 panel and the Like / Dislike image buttons and the "by" button to the uploader's channel; watch_menu.xml's
+  // Add to and Share in the bar.
+  function ytWatch(ctx) {
+    const {ui, lang, data} = ctx, v = ytVideo(ctx, ui.gaVideo) || VIDEOS[0], rating = ytRating(data, v.id), plus = (data.gaYtPlus || []).includes(v.id);
+    const wtab = ui.gaYtWatchTab || 'info', likes = v.likes + (rating === 'like'), dislikes = v.dislikes + (rating === 'dislike');
+    const stats = AndroidStrings.format(T(lang, '%1$,d views | %2$,d likes | %3$,d dislikes'), num(lang, v.views), num(lang, likes), num(lang, dislikes));
+    const rate = (kind, label) => `<button class="ga-yt-rate" data-action="ga-yt-rate" data-id="${kind}" aria-label="${e(T(lang, label))}"${rating ? ' disabled' : ''}><img src="assets/ga-yt-ic_${kind}${rating ? '_disabled' : ''}.png" alt=""></button>`;
+    const info = `<div class="ga-yt-info"><h3>${e(v.title)}</h3><small>${e(new Date(v.added + 'T12:00').toLocaleDateString(lang === 'en' ? 'en-US' : lang, {year: 'numeric', month: 'short', day: 'numeric'}))}</small><small>${e(stats)}</small><div class="ga-yt-panel"><button class="ga-yt-plus" data-action="ga-yt-plus" aria-label="+1"><img src="assets/ga-yt-ic_plusone_standard_${plus ? 'on' : 'off'}.png" alt=""></button><i></i>${rate('like', 'Like')}${rate('dislike', 'Dislike')}</div><button class="ga-yt-channel" data-action="ga-yt-channel" data-id="${e(v.channel)}">${e(T(lang, 'by'))} <b>${e(v.channel)}</b></button>${v.text ? `<h4>${e(T(lang, 'Description'))}</h4><p>${e(v.text)}</p>` : ''}${v.category ? `<h4>${e(T(lang, 'Category'))}</h4><p class="dim">${e(v.category)}</p>` : ''}</div>`;
+    const pane = wtab === 'related' ? VIDEOS.filter(x => x.id !== v.id).map(x => ytItem(ctx, x)).join('') : wtab === 'comments' ? ytNone(lang, 'No comments found.') : info;
+    return `<div class="app-view ga-app ga-yt">${ytBar(true, icon('ga-yt-addto', T(lang, 'Add to'), 'ga-yt-ic_menu_add_to_playlist') + icon('ga-yt-share', T(lang, 'Share'), 'ga-yt-ic_menu_share') + icon('ga-yt-search', T(lang, 'Search'), 'ga-yt-ic_menu_search') + more())}<button class="ga-yt-video${ui.gaPaused ? ' paused' : ''}" data-action="ga-yt-toggle">${ytThumb(ctx, v, 'wide')}<img src="assets/ga-yt-ic_vidcontrol_${ui.gaPaused ? 'play' : 'pause'}.png" alt=""></button><nav class="ga-yt-tabrow">${[['info', 'Info'], ['related', 'Related'], ['comments', 'Comments']].map(([id, label]) => `<button class="${id === wtab ? 'on' : ''}" data-action="ga-yt-wtab" data-id="${id}">${e(T(lang, label))}</button>`).join('')}</nav><div class="ga-scroll ga-yt-pane">${pane}</div>${ytDialog(ctx)}</div>`;
+  }
+
+  // ChannelActivity (channel_activity.xml): channel_header.xml on bg_stripes_medium (the 76 dp avatar in avatar_border,
+  // the 18 dp bold name in white, the 12 dp grey stats), the #3d3d3d tab row of Uploads / Favorites / Activity /
+  // Playlists; channel_menu.xml's Subscribe or Unsubscribe in the overflow.
+  const CHANNEL_TABS = [['uploads', 'Uploads', 'No uploads found.'], ['favorites', 'Favorites', 'No favorites found.'], ['activity', 'Activity', 'No recent activity.'], ['playlists', 'Playlists', 'No playlists found.']];
+  function ytChannel(ctx) {
+    const {lang, ui} = ctx, name = ui.gaYtChannel || '', tab = CHANNEL_TABS.find(t => t[0] === ui.gaYtChTab) || CHANNEL_TABS[0];
+    const vids = ytVideos(ctx).filter(v => v.channel === name && ytListed(v));
+    const body = tab[0] === 'uploads' && vids.length ? vids.map(v => ytItem(ctx, v)).join('') : ytNone(lang, tab[2]);
+    return `<div class="app-view ga-app ga-yt">${ytBar(true, icon('ga-yt-search', T(lang, 'Search'), 'ga-yt-ic_menu_search') + more())}<div class="ga-yt-chhead"><img src="${AVATAR.youtube}" alt=""><span><b>${e(name)}</b><small>${e(T(lang, 'Channel views'))}</small><small>${e(T(lang, 'Uploaded'))}</small><small>${e(T(lang, 'Subscribers'))}</small></span></div><nav class="ga-yt-tabrow">${CHANNEL_TABS.map(([id, label]) => `<button class="${id === tab[0] ? 'on' : ''}" data-action="ga-yt-chtab" data-id="${id}">${e(T(lang, label))}</button>`).join('')}</nav><div class="ga-scroll ga-yt-pane">${body}</div>${ytDialog(ctx)}</div>`;
+  }
+
+  /* The Account tab (home_activity.xml): my_channel_header.xml on bg_stripes_light, then my_channel_stack_buttons.xml's
+     StackButtons (bg_stack_normal with the ic_stack_* picture, the 16 dp label under it): Uploads, Favorites, History;
+     Playlists, Subscriptions. Each opens its My… activity: MyUploads, MyFavorites, WatchHistory (video_item rows),
+     MyPlaylists (stack_playlist_item rows: Watch later, Favorites, then the playlists; my_playlists_menu's Create
+     playlist), MySubscriptions (subscription_item rows: "<name>'s activity" or the channel's name for uploads only). */
+  const STACKS = [['uploads', 'Uploads', 'uploads'], ['favorites', 'Favorites', 'favorites'], ['history', 'History', 'history'], ['playlists', 'Playlists', 'playlists'], ['subscriptions', 'Subscriptions', 'subscriptions']];
+  const stack = (lang, [id, label, icon], row = false) => `<button class="ga-yt-stack${row ? ' row' : ''}" data-action="ga-yt-list" data-id="${id}"><span class="ga-yt-card"><img src="assets/ga-yt-ic_stack_${icon}.png" alt=""></span><b>${e(T(lang, label))}</b></button>`;
+  function ytAccount(ctx) {
+    const {lang} = ctx;
+    return `<div class="ga-yt-channelhead"><img src="${AVATAR.youtube}" alt=""><span><b>${e(ctx.account)}</b><small>${e(T(lang, 'Channel views'))}</small><small>${e(T(lang, 'Uploaded'))}</small><small>${e(T(lang, 'Subscribers'))}</small></span></div><div class="ga-yt-stacks">${STACKS.slice(0, 3).map(s => stack(lang, s)).join('')}</div><div class="ga-yt-stacks">${STACKS.slice(3).map(s => stack(lang, s)).join('')}</div>`;
+  }
+  const LISTS = {uploads: ['Uploads', 'No uploads found.'], favorites: ['Favorites', 'No favorites found.'], history: ['History', 'No watch history.'], later: ['Watch later', 'No videos to watch later.'], playlists: ['Playlists', 'No playlists found.'], subscriptions: ['Subscriptions', 'No subscriptions found.']};
+  function ytList(ctx) {
+    const {lang, ui} = ctx, s = ytStore(ctx.data), id = ui.gaYtList || 'uploads', videos = ids => ids.map(x => ytVideo(ctx, x)).filter(Boolean);
+    let title, body;
+    if (id.startsWith('pl:')) {
+      // PlaylistActivity (playlist_activity.xml): the title and "by <account> | n videos" on bg_stripes_light.
+      const pl = s.playlists.find(p => p.id === id.slice(3)); if (!pl) return '';
+      const n = pl.videos.length, details = AndroidStrings.format(T(lang, n === 1 ? 'by %1$s | 1 video' : n ? 'by %1$s | %2$d videos' : 'by %1$s'), ctx.account, n);
+      return `<div class="app-view ga-app ga-yt">${ytBar(true, icon('ga-yt-search', T(lang, 'Search'), 'ga-yt-ic_menu_search') + more())}<div class="ga-yt-plhead"><b>${e(pl.name)}</b><small>${e(details)}</small></div><div class="ga-scroll">${n ? videos(pl.videos).map(v => ytItem(ctx, v)).join('') : ytNone(lang, 'No videos found.')}</div></div>`;
     }
+    [title] = LISTS[id];
+    if (id === 'playlists') body = [['later', 'Watch later', 'watchlater'], ['favorites', 'Favorites', 'favorites'], ...s.playlists.map(p => [`pl:${p.id}`, p.name, 'playlists'])].map(([key, label, icon]) => `<button class="ga-yt-stack row" data-action="ga-yt-list" data-id="${e(key)}"><span class="ga-yt-card"><img src="assets/ga-yt-ic_stack_${icon}.png" alt=""></span><b>${e(key.startsWith('pl:') ? label : T(lang, label))}</b></button>`).join('');
+    else if (id === 'subscriptions') { const subs = Object.entries(s.subs); body = subs.length ? subs.map(([name, kind]) => `<button class="ga-yt-sub" data-action="ga-yt-channel" data-id="${e(name)}">${e(kind === 'activity' ? AndroidStrings.format(T(lang, "%1$s's activity"), name) : name)}</button>`).join('') : ytNone(lang, LISTS[id][1]); }
+    else { const list = videos(id === 'uploads' ? s.uploads.map(u => u.id) : s[id]); body = list.length ? list.map(v => ytItem(ctx, v)).join('') : ytNone(lang, LISTS[id][1]); }
+    return `<div class="app-view ga-app ga-yt">${ytBar(true, icon('ga-yt-search', T(lang, 'Search'), 'ga-yt-ic_menu_search') + more(), T(lang, title))}<div class="ga-scroll">${body}</div>${ytDialog(ctx)}</div>`;
+  }
+
+  /* UploadActivity (upload_form.xml): home_menu.xml's Record starts the camcorder (VIDEO_CAPTURE with quickCapture),
+     its clip comes back to "Upload video": upload_form_video_frame.xml (the 105 × 66 dp thumbnail, the file name and
+     the account on bg_stripes_light), Title, Description, Privacy (PrivacySpinner: privacy_item.xml with ic_yt_locked
+     or ic_yt_unlocked, privacy_dropdown.xml adding the description), Tags, and the Upload button over the terms. An
+     empty title uploads under the file name; the privacy is kept as upload_privacy. Before the first upload, upload_policy
+     is asked (upload_policy_dialog.xml, Only when on Wi-Fi checked). */
+  const PRIVACY = [['Public', 'Anyone can find it and view it.'], ['Unlisted', 'Only people who know the link can view it.'], ['Private', 'Only you can view it.']];
+  const lock = p => `<img src="assets/ga-yt-ic_yt_${p === 2 ? 'locked' : 'unlocked'}.png" alt="">`;
+  function ytUpload(ctx) {
+    const {lang, ui} = ctx, up = ui.gaYtUp || {}, clip = ctx.data.photos?.find(p => p.id === up.photo); if (!clip) return '';
+    const privacy = up.privacy ?? ytPref(ctx.data, 'upload_privacy', 0), file = `${clip.name}.mp4`;
+    const open = ui.gaYtDrop === 'privacy', drop = open ? `<div class="ga-yt-drop ga-yt-privacy-drop" role="listbox">${PRIVACY.map(([label, text], i) => `<button type="button" data-action="ga-yt-privacy" data-id="${i}" role="option" aria-selected="${i === privacy}">${lock(i)}<span><b>${e(T(lang, label))}</b><small>${e(T(lang, text))}</small></span></button>`).join('')}</div>` : '';
+    const field = (name, label, hint, value, lines = 1) => `<label class="ga-yt-label" for="ga-yt-${name}">${e(T(lang, label))}</label>${lines > 1 ? `<textarea id="ga-yt-${name}" name="${name}" rows="2" maxlength="200" data-ga-yt-up="${name}">${e(value)}</textarea>` : `<input id="ga-yt-${name}" name="${name}" value="${e(value)}" maxlength="${name === 'title' ? 50 : 200}" placeholder="${e(hint ? T(lang, hint) : '')}" autocomplete="off" data-ga-yt-up="${name}">`}`;
+    return `<form class="app-view ga-app ga-yt ga-yt-upload" data-form="ga-yt-upload">${ytBar(true, more(), T(lang, 'Upload video'))}<div class="ga-scroll"><div class="ga-yt-upframe"><span class="ga-yt-thumb">${ytThumb(ctx, {title: file, photo: clip.id}, 'thumb')}</span><span class="ga-yt-details"><b>${e(file)}</b><small>${e(ctx.account)}</small></span></div>${field('title', 'Title', 'You can set the title here', up.title || '')}${field('text', 'Video description', '', up.text || '', 2)}<span class="ga-yt-label">${e(T(lang, 'Privacy'))}</span>${open ? ytScrim : ''}<div class="ga-yt-anchor"><button type="button" class="ga-yt-privacy" data-action="ga-yt-drop" data-id="privacy">${lock(privacy)}<span>${e(T(lang, PRIVACY[privacy][0]))}</span></button>${drop}</div>${field('tags', 'Tags', 'Comma separated list of tags', up.tags || '')}</div><div class="ga-yt-upbuttons"><button type="submit">${e(T(lang, 'Upload button'))}</button><small>${e(T(lang, "By uploading you agree to YouTube's Terms of Service."))}</small></div>${ytDialog(ctx)}</form>`;
+  }
+
+  /* SettingsActivity: preference_headers.xml's General, Search and About (PreferenceActivity's headers on the phone),
+     each header's fragment under its title. General (general_prefs.xml; prefetch and auto-sync are removed on this
+     build): High quality on mobile, Caption font size, Uploads. Search (search_prefs.xml): Clear search history behind its
+     "Clear" confirmation, SafeSearch filtering in the "SafeSearch" single-choice dialog. About (about_prefs.xml): Help,
+     Feedback and the four terms are Google's pages; Open source licenses is LicensesActivity's licenses.html; App
+     version is the APK's 3.5.5. */
+  const YT_PREFS = {
+    general: [['check', 'default_hq', 'High quality on mobile', 'Start videos in high quality when connected to a mobile network. Startup may take longer.', false],
+      ['list', 'subtitles_size', 'Caption font size', 'Sets the font size to use for captions', 1, ['Small', 'Medium', 'Large', 'Huge']],
+      ['list', 'upload_policy', 'YT Uploads setting', 'Specify network preferences for uploads', -1, ['Only when on Wi-Fi', 'On any network']]],
+    search: [['clear', 'clear_history', 'YT Clear search history', 'Clear previous YouTube searches from showing in the Search box'],
+      ['list', 'safe_search', 'SafeSearch filtering', 'Block videos containing restricted content from showing in search results', 1, ["Don't filter", 'Moderate', 'Strict'], 'SafeSearch']],
+    about: [['web', 'help', 'YT Help', 'Find answers to your YouTube questions here'], ['web', 'feedback', 'YT Feedback', 'Help us make YouTube better'],
+      ['web', 'mobile_terms', 'Google Mobile Terms of Service', 'Read Google Mobile Terms of Service'], ['web', 'youtube_terms', 'YouTube Terms of Service', "Read YouTube's Terms of Service"],
+      ['web', 'mobile_privacy', 'Google Mobile Privacy Policy', 'Read Google Mobile Privacy Policy'], ['web', 'youtube_privacy', 'YouTube Privacy Policy', "Read YouTube's Privacy Policy"],
+      ['licenses', 'open_source_licenses', 'Open source licenses', 'License details for open source software'], ['info', 'version', 'App version', '3.5.5']]
+  };
+  const HEADERS = [['general', 'YT General'], ['search', 'YT Search'], ['about', 'YT About']];
+  const ytPrefRow = key => Object.values(YT_PREFS).flat().find(r => r[1] === key);
+  function ytSettings(ctx) {
+    const {lang, ui, data} = ctx, page = ui.gaYtPrefPage || '';
+    if (page === 'licenses') return `<div class="app-view ga-app ga-yt ga-yt-licenses">${ytBar(true, '', T(lang, 'Open source licenses'))}<iframe src="assets/ga-yt-licenses.html" title="${e(T(lang, 'Open source licenses'))}"></iframe></div>`;
+    const rows = page ? YT_PREFS[page].map(([kind, key, title, summary, def]) => {
+      const box = kind === 'check' ? `<i class="mps-check${ytPref(data, key, def) ? ' on' : ''}"></i>` : '', info = kind === 'info';
+      return `<button class="mps-row${info ? ' mps-info disabled' : ''}" data-action="${info ? '' : `ga-yts-${kind}`}" data-id="${key}"${info ? ' disabled' : ''}${kind === 'check' ? ` role="checkbox" aria-checked="${!!ytPref(data, key, def)}"` : ''}><span><b>${e(T(lang, title))}</b><small>${e(info ? summary : T(lang, summary))}</small></span>${box}</button>`;
+    }) : HEADERS.map(([id, title]) => `<button class="mps-row ga-yt-header" data-action="ga-yts-page" data-id="${id}"><span><b>${e(T(lang, title))}</b></span></button>`);
+    return `<div class="app-view ga-app ga-yt mps ga-yt-prefs">${ytBar(true, '', T(lang, page ? HEADERS.find(h => h[0] === page)[1] : 'Settings'))}<div class="ga-scroll mps-list">${rows.join('')}</div>${ytDialog(ctx)}</div>`;
+  }
+
+  /* The dialogs (ui.gaYtDialog), Theme.Holo.Light's AlertDialogs (the mps- styles) except the chooser:
+     - addto: "Add to" over add_to_dialog.xml's list (playlist_chooser_item.xml: Watch later, Favorites, New playlist…
+       with ic_list_watch_later / ic_list_favorite / ic_list_add_new, then the playlists);
+     - newlist: "New playlist" (create_playlist_dialog.xml: the Title field and Private), OK adds the video to it;
+     - share: the framework chooser "Share this video via" for ACTION_SEND text/plain (Theme.Holo.Dialog.Alert), with the
+       image's apps that take text: Email, Gmail and Messaging;
+     - subscribe: "Subscribe to" with All activity / Video uploads only;
+     - clear: "Clear" with ic_dialog_alert, "Search history will be cleared", OK / Cancel;
+     - list: a ListPreference (SafeSearch's dialog title is "SafeSearch");
+     - policy: "Upload" with upload_policy_dialog.xml and OK. */
+  function ytDialog(ctx) {
+    const {lang, ui, data} = ctx, d = ui.gaYtDialog; if (!d) return '';
+    const shell = (title, body, buttons, icon = '') => `<button type="button" class="mps-scrim" data-action="ga-yt-dialog-cancel" aria-label="${e(T(lang, 'Cancel'))}"></button><div class="mps-dialog ga-yt-dialog" role="dialog" aria-label="${e(title)}"><h3>${icon}${e(title)}</h3>${body}${buttons ? `<div class="mps-buttons">${buttons}</div>` : ''}</div>`;
+    const cancel = `<button type="button" data-action="ga-yt-dialog-cancel">${e(T(lang, 'Cancel'))}</button>`;
+    const radios = (items, current, action) => `<div class="mps-choices">${items.map((label, i) => `<button type="button" data-action="${action}" data-id="${i}" role="radio" aria-checked="${i === current}"><span>${e(label)}</span><i class="mps-radio${i === current ? ' on' : ''}"></i></button>`).join('')}</div>`;
+    if (d.kind === 'addto') {
+      const rows = [['later', T(lang, 'Watch later'), 'watch_later'], ['favorites', T(lang, 'Favorites'), 'favorite'], ['new', T(lang, 'New playlist…'), 'add_new'], ...ytStore(data).playlists.map(p => [`pl:${p.id}`, p.name, ''])];
+      return shell(T(lang, 'YT Add to'), `<div class="mps-choices ga-yt-chooser">${rows.map(([id, label, img]) => `<button type="button" data-action="ga-yt-addto-pick" data-id="${e(id)}"><span>${e(label)}</span>${img ? `<img src="assets/ga-yt-ic_list_${img}.png" alt="">` : ''}</button>`).join('')}</div>`, '');
+    }
+    if (d.kind === 'newlist') return shell(T(lang, 'New playlist'), `<input data-ga-yt-newlist maxlength="50" placeholder="${e(T(lang, 'Playlist title'))}" autocomplete="off"><label class="ga-yt-private"><input type="checkbox" data-ga-yt-private><span>${e(T(lang, 'Playlist private'))}</span></label>`, `${cancel}<button type="button" data-action="ga-yt-newlist-ok">${e(T(lang, 'OK'))}</button>`);
+    if (d.kind === 'share') return `<button type="button" class="nwp-scrim" data-action="ga-yt-dialog-cancel" aria-label="${e(T(lang, 'Cancel'))}"></button><div class="nwp-dialog ga-yt-share" role="dialog" aria-label="${e(T(lang, 'Share this video via'))}"><h3>${e(T(lang, 'Share this video via'))}</h3><div class="nwp-choices">${[['email', 'Email'], ['gmail', 'Gmail'], ['messaging', 'Messaging']].map(([app, name]) => `<button type="button" data-action="ga-yt-share-to" data-id="${app}"><img src="assets/${app}.png" alt=""><span>${e(ctx.t(name))}</span></button>`).join('')}</div></div>`;
+    if (d.kind === 'subscribe') return shell(T(lang, 'Subscribe to'), radios([T(lang, 'All activity'), T(lang, 'Video uploads only')], -1, 'ga-yt-subscribe-pick'), '');
+    if (d.kind === 'clear') return shell(T(lang, 'Clear'), `<p>${e(T(lang, 'Search history will be cleared'))}</p>`, `${cancel}<button type="button" data-action="ga-yts-clear-ok">${e(T(lang, 'OK'))}</button>`, '<img class="ga-yt-alert" src="assets/em-ic_dialog_alert_holo_light.png" alt="">');
+    if (d.kind === 'list') { const [, key, title, , def, entries, dialogTitle] = ytPrefRow(d.key); return shell(T(lang, dialogTitle || title), radios(entries.map(x => T(lang, x)), Number(ytPref(data, key, def)), 'ga-yts-pick'), dialogTitle ? '' : cancel); }
+    if (d.kind === 'policy') return shell(T(lang, 'Upload'), `<div class="ga-yt-policy"><p>${e(T(lang, 'Depending on your data plan, uploading videos when not connected to Wi-Fi may result in additional charges.'))}</p>${radios([T(lang, 'Only when on Wi-Fi'), T(lang, 'On any network')], d.pick ?? 0, 'ga-yt-policy-pick')}<p class="note">${e(T(lang, 'You can change this setting at anytime in the app settings.'))}</p></div>`, `<button type="button" data-action="ga-yt-policy-ok">${e(T(lang, 'OK'))}</button>`);
+    return '';
+  }
+
+  function youtube(ctx) {
+    const {ui, lang} = ctx;
+    ytCtx = ctx;
+    if (ui.gaSub === 'watch') return ytWatch(ctx);
+    if (ui.gaSub === 'search') return ytSearch(ctx);
+    if (ui.gaSub === 'results') return ytResults(ctx);
+    if (ui.gaSub === 'channel') return ytChannel(ctx);
+    if (ui.gaSub === 'list') return ytList(ctx);
+    if (ui.gaSub === 'upload') return ytUpload(ctx);
+    if (ui.gaSub === 'settings') return ytSettings(ctx);
     const tab = ui.gaYtTab || 'Home';
-    const body = tab === 'Account'
-      ? `<div class="ga-yt-channelhead"><img src="${AVATAR.youtube}" alt=""><span><b>${e(ctx.account)}</b><small>${e(T(lang, 'Channel views'))}</small><small>${e(T(lang, 'Uploaded'))}</small><small>${e(T(lang, 'Subscribers'))}</small></span></div>`
-      : `${tab === 'Browse' ? `<h3 class="ga-yt-head">${e(T(lang, 'Most viewed'))}</h3>` : ''}${(tab === 'Home' ? VIDEOS : [...VIDEOS].sort((a, b) => b.views - a.views)).map(v => ytItem(lang, v)).join('')}`;
-    return `<div class="app-view ga-app ga-yt">${ytBar(false, icon('ga-unsupported', T(lang, 'Search'), 'ga-yt-ic_menu_search') + icon('ga-unsupported', T(lang, 'Record'), 'ga-yt-ic_menu_capture') + more())}<nav class="ga-yt-tabs">${[['Home', 'Home'], ['Browse', 'Browse'], ['Account', 'Account']].map(([id, label]) => `<button class="${id === tab ? 'on' : ''}" data-action="ga-yt-tab" data-id="${id}">${e(T(lang, label))}</button>`).join('')}</nav><div class="ga-scroll">${body}</div></div>`;
+    const body = tab === 'Account' ? ytAccount(ctx)
+      : `${tab === 'Browse' ? `<h3 class="ga-yt-head">${e(T(lang, 'Most viewed'))}</h3>` : ''}${(tab === 'Home' ? VIDEOS : [...VIDEOS].sort((a, b) => b.views - a.views)).map(v => ytItem(ctx, v)).join('')}`;
+    return `<div class="app-view ga-app ga-yt">${ytBar(false, icon('ga-yt-search', T(lang, 'Search'), 'ga-yt-ic_menu_search') + icon('ga-yt-record', T(lang, 'Record'), 'ga-yt-ic_menu_capture') + more())}<nav class="ga-yt-tabs">${[['Home', 'Home'], ['Browse', 'Browse'], ['Account', 'Account']].map(([id, label]) => `<button class="${id === tab ? 'on' : ''}" data-action="ga-yt-tab" data-id="${id}">${e(T(lang, label))}</button>`).join('')}</nav><div class="ga-scroll">${body}</div></div>`;
+  }
+  // The search field's suggestions follow the text, and the upload form keeps what is typed across its redraws.
+  let ytCtx = null;
+  globalThis.document?.addEventListener('input', event => {
+    if (!ytCtx || ytCtx.ui.view !== 'youtube') return;
+    if (event.target.closest?.('.ga-yt-sv')) { ytCtx.ui.gaYtQ = event.target.value; const box = document.querySelector('#viewport .ga-yt-suggestions'); if (box) box.innerHTML = ytSuggestions(ytCtx, event.target.value); return; }
+    const up = event.target.dataset?.gaYtUp; if (up && ytCtx.ui.gaYtUp) ytCtx.ui.gaYtUp[up] = event.target.value;
+  });
+  // The recorded clip (VIDEO_CAPTURE's result) opens the upload form.
+  function captured(clip, ctx) { ytGo(ctx.ui, 'upload', {gaYtUp: {photo: clip.id}}); ctx.render(); }
+  function ytUploadNow(ctx) {
+    const {ui, data} = ctx, up = ui.gaYtUp || {}, clip = data.photos?.find(p => p.id === up.photo); if (!clip) return;
+    const privacy = up.privacy ?? ytPref(data, 'upload_privacy', 0), s = ytStore(data), seconds = Math.round((clip.duration || 0) / 1000);
+    s.uploads.unshift({id: `u${clip.id}`, key: clip.id.toString(36).padStart(11, '0'), photo: clip.id, title: (up.title || '').trim() || `${clip.name}.mp4`, text: (up.text || '').trim(), tags: (up.tags || '').trim(), privacy, len: `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`, added: new Date(ctx.now).toISOString().slice(0, 10)});
+    (data.gaYtPrefs ||= {}).upload_privacy = privacy; ui.gaYtUp = null; ctx.save();
+    back(ctx); ctx.notify?.(T(ctx.lang, 'Video uploaded successfully.'));
   }
   // The action bar overflow of the screen on show (the apps' menu XML; showAsAction="never" items).
   function menu(ctx) {
@@ -346,7 +650,14 @@
     if (ctx.view === 'play-books' && ui.gaSub === 'read') return [['ga-bk-options', 'Display options'], ['ga-unsupported', 'About the book'], ['ga-unsupported', 'Share'], ['ga-unsupported', 'Available offline'], ['ga-unsupported', 'Read aloud'], ['ga-unsupported', 'Help']].map(([action, key]) => ({action, title: BS(lang, key), id: ''}));
     if (ctx.view === 'play-books') return [['ga-unsupported', 'Refresh'], ['ga-unsupported', 'Accounts'], ['ga-unsupported', 'Help'], ['ga-unsupported', 'Make available offline'], ctx.data?.gaBkView === 'list' ? ['ga-bk-view', 'View as carousel'] : ['ga-bk-view', 'View as list']].map(([action, key]) => ({action, title: BS(lang, key), id: ''}));
     if (ctx.view === 'play-movies') return ['Manage offline rentals', 'Movies: Accounts', 'Movies: Settings', 'Movies: Help', 'Movies: Contact us', 'Movies: Send feedback'].map(key => item('ga-unsupported', key));
-    if (ctx.view === 'youtube') return ui.gaSub === 'watch' ? [item('ga-yt-rate', 'Like', 'like'), item('ga-yt-rate', 'Dislike', 'dislike')] : [item('ga-unsupported', 'Settings'), item('ga-unsupported', 'Feedback'), item('ga-unsupported', 'Help')];
+    // YouTube: each activity's own items, then menu.xml's Settings, Feedback and Help (YouTubeActivity's MenuHelper).
+    if (ctx.view === 'youtube') {
+      const base = [item('ga-yt-settings', 'Settings'), item('ga-unsupported', 'Feedback'), item('ga-unsupported', 'Help')], name = ui.gaYtChannel;
+      if (ui.gaSub === 'watch') return [item('ga-yt-rate', 'Like', 'like'), item('ga-yt-rate', 'Dislike', 'dislike'), item('ga-yt-copy', 'Copy URL'), item('ga-unsupported', 'Flag'), ...base];
+      if (ui.gaSub === 'channel') return [...(name === ctx.account ? [] : ytStore(ctx.data).subs[name] ? [item('ga-yt-unsubscribe', 'Unsubscribe')] : [item('ga-yt-subscribe', 'Subscribe')]), ...base];
+      if (ui.gaSub === 'list' && ui.gaYtList === 'playlists') return [item('ga-yt-newlist', 'Create playlist'), ...base];
+      return base;
+    }
     if (ctx.view === 'talk') return ui.gaSub === 'chat' ? [item('ga-talk-end', 'End chat'), item('ga-talk-info', 'Friend info'), item('ga-talk-add-to-chat', 'Add to chat'), item('ga-talk-clear', 'Clear chat history')]
       : [item('ga-talk-display', 'Display options'), item('ga-talk-end-all', 'End all chats'), item('ga-unsupported', 'Sign out'), item('ga-talk-settings', 'Talk settings'), item('ga-unsupported', 'Talk help'), item('ga-unsupported', 'Send feedback')];
     return [];
@@ -498,7 +809,55 @@
       case 'ga-tks-clear': data.talkSearches = []; ctx.save(); break;
       case 'ga-talk-clear': ctx.closeOverlay(); data.talkChats = (data.talkChats || []).filter(m => String(m.contact) !== String(ui.gaChat)); ctx.save(); ctx.render(); break;
       case 'ga-yt-tab': ui.gaYtTab = id; ctx.render(); break;
-      case 'ga-yt-watch': ui.gaVideo = id; ui.gaPaused = false; ui.gaYtWatchTab = 'info'; ui.gaSub = 'watch'; ctx.render(); break;
+      // A watched video goes to the top of History.
+      case 'ga-yt-watch': { ytGo(ui, 'watch', {gaVideo: id, gaYtWatchTab: 'info'}); ui.gaPaused = false; const s = ytStore(data); s.history = [id, ...s.history.filter(x => x !== id)].slice(0, 50); ctx.save(); ctx.render(); break; }
+      case 'ga-yt-search': ctx.closeOverlay(); ytGo(ui, 'search', {gaYtQ: ''}); ctx.render(); ctx.focus?.('.ga-yt-sv input'); break;
+      case 'ga-yt-search-run': ytRunSearch(ctx, id); break;
+      case 'ga-yt-drop': ui.gaYtDrop = id && ui.gaYtDrop !== id ? id : ''; ctx.render(); break;
+      case 'ga-yt-time': ui.gaYtTime = Number(id); ui.gaYtDrop = ''; ctx.render(); break;
+      case 'ga-yt-privacy': if (ui.gaYtUp) ui.gaYtUp.privacy = Number(id); ui.gaYtDrop = ''; ctx.render(); break;
+      case 'ga-yt-record': ctx.record(); break;
+      // Add to: Watch later and Favorites refuse a video already in them; a playlist takes it again.
+      case 'ga-yt-addto': ctx.closeOverlay(); ui.gaYtDialog = {kind: 'addto'}; ctx.render(); break;
+      case 'ga-yt-addto-pick': {
+        const s = ytStore(data), v = ui.gaVideo;
+        if (id === 'new') { ui.gaYtDialog = {kind: 'newlist', video: v}; ctx.render(); ctx.focus?.('[data-ga-yt-newlist]'); break; }
+        ui.gaYtDialog = null;
+        if (id === 'later' || id === 'favorites') {
+          const dup = s[id].includes(v); if (!dup) s[id].unshift(v);
+          ctx.save(); ctx.render(); ctx.toast(T(ctx.lang, id === 'later' ? (dup ? 'Video is already in your Watch Later playlist.' : 'Video added to Watch Later playlist.') : (dup ? 'Video is already in your favorites.' : 'Video added to favorites.'))); break;
+        }
+        const pl = s.playlists.find(p => `pl:${p.id}` === id); if (pl) { pl.videos.push(v); ctx.save(); ctx.toast(AndroidStrings.format(T(ctx.lang, 'Video added to %1$s playlist.'), pl.name)); }
+        ctx.render(); break;
+      }
+      case 'ga-yt-newlist': ctx.closeOverlay(); ui.gaYtDialog = {kind: 'newlist'}; ctx.render(); ctx.focus?.('[data-ga-yt-newlist]'); break;
+      case 'ga-yt-newlist-ok': {
+        const d = ui.gaYtDialog, name = document.querySelector('#viewport [data-ga-yt-newlist]')?.value.trim() || '', priv = !!document.querySelector('#viewport [data-ga-yt-private]')?.checked;
+        ui.gaYtDialog = null; if (!name) { ctx.render(); break; }
+        const s = ytStore(data), pl = {id: String(Date.now()), name: name.slice(0, 50), private: priv, videos: d?.video ? [d.video] : []}; s.playlists.push(pl); ctx.save(); ctx.render();
+        ctx.toast(d?.video ? AndroidStrings.format(T(ctx.lang, 'Video added to %1$s playlist.'), pl.name) : T(ctx.lang, 'Playlist created.')); break;
+      }
+      case 'ga-yt-share': ui.gaYtDialog = {kind: 'share'}; ctx.render(); break;
+      case 'ga-yt-share-to': { const v = ytVideo(ctx, ui.gaVideo); ui.gaYtDialog = null; if (v) ctx.share(id, AndroidStrings.format(T(ctx.lang, 'Watch "%1$s" on YouTube'), v.title), watchUrl(v)); break; }
+      case 'ga-yt-copy': { ctx.closeOverlay(); const v = ytVideo(ctx, ui.gaVideo); if (v) navigator.clipboard?.writeText(watchUrl(v)).catch(() => {}); ctx.toast(T(ctx.lang, 'URL copied.')); break; }
+      case 'ga-yt-channel': ytGo(ui, 'channel', {gaYtChannel: id, gaYtChTab: 'uploads'}); ctx.render(); break;
+      case 'ga-yt-chtab': ui.gaYtChTab = id; ctx.render(); break;
+      case 'ga-yt-subscribe': ctx.closeOverlay(); ui.gaYtDialog = {kind: 'subscribe'}; ctx.render(); break;
+      case 'ga-yt-subscribe-pick': { const name = ui.gaYtChannel, all = id === '0'; ytStore(data).subs[name] = all ? 'activity' : 'uploads'; ui.gaYtDialog = null; ctx.save(); ctx.render(); ctx.toast(AndroidStrings.format(T(ctx.lang, all ? "Subscribed to %1$s's activity." : "Subscribed to %1$s's uploads."), name)); break; }
+      case 'ga-yt-unsubscribe': ctx.closeOverlay(); delete ytStore(data).subs[ui.gaYtChannel]; ctx.save(); ctx.render(); ctx.toast(T(ctx.lang, 'Unsubscribed.')); break;
+      case 'ga-yt-list': ytGo(ui, 'list', {gaYtList: id}); ctx.render(); break;
+      case 'ga-yt-dialog-cancel': ui.gaYtDialog = null; ctx.render(); break;
+      case 'ga-yt-policy-pick': ui.gaYtDialog.pick = Number(id); ctx.render(); break;
+      case 'ga-yt-policy-ok': (data.gaYtPrefs ||= {}).upload_policy = ui.gaYtDialog?.pick ?? 0; ui.gaYtDialog = null; ctx.save(); ytUploadNow(ctx); break;
+      // YouTube's Settings.
+      case 'ga-yt-settings': ctx.closeOverlay(); ytGo(ui, 'settings', {gaYtPrefPage: ''}); ctx.render(); break;
+      case 'ga-yts-page': ytGo(ui, 'settings', {gaYtPrefPage: id}); ctx.render(); break;
+      case 'ga-yts-licenses': ytGo(ui, 'settings', {gaYtPrefPage: 'licenses'}); ctx.render(); break;
+      case 'ga-yts-check': (data.gaYtPrefs ||= {})[id] = !ytPref(data, id, ytPrefRow(id)[4]); ctx.save(); ctx.render(); break;
+      case 'ga-yts-list': ui.gaYtDialog = {kind: 'list', key: id}; ctx.render(); break;
+      case 'ga-yts-pick': (data.gaYtPrefs ||= {})[ui.gaYtDialog.key] = Number(id); ui.gaYtDialog = null; ctx.save(); ctx.render(); break;
+      case 'ga-yts-clear': ui.gaYtDialog = {kind: 'clear'}; ctx.render(); break;
+      case 'ga-yts-clear-ok': ytStore(data).searches = []; ui.gaYtDialog = null; ctx.save(); ctx.render(); break;
       case 'ga-yt-wtab': ui.gaYtWatchTab = id; ctx.render(); break;
       case 'ga-yt-toggle': ui.gaPaused = !ui.gaPaused; ctx.render(); break;
       // A rating is final (the buttons turn ic_like_disabled / ic_dislike_disabled) and toasts rating_like / rating_dislike.
@@ -526,7 +885,7 @@
       case 'ga-shop': ctx.openApp('play-store'); break;
       case 'ga-search-run': ctx.browse(id); break;
       case 'ga-voice-listen': ctx.listen(); break;
-      case 'ga-unsupported': ctx.closeOverlay(); ctx.toast('This feature is not part of the simulator.'); break;
+      case 'ga-unsupported': case 'ga-yts-web': ctx.closeOverlay(); ctx.toast('This feature is not part of the simulator.'); break;
       default: return false;
     }
     return true;
@@ -538,6 +897,9 @@
       data.talkChats ||= []; data.talkChats.push({contact: ui.gaChat, body, mine: true});
       ctx.save(); ctx.render(); return true;
     }
+    if (form === 'ga-yt-search') { const q = String(values.get('query') || '').trim(); if (q) ytRunSearch(ctx, q); return true; }
+    // The Upload button asks for upload_policy first if it was never set.
+    if (form === 'ga-yt-upload') { if (ytPref(data, 'upload_policy', -1) < 0) { ui.gaYtDialog = {kind: 'policy', pick: 0}; ctx.render(); } else ytUploadNow(ctx); return true; }
     if (form === 'ga-talk-search') { const q = String(values.get('query') || '').trim(); if (q) { ui.gaTalkQ = q; ui.gaSub = 'results'; ctx.render(); } return true; }
     if (form === 'ga-talk-invite') {
       const emails = String(values.get('email') || '').split(/[,;\s]+/).filter(Boolean).map(x => x.includes('@') ? x : `${x}@gmail.com`);
@@ -550,5 +912,5 @@
     }
     return false;
   }
-  window.ICSGoogleApps = {APPS, render, handle, submit, menu, books: {BOOKS, BOOK_PREFS, bookPrefs, stepPref}};
+  window.ICSGoogleApps = {APPS, render, handle, submit, menu, back, captured, books: {BOOKS, BOOK_PREFS, bookPrefs, stepPref}};
 })();

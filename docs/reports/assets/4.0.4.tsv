@@ -243,8 +243,11 @@ versions/4.0.4/assets/ga-bk-ic_menu_toc_light.png	ac23d19eeea95990	copy	maguro:/
 versions/4.0.4/assets/ga-dialog_full_holo_dark.png	196a5f668b23f27a	copy	maguro:/system/app/CameraGoogle.apk!res/drawable-xhdpi/dialog_full_holo_dark.9.png	drawable-xhdpi		196a5f668b23f27a
 versions/4.0.4/assets/ga-fw-ab_solid_dark_holo.png	7c37a21f88eaca53	copy	maguro:/system/framework/framework-res.apk!res/drawable-xhdpi/ab_solid_dark_holo.9.png	drawable-xhdpi		7c37a21f88eaca53
 versions/4.0.4/assets/ga-fw-ab_stacked_solid_dark_holo.png	c25bfb3540f6c75c	copy	maguro:/system/framework/framework-res.apk!res/drawable-xhdpi/ab_stacked_solid_dark_holo.9.png	drawable-xhdpi		c25bfb3540f6c75c
+versions/4.0.4/assets/ga-fw-btn_default_normal_holo_light.png	23a2d0a742840110	copy	maguro:/system/framework/framework-res.apk!res/drawable-xhdpi/btn_default_normal_holo_light.9.png	drawable-xhdpi		23a2d0a742840110
+versions/4.0.4/assets/ga-fw-btn_default_pressed_holo_light.png	4fc12a2519b43b9b	copy	maguro:/system/framework/framework-res.apk!res/drawable-xhdpi/btn_default_pressed_holo_light.9.png	drawable-xhdpi		4fc12a2519b43b9b
 versions/4.0.4/assets/ga-fw-ic_ab_back_holo_dark.png	e42410e5b745b6ec	copy	maguro:/system/app/Music2.apk!res/drawable-xhdpi/ic_ab_back_holo_dark.png	drawable-xhdpi		e42410e5b745b6ec
 versions/4.0.4/assets/ga-fw-ic_ab_back_holo_light.png	b337b8aae35678b0	copy	maguro:/system/framework/framework-res.apk!res/drawable-xhdpi/ic_ab_back_holo_light.png	drawable-xhdpi		b337b8aae35678b0
+versions/4.0.4/assets/ga-fw-ic_menu_recent_history.png	7c527b14d714c92f	copy	maguro:/system/framework/framework-res.apk!res/drawable-xhdpi/ic_menu_recent_history.png	drawable-xhdpi		7c527b14d714c92f
 versions/4.0.4/assets/ga-gp-default_avatar.png	b2b949836bf8221e	copy	maguro:/system/app/PlusOne.apk!res/drawable-xhdpi/default_avatar.png	drawable-xhdpi		b2b949836bf8221e
 versions/4.0.4/assets/ga-gp-home_screen_games_icon_default.png	6f3d4e917177080d	copy	maguro:/system/app/PlusOne.apk!res/drawable-xhdpi/home_screen_games_icon_default.png	drawable-xhdpi		6f3d4e917177080d
 versions/4.0.4/assets/ga-gp-home_screen_huddle_icon_default.png	38c995929f469d5c	copy	maguro:/system/app/PlusOne.apk!res/drawable-xhdpi/home_screen_huddle_icon_default.png	drawable-xhdpi		38c995929f469d5c
@@ -287,7 +290,10 @@ versions/4.0.4/assets/ga-vd-ic_vd_retry.png	110e1c5e6b2f2c08	copy	maguro:/system
 versions/4.0.4/assets/ga-yt-avatar_missing.png	796e3d6bf71b02f0	copy	maguro:/system/app/YouTube.apk!res/drawable/avatar_missing.png	drawable		796e3d6bf71b02f0
 versions/4.0.4/assets/ga-yt-bg_button_normal.png	1cd21a502e33ec63	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/bg_button_normal.9.png	drawable-xhdpi		1cd21a502e33ec63
 versions/4.0.4/assets/ga-yt-bg_button_pressed.png	60de760565f51762	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/bg_button_pressed.9.png	drawable-xhdpi		60de760565f51762
+versions/4.0.4/assets/ga-yt-bg_stack_normal.png	67b8bcd0ee18970f	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/bg_stack_normal.9.png	drawable-xhdpi		67b8bcd0ee18970f
 versions/4.0.4/assets/ga-yt-bg_stripes_dark.png	0d5c6e6bdc1ef40d	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/bg_stripes_dark.png	drawable-xhdpi		0d5c6e6bdc1ef40d
+versions/4.0.4/assets/ga-yt-bg_stripes_light.png	2084c31d995de473	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/bg_stripes_light.png	drawable-xhdpi		2084c31d995de473
+versions/4.0.4/assets/ga-yt-bg_stripes_medium.png	f7a58a4dce7631e6	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/bg_stripes_medium.png	drawable-xhdpi		f7a58a4dce7631e6
 versions/4.0.4/assets/ga-yt-bg_yt_button_panel.png	bd8105c5beb7ad3b	copy	maguro:/system/app/YouTube.apk!res/drawable-nodpi/bg_yt_button_panel.9.png	drawable-nodpi		bd8105c5beb7ad3b
 versions/4.0.4/assets/ga-yt-divider_horizontal.png	095405eb9585c15a	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/divider_horizontal.9.png	drawable-xhdpi		095405eb9585c15a
 versions/4.0.4/assets/ga-yt-ic_dislike.png	4d07920f11a0cbce	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_dislike.png	drawable-xhdpi		4d07920f11a0cbce
@@ -295,6 +301,9 @@ versions/4.0.4/assets/ga-yt-ic_dislike_disabled.png	0168cb2c97771c42	copy	maguro
 versions/4.0.4/assets/ga-yt-ic_hd.png	cb611f27c4eb5f68	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_hd.png	drawable-xhdpi		cb611f27c4eb5f68
 versions/4.0.4/assets/ga-yt-ic_like.png	8fbdd40bf9c88ea5	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_like.png	drawable-xhdpi		8fbdd40bf9c88ea5
 versions/4.0.4/assets/ga-yt-ic_like_disabled.png	d198c0eb77d57f32	copy	maguro:/system/app/YouTube.apk!res/drawable-hdpi/ic_like_disabled.png	drawable-hdpi		d198c0eb77d57f32
+versions/4.0.4/assets/ga-yt-ic_list_add_new.png	96ebe83a1428bd18	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_list_add_new.png	drawable-xhdpi		96ebe83a1428bd18
+versions/4.0.4/assets/ga-yt-ic_list_favorite.png	8cc0d35d3cd43177	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_list_favorite.png	drawable-xhdpi		8cc0d35d3cd43177
+versions/4.0.4/assets/ga-yt-ic_list_watch_later.png	d8b7c76f9727add7	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_list_watch_later.png	drawable-xhdpi		d8b7c76f9727add7
 versions/4.0.4/assets/ga-yt-ic_logo_square.png	5c63acaa7c2c248f	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_logo_square.png	drawable-xhdpi		5c63acaa7c2c248f
 versions/4.0.4/assets/ga-yt-ic_menu_add_to_playlist.png	f6c1fb3a342d0f7c	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_menu_add_to_playlist.png	drawable-xhdpi		f6c1fb3a342d0f7c
 versions/4.0.4/assets/ga-yt-ic_menu_capture.png	23ce51a6c1da7315	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_menu_capture.png	drawable-xhdpi		23ce51a6c1da7315
@@ -302,8 +311,17 @@ versions/4.0.4/assets/ga-yt-ic_menu_search.png	e6200c2141e100b3	copy	maguro:/sys
 versions/4.0.4/assets/ga-yt-ic_menu_share.png	02234443ba53f3fd	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_menu_share.png	drawable-xhdpi		02234443ba53f3fd
 versions/4.0.4/assets/ga-yt-ic_plusone_standard_off.png	4913a59d101ad00d	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_plusone_standard_off.png	drawable-xhdpi		4913a59d101ad00d
 versions/4.0.4/assets/ga-yt-ic_plusone_standard_on.png	d42dc3ed23247d1f	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_plusone_standard_on.png	drawable-xhdpi		d42dc3ed23247d1f
+versions/4.0.4/assets/ga-yt-ic_stack_favorites.png	124bad352b8c966b	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_stack_favorites.png	drawable-xhdpi		124bad352b8c966b
+versions/4.0.4/assets/ga-yt-ic_stack_history.png	c5adf53911bfb8eb	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_stack_history.png	drawable-xhdpi		c5adf53911bfb8eb
+versions/4.0.4/assets/ga-yt-ic_stack_playlists.png	9b45c1849d55d4eb	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_stack_playlists.png	drawable-xhdpi		9b45c1849d55d4eb
+versions/4.0.4/assets/ga-yt-ic_stack_subscriptions.png	5988911a8ed0197b	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_stack_subscriptions.png	drawable-xhdpi		5988911a8ed0197b
+versions/4.0.4/assets/ga-yt-ic_stack_uploads.png	49d7cd23712fc0ff	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_stack_uploads.png	drawable-xhdpi		49d7cd23712fc0ff
+versions/4.0.4/assets/ga-yt-ic_stack_watchlater.png	67f9e21efa9375fb	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_stack_watchlater.png	drawable-xhdpi		67f9e21efa9375fb
 versions/4.0.4/assets/ga-yt-ic_vidcontrol_pause.png	7346a3e66e626aab	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_vidcontrol_pause.png	drawable-xhdpi		7346a3e66e626aab
 versions/4.0.4/assets/ga-yt-ic_vidcontrol_play.png	56a834d18a0cd005	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/ic_vidcontrol_play.png	drawable-xhdpi		56a834d18a0cd005
+versions/4.0.4/assets/ga-yt-ic_yt_locked.png	d52ce7ac6855623b	copy	maguro:/system/app/YouTube.apk!res/drawable-hdpi/ic_yt_locked.png	drawable-hdpi		d52ce7ac6855623b
+versions/4.0.4/assets/ga-yt-ic_yt_unlocked.png	2d5563b6c13f14d2	copy	maguro:/system/app/YouTube.apk!res/drawable-hdpi/ic_yt_unlocked.png	drawable-hdpi		2d5563b6c13f14d2
+versions/4.0.4/assets/ga-yt-licenses.html	34250165ffd21705	copy	maguro:/system/app/YouTube.apk!assets/licenses.html			34250165ffd21705
 versions/4.0.4/assets/ga-yt-tab_selected_holo.png	93219b4bc1b153bb	copy	maguro:/system/app/YouTube.apk!res/drawable/tab_selected_holo.9.png	drawable		93219b4bc1b153bb
 versions/4.0.4/assets/ga-yt-tab_solid_selected.png	b514d8272288eee3	copy	maguro:/system/app/YouTube.apk!res/drawable/tab_solid_selected.9.png	drawable		b514d8272288eee3
 versions/4.0.4/assets/ga-yt-tab_solid_unselected.png	6fc061a79a82a473	copy	maguro:/system/app/YouTube.apk!res/drawable/tab_solid_unselected.9.png	drawable		6fc061a79a82a473

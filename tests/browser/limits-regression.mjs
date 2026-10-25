@@ -1375,6 +1375,101 @@ const gbYouTubeSettings = async h => {
   await h.tap('#viewport [data-id="youtube:clear_history"]');
   h.check('Clear search history empties it', !(await store(h, 'youtube23'))?.searches?.length);
 };
+
+// 4.0.4 YouTube 3.5.5 (T20): Search with its kept queries and time filter, the watch page's Add to (Watch later,
+// a new playlist), Share into Gmail, Copy URL, the uploader's channel and Subscribe, Record into the upload form (the
+// upload policy asked once) with the upload opening from Uploads, and Settings' General / Search pages.
+const icsYouTube = async h => {
+  const yt = async () => (await store(h, 'gaYt')) || {};
+  const menu = async action => { await h.tap('#viewport [data-action="ga-menu"]'); await h.tap(`.holo-menu [data-action="${action}"]`); };
+  const toast = re => h.until(`${re}.test(document.querySelector('.toast')?.textContent || '')`, 4000);
+  await h.openApp('youtube');
+  await h.until(`!!document.querySelector('#viewport .ga-yt-row')`);
+  await h.tap('#viewport .ga-yt-bar [data-action="ga-yt-search"]');
+  await h.type('#viewport .ga-yt-sv input', 'galaxy nexus');
+  await h.key('Enter'); await h.ev(`document.querySelector('#viewport .ga-yt-sv')?.requestSubmit()`);
+  h.check('Search lists the matching video', await h.until(`document.querySelectorAll('#viewport .ga-yt-row').length === 1 && !!document.querySelector('#viewport .ga-yt-row[data-id="v1"]')`));
+  h.check('the query is kept', (await yt()).searches?.[0] === 'galaxy nexus');
+  await h.tap('#viewport .ga-yt-spin');
+  await h.tap('#viewport [data-action="ga-yt-time"][data-id="0"]');
+  h.check('the Today filter leaves no 2011 video', await h.until(`/No videos found/.test(document.querySelector('#viewport .ga-yt-none')?.textContent || '')`));
+  await h.tap('#viewport .ga-yt-bar [data-action="ga-yt-search"]');
+  await h.type('#viewport .ga-yt-sv input', 'gal');
+  h.check('the SearchView suggests the kept query', await h.until(`[...document.querySelectorAll('#viewport .ga-yt-suggest')].some(b => b.textContent === 'galaxy nexus')`));
+  await h.tap('#viewport .ga-yt-suggest[data-id="galaxy nexus"]');
+  await h.until(`!!document.querySelector('#viewport .ga-yt-row[data-id="v1"]')`);
+  await h.tap('#viewport .ga-yt-row[data-id="v1"]');
+  h.check('the video opens', await h.until(`!!document.querySelector('#viewport .ga-yt-info')`));
+  await h.tap('#viewport [data-action="ga-yt-addto"]');
+  await h.tap('#viewport [data-action="ga-yt-addto-pick"][data-id="later"]');
+  h.check('Add to › Watch later', await toast('/Watch Later playlist/') && (await yt()).later?.[0] === 'v1');
+  await h.tap('#viewport [data-action="ga-yt-addto"]');
+  await h.tap('#viewport [data-action="ga-yt-addto-pick"][data-id="later"]');
+  h.check('a second time it is already there', await toast('/already in your Watch Later/') && (await yt()).later.length === 1);
+  await h.tap('#viewport [data-action="ga-yt-addto"]');
+  await h.tap('#viewport [data-action="ga-yt-addto-pick"][data-id="new"]');
+  await h.type('#viewport [data-ga-yt-newlist]', 'Phones');
+  await h.tap('#viewport [data-action="ga-yt-newlist-ok"]');
+  h.check('New playlist takes the video', await toast('/Video added to Phones playlist/') && (await yt()).playlists?.[0]?.videos?.[0] === 'v1');
+  await menu('ga-yt-copy');
+  h.check('Copy URL', await toast('/URL copied/'));
+  await h.tap('#viewport [data-action="ga-yt-share"]');
+  await h.tap('#viewport [data-action="ga-yt-share-to"][data-id="gmail"]');
+  h.check('Share writes the link into Gmail', await h.until(`/youtube\\.com\\/watch\\?v=/.test(document.querySelector('#viewport .g4-form textarea')?.value || '') && /Galaxy Nexus/.test(document.querySelector('#viewport .g4-form [name=subject]')?.value || '')`));
+  await h.openApp('youtube');
+  await h.until(`!!document.querySelector('#viewport .ga-yt-row')`);
+  await h.tap('#viewport .ga-yt-row[data-id="v2"]');
+  await h.tap('#viewport .ga-yt-channel');
+  h.check('the uploader\'s channel lists its video', await h.until(`/Droid Corner/.test(document.querySelector('#viewport .ga-yt-chhead')?.textContent || '') && !!document.querySelector('#viewport .ga-yt-row[data-id="v2"]')`));
+  await menu('ga-yt-subscribe');
+  await h.tap('#viewport [data-action="ga-yt-subscribe-pick"][data-id="0"]');
+  h.check('Subscribe › All activity', await toast("/Subscribed to Droid Corner's activity/") && (await yt()).subs?.['Droid Corner'] === 'activity');
+  await h.key('Escape'); await h.key('Escape');
+  h.check('Back returns through the watch page to Home', await h.until(`!!document.querySelector('#viewport .ga-yt-tabs')`));
+  // Record: the camcorder, then the upload form.
+  await h.tap('#viewport [data-action="ga-yt-record"]');
+  h.check('Record opens the camcorder', await h.until(`!!document.querySelector('#viewport [data-action="shoot"]')`));
+  await h.tap('#viewport [data-action="shoot"]'); await h.sleep(1300); await h.tap('#viewport [data-action="shoot"]');
+  h.check('the clip comes back to Upload video', await h.until(`!!document.querySelector('#viewport .ga-yt-upload .ga-yt-upframe')`));
+  await h.type('#viewport [data-ga-yt-up="title"]', 'Trail clip');
+  await h.tap('#viewport .ga-yt-privacy');
+  await h.tap('#viewport [data-action="ga-yt-privacy"][data-id="1"]');
+  await h.tap('#viewport .ga-yt-upbuttons button');
+  h.check('the first upload asks the upload policy', await h.until(`!!document.querySelector('#viewport [data-action="ga-yt-policy-ok"]')`));
+  await h.tap('#viewport [data-action="ga-yt-policy-ok"]');
+  const up = (await yt()).uploads?.[0];
+  h.check('the upload is kept', up?.title === 'Trail clip' && up.privacy === 1 && (await store(h, 'gaYtPrefs'))?.upload_policy === 0);
+  h.check('its notification is posted', (await store(h, 'notifications')).some(n => /uploaded successfully/.test(n.title)));
+  h.check('the clip is in the Gallery', (await store(h, 'photos')).some(p => p.video && p.id === up.photo));
+  await h.tap('#viewport [data-action="ga-yt-tab"][data-id="Account"]');
+  await h.tap('#viewport .ga-yt-stack[data-id="uploads"]');
+  await h.tap(`#viewport .ga-yt-row[data-id="${up.id}"]`);
+  h.check('the upload opens from Uploads', await h.until(`/Trail clip/.test(document.querySelector('#viewport .ga-yt-info h3')?.textContent || '')`));
+  await h.key('Escape'); await h.key('Escape');
+  await h.tap('#viewport .ga-yt-stack[data-id="playlists"]');
+  await h.tap('#viewport .ga-yt-stack[data-id^="pl:"]');
+  h.check('the playlist holds its video', await h.until(`/Phones/.test(document.querySelector('#viewport .ga-yt-plhead')?.textContent || '') && !!document.querySelector('#viewport .ga-yt-row[data-id="v1"]')`));
+  await h.key('Escape'); await h.key('Escape');
+  await h.tap('#viewport .ga-yt-stack[data-id="subscriptions"]');
+  h.check('Subscriptions lists the channel', await h.until(`/Droid Corner's activity/.test(document.querySelector('#viewport .ga-yt-sub')?.textContent || '')`));
+  await h.key('Escape');
+  // Settings: General and Search.
+  await menu('ga-yt-settings');
+  await h.tap('#viewport [data-action="ga-yts-page"][data-id="general"]');
+  await h.tap('#viewport [data-id="default_hq"]');
+  await h.tap('#viewport [data-id="subtitles_size"]');
+  await h.tap('#viewport [data-action="ga-yts-pick"][data-id="2"]');
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="ga-yts-page"][data-id="search"]');
+  await h.tap('#viewport [data-id="safe_search"]');
+  h.check('SafeSearch has its own dialog title', await h.until(`document.querySelector('#viewport .mps-dialog h3')?.textContent === 'SafeSearch'`));
+  await h.tap('#viewport [data-action="ga-yts-pick"][data-id="2"]');
+  await h.tap('#viewport [data-id="clear_history"]');
+  await h.tap('#viewport [data-action="ga-yts-clear-ok"]');
+  const p = await store(h, 'gaYtPrefs');
+  h.check('the settings are kept', p.default_hq === true && p.subtitles_size === 2 && p.safe_search === 2, JSON.stringify(p));
+  h.check('Clear search history empties the queries', !(await yt()).searches.length);
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1462,6 +1557,7 @@ const CASES = [
   {id: 'T17', version: '2.3.6', name: 'Talk › Add to chat, Settings', run: gbTalk},
   {id: 'T17', version: '4.0.4', name: 'Talk › Display options, Add to chat, Friend info, Talk settings', run: icsTalk},
   {id: 'T20', version: '2.3.6', name: 'YouTube › Settings', run: gbYouTubeSettings},
+  {id: 'T20', version: '4.0.4', name: 'YouTube › Search, Add to, Share, Copy URL, channel, Record and upload, Settings', run: icsYouTube},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

@@ -344,6 +344,7 @@
   let panoCtl = null, movieCtl = null, recTimer = 0;
   function cameraAttach() {
     if (ui.cameraRec && ui.view !== 'camera') cameraStop();
+    if (ui.view !== 'camera') ui.captureFor = '';
     if (panoCtl && !viewport.querySelector('[data-icp]')?.isSameNode(panoCtl.root)) { panoCtl.destroy(); panoCtl = null; }
     const icp = viewport.querySelector('[data-icp]');
     if (icp && !panoCtl) panoCtl = {...ICSPano.attach(icp, {ui, rerender: render, shoot: cameraSave}), root: icp};
@@ -359,7 +360,12 @@
     const photo = {...ICSMedia.scene(data), id: Date.now(), name: `${clip.pano ? 'PANO' : 'VID'}_${stamp.slice(0, 8)}_${stamp.slice(8)}`, album: 'camera', created: Date.now(), ...(clip.pano ? {pano: true} : {video: true, duration: Math.max(1000, Math.round(clip.duration))})};
     data.photos.unshift(photo); save(); return photo;
   }
-  function cameraStop() { const rec = ui.cameraRec; ui.cameraRec = null; clearInterval(recTimer); if (rec) cameraSave({duration: Date.now() - rec.start}); }
+  // A clip recorded for YouTube's Record (quickCapture) returns to it at once.
+  function cameraStop() {
+    const rec = ui.cameraRec; ui.cameraRec = null; clearInterval(recTimer); if (!rec) return;
+    const clip = cameraSave({duration: Date.now() - rec.start});
+    if (ui.captureFor === 'youtube' && ui.view === 'camera') { openApp('youtube', true); ICSGoogleApps.captured(clip, googleAppsContext()); }
+  }
   function restoreWidgetScroll() {
     ui.widgetScroll = ui.widgetScroll || {};
     viewport.querySelectorAll('.home-widget .calw-list').forEach(list => {
@@ -556,7 +562,8 @@
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
     if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; }
     if (app === 'news-weather' && !resume) { ui.newsSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
-    if (ICSGoogleApps.APPS.includes(app) && !resume) { ui.gaSub = ''; if (app === 'voice-dialer') setTimeout(() => googleAppsContext().listen()); }
+    if (ICSGoogleApps.APPS.includes(app) && !resume) { ui.gaSub = ''; ui.gaYtStack = []; ui.gaYtDialog = null; ui.gaYtDrop = ''; if (app === 'voice-dialer') setTimeout(() => googleAppsContext().listen()); }
+    if (app !== 'camera') ui.captureFor = '';
     if(ui.locked)return;
     if (!appNames[app]) return;
     captureRecentView();
@@ -587,10 +594,21 @@
   // Google+, Talk, YouTube, Play Books / Movies, Search, Voice Dialer and Latitude (ics-google-apps.js).
   let voiceDialTimer = null;
   function googleAppsContext() {
-    return {data, ui, view: ui.view, lang: i18n.language, account: ICSGmail.account, save, render, renderOverlay, toast, openApp,
+    return {data, ui, view: ui.view, lang: i18n.language, account: ICSGmail.account, now: deviceDate().getTime(), t: key => i18n.t(key), save, render, renderOverlay, toast, openApp,
       closeOverlay() { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } },
       focus(selector) { requestAnimationFrame(() => viewport.querySelector(selector)?.focus()); },
       browse(query) { openApp('browser'); navigateBrowser(`search:${query}`); },
+      // YouTube's Record: the camcorder in VIDEO_CAPTURE with quickCapture, whose clip goes back to YouTube (cameraStop).
+      record() { ui.captureFor = 'youtube'; ui.cameraMode = 'video'; ui.cameraModes = false; ui.icsPano = null; openApp('camera'); },
+      // ACTION_SEND text/plain: the subject and the text into the chosen app's new message.
+      share(app, subject, text) {
+        openApp(app);
+        if (app === 'gmail') { ICSGmail.handle('g4-compose', '', gmailContext()); const d = data.gmail40.find(m => m.id === ui.g4Id); if (d) Object.assign(d, {subject, body: text}); }
+        else if (app === 'email') { composeEmail(); const d = data.mailbox.find(m => m.id === ui.emailId); if (d) Object.assign(d, {subject, body: text + (d.body || '')}); }
+        else { ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); }
+        save(); render();
+      },
+      notify(title) { addNotification(title, ''); },
       listen() { clearTimeout(voiceDialTimer); ui.gaVoice = 'listening'; render(); voiceDialTimer = setTimeout(() => { ui.gaVoice = 'failed'; if (ui.view === 'voice-dialer') render(); }, 3000); }};
   }
   // The context Gmail's module renders and acts with.
@@ -633,6 +651,7 @@
     if (ui.view === 'play-books') { ui.gaBkSpin = ''; ui.gaBkOptions = false; ui.gaBkToc = false; }
     // Talk: an open dialog first; Friend info returns to its chat, Blocked friends to Talk settings.
     if (ui.view === 'talk' && (ui.gaTkDialog || ui.gaSub === 'info' || ui.gaSub === 'blocked')) { if (ui.gaTkDialog) ui.gaTkDialog = null; else ui.gaSub = ui.gaSub === 'info' ? 'chat' : 'settings'; render(); return; }
+    if (ui.view === 'youtube' && !ui.overlay && ICSGoogleApps.back(googleAppsContext())) return;
     if (ICSGoogleApps.APPS.includes(ui.view) && ui.gaSub) { ui.gaSub = ''; render(); return; }
     if (ui.view === 'gmail' && ui.sub === 'g4-prefs' && !ui.overlay) { ICSGmailPrefs.back(ui); render(); return; }
     if (ui.view === 'gmail') {
@@ -650,6 +669,8 @@
     if(ui.view==='phone' && ui.activeCall){if(ui.activeCall.keypad){ui.activeCall.keypad=false;render();}else home(false);return;}
     if (ui.view === 'gallery' && ui.galleryCrop) { ui.galleryCrop=null;render();return; }
     if (ui.view === 'gallery' && ui.gallerySlideshow) { ui.gallerySlideshow=false;render();return; }
+    // YouTube's capture: Back before recording returns to it without a clip (RESULT_CANCELED).
+    if (ui.view === 'camera' && ui.captureFor && !ui.cameraRec && !ui.overlay) { openApp(ui.captureFor, true); return; }
     if (ui.view === 'camera' && ui.cameraRec && !ui.overlay) { cameraStop(); render(); return; }
     if (ui.view === 'camera' && ui.icsPano?.state === 'capture' && !ui.overlay) { ui.icsPano = null; render(); return; }
     if (ui.view === 'gallery' && ui.sub === 'movie') { ui.sub='photo';ui.galleryMovie=null;render();return; }

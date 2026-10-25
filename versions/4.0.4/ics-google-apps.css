@@ -123,11 +123,97 @@
 .ga-yt-info p{margin:0;font-size:calc(13 * var(--dp))}
 .ga-yt-info p.dim{color:#555}
 .ga-yt-none{margin:calc(23.5295 * var(--dp)) 0;color:#555;text-align:center;font-size:calc(13 * var(--dp))}
-.ga-yt-channelhead{display:flex;padding:calc(16 * var(--dp));background:#d6d6d6}
-.ga-yt-channelhead img{width:calc(76 * var(--dp));height:calc(76 * var(--dp));padding:calc(1.1765 * var(--dp));background:#fff;box-shadow:0 0 0 calc(1.1765 * var(--dp)) #0002}
-.ga-yt-channelhead span{display:flex;flex-direction:column;margin-left:calc(7 * var(--dp));min-width:0}
-.ga-yt-channelhead b{font-size:calc(18 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* my_channel_header.xml (bg_stripes_light, 16 dp padding) and channel_header.xml (bg_stripes_medium, 4 dp, the name in
+   white and the stats in #888): the 76 dp avatar in avatar_border, the 18 dp bold name and the 12 dp stats. */
+.ga-yt-channelhead,.ga-yt-chhead{flex:none;display:flex;padding:calc(16 * var(--dp));background:#e6e6e6 url('assets/ga-yt-bg_stripes_light.png') 0 0/calc(16 * var(--dp)) calc(16 * var(--dp)) repeat}
+.ga-yt-chhead{padding:calc(4 * var(--dp));background:#8a8a8a url('assets/ga-yt-bg_stripes_medium.png') 0 0/calc(16 * var(--dp)) calc(16 * var(--dp)) repeat;color:#fff}
+.ga-yt-channelhead img,.ga-yt-chhead img{width:calc(76 * var(--dp));height:calc(76 * var(--dp));margin-left:calc(2 * var(--dp));padding:calc(1.1765 * var(--dp));background:#fff;box-shadow:0 0 0 calc(1.1765 * var(--dp)) #0002}
+.ga-yt-channelhead span,.ga-yt-chhead span{display:flex;flex-direction:column;margin-left:calc(7 * var(--dp));min-width:0}
+.ga-yt-channelhead b,.ga-yt-chhead b{font-size:calc(18 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ga-yt-channelhead small{color:#555;font-size:calc(12 * var(--dp))}
+.ga-yt-chhead small{color:#888;font-size:calc(12 * var(--dp))}
+/* my_channel_stack_buttons.xml: two rows 20 dp apart of StackButtons (bg_stack_normal, the ic_stack_* picture on it,
+   the 16 dp label); stack_playlist_item.xml lays one out in a row. */
+.ga-yt-stacks{flex:none;display:flex;margin-top:calc(20 * var(--dp))}
+.screen .ga-yt-stack{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;padding:0;border:0;background:none;color:#000}
+.ga-yt-card{flex:none;display:flex;align-items:center;justify-content:center;width:calc(88 * var(--dp));height:calc(69.5 * var(--dp));background:url('assets/ga-yt-bg_stack_normal.png') 0 0/100% 100% no-repeat}
+.ga-yt-card img{width:calc(45.5 * var(--dp));height:calc(45.5 * var(--dp))}
+.ga-yt-stack b{max-width:100%;margin-top:calc(4 * var(--dp));font-weight:400;font-size:calc(16 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .ga-yt-stack:active .ga-yt-card{box-shadow:inset 0 0 0 calc(100 * var(--dp)) #33b5e566}
+.screen .ga-yt-stack.row{flex-direction:row;width:100%;padding:calc(4 * var(--dp)) calc(8 * var(--dp));border-bottom:calc(1.1765 * var(--dp)) solid #0000001f}
+.ga-yt-stack.row b{margin:0 0 0 calc(12 * var(--dp))}
+/* subscription_item.xml: textAppearanceLarge in a listPreferredItemHeight row, 15 dp side padding. */
+.screen .ga-yt-sub{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:0 calc(15 * var(--dp));border:0;border-bottom:calc(1.1765 * var(--dp)) solid #0000001f;background:none;color:#000;font-size:calc(22 * var(--dp));text-align:left}
+.screen .ga-yt-sub:active{background:#33b5e566}
+/* playlist_activity.xml: the 18 dp bold title and the 13 dp details on bg_stripes_light, 6 dp padding. */
+.ga-yt-plhead{flex:none;display:flex;flex-direction:column;padding:calc(6 * var(--dp));background:#e6e6e6 url('assets/ga-yt-bg_stripes_light.png') 0 0/calc(16 * var(--dp)) calc(16 * var(--dp)) repeat}
+.ga-yt-plhead b{font-size:calc(18 * var(--dp))}
+.ga-yt-plhead small{font-size:calc(13 * var(--dp))}
+/* The SearchView in the bar and the recent queries under it (ic_menu_recent_history). */
+.ga-yt-sv input{flex:1;min-width:0;height:calc(36 * var(--dp));margin-right:calc(8 * var(--dp));padding:0 calc(4 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #33b5e5;background:none;color:#fff;font:400 calc(18 * var(--dp)) RobotoICS,sans-serif;outline:0}
+.ga-yt-sv input::placeholder{color:#ffffff80}
+.ga-yt-suggestions{background:#fff}
+.screen .ga-yt-suggest{display:flex;align-items:center;width:100%;min-height:calc(58 * var(--dp));padding:0 calc(8 * var(--dp));border:0;border-bottom:calc(1.1765 * var(--dp)) solid #0000001f;background:none;color:#000;text-align:left;font-size:calc(18 * var(--dp))}
+.screen .ga-yt-suggest:active{background:#33b5e566}
+.ga-yt-suggest img{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-right:calc(12 * var(--dp))}
+.ga-yt-suggest span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* results_activity.xml: the ics_dark_grey row with "Results" (18 dp white, 8 dp in) and the 48 dp DropdownSpinner. */
+.ga-yt-results-head{position:relative;z-index:6;flex:none;display:flex;align-items:center;height:calc(48 * var(--dp));padding-left:calc(8 * var(--dp));background:#3d3d3d;color:#fff;font-size:calc(18 * var(--dp))}
+.ga-yt-results-head span{flex:1;min-width:0}
+.screen .ga-yt-spin{height:100%;padding:0 calc(16 * var(--dp)) 0 0;border:0 solid transparent;border-width:calc(4 * var(--dp)) calc(16 * var(--dp)) calc(4 * var(--dp)) calc(4 * var(--dp));border-image:url('assets/ga-bk-23-spinner_default_holo_dark.png') 8 32 52 8 fill/calc(4 * var(--dp)) calc(16 * var(--dp)) calc(26 * var(--dp)) calc(4 * var(--dp));background:none;color:#fff;font-size:calc(16 * var(--dp))}
+.screen .ga-yt-spin:active{border-image-source:url('assets/ga-bk-23-spinner_pressed_holo_dark.png')}
+/* A spinner's dropdown: menu_dropdown_panel_holo_light under its anchor. */
+.screen .ga-yt-drop-scrim{position:absolute;inset:0;z-index:5;border:0;background:none}
+.ga-yt-anchor{position:relative;z-index:6}
+.ga-yt-drop{position:absolute;top:100%;right:0;z-index:7;min-width:calc(160 * var(--dp));border:calc(10 * var(--dp)) solid transparent;margin:calc(-6 * var(--dp)) calc(-6 * var(--dp)) 0;border-image:url('assets/ga-bk-23-menu_dropdown_panel_holo_light.png') 20 fill/calc(10 * var(--dp))}
+.screen .ga-yt-drop button{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;color:#000;font-size:calc(18 * var(--dp));text-align:left}
+.screen .ga-yt-drop button:active{background:#33b5e566}
+/* privacy_dropdown.xml: 12 dp padding, the icon, the 18 dp #212121 label and the 13 dp italic grey description. */
+/* The PrivacySpinner's list opens above it (ListPopupWindow takes the side with room: the form scrolls under it). */
+.ga-yt-privacy-drop{left:0;top:auto;bottom:100%;margin:0 calc(-6 * var(--dp)) calc(-6 * var(--dp))}
+.screen .ga-yt-privacy-drop button{align-items:flex-start;padding:calc(12 * var(--dp))}
+.ga-yt-privacy-drop img,.ga-yt-privacy img{flex:none;width:calc(21.3333 * var(--dp));height:calc(21.3333 * var(--dp));padding-right:calc(8 * var(--dp))}
+.ga-yt-privacy-drop span{display:flex;flex-direction:column}
+.ga-yt-privacy-drop b{font-weight:400;font-size:calc(18 * var(--dp));color:#212121}
+.ga-yt-privacy-drop small{font-size:calc(13 * var(--dp));font-style:italic;color:#888}
+/* upload_form.xml on primary_background: the video frame on bg_stripes_light, ics_grey labels, the fields, the
+   PrivacySpinner (privacy_item.xml: 8 dp padding, the icon and the 18 dp #212121 label), the Upload button (13 dp,
+   50 dp side padding) and the 12 dp terms under it. */
+.ga-yt-upload .ga-scroll{padding:0 calc(2 * var(--dp))}
+.ga-yt-upframe{display:flex;align-items:flex-start;margin:0 0 calc(4 * var(--dp)) calc(2 * var(--dp));padding:calc(6 * var(--dp));background:#e6e6e6 url('assets/ga-yt-bg_stripes_light.png') 0 0/calc(16 * var(--dp)) calc(16 * var(--dp)) repeat}
+.ga-yt-upframe .ga-yt-thumb{box-shadow:0 0 0 calc(1.1765 * var(--dp)) #0003}
+.ga-yt-upframe b{font-size:calc(15 * var(--dp));-webkit-line-clamp:1}
+.ga-yt-label{display:block;padding:calc(6 * var(--dp)) 0 0 calc(2 * var(--dp));color:#555;font-size:calc(14 * var(--dp))}
+.ga-yt-upload input,.ga-yt-upload textarea{display:block;width:100%;box-sizing:border-box;padding:calc(6 * var(--dp)) calc(4 * var(--dp));border:0;border-bottom:calc(1.1765 * var(--dp)) solid #0000004d;background:none;color:#000;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;resize:none;outline:0}
+.ga-yt-upload input:focus,.ga-yt-upload textarea:focus{border-bottom:calc(2 * var(--dp)) solid #33b5e5}
+.ga-yt-upload input::placeholder{color:#00000059}
+.screen .ga-yt-privacy{display:flex;align-items:center;width:100%;height:calc(48 * var(--dp));padding:0;border:0 solid transparent;border-width:calc(4 * var(--dp)) calc(16 * var(--dp)) calc(4 * var(--dp)) calc(4 * var(--dp));border-image:url('assets/calendar-spinner_default_holo_light.png') 8 32 52 8 fill/calc(4 * var(--dp)) calc(16 * var(--dp)) calc(26 * var(--dp)) calc(4 * var(--dp));background:none;color:#212121;font-size:calc(18 * var(--dp));text-align:left}
+.screen .ga-yt-privacy:active{border-image-source:url('assets/calendar-spinner_pressed_holo_light.png')}
+.ga-yt-upbuttons{flex:none;display:flex;flex-direction:column;margin:0 calc(2 * var(--dp))}
+.screen .ga-yt-upbuttons button{align-self:center;min-height:calc(48 * var(--dp));margin:calc(12 * var(--dp)) 0;padding:0 calc(50 * var(--dp));border:0 solid transparent;border-width:calc(6 * var(--dp)) calc(5 * var(--dp));border-image:url('assets/ga-fw-btn_default_normal_holo_light.png') 32 24 28 24 fill/calc(6 * var(--dp)) calc(5 * var(--dp));background:none;color:#000;font-size:calc(13 * var(--dp))}
+.screen .ga-yt-upbuttons button:active{border-image-source:url('assets/ga-fw-btn_default_pressed_holo_light.png')}
+.ga-yt-upbuttons small{padding:calc(4 * var(--dp)) 0;color:#555;font-size:calc(12 * var(--dp))}
+/* SettingsActivity on primary_background, the Theme.Holo.Light preference rows (the mps- styles); the headers list
+   is a plain list of titles. LicensesActivity is a WebView of licenses.html. */
+.ga-yt.mps{background:#e6e6e6}
+.screen .ga-yt-prefs .ga-yt-header{min-height:calc(48 * var(--dp))}
+.ga-yt-licenses iframe{flex:1;width:100%;border:0;background:#fff}
+/* The dialogs: the alert icon beside the title; Add to's playlist_chooser_item rows (textAppearanceLarge, the icon in the
+   60 dp panel at the right); New playlist's Private check box; upload_policy_dialog.xml's 15 dp texts. */
+.ga-yt-dialog h3{display:flex;align-items:center}
+.ga-yt-alert{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-right:calc(8 * var(--dp))}
+.screen .ga-yt-chooser button{min-height:calc(64 * var(--dp));padding:0 0 0 calc(15 * var(--dp));font-size:calc(22 * var(--dp))}
+.ga-yt-chooser img{flex:none;width:calc(40 * var(--dp));height:calc(40 * var(--dp));margin:0 calc(10 * var(--dp))}
+.ga-yt-private{display:flex;align-items:center;gap:calc(4 * var(--dp));padding:0 calc(16 * var(--dp)) calc(12 * var(--dp));font-size:calc(18 * var(--dp))}
+.mps-dialog .ga-yt-private input{appearance:none;flex:none;width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin:0;padding:0;border:0;background:url('assets/btn_check_off_holo_light.png') center/contain no-repeat}
+.mps-dialog .ga-yt-private input:checked{background-image:url('assets/btn_check_on_holo_light.png')}
+.ga-yt-policy{max-height:calc(360 * var(--dp));overflow-y:auto;padding:calc(4 * var(--dp)) calc(12 * var(--dp))}
+.mps-dialog .ga-yt-policy p{padding:0 0 calc(10 * var(--dp));font-size:calc(15 * var(--dp))}
+.mps-dialog .ga-yt-policy p.note{padding:calc(10 * var(--dp)) 0 0;color:#555;font-style:italic}
+.ga-yt-policy .mps-choices button{flex-direction:row-reverse;gap:calc(8 * var(--dp));padding:0;border:0;font-size:calc(15 * var(--dp))}
+/* The chooser "Share this video via" (ResolverActivity): resolve_list_item.xml's 48 dp icon and the label. */
+.screen .ga-yt-share .nwp-choices button{gap:calc(12 * var(--dp));min-height:calc(64 * var(--dp))}
+.ga-yt-share img{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
 /* Play Books 2.3 and Play Movies 1.4. */
 .ga-books-bar{background:#f3f3f3;border-bottom:calc(2 * var(--dp)) solid #4da6e2}
 .ga-page{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:calc(28.2353 * var(--dp)) calc(25.8824 * var(--dp)) calc(14.1177 * var(--dp));border:0;background:#fbf8f0!important;color:#222!important;font:400 calc(18.8236 * var(--dp)) Georgia,serif;text-align:left;line-height:1.5}
