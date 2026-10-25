@@ -807,7 +807,7 @@
   }
   function openApp(app, resume = false) {
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
-    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt10Dialog = null; ui.lsPage = ''; ui.lsStack = []; ui.lsDialog = null; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.lpmPage = ''; ui.mpoDialog = ''; }
+    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt10Dialog = null; ui.lsPage = ''; ui.lsStack = []; ui.lsDialog = null; ui.driveFolder = ''; ui.driveFilter = ''; ui.driveNavItem = 'my'; ui.driveStack = []; ui.driveDialog = ''; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.lpmPage = ''; ui.mpoDialog = ''; }
     if(ui.locked)return;
     if (app === 'news-weather' && !resume) { ui.newsWeb = ''; ui.newsDialog = ''; ui.newsExpanded = ''; }
     if (GEL_ALIASES[app]) app = GEL_ALIASES[app];
@@ -937,6 +937,8 @@
     // Hangouts' and Messenger's own pages (hangouts-prefs.js) step back through what opened them.
     if (ui.view === 'hangouts' && ui.hgPage) { HangoutsPrefs.back(ui); render(); return; }
     if (ui.view === 'messaging' && ui.lpmPage) { MessengerOptions.back(ui); render(); return; }
+    // Drive's dialogs, folders and filters (lp-drive.js).
+    if (ui.view === 'drive' && window.LPDrive && LPDrive.back(ui)) { render(); return; }
     if (ui.view === 'messaging' && ui.sub === 'archived') { ui.sub = ''; render(); return; }
     if (ui.view === 'hangouts' && ui.sub === 'archived') { ui.sub = ''; render(); return; }
     if (['messaging', 'hangouts'].includes(ui.view) && ui.sub === 'thread') { ui.sub = ui.mmsListMode || ''; render(); return; }
@@ -1883,6 +1885,17 @@
       closeOverlay() { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } },
       unsupported: () => toast(i18n.t('This feature is not part of the simulator.'))};
   }
+  // Drive's Send file (the item as an attachment) and Share link (its link as the text) in Gmail, Email or Hangouts.
+  function driveShareFile(app, file) {
+    if (!file.photo) { shareVcard(app, file); return; }
+    const photo = data.photos.find(p => p.id === file.photo); ui.overlay = ''; renderOverlay(); openApp(app); composeEmail();
+    const d = mailbox().find(m => m.id === ui.emailId); if (d && photo) (d.files ||= []).push({name: photo.name, mime: 'image/jpeg', size: photo.size || 1843200, photo: clone(photo)}); save(); render();
+  }
+  function driveShareText(app, text, subject) {
+    ui.overlay = ''; renderOverlay();
+    if (app === 'hangouts') { openApp('hangouts'); ui.sub = 'new'; messageDraft().body = text; save(); render(); return; }
+    openApp(app); composeEmail(); const d = mailbox().find(m => m.id === ui.emailId); if (d) { d.subject = subject; d.body = text; } save(); render();
+  }
   function shareVcard(app, file) { ui.overlay = ''; renderOverlay(); openApp(app); composeEmail(); const d = mailbox().find(m => m.id === ui.emailId); if (d) (d.files ||= []).push({name: file.name, mime: file.mime, size: file.size, text: file.text}); save(); render(); }
   function composeEmail(source=null,forward=false,to='') {
     const draft=ICSEmail.draft(source,forward);if(to)draft.to=to;
@@ -2059,6 +2072,7 @@
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Gmail's label settings, Days of mail to sync and the vacation responder (gmail.js).
     if (action.startsWith('gmx-') && GmailApp.handlePref(action, id, {data, ui, save, render, toast, root: viewport})) return;
+    if (action.startsWith('drv-') && LPDrive.handle(action, id, {data, ui, save, render, renderOverlay, toast, root: viewport, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), shareFile: driveShareFile, shareText: driveShareText})) return;
     if (/^(hgp|mpo)-/.test(action)) {
       const ctx = {data, ui, save, render, renderOverlay, toast, root: viewport, openApp, openThread: key => openMessageThread(key)};
       if ((action.startsWith('hgp-') ? HangoutsPrefs : MessengerOptions).handle(action, id, ctx)) return;
@@ -3611,6 +3625,8 @@
     event.preventDefault();
     const message = event.target.closest('.mms-message');
     if (message && !ui.overlay) { ui.mmsMessage = message.dataset.id; ui.overlay = 'mms-message'; renderOverlay(); }
+    const driveItem = event.target.closest('[data-drive-hold]');
+    if (driveItem && !ui.overlay && !ui.driveDialog) LPDrive.handle('drv-hold', driveItem.dataset.driveHold, {data, ui, save, render, toast, root: viewport});
     if (!dragState && ui.view === 'home' && !ui.overlay && !ui.overview && event.button === 2 && event.target.closest('.home-slot') && !event.target.closest('.launcher-icon')) { ui.overview = true; render(); }
   });
   // Older WebKit versions may still start page rubber-banding during a custom
@@ -3730,6 +3746,9 @@
     const kwpLong = ui.view === 'wallpaper-picker' && !ui.wp?.checked?.length ? event.target.closest('[data-kwp-long]') : null;
     if (kwpLong) homeLongPressTimer = setTimeout(() => { ui.wp.checked = [kwpLong.dataset.id]; pointerStart = null; suppressReleaseClick(); wallpaperPickerRender(); }, holdDelay(550));
     if (message && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.mmsMessage = message.dataset.id; ui.overlay = 'mms-message'; suppressReleaseClick(); renderOverlay(); }, holdDelay(550));
+    // Drive: a held item opens menu_doclist_context.xml for it (lp-drive.js).
+    const heldDrive = event.target.closest('[data-drive-hold]');
+    if (heldDrive && !ui.overlay && !ui.driveDialog) messageHoldTimer = setTimeout(() => { suppressReleaseClick(); LPDrive.handle('drv-hold', heldDrive.dataset.driveHold, {data, ui, save, render, toast, root: viewport}); }, holdDelay(550));
     if (pointerStart.lockDrag) { clearTimeout(ui.lockReleaseTimer); viewport.querySelectorAll('.lock-chevron').forEach(chevron => chevron.getAnimations().forEach(animation => animation.cancel())); screen.classList.remove('lock-releasing'); screen.classList.add('lock-dragging'); try { screen.setPointerCapture(event.pointerId); } catch {} }
     else if (ui.view === 'lock' && !ui.locked && event.target.closest('.lock-wave')) lockPing();
     if (ui.view === 'calculator' && !ui.overlay && event.target.closest('.calc-pager')) pointerStart.calculatorSwipe = true;

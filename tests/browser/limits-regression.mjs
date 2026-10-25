@@ -2119,6 +2119,79 @@ const kkDriveFiles = async h => {
   await h.tap('#viewport .drv-row[data-action="drv-wifi"]');
   h.check('Settings keep Transfer files only over Wi-Fi', (await store(h, 'drivePrefs'))?.wifiOnly === false && await h.until(`!document.querySelector('#viewport .drv-row[data-action="drv-wifi"] .drv-check.on')`));
 };
+// 5.1.1 Drive 2.1 (T34): Create's "New" sheet makes a folder and a Google Docs file; Sort by and Filter by reorder and
+// narrow the list; a held item moves into a folder, is renamed, kept on device (On device lists it) and removed;
+// Refresh reads the list again; the opened file's Send file hands it to Gmail.
+const lpDriveFiles = async h => {
+  const files = async () => (await store(h, 'driveFiles')) || [];
+  const overflow = async () => { await h.tap('#viewport [data-action="sa-menu"]'); await h.until(`!!document.querySelector('[data-action="drv-refresh"]')`); };
+  const names = () => h.ev(`[...document.querySelectorAll('#viewport .dr2-row b')].map(b => b.textContent)`);
+  await h.openApp('drive');
+  h.check('opens My Drive', await h.until(`!!document.querySelector('#viewport .dr2-row')`));
+  await overflow();
+  h.check('the overflow has Create, Refresh, Filter by, Sort by', await h.ev(`[...document.querySelectorAll('[data-action="drv-dialog"], [data-action="drv-refresh"]')].filter(b => !b.closest('.dr2-list')).map(b => b.textContent).join('|')`) === 'Create|Refresh|Filter by|Sort by');
+  await h.tap('[data-action="drv-dialog"][data-id="add"]');
+  h.check('Create opens the New sheet', await h.until(`[...document.querySelectorAll('#viewport .drv2-choice')].map(b => b.textContent).join('|') === 'Folder|Upload|Scan|Google Docs|Google Sheets|Google Slides'`));
+  await h.tap('#viewport .drv2-choice[data-id="folder"]');
+  await h.type('#viewport [data-drv-edit]', 'Receipts');
+  await h.tap('#viewport [data-action="drv-folder-ok"]');
+  h.check('the folder is listed', await h.until(`[...document.querySelectorAll('#viewport .dr2-row b')].some(b => b.textContent === 'Receipts')`));
+  await overflow();
+  await h.tap('[data-action="drv-dialog"][data-id="add"]');
+  await h.tap('#viewport .drv2-choice[data-id="slides"]');
+  h.check('Google Slides opens an untitled presentation', await h.until(`/Untitled presentation/.test(document.querySelector('#viewport .sa-bar')?.textContent || '')`) && (await files()).some(f => f.kind === 'slides' && f.name === 'Untitled presentation'));
+  await h.key('Escape');
+  await overflow();
+  await h.tap('[data-action="drv-dialog"][data-id="sort"]');
+  await h.tap('#viewport .drv2-item[data-id="title"]');
+  const sortedNames = await names();
+  h.check('Sort by Title puts folders first', ['Photos', 'Receipts'].includes(sortedNames[0]) && ['Photos', 'Receipts'].includes(sortedNames[1]), JSON.stringify(sortedNames));
+  await overflow();
+  await h.tap('[data-action="drv-dialog"][data-id="filter"]');
+  await h.tap('#viewport .drv2-item[data-id="sheet"]');
+  h.check('Filter by Spreadsheets lists only Budget', await h.until(`/Filter: Spreadsheets/.test(document.querySelector('#viewport .dr2-bar')?.textContent || '')`) && JSON.stringify(await names()) === '["Budget"]');
+  await h.key('Escape');
+  h.check('Back leaves the filter', await h.until(`/My Drive/.test(document.querySelector('#viewport .dr2-bar')?.textContent || '')`));
+  const trip = (await files()).find(f => f.name === 'Trip plan 2015').id, receipts = (await files()).find(f => f.name === 'Receipts').id;
+  await h.hold(`#viewport [data-drive-hold="${trip}"]`); await h.sleep(600);
+  h.check('holding an item opens its menu', await h.until(`/Trip plan 2015/.test(document.querySelector('#viewport .drv2-context h3')?.textContent || '')`));
+  await h.tap('#viewport .drv2-context [data-action="drv-move"]');
+  await h.tap(`#viewport .drv2-pick[data-id="${receipts}"]`);
+  await h.tap('#viewport [data-action="drv-move-ok"]');
+  h.check('Move puts it in the folder', await h.until(`![...document.querySelectorAll('#viewport .dr2-row b')].some(b => b.textContent === 'Trip plan 2015')`) && (await files()).find(f => f.id === trip).parent === receipts);
+  await h.tap(`#viewport .dr2-row[data-id="${receipts}"]`);
+  h.check('the folder opens on its item', await h.until(`JSON.stringify([...document.querySelectorAll('#viewport .dr2-row b')].map(b => b.textContent)) === '["Trip plan 2015"]'`));
+  await h.hold(`#viewport [data-drive-hold="${trip}"]`); await h.sleep(600);
+  await h.tap('#viewport .drv2-context [data-action="drv-rename"]');
+  await h.type('#viewport [data-drv-edit]', 'Lisbon trip');
+  await h.tap('#viewport [data-action="drv-rename-ok"]');
+  h.check('Rename renames it', await h.until(`[...document.querySelectorAll('#viewport .dr2-row b')].some(b => b.textContent === 'Lisbon trip')`));
+  await h.hold(`#viewport [data-drive-hold="${trip}"]`); await h.sleep(600);
+  await h.tap('#viewport .drv2-context [data-action="drv-pin"]');
+  h.check('Keep on device is kept', (await files()).find(f => f.id === trip).pinned === true);
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="drive-nav"]');
+  await h.tap('#viewport .dr2-nav [data-id="offline"]');
+  h.check('On device lists it', await h.until(`/On device/.test(document.querySelector('#viewport .dr2-bar')?.textContent || '') && [...document.querySelectorAll('#viewport .dr2-row b')].some(b => b.textContent === 'Lisbon trip')`));
+  await h.tap('#viewport [data-action="drive-nav"]');
+  await h.tap('#viewport .dr2-nav [data-id="my"]');
+  const budget = (await files()).find(f => f.name === 'Budget').id;
+  await h.hold(`#viewport [data-drive-hold="${budget}"]`); await h.sleep(600);
+  await h.tap('#viewport .drv2-context [data-action="drv-remove"]');
+  await h.tap('#viewport [data-action="drv-remove-ok"]');
+  h.check('Remove takes it off the list', await h.until(`![...document.querySelectorAll('#viewport .dr2-row b')].some(b => b.textContent === 'Budget')`) && (await files()).find(f => f.id === budget).trashed === true);
+  await overflow();
+  await h.tap('[data-action="drv-refresh"]');
+  h.check('Refresh shows its progress, then the list', await h.until(`!!document.querySelector('#viewport .drv2-spinner')`, 2000) && await h.until(`!document.querySelector('#viewport .drv2-spinner') && !!document.querySelector('#viewport .dr2-row')`));
+  h.check('reloads', await h.reload());
+  await h.openApp('drive');
+  h.check('the changes stay after a reload', await h.until(`[...document.querySelectorAll('#viewport .dr2-row b')].some(b => b.textContent === 'Receipts') && ![...document.querySelectorAll('#viewport .dr2-row b')].some(b => b.textContent === 'Budget')`));
+  const slides = (await files()).find(f => f.name === 'Meetup slides').id;
+  await h.tap(`#viewport .dr2-row[data-id="${slides}"]`);
+  await h.tap(`#viewport [data-action="drv-send"][data-id="${slides}"]`);
+  await h.tap('#viewport .drv2-app[data-id="gmail"]');
+  h.check('Send file opens Gmail with the item attached', await h.until(`/Meetup slides/.test(document.querySelector('#viewport')?.textContent || '') && /compose|Compose/.test(document.querySelector('#viewport').innerHTML)`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -2219,6 +2292,7 @@ const CASES = [
   {id: 'T32', version: '4.4.4', name: 'Hangouts › Settings, SMS, Invites, Blocked People, People & options, New group MMS', run: kkHangoutsOptions},
   {id: 'T32', version: '5.1.1', name: 'Hangouts › Settings, People & options, Blocked people, Add people; Messenger › People & options', run: lpHangoutsOptions},
   {id: 'T34', version: '4.4.4', name: 'Drive › Add new, Sort by, Filter by, Move to, Rename, Offline, Remove, Refresh, Send, Settings', run: kkDriveFiles},
+  {id: 'T34', version: '5.1.1', name: 'Drive › Create, Sort by, Filter by, Move, Rename, Keep on device, Remove, Refresh, Send file', run: lpDriveFiles},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

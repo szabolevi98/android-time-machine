@@ -484,3 +484,44 @@
 .mps-buttons{display:flex;justify-content:flex-end;padding:calc(8 * var(--dp))}
 .screen .mps-buttons button{min-width:calc(64 * var(--dp));min-height:calc(36 * var(--dp));padding:0 calc(8 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;color:#009688;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
 .screen .mps-buttons button:active,.screen .mps-choices button:active{background:#0000001f}
+/* lp-drive.js: the "New" sheet (create_document_host_activity.xml: #88000000 over the list, the white sheet from the
+   bottom at 8 dp elevation, "New" 16 sp in a 48 dp row, a divider, two rows of three 12 sp captions under their
+   ic_createpanel_* icons), Material dialogs in Theme.Material.Light's accent (CakemixTheme sets none: #009688), the
+   held item's menu, Move's picker, the pinned mark and the Refresh spinner. */
+.screen .dr2-row{position:relative}
+.drv2-pin{position:absolute;right:calc(16 * var(--dp));top:50%;width:calc(8 * var(--dp));height:calc(8 * var(--dp));margin-top:calc(-4 * var(--dp));border-radius:50%;background:#009688}
+.drv2-spinner{flex:none;width:calc(20 * var(--dp));height:calc(20 * var(--dp));margin:0 calc(12 * var(--dp));border:calc(2.5 * var(--dp)) solid #00968833;border-top-color:#009688;border-radius:50%;animation:drv2-spin .8s linear infinite}
+@keyframes drv2-spin{to{transform:rotate(360deg)}}
+.drv2-sheet-scrim{position:absolute;inset:0;z-index:30;border:0;background:#00000088}
+.drv2-sheet{position:absolute;z-index:31;left:0;right:0;bottom:0;padding-bottom:calc(8 * var(--dp));background:#fff;box-shadow:0 calc(-2 * var(--dp)) calc(8 * var(--dp)) #0000003d}
+.drv2-sheet h3{margin:0;height:calc(48 * var(--dp));display:flex;align-items:center;padding:0 calc(16 * var(--dp));font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#4c4c4c}
+.drv2-divider{display:block;height:calc(1 * var(--dp));margin:calc(4 * var(--dp)) 0 calc(8 * var(--dp));background:#e0e0e0}
+.drv2-choices{display:flex;padding:0 0 calc(8 * var(--dp))}
+.screen .drv2-choice{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:calc(8 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;background:none;font:400 calc(12 * var(--dp)) Roboto,sans-serif;color:#4c4c4c;text-align:center}
+.drv2-choice img{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
+.drv2-scrim{position:absolute;inset:0;z-index:30;border:0;background:#0009}
+.drv2-scrim.clear{background:none}
+.drv2-popup{position:absolute;z-index:31;top:calc(4 * var(--dp));right:calc(4 * var(--dp))}
+.drv2-dialog{position:absolute;z-index:31;left:calc(24 * var(--dp));right:calc(24 * var(--dp));top:50%;transform:translateY(-50%);max-height:80%;display:flex;flex-direction:column;padding-bottom:calc(8 * var(--dp));background:#fff;border-radius:calc(2 * var(--dp));box-shadow:0 calc(12 * var(--dp)) calc(24 * var(--dp)) #0000004d}
+.drv2-dialog h3{flex:none;margin:0;padding:calc(24 * var(--dp)) calc(24 * var(--dp)) calc(12 * var(--dp));font:500 calc(20 * var(--dp)) Roboto,sans-serif;color:#000000de;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .drv2-item{display:flex;align-items:center;gap:calc(20 * var(--dp));flex:none;width:100%;min-height:calc(48 * var(--dp));padding:0 calc(24 * var(--dp));border:0;background:none;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.drv2-item span{flex:1}
+.drv2-app img{width:calc(40 * var(--dp));height:calc(40 * var(--dp))}
+.drv2-radio{flex:none;width:calc(20 * var(--dp));height:calc(20 * var(--dp));box-sizing:border-box;border:calc(2 * var(--dp)) solid #0000008a;border-radius:50%}
+.drv2-radio.on{border-color:#009688;background:radial-gradient(#009688 0 calc(5 * var(--dp)),transparent calc(5.5 * var(--dp)))}
+.drv2-msg{margin:0;padding:0 calc(24 * var(--dp)) calc(8 * var(--dp));font:400 calc(16 * var(--dp))/1.4 Roboto,sans-serif;color:#0000008a}
+.screen .drv2-edit{display:block;width:calc(100% - calc(48 * var(--dp)));margin:calc(8 * var(--dp)) calc(24 * var(--dp));padding:calc(8 * var(--dp)) 0;border:0;border-bottom:calc(2 * var(--dp)) solid #009688;font:400 calc(16 * var(--dp)) Roboto,sans-serif;outline:0}
+.drv2-buttons{flex:none;display:flex;justify-content:flex-end;gap:calc(8 * var(--dp));padding:calc(8 * var(--dp)) calc(8 * var(--dp)) 0}
+.screen .drv2-buttons button{min-width:calc(64 * var(--dp));height:calc(36 * var(--dp));padding:0 calc(8 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#009688;text-transform:uppercase}
+.drv2-buttons button:disabled{color:#00000042}
+.drv2-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(4 * var(--dp));padding:0 calc(24 * var(--dp));overflow-y:auto}
+.screen .drv2-photos button{aspect-ratio:1;padding:0;border:0;background:#eee;overflow:hidden}
+.drv2-photos button>*{width:100%;height:100%}
+.drv2-pick-head{flex:none;display:flex;align-items:center;min-height:calc(64 * var(--dp));padding:0 calc(8 * var(--dp))}
+.drv2-pick-head b{flex:1;min-width:0;padding:0 calc(16 * var(--dp));font:500 calc(20 * var(--dp)) Roboto,sans-serif;color:#000000de;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .drv2-pick-head button{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;border-radius:50%;background:none;display:grid;place-items:center}
+.drv2-pick-head button img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.drv2-pick-list{flex:1;min-height:calc(56 * var(--dp));overflow-y:auto;border-top:calc(1 * var(--dp)) solid #e0e0e0;border-bottom:calc(1 * var(--dp)) solid #e0e0e0}
+.screen .drv2-pick{display:flex;align-items:center;width:100%;height:calc(56 * var(--dp));padding:0 calc(24 * var(--dp));border:0;background:none;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.drv2-pick img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin-right:calc(24 * var(--dp))}
+.screen .drv2-item:active,.screen .drv2-choice:active,.screen .drv2-pick:active,.screen .drv2-buttons button:active,.screen .drv2-pick-head button:active{background:#0000001a}

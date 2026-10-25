@@ -169,6 +169,12 @@ versions/5.1.1/assets/docs.png	4525d2d8d34365b2	copy	shamu:/system/app/Drive/Dri
 versions/5.1.1/assets/downloads.png	1b1ffa59d4408de5	same pixels	shamu:/system/app/DownloadProviderUi/DownloadProviderUi.apk!res/mipmap-xxxhdpi-v4/ic_launcher_download.png	mipmap-xxxhdpi-v4		c9f506900211112e
 versions/5.1.1/assets/dr2-action_bar_overflow_white.png	1b7d6a550d699628	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/action_bar_overflow_white.png	drawable-xxhdpi-v4		1b7d6a550d699628
 versions/5.1.1/assets/dr2-ic_back_arrow_alpha.png	9d5673ae73e7cdbf	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_back_arrow_alpha.png	drawable-xxxhdpi-v4		9d5673ae73e7cdbf
+versions/5.1.1/assets/dr2-ic_createpanel_doc.png	a1c0bba3197d66ae	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_createpanel_doc.png	drawable-xxxhdpi-v4		a1c0bba3197d66ae
+versions/5.1.1/assets/dr2-ic_createpanel_folder.png	7e181da1a99beaab	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_createpanel_folder.png	drawable-xxxhdpi-v4		7e181da1a99beaab
+versions/5.1.1/assets/dr2-ic_createpanel_scan.png	54579b07b061d5ed	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_createpanel_scan.png	drawable-xxxhdpi-v4		54579b07b061d5ed
+versions/5.1.1/assets/dr2-ic_createpanel_sheet.png	b8e9f4153a5c61c1	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_createpanel_sheet.png	drawable-xxxhdpi-v4		b8e9f4153a5c61c1
+versions/5.1.1/assets/dr2-ic_createpanel_slide.png	4f1c9af6c1046153	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_createpanel_slide.png	drawable-xxxhdpi-v4		4f1c9af6c1046153
+versions/5.1.1/assets/dr2-ic_createpanel_upload.png	ea8a239042db4e09	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_createpanel_upload.png	drawable-xxxhdpi-v4		ea8a239042db4e09
 versions/5.1.1/assets/dr2-ic_drive_my_drive.png	6277202ffd09bac8	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_drive_my_drive.png	drawable-xxxhdpi-v4		6277202ffd09bac8
 versions/5.1.1/assets/dr2-ic_drive_offline.png	894895bd3e2cd896	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_drive_offline.png	drawable-xxxhdpi-v4		894895bd3e2cd896
 versions/5.1.1/assets/dr2-ic_drive_recently_opened.png	b239e125ae54266b	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_drive_recently_opened.png	drawable-xxxhdpi-v4		b239e125ae54266b
@@ -181,6 +187,7 @@ versions/5.1.1/assets/dr2-ic_menu_search_alpha.png	9dc8e5738831a7bf	copy	shamu:/
 versions/5.1.1/assets/dr2-ic_storage_usage.png	fb38a0fc20deb57f	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_storage_usage.png	drawable-xxxhdpi-v4		fb38a0fc20deb57f
 versions/5.1.1/assets/dr2-ic_type_doc.png	e6a822c2679d18f6	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_doc.png	drawable-xxxhdpi-v4		e6a822c2679d18f6
 versions/5.1.1/assets/dr2-ic_type_folder.png	4c8f1e9f6c81ef5b	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_folder.png	drawable-xxxhdpi-v4		4c8f1e9f6c81ef5b
+versions/5.1.1/assets/dr2-ic_type_image.png	fda12b1bf74d7da8	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_image.png	drawable-xxxhdpi-v4		fda12b1bf74d7da8
 versions/5.1.1/assets/dr2-ic_type_pdf.png	4a59d6df37c4fe19	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_pdf.png	drawable-xxxhdpi-v4		4a59d6df37c4fe19
 versions/5.1.1/assets/dr2-ic_type_presentation.png	3e5f47cb5671e4c4	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_presentation.png	drawable-xxxhdpi-v4		3e5f47cb5671e4c4
 versions/5.1.1/assets/dr2-ic_type_sheet.png	cda596b9966904db	copy	shamu:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_sheet.png	drawable-xxxhdpi-v4		cda596b9966904db
