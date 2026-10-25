@@ -2626,7 +2626,8 @@ const hangoutsTakePhoto = async h => {
   const take = async () => {
     await act('mms-attach');
     await h.tap('[data-action="hg-take-photo"]');
-    h.check('Take photo opens the Camera with Cancel', await h.until(`!!document.querySelector('#viewport [data-action="cam-review-cancel"]')`));
+    // GoogleCamera 2.4 shows no Cancel before the shutter (Back cancels); the mode list is off during the request.
+    h.check('Take photo opens the Camera for the request', await h.until(lp ? `!!document.querySelector('#viewport [data-gcam-shutter]') && !document.querySelector('#viewport [data-gcam-modes]')` : `!!document.querySelector('#viewport [data-action="cam-review-cancel"]')`));
     await h.sleep(700);
     await h.tap(shutter);
     return h.until(`!!document.querySelector('#viewport [data-action="cam-review-done"]') && !!document.querySelector('#viewport [data-action="cam-review-retake"]')`, 8000);
@@ -2634,7 +2635,7 @@ const hangoutsTakePhoto = async h => {
   h.check('the shutter keeps the picture for review', await take());
   await h.shot('hangouts-capture-review');
   await h.tap('#viewport [data-action="cam-review-cancel"]');
-  const draft = () => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));const d=k&&JSON.parse(localStorage.getItem(k));return d?.messageDrafts?.[${JSON.stringify(thread)}]?.attachment||null})()`);
+  const draft = () => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));const d=k&&JSON.parse(localStorage.getItem(k));const m=d?.messageDrafts||{};return (m[${JSON.stringify(thread)}]||m[${JSON.stringify('hg:' + thread)}])?.attachment||null})()`);
   h.check('Cancel returns to the conversation without a picture', await h.until(`!!document.querySelector('#viewport .mms-compose')`) && !(await draft()));
   await take();
   await h.tap('#viewport [data-action="cam-review-retake"]');
@@ -2730,6 +2731,7 @@ const CASES = [
   {id: 'T12', version: '5.1.1', name: 'Maps › Settings, Maps history, Your places, About', run: mapsSettings({version: '9.3.0', places: true})},
   {id: 'T10', version: '4.3', name: 'Hangouts › Take photo through the Camera capture request', run: hangoutsTakePhoto},
   {id: 'T10', version: '4.4.4', name: 'Hangouts › Take photo through the Camera capture request', run: hangoutsTakePhoto},
+  {id: 'T10', version: '5.1.1', name: 'Hangouts › Take photo through the Camera capture request', run: hangoutsTakePhoto},
   {id: 'T10', version: '2.3.6', name: 'Contacts › Take photo through the Camera capture request', run: gbContactPhoto},
   {id: 'T13', version: '2.3.6', name: 'Messaging › Audio, Record audio, Capture picture / video, Slideshow', run: gbMmsAttach},
   {id: 'T13', version: '4.3', name: 'Messaging › Audio Play, Capture picture / video, Slideshow', run: jbMmsAttach},

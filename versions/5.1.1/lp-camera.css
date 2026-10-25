@@ -93,3 +93,13 @@
 .gpano-card img{width:calc(63.9956 * var(--dp));height:calc(63.9956 * var(--dp))}
 .gpano-progress{position:relative;align-self:stretch;height:calc(3.0023 * var(--dp));background:#ffffff4d}
 .gpano-progress i{position:absolute;left:0;top:0;bottom:0;width:0;background:#fff}
+/* A capture request after the shutter: intent_review_imageview fills the frame; bottombar_intent_review (#191919) holds
+   Retake (ic_back, 32 dp), Done (ic_confirm, the 84 dp disc on the shutter's place) and Cancel (ic_cancel, 32 dp). */
+.gcam-intent-review{position:absolute;inset:0;z-index:3;background:#000}
+.gcam-intent-review>svg,.gcam-intent-review>img{width:100%;height:100%;object-fit:cover;display:block}
+.gcam-bar.intent-review{z-index:4;background:#191919}
+.screen .gcam-bar.intent-review button{justify-self:center;display:grid;place-items:center;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;border-radius:50%;background:none}
+.screen .gcam-bar.intent-review button:active{background:#ffffff33}
+.gcam-bar.intent-review img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.screen .gcam-bar.intent-review .gcam-done{width:calc(84 * var(--dp));height:calc(84 * var(--dp))}
+.gcam-bar.intent-review .gcam-done img{width:calc(84 * var(--dp));height:calc(84 * var(--dp))}

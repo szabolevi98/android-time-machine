@@ -87,8 +87,9 @@
   // (20 dp in, the 16 sp #4c4c4c label 44 dp after the icon) under AccountSwitcherView's 147 dp selected account.
   const DRAWER = [['hgp-open:invites', 'Invites', 'ic_drafts_24dp', 0], ['hg-archived', 'Archived', 'ic_archive_24dp', 0], ['hgp-open:blocked', 'Blocked people', 'ic_report_24dp', 0], ['hg-dnd', 'Snooze notifications', 'ic_notifications_off_24dp', 1], ['hgp-open:settings', 'Settings', 'ic_settings_24dp', 1], ['hg-unsupported', 'Help & feedback', 'ic_help_24dp', 1]];
   const MENU = DRAWER.map(([action, label]) => [action, label]);
-  // The attachment button's choices: menu_choose_photo_from_gallery and realtimechat_location.
-  const ATTACH = [['hg-attach-photo', 'Attach photo'], ['hg-share-location', 'Share your location']];
+  // The attachment button's choices as the attachment adapter adds them for a Hangouts conversation (no video, location
+  // on, no stickers): menu_take_camera_photo, menu_choose_photo_from_gallery and realtimechat_location.
+  const ATTACH = [['hg-take-photo', 'Take photo'], ['hg-attach-photo', 'Attach photo'], ['hg-share-location', 'Share your location']];
   function overlay(data, ui, t) {
     const option = (action, label, id = label) => { const [act, arg] = action.split(':'); return `<button data-action="${act}" data-id="${e(arg ?? id)}">${e(H(t, label))}</button>`; };
     if (ui.overlay === 'mms-hg-drawer') {

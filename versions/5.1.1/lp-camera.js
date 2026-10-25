@@ -68,7 +68,12 @@
   }
   function render(data, ui, t, media, locale = 'en', lang = 'en') {
     if (ui.gcsPage) return renderSettings(data, ui, t, locale, lang);
-    const s = settings(media, data), mode = MODES.some(m => m[0] === ui.jbcamModule) ? ui.jbcamModule : 'photo', recording = !!ui.jbcamRecording;
+    // A capture request (IMAGE_CAPTURE: Hangouts' Take photo) stays in the photo module without the mode list; after the
+    // shutter BottomBar.transitionToIntentReviewLayout shows intent_review_imageview over the preview and
+    // retake_done_cancel_layout's bottombar_intent_review on #191919: Retake (ic_back), Done (ic_confirm on the
+    // shutter's place) and Cancel (ic_cancel).
+    const intent = ui.camIntent || null, taken = intent?.taken;
+    const s = settings(media, data), mode = intent ? 'photo' : MODES.some(m => m[0] === ui.jbcamModule) ? ui.jbcamModule : 'photo', recording = !!ui.jbcamRecording;
     const [pw, ph] = (s.front ? s.pictureFront : s.pictureBack).split('x').map(Number);
     const [, , color] = MODES.find(m => m[0] === mode);
     const shutterIcon = mode === 'video' ? (recording ? '' : 'ic_capture_video') : mode === 'panorama' ? 'ic_capture_pano' : mode === 'photosphere' ? window.LPSphere.shutterIcon(ui) : mode === 'refocus' ? window.LPRefocus.shutterIcon(ui) : 'ic_capture_camera_normal';
@@ -87,8 +92,9 @@
       <div class="gcam-countdown" data-gcam-countdown hidden></div>
       <div class="gcam-rec" data-gcam-rec ${recording ? '' : 'hidden'}><i></i><span>00:00</span></div>
       <div class="gcam-options${ui.gcamOptions ? ' open' : ''}">${ui.gcamOptions ? optionButtons : ''}<button type="button" class="gcam-options-toggle" data-gcam-options aria-label="${e(t('Options'))}" aria-expanded="${!!ui.gcamOptions}"><i></i><i></i><i></i></button></div>
-      <div class="gcam-bar">${mode === 'photosphere' ? window.LPSphere.cancelButton(ui, t) : '<span></span>'}<button type="button" class="gcam-shutter${recording ? ' recording' : ''}" data-gcam-shutter aria-label="${e(t(mode === 'video' ? (recording ? 'Stop recording' : 'Start recording') : mode === 'photosphere' && window.LPSphere.capturing(ui) ? 'Done' : mode === 'refocus' && window.LPRefocus.capturing(ui) ? 'Cancel' : 'Shutter'))}">${shutterIcon ? `<img src="${icon(shutterIcon)}" alt="">` : '<i></i>'}</button><span></span></div>
-      <button type="button" class="gcam-edge" data-gcam-modes aria-label="${e(t('Toggle mode list'))}"></button>
+      ${taken ? `<div class="gcam-intent-review">${media.art(taken)}</div><div class="gcam-bar intent-review"><button type="button" data-action="cam-review-retake" aria-label="${e(t('Retake'))}"><img src="${icon('ic_back_normal')}" alt=""></button><button type="button" class="gcam-done" data-action="cam-review-done" aria-label="${e(t('Done'))}"><img src="${icon('ic_confirm_normal')}" alt=""></button><button type="button" data-action="cam-review-cancel" aria-label="${e(t('Cancel'))}"><img src="${icon('ic_cancel_normal')}" alt=""></button></div>` : ''}
+      <div class="gcam-bar"${taken ? ' hidden' : ''}>${mode === 'photosphere' ? window.LPSphere.cancelButton(ui, t) : '<span></span>'}<button type="button" class="gcam-shutter${recording ? ' recording' : ''}" data-gcam-shutter aria-label="${e(t(mode === 'video' ? (recording ? 'Stop recording' : 'Start recording') : mode === 'photosphere' && window.LPSphere.capturing(ui) ? 'Done' : mode === 'refocus' && window.LPRefocus.capturing(ui) ? 'Cancel' : 'Shutter'))}">${shutterIcon ? `<img src="${icon(shutterIcon)}" alt="">` : '<i></i>'}</button><span></span></div>
+      ${intent ? '' : `<button type="button" class="gcam-edge" data-gcam-modes aria-label="${e(t('Toggle mode list'))}"></button>`}
       <div class="gcam-modes-scrim" data-gcam-modes-close></div>
       <nav class="gcam-modes" aria-label="${e(t('Toggle mode list'))}">${MODES.map(([id, label, c, file]) => `<button type="button" data-gcam-mode="${id}" ${id === mode ? 'aria-current="true"' : ''}><span class="gcam-mode-icon" style="--c:${c}"><img src="${icon(file)}" alt=""></span><span>${e(t(label))}</span></button>`).join('')}<button type="button" class="gcam-settings" data-gcam-settings aria-label="${e(t('Settings'))}"><img src="${icon('ic_settings_normal')}" alt=""></button></nav>
     </div>`;
@@ -147,6 +153,8 @@
       const flash = root.querySelector('[data-gcam-flash]');
       if (flash && !reduced) { flash.classList.remove('run'); void flash.offsetWidth; flash.classList.add('run'); }
       shoot();
+      // A capture request shows the picture for review.
+      if (ui.camIntent) rerender();
     };
     const fire = () => {
       const mode = ui.jbcamModule || 'photo';

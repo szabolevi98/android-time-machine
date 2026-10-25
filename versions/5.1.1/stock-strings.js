@@ -1409,7 +1409,8 @@ window.StockStrings = {
   "hp.OK": {"res": "Hangouts:ok", "hu": "OK", "de": "OK", "fr": "OK", "es": "Aceptar", "en": "OK"},
   "hp.New group conversation": {"res": "Hangouts:realtimechat_conversation_new_group_conversation_menu_item_text", "hu": "Új csoportos beszélgetés", "de": "Neue Gruppenunterhaltung", "fr": "Nouvelle conversation de groupe", "es": "Nueva conversación en grupo", "en": "New group conversation"},
   "hp.New Hangout with this group": {"res": "Hangouts:realtimechat_conversation_fork_menu_item_text", "hu": "Új Hangout ezzel a csoporttal", "de": "Neuer Hangout mit der Gruppe", "fr": "Nouveau Hangout avec ce groupe", "es": "Nueva conversación con este grupo", "en": "New Hangout with this group"},
-  "hp.Settings menu": {"res": "Hangouts:realtimechat_settings_menu_item_text", "hu": "Beállítások", "de": "Einstellungen", "fr": "Paramètres", "es": "Ajustes", "en": "Settings"}
+  "hp.Settings menu": {"res": "Hangouts:realtimechat_settings_menu_item_text", "hu": "Beállítások", "de": "Einstellungen", "fr": "Paramètres", "es": "Ajustes", "en": "Settings"},
+  "Take photo": {"res": "Hangouts:menu_take_camera_photo", "hu": "Fotó készítése", "de": "Foto machen", "fr": "Prendre une photo", "es": "Hacer una foto"}
  },
  "gmail": {
   "Primary": {"res": "PrebuiltGmail:label_inbox_section_personal", "hu": "Elsődleges", "de": "Allgemein", "fr": "Principale", "es": "Principal"},

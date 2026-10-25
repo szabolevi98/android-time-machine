@@ -4035,7 +4035,8 @@
    "hp.OK": "Hangouts:ok",
    "hp.New group conversation": "Hangouts:realtimechat_conversation_new_group_conversation_menu_item_text",
    "hp.New Hangout with this group": "Hangouts:realtimechat_conversation_fork_menu_item_text",
-   "hp.Settings menu": "Hangouts:realtimechat_settings_menu_item_text"
+   "hp.Settings menu": "Hangouts:realtimechat_settings_menu_item_text",
+   "Take photo": "Hangouts:menu_take_camera_photo"
   },
   "gmail": {
    "Primary": "PrebuiltGmail:label_inbox_section_personal",
