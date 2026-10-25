@@ -240,7 +240,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T13 — Gingerbread MMS mellékletek és Jelly Bean hanglejátszás
 
 - **Ütem:** Második kör, #7. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — 2.3.6 (2b732ab3): gb-mms-attach.js az Mms.apk szerint: minden Add attachment forrás helyi (Gallery-választók, Camera rögzítés visszatéréssel, Select audio a kép hangjaival, Sound Recorder, slideshow-szerkesztő), AttachmentEditor nézetek (View/Play, Replace, Remove; Edit/Send), SlideshowActivity, Edit slideshow / slide editor menükkel (Duration, Layout). 4.3 (ba2eaa04): jb-mms-attach.js — Play az audio szerkesztőben, Capture picture/video, Videos, Audio, Slideshow overflow menükkel; elküldött média lejátszó gombbal. Valódi MMS-küldés nincs. Regresszió: limits-regression T13 (2.3.6, 4.3; asztali+telefon); gb-mms.test.cjs.
 - **Verziók:** 2.3.6, 4.3.
 - **Forráscsoportok:** 2.3.6-07, 2.3.6-08, 4.3-17.
 - **Elkészítendő és határ:** 2.3.6: video kiválasztás/felvétel, audio kiválasztás/felvétel, slideshow összeállítás és a képmelléklet View. 4.3: az audio editor Play gombja és a kirajzolt helyi mellékletforrások bekötése. Valódi MMS-küldés nem része.
