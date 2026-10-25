@@ -1712,6 +1712,38 @@ const kkSearchSettings = async h => {
   await h.tap('#viewport [data-action="gs-play-games"]');
   h.check('Play Games opens the Games app', await h.until(`!!document.querySelector('#viewport [class*="games"], #viewport [class*="pg"]')`));
 };
+// 5.1.1 Google Search 4.1 (T25): the header list of 4.1.29 and its pages; Show cards off empties the Google page.
+const lpSearchSettings = async h => {
+  const prefs = async () => (await store(h, 'gsearch'))?.prefs || {};
+  await h.openApp('google-search');
+  h.check('the Google page has cards', await h.until(`!!document.querySelector('#viewport .gnow-card, #viewport .gnow-weather, #viewport .gnow-cards > section')`));
+  await h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='gel-overview-settings';document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  h.check('Settings lists the five headers', await h.until(`document.querySelectorAll('#viewport [data-action="lsp-page"]').length === 5`));
+  await h.tap('#viewport [data-action="lsp-page"][data-id="privacy"]');
+  await h.tap('#viewport [data-action="lsp-toggle"][data-id="safe_search"]');
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="lsp-page"][data-id="language"]');
+  await h.tap('#viewport [data-action="lsp-set"][data-id="search_language:hu-HU"]');
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="lsp-page"][data-id="voice"]');
+  await h.tap('#viewport [data-action="lsp-page"][data-id="hotword"]');
+  await h.tap('#viewport [data-action="lsp-toggle"][data-id="voiceEverywhereEnabled"]');
+  h.check('From any screen enables Personal results', await h.until(`document.querySelector('#viewport [data-id="hotword_from_lock_screen"]')?.disabled === false`));
+  await h.key('Escape'); await h.key('Escape');
+  await h.tap('#viewport [data-action="lsp-page"][data-id="phone"]');
+  await h.tap('#viewport [data-action="lsp-source"][data-id="drive"]');
+  await h.key('Escape');
+  const p = await prefs();
+  h.check('the choices are kept', p.safe_search === true && p.search_language === 'hu-HU' && p.voiceEverywhereEnabled === true && p['source:drive'] === true, JSON.stringify(p));
+  await h.tap('#viewport [data-action="lsp-page"][data-id="cards"]');
+  await h.tap('#viewport [data-action="lsp-cards"]');
+  h.check('Show cards off greys the card notifications', (await store(h, 'googleNowOn')) === false && await h.until(`document.querySelector('#viewport [data-id="notificationOverride"]')?.disabled === true`));
+  await h.key('Escape'); await h.key('Escape');
+  h.check('the Google page has no cards', await h.until(`!!document.querySelector('#viewport .gnow-cards') && !document.querySelector('#viewport .gnow-cards > section')`));
+  await h.openApp('google-settings');
+  await h.tap('#viewport [data-action="gs-play-games"]');
+  h.check('Google Settings › Play Games opens the Games app', await h.until(`!document.querySelector('#viewport .sa-gsettings6')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1806,6 +1838,7 @@ const CASES = [
   {id: 'T25', version: '4.0.4', name: 'Google Search › Searchable items filter the suggestions', run: icsSearchableItems},
   {id: 'T25', version: '4.3', name: 'Google Search › Settings pages: Google Now, Notifications, My stuff, Voice, Phone search, Privacy', run: jbSearchSettings},
   {id: 'T25', version: '4.4.4', name: 'Google Search › Settings pages; Google Settings › Play Games', run: kkSearchSettings},
+  {id: 'T25', version: '5.1.1', name: 'Google Search › Settings: the 4.1 headers and pages, Show cards', run: lpSearchSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

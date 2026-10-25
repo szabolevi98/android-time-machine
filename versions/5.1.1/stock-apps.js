@@ -48,9 +48,9 @@
   }
 
   // Google Search settings (the overview "Settings" button) and the Google Settings app.
+  // Google Search 4.1.29's settings: the header list and its pages are lp-search-prefs.js's.
   function searchSettings(ctx) {
-    const row = (icon, label) => `<button class="sa-row" data-action="sa-unsupported"><i>${ICON[icon] || ''}</i><span>${e(ctx.t(label))}</span></button>`;
-    return `<div class="app-view sa-app sa-settings">${bar(ctx, {title: ctx.t('Settings'), up: true, icon: 'google-search.png'})}<div class="sa-scroll"><div class="sa-switch-row"><span>${e(ctx.t('Google Now'))}</span><button class="sa-switch${ctx.data.googleNowOn === false ? '' : ' on'}" data-action="google-now-toggle">${e(ctx.t(ctx.data.googleNowOn === false ? 'OFF' : 'ON'))}</button></div><h4>${e(ctx.t('SEARCH & NOW CARDS'))}</h4>${row('search', 'Phone search')}${row('mic', 'Voice')}${row('locate', 'Accounts & privacy')}${row('list', 'Notifications')}${row('', 'Help & feedback')}</div></div>`;
+    return window.LPSearchPrefs.render(ctx, title => bar(ctx, {title, up: true, icon: 'google-search.png'}));
   }
   // Google Settings (Google Play services 6.7.79, LMY48Y): common.Theme.GoogleSettings is AppCompat Light with a dark
   // action bar in blue grey 900 (#263238) and a teal 500 (#009688) accent. GoogleSettingsActivity builds two categories
@@ -65,7 +65,7 @@
     // The pages GMS draws itself (gms-settings.js); Google+, Account History, Google Fit, Play Games and Data
     // management are other screens, not drawn here.
     if (String(ctx.ui.sub || '').startsWith('gms-')) return window.GMSSettings.render(ctx, g);
-    return `<div class="app-view sa-app sa-gsettings6"><header class="gs6-bar"><b>${e(g('Google Settings'))}</b></header><div class="sa-scroll">${cat('Account')}${row('Google+')}${row('Account History')}${cat('Services')}${row('Ads', 'gms-open', 'ads')}${row('Connected apps', 'gms-open', 'apps')}${['Google Fit', 'Play Games', 'Data management'].map(key => row(key)).join('')}${row('Search & Now', 'gel-overview-settings')}${row('Security', 'gms-open', 'security')}${row('Location', 'gms-open', 'location')}</div></div>`;
+    return `<div class="app-view sa-app sa-gsettings6"><header class="gs6-bar"><b>${e(g('Google Settings'))}</b></header><div class="sa-scroll">${cat('Account')}${row('Google+')}${row('Account History')}${cat('Services')}${row('Ads', 'gms-open', 'ads')}${row('Connected apps', 'gms-open', 'apps')}${row('Google Fit') + row('Play Games', 'gs-play-games') + row('Data management')}${row('Search & Now', 'gel-overview-settings')}${row('Security', 'gms-open', 'security')}${row('Location', 'gms-open', 'location')}</div></div>`;
   }
 
 

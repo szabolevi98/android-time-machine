@@ -1,0 +1,7 @@
+/* Google Search 4.1.29's settings (lp-search-prefs.js) on the Material Light mps- rows. */
+.lsp{background:#fafafa}
+.screen .lsp h4.lsp-category{margin:0;border:0;text-transform:none;letter-spacing:0;padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(8 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#009688}
+.lsp-note{margin:0;padding:calc(16 * var(--dp));font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#0000008a}
+.lsp .mps-row .lp-mswitch{margin-left:calc(16 * var(--dp))}
+.lsp-source img{flex:none;width:calc(40 * var(--dp));height:calc(40 * var(--dp));margin-right:calc(16 * var(--dp))}
+.lsp-radio .mps-radio{margin-right:calc(24 * var(--dp))}

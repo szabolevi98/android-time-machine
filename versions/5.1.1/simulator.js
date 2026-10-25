@@ -789,7 +789,7 @@
       case 'photos': return PhotosApp.render(photosContext());
       case 'gmail': return renderGmail();
       case 'play-music': case 'play-movies': case 'play-books': case 'play-games': return PlayApps.render(playContext(ui.view));
-      case 'google-search': case 'voice-search': case 'maps': case 'drive': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()});
+      case 'google-search': case 'voice-search': case 'maps': case 'drive': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
       case 'phone': return renderPhone();
       case 'people': return renderPeople();
       case 'messaging': return renderMessaging();
@@ -806,7 +806,7 @@
   }
   function openApp(app, resume = false) {
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
-    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt10Dialog = null; }
+    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt10Dialog = null; ui.lsPage = ''; ui.lsStack = []; ui.lsDialog = null; }
     if(ui.locked)return;
     if (app === 'news-weather' && !resume) { ui.newsWeb = ''; ui.newsDialog = ''; ui.newsExpanded = ''; }
     if (GEL_ALIASES[app]) app = GEL_ALIASES[app];
@@ -887,6 +887,7 @@
     if (['docs', 'sheets', 'slides'].includes(ui.view) && ui.sub) { ui.sub = !['search', 'results'].includes(ui.sub) && ui.edFrom === 'results' ? 'results' : ''; ui.edFrom = ''; render(); return; }
     if (ui.view === 'drive' && ui.sub === 'file' && ui.driveFrom === 'results') { ui.sub = 'results'; ui.driveFrom = ''; render(); return; }
     if (ui.view === 'youtube' && !ui.overlay && LPYouTube.back(ytContext())) return;
+    if (ui.view === 'google-search' && ui.sub === 'settings' && !ui.overlay && LPSearchPrefs.back(gsContext())) return;
     if (ui.view === 'youtube' && ui.sub === 'video' && ui.ytFrom === 'results') { ui.sub = 'results'; ui.ytFrom = ''; render(); return; }
     if (ui.gnowSpin) { ui.gnowSpin = ''; render(); return; }
     if (ui.gnowDraft || ui.gnowDialog) { ui.gnowDraft = null; ui.gnowDialog = ''; render(); return; }
@@ -1865,6 +1866,11 @@
     ui.emailFolder = state.folder; ui.emailId = state.id; ui.emailSelected = []; ui.emailQuery = undefined; ui.mailApp = app;
   }
   // Share contact via Email or Gmail: the app's compose with the contact card among its files.
+  // Google Search's settings (lp-search-prefs.js).
+  function gsContext() {
+    return {ui, data, t: key => i18n.t(key), locale: i18n.locale(), account: GmailApp.account, save, render,
+      unsupported: () => toast(i18n.t('This feature is not part of the simulator.'))};
+  }
   // YouTube 10's Settings (lp-youtube.js).
   function ytContext() {
     return {ui, data, t: key => i18n.t(key), locale: i18n.locale(), save, render,
@@ -2099,6 +2105,7 @@
     }
     if (action.startsWith('mps-') && window.MapsPrefs?.handle(action, id, mapsPrefsContext())) return;
     if (ui.view === 'youtube' && action.startsWith('yt10-') && LPYouTube.handle(action, id, ytContext())) return;
+    if (ui.view === 'google-search' && action.startsWith('lsp-') && LPSearchPrefs.handle(action, id, gsContext())) return;
     switch (action) {
       case 'open-app': if (GEL_UNSIMULATED.includes(app)) { toast(i18n.t('This app is not part of the simulator.')); break; } {
         const icon = button.closest('.launcher-icon, .drawer-app, .dock-app') || button;
@@ -2147,7 +2154,9 @@
       case 'gnow-dialog-close': ui.gnowDialog = ''; render(); break;
       case 'gnow-card-back': ui.gnowBack = ui.gnowBack === id ? '' : id; render(); break;
       case 'gnow-units': data.nowUnits = Number(id); save(); render(); break;
-      case 'gel-overview-settings': document.querySelectorAll('.gnow-page.drawer-open').forEach(page => page.classList.remove('drawer-open')); openApp('google-search'); ui.sub = 'settings'; render(); break;
+      case 'gel-overview-settings': document.querySelectorAll('.gnow-page.drawer-open').forEach(page => page.classList.remove('drawer-open')); openApp('google-search'); ui.sub = 'settings'; ui.lsPage = ''; render(); break;
+      // Google Settings' Play Games opens the Games app.
+      case 'gs-play-games': openApp('play-games'); break;
       case 'kk-overview-page': if (ui.overview) { ui.overview = false; ui.page = Number(id); render(); } break;
       case 'drawer-page': ui.drawerPage = Number(id); render(); break;
       case 'add-widget': { const added = addWidget(button.dataset.widgetType); if (!added) { toast('This home screen is full'); break; } const setup = ui.photoWidgetSetup; ui.photoWidgetSetup = null; home(false); ui.photoWidgetSetup = setup; if (added.type === 'photo') { ui.overlay = 'widget-photo-type'; renderOverlay(); } else toast('Widget added'); break; }
