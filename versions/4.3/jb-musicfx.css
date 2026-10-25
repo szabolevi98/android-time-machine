@@ -1,0 +1,18 @@
+/* MusicFX's ActivityMusic (jb-musicfx.js): the Holo Spinner, the 180 dp vertical band SeekBars with the dB scale and
+   their 50 dp frequency labels, the 170 dp strength SeekBars; Theme.Holo's grey when disabled. */
+.mfx{padding:calc(8 * var(--dp)) calc(8 * var(--dp)) calc(16 * var(--dp));color:#fff;font-family:RobotoICS,Roboto,sans-serif}
+.mfx-spinner-wrap{position:relative;display:inline-block}
+.screen .mfx-spinner{min-width:calc(160 * var(--dp));height:calc(48 * var(--dp));padding:0 calc(32 * var(--dp)) 0 calc(8 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #ffffff66;background:none;text-align:left;font-size:calc(18 * var(--dp));color:#fff}
+.mfx-spinner::after{content:'';position:absolute;right:calc(6 * var(--dp));bottom:calc(6 * var(--dp));border:calc(5 * var(--dp)) solid transparent;border-right-color:#ffffffaa;border-bottom-color:#ffffffaa}
+.mfx-spinner:disabled{color:#ffffff55}
+.mfx-drop{position:absolute;z-index:5;left:0;top:100%;min-width:calc(200 * var(--dp));max-height:calc(320 * var(--dp));overflow-y:auto;background:#282828;box-shadow:0 calc(2 * var(--dp)) calc(8 * var(--dp)) #000a}
+.screen .mfx-drop button{display:block;width:100%;height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;text-align:left;font-size:calc(18 * var(--dp));color:#fff}
+.mfx-drop button.on{background:#33b5e533}
+.mfx-eq{display:flex;align-items:flex-start;margin:calc(12 * var(--dp)) 0}
+.mfx-scale{flex:none;display:flex;flex-direction:column;justify-content:space-between;height:calc(180 * var(--dp));padding-right:calc(4 * var(--dp));font-size:calc(14 * var(--dp));color:#bebebe}
+.mfx-band{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0}
+.mfx-band span{width:calc(50 * var(--dp));margin-top:calc(4 * var(--dp));text-align:center;font-size:calc(12 * var(--dp));color:#bebebe}
+.screen .mfx-vertical{width:calc(32 * var(--dp));height:calc(180 * var(--dp));margin:0;writing-mode:vertical-lr;direction:rtl;accent-color:#33b5e5}
+.mfx-row{display:flex;align-items:center;justify-content:space-between;gap:calc(8 * var(--dp));min-height:calc(56 * var(--dp));font-size:calc(18 * var(--dp))}
+.mfx-row input{width:calc(170 * var(--dp));accent-color:#33b5e5}
+.mfx-row.off{color:#ffffff55}

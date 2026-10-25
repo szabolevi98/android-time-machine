@@ -1177,6 +1177,14 @@
    "battery": "Settings:power_usage_summary_title",
    "data": "Settings:data_size_label",
    "storage:Storage": "Settings:storage_label"
+  },
+  "musicfx": {
+   "Equalizer": "MusicFX:eq_dialog_title",
+   "Bass boost": "MusicFX:bass_boost_strength",
+   "3D effect": "MusicFX:virtualizer_strength",
+   "Please plug headphones for these effects": "MusicFX:headset_plug",
+   "FX Booster": "MusicFX:ci_extreme",
+   "User": "MusicFX:user"
   }
  },
  "4.4.4": {
@@ -2623,6 +2631,14 @@
    "battery": "Settings:power_usage_summary_title",
    "data": "Settings:data_size_label",
    "storage:Storage": "Settings:storage_label"
+  },
+  "musicfx": {
+   "Equalizer": "MusicFX:eq_dialog_title",
+   "Bass boost": "MusicFX:bass_boost_strength",
+   "3D effect": "MusicFX:virtualizer_strength",
+   "Please plug headphones for these effects": "MusicFX:headset_plug",
+   "FX Booster": "MusicFX:ci_extreme",
+   "User": "MusicFX:user"
   }
  },
  "5.1.1": {
@@ -4852,6 +4868,14 @@
    "prefEntries_snapHeader:0": "Gmail:@array/prefEntries_snapHeader:0",
    "prefEntries_snapHeader:1": "Gmail:@array/prefEntries_snapHeader:1",
    "prefEntries_snapHeader:2": "Gmail:@array/prefEntries_snapHeader:2"
+  },
+  "musicfx": {
+   "Equalizer": "MusicFX:eq_dialog_title",
+   "Bass boost": "MusicFX:bass_boost_strength",
+   "3D effect": "MusicFX:virtualizer_strength",
+   "Please plug headphones for these effects": "MusicFX:headset_plug",
+   "FX Booster": "MusicFX:ci_extreme",
+   "User": "MusicFX:user"
   }
  }
 }

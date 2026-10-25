@@ -646,7 +646,9 @@
   }
   // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
   const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
+  const musicFxContext = () => ({data, ui, language: i18n.language, locale: i18n.locale(), save, render, toast: message => toast(message)});
   function navigateBack() {
+    if (ui.view === 'settings' && ui.sub === 'musicfx' && !ui.overlay) { ui.mfxSpin = false; ui.sub = 'sound'; render(); return; }
     if (ui.view === 'play-music' && !ui.overlay && ICSPlayMusic.back(ui)) { render(); return; }
     if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
     if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
@@ -943,6 +945,8 @@
     if(s==='lock-setup')return lockControls.renderSetup();
     const a11y=ICSA11y.render(a11yContext());
     if(a11y)return a11y.full||appView(a11y.title,a11y.body,'sx-page icsa-page',a11y.right);
+    // Music effects: MusicFX's ActivityMusic (*-musicfx.js).
+    if(s==='musicfx'){const fx=MusicFX.render(musicFxContext());return appView(fx.title,fx.body,'mfx-page',fx.right);}
     const system=ICSSystemSettings.render(data,ui,key=>i18n.t(key),i18n.locale());
     if(system)return appView(system.title,system.body,'sx-page',system.right);
     const detail=ICSSettingsDetail.render(data,ui,apps,key=>i18n.t(key));
@@ -1371,6 +1375,7 @@
     if (ui.view === 'people' && action.startsWith('hce-') && HoloContactEditor.handle(action, id, {draft: ui.peopleDraft, form: viewport.querySelector('#people-editor'), ui, render, renderOverlay,
       focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
       takePhoto: () => { const photo = {...ICSMedia.scene(data), id: Date.now(), name: `IMG_${new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14)}`, album: 'camera', created: Date.now()}; data.photos.unshift(photo); save(); ui.peopleDraft.photo = photo.id; render(); }})) return;
+    if (action.startsWith('mfx-') && MusicFX.handle(action, id, musicFxContext())) return;
     if (action.startsWith('icsa-') && ICSA11y.handle(action, id, a11yContext())) return;
     // Email's Quick responses, ringtone and server screens (email-prefs.js).
     if (action.startsWith('empx-') && EmailPrefs.handle(action, id, {data, ui, save, render, root: viewport, account: ICSEmail.account})) return;
@@ -1915,6 +1920,7 @@
     }
   });
   document.addEventListener('input', event => {
+    if (event.target.matches('[data-mfx]') && MusicFX.input(event.target, musicFxContext())) return;
     // Play Music's search: the sections follow the query; the field keeps its focus and caret.
     if (event.target.matches('[data-pm4-query]')) { ui.pm4Query = event.target.value; const at = event.target.selectionStart; render(); const field = viewport.querySelector('[data-pm4-query]'); if (field) { field.focus(); field.setSelectionRange(at, at); } return; }
     // Talk's SearchView and Add friend field: the suggestions follow the query without re-rendering the field.

@@ -774,7 +774,9 @@
   const QO = key => { const row = window.StockStrings?.quickoffice?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : key; };
   // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
   const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
+  const musicFxContext = () => ({data, ui, language: i18n.language, locale: i18n.locale(), save, render, toast: message => toast(message)});
   function navigateBack() {
+    if (ui.view === 'settings' && ui.sub === 'musicfx' && !ui.overlay) { ui.mfxSpin = false; ui.sub = 'sound'; render(); return; }
     // Back in a capture request cancels it (RESULT_CANCELED).
     if (ui.view === 'camera' && ui.camIntent && !ui.overlay) { ui.camIntent.cancel(); return; }
     if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
@@ -1132,6 +1134,8 @@
   function renderSettings() {
     const s = ui.sub;
     if(s==='lock-setup')return lockControls.renderSetup();
+    // Music effects: MusicFX's ActivityMusic (*-musicfx.js).
+    if(s==='musicfx'){const fx=MusicFX.render(musicFxContext());return appView(fx.title,fx.body,'mfx-page',fx.right);}
     const system=ICSSystemSettings.render(data,ui,key=>i18n.t(key),i18n.locale());
     if(system)return appView(system.title,system.body,'sx-page',system.right);
     const detail=ICSSettingsDetail.render(data,ui,apps,key=>i18n.t(key));
@@ -1746,6 +1750,7 @@
     const { action, id, app, url } = button.dataset;
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Gmail's label settings, Days of mail to sync and the vacation responder (gmail.js).
+    if (action.startsWith('mfx-') && MusicFX.handle(action, id, musicFxContext())) return;
     if (action.startsWith('gmx-') && GmailApp.handlePref(action, id, {data, ui, save, render, toast, root: viewport})) return;
     // A choice in a Play app's menu closes it before its action runs (kk-play-more.js handles its own).
     if (ui.overlay === 'pa-more' && !action.startsWith('px-') && action !== 'close-overlay') { ui.overlay = ''; ui.paMore = ''; renderOverlay(); }
@@ -2633,6 +2638,7 @@
     }
   });
   document.addEventListener('input', event => {
+    if (event.target.matches('[data-mfx]') && MusicFX.input(event.target, musicFxContext())) return;
     if (event.target.matches?.('[data-city-search]')) { ui.cityQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-city-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
     if (event.target.matches?.('[data-cpref-volume]')) { ui.clockDraft = Number(event.target.value); return; }
     if (event.target.matches?.('[data-chr-seek]')) { const ctx = {ui, data, locale: i18n.locale()}; ChromeApp.prefSeek(event.target.value, ctx); ChromeApp.seekPaint(viewport, ctx); save(); return; }

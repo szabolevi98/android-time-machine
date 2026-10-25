@@ -2760,6 +2760,27 @@ const icsPlayMusicMore = async h => {
   await h.reload(); await h.openApp('play-music'); await act('pm4-settings');
   h.check('the choices survive a restart', await h.until(`document.querySelector('#viewport [data-id="streamHq"]')?.getAttribute('aria-checked') === 'true'`));
 };
+// 4.0.4 / 4.3 / 4.4.4 Music effects (T30): Settings › Sound › Music effects opens MusicFX; the switch turns the effects
+// on, a preset is chosen, a band makes it User, the strengths ask for headphones, and the choices are kept.
+const musicFx = async h => {
+  const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  const fx = async () => ((await store(h, 'musicFx')) || {}).settings || {};
+  await h.openApp('settings'); await act('settings-sub', 'sound');
+  await h.tap('#viewport .settings-row[data-id="musicfx"]');
+  h.check('Music effects opens the Equalizer', await h.until(`!!document.querySelector('#viewport .mfx') && document.querySelector('#viewport .mfx-spinner').disabled`));
+  await h.tap('#viewport [data-action="mfx-enabled"]');
+  h.check('the switch turns the effects on', (await fx()).enabled === true && await h.until(`!document.querySelector('#viewport .mfx-spinner').disabled`));
+  await h.tap('#viewport [data-action="mfx-spin"]');
+  await h.tap('#viewport [data-action="mfx-preset"][data-id="9"]');
+  h.check('a preset is chosen', (await fx()).preset === 9 && await h.until(`document.querySelector('#viewport .mfx-spinner').textContent === 'Rock'`));
+  await h.ev(`(()=>{const el=document.querySelector('#viewport [data-mfx="band:0"]');el.value='-1200';el.dispatchEvent(new Event('input',{bubbles:true}));})()`);
+  const s = await fx();
+  h.check('moving a band makes the preset User', s.preset === 11 && s.user?.[0] === -1200 && s.user?.[4] === 500, JSON.stringify(s));
+  await h.shot('musicfx');
+  h.check('without headphones the strengths stay off', await h.ev(`document.querySelector('#viewport [data-mfx="bass"]').disabled`));
+  await h.key('Escape');
+  h.check('Back returns to Sound', await h.until(`!!document.querySelector('#viewport .settings-row[data-id="musicfx"]')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -2850,6 +2871,9 @@ const CASES = [
   {id: 'T21', version: '4.4.4', name: 'Play Store › Share', run: playShare},
   {id: 'T21', version: '5.1.1', name: 'Play Store › Share, READ MORE and Send email', run: playShare},
   {id: 'T22', version: '4.0.4', name: 'Play Music › Search music, Make instant mix, Music settings', run: icsPlayMusicMore},
+  {id: 'T30', version: '4.0.4', name: 'Settings › Sound › Music effects (MusicFX)', run: musicFx},
+  {id: 'T30', version: '4.3', name: 'Settings › Sound › Music effects (MusicFX)', run: musicFx},
+  {id: 'T30', version: '4.4.4', name: 'Settings › Sound › Music effects (MusicFX)', run: musicFx},
   {id: 'T10', version: '2.3.6', name: 'Contacts › Take photo through the Camera capture request', run: gbContactPhoto},
   {id: 'T13', version: '2.3.6', name: 'Messaging › Audio, Record audio, Capture picture / video, Slideshow', run: gbMmsAttach},
   {id: 'T13', version: '4.3', name: 'Messaging › Audio Play, Capture picture / video, Slideshow', run: jbMmsAttach},

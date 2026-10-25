@@ -1177,5 +1177,13 @@ window.StockStrings = {
   "battery": {"res": "Settings:power_usage_summary_title", "hu": "Akkumulátor", "de": "Akku", "fr": "Batterie", "es": "Batería", "en": "Battery"},
   "data": {"res": "Settings:data_size_label", "hu": "Adatok", "de": "Daten", "fr": "Données", "es": "Datos", "en": "Data"},
   "storage:Storage": {"res": "Settings:storage_label", "hu": "Tárhely", "de": "Speicher", "fr": "Stockage", "es": "Almacenamiento", "en": "Storage"}
+ },
+ "musicfx": {
+  "Equalizer": {"res": "MusicFX:eq_dialog_title", "hu": "Hangszínszabályzó", "de": "Equalizer", "fr": "Égaliseur", "es": "Ecualizador"},
+  "Bass boost": {"res": "MusicFX:bass_boost_strength", "hu": "Mélyhangkiemelő", "de": "Bassverstärkung", "fr": "Amplification des basses", "es": "Refuerzo de graves"},
+  "3D effect": {"res": "MusicFX:virtualizer_strength", "hu": "Térhatású hangzás", "de": "Surround-Sound", "fr": "Son surround", "es": "Sonido envolvente", "en": "Surround sound"},
+  "Please plug headphones for these effects": {"res": "MusicFX:headset_plug", "hu": "Dugja be a fejhallgatót ezekhez az effektekhez.", "de": "Für diese Effekte benötigen Sie Kopfhörer.", "fr": "Veuillez brancher un casque pour ces effets.", "es": "Para disfrutar de los efectos, debes conectar los auriculares.", "en": "Plug in headphones for these effects."},
+  "FX Booster": {"res": "MusicFX:ci_extreme", "hu": "FX booster", "de": "FX-Verstärker", "fr": "FX booster", "es": "FX booster", "en": "FX booster"},
+  "User": {"res": "MusicFX:user", "hu": "Felhasználó", "de": "Nutzer", "fr": "Utilisateur", "es": "Usuario"}
  }
 };

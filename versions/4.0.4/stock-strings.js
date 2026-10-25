@@ -500,5 +500,13 @@ window.StockStrings = {
   "prefEntries_snapHeader:0": {"res": "Gmail:@array/prefEntries_snapHeader:0", "hu": "Mindig látszik", "de": "Immer anzeigen", "fr": "Toujours afficher", "es": "Mostrar siempre", "en": "Always show"},
   "prefEntries_snapHeader:1": {"res": "Gmail:@array/prefEntries_snapHeader:1", "hu": "Megjelenítés csak álló tájolásban", "de": "Nur im Hochformat anzeigen", "fr": "Afficher uniquement en mode Portrait", "es": "Mostrar solo en modo vertical", "en": "Only show in portrait"},
   "prefEntries_snapHeader:2": {"res": "Gmail:@array/prefEntries_snapHeader:2", "hu": "Ne jelenjen meg", "de": "Nicht anzeigen", "fr": "Ne pas afficher", "es": "No mostrar", "en": "Don't show"}
+ },
+ "musicfx": {
+  "Equalizer": {"res": "MusicFX:eq_dialog_title", "hu": "Hangszínszabályzó", "de": "Equalizer", "fr": "Égaliseur", "es": "Ecualizador"},
+  "Bass boost": {"res": "MusicFX:bass_boost_strength", "hu": "Mélyhangkiemelő", "de": "Bassverstärkung", "fr": "Amplification des basses", "es": "Refuerzo de graves"},
+  "3D effect": {"res": "MusicFX:virtualizer_strength", "hu": "3D hatás", "de": "3D-Effekt", "fr": "Effet 3D", "es": "Efecto 3D"},
+  "Please plug headphones for these effects": {"res": "MusicFX:headset_plug", "hu": "Kérjük, dugja be a fejhallgatót ezekért a hatásokért", "de": "Bitte schließen Sie für diese Effekte Kopfhörer an.", "fr": "Veuillez brancher un casque pour ces effets", "es": "Para disfrutar de los efectos, debes conectar los auriculares."},
+  "FX Booster": {"res": "MusicFX:ci_extreme", "hu": "FX Booster", "de": "FX-Verstärker", "fr": "FX Booster", "es": "FX Booster"},
+  "User": {"res": "MusicFX:user", "hu": "Felhasználó", "de": "Nutzer", "fr": "Utilisateur", "es": "Usuario"}
  }
 };
