@@ -22,7 +22,39 @@
     "Time filter": "time_filter_dialog_title", "Today": "time_filter_today", "This week": "time_filter_this_week", "This month": "time_filter_this_month",
     "All time": "time_filter_all_time", "Respond to this video...": "comment_hint", "Post": "comment_post_button", "Comment posted": "comment_posted",
     "Rotate or double tap the video to toggle fullscreen": "promo_fullscreen", "%1$s days ago": "ago_day_plural", "%1$s weeks ago": "ago_week_plural",
-    "%1$s months ago": "ago_month_plural", "Subscribe": "subscribe", "Share this video via": "send_video", "Sign in": "accounts_title"
+    "%1$s months ago": "ago_month_plural", "Subscribe": "subscribe", "Share this video via": "send_video", "Sign in": "accounts_title",
+    "General settings": "pref_general_category",
+    "High quality on mobile": "pref_default_hq_title",
+    "Start videos in high quality when connected to a mobile network.": "pref_default_hq_summary",
+    "Caption font size": "pref_subtitles_size_title",
+    "Sets the font size to use for captions": "pref_subtitles_size_summary",
+    "Small": "@array/subtitles_size_entries:0",
+    "Medium": "@array/subtitles_size_entries:1",
+    "Large": "@array/subtitles_size_entries:2",
+    "Extra Large": "@array/subtitles_size_entries:3",
+    "Search settings": "pref_search_category",
+    "Clear search history": "pref_clear_search_history_title",
+    "Clear previous YouTube searches from showing up in the Search box": "pref_clear_search_history_summary",
+    "SafeSearch filtering": "pref_safe_search_title",
+    "Block videos containing restricted content from appearing in search results": "pref_safe_search_summary",
+    "SafeSearch": "safe_search_dialog_title",
+    "Don't filter": "@array/safe_search_levels:0",
+    "Moderate": "@array/safe_search_levels:1",
+    "Strict": "@array/safe_search_levels:2",
+    "About": "pref_about_category",
+    "Help": "pref_help_title",
+    "Find answers to your YouTube questions here": "pref_help_summary",
+    "Feedback": "pref_feedback_title",
+    "Help us make YouTube better": "pref_feedback_summary",
+    "Google Mobile Terms of Service": "pref_mobile_terms_title",
+    "Read Google Mobile Terms of Service": "pref_mobile_terms_summary",
+    "YouTube Terms of Service": "pref_youtube_terms_title",
+    "Read YouTube's Terms of Service": "pref_youtube_terms_summary",
+    "Google Mobile Privacy Policy": "pref_mobile_privacy_title",
+    "Read Google Mobile Privacy Policy": "pref_mobile_privacy_summary",
+    "YouTube Privacy Policy": "pref_youtube_privacy_title",
+    "Read YouTube's Privacy Policy": "pref_youtube_privacy_summary",
+    "Application version": "pref_version_title"
   });
   const T = GBApps.texts(STRINGS);
   const A = name => `assets/yt-${name}.png`;
@@ -95,7 +127,7 @@
   function menu(ctx) {
     const {lang} = ctx, t = k => T(lang, k);
     return [{action: 'yt-home', title: t('Home'), icon: 'yt-ic_menu_home.png'}, {action: 'yt-browse', title: t('Browse'), icon: 'yt-ic_menu_browse.png'}, {action: 'yt-channel-open', title: t('My Channel'), icon: 'yt-ic_menu_my_channel.png'},
-      {action: 'yt-upload', title: t('Upload'), icon: 'yt-ic_menu_capture_normal.png'}, {action: 'yt-search-open', title: t('Search'), icon: 'ic_menu_search'}, {action: 'yt-unsupported', title: t('Settings'), icon: 'ic_menu_preferences'}];
+      {action: 'yt-upload', title: t('Upload'), icon: 'yt-ic_menu_capture_normal.png'}, {action: 'yt-search-open', title: t('Search'), icon: 'ic_menu_search'}, {action: 'gbpref-open', id: 'youtube', title: t('Settings'), icon: 'ic_menu_preferences'}];
   }
   function dialog(kind, ctx) {
     const {lang} = ctx, t = k => T(lang, k);
@@ -130,7 +162,8 @@
   }
   function submit(form, values, ctx) {
     const {ui, data, lang} = ctx;
-    if (form === 'yt-search') { const q = String(values.get('q') || '').trim(); if (!q) return true; ui.ytQuery = q; ui.ytPage = 'results'; ui.ytWatch = ''; ui.ytSearching = false; ctx.render(); return true; }
+    // Each search is kept for the Search box's history (Settings' Clear search history empties it).
+    if (form === 'yt-search') { const q = String(values.get('q') || '').trim(); if (!q) return true; const s = store(ctx.data); s.searches = [q, ...(s.searches || []).filter(x => x !== q)].slice(0, 10); ctx.save(); ui.ytQuery = q; ui.ytPage = 'results'; ui.ytWatch = ''; ui.ytSearching = false; ctx.render(); return true; }
     if (form === 'yt-comment') { const text = String(values.get('text') || '').trim(); if (!text) return true; const s = store(data); (s.comments[ui.ytWatch] ||= []).unshift(text); ctx.save(); ctx.render(); ctx.toast(T(lang, 'Comment posted')); return true; }
     return false;
   }

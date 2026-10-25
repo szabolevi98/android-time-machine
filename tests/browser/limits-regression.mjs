@@ -1346,6 +1346,35 @@ const icsTalk = async h => {
   await h.tap('#viewport [data-action="ga-talk-unblock"][data-id="1"]');
   h.check('Blocked friends gives the friend back', await h.until(`!document.querySelector('#viewport [data-action="ga-talk-unblock"]')`) && !(await store(h, 'talkBlocked'))?.length);
 };
+
+// 2.3.6 YouTube's Settings (T20, youtube_preferences.xml): the checks and lists are kept, SafeSearch's own dialog
+// title, and Clear search history empties the searches.
+const gbYouTubeSettings = async h => {
+  const prefs = async () => (await store(h, 'appPrefs'))?.youtube || {};
+  const menu = async (action, id = '') => {
+    await h.tap('.touch-menu'); await h.until(`!!document.querySelector('.gbmenu')`);
+    const item = `[data-action="${action}"]${id ? `[data-id="${id}"]` : ''}`;
+    if (!await h.ev(`!!document.querySelector('.gbmenu ${item}')`)) await h.tap('.gbmenu [data-action="gb-menu-more"]');
+    await h.tap(item);
+  };
+  await h.openApp('youtube');
+  await menu('yt-search-open');
+  await h.type('#viewport .yt-search input', 'nexus');
+  await h.ev(`document.querySelector('#viewport .yt-search').requestSubmit()`);
+  h.check('a search is kept for the history', (await store(h, 'youtube23'))?.searches?.[0] === 'nexus');
+  await menu('gbpref-open', 'youtube');
+  h.check('Settings opens', await h.until(`!!document.querySelector('#viewport [data-id="youtube:default_hq"]')`));
+  await h.tap('#viewport [data-id="youtube:default_hq"]');
+  await h.tap('#viewport [data-id="youtube:subtitles_size"]');
+  await h.tap('.gbdlg [data-id="youtube:subtitles_size:2"]');
+  await h.tap('#viewport [data-id="youtube:safe_search"]');
+  h.check('SafeSearch has its own dialog title', await h.until(`/^SafeSearch$/.test(document.querySelector('.gbdlg .gbdlg-title, .gbdlg h3, .gbdlg header')?.textContent.trim() || '')`));
+  await h.tap('.gbdlg [data-id="youtube:safe_search:2"]');
+  const p = await prefs();
+  h.check('the values are kept', p.default_hq === true && p.subtitles_size === 2 && p.safe_search === 2, JSON.stringify(p));
+  await h.tap('#viewport [data-id="youtube:clear_history"]');
+  h.check('Clear search history empties it', !(await store(h, 'youtube23'))?.searches?.length);
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1432,6 +1461,7 @@ const CASES = [
   {id: 'T15', version: '2.3.6', name: 'Car Home Settings and Dock settings', run: gbCarDock},
   {id: 'T17', version: '2.3.6', name: 'Talk › Add to chat, Settings', run: gbTalk},
   {id: 'T17', version: '4.0.4', name: 'Talk › Display options, Add to chat, Friend info, Talk settings', run: icsTalk},
+  {id: 'T20', version: '2.3.6', name: 'YouTube › Settings', run: gbYouTubeSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

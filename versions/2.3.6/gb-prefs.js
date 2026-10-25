@@ -247,6 +247,25 @@
         action('gtalk-terms-key', K('Terms & privacy'), '', {toast: true})
       ]};
     },
+    // YouTube 2.1.6's Settings (YouTube.apk res/xml/youtube_preferences.xml): Caption font size (subtitles_size_*, 18 by
+    // default), Clear search history, SafeSearch filtering (safe_search_levels in the "SafeSearch" dialog); Help,
+    // Feedback and the terms are Google's pages; Application version is the APK's.
+    youtube(ctx) {
+      const Y = key => window.GBYouTube.T(ctx.lang, key), web = (key, title, summary) => action(key, Y(title), Y(summary), {toast: true});
+      return {set: 'youtube', title: Y('Settings'), items: [
+        cat(Y('General settings')),
+        check('default_hq', Y('High quality on mobile'), Y('Start videos in high quality when connected to a mobile network.'), false),
+        list('subtitles_size', Y('Caption font size'), ['Small', 'Medium', 'Large', 'Extra Large'].map(Y), 1, {summary: Y('Sets the font size to use for captions')}),
+        cat(Y('Search settings')),
+        action('clear_history', Y('Clear search history'), Y('Clear previous YouTube searches from showing up in the Search box'), {done: true}),
+        list('safe_search', Y('SafeSearch filtering'), ["Don't filter", 'Moderate', 'Strict'].map(Y), 1, {summary: Y('Block videos containing restricted content from appearing in search results'), dialogTitle: Y('SafeSearch')}),
+        cat(Y('About')),
+        web('help', 'Help', 'Find answers to your YouTube questions here'), web('feedback', 'Feedback', 'Help us make YouTube better'),
+        web('mobile_terms', 'Google Mobile Terms of Service', 'Read Google Mobile Terms of Service'), web('youtube_terms', 'YouTube Terms of Service', "Read YouTube's Terms of Service"),
+        web('mobile_privacy', 'Google Mobile Privacy Policy', 'Read Google Mobile Privacy Policy'), web('youtube_privacy', 'YouTube Privacy Policy', "Read YouTube's Privacy Policy"),
+        action('version', Y('Application version'), '2.1.6', {info: true})
+      ]};
+    },
     dock(ctx) {
       const D = key => S('settings2', ctx.lang, key), on = !!ctx.values.dock_sounds;
       return {set: 'dock', title: D('dock_settings_title'), items: [

@@ -56,7 +56,39 @@
     "%1$s months ago": {"res": "YouTube:ago_month_plural", "hu": "%1$s months ago", "de": "vor %1$s Monaten", "fr": "il y a %1$s mois", "es": "hace %1$s meses"},
     "Subscribe": {"res": "YouTube:subscribe", "hu": "Subscribe", "de": "Abonnieren", "fr": "S'inscrire", "es": "Suscribirse"},
     "Share this video via": {"res": "YouTube:send_video", "hu": "Share this video via", "de": "Video weiterleiten über", "fr": "Partager cette vidéo via...", "es": "Compartir vídeo a través de"},
-    "Sign in": {"res": "YouTube:accounts_title", "hu": "Sign in", "de": "Anmelden", "fr": "Connexion", "es": "Acceder"}
+    "Sign in": {"res": "YouTube:accounts_title", "hu": "Sign in", "de": "Anmelden", "fr": "Connexion", "es": "Acceder"},
+    "General settings": {"res": "YouTube:pref_general_category", "hu": "General settings", "de": "Allgemeine Einstellungen", "fr": "Paramètres généraux", "es": "Ajustes generales"},
+    "High quality on mobile": {"res": "YouTube:pref_default_hq_title", "hu": "High quality on mobile", "de": "Mit hoher Qualität auf Handys", "fr": "Vidéo haute qualité sur mobile", "es": "Alta calidad en móvil"},
+    "Start videos in high quality when connected to a mobile network.": {"res": "YouTube:pref_default_hq_summary", "hu": "Start videos in high quality when connected to a mobile network. Startup may take longer.", "de": "Spielen Sie Videos in hoher Qualität ab, wenn Sie mit einem Mobilfunknetz verbunden sind. Der Start dauert möglicherweise länger.", "fr": "Lancez les vidéos en haute qualité lorsque vous êtes connecté à un réseau mobile. Le démarrage risque de prendre plus de temps.", "es": "Inicia vídeos en alta calidad cuando te conectes a una red móvil. El inicio puede tardar.", "en": "Start videos in high quality when connected to a mobile network. Startup may take longer."},
+    "Caption font size": {"res": "YouTube:pref_subtitles_size_title", "hu": "Caption font size", "de": "Untertitelgröße", "fr": "Taille de police des sous-titres", "es": "Tamaño fuente subtítulo"},
+    "Sets the font size to use for captions": {"res": "YouTube:pref_subtitles_size_summary", "hu": "Sets the font size to use for captions", "de": "Legt die Schriftgröße der Untertitel fest.", "fr": "Définit la taille de caractères à utiliser dans les sous-titres", "es": "Define el tamaño de fuente que se va a utilizar en los subtítulos."},
+    "Small": {"res": "YouTube:@array/subtitles_size_entries:0", "hu": "Small", "de": "Klein", "fr": "Petite", "es": "Pequeño"},
+    "Medium": {"res": "YouTube:@array/subtitles_size_entries:1", "hu": "Medium", "de": "Mittel", "fr": "Moyenne", "es": "Mediano"},
+    "Large": {"res": "YouTube:@array/subtitles_size_entries:2", "hu": "Large", "de": "Groß", "fr": "Grande", "es": "Grande"},
+    "Extra Large": {"res": "YouTube:@array/subtitles_size_entries:3", "hu": "Extra Large", "de": "Extragroß", "fr": "Très grande", "es": "Muy grande"},
+    "Search settings": {"res": "YouTube:pref_search_category", "hu": "Search settings", "de": "Sucheinstellungen", "fr": "Paramètres de recherche", "es": "Ajustes de búsqueda"},
+    "Clear search history": {"res": "YouTube:pref_clear_search_history_title", "hu": "Clear search history", "de": "Suchverlauf löschen", "fr": "Eff. historique recherches", "es": "Borrar historial de búsqueda"},
+    "Clear previous YouTube searches from showing up in the Search box": {"res": "YouTube:pref_clear_search_history_summary", "hu": "Clear previous YouTube searches from showing up in the Search box", "de": "Frühere Suchen auf YouTube aus Suchfeld löschen", "fr": "Supprimer l'historique des recherches YouTube", "es": "Borrar búsquedas anteriores de YouTube para que no aparezcan en el cuadro de búsqueda"},
+    "SafeSearch filtering": {"res": "YouTube:pref_safe_search_title", "hu": "SafeSearch filtering", "de": "SafeSearch-Filter", "fr": "Filtrage SafeSearch", "es": "Filtrado de SafeSearch"},
+    "Block videos containing restricted content from appearing in search results": {"res": "YouTube:pref_safe_search_summary", "hu": "Block videos containing restricted content from appearing in search results", "de": "Videos, die zugriffsbeschränkten Content enthalten, nicht in Suchergebnissen anzeigen", "fr": "Retirer des résultats de recherche les vidéos dont le contenu est soumis à restriction", "es": "Bloquear vídeos con contenido restringido en los resultados de búsqueda."},
+    "SafeSearch": {"res": "YouTube:safe_search_dialog_title", "hu": "SafeSearch", "de": "SafeSearch", "fr": "SafeSearch", "es": "SafeSearch"},
+    "Don't filter": {"res": "YouTube:@array/safe_search_levels:0", "hu": "Don't filter", "de": "Nicht filtern", "fr": "Ne pas filtrer", "es": "No filtrar"},
+    "Moderate": {"res": "YouTube:@array/safe_search_levels:1", "hu": "Moderate", "de": "Moderat", "fr": "Modéré", "es": "Moderado"},
+    "Strict": {"res": "YouTube:@array/safe_search_levels:2", "hu": "Strict", "de": "Strikt", "fr": "Strict", "es": "Estricto"},
+    "About": {"res": "YouTube:pref_about_category", "hu": "About", "de": "Info", "fr": "À propos de", "es": "Acerca de"},
+    "Help": {"res": "YouTube:pref_help_title", "hu": "Help", "de": "Hilfe", "fr": "Aide", "es": "Ayuda"},
+    "Find answers to your YouTube questions here": {"res": "YouTube:pref_help_summary", "hu": "Find answers to your YouTube questions here", "de": "Hier findest du Antworten auf deine Fragen zu YouTube.", "fr": "Trouvez ici la réponse à vos questions concernant YouTube", "es": "Encuentra respuestas a tus preguntas de YouTube aquí."},
+    "Feedback": {"res": "YouTube:pref_feedback_title", "hu": "Feedback", "de": "Feedback", "fr": "Commentaires", "es": "Comentarios"},
+    "Help us make YouTube better": {"res": "YouTube:pref_feedback_summary", "hu": "Help us make YouTube better", "de": "Hilf uns, YouTube zu verbessern", "fr": "Aidez-nous à améliorer YouTube.", "es": "Ayúdanos a mejorar YouTube."},
+    "Google Mobile Terms of Service": {"res": "YouTube:pref_mobile_terms_title", "hu": "Google Mobile Terms of Service", "de": "Google Mobile-Nutzung", "fr": "Conditions d'utilisation Google Mobile", "es": "Condiciones servicio móviles"},
+    "Read Google Mobile Terms of Service": {"res": "YouTube:pref_mobile_terms_summary", "hu": "Read Google Mobile Terms of Service", "de": "Nutzungsbedingungen von Google Mobile lesen", "fr": "Lisez les conditions d'utilisation de Google Mobile.", "es": "Consultar las Condiciones del servicio de Google para móviles"},
+    "YouTube Terms of Service": {"res": "YouTube:pref_youtube_terms_title", "hu": "YouTube Terms of Service", "de": "YouTube-Nutzung", "fr": "Conditions d'utilisation YouTube", "es": "Términos uso de YouTube"},
+    "Read YouTube's Terms of Service": {"res": "YouTube:pref_youtube_terms_summary", "hu": "Read YouTube's Terms of Service", "de": "Nutzungsbedingungen von YouTube lesen", "fr": "Lisez les conditions d'utilisation de YouTube.", "es": "Consultar los Términos de uso de YouTube"},
+    "Google Mobile Privacy Policy": {"res": "YouTube:pref_mobile_privacy_title", "hu": "Google Mobile Privacy Policy", "de": "Mobile-Datenschutz", "fr": "Règles de confidentialité - Mobile", "es": "Política privacidad móviles"},
+    "Read Google Mobile Privacy Policy": {"res": "YouTube:pref_mobile_privacy_summary", "hu": "Read Google Mobile Privacy Policy", "de": "Datenschutzbestimmungen von Google Mobile lesen", "fr": "Lisez les règles de confidentialité de Google Mobile.", "es": "Consultar la Política de privacidad de Google para móviles"},
+    "YouTube Privacy Policy": {"res": "YouTube:pref_youtube_privacy_title", "hu": "YouTube Privacy Policy", "de": "YouTube-Datenschutz", "fr": "Règles de confidentialité - YouTube", "es": "Política privacidad YouTube"},
+    "Read YouTube's Privacy Policy": {"res": "YouTube:pref_youtube_privacy_summary", "hu": "Read YouTube's Privacy Policy", "de": "Datenschutzbestimmungen von YouTube lesen", "fr": "Lisez les règles de confidentialité de YouTube.", "es": "Consultar la Política de privacidad de YouTube"},
+    "Application version": {"res": "YouTube:pref_version_title", "hu": "Application version", "de": "Anwendungsversion", "fr": "Version de l'application", "es": "Versión de la aplicación"}
   };
   const T = GBApps.texts(STRINGS);
   const A = name => `assets/yt-${name}.png`;
@@ -129,7 +161,7 @@
   function menu(ctx) {
     const {lang} = ctx, t = k => T(lang, k);
     return [{action: 'yt-home', title: t('Home'), icon: 'yt-ic_menu_home.png'}, {action: 'yt-browse', title: t('Browse'), icon: 'yt-ic_menu_browse.png'}, {action: 'yt-channel-open', title: t('My Channel'), icon: 'yt-ic_menu_my_channel.png'},
-      {action: 'yt-upload', title: t('Upload'), icon: 'yt-ic_menu_capture_normal.png'}, {action: 'yt-search-open', title: t('Search'), icon: 'ic_menu_search'}, {action: 'yt-unsupported', title: t('Settings'), icon: 'ic_menu_preferences'}];
+      {action: 'yt-upload', title: t('Upload'), icon: 'yt-ic_menu_capture_normal.png'}, {action: 'yt-search-open', title: t('Search'), icon: 'ic_menu_search'}, {action: 'gbpref-open', id: 'youtube', title: t('Settings'), icon: 'ic_menu_preferences'}];
   }
   function dialog(kind, ctx) {
     const {lang} = ctx, t = k => T(lang, k);
@@ -164,7 +196,8 @@
   }
   function submit(form, values, ctx) {
     const {ui, data, lang} = ctx;
-    if (form === 'yt-search') { const q = String(values.get('q') || '').trim(); if (!q) return true; ui.ytQuery = q; ui.ytPage = 'results'; ui.ytWatch = ''; ui.ytSearching = false; ctx.render(); return true; }
+    // Each search is kept for the Search box's history (Settings' Clear search history empties it).
+    if (form === 'yt-search') { const q = String(values.get('q') || '').trim(); if (!q) return true; const s = store(ctx.data); s.searches = [q, ...(s.searches || []).filter(x => x !== q)].slice(0, 10); ctx.save(); ui.ytQuery = q; ui.ytPage = 'results'; ui.ytWatch = ''; ui.ytSearching = false; ctx.render(); return true; }
     if (form === 'yt-comment') { const text = String(values.get('text') || '').trim(); if (!text) return true; const s = store(data); (s.comments[ui.ytWatch] ||= []).unshift(text); ctx.save(); ctx.render(); ctx.toast(T(lang, 'Comment posted')); return true; }
     return false;
   }
