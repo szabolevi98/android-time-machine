@@ -64,8 +64,11 @@
   function searchSettings(ctx) {
     const V = key => AndroidStrings.table('', VS).t(key, String(ctx.locale || 'en'));
     const on = ctx.data.googleNowOn !== false;
-    const header = (title, summary = '') => `<button class="sa-row vs-header" data-action="sa-unsupported"><span><b>${e(V(title))}</b>${summary ? `<small>${e(V(summary))}</small>` : ''}</span></button>`;
-    const now = `<div class="sa-row vs-header vs-now"><button data-action="sa-unsupported"><span><b>${e(V('Google Now'))}</b></span></button><button class="gms-switch${on ? ' on' : ''}" data-action="google-now-toggle" role="switch" aria-checked="${on}" aria-label="${e(V('Google Now'))}"><i>${e(S(ctx, 'gsettings', on ? 'ON' : 'OFF'))}</i></button></div>`;
+    // Each header opens its page (jb-search-prefs.js).
+    if (ctx.ui.gsPage) return window.JBSearchPrefs.render(ctx, title => bar(ctx, {title, up: true, icon: 'google-search.png', cls: ' dark vs-bar'}));
+    const page = {'Google Now': 'now', Notifications: 'notifications', 'My stuff': 'mystuff', Voice: 'voice', 'Phone search': 'phone', 'Privacy & accounts': 'privacy'};
+    const header = (title, summary = '') => `<button class="sa-row vs-header" data-action="gsp-open" data-id="${page[title]}"><span><b>${e(V(title))}</b>${summary ? `<small>${e(V(summary))}</small>` : ''}</span></button>`;
+    const now = `<div class="sa-row vs-header vs-now"><button data-action="gsp-open" data-id="now"><span><b>${e(V('Google Now'))}</b></span></button><button class="gms-switch${on ? ' on' : ''}" data-action="google-now-toggle" role="switch" aria-checked="${on}" aria-label="${e(V('Google Now'))}"><i>${e(S(ctx, 'gsettings', on ? 'ON' : 'OFF'))}</i></button></div>`;
     const rows = now + (on ? header('Notifications') + header('My stuff', 'My sports teams, stocks, places, reminders') : '') + header('Voice') + header('Phone search') + header('Privacy & accounts');
     return `<div class="app-view sa-app sa-settings">${bar(ctx, {title: V('Settings'), up: true, icon: 'google-search.png', cls: ' dark vs-bar'})}<div class="sa-scroll">${rows}</div></div>`;
   }

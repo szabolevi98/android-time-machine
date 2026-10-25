@@ -696,7 +696,7 @@
       case 'browser': return renderBrowser();
       case 'chrome': return renderChrome();
       case 'messenger': case 'navigation': case 'local': case 'currents': case 'play-magazines': case 'wallet': case 'movie-studio': if (ui.view === 'navigation' && ui.navRun) return MapsRoute.nav(mrContext()); return JBExtraApps.render(ui.view, {ui, t: key => i18n.t(key), contacts: data.contacts});
-      case 'google-search': case 'voice-search': case 'maps': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), now: deviceDate()});
+      case 'google-search': case 'voice-search': case 'maps': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
       case 'hangouts': return hangoutsScope(() => Hangouts.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime()));
       case 'downloads': return HoloDownloads.render(dlContext());
       case 'gmail': return renderGmail();
@@ -718,7 +718,7 @@
     // A capture for Messaging lasts while the Camera is open; Messaging opens on its compose screen, not over it.
     if (!resume) { ui.jbmaCapture = null; if (app === 'messaging') ui.jbmaScreen = null; }
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
-    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt4Dialog = null; }
+    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt4Dialog = null; ui.gsPage = ''; ui.gsStack = []; ui.gsDialog = null; }
     if(ui.locked)return;
     if (app === 'news-weather' && !resume) { ui.newsSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
     if (app === 'google-keyboard') { openApp('settings'); ui.sub = 'language'; render(); return; }
@@ -801,6 +801,7 @@
     if (ui.view === 'calculator' && ui.calcPanel) { setCalculatorPanel(0); return; }
     if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return; }
     if (ui.view === 'youtube' && !ui.overlay && JBYouTube.back(ytContext())) return;
+    if (ui.view === 'google-search' && ui.sub === 'settings' && !ui.overlay && JBSearchPrefs.back(gsContext())) return;
     if (ui.view === 'youtube' && ui.sub === 'video' && ui.ytFrom === 'results') { ui.sub = 'results'; ui.ytFrom = ''; render(); return; }
     if (ui.view === 'keep' && ui.keepDialog) { ui.keepDialog = ''; render(); return; }
     if (StockApps.APPS.includes(ui.view) && ui.sub) { if (ui.view === 'keep') saveKeepNote(true); ui.sub = ''; render(); return; }
@@ -1756,6 +1757,12 @@
     return ICSEmail.render(emailContext());
   }
   // Share contact via Email or Gmail: the app's compose with the contact card attached.
+  // Google Search's settings pages (jb-search-prefs.js); Location services is Google Settings' Location.
+  function gsContext() {
+    return {ui, data, t: key => i18n.t(key), locale: i18n.locale(), account: GmailApp.account, save, render,
+      unsupported: () => toast(i18n.t('This feature is not part of the simulator.')),
+      openLocation() { openApp('google-settings'); ui.sub = 'gms-location'; ui.gmsDialog = ''; render(); }};
+  }
   // YouTube 4.5's watch page (jb-youtube.js): ACTION_SEND text/plain puts the subject and the link into the app's new message.
   function ytContext() {
     return {ui, data, t: key => i18n.t(key), locale: i18n.locale(), save, render, toast,
@@ -1895,6 +1902,7 @@
     if (action.startsWith('mps-') && window.MapsPrefs?.handle(action, id, mapsPrefsContext())) return;
     if (ui.view === 'messaging' && action.startsWith('jbma-') && JBMmsAttach.handle(action, id, jbmaContext())) return;
     if (ui.view === 'youtube' && action.startsWith('yt4-') && JBYouTube.handle(action, id, ytContext())) return;
+    if (ui.view === 'google-search' && action.startsWith('gsp-') && JBSearchPrefs.handle(action, id, gsContext())) return;
     switch (action) {
       case 'open-app': {
         const icon = button.closest('.launcher-icon, .drawer-app, .dock-app') || button;
@@ -2167,7 +2175,7 @@
       case 'gms-delete': ui.gmsDialog = ''; ui.gmsDeleting = true; render(); setTimeout(() => { ui.gmsDeleting = false; if (ui.sub === 'gms-history') render(); }, 1500); break;
       case 'sa-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
       case 'voice-listen': listenVoice(); break;
-      case 'gel-overview-settings': ui.overlay = ''; renderOverlay(); openApp('google-search'); ui.sub = 'settings'; render(); break;
+      case 'gel-overview-settings': ui.overlay = ''; renderOverlay(); openApp('google-search'); ui.sub = 'settings'; ui.gsPage = ''; render(); break;
       case 'google-now-toggle': data.googleNowOn = data.googleNowOn === false; save(); render(); break;
       case 'maps-locate': ui.mapsQuery = ''; render(); break;
       // Maps 6.14: the feature switcher, Places (Local), Layers, Clear map, the zoom controls.

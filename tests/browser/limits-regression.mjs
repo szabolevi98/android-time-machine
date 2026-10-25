@@ -1629,6 +1629,57 @@ const icsSearchableItems = async h => {
   await h.tap('#viewport .ga-qsb-hit[data-action="ga-qsb-app"][data-id="calculator"]');
   h.check('an app find opens the app', await h.until(`!!document.querySelector('#viewport .calculator, #viewport [class*="calc"]')`));
 };
+// 4.3 Google Search 2.5 (T25): the settings headers open their pages; a Now card switch hides the card, a notification
+// level, places, a team and a stock, Voice and Phone search choices are kept; Location services opens Google Settings.
+const jbSearchSettings = async h => {
+  const gs = async () => (await store(h, 'gsearch')) || {};
+  await h.openApp('google-search');
+  h.check('the Weather card shows', await h.until(`!!document.querySelector('#viewport .vn-weather')`));
+  await h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='gel-overview-settings';document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  await h.tap('#viewport [data-action="gsp-open"][data-id="now"]');
+  h.check('Google Now lists the cards', await h.until(`document.querySelectorAll('#viewport .gms-switch[data-action="gsp-card"]').length === 16`));
+  await h.tap('#viewport .gms-switch[data-action="gsp-card"][data-id="weather"]');
+  h.check('the Weather switch is kept off', (await gs()).cards?.weather === false);
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="gsp-open"][data-id="notifications"]');
+  await h.tap('#viewport [data-action="gsp-list"][data-id="notif:tickets"]');
+  await h.tap('#viewport [data-action="gsp-pick"][data-id="0"]');
+  h.check('a notification level is kept', (await gs()).prefs?.['notif:tickets'] === '0' && await h.until(`/Off/.test(document.querySelector('#viewport [data-id="notif:tickets"]')?.textContent || '')`));
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="gsp-open"][data-id="mystuff"]');
+  await h.tap('#viewport [data-action="gsp-page"][data-id="places"]');
+  await h.tap('#viewport [data-action="gsp-edit"][data-id="home"]');
+  await h.type('#viewport [data-gsp-input]', '1600 Amphitheatre Pkwy');
+  await h.tap('#viewport [data-action="gsp-edit-ok"]');
+  h.check('Home is kept', (await gs()).places?.home === '1600 Amphitheatre Pkwy');
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="gsp-page"][data-id="stocks"]');
+  await h.tap('#viewport [data-action="gsp-edit"][data-id="stocks"]');
+  await h.type('#viewport [data-gsp-input]', 'goog');
+  await h.tap('#viewport [data-action="gsp-edit-ok"]');
+  h.check('a stock is added', (await gs()).stocks?.[0] === 'GOOG');
+  await h.key('Escape');
+  h.check('My stuff shows the stock', await h.until(`/GOOG/.test(document.querySelector('#viewport [data-id="stocks"]')?.textContent || '')`));
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="gsp-open"][data-id="voice"]');
+  await h.tap('#viewport [data-action="gsp-list"][data-id="ttsMode"]');
+  await h.tap('#viewport [data-action="gsp-pick"][data-id="always"]');
+  await h.tap('#viewport [data-action="gsp-check"][data-id="hotwordDetector"]');
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="gsp-open"][data-id="phone"]');
+  await h.tap('#viewport [data-action="gsp-check"][data-id="source:chrome"]');
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="gsp-open"][data-id="privacy"]');
+  h.check('the account is named', await h.until(`/jellybean\\.demo@gmail\\.com/.test(document.querySelector('#viewport [data-id="account"]')?.textContent || '')`));
+  await h.tap('#viewport [data-action="gsp-list"][data-id="safe_search_settings"]');
+  await h.tap('#viewport [data-action="gsp-pick"][data-id="active"]');
+  const p = (await gs()).prefs;
+  h.check('Voice, Phone search and SafeSearch are kept', p.ttsMode === 'always' && p.hotwordDetector === false && p['source:chrome'] === false && p.safe_search_settings === 'active', JSON.stringify(p));
+  await h.tap('#viewport [data-action="gsp-location"]');
+  h.check('Location services opens Google Settings\' Location', await h.until(`!!document.querySelector('#viewport .sa-gsettings, #viewport [class*="gms"]')`));
+  await h.openApp('google-search');
+  h.check('the Weather card is gone', await h.until(`!!document.querySelector('#viewport .vn-cards') && !document.querySelector('#viewport .vn-weather')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1721,6 +1772,7 @@ const CASES = [
   {id: 'T20', version: '4.4.4', name: 'YouTube › Settings', run: kkYouTubeSettings},
   {id: 'T20', version: '5.1.1', name: 'YouTube › Settings: General, Captions, Privacy, About', run: lpYouTubeSettings},
   {id: 'T25', version: '4.0.4', name: 'Google Search › Searchable items filter the suggestions', run: icsSearchableItems},
+  {id: 'T25', version: '4.3', name: 'Google Search › Settings pages: Google Now, Notifications, My stuff, Voice, Phone search, Privacy', run: jbSearchSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},
