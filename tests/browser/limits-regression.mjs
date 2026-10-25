@@ -1866,6 +1866,87 @@ const lpHangoutsOptions = async h => {
   await h.tap('[data-action="mms-archived"]');
   h.check('Archived lists it', await h.until(`!!document.querySelector('#viewport [data-action="thread"][data-id="1"]')`));
 };
+// 4.4.4 Hangouts 2.0 (T32): Settings and SMS keep their choices; People & options turns a conversation's notifications
+// off, so its answer posts none while another conversation's does; New group MMS starts a group conversation that
+// People & options lists and deletes; Invites and Blocked People show their empty lists.
+const kkHangoutsOptions = async h => {
+  const act = (action, id = '') => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};el.dataset.id=${JSON.stringify(id)};document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  await h.openApp('hangouts');
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="hgp-open"][data-id="settings"]');
+  h.check('Settings open on the account\'s rows', await h.until(`!!document.querySelector('#viewport .hgp-row[data-id="chatOn"]') && !!document.querySelector('#viewport .hgp-row[data-id="sms"]')`));
+  await h.tap('#viewport .hgp-row[data-id="chatOn"]');
+  h.check('Notifications off greys Sound, Vibrate and Invites', await h.until(`['tone:chat','chatVibrate','chatInvites'].every(id => document.querySelector('#viewport .hgp-row[data-id="'+id+'"]')?.disabled)`));
+  await h.tap('#viewport .hgp-row[data-id="chatOn"]');
+  await h.tap('#viewport .hgp-row[data-id="acl"]');
+  await h.tap('#viewport .hgp-row[data-id="acl"]');
+  await h.tap('#viewport .hgp-choice[data-id="RING"]');
+  h.check('Everyone Else can Hangout', await h.until(`/Hangout with you/.test(document.querySelector('#viewport .hgp-row[data-id="acl"] small')?.textContent || '')`));
+  await h.key('Escape');
+  await h.tap('#viewport .hgp-row[data-id="sms"]');
+  h.check('SMS shows its settings', await h.until(`!!document.querySelector('#viewport .hgp-row[data-id="smsOn"]') && /kitkat\\.demo/.test(document.querySelector('#viewport .hgp-info')?.textContent || '')`));
+  await h.tap('#viewport .hgp-row[data-id="groupMms"]');
+  await h.tap('#viewport .hgp-row[data-id="tone:sms"]');
+  const tone = await h.ev(`document.querySelectorAll('#viewport .hgp-choice')[2].textContent`);
+  await h.tap('#viewport .hgp-choice:nth-child(3)');
+  await h.tap('#viewport [data-action="hgp-tone-ok"]');
+  h.check('the chosen sound is the summary', await h.until(`document.querySelector('#viewport .hgp-row[data-id="tone:sms"] small')?.textContent === ${JSON.stringify(tone)}`));
+  await h.tap('#viewport .hgp-row[data-id="autoMms"]');
+  h.check('Auto retrieve off greys roaming', await h.until(`document.querySelector('#viewport .hgp-row[data-id="roamingMms"]')?.disabled === true`));
+  const p = await store(h, 'hgPrefs') || {};
+  h.check('the settings are kept', p.acl === 'RING' && p.groupMms === false && p.autoMms === false && p.smsSound === tone && p.chatOn === true, JSON.stringify(p));
+  await h.key('Escape');
+  await h.tap('#viewport .hgp-row[data-id="blocked"]');
+  h.check('Blocked People is empty', await h.until(`/No blocked people/.test(document.querySelector('#viewport .hgp-zero')?.textContent || '')`));
+  await h.key('Escape'); await h.key('Escape');
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="hgp-open"][data-id="invites"]');
+  h.check('Invites has none', await h.until(`/No invites/.test(document.querySelector('#viewport .hgp-empty')?.textContent || '')`));
+  await h.key('Escape');
+  // Alex's conversation: Notifications off in People & options.
+  await h.tap('#viewport [data-action="thread"][data-id="1"]');
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="hgp-open"][data-id="options"]');
+  h.check('People & options lists Notifications and Alex', await h.until(`!!document.querySelector('#viewport .hgp-option[data-action="hgp-mute"] .hgp-check.on') && /Alex Morgan/.test(document.querySelector('#viewport .hgp-person')?.textContent || '')`));
+  await h.tap('#viewport .hgp-option[data-action="hgp-mute"]');
+  h.check('Notifications off is kept', (await store(h, 'hgConv'))?.['1']?.quiet === true);
+  await h.key('Escape');
+  await h.type('#viewport .hg-compose textarea', 'Quiet please');
+  await h.ev(`document.querySelector('#viewport .hg-compose').requestSubmit()`);
+  await act('home');
+  await h.sleep(5500);
+  let notes = await store(h, 'notifications');
+  h.check('the quiet conversation answers without a notification', (await store(h, 'messages')).some(m => m.contact === 1 && !m.mine && /Sounds good/.test(m.body)) && !notes.some(n => n.kind === 'message'), JSON.stringify(notes));
+  await h.openApp('hangouts');
+  await h.tap('#viewport [data-action="thread"][data-id="4"]');
+  await h.type('#viewport .hg-compose textarea', 'Call you later');
+  await h.ev(`document.querySelector('#viewport .hg-compose').requestSubmit()`);
+  await act('home');
+  await h.sleep(5500);
+  notes = await store(h, 'notifications');
+  h.check('another conversation\'s answer posts its notification', notes.some(n => n.kind === 'message' && n.contact === 4), JSON.stringify(notes));
+  // New group MMS from Alex's conversation.
+  await h.openApp('hangouts');
+  await h.tap('#viewport [data-action="thread"][data-id="1"]');
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="hgp-open"][data-id="add"]');
+  h.check('New group MMS keeps Alex and offers the others', await h.until(`/Alex Morgan/.test(document.querySelector('#viewport .hgp-chip.fixed')?.textContent || '') && !!document.querySelector('#viewport .hgp-pick[data-id="3"]')`));
+  await h.tap('#viewport .hgp-pick[data-id="3"]');
+  await h.tap('#viewport [data-action="hgp-add-ok"]');
+  h.check('OK opens the group conversation', await h.until(`/Alex Morgan, Taylor Lee/.test(document.querySelector('#viewport .hg-title h2')?.textContent || '') && !document.querySelector('#viewport [data-action="mms-call"]')`));
+  await h.type('#viewport .hg-compose textarea', 'Hi both');
+  await h.ev(`document.querySelector('#viewport .hg-compose').requestSubmit()`);
+  h.check('reloads', await h.reload());
+  await h.openApp('hangouts');
+  h.check('the group stays in the list', await h.until(`[...document.querySelectorAll('#viewport .hg-thread')].some(b => /Alex Morgan, Taylor Lee/.test(b.textContent))`));
+  await h.tap('#viewport .hg-thread[data-id="g1"]');
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="hgp-open"][data-id="options"]');
+  h.check('the group lists both people and Delete', await h.until(`document.querySelectorAll('#viewport .hgp-person').length === 2 && !!document.querySelector('#viewport .hgp-option[data-action="mms-delete-thread"]')`));
+  await h.tap('#viewport .hgp-option[data-action="mms-delete-thread"]');
+  await h.tap('[data-action="mms-confirm-delete"]');
+  h.check('Delete removes the group conversation', await h.until(`!!document.querySelector('#viewport .hg-threads') && !document.querySelector('#viewport .hg-thread[data-id="g1"]')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1962,6 +2043,7 @@ const CASES = [
   {id: 'T25', version: '4.4.4', name: 'Google Search › Settings pages; Google Settings › Play Games', run: kkSearchSettings},
   {id: 'T25', version: '5.1.1', name: 'Google Search › Settings: the 4.1 headers and pages, Show cards', run: lpSearchSettings},
   {id: 'T28', version: '4.0.4', name: 'Navigation › Contacts / Starred places; Places › categories and search', run: icsNavPlaces},
+  {id: 'T32', version: '4.4.4', name: 'Hangouts › Settings, SMS, Invites, Blocked People, People & options, New group MMS', run: kkHangoutsOptions},
   {id: 'T32', version: '5.1.1', name: 'Hangouts › Settings, People & options, Blocked people, Add people; Messenger › People & options', run: lpHangoutsOptions},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},

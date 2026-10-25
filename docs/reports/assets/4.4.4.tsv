@@ -291,17 +291,21 @@ versions/4.4.4/assets/hangouts.png	1332315e647dce50	own	Google "Android Quick St
 versions/4.4.4/assets/hg-default_avatar.png	e17ee6c95c5d7097	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/default_avatar.png	drawable-xxhdpi		e17ee6c95c5d7097
 versions/4.4.4/assets/hg-ic_add_gray.png	0e16a4888cca2143	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_add_gray.png	drawable-xxhdpi		0e16a4888cca2143
 versions/4.4.4/assets/hg-ic_camera_dark.png	b7950edd920c4a9d	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_camera_dark.png	drawable-xxhdpi		b7950edd920c4a9d
+versions/4.4.4/assets/hg-ic_delete_gray.png	2804ee29158dbdb9	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_delete_gray.png	drawable-xxhdpi		2804ee29158dbdb9
 versions/4.4.4/assets/hg-ic_gallery_dark.png	43cdaa1266d8eb5f	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_gallery_dark.png	drawable-xxhdpi		43cdaa1266d8eb5f
 versions/4.4.4/assets/hg-ic_handset_dk.png	269ff544fd25b1b0	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_handset_dk.png	drawable-xxhdpi		269ff544fd25b1b0
 versions/4.4.4/assets/hg-ic_hangout_dark.png	4e0ca96b96bbb3b5	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_hangout_dark.png	drawable-xxhdpi		4e0ca96b96bbb3b5
 versions/4.4.4/assets/hg-ic_location_light_normal.png	ad9d429c049bcb6f	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_location_light_normal.png	drawable-xxhdpi		ad9d429c049bcb6f
 versions/4.4.4/assets/hg-ic_map_pin.png	8452d0df523497da	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_map_pin.png	drawable-xxhdpi		8452d0df523497da
+versions/4.4.4/assets/hg-ic_people_add_gray.png	c173513fbb0932b7	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_people_add_gray.png	drawable-xxhdpi		c173513fbb0932b7
 versions/4.4.4/assets/hg-ic_plus_gallery_dark.png	856d2950662e8fe9	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_plus_gallery_dark.png	drawable-xxhdpi		856d2950662e8fe9
 versions/4.4.4/assets/hg-ic_send_dark_disabled.png	cf87c34d2fec73ca	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_send_dark_disabled.png	drawable-xxhdpi		cf87c34d2fec73ca
 versions/4.4.4/assets/hg-ic_send_dark_normal.png	729e2ab43629dd57	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_send_dark_normal.png	drawable-xxhdpi		729e2ab43629dd57
 versions/4.4.4/assets/hg-ic_sms_status_badge.png	e58742832f1e6819	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_sms_status_badge.png	drawable-xxhdpi		e58742832f1e6819
 versions/4.4.4/assets/hg-ic_sms_status_bubble_avatar.png	9cdbc479ec608151	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_sms_status_bubble_avatar.png	drawable-xxhdpi		9cdbc479ec608151
 versions/4.4.4/assets/hg-ic_sms_status_bubble_list.png	3c964587a1991336	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_sms_status_bubble_list.png	drawable-xxhdpi		3c964587a1991336
+versions/4.4.4/assets/hg-ic_unmute_gray.png	1487a079ac76a95d	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_unmute_gray.png	drawable-xxhdpi		1487a079ac76a95d
+versions/4.4.4/assets/hg-ic_zero_blocked.png	4d76a833403ea1ca	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_zero_blocked.png	drawable-xxhdpi		4d76a833403ea1ca
 versions/4.4.4/assets/ic_ab_back_holo_dark.png	bbdc324258de7695	same pixels	hammerhead:/system/app/Magazines.apk!res/drawable-hdpi/ic_ab_back_holo_dark.png	drawable-hdpi		4e65c16eb8ab3185
 versions/4.4.4/assets/ic_ab_back_holo_light.png	2d94f343844f639c	copy	hammerhead:/system/app/Books.apk!res/drawable-xxhdpi/ic_ab_back_holo_light.png	drawable-xxhdpi		2d94f343844f639c
 versions/4.4.4/assets/ic_ab_dialer_holo_dark.png	ea73760aa5f7b535	same pixels	hammerhead:/system/priv-app/GoogleDialer.apk!res/drawable-hdpi/ic_ab_dialer_holo_dark.png	drawable-hdpi		1cd59d0b6e802afa

@@ -40,8 +40,8 @@
       const draft = thread.draft?.body || thread.draft?.attachment;
       const last = thread.last;
       const snippet = draft ? `<b>${e(t('Draft'))}:</b> ${e(thread.draft.body || t('Picture'))}` : last ? `${last.mine ? e(t('You:')) + ' ' : ''}${e(last.body || t('Picture'))}` : '';
-      const unread = thread.messages.some(m => m.read === false);
-      return `<button class="hg-thread${unread ? ' unread' : ''}" data-action="thread" data-id="${e(thread.key)}"><span class="hg-avatar"><img src="${AVATAR}" alt=""><img class="hg-sms-badge" src="assets/hg-ic_sms_status_badge.png" alt="SMS"></span><span class="hg-thread-copy"><span class="hg-thread-top"><strong>${e(thread.person.name)}</strong><time>${e(stamp(last, t, locale, now, true))}</time></span><span class="hg-snippet">${snippet}</span></span></button>`;
+      const unread = thread.messages.some(m => m.read === false), person = window.HangoutsPrefs ? HangoutsPrefs.who(data, thread.key) : thread.person;
+      return `<button class="hg-thread${unread ? ' unread' : ''}" data-action="thread" data-id="${e(thread.key)}"><span class="hg-avatar"><img src="${AVATAR}" alt=""><img class="hg-sms-badge" src="assets/hg-ic_sms_status_badge.png" alt="SMS"></span><span class="hg-thread-copy"><span class="hg-thread-top"><strong>${e(person.name)}</strong><time>${e(stamp(last, t, locale, now, true))}</time></span><span class="hg-snippet">${snippet}</span></span></button>`;
     }).join('');
     if (archived) return `<div class="app-view mms-app hg-app">${bar({up: true, title: H(t, 'Archived Hangouts'), actions: ''})}<div class="mms-scroll hg-threads">${rows || `<p class="hg-empty">${e(H(t, 'No archived Hangouts'))}</p>`}</div></div>`;
     const pending = data.messageDrafts?.new?.body || data.messageDrafts?.new?.attachment;
@@ -54,9 +54,10 @@
     return `<div class="app-view mms-app hg-app">${bar({up: true, title: t('New Hangout'), actions: button('mms-menu', t('More options'), 'ic_menu_moreoverflow_normal_holo_light.png')})}<form class="hg-new" data-form="hg-new"><input name="recipient" autocomplete="off" maxlength="60" aria-label="${e(t('Type a name, email, number, or circle'))}" placeholder="${e(t('Type a name, email, number, or circle'))}" value="${e(draft.recipient || '')}"></form><div class="mms-scroll hg-people">${people.map(p => `<button class="hg-person" data-action="hg-pick" data-id="${e(p.id)}" data-search="${e(`${p.name} ${p.phone}`.toLocaleLowerCase())}"><img src="${AVATAR}" alt=""><span><strong>${e(p.name)}</strong><small>${e(p.phone)} ${e(t('Mobile'))}</small></span></button>`).join('')}</div></div>`;
   }
   function conversation(data, ui, t, locale, now) {
-    const person = ICSMessaging.identity(ui.thread, data.contacts), draft = data.messageDrafts?.[ICSMessaging.draftKey(ui)] || {};
+    const person = window.HangoutsPrefs ? HangoutsPrefs.who(data, ui.thread) : ICSMessaging.identity(ui.thread, data.contacts), draft = data.messageDrafts?.[ICSMessaging.draftKey(ui)] || {};
     const messages = data.messages.filter(m => String(m.contact) === String(ui.thread));
-    const actions = button('mms-call', t('Call'), 'call') + button('mms-menu', t('More options'), 'ic_menu_moreoverflow_normal_holo_light.png');
+    // The Call action needs one SMS person (ConversationFragment.pK).
+    const actions = (person.group ? '' : button('mms-call', t('Call'), 'call')) + button('mms-menu', t('More options'), 'ic_menu_moreoverflow_normal_holo_light.png');
     const cards = messages.map(message => `<button type="button" class="mms-message hg-message ${message.mine ? 'sent' : 'received'}" data-action="mms-message" data-id="${message.id}"><img class="hg-avatar-small" src="${AVATAR}" alt=""><span class="hg-card"><span class="hg-body">${e(message.body)}</span>${message.attachment ? ICSMessaging.photo(message.attachment) : ''}<time>${e(stamp(message, t, locale, now, false))}</time></span></button>`).join('');
     const canSend = (draft.body || '').trim() || draft.attachment;
     return `<div class="app-view mms-app hg-app">${bar({up: true, title: person.name, subtitle: t('SMS'), spinner: true, actions})}<form class="mms-compose hg-compose" data-form="mms-send"><div class="mms-scroll mms-history hg-history">${cards}</div>${draft.attachment ? `<div class="mms-attachment">${ICSMessaging.photo(draft.attachment)}<button type="button" data-action="mms-remove-attachment" aria-label="Remove attachment">×</button></div>` : ''}<div class="mms-compose-bar hg-editor"><textarea name="body" rows="1" maxlength="2000" aria-label="${e(t('Send an SMS message'))}" placeholder="${e(t('Send an SMS message'))}">${e(draft.body || '')}</textarea><small class="mms-counter" hidden></small><button type="button" class="hg-tool" data-action="hg-location" aria-label="${e(t('Share location'))}">${svg.pin}</button><button type="button" class="hg-tool" data-action="mms-attach" aria-label="${e(t('Attach'))}">${svg.camera}</button><button class="mms-send hg-send" type="submit" aria-label="${e(t('Send'))}" ${canSend ? '' : 'disabled'}>${svg.send}</button></div></form></div>`;
@@ -68,6 +69,8 @@
     return `<div class="app-view mms-app hg-app hg-share-location">${bar({up: true, title: H(t, 'Share location'), actions: `<button type="button" class="hg-ab-text" data-action="hg-share-location"><img src="assets/hg-ic_send_dark_normal.png" alt="">${e(H(t, 'SHARE'))}</button>`})}<div class="hg-map-wrap">${map}<img class="hg-pin" src="assets/hg-ic_map_pin.png" alt="${e(H(t, 'Location'))}"></div></div>`;
   }
   function render(data, ui, t, locale, now = Date.now()) {
+    // Settings, Invites, Blocked People, People & options and New group MMS (hangouts-prefs.js).
+    if (ui.hgPage && window.HangoutsPrefs) return HangoutsPrefs.render(data, ui, t);
     if (ui.sub === 'thread' && ui.hgLocation) return shareLocation(data, ui, t);
     if (ui.sub === 'thread') return conversation(data, ui, t, locale, now);
     if (ui.sub === 'new') return picker(data, ui, t);
@@ -76,13 +79,16 @@
   // Overflow of the conversation list (conversation_list_activity_menu.xml of the KTU84P Hangouts; BabelHomeActivity
   // .onPrepareOptionsMenu only adds the invite count to Invites and hides Debug), of a conversation, and the camera
   // button's attach menu.
-  const MENU = [['hg-unsupported', 'Set mood…'], ['hg-unsupported', 'Invites'], ['hg-dnd', 'Snooze notifications'], ['hg-archived', 'Archived Hangouts'], ['hg-unsupported', 'Settings'], ['hg-unsupported', 'Send feedback'], ['hg-unsupported', 'Help']];
+  const MENU = [['hg-unsupported', 'Set mood…'], ['hgp-open:invites', 'Invites'], ['hg-dnd', 'Snooze notifications'], ['hg-archived', 'Archived Hangouts'], ['hgp-open:settings', 'Settings'], ['hg-unsupported', 'Send feedback'], ['hg-unsupported', 'Help']];
   const ATTACH = [['hg-unsupported', 'Take photo', 'camera'], ['hg-unsupported', 'Take video', 'video'], ['hg-attach-photo', 'Attach photo', 'photo'], ['hg-unsupported', 'Google+ albums', 'albums']];
   function overlay(data, ui, t) {
-    const option = (action, label, id = label) => `<button data-action="${action}" data-id="${e(id)}">${e(H(t, label))}</button>`;
+    const option = (action, label, id = label) => { const [act, arg] = action.split(':'); return `<button data-action="${act}" data-id="${e(arg ?? id)}">${e(H(t, label))}</button>`; };
     if (ui.overlay === 'mms-menu') {
       const thread = {key: ui.thread, last: [...data.messages].reverse().find(m => String(m.contact) === String(ui.thread))};
-      const items = ui.sub === 'thread' ? [option('hg-unsupported', 'People & options'), isArchived(data, thread) ? option('hg-unarchive', 'Unarchive') : option('hg-archive', 'Archive'), option('mms-delete-thread', 'Delete')] : ui.sub === 'new' ? [option('hg-unsupported', 'Settings'), option('hg-unsupported', 'Help')] : MENU.map(([action, label]) => option(action, label));
+      // ConversationFragment.onPrepareOptionsMenu: an SMS person's Add people is "New group MMS"; a group has none, and
+      // Delete is for one person only (a group deletes from People & options).
+      const group = window.HangoutsPrefs?.isGroup(ui.thread);
+      const items = ui.sub === 'thread' ? [option('hgp-open:options', 'People & options'), group ? '' : `<button data-action="hgp-open" data-id="add">${e(HangoutsPrefs.S('New group MMS'))}</button>`, isArchived(data, thread) ? option('hg-unarchive', 'Unarchive') : option('hg-archive', 'Archive'), group ? '' : option('mms-delete-thread', 'Delete')] : ui.sub === 'new' ? [option('hgp-open:settings', 'Settings'), option('hg-unsupported', 'Help')] : MENU.map(([action, label]) => option(action, label));
       return `<div class="menu-scrim" data-action="close-overlay"></div><div class="hg-menu" role="menu">${items.join('')}</div>`;
     }
     if (ui.overlay === 'mms-hg-dnd') return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog hg-dnd" role="dialog" aria-label="${e(H(t, 'Snooze notifications for…'))}"><h3>${e(H(t, 'Snooze notifications for…'))}</h3><div class="hg-dnd-list">${SNOOZE_MINUTES.map(m => `<button data-action="hg-dnd-set" data-id="${m}">${e(hours(t, m))}</button>`).join('')}</div></div>`;
