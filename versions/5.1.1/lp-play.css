@@ -279,3 +279,7 @@ img.lpp-card-art,img.lpp-row-art,img.lpp-title-art,img.lpp-shot-art,img.lpp-hero
 .lpp-nav-list hr{height:calc(1*var(--dp));margin:calc(7.5*var(--dp)) 0;border:0;background:#e5e5e5}
 .screen .lpp-nav-item.small{font-weight:500}
 .lpp-bar.overlay.solid{background:var(--c);box-shadow:0 calc(2*var(--dp)) calc(4*var(--dp)) #0003;transition:background .15s}
+/* DescriptionTextModule expanded by READ MORE: the whole callout, then the long description. */
+.lpp-callout.expanded{display:block;-webkit-line-clamp:unset;max-height:none;overflow:visible}
+.lpp-longdesc{margin-top:calc(12 * var(--dp))}
+.jbp-share-icon{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-right:calc(16 * var(--dp))}

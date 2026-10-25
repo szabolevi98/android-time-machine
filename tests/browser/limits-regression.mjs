@@ -2709,6 +2709,29 @@ const icsPlayFilter = async h => {
   await h.until(`/Pixel Blocks/.test(document.querySelector('#viewport')?.textContent || '')`);
   h.check('the filter hides the Medium maturity game', !(await h.ev(`/Orbit Hopper/.test(document.querySelector('#viewport').textContent)`)));
 };
+// 4.3 / 4.4.4 / 5.1.1 Play Store (T21): Share opens the chooser and the mail app's compose screen with the item's
+// play.google.com link; 5.1.1 also expands the description with READ MORE and mails the developer with Send email.
+const playShare = async h => {
+  const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  const fields = () => h.ev(`[...document.querySelectorAll('#viewport input, #viewport textarea')].map(f => f.value).join(' | ')`);
+  const lp = await h.ev(`!!document.querySelector('link[href^="lp-play.css"]')`);
+  await h.openApp('play-store'); await act('jbp-detail', 'orbit');
+  h.check('the details page opens', await h.until(`!!document.querySelector('#viewport .jbp-scroll')`));
+  if (lp) {
+    await h.tap('#viewport [data-action="lpp-readmore"]');
+    h.check('READ MORE expands the description', await h.until(`!document.querySelector('#viewport [data-action="lpp-readmore"]') && !!document.querySelector('#viewport .lpp-callout.expanded')`));
+    await h.tap('#viewport [data-action="jbp-share"]');
+  } else await act('jbp-share');
+  h.check('Share opens the chooser', await h.until(`/Share "Orbit Hopper" via/.test(document.querySelector('.jbp-dlg, .lpp-dlg')?.textContent || '')`));
+  await h.tap('[data-action="jbp-share-to"][data-id="gmail|orbit"]');
+  h.check('Gmail gets the subject and the link', await h.until(`/Check out "Orbit Hopper"/.test([...document.querySelectorAll('#viewport input, #viewport textarea')].map(f => f.value).join(' '))`) && /play\.google\.com\/store\/apps\/details\?id=com\.moonlightstudio\.orbithopper/.test(await fields()), await fields());
+  if (lp) {
+    await h.openApp('play-store'); await act('jbp-detail', 'orbit');
+    await h.until(`!!document.querySelector('#viewport [data-action="jbp-dev-email"]')`);
+    await h.tap('#viewport [data-action="jbp-dev-email"]');
+    h.check('Send email writes to the developer', await h.until(`[...document.querySelectorAll('#viewport input, #viewport textarea')].some(f => f.value.includes('moonlightstudio@example.com'))`), await fields());
+  }
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -2795,6 +2818,9 @@ const CASES = [
   {id: 'T10', version: '5.1.1', name: 'Hangouts › Take photo through the Camera capture request', run: hangoutsTakePhoto},
   {id: 'T21', version: '2.3.6', name: 'Market › Developer Info, Sharing, content rating and the PIN-guarded filter', run: gbMarketMore},
   {id: 'T21', version: '4.0.4', name: 'Play Store › PIN, Unlock settings and the content filter', run: icsPlayFilter},
+  {id: 'T21', version: '4.3', name: 'Play Store › Share', run: playShare},
+  {id: 'T21', version: '4.4.4', name: 'Play Store › Share', run: playShare},
+  {id: 'T21', version: '5.1.1', name: 'Play Store › Share, READ MORE and Send email', run: playShare},
   {id: 'T10', version: '2.3.6', name: 'Contacts › Take photo through the Camera capture request', run: gbContactPhoto},
   {id: 'T13', version: '2.3.6', name: 'Messaging › Audio, Record audio, Capture picture / video, Slideshow', run: gbMmsAttach},
   {id: 'T13', version: '4.3', name: 'Messaging › Audio Play, Capture picture / video, Slideshow', run: jbMmsAttach},

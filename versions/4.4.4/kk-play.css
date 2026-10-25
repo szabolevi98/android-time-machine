@@ -295,3 +295,4 @@ img.jbp-card-art,img.jbp-row-art,img.jbp-head-art,img.jbp-shot-art{object-fit:co
 .screen .kkp-nav-item{display:block;width:100%;min-height:calc(64*var(--dp));padding:0 calc(16*var(--dp));border:0;border-bottom:calc(1.1038 * var(--dp)) solid #00000026;background:none;color:#333;text-align:left;font:400 calc(21*var(--dp)) RobotoLight,Arial,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
 .screen .kkp-nav-item.on{font-family:RobotoBoldJB,Arial,sans-serif}
 .screen .kkp-nav-item:active{background:#33b5e580}
+.jbp-share-icon{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-right:calc(16 * var(--dp))}

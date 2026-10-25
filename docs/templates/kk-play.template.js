@@ -36,7 +36,7 @@
     "Summary": "review_dialog_subject_hint", "Comment": "review_dialog_body_hint", "OK": "ok", "Cancel": "cancel", "Do you want to uninstall this app?": "uninstall_app_msg",
     "App permissions": "permissions_title", "%1$s needs access to:": "needs_permissions", "%1$s does not require any special permissions.": "no_dangerous_permissions",
     "Accept": "accept", "Screenshot": "content_description_screenshot", "Flag as inappropriate": "flagging_title", "Developer": "details_developer_links",
-    "Visit webpage": "link_website", "Send email": "link_email", "Privacy policy": "privacy_policy", "General": "settings_general_section_header",
+    "Visit webpage": "link_website", "Send email": "link_email", "Share \"%1$s\" via": "share_dialog_title", "Check out \"%1$s\"": "share_subject", "Privacy policy": "privacy_policy", "General": "settings_general_section_header",
     "Notifications": "notifications", "Notify me about updates to apps or games that I downloaded": "notification_description", "Auto-update apps": "auto_update_label",
     "Do not auto-update apps": "auto_update_value_disabled", "Auto-update apps at any time. Data charges may apply.": "auto_update_value_enabled",
     "Auto-update apps over Wi-Fi only": "auto_update_value_wifi_only", "Auto-add shortcuts": "auto_add_shortcuts_label",
@@ -127,6 +127,14 @@
   const catalog = () => (window.ICSPlayStore?.catalog || []).map((item, i) => ({...item, kind: item.category === 'Games' ? 'games' : 'apps', price: 'FREE', downloads: ['10,000,000+', '1,000,000+', '500,000+', '100,000+'][i % 4], votes: 12000 + i * 4173, updated: DATES[i % 4], plus: 120 + i * 37, size: String(item.size || '').replace(' ', ''), whatsnew: 'Bug fixes and performance improvements.'}));
   const all = () => [...catalog(), ...EXTRA.map(item => ({downloads: '50,000+', votes: 812, plus: 46, updated: item.kind === 'magazines' ? 'July 9, 2014' : 'June 3, 2014', size: item.kind === 'books' ? '1.2MB' : item.kind === 'magazines' ? '24MB' : item.kind === 'music' ? '96MB' : item.kind === 'movies' ? '820MB' : item.size, description: item.kind === 'books' ? 'A classic, free from Google Play Books.' : item.kind === 'movies' ? 'A feature film from the simulator\'s small demo shelf.' : item.description, ...item}))];
   const find = id => all().find(item => item.id === id);
+  // The details page's Share: ACTION_SEND text/plain with share_subject and the item's play.google.com link in the
+  // system chooser (share_dialog_title), offering the image's mail and chat apps; the package and the developer's address
+  // are the storefront's own.
+  const SHARE_TARGETS = [['gmail', 'Gmail'], ['email', 'Email'], ['hangouts', 'Hangouts']];
+  const slug = text => String(text).toLowerCase().replace(/[^a-z0-9]+/g, '');
+  const packageName = item => item.app ? `com.android.${slug(item.app)}` : `com.${slug(item.developer)}.${slug(item.name)}`;
+  const shareLink = item => `https://play.google.com/store/${item.kind === 'apps' || item.kind === 'games' || !item.kind ? 'apps' : item.kind}/details?id=${packageName(item)}`;
+  const developerEmail = item => `${slug(item.developer)}@example.com`;
   const isApp = item => item.kind === 'apps' || item.kind === 'games';
   const installedState = (item, ctx) => item.app ? 'installed' : ctx.installed.includes(item.id) ? 'installed' : ctx.downloading === item.id ? ctx.phase : '';
   const sec = kind => SECTIONS.find(s => s[0] === kind) || SECTIONS[0];
@@ -153,7 +161,7 @@
     const actions = (opts.actions || ['search']).slice(0, 2).map(a => a === 'search'
       ? `<button class="jbp-ab search" data-action="jbp-search" aria-label="${e(t('Search Google Play'))}"></button>`
       : a === 'wish' ? `<button class="jbp-ab wish${opts.wished ? ' on' : ''}" data-action="jbp-wish" data-id="${e(opts.id)}" aria-label="${e(t(opts.wished ? 'Remove from wishlist' : 'Include in wishlist'))}"></button>`
-      : `<button class="jbp-ab share" data-action="jbp-unavailable" aria-label="${e(t('Share'))}"></button>`).join('');
+      : `<button class="jbp-ab share" data-action="jbp-share" aria-label="${e(t('Share'))}"></button>`).join('');
     if (ctx.searching) return `<form class="jbp-bar searching" style="--bar:${fill};--edge:${edge}" data-form="jbp-search">${up}<input name="query" autocomplete="off" aria-label="${e(t('Search Google Play'))}" placeholder="${e(t('Search Google Play'))}" value="${e(ctx.editValue || '')}"><button class="jbp-ab search" type="submit" aria-label="${e(t('Search'))}"></button></form>`;
     return `<div class="jbp-bar" style="--bar:${fill};--edge:${edge}">${up}<b>${e(title)}</b>${opts.noMenu ? '' : `${actions}<button class="jbp-ab overflow" data-action="jbp-menu" aria-label="More options"></button>`}</div>`;
   }
@@ -299,7 +307,7 @@
   // action slot.
   function menu(ctx) {
     const item = ctx.page === 'detail' ? find(ctx.selected) : null, owned = item && installedState(item, ctx) === 'installed';
-    return [...(item && !owned ? [['jbp-unavailable', 'Share']] : []), ['jbp-settings', 'Settings'], ['jbp-unavailable', 'Help']].map(([action, title]) => ({action, title: text(ctx.lang, title)}));
+    return [...(item && !owned ? [['jbp-share', 'Share']] : []), ['jbp-settings', 'Settings'], ['jbp-unavailable', 'Help']].map(([action, title]) => ({action, title: text(ctx.lang, title)}));
   }
   // The side drawer: drawer_profile_info and the destinations, the current one bold (SideDrawerSelectedText).
   function drawer(ctx) {
@@ -329,6 +337,7 @@
       return dialogBox('rate', t('Rate it!'), `<div class="jbp-rate-set">${[1, 2, 3, 4, 5].map(n => `<button class="${n <= r ? 'on' : ''}" data-action="jbp-rate-pick" data-id="${n}" aria-label="${n}"></button>`).join('')}</div><p class="jbp-rate-name">${e(t(names[r]))}</p><input class="jbp-field" placeholder="${e(t('Summary'))}" aria-label="${e(t('Summary'))}"><textarea class="jbp-field" rows="5" maxlength="512" placeholder="${e(t('Comment'))}" aria-label="${e(t('Comment'))}"></textarea>`, `<button data-action="close-overlay">${e(t('Cancel'))}</button><button data-action="jbp-rate-ok" data-id="${e(item.id)}"${r ? '' : ' disabled'}>${e(t('OK'))}</button>`);
     }
     if (kind === 'uninstall' && item) return dialogBox('ask', item.name, `<p>${e(t('Do you want to uninstall this app?'))}</p>`, `<button data-action="close-overlay">${e(t('Cancel'))}</button><button data-action="jbp-uninstall" data-id="${e(item.id)}">${e(t('OK'))}</button>`);
+    if (kind === 'share' && item) return dialogBox('list', fmt(t('Share "%1$s" via'), item.name), SHARE_TARGETS.map(([app, name]) => `<button class="jbp-dlg-row" data-action="jbp-share-to" data-id="${app}|${e(item.id)}"><img class="jbp-share-icon" src="assets/${app}.png" alt=""><span>${e(ctx.t?.(name) || name)}</span></button>`).join(''));
     if (kind === 'filter') {
       // ContentFilterActivity: a check box per level; Show all apps ticks them all.
       const levels = ['Everyone', 'Low maturity', 'Medium maturity', 'High maturity', 'Show all apps'], f = ctx.filterDraft || ctx.prefs.filter || levels;
@@ -337,5 +346,5 @@
     if (kind === 'accounts') return dialogBox('list', t('Choose Google Account'), `<button class="jbp-dlg-row" data-action="close-overlay" role="radio" aria-checked="true"><span>${e(ctx.account || 'android.demo@gmail.com')}</span><img src="assets/ps4510-btn_radio_on_holo_light.png" alt=""></button>`, `<button data-action="close-overlay">${e(t('Cancel'))}</button>`);
     return '';
   }
-  window.JBPlay = {drawer, SECTIONS, TABS, EXTRA, VERSION, text, fmt, all, find, installedState, render, menu, dialog, art};
+  window.JBPlay = {drawer, SECTIONS, TABS, EXTRA, VERSION, text, fmt, all, find, packageName, shareLink, developerEmail, installedState, render, menu, dialog, art};
 })();
