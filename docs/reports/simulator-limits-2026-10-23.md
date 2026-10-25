@@ -303,7 +303,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T20 — YouTube helyi műveletek
 
 - **Ütem:** Második kör, #10. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Folyamatban — 2.3.6 kész (168bf346): Settings (youtube_preferences.xml: High quality on mobile, Caption font size, Clear search history, SafeSearch, verzió). Hátra: 4.0.4 (Search, Record helyi kameraeredménnyel, Add to helyi lista, Share, csatornaoldal, Settings: general_prefs / search_prefs / about_prefs a preference_headers alatt), 4.3 (Add to, Share, Dislike, Copy URL, Settings), 4.4.4 és 5.1.1 (Settings).
 - **Verziók:** 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 2.3.6-19, 4.0.4-09, 4.3-20, 4.4.4-20, 5.1.1-27.
 - **Elkészítendő és határ:** 2.3.6 Settings. 4.0.4 Search, Record helyi kameraeredménnyel, Add to helyi lista, Share, csatornaoldal és Settings. 4.3 Add to, Share, Dislike, Copy URL és Settings; 4.4.4/5.1.1 Settings. Nincs valódi upload, stream, Flag/Feedback/Help vagy fiókművelet.
