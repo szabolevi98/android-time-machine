@@ -1680,6 +1680,38 @@ const jbSearchSettings = async h => {
   await h.openApp('google-search');
   h.check('the Weather card is gone', await h.until(`!!document.querySelector('#viewport .vn-cards') && !document.querySelector('#viewport .vn-weather')`));
 };
+// 4.4.4 Google Search 3.3 (T25): the settings headers open their pages and keep their choices; Location services and
+// Google Settings' Play Games open their apps.
+const kkSearchSettings = async h => {
+  const prefs = async () => (await store(h, 'gsearch'))?.prefs || {};
+  const open = async () => { await h.openApp('google-search'); await h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='gel-overview-settings';document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`); };
+  await open();
+  await h.tap('#viewport [data-action="ksp-open"][data-id="phone"]');
+  h.check('Phone search lists the sources', await h.until(`document.querySelectorAll('#viewport .ksp-source').length === 7`));
+  await h.tap('#viewport [data-action="ksp-check"][data-id="source:drive"]');
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="ksp-open"][data-id="voice"]');
+  await h.tap('#viewport [data-action="ksp-page"][data-id="hotword"]');
+  await h.tap('#viewport [data-action="ksp-check"][data-id="hotwordDetector"]');
+  h.check('Hotword off greys Listen on home screen', await h.until(`document.querySelector('#viewport [data-id="homescreen_hotword"]')?.disabled === true`));
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="ksp-list"][data-id="ttsMode"]');
+  await h.tap('#viewport [data-action="ksp-pick"][data-id="never"]');
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="ksp-open"][data-id="notifications"]');
+  await h.tap('#viewport [data-action="ksp-list"][data-id="notificationOverride"]');
+  await h.tap('#viewport [data-action="ksp-pick"][data-id="1"]');
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="ksp-open"][data-id="privacy"]');
+  await h.tap('#viewport [data-action="ksp-check"][data-id="safe_search"]');
+  const p = await prefs();
+  h.check('the choices are kept', p['source:drive'] === true && p.hotwordDetector === false && p.ttsMode === 'never' && p.notificationOverride === '1' && p.safe_search === true, JSON.stringify(p));
+  await h.tap('#viewport [data-action="ksp-location"]');
+  h.check('Location services opens Google Settings\' Location', await h.until(`!!document.querySelector('#viewport [class*="gms"]')`));
+  await h.openApp('google-settings');
+  await h.tap('#viewport [data-action="gs-play-games"]');
+  h.check('Play Games opens the Games app', await h.until(`!!document.querySelector('#viewport [class*="games"], #viewport [class*="pg"]')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1773,6 +1805,7 @@ const CASES = [
   {id: 'T20', version: '5.1.1', name: 'YouTube › Settings: General, Captions, Privacy, About', run: lpYouTubeSettings},
   {id: 'T25', version: '4.0.4', name: 'Google Search › Searchable items filter the suggestions', run: icsSearchableItems},
   {id: 'T25', version: '4.3', name: 'Google Search › Settings pages: Google Now, Notifications, My stuff, Voice, Phone search, Privacy', run: jbSearchSettings},
+  {id: 'T25', version: '4.4.4', name: 'Google Search › Settings pages; Google Settings › Play Games', run: kkSearchSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

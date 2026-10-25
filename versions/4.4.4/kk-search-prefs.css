@@ -1,0 +1,6 @@
+/* Google Search 3.3.11's settings pages (kk-search-prefs.js) on the Holo Light mps- rows. */
+.ksp{background:#f3f3f3}
+.ksp .mps-row .sa-switch{flex:none;margin-left:calc(8 * var(--dp))}
+.ksp-note{margin:0;padding:calc(12 * var(--dp)) calc(16 * var(--dp));border-bottom:calc(1 * var(--dp)) solid #0000001f;font-size:calc(14 * var(--dp));color:#323232}
+.ksp-category{margin:0;padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(4 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #33b5e5;font:700 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#33b5e5;text-transform:uppercase}
+.ksp-source img{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin:0 calc(8 * var(--dp)) 0 calc(-8 * var(--dp))}

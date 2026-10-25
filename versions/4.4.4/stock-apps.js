@@ -50,7 +50,10 @@
 
   // Google Search settings (the overview "Settings" button) and the Google Settings app.
   function searchSettings(ctx) {
-    const row = (icon, label) => `<button class="sa-row" data-action="sa-unsupported"><i>${ICON[icon] || ''}</i><span>${e(ctx.t(label))}</span></button>`;
+    // Each header opens its page (kk-search-prefs.js); Help & feedback is Google's page.
+    if (ctx.ui.ksPage) return window.KKSearchPrefs.render(ctx, title => bar(ctx, {title, up: true, icon: 'google-search.png'}));
+    const page = {'Phone search': 'phone', Voice: 'voice', 'Accounts & privacy': 'privacy', Notifications: 'notifications'};
+    const row = (icon, label) => `<button class="sa-row" data-action="${page[label] ? 'ksp-open' : 'sa-unsupported'}" data-id="${page[label] || ''}"><i>${ICON[icon] || ''}</i><span>${e(ctx.t(label))}</span></button>`;
     return `<div class="app-view sa-app sa-settings">${bar(ctx, {title: ctx.t('Settings'), up: true, icon: 'google-search.png'})}<div class="sa-scroll"><div class="sa-switch-row"><span>${e(ctx.t('Google Now'))}</span><button class="sa-switch${ctx.data.googleNowOn === false ? '' : ' on'}" data-action="google-now-toggle">${e(ctx.t(ctx.data.googleNowOn === false ? 'OFF' : 'ON'))}</button></div><h4>${e(ctx.t('SEARCH & NOW CARDS'))}</h4>${row('search', 'Phone search')}${row('mic', 'Voice')}${row('locate', 'Accounts & privacy')}${row('list', 'Notifications')}${row('', 'Help & feedback')}</div></div>`;
   }
   // Google Settings (Google Play services 4.3.23, PrebuiltGmsCore.apk of KTU84P): common_settings.xml's 48 dp bar on
@@ -62,7 +65,7 @@
     const g = key => S(ctx, 'gsettings', key);
     // The pages GMS draws itself (gms-settings.js); Google+ and Play Games open other screens, not drawn here.
     if (String(ctx.ui.sub || '').startsWith('gms-')) return window.GMSSettings.render(ctx, g);
-    const rows = [['Apps with Google+ Sign-In', 'gms-open', 'apps'], ['Google+'], ['Play Games'], ['Location', 'gms-open', 'location'], ['Search & Now', 'gel-overview-settings'], ['Ads', 'gms-open', 'ads'], ['Verify apps', 'gms-open', 'verify'], ['Android Device Manager', 'gms-open', 'mdm'], ['Drive apps', 'gms-open', 'drive']];
+    const rows = [['Apps with Google+ Sign-In', 'gms-open', 'apps'], ['Google+'], ['Play Games', 'gs-play-games'], ['Location', 'gms-open', 'location'], ['Search & Now', 'gel-overview-settings'], ['Ads', 'gms-open', 'ads'], ['Verify apps', 'gms-open', 'verify'], ['Android Device Manager', 'gms-open', 'mdm'], ['Drive apps', 'gms-open', 'drive']];
     return `<div class="app-view sa-app sa-gsettings"><header class="gs-bar"><button class="gs-up" data-action="home" aria-label="${e(g('Google Settings'))}"><i></i><img src="assets/google-settings.png" alt=""></button><b>${e(g('Google Settings'))}</b></header><div class="sa-scroll"><div class="gs-list">${rows.map(([key, action, id]) => `<button data-action="${action || 'sa-unsupported'}" data-id="${id || ''}">${e(g(key))}</button>`).join('')}</div></div></div>`;
   }
 
