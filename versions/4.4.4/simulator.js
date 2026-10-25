@@ -734,7 +734,7 @@
   }
   function openApp(app, resume = false) {
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
-    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; }
+    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt5Dialog = null; }
     if(ui.locked)return;
     if (app === 'news-weather' && !resume) { ui.newsSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
     if (GEL_ALIASES[app]) app = GEL_ALIASES[app];
@@ -801,6 +801,7 @@
     if(ui.view==='phone' && !ui.activeCall && (ui.phoneSearch||'').trim()){ui.phoneSearch='';render();return;}
     if(ui.view==='phone' && ui.activeCall){if(ui.activeCall.keypad){ui.activeCall.keypad=false;render();}else home(false);return;}
     if (ui.view === 'drive' && ui.sub === 'file' && ui.driveFrom === 'results') { ui.sub = 'results'; ui.driveFrom = ''; render(); return; }
+    if (ui.view === 'youtube' && !ui.overlay && KKYouTube.back(ytContext())) return;
     if (ui.view === 'youtube' && ui.sub === 'video' && ui.ytFrom === 'results') { ui.sub = 'results'; ui.ytFrom = ''; render(); return; }
     if (ui.gnowSpin) { ui.gnowSpin = ''; render(); return; }
     if (ui.gnowDraft || ui.gnowDialog) { ui.gnowDraft = null; ui.gnowDialog = ''; render(); return; }
@@ -1593,6 +1594,12 @@
     ui.emailFolder = state.folder; ui.emailId = state.id; ui.emailSelected = []; ui.emailQuery = undefined; ui.mailApp = app;
   }
   // Share contact via Email or Gmail: the app's compose with the contact card attached.
+  // YouTube 5.2's Settings (kk-youtube.js).
+  function ytContext() {
+    return {ui, data, t: key => i18n.t(key), locale: i18n.locale(), save, render,
+      closeOverlay() { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } },
+      unsupported: () => toast(i18n.t('This feature is not part of the simulator.'))};
+  }
   function shareVcard(app, file) { ui.overlay = ''; renderOverlay(); openApp(app); composeEmail(); const d = mailbox().find(m => m.id === ui.emailId); if (d) d.attachment = file; save(); render(); }
   function composeEmail(source=null,forward=false,to='') {
     const draft=ICSEmail.draft(source,forward);if(to)draft.to=to;
@@ -1717,6 +1724,7 @@
       if (result) { if (result.save) save(); for (const title of result.notify || []) addNotification(title, ''); renderOverlay(); render(); if (result.toast) toast(result.toast); return; }
     }
     if (action.startsWith('mps-') && window.MapsPrefs?.handle(action, id, mapsPrefsContext())) return;
+    if (ui.view === 'youtube' && action.startsWith('yt5-') && KKYouTube.handle(action, id, ytContext())) return;
     switch (action) {
       case 'open-app': if (GEL_UNSIMULATED.includes(app)) { toast(i18n.t('This app is not part of the simulator.')); break; } {
         const icon = button.closest('.launcher-icon, .drawer-app, .dock-app') || button;
@@ -2502,7 +2510,7 @@
       case 'web-search': navigateBrowser(`search:${values.get('query')}`); break;
       case 'maps-search': ui.mapsQuery = String(values.get('query') || '').trim().slice(0, 60); window.MapsPrefs?.remember(data, ui.mapsQuery); save(); render(); break;
       case 'drive-search': { const query = String(values.get('query') || '').trim(); if (!query) return; ui.driveQuery = query; ui.sub = 'results'; render(); break; }
-      case 'yt-search': { const query = String(values.get('query') || '').trim(); if (!query) return; ui.ytQuery = query; ui.sub = 'results'; render(); break; }
+      case 'yt-search': { const query = String(values.get('query') || '').trim(); if (!query) return; KKYouTube.searched(query, data); save(); ui.ytQuery = query; ui.sub = 'results'; render(); break; }
       case 'keep-li-add': { const text = String(values.get('text') || '').trim(), note = keepCurrent(); if (!text || !note?.list) return; note.list.push({text, checked: false}); save(); render(); viewport.querySelector('.kp-ed-add input')?.focus(); break; }
       case 'keep-add': { const text = String(values.get('text') || '').trim(); if (!text) return; data.keepNotes = [{id: 'k' + Date.now(), text, color: (data.keepNotes || []).length % 5}, ...(data.keepNotes || [])]; save(); render(); break; }
       case 'earth-search': ui.earthQuery = String(values.get('query') || '').trim().slice(0, 60); ui.earthSearching = false; render(); break;

@@ -6,7 +6,7 @@
 // Taps are real pointer input at the element's centre (Input.dispatchMouseEvent), so a covered or off-screen control
 // fails the same way it would for a visitor. Needs a server for the repository root (BASE, default
 // http://localhost:8090) and Chrome (CHROME). A failing case leaves a screenshot in tests/browser/artifacts/.
-//     node tests/browser/limits-regression.mjs [T01 ...] [--desktop | --phone]
+//     node tests/browser/limits-regression.mjs [T01 ...] [--version 4.4.4] [--desktop | --phone]
 import {spawn} from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -1531,6 +1531,40 @@ const jbYouTube = async h => {
   await h.ev(`document.querySelector('#viewport .yt-sv').requestSubmit()`);
   h.check('Never remember history keeps no search', await h.until(`!!document.querySelector('#viewport .yt-filters')`) && !(await yt()).searches.length);
 };
+
+// 4.4.4 YouTube 5.2.27 (T20): Settings from the overflow, General / Search kept, the licenses page, Back out.
+const kkYouTubeSettings = async h => {
+  await h.openApp('youtube');
+  await h.tap('#viewport [data-action="yt-search-open"]');
+  await h.type('#viewport .yt-sv input', 'nexus');
+  await h.ev(`document.querySelector('#viewport .yt-sv').requestSubmit()`);
+  h.check('a search is kept', await h.until(`true`) && (await store(h, 'yt5Searches'))?.[0] === 'nexus');
+  await h.key('Escape');
+  await h.until(`!document.querySelector('#viewport .yt-sv')`);
+  await h.tap('#viewport [data-action="sa-menu"]');
+  await h.tap('.holo-menu [data-action="yt5-settings"]');
+  h.check('Settings lists its headers', await h.until(`document.querySelectorAll('#viewport [data-action="yt5-page"]').length === 4`));
+  await h.tap('#viewport [data-action="yt5-page"][data-id="general"]');
+  await h.tap('#viewport [data-id="video_notifications_enabled"]');
+  await h.tap('#viewport [data-id="country"]');
+  await h.tap('#viewport [data-action="yt5-pref-pick"][data-id="GB"]');
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="yt5-page"][data-id="search"]');
+  await h.tap('#viewport [data-id="safety_mode"]');
+  h.check('SafeSearch offers Don\'t filter and Strict', await h.until(`document.querySelector('#viewport .mps-dialog h3')?.textContent === 'SafeSearch' && document.querySelectorAll('#viewport [data-action="yt5-pref-pick"]').length === 2`));
+  await h.tap('#viewport [data-action="yt5-pref-pick"][data-id="1"]');
+  await h.tap('#viewport [data-id="clear_history"]');
+  await h.tap('#viewport [data-action="yt5-clear-ok"]');
+  const p = await store(h, 'yt5Prefs');
+  h.check('the settings are kept', p.video_notifications_enabled === false && p.country === 'GB' && p.safety_mode === '1', JSON.stringify(p));
+  h.check('Clear search history empties the queries', !(await store(h, 'yt5Searches'))?.length);
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="yt5-page"][data-id="about"]');
+  await h.tap('#viewport [data-id="open_source_licenses"]');
+  h.check('Open source licenses shows licenses.html', await h.until(`!!document.querySelector('#viewport .yt5-licenses iframe')`));
+  await h.key('Escape'); await h.key('Escape'); await h.key('Escape');
+  h.check('Back leaves Settings', await h.until(`!document.querySelector('#viewport .yt5-prefs') && !!document.querySelector('#viewport .yt5-feed')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1620,6 +1654,7 @@ const CASES = [
   {id: 'T20', version: '2.3.6', name: 'YouTube › Settings', run: gbYouTubeSettings},
   {id: 'T20', version: '4.0.4', name: 'YouTube › Search, Add to, Share, Copy URL, channel, Record and upload, Settings', run: icsYouTube},
   {id: 'T20', version: '4.3', name: 'YouTube › Add to, Like / Dislike, Copy URL, Share, Settings', run: jbYouTube},
+  {id: 'T20', version: '4.4.4', name: 'YouTube › Settings', run: kkYouTubeSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},
@@ -1646,7 +1681,8 @@ const CASES = [
 
 const args = process.argv.slice(2), picked = args.filter(a => /^T\d+/i.test(a)).map(a => a.toUpperCase());
 const WIDTHS = args.includes('--desktop') ? ['desktop'] : args.includes('--phone') ? ['phone'] : ['desktop', 'phone'];
-const cases = CASES.filter(c => !picked.length || picked.includes(c.id));
+const only = args.includes('--version') ? args[args.indexOf('--version') + 1] : '';
+const cases = CASES.filter(c => (!picked.length || picked.includes(c.id)) && (!only || c.version === only));
 if (!cases.length) { console.log(picked.length ? `No case for ${picked.join(', ')}` : 'No case yet'); process.exit(picked.length ? 1 : 0); }
 
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'limits-')), port = 9700 + Math.floor(Math.random() * 600);

@@ -9,7 +9,7 @@
    - Like / Dislike (ui/eg): the rating is kept and can be changed, toasting rating_like / rating_dislike; Copy URL
      (ui/dl) copies http://www.youtube.com/watch?v=<id> and toasts url_copied; Flag stays YouTube's web page.
    - Settings (preference_headers.xml in xml-v11 on this build): General (general_prefs.xml without Auto Uploads,
-     which the code removes; Content localization lists GDataRequestFactory's 39 countries by their names), Connected
+     which the code removes; Content localization lists GDataRequestFactory's 38 countries by their names), Connected
      TVs (pairing needs a TV: Google's flow), Search (Clear search history behind "Clear search history?", Never remember
      history, SafeSearch's single-choice "SafeSearch"), About (Google's pages, LicensesActivity's licenses.html, the
      APK's 4.5.17). Preloading and Developer are dropped by onBuildHeaders on a phone without prefetch or a dev build.

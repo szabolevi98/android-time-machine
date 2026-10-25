@@ -1,0 +1,5 @@
+/* YouTube 5.2.27's Settings (kk-youtube.js) on the Holo Light mps- rows and dialogs. */
+.yt5-prefs{background:#f3f3f3}
+.screen .yt5-prefs .yt5-header{min-height:calc(48 * var(--dp))}
+.yt5-prefs .yt5-bar .sa-title b{color:#333}
+.yt5-licenses iframe{flex:1;width:100%;border:0;background:#fff}

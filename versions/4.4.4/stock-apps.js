@@ -212,6 +212,7 @@
   }
   function youtube(ctx) {
     const y = key => S(ctx, 'youtube', key);
+    if (ctx.ui.sub === 'settings') return KKYouTube.settings(ctx);
     if (ctx.ui.sub === 'search' || ctx.ui.sub === 'results') return ytSearch(ctx, y);
     if (ctx.ui.sub === 'video') {
       const v = VIDEOS.find(item => item.id === ctx.ui.ytVideo) || VIDEOS[0], i = VIDEOS.indexOf(v), liked = (ctx.data.ytLikes || []).includes(v.id);
@@ -293,7 +294,7 @@
     // Google+ 4.2: the stream enables Refresh; the host adds Send feedback, Settings, Help and Sign out (dex).
     if (view === 'google-plus') { const g = key => S(ctx, 'gplus', key); return ['Refresh', 'Send feedback', 'Settings', 'Help', 'Sign out'].map(key => ({action: key === 'Refresh' ? 'gplus-refresh' : 'sa-unsupported', title: g(key)})); }
     if (view === 'drive' && ctx.ui?.sub !== 'file') { const d = key => S(ctx, 'drive', key); return ['Add new', 'Refresh', 'Filter by', 'Sort by', 'Settings', 'Product Tour'].map(key => ({action: 'sa-unsupported', title: d(key)})); }
-    if (view === 'youtube' && ctx.ui?.sub !== 'video') { const y = key => S(ctx, 'youtube', key); return [{action: 'sa-unsupported', title: y('Settings')}, {action: 'sa-unsupported', title: y('Feedback')}, {action: 'sa-unsupported', title: y('Help')}]; }
+    if (view === 'youtube' && ctx.ui?.sub !== 'video') { const y = key => S(ctx, 'youtube', key); return [{action: 'yt5-settings', title: y('Settings')}, {action: 'sa-unsupported', title: y('Feedback')}, {action: 'sa-unsupported', title: y('Help')}]; }
     if (view === 'keep' && ctx.ui?.sub !== 'note') { const k = key => S(ctx, 'keep', key); return [{action: 'keep-columns', title: k(ctx.data?.keepSingle ? 'Multi-column view' : 'Single-column view')}, {action: 'keep-refresh', title: k('Refresh')}, {action: 'sa-unsupported', title: k('Settings')}, {action: 'sa-unsupported', title: k('Send feedback')}, {action: 'sa-unsupported', title: k('Help')}]; }
     if (view === 'keep') { const k = key => S(ctx, 'keep', key), note = (ctx.data?.keepNotes || []).find(n => n.id === ctx.ui.keepNote); return [{action: 'keep-archive', title: k(note?.archived ? 'Unarchive' : 'Archive')}, {action: 'keep-delete', title: k('Delete')}, {action: 'keep-checkboxes', title: k(note?.list ? 'Hide checkboxes' : 'Show checkboxes')}, {action: 'sa-unsupported', title: k('Share…')}, {action: 'sa-unsupported', title: k('Settings')}, {action: 'sa-unsupported', title: k('Send feedback')}, {action: 'sa-unsupported', title: k('Help')}]; }
     if (view === 'earth') { const ea = key => S(ctx, 'earth', key); return (ctx.ui?.earthQuery ? [{action: 'earth-clear', title: ea('Clear map')}] : []).concat(['My location', 'Share', 'Settings', 'Feedback', 'Help', 'Tutorial'].map(key => ({action: 'sa-unsupported', title: ea(key)}))); }

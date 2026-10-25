@@ -1010,5 +1010,6 @@ versions/4.4.4/assets/yt5-ic_drawer_yt_recommended.png	c206d320fd696f21	copy	ham
 versions/4.4.4/assets/yt5-ic_drawer_yt_trending.png	05cc64e49b735c12	copy	hammerhead:/system/app/YouTube.apk!res/drawable-xhdpi/ic_drawer_yt_trending.png	drawable-xhdpi		05cc64e49b735c12
 versions/4.4.4/assets/yt5-ic_like.png	4a2c76460577b906	copy	hammerhead:/system/app/YouTube.apk!res/drawable-xhdpi/ic_like.png	drawable-xhdpi		4a2c76460577b906
 versions/4.4.4/assets/yt5-ic_menu_search.png	75e3bef31d93f61c	copy	hammerhead:/system/app/Magazines.apk!res/drawable-xhdpi/ic_menu_search.png	drawable-xhdpi		75e3bef31d93f61c
+versions/4.4.4/assets/yt5-licenses.html	8998d298557e4ca1	copy	hammerhead:/system/app/YouTube.apk!assets/licenses.html			8998d298557e4ca1
 versions/4.4.4/assets/yt5-missing_avatar.png	49085cc44362a513	copy	hammerhead:/system/app/YouTube.apk!res/drawable-xhdpi/missing_avatar.png	drawable-xhdpi		49085cc44362a513
 versions/4.4.4/assets/yt5-textfield_search_selected_holo_light.png	0946d53659483312	copy	hammerhead:/system/app/Books.apk!res/drawable-xxhdpi/textfield_search_selected_holo_light.9.png	drawable-xxhdpi		0946d53659483312
