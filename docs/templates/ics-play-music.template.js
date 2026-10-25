@@ -13,7 +13,19 @@
     "Playlists": "playlists_title", "Genres": "genres_title", "Search music": "search_hint", "Shuffle all": "shuffle_all", "Now playing": "nowplaying_title",
     "Shuffle": "shuffle", "Make instant mix": "menu_make_instant_mix", "Add to playlist": "add_to_playlist", "New playlist": "new_playlist_title",
     "Remove from playlist": "remove_from_playlist", "All songs": "all_songs_list", "No songs": "no_tracks_title", "More by artist": "more_by_artist",
-    "Current playlist": "queue", "Settings": "settings", "Help": "help_title", "Unknown artist": "unknown_artist_name"});
+    "Current playlist": "queue", "Settings": "settings", "Help": "help_title", "Unknown artist": "unknown_artist_name",
+    "ARTISTS": "search_section_header_artists", "ALBUMS": "search_section_header_albums", "SONGS": "search_section_header_songs",
+    "PLAYLISTS": "search_section_header_playlists", "Cancel current search": "accessibility_search_cancel", "%s Mix": "instant_mix_default_name",
+    "Adding an instant mix to playlists, based on %s.": "creating_instant_mix_with_seed", "Cancel": "cancel", "Music settings": "stream_settings",
+    "Google Play account": "account_settings_title", "Connect to Google Play using %s": "account_selected_summary",
+    "Hide unavailable music": "hide_when_not_connected_title", "Show only available music when offline": "hide_when_not_connected_summary",
+    "Cache music": "cache_streamed_title", "Temporarily store streamed music": "cache_streamed_summary", "Stream via Wi-Fi only": "stream_only_on_wifi_title",
+    "Stream music only when connected via Wi-Fi": "stream_only_on_wifi_summary", "Stream high quality": "stream_only_hq_title",
+    "Always stream music at the highest quality": "stream_only_hq_summary", "Refresh": "refresh_title", "Refresh music from Google Play": "refresh_summary",
+    "Download via Wi-Fi only": "offlinedl_only_on_wifi_title", "Download music for availablility offline only via Wi-Fi": "offlinedl_only_on_wifi_summary",
+    "Download queue": "download_queue_title", "Show the songs currently being downloaded": "download_queue_summary", "No songs queued for download": "show_no_downloads_title",
+    "Lock screen controls": "lock_screen_controls_title", "Show music controls on top of the lock screen": "lock_screen_controls_summary",
+    "Open source licenses": "license_title", "Music version": "music_version_title"});
   const STR = AndroidStrings.table('', STRINGS, AndroidStrings.shared), T = (lang, key) => STR.t(key, lang);
   const TABS = ['Recent', 'Artists', 'Albums', 'Songs', 'Playlists', 'Genres'];
   const GENRE = {'The Demo Tapes': 'Electronic', 'Paper Satellites': 'Indie'};
@@ -35,8 +47,8 @@
     if (kind === 'playlist') return (music.playlists.find(p => String(p.id) === String(id))?.tracks || []);
     return all.map(([, i]) => i);
   }
-  function bar(ctx, {up = false} = {}) {
-    return `<header class="pm4-bar"><button class="pm4-home" data-action="${up ? 'back' : 'home'}" aria-label="Play Music">${up ? '<span class="pm4-back">‹</span>' : ''}<img src="assets/play-music.png" alt=""></button><span class="pm4-spacer"></span><button class="pm4-icon" data-action="pm4-unsupported" aria-label="${e(T(ctx.lang, 'Search music'))}"><img src="assets/pm4-ic_menu_search_holo_dark.png" alt=""></button><button class="pm4-icon" data-action="pm4-menu" aria-label="${e(T(ctx.lang, 'More options'))}"><img src="assets/pm4-ic_menu_moreoverflow_normal_holo_dark.png" alt=""></button></header>`;
+  function bar(ctx, {up = false, title = ''} = {}) {
+    return `<header class="pm4-bar"><button class="pm4-home" data-action="${up ? 'back' : 'home'}" aria-label="Play Music">${up ? '<span class="pm4-back">‹</span>' : ''}<img src="assets/play-music.png" alt=""></button>${title ? `<b class="pm4-title">${e(title)}</b>` : '<span class="pm4-spacer"></span>'}<button class="pm4-icon" data-action="pm4-search" aria-label="${e(T(ctx.lang, 'Search music'))}"><img src="assets/pm4-ic_menu_search_holo_dark.png" alt=""></button><button class="pm4-icon" data-action="pm4-menu" aria-label="${e(T(ctx.lang, 'More options'))}"><img src="assets/pm4-ic_menu_moreoverflow_normal_holo_dark.png" alt=""></button></header>`;
   }
   function songRows(ctx, ids, queue) {
     const {tracks, music} = ctx;
@@ -76,22 +88,50 @@
     const p = Math.min(100, music.position / t.duration * 100);
     return `<div class="app-view pm4-app pm4-player">${bar(ctx, {up: true})}<div class="pm4-np-head"><span class="pm4-np-label">${e(T(lang, 'Now playing'))}</span><b>${e(t.title)}</b><small>${e(t.album)} · ${e(t.artist)}</small></div><div class="pm4-np-art">${cover(t.album, 'huge')}</div><div class="pm4-np-seek"><time class="music-elapsed">${e(time(music.position))}</time><span class="pm4-np-track"><i style="width:${p.toFixed(1)}%"></i></span><time>${e(time(t.duration))}</time></div><div class="pm4-np-controls"><button data-action="music-shuffle" class="${music.shuffle ? 'on' : ''}" aria-label="${e(T(lang, 'Shuffle'))}">⤨</button><button data-action="music-prev" aria-label="Previous">⏮</button><button class="pm4-np-play" data-action="music-play" aria-label="${music.playing ? 'Pause' : 'Play'}">${music.playing ? '❚❚' : '▶'}</button><button data-action="music-next" aria-label="Next">⏭</button><button data-action="music-repeat" class="${music.repeat !== 'off' ? 'on' : ''}" aria-label="Repeat">${music.repeat === 'one' ? '↻¹' : '↻'}</button></div></div>`;
   }
+  // Search (the action bar's SearchView with search_hint): the matches in track_list_item_search sections (ARTISTS,
+  // ALBUMS, SONGS, PLAYLISTS: a 32 dp header, then 64 dp rows with the art, the name and the artist).
+  function search(ctx) {
+    const {ui, tracks, music, lang} = ctx, q = String(ui.pm4Query || '').trim().toLocaleLowerCase(), has = text => String(text).toLocaleLowerCase().includes(q);
+    const row = (action, id, name, sub, extra = '') => `<button class="pm4-song" data-action="${action}" data-id="${e(id)}"${extra}>${cover(name, 'small')}<span class="pm4-song-copy"><b>${e(name)}</b><small>${e(sub)}</small></span></button>`;
+    const section = (title, rows) => rows.length ? `<h3 class="pm4-search-head">${e(T(lang, title))}</h3>${rows.join('')}` : '';
+    const body = q ? section('ARTISTS', artists(tracks).filter(has).map(a => row('pm4-group', `artist:${a}`, a, `${members(tracks, music, 'artist', a).length} ${T(lang, 'Songs').toLocaleLowerCase()}`)))
+      + section('ALBUMS', albums(tracks).filter(has).map(a => row('pm4-group', `album:${a}`, a, tracks.find(t => t.album === a).artist)))
+      + section('SONGS', tracks.map((t, i) => [t, i]).filter(([t]) => has(t.title)).map(([t, i]) => row('pm4-play', i, t.title, t.artist, ' data-queue="all"')))
+      + section('PLAYLISTS', music.playlists.filter(p => has(p.name)).map(p => row('pm4-group', `playlist:${p.id}`, p.name, `${p.tracks.length} ${T(lang, 'Songs').toLocaleLowerCase()}`))) : '';
+    return `<div class="app-view pm4-app"><form class="pm4-bar pm4-searchbar" data-form="pm4-search"><button type="button" class="pm4-home" data-action="back" aria-label="Back"><span class="pm4-back">‹</span><img src="assets/play-music.png" alt=""></button><input data-pm4-query value="${e(ui.pm4Query || '')}" placeholder="${e(T(lang, 'Search music'))}" aria-label="${e(T(lang, 'Search music'))}" autocomplete="off" spellcheck="false">${ui.pm4Query ? `<button type="button" class="pm4-icon" data-action="pm4-search-clear" aria-label="${e(T(lang, 'Cancel current search'))}">✕</button>` : ''}</form><div class="pm4-scroll">${body || (q ? `<p class="pm4-empty">${e(T(lang, 'No songs'))}</p>` : '')}</div>${nowBar(ctx)}</div>`;
+  }
+  // MusicSettingsActivity (music_settings.xml, Holo dark): the account, then the check boxes in their order; the
+  // values are kept (data.pm4Prefs) though nothing streams here.
+  const PREFS = {hideUnavailable: false, cacheStreamed: true, streamWifi: false, streamHq: false, downloadWifi: true, lockControls: true};
+  const prefs = data => ({...PREFS, ...(data.pm4Prefs || {})});
+  function settings(ctx) {
+    const {lang} = ctx, p = prefs(ctx.data), M = key => T(lang, key);
+    const row = (action, title, summary = '') => `<button class="pm4-pref" data-action="${action}"><span><b>${e(M(title))}</b>${summary ? `<small>${e(summary)}</small>` : ''}</span></button>`;
+    const chk = (key, title, summary) => `<button class="pm4-pref" data-action="pm4-pref" data-id="${key}" role="checkbox" aria-checked="${!!p[key]}"><span><b>${e(M(title))}</b><small>${e(M(summary))}</small></span><img src="assets/btn_check_${p[key] ? 'on' : 'off'}_holo_dark.png" alt=""></button>`;
+    return `<div class="app-view pm4-app pm4-settings">${bar(ctx, {up: true, title: M('Music settings')})}<div class="pm4-scroll">${row('pm4-unsupported', 'Google Play account', AndroidStrings.format(M('Connect to Google Play using %s'), ctx.account || 'icecream.demo@gmail.com'))}${chk('hideUnavailable', 'Hide unavailable music', 'Show only available music when offline')}${chk('cacheStreamed', 'Cache music', 'Temporarily store streamed music')}${chk('streamWifi', 'Stream via Wi-Fi only', 'Stream music only when connected via Wi-Fi')}${chk('streamHq', 'Stream high quality', 'Always stream music at the highest quality')}${row('pm4-refresh', 'Refresh', M('Refresh music from Google Play'))}${chk('downloadWifi', 'Download via Wi-Fi only', 'Download music for availablility offline only via Wi-Fi')}${row('pm4-download-queue', 'Download queue', M('Show the songs currently being downloaded'))}${chk('lockControls', 'Lock screen controls', 'Show music controls on top of the lock screen')}${row('pm4-unsupported', 'Open source licenses')}<div class="pm4-pref info"><span><b>${e(M('Music version'))}</b><small>4.1.513</small></span></div></div></div>`;
+  }
+  const downloadQueue = ctx => `<div class="app-view pm4-app pm4-settings">${bar(ctx, {up: true, title: T(ctx.lang, 'Download queue')})}<div class="pm4-scroll"><p class="pm4-empty">${e(T(ctx.lang, 'No songs queued for download'))}</p></div></div>`;
   function render(ctx) {
+    if (ctx.ui.sub === 'search') return search(ctx);
+    if (ctx.ui.sub === 'settings') return settings(ctx);
+    if (ctx.ui.sub === 'download-queue') return downloadQueue(ctx);
     if (ctx.ui.sub === 'player') return player(ctx);
     if (ctx.ui.sub === 'group') return group(ctx);
     return library(ctx);
   }
   function overlay(ctx) {
+    // create_instant_mix: the progress, "Adding an instant mix to playlists, based on %s." and Cancel.
+    if (ctx.ui.overlay === 'pm4-mixing') { const t = ctx.tracks[ctx.music.track] || ctx.tracks[0]; return `<div class="settings-dialog-scrim"></div><div class="settings-dialog pm4-mixing" role="dialog"><i class="pm4-spinner" aria-hidden="true"></i><p>${e(AndroidStrings.format(T(ctx.lang, 'Adding an instant mix to playlists, based on %s.'), t.title))}</p><div class="settings-dialog-actions"><button data-action="pm4-mix-cancel">${e(T(ctx.lang, 'Cancel'))}</button></div></div>`; }
     if (ctx.ui.overlay !== 'pm4-menu') return null;
     const item = (action, label) => `<button data-action="${action}">${e(T(ctx.lang, label))}</button>`;
-    return `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu pm4-menu" role="menu">${item('pm4-shuffle-all', 'Shuffle all')}${item('pm4-unsupported', 'Make instant mix')}${item('pm4-unsupported', 'Settings')}${item('pm4-unsupported', 'Help')}</div>`;
+    return `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu pm4-menu" role="menu">${item('pm4-shuffle-all', 'Shuffle all')}${item('pm4-mix', 'Make instant mix')}${item('pm4-settings', 'Settings')}${item('pm4-unsupported', 'Help')}</div>`;
   }
   // ctx: {tracks, music, ui, lang, time, play(ids, track), save, render, renderOverlay, toast}.
   function handle(action, id, ctx, button) {
     const {ui, tracks, music} = ctx;
     switch (action) {
       case 'pm4-tab': ui.pm4Tab = id; ui.sub = ''; ctx.render(); break;
-      case 'pm4-group': ui.pm4Group = id; ui.sub = 'group'; ctx.render(); break;
+      case 'pm4-group': ui.pm4FromSearch = ui.sub === 'search'; if (ui.pm4FromSearch) ui.pm4From = 'search'; ui.pm4Group = id; ui.sub = 'group'; ctx.render(); break;
       case 'pm4-player': ui.sub = 'player'; ctx.render(); break;
       case 'pm4-play': {
         const queue = button?.dataset.queue || 'all', [kind, ...rest] = queue.split(':');
@@ -101,10 +141,39 @@
       }
       case 'pm4-shuffle-all': { const ids = tracks.map((_, i) => i); music.shuffle = true; ctx.play(ids, ids[Math.floor(Math.random() * ids.length)]); ui.overlay = ''; ctx.renderOverlay(); ui.sub = 'player'; ctx.render(); break; }
       case 'pm4-menu': ui.overlay = 'pm4-menu'; ctx.renderOverlay(); break;
+      case 'pm4-search': ui.pm4Query = ''; ui.pm4From = ui.sub; ui.sub = 'search'; ui.overlay = ''; ctx.renderOverlay(); ctx.render(); ctx.focus('[data-pm4-query]'); break;
+      case 'pm4-search-clear': ui.pm4Query = ''; ctx.render(); ctx.focus('[data-pm4-query]'); break;
+      case 'pm4-settings': ui.overlay = ''; ctx.renderOverlay(); ui.pm4From = ui.sub; ui.sub = 'settings'; ctx.render(); break;
+      case 'pm4-download-queue': ui.sub = 'download-queue'; ctx.render(); break;
+      case 'pm4-refresh': ctx.render(); break;
+      case 'pm4-pref': { const p = prefs(ctx.data); ctx.data.pm4Prefs = {...p, [id]: !p[id]}; ctx.save(); ctx.render(); break; }
+      // Make instant mix from the playing song: a "%s Mix" playlist of it and its genre's and artist's songs first,
+      // then the rest of the collection, added to Playlists and played.
+      case 'pm4-mix': {
+        ui.overlay = 'pm4-mixing'; ctx.renderOverlay();
+        clearTimeout(ui.pm4MixTimer);
+        ui.pm4MixTimer = setTimeout(() => {
+          if (ui.overlay !== 'pm4-mixing') return;
+          const seed = tracks[music.track] ? music.track : 0, s = tracks[seed], genre = t => GENRE[t.artist] || 'Pop';
+          const rank = t => (t.artist === s.artist ? 0 : genre(t) === genre(s) ? 1 : 2);
+          const ids = [seed, ...tracks.map((t, i) => [t, i]).filter(([, i]) => i !== seed).sort((a, b) => rank(a[0]) - rank(b[0])).map(([, i]) => i)];
+          const id = Date.now(); music.playlists = [...music.playlists, {id, name: AndroidStrings.format(T(ctx.lang, '%s Mix'), s.title), tracks: ids}];
+          ui.overlay = ''; ctx.renderOverlay(); ctx.play(ids, seed); ui.pm4Group = `playlist:${id}`; ui.sub = 'group'; ctx.render();
+        }, 1500);
+        break;
+      }
+      case 'pm4-mix-cancel': clearTimeout(ui.pm4MixTimer); ui.overlay = ''; ctx.renderOverlay(); break;
       case 'pm4-unsupported': ui.overlay = ''; ctx.renderOverlay(); ctx.toast('This feature is not part of the simulator.'); break;
       default: return false;
     }
     return true;
   }
-  window.ICSPlayMusic = {TABS, render, overlay, handle};
+  // Back: search and settings go back where they opened from, the download queue to the settings.
+  function back(ui) {
+    if (ui.sub === 'download-queue') { ui.sub = 'settings'; return true; }
+    if (ui.sub === 'search' || ui.sub === 'settings') { ui.sub = ui.pm4From && ui.pm4From !== 'search' ? ui.pm4From : ''; return true; }
+    if (ui.sub === 'group' && ui.pm4From === 'search' && ui.pm4FromSearch) { ui.sub = 'search'; ui.pm4FromSearch = false; return true; }
+    return false;
+  }
+  window.ICSPlayMusic = {TABS, PREFS, prefs, render, overlay, handle, back};
 })();

@@ -589,7 +589,8 @@
   function back() { pendingNav = 'back'; try { navigateBack(); } finally { pendingNav = ''; } }
   // Play Music 4.1 plays the demo library through the shared engine (ui.music), like AOSP Music.
   function playMusicContext() {
-    return {tracks, music: ui.music, ui, lang: i18n.language, time: ICSMusic.time, save, render, renderOverlay, toast,
+    return {tracks, music: ui.music, ui, data, lang: i18n.language, time: ICSMusic.time, save, render, renderOverlay, toast, account: window.ICSGmail?.account,
+      focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
       play(ids, track) { ui.music.queue = [...ids]; ui.music.track = track; ui.music.position = 0; ui.music.playing = true; ui.musicActive = true; ui.musicTrack = track; ui.musicPlaying = true; saveMusic(); }};
   }
   // Google+, Talk, YouTube, Play Books / Movies, Search, Voice Dialer and Latitude (ics-google-apps.js).
@@ -646,6 +647,7 @@
   // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
   const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
   function navigateBack() {
+    if (ui.view === 'play-music' && !ui.overlay && ICSPlayMusic.back(ui)) { render(); return; }
     if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
     if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
     if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return; }
@@ -1815,6 +1817,7 @@
     if (!form || !screen.contains(form)) return;
     event.preventDefault(); const values = new FormData(form);
     if (JBExtraApps.submit(form.dataset.form, values, extraContext())) return;
+    if (form.dataset.form === 'pm4-search') { viewport.querySelector('[data-pm4-query]')?.blur(); return; }
     if (form.dataset.form === 'mr-type') { overlayRoot.querySelector('[data-action="mr-type-ok"]')?.click(); return; }
     if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, mrContext()); return; }
     if (ui.view === 'gmail' && ICSGmail.submit(form.dataset.form, values, gmailContext())) return;
@@ -1912,6 +1915,8 @@
     }
   });
   document.addEventListener('input', event => {
+    // Play Music's search: the sections follow the query; the field keeps its focus and caret.
+    if (event.target.matches('[data-pm4-query]')) { ui.pm4Query = event.target.value; const at = event.target.selectionStart; render(); const field = viewport.querySelector('[data-pm4-query]'); if (field) { field.focus(); field.setSelectionRange(at, at); } return; }
     // Talk's SearchView and Add friend field: the suggestions follow the query without re-rendering the field.
     if (event.target.closest('.ga-tk-sv')) { ui.gaTalkQ = event.target.value; const box = viewport.querySelector('.ga-tk-extras'), tmp = document.createElement('div'); tmp.innerHTML = ICSGoogleApps.render(ui.view, googleAppsContext()); if (box) box.innerHTML = tmp.querySelector('.ga-tk-extras')?.innerHTML || ''; return; }
     if (event.target.matches('.ga-tk-add-field')) { ui.gaInvite = event.target.value; return; }

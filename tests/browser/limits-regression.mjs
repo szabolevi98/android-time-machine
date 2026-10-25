@@ -2732,6 +2732,34 @@ const playShare = async h => {
     h.check('Send email writes to the developer', await h.until(`[...document.querySelectorAll('#viewport input, #viewport textarea')].some(f => f.value.includes('moonlightstudio@example.com'))`), await fields());
   }
 };
+// 4.0.4 Play Music (T22): Search music filters the library into its sections, Make instant mix builds a "%s Mix"
+// playlist from the playing song and plays it, and Music settings keep their check boxes.
+const icsPlayMusicMore = async h => {
+  const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  await h.openApp('play-music');
+  await h.tap('#viewport [data-action="pm4-search"]');
+  h.check('Search music opens the search field', await h.until(`!!document.querySelector('#viewport [data-pm4-query]')`));
+  const first = await h.ev(`document.querySelector('#viewport [data-pm4-query]') && 'ok'`);
+  await h.type('#viewport [data-pm4-query]', 'a');
+  h.check('the query shows its sections', await h.until(`document.querySelectorAll('#viewport .pm4-search-head').length > 0 && document.querySelectorAll('#viewport .pm4-song').length > 0`), first);
+  const all = await h.ev(`document.querySelectorAll('#viewport .pm4-song').length`);
+  await h.type('#viewport [data-pm4-query]', 'zzzq');
+  h.check('a query without matches shows no rows', await h.until(`document.querySelectorAll('#viewport .pm4-song').length === 0`) && all > 0);
+  await h.key('Escape');
+  h.check('Back leaves the search', await h.until(`!document.querySelector('#viewport [data-pm4-query]')`));
+  await h.tap('#viewport [data-action="pm4-menu"]');
+  await h.tap('[data-action="pm4-mix"]');
+  h.check('Make instant mix shows its progress', await h.until(`!!document.querySelector('.pm4-mixing')`));
+  h.check('the mix plays from a new "Mix" playlist', await h.until(`!document.querySelector('.pm4-mixing')`, 6000) && (await store(h, 'music'))?.playlists?.some(p => / Mix$/.test(p.name) && p.tracks.length > 1));
+  await h.tap('#viewport [data-action="pm4-menu"]');
+  await h.tap('[data-action="pm4-settings"]');
+  await h.tap('#viewport [data-action="pm4-pref"][data-id="streamHq"]');
+  await h.tap('#viewport [data-action="pm4-pref"][data-id="lockControls"]');
+  const p = (await store(h, 'pm4Prefs')) || {};
+  h.check('Music settings keep their choices', p.streamHq === true && p.lockControls === false, JSON.stringify(p));
+  await h.reload(); await h.openApp('play-music'); await act('pm4-settings');
+  h.check('the choices survive a restart', await h.until(`document.querySelector('#viewport [data-id="streamHq"]')?.getAttribute('aria-checked') === 'true'`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -2821,6 +2849,7 @@ const CASES = [
   {id: 'T21', version: '4.3', name: 'Play Store › Share', run: playShare},
   {id: 'T21', version: '4.4.4', name: 'Play Store › Share', run: playShare},
   {id: 'T21', version: '5.1.1', name: 'Play Store › Share, READ MORE and Send email', run: playShare},
+  {id: 'T22', version: '4.0.4', name: 'Play Music › Search music, Make instant mix, Music settings', run: icsPlayMusicMore},
   {id: 'T10', version: '2.3.6', name: 'Contacts › Take photo through the Camera capture request', run: gbContactPhoto},
   {id: 'T13', version: '2.3.6', name: 'Messaging › Audio, Record audio, Capture picture / video, Slideshow', run: gbMmsAttach},
   {id: 'T13', version: '4.3', name: 'Messaging › Audio Play, Capture picture / video, Slideshow', run: jbMmsAttach},
