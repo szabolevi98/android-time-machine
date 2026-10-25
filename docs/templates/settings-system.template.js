@@ -81,6 +81,8 @@
     "Touch & hold delay": "?accessibility_long_press_timeout_title",
     "Install web scripts": "?accessibility_script_injection_title",
     "Off": "?accessibility_service_state_off",
+    "On": "?accessibility_service_state_on",
+    "Explore by touch": "?accessibility_touch_exploration_title",
     "Date & time":"date_and_time_settings_title","Automatic date & time":"date_time_auto","Use network-provided time":"date_time_auto_summaryOn",
     "Automatic time zone":"zone_auto","Use network-provided time zone":"zone_auto_summaryOn","Set date":"date_time_set_date","Set time":"date_time_set_time",
     "Select time zone":"date_time_set_timezone","Use 24-hour format":"date_time_24hour","13:00":"?date_time_24_hour_sample","1:00 pm":"?date_time_12_hour_sample",
@@ -178,7 +180,7 @@
       // device_info_settings.xml after DeviceInfoSettings: System updates (GoogleServicesFramework handles the intent),
       // Status, Legal information, then the read-only values; the additional update, safety legal and copyright entries
       // have no activity on the image and go.
-      if(ui.sub==='about')return page(S('About phone'),`${row(S('System updates'),'','toast','This feature is not part of the simulator.')}${row(S('Status'),S('Phone number, signal, etc.'),'settings-sub','about-status')}${row(S('Legal information'),'','settings-sub','about-legal')}${info('Model number','Galaxy Nexus')}${info('Android version','4.0.4','about-tap')}${info('Baseband version','I9250XXLA02')}${info('Kernel version','3.0.8-g034fec9\nandroid-build@vpbs1 #1\nTue Mar 13 15:46:20 PDT 2012')}${info('Build number','IMM76I')}`);
+      if(ui.sub==='about')return page(S('About phone'),`${row(S('System updates'),'','settings-sub','sysupdate')}${row(S('Status'),S('Phone number, signal, etc.'),'settings-sub','about-status')}${row(S('Legal information'),'','settings-sub','about-legal')}${info('Model number','Galaxy Nexus')}${info('Android version','4.0.4','about-tap')}${info('Baseband version','I9250XXLA02')}${info('Kernel version','3.0.8-gda6252b\nandroid-build@vpbs1 #1\nSMP PREEMPT Fri Apr 13 11:35:09 PDT 2012')}${info('Build number','IMM76I')}`);
       // deviceinfo.Status on a GSM phone: the CDMA rows (MIN, PRL version, MEID), ICCID and WiMAX are removed.
       if(ui.sub==='about-status'){
         const up=Math.floor((Date.now()-START)/1000),pad=n=>String(n).padStart(2,'0'),air=p.airplane;
@@ -201,9 +203,9 @@
         const rows=(window.ICSSyncAdapters||[]).map(row=>({key:row.en,name:AndroidStrings.pick(row,window.AndroidI18n?.language,row.en)})).sort((a,b)=>a.name.localeCompare(b.name,locale)).map(({key,name})=>{const on=auto&&!off[key];return `<button class="settings-row" data-action="sx-sync-toggle" data-id="${e(key)}" role="checkbox" aria-checked="${on}"><span class="row-copy">${e(AndroidStrings.format(S('Sync %s'), name))}<small>${e(new Date(START).toLocaleString(locale,{year:'numeric',month:'numeric',day:'numeric',hour:'numeric',minute:'2-digit'}))}</small></span><img class="holo-checkbox" src="assets/btn_check_${on?'on':'off'}_holo_dark.png" alt=""></button>`;}).join('');
         return page('Google',`<div class="sx-sync-title"><img src="assets/ic_google_account.png" alt=""><span><b>${e(account)}</b><small>Google</small></span></div>${section(S('Data & synchronization'))}${rows}`,`<button class="sx-overflow" data-action="sx-dialog" data-id="account-menu" aria-label="More options"><img src="assets/ic_menu_moreoverflow_normal_holo_dark.png" alt=""></button>`);
       }
-      // AccessibilitySettings: TalkBack from the image under Services (off), the system check boxes, Explore by touch only
-      // while a service is on.
-      if(ui.sub==='accessibility')return page(S('Accessibility'),`${section(S('Services'))}${row('TalkBack',S('Off'),'toast','This feature is not part of the simulator.')}${section(S('System'))}${check(S('Large text'),'largeText',!!p.largeText)}${check(S('Power button ends call'),'powerEndsCall',!!p.powerEndsCall)}${check(S('Auto-rotate screen'),'rotate',p.rotate!==false)}${check(S('Speak passwords'),'speakPasswords',!!p.speakPasswords)}${row(S('Touch & hold delay'),A11Y(['Short','Medium','Long'][p.longPressTimeout||0]),'a11y-hold','a11y-hold')}${check(S('Install web scripts'),'webScripts',!!p.webScripts)}`);
+      // AccessibilitySettings: TalkBack from the image under Services, the system check boxes, Explore by touch only while
+      // a service is on; TalkBack, Explore by touch and System updates open ics-a11y.js's screens.
+      if(ui.sub==='accessibility')return page(S('Accessibility'),`${section(S('Services'))}${row('TalkBack',S(p.talkback?'On':'Off'),'settings-sub','talkback')}${section(S('System'))}${check(S('Large text'),'largeText',!!p.largeText)}${check(S('Power button ends call'),'powerEndsCall',!!p.powerEndsCall)}${check(S('Auto-rotate screen'),'rotate',p.rotate!==false)}${check(S('Speak passwords'),'speakPasswords',!!p.speakPasswords)}${p.talkback?row(S('Explore by touch'),S(p.touchExploration?'On':'Off'),'settings-sub','touch-exploration'):''}${row(S('Touch & hold delay'),A11Y(['Short','Medium','Long'][p.longPressTimeout||0]),'a11y-hold','a11y-hold')}${check(S('Install web scripts'),'webScripts',!!p.webScripts)}`);
     }
     if(ui.sub==='date')return page(S('Date & time'),`${check(S('Automatic date & time'),'autoTime',p.autoTime,S('Use network-provided time'))}${check(S('Automatic time zone'),'autoZone',p.autoZone,S('Use network-provided time zone'))}${row(S('Set date'),dateText(data,locale),'sx-dialog','date',p.autoTime)}${row(S('Set time'),now.toLocaleTimeString(locale,{hour:'numeric',minute:'2-digit',hour12:!p.hour24}),'sx-dialog','time',p.autoTime)}${row(S('Select time zone'),zoneText(data,locale),'sx-dialog','zone',p.autoZone)}${check(S('Use 24-hour format'),'hour24',p.hour24,ICS?S(p.hour24?'13:00':'1:00 pm'):'')}${LP?'':row(S('Choose date format'),dateText(data,locale),'sx-dialog','date-format')}`);
     // SecuritySettings: the lock screen XML for the current quality (chooser / lockscreen / pattern / pin / password), the

@@ -1,0 +1,20 @@
+/* ics-a11y.js. SystemUpdateActivity (system_update_activity.xml on Theme.Holo.NoActionBar): the title 32 dp in and 24 dp
+   down in 22 sp holo_blue_light, the indeterminate progress bar 16 dp in, the description in TextAppearance.Medium's
+   17 sp, the 48 dp Check now button 24 dp from the right and 32 dp from the bottom. */
+.screen .icsa-update{display:flex;flex-direction:column;height:100%;background:#000;font-family:RobotoICS,Roboto,sans-serif}
+.icsa-update h1{flex:none;margin:0;padding:calc(24 * var(--dp)) calc(32 * var(--dp)) 0;font:400 calc(22 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#33b5e5}
+.icsa-progress{flex:none;position:relative;height:calc(4 * var(--dp));margin:calc(6.5 * var(--dp)) calc(16 * var(--dp)) 0;overflow:hidden;background:#33b5e533}
+.icsa-progress i{position:absolute;top:0;bottom:0;width:40%;background:#33b5e5;animation:icsa-indeterminate 1.4s linear infinite}
+@keyframes icsa-indeterminate{from{left:-40%}to{left:100%}}
+.icsa-update-scroll{flex:1;min-height:0;overflow-y:auto}
+.icsa-update-scroll p{margin:0;padding:calc(24 * var(--dp)) calc(32 * var(--dp));font:400 calc(17 * var(--dp))/1.35 RobotoICS,Roboto,sans-serif;color:#fff}
+.icsa-update-bottom{flex:none;display:flex;justify-content:flex-end;padding:calc(24 * var(--dp)) calc(24 * var(--dp)) calc(32 * var(--dp))}
+.screen .icsa-button{min-width:calc(64 * var(--dp));height:calc(48 * var(--dp));padding:0 calc(32 * var(--dp));border:0 solid transparent;border-width:calc(6 * var(--dp)) calc(5 * var(--dp));border-image:url('assets/ga-bk-23-btn_default_normal_holo_dark.png') 32 24 28 24 fill/calc(6 * var(--dp)) calc(5 * var(--dp));background:none;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#fff}
+.screen .icsa-button:active{background:#33b5e566}
+.screen .icsa-button:disabled{color:#ffffff55}
+/* text_description_preference.xml: the summary 16 dp in, TextAppearance.Medium in textColorSecondary. */
+.icsa-desc{margin:0;padding:calc(16 * var(--dp));font:400 calc(18 * var(--dp))/1.35 RobotoICS,Roboto,sans-serif;color:#bebebe;white-space:pre-line}
+.icsa-page .sx-text-action{height:100%;white-space:nowrap;flex:none}
+.icsa-warning h3{display:flex;align-items:center;gap:calc(8 * var(--dp))}
+.icsa-warning h3 img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.icsa-list{max-height:calc(320 * var(--dp));overflow-y:auto}

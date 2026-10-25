@@ -2522,6 +2522,55 @@ const jbPlayMore = async h => {
   await h.key('Escape');
   h.check('Back from Settings returns to the reader', await h.until(`!!document.querySelector('#viewport .pb-reader')`));
 };
+// 4.0.4 System updates and TalkBack (T29): GSF's up-to-date screen and Check now; TalkBack's page, the security warning
+// (Cancel keeps it off, OK turns it on), Explore by touch under System with its warning, TalkBack's own settings, Stop.
+const icsA11y = async h => {
+  const settings = async () => ((await store(h, 'settings')) || {});
+  const sub = id => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='settings-sub';el.dataset.id=${JSON.stringify(id)};document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  await h.openApp('settings');
+  await sub('about');
+  await h.tap('#viewport .settings-row[data-id="sysupdate"]');
+  h.check('System updates opens the up-to-date screen', await h.until(`/Your system is currently up to date/.test(document.querySelector('#viewport .icsa-update h1')?.textContent || '') && /Last checked for update at /.test(document.querySelector('#viewport .icsa-update p')?.textContent || '')`));
+  await h.tap('#viewport [data-action="icsa-check"]');
+  h.check('Check now shows the progress bar', await h.until(`!!document.querySelector('#viewport .icsa-progress') && document.querySelector('#viewport [data-action="icsa-check"]').disabled`));
+  h.check('the check ends up to date and is dated anew', await h.until(`!document.querySelector('#viewport .icsa-progress')`, 6000) && typeof (await settings()).updateChecked === 'number');
+  await h.key('Escape');
+  h.check('Back returns to About phone', await h.until(`!!document.querySelector('#viewport .settings-row[data-id="sysupdate"]')`));
+  await h.key('Escape');
+  await sub('accessibility');
+  h.check('TalkBack is off and Explore by touch hidden', await h.until(`/Off/.test(document.querySelector('#viewport .settings-row[data-id="talkback"]')?.textContent || '') && !document.querySelector('#viewport [data-id="touch-exploration"]')`));
+  await h.tap('#viewport .settings-row[data-id="talkback"]');
+  h.check('TalkBack shows its description and switch', await h.until(`/spoken feedback/.test(document.querySelector('#viewport .icsa-desc')?.textContent || '') && !!document.querySelector('#viewport [data-action="icsa-tb-toggle"][aria-checked="false"]')`));
+  await h.tap('#viewport [data-action="icsa-tb-toggle"]');
+  h.check('turning it on asks "Use TalkBack?"', await h.until(`/Use TalkBack\\?/.test(document.querySelector('.icsa-warning h3')?.textContent || '') && /can collect all of the text you type/.test(document.querySelector('.icsa-warning p')?.textContent || '')`));
+  await h.tap('.icsa-warning [data-action="close-overlay"]:not(.settings-dialog-scrim)');
+  h.check('Cancel keeps it off', !(await settings()).talkback && await h.until(`!!document.querySelector('#viewport [data-action="icsa-tb-toggle"][aria-checked="false"]')`));
+  await h.tap('#viewport [data-action="icsa-tb-toggle"]');
+  await h.tap('.icsa-warning [data-action="icsa-tb-on"]');
+  h.check('OK turns TalkBack on', (await settings()).talkback === true && await h.until(`!!document.querySelector('#viewport [data-action="icsa-tb-toggle"][aria-checked="true"]')`));
+  await h.tap('#viewport [data-action="icsa-tb-settings"]');
+  h.check('Settings opens TalkBack\'s preferences', await h.until(`!!document.querySelector('#viewport .settings-row[data-id="ringer"]')`));
+  await h.tap('#viewport .settings-row[data-id="ringer"]');
+  await h.tap('[data-action="icsa-pick"][data-id="ringer:2"]');
+  await h.tap('#viewport .settings-row[data-id="soundback"]');
+  const tp = (await store(h, 'talkbackPrefs')) || {};
+  h.check('TalkBack\'s preferences are kept', tp.ringer === 2 && tp.soundback === false && await h.until(`document.querySelector('#viewport .settings-row[data-id="volume"]')?.disabled === true`), JSON.stringify(tp));
+  await h.key('Escape');
+  await h.key('Escape');
+  h.check('Accessibility shows TalkBack on and Explore by touch', await h.until(`/On/.test(document.querySelector('#viewport .settings-row[data-id="talkback"]')?.textContent || '') && !!document.querySelector('#viewport .settings-row[data-id="touch-exploration"]')`));
+  await h.tap('#viewport .settings-row[data-id="touch-exploration"]');
+  await h.tap('#viewport [data-action="icsa-te-toggle"]');
+  h.check('Explore by touch warns first', await h.until(`/changes the way your device responds to touch/.test(document.querySelector('.icsa-warning p')?.textContent || '')`));
+  await h.tap('.icsa-warning [data-action="icsa-te-on"]');
+  h.check('Explore by touch turns on', (await settings()).touchExploration === true);
+  await h.key('Escape');
+  await h.tap('#viewport .settings-row[data-id="talkback"]');
+  await h.tap('#viewport [data-action="icsa-tb-toggle"]');
+  h.check('turning it off asks "Stop TalkBack?"', await h.until(`/Stop TalkBack\\?/.test(document.querySelector('.icsa-warning h3')?.textContent || '')`));
+  await h.tap('.icsa-warning [data-action="icsa-tb-off"]');
+  const st = await settings();
+  h.check('OK stops TalkBack and Explore by touch', st.talkback === false && st.touchExploration === false);
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -2624,6 +2673,7 @@ const CASES = [
   {id: 'T34', version: '4.3', name: 'Drive is not on the Nexus 4 image', run: jbNoDrive},
   {id: 'T34', version: '4.4.4', name: 'Drive › Add new, Sort by, Filter by, Move to, Rename, Offline, Remove, Refresh, Send, Settings', run: kkDriveFiles},
   {id: 'T34', version: '5.1.1', name: 'Drive › Create, Sort by, Filter by, Move, Rename, Keep on device, Remove, Refresh, Send file', run: lpDriveFiles},
+  {id: 'T29', version: '4.0.4', name: 'Settings › System updates and TalkBack, its warnings, Explore by touch and settings', run: icsA11y},
   {id: 'T43', version: '4.3', name: 'Play Music / Movies / Books › menus, keep on device, bookmarks, sort, settings', run: jbPlayMore},
   {id: 'T43', version: '4.4.4', name: 'Play Music / Movies / Books / Games › menus, keep on device, sort, settings', run: kkPlayMore},
   {id: 'T43', version: '5.1.1', name: 'Play Music / Movies / Books / Games › menus, downloads, bookmarks, sort, settings', run: lpPlayMore},
