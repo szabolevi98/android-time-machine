@@ -1,4 +1,4 @@
-/* Settings › Sound › Music effects: MusicFX's ActivityMusic (android.media.action.DISPLAY_AUDIO_EFFECT_CONTROL_PANEL) on
+/* Settings › Sound › Music effects on the JWR66Y image: MusicFX 1.4's ActivityMusic (android.media.action.DISPLAY_AUDIO_EFFECT_CONTROL_PANEL) on
    Theme.Holo, labelled Equalizer, with the on / off Switch in the action bar. music_main.xml: the preset Spinner (the
    bundle's presets Normal … Rock as libbundlewrapper names them, then FX Booster and User), music_eq.xml's five 180 dp
    vertical band SeekBars (60 Hz to 14 kHz, -15 to +15 dB with the +15 dB / 0 dB / -15 dB scale), Bass boost and 3D

@@ -1,4 +1,4 @@
-/* MusicFX's ActivityMusic (jb-musicfx.js): the Holo Spinner, the 180 dp vertical band SeekBars with the dB scale and
+/* MusicFX's ActivityMusic (ics-musicfx.js; the IMM76I image's MusicFX.apk, 1.4): the Holo Spinner, the 180 dp vertical band SeekBars with the dB scale and
    their 50 dp frequency labels, the 170 dp strength SeekBars; Theme.Holo's grey when disabled. */
 .mfx{padding:calc(8 * var(--dp)) calc(8 * var(--dp)) calc(16 * var(--dp));color:#fff;font-family:RobotoICS,Roboto,sans-serif}
 .mfx-spinner-wrap{position:relative;display:inline-block}
