@@ -219,6 +219,23 @@
     "Movies: Send feedback": "Videos:menu_feedback",
     "Google Search": "GoogleQuickSearchBox:google_search_hint",
     "Searchable items": "GoogleQuickSearchBox:search_sources",
+    "Choose what to search on the phone": "GoogleQuickSearchBox:search_sources_summary",
+    "QSB Apps": "ApplicationsProvider:search_label",
+    "Names of installed applications": "ApplicationsProvider:settings_description",
+    "QSB Play Books": "BooksTablet:main_activity_name",
+    "Books in your library": "BooksTablet:search_settings_description",
+    "QSB Browser": "BrowserGoogle:application_name",
+    "Bookmarks and web history": "BrowserGoogle:search_settings_description",
+    "QSB People": "Contacts:people",
+    "Names of your contacts": "Contacts:search_settings_description",
+    "QSB Messaging": "Mms:search",
+    "Text in your messages": "Mms:search_setting_description",
+    "QSB Play Music": "Music2:musicbrowserlabel",
+    "Artists, albums, and tracks": "Music2:search_settings_description",
+    "QSB Play Movies": "Videos:application_name",
+    "Rented Movies": "Videos:global_search_settings_description",
+    "QSB Voice Search": "VoiceSearch:appName",
+    "Voice Search history": "VoiceSearch:shortcuts_searchable_description",
     "Listening…": "VoiceDialer:listening",
     "No results, try again.": "VoiceDialer:no_results_tts",
     "Did you know…": "VoiceDialer:tool_tip_title",
@@ -756,10 +773,58 @@
   }
 
   // ---- Google Search 1.4.1 (Quick Search Box) ----
-  function search(ctx) {
-    const {lang, data} = ctx, recent = data.gaSearches || ['nexus 4 release date', 'ice cream sandwich update', 'weather'];
-    return `<div class="app-view ga-app ga-search"><form class="ga-qsb" data-form="ga-search"><img src="assets/search.png" alt=""><input name="query" autocomplete="off" placeholder="${e(T(lang, 'Google Search'))}" aria-label="${e(T(lang, 'Google Search'))}"><button type="submit" aria-label="Search"><img src="assets/ga-qsb-ic_search_normal.png" alt=""></button></form><div class="ga-scroll">${recent.map(q => `<button class="ga-suggest" data-action="ga-search-run" data-id="${e(q)}"><img src="assets/ga-qsb-ic_history_suggestion_normal.png" alt="">${e(q)}</button>`).join('')}<button class="ga-suggest ga-sources" data-action="ga-unsupported">${e(T(lang, 'Searchable items'))}</button></div></div>`;
+  /* The searchable items: every app of the image whose searchable has includeInGlobalSearch, named by its searchable
+     activity's label (or the app's) with its searchSettingsDescription, on as default_source_suggest_uris has them
+     (Messaging and Voice Search start off). Typing searches the items that are on and lists their suggestions under the
+     query (suggestion.xml: the source's icon, text1 and text2); a touch opens the item in its app. SearchSettingsActivity
+     shows them as searchable_item_preference.xml rows (the 48 dp icon, the title, the summary, the check box) under
+     "Searchable items" (Theme.Holo). Voice Search keeps no history here and Play Movies has no rentals. */
+  const SOURCES = [
+    ['apps', 'QSB Apps', 'Names of installed applications', true, 'assets/apps.png'],
+    ['play-books', 'QSB Play Books', 'Books in your library', true, 'assets/play-books.png'],
+    ['browser', 'QSB Browser', 'Bookmarks and web history', true, 'assets/browser.png'],
+    ['people', 'QSB People', 'Names of your contacts', true, 'assets/people.png'],
+    ['messaging', 'QSB Messaging', 'Text in your messages', false, 'assets/messaging.png'],
+    ['play-music', 'QSB Play Music', 'Artists, albums, and tracks', true, 'assets/play-music.png'],
+    ['play-movies', 'QSB Play Movies', 'Rented Movies', true, 'assets/play-movies.png'],
+    ['voice-search', 'QSB Voice Search', 'Voice Search history', false, 'assets/ga-vs-ic_launcher_voicesearch.png']
+  ];
+  const sourceOn = (data, id) => data.gaQsbSources?.[id] ?? SOURCES.find(x => x[0] === id)[3];
+  const sources = lang => [...SOURCES].sort((a, b) => T(lang, a[1]).localeCompare(T(lang, b[1]), lang));
+  // [action, id, text1, text2] per item, the words of the query each starting a word of the text.
+  function suggestions(ctx, q) {
+    const {data} = ctx, words = q.toLocaleLowerCase().split(/\s+/).filter(Boolean), hit = text => words.length && words.every(w => String(text).toLocaleLowerCase().split(/[^\p{L}\p{N}]+/u).some(t => t.startsWith(w)));
+    const out = [];
+    for (const [id, , , , icon] of sources(ctx.lang)) {
+      if (!sourceOn(data, id)) continue;
+      const add = rows => rows.slice(0, 3).forEach(r => out.push([r[0], r[1], r[2], r[3], r[4] || icon]));
+      // An app's suggestion carries the app's own icon.
+      if (id === 'apps') add((ctx.apps || []).filter(([, name]) => hit(name)).map(([app, name, src]) => ['ga-qsb-app', app, name, '', src]));
+      if (id === 'play-books') add(BOOKS.filter(b => hit(`${b.title} ${b.author}`)).map(b => ['ga-qsb-book', b.id, b.title, b.author]));
+      if (id === 'browser') add([...new Set([...(data.bookmarks || []), ...[...(data.browserHistory || [])].reverse()])].filter(u => !String(u).startsWith('search:') && hit(u)).map(u => ['ga-qsb-url', u, u, '']));
+      if (id === 'people') add((data.contacts || []).filter(c => hit(c.name)).map(c => ['ga-qsb-contact', c.id, c.name, c.phone || '']));
+      if (id === 'messaging') add((data.messages || []).filter(m => hit(m.body)).reverse().map(m => ['ga-qsb-thread', m.contact, data.contacts?.find(c => c.id === m.contact)?.name || '', m.body]));
+      if (id === 'play-music') add((window.ICSMusic?.tracks || []).filter(t => hit(`${t.title} ${t.artist} ${t.album}`)).map(t => ['ga-qsb-music', t.title, t.title, `${t.artist} – ${t.album}`]));
+    }
+    return out;
   }
+  const suggestionRows = (ctx, q) => suggestions(ctx, q).map(([action, id, one, two, icon]) => `<button class="ga-suggest ga-qsb-hit" data-action="${action}" data-id="${e(id)}"><img src="${icon}" alt=""><span><b>${e(one)}</b>${two ? `<small>${e(two)}</small>` : ''}</span></button>`).join('');
+  function search(ctx) {
+    const {lang, data, ui} = ctx, recent = data.gaSearches || ['nexus 4 release date', 'ice cream sandwich update', 'weather'];
+    qsbCtx = ctx;
+    if (ui.gaSub === 'sources') {
+      const rows = sources(lang).map(([id, title, summary, , icon]) => { const on = sourceOn(data, id); return `<button class="ga-qsb-source" data-action="ga-qsb-source" data-id="${id}" role="checkbox" aria-checked="${on}"><img src="${icon}" alt=""><span><b>${e(T(lang, title))}</b><small>${e(T(lang, summary))}</small></span><i class="nwp-check${on ? ' on' : ''}"></i></button>`; }).join('');
+      return `<div class="app-view ga-app ga-search ga-qsb-prefs">${head('ga-qsb-bar', 'search', T(lang, 'Searchable items'), '', true)}<p class="ga-qsb-note">${e(T(lang, 'Choose what to search on the phone'))}</p><div class="ga-scroll">${rows}</div></div>`;
+    }
+    const q = ui.gaQsbQ || '';
+    return `<div class="app-view ga-app ga-search"><form class="ga-qsb" data-form="ga-search"><img src="assets/search.png" alt=""><input name="query" value="${e(q)}" autocomplete="off" placeholder="${e(T(lang, 'Google Search'))}" aria-label="${e(T(lang, 'Google Search'))}" data-ga-qsb><button type="submit" aria-label="Search"><img src="assets/ga-qsb-ic_search_normal.png" alt=""></button></form><div class="ga-scroll"><div class="ga-qsb-hits">${q ? suggestionRows(ctx, q) : ''}</div>${recent.map(r => `<button class="ga-suggest" data-action="ga-search-run" data-id="${e(r)}"><img src="assets/ga-qsb-ic_history_suggestion_normal.png" alt="">${e(r)}</button>`).join('')}<button class="ga-suggest ga-sources" data-action="ga-qsb-sources">${e(T(lang, 'Searchable items'))}</button></div></div>`;
+  }
+  // The suggestions follow the typed text.
+  let qsbCtx = null;
+  globalThis.document?.addEventListener('input', event => {
+    if (!qsbCtx || qsbCtx.ui.view !== 'search' || !event.target.matches?.('[data-ga-qsb]')) return;
+    qsbCtx.ui.gaQsbQ = event.target.value; const box = document.querySelector('#viewport .ga-qsb-hits'); if (box) box.innerHTML = event.target.value.trim() ? suggestionRows(qsbCtx, event.target.value.trim()) : '';
+  });
 
   // ---- Voice Dialer (AOSP) ----
   function voiceDialer(ctx) {
@@ -884,6 +949,15 @@
       case 'ga-movies-tab': ui.gaMoviesTab = id; ctx.render(); break;
       case 'ga-shop': ctx.openApp('play-store'); break;
       case 'ga-search-run': ctx.browse(id); break;
+      // Google Search's searchable items and the suggestions they give.
+      case 'ga-qsb-sources': ui.gaSub = 'sources'; ctx.render(); break;
+      case 'ga-qsb-source': (data.gaQsbSources ||= {})[id] = !sourceOn(data, id); ctx.save(); ctx.render(); break;
+      case 'ga-qsb-app': ctx.openApp(id); break;
+      case 'ga-qsb-book': ctx.openApp('play-books'); ui.gaBook = id; ui.gaSub = 'read'; ctx.render(); break;
+      case 'ga-qsb-url': ctx.openUrl(id); break;
+      case 'ga-qsb-contact': ctx.openContact(Number(id)); break;
+      case 'ga-qsb-thread': ctx.openThread(String(id)); break;
+      case 'ga-qsb-music': ctx.openApp('play-music'); break;
       case 'ga-voice-listen': ctx.listen(); break;
       case 'ga-unsupported': case 'ga-yts-web': ctx.closeOverlay(); ctx.toast('This feature is not part of the simulator.'); break;
       default: return false;

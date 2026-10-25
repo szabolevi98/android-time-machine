@@ -1607,6 +1607,28 @@ const lpYouTubeSettings = async h => {
   await h.key('Escape'); await h.key('Escape'); await h.key('Escape');
   h.check('Back leaves Settings', await h.until(`!document.querySelector('#viewport .yt10-prefs')`));
 };
+// 4.0.4 Google Search 1.4.1 (T25): typing lists the searchable items' finds; Searchable items turns a source off and
+// its finds go, and a find opens its app.
+const icsSearchableItems = async h => {
+  await h.openApp('search');
+  await h.type('#viewport [data-ga-qsb]', 'alex');
+  h.check('People finds the contact', await h.until(`[...document.querySelectorAll('#viewport .ga-qsb-hit')].some(b => /Alex Morgan/.test(b.textContent))`));
+  await h.type('#viewport [data-ga-qsb]', 'coffee');
+  h.check('Messaging is off by default', await h.until(`!document.querySelector('#viewport .ga-qsb-hit')`));
+  await h.tap('#viewport [data-action="ga-qsb-sources"]');
+  h.check('Searchable items lists the sources', await h.until(`document.querySelectorAll('#viewport .ga-qsb-source').length === 8`));
+  await h.tap('#viewport .ga-qsb-source[data-id="messaging"]');
+  await h.tap('#viewport .ga-qsb-source[data-id="people"]');
+  h.check('the choices are kept', JSON.stringify(await store(h, 'gaQsbSources')) === JSON.stringify({messaging: true, people: false}));
+  await h.key('Escape');
+  await h.type('#viewport [data-ga-qsb]', 'coffee');
+  h.check('Messaging now finds the message', await h.until(`[...document.querySelectorAll('#viewport .ga-qsb-hit')].some(b => /coffee/.test(b.textContent))`));
+  await h.type('#viewport [data-ga-qsb]', 'alex');
+  h.check('People off finds no contact', await h.until(`![...document.querySelectorAll('#viewport .ga-qsb-hit')].some(b => /Alex Morgan/.test(b.textContent))`));
+  await h.type('#viewport [data-ga-qsb]', 'calc');
+  await h.tap('#viewport .ga-qsb-hit[data-action="ga-qsb-app"][data-id="calculator"]');
+  h.check('an app find opens the app', await h.until(`!!document.querySelector('#viewport .calculator, #viewport [class*="calc"]')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1698,6 +1720,7 @@ const CASES = [
   {id: 'T20', version: '4.3', name: 'YouTube › Add to, Like / Dislike, Copy URL, Share, Settings', run: jbYouTube},
   {id: 'T20', version: '4.4.4', name: 'YouTube › Settings', run: kkYouTubeSettings},
   {id: 'T20', version: '5.1.1', name: 'YouTube › Settings: General, Captions, Privacy, About', run: lpYouTubeSettings},
+  {id: 'T25', version: '4.0.4', name: 'Google Search › Searchable items filter the suggestions', run: icsSearchableItems},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

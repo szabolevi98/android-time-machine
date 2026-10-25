@@ -381,3 +381,18 @@
 /* Talk settings and Blocked friends: GTalkPreferencesActivity's Theme.Holo.Light action bar. */
 .ga-tk-lightbar{background:#f3f3f3;border-bottom:calc(1 * var(--dp)) solid #0000001f}
 .ga-tk-lightbar h2{color:#000}
+/* Google Search: the searchable items' suggestions (suggestion.xml: the source's icon, text1 and the smaller text2) and
+   SearchSettingsActivity's Searchable items (Theme.Holo: searchable_item_preference.xml rows, the 48 dp icon 6 dp in,
+   textAppearanceLarge title, textAppearanceSmall summary, the check box). */
+.ga-qsb-hit span{flex:1;min-width:0;display:flex;flex-direction:column}
+.ga-qsb-hit b{font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ga-qsb-hit small{font-size:calc(14 * var(--dp));color:#777;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ga-qsb-prefs{background:#000;color:#fff}
+.ga-qsb-bar{background:#222;color:#fff}
+.ga-qsb-note{flex:none;margin:0;padding:calc(12 * var(--dp)) calc(16 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #ffffff4d;font-size:calc(14 * var(--dp));color:#bebebe}
+.screen .ga-qsb-source{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:0 calc(8 * var(--dp)) 0 0;border:0;border-bottom:calc(1 * var(--dp)) solid #ffffff1f;background:none;color:#fff;text-align:left}
+.screen .ga-qsb-source:active{background:#33b5e566}
+.ga-qsb-source img{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin:0 calc(6 * var(--dp))}
+.ga-qsb-source span{flex:1;min-width:0;display:flex;flex-direction:column;margin:calc(6 * var(--dp)) calc(6 * var(--dp)) calc(6 * var(--dp)) calc(2 * var(--dp))}
+.ga-qsb-source b{font-weight:400;font-size:calc(22 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ga-qsb-source small{font-size:calc(14 * var(--dp));color:#bebebe}

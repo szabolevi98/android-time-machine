@@ -609,6 +609,11 @@
         save(); render();
       },
       notify(title) { addNotification(title, ''); },
+      // Google Search's searchable items open what they find: an app, a page, a contact, a conversation.
+      apps: apps.map(([id, name]) => [id, i18n.t(name), iconAssets.has(id) ? `assets/${id}.png` : '']),
+      openUrl(url) { openApp('browser'); navigateBrowser(url); },
+      openContact(id) { openApp('people'); ui.selectedContact = id; ui.sub = 'detail'; render(); },
+      openThread(key) { openMessageThread(key); render(); },
       listen() { clearTimeout(voiceDialTimer); ui.gaVoice = 'listening'; render(); voiceDialTimer = setTimeout(() => { ui.gaVoice = 'failed'; if (ui.view === 'voice-dialer') render(); }, 3000); }};
   }
   // The context Gmail's module renders and acts with.

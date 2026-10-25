@@ -287,6 +287,7 @@ versions/4.0.4/assets/ga-tk-ic_video_default_holo_dark.png	6557306270b550d0	copy
 versions/4.0.4/assets/ga-vd-ic_vd_mic_off.png	a1b3695f3ae86b03	copy	maguro:/system/app/VoiceDialer.apk!res/drawable-hdpi/ic_vd_mic_off.png	drawable-hdpi		a1b3695f3ae86b03
 versions/4.0.4/assets/ga-vd-ic_vd_mic_on.png	0cf08b5353243b47	copy	maguro:/system/app/VoiceDialer.apk!res/drawable-hdpi/ic_vd_mic_on.png	drawable-hdpi		0cf08b5353243b47
 versions/4.0.4/assets/ga-vd-ic_vd_retry.png	110e1c5e6b2f2c08	copy	maguro:/system/app/VoiceDialer.apk!res/drawable-hdpi/ic_vd_retry.png	drawable-hdpi		110e1c5e6b2f2c08
+versions/4.0.4/assets/ga-vs-ic_launcher_voicesearch.png	dd59a0d24de8af26	copy	maguro:/system/app/VoiceSearch.apk!res/mipmap-xhdpi/ic_launcher_voicesearch.png	mipmap-xhdpi		dd59a0d24de8af26
 versions/4.0.4/assets/ga-yt-avatar_missing.png	796e3d6bf71b02f0	copy	maguro:/system/app/YouTube.apk!res/drawable/avatar_missing.png	drawable		796e3d6bf71b02f0
 versions/4.0.4/assets/ga-yt-bg_button_normal.png	1cd21a502e33ec63	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/bg_button_normal.9.png	drawable-xhdpi		1cd21a502e33ec63
 versions/4.0.4/assets/ga-yt-bg_button_pressed.png	60de760565f51762	copy	maguro:/system/app/YouTube.apk!res/drawable-xhdpi/bg_button_pressed.9.png	drawable-xhdpi		60de760565f51762
