@@ -384,7 +384,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T29 — 4.0.4 System updates és TalkBack helyi felülete
 
 - **Ütem:** Második kör, #16. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `773f8ebb`. System updates: a Google Services Framework SystemUpdateActivity-je (Theme.Holo.NoActionBar, system_update_activity.xml) frissítés nélküli állapotban: „Your system is currently up to date”, „Last checked for update ^1.” a DateUtils elöljárós idejével, Check now a határozatlan folyamatjelzővel; az ellenőrzés mindig naprakészen ér véget, mert nincs frissítési szerver. TalkBack: a Settings ToggleAccessibilityServiceFragment-je (a szolgáltatás leírása, kapcsoló az action barban, „Use TalkBack?” biztonsági figyelmeztetés bekapcsolás előtt, „Stop TalkBack?” kikapcsolás előtt, Settings menüpont), a TalkBack 3.0.2 TalkBackPreferencesActivity-je (a user build telefonon maradó sorai: When to Speak, Feedback Settings, minta- és hanglisták); Explore by touch a System alatt csak bekapcsolt TalkBacknél, „Attention” figyelmeztetéssel. A szimulátor nem beszél: a kapcsolók és beállítások mentődnek, de képernyőolvasó-motor nincs (a feladatlap szerint nem része). Tutorial és a minták lejátszása korlát. Ellenőrzés: limits-regression T29 asztali/telefon zöld; npm test 255/255.
 - **Verziók:** 4.0.4.
 - **Forráscsoportok:** 4.0.4-17.
 - **Elkészítendő és határ:** System updates eredeti frissítési állapotképernyő; a tényleges OTA letöltés/telepítés nem része. TalkBack szolgáltatásrészletek, engedélyezési figyelmeztetés és saját prefsorok a maguro APK alapján; új, teljes rendszerű képernyőolvasó-motor nem része.
