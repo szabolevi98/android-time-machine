@@ -807,7 +807,7 @@
   }
   function openApp(app, resume = false) {
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
-    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt10Dialog = null; ui.lsPage = ''; ui.lsStack = []; ui.lsDialog = null; ui.driveFolder = ''; ui.driveFilter = ''; ui.driveNavItem = 'my'; ui.driveStack = []; ui.driveDialog = ''; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.lpmPage = ''; ui.mpoDialog = ''; }
+    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt10Dialog = null; ui.lsPage = ''; ui.lsStack = []; ui.lsDialog = null; ui.driveFolder = ''; ui.driveFilter = ''; ui.driveNavItem = 'my'; ui.driveStack = []; ui.driveDialog = ''; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.lpmPage = ''; ui.mpoDialog = ''; ui.paStack = []; ui.paMore = ''; }
     if(ui.locked)return;
     if (app === 'news-weather' && !resume) { ui.newsWeb = ''; ui.newsDialog = ''; ui.newsExpanded = ''; }
     if (GEL_ALIASES[app]) app = GEL_ALIASES[app];
@@ -897,6 +897,8 @@
     // Play Books' reader: a dropdown, then the Display options popup, then Contents close before the reader does.
     if (ui.view === 'play-books' && ui.sub === 'reader' && (ui.bkSpin || ui.bkOptions || ui.bkToc)) { if (ui.bkSpin) ui.bkSpin = ''; else if (ui.bkOptions) ui.bkOptions = false; else ui.bkToc = false; render(); return; }
     if (ui.view === 'play-books' && ui.sub === 'reader') { ui.bkOptions = false; ui.bkToc = false; ui.bkSpin = ''; }
+    // The Play apps' own pages (lp-play-more.js) go back to where they were opened.
+    if (PLAY_APPS.includes(ui.view) && PlayMore.back(ui)) { render(); return; }
     if (PLAY_APPS.includes(ui.view) && ui.sub) { ui.sub = ui.sub === 'queue' ? 'player' : ui.sub === 'player' ? ui.paReturn || '' : ui.sub === 'album' && ui.paFromSearch ? 'search' : ''; if (ui.sub !== 'album') ui.paFromSearch = ui.sub === 'search' && ui.paFromSearch; ui.paBars = true; render(); return; }
     if (ui.view === 'photos' && ui.sub === 'edit' && PlusEditor.back(peContext())) return;
     if (ui.view === 'photos' && ui.photosSpinner) { ui.photosSpinner = false; render(); return; }
@@ -1123,7 +1125,10 @@
     } else if (ui.overlay === 'lpx-overflow') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="lpa-menu">${LPExtraApps.menu(ui.view, key => i18n.t(key), i18n.locale()).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
     } else if (ui.overlay === 'pa-menu') {
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="lpa-menu">${PlayApps.menu(playContext(ui.view)).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
+      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="lpa-menu">${PlayApps.menu(playContext(ui.view)).map(item => `<button data-action="${item.action}"${item.id ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
+    } else if (ui.overlay === 'pa-more') {
+      // The Play apps' card, now playing and reader menus and their dialogs (lp-play-more.js).
+      overlayRoot.innerHTML = PlayMore.overlay(playContext(ui.view));
     } else if (ui.overlay === 'photos-menu') {
       overlayRoot.innerHTML = PhotosApp.menu({ui, t: key => i18n.t(key), locale: i18n.locale()});
     } else if (ui.overlay === 'photos-delete') {
@@ -2072,6 +2077,9 @@
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Gmail's label settings, Days of mail to sync and the vacation responder (gmail.js).
     if (action.startsWith('gmx-') && GmailApp.handlePref(action, id, {data, ui, save, render, toast, root: viewport})) return;
+    // A choice in a Play app's menu closes it before its action runs (lp-play-more.js handles its own).
+    if (ui.overlay === 'pa-more' && !action.startsWith('px-') && action !== 'close-overlay') { ui.overlay = ''; ui.paMore = ''; renderOverlay(); }
+    if (action.startsWith('px-') && PlayMore.handle(action, id, {...playContext(ui.view), save, saveMusic, render, renderOverlay, toast, root: viewport, openApp, shareText: driveShareText})) return;
     if (action.startsWith('drv-') && LPDrive.handle(action, id, {data, ui, save, render, renderOverlay, toast, root: viewport, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), shareFile: driveShareFile, shareText: driveShareText})) return;
     if (/^(hgp|mpo)-/.test(action)) {
       const ctx = {data, ui, save, render, renderOverlay, toast, root: viewport, openApp, openThread: key => openMessageThread(key)};

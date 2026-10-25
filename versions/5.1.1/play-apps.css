@@ -294,3 +294,44 @@ img.bk33-label{height:calc(23.9956 * var(--dp))}
 .screen .bk33-toc-list button:active{background:#0000001a}
 .bk33-toc-empty{flex:1;min-height:0}
 .bk33-toc-empty p{margin:0;padding:calc(16.0045 * var(--dp));font:400 calc(13.9956 * var(--dp)) Roboto,sans-serif;color:#0000008a}
+/* lp-play-more.js: the download marks, the settings pages in each settings theme (Music #EF6C00; Movies #A52714 with
+   the #ED3B3B accent; Books #0277BD; Games, Google Play services' GamesSettingsActivity, #263238 with #009688), all on
+   the themes' #EEEEEE windowBackground, Material preference rows, the card and reader menus' dialogs. */
+.pa-pin.on{background:var(--pa);color:#fff!important}
+.pa-kept{position:absolute;left:calc(6 * var(--dp));bottom:calc(6 * var(--dp));width:calc(24 * var(--dp));height:calc(24 * var(--dp));padding:calc(4.5 * var(--dp));border-radius:50%;background:var(--pa);color:#fff;box-sizing:border-box}
+.pa-kept svg{display:block;width:100%;height:100%}
+.screen .lpx-page{--lpx:var(--pa);background:#eee}
+.screen .lpx-music{--pa:#ef6c00;--lpx:#ef6c00}.screen .lpx-movies{--pa:#a52714;--lpx:#ed3b3b}.screen .lpx-books{--pa:#0277bd;--lpx:#0277bd}.screen .lpx-games{--pa:#263238;--lpx:#009688}
+.lpx-dialog.pa-music{--lpx:#ef6c00}.lpx-dialog.pa-movies{--lpx:#ed3b3b}.lpx-dialog.pa-books{--lpx:#0277bd}.lpx-dialog.pa-games{--lpx:#009688}
+.lpx-cat{margin:0;padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(4 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:var(--lpx)}
+.screen .lpx-row{display:flex;align-items:center;width:100%;min-height:calc(72 * var(--dp));padding:calc(16 * var(--dp));border:0;background:none;text-align:left}
+.lpx-row.off{opacity:.38}
+.lpx-row>span{flex:1;min-width:0;display:flex;flex-direction:column}
+.lpx-row b{font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.lpx-row small{margin-top:calc(2 * var(--dp));font:400 calc(14 * var(--dp))/1.35 Roboto,sans-serif;color:#0000008a}
+.screen .lpx-row:not(.lpx-info):not(.off):active,.screen .lpx-choice:active,.screen .lpx-buttons button:active{background:#0000001a}
+.lpx-check{flex:none;position:relative;width:calc(18 * var(--dp));height:calc(18 * var(--dp));margin:0 calc(3 * var(--dp)) 0 calc(16 * var(--dp));box-sizing:border-box;border:calc(2 * var(--dp)) solid #0000008a;border-radius:calc(2 * var(--dp))}
+.lpx-check.on{border-color:var(--lpx);background:var(--lpx)}
+.lpx-check.on::after{content:'';position:absolute;left:calc(4.5 * var(--dp));top:calc(.5 * var(--dp));width:calc(4 * var(--dp));height:calc(9 * var(--dp));border:solid #fff;border-width:0 calc(2 * var(--dp)) calc(2 * var(--dp)) 0;transform:rotate(45deg)}
+.lpx-empty{margin:0;padding:calc(48 * var(--dp)) calc(24 * var(--dp));text-align:center;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#0000008a}
+.lpx-about,.lpx-player{display:flex;gap:calc(16 * var(--dp));padding:calc(16 * var(--dp));background:#fff}
+.screen .lpx-about-cover{flex:none;width:calc(96 * var(--dp));padding:0;border:0;background:none;box-shadow:0 calc(1 * var(--dp)) calc(3 * var(--dp)) #0000004d}
+.lpx-about-cover svg{display:block;width:100%}
+.lpx-player>:first-child{flex:none;width:calc(96 * var(--dp));height:calc(96 * var(--dp));border-radius:50%;overflow:hidden}
+.lpx-about h2,.lpx-player h2{margin:0 0 calc(4 * var(--dp));font:400 calc(20 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.lpx-about p,.lpx-player p{margin:0 0 calc(8 * var(--dp));font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#0000008a}
+.lpx-about-text{margin:0;padding:0 calc(16 * var(--dp)) calc(16 * var(--dp));background:#fff;font:400 calc(14 * var(--dp))/1.5 Roboto,sans-serif;color:#000000b3}
+.lpx-scrim{background:#00000080}
+.lpx-dialog{position:absolute;z-index:41;left:calc(24 * var(--dp));right:calc(24 * var(--dp));top:50%;transform:translateY(-50%);max-height:80%;display:flex;flex-direction:column;padding-bottom:calc(8 * var(--dp));background:#fff;border-radius:calc(2 * var(--dp));box-shadow:0 calc(12 * var(--dp)) calc(24 * var(--dp)) #0000004d}
+.lpx-dialog h3{flex:none;margin:0;padding:calc(24 * var(--dp)) calc(24 * var(--dp)) calc(12 * var(--dp));font:500 calc(20 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.lpx-list{overflow-y:auto;max-height:calc(300 * var(--dp))}
+.screen .lpx-choice{display:flex;align-items:center;gap:calc(20 * var(--dp));width:100%;min-height:calc(48 * var(--dp));padding:0 calc(24 * var(--dp));border:0;background:none;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.lpx-choice span{flex:1}
+.lpx-choice i{flex:none;position:relative;width:calc(20 * var(--dp));height:calc(20 * var(--dp));box-sizing:border-box;border:calc(2 * var(--dp)) solid #0000008a;border-radius:50%}
+.lpx-choice.on i{border-color:var(--lpx)}
+.lpx-choice.on i::after{content:'';position:absolute;inset:calc(3 * var(--dp));border-radius:50%;background:var(--lpx)}
+.lpx-choice.app img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.lpx-msg{margin:0;padding:0 calc(24 * var(--dp)) calc(16 * var(--dp));font:400 calc(16 * var(--dp))/1.4 Roboto,sans-serif;color:#0000008a}
+.screen .lpx-edit{display:block;width:calc(100% - calc(48 * var(--dp)));margin:calc(8 * var(--dp)) calc(24 * var(--dp)) calc(16 * var(--dp));padding:calc(6 * var(--dp)) 0;border:0;border-bottom:calc(2 * var(--dp)) solid var(--lpx);font:400 calc(16 * var(--dp)) Roboto,sans-serif;outline:0;background:none}
+.lpx-buttons{flex:none;display:flex;justify-content:flex-end;padding:0 calc(8 * var(--dp))}
+.screen .lpx-buttons button{min-width:calc(64 * var(--dp));height:calc(36 * var(--dp));margin-left:calc(8 * var(--dp));padding:0 calc(8 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:var(--lpx);text-transform:uppercase}

@@ -117,8 +117,11 @@
   // no overflow: Settings, Help and Send feedback are drawer actions.
   const musicActions = ctx => `<button class="pa-btn" data-action="pa-search" aria-label="${e(S(ctx, 'music', 'Search'))}"><img class="lpa-icon" src="assets/pm58-ic_search_white.png" alt=""></button>`;
   const btn = (action, label, icon, id = '') => `<button class="pa-btn" data-action="${action}"${id ? ` data-id="${e(id)}"` : ''} aria-label="${e(label)}">${glyph[icon]}</button>`;
-  const section = (title, chip = '', chipAction = '') => `<div class="pa-section"><h3>${e(title)}</h3>${chip ? `<button class="pa-chip" data-action="${chipAction}">${e(chip)}</button>` : ''}</div>`;
-  const card = ({action, id, artHtml, title, sub, note = '', pin = false, cls = ''}) => `<div class="pa-card${cls}" role="button" tabindex="0" data-action="${action}" data-id="${e(id)}" aria-label="${e(title)}"><div class="pa-card-art">${artHtml}</div><div class="pa-card-copy"><b>${e(title)}</b><small>${e(sub)}</small>${note ? `<i>${e(note)}</i>` : ''}<button class="pa-dots" data-action="pa-unsupported" aria-label="More options">${glyph.overflow}</button>${pin ? `<button class="pa-pin" data-action="pa-unsupported" aria-label="Keep on device">${glyph.pin}</button>` : ''}</div></div>`;
+  const section = (title, chip = '', chipAction = '', chipId = '') => `<div class="pa-section"><h3>${e(title)}</h3>${chip ? `<button class="pa-chip" data-action="${chipAction}"${chipId ? ` data-id="${e(chipId)}"` : ''}>${e(chip)}</button>` : ''}</div>`;
+  // The card's overflow opens its own menu (doc: "album:…", "movie:…", "book:…"; lp-play-more.js); a store card's opens
+  // the store. The pin is Play Movies' download; kept marks a downloaded album or book.
+  const card = ({action, id, artHtml, title, sub, note = '', pin = false, pinned = false, kept = false, doc = '', cls = ''}) => `<div class="pa-card${cls}" role="button" tabindex="0" data-action="${action}" data-id="${e(id)}" aria-label="${e(title)}"><div class="pa-card-art">${artHtml}${kept ? `<span class="pa-kept">${glyph.pin}</span>` : ''}</div><div class="pa-card-copy"><b>${e(title)}</b><small>${e(sub)}</small>${note ? `<i>${e(note)}</i>` : ''}<button class="pa-dots" data-action="${doc ? 'px-doc' : action === 'pa-shop' ? 'pa-shop' : 'pa-unsupported'}"${doc ? ` data-id="${e(doc)}"` : ''} aria-label="More options">${glyph.overflow}</button>${pin ? `<button class="pa-pin${pinned ? ' on' : ''}" data-action="${doc ? 'px-movie-pin' : 'pa-unsupported'}" data-id="${e(id)}" aria-label="${pinned ? 'Remove download' : 'Download'}">${glyph.pin}</button>` : ''}</div></div>`;
+  const keptAlbum = (ctx, album) => !!window.PlayMore?.kept(ctx.data).includes(album);
 
   // ---- Play Music ----
   function albums(tracks) {
@@ -141,9 +144,9 @@
     if (q) {
       const artists = [...new Set(tracks.map(track => track.artist))].filter(has), found = list.filter(album => has(album.album)), songs = tracks.map((track, id) => ({track, id})).filter(({track}) => has(track.title));
       if (!artists.length && !found.length && !songs.length) body = `<div class="pm-search-empty"><img src="assets/pm58-ic_empty_state_search.png" alt=""><p>${e(m('No results found.'))}</p></div>`;
-      else body = (artists.length ? section(m('Artists'), more(artists.length, 4), 'pa-unsupported') + `<div class="pa-grid">${artists.slice(0, 4).map(artist => card({action: 'pa-album', id: list.find(album => album.artist === artist).album, artHtml: art('cover', seedOf(artist), artist), title: artist, sub: ''})).join('')}</div>` : '')
-        + (found.length ? section(m('Albums'), more(found.length, 4), 'pa-unsupported') + `<div class="pa-grid">${found.slice(0, 4).map(album => card({action: 'pa-album', id: album.album, artHtml: art('cover', seedOf(album.album), album.album, album.artist), title: album.album, sub: album.artist})).join('')}</div>` : '')
-        + (songs.length ? section(m('Songs'), more(songs.length, 5), 'pa-unsupported') + `<div class="pm-songs">${songs.slice(0, 5).map(({track, id}) => `<button class="pm-song${id === state.track ? ' on' : ''}" data-action="pa-song" data-id="${id}" data-queue="all"><span class="pm-qart">${art('cover', seedOf(track.album), track.album)}</span><span><b>${e(track.title)}</b><small>${e(track.artist)}</small></span></button>`).join('')}</div>` : '');
+      else body = (artists.length ? section(m('Artists'), more(artists.length, 4), 'px-more', 'artists') + `<div class="pa-grid">${artists.slice(0, 4).map(artist => card({action: 'px-artist', id: artist, doc: `artist:${artist}`, artHtml: art('cover', seedOf(artist), artist), title: artist, sub: ''})).join('')}</div>` : '')
+        + (found.length ? section(m('Albums'), more(found.length, 4), 'px-more', 'albums') + `<div class="pa-grid">${found.slice(0, 4).map(album => card({action: 'pa-album', id: album.album, doc: `album:${album.album}`, kept: keptAlbum(ctx, album.album), artHtml: art('cover', seedOf(album.album), album.album, album.artist), title: album.album, sub: album.artist})).join('')}</div>` : '')
+        + (songs.length ? section(m('Songs'), more(songs.length, 5), 'px-more', 'songs') + `<div class="pm-songs">${songs.slice(0, 5).map(({track, id}) => `<button class="pm-song${id === state.track ? ' on' : ''}" data-action="pa-song" data-id="${id}" data-queue="all"><span class="pm-qart">${art('cover', seedOf(track.album), track.album)}</span><span><b>${e(track.title)}</b><small>${e(track.artist)}</small></span></button>`).join('')}</div>` : '');
     }
     return `<div class="app-view pa-app pa-music pm-search"><header class="lpa-bar pm-searchbar"><button class="lpa-nav up" data-action="back" aria-label="${e(ctx.t('Back'))}"><span></span></button><label class="pm-sv"><input data-pa-search value="${e(ui.paQuery || '')}" placeholder="${e(m('Search music'))}" aria-label="${e(m('Search music'))}" autocomplete="off" spellcheck="false">${ui.paQuery ? `<button class="pm-sv-clear" data-action="pa-search-clear" aria-label="${e(m('Clear query'))}"></button>` : ''}</label></header><div class="pa-scroll">${body}</div>${miniPlayer(ctx)}</div>`;
   }
@@ -153,7 +156,7 @@
     const time = ctx.time;
     if (ui.sub === 'player' || ui.sub === 'queue') {
       const track = tracks[state.track], thumbs = ctx.data.playMusicThumbs || {};
-      const head = `<header class="pm-np-head"><button class="pm-np-back" data-action="back" aria-label="${e(t('Back'))}"><span class="pm-np-art">${art('cover', seedOf(track.album), track.album)}</span><span class="pm-np-copy"><b>${e(track.title)}</b><small>${e(track.artist)}</small></span></button>${btn('pa-queue', t('Queue'), 'queue')}${btn('pa-unsupported', t('More options'), 'overflow')}</header>`;
+      const head = `<header class="pm-np-head"><button class="pm-np-back" data-action="back" aria-label="${e(t('Back'))}"><span class="pm-np-art">${art('cover', seedOf(track.album), track.album)}</span><span class="pm-np-copy"><b>${e(track.title)}</b><small>${e(track.artist)}</small></span></button>${btn('pa-queue', t('Queue'), 'queue')}${btn('px-np', t('More options'), 'overflow')}</header>`;
       const body = ui.sub === 'queue'
         ? `<div class="pm-queue"><h4>${e(t('QUEUE'))}</h4>${state.queue.map(id => `<button class="pm-queue-row${id === state.track ? ' on' : ''}" data-action="pa-song" data-id="${id}" data-queue="keep"><i class="pm-grip"></i><span class="pm-qart">${art('cover', seedOf(tracks[id].album), tracks[id].album)}</span><span><b>${e(tracks[id].title)}</b><small>${e(tracks[id].artist)}</small></span>${id === state.track ? '<em class="pm-eq"><i></i><i></i><i></i></em>' : ''}</button>`).join('')}</div>`
         : `<div class="pm-np-art-big">${art('cover', seedOf(track.album), track.album, track.artist)}<button class="pm-thumb up${thumbs[state.track] === 1 ? ' on' : ''}" data-action="pa-thumb" data-id="1" aria-label="${e(t('Thumbs up'))}">${glyph.thumbUp}</button><button class="pm-thumb down${thumbs[state.track] === -1 ? ' on' : ''}" data-action="pa-thumb" data-id="-1" aria-label="${e(t('Thumbs down'))}">${glyph.thumbDown}</button><span class="pm-time music-elapsed">${time(state.position)}</span><span class="pm-time end">${time(track.duration)}</span></div>`;
@@ -167,12 +170,12 @@
     let body = '', title = m('Listen Now'), subtitle = '', tabBar = '';
     if (page === 'listen') {
       const reasons = ['Recently played', 'Recently added to My Library', 'Recently played'].map(m);
-      body = `<div class="pa-grid">${list.map((album, i) => card({action: 'pa-album', id: album.album, artHtml: art('cover', seedOf(album.album), album.album, album.artist), title: album.album, sub: album.artist, note: reasons[i % reasons.length]})).join('')}</div>`;
+      body = `<div class="pa-grid">${list.map((album, i) => card({action: 'pa-album', id: album.album, doc: `album:${album.album}`, kept: keptAlbum(ctx, album.album), artHtml: art('cover', seedOf(album.album), album.album, album.artist), title: album.album, sub: album.artist, note: reasons[i % reasons.length]})).join('')}</div>`;
     } else if (page === 'library') {
       title = m('My Library');
       const tab = ui.paMusicTab || 'albums';
       const tabs = [['genres', 'Genres'], ['artists', 'Artists'], ['albums', 'Albums'], ['songs', 'Songs']];
-      const content = tab === 'albums' ? `<div class="pa-grid">${list.map(album => card({action: 'pa-album', id: album.album, artHtml: art('cover', seedOf(album.album), album.album, album.artist), title: album.album, sub: album.artist})).join('')}</div>`
+      const content = tab === 'albums' ? `<div class="pa-grid">${list.map(album => card({action: 'pa-album', id: album.album, doc: `album:${album.album}`, kept: keptAlbum(ctx, album.album), artHtml: art('cover', seedOf(album.album), album.album, album.artist), title: album.album, sub: album.artist})).join('')}</div>`
         : tab === 'songs' ? `<div class="pm-songs">${tracks.map((track, id) => `<button class="pm-song${id === state.track ? ' on' : ''}" data-action="pa-song" data-id="${id}" data-queue="all"><span class="pm-qart">${art('cover', seedOf(track.album), track.album)}</span><span><b>${e(track.title)}</b><small>${e(track.artist)}</small></span><time>${time(track.duration)}</time></button>`).join('')}</div>`
         : tab === 'artists' ? `<div class="pm-songs">${[...new Set(tracks.map(track => track.artist))].map(artist => `<button class="pm-song" data-action="pa-album" data-id="${e(list.find(album => album.artist === artist).album)}"><span class="pm-qart">${art('cover', seedOf(artist), artist)}</span><span><b>${e(artist)}</b><small>${e(AndroidStrings.format(t('%d albums'), list.filter(album => album.artist === artist).length))}</small></span></button>`).join('')}</div>`
         : `<div class="pm-songs"><button class="pm-song" data-action="pa-libtab" data-id="albums"><span class="pm-qart">${art('cover', 3, 'Pop')}</span><span><b>${e(t('Pop'))}</b><small>${e(AndroidStrings.format(t('%d albums'), list.length))}</small></span></button></div>`;
@@ -185,7 +188,7 @@
       title = m('Instant Mixes');
       const tab = ui.paMixTab || 'recommended';
       tabBar = lpTabs([['mine', m('My mixes')], ['recommended', m('Recommended')]], tab, 'pa-mixtab');
-      body = tab === 'recommended' ? `<div class="pa-grid">${list.map(album => card({action: 'pa-album', id: album.album, artHtml: art('cover', seedOf(album.album) + 3, album.album), title: album.album, sub: album.artist})).join('')}</div>` : '';
+      body = tab === 'recommended' ? `<div class="pa-grid">${list.map(album => card({action: 'pa-album', id: album.album, doc: `album:${album.album}`, artHtml: art('cover', seedOf(album.album) + 3, album.album), title: album.album, sub: album.artist})).join('')}</div>` : '';
     } else {
       title = m('Playlists');
       const auto = [['Thumbs up', Object.values(ctx.data.playMusicThumbs || {}).filter(v => v === 1).length], ['Last added', tracks.length]];
@@ -203,7 +206,7 @@
     const hint = s(movies ? 'Search for movies & shows' : 'Search Google Play'), clear = s('Clear query');
     const has = text => String(text).toLocaleLowerCase().includes(q);
     let rows = '';
-    if (q && movies) rows = [...MOVIES, ...SHOWS].filter(item => has(item.title)).map(item => `<button class="pa-suggest-row" data-action="${MOVIES.includes(item) ? 'pa-movie' : 'pa-unsupported'}" data-id="${e(item.id)}"><span class="pa-suggest-art">${art('poster', seedOf(item.id), item.title)}</span><span><b>${e(item.title)}</b></span></button>`).join('');
+    if (q && movies) rows = [...MOVIES, ...SHOWS].filter(item => has(item.title)).map(item => `<button class="pa-suggest-row" data-action="pa-movie" data-id="${e(item.id)}"><span class="pa-suggest-art">${art('poster', seedOf(item.id), item.title)}</span><span><b>${e(item.title)}</b></span></button>`).join('');
     if (q && !movies) rows = BOOKS.filter(book => has(book.title) || has(book.author)).map(book => `<button class="pa-suggest-row" data-action="pa-book" data-id="${e(book.id)}"><span class="pa-suggest-art">${art('book', seedOf(book.id), book.title)}</span><span><b>${e(book.title)}</b><small>${e(book.author)}</small></span></button>`).join('') + `<button class="pa-suggest-row market" data-action="pa-unsupported"><span><b>${e(s('Search Google Play'))}</b></span></button>`;
     return `<div class="app-view pa-app ${movies ? 'pa-movies' : 'pa-books'} pm-search"><header class="lpa-bar pm-searchbar"><button class="lpa-nav up" data-action="back" aria-label="${e(ctx.t('Back'))}"><span></span></button><label class="pm-sv"><input data-pa-search value="${e(ui.paQuery || '')}" placeholder="${e(hint)}" aria-label="${e(hint)}" autocomplete="off" spellcheck="false">${ui.paQuery ? `<button class="pm-sv-clear" data-action="pa-search-clear" aria-label="${e(clear)}"></button>` : ''}</label></header>${rows ? `<div class="pa-suggest ${movies ? 'movies' : 'books'}">${rows}</div>` : ''}</div>`;
   }
@@ -218,7 +221,8 @@
     }
     // search_menu: Search (always) and the media route button (only with a cast device); no overflow.
     const actions = `<button class="pa-btn" data-action="pa-search" aria-label="${e(v('Search'))}"><img class="lpa-icon" src="assets/mv36-abc_ic_search_api_mtrl_alpha.png" alt=""></button>`;
-    const movieCard = m => card({action: 'pa-movie', id: m.id, artHtml: art('poster', seedOf(m.id), m.title), title: m.title, sub: `${m.year}, ${AndroidStrings.format(t('%d mins.'), m.mins)}`, pin: true});
+    const device = window.PlayMore ? window.PlayMore.onDevice(ctx.data) : [];
+    const movieCard = m => card({action: 'pa-movie', id: m.id, doc: `movie:${m.id}`, artHtml: art('poster', seedOf(m.id), m.title), title: m.title, sub: `${m.year}, ${AndroidStrings.format(t('%d mins.'), m.mins)}`, pin: true, pinned: device.includes(m.id)});
     const shopCard = m => card({action: 'pa-shop', id: m.id, artHtml: art('poster', seedOf(m.id), m.title), title: m.title, sub: `${m.year} · ${m.price}`});
     let body, tabBar = '';
     if (page === 'watch') body = `<div class="pa-grid">${MOVIES.filter(m => m.progress).map(m => card({action: 'pa-movie', id: m.id, artHtml: art('poster', seedOf(m.id), m.title) + `<i class="pm-progress-strip" style="--p:${m.progress * 100}%"></i>`, title: m.title, sub: AndroidStrings.format(t('%d% watched'), Math.round(m.progress * 100))})).join('')}</div>${section(v('Recommended for You'), v('Shop'), 'pa-shop')}<div class="pa-grid">${RECOMMENDED.map(shopCard).join('')}</div>`;
@@ -227,7 +231,7 @@
       // MyLibraryFragment pages the movies and shows verticals (VerticalsHelper's titles) under PlayHeaderListLayout tabs.
       const tab = ui.paMovieTab || 'movies';
       tabBar = lpTabs([['movies', v('My Movies')], ['shows', v('My TV Shows')]], tab, 'pa-movietab');
-      body = tab === 'shows' ? `<div class="pa-grid">${SHOWS.map(show => card({action: 'pa-movie', id: show.id, artHtml: art('poster', seedOf(show.id), show.title), title: show.title, sub: AndroidStrings.format(t('%d episodes'), show.episodes), pin: true})).join('')}</div>` : `<div class="pa-grid">${MOVIES.map(movieCard).join('')}</div>`;
+      body = tab === 'shows' ? `<div class="pa-grid">${SHOWS.map(show => card({action: 'pa-movie', id: show.id, doc: `movie:${show.id}`, artHtml: art('poster', seedOf(show.id), show.title), title: show.title, sub: AndroidStrings.format(t('%d episodes'), show.episodes), pin: true, pinned: device.includes(show.id)})).join('')}</div>` : `<div class="pa-grid">${MOVIES.map(movieCard).join('')}</div>`;
     }
     const title = v(APPS['play-movies'].pages.find(p => p[0] === page)[1]);
     return `<div class="app-view pa-app pa-movies">${bar(ctx, {title, actions, tabs: tabBar})}<div class="pa-scroll">${body}</div></div>`;
@@ -278,7 +282,9 @@
     const b = key => S(ctx, 'books', key), tab = ctx.ui.bkTocTab || 'chapters';
     const current = book.starts.filter(start => start <= index).length - 1;
     const tabs = [['chapters', 'Chapters'], ['bookmarks', 'Bookmarks'], ['notes', 'Notes']].map(([id, key]) => `<button class="${tab === id ? 'on' : ''}" data-action="bk-toc-tab" data-id="${id}">${e(b(key))}</button>`).join('');
-    const body = tab === 'chapters' ? `<div class="bk33-toc-list">${book.starts.map((start, n) => `<button class="${n === current ? 'current' : ''}" data-action="bk-chapter" data-id="${start}"><span>${e(book.pages[start].replace(/\n/g, ' '))}</span><em>${start + 1}</em></button>`).join('')}</div>`
+    const marks = window.PlayMore ? window.PlayMore.bookmarks(ctx.data)[book.id] || [] : [];
+    const body = tab === 'bookmarks' && marks.length ? `<div class="bk33-toc-list">${marks.map(at => `<button data-action="bk-chapter" data-id="${at}"><span>${e(book.pages[at].replace(/\n/g, ' '))}</span><em>${at + 1}</em></button>`).join('')}</div>`
+      : tab === 'chapters' ? `<div class="bk33-toc-list">${book.starts.map((start, n) => `<button class="${n === current ? 'current' : ''}" data-action="bk-chapter" data-id="${start}"><span>${e(book.pages[start].replace(/\n/g, ' '))}</span><em>${start + 1}</em></button>`).join('')}</div>`
       : `<div class="bk33-toc-empty">${tab === 'bookmarks' ? `<p>${e(b('To add a bookmark, touch the top corner of the page'))}</p>` : ''}</div>`;
     return `<div class="app-view pa-app bk33-toc"><header class="bk33-toc-head"><div class="bk33-toc-bar"><button data-action="bk-toc" aria-label="${e(b('Close table of contents'))}"><img src="assets/bk33-ic_close_wht_24dp.png" alt=""></button><b>${e(book.title)}</b></div><nav class="bk33-toc-tabs">${tabs}</nav></header>${body}</div>`;
   }
@@ -291,17 +297,19 @@
       const heading = book.starts.includes(index), pr = bookPrefs(data), night = pr.theme === '1', b = key => S(ctx, 'books', key);
       const text = book.pages[index].split('\n').filter(Boolean).map((p, i) => heading ? `<h2${i ? ' class="sub"' : ''}>${e(p)}</h2>` : `<p>${e(p)}</p>`).join('');
       const style = `--bk-zoom:${pr.textZoom};--bk-lh:${(pr.lineHeight / 1.5).toFixed(4)};--bk-dim:${pr.brightness < 0 ? 0 : ((100 - pr.brightness) / 100 * .7).toFixed(3)}`;
-      return `<div class="app-view pa-app pb-reader bk33-theme-${THEME_KEYS[pr.theme] || 'day'} bk33-face-${e(pr.typeface)} bk33-just-${e(pr.justification)}${ui.paBars === false && !ui.bkOptions ? ' bare' : ''}" style="${style}"><header class="pb-top${night ? ' bk33-dark' : ''}"><button class="lpa-nav up dark" data-action="back" aria-label="${e(t('Back'))}"><span></span></button><span><b>${e(book.title)}</b><small>${e(book.author)}</small></span><button class="pa-btn bk33-action" data-action="bk-toc" aria-label="${e(b('Contents'))}"><img src="assets/bk33-ic_toc_24dp.png" alt=""></button><button class="pa-btn bk33-action${ui.bkOptions ? ' on' : ''}" data-action="bk-options" aria-label="${e(b('Display options'))}"><img src="assets/bk33-ic_text_format_24dp.png" alt=""></button>${btn('pa-unsupported', t('More options'), 'overflow')}</header><div class="pb-page" data-action="pa-reader-tap">${text}</div><footer class="pb-bottom"><i style="--p:${(index / Math.max(1, book.pages.length - 1) * 100).toFixed(1)}%"></i><span>${index + 1} / ${book.pages.length}</span></footer><div class="bk33-dim"></div>${ui.bkOptions ? displayOptions(ctx, pr) : ''}</div>`;
+      return `<div class="app-view pa-app pb-reader bk33-theme-${THEME_KEYS[pr.theme] || 'day'} bk33-face-${e(pr.typeface)} bk33-just-${e(pr.justification)}${ui.paBars === false && !ui.bkOptions ? ' bare' : ''}" style="${style}"><header class="pb-top${night ? ' bk33-dark' : ''}"><button class="lpa-nav up dark" data-action="back" aria-label="${e(t('Back'))}"><span></span></button><span><b>${e(book.title)}</b><small>${e(book.author)}</small></span><button class="pa-btn bk33-action" data-action="bk-toc" aria-label="${e(b('Contents'))}"><img src="assets/bk33-ic_toc_24dp.png" alt=""></button><button class="pa-btn bk33-action${ui.bkOptions ? ' on' : ''}" data-action="bk-options" aria-label="${e(b('Display options'))}"><img src="assets/bk33-ic_text_format_24dp.png" alt=""></button>${btn('px-reader-menu', t('More options'), 'overflow')}</header><div class="pb-page" data-action="pa-reader-tap">${text}</div><footer class="pb-bottom"><i style="--p:${(index / Math.max(1, book.pages.length - 1) * 100).toFixed(1)}%"></i><span>${index + 1} / ${book.pages.length}</span></footer><div class="bk33-dim"></div>${ui.bkOptions ? displayOptions(ctx, pr) : ''}</div>`;
     }
     const cover = b => art('book', seedOf(b.id), b.title, b.author);
     // menu/fragment_home.xml: Search (always) and Sort (ifRoom, My Library only) as icons, Refresh in the overflow.
-    const icon = (action, label, src) => `<button class="pa-btn" data-action="${action}" aria-label="${e(label)}"><img class="lpa-icon" src="assets/${src}.png" alt=""></button>`;
-    const actions = icon('pa-search', b('Search'), 'bk33-ic_search_wht_24dp') + (page === 'library' ? icon('pa-unsupported', b('Sort'), 'bk33-ic_sort_wht_24dp') : '') + icon('pa-menu', t('More options'), 'bk33-abc_ic_menu_moreoverflow_mtrl_alpha');
+    const icon = (action, label, src, id = '') => `<button class="pa-btn" data-action="${action}"${id ? ` data-id="${id}"` : ''} aria-label="${e(label)}"><img class="lpa-icon" src="assets/${src}.png" alt=""></button>`;
+    const actions = icon('pa-search', b('Search'), 'bk33-ic_search_wht_24dp') + (page === 'library' ? icon('px-dialog', b('Sort'), 'bk33-ic_sort_wht_24dp', 'sort') : '') + icon('pa-menu', t('More options'), 'bk33-abc_ic_menu_moreoverflow_mtrl_alpha');
     // My Library pages LibraryFilter's non-empty filters (books_view_pager) as PlayHeaderListLayout tabs.
     const tabBar = page === 'library' ? lpTabs([['all', b('All books')], ['purchases', b('Purchases')]], ui.bkFilterTab || 'all', 'pa-bookstab') : '';
+    // The library in the Sort order without what was deleted; a book not downloaded loses its pin.
+    const library = window.PlayMore ? window.PlayMore.libraryBooks(ctx) : BOOKS, notKept = window.PlayMore ? window.PlayMore.booksState(data).notKept : [];
     const body = page === 'read'
-      ? `${section(b('Recent'), b('SEE ALL'), 'pa-see-all')}<div class="pa-grid pb-covers">${BOOKS.map(b => `<div class="pb-cover" role="button" tabindex="0" data-action="pa-book" data-id="${b.id}" aria-label="${e(b.title)}">${cover(b)}<span class="pb-pinned">${glyph.pin}</span></div>`).join('')}</div>`
-      : `<div class="pa-grid">${BOOKS.map(b => card({action: 'pa-book', id: b.id, artHtml: cover(b), title: b.title, sub: b.author, note: progress[b.id] ? AndroidStrings.format(t('%d% read'), Math.round(progress[b.id] / (b.pages.length - 1) * 100)) : ''})).join('')}</div>`;
+      ? `${section(b('Recent'), b('SEE ALL'), 'pa-see-all')}<div class="pa-grid pb-covers">${library.map(b => `<div class="pb-cover" role="button" tabindex="0" data-action="pa-book" data-id="${b.id}" aria-label="${e(b.title)}">${cover(b)}${notKept.includes(b.id) ? '' : `<span class="pb-pinned">${glyph.pin}</span>`}</div>`).join('')}</div>`
+      : `<div class="pa-grid">${library.map(b => card({action: 'pa-book', id: b.id, doc: `book:${b.id}`, kept: !notKept.includes(b.id), artHtml: cover(b), title: b.title, sub: b.author, note: progress[b.id] ? AndroidStrings.format(t('%d% read'), Math.round(progress[b.id] / (b.pages.length - 1) * 100)) : ''})).join('')}</div>`;
     return `<div class="app-view pa-app pa-books">${bar(ctx, {title: b(page === 'read' ? 'Read Now' : 'My Library'), actions, tabs: tabBar})}<div class="pa-scroll">${body}</div></div>`;
   }
 
@@ -313,18 +321,19 @@
     const {ui, t} = ctx, page = ui.paPage?.['play-games'] || 'now', p = key => S(ctx, 'games', key);
     const icon = g => art('icon', seedOf(g.id), g.title);
     const overflow = `<button class="pa-btn" data-action="pa-menu" aria-label="${e(t('More options'))}"><img class="lpa-icon" src="assets/pg22-abc_ic_menu_moreoverflow_mtrl_alpha.png" alt=""></button>`;
-    const gameCard = g => card({action: 'pa-game', id: g.id, artHtml: icon(g), title: g.title, sub: g.dev, note: `${g.got}/${g.achievements}`, cls: ' pg-game'});
-    const playerCard = (pl, i) => card({action: 'pa-unsupported', id: pl.name, artHtml: art('icon', i + 4, pl.name), title: pl.name, sub: pl.game});
+    const gameCard = g => card({action: 'pa-game', id: g.id, doc: `game:${g.id}`, artHtml: icon(g), title: g.title, sub: g.dev, note: `${g.got}/${g.achievements}`, cls: ' pg-game'});
+    const players = window.PlayMore ? window.PlayMore.players(ctx.data) : PLAYERS;
+    const playerCard = (pl, i) => card({action: 'px-player', id: pl.name, doc: `player:${pl.name}`, artHtml: art('icon', i + 4, pl.name), title: pl.name, sub: pl.game});
     const listRow = g => `<div class="pg-row" role="button" tabindex="0" data-action="pa-game" data-id="${g.id}"><span class="pg-icon">${icon(g)}</span><span class="pg-copy"><b>${e(g.title)}</b><small>${e(g.dev)}</small></span>${g.state === 'PURCHASED' ? `<em>${e(p('PURCHASED'))}</em>` : ''}</div>`;
     if (ui.sub === 'game') {
       const g = GAMES.find(item => item.id === ui.paItem) || GAMES[0];
       return `<div class="app-view pa-app pa-games">${bar(ctx, {title: g.title, up: true, actions: overflow})}<div class="pa-scroll"><div class="pg-hero">${art('poster', seedOf(g.id) + 1, '')}<span class="pg-hero-icon">${icon(g)}</span></div><div class="pg-detail"><b>${e(g.title)}</b><small>${e(g.dev)}</small><button class="pa-chip big" data-action="pa-game-play">${e(p('PLAY'))}</button></div>${section(p('Achievements'))}<div class="pg-achievements">${Array.from({length: Math.min(6, g.achievements)}, (_, i) => `<div class="pg-ach${i < g.got ? ' got' : ''}"><span>${glyph.trophy}</span><b>${e(AndroidStrings.format(t('Achievement %d'), i + 1))}</b><small>${e(t(i < g.got ? 'Unlocked' : 'Locked'))}</small></div>`).join('')}</div></div></div>`;
     }
     let body, tabBar = '';
-    if (page === 'now') body = `${section(p('Continue playing'))}<div class="pa-grid">${GAMES.slice(0, 2).map(gameCard).join('')}</div>${section(p('Discover new games'))}<div class="pg-list">${GAMES.slice(2).map(listRow).join('')}</div>${section(p('Add players you know'))}<div class="pa-grid">${PLAYERS.map(playerCard).join('')}</div>`;
+    if (page === 'now') body = `${section(p('Continue playing'))}<div class="pa-grid">${GAMES.slice(0, 2).map(gameCard).join('')}</div>${section(p('Discover new games'))}<div class="pg-list">${GAMES.slice(2).map(listRow).join('')}</div>${section(p('Add players you know'))}<div class="pa-grid">${players.map(playerCard).join('')}</div>`;
     else if (page === 'mine') body = `<div class="pa-grid">${GAMES.map(gameCard).join('')}</div>`;
     else if (page === 'inbox') body = `<div class="pg-null"><p>${e(p('Game on! See invitations and matches in progress here.'))}</p><button class="pa-chip big" data-action="pa-page" data-id="explore">${e(p('FIND MULTIPLAYER GAMES'))}</button></div>`;
-    else if (page === 'players') body = `<div class="pa-grid">${PLAYERS.map(playerCard).join('')}</div>`;
+    else if (page === 'players') body = `<div class="pa-grid">${players.map(playerCard).join('')}</div>`;
     else {
       const tab = ui.paGamesTab || 'featured';
       tabBar = lpTabs([['featured', p('FEATURED')], ['popular', p('POPULAR')], ['multiplayer', p('POPULAR MULTIPLAYER')]], tab, 'pa-gtab');
@@ -336,6 +345,8 @@
 
 
   function render(ctx) {
+    const more = window.PlayMore?.render(ctx);
+    if (more) return more;
     if (ctx.app === 'play-music') return music(ctx);
     if (ctx.app === 'play-movies') return movies(ctx);
     if (ctx.app === 'play-books') return books(ctx);
@@ -351,19 +362,18 @@
     // Books: HomeSideDrawer.populateDrawerActions: Read Now, My Library, Shop, then Settings and Help & feedback.
     // Games: the destination drawer's list (Play Now, My Games, Inbox, Players, Explore with games_ic_drawer_* icons), then
     // Settings and Help & Feedback.
-    if (ctx.app === 'play-games') { const p = key => S(ctx, 'games', key); return playDrawer(p('Play Games'), 'pg22-', [['now', p('Play Now'), 'games_ic_drawer_playnow'], ['mine', p('My Games'), 'games_ic_drawer_mygames'], ['inbox', p('Inbox'), 'games_ic_drawer_inbox'], ['players', p('Players'), 'games_ic_drawer_players'], ['explore', p('Explore'), 'games_ic_drawer_explore']], [[p('Settings')], [p('Help & Feedback')]], page, 'pm58-'); }
-    if (ctx.app === 'play-books') { const b = key => S(ctx, 'books', key); return playDrawer(b('Play Books'), 'bk33-', [['read', b('Read Now'), 'ic_drawer_readnow'], ['library', b('My Library'), 'ic_drawer_mylibrary'], ['shop', b('Shop'), 'ic_drawer_shop', 'pa-shop']], [[b('Settings')], [b('Help & feedback')]], page, 'mv36-'); }
-    if (ctx.app === 'play-movies') { const v = key => S(ctx, 'movies', key); return playDrawer(v('Google Play'), 'mv36-', [['watch', v('Watch Now'), 'ic_drawer_watchnow'], ['library', v('My Library'), 'ic_drawer_mymovielibrary'], ['wishlist', v('My Wishlist'), 'ic_drawer_wishlist'], ['shop', v('Shop'), 'ic_drawer_shop', 'pa-shop']], [[v('Settings')], [v('Help & feedback')]], page); }
-    if (ctx.app === 'play-music') { const m = key => S(ctx, 'music', key); return playDrawer(m('Play Music'), 'pm58-', [['listen', m('Listen Now'), 'ic_drawer_listennow'], ['library', m('My Library'), 'ic_drawer_mymusiclibrary'], ['playlists', m('Playlists'), 'ic_drawer_playlists'], ['mixes', m('Instant Mixes'), 'ic_drawer_radio'], ['shop', m('Shop'), 'ic_drawer_shop', 'pa-shop']], [[m('Settings')], [m('Help')], [m('Send feedback')]], page); }
+    if (ctx.app === 'play-games') { const p = key => S(ctx, 'games', key); return playDrawer(p('Play Games'), 'pg22-', [['now', p('Play Now'), 'games_ic_drawer_playnow'], ['mine', p('My Games'), 'games_ic_drawer_mygames'], ['inbox', p('Inbox'), 'games_ic_drawer_inbox'], ['players', p('Players'), 'games_ic_drawer_players'], ['explore', p('Explore'), 'games_ic_drawer_explore']], [[p('Settings'), 'px-settings'], [p('Help & Feedback')]], page, 'pm58-'); }
+    if (ctx.app === 'play-books') { const b = key => S(ctx, 'books', key); return playDrawer(b('Play Books'), 'bk33-', [['read', b('Read Now'), 'ic_drawer_readnow'], ['library', b('My Library'), 'ic_drawer_mylibrary'], ['shop', b('Shop'), 'ic_drawer_shop', 'pa-shop']], [[b('Settings'), 'px-settings'], [b('Help & feedback')]], page, 'mv36-'); }
+    if (ctx.app === 'play-movies') { const v = key => S(ctx, 'movies', key); return playDrawer(v('Google Play'), 'mv36-', [['watch', v('Watch Now'), 'ic_drawer_watchnow'], ['library', v('My Library'), 'ic_drawer_mymovielibrary'], ['wishlist', v('My Wishlist'), 'ic_drawer_wishlist'], ['shop', v('Shop'), 'ic_drawer_shop', 'pa-shop']], [[v('Settings'), 'px-settings'], [v('Help & feedback')]], page); }
+    if (ctx.app === 'play-music') { const m = key => S(ctx, 'music', key); return playDrawer(m('Play Music'), 'pm58-', [['listen', m('Listen Now'), 'ic_drawer_listennow'], ['library', m('My Library'), 'ic_drawer_mymusiclibrary'], ['playlists', m('Playlists'), 'ic_drawer_playlists'], ['mixes', m('Instant Mixes'), 'ic_drawer_radio'], ['shop', m('Shop'), 'ic_drawer_shop', 'pa-shop']], [[m('Settings'), 'px-settings'], [m('Help')], [m('Send feedback')]], page); }
     return `<div class="pa-drawer-scrim" data-action="close-overlay"></div><nav class="pa-drawer pa-${app.key}" aria-label="${e(ctx.t(app.title))}">${app.pages.map(([id, label]) => `<button class="${id === page ? 'on' : ''}" data-action="pa-page" data-id="${id}">${e(ctx.t(label))}</button>`).join('')}</nav>`;
   }
   // Action bar overflow menus (the pa-menu overlay).
+  // fragment_home's Refresh, games_default_menu's Settings (lp-play-more.js).
   function menu(ctx) {
-    if (ctx.app === 'play-books') return [{action: 'pa-refresh', title: S(ctx, 'books', 'Refresh')}];
-    if (ctx.app === 'play-games') return [{action: 'pa-unsupported', title: S(ctx, 'games', 'Settings')}];
-    return [];
+    return window.PlayMore ? window.PlayMore.menu(ctx) : [];
   }
   const bookPages = id => (BOOKS.find(b => b.id === id) || BOOKS[0]).pages.length;
   const music3 = tracks => albums(tracks);
-  window.PlayApps = {DEFAULT, APPS, MOVIES, SHOWS, BOOKS, GAMES, BOOK_PREFS, art, render, drawer, menu, bookPages, bookPrefs, stepPref, albums: music3};
+  window.PlayApps = {DEFAULT, APPS, MOVIES, SHOWS, BOOKS, GAMES, PLAYERS, BOOK_PREFS, art, card, render, drawer, menu, bookPages, bookPrefs, stepPref, albums: music3};
 })();

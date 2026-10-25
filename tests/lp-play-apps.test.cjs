@@ -1,7 +1,7 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Nexus 6 (LMY48Y): the Play apps from their APKs (audit step 4).
-const w={window:{}};vm.runInNewContext(fs.readFileSync('versions/5.1.1/stock-strings.js','utf8')+fs.readFileSync('versions/5.1.1/play-apps.js','utf8'),w);
+const w={window:{}};vm.runInNewContext(['stock-strings.js','lp-play-more.js','play-apps.js'].map(f=>fs.readFileSync('versions/5.1.1/'+f,'utf8')).join(';'),w);
 const P=w.window.PlayApps,t=k=>k,tracks=[{title:'A',artist:'X',album:'One',duration:100},{title:'B',artist:'X',album:'One',duration:90}];
 const music={queue:[0,1],track:0,position:10,playing:true,shuffle:false,repeat:'off',playlists:[]};
 const ctx=(app,ui={},locale='en')=>({app,ui,data:{},t,locale,music,tracks,time:s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`});
