@@ -717,7 +717,7 @@
   }
   function openApp(app, resume = false) {
     // A capture for Messaging lasts while the Camera is open; Messaging opens on its compose screen, not over it.
-    if (!resume) { ui.jbmaCapture = null; if (app === 'messaging') ui.jbmaScreen = null; }
+    if (!resume) { ui.jbmaCapture = null; ui.camIntent = null; if (app === 'messaging') ui.jbmaScreen = null; }
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
     if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt4Dialog = null; ui.gsPage = ''; ui.gsStack = []; ui.gsDialog = null; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.paStack = []; ui.paMore = ''; }
     if(ui.locked)return;
@@ -764,6 +764,8 @@
   // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
   const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
   function navigateBack() {
+    // Back in a capture request cancels it (RESULT_CANCELED).
+    if (ui.view === 'camera' && ui.camIntent && !ui.overlay) { ui.camIntent.cancel(); return; }
     if (ui.view === 'messaging' && !ui.overlay && window.JBMmsAttach?.back(jbmaContext())) { render(); return; }
     if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
     if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
@@ -1465,6 +1467,7 @@
        audio starts Sound Recorder; the other sources are not part of the simulator. */
     if (ui.overlay === 'mms-attach') { const M = key => MmsStrings.t(key); const types = [['pictures', 'Pictures', 'ic_attach_picture_holo_light'], ['capture-picture', 'Capture picture', 'ic_attach_capture_picture_holo_light'], ['videos', 'Videos', 'ic_attach_video_holo_light'], ['capture-video', 'Capture video', 'ic_attach_capture_video_holo_light'], ['audio', 'Audio', 'ic_attach_audio_holo_light'], ['record-audio', 'Record audio', 'ic_attach_capture_audio_holo_light'], ['slideshow', 'Slideshow', 'ic_attach_slideshow_holo_light']]; return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog mms-dialog mms-attach-types" role="dialog" aria-label="${safe(M('Attach'))}" data-no-translate><h3><img src="assets/mms-ic_dialog_attach.png" alt="">${safe(M('Attach'))}</h3><div class="mms-dialog-list">${types.map(([id, label, icon]) => `<button data-action="mms-attach-type" data-id="${id}"><img src="assets/mms-${icon}.png" alt=""><span>${safe(M(label))}</span></button>`).join('')}</div></div>`; }
     if (ui.overlay?.startsWith('jbma-')) return JBMmsAttach.overlay(ui.overlay, jbmaContext()) || '';
+    if (ui.overlay === 'mms-attach-photos') return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog mms-dialog" role="dialog" aria-label="${safe(i18n.t('Attach photo'))}" data-no-translate><h3>${safe(i18n.t('Attach photo'))}</h3><div class="mms-dialog-list">${data.photos.map(p => `<button data-action="mms-photo" data-id="${p.id}">${ICSMessaging.photo(p)}</button>`).join('') || `<p>${safe(i18n.t('No photos'))}</p>`}</div></div>`;
     if (ui.overlay === 'mms-attach-pick') return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog mms-dialog" role="dialog" aria-label="${safe(MmsStrings.t('Attach'))}" data-no-translate><h3>${safe(MmsStrings.t('Attach'))}</h3><div class="mms-dialog-list">${data.photos.map(p => `<button data-action="mms-photo" data-id="${p.id}">${ICSMessaging.photo(p)}</button>`).join('') || `<p>${safe(i18n.t('No photos'))}</p>`}</div></div>`;
     if (ui.overlay === 'mms-smiley') return alert(M('Insert smiley'), `<div class="mms-smileys">${MmsStrings.SMILEYS.map(([name, text, icon]) => `<button data-action="mms-insert-smiley" data-id="${safe(text)}"><img src="assets/mms-emo_im_${icon}.png" alt=""><span>${safe(M(name))}</span><b>${safe(text)}</b></button>`).join('')}</div>`);
     if (ui.overlay === 'mms-delete-confirm') {
@@ -1493,15 +1496,35 @@
   function cameraShoot(clip) {
     const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
     const photo = {...ICSMedia.scene(data), id: Date.now(), name: clip?.pano ? `PANO_${stamp.slice(0, 8)}_${stamp.slice(8)}` : clip ? `VID_${stamp.slice(0, 8)}_${stamp.slice(8)}` : `IMG_${stamp}`, album: 'camera', created: Date.now(), ...(clip?.pano ? {pano: true} : clip ? {video: true, duration: Math.max(1000, Math.round(clip.duration))} : {})};
+    // An IMAGE_CAPTURE request keeps the picture for its review (jb-camera.js) and hands it to the caller, not the Gallery.
+    if (ui.camIntent && !clip) { ui.camIntent.taken = photo; return photo; }
     data.photos.unshift(photo); save();
-    // IMAGE_CAPTURE / VIDEO_CAPTURE for Messaging: back with what was taken.
+    // VIDEO_CAPTURE for Messaging: back with what was taken.
     if (ui.jbmaCapture && !clip?.pano && (ui.jbmaCapture.type === 'video') === !!clip) { const c = ui.jbmaCapture; ui.jbmaCapture = null; setTimeout(() => jbmaReturn(c, photo), 450); }
     return photo;
   }
   // Messaging's attachments (jb-mms-attach.js): the draft, the shell, the Camera's capture, Sound Recorder and Back.
   const jbmaContext = () => ({ui, data, t: key => i18n.t(key), root: viewport, draftOf: messageDraft, save, render, renderOverlay, toast, back,
-    capture(type, target) { const c = {type, target, ret: {sub: ui.sub, thread: ui.thread, screen: ui.jbmaScreen, slide: ui.jbmaSlide}}; openApp('camera'); ui.jbmaCapture = c; ui.jbcamModule = type === 'video' ? 'video' : 'photo'; render(); },
+    capture(type, target) {
+      const c = {type, target, ret: {sub: ui.sub, thread: ui.thread, screen: ui.jbmaScreen, slide: ui.jbmaSlide}}; openApp('camera'); ui.jbmaCapture = c; ui.jbcamModule = type === 'video' ? 'video' : 'photo';
+      if (type !== 'video') ui.camIntent = cameraIntent(photo => { ui.jbmaCapture = null; jbmaReturn(c, photo); }, () => { ui.jbmaCapture = null; openApp('messaging'); Object.assign(ui, {sub: c.ret.sub, thread: c.ret.thread, jbmaScreen: c.ret.screen, jbmaSlide: c.ret.slide}); render(); scrollMessages(); });
+      render();
+    },
     record(target) { ui.overlay = ''; renderOverlay(); ui.srReturn = {view: ui.view, sub: ui.sub, thread: ui.thread, target, screen: ui.jbmaScreen, slide: ui.jbmaSlide}; ui.sr = SoundRecorder.initial(); ui.view = 'sound-recorder'; ui.sub = ''; render(); }});
+  // An IMAGE_CAPTURE request open in the Camera: review_module_control's Done hands the picture back, Cancel or Back
+  // returns without one, Retake goes back to the shutter.
+  function cameraIntent(done, cancel) {
+    const intent = {type: 'image', taken: null, done: () => { const photo = intent.taken; ui.camIntent = null; done(photo); }, cancel: () => { ui.camIntent = null; cancel(); }};
+    return intent;
+  }
+  // Hangouts' Take photo: the picture joins the conversation's draft as its attachment.
+  function hangoutsTakePhoto() {
+    const ret = {sub: ui.sub, thread: ui.thread};
+    ui.overlay = ''; renderOverlay(); openApp('camera'); ui.jbcamModule = 'photo';
+    const back = () => { openApp('hangouts'); Object.assign(ui, ret); };
+    ui.camIntent = cameraIntent(photo => { back(); const d = messageDraft(); d.attachment = clone(photo); d.updated = Date.now(); save(); render(); scrollMessages(); }, () => { back(); render(); scrollMessages(); });
+    render();
+  }
   function jbmaReturn(c, photo) {
     openApp('messaging'); Object.assign(ui, {sub: c.ret.sub, thread: c.ret.thread, jbmaScreen: c.ret.screen, jbmaSlide: c.ret.slide});
     JBMmsAttach.apply(jbmaContext(), c.target, photo.video ? {video: clone(photo)} : {image: clone(photo)}); render(); scrollMessages();
@@ -2376,6 +2399,10 @@
       case 'thread': openMessageThread(id); break;
       case 'hg-pick': pickHangout(id); break;
       case 'hg-attach-photo': ui.overlay = 'mms-attach-photos'; renderOverlay(); break;
+      case 'hg-take-photo': hangoutsTakePhoto(); break;
+      case 'cam-review-done': ui.camIntent?.taken && ui.camIntent.done(); break;
+      case 'cam-review-retake': if (ui.camIntent) { ui.camIntent.taken = null; render(); } break;
+      case 'cam-review-cancel': ui.camIntent?.cancel(); break;
       case 'hg-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
       // Hangouts 1.0.2: conversations archive until something newer arrives; the snooze dialog (1–72 hours) shows
       // dnd_list_item.xml's banner until Resume.

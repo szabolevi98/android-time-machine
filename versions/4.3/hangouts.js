@@ -79,7 +79,7 @@
   // Hangouts 1.0.2's conversation_list_activity_menu.xml (no mood setting yet) and conversation_activity_menu.xml.
   const MENU = [['hgp-open:invites', 'Invites'], ['hg-dnd', 'Snooze notifications'], ['hg-archived', 'Archived Hangouts'], ['hgp-open:settings', 'Settings'], ['hg-unsupported', 'Send feedback'], ['hg-unsupported', 'Help']];
   // SendPhotoMethodSelectorAdapter.getData: Take photo, Google+ photos, Other photos.
-  const ATTACH = [['hg-unsupported', 'Take photo', 'camera'], ['hg-unsupported', 'Google+ photos', 'albums'], ['hg-attach-photo', 'Other photos', 'gallery']];
+  const ATTACH = [['hg-take-photo', 'Take photo', 'camera'], ['hg-unsupported', 'Google+ photos', 'albums'], ['hg-attach-photo', 'Other photos', 'gallery']];
   function overlay(data, ui, t) {
     const option = (action, label, id = label) => { const [act, arg] = action.split(':'); return `<button data-action="${act}" data-id="${e(arg ?? id)}">${e(H(t, label))}</button>`; };
     if (ui.overlay === 'mms-menu') {

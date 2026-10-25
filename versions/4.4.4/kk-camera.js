@@ -117,20 +117,29 @@
     return null;
   }
 
+  // A capture request (IMAGE_CAPTURE: Messaging's Capture picture, Hangouts' Take photo): PhotoUI.initializeControlByIntent
+  // hides the module switcher and adds review_module_control.xml, Cancel at the bottom left; after the shutter
+  // (showPostCaptureAlert) the picture stays on the preview, the indicators, menu button and shutter go, and Done (bottom
+  // right) and Retake (centre) appear, each a 72 dp ReviewControlIcon with its 32 dp icon on bg_pressed.
+  function reviewControls(t, intent) {
+    const button = (action, file, label) => `<button type="button" class="jbcam-review" data-action="${action}" aria-label="${e(t(label))}"><img src="${icon(file)}" alt=""></button>`;
+    return button('cam-review-cancel', 'ic_menu_cancel_holo_light', 'Review cancel') + (intent.taken ? button('cam-review-retake', 'ic_btn_shutter_retake', 'Review retake') + button('cam-review-done', 'ic_menu_done_holo_light', 'Review done') : '');
+  }
   function render(data, ui, t, media) {
-    const s = settings(media, data), module = ui.jbcamModule || 'photo', recording = ui.jbcamRecording;
+    const intent = ui.camIntent || null, taken = intent?.taken;
+    const s = settings(media, data), module = intent ? 'photo' : ui.jbcamModule || 'photo', recording = ui.jbcamRecording;
     const shutter = module === 'video' ? (recording ? 'btn_shutter_video_recording' : 'btn_shutter_video_default') : 'btn_shutter_default';
     const current = MODULES.find(m => m[0] === module) || MODULES[0];
     return `<div class="app-view camera-app jbcam" data-jbcam data-module="${module}" data-no-translate>
-      <div class="jbcam-preview" data-jbcam-preview>${media.art(media.scene(data))}</div>${module === 'panorama' ? window.JBPano.render(data, ui, t, media) : ''}${module === 'photosphere' ? window.KKSphere.render(data, ui, t, media) : ''}
+      <div class="jbcam-preview" data-jbcam-preview>${media.art(taken || media.scene(data))}</div>${module === 'panorama' ? window.JBPano.render(data, ui, t, media) : ''}${module === 'photosphere' ? window.KKSphere.render(data, ui, t, media) : ''}
       <svg class="jbcam-overlay" data-jbcam-overlay aria-hidden="true"></svg><div class="jbcam-icons" data-jbcam-icons></div><div class="jbcam-label" data-jbcam-label aria-live="polite"></div>
       <div class="jbcam-countdown" data-jbcam-countdown hidden><span class="jbcam-count-title">${e(t('Counting down to take a photo'))}</span><span class="jbcam-count-n"></span></div>
       <div class="jbcam-rec" data-jbcam-rec ${recording ? '' : 'hidden'}><img src="${icon('ic_recording_indicator')}" alt=""><span>00:00</span></div>
       <div class="jbcam-hint" data-jbcam-hint hidden></div>
-      <div class="jbcam-controls"><div class="jbcam-blocker"></div>
-        ${module === 'photo' ? `<div class="jbcam-indicators" aria-hidden="true">${indicators(s).map(([key, file, pos]) => `<img class="jbcam-ind ${pos}" data-ind="${key}" src="${icon(file)}" alt="">`).join('')}</div>` : ''}
+      <div class="jbcam-controls${intent ? ' intent' : ''}${taken ? ' reviewing' : ''}"><div class="jbcam-blocker"></div>${intent ? reviewControls(t, intent) : ''}
+        ${module === 'photo' && !taken ? `<div class="jbcam-indicators" aria-hidden="true">${indicators(s).map(([key, file, pos]) => `<img class="jbcam-ind ${pos}" data-ind="${key}" src="${icon(file)}" alt="">`).join('')}</div>` : ''}
         ${sweeping(module) ? '' : `<button type="button" class="jbcam-menu" data-jbcam-menu aria-label="${e(t('Menu button'))}"></button>`}
-        <button type="button" class="jbcam-switcher" data-jbcam-switcher aria-label="${e(t('Camera, video, or panorama selector'))}" aria-expanded="false"><img src="${icon(current[1])}" alt=""><img class="jbcam-switcher-mark" src="${icon('ic_switcher_menu_indicator')}" alt=""></button>
+        ${intent ? '' : `<button type="button" class="jbcam-switcher" data-jbcam-switcher aria-label="${e(t('Camera, video, or panorama selector'))}" aria-expanded="false"><img src="${icon(current[1])}" alt=""><img class="jbcam-switcher-mark" src="${icon('ic_switcher_menu_indicator')}" alt=""></button>`}
         <button type="button" class="jbcam-shutter" data-jbcam-shutter aria-label="${e(t('Shutter button'))}"><img src="${icon(shutter)}" alt=""></button>
       </div>
       <button type="button" class="jbcam-thumb" data-jbcam-thumb hidden aria-label="${e(t('Gallery'))}"></button>
@@ -289,6 +298,8 @@
       take();
     }
     function take() {
+      // A capture request keeps the picture for review instead of sliding it to the filmstrip.
+      if (ui.camIntent) { shoot(); rerender(); return; }
       const photo = shoot(), thumb = root.querySelector('[data-jbcam-thumb]'), b = box();
       if (!photo || reduced) return;
       thumb.innerHTML = media.art(photo); thumb.hidden = false; thumb.dataset.photo = photo.id;

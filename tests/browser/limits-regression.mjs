@@ -1243,6 +1243,8 @@ const jbMmsAttach = async h => {
   await h.tap('#viewport .jbma [data-action="mms-remove-attachment"]');
   await attach('capture-picture');
   await shutter();
+  h.check('the capture offers Done, Retake and Cancel', await h.until(`!!document.querySelector('#viewport [data-action="cam-review-done"]')`, 8000));
+  await h.tap('#viewport [data-action="cam-review-done"]');
   h.check('Capture picture comes back with the picture', await h.until(`!!document.querySelector('#viewport .jbma-image')`, 8000) && await kind() === 'image');
   await h.tap('#viewport .jbma [data-action="mms-remove-attachment"]');
   await attach('capture-video');
@@ -2609,6 +2611,42 @@ const gbContactPhoto = async h => {
   const saved = (await store(h, 'contacts')).find(c => c.id === person.id), photos = (await store(h, 'contactPhotos')) || [];
   h.check('Done keeps the photo with the contact', !!saved?.photo && photos.some(p => p.id === saved.photo), JSON.stringify(saved?.photo));
 };
+// 4.3 / 4.4.4 / 5.1.1 Hangouts Take photo (T10): the attach menu's Take photo opens the Camera as an IMAGE_CAPTURE
+// request; Cancel returns to the conversation without a picture, Retake goes back to the shutter, Done puts the picture
+// into the draft, and sending it adds it to the conversation.
+const hangoutsTakePhoto = async h => {
+  const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  const lp = await h.ev(`!!document.querySelector('link[href^="lp-camera.css"]')`);
+  const shutter = lp ? '#viewport [data-gcam-shutter]' : '#viewport .jbcam-shutter';
+  await h.openApp('hangouts');
+  await h.until(`!!document.querySelector('#viewport [data-action="thread"]')`);
+  const thread = await h.ev(`document.querySelector('#viewport [data-action="thread"]').dataset.id`);
+  await act('thread', thread);
+  h.check('the conversation opens', await h.until(`!!document.querySelector('#viewport .mms-compose')`));
+  const take = async () => {
+    await act('mms-attach');
+    await h.tap('[data-action="hg-take-photo"]');
+    h.check('Take photo opens the Camera with Cancel', await h.until(`!!document.querySelector('#viewport [data-action="cam-review-cancel"]')`));
+    await h.sleep(700);
+    await h.tap(shutter);
+    return h.until(`!!document.querySelector('#viewport [data-action="cam-review-done"]') && !!document.querySelector('#viewport [data-action="cam-review-retake"]')`, 8000);
+  };
+  h.check('the shutter keeps the picture for review', await take());
+  await h.shot('hangouts-capture-review');
+  await h.tap('#viewport [data-action="cam-review-cancel"]');
+  const draft = () => h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k));const d=k&&JSON.parse(localStorage.getItem(k));return d?.messageDrafts?.[${JSON.stringify(thread)}]?.attachment||null})()`);
+  h.check('Cancel returns to the conversation without a picture', await h.until(`!!document.querySelector('#viewport .mms-compose')`) && !(await draft()));
+  await take();
+  await h.tap('#viewport [data-action="cam-review-retake"]');
+  h.check('Retake goes back to the shutter', await h.until(`!document.querySelector('#viewport [data-action="cam-review-done"]')`));
+  await h.sleep(700);
+  await h.tap(shutter);
+  await h.until(`!!document.querySelector('#viewport [data-action="cam-review-done"]')`, 8000);
+  const before = ((await store(h, 'photos')) || []).length;
+  await h.tap('#viewport [data-action="cam-review-done"]');
+  h.check('Done puts the picture into the draft', await h.until(`!!document.querySelector('#viewport .mms-compose')`) && !!(await draft()));
+  h.check('the picture stays out of the Gallery', ((await store(h, 'photos')) || []).length === before);
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -2690,6 +2728,8 @@ const CASES = [
   {id: 'T12', version: '4.3', name: 'Maps › My Places, Settings, Cache settings', run: mapsSettings({maps6: true, places: true})},
   {id: 'T12', version: '4.4.4', name: 'Maps › Settings, Maps history, Edit home or work, About', run: mapsSettings({version: '7.5.0'})},
   {id: 'T12', version: '5.1.1', name: 'Maps › Settings, Maps history, Your places, About', run: mapsSettings({version: '9.3.0', places: true})},
+  {id: 'T10', version: '4.3', name: 'Hangouts › Take photo through the Camera capture request', run: hangoutsTakePhoto},
+  {id: 'T10', version: '4.4.4', name: 'Hangouts › Take photo through the Camera capture request', run: hangoutsTakePhoto},
   {id: 'T10', version: '2.3.6', name: 'Contacts › Take photo through the Camera capture request', run: gbContactPhoto},
   {id: 'T13', version: '2.3.6', name: 'Messaging › Audio, Record audio, Capture picture / video, Slideshow', run: gbMmsAttach},
   {id: 'T13', version: '4.3', name: 'Messaging › Audio Play, Capture picture / video, Slideshow', run: jbMmsAttach},

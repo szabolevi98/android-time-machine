@@ -400,6 +400,7 @@ versions/4.4.4/assets/jbcam-btn_shutter_pressed.png	2b1a6fa90bf49257	same pixels
 versions/4.4.4/assets/jbcam-btn_shutter_video_default.png	6d52c2e3ea1c0c96	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/btn_shutter_video_default.png	drawable-hdpi		4939c3c996a3db08
 versions/4.4.4/assets/jbcam-btn_shutter_video_pressed.png	d9c5d2bb0e850a9d	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/btn_shutter_video_pressed.png	drawable-hdpi		6c10f8d99b3b4635
 versions/4.4.4/assets/jbcam-btn_shutter_video_recording.png	3dbc32ccd1bccf19	same pixels	hammerhead:/system/app/GoogleCamera.apk!res/drawable-hdpi/btn_shutter_video_recording.png	drawable-hdpi		e834b7e7413dd643
+versions/4.4.4/assets/jbcam-ic_btn_shutter_retake.png	9eadcc72968a2eb5	copy	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_btn_shutter_retake.png	drawable-xhdpi		9eadcc72968a2eb5
 versions/4.4.4/assets/jbcam-ic_exposure_0.png	1021f5f84f2f4405	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_exposure_0.png	drawable-hdpi		860233da508a9250
 versions/4.4.4/assets/jbcam-ic_exposure_holo_light.png	9ed6054495b3e8bf	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_exposure_holo_light.png	drawable-hdpi		73fe0d5ae19c74ca
 versions/4.4.4/assets/jbcam-ic_exposure_n1.png	e3291b1c4bb71c0c	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_exposure_n1.png	drawable-hdpi		5ec4f1b51c8bf43c
@@ -442,6 +443,7 @@ versions/4.4.4/assets/jbcam-ic_indicator_wb_tungsten.png	9cb2a434e5386fc7	same p
 versions/4.4.4/assets/jbcam-ic_location.png	6f907c3c1e47e7d7	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_location.png	drawable-hdpi		59d4f349d90bb129
 versions/4.4.4/assets/jbcam-ic_location_off.png	0b28693643d3f761	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_location_off.png	drawable-hdpi		384ecd7746e6228d
 versions/4.4.4/assets/jbcam-ic_menu_cancel_holo_light.png	186f795d98670bb3	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_menu_cancel_holo_light.png	drawable-xhdpi		214eedfeef087ec2
+versions/4.4.4/assets/jbcam-ic_menu_done_holo_light.png	7352d27fe06e66ae	copy	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_menu_done_holo_light.png	drawable-xhdpi		7352d27fe06e66ae
 versions/4.4.4/assets/jbcam-ic_menu_revert_holo_dark.png	5adfba8b0f0861b1	copy	hammerhead:/system/app/DeskClockGoogle.apk!res/drawable-xhdpi/ic_menu_revert_holo_dark.png	drawable-xhdpi		5adfba8b0f0861b1
 versions/4.4.4/assets/jbcam-ic_pan_left_indicator.png	d1ab5474b70a9717	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_pan_left_indicator.png	drawable-xhdpi		d9c4a40d1501c81c
 versions/4.4.4/assets/jbcam-ic_pan_left_indicator_fast.png	fb2f153beea4c7a3	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_pan_left_indicator_fast.png	drawable-xhdpi		b6566b3285d9790f

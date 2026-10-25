@@ -65,3 +65,12 @@
 .jbcam-radio{width:100%;min-height:calc(56.3645 * var(--dp));display:flex;align-items:center;justify-content:space-between;padding:0 calc(11.7427 * var(--dp)) 0 calc(18.7882 * var(--dp));border:0;border-bottom:calc(1.1743 * var(--dp)) solid #ffffff1a;background:none;color:#fff;font-size:calc(18.7882 * var(--dp));text-align:left}
 .jbcam-radio img{width:calc(37.5764 * var(--dp));height:calc(37.5764 * var(--dp))}
 @media(prefers-reduced-motion:reduce){.jbcam-switcher-popup{animation:none}}
+/* review_module_control.xml in a capture request: Cancel where the switcher was, then Retake on the shutter's place and
+   Done where the menu button was; the reviewed picture hides the shutter, the menu button and the indicators. */
+.jbcam-review{position:absolute;z-index:3;bottom:calc(2.1137 * var(--dp));width:calc(76.0921 * var(--dp));height:calc(76.0921 * var(--dp));border:0;padding:0;background:transparent;display:grid;place-items:center}
+.jbcam-review:active{background:#33b5e5}
+.jbcam-review img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.jbcam-review[data-action=cam-review-cancel]{left:0}
+.jbcam-review[data-action=cam-review-retake]{left:50%;margin-left:calc(-38.0461 * var(--dp))}
+.jbcam-review[data-action=cam-review-done]{right:0}
+.jbcam-controls.reviewing .jbcam-shutter,.jbcam-controls.reviewing .jbcam-menu{visibility:hidden}
