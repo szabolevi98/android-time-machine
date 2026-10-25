@@ -1744,6 +1744,35 @@ const lpSearchSettings = async h => {
   await h.tap('#viewport [data-action="gs-play-games"]');
   h.check('Google Settings › Play Games opens the Games app', await h.until(`!document.querySelector('#viewport .sa-gsettings6')`));
 };
+// 4.0.4 Navigation and Places (T28): the pickers' empty texts, then a contact's address and a starred place drive there;
+// Places' categories and search look through the stored places, a find opens on the map, Back returns to the picker.
+const icsNavPlaces = async h => {
+  await h.openApp('navigation');
+  await h.tap('#viewport .nav-tile[data-id="contacts"]');
+  h.check('Contacts without addresses says so', await h.until(`/contacts with addresses/.test(document.querySelector('#viewport .nav-pick-empty')?.textContent || '')`));
+  await h.key('Escape');
+  h.check('Back returns to the tiles', await h.until(`!!document.querySelector('#viewport .nav-tile')`));
+  // A contact with an address and two places Maps keeps (one starred, one searched).
+  await h.ev(`(()=>{const k='android-time-machine-ics-v1';const d=JSON.parse(localStorage.getItem(k)||'{}');d.contacts=[{id:1,name:'Alex Morgan',phone:'202-555-0148',email:'alex@example.com',postals:[{type:'home',value:'1600 Amphitheatre Pkwy'}]},{id:2,name:'Sam Rivera',phone:'202-555-0192',email:'sam@example.com'},{id:3,name:'Taylor Lee',phone:'202-555-0116',email:'taylor@example.com'},{id:4,name:'Mom',phone:'202-555-0107',email:'mom@example.com'}];d.mapsStarred=['Blue Bottle Coffee'];d.mapsHistory=['Computer History Museum'];localStorage.setItem(k,JSON.stringify(d));return true})()`);
+  h.check('reloads', await h.reload());
+  await h.openApp('navigation');
+  await h.tap('#viewport .nav-tile[data-id="contacts"]');
+  await h.tap('#viewport .nav-pick-row[data-id="1600 Amphitheatre Pkwy"]');
+  h.check('a contact address starts navigation', await h.until(`!!document.querySelector('#viewport .mr-nav')`));
+  await h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='home';document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  await h.openApp('local');
+  await h.tap('#viewport .loc-cats [data-id="Coffee"]');
+  h.check('Coffee finds the starred café', await h.until(`[...document.querySelectorAll('#viewport .loc-hit')].some(b => /Blue Bottle Coffee/.test(b.textContent))`));
+  await h.key('Escape');
+  await h.tap('#viewport .loc-cats [data-id="Hotels"]');
+  h.check('Hotels finds nothing', await h.until(`!!document.querySelector('#viewport .loc-results') && !document.querySelector('#viewport .loc-hit')`));
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="xa-loc-search"]');
+  await h.type('#viewport .loc-sv input', 'museum');
+  await h.ev(`document.querySelector('#viewport .loc-sv').requestSubmit()`);
+  await h.tap('#viewport .loc-hit[data-id="Computer History Museum"]');
+  h.check('a find opens on the map', await h.until(`!!document.querySelector('#viewport .sa-map, #viewport svg.sa-map')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1839,6 +1868,7 @@ const CASES = [
   {id: 'T25', version: '4.3', name: 'Google Search › Settings pages: Google Now, Notifications, My stuff, Voice, Phone search, Privacy', run: jbSearchSettings},
   {id: 'T25', version: '4.4.4', name: 'Google Search › Settings pages; Google Settings › Play Games', run: kkSearchSettings},
   {id: 'T25', version: '5.1.1', name: 'Google Search › Settings: the 4.1 headers and pages, Show cards', run: lpSearchSettings},
+  {id: 'T28', version: '4.0.4', name: 'Navigation › Contacts / Starred places; Places › categories and search', run: icsNavPlaces},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

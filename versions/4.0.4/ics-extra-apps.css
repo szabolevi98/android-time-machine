@@ -61,3 +61,16 @@
 .msg24-row b{font:700 calc(18.0353 * var(--dp)) Roboto,sans-serif;color:#303030;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .msg24-row small{padding-top:calc(2 * var(--dp));font:400 calc(14.0236 * var(--dp)) Roboto,sans-serif;color:#707070;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .msg24-row time{position:absolute;right:calc(16.0353 * var(--dp));top:calc(15.0236 * var(--dp));font:400 calc(12.0236 * var(--dp)) Roboto,sans-serif;color:#c0c0c0}
+/* Navigation's Contacts and Starred places pickers: Holo dark list rows (the name over the address) and the pickers'
+   empty texts; Places' search field in the bar and its finds. */
+.nav-pick{flex:1;min-height:0;overflow-y:auto;background:#000}
+.screen .nav-pick-row{display:flex;flex-direction:column;justify-content:center;width:100%;min-height:calc(64 * var(--dp));padding:calc(6 * var(--dp)) calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #ffffff1f;background:none;color:#fff;text-align:left}
+.screen .nav-pick-row:active{background:#33b5e566}
+.nav-pick-row b{font-weight:400;font-size:calc(18 * var(--dp))}
+.nav-pick-row small{font-size:calc(14 * var(--dp));color:#bebebe}
+.nav-pick-empty{margin:0;padding:calc(24 * var(--dp)) calc(16 * var(--dp));font-size:calc(16 * var(--dp));color:#bebebe;white-space:pre-line}
+.loc-sv{flex:1;min-width:0;display:flex;align-items:center}
+.loc-sv input{flex:1;min-width:0;height:calc(36 * var(--dp));margin:0 calc(8 * var(--dp));padding:0 calc(4 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #33b5e5;background:none;color:#000;font:400 calc(18 * var(--dp)) RobotoICS,sans-serif;outline:0}
+.loc-results{flex:1;min-height:0;overflow-y:auto}
+.screen .loc-hit{display:flex;align-items:center;width:100%;min-height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #0000001f;background:none;color:#000;text-align:left;font-size:calc(18 * var(--dp))}
+.screen .loc-hit:active{background:#33b5e566}

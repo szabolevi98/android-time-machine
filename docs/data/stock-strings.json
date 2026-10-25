@@ -3697,7 +3697,10 @@
    "Type destination": "Maps:da_picker_type_destination",
    "Contacts": "Maps:da_picker_contacts",
    "Starred places": "Maps:da_picker_starred_items",
-   "Places": "Maps:PLACES_APP_NAME"
+   "Places": "Maps:PLACES_APP_NAME",
+   "No contacts with addresses": "Maps:da_picker_no_contacts",
+   "No starred places": "Maps:da_picker_no_starred_items",
+   "Search Maps": "Maps:SEARCH_HINT"
   },
   "studio": {
    "Create new project": "VideoEditorGoogle:projects_new_project"

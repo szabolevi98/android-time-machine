@@ -544,7 +544,7 @@
       case 'play-music': return ICSPlayMusic.render(playMusicContext());
       case 'google-plus': case 'talk': case 'youtube': case 'play-books': case 'play-movies': case 'search': case 'voice-dialer': return ICSGoogleApps.render(ui.view, googleAppsContext());
       case 'maps': case 'latitude': case 'earth': case 'news-weather': return StockApps.render(ui.view, {ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), now: deviceDate()});
-      case 'messenger': case 'navigation': case 'local': case 'movie-studio': if (ui.view === 'navigation' && ui.navRun) return MapsRoute.nav(mrContext()); return JBExtraApps.render(ui.view, {ui, t: key => i18n.t(key), contacts: data.contacts});
+      case 'messenger': case 'navigation': case 'local': case 'movie-studio': if (ui.view === 'navigation' && ui.navRun) return MapsRoute.nav(mrContext()); return JBExtraApps.render(ui.view, {ui, t: key => i18n.t(key), contacts: data.contacts, data});
       case 'phone': return renderPhone();
       case 'people': return renderPeople();
       case 'messaging': return renderMessaging();
@@ -560,7 +560,7 @@
   }
   function openApp(app, resume = false) {
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
-    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; }
+    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.navPick = ''; ui.locResults = null; ui.locSearching = false; }
     if (app === 'news-weather' && !resume) { ui.newsSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
     if (ICSGoogleApps.APPS.includes(app) && !resume) { ui.gaSub = ''; ui.gaYtStack = []; ui.gaYtDialog = null; ui.gaYtDrop = ''; if (app === 'voice-dialer') setTimeout(() => googleAppsContext().listen()); }
     if (app !== 'camera') ui.captureFor = '';
@@ -628,6 +628,12 @@
     return {data, ui, lang: i18n.language, locale: i18n.locale(), now: deviceDate().getTime(), hour24: !!data.settings.hour24, t: key => i18n.t(key),
       save, render, renderOverlay, toast, openApp};
   }
+  // A picked destination drives there as Type destination does; a Places find opens on the map.
+  function extraContext() {
+    return {ui, data, render, focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
+      go(to) { const rt = MapsRoute.route(mrContext(), {to, mode: 'drive', avoid: data.mapsAvoid || {}}); MapsRoute.startNav(mrContext(), {name: to, km: rt.km, min: rt.min, mode: 'drive'}); render(); },
+      openMap(query) { openApp('maps'); ui.mapsQuery = query; render(); }};
+  }
   // Maps 6 directions and Navigation's drive (maps-route.js).
   function mrContext() {
     return {ui, data, t: key => i18n.t(key), locale: i18n.locale(), root: viewport, save, render,
@@ -644,6 +650,7 @@
     if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return; }
     if (ui.view === 'maps' && !ui.overlay && ui.mapsRoute && MapsRoute.back(mrContext())) return;
     if (ui.view === 'navigation' && !ui.overlay && ui.navRun) { ui.overlay = 'mr-exit'; renderOverlay(); return; }
+    if (!ui.overlay && JBExtraApps.back(ui)) { render(); return; }
     // News & Weather: a settings dialog or nested screen, then the settings or the story page.
     if (ui.view === 'news-weather' && ui.newsSub && !ui.overlay) { if (!(ui.newsSub === 'settings' && NewsPrefs.back(ui))) { ui.newsSub = ''; ui.nwpScreen = ''; } render(); return; }
     if (ui.view === 'email' && ui.sub === 'em-settings' && !ui.overlay) { if (ui.emPrefList || ui.emPrefEdit) { ui.emPrefList = ''; ui.emPrefEdit = ''; ui.emPrefTone = undefined; window.SystemSounds?.stop(); } else if (ui.emPref) ui.emPref = EmailPrefs.parent(ui.emPref); else ui.sub = ''; render(); return; }
@@ -1314,6 +1321,8 @@
     if (Date.now() < suppressClickUntil) return;
     const { action, id, app, url } = button.dataset;
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
+    // Navigation's Contacts / Starred places pickers and Places' search and categories (ics-extra-apps.js).
+    if (action.startsWith('xa-') && JBExtraApps.handle(action, id, extraContext())) return;
     if (action === 'mr-type-dest') { ui.overlay = 'mr-type'; renderOverlay(); overlayRoot.querySelector('input')?.focus(); return; }
     if (action === 'mr-type-ok') { const to = overlayRoot.querySelector('input')?.value.trim(); ui.overlay = ''; renderOverlay(); if (to) { const rt = MapsRoute.route(mrContext(), {to, mode: 'drive', avoid: data.mapsAvoid || {}}); MapsRoute.startNav(mrContext(), {name: to, km: rt.km, min: rt.min, mode: 'drive'}); render(); } return; }
     if (action === 'mr-exit-ok') { ui.overlay = ''; renderOverlay(); MapsRoute.stopNav(mrContext()); render(); return; }
@@ -1781,6 +1790,7 @@
     const form = event.target.closest('[data-form]');
     if (!form || !screen.contains(form)) return;
     event.preventDefault(); const values = new FormData(form);
+    if (JBExtraApps.submit(form.dataset.form, values, extraContext())) return;
     if (form.dataset.form === 'mr-type') { overlayRoot.querySelector('[data-action="mr-type-ok"]')?.click(); return; }
     if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, mrContext()); return; }
     if (ui.view === 'gmail' && ICSGmail.submit(form.dataset.form, values, gmailContext())) return;
