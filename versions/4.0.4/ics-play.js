@@ -70,6 +70,20 @@
     "Clear search history summary": {"res": "Phonesky:clear_history_summary", "hu": "Az összes végrehajtott keresés törlése", "de": "Alle Suchvorgänge aus dem Verlauf entfernen", "fr": "Supprimer toutes les recherches que vous avez effectuées", "es": "Eliminar todas las búsquedas realizadas", "en": "Remove all the searches you have performed"},
     "User controls": {"res": "Phonesky:settings_user_controls_section_header", "hu": "Felhasználói vezérlők", "de": "Nutzersteuerung", "fr": "Commandes utilisateur", "es": "Controles de usuario"},
     "Unlock settings": {"res": "Phonesky:unlock_settings_label", "hu": "Beállítások feloldása", "de": "Einstellungen entsperren", "fr": "Déverrouiller les paramètres", "es": "Ajustes de desbloqueo"},
+    "Type your PIN": {"res": "Phonesky:pin_entry_title", "hu": "Írja be a PIN kódot", "de": "PIN eingeben", "fr": "Saisissez votre code secret", "es": "Introduce tu PIN"},
+    "Remove PIN": {"res": "Phonesky:pin_entry_remove_label", "hu": "PIN-kód eltávolítása", "de": "PIN entfernen", "fr": "Supprimer le code PIN", "es": "Eliminar PIN"},
+    "Type a new PIN or remove existing PIN:": {"res": "Phonesky:pin_entry_prompt_edit", "hu": "Adja meg az új PIN kódot vagy törölje a régit:", "de": "Geben Sie eine neue PIN ein oder löschen Sie die vorhandene:", "fr": "Saisissez un nouveau code PIN ou supprimez le code existant :", "es": "Introduce un nuevo PIN o elimina el PIN actual:"},
+    "Create a PIN to control and lock settings:": {"res": "Phonesky:pin_entry_prompt_create", "hu": "PIN kód létrehozása a beállítások kezeléséhez és zárolásához:", "de": "PIN zum Steuern und Sperren der Einstellungen einrichten", "fr": "Créez un code secret pour contrôler et verrouiller les paramètres", "es": "Crea un PIN para controlar y bloquear los ajustes:"},
+    "Re-type to confirm your new PIN:": {"res": "Phonesky:pin_entry_prompt_confirm", "hu": "A megerősítéshez gépelje be ismét az új PIN kódot:", "de": "Neue PIN zur Bestätigung erneut eingeben", "fr": "Saisissez de nouveau le code secret pour le confirmer :", "es": "Vuelve a introducir el nuevo PIN para confirmarlo:"},
+    "Type your PIN to change settings:": {"res": "Phonesky:pin_entry_prompt_settings", "hu": "A beállítások módosításához írja be a PIN kódot:", "de": "Geben Sie zum Ändern der Einstellungen Ihre PIN ein:", "fr": "Saisissez votre code secret pour modifier les paramètres :", "es": "Introduce tu PIN para cambiar la configuración:"},
+    "Type PIN": {"res": "Phonesky:pin_entry_hint_enter_passcode", "hu": "Írja be a PIN kódot", "de": "PIN eingeben", "fr": "Saisissez votre code secret", "es": "Introducir PIN"},
+    "Incorrect PIN": {"res": "Phonesky:pin_entry_hint_wrong_passcode", "hu": "Helytelen PIN kód", "de": "Falsche PIN", "fr": "Code secret erroné", "es": "PIN incorrecto"},
+    "Allow apps rated for": {"res": "Phonesky:content_filter_title", "hu": "Következő alkalmazások engedélyezése:", "de": "Apps zulassen mit Freigabe für", "fr": "Classification des applications autorisées :", "es": "Permitir aplicaciones clasificadas"},
+    "Everyone": {"res": "Phonesky:content_filter_everyone", "hu": "Mindenki", "de": "Alle Stufen", "fr": "Pour tous", "es": "Para todos"},
+    "Low maturity": {"res": "Phonesky:content_filter_low_maturity", "hu": "Alacsony besorolású", "de": "Niedrige Stufe", "fr": "Niveau 3 - Large", "es": "Nivel de madurez bajo"},
+    "Medium maturity": {"res": "Phonesky:content_filter_medium_maturity", "hu": "Közepes besorolású", "de": "Mittlere Stufe", "fr": "Niveau 2 - Modéré", "es": "Nivel de madurez medio"},
+    "High maturity": {"res": "Phonesky:content_filter_high_maturity", "hu": "Magas besorolású", "de": "Hohe Stufe", "fr": "Niveau 1 - Strict", "es": "Nivel de madurez alto"},
+    "Show all apps": {"res": "Phonesky:content_filter_show_all_apps", "hu": "Összes alkalmazás", "de": "Alle Apps anzeigen", "fr": "Afficher toutes app.", "es": "Mostrar todas"},
     "Content filtering": {"res": "Phonesky:content_filtering_label", "hu": "Tartalomszűrés", "de": "Filter für Inhalte", "fr": "Filtrage du contenu", "es": "Filtro de contenido"},
     "Content filtering summary": {"res": "Phonesky:content_filtering_description", "hu": "A tartalomszűrés szintjének beállítása a letölthető alkalmazások körének szűkítéséhez", "de": "Beschränken Sie über die Inhaltsfilterung den Zugriff auf Apps, die heruntergeladen werden können.", "fr": "Définir le niveau de filtrage du contenu afin de limiter les applications pouvant être téléchargées", "es": "Definir el nivel del filtro de contenido para restringir las aplicaciones que se pueden descargar", "en": "Set the content filtering level to restrict apps that can be downloaded"},
     "Use PIN for purchases": {"res": "Phonesky:purchase_lock_label", "hu": "PIN-kód vásárlásokhoz", "de": "PIN für Käufe verwenden", "fr": "Utiliser PIN pour achats", "es": "Usar PIN para compras"},
@@ -154,6 +168,12 @@
   const catalog = () => (window.ICSPlayStore?.catalog || []).map((item, i) => ({...item, kind: item.category === 'Games' ? 'games' : 'apps', price: 'FREE', downloads: ['10,000,000+', '1,000,000+', '500,000+', '100,000+'][i % 4], votes: 12000 + i * 4173, updated: DATES[i % 4], plus: 120 + i * 37, size: String(item.size || '').replace(' ', ''), whatsnew: 'Bug fixes and performance improvements.'}));
   const all = () => [...catalog(), ...EXTRA.map(item => ({downloads: '50,000+', votes: 812, plus: 46, updated: item.kind === 'magazines' ? 'August 9, 2012' : 'February 1, 2012', size: item.kind === 'books' ? '1.2MB' : item.kind === 'magazines' ? '24MB' : item.kind === 'music' ? '96MB' : item.kind === 'movies' ? '820MB' : item.size, description: item.kind === 'books' ? 'A classic, free from Google Play Books.' : item.kind === 'movies' ? 'Rent and watch within 30 days.' : '', ...item}))];
   const find = id => all().find(item => item.id === id);
+  // Each item's content rating (the storefront's own; the image's apps are rated Everyone) and ContentFilterActivity's
+  // choice: the ticked ratings; Show all apps lifts the filter.
+  const MATURITY = {orbit: 'Medium maturity', 'lunar-golf': 'Low maturity'};
+  const LEVELS = ['Everyone', 'Low maturity', 'Medium maturity', 'High maturity', 'Show all apps'];
+  const maturity = item => MATURITY[item.id] || 'Everyone';
+  const shown = ctx => { const f = ctx.prefs?.filter; return all().filter(item => !f || f.includes('Show all apps') || f.includes(maturity(item))); };
   const installedState = (item, ctx) => item.app ? 'installed' : ctx.installed.includes(item.id) ? 'installed' : ctx.downloading === item.id ? ctx.phase : '';
   const stars = rating => `<span class="icsp-stars" aria-label="${rating}">${[1, 2, 3, 4, 5].map(n => `<i class="${rating >= n - .25 ? 'on' : rating >= n - .75 ? 'half' : ''}"></i>`).join('')}</span>`;
   const ICONS = {
@@ -177,13 +197,13 @@
   function suggestions(ctx) {
     if (!ctx.searching) return '';
     const q = String(ctx.editValue || '').trim().toLocaleLowerCase(ctx.locale);
-    const list = q ? all().filter(item => item.name.toLocaleLowerCase(ctx.locale).includes(q)).slice(0, 5).map(item => ({id: item.id, name: item.name})) : ctx.history.slice(0, 5).map(name => ({id: '', name}));
+    const list = q ? shown(ctx).filter(item => item.name.toLocaleLowerCase(ctx.locale).includes(q)).slice(0, 5).map(item => ({id: item.id, name: item.name})) : ctx.history.slice(0, 5).map(name => ({id: '', name}));
     return list.length ? `<div class="icsp-suggest">${list.map(s => `<button type="button" data-action="${s.id ? 'icsp-detail' : 'icsp-search-run'}" data-id="${e(s.id || s.name)}"><i class="${s.id ? 'item' : 'recent'}"></i><span>${e(s.name)}</span></button>`).join('')}</div>` : '';
   }
   const view = (ctx, cls, head, body) => `<div class="app-view icsp ${cls}" data-no-translate>${head}<div class="icsp-scroll">${body}</div>${suggestions(ctx)}</div>`;
 
   function home(ctx) {
-    const T = key => text(ctx.lang, key), items = all(), promo = find('orbit') || items[0];
+    const T = key => text(ctx.lang, key), items = shown(ctx), promo = find('orbit') || items[0];
     // CorpusGridItem.bindCorpusTile: corpus_cell with the strip, the name, the watermark and "see more".
     const tiles = SECTIONS.slice(0, 4).map(([id, label, color]) => `<button class="icsp-tile ${id}" style="--c:${color}" data-action="icsp-section" data-id="${id}"><b>${e(T(label))}</b><i class="icsp-mark ${id}"></i><small>${e(T('see more'))}</small></button>`).join('');
     const stripe = kind => (SECTIONS.find(s => s[0] === kind) || SECTIONS[0])[2];
@@ -197,7 +217,7 @@
     const T = key => text(ctx.lang, key), [id, label, color] = SECTIONS.find(s => s[0] === ctx.section) || SECTIONS[0];
     const tabs = TABS[id], tab = tabs.includes(ctx.tab) ? ctx.tab : 'FEATURED', i = tabs.indexOf(tab);
     const strip = `<div class="icsp-tabs" style="--c:${color}" data-icsp-swipe><button data-action="icsp-tab" data-id="${e(tabs[i - 1] || '')}"${i ? '' : ' disabled'}>${i ? e(T(tabs[i - 1])) : ''}</button><b>${e(T(tab))}</b><button data-action="icsp-tab" data-id="${e(tabs[i + 1] || '')}"${i < tabs.length - 1 ? '' : ' disabled'}>${i < tabs.length - 1 ? e(T(tabs[i + 1])) : ''}</button></div>`;
-    const items = all().filter(item => item.kind === id);
+    const items = shown(ctx).filter(item => item.kind === id);
     let body;
     if (tab === 'CATEGORIES' || tab === 'GENRES') {
       const cats = {games: ['Arcade & Action', 'Brain & Puzzle', 'Cards & Casino', 'Casual', 'Live Wallpaper', 'Racing', 'Sports Games', 'Widgets'], apps: ['Books & Reference', 'Business', 'Comics', 'Communication', 'Education', 'Entertainment', 'Finance', 'Health & Fitness', 'Music & Audio', 'Photography', 'Productivity', 'Tools'], music: ['Alternative', 'Classical', 'Electronica', 'Pop', 'Rock', 'Soundtracks'], books: ['Fiction', 'Classics', 'Mystery', 'Children\'s'], movies: ['Action & Adventure', 'Animation', 'Comedy', 'Drama', 'Family']}[id];
@@ -258,7 +278,7 @@
     return view(ctx, 'icsp-myapps', header(ctx, T('My apps')), group('Up to date', installed) + group('Not installed', removed));
   }
   function search(ctx) {
-    const q = String(ctx.query || '').trim().toLocaleLowerCase(ctx.locale), items = q ? all().filter(item => `${item.name} ${item.developer}`.toLocaleLowerCase(ctx.locale).includes(q)) : [];
+    const q = String(ctx.query || '').trim().toLocaleLowerCase(ctx.locale), items = q ? shown(ctx).filter(item => `${item.name} ${item.developer}`.toLocaleLowerCase(ctx.locale).includes(q)) : [];
     return view(ctx, 'icsp-results', header(ctx, ctx.query || ''), items.length ? `<div class="icsp-list">${items.map(item => row(item, ctx)).join('')}</div>` : `<p class="icsp-empty">${e(text(ctx.lang, 'No results'))}</p>`);
   }
   // Settings (3.8.15 / 3.8.17 captures; Holo rows and upper-case headers on ICS).
@@ -266,8 +286,10 @@
     const T = key => text(ctx.lang, key), s = ctx.prefs;
     const cat = title => `<h3 class="icsp-pref-cat">${e(T(title))}</h3>`;
     const chk = (key, title, summary, disabled) => `<button class="icsp-pref" data-action="icsp-pref" data-id="${key}" role="checkbox" aria-checked="${!!s[key]}"${disabled ? ' disabled' : ''}><span><b>${e(T(title))}</b><small>${e(T(summary))}</small></span><img src="assets/btn_check_${s[key] ? 'on' : 'off'}_holo_dark.png" alt=""></button>`;
-    const plain = (action, title, summary, raw) => `<button class="icsp-pref" data-action="${action}"><span><b>${e(T(title))}</b><small>${raw ? e(summary) : e(T(summary))}</small></span></button>`;
-    return `<div class="app-view icsp icsp-settings" data-no-translate>${header({...ctx, noMenu: true}, T('Settings'))}<div class="icsp-scroll">${cat('General')}${chk('notify', 'Notifications', 'Notifications summary')}${chk('autoUpdate', 'Auto-update apps', 'Auto-update summary')}${chk('wifiOnly', 'Update over Wi-Fi only', 'Wi-Fi summary')}${chk('widgets', 'Auto-add widgets', 'Widgets summary')}${plain('icsp-clear-history', 'Clear search history', 'Clear search history summary')}${cat('User controls')}<button class="icsp-pref" data-action="icsp-unavailable"${s.pinSet ? '' : ' disabled'}><span><b>${e(T('Unlock settings'))}</b></span></button>${plain('icsp-unavailable', 'Content filtering', 'Content filtering summary')}${chk('pin', 'Use PIN for purchases', 'Use PIN summary', !s.pinSet)}${plain('icsp-unavailable', 'Set or change PIN', 'Set PIN summary')}${cat('Other')}${chk('admob', 'Google AdMob Ads', 'AdMob summary')}<p class="icsp-pref-note">${e(AndroidStrings.format(stripTags(T('AdMob info')), ''))}</p>${cat('About')}${plain('icsp-unavailable', 'Open source licenses', 'Licenses summary')}<div class="icsp-pref info"><span><b>${e(T('Build version'))}</b><small>${e(fmt(T('Version'), VERSION))}</small></span></div></div></div>`;
+    // With a PIN the user controls stay locked until Unlock settings takes it (SettingsActivity).
+    const locked = !!s.pinCode && !ctx.unlocked;
+    const plain = (action, title, summary, raw, disabled) => `<button class="icsp-pref" data-action="${action}"${disabled ? ' disabled' : ''}><span><b>${e(T(title))}</b><small>${raw ? e(summary) : e(T(summary))}</small></span></button>`;
+    return `<div class="app-view icsp icsp-settings" data-no-translate>${header({...ctx, noMenu: true}, T('Settings'))}<div class="icsp-scroll">${cat('General')}${chk('notify', 'Notifications', 'Notifications summary')}${chk('autoUpdate', 'Auto-update apps', 'Auto-update summary')}${chk('wifiOnly', 'Update over Wi-Fi only', 'Wi-Fi summary')}${chk('widgets', 'Auto-add widgets', 'Widgets summary')}${plain('icsp-clear-history', 'Clear search history', 'Clear search history summary')}${cat('User controls')}<button class="icsp-pref" data-action="icsp-unlock"${locked ? '' : ' disabled'}><span><b>${e(T('Unlock settings'))}</b></span></button>${plain('icsp-filter', 'Content filtering', 'Content filtering summary', false, locked)}${chk('pin', 'Use PIN for purchases', 'Use PIN summary', !s.pinCode || locked)}${plain('icsp-pin', 'Set or change PIN', 'Set PIN summary', false, locked)}${cat('Other')}${chk('admob', 'Google AdMob Ads', 'AdMob summary')}<p class="icsp-pref-note">${e(AndroidStrings.format(stripTags(T('AdMob info')), ''))}</p>${cat('About')}${plain('icsp-unavailable', 'Open source licenses', 'Licenses summary')}<div class="icsp-pref info"><span><b>${e(T('Build version'))}</b><small>${e(fmt(T('Version'), VERSION))}</small></span></div></div></div>`;
   }
   function render(ctx) {
     if (ctx.page === 'section') return section(ctx);
@@ -283,8 +305,22 @@
   // Holo dialogs: Sort reviews (single choice) and Options (two checkboxes with OK).
   function dialog(kind, ctx) {
     const T = key => text(ctx.lang, key), item = find(ctx.target || ctx.selected);
+    const box = (title, body, buttons) => `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog icsp-dialog" role="dialog" aria-label="${e(title)}"><h3>${e(title)}</h3>${body}<div class="settings-dialog-actions">${buttons}</div></div>`;
+    const cancel = `<button data-action="close-overlay">${e(T('Cancel'))}</button>`;
+    // ContentFilterActivity: "Allow apps rated for" with a check box per rating.
+    if (kind === 'filter') {
+      const f = ctx.filterDraft || ctx.prefs.filter || LEVELS;
+      return box(T('Allow apps rated for'), `<div class="icsp-dlg-list">${LEVELS.map(level => `<button class="icsp-dlg-row" data-action="icsp-filter-pick" data-id="${e(level)}" role="checkbox" aria-checked="${f.includes(level)}"><span>${e(T(level))}</span><img src="assets/btn_check_${f.includes(level) ? 'on' : 'off'}_holo_dark.png" alt=""></button>`).join('')}</div>`, cancel + `<button data-action="icsp-filter-ok">${e(T('OK'))}</button>`);
+    }
+    // PinEntryDialog: the prompt for the step, the PIN field with its hint ("Incorrect PIN" after a wrong one), and
+    // Remove PIN beside OK when an existing PIN is being edited.
+    if (kind === 'pin') {
+      const step = ctx.pinStep || 'create', prompt = {create: 'Create a PIN to control and lock settings:', confirm: 'Re-type to confirm your new PIN:', settings: 'Type your PIN to change settings:', edit: 'Type a new PIN or remove existing PIN:'}[step];
+      return box(T('Type your PIN'), `<p class="icsp-dlg-text">${e(T(prompt))}</p><input class="icsp-pin" data-icsp-pin type="password" inputmode="numeric" maxlength="16" autocomplete="off" placeholder="${e(T(ctx.pinWrong ? 'Incorrect PIN' : 'Type PIN'))}" aria-label="${e(T('Type your PIN'))}">`,
+        cancel + (step === 'edit' ? `<button data-action="icsp-pin-remove">${e(T('Remove PIN'))}</button>` : '') + `<button data-action="icsp-pin-ok">${e(T('OK'))}</button>`);
+    }
     if (kind === 'uninstall' && item) return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog icsp-dialog" role="dialog" aria-label="${e(T('Uninstall app'))}"><h3>${e(T('Uninstall app'))}</h3><p class="icsp-dlg-text">${e(T('Do you want to uninstall this app?'))}</p><div class="settings-dialog-actions"><button data-action="close-overlay">${e(T('Cancel'))}</button><button data-action="icsp-uninstall" data-id="${e(item.id)}">${e(T('OK'))}</button></div></div>`;
     return '';
   }
-  window.ICSPlay = {SECTIONS, TABS, EXTRA, VERSION, text, fmt, all, find, installedState, render, menu, dialog};
+  window.ICSPlay = {SECTIONS, TABS, EXTRA, VERSION, LEVELS, text, fmt, all, shown, maturity, find, installedState, render, menu, dialog};
 })();

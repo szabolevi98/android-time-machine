@@ -2683,6 +2683,32 @@ const gbMarketMore = async h => {
   const games = await h.ev(`document.querySelector('#viewport .gbmk-cat small')?.textContent || ''`);
   h.check('the filter hides the Medium maturity game', !games.includes('Orbit Hopper') && games.includes('Pixel Blocks'), games);
 };
+// 4.0.4 Play Store 3.4.7 (T21): Set or change PIN (typed twice), the user controls locked behind Unlock settings, a
+// wrong PIN refused, and Content filtering that hides the ratings it does not allow.
+const icsPlayFilter = async h => {
+  const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  const prefs = async () => (await store(h, 'marketPrefs')) || {};
+  const pin = async value => { await h.type('[data-icsp-pin]', value); await h.tap('[data-action="icsp-pin-ok"]'); };
+  await h.openApp('play-store'); await act('icsp-settings');
+  h.check('Unlock settings is off without a PIN', await h.until(`document.querySelector('#viewport [data-action="icsp-unlock"]')?.disabled === true`));
+  await h.tap('#viewport [data-action="icsp-pin"]');
+  await pin('1234');
+  h.check('a new PIN is typed again to confirm', await h.until(`/Re-type to confirm/.test(document.querySelector('.icsp-dialog')?.textContent || '')`));
+  await pin('1234');
+  h.check('the PIN is kept and the user controls lock', (await prefs()).pinCode === '1234' && await h.until(`document.querySelector('#viewport [data-action="icsp-filter"]')?.disabled === true`));
+  await h.tap('#viewport [data-action="icsp-unlock"]');
+  await pin('99');
+  h.check('a wrong PIN is refused', await h.until(`document.querySelector('[data-icsp-pin]')?.placeholder === 'Incorrect PIN'`));
+  await pin('1234');
+  h.check('Unlock settings opens the user controls', await h.until(`document.querySelector('#viewport [data-action="icsp-filter"]')?.disabled === false`));
+  await h.tap('#viewport [data-action="icsp-filter"]');
+  await h.tap('[data-action="icsp-filter-pick"][data-id="Medium maturity"]');
+  await h.tap('[data-action="icsp-filter-ok"]');
+  h.check('Content filtering keeps the choice', !((await prefs()).filter || []).includes('Medium maturity'));
+  await act('icsp-section', 'games');
+  await h.until(`/Pixel Blocks/.test(document.querySelector('#viewport')?.textContent || '')`);
+  h.check('the filter hides the Medium maturity game', !(await h.ev(`/Orbit Hopper/.test(document.querySelector('#viewport').textContent)`)));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -2768,6 +2794,7 @@ const CASES = [
   {id: 'T10', version: '4.4.4', name: 'Hangouts › Take photo through the Camera capture request', run: hangoutsTakePhoto},
   {id: 'T10', version: '5.1.1', name: 'Hangouts › Take photo through the Camera capture request', run: hangoutsTakePhoto},
   {id: 'T21', version: '2.3.6', name: 'Market › Developer Info, Sharing, content rating and the PIN-guarded filter', run: gbMarketMore},
+  {id: 'T21', version: '4.0.4', name: 'Play Store › PIN, Unlock settings and the content filter', run: icsPlayFilter},
   {id: 'T10', version: '2.3.6', name: 'Contacts › Take photo through the Camera capture request', run: gbContactPhoto},
   {id: 'T13', version: '2.3.6', name: 'Messaging › Audio, Record audio, Capture picture / video, Slideshow', run: gbMmsAttach},
   {id: 'T13', version: '4.3', name: 'Messaging › Audio Play, Capture picture / video, Slideshow', run: jbMmsAttach},

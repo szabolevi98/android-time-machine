@@ -228,3 +228,9 @@
 /* ListView.dispatchDraw draws no divider next to an item that is not enabled, such as a PreferenceCategory header; the
    divider's room stays (fillForMissingDividers). */
 .screen .icsp-pref:has(+ .icsp-pref-cat){border-bottom-color:transparent}
+/* ContentFilterActivity's check box rows and PinEntryDialog's text and PIN field. */
+.icsp-dlg-list{max-height:calc(340 * var(--dp));overflow-y:auto}
+.screen .icsp-dlg-row{display:flex;align-items:center;width:100%;min-height:calc(56 * var(--dp));padding:0 calc(8 * var(--dp)) 0 calc(18 * var(--dp));border:0;border-top:calc(1 * var(--dp)) solid #3a3a3a;background:none;text-align:left;font-size:calc(18 * var(--dp));color:#eee}
+.icsp-dlg-row span{flex:1}
+.icsp-dlg-row img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.screen .icsp-pin{display:block;width:calc(100% - calc(36 * var(--dp)));margin:0 calc(18 * var(--dp)) calc(16 * var(--dp));padding:calc(6 * var(--dp)) 0;border:0;border-bottom:calc(2 * var(--dp)) solid #33b5e5;background:none;font-size:calc(18 * var(--dp));color:#fff;outline:0}

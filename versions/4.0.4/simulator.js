@@ -788,7 +788,7 @@
     } else if (ui.overlay === 'play-menu') {
       // The action bar overflow: a Holo popup anchored below the overflow button.
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${ICSPlay.menu(icsPlayContext()).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'icsp-sort' || ui.overlay === 'icsp-options') {
+    } else if (ui.overlay?.startsWith('icsp-')) {
       overlayRoot.innerHTML = ICSPlay.dialog(ui.overlay.slice(5), icsPlayContext());
     } else if (ui.overlay === 'jbx-menu') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${JBExtraApps.menu(ui.view, key => i18n.t(key)).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
@@ -1030,7 +1030,7 @@
      run on a timer with a notification while they last and "Successfully installed." afterwards. */
   function icsPlayContext() {
     const m = ui.market || {page: 'home'};
-    return {lang: i18n.language, locale: i18n.locale(), ...m, installed: data.marketInstalled || [], everInstalled: data.marketEverInstalled || [], downloading: ui.marketDownload?.id || '', phase: ui.marketDownload?.phase || '', progress: ui.marketDownload?.progress || 0, plussed: data.marketPlus || [], autoUpdate: data.marketAuto || [], prefs: {notify: true, autoUpdate: false, wifiOnly: false, widgets: true, pin: false, admob: true, ...(data.marketPrefs || {})}, searching: !!ui.marketSearching, editValue: ui.marketEdit || '', history: data.marketSearches || [], reviewSort: ui.reviewSort || 'helpful', reviewLatest: !!ui.reviewLatest, reviewDevice: !!ui.reviewDevice};
+    return {lang: i18n.language, locale: i18n.locale(), ...m, installed: data.marketInstalled || [], everInstalled: data.marketEverInstalled || [], downloading: ui.marketDownload?.id || '', phase: ui.marketDownload?.phase || '', progress: ui.marketDownload?.progress || 0, plussed: data.marketPlus || [], autoUpdate: data.marketAuto || [], prefs: {notify: true, autoUpdate: false, wifiOnly: false, widgets: true, pin: false, admob: true, ...(data.marketPrefs || {})}, unlocked: !!ui.icspUnlocked, pinStep: ui.icspPinStep, pinWrong: !!ui.icspPinWrong, filterDraft: ui.icspFilterDraft, searching: !!ui.marketSearching, editValue: ui.marketEdit || '', history: data.marketSearches || [], reviewSort: ui.reviewSort || 'helpful', reviewLatest: !!ui.reviewLatest, reviewDevice: !!ui.reviewDevice};
   }
   function icsPlayGo(next) { (ui.marketHistory ||= []).push({...(ui.market || {page: 'home'}), scroll: viewport.querySelector('.icsp-scroll')?.scrollTop || 0}); ui.market = {...(ui.market || {}), ...next}; ui.overlay = ''; ui.marketSearching = false; render(); }
   function icsPlayDownload(id) {
@@ -1429,6 +1429,22 @@
       case 'icsp-settings': icsPlayGo({page: 'settings'}); break;
       case 'icsp-unavailable': ui.overlay = ''; renderOverlay(); toast(ICSPlay.text(i18n.language, 'Unavailable')); break;
       case 'icsp-pref': { const base = icsPlayContext().prefs; data.marketPrefs = {...base, [id]: !base[id]}; save(); const top = viewport.querySelector('.icsp-scroll')?.scrollTop || 0; render(); const list = viewport.querySelector('.icsp-scroll'); if (list) list.scrollTop = top; break; }
+      // Content filtering and the PIN (ics-play.js's PinEntryDialog): a new PIN is typed twice; with a PIN the user
+      // controls stay locked until Unlock settings, and editing it can remove it.
+      case 'icsp-filter': ui.icspFilterDraft = undefined; ui.overlay = 'icsp-filter'; renderOverlay(); break;
+      case 'icsp-filter-pick': { const levels = ICSPlay.LEVELS, cur = ui.icspFilterDraft || icsPlayContext().prefs.filter || levels; let next = cur.includes(id) ? cur.filter(x => x !== id && (id === 'Show all apps' || x !== 'Show all apps')) : [...cur, id]; if (id === 'Show all apps') next = cur.includes(id) ? [] : [...levels]; else if (levels.slice(0, 4).every(l => next.includes(l))) next = [...levels]; ui.icspFilterDraft = next; renderOverlay(); break; }
+      case 'icsp-filter-ok': data.marketPrefs = {...icsPlayContext().prefs, filter: ui.icspFilterDraft || icsPlayContext().prefs.filter || ICSPlay.LEVELS}; save(); ui.overlay = ''; renderOverlay(); render(); break;
+      case 'icsp-unlock': case 'icsp-pin': ui.icspPinNext = action; ui.icspPinStep = action === 'icsp-unlock' ? 'settings' : data.marketPrefs?.pinCode ? 'edit' : 'create'; ui.icspPinWrong = false; ui.overlay = 'icsp-pin'; renderOverlay(); overlayRoot.querySelector('[data-icsp-pin]')?.focus(); break;
+      case 'icsp-pin-remove': { const p = {...icsPlayContext().prefs}; delete p.pinCode; p.pin = false; data.marketPrefs = p; save(); ui.overlay = ''; renderOverlay(); render(); break; }
+      case 'icsp-pin-ok': {
+        const value = String(overlayRoot.querySelector('[data-icsp-pin]')?.value || '').trim(), prefs = icsPlayContext().prefs, step = ui.icspPinStep;
+        const again = wrong => { ui.icspPinWrong = wrong; renderOverlay(); overlayRoot.querySelector('[data-icsp-pin]')?.focus(); };
+        if (!/^\d+$/.test(value)) { again(!!value); break; }
+        if (step === 'settings') { if (value !== prefs.pinCode) { again(true); break; } ui.icspUnlocked = true; ui.overlay = ''; renderOverlay(); render(); break; }
+        if (step === 'create' || step === 'edit') { ui.icspPinNew = value; ui.icspPinStep = 'confirm'; again(false); break; }
+        if (value !== ui.icspPinNew) { ui.icspPinStep = data.marketPrefs?.pinCode ? 'edit' : 'create'; again(true); break; }
+        data.marketPrefs = {...prefs, pinCode: value}; ui.icspUnlocked = false; save(); ui.overlay = ''; renderOverlay(); render(); break;
+      }
       case 'icsp-clear-history': data.marketSearches = []; save(); break;
       case 'icsp-search': ui.marketSearching = true; ui.marketEdit = ''; render(); viewport.querySelector('.icsp-bar input')?.focus(); break;
       case 'icsp-search-run': data.marketSearches = [id, ...(data.marketSearches || []).filter(q => q !== id)].slice(0, 10); save(); icsPlayGo({page: 'search', query: id}); break;
