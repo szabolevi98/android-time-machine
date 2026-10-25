@@ -74,8 +74,11 @@
     const detail = ui.sub === 'thread', compose = detail || ui.sub === 'new';
     const person = identity(ui.thread,data.contacts), draft = data.messageDrafts?.[draftKey(ui)] || {};
     if (!compose) {
-      const searching = ui.sub === 'search', list = threads(data, searching ? ui.mmsSearch || '' : '');
-      const bar = searching
+      // A blocked conversation is archived (MessengerOptions); Archived lists those apart.
+      const searching = ui.sub === 'search', archived = ui.sub === 'archived', list = threads(data, searching ? ui.mmsSearch || '' : '').filter(thread => !!window.MessengerOptions?.archived(data, thread.key) === archived);
+      const M = key => window.MessengerOptions ? MessengerOptions.M(key) : key;
+      const bar = archived ? `<header class="lpm-toolbar">${tool('back', t('Navigate up'), 'bg-ic_arrow_back_light.png')}<h2>${escape(M('Archived'))}</h2>${tool('mms-menu', t('More options'), 'gd-ic_overflow_menu.png', 'lpm-white')}</header>`
+        : searching
         ? `<header class="lpm-toolbar">${tool('back', t('Navigate up'), 'bg-ic_arrow_back_light.png')}<form class="lpm-search mms-search" data-form="mms-search"><input name="query" type="search" aria-label="${escape(t('Search'))}" placeholder="${escape(t('Search'))}" maxlength="100" value="${escape(ui.mmsSearch || '')}"></form></header>`
         : `<header class="lpm-toolbar"><h2>${escape(t('Messenger'))}</h2>${tool('mms-search', t('Search'), 'bg-ic_search_light.png')}${tool('mms-menu', t('More options'), 'gd-ic_overflow_menu.png', 'lpm-white')}</header>`;
       const rows = list.map(thread => {
@@ -83,7 +86,7 @@
         const snippet = thread.draft?.body || thread.draft?.attachment ? `<b>${escape(t('Draft'))}</b> ${escape(thread.draft.body || t('Picture'))}` : `${last?.mine ? escape(t('You: ')) : ''}${escape(last?.body || t('Picture'))}`;
         return `<button class="mms-thread lpm-thread${unread ? ' unread' : ''}" data-action="thread" data-id="${escape(thread.key)}">${tile(thread.person, 'lpm-avatar')}<span class="lpm-thread-copy"><strong>${escape(thread.person.name)}</strong><span class="lpm-snippet">${snippet}</span><time>${escape(stamp(last, t, locale, now))}</time></span></button>`;
       }).join('');
-      return `<div class="app-view mms-app lpm-app">${bar}<div class="mms-scroll mms-threads lpm-list">${rows || `<p class="lpm-empty">${escape(t(ui.mmsSearch ? 'No messages found' : 'Once you start a new conversation, you’ll see it listed here'))}</p>`}</div>${searching ? '' : `<button class="lpm-fab" data-action="new-message" aria-label="${escape(t('Start new conversation'))}"><img src="assets/bg-ic_add_white.png" alt=""></button>`}</div>`;
+      return `<div class="app-view mms-app lpm-app">${bar}<div class="mms-scroll mms-threads lpm-list">${rows || `<p class="lpm-empty">${escape(archived ? M('Archived empty') : t(ui.mmsSearch ? 'No messages found' : 'Once you start a new conversation, you’ll see it listed here'))}</p>`}</div>${searching || archived ? '' : `<button class="lpm-fab" data-action="new-message" aria-label="${escape(t('Start new conversation'))}"><img src="assets/bg-ic_add_white.png" alt=""></button>`}</div>`;
     }
     const messages = detail ? data.messages.filter(m=>String(m.contact)===String(ui.thread) && channelOf(m) === 'sms') : [];
     const c = detail ? color(person) : '#0288d1';

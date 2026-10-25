@@ -615,12 +615,18 @@ versions/5.1.1/assets/hg-default_avatar.png	ba5bb1314d129dea	copy	shamu:/system/
 versions/5.1.1/assets/hg-ic_add_24dp.png	4e536a5f8d3eb09b	same pixels	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_add_24dp.png	drawable-xxhdpi-v4		7d9e14fb88b6091c
 versions/5.1.1/assets/hg-ic_archive_24dp.png	e7d177e7532bb78f	same pixels	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_archive_24dp.png	drawable-xxhdpi-v4		f7a3d6377138cd85
 versions/5.1.1/assets/hg-ic_drafts_24dp.png	3518d4b3caf0f535	same pixels	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_drafts_24dp.png	drawable-xxhdpi-v4		9c5d54aa88a658ac
+versions/5.1.1/assets/hg-ic_edit_gray.png	5178612153808ff2	copy	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_edit_gray.png	drawable-xxhdpi-v4		5178612153808ff2
 versions/5.1.1/assets/hg-ic_emoji_dark.png	82f01ddec9833059	copy	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_emoji_dark.png	drawable-xxhdpi-v4		82f01ddec9833059
 versions/5.1.1/assets/hg-ic_hangout_video_24dp.png	2e1c94ed849f0af5	copy	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_hangout_video_24dp.png	drawable-xxhdpi-v4		2e1c94ed849f0af5
 versions/5.1.1/assets/hg-ic_help_24dp.png	ad8916eb03ab10f0	same pixels	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_help_24dp.png	drawable-xxhdpi-v4		ca4f6cd7e916c1ef
+versions/5.1.1/assets/hg-ic_ignore_gray.png	914d6ca463d76a0a	copy	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_ignore_gray.png	drawable-xxhdpi-v4		914d6ca463d76a0a
 versions/5.1.1/assets/hg-ic_notifications_off_24dp.png	f885907500cce0fe	same pixels	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_notifications_off_24dp.png	drawable-xxhdpi-v4		31e5875c56854e1b
+versions/5.1.1/assets/hg-ic_person_add_24dp.png	20278adf2da74d69	copy	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_person_add_24dp.png	drawable-xxhdpi-v4		20278adf2da74d69
 versions/5.1.1/assets/hg-ic_report_24dp.png	cb2130eba16dde93	same pixels	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_report_24dp.png	drawable-xxhdpi-v4		0a58b0f8269da0f2
 versions/5.1.1/assets/hg-ic_settings_24dp.png	6fec9638ce13c1bb	same pixels	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_settings_24dp.png	drawable-xxhdpi-v4		6463894d6a27d69e
+versions/5.1.1/assets/hg-ic_speaker_on_gray.png	c8b0782655649782	copy	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_speaker_on_gray.png	drawable-xxhdpi-v4		c8b0782655649782
+versions/5.1.1/assets/hg-ic_unmute_gray.png	1487a079ac76a95d	copy	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_unmute_gray.png	drawable-xxhdpi-v4		1487a079ac76a95d
+versions/5.1.1/assets/hg-ic_zero_blocked.png	4d76a833403ea1ca	copy	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_zero_blocked.png	drawable-xxhdpi-v4		4d76a833403ea1ca
 versions/5.1.1/assets/hg-lp-quantum_ic_attachment_grey600_24.png	d48e597535dc9fb3	copy	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/quantum_ic_attachment_grey600_24.png	drawable-xxxhdpi-v4		d48e597535dc9fb3
 versions/5.1.1/assets/hg-msg_bubble_hangout_right.png	72f0dfee3349a59a	copy	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/msg_bubble_hangout_right.9.png	drawable-xxhdpi-v4		72f0dfee3349a59a
 versions/5.1.1/assets/hg-msg_bubble_left.png	0afa2fb5950457c1	copy	shamu:/system/priv-app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/msg_bubble_left.9.png	drawable-xxhdpi-v4		0afa2fb5950457c1

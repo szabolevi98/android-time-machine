@@ -84,3 +84,33 @@
 .screen .lpm-message time{display:block;margin-top:calc(3.9956 * var(--dp));font-size:calc(11.9978 * var(--dp))}
 .screen .lpm-message.received time{color:#ffffff99}
 .screen .lpm-message.sent time{color:#32323299}
+/* People & options (hangouts-prefs.js, MessengerOptions): people_options_item_view.xml rows 56 dp high, 16 dp in, with
+   the switch; people_and_options_section_header.xml (the 1 dp #ccc divider over "People in this conversation"). */
+.mpo-list{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.screen .mpo-row{display:flex;align-items:center;width:100%;min-height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;text-align:left}
+.mpo-row.off{opacity:.38}
+.mpo-text{flex:1;min-width:0;display:flex;flex-direction:column}
+.mpo-text b{font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#323232;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mpo-text small{font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#636363;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mpo-switch{flex:none;position:relative;width:calc(36 * var(--dp));height:calc(14 * var(--dp));margin-left:calc(16 * var(--dp));border-radius:calc(7 * var(--dp));background:#00000042}
+.mpo-switch::after{content:'';position:absolute;left:calc(-3 * var(--dp));top:calc(-3 * var(--dp));width:calc(20 * var(--dp));height:calc(20 * var(--dp));border-radius:50%;background:#f1f1f1;box-shadow:0 calc(1 * var(--dp)) calc(3 * var(--dp)) #0006;transition:transform .15s}
+.mpo-switch.on{background:#0288d180}
+.mpo-switch.on::after{transform:translateX(calc(22 * var(--dp)));background:#0288d1}
+.mpo-head i{display:block;height:calc(1 * var(--dp));background:#ccc}
+.mpo-head span{display:block;padding:calc(16 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#0288d1}
+.mpo-person{display:flex;align-items:center;gap:calc(16 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp))}
+.mpo-avatar{flex:none;width:calc(42 * var(--dp));height:calc(42 * var(--dp));border-radius:50%}
+.mpo-avatar span{font:300 calc(24 * var(--dp))/1 Roboto,sans-serif}
+.mpo-scrim{position:absolute;inset:0;z-index:40;border:0;background:#0009}
+.mpo-dialog{position:absolute;z-index:41;left:calc(24 * var(--dp));right:calc(24 * var(--dp));top:50%;transform:translateY(-50%);padding-bottom:calc(8 * var(--dp));background:#fff;border-radius:calc(2 * var(--dp));box-shadow:0 calc(12 * var(--dp)) calc(24 * var(--dp)) #0000004d}
+.mpo-dialog h3{margin:0;padding:calc(24 * var(--dp)) calc(24 * var(--dp)) calc(12 * var(--dp));font:500 calc(20 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.mpo-msg{margin:0;padding:0 calc(24 * var(--dp)) calc(8 * var(--dp));font:400 calc(16 * var(--dp))/1.4 Roboto,sans-serif;color:#0000008a}
+.mpo-tones{max-height:calc(330 * var(--dp));overflow-y:auto;scrollbar-width:none}
+.screen .mpo-choice{display:flex;align-items:center;gap:calc(16 * var(--dp));width:100%;min-height:calc(48 * var(--dp));padding:0 calc(24 * var(--dp));border:0;background:none;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.mpo-choice span{flex:1}
+.mpo-choice i{order:-1}
+.mpo-choice i{flex:none;width:calc(20 * var(--dp));height:calc(20 * var(--dp));box-sizing:border-box;border:calc(2 * var(--dp)) solid #0000008a;border-radius:50%}
+.mpo-choice.on i{border-color:#0288d1;background:radial-gradient(#0288d1 0 calc(5 * var(--dp)),transparent calc(5.5 * var(--dp)))}
+.mpo-buttons{display:flex;justify-content:flex-end;gap:calc(8 * var(--dp));padding:calc(8 * var(--dp)) calc(8 * var(--dp)) 0}
+.screen .mpo-buttons button{min-width:calc(64 * var(--dp));height:calc(36 * var(--dp));padding:0 calc(8 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#0288d1;text-transform:uppercase}
+.screen .mpo-row:active,.screen .mpo-choice:active,.screen .mpo-buttons button:active{background:#0000001a}

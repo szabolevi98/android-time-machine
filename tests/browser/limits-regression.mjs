@@ -1773,6 +1773,99 @@ const icsNavPlaces = async h => {
   await h.tap('#viewport .loc-hit[data-id="Computer History Museum"]');
   h.check('a find opens on the map', await h.until(`!!document.querySelector('#viewport .sa-map, #viewport svg.sa-map')`));
 };
+// 5.1.1 Hangouts 2.5 and Messenger (T32): Settings keep their choices; People & options mutes and blocks (Blocked people
+// unblocks); a muted chat's answer posts no notification; Add people starts a named group Hangout; Messenger's People &
+// options turns a conversation's notifications off and Block archives it.
+const lpHangoutsOptions = async h => {
+  const act = (action, id = '') => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};el.dataset.id=${JSON.stringify(id)};document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  await h.openApp('hangouts');
+  await h.tap('#viewport [data-action="hg-drawer"]');
+  await h.tap('[data-action="hgp-open"][data-id="settings"]');
+  h.check('Settings lists the account', await h.until(`!!document.querySelector('#viewport .hgp-row[data-id="account"]')`));
+  await h.tap('#viewport .hgp-row[data-id="account"]');
+  h.check('the account has its settings', await h.until(`document.querySelectorAll('#viewport .hgp-row').length >= 10 && !!document.querySelector('#viewport .hgp-cat')`));
+  await h.tap('#viewport .hgp-row[data-id="lastSeen"]');
+  await h.tap('#viewport .hgp-row[data-id="acl"]');
+  await h.tap('#viewport .hgp-row[data-id="acl:public"]');
+  await h.tap('#viewport .hgp-choice[data-id="RING"]');
+  h.check('Everyone Else can contact directly', await h.until(`/directly/.test(document.querySelector('#viewport .hgp-row[data-id="acl:public"] small')?.textContent || '')`));
+  await h.key('Escape');
+  await h.tap('#viewport .hgp-row[data-id="notify:chat"]');
+  await h.tap('#viewport .hgp-row[data-id="chatOn"]');
+  h.check('Notifications off greys Sound and Vibrate', await h.until(`document.querySelector('#viewport .hgp-row[data-id="tone:chat"]')?.disabled === true && document.querySelector('#viewport .hgp-row[data-id="chatVibrate"]')?.disabled === true`));
+  await h.tap('#viewport .hgp-row[data-id="chatOn"]');
+  await h.tap('#viewport .hgp-row[data-id="tone:chat"]');
+  const tone = await h.ev(`document.querySelectorAll('#viewport .hgp-choice')[3].textContent`);
+  await h.tap('#viewport .hgp-choice:nth-child(4)');
+  await h.tap('#viewport [data-action="hgp-tone-ok"]');
+  h.check('the chosen sound is the summary', await h.until(`document.querySelector('#viewport .hgp-row[data-id="tone:chat"] small')?.textContent === ${JSON.stringify(tone)}`));
+  const p = await store(h, 'hgPrefs') || {};
+  h.check('the settings are kept', p.lastSeen === false && p.acl?.public === 'RING' && p.chatOn === true && p.chatSound === tone, JSON.stringify(p));
+  for (let i = 0; i < 3; i++) await h.key('Escape');
+  h.check('Back leaves Settings for the list', await h.until(`!!document.querySelector('#viewport [data-action="thread"][data-id="2"]')`));
+  // People & options of Sam's chat: mute, then block and unblock from Blocked people.
+  await h.tap('#viewport [data-action="thread"][data-id="2"]');
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="hgp-open"][data-id="options"]');
+  h.check('People & options lists the options and Sam', await h.until(`!!document.querySelector('#viewport .hgp-option[data-action="hgp-mute"]') && /Sam Rivera/.test(document.querySelector('#viewport .hgp-person')?.textContent || '') && /Block Sam Rivera/.test(document.querySelector('#viewport .hgp-option[data-id="block"]')?.textContent || '')`));
+  await h.tap('#viewport .hgp-option[data-action="hgp-mute"]');
+  h.check('Notifications off is kept for the chat', (await store(h, 'hgConv'))?.['2']?.quiet === true && await h.until(`document.querySelector('#viewport .hgp-option[data-id="tone:conv"]')?.disabled === true`));
+  await h.tap('#viewport .hgp-option[data-id="block"]');
+  await h.tap('#viewport [data-action="hgp-block"]');
+  h.check('Block keeps Sam blocked', (await store(h, 'hgBlocked'))?.includes(2) && await h.until(`/Unblock Sam Rivera/.test(document.querySelector('#viewport .hgp-option[data-action="hgp-unblock"]')?.textContent || '')`));
+  await h.key('Escape'); await h.key('Escape');
+  await h.tap('#viewport [data-action="hg-drawer"]');
+  await h.tap('[data-action="hgp-open"][data-id="blocked"]');
+  h.check('Blocked people lists Sam', await h.until(`/Sam Rivera/.test(document.querySelector('#viewport .hgp-blocked-row')?.textContent || '')`));
+  await h.tap('#viewport .hgp-blocked-row [data-action="hgp-unblock"]');
+  h.check('Unblock empties the list', await h.until(`!!document.querySelector('#viewport .hgp-zero')`) && !(await store(h, 'hgBlocked'))?.length);
+  await h.key('Escape');
+  // The muted chat: the answer arrives but posts no notification.
+  await h.tap('#viewport [data-action="thread"][data-id="2"]');
+  await h.type('#viewport .hgl-compose textarea', 'Muted test');
+  await h.ev(`document.querySelector('#viewport .hgl-compose').requestSubmit()`);
+  await act('home');
+  await h.sleep(5500);
+  const msgs = await store(h, 'messages'), notes = await store(h, 'notifications');
+  h.check('the muted chat gets its answer without a notification', msgs.filter(m => m.contact === 2 && m.channel === 'hangouts' && !m.mine).length === 2 && !notes.some(n => n.channel === 'hangouts'), JSON.stringify(notes));
+  // Add people from Sam's chat: a group Hangout with Taylor, renamed.
+  await h.openApp('hangouts');
+  await h.tap('#viewport [data-action="thread"][data-id="2"]');
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="hgp-open"][data-id="add"]');
+  h.check('Add people keeps Sam and offers the others', await h.until(`/Sam Rivera/.test(document.querySelector('#viewport .hgp-chip.fixed')?.textContent || '') && !!document.querySelector('#viewport .hgp-pick[data-id="3"]') && document.querySelector('#viewport [data-action="hgp-add-ok"]')?.disabled === true`));
+  await h.type('#viewport [data-hgp-query]', 'Tay');
+  h.check('the field filters the people', await h.until(`document.querySelectorAll('#viewport .hgp-pick').length === 1`));
+  await h.tap('#viewport .hgp-pick[data-id="3"]');
+  await h.tap('#viewport [data-action="hgp-add-ok"]');
+  h.check('OK opens the group Hangout', await h.until(`/Sam Rivera, Taylor Lee/.test(document.querySelector('#viewport .hgl-bar h2')?.textContent || '')`));
+  await h.type('#viewport .hgl-compose textarea', 'Hi both');
+  await h.ev(`document.querySelector('#viewport .hgl-compose').requestSubmit()`);
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="hgp-open"][data-id="options"]');
+  h.check('the group lists both people and Leave', await h.until(`document.querySelectorAll('#viewport .hgp-person').length === 2 && !!document.querySelector('#viewport .hgp-option[data-id="leave"]')`));
+  await h.tap('#viewport .hgp-option[data-id="rename"]');
+  await h.type('#viewport [data-hgp-edit]', 'Hike crew');
+  await h.tap('#viewport [data-action="hgp-rename"]');
+  h.check('Rename names the group', await h.until(`/Hike crew/.test(document.querySelector('#viewport .hgp-option[data-id="rename"]')?.textContent || '')`));
+  h.check('reloads', await h.reload());
+  await h.openApp('hangouts');
+  h.check('the named group stays in the list', await h.until(`[...document.querySelectorAll('#viewport .hgl-thread')].some(b => /Hike crew/.test(b.textContent))`));
+  // Messenger: People & options of Alex's conversation.
+  await h.openApp('messaging');
+  await h.tap('#viewport [data-action="thread"][data-id="1"]');
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="mpo-open"]');
+  h.check('Messenger\'s People & options opens', await h.until(`!!document.querySelector('#viewport .mpo-app .mpo-row[data-action="mpo-toggle"]')`));
+  await h.tap('#viewport .mpo-row[data-action="mpo-toggle"]');
+  h.check('Notifications off is kept', (await store(h, 'lpmConv'))?.['1']?.off === true && await h.until(`document.querySelector('#viewport .mpo-row[data-action="mpo-dialog"]')?.disabled === true`));
+  await h.tap('#viewport .mpo-row[data-action="mpo-block"]');
+  await h.tap('#viewport [data-action="mpo-block-ok"]');
+  h.check('Block archives the conversation', await h.until(`!!document.querySelector('#viewport .lpm-list') && !document.querySelector('#viewport [data-action="thread"][data-id="1"]')`));
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="mms-archived"]');
+  h.check('Archived lists it', await h.until(`!!document.querySelector('#viewport [data-action="thread"][data-id="1"]')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1869,6 +1962,7 @@ const CASES = [
   {id: 'T25', version: '4.4.4', name: 'Google Search › Settings pages; Google Settings › Play Games', run: kkSearchSettings},
   {id: 'T25', version: '5.1.1', name: 'Google Search › Settings: the 4.1 headers and pages, Show cards', run: lpSearchSettings},
   {id: 'T28', version: '4.0.4', name: 'Navigation › Contacts / Starred places; Places › categories and search', run: icsNavPlaces},
+  {id: 'T32', version: '5.1.1', name: 'Hangouts › Settings, People & options, Blocked people, Add people; Messenger › People & options', run: lpHangoutsOptions},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

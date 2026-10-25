@@ -438,6 +438,7 @@
     if (ui.view === 'clock' && viewport.querySelector('.jbclock-app')) clockTicker();
     if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserFind) highlightBrowserText();
     if (ui.view === 'photos' && ui.sub === 'photo') attachPhotosSwipe();
+    if (ui.view === 'hangouts' && ui.hgPage === 'add') HangoutsPrefs.mount(viewport, ui, render);
     if (ui.view === 'photos' && ui.sub === 'sphere') LPSphere.attachViewer(viewport);
     if (ui.view === 'photos' && ui.sub === 'refocus' && ui.refocusEdit) { const photo = PhotosApp.list(photosContext())[ui.photosIndex]; if (photo) LPRefocus.attachViewer(viewport, {photo, edit: ui.refocusEdit, media: ICSMedia}); }
     if (ui.view === 'photos' && ui.sub === 'edit') PlusEditor.attach(viewport.querySelector('[data-pe-root]'), peContext());
@@ -806,7 +807,7 @@
   }
   function openApp(app, resume = false) {
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
-    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt10Dialog = null; ui.lsPage = ''; ui.lsStack = []; ui.lsDialog = null; }
+    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt10Dialog = null; ui.lsPage = ''; ui.lsStack = []; ui.lsDialog = null; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.lpmPage = ''; ui.mpoDialog = ''; }
     if(ui.locked)return;
     if (app === 'news-weather' && !resume) { ui.newsWeb = ''; ui.newsDialog = ''; ui.newsExpanded = ''; }
     if (GEL_ALIASES[app]) app = GEL_ALIASES[app];
@@ -933,6 +934,10 @@
     if (ui.view === 'settings' && ui.sub === 'reset-info') { ui.sub = 'backup'; render(); return; }
     if (ui.view === 'settings' && ['brightness','wallpaper','sleep'].includes(ui.sub)) { ui.sub = 'display'; render(); return; }
     if (ui.view === 'settings' && ['volumes','ringtone'].includes(ui.sub)) { ui.sub = 'sound'; render(); return; }
+    // Hangouts' and Messenger's own pages (hangouts-prefs.js) step back through what opened them.
+    if (ui.view === 'hangouts' && ui.hgPage) { HangoutsPrefs.back(ui); render(); return; }
+    if (ui.view === 'messaging' && ui.lpmPage) { MessengerOptions.back(ui); render(); return; }
+    if (ui.view === 'messaging' && ui.sub === 'archived') { ui.sub = ''; render(); return; }
     if (ui.view === 'hangouts' && ui.sub === 'archived') { ui.sub = ''; render(); return; }
     if (['messaging', 'hangouts'].includes(ui.view) && ui.sub === 'thread') { ui.sub = ui.mmsListMode || ''; render(); return; }
     if (ui.view === 'clock' && ui.sub === 'cities') { ui.sub = ''; render(); return; }
@@ -1547,6 +1552,7 @@
     return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><form class="settings-dialog mms-dialog people-editor" role="dialog" aria-label="${group?'Edit group':'New group'}" data-form="people-group"><h3>${group?'Edit group':'New group'}</h3><label>Group name<input name="name" required maxlength="50" value="${safe(group?.name||'')}"></label>${data.contacts.map(p=>`<label class="people-membership"><input type="checkbox" name="members" value="${p.id}" ${group?.members.includes(p.id)?'checked':''}>${safe(p.name)}</label>`).join('')}<div class="settings-dialog-actions"><button type="button" data-action="close-overlay">Cancel</button><button type="submit">Save</button></div></form>`;
   }
   function renderMessaging() {
+    if (ui.lpmPage === 'options') return MessengerOptions.render(data, ui, key => i18n.t(key));
     return ICSMessaging.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime());
   }
   function messageDraft() {
@@ -1586,7 +1592,7 @@
     if (ui.overlay === 'mms-attach-photos') return dialog('Attach photo', `<div class="mms-dialog-list">${data.photos.map(p => `<button data-action="mms-photo" data-id="${p.id}">${ICSMessaging.photo(p)}</button>`).join('') || '<p>No photos</p>'}</div>`);
     if (ui.overlay === 'mms-menu' && ui.view === 'messaging') {
       // Messenger's overflow: the conversation list (Archived, Settings, Help & feedback) or a conversation.
-      const items = ui.sub === 'thread' ? [['mms-smiley', 'Insert smiley'], ['toast:Notifications for this conversation stay on.', 'People & options'], ['mms-delete-thread', 'Delete'], ['mms-discard', 'Discard draft']] : ui.sub === 'new' ? [['mms-smiley', 'Insert smiley'], ['mms-discard', 'Discard draft']] : [['toast:No archived conversations', 'Archived'], ['toast:Messenger settings are not part of this simulation.', 'Settings'], ['toast:Help is not available offline.', 'Help & feedback']];
+      const items = ui.sub === 'thread' ? [['mms-smiley', 'Insert smiley'], ['mpo-open', 'People & options'], ['mms-delete-thread', 'Delete'], ['mms-discard', 'Discard draft']] : ui.sub === 'new' ? [['mms-smiley', 'Insert smiley'], ['mms-discard', 'Discard draft']] : ui.sub === 'archived' ? [['toast:Messenger settings are not part of this simulation.', 'Settings'], ['toast:Help is not available offline.', 'Help & feedback']] : [['mms-archived', 'Archived'], ['toast:Messenger settings are not part of this simulation.', 'Settings'], ['toast:Help is not available offline.', 'Help & feedback']];
       return `<div class="menu-scrim" data-action="close-overlay"></div><div class="lp-popup-menu" role="menu">${items.map(([action, title]) => { const [act, arg] = action.split(/:(.*)/); return `<button role="menuitem" data-action="${act}"${arg ? ` data-id="${safe(arg)}"` : ''}>${safe(i18n.t(title))}</button>`; }).join('')}</div>`;
     }
     if (ui.overlay === 'mms-menu') {
@@ -1979,12 +1985,17 @@
   function scheduleReply(id, channel = 'sms') {
     const key = Number(id), app = channel === 'hangouts' ? 'hangouts' : 'messaging';
     if (!REPLIES[key] || (ui.repliedTo ||= new Set()).has(`${channel}:${key}`)) return;
+    // A blocked person's Hangouts messages do not arrive (realtimechat_block_user_text).
+    if (channel === 'hangouts' && !HangoutsPrefs.receives(data, key)) return;
     ui.repliedTo.add(`${channel}:${key}`);
     setTimeout(() => {
       const who = contact(key); if (!who) return;
       const open = ui.view === app && ui.sub === 'thread' && Number(ui.thread) === key;
       data.messages.push({id: Date.now(), contact: key, body: i18n.t(REPLIES[key]), mine: false, time: clock(), timestamp: Date.now(), read: open, ...(channel === 'hangouts' ? {channel} : {})});
-      if (!open) {
+      // Notifications off for the app or the conversation, a snooze or a block keep the answer silent.
+      const quiet = channel === 'hangouts' ? !HangoutsPrefs.notifies(data, key, deviceDate().getTime()) : !MessengerOptions.notifies(data, key);
+      if (!open && quiet) { save(); if (['messaging', 'hangouts'].includes(ui.view) && !ui.sub) render(); }
+      else if (!open) {
         const note = {id: Date.now(), title: who.name, detail: i18n.t(REPLIES[key]), kind: 'message', contact: key, time: deviceDate().getTime(), ...(channel === 'hangouts' ? {channel} : {})};
         data.notifications.unshift(note); save(); renderStatus(); headsUp(note);
       } else { save(); render(); }
@@ -2048,6 +2059,10 @@
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Gmail's label settings, Days of mail to sync and the vacation responder (gmail.js).
     if (action.startsWith('gmx-') && GmailApp.handlePref(action, id, {data, ui, save, render, toast, root: viewport})) return;
+    if (/^(hgp|mpo)-/.test(action)) {
+      const ctx = {data, ui, save, render, renderOverlay, toast, root: viewport, openApp, openThread: key => openMessageThread(key)};
+      if ((action.startsWith('hgp-') ? HangoutsPrefs : MessengerOptions).handle(action, id, ctx)) return;
+    }
     if (action.startsWith('calpref-') && CalendarPrefs.handle(action, id, {data, ui, save, render, toast, root: viewport, pickZone: zone => { ui.tzp = TimeZonePicker.open(zone, Date.now()); ui.tzpFor = 'home'; ui.overlay = 'tzpicker'; renderTzPicker(true); }})) return;
     // Email's Quick responses, ringtone and server screens (email-prefs.js).
     if (action.startsWith('empx-') && EmailPrefs.handle(action, id, {data, ui, save, render, root: viewport, account: ICSEmail.account})) return;
@@ -2709,6 +2724,7 @@
       case 'hg-archive': (data.hgArchived ||= {})[ui.thread] = Date.now(); ui.overlay = ''; ui.sub = ''; ui.mmsListMode = ''; save(); renderOverlay(); render(); toast(Hangouts.H(key => i18n.t(key), 'Hangout archived.')); break;
       case 'hg-unarchive': if (data.hgArchived) delete data.hgArchived[ui.thread]; ui.overlay = ''; if (ui.mmsListMode === 'archived') ui.mmsListMode = ''; save(); renderOverlay(); render(); break;
       case 'hg-archived': ui.overlay = ''; ui.sub = 'archived'; renderOverlay(); render(); break;
+      case 'mms-archived': ui.overlay = ''; ui.sub = 'archived'; renderOverlay(); render(); break;
       case 'hg-dnd': ui.overlay = 'mms-hg-dnd'; renderOverlay(); break;
       case 'hg-drawer': ui.overlay = 'mms-hg-drawer'; renderOverlay(); break;
       case 'hg-dnd-set': data.hgSnooze = deviceDate().getTime() + Number(id) * 60000; ui.overlay = ''; save(); renderOverlay(); render(); break;
