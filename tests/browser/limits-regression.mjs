@@ -1947,6 +1947,94 @@ const kkHangoutsOptions = async h => {
   await h.tap('[data-action="mms-confirm-delete"]');
   h.check('Delete removes the group conversation', await h.until(`!!document.querySelector('#viewport .hg-threads') && !document.querySelector('#viewport .hg-thread[data-id="g1"]')`));
 };
+// 4.3 Hangouts 1.0.2 (T32): Settings keep their choices; People & options mutes and blocks (Blocked People unblocks);
+// a muted chat's answer posts no notification while another chat's does; Add people starts a group Hangout that can
+// be renamed and left; Hangout requests shows its empty list.
+const jbHangoutsOptions = async h => {
+  const act = (action, id = '') => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};el.dataset.id=${JSON.stringify(id)};document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  const send = async text => { await h.type('#viewport .hg-compose textarea', text); await h.ev(`document.querySelector('#viewport .hg-compose').requestSubmit()`); };
+  await h.openApp('hangouts');
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="hgp-open"][data-id="settings"]');
+  h.check('Settings list the account and About Hangouts', await h.until(`!!document.querySelector('#viewport .hgp-row[data-id="account"]') && !!document.querySelector('#viewport .hgp-row[data-id="about"]')`));
+  await h.tap('#viewport .hgp-row[data-id="about"]');
+  h.check('About shows the build', await h.until(`/1\\.0\\.2\\.717155/.test(document.querySelector('#viewport .hgp-scroll')?.textContent || '')`));
+  await h.key('Escape');
+  await h.tap('#viewport .hgp-row[data-id="account"]');
+  await h.tap('#viewport .hgp-row[data-id="chatVibrate"]');
+  await h.tap('#viewport .hgp-row[data-id="acl"]');
+  await h.tap('#viewport .hgp-row[data-id="acl"]');
+  await h.tap('#viewport .hgp-choice[data-id="RING"]');
+  h.check('Public can Hangout', await h.until(`/Hangout with you/.test(document.querySelector('#viewport .hgp-row[data-id="acl"] small')?.textContent || '')`));
+  await h.key('Escape');
+  await h.tap('#viewport .hgp-row[data-id="chatOn"]');
+  h.check('Notifications off greys Sound, Vibrate and Hangout requests', await h.until(`['tone:chat','chatVibrate','chatInvites'].every(id => document.querySelector('#viewport .hgp-row[data-id="'+id+'"]')?.disabled)`));
+  await h.tap('#viewport .hgp-row[data-id="chatOn"]');
+  const p = await store(h, 'hgPrefs') || {};
+  h.check('the settings are kept', p.chatVibrate === true && p.acl === 'RING' && p.chatOn === true, JSON.stringify(p));
+  for (let i = 0; i < 2; i++) await h.key('Escape');
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="hgp-open"][data-id="invites"]');
+  h.check('Hangout requests has none', await h.until(`/No Hangout requests/.test(document.querySelector('#viewport .hgp-empty')?.textContent || '')`));
+  await h.key('Escape');
+  // Sam's chat: Notifications off, then Block and Unblock from Blocked People.
+  await h.tap('#viewport [data-action="thread"][data-id="2"]');
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="hgp-open"][data-id="options"]');
+  h.check('People & options lists Notifications, Block and Sam', await h.until(`!!document.querySelector('#viewport .hgp-option[data-action="hgp-mute"] .hgp-check.on') && /Block Sam Rivera/.test(document.querySelector('#viewport .hgp-option[data-id="block"]')?.textContent || '') && /Sam Rivera/.test(document.querySelector('#viewport .hgp-person')?.textContent || '')`));
+  await h.tap('#viewport .hgp-option[data-action="hgp-mute"]');
+  h.check('Notifications off is kept', (await store(h, 'hgConv'))?.['2']?.quiet === true);
+  await h.tap('#viewport .hgp-option[data-id="block"]');
+  await h.tap('#viewport [data-action="hgp-block"]');
+  h.check('Block person blocks Sam', (await store(h, 'hgBlocked'))?.includes(2) && await h.until(`!!document.querySelector('#viewport .hgp-option[data-action="hgp-unblock"]')`));
+  await h.tap('#viewport [data-action="hgp-menu"]');
+  await h.tap('#viewport [data-action="hgp-page"][data-id="settings"]');
+  await h.tap('#viewport .hgp-row[data-id="account"]');
+  await h.tap('#viewport .hgp-row[data-id="blocked"]');
+  h.check('Blocked People lists Sam', await h.until(`/Sam Rivera/.test(document.querySelector('#viewport .hgp-blocked-row')?.textContent || '')`));
+  await h.tap('#viewport .hgp-blocked-row [data-action="hgp-unblock"]');
+  h.check('Unblock empties the list', await h.until(`!!document.querySelector('#viewport .hgp-zero')`) && !(await store(h, 'hgBlocked'))?.length);
+  for (let i = 0; i < 4; i++) await h.key('Escape');
+  h.check('Back returns to the chat', await h.until(`!!document.querySelector('#viewport .hg-compose')`));
+  await send('Quiet please');
+  await act('home');
+  await h.sleep(5500);
+  let notes = await store(h, 'notifications');
+  h.check('the muted chat answers without a notification', (await store(h, 'hangoutChats')).some(m => m.contact === 2 && !m.mine && /Got it/.test(m.body)) && !notes.some(n => n.channel === 'hangouts'), JSON.stringify(notes));
+  await h.openApp('hangouts');
+  await h.tap('#viewport [data-action="thread"][data-id="3"]');
+  await send('Nice photos');
+  await act('home');
+  await h.sleep(5500);
+  notes = await store(h, 'notifications');
+  h.check('another chat\'s answer posts its notification', notes.some(n => n.channel === 'hangouts' && n.contact === 3), JSON.stringify(notes));
+  // Add people from Sam's chat: a group Hangout with Alex, renamed, then left.
+  await h.openApp('hangouts');
+  await h.tap('#viewport [data-action="thread"][data-id="2"]');
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="hgp-open"][data-id="add"]');
+  h.check('Add people keeps Sam and offers the others', await h.until(`/Sam Rivera/.test(document.querySelector('#viewport .hgp-chip.fixed')?.textContent || '') && !!document.querySelector('#viewport .hgp-pick[data-id="1"]')`));
+  await h.tap('#viewport .hgp-pick[data-id="1"]');
+  await h.tap('#viewport [data-action="hgp-add-ok"]');
+  h.check('OK opens the group Hangout', await h.until(`/Sam Rivera, Alex Morgan/.test(document.querySelector('#viewport .hg-title h2')?.textContent || '')`));
+  await send('Hi both');
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="hgp-open"][data-id="options"]');
+  h.check('the group lists Rename, Leave, both people and Add People', await h.until(`!!document.querySelector('#viewport .hgp-option[data-id="rename"]') && !!document.querySelector('#viewport .hgp-option[data-id="leave"]') && document.querySelectorAll('#viewport .hgp-person').length === 2 && !!document.querySelector('#viewport .hgp-option[data-id="add"]')`));
+  await h.tap('#viewport .hgp-option[data-id="rename"]');
+  await h.type('#viewport [data-hgp-edit]', 'Coffee club');
+  await h.tap('#viewport [data-action="hgp-rename"]');
+  h.check('Edit name names the group', await h.until(`/Coffee club/.test(document.querySelector('#viewport .hgp-option[data-id="rename"]')?.textContent || '')`));
+  h.check('reloads', await h.reload());
+  await h.openApp('hangouts');
+  h.check('the named group stays in the list', await h.until(`[...document.querySelectorAll('#viewport .hg-thread')].some(b => /Coffee club/.test(b.textContent))`));
+  await h.tap('#viewport .hg-thread[data-id="g1"]');
+  await h.tap('#viewport [data-action="mms-menu"]');
+  await h.tap('[data-action="hgp-open"][data-id="options"]');
+  await h.tap('#viewport .hgp-option[data-id="leave"]');
+  await h.tap('#viewport [data-action="hgp-leave"]');
+  h.check('Leave removes the group', await h.until(`!!document.querySelector('#viewport .hg-threads') && !document.querySelector('#viewport .hg-thread[data-id="g1"]')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -2043,6 +2131,7 @@ const CASES = [
   {id: 'T25', version: '4.4.4', name: 'Google Search › Settings pages; Google Settings › Play Games', run: kkSearchSettings},
   {id: 'T25', version: '5.1.1', name: 'Google Search › Settings: the 4.1 headers and pages, Show cards', run: lpSearchSettings},
   {id: 'T28', version: '4.0.4', name: 'Navigation › Contacts / Starred places; Places › categories and search', run: icsNavPlaces},
+  {id: 'T32', version: '4.3', name: 'Hangouts › Settings, Hangout requests, Blocked People, People & options, Add people', run: jbHangoutsOptions},
   {id: 'T32', version: '4.4.4', name: 'Hangouts › Settings, SMS, Invites, Blocked People, People & options, New group MMS', run: kkHangoutsOptions},
   {id: 'T32', version: '5.1.1', name: 'Hangouts › Settings, People & options, Blocked people, Add people; Messenger › People & options', run: lpHangoutsOptions},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},

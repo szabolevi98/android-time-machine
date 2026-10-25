@@ -304,15 +304,22 @@ versions/4.3/assets/hg1-abs__ic_menu_moreoverflow_normal_holo_light.png	1bef2d14
 versions/4.3/assets/hg1-default_avatar.png	60b12956651829b1	same pixels	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/default_avatar.png	drawable-xhdpi		c13e09e56967d229
 versions/4.3/assets/hg1-ic_add_gray.png	90cca0108c63f364	same pixels	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_add_gray.png	drawable-xhdpi		e33674da7cda586b
 versions/4.3/assets/hg1-ic_camera_dark.png	7a313e216f49810b	same pixels	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_camera_dark.png	drawable-xhdpi		1d08168ba2f16fea
+versions/4.3/assets/hg1-ic_edit_gray.png	50ea37cec0c9d637	copy	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_edit_gray.png	drawable-xhdpi		50ea37cec0c9d637
 versions/4.3/assets/hg1-ic_gallery_dark.png	87548005bb777675	same pixels	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_gallery_dark.png	drawable-xhdpi		740a6d76ebda5fc3
 versions/4.3/assets/hg1-ic_hangout_gray.png	6f163eb07977f41b	same pixels	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_hangout_gray.png	drawable-xhdpi		d147cb50de7a574a
+versions/4.3/assets/hg1-ic_ignore_gray.png	d6a720ec9299485b	copy	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_ignore_gray.png	drawable-xhdpi		d6a720ec9299485b
+versions/4.3/assets/hg1-ic_leave_gray.png	ab744c02a0d67944	copy	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_leave_gray.png	drawable-xhdpi		ab744c02a0d67944
 versions/4.3/assets/hg1-ic_menu_camera.png	c228cef11c5be8e1	same pixels	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_menu_camera.png	drawable-xhdpi		eda6723093cc1ad1
+versions/4.3/assets/hg1-ic_people_add_gray.png	f54144b843137c8a	copy	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_people_add_gray.png	drawable-xhdpi		f54144b843137c8a
 versions/4.3/assets/hg1-ic_plus_gallery_dark.png	77e14351f143b9e3	same pixels	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_plus_gallery_dark.png	drawable-xhdpi		201da71b755d2b64
 versions/4.3/assets/hg1-ic_send_dark_disabled.png	fb7d56452a9ff956	same pixels	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_send_dark_disabled.png	drawable-xhdpi		c085042f68b98d30
 versions/4.3/assets/hg1-ic_send_dark_normal.png	2d4f84b0ffb6de03	same pixels	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_send_dark_normal.png	drawable-xhdpi		c63d07f115492840
+versions/4.3/assets/hg1-ic_unmute_gray.png	a1771bba79773b14	copy	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_unmute_gray.png	drawable-xhdpi		a1771bba79773b14
 versions/4.3/assets/hg1-ic_video_light.png	e69abe1ba6927758	same pixels	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_video_light.png	drawable-xhdpi		32a5384e4f9f2596
+versions/4.3/assets/hg1-ic_zero_blocked.png	b85baed0578e8ca3	copy	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_zero_blocked.png	drawable-xhdpi		b85baed0578e8ca3
 versions/4.3/assets/hg1-msg_bubble_left.png	358cea811106895f	same pixels	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/msg_bubble_left.9.png	drawable-xhdpi		17f3a4e58c96fb70
 versions/4.3/assets/hg1-msg_bubble_right.png	da9195a1cf836a37	same pixels	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/msg_bubble_right.9.png	drawable-xhdpi		93caa738b6420f5d
+versions/4.3/assets/hg1-stat_notify_chat.png	07c3cdccb88ae37b	copy	mako:/system/app/Hangouts.apk!res/drawable-xhdpi-v11/stat_notify_chat.png	drawable-xhdpi-v11		07c3cdccb88ae37b
 versions/4.3/assets/ic_ab_back_holo_dark.png	bbdc324258de7695	same pixels	mako:/system/app/Books.apk!res/drawable-hdpi/ic_ab_back_holo_dark.png	drawable-hdpi		4e65c16eb8ab3185
 versions/4.3/assets/ic_ab_back_holo_light.png	b337b8aae35678b0	copy	mako:/system/app/Books.apk!res/drawable-xhdpi/ic_ab_back_holo_light.png	drawable-xhdpi		b337b8aae35678b0
 versions/4.3/assets/ic_ab_dialer_holo_dark.png	ea73760aa5f7b535	same pixels	mako:/system/app/Dialer.apk!res/drawable-hdpi/ic_ab_dialer_holo_dark.png	drawable-hdpi		1cd59d0b6e802afa

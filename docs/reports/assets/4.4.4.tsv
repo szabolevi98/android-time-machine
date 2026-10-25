@@ -297,7 +297,6 @@ versions/4.4.4/assets/hg-ic_handset_dk.png	269ff544fd25b1b0	copy	hammerhead:/sys
 versions/4.4.4/assets/hg-ic_hangout_dark.png	4e0ca96b96bbb3b5	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_hangout_dark.png	drawable-xxhdpi		4e0ca96b96bbb3b5
 versions/4.4.4/assets/hg-ic_location_light_normal.png	ad9d429c049bcb6f	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_location_light_normal.png	drawable-xxhdpi		ad9d429c049bcb6f
 versions/4.4.4/assets/hg-ic_map_pin.png	8452d0df523497da	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_map_pin.png	drawable-xxhdpi		8452d0df523497da
-versions/4.4.4/assets/hg-ic_people_add_gray.png	c173513fbb0932b7	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_people_add_gray.png	drawable-xxhdpi		c173513fbb0932b7
 versions/4.4.4/assets/hg-ic_plus_gallery_dark.png	856d2950662e8fe9	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_plus_gallery_dark.png	drawable-xxhdpi		856d2950662e8fe9
 versions/4.4.4/assets/hg-ic_send_dark_disabled.png	cf87c34d2fec73ca	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_send_dark_disabled.png	drawable-xxhdpi		cf87c34d2fec73ca
 versions/4.4.4/assets/hg-ic_send_dark_normal.png	729e2ab43629dd57	copy	hammerhead:/system/app/Hangouts.apk!res/drawable-xxhdpi/ic_send_dark_normal.png	drawable-xxhdpi		729e2ab43629dd57

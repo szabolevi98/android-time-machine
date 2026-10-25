@@ -367,6 +367,7 @@
     else if (ui.view === 'home') { viewport.innerHTML = renderHome(); restoreWidgetScroll(); }
     else if (ui.view === 'drawer') viewport.innerHTML = renderDrawer();
     else viewport.innerHTML = renderApp();
+    if (ui.view === 'hangouts' && ui.hgPage === 'add') HangoutsPrefs.mount(viewport, ui, render);
     if (ui.view === 'messaging') window.JBMmsAttach?.mounted(jbmaContext());
     snapResting(viewport);
     renderOverlay();
@@ -718,7 +719,7 @@
     // A capture for Messaging lasts while the Camera is open; Messaging opens on its compose screen, not over it.
     if (!resume) { ui.jbmaCapture = null; if (app === 'messaging') ui.jbmaScreen = null; }
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
-    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt4Dialog = null; ui.gsPage = ''; ui.gsStack = []; ui.gsDialog = null; }
+    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt4Dialog = null; ui.gsPage = ''; ui.gsStack = []; ui.gsDialog = null; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; }
     if(ui.locked)return;
     if (app === 'news-weather' && !resume) { ui.newsSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
     if (app === 'google-keyboard') { openApp('settings'); ui.sub = 'language'; render(); return; }
@@ -825,6 +826,8 @@
     if (ui.view === 'settings' && ui.sub === 'reset-info') { ui.sub = 'backup'; render(); return; }
     if (ui.view === 'settings' && ['brightness','wallpaper','sleep'].includes(ui.sub)) { ui.sub = 'display'; render(); return; }
     if (ui.view === 'settings' && ['volumes','ringtone'].includes(ui.sub)) { ui.sub = 'sound'; render(); return; }
+    // Hangouts' own pages (hangouts-prefs.js) step back through what opened them.
+    if (ui.view === 'hangouts' && ui.hgPage) { HangoutsPrefs.back(ui); render(); return; }
     if (ui.view === 'hangouts' && ui.sub === 'archived') { ui.sub = ''; render(); return; }
     if (ui.view === 'hangouts' && ui.sub === 'thread') { ui.sub = ui.mmsListMode === 'archived' ? 'archived' : ''; render(); return; }
     if (ui.view === 'messaging' && ui.sub === 'thread') { ui.sub = ui.mmsListMode || ''; render(); return; }
@@ -1830,6 +1833,7 @@
   }
   function decorateNotification(note) {
     if (note.id === 2) return {...note, icon: 'mms-ic_contact_picture.png', smallIcon: 'stat_notify_sms.png', big: 'Hey! Are we still on for coffee tomorrow?\nSee you at 11!'};
+    if (note.kind === 'message' && note.channel === 'hangouts') return {...note, icon: 'mms-ic_contact_picture.png', smallIcon: 'hg1-stat_notify_chat.png', big: note.detail};
     if (note.kind === 'calendar') return {...note, icon: 'calendar.png', smallIcon: 'calendar-stat_notify_calendar.png', big: note.detail, actions: [{id: 'snooze', label: 'Snooze', icon: 'calendar-ic_alarm_holo_dark.png'}]};
     return {...note, icon: 'settings.png', smallIcon: 'stat_notify_more.png'};
   }
@@ -1844,6 +1848,24 @@
     data.messages.push({ id: Date.now(), contact: id, body, mine: true, time: clock(), timestamp:Date.now(), read:true, ...(attachment ? {attachment:clone(attachment)} : {}) });
     delete data.messageDrafts?.[ICSMessaging.draftKey(ui)];
     openMessageThread(id);
+    if (ui.view === 'hangouts') scheduleHangoutsReply(id);
+  }
+  /* A demo contact answers a Hangouts message once a few seconds later (per contact and session), into Hangouts' own
+     chats. The answer notifies unless Hangouts notifications, the conversation's Notifications or a snooze keep it
+     quiet; a blocked person's answer never arrives (hangouts-prefs.js). */
+  const HANGOUTS_REPLIES = {1: 'Sounds good, see you then!', 2: 'Got it, thanks!', 3: 'Haha, nice 😄', 4: 'Love you! Talk soon ♥'};
+  function scheduleHangoutsReply(id) {
+    const key = Number(id);
+    if (!HANGOUTS_REPLIES[key] || (ui.repliedTo ||= new Set()).has(key) || !HangoutsPrefs.receives(data, key)) return;
+    ui.repliedTo.add(key);
+    setTimeout(() => {
+      const who = contact(key); if (!who || !HangoutsPrefs.receives(data, key)) return;
+      const open = ui.view === 'hangouts' && ui.sub === 'thread' && Number(ui.thread) === key && !ui.hgPage;
+      const chats = hangoutsSwap ? data.messages : (data.hangoutChats ||= clone(defaultData.hangoutChats));
+      chats.push({id: Date.now(), contact: key, body: i18n.t(HANGOUTS_REPLIES[key]), mine: false, time: clock(), timestamp: Date.now(), read: open});
+      if (!open && HangoutsPrefs.notifies(data, key, deviceDate().getTime())) data.notifications.unshift({id: Date.now(), title: who.name, detail: i18n.t(HANGOUTS_REPLIES[key]), kind: 'message', channel: 'hangouts', contact: key});
+      save(); renderStatus(); if (ui.view === 'hangouts') render(); if (ui.overlay === 'shade') renderOverlay();
+    }, 4500);
   }
 
   let suppressClickUntil = 0;
@@ -1856,6 +1878,7 @@
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Gmail's label settings, Days of mail to sync and the vacation responder (gmail.js).
     if (action.startsWith('gmx-') && GmailApp.handlePref(action, id, {data, ui, save, render, toast, root: viewport})) return;
+    if (action.startsWith('hgp-') && HangoutsPrefs.handle(action, id, {data, ui, save, render, renderOverlay, toast, root: viewport, openApp, openThread: key => openMessageThread(key)})) return;
     if (action.startsWith('calpref-') && CalendarPrefs.handle(action, id, {data, ui, save, render, toast, root: viewport, pickZone: zone => { ui.tzp = TimeZonePicker.open(zone, Date.now()); ui.tzpFor = 'home'; ui.overlay = 'tzpicker'; renderTzPicker(true); }})) return;
     // Email's Quick responses, ringtone and server screens (email-prefs.js).
     if (action.startsWith('empx-') && EmailPrefs.handle(action, id, {data, ui, save, render, root: viewport, account: ICSEmail.account})) return;
@@ -2052,6 +2075,7 @@
       case 'qs-location': ui.overlay = ''; openApp('settings'); ui.sub = 'location'; render(); break;
       case 'notification-action': { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar' && button.dataset.noteAction === 'snooze') { data.notifications = data.notifications.filter(item => item !== note); (data.calendarSnoozes ||= []).push({eventId: note.eventId, date: note.date, title: note.title, detail: note.detail, at: deviceDate().getTime() + 5 * 60000}); save(); renderStatus(); if (!data.notifications.length) ui.overlay = ''; renderOverlay(); toast('Snoozed'); } break; }
       case 'notification-open': { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar') { data.notifications = data.notifications.filter(item => item !== note); save(); ui.overlay = ''; openApp('calendar'); ui.selectedEvent = note.eventId; ui.selectedInstance = note.date; ui.selectedDate = note.date; ui.sub = 'event'; render(); break; } }
+        if (note?.kind === 'message' && note.channel === 'hangouts') { data.notifications = data.notifications.filter(item => item !== note); ui.overlay = ''; openApp('hangouts'); ui.hgPage = ''; hangoutsScope(() => openMessageThread(note.contact)); break; }
         ui.overlay = ''; if (Number(id) === 2) openMessageThread(1); else { ui.view = 'settings'; ui.sub = 'about'; render(); } break;
       case 'unlock': ui.view = 'home'; render(); break;
       case 'unlock-camera': openApp('camera'); break;

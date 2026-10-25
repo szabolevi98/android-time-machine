@@ -95,3 +95,63 @@
 .hg-dnd-list{display:flex;flex-direction:column}
 .screen .hg-dnd-list button{min-height:calc(48.0038 * var(--dp));padding:0 calc(16.0052 * var(--dp));border:0;border-bottom:calc(.9982 * var(--dp)) solid #0000001a;background:none;text-align:left;font:400 calc(18.0015 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
 .screen .hg-dnd-list button:active{background:#33b5e566}
+/* hangouts-prefs.js: Settings (Holo Light preferences under the Hangouts action bar), Invites, Blocked People
+   (blocked_people_fragment.xml, blocked_people_list_item_view.xml), People & options (conversation_option_item_view.xml,
+   conversation_options_header_view.xml, conversation_participant_view.xml) and Add people
+   (new_conversation_activity_buttons.xml: Cancel and OK in white on the #f253a93f bar). */
+.hgp-app{display:flex;flex-direction:column;background:#fff}
+.hgp-scroll{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;background:#fff}
+.screen .hgp-row{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;background:none;text-align:left}
+.hgp-row+.hgp-row{border-top:calc(1 * var(--dp)) solid #e3e3e3}
+.hgp-row.off{opacity:.45}
+.hgp-text{flex:1;min-width:0;display:flex;flex-direction:column}
+.hgp-row .hgp-text b{font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000;overflow-wrap:anywhere}
+.hgp-row .hgp-text small{margin-top:calc(2 * var(--dp));font:400 calc(14 * var(--dp))/1.3 RobotoICS,Roboto,sans-serif;color:#727272}
+.hgp-cat{margin:calc(16 * var(--dp)) calc(16 * var(--dp)) 0;padding:0 calc(8 * var(--dp)) calc(4 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #cfcfcf;font:700 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#8f8f8f;text-transform:uppercase}
+.hgp-check{flex:none;width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-left:calc(8 * var(--dp));background:url('assets/btn_check_off_holo_light.png') center/contain no-repeat}
+.hgp-check.on{background-image:url('assets/btn_check_on_holo_light.png')}
+.hgp-options .hgp-scroll,.hgp-app:not(.hgp-settings):not(.hgp-add):not(.hgp-options) .hgp-scroll{padding:0 calc(8 * var(--dp))}
+.hgp-head{margin:0;padding:calc(16 * var(--dp)) calc(8 * var(--dp)) calc(8 * var(--dp)) 0;font:400 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#0000009a}
+.screen .hgp-option{display:flex;align-items:center;width:100%;min-height:calc(56 * var(--dp));padding:calc(4 * var(--dp)) 0;border:0;background:none;text-align:left}
+.hgp-icon{flex:none;width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin:0 calc(12 * var(--dp)) 0 calc(8 * var(--dp))}
+.hgp-option .hgp-text,.hgp-person .hgp-text{margin-right:calc(8 * var(--dp))}
+.hgp-option .hgp-text b,.hgp-person .hgp-text b,.hgp-blocked-row b,.hgp-pick .hgp-text b{font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000000cc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hgp-person .hgp-text small,.hgp-pick .hgp-text small{font:400 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#0000009a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hgp-option .hgp-check{margin-right:calc(4 * var(--dp))}
+.hgp-person,.hgp-blocked-row{display:flex;align-items:center;height:calc(64 * var(--dp))}
+.hgp-avatar{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin-right:calc(8 * var(--dp))}
+.hgp-blocked-row b{flex:1;min-width:0}
+.hgp-blocked-row i{flex:none;align-self:stretch;width:calc(1 * var(--dp));margin:calc(16 * var(--dp)) 0;background:#0000009a}
+.screen .hgp-blocked-row button{flex:none;align-self:stretch;padding:0 calc(16 * var(--dp));border:0;background:none;font:400 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000000cc}
+.hgp-zero{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center}
+.hgp-zero img{width:calc(96 * var(--dp));height:calc(96 * var(--dp));padding-bottom:calc(28 * var(--dp))}
+.hgp-zero b{font:400 calc(24 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#00000066}
+.hgp-empty{margin:0;padding:calc(35 * var(--dp)) calc(17 * var(--dp));text-align:center;font:400 calc(16 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#888}
+.hgp-audience{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:calc(4 * var(--dp));padding:calc(8 * var(--dp));background:#fff;border-bottom:calc(1 * var(--dp)) solid #d1d1d1}
+.screen .hgp-chip{display:inline-flex;align-items:center;height:calc(32 * var(--dp));padding:0 calc(8 * var(--dp));border:0;background:#d6ecc8;font:400 calc(15 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#222}
+.hgp-chip.fixed{background:#e5e5e5;color:#545454}
+.screen .hgp-audience-field{flex:1;min-width:calc(120 * var(--dp));height:calc(32 * var(--dp));border:0;outline:0;font:400 calc(15 * var(--dp)) RobotoICS,Roboto,sans-serif;background:none}
+.hgp-audience-field::placeholder{color:#aaa}
+.hgp-add .hgp-scroll{display:flex;flex-direction:column;background:#e5e5e5}
+.hgp-people{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none}
+.screen .hgp-pick{display:flex;align-items:center;width:100%;height:calc(64 * var(--dp));padding:0 calc(8 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #d1d1d1;background:#fff;text-align:left}
+.hgp-pick.on{background:#d6ecc8}
+.hgp-buttons{flex:none;display:flex;height:calc(48 * var(--dp));background:#53a93ff2}
+.hgp-buttons i{width:calc(1 * var(--dp));margin:calc(8 * var(--dp)) 0;background:#fff}
+.screen .hgp-buttons button{flex:1;border:0;background:none;font:400 calc(16 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#fff}
+.hgp-buttons button:disabled{color:#ffffff80}
+.hgp-scrim{position:absolute;inset:0;z-index:40;border:0;background:#0009}
+.hgp-scrim.clear{background:none}
+.hgp-menu{position:absolute;z-index:41;top:calc(48 * var(--dp));right:0}
+.hgp-dialog{position:absolute;z-index:41;left:calc(16 * var(--dp));right:calc(16 * var(--dp));top:50%;transform:translateY(-50%);background:#fff;box-shadow:0 calc(2 * var(--dp)) calc(11 * var(--dp)) #0006}
+.hgp-dialog h3{margin:0;padding:calc(16 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #33b5e5;font:400 calc(22 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#33b5e5}
+.hgp-list{max-height:calc(330 * var(--dp));overflow-y:auto;scrollbar-width:none}
+.screen .hgp-choice{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:0 calc(8 * var(--dp)) 0 calc(16 * var(--dp));border:0;background:none;text-align:left;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
+.hgp-choice span{flex:1}
+.hgp-choice i{flex:none;width:calc(32 * var(--dp));height:calc(32 * var(--dp));background:url('assets/btn_radio_off_holo_light.png') center/contain no-repeat}
+.hgp-choice.on i{background-image:url('assets/btn_radio_on_holo_light.png')}
+.hgp-dialog-buttons{display:flex;border-top:calc(1 * var(--dp)) solid #0000001a}
+.screen .hgp-dialog-buttons button{flex:1;min-height:calc(48 * var(--dp));border:0;background:none;font:400 calc(16 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
+.hgp-dialog-buttons button+button{border-left:calc(1 * var(--dp)) solid #0000001a}
+.screen .hgp-row:not(.hgp-info):active,.screen .hgp-option:active,.screen .hgp-pick:active,.screen .hgp-choice:active,.screen .hgp-dialog-buttons button:active,.screen .hgp-blocked-row button:active{background:#33b5e566}
+.screen .hgp-buttons button:active{background:#0000001a}
