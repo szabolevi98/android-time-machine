@@ -59,7 +59,7 @@
     const T = key => text(ctx.lang, key), name = m.mine ? T('messagelist_sender_self') : person.name;
     const subject = m.subject ? e(AndroidStrings.format(T('inline_subject'), m.subject)) + (m.body ? ' - ' : '') : '';
     const time = m.sending ? T('sending_message') : AndroidStrings.format(T('sent_on'), stamp(m, ctx));
-    return `<button type="button" class="mms-message gbmms-msg${m.mine ? ' sent' : ' received'}" data-action="mms-message" data-id="${e(m.id)}">${m.attachment ? `<span class="gbmms-mms">${window.ICSMessaging.photo(m.attachment)}</span>` : ''}<span class="gbmms-text">${badge(m.mine ? null : person)}<b>${e(name)}</b>: ${subject}${smileys(m.body || '', ctx.lang)}<br><small>${e(time)}</small></span>${m.locked ? '<img class="gbmms-lock" src="assets/gb-m-ic_lock_message_sms.png" alt="">' : ''}</button>`;
+    return `<button type="button" class="mms-message gbmms-msg${m.mine ? ' sent' : ' received'}" data-action="mms-message" data-id="${e(m.id)}">${m.attachment ? window.GBMmsAttach?.row(m) || `<span class="gbmms-mms">${window.ICSMessaging.photo(m.attachment)}</span>` : ''}<span class="gbmms-text">${badge(m.mine ? null : person)}<b>${e(name)}</b>: ${subject}${smileys(m.body || '', ctx.lang)}<br><small>${e(time)}</small></span>${m.locked ? '<img class="gbmms-lock" src="assets/gb-m-ic_lock_message_sms.png" alt="">' : ''}</button>`;
   }
   function compose(ctx) {
     const T = key => text(ctx.lang, key), M = window.ICSMessaging, detail = ctx.sub === 'thread';
@@ -70,14 +70,21 @@
     const counter = draft.attachment ? 'MMS' : count.count > 1 || count.remaining <= 10 ? `${count.remaining} / ${count.count}` : '';
     const ready = !!((draft.body || '').trim() || draft.attachment);
     const recipients = !detail || ctx.subjectVisible ? `<div class="gbmms-recipients">${!detail ? `<div class="mms-recipient"><input name="recipient" class="gbmms-field" aria-label="${e(T('to_hint'))}" placeholder="${e(T('to_hint'))}" autocomplete="off" maxlength="60" value="${e(draft.recipient || '')}"><div class="mms-suggestions gbmms-suggestions"></div></div>` : ''}${ctx.subjectVisible ? `<input name="subject" class="gbmms-field" aria-label="${e(T('subject_hint'))}" placeholder="${e(T('subject_hint'))}" maxlength="40" value="${e(draft.subject || '')}">` : ''}</div>` : '';
-    const attachment = draft.attachment ? `<div class="gbmms-attachment"><span class="gbmms-attachment-image">${M.photo(draft.attachment)}</span><span class="gbmms-attachment-buttons"><button type="button" data-action="gbset-toast" data-id="Unavailable in this simulator">${e(T('view'))}</button><button type="button" data-action="mms-attach">${e(T('replace_image'))}</button><button type="button" data-action="mms-remove-attachment">${e(T('remove'))}</button></span></div>` : '';
-    return `<div class="app-view gbmms gbmms-compose" data-no-translate><div class="gb-titlebar">${e(title)}</div><form class="mms-compose gbmms-form" data-form="mms-send">${recipients}<div class="mms-scroll mms-history gbmms-history">${messages.map(m => message(m, ctx, person)).join('')}</div>${attachment}<div class="gbmms-bottom"><textarea name="body" class="gbmms-field" aria-label="${e(T('type_to_compose_text_enter_to_send'))}" placeholder="${e(T('type_to_compose_text_enter_to_send'))}" rows="1" maxlength="2000">${e(draft.body || '')}</textarea><div class="gbmms-send-col"><button class="mms-send gbmms-send" type="submit"${ready ? '' : ' disabled'}>${e(T('send'))}</button><small class="mms-counter gbmms-counter">${e(counter)}</small></div></div></form></div>`;
+    const attachment = window.GBMmsAttach ? GBMmsAttach.editor(ctx, draft) : draft.attachment ? `<div class="gbmms-attachment"><span class="gbmms-attachment-image">${M.photo(draft.attachment)}</span><span class="gbmms-attachment-buttons"><button type="button" data-action="gbset-toast" data-id="Unavailable in this simulator">${e(T('view'))}</button><button type="button" data-action="mms-attach">${e(T('replace_image'))}</button><button type="button" data-action="mms-remove-attachment">${e(T('remove'))}</button></span></div>` : '';
+    return `<div class="app-view gbmms gbmms-compose" data-no-translate><div class="gb-titlebar">${e(title)}</div><form class="mms-compose gbmms-form" data-form="mms-send">${recipients}<div class="mms-scroll mms-history gbmms-history">${messages.map(m => message(m, ctx, person)).join('')}</div>${attachment}<div class="gbmms-bottom${window.GBMmsAttach?.kindOf(draft.attachment) === 'slideshow' ? ' gbma-hidden' : ''}"><textarea name="body" class="gbmms-field" aria-label="${e(T('type_to_compose_text_enter_to_send'))}" placeholder="${e(T('type_to_compose_text_enter_to_send'))}" rows="1" maxlength="2000">${e(draft.body || '')}</textarea><div class="gbmms-send-col"><button class="mms-send gbmms-send" type="submit"${ready ? '' : ' disabled'}>${e(T('send'))}</button><small class="mms-counter gbmms-counter">${e(counter)}</small></div></div></form></div>`;
   }
-  function render(ctx) { return ctx.sub === 'thread' || ctx.sub === 'new' ? compose(ctx) : list(ctx); }
+  function render(ctx) {
+    // The slideshow editor, the player and Sound Recorder open over the compose screen (gb-mms-attach.js).
+    const over = (ctx.sub === 'thread' || ctx.sub === 'new') && window.GBMmsAttach?.screen(ctx);
+    if (over) return over;
+    return ctx.sub === 'thread' || ctx.sub === 'new' ? compose(ctx) : list(ctx);
+  }
 
   // Options menus: ConversationList.onPrepareOptionsMenu and ComposeMessageActivity.onPrepareOptionsMenu.
   function menu(ctx) {
     const T = key => text(ctx.lang, key), M = window.ICSMessaging;
+    const over = window.GBMmsAttach?.menu(ctx);
+    if (over) return over;
     if (ctx.sub !== 'thread' && ctx.sub !== 'new') {
       const any = M.threads(ctx.data).length > 0;
       return [{action: 'new-message', title: T('menu_compose_new'), icon: 'ic_menu_compose'}, ...(any ? [{action: 'gbmms-delete-all', title: T('menu_delete_all'), icon: 'ic_menu_delete'}] : []), {action: 'mms-search', title: ctx.t('Search'), icon: 'ic_menu_search'}, {action: 'gbset-toast', id: 'Unavailable in this simulator', title: T('menu_preferences'), icon: 'ic_menu_preferences'}];
@@ -103,7 +110,8 @@
   // the delete confirmations.
   function dialog(kind, ctx) {
     const T = key => text(ctx.lang, key), ok = ctx.ok, cancel = T('no');
-    if (kind === 'attach') return {title: T('add_attachment'), icon: 'gb-m-ic_dialog_attach.png', items: [['attach_image', 'gallery', 'gbmms-pictures'], ['attach_take_photo', 'camera'], ['attach_video', 'video_player'], ['attach_record_video', 'camera_record'], ['attach_sound', 'musicplayer_2'], ['attach_record_sound', 'record_audio'], ['attach_slideshow', 'slideshow_add_sms']].map(([key, icon, action]) => ({action: action || 'gbset-toast', id: action ? undefined : 'Unavailable in this simulator', title: T(key), icon: `gb-m-ic_launcher_${icon}.png`}))};
+    if (kind === 'attach') return {title: T('add_attachment'), icon: 'gb-m-ic_dialog_attach.png', items: [['attach_image', 'gallery', 'image'], ['attach_take_photo', 'camera', 'take-photo'], ['attach_video', 'video_player', 'video'], ['attach_record_video', 'camera_record', 'record-video'], ['attach_sound', 'musicplayer_2', 'sound'], ['attach_record_sound', 'record_audio', 'record-sound'], ['attach_slideshow', 'slideshow_add_sms', 'slideshow']].map(([key, icon, type]) => ({action: 'gbma-attach', id: type, title: T(key), icon: `gb-m-ic_launcher_${icon}.png`}))};
+    if (String(kind).startsWith('gbma-')) return window.GBMmsAttach?.dialog(kind, ctx) || null;
     if (kind === 'pictures') return {title: T('attach_image'), custom: `<div class="gbmms-pictures">${ctx.data.photos.map(p => `<button type="button" data-action="mms-photo" data-id="${p.id}">${window.ICSMessaging.photo(p)}</button>`).join('')}</div>`, buttons: [{action: 'close-overlay', title: ctx.cancel}]};
     if (kind === 'smiley') {
       const names = array(ctx.lang, 'default_smiley_names'), texts = array(ctx.lang, 'default_smiley_texts');

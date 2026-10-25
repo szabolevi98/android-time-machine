@@ -23,7 +23,9 @@ assert.deepEqual([...G.menu(ctx()).map(i=>i.title)],['Compose','Delete threads',
 assert.deepEqual([...G.menu(ctx({sub:'thread',thread:1,draft:{body:'a'}})).map(i=>i.title)],['Call','View contact','Add subject','Attach','Send','Insert smiley','Delete thread','All threads']);
 assert.deepEqual([...G.menu(ctx({sub:'new',draft:{recipient:'12345'}})).map(i=>i.action)],['mms-call','gbmms-subject','mms-attach','mms-smiley','mms-discard','gbmms-all-threads','gbmms-add-contact']);
 // Dialogs.
-assert.equal(G.dialog('attach',ctx()).items.length,7);assert.equal(G.dialog('attach',ctx()).items[0].action,'gbmms-pictures');
+assert.equal(G.dialog('attach',ctx()).items.length,7);
+// Every source is local (gb-mms-attach.js): Pictures … Slideshow in AttachmentTypeSelectorAdapter's order.
+assert.deepEqual([...G.dialog('attach',ctx()).items.map(i=>`${i.action}:${i.id}`)],['image','take-photo','video','record-video','sound','record-sound','slideshow'].map(t=>'gbma-attach:'+t));
 assert.match(G.dialog('smiley',ctx()).custom,/Tongue sticking out/);assert.match(G.dialog('smiley',ctx({lang:'hu'})).custom,/Kacsintás/);
 assert.deepEqual([...G.dialog('message',ctx({message:data.messages[0]})).items.map(i=>i.title)],['Forward','Copy message text','View message details','Delete message','Lock message']);
 assert.match(G.dialog('details',ctx({message:data.messages[0]})).message,/^Type: Text message\nFrom: 555-1\nReceived: Oct 2, 1:00 PM$/);

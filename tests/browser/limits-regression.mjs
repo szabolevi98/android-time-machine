@@ -1155,6 +1155,69 @@ const mapsSettings = spec => async h => {
   await h.tap('#viewport [data-action="mps-act"][data-id="location"]');
   h.check('Google location settings opens Google Settings', await h.until(`!!document.querySelector('#viewport .gms-app, #viewport .gms6-app') && /Google location settings/.test(document.querySelector('#viewport').textContent)`));
 };
+
+// 2.3.6 Messaging attachments (T13, gb-mms-attach.js): Audio (Select audio) with Play, Record audio in Sound Recorder,
+// Capture picture / video through the Camera, Slideshow (Edit slideshow, a slide's Duration) sent and played.
+const gbMmsAttach = async h => {
+  const act = (a, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(a)};${id ? `el.dataset.id=${JSON.stringify(id)};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove();return 1})()`);
+  const attach = async type => {
+    await h.tap('.touch-menu');
+    await h.until(`!!document.querySelector('.gbmenu')`);
+    if (!await h.ev(`!!document.querySelector('.gbmenu [data-action="mms-attach"]')`)) await h.tap('.gbmenu [data-action="gb-menu-more"]');
+    await h.tap('[data-action="mms-attach"]');
+    await h.tap(`.gbdlg [data-action="gbma-attach"][data-id="${type}"]`);
+  };
+  const kind = () => h.ev(`(()=>{const d=Object.values(${SAVE}.messageDrafts||{}).find(x=>x.attachment);const a=d&&d.attachment;return a?a.kind||(a.video?'video':'image'):''})()`);
+  await h.openApp('messaging');
+  await h.tap('#viewport [data-action="thread"][data-id="1"]');
+  await h.until(`!!document.querySelector('#viewport .gbmms-compose')`);
+  await attach('sound');
+  await h.tap('.gbdlg [data-action="gbma-audio-pick"][data-id="Aquila"]');
+  await h.tap('.gbdlg [data-action="gbma-audio-ok"]');
+  h.check('Audio attaches the sound', await h.until(`/Aquila/.test(document.querySelector('#viewport .gbma-audio')?.textContent || '')`) && await kind() === 'audio');
+  await h.tap('#viewport .gbma-audio [data-action="gbma-view"]');
+  h.check('Play opens the slideshow player', await h.until(`!!document.querySelector('#viewport .gbma-slideshow')`));
+  await act('back');
+  await h.tap('#viewport .gbma [data-action="mms-remove-attachment"]');
+  h.check('Remove takes it off', await h.until(`!document.querySelector('#viewport .gbma')`) && !await kind());
+  await attach('record-sound');
+  h.check('Record audio opens Sound Recorder', await h.until(`!!document.querySelector('#viewport .gbsr')`));
+  await h.tap('#viewport [data-action="gbma-rec-record"]'); await h.sleep(1300); await h.tap('#viewport [data-action="gbma-rec-stop"]');
+  await h.tap('#viewport [data-action="gbma-rec-accept"]');
+  h.check('Use this recording attaches it', await h.until(`/Audio recordings/.test(document.querySelector('#viewport .gbma-audio')?.textContent || '')`));
+  await h.tap('#viewport .gbma [data-action="mms-remove-attachment"]');
+  await attach('take-photo');
+  await h.until(`!!document.querySelector('#viewport [data-action="gbcam-shutter"]')`); await h.sleep(500);
+  await h.tap('#viewport [data-action="gbcam-shutter"]');
+  h.check('Capture picture comes back with the picture', await h.until(`!!document.querySelector('#viewport .gbma-image')`, 8000) && await kind() === 'image');
+  await h.tap('#viewport .gbma [data-action="gbma-replace"]');
+  h.check('Replace offers the pictures', await h.until(`!!document.querySelector('.gbdlg [data-action="gbma-picked"]')`));
+  await act('close-overlay');
+  await h.tap('#viewport .gbma [data-action="mms-remove-attachment"]');
+  await attach('record-video');
+  await h.until(`!!document.querySelector('#viewport [data-action="gbcam-shutter"]')`); await h.sleep(500);
+  await h.tap('#viewport [data-action="gbcam-shutter"]'); await h.sleep(1300); await h.tap('#viewport [data-action="gbcam-shutter"]');
+  h.check('Capture video comes back with the video', await h.until(`!!document.querySelector('#viewport .gbma-video')`, 8000) && await kind() === 'video');
+  // With an attachment shown the menu has no Add attachment, so the video is removed first; a second slide gets 3 seconds.
+  await h.sleep(2500);
+  await h.tap('#viewport .gbma [data-action="mms-remove-attachment"]');
+  await attach('slideshow');
+  h.check('Slideshow opens Edit slideshow', await h.until(`document.querySelectorAll('#viewport .gbma-srow').length === 2`));
+  await h.tap('#viewport [data-action="gbma-add-slide"]');
+  await h.tap('#viewport [data-action="gbma-open-slide"][data-id="1"]');
+  await h.tap('.touch-menu'); await h.until(`!!document.querySelector('.gbmenu')`);
+  if (!await h.ev(`!!document.querySelector('.gbmenu [data-action="gbma-duration"]')`)) await h.tap('.gbmenu [data-action="gb-menu-more"]');
+  await h.tap('[data-action="gbma-duration"]');
+  await h.tap('.gbdlg [data-action="gbma-duration-pick"][data-id="2"]');
+  await act('back');
+  h.check('the slide keeps its duration', await h.until(`/3 secs/.test(document.querySelectorAll('#viewport .gbma-srow')[1]?.textContent || '')`));
+  await act('back');
+  h.check('the compose screen shows the slideshow', await h.until(`!!document.querySelector('#viewport .gbma-show')`) && await kind() === 'slideshow');
+  await h.tap('#viewport .gbma-show [data-action="gbmms-send"]');
+  h.check('Send puts the slideshow in the conversation', await h.until(`!!document.querySelector('#viewport .gbmms-msg [data-action="gbma-rowplay"]')`));
+  await h.tap('#viewport .gbmms-msg [data-action="gbma-rowplay"]');
+  h.check('its play button plays it', await h.until(`!!document.querySelector('#viewport .gbma-slideshow')`));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -1236,6 +1299,7 @@ const CASES = [
   {id: 'T12', version: '4.3', name: 'Maps › My Places, Settings, Cache settings', run: mapsSettings({maps6: true, places: true})},
   {id: 'T12', version: '4.4.4', name: 'Maps › Settings, Maps history, Edit home or work, About', run: mapsSettings({version: '7.5.0'})},
   {id: 'T12', version: '5.1.1', name: 'Maps › Settings, Maps history, Your places, About', run: mapsSettings({version: '9.3.0', places: true})},
+  {id: 'T13', version: '2.3.6', name: 'Messaging › Audio, Record audio, Capture picture / video, Slideshow', run: gbMmsAttach},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},

@@ -36,8 +36,18 @@ delete_thread discard all_threads menu_add_to_contacts message_options menu_forw
 delete confirm_dialog_title confirm_delete_conversation confirm_delete_all_conversations confirm_delete_message no subject_hint menu_view menu_delete
 message_details_title message_type_label text_message multimedia_message from_label to_address_label sent_label received_label search_hint
 attach_image attach_take_photo attach_video attach_record_video attach_sound attach_record_sound attach_slideshow select_link_title
-search_empty view replace_image remove inline_subject menu_unlock'''.split(),
-        'arrays': ['default_smiley_names', 'default_smiley_texts'],
+search_empty view replace_image remove inline_subject menu_unlock
+replace edit play select_audio slideshow_activity edit_slideshow_activity add_slide add_slide_hint slide_number cannot_add_slide_anymore
+converting_to_picture_message converting_to_text_message remove_slide discard_slideshow slide_show_part preview done preview_slideshow
+remove_text remove_picture add_picture remove_music add_music remove_video add_video duration_sec duration_selector_title layout_top layout_bottom
+layout_selector_title select_top_text select_bottom_text type_to_compose_text_or_leave_blank cannot_add_picture_and_video'''.split(),
+        'arrays': ['default_smiley_names', 'default_smiley_texts', 'select_dialog_items'],
+        'plurals': ['slide_duration'],
+    },
+    # Sound Recorder: Messaging's Record audio (GET_CONTENT audio/amr).
+    'recorder': {
+        'apks': ['SoundRecorder'],
+        'keys': 'app_name record_your_message message_recorded review_message recording press_record accept discard timer_format audio_db_title_format audio_db_artist_name audio_db_album_name'.split(),
     },
     'calculator': {
         'apks': ['Calculator'],

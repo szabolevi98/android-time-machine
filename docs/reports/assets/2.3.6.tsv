@@ -197,6 +197,9 @@ versions/2.3.6/assets/gb-btn_keyboard_key_fulltrans_normal_on.png	3d82e5c7534e60
 versions/2.3.6/assets/gb-btn_keyboard_key_fulltrans_pressed.png	acc93d04ec389c9f	same pixels	crespo:/system/app/LatinImeGoogle.apk!res/drawable-hdpi/btn_keyboard_key_fulltrans_pressed.9.png	drawable-hdpi		e01a362b82dd9da2
 versions/2.3.6/assets/gb-btn_keyboard_key_fulltrans_pressed_off.png	d5ea8d37b4dc05a0	same pixels	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/btn_keyboard_key_fulltrans_pressed_off.9.png	drawable-hdpi		1d75d93eca2be215
 versions/2.3.6/assets/gb-btn_keyboard_key_fulltrans_pressed_on.png	841ba8941dcd473f	same pixels	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/btn_keyboard_key_fulltrans_pressed_on.9.png	drawable-hdpi		109b8d3d87cf1bab
+versions/2.3.6/assets/gb-btn_media_player.png	a6228136167f5558	copy	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/btn_media_player.9.png	drawable-hdpi		a6228136167f5558
+versions/2.3.6/assets/gb-btn_media_player_disabled.png	5f6e5729f280402f	copy	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/btn_media_player_disabled.9.png	drawable-hdpi		5f6e5729f280402f
+versions/2.3.6/assets/gb-btn_media_player_pressed.png	6e59d9e5c3db4b78	copy	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/btn_media_player_pressed.9.png	drawable-hdpi		6e59d9e5c3db4b78
 versions/2.3.6/assets/gb-btn_radio_label_background.png	50a76013bf374cd0	same pixels	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/btn_radio_label_background.9.png	drawable-hdpi		c238d57a794be3ae
 versions/2.3.6/assets/gb-btn_radio_off.png	90703dd1a97d12ca	same pixels	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/btn_radio_off.png	drawable-hdpi		94a26e2fa981cda2
 versions/2.3.6/assets/gb-btn_radio_off_pressed.png	7198b214fb4a9eac	same pixels	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/btn_radio_off_pressed.png	drawable-hdpi		3a1e9cac4e6ed92f
@@ -477,6 +480,7 @@ versions/2.3.6/assets/gb-divider_vertical_dark.png	e10dd5ba512b6183	same pixels	
 versions/2.3.6/assets/gb-divider_vertical_dark_opaque.png	f2f6802b4ad0a3f2	same pixels	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/divider_vertical_dark_opaque.9.png	drawable-hdpi		b25370281681ace1
 versions/2.3.6/assets/gb-dl-ic_download_misc_file_type.png	b3a9c8663a644e61	same pixels	crespo:/system/app/DownloadProviderUi.apk!res/drawable-hdpi/ic_download_misc_file_type.png	drawable-hdpi		7d7c39fbfd4fcf3c
 versions/2.3.6/assets/gb-dl-ic_menu_desk_clock.png	9cea744755ae23b7	same pixels	crespo:/system/app/DeskClockGoogle.apk!res/drawable-hdpi/ic_menu_desk_clock.png	drawable-hdpi		4b8096cab2966403
+versions/2.3.6/assets/gb-editbox_background_normal.png	4ea309cf66966845	copy	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/editbox_background_normal.9.png	drawable-hdpi		4ea309cf66966845
 versions/2.3.6/assets/gb-em-appointment_indicator_leftside_1.png	dcee433e02d857ca	same pixels	crespo:/system/app/EmailGoogle.apk!res/drawable-hdpi/appointment_indicator_leftside_1.9.png	drawable-hdpi		a3f8b2b09532a6be
 versions/2.3.6/assets/gb-em-bg_arrow_press.png	32527ed13246031c	same pixels	crespo:/system/app/EmailGoogle.apk!res/drawable-hdpi/bg_arrow_press.9.png	drawable-hdpi		111e09357c2435a7
 versions/2.3.6/assets/gb-em-bg_arrow_unselected.png	d3c8a986ed180bfb	same pixels	crespo:/system/app/EmailGoogle.apk!res/drawable-hdpi/bg_arrow_unselected.9.png	drawable-hdpi		fb10e2992a790837
@@ -789,25 +793,44 @@ versions/2.3.6/assets/gb-m-emo_im_yelling.png	c7fa395afcb6a8f4	same pixels	cresp
 versions/2.3.6/assets/gb-m-ic_attachment_universal_small.png	ca6af90f06bf7cb8	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_attachment_universal_small.png	drawable-hdpi		de945bef4d37754f
 versions/2.3.6/assets/gb-m-ic_contact_picture.png	427aa5dba7151668	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_contact_picture.png	drawable-hdpi		fae1732755585934
 versions/2.3.6/assets/gb-m-ic_dialog_attach.png	e969ae92aa46f2d3	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_dialog_attach.png	drawable-hdpi		145fdcdf8a0a329d
+versions/2.3.6/assets/gb-m-ic_gallery_video_overlay.png	2e19361807ac0826	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_gallery_video_overlay.png	drawable-hdpi		2e19361807ac0826
 versions/2.3.6/assets/gb-m-ic_launcher_camera.png	db98430578498947	same pixels	crespo:/system/app/CameraGoogle.apk!res/drawable-hdpi/ic_launcher_camera.png	drawable-hdpi		9bd7f0fe5217d3ab
 versions/2.3.6/assets/gb-m-ic_launcher_camera_record.png	05c8ea3b0e4a634d	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_launcher_camera_record.png	drawable-hdpi		b58b26702dc18a55
 versions/2.3.6/assets/gb-m-ic_launcher_gallery.png	7acbafbe710eac7b	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_launcher_gallery.png	drawable-hdpi		5f48383cca1ecc16
 versions/2.3.6/assets/gb-m-ic_launcher_musicplayer_2.png	7c6c3d0fb0578b85	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_launcher_musicplayer_2.png	drawable-hdpi		280d823316a94bee
 versions/2.3.6/assets/gb-m-ic_launcher_record_audio.png	5687fe8a7a6f6d93	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_launcher_record_audio.png	drawable-hdpi		6341416287f562af
 versions/2.3.6/assets/gb-m-ic_launcher_slideshow_add_sms.png	7794372c75ef5571	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_launcher_slideshow_add_sms.png	drawable-hdpi		765b23bb7b55eed3
+versions/2.3.6/assets/gb-m-ic_launcher_slideshow_default_sms.png	765b23bb7b55eed3	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_launcher_slideshow_default_sms.png	drawable-hdpi		765b23bb7b55eed3
 versions/2.3.6/assets/gb-m-ic_launcher_video_player.png	2e634df7612a4bee	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_launcher_video_player.png	drawable-hdpi		eef89917d7a03bc9
 versions/2.3.6/assets/gb-m-ic_list_alert_sms_failed.png	34a6726f548bed78	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_list_alert_sms_failed.png	drawable-hdpi		c916f4053987a4d8
 versions/2.3.6/assets/gb-m-ic_lock_message_sms.png	e1d2418a045bc347	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_lock_message_sms.png	drawable-hdpi		8ba64c01608e87a1
+versions/2.3.6/assets/gb-m-ic_maps_back.png	b7fbf466b6ea575d	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_maps_back.png	drawable-hdpi		b7fbf466b6ea575d
+versions/2.3.6/assets/gb-m-ic_maps_next.png	e9c261827dd87447	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_maps_next.png	drawable-hdpi		e9c261827dd87447
+versions/2.3.6/assets/gb-m-ic_menu_add_slide.png	d122786e1414ae93	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_add_slide.png	drawable-hdpi		d122786e1414ae93
+versions/2.3.6/assets/gb-m-ic_menu_add_sound.png	64ef7baa58d889db	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_add_sound.png	drawable-hdpi		64ef7baa58d889db
 versions/2.3.6/assets/gb-m-ic_menu_attachment.png	2930e88e69e3dcce	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_attachment.png	drawable-hdpi		cced15b1a5f58a74
 versions/2.3.6/assets/gb-m-ic_menu_call.png	279cd7b064fbbf3c	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_call.png	drawable-hdpi		fcc25832bc4bb5ad
 versions/2.3.6/assets/gb-m-ic_menu_contact.png	dad9dcaa92060941	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_contact.png	drawable-hdpi		597e674d5d6a5431
+versions/2.3.6/assets/gb-m-ic_menu_delete_played.png	a29635fbcc07dec8	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_delete_played.png	drawable-hdpi		a29635fbcc07dec8
+versions/2.3.6/assets/gb-m-ic_menu_duration.png	c0c192d35b278a69	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_duration.png	drawable-hdpi		c0c192d35b278a69
 versions/2.3.6/assets/gb-m-ic_menu_edit.png	1e35e7a28525e036	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_edit.png	drawable-hdpi		3926768c52abbf50
 versions/2.3.6/assets/gb-m-ic_menu_emoticons.png	daf03d96ac033974	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_emoticons.png	drawable-hdpi		f9d8ca8d04537ea6
 versions/2.3.6/assets/gb-m-ic_menu_friendslist.png	dadff2b02c6f5bba	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_friendslist.png	drawable-hdpi		a923b0def44daf56
+versions/2.3.6/assets/gb-m-ic_menu_movie.png	be872a694678d5e4	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_movie.png	drawable-hdpi		be872a694678d5e4
 versions/2.3.6/assets/gb-m-ic_menu_picture.png	6d695369aaa1bbaa	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_picture.png	drawable-hdpi		5da06116e76150ad
+versions/2.3.6/assets/gb-m-ic_menu_remove_picture.png	606ef4b95306bcb1	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_remove_picture.png	drawable-hdpi		606ef4b95306bcb1
+versions/2.3.6/assets/gb-m-ic_menu_remove_sound.png	563fbcdc9373942a	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_remove_sound.png	drawable-hdpi		563fbcdc9373942a
+versions/2.3.6/assets/gb-m-ic_menu_remove_text.png	d79774673c02f6f9	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_remove_text.png	drawable-hdpi		d79774673c02f6f9
+versions/2.3.6/assets/gb-m-ic_menu_remove_video.png	4c998c676f34e017	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_menu_remove_video.png	drawable-hdpi		4c998c676f34e017
+versions/2.3.6/assets/gb-m-ic_mms_duration.png	264925fc9d82e5b5	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_mms_duration.png	drawable-hdpi		264925fc9d82e5b5
+versions/2.3.6/assets/gb-m-ic_mms_layout.png	9ad1d3364cf1ed21	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_mms_layout.png	drawable-hdpi		9ad1d3364cf1ed21
+versions/2.3.6/assets/gb-m-ic_mms_music.png	8d904beecfc84b8f	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_mms_music.png	drawable-hdpi		8d904beecfc84b8f
+versions/2.3.6/assets/gb-m-ic_mms_text_bottom.png	f3f6a502dc17e7de	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_mms_text_bottom.png	drawable-hdpi		f3f6a502dc17e7de
+versions/2.3.6/assets/gb-m-ic_mms_text_top.png	a30897c5c4ea2f5d	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_mms_text_top.png	drawable-hdpi		a30897c5c4ea2f5d
 versions/2.3.6/assets/gb-m-ic_sms_mms_delivered.png	d9fa1d1c75c06436	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_sms_mms_delivered.png	drawable-hdpi		91939412f3acdc9f
 versions/2.3.6/assets/gb-m-ic_sms_mms_details.png	3799fd21d9d072f8	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_sms_mms_details.png	drawable-hdpi		e2d92514366f7cff
 versions/2.3.6/assets/gb-m-ic_sms_mms_pending.png	7e07524ff771911d	same pixels	crespo:/system/app/Mms.apk!res/drawable-hdpi/ic_sms_mms_pending.png	drawable-hdpi		0255bd3a853190cf
+versions/2.3.6/assets/gb-m-mms_play_btn.png	5510861ad98cc31a	copy	crespo:/system/app/Mms.apk!res/drawable-hdpi/mms_play_btn.png	drawable-hdpi		5510861ad98cc31a
 versions/2.3.6/assets/gb-menu_background.png	c7a5489b0492d9cc	same pixels	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/menu_background.9.png	drawable-hdpi		0c32b92a9277b4fe
 versions/2.3.6/assets/gb-menu_background_fill_parent_width.png	b8a12d2394293a1a	same pixels	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/menu_background_fill_parent_width.9.png	drawable-hdpi		65312568a3eb0f22
 versions/2.3.6/assets/gb-menu_submenu_background.png	9cad258af8de61a3	same pixels	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/menu_submenu_background.9.png	drawable-hdpi		5614c5def021c154
@@ -851,6 +874,7 @@ versions/2.3.6/assets/gb-p-ic_in_call_touch_round_unhold.png	9b17ba812a08bb8c	sa
 versions/2.3.6/assets/gb-p-incall_photo_border_lg.png	4c4276e042a7d4e8	same pixels	crespo:/system/app/Phone.apk!res/drawable-hdpi/incall_photo_border_lg.9.png	drawable-hdpi		45fa5e65d0fba827
 versions/2.3.6/assets/gb-p-picture_unknown.png	33118a801cd7dd79	same pixels	crespo:/system/app/Phone.apk!res/drawable-hdpi/picture_unknown.png	drawable-hdpi		637670e40aa23513
 versions/2.3.6/assets/gb-password_field_default.png	e60cd81c827bfe13	same pixels	crespo:/system/app/Settings.apk!res/drawable-hdpi/password_field_default.9.png	drawable-hdpi		3c200555aaec9a62
+versions/2.3.6/assets/gb-picture_frame.png	6e3bf528642ab2b1	copy	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/picture_frame.9.png	drawable-hdpi		6e3bf528642ab2b1
 versions/2.3.6/assets/gb-platlogo.jpg	44829c7fbf23b4c5	copy	crespo:/system/framework/framework-res.apk!res/drawable-nodpi/platlogo.jpg	drawable-nodpi		44829c7fbf23b4c5
 versions/2.3.6/assets/gb-popup_bottom_bright.png	210be86945225827	same pixels	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/popup_bottom_bright.9.png	drawable-hdpi		0c3e18b506c37be5
 versions/2.3.6/assets/gb-popup_bottom_dark.png	1823f76f2ed924ff	same pixels	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/popup_bottom_dark.9.png	drawable-hdpi		4f69e3d3687c476e
@@ -945,6 +969,13 @@ versions/2.3.6/assets/gb-spinner_select.png	0e283808ba872409	same pixels	crespo:
 versions/2.3.6/assets/gb-spinner_white_16.png	e86494e10791872d	same pixels	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/spinner_white_16.png	drawable-hdpi		f9f3703341f97047
 versions/2.3.6/assets/gb-spinner_white_48.png	eca65bc7057db0f1	same pixels	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/spinner_white_48.png	drawable-hdpi		0ef253cd55aaa991
 versions/2.3.6/assets/gb-spinner_white_76.png	391ccc16c6df5640	same pixels	crespo:/system/framework/framework-res.apk!res/drawable-hdpi/spinner_white_76.png	drawable-hdpi		456c4290011662e7
+versions/2.3.6/assets/gb-sr-gradient_bg.png	a5bf77070a479269	copy	crespo:/system/app/SoundRecorder.apk!res/drawable-hdpi/gradient_bg.png	drawable-hdpi		a5bf77070a479269
+versions/2.3.6/assets/gb-sr-idle_led.png	68ee073286edc28b	copy	crespo:/system/app/SoundRecorder.apk!res/drawable-hdpi/idle_led.png	drawable-hdpi		68ee073286edc28b
+versions/2.3.6/assets/gb-sr-play.png	68e73afaf6f2ab97	copy	crespo:/system/app/SoundRecorder.apk!res/drawable-hdpi/play.png	drawable-hdpi		68e73afaf6f2ab97
+versions/2.3.6/assets/gb-sr-record.png	06fa15a9140da8c1	copy	crespo:/system/app/SoundRecorder.apk!res/drawable-hdpi/record.png	drawable-hdpi		06fa15a9140da8c1
+versions/2.3.6/assets/gb-sr-recording_led.png	c744e6e85805763c	copy	crespo:/system/app/SoundRecorder.apk!res/drawable-hdpi/recording_led.png	drawable-hdpi		c744e6e85805763c
+versions/2.3.6/assets/gb-sr-stop.png	f66ae7cdc2053843	copy	crespo:/system/app/SoundRecorder.apk!res/drawable-hdpi/stop.png	drawable-hdpi		f66ae7cdc2053843
+versions/2.3.6/assets/gb-sr-vumeter.png	89e440c9b320e11c	copy	crespo:/system/app/SoundRecorder.apk!res/drawable-hdpi/vumeter.png	drawable-hdpi		89e440c9b320e11c
 versions/2.3.6/assets/gb-st-app_gauge.png	5404584918010ea2	same pixels	crespo:/system/app/Settings.apk!res/drawable-hdpi/app_gauge.9.png	drawable-hdpi		b0a39c7dc50ca0bc
 versions/2.3.6/assets/gb-st-dotted_line_480px.png	403d0e17b68c20e9	same pixels	crespo:/system/app/Settings.apk!res/drawable-hdpi/dotted_line_480px.png	drawable-hdpi		62e1ac15c8c45faf
 versions/2.3.6/assets/gb-st-ic_settings_bluetooth.png	1e43c65166059e14	same pixels	crespo:/system/app/Settings.apk!res/drawable-hdpi/ic_settings_bluetooth.png	drawable-hdpi		e35afeaf040b0e53

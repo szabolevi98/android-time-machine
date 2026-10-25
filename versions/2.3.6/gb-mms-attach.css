@@ -1,0 +1,95 @@
+/* Messaging attachments (gb-mms-attach.js). AttachmentEditor views on attachment_editor_bg (its 8 px blue edge,
+   7 px above and below; 5 dp right padding), the media 135 dp high, the 100 x 45 dp buttons (80 dp beside a slideshow). */
+.gbma{flex:none;display:flex;align-items:center;padding:calc(4.6667 * var(--dp)) calc(5 * var(--dp)) calc(4.6667 * var(--dp)) calc(5.3333 * var(--dp));border:0 solid transparent;border-width:calc(4.6667 * var(--dp)) 0 calc(4.6667 * var(--dp)) calc(5.3333 * var(--dp));border-image:url('assets/gb-m-attachment_editor_bg.png') 7 0 7 8 fill / calc(4.6667 * var(--dp)) 0 calc(4.6667 * var(--dp)) calc(5.3333 * var(--dp)) stretch;color:#000}
+.gbma-media{position:relative;flex:1;min-width:0;height:calc(135 * var(--dp));display:flex;align-items:center;justify-content:center;overflow:hidden}
+.gbma-media>:first-child{max-width:100%;max-height:100%;height:100%;aspect-ratio:4/3;object-fit:contain}
+.gbma-overlay{position:absolute;inset:0;margin:auto;width:calc(25.3333 * var(--dp));height:calc(25.3333 * var(--dp))}
+.gbma-btns{flex:none;display:flex;flex-direction:column}
+.gbma-btns.two{justify-content:center}
+.screen .gbma-btn{flex:none;height:calc(45 * var(--dp));min-height:0;margin:0;padding:0 calc(4 * var(--dp));border:0 solid transparent;border-image:url('assets/gb-btn_default_normal.png') 5 7 12 7 fill / calc(3.3392 * var(--dp)) calc(4.6725 * var(--dp)) calc(8 * var(--dp)) stretch;background:none;color:#000;font:calc(15 * var(--dp)) DroidSans,Arial,sans-serif;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .gbma-btn:active{border-image:url('assets/gb-btn_default_pressed.png') 10 8 17 8 fill / calc(6.6667 * var(--dp)) calc(5.3334 * var(--dp)) calc(11.3392 * var(--dp)) stretch}
+.gbma-sound{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;font-size:calc(14 * var(--dp))}
+.gbma-sound img{width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding-bottom:calc(10 * var(--dp));box-sizing:content-box}
+.gbma-sound b,.gbma-sound small{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:400}
+.gbma-sound small{color:#555}
+/* slideshow_attachment_view: the first slide in a 240 x 180 dp picture_frame with mms_play_btn over it. */
+.gbma-show{justify-content:space-between}
+.gbma-frame{position:relative;flex:none;width:min(calc(240 * var(--dp)),62%);aspect-ratio:4/3;border:0 solid transparent;border-width:calc(5.3333 * var(--dp)) calc(9.3333 * var(--dp)) calc(8.6667 * var(--dp)) calc(6.6667 * var(--dp));border-image:url('assets/gb-picture_frame.png') 8 14 13 10 fill / calc(5.3333 * var(--dp)) calc(9.3333 * var(--dp)) calc(8.6667 * var(--dp)) calc(6.6667 * var(--dp)) stretch;box-sizing:border-box}
+.gbma-framebody{display:flex;flex-direction:column;width:100%;height:100%;font-size:calc(14 * var(--dp))}
+.gbma-framebody.top{flex-direction:column-reverse}
+.gbma-framepic{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.gbma-framepic>*{max-width:100%;max-height:100%;height:100%}
+.gbma-frametext{flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .gbma-play{position:absolute;left:50%;top:50%;z-index:2;translate:-50% -50%;padding:0;border:0;background:none;cursor:pointer}
+.gbma-play img{display:block;width:calc(65.3333 * var(--dp));height:calc(65.3333 * var(--dp))}
+.gbmms-bottom.gbma-hidden{visibility:hidden}
+/* mms_layout_view in a message: the picture, mms_play_btn over video, sound and slideshow; ic_mms_music alone. */
+.gbma-row{position:relative}
+.gbma-row .mms-photo-frame{display:block}
+.gbma-row .mms-photo-frame>*{display:block;width:100%;aspect-ratio:4/3}
+.gbma-rowicon{display:block;width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.gbma-row:has(.gbma-rowicon){min-height:calc(65.3333 * var(--dp))}
+.gbmms-pictures button{position:relative}
+/* SlideshowActivity: black, the slide's picture, its text on top or at the bottom. */
+.gbma-slideshow{position:absolute;inset:0;display:flex;flex-direction:column;background:#000;color:#fff}
+.gbma-slideshow.top{flex-direction:column-reverse}
+.gbma-slidemedia{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+/* The pictures are shown whole (ImageView's default fitCenter), not cropped as in the grids. */
+.gbma-slidemedia>.media-photo,.gbma-framepic>.media-photo,.gbma-epic>.media-photo,.gbma-media>.media-photo{object-fit:contain}
+.gbma-slidemedia>*{width:100%;height:100%}
+.gbma-slidemedia .gbma-playing{width:auto;aspect-ratio:auto}
+.gbma-slidetext{flex:none;padding:calc(5 * var(--dp));font-size:calc(18 * var(--dp));text-align:center}
+.gbma-playing{display:flex;align-items:center;gap:calc(5 * var(--dp));font-size:calc(18 * var(--dp))}
+.gbma-playing img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+/* SlideshowEditActivity: slideshow_edit_item rows (60 dp picture 2 dp in, "Slide n" bold, the text and the duration). */
+#viewport>.app-view.gbmms.gbma-slides,#viewport>.app-view.gbmms.gbma-editor{background:#000;color:#fff}
+.gbma-slist{flex:1;min-height:0;overflow-y:auto}
+.screen .gbma-srow{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:0;border:0;border-bottom:calc(1.1595 * var(--dp)) solid #ffffff1f;background:none;color:#fff;text-align:left;font-family:DroidSans,Arial,sans-serif;cursor:pointer}
+.screen .gbma-srow:active{border-image:url('assets/gb-list_selector_background_pressed.png') 37 fill / calc(24.6725 * var(--dp)) stretch}
+.gbma-sthumb{flex:none;width:calc(60 * var(--dp));height:calc(60 * var(--dp));padding-left:calc(2 * var(--dp));display:flex;align-items:center;justify-content:center;overflow:hidden;box-sizing:border-box}
+.gbma-sthumb>*{max-width:100%;max-height:100%;aspect-ratio:4/3}
+img.gbma-sthumb.icon{object-fit:none;object-position:center;width:calc(60 * var(--dp))}
+.gbma-stext{flex:1;min-width:0;display:flex;flex-direction:column}
+.gbma-stext b{padding-left:calc(5 * var(--dp));font-size:calc(16 * var(--dp))}
+.gbma-sline{display:flex;font-size:calc(18 * var(--dp));color:#bebebe}
+.gbma-sprev{min-width:0;padding:0 calc(5 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gbma-sdur{flex:none;margin-left:auto;padding:0 calc(10 * var(--dp))}
+/* SlideEditorActivity (edit_slide_activity.xml): the slide on editbox_background with the 50 dp buttons, then the text and Done. */
+.gbma-epanel{flex:1;min-height:0;display:flex;align-items:center;margin:calc(4 * var(--dp));border:0 solid transparent;border-width:calc(6 * var(--dp)) calc(10 * var(--dp)) calc(6 * var(--dp)) calc(9.3333 * var(--dp));border-image:url('assets/gb-editbox_background_normal.png') 9 15 9 14 fill / calc(6 * var(--dp)) calc(10 * var(--dp)) calc(6 * var(--dp)) calc(9.3333 * var(--dp)) stretch;color:#000}
+.gbma-eleft{flex:1;min-width:0;align-self:stretch;display:flex;flex-direction:column;margin:calc(10 * var(--dp)) calc(20 * var(--dp))}
+.gbma-epic{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.gbma-epic>*{max-width:100%;max-height:100%;aspect-ratio:4/3}
+.gbma-eaudio{display:flex;align-items:center;gap:calc(4 * var(--dp));font-size:calc(14 * var(--dp))}
+.gbma-eaudio img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.gbma-ectl{flex:none;display:flex;flex-direction:column}
+.gbma-enav{display:flex}
+.screen .gbma-enav .gbma-small{flex:1}
+.screen .gbma-small{flex:none;height:calc(50 * var(--dp));padding:0 calc(8 * var(--dp));border:0 solid transparent;border-image:url('assets/gb-btn_default_normal.png') 5 7 12 7 fill / calc(3.3392 * var(--dp)) calc(4.6725 * var(--dp)) calc(8 * var(--dp)) stretch;background:none;color:#000;font:calc(15 * var(--dp)) DroidSans,Arial,sans-serif;cursor:pointer}
+.screen .gbma-small:active:not(:disabled){border-image:url('assets/gb-btn_default_pressed.png') 10 8 17 8 fill / calc(6.6667 * var(--dp)) calc(5.3334 * var(--dp)) calc(11.3392 * var(--dp)) stretch}
+.gbma-small:disabled{opacity:.5}
+.gbma-small img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.gbma-ebottom{flex:none;display:flex;align-items:center;gap:calc(2 * var(--dp));padding:calc(2 * var(--dp))}
+.gbma-etext{flex:1;min-width:0;height:calc(45 * var(--dp));padding:0 calc(8 * var(--dp));border:0 solid transparent;border-image:url('assets/gb-textfield_default.png') 12 12 12 12 fill / calc(8 * var(--dp)) stretch;background:none;color:#000;font:calc(15 * var(--dp)) DroidSans,Arial,sans-serif;outline:0}
+/* Sound Recorder (layout-port/main.xml). */
+.gbsr{display:flex;flex-direction:column;background:#000;color:#fff;font-family:DroidSans,Arial,sans-serif}
+.gbsr-div{flex:none;display:block;height:calc(1 * var(--dp));background:url('assets/gb-divider_horizontal_dark.png') 0 0/100% 100%}
+.gbsr-panel{position:relative;flex:none;height:calc(242 * var(--dp));background:url('assets/gb-sr-gradient_bg.png') 0 0/100% 100%}
+.gbsr-time{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-size:calc(112 * var(--dp));line-height:1}
+.gbsr-state{position:absolute;left:0;right:0;bottom:calc(50% + calc(56 * var(--dp)));display:flex;align-items:center;justify-content:center;gap:calc(3.3333 * var(--dp));font-size:calc(18 * var(--dp))}
+.gbsr-state img{width:calc(12 * var(--dp));height:calc(12 * var(--dp))}
+.gbsr-progress{position:absolute;left:calc(20 * var(--dp));right:calc(20 * var(--dp));bottom:calc(50% + calc(60 * var(--dp)));height:calc(10 * var(--dp));border-radius:calc(5 * var(--dp));background:linear-gradient(#9d9e9d,#5a5d5a 75%,#747674);overflow:hidden}
+.gbsr-progress i{display:block;height:100%;border-radius:calc(5 * var(--dp));background:linear-gradient(#ffd300,#ffb600 75%,#ffcb00)}
+.gbsr-middle{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.gbsr-exit{display:flex;width:100%}
+.gbsr-exit .gbma-btn{flex:1;height:auto;min-height:calc(48 * var(--dp));margin:0 calc(2 * var(--dp)) 0 calc(15 * var(--dp))}
+.gbsr-exit .gbma-btn:last-child{margin:0 calc(15 * var(--dp)) 0 calc(2 * var(--dp))}
+.gbsr-vu{position:relative;width:calc(133.3333 * var(--dp));height:calc(53.3333 * var(--dp))}
+.gbsr-vu img{display:block;width:100%;height:100%}
+.gbsr-needle{position:absolute;left:calc(50% - calc(42.6667 * var(--dp)));top:calc(44.3333 * var(--dp));width:calc(42.6667 * var(--dp));height:1px;background:#fff;box-shadow:calc(1.3333 * var(--dp)) calc(1.3333 * var(--dp)) 0 #0000003c;transform-origin:100% 50%}
+.gbsr-pivot{position:absolute;left:calc(50% - calc(2.3333 * var(--dp)));top:calc(42 * var(--dp));width:calc(4.6667 * var(--dp));height:calc(4.6667 * var(--dp));border-radius:50%;background:#fff}
+.gbsr-bar{flex:none;height:calc(60 * var(--dp));display:flex;justify-content:center;padding:calc(4 * var(--dp)) 0;background:url('assets/gb-activity_title_bar.png') 0 0/100% 100%;box-sizing:border-box}
+.screen .gbsr-btn{width:calc(71 * var(--dp));height:100%;flex:none;box-sizing:border-box;padding:0;border:0 solid transparent;border-width:calc(9.3333 * var(--dp)) calc(7.3333 * var(--dp)) calc(11.3333 * var(--dp)) calc(8 * var(--dp));border-image:url('assets/gb-btn_media_player.png') 14 11 17 12 fill / calc(9.3333 * var(--dp)) calc(7.3333 * var(--dp)) calc(11.3333 * var(--dp)) calc(8 * var(--dp)) stretch;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.screen .gbsr-btn:active:not(:disabled){border-image-source:url('assets/gb-btn_media_player_pressed.png')}
+.screen .gbsr-btn:disabled{border-image-source:url('assets/gb-btn_media_player_disabled.png');cursor:default}
+.gbsr-btn img{width:calc(20 * var(--dp))}
+.gbsr-btn:disabled img{opacity:.4}

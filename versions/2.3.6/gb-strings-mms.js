@@ -435,6 +435,258 @@ window.GBStrings["mms"] = {
 "de": "Nachricht entsperren",
 "fr": "Déverrouiller le message",
 "es": "Desbloquear mensaje"
+},
+"replace": {
+"en": "Replace",
+"hu": "Csere",
+"de": "Ersetzen",
+"fr": "Remplacer",
+"es": "Sustituir"
+},
+"edit": {
+"en": "Edit",
+"hu": "Szerkesztés",
+"de": "Bearbeiten",
+"fr": "Modifier",
+"es": "Editar"
+},
+"play": {
+"en": "Play",
+"hu": "Lejátszás",
+"de": "Wiedergeben",
+"fr": "Lire",
+"es": "Reproducir"
+},
+"select_audio": {
+"en": "Select audio",
+"hu": "Hanganyag kiválasztása",
+"de": "Audio auswählen",
+"fr": "Sélectionnez un fichier audio",
+"es": "Seleccionar audio"
+},
+"slideshow_activity": {
+"en": "Slideshow",
+"hu": "Diavetítés",
+"de": "Diashow",
+"fr": "Diaporama",
+"es": "Presentación"
+},
+"edit_slideshow_activity": {
+"en": "Edit slideshow",
+"hu": "Diavetítés szerkesztése",
+"de": "Diashow bearbeiten",
+"fr": "Modifier le diaporama",
+"es": "Editar diapositiva"
+},
+"add_slide": {
+"en": "Add slide",
+"hu": "Dia hozzáadása",
+"de": "Dia hinzufügen",
+"fr": "Ajouter une diapositive",
+"es": "Añadir diapositiva"
+},
+"add_slide_hint": {
+"en": "Select to create new slide.",
+"hu": "Új dia létrehozásához válassza ezt.",
+"de": "Neues Dia erstellen",
+"fr": "Sélectionner cet élément pour créer une nouvelle diapositive.",
+"es": "Selecciona esta opción para crear una diapositiva nueva."
+},
+"slide_number": {
+"en": "Slide %s",
+"hu": "%s. dia",
+"de": "Dia %s",
+"fr": "Diapositive %s",
+"es": "Diapositiva %s"
+},
+"cannot_add_slide_anymore": {
+"en": "Cannot add more slides.",
+"hu": "Nem lehet további diákat hozzáadni.",
+"de": "Es können keine weiteren Dias hinzugefügt werden.",
+"fr": "Impossible d'ajouter d'autres diapositives.",
+"es": "No se pueden añadir más diapositivas."
+},
+"converting_to_picture_message": {
+"en": "Converting to multimedia message…",
+"hu": "Konvertálás multimédiás üzenetté...",
+"de": "Konvertierung in Multimedia-Nachricht wird ausgeführt...",
+"fr": "Conversion en message multimédia...",
+"es": "Convirtiendo en mensaje multimedia..."
+},
+"converting_to_text_message": {
+"en": "Converting to text message…",
+"hu": "Konvertálás szöveges üzenetté...",
+"de": "Konvertierung in Textnachricht wird ausgeführt...",
+"fr": "Conversion en message SMS…",
+"es": "Convirtiendo en mensaje de texto..."
+},
+"remove_slide": {
+"en": "Remove slide",
+"hu": "Dia eltávolítása",
+"de": "Dia entfernen",
+"fr": "Supprimer la diapositive",
+"es": "Eliminar diapositiva"
+},
+"discard_slideshow": {
+"en": "Discard slideshow",
+"hu": "Diavetítés elvetése",
+"de": "Diashow verwerfen",
+"fr": "Supprimer le diaporama",
+"es": "Descartar presentación"
+},
+"slide_show_part": {
+"en": "Part %1$s/%2$s",
+"hu": "%2$s/%1$s. rész",
+"de": "Teil %1$s/%2$s",
+"fr": "Partie %1$s/%2$s",
+"es": "Parte %1$s/%2$s"
+},
+"preview": {
+"en": "Preview",
+"hu": "Előnézet",
+"de": "Vorschau",
+"fr": "Aperçu",
+"es": "Vista previa"
+},
+"done": {
+"en": "Done",
+"hu": "Kész",
+"de": "Fertig",
+"fr": "OK",
+"es": "Listo"
+},
+"preview_slideshow": {
+"en": "Preview",
+"hu": "Előnézet",
+"de": "Vorschau",
+"fr": "Aperçu",
+"es": "Vista previa"
+},
+"remove_text": {
+"en": "Remove text",
+"hu": "Szöveg törlése",
+"de": "Text entfernen",
+"fr": "Supprimer le texte",
+"es": "Eliminar texto"
+},
+"remove_picture": {
+"en": "Remove picture",
+"hu": "Kép eltávolítása",
+"de": "Bild entfernen",
+"fr": "Supprimer l'image",
+"es": "Eliminar imagen"
+},
+"add_picture": {
+"en": "Add picture",
+"hu": "Kép hozzáadása",
+"de": "Bild hinzufügen",
+"fr": "Ajouter une image",
+"es": "Añadir imagen"
+},
+"remove_music": {
+"en": "Remove music",
+"hu": "Zene eltávolítása",
+"de": "Musik entfernen",
+"fr": "Supprimer la musique",
+"es": "Eliminar música"
+},
+"add_music": {
+"en": "Add music",
+"hu": "Zene hozzáadása",
+"de": "Musik hinzufügen",
+"fr": "Ajouter de la musique",
+"es": "Añadir música"
+},
+"remove_video": {
+"en": "Remove video",
+"hu": "Videó eltávolítása",
+"de": "Video entfernen",
+"fr": "Supprimer la vidéo",
+"es": "Eliminar vídeo"
+},
+"add_video": {
+"en": "Add video",
+"hu": "Videó hozzáadása",
+"de": "Video hinzufügen",
+"fr": "Ajouter une vidéo",
+"es": "Añadir vídeo"
+},
+"duration_sec": {
+"en": "Duration (%s sec)",
+"hu": "Időtartam (%s mp)",
+"de": "Dauer (%s Sek.)",
+"fr": "Durée (%s s.)",
+"es": "Duración (%s segundos)"
+},
+"duration_selector_title": {
+"en": "Duration for slide ",
+"hu": "A dia időtartama ",
+"de": "Dauer für Dia ",
+"fr": "Durée de la diapositive ",
+"es": "Duración de la diapositiva "
+},
+"layout_top": {
+"en": "Layout (top)",
+"hu": "Elrendezés (fent)",
+"de": "Layout (oben)",
+"fr": "Mise en page (haut)",
+"es": "Diseño (arriba)"
+},
+"layout_bottom": {
+"en": "Layout (bottom)",
+"hu": "Elrendezés (lent)",
+"de": "Layout (unten)",
+"fr": "Mise en page (bas)",
+"es": "Diseño (abajo)"
+},
+"layout_selector_title": {
+"en": "Slideshow layout ",
+"hu": "Diavetítés elrendezése ",
+"de": "Layout der Diashow ",
+"fr": "Mise en page du diaporama ",
+"es": "Diseño de presentación "
+},
+"select_top_text": {
+"en": "Text on top",
+"hu": "A szöveg felül",
+"de": "Text oben",
+"fr": "Texte en haut de l'écran",
+"es": "Texto arriba"
+},
+"select_bottom_text": {
+"en": "Text on bottom",
+"hu": "A szöveg alul",
+"de": "Text unten",
+"fr": "Texte en bas de l'écran",
+"es": "Texto abajo"
+},
+"type_to_compose_text_or_leave_blank": {
+"en": "Type to compose text, or leave blank",
+"hu": "Kezdje meg a gépelést vagy hagyja üresen",
+"de": "Geben Sie einen Text ein oder lassen Sie das Feld leer.",
+"fr": "Saisissez votre texte ou laissez le champ vide.",
+"es": "Introduce algún texto o deja el campo vacío."
+},
+"cannot_add_picture_and_video": {
+"en": "Cannot add video and picture to one slide.",
+"hu": "Nem lehet videót és képet is hozzáadni ugyanahhoz a diához.",
+"de": "In eine Folie kann nicht gleichzeitig ein Video und ein Bild eingefügt werden.",
+"fr": "Impossible d'ajouter une vidéo et une image sur une diapositive.",
+"es": "No se pueden añadir vídeos ni imágenes a una diapositiva."
+},
+"slide_duration_one": {
+"en": "%s sec",
+"de": "%s Sek.",
+"fr": "%s s",
+"es": "%s segundos",
+"hu": "%s másodperc"
+},
+"slide_duration_other": {
+"en": "%s secs",
+"de": "%s Sek.",
+"fr": "%s s",
+"es": "%s segundos",
+"hu": "%s másodperc"
 }
 },
 "arrays": {
@@ -630,6 +882,73 @@ window.GBStrings["mms"] = {
 ":-X",
 ":-D",
 "o_O"
+]
+},
+"select_dialog_items": {
+"en": [
+"1 second",
+"2 seconds",
+"3 seconds",
+"4 seconds",
+"5 seconds",
+"6 seconds",
+"7 seconds",
+"8 seconds",
+"9 seconds",
+"10 seconds",
+"Other…"
+],
+"hu": [
+"1 másodperc",
+"2 másodperc",
+"3 másodperc",
+"4 másodperc",
+"5 másodperc",
+"6 másodperc",
+"7 másodperc",
+"8 másodperc",
+"9 másodperc",
+"10 másodperc",
+"Egyéb…"
+],
+"de": [
+"1 Sekunde",
+"2 Sekunden",
+"3 Sekunden",
+"4 Sekunden",
+"5 Sekunden",
+"6 Sekunden",
+"7 Sekunden",
+"8 Sekunden",
+"9 Sekunden",
+"10 Sekunden",
+"Weitere..."
+],
+"fr": [
+"1 seconde",
+"2 secondes",
+"3 secondes",
+"4 secondes",
+"5 secondes",
+"6 secondes",
+"7 secondes",
+"8 secondes",
+"9 secondes",
+"10 secondes",
+"Plus..."
+],
+"es": [
+"1 segundo",
+"2 segundos",
+"3 segundos",
+"4 segundos",
+"5 segundos",
+"6 segundos",
+"7 segundos",
+"8 segundos",
+"9 segundos",
+"10 segundos",
+"Otra..."
 ]
 }
 }
