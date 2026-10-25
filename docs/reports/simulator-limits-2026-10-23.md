@@ -375,7 +375,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T28 — 4.0.4 Navigation/Places helyi választók
 
 - **Ütem:** Második kör, #12. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `733afedf`. 4.0.4 Navigation: Contacts (a névjegyek címei) és Starred places (a Mapsben csillagozott helyek) választó, a gyári da_picker_no_contacts / da_picker_no_starred_items üres szövegekkel; a választott cél a meglévő útvonalkezelővel indítja a navigációt. Places: a kategóriák és a keresőmező a Maps által tárolt helyek (csillagozott + keresett) között keresnek a kategória szavai szerint; a találat a térképen nyílik, Back a választóhoz/kategóriákhoz tér vissza. Ellenőrzés: limits-regression T28 asztali+telefon zöld; npm test 255/255. Korlát marad: Speak destination (hangfelismerés); a Places-találatok szerveroldali listája helyett a helyben tárolt helyek, az üres találatnak a Maps 6.4 APK-ban nincs saját szövege, ezért üres lista.
 - **Verziók:** 4.0.4.
 - **Forráscsoportok:** 4.0.4-15.
 - **Elkészítendő és határ:** Navigation Contacts és Starred places; Places keresés és Restaurants/Coffee/Bars/Hotels/Attractions/ATMs/Gas stations kategóriák a már tárolt helyekből. Speak destination az offline hangszolgáltatás korlátja marad. A Type destination már működik.
