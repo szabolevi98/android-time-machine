@@ -1,7 +1,7 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Stock Nexus 5: Play Music, Play Movies & TV, Play Books and Play Games (late 2013 looks, own art and sample content).
-const w={window:{}};vm.runInNewContext(fs.readFileSync('versions/4.4.4/play-apps.js','utf8'),w);
+const w={window:{}};for(const f of ['kk-play-more.js','play-apps.js'])vm.runInNewContext(fs.readFileSync('versions/4.4.4/'+f,'utf8'),w);
 const P=w.window.PlayApps,t=k=>k,tracks=[{title:'A',artist:'X',album:'One',duration:100},{title:'B',artist:'X',album:'One',duration:90},{title:'C',artist:'Y',album:'Two',duration:80}];
 const music={queue:[0,1,2],track:0,position:10,playing:true,shuffle:false,repeat:'off',playlists:[]};
 const ctx=(app,ui={})=>({app,ui,data:{},t,music,tracks,time:s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`});

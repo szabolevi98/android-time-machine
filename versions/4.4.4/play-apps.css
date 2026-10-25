@@ -315,3 +315,40 @@
 .bk3-toc-empty{flex:1;min-height:0;overflow-y:auto}
 .bk3-toc-empty p{margin:0;padding:calc(16.0045 * var(--dp)) calc(16.0045 * var(--dp)) 0;font:400 calc(16.0045 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
 .bk3-toc-empty img{display:block;width:100%}
+/* kk-play-more.js: the kept mark, a downloaded pin, the apps' Holo Light settings pages, About this book, the player
+   page and the menus' dialogs. */
+.pa-pin.on{background:#c74b46;color:#fff!important}
+.pa-kept{position:absolute;left:calc(6 * var(--dp));bottom:calc(6 * var(--dp));width:calc(22 * var(--dp));height:calc(22 * var(--dp));padding:calc(4 * var(--dp));border-radius:50%;background:#f4842ee6;color:#fff;box-sizing:border-box}
+.pa-kept svg{display:block;width:100%;height:100%}
+.pmx-settings .pa-scroll{background:#fff}
+.pmx-cat{margin:calc(16 * var(--dp)) calc(16 * var(--dp)) 0;padding:0 calc(8 * var(--dp)) calc(4 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #cfcfcf;font:700 calc(14 * var(--dp)) Roboto,sans-serif;color:#8f8f8f;text-transform:uppercase}
+.screen .pmx-row{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;background:#fff;text-align:left}
+.pmx-row+.pmx-row{border-top:calc(1 * var(--dp)) solid #e3e3e3}
+.pmx-row>span{flex:1;min-width:0;display:flex;flex-direction:column}
+.pmx-row b{font:400 calc(18 * var(--dp)) Roboto,sans-serif;color:#000}
+.pmx-row small{margin-top:calc(2 * var(--dp));font:400 calc(14 * var(--dp))/1.3 Roboto,sans-serif;color:#727272}
+.pmx-check{flex:none;width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-left:calc(8 * var(--dp));background:url('assets/btn_check_off_holo_light.png') center/contain no-repeat}
+.pmx-check.on{background-image:url('assets/btn_check_on_holo_light.png')}
+.pmx-empty{margin:0;padding:calc(48 * var(--dp)) calc(24 * var(--dp));text-align:center;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#777}
+.pmx-about,.pmx-player{display:flex;gap:calc(16 * var(--dp));padding:calc(16 * var(--dp));background:#fff}
+.pmx-about>.pa-art,.pmx-about>svg,.pmx-about>:first-child{flex:none;width:calc(96 * var(--dp))}
+.pmx-player>:first-child{flex:none;width:calc(96 * var(--dp));height:calc(96 * var(--dp));border-radius:50%;overflow:hidden}
+.pmx-about h2,.pmx-player h2{margin:0 0 calc(4 * var(--dp));font:400 calc(20 * var(--dp)) Roboto,sans-serif;color:#333}
+.pmx-about p,.pmx-player p{margin:0 0 calc(8 * var(--dp));font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#777}
+.pmx-about-text{margin:0;padding:0 calc(16 * var(--dp)) calc(16 * var(--dp));background:#fff;font:400 calc(14 * var(--dp))/1.5 Roboto,sans-serif;color:#555}
+.holo-menu .pmx-check{width:calc(24 * var(--dp));height:calc(24 * var(--dp));float:right}
+.pmx-dialog{position:absolute;z-index:41;left:calc(16 * var(--dp));right:calc(16 * var(--dp));top:50%;transform:translateY(-50%);max-height:80%;display:flex;flex-direction:column;background:#fff;box-shadow:0 calc(2 * var(--dp)) calc(11 * var(--dp)) #0006}
+.pmx-dialog h3{flex:none;margin:0;padding:calc(16 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #33b5e5;font:400 calc(22 * var(--dp)) Roboto,sans-serif;color:#33b5e5}
+.pmx-list{overflow-y:auto;max-height:calc(300 * var(--dp))}
+.screen .pmx-choice{display:flex;align-items:center;gap:calc(12 * var(--dp));width:100%;min-height:calc(48 * var(--dp));padding:0 calc(8 * var(--dp)) 0 calc(16 * var(--dp));border:0;border-top:calc(1 * var(--dp)) solid #e3e3e3;background:none;text-align:left;font:400 calc(18 * var(--dp)) Roboto,sans-serif;color:#000}
+.pmx-choice span{flex:1}
+.pmx-choice i{flex:none;width:calc(32 * var(--dp));height:calc(32 * var(--dp));background:url('assets/btn_radio_off_holo_light.png') center/contain no-repeat}
+.pmx-choice.on i{background-image:url('assets/btn_radio_on_holo_light.png')}
+.pmx-choice.new i,.pmx-choice.app i{display:none}
+.pmx-choice.app img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.pmx-msg{margin:0;padding:calc(16 * var(--dp));font:400 calc(16 * var(--dp))/1.4 Roboto,sans-serif;color:#333}
+.screen .pmx-edit{display:block;width:calc(100% - calc(32 * var(--dp)));margin:calc(16 * var(--dp));padding:calc(6 * var(--dp)) calc(4 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #33b5e5;font:400 calc(18 * var(--dp)) Roboto,sans-serif;outline:0}
+.pmx-buttons{flex:none;display:flex;border-top:calc(1 * var(--dp)) solid #0000001a}
+.screen .pmx-buttons button{flex:1;min-height:calc(48 * var(--dp));border:0;background:none;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000}
+.pmx-buttons button+button{border-left:calc(1 * var(--dp)) solid #0000001a}
+.screen .pmx-row:not(.pmx-info):active,.screen .pmx-choice:active,.screen .pmx-buttons button:active{background:#33b5e566}

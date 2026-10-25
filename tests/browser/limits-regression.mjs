@@ -2198,6 +2198,106 @@ const jbNoDrive = async h => {
   await h.openApp('drive');
   h.check('opening Drive stays on the home screen', await h.until(`!!document.querySelector('#viewport .home-view')`));
 };
+// 4.4.4 Play apps (T43): Music's search MORE list, an album's menu (Keep on device, Play next, Add to playlist, Go to
+// artist), now playing's Save as playlist and Music settings; Movies' download pin and On Device, Settings; Books'
+// card menu (Don't keep, Delete from library), Sort and Settings; Games' player page, Dismiss and Settings.
+const kkPlayMore = async h => {
+  const prefs = async app => ((await store(h, 'playPrefs')) || {})[app] || {};
+  const tapCardDots = sel => h.tap(`${sel} .pa-dots`);
+  const menuItem = async (action, id) => { await h.until(`!!document.querySelector('.pmx-menu, .holo-menu')`); await h.tap(`[data-action="${action}"]${id !== undefined ? `[data-id="${id}"]` : ''}`); };
+  // Music
+  await h.openApp('play-music');
+  h.check('opens Listen Now', await h.until(`!!document.querySelector('#viewport .pa-card[data-action="pa-album"]')`));
+  const album = await h.ev(`document.querySelector('#viewport .pa-card[data-action="pa-album"]').dataset.id`);
+  await tapCardDots(`#viewport .pa-card[data-id="${album}"]`);
+  h.check('an album\'s menu has DocumentMenuHandler\'s entries', await h.until(`[...document.querySelectorAll('.pmx-menu button')].map(b => b.textContent).join('|') === 'Start instant mix|Play next|Add to queue|Keep on device|Add to playlist|Go to artist|Shop this artist'`));
+  await menuItem('px-keep');
+  h.check('Keep on device marks the album', (await store(h, 'playMusicKept'))?.includes(album) && await h.until(`!!document.querySelector('#viewport .pa-card[data-id="${album}"] .pa-kept')`));
+  await tapCardDots(`#viewport .pa-card[data-id="${album}"]`);
+  await menuItem('px-dialog', `playlist:album:${album}`);
+  await h.tap('.pmx-dialog [data-action="px-new-playlist"]');
+  await h.type('[data-pmx-edit]', 'Road trip');
+  await h.tap('.pmx-dialog [data-action="px-create-playlist"]');
+  const music = await store(h, 'music');
+  h.check('Add to playlist makes the playlist with the album', music?.playlists?.some(p => p.name === 'Road trip' && p.tracks.length > 0), JSON.stringify(music?.playlists));
+  await tapCardDots(`#viewport .pa-card[data-id="${album}"]`);
+  await menuItem('px-artist');
+  h.check('Go to artist opens the artist\'s albums', await h.until(`!!document.querySelector('#viewport .pmx-page .pa-card')`));
+  await h.key('Escape');
+  await tapCardDots(`#viewport .pa-card[data-id="${album}"]`);
+  await menuItem('px-mix');
+  h.check('Start instant mix plays', await h.until(`!!document.querySelector('#viewport .pm-now')`));
+  await h.tap('#viewport [data-action="px-np"]');
+  h.check('now playing\'s menu', await h.until(`[...document.querySelectorAll('.pmx-menu button')].map(b => b.textContent).join('|') === 'Start instant mix|Add to playlist|Go to artist|Go to album|Clear queue|Save as playlist'`));
+  await menuItem('px-dialog', 'save-queue');
+  await h.type('[data-pmx-edit]', 'Queue copy');
+  await h.tap('.pmx-dialog [data-action="px-create-playlist"]');
+  h.check('Save as playlist keeps the queue', (await store(h, 'music'))?.playlists?.some(p => p.name === 'Queue copy' && p.tracks.length > 1));
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="pa-menu"]');
+  await menuItem('px-page', 'music-settings');
+  await h.tap('#viewport .pmx-row[data-id="music:streamWifi"]');
+  await h.tap('#viewport .pmx-row[data-id="quality"]');
+  await h.tap('.pmx-dialog [data-id="music:quality:high"]');
+  const mp = await prefs('music');
+  h.check('Music settings keep their choices', mp.streamWifi === true && mp.quality === 'high' && await h.until(`/High/.test(document.querySelector('#viewport .pmx-row[data-id="quality"]')?.textContent || '')`), JSON.stringify(mp));
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="pa-search"]');
+  // The demo library (6 songs, 3 albums, 2 artists) never passes a cluster's 4 / 5 limit, so the MORE page is opened
+  // the way its chip opens it and must list every song the query finds.
+  await h.type('#viewport [data-pa-search]', 'i');
+  await h.until(`document.querySelectorAll('#viewport .pm-song').length === 5`);
+  await h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='px-more';el.dataset.id='songs';document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  h.check('the MORE page lists every song found', await h.until(`document.querySelectorAll('#viewport .pmx-page .pm-song').length === 5`));
+  await h.key('Escape');
+  h.check('Back returns to the search', await h.until(`!!document.querySelector('#viewport [data-pa-search]')`));
+  // Movies
+  await h.openApp('play-movies');
+  const movie = await h.ev(`document.querySelector('#viewport .pa-pin')?.dataset.id`);
+  await h.tap(`#viewport .pa-pin[data-id="${movie}"]`);
+  h.check('the pin downloads the movie', (await store(h, 'playMoviesDevice'))?.includes(movie) && await h.until(`!!document.querySelector('#viewport .pa-pin.on[data-id="${movie}"]')`));
+  await h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='pa-page';el.dataset.id='device';document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  h.check('On Device lists it', await h.until(`!!document.querySelector('#viewport .pa-card[data-id="${movie}"]')`));
+  await h.tap('#viewport [data-action="pa-menu"]');
+  await menuItem('px-page', 'movies-settings');
+  await h.tap('#viewport .pmx-row[data-id="caption"]');
+  await h.tap('.pmx-dialog [data-id="movies:captionSize:3"]');
+  h.check('Movies settings keep the caption size', (await prefs('movies')).captionSize === 3);
+  // Books
+  await h.openApp('play-books');
+  await h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='pa-page';el.dataset.id='library';document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  const book = await h.ev(`document.querySelector('#viewport .pa-card[data-action="pa-book"]').dataset.id`);
+  await tapCardDots(`#viewport .pa-card[data-id="${book}"]`);
+  h.check('a book\'s menu', await h.until(`[...document.querySelectorAll('.pmx-menu button')].map(b => b.textContent).join('|') === "Don't keep|Delete from library|About this book"`));
+  await menuItem('px-book-keep', book);
+  h.check('Don\'t keep drops the pin', (await store(h, 'playBooksState'))?.notKept?.includes(book) && await h.until(`!document.querySelector('#viewport .pa-card[data-id="${book}"] .pa-kept')`));
+  await tapCardDots(`#viewport .pa-card[data-id="${book}"]`);
+  await menuItem('px-dialog', `remove-book:${book}`);
+  await h.tap('.pmx-dialog [data-action="px-remove-book"]');
+  h.check('Delete from library removes it', await h.until(`!document.querySelector('#viewport .pa-card[data-id="${book}"]')`));
+  await h.tap('#viewport [data-action="pa-menu"]');
+  await menuItem('px-more-dialog', 'sort');
+  await h.tap('.pmx-dialog [data-id="title"]');
+  const titles = await h.ev(`[...document.querySelectorAll('#viewport .pa-card b')].map(b => b.textContent)`);
+  h.check('Sort by Title orders the library', JSON.stringify(titles) === JSON.stringify([...titles].sort((a, b) => a.localeCompare(b, 'en'))), JSON.stringify(titles));
+  await h.tap('#viewport [data-action="pa-drawer"]');
+  await h.tap('[data-action="px-page"][data-id="books-settings"]');
+  await h.tap('#viewport .pmx-row[data-id="books:volumeKeys"]');
+  h.check('Books settings keep their choices', (await prefs('books')).volumeKeys === true);
+  // Games
+  await h.openApp('play-games');
+  await h.tap('#viewport .pa-card[data-action="px-player"]');
+  h.check('a player opens their page', await h.until(`!!document.querySelector('#viewport .pmx-player')`));
+  await h.key('Escape');
+  const player = await h.ev(`document.querySelector('#viewport .pa-card[data-action="px-player"]').dataset.id`);
+  await tapCardDots(`#viewport .pa-card[data-id="${player}"]`);
+  await menuItem('px-dismiss');
+  h.check('Dismiss takes the player off', await h.until(`!document.querySelector('#viewport .pa-card[data-id="${player}"]')`));
+  await h.tap('#viewport [data-action="pa-menu"]');
+  await menuItem('px-page', 'games-settings');
+  await h.tap('#viewport .pmx-row[data-id="games:requests"]');
+  h.check('Games settings keep their choices', (await prefs('games')).requests === false);
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -2300,6 +2400,7 @@ const CASES = [
   {id: 'T34', version: '4.3', name: 'Drive is not on the Nexus 4 image', run: jbNoDrive},
   {id: 'T34', version: '4.4.4', name: 'Drive › Add new, Sort by, Filter by, Move to, Rename, Offline, Remove, Refresh, Send, Settings', run: kkDriveFiles},
   {id: 'T34', version: '5.1.1', name: 'Drive › Create, Sort by, Filter by, Move, Rename, Keep on device, Remove, Refresh, Send file', run: lpDriveFiles},
+  {id: 'T43', version: '4.4.4', name: 'Play Music / Movies / Books / Games › menus, keep on device, sort, settings', run: kkPlayMore},
   {id: 'T44', version: '5.1.1', name: 'Phone › Import/export and Settings', run: phoneSettings},
   {id: 'T44', version: '5.1.1', name: 'Phone › Settings › Calls and Advanced', run: phoneCallSettings},
   {id: 'T49', version: '4.4.4', name: 'Camera › Photo Sphere capture and the Gallery viewer', run: photoSphere({kk: true, hint: 'Align to start', rendering: 'Rendering photo sphere'})},
