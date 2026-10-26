@@ -472,11 +472,14 @@ versions/5.1.1/assets/gnl-search_bg.png	30aed389aa4e08ad	copy	shamu:/system/priv
 versions/5.1.1/assets/google-plus.png	414c75a8bef72211	same pixels	shamu:/system/app/PlusOne/PlusOne.apk!res/mipmap-xxxhdpi-v4/quantum_logo_google_plus_color_44in48.png	mipmap-xxxhdpi-v4		218494f5bec13b52
 versions/5.1.1/assets/google-search.png	5c63a420adcd65c3	same pixels	shamu:/system/priv-app/Velvet/Velvet.apk!res/mipmap-xxxhdpi-v4/ic_launcher_google_search.png	mipmap-xxxhdpi-v4		899186f95ea4a58d
 versions/5.1.1/assets/google-settings.png	2aec31a455df6770	same pixels	shamu:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable-xxhdpi-v4/common_settings_icon.png	drawable-xxhdpi-v4		03c1ab3663daeb5b
+versions/5.1.1/assets/gp4-ic_cab_done_holo_light.png	969272927f62bd41	copy	shamu:/system/app/PlusOne/PlusOne.apk!res/drawable-xhdpi-v4/ic_cab_done_holo_light.png	drawable-xhdpi-v4		969272927f62bd41
 versions/5.1.1/assets/gp4-ic_folder_white_20.png	8cec44abab5f4269	copy	shamu:/system/app/PlusOne/PlusOne.apk!res/drawable-xxhdpi-v4/ic_folder_white_20.png	drawable-xxhdpi-v4		8cec44abab5f4269
 versions/5.1.1/assets/gp4-ic_location_grey.png	153699fe2ae31c7b	copy	shamu:/system/app/PlusOne/PlusOne.apk!res/drawable-xxhdpi-v4/ic_location_grey.png	drawable-xxhdpi-v4		153699fe2ae31c7b
 versions/5.1.1/assets/gp4-ov_circle_blue_40.png	9cc6c5292d4351f0	copy	shamu:/system/app/PlusOne/PlusOne.apk!res/drawable-xxhdpi-v4/ov_circle_blue_40.png	drawable-xxhdpi-v4		9cc6c5292d4351f0
 versions/5.1.1/assets/gp4-ov_photos_gradient_64.png	99781700ba79c9d9	copy	shamu:/system/app/PlusOne/PlusOne.apk!res/drawable-xxhdpi-v4/ov_photos_gradient_64.9.png	drawable-xxhdpi-v4		99781700ba79c9d9
 versions/5.1.1/assets/gp4-ov_play_video_48.png	f4a7e19f2a2443ae	same pixels	shamu:/system/app/PlusOne/PlusOne.apk!res/drawable-xxhdpi-v4/ov_play_video_48.png	drawable-xxhdpi-v4		9aeaf3bdea69b011
+versions/5.1.1/assets/gp4-ov_selected_off_32.png	9b271ef0d248caa3	copy	shamu:/system/app/PlusOne/PlusOne.apk!res/drawable-xhdpi-v4/ov_selected_off_32.png	drawable-xhdpi-v4		9b271ef0d248caa3
+versions/5.1.1/assets/gp4-ov_selected_on_32.png	b2dc127982060ce1	copy	shamu:/system/app/PlusOne/PlusOne.apk!res/drawable-xhdpi-v4/ov_selected_on_32.png	drawable-xhdpi-v4		b2dc127982060ce1
 versions/5.1.1/assets/gp4-play_checker_bg.png	a73457ad72b968d6	copy	shamu:/system/app/PlusOne/PlusOne.apk!res/drawable-nodpi-v4/play_checker_bg.png	drawable-nodpi-v4		a73457ad72b968d6
 versions/5.1.1/assets/gp4-quantum_ic_arrow_back_grey600_24.png	4ebc975addf79a40	copy	shamu:/system/app/PlusOne/PlusOne.apk!res/drawable-xxhdpi-v4/quantum_ic_arrow_back_grey600_24.png	drawable-xxhdpi-v4		4ebc975addf79a40
 versions/5.1.1/assets/gp4-quantum_ic_auto_awesome_grey600_24.png	3df773d4213bd220	copy	shamu:/system/app/PlusOne/PlusOne.apk!res/drawable-xxhdpi-v4/quantum_ic_auto_awesome_grey600_24.png	drawable-xxhdpi-v4		3df773d4213bd220

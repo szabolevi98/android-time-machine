@@ -265,6 +265,7 @@ versions/4.4.4/assets/gp-btn_froyo_spinner_pressed.png	7c8e57ddfe12d38c	copy	ham
 versions/4.4.4/assets/gp-ic_albums_nav_20.png	e993144231fd3fca	copy	hammerhead:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_albums_nav_20.png	drawable-xhdpi		e993144231fd3fca
 versions/4.4.4/assets/gp-ic_auto_awesome_nav_20.png	a52d191e121d6892	copy	hammerhead:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_auto_awesome_nav_20.png	drawable-xhdpi		a52d191e121d6892
 versions/4.4.4/assets/gp-ic_brush_white_20.png	1076eb649380a3cd	copy	hammerhead:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_brush_white_20.png	drawable-xhdpi		1076eb649380a3cd
+versions/4.4.4/assets/gp-ic_cab_done_holo_light.png	969272927f62bd41	copy	hammerhead:/system/app/Books.apk!res/drawable-xhdpi/ic_cab_done_holo_light.png	drawable-xhdpi		969272927f62bd41
 versions/4.4.4/assets/gp-ic_create_movie_20.png	9c571a163240950b	copy	hammerhead:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_create_movie_20.png	drawable-xhdpi		9c571a163240950b
 versions/4.4.4/assets/gp-ic_folder_white_20.png	84c015172013814f	copy	hammerhead:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_folder_white_20.png	drawable-xhdpi		84c015172013814f
 versions/4.4.4/assets/gp-ic_location_grey_24.png	8a8d7375169acb5d	copy	hammerhead:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_location_grey_24.png	drawable-xhdpi		8a8d7375169acb5d
@@ -281,6 +282,8 @@ versions/4.4.4/assets/gp-ic_trash_white_20.png	dcb0ebe86ffd4555	copy	hammerhead:
 versions/4.4.4/assets/gp-ov_photos_gradient_64.png	742140b597f64a62	copy	hammerhead:/system/app/PlusOne.apk!res/drawable-xhdpi/ov_photos_gradient_64.9.png	drawable-xhdpi		742140b597f64a62
 versions/4.4.4/assets/gp-ov_play_video_32.png	e96fef46a5e81610	same pixels	hammerhead:/system/app/PlusOne.apk!res/drawable-xxhdpi/ov_play_video_32.png	drawable-xxhdpi		5d1edc1989b7b65f
 versions/4.4.4/assets/gp-ov_play_video_48.png	1a0b2f16d13f5c10	same pixels	hammerhead:/system/app/PlusOne.apk!res/drawable-xhdpi/ov_play_video_48.png	drawable-xhdpi		a37b093bce1ed579
+versions/4.4.4/assets/gp-ov_selected_off_32.png	f5b618839a517e1b	copy	hammerhead:/system/app/PlusOne.apk!res/drawable-xhdpi/ov_selected_off_32.png	drawable-xhdpi		f5b618839a517e1b
+versions/4.4.4/assets/gp-ov_selected_on_32.png	b2dc127982060ce1	copy	hammerhead:/system/app/PlusOne.apk!res/drawable-xhdpi/ov_selected_on_32.png	drawable-xhdpi		b2dc127982060ce1
 versions/4.4.4/assets/gp-play_checker_bg.png	60e90880ab16ba2a	copy	hammerhead:/system/app/CalendarGoogle.apk!res/drawable-nodpi/play_checker_bg.png	drawable-nodpi		60e90880ab16ba2a
 versions/4.4.4/assets/gp42-ic_camera_active.png	015ee773da989dc5	copy	hammerhead:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_camera_active.png	drawable-xhdpi		015ee773da989dc5
 versions/4.4.4/assets/gp42-ic_gplus_red_32.png	f97f9d0f7fd3f28f	copy	hammerhead:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_gplus_red_32.png	drawable-xhdpi		f97f9d0f7fd3f28f

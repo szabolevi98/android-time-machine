@@ -2993,7 +2993,50 @@ const nowReminders = async h => {
     h.check('the card back edits the event in Calendar', await h.until(`!!document.querySelector('#viewport form[data-form="event"]')`));
   } else h.check('the Google page has an appointment card', false);
 };
+// Photos (T38): Select… picks tiles and deletes exactly those, Settings keeps its values, Slideshow steps every five
+// seconds and stops on a tap, Download saves a copy listed in Downloads.
+const photosLocal = async h => {
+  const photos = async () => (await store(h, 'photos')) || [];
+  await h.openApp('photos');
+  await h.tap('#viewport [data-action="photos-menu"]'); await h.tap('[data-action="photos-select"]');
+  h.check('Select… turns the bar into the selection CAB', await h.until(`!!document.querySelector('#viewport .ph-cab') && !!document.querySelector('#viewport [data-action="photos-pick"]')`));
+  const ids = await h.ev(`[...document.querySelectorAll('#viewport [data-action="photos-pick"]')].slice(0, 2).map(b => Number(b.dataset.id))`);
+  for (const id of ids) await h.tap(`#viewport [data-action="photos-pick"][data-id="${id}"]`);
+  h.check('the CAB counts the picked tiles', await h.until(`document.querySelector('#viewport .ph-cab h2')?.textContent === '2' && !!document.querySelector('#viewport [data-action="photos-select-delete"]')`));
+  const tiles = () => h.ev(`document.querySelectorAll('#viewport [data-action="photos-pick"], #viewport [data-action="photos-open"]').length`), before = await tiles();
+  await h.tap('#viewport [data-action="photos-select-delete"]');
+  h.check('Delete photos asks first', await h.until(`!!document.querySelector('[data-action="photos-select-confirm"]')`));
+  await h.tap('[data-action="photos-select-confirm"]');
+  const after = await photos();
+  h.check('exactly the picked photos go', after.length > 0 && !after.some(p => ids.includes(p.id)) && await h.until(`!document.querySelector('#viewport .ph-cab')`) && await tiles() === before - 2);
+  await h.tap('#viewport [data-action="photos-menu"]'); await h.tap('[data-action="photos-settings"]');
+  h.check('Settings lists Auto Backup and the photo settings', await h.until(`!!document.querySelector('#viewport [data-action="photos-settings-backup"]') && !!document.querySelector('#viewport [data-action="photos-pref"][data-id="location"]')`));
+  await h.tap('#viewport [data-action="photos-pref"][data-id="location"]');
+  h.check('Photo Location turns off and stays off', ((await store(h, 'photosPrefs')) || {}).location === false && await h.until(`document.querySelector('#viewport [data-id="location"]')?.getAttribute('aria-checked') === 'false'`));
+  await h.tap('#viewport [data-action="photos-settings-backup"]');
+  await h.tap('#viewport [data-action="photos-pref-list"][data-id="photoConnection"]'); await h.tap('[data-action="photos-pref-pick"][data-id="WIFI_OR_MOBILE"]');
+  h.check('Back up photos keeps Wi-Fi or mobile', ((await store(h, 'photosPrefs')) || {}).photoConnection === 'WIFI_OR_MOBILE' && await h.until(`/mobile data connection/.test(document.querySelector('#viewport [data-id="photoConnection"]')?.textContent || '')`));
+  await h.key('Escape'); await h.key('Escape');
+  await h.tap('#viewport [data-action="photos-open"]');
+  await h.until(`!!document.querySelector('#viewport .ph-viewer')`);
+  const first = await h.ev(`document.querySelector('#viewport .ph-viewer img')?.getAttribute('src')`);
+  await h.tap('#viewport [data-action="photos-menu"]');
+  h.check('the one-up menu has Slideshow', await h.until(`!!document.querySelector('[data-action="photos-slideshow"]')`));
+  await h.tap('[data-action="photos-slideshow"]');
+  h.check('Slideshow hides the bars', await h.until(`!!document.querySelector('#viewport .ph-viewer-view.ph-bare')`));
+  await h.sleep(5800);
+  h.check('and steps to the next picture after five seconds', await h.ev(`document.querySelector('#viewport .ph-viewer img')?.getAttribute('src')`) !== first);
+  await h.tap('#viewport .ph-viewer');
+  const stopped = await h.ev(`document.querySelector('#viewport .ph-viewer img')?.getAttribute('src')`);
+  await h.sleep(5800);
+  h.check('a tap stops it', await h.ev(`document.querySelector('#viewport .ph-viewer img')?.getAttribute('src')`) === stopped);
+  await h.tap('#viewport [data-action="photos-menu"]'); await h.tap('[data-action="photos-download"]');
+  h.check('Download says it is downloading', await h.until(`/Downloading image/.test(document.querySelector('.toast')?.textContent || '')`));
+  h.check('then saves a copy in Download', await h.until(`/Download complete/.test(document.querySelector('.toast')?.textContent || '')`, 5000) && (await photos()).some(p => p.album === 'download' && /^download_\d{8}_\d{6}$/.test(p.name)) && ((await store(h, 'downloads')) || []).some(d => /^download_\d{8}_\d{6}\.jpg$/.test(d.title)));
+};
 const CASES = [
+  {id: 'T38', version: '4.4.4', name: 'Photos (Google+ 4.2.3): Select…, Settings, Slideshow, Download', run: photosLocal},
+  {id: 'T38', version: '5.1.1', name: 'Photos (Google+ 4.9.0): Select…, Settings, Slideshow, Download', run: photosLocal},
   {id: 'T37', version: '4.4.4', name: 'Google Now reminders: Repeat, Where, Set date…, appointment card', run: nowReminders},
   {id: 'T37', version: '5.1.1', name: 'Google Now reminders: Repeat, Where, Set date…, appointment card', run: nowReminders},
   {id: 'T30', version: '4.3', name: 'Language & input (Google Keyboard 1.0, TTS, dictionary, Voice Search)', run: langInput},

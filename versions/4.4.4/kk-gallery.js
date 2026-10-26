@@ -33,7 +33,7 @@
       }
       return [...map.values()];
     }
-    return [['camera', 'Camera'], ['pictures', 'Pictures']].map(([key, name]) => ({key, name, translate: true, items: photos.filter(p => albumOf(p) === key)})).filter(group => group.items.length);
+    return [['camera', 'Camera', true], ['pictures', 'Pictures', true], ['download', 'Download', false]].map(([key, name, translate]) => ({key, name, translate, items: photos.filter(p => albumOf(p) === key)})).filter(group => group.items.length);
   }
   function items(data, ui, locale) {
     const cluster = ui.galleryCluster || 'album';
