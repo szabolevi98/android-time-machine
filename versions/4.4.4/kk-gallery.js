@@ -68,6 +68,12 @@
     // A photo sphere in LightCycle's viewer (kk-sphere.js).
     if (sub === 'sphere') { const photo = data.photos.find(p => p.id === ui.selectedPhoto); if (photo?.sphere) return `<div class="app-view gallery-app jbgal" data-jbgal data-page="sphere">${window.KKSphere.viewer(photo, media, t)}</div>`; return renderPhoto(data, ui, t, media, locale); }
     // MovieActivity for a video (gallery-video.js) under the Holo.ActionBar with the title and Share.
+    // TrimVideo (gallery-video.js) for the video on show.
+    if (sub === 'trim') {
+      const photo = data.photos.find(p => p.id === ui.selectedPhoto);
+      if (photo?.video) return window.G2Video.trimView(photo, {ui, t, media, bar: actions => bar('', actions, t).replace('<span class="jbgal-bar-fill"></span>', '').replace('class="jbgal-bar"', 'class="jbgal-bar g2v-trim-bar"')});
+      return renderPhoto(data, ui, t, media, locale);
+    }
     if (sub === 'movie') {
       const photo = data.photos.find(p => p.id === ui.selectedPhoto);
       if (photo?.video) return window.G2Video.render(photo, {ui, t, media, bar: bar(up(t) + `<h2>${e(photo.name)}</h2>`, iconButton('data-action="gallery-share"', 'Share', 'gallery-ic_menu_share_holo_light.png', t), t)});
@@ -92,7 +98,7 @@
     if (open === 'mode') { cls = 'jbgal-dropdown jbgal-dropdown-mode'; body = item('data-jbgal-mode="film"', 'Filmstrip view', false) + item('data-jbgal-mode="grid"', 'Grid view', true); }
     if (open === 'set-menu') body = item('data-jbgal-toast="Select album"', 'Select album') + item('data-jbgal-toast="Settings"', 'Settings');
     if (open === 'album-menu') body = item('data-action="gallery-slideshow"', 'Slideshow') + item('data-jbgal-toast="Select item"', 'Select item') + item('data-jbgal-open="cluster"', 'Group by');
-    if (open === 'photo-menu' && video) body = item('data-jbgal-delete', 'Delete') + item('data-action="gallery-slideshow"', 'Slideshow') + item('data-jbgal-toast="This feature is not part of the simulator."', 'Trim') + item('data-jbgal-toast="This feature is not part of the simulator."', 'Mute') + item('data-action="gallery-details"', 'Details');
+    if (open === 'photo-menu' && video) body = item('data-jbgal-delete', 'Delete') + item('data-action="gallery-slideshow"', 'Slideshow') + item('data-jbgal-trim', 'Trim') + item('data-jbgal-mute', 'Mute') + item('data-action="gallery-details"', 'Details');
     else if (open === 'photo-menu') body = item('data-jbgal-delete', 'Delete') + item('data-action="gallery-slideshow"', 'Slideshow') + item('data-jbgal-edit', 'Edit') + item('data-action="gallery-rotate" data-id="-90"', 'Rotate left') + item('data-action="gallery-rotate" data-id="90"', 'Rotate right') + item('data-jbgal-edit="geometry"', 'Crop') + item('data-jbgal-setas', 'Set picture as') + item('data-action="gallery-details"', 'Details') + `<button type="button" data-action="gallery-print">${e(AndroidStrings.pick(PRINT, window.AndroidI18n?.language, 'Print'))}</button>`;
     return `<div class="jbgal-popup-scrim" data-jbgal-close></div><div class="${cls}" role="menu">${body}</div>`;
   }
@@ -111,7 +117,7 @@
       ${photo.sphere ? `<button type="button" class="jbgal-sphere" data-jbgal-sphere aria-label="${e(AndroidStrings.pick(window.StockStrings?.sphere?.['View Photo Sphere'] || {}, window.AndroidI18n?.language, 'View Photo Sphere'))}"><img src="assets/jbgal-ic_view_photosphere.png" alt=""></button>` : ''}
       ${ui.galleryUndo ? `<div class="jbgal-undo" role="status"><span>${e(t('Deleted'))}</span><button type="button" data-jbgal-undo>${e(t('UNDO'))}</button></div>` : ''}
       ${ui.gallerySlideshow ? `<button type="button" class="gallery-stop" data-action="gallery-stop">${e(t('Stop slideshow'))}</button>` : ''}
-      ${popups(ui, t, !!photo.video)}</div>`;
+      ${popups(ui, t, !!photo.video)}${ui.galleryVideoTask ? window.G2Video.progress(t, ui.galleryVideoTask) : ''}</div>`;
   }
 
   /* FilterShowActivity: Save in the action bar, the picture on #101010, a 128dp category strip and the
@@ -151,7 +157,10 @@
       if (edit && photo && !edit.confirm && editKey(edit) !== editKey(editState(photo))) { edit.confirm = true; return true; }
       ui.sub = 'photo'; ui.galleryEdit = null; return true;
     }
-    if (ui.sub === 'movie') { ui.sub = 'photo'; ui.galleryMovie = null; return true; }
+    if (ui.galleryVideoTask) return true;
+    if (ui.sub === 'trim') { ui.sub = 'photo'; ui.galleryTrim = null; return true; }
+    // A trimmed or muted copy played from Trim / Mute returns to the original in the photo page.
+    if (ui.sub === 'movie') { ui.sub = 'photo'; ui.galleryMovie = null; if (ui.galleryMovieBack) { ui.selectedPhoto = ui.galleryMovieBack; ui.galleryMovieBack = null; } return true; }
     if (ui.sub === 'sphere') { ui.sub = 'photo'; return true; }
     if (ui.sub === 'photo' && ui.galleryFilm && !ui.galleryFromCamera) { ui.galleryFilm = false; return true; }
     if (ui.sub === 'photo') { if (ui.galleryFromCamera) return 'camera'; ui.sub = 'album'; return true; }
@@ -162,6 +171,17 @@
   function attach(root, {data, ui, t, media, locale, save, render: rerender, toast, openCamera, setWallpaper, reduced}) {
     const page = root.dataset.page;
     if (page === 'movie') return window.G2Video.attach(root, {photo: data.photos.find(p => p.id === ui.selectedPhoto), ui, rerender, reduced});
+    // Trim's SAVE and Mute: the ProgressDialog, then the copy beside the original, the toast and the copy playing.
+    const videoCopy = (kind, photo, range = {}) => {
+      ui.galleryVideoTask = kind; rerender();
+      setTimeout(() => {
+        const made = window.G2Video.copy(photo, {...range, mute: kind === 'mute'}, Date.now()), at = data.photos.indexOf(photo);
+        data.photos.splice(at < 0 ? 0 : at, 0, made); save();
+        ui.galleryVideoTask = ''; ui.galleryTrim = null; ui.galleryPopup = ''; ui.galleryMovie = null; ui.galleryMovieBack = photo.id; ui.selectedPhoto = made.id; ui.sub = 'movie';
+        toast(AndroidStrings.format(t('Saving video to %1$s …'), t('Camera'))); rerender();
+      }, 1200);
+    };
+    if (page === 'trim') { const photo = data.photos.find(p => p.id === ui.selectedPhoto); return window.G2Video.attachTrim(root, {photo, ui, rerender, reduced, onSave: range => videoCopy('trim', photo, range)}); }
     if (page === 'sphere') { window.KKSphere.attachViewer(root); return {destroy() {}}; }
     let hideTimer = 0, destroyed = false;
     const refresh = () => { if (!destroyed) rerender(); };
@@ -183,6 +203,8 @@
       const album = hit('[data-jbgal-album]'); if (album) { ui.galleryAlbum = album.dataset.jbgalAlbum; ui.sub = 'album'; refresh(); return; }
       const note = hit('[data-jbgal-toast]'); if (note) { ui.galleryPopup = ''; refresh(); toast(t(note.dataset.jbgalToast)); return; }
       if (hit('[data-jbgal-delete]')) { ui.galleryPopup = ''; remove(); return; }
+      if (hit('[data-jbgal-trim]')) { ui.galleryPopup = ''; ui.galleryTrim = null; ui.sub = 'trim'; refresh(); return; }
+      if (hit('[data-jbgal-mute]')) { ui.galleryPopup = ''; const photo = data.photos.find(p => p.id === ui.selectedPhoto); if (photo?.video) videoCopy('mute', photo); return; }
       if (hit('[data-jbgal-undo]')) { const undo = ui.galleryUndo; if (undo) { data.photos.splice(undo.position, 0, undo.photo); ui.selectedPhoto = undo.photo.id; ui.galleryUndo = null; save(); refresh(); } return; }
       if (hit('[data-jbgal-sphere]')) { ui.sub = 'sphere'; refresh(); return; }
       if (hit('[data-jbgal-setas]')) { ui.galleryPopup = ''; const photo = data.photos.find(p => p.id === ui.selectedPhoto); if (photo) setWallpaper(photo); return; }

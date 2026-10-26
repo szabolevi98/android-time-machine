@@ -21,3 +21,25 @@
 .g2v-track b{position:absolute;top:50%;width:calc(33.8187 * var(--dp));height:calc(34.3472 * var(--dp));transform:translate(-50%,-50%);background:url('assets/gallery-scrubber_knob.png') center/100% 100% no-repeat}
 .screen .g2v-button{position:absolute;left:50%;top:50%;width:calc(243.0719 * var(--dp));height:calc(98.814 * var(--dp));transform:translate(-50%,-50%);padding:0;border:0;background:url('assets/gallery-bg_vidcontrol.png') center/100% 100% no-repeat;display:grid;place-items:center;cursor:pointer}
 .g2v-button img{width:calc(98.814 * var(--dp));height:calc(98.814 * var(--dp))}
+/* TrimVideo: the overlaid bar's SAVE (14 sp, all caps, 8 dp from the edge and from menu_save_photo), TrimTimeBar
+   with 45 dp instead of 30 dp of padding, the bar at a quarter of its height and the 47 x 58 dp handles hanging below it from their tips
+   (3/4 and 1/4 of their width), the played part from the start handle; the play button fades while playing. */
+.screen .g2v-save{display:flex;align-items:center;gap:calc(8.4547 * var(--dp));height:100%;margin-left:calc(8.4547 * var(--dp));padding:0 calc(8.4547 * var(--dp));border:0;background:none;color:#fff;font:400 calc(14.7957 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;cursor:pointer}
+.screen .g2v-save:disabled{color:#ffffff4d;cursor:default}
+.g2v-save img{width:calc(33.8187 * var(--dp));height:calc(33.8187 * var(--dp))}
+.g2v-trim .g2v-trimbar{height:calc(58.1259 * var(--dp));overflow:hidden}
+.g2v-trim .g2v-back{height:calc(47.5576 * var(--dp))}
+.g2v-trimbar .g2v-time{top:calc(14.5609 * var(--dp))}
+.g2v-trimbar .g2v-track{top:calc(14.5609 * var(--dp));height:calc(4.2274 * var(--dp))}
+.g2v-trimbar .g2v-track i{left:0;width:0}
+.g2v-trimbar .g2v-track b{z-index:2;touch-action:none;cursor:grab}
+.g2v-handle{position:absolute;top:0;width:calc(49.6713 * var(--dp));height:calc(61.2964 * var(--dp));touch-action:none;cursor:grab;-webkit-user-drag:none}
+.g2v-handle-start{transform:translateX(-75%)}
+.g2v-handle-end{transform:translateX(-25%)}
+.g2v-trim[data-state="playing"] .g2v-button{opacity:0;transition:opacity .2s linear;pointer-events:none}
+.g2v-scrim{position:absolute;inset:0;z-index:5;background:#00000099}
+.g2v-progress{position:absolute;left:50%;top:50%;z-index:6;width:min(calc(338.187 * var(--dp)),calc(100% - calc(33.8187 * var(--dp))));transform:translate(-50%,-50%);background:#282828;border:calc(1.1743 * var(--dp)) solid #4b4b4b;color:#fff;font-family:Roboto,sans-serif;box-shadow:0 calc(4.2274 * var(--dp)) calc(12.6821 * var(--dp)) #000b}
+.g2v-progress h3{margin:0;padding:calc(16.9094 * var(--dp)) calc(16.9094 * var(--dp)) calc(14.7957 * var(--dp));border-bottom:calc(2.1137 * var(--dp)) solid #33b5e5;font-weight:400;font-size:calc(23.2504 * var(--dp));color:#33b5e5}
+.g2v-progress p{display:flex;align-items:center;gap:calc(16.9094 * var(--dp));margin:0;padding:calc(16.9094 * var(--dp));font-size:calc(19.0231 * var(--dp))}
+.g2v-spinner{flex:none;width:calc(50.7281 * var(--dp));height:calc(50.7281 * var(--dp));border-radius:50%;border:calc(4.2274 * var(--dp)) solid #33b5e533;border-top-color:#33b5e5;animation:g2v-spin .9s linear infinite}
+@keyframes g2v-spin{to{transform:rotate(360deg)}}

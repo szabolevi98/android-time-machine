@@ -21,3 +21,25 @@
 .g2v-track b{position:absolute;top:50%;width:28.8px;height:29.25px;transform:translate(-50%,-50%);background:url('assets/gallery-scrubber_knob.png') center/100% 100% no-repeat}
 .screen .g2v-button{position:absolute;left:50%;top:50%;width:207px;height:84.15px;transform:translate(-50%,-50%);padding:0;border:0;background:url('assets/gallery-bg_vidcontrol.png') center/100% 100% no-repeat;display:grid;place-items:center;cursor:pointer}
 .g2v-button img{width:84.15px;height:84.15px}
+/* TrimVideo: the overlaid bar's SAVE (14 sp, all caps, 8 dp from the edge and from menu_save_photo), TrimTimeBar
+   with 45 dp instead of 30 dp of padding, the bar at a quarter of its height and the 47 x 58 dp handles hanging below it from their tips
+   (3/4 and 1/4 of their width), the played part from the start handle; the play button fades while playing. */
+.screen .g2v-save{display:flex;align-items:center;gap:7.2px;height:100%;margin-left:7.2px;padding:0 7.2px;border:0;background:none;color:#fff;font:400 12.6px Roboto,sans-serif;text-transform:uppercase;cursor:pointer}
+.screen .g2v-save:disabled{color:#ffffff4d;cursor:default}
+.g2v-save img{width:28.8px;height:28.8px}
+.g2v-trim .g2v-trimbar{height:49.5px;overflow:hidden}
+.g2v-trim .g2v-back{height:40.5px}
+.g2v-trimbar .g2v-time{top:12.4px}
+.g2v-trimbar .g2v-track{top:12.4px;height:3.6px}
+.g2v-trimbar .g2v-track i{left:0;width:0}
+.g2v-trimbar .g2v-track b{z-index:2;touch-action:none;cursor:grab}
+.g2v-handle{position:absolute;top:0;width:42.3px;height:52.2px;touch-action:none;cursor:grab;-webkit-user-drag:none}
+.g2v-handle-start{transform:translateX(-75%)}
+.g2v-handle-end{transform:translateX(-25%)}
+.g2v-trim[data-state="playing"] .g2v-button{opacity:0;transition:opacity .2s linear;pointer-events:none}
+.g2v-scrim{position:absolute;inset:0;z-index:5;background:#00000099}
+.g2v-progress{position:absolute;left:50%;top:50%;z-index:6;width:min(288px,calc(100% - 28.8px));transform:translate(-50%,-50%);background:#282828;border:1px solid #4b4b4b;color:#fff;font-family:Roboto,sans-serif;box-shadow:0 3.6px 10.8px #000b}
+.g2v-progress h3{margin:0;padding:14.4px 14.4px 12.6px;border-bottom:1.8px solid #33b5e5;font-weight:400;font-size:19.8px;color:#33b5e5}
+.g2v-progress p{display:flex;align-items:center;gap:14.4px;margin:0;padding:14.4px;font-size:16.2px}
+.g2v-spinner{flex:none;width:43.2px;height:43.2px;border-radius:50%;border:3.6px solid #33b5e533;border-top-color:#33b5e5;animation:g2v-spin .9s linear infinite}
+@keyframes g2v-spin{to{transform:rotate(360deg)}}
