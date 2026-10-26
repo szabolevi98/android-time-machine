@@ -2,7 +2,8 @@
 limits work keeps its status.
 
     python docs/tools/limits-status.py T09 "Kész — `abc12345`. What now works, how it was checked."
-    python docs/tools/limits-status.py --next      the first item of the second-round order that is not done yet"""
+    python docs/tools/limits-status.py --next      the first item not done yet, in the order of the approved
+                                                   rounds (second, third, fourth)"""
 import re, sys
 
 p = 'docs/reports/simulator-limits-2026-10-23.md'
@@ -15,14 +16,15 @@ def status(tid):
     return s[i + len('- **Állapot:** '):s.index('\n', i)]
 
 if sys.argv[1] == '--next':
-    # The second round's order: the rows of its table, | n | Tnn | ...
-    part = s[s.index('### Második kör'):]
-    part = part[:part.index('\n### ', 5)]
-    for n, tid in re.findall(r'^\| (\d+) \| (T\d+) \|', part, re.M):
-        st = status(tid)
-        if not st.startswith('Kész'):
-            print(n, tid, '—', st[:120]); break
-    else: print('every item of the second round is done')
+    # Each approved round's order: the rows of its table, | n | Tnn | ...
+    for name in ('Második kör', 'Harmadik kör', 'Negyedik kör'):
+        part = s[s.index('### ' + name):]
+        part = part[:part.index('\n### ', 5)]
+        for n, tid in re.findall(r'^\| (\d+) \| (T\d+) \|', part, re.M):
+            st = status(tid)
+            if not st.startswith('Kész'):
+                print(f'{name}:', n, tid, '—', st[:120]); sys.exit()
+    print('every item of every round is done')
     sys.exit()
 tid, text = sys.argv[1], sys.argv[2]
 a = s.index(f'#### {tid} — ')

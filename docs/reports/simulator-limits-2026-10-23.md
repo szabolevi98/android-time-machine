@@ -68,7 +68,7 @@ A mag készfeltételéből nem hagyunk el tesztet vagy mentési/visszanavigálá
 
 A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt hagyta jóvá, ebben a sorrendben. **Ez a szakasz felülírja a fenti „Későbbi lista — nem automatikusan végrehajtandó” táblát és a T23/T24/T27/T29/T41/T45 korábbi kizárását a felsorolt tételekre.** A rendezés elve: előbb az, ami egy másik verzióban már helyben működik (a működő párja forrás és adatmodell), aztán ami részben, végül ami sehol; a két átfésülő audit a végén. A „Máshol kész” oszlop 2026-10-24-i kódkeresés eredménye; a tétel elején ellenőrizni kell. A becslés munkaórában értendő, a mag tapasztalata szerint a valós idő ennek nagyjából fele-kétharmada.
 
-**Folytatás új sessionben:** `python docs/tools/limits-status.py --next` kiírja a sorrend első, még nem kész tételét. Az adott T-feladatlap (lent, „Feladatcsomagok és készfeltételek”) adja a pontos terjedelmet és a „Kész, ha” feltételt; a közös készfeltétel a „Minden most javított mag-út közös készfeltétele” szakasz. Részben kész csomagnál (T09, T11, T44, T49, T48) csak a még hiányzó rész a feladat. Egy tétel akkor kész, ha az Állapot sora „Kész —” kezdetű.
+**Folytatás új sessionben:** `python docs/tools/limits-status.py --next` kiírja a jóváhagyott körök (második, harmadik, negyedik) sorrendjének első, még nem kész tételét. Az adott T-feladatlap (lent, „Feladatcsomagok és készfeltételek”) adja a pontos terjedelmet és a „Kész, ha” feltételt; a közös készfeltétel a „Minden most javított mag-út közös készfeltétele” szakasz. Részben kész csomagnál (T09, T11, T44, T49, T48) csak a még hiányzó rész a feladat. Egy tétel akkor kész, ha az Állapot sora „Kész —” kezdetű.
 
 | # | Csomag | Mit | Itt hiányzik | Máshol kész (referencia) | Becslés |
 |---|---|---|---|---|---|
@@ -111,7 +111,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 
 Összesen kb. 78–129 munkaóra.
 
-**Kimarad, nem építjük meg** (2026-10-24-i döntés; egyik verzióban sincs működő párjuk, és kitalált tartalmat vagy új nagy alrendszert igényelnének): T19 Earth (3–5 ó), T36 Currents/Magazines/Newsstand (2–4 ó), T26 Google+ Messenger (2–3 ó), T23 Google+ posztolás (5–8 ó), T27 Movie Studio (5–8 ó). Ezek Állapota „Halasztott” marad.
+**Kimarad, nem építjük meg** (2026-10-24-i döntés; egyik verzióban sincs működő párjuk, és kitalált tartalmat vagy új nagy alrendszert igényelnének): T19 Earth (3–5 ó), T36 Currents/Magazines/Newsstand (2–4 ó), T26 Google+ Messenger (2–3 ó), T23 Google+ posztolás (5–8 ó), T27 Movie Studio (5–8 ó). Ezek Állapota „Halasztott” maradt — 2026-10-26: mind az öt átkerült a harmadik körbe (lent), könnyített terjedelemmel.
 
 **Munkamód tételenként** (ugyanaz, mint a magban):
 1. Forrás: a saját verzió gyári képe (`_aosp/<device>`: APK, odex/dex, strings; `docs/tools/layout-xml.py`, `apk-strings.py`, `odex2dex.py`, `dex-uses.py`), az AOSP; a referencia-verzió kódja csak adatmodell és viselkedés, a UI a saját verzióé. Becslés, kitalált szöveg vagy kép nincs.
@@ -167,6 +167,85 @@ A tulajdonos 2026-10-26-án kérte, hogy a kihagyott öt tételre legyen terv, d
 4. Sorrend: Earth → Messenger → Google+ → Currents/Newsstand → Movie Studio.
 
 5. Earth szintje: **B, közepes** („túlzásokba se kell esni”). Igazi földkép, lassú forgás, húzással forgatás; Search odarepül a közös helylistából (nem talált: a verzió saját szövege); My location a demótelefon helyére (Mountain View, mint a 2.3.6-ban) kék ponttal; észak / Reset to north; nagyítás 2–3 lépcsőben (görgő, csippentés, ország szintig); Settings az APK `settings.xml`-je szerint, mentve; Share a megosztó lap a hely nevével. Layers: a pipák mentődnek, de nem rajzolnak. **Nem** készül: országhatár- és városnév-rajzolás (Natural Earth), lendület, döntés; a fenti 1. pont ennél részletesebb felsorolását ez írja felül.
+
+### Negyedik kör — jóváhagyva 2026-10-26: az 5.1.1 appjai a 6.0.1-ben és a 7.1.2-ben
+
+A harmadik kör után következik. A Nexus 5X (MTC20K, build 2016-08-12) és a Nexus 6P (N2G48C, build 2017-06-15) gyári képéből hiányzik tíz olyan app, amely az 5.1.1-ben (Nexus 6, LMY48Y) megvan: Docs, Sheets, Slides, Keep, Earth, Google+, Fit, News & Weather, Play Books, Play Newsstand. A Google 2015 körül kivette őket az előtelepített csomagból; mind élt még 2017 júniusában (a Google+ 2019 áprilisáig, a Newsstand és a News & Weather 2018-ig). A tulajdonos 2026-10-26-i döntése: **beépítjük őket, és felírjuk, hogy nem gyáriak**. Az Email és a Wallet nem kell (a 6.0.1/7.1.2-ben a Gmail és az Android Pay a helyük). Play-telepítés folyamat nem készül: az appok egyszerűen fent vannak.
+
+**Egy telepített app jelölése** (mindkét verzióban, minden appra):
+- Az alkalmazásfiókban betűrendben a gyári appok között; a kezdőképernyőre nem kerül.
+- Settings › Apps: a „Downloaded” (letöltött) appok közt, a saját APK verziójával és méretével; Uninstall / Disable a verzió saját szimulátor-elutasítása (nem távolítható el).
+- A Play Store My apps listája, ha a telepített appokból épül, ezeket is mutatja (Open).
+- Ahol a gyári kép „nincs telepítve” ágat ad (pl. 6.0.1 Maps › Google Earth: GOOGLE_EARTH_NOT_AVAILABLE), ott az app megnyílik, ahogy egy telepített Earth-tel a valódi telefonon.
+- Dokumentáció: `docs/features-6.0.1.md` és `docs/features-7.1.2.md` külön szakasz „Play Áruházból telepített appok (nem gyári)”, a `docs/sources.md` minden APK-hoz: verzió, APKMirror-oldal, SHA-256; a README egy mondata.
+
+**Forrás:** az adott év APK-ja az APKMirrorról (lent), a munkamód szerint (`layout-xml.py`, `apk-strings.py`, dex-dekompilálás); a helye `_aosp/bullhead/playapps/` és `_aosp/angler/playapps/` (gitignored). Az APKMirror Cloudflare-rel korlátoz: oldalanként, szünetekkel; ha blokkol, a böngészőpanelen. Az 5.1.1 megvalósítása (pl. `keep-more.js`, `fit-more.js`, `news-sections.js`, `plus-editor.js`, `stock-apps.js`) adatmodellként és viselkedésként átvehető, a felület, a szövegek, az ikonok és a menük a saját APK-ból jönnek, a verzió saját motorjára (6.0.1 `MM`, 7.1.2 `NG`) bekötve, saját előtaggal (előtte `grep -l "<prefix>-" *.css`).
+
+**Terjedelem:** a harmadik körrel azonos könnyített szint: a kirajzolt képernyők, gombok és menüpontok értelmes helyi eredményt adnak, a fiók-, web- és Help/Feedback-utak a verzió elutasítása. Az 5.1.1-ben működő fő utak itt is működjenek (pl. Keep jegyzet létrehozása/szerkesztése/archiválása, Docs-család fájllista és helyi szerkesztés, Fit napi adatok, Books könyvtár és olvasó, News & Weather szekciók, Google+ stream és New post, Newsstand Read Now és cikk, Earth a harmadik kör B szintje).
+
+**Verziók** (APKMirror feltöltési dátum szerint, a build dátumán vagy előtte utolsó stabil; a „közelítő” sorok és a hiányok a munka elején ellenőrizendők, a változat (arch, dpi) és a min API a kiadási oldalról):
+
+| App | 6.0.1 (2016-08-12) | 7.1.2 (2017-06-15) | Megjegyzés |
+|---|---|---|---|
+| Earth | 8.0.4.2346 (2016-06-29) | 9.0.4.2 (2017-05-08) | 8.0.4 ≈ az 5.1.1 8.0.1-e; a 9.0 újratervezett |
+| Keep | 3.3.315.0 (2016-08-10) | 3.4.724.02 (2017-05-18, közelítő) | |
+| Docs | 1.6.292.13 (2016-08-02) | 1.7.212.02 (2017-06-09) | |
+| Sheets | **hézag**: 2015-12-19 és 2017-01-10 közt nincs APKMirror-feltöltés | 1.7.212.03 (2017-06-08) | 6.0.1: 1.6.2xx–1.6.3xx keresése más tükörben (APKPure, Uptodown); ha nincs, a 2017-01-10-i 1.6.502.06 |
+| Slides | **hézag**: 2016-01-02 és 2016-09-16 közt nincs | 1.7.212.01 (2017-06-12) | 6.0.1: a 2016-09-16-i 1.6.352.16 (egy hónappal a build után, a Docs 1.6 családja) |
+| Play Books | 3.9.37 (2016-07-21, közelítő) | **még nincs meg** (3.12–3.13 körül) | |
+| Fit | 1.58.09 (2016-08-02) | 1.68.00 (2017-06-13) | |
+| News & Weather | 2.7.1 (2016-06-02) | 3.1.4 (2017-03-21) | |
+| Google+ | 8.4.0.128646069 (2016-08-04) | 9.13.0.157649703 (2017-06-05, közelítő) | a 2015 végi újratervezés utáni felület; lehet, hogy csak armeabi-v7a |
+| Play Newsstand | 3.5.2 (2016-04-08) | 4.5.0 (2017-06-09) | a 4.x újratervezett |
+
+APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<slug>-<verzió kötőjelekkel>-release/`; slugok: `earth`, `keep`, `docs`, `sheets`, `slides`, `google-play-books`, `fit`, `news-weather`, `google` (Google+), `google-play-newsstand`.
+
+**Sorrend** (előbb, ami jórészt átemelhető, a végén az újratervezettek):
+
+| # | Csomag | Mit | Verziók | Becslés |
+|---|---|---|---|---|
+| 1 | T50 | Earth (a harmadik kör gömbje; 6.0.1 = 8.0.4, 7.1.2 = 9.0 új felület) | 6.0.1, 7.1.2 | 3–4 ó |
+| 2 | T51 | Keep | 6.0.1, 7.1.2 | 2–4 ó |
+| 3 | T52 | Docs, Sheets, Slides (közös motor) | 6.0.1, 7.1.2 | 4–6 ó |
+| 4 | T53 | Fit | 6.0.1, 7.1.2 | 2–4 ó |
+| 5 | T54 | Play Books | 6.0.1, 7.1.2 | 2–4 ó |
+| 6 | T55 | News & Weather | 6.0.1, 7.1.2 | 2–4 ó |
+| 7 | T56 | Google+ (újratervezett) | 6.0.1, 7.1.2 | 6–8 ó |
+| 8 | T57 | Play Newsstand (újratervezett, kitalált demócikkek a harmadik kör 2. döntése szerint) | 6.0.1, 7.1.2 | 6–8 ó |
+
+Összesen kb. 27–42 munkaóra. Csomagonként egy commit (vagy verziónként kettő), mindkét verzióban böngészős regresszió (asztali és telefonos szélesség), a 7.1.2-ben a `tests/browser/ng-*.mjs` minta szerint; a csomag akkor kész, ha mindkét verzióban megvan, a telepített-jelölés is.
+
+#### T50 — Earth a 6.0.1-ben és a 7.1.2-ben (telepítve)
+
+- **Állapot:** Nincs elkezdve.
+
+#### T51 — Keep a 6.0.1-ben és a 7.1.2-ben (telepítve)
+
+- **Állapot:** Nincs elkezdve.
+
+#### T52 — Docs, Sheets, Slides a 6.0.1-ben és a 7.1.2-ben (telepítve)
+
+- **Állapot:** Nincs elkezdve.
+
+#### T53 — Fit a 6.0.1-ben és a 7.1.2-ben (telepítve)
+
+- **Állapot:** Nincs elkezdve.
+
+#### T54 — Play Books a 6.0.1-ben és a 7.1.2-ben (telepítve)
+
+- **Állapot:** Nincs elkezdve.
+
+#### T55 — News & Weather a 6.0.1-ben és a 7.1.2-ben (telepítve)
+
+- **Állapot:** Nincs elkezdve.
+
+#### T56 — Google+ a 6.0.1-ben és a 7.1.2-ben (telepítve)
+
+- **Állapot:** Nincs elkezdve.
+
+#### T57 — Play Newsstand a 6.0.1-ben és a 7.1.2-ben (telepítve)
+
+- **Állapot:** Nincs elkezdve.
 
 ### Feladatcsomagok és készfeltételek
 
@@ -340,8 +419,8 @@ A tulajdonos 2026-10-26-án kérte, hogy a kihagyott öt tételre legyen terv, d
 
 #### T19 — Earth helyi eszközök és beállítások
 
-- **Ütem:** Kimarad — a 2026-10-24-i döntés szerint nem építjük meg (lásd „Második kör”).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Ütem:** Harmadik kör (2026-10-26), könnyített terjedelemmel: a „Harmadik kör” szakasz írja felül az itteni „Kész, ha” feltételt.
+- **Állapot:** Nincs elkezdve (harmadik kör).
 - **Verziók:** 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 2.3.6-18, 4.0.4-16, 4.3-20, 4.4.4-20, 5.1.1-27.
 - **Elkészítendő és határ:** 2.3.6 Settings; 4.0.4 Search, Layers, North up, My Location, Settings; 4.3/4.4.4/5.1.1 Reset to north, My location, Share és Settings/drawer beállításoldal. A jelenlegi demótérkép/földgömb és előre tárolt helyek, nem élő GPS vagy új online földgömbmotor. Help/Feedback/Tutorial/Terms webes út korlát marad.
@@ -376,8 +455,8 @@ A tulajdonos 2026-10-26-án kérte, hogy a kihagyott öt tételre legyen terv, d
 
 #### T23 — Google+ helyi posztolás és beállítások
 
-- **Ütem:** Kimarad — a 2026-10-24-i döntés szerint nem építjük meg (lásd „Második kör”).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Ütem:** Harmadik kör (2026-10-26), könnyített terjedelemmel: a „Harmadik kör” szakasz írja felül az itteni „Kész, ha” feltételt.
+- **Állapot:** Nincs elkezdve (harmadik kör).
 - **Verziók:** 4.0.4, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.0.4-07, 4.3-14, 4.3-20, 4.4.4-14, 4.4.4-20, 5.1.1-14, 5.1.1-27.
 - **Elkészítendő és határ:** 4.0.4 New post. 4.3 Photo/Check in/Mood/Write, New post, Share photos, Share your location, Reshare, értesítési lista és Settings. 4.4.4 a kirajzolt poszt/értesítés/új bejegyzés műveletei és Settings; 5.1.1 Settings. Google Settings Google+ belépés ezekre irányít. A poszt és hely helyi demóadat, nem publikálás.
@@ -403,8 +482,8 @@ A tulajdonos 2026-10-26-án kérte, hogy a kihagyott öt tételre legyen terv, d
 
 #### T26 — 4.0.4/4.3 Google+ Messenger helyi beszélgetések
 
-- **Ütem:** Kimarad — a 2026-10-24-i döntés szerint nem építjük meg (lásd „Második kör”).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Ütem:** Harmadik kör (2026-10-26), könnyített terjedelemmel: a „Harmadik kör” szakasz írja felül az itteni „Kész, ha” feltételt.
+- **Állapot:** Nincs elkezdve (harmadik kör).
 - **Verziók:** 4.0.4, 4.3.
 - **Forráscsoportok:** 4.0.4-13, 4.3-22.
 - **Elkészítendő és határ:** Beszélgetés megnyitása, New conversation és Settings a mintanévjegyekkel; meglévő helyi üzenetmodellre építve. Nincs valódi Google+ üzenetküldés, Sign out, Help vagy Feedback.
@@ -412,8 +491,8 @@ A tulajdonos 2026-10-26-án kérte, hogy a kihagyott öt tételre legyen terv, d
 
 #### T27 — 4.0.4/4.3 Movie Studio helyi projektek
 
-- **Ütem:** Kimarad — a 2026-10-24-i döntés szerint nem építjük meg (lásd „Második kör”).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Ütem:** Harmadik kör (2026-10-26), könnyített terjedelemmel: a „Harmadik kör” szakasz írja felül az itteni „Kész, ha” feltételt.
+- **Állapot:** Nincs elkezdve (harmadik kör).
 - **Verziók:** 4.0.4, 4.3.
 - **Forráscsoportok:** 4.0.4-14, 4.3-22.
 - **Elkészítendő és határ:** Create new project névvel, helyi kép/videó hozzáadás, idővonalon sorrend/csonkolás, előnézet, projektmentés/újranyitás/törlés a gyári VideoEditor UI alapján. Ez egy önálló nagyobb szerkesztőfeladat; nem soroljuk át szolgáltatási korláttá az időigény miatt. Új natív kodek/MP4 renderelő nem része; a helyi projekt és előnézet igen.
@@ -493,8 +572,8 @@ A tulajdonos 2026-10-26-án kérte, hogy a kihagyott öt tételre legyen terv, d
 
 #### T36 — Currents/Magazines/Newsstand helyi tartalmi utak
 
-- **Ütem:** Kimarad — a 2026-10-24-i döntés szerint nem építjük meg (lásd „Második kör”).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Ütem:** Harmadik kör (2026-10-26), könnyített terjedelemmel: a „Harmadik kör” szakasz írja felül az itteni „Kész, ha” feltételt.
+- **Állapot:** Nincs elkezdve (harmadik kör).
 - **Verziók:** 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.3-21, 4.4.4-21, 5.1.1-32.
 - **Elkészítendő és határ:** 4.3 Currents Search/Sync now/Settings, Featured/Saved/Add edition helyi mintaelemek; Play Magazines keresés, magazin megnyitás, Refresh, On device only, Settings. 4.4.4 Newsstand Search, My News/My Magazines/Saved/Explore, Settings, On device only. 5.1.1 Newsstand Search/My Library/Bookmarks/Explore/Settings. Online előfizetés és Help korlát marad.
