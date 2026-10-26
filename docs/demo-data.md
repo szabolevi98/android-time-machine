@@ -38,7 +38,7 @@ The account: `<device>.demo@gmail.com` (6.0.1: nexus5x.demo@gmail.com). Carrier:
   on (owner's rule; not on 2.1 and 2.3.6 on purpose).
 - **Photos / Gallery:** four pictures (Mountain afternoon, City lights, By the sea, Sunset as drawn gradients; 6.0.1:
   four seeded drawings, the last a panorama, two days and nine days old).
-- **Keep (4.3–5.1.1):** "Buy concert tickets", "Groceries: milk, eggs, lollipops", "Call Mom on Sunday".
+- **Keep (4.3–5.1.1; 6.0.1 and 7.1.2 as an app installed from Play):** "Buy concert tickets", "Groceries: milk, eggs, lollipops", "Call Mom on Sunday".
 - **Browser / Chrome bookmarks:** Google, Android, the Wikipedia Android article.
 - **Google Now:** weather card "Riverside 18°, partly cloudy" and the next Calendar event.
 - **Wi-Fi:** the saved network (5.1.1: AndroidAP; 6.0.1: Home Network) and nearby AndroidAP, CoffeeShop, Library

@@ -1,0 +1,91 @@
+// Google Keep installed from Play on 6.0.1 (Keep 3.3.315.0) and 7.1.2 (Keep 3.4.724.02): the demo notes, a new note and
+// a new list kept, a check box, a colour, Pin, Archive and the Archive view, Delete to Trash and Empty Trash, an empty
+// note dropped, Search, Settings, the overflow's column view, and the phone width.
+import assert from 'node:assert/strict';
+import {marshmallow} from './mm-harness.mjs';
+import {nougat} from './ng-harness.mjs';
+for (const [version, start, cls, ns, menuItem] of [['6.0.1', marshmallow, 'mmkp', 'MM', '.mmmenu-item'], ['7.1.2', nougat, 'ngkp', 'NG', '.ngmenu-item']]) {
+  const b = await start();
+  const notes = async () => (await b.save()).keepNotes || [];
+  const type = (sel, value) => b.ev(`(()=>{const f=document.querySelector(${JSON.stringify(sel)});f.value=${JSON.stringify(value)};f.dispatchEvent(new Event('input',{bubbles:true}));return 1})()`);
+  const enter = sel => b.ev(`(()=>{document.querySelector(${JSON.stringify(sel)}).dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));return 1})()`);
+  try {
+    await b.language('en');
+    assert.equal(await b.ev(`!!${ns}.appsData.keep?.installed`), true, 'Keep is installed');
+    await b.open('keep');
+    await b.until(`document.querySelectorAll('#viewport .${cls}-card').length===3`);
+    await b.shot(`${version}-keep`);
+    // A new note.
+    await b.click(`#viewport .${cls}-take`);
+    await b.until(`!!document.querySelector('#viewport [data-keep-text]')`);
+    await type('#viewport [data-keep-title]', 'Weekend');
+    await type('#viewport [data-keep-text]', 'Bake bread');
+    await b.shot(`${version}-keep-editor`);
+    await b.act(`${cls}-close`);
+    await b.until(`[...document.querySelectorAll('#viewport .${cls}-card')].some(c=>/Weekend/.test(c.textContent)&&/Bake bread/.test(c.textContent))`);
+    // A new list with a checked item.
+    await b.act(`${cls}-new-list`);
+    await b.until(`!!document.querySelector('#viewport [data-keep-add]')`);
+    await type('#viewport [data-keep-add]', 'Milk'); await enter('#viewport [data-keep-add]');
+    await b.until(`!!document.querySelector('#viewport [data-keep-item]')`);
+    await b.click(`#viewport .${cls}-check`);
+    assert.equal((await notes()).find(n => n.list?.[0]?.text === 'Milk')?.list[0].checked, true);
+    // Colour and Pin.
+    await b.click(`#viewport [data-action="${cls}-sheet"]`);
+    await b.click(`#viewport [data-action="${cls}-color"][data-id="4"]`);
+    await b.act(`${cls}-pin`);
+    const list = (await notes()).find(n => n.list?.[0]?.text === 'Milk');
+    assert.equal(list.color, 4); assert.equal(list.pinned, true);
+    await b.act(`${cls}-close`);
+    assert.equal(await b.ev(`document.querySelector('#viewport .${cls}-card')?.textContent.includes('Milk')`), true, 'the pinned note comes first');
+    // Archive, then the Archive view.
+    await b.click(`#viewport .${cls}-card:last-child`);
+    const archived = await b.ev(`document.querySelector('#viewport [data-keep-title]')?.value + '|' + (document.querySelector('#viewport [data-keep-text]')?.value||'')`);
+    await b.act(`${cls}-archive`);
+    await b.act(`${cls}-view`, {id: 'archive'});
+    await b.until(`document.querySelectorAll('#viewport .${cls}-card').length===1`);
+    assert.ok((await b.ev(`document.querySelector('#viewport .${cls}-card').textContent`)).includes(archived.split('|')[1] || archived.split('|')[0]));
+    // Delete to Trash, then Empty Trash.
+    await b.click(`#viewport .${cls}-card`);
+    await b.click(`#viewport [data-action="${cls}-sheet"]`);
+    await b.click(`#viewport [data-action="${cls}-delete"]`);
+    await b.act(`${cls}-view`, {id: 'trash'});
+    await b.until(`document.querySelectorAll('#viewport .${cls}-card').length===1 && !!document.querySelector('#viewport .${cls}-banner')`);
+    await b.click(`#viewport .${cls}-more`);
+    await b.until(`!!document.querySelector(${JSON.stringify(menuItem)})`);
+    await b.click(menuItem);
+    await b.until(`[...document.querySelectorAll('button')].some(x=>x.textContent==='Empty Trash'&&x.closest('[role=dialog], .ngdlg, .mmdlg'))`);
+    await b.ev(`[...document.querySelectorAll('button')].filter(x=>x.textContent==='Empty Trash'&&x.closest('[role=dialog], .ngdlg, .mmdlg')).pop().click()`);
+    await b.until(`!document.querySelector('#viewport .${cls}-card') && /No notes in Trash/.test(document.querySelector('#viewport .${cls}-empty')?.textContent||'')`);
+    assert.equal((await notes()).filter(n => n.trashed).length, 0);
+    // An empty note is dropped.
+    await b.act(`${cls}-view`, {id: 'notes'});
+    const count = (await notes()).length;
+    await b.click(`#viewport .${cls}-take`);
+    await b.act(`${cls}-close`);
+    assert.equal((await notes()).length, count, 'an empty note is not kept');
+    // Search.
+    await b.act(`${cls}-search`);
+    await type('#viewport [data-keep-search]', 'concert');
+    await b.until(`document.querySelectorAll('#viewport .${cls}-card').length===1`);
+    await type('#viewport [data-keep-search]', 'zzz');
+    await b.until(`/No matching notes/.test(document.querySelector('#viewport .${cls}-empty')?.textContent||'')`);
+    await b.act(`${cls}-search-close`);
+    // Single-column view from the overflow.
+    await b.click(`#viewport .${cls}-more`);
+    await b.until(`!!document.querySelector(${JSON.stringify(menuItem)})`);
+    await b.click(menuItem);
+    await b.until(`!!document.querySelector('#viewport .${cls}-grid.single')`);
+    // Settings.
+    await b.act(`${cls}-settings`);
+    await b.until(`/Move checked items to bottom/.test(document.querySelector('#viewport').textContent)`);
+    await b.shot(`${version}-keep-settings`);
+    await b.click(`#viewport [data-action="${cls}-pref"][data-id="sharing"]`);
+    assert.equal((await b.save()).keepPrefs.sharing, false);
+    await b.send('Emulation.setDeviceMetricsOverride', {width: 375, height: 812, deviceScaleFactor: 1, mobile: true});
+    await b.open('keep');
+    assert.ok(await b.ev(`document.querySelector('#viewport').scrollWidth<=document.querySelector('#viewport').clientWidth+1`), 'fits the phone width');
+    b.check();
+    console.log(version, 'keep ok');
+  } catch (error) { await b.shot(`${version}-keep-failure`); throw error; } finally { b.close(); }
+}

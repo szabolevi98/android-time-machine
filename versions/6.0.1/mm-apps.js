@@ -597,6 +597,30 @@ MM.appsData = {
 "targetSdk": 21,
 "res": "bullhead:playapps/GoogleEarth.apk:res/mipmap-xxxhdpi-v4/icon.png",
 "installed": true
+},
+"keep": {
+"pkg": "com.google.android.keep",
+"cls": "com.google.android.keep.activities.BrowseActivity",
+"label": {
+"en": "Keep",
+"de": "Notizen",
+"fr": "Keep",
+"es": "Keep",
+"hu": "Keep"
+},
+"icon": "assets/app-keep.png",
+"color": "#ffbb00",
+"version": "3.3.315.0",
+"codeSize": 12227819,
+"permGroups": [
+"contacts",
+"location",
+"microphone",
+"storage"
+],
+"targetSdk": 23,
+"res": "bullhead:playapps/Keep.apk:res/mipmap-xxxhdpi-v4/ic_launcher.png",
+"installed": true
 }
 };
 MM.defaultWorkspace = [

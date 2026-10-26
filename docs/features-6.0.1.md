@@ -36,3 +36,4 @@ Every screen of the image's Settings dashboard: Wi-Fi with its networks and adva
 The owner of the demo phone installed these from Play, in the version of the image's month (docs/sources.md). Settings › Apps lists them with Uninstall.
 
 - **Earth 8.0.4** (installed from Play, not in MTC20K): the Blue Marble globe (drag, zoom, double tap), Search flying to a place ("Not Found: %s" otherwise), My location with the blue dot, the compass, Share, Layers (kept) and the APK's Settings (cache, Google location settings, About Google Earth).
+- **Keep 3.3.315.0** (installed from Play): the demo notes, Take a note… and New list, check boxes, the eight note colours, Pin, Archive, Delete to Trash with Restore / Delete forever / Empty Trash, Make a copy, Send, Search, Single- / Multi-column view and Settings (List behavior, Reminder settings, Sharing). Drawings, audio, photos, reminders and labels keep the limit.

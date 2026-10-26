@@ -47,7 +47,7 @@
     'play-store': ['Play Store', 'Phonesky.apk'], 'play-music': ['Play Music', 'Music2.apk'], 'play-movies': ['Play Movies & TV', 'Videos.apk'],
     'play-games': ['Play Games', 'PlayGames.apk'], 'android-pay': ['Android Pay', 'Wallet.apk'], 'project-fi': ['Project Fi', 'Tycho.apk'],
     // Installed from Play (not in the image: _aosp/<device>/playapps).
-    'earth': ['Earth', 'GoogleEarth.apk (Play)'],
+    'earth': ['Earth', 'GoogleEarth.apk (Play)'], 'keep': ['Keep', 'Keep.apk (Play)'],
     downloads: ['Downloads', 'DownloadProviderUi.apk'], documents: ['Documents', 'DocumentsUI.apk'],
     'live-wallpapers': ['Live wallpapers', 'LiveWallpapersPicker.apk'], 'google-settings': ['Google Settings', 'PrebuiltGmsCore.apk'],
     // Quick settings details (QSPanel.showDetail), drawn inside the shade.

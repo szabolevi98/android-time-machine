@@ -12,6 +12,7 @@ versions/7.1.2/assets/app-drive.png	5f898fdaa9ecd3c1	copy	angler:/system/app/Dri
 versions/7.1.2/assets/app-earth.png	e153a45226c4f9c1	copy	angler:/playapps/GoogleEarth.apk!res/mipmap-xxxhdpi-v4/product_logo_earth_launcher_color_48.png	mipmap-xxxhdpi-v4		e153a45226c4f9c1
 versions/7.1.2/assets/app-gmail.png	ac6b416a68167438	copy	angler:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		ac6b416a68167438
 versions/7.1.2/assets/app-hangouts.png	af56355d87df5496	copy	angler:/system/app/Hangouts/Hangouts.apk!res/mipmap-xxxhdpi-v4/product_logo_hangouts_launcher_color_48.png	mipmap-xxxhdpi-v4		af56355d87df5496
+versions/7.1.2/assets/app-keep.png	6cbc16408bf0c700	copy	angler:/playapps/Keep.apk!res/mipmap-xxxhdpi-v4/product_logo_keep_launcher_color_48.png	mipmap-xxxhdpi-v4		6cbc16408bf0c700
 versions/7.1.2/assets/app-maps.png	439fca47f2059aea	copy	angler:/system/app/Maps/Maps.apk!res/mipmap-xxxhdpi-v4/product_logo_maps_launcher_color_48.png	mipmap-xxxhdpi-v4		439fca47f2059aea
 versions/7.1.2/assets/app-messenger.png	1e6f4b391d12ee22	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_launcher.png	drawable-xxxhdpi-v4		1e6f4b391d12ee22
 versions/7.1.2/assets/app-phone.png	442f798d329b7888	copy	angler:/system/priv-app/GoogleDialer/GoogleDialer.apk!res/mipmap-xxxhdpi-v4/product_logo_dialer_round_launcher_color_48.png	mipmap-xxxhdpi-v4		442f798d329b7888
@@ -625,7 +626,7 @@ versions/7.1.2/assets/gm-ic_send_wht_24dp.png	85d4ce0611509448	copy	angler:/syst
 versions/7.1.2/assets/gm-ic_star_20dp.png	28b13c61f645426f	copy	angler:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_star_20dp.opng	drawable-xxhdpi-v4		28b13c61f645426f
 versions/7.1.2/assets/gm-ic_star_outline_20dp.png	66b86830244c9385	copy	angler:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_star_outline_20dp.opng	drawable-xxhdpi-v4		66b86830244c9385
 versions/7.1.2/assets/gms-auth_ic_google_account.png	ceace2ea6feee94b	copy	angler:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable-xxhdpi-v4/auth_ic_google_account.png	drawable-xxhdpi-v4		ceace2ea6feee94b
-versions/7.1.2/assets/gms-common_ic_googleplayservices.png	241e662a9a723b8c	copy	angler:/system/app/CalculatorGooglePrebuilt/CalculatorGooglePrebuilt.apk!res/drawable-xxhdpi-v4/common_ic_googleplayservices.png	drawable-xxhdpi-v4		241e662a9a723b8c
+versions/7.1.2/assets/gms-common_ic_googleplayservices.png	241e662a9a723b8c	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/common_ic_googleplayservices.png	drawable-xxhdpi-v4		241e662a9a723b8c
 versions/7.1.2/assets/gms-ic_google.png	2fa6a22c3f245701	copy	angler:/system/priv-app/GmsCoreSetupPrebuilt/GmsCoreSetupPrebuilt.apk!res/drawable-xxhdpi-v4/ic_google.png	drawable-xxhdpi-v4		2fa6a22c3f245701
 versions/7.1.2/assets/gms-ic_google_settings.png	1494bcd0498fcea9	copy	angler:/system/priv-app/GmsCoreSetupPrebuilt/GmsCoreSetupPrebuilt.apk!res/drawable-xxhdpi-v4/ic_google_settings.png	drawable-xxhdpi-v4		1494bcd0498fcea9
 versions/7.1.2/assets/gms-quantum_ic_directions_walk_googblue_24.png	c517eeefa3f462ca	copy	angler:/system/priv-app/PrebuiltGmsCore/PrebuiltGmsCore.apk!res/drawable/quantum_ic_directions_walk_googblue_24.png	drawable		c517eeefa3f462ca
@@ -673,6 +674,29 @@ versions/7.1.2/assets/ime-pinyin.png	df3c112cbc0a2690	copy	angler:/system/app/Go
 versions/7.1.2/assets/in-beam.png	85557a1e8fa398f3	copy	angler:/system/app/NfcNci/NfcNci.apk!res/drawable-xxxhdpi-v4/icon.png	drawable-xxxhdpi-v4		85557a1e8fa398f3
 versions/7.1.2/assets/in-bt_share.png	12f705c4046025b5	copy	angler:/system/app/Bluetooth/Bluetooth.apk!res/mipmap-xxxhdpi-v4/bt_share.png	mipmap-xxxhdpi-v4		12f705c4046025b5
 versions/7.1.2/assets/in-cloudprint.png	f8072f65d6d82b86	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxxhdpi-v4/ic_main.png	drawable-xxxhdpi-v4		f8072f65d6d82b86
+versions/7.1.2/assets/kp34-ic_add_box_black.png	8d8c285085ea7959	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_add_box_black.png	drawable-xxhdpi-v4		8d8c285085ea7959
+versions/7.1.2/assets/kp34-ic_archive_gray.png	b69d5a02b727f8d4	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_archive_gray.png	drawable-xxhdpi-v4		b69d5a02b727f8d4
+versions/7.1.2/assets/kp34-ic_delete_forever_black.png	7b53330ab57609ae	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_delete_forever_black.png	drawable-xxhdpi-v4		7b53330ab57609ae
+versions/7.1.2/assets/kp34-ic_ink_pen_black.png	57b25fc8a92b95f7	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_ink_pen_black.png	drawable-xxhdpi-v4		57b25fc8a92b95f7
+versions/7.1.2/assets/kp34-ic_material_archive_black.png	f4d3909bfdd3fc76	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_archive_black.png	drawable-xxhdpi-v4		f4d3909bfdd3fc76
+versions/7.1.2/assets/kp34-ic_material_arrow_left_dark.png	f529e366940fe05d	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_arrow_left_dark.png	drawable-xxhdpi-v4		f529e366940fe05d
+versions/7.1.2/assets/kp34-ic_material_arrow_left_light.png	0caa0401f279249a	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_arrow_left_light.png	drawable-xxhdpi-v4		0caa0401f279249a
+versions/7.1.2/assets/kp34-ic_material_camera_dark.png	c48bd0454f18b2a1	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_camera_dark.png	drawable-xxhdpi-v4		c48bd0454f18b2a1
+versions/7.1.2/assets/kp34-ic_material_lightbulb_light.png	2ea156f6c41ba35c	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_lightbulb_light.png	drawable-xxhdpi-v4		2ea156f6c41ba35c
+versions/7.1.2/assets/kp34-ic_material_list_dark.png	d841f547197133c4	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_list_dark.png	drawable-xxhdpi-v4		d841f547197133c4
+versions/7.1.2/assets/kp34-ic_material_mic_dark.png	4e135630d073e6c6	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_mic_dark.png	drawable-xxhdpi-v4		4e135630d073e6c6
+versions/7.1.2/assets/kp34-ic_material_pin.png	cfceca7daf2f3064	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_pin.png	drawable-xxhdpi-v4		cfceca7daf2f3064
+versions/7.1.2/assets/kp34-ic_material_settings_black.png	a3e4224e8ca1c11b	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_settings_black.png	drawable-xxhdpi-v4		a3e4224e8ca1c11b
+versions/7.1.2/assets/kp34-ic_material_trash_black.png	9a20ab2d7c13a351	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_trash_black.png	drawable-xxhdpi-v4		9a20ab2d7c13a351
+versions/7.1.2/assets/kp34-ic_menu_light.png	358353dec44df027	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_menu_light.png	drawable-xxhdpi-v4		358353dec44df027
+versions/7.1.2/assets/kp34-ic_note_action_24dp.png	d33655c4201ea90d	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_note_action_24dp.png	drawable-xxhdpi-v4		d33655c4201ea90d
+versions/7.1.2/assets/kp34-ic_pin_blue_18dp.png	9f7f093ad1bdb225	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_pin_blue_18dp.png	drawable-xxhdpi-v4		9f7f093ad1bdb225
+versions/7.1.2/assets/kp34-ic_pin_gray.png	783993290a19e6cd	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_pin_gray.png	drawable-xxhdpi-v4		783993290a19e6cd
+versions/7.1.2/assets/kp34-ic_reminder_finger_gray.png	1f17f9490a83a88c	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_reminder_finger_gray.png	drawable-xxhdpi-v4		1f17f9490a83a88c
+versions/7.1.2/assets/kp34-ic_reminders_alt_black.png	1365ddf389fc1448	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_reminders_alt_black.png	drawable-xxhdpi-v4		1365ddf389fc1448
+versions/7.1.2/assets/kp34-ic_restore_black.png	477c0b8885cde655	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_restore_black.png	drawable-xxhdpi-v4		477c0b8885cde655
+versions/7.1.2/assets/kp34-ic_search_white.png	004902b0c74b8494	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_search_white.png	drawable-xxhdpi-v4		004902b0c74b8494
+versions/7.1.2/assets/kp34-ic_unarchive_gray.png	f2b565fdf9382725	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_unarchive_gray.png	drawable-xxhdpi-v4		f2b565fdf9382725
 versions/7.1.2/assets/landing-home.jpg	82ce0e6f65ff992b	own	capture of the simulator's own home screen for the landing page card			
 versions/7.1.2/assets/lime-third-party-licenses.txt	050f823a8f867c6f	copy	angler:/system/app/LatinIMEGooglePrebuilt/LatinIMEGooglePrebuilt.apk!res/raw/third_party_licenses	raw		050f823a8f867c6f
 versions/7.1.2/assets/lw-ic_launcher_live_wallpaper.png	d9b111422a5e0ad9	copy	angler:/system/app/LiveWallpapersPicker/LiveWallpapersPicker.apk!res/mipmap-xxhdpi-v4/ic_launcher_live_wallpaper.png	mipmap-xxhdpi-v4		d9b111422a5e0ad9
@@ -683,7 +707,7 @@ versions/7.1.2/assets/mp-directions-white.png	03c6330b9c9bac2d	copy	angler:/syst
 versions/7.1.2/assets/mp-directions.png	1ab87bd1279a2260	copy	angler:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/ic_qu_directions.png	drawable-xxhdpi-v4		1ab87bd1279a2260
 versions/7.1.2/assets/mp-driving.png	d686fecc2a55648c	copy	angler:/system/app/GoogleHindiIME/GoogleHindiIME.apk!res/drawable-xxhdpi-v4/ic_key_sub_category_smiley_car_dark_theme.png	drawable-xxhdpi-v4		d686fecc2a55648c
 versions/7.1.2/assets/mp-gmm_license_notices.txt	30d12f13c6e5eed4	copy	angler:/system/app/Maps/Maps.apk!res/raw/gmm_license_notices.txt	raw		30d12f13c6e5eed4
-versions/7.1.2/assets/mp-help.png	a9e32ae87d483a14	copy	angler:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/ic_qu_help.png	drawable-xxhdpi-v4		a9e32ae87d483a14
+versions/7.1.2/assets/mp-help.png	a9e32ae87d483a14	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_help_black.png	drawable-xxhdpi-v4		a9e32ae87d483a14
 versions/7.1.2/assets/mp-locate.png	ce28f0a3f2d48791	copy	angler:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/quantum_ic_location_searching_black_24.png	drawable-xxhdpi-v4		ce28f0a3f2d48791
 versions/7.1.2/assets/mp-logo.png	9f98078bb88b48b8	copy	angler:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/googlelogo_dark20_color_120x44.png	drawable-xxhdpi-v4		9f98078bb88b48b8
 versions/7.1.2/assets/mp-menu.png	107a15dba696f277	copy	angler:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/ic_qu_menu_grabber.png	drawable-xxhdpi-v4		107a15dba696f277
@@ -892,8 +916,8 @@ versions/7.1.2/assets/pk-com.google.android.contacts.png	805fadb772d49824	copy	a
 versions/7.1.2/assets/pk-com.google.android.deskclock.png	9fc433feaaede5c5	copy	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!res/mipmap-xxxhdpi-v4/ic_launcher_alarmclock.png	mipmap-xxxhdpi-v4		9fc433feaaede5c5
 versions/7.1.2/assets/pk-com.google.android.dialer.png	442f798d329b7888	copy	angler:/system/priv-app/GoogleDialer/GoogleDialer.apk!res/mipmap-xxxhdpi-v4/product_logo_dialer_round_launcher_color_48.png	mipmap-xxxhdpi-v4		442f798d329b7888
 versions/7.1.2/assets/pk-com.google.android.gm.png	ac6b416a68167438	copy	angler:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		ac6b416a68167438
-versions/7.1.2/assets/pk-com.google.android.gms.png	241e662a9a723b8c	copy	angler:/system/app/CalculatorGooglePrebuilt/CalculatorGooglePrebuilt.apk!res/drawable-xxhdpi-v4/common_ic_googleplayservices.png	drawable-xxhdpi-v4		241e662a9a723b8c
-versions/7.1.2/assets/pk-com.google.android.gms.setup.png	241e662a9a723b8c	copy	angler:/system/app/CalculatorGooglePrebuilt/CalculatorGooglePrebuilt.apk!res/drawable-xxhdpi-v4/common_ic_googleplayservices.png	drawable-xxhdpi-v4		241e662a9a723b8c
+versions/7.1.2/assets/pk-com.google.android.gms.png	241e662a9a723b8c	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/common_ic_googleplayservices.png	drawable-xxhdpi-v4		241e662a9a723b8c
+versions/7.1.2/assets/pk-com.google.android.gms.setup.png	241e662a9a723b8c	copy	angler:/playapps/Keep.apk!res/drawable-xxhdpi-v4/common_ic_googleplayservices.png	drawable-xxhdpi-v4		241e662a9a723b8c
 versions/7.1.2/assets/pk-com.google.android.googlequicksearchbox.png	3f42287cc21f6927	copy	angler:/system/priv-app/Velvet/Velvet.apk!res/mipmap-xxxhdpi-v4/ic_launcher_google_search.png	mipmap-xxxhdpi-v4		3f42287cc21f6927
 versions/7.1.2/assets/pk-com.google.android.ims.png	f58acfe98de562b4	copy	angler:/system/priv-app/CarrierServices/CarrierServices.apk!res/drawable-xxxhdpi-v4/ic_launcher.png	drawable-xxxhdpi-v4		f58acfe98de562b4
 versions/7.1.2/assets/pk-com.google.android.inputmethod.japanese.png	e2b4f1671c1806b4	copy	angler:/system/app/GoogleJapaneseInput/GoogleJapaneseInput.apk!res/mipmap-xxxhdpi-v4/app_icon.png	mipmap-xxxhdpi-v4		e2b4f1671c1806b4
@@ -1002,7 +1026,7 @@ versions/7.1.2/assets/st-ic_menu.svg	3caa4c2a06398f98	vector	angler:/system/priv
 versions/7.1.2/assets/st-ic_menu_add.svg	2164f344c34560f4	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_menu_add.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	93fa35f216193e1d
 versions/7.1.2/assets/st-ic_menu_add_white.svg	6445d7ea7174cb64	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_menu_add_white.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	032674a498d37f7c
 versions/7.1.2/assets/st-ic_menu_delete.svg	6e95fb8b94438452	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_menu_delete.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	914b29e2d44ee534
-versions/7.1.2/assets/st-ic_menu_refresh_holo_dark.png	d3ef7626faa5a539	copy	angler:/system/priv-app/Phonesky/Phonesky.apk!res/drawable-xhdpi-v4/ic_menu_refresh_holo_dark.png	drawable-xhdpi-v4		d3ef7626faa5a539
+versions/7.1.2/assets/st-ic_menu_refresh_holo_dark.png	d3ef7626faa5a539	copy	angler:/playapps/Keep.apk!res/drawable-xhdpi-v4/ic_menu_refresh_holo_dark.png	drawable-xhdpi-v4		d3ef7626faa5a539
 versions/7.1.2/assets/st-ic_power_system.png	7f2bcf47f3cdbbbd	copy	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable-xxxhdpi-v4/ic_power_system.png	drawable-xxxhdpi-v4		7f2bcf47f3cdbbbd
 versions/7.1.2/assets/st-ic_remove_24dp.svg	1eed25741a31d889	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_remove_24dp.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	a2f620bafe6f32a1
 versions/7.1.2/assets/st-ic_restore_googblue_48dp.svg	100e24a5d9deaa36	vector	angler:/system/priv-app/SettingsGoogle/SettingsGoogle.apk!res/drawable/ic_restore_googblue_48dp.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	1a17ebfe99f2ac2c

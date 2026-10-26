@@ -187,7 +187,7 @@ the Earth chrome, menus and settings stay the APKs' own (`earth-globe.js`, `eart
 The Nexus 5X (MTC20K) and 6P (N2G48C) images lack ten Google apps that 5.1.1's image has. They are added as apps the
 phone's owner installed from Play, in the version current on the image's build date, and are marked so: `installed:
 true` in `mm-apps.js` / `ng-apps.js` (Settings › Apps shows Uninstall, which the simulator does not perform). The APKs
-live beside the images in `_aosp/<device>/playapps/` (gitignored); `docs/tools/mm-apps.py`, `mm-appprefs.py`,
+live beside the images in `_aosp/<device>/playapps/` (gitignored; `docs/tools/apkmirror-get.py` downloads one and checks it); `docs/tools/mm-apps.py`, `mm-appprefs.py`,
 `mm-strings.py` (`image_res.py`), `playapp-assets.py` and `asset-inventory.py` read them there. Plan and versions:
 docs/reports/simulator-limits-2026-10-23.md, "Negyedik kör".
 
@@ -195,6 +195,8 @@ docs/reports/simulator-limits-2026-10-23.md, "Negyedik kör".
 |---|---|---|---|---|
 | 6.0.1 | Earth 8.0.4.2346 | [earth-8-0-4-2346-release](https://www.apkmirror.com/apk/google-inc/earth/earth-8-0-4-2346-release/) (uploaded 2016-06-29) | x86, nodpi | `52623b93fcd82d35abdb13aa4abb69edae4740275f2d1c8d54a28f8c24b10c46` |
 | 7.1.2 | Earth 9.0.4.2 | [earth-9-0-4-2-release](https://www.apkmirror.com/apk/google-inc/earth/earth-9-0-4-2-release/) (uploaded 2017-05-08) | armeabi-v7a, nodpi | `3128b1f7d67efe066d4edee8dcd527d36fb028ce997d7612f8d3377840c4e95b` |
+| 6.0.1 | Keep 3.3.315.0 | [keep-3-3-315-0-release](https://www.apkmirror.com/apk/google-inc/keep/keep-3-3-315-0-release/) (uploaded 2016-08-10) | armeabi-v7a, nodpi | `e10e7d61462b37996c2f9bff4c47d88815fa475a20d710c7227760d7ab163021` |
+| 7.1.2 | Keep 3.4.724.02 | [keep-3-4-724-02-release](https://www.apkmirror.com/apk/google-inc/keep/keep-3-4-724-02-release/) (uploaded 2017-05-18) | armeabi-v7a, nodpi | `35fd2d31f0e7db00c90c5d0d10d40370ebdb7f9a713e0f137ea89efefdad0cb3` |
 
 The variant's native code does not matter here: the simulator reads the resources (layouts, strings, drawables,
 settings XML), which are the same in every nodpi variant. Each file is saved as `<Apk name>.apk` (GoogleEarth.apk);

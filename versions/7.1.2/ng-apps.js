@@ -603,6 +603,30 @@ NG.appsData = {
 "targetSdk": 23,
 "res": "angler:playapps/GoogleEarth.apk:res/mipmap-xxxhdpi-v4/product_logo_earth_launcher_color_48.png",
 "installed": true
+},
+"keep": {
+"pkg": "com.google.android.keep",
+"cls": "com.google.android.keep.activities.BrowseActivity",
+"label": {
+"en": "Keep",
+"de": "Notizen",
+"fr": "Keep",
+"es": "Keep",
+"hu": "Keep"
+},
+"icon": "assets/app-keep.png",
+"color": "#ffbb00",
+"version": "3.4.724.02.30",
+"codeSize": 12520124,
+"permGroups": [
+"contacts",
+"location",
+"microphone",
+"storage"
+],
+"targetSdk": 25,
+"res": "angler:playapps/Keep.apk:res/mipmap-xxxhdpi-v4/product_logo_keep_launcher_color_48.png",
+"installed": true
 }
 };
 NG.defaultWorkspace = [
