@@ -231,7 +231,7 @@ APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<sl
 
 #### T53 — Fit a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `a342af7e`. Telepítettként: 6.0.1 Fit 1.58.09 (`mm-fit.js`), 7.1.2 Fit 1.68.00 (`ng-fit.js`), egy sablonból (`docs/templates/fit-play.*`, `docs/tools/fit-play.py`) a saját APK szövegeivel és ikonjaival: Home az illusztrált fejléc alatt, Active time kerék 30 perces célhoz, a nap tevékenységei, súlykártya; Timeline naponként; a FAB Add activity (leírás, típus, dátum, kezdés, időtartam; jövőbeli vég elutasítva) és Add your weight; Settings (súly mértékegysége, célértesítések). A demó nap az 5.1.1-é (`docs/demo-data.md`). Challenges, Start activity (élő szenzor), Help: elutasítás. Ellenőrzés: `tests/browser/play-fit.mjs` (mindkét verzió, telefonos szélesség is), `npm test`. Az eszközleltár azonos bájtoknál a kép saját fájlját, a telepített appok közül a korábban felvettet választja.
 
 #### T54 — Play Books a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
