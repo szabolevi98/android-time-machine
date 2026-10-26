@@ -3239,6 +3239,12 @@
   },
   "news": {
    "News & Weather": "PrebuiltNewsWeather:app_name",
+   "Choose an edition": "PrebuiltNewsWeather:change_edition_dialog_title",
+   "Manage sections": "PrebuiltNewsWeather:manage_sections_activity_title",
+   "Hidden sections": "PrebuiltNewsWeather:manage_sections_hidden_section",
+   "Reorder section": "PrebuiltNewsWeather:manage_sections_reorder_content_description",
+   "Remove this section": "PrebuiltNewsWeather:menu_remove_section",
+   "Section deleted": "PrebuiltNewsWeather:manage_sections_removal_message",
    "Headlines": "PrebuiltNewsWeather:headlines_section_title",
    "Search": "PrebuiltNewsWeather:menu_search",
    "Add section": "PrebuiltNewsWeather:menu_group_add_section",

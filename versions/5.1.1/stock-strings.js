@@ -290,6 +290,12 @@ window.StockStrings = {
  },
  "news": {
   "News & Weather": {"res": "PrebuiltNewsWeather:app_name", "hu": "Hírek és időjárás", "de": "News & Wetter", "fr": "Actualités et météo", "es": "Noticias y tiempo"},
+  "Choose an edition": {"res": "PrebuiltNewsWeather:change_edition_dialog_title", "hu": "Válasszon egy kiadást", "de": "Ausgabe auswählen", "fr": "Sélectionner une édition", "es": "Selecciona una edición"},
+  "Manage sections": {"res": "PrebuiltNewsWeather:manage_sections_activity_title", "hu": "Adott szakaszok kezelése", "de": "Abschnitte verwalten", "fr": "Gérer les sections", "es": "Administrar secciones"},
+  "Hidden sections": {"res": "PrebuiltNewsWeather:manage_sections_hidden_section", "hu": "Rejtett szakaszok", "de": "Ausgeblendete Abschnitte", "fr": "Sections masquées", "es": "Secciones ocultas"},
+  "Reorder section": {"res": "PrebuiltNewsWeather:manage_sections_reorder_content_description", "hu": "Rész átrendezése", "de": "Abschnitt neu ordnen", "fr": "Réorganiser la section", "es": "Cambiar orden de la sección"},
+  "Remove this section": {"res": "PrebuiltNewsWeather:menu_remove_section", "hu": "A szakasz eltávolítása", "de": "Diesen Abschnitt entfernen", "fr": "Supprimer cette section", "es": "Eliminar esta sección"},
+  "Section deleted": {"res": "PrebuiltNewsWeather:manage_sections_removal_message", "hu": "Szakasz törölve", "de": "Abschnitt gelöscht", "fr": "La section a bien été supprimée.", "es": "Sección eliminada"},
   "Headlines": {"res": "PrebuiltNewsWeather:headlines_section_title", "hu": "Címsorok", "de": "Schlagzeilen", "fr": "À la une", "es": "Titulares"},
   "Search": {"res": "PrebuiltNewsWeather:menu_search", "hu": "Keresés", "de": "Suche", "fr": "Rechercher", "es": "Buscar"},
   "Add section": {"res": "PrebuiltNewsWeather:menu_group_add_section", "hu": "Panel hozzáadása", "de": "Abschnitt hinzufügen", "fr": "Ajouter une section", "es": "Añadir sección"},

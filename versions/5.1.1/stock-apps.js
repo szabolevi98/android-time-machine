@@ -273,10 +273,14 @@
 
   // ---- News & Weather (Holo dark): Weather, Top Stories and topics ----
   const STORIES = {
-    'Top Stories': [['Android 5.1.1 security update rolls out to Nexus devices', 'Tech Daily', '2 hours ago'], ['City marathon draws record crowd', 'Metro News', '4 hours ago'], ['Researchers map the ocean floor in 3D', 'Science Today', '6 hours ago']],
-    'Technology': [['Material design comes to more of your apps', 'Gadget Weekly', '1 hour ago'], ['Smart watches: the next big thing?', 'Droid Corner', '3 hours ago']],
-    'Sports': [['Underdogs win the cup final', 'Sports Desk', '5 hours ago']]
+    'Top Stories': [['Android 5.1.1 security update rolls out to Nexus devices', 'Tech Daily', '2 hours ago', 'https://tech-daily.example/nexus-security-update'], ['City marathon draws record crowd', 'Metro News', '4 hours ago', 'https://metro-news.example/city-marathon'], ['Researchers map the ocean floor in 3D', 'Science Today', '6 hours ago', 'https://science-today.example/ocean-floor']],
+    'Technology': [['Material design comes to more of your apps', 'Gadget Weekly', '1 hour ago', 'https://gadget-weekly.example/material-apps'], ['Smart watches: the next big thing?', 'Droid Corner', '3 hours ago', 'https://droid-corner.example/smart-watches']],
+    'Sports': [['Underdogs win the cup final', 'Sports Desk', '5 hours ago', 'https://sports-desk.example/cup-final']]
   };
+  const newsRows=(data,id)=>window.NewsSections?NewsSections.rows(data,STORIES,id):(id==='Headlines'?STORIES['Top Stories']:STORIES[id])||[];
+  const newsArticle=(data,key)=>{const [id,index]=String(key).split(':'),row=newsRows(data,id)[Number(index)];return row&&{title:row[0],source:row[1],time:row[2],url:row[3]};};
+  // Open in browser: the browser's offline page for a stored article URL (the address arrives without its scheme).
+  const newsPage=url=>{const row=Object.values(STORIES).flat().find(r=>r[3].replace(/^https?:\/\//,'')===url);return row?`<article class="web-offline-article"><h2>${e(row[0])}</h2><time>${e(row[1])} · Demo archive</time></article>`:'';};
   // News & Weather 2.2 (LMY48Y). AppThemeLight: the Toolbar takes colorPrimary = the window background #f5f5f5 with
   // 4 dp elevation, status bar #9e9e9e, accent #3367d6, text #de000000 / #8d000000. news_activity.xml's menu: Search and
   // Add section (ifRoom) beside the overflow (Refresh, Edit weather display, Change editions, Manage sections, Switch to
@@ -305,22 +309,23 @@
   }
   // WebContentActivity (web_content_activity.xml): the article in a WebView under the toolbar with menu/web_content_activity.xml.
   function newsWeb(ctx, n) {
-    const [sec, j] = String(ctx.ui.newsWeb).split(':'), story = (sec === 'Headlines' ? STORIES['Top Stories'] : STORIES[sec])?.[Number(j)];
+    const [sec, j] = String(ctx.ui.newsWeb).split(':'), story = newsRows(ctx.data,sec)[Number(j)];
     if (!story) return '';
     return `<div class="app-view sa-app sa-news2 nw2-web${news2(ctx.data).dark ? ' nw2-dark' : ''}"><header class="nw2-bar"><button class="nw2-back" data-action="back" aria-label="${e(ctx.t('Navigate up'))}"><img src="assets/bg-ic_arrow_back_light.png" alt=""></button><b>${e(story[1])}</b><button class="sa-btn" data-action="sa-menu" aria-label="${e(ctx.t('More options'))}"><img src="assets/nw2-abc_ic_menu_moreoverflow_mtrl_alpha.png" alt=""></button></header><div class="sa-scroll nw2-article"><h2>${e(story[0])}</h2><small>${e(story[1])} · ${e(ctx.t(story[2]))}</small><span class="nw2-article-photo">${thumb(Number(j) + 2)}</span><p>${e(snippet(story[0], story[1]))}</p></div></div>`;
   }
   function news(ctx) {
-    const n = key => S(ctx, 'news', key), sections = ['Headlines', 'Technology', 'Sports'], sec = sections.includes(ctx.ui.newsTab) ? ctx.ui.newsTab : 'Headlines';
+    if(ctx.ui.newsManage&&window.NewsSections)return NewsSections.page(ctx);
+    const n = key => S(ctx, 'news', key), sections = window.NewsSections?NewsSections.sections(ctx.data):['Headlines', 'Technology', 'Sports'], sec = sections.includes(ctx.ui.newsTab) ? ctx.ui.newsTab : 'Headlines';
     if (ctx.ui.newsWeb) return newsWeb(ctx, n);
     const o = news2(ctx.data), deg = c => o.unit === 'F' ? Math.round(c * 9 / 5 + 32) : c;
     const label = id => id === 'Headlines' ? n('Headlines') : ctx.t(id);
-    const stories = id => (id === 'Headlines' ? STORIES['Top Stories'] : STORIES[id]) || [];
+    const stories = id => newsRows(ctx.data,id);
     const chart = ctx.ui.newsChart || 'Temp.', temps = [17, 19, 21, 22, 21, 19, 17, 15].map(deg);
     const bars = chart === 'Temp.' ? temps : chart === 'Precip.' ? [0, 0, 10, 20, 10, 0, 0, 0] : chart === 'Wind' ? [8, 10, 13, 15, 14, 11, 9, 8].map(WIND[o.wind][0]) : [72, 66, 60, 55, 54, 58, 64, 70];
     const weather = sec === 'Headlines' && o.weather !== 'hide' ? `<section class="nw2-card nw2-weather"><div class="nw2-now"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="9" r="4" fill="#fbc02d"/><path d="M7 19h11a4 4 0 0 0 0-8 5.5 5.5 0 0 0-10.4 1.6A3.3 3.3 0 0 0 7 19z" fill="#cfd8dc"/></svg><b>${deg(21)}°</b><span>${o.weather === 'custom' && o.place ? `<strong>${e(o.place)}</strong>` : ''}<em>${e(n('Partly Cloudy'))}</em><small>${e(AndroidStrings.format(n('Precipitation: %1$s%%'), 10))}</small><small>${e(AndroidStrings.format(n('Humidity: %1$s%%'), 60))}</small></span></div><nav class="nw2-tabs">${['Temp.', 'Precip.', 'Wind', 'Humidity'].map(t => `<button class="${t === chart ? 'on' : ''}" data-action="news-chart" data-id="${t}">${e(n(t))}</button>`).join('')}</nav><div class="nw2-chart">${bars.map((v, j) => `<i style="height:${Math.max(4, Math.round(v / Math.max(...bars) * 100))}%"><b>${chart === 'Precip.' || chart === 'Humidity' ? v + '%' : v + (chart === 'Wind' ? '' : '°')}</b></i>`).join('')}</div></section>` : '';
     const card = `<section class="nw2-card"><header class="nw2-head"><h3>${e(label(sec))}</h3><button data-action="${sec === 'Headlines' ? 'news2-weather-menu' : 'sa-unsupported'}" aria-label="${e(n('Section header menu button'))}"><img src="assets/nw2-ic_more_horiz_white_18dp.png" alt=""></button></header>${stories(sec).map(([title, source, time], j) => ctx.ui.newsExpanded === `${sec}:${j}` ? `<div class="nw2-expanded"><div class="nw2-exp-top"><span class="nw2-photo big">${thumb(j + 2)}</span><span><b>${e(title)}</b><small>${e(source)} · ${e(ctx.t(time))}</small></span><button class="nw2-icon" data-action="news2-expand" data-id="" aria-label="${e(n('Show less'))}"><img src="assets/nw2-ic_expand_less_white_24dp.png" alt=""></button></div><button class="nw2-snippet" data-action="news2-open" data-id="${sec}:${j}">${e(snippet(title, source))}</button><button class="nw2-article-row" data-action="news2-open" data-id="${sec}:${j}">${e(source)} · ${e(title)}</button><footer><button class="nw2-icon" data-action="news2-share" data-id="${sec}:${j}" aria-label="${e(n('Share article'))}"><img src="assets/nw2-ic_share_white_18dp.png" alt=""></button><button class="nw2-less" data-action="news2-expand" data-id="">${e(n('Show less'))}<img src="assets/nw2-ic_expand_less_white_24dp.png" alt=""></button></footer></div>` : `<button class="nw2-story" data-action="news2-expand" data-id="${sec}:${j}"><span class="nw2-photo">${thumb(j + 2)}</span><span><b>${e(title)}</b><small>${e(source)} · ${e(ctx.t(time))}</small></span></button>`).join('')}<button class="nw2-more" data-action="sa-unsupported">${e(AndroidStrings.format(n('More stories from %1$s'), label(sec)))}</button></section>`;
-    const drawer = ctx.ui.newsDrawer ? `<button class="nw2-scrim" data-action="news-drawer" aria-label="${e(ctx.t('Close'))}"></button><nav class="nw2-drawer"><div class="nw2-account"><b>Nexus 6</b><small>nexus6.demo@gmail.com</small></div>${sections.map(id => `<button class="${id === sec ? 'on' : ''}" data-action="news-tab" data-id="${id}">${e(label(id))}</button>`).join('')}<hr><button data-action="sa-unsupported">${e(n('Add and remove sections…'))}</button><button data-action="sa-unsupported">${e(n('Help & feedback'))}</button></nav>` : '';
-    return `<div class="app-view sa-app sa-news2${o.dark ? ' nw2-dark' : ''}"><header class="nw2-bar"><button class="nw2-toggle" data-action="news-drawer" aria-label="${e(n('Open navigation drawer'))}"><i></i><i></i><i></i></button><b>${e(label(sec))}</b>${img('sa-unsupported', n('Search'), 'nw2-abc_ic_search_api_mtrl_alpha.png')}${img('sa-unsupported', n('Add section'), 'nw2-ic_add_white_24dp.png')}<button class="sa-btn" data-action="sa-menu" aria-label="${e(ctx.t('More options'))}"><img src="assets/nw2-abc_ic_menu_moreoverflow_mtrl_alpha.png" alt=""></button></header><div class="sa-scroll nw2-page">${ctx.ui.newsRefreshing ? `<p class="nw2-loading"><i></i>${e(n('Gathering your news…'))}</p>` : weather + card}</div>${drawer}${newsDialog(ctx, n, o)}</div>`;
+    const drawer = ctx.ui.newsDrawer ? `<button class="nw2-scrim" data-action="news-drawer" aria-label="${e(ctx.t('Close'))}"></button><nav class="nw2-drawer"><div class="nw2-account"><b>Nexus 6</b><small>nexus6.demo@gmail.com</small></div>${sections.map(id => `<button class="${id === sec ? 'on' : ''}" data-action="news-tab" data-id="${id}">${e(label(id))}</button>`).join('')}<hr><button data-action="nwsec-manage">${e(n('Add and remove sections…'))}</button><button data-action="sa-unsupported">${e(n('Help & feedback'))}</button></nav>` : '';
+    return `<div class="app-view sa-app sa-news2${o.dark ? ' nw2-dark' : ''}"><header class="nw2-bar"><button class="nw2-toggle" data-action="news-drawer" aria-label="${e(n('Open navigation drawer'))}"><i></i><i></i><i></i></button><b>${e(label(sec))}</b>${img('sa-unsupported', n('Search'), 'nw2-abc_ic_search_api_mtrl_alpha.png')}${img('sa-unsupported', n('Add section'), 'nw2-ic_add_white_24dp.png')}<button class="sa-btn" data-action="sa-menu" aria-label="${e(ctx.t('More options'))}"><img src="assets/nw2-abc_ic_menu_moreoverflow_mtrl_alpha.png" alt=""></button></header><div class="sa-scroll nw2-page">${ctx.ui.newsRefreshing ? `<p class="nw2-loading"><i></i>${e(n('Gathering your news…'))}</p>` : weather + card}</div>${drawer}${newsDialog(ctx, n, o)}${window.NewsSections?.dialog(ctx)||''}</div>`;
   }
 
 
@@ -337,12 +342,12 @@
     if (view === 'keep') { const k = key => S(ctx, 'keep', key), note = (ctx.data?.keepNotes || []).find(n => n.id === ctx.ui.keepNote); return [{action: 'keep-delete', title: k('Delete note')}, {action: 'kp-copy', title: k('Make a copy')}, {action: 'kp-share', title: k('Send')}, {action: 'keep-checkboxes', title: k(note?.list ? 'Hide checkboxes' : 'Show checkboxes')}]; }
     if (view === 'news-weather') {
       const n = key => S(ctx, 'news', key), dark = news2(ctx.data || {}).dark;
-      if (ctx.ui?.newsWeb) return [{action: 'sa-unsupported', title: n('Open in browser')}, {action: 'news2-share', id: ctx.ui.newsWeb, title: n('Share article')}];
+      if (ctx.ui?.newsWeb) return [{action: 'nwsec-browser', title: n('Open in browser')}, {action: 'news2-share', id: ctx.ui.newsWeb, title: n('Share article')}];
       if (ctx.ui?.newsMenu === 'weather') return [['weather', 'Edit weather display…'], ['unit', 'Temperature units…'], ['wind', 'Wind speed units…']].map(([id, key]) => ({action: 'news2-dialog', id, title: n(key)}));
-      return [{action: 'sa-news-refresh', title: n('Refresh')}, {action: 'news2-dialog', id: 'weather', title: n('Edit weather display…')}, {action: 'sa-unsupported', title: n('Change editions…')}, {action: 'sa-unsupported', title: n('Manage sections…')}, {action: 'news2-theme', title: n(dark ? 'Switch to light theme' : 'Switch to dark theme')}];
+      return [{action: 'sa-news-refresh', title: n('Refresh')}, {action: 'news2-dialog', id: 'weather', title: n('Edit weather display…')}, {action: 'nwsec-editions', title: n('Change editions…')}, {action: 'nwsec-manage', title: n('Manage sections…')}, {action: 'news2-theme', title: n(dark ? 'Switch to light theme' : 'Switch to dark theme')}];
     }
     if (view === 'earth') { const ea = key => S(ctx, 'earth', key); return ['My location', 'Share'].map(key => ({action: 'sa-unsupported', title: ea(key)})); }
     return [];
   }
-  window.StockApps = {FILES: FILES0, news2, APPS: SIMPLE, VIDEOS, POSTS, DEFAULT_NOTES, render, menu};
+  window.StockApps = {newsArticle,newsPage,FILES: FILES0, news2, APPS: SIMPLE, VIDEOS, POSTS, DEFAULT_NOTES, render, menu};
 })();

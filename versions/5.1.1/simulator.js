@@ -436,6 +436,9 @@
       const elapsed = performance.now() - activeTransition.start;
       ICSTransitions.play(viewport.firstElementChild, activeTransition.spec.enter, activeTransition.factor).forEach(animation => { animation.currentTime = elapsed; activeTransition.animations.push(animation); });
     }
+    const newsRoot=viewport.querySelector('[data-news-sections]');
+    if(ui.newsSectionsHook&&ui.newsSectionsHook.root!==newsRoot){ui.newsSectionsHook.destroy();ui.newsSectionsHook=null;}
+    if(newsRoot&&!ui.newsSectionsHook)ui.newsSectionsHook={...NewsSections.attach(newsRoot,newsSectionsContext()),root:newsRoot};
     if (ui.jbcam && !viewport.querySelector('[data-gcam]')?.isSameNode(ui.jbcam.root)) { ui.jbcam.destroy(); ui.jbcam = null; }
     const camRoot = viewport.querySelector('[data-gcam]');
     if (camRoot && !ui.jbcam) ui.jbcam = {...LPCamera.attach(camRoot, {data, ui, t: key => i18n.t(key), media: ICSMedia, save, render, shoot: cameraShoot, gallery: cameraGallery, toast, reduced: !!reducedMotion?.matches}), root: camRoot};
@@ -858,6 +861,7 @@
   }
   // Drive's files as the apps change them (the editors, Drive).
   const officeFiles = () => data.driveFiles || StockApps.FILES;
+  const newsSectionsContext=()=>({data,ui,locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,toast,article:key=>StockApps.newsArticle(data,key),browser:url=>{openApp('chrome');navigateBrowser(url);}});
   const editorContext=()=>({data,ui,files:officeFiles(),locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,
     openDrive(){openApp('drive');},pick(){docPick(ui.view,EditorMore.ACCEPT[ui.view]);},shareText:driveShareText,shareFile:driveShareFile,
     shortcut(file){placeShortcut('office:'+file.id,file.name);}});
@@ -914,6 +918,7 @@
     if (ui.pinned && ui.view === ui.pinned && !ui.overlay && !ui.sub) { pinnedToast(); return; }
     if (ui.view === 'maps' && !ui.overlay && (ui.mapsRoute || ui.navRun) && MapsRoute.back(mrContext())) return;
     // News & Weather: a dialog, then the article page, then an expanded story.
+    if(ui.view==='news-weather'&&!ui.overlay&&NewsSections.back(newsSectionsContext()))return;
     if (ui.view === 'news-weather' && !ui.overlay && (ui.newsDialog || ui.newsWeb)) { if (ui.newsDialog) { ui.newsDialog = ''; ui.newsPick = undefined; } else ui.newsWeb = ''; render(); return; }
     if (ui.view === 'settings' && ['a11y-magnification', 'a11y-shortcut'].includes(ui.sub) && !ui.overlay) { ui.sub = 'accessibility'; render(); return; }
     if (ui.view === 'calendar' && ui.sub === 'calendar-settings' && !ui.overlay) { if (CalendarPrefs.back(ui) === 'leave') { ui.sub = ''; ui.calPref = ''; } render(); return; }
@@ -1548,6 +1553,7 @@
     }
     if (url.includes('android.com')) return `<h2 style="color:#79b93f">android</h2><h3>Android 5.1, Lollipop</h3><p>Material design brings bold colour, responsive motion and depth to every screen. Notifications reach you on the lock screen and as heads-up alerts, Overview keeps your recent apps and tabs in a stack of cards, and Smart Lock keeps your phone unlocked near a trusted device.</p><div style="background:#00bcd4;color:white;padding:calc(27.5939 * var(--dp));text-align:center;font-size:calc(41.9427 * var(--dp))">🍭<br><small style="font-size:calc(18.7638 * var(--dp))">Lollipop</small></div>${browserLink('en.wikipedia.org/wiki/Android','Learn about Android','The story of Android.')}`;
     if (url.includes('wikipedia.org')) return `<h2>Android (operating system)</h2><p><small>From Wikipedia, the free encyclopedia</small></p><hr><p>Android is a mobile operating system based on a modified version of the Linux kernel. Android 4.0, known as Ice Cream Sandwich, introduced the Holo interface and virtual navigation buttons; versions 4.1–4.3, Jelly Bean, added Project Butter, Google Now and expandable notifications; Android 4.4, KitKat, was tuned to run on devices with 512 MB of RAM; Android 5.0, Lollipop, introduced Material design, the ART runtime and 64-bit support, and 5.1 added multiple SIM cards and Device Protection.</p><h3>Versions</h3><p>Gingerbread · Ice Cream Sandwich · Jelly Bean · KitKat · Lollipop</p>${browserLink('www.android.com','Official Android website')}`;
+    const newsPage = window.StockApps?.newsPage(url); if (newsPage) return newsPage;
     if (url === 'news.example/nexus-6' || url === 'retro.example/lollipop') return `<article class="web-offline-article"><h2>${url.startsWith('news')?'A day with the Nexus 6':'A closer look at Lollipop'}</h2><time>November 3, 2014 · Demo archive</time><p>The phone has a 6-inch Quad HD screen, front-facing stereo speakers and a Turbo Charger that adds six hours of use in fifteen minutes. Open the app drawer to discover the Lollipop experience.</p><h3>Everyday essentials</h3><p>Contacts, messages and the browser share a simple visual language. Swipe between home screens, arrange your favorite apps, and pull down the notification shade.</p><h3>Make it yours</h3><p>Choose a wallpaper, add an analog clock and keep your favorite contacts close. This small offline archive is a fictional snapshot of the early smartphone era.</p>${browserLink('news.example','Back to Tech News')}${browserLink('retro.example/lollipop','Explore Lollipop')}</article>`;
     if (url.includes('news.example')) return `<h2>Tech News</h2><p style="color:#777">Thursday, October 22, 2015</p><hr><h3>Android 5.1.1 security update arrives on the Nexus 6</h3><p>Build LMY48Y brings the November security patches to Google's Nexus devices.</p><h3>Apps in your pocket</h3><p>Material design apps are arriving on Google Play every week.</p>${browserLink('news.example/nexus-6','Read the Nexus 6 story')}${browserLink('retro.example','Visit the 2015 Web')}`;
     if (url.includes('retro.example')) return `<h2>Welcome to the 2015 Web</h2><p>A little time capsule from the Material design era.</p><ul><li>Share photos</li><li>Check your email</li><li>Customize your phone</li></ul>${browserLink('retro.example/lollipop','Explore Lollipop')}${browserLink('maps.example','Open the sample map')}${browserLink('www.google.com','Back to Google')}`;
@@ -2241,6 +2247,7 @@
         render(); if (result.toast) toast(result.toast); return;
       }
     }
+    if(action.startsWith('nwsec-')&&NewsSections.handle(action,id,newsSectionsContext()))return;
     if(action.startsWith('emore-')&&EditorMore.handle(action,id,editorContext()))return;
     if(action.startsWith('kp-') && KeepMore.handle(action,id,keepMoreContext()))return;
     if (action.startsWith('cpref-') && ui.view === 'clock') {

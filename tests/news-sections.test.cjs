@@ -1,0 +1,15 @@
+require('./lib/vm-strings.cjs');
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const c={window:{},Intl};vm.runInNewContext(fs.readFileSync('versions/5.1.1/news-sections.js','utf8'),c);
+const M=c.window.NewsSections,data={},ui={},ctx={data,ui,locale:'en',t:k=>k,save(){},render(){},renderOverlay(){},toast(){}};
+assert.deepEqual(Array.from(M.sections(data)),['Headlines','Technology','Sports']);
+M.handle('nwsec-editions','',ctx);M.handle('nwsec-cancel','',ctx);assert.equal(M.edition(data),'us');
+M.handle('nwsec-edition-pick','gb',ctx);assert.deepEqual(Array.from(M.sections(data)),['Headlines','Sports','Technology']);
+M.handle('nwsec-hide','Sports',ctx);assert.deepEqual(Array.from(M.sections(data)),['Headlines','Technology']);
+M.handle('nwsec-restore','Sports',ctx);assert.deepEqual(Array.from(M.sections(data)),['Headlines','Technology','Sports']);
+M.handle('nwsec-edition-pick','us',ctx);assert.deepEqual(Array.from(M.sections(data)),['Headlines','Technology','Sports']);
+M.handle('nwsec-edition-pick','gb',ctx);assert.deepEqual(Array.from(M.sections(data)),['Headlines','Technology','Sports']);
+const stories={'Top Stories':[['a','a','a','https://a.example'],['b','b','b','https://b.example']]};assert.equal(M.rows(data,stories,'Headlines')[0][3],'https://b.example');assert.equal(stories['Top Stories'][0][0],'a');
+data.news2.sectionsByEdition.gb=['bogus','Sports','Sports'];assert.deepEqual(Array.from(M.sections(data)),['Headlines','Sports']);
+let url;ctx.article=()=>({url:'https://b.example'});ctx.browser=u=>url=u;M.handle('nwsec-browser','',ctx);assert.equal(url,'https://b.example');
+console.log('News editions, independent section persistence, catalogue validation, cancel and exact article URL passed.');

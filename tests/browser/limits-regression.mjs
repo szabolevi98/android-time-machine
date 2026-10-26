@@ -3737,6 +3737,27 @@ const editorsMore=app=>async h=>{
 };
 CASES.push(...['docs','sheets','slides'].map(app=>({id:'T40',version:'5.1.1',name:app+' › collections, grid/sort, sharing, move, picker and document shortcut',run:editorsMore(app)})));
 
+CASES.push({id:'T42',version:'5.1.1',name:'News editions, section visibility/order and exact article URL',async run(h){
+  const menu=async action=>{await h.tap('#viewport [data-action="sa-menu"]');await h.tap(`[data-action="${action}"]`);};
+  await h.openApp('news-weather');await menu('nwsec-editions');await h.tap('[data-action="nwsec-cancel"]');
+  h.check('Cancel preserves the default edition',!(await h.save())?.news2?.edition);
+  await menu('nwsec-editions');await h.tap('[data-action="nwsec-edition-pick"][data-id="gb"]');
+  h.check('edition changes the actual lead article',await h.ev(`document.querySelector('.nw2-story b')?.textContent.includes('marathon')`));
+  await menu('nwsec-manage');await h.tap('[data-action="nwsec-hide"][data-id="Sports"]');await h.tap('[data-action="nwsec-back"]');
+  await h.tap('[data-action="news-drawer"]');h.check('hidden section disappears from the drawer',!await h.ev(`!!document.querySelector('[data-action="news-tab"][data-id="Sports"]')`));
+  await h.tap('[data-action="nwsec-manage"]');await h.tap('[data-action="nwsec-restore"][data-id="Sports"]');
+  const height=await h.ev(`document.querySelector('.nwsec-row').getBoundingClientRect().height`);
+  await h.drag('[data-nwsec-drag="Sports"]',0,-height);
+  h.check('drag saves the real section order',(await h.save()).news2.sectionsByEdition.gb.join(',')==='Headlines,Sports,Technology');await h.shot('news-sections');
+  await h.tap('[data-action="nwsec-back"]');h.check('reload succeeds',await h.reload());await h.openApp('news-weather');
+  h.check('edition and section order survive reload',(await h.save()).news2.edition==='gb'&&(await h.save()).news2.sectionsByEdition.gb.join(',')==='Headlines,Sports,Technology');
+  await h.tap('[data-action="news2-expand"][data-id="Headlines:0"]');await h.tap('[data-action="news2-open"][data-id="Headlines:0"]');await menu('nwsec-browser');
+  h.check('Chrome receives the exact selected article URL',await h.until(`!!document.querySelector('.chrome-app')||document.querySelector('input')?.value.includes('metro-news.example')`));
+  h.check('stored browser history contains that URL',(await h.save()).browserHistory.includes('metro-news.example/city-marathon'));
+  h.check('the browser shows that article offline',await h.until(`document.querySelector('#viewport .web-offline-article h2')?.textContent.includes('marathon')`));await h.sleep(800);
+  h.check('the old Tech News page is not shown',!await h.ev(`[...document.querySelectorAll('#viewport h2')].some(x=>x.textContent==='Tech News')`));await h.shot('news-browser');
+}});
+
 const args = process.argv.slice(2), picked = args.filter(a => /^T\d+/i.test(a)).map(a => a.toUpperCase());
 const WIDTHS = args.includes('--desktop') ? ['desktop'] : args.includes('--phone') ? ['phone'] : ['desktop', 'phone'];
 const only = args.includes('--version') ? args[args.indexOf('--version') + 1] : '';
