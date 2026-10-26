@@ -219,7 +219,7 @@ APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<sl
 
 #### T50 — Earth a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `78d1854a`. Earth telepítettként: 6.0.1 Earth 8.0.4.2346 (`mm-earth.js`: Earth 8 eszköztár, fiók, iránytű, pegman; Search a „Not Found: %s”-szel, My location kék ponttal, Share, Layers mentve, az APK settings.xml-je az mm-appprefs motorral), 7.1.2 Earth 9.0.4.2 (`ng-earth.js`: átlátszó eszköztár Search / Voyager / Im Feeling Lucky / Create Postcard, túlcsordulásban My Location és Share Link, nav controls 2D/3D-vel és iránytűvel, keresési találatok, fiók My Places és Map Style panelekkel, az APK settings.xml-je). Mindkettő a Blue Marble gömbön (`earth-globe.js`). Az app-listában `installed: true`, Beállítások › Alkalmazások: Eltávolítás (elutasítás). APK-k: `_aosp/<device>/playapps/`, forrás és SHA-256 a docs/sources.md-ben. Ellenőrzés: `tests/browser/mm-earth.mjs`, `ng-earth.mjs`, mm/ng-leaks, npm test 260/260.
 
 #### T51 — Keep a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
