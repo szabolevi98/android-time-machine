@@ -121,7 +121,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 5. Teszt: minden javított út esete a `tests/browser/limits-regression.mjs` CASES listájába (asztali és telefonos szélességen fut, pozitív eredmény, mentés, Cancel/Back); szükség szerint `tests/*.test.cjs`; `npm test`, `node tests/browser/limits-regression.mjs <T-id>`; a `check:texts`-et ne futtasd a regresszióval egy időben.
 6. Commit (Co-Authored-By sor nélkül) és push a `main`-re; utána `python docs/tools/limits-status.py <T-id> "Kész — `commit`. …"` és külön docs-commit. VPS-deploy csak kérésre.
 
-### Harmadik kör — tervezet 2026-10-26 (megbeszélésre, még nincs jóváhagyva)
+### Harmadik kör — tervezet 2026-10-26 (döntések lent; az Earth szintje még nyitott)
 
 A tulajdonos 2026-10-26-án kérte, hogy a kihagyott öt tételre legyen terv, de **nem kell teljes működés**: a cél, hogy a kirajzolt, látható gombok és menüpontok értelmes helyi eredményt adjanak, a mély alfunkciók maradhatnak elutasításon. A Movie Studio ki is maradhat. A T-feladatlapok lenti „Kész, ha” feltételeit ez a könnyített terjedelem váltja ki. Forrás mindenhol a saját verzió APK-ja (mind megvan: `GoogleEarth.apk` crespo/maguro/mako/hammerhead/shamu, `PlusOne.apk` maguro/mako/hammerhead/shamu, `Currents.apk` és `Magazines.apk` mako, `Magazines.apk` hammerhead, `Newsstand.apk` shamu, `VideoEditorGoogle.apk` maguro/mako).
 
@@ -131,7 +131,7 @@ A tulajdonos 2026-10-26-án kérte, hogy a kihagyott öt tételre legyen terv, d
 | 2 | T26 | Google+ Messenger: szál megnyitása, helyi üzenetküldés, New conversation, Settings | 4.0.4, 4.3 | 2 ó |
 | 3 | T23 | Google+: New post (szöveg, fotó, hely) a saját streambe, Settings; Reshare és értesítések elutasítás marad | 4.0.4, 4.3, 4.4.4, 5.1.1 | 3–4 ó |
 | 4 | T36 | Currents / Magazines / Newsstand: Settings az APK-ból, keresés a meglévő elemekben, mentés/könyvjelző; a cikk-olvasó a nyitott kérdés szerint | 4.3, 4.4.4, 5.1.1 | 2–4 ó |
-| 5 | T27 | Movie Studio: kimarad, vagy minimális „héj” (lásd lent) | 4.0.4, 4.3 | 0 vagy 2–3 ó |
+| 5 | T27 | Movie Studio: minimális „héj” (lásd lent) | 4.0.4, 4.3 | 2–3 ó |
 
 Összesen kb. 11–19 munkaóra.
 
@@ -158,13 +158,15 @@ A tulajdonos 2026-10-26-án kérte, hogy a kihagyott öt tételre legyen terv, d
 - Settings az APK saját XML-jéből (Currents `settings_currents.xml`, Magazines `preference_magazines.xml` / `settings.xml`, Newsstand `settings.xml`), mentve. Search a meglévő elemek nevére szűr. On device only kapcsoló mentve, üres állapotot ad. Mentés/könyvjelző megmarad.
 - A cikk/magazin megnyitása a nyitott kérdéstől függ (lent).
 
-**5. T27 Movie Studio (AOSP VideoEditor).** Javaslat: kimarad. Ha mégis: Create new project → névadó párbeszéd (AOSP szöveg) → a projektszerkesztő képernyő a gyári layout szerint, Add video / Add photo a Galéria-választóval, az elemek bélyegképként megjelennek az idővonalon, a projekt mentődik és a listában újranyitható/törölhető. Lejátszás, vágás, átmenetek, export elutasítás marad.
+**5. T27 Movie Studio (AOSP VideoEditor).** Minimális héj (döntés 2026-10-26): Create new project → névadó párbeszéd (AOSP szöveg) → a projektszerkesztő képernyő a gyári layout szerint, Add video / Add photo a Galéria-választóval, az elemek bélyegképként megjelennek az idővonalon, a projekt mentődik és a listában újranyitható/törölhető. Lejátszás, vágás, átmenetek, export elutasítás marad.
 
-**Nyitott kérdések a tulajdonosnak:**
-1. Earth földkép: a NASA Blue Marble mehet? (Nem a gyári képből van, mert az Earth a képeket szerverről töltötte; ugyanúgy referencia, mint a Wikimedia-fotók.) Egy textúra a gyökér `assets/`-ben az öt verziónak, vagy verziónként külön (a „két verzióban nem lehet bájtra azonos fájl” szabály miatt pl. eltérő felbontással)?
-2. Currents / Newsstand cikkek: a megnyitott cikkhez szöveg kell. (a) Közkincs szöveg (pl. Wikipedia-kivonat, NASA-hír) forrásmegjelöléssel, (b) csak a cím és a kép, „a tartalom offline nem érhető el” üres állapottal, vagy (c) kitalált rövid cikk, mint a News & Weather?
-3. Movie Studio: kimarad, vagy a minimális héj?
-4. Sorrend: a fenti (Earth → Messenger → Google+ → Currents/Newsstand → Movie Studio)?
+**A tulajdonos döntései (2026-10-26):**
+1. Earth földkép: NASA Blue Marble, verziónként külön textúrafájl a verzió előtagjával (eltérő felbontás, így nem bájtazonos).
+2. Currents / Magazines / Newsstand: a megnyitott elem rövid, kitalált demócikket mutat, ahogy a News & Weather (ez a szakasz kifejezett kivétel a munkamód „kitalált szöveg nincs” szabálya alól; a keret, a menük és a beállítások szövege továbbra is az APK-ból).
+3. Movie Studio: a minimális héj készül el.
+4. Sorrend: Earth → Messenger → Google+ → Currents/Newsstand → Movie Studio.
+
+**Még nyitott:** az Earth működési szintje (a tulajdonos szerint „túlzásokba se kell esni”), megbeszélés alatt.
 
 ### Feladatcsomagok és készfeltételek
 
