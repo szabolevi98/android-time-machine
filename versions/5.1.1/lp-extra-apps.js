@@ -59,18 +59,32 @@
   const FIT_COLOR = {walking: '#ff9000', running: '#c1175a', biking: '#4bc5ab'};
   const FIT_SESSIONS = [{type: 'walking', at: [17, 30], min: 5}, {type: 'biking', at: [12, 40], min: 4}, {type: 'walking', at: [8, 5], min: 9}];
   const FIT_GOAL = 30;
-  function fit(t, locale) {
-    const F = key => S('fit', key, t, locale), total = {};
-    FIT_SESSIONS.forEach(({type, min}) => { total[type] = (total[type] || 0) + min; });
-    const active = Object.values(total).reduce((a, b) => a + b, 0), pct = active / FIT_GOAL * 100;
-    const legend = ['walking', 'running', 'biking'].filter(type => total[type]).map(type => `<i class="fit-space"></i><span class="fit-legend-item"><span class="fit-legend-icon" style="background:${FIT_COLOR[type]}"><img src="assets/fit-ic_${type}.png" alt=""></span><span class="fit-legend-value">${digits(lines(icu(F('legend_duration_value'), {count: total[type]}, locale)))}</span></span>`).join('');
+  /* Since T41 the day is FitMore's (fit-more.js): the demo sessions plus the activities added on the phone, yesterday's
+     under timeline_divider_yesterday, and the daily goal from Settings (active time; a steps goal has no step data
+     here, so its wheel counts 0 steps; without a goal the ring is today's mix and there is no goal line). Durations
+     use the _0 / _m / _h / _h_m forms of WheelContent and TimelineEventTitleDuration. */
+  function fit(t, locale, data = {}, ui = {}) {
+    const F = key => S('fit', key, t, locale), total = {}, ctx = {data, ui, t, locale};
+    if (window.FitMore) { const page = FitMore.page(ctx); if (page) return page; }
+    const day = window.FitMore ? FitMore.days(ctx, FIT_SESSIONS) : {today: FIT_SESSIONS, yesterday: [], goal: {type: 'duration', value: FIT_GOAL}};
+    const color = type => window.FitMore ? FitMore.color(type) : FIT_COLOR[type];
+    day.today.forEach(({type, min}) => { total[type] = (total[type] || 0) + min; });
+    const types = [...['walking', 'running', 'biking'].filter(type => total[type]), ...Object.keys(total).filter(type => !FIT_COLOR[type]).sort((a, b) => total[b] - total[a] || a.localeCompare(b))];
+    const active = Object.values(total).reduce((a, b) => a + b, 0), goal = day.goal, steps = goal?.type === 'steps';
+    const pct = !goal ? 0 : steps ? 0 : active / goal.value * 100;
+    const hm = (key, m, args = {}) => m >= 60 && m % 60 ? AndroidStrings.format(F(key + '_h_m'), Math.floor(m / 60), m % 60, args.activity ?? '') : icu(F(key + (m >= 60 ? '_h' : '_m')), {...args, count: m >= 60 ? m / 60 : m}, locale);
+    const legend = types.map(type => `<i class="fit-space"></i><span class="fit-legend-item"><span class="fit-legend-icon" style="background:${color(type)}"><img src="assets/fit-ic_${type}.png" alt=""></span><span class="fit-legend-value">${digits(lines(icu(F('legend_duration_value'), {count: total[type]}, locale)))}</span></span>`).join('');
     const summary = F(pct >= 100 ? 'summary_message_goal_complete' : pct >= 70 ? 'summary_message_goal_70_to_90_percent' : pct >= 50 ? 'summary_message_goal_50_to_70_percent' : pct >= 30 ? 'summary_message_goal_30_to_50_percent' : active ? 'summary_message_no_goal_active' : 'summary_message_no_data_today');
     let start = 0;
-    const arcs = ['walking', 'running', 'biking'].filter(type => total[type]).map(type => { const len = Math.min(total[type] / FIT_GOAL * 360, 360 - start); const arc = `<circle cx="145" cy="145" r="134" pathLength="360" stroke="${FIT_COLOR[type]}" stroke-dasharray="${len} 360" stroke-dashoffset="${-start}"/>`; start += len; return arc; }).join('');
-    const info = active >= FIT_GOAL ? F('wheel_goal_duration_met') : icu(F('wheel_goal_duration_not_met_m'), {count: FIT_GOAL - active}, locale);
-    const time = ([h, m]) => new Date(2015, 0, 1, h, m).toLocaleTimeString(locale, {hour: 'numeric', minute: '2-digit'});
-    const sessions = FIT_SESSIONS.map(({type, at, min}) => `<li class="fit-session" style="--c:${FIT_COLOR[type]}"><i class="fit-dot"></i><strong>${e(icu(F('timeline_event_title_activity_m'), {count: min, activity: F('timeline_activity_' + type)}, locale))}</strong><small>${e(time(at))}</small></li>`).join('');
-    return `<div class="app-view lpx-app fit-app"><div class="fit-scroll"><div class="fit-legend"><div class="fit-legend-items">${legend}</div><button class="fit-overflow" data-action="lpx-overflow" aria-label="${e(F('overflow_menu'))}"><img src="assets/fit-ic_overflow_dark.png" alt=""></button></div><p class="fit-summary">${e(summary)}</p><div class="fit-wheel"><svg viewBox="0 0 290 290" aria-hidden="true"><circle cx="145" cy="145" r="134" stroke="#3333330d"/><g transform="rotate(-90 145 145)">${arcs}</g></svg><div class="fit-wheel-center"><p class="fit-value">${digits(lines(icu(F('wheel_duration_today_m'), {count: active}, locale)))}</p><p class="fit-info">${e(info)}</p></div></div><ol class="fit-timeline">${sessions}</ol></div></div>`;
+    const full = steps ? 0 : goal ? goal.value : active;
+    const arcs = full ? types.map(type => { const len = Math.min(total[type] / full * 360, 360 - start); const arc = `<circle cx="145" cy="145" r="134" pathLength="360" stroke="${color(type)}" stroke-dasharray="${len} 360" stroke-dashoffset="${-start}"/>`; start += len; return arc; }).join('') : '';
+    const left = goal && !steps ? goal.value - active : 0;
+    const info = !goal ? '' : steps ? icu(F('wheel_goal_steps_not_met'), {count: goal.value}, locale) : left > 0 ? hm('wheel_goal_duration_not_met', left) : left === 0 ? F('wheel_goal_duration_met') : hm('wheel_goal_duration_exceeded', -left);
+    const value = steps ? icu(F('wheel_steps_value'), {count: 0}, locale) : !active ? F('wheel_duration_today_0') : active >= 60 && active % 60 ? AndroidStrings.format(F('wheel_duration_today_h_m'), Math.floor(active / 60), active % 60) : icu(F(active >= 60 ? 'wheel_duration_today_h' : 'wheel_duration_today_m'), {count: active >= 60 ? active / 60 : active}, locale);
+    const time = s => s.start != null ? new Date(s.start).toLocaleTimeString(locale, {hour: 'numeric', minute: '2-digit'}) : new Date(2015, 0, 1, s.at[0], s.at[1]).toLocaleTimeString(locale, {hour: 'numeric', minute: '2-digit'});
+    const row = s => `<li class="fit-session" style="--c:${color(s.type)}"><i class="fit-dot"></i><strong>${e(hm('timeline_event_title_activity', s.min, {activity: F('timeline_activity_' + s.type)}))}</strong><small>${e(time(s))}</small></li>`;
+    const sessions = day.today.map(row).join('') + (day.yesterday.length ? `<li class="fit-divider">${e(F('timeline_divider_yesterday'))}</li>${day.yesterday.map(row).join('')}` : '');
+    return `<div class="app-view lpx-app fit-app"><div class="fit-scroll"><div class="fit-legend"><div class="fit-legend-items">${legend}</div><button class="fit-overflow" data-action="lpx-overflow" aria-label="${e(F('overflow_menu'))}"><img src="assets/fit-ic_overflow_dark.png" alt=""></button></div><p class="fit-summary">${e(summary)}</p><div class="fit-wheel"><svg viewBox="0 0 290 290" aria-hidden="true"><circle cx="145" cy="145" r="134" stroke="#3333330d"/><g transform="rotate(-90 145 145)">${arcs}</g></svg><div class="fit-wheel-center"><p class="fit-value">${digits(lines(value))}</p><p class="fit-info">${e(info)}</p></div></div><ol class="fit-timeline">${sessions}</ol></div></div>`;
   }
   /* Wallet 8.0 on a new account: WarmWelcomeFilter starts WarmWelcomeActivity (Theme.Wallet.TranslucentStatusBar).
      warm_welcome_activity.xml's splash (img_logo_wallet_color_88dp and welcome_intro in Headline.WarmWelcomeIntro:
@@ -109,7 +123,7 @@
       if (ui.sub === 'results') return `<div class="app-view lpx-app"><header class="lpx-bar" style="background:${COLORS[app][0]}"><button class="lpx-btn" data-action="back" aria-label="${e(t('Back'))}"><img class="lpx-icon" src="assets/ed-ic_back_arrow_alpha.png" alt=""></button><h2>${e(AndroidStrings.format(ed('Search: "%s"'), q))}</h2><button class="lpx-btn" data-action="ed-search-clear" aria-label="${e(ed('Clear search'))}"><img class="lpx-icon" src="assets/ed-ic_menu_clear_alpha.png" alt=""></button><button class="lpx-btn" data-action="lpx-overflow" aria-label="${e(t('More options'))}">${svg.more}</button></header>${ui.editorRefreshing?'<div class="emore-refreshing"></div>':''}<div class="lpx-list${window.EditorMore?.prefs(data,app).grid?' ed-grid':''}">${rows || `<p class="lpx-empty">${e(ed('No Items'))}</p>`}</div></div>`;
       return `<div class="app-view lpx-app">${editorsBar(app, S('editors', APP_NAME[app], t, locale), t, locale)}${ui.editorRefreshing?'<div class="emore-refreshing"></div>':''}<div class="lpx-list${window.EditorMore?.prefs(data,app).grid?' ed-grid':''}">${rows || `<p class="lpx-empty">${e(t('No recent files'))}</p>`}</div>${window.EditorMore?.drawer(context)||''}</div>`;
     }
-    if (app === 'fit') return fit(t, locale);
+    if (app === 'fit') return fit(t, locale, data, ui);
     if (app === 'newsstand') {
       const stories = [['Material design comes to more apps', 'Gadget Weekly', '#5c6bc0'], ['A weekend of trails above the city', 'Trail & Summit', '#43a047'], ['Five autumn soups in thirty minutes', 'Weekend Kitchen', '#ef6c00']];
       return `<div class="app-view lpx-app">${toolbar('newsstand', S('newsstand', 'Read Now', t, locale), {nav: 'drawer', icons: `<button class="lpx-btn" data-action="lpx-unavailable" aria-label="${e(S('newsstand', 'Search', t, locale))}"><img class="lpx-icon" src="assets/ns33-abc_ic_search_api_mtrl_alpha.png" alt=""></button>`})}<div class="lpx-list lpx-cards">${stories.map(([title, source, color]) => `<article class="lpx-story"><div class="lpx-story-art" style="background:${color}"></div><div class="lpx-story-copy"><small>${e(source)}</small><strong>${e(title)}</strong></div></article>`).join('')}</div>${ui.lpxDrawer ? nsDrawer(t, locale) : ''}</div>`;
@@ -121,7 +135,7 @@
   function menu(app, t, locale, context) {
     if(KIND[app]&&window.EditorMore&&context)return EditorMore.menu(context);
     if (KIND[app]) return ['View as Grid', 'Sort by', 'Open document', 'Refresh'].map(key => ({action: 'lpx-unavailable', title: S('editors', key, t, locale)}));
-    if (app === 'fit') return ['Add activity', 'Add your weight', 'Settings', 'Help & feedback'].map(key => ({action: 'lpx-unavailable', title: S('fit', key, t, locale)}));
+    if (app === 'fit') return window.FitMore ? FitMore.menu({t, locale}) : ['Add activity', 'Add your weight', 'Settings', 'Help & feedback'].map(key => ({action: 'lpx-unavailable', title: S('fit', key, t, locale)}));
     return [];
   }
   // The document actions menu (menu_doclist_context.xml's items for a Google document) and its Rename / Remove dialogs.

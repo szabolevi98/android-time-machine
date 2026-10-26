@@ -3758,7 +3758,38 @@ CASES.push({id:'T42',version:'5.1.1',name:'News editions, section visibility/ord
   h.check('the old Tech News page is not shown',!await h.ev(`[...document.querySelectorAll('#viewport h2')].some(x=>x.textContent==='Tech News')`));await h.shot('news-browser');
 }});
 
-const args = process.argv.slice(2), picked = args.filter(a => /^T\d+/i.test(a)).map(a => a.toUpperCase());
+CASES.push({id:'T41',version:'5.1.1',name:'Fit add activity, weight, goal, units and Back/discard',async run(h){
+  const back=()=>h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='back';document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove();return 1})()`);
+  const menu=async action=>{await h.tap('#viewport [data-action="lpx-overflow"]');await h.tap(`[data-action="${action}"]`);};
+  const fit=async()=>(await h.save())?.fit||{};
+  await h.openApp('fit');await menu('fitm-add');
+  h.check('Add activity opens the editor',await h.until(`!!document.querySelector('#viewport .fitm-editor [data-fitm-field="m"]')`));
+  await h.type('#viewport [data-fitm-field="m"]','75');await h.tap('#viewport [data-action="fitm-save"]');
+  h.check('an invalid minute value is not saved',await h.until(`document.querySelector('#viewport .fitm-error')?.textContent==='Invalid value'`)&&!(await fit()).sessions?.length);await h.shot('fit-editor');
+  await back();h.check('Back with changes asks to discard',await h.until(`!!document.querySelector('#viewport .fitm-alert')`));
+  await h.tap('#viewport .fitm-alert [data-action="fitm-dialog-close"]');h.check('Cancel keeps the editor',await h.ev(`!!document.querySelector('#viewport .fitm-editor')&&!document.querySelector('#viewport .fitm-alert')`));
+  await h.tap('#viewport [data-action="fitm-types"]');await h.shot('fit-types');await h.tap('#viewport [data-action="fitm-type"][data-id="yoga"]');
+  await h.ev(`(()=>{const t=document.querySelector('#viewport [data-fitm-time]'),d=new Date(Date.now()-3*36e5);t.value=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');t.dispatchEvent(new Event('change',{bubbles:true}));const x=document.querySelector('#viewport [data-fitm-date]'),y=new Date(Date.now()-3*36e5);x.value=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');x.dispatchEvent(new Event('change',{bubbles:true}));return 1})()`);
+  await h.type('#viewport [data-fitm-field="h"]','1');await h.type('#viewport [data-fitm-field="m"]','5');await h.tap('#viewport [data-action="fitm-save"]');
+  h.check('a valid activity is saved',await h.until(`!document.querySelector('#viewport .fitm-editor')`)&&(await fit()).sessions?.[0]?.type==='yoga'&&(await fit()).sessions[0].min===65);
+  h.check('the timeline and wheel count it',await h.ev(`document.querySelector('#viewport .fit-timeline').textContent.includes('1 hr 5 min doing yoga')&&!!document.querySelector('#viewport .fit-legend img[src*="fit-ic_yoga"]')`));await h.shot('fit-timeline');
+  await menu('fitm-weight');await h.ev(`(()=>{const s=document.querySelector('#viewport [data-fitm-select="unit"]');s.value='1';s.dispatchEvent(new Event('change',{bubbles:true}));return 1})()`);
+  await h.type('#viewport [data-fitm-field="b"]','-4');await h.tap('#viewport [data-action="fitm-save"]');
+  h.check('a negative weight is refused',await h.until(`!!document.querySelector('#viewport .fitm-error')`)&&!(await fit()).weights?.length);
+  await h.type('#viewport [data-fitm-field="b"]','72.5');await h.tap('#viewport [data-action="fitm-save"]');
+  h.check('the weight is saved in kg',await h.until(`!document.querySelector('#viewport .fitm-editor')`)&&(await fit()).weights?.[0]?.kg===72.5);
+  await menu('fitm-settings');h.check('Settings shows the saved weight',await h.until(`document.querySelector('#viewport .fitm-settings')?.textContent.includes('72.5')`));
+  await h.tap('#viewport [data-action="fitm-edit"][data-id="goal"]');await h.type('#viewport [data-fitm-field="a"]','2');await h.type('#viewport [data-fitm-field="b"]','0');await h.tap('#viewport [data-action="fitm-save"]');
+  h.check('the goal is saved',await h.until(`!document.querySelector('#viewport .fitm-editor')`)&&(await fit()).goal?.value===120);
+  await h.ev(`(()=>{const s=document.querySelector('#viewport [data-fitm-select="unit-weight"]');s.value='0';s.dispatchEvent(new Event('change',{bubbles:true}));return 1})()`);
+  h.check('the weight unit applies',await h.until(`document.querySelector('#viewport [data-id="weight"]')?.textContent.includes('159.8')`)&&(await fit()).units.weight===0);await h.shot('fit-settings');
+  h.check('reload succeeds',await h.reload());await h.openApp('fit');
+  h.check('activity, weight, goal and unit survive reload',(await fit()).sessions?.length===1&&(await fit()).weights?.length===1&&(await fit()).goal?.value===120&&(await fit()).units?.weight===0);
+  h.check('the timeline uses the saved goal',await h.until(`document.querySelector('#viewport .fit-info')?.textContent==='37 min to goal'`));
+  await menu('fitm-settings');await back();h.check('Back leaves Settings',await h.until(`!!document.querySelector('#viewport .fit-app')&&!document.querySelector('#viewport .fitm-settings')`));
+}});
+
+const args = process.argv.slice(2), picked =args.filter(a => /^T\d+/i.test(a)).map(a => a.toUpperCase());
 const WIDTHS = args.includes('--desktop') ? ['desktop'] : args.includes('--phone') ? ['phone'] : ['desktop', 'phone'];
 const only = args.includes('--version') ? args[args.indexOf('--version') + 1] : '';
 const onlyName=args.includes('--name')?args[args.indexOf('--name')+1]:'';

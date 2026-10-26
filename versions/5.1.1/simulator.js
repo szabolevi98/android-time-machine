@@ -439,6 +439,9 @@
     const newsRoot=viewport.querySelector('[data-news-sections]');
     if(ui.newsSectionsHook&&ui.newsSectionsHook.root!==newsRoot){ui.newsSectionsHook.destroy();ui.newsSectionsHook=null;}
     if(newsRoot&&!ui.newsSectionsHook)ui.newsSectionsHook={...NewsSections.attach(newsRoot,newsSectionsContext()),root:newsRoot};
+    const fitRoot=viewport.querySelector('[data-fit-more]');
+    if(ui.fitMoreHook&&ui.fitMoreHook.root!==fitRoot){ui.fitMoreHook.destroy();ui.fitMoreHook=null;}
+    if(fitRoot&&!ui.fitMoreHook)ui.fitMoreHook={...FitMore.attach(fitRoot,fitContext()),root:fitRoot};
     if (ui.jbcam && !viewport.querySelector('[data-gcam]')?.isSameNode(ui.jbcam.root)) { ui.jbcam.destroy(); ui.jbcam = null; }
     const camRoot = viewport.querySelector('[data-gcam]');
     if (camRoot && !ui.jbcam) ui.jbcam = {...LPCamera.attach(camRoot, {data, ui, t: key => i18n.t(key), media: ICSMedia, save, render, shoot: cameraShoot, gallery: cameraGallery, toast, reduced: !!reducedMotion?.matches}), root: camRoot};
@@ -861,6 +864,7 @@
   }
   // Drive's files as the apps change them (the editors, Drive).
   const officeFiles = () => data.driveFiles || StockApps.FILES;
+  const fitContext=()=>({data,ui,locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,toast});
   const newsSectionsContext=()=>({data,ui,locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,toast,article:key=>StockApps.newsArticle(data,key),browser:url=>{openApp('chrome');navigateBrowser(url);}});
   const editorContext=()=>({data,ui,files:officeFiles(),locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,
     openDrive(){openApp('drive');},pick(){docPick(ui.view,EditorMore.ACCEPT[ui.view]);},shareText:driveShareText,shareFile:driveShareFile,
@@ -919,6 +923,7 @@
     if (ui.view === 'maps' && !ui.overlay && (ui.mapsRoute || ui.navRun) && MapsRoute.back(mrContext())) return;
     // News & Weather: a dialog, then the article page, then an expanded story.
     if(ui.view==='news-weather'&&!ui.overlay&&NewsSections.back(newsSectionsContext()))return;
+    if(ui.view==='fit'&&!ui.overlay&&FitMore.back(fitContext()))return;
     if (ui.view === 'news-weather' && !ui.overlay && (ui.newsDialog || ui.newsWeb)) { if (ui.newsDialog) { ui.newsDialog = ''; ui.newsPick = undefined; } else ui.newsWeb = ''; render(); return; }
     if (ui.view === 'settings' && ['a11y-magnification', 'a11y-shortcut'].includes(ui.sub) && !ui.overlay) { ui.sub = 'accessibility'; render(); return; }
     if (ui.view === 'calendar' && ui.sub === 'calendar-settings' && !ui.overlay) { if (CalendarPrefs.back(ui) === 'leave') { ui.sub = ''; ui.calPref = ''; } render(); return; }
@@ -2248,6 +2253,7 @@
       }
     }
     if(action.startsWith('nwsec-')&&NewsSections.handle(action,id,newsSectionsContext()))return;
+    if(action.startsWith('fitm-')&&FitMore.handle(action,id,fitContext()))return;
     if(action.startsWith('emore-')&&EditorMore.handle(action,id,editorContext()))return;
     if(action.startsWith('kp-') && KeepMore.handle(action,id,keepMoreContext()))return;
     if (action.startsWith('cpref-') && ui.view === 'clock') {
