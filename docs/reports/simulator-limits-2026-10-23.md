@@ -474,7 +474,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T39 — 4.4.4 Quickoffice helyi fájlforrások
 
 - **Ütem:** Második kör, #31. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `bfdd97eb`. A QuickOffice 6.3.1 saját HomeActivity/P és FilePickerActivity/FilePickerFragment kódja alapján a Drive és Device belépés működik. A Device natív Holo.Light választója a Download mappából indul, helyi Quickoffice-fájlokat és letöltött PDF/irodai dokumentumokat ad vissza; választás előtt az Open tiltott, Cancel/Back nem módosít. A Drive a T34 demómodelljét olvassa, helyi-only fájl nélkül; a megfelelő fájl szövege nyílik meg. A mentett új dokumentum Device-fájlként marad meg, a létrehozás továbbra is működik. A gyári főmenü Open/New/About helyi műveleteit bekötöttük; ebben a menüben nincs külön rendezési vagy Settings sor, ilyet nem találtunk ki. Ellenőrzés: `npm test` 257/257; `limits-regression.mjs T39` asztali és telefonszélességen zöld, két forrás, kiválasztás, Open, új fájl, Cancel/Back, About, reload; nincs kivétel, elutasítás vagy hibás kérés. A saját APK öt új fájltípusikonja és címkéi nyilvántartva; `asset-inventory.py --check 4.4.4`: 1029 fájl, 0 probléma.
 - **Verziók:** 4.4.4.
 - **Forráscsoportok:** 4.4.4-22.
 - **Elkészítendő és határ:** Drive a demó Drive-listával, Device a helyi tárral; overflow adott APK-ban szereplő helyi rendezési/nézet/beállítás műveletei. Valós Google Drive hozzáférés, fiók és webes support nem része. Create new file már működik.
