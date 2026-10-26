@@ -11,7 +11,7 @@
    Trim (TrimVideo: trim_view.xml under an overlaid action bar whose custom view is trim_menu.xml's SAVE with
    menu_save_photo) plays the clip inside the chosen range; TrimTimeBar's text_select_handle_left / _right mark its ends
    (the start never passes the end, the scrubber stays between them, a touch elsewhere plays or pauses), and SAVE is
-   enabled only when the range differs from the clip by 100 ms or more at both ends (isModified). Trimming and Mute
+   enabled only for at least 100 ms of video, at least 100 ms shorter than the original (isModified). Trimming and Mute
    (MuteVideo) show their ProgressDialog ("Trimming" / "Muting", "Please wait"), then SaveVideoFileUtils writes
    TRIM_ / MUTE_yyyyMMdd_HHmmss next to the original — the Camera folder ("Saving video to %1$s …"), with the
    original's date taken — and the new clip plays in MovieActivity. A copy keeps where it starts in the recording
@@ -103,7 +103,7 @@
   // TrimVideo / TrimTimeBar: playback held inside [start, end], the handles and the scrubber dragged on the bar.
   function attachTrim(root, {photo, ui, rerender, reduced, onSave}) {
     const s = ui.galleryTrim, d = photo.duration;
-    let destroyed = false, last = performance.now(), frame = 0;
+    let destroyed = false, last = performance.now(), frame = 0, stopDrag = () => {};
     const node = sel => root.querySelector(sel), pct = v => `${v / d * 100}%`;
     const paint = () => {
       node('[data-g2v-played]').style.left = pct(s.start); node('[data-g2v-played]').style.width = pct(Math.max(0, s.pos - s.start));
@@ -135,14 +135,15 @@
         else s.pos = Math.max(s.start, Math.min(s.end, v));
         s.ended = false; paint();
       };
-      const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); s.start = Math.round(s.start); s.end = Math.round(s.end); s.pos = Math.round(s.pos); rerender(); };
-      window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+      const up = () => { stopDrag(); s.start = Math.round(s.start); s.end = Math.round(s.end); s.pos = Math.round(s.pos); if (!destroyed) rerender(); };
+      stopDrag = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up); };
+      window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
     }, true);
     root.addEventListener('click', event => {
       if (event.target.closest('[data-g2v-save]') && modified(s, d) && !ui.galleryVideoTask) { s.paused = true; onSave({start: s.start, end: s.end}); }
     });
     paint(); frame = requestAnimationFrame(now => { last = now; tick(now); });
-    return {destroy() { destroyed = true; cancelAnimationFrame(frame); }};
+    return {destroy() { destroyed = true; stopDrag(); cancelAnimationFrame(frame); }};
   }
   // SaveVideoFileUtils: the copy's name from the time it is written; it keeps the original's date taken and album.
   const stamp = (prefix, now) => { const d = new Date(now), p = n => String(n).padStart(2, '0'); return `${prefix}_${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`; };

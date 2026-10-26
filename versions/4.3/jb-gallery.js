@@ -178,7 +178,11 @@
       setTimeout(() => {
         const made = window.G2Video.copy(photo, {...range, mute: kind === 'mute'}, Date.now()), at = data.photos.indexOf(photo);
         data.photos.splice(at < 0 ? 0 : at, 0, made); save();
-        ui.galleryVideoTask = ''; ui.galleryTrim = null; ui.galleryPopup = ''; ui.galleryMovie = null; ui.galleryMovieBack = photo.id; ui.selectedPhoto = made.id; ui.sub = 'movie';
+        ui.galleryVideoTask = ''; ui.galleryTrim = null;
+        // Saving can finish after Home or another app was opened. Keep that navigation intact.
+        if (ui.view === 'gallery' && ui.selectedPhoto === photo.id) {
+          ui.galleryPopup = ''; ui.galleryMovie = null; ui.galleryMovieBack = photo.id; ui.selectedPhoto = made.id; ui.sub = 'movie';
+        }
         toast(AndroidStrings.format(t('Saving video to %1$s …'), t('Camera'))); rerender();
       }, 1200);
     };

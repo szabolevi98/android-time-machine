@@ -208,6 +208,8 @@ versions/4.4.4/assets/gallery-frame_overlay_gallery_folder.png	04d5cac2820f0f83	
 versions/4.4.4/assets/gallery-ic_control_play.png	fd6558ee95283781	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_control_play.png	drawable-hdpi		4d7cff2f623fa520
 versions/4.4.4/assets/gallery-ic_gallery_play.png	e30252c9f2b0fd95	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_gallery_play.png	drawable-xhdpi		849b1f881ada33b1
 versions/4.4.4/assets/gallery-ic_menu_camera_holo_light.png	d89a3aa38ec661ef	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_menu_camera_holo_light.png	drawable-hdpi		993d35698d79458a
+versions/4.4.4/assets/gallery-ic_menu_savephoto.png	fb42a01324cc76d5	copy	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_menu_savephoto.png	drawable-xhdpi		fb42a01324cc76d5
+versions/4.4.4/assets/gallery-ic_menu_savephoto_disabled.png	4dd61f5d1ac394e2	copy	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_menu_savephoto_disabled.png	drawable-xhdpi		4dd61f5d1ac394e2
 versions/4.4.4/assets/gallery-ic_menu_share_holo_light.png	e2064ea7bc8af520	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_menu_share_holo_light.png	drawable-hdpi		d34720613de9c270
 versions/4.4.4/assets/gallery-ic_menu_slideshow_holo_light.png	957179a455e992b5	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_menu_slideshow_holo_light.png	drawable-hdpi		1aebefc6aeb2a0f6
 versions/4.4.4/assets/gallery-ic_menu_trash_holo_light.png	75140ca2b9e4527e	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-hdpi/ic_menu_trash_holo_light.png	drawable-hdpi		9ebd785f6120cc41
@@ -216,6 +218,8 @@ versions/4.4.4/assets/gallery-ic_vidcontrol_play.png	192c38c998e30ae8	same pixel
 versions/4.4.4/assets/gallery-ic_vidcontrol_reload.png	89d4a11a76bd1b35	same pixels	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_vidcontrol_reload.png	drawable-xhdpi		e3880e06a27bad1c
 versions/4.4.4/assets/gallery-ic_video_thumb.png	3ec2e1b2ecdd086f	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/ic_video_thumb.png	drawable-xhdpi		6ea74c2bd338626a
 versions/4.4.4/assets/gallery-scrubber_knob.png	194edd6a6809ec52	same pixels	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/scrubber_knob.png	drawable-xhdpi		2cc195c7969d7220
+versions/4.4.4/assets/gallery-text_select_handle_left.png	f62ec09de79b82f1	copy	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/text_select_handle_left.png	drawable-xhdpi		f62ec09de79b82f1
+versions/4.4.4/assets/gallery-text_select_handle_right.png	097391e079a44acb	copy	hammerhead:/system/app/GalleryGoogle.apk!res/drawable-xhdpi/text_select_handle_right.png	drawable-xhdpi		097391e079a44acb
 versions/4.4.4/assets/gallery-widget_preview.png	8399834bd135d230	same pixels	hammerhead:/system/app/GoogleCamera.apk!res/drawable-hdpi/preview.png	drawable-hdpi		85b1509de1c75c62
 versions/4.4.4/assets/gallery.png	eaac43d04eb497c6	same pixels	hammerhead:/system/priv-app/MediaProvider.apk!res/mipmap-xhdpi/ic_launcher_gallery.png	mipmap-xhdpi		a0f184a352be4724
 versions/4.4.4/assets/gel-ic_google_small_light.png	14548c6014658870	copy	hammerhead:/system/priv-app/Velvet.apk!res/drawable-xxhdpi/ic_google_small_light.png	drawable-xxhdpi		14548c6014658870

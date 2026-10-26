@@ -33,7 +33,7 @@
 .g2v-trimbar .g2v-track{top:calc(14.5609 * var(--dp));height:calc(4.2274 * var(--dp))}
 .g2v-trimbar .g2v-track i{left:0;width:0}
 .g2v-trimbar .g2v-track b{z-index:2;touch-action:none;cursor:grab}
-.g2v-handle{position:absolute;top:0;width:calc(49.6713 * var(--dp));height:calc(61.2964 * var(--dp));touch-action:none;cursor:grab;-webkit-user-drag:none}
+.screen .g2v-handle{position:absolute;top:0;width:calc(49.6713 * var(--dp));height:calc(61.2964 * var(--dp));touch-action:none;cursor:grab;-webkit-user-drag:none;pointer-events:auto}
 .g2v-handle-start{transform:translateX(-75%)}
 .g2v-handle-end{transform:translateX(-25%)}
 .g2v-trim[data-state="playing"] .g2v-button{opacity:0;transition:opacity .2s linear;pointer-events:none}

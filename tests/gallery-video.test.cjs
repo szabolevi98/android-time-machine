@@ -22,6 +22,24 @@ for(const [ver,file,global] of [['4.3','jb-gallery.js','JBGallery'],['4.4.4','kk
   assert.ok(movie.includes('data-page="movie"')&&movie.includes('VID_20261009_101010')&&movie.includes('ic_vidcontrol_reload')&&movie.includes('00:05'),ver+' movie');
   ui.galleryMovie={id:9,pos:1000,paused:true};assert.ok(gal.render(data,ui,t,media,'en').includes('ic_vidcontrol_play'));
   assert.equal(gal.back(ui,data),true);assert.equal(ui.sub,'photo');
+  // Native isModified thresholds and independent, composable edits: a second trim advances within the same source.
+  assert.equal(V.modified({start:0,end:5000},5000),false);
+  assert.equal(V.modified({start:0,end:4950},5000),false);
+  assert.equal(V.modified({start:1000,end:1099},5000),false);
+  assert.equal(V.modified({start:1000,end:1100},5000),true);
+  const before=JSON.stringify(clip),trim=V.copy(clip,{start:1000,end:4000},10000);
+  assert.equal(trim.duration,3000);assert.equal(trim.clip.from,1000);assert.equal(trim.clip.full,5000);
+  assert.match(trim.name,/^TRIM_\d{8}_\d{6}$/);assert.equal(trim.album,clip.album);assert.equal(trim.created,clip.created);
+  assert.equal(V.frameAt(trim,0),.2);assert.equal(V.frameAt(trim,3000),.8);
+  const mute=V.copy(trim,{mute:true},20000),again=V.copy(mute,{start:500,end:2000},30000);
+  assert.match(mute.name,/^MUTE_/);assert.equal(mute.muted,true);assert.equal(mute.duration,3000);
+  assert.equal(again.clip.from,1500);assert.equal(again.clip.full,5000);assert.equal(again.muted,true);
+  assert.equal(JSON.stringify(clip),before,'edits preserve the original');
+  Object.assign(ui,{sub:'trim',galleryTrim:null});
+  assert.ok(gal.render(data,ui,t,media,'en').includes('data-g2v-save disabled'));
+  ui.galleryTrim.start=1000;
+  assert.ok(!gal.render(data,ui,t,media,'en').includes('data-g2v-save disabled'));
+  assert.equal(gal.back(ui,data),true);assert.equal(ui.sub,'photo');assert.equal(ui.galleryTrim,null);
 }
 // The cameras save the clip instead of a "not saved" note.
 for(const f of ['4.3/jb-camera.js','4.4.4/kk-camera.js','5.1.1/lp-camera.js'])assert.ok(fs.readFileSync('versions/'+f,'utf8').includes('shoot({duration})'),f);

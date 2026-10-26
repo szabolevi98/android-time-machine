@@ -3487,6 +3487,94 @@ const CASES = [
   {id: 'T09', version: '5.1.1', name: 'Email › Settings: quick responses, ringtone, server settings', run: emailSettings}
 ];
 
+// GalleryGoogle's TrimVideo / MuteVideo (T31): record through Camera, edit through the photo menu, and reopen the
+// independent copies after reload. Drag both handles rather than assigning the range in the application model.
+const galleryVideoEdit = async h => {
+  const videos = async () => (await h.save()).photos.filter(p => p.video);
+  const photoPage = async id => {
+    await h.openApp('gallery');
+    await h.tap('#viewport [data-jbgal-album="camera"]');
+    await h.tap(`#viewport [data-action="photo"][data-id="${id}"]`);
+    h.check('the recorded video opens in PhotoPage', await h.until(`!!document.querySelector('#viewport [data-page="photo"] .g2v-photo-play')`));
+  };
+  const menu = async action => {
+    if (await h.ev(`!!document.querySelector('#viewport .jbgal-photo:not(.bars)')`)) {
+      // Outside the middle sixth: show the photo bars without starting MovieActivity.
+      const r = await h.ev(`(()=>{const r=document.querySelector('#viewport [data-jbgal-stage]').getBoundingClientRect();return {x:r.x+r.width*.2,y:r.y+r.height*.5}})()`);
+      for (const type of ['mousePressed','mouseReleased']) await h.send('Input.dispatchMouseEvent',{type,...r,button:'left',buttons:type==='mousePressed'?1:0,clickCount:1});
+      await h.sleep(400);
+    }
+    await h.tap('#viewport [data-jbgal-open="photo-menu"]');
+    await h.tap(`#viewport [data-jbgal-${action}]`);
+  };
+  const range = () => h.ev(`(()=>{const p=document.querySelector('#viewport [data-g2v-track]'),w=p.getBoundingClientRect().width;return {width:w,start:parseFloat(p.querySelector('.g2v-handle-start').style.left)/100,end:parseFloat(p.querySelector('.g2v-handle-end').style.left)/100}})()`);
+  await h.openApp('camera');
+  await h.tap('#viewport [data-jbcam-switcher]');
+  await h.tap('#viewport [data-jbcam-module="video"]');
+  await h.tap('#viewport .jbcam-shutter'); await h.sleep(5200); await h.tap('#viewport .jbcam-shutter');
+  const [original] = await videos();
+  h.check('Camera saves a video with a usable duration', original?.duration >= 5000);
+  await photoPage(original.id); await menu('trim');
+  h.check('Trim opens with SAVE disabled for the whole clip', await h.until(`!!document.querySelector('#viewport [data-g2v-save]:disabled')`));
+  const w = (await range()).width;
+  await h.drag('#viewport .g2v-handle-start',w*.2,0);
+  await h.drag('#viewport .g2v-handle-end',-w*.2,0);
+  h.check('both dragged handles select a shorter range', (await range()).start > .15 && (await range()).end < .85, JSON.stringify(await range()));
+  h.check('a changed range enables SAVE', await h.ev(`!document.querySelector('#viewport [data-g2v-save]').disabled`));
+  await h.shot('gallery-trim');
+  await h.key('Escape');
+  h.check('Back discards the unsaved trim', (await videos()).length === 1);
+  await menu('trim');
+  const grip = await h.ev(`(()=>{const r=document.querySelector('#viewport .g2v-handle-start').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);
+  await h.send('Input.dispatchMouseEvent',{type:'mousePressed',...grip,button:'left',buttons:1,clickCount:1});
+  await h.key('Escape');
+  await h.send('Input.dispatchMouseEvent',{type:'mouseMoved',x:grip.x+40,y:grip.y,button:'left',buttons:1});
+  await h.send('Input.dispatchMouseEvent',{type:'mouseReleased',x:grip.x+40,y:grip.y,button:'left',buttons:0,clickCount:1});
+  h.check('leaving during a drag cleans up its pointer listeners', await h.ev(`!!document.querySelector('#viewport [data-page="photo"]')`));
+  await menu('trim');
+  h.check('reopening starts with the whole clip', await h.ev(`document.querySelector('#viewport [data-g2v-save]').disabled`) && (await range()).start === 0 && (await range()).end === 1);
+  await h.drag('#viewport .g2v-handle-start',w*.2,0);
+  await h.drag('#viewport .g2v-handle-end',-w*.2,0);
+  const selected = await range();
+  await h.tap('#viewport [data-g2v-save]');
+  h.check('SAVE shows Trimming and Please wait', await h.until(`!!document.querySelector('#viewport .g2v-progress[aria-label="Trimming"]') && /Please wait/.test(document.querySelector('#viewport .g2v-progress')?.textContent)`));
+  h.check('the trimmed copy plays', await h.until(`!!document.querySelector('#viewport [data-page="movie"][data-sound="track"]')`));
+  let clips = await videos(); const trimmed = clips.find(p => /^TRIM_/.test(p.name));
+  h.check('the trim keeps the selected duration and source offset', Math.abs(trimmed.duration-(selected.end-selected.start)*original.duration) < 3 && Math.abs(trimmed.clip.from-selected.start*original.duration) < 3 && trimmed.clip.full === original.duration);
+  h.check('the original is unchanged', JSON.stringify(clips.find(p=>p.id===original.id)) === JSON.stringify(original));
+  await h.key('Escape');
+  h.check('Back from the copy returns to the original photo', await h.until(`!!document.querySelector('#viewport [data-page="photo"]')`));
+  await menu('mute');
+  h.check('Mute shows its progress dialog', await h.until(`!!document.querySelector('#viewport .g2v-progress[aria-label="Muting"]')`));
+  h.check('the muted copy plays without a sound track', await h.until(`!!document.querySelector('#viewport [data-page="movie"][data-sound="none"]')`));
+  clips = await videos(); const muted = clips.find(p => /^MUTE_/.test(p.name));
+  h.check('Mute preserves the whole recording in a separate copy', muted.muted && muted.duration === original.duration && muted.clip.from === 0 && clips.length === 3);
+  await h.reload();
+  h.check('both copies survive reload', JSON.stringify(await videos()) === JSON.stringify(clips));
+  await photoPage(trimmed.id);
+  await h.tap('#viewport [data-jbgal-stage]');
+  h.check('reopened trim uses its saved duration', await h.until(`document.querySelector('#viewport [data-g2v-bar]')?.getAttribute('aria-valuemax') === '${trimmed.duration}'`));
+  h.check('its first frame keeps the source position', await h.ev(`window.G2Video.frameAt(${JSON.stringify(trimmed)},0) > .15`));
+  await h.key('Escape');
+  // Collapsing the range to zero must disable SAVE and leave the saved clips alone on Back.
+  await menu('trim');
+  await h.drag('#viewport .g2v-handle-start',w*2,0);
+  h.check('an empty range cannot be saved', await h.ev(`document.querySelector('#viewport [data-g2v-save]').disabled`));
+  await h.key('Escape');
+  h.check('invalid range and Back make no new copy', (await videos()).length === 3);
+  await photoPage(muted.id); await h.tap('#viewport [data-jbgal-stage]');
+  h.check('the muted state also survives reopening', await h.until(`!!document.querySelector('#viewport [data-page="movie"][data-sound="none"]')`));
+  await h.shot('gallery-muted');
+  await h.key('Escape'); await menu('mute');
+  await h.tap('[data-action="home"]');
+  await h.openApp('clock');
+  await h.sleep(1500);
+  h.check('a background save completes without replacing another app', (await videos()).length === 4 && await h.ev(`!!document.querySelector('#viewport [data-action="jbclock-tab"]')`));
+  await h.reload();
+  h.check('the background copy is also persisted', (await videos()).length === 4);
+};
+CASES.push(...['4.3','4.4.4'].map(version=>({id:'T31',version,name:'Gallery › video Trim / Mute, copies and reload',run:galleryVideoEdit})));
+
 const args = process.argv.slice(2), picked = args.filter(a => /^T\d+/i.test(a)).map(a => a.toUpperCase());
 const WIDTHS = args.includes('--desktop') ? ['desktop'] : args.includes('--phone') ? ['phone'] : ['desktop', 'phone'];
 const only = args.includes('--version') ? args[args.indexOf('--version') + 1] : '';
