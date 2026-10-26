@@ -3466,7 +3466,62 @@ const plusPost = o => async h => {
   await h.shot(`t23-gplus-${o.version}`);
 };
 
+// Currents / Magazines / Newsstand (T36): a story (or an issue's article) opens in the reader, Save / Bookmark keeps
+// it and the Saved / Bookmarks list shows it, Search finds a story, an empty section shows the APK's caption, Settings
+// keeps a choice (Newsstand's text size changes the reader) and On device only leaves only what is kept.
+const newsLocal = o => async h => {
+  const saved = async () => (((await store(h, 'newsSaved')) || {})[o.app]) || [];
+  const prefs = async () => (((await store(h, 'newsPrefs')) || {})[o.app]) || {};
+  const menu = async action => { await h.tap(`#viewport [data-action="${o.overflow}"]`); await h.until(`!!document.querySelector('.holo-menu')`); await h.tap(`.holo-menu [data-action="${action}"]`); };
+  const drawer = async (action, id) => { await h.tap(`#viewport [data-action="${o.drawer}"]`); await h.tap(`#viewport [data-action="${action}"]${id ? `[data-id="${id}"]` : ''}`); };
+  await h.openApp(o.app);
+  if (o.issue) { await h.until(`!!document.querySelector('#viewport [data-action="nr-issue"]')`); await h.tap('#viewport [data-action="nr-issue"][data-id="mag1"]'); h.check('an issue lists its articles', await h.until(`document.querySelectorAll('#viewport .nr-row').length === 2`)); await h.tap('#viewport .nr-row'); }
+  else { await h.until(`!!document.querySelector('#viewport [data-action="nr-open"]')`); await h.tap(`#viewport [data-action="nr-open"][data-id="${o.first}"]`); }
+  h.check('the reader shows the article', await h.until(`!!document.querySelector('#viewport .nr-article h1') && document.querySelectorAll('#viewport .nr-article p').length >= 2`));
+  const title = await h.ev(`document.querySelector('#viewport .nr-article h1').textContent`);
+  await h.shot(`t36-article-${o.app}-${o.version || ''}`);
+  await h.tap('#viewport .nr-act[data-action="nr-save"]');
+  h.check('Save / Bookmark keeps the article', (await saved()).length === 1);
+  await h.key('Escape');
+  if (o.issue) await h.key('Escape');
+  if (o.panel) { await h.tap('#viewport [data-action="currents-menu"]'); await h.tap('#viewport [data-action="nr-section"][data-id="saved"]'); }
+  else if (o.drawer) await drawer('nr-section', 'saved');
+  if (o.panel || o.drawer) {
+    h.check('the saved list shows it', await h.until(`[...document.querySelectorAll('#viewport .nr-row b')].some(b => b.textContent === ${JSON.stringify(title)})`));
+    await h.key('Escape');
+  }
+  if (o.emptySection) { await drawer('nr-section', o.emptySection); h.check('an empty section shows the APK\'s caption', await h.until(`/^No /.test(document.querySelector('#viewport .nr-empty')?.textContent || '')`)); await h.key('Escape'); }
+  if (o.searchMenu) await menu('nr-search'); else await h.tap('#viewport [data-action="nr-search"]');
+  await h.type('#viewport .nr-search input', o.query);
+  h.check('Search finds the story', await h.until(`[...document.querySelectorAll('#viewport .nr-row b')].some(b => ${JSON.stringify(new RegExp(o.found, 'i').source)} && new RegExp(${JSON.stringify(o.found)}, 'i').test(b.textContent))`));
+  await h.key('Escape');
+  if (o.settingsDrawer) await drawer('nr-settings'); else await menu('nr-settings');
+  h.check('Settings opens the APK\'s settings', await h.until(`!!document.querySelector('#viewport .nr-prefs .mps-row')`));
+  if (o.textSize) {
+    await h.tap('#viewport .nr-prefs [data-id="articleTextSize"]');
+    await h.tap('#viewport [data-action="nr-pick"][data-id="2"]');
+    h.check('Article text size is kept', (await prefs()).articleTextSize === 2);
+  } else {
+    await h.tap(`#viewport .nr-prefs [data-id="${o.check}"]`);
+    h.check(`${o.check} is kept`, (await prefs())[o.check] === true);
+  }
+  await h.key('Escape');
+  if (o.onDevice) {
+    await menu('nr-ondevice');
+    h.check('On device only leaves only what is kept', await h.until(o.issue ? `!document.querySelector('#viewport [data-action="nr-issue"]') && !!document.querySelector('#viewport .nr-empty')` : `document.querySelectorAll('#viewport [data-action="nr-open"]').length === 1`));
+  }
+  if (o.textSize && !o.onDevice) {
+    await h.tap(`#viewport [data-action="nr-open"][data-id="${o.first}"]`);
+    h.check('the reader uses the large text', await h.until(`!!document.querySelector('#viewport .nr-article.nr-large')`));
+  }
+  await h.shot(`t36-${o.app}-${o.version || ''}`);
+};
+
 const CASES = [
+  {id: 'T36', version: '4.3', name: 'Currents › reader, Save For Later, Saved, Search, Settings', run: newsLocal({app: 'currents', first: 'c1', panel: true, overflow: 'sa-menu', searchMenu: true, query: 'hikes', found: 'Five day hikes', check: 'showReadPosts'})},
+  {id: 'T36', version: '4.3', name: 'Magazines › issue, reader, Save, Search, Settings, On device only', run: newsLocal({app: 'play-magazines', issue: true, overflow: 'sa-menu', query: 'kitchen', found: 'Tomatoes|One pan', check: 'wifiOnly', onDevice: true})},
+  {id: 'T36', version: '4.4.4', name: 'Newsstand › reader, Bookmark, Saved, My News, Search, text size, On device only', run: newsLocal({app: 'newsstand', first: 'n1', drawer: 'kkx-drawer', emptySection: 'My News', overflow: 'kkx-menu', query: 'soup', found: 'autumn soups', textSize: true, onDevice: true, version: 'kk'})},
+  {id: 'T36', version: '5.1.1', name: 'Newsstand › reader, Bookmark, Bookmarks, My Library, Search, text size', run: newsLocal({app: 'newsstand', first: 'n1', drawer: 'lpx-drawer', emptySection: 'My Library', settingsDrawer: true, query: 'trails', found: 'weekend of trails', textSize: true, version: 'lp'})},
   {id: 'T23', version: '4.0.4', name: 'Google+ › New post, Delete, Discard, Settings', run: plusPost({stream: true, newPost: '.ga-gp-bar [data-action="gpp-new"]', overflow: 'ga-menu', version: '2.4'})},
   {id: 'T23', version: '4.3', name: 'Google+ › New post, Delete, Discard, Settings', run: plusPost({newPost: '[data-action="gpp-new"][data-id=""]', overflow: 'sa-menu', list: true, about: true, version: '4.0'})},
   {id: 'T23', version: '4.4.4', name: 'Google+ › New post, Delete, Discard, Settings', run: plusPost({newPost: '[data-action="gpp-new"][data-id=""]', overflow: 'sa-menu', list: true, version: '4.2.3'})},

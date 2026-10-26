@@ -62,3 +62,27 @@
 .kkx-paper.qo-blank.slides{min-height:0;aspect-ratio:4/3}
 .screen .kkx-quickoffice .kkx-btn{width:auto;padding:0 calc(11.9978 * var(--dp));color:inherit;font:500 calc(13.9956 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
 .qo-name{display:block;width:calc(100% - calc(35.3201 * var(--dp)));margin:calc(4.4151 * var(--dp)) calc(17.6601 * var(--dp)) calc(13.2451 * var(--dp));padding:calc(6.6226 * var(--dp)) 0;border:0;border-bottom:calc(2.2076 * var(--dp)) solid #33b5e5;background:none;color:inherit;font:400 calc(17.6601 * var(--dp)) Roboto,sans-serif;outline:0}
+
+/* Currents / Magazines / Newsstand reading (news-reader.js): the reader page, lists, the empty captions, the search
+   field in the bar and the settings on the light preference rows. */
+.nr{display:flex;flex-direction:column;background:#fff}
+.nr-scroll{flex:1;min-height:0;overflow-y:auto}
+.nr-article{padding:0 0 calc(24 * var(--dp))}
+.nr-art{height:calc(140 * var(--dp))}
+.nr-article small{display:block;margin:calc(16 * var(--dp)) calc(16 * var(--dp)) 0;font:700 calc(13 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.nr-article h1{margin:calc(6 * var(--dp)) calc(16 * var(--dp)) calc(10 * var(--dp));font:400 calc(24 * var(--dp))/1.25 Roboto,sans-serif;color:#222}
+.nr-article p{margin:0 calc(16 * var(--dp)) calc(12 * var(--dp));font:400 calc(16 * var(--dp))/1.5 Roboto,sans-serif;color:#333}
+.nr-small p{font-size:calc(14 * var(--dp))}
+.nr-large p{font-size:calc(19 * var(--dp))}
+.screen .nr-row{display:flex;align-items:stretch;width:100%;min-height:calc(72 * var(--dp));padding:0;border:0;border-bottom:1px solid #e5e5e5;background:none;text-align:left}
+.nr-row i{flex:none;width:calc(72 * var(--dp))}
+.nr-row span{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:calc(8 * var(--dp)) calc(16 * var(--dp))}
+.nr-row small{font:700 calc(12 * var(--dp)) Roboto,sans-serif;color:#888;text-transform:uppercase}
+.nr-row b{font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#222}
+.nr-empty{margin:0;padding:calc(32 * var(--dp)) calc(16 * var(--dp));text-align:center;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#888}
+.nr-search{flex:1;min-width:0;display:flex;align-items:center}
+.nr-search input{width:100%;padding:calc(6 * var(--dp)) calc(4 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #33b5e5;background:none;color:inherit;font:400 calc(18 * var(--dp)) Roboto,sans-serif;outline:0}
+.screen .nr-act{flex:none;align-self:stretch;padding:0 calc(12 * var(--dp));border:0;background:none;color:inherit;font:700 calc(13 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.screen .nr-story{display:block;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left}
+.nr-prefs{display:flex;flex-direction:column;background:#fff}
+.nr-prefs .mps-cat{color:#808080;border-bottom-color:#00000026}

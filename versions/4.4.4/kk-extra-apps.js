@@ -37,12 +37,17 @@
   const action = (icon, label) => `<button class="kkx-btn" data-action="kkx-unavailable" aria-label="${e(label)}">${svg[icon]}</button>`;
   const Q = (key, t) => S('quickoffice', key, t);
   const QO_KIND = {doc: ['New Document', '.docx'], sheet: ['New Spreadsheet', '.xlsx'], slides: ['New Presentation', '.pptx']};
-  function render(app, {files, ui, t, data, locale}) {
+  function render(app, {files, ui, t, data, locale, news}) {
     if (app === 'newsstand') {
       const n = key => S('newsstand', key, t);
-      const drawer = ui.kkxDrawer ? `<button class="kkx-scrim" data-action="kkx-drawer" aria-label="${e(t('Close'))}"></button><nav class="ns-drawer">${['Read Now', 'My News', 'My Magazines', 'Saved', 'Explore'].map((key, i) => `<button class="${i ? '' : 'on'}" data-action="${i ? 'kkx-unavailable' : 'kkx-drawer'}">${e(n(key))}</button>`).join('')}</nav>` : '';
-      const stories = [['Material design comes to more apps', 'Gadget Weekly', '#15a0c8'], ['A weekend of trails above the city', 'Trail & Summit', '#4285f4'], ['Five autumn soups in thirty minutes', 'Weekend Kitchen', '#ef851c']];
-      return `<div class="app-view kkx-app kkx-newsstand">${bar('newsstand', n('Read Now'), `<button class="kkx-btn" data-action="kkx-unavailable" aria-label="${e(n('Search'))}"><img class="kkx-img" src="assets/ns-ic_menu_search_holo_dark.png" alt=""></button><button class="kkx-btn" data-action="kkx-menu" aria-label="${e(t('More options'))}">${svg.more}</button>`, 'dark')}<div class="kkx-list kkx-cards">${stories.map(([title, source, color]) => `<article class="kkx-story"><div class="kkx-story-art" style="background:${color}"><b>${e(title)}</b></div><div class="kkx-story-copy"><small>${e(source)}</small></div></article>`).join('')}</div>${drawer}</div>`;
+      // The reader, search, the drawer's sections and the settings (news-reader.js) under an Up bar.
+      const nr = news && window.NewsReader?.render({...news, bar: ({title, actions = ''}) => `<header class="sa-bar dark nr-bar"><button class="sa-up" data-action="back" aria-label="${e(t('Back'))}"><img class="sa-caret" src="assets/ic_ab_back_holo_dark.png" alt=""><img src="assets/newsstand.png" alt=""></button><span class="sa-title"><b>${e(title)}</b></span>${actions}</header>`});
+      if (nr) return nr;
+      const drawer = ui.kkxDrawer ? `<button class="kkx-scrim" data-action="kkx-drawer" aria-label="${e(t('Close'))}"></button><nav class="ns-drawer">${[['Read Now', 'kkx-drawer'], ['My News', 'nr-section', 'My News'], ['My Magazines', 'nr-section', 'My Magazines'], ['Saved', 'nr-section', 'saved'], ['Explore', 'kkx-unavailable']].map(([key, action, id = ''], i) => `<button class="${i ? '' : 'on'}" data-action="${action}" data-id="${id}">${e(n(key))}</button>`).join('')}</nav>` : '';
+      // Read Now's stories (news-reader.js); On device only keeps the bookmarked ones.
+      const ids = news ? window.NewsReader.visible(news, ['n1', 'n2', 'n3']) : ['n1', 'n2', 'n3'];
+      const stories = ids.map(id => { const a = window.NewsReader?.ARTICLES[id] || {}; return [a.title, a.source, a.color, id]; });
+      return `<div class="app-view kkx-app kkx-newsstand">${bar('newsstand', n('Read Now'), `<button class="kkx-btn" data-action="nr-search" aria-label="${e(n('Search'))}"><img class="kkx-img" src="assets/ns-ic_menu_search_holo_dark.png" alt=""></button><button class="kkx-btn" data-action="kkx-menu" aria-label="${e(t('More options'))}">${svg.more}</button>`, 'dark')}<div class="kkx-list kkx-cards">${stories.length ? stories.map(([title, source, color, id]) => `<button class="kkx-story nr-story" data-action="nr-open" data-id="${id}"><div class="kkx-story-art" style="background:${color}"><b>${e(title)}</b></div><div class="kkx-story-copy"><small>${e(source)}</small></div></button>`).join('') : `<p class="nr-empty">${e(n('No articles bookmarked'))}</p>`}</div>${drawer}</div>`;
     }
     if (app === 'quickoffice') {
       const context={files,ui,t,data,locale};
@@ -64,8 +69,8 @@
     return '';
   }
   // Newsstand's overflow: NSActivity's standard_menu, then HomeFragment's home_fragment_menu (Search is the bar icon).
-  function menu(app, t) {
-    if (app === 'newsstand') return ['Settings', 'Help', 'On device only'].map(key => ({action: 'kkx-unavailable', title: S('newsstand', key, t)}));
+  function menu(app, t, ui) {
+    if (app === 'newsstand') return ui?.nrApp ? [] : [['Settings', 'nr-settings'], ['Help', 'kkx-unavailable'], ['On device only', 'nr-ondevice']].map(([key, action]) => ({action, title: S('newsstand', key, t)}));
     return [];
   }
   // The dialogs: create (Document / Spreadsheet / Presentation), a file's long-press menu, Rename file, Delete.
