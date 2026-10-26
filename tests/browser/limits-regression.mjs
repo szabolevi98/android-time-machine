@@ -3575,6 +3575,74 @@ const galleryVideoEdit = async h => {
 };
 CASES.push(...['4.3','4.4.4'].map(version=>({id:'T31',version,name:'Gallery › video Trim / Mute, copies and reload',run:galleryVideoEdit})));
 
+const keepMore = async h => {
+  const notes=async()=>(await h.save()).keepNotes;
+  const menu=async action=>{await h.tap('#viewport [data-action="sa-menu"]');await h.tap(`[data-action="${action}"]`);};
+  const isLP=await h.ev(`location.pathname.includes('/5.1.1/')`);
+  await h.openApp('keep');
+  await h.tap('#viewport [data-action="keep-new"]');
+  await h.type('#viewport .keep-text','Remember the museum at 10.');
+  const original=(await notes()).find(n=>n.text==='Remember the museum at 10.');
+  // Share must snapshot the current editor text, even before navigation saves it.
+  await menu('kp-share');
+  h.check('Share/Send opens a chooser',await h.until(`!!document.querySelector('#viewport [data-action="kp-send"]')`));
+  await h.key('Escape');
+  h.check('Back returns to the note without losing text',await h.ev(`document.querySelector('#viewport .keep-text')?.value==='Remember the museum at 10.'`));
+  if(isLP){
+    await menu('kp-copy');
+    h.check('Make a copy creates a second independent note', (await notes()).filter(n=>n.text==='Remember the museum at 10.').length===2);
+    await h.type('#viewport .keep-text','Museum copy edited');
+    await h.key('Escape');
+    h.check('editing the copy preserves the original',(await notes()).some(n=>n.text==='Remember the museum at 10.'));
+    await h.tap('#viewport [data-action="keep-new"]');await h.type('#viewport .keep-text','Text to send');
+  }
+  const sentText=await h.ev(`document.querySelector('#viewport .keep-text').value`);
+  await menu('kp-share');await h.tap('#viewport [data-action="kp-send"][data-id="gmail"]');
+  h.check('Gmail receives the exact note text',await h.until(`document.querySelector('#viewport textarea[name="body"]')?.value===${JSON.stringify(sentText)}`));
+  await h.openApp('keep');
+  const count=(await notes()).length;
+  await h.tap('#viewport [data-action="kp-record"]');
+  h.check('New recording starts the native speech view',await h.until(`!!document.querySelector('#viewport [data-action="kp-record-done"]')`));
+  await h.key('Escape');await h.sleep(300);
+  h.check('cancelled recording adds no note',(await notes()).length===count);
+  await h.tap('#viewport [data-action="kp-record"]');await h.sleep(1400);
+  await h.tap('#viewport [data-action="kp-record-done"]');
+  h.check('finishing creates a playable audio note',await h.until(`!!document.querySelector('#viewport [data-kpm-audio]')`));
+  const voice=(await notes()).find(n=>n.audio);
+  h.check('the sample has persisted PCM audio',voice.audio.duration>=1&&voice.audio.dataUrl.startsWith('data:audio/wav;base64,UklGR'));
+  await h.tap('#viewport [data-action="kp-play"]');
+  h.check('audio playback advances the native progress bar',await h.until(`document.querySelector('#viewport [data-kpm-progress]')?.value>.2`));
+  await h.shot('keep-audio');
+  await h.key('Escape');await h.reload();await h.openApp('keep');
+  h.check('the empty-text voice note survives leaving and reload',(await notes()).find(n=>n.id===voice.id)?.audio.dataUrl===voice.audio.dataUrl);
+  await h.tap(`#viewport [data-action="keep-open"][data-id="${voice.id}"]`);await h.tap('#viewport [data-action="kp-play"]');
+  h.check('the reloaded sample plays',await h.until(`document.querySelector('#viewport [data-kpm-progress]')?.value>.2`));
+  await menu('kp-share');await h.tap('#viewport [data-action="kp-send"][data-id="gmail"]');
+  h.check('Send preserves the audio stream in the mail draft',(await h.save()).gmailbox.some(m=>m.attachment?.dataUrl===voice.audio.dataUrl));
+  await h.openApp('keep');await h.tap(`#viewport [data-action="keep-open"][data-id="${voice.id}"]`);
+  await h.tap('#viewport [data-action="kp-audio-remove"]');await h.key('Escape');
+  h.check('Back cancels audio removal',await h.ev(`!!document.querySelector('#viewport [data-kpm-audio]')`));
+  await h.tap('#viewport [data-action="kp-audio-remove"]');await h.tap('#viewport [data-action="kp-audio-delete"]');
+  h.check('confirmed removal deletes the audio',!(await notes()).find(n=>n.id===voice.id).audio);
+  await h.key('Escape');
+  if(!isLP){
+    await menu('kp-settings');
+    h.check('Settings opens its native preference rows',await h.until(`!!document.querySelector('#viewport [data-action="kp-sync"]')`));
+    await h.tap('#viewport [data-action="kp-about"]');
+    h.check('About identifies this image version',await h.ev(`/Keep/.test(document.querySelector('#viewport .kpm-about')?.textContent||'')`));await h.key('Escape');
+    await h.tap('#viewport [data-action="kp-sync"]');
+    h.check('Sync opens Android account settings',await h.until(`!!document.querySelector('#viewport [data-action="kp-sync-toggle"]')`));
+    const key=await h.ev(`document.querySelector('#viewport [data-action="kp-sync-toggle"]').dataset.id`);
+    await h.tap(`#viewport [data-action="kp-sync-toggle"][data-id="${key}"]`);
+    h.check('the native sync preference is saved',!!(await h.save()).settings.syncOff?.[key]);
+    await h.key('Escape');h.check('Back returns to Keep Settings',await h.until(`!!document.querySelector('#viewport [data-action="kp-sync"]')`));
+    await h.shot('keep-settings');
+    await h.reload();await h.openApp('keep');await menu('kp-settings');await h.tap('#viewport [data-action="kp-sync"]');
+    h.check('the Keep sync preference survives reload',await h.ev(`document.querySelector('#viewport [data-action="kp-sync-toggle"]')?.getAttribute('aria-checked')==='false'`));
+  }
+};
+CASES.push(...['4.3','4.4.4','5.1.1'].map(version=>({id:'T35',version,name:'Keep › Share/Send, copy, voice notes and Settings',run:keepMore})));
+
 const args = process.argv.slice(2), picked = args.filter(a => /^T\d+/i.test(a)).map(a => a.toUpperCase());
 const WIDTHS = args.includes('--desktop') ? ['desktop'] : args.includes('--phone') ? ['phone'] : ['desktop', 'phone'];
 const only = args.includes('--version') ? args[args.indexOf('--version') + 1] : '';

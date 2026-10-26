@@ -127,16 +127,16 @@
   function keepCard(ctx, n) {
     const photo = n.photo ? keepPhoto(ctx, n.photo) : '', items = n.list ? keepOrder(n.list).filter(i => i.text.trim()) : [];
     const rows = items.slice(0, KEEP_INDEX_MAX).map(i => `<span class="kp-li${i.checked ? ' on' : ''}"><img src="assets/${i.checked ? 'kp-ic_checked_dark.png' : 'kp-ic_unchecked_dark.png'}" alt=""><span>${e(i.text)}</span></span>`).join('') + (items.length > KEEP_INDEX_MAX ? '<span class="kp-ellipse">…</span>' : '');
-    return `<button class="sa-note${photo ? ' kp-with-photo' : ''}" data-no-translate data-action="keep-open" data-id="${e(n.id)}" style="--note:${KEEP_COLORS[n.color || 0]}">${photo ? `<img class="kp-photo" src="${e(photo)}" alt="">` : ''}${n.list ? rows : n.text ? `<span class="kp-text">${e(n.text)}</span>` : ''}</button>`;
+    return `<button class="sa-note${photo ? ' kp-with-photo' : ''}" data-no-translate data-action="keep-open" data-id="${e(n.id)}" style="--note:${KEEP_COLORS[n.color || 0]}">${photo ? `<img class="kp-photo" src="${e(photo)}" alt="">` : ''}${window.KeepMore?.badge(ctx,n)||''}${n.list ? rows : n.text ? `<span class="kp-text">${e(n.text)}</span>` : ''}</button>`;
   }
   function keepEditor(ctx, note, k) {
     const photo = note.photo ? keepPhoto(ctx, note.photo) : '';
     const pic = photo ? `<div class="kp-ed-photo"><img src="${e(photo)}" alt=""><button type="button" class="kp-ed-photo-del" data-action="keep-photo-remove" aria-label="${e(k('Remove photo?'))}"><img src="assets/kp-ic_delete_light.png" alt=""></button></div>` : '';
-    if (!note.list) return `${pic}<textarea class="keep-text" maxlength="2000" aria-label="${e(k('New note'))}">${e(note.text)}</textarea>`;
+    if (!note.list) return `${pic}${window.KeepMore?.audio(ctx,note)||''}<textarea class="keep-text" maxlength="2000" aria-label="${e(k('New note'))}">${e(note.text)}</textarea>`;
     const row = i => { const item = note.list[i]; return `<div class="kp-ed-li${item.checked ? ' on' : ''}"><button type="button" class="kp-ed-check" data-action="keep-li-check" data-id="${i}" role="checkbox" aria-checked="${!!item.checked}" aria-label="${e(item.text)}"></button><input class="kp-ed-text" data-keep-li="${i}" value="${e(item.text)}" maxlength="1000" autocomplete="off" aria-label="${e(k('List item'))}"><button type="button" class="kp-ed-del" data-action="keep-li-delete" data-id="${i}" aria-label="${e(k('Delete'))}"><img src="assets/kp-ic_delete_dark.png" alt=""></button></div>`; };
     const add = `<form class="kp-ed-add" data-form="keep-li-add"><i class="kp-ed-check" aria-hidden="true"></i><input name="text" maxlength="1000" autocomplete="off" placeholder="${e(k('List item'))}" aria-label="${e(k('List item'))}"></form>`;
     const index = note.list.map((_, i) => i);
-    return `${pic}<div class="kp-ed-list" data-no-translate>${index.map(row).join('')}${add}</div>`;
+    return `${pic}${window.KeepMore?.audio(ctx,note)||''}<div class="kp-ed-list" data-no-translate>${index.map(row).join('')}${add}</div>`;
   }
   function keepDialog(ctx, k) {
     const kind = ctx.ui.keepDialog;
@@ -148,6 +148,8 @@
     return `<button type="button" class="kp-dlg-scrim" data-action="keep-dialog-close" aria-label="${e(ctx.t('Close'))}"></button><div class="kp-dlg" role="dialog">${body}</div>`;
   }
   function keep(ctx) {
+    if(ctx.ui.kpScreen==='record')return voice(ctx).replace(/voice-listen/g,'kp-record-done');
+    if(ctx.ui.kpScreen)return window.KeepMore.screen(ctx);
     const notes = ctx.data.keepNotes || [], k = key => S(ctx, 'keep', key);
     if (ctx.ui.sub === 'note') {
       const note = notes.find(n => n.id === ctx.ui.keepNote);
@@ -155,7 +157,7 @@
     }
     const archived = ctx.ui.keepArchived, shown = notes.filter(n => !!n.archived === !!archived), single = ctx.data.keepSingle;
     const add = (action, key, src) => `<button type="button" class="sa-keep-new" data-action="${action}" aria-label="${e(k(key))}"><img src="assets/kp-${src}.png" alt=""></button>`;
-    const quick = archived ? '' : `<form class="sa-keep-add" data-form="keep-add"><input name="text" maxlength="500" autocomplete="off" placeholder="${e(k('Add quick note'))}" aria-label="${e(k('Add quick note'))}"><i></i><div class="sa-keep-items">${add('keep-new', 'New note', 'ic_note_dark')}${add('keep-new-list', 'New list', 'ic_list_dark')}${add('sa-unsupported', 'New recording', 'ic_mic_dark')}${add('keep-photo-take', 'New photo', 'ic_camera_dark')}</div></form>`;
+    const quick = archived ? '' : `<form class="sa-keep-add" data-form="keep-add"><input name="text" maxlength="500" autocomplete="off" placeholder="${e(k('Add quick note'))}" aria-label="${e(k('Add quick note'))}"><i></i><div class="sa-keep-items">${add('keep-new', 'New note', 'ic_note_dark')}${add('keep-new-list', 'New list', 'ic_list_dark')}${add('kp-record', 'New recording', 'ic_mic_dark')}${add('keep-photo-take', 'New photo', 'ic_camera_dark')}</div></form>`;
     return `<div class="app-view sa-app sa-keep">${bar(ctx, {title: archived ? k('Archived notes') : k('Keep'), up: !!archived, icon: 'keep.png', actions: btn('sa-menu', ctx.t('More options'), 'overflow')})}${quick}<div class="sa-scroll"><div class="sa-notes${single ? ' single' : ''}">${shown.map(n => keepCard(ctx, n)).join('') || `<p class="sa-empty">${e(k(archived ? 'There are no archived notes' : 'Take a note'))}</p>`}</div></div>${keepDialog(ctx, k)}</div>`;
   }
 
@@ -273,8 +275,8 @@
       return [{action: 'maps-clear', title: mp('Clear map')}, {action: 'mps-settings', id: 'places', title: mp('My Places')}, {action: 'mps-settings', id: 'settings', title: mp('Settings')}, {action: 'sa-unsupported', title: mp('Help')}];
     }
     if (view === 'youtube') { const y = key => S(ctx, 'youtube', key); return ctx.ui?.sub === 'video' ? [{action: 'yt4-rate', id: 'like', title: y('Like')}, {action: 'yt4-rate', id: 'dislike', title: y('Dislike')}, {action: 'yt4-copy', title: y('Copy URL')}, {action: 'sa-unsupported', title: y('Flag')}] : [{action: 'yt4-settings', title: y('Settings')}, {action: 'sa-unsupported', title: y('Feedback')}, {action: 'sa-unsupported', title: y('Help')}]; }
-    if (view === 'keep' && ctx.ui?.sub !== 'note') { const k = key => S(ctx, 'keep', key); return [{action: 'keep-columns', title: k(ctx.data?.keepSingle ? 'Multi-column view' : 'Single-column view')}, {action: 'keep-refresh', title: k('Refresh')}, {action: 'keep-archived', title: k('Archived notes')}, {action: 'sa-unsupported', title: k('Settings')}, {action: 'sa-unsupported', title: k('Send feedback')}, {action: 'sa-unsupported', title: k('Help')}]; }
-    if (view === 'keep') { const k = key => S(ctx, 'keep', key), note = (ctx.data?.keepNotes || []).find(n => n.id === ctx.ui.keepNote); return [{action: 'keep-archive', title: k(note?.archived ? 'Unarchive' : 'Archive')}, {action: 'keep-delete', title: k('Delete')}, {action: 'keep-checkboxes', title: k(note?.list ? 'Hide checkboxes' : 'Show checkboxes')}, {action: 'sa-unsupported', title: k('Share')}, {action: 'sa-unsupported', title: k('Settings')}, {action: 'sa-unsupported', title: k('Send feedback')}, {action: 'sa-unsupported', title: k('Help')}]; }
+    if (view === 'keep' && ctx.ui?.sub !== 'note') { const k = key => S(ctx, 'keep', key); return [{action: 'keep-columns', title: k(ctx.data?.keepSingle ? 'Multi-column view' : 'Single-column view')}, {action: 'keep-refresh', title: k('Refresh')}, {action: 'keep-archived', title: k('Archived notes')}, {action: 'kp-settings', title: k('Settings')}, {action: 'sa-unsupported', title: k('Send feedback')}, {action: 'sa-unsupported', title: k('Help')}]; }
+    if (view === 'keep') { const k = key => S(ctx, 'keep', key), note = (ctx.data?.keepNotes || []).find(n => n.id === ctx.ui.keepNote); return [{action: 'keep-archive', title: k(note?.archived ? 'Unarchive' : 'Archive')}, {action: 'keep-delete', title: k('Delete')}, {action: 'keep-checkboxes', title: k(note?.list ? 'Hide checkboxes' : 'Show checkboxes')}, {action: 'kp-share', title: k('Share')}, {action: 'kp-settings', title: k('Settings')}, {action: 'sa-unsupported', title: k('Send feedback')}, {action: 'sa-unsupported', title: k('Help')}]; }
     // webview_menu.xml on a story (Share story); main_menu.xml's Settings otherwise, none on the settings themselves.
     if (view === 'news-weather') return ctx.ui?.newsSub === 'settings' ? [] : ctx.ui?.newsSub === 'story' ? [{action: 'news-share', title: S(ctx, 'news', 'Share story')}] : [{action: 'news-settings', title: S(ctx, 'news', 'Settings')}];
     return [];

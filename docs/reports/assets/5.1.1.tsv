@@ -754,6 +754,8 @@ versions/5.1.1/assets/kp3-ic_material_sharing_person_dark.png	2df072d018b50177	c
 versions/5.1.1/assets/kp3-ic_material_trash_black.png	6b4a3868f6bb5e01	copy	shamu:/system/app/PrebuiltKeep/PrebuiltKeep.apk!res/drawable-xhdpi-v4/ic_material_trash_black.png	drawable-xhdpi-v4		6b4a3868f6bb5e01
 versions/5.1.1/assets/kp3-ic_material_unarchive_light.png	f5d9c51b413c0a65	copy	shamu:/system/app/PrebuiltKeep/PrebuiltKeep.apk!res/drawable-xhdpi-v4/ic_material_unarchive_light.png	drawable-xhdpi-v4		f5d9c51b413c0a65
 versions/5.1.1/assets/kp3-note_shadow.png	a8e9e82dd57572e2	copy	shamu:/system/app/PrebuiltKeep/PrebuiltKeep.apk!res/drawable-xhdpi-v4/note_shadow.9.png	drawable-xhdpi-v4		a8e9e82dd57572e2
+versions/5.1.1/assets/kp3-pause.png	632fe6b71a60bfc3	copy	shamu:/system/app/PrebuiltKeep/PrebuiltKeep.apk!res/drawable-xhdpi-v4/ic_pause_dark.png	drawable-xhdpi-v4		632fe6b71a60bfc3
+versions/5.1.1/assets/kp3-play.png	9a437f1320fe3814	copy	shamu:/system/app/PrebuiltKeep/PrebuiltKeep.apk!res/drawable-xhdpi-v4/ic_play_dark.png	drawable-xhdpi-v4		9a437f1320fe3814
 versions/5.1.1/assets/kp3-search_filter_bar.png	c25567eaee86920c	copy	shamu:/system/app/PrebuiltKeep/PrebuiltKeep.apk!res/drawable-xhdpi-v4/search_filter_bar.9.png	drawable-xhdpi-v4		c25567eaee86920c
 versions/5.1.1/assets/kwp-ic_actionbar_accept.png	3841d19660d35641	same pixels	shamu:/system/priv-app/Velvet/Velvet.apk!res/drawable-xhdpi-v4/ic_actionbar_accept.png	drawable-xhdpi-v4		e6adf1c335a0c427
 versions/5.1.1/assets/kwp-ic_cab_done_holo_dark.png	afaf09d449755fa9	same pixels	shamu:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/ic_cab_done_holo_dark.png	drawable-xxhdpi-v4		fbc11c6893d82521

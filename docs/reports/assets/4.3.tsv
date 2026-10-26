@@ -618,6 +618,8 @@ versions/4.3/assets/kp-ic_note_dark.png	b10bbdf3fc88c9ad	copy	mako:/system/app/K
 versions/4.3/assets/kp-ic_unchecked_dark.png	91caae97c0877360	copy	mako:/system/app/Keep.apk!res/drawable-xhdpi/ic_unchecked_dark.png	drawable-xhdpi		91caae97c0877360
 versions/4.3/assets/kp-note_shadow.png	6bebfb0c56683a61	copy	mako:/system/app/Keep.apk!res/drawable-xhdpi/note_shadow.9.png	drawable-xhdpi		6bebfb0c56683a61
 versions/4.3/assets/kp-note_shadow_activated.png	b9c6fe3b76fa42ac	copy	mako:/system/app/Keep.apk!res/drawable-xhdpi/note_shadow_activated.9.png	drawable-xhdpi		b9c6fe3b76fa42ac
+versions/4.3/assets/kp-pause.png	632fe6b71a60bfc3	copy	mako:/system/app/Keep.apk!res/drawable-xhdpi/ic_pause_dark.png	drawable-xhdpi		632fe6b71a60bfc3
+versions/4.3/assets/kp-play.png	9a437f1320fe3814	copy	mako:/system/app/Keep.apk!res/drawable-xhdpi/ic_play_dark.png	drawable-xhdpi		9a437f1320fe3814
 versions/4.3/assets/kp-quick_edit_shadow.png	6bebfb0c56683a61	copy	mako:/system/app/Keep.apk!res/drawable-xhdpi/quick_edit_shadow.9.png	drawable-xhdpi		6bebfb0c56683a61
 versions/4.3/assets/landing-home.jpg	9b9cc7164ae7a955	own	capture of the simulator's own home screen for the landing page card			
 versions/4.3/assets/launcher-ic_home_voice_search_holo.png	85c35aea1483bb05	resized	mako:/system/app/Launcher2.apk!res/drawable-xhdpi/ic_home_voice_search_holo.png	drawable-xhdpi	resized 44×64 → 33×48, mean difference 0.77	42c4dda28a5042e0

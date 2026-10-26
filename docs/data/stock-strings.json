@@ -153,6 +153,17 @@
    "Silent": "framework:ringtone_silent"
   },
   "keep": {
+   "Voice recording": "Keep:voice_recording_icon_text",
+   "Play": "Keep:play_voice_recording",
+   "Remove voice recording?": "Keep:remove_voice_recording",
+   "Share note": "Keep:share_note",
+   "Switch accounts": "Keep:switch_accounts_dialog_button",
+   "Sync is on": "Keep:sync_setting_on",
+   "Sync is off": "Keep:sync_setting_off",
+   "About Google Keep": "Keep:activity_about",
+   "Version %s": "Keep:version",
+   "You can see your notes at": "Keep:website_title",
+   "drive.google.com/keep": "Keep:website_link",
    "Keep": "Keep:app_name",
    "Add quick note": "Keep:add_quick_note_hint",
    "Take a note": "Keep:empty_view_no_notes",
@@ -1653,6 +1664,17 @@
    "Route options": "Maps:DIRECTIONS_OPTIONS_MENU_ITEM_FOR_DRIVING"
   },
   "keep": {
+   "Voice recording": "Keep:voice_recording_icon_text",
+   "Play": "Keep:play_voice_recording",
+   "Remove voice recording?": "Keep:remove_voice_recording",
+   "Share note": "Keep:share_note",
+   "Switch accounts": "Keep:switch_accounts_dialog_button",
+   "Sync is on": "Keep:sync_setting_on",
+   "Sync is off": "Keep:sync_setting_off",
+   "About Google Keep": "Keep:activity_about",
+   "Version %s": "Keep:version",
+   "You can see your notes at": "Keep:website_title",
+   "drive.google.com/keep": "Keep:website_link",
    "Keep": "Keep:app_name",
    "Add quick note": "Keep:add_quick_note_hint",
    "New note": "Keep:menu_new_note",
@@ -3247,6 +3269,10 @@
    "Switch to light theme": "PrebuiltNewsWeather:menu_switch_theme_light"
   },
   "keep": {
+   "Voice recording": "PrebuiltKeep:voice_recording_icon_text",
+   "Play": "PrebuiltKeep:play_voice_recording",
+   "Remove voice recording?": "PrebuiltKeep:remove_voice_recording",
+   "Send note": "PrebuiltKeep:send_note",
    "Keep": "PrebuiltKeep:app_name",
    "Add quick note": "PrebuiltKeep:add_quick_note_hint",
    "New note": "PrebuiltKeep:menu_new_note",

@@ -439,6 +439,17 @@ window.StockStrings = {
   "Route options": {"res": "Maps:DIRECTIONS_OPTIONS_MENU_ITEM_FOR_DRIVING", "hu": "Útvonalopciók", "de": "Routenoptionen", "fr": "Options d'itinéraire", "es": "Opciones de ruta"}
  },
  "keep": {
+  "Voice recording": {"res": "Keep:voice_recording_icon_text", "hu": "Hangfelvétel", "de": "Sprachaufnahme", "fr": "Enregistrement vocal", "es": "Grabación de voz"},
+  "Play": {"res": "Keep:play_voice_recording", "hu": "Google Play", "de": "Anhören", "fr": "Lire", "es": "Google Play"},
+  "Remove voice recording?": {"res": "Keep:remove_voice_recording", "hu": "Eltávolítja a hangfelvételt?", "de": "Sprachaufnahme entfernen?", "fr": "Supprimer l'enregistrement vocal ?", "es": "¿Quieres eliminar la grabación de voz?"},
+  "Share note": {"res": "Keep:share_note", "hu": "Megosztás", "de": "Notiz teilen", "fr": "Partager la note", "es": "Compartir nota"},
+  "Switch accounts": {"res": "Keep:switch_accounts_dialog_button", "hu": "Fiókváltás", "de": "Konto wechseln", "fr": "Changer de compte", "es": "Cambiar cuenta"},
+  "Sync is on": {"res": "Keep:sync_setting_on", "hu": "Szinkronizálás bekapcsolva", "de": "Synchronisierung ist aktiviert.", "fr": "Synchronisation activée", "es": "Sincronización activada"},
+  "Sync is off": {"res": "Keep:sync_setting_off", "hu": "Szinkronizálás kikapcsolva", "de": "Synchronisierung ist deaktiviert.", "fr": "Synchronisation désactivée", "es": "Sincronización desactivada"},
+  "About Google Keep": {"res": "Keep:activity_about", "hu": "A Google Keep névjegye", "de": "Über Google Keep", "fr": "À propos de Google Keep", "es": "Información de Google Keep"},
+  "Version %s": {"res": "Keep:version", "hu": "Verzió: %s", "de": "Version %s", "fr": "Version %s", "es": "Versión %s"},
+  "You can see your notes at": {"res": "Keep:website_title", "hu": "Jegyzeteit megtekintheti itt:", "de": "Sie finden Ihre Notizen unter", "fr": "Consultez vos notes sur", "es": "Puedes ver tus notas en"},
+  "drive.google.com/keep": {"res": "Keep:website_link", "hu": "drive.google.com/keep", "de": "drive.google.com/keep", "fr": "drive.google.com/keep", "es": "drive.google.com/keep"},
   "Keep": {"res": "Keep:app_name", "hu": "Keep", "de": "Keep", "fr": "Keep", "es": "Keep"},
   "Add quick note": {"res": "Keep:add_quick_note_hint", "hu": "Rövid üzenet hozzáadása", "de": "Kurze Notiz hinzufügen", "fr": "Ajouter une note rapide", "es": "Añadir nota rápida"},
   "New note": {"res": "Keep:menu_new_note", "hu": "Új jegyzet", "de": "Neue Notiz", "fr": "Nouvelle note", "es": "Nueva nota"},

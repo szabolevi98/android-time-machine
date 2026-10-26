@@ -1,0 +1,16 @@
+/* __VERSION__ __KEEP__: editor_audio_player.xml, settings.xml and the native preference rows. */
+.kpm .sa-bar{background:__BAR__;color:__INK__;flex:none}
+.kpm .sa-title{font-size:18px;font-weight:400}
+.kpm-row{display:flex;align-items:center;gap:16px;width:100%;min-height:56px;padding:12px 16px;border:0;border-bottom:1px solid #ddd;background:transparent;text-align:left;color:#333;font:400 16px Roboto,sans-serif}
+.kpm-row small{display:block;font-size:14px;color:#777;margin-top:5px}
+.kpm-row img{width:32px;height:32px;object-fit:contain}
+.kpm-about{padding:32px 16px;text-align:center;color:#333}
+.kpm-about>img{width:64px;height:64px}
+.kpm-audio{display:flex;align-items:center;gap:8px;min-height:48px;margin:8px;border:1px solid #0004;color:#0009}
+.kpm-audio button{flex:none;width:40px;height:44px;border:0;border-right:1px solid #0003;background:transparent}
+.kpm-audio button img{width:28px;height:28px;object-fit:contain}
+.kpm-audio progress{flex:1;min-width:0;width:40px;height:4px;accent-color:__ACCENT__}
+.kpm-audio span{font-size:12px}
+.kpm-audio button:last-child{border:0;border-left:1px solid #0003}
+.kpm-card-audio{display:flex;align-items:center;gap:8px;padding:8px;font-size:12px}
+.kpm-card-audio img{width:24px;height:24px;object-fit:contain}

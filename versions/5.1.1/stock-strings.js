@@ -331,6 +331,10 @@ window.StockStrings = {
   "Switch to light theme": {"res": "PrebuiltNewsWeather:menu_switch_theme_light", "hu": "Váltás világos témára", "de": "Zum hellen Design wechseln", "fr": "Passer au thème clair", "es": "Cambiar a tema claro"}
  },
  "keep": {
+  "Voice recording": {"res": "PrebuiltKeep:voice_recording_icon_text", "hu": "Hangfelvétel", "de": "Sprachaufnahme", "fr": "Enregistrement vocal", "es": "Grabación de voz"},
+  "Play": {"res": "PrebuiltKeep:play_voice_recording", "hu": "Google Play", "de": "Anhören", "fr": "Lire", "es": "Google Play"},
+  "Remove voice recording?": {"res": "PrebuiltKeep:remove_voice_recording", "hu": "Törli a hangfelvételt?", "de": "Sprachaufnahme löschen?", "fr": "Supprimer l'enregistrement vocal ?", "es": "¿Eliminar grabación de voz?", "en": "Delete voice recording?"},
+  "Send note": {"res": "PrebuiltKeep:send_note", "hu": "Jegyzet küldése", "de": "Notiz senden", "fr": "Envoyer la note", "es": "Enviar nota"},
   "Keep": {"res": "PrebuiltKeep:app_name", "hu": "Keep", "de": "Notizen", "fr": "Keep", "es": "Keep"},
   "Add quick note": {"res": "PrebuiltKeep:add_quick_note_hint", "hu": "Rövid jegyzet hozzáadása", "de": "Notiz hinzufügen", "fr": "Ajouter une note", "es": "Añadir una nota rápida"},
   "New note": {"res": "PrebuiltKeep:menu_new_note", "hu": "Új jegyzet", "de": "Neue Notiz", "fr": "Nouvelle note", "es": "Nueva nota"},

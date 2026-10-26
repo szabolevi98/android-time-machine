@@ -370,6 +370,8 @@
     }
   }
   function render() {
+    if(ui.view!=='keep')window.KeepMore?.leave(ui);
+    if(ui.kpSyncReturn&&(ui.view!=='settings'||ui.sub!=='sync-google'))ui.kpSyncReturn=false;
     updateBarMode();
     viewport.querySelectorAll('.home-widget .calw-list').forEach(list => { (ui.widgetScroll ||= {})[list.closest('.home-widget').dataset.widgetId] = list.scrollTop; });
     if(ui.locked)ui.view='lock';
@@ -841,6 +843,8 @@
     if (ui.view === 'youtube' && ui.sub === 'video' && ui.ytFrom === 'results') { ui.sub = 'results'; ui.ytFrom = ''; render(); return; }
     if (ui.gnowSpin) { ui.gnowSpin = ''; render(); return; }
     if (ui.gnowDraft || ui.gnowDialog) { ui.gnowDraft = null; ui.gnowDialog = ''; render(); return; }
+    if(ui.view==='keep' && KeepMore.back(keepMoreContext()))return;
+    if(ui.view==='settings' && ui.kpSyncReturn && ui.sub==='sync-google'){ui.kpSyncReturn=false;openApp('keep',true);ui.kpScreen='settings';render();return;}
     if (ui.view === 'keep' && ui.keepDialog) { ui.keepDialog = ''; render(); return; }
     if (StockApps.APPS.includes(ui.view) && ui.sub) { if (ui.view === 'keep') saveKeepNote(true); ui.sub = ''; render(); return; }
     // Play Books' reader: a dropdown, then the Display options popup, then Contents close before the reader does.
@@ -1209,6 +1213,7 @@
     if (s === 'beam') return appView('Android Beam', `${wirelessCheckRow('Android Beam', 'Ready to transmit app content via NFC', 'androidBeam')}`, 'wireless-more');
     if (s === 'brightness') return appView('Brightness', `<div class="detail-pad"><h3>Brightness</h3><input type="range" min="10" max="100" value="${data.settings.brightness}" data-field="brightness" aria-label="Brightness"><p>${data.settings.brightness}%</p></div>`);
     if (s === 'sync') return appView('Accounts & sync', `${toggleRow('Auto-sync', 'Sync app data automatically', 'autoSync', '↻')}${label('ACCOUNTS')}${row('Google', 'demo@android.local', 'settings-sub', 'sync-google', '◎')}${row('Add account', '', 'toast', 'Demo account already added', '<img src="assets/setting-add-account.png" alt="">')}`);
+    if(s==='sync-google'&&ui.kpSyncReturn)return appView('Google',KeepMore.syncPage(keepMoreContext()));
     if (s === 'sync-google') return appView('Google', `<div class="detail-pad"><h3>demo@android.local</h3><p>Sample account data is stored only in this browser.</p></div>${row('Sync Gmail', 'Last synced today', 'noop', '', '✉')}${row('Sync Calendar', 'Last synced today', 'noop', '', '▦')}${row('Sync Contacts', 'Last synced today', 'noop', '', '◉')}`);
     if (s === 'location') {
       const on = data.settings.locationAccess !== false, mode = locationMode();
@@ -1658,6 +1663,11 @@
     clearTimeout(voiceTimer); ui.voiceState = 'listening'; if (ui.view === 'voice-search') render();
     voiceTimer = setTimeout(() => { ui.voiceState = 'retry'; if (ui.view === 'voice-search') render(); }, 3000);
   }
+  const keepMoreContext=()=>({data,ui,t:key=>i18n.t(key),locale:i18n.locale(),account:GmailApp.account,save,render,renderOverlay,saveNote:saveKeepNote,
+    sync(){ui.kpScreen='';openApp('settings');ui.kpSyncReturn=true;ui.sub='sync-google';render();},
+    website(url){ui.kpScreen='';openApp('chrome');navigateBrowser(url);},
+    send(app,spec){ui.kpScreen='';ui.overlay='';renderOverlay();openApp(app);composeEmail();const draft=(app==='gmail'?data.gmailbox:data.mailbox).find(m=>m.id===ui.emailId);if(draft){draft.body=spec.text;draft.subject=spec.text.split('\n')[0]||'';if(spec.audio)draft.attachment={...clone(spec.audio),kind:'audio',vcard:true};else if(spec.photo)draft.attachment=clone(data.photos.find(p=>p.id===spec.photo));}save();render();}
+  });
   const keepCurrent = () => (data.keepNotes || []).find(item => item.id === ui.keepNote);
   // Keeps the editor's text; on leaving, empty list items go and a note without text, items or picture is dropped.
   function saveKeepNote(leaving) {
@@ -1665,7 +1675,7 @@
     if (!note) return;
     if (area) note.text = area.value;
     if (leaving && note.list) note.list = note.list.filter(item => item.text.trim());
-    if (leaving && !String(note.text || '').trim() && !(note.list || []).length && !note.photo) data.keepNotes = data.keepNotes.filter(item => item !== note);
+    if (leaving && !String(note.text || '').trim() && !(note.list || []).length && !note.photo && !note.audio) data.keepNotes = data.keepNotes.filter(item => item !== note);
     save();
   }
   // A picture goes to the open note, or starts a new picture note from the browse bar.
@@ -1866,6 +1876,7 @@
         render(); if (result.toast) toast(result.toast); return;
       }
     }
+    if(action.startsWith('kp-') && KeepMore.handle(action,id,keepMoreContext()))return;
     if (action.startsWith('cpref-') && ui.view === 'clock') {
       const result = ClockPrefs.handle(action, id, {data, ui});
       if (['cpref-main', 'jbclock-cities-menu'].includes(ui.overlay)) { ui.overlay = ''; renderOverlay(); }

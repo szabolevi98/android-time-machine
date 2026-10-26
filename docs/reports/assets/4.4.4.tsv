@@ -699,6 +699,8 @@ versions/4.4.4/assets/kp2-ic_reminder_dark.png	336490cc3385ec25	copy	hammerhead:
 versions/4.4.4/assets/kp2-ic_unchecked_dark.png	5048413782a72b37	copy	hammerhead:/system/app/Keep.apk!res/drawable-xxhdpi/ic_unchecked_dark.png	drawable-xxhdpi		5048413782a72b37
 versions/4.4.4/assets/kp2-note_shadow.png	4b6a0fe08c4a5e1b	copy	hammerhead:/system/app/Keep.apk!res/drawable-xhdpi/note_shadow.9.png	drawable-xhdpi		4b6a0fe08c4a5e1b
 versions/4.4.4/assets/kp2-note_shadow_activated.png	b9c6fe3b76fa42ac	copy	hammerhead:/system/app/Keep.apk!res/drawable-xhdpi/note_shadow_activated.9.png	drawable-xhdpi		b9c6fe3b76fa42ac
+versions/4.4.4/assets/kp2-pause.png	632fe6b71a60bfc3	copy	hammerhead:/system/app/Keep.apk!res/drawable-xhdpi/ic_pause_dark.png	drawable-xhdpi		632fe6b71a60bfc3
+versions/4.4.4/assets/kp2-play.png	9a437f1320fe3814	copy	hammerhead:/system/app/Keep.apk!res/drawable-xhdpi/ic_play_dark.png	drawable-xhdpi		9a437f1320fe3814
 versions/4.4.4/assets/kp2-quick_edit_shadow.png	6bebfb0c56683a61	copy	hammerhead:/system/app/Keep.apk!res/drawable-xhdpi/quick_edit_shadow.9.png	drawable-xhdpi		6bebfb0c56683a61
 versions/4.4.4/assets/kwp-ic_actionbar_accept.png	3841d19660d35641	same pixels	hammerhead:/system/priv-app/Velvet.apk!res/drawable-xhdpi/ic_actionbar_accept.png	drawable-xhdpi		e6adf1c335a0c427
 versions/4.4.4/assets/kwp-ic_cab_done_holo_dark.png	afaf09d449755fa9	same pixels	hammerhead:/system/app/Books.apk!res/drawable-xxhdpi/ic_cab_done_holo_dark.png	drawable-xxhdpi		fbc11c6893d82521
