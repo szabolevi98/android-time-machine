@@ -227,7 +227,7 @@ APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<sl
 
 #### T52 — Docs, Sheets, Slides a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `aef26242`. Telepítettként: 6.0.1 Docs 1.6.292.13, Sheets 1.6.502.06 (az APKMirror 2016-os hiánya miatt a 2017. januári), Slides 1.6.352.16 (`mm-editors.js`); 7.1.2 Docs 1.7.212.02, Sheets 1.7.212.03, Slides 1.7.212.01 (`ng-editors.js`), egy sablonból (`docs/templates/editors-play.*`, `docs/tools/editors-play.py`) a saját APK szövegeivel és ikonjaival, a Drive fájljain (`data.driveFiles`): üdvözlő nézet, lista / rács, Sort by, Search, fiók (Recent, Shared with me, Starred, Offline, Trash, Settings, Help & feedback, Google Drive), FAB menü új fájllal, fájlmenü (Share link, Send file, Available offline, Rename, Remove; a Kukában Restore és Delete), Settings; megnyitva szerkesztés gombbal a dokumentum szövege, a táblázat cellái (A–F, 30 sor), a prezentáció diái (Add slide). Sablonok, Open with, Download, Move, Add to Home screen, Print: elutasítás. Ellenőrzés: `tests/browser/play-editors.mjs` (mindkét verzió, telefonos szélesség is), `npm test`.
 
 #### T53 — Fit a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
