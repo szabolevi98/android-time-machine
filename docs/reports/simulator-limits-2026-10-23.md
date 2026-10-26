@@ -249,7 +249,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T14 — 2.3.6 Zene helyi fájlműveletei
 
 - **Ütem:** Második kör, #27. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `c1fe7697`. 2.3.6 Zene: a dal kontextusmenüjében és a lejátszó menüjében a Use as (phone) ringtone a Beállítások csengőhangjává teszi a dalt (ringtone_set toast, a választóban is megjelenik); a Delete a DeleteItems megerősítés (delete_song_desc_nosdcard, OK/Cancel) után törli a könyvtárból, a sorból és a lejátszási listákból (MediaPlaybackService.removeTrack: a következő dal jön, üres sornál megáll, a lejátszó bezárul); törölt csengőhang az alapértelmezettre esik vissza. Teszt: limits-regression T14.
 - **Verziók:** 2.3.6.
 - **Forráscsoportok:** 2.3.6-09.
 - **Elkészítendő és határ:** Use as ringtone és Delete a szám/lejátszó menüjében; a helyi demókönyvtár módosítása és a Beállítások csengőhangértékének összekötése.
@@ -285,7 +285,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T18 — Books helyi könyvtári műveletek
 
 - **Ütem:** Második kör, #25. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `c1fe7697`. 2.3.6: az olvasó About menüje a könyv Google Books oldalát nyitja a Böngészőben; a Manage eBooks a könyvtárat downloads_item_volume sorokkal listázza (tű: pin_toast/unpin_toast, kuka: megerősítés, Remove). 4.0.4 Play Books: SearchView helyi javaslatokkal és Search online-nal, a cím About-popupja (about_the_book_popup), About the book a Play Store-ban, Share választó (share_subject + books.google.com/books?id=…), bejelölhető Available offline, Read aloud (speechSynthesis, az olvasóból kilépve leáll), Refresh (állapotsori szinkronikon), Make available offline (tűk csak ilyenkor, manage_offline_view panel, %s FREE). Teszt: limits-regression T18 (2.3.6, 4.0.4; mindkét szélesség).
 - **Verziók:** 2.3.6, 4.0.4.
 - **Forráscsoportok:** 2.3.6-18, 4.0.4-10.
 - **Elkészítendő és határ:** 2.3.6 About és Manage eBooks helyi könyvkezelő. 4.0.4 Search, About the book, Share, Available offline/Make available offline, Read aloud és Refresh. A valódi áruházi beszerzés, Accounts és Help nem része; Read aloud a demószöveget használja és megállítható.
@@ -541,7 +541,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T46 — Gmail helyi About oldal
 
 - **Ütem:** Második kör, #26. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `c1fe7697`. A 4.3 (Gmail 4.5.1-776638) és 4.4.4 (4.6.1 (1227136)) About Gmail sora az AboutFragment oldalát nyitja: logó, Version, ©év, Send feedback csak a Google Feedbacket tartalmazó Nexus 4 image-en, about_desc, Open source licenses (az APK res/raw/licenses.html-je), Privacy Policy (külső link, korlát marad). 5.1.1-hez nem nyúltunk. Teszt: limits-regression T46.
 - **Verziók:** 4.3, 4.4.4.
 - **Forráscsoportok:** 4.3-05, 4.4.4-05.
 - **Elkészítendő és határ:** 4.3 Gmail 4.5.1 és 4.4.4 Gmail 4.6.1: a már kirajzolt About Gmail sor helyi verzió/build oldala. 5.1.1-en a headers csak general/account, ezért ott nincs About feladat és nem kerül be új menüpont. Welcome/Learn more és külső jogi/súgólink marad korlát.
