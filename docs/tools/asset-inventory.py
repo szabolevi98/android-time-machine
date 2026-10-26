@@ -120,17 +120,18 @@ def declared_raw(img, filename, data):
     return None
 
 
-def image(device, density='mdpi'):
+def image(device, density='mdpi', play=True):
     # Kept per density: an image is the own one of its version (its density first) and another's (mdpi first), and a
-    # run over several versions must trace each as a run over that version alone does.
-    if (device, density) not in LOADED: LOADED[device, density] = Image_(device, density)
-    return LOADED[device, density]
+    # run over several versions must trace each as a run over that version alone does. The apps installed from Play
+    # belong to their own version only (play=False for another version's image).
+    if (device, density, play) not in LOADED: LOADED[device, density, play] = Image_(device, density, play)
+    return LOADED[device, density, play]
 
 
 class Image_:
     """The image's files of one device, by content and by resource name."""
-    def __init__(self, device, density):
-        self.device, self.density, self.rows = device, density, index(device)
+    def __init__(self, device, density, play=True):
+        self.device, self.density, self.rows = device, density, [r for r in index(device) if play or not r[0].startswith('../playapps/')]
         self.by_sha, self.by_name, self.zips = {}, {}, {}
         for row in self.rows:
             # An empty file of the image (the 6P's 0-byte gesture videos) traces nothing.
@@ -312,7 +313,7 @@ def trace(own, path, data):
             row = next((r for r in own.rows if r[0] == apk and r[1] == entry), None)
             if row: return 'vector', own, row, 'vector drawable drawn as SVG (declared APK and configuration)'
     # The others in release order, so a later image (the 5X joined last) never takes a file an earlier one traced first.
-    images = [own] + [image(d) for d in RELEASES if d != own.device]
+    images = [own] + [image(d, play=False) for d in RELEASES if d != own.device]
     for img in images:
         if digest in img.by_sha: return 'copy', img, sorted(img.by_sha[digest], key=lambda r: img.rank(r, names))[0], ''
     if re.match(r'boot-part\d+\.webp$', file):

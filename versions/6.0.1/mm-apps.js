@@ -575,6 +575,28 @@ MM.appsData = {
 "targetSdk": 23,
 "res": "bullhead:priv-app/Velvet/Velvet.apk:res/mipmap-xxxhdpi-v4/ic_launcher_google_search.png"
 },
+"docs": {
+"pkg": "com.google.android.apps.docs.editors.docs",
+"cls": "com.google.android.apps.docs.app.NewMainProxyActivity",
+"label": {
+"en": "Docs",
+"de": "Docs",
+"fr": "Docs",
+"es": "Documentos",
+"hu": "Dokumentumok"
+},
+"icon": "assets/app-docs.png",
+"color": "#4285f4",
+"version": "1.6.292.13.30",
+"codeSize": 41216264,
+"permGroups": [
+"contacts",
+"storage"
+],
+"targetSdk": 24,
+"res": "bullhead:playapps/Docs.apk:res/mipmap-xxxhdpi-v4/quantum_logo_docs_launcher_color_48.png",
+"installed": true
+},
 "earth": {
 "pkg": "com.google.earth",
 "cls": "com.google.earth.EarthActivity",
@@ -620,6 +642,53 @@ MM.appsData = {
 ],
 "targetSdk": 23,
 "res": "bullhead:playapps/Keep.apk:res/mipmap-xxxhdpi-v4/ic_launcher.png",
+"installed": true
+},
+"sheets": {
+"pkg": "com.google.android.apps.docs.editors.sheets",
+"cls": "com.google.android.apps.docs.app.NewMainProxyActivity",
+"label": {
+"en": "Sheets",
+"de": "Tabellen",
+"fr": "Sheets",
+"es": "Hojas de cálculo",
+"hu": "Táblázatok"
+},
+"icon": "assets/app-sheets.png",
+"color": "#0f9d58",
+"version": "1.6.502.06.30",
+"codeSize": 51012319,
+"permGroups": [
+"contacts",
+"storage"
+],
+"targetSdk": 25,
+"res": "bullhead:playapps/Sheets.apk:res/mipmap-xxxhdpi-v4/quantum_logo_sheets_launcher_color_48.png",
+"installed": true
+},
+"slides": {
+"pkg": "com.google.android.apps.docs.editors.slides",
+"cls": "com.google.android.apps.docs.app.NewMainProxyActivity",
+"label": {
+"en": "Slides",
+"de": "Präsentationen",
+"fr": "Slides",
+"es": "Presentaciones",
+"hu": "Diák"
+},
+"icon": "assets/app-slides.png",
+"color": "#f4b400",
+"version": "1.6.352.16.30",
+"codeSize": 56566957,
+"permGroups": [
+"calendar",
+"camera",
+"contacts",
+"microphone",
+"storage"
+],
+"targetSdk": 24,
+"res": "bullhead:playapps/Slides.apk:res/mipmap-xxxhdpi-v4/quantum_logo_slides_launcher_color_48.png",
 "installed": true
 }
 };

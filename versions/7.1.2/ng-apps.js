@@ -581,6 +581,28 @@ NG.appsData = {
 "targetSdk": 24,
 "res": "angler:priv-app/Velvet/Velvet.apk:res/mipmap-xxxhdpi-v4/ic_launcher_google_search.png"
 },
+"docs": {
+"pkg": "com.google.android.apps.docs.editors.docs",
+"cls": "com.google.android.apps.docs.app.NewMainProxyActivity",
+"label": {
+"en": "Docs",
+"de": "Docs",
+"fr": "Docs",
+"es": "Documentos",
+"hu": "Dokumentumok"
+},
+"icon": "assets/app-docs.png",
+"color": "#4285f4",
+"version": "1.7.212.02.30",
+"codeSize": 40438483,
+"permGroups": [
+"contacts",
+"storage"
+],
+"targetSdk": 25,
+"res": "angler:playapps/Docs.apk:res/mipmap-xxxhdpi-v4/quantum_logo_docs_launcher_color_48.png",
+"installed": true
+},
 "earth": {
 "pkg": "com.google.earth",
 "cls": "com.google.android.apps.earth.EarthActivity",
@@ -626,6 +648,53 @@ NG.appsData = {
 ],
 "targetSdk": 25,
 "res": "angler:playapps/Keep.apk:res/mipmap-xxxhdpi-v4/product_logo_keep_launcher_color_48.png",
+"installed": true
+},
+"sheets": {
+"pkg": "com.google.android.apps.docs.editors.sheets",
+"cls": "com.google.android.apps.docs.app.NewMainProxyActivity",
+"label": {
+"en": "Sheets",
+"de": "Tabellen",
+"fr": "Sheets",
+"es": "Hojas de cálculo",
+"hu": "Táblázatok"
+},
+"icon": "assets/app-sheets.png",
+"color": "#0f9d58",
+"version": "1.7.212.03.30",
+"codeSize": 45186308,
+"permGroups": [
+"contacts",
+"storage"
+],
+"targetSdk": 25,
+"res": "angler:playapps/Sheets.apk:res/mipmap-xxxhdpi-v4/quantum_logo_sheets_launcher_color_48.png",
+"installed": true
+},
+"slides": {
+"pkg": "com.google.android.apps.docs.editors.slides",
+"cls": "com.google.android.apps.docs.app.NewMainProxyActivity",
+"label": {
+"en": "Slides",
+"de": "Präsentationen",
+"fr": "Slides",
+"es": "Presentaciones",
+"hu": "Diák"
+},
+"icon": "assets/app-slides.png",
+"color": "#f4b400",
+"version": "1.7.212.01.30",
+"codeSize": 55595525,
+"permGroups": [
+"calendar",
+"camera",
+"contacts",
+"microphone",
+"storage"
+],
+"targetSdk": 25,
+"res": "angler:playapps/Slides.apk:res/mipmap-xxxhdpi-v4/quantum_logo_slides_launcher_color_48.png",
 "installed": true
 }
 };

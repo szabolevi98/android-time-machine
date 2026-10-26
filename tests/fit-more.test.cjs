@@ -1,6 +1,8 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Fit 1.51 (T41): Add activity, Add your weight and Settings kept on the phone (fit-more.js).
+// Today's noon as now, so the sessions the test adds hours back stay on today whenever it runs (not yesterday after midnight).
+const noon=new Date().setHours(12,0,0,0);Date.now=()=>noon;
 const w={window:{},Intl,Date};vm.runInNewContext(['stock-strings.js','lp-extra-apps.js','fit-more.js'].map(f=>fs.readFileSync('versions/5.1.1/'+f,'utf8')).join('\n'),w);
 w.LPExtraApps=w.window.LPExtraApps;w.FitMore=w.window.FitMore;w.StockStrings=w.window.StockStrings;
 const X=w.window.LPExtraApps,M=w.window.FitMore,toasts=[];

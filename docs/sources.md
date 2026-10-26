@@ -197,6 +197,15 @@ docs/reports/simulator-limits-2026-10-23.md, "Negyedik kör".
 | 7.1.2 | Earth 9.0.4.2 | [earth-9-0-4-2-release](https://www.apkmirror.com/apk/google-inc/earth/earth-9-0-4-2-release/) (uploaded 2017-05-08) | armeabi-v7a, nodpi | `3128b1f7d67efe066d4edee8dcd527d36fb028ce997d7612f8d3377840c4e95b` |
 | 6.0.1 | Keep 3.3.315.0 | [keep-3-3-315-0-release](https://www.apkmirror.com/apk/google-inc/keep/keep-3-3-315-0-release/) (uploaded 2016-08-10) | armeabi-v7a, nodpi | `e10e7d61462b37996c2f9bff4c47d88815fa475a20d710c7227760d7ab163021` |
 | 7.1.2 | Keep 3.4.724.02 | [keep-3-4-724-02-release](https://www.apkmirror.com/apk/google-inc/keep/keep-3-4-724-02-release/) (uploaded 2017-05-18) | armeabi-v7a, nodpi | `35fd2d31f0e7db00c90c5d0d10d40370ebdb7f9a713e0f137ea89efefdad0cb3` |
+| 6.0.1 | Docs 1.6.292.13 | [docs-1-6-292-13-release](https://www.apkmirror.com/apk/google-inc/docs/docs-1-6-292-13-release/) (uploaded 2016-08-02) | armeabi-v7a, nodpi | `11b86ae76ee3d4b0745a4d2391d2dde6fd7553123f18e61df6ef2618ea271692` |
+| 6.0.1 | Sheets 1.6.502.06 | [sheets-1-6-502-06-release](https://www.apkmirror.com/apk/google-inc/sheets/sheets-1-6-502-06-release/) (uploaded 2017-01-06) | armeabi-v7a, nodpi | `0af0963a1c22859aee51ba0fa85f17f5802428bcdbcb30ac23ff3cc148c8da3a` |
+| 6.0.1 | Slides 1.6.352.16 | [slides-1-6-352-16-release](https://www.apkmirror.com/apk/google-inc/slides/slides-1-6-352-16-release/) (uploaded 2016-09-16) | armeabi-v7a, nodpi | `70a5e0cb8234a7bd0fcd5320649ca52b3719fd245107a226d41505abf04cb5ee` |
+| 7.1.2 | Docs 1.7.212.02 | [docs-1-7-212-02-release](https://www.apkmirror.com/apk/google-inc/docs/docs-1-7-212-02-release/) (uploaded 2017-06-01) | armeabi-v7a, nodpi | `0f9a2e7ec2c2fb814f3876eae680711eba3ed3edabbcc4fb43e2e6f3f59830a6` |
+| 7.1.2 | Sheets 1.7.212.03 | [sheets-1-7-212-03-release](https://www.apkmirror.com/apk/google-inc/sheets/sheets-1-7-212-03-release/) (uploaded 2017-06-01) | armeabi-v7a, nodpi | `6dfa2bef4822ca9c43ccdfa58133625e86457e5d4936f67ab0cc5aa850f5d09f` |
+| 7.1.2 | Slides 1.7.212.01 | [slides-1-7-212-01-release](https://www.apkmirror.com/apk/google-inc/slides/slides-1-7-212-01-release/) (uploaded 2017-06-02) | armeabi-v7a, nodpi | `eda23b06e046e598f028ccfc89cd398560fac180cf2bed82f2ca71012932d886` |
+
+Sheets on 6.0.1 is 1.6.502.06 (January 2017): APKMirror has no Sheets release between 1.4.492.11 and it, so the
+plan's fallback, the first one after the image's month, is used.
 
 The variant's native code does not matter here: the simulator reads the resources (layouts, strings, drawables,
 settings XML), which are the same in every nodpi variant. Each file is saved as `<Apk name>.apk` (GoogleEarth.apk);
