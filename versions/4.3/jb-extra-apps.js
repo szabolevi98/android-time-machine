@@ -44,12 +44,14 @@
   const action = (icon, label) => `<button class="kkx-btn" data-action="kkx-unavailable" aria-label="${e(label)}">${svg[icon]}</button>`;
   const row = (icon, label, sub = '', color = '#33b5e5') => `<button class="kkx-file" data-action="kkx-unavailable"><span class="kkx-file-icon" style="color:${color}">${svg[icon]}</span><span class="kkx-file-copy"><strong>${e(label)}</strong>${sub ? `<small>${e(sub)}</small>` : ''}</span></button>`;
   const tiles = (items, cls = '') => `<div class="jbx-grid ${cls}">${items.map(([title, color, sub = '']) => `<button class="jbx-tile" data-action="kkx-unavailable" style="--tile:${color}"><span class="jbx-tile-art">${e(title.charAt(0))}</span><strong>${e(title)}</strong>${sub ? `<small>${e(sub)}</small>` : ''}</button>`).join('')}</div>`;
-  function render(app, {ui, t, chats = [], contacts = []}) {
+  function render(app, {ui, t, chats = [], contacts = [], messenger}) {
     if (app === 'messenger') {
-      // Google+ 4.0's HostedMessengerFragment: onPrepareActionBar shows the title and the New conversation button.
-      const m = key => S('gplus', key, t), people = contacts.slice(0, 3);
-      const rows = people.map((p, i) => `<button class="msg-row" data-action="kkx-unavailable"><img src="assets/msg-ic_avatar.png" alt=""><span><b>${e(p.name)}</b><small>${e(['Saturday’s hike: who’s driving?', 'Photos from the meetup', 'See you at 11!'][i])}</small></span><time>${['10:24', '9:02', 'Mon'][i]}</time></button>`).join('');
-      return `<div class="app-view kkx-app msg40"><header class="sa-bar"><button class="sa-up" data-action="home" aria-label="${e(m('Messenger'))}"><img src="assets/messenger.png" alt=""></button><span class="sa-title"><b>${e(m('Messenger'))}</b></span><button class="msg-act" data-action="kkx-unavailable" aria-label="${e(m('New conversation'))}"><img src="assets/msg-ic_menu_start_new_huddle.png" alt=""></button><button class="msg-act" data-action="sa-menu" aria-label="${e(t('More options'))}"><img src="assets/ic_menu_moreoverflow_normal_holo_light.png" alt=""></button></header><div class="msg-list">${rows}</div></div>`;
+      // Google+ 4.0's HostedMessengerFragment: onPrepareActionBar shows the title and the New conversation button; a
+      // conversation, New conversation and the settings (plus-messenger.js) keep the bar with Up.
+      const m = key => S('gplus', key, t);
+      const bar = ({title, up}) => `<header class="sa-bar"><button class="sa-up" data-action="${up ? 'back' : 'home'}" aria-label="${e(title)}">${up ? '<img class="sa-caret" src="assets/ic_ab_back_holo_light.png" alt="">' : ''}<img src="assets/messenger.png" alt=""></button><span class="sa-title"><b>${e(title)}</b></span>${up ? '' : `<button class="msg-act" data-action="gpm-new-open" aria-label="${e(m('New conversation'))}"><img src="assets/msg-ic_menu_start_new_huddle.png" alt=""></button>`}<button class="msg-act" data-action="sa-menu" aria-label="${e(t('More options'))}"><img src="assets/ic_menu_moreoverflow_normal_holo_light.png" alt=""></button></header>`;
+      const list = rows => `<div class="app-view kkx-app msg40">${bar({title: m('Messenger')})}<div class="msg-list">${rows ? rows.map(r => `<button class="msg-row" data-action="gpm-open" data-id="${e(r.id)}"><img src="assets/msg-ic_avatar.png" alt=""><span><b>${e(r.title)}</b><small>${e(r.snippet)}</small></span><time>${e(r.time)}</time></button>`).join('') : `<p class="gpm-empty">${e(m('Start a conversation'))}</p>`}</div></div>`;
+      return window.PlusMessenger.render({...messenger, bar, list});
     }
     if (app === 'navigation') {
       // Maps 6.14's DestinationActivity on a phone (da_destination_activity_redesign): the shortcut tiles of class aa.

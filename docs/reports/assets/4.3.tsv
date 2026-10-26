@@ -305,6 +305,8 @@ versions/4.3/assets/gp4-ic_location_active.png	8da69e148cfb6917	copy	mako:/syste
 versions/4.3/assets/gp4-ic_mood_gold.png	1f2252dc370987d6	copy	mako:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_mood_gold.png	drawable-xhdpi		1f2252dc370987d6
 versions/4.3/assets/gp4-ic_reshare_16.png	e0d64b7d263571ff	copy	mako:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_reshare_16.png	drawable-xhdpi		e0d64b7d263571ff
 versions/4.3/assets/gp4-ic_text_active.png	6d47be78dc44abb3	copy	mako:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_text_active.png	drawable-xhdpi		6d47be78dc44abb3
+versions/4.3/assets/gpm-ic_menu_send_holo_light.png	61401b304bc28e9e	copy	mako:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_menu_send_holo_light.png	drawable-xhdpi		61401b304bc28e9e
+versions/4.3/assets/gpm-ic_send_photo_holo_light.png	ae37eb0f54228f6e	copy	mako:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_send_photo_holo_light.png	drawable-xhdpi		ae37eb0f54228f6e
 versions/4.3/assets/hangouts.png	85c0e72ee68f540a	copy	mako:/system/app/Hangouts.apk!res/drawable-xhdpi/ic_launcher_babel.png	drawable-xhdpi		85c0e72ee68f540a
 versions/4.3/assets/hg1-abs__ic_ab_back_holo_light.png	10d6203dd04271d2	same pixels	mako:/system/app/Currents.apk!res/drawable-xhdpi/abs__ic_ab_back_holo_light.png	drawable-xhdpi		b337b8aae35678b0
 versions/4.3/assets/hg1-abs__ic_menu_moreoverflow_normal_holo_light.png	1bef2d14cada3e90	same pixels	mako:/system/app/Currents.apk!res/drawable-xhdpi/abs__ic_menu_moreoverflow_normal_holo_light.png	drawable-xhdpi		4d600c2c5ee39df9

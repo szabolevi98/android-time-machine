@@ -74,3 +74,36 @@
 .loc-results{flex:1;min-height:0;overflow-y:auto}
 .screen .loc-hit{display:flex;align-items:center;width:100%;min-height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #0000001f;background:none;color:#000;text-align:left;font-size:calc(18 * var(--dp))}
 .screen .loc-hit:active{background:#33b5e566}
+
+/* Google+ Messenger (plus-messenger.js): conversation_activity (message_list_item_view: the 48 dp avatar on #eeeeee,
+   author, time and text), compose_message (the photo and send buttons round the field), new_conversation_activity (the
+   audience field over the contacts) and the settings on the light preference rows. */
+.gpm{display:flex;flex-direction:column;background:#fff}
+.gpm-list{flex:1;min-height:0;overflow-y:auto}
+.gpm-msg{display:flex;align-items:stretch;min-height:calc(48 * var(--dp))}
+.gpm-avatar{flex:none;width:calc(48 * var(--dp));background:#eee}
+.gpm-avatar img{display:block;width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
+.gpm-body{flex:1;min-width:0;padding:calc(8 * var(--dp)) calc(16 * var(--dp)) calc(8 * var(--dp)) calc(8 * var(--dp));border-bottom:calc(1 * var(--dp)) solid #e5e5e5}
+.gpm-head{display:flex;align-items:baseline;gap:calc(4 * var(--dp))}
+.gpm-head b{flex:1;min-width:0;font:700 calc(14 * var(--dp)) Roboto,sans-serif;color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gpm-head time{flex:none;font:400 calc(12 * var(--dp)) Roboto,sans-serif;color:#999}
+.gpm-body p{margin:calc(4 * var(--dp)) 0 0;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000;overflow-wrap:anywhere}
+.gpm-compose{flex:none;display:flex;align-items:center;padding:calc(6 * var(--dp)) 0;border-top:1px solid #ccc;background:#fff}
+.screen .gpm-photo,.screen .gpm-send{flex:none;padding:0 calc(8 * var(--dp));border:0;background:none}
+.gpm-photo img,.gpm-send img{display:block;width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.gpm-compose input{flex:1;min-width:0;padding:calc(6 * var(--dp)) calc(4 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #bdbdbd;background:none;color:#000;font:400 calc(18 * var(--dp)) Roboto,sans-serif;outline:0}
+.gpm-compose input:focus{border-bottom:calc(2 * var(--dp)) solid #33b5e5}
+.gpm-audience{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:calc(4 * var(--dp));padding:calc(8 * var(--dp));border-bottom:1px solid #ccc}
+.gpm-audience input{flex:1;min-width:calc(120 * var(--dp));padding:calc(6 * var(--dp)) calc(4 * var(--dp));border:0;background:none;color:#000;font:400 calc(18 * var(--dp)) Roboto,sans-serif;outline:0}
+.screen .gpm-chip{border:0;padding:calc(4 * var(--dp)) calc(8 * var(--dp));background:#e5e5e5;color:#333;font:400 calc(14 * var(--dp)) Roboto,sans-serif}
+.gpm-people{flex:1;min-height:0;overflow-y:auto}
+.screen .gpm-person{display:flex;align-items:center;width:100%;padding:0;border:0;border-bottom:1px solid #e5e5e5;background:none;text-align:left}
+.screen .gpm-person.on{background:#33b5e533}
+.gpm-person[hidden]{display:none}
+.gpm-person img{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
+.gpm-person span{flex:1;min-width:0;display:flex;flex-direction:column;padding:0 calc(12 * var(--dp))}
+.gpm-person b{font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000}
+.gpm-person small{font:400 calc(13 * var(--dp)) Roboto,sans-serif;color:#707070}
+.gpm-empty{margin:0;padding:calc(24 * var(--dp)) calc(16 * var(--dp));text-align:center;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#707070}
+.gpm-prefs{display:flex;flex-direction:column;background:#fff}
+.gpm-prefs .mps-cat{color:#808080;border-bottom-color:#00000026}

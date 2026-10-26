@@ -354,6 +354,8 @@ versions/4.0.4/assets/gallery-widget_preview.png	8399834bd135d230	same pixels	ma
 versions/4.0.4/assets/gallery.png	7f70433a87a2b37b	copy	maguro:/system/app/GalleryGoogle.apk!res/mipmap-hdpi/ic_launcher_gallery.png	mipmap-hdpi		7f70433a87a2b37b
 versions/4.0.4/assets/gmail.png	a7efcd1d082d4d6c	copy	maguro:/system/app/Gmail.apk!res/mipmap-xhdpi/ic_launcher_mail.png	mipmap-xhdpi		a7efcd1d082d4d6c
 versions/4.0.4/assets/google-plus.png	ddde5868ee1c430d	copy	maguro:/system/app/PlusOne.apk!res/drawable-xhdpi/icon.png	drawable-xhdpi		ddde5868ee1c430d
+versions/4.0.4/assets/gpm-ic_send_holo_light.png	cc257c41cda36841	copy	maguro:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_send_holo_light.png	drawable-xhdpi		cc257c41cda36841
+versions/4.0.4/assets/gpm-ic_send_photo_holo_light.png	ae37eb0f54228f6e	copy	maguro:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_send_photo_holo_light.png	drawable-xhdpi		ae37eb0f54228f6e
 versions/4.0.4/assets/ic_ab_back_holo_dark.png	bbdc324258de7695	same pixels	maguro:/system/app/Music2.apk!res/drawable-hdpi/ic_ab_back_holo_dark.png	drawable-hdpi		4e65c16eb8ab3185
 versions/4.0.4/assets/ic_ab_back_holo_light.png	b337b8aae35678b0	copy	maguro:/system/framework/framework-res.apk!res/drawable-xhdpi/ic_ab_back_holo_light.png	drawable-xhdpi		b337b8aae35678b0
 versions/4.0.4/assets/ic_ab_dialer_holo_dark.png	12661aa54aedca89	copy	maguro:/system/app/Contacts.apk!res/drawable-xhdpi/ic_ab_dialer_holo_dark.png	drawable-xhdpi		12661aa54aedca89

@@ -36,12 +36,14 @@
     const r = ui.locResults, words = r.category ? CATEGORY_WORDS[r.category] : [r.query.toLocaleLowerCase()], hits = placeHits(data, words);
     return `<div class="app-view kkx-app loc64"><header class="loc-bar"><span class="loc-switch"><img src="assets/loc-ic_feature_local.png" alt=""><img src="assets/nav-switcher_dropdown_triangle.png" alt=""></span><i></i><b>${e(r.category ? local(r.category, t) : r.query)}</b></header><div class="loc-where"><img src="assets/loc-gray_location.png" alt=""><span>Mountain View</span><img src="assets/loc-locationbar_triangle.png" alt=""></div><div class="loc-results">${hits.map(p => `<button class="loc-hit" data-action="xa-loc-open" data-id="${e(p)}"><b>${e(p)}</b></button>`).join('')}</div></div>`;
   }
-  function render(app, {ui, t, chats = [], contacts = [], data = {}}) {
+  function render(app, {ui, t, chats = [], contacts = [], data = {}, messenger}) {
     if (app === 'messenger') {
-      // Google+ 2.4's ConversationListActivity: the EsActionBar with home as up and conversation_list_item_view rows.
-      const m = key => S('gplus', key, t), people = contacts.slice(0, 3);
-      const rows = people.map((p, i) => `<button class="msg24-row" data-action="kkx-unavailable"><img src="assets/msg-default_avatar.png" alt=""><span><b>${e(p.name)}</b><small>${e(['Saturday’s hike: who’s driving?', 'Photos from the meetup', 'See you at 11!'][i])}</small></span><time>${['10:24', '9:02', 'Mon'][i]}</time></button>`).join('');
-      return `<div class="app-view kkx-app msg24"><header class="msg24-bar"><button data-action="home" aria-label="${e(m('Messenger'))}"><img class="up" src="assets/ga-fw-ic_ab_back_holo_dark.png" alt=""><img src="assets/messenger.png" alt=""></button><b>${e(m('Messenger'))}</b><button class="msg24-act" data-action="kkx-unavailable" aria-label="${e(m('New conversation'))}"><img src="assets/msg-ic_menu_start_new_huddle_action_bar.png" alt=""></button><button class="msg24-act" data-action="jbx-menu" aria-label="${e(t('More options'))}"><img src="assets/ic_menu_moreoverflow_normal_holo_dark.png" alt=""></button></header><div class="msg24-list">${rows}</div></div>`;
+      // Google+ 2.4's EsActionBar (home as up) over ConversationListActivity's conversation_list_item_view rows, or a
+      // conversation, New conversation or the settings (plus-messenger.js) under the same bar.
+      const m = key => S('gplus', key, t);
+      const bar = ({title, up}) => `<header class="msg24-bar"><button data-action="${up ? 'back' : 'home'}" aria-label="${e(title)}"><img class="up" src="assets/ga-fw-ic_ab_back_holo_dark.png" alt=""><img src="assets/messenger.png" alt=""></button><b>${e(title)}</b>${up ? '' : `<button class="msg24-act" data-action="gpm-new-open" aria-label="${e(m('New conversation'))}"><img src="assets/msg-ic_menu_start_new_huddle_action_bar.png" alt=""></button>`}<button class="msg24-act" data-action="jbx-menu" aria-label="${e(t('More options'))}"><img src="assets/ic_menu_moreoverflow_normal_holo_dark.png" alt=""></button></header>`;
+      const list = rows => `<div class="app-view kkx-app msg24">${bar({title: m('Messenger')})}<div class="msg24-list">${rows ? rows.map(r => `<button class="msg24-row" data-action="gpm-open" data-id="${e(r.id)}"><img src="assets/msg-default_avatar.png" alt=""><span><b>${e(r.title)}</b><small>${e(r.snippet)}</small></span><time>${e(r.time)}</time></button>`).join('') : `<p class="gpm-empty">${e(m('Start a conversation'))}</p>`}</div></div>`;
+      return window.PlusMessenger.render({...messenger, bar, list});
     }
     if (app === 'navigation' && ui.navPick) return picker(ui, t, data, contacts);
     if (app === 'local' && ui.locResults) return results(ui, t, data);

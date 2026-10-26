@@ -3383,7 +3383,50 @@ const earthLocal = o => async h => {
   await h.shot(`t19-earth-${o.gb ? 'gb' : o.version}`);
 };
 
+// Google+ Messenger (T26): a conversation from the list opens and keeps a sent message; New conversation starts one with
+// a picked contact; the conversation menu mutes, renames and leaves; Settings keeps a check box and Who can message you.
+const plusMessenger = o => async h => {
+  const chats = async () => (await store(h, 'plusChats')) || [];
+  const menu = async action => { await h.tap(`#viewport [data-action="${o.overflow}"]`); await h.until(`!!document.querySelector('.holo-menu')`); await h.tap(`.holo-menu [data-action="${action}"]`); };
+  const send = async text => { await h.type('#viewport .gpm-compose input', text); await h.ev(`document.querySelector('#viewport .gpm-compose').requestSubmit()`); };
+  await h.openApp('messenger');
+  h.check('the list shows the conversations', await h.until(`document.querySelectorAll('#viewport [data-action="gpm-open"]').length === 3`));
+  await h.tap('#viewport [data-action="gpm-open"]');
+  h.check('a conversation opens with its message', await h.until(`/hike|meetup|11/.test(document.querySelector('#viewport .gpm-list')?.textContent || '')`));
+  await send('Count me in!');
+  h.check('a sent message is shown and kept', await h.until(`[...document.querySelectorAll('#viewport .gpm-msg.me p')].some(p => p.textContent === 'Count me in!')`) && (await chats()).some(c => c.messages.some(m => m.me && m.text === 'Count me in!')));
+  await h.shot(`t26-thread-${o.version}`);
+  await h.tap('#viewport .gpm-thread [data-action="back"]');
+  h.check('the list shows the sent message first', await h.until(`document.querySelector('#viewport [data-action="gpm-open"] small')?.textContent === 'Count me in!'`));
+  await h.tap('#viewport [data-action="gpm-new-open"]');
+  h.check('New conversation lists the contacts', await h.until(`document.querySelectorAll('#viewport .gpm-person').length >= 3`));
+  const name = await h.ev(`document.querySelectorAll('#viewport .gpm-person b')[3]?.textContent || document.querySelectorAll('#viewport .gpm-person b')[0].textContent`);
+  await h.tap(`#viewport .gpm-person:nth-child(${await h.ev(`document.querySelectorAll('#viewport .gpm-person').length > 3 ? 4 : 1`)})`);
+  h.check('the picked contact becomes a chip', await h.until(`!!document.querySelector('#viewport .gpm-chip')`));
+  await send('Hello from Google+');
+  h.check('sending starts the conversation with that contact', await h.until(`!!document.querySelector('#viewport .gpm-thread') && document.querySelector('#viewport .gpm-thread header')?.textContent.includes(${JSON.stringify(name)})`) && (await chats()).length === 4);
+  await menu('gpm-mute');
+  h.check('Mute is kept', (await chats()).some(c => c.muted));
+  await menu('gpm-rename');
+  await h.type('#viewport [data-gpm-name]', 'Weekend plans');
+  await h.tap('#viewport [data-action="gpm-rename-ok"]');
+  h.check('Edit name renames the conversation', await h.until(`document.querySelector('#viewport .gpm-thread header')?.textContent.includes('Weekend plans')`));
+  await menu('gpm-leave');
+  await h.tap('#viewport [data-action="gpm-leave-ok"]');
+  h.check('Leave removes the conversation', await h.until(`document.querySelectorAll('#viewport [data-action="gpm-open"]').length === 3`) && (await chats()).length === 3);
+  await menu('gpm-settings');
+  h.check('Settings opens Messenger\'s settings', await h.until(`!!document.querySelector('#viewport .gpm-prefs [data-id="notify"]')`));
+  await h.tap('#viewport .gpm-prefs [data-id="notify"]');
+  h.check('Messenger notifications is kept', ((await store(h, 'plusMessengerPrefs')) || {}).notify === false);
+  await h.tap('#viewport .gpm-prefs [data-id="acl"]');
+  await h.tap('#viewport [data-action="gpm-pick-value"][data-id="acl:1"]');
+  h.check('the message setting is kept', ((await store(h, 'plusMessengerPrefs')) || {}).acl === 1 && (!o.subtitle || await h.until(`/circles can add you/i.test(document.querySelector('#viewport .gpm-prefs [data-id="acl"]')?.textContent || '')`)));
+  await h.shot(`t26-messenger-${o.version}`);
+};
+
 const CASES = [
+  {id: 'T26', version: '4.0.4', name: 'Messenger › conversations, New conversation, menu, Settings', run: plusMessenger({overflow: 'jbx-menu', version: '2.4'})},
+  {id: 'T26', version: '4.3', name: 'Messenger › conversations, New conversation, menu, Settings', run: plusMessenger({overflow: 'sa-menu', subtitle: true, version: '4.0'})},
   {id: 'T19', version: '2.3.6', name: 'Earth › globe, Search, My Location, north, Layers, Settings', run: earthLocal({gb: true, myloc: 'menu', layers: true, check: 'use_sensors', checkDefault: false, version: '2.0.1'})},
   {id: 'T19', version: '4.0.4', name: 'Earth › globe, Search, My Location, north, Layers, Settings', run: earthLocal({layers: 'bar', check: 'use_terrain', checkDefault: true, version: '6.1'})},
   {id: 'T19', version: '4.3', name: 'Earth › globe, Search, My location, north, Share, Settings', run: earthLocal({myloc: 'menu', share: 'menu', chooser: 'messaging', check: 'imagery_visibility', checkDefault: true, version: '7.1.1.1682'})},
