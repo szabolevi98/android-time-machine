@@ -3643,6 +3643,43 @@ const keepMore = async h => {
 };
 CASES.push(...['4.3','4.4.4','5.1.1'].map(version=>({id:'T35',version,name:'Keep › Share/Send, copy, voice notes and Settings',run:keepMore})));
 
+const quickofficeSources=async h=>{
+  await h.openApp('quickoffice');
+  await h.tap('#viewport [data-action="qox-menu"]');await h.tap('[data-action="qox-open-menu"]');await h.tap('[data-action="qox-device"]');
+  h.check('Device opens the native file picker with Open disabled',await h.until(`!!document.querySelector('[data-action="qox-confirm"]:disabled')`));
+  await h.tap('[data-action="qox-cancel"]');
+  h.check('Cancel returns to the unchanged home list',await h.ev(`!!document.querySelector('#viewport [data-action="qox-drive"]')&&!document.querySelector('.qox-dialog')`));
+  await h.tap('#viewport [data-action="qox-menu"]');await h.tap('[data-action="qo-new"]');await h.tap('[data-action="qo-create"][data-id="doc"]');
+  h.check('New still opens an unsaved document',await h.until(`!!document.querySelector('#viewport .qo-blank')`));
+  await h.tap('#viewport [data-action="qo-save"]');
+  const local=(await h.save()).driveFiles.find(f=>f.local&&f.kind==='doc');
+  h.check('Save on Device records a local file',!!local&&local.parent==='device');
+  await h.tap('#viewport [data-action="qox-device"]');
+  await h.tap(`[data-action="qox-select"][data-id="${local.id}"]`);
+  h.check('selecting a file enables Open',await h.ev(`!document.querySelector('[data-action="qox-confirm"]').disabled`));
+  await h.tap('[data-action="qox-confirm"]');
+  h.check('the selected local document opens',await h.until(`document.querySelector('#viewport .kkx-bar h2')?.textContent===${JSON.stringify(local.name)}&&!!document.querySelector('#viewport .kkx-paper')`));
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="qox-device"]');await h.tap('[data-action="qox-up"]');
+  h.check('the native picker can navigate to internal storage',await h.until(`!!document.querySelector('[data-action="qox-folder"]')`));
+  await h.tap('[data-action="qox-folder"]');await h.key('Escape');
+  h.check('Back cancels the picker',await h.ev(`!document.querySelector('.qox-dialog')`));
+  await h.tap('#viewport [data-action="qox-drive"]');
+  const files=(await h.save()).driveFiles,drive=files.find(f=>!f.local&&!/^q/.test(f.id)&&f.kind==='doc'&&(!f.parent||f.parent==='root'));
+  h.check('Drive lists the demo files but excludes local-only documents',await h.until(`!!document.querySelector('#viewport [data-action="qox-drive-pick"]')`)&&!await h.ev(`!!document.querySelector('#viewport [data-action="qox-drive-pick"][data-id="${local.id}"]')`));
+  await h.tap(`#viewport [data-action="qox-drive-pick"][data-id="${drive.id}"]`);
+  h.check('the right Drive file content opens',await h.until(`document.querySelector('#viewport .kkx-bar h2')?.textContent===${JSON.stringify(drive.name)}`)&&await h.ev(`document.querySelector('#viewport .kkx-paper').textContent.includes(${JSON.stringify(drive.text.split('\n')[0])})`));
+  await h.shot('quickoffice-drive-file');await h.key('Escape');
+  await h.tap('#viewport [data-action="qox-drive"]');await h.tap('#viewport [data-action="qox-cancel"]');
+  h.check('Drive Cancel returns to the original list',await h.ev(`!!document.querySelector('#viewport [data-action="qox-device"]')`));
+  await h.tap('#viewport [data-action="qox-menu"]');await h.tap('[data-action="qox-about"]');
+  h.check('About shows the factory Quickoffice version',await h.ev(`/Quickoffice 6.3.1/.test(document.querySelector('.qox-about')?.textContent||'')`));await h.tap('[data-action="qox-cancel"]');
+  await h.reload();await h.openApp('quickoffice');await h.tap('#viewport [data-action="qox-device"]');
+  h.check('the device source survives reload',await h.until(`!!document.querySelector('[data-action="qox-select"][data-id="${local.id}"]')`));
+  await h.shot('quickoffice-device-picker');
+};
+CASES.push({id:'T39',version:'4.4.4',name:'Quickoffice › Device/Drive sources, Open/New/About and cancel',run:quickofficeSources});
+
 const args = process.argv.slice(2), picked = args.filter(a => /^T\d+/i.test(a)).map(a => a.toUpperCase());
 const WIDTHS = args.includes('--desktop') ? ['desktop'] : args.includes('--phone') ? ['phone'] : ['desktop', 'phone'];
 const only = args.includes('--version') ? args[args.indexOf('--version') + 1] : '';

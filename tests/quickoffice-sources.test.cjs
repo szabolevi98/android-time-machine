@@ -1,0 +1,10 @@
+require('./lib/vm-strings.cjs');
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const c={window:{}};vm.runInNewContext(fs.readFileSync('versions/4.4.4/quickoffice-more.js','utf8'),c);
+const Q=c.window.QuickofficeMore,files=[{id:'cloud',name:'Cloud.docx',kind:'doc',text:'cloud'},{id:'qlegacy',name:'Old local.docx',kind:'doc'},{id:'saved',local:true,name:'Saved.xlsx',kind:'sheet'},{id:'trash',name:'Trash.docx',kind:'doc',trashed:true},{id:'folder',name:'Folder',kind:'folder'},{id:'photo',name:'Image',kind:'image'}];
+const ctx={files,data:{downloads:[{time:1,name:'Printed.pdf',pdf:{lines:['One','Two']}},{time:2,name:'Skipped.zip'}]},locale:'en'},before=JSON.stringify(ctx);
+assert.deepEqual(Array.from(Q.driveFiles(ctx),f=>f.id),['cloud','folder']);
+assert.deepEqual(Array.from(Q.deviceFiles(ctx),f=>f.id),['qlegacy','download:1','saved']);
+assert.equal(Q.deviceFiles(ctx).find(f=>f.id==='download:1').text,'One\nTwo');
+assert.equal(JSON.stringify(ctx),before,'selecting and sorting sources does not mutate stored files');
+console.log('Quickoffice independent device/Drive source checks passed.');

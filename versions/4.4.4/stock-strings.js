@@ -1401,6 +1401,17 @@ window.StockStrings = {
   "hp.Set your mood summary": {"res": "Hangouts:rich_status_mood_summary", "hu": "Tudassa az emberekkel, hogy érzi magát ma", "de": "Zeigen Sie den anderen, wie Sie sich heute fühlen", "fr": "Indiquez à vos contacts comment vous vous sentez aujourd'hui.", "es": "Permite a los usuarios saber cómo te sientes hoy", "en": "Let people know how you're feeling today"}
  },
  "quickoffice": {
+  "Open": {"res": "QuickOffice:Pick", "hu": "Megnyitás", "de": "Öffnen", "fr": "Ouvrir", "es": "Abrir"},
+  "New": {"res": "QuickOffice:New", "hu": "Új", "de": "Neu", "fr": "Nouveau", "es": "Nuevo"},
+  "Open from Drive": {"res": "QuickOffice:open_from_drive_menu", "hu": "Megnyitás a Drive-on", "de": "Aus Google Drive öffnen", "fr": "Ouvrir depuis Drive", "es": "Abrir desde Drive"},
+  "Open from Device": {"res": "QuickOffice:open_from_device_menu", "hu": "Megnyitás a készüléken", "de": "Auf dem Gerät gespeichertes Dokument öffnen", "fr": "Ouvrir depuis l'appareil", "es": "Abrir desde dispositivo"},
+  "New document": {"res": "QuickOffice:new_word_document_menu", "hu": "Új dokumentum", "de": "Neues Dokument", "fr": "Nouveau document", "es": "Nuevo documento"},
+  "New spreadsheet": {"res": "QuickOffice:new_excel_document_menu", "hu": "Új táblázat", "de": "Neue Tabelle", "fr": "Nouvelle feuille de calcul", "es": "Nueva hoja de cálculo"},
+  "New presentation": {"res": "QuickOffice:new_powerpoint_document_menu", "hu": "Új prezentáció", "de": "Neue Präsentation", "fr": "Nouvelle présentation", "es": "Nueva presentación"},
+  "About": {"res": "QuickOffice:About", "hu": "Névjegy", "de": "Info", "fr": "À propos", "es": "Acerca de"},
+  "About Quickoffice": {"res": "QuickOffice:about_dialog_title", "hu": "A Quickoffice névjegye", "de": "Über Quickoffice", "fr": "À propos de Quickoffice", "es": "Acerca de Quickoffice"},
+  "Close": {"res": "QuickOffice:about_dialog_close", "hu": "Bezárás", "de": "Schließen", "fr": "Fermer", "es": "Cerrar"},
+  "Internal Storage": {"res": "QuickOffice:text_internal_storage", "hu": "Belső tárhely", "de": "Interner Speicher", "fr": "Mémoire de stockage interne", "es": "Almacenamiento interno"},
   "Document": {"res": "QuickOffice:new_word_document", "hu": "Dokumentum", "de": "Dokument", "fr": "Document", "es": "Documento"},
   "Spreadsheet": {"res": "QuickOffice:new_excel_document", "hu": "Táblázat", "de": "Tabelle", "fr": "Feuille de calcul", "es": "Hoja de cálculo"},
   "Presentation": {"res": "QuickOffice:new_powerpoint_document", "hu": "Prezentáció", "de": "Präsentation", "fr": "Présentation", "es": "Presentación"},

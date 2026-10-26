@@ -937,6 +937,11 @@ versions/4.4.4/assets/ps4510-ic_review.png	0318195297735be7	same pixels	hammerhe
 versions/4.4.4/assets/ps4510-ic_search_api_holo_light.png	85a27d3bf676315b	copy	hammerhead:/system/app/Books.apk!res/drawable-xhdpi/ic_search_api_holo_light.png	drawable-xhdpi		85a27d3bf676315b
 versions/4.4.4/assets/ps4510-menu_dropdown_panel_holo_light.png	01047ed2f361ccdf	copy	hammerhead:/system/app/Books.apk!res/drawable-xxhdpi/menu_dropdown_panel_holo_light.9.png	drawable-xxhdpi		01047ed2f361ccdf
 versions/4.4.4/assets/ps4510-play_checker_bg.png	60e90880ab16ba2a	copy	hammerhead:/system/app/CalendarGoogle.apk!res/drawable-nodpi/play_checker_bg.png	drawable-nodpi		60e90880ab16ba2a
+versions/4.4.4/assets/qox-excel.png	bc8f45c576275d0b	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_excel.png	drawable-hdpi		bc8f45c576275d0b
+versions/4.4.4/assets/qox-folder.png	fe71678baad7ce41	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_folder.png	drawable-hdpi		fe71678baad7ce41
+versions/4.4.4/assets/qox-pdf.png	52d81a1b6adcd5d9	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_pdf.png	drawable-hdpi		52d81a1b6adcd5d9
+versions/4.4.4/assets/qox-powerpoint.png	679b36bc27ada945	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_powerpoint.png	drawable-hdpi		679b36bc27ada945
+versions/4.4.4/assets/qox-word.png	810625f6a6d1ee20	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_word.png	drawable-hdpi		810625f6a6d1ee20
 versions/4.4.4/assets/quickoffice.png	07eef9181049b6a8	copy	hammerhead:/system/app/QuickOffice.apk!res/mipmap-xxxhdpi/quickoffice.png	mipmap-xxxhdpi		07eef9181049b6a8
 versions/4.4.4/assets/scrollbar_handle_holo_dark.png	37a0f3cc7d6c78af	copy	hammerhead:/system/framework/framework-res.apk!res/drawable-xxhdpi/scrollbar_handle_holo_dark.9.png	drawable-xxhdpi		37a0f3cc7d6c78af
 versions/4.4.4/assets/scrollbar_handle_holo_light.png	7330d518cae37bcf	copy	hammerhead:/system/framework/framework-res.apk!res/drawable-xxhdpi/scrollbar_handle_holo_light.9.png	drawable-xxhdpi		7330d518cae37bcf

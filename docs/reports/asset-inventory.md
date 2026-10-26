@@ -39,7 +39,7 @@ Not traced:
 
 ## 4.4.4 (hammerhead)
 
-copy: 423, same pixels: 389, resized: 181, own: 20, converted: 15, similar: 13, generated: 2, not traced: 2
+copy: 428, same pixels: 389, resized: 181, own: 20, converted: 15, similar: 13, generated: 2, not traced: 2
 
 From another release's image (the own image has no such file; to review): bullhead 1, maguro 26, mako 13 — the source column of the TSV names each.
 

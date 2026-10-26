@@ -2626,6 +2626,17 @@
    "hp.Set your mood summary": "Hangouts:rich_status_mood_summary"
   },
   "quickoffice": {
+   "Open": "QuickOffice:Pick",
+   "New": "QuickOffice:New",
+   "Open from Drive": "QuickOffice:open_from_drive_menu",
+   "Open from Device": "QuickOffice:open_from_device_menu",
+   "New document": "QuickOffice:new_word_document_menu",
+   "New spreadsheet": "QuickOffice:new_excel_document_menu",
+   "New presentation": "QuickOffice:new_powerpoint_document_menu",
+   "About": "QuickOffice:About",
+   "About Quickoffice": "QuickOffice:about_dialog_title",
+   "Close": "QuickOffice:about_dialog_close",
+   "Internal Storage": "QuickOffice:text_internal_storage",
    "Document": "QuickOffice:new_word_document",
    "Spreadsheet": "QuickOffice:new_excel_document",
    "Presentation": "QuickOffice:new_powerpoint_document",

@@ -732,12 +732,13 @@
       case 'clock': return renderClock();
       case 'calculator': return renderCalculator();
       case 'email': return renderEmail();
-      case 'newsstand': case 'quickoffice': case 'wallet': return KKExtraApps.render(ui.view, {files: officeFiles().filter(f => !f.trashed), ui, t: key => i18n.t(key)});
+      case 'newsstand': case 'quickoffice': case 'wallet': return KKExtraApps.render(ui.view, {files: officeFiles().filter(f => !f.trashed), ui, data, locale:i18n.locale(), t: key => i18n.t(key)});
       case 'downloads': return KKDownloads.render(data.downloads || [], ui, key => i18n.t(key), i18n.locale());
       default: return renderHome();
     }
   }
   function openApp(app, resume = false) {
+    if(app==='quickoffice'&&!resume){ui.qox=null;ui.qoxDoc=null;}
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
     if (!resume) { ui.camIntent = null; ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt5Dialog = null; ui.ksPage = ''; ui.ksDialog = null; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.driveFolder = ''; ui.driveFilter = ''; ui.driveNavItem = 'my'; ui.driveStack = []; ui.driveDialog = ''; ui.driveDetail = ''; ui.paStack = []; ui.paMore = ''; }
     if(ui.locked)return;
@@ -775,6 +776,7 @@
   }
   // Drive's files as the apps change them (Quickoffice, Drive).
   const officeFiles = () => data.driveFiles || StockApps.FILES;
+  const quickofficeContext=()=>({files:officeFiles(),data,ui,locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay});
   const QO = key => { const row = window.StockStrings?.quickoffice?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : key; };
   // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
   const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
@@ -818,6 +820,7 @@
     if (ui.view === 'clock' && ui.sub === 'cities' && ui.cityQuery !== undefined && !ui.overlay) { ui.cityQuery = undefined; render(); return; }
     if (ui.chromeReturn && ui.view === ui.chromeReturn.view && ui.sub === ui.chromeReturn.sub && !ui.overlay) { const back = ui.chromeReturn; ui.chromeReturn = null; openApp('chrome'); ui.sub = 'chrome-settings'; ui.chromePrefStack = back.stack; render(); return; }
     if (ui.view === 'google-settings' && GMSSettings.back(ui)) { render(); return; }
+    if(ui.view==='quickoffice'&&!ui.overlay&&QuickofficeMore.back(quickofficeContext()))return;
     if (ui.view === 'quickoffice' && ui.sub === 'qo-new' && !ui.overlay) { ui.sub = ''; render(); return; }
     if (ui.view === 'maps' && !ui.overlay && (ui.mapsRoute || ui.navRun) && MapsRoute.back(mrContext())) return;
     // News & Weather: a settings dialog or nested screen, then the settings or the story page.
@@ -1009,6 +1012,8 @@
       overlayRoot.innerHTML = peopleOverlay();
     } else if (ui.overlay === 'pa-drawer') {
       overlayRoot.innerHTML = PlayApps.drawer(playContext(ui.view));
+    } else if (ui.overlay.startsWith('qox-')) {
+      overlayRoot.innerHTML=QuickofficeMore.dialog(quickofficeContext());
     } else if (ui.overlay.startsWith('qo-')) {
       overlayRoot.innerHTML = KKExtraApps.qoDialog({'qo-create': 'create', 'qo-file': 'file', 'qo-rename': 'rename', 'qo-delete': 'delete'}[ui.overlay], {files: officeFiles(), ui, t: key => i18n.t(key)});
     } else if (ui.overlay === 'kkx-menu') {
@@ -1876,6 +1881,7 @@
         render(); if (result.toast) toast(result.toast); return;
       }
     }
+    if(action.startsWith('qox-')&&QuickofficeMore.handle(action,id,quickofficeContext()))return;
     if(action.startsWith('kp-') && KeepMore.handle(action,id,keepMoreContext()))return;
     if (action.startsWith('cpref-') && ui.view === 'clock') {
       const result = ClockPrefs.handle(action, id, {data, ui});
@@ -1991,7 +1997,7 @@
       case 'qo-new': ui.overlay = 'qo-create'; renderOverlay(); break;
       case 'qo-create': ui.overlay = ''; renderOverlay(); ui.qoKind = id; ui.sub = 'qo-new'; render(); break;
       case 'qo-save': { const [base, ext] = KKExtraApps.QO_KIND[ui.qoKind], label = QO(base), names = new Set(officeFiles().map(f => f.name)); let name = `${label}${ext}`, n = 1; while (names.has(name)) name = `${label} (${n++})${ext}`;
-        data.driveFiles = [{id: `q${Date.now().toString(36)}`, name, kind: ui.qoKind, date: deviceDate().toLocaleDateString(i18n.locale(), {month: 'short', day: 'numeric'}), age: 0, text: ''}, ...officeFiles()]; save(); ui.sub = ''; render(); toast(AndroidStrings.format(QO('File saved to %1$s'), KKExtraApps.local('Device', key => i18n.t(key)))); break; }
+        data.driveFiles = [{id: `q${Date.now().toString(36)}`, name, kind: ui.qoKind, local:true, parent:'device', date: deviceDate().toLocaleDateString(i18n.locale(), {month: 'short', day: 'numeric'}), age: 0, text: ''}, ...officeFiles()]; save(); ui.sub = ''; render(); toast(AndroidStrings.format(QO('File saved to %1$s'), KKExtraApps.local('Device', key => i18n.t(key)))); break; }
       case 'qo-rename': ui.overlay = 'qo-rename'; renderOverlay(); overlayRoot.querySelector('[data-qo-name]')?.select(); break;
       case 'qo-rename-ok': { const name = overlayRoot.querySelector('[data-qo-name]')?.value.trim(); if (name) { data.driveFiles = officeFiles().map(f => f.id === ui.qoFile ? {...f, name} : f); save(); } ui.overlay = ''; renderOverlay(); render(); break; }
       case 'qo-delete': ui.overlay = 'qo-delete'; renderOverlay(); break;

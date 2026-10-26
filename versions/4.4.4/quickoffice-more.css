@@ -1,0 +1,17 @@
+/* QuickOffice 6.3.1 file_picker_row.xml: the package's 54dp rows, 32dp icons, 18sp/14sp labels, selected #83d1ee. */
+.qox-dialog{background:#fafafa;color:#333}
+.qox-dialog h3{color:#33b5e5;border-bottom:calc(2 * var(--dp)) solid #33b5e5}
+.qox-rows{overflow:auto;max-height:calc(330 * var(--dp));display:flex;flex-direction:column}
+.qox-rows>button:not(.qox-entry){min-height:calc(48 * var(--dp));padding:calc(12 * var(--dp)) calc(16 * var(--dp));border:0;background:transparent;color:#333;text-align:left}
+.qox-entry{display:flex;align-items:center;gap:calc(10 * var(--dp));width:100%;min-height:calc(54 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:transparent;text-align:left;color:#333}
+.qox-entry.selected{background:#83d1ee}
+.qox-entry>img{width:calc(32 * var(--dp));height:calc(32 * var(--dp));object-fit:contain;flex:none}
+.qox-entry>span{min-width:0;flex:1}
+.qox-entry b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:400 calc(18 * var(--dp)) Roboto,sans-serif}
+.qox-entry small{display:block;font-size:calc(14 * var(--dp));color:#777}
+.qox-dialog .settings-dialog-actions>button:disabled{opacity:.35}
+.qox-about{padding:calc(16 * var(--dp))}
+.qox-drive .kkx-bar>img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.qox-drive .kkx-bar>.kkx-btn:last-child{width:auto;min-width:calc(64 * var(--dp));font-size:calc(14 * var(--dp))}
+
+.qox-drive .kkx-btn>img,.kkx-quickoffice>.kkx-bar>.kkx-btn>img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));object-fit:contain}

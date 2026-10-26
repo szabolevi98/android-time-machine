@@ -37,7 +37,7 @@
   const action = (icon, label) => `<button class="kkx-btn" data-action="kkx-unavailable" aria-label="${e(label)}">${svg[icon]}</button>`;
   const Q = (key, t) => S('quickoffice', key, t);
   const QO_KIND = {doc: ['New Document', '.docx'], sheet: ['New Spreadsheet', '.xlsx'], slides: ['New Presentation', '.pptx']};
-  function render(app, {files, ui, t}) {
+  function render(app, {files, ui, t, data, locale}) {
     if (app === 'newsstand') {
       const n = key => S('newsstand', key, t);
       const drawer = ui.kkxDrawer ? `<button class="kkx-scrim" data-action="kkx-drawer" aria-label="${e(t('Close'))}"></button><nav class="ns-drawer">${['Read Now', 'My News', 'My Magazines', 'Saved', 'Explore'].map((key, i) => `<button class="${i ? '' : 'on'}" data-action="${i ? 'kkx-unavailable' : 'kkx-drawer'}">${e(n(key))}</button>`).join('')}</nav>` : '';
@@ -45,13 +45,16 @@
       return `<div class="app-view kkx-app kkx-newsstand">${bar('newsstand', n('Read Now'), `<button class="kkx-btn" data-action="kkx-unavailable" aria-label="${e(n('Search'))}"><img class="kkx-img" src="assets/ns-ic_menu_search_holo_dark.png" alt=""></button><button class="kkx-btn" data-action="kkx-menu" aria-label="${e(t('More options'))}">${svg.more}</button>`, 'dark')}<div class="kkx-list kkx-cards">${stories.map(([title, source, color]) => `<article class="kkx-story"><div class="kkx-story-art" style="background:${color}"><b>${e(title)}</b></div><div class="kkx-story-copy"><small>${e(source)}</small></div></article>`).join('')}</div>${drawer}</div>`;
     }
     if (app === 'quickoffice') {
+      const context={files,ui,t,data,locale};
+      if(ui.qoxDoc)return QuickofficeMore.document(context);
+      if(ui.qox?.source==='drive')return QuickofficeMore.page(context);
       // A new file (create_new_file_label: Document / Spreadsheet / Presentation) opens blank and "Not saved yet"; Save keeps it.
       if (ui.sub === 'qo-new') return `<div class="app-view kkx-app kkx-quickoffice">${bar('quickoffice', Q(QO_KIND[ui.qoKind][0], t), `<button class="kkx-btn" data-action="qo-save" aria-label="${e(Q('Save', t))}">${e(Q('Save', t))}</button>`)}<div class="kkx-page"><article class="kkx-paper qo-blank ${ui.qoKind}"><small>${e(Q('Not saved yet', t))}</small></article></div></div>`;
       const open = ui.sub && files.find(file => file.id === ui.sub);
       if (open) return `<div class="app-view kkx-app kkx-quickoffice">${bar('quickoffice', open.name)}<div class="kkx-page"><article class="kkx-paper">${open.text.split('\n').map(line => `<p>${e(line)}</p>`).join('')}</article></div></div>`;
       const recent = files.filter(file => KIND_COLOR[file.kind]).map(file => `<button class="kkx-file" data-action="kkx-open" data-id="${e(file.id)}" data-qo-hold="${e(file.id)}"><span class="kkx-file-icon" style="color:${KIND_COLOR[file.kind]}">${svg.doc}</span><span class="kkx-file-copy"><strong>${e(file.name)}</strong><small>${e(file.date)}</small></span></button>`).join('');
       const tile = (icon, label) => `<button class="kkx-tile" data-action="kkx-unavailable"><span>${svg[icon]}</span>${e(label)}</button>`;
-      return `<div class="app-view kkx-app kkx-quickoffice">${bar('quickoffice', 'Quickoffice®', action('more', t('More options')))}<div class="kkx-list"><h3 class="kkx-section">${e(local('Open or create new files', t))}</h3><div class="kkx-tiles">${tile('drive', local('Drive', t))}${tile('device', local('Device', t))}${tile('plus', local('Create new file', t)).replace('data-action="kkx-unavailable"', 'data-action="qo-new"')}</div><h3 class="kkx-section">${e(local('Recent files', t))}</h3>${recent}</div></div>`;
+      return `<div class="app-view kkx-app kkx-quickoffice">${bar('quickoffice', 'Quickoffice®', action('more', t('More options')).replace('data-action="kkx-unavailable"','data-action="qox-menu"'))}<div class="kkx-list"><h3 class="kkx-section">${e(local('Open or create new files', t))}</h3><div class="kkx-tiles">${tile('drive', local('Drive', t)).replace('data-action="kkx-unavailable"','data-action="qox-drive"')}${tile('device', local('Device', t)).replace('data-action="kkx-unavailable"','data-action="qox-device"')}${tile('plus', local('Create new file', t)).replace('data-action="kkx-unavailable"', 'data-action="qo-new"')}</div><h3 class="kkx-section">${e(local('Recent files', t))}</h3>${recent}</div></div>`;
     }
     if (app === 'wallet') {
       // Wallet 2.0's nav_drawer (US only, so English as the image shows it everywhere).
