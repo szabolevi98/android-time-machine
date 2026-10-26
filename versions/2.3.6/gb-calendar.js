@@ -145,7 +145,7 @@
     const T = key => text(ctx.lang, key);
     if (ctx.sub === 'event') return [{action: 'event-edit', title: T('event_edit'), icon: 'ic_menu_edit'}, {action: 'event-delete', title: T('event_delete'), icon: 'ic_menu_delete'}];
     if (ctx.sub === 'event-edit') return [{action: 'gbcal-extra', title: T(ctx.extra ? 'edit_event_hide_extra_options' : 'edit_event_show_extra_options'), icon: 'ic_menu_preferences'}, ...(ctx.draft?.id ? [{action: 'event-delete', title: T('delete_label'), icon: 'ic_menu_delete'}] : [])];
-    const na = 'Unavailable in this simulator';
+    const na = 'This feature is not part of the simulator.';
     return [
       {action: 'calendar-mode', id: 'Day', title: T('day_view'), icon: 'ic_menu_day', disabled: ctx.mode === 'Day'},
       {action: 'calendar-mode', id: 'Week', title: T('week_view'), icon: 'ic_menu_week', disabled: ctx.mode === 'Week'},

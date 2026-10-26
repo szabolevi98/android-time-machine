@@ -1141,7 +1141,7 @@
      messages" while locked messages are there), confirmDeleteDialog and MessageUtils.getTextMessageDetails. The words
      are mms-strings.js'. */
   function renderMessageOverlay() {
-    const M = key => MmsStrings.t(key), unavailable = 'Not available in this simulator';
+    const M = key => MmsStrings.t(key), unavailable = 'This feature is not part of the simulator.';
     const option = (action, text, id = '') => `<button data-action="${action}" data-id="${safe(id)}">${safe(text)}</button>`;
     const alert = (title, body, buttons = '', icon = false) => `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="mms-alert" role="alertdialog" aria-label="${safe(title)}" data-no-translate>${title ? `<h3>${icon ? '<img src="assets/mms-ic_dialog_alert_holo_light.png" alt="">' : ''}${safe(title)}</h3>` : ''}${body}${buttons ? `<div class="mms-alert-buttons">${buttons}</div>` : ''}</div>`;
     const message = data.messages.find(m => String(m.id) === String(ui.mmsMessage));
@@ -1499,7 +1499,7 @@
       case 'unlock-camera': openApp('camera'); break;
       case 'settings-sub': ui.overlay = ''; if (ui.view === 'settings' && !ui.sub) ui.settingsRootScroll = viewport.querySelector('.settings-app')?.scrollTop || 0; ui.sub = id; render(); break;
       case 'sd-dialog': ui.settingsField=id;ui.overlay='sd-dialog';renderOverlay();break;
-      case 'dev-info': toast(i18n.t('Not available in the simulator')); break;
+      case 'dev-info': toast(i18n.t('This feature is not part of the simulator.')); break;
       // Developer options' ListPreferences: the choice is kept in data.settings['dev_<key>'] (index into the entries).
       case 'dev-list': ui.devList = id; ui.overlay = 'dev-list'; renderOverlay(); break;
       case 'dev-list-pick': { const cut = id.lastIndexOf(':'); data.settings[id.slice(0, cut)] = Number(id.slice(cut + 1)); save(); ui.overlay = ''; renderOverlay(); render(); break; }

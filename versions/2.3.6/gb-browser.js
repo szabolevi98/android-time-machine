@@ -20,7 +20,7 @@
   // suggestions from bookmarks and history.
   function searchDialog(ctx) {
     const T = key => text(ctx.lang, key);
-    return `<div class="gbbr-search-scrim" data-action="gbbr-edit-cancel"></div><form class="gbbr-search" data-form="address"><div class="gbbr-search-row"><img class="gbbr-search-app" src="assets/gb-br-ic_launcher_browser.png" alt=""><input name="address" autocomplete="off" aria-label="${e(T('search_hint'))}" placeholder="${e(T('search_hint'))}" value="${e(ctx.editValue)}"><button class="gbbr-go" type="submit" aria-label="${e(T('goto_dot'))}"><img src="assets/gb-ic_btn_search_go.png" alt=""></button><button class="gbbr-voice" type="button" data-action="gbset-toast" data-id="Unavailable in this simulator" aria-label="Voice search"><img src="assets/gb-ic_btn_speak_now.png" alt=""></button></div><div class="gbbr-suggest">${suggestions(ctx)}</div></form>`;
+    return `<div class="gbbr-search-scrim" data-action="gbbr-edit-cancel"></div><form class="gbbr-search" data-form="address"><div class="gbbr-search-row"><img class="gbbr-search-app" src="assets/gb-br-ic_launcher_browser.png" alt=""><input name="address" autocomplete="off" aria-label="${e(T('search_hint'))}" placeholder="${e(T('search_hint'))}" value="${e(ctx.editValue)}"><button class="gbbr-go" type="submit" aria-label="${e(T('goto_dot'))}"><img src="assets/gb-ic_btn_search_go.png" alt=""></button><button class="gbbr-voice" type="button" data-action="gbset-toast" data-id="This feature is not part of the simulator." aria-label="Voice search"><img src="assets/gb-ic_btn_speak_now.png" alt=""></button></div><div class="gbbr-suggest">${suggestions(ctx)}</div></form>`;
   }
   function suggestions(ctx) {
     const q = String(ctx.editValue || '').trim().toLowerCase();
@@ -72,7 +72,7 @@
 
   // menu/browser.xml (MAIN_MENU): five items and More; the bookmarks and history pages have their own menus.
   function menu(ctx) {
-    const T = key => text(ctx.lang, key), na = 'Unavailable in this simulator';
+    const T = key => text(ctx.lang, key), na = 'This feature is not part of the simulator.';
     if (ctx.sub === 'bookmarks') return [{action: 'gbbr-add-bookmark', title: T('bookmark_page'), icon: 'gb-br-ic_menu_add_bookmark.png'}, {action: 'gbbr-switch-view', title: T(ctx.listView ? 'switch_to_thumbnails' : 'switch_to_list'), icon: ctx.listView ? 'gb-br-ic_menu_thumbnail.png' : 'gb-br-ic_menu_list.png'}];
     if (ctx.sub === 'history') return ctx.history.length ? [{action: 'gbbr-clear-history', title: T('clear_history'), icon: 'ic_menu_close_clear_cancel'}] : [];
     if (ctx.sub) return [];

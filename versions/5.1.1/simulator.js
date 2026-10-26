@@ -1682,7 +1682,7 @@
     if (ui.overlay === 'mms-attach-photos') return dialog('Attach photo', `<div class="mms-dialog-list">${data.photos.map(p => `<button data-action="mms-photo" data-id="${p.id}">${ICSMessaging.photo(p)}</button>`).join('') || '<p>No photos</p>'}</div>`);
     if (ui.overlay === 'mms-menu' && ui.view === 'messaging') {
       // Messenger's overflow: the conversation list (Archived, Settings, Help & feedback) or a conversation.
-      const items = ui.sub === 'thread' ? [['mms-smiley', 'Insert smiley'], ['mpo-open', 'People & options'], ['mms-delete-thread', 'Delete'], ['mms-discard', 'Discard draft']] : ui.sub === 'new' ? [['mms-smiley', 'Insert smiley'], ['mms-discard', 'Discard draft']] : ui.sub === 'archived' ? [['toast:Messenger settings are not part of this simulation.', 'Settings'], ['toast:Help is not available offline.', 'Help & feedback']] : [['mms-archived', 'Archived'], ['toast:Messenger settings are not part of this simulation.', 'Settings'], ['toast:Help is not available offline.', 'Help & feedback']];
+      const items = ui.sub === 'thread' ? [['mms-smiley', 'Insert smiley'], ['mpo-open', 'People & options'], ['mms-delete-thread', 'Delete'], ['mms-discard', 'Discard draft']] : ui.sub === 'new' ? [['mms-smiley', 'Insert smiley'], ['mms-discard', 'Discard draft']] : ui.sub === 'archived' ? [['toast:This feature is not part of the simulator.', 'Settings'], ['toast:Help is not available offline.', 'Help & feedback']] : [['mms-archived', 'Archived'], ['toast:This feature is not part of the simulator.', 'Settings'], ['toast:Help is not available offline.', 'Help & feedback']];
       return `<div class="menu-scrim" data-action="close-overlay"></div><div class="lp-popup-menu" role="menu">${items.map(([action, title]) => { const [act, arg] = action.split(/:(.*)/); return `<button role="menuitem" data-action="${act}"${arg ? ` data-id="${safe(arg)}"` : ''}>${safe(i18n.t(title))}</button>`; }).join('')}</div>`;
     }
     if (ui.overlay === 'mms-menu') {
@@ -2568,7 +2568,7 @@
       case 'sx-apn-new': ui.systemDraft={};ui.systemField='apn-edit';ui.systemError='';ui.systemValues=null;ui.overlay='sx-dialog';renderOverlay();break;
       case 'sx-apn-open': ui.systemDraft=clone((data.apnProfiles||[{id:'default',name:'Telekom',apn:'internet.telekom',mcc:'216',mnc:'30'}]).find(profile=>profile.id===id)||{});ui.systemField='apn-edit';ui.systemError='';ui.systemValues=null;ui.overlay='sx-dialog';renderOverlay();break;
       case 'sx-apn-select': data.settings.apnId=id;save();render();break;
-      case 'dev-info': toast(i18n.t('Not available in the simulator')); break;
+      case 'dev-info': toast(i18n.t('This feature is not part of the simulator.')); break;
       // Developer options' ListPreferences: the choice is kept in data.settings['dev_<key>'] (index into the entries).
       case 'dev-list': ui.devList = id; ui.overlay = 'dev-list'; renderOverlay(); break;
       case 'dev-list-pick': { const cut = id.lastIndexOf(':'); data.settings[id.slice(0, cut)] = Number(id.slice(cut + 1)); save(); ui.overlay = ''; renderOverlay(); render(); break; }

@@ -22,7 +22,7 @@
    - MyDownloadsActivity (title_my_downloads.xml "downloads"), search ("Search Android Market"; no results:
      search_no_results.xml), menu (res/menu/base.xml: Search, Downloads, Help, Home; Security, Cancel download, Clear my
      review on the details).
-   Paid items cannot be bought here (no Google Checkout account): "Unavailable in this simulator". */
+   Paid items cannot be bought here (no Google Checkout account): "This feature is not part of the simulator.". */
 (() => {
   'use strict';
   const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[ch]);
@@ -214,7 +214,7 @@
         case 'ecmk-install': push(c, {page: 'permissions', id: x.id}); return true;
         case 'ecmk-perm-ok': c.ui.mkStack.pop(); startDownload(c, x); return true;
         case 'ecmk-perm-cancel': c.ui.mkStack.pop(); c.render(); return true;
-        case 'ecmk-buy': c.toast(c.t('Unavailable in this simulator')); return true;
+        case 'ecmk-buy': c.toast(c.t('This feature is not part of the simulator.')); return true;
         case 'ecmk-cancel': clearTimeout(jobTimer); job = null; c.render(); return true;
         case 'ecmk-launch':
           if (x.app) { c.open(x.app); return true; }

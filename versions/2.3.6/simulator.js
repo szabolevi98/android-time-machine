@@ -810,7 +810,7 @@
       if (ui.gbMusicDialog === 'delete') return {icon: 'ic_dialog_alert', message: AndroidStrings.format(musicText('delete_song_desc_nosdcard'), track?.title || ''), buttons: [{action: 'music-delete-ok', title: musicText('delete_confirm_button_text')}, {action: 'close-overlay', title: musicText('cancel')}]};
       if (ui.gbMusicDialog === 'add') return {title: musicText('add_to_playlist'), items: [{action: 'music-add-queue', title: musicText('queue')}, {action: 'music-new-playlist', id: 'add', title: musicText('new_playlist')}, ...ui.music.playlists.map(p => ({action: 'music-add-confirm', id: p.id, title: p.name}))]};
       if (ui.gbMusicDialog === 'new') return {title: musicText('new_playlist'), custom: `<form data-form="music-playlist"><input name="name" maxlength="60" required aria-label="${safe(i18n.t('Playlist name'))}" value="${safe(AndroidStrings.format(musicText('new_playlist_name_template'), String(ui.music.playlists.length + 1)))}"></form>`, buttons: [{action: 'music-playlist-save', title: musicText('create_playlist_create_text')}, {action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]};
-      return {title: track?.title || '', items: [{action: 'music-play-selected', title: musicText('play_selection')}, {action: 'music-add-to-playlist', title: musicText('add_to_playlist')}, ...(inPlaylist ? [{action: 'music-remove-from-playlist', title: musicText('remove_from_playlist')}] : []), {action: 'music-ringtone', id: String(ui.musicSelected), title: musicText('ringtone_menu')}, {action: 'music-delete', id: String(ui.musicSelected), title: musicText('delete_item')}, {action: 'gbset-toast', id: 'Unavailable in this simulator', title: musicText('search_title')}]};
+      return {title: track?.title || '', items: [{action: 'music-play-selected', title: musicText('play_selection')}, {action: 'music-add-to-playlist', title: musicText('add_to_playlist')}, ...(inPlaylist ? [{action: 'music-remove-from-playlist', title: musicText('remove_from_playlist')}] : []), {action: 'music-ringtone', id: String(ui.musicSelected), title: musicText('ringtone_menu')}, {action: 'music-delete', id: String(ui.musicSelected), title: musicText('delete_item')}, {action: 'gbset-toast', id: 'This feature is not part of the simulator.', title: musicText('search_title')}]};
     }
     if (ui.overlay === 'gb-dialog-mms') return GBMms.dialog(ui.gbMmsDialog, gbMmsContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-set') return GBSettings.dialog(ui.gbSetDialog, gbSettingsContext()) || {title: '', items: []};
@@ -1711,7 +1711,7 @@
       case 'gbqs-corpora': ui.qsb.selecting = !ui.qsb.selecting; render(); break;
       case 'gbpref-open': ui.overlay = ''; ui.gbPrefs = {app: id, view: ui.view}; render(); break;
       case 'gbem-add-account': ui.overlay = ''; ui.gbEmSetup = {email: '', def: false}; render(); viewport.querySelector('.gbem-setup [name=email]')?.focus(); break;
-      case 'gbem-setup-manual': toast('Unavailable in this simulator'); break;
+      case 'gbem-setup-manual': toast('This feature is not part of the simulator.'); break;
       case 'gbem-setup-cancel': clearTimeout(ui.gbEmSetupTimer); ui.overlay = ''; renderOverlay(); break;
       case 'gbce-photo': gbceSync(); ui.gbceDialog = ui.peopleDraft?.photo ? 'photo-edit' : 'photo'; ui.overlay = 'gb-dialog-ce'; renderOverlay(); break;
       case 'gbce-photo-take': { gbceSync(); ui.overlay = ''; renderOverlay(); const ret = {sub: ui.sub}; openApp('camera'); ui.gbceCapture = {type: 'image', ret, taken: null}; ui.gbcamMode = 'photo'; render(); break; }
@@ -1735,7 +1735,7 @@
       case 'gbcal-select-ok': data.calendarState = ui.gbCalSel.state; ui.gbCalSel = null; save(); render(); break;
       case 'gbpref-check': { const [app, key] = String(id).split(':'), ctx = gbPrefsContext(app), item = GBPrefs.find(ctx, key); if (item) gbPrefSet(key, !GBPrefs.get(item, ctx.values)); gbPrefRender(); break; }
       case 'gbpref-list': case 'gbpref-action': { const [app, key] = String(id).split(':'), item = GBPrefs.find(gbPrefsContext(app), key); if (!item) break;
-        if (item.toast) { toast('Unavailable in this simulator'); break; }
+        if (item.toast) { toast('This feature is not part of the simulator.'); break; }
         if (item.open) { ui.gbPrefs = {app: item.open, view: ui.gbPrefs.view || ui.view, parent: ui.gbPrefs}; render(); break; }
         // Google Mail's Clear search history / Clear "Show pictures" act at once.
         if (item.done) { if (key === 'clear-search-history') data.gmailSearches = []; if (key === 'clear-display-images-whitelist') data.gmailShowPictures = []; if (key === 'pref_gtalk_clear_history_key' && data.talk23) data.talk23.searches = []; if (key === 'clear_history' && data.youtube23) data.youtube23.searches = []; if (key === 'cache_settings_clear_cache') data.mapsCache = false; save(); gbPrefRender(); break; }

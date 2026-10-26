@@ -1474,7 +1474,7 @@
   function renderMessageOverlay() {
     // Hangouts draws its own overflow, attach menu and snooze dialog (hangouts.js); the rest is Messaging's.
     if (ui.view === 'hangouts') { const own = Hangouts.overlay(data, ui, key => i18n.t(key)); if (own !== null) return own; }
-    const M = key => MmsStrings.t(key), unavailable = 'Not available in this simulator';
+    const M = key => MmsStrings.t(key), unavailable = 'This feature is not part of the simulator.';
     const option = (action, text, id = '') => `<button data-action="${action}" data-id="${safe(id)}">${safe(text)}</button>`;
     const alert = (title, body, buttons = '', icon = false) => `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="mms-alert" role="alertdialog" aria-label="${safe(title)}" data-no-translate>${title ? `<h3>${icon ? '<img src="assets/mms-ic_dialog_alert_holo_light.png" alt="">' : ''}${safe(title)}</h3>` : ''}${body}${buttons ? `<div class="mms-alert-buttons">${buttons}</div>` : ''}</div>`;
     const message = data.messages.find(m => String(m.id) === String(ui.mmsMessage));
@@ -2201,7 +2201,7 @@
       case 'sx-apn-new': ui.systemDraft={};ui.systemField='apn-edit';ui.systemError='';ui.systemValues=null;ui.overlay='sx-dialog';renderOverlay();break;
       case 'sx-apn-open': ui.systemDraft=clone((data.apnProfiles||[{id:'default',name:'Telekom',apn:'internet.telekom',mcc:'216',mnc:'30'}]).find(profile=>profile.id===id)||{});ui.systemField='apn-edit';ui.systemError='';ui.systemValues=null;ui.overlay='sx-dialog';renderOverlay();break;
       case 'sx-apn-select': data.settings.apnId=id;save();render();break;
-      case 'dev-info': toast(i18n.t('Not available in the simulator')); break;
+      case 'dev-info': toast(i18n.t('This feature is not part of the simulator.')); break;
       // Developer options' ListPreferences: the choice is kept in data.settings['dev_<key>'] (index into the entries).
       case 'dev-list': ui.devList = id; ui.overlay = 'dev-list'; renderOverlay(); break;
       case 'dev-list-pick': { const cut = id.lastIndexOf(':'); data.settings[id.slice(0, cut)] = Number(id.slice(cut + 1)); save(); ui.overlay = ''; renderOverlay(); render(); break; }

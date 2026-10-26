@@ -130,7 +130,7 @@
         go('master_clear_title', 'master_clear_summary', 'ics:reset-info')]},
       storage: {title: 'storage_settings', items: [
         cat('sd_memory'), info('memory_size', '14.84GB'), info('memory_available', '13.92GB'),
-        go('sd_eject', 'sd_eject_summary', 'toast:SD card will be unmounted'), go('sd_format', 'sd_format_summary', 'toast:Erasing the SD card is disabled in the simulator'),
+        go('sd_eject', 'sd_eject_summary', 'toast:SD card will be unmounted'), go('sd_format', 'sd_format_summary', 'toast:This feature is not part of the simulator.'),
         cat('internal_memory'), info('memory_available', '869MB')]},
       language: {title: 'language_settings', items: [
         cat('language_settings_category'), go('phone_language', {raw: ctx.languageName}, 'locale'),

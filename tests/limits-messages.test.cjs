@@ -18,4 +18,16 @@ for(const v of ['4.0.4','4.3','4.4.4','5.1.1']){
   assert.ok(!/email-unavailable'[^\n]*Not available in this simulator/.test(s),v);
 }
 assert.ok(!i18n.includes("'Photo Sphere capture is not simulated'"),'the old Photo Sphere refusal is gone');
+// T48 (rest): every version's same-meaning refusals ("Unavailable in this simulator", "Not available in this/the
+// simulator", Messenger's settings, the 2.3.6 SD card erase) use the key too, and their old rows are gone. Emergency
+// calls and the offline texts keep their own (translated) wording.
+const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(d=>d.isDirectory()?(d.name==='assets'?[]:walk(`${dir}/${d.name}`)):d.name.endsWith('.js')?[`${dir}/${d.name}`]:[]);
+for(const file of walk('versions')){
+  const s=fs.readFileSync(file,'utf8');
+  assert.doesNotMatch(s,/['"]Unavailable in this simulator['"]|Not available in (this|the) simulator|Messenger settings are not part of this simulation|Erasing the SD card is disabled/,file);
+}
+for(const key of ['Unavailable in this simulator','Not available in the simulator','Not available in this simulator'])assert.ok(!i18n.includes(`'${key}': {`),key);
+for(const key of ['Help is not available offline.','Search is not available offline','Emergency calls are unavailable in this simulator.']){
+  const r=i18n.split('\n').find(l=>l.includes(`'${key}': {`));assert.ok(r,key);for(const lang of ['hu','de','fr','es'])assert.match(r,new RegExp(`${lang}: '[^']+'`),key+' '+lang);
+}
 console.log('limits-messages ok');

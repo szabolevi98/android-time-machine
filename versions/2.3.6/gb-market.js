@@ -309,7 +309,7 @@
     const t = T(ctx);
     if (['permissions', 'uninstall', 'settings'].includes(ctx.page)) return [];
     const item = ctx.page === 'detail' ? find(ctx.selected) : null, owned = item && installedState(item, ctx) === 'installed';
-    return [{action: 'gbmk-search', title: t('Search'), icon: 'ic_menu_search'}, {action: 'gbmk-my-apps', title: t('My apps'), icon: 'gbm234-ic_menu_my_downloads.png'}, {action: 'gbmk-settings', title: t('Settings'), icon: 'ic_menu_preferences'}, {action: 'gbset-toast', id: 'Unavailable in this simulator', title: t('Help'), icon: 'ic_menu_help'},
+    return [{action: 'gbmk-search', title: t('Search'), icon: 'ic_menu_search'}, {action: 'gbmk-my-apps', title: t('My apps'), icon: 'gbm234-ic_menu_my_downloads.png'}, {action: 'gbmk-settings', title: t('Settings'), icon: 'ic_menu_preferences'}, {action: 'gbset-toast', id: 'This feature is not part of the simulator.', title: t('Help'), icon: 'ic_menu_help'},
       ...(ctx.page === 'home' ? [] : [{action: 'gbmk-home', title: t('Home'), icon: 'gbm234-ic_menu_home.png'}]),
       ...(item ? [{action: 'gbmk-security', title: t('Security'), icon: 'gbm234-ic_menu_security_setting.png'}] : []), ...(owned && ctx.rated?.[item.id] ? [{action: 'gbmk-clear-review', title: t('Clear my review'), icon: 'gbm234-ic_menu_clear_rating.png'}] : [])];
   }
