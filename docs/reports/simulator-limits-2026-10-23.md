@@ -235,7 +235,7 @@ APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<sl
 
 #### T54 — Play Books a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `b0780156`. Telepítettként: 6.0.1 Play Books 3.9.37 (2016-07-21), 7.1.2 Play Books 3.13.17 (2017-06-01; az APKMirror-lista szerint a build előtti utolsó), egy sablonból (`docs/templates/books-play.*`, `docs/tools/books-play.py`) a saját APK szövegeivel és ikonjaival: Read now / Home, My library / Library a demó telefon négy közkincs könyvével (`docs/demo-data.md`), Sort by (Recent, Title, Author; 3.13-ban az overflow-ban), a kártya Download / Remove download és Delete from library, Downloaded only, Search; olvasó lapozással (oldalak, csúszka), Contents, Display options (Day, Night, Sepia, sormagasság). Shop a Play Store-t nyitja; Settings, Help: elutasítás. Ellenőrzés: `tests/browser/play-books.mjs` (mindkét verzió, telefonos szélesség is), `npm test`.
 
 #### T55 — News & Weather a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
