@@ -339,7 +339,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T24 — 4.0.4 Play Movies helyi offline kezelés
 
 - **Ütem:** Második kör, #24. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `7a5594bd`. Videos 1.4.11 szerint: a Manage offline rentals a My Rentals offline módja az offline_footer.xml sávval (Done, tárhelysáv, Make available offline, „9.93 GB free”), kölcsönzés nélkül üres listával; a Settings a general_prefs.xml (Streaming, Downloads, Caption font size, Open source licenses az APK licenses.html-jével, Application version) helyben mentve; a Retry újrakéri a Top Rentals-t (töltésjelző), majd ugyanazt a hálózati hibát mutatja, szimulátor-toast nélkül.
 - **Verziók:** 4.0.4.
 - **Forráscsoportok:** 4.0.4-11.
 - **Elkészítendő és határ:** Manage offline rentals helyi mintaelem-listája, Settings helyi preferenciák és Retry natív offline hibaállapot újbóli megnyitással. Valódi kölcsönzés, Accounts, stream és támogatás nem része.
