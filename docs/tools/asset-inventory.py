@@ -28,6 +28,8 @@ from PIL import Image
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace(os.sep, '/') + '/'
 VERSIONS = {'2.1': ('passion', 'hdpi'), '6.0.1': ('bullhead', 'xxhdpi'), '2.3.6': ('crespo', 'hdpi'), '4.0.4': ('maguro', 'xhdpi'), '4.3': ('mako', 'xhdpi'), '4.4.4': ('hammerhead', 'xxhdpi'), '5.1.1': ('shamu', 'xxxhdpi'), '7.1.2': ('angler', 'xxhdpi')}
 RELEASES = ['passion', 'crespo', 'maguro', 'mako', 'hammerhead', 'shamu', 'bullhead', 'angler']
+# The apps installed from Play (_aosp/<device>/playapps/<Apk>.apk), lower-case, in the order the fourth round added them.
+PLAY_ORDER = ['googleearth', 'keep', 'docs', 'sheets', 'slides', 'fit']
 DENSITIES = ['xxxhdpi', 'xxhdpi', 'xhdpi', 'hdpi', 'mdpi', 'ldpi', 'nodpi']
 IMAGES = ('.png', '.jpg', '.jpeg', '.gif', '.webp')
 MEDIA = ('.png', '.opng', '.jpg', '.jpeg', '.gif', '.webp', '.ogg', '.ttf', '.otf', '.xml', '.mp4')   # .opng: Gmail's PNGs
@@ -172,7 +174,11 @@ class Image_:
         dens = next((d for d in DENSITIES if re.search(rf'(^|-){d}(-|$)', q)), '')
         # A phone's own configuration first: tablet (swNNNdp, large), landscape and right-to-left variants come after.
         other = bool(re.search(r'(^|-)(sw\d+dp|w\d+dp|large|xlarge|land|ldrtl|night|television|car)(-|$)', q))
-        return (name_of(row[1] or row[0]) not in wanted, other, dens != self.density, abs(DENSITIES.index(dens) - DENSITIES.index(self.density)) if dens else 9, row[0], row[1])
+        # The image's own files before the apps installed from Play, and those in the order they were added, so an
+        # app added later never takes a file an earlier source traced first.
+        play = row[0].startswith('../playapps/')
+        added = PLAY_ORDER.index(name_of(row[0])) if play and name_of(row[0]) in PLAY_ORDER else len(PLAY_ORDER)
+        return (name_of(row[1] or row[0]) not in wanted, other, dens != self.density, abs(DENSITIES.index(dens) - DENSITIES.index(self.density)) if dens else 9, play, added, row[0], row[1])
 
 
 def name_of(path):

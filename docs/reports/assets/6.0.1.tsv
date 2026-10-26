@@ -7,10 +7,11 @@ versions/6.0.1/assets/app-chrome.png	54e3f0cf8f26918b	copy	bullhead:/system/app/
 versions/6.0.1/assets/app-clock.png	9fc433feaaede5c5	copy	bullhead:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!res/mipmap-xxxhdpi-v4/ic_launcher_alarmclock.png	mipmap-xxxhdpi-v4		9fc433feaaede5c5
 versions/6.0.1/assets/app-contacts.png	77c3ea6221164201	copy	bullhead:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/mipmap-xxxhdpi-v4/ic_contacts_clr_48cv_44dp.png	mipmap-xxxhdpi-v4		77c3ea6221164201
 versions/6.0.1/assets/app-device-policy.png	444925756bd17160	copy	bullhead:/system/app/DMAgent/DMAgent.apk!res/drawable-xhdpi-v4/launcher.png	drawable-xhdpi-v4		444925756bd17160
-versions/6.0.1/assets/app-docs.png	aa106703643e6415	copy	bullhead:/playapps/Docs.apk!res/mipmap-xxxhdpi-v4/quantum_logo_docs_launcher_color_48.png	mipmap-xxxhdpi-v4		aa106703643e6415
+versions/6.0.1/assets/app-docs.png	aa106703643e6415	copy	bullhead:/system/app/Drive/Drive.apk!res/mipmap-xxxhdpi-v4/quantum_logo_docs_launcher_color_48.png	mipmap-xxxhdpi-v4		aa106703643e6415
 versions/6.0.1/assets/app-downloads.png	c9f506900211112e	copy	bullhead:/system/app/DownloadProviderUi/DownloadProviderUi.apk!res/mipmap-xxxhdpi-v4/ic_launcher_download.png	mipmap-xxxhdpi-v4		c9f506900211112e
-versions/6.0.1/assets/app-drive.png	5f898fdaa9ecd3c1	copy	bullhead:/playapps/Docs.apk!res/mipmap-xxxhdpi-v4/quantum_logo_drive_launcher_color_48.png	mipmap-xxxhdpi-v4		5f898fdaa9ecd3c1
+versions/6.0.1/assets/app-drive.png	5f898fdaa9ecd3c1	copy	bullhead:/system/app/Drive/Drive.apk!res/mipmap-xxxhdpi-v4/quantum_logo_drive_launcher_color_48.png	mipmap-xxxhdpi-v4		5f898fdaa9ecd3c1
 versions/6.0.1/assets/app-earth.png	d9e230bfcf77aa2c	copy	bullhead:/playapps/GoogleEarth.apk!res/mipmap-xxxhdpi-v4/icon.png	mipmap-xxxhdpi-v4		d9e230bfcf77aa2c
+versions/6.0.1/assets/app-fit.png	77786b9b6adeff99	copy	bullhead:/playapps/Fit.apk!res/mipmap-xxxhdpi-v4/logo_fitness_color_44in48dp.png	mipmap-xxxhdpi-v4		77786b9b6adeff99
 versions/6.0.1/assets/app-gmail.png	3ba9041e6bc59486	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/mipmap-xxxhdpi-v4/ic_launcher_mail.png	mipmap-xxxhdpi-v4		3ba9041e6bc59486
 versions/6.0.1/assets/app-hangouts.png	af56355d87df5496	copy	bullhead:/system/app/Hangouts/Hangouts.apk!res/mipmap-xxxhdpi-v4/quantum_logo_hangouts_launcher_color_48.png	mipmap-xxxhdpi-v4		af56355d87df5496
 versions/6.0.1/assets/app-keep.png	7667670aaec312ce	copy	bullhead:/playapps/Keep.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		7667670aaec312ce
@@ -25,8 +26,8 @@ versions/6.0.1/assets/app-play-store.png	c6b3211ea55266e9	copy	bullhead:/system/
 versions/6.0.1/assets/app-project-fi.png	93a00554ab0fa31d	copy	bullhead:/system/app/Tycho/Tycho.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		93a00554ab0fa31d
 versions/6.0.1/assets/app-search.png	c9dd419b800ceacd	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/mipmap-xxxhdpi-v4/ic_launcher_google_search.png	mipmap-xxxhdpi-v4		c9dd419b800ceacd
 versions/6.0.1/assets/app-settings.png	95337b618ba7c599	copy	bullhead:/system/priv-app/Settings/Settings.apk!res/mipmap-xxxhdpi-v4/ic_launcher_settings.png	mipmap-xxxhdpi-v4		95337b618ba7c599
-versions/6.0.1/assets/app-sheets.png	5c6b29f8bc2051f6	copy	bullhead:/playapps/Docs.apk!res/mipmap-xxxhdpi-v4/quantum_logo_sheets_launcher_color_48.png	mipmap-xxxhdpi-v4		5c6b29f8bc2051f6
-versions/6.0.1/assets/app-slides.png	a6e4716552d5c269	copy	bullhead:/playapps/Docs.apk!res/mipmap-xxxhdpi-v4/quantum_logo_slides_launcher_color_48.png	mipmap-xxxhdpi-v4		a6e4716552d5c269
+versions/6.0.1/assets/app-sheets.png	5c6b29f8bc2051f6	copy	bullhead:/system/app/Drive/Drive.apk!res/mipmap-xxxhdpi-v4/quantum_logo_sheets_launcher_color_48.png	mipmap-xxxhdpi-v4		5c6b29f8bc2051f6
+versions/6.0.1/assets/app-slides.png	a6e4716552d5c269	copy	bullhead:/system/app/Drive/Drive.apk!res/mipmap-xxxhdpi-v4/quantum_logo_slides_launcher_color_48.png	mipmap-xxxhdpi-v4		a6e4716552d5c269
 versions/6.0.1/assets/app-youtube.png	410baa2ebad0aeb5	copy	bullhead:/system/app/YouTube/YouTube.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		410baa2ebad0aeb5
 versions/6.0.1/assets/bd-colors_icon.png	3fe1de646cede7ef	copy	bullhead:/system/app/BasicDreams/BasicDreams.apk!res/mipmap-xhdpi-v4/colors_icon.png	mipmap-xhdpi-v4		3fe1de646cede7ef
 versions/6.0.1/assets/bg-emoji-faces.png	778b9dbd924ee09b	generated	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-nodpi-v4/emoji_u00a9.png	drawable-nodpi-v4	sprite of the category's emoji_u*.png, 72 px cells, 256 colours (docs/tools/mm-emoji.py)	daa07bf7281b1f3a
@@ -230,7 +231,7 @@ versions/6.0.1/assets/dc-ic_tab_timer_normal.png	c9173c8d85924564	copy	bullhead:
 versions/6.0.1/assets/device-nexus-5x.svg	6d86c7705924c946	own	drawn by docs/tools/device-frames.py: the outline measured from the maker's front render, the shading drawn			
 versions/6.0.1/assets/dr-ds_checkmark_holo_light.png	f840fd8f3130417e	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xhdpi-v4/ds_checkmark_holo_light.png	drawable-xhdpi-v4		f840fd8f3130417e
 versions/6.0.1/assets/dr-ds_shutter_holo.png	76053bec6b2900ac	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xhdpi-v4/ds_shutter_holo.png	drawable-xhdpi-v4		76053bec6b2900ac
-versions/6.0.1/assets/dr-ic_add.png	c63e09363eb080a0	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c63e09363eb080a0
+versions/6.0.1/assets/dr-ic_add.png	c63e09363eb080a0	copy	bullhead:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c63e09363eb080a0
 versions/6.0.1/assets/dr-ic_back_grey.png	43d83cf02285c42c	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_back_grey.png	drawable-xxhdpi-v4		43d83cf02285c42c
 versions/6.0.1/assets/dr-ic_close.png	4daca5c26327714f	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_close.png	drawable-xxhdpi-v4		4daca5c26327714f
 versions/6.0.1/assets/dr-ic_createpanel_doc.png	5acaad2168d56125	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_createpanel_doc.png	drawable-xxhdpi-v4		5acaad2168d56125
@@ -241,7 +242,7 @@ versions/6.0.1/assets/dr-ic_createpanel_slide.png	902e1a9506696142	copy	bullhead
 versions/6.0.1/assets/dr-ic_createpanel_upload.png	3f84f07cf189faf9	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_createpanel_upload.png	drawable-xxhdpi-v4		3f84f07cf189faf9
 versions/6.0.1/assets/dr-ic_drive_my_drive.png	4af25010c6c9bcf2	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_drive_my_drive.png	drawable-xxhdpi-v4		4af25010c6c9bcf2
 versions/6.0.1/assets/dr-ic_drive_offline.png	743cf87ec0f044d5	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_drive_offline.png	drawable-xxhdpi-v4		743cf87ec0f044d5
-versions/6.0.1/assets/dr-ic_drive_recently_opened.png	2ce2c54170ca82e9	copy	bullhead:/playapps/Docs.apk!res/drawable-xxhdpi-v4/ic_drive_recently_opened.png	drawable-xxhdpi-v4		2ce2c54170ca82e9
+versions/6.0.1/assets/dr-ic_drive_recently_opened.png	2ce2c54170ca82e9	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_drive_recently_opened.png	drawable-xxhdpi-v4		2ce2c54170ca82e9
 versions/6.0.1/assets/dr-ic_drive_starred.png	03120cdf944e697c	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_drive_starred.png	drawable-xxhdpi-v4		03120cdf944e697c
 versions/6.0.1/assets/dr-ic_drive_trash.png	416fef8a5784c11c	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_drive_trash.png	drawable-xxhdpi-v4		416fef8a5784c11c
 versions/6.0.1/assets/dr-ic_drive_upload.png	60142cc8a1d0cece	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_drive_upload.png	drawable-xxhdpi-v4		60142cc8a1d0cece
@@ -270,13 +271,13 @@ versions/6.0.1/assets/du-ic_menu_view_grid_alpha.png	08d10591efb688e4	copy	bullh
 versions/6.0.1/assets/du-ic_menu_view_list_alpha.png	4854498f875415b9	copy	bullhead:/system/app/DocumentsUI/DocumentsUI.apk!res/drawable-xxhdpi-v4/ic_menu_view_list_alpha.png	drawable-xxhdpi-v4		4854498f875415b9
 versions/6.0.1/assets/du-ic_root_download_alpha.png	16ecf75ad2defc1a	copy	bullhead:/system/app/DocumentsUI/DocumentsUI.apk!res/drawable-xxhdpi-v4/ic_root_download_alpha.png	drawable-xxhdpi-v4		16ecf75ad2defc1a
 versions/6.0.1/assets/du-ic_root_recent_alpha.png	93ec92aeac91c340	copy	bullhead:/system/app/DocumentsUI/DocumentsUI.apk!res/drawable-xxhdpi-v4/ic_root_recent_alpha.png	drawable-xxhdpi-v4		93ec92aeac91c340
-versions/6.0.1/assets/ea84-avatar_placeholder.png	264e3ea2d379c4a8	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/avatar_placeholder.png	drawable-xxhdpi-v4		264e3ea2d379c4a8
+versions/6.0.1/assets/ea84-avatar_placeholder.png	264e3ea2d379c4a8	copy	bullhead:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/avatar_placeholder.png	drawable-xxhdpi-v4		264e3ea2d379c4a8
 versions/6.0.1/assets/ea84-bluedot.png	598d415c1c97f017	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/bluedot.png	drawable-xxhdpi-v4		598d415c1c97f017
 versions/6.0.1/assets/ea84-button_compass.png	a6867f75a8e30bd2	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/button_compass.png	drawable-xxhdpi-v4		a6867f75a8e30bd2
 versions/6.0.1/assets/ea84-ic_compass.png	95376be9f59200c0	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_compass.png	drawable-xxhdpi-v4		95376be9f59200c0
 versions/6.0.1/assets/ea84-ic_menu_clear_map.png	d803a65faa0b0534	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_menu_clear_map.png	drawable-xxhdpi-v4		d803a65faa0b0534
 versions/6.0.1/assets/ea84-ic_menu_mylocation.png	8da1978fb71407c2	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_menu_mylocation.png	drawable-xxhdpi-v4		8da1978fb71407c2
-versions/6.0.1/assets/ea84-ic_menu_search.png	a59b8dc4f3bacb42	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_menu_search.png	drawable-xxhdpi-v4		a59b8dc4f3bacb42
+versions/6.0.1/assets/ea84-ic_menu_search.png	a59b8dc4f3bacb42	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_menu_search.png	drawable-xxhdpi-v4		a59b8dc4f3bacb42
 versions/6.0.1/assets/ea84-ic_share_alt_white_24dp.png	91a50a463e33336d	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_share_alt_white_24dp.png	drawable-xxhdpi-v4		91a50a463e33336d
 versions/6.0.1/assets/ea84-pegman.png	e591212571a3874b	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/pegman.png	drawable-xxhdpi-v4		e591212571a3874b
 versions/6.0.1/assets/ed16-editors_action_bar_done.png	123f06a77c479ca9	copy	bullhead:/playapps/Docs.apk!res/drawable-xxhdpi-v4/editors_action_bar_done.png	drawable-xxhdpi-v4		123f06a77c479ca9
@@ -284,7 +285,7 @@ versions/6.0.1/assets/ed16-editors_action_search.png	bc1947b53f45336d	copy	bullh
 versions/6.0.1/assets/ed16-editors_nav_icon_drive_inactive.png	bfd048c6d9f6245d	copy	bullhead:/playapps/Docs.apk!res/drawable-xxhdpi-v4/editors_nav_icon_drive_inactive.png	drawable-xxhdpi-v4		bfd048c6d9f6245d
 versions/6.0.1/assets/ed16-ic_actionbar_left_arrow_editors.png	c7c5372404e055cc	copy	bullhead:/playapps/Docs.apk!res/drawable-xxhdpi-v4/ic_actionbar_left_arrow_editors.png	drawable-xxhdpi-v4		c7c5372404e055cc
 versions/6.0.1/assets/ed16-ic_choose_template_24.png	77d53b41cf3bb519	copy	bullhead:/playapps/Docs.apk!res/drawable-xxhdpi-v4/ic_choose_template_24.png	drawable-xxhdpi-v4		77d53b41cf3bb519
-versions/6.0.1/assets/ed16-ic_drive_recently_opened.png	2ce2c54170ca82e9	copy	bullhead:/playapps/Docs.apk!res/drawable-xxhdpi-v4/ic_drive_recently_opened.png	drawable-xxhdpi-v4		2ce2c54170ca82e9
+versions/6.0.1/assets/ed16-ic_drive_recently_opened.png	2ce2c54170ca82e9	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_drive_recently_opened.png	drawable-xxhdpi-v4		2ce2c54170ca82e9
 versions/6.0.1/assets/ed16-ic_folder_white.png	3b05f451d785d8e4	copy	bullhead:/playapps/Docs.apk!res/drawable-xxhdpi-v4/ic_folder_white.png	drawable-xxhdpi-v4		3b05f451d785d8e4
 versions/6.0.1/assets/ed16-ic_help.png	776ec4b7088473a4	copy	bullhead:/playapps/Docs.apk!res/drawable-xxhdpi-v4/ic_help.png	drawable-xxhdpi-v4		776ec4b7088473a4
 versions/6.0.1/assets/ed16-ic_menu_edit_alpha.png	83fee4025cd0da3d	copy	bullhead:/playapps/Docs.apk!res/drawable-xxhdpi-v4/ic_menu_edit_alpha.png	drawable-xxhdpi-v4		83fee4025cd0da3d
@@ -299,9 +300,9 @@ versions/6.0.1/assets/ed16-quantum_ic_delete_grey600_24.png	f30b728225407b06	cop
 versions/6.0.1/assets/ed16-quantum_ic_more_vert_grey600_24.png	66d58e1fa20395d4	copy	bullhead:/playapps/Docs.apk!res/drawable-xxhdpi-v4/quantum_ic_more_vert_grey600_24.png	drawable-xxhdpi-v4		66d58e1fa20395d4
 versions/6.0.1/assets/ed16-quantum_ic_offline_pin_grey600_24.png	3da9d1722da6ea27	copy	bullhead:/playapps/Docs.apk!res/drawable-xxhdpi-v4/quantum_ic_offline_pin_grey600_24.png	drawable-xxhdpi-v4		3da9d1722da6ea27
 versions/6.0.1/assets/ed16-quantum_ic_people_grey600_24.png	9831a841b1d39617	copy	bullhead:/playapps/Docs.apk!res/drawable-xxhdpi-v4/quantum_ic_people_grey600_24.png	drawable-xxhdpi-v4		9831a841b1d39617
-versions/6.0.1/assets/ed16-quantum_logo_docs_launcher_color_48.png	8f5ca662524c250e	copy	bullhead:/playapps/Docs.apk!res/mipmap-xxhdpi-v4/quantum_logo_docs_launcher_color_48.png	mipmap-xxhdpi-v4		8f5ca662524c250e
-versions/6.0.1/assets/ed16-quantum_logo_sheets_launcher_color_48.png	7d2f9024d51de903	copy	bullhead:/playapps/Docs.apk!res/mipmap-xxhdpi-v4/quantum_logo_sheets_launcher_color_48.png	mipmap-xxhdpi-v4		7d2f9024d51de903
-versions/6.0.1/assets/ed16-quantum_logo_slides_launcher_color_48.png	570562639a8f23aa	copy	bullhead:/playapps/Docs.apk!res/mipmap-xxhdpi-v4/quantum_logo_slides_launcher_color_48.png	mipmap-xxhdpi-v4		570562639a8f23aa
+versions/6.0.1/assets/ed16-quantum_logo_docs_launcher_color_48.png	8f5ca662524c250e	copy	bullhead:/system/app/Drive/Drive.apk!res/mipmap-xxhdpi-v4/quantum_logo_docs_launcher_color_48.png	mipmap-xxhdpi-v4		8f5ca662524c250e
+versions/6.0.1/assets/ed16-quantum_logo_sheets_launcher_color_48.png	7d2f9024d51de903	copy	bullhead:/system/app/Drive/Drive.apk!res/mipmap-xxhdpi-v4/quantum_logo_sheets_launcher_color_48.png	mipmap-xxhdpi-v4		7d2f9024d51de903
+versions/6.0.1/assets/ed16-quantum_logo_slides_launcher_color_48.png	570562639a8f23aa	copy	bullhead:/system/app/Drive/Drive.apk!res/mipmap-xxhdpi-v4/quantum_logo_slides_launcher_color_48.png	mipmap-xxhdpi-v4		570562639a8f23aa
 versions/6.0.1/assets/egg-android.svg	888532eaac3fb154	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/android.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	9eb88eb09fe92142
 versions/6.0.1/assets/egg-cactus1.svg	095e6ca09c292a45	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable-nodpi-v4/cactus1.xml	drawable-nodpi-v4	vector drawable drawn as SVG	18b7d884d59c0457
 versions/6.0.1/assets/egg-cactus2.svg	45900d530d9034c8	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable-nodpi-v4/cactus2.xml	drawable-nodpi-v4	vector drawable drawn as SVG	835a5ce6e9f66cd2
@@ -328,6 +329,38 @@ versions/6.0.1/assets/egg-play.svg	17f9d94068678bcb	vector	bullhead:/system/priv
 versions/6.0.1/assets/egg-plus.svg	a20326c4cc1011f0	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable-nodpi-v4/plus.xml	drawable-nodpi-v4	vector drawable drawn as SVG	8ca7e17eff92127f
 versions/6.0.1/assets/egg-star.svg	f7d0196f9dfe0c68	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/star.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	f4847181e9d1e9f9
 versions/6.0.1/assets/egg-sun.svg	77a356aa8a5c18a7	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/sun.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	702c090f1f0a7266
+versions/6.0.1/assets/fit58-ic_add_activity.png	499b18c3e7bd4773	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_add_activity.png	drawable-xxhdpi-v4		499b18c3e7bd4773
+versions/6.0.1/assets/fit58-ic_aerobics.png	5467365eb70729a2	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_aerobics.png	drawable-xxhdpi-v4		5467365eb70729a2
+versions/6.0.1/assets/fit58-ic_badminton.png	4c9557a0e629e531	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_badminton.png	drawable-xxhdpi-v4		4c9557a0e629e531
+versions/6.0.1/assets/fit58-ic_basketball.png	ae6338b8ebfe2ce3	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_basketball.png	drawable-xxhdpi-v4		ae6338b8ebfe2ce3
+versions/6.0.1/assets/fit58-ic_biking.png	8f6fe59133f2d314	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_biking.png	drawable-xxhdpi-v4		8f6fe59133f2d314
+versions/6.0.1/assets/fit58-ic_close_dark.png	185f5250046a4cef	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_close_dark.png	drawable-xxhdpi-v4		185f5250046a4cef
+versions/6.0.1/assets/fit58-ic_dancing.png	442177a5c8ac8cf1	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_dancing.png	drawable-xxhdpi-v4		442177a5c8ac8cf1
+versions/6.0.1/assets/fit58-ic_football.png	8aaf2d6b51f07f5d	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_football.png	drawable-xxhdpi-v4		8aaf2d6b51f07f5d
+versions/6.0.1/assets/fit58-ic_golf.png	c80df9e7bdbb29fe	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_golf.png	drawable-xxhdpi-v4		c80df9e7bdbb29fe
+versions/6.0.1/assets/fit58-ic_hiking.png	c276fa5adff31115	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_hiking.png	drawable-xxhdpi-v4		c276fa5adff31115
+versions/6.0.1/assets/fit58-ic_other.png	1cf97c159928df39	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_other.png	drawable-xxhdpi-v4		1cf97c159928df39
+versions/6.0.1/assets/fit58-ic_pilates.png	bf634e073a77ae7e	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_pilates.png	drawable-xxhdpi-v4		bf634e073a77ae7e
+versions/6.0.1/assets/fit58-ic_rowing.png	2299f6d0c232b32d	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_rowing.png	drawable-xxhdpi-v4		2299f6d0c232b32d
+versions/6.0.1/assets/fit58-ic_running.png	ce0b748e9261d444	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_running.png	drawable-xxhdpi-v4		ce0b748e9261d444
+versions/6.0.1/assets/fit58-ic_skiing.png	ae3541069566fdc5	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_skiing.png	drawable-xxhdpi-v4		ae3541069566fdc5
+versions/6.0.1/assets/fit58-ic_soccer.png	4a3224f4fe286eb3	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_soccer.png	drawable-xxhdpi-v4		4a3224f4fe286eb3
+versions/6.0.1/assets/fit58-ic_steps_gray.png	dd10ee84e1ed4d70	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_steps_gray.png	drawable-xxhdpi-v4		dd10ee84e1ed4d70
+versions/6.0.1/assets/fit58-ic_strength_training.png	4d17b94d2e3d4f48	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_strength_training.png	drawable-xxhdpi-v4		4d17b94d2e3d4f48
+versions/6.0.1/assets/fit58-ic_swimming.png	db37b2eb7a075785	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_swimming.png	drawable-xxhdpi-v4		db37b2eb7a075785
+versions/6.0.1/assets/fit58-ic_tennis.png	1e7d428d8f90307e	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_tennis.png	drawable-xxhdpi-v4		1e7d428d8f90307e
+versions/6.0.1/assets/fit58-ic_timeline_dark.png	839cfc4f56ca8450	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_timeline_dark.png	drawable-xxhdpi-v4		839cfc4f56ca8450
+versions/6.0.1/assets/fit58-ic_volleyball.png	ee8870b8466937ee	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_volleyball.png	drawable-xxhdpi-v4		ee8870b8466937ee
+versions/6.0.1/assets/fit58-ic_walking.png	f2de3b508580dd74	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_walking.png	drawable-xxhdpi-v4		f2de3b508580dd74
+versions/6.0.1/assets/fit58-ic_weight_white.png	50bd86bbf25bbbd4	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_weight_white.png	drawable-xxhdpi-v4		50bd86bbf25bbbd4
+versions/6.0.1/assets/fit58-ic_white_running_24.png	c3db90db473c1ec0	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_white_running_24.png	drawable-xxhdpi-v4		c3db90db473c1ec0
+versions/6.0.1/assets/fit58-ic_yoga.png	bf634e073a77ae7e	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/ic_yoga.png	drawable-xxhdpi-v4		bf634e073a77ae7e
+versions/6.0.1/assets/fit58-illo_header_myfit_single_walking_male_01.png	3c7800310fa6f186	copy	bullhead:/playapps/Fit.apk!res/drawable-nodpi-v4/illo_header_myfit_single_walking_male_01.png	drawable-nodpi-v4		3c7800310fa6f186
+versions/6.0.1/assets/fit58-logo_fitness_color_24dp.png	89fa9d99139a2be8	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/logo_fitness_color_24dp.png	drawable-xxhdpi-v4		89fa9d99139a2be8
+versions/6.0.1/assets/fit58-quantum_ic_add_white_24.png	31b6ba15b65be8b2	copy	bullhead:/playapps/Docs.apk!res/drawable-xxhdpi-v4/quantum_ic_add_white_24.png	drawable-xxhdpi-v4		31b6ba15b65be8b2
+versions/6.0.1/assets/fit58-quantum_ic_group_grey600_24.png	9831a841b1d39617	copy	bullhead:/playapps/Slides.apk!res/drawable-xxhdpi-v4/quantum_ic_group_grey600_24.png	drawable-xxhdpi-v4		9831a841b1d39617
+versions/6.0.1/assets/fit58-quantum_ic_help_black_24.png	a9e32ae87d483a14	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/quantum_ic_help_black_24.png	drawable-xxhdpi-v4		a9e32ae87d483a14
+versions/6.0.1/assets/fit58-quantum_ic_settings_black_24.png	a3e4224e8ca1c11b	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/quantum_ic_settings_black_24.png	drawable-xxhdpi-v4		a3e4224e8ca1c11b
 versions/6.0.1/assets/fw-btn_radio_to_on_mtrl_000.png	2dd9c8672627cd22	copy	bullhead:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/btn_radio_to_on_mtrl_000.png	drawable-xxhdpi-v4		2dd9c8672627cd22
 versions/6.0.1/assets/fw-btn_radio_to_on_mtrl_015.png	259843ddf1ab113b	copy	bullhead:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/btn_radio_to_on_mtrl_015.png	drawable-xxhdpi-v4		259843ddf1ab113b
 versions/6.0.1/assets/fw-btn_switch_to_on_mtrl_00001.9.png	c4603dac2f0cd1d1	copy	bullhead:/system/framework/framework-res.apk!res/drawable-xxhdpi-v4/btn_switch_to_on_mtrl_00001.9.png	drawable-xxhdpi-v4		c4603dac2f0cd1d1
@@ -413,7 +446,7 @@ versions/6.0.1/assets/gel-cling_bg.9.png	a7648c0a6be7114a	copy	bullhead:/system/
 versions/6.0.1/assets/gel-ic_allapps.png	032e2fa7a49215e7	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_allapps.png	drawable-xxhdpi-v4		032e2fa7a49215e7
 versions/6.0.1/assets/gel-ic_allapps_pressed.png	d165841d2046b2fc	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_allapps_pressed.png	drawable-xxhdpi-v4		d165841d2046b2fc
 versions/6.0.1/assets/gel-ic_arrow_back_grey.png	4ebc975addf79a40	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_arrow_back_grey.png	drawable-xxhdpi-v4		4ebc975addf79a40
-versions/6.0.1/assets/gel-ic_clear.svg	e3b0c44298fc1c14	vector	bullhead:/playapps/Docs.apk!res/drawable/ic_clear.xml	drawable	vector drawable drawn as SVG	83db8ca75bbb00b9
+versions/6.0.1/assets/gel-ic_clear.svg	e3b0c44298fc1c14	vector	bullhead:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-v21/ic_clear.xml	drawable-v21	vector drawable drawn as SVG	53370cd1865d8fa1
 versions/6.0.1/assets/gel-ic_info_launcher.png	e6013e5fce2ffe8c	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_info_launcher.png	drawable-xxhdpi-v4		e6013e5fce2ffe8c
 versions/6.0.1/assets/gel-ic_launcher_wallpaper.png	09ac0c1b92920fa7	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/mipmap-xxhdpi-v4/ic_launcher_wallpaper.png	mipmap-xxhdpi-v4		09ac0c1b92920fa7
 versions/6.0.1/assets/gel-ic_mic_none.png	caff75b7db80aabc	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_mic_none.png	drawable-xxhdpi-v4		caff75b7db80aabc
@@ -457,7 +490,7 @@ versions/6.0.1/assets/ghome-wp_009.jpg	1906339eb6e7ca67	copy	bullhead:/system/ap
 versions/6.0.1/assets/ghome-wp_009_small.jpg	f13f79a1389b4f3f	copy	bullhead:/system/app/GoogleHome/GoogleHome.apk!res/drawable-nodpi-v4/wp_009_small.jpg	drawable-nodpi-v4		f13f79a1389b4f3f
 versions/6.0.1/assets/gm-abc_ic_clear_mtrl_alpha.png	db65bb77fdbc61c8	copy	bullhead:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/abc_ic_clear_mtrl_alpha.png	drawable-xxhdpi-v4		db65bb77fdbc61c8
 versions/6.0.1/assets/gm-abc_ic_search_api_mtrl_alpha.png	f1136d0c76acb788	copy	bullhead:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/abc_ic_search_api_mtrl_alpha.png	drawable-xxhdpi-v4		f1136d0c76acb788
-versions/6.0.1/assets/gm-avatar_placeholder.png	e5a4072a512488e5	copy	bullhead:/playapps/Docs.apk!res/drawable-xxhdpi-v4/avatar_placeholder.png	drawable-xxhdpi-v4		e5a4072a512488e5
+versions/6.0.1/assets/gm-avatar_placeholder.png	e5a4072a512488e5	copy	bullhead:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/avatar_placeholder.png	drawable-xxhdpi-v4		e5a4072a512488e5
 versions/6.0.1/assets/gm-gradient_bg_widget_holo.9.png	1618e7488c8afac2	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/gradient_bg_widget_holo.9.png	drawable-xxhdpi-v4		1618e7488c8afac2
 versions/6.0.1/assets/gm-ic_archive_wht_24dp.png	73c969811b8d48c2	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_archive_wht_24dp.png	drawable-xxhdpi-v4		73c969811b8d48c2
 versions/6.0.1/assets/gm-ic_arrow_back_24dp.png	b6bcdaa0ff1afe8c	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_arrow_back_24dp.png	drawable-xxhdpi-v4		b6bcdaa0ff1afe8c
@@ -952,7 +985,7 @@ versions/6.0.1/assets/vv-tile_shadow_bottom.9.png	a19b5df935c366b7	copy	bullhead
 versions/6.0.1/assets/vv-tile_shadow_top.9.png	c730c8124c867aca	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/tile_shadow_top.9.png	drawable-xxhdpi-v4		c730c8124c867aca
 versions/6.0.1/assets/vv-widget_card_frame.9.png	97e8a2643cbedc41	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/widget_card_frame.9.png	drawable-xxhdpi-v4		97e8a2643cbedc41
 versions/6.0.1/assets/vw-widget_tile.png	00bcc498b7a94a70	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/widget_tile.png	drawable-xxhdpi-v4		00bcc498b7a94a70
-versions/6.0.1/assets/wa-ic_add.png	c63e09363eb080a0	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c63e09363eb080a0
+versions/6.0.1/assets/wa-ic_add.png	c63e09363eb080a0	copy	bullhead:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c63e09363eb080a0
 versions/6.0.1/assets/wa-quantum_ic_chevron_left_white_24.png	d20f1f576ee0a627	copy	bullhead:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_chevron_left_white_24.png	drawable-xxhdpi-v4		d20f1f576ee0a627
 versions/6.0.1/assets/wa-quantum_ic_chevron_right_white_24.png	bee52760a197657e	copy	bullhead:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_chevron_right_white_24.png	drawable-xxhdpi-v4		bee52760a197657e
 versions/6.0.1/assets/wa-tp_howtopay_screen1_color_296dp.png	f071ff75f656717a	copy	bullhead:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_howtopay_screen1_color_296dp.png	drawable-xxhdpi-v4		f071ff75f656717a
@@ -983,7 +1016,7 @@ versions/6.0.1/assets/wg-sc-playlist.png	8297beb4402354fe	copy	bullhead:/system/
 versions/6.0.1/assets/wg-search.png	a67e28dd2b043e3e	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/qsb_search_widget_preview.png	drawable-xxhdpi-v4		a67e28dd2b043e3e
 versions/6.0.1/assets/wg-soundsearch-pressed.png	221063fae029d31c	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/sound_id_widget_pressed.png	drawable-xxhdpi-v4		221063fae029d31c
 versions/6.0.1/assets/wg-soundsearch.png	1da41942873cc392	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/sound_id_widget_normal.png	drawable-xxhdpi-v4		1da41942873cc392
-versions/6.0.1/assets/yt-abc_ic_menu_moreoverflow_mtrl_alpha.png	a74d5dff31f9a537	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/abc_ic_menu_moreoverflow_mtrl_alpha.png	drawable-xxhdpi-v4		a74d5dff31f9a537
+versions/6.0.1/assets/yt-abc_ic_menu_moreoverflow_mtrl_alpha.png	a74d5dff31f9a537	copy	bullhead:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/abc_ic_menu_moreoverflow_mtrl_alpha.png	drawable-xxhdpi-v4		a74d5dff31f9a537
 versions/6.0.1/assets/yt-action_bar_logo_release.png	4cd12f7cc2b8b0a6	copy	bullhead:/system/app/YouTube/YouTube.apk!res/drawable-xhdpi-v4/action_bar_logo_release.png	drawable-xhdpi-v4		4cd12f7cc2b8b0a6
 versions/6.0.1/assets/yt-contextual_menu_anchor_normal.png	9b7076d765f1107e	copy	bullhead:/system/app/YouTube/YouTube.apk!res/drawable-xxhdpi-v4/contextual_menu_anchor_normal.png	drawable-xxhdpi-v4		9b7076d765f1107e
 versions/6.0.1/assets/yt-ic_account_circle.png	831430d6b50b64f8	copy	bullhead:/system/app/YouTube/YouTube.apk!res/drawable-xxhdpi-v4/ic_account_circle.png	drawable-xxhdpi-v4		831430d6b50b64f8

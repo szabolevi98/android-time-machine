@@ -8,7 +8,7 @@ copy: 1266, generated: 2, own: 2
 
 ## 6.0.1 (bullhead)
 
-copy: 787, vector: 210, generated: 9, own: 2
+copy: 820, vector: 210, generated: 9, own: 2
 
 ## 2.3.6 (crespo)
 
@@ -61,5 +61,5 @@ Not traced:
 
 ## 7.1.2 (angler)
 
-copy: 923, vector: 352, generated: 4, own: 3
+copy: 955, vector: 352, generated: 4, own: 3
 

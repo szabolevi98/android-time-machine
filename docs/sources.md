@@ -203,6 +203,8 @@ docs/reports/simulator-limits-2026-10-23.md, "Negyedik kör".
 | 7.1.2 | Docs 1.7.212.02 | [docs-1-7-212-02-release](https://www.apkmirror.com/apk/google-inc/docs/docs-1-7-212-02-release/) (uploaded 2017-06-01) | armeabi-v7a, nodpi | `0f9a2e7ec2c2fb814f3876eae680711eba3ed3edabbcc4fb43e2e6f3f59830a6` |
 | 7.1.2 | Sheets 1.7.212.03 | [sheets-1-7-212-03-release](https://www.apkmirror.com/apk/google-inc/sheets/sheets-1-7-212-03-release/) (uploaded 2017-06-01) | armeabi-v7a, nodpi | `6dfa2bef4822ca9c43ccdfa58133625e86457e5d4936f67ab0cc5aa850f5d09f` |
 | 7.1.2 | Slides 1.7.212.01 | [slides-1-7-212-01-release](https://www.apkmirror.com/apk/google-inc/slides/slides-1-7-212-01-release/) (uploaded 2017-06-02) | armeabi-v7a, nodpi | `eda23b06e046e598f028ccfc89cd398560fac180cf2bed82f2ca71012932d886` |
+| 6.0.1 | Fit 1.58.09 | [fit-1-58-09-release](https://www.apkmirror.com/apk/google-inc/fit/fit-1-58-09-release/) (uploaded 2016-08-02) | noarch, nodpi | `483e06b1bfa6164d5af749cb00c34c72315522d57db7f60f94203cb9ab98acb0` |
+| 7.1.2 | Fit 1.68.00 | [fit-1-68-00-release](https://www.apkmirror.com/apk/google-inc/fit/fit-1-68-00-release/) (uploaded 2017-06-13) | noarch, nodpi | `8763fe95d2313ac39bf4ab66a30558f5e7b6d902fee333a6495fe0bfae8bd957` |
 
 Sheets on 6.0.1 is 1.6.502.06 (January 2017): APKMirror has no Sheets release between 1.4.492.11 and it, so the
 plan's fallback, the first one after the image's month, is used.

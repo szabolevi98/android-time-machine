@@ -597,6 +597,30 @@ MM.appsData = {
 "res": "bullhead:playapps/Docs.apk:res/mipmap-xxxhdpi-v4/quantum_logo_docs_launcher_color_48.png",
 "installed": true
 },
+"fit": {
+"pkg": "com.google.android.apps.fitness",
+"cls": "com.google.android.apps.fitness.welcome.WelcomeActivity",
+"label": {
+"en": "Fit",
+"de": "Fit",
+"fr": "Fit",
+"es": "Fit",
+"hu": "Fitnesz"
+},
+"icon": "assets/app-fit.png",
+"color": "#f5f5f5",
+"version": "1.58.09-100",
+"codeSize": 19869300,
+"permGroups": [
+"contacts",
+"location",
+"sensors",
+"storage"
+],
+"targetSdk": 23,
+"res": "bullhead:playapps/Fit.apk:res/mipmap-xxxhdpi-v4/logo_fitness_color_44in48dp.png",
+"installed": true
+},
 "earth": {
 "pkg": "com.google.earth",
 "cls": "com.google.earth.EarthActivity",
