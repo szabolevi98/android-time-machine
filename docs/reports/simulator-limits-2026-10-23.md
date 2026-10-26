@@ -267,7 +267,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T16 — 2.3.6 Google Voice helyi beállítások
 
 - **Ütem:** Második kör, #28. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `3db7f405`. A Google Voice menü Settings pontja a googlevoice.apk preferences.xml-jét nyitja a GB preferenciasorokon: General (Do not disturb, Voicemail playback: Play via handset/speaker, Sync and notifications), About (Legal information, letiltott My Google Voice number és Build number 0.4.2.30). C2DM miatt a Refresh inbox elmarad, a Synchronize Inbox a rendszer Background data-jától függ (ez az Accounts & sync oldalt nyitja); Inbox notifications kikapcsolva szürkíti a Vibrate/Light/Select ringtone sorokat. Making calls, This phone’s number, Sign out és a jogi oldalak korlát maradnak. Az értékek data.appPrefs['gv-settings'/'gv-sync']-ben. Teszt: limits-regression T16.
 - **Verziók:** 2.3.6.
 - **Forráscsoportok:** 2.3.6-13.
 - **Elkészítendő és határ:** A Settings út helyi értesítési, hang- és megjelenítési preferenciái a crespo gyári APK alapján. Balance, fizetés, szolgáltatói aktiválás és Help korlát marad.
