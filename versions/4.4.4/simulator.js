@@ -246,7 +246,9 @@
   const fullDate = () => deviceDate().toLocaleDateString(i18n.locale(), { weekday: 'long', month: 'long', day: 'numeric' });
   const shadeDate = () => deviceDate().toLocaleDateString(i18n.locale(), { weekday: 'short', month: 'short', day: 'numeric' });
   const contact = id => data.contacts.find(item => item.id === Number(id));
+  const webShortcut = id => String(id).startsWith('web:') ? (data.webShortcuts || []).find(w => String(w.id) === String(id).slice(4)) || {title: ''} : null;
   const appIcon = id => {
+    if (webShortcut(id)) return '<span class="app-icon"><img src="assets/c32-app_shortcut_icon.png" alt=""></span>';
     const person = contactShortcut(id);
     if (person) return `<span class="app-icon contact-shortcut-icon">${window.KKDialer ? KKDialer.letterTile(person, 'contact-shortcut-tile') : ''}</span>`;
     if (id === 'play-store') return '<span class="app-icon"><img src="assets/play-store.svg?v=2" alt=""></span>';
@@ -264,17 +266,17 @@
      the image's contact picture as the icon, the name as the label. Launcher3's InstallShortcutReceiver adds it on the first free cell from the second screen on (startSearchPageIndex), a new screen when all are full; the toast names it (shortcut_installed). */
   const contactShortcut = id => String(id).startsWith('contact:') ? data.contacts.find(p => p.id === Number(String(id).slice(8))) || {name: ''} : null;
   const VCARD = key => { const row = window.StockStrings?.vcard?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : key; };
-  function placeContactShortcut(person) {
-    if (!person) return;
+  function placeContactShortcut(person) { if (person) placeShortcut(`contact:${person.id}`, person.name); }
+  function placeShortcut(key, label) {
     const free = page => (data.homePages[page] || []).findIndex((id, index) => !id && !(data.homeWidgets[page] || []).some(w => { const s = widgetSize(w); return index % 4 >= w.x && index % 4 < w.x + s.width && Math.floor(index / 4) >= w.y && Math.floor(index / 4) < w.y + s.height; }));
     const count = homePageCount ? homePageCount() : data.homePages.length;
     const order = Array.from({length: Math.max(0, count - 1)}, (_, i) => i + 1);
     let page = order.find(i => free(i) >= 0);
     if (page === undefined) { data.homePages.splice(count, 0, Array(16).fill(null)); data.homeWidgets.splice(count, 0, []); page = count; }
-    data.homePages[page][free(page)] = `contact:${person.id}`; save();
-    toast(AndroidStrings.format(VCARD('Shortcut "%s" created.'), person.name));
+    data.homePages[page][free(page)] = key; save();
+    toast(AndroidStrings.format(VCARD('Shortcut "%s" created.'), label));
   }
-  const launcherIcon = id => contactShortcut(id) ? `<button class="launcher-icon contact-shortcut" data-action="open-contact" data-id="${safe(String(id).slice(8))}" aria-label="${safe(contactShortcut(id).name)}" data-no-translate>${appIcon(id)}<span>${safe(contactShortcut(id).name)}</span></button>` : ICSLauncherFolders.folder(data,id)
+  const launcherIcon = id => webShortcut(id) ? `<button class="launcher-icon" data-action="open-web-shortcut" data-id="${safe(String(id).slice(4))}" aria-label="${safe(webShortcut(id).title)}" data-no-translate>${appIcon(id)}<span>${safe(webShortcut(id).title)}</span></button>` : contactShortcut(id) ? `<button class="launcher-icon contact-shortcut" data-action="open-contact" data-id="${safe(String(id).slice(8))}" aria-label="${safe(contactShortcut(id).name)}" data-no-translate>${appIcon(id)}<span>${safe(contactShortcut(id).name)}</span></button>` : ICSLauncherFolders.folder(data,id)
     ? `<button class="launcher-icon" data-action="folder-open" data-folder-id="${safe(id)}" aria-label="${safe(folderName(id))}" data-no-translate>${appIcon(id)}<span>${safe(folderName(id))}</span></button>`
     : `<button class="launcher-icon" data-action="${id==='apps'?'drawer':'open-app'}" ${id==='apps'?'':`data-app="${id}"`} aria-label="${safe(appNames[id]||'Apps')}">${appIcon(id)}<span>${safe(appNames[id]||'Apps')}</span></button>`;
   const actionbar = (title, right = '') => `<div class="actionbar"><button class="up" data-action="${ui.view === 'settings' && !ui.sub ? 'noop' : 'back'}" aria-label="${ui.view === 'settings' && !ui.sub ? 'Settings' : 'Back'}">${ui.view === 'settings' ? `${ui.sub ? '<img class="up-chevron" src="assets/ic_ab_back_holo_dark.png" alt="">' : ''}<img class="settings-header-icon" src="assets/settings.png" alt="">` : '‹'}</button><h2>${safe(title)}</h2>${right}</div>`;
@@ -796,7 +798,10 @@
       else { card.style.translate = ''; card.style.opacity = ''; } };
     window.addEventListener('pointermove', move); window.addEventListener('pointerup', end); window.addEventListener('pointercancel', end);
   }, true);
+  const printContext = () => ({ui, data, root: overlayRoot, language: i18n.language, locale: i18n.locale(), t: key => i18n.t(key), save, renderOverlay, toast: message => toast(i18n.t(message)), mime: name => KKDownloads.mime(name), saved: () => { if (ui.view === 'downloads') render(); }});
+  const chromeText = key => AndroidStrings.pick(window.StockStrings?.chrome?.[key], i18n.locale(), key);
   function navigateBack() {
+    if (ui.overlay === 'print') { const u = ui.print; if (u?.step === 'printers') { u.step = 'config'; renderOverlay(); } else if (u?.expanded) { u.expanded = false; renderOverlay(); } else { ui.print = null; ui.overlay = ''; renderOverlay(); } return; }
     if (ui.view === 'settings' && ui.sub.startsWith('lng-') && !ui.overlay && InputLanguage.back(langContext())) return;
     if (ui.view === 'google-search' && ui.voiceFromSettings && ui.sub === 'settings' && !ui.overlay && !(ui.ksStack || []).length) { ui.voiceFromSettings = false; openApp('settings'); ui.sub = 'language'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'dev-backup-pw' && !ui.overlay) { ui.sub = 'development'; render(); return; }
@@ -958,6 +963,11 @@
       overlayRoot.innerHTML = ProcStats.overlay(procStatsContext());
     } else if (ui.overlay === 'lng-dialog') {
       overlayRoot.innerHTML = InputLanguage.overlay(langContext());
+    } else if (ui.overlay === 'print') {
+      overlayRoot.innerHTML = PrintSpooler.overlay(printContext());
+    } else if (ui.overlay === 'chrome-a2hs') {
+      // Chrome's Add to homescreen: the page's title in the Title field, Cancel / Add.
+      overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog chr-a2hs" role="dialog" aria-label="${safe(chromeText('Add to homescreen'))}"><h3>${safe(chromeText('Add to homescreen'))}</h3><div class="chr-a2hs-row"><img src="assets/c32-app_shortcut_icon.png" alt=""><input data-a2hs-title value="${safe(ui.a2hs?.title || '')}" placeholder="${safe(chromeText('Title'))}" aria-label="${safe(chromeText('Title'))}"></div><div class="settings-dialog-actions"><button data-action="close-overlay">${safe(chromeText('Cancel'))}</button><button data-action="chrome-a2hs-add">${safe(chromeText('Add'))}</button></div></div>`;
     } else if (ui.overlay === 'cert-install') {
       overlayRoot.innerHTML = CertInstall.overlay(certContext());
     } else if(ui.overlay==='sx-dialog'){
@@ -1452,7 +1462,7 @@
       const name = `download_${now.getFullYear()}${two(now.getMonth() + 1)}${two(now.getDate())}_${two(now.getHours())}${two(now.getMinutes())}${two(now.getSeconds())}`;
       const copy = {...clone(photo), id: Date.now(), name, album: 'download', created: now.getTime()};
       data.photos.push(copy);
-      (data.downloads ||= []).unshift({id: copy.id, title: `${name}.jpg`, domain: photo.name, size: 1048576 + (copy.id % 900000), status: 'success', kind: 'image', time: now.getTime(), photoId: copy.id});
+      (data.downloads ||= []).unshift({name: `${name}.jpg`, size: 1048576 + (copy.id % 900000), time: now.getTime(), photoId: copy.id});
       save(); if (ui.view === 'photos') render(); toast(photosText('Download complete.'));
     }, 1200);
   }
@@ -1819,6 +1829,7 @@
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Gmail's label settings, Days of mail to sync and the vacation responder (gmail.js).
     if (action.startsWith('lng-') && InputLanguage.handle(action, id, langContext())) return;
+    if (action.startsWith('pr-') && PrintSpooler.handle(action, id, printContext())) return;
     if (action.startsWith('dev-') && JBDeveloperOptions.handle(action, id, devContext())) return;
     if (action.startsWith('ps-') && ProcStats.handle(action, id, procStatsContext())) return;
     if (action.startsWith('mfx-') && MusicFX.handle(action, id, musicFxContext())) return;
@@ -2342,6 +2353,15 @@
       case 'photos-pref-list': ui.photosPrefList = id; ui.overlay = 'photos-pref-list'; renderOverlay(); break;
       case 'photos-pref-pick': (data.photosPrefs ||= {})[ui.photosPrefList] = id; ui.overlay = ''; renderOverlay(); save(); render(); break;
       case 'photos-pref-online': toast(i18n.t('This feature is not part of the simulator.')); break;
+      case 'gallery-print': { const photo = data.photos.find(x => x.id === ui.selectedPhoto); ui.overlay = ''; ui.galleryPopup = ''; renderOverlay(); if (photo) { render(); PrintSpooler.open(printContext(), {name: photo.name, image: ICSMedia.image(photo)}); } break; }
+      case 'photos-print': { const photo = photosCurrent(); ui.overlay = ''; renderOverlay(); if (photo) PrintSpooler.open(printContext(), {name: photo.name, image: ICSMedia.image(photo)}); break; }
+      // Chrome's Print…: the page as it is shown, its heading as the job's name.
+      case 'chrome-print': { const page = viewport.querySelector('.browser-page'); ui.overlay = ''; renderOverlay(); const title = page?.querySelector('h1, h2, strong')?.textContent?.trim() || ui.browserUrl; PrintSpooler.open(printContext(), {name: title, title, lines: String(page?.innerText || ui.browserUrl).split('\n').map(x => x.trim()).filter(Boolean)}); break; }
+      case 'chrome-a2hs': { const page = viewport.querySelector('.browser-page'); ui.a2hs = {url: ui.browserUrl, title: page?.querySelector('h1, h2, strong')?.textContent?.trim() || ui.browserUrl}; ui.overlay = 'chrome-a2hs'; renderOverlay(); overlayRoot.querySelector('[data-a2hs-title]')?.focus(); break; }
+      case 'chrome-a2hs-add': { const title = String(overlayRoot.querySelector('[data-a2hs-title]')?.value || ui.a2hs?.title || '').trim() || ui.a2hs.url; const item = {id: Date.now(), title, url: ui.a2hs.url}; (data.webShortcuts ||= []).push(item); ui.overlay = ''; renderOverlay(); placeShortcut(`web:${item.id}`, title); break; }
+      case 'open-web-shortcut': { const item = (data.webShortcuts || []).find(w => String(w.id) === id); if (!item) break; openApp('chrome'); navigateBrowser(item.url); break; }
+      case 'dl-open-pdf': { const doc = (data.downloads || []).find(d => String(d.time) === id); if (doc) PrintSpooler.openPdf(printContext(), doc); break; }
+      case 'dl-open-photo': { const photo = data.photos.find(p => p.id === Number(id)); if (!photo) break; openApp('photos'); ui.photosList = 'all'; const list = PhotosApp.list(photosContext()); ui.photosIndex = Math.max(0, list.findIndex(p => p.id === photo.id)); ui.selectedPhoto = photo.id; ui.sub = 'photo'; render(); break; }
       case 'photos-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
       case 'chrome-close-all': ui.browserSession = {tabs: [{history: [ChromeApp.NTP], index: 0}], active: 0}; ui.sub = ''; ui.overlay = ''; renderOverlay(); saveBrowserState(); render(); break;
       case 'chrome-ntp': chromeSection(id); break;
@@ -2744,6 +2764,7 @@
     }
   });
   document.addEventListener('input', event => {
+    if (event.target.matches('[data-pr]') && PrintSpooler.input(event.target, printContext())) return;
     if (event.target.matches('[data-gnp-q]') && ui.gnowDraft?.placeDialog) { ui.gnowDraft.placeDialog.q = event.target.value; const at = event.target.selectionStart; render(); const field = viewport.querySelector('[data-gnp-q]'); field?.focus(); field?.setSelectionRange(at, at); return; }
     if (event.target.matches('[data-gnr-rule]') && ui.gnowDraft?.ruleDialog) { const r = ui.gnowDraft.ruleDialog, key = event.target.dataset.gnrRule, value = event.target.value;
       if (key === 'interval' || key === 'count') { r[key] = Math.max(1, Math.min(key === 'count' ? 730 : 99, Number(value) || 1)); const label = event.target.closest('.gnr-interval'); if (label && key === 'interval') { const keep = event.target.selectionStart; render(); const f = viewport.querySelector('[data-gnr-rule="interval"]'); f?.focus(); try { f?.setSelectionRange(keep, keep); } catch (error) { /* number input */ } } return; }

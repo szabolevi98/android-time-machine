@@ -42,7 +42,8 @@
     const sort = ui.dlSort || 'date', grid = !!ui.dlGrid;
     const list = sorted(items || [], sort);
     const open = `data-action="toast" data-id="${e(t('No app can open this file.'))}"`;
-    const row = item => `<button class="ldu-item" ${open}><span class="ldu-icon">${icon(`ic_doc_${mime(item.name)}`, 'ldu-mime')}</span><span class="ldu-copy"><span class="ldu-title">${e(item.name)}</span><span class="ldu-line2"><span>${e(when(item.time, locale))}</span><span>${e(size(item.size))}</span></span></span></button>`;
+    const openOf = item => item.pdf ? `data-action="dl-open-pdf" data-id="${item.time}"` : item.photoId ? `data-action="dl-open-photo" data-id="${item.photoId}"` : open;
+    const row = item => `<button class="ldu-item" ${openOf(item)}><span class="ldu-icon">${icon(`ic_doc_${mime(item.name)}`, 'ldu-mime')}</span><span class="ldu-copy"><span class="ldu-title">${e(item.name)}</span><span class="ldu-line2"><span>${e(when(item.time, locale))}</span><span>${e(size(item.size))}</span></span></span></button>`;
     const cell = item => `<button class="ldu-cell" ${open}>${icon(`ic_doc_${mime(item.name)}`, 'ldu-mime')}<span class="ldu-band"><span class="ldu-title">${e(item.name)}</span><span class="ldu-line2"><span>${e(when(item.time, locale))}</span><span>${e(size(item.size))}</span></span></span></button>`;
     const body = list.length ? `<div class="ldu-${grid ? 'grid' : 'list'}">${list.map(grid ? cell : row).join('')}</div>` : `<p class="ldu-empty">${e(t('No items'))}</p>`;
     const action = (act, id, label, file) => `<button data-action="${act}" ${id ? `data-id="${id}"` : ''} aria-label="${e(t(label))}">${icon(file, 'ldu-ab-icon')}</button>`;

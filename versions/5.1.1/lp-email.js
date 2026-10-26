@@ -277,7 +277,7 @@
       if (kind === 'conversation') return menu([['email-folders', 'Move to']]);
       /* MessageHeaderView's overflow (message_header_overflow_menu.xml): with the default reply behaviour Reply is the
          header button, so Reply all, Forward, Add or Remove star (not in Trash) and Print. */
-      if (kind === 'message') return menu([['email-reply-all', 'Reply all'], ['email-forward', 'Forward'], ...(item && item.folder !== 'Trash' ? [['email-star', item.starred ? 'Remove star' : 'Add star', item.id]] : []), ['email-unavailable', 'Print']]);
+      if (kind === 'message') return menu([['email-reply-all', 'Reply all'], ['email-forward', 'Forward'], ...(item && item.folder !== 'Trash' ? [['email-star', item.starred ? 'Remove star' : 'Add star', item.id]] : []), ['email-print', 'Print']]);
       // validateVolatileMenuOptionVisibility: "Empty Trash" over a non-empty trash (EMPTY_TRASH is an Email capability).
       if (kind === 'trash') return menu([['email-empty-trash', 'Empty Trash']]);
       return '';

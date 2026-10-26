@@ -1,0 +1,61 @@
+/* kk-print.js: PrintJobConfigActivity's panel (container_background #f2f2f2, PrintOptionTitleTextAppearance #888888 caps,
+   the white action bar under its #cccccc separator), DocumentsUI's save mode (Theme.Holo.Light), ResolverActivity and
+   Quickoffice's viewer. 4.4 has no print preview. */
+.pr-scrim{position:absolute;inset:0;z-index:58;background:#0009}
+.pr-panel{position:absolute;z-index:59;left:0;right:0;top:var(--sb);max-height:80%;overflow-y:auto;background:#f2f2f2;color:#333;font-family:Roboto,sans-serif;box-shadow:0 calc(2 * var(--dp)) calc(8 * var(--dp)) #0006}
+.pr-dest{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #ccc;background:none;text-align:left;font:calc(18 * var(--dp)) Roboto,sans-serif;color:#333}
+.pr-dest span{flex:1}
+.pr-dest i{width:0;height:0;border:calc(5 * var(--dp)) solid transparent;border-right-color:#888;border-bottom-color:#888}
+.pr-dest-drop{position:absolute;z-index:2;left:calc(8 * var(--dp));right:calc(8 * var(--dp));top:calc(48 * var(--dp));background:#fff;box-shadow:0 calc(2 * var(--dp)) calc(6 * var(--dp)) #0006}
+.screen .pr-dest-drop button{display:flex;align-items:center;width:100%;min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;text-align:left;font:calc(16 * var(--dp)) Roboto,sans-serif;color:#333}
+.pr-cols{display:grid;grid-template-columns:1fr 1fr;gap:0 calc(16 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp))}
+.pr-opt{display:flex;flex-direction:column;margin-bottom:calc(8 * var(--dp))}
+.pr-opt>span{margin-top:calc(8 * var(--dp));color:#888;font:700 calc(13 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.screen .pr-opt input,.screen .pr-opt select{height:calc(40 * var(--dp));min-width:0;padding:0 calc(4 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #aaa;background:none;font:calc(16 * var(--dp)) Roboto,sans-serif;color:#333;outline:0}
+.pr-opt option{color:#000}
+.pr-actions{display:flex;flex-direction:column;background:#fff}
+.pr-actions i{height:calc(1 * var(--dp));background:#ccc}
+.screen .pr-actions button{min-height:calc(48 * var(--dp));border:0;background:none;font:calc(16 * var(--dp)) Roboto,sans-serif;color:#333}
+.pr-generating p{display:flex;align-items:center;justify-content:space-between;margin:0;padding:calc(24 * var(--dp)) calc(16 * var(--dp));font-size:calc(18 * var(--dp))}
+.pr-spinner{width:calc(32 * var(--dp));height:calc(32 * var(--dp));border:calc(3 * var(--dp)) solid #33b5e5;border-right-color:transparent;border-radius:50%;animation:pr-rot 1s linear infinite}
+@keyframes pr-rot{to{transform:rotate(360deg)}}
+.pr-preview{flex:1;min-height:0;position:relative;overflow-y:auto;padding:calc(8 * var(--dp)) 0;background:#f2f1f2}
+.pr-page{width:calc(260 * var(--dp));margin:calc(8 * var(--dp)) auto;background:#fff;box-shadow:0 calc(1 * var(--dp)) calc(3 * var(--dp)) rgba(0,0,0,.25)}
+.pr-page.land{width:calc(330 * var(--dp))}
+.pr-sheet{aspect-ratio:210/297;overflow:hidden;padding:calc(18 * var(--dp)) calc(20 * var(--dp));color:#222;font:calc(5.5 * var(--dp))/1.45 Roboto,sans-serif}
+.pr-page.land .pr-sheet{aspect-ratio:297/210}
+.pr-page.bw .pr-sheet{filter:grayscale(1)}
+.pr-sheet img{display:block;width:100%;height:100%;object-fit:contain}
+.pr-sheet h1{margin:0 0 calc(6 * var(--dp));font:500 calc(9 * var(--dp))/1.3 Roboto,sans-serif}
+.pr-sheet p{margin:0 0 calc(4 * var(--dp))}
+.pr-docs{position:absolute;top:var(--sb);bottom:var(--nb);left:0;right:0;z-index:60;display:flex;flex-direction:column;background:#fff;color:#212121;font-family:Roboto,sans-serif}
+.pr-docs-bar{flex:none;display:flex;align-items:center;gap:calc(12 * var(--dp));min-height:calc(48 * var(--dp));padding:0 calc(12 * var(--dp));background:#f1f1f1;color:#333}
+.screen .pr-docs-bar button{width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center}
+.pr-docs-bar img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.pr-docs-bar span{display:flex;flex-direction:column}
+.pr-docs-bar b{font-weight:400;font-size:calc(18 * var(--dp))}
+.pr-docs-bar small{font-size:calc(13 * var(--dp));opacity:.75}
+.pr-docs-list{flex:1;overflow-y:auto}
+.pr-doc{display:flex;align-items:center;gap:calc(16 * var(--dp));min-height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));opacity:.45}
+.pr-doc img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.pr-doc span{display:flex;flex-direction:column}
+.pr-doc small{color:#757575;font-size:calc(14 * var(--dp))}
+.pr-empty{margin:calc(48 * var(--dp)) calc(16 * var(--dp));text-align:center;color:#757575;font-size:calc(16 * var(--dp))}
+.pr-savebar{flex:none;display:flex;align-items:center;gap:calc(8 * var(--dp));min-height:calc(56 * var(--dp));padding:0 0 0 calc(16 * var(--dp));background:#ddd;border-top:calc(1 * var(--dp)) solid #ccc}
+.pr-savebar img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.screen .pr-savebar input{flex:1;min-width:0;height:calc(40 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #33b5e5;background:none;font:calc(16 * var(--dp)) Roboto,sans-serif;color:#212121;outline:0}
+.screen .pr-savebar button{align-self:stretch;min-width:calc(72 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#33b5e5;text-transform:uppercase}
+.pr-chooser .pr-app{display:flex;align-items:center;gap:calc(16 * var(--dp));width:100%;min-height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;text-align:left;font:calc(16 * var(--dp)) Roboto,sans-serif;color:inherit}
+.pr-chooser .pr-app img{width:calc(40 * var(--dp));height:calc(40 * var(--dp))}
+.pr-chooser .pr-app.on{background:#33b5e566}
+.pr-viewer{position:absolute;top:var(--sb);bottom:var(--nb);left:0;right:0;z-index:60;display:flex;flex-direction:column;background:#525252}
+.pr-viewer-bar{flex:none;display:flex;align-items:center;gap:calc(8 * var(--dp));min-height:calc(48 * var(--dp));padding:0 calc(8 * var(--dp));background:#f3f3f3;color:#333;font:400 calc(18 * var(--dp)) Roboto,sans-serif}
+.screen .pr-viewer-bar button{width:calc(40 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center}
+.pr-viewer-bar button img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.pr-viewer-app{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.pr-viewer-bar b{font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pr-viewer-pages{background:#525252}
+/* Chrome's Add to homescreen dialog: app_shortcut_icon beside the Title field. */
+.chr-a2hs-row{display:flex;align-items:center;gap:calc(12 * var(--dp))}
+.chr-a2hs-row img{width:calc(48 * var(--dp));height:calc(48 * var(--dp))}
+.screen .chr-a2hs-row input{flex:1;min-width:0;height:calc(40 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #33b5e5;background:none;color:inherit;font-size:calc(16 * var(--dp));outline:0}

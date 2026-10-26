@@ -156,7 +156,7 @@
   function menu(ctx) {
     const {ui} = ctx, item = (name, label) => `<button data-action="${name}" role="menuitem">${e(P(ctx, label))}</button>`;
     const items = ui.sub === 'photo'
-      ? [item('photos-details', 'Photo details'), item('photos-unsupported', 'Print'), ...(ctx.data && list(ctx).length > 1 ? [item('photos-slideshow', 'Slideshow')] : []), item('photos-wallpaper', 'Set as'), item('photos-download', 'Download')]
+      ? [item('photos-details', 'Photo details'), item('photos-print', 'Print'), ...(ctx.data && list(ctx).length > 1 ? [item('photos-slideshow', 'Slideshow')] : []), item('photos-wallpaper', 'Set as'), item('photos-download', 'Download')]
       : [item('photos-select', 'Select photos'), item('photos-unsupported', 'Send feedback'), item('photos-settings', 'Settings'), item('photos-unsupported', 'Help')];
     return `<div class="menu-scrim" data-action="close-overlay"></div><div class="ph-menu" role="menu">${items.join('')}</div>`;
   }

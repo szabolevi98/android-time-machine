@@ -3032,9 +3032,79 @@ const photosLocal = async h => {
   h.check('a tap stops it', await h.ev(`document.querySelector('#viewport .ph-viewer img')?.getAttribute('src')`) === stopped);
   await h.tap('#viewport [data-action="photos-menu"]'); await h.tap('[data-action="photos-download"]');
   h.check('Download says it is downloading', await h.until(`/Downloading image/.test(document.querySelector('.toast')?.textContent || '')`));
-  h.check('then saves a copy in Download', await h.until(`/Download complete/.test(document.querySelector('.toast')?.textContent || '')`, 5000) && (await photos()).some(p => p.album === 'download' && /^download_\d{8}_\d{6}$/.test(p.name)) && ((await store(h, 'downloads')) || []).some(d => /^download_\d{8}_\d{6}\.jpg$/.test(d.title)));
+  h.check('then saves a copy in Download', await h.until(`/Download complete/.test(document.querySelector('.toast')?.textContent || '')`, 5000) && (await photos()).some(p => p.album === 'download' && /^download_\d{8}_\d{6}$/.test(p.name)) && ((await store(h, 'downloads')) || []).some(d => /^download_\d{8}_\d{6}\.jpg$/.test(d.name)));
+};
+// Printing (T45): every app's Print opens the image's PrintSpooler with its document — 5.1's preview shows it —;
+// cancelling saves nothing, Save as PDF goes through DocumentsUI's "Save to" into Downloads, and the PDF opens
+// through the chooser in Quickoffice (4.4) / Drive (5.1) with the same content. Chrome's Add to homescreen puts a
+// shortcut on the home screen that opens the page.
+const printFlow = (open, expect, tag = '') => async h => {
+  const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  const pdfs = async () => ((await store(h, 'downloads')) || []).filter(d => d.pdf);
+  const lp = await open(h, act);
+  h.check('Print opens the print dialog with Save as PDF', await h.until(`/Save as PDF/.test(document.querySelector('.pr-panel, .pr-activity')?.textContent || '')`));
+  if (tag) await h.shot(`print-${tag}`);
+  if (lp) h.check('the preview shows the document', await h.until(`(${expect.toString()})(document.querySelector('.pr-preview .pr-sheet'))`, 4000));
+  // Cancel first: 4.4's Generating print job has Cancel, 5.1's dialog goes with Back.
+  if (lp) await h.key('Escape'); else { await h.tap('[data-action="pr-print"]'); await h.until(`!!document.querySelector('.pr-generating')`); await h.tap('.pr-generating [data-action="pr-cancel"]'); }
+  h.check('Cancel saves nothing', await h.until(`!document.querySelector('.pr-panel, .pr-activity, .pr-docs')`) && !(await pdfs()).length);
+  await open(h, act);
+  await h.until(`!!document.querySelector('.pr-panel, .pr-activity')`);
+  await h.tap('[data-action="pr-print"]');
+  h.check('Save as PDF asks DocumentsUI where (Save to)', await h.until(`/Save to/.test(document.querySelector('.pr-docs')?.textContent || '') && /\\.pdf$/.test(document.querySelector('[data-pr-name]')?.value || '')`, 4000));
+  if (tag) await h.shot(`print-${tag}-save`);
+  await h.tap('[data-action="pr-save"]');
+  const saved = await pdfs();
+  h.check('the PDF is in Downloads', saved.length === 1 && /\.pdf$/.test(saved[0].name));
+  await h.openApp('downloads');
+  await h.tap('#viewport [data-action="dl-open-pdf"]');
+  h.check('it opens through the chooser', await h.until(`!!document.querySelector('.pr-chooser [data-action="pr-app"]')`));
+  await h.tap(lp ? '.pr-chooser [data-id="drive"]' : '.pr-chooser [data-id="quickoffice"]'); await h.tap('[data-action="pr-once"]');
+  if (tag) { await h.sleep(300); await h.shot(`print-${tag}-viewer`); }
+  h.check('and shows what was printed', await h.until(`(${expect.toString()})(document.querySelector('.pr-viewer .pr-sheet'))`));
+  await h.key('Escape');
+};
+const photoSheet = sheet => !!sheet?.querySelector('img[src]');
+const chromePage = async h => {
+  await h.openApp('chrome'); await h.until(`!!document.querySelector('#viewport .chr-omnibox input')`);
+  await h.type('#viewport .chr-omnibox input', 'www.google.com');
+  await h.send('Input.dispatchKeyEvent', {type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, text: '\r'});
+  await h.until(`!!document.querySelector('#viewport .browser-page')`);
+};
+const PRINT_CASES = {
+  photos: async (h, act) => { await h.openApp('photos'); await h.tap('#viewport [data-action="photos-open"]'); await h.until(`!!document.querySelector('#viewport .ph-viewer')`); await h.tap('#viewport [data-action="photos-menu"]'); await h.tap('[data-action="photos-print"]'); return !!(await h.ev(`!!window.LPDownloads`)); },
+  gallery: async (h, act) => { await h.openApp('gallery'); await h.tap('#viewport [data-jbgal-album]'); await h.tap('#viewport [data-action="photo"]'); await h.tap('#viewport [data-jbgal-open="photo-menu"]'); await h.tap('#viewport [data-action="gallery-print"]'); return false; },
+  chrome: async (h, act) => { await chromePage(h); await h.tap('#viewport [data-action="browser-menu"]'); await h.tap('[data-action="chrome-print"]'); return !!(await h.ev(`!!window.LPDownloads`)); },
+  gmail: async (h, act) => { await h.openApp('gmail'); await h.tap('#viewport [data-action="email-read"]'); await h.tap('#viewport [data-action="email-menu"][data-id="message"]'); await h.tap('[data-action="email-print"]'); return true; },
+  docs: app => async (h, act) => { await h.openApp(app); await h.tap('#viewport [data-action="ed-item"]'); await h.tap('[data-action="ed-print"]'); return true; },
+};
+const textSheet = sheet => (sheet?.textContent || '').trim().length > 3;
+const a2hs = async h => {
+  await chromePage(h);
+  await h.tap('#viewport [data-action="browser-menu"]');
+  await h.tap('[data-action="chrome-a2hs"]');
+  h.check('Add to homescreen asks for the title', await h.until(`!!document.querySelector('.chr-a2hs [data-a2hs-title]')`));
+  await h.type('.chr-a2hs [data-a2hs-title]', 'My page');
+  await h.tap('[data-action="chrome-a2hs-add"]');
+  const shortcut = ((await store(h, 'webShortcuts')) || [])[0];
+  h.check('the shortcut is kept with its page', shortcut?.title === 'My page' && !!shortcut.url, JSON.stringify(shortcut));
+  await h.key('Home'); await h.ev(`document.querySelector('[data-action="home"]')?.click()`);
+  h.check('it is on the home screen', await h.until(`[...document.querySelectorAll('[data-action="open-web-shortcut"]')].some(b => /My page/.test(b.textContent))`, 4000));
+  await h.ev(`document.querySelector('[data-action="open-web-shortcut"]').click()`);
+  h.check('and opens the page in Chrome', await h.until(`!!document.querySelector('#viewport .browser-page, #viewport .chr-omnibox')`) && await h.ev(`(document.querySelector('.chr-omnibox input')?.value || document.querySelector('.chr-omnibox')?.textContent || '')`).then(v => v.includes(String(shortcut.url).replace(/^https?:\/\//, '').split('/')[0])));
 };
 const CASES = [
+  {id: 'T45', version: '4.4.4', name: 'Gallery › Print (PrintSpooler 4.4, Save as PDF, Quickoffice)', run: printFlow(PRINT_CASES.gallery, photoSheet)},
+  {id: 'T45', version: '4.4.4', name: 'Photos › Print', run: printFlow(PRINT_CASES.photos, photoSheet)},
+  {id: 'T45', version: '4.4.4', name: 'Chrome › Print…', run: printFlow(PRINT_CASES.chrome, textSheet, 'chrome')},
+  {id: 'T45', version: '4.4.4', name: 'Chrome › Add to homescreen', run: a2hs},
+  {id: 'T45', version: '5.1.1', name: 'Photos › Print (PrintActivity preview, Save to PDF, Drive)', run: printFlow(PRINT_CASES.photos, photoSheet)},
+  {id: 'T45', version: '5.1.1', name: 'Gmail › Print', run: printFlow(PRINT_CASES.gmail, textSheet, 'gmail')},
+  {id: 'T45', version: '5.1.1', name: 'Chrome › Print…', run: printFlow(PRINT_CASES.chrome, textSheet)},
+  {id: 'T45', version: '5.1.1', name: 'Docs › Print', run: printFlow(PRINT_CASES.docs('docs'), textSheet)},
+  {id: 'T45', version: '5.1.1', name: 'Sheets › Print', run: printFlow(PRINT_CASES.docs('sheets'), textSheet)},
+  {id: 'T45', version: '5.1.1', name: 'Slides › Print', run: printFlow(PRINT_CASES.docs('slides'), textSheet)},
+  {id: 'T45', version: '5.1.1', name: 'Chrome › Add to homescreen', run: a2hs},
   {id: 'T38', version: '4.4.4', name: 'Photos (Google+ 4.2.3): Select…, Settings, Slideshow, Download', run: photosLocal},
   {id: 'T38', version: '5.1.1', name: 'Photos (Google+ 4.9.0): Select…, Settings, Slideshow, Download', run: photosLocal},
   {id: 'T37', version: '4.4.4', name: 'Google Now reminders: Repeat, Where, Set date…, appointment card', run: nowReminders},

@@ -39,7 +39,7 @@ Not traced:
 
 ## 4.4.4 (hammerhead)
 
-copy: 414, same pixels: 389, resized: 181, own: 20, converted: 15, similar: 13, generated: 2, not traced: 2
+copy: 415, same pixels: 389, resized: 181, own: 20, converted: 15, similar: 13, generated: 2, not traced: 2
 
 From another release's image (the own image has no such file; to review): bullhead 1, maguro 26, mako 13 — the source column of the TSV names each.
 
@@ -50,7 +50,7 @@ Not traced:
 
 ## 5.1.1 (shamu)
 
-copy: 795, vector: 199, resized: 158, same pixels: 143, converted: 31, similar: 7, generated: 6, own: 3, not traced: 2, cropped: 1
+copy: 799, vector: 199, resized: 158, same pixels: 143, converted: 31, similar: 7, generated: 6, own: 3, not traced: 2, cropped: 1
 
 From another release's image (the own image has no such file; to review): hammerhead 26, maguro 30, mako 21, passion 1 — the source column of the TSV names each.
 

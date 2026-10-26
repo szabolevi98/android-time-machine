@@ -129,7 +129,7 @@
   function edDialog(kind, {files, ui, t, locale}) {
     const file = files.find(f => f.id === ui.edFile), ed = key => S('editors', key, t, locale);
     if (!file) return '';
-    if (kind === 'menu') return `<div class="menu-scrim" data-action="close-overlay"></div><div class="lpa-menu ed-itemmenu" data-no-translate>${ITEM_MENU.map(key => `<button data-action="${key === 'Rename' ? 'ed-rename' : key === 'Remove' ? 'ed-remove' : 'lpx-unavailable'}">${e(ed(key))}</button>`).join('')}</div>`;
+    if (kind === 'menu') return `<div class="menu-scrim" data-action="close-overlay"></div><div class="lpa-menu ed-itemmenu" data-no-translate>${ITEM_MENU.map(key => `<button data-action="${key === 'Rename' ? 'ed-rename' : key === 'Remove' ? 'ed-remove' : key === 'Print' ? 'ed-print' : 'lpx-unavailable'}">${e(ed(key))}</button>`).join('')}</div>`;
     const box = (title, body, ok) => `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog" role="dialog" aria-label="${e(title)}" data-no-translate>${title ? `<h3>${e(title)}</h3>` : ''}${body}<div class="settings-dialog-actions"><button data-action="close-overlay">${e(ed('Cancel'))}</button>${ok}</div></div>`;
     if (kind === 'rename') return box(ed(RENAME_TITLE[file.kind] || 'Rename'), `<input class="ed-name" data-ed-name value="${e(file.name)}" autocomplete="off" spellcheck="false">`, `<button data-action="ed-rename-ok">${e(ed('OK'))}</button>`);
     if (kind === 'remove') return box('', `<p>${e(ed('Do you really want to remove this file?'))}</p>`, `<button data-action="ed-remove-ok">${e(ed('Remove button'))}</button>`);

@@ -89,6 +89,7 @@ versions/5.1.1/assets/calendar.png	9b669b5c81d0680f	same pixels	shamu:/system/ap
 versions/5.1.1/assets/calwidget-header_bg_cal_widget_holo.png	33a0ca1b7ca79b8a	same pixels	maguro:/system/app/CalendarGoogle.apk!res/drawable-hdpi/header_bg_cal_widget_holo.9.png	drawable-hdpi		6aaff788fa75a6e0
 versions/5.1.1/assets/calwidget-header_bg_cal_widget_pressed_holo.png	2e480b86ccef26e7	not traced				
 versions/5.1.1/assets/camera.png	1d1a61ee9e6da2fb	same pixels	shamu:/system/app/GoogleCamera/GoogleCamera.apk!res/mipmap-xxxhdpi-v4/logo_google_camera_color_44in48dp.png	mipmap-xxxhdpi-v4		b866c3f53f1469b7
+versions/5.1.1/assets/chr40-app_shortcut_icon.png	3150b15c8ea4c893	copy	shamu:/system/app/Chrome/Chrome.apk!res/mipmap-xxxhdpi-v4/app_shortcut_icon.png	mipmap-xxxhdpi-v4		3150b15c8ea4c893
 versions/5.1.1/assets/chr40-btn_back.png	1c8ceec2430f2d4e	copy	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/btn_back.png	drawable-xxhdpi-v4		1c8ceec2430f2d4e
 versions/5.1.1/assets/chr40-btn_forward.png	a8553234d3c4735c	copy	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/btn_forward.png	drawable-xxhdpi-v4		a8553234d3c4735c
 versions/5.1.1/assets/chr40-btn_menu.png	d36f0c95ae50803d	same pixels	shamu:/system/app/Chrome/Chrome.apk!res/drawable-xxhdpi-v4/btn_menu.png	drawable-xxhdpi-v4		d22c18ad8c07198f
@@ -1217,7 +1218,10 @@ versions/5.1.1/assets/power-sync-off.png	b6283b6dd0f8eab7	resized	shamu:/system/
 versions/5.1.1/assets/power-sync-on.png	3580f0143945837e	resized	shamu:/system/priv-app/Settings/Settings.apk!res/drawable-xxxhdpi-v4/ic_appwidget_settings_sync_on_holo.png	drawable-xxxhdpi-v4	resized 96×96 → 48×48, mean difference 0.00	b10d5d5c9180c018
 versions/5.1.1/assets/power-wifi-off.png	c478986160dc63e0	resized	shamu:/system/priv-app/Settings/Settings.apk!res/drawable-xxxhdpi-v4/ic_appwidget_settings_wifi_off_holo.png	drawable-xxxhdpi-v4	resized 96×96 → 48×48, mean difference 0.00	f9bb6bc99073a1b2
 versions/5.1.1/assets/power-wifi-on.png	fe86c6fd937103ca	resized	shamu:/system/priv-app/Settings/Settings.apk!res/drawable-xxxhdpi-v4/ic_appwidget_settings_wifi_on_holo.png	drawable-xxxhdpi-v4	resized 96×96 → 48×48, mean difference 0.00	b159b50ee914ccf2
+versions/5.1.1/assets/ps-ic_expand_less.png	cea5e078c308a01f	copy	shamu:/system/app/PrintSpooler/PrintSpooler.apk!res/drawable-xxxhdpi-v4/ic_expand_less.png	drawable-xxxhdpi-v4		cea5e078c308a01f
+versions/5.1.1/assets/ps-ic_expand_more.png	6c709d776b57367d	copy	shamu:/system/app/PrintSpooler/PrintSpooler.apk!res/drawable-xxxhdpi-v4/ic_expand_more.png	drawable-xxxhdpi-v4		6c709d776b57367d
 versions/5.1.1/assets/ps-ic_menu_refresh_holo_dark.png	aee1f72b89729c23	copy	shamu:/system/app/PrebuiltKeep/PrebuiltKeep.apk!res/drawable-xhdpi-v4/ic_menu_refresh_holo_dark.png	drawable-xhdpi-v4		aee1f72b89729c23
+versions/5.1.1/assets/ps-ic_menu_savetopdf.png	19ba2608fd67c100	copy	shamu:/system/app/PrintSpooler/PrintSpooler.apk!res/drawable-xxxhdpi-v4/ic_menu_savetopdf.png	drawable-xxxhdpi-v4		19ba2608fd67c100
 versions/5.1.1/assets/ps5213-abc_ic_ab_back_mtrl_am_alpha.png	b3e0d85ecd7d5768	copy	shamu:/system/app/Books/Books.apk!res/drawable-xxxhdpi-v4/abc_ic_ab_back_mtrl_am_alpha.png	drawable-xxxhdpi-v4		b3e0d85ecd7d5768
 versions/5.1.1/assets/ps5213-abc_ic_menu_moreoverflow_mtrl_alpha.png	32d9d6cfdb4886b7	copy	shamu:/system/app/Books/Books.apk!res/drawable-xxxhdpi-v4/abc_ic_menu_moreoverflow_mtrl_alpha.png	drawable-xxxhdpi-v4		32d9d6cfdb4886b7
 versions/5.1.1/assets/ps5213-bg_default_profile_art.png	85bdeef3fcfff994	copy	shamu:/system/app/Books/Books.apk!res/drawable-xxhdpi-v4/bg_default_profile_art.png	drawable-xxhdpi-v4		85bdeef3fcfff994

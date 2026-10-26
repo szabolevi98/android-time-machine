@@ -62,6 +62,7 @@ versions/4.4.4/assets/btn_radio_off_holo_dark.png	4bc1f42e445855e2	resized	hamme
 versions/4.4.4/assets/btn_radio_off_holo_light.png	0b769c5ac69e1b85	same pixels	hammerhead:/system/framework/framework-res.apk!res/drawable-xxhdpi/btn_radio_off_holo_light.png	drawable-xxhdpi		6d319ee66635b811
 versions/4.4.4/assets/btn_radio_on_holo_dark.png	99bbd302f0e26205	resized	hammerhead:/system/framework/framework-res.apk!res/drawable-xxhdpi/btn_radio_on_holo_dark.png	drawable-xxhdpi	resized 96×96 → 48×48, mean difference 0.00	9fe506967fd4216d
 versions/4.4.4/assets/btn_radio_on_holo_light.png	7a1fd9506cf358a6	same pixels	hammerhead:/system/framework/framework-res.apk!res/drawable-xxhdpi/btn_radio_on_holo_light.png	drawable-xxhdpi		4ec47f23ad28e4b2
+versions/4.4.4/assets/c32-app_shortcut_icon.png	4ff70b2f0fe45e36	copy	hammerhead:/system/app/Chrome.apk!res/mipmap-xxhdpi/app_shortcut_icon.png	mipmap-xxhdpi		4ff70b2f0fe45e36
 versions/4.4.4/assets/c32-back.png	57498cdd4228bfca	same pixels	hammerhead:/system/app/Chrome.apk!res/drawable-xhdpi/back.png	drawable-xhdpi		7cf912af1e38a47e
 versions/4.4.4/assets/c32-back_disabled.png	55114f021bca9003	same pixels	hammerhead:/system/app/Chrome.apk!res/drawable-xhdpi/back_disabled.png	drawable-xhdpi		9f4adaef687acd16
 versions/4.4.4/assets/c32-bookmarks_icon.png	88bb508bf80ef3ed	same pixels	hammerhead:/system/app/Chrome.apk!res/drawable-xhdpi/bookmarks_icon.png	drawable-xhdpi		4de588b4098c70bc
