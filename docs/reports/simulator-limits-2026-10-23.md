@@ -494,7 +494,7 @@ APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<sl
 #### T27 — 4.0.4/4.3 Movie Studio helyi projektek
 
 - **Ütem:** Harmadik kör (2026-10-26), könnyített terjedelemmel: a „Harmadik kör” szakasz írja felül az itteni „Kész, ha” feltételt.
-- **Állapot:** Nincs elkezdve (harmadik kör).
+- **Állapot:** Kész — `93ea17c5`. Minimális héj (4.0.4, 4.3; AOSP VideoEditor): Create New Project névvel (projects_project_name, untitled) a szerkesztőt nyitja; az action bar Add menüje (action_bar_menu.xml) Import video clip / Import image a telefon képeit teszi az előnézet alatti storyboardra; a projekt megmarad (data.movieProjects) és a rácsból újranyílik; a túlcsordulás Change project name és Delete project (editor_delete_project_question) működik. Felvétel, zene, képarány, lejátszás, vágás, Export movie: elutasítás. Közös kód: `movie-studio.js`. Ellenőrzés: `limits-regression.mjs T27` két verzió asztali és telefonos szélességen, npm test 260/260.
 - **Verziók:** 4.0.4, 4.3.
 - **Forráscsoportok:** 4.0.4-14, 4.3-22.
 - **Elkészítendő és határ:** Create new project névvel, helyi kép/videó hozzáadás, idővonalon sorrend/csonkolás, előnézet, projektmentés/újranyitás/törlés a gyári VideoEditor UI alapján. Ez egy önálló nagyobb szerkesztőfeladat; nem soroljuk át szolgáltatási korláttá az időigény miatt. Új natív kodek/MP4 renderelő nem része; a helyi projekt és előnézet igen.
