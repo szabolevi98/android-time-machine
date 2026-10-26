@@ -781,7 +781,12 @@
     lockSettings: () => { ui.sub = 'security'; render(); }});
   const devContext = () => ({data, ui, root: viewport, save, render, renderOverlay, toast: message => toast(message), t: key => i18n.t(key), language: i18n.language});
   const procStatsContext = () => ({data, ui, save, render, renderOverlay, toast: message => toast(message), language: i18n.language, locale: i18n.locale(), appIcon: id => `<img src="assets/${id === 'play-store' ? 'play-store.svg' : id + '.png'}" alt="">`});
+  const langContext = () => ({data, ui, root: viewport, language: i18n.language, locale: i18n.locale(), languageName: {en: 'English', hu: 'Magyar', de: 'Deutsch', fr: 'Français', es: 'Español'}[i18n.language],
+    save, render, renderOverlay, toast: message => toast(i18n.t(message)),
+    openVoice: () => { openApp('google-search'); ui.sub = 'settings'; ui.ksStack = []; ui.ksPage = 'voice'; ui.ksDialog = null; ui.voiceFromSettings = true; render(); }});
   function navigateBack() {
+    if (ui.view === 'settings' && ui.sub.startsWith('lng-') && !ui.overlay && InputLanguage.back(langContext())) return;
+    if (ui.view === 'google-search' && ui.voiceFromSettings && ui.sub === 'settings' && !ui.overlay && !(ui.ksStack || []).length) { ui.voiceFromSettings = false; openApp('settings'); ui.sub = 'language'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'dev-backup-pw' && !ui.overlay) { ui.sub = 'development'; render(); return; }
     if (ui.view === 'settings' && ui.sub.startsWith('dev-procstats') && !ui.overlay) { ui.sub = ui.sub === 'dev-procstats' ? 'development' : 'dev-procstats'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'musicfx' && !ui.overlay) { ui.mfxSpin = false; ui.sub = 'sound'; render(); return; }
@@ -936,6 +941,8 @@
       overlayRoot.innerHTML = ICSWidgets.photoOverlay(data, ui, key => i18n.t(key));
     } else if (ui.overlay.startsWith('ps-')) {
       overlayRoot.innerHTML = ProcStats.overlay(procStatsContext());
+    } else if (ui.overlay === 'lng-dialog') {
+      overlayRoot.innerHTML = InputLanguage.overlay(langContext());
     } else if (ui.overlay === 'cert-install') {
       overlayRoot.innerHTML = CertInstall.overlay(certContext());
     } else if(ui.overlay==='sx-dialog'){
@@ -1184,19 +1191,20 @@
     if (s === 'print') return appView('Printing', `${label('Print services')}<p class="kk-empty-text">No services installed</p>`, 'kk-print', `<button class="jb-ab-action" data-action="open-app" data-app="play-store" aria-label="${safe(i18n.t('Add service'))}"><img src="assets/jb-ic_menu_add.png" alt=""></button>`);
     if (s === 'daydream') return renderDaydreamSettings();
     if (s === 'reset-info') return appView('Factory data reset', `<div class="detail-pad"><h3>Erase local simulator data</h3><p>This clears the saved home screens, settings, and sample content for this version.</p><button class="small-button" data-action="factory-reset">Reset simulator</button></div>`);
-    if (s === 'accessibility') return appView('Accessibility', `${label('SERVICES')}${row('No services installed', '', 'noop', '', '')}${label('SYSTEM')}${prefRow(A11Y('Magnification gestures'), A11Y(data.settings.magnification ? 'On' : 'Off'), 'settings-sub', 'a11y-magnification')}${toggleRow('Large text', '', 'largeText', 'A')}${toggleRow('Power button ends call', '', 'powerEndsCall', '⏻')}${toggleRow('Auto-rotate screen', '', 'rotate', '↻')}${toggleRow('Speak passwords', '', 'speakPasswords', '◉')}${prefRow(A11Y('Accessibility shortcut'), A11Y(data.settings.a11yShortcut ? 'On' : 'Off'), 'settings-sub', 'a11y-shortcut')}${prefRow('Text-to-speech output', '')}${prefRow(A11Y('Touch & hold delay'), A11Y(HOLD_NAMES[data.settings.longPressTimeout || 0]), 'a11y-hold')}`);
+    if (s === 'accessibility') return appView('Accessibility', `${label('SERVICES')}${row('No services installed', '', 'noop', '', '')}${label('SYSTEM')}${prefRow(A11Y('Magnification gestures'), A11Y(data.settings.magnification ? 'On' : 'Off'), 'settings-sub', 'a11y-magnification')}${toggleRow('Large text', '', 'largeText', 'A')}${toggleRow('Power button ends call', '', 'powerEndsCall', '⏻')}${toggleRow('Auto-rotate screen', '', 'rotate', '↻')}${toggleRow('Speak passwords', '', 'speakPasswords', '◉')}${prefRow(A11Y('Accessibility shortcut'), A11Y(data.settings.a11yShortcut ? 'On' : 'Off'), 'settings-sub', 'a11y-shortcut')}${prefRow('Text-to-speech output', '', 'lng-open', 'tts')}${prefRow(A11Y('Touch & hold delay'), A11Y(HOLD_NAMES[data.settings.longPressTimeout || 0]), 'a11y-hold')}`);
     // ToggleScreenMagnificationPreferenceFragment / ToggleGlobalGesturePreferenceFragment: the switch in the action
     // bar over the feature's description.
     if (s === 'a11y-magnification') return appView(A11Y('Magnification gestures'), `<p class="a11y-summary">${safe(A11Y('Magnification summary'))}</p>`, '', connectivitySwitch('magnification', A11Y('Magnification gestures'), true));
     if (s === 'a11y-shortcut') return appView(A11Y('Accessibility shortcut'), `<p class="a11y-summary">${safe(A11Y('Accessibility shortcut summary'))}</p>`, '', connectivitySwitch('a11yShortcut', A11Y('Accessibility shortcut'), true));
     // Android 4.3 development_prefs.xml, with the master switch in the action bar (DevelopmentSettings).
+    const lngPage = InputLanguage.render(langContext());
+    if (lngPage) return appView(lngPage.title, lngPage.body, 'lng-page', lngPage.right);
     const devPage = JBDeveloperOptions.page(s, key => i18n.t(key), i18n.language);
     if (devPage) return appView(devPage.title, devPage.body, 'dev-page');
     if (s.startsWith('dev-procstats')) { const stats = ProcStats.render(procStatsContext()); if (stats) return appView(stats.title, stats.body, 'ps-page', stats.right); }
     if (s === 'development') return appView('Developer options', JBDeveloperOptions.render(data.settings, key => i18n.t(key), value => ICSSettingsDetail.animationScaleLabel(value), i18n.language), '', connectivitySwitch('developerEnabled', i18n.t('Developer options'), true));
     // Settings 4.3 language_settings.xml: Language opens its own list; keyboards, speech and pointer speed follow.
     const languageNames = {en: 'English', hu: 'Magyar', de: 'Deutsch', fr: 'Français', es: 'Español'};
-    if (s === 'language') return appView('Language & input', `${prefRow('Language', languageNames[i18n.language], 'settings-sub', 'language-pick')}${wirelessCheckRow('Spell checker', '', 'spellChecker')}${label('KEYBOARD & INPUT METHODS')}${prefRow('Default', 'Android keyboard (AOSP)')}${wirelessCheckRow('Android keyboard (AOSP)', languageNames[i18n.language], 'imeLatin')}${label('SPEECH')}${prefRow('Voice search', '')}${prefRow('Text-to-speech output', '')}${label('MOUSE/TRACKPAD')}${prefRow('Pointer speed', '')}`);
     if (s === 'language-pick') return appView('Language', Object.entries(languageNames).map(([code, name]) => `<button class="settings-row wireless-row" data-action="set-language" data-id="${code}" role="radio" aria-checked="${i18n.language === code}" data-no-translate><span class="row-copy">${name}</span><img class="holo-radio" src="assets/btn_radio_${i18n.language === code ? 'on' : 'off'}_holo_dark.png" alt=""></button>`).join(''));
     if (s === 'volumes' || s === 'ringtone' || s === 'sleep') return appView(s === 'volumes' ? 'Volumes' : s === 'ringtone' ? 'Phone ringtone' : 'Sleep', `<div class="detail-pad"><p>${s === 'ringtone' ? 'Orion is selected.' : s === 'sleep' ? 'Screen turns off after 30 seconds.' : 'Ringtone 70% · Media 60% · Alarm 80%'}</p></div>`);
     return appView('Settings', `${label('WIRELESS & NETWORKS')}${connectivityRow('Wi-Fi', 'wifi')}${connectivityRow('Bluetooth', 'bluetooth')}${row('Data usage', '', 'settings-sub', 'data', '◕')}${row('More...', '', 'settings-sub', 'wireless', null)}${label('DEVICE')}${row('Sound', '', 'settings-sub', 'sound', '♫')}${row('Display', '', 'settings-sub', 'display', '☼')}${row('Storage', '', 'settings-sub', 'storage', '▤')}${row('Battery', '', 'settings-sub', 'battery', '◧')}${row('Apps', '', 'settings-sub', 'apps', '▦')}${row('Tap & pay', '', 'settings-sub', 'nfc-payment', '◎')}${label('PERSONAL')}${row('Location', '', 'settings-sub', 'location', '◎')}${row('Security', '', 'settings-sub', 'security', '◉')}${row('Language & input', '', 'settings-sub', 'language', '◎')}${row('Backup & reset', '', 'settings-sub', 'backup', '↻')}${label('ACCOUNTS')}${row('Google', '', 'settings-sub', 'sync-google', '◎')}${row('Add account', '', 'toast', 'Demo account already added', '<img src="assets/setting-add-account.png" alt="">')}${label('SYSTEM')}${row('Date & time', '', 'settings-sub', 'date', '◷')}${row('Accessibility', '', 'settings-sub', 'accessibility', '◉')}${row('Printing', '', 'settings-sub', 'print', '▤')}${data.settings.developerUnlocked ? row('Developer options', '', 'settings-sub', 'development', '⚙') : ''}${row('About phone', '', 'settings-sub', 'about', '◉')}`);
@@ -1764,6 +1772,7 @@
     const { action, id, app, url } = button.dataset;
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Gmail's label settings, Days of mail to sync and the vacation responder (gmail.js).
+    if (action.startsWith('lng-') && InputLanguage.handle(action, id, langContext())) return;
     if (action.startsWith('dev-') && JBDeveloperOptions.handle(action, id, devContext())) return;
     if (action.startsWith('ps-') && ProcStats.handle(action, id, procStatsContext())) return;
     if (action.startsWith('mfx-') && MusicFX.handle(action, id, musicFxContext())) return;
@@ -2655,6 +2664,7 @@
     }
   });
   document.addEventListener('input', event => {
+    if (event.target.matches('[data-lng-seek]') && InputLanguage.input(event.target, langContext())) return;
     if (event.target.matches('[data-mfx]') && MusicFX.input(event.target, musicFxContext())) return;
     if (event.target.matches?.('[data-city-search]')) { ui.cityQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-city-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
     if (event.target.matches?.('[data-cpref-volume]')) { ui.clockDraft = Number(event.target.value); return; }

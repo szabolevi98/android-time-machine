@@ -622,6 +622,9 @@ versions/4.3/assets/launcher-ic_launcher_info_normal_holo.png	60e862106cadeb02	r
 versions/4.3/assets/launcher-portal_container_holo.png	625a56915a820470	resized	mako:/system/app/Launcher2.apk!res/drawable-xhdpi/portal_container_holo.9.png	drawable-xhdpi	resized 72×72 → 54×54, mean difference 0.17	e472a98176a3e3bc
 versions/4.3/assets/launcher-portal_ring_inner_holo.png	5b83fed6a94ff9e4	resized	mako:/system/app/Launcher2.apk!res/drawable-xhdpi/portal_ring_inner_holo.png	drawable-xhdpi	resized 128×128 → 96×96, mean difference 0.46	e4dc52b6ea7b438b
 versions/4.3/assets/launcher-portal_ring_outer_holo.png	4e67fde915724260	resized	mako:/system/app/Launcher2.apk!res/drawable-xhdpi/portal_ring_outer_holo.png	drawable-xhdpi	resized 213×213 → 160×160, mean difference 0.17	3b6e025085ccae09
+versions/4.3/assets/lng-ic_menu_add.png	3e9e3c5a02fe3b22	copy	mako:/system/app/LatinImeGoogle.apk!res/drawable-xhdpi/ic_menu_add.png	drawable-xhdpi		3e9e3c5a02fe3b22
+versions/4.3/assets/lng-ic_menu_delete.png	a7d99bc99e77a4f9	copy	mako:/system/app/Velvet.apk!res/drawable-xhdpi/ic_menu_delete.png	drawable-xhdpi		a7d99bc99e77a4f9
+versions/4.3/assets/lng-ic_sysbar_quicksettings.png	8cff53512037734d	copy	mako:/system/app/Settings.apk!res/drawable-xhdpi/ic_sysbar_quicksettings.png	drawable-xhdpi		8cff53512037734d
 versions/4.3/assets/loc-actionbar_background.png	1fc64714041defd3	copy	mako:/system/app/Maps.apk!res/drawable-240dpi/actionbar_background.png	drawable-240dpi		1fc64714041defd3
 versions/4.3/assets/loc-actionbar_search.png	12a21a9557eba28a	copy	mako:/system/app/Maps.apk!res/drawable-240dpi/actionbar_search.png	drawable-240dpi		12a21a9557eba28a
 versions/4.3/assets/loc-actionbar_seperator.png	aaa7f3252b59606a	copy	mako:/system/app/Maps.apk!res/drawable-240dpi/actionbar_seperator.png	drawable-240dpi		aaa7f3252b59606a

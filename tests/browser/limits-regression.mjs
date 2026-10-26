@@ -2878,7 +2878,68 @@ const devRows = async h => {
     await h.shot('procstats-memory');
   }
 };
+// Language & input (T30): the image's page instead of rows that ended in "Not available in the simulator" — the input
+// method picker, Google Keyboard's own settings, Text-to-speech output, the personal dictionary, Voice Search / Voice
+// input and Pointer speed.
+const langInput = async h => {
+  const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  const prefs = async () => (await store(h, 'inputPrefs')) || {};
+  await h.openApp('settings'); await act('settings-sub', 'language');
+  h.check('Language & input opens', await h.until(`/Google Keyboard/.test(document.querySelector('#viewport')?.innerText || '')`));
+  await h.shot('language');
+  h.check('no row is a dead end', !(await h.ev(`!!document.querySelector('#viewport [data-action="dev-info"]')`)));
+  await h.tap('#viewport [data-action="lng-ime-dialog"]');
+  h.check('the input method picker lists Google voice typing', await h.until(`!!document.querySelector('.lng-dialog [data-action="lng-ime-pick"][data-id="voice"]')`));
+  await h.tap('.lng-dialog [data-action="lng-ime-pick"][data-id="voice"]');
+  h.check('the current keyboard follows the choice', await h.until(`/Automatic - Google voice typing/.test(document.querySelector('#viewport [data-action="lng-ime-dialog"]')?.textContent || '')`) && (await prefs()).ime === 'voice');
+  await act('lng-open', 'screen:latin:prefs');
+  h.check('Google Keyboard settings start with its input languages', await h.until(`/Google Keyboard Settings/.test(document.querySelector('#viewport')?.innerText || '') && !!document.querySelector('#viewport [data-action="lng-open"][data-id="subtypes"]')`));
+  await h.shot('keyboard-settings');
+  if (await h.ev(`!!document.querySelector('#viewport [data-id="screen:latin:prefs_screen_correction"]')`)) await h.tap('#viewport [data-id="screen:latin:prefs_screen_correction"]');
+  await h.tap('#viewport [data-action="lng-list"][data-id$="|auto_correction_threshold"]');
+  await h.tap('.lng-dialog [data-action="lng-list-pick"][data-id="2"]');
+  h.check('Auto-correction keeps Aggressive', (await prefs())['latin/auto_correction_threshold'] === '2');
+  await h.tap('#viewport [data-action="lng-pref-toggle"][data-id$="|pref_key_block_potentially_offensive"]');
+  h.check('Block offensive words turns off', (await prefs())['latin/pref_key_block_potentially_offensive'] === false);
+  await h.key('Escape'); if (!(await h.ev(`!!document.querySelector('#viewport [data-action="lng-ime-dialog"]')`))) await h.key('Escape');
+  h.check('Back returns to Language & input', await h.until(`!!document.querySelector('#viewport [data-action="lng-ime-dialog"]')`));
+  await act('lng-open', 'tts');
+  h.check('Text-to-speech output shows the Google engine', await h.until(`/Google Text-to-speech Engine/.test(document.querySelector('#viewport')?.innerText || '')`));
+  await h.shot('tts');
+  await h.tap('#viewport [data-action="lng-rate"]'); await h.tap('.lng-dialog [data-action="lng-rate-pick"][data-id="150"]');
+  h.check('Speech rate keeps Fast', (await prefs())['tts/rate'] === '150');
+  await h.key('Escape');
+  await act('lng-open', 'dict');
+  h.check('the personal dictionary starts empty', await h.until(`!!document.querySelector('#viewport .lng-empty')`));
+  await h.tap('#viewport [data-action="lng-word"]');
+  await h.type('#viewport .lng-word-form [name="word"]', 'Rosalind'); await h.type('#viewport .lng-word-form [name="shortcut"]', 'ros');
+  await h.key('Escape');
+  h.check('a word added is kept when the page is left', await h.until(`/Rosalind/.test(document.querySelector('#viewport')?.innerText || '')`) && ((await store(h, 'userDictionary')) || []).some(w => w.word === 'Rosalind' && w.shortcut === 'ros'));
+  await h.key('Escape');
+  if (await h.ev(`!!document.querySelector('#viewport [data-action="lng-voice"]')`)) {
+    await h.tap('#viewport [data-action="lng-voice"]');
+    h.check('Voice Search opens Google Search voice settings', await h.until(`/Block offensive words/.test(document.querySelector('#viewport')?.innerText || '')`));
+    await h.key('Escape');
+    h.check('and Back comes back to Language & input', await h.until(`!!document.querySelector('#viewport [data-action="lng-ime-dialog"]')`));
+  } else {
+    await act('lng-open', 'voiceinput');
+    await h.tap('#viewport [data-action="lng-voice-service"][data-id="basic"]');
+    h.check('Voice input switches to Basic Google recognition', (await prefs()).voiceService === 'basic');
+    await h.tap('#viewport [data-action="lng-voice-service"][data-id="full"]');
+    h.check('Enhanced Google services asks first', await h.until(`/always-on voice monitoring/.test(document.querySelector('.lng-dialog')?.textContent || '')`));
+    await h.tap('[data-action="lng-voice-service-ok"]');
+    h.check('and is chosen on OK', (await prefs()).voiceService === 'full');
+    await h.key('Escape');
+  }
+  await h.tap('#viewport [data-action="lng-pointer"]');
+  await h.ev(`(()=>{const r=document.querySelector('[data-lng-pointer]');r.value='3';r.dispatchEvent(new Event('input',{bubbles:true}))})()`);
+  await h.tap('[data-action="lng-pointer-ok"]');
+  h.check('Pointer speed keeps its value', (await prefs()).pointerSpeed === 3);
+};
 const CASES = [
+  {id: 'T30', version: '4.3', name: 'Language & input (Google Keyboard 1.0, TTS, dictionary, Voice Search)', run: langInput},
+  {id: 'T30', version: '4.4.4', name: 'Language & input (Google Keyboard 2.0, TTS, dictionary, Voice Search)', run: langInput},
+  {id: 'T30', version: '5.1.1', name: 'Language & input (Google Keyboard 4.0, TTS, dictionary, Voice input)', run: langInput},
   {id: 'T30', version: '4.0.4', name: 'Developer options rows (Development device ID, Desktop backup password)', run: devRows},
   {id: 'T30', version: '4.3', name: 'Developer options rows (bug report, adb keys, debug app, backup password)', run: devRows},
   {id: 'T30', version: '4.4.4', name: 'Developer options rows (… and Process Stats)', run: devRows},
