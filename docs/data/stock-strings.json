@@ -3980,6 +3980,18 @@
    "x.Build version": "PrebuiltGmsCore:games_gcore_build_version_title"
   },
   "editors": {
+   "View as List": "EditorsDocs:editors_menu_doc_view_list_mode",
+   "Recent": "EditorsDocs:menu_show_recent",
+   "Starred": "EditorsDocs:menu_show_starred",
+   "On device": "EditorsDocs:menu_show_pinned",
+   "Google Drive": "EditorsDocs:nav_panel_google_drive_button",
+   "My Drive": "EditorsDocs:menu_my_drive",
+   "Title": "EditorsDocs:menu_sort_title",
+   "Last modified": "EditorsDocs:menu_sort_last_modified",
+   "Last opened by me": "EditorsDocs:menu_sort_recently_opened",
+   "Last edited by me": "EditorsDocs:menu_sort_recently_edited",
+   "Quota used": "EditorsDocs:menu_sort_quota_used",
+   "Remove from device": "EditorsDocs:menu_unpin",
    "Docs": "EditorsDocs:app_name_docs",
    "Sheets": "EditorsDocs:app_name_sheets",
    "Slides": "EditorsDocs:app_name_slides",

@@ -30,9 +30,9 @@
   const BUCKETS = {camera: 'Camera', pictures: 'Pictures', screenshots: 'Screenshots', download: 'Download'};
   const SORTS = [['name', 'By name'], ['date', 'By date modified'], ['size', 'By size']];
   const MIMES = {jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', webp: 'image/webp', mp4: 'video/mp4', '3gp': 'video/3gpp', webm: 'video/webm',
-    mp3: 'audio/mpeg', ogg: 'audio/ogg', m4a: 'audio/mp4', pdf: 'application/pdf', apk: 'application/vnd.android.package-archive', zip: 'application/zip', txt: 'text/plain', html: 'text/html'};
+    mp3: 'audio/mpeg', ogg: 'audio/ogg', m4a: 'audio/mp4', pdf: 'application/pdf', apk: 'application/vnd.android.package-archive', zip: 'application/zip', txt: 'text/plain',csv:'text/csv',tsv:'text/tab-separated-values',doc:'application/msword',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',xls:'application/vnd.ms-excel',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',ppt:'application/vnd.ms-powerpoint',pptx:'application/vnd.openxmlformats-officedocument.presentationml.presentation', html: 'text/html'};
   const mimeOf = name => MIMES[(String(name).match(/\.([a-z0-9]{2,4})$/i) || [])[1]?.toLowerCase()] || 'application/octet-stream';
-  const matches = (accept, mime) => accept === '*/*' || accept === mime || (accept.endsWith('/*') && String(mime).startsWith(accept.slice(0, -1)));
+  const matches = (accept,mime)=>String(accept).split(',').some(a=>a==='*/*'||a===mime||(a.endsWith('/*')&&String(mime).startsWith(a.slice(0,-1))));
   // MimePredicate.VISUAL_MIMES (image and video types) against the request: any type is not visual.
   const visual = accept => /^(image|video)\//.test(accept);
   // IconUtils.loadMimeIcon: the ic_doc_* of the type.
@@ -54,7 +54,7 @@
     return {id: `photo:${p.id}`, name, mime: video ? 'video/mp4' : 'image/jpeg', size: video ? Math.round((p.duration || 5000) / 1000 * 2125000) : 1400000 + seed * 7919 % 1900000, time: p.created || 0, photo: p};
   }
   const trackDoc = (track, i, file) => ({id: `track:${i}`, name: file ? `${track.title}.mp3` : track.title, mime: 'audio/mpeg', size: track.duration * 16000, time: 0});
-  const downloadDoc = (d, i) => ({id: `dl:${i}`, name: d.name, mime: d.mime || mimeOf(d.name), size: d.size || 0, time: d.time || 0});
+  const downloadDoc = (d, i) => ({id: `dl:${i}`, name: d.name, mime: d.mime || mimeOf(d.name), size: d.size || 0, time: d.time || 0,document:JSON.parse(JSON.stringify(d))});
   // A directory's last modified time is its newest document's (MediaDocumentsProvider's buckets: MAX(date_modified)).
   const dir = (id, name, children, more = {}) => ({id, name, dir: true, children, time: Math.max(0, ...children.map(c => c.time || 0)), ...more});
   function group(list, key) { const map = new Map(); for (const item of list) { const k = key(item); if (!map.has(k)) map.set(k, []); map.get(k).push(item); } return map; }

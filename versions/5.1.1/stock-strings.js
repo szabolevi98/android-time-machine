@@ -1031,6 +1031,18 @@ window.StockStrings = {
   "x.Build version": {"res": "PrebuiltGmsCore:games_gcore_build_version_title", "hu": "%s verzió", "de": "%s-Version", "fr": "%s – Version", "es": "Versión de %s", "en": "%s version"}
  },
  "editors": {
+  "View as List": {"res": "EditorsDocs:editors_menu_doc_view_list_mode", "hu": "Listanézet", "de": "Liste anzeigen", "fr": "Liste", "es": "Ver como lista"},
+  "Recent": {"res": "EditorsDocs:menu_show_recent", "hu": "Legutóbbi", "de": "Zuletzt geöffnet", "fr": "Récents", "es": "Recientes"},
+  "Starred": {"res": "EditorsDocs:menu_show_starred", "hu": "Csillagozott", "de": "Markiert", "fr": "Suivis", "es": "Destacados"},
+  "On device": {"res": "EditorsDocs:menu_show_pinned", "hu": "Az eszközön", "de": "Auf dem Gerät", "fr": "Sur cet appareil", "es": "En el dispositivo"},
+  "Google Drive": {"res": "EditorsDocs:nav_panel_google_drive_button", "hu": "Google Drive", "de": "Google Drive", "fr": "Google Drive", "es": "Google Drive"},
+  "My Drive": {"res": "EditorsDocs:menu_my_drive", "hu": "Saját meghajtó", "de": "Meine Ablage", "fr": "Mon Drive", "es": "Mi unidad"},
+  "Title": {"res": "EditorsDocs:menu_sort_title", "hu": "Cím", "de": "Titel", "fr": "Titre", "es": "Título"},
+  "Last modified": {"res": "EditorsDocs:menu_sort_last_modified", "hu": "Utolsó módosítás", "de": "Zuletzt geändert", "fr": "Dernière modif.", "es": "Últimos modificados"},
+  "Last opened by me": {"res": "EditorsDocs:menu_sort_recently_opened", "hu": "Általam utol. megny.", "de": "Zuletzt von mir geöffnet", "fr": "Dern. ouv. par moi", "es": "Últimos abiertos por mí"},
+  "Last edited by me": {"res": "EditorsDocs:menu_sort_recently_edited", "hu": "Általam utol. szerk.", "de": "Zuletzt von mir bearbeitet", "fr": "Dern. modif. par moi", "es": "Últimos editados por mí"},
+  "Quota used": {"res": "EditorsDocs:menu_sort_quota_used", "hu": "Felhasznált kvóta", "de": "Verwendetes Kontingent", "fr": "Quota utilisé", "es": "Espacio utilizado"},
+  "Remove from device": {"res": "EditorsDocs:menu_unpin", "hu": "Törl. az eszközről", "de": "Vom Gerät löschen", "fr": "Désac. hors connex", "es": "Quitar de dispos."},
   "Docs": {"res": "EditorsDocs:app_name_docs", "hu": "Dokumentumok", "de": "Docs", "fr": "Docs", "es": "Documentos"},
   "Sheets": {"res": "EditorsDocs:app_name_sheets", "hu": "Táblázatok", "de": "Tabellen", "fr": "Sheets", "es": "Hojas de cálculo"},
   "Slides": {"res": "EditorsDocs:app_name_slides", "hu": "Diák", "de": "Präsentationen", "fr": "Slides", "es": "Presentaciones"},

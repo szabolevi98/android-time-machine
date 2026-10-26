@@ -6,7 +6,7 @@
 // Taps are real pointer input at the element's centre (Input.dispatchMouseEvent), so a covered or off-screen control
 // fails the same way it would for a visitor. Needs a server for the repository root (BASE, default
 // http://localhost:8090) and Chrome (CHROME). A failing case leaves a screenshot in tests/browser/artifacts/.
-//     node tests/browser/limits-regression.mjs [T01 ...] [--version 4.4.4] [--desktop | --phone]
+//     node tests/browser/limits-regression.mjs [T01 ...] [--version 4.4.4] [--desktop | --phone] [--name text]
 import {spawn} from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -3680,10 +3680,68 @@ const quickofficeSources=async h=>{
 };
 CASES.push({id:'T39',version:'4.4.4',name:'Quickoffice › Device/Drive sources, Open/New/About and cancel',run:quickofficeSources});
 
+const editorsMore=app=>async h=>{
+  const kind={docs:'doc',sheets:'sheet',slides:'slides'}[app],ext={docs:'txt',sheets:'tsv',slides:'pptx'}[app],a='emore-a',b='emore-b';
+  await h.openApp(app);await h.tap('#viewport [data-action="ed-new"]');
+  h.check('Add new still creates a document',await h.until(`!!document.querySelector('#viewport .lpx-paper')`));
+  // A local downloaded document and a folder are input fixtures; every operation under test uses the visible UI.
+  await h.ev(`(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-machine-\\w+-v1$/.test(k)),d=JSON.parse(localStorage.getItem(k));d.driveFiles=[{id:'${a}',name:'A fixture',kind:'${kind}',text:'Museum plans\\nTickets 2',age:2},{id:'${b}',name:'B fixture',kind:'${kind}',text:'Second document',age:1},{id:'emore-folder',name:'Office folder',kind:'folder',parent:'root'},...(d.driveFiles||StockApps.FILES)];d.downloads=[{name:'Local document.${ext}',text:'Local imported content',size:22,time:Date.now()},{name:'Wrong.zip',size:9,time:Date.now()-1}];localStorage.setItem(k,JSON.stringify(d))})()`);
+  h.check('reload returns to the launcher',await h.reload());await h.openApp(app);
+  const menu=async action=>{await h.tap('#viewport [data-action="lpx-overflow"]');await h.tap(`[data-action="${action}"]`);};
+  const item=async(id,action)=>{await h.tap(`#viewport [data-action="ed-item"][data-id="${id}"]`);await h.tap(`[data-action="${action}"]`);};
+  const collection=async id=>{await h.tap('#viewport [data-action="emore-drawer"]');await h.tap(`#viewport [data-action="emore-collection"][data-id="${id}"]`);};
+  await menu('emore-grid');
+  h.check('View as Grid changes the actual list',await h.ev(`!!document.querySelector('#viewport .ed-grid')`));
+  await menu('emore-sort');await h.tap('[data-action="emore-sort-pick"][data-id="title"]');
+  h.check('Title sorting orders the rendered files',await h.ev(`(()=>{const ids=[...document.querySelectorAll('#viewport [data-action="lpx-open"]')].map(b=>b.dataset.id);return ids.indexOf('${a}')<ids.indexOf('${b}')})()`));
+  await item(a,'emore-pin');await collection('offline');
+  h.check('On device shows only pinned documents',await h.ev(`document.querySelectorAll('#viewport [data-action="lpx-open"]').length===1&&!!document.querySelector('#viewport [data-action="lpx-open"][data-id="${a}"]')`));
+  h.check('reload returns to the launcher',await h.reload());await h.openApp(app);
+  h.check('grid, sorting and collection persist',await h.ev(`!!document.querySelector('#viewport .ed-grid')`) && (await h.save()).editorPrefs[app].sort==='title' && (await h.save()).editorPrefs[app].collection==='offline');
+  await collection('starred');h.check('the empty Starred collection is usable',await h.ev(`document.querySelectorAll('#viewport [data-action="lpx-open"]').length===0`));
+  await collection('recent');
+  await item(a,'emore-move');await h.tap('[data-action="emore-move-folder"][data-id="emore-folder"]');await h.tap('[data-action="emore-cancel"]');
+  h.check('Move Cancel leaves the parent intact',!(await h.save()).driveFiles.find(f=>f.id===a).parent);
+  await item(a,'emore-move');await h.tap('[data-action="emore-move-folder"][data-id="emore-folder"]');await h.tap('[data-action="emore-move-ok"]');
+  h.check('Move changes the stored destination',(await h.save()).driveFiles.find(f=>f.id===a).parent==='emore-folder');
+  await item(a,'emore-link');await h.tap('[data-action="emore-send-to"][data-id="gmail"]');
+  h.check('Share link carries the document id to Gmail',await h.until(`document.querySelector('#viewport textarea[name="body"]')?.value.includes('/d/${a}/')`));
+  await h.openApp(app);await item(a,'emore-send');await h.tap('[data-action="emore-send-to"][data-id="gmail"]');
+  h.check('Send file carries the actual stored text',(await h.save()).gmailbox.some(m=>m.files?.some(f=>f.text==='Museum plans\nTickets 2'&&/^text\//.test(f.mime))));
+  await h.openApp(app);await item(a,'emore-shortcut');
+  let d=await h.save();h.check('Add to home screen stores a document shortcut',d.homePages.some(p=>p.includes('office:'+a)));
+  await h.tap('[data-action="home"]');for(let i=0;i<4&&await h.ev(`!!document.querySelector('[data-action="cling-dismiss"]')`);i++){await h.tap('[data-action="cling-dismiss"]');await h.sleep(350);}
+  let page=(await h.save()).homePages.findIndex(p=>p.includes('office:'+a));
+  await h.tap(`#viewport .page-indicators [data-action="page"][data-id="${page}"]`);
+  await h.tap(`#viewport [data-action="open-office-shortcut"][data-id="${a}"]`);
+  h.check('the launcher opens the exact document',await h.until(`document.querySelector('#viewport .lpx-bar h2')?.textContent==='A fixture'&&document.querySelector('#viewport .lpx-paper')?.textContent.replace(/\\s/g,'').includes('Museumplans')`));
+  h.check('reload returns to the launcher',await h.reload());await h.tap('[data-action="home"]');for(let i=0;i<4&&await h.ev(`!!document.querySelector('[data-action="cling-dismiss"]')`);i++){await h.tap('[data-action="cling-dismiss"]');await h.sleep(350);}page=(await h.save()).homePages.findIndex(p=>p.includes('office:'+a));
+  await h.tap(`#viewport .page-indicators [data-action="page"][data-id="${page}"]`);await h.tap(`#viewport [data-action="open-office-shortcut"][data-id="${a}"]`);
+  h.check('the document shortcut survives reload',await h.until(`document.querySelector('#viewport .lpx-bar h2')?.textContent==='A fixture'`));await h.key('Escape');
+  await item(a,'ed-rename');await h.type('[data-ed-name]','Renamed fixture');await h.tap('[data-action="ed-rename-ok"]');
+  h.check('Rename still changes the real file',(await h.save()).driveFiles.find(f=>f.id===a).name==='Renamed fixture');
+  await item(a,'ed-remove');await h.key('Escape');h.check('Remove Cancel preserves the document',(await h.save()).driveFiles.some(f=>f.id===a));
+  await item(a,'ed-remove');await h.tap('[data-action="ed-remove-ok"]');
+  d=await h.save();h.check('Remove also clears its launcher shortcut',!d.driveFiles.some(f=>f.id===a)&&!d.homePages.some(p=>p.includes('office:'+a)));
+  await menu('emore-refresh');h.check('Refresh shows progress and returns to the list',await h.until(`!!document.querySelector('#viewport .emore-refreshing')`)&&await h.until(`!document.querySelector('#viewport .emore-refreshing')`));
+  await menu('emore-open');
+  h.check('Open document reaches Android DocumentsUI',await h.until(`!!document.querySelector('#viewport .ldp-app')`));
+  for(let i=0;i<3&&await h.ev(`!!document.querySelector('#viewport .ldp-app')`);i++)await h.key('Escape');
+  h.check('picker Back returns to the original app',await h.until(`!!document.querySelector('#viewport [data-action="emore-drawer"]')`));
+  await menu('emore-open');if(!await h.ev(`!!document.querySelector('#viewport .ldp-drawer')`))await h.tap('#viewport [data-action="ldp-drawer"]');
+  await h.tap('#viewport [data-action="ldp-root"][data-id="downloads"]');
+  h.check('unrelated file types are disabled',await h.ev(`[...document.querySelectorAll('#viewport .ldp-doc')].some(b=>b.textContent.includes('Wrong.zip')&&b.disabled)`));
+  await h.tap('#viewport [data-action="ldp-open"][data-id="dl:0"]');
+  h.check('the local document opens with its content',await h.until(`document.querySelector('#viewport .lpx-paper')?.textContent.replace(/\\s/g,'').includes('Localimportedcontent')`));
+  await h.shot('editors-'+app+'-local');await h.key('Escape');await menu('emore-grid');await h.shot('editors-'+app+'-list');
+};
+CASES.push(...['docs','sheets','slides'].map(app=>({id:'T40',version:'5.1.1',name:app+' › collections, grid/sort, sharing, move, picker and document shortcut',run:editorsMore(app)})));
+
 const args = process.argv.slice(2), picked = args.filter(a => /^T\d+/i.test(a)).map(a => a.toUpperCase());
 const WIDTHS = args.includes('--desktop') ? ['desktop'] : args.includes('--phone') ? ['phone'] : ['desktop', 'phone'];
 const only = args.includes('--version') ? args[args.indexOf('--version') + 1] : '';
-const cases = CASES.filter(c => (!picked.length || picked.includes(c.id)) && (!only || c.version === only));
+const onlyName=args.includes('--name')?args[args.indexOf('--name')+1]:'';
+const cases = CASES.filter(c => (!onlyName||c.name.includes(onlyName)) && (!picked.length || picked.includes(c.id)) && (!only || c.version === only));
 if (!cases.length) { console.log(picked.length ? `No case for ${picked.join(', ')}` : 'No case yet'); process.exit(picked.length ? 1 : 0); }
 
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'limits-')), port = 9700 + Math.floor(Math.random() * 600);
@@ -3746,8 +3804,10 @@ const SAVE = `(()=>{const k=Object.keys(localStorage).find(k=>/^android-time-mac
 
 // 2.3.6 to 5.1.1 share the page shell: a lock or home view in #viewport, unlocked with the 'unlock' action.
 async function boot(version) {
+  const navigationToken=`limits-${Date.now()}-${Math.random()}`;
+  await ev(`window.__limitsNavigationToken=${JSON.stringify(navigationToken)}`);
   await send('Page.navigate', {url: `${BASE}/versions/${version}/`});
-  if (!await until(`!!document.querySelector('#viewport .home-view, #viewport .lock-view')`, 25000)) return false;
+  if (!await until(`window.__limitsNavigationToken!==${JSON.stringify(navigationToken)} && !!document.querySelector('#viewport .home-view, #viewport .lock-view')`, 25000)) return false;
   if (await ev(`!!document.querySelector('#viewport .lock-view')`)) {
     await ev(`(()=>{const el=document.createElement('button');el.dataset.action='unlock';document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
     if (!await until(`!!document.querySelector('#viewport .home-view')`)) return false;
@@ -3783,10 +3843,15 @@ for (const c of cases) for (const width of WIDTHS) {
   try { const steps = await run(c, width); console.log(`ok   ${name}: ${steps.join(', ')}`); }
   catch (error) {
     failures++; console.log(`FAIL ${name}: ${error.message}`);
+    if(errors.length)console.log('  exceptions:',errors.join(' | '));
+    if(failed.length)console.log('  requests:',failed.join(' | '));
     fs.mkdirSync(ARTIFACTS, {recursive: true});
     const shot = await send('Page.captureScreenshot', {format: 'png'});
     if (shot.result?.data) fs.writeFileSync(path.join(ARTIFACTS, `limits-${c.id}-${c.version}-${width}.png`), Buffer.from(shot.result.data, 'base64'));
   }
 }
-ws.close(); chrome.kill();
-process.exit(failures ? 1 : 0);
+// Let the WebSocket and child-process handles close before Node exits (Windows can otherwise hit
+// UV_HANDLE_CLOSING when process.exit races a pending CDP close callback).
+if(ws.readyState!==WebSocket.CLOSED)await new Promise(resolve=>{ws.addEventListener('close',resolve,{once:true});ws.close();setTimeout(resolve,1500).unref();});
+if(chrome.exitCode===null)await new Promise(resolve=>{chrome.once('exit',resolve);chrome.kill();setTimeout(resolve,1500).unref();});
+process.exitCode=failures?1:0;
