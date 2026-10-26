@@ -422,7 +422,7 @@ APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<sl
 #### T19 — Earth helyi eszközök és beállítások
 
 - **Ütem:** Harmadik kör (2026-10-26), könnyített terjedelemmel: a „Harmadik kör” szakasz írja felül az itteni „Kész, ha” feltételt.
-- **Állapot:** Nincs elkezdve (harmadik kör).
+- **Állapot:** Kész — `608d5556`. Mind az öt Earth (2.3.6 2.0.1, 4.0.4 6.1, 4.3 7.1.1, 4.4.4 7.1.3, 5.1.1 8.0.1) a NASA Blue Marble gömbjét rajzolja (`earth-globe.js`, helyi `assets/earth/blue-marble.jpg`, offline): húzás, görgő/csippentés/dupla koppintás nagyítás, Shift-húzás/csavarás forgatás. Search a közös helylistára repül (nem talált: az APK „Not Found: %s”), My location a demótelefonra a kék ponttal, Reset to north / iránytű / észak-gomb, Layers (2.3.6, 4.0.4, 5.1.1) mentett pipák rajzolás nélkül, Share Maps-linkkel az üzenetküldőbe (4.3 Gmail/Üzenetek választó, 4.4.4 Hangouts, 5.1.1 Messenger), Settings az APK saját settings.xml-je (`earth-app.js`, 2.3.6: gb-prefs ea-settings), About az APK verziójával. Ellenőrzés: `limits-regression.mjs T19` öt eset asztali és telefonos szélességen, npm test 260/260.
 - **Verziók:** 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 2.3.6-18, 4.0.4-16, 4.3-20, 4.4.4-20, 5.1.1-27.
 - **Elkészítendő és határ:** 2.3.6 Settings; 4.0.4 Search, Layers, North up, My Location, Settings; 4.3/4.4.4/5.1.1 Reset to north, My location, Share és Settings/drawer beállításoldal. A jelenlegi demótérkép/földgömb és előre tárolt helyek, nem élő GPS vagy új online földgömbmotor. Help/Feedback/Tutorial/Terms webes út korlát marad.
