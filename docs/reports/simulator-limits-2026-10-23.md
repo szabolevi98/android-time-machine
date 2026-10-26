@@ -485,7 +485,7 @@ APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<sl
 #### T26 — 4.0.4/4.3 Google+ Messenger helyi beszélgetések
 
 - **Ütem:** Harmadik kör (2026-10-26), könnyített terjedelemmel: a „Harmadik kör” szakasz írja felül az itteni „Kész, ha” feltételt.
-- **Állapot:** Nincs elkezdve (harmadik kör).
+- **Állapot:** Kész — `e1070e94`. 4.0.4 (Google+ 2.4) és 4.3 (Google+ 4.0) Messenger: a lista beszélgetései megnyílnak (message_list_item_view: 48 dp avatar, szerző, idő, szöveg; compose_message(_fragment): fotó gomb, „Type a message”, Küldés), a küldött üzenet megmarad (data.plusChats), New conversation az audience mezővel és a névjegyekkel, a beszélgetés menüje (Mute/Unmute, Edit name, Leave megerősítéssel; Add people elutasítás), Messenger beállításai (2.4 realtimechat_settings.xml, 4.0 realtimechat_preferences.xml az ACL-alcímmel). Közös logika: `plus-messenger.js`. Válasz nem érkezik. Ellenőrzés: `limits-regression.mjs T26` két verzió asztali és telefonos szélességen, npm test 260/260.
 - **Verziók:** 4.0.4, 4.3.
 - **Forráscsoportok:** 4.0.4-13, 4.3-22.
 - **Elkészítendő és határ:** Beszélgetés megnyitása, New conversation és Settings a mintanévjegyekkel; meglévő helyi üzenetmodellre építve. Nincs valódi Google+ üzenetküldés, Sign out, Help vagy Feedback.
