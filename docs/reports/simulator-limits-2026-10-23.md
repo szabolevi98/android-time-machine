@@ -168,6 +168,8 @@ A tulajdonos 2026-10-26-án kérte, hogy a kihagyott öt tételre legyen terv, d
 
 5. Earth szintje: **B, közepes** („túlzásokba se kell esni”). Igazi földkép, lassú forgás, húzással forgatás; Search odarepül a közös helylistából (nem talált: a verzió saját szövege); My location a demótelefon helyére (Mountain View, mint a 2.3.6-ban) kék ponttal; észak / Reset to north; nagyítás 2–3 lépcsőben (görgő, csippentés, ország szintig); Settings az APK `settings.xml`-je szerint, mentve; Share a megosztó lap a hely nevével. Layers: a pipák mentődnek, de nem rajzolnak. **Nem** készül: országhatár- és városnév-rajzolás (Natural Earth), lendület, döntés; a fenti 1. pont ennél részletesebb felsorolását ez írja felül.
 
+**A harmadik kör után: azonnal a negyedik kör jön.** Ha a harmadik kör utolsó tétele (T27 Movie Studio) is kész, ne állj meg és ne kérdezz rá: folytasd a lenti „Negyedik kör” T50-es tételével (a tulajdonos 2026-10-26-i kérése; a `limits-status.py --next` is oda visz).
+
 ### Negyedik kör — jóváhagyva 2026-10-26: az 5.1.1 appjai a 6.0.1-ben és a 7.1.2-ben
 
 A harmadik kör után következik. A Nexus 5X (MTC20K, build 2016-08-12) és a Nexus 6P (N2G48C, build 2017-06-15) gyári képéből hiányzik tíz olyan app, amely az 5.1.1-ben (Nexus 6, LMY48Y) megvan: Docs, Sheets, Slides, Keep, Earth, Google+, Fit, News & Weather, Play Books, Play Newsstand. A Google 2015 körül kivette őket az előtelepített csomagból; mind élt még 2017 júniusában (a Google+ 2019 áprilisáig, a Newsstand és a News & Weather 2018-ig). A tulajdonos 2026-10-26-i döntése: **beépítjük őket, és felírjuk, hogy nem gyáriak**. Az Email és a Wallet nem kell (a 6.0.1/7.1.2-ben a Gmail és az Android Pay a helyük). Play-telepítés folyamat nem készül: az appok egyszerűen fent vannak.
