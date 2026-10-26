@@ -268,7 +268,9 @@ versions/4.0.4/assets/ga-ic_lock_airplane_mode_off.png	7bbdb281aaf849a4	copy	mag
 versions/4.0.4/assets/ga-ic_lock_power_off.png	b66ed455146cbb39	copy	maguro:/system/framework/framework-res.apk!res/drawable-xhdpi/ic_lock_power_off.png	drawable-xhdpi		b66ed455146cbb39
 versions/4.0.4/assets/ga-mv-alert_error.png	59f0a3847fee6251	copy	maguro:/system/app/Videos.apk!res/drawable-hdpi/alert_error.png	drawable-hdpi		59f0a3847fee6251
 versions/4.0.4/assets/ga-mv-background.png	510dd7be59757ecc	copy	maguro:/system/app/Videos.apk!res/drawable-nodpi/background.png	drawable-nodpi		510dd7be59757ecc
+versions/4.0.4/assets/ga-mv-ic_manage_pin.png	e238cde53f206743	copy	maguro:/system/app/Videos.apk!res/drawable/ic_manage_pin.png	drawable		e238cde53f206743
 versions/4.0.4/assets/ga-mv-ic_menu_shop_holo_dark.png	e3508e32a5b3f012	copy	maguro:/system/app/Music2.apk!res/drawable-hdpi/ic_menu_shop_holo_dark.png	drawable-hdpi		e3508e32a5b3f012
+versions/4.0.4/assets/ga-mv-licenses.html	98b3a6326a8d6216	copy	maguro:/system/app/Videos.apk!assets/licenses.html			98b3a6326a8d6216
 versions/4.0.4/assets/ga-qsb-ic_history_suggestion_normal.png	7a200cfc428f10ab	copy	maguro:/system/app/GoogleQuickSearchBox.apk!res/drawable-xhdpi/ic_history_suggestion_normal.png	drawable-xhdpi		7a200cfc428f10ab
 versions/4.0.4/assets/ga-qsb-ic_search_normal.png	ba479db13beea1cc	copy	maguro:/system/app/GoogleQuickSearchBox.apk!res/drawable-xhdpi/ic_search_normal.png	drawable-xhdpi		ba479db13beea1cc
 versions/4.0.4/assets/ga-spinner_48_inner_holo.png	37e040ce6f1069e9	copy	maguro:/system/framework/framework-res.apk!res/drawable-xhdpi/spinner_48_inner_holo.png	drawable-xhdpi		37e040ce6f1069e9

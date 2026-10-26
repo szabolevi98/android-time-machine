@@ -396,3 +396,26 @@
 .ga-qsb-source span{flex:1;min-width:0;display:flex;flex-direction:column;margin:calc(6 * var(--dp)) calc(6 * var(--dp)) calc(6 * var(--dp)) calc(2 * var(--dp))}
 .ga-qsb-source b{font-weight:400;font-size:calc(22 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ga-qsb-source small{font-size:calc(14 * var(--dp));color:#bebebe}
+/* Play Movies 1.4.11's offline mode (offline_footer.xml), Settings (general_prefs.xml on Theme.Holo) and Licenses, and
+   list_status_item.xml's ProgressBar while Retry asks again. */
+.ga-movies{position:relative;display:flex;flex-direction:column}
+.ga-mv-spinner{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin:calc(16 * var(--dp)) auto;border:calc(3 * var(--dp)) solid #33b5e5;border-right-color:transparent;border-radius:50%;animation:ga-mv-rot 1s linear infinite}
+@keyframes ga-mv-rot{to{transform:rotate(360deg)}}
+.ga-mv-offline{flex:none;display:flex;align-items:stretch;height:calc(64 * var(--dp));background:#000000f0}
+.screen .ga-mv-offline button{flex:none;min-width:calc(96 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;color:#fff;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif}
+.ga-mv-offline>i{flex:none;width:calc(1 * var(--dp));background:#ffffff33}
+.ga-mv-storage{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:calc(3 * var(--dp));padding:0 calc(12 * var(--dp))}
+.ga-mv-bar{display:block;height:calc(6 * var(--dp));background:#ffffff26}
+.ga-mv-bar b{display:block;height:100%;background:#95c509}
+.ga-mv-pinline{display:flex;align-items:center;gap:calc(4 * var(--dp));color:#95c509;font-size:calc(12 * var(--dp))}
+.ga-mv-pinline img{width:calc(20 * var(--dp));height:calc(20 * var(--dp))}
+.ga-mv-free{color:#bbb;font-size:calc(12 * var(--dp))}
+.ga-mv-title{flex:1;padding-left:calc(4 * var(--dp));font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#fff}
+.ga-mv-prefs{background:#000c}
+.screen .ga-mv-pref{display:flex;align-items:center;gap:calc(12 * var(--dp));width:100%;min-height:calc(64 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #ffffff1f;background:none;text-align:left;color:#fff;font-family:RobotoICS,Roboto,sans-serif}
+.ga-mv-pref span{flex:1;display:flex;flex-direction:column;gap:calc(2 * var(--dp))}
+.ga-mv-pref b{font-weight:400;font-size:calc(18 * var(--dp))}
+.ga-mv-pref small{font-size:calc(14 * var(--dp));color:#bebebe}
+.ga-mv-pref .holo-checkbox{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.screen .ga-mv-pref:disabled{opacity:1}
+.ga-mv-licenses{flex:1;width:100%;border:0;background:#fff}

@@ -3093,7 +3093,35 @@ const a2hs = async h => {
   await h.ev(`document.querySelector('[data-action="open-web-shortcut"]').click()`);
   h.check('and opens the page in Chrome', await h.until(`!!document.querySelector('#viewport .browser-page, #viewport .chr-omnibox')`) && await h.ev(`(document.querySelector('.chr-omnibox input')?.value || document.querySelector('.chr-omnibox')?.textContent || '')`).then(v => v.includes(String(shortcut.url).replace(/^https?:\/\//, '').split('/')[0])));
 };
+// Play Movies 1.4.11 (T24): Manage offline rentals is My Rentals' offline mode with its footer, Settings keeps its
+// values, Retry asks for Top Rentals again and comes back to the network error, with no simulator refusal.
+const moviesOffline = async h => {
+  const prefs = async () => (await store(h, 'gaMvPrefs')) || {};
+  await h.openApp('play-movies');
+  h.check('My Rentals shows the network error with Retry', await h.until(`!!document.querySelector('#viewport [data-action="ga-mv-retry"]')`));
+  await h.tap('#viewport [data-action="ga-mv-retry"]');
+  h.check('Retry asks again', await h.until(`!!document.querySelector('#viewport .ga-mv-spinner')`));
+  h.check('and comes back to the error', await h.until(`!!document.querySelector('#viewport [data-action="ga-mv-retry"]')`, 4000));
+  await h.tap('#viewport [data-action="ga-menu"]'); await h.tap('[data-action="ga-mv-offline"]');
+  h.check('Manage offline rentals shows the offline footer', await h.until(`/9\\.93 GB/.test(document.querySelector('#viewport .ga-mv-offline')?.textContent || '') && /rentals/.test(document.querySelector('#viewport .ga-mv-page')?.textContent || '')`));
+  await h.shot('movies-offline');
+  await h.tap('#viewport [data-action="ga-mv-offline-done"]');
+  h.check('Done leaves offline mode', await h.until(`!document.querySelector('#viewport .ga-mv-offline')`));
+  await h.tap('#viewport [data-action="ga-menu"]'); await h.tap('[data-action="ga-mv-settings"]');
+  h.check('Settings lists the preferences', await h.until(`document.querySelectorAll('#viewport .ga-mv-pref').length === 5`));
+  await h.shot('movies-settings');
+  await h.tap('#viewport [data-action="ga-mv-toggle"]');
+  await h.tap('#viewport [data-action="ga-mv-list"][data-id="subtitles_size"]'); await h.tap('[data-action="ga-mv-pick"][data-id="4"]');
+  await h.tap('#viewport [data-action="ga-mv-list"][data-id="download_policy"]'); await h.tap('[data-action="ga-mv-pick"][data-id="wifi"]');
+  const p = await prefs();
+  h.check('the values are kept', p.warning_streaming_bandwidth === false && p.subtitles_size === '4' && p.download_policy === 'wifi', JSON.stringify(p));
+  await h.tap('#viewport [data-action="ga-mv-licenses"]');
+  h.check('Open source licenses shows the app\'s notices', await h.until(`!!document.querySelector('#viewport iframe.ga-mv-licenses')`));
+  await h.key('Escape'); await h.key('Escape');
+  h.check('Back returns to My Rentals', await h.until(`!!document.querySelector('#viewport .ga-mv-tabs')`));
+};
 const CASES = [
+  {id: 'T24', version: '4.0.4', name: 'Play Movies › Manage offline rentals, Settings, Retry', run: moviesOffline},
   {id: 'T45', version: '4.4.4', name: 'Gallery › Print (PrintSpooler 4.4, Save as PDF, Quickoffice)', run: printFlow(PRINT_CASES.gallery, photoSheet)},
   {id: 'T45', version: '4.4.4', name: 'Photos › Print', run: printFlow(PRINT_CASES.photos, photoSheet)},
   {id: 'T45', version: '4.4.4', name: 'Chrome › Print…', run: printFlow(PRINT_CASES.chrome, textSheet, 'chrome')},

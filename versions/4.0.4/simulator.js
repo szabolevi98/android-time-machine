@@ -670,7 +670,7 @@
     if (ui.view === 'play-books') { ui.gaBkSpin = ''; ui.gaBkOptions = false; ui.gaBkToc = false; }
     // Talk: an open dialog first; Friend info returns to its chat, Blocked friends to Talk settings.
     if (ui.view === 'talk' && (ui.gaTkDialog || ui.gaSub === 'info' || ui.gaSub === 'blocked')) { if (ui.gaTkDialog) ui.gaTkDialog = null; else ui.gaSub = ui.gaSub === 'info' ? 'chat' : 'settings'; render(); return; }
-    if (ui.view === 'youtube' && !ui.overlay && ICSGoogleApps.back(googleAppsContext())) return;
+    if ((ui.view === 'youtube' || ui.view === 'play-movies') && !ui.overlay && ICSGoogleApps.back(googleAppsContext())) return;
     if (ICSGoogleApps.APPS.includes(ui.view) && ui.gaSub) { ui.gaSub = ''; render(); return; }
     if (ui.view === 'gmail' && ui.sub === 'g4-prefs' && !ui.overlay) { ICSGmailPrefs.back(ui); render(); return; }
     if (ui.view === 'gmail') {

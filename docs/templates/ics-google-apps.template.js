@@ -212,6 +212,16 @@
     "Retry": "Videos:retry",
     "You don't have any personal videos": "Videos:no_local_videos_found",
     "Manage offline rentals": "Videos:menu_manage_offline",
+    "Movies: Done": "Videos:done", "Movies: Make available offline": "Videos:make_offline", "Movies: %s free": "Videos:free_space_format",
+    "Movies: no rentals": "Videos:no_my_purchases_found", "Movies: Streaming": "Videos:pref_warning_streaming_bandwidth_title",
+    "Movies: Warn me before streaming over a mobile network.": "Videos:pref_warning_streaming_bandwidth_summary", "Movies: Downloads": "Videos:pref_download_policy_title",
+    "Movies: Specify network preferences for downloads.": "Videos:pref_download_policy_summary", "Movies: Caption font size": "Videos:pref_subtitles_size_title",
+    "Movies: Sets the font size to use for on-screen caption text.": "Videos:pref_subtitles_size_summary", "Movies: Open source licenses": "Videos:open_source_licenses_title",
+    "Movies: License details for open source software": "Videos:open_source_licenses_description", "Movies: Application version": "Videos:pref_version_title",
+    "Movies: Download only on WiFi": "Videos:download_when_on_wifi", "Movies: Download on any network": "Videos:download_on_any_network",
+    "Movies: Small": "Videos:@array/subtitles_size_entries:0", "Movies: Medium": "Videos:@array/subtitles_size_entries:1",
+    "Movies: Large": "Videos:@array/subtitles_size_entries:2", "Movies: Extra Large": "Videos:@array/subtitles_size_entries:3",
+    "Movies: Cancel": "Videos:cancel", "Movies: Settings title": "Videos:settings_title",
     "Movies: Accounts": "Videos:logout",
     "Movies: Settings": "Videos:menu_settings",
     "Movies: Help": "Videos:menu_help",
@@ -474,7 +484,13 @@
   const YT_STATE = ['gaSub', 'gaVideo', 'gaYtWatchTab', 'gaYtQ', 'gaYtChannel', 'gaYtChTab', 'gaYtList', 'gaYtPrefPage'];
   function ytGo(ui, sub, extra = {}) { (ui.gaYtStack ||= []).push(Object.fromEntries(YT_STATE.map(k => [k, ui[k]]))); Object.assign(ui, {gaSub: sub, gaYtDialog: null, gaYtDrop: ''}, extra); }
   function back(ctx) {
-    const {ui} = ctx; if (ctx.view !== 'youtube') return false;
+    const {ui} = ctx;
+    // Play Movies: a dialog, Licenses, Settings, then offline mode.
+    if (ctx.view === 'play-movies') {
+      if (ui.gaMvDialog) ui.gaMvDialog = null; else if (ui.gaSub === 'mv-licenses') ui.gaSub = 'mv-settings'; else if (ui.gaSub) ui.gaSub = ''; else if (ui.gaMvOffline) ui.gaMvOffline = false; else return false;
+      ctx.render(); return true;
+    }
+    if (ctx.view !== 'youtube') return false;
     if (ui.gaYtDialog || ui.gaYtDrop) { ui.gaYtDialog = null; ui.gaYtDrop = ''; ctx.render(); return true; }
     const prev = (ui.gaYtStack || []).pop(); if (!prev) return false;
     Object.assign(ui, prev); ctx.render(); return true;
@@ -666,7 +682,7 @@
     // Play Books' fragment_reader.xml: Contents is the action item; the rest of reader_items fills the overflow.
     if (ctx.view === 'play-books' && ui.gaSub === 'read') return [['ga-bk-options', 'Display options'], ['ga-unsupported', 'About the book'], ['ga-unsupported', 'Share'], ['ga-unsupported', 'Available offline'], ['ga-unsupported', 'Read aloud'], ['ga-unsupported', 'Help']].map(([action, key]) => ({action, title: BS(lang, key), id: ''}));
     if (ctx.view === 'play-books') return [['ga-unsupported', 'Refresh'], ['ga-unsupported', 'Accounts'], ['ga-unsupported', 'Help'], ['ga-unsupported', 'Make available offline'], ctx.data?.gaBkView === 'list' ? ['ga-bk-view', 'View as carousel'] : ['ga-bk-view', 'View as list']].map(([action, key]) => ({action, title: BS(lang, key), id: ''}));
-    if (ctx.view === 'play-movies') return ['Manage offline rentals', 'Movies: Accounts', 'Movies: Settings', 'Movies: Help', 'Movies: Contact us', 'Movies: Send feedback'].map(key => item('ga-unsupported', key));
+    if (ctx.view === 'play-movies') return [item('ga-mv-offline', 'Manage offline rentals'), ...['Movies: Accounts'].map(key => item('ga-unsupported', key)), item('ga-mv-settings', 'Movies: Settings'), ...['Movies: Help', 'Movies: Contact us', 'Movies: Send feedback'].map(key => item('ga-unsupported', key))];
     // YouTube: each activity's own items, then menu.xml's Settings, Feedback and Help (YouTubeActivity's MenuHelper).
     if (ctx.view === 'youtube') {
       const base = [item('ga-yt-settings', 'Settings'), item('ga-unsupported', 'Feedback'), item('ga-unsupported', 'Help')], name = ui.gaYtChannel;
@@ -763,13 +779,41 @@
 
   // ---- Play Movies 1.4.11 ----
   // status.xml: the 15 dp light_grey message between alert_error and Retry, centred.
-  const mvStatus = (lang, message, error = false) => `<div class="ga-mv-status">${error ? '<img src="assets/ga-mv-alert_error.png" alt="">' : ''}<span>${e(T(lang, message))}</span>${error ? `<button class="ga-mv-retry" data-action="ga-unsupported">${e(T(lang, 'Retry'))}</button>` : ''}</div>`;
+  const mvStatus = (lang, message, error = false) => `<div class="ga-mv-status">${error ? '<img src="assets/ga-mv-alert_error.png" alt="">' : ''}<span>${e(T(lang, message))}</span>${error ? `<button class="ga-mv-retry" data-action="ga-mv-retry">${e(T(lang, 'Retry'))}</button>` : ''}</div>`;
+  // list_status_item.xml's ProgressBar while Top Rentals is asked for again.
+  const mvLoading = '<div class="ga-mv-status"><span class="ga-mv-spinner" role="progressbar"></span></div>';
+  /* Manage offline rentals: My Rentals in offline mode with offline_footer.xml (#F0000000, 64 dp): Done, the storage
+     indicator with "Make available offline" (ic_manage_pin) and "%s free" — the demo phone's 9.93 GB of 13.33 GB. The
+     account has no rentals, so there is nothing to pin. */
+  const mvFooter = lang => `<footer class="ga-mv-offline"><button type="button" data-action="ga-mv-offline-done">${e(T(lang, 'Movies: Done'))}</button><i></i><div class="ga-mv-storage"><span class="ga-mv-bar"><b style="width:25.5%"></b></span><span class="ga-mv-pinline"><span>${e(T(lang, 'Movies: Make available offline'))}</span><img src="assets/ga-mv-ic_manage_pin.png" alt=""></span><span class="ga-mv-free">${e(AndroidStrings.format(T(lang, 'Movies: %s free'), '9.93 GB'))}</span></div></footer>`;
+  /* Settings (honeycomb SettingsActivity, general_prefs.xml): Streaming (on), Downloads (download_policy: "ask" until
+     chosen, so nothing is ticked), Caption font size (Medium), Open source licenses (LicensesActivity over the APK's
+     assets/licenses.html), Application version. Kept in data.gaMvPrefs. */
+  const MV_LISTS = {download_policy: [['wifi', 'Movies: Download only on WiFi'], ['any', 'Movies: Download on any network']], subtitles_size: [['1', 'Movies: Small'], ['2', 'Movies: Medium'], ['3', 'Movies: Large'], ['4', 'Movies: Extra Large']]};
+  const mvPref = (data, key) => ({warning_streaming_bandwidth: true, download_policy: 'ask', subtitles_size: '2', ...data.gaMvPrefs})[key];
+  function mvSettings(ctx) {
+    const {lang, data, ui} = ctx, t = key => T(lang, key);
+    if (ui.gaSub === 'mv-licenses') return `<div class="app-view ga-app ga-movies"><header class="ga-bar ga-movies-bar"><button class="ga-home" data-action="back" aria-label="${e(t('Navigate up'))}"><img src="assets/play-movies.png" alt=""></button><b class="ga-mv-title">${e(t('Movies: Open source licenses'))}</b></header><iframe class="ga-mv-licenses" src="assets/ga-mv-licenses.html" title="${e(t('Movies: Open source licenses'))}"></iframe></div>`;
+    const row = (title, summary, action, id = '', right = '') => `<button class="ga-mv-pref" ${action ? `data-action="${action}" data-id="${id}"` : 'disabled'}><span><b>${e(t(title))}</b><small>${e(summary)}</small></span>${right}</button>`;
+    const on = !!mvPref(data, 'warning_streaming_bandwidth');
+    const d = ui.gaMvDialog, list = d ? MV_LISTS[d] : null, current = d ? mvPref(data, d) : '';
+    const dialog = list ? `<button type="button" class="mps-scrim" data-action="ga-mv-dialog-cancel" aria-label="${e(t('Movies: Cancel'))}"></button><div class="mps-dialog ga-mv-dialog" role="dialog"><h3>${e(t(d === 'download_policy' ? 'Movies: Downloads' : 'Movies: Caption font size'))}</h3><div class="mps-choices">${list.map(([v, label]) => `<button type="button" data-action="ga-mv-pick" data-id="${v}" role="radio" aria-checked="${v === current}"><span>${e(t(label))}</span><i class="mps-radio${v === current ? ' on' : ''}"></i></button>`).join('')}</div><div class="mps-buttons"><button type="button" data-action="ga-mv-dialog-cancel">${e(t('Movies: Cancel'))}</button></div></div>` : '';
+    return `<div class="app-view ga-app ga-movies"><header class="ga-bar ga-movies-bar"><button class="ga-home" data-action="back" aria-label="${e(t('Navigate up'))}"><img src="assets/play-movies.png" alt=""></button><b class="ga-mv-title">${e(t('Movies: Settings title'))}</b></header><div class="ga-scroll ga-mv-prefs">`
+      + row('Movies: Streaming', t('Movies: Warn me before streaming over a mobile network.'), 'ga-mv-toggle', 'warning_streaming_bandwidth', `<img class="holo-checkbox" src="assets/btn_check_${on ? 'on' : 'off'}_holo_dark.png" alt="">`)
+      + row('Movies: Downloads', t('Movies: Specify network preferences for downloads.'), 'ga-mv-list', 'download_policy')
+      + row('Movies: Caption font size', t('Movies: Sets the font size to use for on-screen caption text.'), 'ga-mv-list', 'subtitles_size')
+      + row('Movies: Open source licenses', t('Movies: License details for open source software'), 'ga-mv-licenses')
+      + row('Movies: Application version', '1.4.11', '') + `</div>${dialog}</div>`;
+  }
   function movies(ctx) {
     const {ui, lang} = ctx, tab = ui.gaMoviesTab || 'rentals';
-    const body = tab === 'rentals'
-      ? `<h3 class="ga-mv-welcome">${e(T(lang, 'Welcome!'))}</h3><p class="ga-mv-intro">${e(T(lang, "Looks like you don't have any rentals. Touch the shop icon above to browse our full catalog, or select from our most popular rentals below."))}</p><hr class="ga-mv-rule">${mvStatus(lang, 'There was a problem with the network', true)}`
+    if (ui.gaSub === 'mv-settings' || ui.gaSub === 'mv-licenses') return mvSettings(ctx);
+    const offline = !!ui.gaMvOffline;
+    const body = tab === 'rentals' && offline ? mvStatus(lang, 'Movies: no rentals')
+      : tab === 'rentals'
+      ? `<h3 class="ga-mv-welcome">${e(T(lang, 'Welcome!'))}</h3><p class="ga-mv-intro">${e(T(lang, "Looks like you don't have any rentals. Touch the shop icon above to browse our full catalog, or select from our most popular rentals below."))}</p><hr class="ga-mv-rule">${ui.gaMvLoading ? mvLoading : mvStatus(lang, 'There was a problem with the network', true)}`
       : mvStatus(lang, "You don't have any personal videos");
-    return `<div class="app-view ga-app ga-movies"><header class="ga-bar ga-movies-bar"><button class="ga-home" data-action="home" aria-label="${e(T(lang, 'Play Movies'))}"><img src="assets/play-movies.png" alt=""></button><span class="ga-mv-fill"></span>${icon('ga-shop', T(lang, 'Movies: Shop'), 'ga-mv-ic_menu_shop_holo_dark')}${more()}</header><nav class="ga-mv-tabs">${[['rentals', 'My Rentals'], ['personal', 'Personal Videos']].map(([id, label]) => `<button class="${id === tab ? 'on' : ''}" data-action="ga-movies-tab" data-id="${id}">${e(T(lang, label))}</button>`).join('')}</nav><div class="ga-scroll ga-mv-page${tab === 'personal' ? ' ga-mv-empty' : ''}">${body}</div></div>`;
+    return `<div class="app-view ga-app ga-movies"><header class="ga-bar ga-movies-bar"><button class="ga-home" data-action="home" aria-label="${e(T(lang, 'Play Movies'))}"><img src="assets/play-movies.png" alt=""></button><span class="ga-mv-fill"></span>${icon('ga-shop', T(lang, 'Movies: Shop'), 'ga-mv-ic_menu_shop_holo_dark')}${more()}</header><nav class="ga-mv-tabs">${[['rentals', 'My Rentals'], ['personal', 'Personal Videos']].map(([id, label]) => `<button class="${id === tab ? 'on' : ''}" data-action="ga-movies-tab" data-id="${id}">${e(T(lang, label))}</button>`).join('')}</nav><div class="ga-scroll ga-mv-page${tab === 'personal' ? ' ga-mv-empty' : ''}">${body}</div>${offline ? mvFooter(lang) : ''}</div>`;
   }
 
   // ---- Google Search 1.4.1 (Quick Search Box) ----
@@ -947,6 +991,15 @@
       case 'ga-bk-at': ui.gaBkAt = Number(id); ctx.render(); break;
       case 'ga-bk-pin': (data.gaBkPinned ||= {})[id] = !data.gaBkPinned[id]; ctx.save(); ctx.render(); break;
       case 'ga-movies-tab': ui.gaMoviesTab = id; ctx.render(); break;
+      case 'ga-mv-retry': ui.gaMvLoading = true; ctx.render(); setTimeout(() => { ui.gaMvLoading = false; if (ctx.view === 'play-movies') ctx.render(); }, 1500); break;
+      case 'ga-mv-offline': ctx.closeOverlay(); ui.gaMvOffline = true; ui.gaMoviesTab = 'rentals'; ctx.render(); break;
+      case 'ga-mv-offline-done': ui.gaMvOffline = false; ctx.render(); break;
+      case 'ga-mv-settings': ctx.closeOverlay(); ui.gaSub = 'mv-settings'; ctx.render(); break;
+      case 'ga-mv-licenses': ui.gaSub = 'mv-licenses'; ctx.render(); break;
+      case 'ga-mv-toggle': (data.gaMvPrefs ||= {})[id] = !mvPref(data, id); ctx.save(); ctx.render(); break;
+      case 'ga-mv-list': ui.gaMvDialog = id; ctx.render(); break;
+      case 'ga-mv-pick': (data.gaMvPrefs ||= {})[ui.gaMvDialog] = id; ui.gaMvDialog = null; ctx.save(); ctx.render(); break;
+      case 'ga-mv-dialog-cancel': ui.gaMvDialog = null; ctx.render(); break;
       case 'ga-shop': ctx.openApp('play-store'); break;
       case 'ga-search-run': ctx.browse(id); break;
       // Google Search's searchable items and the suggestions they give.
