@@ -575,7 +575,7 @@ APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<sl
 #### T36 — Currents/Magazines/Newsstand helyi tartalmi utak
 
 - **Ütem:** Harmadik kör (2026-10-26), könnyített terjedelemmel: a „Harmadik kör” szakasz írja felül az itteni „Kész, ha” feltételt.
-- **Állapot:** Nincs elkezdve (harmadik kör).
+- **Állapot:** Kész — `e3b318dc`. Currents 2.1 és Play Magazines 2.0 (4.3), Play Newsstand (4.4.4, 5.1.1): a történetek és egy szám cikkei olvasóoldalon nyílnak (rövid kitalált demócikkek, a tulajdonos 2026-10-26-i döntése szerint), Save For Later / Bookmark for Later a Saved / Bookmarks listába tesz, a keresés a telefon történetei közt szűr, a többi fiókszekció az APK üres feliratát adja, On device only csak a megtartottakat hagyja, a beállítások az APK settings XML-je (settings_currents.xml, preference_magazines.xml, settings.xml), az Article text size az olvasóra hat. Közös kód: `news-reader.js`. Ellenőrzés: `limits-regression.mjs T36` négy eset asztali és telefonos szélességen, npm test 260/260.
 - **Verziók:** 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.3-21, 4.4.4-21, 5.1.1-32.
 - **Elkészítendő és határ:** 4.3 Currents Search/Sync now/Settings, Featured/Saved/Add edition helyi mintaelemek; Play Magazines keresés, magazin megnyitás, Refresh, On device only, Settings. 4.4.4 Newsstand Search, My News/My Magazines/Saved/Explore, Settings, On device only. 5.1.1 Newsstand Search/My Library/Bookmarks/Explore/Settings. Online előfizetés és Help korlát marad.
