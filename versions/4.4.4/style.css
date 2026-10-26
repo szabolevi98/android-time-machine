@@ -475,6 +475,15 @@ html,body{overscroll-behavior-y:none}
 
 /* Developer options overlays: debug.layout clip bounds, PointerLocationView bar, LoadAverageService. */
 .jb-dev-row:disabled{opacity:.4}
+/* SetFullBackupPassword (set_backup_pw.xml): 16 dp padding, the prompts over full-width password fields, the two
+   wrap_content buttons side by side; the alert dialogs' message (jb-devopts.js and its siblings). */
+.dev-backup-pw{display:flex;flex-direction:column;padding:calc(16 * var(--dp))}
+.dev-backup-field{display:flex;flex-direction:column;font-size:calc(14 * var(--dp))}
+.screen .dev-backup-field input{height:calc(48 * var(--dp));margin:0 0 calc(4 * var(--dp));padding:0 calc(4 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #888;background:none;color:inherit;font-size:calc(18 * var(--dp));outline:0}
+.screen .dev-backup-field input:focus{border-bottom:calc(2 * var(--dp)) solid #33b5e5}
+.dev-backup-buttons{display:flex;gap:calc(4 * var(--dp))}
+.screen .dev-backup-buttons button{min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:#ffffff1f;color:#fff;font-size:calc(16 * var(--dp))}
+.dev-dialog-message{margin:0;padding:calc(16 * var(--dp));font-size:calc(16 * var(--dp))}
 .dev-layout-bounds #viewport *,.dev-layout-bounds #overlay-root *{outline:calc(1.1038 * var(--dp)) solid #ff000099;outline-offset:calc(-1.1038 * var(--dp))}
 .dev-pointer-bar{position:absolute;top:0;left:0;right:0;height:calc(26.4901 * var(--dp));z-index:60;display:flex;align-items:center;padding:0 calc(4.4151 * var(--dp));background:#000000c0;color:#fff;font:calc(9.3819 * var(--dp))/1 monospace;white-space:pre;overflow:hidden;pointer-events:none}
 .dev-cpu{position:absolute;top:calc(28.6976 * var(--dp));right:calc(3.3113 * var(--dp));z-index:60;display:flex;flex-direction:column;align-items:flex-end;gap:calc(1.1038 * var(--dp));font:calc(9.3819 * var(--dp))/1.2 monospace;color:#fff;text-shadow:0 0 calc(2.2076 * var(--dp)) #000,0 0 calc(2.2076 * var(--dp)) #000;pointer-events:none}

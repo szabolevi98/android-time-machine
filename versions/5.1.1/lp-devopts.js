@@ -6,7 +6,8 @@
   const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
   // [kind, title, summary, setting key, depends on USB debugging, ...]; kind: check (CheckBoxPreference), switch
   // (SwitchPreference), choice (ListPreference: + entries, summaries or null, default index, dialog title), list (a row
-  // with its summary: PreferenceScreen, Preference), scale (the animation scale dialog).
+  // with its summary that opens a page or dialog: + its preference key, USB debugging, the summary once set), info (a
+  // preferenceInformationStyle row), scale (the animation scale dialog).
   const SECTIONS = [
     [
       "",
@@ -14,12 +15,17 @@
         [
           "list",
           "Take bug report",
-          ""
+          "",
+          "bugreport",
+          true
         ],
         [
           "list",
           "Desktop backup password",
-          "Desktop full backups aren't currently protected"
+          "Desktop full backups aren't currently protected",
+          "local_backup_password",
+          false,
+          "Touch to change or remove the password for desktop full backups"
         ],
         [
           "switch",
@@ -61,7 +67,8 @@
         [
           "list",
           "Process Stats",
-          "Geeky stats about running processes"
+          "Geeky stats about running processes",
+          "proc_stats"
         ]
       ]
     ],
@@ -77,7 +84,8 @@
         [
           "list",
           "Revoke USB debugging authorizations",
-          ""
+          "",
+          "clear_adb_keys"
         ],
         [
           "switch",
@@ -89,7 +97,8 @@
           "switch",
           "Bug report shortcut",
           "Show a button in the power menu for taking a bug report",
-          "bugreportPower"
+          "bugreportPower",
+          true
         ],
         [
           "switch",
@@ -106,7 +115,8 @@
         [
           "list",
           "Select debug app",
-          "No debug application set"
+          "No debug application set",
+          "debug_app"
         ],
         [
           "switch",
@@ -436,6 +446,7 @@
     "Take bug report": {"res": "framework:bugreport_title", "hu": "Hibajelentés készítése", "de": "Fehlerbericht abrufen", "fr": "Créer un rapport de bug", "es": "Crear informe de errores"},
     "Desktop backup password": {"res": "Settings:local_backup_password_title", "hu": "Asztali mentés jelszava", "de": "Desktop-Sicherungspasswort", "fr": "Mot de passe sauvegarde PC", "es": "Contraseña para copias de ordenador"},
     "Desktop full backups aren't currently protected": {"res": "Settings:local_backup_password_summary_none", "hu": "Az asztali teljes biztonsági mentések jelenleg nem védettek.", "de": "Vollständige Desktop-Sicherungen sind momentan nicht passwortgeschützt.", "fr": "Les sauvegardes complètes sur PC ne sont pas protégées actuellement.", "es": "Las copias de seguridad completas de ordenador no están protegidas"},
+    "Touch to change or remove the password for desktop full backups": {"res": "Settings:local_backup_password_summary_change", "hu": "Érintse meg, ha módosítaná vagy eltávolítaná a jelszót az asztali teljes mentésekhez", "de": "Zum Ändern oder Entfernen des Passworts für vollständige Desktop-Sicherungen berühren", "fr": "Appuyez pour modifier ou supprimer le mot de passe utilisé pour les sauvegardes complètes sur PC.", "es": "Tocar para cambiar o eliminar la contraseña para las copias de seguridad completas de ordenador"},
     "Stay awake": {"res": "Settings:keep_screen_on", "hu": "Nem kapcsolódik ki", "de": "Aktiv lassen", "fr": "Rester activé", "es": "Pantalla activa"},
     "Screen will never sleep while charging": {"res": "Settings:keep_screen_on_summary", "hu": "A képernyő soha nem kapcsol ki töltés során", "de": "Display wird beim Laden nie in den Ruhezustand versetzt", "fr": "L'écran ne se met jamais en veille lors du chargement.", "es": "La pantalla nunca entra en modo de suspensión si el dispositivo se está cargando"},
     "HDCP checking": {"res": "Settings:hdcp_checking_title", "hu": "HDCP ellenőrzés", "de": "HDCP-Prüfung", "fr": "Vérification HDCP", "es": "Comprobación de HDCP"},
@@ -561,8 +572,29 @@
     "At most 3 processes": {"res": "Settings:@array/app_process_limit_entries:4", "hu": "Legfeljebb 3 folyamat", "de": "Höchstens 3 Prozesse", "fr": "Trois processus maximum", "es": "3 procesos"},
     "At most 4 processes": {"res": "Settings:@array/app_process_limit_entries:5", "hu": "Legfeljebb 4 folyamat", "de": "Höchstens 4 Prozesse", "fr": "Quatre processus maximum", "es": "4 procesos"},
     "Show all ANRs": {"res": "Settings:show_all_anrs", "hu": "Összes ANR mutatása", "de": "Alle ANRS anzeigen", "fr": "Afficher tous les messages ANR", "es": "Errores sin respuesta"},
-    "Show App Not Responding dialog for background apps": {"res": "Settings:show_all_anrs_summary", "hu": "Az Alkalmazás nem válaszol ablak megjelenítése", "de": "Dialogfeld \"App antwortet nicht\" für Hintergrund-Apps anzeigen", "fr": "Afficher \"L'application ne répond plus\" pour applis en arrière-plan", "es": "Informar de que una aplicación en segundo plano no responde"}
+    "Show App Not Responding dialog for background apps": {"res": "Settings:show_all_anrs_summary", "hu": "Az Alkalmazás nem válaszol ablak megjelenítése", "de": "Dialogfeld \"App antwortet nicht\" für Hintergrund-Apps anzeigen", "fr": "Afficher \"L'application ne répond plus\" pour applis en arrière-plan", "es": "Informar de que una aplicación en segundo plano no responde"},
+    "Type your current full backup password here": {"res": "Settings:current_backup_pw_prompt", "hu": "Adja meg a jelenlegi, teljes biztonsági mentéshez használt jelszavát", "de": "Aktuelles Passwort für vollständige Sicherungen eingeben", "fr": "Saisissez le mot de passe actuel utilisé pour les sauvegardes complètes.", "es": "Introduce aquí la contraseña actual de la copia de seguridad completa."},
+    "Type a new password for full backups here": {"res": "Settings:new_backup_pw_prompt", "hu": "Írjon be új jelszót a teljes mentésekhez itt", "de": "Neues Passwort für vollständige Sicherungen eingeben", "fr": "Saisissez votre nouveau mot de passe pour les sauvegardes complètes.", "es": "Introduce una contraseña nueva para las copias de seguridad completas."},
+    "Retype your new full backup password here": {"res": "Settings:confirm_new_backup_pw_prompt", "hu": "Még egyszer írja be a teljes mentés új jelszavát", "de": "Neues Passwort für vollständige Sicherungen erneut eingeben", "fr": "Confirmez ici votre nouveau mot de passe de sauvegarde complète.", "es": "Vuelve a escribir aquí la nueva contraseña de copia de seguridad completa."},
+    "Cancel": {"res": "Settings:backup_pw_cancel_button_text", "hu": "Mégse", "de": "Abbrechen", "fr": "Annuler", "es": "Cancelar"},
+    "Set backup password": {"res": "Settings:backup_pw_set_button_text", "hu": "Biztonsági jelszó beállítása", "de": "Passwort festlegen", "fr": "Définir le mot de passe de sauvegarde", "es": "Establecer contraseña"},
+    "New backup password set": {"res": "Settings:local_backup_password_toast_success", "hu": "Új biztonsági jelszó beállítva", "de": "Neues Sicherungspasswort festgelegt", "fr": "Le nouveau mot de passe de secours a bien été défini.", "es": "Nueva contraseña de seguridad establecida"},
+    "New password and confirmation don't match": {"res": "Settings:local_backup_password_toast_confirmation_mismatch", "hu": "Az új jelszó és a megerősítése nem egyezik.", "de": "Das neue Passwort und die Bestätigung stimmen nicht überein.", "fr": "Le nouveau mot de passe et sa confirmation ne correspondent pas.", "es": "La nueva contraseña y la de confirmación no coinciden."},
+    "Failure setting backup password": {"res": "Settings:local_backup_password_toast_validation_failure", "hu": "Hiba a biztonsági jelszó beállítása során", "de": "Fehler beim Festlegen des Sicherungspassworts", "fr": "Échec de la définition du mot de passe de secours.", "es": "Error al establecer contraseña de seguridad"},
+    "Revoke access to USB debugging from all computers you've previously authorized?": {"res": "Settings:adb_keys_warning_message", "hu": "Visszavonja a hozzáférést az USB-s hibakereséshez az összes számítógépről, ahol korábban engedélyezte azt?", "de": "Zugriff auf USB-Debugging für alle zuvor autorisierten Computer aufheben?", "fr": "Voulez-vous vraiment désactiver l'accès au débogage USB de tous les ordinateurs précédemment autorisés ?", "es": "¿Quieres revocar el acceso a la depuración USB de todos los ordenadores que habías autorizado anteriormente?"},
+    "Select application": {"res": "Settings:select_application", "hu": "Alkalmazás kiválasztása", "de": "App auswählen", "fr": "Sélectionner une application", "es": "Seleccionar aplicación"},
+    "Nothing": {"res": "Settings:no_application", "hu": "Semmi", "de": "Keine", "fr": "Aucune", "es": "Ninguna"},
+    "Settings": {"res": "Settings:settings_label", "hu": "Beállítások", "de": "Einstellungen", "fr": "Paramètres", "es": "Ajustes"},
+    "This will collect information about your current device state, to send as an e-mail message. It will take a little time from starting the bug report until it is ready to be sent; please be patient.": {"res": "framework:bugreport_message", "hu": "Ezzel információt fog gyűjteni az eszköz jelenlegi állapotáról, amelyet a rendszer e-mailben fog elküldeni. Kérjük, legyen türelemmel, amíg a hibajelentés elkészül, és küldhető állapotba kerül.", "de": "Bei diesem Fehlerbericht werden Daten zum aktuellen Status Ihres Geräts erfasst und als E-Mail versandt. Vom Start des Berichts bis zu seinem Versand kann es eine Weile dauern. Bitte haben Sie etwas Geduld.", "fr": "Cela permet de recueillir des informations concernant l'état actuel de votre appareil. Ces informations sont ensuite envoyées sous forme d'e-mail. Merci de patienter pendant la préparation du rapport de bug. Cette opération peut prendre quelques instants.", "es": "Se recopilará información sobre el estado actual de tu dispositivo y se enviará por correo electrónico. Pasarán unos minutos desde que empiece a generarse el informe de errores hasta que se envíe, por lo que te recomendamos que tengas paciencia."},
+    "Report": {"res": "framework:report", "hu": "Jelentés", "de": "Bericht", "fr": "Rapport", "es": "Informar"},
+    "OK": {"res": "framework:ok", "hu": "OK", "de": "OK", "fr": "OK", "es": "Aceptar"}
   };
+  const ICS = false;
+  // The demo phone's VerifierDeviceIdentity (VerifierDeviceIdentity.toString: 13 base32 characters in fours).
+  const DEVICE_ID = 'HQ4V-7KZM-2WRD-F';
+  // IMM76I's SetFullBackupPassword shows hard-coded English toasts; later images have the local_backup_password_toast_* texts.
+  const BACKUP_TOASTS = ICS ? {mismatch: "!!! New password and confirmation don't match !!!", success: '!!! New backup password set !!!', failure: '!!! Failure setting backup password !!!'}
+    : {mismatch: "New password and confirmation don't match", success: 'New backup password set', failure: 'Failure setting backup password'};
   // The image's text where it has one, else the caller's t (the shared rows).
   const STR = AndroidStrings.table('', STRINGS), reader = (lang, t) => text => STR.has(text) ? STR.t(text, lang) : t(text);
   const DEFAULTS = {developerEnabled: true, verifyUsb: true, animatorScale: 1};
@@ -572,13 +604,15 @@
 
   function render(settings, t, scaleLabel, lang = 'en') {
     const on = settings.developerEnabled !== false, T = reader(lang, t);
-    return SECTIONS.map(([category, rows]) => `${category ? `<div class="section-label">${e(CATEGORY_CAPS ? T(category).toLocaleUpperCase() : T(category))}</div>` : ''}${rows.map(([kind, title, summary, key, dependent]) => {
+    return SECTIONS.map(([category, rows]) => `${category ? `<div class="section-label">${e(CATEGORY_CAPS ? T(category).toLocaleUpperCase() : T(category))}</div>` : ''}${rows.map(([kind, title, summary, key, dependent, changed]) => {
       const disabled = !on || (dependent && !settings.usbDebug) || (key === 'waitDebugger');
       const attrs = disabled ? 'disabled aria-disabled="true"' : '';
       const copy = `<span class="row-copy">${e(T(title))}${summary ? `<small>${e(T(summary))}</small>` : ''}</span>`;
       if (kind === 'check') return `<button class="settings-row wireless-row jb-dev-row" data-action="toggle-setting" data-id="${key}" role="checkbox" aria-checked="${!!settings[key]}" ${attrs}>${copy}<img class="holo-checkbox" src="assets/btn_check_${settings[key] ? 'on' : 'off'}_holo_dark.png" alt=""></button>`;
       if (kind === 'switch') return `<button class="settings-row lp-switch-row jb-dev-row" data-action="toggle-setting" data-id="${key}" role="switch" aria-checked="${!!settings[key]}" ${attrs}>${copy}<span class="lp-mswitch${settings[key] ? ' on' : ''}" aria-hidden="true"></span></button>`;
       if (kind === 'choice') { const [, , , , , entries, summaries, fallback] = SECTIONS.flatMap(([, list]) => list).find(row => row[3] === key); const index = settings[key] ?? fallback; return `<button class="settings-row jb-dev-row" data-action="dev-list" data-id="${key}" ${attrs}><span class="row-copy">${e(T(title))}<small>${e(T((summaries || entries)[index] ?? entries[0]))}</small></span></button>`; }
+      if (kind === 'info') return `<button class="settings-row jb-dev-row" data-action="noop" ${attrs}><span class="row-copy">${e(T(title))}<small>${e(DEVICE_ID)}</small></span></button>`;
+      if (kind === 'list') return `<button class="settings-row jb-dev-row" data-action="dev-pref" data-id="${key}" ${attrs}><span class="row-copy">${e(T(title))}${summary ? `<small>${e(T(key === 'local_backup_password' && settings.backupPassword ? changed : summary))}</small>` : ''}</span></button>`;
       if (kind === 'scale') return `<button class="settings-row jb-dev-row" data-action="sd-dialog" data-id="${key}" ${attrs}><span class="row-copy">${e(T(title))}<small>${e(t(scaleLabel(settings[key] ?? 1)))}</small></span></button>`;
       return `<button class="settings-row jb-dev-row" data-action="dev-info" data-id="${e(title)}" ${attrs}>${copy}</button>`;
     }).join('')}`).join('');
@@ -586,11 +620,64 @@
 
   // ListPreference's dialog: the title, the entries as single-choice rows, Cancel; a tap picks and closes.
   function dialog(key, settings, t, lang = 'en') {
+    const T = reader(lang, t), radio = on => CATEGORY_CAPS ? `<img class="holo-radio" src="assets/btn_radio_${on ? 'on' : 'off'}_holo_dark.png" alt="">` : `<span class="lp-radio${on ? ' on' : ''}" aria-hidden="true"></span>`;
+    const alert = (title, message, ok, okAction) => `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog" role="dialog" aria-label="${e(title || message)}">${title ? `<h3>${e(title)}</h3>` : ''}<p class="dev-dialog-message">${e(message)}</p><div class="settings-dialog-actions"><button data-action="close-overlay">${e(T('Cancel'))}</button><button data-action="${okAction}">${e(ok)}</button></div></div>`;
+    // BugreportPreference: its title, bugreport_message and Report; the adb keys dialog: the message, OK and Cancel.
+    if (key === 'bugreport') return alert(T('Take bug report'), T('This will collect information about your current device state, to send as an e-mail message. It will take a little time from starting the bug report until it is ready to be sent; please be patient.'), T('Report'), 'dev-bugreport');
+    if (key === 'clear_adb_keys') return alert('', T("Revoke access to USB debugging from all computers you've previously authorized?"), T('OK'), 'dev-adb-revoke');
+    // AppPicker (Theme.Holo.Dialog / Theme.Material.Light.Dialog): "Nothing", then the debuggable apps, none on a user build.
+    if (key === 'debug_app') return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog dev-app-picker" role="dialog" aria-label="${e(T('Select application'))}"><h3>${e(T('Select application'))}</h3><button class="settings-row wireless-row" data-action="dev-debug-pick" data-id=""><span class="row-copy">${e(T('Nothing'))}</span></button></div>`;
     const row = SECTIONS.flatMap(([, rows]) => rows).find(item => item[0] === 'choice' && item[3] === key);
     if (!row) return '';
-    const T = reader(lang, t);
     const [, , , , , entries, , fallback, title] = row, current = settings[key] ?? fallback;
     return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog" role="dialog" aria-label="${e(T(title))}"><h3>${e(T(title))}</h3>${entries.map((entry, n) => `<button class="settings-row wireless-row" data-action="dev-list-pick" data-id="${key}:${n}" role="radio" aria-checked="${n === current}"><span class="row-copy">${e(T(entry))}</span>${CATEGORY_CAPS ? `<img class="holo-radio" src="assets/btn_radio_${n === current ? 'on' : 'off'}_holo_dark.png" alt="">` : `<span class="lp-radio${n === current ? ' on' : ''}" aria-hidden="true"></span>`}</button>`).join('')}<div class="settings-dialog-actions"><button data-action="close-overlay">${e(t('Cancel'))}</button></div></div>`;
+  }
+
+  // SetFullBackupPassword (set_backup_pw.xml): the three prompts and password fields, Cancel and Set backup password;
+  // the activity has no label of its own, so the title is the app's.
+  function page(sub, t, lang = 'en') {
+    if (sub !== 'dev-backup-pw') return null;
+    const T = reader(lang, t), field = (prompt, name) => `<label class="dev-backup-field"><span>${e(T(prompt))}</span><input type="password" name="${name}" autocomplete="off"></label>`;
+    return {title: T('Settings'), body: `<form class="dev-backup-pw" data-form="dev-backup-pw">${field('Type your current full backup password here', 'current')}${field('Type a new password for full backups here', 'new')}${field('Retype your new full backup password here', 'confirm')}<div class="dev-backup-buttons"><button type="button" data-action="dev-backup-cancel">${e(T('Cancel'))}</button><button type="button" data-action="dev-backup-set">${e(T('Set backup password'))}</button></div></form>`};
+  }
+  // BackupManagerService keeps a PBKDF2 hash of the password; the simulator keeps a SHA-256 one (with a salt) in
+  // settings.backupPassword. With none saved, the current password has to be empty; an empty new one removes it.
+  async function digest(salt, text) {
+    const bytes = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(salt + text)));
+    return [...bytes].map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  async function setBackupPassword(settings, current, next) {
+    const saved = settings.backupPassword;
+    if (saved ? await digest(saved.salt, current) !== saved.digest : current !== '') return false;
+    if (!next) { delete settings.backupPassword; return true; }
+    const salt = [...crypto.getRandomValues(new Uint8Array(16))].map(b => b.toString(16).padStart(2, '0')).join('');
+    settings.backupPassword = {salt, digest: await digest(salt, next)};
+    return true;
+  }
+  // The rows' actions; ctx: {data, ui, root, save, render, renderOverlay, toast(text), t, language}. True when handled.
+  function handle(action, id, ctx) {
+    const {data, ui} = ctx, T = reader(ctx.language, ctx.t), close = () => { ui.overlay = ''; ctx.renderOverlay(); };
+    switch (action) {
+      case 'dev-pref':
+        if (id === 'local_backup_password') { ui.sub = 'dev-backup-pw'; ctx.render(); ctx.root.querySelector('.dev-backup-pw input')?.focus(); return true; }
+        if (id === 'proc_stats') { ui.sub = 'dev-procstats'; ctx.render(); return true; }
+        ui.devList = id; ui.overlay = 'dev-list'; ctx.renderOverlay(); return true;
+      // Report starts the bugreport service, which posts its notification minutes later; Revoke clears the adb keys
+      // (the simulator has no USB host); Nothing leaves no debug app set.
+      case 'dev-bugreport': case 'dev-adb-revoke': case 'dev-debug-pick': close(); return true;
+      case 'dev-backup-cancel': ui.sub = 'development'; ctx.render(); return true;
+      case 'dev-backup-set': {
+        const form = ctx.root.querySelector('.dev-backup-pw'); if (!form) return true;
+        const [current, next, confirm] = ['current', 'new', 'confirm'].map(name => form.elements[name].value);
+        if (next !== confirm) { ctx.toast(T(BACKUP_TOASTS.mismatch)); return true; }
+        setBackupPassword(data.settings, current, next).then(ok => {
+          ctx.toast(T(ok ? BACKUP_TOASTS.success : BACKUP_TOASTS.failure));
+          if (ok) { ctx.save(); if (ui.sub === 'dev-backup-pw') { ui.sub = 'development'; ctx.render(); } }
+        });
+        return true;
+      }
+    }
+    return false;
   }
 
   /* Overlays: layout bounds (red clip bounds and blue corner marks), PointerLocationView's top bar, and the
@@ -614,5 +701,5 @@
     const box = screen.getBoundingClientRect(), k = box.width / screen.offsetWidth || 1, x = (event.clientX - box.left) / k * 2, y = (event.clientY - box.top) / k * 2;
     bar.textContent = `P: ${down ? 1 : 0} / ${count}   X: ${x.toFixed(1)}   Y: ${y.toFixed(1)}   Xv: 0.000   Yv: 0.000   Prs: ${down ? '1.00' : '0.00'}   Size: ${down ? '0.20' : '0.00'}`;
   }
-  window.JBDeveloperOptions = {SECTIONS, STRINGS, DEFAULTS, keys, render, dialog, apply, updateCpu, pointerMove};
+  window.JBDeveloperOptions = {SECTIONS, STRINGS, DEFAULTS, keys, render, dialog, page, handle, apply, updateCpu, pointerMove};
 })();

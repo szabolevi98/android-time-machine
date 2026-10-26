@@ -1,0 +1,20 @@
+/* kk-procstats.js: ProcessStatsUi on the KTU84P image — the mem_status information row, the
+   LinearColorPreference bar (32 dp between its 16 dp margins), app_percentage_item rows (sd-usage-row), Use details'
+   power_usage_detail_item_text rows (bold label, value at the end) and the overflow menu's check marks. */
+.ps-line{display:flex;align-items:baseline;justify-content:space-between;gap:calc(8 * var(--dp))}
+.screen .ps-line small{margin:0;align-self:auto}
+.ps-status{pointer-events:none}
+.ps-colors{display:flex;width:calc(100% - calc(32 * var(--dp)));height:calc(32 * var(--dp));margin:calc(16 * var(--dp)) calc(16 * var(--dp));padding:0;border:0;background:none}
+.ps-colors span{display:block;height:100%}
+.ps-header{border-bottom:0}
+.ps-header em{display:block;font-style:normal;font-size:calc(14 * var(--dp));color:#aaa}
+.ps-buttons span{flex:1}
+.ps-detail-item{display:flex;justify-content:space-between;gap:calc(8 * var(--dp));padding:calc(6 * var(--dp)) calc(16 * var(--dp));font-size:calc(16 * var(--dp));color:#eee}
+.ps-detail-item b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ps-mem-row{min-height:calc(48 * var(--dp))}
+.screen .ps-refresh{width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:calc(12 * var(--dp));border:0;background:none}
+.ps-refresh img{width:100%;height:100%}
+.ps-menu button{display:flex;align-items:center;justify-content:space-between}
+.ps-menu h3{margin:0;padding:calc(12 * var(--dp)) calc(16 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #33b5e5;font-size:calc(16 * var(--dp));font-weight:400;color:#33b5e5}
+.ps-check{width:calc(18 * var(--dp));height:calc(18 * var(--dp));border:calc(2 * var(--dp)) solid #aaa;border-radius:calc(2 * var(--dp))}
+.ps-check.on{border-color:#33b5e5;background:#33b5e5}

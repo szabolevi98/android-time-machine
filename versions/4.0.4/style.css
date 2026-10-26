@@ -542,6 +542,15 @@ html,body{overscroll-behavior-y:none}
 .screen .settings-app :is(.settings-row,.list-row):has(+ .section-label){border-bottom-color:transparent}
 /* Developer options rows (ics-devopts.js): a disabled row is dimmed. */
 .jb-dev-row:disabled{opacity:.4}
+/* SetFullBackupPassword (set_backup_pw.xml): 16 dp padding, the prompts over full-width password fields, the two
+   wrap_content buttons side by side; the alert dialogs' message (jb-devopts.js and its siblings). */
+.dev-backup-pw{display:flex;flex-direction:column;padding:calc(16 * var(--dp))}
+.dev-backup-field{display:flex;flex-direction:column;font-size:calc(14 * var(--dp))}
+.screen .dev-backup-field input{height:calc(48 * var(--dp));margin:0 0 calc(4 * var(--dp));padding:0 calc(4 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #888;background:none;color:inherit;font-size:calc(18 * var(--dp));outline:0}
+.screen .dev-backup-field input:focus{border-bottom:calc(2 * var(--dp)) solid #33b5e5}
+.dev-backup-buttons{display:flex;gap:calc(4 * var(--dp))}
+.screen .dev-backup-buttons button{min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:#ffffff1f;color:#fff;font-size:calc(16 * var(--dp))}
+.dev-dialog-message{margin:0;padding:calc(16 * var(--dp));font-size:calc(16 * var(--dp))}
 /* Single-choice rows in the Holo dark settings dialogs (ListPreference, Daydream, touch & hold delay): white text on
    the dialog's dark panel with the Holo radio on the right and the list divider, not the light list style. */
 .settings-dialog>.settings-row{display:flex;align-items:center;justify-content:space-between;gap:calc(9.4118 * var(--dp));width:100%;min-height:calc(51.1648 * var(--dp));padding:0 0 0 calc(17.0589 * var(--dp));border:0;border-bottom:calc(1.1765 * var(--dp)) solid #ffffff1f;background:none;color:#f2f2f2;text-align:left;font-size:calc(19.1883 * var(--dp))}

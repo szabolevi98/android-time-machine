@@ -6,6 +6,8 @@
 (() => {
   'use strict';
   const DEVICE='hammerhead',ICS=DEVICE==='maguro',KK=DEVICE==='hammerhead',LP=DEVICE==='shamu';
+  // The demo phone's Google account (the one Gmail, Play and Calendar show).
+  const ACCOUNT={maguro:'icecream.demo@gmail.com',mako:'jellybean.demo@gmail.com',hammerhead:'kitkat.demo@gmail.com',shamu:'nexus6.demo@gmail.com'}[DEVICE];
   const STRINGS={
     "About phone": {"res": "Settings:about_settings", "hu": "A telefonról", "de": "Über das Telefon", "fr": "À propos du téléphone", "es": "Información del teléfono"},
     "System updates": {"res": "Settings:system_update_settings_list_item_title", "hu": "Rendszerfrissítések", "de": "Systemaktualisierungen", "fr": "Mises à jour du système", "es": "Actualizaciones del sistema"},
@@ -231,6 +233,8 @@
   function render(data,ui,t,locale) {
     const p=prefs(data),page=(title,body,right='')=>({title,body,right}),now=wallDate(data),secure=['pattern','pin','password'].includes(p.screenLock);
     // date_time_prefs.xml: the 24-hour summary samples were dropped in 4.1 and the date format list in 5.0.
+    // privacy_settings.xml; the backup account is the Google account once backup is on.
+    if(ui.sub==='backup')return page(S('Backup & reset'),`${section(S('Backup & restore'))}${check(S('Back up my data'),'backup',p.backup!==false,S('Back up app data, Wi-Fi passwords, and other settings to Google servers'))}${row(S('Backup account'),p.backup!==false?ACCOUNT:S('No account is currently storing backed up data'),'noop','',p.backup===false)}${check(S('Automatic restore'),'autoRestore',p.autoRestore!==false,S('When reinstalling an app, restore backed up settings and data'),p.backup===false)}${section(S('Personal data'))}${row(S('Factory data reset'),S('Erases all data on phone'),'settings-sub','reset-info')}`);
     // ICS-only pages (4.0.4), from the IMM76I Settings' preference XML and code.
     if(ICS){
       const info=(title,value,action='noop',id='')=>row(S(title),value,action,id);
@@ -247,8 +251,6 @@
       // Utils.updatePreferenceToSpecificActivityOrRemove titles the entries after their activities.
       if(ui.sub==='about-legal')return page(S('Legal information'),`${row(S('Open source licenses'),'','toast','This feature is not part of the simulator.')}${row(S('Google legal'),'','toast','This feature is not part of the simulator.')}`);
       if(ui.sub==='location')return page(S('Location services'),`${check(S("Google's location service"),'networkLocation',p.networkLocation!==false,S('Let apps use data from sources such as Wi-Fi and mobile networks to determine your approximate location'))}${check(S('GPS satellites'),'gps',!!p.gps,S('Let apps use GPS to pinpoint your location'))}`);
-      // privacy_settings.xml; the backup account is the Google account once backup is on.
-      if(ui.sub==='backup')return page(S('Backup & reset'),`${section(S('Backup & restore'))}${check(S('Back up my data'),'backup',p.backup!==false,S('Back up app data, Wi-Fi passwords, and other settings to Google servers'))}${row(S('Backup account'),p.backup!==false?account:S('No account is currently storing backed up data'),'noop','',p.backup===false)}${check(S('Automatic restore'),'autoRestore',p.autoRestore!==false,S('When reinstalling an app, restore backed up settings and data'),p.backup===false)}${section(S('Personal data'))}${row(S('Factory data reset'),S('Erases all data on phone'),'settings-sub','reset-info')}`);
       // MasterClear (master_clear.xml) with emulated external storage: also_erases_external, the signed-in accounts.
       if(ui.sub==='reset-info')return page(S('Factory data reset'),`<div class="sx-master-clear"><p>${e(S('master_clear_desc').trimEnd()+'\n'+S('master_clear_desc_also_erases_external').replace(/^\n+/,''))}</p><p>${e(S('master_clear_accounts'))}</p><p class="sx-account"><img src="assets/ic_google_account.png" alt="">${e(account)}</p></div><button class="sx-reset" data-action="factory-reset">${e(S('Reset phone'))}</button>`);
       // ManageAccountsSettings: the auto-sync Switch in the action bar, "Add account" (ifRoom|withText), AccountPreference

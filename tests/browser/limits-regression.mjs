@@ -2811,7 +2811,78 @@ const certInstall = async h => {
   const creds = (await store(h, 'userCredentials')) || [];
   h.check('with a PIN lock the certificate is installed for Wi-Fi', creds.some(c => c.name === 'OfficeWiFi' && c.usage === 'wifi') && await h.until(`/OfficeWiFi is installed/.test(document.querySelector('.toast')?.textContent || '')`), JSON.stringify(creds));
 };
+// Developer options (T30): no row ends in "Not available in the simulator" — the Development device ID, Take bug report
+// (only with USB debugging), Revoke USB debugging authorizations, Select debug app (AppPicker's Nothing), Desktop backup
+// password (SetFullBackupPassword checks the confirmation and the current password) and, from 4.4, Process Stats.
+const devRows = async h => {
+  const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  const toastIs = re => h.until(`${re}.test(document.querySelector('.toast')?.textContent || '')`);
+  const row = key => `#viewport [data-action="dev-pref"][data-id="${key}"]`;
+  const tapRow = async key => { await h.ev(`document.querySelector('${row(key)}')?.scrollIntoView({block: 'center'})`); await h.tap(row(key)); };
+  await h.openApp('settings'); await act('settings-sub', 'about');
+  // Build number seven times (5.1.1's action is build-tap).
+  for (let i = 0; i < 7; i++) await act(await h.ev(`!!document.querySelector('#viewport [data-action="build-tap"]')`) ? 'build-tap' : 'developer-tap');
+  await act('settings-sub', 'development');
+  h.check('Developer options opens', await h.until(`!!document.querySelector('${row('local_backup_password')}')`));
+  h.check('no row is a dead end', !(await h.ev(`!!document.querySelector('#viewport [data-action="dev-info"]')`)));
+  const ics = await h.ev(`!!document.querySelector('#viewport [data-action="noop"].jb-dev-row')`);
+  if (ics) h.check('Development device ID shows the device identity', await h.ev(`/^[A-Z2-7]{4}-[A-Z2-7]{4}-[A-Z2-7]{4}-[A-Z2-7]$/.test(document.querySelector('#viewport [data-action="noop"].jb-dev-row small')?.textContent || '')`));
+  else {
+    h.check('Take bug report waits for USB debugging', await h.ev(`document.querySelector('${row('bugreport')}').disabled`));
+    await h.ev(`document.querySelector('#viewport [data-action="toggle-setting"][data-id="usbDebug"]').scrollIntoView({block: 'center'})`); await h.tap('#viewport [data-action="toggle-setting"][data-id="usbDebug"]');
+    if (await h.ev(`!!document.querySelector('.settings-dialog [data-action="close-overlay"]') && /USB debugging/.test(document.querySelector('.settings-dialog')?.textContent || '')`)) await h.tap('.settings-dialog button:last-child');
+    await h.until(`!document.querySelector('${row('bugreport')}').disabled`);
+    await tapRow('bugreport');
+    h.check('Take bug report asks first', await h.until(`/collect information about your current device state/.test(document.querySelector('.settings-dialog')?.textContent || '')`));
+    await h.tap('[data-action="dev-bugreport"]');
+    await tapRow('clear_adb_keys');
+    h.check('Revoke asks about the authorized computers', await h.until(`/Revoke access to USB debugging/.test(document.querySelector('.settings-dialog')?.textContent || '')`));
+    await h.tap('[data-action="dev-adb-revoke"]');
+    await tapRow('debug_app');
+    h.check('Select debug app offers Nothing', await h.until(`document.querySelector('.dev-app-picker [data-action="dev-debug-pick"]')?.textContent === 'Nothing'`));
+    await h.tap('[data-action="dev-debug-pick"]');
+    h.check('no debug app is set', await h.until(`!document.querySelector('.settings-dialog') && /No debug application set/.test(document.querySelector('${row('debug_app')}').textContent)`));
+  }
+  await tapRow('local_backup_password');
+  h.check('Desktop backup password asks for three passwords', await h.until(`document.querySelectorAll('#viewport .dev-backup-pw input[type="password"]').length === 3`));
+  await h.shot('backup-password');
+  await h.type('#viewport .dev-backup-pw [name="new"]', 'demo1'); await h.type('#viewport .dev-backup-pw [name="confirm"]', 'demo2'); await h.tap('[data-action="dev-backup-set"]');
+  h.check('a confirmation that differs is refused', await toastIs(`/New password and confirmation don't match/`));
+  await h.type('#viewport .dev-backup-pw [name="confirm"]', 'demo1'); await h.tap('[data-action="dev-backup-set"]');
+  h.check('the password is set', await toastIs(`/New backup password set/`) && await h.until(`/change or remove the password/.test(document.querySelector('${row('local_backup_password')}')?.textContent || '')`) && !!(await store(h, 'settings'))?.backupPassword?.digest);
+  await tapRow('local_backup_password');
+  await h.type('#viewport .dev-backup-pw [name="current"]', 'wrong'); await h.tap('[data-action="dev-backup-set"]');
+  h.check('a wrong current password is refused', await toastIs(`/Failure setting backup password/`));
+  await h.tap('[data-action="dev-backup-cancel"]');
+  if (!(await h.ev(`!!document.querySelector('${row('proc_stats')}')`))) return;
+  await tapRow('proc_stats');
+  h.check('Process Stats lists the background processes', await h.until(`/Background apps over 3h 0m/.test(document.querySelector('#viewport .ps-status')?.textContent || '') && document.querySelectorAll('#viewport .ps-row').length >= 6`));
+  await h.shot('procstats');
+  const has = label => `[...document.querySelectorAll('#viewport .ps-row')].some(r => r.textContent.includes(${JSON.stringify(label)}))`;
+  h.check('without Show system there is no System UI', !(await h.ev(has('System UI'))));
+  await h.tap('[data-action="ps-menu"]'); await h.tap('[data-action="ps-system"]');
+  h.check('Show system adds the persistent processes', await h.until(has('System UI')));
+  await h.tap('[data-action="ps-menu"]'); await h.tap('[data-action="ps-sub"][data-id="duration"]'); await h.tap('[data-action="ps-duration"][data-id="3"]');
+  h.check('Duration › 1 day', await h.until(`/over 1d 0h 0m/.test(document.querySelector('#viewport .ps-status')?.textContent || '')`));
+  await h.tap('[data-action="ps-menu"]'); await h.tap('[data-action="ps-sub"][data-id="type"]'); await h.tap('[data-action="ps-type"][data-id="fg"]');
+  h.check('Stats type › Foreground', await h.until(`/Foreground apps over/.test(document.querySelector('#viewport .ps-status')?.textContent || '') && ${has('Settings')}`));
+  await h.tap('#viewport .ps-row');
+  h.check('a process opens Use details', await h.until(`/Average RAM use/.test(document.querySelector('#viewport')?.textContent || '') && /MB/.test(document.querySelector('#viewport .ps-detail-item')?.textContent || '')`));
+  await h.shot('procstats-detail');
+  await h.tap('[data-action="ps-force-stop"]');
+  h.check('Force stop stops it once', await h.until(`document.querySelector('[data-action="ps-force-stop"]')?.disabled === true`));
+  await h.key('Escape');
+  if (await h.ev(`!!document.querySelector('#viewport button.ps-colors')`)) {
+    await h.tap('#viewport button.ps-colors');
+    h.check('the memory bar opens Memory details', await h.until(`/Memory states/.test(document.querySelector('#viewport')?.textContent || '') && document.querySelectorAll('#viewport .ps-mem-row').length >= 9`));
+    await h.shot('procstats-memory');
+  }
+};
 const CASES = [
+  {id: 'T30', version: '4.0.4', name: 'Developer options rows (Development device ID, Desktop backup password)', run: devRows},
+  {id: 'T30', version: '4.3', name: 'Developer options rows (bug report, adb keys, debug app, backup password)', run: devRows},
+  {id: 'T30', version: '4.4.4', name: 'Developer options rows (… and Process Stats)', run: devRows},
+  {id: 'T30', version: '5.1.1', name: 'Developer options rows (… and Process Stats, Memory details)', run: devRows},
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
       await h.openApp('photos');
