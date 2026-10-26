@@ -206,7 +206,7 @@
     const {view, ui, lang} = ctx, t = k => T(lang, k);
     if (view === 'google-voice') return ui.gvOpen
       ? [{action: 'gv-call', title: 'Call', icon: 'gv-ic_menu_call_gingerbread.png'}, {action: 'gv-sms-open', title: 'Text', icon: 'gv-ic_menu_sms_gingerbread.png'}, {action: 'gv-archive', title: 'Archive', icon: 'gv-ic_menu_archive_gingerbread.png'}, {action: 'gv-delete', title: 'Delete', icon: 'gv-ic_menu_delete_gingerbread.png'}, {action: 'gv-star', id: ui.gvOpen, title: 'Add star', icon: 'gv-ic_menu_star_gingerbread.png'}]
-      : [{action: 'gv-compose', title: 'Compose', icon: 'gv-ic_menu_compose_gingerbread.png'}, {action: 'gv-labels', title: 'Labels', icon: 'gv-ic_menu_labels_gingerbread.png'}, {action: 'gv-refresh', title: 'Refresh', icon: 'gv-ic_menu_refresh_gingerbread.png'}, {action: 'gv-search', title: 'Search', icon: 'gv-ic_menu_search_gingerbread.png'}, {action: 'gv-unsupported', title: 'Balance', icon: 'gv-ic_menu_balance_gingerbread.png'}, {action: 'gv-unsupported', title: 'Settings', icon: 'ic_menu_preferences'}, {action: 'gv-unsupported', title: 'Help', icon: 'ic_menu_help'}];
+      : [{action: 'gv-compose', title: 'Compose', icon: 'gv-ic_menu_compose_gingerbread.png'}, {action: 'gv-labels', title: 'Labels', icon: 'gv-ic_menu_labels_gingerbread.png'}, {action: 'gv-refresh', title: 'Refresh', icon: 'gv-ic_menu_refresh_gingerbread.png'}, {action: 'gv-search', title: 'Search', icon: 'gv-ic_menu_search_gingerbread.png'}, {action: 'gv-unsupported', title: 'Balance', icon: 'gv-ic_menu_balance_gingerbread.png'}, {action: 'gbpref-open', id: 'gv-settings', title: 'Settings', icon: 'ic_menu_preferences'}, {action: 'gv-unsupported', title: 'Help', icon: 'ic_menu_help'}];
     if (view === 'tags') return ui.tgOpen ? [{action: 'tg-delete', id: ui.tgOpen, title: t('Delete tag'), icon: 'ic_menu_delete'}, {action: 'tg-intro', id: '0', title: t('Help'), icon: 'ic_menu_help'}] : [{action: 'tg-intro', id: '0', title: t('Help'), icon: 'ic_menu_help'}, {action: 'tg-settings', title: t('Settings'), icon: 'ic_menu_preferences'}];
     if (view === 'car-home') return [{action: 'ch-open', id: 'exit', title: T(lang, 'Exit car mode'), icon: 'ch-ic_exit_carhome.png'}, {action: 'gbpref-open', id: 'car-settings', title: t('Settings'), icon: 'ic_menu_preferences'}];
     return [];
@@ -264,6 +264,8 @@
       case 'gv-search': close(); ui.gvSearching = true; ctx.render(); ctx.focus('.gbbr-search input'); break;
       case 'gv-search-cancel': ui.gvSearching = false; ctx.render(); break;
       case 'gv-unsupported': close(); ctx.toast('This feature is not part of the simulator.'); break;
+      // Settings › Sync and notifications › Background data: the system's Accounts & sync settings.
+      case 'gv-sync-settings': ui.gbPrefs = null; ctx.openApp('settings'); ui.gbSettingsStack = ['']; ui.sub = 'sync'; ctx.render(); break;
       case 'tg-tab': ui.tgTab = id; ctx.render(); break;
       case 'tg-open': ui.tgOpen = id; ctx.render(); break;
       case 'tg-done': ui.tgOpen = ''; ctx.render(); break;

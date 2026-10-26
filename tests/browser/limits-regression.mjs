@@ -3280,12 +3280,45 @@ async function gbMusicFiles(h) {
   h.check('with every song gone the library is empty and the player closed', await h.until(`!document.querySelector('#viewport .music-song-row') && !document.querySelector('#viewport .music-player') && !document.querySelector('#viewport .music-nowplaying')`) && (await store(h, 'music')).track == null);
 }
 
+// T16 (2.3.6): Google Voice's Settings (preferences.xml) with local values; account and carrier rows stay closed.
+async function gbVoiceSettings(h) {
+  const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove();return 1})()`);
+  const gv = async (screen = 'gv-settings') => ((await store(h, 'appPrefs')) || {})[screen] || {};
+  const row = key => `#viewport .gbset-row[data-id$=":${key}"]`;
+  await h.openApp('google-voice');
+  await h.until(`!!document.querySelector('#viewport .gv')`);
+  await h.tap('.touch-menu');
+  await h.until(`!!document.querySelector('.gbmenu')`);
+  if (!await h.ev(`!!document.querySelector('.gbmenu [data-action="gbpref-open"][data-id="gv-settings"]')`)) await h.tap('.gbmenu [data-action="gb-menu-more"]');
+  await h.tap('[data-action="gbpref-open"][data-id="gv-settings"]');
+  h.check('Settings opens its own screen', await h.until(`/Do not disturb/.test(document.querySelector('#viewport .gbset-list')?.textContent || '') && /Build number/.test(document.querySelector('#viewport .gbset-list').textContent)`));
+  h.check('the About rows are disabled with the number and build', await h.ev(`document.querySelector(${JSON.stringify(row('pref_build_number'))}).disabled && /0\.4\.2\.30/.test(document.querySelector(${JSON.stringify(row('pref_build_number'))}).textContent)`));
+  await h.tap(row('do_not_disturb_preference_key'));
+  h.check('Do not disturb is kept', (await gv()).do_not_disturb_preference_key === false);
+  await h.tap(row('voicemail_playback_via_speaker_key'));
+  await h.tap('[data-action="gbpref-pick"][data-id="gv-settings:voicemail_playback_via_speaker_key:1"]');
+  h.check('Voicemail playback is kept', (await gv()).voicemail_playback_via_speaker_key === 1 && await h.until(`/Play via speaker/.test(document.querySelector(${JSON.stringify(row('voicemail_playback_via_speaker_key'))}).textContent)`));
+  h.check('Making calls, This phone’s number and Sign out stay at Google', await h.ev(`['call_routing_key', 'forwarding_number_key', 'sign_out_preference'].every(k => document.querySelector('#viewport .gbset-row[data-id$=":' + k + '"]')?.dataset.action === 'gv-unsupported')`));
+  await h.tap(row('notification_preference'));
+  h.check('Sync and notifications opens', await h.until(`/Synchronize Inbox/.test(document.querySelector('#viewport .gbset-list')?.textContent || '') && /Enabled/.test(document.querySelector(${JSON.stringify(row('pref_background_data'))}).textContent)`));
+  await h.tap(row('pref_notification_enabled'));
+  h.check('Inbox notifications off greys Vibrate, Light and the ringtone', (await gv('gv-sync')).pref_notification_enabled === false && await h.ev(`document.querySelector(${JSON.stringify(row('pref_notification_vibrate'))}).disabled && document.querySelector(${JSON.stringify(row('pref_notification_ringtone'))}).disabled`));
+  await h.tap(row('pref_notification_enabled'));
+  await h.tap(row('pref_notification_ringtone'));
+  await h.tap('[data-action="gbpref-pick"][data-id="gv-sync:pref_notification_ringtone:Altair"]');
+  h.check('the ringtone is kept', (await gv('gv-sync')).pref_notification_ringtone === 'Altair');
+  await h.shot('t16-gb-voice-settings');
+  await h.tap(row('pref_background_data'));
+  h.check('Background data opens Accounts & sync', await h.until(`!!document.querySelector('#viewport .gbsp')`));
+}
+
 const CASES = [
   {id: 'T18', version: '2.3.6', name: 'Books › reader About, Manage eBooks (pin, remove)', run: gbBooksLocal},
   {id: 'T18', version: '4.0.4', name: 'Play Books › Search, About, Share, Available offline, Read aloud, Refresh, Make available offline', run: icsBooksLocal},
   {id: 'T46', version: '4.3', name: 'Gmail 4.5.1 › About Gmail, Open source licenses', run: gmailAbout('4.5.1-776638', true)},
   {id: 'T46', version: '4.4.4', name: 'Gmail 4.6.1 › About Gmail, Open source licenses', run: gmailAbout('4.6.1 (1227136)', false)},
   {id: 'T14', version: '2.3.6', name: 'Music › Use as phone ringtone, Delete', run: gbMusicFiles},
+  {id: 'T16', version: '2.3.6', name: 'Google Voice › Settings (local preferences)', run: gbVoiceSettings},
   {id: 'T24', version: '4.0.4', name: 'Play Movies › Manage offline rentals, Settings, Retry', run: moviesOffline},
   {id: 'T45', version: '4.4.4', name: 'Gallery › Print (PrintSpooler 4.4, Save as PDF, Quickoffice)', run: printFlow(PRINT_CASES.gallery, photoSheet)},
   {id: 'T45', version: '4.4.4', name: 'Photos › Print', run: printFlow(PRINT_CASES.photos, photoSheet)},

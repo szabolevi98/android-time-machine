@@ -23,7 +23,14 @@
    Colorize icons, Wallpaper, Bluetooth starts Car Home (bt_launch_settings.xml: the system's Bluetooth, the disconnect
    Timeout, and no paired device: bt_launch_settings_hint), Reset to defaults and Android settings; rows with an `act`
    are Car Home's own dialogs (gb-extra-apps.js). The Clock's Dock settings is Settings' DockSettings (dock_settings.xml):
-   Audio with "Phone not docked" (no dock event: a touch gives "Dock not found") and Dock insertion sound. */
+   Audio with "Phone not docked" (no dock event: a touch gives "Dock not found") and Dock insertion sound.
+   Google Voice 0.4.2.30's Settings (googlevoice.apk res/xml/preferences.xml, SettingsActivity, English only like the
+   APK): General — Do not disturb, Making calls, This phone's number, Voicemail playback (VoicemailPlaybackActivity:
+   Play via handset unless getVoicemailPlaybackViaSpeaker), Sync and notifications, Sign out (the account); About —
+   Legal information and the disabled My Google Voice number and Build number. The image has C2DM, so
+   configurePreferences drops Refresh inbox: Synchronize Inbox depends on Background data (the system's, shown Enabled /
+   Disabled and opened in Accounts & sync) and Inbox notifications on Synchronize Inbox. Making calls, This phone's
+   number and Sign out change the account at Google, and the legal pages are Google's web pages: they stay closed. */
 (() => {
   'use strict';
   const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -223,6 +230,39 @@
         cat(C('Start Car Home on connect with:')),
         action('bt_hint', '', C('Before a device can be used here, it needs to be paired and Bluetooth has to be enabled.'), {info: true})
       ]};
+    },
+    'gv-settings'(ctx) {
+      const closed = (key, title, summary = '') => action(key, title, summary, {act: 'gv-unsupported'});
+      return {set: 'gv', title: 'Google Voice', items: [
+        cat('General'),
+        check('do_not_disturb_preference_key', 'Do not disturb', '', true),
+        closed('call_routing_key', 'Making calls'),
+        closed('forwarding_number_key', 'This phone’s number'),
+        list('voicemail_playback_via_speaker_key', 'Voicemail playback', ['Play via handset', 'Play via speaker'], 0, {showValue: true}),
+        action('notification_preference', 'Sync and notifications', '', {open: 'gv-sync'}),
+        closed('sign_out_preference', 'Sign out', ctx.gmailAccount),
+        cat('About'),
+        action('legal_information_preference', 'Legal information', '', {open: 'gv-legal'}),
+        action('pref_google_voice_number', 'My Google Voice number', '(202) 555-0100', {disabled: true}),
+        action('pref_build_number', 'Build number', '0.4.2.30', {disabled: true})
+      ]};
+    },
+    'gv-sync'(ctx) {
+      const bg = ctx.settings?.backgroundData !== false;
+      return {set: 'gv', title: 'Sync and notifications', items: [
+        cat('Synchronization'),
+        check('push_notifications_key', 'Synchronize Inbox', bg ? '' : 'Background data must be enabled for inbox synchronization to work.', true, {dependency: 'pref_background_data'}),
+        action('pref_background_data', 'Background data', bg ? 'Enabled' : 'Disabled', {act: 'gv-sync-settings', value: bg}),
+        cat('Notifications'),
+        check('sms_notifications_key', 'Text messages', 'Notify via text message', false),
+        check('pref_notification_enabled', 'Inbox notifications', 'Notify in status bar when new items arrive', true, {dependency: 'push_notifications_key'}),
+        check('pref_notification_vibrate', 'Vibrate', 'Also vibrate when new items arrive', true, {dependency: 'pref_notification_enabled'}),
+        check('pref_notification_light', 'Light', 'Also blink status light when new items arrive', true, {dependency: 'pref_notification_enabled'}),
+        {...action('pref_notification_ringtone', 'Select ringtone', '', {ringtone: true}), dependency: 'pref_notification_enabled'}
+      ]};
+    },
+    'gv-legal'() {
+      return {set: 'gv', title: 'Legal information', items: [cat('Legal information'), ...[['pref_terms_of_service', 'Terms of Service'], ['pref_privacy_policy', 'Privacy Policy'], ['pref_program_policy', 'Program Policy'], ['pref_legal_notices', 'Legal Notices']].map(([key, title]) => action(key, title, '', {act: 'gv-unsupported'}))]};
     },
     // Google Talk's Settings (Talk2.apk res/xml/gtalk_preferences.xml): Notifications are DependentListPreferences whose
     // rows below go grey on "Off"; Terms & privacy is Google's page.
