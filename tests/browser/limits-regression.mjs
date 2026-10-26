@@ -2936,7 +2936,66 @@ const langInput = async h => {
   await h.tap('[data-action="lng-pointer-ok"]');
   h.check('Pointer speed keeps its value', (await prefs()).pointerSpeed === 3);
 };
+// Google Now reminders (T37): Repeat through the recurrence dialog, Where through the location spinner and its local
+// place search, Set date… through the date picker; the appointment card's back edits it in Calendar and a swipe
+// dismisses it ("Done for now", Undo).
+const nowReminders = async h => {
+  const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  const list = async () => (await store(h, 'nowReminders')) || [];
+  await h.openApp('google-search'); await act('gnow-reminders');
+  await h.tap('#viewport [data-action="gnow-reminder-new"]');
+  await h.type('#viewport [data-gnr-title]', 'Water the plants');
+  await h.tap('#viewport [data-action="gnow-rule-open"]');
+  h.check('Repeat opens the recurrence dialog, off at first', await h.until(`document.querySelector('#viewport .gnr-rule .gnr-switch')?.getAttribute('aria-checked') === 'false'`));
+  await h.tap('#viewport .gnr-rule [data-action="gnow-rule-switch"]');
+  h.check('the switch offers the week days', await h.until(`document.querySelectorAll('#viewport .gnr-rule .gnr-day').length === 7`));
+  await h.shot('now-repeat');
+  await h.tap('#viewport .gnr-rule [data-action="gnow-rule-done"]');
+  h.check('the button names the rule', await h.until(`/Weekly on/.test(document.querySelector('#viewport [data-action="gnow-rule-open"]')?.textContent || '')`));
+  await h.tap('#viewport [data-action="gnow-reminder-set"]');
+  h.check('the repeating reminder is saved', (await list()).some(r => r.title === 'Water the plants' && r.rule?.freq === 1));
+  h.check('the list shows its rule', await h.until(`/Weekly on/.test(document.querySelector('#viewport .gnr-scroll')?.textContent || '')`));
+  await h.tap('#viewport [data-action="gnow-reminder-new"]');
+  await h.type('#viewport [data-gnr-title]', 'Pick up the parcel');
+  await h.tap('#viewport [data-action="gnow-trigger"][data-id="place"]');
+  h.check('Where swaps the spinners for the place', await h.until(`!!document.querySelector('#viewport .gnr-place-spin') && !document.querySelector('#viewport [data-action="gnow-rule-open"]')`));
+  await h.tap('#viewport .gnr-place-spin');
+  await h.tap('#viewport [data-action="gnow-place-option"][data-id="home"]');
+  h.check('without a home address it asks for one', await h.until(`/Set home location/.test(document.querySelector('#viewport .gnr-place')?.textContent || '')`));
+  await h.type('#viewport [data-gnp-q]', 'zzzz');
+  h.check('no match says so', await h.until(`/No matching places found/.test(document.querySelector('#viewport .gnr-place')?.textContent || '')`));
+  await h.type('#viewport [data-gnp-q]', 'Shore');
+  await h.shot('now-place');
+  await h.tap('#viewport [data-action="gnow-place-pick"][data-id="Shoreline Amphitheatre"]');
+  h.check('the place becomes Home', await h.until(`/Home, 1 Amphitheatre Pkwy/.test(document.querySelector('#viewport .gnr-place-spin')?.textContent || '')`) && /Amphitheatre/.test((await store(h, 'mapsHome')) || ''));
+  await h.shot('now-where');
+  await h.tap('#viewport [data-action="gnow-reminder-set"]');
+  const placed = (await list()).find(r => r.title === 'Pick up the parcel');
+  h.check('the place reminder is saved', placed?.trigger === 'place' && placed.place?.label === 'home');
+  await h.tap(`#viewport [data-action="gnow-reminder-edit"][data-id="${placed?.id}"]`);
+  h.check('and comes back with its place', await h.until(`document.querySelector('#viewport [data-action="gnow-trigger"][data-id="place"]')?.getAttribute('aria-pressed') === 'true' && /Home/.test(document.querySelector('#viewport .gnr-place-spin')?.textContent || '')`));
+  await h.tap('#viewport [data-action="gnow-trigger"][data-id="time"]');
+  await h.tap('#viewport .gnr-spin[data-id="day"]'); await h.tap('#viewport [data-action="gnow-reminder-pick"][data-id="day:3"]');
+  h.check('Set date… opens the date picker', await h.until(`!!document.querySelector('.dtp-done')`));
+  await h.tap('.dtp-done');
+  h.check('the date is the picked one', await h.until(`!document.querySelector('.dtp-done') && !!document.querySelector('#viewport .gnr-edit')`));
+  await h.tap('#viewport [data-action="gnow-reminder-cancel"]');
+  await h.key('Escape');
+  await h.openApp('google-search');
+  if (await h.until(`!!document.querySelector('#viewport [data-gnow-swipe]')`, 4000)) {
+    const key = await h.ev(`document.querySelector('#viewport [data-gnow-swipe]').dataset.gnowSwipe`);
+    await h.drag('#viewport [data-gnow-swipe] .gnow-appt-time', -320, 0);
+    h.check('a swipe dismisses the appointment card', await h.until(`!document.querySelector('#viewport [data-gnow-swipe]') && !!document.querySelector('#viewport .gnow-undo')`) && ((await store(h, 'nowDismissed')) || []).includes(key));
+    await h.tap('#viewport [data-action="gnow-undo"]');
+    h.check('Undo brings it back', await h.until(`!!document.querySelector('#viewport [data-gnow-swipe]')`));
+    await h.tap('#viewport [data-gnow-swipe] [data-action="gnow-card-back"]');
+    await h.tap('#viewport [data-action="gnow-event-edit"]');
+    h.check('the card back edits the event in Calendar', await h.until(`!!document.querySelector('#viewport form[data-form="event"]')`));
+  } else h.check('the Google page has an appointment card', false);
+};
 const CASES = [
+  {id: 'T37', version: '4.4.4', name: 'Google Now reminders: Repeat, Where, Set date…, appointment card', run: nowReminders},
+  {id: 'T37', version: '5.1.1', name: 'Google Now reminders: Repeat, Where, Set date…, appointment card', run: nowReminders},
   {id: 'T30', version: '4.3', name: 'Language & input (Google Keyboard 1.0, TTS, dictionary, Voice Search)', run: langInput},
   {id: 'T30', version: '4.4.4', name: 'Language & input (Google Keyboard 2.0, TTS, dictionary, Voice Search)', run: langInput},
   {id: 'T30', version: '5.1.1', name: 'Language & input (Google Keyboard 4.0, TTS, dictionary, Voice input)', run: langInput},

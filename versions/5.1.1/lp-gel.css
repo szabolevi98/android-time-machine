@@ -135,3 +135,50 @@
 .gnr-alert-buttons{display:flex;justify-content:flex-end;gap:calc(8.0023 * var(--dp));padding:calc(23.9956 * var(--dp)) calc(8.0023 * var(--dp)) calc(8.0023 * var(--dp))}
 .screen .gnr-alert-buttons button{min-width:calc(63.9956 * var(--dp));height:calc(36.0045 * var(--dp));padding:0 calc(8.0023 * var(--dp));border:0;border-radius:calc(1.9978 * var(--dp));background:none;font:500 calc(13.9956 * var(--dp)) Roboto,sans-serif;color:#4285f4;text-transform:uppercase}
 .screen .gnr-alert-buttons button:active{background:#0000001f}
+
+/* Reminders' Where and Repeat (gel-now.js): the location spinner's two-line rows (edit_reminder_location_spinner.xml),
+   the place search, Velvet's RecurrencePickerDialog (recurrencepicker.xml: freqSpinner and repeat_switch, the interval,
+   WeekButtons on ic_recurrence_bubble, the month radios, the end spinner, Done), the appointment card's back and the
+   undo bar of a dismissed card. */
+.gnr-scrim-top{z-index:42}
+.gnr-alert.gnr-place,.gnr-alert.gnr-rule{z-index:43;max-height:80%;overflow-y:auto}
+.gnr-alert h4{margin:0;padding:calc(20 * var(--dp)) calc(24 * var(--dp)) 0;font:500 calc(18 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.gnr-place p{padding-top:calc(8 * var(--dp))}
+.gnr-place .gnr-label{margin:calc(12 * var(--dp)) calc(24 * var(--dp)) 0;width:calc(100% - calc(48 * var(--dp)))}
+.gnr-place-list{max-height:calc(240 * var(--dp));overflow-y:auto;margin-top:calc(8 * var(--dp))}
+.gnr-place-item,.gnr-place-drop button{display:flex;flex-direction:column;justify-content:center;width:100%;min-height:calc(56 * var(--dp));padding:calc(6 * var(--dp)) calc(24 * var(--dp));border:0;background:none;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.gnr-place-drop button{padding:calc(6 * var(--dp)) calc(16 * var(--dp))}
+.gnr-place-item b,.gnr-place-drop b{font-weight:400}
+.gnr-place-item small,.gnr-place-drop small{font-size:calc(14 * var(--dp));color:#0000008a}
+.gnr-place-item:active,.gnr-place-drop button:active{background:#0000000f}
+.gnr-place .gnr-empty{padding:calc(12 * var(--dp)) calc(24 * var(--dp))}
+.gnr-place-spin{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gnr-rule-top{display:flex;align-items:center;justify-content:space-between;gap:calc(8 * var(--dp));padding:calc(12 * var(--dp)) calc(16 * var(--dp));}
+.screen .gnr-rfreq{flex:1;min-width:0;height:calc(48 * var(--dp));border:0;background:none;font:500 calc(15 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.gnr-rfreq option{color:#000}
+.screen .gnr-switch{flex:none;position:relative;width:calc(48 * var(--dp));height:calc(24 * var(--dp));padding:0;border:0;border-radius:calc(12 * var(--dp));background:#00000042}
+.gnr-switch i{position:absolute;top:calc(2 * var(--dp));left:calc(2 * var(--dp));width:calc(20 * var(--dp));height:calc(20 * var(--dp));border-radius:50%;background:#fafafa;box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) #0006;transition:left .15s}
+.gnr-switch.on{background:#4285f480}
+.gnr-switch.on i{left:calc(26 * var(--dp));background:#4285f4}
+.gnr-rule-options{padding:calc(8 * var(--dp)) calc(16 * var(--dp))}
+.gnr-rule-options.off{opacity:.4}
+.gnr-interval{display:flex;align-items:center;gap:calc(8 * var(--dp));font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.screen .gnr-interval input,.screen .gnr-end input{width:calc(64 * var(--dp));height:calc(40 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #4285f4;background:none;font:400 calc(16 * var(--dp)) Roboto,sans-serif;text-align:center;color:#000000de;outline:0}
+.screen .gnr-end input[type=date]{width:auto}
+.gnr-week{display:flex;justify-content:space-between;margin:calc(12 * var(--dp)) 0}
+.screen .gnr-day{width:calc(36 * var(--dp));height:calc(36 * var(--dp));padding:0;border:calc(1 * var(--dp)) solid #b2b2b2;border-radius:50%;background:none;font:400 calc(12 * var(--dp)) Roboto,sans-serif;color:#0000008a}
+.screen .gnr-day.on{border-color:#4285f4;background:#4285f4;color:#fff}
+.gnr-month{display:flex;flex-direction:column;margin:calc(8 * var(--dp)) 0}
+.screen .gnr-radio{display:flex;align-items:center;gap:calc(12 * var(--dp));min-height:calc(44 * var(--dp));padding:0;border:0;background:none;text-align:left;font:400 calc(15 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.gnr-radio::before{content:'';flex:none;width:calc(16 * var(--dp));height:calc(16 * var(--dp));border:calc(2 * var(--dp)) solid #00000084;border-radius:50%}
+.gnr-radio.on::before{border-color:#4285f4;background:radial-gradient(#4285f4 0 calc(5 * var(--dp)), transparent calc(5.5 * var(--dp)))}
+.gnr-end{display:flex;align-items:center;gap:calc(12 * var(--dp));margin-top:calc(8 * var(--dp))}
+.screen .gnr-end select{height:calc(44 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #00000042;background:none;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.gnow-back-links{display:flex;flex-direction:column;gap:calc(4 * var(--dp));padding:calc(48 * var(--dp)) calc(16 * var(--dp)) calc(8 * var(--dp))}
+.screen .gnow-back-links button,.screen .gnow-back-link{display:block;width:100%;min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#4285f4}
+.gnow-back-link{margin-top:calc(48 * var(--dp))}
+.gnow-appt{touch-action:pan-y}
+.gnow-undo{position:absolute;z-index:30;left:calc(8 * var(--dp));right:calc(8 * var(--dp));bottom:calc(8 * var(--dp));display:flex;align-items:center;justify-content:space-between;min-height:calc(48 * var(--dp));padding:0 calc(8 * var(--dp)) 0 calc(16 * var(--dp));background:#323232;color:#fff;font:400 calc(14 * var(--dp)) Roboto,sans-serif;box-shadow:0 calc(2 * var(--dp)) calc(6 * var(--dp)) #0006}
+.screen .gnow-undo button{min-height:calc(36 * var(--dp));padding:0 calc(8 * var(--dp));border:0;background:none;font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#82b1ff;text-transform:uppercase}
+/* Set date… / Set time… open the date and time pickers above the reminder editor. */
+.screen:has(.gnr-edit) #overlay-root>*{z-index:50}

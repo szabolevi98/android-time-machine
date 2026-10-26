@@ -982,6 +982,8 @@ versions/4.4.4/assets/vn3-ic_reminder_cancel_normal.png	6a1381806dc65c20	copy	ha
 versions/4.4.4/assets/vn3-ic_reminder_set_normal.png	0c6567898484e087	copy	hammerhead:/system/priv-app/Velvet.apk!res/drawable-xhdpi/ic_reminder_set_normal.png	drawable-xhdpi		0c6567898484e087
 versions/4.4.4/assets/vn3-ic_reminder_small.png	e6afe8992ba55073	copy	hammerhead:/system/priv-app/Velvet.apk!res/drawable-xhdpi/ic_reminder_small.png	drawable-xhdpi		e6afe8992ba55073
 versions/4.4.4/assets/vn3-ic_reminders_place_normal.png	ceb19816166a501d	copy	hammerhead:/system/priv-app/Velvet.apk!res/drawable-xhdpi/ic_reminders_place_normal.png	drawable-xhdpi		ceb19816166a501d
+versions/4.4.4/assets/vn3-ic_reminders_place_selected.png	e03947e9b4df62b5	copy	hammerhead:/system/priv-app/Velvet.apk!res/drawable-xxhdpi/ic_reminders_place_selected.png	drawable-xxhdpi		e03947e9b4df62b5
+versions/4.4.4/assets/vn3-ic_reminders_time_normal.png	c559e1b2df06c853	copy	hammerhead:/system/priv-app/Velvet.apk!res/drawable-xxhdpi/ic_reminders_time_normal.png	drawable-xxhdpi		c559e1b2df06c853
 versions/4.4.4/assets/vn3-ic_reminders_time_selected.png	ac2849dd307f3fbf	copy	hammerhead:/system/priv-app/Velvet.apk!res/drawable-xhdpi/ic_reminders_time_selected.png	drawable-xhdpi		ac2849dd307f3fbf
 versions/4.4.4/assets/vn3-ic_training_dots_normal.png	8de23fc2888de024	copy	hammerhead:/system/priv-app/Velvet.apk!res/drawable-xhdpi/ic_training_dots_normal.png	drawable-xhdpi		8de23fc2888de024
 versions/4.4.4/assets/vn3-ic_weather_umbrella.png	fd988369f7001ab3	copy	hammerhead:/system/priv-app/Velvet.apk!res/drawable-xhdpi/ic_weather_umbrella.png	drawable-xhdpi		fd988369f7001ab3

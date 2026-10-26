@@ -1304,6 +1304,8 @@ versions/5.1.1/assets/vn4-ic_reminder_cancel_normal.png	6a1381806dc65c20	copy	sh
 versions/5.1.1/assets/vn4-ic_reminder_set_normal.png	0c6567898484e087	copy	shamu:/system/priv-app/Velvet/Velvet.apk!res/drawable-xhdpi-v4/ic_reminder_set_normal.png	drawable-xhdpi-v4		0c6567898484e087
 versions/5.1.1/assets/vn4-ic_reminder_small.png	e6afe8992ba55073	copy	shamu:/system/priv-app/Velvet/Velvet.apk!res/drawable-xhdpi-v4/ic_reminder_small.png	drawable-xhdpi-v4		e6afe8992ba55073
 versions/5.1.1/assets/vn4-ic_reminders_place_normal.png	ceb19816166a501d	copy	shamu:/system/priv-app/Velvet/Velvet.apk!res/drawable-xhdpi-v4/ic_reminders_place_normal.png	drawable-xhdpi-v4		ceb19816166a501d
+versions/5.1.1/assets/vn4-ic_reminders_place_selected.png	e03947e9b4df62b5	copy	shamu:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_reminders_place_selected.png	drawable-xxhdpi-v4		e03947e9b4df62b5
+versions/5.1.1/assets/vn4-ic_reminders_time_normal.png	c559e1b2df06c853	copy	shamu:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/ic_reminders_time_normal.png	drawable-xxhdpi-v4		c559e1b2df06c853
 versions/5.1.1/assets/vn4-ic_reminders_time_selected.png	ac2849dd307f3fbf	copy	shamu:/system/priv-app/Velvet/Velvet.apk!res/drawable-xhdpi-v4/ic_reminders_time_selected.png	drawable-xhdpi-v4		ac2849dd307f3fbf
 versions/5.1.1/assets/vn4-ic_settings.png	572dcf6e4d96b9db	copy	shamu:/system/priv-app/Velvet/Velvet.apk!res/drawable-xhdpi-v4/ic_settings.png	drawable-xhdpi-v4		572dcf6e4d96b9db
 versions/5.1.1/assets/vn4-ic_weather_umbrella.png	fd988369f7001ab3	copy	shamu:/system/priv-app/Velvet/Velvet.apk!res/drawable-xhdpi-v4/ic_weather_umbrella.png	drawable-xhdpi-v4		fd988369f7001ab3

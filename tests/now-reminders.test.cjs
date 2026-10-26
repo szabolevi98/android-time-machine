@@ -13,7 +13,7 @@ for(const [v,third] of [['4.4.4','Weekend'],['5.1.1','Occasionally']]){
   assert.deepEqual({...N.draftReminder({day:1,slot:2},now)},{date:'2026-10-08',time:'17:00'});
   assert.deepEqual({...N.draftReminder({day:0,slot:4},now)},{date:'2026-10-07',time:''});
   assert.equal(N.draftReminder({day:3,slot:0},now),null);assert.equal(N.draftReminder({day:0,slot:5},now),null);
-  if(v==='4.4.4')assert.equal(N.draftReminder({day:2,slot:0},now).date,'2026-10-10');else assert.equal(N.draftReminder({day:2,slot:0},now),null);
+  if(v==='4.4.4')assert.equal(N.draftReminder({day:2,slot:0},now).date,'2026-10-10');else assert.equal(JSON.stringify(N.draftReminder({day:2,slot:0},now)),JSON.stringify({date:'2026-10-07',time:'',occasionally:true}));
   const data={events:[],nowReminders:[{id:'r1',title:'Call the dentist',date:'2026-10-08',time:'17:00'},{id:'r0',title:'Old',date:'2026-10-01',time:'09:00'}]};
   // The Now stream shows upcoming reminders as cards with the card menu; the weather card turns round to the units question.
   const page=N.render({data,t,locale:'en-US',now,ui:{}});
