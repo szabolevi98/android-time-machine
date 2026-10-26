@@ -458,7 +458,7 @@ APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<sl
 #### T23 — Google+ helyi posztolás és beállítások
 
 - **Ütem:** Harmadik kör (2026-10-26), könnyített terjedelemmel: a „Harmadik kör” szakasz írja felül az itteni „Kész, ha” feltételt.
-- **Állapot:** Nincs elkezdve (harmadik kör).
+- **Állapot:** Kész — `2ed3eee2`. Google+ 2.4 (4.0.4), 4.0 (4.3), 4.2.3 (4.4.4), 4.9 (5.1.1): New post a megosztó dobozt nyitja (New post / Write / Photo / Check in / Location / 4.9 tollgomb): szöveg (share_body_hint), a telefon egy képe, a telefon helye; az APK saját gombszövegével a stream tetejére kerül és megmarad (data.gplusMyPosts), saját poszt Delete a post_delete_question kérdéssel; Back írott posztnál Discard. Settings az APK listája (main_preferences.xml, 4.9 settings_headers.xml, 2.4 notifications_preferences.xml): Notifications (pipák, csengőhang), About Google+ (4.0), Messenger (4.0: a Messenger beállításai); a többi sor Google fiókoldala, korlát marad. Reshare, kommentek, értesítési lista: elutasítás. Közös kód: `plus-post.js`. Ellenőrzés: `limits-regression.mjs T23` négy verzió asztali és telefonos szélességen, npm test 260/260.
 - **Verziók:** 4.0.4, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.0.4-07, 4.3-14, 4.3-20, 4.4.4-14, 4.4.4-20, 5.1.1-14, 5.1.1-27.
 - **Elkészítendő és határ:** 4.0.4 New post. 4.3 Photo/Check in/Mood/Write, New post, Share photos, Share your location, Reshare, értesítési lista és Settings. 4.4.4 a kirajzolt poszt/értesítés/új bejegyzés műveletei és Settings; 5.1.1 Settings. Google Settings Google+ belépés ezekre irányít. A poszt és hely helyi demóadat, nem publikálás.
