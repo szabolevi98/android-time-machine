@@ -465,7 +465,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T38 — 4.4.4/5.1.1 Photos helyi menüműveletek
 
 - **Ütem:** Második kör, #22. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `f29b99b7`. A Google+ 4.2.3 / 4.9.0 forrása szerint: Select… a kijelölő mód (CAB a számlálóval, Share és Delete photos, a csempék kijelölés-jelölői), a törlés csak a kijelölt képekre vonatkozik; Settings a General Settings / fotóbeállítások / About lista és az Auto Backup oldal az XML alapértékeivel, helyben megőrizve (online backup, tárhelyvásárlás, About-lapok jelzik, hogy nem részei); Slideshow egynél több képnél látszik, 5 mp-enként lapoz 600 ms-os csúszással, az utolsónál vagy koppintásra leáll; Download a Download mappába ment download_yyyyMMdd_HHmmss másolatot és felveszi a Downloads listába. A 4.4 Edit és az 5.1 Edit (T01) regressziós esetei zöldek.
 - **Verziók:** 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.4.4-17, 5.1.1-21.
 - **Elkészítendő és határ:** Slideshow, Download a helyi médiatárba, Select photos többes kijelöléssel és az APK szerinti helyi Settings értékek. Az online backup/bejelentkezés nem része. Print T45, 5.1 Edit T01. 4.4 Edit működő regressziós referencia marad.
