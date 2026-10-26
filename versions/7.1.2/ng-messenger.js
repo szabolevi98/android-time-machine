@@ -595,7 +595,7 @@
     },
     click(c, key, n) {
       const t = T();
-      if (key === 'sms_enabled') { c.open('settings', 'advanced_apps'); return true; }
+      if (key === 'sms_enabled') { c.open('settings', 'xml:advanced_apps'); return true; }
       if (key === 'notification_sound') { NG.ringtonePicker?.(c, {kind: 'notification', current: NG.appPref(c, 'messenger', key, 'default'), defaultTitle: t.t('framework/ringtone_default'), onPick: (c, v) => { NG.setAppPref(c, 'messenger', key, v); c.render(); }}); return true; }
       if (key === 'buglesub_group_messaging') {
         NG.appPrefsChoose(c, NG.appPrefStr(n.title), [AP().t('PrebuiltBugle/disable_group_mms'), AP().t('PrebuiltBugle/enable_group_mms')], NG.appPref(c, 'messenger', key, true) ? 1 : 0, (c, i) => { NG.setAppPref(c, 'messenger', key, i === 1); c.render(); }, PRIMARY);
@@ -609,8 +609,8 @@
         return true;
       }
       if (key === 'advanced_prefs') { NG.appPrefsGo(c, 'preferences_per_subscription', AP().t('PrebuiltBugle/advanced_settings_activity_title')); return true; }
-      if (key === 'buglesub_wireless_alerts_key') { c.open('settings', 'cell-broadcast'); return true; }
-      if (key === 'sms_apns_key') { c.open('settings', 'apn_settings'); return true; }
+      if (key === 'buglesub_wireless_alerts_key') { NG.openPrefs(c, 'cellbroadcast', 'preferences', NG.appPrefStr('string/CellBroadcastReceiver/sms_cb_settings')); return true; }
+      if (key === 'sms_apns_key') { c.open('settings', 'xml:apn_settings'); return true; }
       if (key === 'current_country') return true;
       return false;
     },

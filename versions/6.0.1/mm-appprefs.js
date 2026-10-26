@@ -20,6 +20,9 @@
   const esc = (c, s) => c.safe(s);
   const str = r => typeof r === 'string' && r.startsWith('string/') ? T().t(r.slice(7)) : r || '';
   const arr = r => typeof r === 'string' && r.startsWith('array/') ? T().t(r.slice(6)) : Array.isArray(r) ? r : [];
+  // A list entry with an argument: Play Movies' audio_language_selector_titles ("%1$s, when available", value system)
+  // names the system language, as Locale.getDisplayLanguage does.
+  const entries = (c, n) => arr(n.entries).map(e => typeof e === 'string' && e.includes('%1$s') ? AndroidStrings.format(e, new Intl.DisplayNames([c.lang || 'en'], {type: 'language'}).of(c.lang || 'en')) : e);
   MM.appPrefsHooks = MM.appPrefsHooks || {};
   MM.appPrefStr = str; MM.appPrefArr = arr;
 
@@ -59,7 +62,7 @@
     const h = hooks(c).summary?.(c, n.key, n); if (h !== undefined) return h;
     if (isToggle(n)) { const v = value(c, n); return str(v ? n.summaryOn || n.summary : n.summaryOff || n.summary); }
     if (isList(n)) {
-      const i = arr(n.entryValues).indexOf(String(value(c, n))), entry = arr(n.entries)[i] ?? '';
+      const i = arr(n.entryValues).indexOf(String(value(c, n))), entry = entries(c, n)[i] ?? '';
       const s = str(n.summary);
       return s ? AndroidStrings.format(s, entry) : entry;
     }
@@ -99,8 +102,8 @@
       <div class="mmpf-list">${hooks(c).top?.(c, s.xml) || ''}${rows(c, n)}${s.path.length ? '' : hooks(c).after?.(c, s.xml) || ''}${s.path.length ? '' : (hooks(c).append?.[s.xml] || []).map((x, k) => rows(c, app(c).xml[x], `@${k}.`)).join('')}</div></div>`;
   }
   function choose(c, n) {
-    const entries = arr(n.entries), values = arr(n.entryValues), v = String(value(c, n));
-    c.dialog({title: str(n.dialogTitle || n.title), items: entries.map((e, i) => ({html: `<span class="mmst-choice"><i class="mmw-radio${values[i] === v ? ' on' : ''}"></i><span>${esc(c, e)}</span></span>`})),
+    const items = entries(c, n), values = arr(n.entryValues), v = String(value(c, n));
+    c.dialog({title: str(n.dialogTitle || n.title), items: items.map((e, i) => ({html: `<span class="mmst-choice"><i class="mmw-radio${values[i] === v ? ' on' : ''}"></i><span>${esc(c, e)}</span></span>`})),
       buttons: [{label: MM.text('framework').t('cancel')}], onItem: i => { setValue(c, n, values[i]); c.render(); }});
   }
   function edit(c, n) {

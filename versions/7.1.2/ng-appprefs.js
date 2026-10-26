@@ -19,6 +19,9 @@
   const esc = (c, s) => c.safe(s);
   const str = r => typeof r === 'string' && r.startsWith('string/') ? T().t(r.slice(7)) : r || '';
   const arr = r => typeof r === 'string' && r.startsWith('array/') ? T().t(r.slice(6)) : Array.isArray(r) ? r : [];
+  // A list entry with an argument: Play Movies' audio_language_selector_titles ("%1$s, when available", value system)
+  // names the system language, as Locale.getDisplayLanguage does.
+  const entries = (c, n) => arr(n.entries).map(e => typeof e === 'string' && e.includes('%1$s') ? AndroidStrings.format(e, new Intl.DisplayNames([c.lang || 'en'], {type: 'language'}).of(c.lang || 'en')) : e);
   NG.appPrefsHooks = NG.appPrefsHooks || {};
   NG.appPrefStr = str; NG.appPrefArr = arr;
 
@@ -68,7 +71,7 @@
     const h = hooks(c).summary?.(c, n.key, n); if (h !== undefined) return h;
     if (isToggle(n)) { const v = value(c, n); return str(v ? n.summaryOn || n.summary : n.summaryOff || n.summary); }
     if (isList(n)) {
-      const i = arr(n.entryValues).indexOf(String(value(c, n))), entry = arr(n.entries)[i] ?? '';
+      const i = arr(n.entryValues).indexOf(String(value(c, n))), entry = entries(c, n)[i] ?? '';
       const s = str(n.summary);
       return s ? AndroidStrings.format(s, entry) : entry;
     }
@@ -160,7 +163,7 @@
     buttons: [{label: NG.text('settings').t('framework/cancel')}], onItem: i => onPick(c, i)});
   function choose(c, n) {
     const values = arr(n.entryValues), v = String(value(c, n));
-    NG.appPrefsChoose(c, str(n.dialogTitle || n.title), arr(n.entries), values.indexOf(v), (c, i) => { setValue(c, n, values[i]); c.render(); }, accent(c));
+    NG.appPrefsChoose(c, str(n.dialogTitle || n.title), entries(c, n), values.indexOf(v), (c, i) => { setValue(c, n, values[i]); c.render(); }, accent(c));
   }
   function edit(c, n) {
     let v = String(value(c, n) || '');

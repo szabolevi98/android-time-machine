@@ -166,7 +166,7 @@
       if (!input) return;
       input.addEventListener('input', () => suggestRows(c, root));
       root.querySelector('form').addEventListener('submit', event => { event.preventDefault(); const go = search.onGo, v = input.value; closeSearch(c); go?.(v); });
-      setTimeout(() => { input.focus(); input.select(); input.dispatchEvent(new FocusEvent('focusin', {bubbles: true})); suggestRows(c, root); }, 30);
+      setTimeout(() => { if (!input.isConnected) return; input.focus(); input.select(); input.dispatchEvent(new FocusEvent('focusin', {bubbles: true})); suggestRows(c, root); }, 30);
     },
     action(name, el, event, c) {
       if (name === 'ecui-sd-close') { closeSearch(c); return true; }
