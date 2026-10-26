@@ -181,3 +181,21 @@ the Earth chrome, menus and settings stay the APKs' own (`earth-globe.js`, `eart
   file for all versions, owner 2026-10-26).
 - The search places in `earth-globe.js` are well-known coordinates; the demo phone's location is Mountain View, as
   in the other apps' maps.
+
+### Apps installed from Play on 6.0.1 and 7.1.2 (owner decision, 2026-10-26)
+
+The Nexus 5X (MTC20K) and 6P (N2G48C) images lack ten Google apps that 5.1.1's image has. They are added as apps the
+phone's owner installed from Play, in the version current on the image's build date, and are marked so: `installed:
+true` in `mm-apps.js` / `ng-apps.js` (Settings › Apps shows Uninstall, which the simulator does not perform). The APKs
+live beside the images in `_aosp/<device>/playapps/` (gitignored); `docs/tools/mm-apps.py`, `mm-appprefs.py`,
+`mm-strings.py` (`image_res.py`), `playapp-assets.py` and `asset-inventory.py` read them there. Plan and versions:
+docs/reports/simulator-limits-2026-10-23.md, "Negyedik kör".
+
+| Version | App | APK (APKMirror) | Variant | SHA-256 |
+|---|---|---|---|---|
+| 6.0.1 | Earth 8.0.4.2346 | [earth-8-0-4-2346-release](https://www.apkmirror.com/apk/google-inc/earth/earth-8-0-4-2346-release/) (uploaded 2016-06-29) | x86, nodpi | `52623b93fcd82d35abdb13aa4abb69edae4740275f2d1c8d54a28f8c24b10c46` |
+| 7.1.2 | Earth 9.0.4.2 | [earth-9-0-4-2-release](https://www.apkmirror.com/apk/google-inc/earth/earth-9-0-4-2-release/) (uploaded 2017-05-08) | armeabi-v7a, nodpi | `3128b1f7d67efe066d4edee8dcd527d36fb028ce997d7612f8d3377840c4e95b` |
+
+The variant's native code does not matter here: the simulator reads the resources (layouts, strings, drawables,
+settings XML), which are the same in every nodpi variant. Each file is saved as `<Apk name>.apk` (GoogleEarth.apk);
+its checksum is APKMirror's.

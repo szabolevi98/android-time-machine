@@ -1,0 +1,40 @@
+/* Google Earth 9.0.4.2 (ng-earth.js): the globe under the transparent Toolbar (common.xml: 56 dp, white quantum icons),
+   the Google logo at the bottom start, nav_controls.xml's 48 dp translucent ovals at the bottom end, the search input
+   with its results, navigation_menu.xml's drawer (Material NavigationView: 280 dp, 48 dp rows, grey600 icons, 14 sp
+   medium) and the My Places / Map Style panels. */
+.ngea{position:relative;height:100%;overflow:hidden;background:#000}
+.ngea-globe{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+.ngea-bar,.ngea-searchbar{position:absolute;left:0;right:0;top:calc(24 * var(--dp));z-index:3;display:flex;align-items:center;height:calc(56 * var(--dp));padding:0 calc(4 * var(--dp))}
+.ngea-bar{background:linear-gradient(#0000008a,#0000)}
+.ngea-searchbar{background:#212121}
+.ngea-fill{flex:1}
+.screen .ngea-btn{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));display:grid;place-items:center;padding:0;border:0;background:none}
+.ngea-btn img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));rotate:var(--rot,0deg)}
+.ngea-more{flex:none}
+.ngea-input{flex:1;min-width:0;padding:calc(6 * var(--dp)) calc(8 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #ffffff80;background:none;color:#fff;font:400 calc(18 * var(--dp)) Roboto,sans-serif;outline:0}
+.ngea-input::placeholder{color:#ffffff80}
+.ngea-results{position:absolute;left:0;right:0;top:calc(80 * var(--dp));z-index:3;max-height:calc(100% - 80 * var(--dp));overflow-y:auto;background:#fff;box-shadow:0 calc(2 * var(--dp)) calc(6 * var(--dp)) #0006}
+.screen .ngea-result{display:flex;align-items:center;gap:calc(24 * var(--dp));width:100%;min-height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;color:#212121;font:400 calc(16 * var(--dp)) Roboto,sans-serif;text-align:left}
+.ngea-result img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngea-empty{margin:0;padding:calc(16 * var(--dp));color:#757575;font:400 calc(16 * var(--dp)) Roboto,sans-serif}
+.ngea-logo{position:absolute;left:calc(16 * var(--dp));bottom:calc(16 * var(--dp));z-index:2;width:calc(66 * var(--dp));pointer-events:none}
+.ngea-nav{position:absolute;right:calc(16 * var(--dp));bottom:calc(16 * var(--dp));z-index:2;display:flex;flex-direction:column;gap:calc(12 * var(--dp))}
+.screen .ngea-round{width:calc(48 * var(--dp));height:calc(48 * var(--dp));display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:#00000061;color:#fff;font:500 calc(14 * var(--dp)) Roboto,sans-serif}
+.ngea-round img{width:calc(36 * var(--dp));height:calc(36 * var(--dp))}
+.ngea-card{position:absolute;left:calc(8 * var(--dp));right:calc(72 * var(--dp));bottom:calc(16 * var(--dp));z-index:2;padding:calc(14 * var(--dp)) calc(16 * var(--dp));border-radius:calc(2 * var(--dp));background:#fff;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0005}
+.ngea-card b{font:400 calc(20 * var(--dp)) Roboto,sans-serif;color:#212121}
+.ngea-scrim{position:absolute;inset:0;z-index:5;background:#00000099}
+.ngea-drawer{position:absolute;left:0;top:0;bottom:0;z-index:6;width:calc(280 * var(--dp));overflow-y:auto;background:#fff;box-shadow:0 0 calc(16 * var(--dp)) #0008}
+.ngea-account{display:flex;flex-direction:column;justify-content:flex-end;gap:calc(8 * var(--dp));height:calc(160 * var(--dp));padding:calc(16 * var(--dp));background:#455a64;color:#fff}
+.ngea-account img{width:calc(64 * var(--dp));height:calc(64 * var(--dp));border-radius:50%}
+.ngea-account small{font:400 calc(14 * var(--dp)) Roboto,sans-serif}
+.screen .ngea-drawer button{display:flex;align-items:center;gap:calc(32 * var(--dp));width:100%;height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;color:#212121;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-align:left}
+.ngea-drawer button img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngea-drawer img.tint{filter:brightness(.4)}
+.ngea-drawer hr{margin:calc(8 * var(--dp)) 0;border:0;border-top:1px solid #0000001f}
+.ngea-panel{position:absolute;left:0;right:0;top:0;bottom:0;z-index:4;background:#fff}
+.ngea-panel header{display:flex;align-items:center;gap:calc(16 * var(--dp));height:calc(56 * var(--dp));margin-top:calc(24 * var(--dp));padding:0 calc(4 * var(--dp));background:#212121;color:#fff}
+.ngea-panel header b{font:500 calc(20 * var(--dp)) Roboto,sans-serif}
+.ngea-panel p{margin:0;padding:calc(24 * var(--dp)) calc(16 * var(--dp));color:#757575;font:400 calc(16 * var(--dp)) Roboto,sans-serif}
+.screen .ngea-style{display:flex;align-items:center;width:100%;height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));border:0;border-bottom:1px solid #0000001f;background:none;color:#212121;font:400 calc(16 * var(--dp)) Roboto,sans-serif;text-align:left}
+.ngea-style.on{color:#4285f4;font-weight:500}

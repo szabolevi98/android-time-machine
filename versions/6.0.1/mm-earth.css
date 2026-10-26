@@ -1,0 +1,29 @@
+/* Google Earth 8.0.4 (mm-earth.js): 5.1.1's Earth 8 layout, from common.xml and main.xml: the 56 dp Toolbar on
+   actionbar_gradient (#cc000000 to transparent) with the drawer toggle, the title and the white icons, the compass
+   (40 dp) under it at the end, the pegman at the start, the 300 dp drawer and the Layers dialog's check boxes. */
+.mmea{position:relative;height:100%;overflow:hidden;background:radial-gradient(ellipse at 50% 55%,#0c1a33,#000 70%)}
+.mmea-globe{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+.mmea-bar{position:absolute;left:0;right:0;top:0;z-index:3;display:flex;align-items:center;height:calc(56 * var(--dp));padding-right:calc(4 * var(--dp));background:linear-gradient(#000000cc,#0000)}
+.screen .mmea-toggle{flex:none;display:flex;flex-direction:column;justify-content:center;gap:calc(4 * var(--dp));width:calc(56 * var(--dp));height:calc(56 * var(--dp));padding:0 calc(18 * var(--dp));border:0;background:none}
+.mmea-toggle i{display:block;height:calc(2 * var(--dp));background:#fff}
+.mmea-bar>b{flex:1;min-width:0;font:500 calc(20 * var(--dp)) Roboto,sans-serif;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .mmea-btn{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));display:grid;place-items:center;padding:0;border:0;background:none}
+.mmea-btn img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.mmea-field{flex:3;min-width:0}
+.mmea-field input{width:100%;padding:calc(4 * var(--dp)) 0;border:0;border-bottom:calc(2 * var(--dp)) solid #fff;background:none;color:#fff;font:400 calc(16 * var(--dp)) Roboto,sans-serif;outline:0}
+.mmea-field input::placeholder{color:#ffffffb3}
+.screen .mmea-compass{position:absolute;right:calc(5 * var(--dp));top:calc(56 * var(--dp));z-index:2;width:calc(40 * var(--dp));height:calc(40 * var(--dp));padding:0;border:0;background:none}
+.mmea-compass img{position:absolute;inset:0;width:100%;height:100%}
+.screen .mmea-pegman{position:absolute;left:calc(4 * var(--dp));top:calc(102 * var(--dp));z-index:2;width:calc(32 * var(--dp));height:calc(32 * var(--dp));padding:0;border:0;background:none}
+.mmea-pegman img{width:100%;height:100%}
+.mmea-scrim{position:absolute;inset:0;z-index:4;background:#0006}
+.mmea-drawer{position:absolute;left:0;top:0;bottom:0;z-index:5;width:min(calc(300 * var(--dp)),85%);overflow-y:auto;background:#fff}
+.mmea-account{display:flex;flex-direction:column;justify-content:flex-end;height:calc(147 * var(--dp));padding:0 calc(16 * var(--dp)) calc(12 * var(--dp));background:#303030;color:#fff}
+.mmea-account img{width:calc(64 * var(--dp));height:calc(64 * var(--dp));margin-top:calc(16 * var(--dp));margin-bottom:auto;border-radius:50%}
+.mmea-account b{font:500 calc(14 * var(--dp)) Roboto,sans-serif}
+.mmea-account small{font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#ffffffb3}
+.screen .mmea-drawer button{display:flex;align-items:center;width:100%;height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;color:#000000de;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-align:left}
+.screen .mmea-drawer button:active{background:#0000001a}
+.mmea-drawer hr{margin:calc(8 * var(--dp)) 0;border:0;border-top:1px solid #0000001f}
+.mmea-check{flex:none;width:calc(18 * var(--dp));height:calc(18 * var(--dp));margin-left:auto;border:calc(2 * var(--dp)) solid #0000008a;border-radius:calc(2 * var(--dp))}
+.mmea-check.on{border-color:#009688;background:#009688}

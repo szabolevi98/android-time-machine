@@ -35,6 +35,8 @@ def find_apk(name):
     for d in ('app', 'priv-app'):
         for p in (f'{d}/{name}.apk', f'{d}/{name}/{name}.apk'):
             if os.path.exists(SYSTEM + p): return p
+    # An app installed from Play on this phone (_aosp/<device>/playapps/, beside the image's system).
+    if os.path.exists(SYSTEM + f'../playapps/{name}.apk'): return f'../playapps/{name}.apk'
     raise SystemExit(f'no {name}.apk')
 
 

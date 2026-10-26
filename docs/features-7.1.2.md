@@ -116,3 +116,9 @@ This is a static browser simulator with separate local saved state for each
 version/user. Calls, messages, search results, store/cloud content, camera scenes,
 media processing and payments are simulated. It does not connect to live Google
 accounts, telephone networks, payment services or an Android runtime.
+
+## Apps installed from Play (not in the factory image)
+
+The owner of the demo phone installed these from Play, in the version of the image's month (docs/sources.md). Settings › Apps lists them with Uninstall.
+
+- **Earth 9.0.4** (installed from Play, not in N2G48C): the Blue Marble globe (drag, zoom, double tap), Search with its results, I'm Feeling Lucky, My Location and Share Link in the overflow, the compass and 2D / 3D, the drawer (My Places, Map Style kept) and the APK's Settings (flight animations, units, quality, version, region). Voyager, postcards and Street View keep the limit.

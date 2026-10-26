@@ -67,3 +67,6 @@ general_settings
 +app_name
 [smartlock] PrebuiltGmsCore PersonalUnlockingSettingsActivity
 personal_unlocking_settings_preferences trusted_devices_preferences trusted_places_preferences on_body_detection_preferences face_unlock_preferences
+[earth] GoogleEarth -
+settings
++msg_clear_cache +about_info+args1

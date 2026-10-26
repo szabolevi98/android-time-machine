@@ -40,11 +40,24 @@ def file_sha(path, data):
     return sha(data.replace(b'\r\n', b'\n') if path.endswith('.svg') else data)[:16]
 
 
+def installed(device):
+    """The apps installed from Play beside the image (6.0.1 / 7.1.2: _aosp/<device>/playapps/*.apk), not cached: where is
+    ../playapps/<Apk>.apk, relative to /system like the image's files."""
+    rows = []
+    for path in sorted(glob.glob(f'{ROOT}_aosp/{device}/playapps/*.apk')):
+        with zipfile.ZipFile(path) as z:
+            for info in z.infolist():
+                if info.filename.lower().endswith(MEDIA) and not info.filename.startswith('META-INF/'):
+                    data = z.read(info)
+                    rows.append([f'../playapps/{os.path.basename(path)}', info.filename, len(data), sha(data)])
+    return rows
+
+
 def index(device):
     """Every image, font, sound and drawable XML of the image: [where, entry, size, sha256]. where is the path under
-    /system; entry the path inside an APK / JAR / ZIP, '' for a plain file."""
+    /system; entry the path inside an APK / JAR / ZIP, '' for a plain file. The apps installed from Play follow."""
     cache = f'{ROOT}_aosp/{device}/asset-index.json'
-    if os.path.exists(cache): return json.load(open(cache))
+    if os.path.exists(cache): return json.load(open(cache)) + installed(device)
     system, rows = f'{ROOT}_aosp/{device}/system/', []
     for path in sorted(glob.glob(system + '**/*', recursive=True)):
         if not os.path.isfile(path): continue
@@ -62,7 +75,7 @@ def index(device):
             data = open(path, 'rb').read()
             rows.append([where, '', len(data), sha(data)])
     json.dump(rows, open(cache, 'w'))
-    return rows
+    return rows + installed(device)
 
 
 def signatures(img):
@@ -195,7 +208,8 @@ def difference(a, b):
 
 
 def where_text(device, row):
-    return f'{device}:/system/{row[0]}' + (f'!{row[1]}' if row[1] else '')
+    where = f'/{row[0][3:]}' if row[0].startswith('../') else f'/system/{row[0]}'
+    return f'{device}:{where}' + (f'!{row[1]}' if row[1] else '')
 
 
 def signature(im):

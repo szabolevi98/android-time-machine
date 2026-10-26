@@ -21,7 +21,9 @@ class ImageRes:
         if name not in self.apks:
             system = f'{ROOT}_aosp/{self.device}/system/'
             path = next(p for p in ([system + 'framework/framework-res.apk'] if name == 'framework' else
-                                    [f'{system}{d}/{name}.apk' for d in ('app', 'priv-app')] + [f'{system}{d}/{name}/{name}.apk' for d in ('app', 'priv-app')])
+                                    [f'{system}{d}/{name}.apk' for d in ('app', 'priv-app')] + [f'{system}{d}/{name}/{name}.apk' for d in ('app', 'priv-app')] +
+                                    # An app installed from Play on this phone (6.0.1 / 7.1.2: _aosp/<device>/playapps/).
+                                    [f'{ROOT}_aosp/{self.device}/playapps/{name}.apk'])
                         if os.path.exists(p))
             r = APK(path).get_android_resources()
             names = r.get_packages_names()

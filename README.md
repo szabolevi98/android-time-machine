@@ -41,8 +41,8 @@ What each version does, screen by screen:
 - [Android 4.3 Jelly Bean](docs/features-4.3.md) on the Nexus 4
 - [Android 4.4.4 KitKat](docs/features-4.4.4.md) on the Nexus 5, with the stock Google apps
 - [Android 5.1.1 Lollipop](docs/features-5.1.1.md) on the Nexus 6, as its LMY48Y factory image ships it
-- [Android 6.0.1 Marshmallow](docs/features-6.0.1.md) on the Nexus 5X, rebuilt from its MTC20K factory image
-- [Android 7.1.2 Nougat](docs/features-7.1.2.md) on the Nexus 6P, rebuilt from its N2G48C factory image: split-screen, bundled notifications/direct reply, launcher shortcuts, Gboard and the image's Google apps
+- [Android 6.0.1 Marshmallow](docs/features-6.0.1.md) on the Nexus 5X, rebuilt from its MTC20K factory image (plus Google apps of 2016 the image lacks, installed from Play and marked so: Earth …)
+- [Android 7.1.2 Nougat](docs/features-7.1.2.md) on the Nexus 6P, rebuilt from its N2G48C factory image: split-screen, bundled notifications/direct reply, launcher shortcuts, Gboard and the image's Google apps (plus Google apps of 2017 the image lacks, installed from Play and marked so: Earth …)
 
 ## Social preview image
 

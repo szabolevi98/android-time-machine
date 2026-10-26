@@ -18,7 +18,13 @@
   const T = () => NG.text('appprefs');
   const esc = (c, s) => c.safe(s);
   const str = r => typeof r === 'string' && r.startsWith('string/') ? T().t(r.slice(7)) : r || '';
-  const arr = r => typeof r === 'string' && r.startsWith('array/') ? T().t(r.slice(6)) : Array.isArray(r) ? r : [];
+  // A string array: its row, or "array:<name>" when a string of the same name took the plain key (Earth 9's
+  // settings_distance_units is both the title and the list).
+  const arr = r => {
+    if (typeof r !== 'string' || !r.startsWith('array/')) return Array.isArray(r) ? r : [];
+    const both = T().t('array:' + r.slice(6)), one = Array.isArray(both) ? both : T().t(r.slice(6));
+    return Array.isArray(one) ? one : [];
+  };
   // A list entry with an argument: Play Movies' audio_language_selector_titles ("%1$s, when available", value system)
   // names the system language, as Locale.getDisplayLanguage does.
   const entries = (c, n) => arr(n.entries).map(e => typeof e === 'string' && e.includes('%1$s') ? AndroidStrings.format(e, new Intl.DisplayNames([c.lang || 'en'], {type: 'language'}).of(c.lang || 'en')) : e);

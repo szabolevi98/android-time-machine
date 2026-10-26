@@ -1525,6 +1525,10 @@
     'Panoramio Photos': {own: true, hu: 'Panoramio-fotók', de: 'Panoramio-Fotos', fr: 'Photos Panoramio', es: 'Fotos de Panoramio'},
     'Wikipedia': {own: true, hu: 'Wikipédia', de: 'Wikipedia', fr: 'Wikipédia', es: 'Wikipedia'},
     '3D Buildings': {own: true, hu: '3D épületek', de: '3D-Gebäude', fr: 'Bâtiments 3D', es: 'Edificios en 3D'},
+    // Earth 9's Map Style base layers (Google's server names them; the simulator's own).
+    'Clean': {own: true, hu: 'Letisztult', de: 'Einfach', fr: 'Épuré', es: 'Limpio'},
+    'Exploration': {own: true, hu: 'Felfedezés', de: 'Erkundung', fr: 'Exploration', es: 'Exploración'},
+    'Everything': {own: true, hu: 'Minden', de: 'Alles', fr: 'Tout', es: 'Todo'},
     // Earth's layer of country borders and place names (not the photo editor's Borders, which are frames).
     'Borders and Labels': {own: true, hu: 'Határok és címkék', de: 'Grenzen und Beschriftungen', fr: 'Frontières et légendes', es: 'Fronteras y etiquetas'},
     'Books': {own: true, hu: 'Könyvek', de: 'Google Bücher', fr: 'Livres', es: 'Google Libros'},

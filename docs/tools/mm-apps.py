@@ -47,7 +47,12 @@ IDS = {
     'com.google.android.music': 'play-music', 'com.google.android.videos': 'play-movies', 'com.google.android.play.games': 'play-games',
     'com.google.android.apps.walletnfcrel': 'android-pay', 'com.google.android.apps.tycho': 'project-fi',
     'com.android.providers.downloads.ui': 'downloads', 'com.android.documentsui': 'documents', 'com.google.android.gms': 'google-settings',
-    'com.android.settings': 'settings', 'com.google.android.googlequicksearchbox': 'search', 'com.google.android.apps.enterprise.dmagent': 'device-policy'}
+    'com.android.settings': 'settings', 'com.google.android.googlequicksearchbox': 'search', 'com.google.android.apps.enterprise.dmagent': 'device-policy',
+    # The apps the 5.1.1 image has but these images do not, installed from Play (docs/reports/simulator-limits-2026-10-23.md T50–T57).
+    'com.google.earth': 'earth', 'com.google.android.keep': 'keep', 'com.google.android.apps.docs.editors.docs': 'docs',
+    'com.google.android.apps.docs.editors.sheets': 'sheets', 'com.google.android.apps.docs.editors.slides': 'slides',
+    'com.google.android.apps.fitness': 'fit', 'com.google.android.apps.books': 'play-books', 'com.google.android.apps.genie.geniewidget': 'news-weather',
+    'com.google.android.apps.plus': 'google-plus', 'com.google.android.apps.magazines': 'newsstand'}
 HIDDEN = {('com.google.android.googlequicksearchbox', 'com.google.android.googlequicksearchbox.VoiceSearchActivity'),
           ('com.google.android.inputmethod.latin', 'com.android.inputmethod.latin.setup.SetupActivity')}
 
@@ -115,7 +120,10 @@ def dangerous_groups():
 def apps():
     rows = []
     groups = dangerous_groups()
-    for path in sorted(glob.glob(SYSTEM + 'app/*/*.apk') + glob.glob(SYSTEM + 'priv-app/*/*.apk')):
+    # The image's apps, then the apps installed from Play on this phone (_aosp/<device>/playapps/, the version of the
+    # image's month: docs/reports/simulator-limits-2026-10-23.md, Negyedik kör), which Settings lists as downloaded.
+    installed = sorted(glob.glob(SYSTEM + '../playapps/*.apk'))
+    for path in sorted(glob.glob(SYSTEM + 'app/*/*.apk') + glob.glob(SYSTEM + 'priv-app/*/*.apk')) + installed:
         a = APK(path); x = a.get_android_manifest_xml(); r = a.get_android_resources()
         pkg = x.get('package'); app = x.find('application')
         if not resolve_bool(r, app.get(NS + 'enabled')): continue
@@ -140,13 +148,14 @@ def apps():
                     if target is not None: theme = target.get(NS + 'theme') or theme
                 theme = theme or app.get(NS + 'theme')
                 rel = path[len(SYSTEM):].replace(os.sep, '/')
-                color = THEMES.attr(rel, theme, 'colorPrimary') if theme else None
+                try: color = THEMES.attr(rel, theme, 'colorPrimary') if theme else None
+                except Exception: color = None
                 # PackageStats' code size: the APK and its pre-optimised oat files in the app's folder; the versionName.
                 folder = os.path.dirname(path)
-                size = sum(os.path.getsize(os.path.join(d, f)) for d, _, fs in os.walk(folder) for f in fs)
+                size = os.path.getsize(path) if path in installed else sum(os.path.getsize(os.path.join(d, f)) for d, _, fs in os.walk(folder) for f in fs)
                 # The runtime permission groups it asks for (uses-permission of a dangerous permission).
                 asked = sorted({groups[u.get(NS + 'name')] for u in x.iter('uses-permission') if u.get(NS + 'name') in groups})
-                rows.append({'apk': path[len(SYSTEM):], 'pkg': pkg, 'cls': cls, 'label': label, 'iconRes': icon, 'r': r, 'color': color or '#ff212121',
+                rows.append({'installed': path in installed, 'apk': path[len(SYSTEM):], 'pkg': pkg, 'cls': cls, 'label': label, 'iconRes': icon, 'r': r, 'color': color or '#ff212121',
                              'version': a.get_androidversion_name(), 'size': size, 'perms': asked, 'target': int(a.get_target_sdk_version() or 0)})
     return rows
 
@@ -189,7 +198,7 @@ if __name__ == '__main__':
         label = row['label']; gaps = [l for l in LANGS[1:] if l not in label]
         label.update({l: label['en'] for l in gaps})
         data[id] = {'pkg': row['pkg'], 'cls': row['cls'], 'label': label, 'icon': f'assets/app-{id}.png', 'color': '#' + row['color'][-6:],
-                    'version': row['version'], 'codeSize': row['size'], 'permGroups': row['perms'], 'targetSdk': row['target'], 'res': f"{DEVICE}:{row['apk'].replace(os.sep, '/')}:{src}", **({'untranslated': gaps} if gaps else {})}
+                    'version': row['version'], 'codeSize': row['size'], 'permGroups': row['perms'], 'targetSdk': row['target'], 'res': f"{DEVICE}:{row['apk'].replace(os.sep, '/').replace('../', '')}:{src}", **({'untranslated': gaps} if gaps else {}), **({'installed': True} if row['installed'] else {})}
         print(id, row['cls'], density, label['en'], '/', label['hu'])
     byComponent = {(v['pkg'], v['cls']): k for k, v in data.items()}
     items = layout()

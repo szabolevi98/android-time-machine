@@ -9,6 +9,7 @@ versions/7.1.2/assets/app-contacts.png	805fadb772d49824	copy	angler:/system/priv
 versions/7.1.2/assets/app-device-policy.png	a483f1b6c4423a0c	copy	angler:/system/app/DMAgent/DMAgent.apk!res/drawable-xxxhdpi-v4/product_logo_apps_policy_color_192.png	drawable-xxxhdpi-v4		a483f1b6c4423a0c
 versions/7.1.2/assets/app-documents.png	c9f506900211112e	copy	angler:/system/app/DownloadProviderUi/DownloadProviderUi.apk!res/mipmap-xxxhdpi-v4/ic_launcher_download.png	mipmap-xxxhdpi-v4		c9f506900211112e
 versions/7.1.2/assets/app-drive.png	5f898fdaa9ecd3c1	copy	angler:/system/app/Drive/Drive.apk!res/mipmap-xxxhdpi-v4/quantum_logo_drive_launcher_color_48.png	mipmap-xxxhdpi-v4		5f898fdaa9ecd3c1
+versions/7.1.2/assets/app-earth.png	e153a45226c4f9c1	copy	angler:/playapps/GoogleEarth.apk!res/mipmap-xxxhdpi-v4/product_logo_earth_launcher_color_48.png	mipmap-xxxhdpi-v4		e153a45226c4f9c1
 versions/7.1.2/assets/app-gmail.png	ac6b416a68167438	copy	angler:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		ac6b416a68167438
 versions/7.1.2/assets/app-hangouts.png	af56355d87df5496	copy	angler:/system/app/Hangouts/Hangouts.apk!res/mipmap-xxxhdpi-v4/product_logo_hangouts_launcher_color_48.png	mipmap-xxxhdpi-v4		af56355d87df5496
 versions/7.1.2/assets/app-maps.png	439fca47f2059aea	copy	angler:/system/app/Maps/Maps.apk!res/mipmap-xxxhdpi-v4/product_logo_maps_launcher_color_48.png	mipmap-xxxhdpi-v4		439fca47f2059aea
@@ -122,10 +123,10 @@ versions/7.1.2/assets/ca-ic_today.png	e096d75d6a148db3	copy	angler:/system/app/C
 versions/7.1.2/assets/ca-ic_week.png	dcabf15175a13e19	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/ic_week.png	drawable-xxhdpi-v4		dcabf15175a13e19
 versions/7.1.2/assets/ca-icon.png	f71e89b5d0b34165	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/icon.png	drawable-xxhdpi-v4		f71e89b5d0b34165
 versions/7.1.2/assets/ca-quantum_ic_add_white_24.png	31b6ba15b65be8b2	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/quantum_ic_add_white_24.png	drawable-xxhdpi-v4		31b6ba15b65be8b2
-versions/7.1.2/assets/ca-quantum_ic_arrow_back_black_24.png	9a74abc72c4052a7	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/quantum_ic_arrow_back_black_24.png	drawable-xxhdpi-v4		9a74abc72c4052a7
+versions/7.1.2/assets/ca-quantum_ic_arrow_back_black_24.png	9a74abc72c4052a7	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/quantum_ic_arrow_back_black_24.png	drawable-xxhdpi-v4		9a74abc72c4052a7
 versions/7.1.2/assets/ca-quantum_ic_done_white_24.png	7ecd078f0e4470e8	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/quantum_ic_done_white_24.png	drawable-xxhdpi-v4		7ecd078f0e4470e8
 versions/7.1.2/assets/ca-quantum_ic_flag_grey600_24.png	a5ef16a2abcefca3	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/quantum_ic_flag_grey600_24.png	drawable-xxhdpi-v4		a5ef16a2abcefca3
-versions/7.1.2/assets/ca-quantum_ic_flag_white_24.png	b24a38e4ee87ab31	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/quantum_ic_flag_white_24.png	drawable-xxhdpi-v4		b24a38e4ee87ab31
+versions/7.1.2/assets/ca-quantum_ic_flag_white_24.png	b24a38e4ee87ab31	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/quantum_ic_flag_white_24.png	drawable-xxhdpi-v4		b24a38e4ee87ab31
 versions/7.1.2/assets/ca-quantum_ic_reminders_alt_white_24.png	fcea62351bc9df0b	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/quantum_ic_reminders_alt_white_24.png	drawable-xxhdpi-v4		fcea62351bc9df0b
 versions/7.1.2/assets/ca-quickcreate.png	3fd0d7cf9a24ac21	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-nodpi-v4/quickcreate.png	drawable-nodpi-v4		3fd0d7cf9a24ac21
 versions/7.1.2/assets/ca-richness.png	64da85ed587cd15f	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-nodpi-v4/richness.png	drawable-nodpi-v4		64da85ed587cd15f
@@ -257,7 +258,7 @@ versions/7.1.2/assets/ct-ic_star_outline_24dp.png	2de8f3a3b8b57fc9	copy	angler:/
 versions/7.1.2/assets/ct-person_white_540dp.png	13eca25b788f3f51	copy	angler:/system/priv-app/GoogleContacts/GoogleContacts.apk!res/drawable-xxxhdpi-v4/person_white_540dp.png	drawable-xxxhdpi-v4		13eca25b788f3f51
 versions/7.1.2/assets/cw-bookmark-folder.png	b2c150f80e0f6c7a	copy	angler:/system/app/Chrome/Chrome.apk!res/drawable-xxxhdpi-v4/bookmark_folder.png	drawable-xxxhdpi-v4		b2c150f80e0f6c7a
 versions/7.1.2/assets/cw-next.png	a98e02d7e59a2ae8	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/quantum_ic_chevron_right_white_24.png	drawable-xxhdpi-v4		a98e02d7e59a2ae8
-versions/7.1.2/assets/cw-prev.png	87d54a9a7a6ba42c	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/quantum_ic_chevron_left_white_24.png	drawable-xxhdpi-v4		87d54a9a7a6ba42c
+versions/7.1.2/assets/cw-prev.png	87d54a9a7a6ba42c	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/quantum_ic_chevron_left_white_24.png	drawable-xxhdpi-v4		87d54a9a7a6ba42c
 versions/7.1.2/assets/dc-bg_day_selected.png	ce2401840f3b8503	copy	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!res/drawable-xxxhdpi-v4/bg_day_selected.png	drawable-xxxhdpi-v4		ce2401840f3b8503
 versions/7.1.2/assets/dc-clock.ttf	d7bbc227ed36ee08	copy	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!assets/fonts/clock.ttf			d7bbc227ed36ee08
 versions/7.1.2/assets/dc-ic_add_timer.svg	c8a8a073be9a9c1e	vector	angler:/system/app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk!res/drawable/ic_add_timer.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	010f39148cb8017f
@@ -307,7 +308,7 @@ versions/7.1.2/assets/du-ic_root_documents.svg	551b4c7770305cca	vector	angler:/s
 versions/7.1.2/assets/du-ic_root_download_alpha.png	89717f83eced4d8f	copy	angler:/system/priv-app/DocumentsUI/DocumentsUI.apk!res/drawable-xxxhdpi-v4/ic_root_download_alpha.png	drawable-xxxhdpi-v4		89717f83eced4d8f
 versions/7.1.2/assets/du-ic_root_recent_alpha.png	a1d90935faf73b77	copy	angler:/system/priv-app/DocumentsUI/DocumentsUI.apk!res/drawable-xxxhdpi-v4/ic_root_recent_alpha.png	drawable-xxxhdpi-v4		a1d90935faf73b77
 versions/7.1.2/assets/du-ic_root_smartphone.svg	965db07a8b1235cf	vector	angler:/system/priv-app/DocumentsUI/DocumentsUI.apk!res/drawable/ic_root_smartphone.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	6e4ca91e71490962
-versions/7.1.2/assets/dv-add.png	41a8b716cdfc392d	copy	angler:/system/app/DMAgent/DMAgent.apk!res/drawable-xxxhdpi-v4/ic_add.png	drawable-xxxhdpi-v4		41a8b716cdfc392d
+versions/7.1.2/assets/dv-add.png	41a8b716cdfc392d	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/ic_add.png	drawable-xxxhdpi-v4		41a8b716cdfc392d
 versions/7.1.2/assets/dv-audio-big.png	599ba17563ca0398	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/ic_type_audio_black_big.png	drawable-xxxhdpi-v4		599ba17563ca0398
 versions/7.1.2/assets/dv-back.png	dc88c631c0d89f54	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_arrow_back_grey600_24.png	drawable-xxxhdpi-v4		dc88c631c0d89f54
 versions/7.1.2/assets/dv-check.png	bbc56583930a1b66	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xhdpi-v4/ds_checkmark_holo_light.png	drawable-xhdpi-v4		bbc56583930a1b66
@@ -341,6 +342,28 @@ versions/7.1.2/assets/dv-widget-logo.png	1b01830f7cbc3b85	copy	angler:/system/ap
 versions/7.1.2/assets/dv-widget-new.png	00f6fbcb539fa8b5	copy	angler:/system/app/Drive/Drive.apk!res/drawable-hdpi-v4/widget_newdoc.png	drawable-hdpi-v4		00f6fbcb539fa8b5
 versions/7.1.2/assets/dv-widget-scan.png	cd6e64f2d51e5bd0	copy	angler:/system/app/Drive/Drive.apk!res/drawable-hdpi-v4/widget_newdocfromcamera.png	drawable-hdpi-v4		cd6e64f2d51e5bd0
 versions/7.1.2/assets/dv-widget-upload.png	72ed989a7153e213	copy	angler:/system/app/Drive/Drive.apk!res/drawable-hdpi-v4/widget_upload.png	drawable-hdpi-v4		72ed989a7153e213
+versions/7.1.2/assets/ea9-avatar_placeholder.png	7ca111b8980139ad	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/avatar_placeholder.png	drawable-xxxhdpi-v4		7ca111b8980139ad
+versions/7.1.2/assets/ea9-googlelogo_white_color.png	7818b61cae038533	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/googlelogo_white_color.png	drawable-xxhdpi-v4		7818b61cae038533
+versions/7.1.2/assets/ea9-ic_compass.png	4099dec11c7f84bd	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_compass.png	drawable-xxhdpi-v4		4099dec11c7f84bd
+versions/7.1.2/assets/ea9-pegman.png	49ec34e6ee6bb25e	copy	angler:/playapps/GoogleEarth.apk!res/drawable-hdpi-v4/pegman.png	drawable-hdpi-v4		49ec34e6ee6bb25e
+versions/7.1.2/assets/ea9-quantum_ic_arrow_back_white_24.png	14f802c93af2ce62	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_arrow_back_white_24.png	drawable-xxxhdpi-v4		14f802c93af2ce62
+versions/7.1.2/assets/ea9-quantum_ic_casino_white_24.png	562d746110720c67	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_casino_white_24.png	drawable-xxxhdpi-v4		562d746110720c67
+versions/7.1.2/assets/ea9-quantum_ic_clear_white_24.png	7e0354a9998c3892	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_clear_white_24.png	drawable-xxxhdpi-v4		7e0354a9998c3892
+versions/7.1.2/assets/ea9-quantum_ic_feedback_grey600_24.png	bb631b9e01c99778	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_feedback_grey600_24.png	drawable-xxxhdpi-v4		bb631b9e01c99778
+versions/7.1.2/assets/ea9-quantum_ic_help_grey600_24.png	4bfe033456b44886	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_help_grey600_24.png	drawable-xxxhdpi-v4		4bfe033456b44886
+versions/7.1.2/assets/ea9-quantum_ic_keyboard_voice_white_24.png	f501b5ad468d9c4a	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_keyboard_voice_white_24.png	drawable-xxxhdpi-v4		f501b5ad468d9c4a
+versions/7.1.2/assets/ea9-quantum_ic_layers_grey600_24.png	a48638b615868070	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_layers_grey600_24.png	drawable-xxxhdpi-v4		a48638b615868070
+versions/7.1.2/assets/ea9-quantum_ic_menu_white_24.png	53e3c7f475723fba	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_menu_white_24.png	drawable-xxxhdpi-v4		53e3c7f475723fba
+versions/7.1.2/assets/ea9-quantum_ic_my_location_white_24.png	749142c252ce2237	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_my_location_white_24.png	drawable-xxxhdpi-v4		749142c252ce2237
+versions/7.1.2/assets/ea9-quantum_ic_photo_camera_white_24.png	b405f27fb43f781e	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_photo_camera_white_24.png	drawable-xxxhdpi-v4		b405f27fb43f781e
+versions/7.1.2/assets/ea9-quantum_ic_place_googblue_48.png	523ea584cbdee17c	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_place_googblue_48.png	drawable-xxxhdpi-v4		523ea584cbdee17c
+versions/7.1.2/assets/ea9-quantum_ic_place_grey600_24.png	d11da8a6c64aac31	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_place_grey600_24.png	drawable-xxxhdpi-v4		d11da8a6c64aac31
+versions/7.1.2/assets/ea9-quantum_ic_search_grey600_24.png	8f2b73c0cdafe99f	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_search_grey600_24.png	drawable-xxxhdpi-v4		8f2b73c0cdafe99f
+versions/7.1.2/assets/ea9-quantum_ic_search_white_24.png	918906f5e698cf62	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_search_white_24.png	drawable-xxxhdpi-v4		918906f5e698cf62
+versions/7.1.2/assets/ea9-quantum_ic_settings_grey600_24.png	bdc639f047265044	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_settings_grey600_24.png	drawable-xxxhdpi-v4		bdc639f047265044
+versions/7.1.2/assets/ea9-quantum_ic_share_white_24.png	2b04105c16aac835	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_share_white_24.png	drawable-xxxhdpi-v4		2b04105c16aac835
+versions/7.1.2/assets/ea9-quantum_ic_turned_in_grey600_24.png	0bd73aa46e76242a	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_turned_in_grey600_24.png	drawable-xxxhdpi-v4		0bd73aa46e76242a
+versions/7.1.2/assets/ea9-voyager_white.png	b571b33562daf8ef	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/voyager_white.png	drawable-xxhdpi-v4		b571b33562daf8ef
 versions/7.1.2/assets/egg-back.svg	c0b7567f1435a980	vector	angler:/system/app/EasterEgg/EasterEgg.apk!res/drawable/back.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	fe982e55b211d74d
 versions/7.1.2/assets/egg-belly.svg	22de375b0c2c650e	vector	angler:/system/app/EasterEgg/EasterEgg.apk!res/drawable/belly.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	ddd6471cde5bdee4
 versions/7.1.2/assets/egg-body.svg	5f9c38bf4f4c2d7d	vector	angler:/system/app/EasterEgg/EasterEgg.apk!res/drawable/body.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	efe185c75dda11f8
@@ -552,7 +575,7 @@ versions/7.1.2/assets/ghome-wp_004.jpg	de65c756eb5113d5	copy	angler:/system/app/
 versions/7.1.2/assets/ghome-wp_004_small.jpg	498edc0ecf012789	copy	angler:/system/app/GoogleHome/GoogleHome.apk!res/drawable-nodpi-v4/wp_004_small.jpg	drawable-nodpi-v4		498edc0ecf012789
 versions/7.1.2/assets/gm-abc_ic_clear_material.svg	7a0c724f1b1e7a20	vector	angler:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable/abc_ic_clear_material.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	ac10a8dd23f36cc7
 versions/7.1.2/assets/gm-account_switcher_blue.jpg	47d1a562f387a616	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xhdpi-v4/account_switcher_blue.jpg	drawable-xhdpi-v4		47d1a562f387a616
-versions/7.1.2/assets/gm-avatar_placeholder.png	e5a4072a512488e5	copy	angler:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/avatar_placeholder.png	drawable-xxhdpi-v4		e5a4072a512488e5
+versions/7.1.2/assets/gm-avatar_placeholder.png	e5a4072a512488e5	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/avatar_placeholder.png	drawable-xxhdpi-v4		e5a4072a512488e5
 versions/7.1.2/assets/gm-ic_archive_wht_24dp.png	06921c2ed7640aea	copy	angler:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_archive_wht_24dp.opng	drawable-xxhdpi-v4		06921c2ed7640aea
 versions/7.1.2/assets/gm-ic_arrow_back_24dp.png	b4e5cfeb53f01429	copy	angler:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_arrow_back_24dp.opng	drawable-xxhdpi-v4		b4e5cfeb53f01429
 versions/7.1.2/assets/gm-ic_arrow_back_wht_24dp.svg	e9fddfa1e5da216d	vector	angler:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-anydpi-v21/ic_arrow_back_wht_24dp.xml	drawable-anydpi-v21	vector drawable drawn as SVG (declared APK and configuration)	f510129d8e258c2f
@@ -616,12 +639,12 @@ versions/7.1.2/assets/ho-archive.png	e5be0c8862618e7e	copy	angler:/system/app/Ha
 versions/7.1.2/assets/ho-attach.png	c93dc257bd7353dd	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/quantum_ic_attachment_grey600_24.png	drawable-xxxhdpi-v4		c93dc257bd7353dd
 versions/7.1.2/assets/ho-avatar-large.png	1f3af271a378b888	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/default_avatar_large.png	drawable-xxhdpi-v4		1f3af271a378b888
 versions/7.1.2/assets/ho-avatar.png	8825daa6b6a2b09e	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/default_avatar.png	drawable-xxhdpi-v4		8825daa6b6a2b09e
-versions/7.1.2/assets/ho-back.png	14f802c93af2ce62	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_arrow_back_white_24.png	drawable-xxxhdpi-v4		14f802c93af2ce62
+versions/7.1.2/assets/ho-back.png	14f802c93af2ce62	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_arrow_back_white_24.png	drawable-xxxhdpi-v4		14f802c93af2ce62
 versions/7.1.2/assets/ho-end.png	14c1b500afb8c398	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/quantum_ic_call_end_white_24.png	drawable-xxxhdpi-v4		14c1b500afb8c398
 versions/7.1.2/assets/ho-group.png	32ed39b6d35e4869	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/default_avatar_circles.png	drawable-xxhdpi-v4		32ed39b6d35e4869
 versions/7.1.2/assets/ho-incoming-grouped.9.png	a0f21426f5f44b4d	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/msg_bubble_incoming_grouped.9.png	drawable-xxxhdpi-v4		a0f21426f5f44b4d
 versions/7.1.2/assets/ho-incoming.9.png	6d6630ff9df3e7a3	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/msg_bubble_incoming.9.png	drawable-xxxhdpi-v4		6d6630ff9df3e7a3
-versions/7.1.2/assets/ho-location.png	281e067b4b08b4e8	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/quantum_ic_my_location_grey600_24.png	drawable-xxxhdpi-v4		281e067b4b08b4e8
+versions/7.1.2/assets/ho-location.png	281e067b4b08b4e8	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_my_location_grey600_24.png	drawable-xxxhdpi-v4		281e067b4b08b4e8
 versions/7.1.2/assets/ho-mic-off.png	3f853db4de03d767	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/quantum_ic_mic_off_white_24.png	drawable-xxxhdpi-v4		3f853db4de03d767
 versions/7.1.2/assets/ho-mic.png	ecff8c3b0aaf26f9	copy	angler:/system/app/GoogleHindiIME/GoogleHindiIME.apk!res/drawable-xxxhdpi-v4/quantum_ic_mic_white_24.png	drawable-xxxhdpi-v4		ecff8c3b0aaf26f9
 versions/7.1.2/assets/ho-outgoing-grouped.9.png	a0f21426f5f44b4d	copy	angler:/system/app/Hangouts/Hangouts.apk!res/drawable-xxxhdpi-v4/msg_bubble_incoming_grouped.9.png	drawable-xxxhdpi-v4		a0f21426f5f44b4d
@@ -734,12 +757,12 @@ versions/7.1.2/assets/mw-open.png	083657b2f30e3ca1	copy	angler:/system/app/Prebu
 versions/7.1.2/assets/mw-outgoing.9.png	04a96bee5a286962	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/widget_msg_bubble_outgoing.9.png	drawable-xxxhdpi-v4		04a96bee5a286962
 versions/7.1.2/assets/mw-reply.png	af1548a69fa9bb0b	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_widget_fab_reply.png	drawable-xxxhdpi-v4		af1548a69fa9bb0b
 versions/7.1.2/assets/pay-account.png	feb73d6eb7126a89	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_account_circle_grey600_36.png	drawable-xxhdpi-v4		feb73d6eb7126a89
-versions/7.1.2/assets/pay-add.png	c6122508e04958cd	copy	angler:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c6122508e04958cd
+versions/7.1.2/assets/pay-add.png	c6122508e04958cd	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c6122508e04958cd
 versions/7.1.2/assets/pay-amex.png	4b701cfb4e4b39e7	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_networklogo_amex_color_98dp.png	drawable-xxhdpi-v4		4b701cfb4e4b39e7
-versions/7.1.2/assets/pay-back-white.png	0c4493c91c0cb467	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/quantum_ic_arrow_back_white_24.png	drawable-xxhdpi-v4		0c4493c91c0cb467
+versions/7.1.2/assets/pay-back-white.png	0c4493c91c0cb467	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/quantum_ic_arrow_back_white_24.png	drawable-xxhdpi-v4		0c4493c91c0cb467
 versions/7.1.2/assets/pay-card-art.png	0313413f4904eb99	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_generic_card_art_pattern_color_360x227dp.png	drawable-xxhdpi-v4		0313413f4904eb99
-versions/7.1.2/assets/pay-close-white.png	93b3126fb85e3934	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/quantum_ic_close_white_24.png	drawable-xxhdpi-v4		93b3126fb85e3934
-versions/7.1.2/assets/pay-close.png	f1ee80bd0cec8467	copy	angler:/system/app/CalendarGooglePrebuilt/CalendarGooglePrebuilt.apk!res/drawable-xxhdpi-v4/chips_ic_close_24dp.png	drawable-xxhdpi-v4		f1ee80bd0cec8467
+versions/7.1.2/assets/pay-close-white.png	93b3126fb85e3934	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/quantum_ic_clear_white_24.png	drawable-xxhdpi-v4		93b3126fb85e3934
+versions/7.1.2/assets/pay-close.png	f1ee80bd0cec8467	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/places_ic_clear.png	drawable-xxhdpi-v4		f1ee80bd0cec8467
 versions/7.1.2/assets/pay-discover.png	ce88ab643162baa1	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_networklogo_discover_color_98dp.png	drawable-xxhdpi-v4		ce88ab643162baa1
 versions/7.1.2/assets/pay-fab-card.png	ef91d7d6d14f0099	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_credit_card_white_24.png	drawable-xxhdpi-v4		ef91d7d6d14f0099
 versions/7.1.2/assets/pay-fab-gift.png	65c5ccc8f2289c1e	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_wallet_giftcard_white_24.png	drawable-xxhdpi-v4		65c5ccc8f2289c1e

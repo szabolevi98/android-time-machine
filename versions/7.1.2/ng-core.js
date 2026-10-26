@@ -47,6 +47,8 @@
     maps: ['Maps', 'Maps.apk'], youtube: ['YouTube', 'YouTube.apk'], hangouts: ['Hangouts', 'Hangouts.apk'], drive: ['Drive', 'Drive.apk'],
     'play-store': ['Play Store', 'Phonesky.apk'], 'play-music': ['Play Music', 'Music2.apk'], 'play-movies': ['Play Movies & TV', 'Videos.apk'],
     'play-games': ['Play Games', 'PlayGames.apk'], 'android-pay': ['Android Pay', 'Wallet.apk'], 'project-fi': ['Project Fi', 'Tycho.apk'],
+    // Installed from Play (not in the image: _aosp/<device>/playapps).
+    'earth': ['Earth', 'GoogleEarth.apk (Play)'],
     'device-policy': ['Device Policy', 'DMAgent.apk'], documents: ['Downloads', 'DocumentsUI.apk · LauncherActivity'], files: ['Files', 'DocumentsUI.apk'],
     'live-wallpapers': ['Live wallpapers', 'LiveWallpapersPicker.apk'], musicfx: ['Equalizer', 'MusicFX.apk · ActivityMusic'],
     daydream: ['Screen saver', 'DreamManagerService · DeskClock, BasicDreams, Photos'], 'emergency-info': ['Emergency information', 'EmergencyInfo.apk'],

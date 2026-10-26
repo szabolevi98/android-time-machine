@@ -30,3 +30,9 @@ Every screen of the image's Settings dashboard: Wi-Fi with its networks and adva
 - **Chrome 44:** document mode with the omnibox, the New Tab page, the app menu and an offline web of 2016.
 - **Camera, Photos, Clock and Calculator.**
 - **Google apps:** the Google app with the Now page, search and voice; Play Store 5.12.7 with a made-up storefront, installing and My apps; Maps 9.13 (a drawn town), YouTube 10.28.60, Drive 2.3, Play Music, Play Movies & TV, Play Games, Android Pay, Project Fi and Device Policy, and Downloads (Documents).
+
+## Apps installed from Play (not in the factory image)
+
+The owner of the demo phone installed these from Play, in the version of the image's month (docs/sources.md). Settings › Apps lists them with Uninstall.
+
+- **Earth 8.0.4** (installed from Play, not in MTC20K): the Blue Marble globe (drag, zoom, double tap), Search flying to a place ("Not Found: %s" otherwise), My location with the blue dot, the compass, Share, Layers (kept) and the APK's Settings (cache, Google location settings, About Google Earth).

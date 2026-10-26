@@ -580,6 +580,29 @@ NG.appsData = {
 ],
 "targetSdk": 24,
 "res": "angler:priv-app/Velvet/Velvet.apk:res/mipmap-xxxhdpi-v4/ic_launcher_google_search.png"
+},
+"earth": {
+"pkg": "com.google.earth",
+"cls": "com.google.android.apps.earth.EarthActivity",
+"label": {
+"en": "Earth",
+"de": "Earth",
+"fr": "Earth",
+"es": "Earth",
+"hu": "Earth"
+},
+"icon": "assets/app-earth.png",
+"color": "#263238",
+"version": "9.0.4.2",
+"codeSize": 10231238,
+"permGroups": [
+"contacts",
+"location",
+"storage"
+],
+"targetSdk": 23,
+"res": "angler:playapps/GoogleEarth.apk:res/mipmap-xxxhdpi-v4/product_logo_earth_launcher_color_48.png",
+"installed": true
 }
 };
 NG.defaultWorkspace = [

@@ -98,7 +98,7 @@
     // Battery and Memory stay greyed while the app has used nothing (InstalledAppDetails.refreshUi).
     const pref = (key, title, summary, off = false) => `<button type="button" class="mmst-pref${off ? ' disabled' : ''}" data-action="mmai-pref" data-key="${key}"${off ? ' disabled' : ''}><span class="mmst-texts"><span class="mmst-title">${c.safe(title)}</span><span class="mmst-summary">${c.safe(summary)}</span></span></button>`;
     return `<div class="mmst-list"><div class="mmai-head"><div class="mmap-row static"><img src="${a.icon}" alt=""><span class="mmap-texts"><span class="mmap-line"><span class="mmap-label">${c.safe(MM.appLabel(c, id))}</span></span><span class="mmap-sub">${c.safe(t.fmt('version_text', null, a.version))}</span></span></div>
-      <div class="mmai-buttons"><button type="button" class="mmai-button" data-action="mmai-disable"${PLATFORM.includes(id) ? ' disabled' : ''}>${c.safe(t.t(off ? 'enable_text' : 'disable_text'))}</button><i></i><button type="button" class="mmai-button" data-action="mmai-stop"${running ? '' : ' disabled'}>${c.safe(t.t('force_stop'))}</button></div></div>
+      <div class="mmai-buttons"><button type="button" class="mmai-button" data-action="mmai-disable"${PLATFORM.includes(id) ? ' disabled' : ''}>${c.safe(t.t(MM.appsData[id]?.installed ? 'uninstall_text' : off ? 'enable_text' : 'disable_text'))}</button><i></i><button type="button" class="mmai-button" data-action="mmai-stop"${running ? '' : ' disabled'}>${c.safe(t.t('force_stop'))}</button></div></div>
       ${pref('storage_settings', t.t('storage_settings'), t.fmt('storage_summary_format', null, MM.fileSize(c, MM.appTotalSize ? MM.appTotalSize(c, id) : a.codeSize), t.t('storage_type_internal')))}
       ${pref('data_settings', t.t('data_usage_summary_title'), MM.appDataUsage?.(c, id) ? t.fmt('data_summary_format', null, MM.fileSize(c, MM.appDataUsage(c, id)), MM.dataCycleStart?.(c) || '') : t.t('no_data_usage'))}
       ${pref('permission_settings', t.t('permissions_label'), permissions(c, id))}
@@ -113,6 +113,8 @@
     action(c, name, el, cur) {
       const t = T(), id = cur.screen.slice(4), s = S(c);
       if (name === 'mmai-disable') {
+        // An app installed from Play before the demo (mm-apps.js installed: Earth …): Uninstall is not simulated.
+        if (MM.appsData[id]?.installed) { c.toast(c.t('This feature is not part of the simulator.')); return true; }
         if (disabled(c, id)) { s.disabledApps = (s.disabledApps || []).filter(x => x !== id); c.save(); c.render(); return true; }
         c.dialog({message: t.t('app_disable_dlg_text'), buttons: [{label: t.t('dlg_cancel')}, {label: t.t('app_disable_dlg_positive'), action: c => {
           s.disabledApps = [...new Set([...(s.disabledApps || []), id])]; c.ui.recent = (c.ui.recent || []).filter(x => x !== id); c.save(); c.render();

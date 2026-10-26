@@ -9,6 +9,7 @@ versions/6.0.1/assets/app-contacts.png	77c3ea6221164201	copy	bullhead:/system/pr
 versions/6.0.1/assets/app-device-policy.png	444925756bd17160	copy	bullhead:/system/app/DMAgent/DMAgent.apk!res/drawable-xhdpi-v4/launcher.png	drawable-xhdpi-v4		444925756bd17160
 versions/6.0.1/assets/app-downloads.png	c9f506900211112e	copy	bullhead:/system/app/DownloadProviderUi/DownloadProviderUi.apk!res/mipmap-xxxhdpi-v4/ic_launcher_download.png	mipmap-xxxhdpi-v4		c9f506900211112e
 versions/6.0.1/assets/app-drive.png	5f898fdaa9ecd3c1	copy	bullhead:/system/app/Drive/Drive.apk!res/mipmap-xxxhdpi-v4/quantum_logo_drive_launcher_color_48.png	mipmap-xxxhdpi-v4		5f898fdaa9ecd3c1
+versions/6.0.1/assets/app-earth.png	d9e230bfcf77aa2c	copy	bullhead:/playapps/GoogleEarth.apk!res/mipmap-xxxhdpi-v4/icon.png	mipmap-xxxhdpi-v4		d9e230bfcf77aa2c
 versions/6.0.1/assets/app-gmail.png	3ba9041e6bc59486	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/mipmap-xxxhdpi-v4/ic_launcher_mail.png	mipmap-xxxhdpi-v4		3ba9041e6bc59486
 versions/6.0.1/assets/app-hangouts.png	af56355d87df5496	copy	bullhead:/system/app/Hangouts/Hangouts.apk!res/mipmap-xxxhdpi-v4/quantum_logo_hangouts_launcher_color_48.png	mipmap-xxxhdpi-v4		af56355d87df5496
 versions/6.0.1/assets/app-maps.png	4062635bc9e1ec6b	copy	bullhead:/system/app/Maps/Maps.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		4062635bc9e1ec6b
@@ -225,7 +226,7 @@ versions/6.0.1/assets/dc-ic_tab_timer_normal.png	c9173c8d85924564	copy	bullhead:
 versions/6.0.1/assets/device-nexus-5x.svg	6d86c7705924c946	own	drawn by docs/tools/device-frames.py: the outline measured from the maker's front render, the shading drawn			
 versions/6.0.1/assets/dr-ds_checkmark_holo_light.png	f840fd8f3130417e	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xhdpi-v4/ds_checkmark_holo_light.png	drawable-xhdpi-v4		f840fd8f3130417e
 versions/6.0.1/assets/dr-ds_shutter_holo.png	76053bec6b2900ac	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xhdpi-v4/ds_shutter_holo.png	drawable-xhdpi-v4		76053bec6b2900ac
-versions/6.0.1/assets/dr-ic_add.png	c63e09363eb080a0	copy	bullhead:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c63e09363eb080a0
+versions/6.0.1/assets/dr-ic_add.png	c63e09363eb080a0	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c63e09363eb080a0
 versions/6.0.1/assets/dr-ic_back_grey.png	43d83cf02285c42c	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_back_grey.png	drawable-xxhdpi-v4		43d83cf02285c42c
 versions/6.0.1/assets/dr-ic_close.png	4daca5c26327714f	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_close.png	drawable-xxhdpi-v4		4daca5c26327714f
 versions/6.0.1/assets/dr-ic_createpanel_doc.png	5acaad2168d56125	copy	bullhead:/system/app/Drive/Drive.apk!res/drawable-xxhdpi-v4/ic_createpanel_doc.png	drawable-xxhdpi-v4		5acaad2168d56125
@@ -265,6 +266,15 @@ versions/6.0.1/assets/du-ic_menu_view_grid_alpha.png	08d10591efb688e4	copy	bullh
 versions/6.0.1/assets/du-ic_menu_view_list_alpha.png	4854498f875415b9	copy	bullhead:/system/app/DocumentsUI/DocumentsUI.apk!res/drawable-xxhdpi-v4/ic_menu_view_list_alpha.png	drawable-xxhdpi-v4		4854498f875415b9
 versions/6.0.1/assets/du-ic_root_download_alpha.png	16ecf75ad2defc1a	copy	bullhead:/system/app/DocumentsUI/DocumentsUI.apk!res/drawable-xxhdpi-v4/ic_root_download_alpha.png	drawable-xxhdpi-v4		16ecf75ad2defc1a
 versions/6.0.1/assets/du-ic_root_recent_alpha.png	93ec92aeac91c340	copy	bullhead:/system/app/DocumentsUI/DocumentsUI.apk!res/drawable-xxhdpi-v4/ic_root_recent_alpha.png	drawable-xxhdpi-v4		93ec92aeac91c340
+versions/6.0.1/assets/ea84-avatar_placeholder.png	264e3ea2d379c4a8	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/avatar_placeholder.png	drawable-xxhdpi-v4		264e3ea2d379c4a8
+versions/6.0.1/assets/ea84-bluedot.png	598d415c1c97f017	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/bluedot.png	drawable-xxhdpi-v4		598d415c1c97f017
+versions/6.0.1/assets/ea84-button_compass.png	a6867f75a8e30bd2	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/button_compass.png	drawable-xxhdpi-v4		a6867f75a8e30bd2
+versions/6.0.1/assets/ea84-ic_compass.png	95376be9f59200c0	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_compass.png	drawable-xxhdpi-v4		95376be9f59200c0
+versions/6.0.1/assets/ea84-ic_menu_clear_map.png	d803a65faa0b0534	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_menu_clear_map.png	drawable-xxhdpi-v4		d803a65faa0b0534
+versions/6.0.1/assets/ea84-ic_menu_mylocation.png	8da1978fb71407c2	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_menu_mylocation.png	drawable-xxhdpi-v4		8da1978fb71407c2
+versions/6.0.1/assets/ea84-ic_menu_search.png	a59b8dc4f3bacb42	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_menu_search.png	drawable-xxhdpi-v4		a59b8dc4f3bacb42
+versions/6.0.1/assets/ea84-ic_share_alt_white_24dp.png	91a50a463e33336d	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_share_alt_white_24dp.png	drawable-xxhdpi-v4		91a50a463e33336d
+versions/6.0.1/assets/ea84-pegman.png	e591212571a3874b	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/pegman.png	drawable-xxhdpi-v4		e591212571a3874b
 versions/6.0.1/assets/egg-android.svg	888532eaac3fb154	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable/android.xml	drawable	vector drawable drawn as SVG (declared APK and configuration)	9eb88eb09fe92142
 versions/6.0.1/assets/egg-cactus1.svg	095e6ca09c292a45	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable-nodpi-v4/cactus1.xml	drawable-nodpi-v4	vector drawable drawn as SVG	18b7d884d59c0457
 versions/6.0.1/assets/egg-cactus2.svg	45900d530d9034c8	vector	bullhead:/system/priv-app/SystemUI/SystemUI.apk!res/drawable-nodpi-v4/cactus2.xml	drawable-nodpi-v4	vector drawable drawn as SVG	835a5ce6e9f66cd2
@@ -893,7 +903,7 @@ versions/6.0.1/assets/vv-tile_shadow_bottom.9.png	a19b5df935c366b7	copy	bullhead
 versions/6.0.1/assets/vv-tile_shadow_top.9.png	c730c8124c867aca	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/tile_shadow_top.9.png	drawable-xxhdpi-v4		c730c8124c867aca
 versions/6.0.1/assets/vv-widget_card_frame.9.png	97e8a2643cbedc41	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/widget_card_frame.9.png	drawable-xxhdpi-v4		97e8a2643cbedc41
 versions/6.0.1/assets/vw-widget_tile.png	00bcc498b7a94a70	copy	bullhead:/system/priv-app/Velvet/Velvet.apk!res/drawable-xxhdpi-v4/widget_tile.png	drawable-xxhdpi-v4		00bcc498b7a94a70
-versions/6.0.1/assets/wa-ic_add.png	c63e09363eb080a0	copy	bullhead:/system/app/CloudPrint2/CloudPrint2.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c63e09363eb080a0
+versions/6.0.1/assets/wa-ic_add.png	c63e09363eb080a0	copy	bullhead:/playapps/GoogleEarth.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c63e09363eb080a0
 versions/6.0.1/assets/wa-quantum_ic_chevron_left_white_24.png	d20f1f576ee0a627	copy	bullhead:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_chevron_left_white_24.png	drawable-xxhdpi-v4		d20f1f576ee0a627
 versions/6.0.1/assets/wa-quantum_ic_chevron_right_white_24.png	bee52760a197657e	copy	bullhead:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_chevron_right_white_24.png	drawable-xxhdpi-v4		bee52760a197657e
 versions/6.0.1/assets/wa-tp_howtopay_screen1_color_296dp.png	f071ff75f656717a	copy	bullhead:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_howtopay_screen1_color_296dp.png	drawable-xxhdpi-v4		f071ff75f656717a
