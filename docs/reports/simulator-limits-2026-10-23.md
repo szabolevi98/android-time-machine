@@ -438,7 +438,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T35 — Keep helyi megosztás, felvétel és beállítás
 
 - **Ütem:** Második kör, #30. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `b774f8f1`. A saját Keep 1.0/2.0 Settings XML-je alapján fiók-, About-, webes és Keep-authorityra szűrt rendszer-szinkronizálási belépések; a kapcsoló mentődik és újratöltve megmarad. Mindhárom verzió Share/Send a szerkesztett jegyzet pillanatképét adja Gmailbe/Emailbe; 5.1.1 Make a copy új azonosítóval, független lista- és audiometaadatokkal készül. Az új hangjegyzet a meglévő időzített demófelvételi modellből származó rövid, generált PCM WAV: menthető, ténylegesen visszajátszható, újratöltve is megmarad és mellékletként átadható; Back megszakítja a felvételt, a törlés megerősítést kér. Nem használ valódi mikrofont vagy felhős beszédfelismerést. Ellenőrzés: `npm test` 256/256; `limits-regression.mjs T35` 4.3/4.4.4/5.1.1 asztali és telefonszélességen (6/6) zöld, szöveg/audio átadás, másolatfüggetlenség, lejátszási előrehaladás, reload, törlés Cancel/OK és szinkronizálási megmaradás; nincs elutasítás, kivétel vagy hibás kérés. `asset-inventory.py --check 4.3 4.4.4 5.1.1`: 3410 fájl, 0 probléma. A hat új vezérlőikon és az új címkék a saját gyári Keep APK-jából származnak.
 - **Verziók:** 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.3-19, 4.4.4-20, 5.1.1-26.
 - **Elkészítendő és határ:** 4.3 New recording, Share és Settings; 4.4.4 Share/Settings; 5.1.1 Make a copy, Send és New recording. A hangfelvétel a meglévő demófelvételi modellből jegyzetcsatolmányt hoz létre. Help/Feedback nem része.
