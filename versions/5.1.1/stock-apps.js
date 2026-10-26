@@ -249,7 +249,10 @@
   // the image does not pin down, so the toggle is not simulated.
   function gplus(ctx) {
     const plused = ctx.data.gplusPlus || [], g = key => S(ctx, 'gplus', key);
-    return `<div class="app-view sa-app sa-gplus sa-gplus49"><header class="gp49-bar"><button class="gp49-toggle" data-action="sa-unsupported" aria-label="Menu"><i></i><i></i><i></i></button><b>${e(g('Home'))}</b>${img('sa-unsupported', 'Notifications', 'gp49-quantum_ic_notifications_none_white_24.png')}${btn('sa-menu', ctx.t('More options'), 'overflow')}</header><div class="sa-scroll sa-stream">${POSTS.map((p, i) => `<article class="sa-post">${avatar(p.name, i)}<div class="sa-post-head"><b>${e(p.name)}</b><small>${e(ctx.t(p.time))}</small></div><p>${e(p.text)}</p>${p.photo !== null ? `<div class="sa-post-photo">${thumb(p.photo)}</div>` : ''}<footer><button class="sa-plus${plused.includes(p.id) ? ' on' : ''}" data-action="gplus-plus" data-id="${p.id}">+1 <span>${p.plus + (plused.includes(p.id) ? 1 : 0)}</span></button><button data-action="sa-unsupported">${ICON.share}</button></footer></article>`).join('')}</div><button class="gp49-fab" data-action="sa-unsupported" aria-label="${e(ctx.t('Share'))}"><img src="assets/gp49-quantum_ic_create_white_24.png" alt=""></button></div>`;
+    // New post (sharekit) and Settings (settings_headers.xml) are plus-post.js's.
+    const pp = window.PlusPost?.render({...ctx.plusCtx, bar: ({title, up, action}) => bar(ctx, {title, up: true, icon: 'google-plus.png', actions: action || ''})});
+    if (pp) return pp;
+    return `<div class="app-view sa-app sa-gplus sa-gplus49"><header class="gp49-bar"><button class="gp49-toggle" data-action="sa-unsupported" aria-label="Menu"><i></i><i></i><i></i></button><b>${e(g('Home'))}</b>${img('sa-unsupported', 'Notifications', 'gp49-quantum_ic_notifications_none_white_24.png')}${btn('sa-menu', ctx.t('More options'), 'overflow')}</header><div class="sa-scroll sa-stream">${[...window.PlusPost.posts(ctx.plusCtx), ...POSTS].map((p, i) => `<article class="sa-post">${avatar(p.name, i)}<div class="sa-post-head"><b>${e(p.name)}</b><small>${e(ctx.t(p.time))}</small></div><p>${e(p.text)}</p>${window.PlusPost.place(ctx.plusCtx, p)}${p.photo !== null ? `<div class="sa-post-photo">${thumb(p.photo)}</div>` : ''}<footer><button class="sa-plus${plused.includes(p.id) ? ' on' : ''}" data-action="gplus-plus" data-id="${p.id}">+1 <span>${p.plus + (plused.includes(p.id) ? 1 : 0)}</span></button><button data-action="sa-unsupported">${ICON.share}</button>${window.PlusPost.del(ctx.plusCtx, p)}</footer></article>`).join('')}</div><button class="gp49-fab" data-action="gpp-new" aria-label="${e(ctx.t('Share'))}"><img src="assets/gp49-quantum_ic_create_white_24.png" alt=""></button>${window.PlusPost.overlay(ctx.plusCtx)}</div>`;
   }
 
 
@@ -336,7 +339,7 @@
   const DEFAULT_NOTES = [{id: 'k1', text: 'Buy concert tickets', color: 0}, {id: 'k2', text: 'Groceries: milk, eggs, lollipops', color: 1}, {id: 'k3', text: 'Call Mom on Sunday', color: 2}];
   // The overflow of the screen on show. News & Weather 2.2 (LMY48Y) res/menu/news_activity.xml: Search (abc_ic_search_api_mtrl_alpha) and Add section (ic_add_white_24dp) if room; Refresh, Edit weather display…, Remove this section and Migrate settings in the overflow.
   function menu(view, ctx) {
-    if (view === 'google-plus') { const g = key => S(ctx, 'gplus', key); return ['Refresh', 'Feedback', 'Settings', 'Help', 'Sign out'].map(key => ({action: key === 'Refresh' ? 'gplus-refresh' : 'sa-unsupported', title: g(key)})); }
+    if (view === 'google-plus') { const g = key => S(ctx, 'gplus', key); return ctx.ui?.gppDraft || ctx.ui?.gppPrefs ? [] : ['Refresh', 'Feedback', 'Settings', 'Help', 'Sign out'].map(key => ({action: key === 'Refresh' ? 'gplus-refresh' : key === 'Settings' ? 'gpp-settings' : 'sa-unsupported', title: g(key)})); }
     if (view === 'youtube' && ctx.ui?.sub !== 'video') { const y = key => S(ctx, 'youtube', key); return [{action: 'yt10-settings', title: y('Settings')}, {action: 'sa-unsupported', title: y('Help & feedback')}]; }
     if (view === 'drive' && ctx.ui?.sub !== 'file') { if (window.LPDrive) return window.LPDrive.menu(ctx); const d = key => S(ctx, 'drive', key); return ['Create', 'Refresh', 'Filter by', 'Sort by'].map(key => ({action: 'sa-unsupported', title: d(key)})); }
     if (view === 'keep' && ctx.ui?.sub !== 'note') { const k = key => S(ctx, 'keep', key); return [{action: 'keep-columns', title: k(ctx.data?.keepSingle ? 'Multi-column view' : 'Single-column view')}, {action: 'keep-refresh', title: k('Refresh')}]; }
@@ -350,5 +353,5 @@
     if (view === 'earth') { const ea = key => S(ctx, 'earth', key); return [['My location', 'earth-myloc'], ['Share', 'earth-share']].map(([key, action]) => ({action, title: ea(key)})); }
     return [];
   }
-  window.StockApps = {newsArticle,newsPage,FILES: FILES0, news2, APPS: SIMPLE, VIDEOS, POSTS, DEFAULT_NOTES, render, menu};
+  window.StockApps = {thumb, newsArticle,newsPage,FILES: FILES0, news2, APPS: SIMPLE, VIDEOS, POSTS, DEFAULT_NOTES, render, menu};
 })();

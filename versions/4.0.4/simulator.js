@@ -563,6 +563,7 @@
     }
   }
   function openApp(app, resume = false) {
+    if (app === 'google-plus' && !resume) PlusPost.open(ui);
     if (app === 'messenger' && !resume) PlusMessenger.open(ui);
     if (app === 'earth' && !resume) EarthApp.open(ui);
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
@@ -601,7 +602,7 @@
   // Google+, Talk, YouTube, Play Books / Movies, Search, Voice Dialer and Latitude (ics-google-apps.js).
   let voiceDialTimer = null;
   function googleAppsContext() {
-    return {data, ui, view: ui.view, lang: i18n.language, account: ICSGmail.account, now: deviceDate().getTime(), t: key => i18n.t(key), save, render, renderOverlay, toast, openApp,
+    return {plus: ui.view === 'google-plus' ? plusContext() : null, data, ui, view: ui.view, lang: i18n.language, account: ICSGmail.account, now: deviceDate().getTime(), t: key => i18n.t(key), save, render, renderOverlay, toast, openApp,
       closeOverlay() { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } },
       focus(selector) { requestAnimationFrame(() => viewport.querySelector(selector)?.focus()); },
       browse(query) { openApp('browser'); navigateBrowser(`search:${query}`); },
@@ -655,6 +656,8 @@
   }
   // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
   const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
+  // Google+ posting and settings (plus-post.js): Google+ 2.4's New post, own posts and Settings.
+  const plusContext = () => { PlusPost.bind(ui); return {ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.gplus?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, version: '2.4', me: i18n.t('Me'), account: 'icecream.demo@gmail.com', now: deviceDate(), locale: i18n.locale(), save, render, thumb: i => StockApps.thumb(i), openMessengerSettings: () => { openApp('messenger'); ui.gpmPrefs = true; render(); }}; };
   // Google+ Messenger (plus-messenger.js): Google+ 2.4's conversations, New conversation and settings.
   const messengerContext = () => ({ui, data, t: key => i18n.t(key), S: key => JBExtraApps.text('gplus', key), contacts: data.contacts, now: deviceDate(), locale: i18n.locale(), save, render, toast: message => toast(message), avatar: 'assets/msg-default_avatar.png', photoIcon: 'assets/gpm-ic_send_photo_holo_light.png', sendIcon: 'assets/gpm-ic_send_holo_light.png', version: '2.4', listMenu: ['Settings', 'Send feedback', 'Help'], me: i18n.t('Me')});
   // Earth (earth-app.js): Earth 6.1's settings, search, My location and Share.
@@ -685,6 +688,7 @@
     if (ui.view === 'play-books') { ui.gaBkSpin = ''; ui.gaBkOptions = false; ui.gaBkToc = false; }
     // Talk: an open dialog first; Friend info returns to its chat, Blocked friends to Talk settings.
     if (ui.view === 'talk' && (ui.gaTkDialog || ui.gaSub === 'info' || ui.gaSub === 'blocked')) { if (ui.gaTkDialog) ui.gaTkDialog = null; else ui.gaSub = ui.gaSub === 'info' ? 'chat' : 'settings'; render(); return; }
+    if (ui.view === 'google-plus' && !ui.overlay && PlusPost.back(ui)) { render(); return; }
     if ((ui.view === 'youtube' || ui.view === 'play-movies' || ui.view === 'play-books') && !ui.overlay && ICSGoogleApps.back(googleAppsContext())) return;
     if (ICSGoogleApps.APPS.includes(ui.view) && ui.gaSub) { ui.gaSub = ''; render(); return; }
     if (ui.view === 'gmail' && ui.sub === 'g4-prefs' && !ui.overlay) { ICSGmailPrefs.back(ui); render(); return; }
@@ -1389,6 +1393,7 @@
       if (action === 'news-share') { ui.overlay = ''; renderOverlay(); const title = viewport.querySelector('.nwp-story h2')?.textContent || ''; openApp('messaging'); ui.sub = 'new'; messageDraft().body = title; save(); render(); return; }
       if (action.startsWith('nwp-')) { NewsPrefs.handle(action, id, {ui, data, lang: i18n.language, save, render, input: () => viewport.querySelector('[data-nwp-input]')?.value, unsupported: () => toast(i18n.t('This feature is not part of the simulator.'))}); return; }
     }
+    if (ui.view === 'google-plus' && action.startsWith('gpp-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (PlusPost.handle(action, id, plusContext())) return; }
     if (ICSGoogleApps.APPS.includes(ui.view) && action.startsWith('ga-') && ICSGoogleApps.handle(action, id, googleAppsContext())) return;
     if (action.startsWith('lng-') && ICSLanguage.handle(action, id, {data, ui, save, render, renderOverlay, toast: text => toast(i18n.t(text))})) return;
     if (ui.view === 'play-music' && action.startsWith('pm4-') && ICSPlayMusic.handle(action, id, playMusicContext(), button)) return;
@@ -1943,6 +1948,7 @@
     }
   });
   document.addEventListener('input', event => {
+    if (PlusPost.input(event.target)) return;
     if (PlusMessenger.input(event.target, messengerContext())) return;
     if (event.target.matches('[data-mfx]') && MusicFX.input(event.target, musicFxContext())) return;
     // Play Music's search: the sections follow the query; the field keeps its focus and caret.

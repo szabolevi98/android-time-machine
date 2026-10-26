@@ -347,16 +347,21 @@
   ];
   function gplus(ctx) {
     const {ui, lang, data} = ctx, sub = ui.gaSub || '';
+    // New post (post_fragment) and Settings (notifications_preferences.xml) are plus-post.js's; home_menu.xml's
+    // New post and the overflow (Settings, Send feedback, Sign out) are on the home and Stream bars.
+    const pp = ctx.plus && window.PlusPost?.render({...ctx.plus, bar: ({title, action}) => head('ga-gp-bar', 'google-plus', title, action || '', true)});
+    if (pp) return pp;
+    const newPost = icon('gpp-new', T(lang, 'New post'), 'ga-gp-ic_menu_new_post_action_bar');
     if (sub === 'stream') {
       const tab = ui.gaStream || 'All circles', plus = data.gaPlus || [];
       const posts = tab === 'Nearby' ? POSTS.slice(0, 1) : tab === "What's hot" ? POSTS.slice(2) : POSTS;
-      return `<div class="app-view ga-app ga-gplus">${head('ga-gp-bar', 'google-plus', T(lang, 'Stream'), icon('ga-unsupported', T(lang, 'New post'), 'ga-gp-ic_menu_new_post_action_bar'), true)}${tabs(['All circles', 'Nearby', "What's hot"].map(t => [t, T(lang, t)]), tab, 'ga-stream')}<div class="ga-scroll ga-gp-stream">${posts.map(p => `<article class="ga-post"><header><img src="${AVATAR.gplus}" alt=""><span><b>${e(p.name)}</b><small>${e(p.time)}</small></span></header><p>${e(p.text)}</p><footer><button class="ga-plus${plus.includes(p.id) ? ' on' : ''}" data-action="ga-plus" data-id="${p.id}">+${p.plus + (plus.includes(p.id) ? 1 : 0)}</button><span><img src="assets/ga-gp-ic_comment.png" alt=""> ${p.comments}</span></footer></article>`).join('')}</div></div>`;
+      return `<div class="app-view ga-app ga-gplus">${head('ga-gp-bar', 'google-plus', T(lang, 'Stream'), newPost + more(), true)}${tabs(['All circles', 'Nearby', "What's hot"].map(t => [t, T(lang, t)]), tab, 'ga-stream')}<div class="ga-scroll ga-gp-stream">${[...(tab === 'All circles' && ctx.plus ? window.PlusPost.posts(ctx.plus) : []), ...posts].map(p => `<article class="ga-post"><header><img src="${AVATAR.gplus}" alt=""><span><b>${e(p.name)}</b><small>${e(p.time)}</small></span></header><p>${e(p.text)}</p>${ctx.plus && p.mine ? window.PlusPost.place(ctx.plus, p) : ''}${p.photo != null && window.StockApps ? `<div class="ga-gp-photo">${StockApps.thumb(p.photo)}</div>` : ''}<footer><button class="ga-plus${plus.includes(p.id) ? ' on' : ''}" data-action="ga-plus" data-id="${p.id}">+${p.plus + (plus.includes(p.id) ? 1 : 0)}</button><span><img src="assets/ga-gp-ic_comment.png" alt=""> ${p.comments ?? 0}</span>${ctx.plus ? window.PlusPost.del(ctx.plus, p) : ''}</footer></article>`).join('')}</div>${window.PlusPost?.overlay(ctx.plus) || ''}</div>`;
     }
     if (sub === 'photos') return `<div class="app-view ga-app ga-gplus">${head('ga-gp-bar', 'google-plus', T(lang, 'Photos'), '', true)}<div class="ga-scroll ga-gp-photos"><h3>${e(T(lang, 'Your albums'))}</h3><div class="ga-grid">${(data.photos || []).map(p => `<span class="ga-photo" style="background:linear-gradient(135deg,${p.colors?.[0] || '#555'},${p.colors?.[2] || '#222'})"><em>${e(p.name)}</em></span>`).join('')}</div></div></div>`;
     if (sub === 'circles') return `<div class="app-view ga-app ga-gplus">${head('ga-gp-bar', 'google-plus', T(lang, 'Circles'), '', true)}<div class="ga-scroll">${(data.contacts || []).map(c => `<div class="ga-person"><img src="${AVATAR.gplus}" alt=""><b>${e(c.name)}</b></div>`).join('')}</div></div>`;
     // home_screen_*_icon_default (xhdpi 128 px) over the labels.
     const tile = (id, label, src) => `<button class="ga-gp-tile" data-action="ga-gp-open" data-id="${id}"><img src="assets/ga-gp-home_screen_${src}_icon_default.png" alt=""><b>${e(T(lang, label))}</b></button>`;
-    return `<div class="app-view ga-app ga-gplus ga-gp-home">${head('ga-gp-bar', 'google-plus', 'Google+')}<div class="ga-gp-grid">${tile('stream', 'Stream', 'stream')}${tile('photos', 'Photos', 'photos')}${tile('profile', 'Profile', 'profile')}${tile('circles', 'Circles', 'people')}${tile('messenger', 'Messenger', 'huddle')}${tile('games', 'Games', 'games')}</div></div>`;
+    return `<div class="app-view ga-app ga-gplus ga-gp-home">${head('ga-gp-bar', 'google-plus', 'Google+', newPost + more())}<div class="ga-gp-grid">${tile('stream', 'Stream', 'stream')}${tile('photos', 'Photos', 'photos')}${tile('profile', 'Profile', 'profile')}${tile('circles', 'Circles', 'people')}${tile('messenger', 'Messenger', 'huddle')}${tile('games', 'Games', 'games')}</div></div>`;
   }
 
   // ---- Google Talk ----
@@ -705,6 +710,7 @@
         bk('ga-bk-aloud', ui.gaBkAloud ? 'Stop reading aloud' : 'Read aloud', {disabled: !globalThis.speechSynthesis}), bk('ga-unsupported', 'Help')];
     }
     // home.xml's overflow, then fragment_carousel.xml's: Make available offline is hidden while its panel shows.
+    if (ctx.view === 'google-plus') return ui.gppDraft || ui.gppPrefs ? [] : [item('gpp-settings', 'Settings'), item('ga-unsupported', 'Send feedback'), item('ga-unsupported', 'Sign out')];
     if (ctx.view === 'play-books') return [['ga-bk-refresh', 'Refresh'], ['ga-unsupported', 'Accounts'], ['ga-unsupported', 'Help'], ...(ui.gaBkOffline ? [] : [['ga-bk-offline', 'Make available offline']]), ctx.data?.gaBkView === 'list' ? ['ga-bk-view', 'View as carousel'] : ['ga-bk-view', 'View as list']].map(([action, key]) => ({action, title: BS(lang, key), id: ''}));
     if (ctx.view === 'play-movies') return [item('ga-mv-offline', 'Manage offline rentals'), ...['Movies: Accounts'].map(key => item('ga-unsupported', key)), item('ga-mv-settings', 'Movies: Settings'), ...['Movies: Help', 'Movies: Contact us', 'Movies: Send feedback'].map(key => item('ga-unsupported', key))];
     // YouTube: each activity's own items, then menu.xml's Settings, Feedback and Help (YouTubeActivity's MenuHelper).

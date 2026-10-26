@@ -89,7 +89,21 @@ window.StockStrings = {
   "Who can message you": {"res": "PlusOne:realtimechat_acl_settings_title", "hu": "Kik küldhetnek neked üzenetet", "de": "Wer kann mir schreiben", "fr": "Qui peut vous écrire", "es": "Quién puede contactarte"},
   "Show when messages are received": {"res": "PlusOne:realtimechat_settings_notify_summary", "hu": "Jelenjen meg, ha üzenetek érkeznek", "de": "Eingehende Nachrichten anzeigen", "fr": "Afficher les notifications de nouveau message", "es": "Mostrar cuando se reciban mensajes"},
   "Also vibrate when messages are received": {"res": "PlusOne:realtimechat_settings_vibrate_summary", "hu": "Akkor is rezegjen, ha üzenetek érkeznek", "de": "Auch vibrieren, wenn Nachrichten eingehen", "fr": "Vibrer également à la réception de messages", "es": "Vibrar también cuando se reciban mensajes"},
-  "Set a ringtone for new messages": {"res": "PlusOne:realtimechat_settings_ringtone_summary", "hu": "Csengőhangot állíthatsz be az új üzenetekhez", "de": "Klingelton für neue Nachrichten festlegen", "fr": "Choisir une sonnerie pour les nouveaux messages", "es": "Definir un tono de llamada para los mensajes nuevos"}
+  "Set a ringtone for new messages": {"res": "PlusOne:realtimechat_settings_ringtone_summary", "hu": "Csengőhangot állíthatsz be az új üzenetekhez", "de": "Klingelton für neue Nachrichten festlegen", "fr": "Choisir une sonnerie pour les nouveaux messages", "es": "Definir un tono de llamada para los mensajes nuevos"},
+  "@share_hint": {"res": "PlusOne:share_body_hint", "hu": "Megjegyzés hozzáadása", "de": "Kommentar hinzufügen", "fr": "Ajouter un commentaire", "es": "Añade un comentario", "en": "Add a comment"},
+  "Your circles": {"res": "PlusOne:audience_display_circles", "hu": "Köreid", "de": "Meine Kreise", "fr": "Vos cercles", "es": "Tus círculos"},
+  "Delete": {"res": "PlusOne:menu_remove_post", "hu": "Törlés", "de": "Löschen", "fr": "Supprimer", "es": "Eliminar"},
+  "Do you want to delete this post?": {"res": "PlusOne:post_delete_question", "hu": "Törlöd ezt a bejegyzést?", "de": "Möchten Sie diesen Beitrag löschen?", "fr": "Voulez-vous supprimer ce post ?", "es": "¿Quieres eliminar esta publicación?"},
+  "Discard": {"res": "PlusOne:post_discard", "hu": "Elvetés", "de": "Verwerfen", "fr": "Supprimer", "es": "Descartar"},
+  "New post": {"res": "PlusOne:menu_post", "hu": "Új bejegyzés", "de": "Neuer Beitrag", "fr": "Nouveau post", "es": "Publicación nueva"},
+  "Google+ notifications": {"res": "PlusOne:notifications_preference_enabled_title", "hu": "Google+ értesítések", "de": "Benachrichtigungen", "fr": "Notifications Google+", "es": "Notificaciones de Google+"},
+  "Set a ringtone for new notifications": {"res": "PlusOne:notifications_preference_ringtone_summary", "hu": "Csengőhangot állíthatsz be az új értesítésekhez", "de": "Klingelton für neue Benachrichtigungen festlegen", "fr": "Choisir une sonnerie pour les nouvelles notifications", "es": "Definir tono de llamada para nuevas notificaciones"},
+  "@post": {"res": "PlusOne:post", "hu": "Közzététel", "de": "Posten", "fr": "Poster", "es": "Publicar", "en": "Post"},
+  "@add_photo": {"res": "PlusOne:post_add_photo_from_phone", "hu": "Fotó hozzáadása az eszközről", "de": "Foto von Gerät hinzufügen", "fr": "Ajouter une photo depuis l'appareil", "es": "Añadir foto del dispositivo", "en": "Add photo from device"},
+  "Location": {"res": "PlusOne:post_toggle_location", "hu": "Hely ki-/bekapcsolása", "de": "Standort umschalten", "fr": "Changer d'emplacement", "es": "Desactiva la ubicación.", "en": "Toggle location"},
+  "Show when notifications are received": {"res": "PlusOne:notifications_preference_enabled_summary", "hu": "Jelenjen meg, ha értesítések érkeznek", "de": "Eingehende Benachrichtigungen anzeigen", "fr": "Afficher les notifications reçues", "es": "Mostrar cuando se reciban notificaciones"},
+  "Also vibrate when notifications are received": {"res": "PlusOne:notifications_preference_vibrate_summary", "hu": "Akkor is rezegjen, ha értesítések érkeznek", "de": "Auch vibrieren, wenn Benachrichtigungen eintreffen", "fr": "Activer également le mode vibreur à la réception de notifications", "es": "Vibrar también cuando se reciban notificaciones"},
+  "Notification settings": {"res": "PlusOne:notification_settings_details_button", "hu": "Értesítési beállítások", "de": "Benachr.-Einstellungen", "fr": "Paramètres notification", "es": "Ajustes de notificaciones"}
  },
  "earth": {
   "Earth": {"res": "GoogleEarth:app_name", "hu": "Earth", "de": "Earth", "fr": "Earth", "es": "Earth"},

@@ -138,5 +138,5 @@
     if (view === 'news-weather') { const n = key => S(ctx, 'news', key); return ctx.ui?.newsSub === 'settings' ? [] : ctx.ui?.newsSub === 'story' ? [{action: 'news-share', title: n('Share story')}] : [{action: 'sa-news-refresh', title: n('Refresh')}, {action: 'news-settings', title: n('Settings')}]; }
     return [];
   }
-  window.StockApps = {mapSvg, render, menu, LAT_FRIENDS};
+  window.StockApps = {thumb, mapSvg, render, menu, LAT_FRIENDS};
 })();

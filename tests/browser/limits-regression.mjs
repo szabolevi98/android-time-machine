@@ -3424,7 +3424,53 @@ const plusMessenger = o => async h => {
   await h.shot(`t26-messenger-${o.version}`);
 };
 
+// Google+ posting (T23): New post with text, the phone's location and a picture goes to the top of the stream and is
+// kept; Delete asks and removes it; Back over a written post offers Discard and posts nothing; Settings keeps the
+// notifications check box (and 4.0 shows About Google+).
+const plusPost = o => async h => {
+  const mine = async () => (await store(h, 'gplusMyPosts')) || [];
+  const menu = async action => { await h.tap(`#viewport [data-action="${o.overflow}"]`); await h.until(`!!document.querySelector('.holo-menu')`); await h.tap(`.holo-menu [data-action="${action}"]`); };
+  await h.openApp('google-plus');
+  if (o.stream) { await h.until(`!!document.querySelector('#viewport [data-action="ga-gp-open"][data-id="stream"]')`); await h.tap('#viewport [data-action="ga-gp-open"][data-id="stream"]'); }
+  await h.until(`!!document.querySelector('#viewport [data-action="gpp-new"]')`);
+  await h.tap(`#viewport ${o.newPost}`);
+  h.check('New post opens the share box', await h.until(`!!document.querySelector('#viewport .gpp textarea')`));
+  h.check('the post button waits for something to post', await h.ev(`document.querySelector('#viewport .gpp-share').disabled`));
+  await h.type('#viewport .gpp textarea', 'Sunset from the trail');
+  await h.tap('#viewport .gpp-add[data-action="gpp-place"]');
+  await h.tap('#viewport .gpp-add[data-action="gpp-photo"]');
+  await h.tap('#viewport [data-action="gpp-photo-set"][data-id="1"]');
+  h.check('the location and the picture are attached', await h.until(`!!document.querySelector('#viewport .gpp-loc') && !!document.querySelector('#viewport .gpp-photo svg')`));
+  await h.shot(`t23-compose-${o.version}`);
+  await h.tap('#viewport .gpp-share');
+  h.check('the post is first in the stream with its place', await h.until(`(()=>{const a=document.querySelector('#viewport article');return a&&/Sunset from the trail/.test(a.textContent)&&!!a.querySelector('.gpp-place')})()`));
+  h.check('the post is kept', (await mine()).length === 1 && (await mine())[0].photo === 1);
+  await h.tap('#viewport article .gpp-del');
+  await h.tap('#viewport [data-action="gpp-delete-ok"]');
+  h.check('Delete removes the post', await h.until(`![...document.querySelectorAll('#viewport article')].some(a => /Sunset from the trail/.test(a.textContent))`) && (await mine()).length === 0);
+  await h.tap(`#viewport ${o.newPost}`);
+  await h.type('#viewport .gpp textarea', 'Not this one');
+  await h.key('Escape');
+  h.check('Back over a written post offers Discard', await h.until(`!!document.querySelector('#viewport [data-action="gpp-discard-ok"]')`));
+  await h.tap('#viewport [data-action="gpp-discard-ok"]');
+  h.check('Discard posts nothing', (await mine()).length === 0 && await h.until(`!document.querySelector('#viewport .gpp textarea')`));
+  await menu('gpp-settings');
+  if (o.list) {
+    h.check('Settings shows the APK\'s list', await h.until(`!!document.querySelector('#viewport .gpp-prefs [data-id="notifications"]')`));
+    if (o.about) { await h.tap('#viewport .gpp-prefs [data-id="about"]'); h.check('About Google+ shows the version', await h.until(`/4\\.0\\.0\\.46852618/.test(document.querySelector('#viewport .mps-dialog')?.textContent || '')`)); await h.tap('#viewport .mps-dialog [data-action="gpp-cancel"]'); }
+    await h.tap('#viewport .gpp-prefs [data-id="notifications"]');
+  }
+  h.check('the notifications settings open', await h.until(`!!document.querySelector('#viewport .gpp-prefs [data-id="notifications_enabled"]')`));
+  await h.tap('#viewport .gpp-prefs [data-id="notifications_enabled"]');
+  h.check('Google+ notifications is kept', ((await store(h, 'gplusPrefs')) || {}).notifications_enabled === false);
+  await h.shot(`t23-gplus-${o.version}`);
+};
+
 const CASES = [
+  {id: 'T23', version: '4.0.4', name: 'Google+ › New post, Delete, Discard, Settings', run: plusPost({stream: true, newPost: '.ga-gp-bar [data-action="gpp-new"]', overflow: 'ga-menu', version: '2.4'})},
+  {id: 'T23', version: '4.3', name: 'Google+ › New post, Delete, Discard, Settings', run: plusPost({newPost: '[data-action="gpp-new"][data-id=""]', overflow: 'sa-menu', list: true, about: true, version: '4.0'})},
+  {id: 'T23', version: '4.4.4', name: 'Google+ › New post, Delete, Discard, Settings', run: plusPost({newPost: '[data-action="gpp-new"][data-id=""]', overflow: 'sa-menu', list: true, version: '4.2.3'})},
+  {id: 'T23', version: '5.1.1', name: 'Google+ › New post, Delete, Discard, Settings', run: plusPost({newPost: '.gp49-fab', overflow: 'sa-menu', list: true, version: '4.9'})},
   {id: 'T26', version: '4.0.4', name: 'Messenger › conversations, New conversation, menu, Settings', run: plusMessenger({overflow: 'jbx-menu', version: '2.4'})},
   {id: 'T26', version: '4.3', name: 'Messenger › conversations, New conversation, menu, Settings', run: plusMessenger({overflow: 'sa-menu', subtitle: true, version: '4.0'})},
   {id: 'T19', version: '2.3.6', name: 'Earth › globe, Search, My Location, north, Layers, Settings', run: earthLocal({gb: true, myloc: 'menu', layers: true, check: 'use_sensors', checkDefault: false, version: '2.0.1'})},

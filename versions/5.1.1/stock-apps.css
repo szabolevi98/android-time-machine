@@ -531,3 +531,28 @@
 .sa-earth-canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
 .mps-cat{padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(4 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#009688}
 .sa-earth .mps-choices img{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-right:calc(16 * var(--dp))}
+
+/* Google+ New post (plus-post.js: post_fragment on compose_panel_bg #e5e5e5, white compose items, 18 sp text with the
+   #bababa hint, the post button in the action bar), own posts' place and Delete, and Settings on the light rows. */
+.gpp{display:flex;flex-direction:column;background:#e5e5e5}
+.gpp-body{flex:1;min-height:0;overflow-y:auto}
+.gpp-audience{padding:calc(12 * var(--dp)) calc(16 * var(--dp));background:#fff;border-bottom:1px solid #d6d6d6}
+.gpp-audience span{font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#427fed}
+.gpp-text textarea{display:block;width:100%;box-sizing:border-box;min-height:calc(120 * var(--dp));padding:calc(12 * var(--dp)) calc(16 * var(--dp));border:0;background:#fff;color:#404040;font:400 calc(18 * var(--dp)) Roboto,sans-serif;resize:none;outline:0}
+.gpp-text textarea::placeholder{color:#bababa}
+.gpp-row{display:flex;align-items:center;min-height:calc(56 * var(--dp));margin-top:1px;padding:0 calc(4 * var(--dp)) 0 calc(16 * var(--dp));background:#fff}
+.screen .gpp-add{flex:1;padding:calc(16 * var(--dp)) 0;border:0;background:none;color:#bababa;font:400 calc(18 * var(--dp)) Roboto,sans-serif;text-align:left}
+.gpp-loc{flex:1;color:#404040;font:400 calc(18 * var(--dp)) Roboto,sans-serif}
+.gpp-photo{flex:1;padding:calc(8 * var(--dp)) 0}
+.gpp-photo svg{display:block;width:100%;height:auto}
+.screen .gpp-x{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));border:0;background:none;color:#888;font-size:calc(24 * var(--dp))}
+.gpp-pick{display:grid;grid-template-columns:1fr 1fr;gap:calc(4 * var(--dp));padding:calc(8 * var(--dp));background:#fff}
+.screen .gpp-pick button{padding:0;border:0;background:none}
+.gpp-pick svg{display:block;width:100%;height:auto}
+.screen .gpp-share{flex:none;align-self:stretch;padding:0 calc(16 * var(--dp));border:0;background:none;color:#427fed;font:700 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.screen .gpp-share:disabled{opacity:.4}
+.gpp-place{display:block;margin-top:calc(4 * var(--dp));color:#888;font:400 calc(13 * var(--dp)) Roboto,sans-serif}
+.screen .gpp-del{margin-left:auto;padding:calc(4 * var(--dp)) calc(8 * var(--dp));border:0;background:none;color:#888;font:400 calc(13 * var(--dp)) Roboto,sans-serif}
+.gpp-prefs{display:flex;flex-direction:column;background:#fff}
+.gpp-prefs .mps-cat{color:#808080;border-bottom-color:#00000026}
+.ga-gp-photo svg{display:block;width:100%;height:auto;margin-top:calc(8 * var(--dp))}

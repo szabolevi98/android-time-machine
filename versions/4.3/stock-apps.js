@@ -204,8 +204,11 @@
     // notifications button (notification_count: #dd4b39, 3 sp corners) and the overflow (host_menu.xml's stream items);
     // compose_bar.xml at the bottom: Photo, Check in, Mood and Write in #427fed / #b23424 / #f4b400 / #3e802f on black.
     const g = key => S(ctx, 'gplus', key);
-    const compose = [['Photo', 'ic_camera_active', '#427fed'], ['Check in', 'ic_location_active', '#b23424'], ['Mood', 'ic_mood_gold', '#f4b400'], ['Write', 'ic_text_active', '#3e802f']].map(([key, icon, color]) => `<button data-action="sa-unsupported" style="color:${color}"><img src="assets/gp4-${icon}.png" alt="">${e(g(key))}</button>`).join('');
-    return `<div class="app-view sa-app sa-gplus">${bar(ctx, {title: g('Home'), subtitle: ctx.t('All'), icon: 'gp4-ic_gplus_red_32.png', actions: '<button class="sa-gp-notify" data-action="sa-unsupported" aria-label="Notifications"><b>2</b></button>' + btn('sa-menu', ctx.t('More options'), 'overflow')})}<div class="sa-scroll sa-stream">${POSTS.map((p, i) => `<article class="sa-post">${avatar(p.name, i)}<div class="sa-post-head"><b>${e(p.name)}</b><small>${e(ctx.t(p.time))}</small></div><p>${e(p.text)}</p>${p.photo !== null ? `<div class="sa-post-photo">${thumb(p.photo)}</div>` : ''}<footer><button class="sa-plus${plused.includes(p.id) ? ' on' : ''}" data-action="gplus-plus" data-id="${p.id}">+1 <span>${p.plus + (plused.includes(p.id) ? 1 : 0)}</span></button><button data-action="sa-unsupported" aria-label="Reshare"><img src="assets/gp4-ic_reshare_16.png" alt=""></button></footer></article>`).join('')}</div><nav class="sa-gp-compose">${compose}</nav></div>`;
+    // New post (post_fragment) and Settings (main_preferences.xml) are plus-post.js's.
+    const pp = window.PlusPost?.render({...ctx.plusCtx, bar: ({title, up, action}) => bar(ctx, {title, up: true, icon: 'gp4-ic_gplus_red_32.png', actions: action || ''})});
+    if (pp) return pp;
+    const compose = [['Photo', 'ic_camera_active', '#427fed'], ['Check in', 'ic_location_active', '#b23424'], ['Mood', 'ic_mood_gold', '#f4b400'], ['Write', 'ic_text_active', '#3e802f']].map(([key, icon, color]) => `<button data-action="${{Photo: 'gpp-new', 'Check in': 'gpp-new', Location: 'gpp-new', Write: 'gpp-new'}[key] || 'sa-unsupported'}" data-id="${{Photo: 'photo', 'Check in': 'place', Location: 'place'}[key] || ''}" style="color:${color}"><img src="assets/gp4-${icon}.png" alt="">${e(g(key))}</button>`).join('');
+    return `<div class="app-view sa-app sa-gplus">${bar(ctx, {title: g('Home'), subtitle: ctx.t('All'), icon: 'gp4-ic_gplus_red_32.png', actions: '<button class="sa-gp-notify" data-action="sa-unsupported" aria-label="Notifications"><b>2</b></button>' + btn('sa-menu', ctx.t('More options'), 'overflow')})}<div class="sa-scroll sa-stream">${[...window.PlusPost.posts(ctx.plusCtx), ...POSTS].map((p, i) => `<article class="sa-post">${avatar(p.name, i)}<div class="sa-post-head"><b>${e(p.name)}</b><small>${e(ctx.t(p.time))}</small></div><p>${e(p.text)}</p>${window.PlusPost.place(ctx.plusCtx, p)}${p.photo !== null ? `<div class="sa-post-photo">${thumb(p.photo)}</div>` : ''}<footer><button class="sa-plus${plused.includes(p.id) ? ' on' : ''}" data-action="gplus-plus" data-id="${p.id}">+1 <span>${p.plus + (plused.includes(p.id) ? 1 : 0)}</span></button><button data-action="sa-unsupported" aria-label="Reshare"><img src="assets/gp4-ic_reshare_16.png" alt=""></button>${window.PlusPost.del(ctx.plusCtx, p)}</footer></article>`).join('')}</div><nav class="sa-gp-compose">${compose}</nav>${window.PlusPost.overlay(ctx.plusCtx)}</div>`;
   }
 
   // ---- Earth (2013): the globe in space under a translucent search bar ----
@@ -268,7 +271,7 @@
     if (view === 'play-magazines') { const g = key => S(ctx, 'magazines', key); return ['Refresh', 'On device only', 'Manage subscriptions', 'Settings', 'Help'].map(key => ({action: 'sa-unsupported', title: g(key)})); }
     // Messenger (Google+ 4.0's host menu without the stream's items).
     if (view === 'messenger') { const g = key => S(ctx, 'gplus', key); return ['Send feedback', 'Settings', 'Help', 'Sign out'].map(key => ({action: 'sa-unsupported', title: g(key)})); }
-    if (view === 'google-plus') { const g = key => S(ctx, 'gplus', key); return ['New post', 'Share photos', 'Share your location', 'Refresh', 'Send feedback', 'Settings', 'Help', 'Sign out'].map(key => ({action: key === 'Refresh' ? 'gplus-refresh' : 'sa-unsupported', title: g(key)})); }
+    if (view === 'google-plus') { const g = key => S(ctx, 'gplus', key), act = {'New post': ['gpp-new'], 'Share photos': ['gpp-new', 'photo'], 'Share your location': ['gpp-new', 'place'], Refresh: ['gplus-refresh'], Settings: ['gpp-settings']}; return ctx.ui?.gppDraft || ctx.ui?.gppPrefs ? [] : ['New post', 'Share photos', 'Share your location', 'Refresh', 'Send feedback', 'Settings', 'Help', 'Sign out'].map(key => ({action: act[key]?.[0] || 'sa-unsupported', id: act[key]?.[1], title: g(key)})); }
     if (view === 'maps') {
       const mp = key => S(ctx, 'maps', key);
       if (ctx.ui?.mapsMenu === 'switcher') return [{action: 'maps-feature', id: 'map', title: mp('Map')}, {action: 'maps-feature', id: 'local', title: `${mp('Local')} — ${mp('Find restaurants, bars & more')}`}, {action: 'maps-feature', id: 'navigation', title: mp('GPS navigation')}, {action: 'maps-feature', id: 'traffic', title: mp('Traffic')}];
@@ -282,5 +285,5 @@
     if (view === 'news-weather') return ctx.ui?.newsSub === 'settings' ? [] : ctx.ui?.newsSub === 'story' ? [{action: 'news-share', title: S(ctx, 'news', 'Share story')}] : [{action: 'news-settings', title: S(ctx, 'news', 'Settings')}];
     return [];
   }
-  window.StockApps = {mapSvg, APPS: SIMPLE, VIDEOS, POSTS, DEFAULT_NOTES, render, menu};
+  window.StockApps = {thumb, mapSvg, APPS: SIMPLE, VIDEOS, POSTS, DEFAULT_NOTES, render, menu};
 })();

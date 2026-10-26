@@ -700,7 +700,7 @@
       case 'browser': return renderBrowser();
       case 'chrome': return renderChrome();
       case 'messenger': case 'navigation': case 'local': case 'currents': case 'play-magazines': case 'wallet': case 'movie-studio': if (ui.view === 'navigation' && ui.navRun) return MapsRoute.nav(mrContext()); return JBExtraApps.render(ui.view, {messenger: ui.view === 'messenger' ? messengerContext() : null, ui, t: key => i18n.t(key), contacts: data.contacts});
-      case 'google-search': case 'voice-search': case 'maps': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
+      case 'google-search': case 'voice-search': case 'maps': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, plusCtx: ui.view === 'google-plus' ? plusContext() : null, ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
       case 'hangouts': return hangoutsScope(() => Hangouts.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime()));
       case 'downloads': return HoloDownloads.render(dlContext());
       case 'gmail': return renderGmail();
@@ -719,6 +719,7 @@
     }
   }
   function openApp(app, resume = false) {
+    if (app === 'google-plus' && !resume) PlusPost.open(ui);
     if (app === 'messenger' && !resume) PlusMessenger.open(ui);
     if (app === 'earth' && !resume) EarthApp.open(ui);
     // A capture for Messaging lasts while the Camera is open; Messaging opens on its compose screen, not over it.
@@ -768,6 +769,8 @@
   }
   // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
   const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
+  // Google+ posting and settings (plus-post.js): Google+ 4.0's New post, own posts and Settings.
+  const plusContext = () => { PlusPost.bind(ui); return {ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.gplus?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, version: '4.0', me: i18n.t('Me'), account: 'jellybean.demo@gmail.com', now: deviceDate(), locale: i18n.locale(), save, render, thumb: i => StockApps.thumb(i), openMessengerSettings: () => { openApp('messenger'); ui.gpmPrefs = true; render(); }}; };
   // Google+ Messenger (plus-messenger.js): Google+ 4.0's conversations, New conversation and settings.
   const messengerContext = () => ({ui, data, t: key => i18n.t(key), S: key => JBExtraApps.text('gplus', key), contacts: data.contacts, now: deviceDate(), locale: i18n.locale(), save, render, toast: message => toast(message), avatar: 'assets/msg-ic_avatar.png', photoIcon: 'assets/gpm-ic_send_photo_holo_light.png', sendIcon: 'assets/gpm-ic_menu_send_holo_light.png', version: '4.0', listMenu: ['Send feedback', 'Settings', 'Help', 'Sign out'], me: i18n.t('Me')});
   // Earth (earth-app.js): Earth 7.1.1's settings, search, My location and Share.
@@ -793,6 +796,7 @@
     if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
     if (ui.view === 'earth' && !ui.overlay && EarthApp.back(ui)) { render(); return; }
     if (ui.view === 'messenger' && !ui.overlay && PlusMessenger.back(ui)) { render(); return; }
+    if (ui.view === 'google-plus' && !ui.overlay && PlusPost.back(ui)) { render(); return; }
     if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return; }
     if (ui.view === 'clock' && !ui.overlay && ClockPrefs.back(ui)) { render(); return; }
     if (ui.chromeReturn && ui.view === ui.chromeReturn.view && ui.sub === ui.chromeReturn.sub && !ui.overlay) { const back = ui.chromeReturn; ui.chromeReturn = null; openApp('chrome'); ui.sub = 'chrome-settings'; ui.chromePrefStack = back.stack; render(); return; }
@@ -2006,6 +2010,7 @@
     }
     if (ui.view === 'earth' && /^(earth|eps)-/.test(action)) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (EarthApp.handle(action, id, earthContext())) return; }
     if (ui.view === 'messenger' && action.startsWith('gpm-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (PlusMessenger.handle(action, id, messengerContext())) return; }
+    if (ui.view === 'google-plus' && action.startsWith('gpp-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (PlusPost.handle(action, id, plusContext())) return; }
     if (action.startsWith('mps-') && window.MapsPrefs?.handle(action, id, mapsPrefsContext())) return;
     if (ui.view === 'messaging' && action.startsWith('jbma-') && JBMmsAttach.handle(action, id, jbmaContext())) return;
     if (ui.view === 'youtube' && action.startsWith('yt4-') && JBYouTube.handle(action, id, ytContext())) return;
@@ -2804,6 +2809,7 @@
   document.addEventListener('submit', event => hangoutsScope(() => handleSubmit(event)));
   document.addEventListener('input', event => hangoutsScope(() => handleInput(event)));
   function handleInput(event) {
+    if (PlusPost.input(event.target)) return;
     if (PlusMessenger.input(event.target, messengerContext())) return;
     if (event.target.matches('[data-lng-seek]') && InputLanguage.input(event.target, langContext())) return;
     if (event.target.matches('[data-mfx]') && MusicFX.input(event.target, musicFxContext())) return;

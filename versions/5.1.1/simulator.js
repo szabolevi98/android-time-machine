@@ -808,7 +808,7 @@
       case 'photos': return PhotosApp.render(photosContext());
       case 'gmail': return renderGmail();
       case 'play-music': case 'play-movies': case 'play-books': case 'play-games': return PlayApps.render(playContext(ui.view));
-      case 'google-search': case 'voice-search': case 'maps': case 'drive': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
+      case 'google-search': case 'voice-search': case 'maps': case 'drive': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, plusCtx: ui.view === 'google-plus' ? plusContext() : null, ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
       case 'phone': return renderPhone();
       case 'people': return renderPeople();
       case 'messaging': return renderMessaging();
@@ -824,6 +824,7 @@
     }
   }
   function openApp(app, resume = false) {
+    if (app === 'google-plus' && !resume) PlusPost.open(ui);
     if (app === 'earth' && !resume) EarthApp.open(ui);
     if(!resume&&LPExtraApps.KIND[app]){ui.editorDrawer=false;ui.editorRefreshing=false;}
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
@@ -882,6 +883,8 @@
   }
   // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
   const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
+  // Google+ posting and settings (plus-post.js): Google+ 4.9's New post, own posts and Settings.
+  const plusContext = () => { PlusPost.bind(ui); return {ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.gplus?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, version: '4.9', me: i18n.t('Me'), account: 'nexus6.demo@gmail.com', now: deviceDate(), locale: i18n.locale(), save, render, thumb: i => StockApps.thumb(i), openMessengerSettings: () => { openApp('messenger'); ui.gpmPrefs = true; render(); }}; };
   // Earth (earth-app.js): Earth 8.0.1's settings, search, My location and Share.
   const earthContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, save, render, toast: message => toast(message), earth: '8.0.1', account: 'nexus6.demo@gmail.com', dark: false, dot: 'assets/ea8-bluedot.png', shareTargets: [['messaging', 'Messenger']], share: (app, text, subject) => { ui.overlay = ''; renderOverlay(); openApp(app); ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); save(); render(); }, openLocation: () => { openApp('settings'); ui.sub = 'location'; render(); }});
   // Advanced Wi-Fi's Install certificates (*-certinstall.js) and its dialogs.
@@ -918,6 +921,7 @@
     if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
     if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
     if (ui.view === 'earth' && !ui.overlay && EarthApp.back(ui)) { render(); return; }
+    if (ui.view === 'google-plus' && !ui.overlay && PlusPost.back(ui)) { render(); return; }
     if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return; }
     if (ui.view === 'phone' && !ui.overlay && LPDialerPrefs.back(ui)) { render(); return; }
     if (ui.view === 'clock' && !ui.overlay && ClockPrefs.back(ui)) { render(); return; }
@@ -2287,6 +2291,7 @@
       if (result) { if (result.save) save(); for (const title of result.notify || []) addNotification(title, ''); renderOverlay(); render(); if (result.toast) toast(result.toast); return; }
     }
     if (ui.view === 'earth' && /^(earth|eps)-/.test(action)) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (EarthApp.handle(action, id, earthContext())) return; }
+    if (ui.view === 'google-plus' && action.startsWith('gpp-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (PlusPost.handle(action, id, plusContext())) return; }
     if (action.startsWith('mps-') && window.MapsPrefs?.handle(action, id, mapsPrefsContext())) return;
     if (ui.view === 'youtube' && action.startsWith('yt10-') && LPYouTube.handle(action, id, ytContext())) return;
     if (ui.view === 'google-search' && action.startsWith('lsp-') && LPSearchPrefs.handle(action, id, gsContext())) return;
@@ -3269,6 +3274,7 @@
     if (bar && hero) bar.classList.toggle('solid', list.scrollTop > hero.offsetHeight - bar.offsetHeight);
   }, true);
   document.addEventListener('input', event => {
+    if (PlusPost.input(event.target)) return;
     if (event.target.matches('[data-pr]') && PrintSpooler.input(event.target, printContext())) return;
     if (event.target.matches('[data-gnp-q]') && ui.gnowDraft?.placeDialog) { ui.gnowDraft.placeDialog.q = event.target.value; const at = event.target.selectionStart; render(); const field = viewport.querySelector('[data-gnp-q]'); field?.focus(); field?.setSelectionRange(at, at); return; }
     if (event.target.matches('[data-gnr-rule]') && ui.gnowDraft?.ruleDialog) { const r = ui.gnowDraft.ruleDialog, key = event.target.dataset.gnrRule, value = event.target.value;
