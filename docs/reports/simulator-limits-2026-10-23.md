@@ -402,7 +402,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T31 — 4.3/4.4.4 Galéria videó Trim és Mute
 
 - **Ütem:** Második kör, #29. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `e2fa8237` (a `049e1f2d` félbehagyott megvalósítás lezárása). A 4.3/4.4.4 GalleryGoogle TrimVideo és MuteVideo gyári vezérlői működnek; javítva a fogantyúk pointer-kezelése, a megszakított húzás takarítása és a háttérmentés navigációja. A TRIM_/MUTE_ másolat megtartja az eredeti felvételbeli tartományt, a némítást és az eredetit; újranyitva és újratöltés után is helyes. Ellenőrzés: `npm test` 255/255; `node tests/browser/limits-regression.mjs T31` mindkét verzióban asztali és telefonszélességen zöld (valódi kamerafelvétel, két fogantyú húzása, Back/elvetés, húzás közbeni kilépés, érvénytelen tartomány, másolatok lejátszása, újratöltés, másik app közben befejeződő mentés; nincs kivétel vagy hibás kérés). `python docs/tools/asset-inventory.py --check 4.3 4.4.4`: 2059 fájl újraépítve, 0 probléma; a nyolc új asset a saját gyári APK-jából származik. `node docs/tools/text-check.mjs 4.3 4.4.4 --langs hu`: 91 + 92 alkalmazás, 0 hiányzó kulcs és 0 kivétel. A vágás/némítás a meglévő szimulált médiamodellen történik.
 - **Verziók:** 4.3, 4.4.4.
 - **Forráscsoportok:** 4.3-16, 4.4.4-15.
 - **Elkészítendő és határ:** A meglévő helyi videóhoz vágási tartományválasztó, előnézet, mentés másolatként és némított másolat a gyári Galéria szerint. A fizikai média újrakódolása csak a projekt meglévő médiamodelljének szintjén szükséges; nem elég egy sikertoast.
