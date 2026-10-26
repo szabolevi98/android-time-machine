@@ -532,7 +532,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T45 — 4.4.4/5.1.1 helyi nyomtatási folyamat és webshortcut
 
 - **Ütem:** Második kör, #23. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `7b9c1ab1`. 4.4.4: Galéria, Photos és Chrome Print a KTU84P PrintSpooler PrintJobConfigActivity paneljét nyitja (Save as PDF / All printers…, Copies, Color, Pages, Paper Size, Orientation; Generating print job + Cancel, előnézet a 4.4-ben nincs). 5.1.1: Photos, Gmail, Chrome, Docs, Sheets, Slides Print a PrintActivity-t nyitja összegzéssel, opciókkal és a forrás képét/szövegét mutató előnézettel. Save as PDF → DocumentsUI „Save to” → Downloads; a PDF a választón át (Play Books / Quickoffice, ill. Drive / Play Books) a Quickoffice / Drive nézőben nyílik a nyomtatott oldalakkal; Cancel nem ment. Chrome Add to homescreen (Title, Cancel/Add) parancsikont tesz a kezdőképernyőre, amely a lapot nyitja. Minden belépésnek külön tesztesete van (11).
 - **Verziók:** 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.4.4-03, 4.4.4-15, 4.4.4-17, 5.1.1-03, 5.1.1-21, 5.1.1-22, 5.1.1-30.
 - **Elkészítendő és határ:** 4.4.4 Galéria/Photos/Chrome Print; 5.1.1 Photos/Gmail/Chrome/Docs/Sheets/Slides Print: saját korabeli PrintSpooler előnézet, helyi Save as PDF, megszakítás. 4.4.4/5.1.1 Chrome Add to homescreen. A 6/7 print modul adatátadási referencia, nem átmásolandó UI. Fizikai nyomtató és print service telepítés nem része.
