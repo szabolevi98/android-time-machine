@@ -58,7 +58,21 @@ window.StockStrings = {
   "Search Maps": {"res": "Maps:SEARCH_HINT", "hu": "Keresés", "de": "Maps-Suche", "fr": "Rechercher", "es": "Buscar en Maps"}
  },
  "studio": {
-  "Create new project": {"res": "VideoEditorGoogle:projects_new_project", "hu": "Új projekt létrehozása", "de": "Neues Projekt", "fr": "Créer un projet", "es": "Crear proyecto nuevo", "en": "Create New Project"}
+  "Create new project": {"res": "VideoEditorGoogle:projects_new_project", "hu": "Új projekt létrehozása", "de": "Neues Projekt", "fr": "Créer un projet", "es": "Crear proyecto nuevo", "en": "Create New Project"},
+  "@new_project": {"res": "VideoEditorGoogle:projects_new_project", "hu": "Új projekt létrehozása", "de": "Neues Projekt", "fr": "Créer un projet", "es": "Crear proyecto nuevo", "en": "Create New Project"},
+  "Project name": {"res": "VideoEditorGoogle:projects_project_name", "hu": "Projekt neve", "de": "Projektname", "fr": "Nom de projet", "es": "Nombre del proyecto"},
+  "Untitled": {"res": "VideoEditorGoogle:untitled", "hu": "Névtelen", "de": "Unbenannt", "fr": "Sans nom", "es": "Sin título"},
+  "Add": {"res": "VideoEditorGoogle:editor_add", "hu": "Hozzáadás", "de": "Hinzufügen", "fr": "Ajouter", "es": "Añadir"},
+  "Record a video": {"res": "VideoEditorGoogle:editor_capture_video", "hu": "Videó rögzítése", "de": "Video aufzeichnen", "fr": "Enregistrer une vidéo", "es": "Grabar un vídeo"},
+  "Take a photo": {"res": "VideoEditorGoogle:editor_capture_image", "hu": "Fotó készítése", "de": "Foto aufnehmen", "fr": "Prendre une photo", "es": "Hacer una foto"},
+  "Import video clip": {"res": "VideoEditorGoogle:editor_import_video", "hu": "Videoklip importálása", "de": "Videoclip importieren", "fr": "Importer un clip vidéo", "es": "Importar vídeo"},
+  "Import image": {"res": "VideoEditorGoogle:editor_import_image", "hu": "Kép importálása", "de": "Bild importieren", "fr": "Importer une image", "es": "Importar imagen"},
+  "Import music": {"res": "VideoEditorGoogle:editor_import_audio", "hu": "Zene importálása", "de": "Musik importieren", "fr": "Importer un morceau", "es": "Importar música"},
+  "Change aspect ratio": {"res": "VideoEditorGoogle:editor_change_aspect_ratio", "hu": "Méretarány módosítása", "de": "Seitenverhältnis ändern", "fr": "Modifier les proportions", "es": "Cambiar relación de aspecto"},
+  "Change project name": {"res": "VideoEditorGoogle:editor_edit_project_name", "hu": "Projektnév módosítása", "de": "Projektnamen ändern", "fr": "Modifier le nom de projet", "es": "Cambiar nombre proyecto"},
+  "Export movie": {"res": "VideoEditorGoogle:editor_export_movie", "hu": "Film exportálása", "de": "Film exportieren", "fr": "Exporter le film", "es": "Exportar película"},
+  "Delete project": {"res": "VideoEditorGoogle:editor_delete_project", "hu": "Projekt törlése", "de": "Projekt löschen", "fr": "Supprimer le projet", "es": "Eliminar proyecto"},
+  "Do you want to delete this project?": {"res": "VideoEditorGoogle:editor_delete_project_question", "hu": "Törli ezt a projektet?", "de": "Möchten Sie dieses Projekt löschen?", "fr": "Voulez-vous supprimer ce projet ?", "es": "¿Quieres eliminar este proyecto?"}
  },
  "gplus": {
   "Messenger": {"res": "PlusOne:home_screen_huddle_label", "hu": "Messenger", "de": "Messenger", "fr": "Chat +", "es": "Messenger"},

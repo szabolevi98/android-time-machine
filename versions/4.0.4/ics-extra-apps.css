@@ -107,3 +107,23 @@
 .gpm-empty{margin:0;padding:calc(24 * var(--dp)) calc(16 * var(--dp));text-align:center;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#707070}
 .gpm-prefs{display:flex;flex-direction:column;background:#fff}
 .gpm-prefs .mps-cat{color:#808080;border-bottom-color:#00000026}
+
+/* Movie Studio shell (movie-studio.js): the editor bar, the preview over the storyboard, the Add menu, the picture
+   picker, the project thumbnails and the dialogs. */
+.ms43{overflow-y:auto}
+.ms-thumb>svg{position:absolute;inset:0;width:100%;height:100%}
+.screen .ms-up,.screen .ms-act{flex:none;height:100%;display:grid;place-items:center;padding:0 calc(8 * var(--dp));border:0;background:none}
+.ms-bar>b{flex:1;min-width:0;margin-left:calc(8 * var(--dp));overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:400 calc(18 * var(--dp)) Roboto,sans-serif;color:#fff}
+.ms-editor{position:relative;display:flex;flex-direction:column;background:#111}
+.ms-editor .ms-bar{position:relative}
+.ms-preview{flex:1;min-height:0;display:grid;place-items:center;margin:calc(8 * var(--dp));background:#000}
+.ms-preview svg{width:100%;height:auto;max-height:100%}
+.ms-timeline{flex:none;display:flex;align-items:center;gap:calc(4 * var(--dp));height:calc(96 * var(--dp));padding:0 calc(8 * var(--dp));overflow-x:auto;background:#222;border-top:1px solid #2d2d2d}
+.ms-clip{position:relative;flex:none;width:calc(128 * var(--dp));height:calc(72 * var(--dp));background:#000}
+.ms-clip svg,.ms-pick svg{display:block;width:100%;height:100%}
+.ms-play{position:absolute;left:50%;top:50%;width:0;height:0;margin:calc(-10 * var(--dp)) 0 0 calc(-7 * var(--dp));border:calc(10 * var(--dp)) solid transparent;border-left:calc(16 * var(--dp)) solid #fffd}
+.screen .ms-x{position:absolute;right:0;top:0;width:calc(24 * var(--dp));height:calc(24 * var(--dp));padding:0;border:0;background:#0009;color:#fff;font-size:calc(16 * var(--dp))}
+.screen .ms-addclip{flex:none;width:calc(72 * var(--dp));height:calc(72 * var(--dp));border:calc(2 * var(--dp)) dashed #555;background:none;color:#888;font-size:calc(32 * var(--dp))}
+.ms-addmenu{position:absolute;right:calc(8 * var(--dp));top:calc(48 * var(--dp));z-index:31}
+.ms-pick{position:absolute;left:calc(16 * var(--dp));right:calc(16 * var(--dp));top:50%;z-index:31;display:grid;grid-template-columns:1fr 1fr;gap:calc(4 * var(--dp));padding:calc(8 * var(--dp));transform:translateY(-50%);background:#282828}
+.screen .ms-pick button{position:relative;height:calc(90 * var(--dp));padding:0;border:0;background:#000}

@@ -3517,7 +3517,42 @@ const newsLocal = o => async h => {
   await h.shot(`t36-${o.app}-${o.version || ''}`);
 };
 
+// Movie Studio (T27, minimal shell): Create New Project asks for a name and opens the editor; Import image and Import
+// video clip put pictures on the storyboard; the project is kept and reopens from the grid; Change project name
+// renames it; Delete project asks and removes it.
+const movieShell = o => async h => {
+  const projects = async () => (await store(h, 'movieProjects')) || [];
+  const menu = async action => { await h.tap(`#viewport [data-action="${o.overflow}"]`); await h.until(`!!document.querySelector('.holo-menu')`); await h.tap(`.holo-menu [data-action="${action}"]`); };
+  await h.openApp('movie-studio');
+  await h.until(`!!document.querySelector('#viewport [data-action="mst-new"]')`);
+  await h.tap('#viewport [data-action="mst-new"]');
+  await h.type('#viewport [data-mst-name]', 'Summer trip');
+  await h.tap('#viewport [data-action="mst-name-ok"]');
+  h.check('Create New Project opens the editor', await h.until(`/Summer trip/.test(document.querySelector('#viewport .ms-editor .ms-bar')?.textContent || '')`));
+  await h.tap('#viewport .ms-act[data-action="mst-add-menu"]');
+  await h.tap('#viewport [data-action="mst-import"][data-id="image"]');
+  await h.tap('#viewport [data-action="mst-add"][data-id="2"]');
+  await h.tap('#viewport .ms-addclip');
+  await h.tap('#viewport [data-action="mst-import"][data-id="video"]');
+  await h.tap('#viewport [data-action="mst-add"][data-id="0"]');
+  h.check('the storyboard shows an image and a video clip', await h.until(`document.querySelectorAll('#viewport .ms-clip').length === 2 && document.querySelectorAll('#viewport .ms-clip .ms-play').length === 1`));
+  h.check('the project is kept', (await projects()).length === 1 && (await projects())[0].items.length === 2);
+  await h.shot(`t27-editor-${o.version}`);
+  await h.key('Escape');
+  h.check('the grid lists the project', await h.until(`[...document.querySelectorAll('#viewport [data-action="mst-open"]')].some(b => /Summer trip/.test(b.textContent))`));
+  await h.tap('#viewport [data-action="mst-open"]');
+  await menu('mst-rename');
+  await h.type('#viewport [data-mst-name]', 'Beach day');
+  await h.tap('#viewport [data-action="mst-name-ok"]');
+  h.check('Change project name renames it', await h.until(`/Beach day/.test(document.querySelector('#viewport .ms-editor .ms-bar')?.textContent || '')`) && (await projects())[0].name === 'Beach day');
+  await menu('mst-delete');
+  await h.tap('#viewport [data-action="mst-delete-ok"]');
+  h.check('Delete project removes it', await h.until(`!document.querySelector('#viewport [data-action="mst-open"]')`) && (await projects()).length === 0);
+};
+
 const CASES = [
+  {id: 'T27', version: '4.0.4', name: 'Movie Studio › new project, import, rename, delete', run: movieShell({overflow: 'jbx-menu', version: '4.0.4'})},
+  {id: 'T27', version: '4.3', name: 'Movie Studio › new project, import, rename, delete', run: movieShell({overflow: 'sa-menu', version: '4.3'})},
   {id: 'T36', version: '4.3', name: 'Currents › reader, Save For Later, Saved, Search, Settings', run: newsLocal({app: 'currents', first: 'c1', panel: true, overflow: 'sa-menu', searchMenu: true, query: 'hikes', found: 'Five day hikes', check: 'showReadPosts'})},
   {id: 'T36', version: '4.3', name: 'Magazines › issue, reader, Save, Search, Settings, On device only', run: newsLocal({app: 'play-magazines', issue: true, overflow: 'sa-menu', query: 'kitchen', found: 'Tomatoes|One pan', check: 'wifiOnly', onDevice: true})},
   {id: 'T36', version: '4.4.4', name: 'Newsstand › reader, Bookmark, Saved, My News, Search, text size, On device only', run: newsLocal({app: 'newsstand', first: 'n1', drawer: 'kkx-drawer', emptySection: 'My News', overflow: 'kkx-menu', query: 'soup', found: 'autumn soups', textSize: true, onDevice: true, version: 'kk'})},

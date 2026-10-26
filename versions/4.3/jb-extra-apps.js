@@ -44,7 +44,7 @@
   const action = (icon, label) => `<button class="kkx-btn" data-action="kkx-unavailable" aria-label="${e(label)}">${svg[icon]}</button>`;
   const row = (icon, label, sub = '', color = '#33b5e5') => `<button class="kkx-file" data-action="kkx-unavailable"><span class="kkx-file-icon" style="color:${color}">${svg[icon]}</span><span class="kkx-file-copy"><strong>${e(label)}</strong>${sub ? `<small>${e(sub)}</small>` : ''}</span></button>`;
   const tiles = (items, cls = '') => `<div class="jbx-grid ${cls}">${items.map(([title, color, sub = '']) => `<button class="jbx-tile" data-action="kkx-unavailable" style="--tile:${color}"><span class="jbx-tile-art">${e(title.charAt(0))}</span><strong>${e(title)}</strong>${sub ? `<small>${e(sub)}</small>` : ''}</button>`).join('')}</div>`;
-  function render(app, {ui, t, chats = [], contacts = [], messenger, news}) {
+  function render(app, {studio, ui, t, chats = [], contacts = [], messenger, news}) {
     if (app === 'messenger') {
       // Google+ 4.0's HostedMessengerFragment: onPrepareActionBar shows the title and the New conversation button; a
       // conversation, New conversation and the settings (plus-messenger.js) keep the bar with Up.
@@ -93,8 +93,9 @@
       return `<div class="app-view kkx-app wal16"><header class="sa-bar"><button class="sa-up" data-action="home" aria-label="Wallet"><img src="assets/wallet.png" alt=""></button><span class="sa-title"><b>Wallet</b></span></header><div class="wal-dash"><i class="wal-space"></i><div class="wal-row">${[['Payment cards', 'payment'], ['Rewards cards', 'loyalty']].map(button).join('')}</div><i class="wal-space"></i><div class="wal-row">${[['Offers', 'offers'], ['Transactions', 'transactions']].map(button).join('')}</div><i class="wal-space wide"></i></div></div>`;
     }
     if (app === 'movie-studio') {
-      const title = S('studio', 'Create new project', t);
-      return `<div class="app-view kkx-app ms43"><header class="ms-bar"><img src="assets/movie-studio.png" alt=""></header><div class="ms-grid"><button class="ms-item" data-action="kkx-unavailable" aria-label="${e(title)}"><span class="ms-thumb"><img src="assets/ms-add_video_project_big.png" alt=""><b>${e(title)}</b></span></button></div></div>`;
+      // AOSP VideoEditor: the projects grid and the editor (movie-studio.js) under the ms-bar.
+      const bar = ({title, actions = ''}) => `<header class="ms-bar">${title ? `<button class="ms-up" data-action="back" aria-label="${e(t('Back'))}"><img src="assets/movie-studio.png" alt=""></button><b>${e(title)}</b>${actions}<button class="ms-act" data-action="sa-menu" aria-label="${e(t('More options'))}"><img src="assets/ic_menu_moreoverflow_normal_holo_dark.png" alt=""></button>` : '<img src="assets/movie-studio.png" alt="">'}</header>`;
+      return window.MovieStudio.render({...studio, bar});
     }
     return '';
   }

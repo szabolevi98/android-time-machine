@@ -36,7 +36,7 @@
     const r = ui.locResults, words = r.category ? CATEGORY_WORDS[r.category] : [r.query.toLocaleLowerCase()], hits = placeHits(data, words);
     return `<div class="app-view kkx-app loc64"><header class="loc-bar"><span class="loc-switch"><img src="assets/loc-ic_feature_local.png" alt=""><img src="assets/nav-switcher_dropdown_triangle.png" alt=""></span><i></i><b>${e(r.category ? local(r.category, t) : r.query)}</b></header><div class="loc-where"><img src="assets/loc-gray_location.png" alt=""><span>Mountain View</span><img src="assets/loc-locationbar_triangle.png" alt=""></div><div class="loc-results">${hits.map(p => `<button class="loc-hit" data-action="xa-loc-open" data-id="${e(p)}"><b>${e(p)}</b></button>`).join('')}</div></div>`;
   }
-  function render(app, {ui, t, chats = [], contacts = [], data = {}, messenger}) {
+  function render(app, {studio, ui, t, chats = [], contacts = [], data = {}, messenger}) {
     if (app === 'messenger') {
       // Google+ 2.4's EsActionBar (home as up) over ConversationListActivity's conversation_list_item_view rows, or a
       // conversation, New conversation or the settings (plus-messenger.js) under the same bar.
@@ -63,9 +63,9 @@
       return `<div class="app-view kkx-app loc64"><header class="loc-bar"><span class="loc-switch"><img src="assets/loc-ic_feature_local.png" alt=""><img src="assets/nav-switcher_dropdown_triangle.png" alt=""></span><i></i>${ui.locSearching ? `<form class="loc-sv" data-form="xa-loc-search"><input name="query" placeholder="${e(S('navigation', 'Search Maps', t))}" autocomplete="off" spellcheck="false"></form>` : `<b>${e(S('navigation', 'Places', t))}</b><i></i>`}<button data-action="xa-loc-search" aria-label="${e(t('Search'))}"><img src="assets/loc-actionbar_search.png" alt=""></button></header><div class="loc-where"><img src="assets/loc-gray_location.png" alt=""><span>Mountain View</span><img src="assets/loc-locationbar_triangle.png" alt=""></div><div class="loc-cats">${cats.map(([key, icon]) => `<button data-action="xa-loc-cat" data-id="${key}"><img src="assets/loc-places_cat_icon_${icon}.png" alt=""><span>${e(local(key, t))}</span></button>`).join('')}</div></div>`;
     }
     if (app === 'movie-studio') {
-      // AOSP VideoEditor (android-4.0.4_r2.1): ProjectsActivity's project picker with the new-project bitmap.
-      const title = S('studio', 'Create new project', t);
-      return `<div class="app-view kkx-app ms43"><header class="ms-bar"><img src="assets/movie-studio.png" alt=""></header><div class="ms-grid"><button class="ms-item" data-action="kkx-unavailable" aria-label="${e(title)}"><span class="ms-thumb"><img src="assets/ms-add_video_project_big.png" alt=""><b>${e(title)}</b></span></button></div></div>`;
+      // AOSP VideoEditor: the projects grid and the editor (movie-studio.js) under the ms-bar.
+      const bar = ({title, actions = ''}) => `<header class="ms-bar">${title ? `<button class="ms-up" data-action="back" aria-label="${e(t('Back'))}"><img src="assets/movie-studio.png" alt=""></button><b>${e(title)}</b>${actions}<button class="ms-act" data-action="jbx-menu" aria-label="${e(t('More options'))}"><img src="assets/ic_menu_moreoverflow_normal_holo_dark.png" alt=""></button>` : '<img src="assets/movie-studio.png" alt="">'}</header>`;
+      return window.MovieStudio.render({...studio, bar});
     }
     return '';
   }

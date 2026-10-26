@@ -1,9 +1,10 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Nexus 4 (JWR66Y) extra launcher apps, each from its APK (audit step 4).
-const w={window:{AndroidI18n:{language:'en'}}};vm.runInNewContext(fs.readFileSync('versions/4.3/stock-strings.js','utf8')+fs.readFileSync('versions/4.3/jb-extra-apps.js','utf8')+fs.readFileSync('plus-messenger.js','utf8'),w);
+const w={window:{AndroidI18n:{language:'en'}}};vm.runInNewContext(fs.readFileSync('versions/4.3/stock-strings.js','utf8')+fs.readFileSync('versions/4.3/jb-extra-apps.js','utf8')+fs.readFileSync('plus-messenger.js','utf8')+fs.readFileSync('movie-studio.js','utf8'),w);
 const X=w.window.JBExtraApps,t=k=>k,contacts=[{name:'Alex Morgan'},{name:'Sam Rivera'},{name:'Taylor Lee'}];
-const r=(app,ui={})=>X.render(app,{ui,t,contacts});
+const studio={ui:{},data:{},t,S:k=>w.window.JBExtraApps.text('studio',k),thumb:()=>'',addIcon:''};
+const r=(app,ui={})=>X.render(app,{ui,t,contacts,studio:app==='movie-studio'?{...studio,ui}:null});
 const nav=r('navigation');
 assert.ok(nav.includes('SHORTCUTS')&&nav.includes('STARRED')&&(nav.match(/class="nav-tile"/g)||[]).length===4&&nav.includes('nav-da_picker_speak_destination.png'));
 const local=r('local');

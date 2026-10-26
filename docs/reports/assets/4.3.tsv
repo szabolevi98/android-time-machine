@@ -808,6 +808,7 @@ versions/4.3/assets/mp6r-turn_square_green_bg_normal.png	72fd19cbf3bb324e	copy	m
 versions/4.3/assets/mp6r-vertical_separator.png	a236820929051245	copy	mako:/system/app/Maps.apk!res/drawable-nodpi/vertical_separator.png	drawable-nodpi		a236820929051245
 versions/4.3/assets/ms-activity_background.png	fb5e06cc8e7fddff	copy	mako:/system/app/VideoEditorGoogle.apk!res/drawable-xhdpi/activity_background.png	drawable-xhdpi		fb5e06cc8e7fddff
 versions/4.3/assets/ms-add_video_project_big.png	7558c3a64548645b	copy	mako:/system/app/VideoEditorGoogle.apk!res/drawable-xhdpi/add_video_project_big.png	drawable-xhdpi		7558c3a64548645b
+versions/4.3/assets/ms-ic_menu_add_clip_normal.png	a2265db8791c30f5	copy	mako:/system/app/VideoEditorGoogle.apk!res/drawable-xhdpi/ic_menu_add_clip_normal.png	drawable-xhdpi		a2265db8791c30f5
 versions/4.3/assets/msg-bg_tacos_body.png	254e60d5fcbeb081	copy	mako:/system/app/PlusOne.apk!res/drawable/bg_tacos_body.9.png	drawable		254e60d5fcbeb081
 versions/4.3/assets/msg-ic_avatar.png	955a67cd1fac09be	copy	mako:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_avatar.png	drawable-xhdpi		955a67cd1fac09be
 versions/4.3/assets/msg-ic_menu_start_new_huddle.png	66d4d1e52bfb75da	copy	mako:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_menu_start_new_huddle.png	drawable-xhdpi		66d4d1e52bfb75da

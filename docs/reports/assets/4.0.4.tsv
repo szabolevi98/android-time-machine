@@ -562,6 +562,7 @@ versions/4.0.4/assets/mp6r-turn_square_green_bg_normal.png	72fd19cbf3bb324e	copy
 versions/4.0.4/assets/mp6r-vertical_separator.png	a236820929051245	copy	maguro:/system/app/Maps.apk!res/drawable-nodpi/vertical_separator.png	drawable-nodpi		a236820929051245
 versions/4.0.4/assets/ms-activity_background.png	fb5e06cc8e7fddff	copy	maguro:/system/app/VideoEditorGoogle.apk!res/drawable-xhdpi/activity_background.png	drawable-xhdpi		fb5e06cc8e7fddff
 versions/4.0.4/assets/ms-add_video_project_big.png	7558c3a64548645b	copy	maguro:/system/app/VideoEditorGoogle.apk!res/drawable-xhdpi/add_video_project_big.png	drawable-xhdpi		7558c3a64548645b
+versions/4.0.4/assets/ms-ic_menu_add_clip_normal.png	a2265db8791c30f5	copy	maguro:/system/app/VideoEditorGoogle.apk!res/drawable-xhdpi/ic_menu_add_clip_normal.png	drawable-xhdpi		a2265db8791c30f5
 versions/4.0.4/assets/msg-default_avatar.png	b2b949836bf8221e	copy	maguro:/system/app/PlusOne.apk!res/drawable-xhdpi/default_avatar.png	drawable-xhdpi		b2b949836bf8221e
 versions/4.0.4/assets/msg-ic_menu_start_new_huddle_action_bar.png	7157a6e4a9d6c951	copy	maguro:/system/app/PlusOne.apk!res/drawable-xhdpi/ic_menu_start_new_huddle_action_bar.png	drawable-xhdpi		7157a6e4a9d6c951
 versions/4.0.4/assets/music-albumart_mp_unknown.png	6dff74bea505b877	resized	maguro:/system/app/Music2.apk!res/drawable-hdpi/albumart_mp_unknown_list.png	drawable-hdpi	resized 98×96 → 303×303, mean difference 1.00	fa959e978e790c4e
