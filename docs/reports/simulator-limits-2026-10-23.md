@@ -223,7 +223,7 @@ APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<sl
 
 #### T51 — Keep a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `2d143ce8`. Keep telepítettként: 6.0.1 Keep 3.3.315.0 (`mm-keep.js`), 7.1.2 Keep 3.4.724.02 (`ng-keep.js`), egy sablonból (`docs/templates/keep-play.*`, `docs/tools/keep-play.py`) a saját APK szövegeivel és ikonjaival: demó jegyzetek, Take a note… és New list, jelölőnégyzetek, nyolc szín, Pin, Archive és az Archive nézet, Kuka Restore / Delete forever / Empty Trash, Make a copy, Send, Search, oszlopnézet, Settings (List behavior, Reminder settings, Sharing). Rajz, hang, fotó, emlékeztető, címkék: elutasítás. Ellenőrzés: `tests/browser/play-keep.mjs` mindkét verzión, npm test 260/260.
 
 #### T52 — Docs, Sheets, Slides a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
