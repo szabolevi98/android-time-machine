@@ -393,7 +393,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T30 — Settings dev-info valódi helyi céljai
 
 - **Ütem:** Második kör, #20. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `b515b5b5`, `408f95c2` (Music effects 4.0.4/4.3/4.4.4: MusicFX ActivityMusic, presetek, sávok, Bass boost/3D fejhallgatóval), `691143a9` (Install certificates 4.3/4.4.4/5.1.1: CertInstaller lista, hibás fájl, név- és képernyőzár-ellenőrzés, demó hitelesítő-tár), `cbffb4f7` (Developer options sorai a képek szerint: Development device ID, bug report, adb kulcsok, debug app, Desktop backup password; 4.4.4/5.1.1 Process Stats; 4.3+ Backup & reset), `53350213` (4.3/4.4.4/5.1.1 Language & input a képek XML-jeiből: Google Keyboard beállítások, beviteli mód választó, TTS, szótár, Voice Search / Voice input, Pointer speed). Egy beállítássor sem ad már „Not available in the simulator” üzenetet.
 - **Verziók:** 4.0.4, 4.3, 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.0.4-18, 5.1.1-18, N04, N05.
 - **Elkészítendő és határ:** 4.0.4 Music effects választó; 4.3/4.4.4 Music effects és Wi-Fi Install certificates; 5.1.1 Wi-Fi Install certificates. A 4.0.4 közös kódjában definiált certs sor az ICS visszatérési ágban nincs kirajzolva, oda nem kerül új Wi-Fi sor. 5.1.1-ben a régi Music effects renderút helyett az LP Sound & notification aktív, oda sem találunk ki új sort. A tanúsítványfolyamat a demó fájltárat és hitelesítő-tárat kezeli, nem a host rendszerét. A readonly/információs dev-info céloknak statikus részlet/noop kell, új hardverfunkció nem.
