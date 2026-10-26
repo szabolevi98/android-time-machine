@@ -1185,5 +1185,24 @@ window.StockStrings = {
   "Please plug headphones for these effects": {"res": "MusicFX:headset_plug", "hu": "Dugja be a fejhallgatót ezekhez az effektekhez.", "de": "Für diese Effekte benötigen Sie Kopfhörer.", "fr": "Veuillez brancher un casque pour ces effets.", "es": "Para disfrutar de los efectos, debes conectar los auriculares.", "en": "Plug in headphones for these effects."},
   "FX Booster": {"res": "MusicFX:ci_extreme", "hu": "FX booster", "de": "FX-Verstärker", "fr": "FX booster", "es": "FX booster", "en": "FX booster"},
   "User": {"res": "MusicFX:user", "hu": "Felhasználó", "de": "Nutzer", "fr": "Utilisateur", "es": "Usuario"}
+ },
+ "certinstall": {
+  "Choose a certificate": {"res": "CertInstaller:pick_file_title", "hu": "Válasszon egy tanúsítványt", "de": "Zertifikat auswählen", "fr": "Sélectionnez un certificat", "es": "Seleccionar un certificado"},
+  "Name the certificate": {"res": "CertInstaller:name_credential_dialog_title", "hu": "A tanúsítvány neve", "de": "Zertifikat benennen", "fr": "Attribuer un nom au certificat", "es": "Nombre del certificado"},
+  "Certificate name:": {"res": "CertInstaller:credential_name", "hu": "Tanúsítvány neve:", "de": "Zertifikatname:", "fr": "Nom du certificat :", "es": "Nombre del certificado:"},
+  "Credential use:": {"res": "CertInstaller:credential_usage_label", "hu": "Hitelesítési adatok használata:", "de": "Verwendung der Anmeldedaten:", "fr": "Utilisation du certificat :", "es": "Uso de credenciales:"},
+  "usage.0": {"res": "CertInstaller:@array/credential_usage:0", "hu": "VPN és alkalmazások", "de": "VPN und Apps", "fr": "VPN et applications", "es": "VPN y aplicaciones", "en": "VPN and apps"},
+  "usage.1": {"res": "CertInstaller:@array/credential_usage:1", "hu": "Wi-Fi", "de": "WLAN", "fr": "Wi-Fi", "es": "Wi-Fi", "en": "Wi-Fi"},
+  "The package contains:": {"res": "CertInstaller:credential_info", "hu": "A csomag tartalma:", "de": "Das Paket enthält Folgendes:", "fr": "Le package contient :", "es": "El paquete contiene:"},
+  "one CA certificate": {"res": "CertInstaller:one_cacrt", "hu": "egy CA tanúsítvány", "de": "ein CA-Zertifikat", "fr": "un certificat de l'autorité de certification", "es": "un certificado CA"},
+  "Type a name.": {"res": "CertInstaller:name_empty_error", "hu": "Írjon be egy nevet.", "de": "Geben Sie einen Namen ein.", "fr": "Veuillez saisir un nom.", "es": "Escribe un nombre."},
+  "Type a name that contains only letters and numbers.": {"res": "CertInstaller:name_char_error", "hu": "Csak betűket és számokat tartalmazó nevet adjon meg.", "de": "Geben Sie einen Namen ein, der ausschließlich aus Buchstaben und Zahlen besteht.", "fr": "Veuillez saisir un nom ne contenant que des lettres et des chiffres.", "es": "Escribe un nombre que contenga solo letras y números."},
+  "The certificate is invalid.": {"res": "CertInstaller:invalid_cert", "hu": "Ez a tanúsítvány érvénytelen.", "de": "Das Zertifikat ist ungültig.", "fr": "Le certificat est incorrect.", "es": "El certificado no es válido."},
+  "%s is installed.": {"res": "CertInstaller:cert_is_added", "hu": "A(z) %s tanúsítvány telepítve van.", "de": "%s ist installiert.", "fr": "%s est installé.", "es": "%s se ha instalado."},
+  "No certificate file found in USB storage.": {"res": "CertInstaller:no_cert_file_found", "hu": "Nem található tanúsítványfájl az USB-táron.", "de": "Keine Zertifikatdatei auf USB-Speicher gefunden.", "fr": "Fichier de certificat introuvable dans la mémoire de stockage USB", "es": "No se ha encontrado ningún archivo de certificado en el almacenamiento USB."},
+  "You need to set a lock screen PIN or password before you can use credential storage.": {"res": "Settings:credentials_configure_lock_screen_hint", "hu": "Be kell állítania a zárolási képernyő PIN kódját vagy jelszavát, mielőtt használhatná az azonosítótárolót.", "de": "Zur Verwendung des Anmeldeinformationsspeichers müssen Sie eine PIN oder ein Passwort für die Display-Sperre festlegen.", "fr": "Avant d'utiliser le stockage d'identifiants, vous devez définir un code PIN ou un mot de passe pour le verrouillage d'écran.", "es": "Para poder usar el almacenamiento de credenciales, debes establecer una contraseña o un PIN para la pantalla de bloqueo."},
+  "Attention": {"res": "framework:dialog_alert_title", "hu": "Figyelem", "de": "Achtung", "fr": "Attention", "es": "Atención"},
+  "OK": {"res": "framework:ok", "hu": "OK", "de": "OK", "fr": "OK", "es": "Aceptar"},
+  "Cancel": {"res": "framework:cancel", "hu": "Mégse", "de": "Abbrechen", "fr": "Annuler", "es": "Cancelar"}
  }
 };

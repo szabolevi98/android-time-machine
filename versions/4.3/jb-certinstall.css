@@ -1,0 +1,9 @@
+/* jb-certinstall.js: CertInstaller's dialogs on the JWR66Y image — the certificate list, name_credential_dialog.xml's
+   red error line, the name field, the Credential use spinner and the package line. */
+.cert-files{max-height:calc(300 * var(--dp));overflow-y:auto}
+.cert-form{display:flex;flex-direction:column;gap:calc(10 * var(--dp))}
+.cert-form label{display:flex;flex-direction:column;gap:calc(4 * var(--dp));font-size:calc(16 * var(--dp))}
+.screen .cert-form input,.screen .cert-form select{height:calc(40 * var(--dp));padding:0 calc(4 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #33b5e5;background:none;color:inherit;font-size:calc(16 * var(--dp));outline:0}
+.cert-form select option{color:#000}
+.cert-error{margin:0;color:#f00;font-weight:700;font-size:calc(14 * var(--dp))}
+.cert-info{margin:0;font-size:calc(14 * var(--dp));opacity:.8}

@@ -2781,6 +2781,36 @@ const musicFx = async h => {
   await h.key('Escape');
   h.check('Back returns to Sound', await h.until(`!!document.querySelector('#viewport .settings-row[data-id="musicfx"]')`));
 };
+// 4.3 / 4.4.4 / 5.1.1 Install certificates (T30): Advanced Wi-Fi's Install certificates lists the demo USB storage's
+// certificates; the damaged one is refused, the good one is named (empty and bad names refused), credential storage
+// asks for a screen lock first, and with a PIN lock the certificate is installed for Wi-Fi.
+const certInstall = async h => {
+  const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
+  const open = async () => { await h.openApp('settings'); await act('settings-sub', 'wifi-advanced'); await h.until(`!!document.querySelector('#viewport [data-action="cert-install"]')`); await h.tap('#viewport [data-action="cert-install"]'); };
+  await open();
+  h.check('Install certificates lists the storage', await h.until(`document.querySelectorAll('[data-action="cert-pick"]').length === 2`));
+  await h.tap('[data-action="cert-pick"][data-id="router-backup.cer"]');
+  h.check('the damaged file is refused', await h.until(`/The certificate is invalid/.test(document.querySelector('.toast')?.textContent || '')`) && !(await h.ev(`!!document.querySelector('.cert-dialog')`)));
+  await h.tap('#viewport [data-action="cert-install"]');
+  await h.tap('[data-action="cert-pick"][data-id="OfficeWiFi.crt"]');
+  h.check('the good one asks for a name', await h.until(`document.querySelector('[data-cert-name]')?.value === 'OfficeWiFi' && document.querySelector('[data-cert-usage]')?.value === '1'`));
+  await h.type('[data-cert-name]', 'Office WiFi'); await h.tap('[data-action="cert-ok"]');
+  h.check('a name with a space is refused', await h.until(`/only letters and numbers/.test(document.querySelector('.cert-error')?.textContent || '')`));
+  await h.type('[data-cert-name]', 'OfficeWiFi'); await h.tap('[data-action="cert-ok"]');
+  h.check('credential storage asks for a screen lock', await h.until(`/lock screen PIN or password/.test(document.querySelector('.cert-dialog')?.textContent || '')`));
+  await h.tap('[data-action="cert-lock"]');
+  h.check('OK goes to Security', await h.until(`!document.querySelector('.cert-dialog') && !document.querySelector('#viewport [data-action="cert-install"]')`));
+  // Screen lock › PIN through Settings' own chooser (lockscreen.js), typed twice.
+  // (5.1.1's Security page opens the chooser itself: data-lock-action="open".)
+  await h.tap(await h.ev(`!!document.querySelector('#viewport .settings-row[data-lock-action="open"]')`) ? '#viewport .settings-row[data-lock-action="open"]' : '#viewport .settings-row[data-id="screen-lock"]');
+  await h.tap('#viewport [data-lock-action="choose"][data-lock-kind="pin"]');
+  for (const round of [1, 2]) { for (const d of '1234') await h.tap(`#viewport [data-lock-key="${d}"]`); await h.tap('#viewport [data-lock-action="next"]'); await h.sleep(400); }
+  h.check('the PIN lock is set', await h.until(`!document.querySelector('#viewport .credential-setup')`, 6000));
+  await open(); await h.tap('[data-action="cert-pick"][data-id="OfficeWiFi.crt"]');
+  await h.until(`!!document.querySelector('[data-cert-name]')`); await h.tap('[data-action="cert-ok"]');
+  const creds = (await store(h, 'userCredentials')) || [];
+  h.check('with a PIN lock the certificate is installed for Wi-Fi', creds.some(c => c.name === 'OfficeWiFi' && c.usage === 'wifi') && await h.until(`/OfficeWiFi is installed/.test(document.querySelector('.toast')?.textContent || '')`), JSON.stringify(creds));
+};
 const CASES = [
   {id: 'T01', version: '5.1.1', name: 'Photos › Edit opens Google+\'s editor, saves and discards', async run(h) {
     const openViewer = async () => {
@@ -2874,6 +2904,9 @@ const CASES = [
   {id: 'T30', version: '4.0.4', name: 'Settings › Sound › Music effects (MusicFX)', run: musicFx},
   {id: 'T30', version: '4.3', name: 'Settings › Sound › Music effects (MusicFX)', run: musicFx},
   {id: 'T30', version: '4.4.4', name: 'Settings › Sound › Music effects (MusicFX)', run: musicFx},
+  {id: 'T30', version: '4.3', name: 'Advanced Wi-Fi › Install certificates (CertInstaller)', run: certInstall},
+  {id: 'T30', version: '4.4.4', name: 'Advanced Wi-Fi › Install certificates (CertInstaller)', run: certInstall},
+  {id: 'T30', version: '5.1.1', name: 'Advanced Wi-Fi › Install certificates (CertInstaller)', run: certInstall},
   {id: 'T10', version: '2.3.6', name: 'Contacts › Take photo through the Camera capture request', run: gbContactPhoto},
   {id: 'T13', version: '2.3.6', name: 'Messaging › Audio, Record audio, Capture picture / video, Slideshow', run: gbMmsAttach},
   {id: 'T13', version: '4.3', name: 'Messaging › Audio Play, Capture picture / video, Slideshow', run: jbMmsAttach},

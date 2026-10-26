@@ -1185,6 +1185,25 @@
    "Please plug headphones for these effects": "MusicFX:headset_plug",
    "FX Booster": "MusicFX:ci_extreme",
    "User": "MusicFX:user"
+  },
+  "certinstall": {
+   "Choose a certificate": "CertInstaller:pick_file_title",
+   "Name the certificate": "CertInstaller:name_credential_dialog_title",
+   "Certificate name:": "CertInstaller:credential_name",
+   "Credential use:": "CertInstaller:credential_usage_label",
+   "usage.0": "CertInstaller:@array/credential_usage:0",
+   "usage.1": "CertInstaller:@array/credential_usage:1",
+   "The package contains:": "CertInstaller:credential_info",
+   "one CA certificate": "CertInstaller:one_cacrt",
+   "Type a name.": "CertInstaller:name_empty_error",
+   "Type a name that contains only letters and numbers.": "CertInstaller:name_char_error",
+   "The certificate is invalid.": "CertInstaller:invalid_cert",
+   "%s is installed.": "CertInstaller:cert_is_added",
+   "No certificate file found in USB storage.": "CertInstaller:no_cert_file_found",
+   "You need to set a lock screen PIN or password before you can use credential storage.": "Settings:credentials_configure_lock_screen_hint",
+   "Attention": "framework:dialog_alert_title",
+   "OK": "framework:ok",
+   "Cancel": "framework:cancel"
   }
  },
  "4.4.4": {
@@ -2639,6 +2658,25 @@
    "Please plug headphones for these effects": "MusicFX:headset_plug",
    "FX Booster": "MusicFX:ci_extreme",
    "User": "MusicFX:user"
+  },
+  "certinstall": {
+   "Choose a certificate": "CertInstaller:pick_file_title",
+   "Name the certificate": "CertInstaller:name_credential_dialog_title",
+   "Certificate name:": "CertInstaller:credential_name",
+   "Credential use:": "CertInstaller:credential_usage_label",
+   "usage.0": "CertInstaller:@array/credential_usage:0",
+   "usage.1": "CertInstaller:@array/credential_usage:1",
+   "The package contains:": "CertInstaller:credential_info",
+   "one CA certificate": "CertInstaller:one_cacrt",
+   "Type a name.": "CertInstaller:name_empty_error",
+   "Type a name that contains only letters and numbers.": "CertInstaller:name_char_error",
+   "The certificate is invalid.": "CertInstaller:invalid_cert",
+   "%s is installed.": "CertInstaller:cert_is_added",
+   "No certificate file found in USB storage.": "CertInstaller:no_cert_file_found",
+   "You need to set a lock screen PIN or password before you can use credential storage.": "Settings:credentials_configure_lock_screen_hint",
+   "Attention": "framework:dialog_alert_title",
+   "OK": "framework:ok",
+   "Cancel": "framework:cancel"
   }
  },
  "5.1.1": {
@@ -4365,6 +4403,25 @@
    "mo.Archived": "PrebuiltBugle:archived_activity_title",
    "mo.Archived empty": "PrebuiltBugle:archived_conversation_list_empty_text",
    "mo.Cancel": "framework:cancel"
+  },
+  "certinstall": {
+   "Choose a certificate": "CertInstaller:pick_file_title",
+   "Name the certificate": "CertInstaller:name_credential_dialog_title",
+   "Certificate name:": "CertInstaller:credential_name",
+   "Credential use:": "CertInstaller:credential_usage_label",
+   "usage.0": "CertInstaller:@array/credential_usage:0",
+   "usage.1": "CertInstaller:@array/credential_usage:1",
+   "The package contains:": "CertInstaller:credential_info",
+   "one CA certificate": "CertInstaller:one_cacrt",
+   "Type a name.": "CertInstaller:name_empty_error",
+   "Type a name that contains only letters and numbers.": "CertInstaller:name_char_error",
+   "The certificate is invalid.": "CertInstaller:invalid_cert",
+   "%s is installed.": "CertInstaller:cert_is_added",
+   "No certificate file found in USB storage.": "CertInstaller:no_cert_file_found",
+   "You need to set a lock screen PIN or password before you can use credential storage.": "Settings:credentials_configure_lock_screen_hint",
+   "Attention": "framework:dialog_alert_title",
+   "OK": "framework:ok",
+   "Cancel": "framework:cancel"
   }
  },
  "4.0.4": {

@@ -856,6 +856,10 @@
   }
   // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
   const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
+  // Advanced Wi-Fi's Install certificates (*-certinstall.js) and its dialogs.
+  const certContext = () => ({ui, data, language: i18n.language, root: overlayRoot, save, toast: message => toast(message),
+    open: () => { ui.overlay = 'cert-install'; renderOverlay(); overlayRoot.querySelector('[data-cert-name]')?.focus(); }, close: () => { ui.overlay = ''; renderOverlay(); },
+    lockSettings: () => { ui.sub = 'security'; render(); }});
   function navigateBack() {
     // Back in a capture request cancels it (RESULT_CANCELED).
     if (ui.view === 'camera' && ui.camIntent && !ui.overlay) { ui.camIntent.cancel(); return; }
@@ -1082,6 +1086,8 @@
     } else if (ui.overlay.startsWith('lps-')) {
       overlayRoot.innerHTML = LPSecurity.overlay({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
       overlayRoot.querySelector('[data-lps-pin]')?.focus();
+    } else if (ui.overlay === 'cert-install') {
+      overlayRoot.innerHTML = CertInstall.overlay(certContext());
     } else if(ui.overlay==='sx-dialog'){
       overlayRoot.innerHTML=ICSSystemSettings.overlay(data,ui,key=>i18n.t(key));
     } else if (ui.overlay === 'search') {
@@ -2094,6 +2100,7 @@
     const { action, id, app, url } = button.dataset;
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Gmail's label settings, Days of mail to sync and the vacation responder (gmail.js).
+    if (action.startsWith('cert-') && CertInstall.handle(action, id, certContext())) return;
     if (action.startsWith('gmx-') && GmailApp.handlePref(action, id, {data, ui, save, render, toast, root: viewport})) return;
     // A choice in a Play app's menu closes it before its action runs (lp-play-more.js handles its own).
     if (ui.overlay === 'pa-more' && !action.startsWith('px-') && action !== 'close-overlay') { ui.overlay = ''; ui.paMore = ''; renderOverlay(); }

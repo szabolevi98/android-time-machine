@@ -277,7 +277,7 @@
     if(ui.sub==='wifi-advanced'){
       const notify=check(S('Network notification'),'wifiNotify',p.wifiNotify,S('Notify me when an open network is available'),!p.wifi),sleep=row(S('Keep Wi-Fi on during sleep'),S(sleepNames[p.wifiSleep]||'Always'),'sx-dialog','wifi-sleep');
       const scan=check(S('Scanning always available'),'wifiScanAlways',p.wifiScanAlways,S("Let Google's location service and other apps scan for networks, even when Wi-Fi is off"));
-      const band=row(S('Wi-Fi frequency band'),S(bandNames[p.wifiBand]||'Automatic'),'sx-dialog','wifi-band'),certs=row(S('Install certificates'),'','dev-info','Install certificates');
+      const band=row(S('Wi-Fi frequency band'),S(bandNames[p.wifiBand]||'Automatic'),'sx-dialog','wifi-band'),certs=row(S('Install certificates'),'','cert-install','');
       const addresses=`${row(S('MAC address'),'02:00:00:40:04:01','noop')}${row(S('IP address'),p.wifi&&p.wifiNetwork?'192.0.2.4':S('Unavailable'),'noop')}`;
       if(ICS)return page(S('Advanced Wi-Fi'),`${notify}${sleep}${check(S('Avoid poor connections'),'wifiPoorAvoid',p.wifiPoorAvoid,S("Don't use a Wi-Fi network unless it has a good Internet connection"))}${band}${addresses}`);
       if(LP)return page(S('Advanced Wi-Fi'),`${notify}${scan}${sleep}${band}${certs}${row(S('Wi-Fi Direct'),'','noop')}${row(S('WPS Push Button'),'','noop')}${row(S('WPS Pin Entry'),'','noop')}${addresses}`);

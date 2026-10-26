@@ -775,6 +775,10 @@
   // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
   const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
   const musicFxContext = () => ({data, ui, language: i18n.language, locale: i18n.locale(), save, render, toast: message => toast(message)});
+  // Advanced Wi-Fi's Install certificates (*-certinstall.js) and its dialogs.
+  const certContext = () => ({ui, data, language: i18n.language, root: overlayRoot, save, toast: message => toast(message),
+    open: () => { ui.overlay = 'cert-install'; renderOverlay(); overlayRoot.querySelector('[data-cert-name]')?.focus(); }, close: () => { ui.overlay = ''; renderOverlay(); },
+    lockSettings: () => { ui.sub = 'security'; render(); }});
   function navigateBack() {
     if (ui.view === 'settings' && ui.sub === 'musicfx' && !ui.overlay) { ui.mfxSpin = false; ui.sub = 'sound'; render(); return; }
     // Back in a capture request cancels it (RESULT_CANCELED).
@@ -926,6 +930,8 @@
       overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog jb-brightness" role="dialog" aria-label="${safe(i18n.t('Brightness'))}"><h3>${safe(i18n.t('Brightness'))}</h3><div class="jb-brightness-row"><img src="assets/jb-ic_qs_brightness_auto_off.png" alt=""><input type="range" min="10" max="100" value="${data.settings.brightness}" data-field="brightness" aria-label="${safe(i18n.t('Brightness'))}" ${data.settings.autoBrightness ? 'disabled' : ''}><label><input type="checkbox" data-field="auto-brightness" ${data.settings.autoBrightness ? 'checked' : ''}><span>${safe(i18n.t('AUTO'))}</span></label></div></div>`;
     } else if (ui.overlay.startsWith('widget-photo')) {
       overlayRoot.innerHTML = ICSWidgets.photoOverlay(data, ui, key => i18n.t(key));
+    } else if (ui.overlay === 'cert-install') {
+      overlayRoot.innerHTML = CertInstall.overlay(certContext());
     } else if(ui.overlay==='sx-dialog'){
       overlayRoot.innerHTML=ICSSystemSettings.overlay(data,ui,key=>i18n.t(key));
     } else if (ui.overlay === 'search') {
@@ -1751,6 +1757,7 @@
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Gmail's label settings, Days of mail to sync and the vacation responder (gmail.js).
     if (action.startsWith('mfx-') && MusicFX.handle(action, id, musicFxContext())) return;
+    if (action.startsWith('cert-') && CertInstall.handle(action, id, certContext())) return;
     if (action.startsWith('gmx-') && GmailApp.handlePref(action, id, {data, ui, save, render, toast, root: viewport})) return;
     // A choice in a Play app's menu closes it before its action runs (kk-play-more.js handles its own).
     if (ui.overlay === 'pa-more' && !action.startsWith('px-') && action !== 'close-overlay') { ui.overlay = ''; ui.paMore = ''; renderOverlay(); }
