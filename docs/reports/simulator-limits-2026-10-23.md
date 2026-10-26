@@ -456,7 +456,7 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 #### T37 — 4.4.4/5.1.1 Google Now emlékeztetők
 
 - **Ütem:** Második kör, #21. tétel (jóváhagyva 2026-10-24).
-- **Állapot:** Halasztott, nincs megépítve; nem része az aktuális magnak.
+- **Állapot:** Kész — `39ad0249`. Az emlékeztető-szerkesztő Where gombja a helyválasztó spinnert adja (Home / Work a fiók címeiből, Set location), helyi mintahely-kereséssel; a One-time a Velvet RecurrencePickerDialog-ját nyitja (gyakoriság, intervallum, hét napjai, havi minta, vége), az ismétlődő emlékeztető a következő esedékességével jelenik meg; Set date… / Set time… dátum- és időválasztót nyit; 5.1.1-en az Occasionally is menthető. Az eseménykártya menüje a hátoldalra fordít (Calendar-szerkesztés), elhúzva Done for now / Undo. Helyalapú riasztás nincs, a hely csak megjelenik.
 - **Verziók:** 4.4.4, 5.1.1.
 - **Forráscsoportok:** 4.4.4-18, 5.1.1-24.
 - **Elkészítendő és határ:** Eseménykártya menü releváns helyi elrejtés/szerkesztés; Where helyi mintapontválasztó és One-time helyett ismétlődés mentése. Nem folyamatos GPS/geofencing vagy élő naptárszolgáltatás.
