@@ -286,7 +286,20 @@ window.StockStrings = {
   "Settings": {"res": "GoogleEarth:menu_settings", "hu": "Beállítások", "de": "Einstellungen", "fr": "Paramètres", "es": "Ajustes"},
   "Feedback": {"res": "GoogleEarth:menu_feedback", "hu": "Visszajelzés", "de": "Feedback", "fr": "Commentaires", "es": "Comentarios"},
   "Help": {"res": "GoogleEarth:menu_help", "hu": "Súgó", "de": "Hilfe", "fr": "Aide", "es": "Ayuda"},
-  "Tutorial": {"res": "GoogleEarth:menu_tutorial", "hu": "Útmutató", "de": "Anleitung", "fr": "Didacticiel", "es": "Tutorial"}
+  "Tutorial": {"res": "GoogleEarth:menu_tutorial", "hu": "Útmutató", "de": "Anleitung", "fr": "Didacticiel", "es": "Tutorial"},
+  "Clear Data Cache": {"res": "GoogleEarth:settings_clear_cache", "hu": "Az adat-gyorsítótár törlése", "de": "Daten-Cache leeren", "fr": "Effacer le cache de données", "es": "Borrar la caché de datos"},
+  "Resets the persistent cache.": {"res": "GoogleEarth:settings_clear_cache_summary", "hu": "Visszaállítja az állandó gyorsítótárat.", "de": "Dauerhaften Cache zurücksetzen", "fr": "Réinitialise le cache persistant.", "es": "Elimina los datos en caché."},
+  "Data Cache Size": {"res": "GoogleEarth:settings_cache_size", "hu": "Az adat-gyorsítótár mérete", "de": "Größe des Daten-Cache", "fr": "Taille du cache de données", "es": "Tamaño de la caché de datos"},
+  "Maximum size of the persistent cache.": {"res": "GoogleEarth:settings_cache_size_summary", "hu": "Az állandó gyorsítótár maximális mérete.", "de": "Maximale Größe des dauerhaften Cache", "fr": "Taille maximale du cache persistant.", "es": "Tamaño máximo de la caché."},
+  "@cache_size:0": {"res": "GoogleEarth:@array/settings_cache_size:0", "hu": "Kicsi", "de": "Klein", "fr": "Petit", "es": "Pequeño", "en": "Small"},
+  "@cache_size:1": {"res": "GoogleEarth:@array/settings_cache_size:1", "hu": "Közepes", "de": "Mittel", "fr": "Moyen", "es": "Normal", "en": "Medium"},
+  "@cache_size:2": {"res": "GoogleEarth:@array/settings_cache_size:2", "hu": "Nagy", "de": "Groß", "fr": "Grand", "es": "Grande", "en": "Large"},
+  "Clearing data cache": {"res": "GoogleEarth:msg_clear_cache", "hu": "A gyorsítótár törlése", "de": "Daten-Cache wird geleert.", "fr": "Suppression du cache en cours", "es": "Borrar caché de datos"},
+  "About": {"res": "GoogleEarth:settings_about_section", "hu": "Névjegy", "de": "Info", "fr": "À propos de", "es": "Acerca de"},
+  "About Google Earth": {"res": "GoogleEarth:settings_about_item", "hu": "A Google Earth névjegye", "de": "Über Google Earth", "fr": "À propos de Google Earth", "es": "Acerca de Google Earth"},
+  "About info": {"res": "GoogleEarth:about_info", "hu": "Verzió: %1$s", "de": "Version %1$s", "fr": "Version %1$s", "es": "Versión %1$s", "en": "Version %1$s"},
+  "Not Found: %s": {"res": "GoogleEarth:search_not_found", "hu": "A(z) %s nem található.", "de": "Nicht gefunden: %s", "fr": "Non trouvé : %s", "es": "No encontrado: %s"},
+  "Google location settings": {"res": "GoogleEarth:settings_google_location", "hu": "Google-helybeállítások", "de": "Google-Standorteinstellungen", "fr": "Paramètres de localisation Google", "es": "Ajustes ubicación Google"}
  },
  "news": {
   "News & Weather": {"res": "PrebuiltNewsWeather:app_name", "hu": "Hírek és időjárás", "de": "News & Wetter", "fr": "Actualités et météo", "es": "Noticias y tiempo"},

@@ -18,7 +18,7 @@ From another release's image (the own image has no such file; to review): maguro
 
 ## 4.0.4 (maguro)
 
-copy: 446, same pixels: 146, resized: 135, own: 15, converted: 4, similar: 4, cropped: 2, generated: 1, not traced: 1
+copy: 447, same pixels: 146, resized: 135, own: 15, converted: 4, similar: 4, cropped: 2, generated: 1, not traced: 1
 
 From another release's image (the own image has no such file; to review): hammerhead 1, mako 2, passion 23 — the source column of the TSV names each.
 
@@ -28,7 +28,7 @@ Not traced:
 
 ## 4.3 (mako)
 
-copy: 478, same pixels: 333, resized: 196, converted: 19, own: 8, similar: 7, generated: 3, not traced: 2, cropped: 2
+copy: 479, same pixels: 333, resized: 196, converted: 19, own: 8, similar: 7, generated: 3, not traced: 2, cropped: 2
 
 From another release's image (the own image has no such file; to review): maguro 17, passion 26, shamu 1 — the source column of the TSV names each.
 
@@ -39,7 +39,7 @@ Not traced:
 
 ## 4.4.4 (hammerhead)
 
-copy: 428, same pixels: 389, resized: 181, own: 20, converted: 15, similar: 13, generated: 2, not traced: 2
+copy: 429, same pixels: 389, resized: 181, own: 20, converted: 15, similar: 13, generated: 2, not traced: 2
 
 From another release's image (the own image has no such file; to review): bullhead 1, maguro 26, mako 13 — the source column of the TSV names each.
 
@@ -50,7 +50,7 @@ Not traced:
 
 ## 5.1.1 (shamu)
 
-copy: 906, vector: 199, resized: 158, same pixels: 143, converted: 31, similar: 7, generated: 6, own: 3, not traced: 2, cropped: 1
+copy: 907, vector: 199, resized: 158, same pixels: 143, converted: 31, similar: 7, generated: 6, own: 3, not traced: 2, cropped: 1
 
 From another release's image (the own image has no such file; to review): hammerhead 26, maguro 30, mako 21, passion 1 — the source column of the TSV names each.
 

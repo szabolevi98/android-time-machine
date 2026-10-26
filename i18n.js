@@ -1525,6 +1525,8 @@
     'Panoramio Photos': {own: true, hu: 'Panoramio-fotók', de: 'Panoramio-Fotos', fr: 'Photos Panoramio', es: 'Fotos de Panoramio'},
     'Wikipedia': {own: true, hu: 'Wikipédia', de: 'Wikipedia', fr: 'Wikipédia', es: 'Wikipedia'},
     '3D Buildings': {own: true, hu: '3D épületek', de: '3D-Gebäude', fr: 'Bâtiments 3D', es: 'Edificios en 3D'},
+    // Earth's layer of country borders and place names (not the photo editor's Borders, which are frames).
+    'Borders and Labels': {own: true, hu: 'Határok és címkék', de: 'Grenzen und Beschriftungen', fr: 'Frontières et légendes', es: 'Fronteras y etiquetas'},
     'Books': {own: true, hu: 'Könyvek', de: 'Google Bücher', fr: 'Livres', es: 'Google Libros'},
     'Reset all local Gingerbread simulator data?': {own: true, hu: 'Visszaállítod a Gingerbread szimulátor összes helyi adatát?', de: 'Alle lokalen Gingerbread-Simulatordaten zurücksetzen?', fr: 'Réinitialiser toutes les données locales du simulateur Gingerbread ?', es: '¿Restablecer todos los datos locales del simulador Gingerbread?'},
     // The power control widget's accessibility labels (the 2.3 widget has none of its own).

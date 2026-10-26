@@ -165,3 +165,19 @@ python docs/tools/ng-retained-wallpaper.py --check
 The helper verifies both APK and JPEG hashes before writing. The asset inventory
 records this external historical source via `docs/data/asset-sources.tsv`;
 its `own` category means outside the indexed N2G48C image, not simulator artwork.
+
+### Google Earth globe imagery (owner decision, 2026-10-26)
+
+Earth streamed its imagery from Google's servers, so no factory image holds a globe picture. Every version's Earth
+(2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1) draws NASA's Blue Marble Next Generation instead, kept locally so it works offline;
+the Earth chrome, menus and settings stay the APKs' own (`earth-globe.js`, `earth-app.js`, 2.3.6 `gb-google-apps.js`).
+
+- Source: NASA Earth Observatory, Blue Marble Next Generation with topography and bathymetry, August 2004,
+  [world.topo.bathy.200408.3x5400x2700.jpg](https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73776/world.topo.bathy.200408.3x5400x2700.jpg)
+  (5400 x 2700, SHA-256 `f76d7b94445e8975a755c849ddaa93ed07b7e01118fb0b7e6bc5546a68c18d5c`); NASA imagery is
+  public domain.
+- Output: `assets/earth/blue-marble.jpg` (SHA-256 `315d58513142cdde94fd202ca148858f914986a2e7ee12be2c3192e368612b00`),
+  Lanczos-resized to 4096 x 2048, JPEG quality 80, progressive (one shared
+  file for all versions, owner 2026-10-26).
+- The search places in `earth-globe.js` are well-known coordinates; the demo phone's location is Mountain View, as
+  in the other apps' maps.

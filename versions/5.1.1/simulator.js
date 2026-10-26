@@ -424,6 +424,7 @@
     snapResting(viewport);
     renderOverlay();
     i18n.translateDOM(screen);
+    if (ui.view === 'earth') EarthApp.mount(viewport, earthContext());
     const scene = {view: ui.view, sub: ui.sub}, transit = ui.sleeping ? '' : ICSTransitions.kind(lastScene, scene, pendingNav);
     lastScene = scene;
     // Launcher icons, folders and the drawer start apps with a scale-up from the tapped icon.
@@ -807,7 +808,7 @@
       case 'photos': return PhotosApp.render(photosContext());
       case 'gmail': return renderGmail();
       case 'play-music': case 'play-movies': case 'play-books': case 'play-games': return PlayApps.render(playContext(ui.view));
-      case 'google-search': case 'voice-search': case 'maps': case 'drive': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
+      case 'google-search': case 'voice-search': case 'maps': case 'drive': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
       case 'phone': return renderPhone();
       case 'people': return renderPeople();
       case 'messaging': return renderMessaging();
@@ -823,6 +824,7 @@
     }
   }
   function openApp(app, resume = false) {
+    if (app === 'earth' && !resume) EarthApp.open(ui);
     if(!resume&&LPExtraApps.KIND[app]){ui.editorDrawer=false;ui.editorRefreshing=false;}
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
     if (!resume) { ui.camIntent = null; ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt10Dialog = null; ui.lsPage = ''; ui.lsStack = []; ui.lsDialog = null; ui.driveFolder = ''; ui.driveFilter = ''; ui.driveNavItem = 'my'; ui.driveStack = []; ui.driveDialog = ''; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.lpmPage = ''; ui.mpoDialog = ''; ui.paStack = []; ui.paMore = ''; }
@@ -880,6 +882,8 @@
   }
   // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
   const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
+  // Earth (earth-app.js): Earth 8.0.1's settings, search, My location and Share.
+  const earthContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, save, render, toast: message => toast(message), earth: '8.0.1', account: 'nexus6.demo@gmail.com', dark: false, dot: 'assets/ea8-bluedot.png', shareTargets: [['messaging', 'Messenger']], share: (app, text, subject) => { ui.overlay = ''; renderOverlay(); openApp(app); ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); save(); render(); }, openLocation: () => { openApp('settings'); ui.sub = 'location'; render(); }});
   // Advanced Wi-Fi's Install certificates (*-certinstall.js) and its dialogs.
   const certContext = () => ({ui, data, language: i18n.language, root: overlayRoot, save, toast: message => toast(message),
     open: () => { ui.overlay = 'cert-install'; renderOverlay(); overlayRoot.querySelector('[data-cert-name]')?.focus(); }, close: () => { ui.overlay = ''; renderOverlay(); },
@@ -913,6 +917,7 @@
     if (ui.view === 'camera' && ui.camIntent && !ui.overlay) { ui.camIntent.cancel(); return; }
     if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
     if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
+    if (ui.view === 'earth' && !ui.overlay && EarthApp.back(ui)) { render(); return; }
     if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return; }
     if (ui.view === 'phone' && !ui.overlay && LPDialerPrefs.back(ui)) { render(); return; }
     if (ui.view === 'clock' && !ui.overlay && ClockPrefs.back(ui)) { render(); return; }
@@ -2281,6 +2286,7 @@
       const result = PeopleIO.handle(action, id, {data, ui, t: key => i18n.t(key), locale: i18n.locale()});
       if (result) { if (result.save) save(); for (const title of result.notify || []) addNotification(title, ''); renderOverlay(); render(); if (result.toast) toast(result.toast); return; }
     }
+    if (ui.view === 'earth' && /^(earth|eps)-/.test(action)) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (EarthApp.handle(action, id, earthContext())) return; }
     if (action.startsWith('mps-') && window.MapsPrefs?.handle(action, id, mapsPrefsContext())) return;
     if (ui.view === 'youtube' && action.startsWith('yt10-') && LPYouTube.handle(action, id, ytContext())) return;
     if (ui.view === 'google-search' && action.startsWith('lsp-') && LPSearchPrefs.handle(action, id, gsContext())) return;
@@ -3213,7 +3219,7 @@
       case 'yt-search': { const query = String(values.get('query') || '').trim(); if (!query) return; LPYouTube.searched(query, data); save(); ui.ytQuery = query; ui.sub = 'results'; render(); break; }
       case 'keep-li-add': { const text = String(values.get('text') || '').trim(), note = keepCurrent(); if (!text || !note?.list) return; note.list.push({text, checked: false}); save(); render(); viewport.querySelector('.kp-ed-add input')?.focus(); break; }
       case 'keep-add': { const text = String(values.get('text') || '').trim(); if (!text) return; data.keepNotes = [{id: 'k' + Date.now(), text, color: (data.keepNotes || []).length % 5}, ...(data.keepNotes || [])]; save(); render(); break; }
-      case 'earth-search': ui.earthQuery = String(values.get('query') || '').trim().slice(0, 60); ui.earthSearching = false; render(); break;
+      case 'earth-search': ui.earthSearching = false; EarthApp.search(values.get('query'), earthContext()); render(); break;
       case 'chrome-history-search': ui.chromeHistoryQuery = String(values.get('query') || '').trim(); render(); break;
       case 'mms-search': ui.mmsSearch = String(values.get('query') || '').trim(); render(); break;
       case 'hg-new': { const target = ICSMessaging.recipient(values.get('recipient'), data.contacts); if (!target) { toast('Enter a contact name or valid phone number'); return; } pickHangout(target.key); break; }

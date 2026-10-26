@@ -525,3 +525,9 @@
 .screen .drv2-pick{display:flex;align-items:center;width:100%;height:calc(56 * var(--dp));padding:0 calc(24 * var(--dp));border:0;background:none;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
 .drv2-pick img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin-right:calc(24 * var(--dp))}
 .screen .drv2-item:active,.screen .drv2-choice:active,.screen .drv2-pick:active,.screen .drv2-buttons button:active,.screen .drv2-pick-head button:active{background:#0000001a}
+
+/* Earth (earth-app.js): the globe canvas; Settings is Theme.Earth.ActionBar (AppCompat Light): PreferenceCategory in
+   the accent colour, the light dialogs for Settings, Layers and Share. */
+.sa-earth-canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+.mps-cat{padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(4 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#009688}
+.sa-earth .mps-choices img{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-right:calc(16 * var(--dp))}

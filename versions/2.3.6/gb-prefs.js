@@ -209,6 +209,22 @@
         lab('bubble', 'lab_bubble_buttons', 'Bubble Buttons', 'Call or navigate to a place right from its bubble.')
       ]};
     },
+    // Earth 2.0.1's Settings (res/xml/settings.xml): Clear Data Cache (msg_clear_cache), the cache size list, the two
+    // check boxes with their summaryOn / summaryOff, Databases (database_title's list, only the default database) and
+    // About (about_info with the APK's version name and code). Rows with `act` are gb-google-apps.js's.
+    'ea-settings'(ctx) {
+      const E = key => S('earth', ctx.lang, key), v = (key, def) => ctx.values[key] ?? def;
+      return {set: 'earth', title: E('menu_settings'), items: [
+        cat(E('settings_settings_section')),
+        action('settings.clear', E('settings_clear_cache'), E('settings_clear_cache_summary'), {act: 'ea-clear-cache'}),
+        list('settings.cache_size', E('settings_cache_size'), A('earth', ctx.lang, 'settings_cache_size'), 0, {summary: E('settings_cache_size_summary')}),
+        check('settings.use_sensors', E('settings_sensors'), E(v('settings.use_sensors', false) ? 'settings_sensors_summary_on' : 'settings_sensors_summary_off'), false),
+        check('settings.use_terrain', E('settings_use_terrain'), E(v('settings.use_terrain', true) ? 'settings_use_terrain_summary_on' : 'settings_use_terrain_summary_off'), true),
+        action('settings.alternate_database', E('settings_databases'), E('settings_databases_summary'), {act: 'ea-databases'}),
+        cat(E('settings_about_section')),
+        action('settings.about', E('settings_about_item'), '', {act: 'ea-about'})
+      ]};
+    },
     'car-settings'(ctx) {
       const C = key => window.GBExtraApps.T(ctx.lang, key), act = (key, title, summary, a, extra = {}) => action(key, C(title), summary ? C(summary) : '', {act: a, ...extra});
       return {set: 'car', title: C('Settings'), items: [
@@ -403,5 +419,5 @@
     }
     return null;
   }
-  window.GBPrefs = {SCREENS, render, dialog, find, get, server, serverValid, serverInput, serverSave, PORTS};
+  window.GBPrefs = {SCREENS, render, dialog, find, get, server, serverValid, serverInput, serverSave, PORTS, text: S};
 })();

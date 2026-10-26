@@ -217,10 +217,11 @@
   function earthBar(ctx) {
     const ea = key => S(ctx, 'earth', key);
     const search = ctx.ui.earthSearching ? `<form class="sa-earth-field" data-form="earth-search"><input name="query" autocomplete="off" placeholder="${e(ea('Example: Pizza'))}" aria-label="${e(ea('Search'))}"></form>` : img('earth-search-open', ea('Search'), 'ea7-ic_menu_search_holo_dark.png');
-    return `<header class="sa-bar dark sa-earth-bar"><button class="sa-up" data-action="${ctx.ui.earthSearching ? 'earth-search-close' : 'home'}" aria-label="${e(ea('Earth'))}"><img src="assets/earth.png" alt=""></button><span class="sa-title"><b>${ctx.ui.earthSearching ? '' : e(ctx.ui.earthQuery || ea('Earth'))}</b></span>${search}${img('sa-unsupported', ea('Reset to north'), 'ea7-ic_menu_northup.png', 'tall')}${btn('sa-menu', ctx.t('More options'), 'overflow')}</header>`;
+    return `<header class="sa-bar dark sa-earth-bar"><button class="sa-up" data-action="${ctx.ui.earthSearching ? 'earth-search-close' : 'home'}" aria-label="${e(ea('Earth'))}"><img src="assets/earth.png" alt=""></button><span class="sa-title"><b>${ctx.ui.earthSearching ? '' : e(ctx.ui.earthQuery || ea('Earth'))}</b></span>${search}${img('earth-north', ea('Reset to north'), 'ea7-ic_menu_northup.png', 'tall')}${btn('sa-menu', ctx.t('More options'), 'overflow')}</header>`;
   }
   function earth(ctx) {
-    return `<div class="app-view sa-app sa-earth"><div class="sa-stars"></div><div class="sa-globe">${'<svg viewBox="0 0 200 200" aria-hidden="true"><defs><radialGradient id="sa-gl" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#6fb4ff"/><stop offset=".55" stop-color="#1c5fb8"/><stop offset="1" stop-color="#05173d"/></radialGradient><clipPath id="sa-gc"><circle cx="100" cy="100" r="92"/></clipPath></defs><circle cx="100" cy="100" r="96" fill="#6fb4ff" opacity=".18"/><circle cx="100" cy="100" r="92" fill="url(#sa-gl)"/><g clip-path="url(#sa-gc)"><g class="sa-land" fill="#4f8f3e"><path d="M10 60c20-14 44-10 52 4s-8 26-2 40-20 30-36 22-26-48-14-66z"/><path d="M90 96c16-6 38 2 44 22s-8 40-26 46-24-12-18-30-16-30 0-38z"/><path d="M80 24c12-4 28 2 30 12s-16 10-24 6-18-16-6-18z"/><path d="M210 60c20-14 44-10 52 4s-8 26-2 40-20 30-36 22-26-48-14-66z"/><path d="M290 96c16-6 38 2 44 22s-8 40-26 46-24-12-18-30-16-30 0-38z"/><path d="M280 24c12-4 28 2 30 12s-16 10-24 6-18-16-6-18z"/></g><g fill="#fff" opacity=".55"><ellipse cx="60" cy="140" rx="30" ry="6"/><ellipse cx="140" cy="60" rx="24" ry="5"/></g></g><circle cx="100" cy="100" r="92" fill="none" stroke="#9cd0ff" stroke-opacity=".5" stroke-width="2"/></svg>'}</div>${earthBar(ctx)}</div>`;
+    if (window.EarthApp.active(ctx.ui)) return window.EarthApp.render({...ctx.earthCtx, bar: title => bar(ctx, {title, up: true, icon: 'earth.png', cls: ' dark'})});
+    return `<div class="app-view sa-app sa-earth"><div class="sa-stars"></div>${window.EarthApp.canvas()}${earthBar(ctx)}${window.EarthApp.overlay(ctx.earthCtx)}</div>`;
   }
 
   // ---- News & Weather (2013, Holo dark): Weather, Top Stories and topics ----
@@ -260,7 +261,7 @@
   function menu(view, ctx) {
     // Google Search 2.5.9: the footer's menu button (settings.xml, settings_menu.xml).
     if (view === 'google-search' && ctx.ui?.sub !== 'settings') { const g = key => S(ctx, 'google', key); return [{action: 'gel-overview-settings', title: g('Settings')}, {action: 'sa-unsupported', title: g('Send feedback')}, {action: 'sa-unsupported', title: g('Help')}]; }
-    if (view === 'earth') { const ea = key => S(ctx, 'earth', key); return (ctx.ui?.earthQuery ? [{action: 'earth-clear', title: ea('Clear map')}] : []).concat(['My location', 'Share', 'Settings', 'Feedback', 'Help', 'Tutorial'].map(key => ({action: 'sa-unsupported', title: ea(key)}))); }
+    if (view === 'earth') { const ea = key => S(ctx, 'earth', key); return (ctx.ui?.earthQuery ? [{action: 'earth-clear', title: ea('Clear map')}] : []).concat([['My location', 'earth-myloc'], ['Share', 'earth-share'], ['Settings', 'earth-settings'], ['Feedback'], ['Help'], ['Tutorial']].map(([key, action = 'sa-unsupported']) => ({action, title: ea(key)}))); }
     // Currents 2.1's currents_home_menu on the home (the edition items stay hidden).
     if (view === 'currents') { const c = key => S(ctx, 'currents', key); return [{action: 'sa-unsupported', title: ctx.t('Search')}].concat(['Sync now', 'Settings', 'Help'].map(key => ({action: 'sa-unsupported', title: c(key)}))); }
     // Play Magazines 2.0's magazines_home_menu (Search magazines is the bar icon).

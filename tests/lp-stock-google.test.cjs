@@ -1,7 +1,7 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // 5.1.1 stock Google apps checked against the LMY48Y APKs and their odex code (audit step 4).
-const w={window:{GELNow:{render:()=>'<div class="gnow-page"></div>'}}};for(const f of ['stock-strings.js','lp-drive.js','stock-apps.js'])vm.runInNewContext(fs.readFileSync('versions/5.1.1/'+f,'utf8'),w);
+const w={window:{GELNow:{render:()=>'<div class="gnow-page"></div>'}}};vm.runInNewContext(fs.readFileSync('earth-app.js','utf8'),w);for(const f of ['stock-strings.js','lp-drive.js','stock-apps.js'])vm.runInNewContext(fs.readFileSync('versions/5.1.1/'+f,'utf8'),w);
 const A=w.window.StockApps,css=fs.readFileSync('versions/5.1.1/stock-apps.css','utf8'),ctx=(ui={},locale='en')=>({ui,data:{},t:k=>k,locale,now:new Date(2015,7,20,10)});
 // Google Settings 6.7: GoogleSettingsActivity's categories and rows in the dex's order.
 const gs=A.render('google-settings',ctx({},'hu'));

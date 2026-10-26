@@ -172,6 +172,7 @@ versions/4.4.4/assets/dr-ic_type_presentation.png	3cab05fcccd0de58	copy	hammerhe
 versions/4.4.4/assets/dr-ic_type_sheet.png	9e11067be63a04fd	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_sheet.png	drawable-hdpi		9e11067be63a04fd
 versions/4.4.4/assets/dr-ic_upaffordance.png	b337b8aae35678b0	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_upaffordance.png	drawable-xhdpi		b337b8aae35678b0
 versions/4.4.4/assets/drive.png	868acbd5d39f5f96	copy	hammerhead:/system/priv-app/PrebuiltGmsCore.apk!res/drawable-xxhdpi/launcher_drive_icon.png	drawable-xxhdpi		868acbd5d39f5f96
+versions/4.4.4/assets/ea7-bluedot.png	fc7b2922d0423af7	copy	hammerhead:/system/app/GoogleEarth.apk!res/drawable/bluedot.png	drawable		fc7b2922d0423af7
 versions/4.4.4/assets/ea7-ic_menu_northup.png	0fbcfff631376396	copy	hammerhead:/system/app/GoogleEarth.apk!res/drawable-xhdpi/ic_menu_northup.png	drawable-xhdpi		0fbcfff631376396
 versions/4.4.4/assets/ea7-ic_menu_search_holo_dark.png	d0ab4bb668282af3	copy	hammerhead:/system/framework/framework-res.apk!res/drawable-xxhdpi/ic_menu_search_holo_dark.png	drawable-xxhdpi		d0ab4bb668282af3
 versions/4.4.4/assets/earth.png	e8a9a79c95a8e295	own	Wikimedia Commons "Google Earth logo 2013.svg" (THIRD_PARTY_NOTICES.md)			

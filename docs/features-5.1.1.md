@@ -27,6 +27,7 @@ The stock Nexus 6 as the factory image `shamu-lmy48y` (build LMY48Y, August 2015
 - **Calendar 5.0.1:** schedule with the month illustrations, Day, Week and Month views, the drawer and event screens.
 - **Clock, Calculator and Camera:** the 5.1 DeskClock with the hour-coloured background, Calculator 5.1 with the live result and the advanced pad, and Google Camera 2.4.
 - **Chrome 40** with the Material toolbar, the Google New Tab page and the tab switcher; **Photos** (Google+ 4.9) and **Play Store 5.2.13**, the image's own (rebuilt from its Phonesky.apk: the Material drawer, quick links, the module-based details page with the discovery badges, the permission buckets and the 5.2 settings) with the Play media apps.
+- **Earth 8.0.1:** the Blue Marble globe (drag, zoom, double tap), Search, the compass (Reset to north), My location, Share to Messenger, Layers (kept) and Settings (Theme.Earth.ActionBar: cache, Google location settings, About).
 - **Settings:** the Material dashboard and the 5.1 preference screens, including Sound & notification, Interruptions, data usage, battery, accounts and the Google Keyboard.
 - Docs, Sheets, Slides, Fit, Newsstand and Wallet open simple screens of their own. The drawer is the LMY48Y launcher's: no AOSP Browser, Gallery or Music (Chrome, Photos and Play Music stand in; the camera's last picture opens in Photos), and no Cloud Print, which hides its icon from Android 4.4 on.
 

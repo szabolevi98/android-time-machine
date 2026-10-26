@@ -132,7 +132,7 @@
 /* ---------- Earth 2.0.1 ---------- */
 .ea{position:relative;height:100%;overflow:hidden;background:#000 radial-gradient(calc(1.1595 * var(--dp)) calc(1.1595 * var(--dp)) at 20% 30%,#fff,transparent),radial-gradient(calc(1.1595 * var(--dp)) calc(1.1595 * var(--dp)) at 70% 15%,#fff,transparent),radial-gradient(calc(1.7392 * var(--dp)) calc(1.7392 * var(--dp)) at 85% 60%,#cfe,transparent),radial-gradient(calc(1.1595 * var(--dp)) calc(1.1595 * var(--dp)) at 35% 80%,#fff,transparent),radial-gradient(calc(1.1595 * var(--dp)) calc(1.1595 * var(--dp)) at 55% 45%,#fff8,transparent),radial-gradient(calc(1.1595 * var(--dp)) calc(1.1595 * var(--dp)) at 10% 65%,#fff9,transparent),#000;color:#fff;font-family:DroidSans,Arial,sans-serif;touch-action:none}
 .ea-splash img{display:block;width:100%;height:100%;object-fit:cover}
-.ea-globe{position:absolute;inset:0;width:100%;height:100%;cursor:grab}
+.ea-globe{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:none}
 .ea-brand{position:absolute;left:50%;top:calc(29.3334 * var(--dp));width:calc(136.6725 * var(--dp));height:calc(30.6667 * var(--dp));translate:-50% 0;pointer-events:none}
 .screen .ea-north{position:absolute;right:calc(10.6667 * var(--dp));top:calc(10.6667 * var(--dp));width:calc(42.6667 * var(--dp));height:calc(42.6667 * var(--dp));padding:0;border:0;background:none;cursor:pointer}
 .ea-north img{width:100%;height:100%}

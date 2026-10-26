@@ -3312,7 +3312,83 @@ async function gbVoiceSettings(h) {
   h.check('Background data opens Accounts & sync', await h.until(`!!document.querySelector('#viewport .gbsp')`));
 }
 
+// Earth (T19): the Blue Marble globe (earth-globe.js) turns under a drag, Search flies to the place, My location to the
+// demo phone with the blue dot, Reset to north turns the heading back; Settings keeps a check box and shows About;
+// Layers keeps the choice (2.3.6, 4.0.4, 5.1.1); Share hands a Maps link to the messaging app (4.3–5.1.1).
+const earthLocal = o => async h => {
+  const view = () => h.ev(`EarthGlobe.current()`);
+  const near = (v, lon, lat) => v && Math.abs(v.lon - lon) < 1 && Math.abs(v.lat - lat) < 1;
+  const earthPrefs = async () => o.gb ? ((await store(h, 'appPrefs')) || {})['ea-settings'] || {} : (await store(h, 'earthPrefs')) || {};
+  const menu = async action => {
+    if (o.gb) { await h.tap('.touch-menu'); await h.until(`!!document.querySelector('.gbmenu')`); await h.tap(`.gbmenu [data-action="${action}"]`); }
+    else { await h.tap('#viewport [data-action="sa-menu"]'); await h.until(`!!document.querySelector('.holo-menu')`); await h.tap(`.holo-menu [data-action="${action}"]`); }
+  };
+  const canvas = o.gb ? '#viewport .ea-globe' : '#viewport .sa-earth-canvas';
+  await h.openApp('earth');
+  h.check('Earth opens on the globe', await h.until(`!!document.querySelector(${JSON.stringify(canvas)})`, 8000));
+  // The texture: the globe's centre is not the plain loading sphere once Blue Marble is read.
+  h.check('the globe shows the Blue Marble imagery', await h.until(`(()=>{const c=document.querySelector(${JSON.stringify(canvas)});if(!c||!c.width)return false;const d=c.getContext('2d').getImageData(c.width/2|0,c.height/2|0,1,1).data;return d[3]>0&&!(d[0]===Math.round(22*(.62+.38))&&d[1]===62)})()`, 8000));
+  const before = await view();
+  await h.drag(canvas, 80, 0);
+  const dragged = await view();
+  h.check('a drag turns the globe and stops the spin', dragged && !dragged.spin && Math.abs(((dragged.lon - before.lon + 540) % 360) - 180) > 5);
+  // Search.
+  if (o.gb) await menu('ea-search'); else await h.tap('#viewport [data-action="earth-search-open"]');
+  const field = o.gb ? '#viewport .ea-search input' : '#viewport .sa-earth-field input, #viewport .ea8-field input';
+  await h.type(field, 'Budapest');
+  await h.ev(`document.querySelector(${JSON.stringify(field)}).form.requestSubmit()`);
+  h.check('Search flies to Budapest', await h.until(`(()=>{const v=EarthGlobe.current();return v&&!v.anim&&Math.abs(v.lon-19.04)<1&&Math.abs(v.lat-47.5)<1&&v.zoom>4})()`, 5000));
+  h.check('the place is named', await h.until(`/Budapest/.test(document.querySelector('#viewport ${o.gb ? '.ea-label' : '.sa-title, #viewport .ea8-bar b'}')?.textContent || '')`));
+  await h.shot(`t19-earth-globe-${o.gb ? 'gb' : o.version}`);
+  // My location.
+  if (o.myloc === 'menu') await menu(o.gb ? 'ea-myloc' : 'earth-myloc'); else await h.tap('#viewport [data-action="earth-myloc"]');
+  h.check('My location flies to the demo phone', await h.until(`(()=>{const v=EarthGlobe.current();return v&&!v.anim&&Math.abs(v.lon+122.08)<1&&Math.abs(v.lat-37.39)<1})()`, 5000));
+  // Reset to north after a turn.
+  await h.ev(`(EarthGlobe.current().heading = 70, true)`);
+  await h.tap(o.gb ? '#viewport .ea-north' : '#viewport [data-action="earth-north"]');
+  h.check('Reset to north turns the heading back', await h.until(`Math.abs(((EarthGlobe.current().heading + 180) % 360) - 180) < 1`, 3000));
+  // Layers.
+  if (o.layers) {
+    if (o.gb) await menu('ea-layers');
+    else if (o.layers === 'drawer') { await h.tap('#viewport [data-action="earth-drawer"]'); await h.tap('#viewport .ea8-drawer [data-action="earth-layers"]'); }
+    else await h.tap('#viewport [data-action="earth-layers"]');
+    const layer = o.gb ? '[data-action="ea-layer"][data-id="Wikipedia"]' : '#viewport [data-action="earth-layer"][data-id="Wikipedia"]';
+    h.check('Layers lists the layers', await h.until(`!!document.querySelector('${layer}')`));
+    await h.tap(layer);
+    h.check('a layer choice is kept', ((await store(h, 'earthLayers')) || []).includes('Wikipedia'));
+    if (o.gb) await h.key('Escape'); else await h.tap('#viewport .mps-dialog [data-action="eps-cancel"]');
+  }
+  // Share.
+  if (o.share) {
+    if (o.share === 'menu') await menu('earth-share'); else await h.tap('#viewport [data-action="earth-share"]');
+    if (o.chooser) { await h.until(`!!document.querySelector('#viewport [data-action="earth-share-to"]')`); await h.tap(`#viewport [data-action="earth-share-to"][data-id="${o.chooser}"]`); }
+    // Hangouts (4.4.4) asks for the person first; the text waits in the new conversation's draft.
+    if (o.pick) { await h.until(`!!document.querySelector('#viewport [data-action="${o.pick}"]')`); await h.tap(`#viewport [data-action="${o.pick}"]`); }
+    h.check('Share hands a Maps link to the messaging app', await h.until(`[...document.querySelectorAll('#viewport textarea, #viewport input, #viewport [contenteditable]')].some(x => /maps\\.google\\.com\\/maps\\?ll=37\\.39/.test(x.value || x.textContent))`, 4000));
+    await h.openApp('earth');
+    await h.until(`!!document.querySelector(${JSON.stringify(canvas)})`);
+  }
+  // Settings.
+  if (o.drawer) { await h.tap('#viewport [data-action="earth-drawer"]'); await h.tap('#viewport .ea8-drawer [data-action="earth-settings"]'); }
+  else await menu(o.gb ? 'ea-settings' : 'earth-settings');
+  const row = key => o.gb ? `#viewport .gbset-row[data-id$=":settings.${key}"]` : `#viewport .mps-row[data-id="${key}"]`;
+  h.check('Settings opens the APK\'s settings', await h.until(`!!document.querySelector('${row('about')}')`));
+  if (o.check) {
+    await h.tap(row(o.check));
+    const key = o.gb ? `settings.${o.check}` : o.check;
+    h.check(`${o.check} is kept`, (await earthPrefs())[key] === !o.checkDefault);
+  }
+  await h.tap(row('about'));
+  h.check('About Google Earth shows the version', await h.until(`new RegExp(${JSON.stringify(o.version.replace(/\./g, '\\.'))}).test(document.querySelector('${o.gb ? '.gbdialog, .dialog' : '#viewport .mps-dialog'}')?.textContent || document.body.innerText)`));
+  await h.shot(`t19-earth-${o.gb ? 'gb' : o.version}`);
+};
+
 const CASES = [
+  {id: 'T19', version: '2.3.6', name: 'Earth › globe, Search, My Location, north, Layers, Settings', run: earthLocal({gb: true, myloc: 'menu', layers: true, check: 'use_sensors', checkDefault: false, version: '2.0.1'})},
+  {id: 'T19', version: '4.0.4', name: 'Earth › globe, Search, My Location, north, Layers, Settings', run: earthLocal({layers: 'bar', check: 'use_terrain', checkDefault: true, version: '6.1'})},
+  {id: 'T19', version: '4.3', name: 'Earth › globe, Search, My location, north, Share, Settings', run: earthLocal({myloc: 'menu', share: 'menu', chooser: 'messaging', check: 'imagery_visibility', checkDefault: true, version: '7.1.1.1682'})},
+  {id: 'T19', version: '4.4.4', name: 'Earth › globe, Search, My location, north, Share, Settings', run: earthLocal({myloc: 'menu', share: 'menu', pick: 'hg-pick', check: 'use_sensors', checkDefault: false, version: '7.1.3.1255'})},
+  {id: 'T19', version: '5.1.1', name: 'Earth › globe, Search, My location, compass, Layers, Share, Settings', run: earthLocal({layers: 'drawer', drawer: true, myloc: 'menu', share: 'bar', version: '8.0.1.2311'})},
   {id: 'T18', version: '2.3.6', name: 'Books › reader About, Manage eBooks (pin, remove)', run: gbBooksLocal},
   {id: 'T18', version: '4.0.4', name: 'Play Books › Search, About, Share, Available offline, Read aloud, Refresh, Make available offline', run: icsBooksLocal},
   {id: 'T46', version: '4.3', name: 'Gmail 4.5.1 › About Gmail, Open source licenses', run: gmailAbout('4.5.1-776638', true)},

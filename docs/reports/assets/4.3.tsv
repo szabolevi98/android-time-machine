@@ -177,6 +177,7 @@ versions/4.3/assets/dl-ic_menu_delete.png	a7d99bc99e77a4f9	copy	mako:/system/app
 versions/4.3/assets/dl-ic_menu_share.png	1a91acf9b576561a	copy	mako:/system/framework/framework-res.apk!res/drawable-xhdpi/ic_menu_share.png	drawable-xhdpi		1a91acf9b576561a
 versions/4.3/assets/dl-list_selector_pressed_holo_dark.png	a8870d94c1533b8c	copy	mako:/system/app/Music2.apk!res/drawable-xhdpi/list_selector_pressed_holo_dark.9.png	drawable-xhdpi		a8870d94c1533b8c
 versions/4.3/assets/downloads.png	5653d7c3853fbcdc	copy	mako:/system/app/DownloadProviderUi.apk!res/mipmap-xhdpi/ic_launcher_download.png	mipmap-xhdpi		5653d7c3853fbcdc
+versions/4.3/assets/ea7-bluedot.png	fc7b2922d0423af7	copy	mako:/system/app/GoogleEarth.apk!res/drawable/bluedot.png	drawable		fc7b2922d0423af7
 versions/4.3/assets/ea7-ic_menu_northup.png	0fbcfff631376396	copy	mako:/system/app/GoogleEarth.apk!res/drawable-xhdpi/ic_menu_northup.png	drawable-xhdpi		0fbcfff631376396
 versions/4.3/assets/ea7-ic_menu_search_holo_dark.png	51511aeb7aa5a2d9	copy	mako:/system/framework/framework-res.apk!res/drawable-xhdpi/ic_menu_search_holo_dark.png	drawable-xhdpi		51511aeb7aa5a2d9
 versions/4.3/assets/ears-appwidget_bg.png	1795a8228e5ab5dc	same pixels	mako:/system/app/GoogleEars.apk!res/drawable-xhdpi/appwidget_bg.9.png	drawable-xhdpi		a38d49fe297fbc53

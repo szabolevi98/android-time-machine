@@ -7,7 +7,8 @@
    - Books 1.2.2 (BooksPhone.apk): the 45 dip home_actionbar with Get eBooks and search, the library grid on #eaf0fb
      (grid_item_volume.xml: 72 x 100 dip covers, 14 sp title, 11 sp author), and the reader with its 60 dip
      ab_material_reader_day bar, flowing text and the page scrubber.
-   - Earth 2.0.1 (GoogleEarth.apk): the splash, then the globe under the brand with the north button, Search and Layers.
+   - Earth 2.0.1 (GoogleEarth.apk): the splash, then the globe (earth-globe.js) under the brand with the north button,
+     Search, Layers, My Location and Settings (gb-prefs.js ea-settings).
    - Voice Search 2.1.3 (VoiceSearch.apk): recognition_dialog.xml (319 x 265 dip on vs_dialog_red: "Speak now", the
      microphone with its level meter, the Google watermark, Help and Cancel), "No speech heard" with Speak again, and
      the Voice Actions help ("Try saying...") whose examples run the matching app.
@@ -229,62 +230,12 @@
 
   // ---------- Earth ----------
   const EA = name => `assets/ea-${name}.png`;
-  // Very rough continents as [lon, lat] rings, filled onto an equirectangular texture the globe samples.
-  const LAND = [
-    [[-168, 66], [-140, 70], [-95, 72], [-75, 62], [-60, 55], [-55, 47], [-70, 43], [-76, 35], [-81, 25], [-97, 26], [-105, 20], [-92, 16], [-83, 9], [-80, 8], [-87, 14], [-106, 24], [-117, 32], [-124, 40], [-124, 48], [-135, 57], [-150, 60], [-165, 60]],
-    [[-80, 9], [-72, 12], [-60, 10], [-50, 0], [-35, -5], [-38, -14], [-48, -26], [-57, -35], [-65, -42], [-68, -55], [-73, -50], [-73, -38], [-71, -18], [-81, -5], [-79, 2]],
-    [[-10, 36], [-9, 43], [-2, 48], [3, 51], [9, 54], [12, 56], [5, 59], [10, 63], [20, 70], [30, 70], [40, 67], [60, 70], [80, 73], [110, 76], [140, 72], [170, 70], [180, 65], [160, 60], [140, 52], [130, 43], [121, 31], [120, 22], [109, 20], [105, 10], [100, 14], [98, 8], [92, 22], [80, 15], [77, 8], [72, 20], [66, 25], [57, 25], [52, 30], [48, 30], [44, 13], [35, 28], [34, 32], [28, 36], [26, 40], [20, 40], [15, 38], [12, 44], [5, 43]],
-    [[-17, 15], [-16, 25], [-6, 35], [10, 37], [20, 32], [32, 31], [35, 22], [43, 12], [51, 11], [42, -2], [40, -15], [35, -24], [27, -34], [18, -34], [12, -18], [13, -5], [9, 4], [-8, 5], [-15, 10]],
-    [[114, -22], [122, -18], [131, -12], [137, -12], [142, -11], [146, -19], [153, -25], [151, -34], [145, -38], [138, -35], [130, -32], [115, -34], [114, -26]],
-    [[-50, 60], [-30, 60], [-20, 70], [-25, 80], [-45, 83], [-65, 78], [-55, 68]],
-    [[-180, -70], [-120, -72], [-60, -64], [0, -70], [60, -67], [120, -66], [180, -70], [180, -90], [-180, -90]]
-  ];
-  let earthTexture = null;
-  function texture() {
-    if (earthTexture) return earthTexture;
-    const c = document.createElement('canvas'); c.width = 512; c.height = 256;
-    const g = c.getContext('2d');
-    const sea = g.createLinearGradient(0, 0, 0, 256); sea.addColorStop(0, '#0d2a52'); sea.addColorStop(.5, '#14427e'); sea.addColorStop(1, '#0d2a52');
-    g.fillStyle = sea; g.fillRect(0, 0, 512, 256);
-    for (const ring of LAND) {
-      g.beginPath(); ring.forEach(([lon, lat], i) => { const x = (lon + 180) / 360 * 512, y = (90 - lat) / 180 * 256; i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.closePath();
-      const land = g.createLinearGradient(0, 0, 0, 256); land.addColorStop(0, '#e9eef0'); land.addColorStop(.14, '#9aa77a'); land.addColorStop(.24, '#4f6e34'); land.addColorStop(.36, '#6f7a3e'); land.addColorStop(.42, '#b49a62'); land.addColorStop(.5, '#3d6a2a'); land.addColorStop(.58, '#a58c58'); land.addColorStop(.7, '#5d7838'); land.addColorStop(.86, '#c9d3d2'); land.addColorStop(1, '#f2f6f7');
-      g.fillStyle = land; g.fill();
-    }
-    // Speckled relief and thin cloud streaks.
-    for (let i = 0; i < 900; i++) { const x = (i * 131) % 512, y = (i * 71 + (i >> 3)) % 256; g.fillStyle = i % 3 ? '#00000014' : '#ffffff12'; g.fillRect(x, y, 3, 2); }
-    g.fillStyle = '#ffffff30';
-    for (let i = 0; i < 40; i++) { const x = (i * 97) % 512, y = 40 + (i * 53) % 180; g.beginPath(); g.ellipse(x, y, 9 + i % 9, 1.5 + i % 2, (i % 5 - 2) / 10, 0, Math.PI * 2); g.fill(); }
-    earthTexture = g.getImageData(0, 0, 512, 256);
-    return earthTexture;
-  }
-  function drawGlobe(canvas, lon0, lat0) {
-    const w = canvas.width = canvas.clientWidth, h = canvas.height = canvas.clientHeight; if (!w || !h) return;
-    const g = canvas.getContext('2d'), r = Math.min(w, h) * .4, cx = w / 2, cy = h * .52, tex = texture();
-    const out = g.createImageData(Math.ceil(r * 2), Math.ceil(r * 2)), size = out.width;
-    const sl = Math.sin(lat0 * Math.PI / 180), cl = Math.cos(lat0 * Math.PI / 180);
-    for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
-      const nx = (x - r) / r, ny = (r - y) / r, d = nx * nx + ny * ny; if (d > 1) continue;
-      const nz = Math.sqrt(1 - d), lat = Math.asin(ny * cl + nz * sl), lon = lon0 * Math.PI / 180 + Math.atan2(nx, nz * cl - ny * sl);
-      const tx = ((Math.floor((lon / Math.PI + 1) / 2 * 512) % 512) + 512) % 512, ty = Math.min(255, Math.max(0, Math.floor((.5 - lat / Math.PI) * 256)));
-      const i = (ty * 512 + tx) * 4, o = (y * size + x) * 4, light = .35 + .65 * Math.max(0, nz * .8 + nx * -.3 + ny * .25);
-      out.data[o] = tex.data[i] * light; out.data[o + 1] = tex.data[i + 1] * light; out.data[o + 2] = tex.data[i + 2] * light; out.data[o + 3] = 255;
-    }
-    g.clearRect(0, 0, w, h);
-    const glow = g.createRadialGradient(cx, cy, r * .95, cx, cy, r * 1.12); glow.addColorStop(0, '#6fb4ff88'); glow.addColorStop(1, '#6fb4ff00');
-    g.fillStyle = glow; g.beginPath(); g.arc(cx, cy, r * 1.12, 0, Math.PI * 2); g.fill();
-    // putImageData would overwrite the glow under the sphere's square, so the sphere is composited from its own canvas.
-    const sphere = drawGlobe.sphere ||= document.createElement('canvas'); sphere.width = size; sphere.height = size;
-    sphere.getContext('2d').putImageData(out, 0, 0);
-    g.drawImage(sphere, Math.round(cx - r), Math.round(cy - r));
-  }
   function earth(ctx) {
     const {ui, lang} = ctx;
     if (ui.eaSplash) return `<div class="app-view ea ea-splash" data-no-translate><img src="${EA('splash')}" alt=""></div>`;
     const search = ui.eaSearching ? `<form class="ea-search" data-form="ea-search"><input name="q" placeholder="${e(T(lang, 'Example: Pizza'))}" aria-label="${e(T(lang, 'Search'))}" autocomplete="off"></form>` : '';
     return `<div class="app-view ea" data-no-translate><canvas class="ea-globe"></canvas><img class="ea-brand" src="${EA('brand')}" alt="Google earth"><button class="ea-north" data-action="ea-north" aria-label="N"><img src="${EA('north_button')}" alt=""></button>${ui.eaPlace ? `<div class="ea-label">${e(ui.eaPlace)}</div>` : ''}${search}</div>`;
   }
-  const PLACES = {pizza: [-122.08, 37.39], 'mountain view': [-122.08, 37.39], london: [-.12, 51.5], paris: [2.35, 48.85], budapest: [19.04, 47.5], tokyo: [139.7, 35.7], 'new york': [-74, 40.7], sydney: [151.2, -33.9], 'rio de janeiro': [-43.2, -22.9], cairo: [31.2, 30], berlin: [13.4, 52.5], madrid: [-3.7, 40.4]};
 
   // ---------- Voice Search ----------
   const VA = name => `assets/vs-${name}.png`;
@@ -313,25 +264,20 @@
       default: return voice(ctx);
     }
   }
-  let earthAnim = 0, vsTimer = 0, globe = {lon: -100, lat: 25, spin: true};
+  // Earth's view (earth-globe.js) outlives a render; the marker is My Location's blue dot.
+  let vsTimer = 0;
+  const globe = {lon: -100, lat: 25, zoom: 1, heading: 0, spin: true};
   function mounted(ctx) {
     const {ui, root} = ctx;
-    cancelAnimationFrame(earthAnim);
     if (ctx.view === 'earth' && !ui.eaSplash) {
       const canvas = root.querySelector('.ea-globe');
-      const tick = () => { if (!canvas.isConnected) return; if (globe.spin) globe.lon -= .25; drawGlobe(canvas, globe.lon, globe.lat); earthAnim = requestAnimationFrame(tick); };
-      tick();
+      if (canvas) EarthGlobe.mount(canvas, globe, {marker: ui.eaMyLoc ? {...EarthGlobe.HOME, src: EA('bluedot'), size: 20} : null});
     }
     if (ctx.view === 'voice-search' && (ui.vsState || 'listening') === 'listening') {
       clearTimeout(vsTimer);
       vsTimer = setTimeout(() => { if (ui.view === 'voice-search' && (ui.vsState || 'listening') === 'listening') { ui.vsState = 'timeout'; ctx.render(); } }, 5000);
     }
   }
-  // Dragging spins the globe.
-  let drag = null;
-  document.addEventListener('pointerdown', event => { if (!event.target.closest?.('.ea-globe')) return; drag = {x: event.clientX, y: event.clientY, lon: globe.lon, lat: globe.lat}; globe.spin = false; });
-  document.addEventListener('pointermove', event => { if (!drag) return; globe.lon = drag.lon - (event.clientX - drag.x) * .5; globe.lat = Math.max(-80, Math.min(80, drag.lat + (event.clientY - drag.y) * .5)); });
-  document.addEventListener('pointerup', () => { drag = null; });
 
   function menu(ctx) {
     const {lang, ui, view} = ctx, t = k => T(lang, k);
@@ -340,7 +286,7 @@
     if (view === 'books') return ui.bkRead && !ui.bkPrefs
       ? [{action: 'bk-about', title: t('About'), icon: 'bk-ic_menu_about.png'}, {action: 'bk-toc', title: t('Contents'), icon: 'bk-ic_menu_contents.png'}, {action: 'bk-library', title: t('My eBooks'), icon: 'bk-ic_menu_myebooks.png'}, {action: 'bk-settings', title: t('Settings'), icon: 'bk-ic_menu_reader_settings.png'}, {action: 'ga-unsupported', title: t('Help'), icon: 'bk-ic_menu_help.png'}]
       : [{action: 'bk-sort', title: t('Sort order'), icon: 'bk-ic_menu_sort_alphabetically.png'}, {action: 'bk-downloads', title: t('Manage eBooks'), icon: 'bk-ic_menu_my_downloads.png'}, {action: 'bk-get', title: t('Get eBooks'), icon: 'bk-ic_menu_myebooks.png'}, {action: 'ga-unsupported', title: t('Help'), icon: 'bk-ic_menu_help.png'}];
-    if (view === 'earth') return [{action: 'ea-search', title: t('Search'), icon: 'ic_menu_search'}, {action: 'ea-layers', title: t('Layers'), icon: 'ea-ic_menu_layers.png'}, {action: 'ea-myloc', title: t('My Location'), icon: 'ic_menu_mylocation'}, {action: 'ea-clear', title: t('Clear Search Results'), icon: 'ic_menu_close_clear_cancel'}, {action: 'ga-unsupported', title: ctx.t('Settings'), icon: 'ic_menu_preferences'}];
+    if (view === 'earth') return [{action: 'ea-search', title: t('Search'), icon: 'ic_menu_search'}, {action: 'ea-layers', title: t('Layers'), icon: 'ea-ic_menu_layers.png'}, {action: 'ea-myloc', title: t('My Location'), icon: 'ic_menu_mylocation'}, {action: 'ea-clear', title: t('Clear Search Results'), icon: 'ic_menu_close_clear_cancel'}, {action: 'ea-settings', title: ctx.t('Settings'), icon: 'ic_menu_preferences'}];
     return [];
   }
   function dialog(kind, ctx) {
@@ -349,7 +295,10 @@
     if (kind === 'typeface') { const pr = bookPrefs(data); return {title: t('Typeface'), items: TYPEFACES.map(([label, value]) => ({action: 'bk-typeface-set', id: value, title: label})), choice: 'single', selected: Math.max(0, TYPEFACES.findIndex(([, v]) => v === pr.typeface))}; }
     if (kind === 'remove') { const b = BOOKS.find(x => x.id === ui.bkRemove); return {message: AndroidStrings.format(t('Remove book message'), b?.title || ''), buttons: [{action: 'bk-remove-keep', title: t('Keep')}, {action: 'bk-remove-ok', title: t('Remove book')}]}; }
     if (kind === 'sort') return {title: t('Sort by:'), items: ['Recently read', 'Title', 'Author'].map(k => ({action: 'bk-sort-by', id: k, title: t(k)})), choice: 'single', selected: ['Recently read', 'Title', 'Author'].indexOf(data.booksSort || 'Recently read')};
-    if (kind === 'layers') return {title: t('Layers'), items: ['Places', 'Businesses', 'Panoramio Photos', 'Wikipedia', 'Borders', '3D Buildings'].map(l => ({action: 'ea-layer', id: l, title: ctx.t(l), checked: (ui.eaLayers || ['Borders']).includes(l)})), choice: 'multi'};
+    // DatabaseListActivity's title over the one database the phone knows; AboutActivity's version line.
+    if (kind === 'ea-databases') return {title: GBPrefs.text('earth', lang, 'settings_databases'), message: GBPrefs.text('earth', lang, 'database_title'), items: [{action: 'close-overlay', title: GBPrefs.text('earth', lang, 'database_default')}], choice: 'single', selected: 0};
+    if (kind === 'ea-about') return {title: GBPrefs.text('earth', lang, 'settings_about_item'), message: AndroidStrings.format(GBPrefs.text('earth', lang, 'about_info'), '2.0.1', '25').replace(/<br>/g, ' ').replace(/<[^>]+>/g, ''), buttons: [{action: 'close-overlay', title: GBPrefs.text('framework', lang, 'ok')}]};
+    if (kind === 'layers') return {title: t('Layers'), items: ['Places', 'Businesses', 'Panoramio Photos', 'Wikipedia', 'Borders and Labels', '3D Buildings'].map(l => ({action: 'ea-layer', id: l, title: ctx.t(l), checked: (data.earthLayers || ['Borders and Labels']).includes(l)})), choice: 'multi'};
     return null;
   }
   function voiceDo(ctx, id) {
@@ -399,10 +348,15 @@
       case 'bk-get': close(); ctx.openApp('play-store'); break;
       case 'ea-search': close(); ui.eaSearching = true; ctx.render(); ctx.focus('.ea-search input'); break;
       case 'ea-layers': ctx.dialog('layers'); break;
-      case 'ea-layer': { const l = ui.eaLayers ||= ['Borders']; const i = l.indexOf(id); if (i >= 0) l.splice(i, 1); else l.push(id); ctx.dialog('layers'); break; }
-      case 'ea-myloc': close(); Object.assign(globe, {lon: -122.08, lat: 37.39, spin: false}); ui.eaPlace = T(lang, 'My Location'); ctx.render(); break;
-      case 'ea-clear': close(); ui.eaPlace = ''; globe.spin = true; ctx.render(); break;
-      case 'ea-north': globe.lat = 0; break;
+      // The layers are kept, but the globe has only the imagery to draw (the layers' data came from Google's servers).
+      case 'ea-layer': { const l = data.earthLayers ||= ['Borders and Labels']; const i = l.indexOf(id); if (i >= 0) l.splice(i, 1); else l.push(id); ctx.save(); ctx.dialog('layers'); break; }
+      case 'ea-myloc': close(); EarthGlobe.myLocation(globe); ui.eaMyLoc = true; ui.eaPlace = T(lang, 'My Location'); ctx.render(); break;
+      case 'ea-clear': close(); ui.eaPlace = ''; ui.eaMyLoc = false; ctx.render(); break;
+      case 'ea-north': EarthGlobe.north(globe); break;
+      case 'ea-settings': close(); ui.gbPrefs = {app: 'ea-settings', view: 'earth'}; ctx.render(); break;
+      case 'ea-clear-cache': ctx.toast(GBPrefs.text('earth', lang, 'msg_clear_cache')); break;
+      case 'ea-databases': ctx.dialog('ea-databases'); break;
+      case 'ea-about': ctx.dialog('ea-about'); break;
       case 'vs-help': clearTimeout(vsTimer); ui.vsState = 'help'; ctx.render(); break;
       case 'vs-again': ui.vsState = 'listening'; ctx.render(); break;
       case 'vs-cancel': clearTimeout(vsTimer); ui.vsState = 'listening'; ctx.home(); break;
@@ -416,8 +370,8 @@
     const {ui, lang} = ctx;
     if (form !== 'ea-search') return false;
     const q = String(values.get('q') || '').trim().toLowerCase(); ui.eaSearching = false;
-    const hit = PLACES[q] || Object.entries(PLACES).find(([k]) => k.includes(q) || q.includes(k))?.[1];
-    if (hit) { Object.assign(globe, {lon: hit[0], lat: hit[1], spin: false}); ui.eaPlace = String(values.get('q')).trim(); }
+    const hit = EarthGlobe.find(q);
+    if (hit) { EarthGlobe.flyTo(globe, hit); ui.eaMyLoc = false; ui.eaPlace = String(values.get('q')).trim(); }
     else ctx.toast(AndroidStrings.format(T(lang, 'Not Found: %s'), String(values.get('q')).trim()));
     ctx.render(); return true;
   }
@@ -437,7 +391,7 @@
     if (resume) return;
     if (view === 'news-weather') { ui.nwTab = 'Weather'; ui.nwStory = ''; ui.nwSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
     if (view === 'books') { ui.bkRead = ''; ui.bkPrefs = false; ui.bkToc = false; ui.bkDownloads = false; }
-    if (view === 'earth') { ui.eaSplash = true; ui.eaPlace = ''; globe.spin = true; setTimeout(() => { ui.eaSplash = false; if (ui.view === 'earth') ctx.render(); }, 1600); }
+    if (view === 'earth') { ui.eaSplash = true; ui.eaPlace = ''; ui.eaMyLoc = false; globe.spin = true; setTimeout(() => { ui.eaSplash = false; if (ui.view === 'earth') ctx.render(); }, 1600); }
     if (view === 'voice-search') ui.vsState = 'listening';
   }
   const module = {render, mounted, menu, dialog, handle, submit, back, open};

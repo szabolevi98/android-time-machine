@@ -63,6 +63,15 @@ silent_alarm_summary date_time_set alarm_in_silent_mode_title alarm_in_silent_mo
 alarm_volume_summary snooze_duration_title volume_button_setting_title volume_button_setting_summary volume_button_dialog_title'''.split(),
         'arrays': ['alarm_set', 'snooze_duration_entries', 'volume_button_setting_entries'],
     },
+    # Earth 2.0.1's Settings (res/xml/settings.xml) and its dialogs.
+    'earth': {
+        'apks': ['GoogleEarth'],
+        'keys': '''menu_settings settings_settings_section settings_clear_cache settings_clear_cache_summary settings_cache_size
+settings_cache_size_summary settings_sensors settings_sensors_summary_on settings_sensors_summary_off settings_use_terrain
+settings_use_terrain_summary_on settings_use_terrain_summary_off settings_databases settings_databases_summary settings_about_section
+settings_about_item about_info msg_clear_cache database_title database_default'''.split(),
+        'arrays': ['settings_cache_size'],
+    },
     # Music: docs/tools/gb-music-strings.py reads them (and the plurals) from the image's MusicGoogle.apk.
     'browser': {
         'apks': ['Browser', 'framework'],

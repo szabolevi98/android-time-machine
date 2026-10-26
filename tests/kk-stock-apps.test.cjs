@@ -1,7 +1,7 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Stock Nexus 5: the other Google apps in the drawer with simple 2013 screens, and GSMArena's Google folder.
-const w={window:{}};w.window.GELNow={render:()=>'<div class="gnow-page">now</div>'};for(const f of ['news-prefs.js','stock-apps.js'])vm.runInNewContext(fs.readFileSync('versions/4.4.4/'+f,'utf8'),w);
+const w={window:{}};w.window.GELNow={render:()=>'<div class="gnow-page">now</div>'};vm.runInNewContext(fs.readFileSync('earth-app.js','utf8'),w);for(const f of ['news-prefs.js','stock-apps.js'])vm.runInNewContext(fs.readFileSync('versions/4.4.4/'+f,'utf8'),w);
 const A=w.window.StockApps,t=k=>k,ctx=(ui={},data={})=>({ui,data,t,locale:'en',now:new Date(2014,5,20)});
 for(const app of A.APPS)assert.ok(A.render(app,ctx({},{keepNotes:A.DEFAULT_NOTES})).includes('app-view sa-app'),app);
 assert.ok(A.render('google-search',ctx()).includes('gnow-page')&&A.render('google-search',ctx({sub:'settings'})).includes('SEARCH &amp; NOW CARDS'));

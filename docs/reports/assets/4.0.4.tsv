@@ -119,6 +119,7 @@ versions/4.0.4/assets/dl-ic_download_misc_file_type.png	7d7c39fbfd4fcf3c	copy	ma
 versions/4.0.4/assets/dl-ic_menu_delete.png	a7d99bc99e77a4f9	copy	maguro:/system/framework/framework-res.apk!res/drawable-xhdpi/ic_menu_delete.png	drawable-xhdpi		a7d99bc99e77a4f9
 versions/4.0.4/assets/dl-ic_menu_share.png	1a91acf9b576561a	copy	maguro:/system/framework/framework-res.apk!res/drawable-xhdpi/ic_menu_share.png	drawable-xhdpi		1a91acf9b576561a
 versions/4.0.4/assets/downloads.png	5653d7c3853fbcdc	copy	maguro:/system/app/DownloadProviderUi.apk!res/mipmap-xhdpi/ic_launcher_download.png	mipmap-xhdpi		5653d7c3853fbcdc
+versions/4.0.4/assets/ea6-bluedot.png	fc7b2922d0423af7	copy	maguro:/system/app/GoogleEarth.apk!res/drawable/bluedot.png	drawable		fc7b2922d0423af7
 versions/4.0.4/assets/ea6-header_bar_bg_80_percent_black.png	ee66df9086666c61	copy	maguro:/system/app/GoogleEarth.apk!res/drawable-v11/header_bar_bg_80_percent_black.png	drawable-v11		ee66df9086666c61
 versions/4.0.4/assets/ea6-ic_menu_layers.png	41a90eadcdae3dfe	copy	maguro:/system/app/GoogleEarth.apk!res/drawable-xhdpi/ic_menu_layers.png	drawable-xhdpi		41a90eadcdae3dfe
 versions/4.0.4/assets/ea6-ic_menu_mylocation.png	60ef0e16135c38fb	copy	maguro:/system/app/GoogleEarth.apk!res/drawable-xhdpi/ic_menu_mylocation.png	drawable-xhdpi		60ef0e16135c38fb

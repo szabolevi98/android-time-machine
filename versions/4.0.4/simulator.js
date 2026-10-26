@@ -327,6 +327,7 @@
     snapResting(viewport);
     renderOverlay();
     i18n.translateDOM(screen);
+    if (ui.view === 'earth') EarthApp.mount(viewport, earthContext());
     const scene = {view: ui.view, sub: ui.sub}, transit = ui.sleeping ? '' : ICSTransitions.kind(lastScene, scene, pendingNav);
     lastScene = scene;
     if (transit) startTransition(transit, outgoing, viewport.firstElementChild);
@@ -546,7 +547,7 @@
       case 'gmail': return ICSGmail.render(gmailContext());
       case 'play-music': return ICSPlayMusic.render(playMusicContext());
       case 'google-plus': case 'talk': case 'youtube': case 'play-books': case 'play-movies': case 'search': case 'voice-dialer': return ICSGoogleApps.render(ui.view, googleAppsContext());
-      case 'maps': case 'latitude': case 'earth': case 'news-weather': return StockApps.render(ui.view, {ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), now: deviceDate()});
+      case 'maps': case 'latitude': case 'earth': case 'news-weather': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), now: deviceDate()});
       case 'messenger': case 'navigation': case 'local': case 'movie-studio': if (ui.view === 'navigation' && ui.navRun) return MapsRoute.nav(mrContext()); return JBExtraApps.render(ui.view, {ui, t: key => i18n.t(key), contacts: data.contacts, data});
       case 'phone': return renderPhone();
       case 'people': return renderPeople();
@@ -562,6 +563,7 @@
     }
   }
   function openApp(app, resume = false) {
+    if (app === 'earth' && !resume) EarthApp.open(ui);
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
     if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.navPick = ''; ui.locResults = null; ui.locSearching = false; }
     if (app === 'news-weather' && !resume) { ui.newsSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
@@ -652,6 +654,8 @@
   }
   // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
   const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
+  // Earth (earth-app.js): Earth 6.1's settings, search, My location and Share.
+  const earthContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, save, render, toast: message => toast(message), earth: '6.1', account: 'icecream.demo@gmail.com', dark: true, dot: 'assets/ea6-bluedot.png', shareTargets: [['messaging', 'Messaging']], share: (app, text, subject) => { ui.overlay = ''; renderOverlay(); openApp(app); ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); save(); render(); }, openLocation: () => { openApp('settings'); toast(i18n.t('This feature is not part of the simulator.')); }});
   const musicFxContext = () => ({data, ui, language: i18n.language, locale: i18n.locale(), save, render, toast: message => toast(message)});
   const devContext = () => ({data, ui, root: viewport, save, render, renderOverlay, toast: message => toast(message), t: key => i18n.t(key), language: i18n.language});
   function navigateBack() {
@@ -660,6 +664,7 @@
     if (ui.view === 'play-music' && !ui.overlay && ICSPlayMusic.back(ui)) { render(); return; }
     if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
     if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
+    if (ui.view === 'earth' && !ui.overlay && EarthApp.back(ui)) { render(); return; }
     if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return; }
     if (ui.view === 'maps' && !ui.overlay && ui.mapsRoute && MapsRoute.back(mrContext())) return;
     if (ui.view === 'navigation' && !ui.overlay && ui.navRun) { ui.overlay = 'mr-exit'; renderOverlay(); return; }
@@ -1356,6 +1361,7 @@
     if (ui.view === 'email' && action.startsWith('email-') && ICSEmail.handle(action, id, emailContext())) return;
     // Maps, Earth, News & Weather and the simple extras.
     if (['maps', 'latitude', 'earth', 'news-weather', 'messenger', 'navigation', 'local', 'movie-studio'].includes(ui.view)) {
+      if (ui.view === 'earth' && /^(earth|eps)-/.test(action)) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (EarthApp.handle(action, id, earthContext())) return; }
       if (action.startsWith('mps-') && window.MapsPrefs?.handle(action, id, mapsPrefsContext())) return;
       if (action === 'jbx-menu') { ui.overlay = 'jbx-menu'; renderOverlay(); return; }
       if (action === 'sa-unsupported' || action === 'kkx-unavailable') { ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); return; }
@@ -1839,7 +1845,7 @@
     if (ui.view === 'gmail' && ICSGmail.submit(form.dataset.form, values, gmailContext())) return;
     if (ICSGoogleApps.APPS.includes(ui.view) && ICSGoogleApps.submit(form.dataset.form, values, googleAppsContext())) return;
     if (form.dataset.form === 'maps-search') { ui.mapsQuery = String(values.get('query') || '').trim().slice(0, 60); window.MapsPrefs?.remember(data, ui.mapsQuery); save(); render(); return; }
-    if (form.dataset.form === 'earth-search') { toast(i18n.t('This feature is not part of the simulator.')); return; }
+    if (form.dataset.form === 'earth-search') { ui.earthSearching = false; EarthApp.search(new FormData(form).get('query'), earthContext()); render(); return; }
     if(form.dataset.form==='folder-name'){event.target.querySelector('input')?.blur();render();return;}
     if(ICSLanguage.submit(form.dataset.form,values,{data,ui,save,render,renderOverlay}))return;
     if(form.dataset.form==='sx-save'){ui.systemError=ICSSystemSettings.submit(data,ui,values);if(ui.systemError){ui.systemValues=Object.fromEntries(values);renderOverlay();return;}save();ui.overlay='';render();return;}

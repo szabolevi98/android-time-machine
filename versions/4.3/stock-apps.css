@@ -429,3 +429,21 @@
 /* The found place's star (ic_menu_star / _on, 48 px at 320 dpi) left of Directions. */
 .sa-maps-card .sa-btn.sa-maps-star{right:calc(66.2283 * var(--dp))}
 .sa-maps-star img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+
+/* Earth (earth-app.js): the globe canvas, and Settings with no theme of its own: Holo dark PreferenceActivity rows,
+   PreferenceCategory headers (14 sp bold caps over list_section_divider) and Holo dark dialogs for Settings, Layers and Share. */
+.sa-earth-canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+.mps-cat{padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(4 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #ffffff40;font:700 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;text-transform:uppercase;color:#bebebe}
+.mps-dark{background:#000}
+.screen .mps-dark .mps-row{border-bottom-color:#ffffff1f;color:#fff}
+.mps-dark .mps-row small{color:#bebebe}
+.mps-dark .mps-row.disabled b,.mps-dark .mps-row.disabled small{color:#ffffff4d}
+.mps-dark .mps-check,.sa-earth .mps-check{background-image:url('assets/btn_check_off_holo_dark.png')}
+.mps-dark .mps-check.on,.sa-earth .mps-check.on{background-image:url('assets/btn_check_on_holo_dark.png')}
+.mps-dark .mps-radio{background-image:url('assets/btn_radio_off_holo_dark.png')}
+.mps-dark .mps-radio.on{background-image:url('assets/btn_radio_on_holo_dark.png')}
+.mps-dark .mps-dialog,.sa-earth .mps-dialog{background:#282828;color:#fff}
+.mps-dark .mps-dialog p{color:#fff}
+.screen .mps-dark .mps-choices button,.screen .sa-earth .mps-choices button,.screen .mps-dark .mps-buttons button,.screen .sa-earth .mps-buttons button{color:#fff;border-color:#ffffff1f}
+.mps-dark .mps-buttons,.sa-earth .mps-buttons{border-top-color:#ffffff1f}
+.sa-earth .mps-choices img{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-right:calc(16 * var(--dp))}
