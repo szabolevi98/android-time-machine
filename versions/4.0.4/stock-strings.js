@@ -284,7 +284,17 @@ window.StockStrings = {
   "Accounts": {"res": "BooksTablet:menu_accounts", "hu": "Fiókok", "de": "Konten", "fr": "Comptes", "es": "Cuentas"},
   "Make available offline": {"res": "BooksTablet:menu_manage_offline", "hu": "Offline elérhető albumok", "de": "Offline bereitstellen", "fr": "Consulter hors connexion", "es": "Disponible sin conexión"},
   "View as carousel": {"res": "BooksTablet:menu_carousel_view", "hu": "Megtekintés körhintaként", "de": "In Karussellansicht anzeigen", "fr": "Afficher sous forme de carrousel", "es": "Ver como carrusel"},
-  "View as list": {"res": "BooksTablet:menu_list_view", "hu": "Megtekintés listaként", "de": "Als Liste anzeigen", "fr": "Afficher sous forme de liste", "es": "Ver como lista"}
+  "View as list": {"res": "BooksTablet:menu_list_view", "hu": "Megtekintés listaként", "de": "Als Liste anzeigen", "fr": "Afficher sous forme de liste", "es": "Ver como lista"},
+  "Stop reading aloud": {"res": "BooksTablet:menu_stop_reading_aloud", "hu": "Hangos felolvasás befejezése", "de": "Vorlesen beenden", "fr": "Arrêter la lecture à voix haute", "es": "Dejar de leer en voz alta"},
+  "Search for books": {"res": "BooksTablet:search_hint", "hu": "Könyvek keresése", "de": "Nach Büchern suchen", "fr": "Rechercher livres", "es": "Buscar libros"},
+  "Search online": {"res": "BooksTablet:suggest_market", "hu": "Keresés online", "de": "Online suchen", "fr": "Rechercher en ligne", "es": "Buscar online"},
+  "Share \"%1$s\" via": {"res": "BooksTablet:share_dialog_title", "hu": "\"%1$s\" megosztása a következőn keresztül:", "de": "\"%1$s\" teilen über", "fr": "Partager \"%1$s\" via", "es": "Compartir \"%1$s\" a través de"},
+  "Check out \"%1$s\"": {"res": "BooksTablet:share_subject", "hu": "Tekintse át a következőket: \"%1$s\"", "de": "Das könnte interessant sein: \"%1$s\"", "fr": "Consulter \"%1$s\"", "es": "Consultar \"%1$s\""},
+  "Done": {"res": "BooksTablet:done", "hu": "Kész", "de": "Fertig", "fr": "OK", "es": "Ok"},
+  "%s FREE": {"res": "BooksTablet:free_space_format", "hu": "%s SZABAD", "de": "%s verfügbar", "fr": "ESPACE LIBRE : %s", "es": "%s libre"},
+  "Offline legend": {"res": "BooksTablet:make_available_offline", "hu": "Legyen elérhető offline is", "de": "Offline bereitstellen", "fr": "Consulter hors connexion", "es": "Disponible sin conexión", "en": "Make available offline"},
+  "%1$d pages": {"res": "BooksTablet:number_of_pages", "hu": "%1$d oldal", "de": "%1$d Seiten", "fr": "%1$d pages", "es": "%1$d páginas"},
+  "Published %1$s": {"res": "BooksTablet:publication_date", "hu": "Közzététel dátuma: %1$s", "de": "Veröffentlichung: %1$s", "fr": "Date de publication : %1$s", "es": "Fecha de publicación: %1$s"}
  },
  "camera": {
   "pref_camera_flashmode_title": {"res": "CameraGoogle:pref_camera_flashmode_title", "hu": "Vakumód", "de": "Blitzmodus", "fr": "Mode Flash", "es": "Flash", "en": "Flash mode"},

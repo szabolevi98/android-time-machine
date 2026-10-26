@@ -195,3 +195,14 @@
 .screen .nwp-buttons button{flex:1;min-height:calc(48 * var(--dp));padding:calc(6.6667 * var(--dp)) calc(4.6377 * var(--dp)) calc(11.3392 * var(--dp));border:0 solid transparent;border-image:url('assets/gb-btn_default_normal.png') 5 7 12 7 fill / calc(3.3392 * var(--dp)) calc(4.6725 * var(--dp)) calc(8 * var(--dp)) stretch;background:none;color:#000;font:400 calc(18.0058 * var(--dp)) DroidSans,Arial,sans-serif}
 .screen .nwp-buttons button:active{border-image:url('assets/gb-btn_default_pressed.png') 10 8 17 8 fill / calc(6.6667 * var(--dp)) calc(5.3334 * var(--dp)) calc(11.3392 * var(--dp)) stretch}
 .nw-unavailable{margin:0;padding:calc(30.0058 * var(--dp)) calc(15.0029 * var(--dp));text-align:center;font-size:calc(18.0058 * var(--dp));color:#bfbfbf}
+/* Manage eBooks: downloads_item_volume.xml rows (padding 4/6 dp, 10 dp text margin, 16 sp ManageBooks.Text, the 1 px #cdcdcd divider, 48 dp image buttons). */
+.bk-downloads{background:#fff}
+.bk-dl-row{display:flex;align-items:center;padding:calc(6 * var(--dp)) 0 calc(6 * var(--dp)) calc(4 * var(--dp));border-bottom:1px solid #e5e5e5;color:#000}
+.bk-dl-row>span{flex:1;min-width:0;display:flex;flex-direction:column;margin-left:calc(10 * var(--dp))}
+.bk-dl-row b,.bk-dl-row small{font-size:calc(16 * var(--dp));overflow:hidden;text-overflow:ellipsis}
+.bk-dl-row b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.bk-dl-row small{white-space:nowrap}
+.bk-dl-row>i{align-self:stretch;width:1px;background:#cdcdcd}
+.screen .bk-dl-row>button{width:calc(48 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center}
+.bk-dl-row>button img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.screen .bk-dl-row>button:active{background:#ffcd3a80}

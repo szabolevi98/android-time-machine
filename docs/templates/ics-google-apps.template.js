@@ -490,6 +490,11 @@
       if (ui.gaMvDialog) ui.gaMvDialog = null; else if (ui.gaSub === 'mv-licenses') ui.gaSub = 'mv-settings'; else if (ui.gaSub) ui.gaSub = ''; else if (ui.gaMvOffline) ui.gaMvOffline = false; else return false;
       ctx.render(); return true;
     }
+    // Play Books: the share chooser or the About popup, the SearchView, then the offline panel.
+    if (ctx.view === 'play-books') {
+      if (ui.gaBkDialog) ui.gaBkDialog = ''; else if (ui.gaBkAbout) ui.gaBkAbout = false; else if (ui.gaBkSearch) { ui.gaBkSearch = false; ui.gaBkQ = ''; } else if (ui.gaBkOffline && ui.gaSub !== 'read') ui.gaBkOffline = false; else return false;
+      ctx.render(); return true;
+    }
     if (ctx.view !== 'youtube') return false;
     if (ui.gaYtDialog || ui.gaYtDrop) { ui.gaYtDialog = null; ui.gaYtDrop = ''; ctx.render(); return true; }
     const prev = (ui.gaYtStack || []).pop(); if (!prev) return false;
@@ -663,6 +668,7 @@
   // The search field's suggestions follow the text, and the upload form keeps what is typed across its redraws.
   let ytCtx = null;
   globalThis.document?.addEventListener('input', event => {
+    if (ytCtx && ytCtx.ui.view === 'play-books' && event.target.closest?.('.ga-bk-sv')) { ytCtx.ui.gaBkQ = event.target.value; const box = document.querySelector('#viewport .ga-bk-suggestions'); if (box) box.innerHTML = bookSuggestions(ytCtx.lang, event.target.value); return; }
     if (!ytCtx || ytCtx.ui.view !== 'youtube') return;
     if (event.target.closest?.('.ga-yt-sv')) { ytCtx.ui.gaYtQ = event.target.value; const box = document.querySelector('#viewport .ga-yt-suggestions'); if (box) box.innerHTML = ytSuggestions(ytCtx, event.target.value); return; }
     const up = event.target.dataset?.gaYtUp; if (up && ytCtx.ui.gaYtUp) ytCtx.ui.gaYtUp[up] = event.target.value;
@@ -680,8 +686,15 @@
   function menu(ctx) {
     const {ui, lang} = ctx, item = (action, title, id = '') => ({action, title: T(lang, title), id});
     // Play Books' fragment_reader.xml: Contents is the action item; the rest of reader_items fills the overflow.
-    if (ctx.view === 'play-books' && ui.gaSub === 'read') return [['ga-bk-options', 'Display options'], ['ga-unsupported', 'About the book'], ['ga-unsupported', 'Share'], ['ga-unsupported', 'Available offline'], ['ga-unsupported', 'Read aloud'], ['ga-unsupported', 'Help']].map(([action, key]) => ({action, title: BS(lang, key), id: ''}));
-    if (ctx.view === 'play-books') return [['ga-unsupported', 'Refresh'], ['ga-unsupported', 'Accounts'], ['ga-unsupported', 'Help'], ['ga-unsupported', 'Make available offline'], ctx.data?.gaBkView === 'list' ? ['ga-bk-view', 'View as carousel'] : ['ga-bk-view', 'View as list']].map(([action, key]) => ({action, title: BS(lang, key), id: ''}));
+    // Available offline is checkable (menu_keep_on_device); Read aloud turns into Stop reading aloud while it speaks and
+    // is disabled without a speech engine (getSpeechIsAvailable).
+    if (ctx.view === 'play-books' && ui.gaSub === 'read') {
+      const b = readingBook(ui), bk = (action, key, extra = {}) => ({action, title: BS(lang, key), id: '', ...extra});
+      return [bk('ga-bk-options', 'Display options'), bk('ga-bk-about', 'About the book'), bk('ga-bk-share', 'Share'), bk('ga-bk-keep', 'Available offline', {checked: !!(ctx.data?.gaBkPinned || {})[b.id]}),
+        bk('ga-bk-aloud', ui.gaBkAloud ? 'Stop reading aloud' : 'Read aloud', {disabled: !globalThis.speechSynthesis}), bk('ga-unsupported', 'Help')];
+    }
+    // home.xml's overflow, then fragment_carousel.xml's: Make available offline is hidden while its panel shows.
+    if (ctx.view === 'play-books') return [['ga-bk-refresh', 'Refresh'], ['ga-unsupported', 'Accounts'], ['ga-unsupported', 'Help'], ...(ui.gaBkOffline ? [] : [['ga-bk-offline', 'Make available offline']]), ctx.data?.gaBkView === 'list' ? ['ga-bk-view', 'View as carousel'] : ['ga-bk-view', 'View as list']].map(([action, key]) => ({action, title: BS(lang, key), id: ''}));
     if (ctx.view === 'play-movies') return [item('ga-mv-offline', 'Manage offline rentals'), ...['Movies: Accounts'].map(key => item('ga-unsupported', key)), item('ga-mv-settings', 'Movies: Settings'), ...['Movies: Help', 'Movies: Contact us', 'Movies: Send feedback'].map(key => item('ga-unsupported', key))];
     // YouTube: each activity's own items, then menu.xml's Settings, Feedback and Help (YouTubeActivity's MenuHelper).
     if (ctx.view === 'youtube') {
@@ -700,7 +713,7 @@
   // BooksTablet.apk's own strings (stock-strings.js, group books).
   const BS = (lang, key) => { const row = window.StockStrings?.books?.[key]; return row ? AndroidStrings.pick(row, lang, key) : key; };
   const BOOKS = [
-    {id: "b1", title: "Alice’s Adventures in Wonderland", author: "Lewis Carroll", pages: [
+    {id: "b1", title: "Alice’s Adventures in Wonderland", author: "Lewis Carroll", store: "book-alice", year: 1865, pages: [
       "CHAPTER I.\nDown the Rabbit-Hole",
       "Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, “and what is the use of a book,” thought Alice “without pictures or conversations?”",
       "So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of making a daisy-chain would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.",
@@ -709,7 +722,7 @@
       "“Curiouser and curiouser!” cried Alice (she was so much surprised, that for the moment she quite forgot how to speak good English); “now I’m opening out like the largest telescope that ever was! Good-bye, feet!”",
       "CHAPTER III.\nA Caucus-Race and a Long Tale",
       "They were indeed a queer-looking party that assembled on the bank—the birds with draggled feathers, the animals with their fur clinging close to them, and all dripping wet, cross, and uncomfortable."]},
-    {id: "b2", title: "The Adventures of Sherlock Holmes", author: "Arthur Conan Doyle", pages: [
+    {id: "b2", title: "The Adventures of Sherlock Holmes", author: "Arthur Conan Doyle", store: "book-holmes", year: 1892, pages: [
       "I. A Scandal in Bohemia",
       "To Sherlock Holmes she is always the woman. I have seldom heard him mention her under any other name. In his eyes she eclipses and predominates the whole of her sex.",
       "It was not that he felt any emotion akin to love for Irene Adler. All emotions, and that one particularly, were abhorrent to his cold, precise but admirably balanced mind.",
@@ -756,13 +769,55 @@
     const current = book.starts.filter(start => start <= index).length - 1;
     return `<div class="ga-bk-toc-scrim" data-action="ga-bk-toc"></div><div class="ga-bk-toc">${book.starts.map((start, n) => `<button class="${n === current ? 'current' : ''}" data-action="ga-bk-chapter" data-id="${start}"><span>${e(book.pages[start].replace(/\n/g, ' '))}</span><em>${start + 1}</em></button>`).join('')}</div>`;
   }
+  const readingBook = ui => BOOKS.find(x => x.id === ui.gaBook) || BOOKS[0];
+  /* About the book's popup (ReaderFragment.toggleAboutTheBook, touching the title): about_the_book_popup.xml — the
+     #3d3f40 head with the 120 dp cover, the 24 sp white title and the 18 sp #848484 author, the 2 dp #3f9ddd rule,
+     "Published %1$s" (no publisher) and "%1$d pages" at 18 sp, then the 2 dp #bdbdbd rule. */
+  function aboutPopup(lang, b) {
+    return `<div class="ga-bk-about-scrim" data-action="ga-bk-about-popup"></div><div class="ga-bk-about" role="dialog" aria-label="${e(b.title)}"><div class="ga-bk-about-head">${art(b.title, 'ga-bk-cover')}<span><b>${e(b.title)}</b><small>${e(b.author)}</small></span></div><i class="blue"></i><p>${e(AndroidStrings.format(BS(lang, 'Published %1$s'), b.year))}</p><p class="last">${e(AndroidStrings.format(BS(lang, '%1$d pages'), b.pages.length))}</p><i></i></div>`;
+  }
+  // Share: the chooser (share_dialog_title) over the image's apps that take ACTION_SEND text/plain.
+  function bookShare(ctx, b) {
+    const {lang} = ctx, title = AndroidStrings.format(BS(lang, 'Share "%1$s" via'), b.title);
+    return `<button type="button" class="nwp-scrim" data-action="ga-bk-dialog-cancel" aria-label="${e(T(lang, 'Cancel'))}"></button><div class="nwp-dialog ga-yt-share" role="dialog" aria-label="${e(title)}"><h3>${e(title)}</h3><div class="nwp-choices">${[['email', 'Email'], ['gmail', 'Gmail'], ['messaging', 'Messaging']].map(([app, name]) => `<button type="button" data-action="ga-bk-share-to" data-id="${app}"><img src="assets/${app}.png" alt=""><span>${e(ctx.t(name))}</span></button>`).join('')}</div></div>`;
+  }
+  /* Search (HomeMenuFragment): the SearchView expanded in the bar with search_hint; its LocalSearchAdapter lists the
+     library's books whose title or author has the text (title COLLATE NOCASE ASC) as list_item_suggest_volume.xml rows
+     (40 dp cover, List.VolumeSuggest.Title 18 sp, .Creator 14 sp), then list_item_suggest_market.xml's "Search online". */
+  const bookMatches = q => q ? BOOKS.filter(b => `${b.title}\n${b.author}`.toLocaleLowerCase().includes(q.toLocaleLowerCase())).sort((a, b) => a.title.localeCompare(b.title, undefined, {sensitivity: 'base'})) : [];
+  const bookSuggestions = (lang, q) => { const hits = bookMatches(q); return hits.length ? hits.map(b => `<button class="ga-bk-suggest" data-action="ga-bk-suggest" data-id="${b.id}">${art(b.title, 'ga-bk-cover')}<span><b>${e(b.title)}</b><small>${e(b.author)}</small></span></button>`).join('') + `<button class="ga-bk-suggest ga-bk-online" data-action="ga-bk-search-online"><span><b>${e(BS(lang, 'Search online'))}</b></span></button>` : ''; };
+  /* Make available offline (VolumeCarouselFragment.setShowOfflineUi): the pins show on the books, a touch on a cover
+     pins it, and manage_offline_view.xml (#222222 at 96 %) sits at the bottom: Done (ic_cab_done_holo_dark), a 15 %
+     white rule, the storage indicator (secondaryProgress: used + 10 MB per newly pinned book) and the legend with
+     "%s FREE" — the demo phone's 9.93 GB free of 13.33 GB. */
+  const GB = 1024 ** 3, TOTAL = 13.33 * GB, FREE = 9.93 * GB, PIN_BYTES = 10e6;
+  const fileSize = bytes => { let v = bytes, u = 0; while (v > 900 && u < 3) { v /= 1024; u++; } return `${v < 100 ? v.toFixed(2) : v.toFixed(0)} ${['B', 'KB', 'MB', 'GB'][u]}`; };
+  function offlinePanel(ctx) {
+    const {lang, ui, data} = ctx, pinned = data.gaBkPinned || {}, start = ui.gaBkOfflineStart || {};
+    const delta = BOOKS.reduce((sum, b) => sum + (!!pinned[b.id] === !!start[b.id] ? 0 : pinned[b.id] ? PIN_BYTES : -PIN_BYTES), 0), used = TOTAL - FREE + delta;
+    return `<footer class="ga-bk-manage"><button data-action="ga-bk-offline-done" aria-label="${e(BS(lang, 'Done'))}"><img src="assets/ga-bk-ic_cab_done_holo_dark.png" alt=""></button><i></i><div class="ga-bk-storage"><span class="ga-bk-meter"><b style="width:${(used / TOTAL * 100).toFixed(2)}%"></b></span><span class="ga-bk-legend"><img src="assets/ga-bk-ic_make_avaiable_offline_legend.png" alt=""><span>${e(BS(lang, 'Offline legend'))}</span><small>${e(AndroidStrings.format(BS(lang, '%s FREE'), fileSize(TOTAL - used)))}</small></span></div></footer>`;
+  }
+  function stopAloud(ui) { ui.gaBkAloud = ''; globalThis.speechSynthesis?.cancel(); }
+  // Read aloud (TextToSpeechController): the page's text through the speech engine, turning the pages as it goes.
+  function speakPage(ctx) {
+    const {ui, data} = ctx, b = readingBook(ui), synth = globalThis.speechSynthesis; if (!synth || ui.gaBkAloud !== b.id) return;
+    const page = Math.min((data.gaBookPages || {})[b.id] || 0, b.pages.length - 1), say = new SpeechSynthesisUtterance(b.pages[page].replace(/\n/g, '. '));
+    say.lang = 'en-US';
+    say.onend = () => {
+      if (ui.gaBkAloud !== b.id || ui.view !== 'play-books' || ui.gaSub !== 'read') return;
+      if (page + 1 >= b.pages.length) { stopAloud(ui); return; }
+      (data.gaBookPages ||= {})[b.id] = page + 1; ctx.save(); ctx.render(); speakPage(ctx);
+    };
+    synth.cancel(); synth.speak(say);
+  }
   function books(ctx) {
     const {ui, lang, data} = ctx;
     if (ui.gaSub === 'read') {
       const b = BOOKS.find(x => x.id === ui.gaBook) || BOOKS[0], page = Math.min((data.gaBookPages || {})[b.id] || 0, b.pages.length - 1), pr = bookPrefs(data);
       const text = b.pages[page].split('\n').filter(Boolean).map((p, i) => b.starts.includes(page) ? `<h3${i ? ' class="sub"' : ''}>${e(p)}</h3>` : `<p>${e(p)}</p>`).join('');
       const style = `--bk-zoom:${pr.textZoom};--bk-lh:${(pr.lineHeight / 1.55).toFixed(4)};--bk-dim:${pr.brightness < 0 ? 0 : ((100 - pr.brightness) / 100 * .7).toFixed(3)}`;
-      return `<div class="app-view ga-app ga-books ga-bk-reader ga-bk-${pr.theme === '1' ? 'night' : 'day'} ga-bk-face-${e(pr.typeface)} ga-bk-just-${e(pr.justification)}" style="${style}">${head('ga-books-bar', 'play-books', b.title, icon('ga-bk-toc', BS(lang, 'Contents'), 'ga-bk-ic_menu_toc_light') + more(true), true)}<button class="ga-page" data-action="ga-book-turn"><span class="ga-bk-text">${text}</span><small>${page + 1} / ${b.pages.length}</small></button>${ui.gaBkToc ? bookContents(b, page) : ''}${ui.gaBkOptions ? bookSettings(lang, ui, pr) : ''}<div class="ga-bk-dim"></div></div>`;
+      const bar = head('ga-books-bar', 'play-books', b.title, icon('ga-bk-toc', BS(lang, 'Contents'), 'ga-bk-ic_menu_toc_light') + more(true), true).replace('<h2>', '<h2 class="ga-bk-title" data-action="ga-bk-about-popup" role="button">');
+      return `<div class="app-view ga-app ga-books ga-bk-reader ga-bk-${pr.theme === '1' ? 'night' : 'day'} ga-bk-face-${e(pr.typeface)} ga-bk-just-${e(pr.justification)}${ui.gaBkAloud ? ' ga-bk-aloud' : ''}" style="${style}">${bar}<button class="ga-page" data-action="ga-book-turn"><span class="ga-bk-text">${text}</span><small>${page + 1} / ${b.pages.length}</small></button>${ui.gaBkToc ? bookContents(b, page) : ''}${ui.gaBkOptions ? bookSettings(lang, ui, pr) : ''}${ui.gaBkAbout ? aboutPopup(lang, b) : ''}${ui.gaBkDialog === 'share' ? bookShare(ctx, b) : ''}<div class="ga-bk-dim"></div></div>`;
     }
     /* The library (Theme.Light: the action bar overlays carousel_bg; home.xml's Shop and Search in the bar).
        LocalPreferences' default view mode is "carousel": the covers on a turntable over volume_detail_view.xml (the btn_pin
@@ -770,11 +825,15 @@
        ListView of books_list_item.xml rows (36 dp cover, List.TitleText medium bold and List.AuthorText small at 75 %,
        the 30 dp pin). The covers are drawn: the books are public-domain demo texts without cover art. */
     const pinned = data.gaBkPinned || {}, pin = b => `<button class="ga-bk-pin${pinned[b.id] ? ' on' : ''}" data-action="ga-bk-pin" data-id="${b.id}" aria-pressed="${!!pinned[b.id]}" aria-label="${e(BS(lang, 'Make available offline'))}"></button>`;
-    const bar = head('ga-books-bar', 'play-books', 'Play Books', icon('ga-shop', T(lang, 'Shop'), 'ga-bk-ic_menu_market_light') + icon('ga-unsupported', BS(lang, 'Search'), 'ga-bk-ic_menu_search_light') + more(true));
-    if (data.gaBkView === 'list') return `<div class="app-view ga-app ga-books ga-bk-home">${bar}<div class="ga-scroll ga-bk-list">${BOOKS.map(b => `<div class="ga-bk-row"><button class="ga-bk-open" data-action="ga-book" data-id="${b.id}">${art(b.title, 'ga-bk-cover')}<span><b>${e(b.title)}</b><small>${e(b.author)}</small></span></button>${pin(b)}</div>`).join('')}</div></div>`;
+    const q = ui.gaBkQ || '', offline = !!ui.gaBkOffline, open = offline ? 'ga-bk-pin' : 'ga-book';
+    const bar = ui.gaBkSearch
+      ? `<form class="ga-bar ga-books-bar ga-bk-sv" data-form="ga-bk-search"><button type="button" class="ga-home" data-action="back" aria-label="Play Books"><img class="ga-back" src="assets/ga-fw-ic_ab_back_holo_light.png" alt=""><img src="assets/play-books.png" alt=""></button><input name="query" value="${e(q)}" placeholder="${e(BS(lang, 'Search for books'))}" autocomplete="off" spellcheck="false" aria-label="${e(BS(lang, 'Search for books'))}"></form><div class="ga-bk-suggestions">${bookSuggestions(lang, q)}</div>`
+      : head('ga-books-bar', 'play-books', 'Play Books', icon('ga-shop', T(lang, 'Shop'), 'ga-bk-ic_menu_market_light') + icon('ga-bk-search', BS(lang, 'Search'), 'ga-bk-ic_menu_search_light') + more(true));
+    const home = `app-view ga-app ga-books ga-bk-home${offline ? ' ga-bk-offline' : ''}${ui.gaBkSyncing ? ' ga-bk-syncing' : ''}`, panel = offline ? offlinePanel(ctx) : '';
+    if (data.gaBkView === 'list') return `<div class="${home}">${bar}<div class="ga-scroll ga-bk-list">${BOOKS.map(b => `<div class="ga-bk-row"><button class="ga-bk-open" data-action="${open}" data-id="${b.id}">${art(b.title, 'ga-bk-cover')}<span><b>${e(b.title)}</b><small>${e(b.author)}</small></span></button>${pin(b)}</div>`).join('')}</div>${panel}</div>`;
     const at = Math.min(Math.max(ui.gaBkAt || 0, 0), BOOKS.length - 1), b = BOOKS[at];
-    const covers = BOOKS.map((x, i) => `<button class="ga-bk-slot" style="--d:${i - at};--a:${Math.min(1, Math.abs(i - at))};z-index:${10 - Math.abs(i - at)}" data-action="${i === at ? 'ga-book' : 'ga-bk-at'}" data-id="${i === at ? x.id : i}" aria-label="${e(x.title)}">${art(x.title, 'ga-bk-cover')}</button>`).join('');
-    return `<div class="app-view ga-app ga-books ga-bk-home">${bar}<div class="ga-bk-carousel">${covers}</div><div class="ga-bk-detail">${pin(b)}<b>${e(b.title)}</b><span>${e(b.author)}</span></div></div>`;
+    const covers = BOOKS.map((x, i) => `<button class="ga-bk-slot" style="--d:${i - at};--a:${Math.min(1, Math.abs(i - at))};z-index:${10 - Math.abs(i - at)}" data-action="${i === at ? open : 'ga-bk-at'}" data-id="${i === at ? x.id : i}" aria-label="${e(x.title)}">${art(x.title, 'ga-bk-cover')}</button>`).join('');
+    return `<div class="${home}">${bar}<div class="ga-bk-carousel">${covers}</div><div class="ga-bk-detail">${pin(b)}<b>${e(b.title)}</b><span>${e(b.author)}</span></div>${panel}</div>`;
   }
 
   // ---- Play Movies 1.4.11 ----
@@ -877,6 +936,7 @@
   }
 
   function render(app, ctx) {
+    if (app === 'play-books') ytCtx = ctx;
     return ({'google-plus': gplus, talk, youtube, 'play-books': books, 'play-movies': movies, search, 'voice-dialer': voiceDialer}[app] || (() => ''))(ctx);
   }
   // ctx: {data, ui, lang, account, save, render, toast, openApp, browse(query), listen()}.
@@ -975,7 +1035,7 @@
         (data.gaYtRatings ||= {})[v] = id; ctx.save(); ctx.render(); ctx.toast(T(ctx.lang, id === 'like' ? 'You like this video.' : 'You dislike this video.')); break;
       }
       case 'ga-yt-plus': { const v = ui.gaVideo || VIDEOS[0].id, list = data.gaYtPlus || []; data.gaYtPlus = list.includes(v) ? list.filter(x => x !== v) : [...list, v]; ctx.save(); ctx.render(); break; }
-      case 'ga-book': ui.gaBook = id; ui.gaSub = 'read'; ctx.render(); break;
+      case 'ga-book': if (ui.gaBkAloud && ui.gaBkAloud !== id) stopAloud(ui); ui.gaBook = id; ui.gaSub = 'read'; ui.gaBkAbout = false; ctx.render(); break;
       case 'ga-book-turn': { const b = BOOKS.find(x => x.id === ui.gaBook) || BOOKS[0]; data.gaBookPages ||= {}; data.gaBookPages[b.id] = ((data.gaBookPages[b.id] || 0) + 1) % b.pages.length; ctx.save(); ctx.render(); break; }
       // Play Books 2.3.6's reader: the Contents popup (TableOfContentsActionItem) and Display options (ReaderSettingsFragment).
       case 'ga-bk-toc': ui.gaBkToc = !ui.gaBkToc; ui.gaBkOptions = false; ui.gaBkSpin = ''; ctx.render(); break;
@@ -990,6 +1050,22 @@
       case 'ga-bk-view': ctx.closeOverlay(); data.gaBkView = data.gaBkView === 'list' ? 'carousel' : 'list'; ctx.save(); ctx.render(); break;
       case 'ga-bk-at': ui.gaBkAt = Number(id); ctx.render(); break;
       case 'ga-bk-pin': (data.gaBkPinned ||= {})[id] = !data.gaBkPinned[id]; ctx.save(); ctx.render(); break;
+      // The reader's overflow: About the book is the book's page in the Play Store (startAboutVolume); a touch on the
+      // title toggles the About popup; Share sends the canonical URL with share_subject; Available offline pins it.
+      case 'ga-bk-about': { const b = readingBook(ui); ctx.closeOverlay(); stopAloud(ui); ctx.play({page: 'detail', selected: b.store}); break; }
+      case 'ga-bk-about-popup': ui.gaBkAbout = !ui.gaBkAbout; ui.gaBkToc = false; ctx.render(); break;
+      case 'ga-bk-share': ctx.closeOverlay(); ui.gaBkDialog = 'share'; ctx.render(); break;
+      case 'ga-bk-share-to': { const b = readingBook(ui); ui.gaBkDialog = ''; stopAloud(ui); ctx.share(id, AndroidStrings.format(BS(ctx.lang, 'Check out "%1$s"'), b.title), `http://books.google.com/books?id=${b.id}`); break; }
+      case 'ga-bk-dialog-cancel': ui.gaBkDialog = ''; ctx.render(); break;
+      case 'ga-bk-keep': { const b = readingBook(ui); ctx.closeOverlay(); (data.gaBkPinned ||= {})[b.id] = !data.gaBkPinned[b.id]; ctx.save(); ctx.render(); break; }
+      case 'ga-bk-aloud': ctx.closeOverlay(); if (ui.gaBkAloud) stopAloud(ui); else { ui.gaBkAloud = readingBook(ui).id; speakPage(ctx); } ctx.render(); break;
+      // The library: Search, Refresh (a forced sync: the status bar's sync icon), Make available offline.
+      case 'ga-bk-search': ui.gaBkSearch = true; ui.gaBkQ = ''; ctx.render(); ctx.focus?.('.ga-bk-sv input'); break;
+      case 'ga-bk-suggest': ui.gaBkSearch = false; ui.gaBkQ = ''; ui.gaBook = id; ui.gaSub = 'read'; ctx.render(); break;
+      case 'ga-bk-search-online': { const query = ui.gaBkQ || ''; ui.gaBkSearch = false; ui.gaBkQ = ''; ctx.play({page: 'search', query}); break; }
+      case 'ga-bk-refresh': ctx.closeOverlay(); ctx.sync(1500); break;
+      case 'ga-bk-offline': ctx.closeOverlay(); ui.gaBkOffline = true; ui.gaBkOfflineStart = {...(data.gaBkPinned || {})}; ctx.render(); break;
+      case 'ga-bk-offline-done': ui.gaBkOffline = false; ctx.render(); break;
       case 'ga-movies-tab': ui.gaMoviesTab = id; ctx.render(); break;
       case 'ga-mv-retry': ui.gaMvLoading = true; ctx.render(); setTimeout(() => { ui.gaMvLoading = false; if (ctx.view === 'play-movies') ctx.render(); }, 1500); break;
       case 'ga-mv-offline': ctx.closeOverlay(); ui.gaMvOffline = true; ui.gaMoviesTab = 'rentals'; ctx.render(); break;
@@ -1025,6 +1101,8 @@
       ctx.save(); ctx.render(); return true;
     }
     if (form === 'ga-yt-search') { const q = String(values.get('query') || '').trim(); if (q) ytRunSearch(ctx, q); return true; }
+    // Books' SearchView: a query goes to the Play Store's book search (startSearch).
+    if (form === 'ga-bk-search') { const q = String(values.get('query') || '').trim(); if (q) { ui.gaBkSearch = false; ui.gaBkQ = ''; ctx.play({page: 'search', query: q}); } return true; }
     // The Upload button asks for upload_policy first if it was never set.
     if (form === 'ga-yt-upload') { if (ytPref(data, 'upload_policy', -1) < 0) { ui.gaYtDialog = {kind: 'policy', pick: 0}; ctx.render(); } else ytUploadNow(ctx); return true; }
     if (form === 'ga-talk-search') { const q = String(values.get('query') || '').trim(); if (q) { ui.gaTalkQ = q; ui.gaSub = 'results'; ctx.render(); } return true; }
@@ -1039,5 +1117,5 @@
     }
     return false;
   }
-  window.ICSGoogleApps = {APPS, render, handle, submit, menu, back, captured, books: {BOOKS, BOOK_PREFS, bookPrefs, stepPref}};
+  window.ICSGoogleApps = {APPS, render, handle, submit, menu, back, captured, books: {BOOKS, BOOK_PREFS, bookPrefs, stepPref, stopAloud}};
 })();

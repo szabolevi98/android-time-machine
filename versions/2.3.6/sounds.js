@@ -24,7 +24,7 @@
   document.addEventListener('click', event => {
     const pick = event.target.closest?.('[data-action="gbset-sound-pick"]');
     if (!pick) return;
-    const [kind, name] = pick.dataset.id.split(':');
+    const id = pick.dataset.id, kind = id.slice(0, id.indexOf(':')), name = id.slice(id.indexOf(':') + 1);
     if (name) play(kind === 'ringtone' ? 'ringtones' : 'notifications', name); else stop();
   }, true);
   // The list closing stops the preview; the ringing screen appearing or leaving starts or stops the alarm.

@@ -124,6 +124,17 @@
     if (ui.gmPref === 'labels') { ui.gmPref = 'account'; return true; }
     return false;
   }
+  /* About Gmail (preference_headers.xml's AboutFragment, about_activity.xml): the logo, "Version %s" with the
+     APK's versionName, "©%d Google Inc." with the year, Send feedback and "Tell us what you think" only where Google
+     Feedback is installed (Utils.isGoogleFeedbackInstalled: the Nexus 5 image has no GoogleFeedback.apk), a 2 dp #666666 rule, about_desc,
+     Open source licenses (LicenseActivity's WebView over res/raw/licenses.html) and the Privacy Policy link. */
+  const VERSION = '4.6.1 (1227136)', FEEDBACK = false;
+  function about(lang, T) {
+    const link = (action, label) => `<button type="button" class="gmp-link" data-action="${action}">${e(label)}</button>`;
+    return `<div class="gmp-about"><img class="gmp-logo" src="assets/gm-logo.png" alt="Gmail"><p class="gap">${e(AndroidStrings.format(T('Version %s'), VERSION))}</p><p>${e(AndroidStrings.format(T('©%d Google Inc.'), new Date().getFullYear()))}</p>`
+      + (FEEDBACK ? `<p class="gap">${link('gmail-unavailable', T('Send feedback'))}</p><p>${e(T('Tell us what you think'))}</p>` : '')
+      + `<hr><p>${e(T('About desc'))}</p><p class="gap">${link('gmail-licenses', T('Open source licenses'))}</p><p class="gap">${link('gmail-unavailable', T('Privacy Policy'))}</p></div>`;
+  }
   const categoryOn = (data, id) => pref(data, 'category-' + id, (CATEGORIES.find(row => row[1] === id) || [])[4] ?? true);
   function settings(data, ui, lang, emailT) {
     const T = key => P(lang, key), page = ui.gmPref || '';
@@ -132,7 +143,7 @@
     const check = on => `<i class="gmp-check${on ? ' on' : ''}" role="checkbox" aria-checked="${!!on}"></i>`;
     const value = item => item[1].startsWith('category-') ? categoryOn(data, item[1].slice(9)) : pref(data, item[1], item[4]);
     let body = '';
-    if (!page) body = [['general', 'General settings'], ['account', account], ['about', 'About Gmail']].map(([id, label]) => row(id === 'about' ? 'gmail-unavailable' : 'gmail-pref', id, id === 'account' ? label : T(label))).join('');
+    if (!page) body = [['general', 'General settings'], ['account', account], ['about', 'About Gmail']].map(([id, label]) => row('gmail-pref', id, id === 'account' ? label : T(label))).join('');
     else if (screens[page]) body = screens[page].map(item => {
       if (item[0] === 'cat') return `<h4 class="gmp-cat">${e(T(item[1]))}</h4>`;
       // Inbox sound & vibrate depends on Notifications (dependency="notifications-enabled").
@@ -147,9 +158,11 @@
       const on = page === 'categories' && item[1] !== 'starred' ? categoryOn(data, item[1]) : pref(data, item[1], item[4]);
       return row('gmail-pref-toggle', page === 'categories' && item[1] !== 'starred' ? 'category-' + item[1] : item[1], T(item[2]), item[3] ? T(item[3]) : '', check(on), icon);
     }).join('');
+    else if (page === 'about') body = about(lang, T);
+    else if (page === 'licenses') body = `<iframe class="gmp-licenses" src="assets/gm-licenses.html" title="${e(T('Open source licenses'))}"></iframe>`;
     else if (page === 'labels') body = FOLDERS.map(name => row('gmail-pref', 'label:' + name, tr(lang, name), [syncText(data, name, lang), notifyText(data, name, lang)].filter(Boolean).join('\n'))).join('');
     else if (page.startsWith('label:')) body = labelPage(data, page.slice(6), lang, row, check);
-    const title = !page ? T('Settings') : page === 'general' ? T('General settings') : page === 'categories' ? T('Inbox categories') : page === 'labels' ? T('Manage labels') : page.startsWith('label:') ? (page === 'label:Primary' && ui.gmLabelFrom !== 'labels' ? T('Inbox sound & vibrate') : tr(lang, page.slice(6))) : account;
+    const title = !page ? T('Settings') : page === 'general' ? T('General settings') : page === 'about' ? T('About Gmail') : page === 'licenses' ? T('Open source licenses') : page === 'categories' ? T('Inbox categories') : page === 'labels' ? T('Manage labels') : page.startsWith('label:') ? (page === 'label:Primary' && ui.gmLabelFrom !== 'labels' ? T('Inbox sound & vibrate') : tr(lang, page.slice(6))) : account;
     const list = ui.gmPrefList && [...GENERAL, ...ACCOUNT].find(item => item[0] === 'list' && item[1] === ui.gmPrefList);
     const dialog = ui.gmx ? labelDialog(data, ui, lang, emailT) : list ? `<button type="button" class="gmp-scrim" data-action="gmail-pref-close" aria-label="${e(emailT('Cancel'))}"></button><div class="gmp-dialog" role="dialog"><h3>${e(T(list[2]))}</h3>${list[3].map((label, i) => `<button type="button" class="gmp-choice${pref(data, list[1], list[4]) === i ? ' on' : ''}" data-action="gmail-pref-pick" data-id="${list[1]}:${i}" role="radio" aria-checked="${pref(data, list[1], list[4]) === i}"><span>${e(T(label))}</span><i></i></button>`).join('')}<div class="gmp-buttons"><button type="button" data-action="gmail-pref-close">${e(emailT('Cancel'))}</button></div></div>`
       : ui.gmSignature !== undefined ? `<button type="button" class="gmp-scrim" data-action="gmail-pref-close" aria-label="${e(emailT('Cancel'))}"></button><div class="gmp-dialog" role="dialog"><h3>${e(T('Signature dialog'))}</h3><textarea class="gmp-signature" data-gmail-signature data-no-translate rows="3">${e(ui.gmSignature)}</textarea><div class="gmp-buttons"><button type="button" data-action="gmail-pref-close">${e(emailT('Cancel'))}</button><button type="button" data-action="gmail-signature-save">${e(emailT('OK'))}</button></div></div>` : '';

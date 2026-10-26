@@ -34,8 +34,11 @@
   const RINGTONES = RINGTONE_TITLES.map(([file]) => file), NOTIFICATIONS = NOTIFICATION_TITLES.map(([file]) => file);
   const SOUND_DEFAULTS = {ringtone: 'Sceptrum', notificationSound: 'Castor'};
   // A saved sound the image lacks (the earlier AOSP OriginalAudio set) reads as the image's default.
-  const soundOf = (s, kind) => { const name = s[kind] ?? SOUND_DEFAULTS[kind]; return name === '' || (kind === 'ringtone' ? RINGTONES : NOTIFICATIONS).includes(name) ? name : SOUND_DEFAULTS[kind]; };
-  const soundTitle = name => name ? TITLES[name] || name.replace(/_/g, ' ').replace(/([a-z])([A-Z0-9])/g, '$1 $2').replace(/\s+/g, ' ').trim() : '';
+  // Music's "Use as phone ringtone" saves music:<song>; RingtoneManager lists the songs flagged IS_RINGTONE after the
+  // system's own tones.
+  const songRingtones = () => (window.ICSMusic?.ringtones() || []).map(n => `music:${n}`);
+  const soundOf = (s, kind) => { const name = s[kind] ?? SOUND_DEFAULTS[kind]; return name === '' || (kind === 'ringtone' ? [...RINGTONES, ...songRingtones()] : NOTIFICATIONS).includes(name) ? name : SOUND_DEFAULTS[kind]; };
+  const soundTitle = name => name?.startsWith?.('music:') ? window.ICSMusic?.tracks[Number(name.slice(6))]?.title || '' : name ? TITLES[name] || name.replace(/_/g, ' ').replace(/([a-z])([A-Z0-9])/g, '$1 $2').replace(/\s+/g, ' ').trim() : '';
   const LOCALES = [['en', 'English'], ['hu', 'Magyar'], ['de', 'Deutsch'], ['fr', 'Français'], ['es', 'Español']];
   /* Screens; "ics:x" targets reuse the version's existing page (lock setup, accounts, applications, battery). */
   // Voice Search 2.1.3's settings data (gb-voice-settings.js) and its language entries.
@@ -300,7 +303,7 @@
       return {title: T('all_volume_title'), custom: `<div class="gbvols">${slider('ringVolume', T('incoming_call_volume_title'), 70)}<label class="gbvol-check"><input type="checkbox" data-vol-same ${same ? 'checked' : ''}> ${e(T('checkbox_notification_same_as_incoming_call'))}</label>${slider('notificationVolume', T('notification_volume_title'), 70).replace('<label class="gbvol"', `<label class="gbvol" data-vol-notification${same ? ' hidden' : ''}`)}${slider('mediaVolume', T('media_volume_title'), 60)}${slider('alarmVolume', T('alarm_volume_title'), 80)}</div>`, buttons: [{action: 'gbset-volume-ok', title: ok}, {action: 'close-overlay', title: cancel}]};
     }
     if (kind === 'ringtone' || kind === 'notificationSound') {
-      const names = kind === 'ringtone' ? RINGTONES : NOTIFICATIONS, current = soundOf(s, kind);
+      const names = kind === 'ringtone' ? [...RINGTONES, ...songRingtones()] : NOTIFICATIONS, current = soundOf(s, kind);
       const options = ['', ...names];
       return {title: T(kind === 'ringtone' ? 'ringtone_title' : 'notification_sound_title'), items: options.map(name => ({action: 'gbset-sound-pick', id: `${kind}:${name}`, title: name ? soundTitle(name) : ctx.t('Silent')})), choice: 'single', selected: Math.max(0, options.indexOf(current)), buttons: [{action: 'close-overlay', title: ok}, {action: 'close-overlay', title: cancel}]};
     }

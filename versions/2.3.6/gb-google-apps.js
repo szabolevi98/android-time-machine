@@ -43,6 +43,11 @@
     "Recently read": {"res": "BooksPhone:display_sort_date_read", "hu": "Nemrég olvasott", "de": "Zuletzt gelesen", "fr": "Livres récemment lus", "es": "Leído recientemente"},
     "Sort by:": {"res": "BooksPhone:sort_dialog_title", "hu": "Rendezési szempont:", "de": "Sortieren nach:", "fr": "Trier par :", "es": "Ordenar por:"},
     "About": {"res": "BooksPhone:menu_reader_about", "hu": "Ismertető", "de": "Über", "fr": "À propos de", "es": "Acerca de"},
+    "Keep": {"res": "BooksPhone:remove_book_dialog_cancel", "hu": "Megőrzés", "de": "Beibehalten", "fr": "Conserver", "es": "Conservar"},
+    "Remove book": {"res": "BooksPhone:remove_book_dialog_confirm", "hu": "Törlés", "de": "Entfernen", "fr": "Supprimer", "es": "Eliminar", "en": "Remove"},
+    "Remove book message": {"res": "BooksPhone:remove_book_dialog_message", "hu": "Leveszi a(z) \"%s\" című könyvet E-könyveim polcáról? Addig nem fogja tudni elolvasni, amíg újra fel nem teszi.", "de": "\"%s\" aus Ihrem Bücherregal entfernen? Sie können es erst wieder lesen, nachdem Sie es erneut hinzugefügt haben.", "fr": "Supprimer \"%s\" de l'étagère Mes livres numériques ? Si oui, vous ne serez plus en mesure de lire ce livre, à moins de le télécharger à nouveau.", "es": "¿Quieres eliminar \"%s\" de la estantería \"Mis eBooks\"? No podrás volver a leerlo a menos que lo añadas de nuevo a la estantería.", "en": "Remove \"%s\" from the My eBooks shelf? You won't be able to read it unless you add it back again."},
+    "Pin toast": {"res": "BooksPhone:pin_toast", "hu": "Annak biztosítása, hogy el tudja olvasni ezt a könyvet offline.", "de": "Es wird sichergestellt, dass Sie dieses Buch offline lesen können.", "fr": "Le livre pourra être consulté hors connexion.", "es": "Asegurarte de poder leer este libro sin conexión", "en": "Ensuring that you can read this book offline."},
+    "Unpin toast": {"res": "BooksPhone:unpin_toast", "hu": "Ha a telefonján kevés a hely, lehet, hogy nem tudja elolvasni ezt a könyvet offline.", "de": "Auf Ihrem Telefon ist nur noch wenig Speicherplatz vorhanden. Möglicherweise können Sie dieses Buch nicht offline lesen.", "fr": "Si votre téléphone dispose de peu d'espace de stockage, il est possible que vous ne puissiez pas lire ce livre hors connexion.", "es": "Si el teléfono tiene poco espacio, es posible que no puedas leer este libro sin conexión.", "en": "If your phone is low on space, you may not be able to read this book offline."},
     "Day": {"res": "BooksPhone:pref_themes_day", "hu": "Nappal", "de": "Tag", "fr": "Jour", "es": "Día"},
     "Night": {"res": "BooksPhone:pref_themes_night", "hu": "Éjszaka", "de": "Nacht", "fr": "Nuit", "es": "Noche"},
     "Text size": {"res": "BooksPhone:text_size", "hu": "Szöveg mérete", "de": "Textgröße", "fr": "Taille de la police", "es": "Tamaño de la letra"},
@@ -203,6 +208,13 @@
     const current = book.starts.filter(start => start <= page).length - 1;
     return `<div class="bk-chapters"><div class="bk-ch-title"><b>${e(book.title)}</b><small>${e(book.author)}</small></div><div class="bk-ch-list">${book.starts.map((start, n) => `<button class="${n === current ? 'current' : ''}" data-action="bk-goto" data-id="${start}"><span>${e(book.pages[start].replace(/\n/g, ' '))}</span><em>${start + 1}</em></button>`).join('')}</div></div>`;
   }
+  /* Manage eBooks (VolumesListActivity.setDownloadsVisible: activity_volumes_content.xml's downloads_list): a
+     downloads_item_volume.xml row per book — title, author, the trash button (Remove "…" from the My eBooks shelf?,
+     Keep / Remove) and pin_or_buy_button (pin_unpinned / pin_pinned, with pin_toast / unpin_toast). */
+  function manage(ctx, list) {
+    const pinned = ctx.data.booksPinned || {};
+    return `<div class="bk-downloads">${list.map(b => `<div class="bk-dl-row"><span><b>${e(b.title)}</b><small>${e(b.author)}</small></span><i></i><button data-action="bk-remove" data-id="${b.id}" aria-label="${e(T(ctx.lang, 'Remove book'))}"><img src="${BA('trash_default')}" alt=""></button><i></i><button data-action="bk-pin" data-id="${b.id}" aria-pressed="${!!pinned[b.id]}" aria-label="${e(T(ctx.lang, 'Pin toast'))}"><img src="${BA(pinned[b.id] ? 'pin_pinned_default' : 'pin_unpinned_default')}" alt=""></button></div>`).join('')}</div>`;
+  }
   function books(ctx) {
     const {ui, lang, data} = ctx, reading = BOOKS.find(b => b.id === ui.bkRead);
     if (reading) {
@@ -210,9 +222,9 @@
       if (ui.bkPrefs) return bookSettings(ctx, reading, page, dim);
       return `<div class="app-view bk bk-reader${night ? ' night' : ''}" style="--bk-dim:${dim}" data-no-translate><div class="bk-rbar"><button class="bk-home" data-action="bk-library" aria-label="${e(T(lang, 'My eBooks'))}"><img src="${BA('ic_myebooks_default')}" alt=""></button><span class="bk-rtitle"><b>${e(reading.title)}</b><small>${e(reading.author)}</small></span><button data-action="bk-toc" aria-label="${e(T(lang, 'Contents'))}"><img src="${BA('ic_table_of_contents_default')}" alt=""></button><button data-action="bk-settings" aria-label="${e(T(lang, 'Settings'))}"><img src="${BA('ic_reader_settings_default')}" alt=""></button></div>${ui.bkToc ? bookChapters(reading, page) : `<div class="bk-page"><button class="bk-turn prev" data-action="bk-page" data-id="-1" aria-label="‹"></button><div class="bk-text" style="${textStyle(pr)}">${pageHtml(reading, page)}</div><button class="bk-turn next" data-action="bk-page" data-id="1" aria-label="›"></button></div><div class="bk-scrub"><i style="--p:${reading.pages.length > 1 ? page / (reading.pages.length - 1) : 0}"></i><span>${e(AndroidStrings.format(T(lang, 'page %1$s of %2$s'), page + 1, reading.pages.length))}</span></div>`}<div class="bk-dim"></div></div>`;
     }
-    const sort = data.booksSort || 'Recently read', last = data.booksLast || {};
-    const list = [...BOOKS].sort((a, b) => sort === 'Title' ? a.title.localeCompare(b.title) : sort === 'Author' ? a.author.split(' ').pop().localeCompare(b.author.split(' ').pop()) : (last[b.id] || 0) - (last[a.id] || 0));
-    return `<div class="app-view bk" data-no-translate><div class="bk-bar"><span class="bk-logo">Google <b>eBooks</b></span><button class="bk-get" data-action="bk-get" aria-label="${e(T(lang, 'Get eBooks'))}"><span>${e(T(lang, 'Get eBooks'))}</span></button><button class="bk-search" data-action="bk-get" aria-label="Search"><img src="${BA('ic_home_search_default')}" alt=""></button></div><div class="bk-scroll"><div class="bk-grid">${list.map(b => `<button class="bk-vol" data-action="bk-open" data-id="${b.id}">${cover(b)}<b>${e(b.title)}</b><small>${e(b.author)}</small></button>`).join('')}</div></div></div>`;
+    const sort = data.booksSort || 'Recently read', last = data.booksLast || {}, removed = data.booksRemoved || [];
+    const list = BOOKS.filter(b => !removed.includes(b.id)).sort((a, b) => sort === 'Title' ? a.title.localeCompare(b.title) : sort === 'Author' ? a.author.split(' ').pop().localeCompare(b.author.split(' ').pop()) : (last[b.id] || 0) - (last[a.id] || 0));
+    return `<div class="app-view bk" data-no-translate><div class="bk-bar"><span class="bk-logo">Google <b>eBooks</b></span><button class="bk-get" data-action="bk-get" aria-label="${e(T(lang, 'Get eBooks'))}"><span>${e(T(lang, 'Get eBooks'))}</span></button><button class="bk-search" data-action="bk-get" aria-label="Search"><img src="${BA('ic_home_search_default')}" alt=""></button></div><div class="bk-scroll">${ui.bkDownloads ? manage(ctx, list) : `<div class="bk-grid">${list.map(b => `<button class="bk-vol" data-action="bk-open" data-id="${b.id}">${cover(b)}<b>${e(b.title)}</b><small>${e(b.author)}</small></button>`).join('')}</div>`}</div></div>`;
   }
 
   // ---------- Earth ----------
@@ -326,8 +338,8 @@
     if (view === 'news-weather') return ui.nwSub === 'settings' ? [] : [{action: 'nw-refresh', title: t('Refresh'), icon: 'nw-ic_menu_refresh.png'}, ...(ui.nwStory ? [{action: 'nw-share', title: t('Share story'), icon: 'nw-ic_menu_share.png'}] : []), {action: 'nw-settings', title: t('Settings'), icon: 'ic_menu_preferences'}];
     // menu/reader.xml: About, Contents, (Original pages: scanned books only), My eBooks, Settings, Help.
     if (view === 'books') return ui.bkRead && !ui.bkPrefs
-      ? [{action: 'ga-unsupported', title: t('About'), icon: 'bk-ic_menu_about.png'}, {action: 'bk-toc', title: t('Contents'), icon: 'bk-ic_menu_contents.png'}, {action: 'bk-library', title: t('My eBooks'), icon: 'bk-ic_menu_myebooks.png'}, {action: 'bk-settings', title: t('Settings'), icon: 'bk-ic_menu_reader_settings.png'}, {action: 'ga-unsupported', title: t('Help'), icon: 'bk-ic_menu_help.png'}]
-      : [{action: 'bk-sort', title: t('Sort order'), icon: 'bk-ic_menu_sort_alphabetically.png'}, {action: 'ga-unsupported', title: t('Manage eBooks'), icon: 'bk-ic_menu_my_downloads.png'}, {action: 'bk-get', title: t('Get eBooks'), icon: 'bk-ic_menu_myebooks.png'}, {action: 'ga-unsupported', title: t('Help'), icon: 'bk-ic_menu_help.png'}];
+      ? [{action: 'bk-about', title: t('About'), icon: 'bk-ic_menu_about.png'}, {action: 'bk-toc', title: t('Contents'), icon: 'bk-ic_menu_contents.png'}, {action: 'bk-library', title: t('My eBooks'), icon: 'bk-ic_menu_myebooks.png'}, {action: 'bk-settings', title: t('Settings'), icon: 'bk-ic_menu_reader_settings.png'}, {action: 'ga-unsupported', title: t('Help'), icon: 'bk-ic_menu_help.png'}]
+      : [{action: 'bk-sort', title: t('Sort order'), icon: 'bk-ic_menu_sort_alphabetically.png'}, {action: 'bk-downloads', title: t('Manage eBooks'), icon: 'bk-ic_menu_my_downloads.png'}, {action: 'bk-get', title: t('Get eBooks'), icon: 'bk-ic_menu_myebooks.png'}, {action: 'ga-unsupported', title: t('Help'), icon: 'bk-ic_menu_help.png'}];
     if (view === 'earth') return [{action: 'ea-search', title: t('Search'), icon: 'ic_menu_search'}, {action: 'ea-layers', title: t('Layers'), icon: 'ea-ic_menu_layers.png'}, {action: 'ea-myloc', title: t('My Location'), icon: 'ic_menu_mylocation'}, {action: 'ea-clear', title: t('Clear Search Results'), icon: 'ic_menu_close_clear_cancel'}, {action: 'ga-unsupported', title: ctx.t('Settings'), icon: 'ic_menu_preferences'}];
     return [];
   }
@@ -335,6 +347,7 @@
     const {lang, ui, data} = ctx, t = k => T(lang, k);
     // TypefacePreference: the typeface_custom list.
     if (kind === 'typeface') { const pr = bookPrefs(data); return {title: t('Typeface'), items: TYPEFACES.map(([label, value]) => ({action: 'bk-typeface-set', id: value, title: label})), choice: 'single', selected: Math.max(0, TYPEFACES.findIndex(([, v]) => v === pr.typeface))}; }
+    if (kind === 'remove') { const b = BOOKS.find(x => x.id === ui.bkRemove); return {message: AndroidStrings.format(t('Remove book message'), b?.title || ''), buttons: [{action: 'bk-remove-keep', title: t('Keep')}, {action: 'bk-remove-ok', title: t('Remove book')}]}; }
     if (kind === 'sort') return {title: t('Sort by:'), items: ['Recently read', 'Title', 'Author'].map(k => ({action: 'bk-sort-by', id: k, title: t(k)})), choice: 'single', selected: ['Recently read', 'Title', 'Author'].indexOf(data.booksSort || 'Recently read')};
     if (kind === 'layers') return {title: t('Layers'), items: ['Places', 'Businesses', 'Panoramio Photos', 'Wikipedia', 'Borders', '3D Buildings'].map(l => ({action: 'ea-layer', id: l, title: ctx.t(l), checked: (ui.eaLayers || ['Borders']).includes(l)})), choice: 'multi'};
     return null;
@@ -374,6 +387,13 @@
       case 'bk-pref-match': { const pr = bookPrefs(data); data.booksPrefs = {...pr, brightness: pr.brightness < 0 ? Math.max(10, Math.round((data.settings?.brightness ?? 100) / 5) * 5) : -1}; delete data.booksNight; ctx.save(); ctx.render(); break; }
       case 'bk-toc': ui.bkToc = !ui.bkToc; close(); ctx.render(); break;
       case 'bk-library': ui.bkRead = ''; close(); ctx.render(); break;
+      // The reader's About: OceanUris.getAboutTheBookUrl, the book's Google Books page in the Browser.
+      case 'bk-about': close(); ctx.browse(`books.google.com/books?id=${ui.bkRead}`); break;
+      case 'bk-downloads': close(); ui.bkDownloads = true; ctx.render(); break;
+      case 'bk-pin': { const pins = data.booksPinned ||= {}; pins[id] = !pins[id]; ctx.save(); ctx.render(); ctx.toast(T(lang, pins[id] ? 'Pin toast' : 'Unpin toast')); break; }
+      case 'bk-remove': ui.bkRemove = id; ctx.dialog('remove'); break;
+      case 'bk-remove-keep': close(); break;
+      case 'bk-remove-ok': data.booksRemoved = [...new Set([...(data.booksRemoved || []), ui.bkRemove])]; close(); ctx.save(); ctx.render(); break;
       case 'bk-sort': ctx.dialog('sort'); break;
       case 'bk-sort-by': data.booksSort = id; close(); ctx.save(); ctx.render(); break;
       case 'bk-get': close(); ctx.openApp('play-store'); break;
@@ -407,6 +427,7 @@
     if (view === 'news-weather' && ui.nwStory) { ui.nwStory = ''; ctx.render(); return true; }
     if (view === 'books' && ui.bkRead && (ui.bkPrefs || ui.bkToc)) { ui.bkPrefs = false; ui.bkToc = false; ctx.render(); return true; }
     if (view === 'books' && ui.bkRead) { ui.bkRead = ''; ctx.render(); return true; }
+    if (view === 'books' && ui.bkDownloads) { ui.bkDownloads = false; ctx.render(); return true; }
     if (view === 'earth' && ui.eaSearching) { ui.eaSearching = false; ctx.render(); return true; }
     if (view === 'voice-search' && ui.vsState === 'help') { ui.vsState = 'listening'; ctx.render(); return true; }
     return false;
@@ -415,7 +436,7 @@
     const {ui, view} = ctx;
     if (resume) return;
     if (view === 'news-weather') { ui.nwTab = 'Weather'; ui.nwStory = ''; ui.nwSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
-    if (view === 'books') { ui.bkRead = ''; ui.bkPrefs = false; ui.bkToc = false; }
+    if (view === 'books') { ui.bkRead = ''; ui.bkPrefs = false; ui.bkToc = false; ui.bkDownloads = false; }
     if (view === 'earth') { ui.eaSplash = true; ui.eaPlace = ''; globe.spin = true; setTimeout(() => { ui.eaSplash = false; if (ui.view === 'earth') ctx.render(); }, 1600); }
     if (view === 'voice-search') ui.vsState = 'listening';
   }

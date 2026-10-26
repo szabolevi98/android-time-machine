@@ -248,6 +248,8 @@ versions/4.4.4/assets/gm-ic_menu_inbox_promotions_holo_dark.png	0b07b3fca4ab1979
 versions/4.4.4/assets/gm-ic_menu_inbox_promotions_holo_light.png	9215d0d5d19d2d5c	same pixels	hammerhead:/system/app/Gmail2.apk!res/drawable-xxhdpi/ic_menu_inbox_promotions_holo_light.png	drawable-xxhdpi		9df4851de101a4e7
 versions/4.4.4/assets/gm-ic_menu_inbox_social_holo_dark.png	64b5a01ce8c0594e	same pixels	hammerhead:/system/app/Gmail2.apk!res/drawable-xxhdpi/ic_menu_inbox_social_holo_dark.png	drawable-xxhdpi		ba3723004c40a155
 versions/4.4.4/assets/gm-ic_menu_inbox_social_holo_light.png	0c6f7da360fc1a17	same pixels	hammerhead:/system/app/Gmail2.apk!res/drawable-xxhdpi/ic_menu_inbox_social_holo_light.png	drawable-xxhdpi		2b7e8ab79502ce45
+versions/4.4.4/assets/gm-licenses.html	0b76286ba38e7aac	copy	hammerhead:/system/app/Gmail2.apk!res/raw/licenses.html	raw		0b76286ba38e7aac
+versions/4.4.4/assets/gm-logo.png	fdadbdf3a7ea8a69	copy	hammerhead:/system/app/Gmail2.apk!res/drawable-xhdpi/logo.png	drawable-xhdpi		fdadbdf3a7ea8a69
 versions/4.4.4/assets/gmail.png	001728270368eee6	own	Google "Android Quick Start Guide" for Android 4.4, embedded image (THIRD_PARTY_NOTICES.md)		closest: mean difference 4.58 (hammerhead:/system/app/Gmail2.apk!res/mipmap-xxxhdpi/ic_launcher_mail.png)	
 versions/4.4.4/assets/gms-common_ic_googleplayservices.png	49969b823fec8727	same pixels	hammerhead:/system/priv-app/PrebuiltGmsCore.apk!res/drawable-xxhdpi/common_ic_googleplayservices.png	drawable-xxhdpi		26cc19e0cde145ee
 versions/4.4.4/assets/gms-common_settings_bg.png	022d742a303aeceb	copy	hammerhead:/system/priv-app/PrebuiltGmsCore.apk!res/drawable-xxhdpi/common_settings_bg.9.png	drawable-xxhdpi		022d742a303aeceb

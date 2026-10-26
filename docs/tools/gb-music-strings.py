@@ -15,9 +15,10 @@ ringtone_menu_short play_selection add_to_playlist queue new_playlist new_playli
 create_playlist_overwrite_text remove_from_playlist shuffle_on_notif shuffle_off_notif repeat_all_notif repeat_current_notif
 repeat_off_notif emptyplaylist browse_menu albums_menu tracks_menu playlists_menu unknown_artist_name unknown_album_name onesong
 albumsongseparator recentlyadded recentlyadded_title podcasts_listitem play_all save_as_playlist clear_playlist durationformatshort
-delete_playlist_menu edit_playlist_menu rename_playlist_menu playlist_deleted_message
+delete_playlist_menu edit_playlist_menu rename_playlist_menu playlist_deleted_message ringtone_set delete_song_desc_nosdcard
+delete_confirm_button_text cancel
 '''.split()
-PLURALS = ['Nalbums', 'Nsongs', 'Nsongscomp', 'NNNtrackstoplaylist']
+PLURALS = ['Nalbums', 'Nsongs', 'Nsongscomp', 'NNNtrackstoplaylist', 'NNNtracksdeleted']
 a = APK('_aosp/crespo/system/app/MusicGoogle.apk'); r = a.get_android_resources(); pkg = r.get_packages_names()[0]
 def clean(v): return re.sub(r'\\(["\'])', r'\1', v).replace('\\n', '\n')
 strings, plurals = {}, {}

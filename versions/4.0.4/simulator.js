@@ -265,7 +265,7 @@
   const statusIndicators = () => `<span class="status-right">${data.settings.bluetooth ? '<img class="status-bluetooth" src="assets/stat_sys_data_bluetooth.png" alt="">' : ''}${data.settings.silent ? `<img src="assets/stat_sys_ringer_${data.settings.silentMode === 'vibrate' ? 'vibrate' : 'silent'}.png" alt="">` : ''}${data.alarms.some(alarm => alarm.enabled) ? '<img src="assets/stat_sys_alarm.png" alt="">' : ''}<span class="status-cluster">${data.settings.wifi && data.settings.wifiNetwork ? '<img class="status-wifi" src="assets/stat_sys_wifi_signal_4_fully.png" alt="">' : ''}<img src="assets/${data.settings.airplane ? 'stat_sys_signal_flightmode' : 'stat_sys_signal_4_fully'}.png" alt=""></span><img class="status-battery" src="assets/stat_sys_battery_71.png" alt=""><span class="status-clock">${clock()}</span></span>`;
 
   function renderStatus() {
-    const notificationIcons = data.notifications.length ? `${data.notifications.some(item => item.id === 2) ? '<img src="assets/stat_notify_sms.png" alt="">' : ''}${data.notifications.some(item => item.kind === 'calendar') ? '<img src="assets/calendar-stat_notify_calendar.png" alt="">' : ''}${data.notifications.some(item => item.id !== 2 && item.kind !== 'calendar') ? '<img src="assets/stat_notify_more.png" alt="">' : ''}` : '';
+    const notificationIcons = (ui.syncing ? '<img src="assets/stat_notify_sync.png" alt="">' : '') + (data.notifications.length ? `${data.notifications.some(item => item.id === 2) ? '<img src="assets/stat_notify_sms.png" alt="">' : ''}${data.notifications.some(item => item.kind === 'calendar') ? '<img src="assets/calendar-stat_notify_calendar.png" alt="">' : ''}${data.notifications.some(item => item.id !== 2 && item.kind !== 'calendar') ? '<img src="assets/stat_notify_more.png" alt="">' : ''}` : '');
     statusRoot.innerHTML = `<button class="status-button" data-action="shade" aria-label="Open notifications"><span class="status-left">${notificationIcons}</span>${statusIndicators()}</button>`;
     i18n.translateDOM(statusRoot);
   }
@@ -313,6 +313,8 @@
   function render() {
     viewport.querySelectorAll('.home-widget .calw-list').forEach(list => { (ui.widgetScroll ||= {})[list.closest('.home-widget').dataset.widgetId] = list.scrollTop; });
     if(ui.locked)ui.view='lock';
+    // Read aloud stops once the reader is left.
+    if (ui.gaBkAloud && !(ui.view === 'play-books' && ui.gaSub === 'read')) ICSGoogleApps.books.stopAloud(ui);
     const outgoing = viewport.firstElementChild;
     screen.className = `screen${activeTransition ? ' transitioning' : ''} wallpaper-${data.wallpaper}${data.settings.largeText ? ' large-text' : ''}${ui.sleeping?' sleeping':''}${ui.locked?' credential-locked':''}`;
     screen.style.background = data.wallpaper === 11 && data.customWallpaperPhoto ? `#080d14 url('${ICSMedia.image(data.customWallpaperPhoto)}') center / cover no-repeat` : data.wallpaper === 11 && data.customWallpaper ? `linear-gradient(160deg, ${data.customWallpaper[0]}, ${data.customWallpaper[1]} 53%, ${data.customWallpaper[2]})` : `#080d14 url('assets/wallpaper_${wallpaperFiles[data.wallpaper] || 'chroma'}.jpg') center center / cover no-repeat`;
@@ -600,6 +602,10 @@
       closeOverlay() { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } },
       focus(selector) { requestAnimationFrame(() => viewport.querySelector(selector)?.focus()); },
       browse(query) { openApp('browser'); navigateBrowser(`search:${query}`); },
+      // The Play Store (Finsky) on a page: Books' About the book and its searches.
+      play(next) { openApp('play-store'); icsPlayGo(next); },
+      // A manual sync (Books' Refresh): the status bar's sync icon while it runs.
+      sync(ms) { ui.syncing = true; renderStatus(); setTimeout(() => { ui.syncing = false; renderStatus(); }, ms); },
       // YouTube's Record: the camcorder in VIDEO_CAPTURE with quickCapture, whose clip goes back to YouTube (cameraStop).
       record() { ui.captureFor = 'youtube'; ui.cameraMode = 'video'; ui.cameraModes = false; ui.icsPano = null; openApp('camera'); },
       // ACTION_SEND text/plain: the subject and the text into the chosen app's new message.
@@ -670,7 +676,7 @@
     if (ui.view === 'play-books') { ui.gaBkSpin = ''; ui.gaBkOptions = false; ui.gaBkToc = false; }
     // Talk: an open dialog first; Friend info returns to its chat, Blocked friends to Talk settings.
     if (ui.view === 'talk' && (ui.gaTkDialog || ui.gaSub === 'info' || ui.gaSub === 'blocked')) { if (ui.gaTkDialog) ui.gaTkDialog = null; else ui.gaSub = ui.gaSub === 'info' ? 'chat' : 'settings'; render(); return; }
-    if ((ui.view === 'youtube' || ui.view === 'play-movies') && !ui.overlay && ICSGoogleApps.back(googleAppsContext())) return;
+    if ((ui.view === 'youtube' || ui.view === 'play-movies' || ui.view === 'play-books') && !ui.overlay && ICSGoogleApps.back(googleAppsContext())) return;
     if (ICSGoogleApps.APPS.includes(ui.view) && ui.gaSub) { ui.gaSub = ''; render(); return; }
     if (ui.view === 'gmail' && ui.sub === 'g4-prefs' && !ui.overlay) { ICSGmailPrefs.back(ui); render(); return; }
     if (ui.view === 'gmail') {
@@ -800,7 +806,7 @@
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${JBExtraApps.menu(ui.view, key => i18n.t(key)).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
     } else if (ui.overlay === 'ga-menu') {
       // The ICS Google apps' action bar overflow (their menu XML's never-shown-as-action items).
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${ICSGoogleApps.menu(googleAppsContext()).map(item => `<button data-action="${item.action}"${item.id ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
+      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu ga-holo-menu">${ICSGoogleApps.menu(googleAppsContext()).map(item => `<button data-action="${item.action}"${item.id ? ` data-id="${safe(item.id)}"` : ''}${item.disabled ? ' disabled' : ''}${item.checked !== undefined ? ` role="menuitemcheckbox" aria-checked="${item.checked}"` : ''}><span>${safe(item.title)}</span>${item.checked !== undefined ? `<img src="assets/btn_check_${item.checked ? 'on' : 'off'}_holo_dark.png" alt="">` : ''}</button>`).join('')}</div>`;
     } else if (ui.overlay === 'mr-type') {
       // Navigation's Type destination: the address field with OK / Cancel.
       const S = key => MapsRoute.S(mrContext(), key), title = JBExtraApps.text ? JBExtraApps.text('navigation', 'Type destination') : 'Type destination';

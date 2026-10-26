@@ -831,7 +831,7 @@
     // Chrome settings: dialogs first, then the page, then back to the browser.
     // Gmail settings: the dialogs, then the pages, then back to the mail.
     if (ui.view === 'gmail' && ui.sub === 'gm-settings' && GmailApp.prefBack(ui, {data, root: viewport, toast})) { render(); return; }
-    if (ui.view === 'gmail' && ui.sub === 'gm-settings') { if (ui.gmPrefList || ui.gmSignature !== undefined) { ui.gmPrefList = ''; ui.gmSignature = undefined; } else if (ui.gmPref === 'categories') ui.gmPref = 'account'; else if (ui.gmPref) ui.gmPref = ''; else ui.sub = ''; render(); return; }
+    if (ui.view === 'gmail' && ui.sub === 'gm-settings') { if (ui.gmPrefList || ui.gmSignature !== undefined) { ui.gmPrefList = ''; ui.gmSignature = undefined; } else if (ui.gmPref === 'categories') ui.gmPref = 'account'; else if (ui.gmPref === 'licenses') ui.gmPref = 'about'; else if (ui.gmPref) ui.gmPref = ''; else ui.sub = ''; render(); return; }
     if (['browser', 'chrome'].includes(ui.view) && (ui.chromeClear || ui.chromeList || ui.chromePrefMenu || ui.chromeConfirm) && !ui.chromeClear?.busy) { ui.chromeClear = null; ui.chromeList = ''; ui.chromePrefMenu = false; ui.chromeConfirm = ''; render(); return; }
     if (['browser', 'chrome'].includes(ui.view) && ui.sub === 'chrome-settings') { if (!ChromeApp.prefBack(ui)) ui.sub = ''; render(); return; }
     if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserFind !== undefined) { ui.browserFind = undefined; render(); return; }
@@ -1776,6 +1776,7 @@
       case 'email-dismiss-teaser': if(ui.view==='gmail')data.gmailTeaserDismissed=true;else data.emailTeaserDismissed=true;save();render();break;
       // Gmail settings (gmail.js GmailApp.settings); Email's own settings (email-prefs.js).
       case 'email-settings': ui.overlay = ''; renderOverlay(); if (ui.view === 'gmail') { ui.sub = 'gm-settings'; ui.gmPref = ''; } else { ui.sub = 'em-settings'; ui.emPref = ''; } render(); break;
+      case 'gmail-licenses': ui.gmPref = 'licenses'; render(); break;
       case 'gmail-categories': ui.sub = 'gm-settings'; ui.gmPref = 'categories'; render(); break;
       case 'gmail-pref': if (id.startsWith('label:')) ui.gmLabelFrom = ui.gmPref || 'account'; ui.gmPref = id; render(); break;
       case 'gmail-pref-toggle': { const prefs = data.gmailPrefs ||= {}; const fallback = id.startsWith('category-') ? !['updates', 'forums'].includes(id.slice(9)) : !['reply-all', 'starred'].concat([]).includes(id); prefs[id] = !(prefs[id] ?? fallback); save(); render(); break; }

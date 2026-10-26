@@ -3120,7 +3120,172 @@ const moviesOffline = async h => {
   await h.key('Escape'); await h.key('Escape');
   h.check('Back returns to My Rentals', await h.until(`!!document.querySelector('#viewport .ga-mv-tabs')`));
 };
+// T18 (2.3.6): Books' reader › About opens the book's Google Books page; Manage eBooks pins and removes books.
+async function gbBooksLocal(h) {
+  const menu = async action => {
+    await h.tap('.touch-menu');
+    await h.until(`!!document.querySelector('.gbmenu')`);
+    if (!await h.ev(`!!document.querySelector('.gbmenu [data-action="${action}"]')`)) await h.tap('.gbmenu [data-action="gb-menu-more"]');
+    await h.tap(`[data-action="${action}"]`);
+  };
+  await h.openApp('books');
+  await h.tap('#viewport .bk-vol[data-id="b1"]');
+  await h.until(`!!document.querySelector('#viewport .bk-reader')`);
+  await menu('bk-about');
+  h.check('About opens the book in the Browser', await h.until(`!!document.querySelector('#viewport .web-book') && document.querySelector('#viewport .web-book h2').textContent.includes('Alice')`));
+  await h.openApp('books');
+  if (await h.ev(`!!document.querySelector('#viewport .bk-reader')`)) await h.tap('#viewport [data-action="bk-library"]');
+  await menu('bk-downloads');
+  h.check('Manage eBooks lists the books', await h.until(`document.querySelectorAll('#viewport .bk-dl-row').length === 4`));
+  await h.tap('#viewport .bk-dl-row [data-action="bk-pin"][data-id="b4"]');
+  h.check('the pin keeps the book offline', (await store(h, 'booksPinned'))?.b4 === true && await h.until(`document.querySelector('#viewport [data-action="bk-pin"][data-id="b4"]').getAttribute('aria-pressed') === 'true'`));
+  await h.tap('#viewport .bk-dl-row [data-action="bk-remove"][data-id="b1"]');
+  h.check('remove asks first', await h.until(`/My eBooks/.test(document.body.textContent) && !!document.querySelector('[data-action="bk-remove-ok"]')`));
+  await h.tap('[data-action="bk-remove-ok"]');
+  h.check('Remove takes the book off the shelf', (await store(h, 'booksRemoved'))?.includes('b1') && await h.until(`document.querySelectorAll('#viewport .bk-dl-row').length === 3`));
+  await h.shot('t18-gb-books');
+  await h.key('Escape');
+  h.check('Back returns to the library without the book', await h.until(`!!document.querySelector('#viewport .bk-grid') && !document.querySelector('#viewport .bk-vol[data-id="b1"]')`));
+}
+
+// T18 (4.0.4): Play Books 2.3.6's Search, the reader's About / Share / Available offline / Read aloud, Refresh and
+// Make available offline.
+async function icsBooksLocal(h) {
+  const back = () => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action='back';document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove();return 1})()`);
+  const menu = async action => {
+    await h.tap('#viewport [data-action="ga-menu"]');
+    await h.until(`!!document.querySelector('.holo-menu [data-action="${action}"]')`);
+    await h.tap(`.holo-menu [data-action="${action}"]`);
+  };
+  const menuRead = async expr => { await h.tap('#viewport [data-action="ga-menu"]'); await h.until(`!!document.querySelector('.holo-menu')`); const value = await h.ev(expr); await h.ev(`document.querySelector('.menu-scrim').click()`); await h.until(`!document.querySelector('.holo-menu')`); return value; };
+  const menuText = action => menuRead(`document.querySelector('.holo-menu [data-action="${action}"]')?.textContent || ''`);
+  const reader = async () => {
+    await h.openApp('play-books');
+    if (await h.ev(`!!document.querySelector('#viewport .ga-bk-reader')`)) await back();
+    await h.until(`!!document.querySelector('#viewport .ga-bk-home')`);
+  };
+  await reader();
+  await h.tap('#viewport [data-action="ga-bk-search"]');
+  await h.type('#viewport .ga-bk-sv input', 'holmes');
+  h.check('Search suggests the matching local book and Search online', await h.until(`[...document.querySelectorAll('#viewport .ga-bk-suggest[data-action="ga-bk-suggest"]')].map(b => b.dataset.id).join() === 'b2' && !!document.querySelector('#viewport .ga-bk-online')`));
+  await h.type('#viewport .ga-bk-sv input', 'carroll');
+  h.check('the author matches too', await h.until(`[...document.querySelectorAll('#viewport .ga-bk-suggest[data-action="ga-bk-suggest"]')].map(b => b.dataset.id).join() === 'b1'`));
+  await h.shot('t18-ics-books-search');
+  await h.tap('#viewport .ga-bk-suggest[data-id="b1"]');
+  h.check('a suggestion opens the book', await h.until(`/Alice/.test(document.querySelector('#viewport .ga-bk-reader h2')?.textContent || '')`));
+  await h.tap('#viewport .ga-bk-title');
+  h.check('the title shows About the book', await h.until(`/Published 1865/.test(document.querySelector('#viewport .ga-bk-about')?.textContent || '') && /8 pages/.test(document.querySelector('#viewport .ga-bk-about').textContent)`));
+  await h.shot('t18-ics-books-about');
+  await back();
+  h.check('Back closes the popup first', await h.until(`!document.querySelector('#viewport .ga-bk-about') && !!document.querySelector('#viewport .ga-bk-reader')`));
+  await menu('ga-bk-keep');
+  h.check('Available offline pins the book', (await store(h, 'gaBkPinned'))?.b1 === true);
+  h.check('the item is checked', await menuRead(`document.querySelector('.holo-menu [data-action="ga-bk-keep"]')?.getAttribute('aria-checked')`) === 'true');
+  await menu('ga-bk-aloud');
+  h.check('Read aloud turns into Stop reading aloud', /Stop reading aloud/.test(await menuText('ga-bk-aloud')));
+  await back();
+  await h.until(`!!document.querySelector('#viewport .ga-bk-home')`);
+  h.check('leaving the reader stops reading aloud', await h.ev(`!speechSynthesis.speaking`));
+  await h.tap('#viewport .ga-bk-slot[data-action="ga-book"]');
+  await h.until(`!!document.querySelector('#viewport .ga-bk-reader')`);
+  h.check('the reader offers Read aloud again', /^Read aloud$/.test(await menuText('ga-bk-aloud')));
+  await menu('ga-bk-share');
+  h.check('Share asks with the book\'s chooser title', await h.until(`/Share "Alice/.test(document.querySelector('#viewport .ga-yt-share h3')?.textContent || '')`));
+  await h.tap('#viewport [data-action="ga-bk-share-to"][data-id="gmail"]');
+  h.check('Share sends the book\'s link', await h.until(`/books\\.google\\.com\\/books\\?id=b1/.test(document.querySelector('#viewport .g4-form textarea')?.value || '') && /Check out "Alice/.test(document.querySelector('#viewport .g4-form [name=subject]')?.value || '')`));
+  await h.openApp('play-books');
+  await h.until(`!!document.querySelector('#viewport .ga-bk-reader, #viewport .ga-bk-home')`);
+  if (!await h.ev(`!!document.querySelector('#viewport .ga-bk-reader')`)) { await h.tap('#viewport .ga-bk-slot[data-action="ga-book"]'); await h.until(`!!document.querySelector('#viewport .ga-bk-reader')`); }
+  await menu('ga-bk-about');
+  h.check('About the book opens the Play Store page', await h.until(`/Alice/.test(document.querySelector('#viewport')?.textContent || '') && !!document.querySelector('#viewport .icsp-scroll, #viewport [class*="icsp-detail"]')`));
+  await reader();
+  await menu('ga-bk-refresh');
+  h.check('Refresh syncs (the status bar\'s sync icon)', await h.until(`!!document.querySelector('#status-bar img[src*="stat_notify_sync"], .status-button img[src*="stat_notify_sync"]')`));
+  h.check('the sync ends', await h.until(`!document.querySelector('.status-button img[src*="stat_notify_sync"]')`, 4000));
+  h.check('the pins hide outside offline mode', await h.ev(`getComputedStyle(document.querySelector('#viewport .ga-bk-pin')).visibility === 'hidden'`));
+  await menu('ga-bk-offline');
+  h.check('Make available offline shows the panel', await h.until(`/9\\.93 GB FREE/.test(document.querySelector('#viewport .ga-bk-manage')?.textContent || '') && getComputedStyle(document.querySelector('#viewport .ga-bk-pin')).visibility === 'visible'`));
+  const current = await h.ev(`document.querySelector('#viewport .ga-bk-slot[data-action="ga-bk-pin"]').dataset.id`);
+  const before = !!(await store(h, 'gaBkPinned'))?.[current];
+  await h.tap('#viewport .ga-bk-slot[data-action="ga-bk-pin"]');
+  h.check('a cover toggles its pin', !!(await store(h, 'gaBkPinned'))?.[current] === !before && await h.until(`/9\\.9[24] GB FREE/.test(document.querySelector('#viewport .ga-bk-manage').textContent)`));
+  h.check('the menu hides Make available offline', !/Make available offline/.test(await menuRead(`document.querySelector('.holo-menu')?.textContent || ''`)));
+  await h.shot('t18-ics-books-offline');
+  await h.tap('#viewport [data-action="ga-bk-offline-done"]');
+  h.check('Done closes the panel', await h.until(`!document.querySelector('#viewport .ga-bk-manage')`));
+  await h.tap('#viewport [data-action="ga-bk-search"]');
+  await h.type('#viewport .ga-bk-sv input', 'dickens');
+  await h.ev(`document.querySelector('#viewport .ga-bk-sv')?.requestSubmit()`);
+  h.check('a query goes to the Play Store\'s search', await h.until(`/dickens/.test(document.querySelector('#viewport')?.textContent || '') && !document.querySelector('#viewport .ga-bk-home')`));
+}
+
+// T46: Gmail's About Gmail (AboutFragment) with the image's versionName; Send feedback only beside Google Feedback.
+const gmailAbout = (version, feedback) => async h => {
+  const act = action => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove();return 1})()`);
+  await h.openApp('gmail');
+  await h.until(`!!document.querySelector('#viewport .app-view')`);
+  await act('email-settings');
+  await h.tap('#viewport .gmp-row[data-id="about"]');
+  h.check('About Gmail shows the image\'s version', await h.until(`(document.querySelector('#viewport .gmp-about')?.textContent || '').includes(${JSON.stringify('Version ' + version)}) && /About Gmail/.test(document.querySelector('#viewport .gmp-bar b').textContent)`));
+  h.check('the copyright carries the year', await h.ev(`document.querySelector('#viewport .gmp-about').textContent.includes('©' + new Date().getFullYear() + ' Google Inc.')`));
+  h.check(feedback ? 'Send feedback is offered (Google Feedback is installed)' : 'no Send feedback (no Google Feedback on the image)', await h.ev(`/Send feedback/.test(document.querySelector('#viewport .gmp-about').textContent)`) === feedback);
+  await h.shot('t46-gmail-about');
+  await h.tap('#viewport [data-action="gmail-licenses"]');
+  h.check('Open source licenses shows the APK\'s notices', await h.until(`/gm-licenses\.html/.test(document.querySelector('#viewport iframe.gmp-licenses')?.src || '') && /Open source licenses/.test(document.querySelector('#viewport .gmp-bar b').textContent)`));
+  await act('back');
+  h.check('Back returns to About', await h.until(`!!document.querySelector('#viewport .gmp-about')`));
+  await act('back');
+  h.check('then to the settings headers', await h.until(`!!document.querySelector('#viewport .gmp-row[data-id="about"]')`));
+};
+
+// T14 (2.3.6): Music's Use as phone ringtone and Delete (DeleteItems), from a song's context menu and the player.
+async function gbMusicFiles(h) {
+  const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove();return 1})()`);
+  const settings = async () => (await store(h, 'settings')) || {};
+  await h.openApp('music');
+  await act('music-tab', 'Songs');
+  await act('music-track-menu', 2);
+  h.check('the context menu offers Use as phone ringtone and Delete', await h.until(`!!document.querySelector('[data-action="music-ringtone"][data-id="2"]') && !!document.querySelector('[data-action="music-delete"][data-id="2"]')`));
+  await h.tap('[data-action="music-ringtone"][data-id="2"]');
+  h.check('the song becomes the phone ringtone', (await settings()).ringtone === 'music:2' && await h.until(`/"Night Drive" set as phone ringtone/.test(document.body.textContent)`));
+  await h.openApp('settings');
+  await act('gbset-dialog', 'ringtone');
+  h.check('Settings › Phone ringtone lists and selects the song', await h.until(`[...document.querySelectorAll('[data-action="gbset-sound-pick"]')].some(b => b.dataset.id === 'ringtone:music:2' && /Night Drive/.test(b.textContent) && (b.getAttribute('aria-checked') === 'true' || b.classList.contains('selected') || !!b.querySelector('input:checked, .checked, [aria-checked="true"]')))`));
+  await h.ev(`document.querySelector('[data-action="close-overlay"]')?.click()`);
+  await h.openApp('music');
+  await act('music-tab', 'Songs');
+  await act('music-select', 0);
+  await h.until(`!!document.querySelector('#viewport .music-player')`);
+  await act('music-track-menu', 4);
+  await h.tap('[data-action="music-delete"][data-id="4"]');
+  h.check('Delete asks first (USB storage)', await h.until(`/"Sunday Morning" will be permanently deleted from USB storage/.test(document.body.textContent) && !!document.querySelector('[data-action="music-delete-ok"]')`));
+  await h.tap('[data-action="music-delete-ok"]');
+  h.check('the song is deleted', (await store(h, 'music'))?.deleted?.includes(4) && await h.until(`/1 song was deleted/.test(document.body.textContent)`));
+  h.check('the queue loses it, the song playing stays', !(await store(h, 'music')).queue.includes(4) && (await store(h, 'music')).track === 0);
+  await act('music-delete', 2);
+  await h.tap('[data-action="close-overlay"]');
+  h.check('Cancel keeps the song', !(await store(h, 'music')).deleted.includes(2));
+  await act('music-select', 2);
+  await act('music-delete', 2);
+  await h.tap('[data-action="music-delete-ok"]');
+  const m = await store(h, 'music');
+  h.check('deleting the song playing moves to the next one', m.track === 3 && !m.queue.includes(2) && await h.until(`/City Lights/.test(document.querySelector('#viewport .music-player')?.textContent || '')`));
+  h.check('the deleted ringtone falls back to the default', !(await settings()).ringtone);
+  await h.shot('t14-gb-music');
+  await h.key('Escape');
+  await act('music-library');
+  await act('music-tab', 'Songs');
+  h.check('the library lists the four songs left', await h.until(`document.querySelectorAll('#viewport .music-song-row').length === 4`));
+  for (const id of [0, 1, 3, 5]) { await act('music-delete', id); await h.tap('[data-action="music-delete-ok"]'); }
+  h.check('with every song gone the library is empty and the player closed', await h.until(`!document.querySelector('#viewport .music-song-row') && !document.querySelector('#viewport .music-player') && !document.querySelector('#viewport .music-nowplaying')`) && (await store(h, 'music')).track == null);
+}
+
 const CASES = [
+  {id: 'T18', version: '2.3.6', name: 'Books › reader About, Manage eBooks (pin, remove)', run: gbBooksLocal},
+  {id: 'T18', version: '4.0.4', name: 'Play Books › Search, About, Share, Available offline, Read aloud, Refresh, Make available offline', run: icsBooksLocal},
+  {id: 'T46', version: '4.3', name: 'Gmail 4.5.1 › About Gmail, Open source licenses', run: gmailAbout('4.5.1-776638', true)},
+  {id: 'T46', version: '4.4.4', name: 'Gmail 4.6.1 › About Gmail, Open source licenses', run: gmailAbout('4.6.1 (1227136)', false)},
+  {id: 'T14', version: '2.3.6', name: 'Music › Use as phone ringtone, Delete', run: gbMusicFiles},
   {id: 'T24', version: '4.0.4', name: 'Play Movies › Manage offline rentals, Settings, Retry', run: moviesOffline},
   {id: 'T45', version: '4.4.4', name: 'Gallery › Print (PrintSpooler 4.4, Save as PDF, Quickoffice)', run: printFlow(PRINT_CASES.gallery, photoSheet)},
   {id: 'T45', version: '4.4.4', name: 'Photos › Print', run: printFlow(PRINT_CASES.photos, photoSheet)},

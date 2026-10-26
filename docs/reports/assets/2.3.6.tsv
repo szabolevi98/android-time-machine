@@ -55,8 +55,11 @@ versions/2.3.6/assets/bk-ic_text_small_default.png	57389af3f8d3608e	copy	crespo:
 versions/2.3.6/assets/bk-ic_text_small_selected.png	220477cebe27d65f	copy	crespo:/system/app/BooksPhone.apk!res/drawable-hdpi/ic_text_small_selected.png	drawable-hdpi		220477cebe27d65f
 versions/2.3.6/assets/bk-knob_default_day.png	bf245c8792fddcf3	copy	crespo:/system/app/BooksPhone.apk!res/drawable-hdpi/knob_default_day.png	drawable-hdpi		bf245c8792fddcf3
 versions/2.3.6/assets/bk-list_view_rule_day.png	83d71b836f7b9496	copy	crespo:/system/app/BooksPhone.apk!res/drawable-hdpi/list_view_rule_day.9.png	drawable-hdpi		83d71b836f7b9496
+versions/2.3.6/assets/bk-pin_pinned_default.png	adbc8ef4e91ce8d4	copy	crespo:/system/app/BooksPhone.apk!res/drawable-hdpi/pin_pinned_default.png	drawable-hdpi		adbc8ef4e91ce8d4
+versions/2.3.6/assets/bk-pin_unpinned_default.png	81201e85289f1af8	copy	crespo:/system/app/BooksPhone.apk!res/drawable-hdpi/pin_unpinned_default.png	drawable-hdpi		81201e85289f1af8
 versions/2.3.6/assets/bk-scrubber_bg_day.png	3e4d6972e200a14d	copy	crespo:/system/app/BooksPhone.apk!res/drawable-hdpi/scrubber_bg_day.9.png	drawable-hdpi		3e4d6972e200a14d
 versions/2.3.6/assets/bk-spine.png	2efcbb2d400b1326	copy	crespo:/system/app/BooksPhone.apk!res/drawable-hdpi/spine.9.png	drawable-hdpi		2efcbb2d400b1326
+versions/2.3.6/assets/bk-trash_default.png	ecf349620384333b	copy	crespo:/system/app/BooksPhone.apk!res/drawable-hdpi/trash_default.png	drawable-hdpi		ecf349620384333b
 versions/2.3.6/assets/books.png	b84de7bde646fe9c	copy	crespo:/system/app/BooksPhone.apk!res/drawable-hdpi/ic_books_launcher.png	drawable-hdpi		b84de7bde646fe9c
 versions/2.3.6/assets/boot-part0.webp	e60579d2ccc26385	generated	crespo:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
 versions/2.3.6/assets/boot-part1.webp	c821a8d8fc17112a	generated	crespo:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	

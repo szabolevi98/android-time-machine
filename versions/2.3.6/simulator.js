@@ -263,7 +263,7 @@
     if (ui.view === 'browser') { if (ui.gbBrEdit) return; const items = GBBrowser.menu(gbBrowserContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'music') {
       const party = {action: 'music-party', title: musicText(ui.music.party ? 'party_shuffle_off' : 'party_shuffle'), icon: 'gb-mu-ic_menu_party_shuffle.png'};
-      ui.gbMenuItems = ui.sub === 'player' ? [{action: 'music-library', title: musicText('goto_start'), icon: 'ic_menu_music_library'}, party, {action: 'music-track-menu-add', title: musicText('add_to_playlist'), icon: 'ic_menu_add'}, {action: 'gbset-toast', id: 'Unavailable in this simulator', title: musicText('ringtone_menu'), icon: 'ic_menu_set_as_ringtone'}, {action: 'gbset-toast', id: 'Unavailable in this simulator', title: musicText('delete_item'), icon: 'ic_menu_delete'}] : [party, {action: 'music-shuffle-all', title: musicText('shuffle_all'), icon: 'ic_menu_shuffle'}];
+      ui.gbMenuItems = ui.sub === 'player' ? [{action: 'music-library', title: musicText('goto_start'), icon: 'ic_menu_music_library'}, party, {action: 'music-track-menu-add', title: musicText('add_to_playlist'), icon: 'ic_menu_add'}, {action: 'music-ringtone', id: String(ui.music.track), title: musicText('ringtone_menu_short'), icon: 'ic_menu_set_as_ringtone'}, {action: 'music-delete', id: String(ui.music.track), title: musicText('delete_item'), icon: 'ic_menu_delete'}] : [party, {action: 'music-shuffle-all', title: musicText('shuffle_all'), icon: 'ic_menu_shuffle'}];
       ui.overlay = 'gb-menu-settings'; renderOverlay(); return;
     }
     if (ui.view === 'clock') { const items = GBDeskClock.menu(gbClockContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
@@ -805,9 +805,12 @@
     if (ui.overlay === 'gb-dialog-br') return GBBrowser.dialog(ui.gbBrDialog, gbBrowserContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-music') {
       const track = ICSMusic.tracks[ui.musicSelected], inPlaylist = ui.sub === 'music-group' && String(ui.musicGroup).startsWith('playlist|');
+      // DeleteItems (layout-finger/confirm_delete.xml, no title): delete_song_desc_nosdcard — the Nexus S keeps music on
+      // its built-in USB storage (isExternalStorageRemovable is false) — then OK and Cancel.
+      if (ui.gbMusicDialog === 'delete') return {icon: 'ic_dialog_alert', message: AndroidStrings.format(musicText('delete_song_desc_nosdcard'), track?.title || ''), buttons: [{action: 'music-delete-ok', title: musicText('delete_confirm_button_text')}, {action: 'close-overlay', title: musicText('cancel')}]};
       if (ui.gbMusicDialog === 'add') return {title: musicText('add_to_playlist'), items: [{action: 'music-add-queue', title: musicText('queue')}, {action: 'music-new-playlist', id: 'add', title: musicText('new_playlist')}, ...ui.music.playlists.map(p => ({action: 'music-add-confirm', id: p.id, title: p.name}))]};
       if (ui.gbMusicDialog === 'new') return {title: musicText('new_playlist'), custom: `<form data-form="music-playlist"><input name="name" maxlength="60" required aria-label="${safe(i18n.t('Playlist name'))}" value="${safe(AndroidStrings.format(musicText('new_playlist_name_template'), String(ui.music.playlists.length + 1)))}"></form>`, buttons: [{action: 'music-playlist-save', title: musicText('create_playlist_create_text')}, {action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]};
-      return {title: track?.title || '', items: [{action: 'music-play-selected', title: musicText('play_selection')}, {action: 'music-add-to-playlist', title: musicText('add_to_playlist')}, ...(inPlaylist ? [{action: 'music-remove-from-playlist', title: musicText('remove_from_playlist')}] : []), {action: 'gbset-toast', id: 'Unavailable in this simulator', title: musicText('ringtone_menu')}, {action: 'gbset-toast', id: 'Unavailable in this simulator', title: musicText('delete_item')}, {action: 'gbset-toast', id: 'Unavailable in this simulator', title: musicText('search_title')}]};
+      return {title: track?.title || '', items: [{action: 'music-play-selected', title: musicText('play_selection')}, {action: 'music-add-to-playlist', title: musicText('add_to_playlist')}, ...(inPlaylist ? [{action: 'music-remove-from-playlist', title: musicText('remove_from_playlist')}] : []), {action: 'music-ringtone', id: String(ui.musicSelected), title: musicText('ringtone_menu')}, {action: 'music-delete', id: String(ui.musicSelected), title: musicText('delete_item')}, {action: 'gbset-toast', id: 'Unavailable in this simulator', title: musicText('search_title')}]};
     }
     if (ui.overlay === 'gb-dialog-mms') return GBMms.dialog(ui.gbMmsDialog, gbMmsContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-set') return GBSettings.dialog(ui.gbSetDialog, gbSettingsContext()) || {title: '', items: []};
@@ -1067,6 +1070,8 @@
       const term = url.slice(7);
       return `<h2>Search results</h2><p>Results for <strong>${safe(term)}</strong></p>${browserLink('www.android.com', 'Android – Discover Android 2.3', 'Gingerbread brings a faster, simpler interface, a new keyboard and NFC.')}${browserLink('en.wikipedia.org/wiki/Android', 'Android (operating system) – Wikipedia', 'An overview of the Android mobile operating system.')}${browserLink('news.example', 'Tech News', `Stories related to ${term}.`)}`;
     }
+    // Google Books' About the book page (Books' reader › About) for the demo library's books.
+    if (url.startsWith('books.google.com/books?id=')) { const book = (window.GBGoogleApps?.BOOKS || []).find(b => b.id === url.split('id=')[1]); if (book) return `<div class="web-book"><h2>${safe(book.title)}</h2><p><small>${safe(book.author)}</small></p><hr><p>${safe(book.pages.find(p => p.length > 80) || book.pages[1] || '')}</p><p><small>${book.pages.length} pages · public domain</small></p></div>`; }
     if (url.includes('android.com')) return `<h2 style="color:#79b93f">android</h2><h3>Meet Android 2.3</h3><p>The fastest version of Android yet: a simpler interface, a new keyboard, one-touch word selection and copy/paste, and Near Field Communication.</p><div style="background:#23343c;color:white;padding:calc(28.9856 * var(--dp));text-align:center;font-size:calc(44.058 * var(--dp))">🤖<br><small style="font-size:calc(19.7102 * var(--dp))">Gingerbread</small></div>${browserLink('en.wikipedia.org/wiki/Android','Learn about Android','The story of Android.')}`;
     if (url.includes('wikipedia.org')) return `<h2>Android (operating system)</h2><p><small>From Wikipedia, the free encyclopedia</small></p><hr><p>Android is a mobile operating system based on a modified version of the Linux kernel. Android 2.3, known as Gingerbread, refined the user interface and added support for NFC and internet calling.</p><h3>Versions</h3><p>Cupcake · Donut · Eclair · Froyo · Gingerbread · Honeycomb</p>${browserLink('www.android.com','Official Android website')}`;
     if (url === 'news.example/galaxy-nexus' || url === 'retro.example/holo') return `<article class="web-offline-article"><h2>${url.startsWith('news')?'A day with Nexus S':'A closer look at Gingerbread'}</h2><time>September 2, 2011 · Demo archive</time><p>The phone has a curved glass screen, four touch keys and a green-accented interface. Open the app drawer to discover the classic Android experience.</p><h3>Everyday essentials</h3><p>Contacts, messages and the browser share a simple visual language. Swipe between home screens, arrange your favorite apps, and pull down the notification shade.</p><h3>Make it yours</h3><p>Choose a wallpaper, add an analog clock and keep your favorite contacts close. This small offline archive is a fictional snapshot of the early smartphone era.</p>${browserLink('news.example','Back to Tech News')}${browserLink('retro.example/holo','Explore the Gingerbread interface')}</article>`;
@@ -1642,7 +1647,7 @@
       case 'gbset-bt-device': if (data.settings.pairedDevice === id) { toast('Connected'); break; } data.settings.pairedDevice = id; save(); render(); break;
       case 'gbset-bt-name-ok': { const name = overlayRoot.querySelector('[data-bt-name]')?.value.trim(); if (name) data.settings.bluetoothName = name.slice(0, 40); ui.overlay = ''; save(); render(); break; }
       case 'gbset-volume-ok': overlayRoot.querySelectorAll('[data-vol]').forEach(input => { data.settings[input.dataset.vol] = Number(input.value); }); { const same = overlayRoot.querySelector('[data-vol-same]'); if (same) data.settings.notificationSameAsRing = same.checked; } ui.overlay = ''; save(); render(); break;
-      case 'gbset-sound-pick': { const [kind, name] = id.split(':'); data.settings[kind] = name; save(); renderOverlay(); render(); break; }
+      case 'gbset-sound-pick': { const at = id.indexOf(':'), kind = id.slice(0, at), name = id.slice(at + 1); data.settings[kind] = name; save(); renderOverlay(); render(); break; }
       case 'gbset-locale': i18n.setLanguage(id); location.reload(); break;
       case 'gbset-adb-ok': data.settings.usbDebug = true; ui.overlay = ''; save(); render(); break;
       case 'gbset-brightness-ok': { const input = overlayRoot.querySelector('.gbbright input[type=range]'); if (input) data.settings.brightness = Number(input.value); const auto = overlayRoot.querySelector('.gbbright input[type=checkbox]'); if (auto) data.settings.autoBrightness = auto.checked; ui.overlay = ''; save(); render(); break; }
@@ -2033,6 +2038,17 @@
       case 'music-add-queue': if(!ui.music.queue.includes(ui.musicSelected))ui.music.queue.push(ui.musicSelected);saveMusic();ui.overlay='';render();break;
       case 'music-new-playlist': ui.musicAddPending=id==='add';ui.overlay='gb-dialog-music';ui.gbMusicDialog='new';renderOverlay();overlayRoot.querySelector('[name=name]')?.focus();break;
       case 'music-add-confirm': {const playlist=ui.music.playlists.find(p=>String(p.id)===id);if(playlist&&!playlist.tracks.includes(ui.musicSelected))playlist.tracks.push(ui.musicSelected);saveMusic();ui.overlay='';render();toast('Added to playlist');break;}
+      // Use as phone ringtone: the song is flagged IS_RINGTONE and becomes Settings › Sound › Phone ringtone.
+      case 'music-ringtone': { const n = Number(id); if (!ICSMusic.setRingtone(ui.music, n)) break; data.settings.ringtone = `music:${n}`; saveMusic(); save(); ui.overlay = ''; renderOverlay(); toast(AndroidStrings.format(musicText('ringtone_set'), ICSMusic.tracks[n].title)); break; }
+      case 'music-delete': ui.musicSelected = Number(id); ui.overlay = 'gb-dialog-music'; ui.gbMusicDialog = 'delete'; renderOverlay(); break;
+      case 'music-delete-ok': {
+        const n = ui.musicSelected; ICSMusic.remove(ui.music, n);
+        if (data.settings.ringtone === `music:${n}`) delete data.settings.ringtone;
+        ui.musicTrack = ui.music.track; ui.musicPlaying = ui.music.playing; ui.overlay = '';
+        // MediaPlaybackActivity finishes once nothing is loaded.
+        if (ui.music.track == null && (ui.sub === 'player' || ui.sub === 'queue')) ui.sub = '';
+        saveMusic(); save(); renderOverlay(); render(); toast(musicPlural('NNNtracksdeleted', 1)); break;
+      }
       case 'music-remove-from-playlist': {const playlist=ui.music.playlists.find(p=>`playlist|${p.id}`===ui.musicGroup);if(playlist)playlist.tracks=playlist.tracks.filter(track=>track!==ui.musicSelected);saveMusic();ui.overlay='';render();break;}
       case 'email-read': {const item=data.mailbox.find(item=>item.id===id);if(!item)break;ui.emailId=id;item.read=true;ui.sub=item.folder==='Drafts'?'compose':'read';ui.emailError='';save();render();break;}
       case 'email-compose': composeEmail();break;

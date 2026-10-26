@@ -358,6 +358,34 @@ window.GBStrings["music"] = {
 "de": "Playlist gelöscht",
 "fr": "La playlist a été supprimée.",
 "es": "Se ha eliminado la lista de reproducción."
+},
+"ringtone_set": {
+"en": "\"%s\" set as phone ringtone.",
+"hu": "\"%s\" beállítva a telefon csengőhangjaként.",
+"de": "\"%s\" wurde als Telefonklingelton festgelegt.",
+"fr": "\"%s\" a été défini comme sonnerie.",
+"es": "Se ha establecido \"%s\" como tono del teléfono."
+},
+"delete_song_desc_nosdcard": {
+"en": "\"%s\" will be permanently deleted from USB storage.",
+"hu": "\"%s\" véglegesen törlésre kerül az USB-tárolóról.",
+"de": "\"%s\" wird endgültig aus dem USB-Speicher gelöscht.",
+"fr": "\"%s\" sera définitivement supprimé de la mémoire de stockage USB.",
+"es": "\"%s\" se eliminará permanentemente del almacenamiento USB."
+},
+"delete_confirm_button_text": {
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"cancel": {
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
 }
 },
 "plurals": {
@@ -437,6 +465,28 @@ window.GBStrings["music"] = {
 "es": {
 "other": "Se han añadido %d canciones a la lista de reproducción.",
 "one": "Se ha añadido una canción a la lista de reproducción."
+}
+},
+"NNNtracksdeleted": {
+"en": {
+"other": "%d songs were deleted.",
+"one": "1 song was deleted."
+},
+"hu": {
+"other": "%d dal törlésre került.",
+"one": "1 dal törölve."
+},
+"de": {
+"other": "%d Titel wurden gelöscht.",
+"one": "1 Titel wurde gelöscht."
+},
+"fr": {
+"other": "%d chansons ont été supprimées.",
+"one": "1 chanson a été supprimée."
+},
+"es": {
+"other": "Se han eliminado %d canciones.",
+"one": "Se ha eliminado una canción."
 }
 }
 }

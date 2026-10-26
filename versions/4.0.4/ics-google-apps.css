@@ -419,3 +419,52 @@
 .ga-mv-pref .holo-checkbox{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
 .screen .ga-mv-pref:disabled{opacity:1}
 .ga-mv-licenses{flex:1;width:100%;border:0;background:#fff}
+/* Play Books' library: the pins show only while Make available offline is on; manage_offline_view.xml at the bottom
+   (#222222 at 96 %, Done, a 15 % white rule, the Holo progressBarStyleHorizontal storage indicator with its 3 dp line —
+   #ffffff1a track, #33b4e44d secondary progress — and the legend row in textAppearanceSmall). */
+.ga-bk-home:not(.ga-bk-offline) .ga-bk-pin{visibility:hidden}
+.ga-bk-home{position:relative}
+.ga-bk-manage{flex:none;display:flex;align-items:stretch;background:#222222f5;color:#bebebe}
+.screen .ga-bk-manage>button{flex:none;display:grid;place-items:center;padding:0 calc(8 * var(--dp));border:0;background:none}
+.ga-bk-manage>button:active{background:#33b5e566}
+.ga-bk-manage>button img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.ga-bk-manage>i{flex:none;width:calc(1 * var(--dp));margin:calc(12 * var(--dp)) 0;background:#ffffff26}
+.ga-bk-storage{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:calc(8 * var(--dp)) 0}
+.ga-bk-meter{display:flex;align-items:center;height:calc(16 * var(--dp));margin:0 calc(12 * var(--dp));background:linear-gradient(#ffffff1a,#ffffff1a) center/100% calc(3 * var(--dp)) no-repeat}
+.ga-bk-meter b{display:block;height:calc(3 * var(--dp));background:#33b4e44d}
+.ga-bk-legend{display:flex;align-items:center;font:400 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif}
+.ga-bk-legend img{flex:none;width:calc(16 * var(--dp));height:calc(16 * var(--dp));margin-left:calc(8 * var(--dp))}
+.ga-bk-legend span{flex:1;min-width:0;margin-left:calc(8 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ga-bk-legend small{flex:none;min-width:calc(100 * var(--dp));margin:0 calc(12 * var(--dp));font-size:inherit;text-align:right}
+/* The SearchView expanded in the light bar, and the LocalSearchAdapter's dropdown under it. */
+.ga-bk-sv input{flex:1;min-width:0;height:calc(36 * var(--dp));margin-right:calc(8 * var(--dp));padding:0 calc(4 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #33b5e5;background:none;color:#000;font:400 calc(18 * var(--dp)) RobotoICS,sans-serif;outline:0}
+.ga-bk-sv input::placeholder{color:#00000066}
+.ga-bk-suggestions{position:absolute;z-index:20;top:calc(48 * var(--dp));left:0;right:0;max-height:calc(100% - calc(48 * var(--dp)));overflow-y:auto;background:#fff;box-shadow:0 calc(2 * var(--dp)) calc(6 * var(--dp)) #0005}
+.ga-bk-suggestions:empty{display:none}
+.screen .ga-bk-suggest{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:calc(4 * var(--dp));border:0;border-bottom:calc(1.1765 * var(--dp)) solid #0000001f;background:none;color:#000;text-align:left}
+.screen .ga-bk-suggest:active{background:#33b5e566}
+.ga-bk-suggest .ga-art.ga-bk-cover{flex:none;width:calc(40 * var(--dp));box-shadow:none}
+.ga-bk-suggest .ga-art em{display:none}
+.ga-bk-suggest span{display:flex;flex-direction:column;min-width:0;padding-left:calc(4 * var(--dp))}
+.ga-bk-suggest b,.ga-bk-suggest small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ga-bk-suggest b{font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000}
+.ga-bk-suggest small{font:400 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#323232}
+.screen .ga-bk-suggest.ga-bk-online{padding:0 calc(8 * var(--dp)) 0 calc(60 * var(--dp))}
+/* The reader's title opens about_the_book_popup.xml as a drop-down (popupMenuStyle's panel). */
+.ga-bk-title{cursor:pointer}
+.ga-bk-about-scrim{position:absolute;inset:0;z-index:29}
+.ga-bk-about{position:absolute;z-index:30;top:calc(43.5295 * var(--dp));left:calc(4 * var(--dp));right:calc(4 * var(--dp));max-width:calc(480 * var(--dp));max-height:calc(100% - calc(58.8236 * var(--dp)));overflow-y:auto;box-sizing:border-box;border:calc(10 * var(--dp)) solid transparent;border-image:url('assets/ga-bk-23-menu_dropdown_panel_holo_light.png') 20 fill/calc(10 * var(--dp));color:#000;font-family:RobotoICS,Roboto,sans-serif}
+.ga-bk-about-head{display:flex;align-items:center;justify-content:center;background:#3d3f40}
+.ga-bk-about-head .ga-art.ga-bk-cover{flex:none;width:auto;height:calc(120 * var(--dp));margin:0 calc(8 * var(--dp));box-shadow:none}
+.ga-bk-about-head .ga-art em{display:none}
+.ga-bk-about-head span{flex:1;min-width:0;display:flex;flex-direction:column}
+.ga-bk-about-head b{margin:calc(8 * var(--dp)) calc(8 * var(--dp)) 0;font-weight:400;font-size:calc(24 * var(--dp));color:#fff}
+.ga-bk-about-head small{margin:0 calc(8 * var(--dp)) calc(8 * var(--dp));font-size:calc(18 * var(--dp));color:#848484}
+.ga-bk-about>i{display:block;height:calc(2 * var(--dp));background:#bdbdbd}
+.ga-bk-about>i.blue{background:#3f9ddd}
+.ga-bk-about p{margin:calc(8 * var(--dp)) calc(8 * var(--dp)) 0;font-size:calc(18 * var(--dp))}
+.ga-bk-about p.last{margin-bottom:calc(8 * var(--dp))}
+/* Checkable and disabled items of the Google apps' overflow. */
+.ga-holo-menu button{display:flex;align-items:center;justify-content:space-between;gap:calc(8 * var(--dp))}
+.ga-holo-menu button img{flex:none;width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin:calc(-8 * var(--dp)) 0}
+.ga-holo-menu button:disabled{color:#ffffff4d}

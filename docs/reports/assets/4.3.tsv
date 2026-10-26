@@ -279,6 +279,8 @@ versions/4.3/assets/gm-ic_menu_inbox_promotions_holo_dark.png	a7acb25a8a25a8a1	s
 versions/4.3/assets/gm-ic_menu_inbox_promotions_holo_light.png	694648c6e7079b2a	same pixels	mako:/system/app/Gmail2.apk!res/drawable-xhdpi/ic_menu_inbox_promotions_holo_light.png	drawable-xhdpi		00b3995c2fa59775
 versions/4.3/assets/gm-ic_menu_inbox_social_holo_dark.png	3eea081877c482f9	same pixels	mako:/system/app/Gmail2.apk!res/drawable-xhdpi/ic_menu_inbox_social_holo_dark.png	drawable-xhdpi		117c403ecbc18dd0
 versions/4.3/assets/gm-ic_menu_inbox_social_holo_light.png	d35438c59b1887c7	same pixels	mako:/system/app/Gmail2.apk!res/drawable-xhdpi/ic_menu_inbox_social_holo_light.png	drawable-xhdpi		73748cc096816834
+versions/4.3/assets/gm-licenses.html	f7d7d2c69de1676b	copy	mako:/system/app/Gmail2.apk!res/raw/licenses.html	raw		f7d7d2c69de1676b
+versions/4.3/assets/gm-logo.png	fdadbdf3a7ea8a69	copy	mako:/system/app/Gmail2.apk!res/drawable-xhdpi/logo.png	drawable-xhdpi		fdadbdf3a7ea8a69
 versions/4.3/assets/gmail.png	f57409774bfa6746	copy	mako:/system/app/Gmail2.apk!res/mipmap-xhdpi/ic_launcher_mail.png	mipmap-xhdpi		f57409774bfa6746
 versions/4.3/assets/gms-common_ic_googleplayservices.png	522c6dbad73d9ae0	same pixels	mako:/system/app/PrebuiltGmsCore.apk!res/drawable-xhdpi/common_ic_googleplayservices.png	drawable-xhdpi		6683c25d854d15f6
 versions/4.3/assets/gms-common_settings_bg.png	022d742a303aeceb	copy	mako:/system/app/PrebuiltGmsCore.apk!res/drawable-xhdpi/common_settings_bg.9.png	drawable-xhdpi		022d742a303aeceb

@@ -858,7 +858,14 @@
    "gx.summary.silent_ring": "Gmail2:label_notification_summary_silent_ring",
    "gx.summary.silent_ring_notify_once": "Gmail2:label_notification_summary_silent_ring_notify_once",
    "gx.summary.silent_ring_vibe": "Gmail2:label_notification_summary_silent_ring_vibe",
-   "gx.summary.silent_ring_vibe_notify_once": "Gmail2:label_notification_summary_silent_ring_vibe_notify_once"
+   "gx.summary.silent_ring_vibe_notify_once": "Gmail2:label_notification_summary_silent_ring_vibe_notify_once",
+   "Version %s": "Gmail2:version",
+   "©%d Google Inc.": "Gmail2:copyright",
+   "Send feedback": "Gmail2:feedback",
+   "Tell us what you think": "Gmail2:feedback_description",
+   "About desc": "Gmail2:about_desc",
+   "Open source licenses": "Gmail2:open_source_licenses_title",
+   "Privacy Policy": "Gmail2:privacy_policy_link"
   },
   "a11y": {
    "Touch & hold delay": "Settings:accessibility_long_press_timeout_preference_title",
@@ -2326,7 +2333,14 @@
    "gx.summary.silent_ring": "Gmail2:label_notification_summary_silent_ring",
    "gx.summary.silent_ring_notify_once": "Gmail2:label_notification_summary_silent_ring_notify_once",
    "gx.summary.silent_ring_vibe": "Gmail2:label_notification_summary_silent_ring_vibe",
-   "gx.summary.silent_ring_vibe_notify_once": "Gmail2:label_notification_summary_silent_ring_vibe_notify_once"
+   "gx.summary.silent_ring_vibe_notify_once": "Gmail2:label_notification_summary_silent_ring_vibe_notify_once",
+   "Version %s": "Gmail2:version",
+   "©%d Google Inc.": "Gmail2:copyright",
+   "Send feedback": "Gmail2:feedback",
+   "Tell us what you think": "Gmail2:feedback_description",
+   "About desc": "Gmail2:about_desc",
+   "Open source licenses": "Gmail2:open_source_licenses_title",
+   "Privacy Policy": "Gmail2:privacy_policy_link"
   },
   "a11y": {
    "Touch & hold delay": "Settings:accessibility_long_press_timeout_preference_title",
@@ -5185,7 +5199,17 @@
    "Accounts": "BooksTablet:menu_accounts",
    "Make available offline": "BooksTablet:menu_manage_offline",
    "View as carousel": "BooksTablet:menu_carousel_view",
-   "View as list": "BooksTablet:menu_list_view"
+   "View as list": "BooksTablet:menu_list_view",
+   "Stop reading aloud": "BooksTablet:menu_stop_reading_aloud",
+   "Search for books": "BooksTablet:search_hint",
+   "Search online": "BooksTablet:suggest_market",
+   "Share \"%1$s\" via": "BooksTablet:share_dialog_title",
+   "Check out \"%1$s\"": "BooksTablet:share_subject",
+   "Done": "BooksTablet:done",
+   "%s FREE": "BooksTablet:free_space_format",
+   "Offline legend": "BooksTablet:make_available_offline",
+   "%1$d pages": "BooksTablet:number_of_pages",
+   "Published %1$s": "BooksTablet:publication_date"
   },
   "camera": {
    "pref_camera_flashmode_title": "CameraGoogle:pref_camera_flashmode_title",

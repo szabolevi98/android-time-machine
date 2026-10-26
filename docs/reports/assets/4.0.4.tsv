@@ -235,6 +235,8 @@ versions/4.0.4/assets/ga-bk-btn_pin_off.png	f48b169c29b1c9ea	copy	maguro:/system
 versions/4.0.4/assets/ga-bk-btn_pin_on.png	90165ffa6ce04af0	copy	maguro:/system/app/BooksTablet.apk!res/drawable-xhdpi/btn_pin_on.png	drawable-xhdpi		90165ffa6ce04af0
 versions/4.0.4/assets/ga-bk-btn_pin_pressed.png	c41a4f2bd625ace5	copy	maguro:/system/app/BooksTablet.apk!res/drawable-xhdpi/btn_pin_pressed.png	drawable-xhdpi		c41a4f2bd625ace5
 versions/4.0.4/assets/ga-bk-carousel_bg.png	f4e0ac63322b9bd5	copy	maguro:/system/app/BooksTablet.apk!res/drawable-xhdpi/carousel_bg.png	drawable-xhdpi		f4e0ac63322b9bd5
+versions/4.0.4/assets/ga-bk-ic_cab_done_holo_dark.png	fb47e8d72e97faba	copy	maguro:/system/app/BooksTablet.apk!res/drawable-xhdpi/ic_cab_done_holo_dark.png	drawable-xhdpi		fb47e8d72e97faba
+versions/4.0.4/assets/ga-bk-ic_make_avaiable_offline_legend.png	88779fdffea1179f	copy	maguro:/system/app/BooksTablet.apk!res/drawable-xhdpi/ic_make_avaiable_offline_legend.png	drawable-xhdpi		88779fdffea1179f
 versions/4.0.4/assets/ga-bk-ic_menu_market_dark.png	0cff2b0619695d70	copy	maguro:/system/app/BooksTablet.apk!res/drawable-xhdpi/ic_menu_market_dark.png	drawable-xhdpi		0cff2b0619695d70
 versions/4.0.4/assets/ga-bk-ic_menu_market_light.png	e8392b8937a61db9	copy	maguro:/system/app/BooksTablet.apk!res/drawable-xhdpi/ic_menu_market_light.png	drawable-xhdpi		e8392b8937a61db9
 versions/4.0.4/assets/ga-bk-ic_menu_search_light.png	2debb5b953661139	copy	maguro:/system/app/BooksTablet.apk!res/drawable-xhdpi/ic_menu_search_light.png	drawable-xhdpi		2debb5b953661139
@@ -707,6 +709,7 @@ versions/4.0.4/assets/star4.png	223906b528ec4907	same pixels	maguro:/system/app/
 versions/4.0.4/assets/star5.png	e43b36ddd7247fef	same pixels	maguro:/system/app/SystemUI.apk!res/drawable-nodpi/star5.png	drawable-nodpi		ded2deaf972b28a0
 versions/4.0.4/assets/stat_notify_more.png	c4de5a67e17c542d	resized	maguro:/system/app/SystemUI.apk!res/drawable-xhdpi/stat_notify_more.png	drawable-xhdpi	resized 48×48 → 36×36, mean difference 0.00	5c0f0a3f773a77ed
 versions/4.0.4/assets/stat_notify_sms.png	c6a98355b5cd7550	resized	maguro:/system/app/Mms.apk!res/drawable-xhdpi/stat_notify_sms.png	drawable-xhdpi	resized 48×48 → 36×36, mean difference 2.22	f6a2d1cf5ba97342
+versions/4.0.4/assets/stat_notify_sync.png	cc073635a9f06743	copy	maguro:/system/framework/framework-res.apk!res/drawable-xhdpi/stat_notify_sync.png	drawable-xhdpi		cc073635a9f06743
 versions/4.0.4/assets/stat_sys_alarm.png	536cb6ebffaf4a91	resized	maguro:/system/app/SystemUI.apk!res/drawable-xhdpi/stat_sys_alarm.png	drawable-xhdpi	resized 36×36 → 27×27, mean difference 0.58	1bc5e3ef11c110f9
 versions/4.0.4/assets/stat_sys_battery_71.png	dd3f0be5d79f8ff6	resized	maguro:/system/app/SystemUI.apk!res/drawable-xhdpi/stat_sys_battery_71.png	drawable-xhdpi	resized 24×36 → 18×27, mean difference 0.80	beb6894a43212d67
 versions/4.0.4/assets/stat_sys_data_bluetooth.png	821d0e8305d25b8f	resized	maguro:/system/app/SystemUI.apk!res/drawable-xhdpi/stat_sys_data_bluetooth.png	drawable-xhdpi	resized 24×36 → 18×27, mean difference 2.18	759cafa371508ce3
