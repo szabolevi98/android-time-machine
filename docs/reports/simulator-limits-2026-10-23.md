@@ -121,6 +121,51 @@ A mag lezárása után a felhasználó a későbbi listából ezt a 36 tételt h
 5. Teszt: minden javított út esete a `tests/browser/limits-regression.mjs` CASES listájába (asztali és telefonos szélességen fut, pozitív eredmény, mentés, Cancel/Back); szükség szerint `tests/*.test.cjs`; `npm test`, `node tests/browser/limits-regression.mjs <T-id>`; a `check:texts`-et ne futtasd a regresszióval egy időben.
 6. Commit (Co-Authored-By sor nélkül) és push a `main`-re; utána `python docs/tools/limits-status.py <T-id> "Kész — `commit`. …"` és külön docs-commit. VPS-deploy csak kérésre.
 
+### Harmadik kör — tervezet 2026-10-26 (megbeszélésre, még nincs jóváhagyva)
+
+A tulajdonos 2026-10-26-án kérte, hogy a kihagyott öt tételre legyen terv, de **nem kell teljes működés**: a cél, hogy a kirajzolt, látható gombok és menüpontok értelmes helyi eredményt adjanak, a mély alfunkciók maradhatnak elutasításon. A Movie Studio ki is maradhat. A T-feladatlapok lenti „Kész, ha” feltételeit ez a könnyített terjedelem váltja ki. Forrás mindenhol a saját verzió APK-ja (mind megvan: `GoogleEarth.apk` crespo/maguro/mako/hammerhead/shamu, `PlusOne.apk` maguro/mako/hammerhead/shamu, `Currents.apk` és `Magazines.apk` mako, `Magazines.apk` hammerhead, `Newsstand.apk` shamu, `VideoEditorGoogle.apk` maguro/mako).
+
+| # | Csomag | Könnyített terjedelem | Verziók | Becslés |
+|---|---|---|---|---|
+| 1 | T19 | Earth: valódi földkép a kamu gömb helyett, forgatás/nagyítás, keresés, My location, észak, Borders réteg, Share, Settings | 2.3.6, 4.0.4, 4.3, 4.4.4, 5.1.1 | 4–6 ó |
+| 2 | T26 | Google+ Messenger: szál megnyitása, helyi üzenetküldés, New conversation, Settings | 4.0.4, 4.3 | 2 ó |
+| 3 | T23 | Google+: New post (szöveg, fotó, hely) a saját streambe, Settings; Reshare és értesítések elutasítás marad | 4.0.4, 4.3, 4.4.4, 5.1.1 | 3–4 ó |
+| 4 | T36 | Currents / Magazines / Newsstand: Settings az APK-ból, keresés a meglévő elemekben, mentés/könyvjelző; a cikk-olvasó a nyitott kérdés szerint | 4.3, 4.4.4, 5.1.1 | 2–4 ó |
+| 5 | T27 | Movie Studio: kimarad, vagy minimális „héj” (lásd lent) | 4.0.4, 4.3 | 0 vagy 2–3 ó |
+
+Összesen kb. 11–19 munkaóra.
+
+**1. T19 Earth.** Most: 2.3.6-ban durva, kézzel rajzolt kontinensek canvasra, 12 beégetett helyre keresés; 4.0.4–5.1.1-ben SVG-folt-gömb, a keresés csak a címsort írja át (4.0.4-ben toast), a menüpontok nagy része `sa-unsupported`.
+- Földgömb: a NASA Blue Marble (közkincs, valódi műholdmozaik) equirectangular textúrája a 2.3.6 meglévő canvas-gömbrajzolójával (`drawGlobe`), verziónként a saját fájlban és előtaggal; a verziók saját kerete (action bar, ikonok, 5.1.1 drawer) marad.
+- Mozgatás: húzással forgatás, görgővel/csippentéssel nagyítás néhány szintig (amíg a textúra felbontása elbírja); kis lendület elengedéskor.
+- Keresés: közös helylista (a 2.3.6 `PLACES` bővítve, plusz a demótelefon Home/Work címe) „odarepüléssel”; nem talált hely a verzió saját „Not Found: %s” / no-results szövege.
+- My location: a demótelefon helyére repül, kék ponttal (`ea-bluedot.png`, 5.1.1 saját ikon). Észak / Reset to north: visszaforgatja az irányt.
+- Layers (2.3.6, 4.0.4): Borders ténylegesen rajzol országhatárt (Natural Earth 1:110m, közkincs); Places a helylista pontjait és neveit rajzolja; a többi réteg (Businesses, Panoramio, Wikipedia, 3D Buildings) pipálható, mentődik, de nem rajzol.
+- Share (4.3–5.1.1): a verzió megosztó lapja a hely nevével és Maps-linkjével.
+- Settings: az APK `res/xml/settings.xml`-je (2.3.6: Clear cache, Cache size, Use sensors, Use terrain, About; 5.1.1: Clear cache, Data cache size, Google location, About) a verzió preferencia-motorjával, mentve.
+- Elutasítás marad: Help, Feedback, Tutorial, Terms (webes oldalak), Fly to / Look around / Street View.
+
+**2. T26 Google+ Messenger (Google+ 2.4 / 4.0).** Most: lista három sorral, minden sor és a New conversation elutasít.
+- A sor megnyitja a szálat a sor üzenetével (a meglévő szöveg, nem új tartalom); a küldés helyben menti, újranyitva megmarad. Válasz nem érkezik.
+- New conversation: a névjegyválasztó, utána üres szál. Settings: a PlusOne APK megfelelő preferencia-XML-je (értesítések), mentve. Sign out, Help, Feedback elutasítás marad.
+
+**3. T23 Google+ posztolás.** Most: a stream kirajzolva, New post / Share photos / Share your location elutasít.
+- New post a saját verzió szerkesztőjével (PlusOne APK layoutja): szöveg, fotó a Galériából/Photosból, hely a demótelefon helyéből; a poszt a saját stream tetejére kerül, mentve, törölhető. Cancel nem posztol.
+- Settings: a PlusOne `notifications_preferences.xml` / `photo_preferences.xml` (mako-tól `auto_backup_preferences.xml`), mentve.
+- Elutasítás marad: Reshare, +1 mások posztjain túl, értesítési lista, körök szerkesztése, Sign out, Help, Feedback.
+
+**4. T36 Currents / Magazines / Newsstand.** Most: a kiadások/magazinok kirajzolva, minden elem és menüpont elutasít.
+- Settings az APK saját XML-jéből (Currents `settings_currents.xml`, Magazines `preference_magazines.xml` / `settings.xml`, Newsstand `settings.xml`), mentve. Search a meglévő elemek nevére szűr. On device only kapcsoló mentve, üres állapotot ad. Mentés/könyvjelző megmarad.
+- A cikk/magazin megnyitása a nyitott kérdéstől függ (lent).
+
+**5. T27 Movie Studio (AOSP VideoEditor).** Javaslat: kimarad. Ha mégis: Create new project → névadó párbeszéd (AOSP szöveg) → a projektszerkesztő képernyő a gyári layout szerint, Add video / Add photo a Galéria-választóval, az elemek bélyegképként megjelennek az idővonalon, a projekt mentődik és a listában újranyitható/törölhető. Lejátszás, vágás, átmenetek, export elutasítás marad.
+
+**Nyitott kérdések a tulajdonosnak:**
+1. Earth földkép: a NASA Blue Marble mehet? (Nem a gyári képből van, mert az Earth a képeket szerverről töltötte; ugyanúgy referencia, mint a Wikimedia-fotók.) Egy textúra a gyökér `assets/`-ben az öt verziónak, vagy verziónként külön (a „két verzióban nem lehet bájtra azonos fájl” szabály miatt pl. eltérő felbontással)?
+2. Currents / Newsstand cikkek: a megnyitott cikkhez szöveg kell. (a) Közkincs szöveg (pl. Wikipedia-kivonat, NASA-hír) forrásmegjelöléssel, (b) csak a cím és a kép, „a tartalom offline nem érhető el” üres állapottal, vagy (c) kitalált rövid cikk, mint a News & Weather?
+3. Movie Studio: kimarad, vagy a minimális héj?
+4. Sorrend: a fenti (Earth → Messenger → Google+ → Currents/Newsstand → Movie Studio)?
+
 ### Feladatcsomagok és készfeltételek
 
 **Az Ütem és — részcsomagnál — a Mostani rész az irányadó.** A teljes korábbi leírás későbbi jelöltként marad meg. Részcsomagnál a mag lezárásához csak a Mostani készfeltétel szükséges; a későbbi rész státusza ettől halasztott marad. Minden javítás commitja és ellenőrzése itt, a riport megfelelő T-lapján vezetendő.
