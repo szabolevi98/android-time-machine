@@ -581,6 +581,28 @@ NG.appsData = {
 "targetSdk": 24,
 "res": "angler:priv-app/Velvet/Velvet.apk:res/mipmap-xxxhdpi-v4/ic_launcher_google_search.png"
 },
+"play-books": {
+"pkg": "com.google.android.apps.books",
+"cls": "com.google.android.apps.books.app.BooksActivity",
+"label": {
+"en": "Play Books",
+"de": "Play Bücher",
+"fr": "Play Livres",
+"es": "Play Libros",
+"hu": "Play Könyvek"
+},
+"icon": "assets/app-play-books.png",
+"color": "#212121",
+"version": "3.13.17",
+"codeSize": 11345315,
+"permGroups": [
+"contacts",
+"storage"
+],
+"targetSdk": 25,
+"res": "angler:playapps/Books.apk:res/mipmap-xxxhdpi-v4/ic_launcher_play_books.png",
+"installed": true
+},
 "docs": {
 "pkg": "com.google.android.apps.docs.editors.docs",
 "cls": "com.google.android.apps.docs.app.NewMainProxyActivity",

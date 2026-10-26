@@ -41,6 +41,8 @@ The account: `<device>.demo@gmail.com` (6.0.1: nexus5x.demo@gmail.com). Carrier:
 - **Keep (4.3–5.1.1; 6.0.1 and 7.1.2 as an app installed from Play):** "Buy concert tickets", "Groceries: milk, eggs, lollipops", "Call Mom on Sunday".
 - **Fit (5.1.1; 6.0.1 and 7.1.2 as an app installed from Play):** walking 9 min at 8:05, biking 4 min at 12:40,
   walking 5 min at 17:30 against a 30 min goal (6.0.1 / 7.1.2: a time still to come today falls on yesterday).
+- **Play Books (4.3–5.1.1's Play apps; 6.0.1 and 7.1.2 as an app installed from Play):** four public-domain openings,
+  Alice's Adventures in Wonderland, Pride and Prejudice, The Three Musketeers, The Adventures of Sherlock Holmes.
 - **Browser / Chrome bookmarks:** Google, Android, the Wikipedia Android article.
 - **Google Now:** weather card "Riverside 18°, partly cloudy" and the next Calendar event.
 - **Wi-Fi:** the saved network (5.1.1: AndroidAP; 6.0.1: Home Network) and nearby AndroidAP, CoffeeShop, Library

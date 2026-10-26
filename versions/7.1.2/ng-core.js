@@ -49,7 +49,7 @@
     'play-games': ['Play Games', 'PlayGames.apk'], 'android-pay': ['Android Pay', 'Wallet.apk'], 'project-fi': ['Project Fi', 'Tycho.apk'],
     // Installed from Play (not in the image: _aosp/<device>/playapps).
     'earth': ['Earth', 'GoogleEarth.apk (Play)'], 'keep': ['Keep', 'Keep.apk (Play)'],
-    docs: ['Docs', 'Docs.apk (Play)'], sheets: ['Sheets', 'Sheets.apk (Play)'], slides: ['Slides', 'Slides.apk (Play)'], fit: ['Fit', 'Fit.apk (Play)'],
+    docs: ['Docs', 'Docs.apk (Play)'], sheets: ['Sheets', 'Sheets.apk (Play)'], slides: ['Slides', 'Slides.apk (Play)'], fit: ['Fit', 'Fit.apk (Play)'], 'play-books': ['Play Books', 'Books.apk (Play)'],
     'device-policy': ['Device Policy', 'DMAgent.apk'], documents: ['Downloads', 'DocumentsUI.apk · LauncherActivity'], files: ['Files', 'DocumentsUI.apk'],
     'live-wallpapers': ['Live wallpapers', 'LiveWallpapersPicker.apk'], musicfx: ['Equalizer', 'MusicFX.apk · ActivityMusic'],
     daydream: ['Screen saver', 'DreamManagerService · DeskClock, BasicDreams, Photos'], 'emergency-info': ['Emergency information', 'EmergencyInfo.apk'],

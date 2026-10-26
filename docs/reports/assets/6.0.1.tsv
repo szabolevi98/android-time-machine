@@ -19,6 +19,7 @@ versions/6.0.1/assets/app-maps.png	4062635bc9e1ec6b	copy	bullhead:/system/app/Ma
 versions/6.0.1/assets/app-messenger.png	fc1661bbf3b21b7e	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_launcher.png	drawable-xxhdpi-v4		fc1661bbf3b21b7e
 versions/6.0.1/assets/app-phone.png	269fc7e71cfc2cd2	copy	bullhead:/system/priv-app/GoogleDialer/GoogleDialer.apk!res/mipmap-xxxhdpi-v4/ic_dialer_clr_48cv_44dp.png	mipmap-xxxhdpi-v4		269fc7e71cfc2cd2
 versions/6.0.1/assets/app-photos.png	4407f7a3862f118b	copy	bullhead:/system/app/Photos/Photos.apk!res/mipmap-xxxhdpi-v4/quantum_logo_photos_launcher_color_48.png	mipmap-xxxhdpi-v4		4407f7a3862f118b
+versions/6.0.1/assets/app-play-books.png	ded076782735379e	copy	bullhead:/playapps/Books.apk!res/mipmap-xxxhdpi-v4/ic_launcher_play_books.png	mipmap-xxxhdpi-v4		ded076782735379e
 versions/6.0.1/assets/app-play-games.png	0a1a7461266fde4d	copy	bullhead:/system/app/PlayGames/PlayGames.apk!res/mipmap-xxxhdpi-v4/ic_launcher_play_games.png	mipmap-xxxhdpi-v4		0a1a7461266fde4d
 versions/6.0.1/assets/app-play-movies.png	a990617635ba1a49	copy	bullhead:/system/app/Videos/Videos.apk!res/mipmap-xxxhdpi-v4/ic_launcher_videos.png	mipmap-xxxhdpi-v4		a990617635ba1a49
 versions/6.0.1/assets/app-play-music.png	9f1c7ba989ad4a11	copy	bullhead:/system/app/Music2/Music2.apk!res/mipmap-xxxhdpi-v4/ic_launcher_play_music.png	mipmap-xxxhdpi-v4		9f1c7ba989ad4a11
@@ -84,6 +85,16 @@ versions/6.0.1/assets/bg-widget_fab_reply.png	6368685c8de8e864	copy	bullhead:/sy
 versions/6.0.1/assets/bg-widget_hr.9.png	418585b2def11438	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/widget_hr.9.png	drawable-xxhdpi-v4		418585b2def11438
 versions/6.0.1/assets/bg-widget_msg_bubble_incoming.9.png	b409d9c6f008f899	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/widget_msg_bubble_incoming.9.png	drawable-xxhdpi-v4		b409d9c6f008f899
 versions/6.0.1/assets/bg-widget_msg_bubble_outgoing.9.png	ed9ae2165f2e669f	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/widget_msg_bubble_outgoing.9.png	drawable-xxhdpi-v4		ed9ae2165f2e669f
+versions/6.0.1/assets/bk39-ic_arrow_back_gray_24dp.png	e9e20411a3ac637a	copy	bullhead:/playapps/Books.apk!res/drawable-xxhdpi-v4/ic_arrow_back_gray_24dp.png	drawable-xxhdpi-v4		e9e20411a3ac637a
+versions/6.0.1/assets/bk39-ic_arrow_back_white_24dp.png	0c4493c91c0cb467	copy	bullhead:/playapps/Books.apk!res/drawable-xxhdpi-v4/ic_arrow_back_white_24dp.png	drawable-xxhdpi-v4		0c4493c91c0cb467
+versions/6.0.1/assets/bk39-ic_close_wht_24dp.png	93b3126fb85e3934	copy	bullhead:/playapps/Books.apk!res/drawable-xxhdpi-v4/ic_close_wht_24dp.png	drawable-xxhdpi-v4		93b3126fb85e3934
+versions/6.0.1/assets/bk39-ic_drawer_white.png	4615a856f8680e4f	copy	bullhead:/playapps/Books.apk!res/drawable-xxhdpi-v4/ic_drawer_white.png	drawable-xxhdpi-v4		4615a856f8680e4f
+versions/6.0.1/assets/bk39-ic_menu_moreoverflow_card_dark_normal.png	8cd711a1d08c9620	copy	bullhead:/playapps/Books.apk!res/drawable-xxhdpi-v4/ic_menu_moreoverflow_card_dark_normal.png	drawable-xxhdpi-v4		8cd711a1d08c9620
+versions/6.0.1/assets/bk39-ic_search_white.png	aad661086a62e5bc	copy	bullhead:/playapps/Books.apk!res/drawable-xxhdpi-v4/ic_search_white.png	drawable-xxhdpi-v4		aad661086a62e5bc
+versions/6.0.1/assets/bk39-ic_sort_white_24dp.png	8a498e18bef34cc6	copy	bullhead:/playapps/Books.apk!res/drawable-xxhdpi-v4/ic_sort_white_24dp.png	drawable-xxhdpi-v4		8a498e18bef34cc6
+versions/6.0.1/assets/bk39-ic_toc_24dp.png	5f62b4b314ae1290	copy	bullhead:/playapps/Books.apk!res/drawable-xxhdpi-v4/ic_toc_24dp.png	drawable-xxhdpi-v4		5f62b4b314ae1290
+versions/6.0.1/assets/bk39-ic_toc_wht_24dp.png	8df4e3613ea60048	copy	bullhead:/playapps/Books.apk!res/drawable-xxhdpi-v4/ic_toc_wht_24dp.png	drawable-xxhdpi-v4		8df4e3613ea60048
+versions/6.0.1/assets/bk39-illo_empty_my_library.png	1d1259e4442d0f09	copy	bullhead:/playapps/Books.apk!res/drawable-nodpi-v4/illo_empty_my_library.png	drawable-nodpi-v4		1d1259e4442d0f09
 versions/6.0.1/assets/boot-part0.webp	273ab0813062f4d8	generated	bullhead:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
 versions/6.0.1/assets/boot-part1.webp	768599a777099c0d	generated	bullhead:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
 versions/6.0.1/assets/boot-part2.webp	0ab38eb11cbf0301	generated	bullhead:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	

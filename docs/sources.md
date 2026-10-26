@@ -205,6 +205,8 @@ docs/reports/simulator-limits-2026-10-23.md, "Negyedik kör".
 | 7.1.2 | Slides 1.7.212.01 | [slides-1-7-212-01-release](https://www.apkmirror.com/apk/google-inc/slides/slides-1-7-212-01-release/) (uploaded 2017-06-02) | armeabi-v7a, nodpi | `eda23b06e046e598f028ccfc89cd398560fac180cf2bed82f2ca71012932d886` |
 | 6.0.1 | Fit 1.58.09 | [fit-1-58-09-release](https://www.apkmirror.com/apk/google-inc/fit/fit-1-58-09-release/) (uploaded 2016-08-02) | noarch, nodpi | `483e06b1bfa6164d5af749cb00c34c72315522d57db7f60f94203cb9ab98acb0` |
 | 7.1.2 | Fit 1.68.00 | [fit-1-68-00-release](https://www.apkmirror.com/apk/google-inc/fit/fit-1-68-00-release/) (uploaded 2017-06-13) | noarch, nodpi | `8763fe95d2313ac39bf4ab66a30558f5e7b6d902fee333a6495fe0bfae8bd957` |
+| 6.0.1 | Play Books 3.9.37 | [google-play-books-3-9-37-release](https://www.apkmirror.com/apk/google-inc/google-play-books/google-play-books-3-9-37-release/) (uploaded 2016-07-21) | noarch, nodpi | `27c92df4154ae909e1bd2c0b65644720baf8a8528663ab88996d6010defb5ba9` |
+| 7.1.2 | Play Books 3.13.17 | [google-play-books-3-13-17-release](https://www.apkmirror.com/apk/google-inc/google-play-books/google-play-books-3-13-17-release/) (uploaded 2017-06-01) | noarch, nodpi | `728ee1889ade86cd2e3a36ef0d77d4b2340903a2dea4653803a33afcde6edaed` |
 
 Sheets on 6.0.1 is 1.6.502.06 (January 2017): APKMirror has no Sheets release between 1.4.492.11 and it, so the
 plan's fallback, the first one after the image's month, is used.

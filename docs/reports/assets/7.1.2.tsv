@@ -19,6 +19,7 @@ versions/7.1.2/assets/app-maps.png	439fca47f2059aea	copy	angler:/system/app/Maps
 versions/7.1.2/assets/app-messenger.png	1e6f4b391d12ee22	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_launcher.png	drawable-xxxhdpi-v4		1e6f4b391d12ee22
 versions/7.1.2/assets/app-phone.png	442f798d329b7888	copy	angler:/system/priv-app/GoogleDialer/GoogleDialer.apk!res/mipmap-xxxhdpi-v4/product_logo_dialer_round_launcher_color_48.png	mipmap-xxxhdpi-v4		442f798d329b7888
 versions/7.1.2/assets/app-photos.png	4e840aeb56a904c4	copy	angler:/system/app/Photos/Photos.apk!res/mipmap-xxxhdpi-v4/quantum_logo_photos_launcher_color_48.png	mipmap-xxxhdpi-v4		4e840aeb56a904c4
+versions/7.1.2/assets/app-play-books.png	8c51e72aaf83c423	copy	angler:/playapps/Books.apk!res/mipmap-xxxhdpi-v4/ic_launcher_play_books.png	mipmap-xxxhdpi-v4		8c51e72aaf83c423
 versions/7.1.2/assets/app-play-games.png	6858e1f0b9f59072	copy	angler:/system/app/PlayGames/PlayGames.apk!res/mipmap-xxxhdpi-v4/ic_launcher_play_games.png	mipmap-xxxhdpi-v4		6858e1f0b9f59072
 versions/7.1.2/assets/app-play-movies.png	29384dce6415f26d	copy	angler:/system/app/Videos/Videos.apk!res/mipmap-xxxhdpi-v4/ic_launcher_videos.png	mipmap-xxxhdpi-v4		29384dce6415f26d
 versions/7.1.2/assets/app-play-music.png	2d405fccd15ec002	copy	angler:/system/app/Music2/Music2.apk!res/mipmap-xxxhdpi-v4/ic_launcher_play_music.png	mipmap-xxxhdpi-v4		2d405fccd15ec002
@@ -88,6 +89,15 @@ versions/7.1.2/assets/bg-ic_sms_light.png	af85bf19b66479f4	copy	angler:/system/a
 versions/7.1.2/assets/bg-ic_stickers_light.png	dc73e9ef184cb70d	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_stickers_light.png	drawable-xxxhdpi-v4		dc73e9ef184cb70d
 versions/7.1.2/assets/bg-icon_local_sticker_set.png	be231780f52adbba	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-nodpi-v4/icon_local_sticker_set.png	drawable-nodpi-v4		be231780f52adbba
 versions/7.1.2/assets/bg-swipe_shadow.9.png	f0354d6604314862	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/swipe_shadow.9.png	drawable-xxxhdpi-v4		f0354d6604314862
+versions/7.1.2/assets/bk313-ic_arrow_back_gray_24dp.png	ce7c316536066f96	copy	angler:/playapps/Books.apk!res/drawable-xxxhdpi-v4/ic_arrow_back_gray_24dp.png	drawable-xxxhdpi-v4		ce7c316536066f96
+versions/7.1.2/assets/bk313-ic_arrow_back_white_24dp.png	ca4a92bdc9882cf3	copy	angler:/playapps/Books.apk!res/drawable-xxxhdpi-v4/ic_arrow_back_white_24dp.png	drawable-xxxhdpi-v4		ca4a92bdc9882cf3
+versions/7.1.2/assets/bk313-ic_close_wht_24dp.png	014d10d7aa99d5a7	copy	angler:/playapps/Books.apk!res/drawable-xxxhdpi-v4/ic_close_wht_24dp.png	drawable-xxxhdpi-v4		014d10d7aa99d5a7
+versions/7.1.2/assets/bk313-ic_drawer_white.png	4615a856f8680e4f	copy	angler:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_drawer_white.png	drawable-xxhdpi-v4		4615a856f8680e4f
+versions/7.1.2/assets/bk313-ic_menu_moreoverflow_card_dark_normal.png	8cd711a1d08c9620	copy	angler:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_menu_moreoverflow_card_dark_normal.png	drawable-xxhdpi-v4		8cd711a1d08c9620
+versions/7.1.2/assets/bk313-ic_search_white.png	aad661086a62e5bc	copy	angler:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_search_white.png	drawable-xxhdpi-v4		aad661086a62e5bc
+versions/7.1.2/assets/bk313-ic_toc_24dp.png	aeb9a1680e674bda	copy	angler:/playapps/Books.apk!res/drawable-xxxhdpi-v4/ic_toc_24dp.png	drawable-xxxhdpi-v4		aeb9a1680e674bda
+versions/7.1.2/assets/bk313-ic_toc_wht_24dp.png	b5a6d9ee58712c13	copy	angler:/playapps/Books.apk!res/drawable-xxxhdpi-v4/ic_toc_wht_24dp.png	drawable-xxxhdpi-v4		b5a6d9ee58712c13
+versions/7.1.2/assets/bk313-illo_empty_my_library.png	1d1259e4442d0f09	copy	angler:/playapps/Books.apk!res/drawable-nodpi-v4/illo_empty_my_library.png	drawable-nodpi-v4		1d1259e4442d0f09
 versions/7.1.2/assets/boot-part0.webp	f8727d04a326244f	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
 versions/7.1.2/assets/boot-part1.webp	f19881d52f757d52	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	
 versions/7.1.2/assets/boot-part2.webp	8482865882f6cf6b	generated	angler:/system/media/bootanimation.zip		sprite sheet of the part, cropped and scaled (docs/tools/bootanimation.py)	

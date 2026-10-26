@@ -160,7 +160,7 @@
     const u = U(c, app), p = P(c, app), t = k => T(app).t(k);
     if (name === 'mm-menu') {
       c.menu([{label: t(p.grid ? 'editors_menu_doc_view_list_mode' : 'editors_menu_doc_view_grid_mode'), action: c => { p.grid = !p.grid; c.save(); c.render(); }},
-        {label: t('editors_menu_sort_by'), action: c => c.dialog({title: t('editors_menu_sort_by'), items: SORTS.map(([id, key]) => ({html: `<span class="mmeds-radio${p.sort === id ? ' on' : ''}"></span>${c.safe(t(key))}`})), onItem: (i, c) => { p.sort = SORTS[i][0]; c.save(); c.closeDialog(); c.render(); }, buttons: [{label: t('chips_action_cancel')}]})},
+        {label: t('editors_menu_sort_by'), action: c => c.dialog({title: t('editors_menu_sort_by'), items: SORTS.map(([id, key]) => ({html: `<span class="mmeds-radio${p.sort === id ? ' on' : ''}"></span>${c.safe(t(key))}`})), onItem: (i, c) => { p.sort = SORTS[i][0]; c.save(); c.render(); }, buttons: [{label: t('chips_action_cancel')}]})},
         {label: t('editors_menu_refresh'), action: c => c.render()}], el);
       return true;
     }
