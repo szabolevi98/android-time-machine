@@ -47,6 +47,9 @@ try{
    for(let i=0;i<8;i++){droids.add(await rendered('.nyan-cat'));stars.add(await rendered('.nyan-star'));await sleep(90);}
    assert.ok(droids.size>=5,`droid body/hand bitmaps animate (reduced=${reduced})`);
    assert.ok(stars.size>=3,`particle bitmaps twinkle (reduced=${reduced})`);
+   const pixels=urls=>b.ev(`Promise.all(${JSON.stringify([...urls])}.map(async url=>{const img=new Image();img.src=url.slice(5,-2);await img.decode();const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0);const rgba=ctx.getImageData(0,0,canvas.width,canvas.height).data;return [...new Uint8Array(await crypto.subtle.digest('SHA-256',rgba))].join(',')}))`);
+   assert.ok(new Set(await pixels(droids)).size>=2,'rendered droid frames contain different pixels, not duplicate poses');
+   assert.ok(new Set(await pixels(stars)).size>=2,'rendered particle frames contain different pixels');
    assert.notEqual(await b.ev(`document.querySelector('.nyan-cat').style.transform`),x,'androids fly');
    assert.equal(await b.ev(`getComputedStyle(document.querySelector('.nyan-sky')).backgroundColor`),'rgb(0, 51, 102)','Nyandroid retains its own sky');
   }else if(v==='4.3'){
