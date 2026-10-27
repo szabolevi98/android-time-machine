@@ -317,7 +317,7 @@ location, észak, Share, Layers mentve, a saját settings.xml).
   fényerő, szövegméret, sormagasság a LocalPreferences lépései szerint); könyvjelzők (Add/Remove bookmark) és a Contents
   Bookmarks lapja; az olvasó overflow-ja (About this book, Share, Add/Remove bookmark, Settings); kártyamenü About this
   book; a könyvtár lapjai, amennyit az APK mutat (All books, Purchases); Settings az APK beállításlistájából.
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `e2a4fea8`. Play Books 3.9 / 3.13 az 5.1.1 szintjén (T43 Books, az 5.1.1 olvasója): Display options (Day/Night/Sepia, fényerő auto vagy kézi, betűtípus, igazítás, betűméret 1/8 lépésekben, sormagasság), könyvjelző az olvasó overflow-jából és a Contents Bookmarks lapja, az overflow About this book, Share, Add/Remove bookmark, Read aloud (korlát), Settings pontja, kártyamenü About this book, a könyvtár All books és Purchases lapja, Settings az AppSettingsActivity listája (Auto-rotate screen, Download over Wi-Fi only, hangerőgomb, 3D lapozás, PDF feltöltés, felolvasás). Ellenőrzés: `tests/browser/play-books.mjs` mindkét verzió, asztali és telefonos szélesség; `npm test` 260/260.
 
 #### T63 — News & Weather az 5.1.1 szintjén
 
