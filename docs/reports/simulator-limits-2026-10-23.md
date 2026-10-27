@@ -438,7 +438,7 @@ Sorrend: előbb az apró hibák és halott sorok, aztán appok szerint, végül 
 
 #### Ellenőrzés és terv (2-es változat, 2026-10-27)
 
-**Státusz: jóváhagyva, végrehajtás alatt.** A tulajdonos 2026-10-27-én mind a hét alábbi csomag végrehajtását kérte, az 1. csomagtól; commit és push engedélyezett, deploy nem kell. A teljes T71–T93 listából csak a „2-es változat” terjedelme érvényes: a látható, de nem működő vagy hibás részek pótlása, a nagy újraépítések nélkül. A félkész T71 stash feldolgozva; az 1–4. csomag kész (T71, T75, T72–T74, T79–T80). A folytatási sorrend az alábbi hétcsomagos tábláé; a T76 Naptár General a 7. csomag része.
+**Státusz: jóváhagyva, végrehajtás alatt.** A tulajdonos 2026-10-27-én mind a hét alábbi csomag végrehajtását kérte, az 1. csomagtól; commit és push engedélyezett, deploy nem kell. A teljes T71–T93 listából csak a „2-es változat” terjedelme érvényes: a látható, de nem működő vagy hibás részek pótlása, a nagy újraépítések nélkül. A félkész T71 stash feldolgozva; az 1–5. csomag kész (T71, T75, T72–T74, T79–T80, T77–T78, T81–T83). A folytatási sorrend az alábbi hétcsomagos tábláé; a T76 Naptár General a 7. csomag része.
 
 **Ellenőrzés a kódban (nem az ügynökök szava alapján).** Megerősítve: a T71 tételei (a 7.1.2 DND-javaslat `r.enabled` /
 `r.on`, Users, inverzió, SIM PIN; a 6.0.1 Auto-sync, Backup account, Default apps hook nélkül, Restrict background csak
@@ -570,7 +570,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - Mindkettő: tap to focus gyűrű (5.1.1 lp-camera.js:147; angler `tap_to_focus`).
   - Mindkettő: kérésre fotózás (Retake / Done / Cancel) más appból (5.1.1 lp-camera.js:75,95).
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `d293c723`. A 6.0.1 Google Camera meglévő Gridlines beállítása tényleges harmadolórácsot rajzol az előnézetre, mentett állapottal. A speciális felvételi módok és a kérésre fotózás továbbra is kívül vannak a 2-es változat körén. Ellenőrzés: a gyári pref sor kapcsolása után a rács megjelenik; asztali és 390 px-es próba, `npm test` 260/260.
 
 #### T78 — Fotók
 
@@ -582,7 +582,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - 6.0.1: a szerkesztőből hiányzik a szűrő és a vágás (5.1.1 plus-editor.js; 7.1.2 a pár).
   - 7.1.2: a nézegető menüjéből hiányzik a Use as és a Print (kulcsok megvannak, ng-photos.js:30).
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `d293c723`. A 6.0.1 helyi videójának Edit gombja a hibás Slideshow üzenet helyett a Photos 1.4 CPE vágóvezérlőjét nyitja: kezdő-/végpont, Cancel/Back, mentés külön másolatként, eredeti megőrzése. A meglévő szimulált videómodell időtartamát és forrásbeli eltolását tárolja; nem bináris videó-átkódolás. A 7.1.2 képnézőjén megjelent a Use as (a meglévő WallpaperPicker fénykép-pillanatképe és vágása) és a Print (a meglévő PrintSpooler képes feladata). A többi nagyobb T78-rész kimarad a 2-es változatból. Ellenőrzés: `tests/browser/system-smallapps.mjs`, mindkét verzió 1280 és 390 px; a vágás megszakítása és külön másolata, háttérkép-pillanatkép, nyomtatási előnézet; 260 modulteszt.
 
 #### T79 — Chrome
 
@@ -616,7 +616,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - 6.0.1: csatolmány (fotó, kép, hely, emoji), Delete conversation, People & options (csoport, átnevezés, kilépés, tiltás, Blocked people), Snooze sáv és értesítési beállítás hatása (7.1.2 a pár).
   - Mindkettő: „How others get in touch with you” (5.1.1 hangouts-prefs.js:5-6).
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `d293c723`. A 6.0.1 Hangouts Delete gyári megerősítéssel töröl; Cancel megőrzi a beszélgetést. A Snooze megjeleníti a gyári Notifications snoozed until / Resume sávot, lejártakor megszűnik. A chat értesítéskapcsolója és a Snooze ténylegesen megakadályozza a háttérben érkező demóválasz értesítését; a válasz maga továbbra is megérkezik. Törölt beszélgetéshez nem érkezik későn fantomválasz. People & options, csatolmányok és más kizárt nagyobb részek nem készültek ebben a körben. Ellenőrzés: asztali/telefonos Delete, Cancel, Snooze, Resume; háttérválasz bekapcsolt, kikapcsolt és szüneteltetett értesítésnél; 260 modulteszt.
 
 #### T82 — Maps
 
@@ -626,7 +626,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - 6.0.1: közlekedési mód, kiindulópont, csere; Maps history; távolság-mértékegység (7.1.2 a pár).
   - APK-ellenőrzés: Terrain réteg.
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `d293c723`. A 6.0.1 Maps tárolt Distance units választása a navigációban méter/km vagy láb/mérföld szerint formáz; automatikusan a meglévő locale-t követi. Maps history: a helyben megnyitott keresési találatok névvel és időponttal mentődnek, az eddig rejtett beállítássor a listájukat nyitja, Remove törli a kijelölt előzményt. Az adat a meglévő offline mintavárosé; nem online Maps-fiókelőzmény. A többi T82-rész a 2-es változatból kizárt. Ellenőrzés: keresési találat mentése, Miles választás, navigáció láb/mérföld feliratai, Maps history/Remove mindkét szélességen; 260 modulteszt.
 
 #### T83 — YouTube, Drive, Letöltések (6.0.1)
 
@@ -636,7 +636,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - Drive: mappák megnyitása, Move, Sort by, Filter by, Share link, Send file, PDF/kép megnyitása, Restore a kukából (7.1.2 a pár).
   - Letöltések / dokumentumválasztó: Sort by, fájl megnyitása, gyökerek (Recent, Images, Videos, Audio, Downloads, mappák) (7.1.2 ng-documents.js a pár).
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `d293c723`. 6.0.1: YouTube Clear watch/search history helyi törlés megerősítéssel, Cancel megőrzéssel; a már látható Pause kapcsolók a rögzítést is megállítják. Drive Sort by (Name, Last modified, Last opened by me) mentve, mappák előre, azonos fájlreferenciákkal; a Trash Restore helyreállít. Letöltések Name/date/size rendezés mentéssel, fájlsorok és keresési találatok megnyitják a szimulátor helyi szöveg/PDF-oldalmodelljét (nem tetszőleges importált bináris PDF-dekóder). Ellenőrzés: `tests/browser/system-smallapps.mjs` 1280/390 px, névsorrend újratöltés után, helyes dokumentum megnyitása keresésből, Restore, mindkét YouTube-előzmény törlése és elvetése; `npm test` 260/260.
 
 #### T84 — Play Store
 
