@@ -525,5 +525,69 @@ MM.strings('keep', {
 "Azul",
 "Gris"
 ]
+},
+"recording_description": {
+"res": "bullhead:Keep:recording_description",
+"en": "Recording",
+"hu": "Felvétel",
+"de": "Aufnahme läuft…",
+"fr": "Enregistrement",
+"es": "Grabación"
+},
+"play_voice_recording": {
+"res": "bullhead:Keep:play_voice_recording",
+"en": "Play",
+"hu": "Google Play",
+"de": "Anhören",
+"fr": "Lire",
+"es": "Google Play"
+},
+"remove_voice_recording": {
+"res": "bullhead:Keep:remove_voice_recording",
+"en": "Delete voice recording?",
+"hu": "Törli a hangfelvételt?",
+"de": "Sprachaufnahme löschen?",
+"fr": "Supprimer l'enregistrement vocal ?",
+"es": "¿Eliminar grabación de voz?"
+},
+"voice_recording_duration": {
+"res": "bullhead:Keep:voice_recording_duration",
+"en": "Voice recording duration: %1$s %2$s",
+"hu": "Hangfelvétel hossza: %1$s %2$s",
+"de": "Dauer der Sprachaufnahme: %1$s %2$s",
+"fr": "Durée de l'enregistrement vocal : %1$s %2$s",
+"es": "Duración de la grabación de voz: %1$s %2$s"
+},
+"snippet_audio_note": {
+"res": "bullhead:Keep:snippet_audio_note",
+"en": "Audio note",
+"hu": "Hangjegyzet",
+"de": "Audionotiz",
+"fr": "Note audio",
+"es": "Nota de audio"
+},
+"audio_clip_added_content_description": {
+"res": "bullhead:Keep:audio_clip_added_content_description",
+"en": "Audio clip added",
+"hu": "Hangfelvétel hozzáadva",
+"de": "Audioclip hinzugefügt",
+"fr": "Enregistrement audio ajouté",
+"es": "Se ha añadido el clip de audio"
+},
+"audio_clip_deleted_content_description": {
+"res": "bullhead:Keep:audio_clip_deleted_content_description",
+"en": "Audio clip deleted",
+"hu": "Hangfelvétel törölve",
+"de": "Audioclip gelöscht",
+"fr": "Enregistrement audio supprimé",
+"es": "Se ha eliminado el clip de audio"
+},
+"enable_web_embeds": {
+"res": "bullhead:Keep:enable_web_embeds",
+"en": "Display rich link previews",
+"hu": "Részletes linkelőnézetek megjelenítése",
+"de": "Rich-Link-Vorschauen anzeigen",
+"fr": "Afficher des aperçus de lien enrichis",
+"es": "Mostrar vistas previas avanzadas de enlaces"
 }
 });

@@ -1,6 +1,7 @@
 // Google Keep installed from Play on 6.0.1 (Keep 3.3.315.0) and 7.1.2 (Keep 3.4.724.02): the demo notes, a new note and
 // a new list kept, a check box, a colour, Pin, Archive and the Archive view, Delete to Trash and Empty Trash, an empty
-// note dropped, Search, Settings, the overflow's column view, and the phone width.
+// note dropped, Search, Settings, the overflow's column view, and the phone width. Round five (T66): an audio note
+// recorded, kept and played, sent with its recording, and its recording deleted.
 import assert from 'node:assert/strict';
 import {marshmallow} from './mm-harness.mjs';
 import {nougat} from './ng-harness.mjs';
@@ -64,6 +65,33 @@ for (const [version, start, cls, ns, menuItem] of [['6.0.1', marshmallow, 'mmkp'
     await b.click(`#viewport .${cls}-take`);
     await b.act(`${cls}-close`);
     assert.equal((await notes()).length, count, 'an empty note is not kept');
+    // An audio note: recording, then the clip with Play; Send carries it; Delete voice recording? removes it.
+    await b.click(`#viewport [data-action="${cls}-new-audio"]`);
+    await b.until(`!!document.querySelector('#viewport .${cls}-clip.recording [data-keep-timer]')`);
+    await b.click(`#viewport [data-action="${cls}-stop"]`);
+    await b.until(`!!document.querySelector('#viewport [data-action="${cls}-play"]')`);
+    const voice = (await notes()).find(n => n.audio);
+    assert.ok(voice && voice.audio.sec >= 1, 'the recording is kept');
+    await b.click(`#viewport [data-action="${cls}-play"]`);
+    await b.click(`#viewport [data-action="${cls}-play"]`);
+    await b.click(`#viewport [data-action="${cls}-sheet"]`);
+    await b.click(`#viewport [data-action="${cls}-send"]`);
+    const sheet = version === '6.0.1' ? 'mmin' : 'ngin';
+    await b.until(`!!document.querySelector('.${sheet}-sheet')`);
+    await b.click(`.${sheet}-dim`);
+    await b.click(`#viewport [data-action="${cls}-unaudio"]`);
+    await b.until(`[...document.querySelectorAll('button')].some(x=>x.textContent.trim()==='Delete'&&x.closest('.ngdlg, .mmdlg'))`);
+    await b.ev(`[...document.querySelectorAll('button')].filter(x=>x.textContent.trim()==='Delete'&&x.closest('.ngdlg, .mmdlg')).pop().click()`);
+    await b.until(`!document.querySelector('#viewport [data-action="${cls}-play"]')`);
+    assert.equal((await notes()).filter(n => n.audio).length, 0);
+    await b.act(`${cls}-close`);
+    // Back while recording drops the note.
+    const before = (await notes()).length;
+    await b.click(`#viewport [data-action="${cls}-new-audio"]`);
+    await b.until(`!!document.querySelector('#viewport [data-keep-timer]')`);
+    await b.ev(`document.querySelector('#nav-bar [data-key="back"]')?.click()`);
+    await b.until(`!document.querySelector('#viewport [data-keep-timer]')`);
+    assert.equal((await notes()).length, before, 'Back while recording keeps nothing');
     // Search.
     await b.act(`${cls}-search`);
     await type('#viewport [data-keep-search]', 'concert');

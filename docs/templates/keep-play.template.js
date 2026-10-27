@@ -7,8 +7,11 @@
    the Toolbar in the note's colour with Pin, Remind me and Archive, the title and the text or the list (a check box
    per item, "List item" to add one), editor_bottom_bar.xml (Add, the action button) and its bottom sheet (Delete /
    Restore and Delete forever in Trash, Make a copy, Send, the colours). Search filters the notes; Settings has List
-   behavior, Reminder settings and Sharing. The notes (data.keepNotes) are the demo phone's, kept on the phone.
-   Drawings, audio, photos, reminders, labels and collaborators keep the simulator's limit. */
+   behavior, Reminder settings and Sharing (with Display rich link previews). The audio note (as 5.1.1's Keep has it):
+   the quick bar's mic opens a note that is "Recording" with its timer until stopped (Back drops it); the note keeps a
+   short recording, a WAV generated here (no microphone is used), with Play and the recording's duration, Delete voice
+   recording? to remove it, and Send hands it on as an attachment. The notes (data.keepNotes) are the demo phone's,
+   kept on the phone. Drawings, photos, reminders, labels and collaborators keep the simulator's limit. */
 (() => {
   'use strict';
   const T = () => __NS__.text('keep'), t = k => T().t(k);
@@ -22,9 +25,20 @@
   const DEFAULT = [{id: 'k1', text: 'Buy concert tickets', color: 0}, {id: 'k2', text: 'Groceries: milk, eggs, lollipops', color: 1}, {id: 'k3', text: 'Call Mom on Sunday', color: 2}];
   const U = c => c.ui.keep ||= {view: 'notes', note: '', drawer: false, search: false, query: '', sheet: false, prefs: false};
   const notes = c => (c.data.keepNotes ||= DEFAULT.map((n, i) => ({...n, title: '', list: null, archived: false, trashed: false, pinned: false, at: Date.now() - (i + 1) * 3600e3})));
-  const P = c => (c.data.keepPrefs ||= {bottom: false, checkedBottom: true, sharing: true});
+  const P = c => { const p = c.data.keepPrefs ||= {bottom: false, checkedBottom: true, sharing: true}; if (!('embeds' in p)) p.embeds = true; return p; };
   const cur = c => notes(c).find(n => n.id === U(c).note);
   const refuse = c => c.toast(c.t('This feature is not part of the simulator.'));
+  function wav(sec, seed) {
+    const rate = 8000, len = rate * sec, bytes = new Uint8Array(44 + len), v = new DataView(bytes.buffer), str = (o, x) => [...x].forEach((ch, i) => bytes[o + i] = ch.charCodeAt(0));
+    str(0, 'RIFF'); v.setUint32(4, 36 + len, true); str(8, 'WAVEfmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, rate, true); v.setUint32(28, rate, true); v.setUint16(32, 1, true); v.setUint16(34, 8, true); str(36, 'data'); v.setUint32(40, len, true);
+    for (let i = 0; i < len; i++) { const t = i / rate, f = 220 + 80 * Math.sin(t * 2 + seed), env = 0.25 + 0.2 * Math.sin(t * 6 + seed); bytes[44 + i] = 128 + Math.round(60 * env * Math.sin(2 * Math.PI * f * t)); }
+    let bin = ''; for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode(...bytes.subarray(i, i + 8192));
+    return 'data:audio/wav;base64,' + btoa(bin);
+  }
+  const seedOf = id => [...String(id)].reduce((a, ch) => a + ch.charCodeAt(0), 0) % 7;
+  const mmss = sec => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
+  let player = null;
   const plain = n => [n.title, n.text, ...(n.list || []).map(i => i.text)].filter(Boolean).join('\n');
   const btn = (c, action, label, icon, id = '') => `<button type="button" class="__CLS__-btn" data-action="${action}"${id ? ` data-id="${c.safe(id)}"` : ''} aria-label="${c.safe(label)}"><img src="${I(icon)}" alt=""></button>`;
   const VIEWS = [['notes', 'drawer_landing_page_active_notes', 'lightbulb'], ['reminders', 'drawer_landing_page_all_reminders', 'reminders'], ['archive', 'drawer_landing_page_archive', 'archiveBlack'], ['trash', 'drawer_landing_page_trash', 'trash']];
@@ -32,7 +46,8 @@
   const BAR = {archive: '#5f7c8a', trash: '#636363'};
   function card(c, n) {
     const body = n.list ? `<ul>${n.list.slice(0, 8).map(i => `<li class="${i.checked ? 'done' : ''}"><i></i>${c.safe(i.text)}</li>`).join('')}</ul>` : `<p>${c.safe(n.text)}</p>`;
-    return `<button type="button" class="__CLS__-card" data-action="__CLS__-open" data-id="${c.safe(n.id)}" style="background:${COLORS[n.color || 0]}">${n.pinned ? `<img class="__CLS__-pinned" src="${I(ICON.pinned)}" alt="">` : ''}${n.title ? `<b>${c.safe(n.title)}</b>` : ''}${body}</button>`;
+    const audio = n.audio ? `<span class="__CLS__-audiochip"><img src="${I(ICON.mic)}" alt="">${c.safe(t('snippet_audio_note'))} · ${mmss(n.audio.sec)}</span>` : '';
+    return `<button type="button" class="__CLS__-card" data-action="__CLS__-open" data-id="${c.safe(n.id)}" style="background:${COLORS[n.color || 0]}">${n.pinned ? `<img class="__CLS__-pinned" src="${I(ICON.pinned)}" alt="">` : ''}${n.title ? `<b>${c.safe(n.title)}</b>` : ''}${body}${audio}</button>`;
   }
   function browse(c) {
     const u = U(c), list = notes(c), v = u.view;
@@ -41,7 +56,7 @@
     const bar = `<header class="__CLS__-bar" style="background:${BAR[v] || '#ffbb00'}">${btn(c, '__CLS__-drawer', t('drawer_open'), ICON.menu)}<b>${c.safe(title)}</b>${v === 'notes' ? btn(c, '__CLS__-search', t('menu_search'), ICON.search) : ''}${__NS__.menu.button(c, '__CLS__-more')}</header>`;
     const banner = v === 'trash' ? `<div class="__CLS__-banner">${c.safe(t('trash_view_banner_text'))}</div>` : '';
     const grid = shown.length ? `<div class="__CLS__-grid${c.data.keepSingle ? ' single' : ''}">${shown.map(n => card(c, n)).join('')}</div>` : `<p class="__CLS__-empty">${c.safe(t(EMPTY[v]))}</p>`;
-    const quick = v === 'notes' ? `<div class="__CLS__-quick"><button type="button" class="__CLS__-take" data-action="__CLS__-new">${c.safe(t('add_quick_note_hint'))}</button>${btn(c, '__CLS__-new-list', t('menu_new_list'), ICON.list)}${btn(c, '__CLS__-unavailable', t('menu_new_drawing'), ICON.ink)}${btn(c, '__CLS__-unavailable', t('__AUDIO__'), ICON.mic)}${btn(c, '__CLS__-unavailable', t('menu_new_picture'), ICON.camera)}</div>` : '';
+    const quick = v === 'notes' ? `<div class="__CLS__-quick"><button type="button" class="__CLS__-take" data-action="__CLS__-new">${c.safe(t('add_quick_note_hint'))}</button>${btn(c, '__CLS__-new-list', t('menu_new_list'), ICON.list)}${btn(c, '__CLS__-unavailable', t('menu_new_drawing'), ICON.ink)}${btn(c, '__CLS__-new-audio', t('__AUDIO__'), ICON.mic)}${btn(c, '__CLS__-unavailable', t('menu_new_picture'), ICON.camera)}</div>` : '';
     const drawer = u.drawer ? `<div class="__CLS__-scrim" data-action="__CLS__-drawer"></div><nav class="__CLS__-drawer"><div class="__CLS__-account"><small>${c.safe(__NS__.account?.email || '')}</small></div>${VIEWS.map(([id, key, icon]) => `<button type="button" class="${v === id ? 'on' : ''}" data-action="__CLS__-view" data-id="${id}"><img src="${I(ICON[icon])}" alt=""><span>${c.safe(t(key))}</span></button>`).join('')}<hr><button type="button" data-action="__CLS__-settings"><img src="${I(ICON.settings)}" alt=""><span>${c.safe(t('drawer_link_settings'))}</span></button><button type="button" data-action="__CLS__-unavailable"><span class="__CLS__-noicon"></span><span>${c.safe(t('drawer_link_page_help_feedback'))}</span></button></nav>` : '';
     return `<div class="__CLS__">${bar}${banner}<div class="__CLS__-scroll">${grid}</div>${quick}${drawer}</div>`;
   }
@@ -53,7 +68,9 @@
     const sheet = U(c).sheet ? `<div class="__CLS__-sheetscrim" data-action="__CLS__-sheet"></div><div class="__CLS__-sheet">${trashed
       ? [['__CLS__-restore', 'menu_restore', ICON.restore], ['__CLS__-forever', 'menu_delete_forever', ICON.forever]].map(([a, k, i]) => `<button type="button" data-action="${a}"><img src="${I(i)}" alt=""><span>${c.safe(t(k))}</span></button>`).join('')
       : `${[['__CLS__-delete', 'menu_delete'], ['__CLS__-clone', 'menu_clone'], ['__CLS__-send', 'menu_send']].map(([a, k]) => `<button type="button" data-action="${a}"><span>${c.safe(t(k))}</span></button>`).join('')}<div class="__CLS__-colors" role="radiogroup" aria-label="${c.safe(t('color_picker_title'))}">${COLORS.map((col, i) => `<button type="button" class="__CLS__-swatch${(n.color || 0) === i ? ' on' : ''}" data-action="__CLS__-color" data-id="${i}" style="background:${col}" role="radio" aria-checked="${(n.color || 0) === i}" aria-label="${c.safe(T().t('array:note_color_palette_descriptions')?.[i] || '')}"></button>`).join('')}</div>`}</div>` : '';
-    return `<div class="__CLS__ __CLS__-editor" style="background:${COLORS[n.color || 0]}">${bar}<div class="__CLS__-scroll"><input class="__CLS__-title" data-keep-title value="${c.safe(n.title || '')}" placeholder="${c.safe(t('list_title_hint'))}" aria-label="${c.safe(t('list_title_hint'))}"${ro}>${items}</div><footer class="__CLS__-bottom">${btn(c, '__CLS__-unavailable', t('add'), ICON.add)}<span class="__CLS__-fill"></span>${btn(c, '__CLS__-sheet', t('action'), ICON.action)}</footer>${sheet}</div>`;
+    const rec = U(c).rec, clip = rec ? `<div class="__CLS__-clip recording" role="status"><i class="__CLS__-recdot"></i><span>${c.safe(t('recording_description'))}</span><b data-keep-timer>0:00</b><button type="button" class="__CLS__-recstop" data-action="__CLS__-stop" aria-label="${c.safe(t('recording_description'))}"></button></div>`
+      : n.audio ? `<div class="__CLS__-clip"><button type="button" class="__CLS__-play${U(c).playing ? ' on' : ''}" data-action="__CLS__-play" aria-label="${c.safe(t('play_voice_recording'))}"></button><span aria-label="${c.safe(AndroidStrings.format(t('voice_recording_duration'), mmss(n.audio.sec), ''))}">${mmss(n.audio.sec)}</span>${trashed ? '' : `<button type="button" class="__CLS__-unclip" data-action="__CLS__-unaudio" aria-label="${c.safe(t('remove_voice_recording'))}">×</button>`}</div>` : '';
+    return `<div class="__CLS__ __CLS__-editor" style="background:${COLORS[n.color || 0]}">${bar}<div class="__CLS__-scroll">${clip}<input class="__CLS__-title" data-keep-title value="${c.safe(n.title || '')}" placeholder="${c.safe(t('list_title_hint'))}" aria-label="${c.safe(t('list_title_hint'))}"${ro}>${items}</div><footer class="__CLS__-bottom">${btn(c, '__CLS__-unavailable', t('add'), ICON.add)}<span class="__CLS__-fill"></span>${btn(c, '__CLS__-sheet', t('action'), ICON.action)}</footer>${sheet}</div>`;
   }
   function search(c) {
     const u = U(c), q = u.query.trim().toLowerCase(), found = q ? notes(c).filter(n => !n.trashed && plain(n).toLowerCase().includes(q)) : [];
@@ -64,7 +81,7 @@
     const p = P(c), time = (h) => new Date(2000, 0, 1, h).toLocaleTimeString(c.locale(), {hour: 'numeric', minute: '2-digit'});
     const check = (key, label) => `<button type="button" class="__CLS__-pref" data-action="__CLS__-pref" data-id="${key}" role="checkbox" aria-checked="${!!p[key]}"><span>${c.safe(label)}</span><i class="__CLS__-box${p[key] ? ' on' : ''}"></i></button>`;
     const info = (label, value) => `<div class="__CLS__-pref info"><span>${c.safe(label)}</span><small>${c.safe(value)}</small></div>`;
-    return `<div class="__CLS__ __CLS__-settings"><header class="__CLS__-bar" style="background:#5f7c8a">${btn(c, '__CLS__-prefs-close', t('editor_navigate_up_content_description'), ICON.back2)}<b>${c.safe(t('settings'))}</b></header><div class="__CLS__-scroll"><h3>${c.safe(t('settings_list_behavior'))}</h3>${check('bottom', t('settings_add_new_items_to_bottom'))}${check('checkedBottom', t('settings_move_checked_items_to_bottom'))}<h3>${c.safe(t('settings_reminders'))}</h3>${info(t('reminder_time_morning'), time(8))}${info(t('reminder_time_afternoon'), time(13))}${info(t('reminder_time_evening'), time(18))}<h3>${c.safe(t('settings_sharing'))}</h3>${check('sharing', t('enable_sharing'))}</div></div>`;
+    return `<div class="__CLS__ __CLS__-settings"><header class="__CLS__-bar" style="background:#5f7c8a">${btn(c, '__CLS__-prefs-close', t('editor_navigate_up_content_description'), ICON.back2)}<b>${c.safe(t('settings'))}</b></header><div class="__CLS__-scroll"><h3>${c.safe(t('settings_list_behavior'))}</h3>${check('bottom', t('settings_add_new_items_to_bottom'))}${check('checkedBottom', t('settings_move_checked_items_to_bottom'))}<h3>${c.safe(t('settings_reminders'))}</h3>${info(t('reminder_time_morning'), time(8))}${info(t('reminder_time_afternoon'), time(13))}${info(t('reminder_time_evening'), time(18))}<h3>${c.safe(t('settings_sharing'))}</h3>${check('sharing', t('enable_sharing'))}${check('embeds', t('enable_web_embeds'))}</div></div>`;
   }
   function render(c) {
     const u = U(c);
@@ -76,6 +93,9 @@
   }
   function mount(c, root) {
     const n = cur(c);
+    clearInterval(U(c).tick);
+    const timer = root.querySelector('[data-keep-timer]');
+    if (timer) { const go = () => { timer.textContent = mmss(Math.floor((Date.now() - U(c).rec.start) / 1000)); }; go(); U(c).tick = setInterval(() => { if (!timer.isConnected || !U(c).rec) return clearInterval(U(c).tick); go(); }, 250); }
     const save = () => { if (n) { n.at = Date.now(); c.save(); } };
     root.querySelector('[data-keep-title]')?.addEventListener('input', e => { n.title = e.target.value; save(); });
     root.querySelector('[data-keep-text]')?.addEventListener('input', e => { n.text = e.target.value; save(); });
@@ -89,9 +109,11 @@
   // Leaving the editor drops a note with nothing in it, as the app does.
   function leave(c) {
     const u = U(c), n = cur(c);
-    if (n && !plain(n).trim()) c.data.keepNotes = notes(c).filter(x => x !== n);
+    u.rec = null; player?.pause(); player = null; u.playing = false;
+    if (n && !plain(n).trim() && !n.audio) c.data.keepNotes = notes(c).filter(x => x !== n);
     u.note = ''; u.sheet = false; c.save();
   }
+  __SEND__
   const make = (c, list) => { const n = {id: `k${Date.now()}`, title: '', text: '', list: list ? [] : null, color: 0, archived: false, trashed: false, pinned: false, at: Date.now()}; notes(c).push(n); Object.assign(U(c), {note: n.id, focusText: true}); };
   function action(name, el, ev, c) {
     const u = U(c);
@@ -120,7 +142,16 @@
       case 'restore': n.trashed = false; c.save(); leave(c); break;
       case 'forever': c.data.keepNotes = notes(c).filter(x => x !== n); u.note = ''; u.sheet = false; c.save(); break;
       case 'clone': { const copy = {...JSON.parse(JSON.stringify(n)), id: `k${Date.now()}`, at: Date.now()}; notes(c).push(copy); u.note = copy.id; u.sheet = false; c.save(); break; }
-      case 'send': u.sheet = false; c.render(); __NS__.share(c, {title: t('menu_send'), subject: n.title || '', text: plain(n)}); return true;
+      case 'send': u.sheet = false; c.render(); sendNote(c, n); return true;
+      case 'new-audio': make(c, false); Object.assign(U(c), {focusText: false, rec: {start: Date.now()}}); break;
+      case 'stop': { const sec = Math.max(1, Math.min(30, Math.round((Date.now() - u.rec.start) / 1000))); n.audio = {sec}; n.at = Date.now(); u.rec = null; c.save(); c.toast(t('audio_clip_added_content_description')); break; }
+      case 'play': {
+        if (u.playing) { player?.pause(); player = null; u.playing = false; break; }
+        player = new Audio(wav(n.audio.sec, seedOf(n.id))); u.playing = true;
+        player.addEventListener('ended', () => { u.playing = false; player = null; c.render(); });
+        player.play().catch(() => { u.playing = false; player = null; c.render(); }); break;
+      }
+      case 'unaudio': c.dialog({message: t('remove_voice_recording'), buttons: [{label: t('menu_cancel')}, {label: t('menu_delete'), action: c => { player?.pause(); player = null; u.playing = false; delete n.audio; c.save(); c.render(); c.toast(t('audio_clip_deleted_content_description')); }}]}); return true;
       case 'settings': Object.assign(u, {prefs: true, drawer: false}); break;
       case 'prefs-close': u.prefs = false; break;
       case 'pref': { const p = P(c); p[el.dataset.id] = !p[el.dataset.id]; c.save(); break; }
@@ -135,6 +166,7 @@
     back(c) {
       const u = U(c);
       if (u.sheet) { u.sheet = false; c.render(); return true; }
+      if (u.rec) { leave(c); c.render(); return true; }
       if (u.note) { leave(c); c.render(); return true; }
       if (u.prefs) { u.prefs = false; c.render(); return true; }
       if (u.search) { u.search = false; c.render(); return true; }

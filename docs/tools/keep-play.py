@@ -5,6 +5,7 @@ docs/tools/playapp-assets.py from the APK in _aosp/<device>/playapps/Keep.apk as
 
     python docs/tools/keep-play.py"""
 import json
+SEND = {'MM': "// Send: the note's text; a recording goes along as an attachment (6.0.1: Gmail's draft takes it).\n  const sendNote = (c, n) => MM.share(c, {title: t('menu_send'), subject: n.title || '', text: plain(n), ...(n.audio ? {attach: [{name: 'Recording.wav', mime: 'audio/wav', size: 44 + 8000 * n.audio.sec}]} : {})});", 'NG': "// Send: the note's text; a recording goes along as the send model's document.\n  const sendNote = (c, n) => NG.share(c, {title: t('menu_send'), subject: n.title || '', text: plain(n), ...(n.audio ? {document: {name: 'Recording.wav', mime: 'audio/wav', type: 'audio', size: 44 + 8000 * n.audio.sec, duration: n.audio.sec}} : {})});"}
 ROOT = __file__.replace('\\', '/').rsplit('/docs/', 1)[0] + '/'
 COMMON = {'list': 'ic_material_list_dark', 'ink': 'ic_ink_pen_black', 'mic': 'ic_material_mic_dark', 'camera': 'ic_material_camera_dark',
           'add': 'ic_add_box_black', 'action': 'ic_note_action_24dp', 'lightbulb': 'ic_material_lightbulb_light', 'reminders': 'ic_reminders_alt_black',
@@ -24,7 +25,7 @@ VERSIONS = [
 src = open(ROOT + 'docs/templates/keep-play.template.js', encoding='utf-8').read()
 for v in VERSIONS:
     out = (src.replace('__VERSION__', v['name']).replace('__DEVICE__', v['device']).replace('__NS_LOWER__', v['ns'].lower()).replace('__NS__', v['ns'])
-           .replace('__CLS__', v['cls']).replace('__ICONS__', v['icons']).replace('__AUDIO__', v['audio']).replace('__ICON_MAP__', json.dumps(v['icon'])))
+           .replace('__CLS__', v['cls']).replace('__ICONS__', v['icons']).replace('__AUDIO__', v['audio']).replace('__ICON_MAP__', json.dumps(v['icon'])).replace('__SEND__', SEND[v['ns']]))
     open(f"{ROOT}versions/{v['version']}/{v['out']}", 'w', encoding='utf-8', newline='\n').write(out)
     css = open(ROOT + 'docs/templates/keep-play.template.css', encoding='utf-8').read().replace('__CLS__', v['cls'])
     open(f"{ROOT}versions/{v['version']}/{v['out'].replace('.js', '.css')}", 'w', encoding='utf-8', newline='\n').write(css)
