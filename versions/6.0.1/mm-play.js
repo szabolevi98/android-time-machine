@@ -103,7 +103,7 @@
   }
   function details(c, it) {
     const t = T(), u = ui(c), installed = isInstalled(c, it), dl = u.dl?.id === it.id ? u.dl : null;
-    const buttons = it.media ? `<div class="mmps-btns">${it.media === 2 ? `<button type="button" class="mmps-btn light" style="color:${CORPORA[2][1]}" data-action="mmps-buy" data-id="${it.id}">${esc(c, AndroidStrings.format(t.t('rent'), priceLabel(c, {price: it.price - 1})))}</button>` : ''}<button type="button" class="mmps-btn" style="background:${CORPORA[it.media][1]}" data-action="mmps-buy" data-id="${it.id}">${esc(c, AndroidStrings.format(t.t('buy'), priceLabel(c, it)))}</button></div>` : dl ? `<div class="mmps-dl"><div class="mmps-dlbar"><i style="width:${dl.p}%"></i></div><small>${esc(c, dl.p < 100 ? `${t.t('download_in_progress')} ${dl.p}%` : t.t('installing'))}</small></div>`
+    const buttons = it.media ? `<div class="mmps-btns">${it.media === 2 ? `<button type="button" class="mmps-btn light" style="color:${CORPORA[2][1]}" data-action="mmps-buy" data-id="${it.id}">${esc(c, AndroidStrings.format(t.t('rent'), priceLabel(c, {price: it.price - 1})))}</button>` : ''}<button type="button" class="mmps-btn" style="background:${CORPORA[it.media][1]}" data-action="mmps-buy" data-id="${it.id}">${esc(c, AndroidStrings.format(t.t('buy'), priceLabel(c, it)))}</button></div>` : dl ? `<div class="mmps-dl"><div class="mmps-dlbar"><i style="width:${dl.p}%"></i></div><small>${esc(c, dl.p < 100 ? `${t.t('download_in_progress')} ${dl.p}%` : t.t('installing'))}</small><button type="button" class="mmps-cancel" data-action="mmps-cancel" aria-label="${esc(c,t.t('content_description_cancel_download'))}">${esc(c,t.t('cancel'))}</button></div>`
       : installed ? `<div class="mmps-btns">${it.system ? '' : `<button type="button" class="mmps-btn light" data-action="mmps-uninstall" data-id="${it.id}">${esc(c, t.t('uninstall'))}</button>`}<button type="button" class="mmps-btn" data-action="mmps-open" data-id="${it.id}">${esc(c, t.t('open'))}</button></div>`
       : `<div class="mmps-btns"><button type="button" class="mmps-btn" data-action="mmps-install" data-id="${it.id}">${esc(c, t.t('install'))}</button></div>`;
     const shots = it.icon ? '' : `<div class="mmps-shots">${[1, 2, 3].map(k => `<span class="mmps-shot" style="background:linear-gradient(160deg,${it.color},#fff 140%)">${icon(it, 'big')}</span>`).join('')}</div>`;
@@ -146,11 +146,11 @@
     return `<div class="mmps">${bar}<div class="mmps-page">${body}</div>${drawer}</div>`;
   }
   function install(c, id) {
-    const u = ui(c); u.dl = {id, p: 0}; c.render();
+    const u = ui(c), task = {id,p:0}; u.dl = task; c.render();
     const step = () => {
-      if (!u.dl || u.dl.id !== id) return;
+      if (u.dl !== task) return;
       u.dl.p = Math.min(100, u.dl.p + 9 + Math.floor(Math.random() * 12));
-      if (u.dl.p >= 100) { setTimeout(() => { u.dl = null; st(c).installed.push(id); c.save(); MM.notify ? MM.notify(c, {app: 'play-store', icon: 'assets/ps-stat_notify_installed.png', title: item(c, id)?.name || id, text: T().t('notification_installation_success_message'), open: ['play-store', ''], heads: false}) : c.toast(T().t('notification_installation_success_message'), false); if (c.ui.view === 'play-store') c.render(); }, 900); }
+      if (u.dl.p >= 100) { setTimeout(() => { if(u.dl!==task)return;u.dl = null; if(!st(c).installed.includes(id))st(c).installed.push(id); c.save(); MM.notify ? MM.notify(c, {app: 'play-store', icon: 'assets/ps-stat_notify_installed.png', title: item(c, id)?.name || id, text: T().t('notification_installation_success_message'), open: ['play-store', ''], heads: false}) : c.toast(T().t('notification_installation_success_message'), false); if (c.ui.view === 'play-store') c.render(); }, 900); }
       else setTimeout(step, 250);
       if (c.ui.view === 'play-store') c.render();
     };
@@ -185,11 +185,12 @@
         case 'mmps-drawer': u.drawer = !u.drawer; c.render(); return true;
         case 'mmps-home': u.history = []; u.page = 'home'; u.drawer = false; c.render(); return true;
         case 'mmps-myapps': go('myapps'); return true;
-        case 'mmps-item': go('details', el.dataset.id); return true;
+        case 'mmps-item': if(u.search?.trim()){const q=u.search.trim();st(c).searches=[q,...(st(c).searches||[]).filter(x=>x!==q)].slice(0,30);c.save();} go('details', el.dataset.id); return true;
         case 'mmps-back': this.back(c); return true;
         case 'mmps-search': u.search = ''; c.render(); return true;
         case 'mmps-sback': u.search = null; c.render(); return true;
         case 'mmps-readmore': u.more = !u.more; c.render(); return true;
+        case 'mmps-cancel': u.dl=null;c.render();return true;
         case 'mmps-install': install(c, el.dataset.id); return true;
         case 'mmps-uninstall': c.dialog({message: t.t('uninstall_app_msg'), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok'), action: c => { st(c).installed = st(c).installed.filter(x => x !== el.dataset.id); c.save(); c.render(); }}]}); return true;
         case 'mmps-open': { const id = el.dataset.id; if (MM.appsData?.[id]) c.open(id); else c.open('fiction-app', id); return true; }
@@ -219,4 +220,24 @@
       return false;
     }
   });
+  // SettingsActivity supplies the choices missing from Phonesky's res/xml/settings.xml.
+  const playPref=(c,k,d)=>MM.appPref(c,'play',k,d),setPref=(c,k,v)=>{((c.data.appPrefs||={}).play||={})[k]=v;c.save();};
+  const choices={
+    'auto-update-mode':[['off','auto_update_value_disabled'],['always','auto_update_value_enabled'],['wifi','auto_update_value_wifi_only']],
+    'download-mode':[['always','download_settings_value_download_always'],['ask','download_settings_value_ask'],['wifi','download_settings_value_wifi_only']],
+    'purchase-auth':[['always','purchase_auth_value_always'],['session','purchase_auth_value_session'],['never','purchase_auth_value_never']]};
+  const levels=['content_filter_everyone','content_filter_low_maturity','content_filter_medium_maturity','content_filter_high_maturity','content_filter_show_all_apps'];
+  const listNodes=MM.appPrefsXml.play.xml.settings.c.flatMap(n=>n.c||[]);
+  for(const k of ['auto-add-shortcuts','update-notifications','update-completion-notifications']){const n=listNodes.find(n=>n.key===k);if(n)n.defaultValue='true';}
+  function pin(c,title,done){let value='';c.dialog({title:T().t(title),html:`<div class="mmpf-edit"><input type="password" inputmode="numeric" maxlength="8" placeholder="${esc(c,T().t('pin_hint'))}" autocomplete="off"></div>`,mount(c,win){const ok=win.querySelector('[data-index="1"]');ok.disabled=true;win.querySelector('input').addEventListener('input',e=>{value=e.target.value.replace(/\D/g,'');e.target.value=value;ok.disabled=value.length<4;});},buttons:[{label:MM.text('framework').t('cancel')},{label:MM.text('framework').t('ok'),action:c=>done(c,value)}]});}
+  function createPin(c){pin(c,'pin_setup_label',(c,value)=>pin(c,'pin_confirm_label',(c,confirmed)=>{if(value!==confirmed){c.toast(T().t('pin_entry_hint_wrong_passcode'));return;}st(c).contentPin=value;st(c).contentEnabled=true;c.save();c.render();}));}
+  const oldPlaySummary=MM.appPrefsHooks.play.summary;
+  MM.appPrefsHooks.play.summary=(c,key,node)=>{if(choices[key]){const list=choices[key];return T().t((list.find(([v])=>v===playPref(c,key,list[0][0]))||list[0])[1]);}return oldPlaySummary?.(c,key,node);};
+  MM.appPrefsHooks.play.click=(c,key,n)=>{
+    if(choices[key]){const list=choices[key],cur=playPref(c,key,list[0][0]);c.dialog({title:MM.appPrefStr(n.title),items:list.map(([v,k])=>({html:`<span class="mmst-choice"><i class="mmw-radio${v===cur?' on':''}"></i><span>${esc(c,T().t(k))}</span></span>`})),buttons:[{label:MM.text('framework').t('cancel')}],onItem(i,c){setPref(c,key,list[i][0]);c.render();}});return true;}
+    if(key==='clear-history'){st(c).searches=[];c.save();c.render();return true;}
+    if(key==='content-level'){const open=()=>c.open('play-parental','play-store');if(st(c).contentEnabled)pin(c,'pin_entry_label',(c,value)=>{if(value!==st(c).contentPin){c.toast(T().t('pin_entry_hint_wrong_passcode'));return;}open();});else open();return true;}
+    return false;
+  };
+  MM.register('play-parental',{app:false,statusColor:()=>GREEN_DARK,render(c){const d=st(c),t=T();return `<div class="mmpf"><div class="mmpf-bar" style="background:${GREEN}"><button type="button" class="mmpf-up" data-action="mmpsp-back"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button><span>${esc(c,t.t('content_filtering_label'))}</span></div><div class="mmpf-list"><button type="button" class="mmst-pref" data-action="mmpsp-toggle"><span class="mmst-texts"><span class="mmst-title">${esc(c,t.t('content_filtering_label'))}</span></span><i class="mmw-switch${d.contentEnabled?' on':''}"><i class="mmw-thumb"></i></i></button>${d.contentEnabled?`<button type="button" class="mmst-pref" data-action="mmpsp-level"><span class="mmst-texts"><span class="mmst-title">${esc(c,t.t('menu_home'))}</span><span class="mmst-summary">${esc(c,t.t(levels[d.contentLevel??4]))}</span></span></button>`:''}</div></div>`;},action(name,el,event,c){if(name==='mmpsp-back'){c.back();return true;}if(name==='mmpsp-toggle'){if(st(c).contentEnabled){st(c).contentEnabled=false;c.save();c.render();}else createPin(c);return true;}if(name==='mmpsp-level'){c.dialog({title:T().t('content_filter_title'),items:levels.map(k=>({html:esc(c,T().t(k))})),onItem(i,c){st(c).contentLevel=i;c.save();c.render();}});return true;}return false;}});
 })();

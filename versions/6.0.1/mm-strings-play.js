@@ -456,5 +456,207 @@ MM.strings('play', {
 "de": "Kaufen",
 "fr": "Boutique",
 "es": "Tienda"
+},
+"cancel": {
+"res": "bullhead:Phonesky:cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"content_description_cancel_download": {
+"res": "bullhead:Phonesky:content_description_cancel_download",
+"en": "Cancel this download",
+"hu": "Letöltés törlése",
+"de": "Download abbrechen",
+"fr": "Annuler téléchargement",
+"es": "Cancelar descarga"
+},
+"auto_update_value_disabled": {
+"res": "bullhead:Phonesky:auto_update_value_disabled",
+"en": "Do not auto-update apps",
+"hu": "Ne frissítse automatikusan az alkalmazásokat",
+"de": "Keine automatischen App-Updates zulassen",
+"fr": "Ne pas mettre à jour automatiquement les applications",
+"es": "No actualizar las aplicaciones automáticamente"
+},
+"auto_update_value_enabled": {
+"res": "bullhead:Phonesky:auto_update_value_enabled",
+"en": "Auto-update apps at any time. Data charges may apply.",
+"hu": "Az alkalmazások bármikor automatikusan frissülhetnek. Előfordulhat, hogy a szolgáltató adatforgalmi díjat számít fel.",
+"de": "Apps jederzeit automatisch aktualisieren. Es können Gebühren für die Datenübertragung anfallen.",
+"fr": "Mettre à jour les applications à tout moment. Des frais supplémentaires liés à la consommation de données peuvent être facturés.",
+"es": "Actualizar aplicaciones automáticamente en cualquier momento. Es posible que se apliquen cargos de datos"
+},
+"auto_update_value_wifi_only": {
+"res": "bullhead:Phonesky:auto_update_value_wifi_only",
+"en": "Auto-update apps over Wi-Fi only",
+"hu": "Alkalmazások automatikus frissítése csak Wi-Fi hálózaton keresztül",
+"de": "Automatische App-Updates nur über WLAN zulassen",
+"fr": "Mettre à jour automatiquement les applications via Wi-Fi uniquement",
+"es": "Actualizar las aplicaciones automáticamente solo a través de Wi-Fi"
+},
+"download_settings_value_ask": {
+"res": "bullhead:Phonesky:download_settings_value_ask",
+"en": "Ask before downloading over a mobile network",
+"hu": "Ask before downloading over a mobile network",
+"de": "Ask before downloading over a mobile network",
+"fr": "Ask before downloading over a mobile network",
+"es": "Ask before downloading over a mobile network",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"download_settings_value_download_always": {
+"res": "bullhead:Phonesky:download_settings_value_download_always",
+"en": "Download over any network",
+"hu": "Download over any network",
+"de": "Download over any network",
+"fr": "Download over any network",
+"es": "Download over any network",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"download_settings_value_wifi_only": {
+"res": "bullhead:Phonesky:download_settings_value_wifi_only",
+"en": "Download over Wi-Fi only",
+"hu": "Download over Wi-Fi only",
+"de": "Download over Wi-Fi only",
+"fr": "Download over Wi-Fi only",
+"es": "Download over Wi-Fi only",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"purchase_auth_value_always": {
+"res": "bullhead:Phonesky:purchase_auth_value_always",
+"en": "For all purchases through Google Play on this device",
+"hu": "A Google Playen végrehajtott összes vásárlás esetében ezen az eszközön",
+"de": "Für alle Käufe bei Google Play auf diesem Gerät",
+"fr": "Pour tous les achats via Google Play sur cet appareil",
+"es": "Para todas las compras realizadas a través de Google Play en este dispositivo"
+},
+"purchase_auth_value_never": {
+"res": "bullhead:Phonesky:purchase_auth_value_never",
+"en": "Never",
+"hu": "Soha",
+"de": "Nie",
+"fr": "Jamais",
+"es": "Nunca"
+},
+"purchase_auth_value_session": {
+"res": "bullhead:Phonesky:purchase_auth_value_session",
+"en": "Every 30 minutes",
+"hu": "30 percenként",
+"de": "Alle 30 Minuten",
+"fr": "Toutes les 30 minutes",
+"es": "Cada 30 minutos"
+},
+"content_filtering_label": {
+"res": "bullhead:Phonesky:content_filtering_label",
+"en": "Parental controls",
+"hu": "Szülői felügyelet",
+"de": "Jugendschutzeinstellungen",
+"fr": "Contrôle parental",
+"es": "Controles parentales"
+},
+"pin_setup_label": {
+"res": "bullhead:Phonesky:pin_setup_label",
+"en": "Create content PIN",
+"hu": "Tartalmi PIN kód létrehozása",
+"de": "Inhalts-PIN erstellen",
+"fr": "Créer un code pour le contenu",
+"es": "Crea un PIN de contenido"
+},
+"pin_confirm_label": {
+"res": "bullhead:Phonesky:pin_confirm_label",
+"en": "Confirm PIN",
+"hu": "PIN kód megerősítése",
+"de": "PIN bestätigen",
+"fr": "Confirmer le code",
+"es": "Confirmar PIN"
+},
+"pin_entry_label": {
+"res": "bullhead:Phonesky:pin_entry_label",
+"en": "Enter content PIN",
+"hu": "Adja meg a tartalmi PIN kódot",
+"de": "Inhalts-PIN eingeben",
+"fr": "Saisir le code",
+"es": "Introducir PIN de contenido"
+},
+"pin_entry_hint_wrong_passcode": {
+"res": "bullhead:Phonesky:pin_entry_hint_wrong_passcode",
+"en": "Incorrect PIN",
+"hu": "Helytelen PIN kód",
+"de": "Falsche PIN",
+"fr": "Code secret erroné",
+"es": "PIN incorrecto"
+},
+"pin_hint": {
+"res": "bullhead:Phonesky:pin_hint",
+"en": "Type PIN",
+"hu": "Írd be a PIN kódot",
+"de": "PIN eingeben",
+"fr": "Taper le code PIN",
+"es": "Introduce un PIN"
+},
+"content_filter_everyone": {
+"res": "bullhead:Phonesky:content_filter_everyone",
+"en": "Everyone",
+"hu": "Mindenki",
+"de": "Alle",
+"fr": "Pour tous",
+"es": "Para todos"
+},
+"content_filter_high_maturity": {
+"res": "bullhead:Phonesky:content_filter_high_maturity",
+"en": "High maturity",
+"hu": "Magas besorolású",
+"de": "Stufe 1 - Hoch",
+"fr": "Niveau 1 - Strict",
+"es": "Nivel de madurez alto"
+},
+"content_filter_low_maturity": {
+"res": "bullhead:Phonesky:content_filter_low_maturity",
+"en": "Low maturity",
+"hu": "Alacsony besorolású",
+"de": "Stufe 3 - Niedrig",
+"fr": "Niveau 3 - Large",
+"es": "Nivel de madurez bajo"
+},
+"content_filter_medium_maturity": {
+"res": "bullhead:Phonesky:content_filter_medium_maturity",
+"en": "Medium maturity",
+"hu": "Közepes besorolású",
+"de": "Stufe 2 - Mittel",
+"fr": "Niveau 2 - Modéré",
+"es": "Nivel de madurez medio"
+},
+"content_filter_show_all_apps": {
+"res": "bullhead:Phonesky:content_filter_show_all_apps",
+"en": "Show all apps",
+"hu": "Összes alkalmazás",
+"de": "Alle Apps anzeigen",
+"fr": "Afficher toutes app.",
+"es": "Mostrar todas"
+},
+"content_filter_title": {
+"res": "bullhead:Phonesky:content_filter_title",
+"en": "Allow apps rated for",
+"hu": "Következő alkalmazások engedélyezése:",
+"de": "Folgende Apps zulassen",
+"fr": "Applications autorisées :",
+"es": "Permitir aplicaciones..."
 }
 });

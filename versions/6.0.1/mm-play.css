@@ -100,3 +100,6 @@
 .mmps-fapp{position:absolute;inset:0;display:flex;flex-direction:column;background:#fafafa;font-family:Roboto,sans-serif}
 .mmps-fbar{flex:none;height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));display:flex;align-items:center;background:var(--fc);color:#fff;font:500 calc(20 * var(--dp)) Roboto,sans-serif}
 .mmps-fbody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(16 * var(--dp));padding:calc(24 * var(--dp));text-align:center;color:#616161;font-size:calc(16 * var(--dp))}
+
+/* Phonesky download cancel stays available through the final installing delay. */
+.mmps-cancel{border:0;background:none;color:#689f38;font:500 calc(14 * var(--dp)) Roboto,sans-serif;min-height:calc(40 * var(--dp));text-transform:uppercase;}

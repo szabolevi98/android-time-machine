@@ -695,5 +695,203 @@ NG.strings('games', {
 "de": "Nach oben navigieren",
 "fr": "Parcourir vers le haut",
 "es": "Desplazarse hacia arriba"
+},
+"games_gcore_public_profile": {
+"res": "angler:PlayGames:games_gcore_public_profile",
+"en": "Game Profile",
+"hu": "Játékprofil",
+"de": "Spielprofil",
+"fr": "Profil de jeu",
+"es": "Perfil de juego"
+},
+"games_gcore_public_profile_hidden_status": {
+"res": "angler:PlayGames:games_gcore_public_profile_hidden_status",
+"en": "Hidden",
+"hu": "Rejtett",
+"de": "Verborgen",
+"fr": "Masqué",
+"es": "Oculto"
+},
+"games_gcore_public_profile_public_status": {
+"res": "angler:PlayGames:games_gcore_public_profile_public_status",
+"en": "Public",
+"hu": "Nyilvános",
+"de": "Öffentlich",
+"fr": "Public",
+"es": "Público"
+},
+"games_profile_visibility_dialog_title": {
+"res": "angler:PlayGames:games_profile_visibility_dialog_title",
+"en": "Game profile visibility",
+"hu": "Játékprofil láthatósága",
+"de": "Sichtbarkeit des Spielprofils",
+"fr": "Visibilité du profil de jeu",
+"es": "Visibilidad del perfil"
+},
+"games_profile_visibility_dialog_content": {
+"res": "angler:PlayGames:games_profile_visibility_dialog_content",
+"en": "You can make your gameplay activity, level, and XP public. This information will be based on all games that you've played. Learn more",
+"hu": "You can make your gameplay activity, level, and XP public. This information will be based on all games that you've played. Learn more",
+"de": "You can make your gameplay activity, level, and XP public. This information will be based on all games that you've played. Learn more",
+"fr": "You can make your gameplay activity, level, and XP public. This information will be based on all games that you've played. Learn more",
+"es": "You can make your gameplay activity, level, and XP public. This information will be based on all games that you've played. Learn more",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"games_profile_status_message_hidden": {
+"res": "angler:PlayGames:games_profile_status_message_hidden",
+"en": "Your Game Profile is currently hidden",
+"hu": "A játékprofil jelenleg rejtett",
+"de": "Dein Spielprofil ist momentan verborgen.",
+"fr": "Votre profil de jeu est actuellement masqué.",
+"es": "Tu perfil de juego está oculto"
+},
+"games_profile_status_message_public": {
+"res": "angler:PlayGames:games_profile_status_message_public",
+"en": "Your Game Profile is currently public",
+"hu": "A játékprofil jelenleg nyilvános",
+"de": "Dein Spielprofil ist momentan öffentlich.",
+"fr": "Votre profil de jeu est actuellement public.",
+"es": "Tu perfil de juego es público"
+},
+"games_profile_button_go_public": {
+"res": "angler:PlayGames:games_profile_button_go_public",
+"en": "Make public",
+"hu": "Legyen nyilvános",
+"de": "Öffentlich machen",
+"fr": "Rendre public",
+"es": "Hacer público"
+},
+"games_profile_button_hide_profile": {
+"res": "angler:PlayGames:games_profile_button_hide_profile",
+"en": "Hide",
+"hu": "Elrejtés",
+"de": "Ausblenden",
+"fr": "Masquer",
+"es": "Ocultar"
+},
+"games_profile_button_remain_hidden": {
+"res": "angler:PlayGames:games_profile_button_remain_hidden",
+"en": "Stay hidden",
+"hu": "Maradjon rejtve",
+"de": "Ausgeblendet lassen",
+"fr": "Laisser masqué",
+"es": "Mantener oculto"
+},
+"games_profile_button_remain_public": {
+"res": "angler:PlayGames:games_profile_button_remain_public",
+"en": "Stay public",
+"hu": "Maradjon nyilvános",
+"de": "Öffentlich lassen",
+"fr": "Laisser public",
+"es": "Mantener público"
+},
+"games_gcore_multiplayer_notifications": {
+"res": "angler:PlayGames:games_gcore_multiplayer_notifications",
+"en": "Multiplayer notifications",
+"hu": "Többszereplős játékok értesítései",
+"de": "Mehrspielermodus-Benachrichtigungen",
+"fr": "Notifications jeux multijoueurs",
+"es": "Notificaciones de multijugador"
+},
+"games_gcore_multiplayer_notifications_summary": {
+"res": "angler:PlayGames:games_gcore_multiplayer_notifications_summary",
+"en": "Allow games to send notifications for multiplayer games",
+"hu": "Értesítésküldés engedélyezése többszereplős játékoknál",
+"de": "Senden von Mehrspielermodus-Benachrichtigungen zulassen",
+"fr": "Autoriser l'envoi de notifications via les jeux multijoueurs",
+"es": "Permitir que los juegos multijugador envíen notificaciones"
+},
+"games_gcore_quest_notifications": {
+"res": "angler:PlayGames:games_gcore_quest_notifications",
+"en": "Quests notifications",
+"hu": "Értesítés küldetésről",
+"de": "Benachrichtigungen zu Missionen",
+"fr": "Notifications des quêtes",
+"es": "Notificaciones de misiones"
+},
+"games_gcore_quest_notifications_summary": {
+"res": "angler:PlayGames:games_gcore_quest_notifications_summary",
+"en": "Allow games to send notifications for quests",
+"hu": "Értesítésküldés engedélyezése küldetések esetén",
+"de": "Spiele dürfen Benachrichtigungen zu Missionen senden",
+"fr": "Autoriser les jeux à envoyer des notifications pour les quêtes",
+"es": "Permitir que los juegos envíen notificaciones de misiones"
+},
+"games_gcore_request_notifications": {
+"res": "angler:PlayGames:games_gcore_request_notifications",
+"en": "Requests notifications",
+"hu": "Értesítések kérések esetén",
+"de": "Benachrichtigungen bei Anfragen",
+"fr": "Notifications des demandes",
+"es": "Notificaciones de solicitudes"
+},
+"games_gcore_request_notifications_summary": {
+"res": "angler:PlayGames:games_gcore_request_notifications_summary",
+"en": "Allow games to send notifications for gifts and requests",
+"hu": "Ajándék- és kérésértesítés engedélyezése játékok esetén",
+"de": "Spielen Benachrichtigungen für Geschenke/Anfragen gestatten",
+"fr": "Autoriser l'envoi de notifications pour les demandes et les cadeaux via les jeux",
+"es": "Permitir que los juegos envíen notificaciones sobre regalos y solicitudes"
+},
+"games_gcore_friend_notifications": {
+"res": "angler:PlayGames:games_gcore_friend_notifications",
+"en": "Friend notifications",
+"hu": "Ismerősök értesítései",
+"de": "Benachrichtigungen von Freunden",
+"fr": "Notifications des amis",
+"es": "Notificaciones de amistad"
+},
+"games_gcore_friend_notifications_summary": {
+"res": "angler:PlayGames:games_gcore_friend_notifications_summary",
+"en": "Show notifications for friend invites",
+"hu": "Meghívásokkal kapcsolatos értesítések megjelenítése",
+"de": "Benachrichtigungen zu Freundschaftsanfragen anzeigen",
+"fr": "Afficher des notifications pour les invitations des amis",
+"es": "Muestra notificaciones de invitaciones de amigos"
+},
+"games_gcore_muted_games": {
+"res": "angler:PlayGames:games_gcore_muted_games",
+"en": "Muted games",
+"hu": "Zárolt játékok",
+"de": "Ausgeblendete Spiele",
+"fr": "Notifications bloquées",
+"es": "Juegos silenciados"
+},
+"games_gcore_muted_games_empty": {
+"res": "angler:PlayGames:games_gcore_muted_games_empty",
+"en": "No games muted yet",
+"hu": "Még nem zárolt játékokat",
+"de": "Keine Spiele ausgeblendet",
+"fr": "Aucun jeu",
+"es": "No has silenciado ningún juego."
+},
+"games_settings_unmute_title": {
+"res": "angler:PlayGames:games_settings_unmute_title",
+"en": "Unmute?",
+"hu": "Feloldja a zárolást?",
+"de": "Wieder einblenden?",
+"fr": "Réactiver les notif. ?",
+"es": "¿Activar sonido?"
+},
+"games_settings_unmute_message": {
+"res": "angler:PlayGames:games_settings_unmute_message",
+"en": " Let %s send game requests and notifications.",
+"hu": "A(z) %s küldhet játékkérelmeket és értesítéseket.",
+"de": "%s das Senden von Anfragen und Benachrichtigungen gestatten",
+"fr": "Autoriser l'envoi de demandes et de notifications associées au jeu %s",
+"es": "Permite que %s envíe solicitudes de juego y notificaciones."
+},
+"games_settings_unmute_ok": {
+"res": "angler:PlayGames:games_settings_unmute_ok",
+"en": "Unmute",
+"hu": "Feloldás",
+"de": "Einblenden",
+"fr": "Réactiver notif.",
+"es": "Activar sonido"
 }
 });
