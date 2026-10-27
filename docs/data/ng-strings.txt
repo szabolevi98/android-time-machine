@@ -153,6 +153,7 @@ EmergencyInfo/app_label
 [contacts] GoogleContacts framework
 # Google Contacts 1.4.22: PeopleActivity's tabs and menu, the lists, QuickContactActivity's cards and menu, the compact
 # editor and its menu, the contact picker, Contacts to display, Import/export
+importing_vcard_finished_title+args1 exporting_vcard_finished_title+args1 exporting_vcard_filename
 applicationLabel favorites_tab_label all_contacts_tab_label menu_search hint_findContacts menu_contacts_filter
 menu_import_export menu_clear_frequents menu_blocked_numbers menu_accounts menu_settings menu_help listTotalAllContactsZeroStarred noContacts
 favoritesFrequentContacted user_profile_contacts_list_header profile_display_name menu_addStar menu_removeStar
@@ -190,6 +191,7 @@ YouTube/application_name CloudPrint2/document_submit_failed_title CloudPrint2/fa
 # Messenger 2.0.906: the conversation list and its menu, the conversation and its menu, the compose bar, the contact
 # picker, People & options, Archived, Blocked contacts, the media picker (its tabs: stickers, camera, gallery, audio,
 # location), the dates. No emoji keyboard: with the image's Gboard (EmojiCapable) ComposeMessageView keeps the button gone
+conversation_list_item_view_draft_message
 own:sim_reply_1 own:sim_reply_2 own:sim_reply_3
 app_name start_new_conversation action_search_messages action_menu_show_archived blocked_contacts_title action_settings
 action_help_and_feedback conversation_list_empty_text conversation_list_item_view_sent_from_you_prefix posted_now

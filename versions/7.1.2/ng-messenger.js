@@ -68,6 +68,9 @@
   ];
   const threads = c => c.data.sms || (c.data.sms = JSON.parse(JSON.stringify(NG.defaults.sms)));
   const ui = c => c.ui.messenger || (c.ui.messenger = {screen: '', to: '', search: null, draft: {}, attach: {}, details: {}, sel: null, msel: null, panel: '', mediaTab: 'gallery', csearch: null, mode: ''});
+  // The typed draft is kept with the conversation (saved half a second after the last key).
+  let draftTimer = 0;
+  const keepDraft = c => { clearTimeout(draftTimer); draftTimer = setTimeout(() => c.save(), 500); };
   const esc = (c, s) => c.safe(s);
   const thread = (c, id) => threads(c).find(x => x.id === +id);
   const threadFor = (c, number) => threads(c).find(x => P().same(x.number, number));
@@ -131,9 +134,11 @@
     const t = T(), u = ui(c), last = x.messages.at(-1), unread = !x.read, sel = u.sel?.includes(x.id);
     const status = last.status === 'sending' ? t.t('message_status_sending') : when(c, last.time, true);
     const prefix = last.mine ? t.t('conversation_list_item_view_sent_from_you_prefix') : '';
+    // ConversationListItemView: a conversation with a draft shows the draft as its snippet and "Draft" for its time.
+    const draft = (x.draft || '').trim();
     return `<div class="ngms-item" data-id="${x.id}"><div class="ngms-swipebg np-bg-swipe_shadow">${icon('ic_archive_small_dark', 'l')}${icon('ic_archive_small_dark', 'r')}</div>
       <button type="button" class="ngms-conv${unread ? ' unread' : ''}${sel ? ' sel' : ''}" data-action="ngms-open" data-id="${x.id}">${sel ? `<img class="ngms-av ngms-check" src="${A('ic_checkmark_circle_blue')}" alt="">` : avatar(c, x.number, 'ngms-cicon')}
-        <span class="ngms-ctext"><span class="ngms-cname">${x.muted ? icon('ic_notifications_off_small_light', 'ngms-bell') : ''}<b>${esc(c, nameOf(c, x.number))}</b></span><span class="ngms-snip">${esc(c, prefix + snippetOf(c, last))}</span><span class="ngms-time">${esc(c, status)}</span></span></button></div>`;
+        <span class="ngms-ctext"><span class="ngms-cname">${x.muted ? icon('ic_notifications_off_small_light', 'ngms-bell') : ''}<b>${esc(c, nameOf(c, x.number))}</b></span><span class="ngms-snip">${esc(c, draft || prefix + snippetOf(c, last))}</span><span class="ngms-time">${esc(c, draft ? t.t('conversation_list_item_view_draft_message') : status)}</span></span></button></div>`;
   }
   // The contextual bar of a selection (BugleActionBarActivity's own action mode: white, dark icons).
   function cab(c, buttons) {
@@ -217,7 +222,7 @@
       ${m.mine ? '' : cn ? '<span class="ngms-micon"></span>' : avatar(c, x.number, 'ngms-micon')}<div class="ngms-mcol">${att}${bubble}${showMeta ? `<div class="ngms-meta">${meta}</div>` : ''}</div></div>`;
   }
   function conversation(c, x) {
-    const t = T(), u = ui(c), [color] = colorOf(c, x.number), draft = u.draft[x.id] || '', pending = u.attach[x.id] || [];
+    const t = T(), u = ui(c), [color] = colorOf(c, x.number), draft = u.draft[x.id] ?? x.draft ?? '', pending = u.attach[x.id] || [];
     let head;
     if (u.msel) {
       const m = x.messages.find(y => y.id === u.msel);
@@ -296,13 +301,13 @@
     NG.appTasks.later(c, 'messenger', () => { if (!threads(c).includes(x)) return; for (const m of out) { delete m.status; m.time = Date.now(); } c.save(); if (c.ui.view === 'messenger') c.render(); }, out.some(m => m.photo || m.sticker) ? 2400 : 1200);
   }
   function send(c, x) {
-    const u = ui(c), text = (u.draft[x.id] || '').trim(), pending = u.attach[x.id] || []; if (!text && !pending.length) return;
+    const u = ui(c), text = (u.draft[x.id] ?? x.draft ?? '').trim(), pending = u.attach[x.id] || []; if (!text && !pending.length) return;
     let id = nextId(c) - 1;
     // An MMS: each attachment its own part (bubble), the text with the last one.
     const out = pending.length ? pending.map((a, i) => ({id: ++id, mine: true, ...a, text: i === pending.length - 1 ? text : '', time: Date.now(), status: 'sending'})) : [{id: ++id, mine: true, text, time: Date.now(), status: 'sending'}];
     for(const message of out)if(message.photo){const source=NG.photoLibrary.find(c,message.photo);message.photo=NG.media.fromDocument(c,{...message.document,photo:message.photo,name:message.document?.name||source?.fileName||(source?.kind==='video'?'Video.mp4':'Photo.jpg')},'sms-provider');if(message.document){message.document.photo=message.photo;delete message.document.mediaSnapshot;}}
     NG.smsMedia.stop(c);
-    x.messages.push(...out); x.read = true; u.draft[x.id] = ''; u.attach[x.id] = []; u.panel = ''; c.save(); c.render();
+    x.messages.push(...out); x.read = true; u.draft[x.id] = ''; x.draft = ''; u.attach[x.id] = []; u.panel = ''; c.save(); c.render();
     deliver(c, x, out);
     answer(c, x);
   }
@@ -419,7 +424,7 @@
     if (field) {
       const x = thread(c, u.screen.slice(5)), btn = root.querySelector('.ngms-send');
       const fit = () => { field.style.height = 'auto'; field.style.height = `${Math.min(field.scrollHeight, field.clientWidth * .9)}px`; };
-      field.addEventListener('input', () => { u.draft[x.id] = field.value; btn.disabled = !field.value.trim() && !(u.attach[x.id] || []).length; fit(); });
+      field.addEventListener('input', () => { u.draft[x.id] = x.draft = field.value; keepDraft(c); btn.disabled = !field.value.trim() && !(u.attach[x.id] || []).length; fit(); });
       field.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(c, x); } });
       field.addEventListener('focus', () => { if (u.panel) { u.panel = ''; u.keepScroll = u.lastScroll; c.render(); c.el.viewport.querySelector('.ngms-field')?.focus(); } });
       fit();
@@ -469,7 +474,7 @@
   }
 
   NG.messengerWidget = {threads: c => sorted(c,false), thread, name:nameOf, avatar, snippet:snippetOf, when,
-    draft(c,id,text){const d=ui(c).draft;if(text!==undefined)d[id]=String(text);return d[id]||'';},
+    draft(c,id,text){const d=ui(c).draft,x=thread(c,id);if(text!==undefined){d[id]=String(text);if(x){x.draft=d[id];keepDraft(c);}}return d[id]??x?.draft??'';},
     reply(c,id,text){const x=thread(c,id);if(!x||!String(text).trim()||isBlocked(c,x.number))return false;NG.appData.opened(c,'messenger');replyFromNotification(c,{open:['messenger','conv:'+id]},String(text));ui(c).draft[id]='';return true;}
   };
   NG.register('messenger', {

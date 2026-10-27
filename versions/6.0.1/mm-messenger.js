@@ -42,6 +42,9 @@
   ];
   const threads = c => c.data.sms || (c.data.sms = JSON.parse(JSON.stringify(MM.defaults.sms)));
   const ui = c => c.ui.messenger || (c.ui.messenger = {screen: '', to: '', pickTab: 0, draft: {}, search: null});
+  // The typed draft is kept with the conversation (saved half a second after the last key).
+  let draftTimer = 0;
+  const keepDraft = c => { clearTimeout(draftTimer); draftTimer = setTimeout(() => c.save(), 500); };
   const esc = (c, s) => c.safe(s);
   const colorOf = (c, number) => { const p = P().byNumber(c, number), key = p ? (p.lookup || p.name) : P().digits(number); const i = Math.abs(P().javaHash(key)) % 14; return [P().COLORS[i], DARK[i]]; };
   const nameOf = (c, number) => P().byNumber(c, number)?.name || P().format(number);
@@ -86,10 +89,13 @@
     const title = u.widgetPick ? `<div class="mmms-bar"><button type="button" class="mmms-btn" data-action="mmms-wpickoff"><img src="${A('ic_arrow_back_light')}" alt=""></button><span class="mmms-title in">${esc(c, t.t('app_name'))}</span></div>` : bar;
     return `<div class="mmms">${title}<div class="mmms-page mmms-list">${rows}${empty}</div>${searching || u.widgetPick ? '' : `<button type="button" class="mmms-fab" data-action="mmms-new" aria-label="${esc(c, t.t('start_new_conversation'))}"><img src="${A('ic_add_white')}" alt=""></button>`}</div>`;
   }
+  // ConversationListItemView: a conversation with a draft shows the draft as its snippet and "Draft" for its time.
   function convRow(c, x) {
     const t = T();
     {
-      const last = x.messages.at(-1), unread = !x.read;
+      const last = x.messages.at(-1), unread = !x.read, draft = (x.draft || '').trim();
+      if (draft) return `<button type="button" class="mmms-conv${unread ? ' unread' : ''}" data-action="mmms-open" data-id="${x.id}">${avatar(c, x.number, 'mmms-icon')}
+        <span class="mmms-ctext"><b>${esc(c, nameOf(c, x.number))}${x.muted ? `<img class="mmms-muted" src="${A('ic_notifications_off_small_light')}" alt="">` : ''}</b><span class="mmms-snip">${esc(c, draft)}</span><span class="mmms-time">${esc(c, t.t('conversation_list_item_view_draft_message'))}</span></span></button>`;
       return `<button type="button" class="mmms-conv${unread ? ' unread' : ''}" data-action="mmms-open" data-id="${x.id}">${avatar(c, x.number, 'mmms-icon')}
         <span class="mmms-ctext"><b>${esc(c, nameOf(c, x.number))}${x.muted ? `<img class="mmms-muted" src="${A('ic_notifications_off_small_light')}" alt="">` : ''}</b><span class="mmms-snip">${last.mine ? esc(c, t.t('conversation_list_item_view_sent_from_you_prefix')) : ''}${esc(c, last.text || (last.photo ? t.t('conversation_list_snippet_picture') : last.audio ? t.t('conversation_list_snippet_audio_clip') : ''))}</span><span class="mmms-time">${esc(c, last.status === 'sending' ? t.t('message_status_sending') : when(c, last.time, true))}</span></span></button>`;
     }
@@ -141,21 +147,45 @@
 
   // ---- conversation ----------------------------------------------------------------------------------------------
   function conversation(c, x) {
-    const t = T(), u = ui(c), [color] = colorOf(c, x.number), draft = u.draft[x.id] || '', pending = (u.attach || {})[x.id] || [];
+    const t = T(), u = ui(c), [color] = colorOf(c, x.number), draft = u.draft[x.id] ?? x.draft ?? '', pending = (u.attach || {})[x.id] || [];
     const pend = pending.length ? `<div class="mmms-pending">${pending.map((id, i) => { const p = (MM.media?.photos(c) || []).find(q => q.id === id); return p ? `<span class="mmms-pthumb">${MM.media.svg(p, '', 1)}<button type="button" data-action="mmms-unattach" data-i="${i}"><img src="${A('ic_remove_small_light')}" alt=""></button></span>` : ''; }).join('')}</div>` : '';
     let prev = null;
-    const msgs = x.messages.map(m => {
+    const msgs = x.messages.map((m, i) => {
       const gap = prev && prev.mine === m.mine ? 'same' : ''; prev = m;
       const status = m.status === 'sending' ? t.t('message_status_sending') : when(c, m.time, false);
       const photo = m.photo && (MM.media?.photos(c) || []).find(p => p.id === m.photo);
-      return `<div class="mmms-msg ${m.mine ? 'out' : 'in'} ${gap}">${m.mine ? '' : avatar(c, x.number, 'mmms-micon')}<div class="mmms-bubble${photo ? ' photo' : ''}" ${m.mine ? '' : `style="background-color:${color}"`}>${photo ? MM.media.svg(photo, 'mmms-mimg', 4 / 3) : ''}${m.text ? `<span class="mmms-mtext">${esc(c, m.text)}</span>` : ''}<span class="mmms-mmeta">${esc(c, status)}</span></div></div>`;
+      return `<div class="mmms-msg ${m.mine ? 'out' : 'in'} ${gap}${u.msel === i ? ' selected' : ''}" data-i="${i}">${m.mine ? '' : avatar(c, x.number, 'mmms-micon')}<div class="mmms-bubble${photo ? ' photo' : ''}" ${m.mine ? '' : `style="background-color:${color}"`}>${photo ? MM.media.svg(photo, 'mmms-mimg', 4 / 3) : ''}${m.text ? `<span class="mmms-mtext">${esc(c, m.text)}</span>` : ''}<span class="mmms-mmeta">${esc(c, status)}</span></div></div>`;
     }).join('');
-    return `<div class="mmms mmms-conv-screen" style="--pal:${color}"><div class="mmms-bar" style="background:${color}"><button type="button" class="mmms-btn" data-action="mmms-up"><img src="${A('ic_arrow_back_light')}" alt=""></button><span class="mmms-title in">${esc(c, nameOf(c, x.number))}</span>
-      <button type="button" class="mmms-btn" data-action="mmms-call" aria-label="${esc(c, t.t('action_call'))}"><img src="${A('ic_phone_small_light')}" alt=""></button>${MM.menu.button(c, 'mmms-over')}</div>
+    // A long press selects a message: conversation_fragment_select_menu's action mode (Share, Forward, Copy text, View
+    // details, Delete) over the white contextual bar.
+    const sel = u.msel != null ? x.messages[u.msel] : null;
+    const cabBtn = (action, ic, label) => `<button type="button" class="mmms-btn" data-action="${action}" aria-label="${esc(c, label)}" title="${esc(c, label)}"><img src="${A(ic)}" alt=""></button>`;
+    const head = sel ? `<div class="mmms-bar cab"><button type="button" class="mmms-btn" data-action="mmms-cabclose"><img src="${A('ic_arrow_back_dark')}" alt=""></button><span class="mmms-title in"></span>${cabBtn('mmms-m-share', 'ic_share_dark', t.t('action_share'))}${cabBtn('mmms-m-forward', 'ic_forward_dark', t.t('message_context_menu_forward_message'))}${sel.text ? cabBtn('mmms-m-copy', 'ic_content_copy_dark', t.t('message_context_menu_copy_text')) : ''}${cabBtn('mmms-m-details', 'ic_info_dark', t.t('message_context_menu_view_details'))}${cabBtn('mmms-m-delete', 'ic_delete_small_dark', t.t('action_delete_message'))}</div>`
+      : `<div class="mmms-bar" style="background:${color}"><button type="button" class="mmms-btn" data-action="mmms-up"><img src="${A('ic_arrow_back_light')}" alt=""></button><span class="mmms-title in">${esc(c, nameOf(c, x.number))}</span>
+      <button type="button" class="mmms-btn" data-action="mmms-call" aria-label="${esc(c, t.t('action_call'))}"><img src="${A('ic_phone_small_light')}" alt=""></button>${MM.menu.button(c, 'mmms-over')}</div>`;
+    return `<div class="mmms mmms-conv-screen" style="--pal:${color}">${head}
       <div class="mmms-page mmms-msgs">${msgs}</div>
       ${pend}<div class="mmms-compose"><button type="button" class="mmms-attach" data-action="mmms-attach" aria-label="${esc(c, t.t('attachMediaButtonContentDescription'))}"><img src="${A('ic_attachment_dark')}" alt=""></button>
         <div class="mmms-input"><textarea class="mmms-field" rows="1" placeholder="${esc(c, t.t('compose_message_view_hint_text'))}">${esc(c, draft)}</textarea><button type="button" class="mmms-emoji" data-action="mmms-emoji" aria-label="${esc(c, t.t('emojiKeyboardButtonContentDescription'))}"><img src="${A(u.panel === 'emoji' ? 'ic_ime_dark' : 'ic_emoji_dark')}" alt=""></button></div>
         <button type="button" class="mmms-send" data-action="mmms-send" aria-label="${esc(c, t.t('sendButtonContentDescription'))}"${draft.trim() || pending.length ? '' : ' disabled'}><img src="${A('ic_send_light')}" alt=""></button></div>${u.panel === 'emoji' ? emojiPanel(c) : u.panel === 'media' ? mediaPicker(c, x) : ''}</div>`;
+  }
+
+  function messageAction(c, name) {
+    const t = T(), u = ui(c), x = thread(c, u.screen.slice(5)), m = x?.messages[u.msel];
+    const done = () => { u.msel = null; c.render(); };
+    if (!m) { done(); return; }
+    if (name === 'mmms-m-share') { done(); MM.share(c, {title: t.t('action_share'), kind: 'text', text: m.text || ''}); return; }
+    // Forward: the conversation list picks where the message goes; it becomes that conversation's draft.
+    if (name === 'mmms-m-forward') { u.msel = null; u.share = m.text || ''; u.sharePhoto = m.photo || null; u.screen = ''; c.render(); return; }
+    if (name === 'mmms-m-copy') { MM.clipboard = m.text || ''; done(); return; }
+    if (name === 'mmms-m-details') {
+      // MessageDetailsDialog: the type, who it came from or went to, the time.
+      const h12 = !(c.data.settings.time24 ?? !new Intl.DateTimeFormat(c.locale(), {hour: 'numeric'}).resolvedOptions().hour12);
+      const lines = [`${t.t('message_type_label')}${t.t(m.photo ? 'multimedia_message' : 'text_message')}`, `${t.t(m.mine ? 'to_address_label' : 'from_label')}${nameOf(c, x.number)}`,
+        `${t.t(m.mine ? 'sent_label' : 'received_label')}${new Intl.DateTimeFormat(c.locale(), {dateStyle: 'medium', timeStyle: 'short', hour12: h12}).format(new Date(m.time))}`];
+      done(); c.dialog({title: t.t('message_details_title'), message: lines.join('\n'), buttons: [{label: t.t('framework/ok')}]}); return;
+    }
+    c.dialog({title: t.t('delete_message_confirmation_dialog_title'), message: t.t('delete_message_confirmation_dialog_text'), buttons: [{label: t.t('framework/cancel')}, {label: t.t('delete_message_confirmation_button'), action: c => { x.messages.splice(u.msel, 1); c.save(); done(); }}]});
   }
 
   // ---- contact picker ----------------------------------------------------------------------------------------------
@@ -188,11 +218,11 @@
     if (u.share) { u.draft[x.id] = u.share; u.share = ''; }
   }
   function send(c, x) {
-    const u = ui(c), text = (u.draft[x.id] || '').trim(), pending = (u.attach || {})[x.id] || []; if (!text && !pending.length) return;
+    const u = ui(c), text = (u.draft[x.id] ?? x.draft ?? '').trim(), pending = (u.attach || {})[x.id] || []; if (!text && !pending.length) return;
     let id = Math.max(0, ...threads(c).flatMap(y => y.messages.map(m => m.id)));
     // An MMS: each picture its own part (bubble), the text with the last one.
     const out = pending.length ? pending.map((photo, i) => ({id: ++id, mine: true, photo, text: i === pending.length - 1 ? text : '', time: Date.now(), status: 'sending'})) : [{id: ++id, mine: true, text, time: Date.now(), status: 'sending'}];
-    x.messages.push(...out); u.draft[x.id] = ''; if (u.attach) u.attach[x.id] = []; u.panel = ''; c.save(); c.render();
+    x.messages.push(...out); u.draft[x.id] = ''; x.draft = ''; if (u.attach) u.attach[x.id] = []; u.panel = ''; c.save(); c.render();
     setTimeout(() => { for (const m of out) { delete m.status; m.time = Date.now(); } c.save(); if (c.ui.view === 'messenger') c.render(); }, pending.length ? 2400 : 1200);
     // A demo contact writes back once (mm-notify.js): BugleNotifications posts it with ic_sms_light and the sender's
     // tile, unless the conversation is open.
@@ -230,12 +260,19 @@
   }
   function mount(c, root) {
     const u = ui(c);
-    const msgs = root.querySelector('.mmms-msgs'); if (msgs) msgs.scrollTop = msgs.scrollHeight;
+    const msgs = root.querySelector('.mmms-msgs'); if (msgs) msgs.scrollTop = u.keepScroll ?? msgs.scrollHeight; u.keepScroll = null;
+    for (const el of root.querySelectorAll('.mmms-msg')) el.addEventListener('pointerdown', e => {
+      if (e.button) return;
+      const x0 = e.clientX, y0 = e.clientY;
+      const timer = setTimeout(() => { u.msel = +el.dataset.i; u.panel = ''; u.keepScroll = msgs?.scrollTop; c.render(); }, 500);
+      const cancel = ev => { if (ev.type === 'pointermove' && Math.hypot(ev.clientX - x0, ev.clientY - y0) < 10) return; clearTimeout(timer); ['pointermove', 'pointerup', 'pointercancel'].forEach(n => el.removeEventListener(n, cancel)); };
+      ['pointermove', 'pointerup', 'pointercancel'].forEach(n => el.addEventListener(n, cancel));
+    });
     const field = root.querySelector('.mmms-field');
     if (field) {
       const x = thread(c, u.screen.slice(5)), btn = root.querySelector('.mmms-send');
       const fit = () => { field.style.height = 'auto'; field.style.height = `${Math.min(field.scrollHeight, 120)}px`; };
-      field.addEventListener('input', () => { u.draft[x.id] = field.value; btn.disabled = !field.value.trim(); fit(); });
+      field.addEventListener('input', () => { u.draft[x.id] = x.draft = field.value; keepDraft(c); btn.disabled = !field.value.trim(); fit(); });
       field.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(c, x); } });
       fit();
     }
@@ -268,6 +305,7 @@
     render, mount,
     back(c) {
       const u = ui(c);
+      if (u.msel != null) { u.msel = null; c.render(); return true; }
       if (u.panel) { u.panel = ''; c.render(); return true; }
       if (u.widgetPick && !u.screen) { u.widgetPick = null; return false; }
       if (u.screen && u.external) { u.external = false; u.screen = ''; return false; }
@@ -282,7 +320,9 @@
       switch (name) {
         case 'mmms-open': { const x = thread(c, el.dataset.id);
           if (u.widgetPick) { const done = u.widgetPick; c.back(); done({conv: x.id}); return true; }
-          x.read = true; c.save(); u.prev = u.screen === 'archived' ? 'archived' : ''; u.screen = `conv:${x.id}`; if (u.share) { u.draft[x.id] = u.share; u.share = ''; } c.render(); return true; }
+          x.read = true; c.save(); u.prev = u.screen === 'archived' ? 'archived' : ''; u.screen = `conv:${x.id}`; if (u.share) { u.draft[x.id] = x.draft = u.share; u.share = ''; } if (u.sharePhoto) { (u.attach ||= {})[x.id] = [...(u.attach[x.id] || []), u.sharePhoto]; u.sharePhoto = null; } c.render(); return true; }
+        case 'mmms-cabclose': u.msel = null; c.render(); return true;
+        case 'mmms-m-share': case 'mmms-m-forward': case 'mmms-m-copy': case 'mmms-m-details': case 'mmms-m-delete': messageAction(c, name); return true;
         case 'mmms-up': if (u.external) { u.external = false; u.screen = ''; c.back(); return true; } this.back(c); return true;
         case 'mmms-wpickoff': c.back(); return true;
         case 'mmms-unblock': { const x = thread(c, el.dataset.id); x.blocked = false; x.archived = false; c.save(); c.toast(t.t('unblocked_toast_message'), false); c.render(); return true; }
@@ -310,10 +350,10 @@
         case 'mmms-ecat': u.emojiCat = el.dataset.cat; c.render(); return true;
         case 'mmms-emo': {
           const x = thread(c, u.screen.slice(5)), code = el.dataset.code;
-          u.draft[x.id] = (u.draft[x.id] || '') + emojiChar(code);
+          u.draft[x.id] = x.draft = (u.draft[x.id] ?? x.draft ?? '') + emojiChar(code);
           c.data.bugleRecentEmoji = [code, ...(c.data.bugleRecentEmoji || []).filter(e => e !== code)].slice(0, 48); c.save(); c.render(); return true;
         }
-        case 'mmms-ebks': { const x = thread(c, u.screen.slice(5)); u.draft[x.id] = [...(u.draft[x.id] || '')].slice(0, -1).join(''); c.render(); return true; }
+        case 'mmms-ebks': { const x = thread(c, u.screen.slice(5)); u.draft[x.id] = x.draft = [...(u.draft[x.id] ?? x.draft ?? '')].slice(0, -1).join(''); keepDraft(c); c.render(); return true; }
         case 'mmms-new': u.screen = 'pick'; u.to = ''; c.render(); return true;
         case 'mmms-ptab': u.pickTab = +el.dataset.tab; c.render(); return true;
         case 'mmms-pick': openThread(c, el.dataset.n); c.render(); return true;

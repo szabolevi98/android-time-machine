@@ -45,7 +45,7 @@
 
   // ---- lists ----------------------------------------------------------------------------------------------------
   function row(c, p, head = '') {
-    return `<div class="mmct-item"><span class="mmct-sec">${esc(c, head)}</span><button type="button" class="mmct-row" data-action="mmct-open" data-id="${p.id}">${P().tile(c, p, 'mmct-photo')}<span class="mmct-name">${esc(c, p.name)}</span></button></div>`;
+    return `<div class="mmct-item"><span class="mmct-sec">${esc(c, head)}</span><button type="button" class="mmct-row" data-action="mmct-open" data-id="${p.id}">${P().tile(c, p, 'mmct-photo')}<span class="mmct-name">${esc(c, P().displayName(c, p))}</span></button></div>`;
   }
   // The filter of All contacts: the custom view without "All other contacts" shows none of them.
   const hidden = c => c.data.contactsFilter === 'custom' && c.data.contactsUngrouped === false;
@@ -56,7 +56,7 @@
     let letter = '';
     const pr = c.data.profile, me = !profile ? '' : pr?.name ? `<div class="mmct-item mmct-me"><span class="mmct-sec">${esc(c, t.t('user_profile_contacts_list_header'))}</span><button type="button" class="mmct-row" data-action="mmct-open" data-id="me">${P().tile(c, pr, 'mmct-photo')}<span class="mmct-name">${esc(c, pr.name)}</span></button></div>`
       : `<div class="mmct-item mmct-me"><span class="mmct-sec">${esc(c, t.t('user_profile_contacts_list_header'))}</span><button type="button" class="mmct-row mmct-setup" data-action="mmct-profile">${esc(c, t.t('profile_display_name'))}</button></div>`;
-    return `<div class="mmct-list">${me}${list.map(p => { const l = p.name.charAt(0).toLocaleUpperCase(c.locale()); const h = l !== letter ? (letter = l) : ''; return row(c, p, h); }).join('')}</div>`;
+    return `<div class="mmct-list">${me}${list.map(p => { const l = (P().byLast(c) ? P().alt(p) : p.name).charAt(0).toLocaleUpperCase(c.locale()); const h = l !== letter ? (letter = l) : ''; return row(c, p, h); }).join('')}</div>`;
   }
   function frequents(c) {
     const counts = new Map(), since = c.data.frequentsCleared || 0;
@@ -73,7 +73,7 @@
   // QuickContactActivity's Share: the contact as a vCard (Contacts.CONTENT_VCARD_URI, text/x-vcard) through share_via.
   function share(c, p) {
     if (!p) return;
-    const vcard = ['BEGIN:VCARD', 'VERSION:2.1', `N:;${p.name || ''};;;`, `FN:${p.name || ''}`, ...(p.phone ? [`TEL;CELL:${p.phone}`] : []), ...(p.email ? [`EMAIL;HOME:${p.email}`] : []), 'END:VCARD'].join('\r\n');
+    const vcard = P().vcard(p);
     MM.share(c, {title: T().t('share_via'), kind: 'vcard', name: `${p.name || 'contact'}.vcf`, subject: p.name || '', text: vcard});
   }
   function people(c) {
@@ -219,11 +219,19 @@
   // ImportExportDialogFragment (Contacts and Phone).
   MM.contactsImportExport = c => {
     const t = T(), list = P().sorted(c);
-    const vcards = () => list.map(p => ['BEGIN:VCARD', 'VERSION:2.1', `N:;${p.name || ''};;;`, `FN:${p.name || ''}`, ...(p.phone ? [`TEL;CELL:${p.phone}`] : []), ...(p.email ? [`EMAIL;HOME:${p.email}`] : []), 'END:VCARD'].join('\r\n')).join('\r\n');
+    const vcards = () => list.map(P().vcard).join('\r\n');
+    // ImportVCardActivity: every vCard of the file becomes a contact; a file that is not a vCard is refused.
+    const importFile = (c, f) => {
+      const got = /\.vcf$/i.test(f.name) ? P().parseVcards(f.text) : [];
+      if (!got.length) { c.toast(t.t('import_failure_no_vcard_file'), false); return; }
+      const all = P().list(c);
+      for (const x of got) all.push({id: Math.max(0, ...all.map(y => y.id)) + 1, ...x});
+      c.save(); c.render(); c.toast(AndroidStrings.format(t.t('importing_vcard_finished_title'), f.name), false);
+    };
     c.dialog({title: t.t('dialog_import_export'), items: [t.t('import_from_sim'), t.t('import_from_vcf_file'), t.t('export_to_vcf_file'), t.t('share_visible_contacts')].map(s => ({html: esc(c, s)})), onItem: (i, c) => {
       if (i === 0) MM.pickList(c, {title: t.t('import_from_sim'), color: '#0288d1', status: '#0277bd', rows: [], empty: t.t('noContacts'), onPick: () => {}});
-      else if (i === 1) MM.pickDocument(c, (c, f) => c.toast(/\.vcf$/i.test(f.name) ? AndroidStrings.format(t.t('importing_vcard_finished_title'), f.name) : t.t('import_failure_no_vcard_file'), false));
-      else if (i === 2) { c.ui.docSave = {name: t.t('exporting_vcard_filename'), size: 120 + vcards().length, mime: 'text/x-vcard', done: (c, name) => c.toast(AndroidStrings.format(t.t('exporting_vcard_finished_title'), name || t.t('exporting_vcard_filename')), false)}; c.open('downloads', 'save'); }
+      else if (i === 1) MM.pickDocument(c, importFile);
+      else if (i === 2) { c.ui.docSave = {name: t.t('exporting_vcard_filename'), size: vcards().length, mime: 'text/x-vcard', text: vcards(), done: (c, name) => c.toast(AndroidStrings.format(t.t('exporting_vcard_finished_title'), name || t.t('exporting_vcard_filename')), false)}; c.open('downloads', 'save'); }
       else MM.share(c, {title: t.t('share_via'), kind: 'vcard', name: t.t('exporting_vcard_filename'), subject: '', text: vcards()});
     }});
   };

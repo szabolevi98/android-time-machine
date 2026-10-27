@@ -90,7 +90,8 @@
     const h = hooks(c), out = [];
     for (const [i, n] of (node.c || []).entries()) {
       if (hidden(c, n)) continue;
-      if (n.t === 'header' && !n.fragment && !n.intent && !isToggle(n)) { if (n.title) out.push(NG.settingsCat(c, str(n.title))); continue; }
+      // A header that opens nothing is a category (Earth's); one the app's code opens (link) stays a row.
+      if (n.t === 'header' && !n.fragment && !n.intent && !n.link && !isToggle(n)) { if (n.title) out.push(NG.settingsCat(c, str(n.title))); continue; }
       if (/PreferenceCategory(?:Header)?$/.test(n.t)) {
         // A category without children is a header before the rows that follow it (Chrome's main_preferences).
         const cat = h.title?.(c, n.key, n) ?? str(n.title);

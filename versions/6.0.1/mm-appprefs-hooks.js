@@ -59,19 +59,19 @@
   };
 
   // Contacts and the Phone app's display options: Sort by First name / Last name, Name format First name first / Last
-  // name first (ContactsPreferences, the entries the preference classes set).
+  // name first (ContactsPreferences, the entries the preference classes set), one pair of values for both apps.
   const order = id => { const A = id === 'dialer' ? 'GoogleDialer/' : 'GoogleContacts/'; return {
-    get(c, key) { if (key === 'sortOrder' || key === 'displayOrder') return MM.appPref(c, id, key, '1'); },
+    get(c, key) { if (key === 'sortOrder' || key === 'displayOrder') return MM.appPref(c, 'contacts', key, '1'); },
     summary(c, key) {
       const t = P();
-      if (key === 'sortOrder') return t.t(A + (MM.appPref(c, id, key, '1') === '1' ? 'display_options_sort_by_given_name' : 'display_options_sort_by_family_name'));
-      if (key === 'displayOrder') return t.t(A + (MM.appPref(c, id, key, '1') === '1' ? 'display_options_view_given_name_first' : 'display_options_view_family_name_first'));
+      if (key === 'sortOrder') return t.t(A + (MM.appPref(c, 'contacts', key, '1') === '1' ? 'display_options_sort_by_given_name' : 'display_options_sort_by_family_name'));
+      if (key === 'displayOrder') return t.t(A + (MM.appPref(c, 'contacts', key, '1') === '1' ? 'display_options_view_given_name_first' : 'display_options_view_family_name_first'));
     },
     click(c, key, n) {
       if (key !== 'sortOrder' && key !== 'displayOrder') return false;
       const t = P(), keys = (key === 'sortOrder' ? ['display_options_sort_by_given_name', 'display_options_sort_by_family_name'] : ['display_options_view_given_name_first', 'display_options_view_family_name_first']).map(k => A + k);
-      const cur = MM.appPref(c, id, key, '1');
-      c.dialog({title: MM.appPrefStr(n.title), items: keys.map((k, i) => ({html: `<span class="mmst-choice"><i class="mmw-radio${String(i + 1) === cur ? ' on' : ''}"></i><span>${c.safe(t.t(k))}</span></span>`})), onItem: i => set(c, id, key, String(i + 1))});
+      const cur = MM.appPref(c, 'contacts', key, '1');
+      c.dialog({title: MM.appPrefStr(n.title), items: keys.map((k, i) => ({html: `<span class="mmst-choice"><i class="mmw-radio${String(i + 1) === cur ? ' on' : ''}"></i><span>${c.safe(t.t(k))}</span></span>`})), onItem: i => set(c, 'contacts', key, String(i + 1))});
       return true;
     }
   }; };
@@ -115,8 +115,22 @@
       const m = /^button_(cfu|cfb|cfnry|cfnrc)_key$/.exec(key); if (m) return P().t(`${T}sum_${m[1]}_disabled`);
       if (key === 'button_fdn_enable_key') return P().t(T + 'fdn_disabled');
       if (key === 'button_voicemail_provider_key') return MM.text('shade').t('carrier');
+      // VoicemailSettings: the number (EditPhoneNumberPreference) or voicemail_number_not_set; the notification's sound.
+      if (key === 'button_voicemail_key') return MM.appPref(c, 'calls', key) || P().t(T + 'voicemail_number_not_set');
+      if (key === 'voicemail_notification_ringtone_key') { const v = MM.appPref(c, 'calls', key); return v === '' ? MM.text('framework').t('ringtone_silent') : v || MM.settingsRingtones?.notification?.default; }
     },
-    get(c, key) { if (key === 'button_cw_key') return MM.appPref(c, 'calls', key, true); }
+    get(c, key) { if (key === 'button_cw_key') return MM.appPref(c, 'calls', key, true); },
+    click(c, key, n) {
+      if (key === 'voicemail_notification_ringtone_key') { MM.ringtonePicker?.(c, {kind: 'notification', current: MM.appPref(c, 'calls', key) ?? MM.settingsRingtones?.notification?.default, onPick: (c, v) => set(c, 'calls', key, v)}); return true; }
+      if (key !== 'button_voicemail_key') return false;
+      // EditPhoneNumberPreference's dialog; a new number answers with vm_changed (CallFeaturesSetting.showVMDialog).
+      let v = MM.appPref(c, 'calls', key) || '';
+      const fw = k => MM.text('framework').t(k);
+      c.dialog({title: MM.appPrefStr(n.dialogTitle), html: `<div class="mmst-edit"><input type="tel" class="mmst-input" value="${c.safe(v)}" placeholder="${c.safe(MM.appPrefStr(n.title))}"></div>`,
+        mount: (c, win) => { const f = win.querySelector('input'); f.addEventListener('input', () => { v = f.value.replace(/[^0-9+*#,;]/g, ''); }); setTimeout(() => f.focus(), 50); },
+        buttons: [{label: fw('cancel')}, {label: fw('ok'), action: c => { set(c, 'calls', key, v); setTimeout(() => c.dialog({title: MM.appPrefStr(n.dialogTitle), message: P().t(T + 'vm_changed'), buttons: [{label: fw('ok')}]}), 0); }}]});
+      return true;
+    }
   };
   const NETWORKS = ['Telekom', 'Telenor', 'Vodafone'];   // the radio's network scan around the simulated phone (data, not texts)
   H.network = {

@@ -120,3 +120,6 @@
 .mmms-ecell:active{background:rgba(51,181,229,.6)}
 .mmms-ecell i{display:block;width:calc(32 * var(--dp));height:calc(32 * var(--dp));background-repeat:no-repeat}
 .mmms-ezero{grid-column:1/-1;padding-top:calc(60 * var(--dp));color:#fff;opacity:.6;text-align:center;font-size:calc(16 * var(--dp))}
+/* The message action mode: the white contextual bar with the dark icons; the selected message in the accent. */
+.mmms-bar.cab{background:#fff;color:#000000de}
+.mmms-msg.selected .mmms-bubble{background:#0288d1!important;color:#fff}

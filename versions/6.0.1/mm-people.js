@@ -65,13 +65,67 @@
     return new Intl.DateTimeFormat(loc, {month: 'short', day: 'numeric', ...(d1.getFullYear() !== d0.getFullYear() ? {year: 'numeric'} : {})}).format(d1);
   }
 
+  /* vCard 2.1 as ContactsProvider's VCardComposer writes it for Export to .vcf file and Share (V21_GENERIC): N
+     (family;given) and FN, TEL;CELL, EMAIL;HOME, ADR;HOME (the street field), ORG, TITLE, the nickname as
+     X-ANDROID-CUSTOM:vnd.android.cursor.item/nickname, NOTE, URL; a value with non-ASCII text in
+     CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE. ImportVCardActivity reads 2.1 and 3.0 back (NICKNAME too). */
+  const qp = v => [...new TextEncoder().encode(v)].map(b => (b >= 33 && b <= 126 && b !== 61) ? String.fromCharCode(b) : '=' + b.toString(16).toUpperCase().padStart(2, '0')).join('');
+  const prop = (name, v) => /[^ -~]/.test(v) ? `${name};CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:${qp(v)}` : `${name}:${v}`;
+  const vesc = v => String(v).replace(/([;\\])/g, '\\$1');
+  function vcard(p) {
+    const w = String(p.name || '').trim().split(/\s+/).filter(Boolean), family = w.length > 1 ? w.at(-1) : '', given = w.length > 1 ? w.slice(0, -1).join(' ') : w[0] || '';
+    const out = ['BEGIN:VCARD', 'VERSION:2.1', prop('N', `${vesc(family)};${vesc(given)};;;`), prop('FN', p.name || '')];
+    if (p.nickname) out.push(prop('X-ANDROID-CUSTOM', `vnd.android.cursor.item/nickname;${vesc(p.nickname)};1;;;;;;;;;;;;;`));
+    if (p.phone) out.push(`TEL;CELL:${p.phone}`);
+    if (p.email) out.push(prop('EMAIL;HOME', p.email));
+    if (p.address) out.push(prop('ADR;HOME', `;;${vesc(p.address)};;;;`));
+    if (p.company) out.push(prop('ORG', vesc(p.company)));
+    if (p.title) out.push(prop('TITLE', p.title));
+    if (p.note) out.push(prop('NOTE', p.note.replace(/\r?\n/g, '\\n')));
+    if (p.website) out.push(prop('URL', p.website));
+    out.push('END:VCARD');
+    return out.join('\r\n');
+  }
+  function parseVcards(text) {
+    const lines = String(text || '').replace(/=\r?\n/g, '').replace(/\r?\n[ \t]/g, '').split(/\r?\n/), out = [];
+    const unq = v => v.replace(/\\n/gi, '\n').replace(/\\([;,\\])/g, '$1');
+    const deqp = v => { const bytes = []; for (let i = 0; i < v.length; i++) { if (v[i] === '=' && /^[0-9A-F]{2}$/i.test(v.slice(i + 1, i + 3))) { bytes.push(parseInt(v.slice(i + 1, i + 3), 16)); i += 2; } else bytes.push(v.charCodeAt(i)); } return new TextDecoder().decode(new Uint8Array(bytes)); };
+    const split = v => { const parts = []; let cur = ''; for (let i = 0; i < v.length; i++) { if (v[i] === '\\' && i + 1 < v.length) { cur += v[i] + v[i + 1]; i++; } else if (v[i] === ';') { parts.push(cur); cur = ''; } else cur += v[i]; } parts.push(cur); return parts.map(unq); };
+    let p = null;
+    for (const line of lines) {
+      const i = line.indexOf(':'); if (i < 0) continue;
+      const head = line.slice(0, i).split(';'), key = head[0].toUpperCase().replace(/^ITEM\d+\./, ''); let v = line.slice(i + 1);
+      if (head.some(h => /QUOTED-PRINTABLE/i.test(h))) v = deqp(v);
+      if (key === 'BEGIN') { p = {}; continue; }
+      if (!p) continue;
+      if (key === 'END') { if (!p.name && p.n) p.name = p.n; delete p.n; if (Object.keys(p).length) out.push(p); p = null; continue; }
+      if (key === 'FN') p.name = unq(v).trim();
+      else if (key === 'N') { const [f, g] = split(v); p.n = [g, f].filter(Boolean).join(' ').trim(); }
+      else if (key === 'TEL' && !p.phone) p.phone = unq(v).trim();
+      else if (key === 'EMAIL' && !p.email) p.email = unq(v).trim();
+      else if (key === 'ADR' && !p.address) p.address = split(v).filter(Boolean).join(', ');
+      else if (key === 'ORG') p.company = split(v)[0];
+      else if (key === 'TITLE') p.title = unq(v);
+      else if (key === 'NOTE') p.note = unq(v);
+      else if (key === 'URL') p.website = unq(v);
+      else if (key === 'NICKNAME') p.nickname = unq(v);
+      else if (key === 'X-ANDROID-CUSTOM') { const parts = split(v); if (parts[0] === 'vnd.android.cursor.item/nickname') p.nickname = parts[1]; }
+    }
+    return out;
+  }
   MM.people = {
+    vcard, parseVcards,
     COLORS, javaHash, digits, same, format, typing, tile, relative,
     list: c => c.data.contacts || (c.data.contacts = JSON.parse(JSON.stringify(MM.defaults.contacts))),
     calls: c => c.data.calls || (c.data.calls = JSON.parse(JSON.stringify(MM.defaults.calls))),
     byNumber: (c, n) => MM.people.list(c).find(p => same(p.phone, n)) || null,
     byId: (c, id) => MM.people.list(c).find(p => p.id === +id) || null,
-    sorted: (c, list = MM.people.list(c)) => [...list].sort((a, b) => a.name.localeCompare(b.name, c.locale())),
+    // ContactsPreferences (Contacts › Settings and Phone › Display options write the same two values): Sort by first or
+    // last name (sort_key / sort_key_alt) and the name format (display_name / display_name_alt, "Morgan, Alex").
+    alt: p => { const w = String(p?.name || '').trim().split(/\s+/); return w.length > 1 ? `${w.at(-1)}, ${w.slice(0, -1).join(' ')}` : p?.name || ''; },
+    displayName: (c, p) => MM.appPref?.(c, 'contacts', 'displayOrder', '1') === '2' ? MM.people.alt(p) : p?.name || '',
+    byLast: c => MM.appPref?.(c, 'contacts', 'sortOrder', '1') === '2',
+    sorted: (c, list = MM.people.list(c)) => { const key = MM.people.byLast(c) ? MM.people.alt : p => p.name; return [...list].sort((a, b) => key(a).localeCompare(key(b), c.locale())); },
     // ContactsContract.CommonDataKinds.Phone.getTypeLabel for TYPE_MOBILE (the only kind the sample contacts have).
     typeLabel: () => MM.text('phone').t('phoneTypeMobile'),
     log(c, entry) { const calls = MM.people.calls(c); calls.push({id: Math.max(0, ...calls.map(x => x.id)) + 1, ...entry}); c.save(); }

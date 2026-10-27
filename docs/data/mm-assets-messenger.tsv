@@ -48,3 +48,9 @@ bg-widget_msg_bubble_outgoing.9.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable
 bg-sym_keyboard_delete_holo.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/sym_keyboard_delete_holo
 bg-tab_selected.9.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/tab_selected
 bg-tab_unselected.9.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/tab_unselected
+# conversation_fragment_select_menu's action mode: its back arrow and the icons
+bg-ic_arrow_back_dark.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_arrow_back_dark
+bg-ic_share_dark.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_share_dark
+bg-ic_forward_dark.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_forward_dark
+bg-ic_content_copy_dark.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_content_copy_dark
+bg-ic_info_dark.png	app/PrebuiltBugle/PrebuiltBugle.apk	drawable/ic_info_dark

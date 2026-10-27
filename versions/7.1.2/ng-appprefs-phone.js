@@ -47,10 +47,10 @@
   if (NG.appPrefsXml?.dialer) NG.appPrefsXml.dialer.xml.dialer_settings = {t: 'PreferenceScreen', c: [
     {t: 'header', key: 'display', title: `string/${D}display_options_title`, fragment: 'display_options_settings'},
     {t: 'header', key: 'sounds', title: `string/${D}sounds_and_vibration_title`, fragment: 'sound_settings'},
-    {t: 'header', key: 'quick', title: `string/${D}respond_via_sms_setting_title`},
-    {t: 'header', key: 'calls', title: `string/${D}call_settings_label`},
-    {t: 'header', key: 'blocking', title: `string/${D}manage_blocked_numbers_label`},
-    {t: 'header', key: 'a11y', title: `string/${D}accessibility_settings_title`},
+    {t: 'header', key: 'quick', title: `string/${D}respond_via_sms_setting_title`, link: true},
+    {t: 'header', key: 'calls', title: `string/${D}call_settings_label`, link: true},
+    {t: 'header', key: 'blocking', title: `string/${D}manage_blocked_numbers_label`, link: true},
+    {t: 'header', key: 'a11y', title: `string/${D}accessibility_settings_title`, link: true},
     {t: 'header', key: 'nearby', title: `string/${D}local_search_setting_title`, fragment: 'nearby_places_settings'},
     {t: 'header', key: 'about', title: `string/${D}about_phone_label`, fragment: 'about_phone_fragment'}]};
 
@@ -98,8 +98,22 @@
       const m = /^button_(cfu|cfb|cfnry|cfnrc)_key$/.exec(key); if (m) return P().t(`${TS}sum_${m[1]}_disabled`);
       if (key === 'button_fdn_enable_key') return P().t(TS + 'fdn_disabled');
       if (key === 'button_voicemail_provider_key') return NG.text('shade').t('carrier') || '';
+      // VoicemailSettings: the number (EditPhoneNumberPreference) or voicemail_number_not_set; the notification's sound.
+      if (key === 'button_voicemail_key') return NG.appPref(c, 'calls', key) || P().t(TS + 'voicemail_number_not_set');
+      if (key === 'voicemail_notification_ringtone_key') { const v = NG.appPref(c, 'calls', key); return v === '' ? NG.text('settings').t('framework/ringtone_silent') : v || NG.settingsRingtones?.notification?.default; }
     },
-    get(c, key) { if (key === 'button_cw_key') return NG.appPref(c, 'calls', key, true); }
+    get(c, key) { if (key === 'button_cw_key') return NG.appPref(c, 'calls', key, true); },
+    click(c, key, n) {
+      if (key === 'voicemail_notification_ringtone_key') { NG.ringtonePicker?.(c, {kind: 'notification', current: NG.appPref(c, 'calls', key) ?? NG.settingsRingtones?.notification?.default, onPick: (c, v) => set(c, 'calls', key, v)}); return true; }
+      if (key !== 'button_voicemail_key') return false;
+      // EditPhoneNumberPreference's dialog; a new number answers with vm_changed (CallFeaturesSetting.showVMDialog).
+      let v = NG.appPref(c, 'calls', key) || '';
+      const fw = k => NG.text('settings').t('framework/' + k);
+      c.dialog({title: NG.appPrefStr(n.dialogTitle), html: `<div class="ngst-edit"><input type="tel" class="ngst-input" value="${c.safe(v)}" placeholder="${c.safe(NG.appPrefStr(n.title))}"></div>`,
+        mount: (c, win) => { const f = win.querySelector('input'); f.addEventListener('input', () => { v = f.value.replace(/[^0-9+*#,;]/g, ''); }); setTimeout(() => f.focus(), 50); },
+        buttons: [{label: fw('cancel')}, {label: fw('ok'), action: c => { set(c, 'calls', key, v); setTimeout(() => c.dialog({title: NG.appPrefStr(n.dialogTitle), message: P().t(TS + 'vm_changed'), buttons: [{label: fw('ok')}]}), 0); }}]});
+      return true;
+    }
   };
 
   // Telecom: quick responses, and BlockedNumbersActivity drawn from its layouts.

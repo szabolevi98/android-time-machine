@@ -2426,6 +2426,22 @@ MM.strings('appprefs', {
 "fr": "Liste de numéros autorisés désactivée",
 "es": "Los números de marcación fija están inhabilitados"
 },
+"TeleService/voicemail_number_not_set": {
+"res": "bullhead:TeleService:voicemail_number_not_set",
+"en": "<Not set>",
+"hu": "<Nincs megadva>",
+"de": "<Nicht festgelegt>",
+"fr": "<Non défini>",
+"es": "<No definido>"
+},
+"TeleService/vm_changed": {
+"res": "bullhead:TeleService:vm_changed",
+"en": "Voicemail number changed.",
+"hu": "A postafiók száma módosítva.",
+"de": "Mailboxnummer geändert.",
+"fr": "Le numéro de messagerie vocale a été modifié.",
+"es": "El número del buzón de voz se ha cambiado."
+},
 "TeleService/clir_display_values": {
 "res": "bullhead:TeleService:clir_display_values",
 "en": [

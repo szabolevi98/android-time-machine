@@ -41,12 +41,14 @@ versions/6.0.1/assets/bg-emoji-places.png	cd635397f699aeaa	generated	bullhead:/s
 versions/6.0.1/assets/bg-emoji-symbols.png	35d89de30bd2023f	generated	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-nodpi-v4/emoji_u00a9.png	drawable-nodpi-v4	sprite of the category's emoji_u*.png, 72 px cells, 256 colours (docs/tools/mm-emoji.py)	daa07bf7281b1f3a
 versions/6.0.1/assets/bg-ic_add_white.png	8712ef49d2c96bda	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_add_white.png	drawable-xxhdpi-v4		8712ef49d2c96bda
 versions/6.0.1/assets/bg-ic_archive_undo_small_dark.png	f38c984b2d7fbc8e	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_archive_undo_small_dark.png	drawable-xxhdpi-v4		f38c984b2d7fbc8e
+versions/6.0.1/assets/bg-ic_arrow_back_dark.png	770d4bef80e9cfe9	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_arrow_back_dark.png	drawable-xxhdpi-v4		770d4bef80e9cfe9
 versions/6.0.1/assets/bg-ic_arrow_back_light.png	93d01cbffe38b055	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_arrow_back_light.png	drawable-xxhdpi-v4		93d01cbffe38b055
 versions/6.0.1/assets/bg-ic_attachment_dark.png	a1fecbd0af7d65fc	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_attachment_dark.png	drawable-xxhdpi-v4		a1fecbd0af7d65fc
 versions/6.0.1/assets/bg-ic_audio_light.png	56255603ee4938f5	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_audio_light.png	drawable-xxhdpi-v4		56255603ee4938f5
 versions/6.0.1/assets/bg-ic_camera_light.png	311659e500287966	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_camera_light.png	drawable-xxhdpi-v4		311659e500287966
 versions/6.0.1/assets/bg-ic_checkbox_blank_light.png	cd40990124363c0a	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_checkbox_blank_light.png	drawable-xxhdpi-v4		cd40990124363c0a
 versions/6.0.1/assets/bg-ic_checkbox_light.png	c7b234478120b111	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_checkbox_light.png	drawable-xxhdpi-v4		c7b234478120b111
+versions/6.0.1/assets/bg-ic_content_copy_dark.png	9f9475c92d6f0046	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_content_copy_dark.png	drawable-xxhdpi-v4		9f9475c92d6f0046
 versions/6.0.1/assets/bg-ic_delete_small_dark.png	cfa06129ed4fd45a	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_delete_small_dark.png	drawable-xxhdpi-v4		cfa06129ed4fd45a
 versions/6.0.1/assets/bg-ic_emoji_dark.png	82f01ddec9833059	copy	bullhead:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_emoji_dark.png	drawable-xxhdpi-v4		82f01ddec9833059
 versions/6.0.1/assets/bg-ic_emoji_nature_light_activated.png	0600b767ddf0e90a	copy	bullhead:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_emoji_nature_light_activated.png	drawable-xxhdpi-v4		0600b767ddf0e90a
@@ -61,8 +63,10 @@ versions/6.0.1/assets/bg-ic_emoji_recent_light_activated.png	644a25c42d0c9018	co
 versions/6.0.1/assets/bg-ic_emoji_recent_light_normal.png	1b5e2b0f2f510136	copy	bullhead:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_emoji_recent_light_normal.png	drawable-xxhdpi-v4		1b5e2b0f2f510136
 versions/6.0.1/assets/bg-ic_emoji_symbols_light_activated.png	e4d428d3eeb71b96	copy	bullhead:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_emoji_symbols_light_activated.png	drawable-xxhdpi-v4		e4d428d3eeb71b96
 versions/6.0.1/assets/bg-ic_emoji_symbols_light_normal.png	d89152316c4888b7	copy	bullhead:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_emoji_symbols_light_normal.png	drawable-xxhdpi-v4		d89152316c4888b7
+versions/6.0.1/assets/bg-ic_forward_dark.png	2038a786f7cf859d	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_forward_dark.png	drawable-xxhdpi-v4		2038a786f7cf859d
 versions/6.0.1/assets/bg-ic_image_light.png	9d00d4abcee286d2	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_image_light.png	drawable-xxhdpi-v4		9d00d4abcee286d2
 versions/6.0.1/assets/bg-ic_ime_dark.png	2f6dbad430b7875b	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_ime_dark.png	drawable-xxhdpi-v4		2f6dbad430b7875b
+versions/6.0.1/assets/bg-ic_info_dark.png	fd7f09a79e3931b3	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_info_dark.png	drawable-xxhdpi-v4		fd7f09a79e3931b3
 versions/6.0.1/assets/bg-ic_mp_audio_mic.png	9d131764b9c89153	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_mp_audio_mic.png	drawable-xxhdpi-v4		9d131764b9c89153
 versions/6.0.1/assets/bg-ic_mp_camera_large_light.png	bc7565c5af9abd66	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_mp_camera_large_light.png	drawable-xxhdpi-v4		bc7565c5af9abd66
 versions/6.0.1/assets/bg-ic_no_emoji_history_light.png	800fd801c33a1401	copy	bullhead:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_no_emoji_history_light.png	drawable-xxhdpi-v4		800fd801c33a1401
@@ -73,6 +77,7 @@ versions/6.0.1/assets/bg-ic_phone_small_light.png	dc3efda232109750	copy	bullhead
 versions/6.0.1/assets/bg-ic_remove_small_light.png	f3ccda2afff79643	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_remove_small_light.png	drawable-xxhdpi-v4		f3ccda2afff79643
 versions/6.0.1/assets/bg-ic_search_light.png	b2e1fe777bcc2d3f	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_search_light.png	drawable-xxhdpi-v4		b2e1fe777bcc2d3f
 versions/6.0.1/assets/bg-ic_send_light.png	b5e9ea1354e30eda	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_send_light.png	drawable-xxhdpi-v4		b5e9ea1354e30eda
+versions/6.0.1/assets/bg-ic_share_dark.png	a99d6aca2a1cc0b0	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_share_dark.png	drawable-xxhdpi-v4		a99d6aca2a1cc0b0
 versions/6.0.1/assets/bg-ic_sms_delivery_ok.png	ff28fcba9732f016	copy	bullhead:/system/app/Hangouts/Hangouts.apk!res/drawable-xxhdpi-v4/ic_sms_delivery_ok.png	drawable-xxhdpi-v4		ff28fcba9732f016
 versions/6.0.1/assets/bg-ic_sms_light.png	f421f3ad297f8a2c	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_sms_light.png	drawable-xxhdpi-v4		f421f3ad297f8a2c
 versions/6.0.1/assets/bg-ic_widget_avatar_shadow.png	af1885061d403bef	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_widget_avatar_shadow.png	drawable-xxhdpi-v4		af1885061d403bef

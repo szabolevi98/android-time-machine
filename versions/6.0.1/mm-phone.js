@@ -96,7 +96,7 @@
       <button type="button" class="mmph-del" data-action="${del}" aria-label="${esc(c, t.t('description_delete_button'))}">${icon('ic_dialpad_delete')}</button></div><i class="mmph-dline"></i>`;
   }
   function personRow(c, p, extra = '') {
-    return `<button type="button" class="mmph-crow" data-action="mmph-contact" data-id="${p.id}">${P().tile(c, p, 'mmph-photo')}<span class="mmph-cname">${esc(c, p.name)}${extra}</span></button>`;
+    return `<button type="button" class="mmph-crow" data-action="mmph-contact" data-id="${p.id}">${P().tile(c, p, 'mmph-photo')}<span class="mmph-cname">${esc(c, P().displayName(c, p))}${extra}</span></button>`;
   }
   function shortcuts(c, number) {
     const t = T(), n = P().format(number), list = [];
@@ -143,7 +143,8 @@
     const t = T(), list = P().sorted(c);
     if (!list.length) return empty(c, 'empty_contacts', t.t('all_contacts_empty'), t.t('all_contacts_empty_add_contact_action'), 'mmph-newcontact');
     let letter = '';
-    return `<div class="mmph-clist">${list.map(p => { const l = p.name.charAt(0).toLocaleUpperCase(c.locale()); const head = l !== letter ? (letter = l) : ''; return `<div class="mmph-citem"><span class="mmph-sec">${esc(c, head)}</span>${personRow(c, p)}</div>`; }).join('')}</div>`;
+    // ContactsPreferences: the sort order picks the section letters, the name format the names.
+    return `<div class="mmph-clist">${list.map(p => { const l = (P().byLast(c) ? P().alt(p) : p.name).charAt(0).toLocaleUpperCase(c.locale()); const head = l !== letter ? (letter = l) : ''; return `<div class="mmph-citem"><span class="mmph-sec">${esc(c, head)}</span>${personRow(c, p)}</div>`; }).join('')}</div>`;
   }
 
   // ---- screens ----------------------------------------------------------------------------------------------------
@@ -176,7 +177,7 @@
     const t = T(), u = ui(c);
     const tabs = `<div class="mmph-tabs text" role="tablist">${['call_log_all_title', 'call_log_missed_title'].map((k, i) => `<button type="button" role="tab" aria-selected="${u.historyTab === i}" data-action="mmph-htab" data-tab="${i}">${esc(c, t.t(k))}</button>`).join('')}<i class="mmph-under half" style="transform:translateX(${u.historyTab * 100}%)"></i></div>`;
     const page = u.historyTab ? recents(c, x => x.type === 'missed', 'recentMissed_empty') : recents(c);
-    return `<div class="mmph flat">${screenBar(c, t.t('action_menu_call_history_description'))}${tabs}<div class="mmph-pager"><div class="mmph-page">${page}</div></div></div>`;
+    return `<div class="mmph flat">${screenBar(c, t.t('action_menu_call_history_description'), MM.menu.button(c, 'mmph-barmenu'))}${tabs}<div class="mmph-pager"><div class="mmph-page">${page}</div></div></div>`;
   }
   function details(c, key) {
     const t = T(), g = groups(c).find(x => String(x.key) === String(key));
@@ -299,6 +300,14 @@
       return c.menu([{label: t.t('recentCalls_editNumberBeforeCall'), action: c => { const uu = ui(c); uu.screen = ''; uu.dialpad = true; uu.digits = P().digits(g?.number); c.render(); }}, {label: t.t('call_detail_menu_report'), action: c => c.dialog({title: t.t('report_google_caller_id_dialog_title'), message: P().format(g?.number || ''), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok'), action: c => c.toast(t.t('report_google_caller_id_toast'), false)}]})}]);
     }
     if (u.dialpad) return c.menu([{label: t.t('add_2sec_pause'), action: c => { ui(c).digits += ','; c.render(); }}, {label: t.t('add_wait'), action: c => { ui(c).digits += ';'; c.render(); }}]);
+    // CallLogActivity (call_log_options.xml): Clear call history, ClearCallLogDialog's question, then its progress.
+    if (u.screen === 'history') {
+      const fw = k => MM.text('framework').t(k);
+      return c.menu([{label: t.t('recentCalls_deleteAll'), action: c => c.dialog({title: t.t('clearCallLogConfirmation_title'), message: t.t('clearCallLogConfirmation'), buttons: [{label: fw('cancel')}, {label: fw('ok'), action: c => {
+        c.data.calls = []; c.save();
+        setTimeout(() => { c.dialog({progress: t.t('clearCallLogProgress_title'), cancelable: false}); setTimeout(() => { if (c.ui.overlay === 'dialog') c.closeOverlay(); c.render(); }, 600); }, 0);
+      }}]})}]);
+    }
     const items = [{label: t.t('action_menu_call_history_description'), action: c => { ui(c).screen = 'history'; c.render(); }}, {label: t.t('menu_import_export'), action: c => MM.contactsImportExport(c)}];
     if (frequents(c).length) items.push({label: t.t('menu_clear_frequents'), action: c => c.dialog({title: t.t('clearFrequentsConfirmation_title'), message: t.t('clearFrequentsConfirmation'), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok'), action: c => { c.data.frequentsCleared = Date.now(); c.save(); c.render(); }}]})});
     items.push({label: t.t('menu_newContact'), action: c => c.open('contacts', 'new')}, {label: t.t('dialer_settings_label'), action: c => MM.openPrefs(c, 'dialer', 'dialer_settings', t.t('dialer_settings_label'))});

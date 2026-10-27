@@ -74,7 +74,7 @@
     const list = freq.length ? `<div class="ngct-freqhead${starred.length ? '' : ' first'}">${esc(c, t.t('favoritesFrequentContacted'))}</div>${freq.map(p => `<button type="button" class="ngct-freq" data-action="ngct-open" data-id="${p.id}">${P().tile(c, p, 'ngct-photo')}<span class="ngct-fname">${esc(c, name(c, p))}</span></button>`).join('')}` : '';
     return `<div class="ngct-favs">${grid}${list}</div>`;
   }
-  const vcard = p => ['BEGIN:VCARD', 'VERSION:2.1', `N:;${p.name || ''};;;`, `FN:${p.name || ''}`, ...(p.phone ? [`TEL;CELL:${p.phone}`] : []), ...(p.email ? [`EMAIL;HOME:${p.email}`] : []), 'END:VCARD'].join('\r\n');
+  const vcard = p => P().vcard(p);
   // QuickContactActivity's Share: the contact as a vCard (text/x-vcard) through share_via.
   function share(c, p) {
     if (!p) return;
@@ -255,9 +255,17 @@
     const t = T(), list = P().sorted(c);
     c.dialog({title: t.t('dialog_import_export'), accent: '#0288d1', items: [t.t('import_from_sim'), t.t('import_from_vcf_file'), t.t('export_to_vcf_file'), t.t('share_visible_contacts')].map(s => ({html: esc(c, s)})), onItem: (i, c) => {
       if (i === 0) c.toast(t.t('noContacts'));
-      else if (i === 1) c.open('documents', 'pick:vcf');
-      else if (i === 2) c.open('documents', 'save:contacts.vcf');
-      else if (NG.share) NG.share(c, {title: t.t('share_via'), kind: 'vcard', name: 'contacts.vcf', subject: '', text: list.map(vcard).join('\r\n')});
+      // ImportVCardActivity / ExportVCardActivity through DocumentsUI: every vCard of the file becomes a contact; the
+      // export writes all of them (VCardComposer) into the file the picker names.
+      else if (i === 1) NG.pickDocument(c, {mime: 'text/*', onPick: (c, nodes) => {
+        const f = nodes[0], got = f ? P().parseVcards(f.content) : [];
+        if (!got.length) return;
+        const all = P().list(c);
+        for (const x of got) all.push({id: Math.max(0, ...all.map(y => y.id)) + 1, ...x});
+        c.save(); c.toast(t.fmt('importing_vcard_finished_title', null, f.name), false);
+      }});
+      else if (i === 2) NG.saveDocument(c, {name: t.t('exporting_vcard_filename'), type: 'text', content: list.map(vcard).join('\r\n'), onPick: (c, nodes) => c.toast(t.fmt('exporting_vcard_finished_title', null, nodes[0]?.name || ''), false)});
+      else if (NG.share) NG.share(c, {title: t.t('share_via'), kind: 'vcard', name: t.t('exporting_vcard_filename'), subject: '', text: list.map(vcard).join('\r\n')});
     }});
   };
   // AccountFilterActivity and CustomContactListFilterActivity.

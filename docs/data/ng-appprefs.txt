@@ -7,7 +7,7 @@ display_options_settings sound_settings nearby_places_settings about_phone_fragm
 +display_options_sort_by_given_name +display_options_sort_by_family_name +display_options_view_given_name_first +display_options_view_family_name_first
 [calls] TeleService CallFeaturesSetting
 call_feature_setting gsm_umts_call_options gsm_umts_additional_options voicemail_settings fdn_setting callforward_options accessibility_settings
-+sum_cfu_disabled +sum_cfb_disabled +sum_cfnry_disabled +sum_cfnrc_disabled +manage_fdn_list +fdn_disabled
++sum_cfu_disabled +sum_cfb_disabled +sum_cfnry_disabled +sum_cfnrc_disabled +manage_fdn_list +fdn_disabled +voicemail_number_not_set +vm_changed
 [quickresponses] Telecom RespondViaSmsSettings
 respond_via_sms_settings
 +blocked_numbers +blocked_numbers_msg +block_number +unblock_dialog_body +unblock_button +add_blocked_dialog_body +add_blocked_number_hint
