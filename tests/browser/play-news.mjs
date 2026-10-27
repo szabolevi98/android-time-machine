@@ -1,6 +1,8 @@
 // News & Weather installed from Play on 6.0.1 (2.7.1) and 7.1.2 (3.1.4): Headlines with the weather card (the tabs, C° /
 // F°, the section header menu's Wind speed units), a story opened and shared from its overflow, the drawer's sections,
-// Search with "No matching news", the dark theme, Edit weather display's Hide, and the phone width.
+// Search with "No matching news", the dark theme, Edit weather display's Hide, and the phone width. Round five (T63):
+// Settings, Change editions (the lead story and the section order), Manage sections (hide, drag, add back), Remove this
+// section from its header, and Open in browser showing the story in Chrome.
 // node tests/browser/play-news.mjs [6.0.1|7.1.2]
 import assert from 'node:assert/strict';
 import {marshmallow} from './mm-harness.mjs';
@@ -39,6 +41,45 @@ for (const [version, start, cls, ns, menuItem, dlg] of [['6.0.1', marshmallow, '
     await b.click(`.${sheet}-dim`);
     await b.until(`!document.querySelector('.${sheet}-sheet')`);
     await b.act(`${cls}-close`);
+    // Open in browser: Chrome shows the story from the offline web.
+    await b.click(`#viewport .${cls}-story`);
+    await b.until(`!!document.querySelector('#viewport .${cls}-article h1')`);
+    const title = await b.ev(`document.querySelector('#viewport .${cls}-article h1').textContent`);
+    await b.click(`#viewport .${cls}-more`);
+    await menu('Open in browser');
+    await b.until(`/view-chrome/.test(document.querySelector('#screen').className) && (document.querySelector('#viewport')?.textContent||'').includes(${JSON.stringify('City opens')})`);
+    assert.ok(title.includes('City opens'));
+    await b.open('news-weather');
+    await b.act(`${cls}-close`);
+    // Settings: Change editions puts the second headline first and Sports before Technology.
+    await b.act(`${cls}-drawer`);
+    await b.click(`#viewport [data-action="${cls}-settings"]`);
+    await b.until(`/Manage sections/.test(document.querySelector('#viewport').textContent)`);
+    await b.click(`#viewport [data-action="${cls}-editions"]`);
+    await b.until(`document.querySelectorAll('.${dlg}-item').length===2`);
+    await b.ev(`document.querySelectorAll('.${dlg}-item')[1].click()`);
+    assert.equal((await news()).edition, 'gb');
+    // Manage sections: drag Technology above Sports, hide it, add it back.
+    await b.click(`#viewport [data-action="${cls}-manage"]`);
+    await b.until(`document.querySelectorAll('#viewport [data-news-order] li').length===3`);
+    assert.deepEqual(await b.ev(`[...document.querySelectorAll('#viewport [data-news-order] li')].map(l=>l.dataset.id)`), ['Headlines', 'Sports', 'Technology']);
+    await b.shot(`${version}-news-manage`);
+    await b.drag(`#viewport [data-news-order] li[data-id="Technology"] [data-news-grip]`, 0, -60);
+    await b.until(`[...document.querySelectorAll('#viewport [data-news-order] li')].map(l=>l.dataset.id).join()==='Headlines,Technology,Sports'`);
+    await b.click(`#viewport [data-action="${cls}-hide"][data-id="Technology"]`);
+    await b.until(`document.querySelectorAll('#viewport [data-news-order] li').length===2 && !!document.querySelector('#viewport [data-action="${cls}-unhide"]')`);
+    await b.click(`#viewport [data-action="${cls}-unhide"][data-id="Technology"]`);
+    await b.until(`document.querySelectorAll('#viewport [data-news-order] li').length===3`);
+    await b.act(`${cls}-pageclose`); await b.act(`${cls}-pageclose`);
+    await b.until(`/Researchers map/.test(document.querySelector('#viewport .${cls}-story')?.textContent||'')`);
+    // Remove this section from its header.
+    await b.act(`${cls}-section`, {id: 'Sports'});
+    await b.click(`#viewport [data-action="${cls}-smenu"]`);
+    await menu('Remove this section');
+    await b.until(`[...document.querySelectorAll('.${dlg} button')].length>=2`);
+    await b.ev(`[...document.querySelectorAll('.${dlg} button')].pop().click()`);
+    await b.until(`!!document.querySelector('#viewport .${cls}-now')`);
+    assert.deepEqual((await news()).sections.gb, ['Technology']);
     // The drawer's Technology section.
     await b.act(`${cls}-drawer`);
     await b.click(`#viewport [data-action="${cls}-section"][data-id="Technology"]`);

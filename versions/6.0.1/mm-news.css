@@ -58,3 +58,22 @@
 .dark .mmnw-by{color:#ffffffb3}
 .mmnw-radio{display:inline-block;width:calc(16 * var(--dp));height:calc(16 * var(--dp));margin-right:calc(24 * var(--dp));vertical-align:middle;border:calc(2 * var(--dp)) solid #0000008a;border-radius:50%}
 .mmnw-radio.on{border-color:#3367d6;background:radial-gradient(circle,#3367d6 45%,transparent 50%)}
+.mmnw-page{background:#fff}
+.dark .mmnw-page{background:#303030}
+.mmnw-page h4{margin:0;padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(4 * var(--dp));color:#3367d6;font:500 calc(14 * var(--dp)) Roboto,sans-serif}
+.screen .mmnw-pref{display:flex;align-items:center;gap:calc(16 * var(--dp));width:100%;min-height:calc(56 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;background:none;color:inherit;text-align:left}
+.mmnw-pref span{flex:1;display:flex;flex-direction:column;gap:calc(2 * var(--dp))}
+.mmnw-pref b{font:400 calc(16 * var(--dp)) Roboto,sans-serif}
+.mmnw-pref small{color:#0000008d;font:400 calc(14 * var(--dp)) Roboto,sans-serif}
+.dark .mmnw-pref small{color:#ffffffb3}
+.mmnw-check{flex:none;width:calc(18 * var(--dp));height:calc(18 * var(--dp));border:calc(2 * var(--dp)) solid #0000008a;border-radius:calc(2 * var(--dp))}
+.mmnw-check.on{border-color:#3367d6;background:#3367d6}
+.mmnw-manage{margin:0;padding:0;list-style:none}
+.mmnw-manage li{display:flex;align-items:center;gap:calc(16 * var(--dp));min-height:calc(56 * var(--dp));padding:0 calc(8 * var(--dp)) 0 calc(16 * var(--dp));border-bottom:1px solid #0000001a;background:inherit;font:400 calc(16 * var(--dp)) Roboto,sans-serif}
+.mmnw-manage li.drag{position:relative;z-index:2;background:#e8eaf6;box-shadow:0 calc(2 * var(--dp)) calc(6 * var(--dp)) #0004}
+.mmnw-manage li span{flex:1}
+.mmnw-grip{flex:none;width:calc(24 * var(--dp));height:calc(24 * var(--dp));background:linear-gradient(currentColor 0 0) 50% 30%/70% 2px no-repeat,linear-gradient(currentColor 0 0) 50% 50%/70% 2px no-repeat,linear-gradient(currentColor 0 0) 50% 70%/70% 2px no-repeat;opacity:.54;cursor:grab;touch-action:none}
+.mmnw-grip.off{visibility:hidden}
+.screen .mmnw-x{width:calc(40 * var(--dp));height:calc(40 * var(--dp));padding:0;border:0;background:none;color:inherit;font:400 calc(24 * var(--dp)) Roboto,sans-serif;opacity:.6}
+.mmnw-webpage{padding:calc(16 * var(--dp)) calc(20 * var(--dp));color:#212121;font:400 calc(16 * var(--dp))/1.5 Georgia,serif}
+.mmnw-webpage h1{margin:0 0 calc(12 * var(--dp));font:400 calc(24 * var(--dp))/1.25 Roboto,sans-serif}

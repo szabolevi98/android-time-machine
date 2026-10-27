@@ -4,7 +4,8 @@
    5.1.1's offline web has for its own year), the My Account pages and the Now card history that the Google app's
    Manage card history opens (NowCardsSettingsFragment: https://www.google.com/history/now). Pages are web content, not the image's UI, so they stay in English like
    the sites themselves. MM.web.page(url) → {title, html, secure} or null for an address the offline web does not have;
-   MM.web.normalize(text) turns what the omnibox got into a URL (a Google search for anything that is not an address). */
+   MM.web.normalize(text) turns what the omnibox got into a URL (a Google search for anything that is not an address).
+   MM.webPages holds the apps' own page providers (url → page or null), asked first (News & Weather's stories). */
 (() => {
   'use strict';
   const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[ch]);
@@ -76,6 +77,7 @@
     return `${GOOGLE}search?q=${encodeURIComponent(s).split('%20').join('+')}`;
   }
   function page(url) {
+    for (const extra of MM.webPages || []) { const p = extra(url); if (p) return p; }
     const u = String(url || '').replace(/^https?:\/\/(?:www\.)?(google\.com|android\.com)/, 'https://www.$1').replace(/^http:\/\/(en\.(m\.)?wikipedia\.org)/, 'https://$1');
     if (/^https:\/\/www\.google\.com\/history\/now\/?$/.test(u)) return {url: HISTORY, ...history()};
     if (/^https:\/\/(www\.)?google\.com\/(search|\?|$)/.test(u)) return {url: u, ...google(u)};

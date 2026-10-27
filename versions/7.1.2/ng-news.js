@@ -7,9 +7,15 @@
    section header menu (menu/section_header.xml) has Edit weather display…, Temperature units… and Wind speed units…;
    each section is a card of stories with "More stories from %1$s". A story opens in WebContentActivity with
    menu/web_content_activity.xml's Open in browser and Share article; Search lists the stories that match or
-   "No matching news". The drawer lists the sections, Settings and Help & feedback. The stories are short made-up
-   demo pieces (owner decision 2026-10-26), kept offline; the weather is the demo phone's (docs/demo-data.md: Riverside
-   18°, partly cloudy). Adding sections, editions, Settings and Help & feedback keep the simulator's limit. */
+   "No matching news"; Open in browser opens the story's own address in Chrome, which shows it from the offline web
+   (MM/NG.webPages) and keeps it in its history. The drawer lists the sections, Settings and Help & feedback.
+   Settings is settings.xml: Manage sections (manage_sections_activity_title: the sections in order, each but
+   Headlines with its reorder handle to drag and its removal, "Section deleted", and "Sections you can add back"),
+   Change editions (change_edition_dialog_title: two editions of the simulator's own, which change the lead story and
+   the order of the sections, each edition keeping its own sections), Important news notifications, Lite mode settings, the weather's
+   Temperature units and Wind speed units. A section's header menu has Remove this section. The stories are short
+   made-up demo pieces (owner decision 2026-10-26), kept offline; the weather is the demo phone's (docs/demo-data.md:
+   Riverside 18°, partly cloudy). Topic and location sections and Help & feedback keep the simulator's limit. */
 (() => {
   'use strict';
   const T = () => NG.text('news'), t = k => T().t(k);
@@ -24,13 +30,27 @@
     ['Sports', 'Sports Desk', 4, 'Underdogs win the cup final', ['Nobody gave the team from the second division a chance, but a late header settled the final 2–1.', 'Fans filled the town square long after midnight.']],
     ['Sports', 'Metro News', 8, 'Marathon draws a record crowd', ['More than twelve thousand runners started this year’s city marathon under clear skies.', 'Volunteers handed out water at twenty stations along the river route.']],
     ['Headlines', 'Sky Notes', 7, 'A new comet will be visible next month', ['Astronomers expect the comet to be bright enough to see with binoculars in the early evening.', 'Look low in the west just after sunset, away from city lights.']]
-  ].map(([section, source, hours, title, body], i) => ({id: 'n' + (i + 1), section, source, hours, title, body}));
-  const SECTIONS = ['Headlines', 'Technology', 'Sports'];
+  ].map(([section, source, hours, title, body], i) => ({id: 'n' + (i + 1), section, source, hours, title, body,
+    url: `https://${source.toLowerCase().replace(/[^a-z]+/g, '-').replace(/^-|-$/g, '')}.example/${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`}));
+  // The simulator's own two editions: the region, the sections in their order (Headlines always first).
+  const EDITIONS = {us: {region: 'US', sections: ['Headlines', 'Technology', 'Sports']}, gb: {region: 'GB', sections: ['Headlines', 'Sports', 'Technology']}};
   const WEATHER = {temp: 18, high: [17, 19, 21, 22, 21, 19, 17, 15], precip: [0, 0, 10, 20, 10, 0, 0, 0], wind: [8, 10, 13, 15, 14, 11, 9, 8], humidity: [72, 66, 60, 55, 54, 58, 64, 70]};
   const WIND = {mph: v => Math.round(v / 1.609), kmh: v => v, ms: v => Math.round(v / 3.6)};
   const U = c => c.ui.news ||= {section: 'Headlines', drawer: false, search: false, query: '', story: '', tab: 'temp'};
-  const S = c => c.data.news ||= {unit: 'C', wind: 'kmh', weather: 'auto', dark: false};
+  const S = c => { const s = c.data.news ||= {unit: 'C', wind: 'kmh', weather: 'auto', dark: false}; s.edition ||= 'us'; s.sections ||= {}; if (!('notify' in s)) s.notify = true; return s; };
+  // The edition's sections as the user left them: [shown in order, hidden].
+  function sections(c) {
+    const s = S(c), all = EDITIONS[s.edition].sections, saved = s.sections[s.edition];
+    const shown = saved ? ['Headlines', ...saved.filter(x => x !== 'Headlines' && all.includes(x))] : [...all];
+    return [shown, all.filter(x => !shown.includes(x))];
+  }
+  const setShown = (c, list) => { S(c).sections[S(c).edition] = list.filter(x => x !== 'Headlines'); c.save(); };
+  // The edition's stories of a section; the British edition leads with the second headline.
+  const storiesOf = (c, id) => { const list = STORIES.filter(x => x.section === id); return id === 'Headlines' && S(c).edition === 'gb' ? [list[1], list[0], ...list.slice(2)] : list; };
+  const region = (c, id) => new Intl.DisplayNames([c.locale()], {type: 'region'}).of(EDITIONS[id].region);
   const refuse = c => c.toast(c.t('This feature is not part of the simulator.'));
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[ch]);
+  const LITE = 'pref_lite_mode_settings';
   const svg = color => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z" fill="${color}"/></svg>`;
   const label = (c, id) => id === 'Headlines' ? t('headlines_section_title') : c.t(id);
   const ago = (c, h) => new Intl.RelativeTimeFormat(c.locale(), {numeric: 'auto'}).format(-h, 'hour');
@@ -48,37 +68,67 @@
       <div class="ngnw-chart${dark ? ' dark' : ''}">${values.map((v, i) => `<span><small>${u.tab === 'precip' ? c.safe(AndroidStrings.format(t('weather_chart_precipitation_format'), v)) : u.tab === 'humidity' ? v + '%' : v}</small><i style="height:${Math.max(4, v / max * 100)}%"></i><em>${String((6 + i * 3) % 24).padStart(2, '0')}</em></span>`).join('')}</div></section>`;
   }
   function section(c, id) {
-    const list = STORIES.filter(s => s.section === id);
-    const head = id === 'Headlines' && S(c).weather !== 'hide' ? '' : `<header class="ngnw-head"><h3>${c.safe(label(c, id))}</h3></header>`;
+    const list = storiesOf(c, id);
+    const head = id === 'Headlines' && S(c).weather !== 'hide' ? '' : `<header class="ngnw-head"><h3>${c.safe(label(c, id))}</h3>${id === 'Headlines' ? '' : `<button type="button" class="ngnw-hmenu" data-action="ngnw-smenu" data-id="${id}" aria-label="${c.safe(t('section_header_menu_description'))}"><img src="${I('ic_more_horiz_white_18dp')}" alt=""></button>`}</header>`;
     return `<section class="ngnw-card">${head}${list.map(s => row(c, s)).join('')}<footer class="ngnw-foot">${c.safe(AndroidStrings.format(t('section_footer_format'), list[0]?.source || ''))}</footer></section>`;
   }
   function web(c, s) {
     return `<div class="ngnw${S(c).dark ? ' dark' : ''}"><header class="ngnw-bar"><button type="button" class="ngnw-btn" data-action="ngnw-close" aria-label="${c.safe(t('navigate_up_content_description'))}"><img src="${I('ic_arrow_back_white_24dp')}" alt="" class="ngnw-tint"></button><b>${c.safe(s.source)}</b>${NG.menu.button(c, 'ngnw-more', !S(c).dark)}</header><article class="ngnw-article"><h1>${c.safe(s.title)}</h1><p class="ngnw-by">${c.safe(s.source)} · ${c.safe(ago(c, s.hours))}</p>${s.body.map(p => `<p>${c.safe(p)}</p>`).join('')}</article></div>`;
   }
+  const page = (c, title, body) => `<div class="ngnw${S(c).dark ? ' dark' : ''}"><header class="ngnw-bar"><button type="button" class="ngnw-btn" data-action="ngnw-pageclose" aria-label="${c.safe(t('navigate_up_content_description'))}"><img src="${I('ic_arrow_back_white_24dp')}" alt="" class="ngnw-tint"></button><b>${c.safe(title)}</b></header><div class="ngnw-scroll ngnw-page">${body}</div></div>`;
+  function settings(c) {
+    const s = S(c), row = (action, title, summary = '', extra = '') => `<button type="button" class="ngnw-pref" data-action="${action}"${extra}><span><b>${c.safe(title)}</b>${summary ? `<small>${c.safe(summary)}</small>` : ''}</span></button>`;
+    return page(c, t('drawer_link_settings'), row('ngnw-manage', t('pref_manage_sections')) + row('ngnw-editions', t('pref_change_editions'), region(c, s.edition))
+      + `<button type="button" class="ngnw-pref" data-action="ngnw-notify" role="checkbox" aria-checked="${s.notify}"><span><b>${c.safe(t('pref_enable_important_news_notifications'))}</b></span><i class="ngnw-check${s.notify ? ' on' : ''}"></i></button>`
+      + (LITE ? row('ngnw-unavailable', t(LITE)) : '') + `<h4>${c.safe(t('pref_title_weather'))}</h4>` + row('ngnw-tunits', t('pref_temperature_units'), t(s.unit === 'F' ? 'weather_unit_switcher_fahrenheit' : 'weather_unit_switcher_celsius'))
+      + row('ngnw-wunits', t('pref_wind_speed_units'), t({mph: 'speed_units_mph', kmh: 'speed_units_kmh', ms: 'speed_units_ms'}[s.wind])));
+  }
+  function manage(c) {
+    const [shown, hidden] = sections(c);
+    return page(c, t('manage_sections_activity_title'), `<ul class="ngnw-manage" data-news-order>${shown.map(id => `<li data-id="${id}">${id === 'Headlines' ? '<i class="ngnw-grip off"></i>' : `<i class="ngnw-grip" data-news-grip aria-label="${c.safe(t('manage_sections_reorder_content_description'))}"></i>`}<span>${c.safe(label(c, id))}</span>${id === 'Headlines' ? '' : `<button type="button" class="ngnw-x" data-action="ngnw-hide" data-id="${id}" aria-label="${c.safe(t('menu_remove_section'))}">×</button>`}</li>`).join('')}</ul>
+      ${hidden.length ? `<h4>${c.safe(t('manage_sections_hidden_section'))}</h4><ul class="ngnw-manage">${hidden.map(id => `<li><i class="ngnw-grip off"></i><span>${c.safe(label(c, id))}</span><button type="button" class="ngnw-x add" data-action="ngnw-unhide" data-id="${id}" aria-label="${c.safe(t('menu_group_add_section'))}">+</button></li>`).join('')}</ul>` : ''}`);
+  }
   function render(c) {
     const u = U(c), s = S(c), story = u.story && STORIES.find(x => x.id === u.story);
     if (story) return web(c, story);
+    if (u.page === 'manage') return manage(c);
+    if (u.page === 'settings') return settings(c);
+    const [shown] = sections(c);
+    if (!shown.includes(u.section)) u.section = 'Headlines';
     const q = u.query.trim().toLocaleLowerCase(), found = q ? STORIES.filter(x => (x.title + ' ' + x.source).toLocaleLowerCase().includes(q)) : [];
     const bar = u.search
       ? `<header class="ngnw-bar"><button type="button" class="ngnw-btn" data-action="ngnw-search-close" aria-label="${c.safe(t('navigate_up_content_description'))}"><img src="${I('ic_arrow_back_white_24dp')}" alt="" class="ngnw-tint"></button><input class="ngnw-query" data-news-search value="${c.safe(u.query)}" placeholder="${c.safe(t('search_hint'))}" aria-label="${c.safe(t('menu_search'))}" autocomplete="off" spellcheck="false"></header>`
       : `<header class="ngnw-bar"><button type="button" class="ngnw-btn" data-action="ngnw-drawer" aria-label="${c.safe(t('drawer_open'))}">${svg(s.dark ? '#fff' : '#000000de')}</button><b>${c.safe(label(c, u.section))}</b><button type="button" class="ngnw-btn" data-action="ngnw-search" aria-label="${c.safe(t('menu_search'))}"><img src="${I('abc_ic_search_api_mtrl_alpha')}" alt="" class="ngnw-tint"></button>${NG.menu.button(c, 'ngnw-more', !s.dark)}</header>`;
     const body = u.search ? (q ? (found.length ? `<section class="ngnw-card">${found.map(x => row(c, x)).join('')}</section>` : `<p class="ngnw-empty">${c.safe(t('content_loading_empty_state'))}</p>`) : '')
       : (u.section === 'Headlines' ? weather(c) : '') + section(c, u.section);
-    const drawer = u.drawer ? `<div class="ngnw-scrim" data-action="ngnw-drawer"></div><nav class="ngnw-drawer"><div class="ngnw-account"><small>${c.safe(NG.account?.email || '')}</small></div>${SECTIONS.map(id => `<button type="button" class="${u.section === id ? 'on' : ''}" data-action="ngnw-section" data-id="${id}">${c.safe(label(c, id))}</button>`).join('')}<hr><button type="button" data-action="ngnw-unavailable">${c.safe(t('drawer_link_settings'))}</button><button type="button" data-action="ngnw-unavailable">${c.safe(t('drawer_link_help'))}</button></nav>` : '';
+    const drawer = u.drawer ? `<div class="ngnw-scrim" data-action="ngnw-drawer"></div><nav class="ngnw-drawer"><div class="ngnw-account"><small>${c.safe(NG.account?.email || '')}</small></div>${shown.map(id => `<button type="button" class="${u.section === id ? 'on' : ''}" data-action="ngnw-section" data-id="${id}">${c.safe(label(c, id))}</button>`).join('')}<hr><button type="button" data-action="ngnw-settings">${c.safe(t('drawer_link_settings'))}</button><button type="button" data-action="ngnw-unavailable">${c.safe(t('drawer_link_help'))}</button></nav>` : '';
     return `<div class="ngnw${s.dark ? ' dark' : ''}">${bar}<div class="ngnw-scroll">${body}</div>${drawer}</div>`;
   }
   function mount(c, root) {
+    const order = root.querySelector('[data-news-order]');
+    order?.querySelectorAll('[data-news-grip]').forEach(grip => grip.addEventListener('pointerdown', down => {
+      const row = grip.closest('li'), rows = [...order.children]; down.preventDefault(); row.classList.add('drag');
+      const move = e => { row.style.transform = `translateY(${e.clientY - down.clientY}px)`; };
+      const up = e => {
+        removeEventListener('pointermove', move); removeEventListener('pointerup', up); row.classList.remove('drag'); row.style.transform = '';
+        const ids = rows.map(r => r.dataset.id).filter(id => id !== row.dataset.id), others = rows.filter(r => r !== row && r.dataset.id !== 'Headlines');
+        let at = ids.length; for (const r of others) { const box = r.getBoundingClientRect(); if (e.clientY < box.top + box.height / 2) { at = ids.indexOf(r.dataset.id); break; } }
+        ids.splice(Math.max(1, at), 0, row.dataset.id); setShown(c, ids); c.render();
+      };
+      addEventListener('pointermove', move); addEventListener('pointerup', up);
+    }));
     const u = U(c), q = root.querySelector('[data-news-search]');
     if (q) { q.addEventListener('input', () => { u.query = q.value; const at = q.selectionStart; c.render(); const n = c.el.viewport.querySelector('[data-news-search]'); if (n) { n.focus(); n.setSelectionRange(at, at); } }); if (u.focus) { u.focus = false; requestAnimationFrame(() => q.focus()); } }
   }
   const choose = (c, title, options, current, set) => c.dialog({title, items: options.map(([id, text]) => ({html: `<span class="ngnw-radio${current === id ? ' on' : ''}"></span>${c.safe(text)}`})), onItem: (i, c) => { set(options[i][0]); c.save(); c.render(); }});
+  const editions = c => choose(c, t('change_edition_dialog_title'), Object.keys(EDITIONS).map(id => [id, region(c, id)]), S(c).edition, v => { S(c).edition = v; });
   const weatherDialog = c => choose(c, t('default_location_dialog_title'), [['hide', t('default_location_dialog_hide_text')], ['auto', t('default_location_dialog_auto_text')], ['custom', t('default_location_dialog_custom_text')]], S(c).weather, v => { if (v === 'custom') refuse(c); else S(c).weather = v; });
   function action(name, el, ev, c) {
     const u = U(c), s = S(c);
     if (name === 'ng-menu') {
       const story = u.story && STORIES.find(x => x.id === u.story);
-      if (story) c.menu([{label: t('menu_open_in_browser'), action: refuse}, {label: t('story_share_title'), action: c => NG.share(c, {title: t('story_share_title'), subject: story.title, text: `${story.title}\n${story.source}`})}], el);
-      else c.menu([{label: t('menu_refresh'), action: c => c.render()}, {label: t('menu_edit_weather_location'), action: weatherDialog}, {label: t('menu_change_editions'), action: refuse},
+      if (story) c.menu([{label: t('menu_open_in_browser'), action: c => c.open('chrome', 'url:' + story.url)}, {label: t('story_share_title'), action: c => NG.share(c, {title: t('story_share_title'), subject: story.title, text: `${story.title}\n${story.source}`})}], el);
+      else c.menu([{label: t('menu_refresh'), action: c => c.render()}, {label: t('menu_edit_weather_location'), action: weatherDialog}, {label: t('menu_change_editions'), action: editions},
         {label: t(s.dark ? 'menu_switch_theme_light' : 'menu_switch_theme_dark'), action: c => { s.dark = !s.dark; c.save(); c.render(); }}], el);
       return true;
     }
@@ -95,17 +145,32 @@
       case 'hmenu': c.menu([{label: t('menu_edit_weather_location'), action: weatherDialog},
         {label: t('menu_temperature_units'), action: c => choose(c, t('pref_temperature_units'), [['C', t('weather_unit_switcher_celsius')], ['F', t('weather_unit_switcher_fahrenheit')]], s.unit, v => { s.unit = v; })},
         {label: t('menu_wind_speed_units'), action: c => choose(c, t('pref_wind_speed_units'), [['mph', t('speed_units_mph')], ['kmh', t('speed_units_kmh')], ['ms', t('speed_units_ms')]], s.wind, v => { s.wind = v; })}], el); return true;
+      case 'settings': Object.assign(u, {page: 'settings', drawer: false}); break;
+      case 'manage': u.page = 'manage'; break;
+      case 'pageclose': u.page = u.page === 'manage' ? 'settings' : ''; break;
+      case 'editions': editions(c); return true;
+      case 'notify': s.notify = !s.notify; c.save(); break;
+      case 'tunits': choose(c, t('pref_temperature_units'), [['C', t('weather_unit_switcher_celsius')], ['F', t('weather_unit_switcher_fahrenheit')]], s.unit, v => { s.unit = v; }); return true;
+      case 'wunits': choose(c, t('pref_wind_speed_units'), [['mph', t('speed_units_mph')], ['kmh', t('speed_units_kmh')], ['ms', t('speed_units_ms')]], s.wind, v => { s.wind = v; }); return true;
+      case 'hide': { const [shown] = sections(c); setShown(c, shown.filter(x => x !== el.dataset.id)); c.toast(t('manage_sections_removal_message')); break; }
+      case 'unhide': { const [shown] = sections(c); setShown(c, [...shown, el.dataset.id]); break; }
+      case 'smenu': { const id = el.dataset.id; c.menu([{label: t('menu_remove_section'), action: c => c.dialog({message: t('remove_section_dialog_text'), buttons: [{label: NG.text('framework').t('cancel')}, {label: t('dialog_action_done'), action: c => { const [shown] = sections(c); setShown(c, shown.filter(x => x !== id)); if (U(c).section === id) U(c).section = 'Headlines'; c.render(); c.toast(t('manage_sections_removal_message')); }}]})}], el); return true; }
       case 'unavailable': u.drawer = false; c.render(); refuse(c); return true;
       default: return false;
     }
     c.render(); return true;
   }
+  (NG.webPages ||= []).push(url => {
+    const st = STORIES.find(x => x.url === String(url).replace(/\/$/, ''));
+    return st && {url: st.url, title: st.title, secure: true, color: '#3367d6', html: `<article class="ngnw-webpage"><p class="ngnw-by">${esc(st.source)}</p><h1>${esc(st.title)}</h1>${st.body.map(p => `<p>${esc(p)}</p>`).join('')}</article>`};
+  });
   NG.register('news-weather', {
     render, mount, action,
     statusColor: c => S(c).dark ? '#000000' : '#9e9e9e',
     back(c) {
       const u = U(c);
       if (u.story) { u.story = ''; c.render(); return true; }
+      if (u.page) { u.page = u.page === 'manage' ? 'settings' : ''; c.render(); return true; }
       if (u.drawer) { u.drawer = false; c.render(); return true; }
       if (u.search) { Object.assign(u, {search: false, query: ''}); c.render(); return true; }
       if (u.section !== 'Headlines') { u.section = 'Headlines'; c.render(); return true; }

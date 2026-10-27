@@ -4,7 +4,8 @@
    (NG.web.articles), and "the 2017 Web". Pages are web content, not the image's UI, so they stay in English like the
    sites themselves. NG.web.page(url) gives {url, title, html, secure, color} or null for an address the offline web
    does not have; NG.web.normalize(text) turns what the omnibox got into a URL (a Google search for anything that is not
-   an address). A link is data-action="ngcr-go" data-url, a search form data-form="ngcr-search". */
+   an address). NG.webPages holds the apps' own page providers (url → page or null), asked first (News & Weather's
+   stories). A link is data-action="ngcr-go" data-url, a search form data-form="ngcr-search". */
 (() => {
   'use strict';
   const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[ch]);
@@ -58,7 +59,7 @@
   const retro = () => ({title: 'The 2017 Web', secure: true, html: `<div class="ngwb-retro"><h1>The 2017 Web</h1><p>Cards everywhere, a hamburger menu in every corner, and pages that load before you finish blinking.</p>
     <ul><li>Accelerated Mobile Pages</li><li>Progressive web apps on the home screen</li><li>“Add to Home screen”, the app without a store</li><li>HTTPS, finally everywhere</li></ul>${link(GOOGLE, 'Back to Google')}</div>`});
 
-  function page(raw) {
+  function page(raw) {for(const extra of NG.webPages||[]){const p=extra(raw);if(p)return p;}
     const u = String(raw || '').trim();
     let p = null;
     if (/^https?:\/\/(www\.)?google\.com\/?(search\?.*|\?.*)?$/.test(u)) p = google(u);
