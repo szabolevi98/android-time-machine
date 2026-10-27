@@ -211,6 +211,8 @@ docs/reports/simulator-limits-2026-10-23.md, "Negyedik kör".
 | 7.1.2 | News & Weather 3.1.4 | [news-weather-3-1-4-release](https://www.apkmirror.com/apk/google-inc/news-weather/news-weather-3-1-4-release/) (uploaded 2017-03-21) | noarch, nodpi | `74b348763b422152390921d76e2c6fd28f3a2130cacb1ffd26951bcd49cf38f5` |
 | 6.0.1 | Google+ 8.4.0.128646069 | [google-8-4-0-128646069-release](https://www.apkmirror.com/apk/google-inc/google/google-8-4-0-128646069-release/) (uploaded 2016-08-04) | x86, nodpi | `b47460ee2d6036dc5ef08e2364b3a0febe1ff70b892cc9e07ff0b131fcc4fda3` |
 | 7.1.2 | Google+ 9.14.0.158314320 | [google-9-14-0-158314320-release](https://www.apkmirror.com/apk/google-inc/google/google-9-14-0-158314320-release/) (uploaded 2017-06-13) | x86, nodpi | `8cbac43505cf1a0c2d7b786560a4cdab507bd790f5a1bab4a919968f751b225f` |
+| 6.0.1 | Play Newsstand 3.5.2 | [google-play-newsstand-3-5-2-release](https://www.apkmirror.com/apk/google-inc/google-play-newsstand/google-play-newsstand-3-5-2-release/) (uploaded 2016-04-08) | noarch, nodpi | `6b3ce1eb56d134388b26a5abf2e03f7b536de2305cdff55fb1d1414419cb304f` |
+| 7.1.2 | Play Newsstand 4.5.0 | [google-play-newsstand-4-5-0-release](https://www.apkmirror.com/apk/google-inc/google-play-newsstand/google-play-newsstand-4-5-0-release/) (uploaded 2017-06-09) | noarch, nodpi | `496af13825dd4f691d56773b4cd6264795bc36927492b50b66ed559d9ba8dc67` |
 
 Sheets on 6.0.1 is 1.6.502.06 (January 2017): APKMirror has no Sheets release between 1.4.492.11 and it, so the
 plan's fallback, the first one after the image's month, is used. Google+ on 7.1.2 is 9.14.0 (2017-06-13), the last

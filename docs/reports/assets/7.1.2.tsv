@@ -19,6 +19,7 @@ versions/7.1.2/assets/app-keep.png	6cbc16408bf0c700	copy	angler:/playapps/Keep.a
 versions/7.1.2/assets/app-maps.png	439fca47f2059aea	copy	angler:/system/app/Maps/Maps.apk!res/mipmap-xxxhdpi-v4/product_logo_maps_launcher_color_48.png	mipmap-xxxhdpi-v4		439fca47f2059aea
 versions/7.1.2/assets/app-messenger.png	1e6f4b391d12ee22	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_launcher.png	drawable-xxxhdpi-v4		1e6f4b391d12ee22
 versions/7.1.2/assets/app-news-weather.png	556061e8b959e148	copy	angler:/playapps/News.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		556061e8b959e148
+versions/7.1.2/assets/app-newsstand.png	6b5921c655b056d0	copy	angler:/playapps/Newsstand.apk!res/mipmap-xxxhdpi-v4/logo_play_newsstand_launcher_color_48dp.png	mipmap-xxxhdpi-v4		6b5921c655b056d0
 versions/7.1.2/assets/app-phone.png	442f798d329b7888	copy	angler:/system/priv-app/GoogleDialer/GoogleDialer.apk!res/mipmap-xxxhdpi-v4/product_logo_dialer_round_launcher_color_48.png	mipmap-xxxhdpi-v4		442f798d329b7888
 versions/7.1.2/assets/app-photos.png	4e840aeb56a904c4	copy	angler:/system/app/Photos/Photos.apk!res/mipmap-xxxhdpi-v4/quantum_logo_photos_launcher_color_48.png	mipmap-xxxhdpi-v4		4e840aeb56a904c4
 versions/7.1.2/assets/app-play-books.png	8c51e72aaf83c423	copy	angler:/playapps/Books.apk!res/mipmap-xxxhdpi-v4/ic_launcher_play_books.png	mipmap-xxxhdpi-v4		8c51e72aaf83c423
@@ -864,6 +865,15 @@ versions/7.1.2/assets/mw-list.png	a14560e567515705	copy	angler:/system/app/Prebu
 versions/7.1.2/assets/mw-open.png	083657b2f30e3ca1	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_open_in_new.png	drawable-xxxhdpi-v4		083657b2f30e3ca1
 versions/7.1.2/assets/mw-outgoing.9.png	04a96bee5a286962	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/widget_msg_bubble_outgoing.9.png	drawable-xxxhdpi-v4		04a96bee5a286962
 versions/7.1.2/assets/mw-reply.png	af1548a69fa9bb0b	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_widget_fab_reply.png	drawable-xxxhdpi-v4		af1548a69fa9bb0b
+versions/7.1.2/assets/ns45-ic_empty_bookmark.png	2597302496850b26	copy	angler:/playapps/Newsstand.apk!res/drawable-xxxhdpi-v4/ic_empty_bookmark.png	drawable-xxxhdpi-v4		2597302496850b26
+versions/7.1.2/assets/ns45-ic_library_grid_icon.png	7a3bc2c3bb874498	copy	angler:/playapps/Newsstand.apk!res/drawable-xxxhdpi-v4/ic_library_grid_icon.png	drawable-xxxhdpi-v4		7a3bc2c3bb874498
+versions/7.1.2/assets/ns45-quantum_ic_arrow_back_white_24.png	14f802c93af2ce62	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_arrow_back_white_24.png	drawable-xxxhdpi-v4		14f802c93af2ce62
+versions/7.1.2/assets/ns45-quantum_ic_bookmark_border_grey600_24.png	3ba64c350adb6502	copy	angler:/playapps/Newsstand.apk!res/drawable-xxxhdpi-v4/quantum_ic_bookmark_border_grey600_24.png	drawable-xxxhdpi-v4		3ba64c350adb6502
+versions/7.1.2/assets/ns45-quantum_ic_bookmark_grey600_24.png	6bc3e22302321dc9	copy	angler:/playapps/Newsstand.apk!res/drawable-xxxhdpi-v4/quantum_ic_bookmark_grey600_24.png	drawable-xxxhdpi-v4		6bc3e22302321dc9
+versions/7.1.2/assets/ns45-quantum_ic_explore_grey600_24.png	de0a4d815a8eeced	copy	angler:/playapps/GoogleEarth.apk!res/drawable-xxxhdpi-v4/quantum_ic_explore_grey600_24.png	drawable-xxxhdpi-v4		de0a4d815a8eeced
+versions/7.1.2/assets/ns45-quantum_ic_play_newsstand_grey600_24.png	0eecd03cd2337cf5	copy	angler:/playapps/Newsstand.apk!res/drawable-xxxhdpi-v4/quantum_ic_play_newsstand_grey600_24.png	drawable-xxxhdpi-v4		0eecd03cd2337cf5
+versions/7.1.2/assets/ns45-quantum_ic_search_grey600_24.png	8f2b73c0cdafe99f	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_search_grey600_24.png	drawable-xxxhdpi-v4		8f2b73c0cdafe99f
+versions/7.1.2/assets/ns45-quantum_ic_share_grey600_24.png	62f144081a8e1d67	copy	angler:/playapps/PlusOne.apk!res/drawable-xxxhdpi-v4/quantum_ic_share_grey600_24.png	drawable-xxxhdpi-v4		62f144081a8e1d67
 versions/7.1.2/assets/nw31-abc_ic_search_api_mtrl_alpha.png	918906f5e698cf62	copy	angler:/system/priv-app/GmsCoreSetupPrebuilt/GmsCoreSetupPrebuilt.apk!res/drawable-xxxhdpi-v4/abc_ic_search_api_mtrl_alpha.png	drawable-xxxhdpi-v4		918906f5e698cf62
 versions/7.1.2/assets/nw31-ic_arrow_back_white_24dp.png	d993010a7e69ff47	copy	angler:/playapps/News.apk!res/drawable-hdpi-v4/ic_arrow_back_white_24dp.png	drawable-hdpi-v4		d993010a7e69ff47
 versions/7.1.2/assets/nw31-ic_more_horiz_white_18dp.png	374e2f390fac801d	copy	angler:/playapps/News.apk!res/drawable-xxxhdpi-v4/ic_more_horiz_white_18dp.png	drawable-xxxhdpi-v4		374e2f390fac801d

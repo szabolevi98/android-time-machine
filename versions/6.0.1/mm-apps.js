@@ -712,6 +712,29 @@ MM.appsData = {
 "res": "bullhead:playapps/News.apk:res/mipmap-xxxhdpi-v4/ic_launcher.png",
 "installed": true
 },
+"newsstand": {
+"pkg": "com.google.android.apps.magazines",
+"cls": "com.google.apps.dots.android.app.activity.CurrentsStartActivity",
+"label": {
+"en": "Play Newsstand",
+"de": "Play Kiosk",
+"fr": "Play Kiosque",
+"es": "Play Kiosco",
+"hu": "Play Újságos"
+},
+"icon": "assets/app-newsstand.png",
+"color": "#5363fe",
+"version": "3.5.2",
+"codeSize": 13298868,
+"permGroups": [
+"contacts",
+"location",
+"storage"
+],
+"targetSdk": 23,
+"res": "bullhead:playapps/Newsstand.apk:res/mipmap-xxxhdpi-v4/logo_play_newsstand_launcher_color_48dp.png",
+"installed": true
+},
 "google-plus": {
 "pkg": "com.google.android.apps.plus",
 "cls": "com.google.android.apps.plus.phone.HomeActivity",
