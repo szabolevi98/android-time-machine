@@ -11,7 +11,7 @@ const V='versions/7.1.2';
 const files=fs.readdirSync(V).filter(f=>/\.(js|css|html)$/.test(f));
 const html=fs.readFileSync(`${V}/index.html`,'utf8');
 for(const [,ref] of html.matchAll(/(?:src|href)="([^":?#]+\.(?:js|css))[?"]/g)){
-  assert.ok(/^ng-[\w-]+\.(js|css)$/.test(ref)||/^\.\.\/\.\.\/(i18n|strings|state|earth-globe)\.js$/.test(ref),`7.1.2 loads ${ref}`);
+  assert.ok(/^ng-[\w-]+\.(js|css)$/.test(ref)||/^\.\.\/\.\.\/(i18n|strings|state|earth-globe|boot-ready)\.js$/.test(ref),`7.1.2 loads ${ref}`);
 }
 for(const f of files){
   assert.ok(f==='index.html'||f.startsWith('ng-'),`${V}/${f} has no ng- prefix`);

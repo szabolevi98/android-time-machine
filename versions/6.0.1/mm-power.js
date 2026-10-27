@@ -72,7 +72,8 @@
     const frame = layer.querySelector('.mmpw-frame');
     const [bx, by, bw, bh] = data.box;
     Object.assign(frame.style, {left: `${bx * 100}%`, top: `${by * 100}%`, width: `${bw * 100}%`, height: `${bh * 100}%`});
-    const started = Date.now(), upAfter = 6000;
+    const booted = AndroidBoot.prepare({images: Object.values(MM.appsData).map(app => app.icon)});
+    let ready = false; booted.then(() => { ready = true; });
     let part = 0, index = 0, plays = 0, pause = 0, timer = 0;
     const show = () => {
       const p = data.parts[part], col = index % p.cols, row = Math.floor(index / p.cols);
@@ -86,9 +87,9 @@
       c.ui.power = ''; layer.hidden = true; layer.innerHTML = '';
       c.ui.safeMode = !!c.ui.nextSafeMode; c.ui.nextSafeMode = false;
       watermark(c);
-      // As in the other versions: the keyguard after a boot only with a secure lock, else the home screen.
-      if (['pin', 'password', 'pattern'].includes(c.data.settings.lock?.type)) { c.lock(); c.wake(); }
-      else { c.ui.sleeping = false; c.home(); }
+      AndroidBoot.complete('6.0.1');
+      c.ui.view = 'home'; c.ui.sub = ''; c.ui.beforeLock = null;
+      c.lock(); c.wake();
     };
     const step = () => {
       const p = data.parts[part];
@@ -98,7 +99,7 @@
       if (index >= p.frames) {
         index = 0; plays++;
         pause = p.pause;
-        const up = Date.now() - started >= upAfter;
+        const up = ready;
         if ((p.count && plays >= p.count) || (!p.count && up)) {
           part++; plays = 0;
           if (part >= data.parts.length) { timer = setTimeout(finish, (pause + 1) * 1000 / data.fps); return; }
@@ -107,10 +108,10 @@
       timer = setTimeout(step, 1000 / data.fps);
     };
     // A touch or a key skips the animation, as in the other versions.
-    const skip = e => { e.preventDefault(); e.stopPropagation(); finish(); };
+    const skip = e => { e.preventDefault(); e.stopPropagation(); booted.then(finish); };
     const off = () => { layer.removeEventListener('pointerdown', skip); window.removeEventListener('keydown', skip, true); };
     layer.addEventListener('pointerdown', skip); window.addEventListener('keydown', skip, true);
-    step();
+    AndroidBoot.sprites(data).then(() => { if (c.ui.power === 'boot') step(); });
   }
 
   // The safe mode watermark (WindowManagerService.showSafeModeOverlay: safeMode at the bottom start).
@@ -126,7 +127,7 @@
     app: false,
     render: () => '',
     cold(c) {
-      try { if (sessionStorage.getItem('android-sim-booted-6.0.1') || matchMedia('(prefers-reduced-motion: reduce)').matches) return; sessionStorage.setItem('android-sim-booted-6.0.1', '1'); } catch { return; }
+      if (!AndroidBoot.shouldBoot('6.0.1')) return;
       boot(c);
     }
   });

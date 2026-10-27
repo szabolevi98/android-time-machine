@@ -14,7 +14,7 @@
      start) until the next reboot.
    - Off, the power key boots: BootAnimation::movie() over black, desc.txt's parts ("c 1 0 part0", "c 0 0 part1",
      "c 1 70 part2", "c 1 15 part3" at 60 fps): part0 once, part1 again and again until the system is up, part2 once and
-     70 frames of pause, part3 once and 15 frames; then the home screen (the keyguard with a secure lock). */
+     70 frames of pause, part3 once and 15 frames; then the configured keyguard, followed by the launcher after an explicit unlock. */
 (() => {
   'use strict';
   const T = () => NG.text('power');
@@ -64,10 +64,12 @@
     if (NG.system) NG.system.live.bootAt = Date.now();   // SystemClock.elapsedRealtime starts again
     ensureLayer(c).hidden = false;
     layer.innerHTML = '<div class="ngpw-boot"><div class="ngpw-frame"></div></div>';
-    if (!data) { setTimeout(() => finish(), 500); }
+
     const frame = layer.querySelector('.ngpw-frame');
-    const started = Date.now(), upAfter = 6000;
+    const booted = AndroidBoot.prepare({images: Object.values(NG.appsData).map(app => app.icon)});
+    let ready = false; booted.then(() => { ready = true; });
     let part = 0, index = 0, plays = 0, pause = 0, timer = 0;
+    if (!data) booted.then(finish);
     if (data) { const [bx, by, bw, bh] = data.box; Object.assign(frame.style, {left: `${bx * 100}%`, top: `${by * 100}%`, width: `${bw * 100}%`, height: `${bh * 100}%`}); }
     const show = () => {
       const p = data.parts[part], col = index % p.cols, row = Math.floor(index / p.cols);
@@ -81,9 +83,9 @@
       c.ui.power = ''; layer.hidden = true; layer.innerHTML = '';
       c.ui.safeMode = !!c.ui.nextSafeMode; c.ui.nextSafeMode = false;
       watermark(c);
-      // As in the other versions: the keyguard after a boot only with a secure lock, else the home screen.
-      if (['pin', 'password', 'pattern'].includes(c.data.settings.lock?.type)) { c.lock(); c.wake(); }
-      else { c.ui.sleeping = false; c.home(); }
+      AndroidBoot.complete('7.1.2');
+      c.ui.view = 'home'; c.ui.sub = ''; c.ui.beforeLock = null;
+      c.lock(); c.wake();
     }
     const step = () => {
       const p = data.parts[part];
@@ -93,7 +95,7 @@
       if (index >= p.frames) {
         index = 0; plays++;
         pause = p.pause;
-        const up = Date.now() - started >= upAfter;
+        const up = ready;
         if ((p.count && plays >= p.count) || (!p.count && up)) {
           part++; plays = 0;
           if (part >= data.parts.length) { timer = setTimeout(finish, (pause + 1) * 1000 / data.fps); return; }
@@ -102,10 +104,10 @@
       timer = setTimeout(step, 1000 / data.fps);
     };
     // A touch or a key skips the animation, as in the other versions.
-    const skip = e => { e.preventDefault(); e.stopPropagation(); finish(); };
+    const skip = e => { e.preventDefault(); e.stopPropagation(); booted.then(finish); };
     const off = () => { layer.removeEventListener('pointerdown', skip); window.removeEventListener('keydown', skip, true); };
     layer.addEventListener('pointerdown', skip); window.addEventListener('keydown', skip, true);
-    if (data) step();
+    AndroidBoot.sprites(data).then(() => { if (data && c.ui.power === 'boot') step(); });
   }
 
   // ActivityManagerService.showSafeModeOverlay: safe_mode.xml at the bottom start.
@@ -121,7 +123,7 @@
     app: false,
     render: () => '',
     cold(c) {
-      try { if (sessionStorage.getItem('android-sim-booted-7.1.2') || matchMedia('(prefers-reduced-motion: reduce)').matches) return; sessionStorage.setItem('android-sim-booted-7.1.2', '1'); } catch { return; }
+      if (!AndroidBoot.shouldBoot('7.1.2')) return;
       boot(c);
     }
   });

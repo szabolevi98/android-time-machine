@@ -99,6 +99,12 @@
   <link rel="stylesheet" href="ng-gboard.css?v=3">
   <link rel="stylesheet" href="ng-imes.css?v=1">
   <link rel="stylesheet" href="ng-google.css?v=1">
+  <!-- Fetch the boot movie while the application scripts are loading. -->
+  <link rel="preload" as="image" href="assets/boot-part0.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/boot-part1.webp" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/boot-part2.webp" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/boot-part3.webp" fetchpriority="low">
+  <script defer src="../../boot-ready.js?v=1"></script>
   <script defer src="../../i18n.js?v=116"></script>
   <script defer src="../../strings.js?v=9"></script>
   <script defer src="../../state.js?v=2"></script>
@@ -118,7 +124,7 @@
   <script defer src="ng-lock.js?v=8"></script>
   <script defer src="ng-strings-power.js?v=2"></script>
   <script defer src="ng-boot-animation.js?v=1"></script>
-  <script defer src="ng-power.js?v=2"></script>
+  <script defer src="ng-power.js?v=3"></script>
   <script defer src="ng-strings-volume.js?v=1"></script>
   <script defer src="ng-volume.js?v=2"></script>
   <script defer src="ng-apps.js?v=9"></script>

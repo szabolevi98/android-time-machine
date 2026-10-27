@@ -53,8 +53,8 @@ const dialogs = () => ev(`document.querySelectorAll('[role=dialog],[role=alertdi
 const EC21 = {home: `EC.context?.ui.view === 'home' && !!document.querySelector('#viewport .eclh')`, lock: `EC.context?.ui.view === 'lock'`};
 async function load(version) {
   await send('Page.navigate', {url: `${BASE}/versions/${version}/`});
-  if (version === '2.1') return until(`(${EC21.home}) || (${EC21.lock})`, 25000);
-  return until(`!!document.querySelector('#viewport .home-view, #viewport .lock-view')`, 25000);
+  if (version === '2.1') return until(`((${EC21.home}) || (${EC21.lock})) && !document.querySelector('.ecsys-boot')`, 45000);
+  return until(`!!document.querySelector('#viewport .home-view, #viewport .lock-view') && !document.querySelector('.ga-boot')`, 45000);
 }
 // 2.1: Settings › Wireless & networks › the Bluetooth check box, as a visitor touches them.
 const bluetooth21 = () => ev(`(()=>{const c=EC.context;c.ui.settingsStack=['settings','wireless_settings'];c.render();const row=[...document.querySelectorAll('#viewport .ecpf-row')].find(r=>r.querySelector('.ecpf-title')?.textContent==='Bluetooth');row?.click();return !!row})()`);
@@ -107,9 +107,8 @@ async function flow601(mobile) {
   const steps = [], check = (name, ok, detail = '') => { steps.push({name, ok, detail}); if (!ok) throw new Error(`${name}${detail ? ': ' + detail : ''}`); };
   const load6 = () => send('Page.navigate', {url: `${BASE}/versions/6.0.1/`}).then(() => until(`(${MM6.home}) || (${MM6.lock})`, 25000));
   check('loads', await load6(), await ev(MM6.view));
-  // The boot animation plays on the first load of a session (a touch would only skip it); without a secure lock it
-  // ends on the home screen, as in the other versions.
-  check('the boot animation ends on the home screen', await until(`!document.querySelector('.mmpw-boot')`, 30000) && await until(MM6.home, 3000), await ev(MM6.view));
+  check('boot finishes before interacting', await until(`!document.querySelector('.mmpw-boot')`,45000), await ev(MM6.view));
+  if(await ev(MM6.lock)){check('swipe unlocks after boot',await drag6('.mmlk',0,-200)&&await until(MM6.home,4000),await ev(MM6.view));}
   await ev(`document.querySelector('[data-action="mmh-cling"]')?.click()`);
   if (mobile) {
     // The workspace fills the display: the dock sits at the bottom, and so do the keyguard's affordances.

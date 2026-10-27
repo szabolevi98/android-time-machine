@@ -75,6 +75,12 @@
   <link rel="stylesheet" href="mm-recents.css?v=3">
   <link rel="stylesheet" href="mm-toast.css?v=1">
   <link rel="stylesheet" href="mm-settings.css?v=20">
+  <!-- Fetch the boot movie while the application scripts are loading. -->
+  <link rel="preload" as="image" href="assets/boot-part0.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/boot-part1.webp" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/boot-part2.webp" fetchpriority="low">
+  <link rel="preload" as="image" href="assets/boot-part3.webp" fetchpriority="low">
+  <script defer src="../../boot-ready.js?v=1"></script>
   <script defer src="../../i18n.js?v=116"></script>
   <script defer src="../../strings.js?v=9"></script>
   <script defer src="../../state.js?v=2"></script>
@@ -110,7 +116,7 @@
   <script defer src="mm-pattern.js?v=1"></script>
   <script defer src="mm-strings-power.js?v=2"></script>
   <script defer src="mm-boot-animation.js?v=1"></script>
-  <script defer src="mm-power.js?v=6"></script>
+  <script defer src="mm-power.js?v=7"></script>
   <script defer src="mm-strings-volume.js?v=1"></script>
   <script defer src="mm-volume.js?v=1"></script>
   <script defer src="mm-apps.js?v=11"></script>

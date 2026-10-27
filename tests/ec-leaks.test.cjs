@@ -8,7 +8,7 @@ const V='versions/2.1';
 const files=fs.readdirSync(V).filter(f=>/\.(js|css|html)$/.test(f));
 const html=fs.readFileSync(`${V}/index.html`,'utf8');
 for(const [,ref] of html.matchAll(/(?:src|href)="([^":?#]+\.(?:js|css))[?"]/g)){
-  assert.ok(/^ec-[\w-]+\.(js|css)$/.test(ref)||/^\.\.\/\.\.\/(i18n|strings|state)\.js$/.test(ref),`2.1 loads ${ref}`);
+  assert.ok(/^ec-[\w-]+\.(js|css)$/.test(ref)||/^\.\.\/\.\.\/(i18n|strings|state|boot-ready)\.js$/.test(ref),`2.1 loads ${ref}`);
 }
 for(const f of files){
   assert.ok(f==='index.html'||f.startsWith('ec-'),`${V}/${f} has no ec- prefix`);

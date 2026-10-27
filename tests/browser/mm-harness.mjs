@@ -29,7 +29,8 @@ export async function marshmallow() {
     await send('Page.navigate',{url:`${base}/versions/6.0.1/`});
     await until(`!!window.MM?.module('boot') && !!document.querySelector('#screen')`);
     await ev(`document.querySelector('.mmpw-boot')?.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}))`);
-    await until(`document.querySelector('#screen')?.classList.contains('view-home') && !document.querySelector('.mmpw-boot')`);
+    await until(`!document.querySelector('.mmpw-boot') && !!document.querySelector('.mmlk,.mmh')`);
+    if(await ev(`!!document.querySelector('.mmlk')`)){await drag('.mmlk',0,-200);await until(`document.querySelector('#screen')?.classList.contains('view-home')`);}
     return {ev,send,until,click,act,drag,open,shot,close,errors,failed,
       save:()=>ev(`JSON.parse(localStorage.getItem('android-time-machine-mm-v1'))`),
       async language(lang){await ev(`window.__ngReloadPending=true;AndroidI18n.setLanguage(${JSON.stringify(lang)});location.reload()`);await until(`!window.__ngReloadPending && document.querySelector('#screen')?.classList.contains('view-home') && document.documentElement.lang===${JSON.stringify(lang)}`);},

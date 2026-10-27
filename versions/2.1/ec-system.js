@@ -53,9 +53,9 @@
   function renderPower(c) {
     if (!powerLayer) { powerLayer = document.createElement('div'); powerLayer.className = 'ecsys-power'; c.el.screen.append(powerLayer); }
     powerLayer.hidden = !c.ui.power;
-    if (c.ui.power === 'off') powerLayer.innerHTML = '';
+    if (c.ui.power === 'off' || !c.ui.power) powerLayer.innerHTML = '';
   }
-  function boot(c, booted = new Promise(r => setTimeout(r, 6000))) {
+  function boot(c, booted = AndroidBoot.prepare({images: EC.apps.list.map(app => 'assets/' + app.icon)})) {
     const data = window.BootAnimationData;
     c.ui.power = 'boot'; c.ui.overlay = ''; renderPower(c);
     powerLayer.innerHTML = '<div class="ecsys-boot"><div class="ecsys-boot-frame"></div></div>';
@@ -72,7 +72,7 @@
     };
     const finish = () => {
       if (done) return; done = true; clearTimeout(timer);
-      c.ui.power = ''; renderPower(c); c.lock(); c.wake();
+      AndroidBoot.complete('2.1'); c.ui.power = ''; renderPower(c); c.lock(); c.wake();
     };
     // BootAnimation::movie(): a part with a count plays that often, count 0 loops until exitPending.
     const step = () => {
@@ -88,7 +88,7 @@
       timer = setTimeout(step, 1000 / data.fps);
     };
     data.parts.forEach(p => { p.played = 0; });
-    step();
+    AndroidBoot.sprites(data).then(() => { if (!done) step(); });
     return finish;
   }
 
@@ -140,15 +140,14 @@
     volume(c, dir) { volumeKey(c, dir); }
   });
   EC.register('volume', {app: false, render: () => '', key(c, dir) { if (!c.ui.power) volumeKey(c, dir); }});
-  // A new tab boots the phone (once per tab): the animation runs until the page and its fonts have loaded (at most 12 s).
+  // A fresh tab always boots; the movie covers decoded launcher/keyguard resources, including in private mode.
   EC.register('boot', {
     app: false, render: () => '',
     cold(c) {
-      try { if (sessionStorage.getItem('android-sim-booted-2.1') || matchMedia('(prefers-reduced-motion: reduce)').matches) return; sessionStorage.setItem('android-sim-booted-2.1', '1'); } catch { return; }
-      const loaded = document.readyState === 'complete' ? Promise.resolve() : new Promise(r => window.addEventListener('load', r, {once: true}));
-      const booted = Promise.race([Promise.all([loaded, document.fonts?.ready]), new Promise(r => setTimeout(r, 12000))]).then(() => new Promise(r => setTimeout(r, 1500)));
+      if (!AndroidBoot.shouldBoot('2.1')) return;
+      const booted = AndroidBoot.prepare({images: EC.apps.list.map(app => 'assets/' + app.icon)});
       const finish = boot(c, booted);
-      const skip = event => { off(); if (c.ui.power !== 'boot') return; event.preventDefault(); event.stopPropagation(); finish(); };
+      const skip = event => { off(); if (c.ui.power !== 'boot') return; event.preventDefault(); event.stopPropagation(); booted.then(finish); };
       const off = () => { c.el.screen.removeEventListener('pointerdown', skip, true); window.removeEventListener('keydown', skip, true); };
       c.el.screen.addEventListener('pointerdown', skip, true); window.addEventListener('keydown', skip, true);
     }

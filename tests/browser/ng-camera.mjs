@@ -52,7 +52,7 @@ try {
   await until(`!!document.querySelector('#viewport .ngh, #viewport .nglk') || document.querySelector('#screen')?.classList.contains('view-home')`);
   await ev(`document.querySelector('.ngpw-boot')?.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}))`);
   await until(`!document.querySelector('.ngpw-boot')`);
-  // A fresh non-secure phone boots home; the action button below uses the same path as the launcher icon.
+  // The boot ends at keyguard; this camera-only fixture explicitly opens the launcher app action below.
   await until(`document.querySelector('#screen').classList.contains('view-home')`);
   await open('camera');
   assert.equal(await ev(`!!document.querySelector('#viewport .ngcm')`), true);

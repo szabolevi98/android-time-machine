@@ -10,7 +10,7 @@ const V='versions/6.0.1';
 const files=fs.readdirSync(V).filter(f=>/\.(js|css|html)$/.test(f));
 const html=fs.readFileSync(`${V}/index.html`,'utf8');
 for(const [,ref] of html.matchAll(/(?:src|href)="([^":?#]+\.(?:js|css))[?"]/g)){
-  assert.ok(/^mm-[\w-]+\.(js|css)$/.test(ref)||/^\.\.\/\.\.\/(i18n|strings|state|earth-globe)\.js$/.test(ref),`6.0.1 loads ${ref}`);
+  assert.ok(/^mm-[\w-]+\.(js|css)$/.test(ref)||/^\.\.\/\.\.\/(i18n|strings|state|earth-globe|boot-ready)\.js$/.test(ref),`6.0.1 loads ${ref}`);
 }
 for(const f of files){
   assert.ok(f==='index.html'||f.startsWith('mm-'),`${V}/${f} has no mm- prefix`);

@@ -29,7 +29,8 @@ export async function nougat() {
     await send('Page.navigate',{url:`${base}/versions/7.1.2/`});
     await until(`!!window.NG?.module('boot') && !!document.querySelector('#screen')`);
     await ev(`document.querySelector('.ngpw-boot')?.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}))`);
-    await until(`document.querySelector('#screen')?.classList.contains('view-home') && !document.querySelector('.ngpw-boot')`);
+    await until(`!document.querySelector('.ngpw-boot') && !!document.querySelector('.nglk,.ngh')`);
+    if(await ev(`!!document.querySelector('.nglk')`)){await drag('.nglk',0,-200);await until(`document.querySelector('#screen')?.classList.contains('view-home')`);}
     return {ev,send,until,click,act,drag,open,shot,close,errors,failed,
       save:()=>ev(`JSON.parse(localStorage.getItem('android-time-machine-ng-v1'))`),
       async language(lang){await ev(`window.__ngReloadPending=true;AndroidI18n.setLanguage(${JSON.stringify(lang)});location.reload()`);await until(`!window.__ngReloadPending && document.querySelector('#screen')?.classList.contains('view-home') && document.documentElement.lang===${JSON.stringify(lang)}`);},
