@@ -27,6 +27,8 @@
     menu_show_starred: ['empty_doclist_for_starred_view', 'empty_doclist_for_starred_view_details'], menu_show_pinned: ['empty_doclist_for_pinned_view', 'empty_doclist_for_pinned_view_details'],
     menu_show_upload: ['empty_doclist_for_uploads_view', 'empty_doclist_for_uploads_view_details'], menu_show_trash: ['empty_doclist']};
   const live = c => files(c).filter(f => !f.trashed);
+  // Docs, Sheets and Slides installed from Play open their files (MM.editorsOpen, mm-editors.js).
+  const EDITOR = {doc: 'docs', sheet: 'sheets', slide: 'slides'};
   function inView(c, v) {
     if (v === 'menu_my_drive') return live(c);
     if (v === 'menu_show_starred') return live(c).filter(f => f.starred);
@@ -36,7 +38,7 @@
     if (v === 'menu_show_trash') return files(c).filter(f => f.trashed);
     return [];
   }
-  const row = (c, f, pick) => `<div class="mmgd-row"${pick ? ` data-action="mmgd-pickone" data-i="${files(c).indexOf(f)}"` : ''}><img src="${A(ICON[f.type] || 'ic_type_doc')}" alt=""><span>${esc(c, f.name)}</span>${f.starred && !pick ? '<i class="mmgd-star"></i>' : ''}
+  const row = (c, f, pick) => `<div class="mmgd-row"${pick ? ` data-action="mmgd-pickone" data-i="${files(c).indexOf(f)}"` : EDITOR[f.type] && MM.appsData?.[EDITOR[f.type]] && !f.trashed ? ` data-action="mmgd-open" data-i="${files(c).indexOf(f)}"` : ''}><img src="${A(ICON[f.type] || 'ic_type_doc')}" alt=""><span>${esc(c, f.name)}</span>${f.starred && !pick ? '<i class="mmgd-star"></i>' : ''}
     ${pick ? '' : `<button type="button" class="mmgd-more" data-action="mmgd-more" data-i="${files(c).indexOf(f)}" aria-label="${esc(c, T().t('menu_overflow_content_description'))}"><img src="assets/gm-ic_menu_moreoverflow_mtrl_alpha.png" alt=""></button>`}</div>`;
   function grouped(c, list, pick) {
     const t = T(), folders = list.filter(f => f.type === 'folder'), docs = list.filter(f => f.type !== 'folder');
@@ -123,6 +125,7 @@
           else c.open('help', 'drive');
           return true;
         }
+        case 'mmgd-open': if (!el.closest('[data-action="mmgd-more"]')) MM.editorsOpen?.(c, files(c)[+el.dataset.i]); return true;
         case 'mmgd-search': u.search = true; u.q = ''; c.render(); return true;
         case 'mmgd-searchoff': u.search = false; u.q = ''; c.render(); return true;
         case 'mmgd-qclear': u.q = ''; c.render(); return true;
@@ -132,7 +135,7 @@
           if (type === 'scan') { u.scan = 'view'; c.render(); return true; }
           const base = t.t({folder: 'default_new_folder_title', doc: 'default_new_kix_title', sheet: 'default_new_trix_title', slide: 'default_new_punch_title'}[type]);
           const n = files(c).filter(f => f.type === type && f.name.startsWith(base)).length;
-          add(c, {type, name: n ? `${base} (${n})` : base}); c.render();
+          add(c, {type, name: n ? `${base} (${n})` : base}); if (MM.editorsOpen?.(c, files(c).at(-1), true)) return true; c.render();
           return true;
         }
         case 'mmgd-shutter': {

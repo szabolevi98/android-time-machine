@@ -8,10 +8,14 @@
    overflow) or a grid. The drawer is EditorsEntriesFilter's views (Recent, Shared with me, Starred, Offline, Trash),
    Settings, Help & feedback and navigation_list_footerview_editors.xml's Google Drive. The FAB opens
    fab_menu_fragment.xml (Choose template, the new file); a Recent list with no files is doc_list_empty_recent_view.xml.
-   A row's menu is menu_doclist_context.xml (Restore and Delete in Trash). Search filters by name. Opening a file shows
-   it with an edit button; editing changes the document's text, the spreadsheet's cells or the presentation's slides,
-   kept on the phone. Settings is editors_preferences.xml and preferences.xml without the developer tools. Templates,
-   sharing with people, Open with, Download, Move, Add to Home screen and Print keep the simulator's limit. */
+   A row's menu is menu_doclist_context.xml: Share link, Send file (the text as a .txt, a spreadsheet as a .tsv
+   attachment), Star / Unstar, Available offline, Move (move_dialog_title: My Drive and Drive's folders), Add to home
+   screen (a shortcut that opens the file, removed with it), Rename, Print (the version's print flow with the text) and
+   Remove; Restore and Delete in Trash. Open document (the toolbar's folder and the overflow) takes a text or Office
+   file from the phone's documents picker into the app. Drive opens these files in the app. Search filters by name.
+   Opening a file shows it with an edit button; editing changes the document's text, the spreadsheet's cells or the
+   presentation's slides, kept on the phone. Settings is editors_preferences.xml and preferences.xml without the
+   developer tools. Templates, sharing with people, Open with and Download keep the simulator's limit. */
 (() => {
   'use strict';
   const APPS = {
@@ -41,11 +45,47 @@
     return all;
   }
   const find = (c, id) => files(c).find(f => f.id === id);
+  const APP_OF = {doc: 'docs', sheet: 'sheets', slide: 'slides'};
+  // 7.1.2: DocumentsUI's picker (text files), PrintSpooler's print preview and the send model's document.
+  const pick = (c, app, done) => NG.pickDocument(c, {mime: 'text/*', onPick: (c, nodes) => { const n = nodes[0]; if (n) done(c, {name: n.name, mime: n.mime || 'text/plain', text: n.content || ''}); }});
+  const printFile = (c, f) => { c.ui.printJob = {title: f.name, text: String(f.content || '')}; c.ui.print = null; c.open('print-preview'); };
+  const sendFile = (c, f, title) => { const a = attachment(f); NG.share(c, {title, subject: f.name, document: {name: a.name, mime: a.mime, type: 'text', content: a.text, size: a.size}}); };
+  // Another app (Drive, a home screen shortcut) opens a file here: file:<id> to read, edit:<id> to write.
+  NG.editorsOpen = (c, f, edit = false) => {
+    const app = APP_OF[f?.type];
+    if (!app || !NG.appsData?.[app]) return false;
+    files(c); c.open(app, (edit ? 'edit:' : 'file:') + f.id);
+    return true;
+  };
+  function sync(c, app) {
+    const m = /^(file|edit):(.+)$/.exec(c.ui.sub || ''); if (!m) return;
+    c.ui.sub = '';
+    const f = find(c, m[2]); if (!f || f.trashed) return;
+    f.opened = Date.now();
+    Object.assign(U(c, app), {open: f.id, editing: m[1] === 'edit', focusEdit: m[1] === 'edit', drawer: false, fab: false, search: false, prefs: false});
+    c.save();
+  }
+  // The home screen's shortcuts to a file (launcherInstall's items, in folders too).
+  function dropShortcuts(c, app, id) {
+    const keep = it => !(it.type === 'shortcut' && it.open?.view === app && it.open?.sub === 'file:' + id);
+    for (const list of c.data.home?.pages || []) { for (const it of list) if (it.items) it.items = it.items.filter(keep); list.splice(0, list.length, ...list.filter(keep)); }
+  }
+  const attachment = f => { const sheet = f.type === 'sheet', text = String(f.content || ''); return {name: f.name.replace(/\.(docx?|xlsx?|pptx?|txt|tsv|csv)$/i, '') + (sheet ? '.tsv' : '.txt'), mime: sheet ? 'text/tab-separated-values' : 'text/plain', text, size: new TextEncoder().encode(text).length}; };
+  const OPENS = /^(text\/|application\/(msword|vnd\.ms-|vnd\.openxmlformats))/;
+  function openDocument(c, app) {
+    const t = k => T(app).t(k);
+    pick(c, app, (c, d) => {
+      if (!d || !OPENS.test(d.mime || 'text/plain')) { c.toast(t('error_opening_document')); return; }
+      const f = create(c, app, d.name.replace(/\.[^.]+$/, ''), String(d.text || ''));
+      if (!f) return;
+      f.opened = Date.now(); Object.assign(U(c, app), {open: f.id, editing: false}); c.save(); c.render();
+    });
+  }
   const time = f => f.modified || f.time || 0;
-  function create(c, app) {
-    const a = APPS[app], base = T(app).t(a.untitled), n = files(c).filter(f => f.type === a.type && f.name.startsWith(base)).length, name = n ? `${base} (${n})` : base;
-    if (NG.driveModel) return NG.driveModel.create(c, name, a.type, '', {content: ''});
-    const now = Date.now(), f = {type: a.type, name, time: now, created: now, modified: now, content: ''};
+  function create(c, app, given = '', text = '') {
+    const a = APPS[app], base = given || T(app).t(a.untitled), n = files(c).filter(f => f.type === a.type && f.name.startsWith(base)).length, name = n && !given ? `${base} (${n})` : base;
+    if (NG.driveModel) return NG.driveModel.create(c, name, a.type, '', {content: text});
+    const now = Date.now(), f = {type: a.type, name, time: now, created: now, modified: now, content: text, size: text.length};
     files(c).push(f); files(c);
     return f;
   }
@@ -78,7 +118,7 @@
     const title = u.view === 'recent' ? t('app_name') : t(VIEWS.find(v => v[0] === u.view)[1]);
     const bar = u.search
       ? `<header class="ngeds-bar" style="background:${a.color}">${btn(c, 'ngeds-search-close', t('abc_action_bar_up_description'), 'ic_actionbar_left_arrow_editors')}<input class="ngeds-query" data-ed-search value="${c.safe(u.query)}" placeholder="${c.safe(t('editors_menu_search'))}" aria-label="${c.safe(t('editors_menu_search'))}" autocomplete="off" spellcheck="false"></header>`
-      : `<header class="ngeds-bar" style="background:${a.color}">${btn(c, 'ngeds-drawer', t('menu_show_recent'), svg.menu)}<b>${c.safe(title)}</b>${btn(c, 'ngeds-search', t('editors_menu_search'), 'editors_action_search')}${btn(c, 'ngeds-unavailable', t('open_with_picker'), 'quantum_ic_folder_white_24')}${NG.menu.button(c, 'ngeds-more')}</header>`;
+      : `<header class="ngeds-bar" style="background:${a.color}">${btn(c, 'ngeds-drawer', t('menu_show_recent'), svg.menu)}<b>${c.safe(title)}</b>${btn(c, 'ngeds-search', t('editors_menu_search'), 'editors_action_search')}${btn(c, 'ngeds-pick', t('open_with_picker'), 'quantum_ic_folder_white_24')}${NG.menu.button(c, 'ngeds-more')}</header>`;
     const body = list.length ? `<div class="ngeds-${p.grid ? 'grid' : 'list'}">${list.map(f => row(c, app, f, p.grid)).join('')}</div>` : empty(c, app);
     const fab = u.search || u.view === 'trash' ? '' : `${u.fab ? `<div class="ngeds-fade" data-action="ngeds-fab"></div><div class="ngeds-fabmenu"><button type="button" data-action="ngeds-unavailable"><span>${c.safe(t('fab_choose_template'))}</span><i class="ngeds-mini"><img src="${I('ic_choose_template_24')}" alt=""></i></button><button type="button" data-action="ngeds-new"><span>${c.safe(t('fab_google_document'))}</span><i class="ngeds-mini big" style="background:${a.color}"><img src="${I(a.icon)}" alt="" class="ngeds-white"></i></button></div>` : ''}<button type="button" class="ngeds-fab${u.fab ? ' on' : ''}" data-action="ngeds-fab" style="background:${a.color}" aria-label="${c.safe(t('fab_new_document'))}"><img src="${I('quantum_ic_add_white_24')}" alt=""></button>`;
     const drawer = u.drawer ? `<div class="ngeds-scrim" data-action="ngeds-drawer"></div><nav class="ngeds-drawer"><div class="ngeds-account" style="background:${a.color}"><small>${c.safe(NG.account?.email || '')}</small></div>${VIEWS.map(([id, key, icon]) => `<button type="button" class="${u.view === id ? 'on' : ''}" data-action="ngeds-view" data-id="${id}"><img src="${I(icon)}" alt=""><span>${c.safe(t(key))}</span></button>`).join('')}<hr><button type="button" data-action="ngeds-settings"><img src="${I('ic_settings')}" alt=""><span>${c.safe(t('menu_settings'))}</span></button><button type="button" data-action="ngeds-unavailable"><img src="${I('ic_help')}" alt=""><span>${c.safe(t('menu_help_and_feedback'))}</span></button><div class="ngeds-fill"></div><button type="button" class="ngeds-drive" data-action="ngeds-drive"><img src="${I('editors_nav_icon_drive_inactive')}" alt=""><span>${c.safe(t('nav_panel_google_drive_button'))}</span></button></nav>` : '';
@@ -111,6 +151,7 @@
     return `<div class="ngeds ngeds-settings"><header class="ngeds-bar" style="background:${a.color}">${btn(c, 'ngeds-prefs-close', t('abc_action_bar_up_description'), 'ic_actionbar_left_arrow_editors')}<b>${c.safe(t('prefs_title'))}</b></header><div class="ngeds-scroll">${cat('prefs_notification_category')}${link('ngeds-unavailable', 'prefs_notification_settings_title')}${cat('prefs_language_category')}${sw('rtl', 'prefs_show_rtl_controls_title', 'prefs_show_rtl_controls_summary')}${cat('prefs_sync_category')}${sw('relevant', 'prefs_sync_relevant_automatically_title', 'prefs_sync_relevant_automatically_summary')}${cat('prefs_cache_category_title')}${link('ngeds-clearcache', 'clear_cache', 'prefs_clear_cache_summary')}${cat('prefs_data_usage_category')}${sw('wifi', 'prefs_sync_over_wifi_only_title', 'prefs_sync_over_wifi_only_summary')}</div></div>`;
   }
   function render(c, app) {
+    sync(c, app);
     const u = U(c, app);
     if (u.prefs) return settings(c, app);
     const f = u.open && find(c, u.open);
@@ -140,27 +181,37 @@
   function itemMenu(c, app, f, anchor) {
     const t = k => T(app).t(k), a = APPS[app], cl = k => ({label: t(k), action: refuse});
     if (f.trashed) return c.menu([{label: t('menu_trash_restore'), action: c => { f.trashed = false; c.save(); c.render(); }},
-      {label: t('menu_trash_delete_forever'), action: c => { c.data.driveFiles = files(c).filter(x => x !== f); c.save(); c.render(); }}], anchor);
+      {label: t('menu_trash_delete_forever'), action: c => { c.data.driveFiles = files(c).filter(x => x !== f); dropShortcuts(c, app, f.id); c.save(); c.render(); }}], anchor);
     c.menu([cl('menu_open_with'),
       {label: t('menu_send_link'), action: c => NG.share(c, {title: t('menu_send_link'), subject: f.name, text: `https://docs.google.com/${a.link}/d/${f.id}/edit?usp=sharing`})},
-      {label: t('menu_send'), action: c => NG.share(c, {title: t('menu_send'), subject: f.name, text: String(f.content || f.name)})},
+      {label: t('menu_send'), action: c => sendFile(c, f, t('menu_send'))},
+      {label: t(f.starred ? 'selection_menu_unstar' : 'selection_menu_star'), action: c => { f.starred = !f.starred; c.save(); c.render(); }},
       cl('menu_download'),
       {label: t(f.offline ? 'menu_unpin' : 'menu_offline'), action: c => { f.offline = !f.offline; c.save(); c.render(); }},
-      cl('menu_move_to'), cl('menu_create_shortcut'),
+      {label: t('menu_move_to'), action: c => {
+        const folders = files(c).filter(x => x.type === 'folder' && !x.trashed), places = [['', t('menu_my_drive')], ...folders.map(x => [x.id, x.name])];
+        c.dialog({title: t('move_dialog_title'), items: places.map(([id, name]) => ({html: `<span class="ngeds-radio${(f.parent || '') === id ? ' on' : ''}"></span>${c.safe(name)}`})), onItem: (i, c) => {
+          const to = places[i][0];
+          if (NG.driveModel) NG.driveModel.move(c, [f.id], to); else { f.parent = to; f.modified = Date.now(); }
+          c.save(); c.render();
+        }, buttons: [{label: t('chips_action_cancel')}]});
+      }},
+      {label: t('menu_create_shortcut'), action: c => { NG.launcherInstall(c, {type: 'shortcut', label: f.name, icon: `assets/app-${app}.png`, open: {view: app, sub: 'file:' + f.id}}); c.toast(t('shortcut_created')); }},
       {label: t('menu_rename'), action: c => {
         let v = f.name;
         c.dialog({title: t('rename_document'), html: `<input type="text" class="ngeds-input" value="${c.safe(v)}" spellcheck="false">`,
           mount(c, win) { const i = win.querySelector('.ngeds-input'); i.addEventListener('input', () => { v = i.value.trim(); }); setTimeout(() => { i.focus(); i.select(); }, 50); },
           buttons: [{label: t('chips_action_cancel')}, {label: t('ok_button'), action: c => { if (v && v !== f.name) { f.name = v; f.modified = Date.now(); c.save(); c.render(); } }}]});
       }},
-      cl('menu_print'),
-      {label: t('menu_delete'), action: c => c.dialog({title: t('remove_document'), buttons: [{label: t('chips_action_cancel')}, {label: t('remove_button_confirm'), action: c => { f.trashed = true; c.save(); c.render(); }}]})}], anchor);
+      {label: t('menu_print'), action: c => printFile(c, f)},
+      {label: t('menu_delete'), action: c => c.dialog({title: t('remove_document'), buttons: [{label: t('chips_action_cancel')}, {label: t('remove_button_confirm'), action: c => { f.trashed = true; dropShortcuts(c, app, f.id); c.save(); c.render(); }}]})}], anchor);
   }
   function action(app, name, el, ev, c) {
     const u = U(c, app), p = P(c, app), t = k => T(app).t(k);
     if (name === 'ng-menu') {
       c.menu([{label: t(p.grid ? 'editors_menu_doc_view_list_mode' : 'editors_menu_doc_view_grid_mode'), action: c => { p.grid = !p.grid; c.save(); c.render(); }},
         {label: t('editors_menu_sort_by'), action: c => c.dialog({title: t('editors_menu_sort_by'), items: SORTS.map(([id, key]) => ({html: `<span class="ngeds-radio${p.sort === id ? ' on' : ''}"></span>${c.safe(t(key))}`})), onItem: (i, c) => { p.sort = SORTS[i][0]; c.save(); c.render(); }, buttons: [{label: t('chips_action_cancel')}]})},
+        {label: t('open_with_picker'), action: c => openDocument(c, app)},
         {label: t('editors_menu_refresh'), action: c => c.render()}], el);
       return true;
     }
@@ -184,6 +235,7 @@
       case 'prefs-close': u.prefs = false; break;
       case 'pref': p[el.dataset.id] = !p[el.dataset.id]; c.save(); break;
       case 'clearcache': c.dialog({title: t('clear_cache'), message: t('clear_cache_message'), buttons: [{label: t('chips_action_cancel')}, {label: t('ok_button'), action: c => c.toast(t('clear_cache_cleared_message'))}]}); return true;
+      case 'pick': openDocument(c, app); return true;
       case 'unavailable': Object.assign(u, {drawer: false, fab: false}); c.render(); refuse(c); return true;
       default: return false;
     }

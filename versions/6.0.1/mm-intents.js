@@ -18,7 +18,8 @@
      opens Settings' DevicePickerActivity ('bt-picker': Choose Bluetooth device, the Available devices category
      scanning; FILTER_TYPE_TRANSFER keeps only devices with the OBEX object push profile, which neither of the
      simulator's headset and car kit has, so the scan ends in bluetooth_no_devices_found).
-   Use: MM.share(c, {title, kind: 'text' | 'image' | 'vcard', subject, text, name, exclude: [target ids]}). */
+   Use: MM.share(c, {title, kind: 'text' | 'image' | 'vcard', subject, text, name, attach: [{name, mime, size}] (a file
+   Gmail attaches, as the editors' Send file), exclude: [target ids]}). */
 (() => {
   'use strict';
   const T = () => MM.text('intents');
@@ -96,7 +97,7 @@
       if (id === 'bluetooth') { bluetooth(c); return; }
       if (id === 'drive') { drive(c, s); return; }
       if (id === 'photos') { photos(c); return; }
-      c.ui.shareData = {subject: s.subject || '', text: s.text || '', kind: s.kind};
+      c.ui.shareData = {subject: s.subject || '', text: s.text || '', kind: s.kind, attach: s.attach};
       c.open(id, 'share');
     });
   }

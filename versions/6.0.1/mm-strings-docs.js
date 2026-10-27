@@ -574,5 +574,53 @@ MM.strings('docs', {
 "de": "Wenn keine WLAN-Verbindung verfügbar ist, wird das Hochladen und Aktualisieren von Dateien angehalten.",
 "fr": "L'importation et la mise à jour des fichiers seront suspendues si la connexion Wi-Fi est perdue.",
 "es": "La subida y la actualización de los archivos se detendrán cuando la conexión Wi-Fi no esté disponible"
+},
+"selection_menu_star": {
+"res": "bullhead:Docs:selection_menu_star",
+"en": "Star",
+"hu": "Csillagozás",
+"de": "Markieren",
+"fr": "Suivre",
+"es": "Destacar"
+},
+"selection_menu_unstar": {
+"res": "bullhead:Docs:selection_menu_unstar",
+"en": "Unstar",
+"hu": "Csillagozás törlése",
+"de": "Markierung aufheben",
+"fr": "Ne pas suivre",
+"es": "Dejar de destacar"
+},
+"move_dialog_title": {
+"res": "bullhead:Docs:move_dialog_title",
+"en": "Select destination folder",
+"hu": "Célmappa kiválasztása",
+"de": "Zielordner auswählen",
+"fr": "Dossier de destination",
+"es": "Selección carpeta destino"
+},
+"menu_my_drive": {
+"res": "bullhead:Docs:menu_my_drive",
+"en": "My Drive",
+"hu": "Saját meghajtó",
+"de": "Meine Ablage",
+"fr": "Mon Drive",
+"es": "Mi unidad"
+},
+"shortcut_created": {
+"res": "bullhead:Docs:shortcut_created",
+"en": "Shortcut added to home screen",
+"hu": "A parancsikon felkerült a kezdőképernyőre",
+"de": "Verknüpfung jetzt im Startbildschirm",
+"fr": "Raccourci ajouté à l'écran d'accueil.",
+"es": "Acceso directo añadido a inicio"
+},
+"error_opening_document": {
+"res": "bullhead:Docs:error_opening_document",
+"en": "Unable to access document.",
+"hu": "A dokumentum nem érhető el.",
+"de": "Zugriff auf Dokument nicht möglich",
+"fr": "Impossible d'accéder au document.",
+"es": "No se puede acceder al documento."
 }
 });

@@ -75,7 +75,7 @@
         case 'mmpr-dest': c.menu([{label: t.t('save_as_pdf'), action: () => {}}, {label: t.t('all_printers'), action: c => { u.printers = Date.now() + 3000; c.render(); }}]); return true;
         case 'mmpr-closeprinters': u.printers = false; c.render(); return true;
         // PrintActivity hands the PDF to DocumentsUI's save; it finishes once the file is written.
-        case 'mmpr-print': c.ui.docSave = {name: `${(u.spec.name || 'Document').replace(/[\\/:*?"<>|]/g, '_')}.pdf`, size: 18000 + 9000 * pages(u.spec).length * u.copies, mime: 'application/pdf', done: c => { c.ui.print = null; if (c.ui.view === 'print') c.back(); }}; c.open('downloads', 'save'); return true;
+        case 'mmpr-print': c.ui.docSave = {name: `${(u.spec.name || 'Document').replace(/[\\/:*?"<>|]/g, '_')}.pdf`, size: 18000 + 9000 * pages(u.spec).length * u.copies, mime: 'application/pdf', text: (u.spec.lines || []).join('\n'), done: c => { c.ui.print = null; if (c.ui.view === 'print') c.back(); }}; c.open('downloads', 'save'); return true;
       }
       return false;
     }

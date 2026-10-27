@@ -157,7 +157,7 @@
     const sub = c.ui.sub || ''; if (!sub) return;
     c.ui.sub = '';
     // ComposeActivityGmail from ACTION_SEND: EXTRA_SUBJECT and EXTRA_TEXT fill the draft.
-    if (sub === 'share') { const d = MM.shareTake(c) || {}; const u = ui(c); u.draft = {to: '', subject: d.subject || '', body: d.text || ''}; u.screen = 'compose'; u.external = true; return; }
+    if (sub === 'share') { const d = MM.shareTake(c) || {}; const u = ui(c); u.draft = {to: '', subject: d.subject || '', body: d.text || '', ...(d.attach?.length ? {attach: d.attach.map(f => ({name: f.name, mime: f.mime, size: f.size}))} : {})}; u.screen = 'compose'; u.external = true; return; }
     // A label shortcut opens that folder.
     if (sub.startsWith('folder:')) { const u = ui(c); u.folder = sub.slice(7); u.screen = ''; u.drawer = false; return; }
     if (sub.startsWith('to:')) { const u = ui(c); u.draft = {to: sub.slice(3), subject: '', body: ''}; u.screen = 'compose'; u.external = true; }

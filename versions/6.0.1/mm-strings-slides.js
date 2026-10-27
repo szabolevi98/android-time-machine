@@ -590,5 +590,53 @@ MM.strings('slides', {
 "de": "Folie %1$d von %2$d ",
 "fr": "Diapositive %1$d sur %2$d ",
 "es": "Diapositiva %1$d de %2$d "
+},
+"selection_menu_star": {
+"res": "bullhead:Slides:selection_menu_star",
+"en": "Star",
+"hu": "Csillagozás",
+"de": "Markieren",
+"fr": "Suivre",
+"es": "Destacar"
+},
+"selection_menu_unstar": {
+"res": "bullhead:Slides:selection_menu_unstar",
+"en": "Unstar",
+"hu": "Csillagozás törlése",
+"de": "Markierung aufheben",
+"fr": "Ne pas suivre",
+"es": "Dejar de destacar"
+},
+"move_dialog_title": {
+"res": "bullhead:Slides:move_dialog_title",
+"en": "Select destination folder",
+"hu": "Célmappa kiválasztása",
+"de": "Zielordner auswählen",
+"fr": "Dossier de destination",
+"es": "Selección carpeta destino"
+},
+"menu_my_drive": {
+"res": "bullhead:Slides:menu_my_drive",
+"en": "My Drive",
+"hu": "Saját meghajtó",
+"de": "Meine Ablage",
+"fr": "Mon Drive",
+"es": "Mi unidad"
+},
+"shortcut_created": {
+"res": "bullhead:Slides:shortcut_created",
+"en": "Shortcut added to home screen",
+"hu": "A parancsikon felkerült a kezdőképernyőre",
+"de": "Verknüpfung jetzt im Startbildschirm",
+"fr": "Raccourci ajouté à l'écran d'accueil.",
+"es": "Acceso directo añadido a inicio"
+},
+"error_opening_document": {
+"res": "bullhead:Slides:error_opening_document",
+"en": "Unable to access document.",
+"hu": "A dokumentum nem érhető el.",
+"de": "Zugriff auf Dokument nicht möglich",
+"fr": "Impossible d'accéder au document.",
+"es": "No se puede acceder al documento."
 }
 });

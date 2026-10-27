@@ -123,7 +123,7 @@
       if (name === 'mmsa-up') { if (!this.back(c)) c.back(); return true; }
       if (name === 'mmsa-save') {
         const s = c.ui.docSave || {}, name = (s.name || '').trim() || 'Document.pdf';
-        docs(c).push({name, size: s.size || 20000, mime: s.mime || 'application/pdf', time: Date.now()}); c.save();
+        docs(c).push({name, size: s.size || 20000, mime: s.mime || 'application/pdf', time: Date.now(), ...(s.text ? {text: s.text} : {})}); c.save();
         c.ui.downloads = null; c.ui.docSave = null; c.back(); s.done?.(c, name);
         return true;
       }
@@ -132,7 +132,7 @@
         c.ui.downloads = null; c.ui.docPick = null;
         if (!pick) { MM.wallpaperPicked?.(c, +el.dataset.id); c.back(); return true; }
         const d = docs(c)[+el.dataset.i];
-        c.back(); pick(c, photo ? {name: imgName(photo), size: 1800000 + (photo.id % 7) * 230000, mime: 'image/jpeg'} : {name: d.name, size: d.size, mime: d.mime || 'application/pdf'});
+        c.back(); pick(c, photo ? {name: imgName(photo), size: 1800000 + (photo.id % 7) * 230000, mime: 'image/jpeg'} : {name: d.name, size: d.size, mime: d.mime || 'application/pdf', text: d.text || ''});
         return true;
       }
       return false;

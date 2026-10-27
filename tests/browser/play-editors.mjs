@@ -1,11 +1,13 @@
 // Docs, Sheets and Slides installed from Play on 6.0.1 (1.6) and 7.1.2 (1.7): the welcome view, the FAB menu and a new
 // file edited and kept in Drive's files, Rename, Available offline and the Offline view, the grid view, Sort by,
-// Search, Remove to Trash and Restore, Delete, Settings, Google Drive from the drawer, and the phone width.
+// Search, Remove to Trash and Restore, Delete, Settings, Google Drive from the drawer, and the phone width. Docs also
+// checks the 5.1.1-level paths (round five, T60): Star, Move, Add to home screen and its shortcut, Print, Send file as
+// a Gmail attachment, Open document's picker, and Drive opening the file in Docs.
 import assert from 'node:assert/strict';
 import {marshmallow} from './mm-harness.mjs';
 import {nougat} from './ng-harness.mjs';
 const TYPE = {docs: 'doc', sheets: 'sheet', slides: 'slide'};
-for (const [version, start, cls, ns, menuItem, dlg] of [['6.0.1', marshmallow, 'mmeds', 'MM', '.mmmenu-item', 'mmdlg'], ['7.1.2', nougat, 'ngeds', 'NG', '.ngmenu-item', 'ngdlg']]) {
+for (const [version, start, cls, ns, menuItem, dlg, sheet, attach, driveRow] of [['6.0.1', marshmallow, 'mmeds', 'MM', '.mmmenu-item', 'mmdlg', 'mmin', '.mmgm-att', '#viewport .mmgd-row[data-action="mmgd-open"]'], ['7.1.2', nougat, 'ngeds', 'NG', '.ngmenu-item', 'ngdlg', 'ngin', '.nggm-attachment', '#viewport [data-action="ngdv-file"]']]) {
   const b = await start();
   const files = async type => ((await b.save()).driveFiles || []).filter(f => f.type === type);
   const type = (sel, value) => b.ev(`(()=>{const f=document.querySelector(${JSON.stringify(sel)});f.value=${JSON.stringify(value)};f.dispatchEvent(new Event('input',{bubbles:true}));return 1})()`);
@@ -41,6 +43,52 @@ for (const [version, start, cls, ns, menuItem, dlg] of [['6.0.1', marshmallow, '
       await type(`.${cls}-input`, 'Budget');
       await button('OK');
       await b.until(`document.querySelector('#viewport .${cls}-row b')?.textContent==='Budget'`);
+      if (app === 'docs') {
+        const id = (await files('doc'))[0].id;
+        // Star.
+        await b.click(`#viewport .${cls}-row [data-action="${cls}-item"]`);
+        await menu('Star');
+        assert.equal((await files('doc'))[0].starred, true);
+        // Move: My Drive and the folders.
+        await b.click(`#viewport .${cls}-row [data-action="${cls}-item"]`);
+        await menu('Move');
+        await b.until(`[...document.querySelectorAll('.${dlg}-item')].some(x=>x.textContent.includes('My Drive'))`);
+        await b.ev(`[...document.querySelectorAll('.${dlg}-item')].find(x=>x.textContent.includes('My Drive')).click()`);
+        // Add to home screen: a shortcut that opens the file.
+        await b.click(`#viewport .${cls}-row [data-action="${cls}-item"]`);
+        await menu(version === '6.0.1' ? 'Add to home screen' : 'Add to Home screen');
+        const shortcut = JSON.stringify((await b.save()).home.pages);
+        assert.ok(shortcut.includes(`"sub":"file:${id}"`), 'the shortcut is on the home screen');
+        await b.open('home');
+        await b.open('docs', `file:${id}`);
+        await b.until(`!!document.querySelector('#viewport .${cls}-editor') && /Budget/.test(document.querySelector('#viewport .${cls}-bar b').textContent)`);
+        await b.act(`${cls}-close`);
+        // Print opens the print flow.
+        await b.click(`#viewport .${cls}-row [data-action="${cls}-item"]`);
+        await menu('Print');
+        await b.until(`/view-print/.test(document.querySelector('#screen').className)`);
+        await b.open('docs');
+        // Send file: Gmail's draft carries the .txt.
+        await b.click(`#viewport .${cls}-row [data-action="${cls}-item"]`);
+        await menu('Send file');
+        await b.until(`!!document.querySelector('[data-action="${sheet}-pick"][data-id="gmail"]')`);
+        await b.click(`[data-action="${sheet}-pick"][data-id="gmail"]`);
+        // Gmail's first run (the tour, the account step) comes before the draft.
+        const gm = version === '6.0.1' ? 'mmgm' : 'nggm';
+        for (const step of ['tdone', 'setupdone']) { await b.until(`!!document.querySelector('#viewport [data-action="${gm}-${step}"]') || !!document.querySelector('#viewport ${attach}')`); await b.ev(`document.querySelector('#viewport [data-action="${gm}-${step}"]')?.click()`); }
+        await b.until(`/Budget\.txt/.test(document.querySelector('#viewport ${attach}')?.textContent||'')`);
+        await b.open('docs');
+        // Open document opens the documents picker; Back returns.
+        await b.click(`#viewport [data-action="${cls}-pick"]`);
+        await b.until(`/view-(downloads|documents)/.test(document.querySelector('#screen').className)`);
+        await b.open('docs');
+        // Drive opens the file in Docs.
+        await b.open('drive');
+        await b.until(`!!document.querySelector(${JSON.stringify(driveRow)})`);
+        await b.click(driveRow);
+        await b.until(`/view-docs/.test(document.querySelector('#screen').className) && !!document.querySelector('#viewport .${cls}-editor')`);
+        await b.act(`${cls}-close`);
+      }
       // Available offline and the Offline view.
       await b.click(`#viewport .${cls}-row [data-action="${cls}-item"]`);
       await menu('Available offline');
@@ -48,7 +96,7 @@ for (const [version, start, cls, ns, menuItem, dlg] of [['6.0.1', marshmallow, '
       await b.act(`${cls}-view`, {id: 'offline'});
       await b.until(`document.querySelectorAll('#viewport .${cls}-row').length===1`);
       await b.act(`${cls}-view`, {id: 'starred'});
-      await b.until(`/no starred files/.test(document.querySelector('#viewport .${cls}-empty')?.textContent||'')`);
+      await b.until(app === 'docs' ? `document.querySelectorAll('#viewport .${cls}-row').length===1` : `/no starred files/.test(document.querySelector('#viewport .${cls}-empty')?.textContent||'')`);
       await b.act(`${cls}-view`, {id: 'recent'});
       // Grid view and Sort by from the overflow.
       await b.click(`#viewport .${cls}-more`);

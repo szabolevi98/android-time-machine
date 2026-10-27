@@ -590,5 +590,53 @@ NG.strings('slides', {
 "de": "Folie %1$d von %2$d ",
 "fr": "Diapositive %1$d sur %2$d ",
 "es": "Diapositiva %1$d de %2$d "
+},
+"selection_menu_star": {
+"res": "angler:Slides:selection_menu_star",
+"en": "Star",
+"hu": "Csillagozás",
+"de": "Markieren",
+"fr": "Suivre",
+"es": "Destacar"
+},
+"selection_menu_unstar": {
+"res": "angler:Slides:selection_menu_unstar",
+"en": "Unstar",
+"hu": "Csillagozás törlése",
+"de": "Markierung aufheben",
+"fr": "Ne pas suivre",
+"es": "Dejar de destacar"
+},
+"move_dialog_title": {
+"res": "angler:Slides:move_dialog_title",
+"en": "Select destination",
+"hu": "Céltelefonszám kiválaszt.",
+"de": "Ziel auswählen",
+"fr": "Sélectionner destination",
+"es": "Seleccionar el destino"
+},
+"menu_my_drive": {
+"res": "angler:Slides:menu_my_drive",
+"en": "My Drive",
+"hu": "Saját meghajtó",
+"de": "Meine Ablage",
+"fr": "Mon Drive",
+"es": "Mi unidad"
+},
+"shortcut_created": {
+"res": "angler:Slides:shortcut_created",
+"en": "Added to device Home screen",
+"hu": "Hozzáadva az eszköz kezdőképernyőjéhez",
+"de": "Zum Geräte-Startbildschirm hinzugefügt",
+"fr": "Ajouté à l'écran d'accueil de l'appareil",
+"es": "Añadido a la pantalla de inicio"
+},
+"error_opening_document": {
+"res": "angler:Slides:error_opening_document",
+"en": "Unable to access document.",
+"hu": "A dokumentum nem érhető el.",
+"de": "Zugriff auf Dokument nicht möglich",
+"fr": "Impossible d'accéder au document.",
+"es": "No se puede acceder al documento."
 }
 });
