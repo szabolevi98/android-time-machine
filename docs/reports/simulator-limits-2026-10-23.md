@@ -357,6 +357,43 @@ location, észak, Share, Layers mentve, a saját settings.xml).
 
 
 **Az ötödik kör kész (2026-10-27):** T60–T66 mind kész, a tíz telepített app a 6.0.1-ben és a 7.1.2-ben az 5.1.1 szintjén. Deploy csak kérésre.
+### Hatodik kör — teljes összevetés az 5.1.1-gyel (2026-10-27)
+
+Az ötödik kör a saját, előre összeírt hiánylistáját teljesítette; teljes, funkciónkénti összevetés az 5.1.1-gyel akkor
+nem készült. A tulajdonos kérésére (2026-10-27) most minden telepített app 5.1.1-es kódját (stock-apps.js, keep-more.js,
+fit-more.js, play-apps.js + lp-play-more.js, stock-apps.js News + news-sections.js, plus-post.js, lp-extra-apps.js +
+editors-more.js) összevetettük a 6.0.1/7.1.2 sablonokkal.
+
+| # | App | Eredmény |
+|---|---|---|
+| 1 | Keep | **Hiány:** képes jegyzet (New photo note, Add picture: Take photo / Choose image, kép törlése), a lista „Checked” szakasza összecsukással, Show / Hide checkboxes („Delete checked items?”), listaelem törlése. → T70 |
+| 2 | Fit | Rendben: a sablon tudja az 5.1.1 fit-more.js minden útját (Add activity, súly, magasság, cél, Settings kártyák). |
+| 3 | Play Books | Rendben: Display options, könyvjelzők, kártyamenü, Sort, olvasó-overflow, About this book, Settings. |
+| 4 | News & Weather | Rendben: időjárás-kártya és egységek, sötét téma, kiadások, szekciókezelés, Open in browser. |
+| 5 | Google+ | Rendben: új poszt képpel és helyszínnel, törlés, Settings (az 5.1.1 Photos-szerkesztője a Photos appé). |
+| 6 | Play Newsstand | Rendben: az 5.1.1 Newsstand 3.3 csak Read Now kártyákat és olvasót ad; a 6.0.1/7.1.2 ennél több. |
+| 7 | Docs / Sheets / Slides | Rendben: Recent/Starred/On device, Sort, rács, Send file, Share link, Move, parancsikon, Keep on device. |
+
+| # | Tétel | Csomag |
+|---|---|---|
+| 1 | T70 | Keep: képes jegyzet, listaműveletek |
+
+#### T70 — Keep: képes jegyzet és listaműveletek az 5.1.1 szintjén
+
+- **Pótolandó:** az 5.1.1 Keep 3.0 képes jegyzete és listaszerkesztése, a 3.3/3.4 APK saját felépítésében.
+- **Forrás:** a 3.3 dex-e (BottomSheetItemsCache / BottomSheetItemsCollection: az Add lap Take photo, Choose image,
+  Drawing, Recording, szöveges jegyzetnél Checkboxes; az Action lap Delete, Make a copy, Send, Collaborator, Labels és a
+  színek; TitleFragment: Hide checkboxes, Uncheck all items, Delete checked items, hide_checkboxes_dialog_*),
+  gallery_menu.xml (Grab image text, Send, Delete), editor_graveyard_header.xml, EditorDeleteButtonStyle (3.3
+  ic_material_delete_dark, 3.4 ic_cancel_black_24dp), browse_index_photo_note.xml.
+- **Állapot:** Kész — Keep 3.3 / 3.4: New photo note és az Add lap Take photo (új kép a telefon kamerájának képei közé)
+  és Choose image (a telefon képei közül), a kép a kártya és a szerkesztő tetején, teljes képernyőn a galéria
+  menüjével (Delete image? → Image deleted; a Send a képet küldi), a dex szerinti Add és Action lap, a lista
+  TitleFragment-műveletei, listaelem törlése, „Checked” szakasz a chevronnal (Move checked items to bottom mellett).
+  Böngészős teszt (play-keep) mindkét verzióban, asztali és telefonos szélességen; npm test 260/260.
+
+**A hatodik kör kész (2026-10-27):** az összevetés egyetlen valódi hiánya a Keepé volt (T70). Deploy csak kérésre.
+
 ### Feladatcsomagok és készfeltételek
 
 **Az Ütem és — részcsomagnál — a Mostani rész az irányadó.** A teljes korábbi leírás későbbi jelöltként marad meg. Részcsomagnál a mag lezárásához csak a Mostani készfeltétel szükséges; a későbbi rész státusza ettől halasztott marad. Minden javítás commitja és ellenőrzése itt, a riport megfelelő T-lapján vezetendő.

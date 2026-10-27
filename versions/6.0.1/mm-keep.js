@@ -10,14 +10,24 @@
    behavior, Reminder settings and Sharing (with Display rich link previews). The audio note (as 5.1.1's Keep has it):
    the quick bar's mic opens a note that is "Recording" with its timer until stopped (Back drops it); the note keeps a
    short recording, a WAV generated here (no microphone is used), with Play and the recording's duration, Delete voice
-   recording? to remove it, and Send hands it on as an attachment. The notes (data.keepNotes) are the demo phone's,
-   kept on the phone. Drawings, photos, reminders, labels and collaborators keep the simulator's limit. */
+   recording? to remove it, and Send hands it on as an attachment. Photo notes (as 5.1.1's Keep has them): New photo
+   note and the editor's Add sheet offer Take photo (a new picture of the phone's camera) and Choose image (the phone's
+   pictures); the picture tops the card (browse_index_photo_note.xml) and the editor, opens full screen with
+   gallery_menu.xml's Grab image text, Send and Delete (remove_photo "Delete image?", then image_deleted). The editor's
+   bottom sheets follow BottomSheetItemsCollection (3.3's dex; 3.4 has the same items): Add is Take photo, Choose image,
+   Drawing, Recording and, on a text note, Checkboxes; the action sheet is Delete, Make a copy, Send, Collaborator,
+   Labels and the colours (Restore and Delete forever in Trash). A list note has TitleFragment's actions beside its
+   title: Hide checkboxes (with checked items: hide_checkboxes_dialog_title, Keep or Delete them), and with checked
+   items Uncheck all items and Delete checked items (item_deleted). Each item has EditorDeleteButtonStyle's delete;
+   with Move checked items to bottom the checked items sit under editor_graveyard_header.xml's "Checked", which the
+   chevron collapses. The notes (data.keepNotes) are the demo phone's, kept on the phone. Drawings, reminders, labels,
+   collaborators and Grab image text keep the simulator's limit. */
 (() => {
   'use strict';
   const T = () => MM.text('keep'), t = k => T().t(k);
   const VERSION = '3.3.315.0';
   const I = name => `assets/kp33-${name}.png`;
-  const ICON = {"list": "ic_material_list_dark", "ink": "ic_ink_pen_black", "mic": "ic_material_mic_dark", "camera": "ic_material_camera_dark", "add": "ic_add_box_black", "action": "ic_note_action_24dp", "lightbulb": "ic_material_lightbulb_light", "reminders": "ic_reminders_alt_black", "archiveBlack": "ic_material_archive_black", "trash": "ic_material_trash_black", "settings": "ic_material_settings_black", "restore": "ic_restore_black", "forever": "ic_delete_forever_black", "menu": "ic_menu_light", "pinned": "ic_material_pin", "back": "ic_material_arrow_left_dark", "back2": "ic_material_arrow_left_light", "backDark": "ic_material_arrow_left_dark", "search": "ic_material_search_light", "archive": "ic_archive_dark", "unarchive": "ic_material_unarchive_dark", "pin": "ic_material_pin", "pinOn": "ic_material_unpin_blue", "reminder": "ic_material_reminder_finger_dark"};
+  const ICON = {"list": "ic_material_list_dark", "ink": "ic_ink_pen_black", "mic": "ic_material_mic_dark", "camera": "ic_material_camera_dark", "add": "ic_add_box_black", "action": "ic_note_action_24dp", "lightbulb": "ic_material_lightbulb_light", "reminders": "ic_reminders_alt_black", "archiveBlack": "ic_material_archive_black", "trash": "ic_material_trash_black", "settings": "ic_material_settings_black", "restore": "ic_restore_black", "forever": "ic_delete_forever_black", "menu": "ic_menu_light", "pinned": "ic_material_pin", "back": "ic_material_arrow_left_dark", "back2": "ic_material_arrow_left_light", "backDark": "ic_material_arrow_left_dark", "image": "ic_material_image_dark", "listBlack": "ic_list_black", "copy": "ic_content_copy_black", "send": "ic_googleplus_reshare_black", "person": "ic_person_add_black", "more": "ic_more_vert_black", "chevronUp": "ic_material_chevron_up_dark", "chevronDown": "ic_material_chevron_down_dark", "search": "ic_material_search_light", "archive": "ic_archive_dark", "unarchive": "ic_material_unarchive_dark", "pin": "ic_material_pin", "pinOn": "ic_material_unpin_blue", "reminder": "ic_material_reminder_finger_dark", "itemDelete": "ic_material_delete_dark", "label": "ic_tag_black", "moreWhite": "ic_more_vert_black"};
   // note_color_palette and each colour's primary_dark_* (the editor's status bar).
   const COLORS = ['#fafafa', '#ff8a80', '#ffd180', '#ffff8d', '#ccff90', '#a7ffeb', '#80d8ff', '#cfd8dc'];
   const DARK = ['#b2b2b2', '#b26059', '#b29159', '#b2b262', '#8eb264', '#74b2a4', '#5996b2', '#909699'];
@@ -39,6 +49,8 @@
   const seedOf = id => [...String(id)].reduce((a, ch) => a + ch.charCodeAt(0), 0) % 7;
   const mmss = sec => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
   let player = null;
+  const photoOf = (c, id) => MM.media.photos(c).find(p => p.id === id);
+  const picture = (c, id, cls) => { const p = photoOf(c, id); return p ? MM.media.svg(p, cls) : ''; };
   const plain = n => [n.title, n.text, ...(n.list || []).map(i => i.text)].filter(Boolean).join('\n');
   const btn = (c, action, label, icon, id = '') => `<button type="button" class="mmkp-btn" data-action="${action}"${id ? ` data-id="${c.safe(id)}"` : ''} aria-label="${c.safe(label)}"><img src="${I(icon)}" alt=""></button>`;
   const VIEWS = [['notes', 'drawer_landing_page_active_notes', 'lightbulb'], ['reminders', 'drawer_landing_page_all_reminders', 'reminders'], ['archive', 'drawer_landing_page_archive', 'archiveBlack'], ['trash', 'drawer_landing_page_trash', 'trash']];
@@ -47,7 +59,8 @@
   function card(c, n) {
     const body = n.list ? `<ul>${n.list.slice(0, 8).map(i => `<li class="${i.checked ? 'done' : ''}"><i></i>${c.safe(i.text)}</li>`).join('')}</ul>` : `<p>${c.safe(n.text)}</p>`;
     const audio = n.audio ? `<span class="mmkp-audiochip"><img src="${I(ICON.mic)}" alt="">${c.safe(t('snippet_audio_note'))} · ${mmss(n.audio.sec)}</span>` : '';
-    return `<button type="button" class="mmkp-card" data-action="mmkp-open" data-id="${c.safe(n.id)}" style="background:${COLORS[n.color || 0]}">${n.pinned ? `<img class="mmkp-pinned" src="${I(ICON.pinned)}" alt="">` : ''}${n.title ? `<b>${c.safe(n.title)}</b>` : ''}${body}${audio}</button>`;
+    const photo = n.images?.length ? `<span class="mmkp-backdrop">${picture(c, n.images[0], 'mmkp-pic')}</span>` : '';
+    return `<button type="button" class="mmkp-card${photo ? ' photo' : ''}" data-action="mmkp-open" data-id="${c.safe(n.id)}" style="background:${COLORS[n.color || 0]}">${photo}${n.pinned ? `<img class="mmkp-pinned" src="${I(ICON.pinned)}" alt="">` : ''}${n.title ? `<b>${c.safe(n.title)}</b>` : ''}${body}${audio}</button>`;
   }
   function browse(c) {
     const u = U(c), list = notes(c), v = u.view;
@@ -56,21 +69,31 @@
     const bar = `<header class="mmkp-bar" style="background:${BAR[v] || '#ffbb00'}">${btn(c, 'mmkp-drawer', t('drawer_open'), ICON.menu)}<b>${c.safe(title)}</b>${v === 'notes' ? btn(c, 'mmkp-search', t('menu_search'), ICON.search) : ''}${MM.menu.button(c, 'mmkp-more')}</header>`;
     const banner = v === 'trash' ? `<div class="mmkp-banner">${c.safe(t('trash_view_banner_text'))}</div>` : '';
     const grid = shown.length ? `<div class="mmkp-grid${c.data.keepSingle ? ' single' : ''}">${shown.map(n => card(c, n)).join('')}</div>` : `<p class="mmkp-empty">${c.safe(t(EMPTY[v]))}</p>`;
-    const quick = v === 'notes' ? `<div class="mmkp-quick"><button type="button" class="mmkp-take" data-action="mmkp-new">${c.safe(t('add_quick_note_hint'))}</button>${btn(c, 'mmkp-new-list', t('menu_new_list'), ICON.list)}${btn(c, 'mmkp-unavailable', t('menu_new_drawing'), ICON.ink)}${btn(c, 'mmkp-new-audio', t('menu_new_recording'), ICON.mic)}${btn(c, 'mmkp-unavailable', t('menu_new_picture'), ICON.camera)}</div>` : '';
+    const quick = v === 'notes' ? `<div class="mmkp-quick"><button type="button" class="mmkp-take" data-action="mmkp-new">${c.safe(t('add_quick_note_hint'))}</button>${btn(c, 'mmkp-new-list', t('menu_new_list'), ICON.list)}${btn(c, 'mmkp-unavailable', t('menu_new_drawing'), ICON.ink)}${btn(c, 'mmkp-new-audio', t('menu_new_recording'), ICON.mic)}${btn(c, 'mmkp-new-photo', t('menu_new_picture'), ICON.camera)}</div>` : '';
     const drawer = u.drawer ? `<div class="mmkp-scrim" data-action="mmkp-drawer"></div><nav class="mmkp-drawer"><div class="mmkp-account"><small>${c.safe(MM.account?.email || '')}</small></div>${VIEWS.map(([id, key, icon]) => `<button type="button" class="${v === id ? 'on' : ''}" data-action="mmkp-view" data-id="${id}"><img src="${I(ICON[icon])}" alt=""><span>${c.safe(t(key))}</span></button>`).join('')}<hr><button type="button" data-action="mmkp-settings"><img src="${I(ICON.settings)}" alt=""><span>${c.safe(t('drawer_link_settings'))}</span></button><button type="button" data-action="mmkp-unavailable"><span class="mmkp-noicon"></span><span>${c.safe(t('drawer_link_page_help_feedback'))}</span></button></nav>` : '';
     return `<div class="mmkp">${bar}${banner}<div class="mmkp-scroll">${grid}</div>${quick}${drawer}</div>`;
   }
   function editor(c, n) {
     const trashed = n.trashed, ro = trashed ? ' readonly' : '';
     const bar = `<header class="mmkp-ebar" style="background:${COLORS[n.color || 0]}">${btn(c, 'mmkp-close', t('editor_navigate_up_content_description'), ICON.back)}<span class="mmkp-fill"></span>${trashed ? '' : `${btn(c, 'mmkp-pin', t(n.pinned ? 'menu_unpin' : 'menu_pin'), n.pinned ? ICON.pinOn : ICON.pin)}${btn(c, 'mmkp-unavailable', t('menu_add_reminder'), ICON.reminder)}${btn(c, 'mmkp-archive', t(n.archived ? 'menu_unarchive' : 'menu_archive'), n.archived ? ICON.unarchive : ICON.archive)}`}</header>`;
-    const items = n.list ? `<div class="mmkp-items">${n.list.map((it, i) => `<div class="mmkp-item${it.checked ? ' done' : ''}"><button type="button" class="mmkp-check${it.checked ? ' on' : ''}" data-action="mmkp-check" data-id="${i}" role="checkbox" aria-checked="${it.checked}"${trashed ? ' disabled' : ''}></button><input data-keep-item="${i}" value="${c.safe(it.text)}"${ro}></div>`).join('')}${trashed ? '' : `<div class="mmkp-item add"><span>+</span><input data-keep-add placeholder="${c.safe(t('list_item_hint'))}" aria-label="${c.safe(t('list_item_hint'))}"></div>`}</div>`
+    const row = i => { const it = n.list[i]; return `<div class="mmkp-item${it.checked ? ' done' : ''}"><button type="button" class="mmkp-check${it.checked ? ' on' : ''}" data-action="mmkp-check" data-id="${i}" role="checkbox" aria-checked="${it.checked}"${trashed ? ' disabled' : ''}></button><input data-keep-item="${i}" value="${c.safe(it.text)}"${ro}>${trashed ? '' : btn(c, 'mmkp-item-delete', t('menu_delete'), ICON.itemDelete, String(i))}</div>`; };
+    const index = n.list ? n.list.map((_, i) => i) : [], grave = P(c).checkedBottom, open = grave ? index.filter(i => !n.list[i].checked) : index, done = grave ? index.filter(i => n.list[i].checked) : [], closed = !!U(c).graveClosed;
+    const graveyard = done.length ? `<button type="button" class="mmkp-grave" data-action="mmkp-grave" aria-label="${c.safe(t(closed ? 'expand_checked_items_content_description' : 'collapse_checked_items_content_description'))}"><img src="${I(closed ? ICON.chevronDown : ICON.chevronUp)}" alt=""><span>${c.safe(t('checked_list_items_content_description'))}</span></button>${closed ? '' : done.map(row).join('')}` : '';
+    const items = n.list ? `<div class="mmkp-items">${open.map(row).join('')}${trashed ? '' : `<div class="mmkp-item add"><span>+</span><input data-keep-add placeholder="${c.safe(t('list_item_hint'))}" aria-label="${c.safe(t('list_item_hint'))}"></div>`}${graveyard}</div>`
       : `<textarea class="mmkp-text" data-keep-text placeholder="${c.safe(t('note_body_hint'))}" aria-label="${c.safe(t('note_body_hint'))}"${ro}>${c.safe(n.text || '')}</textarea>`;
     const sheet = U(c).sheet ? `<div class="mmkp-sheetscrim" data-action="mmkp-sheet"></div><div class="mmkp-sheet">${trashed
       ? [['mmkp-restore', 'menu_restore', ICON.restore], ['mmkp-forever', 'menu_delete_forever', ICON.forever]].map(([a, k, i]) => `<button type="button" data-action="${a}"><img src="${I(i)}" alt=""><span>${c.safe(t(k))}</span></button>`).join('')
-      : `${[['mmkp-delete', 'menu_delete'], ['mmkp-clone', 'menu_clone'], ['mmkp-send', 'menu_send']].map(([a, k]) => `<button type="button" data-action="${a}"><span>${c.safe(t(k))}</span></button>`).join('')}<div class="mmkp-colors" role="radiogroup" aria-label="${c.safe(t('color_picker_title'))}">${COLORS.map((col, i) => `<button type="button" class="mmkp-swatch${(n.color || 0) === i ? ' on' : ''}" data-action="mmkp-color" data-id="${i}" style="background:${col}" role="radio" aria-checked="${(n.color || 0) === i}" aria-label="${c.safe(T().t('array:note_color_palette_descriptions')?.[i] || '')}"></button>`).join('')}</div>`}</div>` : '';
+      : U(c).sheet === 'add' ? [['mmkp-take', 'menu_launch_camera', ICON.camera], ['mmkp-choose', 'menu_launch_gallery', ICON.image], ['mmkp-unavailable', 'widget_note_type_drawing', ICON.ink], ['mmkp-record', 'recording_description', ICON.mic], ...(n.list ? [] : [['mmkp-checkboxes', 'add_checkboxes', ICON.listBlack]])].map(([a, k, i]) => `<button type="button" data-action="${a}"><img src="${I(i)}" alt=""><span>${c.safe(t(k))}</span></button>`).join('')
+      : `${[['mmkp-delete', 'menu_delete', ICON.trash], ['mmkp-clone', 'menu_clone', ICON.copy], ['mmkp-send', 'menu_send', ICON.send], ['mmkp-unavailable', 'menu_collaborator', ICON.person], ['mmkp-unavailable', 'menu_labels', ICON.label]].map(([a, k, i]) => `<button type="button" data-action="${a}"><img src="${I(i)}" alt=""><span>${c.safe(t(k))}</span></button>`).join('')}<div class="mmkp-colors" role="radiogroup" aria-label="${c.safe(t('color_picker_title'))}">${COLORS.map((col, i) => `<button type="button" class="mmkp-swatch${(n.color || 0) === i ? ' on' : ''}" data-action="mmkp-color" data-id="${i}" style="background:${col}" role="radio" aria-checked="${(n.color || 0) === i}" aria-label="${c.safe(T().t('array:note_color_palette_descriptions')?.[i] || '')}"></button>`).join('')}</div>`}</div>` : '';
     const rec = U(c).rec, clip = rec ? `<div class="mmkp-clip recording" role="status"><i class="mmkp-recdot"></i><span>${c.safe(t('recording_description'))}</span><b data-keep-timer>0:00</b><button type="button" class="mmkp-recstop" data-action="mmkp-stop" aria-label="${c.safe(t('recording_description'))}"></button></div>`
       : n.audio ? `<div class="mmkp-clip"><button type="button" class="mmkp-play${U(c).playing ? ' on' : ''}" data-action="mmkp-play" aria-label="${c.safe(t('play_voice_recording'))}"></button><span aria-label="${c.safe(AndroidStrings.format(t('voice_recording_duration'), mmss(n.audio.sec), ''))}">${mmss(n.audio.sec)}</span>${trashed ? '' : `<button type="button" class="mmkp-unclip" data-action="mmkp-unaudio" aria-label="${c.safe(t('remove_voice_recording'))}">×</button>`}</div>` : '';
-    return `<div class="mmkp mmkp-editor" style="background:${COLORS[n.color || 0]}">${bar}<div class="mmkp-scroll">${clip}<input class="mmkp-title" data-keep-title value="${c.safe(n.title || '')}" placeholder="${c.safe(t('list_title_hint'))}" aria-label="${c.safe(t('list_title_hint'))}"${ro}>${items}</div><footer class="mmkp-bottom">${btn(c, 'mmkp-unavailable', t('add'), ICON.add)}<span class="mmkp-fill"></span>${btn(c, 'mmkp-sheet', t('action'), ICON.action)}</footer>${sheet}</div>`;
+    const pics = (n.images || []).map((id, i) => `<button type="button" class="mmkp-image" data-action="mmkp-photo" data-id="${i}" aria-label="${c.safe(t('image_content_description'))}">${picture(c, id, 'mmkp-pic')}</button>`).join('');
+    const listMenu = n.list && !trashed ? btn(c, 'mmkp-list-menu', t('action'), ICON.more) : '';
+    return `<div class="mmkp mmkp-editor" style="background:${COLORS[n.color || 0]}">${bar}<div class="mmkp-scroll">${pics}${clip}<div class="mmkp-titlerow"><input class="mmkp-title" data-keep-title value="${c.safe(n.title || '')}" placeholder="${c.safe(t('list_title_hint'))}" aria-label="${c.safe(t('list_title_hint'))}"${ro}>${listMenu}</div>${items}</div><footer class="mmkp-bottom">${trashed ? '<span></span>' : btn(c, 'mmkp-add', t('add'), ICON.add)}<span class="mmkp-fill"></span>${btn(c, 'mmkp-sheet', t('action'), ICON.action)}</footer>${sheet}</div>`;
+  }
+  // KeepPhotoViewController: the picture on black with gallery_menu.xml's overflow.
+  function viewer(c, n) {
+    return `<div class="mmkp mmkp-viewer"><header class="mmkp-vbar">${btn(c, 'mmkp-viewer-close', t('editor_navigate_up_content_description'), ICON.back2)}<span class="mmkp-fill"></span>${btn(c, 'mmkp-viewer-menu', t('action'), ICON.moreWhite)}</header><div class="mmkp-vpic">${picture(c, n.images[U(c).viewer], 'mmkp-pic')}</div></div>`;
   }
   function search(c) {
     const u = U(c), q = u.query.trim().toLowerCase(), found = q ? notes(c).filter(n => !n.trashed && plain(n).toLowerCase().includes(q)) : [];
@@ -87,6 +110,7 @@
     const u = U(c);
     if (u.prefs) return settings(c);
     const n = u.note && cur(c);
+    if (n && u.viewer != null && n.images?.[u.viewer] != null) return viewer(c, n);
     if (n) return editor(c, n);
     if (u.search) return search(c);
     return browse(c);
@@ -110,14 +134,28 @@
   function leave(c) {
     const u = U(c), n = cur(c);
     u.rec = null; player?.pause(); player = null; u.playing = false;
-    if (n && !plain(n).trim() && !n.audio) c.data.keepNotes = notes(c).filter(x => x !== n);
-    u.note = ''; u.sheet = false; c.save();
+    if (n && !plain(n).trim() && !n.audio && !n.images?.length) c.data.keepNotes = notes(c).filter(x => x !== n);
+    u.note = ''; u.sheet = false; u.viewer = null; c.save();
   }
-  // Send: the note's text; a recording goes along as an attachment (6.0.1: Gmail's draft takes it).
-  const sendNote = (c, n) => MM.share(c, {title: t('menu_send'), subject: n.title || '', text: plain(n), ...(n.audio ? {attach: [{name: 'Recording.wav', mime: 'audio/wav', size: 44 + 8000 * n.audio.sec}]} : {})});
+  // 6.0.1: a picture from DocumentsUI's picker (the phone's photos).
+  const pickPhoto = (c, done) => MM.pickDocument(c, (c, d) => { if (d?.photo != null) done(c, d.photo); });
+  // A picture for the note (a new one or the phone's own); a new photo note when there is none open.
+  const attach = (c, id) => { let n = cur(c); if (!n) { make(c, false); n = cur(c); U(c).focusText = false; } (n.images ||= []).push(id); n.at = Date.now(); c.save(); c.render(); c.toast(t('image_added_content_description')); };
+  const takePhoto = c => attach(c, MM.media.add(c, {seed: Math.floor(Math.random() * 1000), time: Date.now(), front: false, kind: 'photo'}).id);
+  const choosePhoto = c => pickPhoto(c, (c, id) => { const u = U(c); if (u.pickFor && notes(c).some(x => x.id === u.pickFor)) u.note = u.pickFor; else u.note = ''; u.pickFor = ''; attach(c, id); });
+  // TitleFragment: Hide checkboxes turns the list into a note (the checked items kept or deleted).
+  const hideBoxes = (c, n, drop) => { const items = drop ? n.list.filter(i => !i.checked) : n.list; n.text = items.map(i => i.text).join('\n'); n.list = null; n.at = Date.now(); c.save(); c.render(); };
+  const deleteChecked = (c, n) => { const k = n.list.filter(i => i.checked).length; n.list = n.list.filter(i => !i.checked); n.at = Date.now(); c.save(); c.render(); c.toast(T().plural('item_deleted', k)); };
+  // Send: the note's text; a recording or the note's pictures go along as attachments (6.0.1: Gmail's draft takes them).
+  const sendNote = (c, n, only) => { const pics = only != null ? [only] : n.images || [], attach = [...(n.audio && only == null ? [{name: 'Recording.wav', mime: 'audio/wav', size: 44 + 8000 * n.audio.sec}] : []), ...pics.map(id => ({name: `IMG_${id}.jpg`, mime: 'image/jpeg', size: 2400000}))]; MM.share(c, {title: t('menu_send'), subject: n.title || '', text: only != null ? '' : plain(n), ...(attach.length ? {attach} : {})}); };
   const make = (c, list) => { const n = {id: `k${Date.now()}`, title: '', text: '', list: list ? [] : null, color: 0, archived: false, trashed: false, pinned: false, at: Date.now()}; notes(c).push(n); Object.assign(U(c), {note: n.id, focusText: true}); };
   function action(name, el, ev, c) {
     const u = U(c);
+    if (name === 'mm-menu' && u.viewer != null) {
+      const n = cur(c);
+      c.menu([{label: t('menu_show_extracted_text'), action: refuse}, {label: t('menu_send'), action: c => sendNote(c, n, n.images[u.viewer])}, {label: t('menu_delete'), action: c => c.dialog({message: t('remove_photo'), buttons: [{label: t('menu_cancel')}, {label: t('menu_delete'), action: c => { n.images.splice(u.viewer, 1); u.viewer = null; n.at = Date.now(); c.save(); c.render(); c.toast(t('image_deleted')); }}]})}], el);
+      return true;
+    }
     if (name === 'mm-menu') {
       const items = u.view === 'trash' ? [{label: t('menu_empty_trash'), action: c => c.dialog({title: t('empty_trash_title'), message: t('empty_trash_message'), buttons: [{label: t('menu_cancel')}, {label: t('menu_empty_trash'), action: c => { c.data.keepNotes = notes(c).filter(n => !n.trashed); c.save(); c.render(); }}]})}]
         : [{label: t(c.data.keepSingle ? 'menu_switch_to_grid_view' : 'menu_switch_to_list_view'), action: c => { c.data.keepSingle = !c.data.keepSingle; c.save(); c.render(); }}, {label: t('menu_sync'), action: c => c.render()}];
@@ -137,7 +175,24 @@
       case 'pin': n.pinned = !n.pinned; c.save(); break;
       case 'archive': n.archived = !n.archived; n.pinned = false; c.save(); leave(c); break;
       case 'check': { const it = n.list[+el.dataset.id]; it.checked = !it.checked; if (P(c).checkedBottom) n.list.sort((a, b) => a.checked - b.checked); n.at = Date.now(); c.save(); break; }
-      case 'sheet': u.sheet = !u.sheet; break;
+      case 'sheet': u.sheet = u.sheet === 'action' ? false : 'action'; break;
+      case 'add': u.sheet = u.sheet === 'add' ? false : 'add'; break;
+      case 'new-photo': c.dialog({title: t('menu_new_picture'), items: [[ICON.camera, 'menu_launch_camera'], [ICON.image, 'menu_launch_gallery']].map(([i, k]) => ({html: `<img class="mmkp-dlgicon" src="${I(i)}" alt="">${c.safe(t(k))}`})), onItem: (i, c) => { if (i === 0) takePhoto(c); else { u.pickFor = ''; choosePhoto(c); } }}); return true;
+      case 'take': u.sheet = false; takePhoto(c); return true;
+      case 'choose': u.sheet = false; u.pickFor = n.id; c.render(); choosePhoto(c); return true;
+      case 'record': u.sheet = false; u.rec = {start: Date.now()}; break;
+      case 'checkboxes': u.sheet = false; n.list = String(n.text || '').split('\n').filter(x => x.trim()).map(text => ({text, checked: false})); n.text = ''; n.at = Date.now(); c.save(); break;
+      case 'photo': u.viewer = +el.dataset.id; break;
+      case 'viewer-close': u.viewer = null; break;
+      case 'viewer-menu': return action('mm-menu', el, ev, c);
+      case 'grave': u.graveClosed = !u.graveClosed; break;
+      case 'item-delete': n.list.splice(+el.dataset.id, 1); n.at = Date.now(); c.save(); break;
+      case 'list-menu': {
+        const checked = n.list.some(i => i.checked);
+        c.menu([{label: t('menu_hide_checkboxes'), action: c => checked ? c.dialog({message: t('hide_checkboxes_dialog_title'), buttons: [{label: t('hide_checkboxes_dialog_button_keep'), action: c => hideBoxes(c, n, false)}, {label: t('hide_checkboxes_dialog_button_delete'), action: c => hideBoxes(c, n, true)}]}) : hideBoxes(c, n, false)},
+          ...(checked ? [{label: t('menu_reset_list'), action: c => { n.list.forEach(i => { i.checked = false; }); n.at = Date.now(); c.save(); c.render(); }}, {label: t('menu_delete_checked'), action: c => deleteChecked(c, n)}] : [])], el);
+        return true;
+      }
       case 'color': n.color = +el.dataset.id; c.save(); break;
       case 'delete': n.trashed = true; n.pinned = false; c.save(); leave(c); break;
       case 'restore': n.trashed = false; c.save(); leave(c); break;
@@ -167,6 +222,7 @@
     back(c) {
       const u = U(c);
       if (u.sheet) { u.sheet = false; c.render(); return true; }
+      if (u.viewer != null) { u.viewer = null; c.render(); return true; }
       if (u.rec) { leave(c); c.render(); return true; }
       if (u.note) { leave(c); c.render(); return true; }
       if (u.prefs) { u.prefs = false; c.render(); return true; }

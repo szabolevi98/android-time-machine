@@ -589,5 +589,172 @@ MM.strings('keep', {
 "de": "Rich-Link-Vorschauen anzeigen",
 "fr": "Afficher des aperçus de lien enrichis",
 "es": "Mostrar vistas previas avanzadas de enlaces"
+},
+"menu_launch_camera": {
+"res": "bullhead:Keep:menu_launch_camera",
+"en": "Take photo",
+"hu": "Fotó készítése",
+"de": "Foto aufnehmen",
+"fr": "Prendre une photo",
+"es": "Hacer foto"
+},
+"menu_launch_gallery": {
+"res": "bullhead:Keep:menu_launch_gallery",
+"en": "Choose image",
+"hu": "Kép kiválasztása",
+"de": "Bild auswählen",
+"fr": "Sélectionner une image",
+"es": "Seleccionar imagen"
+},
+"widget_note_type_drawing": {
+"res": "bullhead:Keep:widget_note_type_drawing",
+"en": "Drawing",
+"hu": "Rajz",
+"de": "Zeichnung",
+"fr": "Dessin",
+"es": "Dibujo"
+},
+"add_checkboxes": {
+"res": "bullhead:Keep:add_checkboxes",
+"en": "Checkboxes",
+"hu": "Jelölőnégyzetek",
+"de": "Kästchen",
+"fr": "Cases à cocher",
+"es": "Casillas de verificación"
+},
+"menu_collaborator": {
+"res": "bullhead:Keep:menu_collaborator",
+"en": "Collaborator",
+"hu": "Közreműködő",
+"de": "Mitbearbeiter",
+"fr": "Collaborateur",
+"es": "Colaborador"
+},
+"menu_hide_checkboxes": {
+"res": "bullhead:Keep:menu_hide_checkboxes",
+"en": "Hide checkboxes",
+"hu": "Jelölőnégyzetek elrejtése",
+"de": "Kästchen ausblenden",
+"fr": "Masquer les cases à cocher",
+"es": "Ocultar casillas de verificación"
+},
+"menu_reset_list": {
+"res": "bullhead:Keep:menu_reset_list",
+"en": "Uncheck all items",
+"hu": "Összes kijelölés megszüntetése",
+"de": "Markierung aufheben",
+"fr": "Décocher tous les éléments",
+"es": "Desmarcar todos los elementos"
+},
+"hide_checkboxes_dialog_title": {
+"res": "bullhead:Keep:hide_checkboxes_dialog_title",
+"en": "Delete checked items?",
+"hu": "Törli a kijelölt elemeket?",
+"de": "Markierte Elemente löschen?",
+"fr": "Supprimer les éléments sélectionnés ?",
+"es": "¿Eliminar elementos tachados?"
+},
+"hide_checkboxes_dialog_button_keep": {
+"res": "bullhead:Keep:hide_checkboxes_dialog_button_keep",
+"en": "Keep",
+"hu": "Megőrzés",
+"de": "Beibehalten",
+"fr": "Conserver",
+"es": "Mantener"
+},
+"hide_checkboxes_dialog_button_delete": {
+"res": "bullhead:Keep:hide_checkboxes_dialog_button_delete",
+"en": "Delete",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Supprimer",
+"es": "Eliminar"
+},
+"checked_list_items_content_description": {
+"res": "bullhead:Keep:checked_list_items_content_description",
+"en": "Checked",
+"hu": "Bejelölve",
+"de": "Abgehakt",
+"fr": "Sélectionné",
+"es": "Marcados"
+},
+"collapse_checked_items_content_description": {
+"res": "bullhead:Keep:collapse_checked_items_content_description",
+"en": "Collapse Checked Items",
+"hu": "Kipipált elemek összecsukása",
+"de": "Aktivierte Elemente minimieren",
+"fr": "Réduire les éléments sélectionnés",
+"es": "Contrae elementos marcados"
+},
+"expand_checked_items_content_description": {
+"res": "bullhead:Keep:expand_checked_items_content_description",
+"en": "Expand Checked Items",
+"hu": "Kipipált elemek kibontása",
+"de": "Aktivierte Elemente maximieren",
+"fr": "Développer les éléments sélectionnés",
+"es": "Amplia los elementos marcados"
+},
+"remove_photo": {
+"res": "bullhead:Keep:remove_photo",
+"en": "Delete image?",
+"hu": "Törli a képet?",
+"de": "Bild löschen?",
+"fr": "Supprimer l'image ?",
+"es": "¿Eliminar imagen?"
+},
+"image_deleted": {
+"res": "bullhead:Keep:image_deleted",
+"en": "Image deleted",
+"hu": "Kép törölve",
+"de": "Bild gelöscht",
+"fr": "L'image a été supprimée.",
+"es": "Imagen eliminada"
+},
+"image_added_content_description": {
+"res": "bullhead:Keep:image_added_content_description",
+"en": "Image added",
+"hu": "Kép hozzáadva",
+"de": "Bild hinzugefügt",
+"fr": "Image ajoutée",
+"es": "Imagen añadida"
+},
+"image_content_description": {
+"res": "bullhead:Keep:image_content_description",
+"en": "Image",
+"hu": "Kép",
+"de": "Bild",
+"fr": "Une image.",
+"es": "Imagen"
+},
+"menu_show_extracted_text": {
+"res": "bullhead:Keep:menu_show_extracted_text",
+"en": "Grab image text",
+"hu": "Kép szövegének beolvasása",
+"de": "Bildtext erfassen",
+"fr": "Extraire le texte de l'image",
+"es": "Texto de imagen guardado"
+},
+"item_deleted": {
+"res": "bullhead:Keep:item_deleted",
+"en": {
+"other": "%d items deleted",
+"one": "Item deleted"
+},
+"hu": {
+"other": "%d elem törölve",
+"one": "Elem törölve"
+},
+"de": {
+"other": "%d Einträge gelöscht",
+"one": "Eintrag gelöscht"
+},
+"fr": {
+"other": "%d éléments supprimés.",
+"one": "%d élément a été supprimé."
+},
+"es": {
+"other": "%d elementos eliminados",
+"one": "Elemento eliminado"
+}
 }
 });

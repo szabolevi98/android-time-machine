@@ -69,3 +69,18 @@
 .ngkp-play::after{content:'';display:block;margin-left:calc(12 * var(--dp));border-left:calc(10 * var(--dp)) solid #fff;border-top:calc(7 * var(--dp)) solid transparent;border-bottom:calc(7 * var(--dp)) solid transparent;width:0;height:0}
 .ngkp-play.on::after{margin-left:calc(11 * var(--dp));width:calc(3 * var(--dp));height:calc(12 * var(--dp));border:0;border-left:calc(3 * var(--dp)) solid #fff;border-right:calc(3 * var(--dp)) solid #fff}
 .screen .ngkp-unclip{width:calc(32 * var(--dp));height:calc(32 * var(--dp));padding:0;border:0;background:none;color:#0000008a;font:400 calc(22 * var(--dp)) Roboto,sans-serif}
+.ngkp-card.photo{padding-top:0}
+.ngkp-backdrop{display:block;margin:0 calc(-12 * var(--dp)) calc(8 * var(--dp));line-height:0}
+.ngkp-pic{display:block;width:100%;height:auto}
+.screen .ngkp-image{display:block;width:100%;padding:0;border:0;background:none;line-height:0}
+.ngkp-titlerow{display:flex;align-items:center}
+.ngkp-titlerow .ngkp-title{flex:1;min-width:0}
+.ngkp-item .ngkp-btn{flex:none;opacity:.54}
+.screen .ngkp-grave{display:flex;align-items:center;gap:calc(8 * var(--dp));width:100%;height:calc(48 * var(--dp));margin-top:calc(8 * var(--dp));padding:0 calc(12 * var(--dp));border:0;border-top:1px solid #0000001f;background:none;color:#0000008a;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-align:left}
+.ngkp-grave img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngkp-sheet button img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin-right:calc(32 * var(--dp));opacity:.7}
+.ngkp-viewer{background:#000}
+.ngkp-vbar{flex:none;display:flex;align-items:center;height:calc(56 * var(--dp));padding:0 calc(4 * var(--dp));background:#0006}
+.ngkp-vpic{flex:1;min-height:0;display:flex;align-items:center}
+.ngkp-vbar .ngkp-btn img{filter:invert(1)}
+.ngkp-dlgicon{width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin-right:calc(24 * var(--dp));vertical-align:middle;opacity:.7}

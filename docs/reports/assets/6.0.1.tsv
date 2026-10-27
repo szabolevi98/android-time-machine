@@ -686,12 +686,19 @@ versions/6.0.1/assets/ime-sym_keyboard_voice_lxx_light.png	4ffb02e86a04e9b7	copy
 versions/6.0.1/assets/in-bt_share.png	d6c10c37ed2142ec	copy	bullhead:/system/app/Bluetooth/Bluetooth.apk!res/mipmap-xxhdpi-v4/bt_share.png	mipmap-xxhdpi-v4		d6c10c37ed2142ec
 versions/6.0.1/assets/kp33-ic_add_box_black.png	8b55e8027e844b55	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_add_box_black.png	drawable-xxhdpi-v4		8b55e8027e844b55
 versions/6.0.1/assets/kp33-ic_archive_dark.png	26a471ad6acf27ad	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_archive_dark.png	drawable-xxhdpi-v4		26a471ad6acf27ad
+versions/6.0.1/assets/kp33-ic_content_copy_black.png	96e019d9894bae7e	copy	bullhead:/playapps/Keep.apk!res/drawable-xhdpi-v4/ic_content_copy_black.png	drawable-xhdpi-v4		96e019d9894bae7e
 versions/6.0.1/assets/kp33-ic_delete_forever_black.png	f7d416d32737ed29	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_delete_forever_black.png	drawable-xxhdpi-v4		f7d416d32737ed29
+versions/6.0.1/assets/kp33-ic_googleplus_reshare_black.png	31f07eb542a9e032	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_googleplus_reshare_black.png	drawable-xxhdpi-v4		31f07eb542a9e032
 versions/6.0.1/assets/kp33-ic_ink_pen_black.png	fc58fa98ba397240	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_ink_pen_black.png	drawable-xxhdpi-v4		fc58fa98ba397240
+versions/6.0.1/assets/kp33-ic_list_black.png	d10733fca44d4549	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_list_black.png	drawable-xxhdpi-v4		d10733fca44d4549
 versions/6.0.1/assets/kp33-ic_material_archive_black.png	25ecad7735dc4363	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_archive_black.png	drawable-xxhdpi-v4		25ecad7735dc4363
 versions/6.0.1/assets/kp33-ic_material_arrow_left_dark.png	f529e366940fe05d	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_arrow_left_dark.png	drawable-xxhdpi-v4		f529e366940fe05d
 versions/6.0.1/assets/kp33-ic_material_arrow_left_light.png	2baa23daa112ce68	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_arrow_left_light.png	drawable-xxhdpi-v4		2baa23daa112ce68
 versions/6.0.1/assets/kp33-ic_material_camera_dark.png	c0d148b726930491	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_camera_dark.png	drawable-xxhdpi-v4		c0d148b726930491
+versions/6.0.1/assets/kp33-ic_material_chevron_down_dark.png	6bdcd9c8b1a630af	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_chevron_down_dark.png	drawable-xxhdpi-v4		6bdcd9c8b1a630af
+versions/6.0.1/assets/kp33-ic_material_chevron_up_dark.png	dc40b5f5e31a4787	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_chevron_up_dark.png	drawable-xxhdpi-v4		dc40b5f5e31a4787
+versions/6.0.1/assets/kp33-ic_material_delete_dark.png	ab4babf443f51c81	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_delete_dark.png	drawable-xxhdpi-v4		ab4babf443f51c81
+versions/6.0.1/assets/kp33-ic_material_image_dark.png	cae935708e32b169	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_image_dark.png	drawable-xxhdpi-v4		cae935708e32b169
 versions/6.0.1/assets/kp33-ic_material_lightbulb_light.png	cb3a7c1e56eac370	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_lightbulb_light.png	drawable-xxhdpi-v4		cb3a7c1e56eac370
 versions/6.0.1/assets/kp33-ic_material_list_dark.png	d8a8059655ff7ec6	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_list_dark.png	drawable-xxhdpi-v4		d8a8059655ff7ec6
 versions/6.0.1/assets/kp33-ic_material_mic_dark.png	f9d3ad282b1981f5	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_mic_dark.png	drawable-xxhdpi-v4		f9d3ad282b1981f5
@@ -703,9 +710,12 @@ versions/6.0.1/assets/kp33-ic_material_trash_black.png	2afe38db52d35cf1	copy	bul
 versions/6.0.1/assets/kp33-ic_material_unarchive_dark.png	23d1cdbd54a1cc17	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_unarchive_dark.png	drawable-xxhdpi-v4		23d1cdbd54a1cc17
 versions/6.0.1/assets/kp33-ic_material_unpin_blue.png	318f543df29bde7a	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_material_unpin_blue.png	drawable-xxhdpi-v4		318f543df29bde7a
 versions/6.0.1/assets/kp33-ic_menu_light.png	30b91b2ee5fbeb2c	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_menu_light.png	drawable-xxhdpi-v4		30b91b2ee5fbeb2c
+versions/6.0.1/assets/kp33-ic_more_vert_black.png	d7e770a619faad1e	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_more_vert_black.png	drawable-xxhdpi-v4		d7e770a619faad1e
 versions/6.0.1/assets/kp33-ic_note_action_24dp.png	ea1112c3ad8f7037	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_note_action_24dp.png	drawable-xxhdpi-v4		ea1112c3ad8f7037
+versions/6.0.1/assets/kp33-ic_person_add_black.png	5934fa637fc8146e	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_person_add_black.png	drawable-xxhdpi-v4		5934fa637fc8146e
 versions/6.0.1/assets/kp33-ic_reminders_alt_black.png	c4bdc77a65f70d2c	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_reminders_alt_black.png	drawable-xxhdpi-v4		c4bdc77a65f70d2c
 versions/6.0.1/assets/kp33-ic_restore_black.png	95f0ad02489048a2	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_restore_black.png	drawable-xxhdpi-v4		95f0ad02489048a2
+versions/6.0.1/assets/kp33-ic_tag_black.png	727b5c2a9cf418e5	copy	bullhead:/playapps/Keep.apk!res/drawable-xxhdpi-v4/ic_tag_black.png	drawable-xxhdpi-v4		727b5c2a9cf418e5
 versions/6.0.1/assets/landing-home.jpg	3d6a224d59015785	own	capture of the simulator's own home screen for the landing page card			
 versions/6.0.1/assets/lw-ic_launcher_live_wallpaper.png	06afb1f349962092	copy	bullhead:/system/app/LiveWallpapersPicker/LiveWallpapersPicker.apk!res/mipmap-xxhdpi-v4/ic_launcher_live_wallpaper.png	mipmap-xxhdpi-v4		06afb1f349962092
 versions/6.0.1/assets/mp-button_compass.png	2c0a0d3f5bfa279e	copy	bullhead:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/button_compass.png	drawable-xxhdpi-v4		2c0a0d3f5bfa279e

@@ -9,6 +9,7 @@ for (const [version, start, cls, ns, menuItem] of [['6.0.1', marshmallow, 'mmkp'
   const b = await start();
   const notes = async () => (await b.save()).keepNotes || [];
   const type = (sel, value) => b.ev(`(()=>{const f=document.querySelector(${JSON.stringify(sel)});f.value=${JSON.stringify(value)};f.dispatchEvent(new Event('input',{bubbles:true}));return 1})()`);
+  const menuPick = async label => { await b.until(`[...document.querySelectorAll(${JSON.stringify(menuItem)})].some(x=>x.textContent.trim()===${JSON.stringify(label)})`); await b.ev(`[...document.querySelectorAll(${JSON.stringify(menuItem)})].find(x=>x.textContent.trim()===${JSON.stringify(label)}).click()`); };
   const enter = sel => b.ev(`(()=>{document.querySelector(${JSON.stringify(sel)}).dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));return 1})()`);
   try {
     await b.language('en');
@@ -92,6 +93,55 @@ for (const [version, start, cls, ns, menuItem] of [['6.0.1', marshmallow, 'mmkp'
     await b.ev(`document.querySelector('#nav-bar [data-key="back"]')?.click()`);
     await b.until(`!document.querySelector('#viewport [data-keep-timer]')`);
     assert.equal((await notes()).length, before, 'Back while recording keeps nothing');
+    // Round six (T70): a photo note (Take photo), a picture chosen from the phone, the picture's Delete.
+    const dlg = version === '6.0.1' ? 'mmdlg' : 'ngdlg';
+    await b.click(`#viewport [data-action="${cls}-new-photo"]`);
+    await b.until(`[...document.querySelectorAll('.${dlg}-item')].some(x=>x.textContent.includes('Take photo'))`);
+    await b.ev(`[...document.querySelectorAll('.${dlg}-item')].find(x=>x.textContent.includes('Take photo')).click()`);
+    await b.until(`!!document.querySelector('#viewport .${cls}-image svg')`);
+    await b.click(`#viewport [data-action="${cls}-add"]`);
+    await b.until(`[...document.querySelectorAll('#viewport .${cls}-sheet button')].map(x=>x.textContent.trim()).join('|')==='Take photo|Choose image|Drawing|Recording|Checkboxes'`);
+    await b.click(`#viewport [data-action="${cls}-choose"]`);
+    if (version === '6.0.1') { await b.until(`!!document.querySelector('#viewport [data-action="mmsa-pickone"]')`); await b.click('#viewport [data-action="mmsa-pickone"]'); }
+    else { await b.until(`!!document.querySelector('#viewport [data-action="ngdocs-root"][data-root="images"]')`); await b.click('#viewport [data-action="ngdocs-root"][data-root="images"]'); await b.until(`!!document.querySelector('#viewport .ngdocs-item')`); await b.click('#viewport .ngdocs-item'); }
+    await b.until(`document.querySelectorAll('#viewport .${cls}-image').length===2`);
+    assert.equal((await notes()).find(n => n.images)?.images.length, 2);
+    await b.shot(`${version}-keep-photo`);
+    await b.click(`#viewport .${cls}-image`);
+    await b.until(`!!document.querySelector('#viewport .${cls}-viewer svg')`);
+    await b.click(`#viewport [data-action="${cls}-viewer-menu"]`);
+    await menuPick('Delete');
+    await b.until(`[...document.querySelectorAll('.${dlg} button')].some(x=>x.textContent.trim()==='Delete')`);
+    assert.ok(await b.ev(`/Delete image\\?/.test(document.querySelector('.${dlg}').textContent)`));
+    await b.ev(`[...document.querySelectorAll('.${dlg} button')].filter(x=>x.textContent.trim()==='Delete').pop().click()`);
+    await b.until(`document.querySelectorAll('#viewport .${cls}-image').length===1 && !document.querySelector('#viewport .${cls}-viewer')`);
+    await b.click(`#viewport [data-action="${cls}-sheet"]`);
+    assert.equal(await b.ev(`[...document.querySelectorAll('#viewport .${cls}-sheet>button')].map(x=>x.textContent.trim()).join('|')`), 'Delete|Make a copy|Send|Collaborator|Labels');
+    await b.click(`#viewport [data-action="${cls}-sheet"]`);
+    await b.act(`${cls}-close`);
+    await b.until(`!!document.querySelector('#viewport .${cls}-card .${cls}-backdrop svg')`);
+    // A list: the Checked section and its chevron, Delete checked items, Hide checkboxes, Checkboxes back, an item deleted.
+    await b.act(`${cls}-new-list`);
+    await b.until(`!!document.querySelector('#viewport [data-keep-add]')`);
+    for (const item of ['Eggs', 'Bread']) { await type('#viewport [data-keep-add]', item); await enter('#viewport [data-keep-add]'); }
+    await b.until(`document.querySelectorAll('#viewport [data-keep-item]').length===2`);
+    await b.click(`#viewport .${cls}-check`);
+    await b.until(`/Checked/.test(document.querySelector('#viewport .${cls}-grave')?.textContent||'')`);
+    await b.click(`#viewport .${cls}-grave`);
+    await b.until(`document.querySelectorAll('#viewport [data-keep-item]').length===1`);
+    await b.click(`#viewport .${cls}-grave`);
+    await b.click(`#viewport [data-action="${cls}-list-menu"]`);
+    await menuPick('Delete checked items');
+    await b.until(`document.querySelectorAll('#viewport [data-keep-item]').length===1 && !document.querySelector('#viewport .${cls}-grave')`);
+    await b.click(`#viewport [data-action="${cls}-list-menu"]`);
+    await menuPick('Hide checkboxes');
+    await b.until(`document.querySelector('#viewport [data-keep-text]')?.value==='Eggs'`);
+    await b.click(`#viewport [data-action="${cls}-add"]`);
+    await b.click(`#viewport [data-action="${cls}-checkboxes"]`);
+    await b.until(`document.querySelector('#viewport [data-keep-item]')?.value==='Eggs'`);
+    await b.click(`#viewport [data-action="${cls}-item-delete"]`);
+    await b.until(`!document.querySelector('#viewport [data-keep-item]')`);
+    await b.act(`${cls}-close`);
     // Search.
     await b.act(`${cls}-search`);
     await type('#viewport [data-keep-search]', 'concert');
