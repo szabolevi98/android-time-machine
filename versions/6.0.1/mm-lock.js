@@ -33,10 +33,11 @@
   const is24 = c => c.data.settings.time24 ?? !new Intl.DateTimeFormat(c.locale(), {hour: 'numeric'}).resolvedOptions().hour12;
   // KeyguardStatusView.Patterns: the time without AM / PM and with the clock colon.
   function clockText(c, now = new Date()) {
+    now=MM.deviceDate(c);
     const mm = String(now.getMinutes()).padStart(2, '0');
     return `${is24(c) ? now.getHours() : now.getHours() % 12 || 12}${mm}`;
   }
-  const dateText = (c, now = new Date()) => new Intl.DateTimeFormat(c.locale(), {weekday: 'long', month: 'long', day: 'numeric'}).format(now);
+  const dateText = (c, now = new Date()) => new Intl.DateTimeFormat(c.locale(), {weekday: 'long', month: 'long', day: 'numeric'}).format(MM.deviceDate(c));
 
   function render(c) {
     const t = T(), s = c.data.settings, st = c.ui.lockState || (c.ui.lockState = {hint: ''});

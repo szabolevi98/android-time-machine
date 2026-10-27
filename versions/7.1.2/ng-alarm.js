@@ -80,7 +80,7 @@
 
   // -- AlarmActivity --------------------------------------------------------------------------------------------------
   function alarmScreen(c) {
-    const t = T(), st = c.ui.alarmAlert, now = new Date(), color = NG.clockHourColor();
+    const t = T(), st = c.ui.alarmAlert, now = NG.deviceDate(c), color = NG.clockHourColor(c);
     if (!st) return `<div class="ngal" style="background:${color}"></div>`;
     const icon = (cls, img) => `<i class="ngal-ic ${cls}" style="-webkit-mask-image:url('${A(img)}');mask-image:url('${A(img)}')"></i>`;
     const alert = st.phase !== 'ring' ? `<div class="ngal-reveal ${st.phase}" style="--hour:${color}"><b>${c.safe(t.t(st.phase === 'off' ? 'alarm_alert_off_text' : 'alarm_alert_snoozed_text'))}</b>${st.info ? `<span>${c.safe(st.info)}</span>` : ''}</div>` : '';
@@ -98,7 +98,7 @@
     const snooze = root.querySelector('.ngal-btn.snooze'), dismiss = root.querySelector('.ngal-btn.dismiss');
     const mid = el => { const r = el.getBoundingClientRect(); return r.left + r.width / 2; };
     const rgb = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
-    const hour = rgb(NG.clockHourColor());
+    const hour = rgb(NG.clockHourColor(c));
     const paint = (el, f, tint) => {
       el.style.transform = `scale(${0.7 + 0.3 * f})`;
       el.querySelector('.ngal-bg').style.opacity = f;
@@ -127,7 +127,7 @@
   }
   NG.register('alarm-alert', {
     app: false,
-    statusColor: () => NG.clockHourColor(),
+    statusColor: c => NG.clockHourColor(c),
     render: alarmScreen,
     mount(c, root) { bindDrag(c, root); },
     back: () => true,
@@ -147,10 +147,10 @@
   function overText(ms) { const s = Math.floor(ms / 1000); return `-${s >= 3600 ? `${Math.floor(s / 3600)}:${pad2(Math.floor(s / 60) % 60)}` : Math.floor(s / 60)}:${pad2(s % 60)}`; }
   NG.register('timer-alert', {
     app: false,
-    statusColor: () => NG.clockHourColor(),
+    statusColor: c => NG.clockHourColor(c),
     render(c) {
       const t = T(), tm = S(c).timer, over = tm?.expired ? Date.now() - tm.expired : 0;
-      return `<div class="ngck ngal-timer" style="background:${NG.clockHourColor()}">
+      return `<div class="ngck ngal-timer" style="background:${NG.clockHourColor(c)}">
         <div class="ngck-circlewrap"><div class="ngck-circle done" style="--p:1"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48"/><circle class="arc" cx="50" cy="50" r="48" pathLength="100"/></svg><span class="ngck-ctime">${over >= 0 ? overText(over) : ''}</span></div></div>
         <div class="ngck-footer"><span></span><button type="button" class="ngck-fab" data-action="ngal-tstop" aria-label="${c.safe(t.t('timer_stop'))}"><img src="${A('ic_stop_white_24dp.png')}" alt=""></button><button type="button" class="ngck-side" data-action="ngal-tplus" aria-label="${c.safe(t.t('timer_plus_one'))}"><i class="ngck-ic white" style="-webkit-mask-image:url('${A('ic_plusone.svg')}');mask-image:url('${A('ic_plusone.svg')}')"></i></button></div></div>`;
     },

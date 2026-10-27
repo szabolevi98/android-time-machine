@@ -43,7 +43,8 @@
       {id: 3, title: 'Hike with Alex', date: iso(nextDow(6)), start: '08:00', end: '13:00', allDay: false, where: 'Ridge trail', note: ''},
       {id: 4, title: 'Meetup slides due', date: iso(plus(9)), allDay: true, where: '', note: ''}];
   })();
-  const events = c => c.data.events || (c.data.events = JSON.parse(JSON.stringify(NG.defaults.events)));
+  const records = c => c.data.events || (c.data.events = JSON.parse(JSON.stringify(NG.defaults.events)));
+  const events = c => NG.calendarPreferences.visible(c,records(c));
   NG.calendarEvents = events;
   NG.calendarWidgetOpen = (c, target) => { const u=ui(c);c.data.calendarOobe=true;Object.assign(u,{screen:target.id?'event:'+target.id:'',drawer:false,search:null,dial:false,picker:false,gridScroll:null});if(target.date){u.date=target.date;u.view='day';}else if(!target.id){u.date='';u.view='schedule';}c.save();c.open('calendar'); };
   const ui = c => c.ui.calendar || (c.ui.calendar = {screen: '', drawer: false, oobe: 0, draft: null, dial: false});
@@ -64,8 +65,8 @@
   }
 
   // ---- the Schedule view --------------------------------------------------------------------------------------------
-  const firstDow = c => (new Intl.Locale(c.locale()).weekInfo?.firstDay ?? (c.locale().startsWith('en') ? 7 : 1)) % 7;
-  const chip = (c, e, cls = '') => `<button type="button" class="ngcl-chip${e.allDay ? '' : ' two'} ${cls}" style="background:${colorOf(e)}" data-action="ngcl-event" data-id="${e.id}"><b>${e.goal ? '<i class="ngcl-goalflag"></i>' : ''}${esc(c, e.title)}</b>${e.allDay ? '' : `<span>${esc(c, e.task ? time(c, e.start) : `${time(c, e.start)} – ${time(c, e.end)}`)}${e.where ? `, ${esc(c, e.where)}` : ''}</span>`}</button>`;
+  const firstDow = c => NG.calendarPreferences.firstDay(c);
+  const chip = (c, e, cls = '') => `<button type="button" class="ngcl-chip${e.allDay ? '' : ' two'} ${cls}" style="background:${colorOf(e)}" data-action="ngcl-event" data-id="${e.id}"><b>${e.goal ? '<i class="ngcl-goalflag"></i>' : ''}${esc(c, e.title)}</b>${e.allDay ? '' : `<span>${esc(c, e.task || e.noEnd ? time(c, e.start) : `${time(c, e.start)} – ${time(c, e.end)}`)}${e.where ? `, ${esc(c, e.where)}` : ''}</span>`}</button>`;
   function schedule(c) {
     const t = T(), today = day0(), byDay = new Map();
     for (const e of events(c)) { if (!byDay.has(e.date)) byDay.set(e.date, []); byDay.get(e.date).push(e); }
@@ -136,7 +137,7 @@
     const allDay = days.map(d => `<div class="ngcl-gall">${dayEvents(c, d).filter(e => e.allDay).map(e => `<button type="button" class="ngcl-gchip" data-action="ngcl-event" data-id="${e.id}" style="background:${colorOf(e)}">${esc(c, e.title)}</button>`).join('')}</div>`).join('');
     const hours = Array.from({length: 24}, (_, h) => `<div class="ngcl-ghour"><span>${h ? esc(c, fmt(c, new Date(2000, 0, 1, h), {hour: 'numeric'})) : ''}</span></div>`).join('');
     const cols = days.map(d => {
-      const blocks = dayEvents(c, d).filter(e => !e.allDay).map(e => { const s = minutes(e.start), en = Math.max(s + 30, minutes(e.end || e.start)); return `<button type="button" class="ngcl-gev" data-action="ngcl-event" data-id="${e.id}" style="top:calc(${s / 60 * HOUR} * var(--dp));height:calc(${(en - s) / 60 * HOUR - 2} * var(--dp));background:${colorOf(e)}"><b>${esc(c, e.title)}</b>${multi ? '' : `<small>${esc(c, `${time(c, e.start)} – ${time(c, e.end)}`)}${e.where ? `, ${esc(c, e.where)}` : ''}</small>`}</button>`; }).join('');
+      const blocks = dayEvents(c, d).filter(e => !e.allDay).map(e => { const s = minutes(e.start), en = Math.max(s + 30, minutes(e.end || e.start)); return `<button type="button" class="ngcl-gev" data-action="ngcl-event" data-id="${e.id}" style="top:calc(${s / 60 * HOUR} * var(--dp));height:calc(${(en - s) / 60 * HOUR - 2} * var(--dp));background:${colorOf(e)}"><b>${esc(c, e.title)}</b>${multi ? '' : `<small>${esc(c, e.noEnd ? time(c,e.start) : `${time(c, e.start)} – ${time(c, e.end)}`)}${e.where ? `, ${esc(c, e.where)}` : ''}</small>`}</button>`; }).join('');
       const line = +d === +today ? `<i class="ngcl-now" style="top:calc(${(now.getHours() * 60 + now.getMinutes()) / 60 * HOUR} * var(--dp))"></i>` : '';
       return `<div class="ngcl-gcol">${Array.from({length: 24}, (_, h) => `<button type="button" class="ngcl-gslot" data-action="ngcl-slot" data-date="${iso(d)}" data-h="${h}"></button>`).join('')}${blocks}${line}</div>`;
     }).join('');
@@ -144,6 +145,7 @@
       <div class="ngcl-gscroll ngcl-swipe"><div class="ngcl-gbody"><div class="ngcl-ghours">${hours}</div>${cols}</div></div></div>`;
   }
   function monthGrid(c, d, mini) {
+    const weekNumbers = !mini && NG.calendarPreferences.prefs(c).weekNumbers;
     const today = day0(), first = new Date(d.getFullYear(), d.getMonth(), 1), start = weekStart(c, first);
     const initials = Array.from({length: 7}, (_, i) => `<i>${esc(c, fmt(c, add(start, i), {weekday: 'narrow'}))}</i>`).join('');
     let cells = '';
@@ -151,9 +153,10 @@
       const x = add(start, i), out = x.getMonth() !== d.getMonth();
       if (i >= 35 && out && x > first) break;
       const evs = mini ? [] : dayEvents(c, x);
-      cells += `<button type="button" class="ngcl-mcell${out ? ' out' : ''}${+x === +today ? ' today' : ''}" data-action="${mini ? 'ngcl-jump' : 'ngcl-mday'}" data-date="${iso(x)}"><b>${x.getDate()}</b>${evs.slice(0, 3).map(e => `<span style="background:${colorOf(e)}">${esc(c, e.title)}</span>`).join('')}</button>`;
+      if(weekNumbers&&i%7===0)cells+=`<i class="ngcl-weeknum">${NG.calendarPreferences.week(x)}</i>`;
+      cells += `<button type="button" class="ngcl-mcell${out ? ' out' : ''}${+x === +today ? ' today' : ''}" data-action="${mini ? 'ngcl-jump' : 'ngcl-mday'}" data-date="${iso(x)}"><b>${x.getDate()}</b>${!mini&&NG.calendarPreferences.prefs(c).alternate?`<em>${esc(c,NG.calendarPreferences.alt(c,x))}</em>`:''}${evs.slice(0, 3).map(e => `<span style="background:${colorOf(e)}">${esc(c, e.title)}</span>`).join('')}</button>`;
     }
-    return `<div class="ngcl-mgrid${mini ? ' mini' : ''}"><div class="ngcl-mdow">${initials}</div><div class="ngcl-mcells">${cells}</div></div>`;
+    return `<div class="ngcl-mgrid${weekNumbers?' weeks':''}${mini ? ' mini' : ''}"><div class="ngcl-mdow">${weekNumbers?'<i></i>':''}${initials}</div><div class="ngcl-mcells">${cells}</div></div>`;
   }
   function searchView(c) {
     const t = T(), u = ui(c), q = (u.search || '').trim().toLowerCase();
@@ -166,6 +169,7 @@
   // ---- an event and the editor --------------------------------------------------------------------------------------
   function when(c, e) {
     const day = fmt(c, parse(e.date), {weekday: 'long', month: 'long', day: 'numeric'});
+    if(e.noEnd&&!e.allDay)return `${day}\n${time(c,e.start)}`;
     return e.allDay ? day : e.task ? `${day}\n${time(c, e.start)}` : `${day}\n${time(c, e.start)} – ${time(c, e.end)}`;
   }
   function info(c, e) {
@@ -181,7 +185,7 @@
       <div class="ngcl-etitle" style="background:${color}"><input data-f="title" value="${esc(c, d.title)}" placeholder="${esc(c, t.t(d.task ? 'edit_title_task_suggest_hint' : 'edit_title_hint'))}" autocomplete="off"></div>
       <div class="ngcl-page"><div class="ngcl-seg">${ic(A('ic_date'))}<div class="ngcl-when"><label class="ngcl-allday"><span>${esc(c, t.t('edit_label_all_day'))}</span><button type="button" class="ngcl-sw" data-action="ngcl-allday" role="switch" aria-checked="${d.allDay}"><i class="ngw-switch${d.allDay ? ' on' : ''}"><i class="ngw-thumb"></i></i></button></label>
         <div class="ngcl-wrow"><span class="ngcl-dpick"><span>${date(d.date)}</span><input type="date" data-f="date" value="${d.date}"></span>${d.allDay ? '' : `<span class="ngcl-tpick"><span>${esc(c, time(c, d.start))}</span><input type="time" data-f="start" value="${d.start}"></span>`}</div>
-        ${d.allDay || d.task ? '' : `<div class="ngcl-wrow"><span class="ngcl-wshow">${date(d.date)}</span><span class="ngcl-tpick"><span>${esc(c, time(c, d.end))}</span><input type="time" data-f="end" value="${d.end}"></span></div>`}</div></div>
+        ${d.allDay || d.task || d.noEnd ? '' : `<div class="ngcl-wrow"><span class="ngcl-wshow">${date(d.endDate || d.date)}</span><span class="ngcl-tpick"><span>${esc(c, time(c, d.end))}</span><input type="time" data-f="end" value="${d.end}"></span></div>`}</div></div>
         ${d.task ? '' : `<div class="ngcl-seg">${ic(A('ic_location'))}<input class="ngcl-sin" data-f="where" value="${esc(c, d.where)}" placeholder="${esc(c, t.t('edit_location_hint'))}"></div>
         <div class="ngcl-seg">${ic(A('ic_notes'))}<input class="ngcl-sin" data-f="note" value="${esc(c, d.note)}" placeholder="${esc(c, t.t('edit_description_hint'))}"></div>`}</div></div>`;
   }
@@ -195,6 +199,7 @@
   function startEdit(c, e, task = false) {
     const h = (new Date().getHours() + 1) % 24;
     const d = e ? {...e} : {id: 0, title: '', date: iso(day0()), start: `${String(h).padStart(2, '0')}:00`, end: `${String((h + 1) % 24).padStart(2, '0')}:00`, allDay: false, where: '', note: '', ...(task ? {task: true} : {})};
+    if(!e && !task)NG.calendarPreferences.applyDuration(c,d);
     d.orig = JSON.stringify({...d, orig: 0});
     ui(c).draft = d; ui(c).screen = 'edit'; ui(c).dial = false;
   }
@@ -219,7 +224,7 @@
     mount(c, root) {
       const u = ui(c), sched = root.querySelector('.ngcl-sched'), today = root.querySelector('#ngcl-today');
       if (sched && today && !u.scrolled) { sched.scrollTop = Math.max(0, today.offsetTop - 120); u.scrolled = true; }
-      root.querySelectorAll('.ngcl-edit [data-f]').forEach(i => i.addEventListener('input', () => { u.draft[i.dataset.f] = i.value; if (i.type === 'date' || i.type === 'time') c.render(); }));
+      root.querySelectorAll('.ngcl-edit [data-f]').forEach(i => i.addEventListener('input', () => { const d=u.draft;if(i.dataset.f==='date'&&d.endDate){const end=parse(d.endDate),days=Math.round((parse(i.value)-parse(d.date))/86400000);end.setDate(end.getDate()+days);d.endDate=iso(end);}d[i.dataset.f]=i.value; if (i.type === 'date' || i.type === 'time') c.render(); }));
       const gs = root.querySelector('.ngcl-gscroll');
       if (gs) { gs.scrollTop = u.gridScroll ?? Math.max(0, (new Date().getHours() - 2) * HOUR * (c.el.screen.clientWidth / 411.43)); gs.addEventListener('scroll', () => { u.gridScroll = gs.scrollTop; }, {passive: true}); }
       // A horizontal swipe turns the period (the views) or the month (the mini month).
@@ -240,7 +245,7 @@
       return false;
     },
     action(name, el, event, c) {
-      const u = ui(c), t = T(), e = events(c).find(x => x.id === +(el.dataset.id || u.screen.slice(6)));
+      const u = ui(c), t = T(), e = records(c).find(x => x.id === +(el.dataset.id || u.screen.slice(6)));
       switch (name) {
         case 'ngcl-oobenext': u.oobe++; c.render(); return true;
         case 'ngcl-oobedone': c.data.calendarOobe = true; c.save(); c.render(); return true;
@@ -255,7 +260,7 @@
         case 'ngcl-picker': u.picker = !u.picker; u.pickerMonth = ''; c.render(); return true;
         case 'ngcl-jump': if (Date.now() - (u.swiped || 0) < 300) return true; u.date = el.dataset.date; u.picker = false; u.pickerMonth = ''; u.gridScroll = null; if ((u.view || 'schedule') === 'schedule') u.view = 'day'; c.render(); return true;
         case 'ngcl-mday': if (Date.now() - (u.swiped || 0) < 300) return true; u.date = el.dataset.date; u.view = 'day'; c.render(); return true;
-        case 'ngcl-slot': { if (Date.now() - (u.swiped || 0) < 300) return true; startEdit(c, null); const h = +el.dataset.h; Object.assign(u.draft, {date: el.dataset.date, start: `${String(h).padStart(2, '0')}:00`, end: `${String((h + 1) % 24).padStart(2, '0')}:00`}); u.draft.orig = JSON.stringify({...u.draft, orig: 0}); c.render(); return true; }
+        case 'ngcl-slot': { if (Date.now() - (u.swiped || 0) < 300) return true; startEdit(c, null); const h = +el.dataset.h; Object.assign(u.draft, {date: el.dataset.date, start: `${String(h).padStart(2, '0')}:00`, end: `${String((h + 1) % 24).padStart(2, '0')}:00`}); NG.calendarPreferences.applyDuration(c,u.draft);u.draft.orig = JSON.stringify({...u.draft, orig: 0}); c.render(); return true; }
         case 'ngcl-schedview': case 'ngcl-dayview': case 'ngcl-weekview': case 'ngcl-monthview': u.view = {schedview: 'schedule', dayview: 'day', weekview: 'week', monthview: 'month'}[name.slice(5)]; u.drawer = false; u.gridScroll = null; c.render(); return true;
         case 'ngcl-settings': u.drawer = false; NG.openPrefs?.(c, 'calendar', 'calendar_settings_headers', t.t('drawer_settings')); return true;
         case 'ngcl-sback': u.search = null; c.render(); return true;
@@ -268,12 +273,12 @@
         case 'ngcl-cancel': closeEditor(c, true); return true;
         case 'ngcl-allday': u.draft.allDay = !u.draft.allDay; c.render(); return true;
         case 'ngcl-save': {
-          const d = u.draft, list = events(c); delete d.orig;
+          const d = u.draft, list = records(c); delete d.orig;
           if (!d.title.trim()) d.title = t.t(d.task ? 'reminder' : 'event');
           if (d.id) Object.assign(list.find(x => x.id === d.id), d); else { d.id = Math.max(0, ...list.map(x => x.id)) + 1; list.push(d); }
           c.save(); u.draft = null; u.screen = `event:${d.id}`; c.render(); return true;
         }
-        case 'ngcl-delete': c.dialog({message: t.t(e.task ? 'delete_this_reminder_title' : 'delete_this_event_title'), buttons: [{label: t.t('framework/cancel')}, {label: t.t('framework/ok'), action: c => { c.data.events = events(c).filter(x => x !== e); c.save(); u.screen = ''; c.render(); }}]}); return true;
+        case 'ngcl-delete': c.dialog({message: t.t(e.task ? 'delete_this_reminder_title' : 'delete_this_event_title'), buttons: [{label: t.t('framework/cancel')}, {label: t.t('framework/ok'), action: c => { c.data.events = records(c).filter(x => x !== e); c.save(); u.screen = ''; c.render(); }}]}); return true;
         case 'ng-menu': c.menu([{label: t.t('search'), action: c => { u.search = ''; c.render(); }}, {label: t.t('calendar_refresh'), action: c => c.render()}], el); return true;
       }
       return false;

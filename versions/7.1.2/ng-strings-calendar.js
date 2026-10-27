@@ -459,5 +459,337 @@ NG.strings('calendar', {
 "de": "Erledigt",
 "fr": "Marquer comme terminé",
 "es": "Marcar como completado"
+},
+"menu_category_general_preferences": {
+"res": "angler:CalendarGooglePrebuilt:menu_category_general_preferences",
+"en": "General",
+"hu": "Általános",
+"de": "Allgemein",
+"fr": "Général",
+"es": "General"
+},
+"menu_smartmail_preferences": {
+"res": "angler:CalendarGooglePrebuilt:menu_smartmail_preferences",
+"en": "Events from Gmail",
+"hu": "Események a Gmailből",
+"de": "Termine aus Gmail",
+"fr": "Événements ajoutés à partir de Gmail",
+"es": "Eventos de Gmail"
+},
+"add_automatically": {
+"res": "angler:CalendarGooglePrebuilt:add_automatically",
+"en": "Add events from Gmail",
+"hu": "Események hozzáadása a Gmailből",
+"de": "Termine aus Gmail hinzufügen",
+"fr": "Importer des événements de Gmail",
+"es": "Añadir eventos de Gmail"
+},
+"preference_edit_week_start_header": {
+"res": "angler:CalendarGooglePrebuilt:preference_edit_week_start_header",
+"en": "Start of the week",
+"hu": "A hét kezdete",
+"de": "1. Tag der Woche",
+"fr": "Début de la semaine",
+"es": "Primer día de la semana"
+},
+"preference_edit_use_device_timezone_label": {
+"res": "angler:CalendarGooglePrebuilt:preference_edit_use_device_timezone_label",
+"en": "Use device time zone",
+"hu": "Eszköz időzónájának használata",
+"de": "Zeitzone des Geräts beibehalten",
+"fr": "Utiliser le fuseau horaire de l'appareil",
+"es": "Usar zona horaria dispositivo"
+},
+"preference_edit_device_timezone_header": {
+"res": "angler:CalendarGooglePrebuilt:preference_edit_device_timezone_header",
+"en": "Time zone",
+"hu": "Időzóna",
+"de": "Zeitzone",
+"fr": "Fuseau horaire",
+"es": "Zona horaria"
+},
+"preference_edit_show_week_number": {
+"res": "angler:CalendarGooglePrebuilt:preference_edit_show_week_number",
+"en": "Show week number",
+"hu": "Hét számának megjelenítése",
+"de": "Kalenderwoche anzeigen",
+"fr": "Afficher numéro de la semaine",
+"es": "Mostrar número de semana"
+},
+"preference_edit_show_declined": {
+"res": "angler:CalendarGooglePrebuilt:preference_edit_show_declined",
+"en": "Show declined events",
+"hu": "Elutasított események",
+"de": "Abgelehnte Termine anzeigen",
+"fr": "Afficher les événements refusés",
+"es": "Ver eventos rechazados"
+},
+"preference_edit_notifications_header": {
+"res": "angler:CalendarGooglePrebuilt:preference_edit_notifications_header",
+"en": "Notifications",
+"hu": "Értesítések",
+"de": "Benachrichtigungen",
+"fr": "Notifications",
+"es": "Notificaciones"
+},
+"preference_edit_notify": {
+"res": "angler:CalendarGooglePrebuilt:preference_edit_notify",
+"en": "Notify on this device",
+"hu": "Értesítés ezen az eszközön",
+"de": "Per Gerät benachrichtigen",
+"fr": "Notifications sur cet appareil",
+"es": "Notificar en este dispositivo"
+},
+"preference_edit_use_standard": {
+"res": "angler:CalendarGooglePrebuilt:preference_edit_use_standard",
+"en": "Use standard tone",
+"hu": "Normál dallam használata",
+"de": "Standardton verwenden",
+"fr": "Utiliser la sonnerie standard",
+"es": "Usar el tono normal"
+},
+"preference_edit_ringtone_header": {
+"res": "angler:CalendarGooglePrebuilt:preference_edit_ringtone_header",
+"en": "Tone",
+"hu": "Csengőhang",
+"de": "Ton bei Benachrichtigung",
+"fr": "Sonnerie",
+"es": "Tono"
+},
+"preference_edit_no_ringtone_string": {
+"res": "angler:CalendarGooglePrebuilt:preference_edit_no_ringtone_string",
+"en": "None",
+"hu": "Egyik sem",
+"de": "Keiner",
+"fr": "Aucune sonnerie",
+"es": "Ninguno"
+},
+"preference_edit_vibrate": {
+"res": "angler:CalendarGooglePrebuilt:preference_edit_vibrate",
+"en": "Vibrate",
+"hu": "Rezgés",
+"de": "Vibration",
+"fr": "Vibreur",
+"es": "Vibrar"
+},
+"preference_edit_notifications_disclaimer": {
+"res": "angler:CalendarGooglePrebuilt:preference_edit_notifications_disclaimer",
+"en": "You can change default notifications by going to the individual calendar, for example Events.",
+"hu": "Az alapértelmezett értesítéseket az egyes naptárakat (például Események) megnyitva módosíthatja.",
+"de": "Sie können Standardbenachrichtigungen im entsprechenden Kalender ändern, z. B. für Termine.",
+"fr": "Vous pouvez modifier les notifications par défaut en allant dans l'agenda en question (\"Événements\", par exemple).",
+"es": "Si quieres cambiar las notificaciones predeterminadas, ve al calendario en cuestión (por ejemplo, Eventos)."
+},
+"settings_default_event_duration_title_spinner": {
+"res": "angler:CalendarGooglePrebuilt:settings_default_event_duration_title_spinner",
+"en": "Default event duration",
+"hu": "Esemény alapértelmezett időtartama",
+"de": "Standardmäßige Termindauer",
+"fr": "Durée par défaut des événements",
+"es": "Duración predeterminada de los eventos"
+},
+"no_end_time": {
+"res": "angler:CalendarGooglePrebuilt:no_end_time",
+"en": "No end time",
+"hu": "Nincs befejezési idő",
+"de": "Kein Ende",
+"fr": "Aucune heure de fin",
+"es": "Sin hora de finalización"
+},
+"end_time_min": {
+"res": "angler:CalendarGooglePrebuilt:end_time_min",
+"en": "%d minutes",
+"hu": "%d perc",
+"de": "%d Minuten",
+"fr": "%d minutes",
+"es": "%d minutos"
+},
+"quick_response_settings": {
+"res": "angler:CalendarGooglePrebuilt:quick_response_settings",
+"en": "Quick responses",
+"hu": "Gyors válaszok",
+"de": "Kurzantworten",
+"fr": "Réponses rapides",
+"es": "Respuestas rápidas"
+},
+"quick_response_settings_title": {
+"res": "angler:CalendarGooglePrebuilt:quick_response_settings_title",
+"en": "Edit quick responses",
+"hu": "Gyors válaszok szerkesztése",
+"de": "Kurzantworten bearbeiten",
+"fr": "Modif. rép. rapides",
+"es": "Editar respuestas rápidas"
+},
+"quick_response_settings_edit_title": {
+"res": "angler:CalendarGooglePrebuilt:quick_response_settings_edit_title",
+"en": "Quick response",
+"hu": "Gyors válasz",
+"de": "Kurzantwort",
+"fr": "Réponse rapide",
+"es": "Respuesta rápida"
+},
+"quick_response_defaults": {
+"res": "angler:CalendarGooglePrebuilt:quick_response_defaults",
+"en": [
+"Running just a couple of minutes late.",
+"Be there in about 10 minutes.",
+"Go ahead and start without me.",
+"Sorry, I can't make it. We'll have to reschedule."
+],
+"hu": [
+"Csak pár percet késik.",
+"Legyen ott körülbelül 10 perc alatt.",
+"Kezdjék el nélkülem.",
+"Sajnálom, nem érek oda. Kénytelenek leszünk átütemezni."
+],
+"de": [
+"Bin einige Minuten verspätet",
+"Bin in etwa 10 Minuten da",
+"Fangt ohne mich an",
+"Schaffe es leider nicht. Neuen Termin ausmachen?"
+],
+"fr": [
+"Désolé, j'aurai quelques minutes de retard.",
+"Désolé, j'arrive dans 10 minutes environ.",
+"Commencez sans moi.",
+"Désolé, je ne peux pas venir. Nous allons devoir reporter."
+],
+"es": [
+"Llego un par de minutos tarde",
+"Llegaré en unos diez minutos",
+"Empezad sin mí",
+"No puedo, mejor en otro momento"
+]
+},
+"preferences_week_start_day_labels": {
+"res": "angler:CalendarGooglePrebuilt:preferences_week_start_day_labels",
+"en": [
+"Saturday",
+"Sunday",
+"Monday"
+],
+"hu": [
+"szombat",
+"vasárnap",
+"hétfő"
+],
+"de": [
+"Samstag",
+"Sonntag",
+"Montag"
+],
+"fr": [
+"samedi",
+"dimanche",
+"lundi"
+],
+"es": [
+"Sábado",
+"Domingo",
+"Lunes"
+]
+},
+"smartmail_toggle_off_dialog_text": {
+"res": "angler:CalendarGooglePrebuilt:smartmail_toggle_off_dialog_text",
+"en": "You'll no longer see events automatically added from your email. Previously added events from Gmail will be removed.",
+"hu": "A rendszer a jövőben nem adja hozzá automatikusan az eseményeket az e-mailekből. A korábban a Gmailből hozzáadott eseményeket eltávolítja.",
+"de": "Termine werden nicht länger automatisch aus Ihren E-Mails in Ihren Kalender übertragen. Bereits aus Gmail hinzugefügte Termine werden wieder entfernt.",
+"fr": "Vous ne verrez plus les événements ajoutés automatiquement à partir de votre messagerie. Les événements ajoutés précédemment à partir de Gmail seront supprimés.",
+"es": "A partir de ahora no verás los eventos añadidos automáticamente desde tu correo electrónico. Además, se eliminarán los eventos anteriores añadidos desde Gmail."
+},
+"smartmail_toggle_off_dialog_confirm_button_text": {
+"res": "angler:CalendarGooglePrebuilt:smartmail_toggle_off_dialog_confirm_button_text",
+"en": "Continue",
+"hu": "Folytatás",
+"de": "Weiter",
+"fr": "Continuer",
+"es": "Continuar"
+},
+"smartmail_toggle_on_dialog_text": {
+"res": "angler:CalendarGooglePrebuilt:smartmail_toggle_on_dialog_text",
+"en": "Future events like flight bookings and restaurant reservations will be automatically added to your calendar from Gmail.",
+"hu": "A rendszer automatikusan hozzáadja a Gmailben megjelenő jövőbeli eseményeket (például repülőjegy- vagy asztalfoglalásokat) a naptárhoz.",
+"de": "Zukünftige Termine wie Flugbuchungen und Restaurantreservierungen werden automatisch aus Gmail zu Ihrem Kalender hinzugefügt.",
+"fr": "Les événements futurs, comme les réservations de vols ou de restaurants, seront automatiquement ajoutés à votre agenda à partir de Gmail.",
+"es": "A partir de ahora, las reservas confirmadas (como billetes de avión o restaurantes) se añadirán automáticamente a tu calendario desde Gmail."
+},
+"smartmail_toggle_on_dialog_confirm_button_text": {
+"res": "angler:CalendarGooglePrebuilt:smartmail_toggle_on_dialog_confirm_button_text",
+"en": "Enable",
+"hu": "Engedélyezés",
+"de": "Aktivieren",
+"fr": "Activer",
+"es": "Habilitar"
+},
+"preference_edit_alternate_calendar_header": {
+"res": "angler:CalendarGooglePrebuilt:preference_edit_alternate_calendar_header",
+"en": "Alternate calendar",
+"hu": "Alternatív naptár",
+"de": "Alternativer Kalender",
+"fr": "Agenda secondaire",
+"es": "Calendario alternativo"
+},
+"preferences_alternate_calendar_labels": {
+"res": "angler:CalendarGooglePrebuilt:preferences_alternate_calendar_labels",
+"en": [
+"No alternate calendar",
+"Chinese calendar - Simplified",
+"Chinese calendar - Traditional",
+"Hebrew calendar",
+"Hijri calendar - Civil",
+"Hijri calendar - Kuwaiti",
+"Hijri calendar - Saudi",
+"Indian calendar - Hindu (Saka)",
+"Korean calendar",
+"Persian calendar"
+],
+"hu": [
+"Nincs alternatív naptár",
+"Kínai naptár – egyszerűsített",
+"Kínai naptár – hagyományos",
+"Zsidó naptár",
+"Iszlám naptár – civil",
+"Iszlám naptár – kuvaiti",
+"Iszlám naptár – szaúdi",
+"Indiai naptár – hindu (szaka)",
+"Koreai naptár",
+"Perzsa naptár"
+],
+"de": [
+"Kein alternativer Kalender",
+"Chinesischer Kalender – vereinfachtes Chinesisch",
+"Chinesischer Kalender – traditionelles Chinesisch",
+"Hebräischer Kalender",
+"Islamischer Kalender – bürgerlich",
+"Islamischer Kalender – Kuwait",
+"Islamischer Kalender – Saudi-Arabien",
+"Indischer Kalender – Hindu (Saka)",
+"Koreanischer Kalender",
+"Iranischer Kalender"
+],
+"fr": [
+"Aucun agenda secondaire",
+"Calendrier chinois – Simplifié",
+"Calendrier chinois – Traditionnel",
+"Agenda hébreu",
+"Calendrier hégirien – Civil",
+"Agenda hégirien (koweïtien)",
+"Agenda hégirien (saoudien)",
+"Calendrier indien – Hindou (Saka)",
+"Agenda coréen",
+"Agenda persan"
+],
+"es": [
+"No hay ningún calendario alternativo",
+"Calendario chino simplificado",
+"Calendario chino tradicional",
+"Calendario judío",
+"Calendario musulmán: civil",
+"Calendario musulmán: kuwaití",
+"Calendario musulmán: saudí",
+"Calendario indio: hindú (saka)",
+"Calendario coreano",
+"Calendario persa"
+]
 }
 });

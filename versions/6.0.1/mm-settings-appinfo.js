@@ -42,14 +42,14 @@
       const t = T(), id = cur.screen.split(':')[1], u = usage(c, id), f = n => MM.fileSize(c, n);
       return `<div class="mmst-list">${header(c, id)}${pair(c, t.t('storage_used'), t.t('storage_type_internal'))}${button(c, 'mmsx-change', t.t('change'), true)}
         <div class="mmst-cat">${esc(c, t.t('storage_label'))}</div>${pair(c, t.t('total_size_label'), f(u.app + u.data))}${pair(c, t.t('application_size_label'), f(u.app))}${pair(c, t.t('external_code_size_label'), f(0))}
-        ${pair(c, t.t('data_size_label'), f(u.data))}${pair(c, t.t('external_data_size_label'), f(0))}${button(c, 'mmsx-cleardata', t.t('clear_user_data_text'), !u.data)}
+        ${pair(c, t.t('data_size_label'), f(u.data))}${pair(c, t.t('external_data_size_label'), f(0))}${button(c, 'mmsx-cleardata', t.t('clear_user_data_text'), !u.data || !MM.appData.canClear(id))}
         <i class="mmsx-space"></i>${pair(c, t.t('cache_size_label'), f(u.cache))}${button(c, 'mmsx-clearcache', t.t('clear_cache_btn_text'), !u.cache)}</div>`;
     },
     action(c, name, el, cur) {
       const t = T(), id = cur.screen.split(':')[1], s = S(c);
       const clear = what => { s.appCleared = {...(s.appCleared || {}), [id]: {...((s.appCleared || {})[id] || {}), [what]: true}}; c.save(); c.render(); };
-      if (name === 'mmsx-cleardata') { c.dialog({title: t.t('clear_data_dlg_title'), message: t.t('clear_data_dlg_text'), buttons: [{label: t.t('dlg_cancel')}, {label: t.t('dlg_ok'), action: () => { clear('data'); clear('cache'); }}]}); return true; }
-      if (name === 'mmsx-clearcache') { clear('cache'); return true; }
+      if (name === 'mmsx-cleardata') { c.dialog({title: t.t('clear_data_dlg_title'), message: t.t('clear_data_dlg_text'), buttons: [{label: t.t('dlg_cancel')}, {label: t.t('dlg_ok'), action: () => { if(MM.appData.clear(c,id)){clear('data');clear('cache');} }}]}); return true; }
+      if (name === 'mmsx-clearcache') { MM.appData.clearCache(c,id); clear('cache'); return true; }
       return false;
     }
   };

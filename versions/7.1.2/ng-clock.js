@@ -72,7 +72,7 @@
   const cityRow = id => (NG.deskClockCities || []).find(r => r[0] === id);
   const LANG_COL = {en: 2, hu: 3, de: 4, fr: 5, es: 6};
   const cityName = (c, r) => r[0] === 'home' ? r[2] : String(r[LANG_COL[c.lang] ?? 2] || r[2]).split('=').pop();
-  const zoneTime = (c, tz, opts = {}) => { try { return new Intl.DateTimeFormat(c.locale(), {timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: !h24(c), ...opts}).format(new Date()); } catch { return ''; } };
+  const zoneTime = (c, tz, opts = {}) => { try { return new Intl.DateTimeFormat(c.locale(), {timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: !h24(c), ...opts}).format(new Date(NG.deviceEpoch(c))); } catch { return ''; } };
   const zoneDay = tz => { try { const p = new Intl.DateTimeFormat('en-CA', {timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date()); return Date.parse(p); } catch { return 0; } };
   // world_clock_item: the city, its day when it is not today's, the time.
   // Automatic home clock (WorldClockAdapter): with it on and Home time zone away from the phone's zone now, a city
@@ -98,7 +98,7 @@
     return `<div class="ngck-analog"><img src="${A('clock_analog_dial.svg')}" alt="">${hand('hour', h * 30)}${hand('minute', m * 6)}${hand('second', sec * 6)}</div>`;
   }
   function clockPage(c) {
-    const now = new Date(), next = nextAlarm(c);
+    const now = NG.deviceDate(c), next = nextAlarm(c);
     const date = new Intl.DateTimeFormat(c.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).format(now);
     return `<div class="ngck-clock">${style(c) === 'analog' ? analog(now) : `<div class="ngck-big">${timeHtml(c, now.getHours(), now.getMinutes(), 'ngck-ampm')}</div>`}
       <div class="ngck-labels"><span>${c.safe(date)}</span>${next ? `<b class="ngck-glyph">A</b><span>${c.safe(next)}</span>` : ''}</div><i class="ngck-hair"></i></div>${worldClocks(c)}`;
@@ -162,7 +162,7 @@
     return `<div class="ngck-footer">${!s.running && s.acc ? side('ngck-swreset', 'ic_reset.svg', t.t('sw_reset_button')) : '<span></span>'}${fab(s.running ? 'ic_pause_white_24dp.png' : 'ic_start_white_24dp.png', t.t('sw_start_button'))}${s.running ? side('ngck-swlap', 'ic_lap.svg', t.t('sw_lap_button')) : s.acc ? side('ngck-swshare', 'ic_share.svg', t.t('sw_share_button')) : '<span></span>'}</div>`;
   }
   function render(c) {
-    const t = T(), u = ui(c), color = HOUR_COLORS[new Date().getHours()];
+    const t = T(), u = ui(c), color = HOUR_COLORS[NG.deviceDate(c).getHours()];
     if (u.night) return `<div class="ngck ngck-night" data-action="ngck-nightoff">${clockPage(c)}</div>`;
     const page = {alarm: alarmPage, clock: clockPage, timer: timerPage, stopwatch: stopwatchPage}[u.tab](c);
     return `<div class="ngck" style="background:${color}"><div class="ngck-tabs">${TABS.map(([id, label]) => `<button type="button" class="${u.tab === id ? 'on' : ''}" data-action="ngck-tab" data-tab="${id}" aria-label="${c.safe(t.t(label))}">${mask(`ic_tab_${id}_static.svg`)}</button>`).join('')}${NG.menu.button(c)}</div>
@@ -186,9 +186,9 @@
 
   NG.clock24 = h24; NG.clockNextAlarmText = nextAlarm;
   // For the alarm and timer alerts (ng-alarm.js): the hour's colour and the time markup.
-  NG.clockHourColor = () => HOUR_COLORS[new Date().getHours()]; NG.clockTimeHtml = timeHtml;
+  NG.clockHourColor = c => HOUR_COLORS[NG.deviceDate(c).getHours()]; NG.clockTimeHtml = timeHtml;
   NG.register('clock', {
-    statusColor: () => HOUR_COLORS[new Date().getHours()],
+    statusColor: c => HOUR_COLORS[NG.deviceDate(c).getHours()],
     render,
     mount(c) { tickLoop(c); },
     tick(c, now) { const u = ui(c); if (c.ui.view === 'clock' && !c.ui.overlay && (u.tab === 'clock' || u.tab === 'alarm' || u.night) && (now.getSeconds() === 0 || (u.tab === 'clock' && !u.night && style(c) === 'analog'))) { c.transition('none'); c.render(); } },
@@ -258,7 +258,7 @@
      group, the check box, the name, the time there in 63 % white). A check adds the city to the world clock. */
   NG.register('clock-cities', {
     app: false,
-    statusColor: () => HOUR_COLORS[new Date().getHours()],
+    statusColor: c => HOUR_COLORS[NG.deviceDate(c).getHours()],
     render(c) {
       const t = T(), u = c.ui.clockCities || (c.ui.clockCities = {q: '', byTime: false, search: false}), picked = S(c).cities || [];
       const all = (NG.deskClockCities || []).map(r => { const raw = String(r[LANG_COL[c.lang] ?? 2] || r[2]), name = raw.split('=').pop(); return {id: r[0], name, key: raw.split('=')[0] || name.charAt(0).toLocaleUpperCase(c.locale()), tz: r[1]}; });
@@ -273,7 +273,7 @@
       const back = `<button type="button" class="ngck-cbtn" data-action="${u.search ? 'ngck-csearchoff' : 'ngck-cup'}">${mask('fw-ic_ab_back_material.svg')}</button>`;
       const bar = u.search ? `<div class="ngck-cbar">${back}<input class="ngck-cq" value="${c.safe(u.q)}" placeholder="${c.safe(t.t('framework/search_go'))}" autocomplete="off"></div>`
         : `<div class="ngck-cbar">${back}<span>${c.safe(t.t('cities_activity_title'))}</span><button type="button" class="ngck-cbtn" data-action="ngck-csearch" aria-label="${c.safe(t.t('framework/search_go'))}">${mask('fw-ic_search_api_material.svg')}</button>${NG.menu.button(c)}</div>`;
-      return `<div class="ngck ngck-cities" style="background:${HOUR_COLORS[new Date().getHours()]}">${bar}<div class="ngck-clist">${sel.length ? `<div class="ngck-chead">${c.safe(t.t('selected_cities_label'))}</div>${sel.map(x => row(x, '')).join('')}<i class="ngck-hair"></i>` : ''}${rows}</div></div>`;
+      return `<div class="ngck ngck-cities" style="background:${HOUR_COLORS[NG.deviceDate(c).getHours()]}">${bar}<div class="ngck-clist">${sel.length ? `<div class="ngck-chead">${c.safe(t.t('selected_cities_label'))}</div>${sel.map(x => row(x, '')).join('')}<i class="ngck-hair"></i>` : ''}${rows}</div></div>`;
     },
     mount(c, root) {
       const f = root.querySelector('.ngck-cq'); if (!f) return;
@@ -323,11 +323,11 @@
   }
   NG.register('clock-settings', {
     app: false,
-    statusColor: () => HOUR_COLORS[new Date().getHours()],
+    statusColor: c => HOUR_COLORS[NG.deviceDate(c).getHours()],
     render(c) {
       const t = T();
       const rows = ROWS.map(r => r.cat ? `<div class="ngck-scat">${c.safe(t.t(r.cat))}</div>` : `<button type="button" class="ngck-srow" data-action="ngck-srow" data-key="${r.key}"><span class="ngck-stexts"><span>${c.safe(t.t(r.title))}</span>${rowSummary(c, r) ? `<small>${c.safe(rowSummary(c, r))}</small>` : ''}</span>${r.sw ? `<i class="ngw-switch ngck-sw${val(c, r) ? ' on' : ''}"><i class="ngw-thumb"></i></i>` : ''}</button>`).join('');
-      return `<div class="ngck ngck-settings" style="background:${HOUR_COLORS[new Date().getHours()]}"><div class="ngck-cbar"><button type="button" class="ngck-cbtn" data-action="ngck-sup">${mask('fw-ic_ab_back_material.svg')}</button><span>${c.safe(t.t('settings'))}</span></div><div class="ngck-slist">${rows}</div></div>`;
+      return `<div class="ngck ngck-settings" style="background:${HOUR_COLORS[NG.deviceDate(c).getHours()]}"><div class="ngck-cbar"><button type="button" class="ngck-cbtn" data-action="ngck-sup">${mask('fw-ic_ab_back_material.svg')}</button><span>${c.safe(t.t('settings'))}</span></div><div class="ngck-slist">${rows}</div></div>`;
     },
     action(name, el, event, c) {
       const t = T();

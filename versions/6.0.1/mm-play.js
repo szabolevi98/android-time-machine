@@ -162,6 +162,7 @@
     render(c) { const it = item(c, c.ui.sub); if (!it) return ''; return `<div class="mmps-fapp" style="--fc:${it.color}"><div class="mmps-fbar">${esc(c, it.name)}</div><div class="mmps-fbody">${icon(it, 'big')}<p>${esc(c, it.desc)}</p></div></div>`; }
   });
   MM.register('play-store', {
+    clearData(c){if(c.ui.play)c.ui.play.dl=null;},
     // The window animation's page (mm-core.js): deeper screens open over the ones they came from.
     page: c => { const u = c.ui.play; return u ? MM.page('play', ...u.history.map(h => `${h.page}:${h.item}`), `${u.page}:${u.item}`) : 'play'; },
     statusColor: c => ui(c).search !== null ? '#757575' : GREEN_DARK,

@@ -138,7 +138,7 @@
      for tomorrow), the chips (an all-day one 30 sp with the bold title, a timed one 50 sp with the time range and
      timely_chip_time_location's place), the 6 dp footer; nothing in those days: widget_no_events_scheduled. */
   function calendarWidget(c) {
-    const t = T(), loc = c.locale(), now = new Date(), color = '#039be5';
+    const t = T(), loc = c.locale(), now = MM.deviceDate(c), color = '#039be5';
     const day0 = d => new Date(d.getFullYear(), d.getMonth(), d.getDate()), today = day0(now);
     const fmt = (d, o) => new Intl.DateTimeFormat(loc, o).format(d);
     const evs = (MM.calendarEvents ? MM.calendarEvents(c) : []).map(e => {
@@ -175,7 +175,7 @@
   function body(c, item) {
     const it = info(item.w);
     const w = it.spanX * MM.launcherGrid.cellW - 2 * PAD, h = it.spanY * MM.launcherGrid.cellH - 2 * PAD;
-    const now = new Date();
+    const now = MM.deviceDate(c);
     switch (item.w) {
       case 'calendar': return calendarWidget(c);
       case 'hangouts': {

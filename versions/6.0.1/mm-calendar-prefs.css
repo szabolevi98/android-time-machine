@@ -1,0 +1,9 @@
+/* mm Calendar 5.2.3 GeneralPreferences rows use the phone's Material preference geometry. */
+.mmcp-note,.mmcp-account{padding:calc(16 * var(--dp));font-size:calc(14 * var(--dp));color:#757575;margin:0;}
+.mmcp .mmst-pref:disabled{opacity:.4;}
+.mmpf-edit textarea{box-sizing:border-box;width:100%;border:0;border-bottom:calc(1 * var(--dp)) solid #4285f4;font:calc(16 * var(--dp)) Roboto,sans-serif;background:none;color:#212121;}
+.mmcl-mgrid.weeks .mmcl-mcells,.mmcl-mgrid.weeks .mmcl-mdow{grid-template-columns:calc(24 * var(--dp)) repeat(7,minmax(0,1fr));}
+.mmcl-weeknum{font:calc(10 * var(--dp)) Roboto,sans-serif;color:#757575;text-align:center;padding-top:calc(8 * var(--dp));}
+.mmcl-mcell em{display:block;font:calc(9 * var(--dp)) Roboto,sans-serif;color:#757575;overflow:hidden;white-space:nowrap;}
+
+.mmcp .mmst-cat{color:#4285f4;}

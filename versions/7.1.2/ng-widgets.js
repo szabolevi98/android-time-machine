@@ -15,8 +15,8 @@
   'use strict';
   const D = 3.5;
   const is24 = c => c.data.settings.time24 ?? !new Intl.DateTimeFormat(c.locale(), {hour: 'numeric'}).resolvedOptions().hour12;
-  const time = (c, d = new Date()) => is24(c) ? `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}` : `${d.getHours() % 12 || 12}:${String(d.getMinutes()).padStart(2, '0')}`;
-  const date = (c, d = new Date()) => new Intl.DateTimeFormat(c.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).format(d);
+  const time = (c, d = NG.deviceDate(c)) => is24(c) ? `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}` : `${d.getHours() % 12 || 12}:${String(d.getMinutes()).padStart(2, '0')}`;
+  const date = (c, d = NG.deviceDate(c)) => new Intl.DateTimeFormat(c.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).format(d);
   // DeskClock's next alarm text: the best "EEE hma" / "EEE Hm" pattern.
   const nextAlarm = c => { const at = NG.clock?.nextAlarm(c); return at ? new Intl.DateTimeFormat(c.locale(), {weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: !is24(c)}).format(at) : ''; };
 

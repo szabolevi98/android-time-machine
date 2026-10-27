@@ -1,0 +1,9 @@
+/* ng Calendar 5.7 GeneralPreferences rows use the phone's Material preference geometry. */
+.ngcp-note,.ngcp-account{padding:calc(16 * var(--dp));font-size:calc(14 * var(--dp));color:#757575;margin:0;}
+.ngcp .ngst-pref:disabled{opacity:.4;}
+.ngpf-edit textarea{box-sizing:border-box;width:100%;border:0;border-bottom:calc(1 * var(--dp)) solid #4285f4;font:calc(16 * var(--dp)) Roboto,sans-serif;background:none;color:#212121;}
+.ngcl-mgrid.weeks .ngcl-mcells,.ngcl-mgrid.weeks .ngcl-mdow{grid-template-columns:calc(24 * var(--dp)) repeat(7,minmax(0,1fr));}
+.ngcl-weeknum{font:calc(10 * var(--dp)) Roboto,sans-serif;color:#757575;text-align:center;padding-top:calc(8 * var(--dp));}
+.ngcl-mcell em{display:block;font:calc(9 * var(--dp)) Roboto,sans-serif;color:#757575;overflow:hidden;white-space:nowrap;}
+
+.ngcp .ngst-cat{color:#4285f4;}

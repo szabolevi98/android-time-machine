@@ -74,7 +74,7 @@
   const cityRow = id => (MM.deskClockCities || []).find(r => r[0] === id);
   const LANG_COL = {en: 2, hu: 3, de: 4, fr: 5, es: 6};
   const cityName = (c, r) => r[0] === 'home' ? r[2] : String(r[LANG_COL[c.lang] ?? 2] || r[2]).split('=').pop();
-  const zoneTime = (c, tz, opts = {}) => { try { return new Intl.DateTimeFormat(c.locale(), {timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: !h24(c), ...opts}).format(new Date()); } catch { return ''; } };
+  const zoneTime = (c, tz, opts = {}) => { try { return new Intl.DateTimeFormat(c.locale(), {timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: !h24(c), ...opts}).format(new Date(MM.deviceEpoch(c))); } catch { return ''; } };
   // Automatic home clock (WorldClockAdapter): with it on and Home time zone away from the phone's zone now, a city
   // named home_label in that zone comes first.
   const offsetOf = tz => { try { const p = new Intl.DateTimeFormat('en-US', {timeZone: tz, timeZoneName: 'longOffset'}).formatToParts(new Date()).find(x => x.type === 'timeZoneName').value; const m = /GMT([+-])(\d+)(?::(\d+))?/.exec(p); return m ? (m[1] === '-' ? -1 : 1) * ((+m[2]) * 60 + (+(m[3] || 0))) : 0; } catch { return 0; } };
@@ -100,7 +100,7 @@
     return `<div class="mmck-analog"><img src="${A('clock_analog_dial')}" alt="">${hand('hour', h * 30)}${hand('minute', m * 6)}</div>`;
   }
   function clockPage(c) {
-    const now = new Date(), next = nextAlarm(c);
+    const now = MM.deviceDate(c), next = nextAlarm(c);
     const date = new Intl.DateTimeFormat(c.locale(), {weekday: 'short', month: 'long', day: 'numeric'}).format(now);
     return `<div class="mmck-clock">${style(c) === 'analog' ? analog(now) : `<div class="mmck-big">${timeHtml(c, now.getHours(), now.getMinutes(), 'mmck-ampm')}</div>`}
       <div class="mmck-labels"><span class="mmck-date">${c.safe(date)}</span>${next ? `<span class="mmck-next"><img src="${A('ic_alarm_small')}" alt="">${c.safe(next)}</span>` : ''}</div><i class="mmck-hair"></i>${worldClocks(c)}</div>`;
@@ -163,7 +163,7 @@
   }
 
   function render(c) {
-    const t = T(), u = ui(c), color = HOUR_COLORS[new Date().getHours()];
+    const t = T(), u = ui(c), color = HOUR_COLORS[MM.deviceDate(c).getHours()];
     if (u.night) return `<div class="mmck mmck-night" data-action="mmck-nightoff">${clockPage(c)}</div>`;
     const page = {alarm: alarmPage, clock: clockPage, timer: timerPage, stopwatch: stopwatchPage}[u.tab](c);
     return `<div class="mmck" style="background:${color}"><div class="mmck-tabs">${TABS.map(([id, label]) => `<button type="button" data-action="mmck-tab" data-tab="${id}" aria-label="${c.safe(t.t(label))}"><img src="${A(`ic_tab_${id}_${u.tab === id ? 'activated' : 'normal'}`)}" alt=""></button>`).join('')}${MM.menu.button(c)}</div>
@@ -185,9 +185,9 @@
   // The clock widgets (mm-widgets.js) show the same time format and next alarm.
   MM.clock24 = h24; MM.clockNextAlarm = nextAlarm;
   // For the alarm and timer alerts (mm-alarm.js): the hour's colour, the time markup, an alarm's next firing.
-  MM.clockHourColor = () => HOUR_COLORS[new Date().getHours()]; MM.clockTimeHtml = timeHtml; MM.clockNextFire = nextFire;
+  MM.clockHourColor = c => HOUR_COLORS[MM.deviceDate(c).getHours()]; MM.clockTimeHtml = timeHtml; MM.clockNextFire = nextFire;
   MM.register('clock', {
-    statusColor: c => HOUR_COLORS[new Date().getHours()],
+    statusColor: c => HOUR_COLORS[MM.deviceDate(c).getHours()],
     render,
     mount(c) { tickLoop(c); },
     tick(c, now) { const u = ui(c); if (c.ui.view === 'clock' && !c.ui.overlay && (u.tab === 'clock' || u.tab === 'alarm' || u.night) && (now.getSeconds() === 0 || (u.tab === 'clock' && style(c) === 'analog' && now.getSeconds() % 10 === 0))) c.render(); },
@@ -248,7 +248,7 @@
      or nothing, the check box, the name, the time there). A check adds the city to the world clock. */
   MM.register('clock-cities', {
     app: false,
-    statusColor: () => HOUR_COLORS[new Date().getHours()],
+    statusColor: c => HOUR_COLORS[MM.deviceDate(c).getHours()],
     render(c) {
       const t = T(), u = c.ui.clockCities || (c.ui.clockCities = {q: '', byTime: false, search: false}), picked = S(c).cities || [];
       const all = (MM.deskClockCities || []).map(r => ({r, id: r[0], name: cityName(c, r), key: String(r[LANG_COL[c.lang] ?? 2]).split('=')[0] || cityName(c, r).charAt(0).toUpperCase(), tz: r[1]}));
@@ -263,7 +263,7 @@
       const sel = all.filter(x => picked.includes(x.id) && !q);
       const bar = u.search ? `<div class="mmck-cbar"><button type="button" class="mmck-cbtn" data-action="mmck-csearchoff"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button><input class="mmck-cq" value="${c.safe(u.q)}" placeholder="${c.safe(t.t('abc_search_hint'))}" autocomplete="off"></div>`
         : `<div class="mmck-cbar"><button type="button" class="mmck-cbtn" data-action="mmck-cup"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button><span>${c.safe(t.t('cities_activity_title'))}</span><button type="button" class="mmck-cbtn" data-action="mmck-csearch" aria-label="${c.safe(t.t('abc_searchview_description_search'))}"><img src="assets/fw-ic_search_api_material.svg" alt=""></button>${MM.menu.button(c)}</div>`;
-      return `<div class="mmck mmck-cities" style="background:${HOUR_COLORS[new Date().getHours()]}">${bar}<div class="mmck-clist">${sel.length ? `<div class="mmck-chead">${c.safe(t.t('selected_cities_label'))}</div>${sel.map(x => row(x, '')).join('')}<div class="mmck-chead"></div>` : ''}${rows}</div></div>`;
+      return `<div class="mmck mmck-cities" style="background:${HOUR_COLORS[MM.deviceDate(c).getHours()]}">${bar}<div class="mmck-clist">${sel.length ? `<div class="mmck-chead">${c.safe(t.t('selected_cities_label'))}</div>${sel.map(x => row(x, '')).join('')}<div class="mmck-chead"></div>` : ''}${rows}</div></div>`;
     },
     mount(c, root) {
       const f = root.querySelector('.mmck-cq'); if (!f) return;

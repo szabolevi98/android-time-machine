@@ -153,14 +153,14 @@
 
   // StatusBarHeaderView's clock: SplitClockView, the time and in 12-hour locales the AM / PM part at 14 sp.
   function headerClock(c) {
-    const now = new Date(), locale = c.locale();
+    const now = MM.deviceDate(c), locale = c.locale();
     const h24 = c.data.settings.time24 ?? !new Intl.DateTimeFormat(locale, {hour: 'numeric'}).resolvedOptions().hour12;
     const mm = String(now.getMinutes()).padStart(2, '0');
     if (h24) return `<span class="mmsh-time">${now.getHours()}:${mm}</span>`;
     const ampm = new Intl.DateTimeFormat(locale, {hour: 'numeric', hour12: true}).formatToParts(now).find(p => p.type === 'dayPeriod')?.value || '';
     return `<span class="mmsh-time">${now.getHours() % 12 || 12}:${mm}</span><span class="mmsh-ampm"> ${c.safe(ampm)}</span>`;
   }
-  const headerDate = c => new Intl.DateTimeFormat(c.locale(), {weekday: 'long', month: 'long', day: 'numeric'}).format(new Date());
+  const headerDate = c => new Intl.DateTimeFormat(c.locale(), {weekday: 'long', month: 'long', day: 'numeric'}).format(MM.deviceDate(c));
 
   // A posted notification (notification_template_material_base: the 40 dp icon circle, the title in
   // TextAppearance.Material.Notification.Title, the text, the actions of notification_material_action_list).

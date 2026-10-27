@@ -352,7 +352,7 @@
       if (e.target.closest('.ngh-qsb,.ngh-overview,.ngh-cling,.ngh-fname,.ngh-allapps,.nggoogle-card,.nggoogle-drawer,.nggoogle-plate,.nggoogle-feedtabs')) return;
       const src = e.target.closest('[data-src]');
       press = {x: e.clientX, y: e.clientY, moved: false, w: el.clientWidth, src, timer: 0};
-      // ViewConfiguration's long press timeout, 500 ms.
+      // ViewConfiguration's configured long press timeout (500 ms by default).
       press.timer = setTimeout(() => {
         if (!press || press.moved) return;
         if (st.folder && !src) return;
@@ -372,7 +372,7 @@
           st.overview = true; c.render();
         }
         press = null;
-      }, 500);
+      }, NG.longPressTimeout(c));
     });
     const move = e => {
       if (st.dragging) { moveDrag(c, root, e.clientX, e.clientY); return; }

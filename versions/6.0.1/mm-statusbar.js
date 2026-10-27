@@ -54,7 +54,7 @@
   MM.batteryMeter = () => { const b = MM.battery(); return batterySvg(b.level, b.plugged); };
 
   const is24 = c => c.data.settings.time24 ?? !new Intl.DateTimeFormat(c.locale(), {hour: 'numeric'}).resolvedOptions().hour12;
-  const clock = (c, now = new Date()) => is24(c) ? `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}` : `${now.getHours() % 12 || 12}:${String(now.getMinutes()).padStart(2, '0')}`;
+  const clock = (c, now = MM.deviceDate(c)) => is24(c) ? `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}` : `${now.getHours() % 12 || 12}:${String(now.getMinutes()).padStart(2, '0')}`;
   MM.clockText = clock;
 
   // signal_cluster_view.xml: Wi-Fi, the spacer when the mobile signal shows too, the mobile signal with its data type
@@ -83,7 +83,7 @@
     tick(c, now) {
       if (now.getMinutes() === lastMinute) return;
       lastMinute = now.getMinutes();
-      const el = c.el.status.querySelector('.mmsb-clock'); if (el) el.textContent = clock(c, now);
+      const el = c.el.status.querySelector('.mmsb-clock'); if (el) el.textContent = clock(c);
     }
   });
 

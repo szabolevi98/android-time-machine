@@ -4,7 +4,7 @@
   "description": "Eight Android releases in the browser, each rebuilt from its own factory image.",
   "scripts": {
     "test": "node --test tests/*.cjs",
-    "test:browser": "node tests/browser/flows.mjs && node tests/browser/ng-release.mjs && node tests/browser/ng-wallpaper.mjs && node tests/browser/wallpaper-scroll.mjs && node tests/browser/limits-regression.mjs && node tests/browser/system-browser-mail.mjs && node tests/browser/system-smallapps.mjs && node tests/browser/system-store-games.mjs",
+    "test:browser": "node tests/browser/flows.mjs && node tests/browser/ng-release.mjs && node tests/browser/ng-wallpaper.mjs && node tests/browser/wallpaper-scroll.mjs && node tests/browser/limits-regression.mjs && node tests/browser/system-browser-mail.mjs && node tests/browser/system-smallapps.mjs && node tests/browser/system-store-games.mjs && node tests/browser/system-settings-effects.mjs",
     "check:texts": "node docs/tools/text-check.mjs",
     "check:assets": "node docs/tools/asset-check.mjs",
     "check:fonts": "node docs/tools/font-check.mjs",

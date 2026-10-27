@@ -228,7 +228,7 @@
 
   // SplitClockView: the time, and in 12-hour locales the AM / PM part after it.
   function headerClock(c) {
-    const now = new Date(), locale = c.locale();
+    const now = NG.deviceDate(c), locale = c.locale();
     const h24 = c.data.settings.time24 ?? !new Intl.DateTimeFormat(locale, {hour: 'numeric'}).resolvedOptions().hour12;
     const mm = String(now.getMinutes()).padStart(2, '0');
     if (h24) return `${now.getHours()}:${mm}`;
@@ -236,7 +236,7 @@
     return `${now.getHours() % 12 || 12}:${mm} ${c.safe(ampm)}`;
   }
   // DateView with abbrev_wday_month_day_no_year_alarm "EEEMMMd", the locale's best pattern for it.
-  const headerDate = c => new Intl.DateTimeFormat(c.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).format(new Date());
+  const headerDate = c => new Intl.DateTimeFormat(c.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).format(NG.deviceDate(c));
 
   function tileHtml(c, tile, box) {
     const pos = `left:calc(${box.x.toFixed(3)} * var(--dp));top:calc(${box.rowTop.toFixed(3)} * var(--dp));width:calc(${box.w.toFixed(3)} * var(--dp));height:calc(${box.h.toFixed(3)} * var(--dp))`;

@@ -22,8 +22,8 @@
   // settings_distance_units is both the title and the list).
   const arr = r => {
     if (typeof r !== 'string' || !r.startsWith('array/')) return Array.isArray(r) ? r : [];
-    const both = T().t('array:' + r.slice(6)), one = Array.isArray(both) ? both : T().t(r.slice(6));
-    return Array.isArray(one) ? one : [];
+    const table = T(), key = r.slice(6), value = table.t(table.has('array:' + key) ? 'array:' + key : key);
+    return Array.isArray(value) ? value : [];
   };
   // A list entry with an argument: Play Movies' audio_language_selector_titles ("%1$s, when available", value system)
   // names the system language, as Locale.getDisplayLanguage does.

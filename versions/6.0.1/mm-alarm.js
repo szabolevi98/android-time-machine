@@ -92,7 +92,7 @@
 
   // -- AlarmActivity --------------------------------------------------------------------------------------------------
   function alarmScreen(c) {
-    const t = T(), st = c.ui.alarmAlert, now = new Date(), color = MM.clockHourColor();
+    const t = T(), st = c.ui.alarmAlert, now = MM.deviceDate(c), color = MM.clockHourColor(c);
     if (!st) return `<div class="mmal" style="background:${color}"></div>`;
     const icon = (cls, img) => `<i class="mmal-ic ${cls}" style="-webkit-mask-image:url('${A(img)}');mask-image:url('${A(img)}')"></i>`;
     const alert = st.phase !== 'ring' ? `<div class="mmal-reveal ${st.phase}" style="--hour:${color}"><b>${c.safe(t.t(st.phase === 'off' ? 'alarm_alert_off_text' : 'alarm_alert_snoozed_text'))}</b>${st.info ? `<span>${c.safe(st.info)}</span>` : ''}</div>` : '';
@@ -110,7 +110,7 @@
     const snooze = root.querySelector('.mmal-btn.snooze'), dismiss = root.querySelector('.mmal-btn.dismiss');
     const mid = el => { const r = el.getBoundingClientRect(); return r.left + r.width / 2; };
     const rgb = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
-    const hour = rgb(MM.clockHourColor());
+    const hour = rgb(MM.clockHourColor(c));
     const paint = (el, f, tint) => {
       el.style.transform = `scale(${0.7 + 0.3 * f})`;
       el.querySelector('.mmal-bg').style.opacity = f;
@@ -139,7 +139,7 @@
   }
   MM.register('alarm-alert', {
     app: false,
-    statusColor: () => MM.clockHourColor(),
+    statusColor: c => MM.clockHourColor(c),
     render: alarmScreen,
     mount(c, root) { bindDrag(c, root); },
     back: () => true,
@@ -159,10 +159,10 @@
   function overText(ms) { const s = Math.floor(ms / 1000); return `-${s >= 3600 ? `${Math.floor(s / 3600)}:${pad2(Math.floor(s / 60) % 60)}` : Math.floor(s / 60)}:${pad2(s % 60)}`; }
   MM.register('timer-alert', {
     app: false,
-    statusColor: () => MM.clockHourColor(),
+    statusColor: c => MM.clockHourColor(c),
     render(c) {
       const t = T(), tm = S(c).timer, over = tm?.expired ? Date.now() - tm.expired : 0;
-      return `<div class="mmck mmal-timer" style="background:${MM.clockHourColor()}">
+      return `<div class="mmck mmal-timer" style="background:${MM.clockHourColor(c)}">
         <div class="mmck-circlewrap"><div class="mmck-circle done" style="--p:1"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48"/><circle class="arc" cx="50" cy="50" r="48" pathLength="100"/></svg><span class="mmck-ctime">${over >= 0 ? overText(over) : ''}</span></div></div>
         <div class="mmck-footer"><span></span><button type="button" class="mmck-fab" data-action="mmal-tstop" aria-label="${c.safe(t.t('timer_stop'))}"><img src="${A('ic_stop_white_24dp')}" alt=""></button><button type="button" class="mmck-side" data-action="mmal-tplus" aria-label="${c.safe(t.t('timer_plus_1_min'))}"><img src="${A('ic_plusone')}" alt=""></button></div></div>`;
     },
@@ -180,6 +180,7 @@
   let last = 0;
   MM.register('clock-alerts', {
     app: false,
+    clearData(){vibrate(false);last=0;},
     render: () => '',
     tick(c, now) {
       if (c.ui.power) return;

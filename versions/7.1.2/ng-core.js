@@ -236,6 +236,7 @@
     else navRoot.innerHTML = missingNav();
     viewport.innerHTML = mod ? mod.render(c) : ui.view === 'home' ? missingHome() : missing(ui.view);
     mod?.mount?.(c, viewport);
+    window.NG.applyPreferences?.(c,viewport);
     shown = {view: ui.view, sub: ui.sub, page};
     // Split screen (ng-split.js): the other side, the divider and the windows' bounds.
     window.NG.split?.after(c);
@@ -264,6 +265,7 @@
     const mod = modules[ui.overlay];
     overlayRoot.innerHTML = mod ? mod.render(c) : missing(ui.overlay, `<button type="button" data-action="ng-close">${safe(t('Close'))}</button>`);
     mod?.mount?.(c, overlayRoot);
+    window.NG.applyPreferences?.(c,overlayRoot);
   }
 
   // Opening a screen: an app goes to the front of the recent list (Overview keeps every task; trimmed here at 20).

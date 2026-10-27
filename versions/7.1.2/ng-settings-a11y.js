@@ -23,8 +23,7 @@
      font_size_preview (Sample text …) or screen_zoom_preview_1 (the conversation of ConversationMessageView: the 9-patch
      bubbles, the lettered icons) and _2 (AppGridView: the launcher's apps); the dots, the current step's label, the
      LabeledSeekBar between the smaller and larger buttons, the summary. Font sizes are fontsize's entries (0.85, 1,
-     1.15, 1.3); the 6P's display sizes are DisplayDensityUtils' (560 dpi; a 1.5 maximum cut to 320 dp of width: 476, 560, 612, 666, 720). The simulator keeps
-     the choice and shows it in the previews; its own screens stay at the default size. */
+     1.15, 1.3); the 6P's display sizes are DisplayDensityUtils' (560 dpi; a 1.5 maximum cut to 320 dp of width: 476, 560, 612, 666, 720). Display size remains a preview; ng-settings-effects.js applies Font size to the phone's newly drawn text. */
 (() => {
   'use strict';
   const T = () => NG.text('settings');
@@ -145,7 +144,7 @@
 
   // -- Font size and Display size -------------------------------------------------------------------------------------
   const FONT_SCALES = ['0.85', '1.0', '1.15', '1.30'];
-  const fontIndex = c => Math.max(0, FONT_SCALES.indexOf(S(c).fontScale || '1.0'));
+  const fontIndex = c => Math.max(0, FONT_SCALES.findIndex(v => +v === +(S(c).fontScale ?? 1)));
   const fontLabel = (c, i) => NG.settingsArr('array/entries_font_size')[i] || '';
   const DENSITIES = [476, 560, 612, 666, 720];
   const ZOOM_LABELS = ['screen_zoom_summary_small', 'screen_zoom_summary_default', 'screen_zoom_summary_large', 'screen_zoom_summary_very_large', 'screen_zoom_summary_extremely_large'];

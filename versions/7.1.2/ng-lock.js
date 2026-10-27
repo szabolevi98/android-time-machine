@@ -45,10 +45,11 @@
   const is24 = c => c.data.settings.time24 ?? !new Intl.DateTimeFormat(c.locale(), {hour: 'numeric'}).resolvedOptions().hour12;
   // KeyguardStatusView.Patterns: the best "hm" / "Hm" pattern, AM / PM taken out, ':' as the clock colon.
   function clockText(c, now = new Date()) {
+    now=NG.deviceDate(c);
     const parts = new Intl.DateTimeFormat(c.locale(), {hour: 'numeric', minute: '2-digit', hour12: !is24(c)}).formatToParts(now);
     return parts.filter(p => p.type !== 'dayPeriod').map(p => p.type === 'literal' ? p.value.replace(':', '').replace(/\s+/g, '') : p.value).join('').trim();
   }
-  const dateText = (c, alarm, now = new Date()) => new Intl.DateTimeFormat(c.locale(), alarm ? {weekday: 'short', month: 'short', day: 'numeric'} : {weekday: 'long', month: 'long', day: 'numeric'}).format(now);
+  const dateText = (c, alarm, now = new Date()) => new Intl.DateTimeFormat(c.locale(), alarm ? {weekday: 'short', month: 'short', day: 'numeric'} : {weekday: 'long', month: 'long', day: 'numeric'}).format(NG.deviceDate(c));
   const alarmText = (c, at) => new Intl.DateTimeFormat(c.locale(), {weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: !is24(c)}).format(at);
 
   const secure = c => ['pin', 'password', 'pattern'].includes(c.data.settings.lock?.type);

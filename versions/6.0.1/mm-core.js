@@ -232,6 +232,7 @@
     else navRoot.innerHTML = missingNav();
     viewport.innerHTML = mod ? mod.render(c) : ui.view === 'home' ? missingHome() : missing(ui.view);
     mod?.mount?.(c, viewport);
+    window.MM.applyPreferences?.(c,viewport);
     shown = {view: ui.view, sub: ui.sub, page};
     renderOverlay();
     if (old) animateTransition(kind, old);
@@ -262,6 +263,7 @@
     const mod = modules[ui.overlay];
     overlayRoot.innerHTML = mod ? mod.render(c) : missing(ui.overlay, `<button type="button" data-action="mm-close">${safe(t('Close'))}</button>`);
     mod?.mount?.(c, overlayRoot);
+    window.MM.applyPreferences?.(c,overlayRoot);
   }
 
   // Opening a screen: an app goes to the front of the recent list (Overview keeps every task; trimmed here at 20).
@@ -269,6 +271,7 @@
   function open(view, sub = '', {replace = false, from = null, zoom = false} = {}) {
     if (ui.view !== view && !replace && ui.view !== 'home' && ui.view !== 'lock') ui.history.push({view: ui.view, sub: ui.sub});
     ui.view = view; ui.sub = sub; ui.overlay = '';
+    window.MM.appData?.opened(c,view);
     if (modules[view]?.app !== false && SCREENS[view] && !SYSTEM.includes(view)) ui.recent = [view, ...ui.recent.filter(id => id !== view)].slice(0, 20);
     // The launcher's predicted apps follow what was opened last (kept with the saved state).
     if (window.MM.appsData?.[view]) { data.recentApps = [view, ...(data.recentApps || []).filter(id => id !== view)].slice(0, 12); save(); }

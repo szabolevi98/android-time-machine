@@ -365,7 +365,7 @@
     name?.addEventListener('change', () => { const loc = folderOf(c, st.folder); if (loc) { loc.item.title = name.value; c.save(); } });
     name?.addEventListener('keydown', e => { if (e.key === 'Enter') name.blur(); e.stopPropagation(); });
     let press = null;
-    const longPress = 500;   // ViewConfiguration's long press timeout
+    const longPress = MM.longPressTimeout(c);   // ViewConfiguration's long press timeout
     el.addEventListener('pointerdown', e => {
       if (e.button || st.dragging) return;
       if (e.target.closest('.mmh-qsb,.mmh-overview,.mmh-cling,.mmh-fname,.mmh-allapps')) return;

@@ -40,7 +40,8 @@
       {id: 3, title: 'Hike with Alex', date: iso(nextDow(6)), start: '08:00', end: '13:00', allDay: false, where: 'Ridge trail', note: ''},
       {id: 4, title: 'Meetup slides due', date: iso(plus(9)), allDay: true, where: '', note: ''}];
   })();
-  const events = c => c.data.events || (c.data.events = JSON.parse(JSON.stringify(MM.defaults.events)));
+  const records = c => c.data.events || (c.data.events = JSON.parse(JSON.stringify(MM.defaults.events)));
+  const events = c => MM.calendarPreferences.visible(c,records(c));
   // The Calendar widget (mm-widgets.js) lists the same events.
   MM.calendarEvents = events;
   const ui = c => c.ui.calendar || (c.ui.calendar = {screen: '', drawer: false, oobe: 0, draft: null});
@@ -64,7 +65,7 @@
     for (const e of events(c)) { const k = e.date; if (!byDay.has(k)) byDay.set(k, []); byDay.get(k).push(e); }
     for (const list of byDay.values()) list.sort((a, b) => (a.allDay ? -1 : b.allDay ? 1 : a.start.localeCompare(b.start)));
     const first = new Date(today.getFullYear(), today.getMonth(), 1), last = new Date(today.getFullYear(), today.getMonth() + 3, 0);
-    const startDow = new Intl.Locale(c.locale()).weekInfo?.firstDay ?? (c.locale().startsWith('en') ? 7 : 1);
+    const startDow = firstDow(c);
     let out = '', month = -1;
     const d = new Date(first); d.setDate(d.getDate() - ((d.getDay() - startDow % 7 + 7) % 7));
     while (d <= last) {
@@ -83,7 +84,7 @@
         const key = iso(day), list = byDay.get(key) || [], isToday = +day === +today;
         if ((list.length || isToday) && day >= first && day <= last) {
           const cls = isToday ? 'today' : day < today ? 'past' : '';
-          out += `<div class="mmcl-day ${cls}" ${isToday ? 'id="mmcl-today"' : ''}><div class="mmcl-dhead"><small>${esc(c, fmt(c, day, {weekday: 'short'}))}</small><b>${day.getDate()}</b></div><div class="mmcl-chips">${list.map(e => `<button type="button" class="mmcl-chip${e.allDay ? '' : ' two'}" style="background:${PEACOCK}" data-action="mmcl-event" data-id="${e.id}"><b>${esc(c, e.title)}</b>${e.allDay ? '' : `<span>${esc(c, `${time(c, e.start)} – ${time(c, e.end)}`)}${e.where ? `, ${esc(c, e.where)}` : ''}</span>`}</button>`).join('') || `<span class="mmcl-none">${esc(c, t.t('no_events'))}</span>`}</div></div>`;
+          out += `<div class="mmcl-day ${cls}" ${isToday ? 'id="mmcl-today"' : ''}><div class="mmcl-dhead"><small>${esc(c, fmt(c, day, {weekday: 'short'}))}</small><b>${day.getDate()}</b></div><div class="mmcl-chips">${list.map(e => `<button type="button" class="mmcl-chip${e.allDay ? '' : ' two'}" style="background:${PEACOCK}" data-action="mmcl-event" data-id="${e.id}"><b>${esc(c, e.title)}</b>${e.allDay ? '' : `<span>${esc(c, e.noEnd ? time(c,e.start) : `${time(c, e.start)} – ${time(c, e.end)}`)}${e.where ? `, ${esc(c, e.where)}` : ''}</span>`}</button>`).join('') || `<span class="mmcl-none">${esc(c, t.t('no_events'))}</span>`}</div></div>`;
         }
       }
       d.setDate(d.getDate() + 7);
@@ -114,7 +115,7 @@
 
   // ---- Day, Week, Month, the mini month, search ---------------------------------------------------------------------
   const HOUR = 48;
-  const firstDow = c => (new Intl.Locale(c.locale()).weekInfo?.firstDay ?? (c.locale().startsWith('en') ? 7 : 1)) % 7;
+  const firstDow = c => MM.calendarPreferences.firstDay(c);
   const cur = c => { const u = ui(c); return u.date ? parse(u.date) : day0(); };
   const add = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
   const weekStart = (c, d) => add(d, -((d.getDay() - firstDow(c) + 7) % 7));
@@ -126,7 +127,7 @@
     const allDay = days.map(d => `<div class="mmcl-gall">${dayEvents(c, d).filter(e => e.allDay).map(e => `<button type="button" class="mmcl-gchip" data-action="mmcl-event" data-id="${e.id}" style="background:${PEACOCK}">${esc(c, e.title)}</button>`).join('')}</div>`).join('');
     const hours = Array.from({length: 24}, (_, h) => `<div class="mmcl-ghour"><span>${h ? esc(c, fmt(c, new Date(2000, 0, 1, h), {hour: 'numeric'})) : ''}</span></div>`).join('');
     const cols = days.map(d => {
-      const blocks = dayEvents(c, d).filter(e => !e.allDay).map(e => { const s = minutes(e.start), en = Math.max(s + 30, minutes(e.end || e.start)); return `<button type="button" class="mmcl-gev" data-action="mmcl-event" data-id="${e.id}" style="top:calc(${s / 60 * HOUR} * var(--dp));height:calc(${(en - s) / 60 * HOUR - 2} * var(--dp));background:${PEACOCK}"><b>${esc(c, e.title)}</b>${multi ? '' : `<small>${esc(c, `${time(c, e.start)} – ${time(c, e.end)}`)}${e.where ? `, ${esc(c, e.where)}` : ''}</small>`}</button>`; }).join('');
+      const blocks = dayEvents(c, d).filter(e => !e.allDay).map(e => { const s = minutes(e.start), en = Math.max(s + 30, minutes(e.end || e.start)); return `<button type="button" class="mmcl-gev" data-action="mmcl-event" data-id="${e.id}" style="top:calc(${s / 60 * HOUR} * var(--dp));height:calc(${(en - s) / 60 * HOUR - 2} * var(--dp));background:${PEACOCK}"><b>${esc(c, e.title)}</b>${multi ? '' : `<small>${esc(c, e.noEnd ? time(c,e.start) : `${time(c, e.start)} – ${time(c, e.end)}`)}${e.where ? `, ${esc(c, e.where)}` : ''}</small>`}</button>`; }).join('');
       const line = +d === +today ? `<i class="mmcl-now" style="top:calc(${(now.getHours() * 60 + now.getMinutes()) / 60 * HOUR} * var(--dp))"></i>` : '';
       return `<div class="mmcl-gcol" data-date="${iso(d)}">${Array.from({length: 24}, (_, h) => `<button type="button" class="mmcl-gslot" data-action="mmcl-slot" data-date="${iso(d)}" data-h="${h}"></button>`).join('')}${blocks}${line}</div>`;
     }).join('');
@@ -134,6 +135,7 @@
       <div class="mmcl-gscroll mmcl-swipe"><div class="mmcl-gbody"><div class="mmcl-ghours">${hours}</div>${cols}</div></div></div>`;
   }
   function monthGrid(c, d, mini) {
+    const weekNumbers = !mini && MM.calendarPreferences.prefs(c).weekNumbers;
     const today = day0(), first = new Date(d.getFullYear(), d.getMonth(), 1), start = weekStart(c, first);
     const initials = Array.from({length: 7}, (_, i) => esc(c, fmt(c, add(start, i), {weekday: 'narrow'}))).map(s => `<i>${s}</i>`).join('');
     let cells = '';
@@ -141,14 +143,15 @@
       const x = add(start, i), out = x.getMonth() !== d.getMonth();
       if (i >= 35 && out && x > first) break;
       const evs = mini ? [] : dayEvents(c, x);
+      if(weekNumbers&&i%7===0)cells+=`<i class="mmcl-weeknum">${MM.calendarPreferences.week(x)}</i>`;
       cells += `<button type="button" class="mmcl-mcell${out ? ' out' : ''}${+x === +today ? ' today' : ''}" data-action="${mini ? 'mmcl-jump' : 'mmcl-mday'}" data-date="${iso(x)}"><b>${x.getDate()}</b>${evs.slice(0, 3).map(e => `<span style="background:${PEACOCK}">${esc(c, e.title)}</span>`).join('')}</button>`;
     }
-    return `<div class="mmcl-mgrid${mini ? ' mini' : ''}"><div class="mmcl-mdow">${initials}</div><div class="mmcl-mcells">${cells}</div></div>`;
+    return `<div class="mmcl-mgrid${weekNumbers?' weeks':''}${mini ? ' mini' : ''}"><div class="mmcl-mdow">${weekNumbers?'<i></i>':''}${initials}</div><div class="mmcl-mcells">${cells}</div></div>`;
   }
   function searchView(c) {
     const t = T(), u = ui(c), q = (u.search || '').trim().toLowerCase();
     const hits = q ? events(c).filter(e => [e.title, e.where, e.note].some(x => (x || '').toLowerCase().includes(q))).sort((a, b) => a.date.localeCompare(b.date) || (a.start || '').localeCompare(b.start || '')) : [];
-    const rows = hits.map(e => { const d = parse(e.date); return `<div class="mmcl-day"><div class="mmcl-dhead"><small>${esc(c, fmt(c, d, {weekday: 'short'}))}</small><b>${d.getDate()}</b></div><div class="mmcl-chips"><button type="button" class="mmcl-chip${e.allDay ? '' : ' timed'}" data-action="mmcl-event" data-id="${e.id}" style="background:${PEACOCK}"><b>${esc(c, e.title)}</b>${e.allDay ? '' : `<small>${esc(c, `${time(c, e.start)} – ${time(c, e.end)}`)}</small>`}</button></div></div>`; }).join('');
+    const rows = hits.map(e => { const d = parse(e.date); return `<div class="mmcl-day"><div class="mmcl-dhead"><small>${esc(c, fmt(c, d, {weekday: 'short'}))}</small><b>${d.getDate()}</b></div><div class="mmcl-chips"><button type="button" class="mmcl-chip${e.allDay ? '' : ' timed'}" data-action="mmcl-event" data-id="${e.id}" style="background:${PEACOCK}"><b>${esc(c, e.title)}</b>${e.allDay ? '' : `<small>${esc(c, e.noEnd ? time(c,e.start) : `${time(c, e.start)} – ${time(c, e.end)}`)}</small>`}</button></div></div>`; }).join('');
     return `<div class="mmcl"><div class="mmcl-bar"><button type="button" class="mmcl-btn" data-action="mmcl-sback"><img src="assets/gm-ic_arrow_back_24dp.png" alt=""></button><input class="mmcl-q" value="${esc(c, u.search || '')}" placeholder="${esc(c, t.t('search'))}" autocomplete="off">${u.search ? `<button type="button" class="mmcl-btn" data-action="mmcl-sclear" aria-label="${esc(c, t.t('accessibility_clear_search'))}"><img src="assets/gm-abc_ic_clear_mtrl_alpha.png" alt=""></button>` : ''}</div>
       <div class="mmcl-page mmcl-sched">${rows || (q ? `<div class="mmcl-none">${esc(c, t.t('no_results_found'))}</div>` : '')}</div></div>`;
   }
@@ -156,6 +159,7 @@
   // ---- an event and the editor --------------------------------------------------------------------------------------
   function when(c, e) {
     const d = parse(e.date), day = fmt(c, d, {weekday: 'long', month: 'long', day: 'numeric'});
+    if(e.noEnd&&!e.allDay)return `${day}\n${time(c,e.start)}`;
     return e.allDay ? day : `${day}\n${time(c, e.start)} – ${time(c, e.end)}`;
   }
   function info(c, e) {
@@ -171,7 +175,7 @@
       <div class="mmcl-etitle" style="background:${PEACOCK}"><input data-f="title" value="${esc(c, d.title)}" placeholder="${esc(c, t.t('edit_title_hint'))}" autocomplete="off"></div>
       <div class="mmcl-page"><div class="mmcl-seg">${ic(V('ic_date'))}<div class="mmcl-when"><label class="mmcl-allday"><span>${esc(c, t.t('edit_label_all_day'))}</span><button type="button" class="mmcl-sw" data-action="mmcl-allday" role="switch" aria-checked="${d.allDay}"><i class="mmw-switch${d.allDay ? ' on' : ''}"><i class="mmw-thumb"></i></i></button></label>
         <div class="mmcl-wrow"><input type="date" data-f="date" value="${d.date}"><span class="mmcl-wshow">${date(d.date)}</span>${d.allDay ? '' : `<span class="mmcl-tpick"><span>${esc(c, time(c, d.start))}</span><input type="time" data-f="start" value="${d.start}"></span>`}</div>
-        ${d.allDay ? '' : `<div class="mmcl-wrow"><span class="mmcl-wshow">${date(d.date)}</span><span class="mmcl-tpick"><span>${esc(c, time(c, d.end))}</span><input type="time" data-f="end" value="${d.end}"></span></div>`}<span class="mmcl-more">${esc(c, t.t('more_options'))}</span></div></div>
+        ${d.allDay || d.noEnd ? '' : `<div class="mmcl-wrow"><span class="mmcl-wshow">${date(d.endDate || d.date)}</span><span class="mmcl-tpick"><span>${esc(c, time(c, d.end))}</span><input type="time" data-f="end" value="${d.end}"></span></div>`}<span class="mmcl-more">${esc(c, t.t('more_options'))}</span></div></div>
         <div class="mmcl-seg">${ic(V('ic_location'))}<input class="mmcl-sin" data-f="where" value="${esc(c, d.where)}" placeholder="${esc(c, t.t('edit_location_hint'))}"></div>
         <div class="mmcl-seg">${ic(V('ic_notes'))}<input class="mmcl-sin" data-f="note" value="${esc(c, d.note)}" placeholder="${esc(c, t.t('edit_description_hint'))}"></div></div></div>`;
   }
@@ -184,6 +188,7 @@
   function startEdit(c, e) {
     const now = new Date(), h = (now.getHours() + 1) % 24;
     const d = e ? {...e} : {id: 0, title: '', date: iso(day0()), start: `${String(h).padStart(2, '0')}:00`, end: `${String((h + 1) % 24).padStart(2, '0')}:00`, allDay: false, where: '', note: ''};
+    if(!e)MM.calendarPreferences.applyDuration(c,d);
     d.orig = JSON.stringify({...d, orig: 0});
     ui(c).draft = d; ui(c).screen = 'edit';
   }
@@ -204,7 +209,7 @@
     mount(c, root) {
       const sched = root.querySelector('.mmcl-sched'), today = root.querySelector('#mmcl-today');
       if (sched && today && !ui(c).scrolled) { sched.scrollTop = Math.max(0, today.offsetTop - 120); ui(c).scrolled = true; }
-      root.querySelectorAll('.mmcl-edit [data-f]').forEach(i => i.addEventListener('input', () => { ui(c).draft[i.dataset.f] = i.value; if (i.type === 'date' || i.type === 'time') c.render(); }));
+      root.querySelectorAll('.mmcl-edit [data-f]').forEach(i => i.addEventListener('input', () => { const d=ui(c).draft;if(i.dataset.f==='date'&&d.endDate){const end=parse(d.endDate),days=Math.round((parse(i.value)-parse(d.date))/86400000);end.setDate(end.getDate()+days);d.endDate=iso(end);}d[i.dataset.f]=i.value; if (i.type === 'date' || i.type === 'time') c.render(); }));
       const u = ui(c), gs = root.querySelector('.mmcl-gscroll');
       if (gs) { gs.scrollTop = u.gridScroll ?? Math.max(0, (new Date().getHours() - 2) * HOUR * (gs.clientWidth / 360 || 1)); gs.addEventListener('scroll', () => { u.gridScroll = gs.scrollTop; }, {passive: true}); }
       // A horizontal swipe turns the period (the views) or the month (the mini month).
@@ -224,7 +229,7 @@
       return false;
     },
     action(name, el, event, c) {
-      const u = ui(c), t = T(), e = events(c).find(x => x.id === +(el.dataset.id || u.screen.slice(6)));
+      const u = ui(c), t = T(), e = records(c).find(x => x.id === +(el.dataset.id || u.screen.slice(6)));
       switch (name) {
         case 'mmcl-oobenext': u.oobe++; c.render(); return true;
         case 'mmcl-oobedone': c.data.calendarOobe = true; c.save(); c.render(); return true;
@@ -233,7 +238,7 @@
         case 'mmcl-picker': u.picker = !u.picker; u.pickerMonth = ''; c.render(); return true;
         case 'mmcl-jump': if (Date.now() - (u.swiped || 0) < 300) return true; u.date = el.dataset.date; u.picker = false; u.pickerMonth = ''; u.gridScroll = null; if ((u.view || 'schedule') === 'schedule') u.view = 'day'; c.render(); return true;
         case 'mmcl-mday': if (Date.now() - (u.swiped || 0) < 300) return true; u.date = el.dataset.date; u.view = 'day'; c.render(); return true;
-        case 'mmcl-slot': { if (Date.now() - (u.swiped || 0) < 300) return true; startEdit(c, null); const h = +el.dataset.h; Object.assign(u.draft, {date: el.dataset.date, start: `${String(h).padStart(2, '0')}:00`, end: `${String((h + 1) % 24).padStart(2, '0')}:00`}); u.draft.orig = JSON.stringify({...u.draft, orig: 0}); c.render(); return true; }
+        case 'mmcl-slot': { if (Date.now() - (u.swiped || 0) < 300) return true; startEdit(c, null); const h = +el.dataset.h; Object.assign(u.draft, {date: el.dataset.date, start: `${String(h).padStart(2, '0')}:00`, end: `${String((h + 1) % 24).padStart(2, '0')}:00`}); MM.calendarPreferences.applyDuration(c,u.draft);u.draft.orig = JSON.stringify({...u.draft, orig: 0}); c.render(); return true; }
         case 'mmcl-schedview': case 'mmcl-dayview': case 'mmcl-weekview': case 'mmcl-monthview': u.view = {schedview: 'schedule', dayview: 'day', weekview: 'week', monthview: 'month'}[name.slice(5)]; u.drawer = false; u.gridScroll = null; c.render(); return true;
         case 'mmcl-settings': u.drawer = false; MM.openPrefs(c, 'calendar', 'calendar_settings_headers', t.t('drawer_settings')); return true;
         case 'mmcl-sback': u.search = null; c.render(); return true;
@@ -246,12 +251,12 @@
         case 'mmcl-cancel': closeEditor(c, true); return true;
         case 'mmcl-allday': u.draft.allDay = !u.draft.allDay; c.render(); return true;
         case 'mmcl-save': {
-          const d = u.draft, list = events(c); delete d.orig;
+          const d = u.draft, list = records(c); delete d.orig;
           if (!d.title.trim()) d.title = t.t('event');
           if (d.id) Object.assign(list.find(x => x.id === d.id), d); else { d.id = Math.max(0, ...list.map(x => x.id)) + 1; list.push(d); }
           c.save(); u.draft = null; u.screen = `event:${d.id}`; c.render(); return true;
         }
-        case 'mmcl-delete': c.dialog({message: t.t('delete_this_event_title'), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok'), action: c => { c.data.events = events(c).filter(x => x !== e); c.save(); u.screen = ''; c.render(); }}]}); return true;
+        case 'mmcl-delete': c.dialog({message: t.t('delete_this_event_title'), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok'), action: c => { c.data.events = records(c).filter(x => x !== e); c.save(); u.screen = ''; c.render(); }}]}); return true;
         case 'mm-menu': c.menu([{label: t.t('search'), action: c => { u.search = ''; c.render(); }}, {label: t.t('calendar_refresh'), action: c => c.render()}]); return true;
       }
       return false;

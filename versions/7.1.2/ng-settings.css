@@ -539,3 +539,6 @@ button.ngst-pref:active,div.ngst-pref[role=button]:active:not(:has(.ngst-gear:ac
 .ngsa-key{margin-left:calc(4 * var(--dp));padding:calc(4 * var(--dp));border-radius:calc(2 * var(--dp));background:#f5f5f5;color:#757575;font-size:calc(14 * var(--dp));line-height:calc(19 * var(--dp));text-transform:uppercase;white-space:nowrap}
 .ngsa-key.icon{display:flex;padding:calc(4 * var(--dp))}
 .ngsa-key.icon img{width:calc(19 * var(--dp));height:calc(19 * var(--dp))}
+
+/* WifiDisplaySettings: no receiver is discoverable in the local demo. */
+.ngcast-empty{padding:calc(24 * var(--dp));font-size:calc(16 * var(--dp));color:#757575;text-align:center;}
