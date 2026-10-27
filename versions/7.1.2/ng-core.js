@@ -158,7 +158,15 @@
     const old = viewport, fresh = old.cloneNode(false), top = old.offsetTop, height = old.offsetHeight;
     if (LAUNCHER.includes(shown.view)) {
       const cs = getComputedStyle(screen);
-      old.style.background = `#000 ${cs.backgroundImage} 0 ${-top}px / auto ${screen.clientHeight}px no-repeat`;
+      // Paint in the screen's original bounds: the viewport excludes the system bars, while a saved crop may pan
+      // and zoom on either axis. Reusing its background in a full-screen layer preserves percentage geometry.
+      const wallpaper = document.createElement('div');
+      wallpaper.className = 'ng-transition-wallpaper';
+      wallpaper.setAttribute('aria-hidden', 'true');
+      Object.assign(wallpaper.style, {position: 'absolute', left: '0', top: `${-top}px`, width: '100%',
+        height: `${screen.clientHeight}px`, background: cs.background, zIndex: '-1', pointerEvents: 'none'});
+      old.style.isolation = 'isolate';
+      old.prepend(wallpaper);
     }
     old.removeAttribute('id'); old.classList.add('ng-leaving');
     Object.assign(old.style, {position: 'absolute', left: '0', right: '0', top: `${top}px`, height: `${height}px`, overflow: 'hidden', pointerEvents: 'none'});

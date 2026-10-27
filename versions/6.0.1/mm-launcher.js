@@ -358,6 +358,7 @@
     const el = root.querySelector('.mmh'), strip = root.querySelector('.mmh-strip');
     if (!el) return;
     const st = c.ui.home, h = home(c), last = h.pages.length;
+    st.listenersOff?.();
     // A folder plays its opening once (a re-render while it is open keeps it as it is).
     if (st.folder && st.folderShown !== st.folder) { st.folderShown = st.folder; folderOpenAnim(c, el.querySelector('.mmh-fpanel')); }
     if (!st.folder) st.folderShown = null;
@@ -415,11 +416,28 @@
       st.page = page; el.style.setProperty('--page', page); el.classList.toggle('now', page === 0);
       root.querySelectorAll('.mmh-dots i').forEach((dot, i) => dot.classList.toggle('on', i === page));
     };
+    const cancel = () => {
+      if (!press && !st.dragging) return;
+      clearTimeout(press?.timer); press = null;
+      const d = st.dragging;
+      if (d) { clearTimeout(d.edgeTimer); st.dragging = null; st.suppressClick = false; }
+      c.render();
+    };
+    // Keep native vertical scrolling until a long press starts a drag (including a drawer hand-off).
+    // Pointer movement alone cannot cancel the browser's touch pan, which would otherwise send pointercancel.
+    const touchMove = e => { if (st.dragging) e.preventDefault(); };
     // Moves and the release go to the document: a drag may start in the drawer and the pointer leave the launcher.
     document.addEventListener('pointermove', move);
     document.addEventListener('pointerup', end, true);
-    root._mmhOff?.();
-    root._mmhOff = () => { document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', end, true); };
+    document.addEventListener('pointercancel', cancel, true);
+    document.addEventListener('touchmove', touchMove, {passive: false});
+    st.listenersOff = () => {
+      clearTimeout(press?.timer); press = null;
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerup', end, true);
+      document.removeEventListener('pointercancel', cancel, true);
+      document.removeEventListener('touchmove', touchMove);
+    };
     // A drag the drawer started (an app held there) continues here.
     if (st.pendingDrag) {
       const d = st.pendingDrag; st.pendingDrag = null;
@@ -453,6 +471,18 @@
     // browser's device toolbar) renders it again so the five rows share the new height.
     init(c) { let size = ''; new ResizeObserver(() => { const vp = c.el.viewport, next = `${vp.clientWidth}/${vp.clientHeight}`; if (next === size) return; size = next; if (c.ui.view === 'home' && !c.ui.home?.dragging && !c.ui.home?.folder) c.render(); }).observe(c.el.screen); },
     render, mount,
+    unmount(c) {
+      const st = c.ui.home;
+      st?.listenersOff?.();
+      if (!st) return;
+      st.listenersOff = null;
+      if (st.dragging) {
+        clearTimeout(st.dragging.edgeTimer);
+        st.dragging.view?.remove();
+        if (st.dragging.srcEl) st.dragging.srcEl.style.visibility = '';
+        st.dragging = null; st.suppressClick = false;
+      }
+    },
     reset(c) { if (c.ui.home) { Object.assign(c.ui.home, {folder: null, overview: false}); if (!c.ui.home.pendingDrag) c.ui.home.page = 1; } },
     back(c) { const st = c.ui.home; if (st?.folder) { closeFolder(c); return true; } if (st?.overview) { st.overview = false; c.render(); } return true; },
     action(name, el, event, c) {

@@ -1,7 +1,7 @@
 /* Android 7.1.2 Overview (ng-recents.js), in dp: SystemUI's recents.xml, recents_task_view.xml,
    recents_task_view_header.xml, recents_stack_action_button.xml and recents_empty.xml of N2G48C. The activity shows the
    wallpaper under its 0.33 black scrim; the status bar and the navigation bar are see-through. */
-.screen.view-recents{background:#000 var(--ng-wallpaper,url('assets/fw-default_wallpaper.png')) left top/auto 100% no-repeat}
+.screen.view-recents{background:#000 var(--ng-wallpaper,url('assets/fw-default_wallpaper.png')) var(--ng-home-position,left top)/var(--ng-home-size,auto 100%) no-repeat}
 .screen.view-recents .ngnb{background:#00000054}
 .ngrc{position:absolute;inset:0;overflow:hidden;font-family:Roboto,sans-serif;touch-action:none;user-select:none}
 .ngrc-scrim{position:absolute;inset:0;background:#00000054}

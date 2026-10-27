@@ -6,7 +6,7 @@
      'recents') and the held Home (the assist gesture); the side keys are power (held: the power menu) and volume
    - the site controls around the phone: language, full screen, reset
    Every screen is drawn by an mm- module that registers itself:
-     MM.register(id, {title, app, render(c), mount(c, root), action(name, el, event, c), submit(form, event, c),
+     MM.register(id, {title, app, render(c), mount(c, root), unmount(c), action(name, el, event, c), submit(form, event, c),
                       back(c), tick(c, now), noStatus(c), noNav(c), keepAwake(c), timeout(c)})
    render() returns the screen's HTML; the other hooks are optional and return true when they handled the event.
    A screen no module draws shows the "not built yet" card instead of an older version's screen. */
@@ -217,6 +217,8 @@
     } else old.remove();
   }
   function render() {
+    // A leaving viewport is only an animation snapshot; it must no longer own input listeners or timers.
+    if (shown.view && (shown.view !== ui.view || ui.sleeping)) modules[shown.view]?.unmount?.(c);
     snapshot();
     const mod = modules[ui.view];
     const page = mod?.page?.(c) ?? '';
