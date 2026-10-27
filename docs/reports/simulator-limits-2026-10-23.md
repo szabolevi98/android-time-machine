@@ -249,7 +249,111 @@ APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<sl
 
 - **Állapot:** Kész — `29783718`. Telepítettként: 6.0.1 Play Newsstand 3.5.2 (app_color_material sáv, fiók: Read Now, My Library, Bookmarks), 7.1.2 Play Newsstand 4.5.0 (a 4.x újratervezés: világos sáv, alsó sáv: For You, Library, Read Later), egy sablonból (`docs/templates/newsstand-play.*`, `docs/tools/newsstand-play.py`) a saját APK szövegeivel és ikonjaival: cikkoldal Share-rel és a megtartás / eltávolítás kapcsolóval (toast), a megtartott cikkek listája vagy az APK üres felirata, könyvtár forrásonként, Article text size, Search ("No results found"). A cikkek a korábbi verziók kitalált demódarabjai (`news-reader.js`). Explore, előfizetés, áruház, Help: elutasítás. Ellenőrzés: `tests/browser/play-newsstand.mjs` (mindkét verzió, telefonos szélesség is), `npm test`.
 
-**A negyedik kör kész (2026-10-27):** mind a tíz app (T50–T57) telepítettként a 6.0.1-ben és a 7.1.2-ben, a forrás-APK-k ellenőrzőösszeggel a `docs/sources.md`-ben, a böngészős tesztek `tests/browser/play-*.mjs`, `mm-earth.mjs`, `ng-earth.mjs`. Nincs deployolva.
+**A negyedik kör kész (2026-10-27)**, de csak a könnyített szinten; az 5.1.1-es kidolgozottságot az ötödik kör pótolja. Mind a tíz app (T50–T57) telepítettként a 6.0.1-ben és a 7.1.2-ben, a forrás-APK-k ellenőrzőösszeggel a `docs/sources.md`-ben, a böngészős tesztek `tests/browser/play-*.mjs`, `mm-earth.mjs`, `ng-earth.mjs`. Nincs deployolva.
+
+### Ötödik kör — a telepített appok az 5.1.1 szintjén (tervezve 2026-10-27)
+
+**Miért:** a negyedik kör a tíz appot a „könnyített szinten” tette fel a 6.0.1-be és a 7.1.2-be. A tulajdonos ezt úgy
+értette, hogy legalább az 5.1.1-es kidolgozottság jön, nem annál kevesebb (2026-10-27: „én azt hittem eleve úgy csinálod
+meg”). Ez a kör ezt pótolja: amit az 5.1.1-ben a második és harmadik kör megcsinált (T19, T23, T35, T36, T40–T43, T45),
+az a 6.0.1-ben és a 7.1.2-ben is működjön, a verzió saját APK-jának felületével és szövegeivel. Ami az újakban már több
+(Docs-család szerkesztés, Fit Home/Timeline), megmarad.
+
+**Módszer:** a negyedik kör sablonjai bővülnek (`docs/templates/*-play.*`, `docs/tools/*-play.py`), így egy változtatás
+mindkét verzióba kerül. A logika az 5.1.1-es megoldást követi (`versions/5.1.1/editors-more.js`, `fit-more.js`,
+`play-apps.js`/`lp-play-more.js`, `news-sections.js`, a gyökérben `plus-post.js`, `news-reader.js`), de semmit nem tölt be
+közvetlenül más verzióból (szivárgástesztek). Szöveg, ikon, menüsorrend és beállítás-XML a 6.0.1-es / 7.1.2-es APK-ból;
+ami ott eltér (pl. Books 3.13 Sort az overflow-ban, Newsstand 4.5 alsó sávja), az az újabb APK szerint. A meglévő
+6.0.1/7.1.2 építőelemek használandók: nyomtatás (`MM.print`, 7.1.2 `c.ui.printJob`), DocumentsUI-választó
+(`MM.pickDocument`, `NG.pickDocument`), kezdőképernyő-parancsikon (`MM.launcherInstall`, `NG.launcherInstall`), a telefon
+képei (6.0.1 smallapps-választó, `NG.photoLibrary`), Chrome (`c.open('chrome', …)`), appbeállítások (`MM/NG.openPrefs`).
+
+**Kész, ha** az adott T-elem minden 5.1.1-es útja mindkét verzióban működik és újratöltés után is megmarad; a
+`tests/browser/play-*.mjs` minden új útra kap ellenőrzést asztali és telefonos szélességen; `npm test`, a szivárgás- és
+leltártesztek zöldek; a features-, sources- és demo-data dokumentáció frissül. Deploy csak kérésre.
+
+| Sorrend | Csomag | Tartalom (az 5.1.1-es minta) | Verziók | Becslés |
+|---|---|---|---|---|
+| 1 | T60 | Docs, Sheets, Slides: T40 + T45 | 6.0.1, 7.1.2 | 2,5–3 ó |
+| 2 | T61 | Fit: T41 | 6.0.1, 7.1.2 | 2 ó |
+| 3 | T62 | Play Books: T43 Books része + az 5.1.1 olvasója | 6.0.1, 7.1.2 | 2 ó |
+| 4 | T63 | News & Weather: T42 | 6.0.1, 7.1.2 | 1,5 ó |
+| 5 | T64 | Google+: T23 | 6.0.1, 7.1.2 | 1,5 ó |
+| 6 | T65 | Play Newsstand: T36 | 6.0.1, 7.1.2 | 1 ó |
+| 7 | T66 | Keep: T35 | 6.0.1, 7.1.2 | 1 ó |
+
+Összesen kb. 11–12 munkaóra. Earth nem kap csomagot: a 6.0.1/7.1.2 már az 5.1.1 B szintjén van (gömb, keresés, My
+location, észak, Share, Layers mentve, a saját settings.xml).
+
+#### T60 — Docs, Sheets, Slides az 5.1.1 szintjén
+
+- **Mostani állapot:** doclista a Drive fájljaiból, fiók (Recent, Shared with me, Starred, Offline, Trash), rács, Sort
+  by, keresés, FAB új fájllal, fájlmenü (Share link, Send file szövegként, Available offline, Rename, Remove; a Kukában
+  Restore, Delete), Settings, szerkesztés (szöveg, cellák, diák).
+- **Pótolandó (T40, T45):** Open document a DocumentsUI-választóval, típus szerint szűrve, a választott fájl tartalma
+  megnyílik; Send file valódi mellékletként (text/plain, a táblázat TSV); Move a Drive mappáiba (Cancel/OK); Add to home
+  screen: a dokumentumot nyitó parancsikon a kezdőképernyőn, újratöltve is, Remove a parancsikont is törli; Print a
+  verzió nyomtatási útján, a dokumentum szövegének előnézetével; Starred jelölés a fájlmenüből (az 5.1.1-es saját
+  gyűjtemények helyett a Drive starred mezője); a Drive-ból egy Docs/Sheets/Slides fájl a megfelelő appban nyílik.
+- **Állapot:** Nincs elkezdve.
+
+#### T61 — Fit az 5.1.1 szintjén
+
+- **Mostani állapot:** Home (kerék 30 perces célhoz, a nap tevékenységei, súlykártya), Timeline, Add activity 20
+  típussal, Add your weight (kg/lb), Settings (súly mértékegysége, célértesítések).
+- **Pótolandó (T41):** a tevékenységtípus-választó az ActivitySpinnerAdapter szerint (az utóbbi 7 elöl, utána az APK
+  összes típusa név szerint, a saját ikonjukkal); Discard changes? kérdés Back/X esetén, ha változott valami; súly
+  fontban, kilogrammban és stone-ban; magasság (cm vagy ft/in); napi cél (aktív idő vagy lépés, Set a goal, Delete goal,
+  Goal saved/deleted), amit a kerék használ; nem; mértékegységek (magasság, súly, távolság, energia); értesítések; mind a
+  1.58/1.68 saját beállításkártyáinak szövegeivel.
+- **Állapot:** Nincs elkezdve.
+
+#### T62 — Play Books az 5.1.1 szintjén
+
+- **Mostani állapot:** Read now/Home, My library/Library, Sort, kártyamenü (Download/Remove download, Delete from
+  library), Downloaded only, keresés; olvasó lapozással, csúszkával, Contents (Chapters), Display options (téma,
+  sormagasság).
+- **Pótolandó (T43 Books, az 5.1.1 olvasója):** Display options teljesen (Day/Night/Sepia, betűtípus, sorkizárás,
+  fényerő, szövegméret, sormagasság a LocalPreferences lépései szerint); könyvjelzők (Add/Remove bookmark) és a Contents
+  Bookmarks lapja; az olvasó overflow-ja (About this book, Share, Add/Remove bookmark, Settings); kártyamenü About this
+  book; a könyvtár lapjai, amennyit az APK mutat (All books, Purchases); Settings az APK beállításlistájából.
+- **Állapot:** Nincs elkezdve.
+
+#### T63 — News & Weather az 5.1.1 szintjén
+
+- **Mostani állapot:** Headlines az időjárás-kártyával (fülek, C°/F°, szélsebesség, Edit weather display), Technology
+  és Sports, cikkoldal Share-rel, keresés, sötét téma.
+- **Pótolandó (T42):** Change editions… (3.1: Country & Language) két helyi kiadással, amely a vezető hírt és a
+  szekciók sorrendjét ténylegesen cseréli; Manage sections (és a fiók Add and remove sections… pontja): elrejtés
+  (Section deleted), visszaállítás a Hidden sections alól, átrendezés húzással, a Headlines kötelező; kiadásonként
+  mentve; Open in browser a cikk saját URL-jét a Chrome-ba adja (offline cikkoldal, böngészőelőzmény).
+- **Állapot:** Nincs elkezdve.
+
+#### T64 — Google+ az 5.1.1 szintjén
+
+- **Mostani állapot:** Home stream (+1, Share, kártyamenü), megosztódoboz szöveggel és POST-tal, saját poszt törlése,
+  Notifications, alsó sáv, fiók.
+- **Pótolandó (T23):** a megosztódobozban kép a telefon képei közül és a telefon helye (a poszton is megjelennek, a
+  stream megtartja); Settings az APK beállításlistája: Notifications (pipák, csengőhang), About Google+ a verzióval; a
+  fiókoldalas sorok korlátja marad.
+- **Állapot:** Nincs elkezdve.
+
+#### T65 — Play Newsstand az 5.1.1 szintjén
+
+- **Mostani állapot:** Read Now/For You, My Library/Library forrásonként, Bookmarks/Read Later, cikkoldal Share-rel és
+  megtartással, Article text size az overflow-ban, keresés.
+- **Pótolandó (T36):** Settings az APK saját settings.xml-je (`MM/NG.openPrefs`), benne az Article text size;
+  Downloaded only / On device only, amely csak a megtartottakat hagyja; a könyvtár lapjai és a többi szekció az APK üres
+  feliratával; Explore elutasítás helyett az APK üres felirata.
+- **Állapot:** Nincs elkezdve.
+
+#### T66 — Keep az 5.1.1 szintjén
+
+- **Mostani állapot:** jegyzetek, listák, színek, Pin, Archive, Kuka, Make a copy, Send, keresés, oszlopnézet, Settings.
+- **Pótolandó (T35):** hangjegyzet: rövid generált WAV, menthető, lejátszható, újratöltve megmarad, mellékletként
+  küldhető; Back megszakítja a felvételt, törlés megerősítéssel; a beállítások sorai a 3.3/3.4 APK settings XML-je
+  szerint, ha ott több van a mostaninál.
+- **Állapot:** Nincs elkezdve.
 
 ### Feladatcsomagok és készfeltételek
 
