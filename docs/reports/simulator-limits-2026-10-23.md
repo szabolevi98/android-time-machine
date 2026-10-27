@@ -438,9 +438,7 @@ Sorrend: előbb az apró hibák és halott sorok, aztán appok szerint, végül 
 
 #### Ellenőrzés és terv (2-es változat, 2026-10-27)
 
-**Státusz: csak felmérés és terv, jóváhagyásra vár.** A tulajdonos a teljes T71–T93 listából a „2-es változatot” kérte
-felmérni: csak a látható, de nem működő vagy hibás részek pótlását, a nagy újraépítések nélkül. Javítás nem indult; a hat
-félkész T71-javítás `git stash`-ben van („T71 partial fixes …”).
+**Státusz: jóváhagyva, végrehajtás alatt.** A tulajdonos 2026-10-27-én mind a hét alábbi csomag végrehajtását kérte, az 1. csomagtól; commit és push engedélyezett, deploy nem kell. A teljes T71–T93 listából csak a „2-es változat” terjedelme érvényes: a látható, de nem működő vagy hibás részek pótlása, a nagy újraépítések nélkül. A félkész T71 stash feldolgozva; az 1–4. csomag kész (T71, T75, T72–T74, T79–T80). A folytatási sorrend az alábbi hétcsomagos tábláé; a T76 Naptár General a 7. csomag része.
 
 **Ellenőrzés a kódban (nem az ügynökök szava alapján).** Megerősítve: a T71 tételei (a 7.1.2 DND-javaslat `r.enabled` /
 `r.on`, Users, inverzió, SIM PIN; a 6.0.1 Auto-sync, Backup account, Default apps hook nélkül, Restrict background csak
@@ -597,7 +595,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - 6.0.1: Site settings (7.1.2 ng-chrome-sites.js a pár); mindkettő: Reduce data usage kapcsoló és statisztika.
   - 7.1.2: Print — APK-ellenőrzés.
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `e4370a2c`. Mindkét Chrome: a Clear browsing data működő választóval, megszakítással és külön helyi adattípusokkal; 7.1.2-n időszűréssel. A könyvjelzők, a megjelenítési preferenciák és a webhelyengedélyek megmaradnak. A Search engine választása mentődik és a címsort használja (Google/Bing/Yahoo demóválaszték; az offline weben kívüli szolgáltatások a meglévő hálózati hibaoldalt adják). A Text scaling 50–200%-os előnézettel, OK/Cancel művelettel mentődik és a weboldal szövegére hat. Forrás: saját Chrome 44/55 APK, search_engine.xml, preference_text_scale.xml, a saját szövegerőforrások öt nyelven. Ellenőrzés: `npm test` 260/260; `node tests/browser/system-browser-mail.mjs` mindkét verzió, 1280 és 390 px, 0 kivétel és hibás helyi kérés. A teljes T79 további részei nem részei a 2-es változatnak.
 
 #### T80 — Gmail
 
@@ -609,7 +607,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - Mindkettő: Vacation responder, Manage labels, Days of mail to sync (5.1.1 gmail.js:53-133).
   - Mindkettő: az aláírás és a kategóriák nem hatnak (5.1.1 simulator.js:2051, gmail.js:181,225).
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `e4370a2c`. A 6.0.1 Gmail piszkozata újratöltés után szerkesztőben nyílik, ugyanazt a bejegyzést frissíti és küldéskor átkerül a Sent mappába; a csatolmányait megőrzi. Mindkét Gmail Cc/Bcc mezője kinyitható és a címzettek mentődnek a piszkozatban/küldött levélben. Új levél, válasz, továbbítás és megosztás egyszer kapja meg a helyi aláírást; egy meglévő piszkozat nem kap még egyet. Vacation responder: gyári címkék, kapcsoló, First/Last day az Android dátumválasztóval (None is választható), subject/message, Contacts only; Save, üres tartalom ellenőrzése, Back/elvetés megerősítéssel; helyi demóállapot, nem küld automatikus levelet. A saját Gmail 5.7/6.9.25 APK layoutjai, ikonjai és öt nyelvű szövegei. Ellenőrzés: `npm test` 260/260; mindkét verzió asztali és telefonos böngészős próbája zöld (piszkozat-azonosság, újratöltés, egyszeri aláírás, Cc/Bcc, helyi küldés, dátumválasztás, responder mentés és elvetés). A kijelölősáv, címkék és más kizárt T80-részek nem részei a 2-es változatnak.
 
 #### T81 — Hangouts
 
