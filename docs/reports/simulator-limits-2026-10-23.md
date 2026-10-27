@@ -327,7 +327,7 @@ location, észak, Share, Layers mentve, a saját settings.xml).
   szekciók sorrendjét ténylegesen cseréli; Manage sections (és a fiók Add and remove sections… pontja): elrejtés
   (Section deleted), visszaállítás a Hidden sections alól, átrendezés húzással, a Headlines kötelező; kiadásonként
   mentve; Open in browser a cikk saját URL-jét a Chrome-ba adja (offline cikkoldal, böngészőelőzmény).
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `079554d2`. News & Weather 2.7 / 3.1 az 5.1.1 T42 szintjén: Settings (settings.xml) Manage sections (sorrend húzással, Section deleted, Sections you can add back, a Headlines kötelező), Change editions / Country & Language (két helyi kiadás, a vezető hír és a szekciósorrend ténylegesen cserélődik, kiadásonként mentve), Important news notifications, időjárás-mértékegységek; szekciófejléc Remove this section; Open in browser a cikk címét a Chrome-ba adja, amely az offline webről mutatja (MM/NG.webPages szolgáltatók) és az előzménybe teszi. Ellenőrzés: `tests/browser/play-news.mjs` mindkét verzió, asztali és telefonos szélesség; `ng-chrome-sites`; `npm test` 260/260.
 
 #### T64 — Google+ az 5.1.1 szintjén
 
