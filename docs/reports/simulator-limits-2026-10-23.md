@@ -519,7 +519,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - 6.0.1: Sort by / Name format nem hat, és a Telefon és a Névjegyek külön tárolja (5.1.1 közös `contactPrefs`; 7.1.2 ng-people.js:71).
   - APK-ellenőrzés: Caller ID by Google beállítás (mindkettő), All/Missed hívásnapló-képernyő (7.1.2).
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `f088ef84`. 6.0.1: a Call history képernyő overflow-ja Clear call history (call_log_options.xml; clearCallLogConfirmation, majd Clearing call history…); Sort by / Name format a Telefonban és a Névjegyekben ugyanazt a ContactsPreferences-értéket írja és mindkét lista követi (szakaszbetű, „Morgan, Alex”). Mindkettő: a Voicemail number (EditPhoneNumberPreference: <Not set>, szerkesztés, Voicemail number changed.) és a hangpostaértesítés Sound sora (értesítési hangválasztó). 7.1.2: a Telefon beállításaiban a Quick responses, Calls, Call blocking és Accessibility sor kategóriafejlécként jelent meg és nem nyílt meg — most megnyílik. Kimarad: Caller ID by Google, All/Missed képernyő (APK-ellenőrzés). Ellenőrzés: `tests/browser/system-comms.mjs` mindkét verzió; `npm test` 260/260.
 
 #### T73 — Névjegyek
 
@@ -530,7 +530,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - Mindkettő: Customize — csak „All other contacts”, nincs csoport és fiókfejléc (5.1.1 lp-people-io.js:197-219).
   - 6.0.1: a szerkesztő menüjéből hiányzik a Link, Set ringtone, All calls to voicemail (7.1.2 ng-contacts.js:279-289; bullhead `menu_joinAggregate`).
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `f088ef84`. Mindkettő: Export to .vcf file a VCardComposer vCard 2.1-ét írja a mentett fájlba minden szerkeszthető mezővel (N/FN, TEL, EMAIL, ADR, ORG, TITLE, becenév X-ANDROID-CUSTOM-ként, NOTE, URL, nem ASCII szöveg quoted-printable UTF-8-ban), Import from .vcf file a kiválasztott fájl összes vCardját névjegyként felveszi (2.1 és 3.0), a megosztás ugyanazt a vCardot küldi; a 7.1.2-ben a menü eddig nem létező dokumentumválasztó-útra mutatott, most a DocumentsUI mentés/választás. Kimarad: Customize csoportok, a 6.0.1 szerkesztőmenü Link / Set ringtone / All calls to voicemail sora. Ellenőrzés: `tests/browser/system-comms.mjs` mindkét verzió (exportált fájl tartalma, visszaolvasás); `npm test` 260/260.
 
 #### T74 — Messenger
 
@@ -541,7 +541,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - 6.0.1: kijelölő mód (archive, block, delete) és swipe-archive (7.1.2 ng-messenger.js:385) — APK-ellenőrzés.
   - APK-ellenőrzés: SMS karakterszámláló (5.1.1 messaging.js:20-33).
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `f088ef84`. Mindkettő: a beírt piszkozat a beszélgetéssel mentődik (újratöltés után is), a listában a piszkozat a kivonat és az idő helyén „Draft” (conversation_list_item_view_draft_message). 6.0.1: egy üzenet hosszú nyomásra kijelölődik (message_bubble_color_selected) és a conversation_fragment_select_menu műveletsávja jelenik meg: Share, Forward (a beszélgetéslistából választott beszélgetés piszkozata lesz, kép mellékletként), Copy text, View details (típus, kitől/kinek, idő), Delete megerősítéssel. Kimarad: a 6.0.1 lista kijelölő módja és húzásos archiválás, SMS karakterszámláló (APK-ellenőrzés). Ellenőrzés: `tests/browser/system-comms.mjs` mindkét verzió; `npm test` 260/260.
 
 #### T75 — Óra
 
