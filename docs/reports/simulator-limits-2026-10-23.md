@@ -243,7 +243,7 @@ APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<sl
 
 #### T56 — Google+ a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `a901921b`. Telepítettként: 6.0.1 Google+ 8.4.0.128646069, 7.1.2 Google+ 9.14.0.158314320 (a build előtti utolsó; a terv közelítő 9.13-a helyett), egy sablonból (`docs/templates/plus-play.*`, `docs/tools/plus-play.py`) a saját APK szövegeivel és ikonjaival: Home stream a demó telefon három posztjával (+1, Share, kártyamenü), a FAB megosztódoboza (Public, "What's new with you?", POST; szöveggel Back esetén eldobás-kérdés), saját poszt törlése (post_delete_question), Notifications "All caught up!", alsó sáv és fiók. Collections, Communities, Profile, People, kommentek, fotók, Search, Settings, Help: elutasítás. Ellenőrzés: `tests/browser/play-plus.mjs` (mindkét verzió, telefonos szélesség is), `npm test`.
 
 #### T57 — Play Newsstand a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
