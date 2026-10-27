@@ -169,3 +169,6 @@
 .nggm-attachment-open small{font-size:calc(10 * var(--dp));color:#757575}
 .nggm-attachment-remove{display:flex;align-items:center;justify-content:center;width:calc(48 * var(--dp));height:calc(48 * var(--dp));flex:none;background:none;border:0;padding:0}
 .nggm-attachment-remove .nggm-ic{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+
+/* Compose recipient expansion, Gmail 6.9.25. */
+.nggm-ccbutton{border:0;background:none;color:#757575;align-self:flex-end;min-width:calc(40 * var(--dp));min-height:calc(32 * var(--dp));font-size:calc(24 * var(--dp));}

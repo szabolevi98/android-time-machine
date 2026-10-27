@@ -1,0 +1,8 @@
+/* ng Chrome 55 preference_text_scale.xml: slider and the 180 dp preview. */
+.ngcr-scale { padding:calc(16 * var(--dp)); }
+.ngcr-scale label { display:flex; gap:calc(12 * var(--dp)); align-items:center; }
+.ngcr-scale output { min-width:calc(40 * var(--dp)); }
+.ngcr-scale input { flex:1; min-width:0; accent-color:#4285f4; }
+.ngcr-scale p { height:calc(180 * var(--dp)); overflow:auto; padding:calc(16 * var(--dp)); background:#fafafa; line-height:1.4; }
+.ngcr-period { display:flex; flex-wrap:wrap; gap:calc(8 * var(--dp)); padding:calc(16 * var(--dp)); }
+.ngcr-period select { max-width:100%; font:inherit; color:inherit; background:transparent; }

@@ -624,6 +624,7 @@ versions/6.0.1/assets/gm-ic_drawer_trash_24dp.png	627ee5f7d39b0d48	copy	bullhead
 versions/6.0.1/assets/gm-ic_drawer_updates_24dp.png	13a1db4223b66118	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_drawer_updates_24dp.png	drawable-xxhdpi-v4		13a1db4223b66118
 versions/6.0.1/assets/gm-ic_email_caret_single.png	1c9140532bc180b8	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_email_caret_single.png	drawable-xxhdpi-v4		1c9140532bc180b8
 versions/6.0.1/assets/gm-ic_empty_inbox.png	bd5419ebe9bc8129	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_empty_inbox.png	drawable-xxhdpi-v4		bd5419ebe9bc8129
+versions/6.0.1/assets/gm-ic_expand_more_24dp.png	13160e028b51f047	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_expand_more_24dp.png	drawable-xxhdpi-v4		13160e028b51f047
 versions/6.0.1/assets/gm-ic_file_file.png	a71bd034d0ae92fb	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_file_file.png	drawable-xxhdpi-v4		a71bd034d0ae92fb
 versions/6.0.1/assets/gm-ic_file_image.png	336c3edf37b821cc	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_file_image.png	drawable-xxhdpi-v4		336c3edf37b821cc
 versions/6.0.1/assets/gm-ic_file_pdf.png	0883f15acfd18017	copy	bullhead:/system/app/PrebuiltGmail/PrebuiltGmail.apk!res/drawable-xxhdpi-v4/ic_file_pdf.png	drawable-xxhdpi-v4		0883f15acfd18017

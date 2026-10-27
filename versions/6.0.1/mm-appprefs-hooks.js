@@ -37,7 +37,7 @@
     after: (c, xml) => xml === 'preference_headers' ? `<button type="button" class="mmst-pref" data-action="mmpf-goto" data-xml="gmail_account_preferences" data-title="${c.safe(MM.account.email)}"><span class="mmst-texts"><span class="mmst-title">${c.safe(MM.account.email)}</span></span></button>` : '',
     fragments: {GeneralPrefsFragment: 'general_preferences', InboxSectionsPreferenceFragment: 'inbox_section_preferences'},
     screens: {'inbox-settings': 'label_preferences'},
-    hidden: ['vacation-responder', 'manage-labels', 'number-picker'],
+    hidden: ['manage-labels', 'number-picker'],
     summary(c, key) { if (key === 'signature') return MM.appPref(c, 'gmail', key, '') || P().t('PrebuiltGmail/preferences_signature_summary_not_set'); }
   };
 
@@ -248,7 +248,7 @@
   H.chrome = {color: ['#4285f4', '#3367d6'],
     fragments: {PrivacyPreferences: 'privacy_preferences', AccessibilityPreferences: 'accessibility_preferences', ContentPreferences: 'content_preferences', AutofillPreferences: 'autofill_preferences', BandwidthReductionPreferences: 'bandwidth_reduction_preferences_off', AboutChromePreferences: 'about_chrome_preferences', DocumentModePreference: 'document_mode_preferences', TranslatePreferences: 'translate_preferences', DoNotTrackPreference: 'do_not_track_preferences', UsageAndCrashReportsPreferenceFragment: 'usage_and_crash_reports_preferences', ContextualSearchPreferenceFragment: 'contextual_search_preferences'},
     hidden: ['sign_in', 'saved_passwords', 'homepage', 'network_predictions_no_cellular', 'crash_dump_upload_no_cellular', 'crash_dump_upload', 'data_reduction_experiment_text', 'data_reduction_experiment_link', 'contextual_search', 'autofill_profiles', 'autofill_credit_cards',
-      'website_settings', 'cookies', 'device_location', 'camera', 'microphone', 'push_notifications', 'images', 'javascript', 'popups', 'fullscreen', 'protected_content', 'use_storage', 'clear_browsing_data', 'text_scale']};
+      'website_settings', 'cookies', 'device_location', 'camera', 'microphone', 'push_notifications', 'images', 'javascript', 'popups', 'fullscreen', 'protected_content', 'use_storage']};
   H.drive = {color: ['#4285f4', '#3367d6']};
   // Smart Lock (GoogleTrustAgentPersonalUnlockingSettings): in Settings' colours; nothing trusted yet; Trusted voice
   // follows the Google app's "Ok Google" detection (off), On-body detection is off.

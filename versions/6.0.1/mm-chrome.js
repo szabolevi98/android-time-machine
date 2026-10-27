@@ -218,7 +218,7 @@
     const sub = c.ui.sub || '';
     if (!sub) return;
     c.ui.sub = '';
-    if (sub.startsWith('url:')) { const s = S(c); s.fre = true; const target = MM.web.normalize(sub.slice(4)); s.history = s.history.slice(0, s.index + 1); s.history.push(target); s.index = s.history.length - 1; const p = MM.web.page(target); if (p) { s.history[s.index] = p.url; if (!s.incognito) { s.visits[p.url] = (s.visits[p.url] || 0) + 1; s.log = [...(s.log || []), {url: p.url, title: p.title, time: Date.now()}].slice(-200); } } }
+    if (sub.startsWith('url:')) { const s = S(c); s.fre = true; const target = MM.chromeAddress(c, sub.slice(4)); s.history = s.history.slice(0, s.index + 1); s.history.push(target); s.index = s.history.length - 1; const p = MM.web.page(target); if (p) { s.history[s.index] = p.url; if (!s.incognito) { s.visits[p.url] = (s.visits[p.url] || 0) + 1; s.log = [...(s.log || []), {url: p.url, title: p.title, time: Date.now()}].slice(-200); } } }
   }
 
   MM.register('chrome', {
@@ -252,7 +252,7 @@
     },
     submit(form, event, c) {
       const name = form.dataset.form;
-      if (name === 'mmcr-omnibox') { go(c, MM.web.normalize(form.elements.q.value)); return true; }
+      if (name === 'mmcr-omnibox') { go(c, MM.chromeAddress(c, form.elements.q.value)); return true; }
       if (name === 'mmcr-search') { const q = form.elements.q.value.trim(); if (q) go(c, `${MM.web.GOOGLE}search?q=${encodeURIComponent(q).split('%20').join('+')}`); return true; }
       return false;
     },
@@ -278,7 +278,7 @@
         case 'mmcr-history': go(c, HISTORY); return true;
         case 'mmcr-bmdel': s.bookmarks = s.bookmarks.filter(x => x !== el.dataset.url); c.save(); c.render(); return true;
         case 'mmcr-hdel': s.log = (s.log || []).filter(e => e.time !== +el.dataset.time); c.save(); c.render(); return true;
-        case 'mmcr-hclear': MM.openPrefs(c, 'chrome', 'privacy_preferences', T().t('menu_preferences')); return true;
+        case 'mmcr-hclear': MM.chromeClearDialog(c); return true;
         case 'mmcr-findclose': u.find = null; c.render(); return true;
         case 'mmcr-findnext': case 'mmcr-findprev': if (u.find?.n) { u.find.i = (u.find.i + (name === 'mmcr-findnext' ? 1 : -1) + u.find.n) % u.find.n; c.render(); } return true;
         case 'mmcr-reload': go(c, url(c), {replace: true}); return true;

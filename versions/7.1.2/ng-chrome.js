@@ -156,7 +156,7 @@
   function suggestions(c) {
     const u = ui(c), q = u.text.trim(), low = q.toLowerCase();
     if (!q) return '';
-    const target = NG.web.normalize(q), isUrl = !/google\.com\/search/.test(target);
+    const target = NG.chromeAddress(c, q), isUrl = !/google\.com\/search/.test(NG.web.normalize(q));
     const rows = [{icon: isUrl ? 'ic_omnibox_page' : 'ic_suggestion_magnifier', text: q, sub: '', url: target}];
     const seen = new Set([target]);
     for (const e of [...S(c).log].reverse()) { if (seen.has(e.url) || rows.length > 5) continue; if (`${e.title} ${e.url}`.toLowerCase().includes(low)) { seen.add(e.url); rows.push({icon: 'ic_suggestion_history', text: e.title, sub: e.url.replace(/^https?:\/\//, ''), url: e.url}); } }
@@ -340,7 +340,7 @@
     c.ui.sub = '';
     if(sub==='shortcut:new-tab'||sub==='shortcut:incognito'){const s=S(c),inc=sub==='shortcut:incognito';s.fre=2;s.incognito=inc;ui(c).switcher=false;newTab(c,NTP,inc);c.save();return;}
     // An address from another app (a shortcut, a link): a new tab in the normal model, past the first run.
-    if (sub.startsWith('url:')) { const s = S(c), target = NG.web.normalize(sub.slice(4)), p = NG.web.page(target); s.fre = 2; ui(c).switcher = false; s.incognito = false; newTab(c, p ? p.url : target, false); c.save(); }
+    if (sub.startsWith('url:')) { const s = S(c), target = NG.chromeAddress(c, sub.slice(4)), p = NG.web.page(target); s.fre = 2; ui(c).switcher = false; s.incognito = false; newTab(c, p ? p.url : target, false); c.save(); }
   }
 
   // A card of the switcher swiped sideways closes its tab (Stack's discard: 40 % of the width or a fling).
@@ -453,7 +453,7 @@
     },
     submit(form, event, c) {
       const name = form.dataset.form;
-      if (name === 'ngcr-omnibox') { go(c, NG.web.normalize(form.elements.q.value)); return true; }
+      if (name === 'ngcr-omnibox') { go(c, NG.chromeAddress(c, form.elements.q.value)); return true; }
       if (name === 'ngcr-search') { const q = form.elements.q.value.trim(); if (q) go(c, `${NG.web.GOOGLE}search?q=${encodeURIComponent(q).split('%20').join('+')}`); return true; }
       return false;
     },
@@ -498,7 +498,7 @@
         case 'ngcr-rtoggle': u.recentOpen = !(u.recentOpen ?? true); c.render(); return true;
         case 'ngcr-history': go(c, HISTORY); return true;
         case 'ngcr-hdel': s.log = s.log.filter(e => e.time !== +el.dataset.time); c.save(); c.render(); return true;
-        case 'ngcr-hclear': NG.openPrefs?.(c, 'chrome', 'privacy_preferences', T().t('menu_preferences')); return true;
+        case 'ngcr-hclear': NG.chromeClearDialog(c); return true;
         case 'ngcr-findclose': u.find = null; c.render(); return true;
         case 'ngcr-findnext': case 'ngcr-findprev': if (u.find?.n) { u.find.i = (u.find.i + (name === 'ngcr-findnext' ? 1 : -1) + u.find.n) % u.find.n; c.render(); } return true;
         case 'ngcr-reload': go(c, url(c), {replace: true}); return true;

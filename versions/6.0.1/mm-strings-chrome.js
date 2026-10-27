@@ -552,5 +552,85 @@ MM.strings('chrome', {
 "de": "Lesezeichen löschen",
 "fr": "Supprimer le favori",
 "es": "Eliminar marcador"
+},
+"prefs_search_engine": {
+"res": "bullhead:Chrome:prefs_search_engine",
+"en": "Search engine",
+"hu": "Keresőmotor",
+"de": "Suchmaschine",
+"fr": "Moteur de recherche",
+"es": "Motor de búsqueda"
+},
+"font_size": {
+"res": "bullhead:Chrome:font_size",
+"en": "Text scaling",
+"hu": "Szöveg nagyítása",
+"de": "Text-Skalierung",
+"fr": "Mise à l'échelle texte",
+"es": "Ajuste de texto"
+},
+"font_size_preview_text": {
+"res": "bullhead:Chrome:font_size_preview_text",
+"en": "Drag the slider until you can read this comfortably. Text should look at least this big after double-tapping on a paragraph.",
+"hu": "Húzza a csúszkát, amíg kényelmesen nem tudja olvasni a szöveget; legalább ekkorának kell lennie, miután duplán koppint a bekezdésre.",
+"de": "Ziehen Sie den Schieberegler, bis Sie diesen Text problemlos lesen können. Nach dem Doppeltippen auf einen Abschnitt sollte der Text mindestens so groß sein.",
+"fr": "Faites glisser le curseur pour lire le texte aisément. Sa taille doit être similaire à celle-ci lorsque vous appuyez deux fois sur un paragraphe.",
+"es": "Arrastra el control deslizante hasta que puedas leer cómodamente. El texto debe tener al menos este tamaño después de tocar un párrafo dos veces."
+},
+"clear_browsing_data_title": {
+"res": "bullhead:Chrome:clear_browsing_data_title",
+"en": "Clear browsing data",
+"hu": "Böngészési adatok törlése",
+"de": "Browserdaten löschen",
+"fr": "Effacer les données de navigation",
+"es": "Borrar datos de navegación"
+},
+"clear_cache_title": {
+"res": "bullhead:Chrome:clear_cache_title",
+"en": "Cache",
+"hu": "Gyorsítótár",
+"de": "Cache",
+"fr": "Vider le cache",
+"es": "Caché"
+},
+"clear_history_title": {
+"res": "bullhead:Chrome:clear_history_title",
+"en": "Browsing history",
+"hu": "Böngészés előzményei",
+"de": "Browserverlauf",
+"fr": "Historique de navigation",
+"es": "Historial de navegación"
+},
+"clear_cookies_and_site_data_title": {
+"res": "bullhead:Chrome:clear_cookies_and_site_data_title",
+"en": "Cookies, site data",
+"hu": "Cookie-k, webhelyadatok",
+"de": "Cookies, Websitedaten",
+"fr": "Effacer les cookies et les données du site",
+"es": "Cookies y datos de sitios"
+},
+"clear_passwords_title": {
+"res": "bullhead:Chrome:clear_passwords_title",
+"en": "Saved passwords",
+"hu": "Mentett jelszavak",
+"de": "Gespeicherte Passwörter",
+"fr": "Mots de passe enregistrés",
+"es": "Contraseñas guardadas"
+},
+"clear_data_delete": {
+"res": "bullhead:Chrome:clear_data_delete",
+"en": "Clear",
+"hu": "Törlés",
+"de": "Löschen",
+"fr": "Effacer",
+"es": "Eliminar"
+},
+"clear_formdata_title": {
+"res": "bullhead:Chrome:clear_formdata_title",
+"en": "Autofill data",
+"hu": "Automatikus kitöltés adatai",
+"de": "AutoFill-Daten",
+"fr": "Données de saisie automatique",
+"es": "Datos de Autocompletar"
 }
 });

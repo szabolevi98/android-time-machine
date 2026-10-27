@@ -118,11 +118,13 @@
   // ---- compose -----------------------------------------------------------------------------------------------------
   function compose(c) {
     const t = T(), d = ui(c).draft;
-    const field = (key, label, value, extra = '') => `<label class="mmgm-cf"><span>${esc(c, label)}</span><input data-f="${key}" value="${esc(c, value)}" autocomplete="off" spellcheck="false"${extra}></label>`;
+    if (!d.signatureReady && !d.id) { const sig = MM.appPref(c, 'gmail', 'signature', ''); if (sig) d.body += '\n\n' + sig; d.signatureReady = true; }
+    const field = (key, label, value, extra = '') => `<label class="mmgm-cf"><span>${esc(c, label)}</span><input data-f="${key}" value="${esc(c, value)}" autocomplete="off" spellcheck="false"${extra}>${key === 'to' ? `<button type="button" class="mmgm-ccbutton" data-action="mmgm-ccbcc" aria-label="${esc(c, t.t('add_cc_label'))}"><img src="assets/gm-ic_expand_more_24dp.png" alt=""></button>` : ''}</label>`;
     return `<div class="mmgm mmgm-compose"><div class="mmgm-bar"><button type="button" class="mmgm-btn" data-action="mmgm-cback"><img src="${A('ic_arrow_back_wht_24dp')}" alt=""></button><span class="mmgm-title">${esc(c, t.t('compose'))}</span>
       <button type="button" class="mmgm-btn" data-action="mmgm-attach" aria-label="${esc(c, t.t('add_file_attachment'))}"><img src="${A('ic_attach_file_wht_24dp')}" alt=""></button><button type="button" class="mmgm-btn" data-action="mmgm-send" aria-label="${esc(c, t.t('send'))}"><img src="${A('ic_send_wht_24dp')}" alt=""></button>${MM.menu.button(c, 'mmgm-over')}</div>
-      <div class="mmgm-page mmgm-cform"><div class="mmgm-cf"><span>${esc(c, t.t('from'))}</span><b>${esc(c, MM.account.email)}</b></div>${field('to', t.t('to'), d.to, ' type="email"')}
-      <input class="mmgm-csubj" data-f="subject" value="${esc(c, d.subject)}" placeholder="${esc(c, t.t('subject_hint'))}" autocomplete="off"><textarea class="mmgm-cbody" data-f="body" placeholder="${esc(c, t.t('body_hint'))}">${esc(c, d.body)}</textarea>${attachments(c, d.attach, true)}</div></div>`;
+      <div class="mmgm-page mmgm-cform"><div class="mmgm-cf"><span>${esc(c, t.t('from'))}</span><b>${esc(c, MM.account.email)}</b></div>${field('to', t.t('to'), d.to)}${d.showCc || d.cc || d.bcc ? field('cc', t.t('cc'), d.cc || '') + field('bcc', t.t('bcc'), d.bcc || '') : ''}
+      <input class="mmgm-csubj" data-f="subject" value="${esc(c, d.subject)}" placeholder="${esc(c, t.t('subject_hint'))}" autocomplete="off"><textarea class="mmgm-cbody" data-f="body" placeholder="${esc(c, t.t('body_hint'))}">
+${esc(c, d.body)}</textarea>${attachments(c, d.attach, true)}</div></div>`;
   }
   // Attachment tiles (attachment_tile.xml): the file type icon, the name and the type with its size; in compose the X
   // of remove_attachment_desc.
@@ -175,11 +177,13 @@
   }
   function closeCompose(c, save) {
     const u = ui(c), d = u.draft, t = T();
-    if (save && (d.to || d.subject || d.body)) { const all = mail(c); all.push({id: Math.max(0, ...all.map(x => x.id)) + 1, from: MM.account.name, email: d.to, subject: d.subject, body: d.body, time: Date.now(), unread: false, cat: 'primary', box: 'drafts'}); c.save(); }
+    if (save && (d.to || d.cc || d.bcc || d.subject || d.body || d.attach?.length)) storeCompose(c, d, 'drafts');
+    else if (d.id) { c.data.mail = mail(c).filter(m => m.id !== d.id); c.save(); }
     u.draft = null; u.screen = '';
     if (u.external) { u.external = false; c.back(); return; }
     c.render();
   }
+  function storeCompose(c, d, box) { const all = mail(c); let m = all.find(m => m.id === d.id && m.box === 'drafts'); if (!m) { m = {id: Math.max(0, ...all.map(x => x.id)) + 1}; all.push(m); } Object.assign(m, {from: MM.account.name, email: d.to, cc: d.cc || '', bcc: d.bcc || '', subject: d.subject, body: d.body, attach: d.attach || [], time: Date.now(), unread: false, cat: 'primary', box}); c.save(); }
   function menu(c) {
     const t = T(), u = ui(c);
     if (u.screen === 'compose') return c.menu([{label: t.t('save_draft'), action: c => closeCompose(c, true)}, {label: t.t('discard'), action: c => { c.toast(t.t('message_discarded'), false); closeCompose(c, false); }}]);
@@ -253,7 +257,7 @@
         case 'mmgm-sback': u.screen = ''; c.render(); return true;
         case 'mmgm-sclear': u.q = ''; u.searched = false; c.render(); return true;
         case 'mmgm-sugg': submit(c, el.dataset.q); return true;
-        case 'mmgm-open': if (event?.target?.closest('.mmgm-star')) return false; m.unread = false; c.save(); u.prev = u.screen === 'search' ? 'search' : ''; u.screen = `conv:${m.id}`; c.render(); return true;
+        case 'mmgm-open': if (event?.target?.closest('.mmgm-star')) return false; if (m.box === 'drafts') { u.draft = {id: m.id, to: m.email, cc: m.cc || '', bcc: m.bcc || '', subject: m.subject, body: m.body, attach: (m.attach || []).map(f => ({...f}))}; u.screen = 'compose'; c.render(); return true; } m.unread = false; c.save(); u.prev = u.screen === 'search' ? 'search' : ''; u.screen = `conv:${m.id}`; c.render(); return true;
         case 'mmgm-star': m.starred = !m.starred; c.save(); c.render(); return true;
         case 'mmgm-up': u.screen = u.prev || ''; u.prev = ''; c.render(); return true;
         case 'mmgm-archive': m.box = 'archive'; u.screen = u.prev || ''; u.prev = ''; c.save(); c.toast(AndroidStrings.format(t.plural('conversation_archived', 1), 1).replace(/<\/?b>/g, ''), false); c.render(); return true;
@@ -262,6 +266,7 @@
         case 'mmgm-compose': u.draft = {to: '', subject: '', body: ''}; u.screen = 'compose'; c.render(); return true;
         case 'mmgm-reply': u.draft = {to: m.email, subject: /^Re:/i.test(m.subject) ? m.subject : `Re: ${m.subject}`, body: ''}; u.screen = 'compose'; c.render(); return true;
         case 'mmgm-forward': u.draft = {to: '', subject: `Fwd: ${m.subject}`, body: `\n\n${m.body}`}; u.screen = 'compose'; c.render(); return true;
+        case 'mmgm-ccbcc': u.draft.showCc = !u.draft.showCc; c.render(); return true;
         case 'mmgm-cback': closeCompose(c, true); return true;
         // The attach button's menu: Attach file (DocumentsUI's GET_CONTENT picker) and Insert from Drive (Drive's picker).
         case 'mmgm-attach': {
@@ -271,8 +276,8 @@
         }
         case 'mmgm-attx': u.draft.attach.splice(+el.dataset.i, 1); c.render(); return true;
         case 'mmgm-send': {
-          const d = u.draft; if (!d.to.trim()) { c.root?.querySelector?.('[data-f="to"]')?.focus(); return true; }
-          const all = mail(c); all.push({id: Math.max(0, ...all.map(x => x.id)) + 1, from: MM.account.name, email: d.to, subject: d.subject, body: d.body, attach: d.attach, time: Date.now(), unread: false, cat: 'primary', box: 'sent'});
+          const d = u.draft; if (![d.to, d.cc, d.bcc].some(x => x?.trim())) { c.root?.querySelector?.('[data-f="to"]')?.focus(); return true; }
+          storeCompose(c, d, 'sent');
           c.save(); c.toast(t.t('sending'), false); u.draft = null; u.screen = ''; if (u.external) { u.external = false; c.back(); return true; } c.render(); return true;
         }
         case 'mm-menu': menu(c); return true;

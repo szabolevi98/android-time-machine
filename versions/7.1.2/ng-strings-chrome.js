@@ -619,5 +619,133 @@ NG.strings('chrome', {
 "de": "Dies ist eine sichere Google Chrome-Seite.",
 "fr": "Cette page Google Chrome est sécurisée.",
 "es": "Estás viendo una página de Google Chrome segura."
+},
+"prefs_search_engine": {
+"res": "angler:Chrome:prefs_search_engine",
+"en": "Search engine",
+"hu": "Keresőmotor",
+"de": "Suchmaschine",
+"fr": "Moteur de recherche",
+"es": "Motor de búsqueda"
+},
+"font_size": {
+"res": "angler:Chrome:font_size",
+"en": "Text scaling",
+"hu": "Szöveg nagyítása",
+"de": "Text-Skalierung",
+"fr": "Mise à l'échelle du texte",
+"es": "Ajuste de texto"
+},
+"font_size_preview_text": {
+"res": "angler:Chrome:font_size_preview_text",
+"en": "Drag the slider until you can read this comfortably. Text should look at least this big after double-tapping on a paragraph.",
+"hu": "Húzza a csúszkát, amíg kényelmesen nem tudja olvasni a szöveget; legalább ekkorának kell lennie, miután duplán koppint a bekezdésre.",
+"de": "Ziehen Sie den Schieberegler, bis Sie diesen Text problemlos lesen können. Nach dem Doppeltippen auf einen Abschnitt sollte der Text mindestens so groß sein.",
+"fr": "Faites glisser le curseur pour lire le texte aisément. Sa taille doit être similaire à celle-ci lorsque vous appuyez deux fois sur un paragraphe.",
+"es": "Arrastra el control deslizante hasta que puedas leer cómodamente. El texto debe tener al menos este tamaño después de tocar un párrafo dos veces."
+},
+"clear_browsing_data_title": {
+"res": "angler:Chrome:clear_browsing_data_title",
+"en": "Clear browsing data",
+"hu": "Böngészési adatok törlése",
+"de": "Browserdaten löschen",
+"fr": "Effacer les données de navigation",
+"es": "Borrar datos de navegación"
+},
+"clear_cache_title": {
+"res": "angler:Chrome:clear_cache_title",
+"en": "Cached images and files",
+"hu": "A gyorsítótárban szereplő képek és fájlok",
+"de": "Bilder und Dateien im Cache",
+"fr": "Images et fichiers en cache",
+"es": "Archivos e imágenes almacenados en caché"
+},
+"clear_history_title": {
+"res": "angler:Chrome:clear_history_title",
+"en": "Browsing history",
+"hu": "Böngészés előzményei",
+"de": "Browserverlauf",
+"fr": "Historique de navigation",
+"es": "Historial de navegación"
+},
+"clear_cookies_and_site_data_title": {
+"res": "angler:Chrome:clear_cookies_and_site_data_title",
+"en": "Cookies and site data",
+"hu": "Cookie-k és webhelyadatok",
+"de": "Cookies und Websitedaten",
+"fr": "Cookies et données de site",
+"es": "Datos de sitios y cookies"
+},
+"clear_passwords_title": {
+"res": "angler:Chrome:clear_passwords_title",
+"en": "Saved passwords",
+"hu": "Mentett jelszavak",
+"de": "Gespeicherte Passwörter",
+"fr": "Mots de passe enregistrés",
+"es": "Contraseñas guardadas"
+},
+"clear_data_delete": {
+"res": "angler:Chrome:clear_data_delete",
+"en": "Clear data",
+"hu": "Adatok törlése",
+"de": "Daten löschen",
+"fr": "Effacer les données",
+"es": "Borrar los datos"
+},
+"clear_form_data_title": {
+"res": "angler:Chrome:clear_form_data_title",
+"en": "Autofill form data",
+"hu": "Automatikus kitöltési űrlapadatok",
+"de": "AutoFill-Formulardaten",
+"fr": "Données de saisie automatique",
+"es": "Datos de Autocompletar formulario"
+},
+"clear_browsing_data_period_title": {
+"res": "angler:Chrome:clear_browsing_data_period_title",
+"en": "Clear data from the",
+"hu": "Adatok törlése:",
+"de": "Daten löschen",
+"fr": "Effacer les données",
+"es": "Borrar datos de:"
+},
+"clear_browsing_data_period_hour": {
+"res": "angler:Chrome:clear_browsing_data_period_hour",
+"en": "past hour",
+"hu": "elmúlt óra",
+"de": "für die letzte Stunde",
+"fr": "de la dernière heure",
+"es": "última hora"
+},
+"clear_browsing_data_period_day": {
+"res": "angler:Chrome:clear_browsing_data_period_day",
+"en": "past day",
+"hu": "elmúlt nap",
+"de": "für den letzten Tag",
+"fr": "des dernières 24 heures",
+"es": "último día"
+},
+"clear_browsing_data_period_week": {
+"res": "angler:Chrome:clear_browsing_data_period_week",
+"en": "past week",
+"hu": "elmúlt hét",
+"de": "für die letzte Woche",
+"fr": "de la dernière semaine",
+"es": "semana pasada"
+},
+"clear_browsing_data_period_four_weeks": {
+"res": "angler:Chrome:clear_browsing_data_period_four_weeks",
+"en": "last 4 weeks",
+"hu": "elmúlt négy hét",
+"de": "für die letzten 4 Wochen",
+"fr": "des quatre dernières semaines",
+"es": "últimas 4 semanas"
+},
+"clear_browsing_data_period_everything": {
+"res": "angler:Chrome:clear_browsing_data_period_everything",
+"en": "beginning of time",
+"hu": "a kezdetektől",
+"de": "für den gesamten Zeitraum",
+"fr": "depuis le début",
+"es": "el origen de los tiempos"
 }
 });

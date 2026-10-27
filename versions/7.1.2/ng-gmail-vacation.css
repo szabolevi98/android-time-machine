@@ -1,0 +1,10 @@
+/* ng Gmail 6.9.25 vacation responder: two date columns, divider-separated fields, Contacts checkbox. */
+.nggv-save { border:0;background:none;color:inherit;font:500 calc(14 * var(--dp)) Roboto,sans-serif;padding:calc(16 * var(--dp));text-transform:uppercase; }
+.nggv-form fieldset { border:0;margin:0;padding:0;min-width:0; }
+.nggv-form fieldset:disabled { opacity:.4; }
+.nggv-form .nggm-csubj,.nggv-form .nggm-cbody { display:block;box-sizing:border-box;width:calc(100% - 32 * var(--dp));margin:0 calc(16 * var(--dp)); }
+.nggv-form .nggm-cbody { min-height:calc(140 * var(--dp)); }
+.nggv-dates { display:flex;gap:calc(16 * var(--dp));padding:calc(16 * var(--dp)); }
+.nggv-dates label { flex:1;min-width:0;font-size:calc(12 * var(--dp));color:#757575; }
+.nggv-dates button { display:block;width:100%;box-sizing:border-box;min-width:0;border:0;border-bottom:calc(.5 * var(--dp)) solid #ddd;background:none;font:calc(14 * var(--dp)) Roboto,sans-serif;color:#212121;padding:calc(8 * var(--dp)) 0; }
+.nggv-form .ngst-check { flex:none;margin-right:calc(16 * var(--dp)); }

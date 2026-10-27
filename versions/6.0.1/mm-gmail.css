@@ -132,3 +132,8 @@
 .mmgm-lrow{display:flex;align-items:center;gap:calc(32 * var(--dp));width:100%;height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));border:0;border-bottom:1px solid #eee;background:none;color:#212121;font:calc(16 * var(--dp)) Roboto,sans-serif;text-align:left}
 .mmgm-lrow img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
 .mmgm-cform:has(.mmgm-atts) .mmgm-cbody{flex:none}
+
+/* Compose recipient expansion, Gmail 5.7. */
+.mmgm-ccbutton{border:0;background:none;color:#757575;align-self:flex-end;min-width:calc(40 * var(--dp));min-height:calc(32 * var(--dp));font-size:calc(24 * var(--dp));}
+
+.mmgm-ccbutton img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));opacity:.54;}

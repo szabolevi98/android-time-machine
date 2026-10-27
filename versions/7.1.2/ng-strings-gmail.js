@@ -811,5 +811,141 @@ NG.strings('gmail', {
 "de": "Abbrechen",
 "fr": "Annuler",
 "es": "Cancelar"
+},
+"date_none": {
+"res": "angler:PrebuiltGmail:date_none",
+"en": "None",
+"hu": "Nincs",
+"de": "Keines",
+"fr": "Aucune",
+"es": "Ninguna"
+},
+"cc": {
+"res": "angler:PrebuiltGmail:cc",
+"en": "Cc",
+"hu": "Másolat",
+"de": "Cc",
+"fr": "Cc",
+"es": "CC"
+},
+"bcc": {
+"res": "angler:PrebuiltGmail:bcc",
+"en": "Bcc",
+"hu": "Titk. más.",
+"de": "Bcc",
+"fr": "Cci",
+"es": "CCO"
+},
+"add_cc_label": {
+"res": "angler:PrebuiltGmail:add_cc_label",
+"en": "Add Cc/Bcc",
+"hu": "Másolatmezők",
+"de": "Cc/Bcc hinzufügen",
+"fr": "Ajouter Cc/Cci",
+"es": "Añadir Cc/Cco"
+},
+"preferences_vacation_responder_title": {
+"res": "angler:PrebuiltGmail:preferences_vacation_responder_title",
+"en": "Vacation responder",
+"hu": "Automatikus válasz",
+"de": "Abwesenheitsnotiz",
+"fr": "Réponse automatique",
+"es": "Respuesta automática"
+},
+"vacation_responder_body_hint_text": {
+"res": "angler:PrebuiltGmail:vacation_responder_body_hint_text",
+"en": "Message",
+"hu": "Üzenet",
+"de": "Nachricht",
+"fr": "Message",
+"es": "Mensaje"
+},
+"send_to_contacts_text": {
+"res": "angler:PrebuiltGmail:send_to_contacts_text",
+"en": "Send only to my Contacts",
+"hu": "Küldés csak a címtáramban szereplő személyeknek",
+"de": "Abwesenheitsnotiz nur an meine Kontakte senden",
+"fr": "Envoyer uniquement à mes contacts",
+"es": "Enviar solo a mis contactos"
+},
+"pick_start_date_title": {
+"res": "angler:PrebuiltGmail:pick_start_date_title",
+"en": "First day",
+"hu": "Első nap",
+"de": "Startdatum",
+"fr": "Début",
+"es": "Primer día"
+},
+"pick_end_date_title": {
+"res": "angler:PrebuiltGmail:pick_end_date_title",
+"en": "Last day",
+"hu": "Utolsó nap",
+"de": "Enddatum",
+"fr": "Dernier jour",
+"es": "Último día"
+},
+"vacation_responder_changes_saved": {
+"res": "angler:PrebuiltGmail:vacation_responder_changes_saved",
+"en": "Vacation responder changes saved",
+"hu": "Az automatikus válasz módosításai mentve",
+"de": "Änderungen an Abwesenheitsnotiz gespeichert",
+"fr": "Modifications du répondeur automatique enregistrées",
+"es": "Cambios en la respuesta automática guardados"
+},
+"vacation_responder_changes_discarded": {
+"res": "angler:PrebuiltGmail:vacation_responder_changes_discarded",
+"en": "Vacation responder changes discarded",
+"hu": "Az automatikus válasz módosításai elvetve",
+"de": "Änderungen an Abwesenheitsnotiz verworfen",
+"fr": "Modifications du répondeur automatique supprimées",
+"es": "Cambios en la respuesta automática descartados"
+},
+"vacation_responder_off": {
+"res": "angler:PrebuiltGmail:vacation_responder_off",
+"en": "Off",
+"hu": "Ki",
+"de": "Deaktiviert",
+"fr": "Désactivé",
+"es": "Desactivada"
+},
+"vacation_responder_on": {
+"res": "angler:PrebuiltGmail:vacation_responder_on",
+"en": "On, from %1$s",
+"hu": "Első nap: %1$s",
+"de": "Aktiviert ab %1$s",
+"fr": "Activé, à partir du %1$s",
+"es": "Activada a partir del %1$s"
+},
+"vacation_responder_on_with_end_date": {
+"res": "angler:PrebuiltGmail:vacation_responder_on_with_end_date",
+"en": "On, from %1$s to %2$s",
+"hu": "Bekapcsolva; első nap: %1$s, utolsó nap: %2$s",
+"de": "Aktiviert ab %1$s bis %2$s",
+"fr": "Activé, du %1$s au %2$s",
+"es": "Activada del %1$s al %2$s"
+},
+"vacation_responder_empty_subject_and_body_warning": {
+"res": "angler:PrebuiltGmail:vacation_responder_empty_subject_and_body_warning",
+"en": "Add a subject or message",
+"hu": "Adjon meg egy tárgyat vagy szöveget",
+"de": "Betreff oder Nachricht hinzufügen",
+"fr": "Veuillez ajouter un objet ou un message.",
+"es": "Añade un asunto o un mensaje"
+},
+"save": {
+"res": "angler:PrebuiltGmail:save",
+"en": "Save",
+"hu": "Mentés",
+"de": "Speichern",
+"fr": "Enregistr.",
+"es": "Guardar"
+},
+"discard_changes": {
+"res": "angler:PrebuiltGmail:discard_changes",
+"en": "Discard changes?",
+"hu": "Elveti a módosításokat?",
+"de": "Änderungen verwerfen?",
+"fr": "Voulez-vous supprimer les modifications ?",
+"es": "¿Quieres descartar los cambios?"
 }
 });

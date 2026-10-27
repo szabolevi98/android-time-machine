@@ -246,6 +246,9 @@ hint_find_in_page find_in_page_count+args2 accessibility_find_toolbar_btn_prev a
 add cancel added_to_homescreen+args1 share_link_chooser_title page_info_site_settings_button page_info_connection_https
 page_info_connection_http page_info_connection_internal_page
 
+# Chrome local data, search and accessibility controls (round seven, package 4)
+prefs_search_engine font_size font_size_preview_text clear_browsing_data_title clear_cache_title clear_history_title clear_cookies_and_site_data_title clear_passwords_title clear_data_delete clear_form_data_title clear_browsing_data_period_title clear_browsing_data_period_hour clear_browsing_data_period_day clear_browsing_data_period_week clear_browsing_data_period_four_weeks clear_browsing_data_period_everything
+
 [gmail] PrebuiltGmail framework
 # Gmail 6.9.25: the welcome tour, setting up addresses, the inbox with its sectioned-inbox teaser and swipe to archive,
 # the drawer, a conversation, compose, search, Move to / Label as, the Set up email landing
@@ -265,6 +268,10 @@ mark_important plurals:conversation_muted plurals:conversation_not_important plu
 label_ignored search_results_header empty_search+args1 search_back_desc search_clear_desc account_setup_landing_headline
 account_disambig_type_google_title account_disambig_type_personal_title account_disambig_type_exchange_title
 framework/ok framework/cancel
+
+# Local compose and vacation responder, package 4
+date_none
+cc bcc add_cc_label preferences_vacation_responder_title vacation_responder_body_hint_text send_to_contacts_text pick_start_date_title pick_end_date_title vacation_responder_changes_saved vacation_responder_changes_discarded vacation_responder_off vacation_responder_on vacation_responder_on_with_end_date vacation_responder_empty_subject_and_body_warning save discard_changes
 
 [calendar] CalendarGooglePrebuilt framework
 # Google Calendar 5.7: the first run, the drawer with its lockup, the Schedule view, Day / Week / Month, the speed dial,
