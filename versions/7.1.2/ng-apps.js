@@ -695,6 +695,28 @@ NG.appsData = {
 "res": "angler:playapps/Keep.apk:res/mipmap-xxxhdpi-v4/product_logo_keep_launcher_color_48.png",
 "installed": true
 },
+"news-weather": {
+"pkg": "com.google.android.apps.genie.geniewidget",
+"cls": "com.google.android.apps.genie.geniewidget.activities.NewsActivity",
+"label": {
+"en": "News & Weather",
+"de": "News & Wetter",
+"fr": "Actualités et météo",
+"es": "Noticias y el tiempo",
+"hu": "Hírek és időjárás"
+},
+"icon": "assets/app-news-weather.png",
+"color": "#f5f5f5",
+"version": "3.1.4 (150465541)",
+"codeSize": 5748688,
+"permGroups": [
+"contacts",
+"location"
+],
+"targetSdk": 25,
+"res": "angler:playapps/News.apk:res/mipmap-xxxhdpi-v4/ic_launcher.png",
+"installed": true
+},
 "sheets": {
 "pkg": "com.google.android.apps.docs.editors.sheets",
 "cls": "com.google.android.apps.docs.app.NewMainProxyActivity",

@@ -43,6 +43,8 @@ The account: `<device>.demo@gmail.com` (6.0.1: nexus5x.demo@gmail.com). Carrier:
   walking 5 min at 17:30 against a 30 min goal (6.0.1 / 7.1.2: a time still to come today falls on yesterday).
 - **Play Books (4.3–5.1.1's Play apps; 6.0.1 and 7.1.2 as an app installed from Play):** four public-domain openings,
   Alice's Adventures in Wonderland, Pride and Prejudice, The Three Musketeers, The Adventures of Sherlock Holmes.
+- **News & Weather (5.1.1; 6.0.1 and 7.1.2 as an app installed from Play):** the Riverside weather card; 5.1.1 has its own
+  stories, 6.0.1 / 7.1.2 eight short made-up ones under Headlines, Technology and Sports.
 - **Browser / Chrome bookmarks:** Google, Android, the Wikipedia Android article.
 - **Google Now:** weather card "Riverside 18°, partly cloudy" and the next Calendar event.
 - **Wi-Fi:** the saved network (5.1.1: AndroidAP; 6.0.1: Home Network) and nearby AndroidAP, CoffeeShop, Library

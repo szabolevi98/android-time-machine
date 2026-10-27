@@ -17,6 +17,7 @@ versions/7.1.2/assets/app-hangouts.png	af56355d87df5496	copy	angler:/system/app/
 versions/7.1.2/assets/app-keep.png	6cbc16408bf0c700	copy	angler:/playapps/Keep.apk!res/mipmap-xxxhdpi-v4/product_logo_keep_launcher_color_48.png	mipmap-xxxhdpi-v4		6cbc16408bf0c700
 versions/7.1.2/assets/app-maps.png	439fca47f2059aea	copy	angler:/system/app/Maps/Maps.apk!res/mipmap-xxxhdpi-v4/product_logo_maps_launcher_color_48.png	mipmap-xxxhdpi-v4		439fca47f2059aea
 versions/7.1.2/assets/app-messenger.png	1e6f4b391d12ee22	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_launcher.png	drawable-xxxhdpi-v4		1e6f4b391d12ee22
+versions/7.1.2/assets/app-news-weather.png	556061e8b959e148	copy	angler:/playapps/News.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		556061e8b959e148
 versions/7.1.2/assets/app-phone.png	442f798d329b7888	copy	angler:/system/priv-app/GoogleDialer/GoogleDialer.apk!res/mipmap-xxxhdpi-v4/product_logo_dialer_round_launcher_color_48.png	mipmap-xxxhdpi-v4		442f798d329b7888
 versions/7.1.2/assets/app-photos.png	4e840aeb56a904c4	copy	angler:/system/app/Photos/Photos.apk!res/mipmap-xxxhdpi-v4/quantum_logo_photos_launcher_color_48.png	mipmap-xxxhdpi-v4		4e840aeb56a904c4
 versions/7.1.2/assets/app-play-books.png	8c51e72aaf83c423	copy	angler:/playapps/Books.apk!res/mipmap-xxxhdpi-v4/ic_launcher_play_books.png	mipmap-xxxhdpi-v4		8c51e72aaf83c423
@@ -848,6 +849,10 @@ versions/7.1.2/assets/mw-list.png	a14560e567515705	copy	angler:/system/app/Prebu
 versions/7.1.2/assets/mw-open.png	083657b2f30e3ca1	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_open_in_new.png	drawable-xxxhdpi-v4		083657b2f30e3ca1
 versions/7.1.2/assets/mw-outgoing.9.png	04a96bee5a286962	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/widget_msg_bubble_outgoing.9.png	drawable-xxxhdpi-v4		04a96bee5a286962
 versions/7.1.2/assets/mw-reply.png	af1548a69fa9bb0b	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_widget_fab_reply.png	drawable-xxxhdpi-v4		af1548a69fa9bb0b
+versions/7.1.2/assets/nw31-abc_ic_search_api_mtrl_alpha.png	918906f5e698cf62	copy	angler:/system/priv-app/GmsCoreSetupPrebuilt/GmsCoreSetupPrebuilt.apk!res/drawable-xxxhdpi-v4/abc_ic_search_api_mtrl_alpha.png	drawable-xxxhdpi-v4		918906f5e698cf62
+versions/7.1.2/assets/nw31-ic_arrow_back_white_24dp.png	d993010a7e69ff47	copy	angler:/playapps/News.apk!res/drawable-hdpi-v4/ic_arrow_back_white_24dp.png	drawable-hdpi-v4		d993010a7e69ff47
+versions/7.1.2/assets/nw31-ic_more_horiz_white_18dp.png	374e2f390fac801d	copy	angler:/playapps/News.apk!res/drawable-xxxhdpi-v4/ic_more_horiz_white_18dp.png	drawable-xxxhdpi-v4		374e2f390fac801d
+versions/7.1.2/assets/nw31-weather_large_partly_cloudy.png	6dfaa034e2c3ac34	copy	angler:/playapps/News.apk!res/drawable-xxxhdpi-v4/weather_large_partly_cloudy.png	drawable-xxxhdpi-v4		6dfaa034e2c3ac34
 versions/7.1.2/assets/pay-account.png	feb73d6eb7126a89	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/quantum_ic_account_circle_grey600_36.png	drawable-xxhdpi-v4		feb73d6eb7126a89
 versions/7.1.2/assets/pay-add.png	c6122508e04958cd	copy	angler:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/ic_add.png	drawable-xxhdpi-v4		c6122508e04958cd
 versions/7.1.2/assets/pay-amex.png	4b701cfb4e4b39e7	copy	angler:/system/app/Wallet/Wallet.apk!res/drawable-xxhdpi-v4/tp_networklogo_amex_color_98dp.png	drawable-xxhdpi-v4		4b701cfb4e4b39e7

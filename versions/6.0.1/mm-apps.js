@@ -690,6 +690,28 @@ MM.appsData = {
 "res": "bullhead:playapps/Keep.apk:res/mipmap-xxxhdpi-v4/ic_launcher.png",
 "installed": true
 },
+"news-weather": {
+"pkg": "com.google.android.apps.genie.geniewidget",
+"cls": "com.google.android.apps.genie.geniewidget.activities.NewsActivity",
+"label": {
+"en": "News & Weather",
+"de": "News & Wetter",
+"fr": "Actualités et météo",
+"es": "Noticias y el tiempo",
+"hu": "Hírek és időjárás"
+},
+"icon": "assets/app-news-weather.png",
+"color": "#f5f5f5",
+"version": "2.7.1 (123348909)",
+"codeSize": 4998840,
+"permGroups": [
+"contacts",
+"location"
+],
+"targetSdk": 23,
+"res": "bullhead:playapps/News.apk:res/mipmap-xxxhdpi-v4/ic_launcher.png",
+"installed": true
+},
 "sheets": {
 "pkg": "com.google.android.apps.docs.editors.sheets",
 "cls": "com.google.android.apps.docs.app.NewMainProxyActivity",

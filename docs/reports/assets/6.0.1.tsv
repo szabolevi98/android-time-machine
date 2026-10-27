@@ -17,6 +17,7 @@ versions/6.0.1/assets/app-hangouts.png	af56355d87df5496	copy	bullhead:/system/ap
 versions/6.0.1/assets/app-keep.png	7667670aaec312ce	copy	bullhead:/playapps/Keep.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		7667670aaec312ce
 versions/6.0.1/assets/app-maps.png	4062635bc9e1ec6b	copy	bullhead:/system/app/Maps/Maps.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		4062635bc9e1ec6b
 versions/6.0.1/assets/app-messenger.png	fc1661bbf3b21b7e	copy	bullhead:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxhdpi-v4/ic_launcher.png	drawable-xxhdpi-v4		fc1661bbf3b21b7e
+versions/6.0.1/assets/app-news-weather.png	556061e8b959e148	copy	bullhead:/playapps/News.apk!res/mipmap-xxxhdpi-v4/ic_launcher.png	mipmap-xxxhdpi-v4		556061e8b959e148
 versions/6.0.1/assets/app-phone.png	269fc7e71cfc2cd2	copy	bullhead:/system/priv-app/GoogleDialer/GoogleDialer.apk!res/mipmap-xxxhdpi-v4/ic_dialer_clr_48cv_44dp.png	mipmap-xxxhdpi-v4		269fc7e71cfc2cd2
 versions/6.0.1/assets/app-photos.png	4407f7a3862f118b	copy	bullhead:/system/app/Photos/Photos.apk!res/mipmap-xxxhdpi-v4/quantum_logo_photos_launcher_color_48.png	mipmap-xxxhdpi-v4		4407f7a3862f118b
 versions/6.0.1/assets/app-play-books.png	ded076782735379e	copy	bullhead:/playapps/Books.apk!res/mipmap-xxxhdpi-v4/ic_launcher_play_books.png	mipmap-xxxhdpi-v4		ded076782735379e
@@ -637,6 +638,10 @@ versions/6.0.1/assets/mu-ic_play_black.png	d42cfc0496491c0d	copy	bullhead:/syste
 versions/6.0.1/assets/mu-ic_rew_dark.png	513d0b5cdd4c6d0e	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xxhdpi-v4/ic_rew_dark.png	drawable-xxhdpi-v4		513d0b5cdd4c6d0e
 versions/6.0.1/assets/mu-ic_widget_headphone.png	f8df6ab1dc65219b	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xhdpi-v4/ic_widget_headphone.png	drawable-xhdpi-v4		f8df6ab1dc65219b
 versions/6.0.1/assets/mu-ifl_widget_background.png	1d7bd2b0005e2022	copy	bullhead:/system/app/Music2/Music2.apk!res/drawable-xhdpi-v4/ifl_widget_background.png	drawable-xhdpi-v4		1d7bd2b0005e2022
+versions/6.0.1/assets/nw27-abc_ic_search_api_mtrl_alpha.png	45aa0b84bc761449	copy	bullhead:/playapps/Fit.apk!res/drawable-xxhdpi-v4/abc_ic_search_api_mtrl_alpha.png	drawable-xxhdpi-v4		45aa0b84bc761449
+versions/6.0.1/assets/nw27-ic_arrow_back_white_24dp.png	d993010a7e69ff47	copy	bullhead:/playapps/Books.apk!res/drawable-hdpi-v4/ic_arrow_back_white_24dp.png	drawable-hdpi-v4		d993010a7e69ff47
+versions/6.0.1/assets/nw27-ic_more_horiz_white_18dp.png	c8196170a0d3ce24	copy	bullhead:/playapps/News.apk!res/drawable-xxhdpi-v4/ic_more_horiz_white_18dp.png	drawable-xxhdpi-v4		c8196170a0d3ce24
+versions/6.0.1/assets/nw27-weather_large_partly_cloudy.png	cd8f25a9e8291faf	copy	bullhead:/playapps/News.apk!res/drawable-xxhdpi-v4/weather_large_partly_cloudy.png	drawable-xxhdpi-v4		cd8f25a9e8291faf
 versions/6.0.1/assets/pg-bg_drawer_banner.png	2ed27664cc5d0032	copy	bullhead:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/bg_drawer_banner.png	drawable-xxhdpi-v4		2ed27664cc5d0032
 versions/6.0.1/assets/pg-games_edu_mygames.png	31a72b61dea41eb6	copy	bullhead:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_edu_mygames.png	drawable-xxhdpi-v4		31a72b61dea41eb6
 versions/6.0.1/assets/pg-games_ic_drawer_explore.png	191a99f28687db70	copy	bullhead:/system/app/PlayGames/PlayGames.apk!res/drawable-xxhdpi-v4/games_ic_drawer_explore.png	drawable-xxhdpi-v4		191a99f28687db70

@@ -207,6 +207,8 @@ docs/reports/simulator-limits-2026-10-23.md, "Negyedik kör".
 | 7.1.2 | Fit 1.68.00 | [fit-1-68-00-release](https://www.apkmirror.com/apk/google-inc/fit/fit-1-68-00-release/) (uploaded 2017-06-13) | noarch, nodpi | `8763fe95d2313ac39bf4ab66a30558f5e7b6d902fee333a6495fe0bfae8bd957` |
 | 6.0.1 | Play Books 3.9.37 | [google-play-books-3-9-37-release](https://www.apkmirror.com/apk/google-inc/google-play-books/google-play-books-3-9-37-release/) (uploaded 2016-07-21) | noarch, nodpi | `27c92df4154ae909e1bd2c0b65644720baf8a8528663ab88996d6010defb5ba9` |
 | 7.1.2 | Play Books 3.13.17 | [google-play-books-3-13-17-release](https://www.apkmirror.com/apk/google-inc/google-play-books/google-play-books-3-13-17-release/) (uploaded 2017-06-01) | noarch, nodpi | `728ee1889ade86cd2e3a36ef0d77d4b2340903a2dea4653803a33afcde6edaed` |
+| 6.0.1 | News & Weather 2.7.1 | [news-weather-2-7-1-release](https://www.apkmirror.com/apk/google-inc/news-weather/news-weather-2-7-1-release/) (uploaded 2016-06-02) | noarch, nodpi | `bc58e3efe256a9752132708c6ac087e5422d0f3f3aae6d55ed41ba467dbd34a0` |
+| 7.1.2 | News & Weather 3.1.4 | [news-weather-3-1-4-release](https://www.apkmirror.com/apk/google-inc/news-weather/news-weather-3-1-4-release/) (uploaded 2017-03-21) | noarch, nodpi | `74b348763b422152390921d76e2c6fd28f3a2130cacb1ffd26951bcd49cf38f5` |
 
 Sheets on 6.0.1 is 1.6.502.06 (January 2017): APKMirror has no Sheets release between 1.4.492.11 and it, so the
 plan's fallback, the first one after the image's month, is used.
