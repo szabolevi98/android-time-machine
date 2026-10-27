@@ -4,12 +4,15 @@
    drawer button, the page title, Search and Notifications; the bottom bar of home_navigation_item, Collections,
    Communities and Notifications; the stream's cards (the author, the time, the text, a picture, +1 with its count,
    Share and the card menu: Delete for one's own post, with post_delete_question) and the compose FAB
-   (quantum_ic_create_white_24). The share box (sharekit): the audience (Public), the text under "What's new with you?"
-   and POST, which puts the post at the top of the stream (data.plusPlay.mine); Back with text asks
-   sharekit_post_quit_question. Notifications shows "All caught up!". The drawer has the account, Home, Collections,
+   (quantum_ic_create_white_24). The share box (sharekit): the audience (Public), the text under "What's new with you?", a picture from the
+   phone's photos (the documents picker) and the phone's location (Mountain View, CA, as 5.1.1's), and POST, which
+   puts the post at the top of the stream with them (data.plusPlay.mine); Back with text asks
+   sharekit_post_quit_question. Settings (built in the APK's code; no settings XML): Notifications, Ringtone (the
+   default sound or Silent), Vibrate, Automatically play videos, Account and Open source licenses (the limit), and
+   About Google+ with this version. Notifications shows "All caught up!". The drawer has the account, Home, Collections,
    Communities, Profile, People, Notifications, Settings and Help & feedback. The stream's posts are the demo phone's
-   (docs/demo-data.md), written for __YEAR__; Collections, Communities, Profile, People, comments, photos, Search,
-   Settings and Help & feedback are Google's services and keep the simulator's limit. */
+   (docs/demo-data.md), written for __YEAR__; Collections, Communities, Profile, People, comments, Search and
+   Help & feedback are Google's services and keep the simulator's limit. */
 (() => {
   'use strict';
   const T = () => __NS__.text('plus'), t = k => T().t(k);
@@ -22,31 +25,43 @@
   ];
   const COLORS = ['#e53935', '#8e24aa', '#3949ab', '#00897b', '#f4511e', '#6d4c41'];
   const U = c => c.ui.plus ||= {page: 'home', drawer: false, compose: false, draft: ''};
-  const S = c => c.data.plusPlay ||= {mine: [], plused: [], deleted: []};
+  const S = c => { const s = c.data.plusPlay ||= {mine: [], plused: [], deleted: []}; s.prefs ||= {notify: true, silent: false, vibrate: true, video: true}; return s; };
+  const PLACE = 'Mountain View, CA';
+  __PLATFORM__
+  const photoOf = (c, id) => id == null ? null : (__NS__.media?.photos(c) || []).find(x => String(x.id) === String(id));
   const refuse = c => c.toast(c.t('This feature is not part of the simulator.'));
   const ago = (c, h) => new Intl.RelativeTimeFormat(c.locale(), {numeric: 'auto'}).format(-h, h >= 24 ? 'day' : 'hour').replace(/^./, x => x.toUpperCase());
   const hours = at => Math.max(0, Math.round((Date.now() - at) / 36e5));
   const initial = name => name.trim().charAt(0).toUpperCase();
   const btn = (c, action, label, icon, extra = '') => `<button type="button" class="__CLS__-btn" data-action="${action}"${extra} aria-label="${c.safe(label)}"><img src="${I(icon)}" alt=""></button>`;
   function posts(c) {
-    const s = S(c), own = s.mine.map(p => ({...p, own: true, name: __NS__.account?.name || 'Me', hours: hours(p.at), plus: 0}));
+    const s = S(c), own = s.mine.map(p => ({...p, own: true, name: __NS__.account?.name || 'Me', hours: hours(p.at), plus: 0, picture: photoOf(c, p.photo), photo: 0}));
     return [...own.slice().reverse(), ...POSTS.filter(p => !s.deleted.includes(p.id))];
   }
   function card(c, p) {
     const s = S(c), on = s.plused.includes(p.id), count = p.plus + (on ? 1 : 0);
-    return `<article class="__CLS__-card"><header><i class="__CLS__-avatar" style="background:${COLORS[(p.name.length + p.id.length) % COLORS.length]}">${c.safe(initial(p.name))}</i><span><b>${c.safe(p.name)}</b><small>${c.safe(ago(c, p.hours))} · ${c.safe(t('acl_public'))}</small></span>${btn(c, '__CLS__-card', t('abc_action_menu_overflow_description'), 'quantum_ic_more_vert_grey600_24', ` data-id="${p.id}"`)}</header><p>${c.safe(p.text)}</p>${p.photo ? `<div class="__CLS__-photo" style="--h:${p.photo * 67 % 360}"></div>` : ''}<footer><button type="button" class="__CLS__-plus${on ? ' on' : ''}" data-action="__CLS__-plus" data-id="${p.id}" aria-label="${c.safe(t('plus_one_button_content_description'))}" aria-pressed="${on}">+1${count ? ` <span>${count}</span>` : ''}</button><button type="button" class="__CLS__-act" data-action="__CLS__-unavailable" aria-label="${c.safe(t('accessibility_action_comment'))}">${c.safe(t('accessibility_action_comment'))}</button>${btn(c, '__CLS__-share', t('menu_share'), 'quantum_ic_share_grey600_24', ` data-id="${p.id}"`)}</footer></article>`;
+    return `<article class="__CLS__-card"><header><i class="__CLS__-avatar" style="background:${COLORS[(p.name.length + p.id.length) % COLORS.length]}">${c.safe(initial(p.name))}</i><span><b>${c.safe(p.name)}</b><small>${c.safe(ago(c, p.hours))} · ${c.safe(t('acl_public'))}</small></span>${btn(c, '__CLS__-card', t('abc_action_menu_overflow_description'), 'quantum_ic_more_vert_grey600_24', ` data-id="${p.id}"`)}</header><p>${c.safe(p.text)}</p>${p.place ? `<p class="__CLS__-place"><img src="${I('quantum_ic_place_grey600_24')}" alt="">${c.safe(p.place)}</p>` : ''}${p.picture ? `<div class="__CLS__-picture">${__NS__.media.svg(p.picture, '__CLS__-pic', 16 / 9)}</div>` : p.photo ? `<div class="__CLS__-photo" style="--h:${p.photo * 67 % 360}"></div>` : ''}<footer><button type="button" class="__CLS__-plus${on ? ' on' : ''}" data-action="__CLS__-plus" data-id="${p.id}" aria-label="${c.safe(t('plus_one_button_content_description'))}" aria-pressed="${on}">+1${count ? ` <span>${count}</span>` : ''}</button><button type="button" class="__CLS__-act" data-action="__CLS__-unavailable" aria-label="${c.safe(t('accessibility_action_comment'))}">${c.safe(t('accessibility_action_comment'))}</button>${btn(c, '__CLS__-share', t('menu_share'), 'quantum_ic_share_grey600_24', ` data-id="${p.id}"`)}</footer></article>`;
   }
   function compose(c) {
     const u = U(c);
-    return `<div class="__CLS__ __CLS__-compose"><header class="__CLS__-bar">${btn(c, '__CLS__-compose-close', t('cancel'), 'quantum_ic_close_white_24')}<b>${c.safe(t('sharebox_activity_name'))}</b><button type="button" class="__CLS__-post" data-action="__CLS__-post"${u.draft.trim() ? '' : ' disabled'}>${c.safe(t('sharekit_post_button_text'))}</button></header>
+    return `<div class="__CLS__ __CLS__-compose"><header class="__CLS__-bar">${btn(c, '__CLS__-compose-close', t('cancel'), 'quantum_ic_close_white_24')}<b>${c.safe(t('sharebox_activity_name'))}</b><button type="button" class="__CLS__-post" data-action="__CLS__-post"${u.draft.trim() || u.photo != null ? '' : ' disabled'}>${c.safe(t('sharekit_post_button_text'))}</button></header>
       <div class="__CLS__-who"><i class="__CLS__-avatar" style="background:#3949ab">${c.safe(initial(__NS__.account?.name || 'Me'))}</i><span><b>${c.safe(__NS__.account?.name || '')}</b><em><img src="${I('quantum_ic_public_grey600_18')}" alt="">${c.safe(t('acl_public'))}</em></span></div>
       <textarea class="__CLS__-text" data-plus-draft placeholder="${c.safe(t('mini_sharebox_hint'))}" aria-label="${c.safe(t('mini_sharebox_hint'))}">${c.safe(u.draft)}</textarea>
-      <footer class="__CLS__-tools">${btn(c, '__CLS__-unavailable', t('sharebox_photo_content_description'), 'quantum_ic_photo_library_grey600_24')}${btn(c, '__CLS__-unavailable', t('exif_location'), 'quantum_ic_place_grey600_24')}</footer></div>`;
+      ${u.place ? `<p class="__CLS__-place"><img src="${I('quantum_ic_place_grey600_24')}" alt="">${c.safe(u.place)}</p>` : ''}${photoOf(c, u.photo) ? `<div class="__CLS__-picture draft">${__NS__.media.svg(photoOf(c, u.photo), '__CLS__-pic', 16 / 9)}<button type="button" class="__CLS__-unpic" data-action="__CLS__-unphoto" aria-label="${c.safe(t('cancel'))}">×</button></div>` : ''}
+      <footer class="__CLS__-tools">${btn(c, '__CLS__-photo', t('sharebox_photo_content_description'), 'quantum_ic_photo_library_grey600_24')}${btn(c, '__CLS__-place', t('exif_location'), 'quantum_ic_place_grey600_24', ` aria-pressed="${!!u.place}"`)}</footer></div>`;
   }
   const NAV = [['home', 'home_navigation_item', 'quantum_ic_home_grey600_24'], ['collections', 'collections_navigation_item', 'quantum_ic_photo_album_grey600_24'], ['communities', 'communities_navigation_item', 'quantum_ic_people_grey600_24'], ['notifications', 'notifications_navigation_item', 'quantum_ic_notifications_grey600_24']];
+  function settings(c) {
+    const p = S(c).prefs, chk = (key, label) => `<button type="button" class="__CLS__-pref" data-action="__CLS__-pref" data-id="${key}" role="checkbox" aria-checked="${!!p[key]}"><b>${c.safe(t(label))}</b><i class="__CLS__-check${p[key] ? ' on' : ''}"></i></button>`;
+    const row = (action, label, value = '') => `<button type="button" class="__CLS__-pref" data-action="${action}"><span><b>${c.safe(t(label))}</b>${value ? `<small>${c.safe(value)}</small>` : ''}</span></button>`;
+    return `<div class="__CLS__ __CLS__-settings"><header class="__CLS__-bar">${btn(c, '__CLS__-settings-close', t('navigation_drawer'), 'quantum_ic_arrow_back_white_24')}<b>${c.safe(t('account_management_preference_title'))}</b></header><div class="__CLS__-scroll">
+      ${chk('notify', 'notifications_preference_enabled_title')}${row('__CLS__-ringtone', 'notifications_preference_ringtone_title', p.silent ? t('settings_silent_ringtone') : t('ringtone_default'))}${chk('vibrate', 'notifications_preference_vibrate_title')}${chk('video', 'preferences_toggle_stream_video_title')}
+      ${row('__CLS__-unavailable', 'preferences_account_button')}${row('__CLS__-about', 'preferences_about_button')}${row('__CLS__-unavailable', 'preferences_license_title', t('preferences_license_summary'))}</div></div>`;
+  }
   function render(c) {
     const u = U(c);
     if (u.compose) return compose(c);
+    if (u.page === 'settings') return settings(c);
     const title = t(NAV.find(n => n[0] === u.page)[1]);
     const bar = `<header class="__CLS__-bar">${btn(c, '__CLS__-drawer', t('navigation_drawer'), 'quantum_ic_menu_white_24')}<b>${c.safe(title)}</b>${btn(c, '__CLS__-unavailable', t('menu_search'), 'quantum_ic_search_white_24')}${btn(c, '__CLS__-page', t('notifications'), 'quantum_ic_notifications_none_white_24', ' data-id="notifications"')}</header>`;
     const body = u.page === 'home' ? `<div class="__CLS__-stream">${posts(c).map(p => card(c, p)).join('')}</div>` : `<p class="__CLS__-empty">${c.safe(t('plus_no_unread_notifications'))}</p>`;
@@ -65,7 +80,7 @@
   }
   function leaveCompose(c) {
     const u = U(c);
-    if (!u.draft.trim()) { u.compose = false; c.render(); return; }
+    if (!u.draft.trim() && u.photo == null) { u.compose = false; c.render(); return; }
     c.dialog({message: t('sharekit_post_quit_question'), buttons: [{label: t('cancel')}, {label: t('post_discard'), action: c => { Object.assign(u, {compose: false, draft: ''}); c.render(); }}]});
   }
   function action(name, el, ev, c) {
@@ -75,12 +90,19 @@
       case 'drawer': u.drawer = !u.drawer; break;
       case 'page': {
         const id = el.dataset.id; u.drawer = false;
-        if (!['home', 'notifications'].includes(id)) { c.render(); refuse(c); return true; }
+        if (!['home', 'notifications', 'settings'].includes(id)) { c.render(); refuse(c); return true; }
         u.page = id; break;
       }
-      case 'compose': Object.assign(u, {compose: true, draft: '', focus: true}); break;
+      case 'compose': Object.assign(u, {compose: true, draft: '', focus: true, photo: null, place: ''}); break;
       case 'compose-close': leaveCompose(c); return true;
-      case 'post': if (!u.draft.trim()) return true; s.mine.push({id: 'm' + Date.now(), text: u.draft.trim(), at: Date.now()}); Object.assign(u, {compose: false, draft: ''}); c.save(); break;
+      case 'post': if (!u.draft.trim() && u.photo == null) return true; s.mine.push({id: 'm' + Date.now(), text: u.draft.trim(), at: Date.now(), ...(u.photo != null ? {photo: u.photo} : {}), ...(u.place ? {place: u.place} : {})}); Object.assign(u, {compose: false, draft: '', photo: null, place: ''}); c.save(); break;
+      case 'photo': pickPhoto(c, (c, id) => { U(c).photo = id; c.render(); }); return true;
+      case 'unphoto': u.photo = null; break;
+      case 'place': u.place = u.place ? '' : PLACE; break;
+      case 'settings-close': u.page = 'home'; break;
+      case 'pref': s.prefs[el.dataset.id] = !s.prefs[el.dataset.id]; c.save(); break;
+      case 'ringtone': c.dialog({title: t('notifications_preference_ringtone_title'), items: [t('ringtone_default'), t('settings_silent_ringtone')].map((x, i) => ({html: `<span class="__CLS__-radio${(i === 1) === s.prefs.silent ? ' on' : ''}"></span>${c.safe(x)}`})), onItem: (i, c) => { s.prefs.silent = i === 1; c.save(); c.render(); }}); return true;
+      case 'about': c.dialog({title: t('preferences_about_button'), message: `Google+ __VERSION__`, buttons: [{label: t('ok')}]}); return true;
       case 'plus': { const id = el.dataset.id; s.plused = s.plused.includes(id) ? s.plused.filter(x => x !== id) : [...s.plused, id]; c.save(); break; }
       case 'share': { const p = posts(c).find(x => x.id === el.dataset.id); if (p) __NS__.share(c, {title: t('menu_share'), subject: p.name, text: p.text}); return true; }
       case 'card': {
@@ -100,6 +122,7 @@
     back(c) {
       const u = U(c);
       if (u.compose) { leaveCompose(c); return true; }
+      if (u.page === 'settings') { u.page = 'home'; c.render(); return true; }
       if (u.drawer) { u.drawer = false; c.render(); return true; }
       if (u.page !== 'home') { u.page = 'home'; c.render(); return true; }
       return false;

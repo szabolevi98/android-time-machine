@@ -47,3 +47,19 @@
 .mmplus-who em img{width:calc(18 * var(--dp));height:calc(18 * var(--dp))}
 .mmplus-text{flex:1;min-height:0;margin:0 calc(16 * var(--dp));border:0;background:none;color:#212121;font:400 calc(18 * var(--dp))/1.4 Roboto,sans-serif;resize:none;outline:0}
 .mmplus-tools{flex:none;display:flex;padding:calc(4 * var(--dp));border-top:1px solid #e0e0e0}
+.mmplus-place{display:flex;align-items:center;gap:calc(6 * var(--dp));margin:0 calc(16 * var(--dp)) calc(8 * var(--dp));color:#757575;font:400 calc(14 * var(--dp)) Roboto,sans-serif}
+.mmplus-place img{width:calc(18 * var(--dp));height:calc(18 * var(--dp))}
+.mmplus-picture{position:relative;line-height:0}
+.mmplus-picture.draft{margin:0 calc(16 * var(--dp)) calc(8 * var(--dp))}
+.mmplus-pic{display:block;width:100%;height:auto}
+.screen .mmplus-unpic{position:absolute;right:calc(8 * var(--dp));top:calc(8 * var(--dp));width:calc(32 * var(--dp));height:calc(32 * var(--dp));padding:0;border:0;border-radius:50%;background:#0008;color:#fff;font:400 calc(20 * var(--dp)) Roboto,sans-serif;line-height:1}
+.mmplus-settings{background:#fff}
+.screen .mmplus-pref{display:flex;align-items:center;gap:calc(16 * var(--dp));width:100%;min-height:calc(56 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;border-bottom:1px solid #0000000f;background:none;color:#212121;text-align:left}
+.mmplus-pref span,.mmplus-pref>b{flex:1}
+.mmplus-pref span{display:flex;flex-direction:column;gap:calc(2 * var(--dp))}
+.mmplus-pref b{font:400 calc(16 * var(--dp)) Roboto,sans-serif}
+.mmplus-pref small{color:#757575;font:400 calc(14 * var(--dp)) Roboto,sans-serif}
+.mmplus-check{flex:none;width:calc(18 * var(--dp));height:calc(18 * var(--dp));border:calc(2 * var(--dp)) solid #0000008a;border-radius:calc(2 * var(--dp))}
+.mmplus-check.on{border-color:#db4437;background:#db4437}
+.mmplus-radio{display:inline-block;width:calc(16 * var(--dp));height:calc(16 * var(--dp));margin-right:calc(24 * var(--dp));vertical-align:middle;border:calc(2 * var(--dp)) solid #0000008a;border-radius:50%}
+.mmplus-radio.on{border-color:#db4437;background:radial-gradient(circle,#db4437 45%,transparent 50%)}

@@ -47,3 +47,19 @@
 .__CLS__-who em img{width:calc(18 * var(--dp));height:calc(18 * var(--dp))}
 .__CLS__-text{flex:1;min-height:0;margin:0 calc(16 * var(--dp));border:0;background:none;color:#212121;font:400 calc(18 * var(--dp))/1.4 Roboto,sans-serif;resize:none;outline:0}
 .__CLS__-tools{flex:none;display:flex;padding:calc(4 * var(--dp));border-top:1px solid #e0e0e0}
+.__CLS__-place{display:flex;align-items:center;gap:calc(6 * var(--dp));margin:0 calc(16 * var(--dp)) calc(8 * var(--dp));color:#757575;font:400 calc(14 * var(--dp)) Roboto,sans-serif}
+.__CLS__-place img{width:calc(18 * var(--dp));height:calc(18 * var(--dp))}
+.__CLS__-picture{position:relative;line-height:0}
+.__CLS__-picture.draft{margin:0 calc(16 * var(--dp)) calc(8 * var(--dp))}
+.__CLS__-pic{display:block;width:100%;height:auto}
+.screen .__CLS__-unpic{position:absolute;right:calc(8 * var(--dp));top:calc(8 * var(--dp));width:calc(32 * var(--dp));height:calc(32 * var(--dp));padding:0;border:0;border-radius:50%;background:#0008;color:#fff;font:400 calc(20 * var(--dp)) Roboto,sans-serif;line-height:1}
+.__CLS__-settings{background:#fff}
+.screen .__CLS__-pref{display:flex;align-items:center;gap:calc(16 * var(--dp));width:100%;min-height:calc(56 * var(--dp));padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;border-bottom:1px solid #0000000f;background:none;color:#212121;text-align:left}
+.__CLS__-pref span,.__CLS__-pref>b{flex:1}
+.__CLS__-pref span{display:flex;flex-direction:column;gap:calc(2 * var(--dp))}
+.__CLS__-pref b{font:400 calc(16 * var(--dp)) Roboto,sans-serif}
+.__CLS__-pref small{color:#757575;font:400 calc(14 * var(--dp)) Roboto,sans-serif}
+.__CLS__-check{flex:none;width:calc(18 * var(--dp));height:calc(18 * var(--dp));border:calc(2 * var(--dp)) solid #0000008a;border-radius:calc(2 * var(--dp))}
+.__CLS__-check.on{border-color:#db4437;background:#db4437}
+.__CLS__-radio{display:inline-block;width:calc(16 * var(--dp));height:calc(16 * var(--dp));margin-right:calc(24 * var(--dp));vertical-align:middle;border:calc(2 * var(--dp)) solid #0000008a;border-radius:50%}
+.__CLS__-radio.on{border-color:#db4437;background:radial-gradient(circle,#db4437 45%,transparent 50%)}

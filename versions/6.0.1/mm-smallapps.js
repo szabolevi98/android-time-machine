@@ -132,7 +132,7 @@
         c.ui.downloads = null; c.ui.docPick = null;
         if (!pick) { MM.wallpaperPicked?.(c, +el.dataset.id); c.back(); return true; }
         const d = docs(c)[+el.dataset.i];
-        c.back(); pick(c, photo ? {name: imgName(photo), size: 1800000 + (photo.id % 7) * 230000, mime: 'image/jpeg'} : {name: d.name, size: d.size, mime: d.mime || 'application/pdf', text: d.text || ''});
+        c.back(); pick(c, photo ? {name: imgName(photo), size: 1800000 + (photo.id % 7) * 230000, mime: 'image/jpeg', photo: photo.id} : {name: d.name, size: d.size, mime: d.mime || 'application/pdf', text: d.text || ''});
         return true;
       }
       return false;
