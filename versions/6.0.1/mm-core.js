@@ -340,7 +340,8 @@
   function powerKey() { if (ui.power === 'off') { c.boot?.(); return; } if (ui.power) return; if (ui.sleeping) wake(); else lockScreen(); }
   function powerHold() { if (ui.power === 'off') { c.boot?.(); return; } if (ui.power) return; if (ui.sleeping) { wake(); return; } ui.overlay = 'power'; renderOverlay(); }
 
-  function volumeKey(direction) { modules.volume?.key?.(c, direction); }
+  // A screen may take the volume keys itself (DeskClock's AlarmActivity.dispatchKeyEvent).
+  function volumeKey(direction) { if (modules[ui.view]?.volumeKey?.(c, direction)) return; modules.volume?.key?.(c, direction); }
   function bindVolume(element, direction) {
     element.addEventListener('pointerdown', event => { if (event.button) return; event.preventDefault(); volumeKey(typeof direction === 'function' ? direction(event) : direction); });
     element.addEventListener('click', event => { if (event.detail === 0) volumeKey(typeof direction === 'function' ? 1 : direction); });

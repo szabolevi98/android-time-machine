@@ -514,6 +514,172 @@ NG.strings('clock', {
 "fr": "Annuler",
 "es": "Cancelar"
 },
+"description_direction_left": {
+"res": "angler:PrebuiltDeskClockGoogle:description_direction_left",
+"en": "Swipe left to snooze",
+"hu": "A szundihoz csúsztassa gyorsan balra",
+"de": "Zum Schlummern nach links wischen",
+"fr": "Faire glisser le doigt vers la gauche pour répéter",
+"es": "Deslizar hacia la izquierda para posponer"
+},
+"description_direction_right": {
+"res": "angler:PrebuiltDeskClockGoogle:description_direction_right",
+"en": "Swipe right to dismiss",
+"hu": "Az elutasításhoz csúsztassa gyorsan jobbra",
+"de": "Zum Schließen nach rechts wischen",
+"fr": "Faire glisser le doigt vers la droite pour ignorer",
+"es": "Deslizar hacia la derecha para descartar"
+},
+"description_direction_both": {
+"res": "angler:PrebuiltDeskClockGoogle:description_direction_both",
+"en": "Swipe left to snooze or right to dismiss",
+"hu": "A szundihoz csúsztassa gyorsan balra, az elvetéshez pedig jobbra",
+"de": "Zum Schlummern nach links, zum Schließen nach rechts wischen",
+"fr": "Faire glisser le doigt vers la gauche pour répéter ou vers la droite pour ignorer",
+"es": "Desliza el dedo hacia la izquierda para posponer la alarma o hacia la derecha para ignorarla"
+},
+"alarm_alert_snooze_text": {
+"res": "angler:PrebuiltDeskClockGoogle:alarm_alert_snooze_text",
+"en": "Snooze",
+"hu": "Szundi",
+"de": "Schlummern",
+"fr": "Répéter",
+"es": "Posponer"
+},
+"alarm_alert_dismiss_text": {
+"res": "angler:PrebuiltDeskClockGoogle:alarm_alert_dismiss_text",
+"en": "Dismiss",
+"hu": "Elvetés",
+"de": "Ausschalten",
+"fr": "Quitter",
+"es": "Descartar"
+},
+"alarm_alert_snoozed_text": {
+"res": "angler:PrebuiltDeskClockGoogle:alarm_alert_snoozed_text",
+"en": "Snoozed",
+"hu": "Elhalasztva",
+"de": "Schlummern",
+"fr": "Répétée",
+"es": "Pospuesta"
+},
+"alarm_alert_off_text": {
+"res": "angler:PrebuiltDeskClockGoogle:alarm_alert_off_text",
+"en": "Alarm off",
+"hu": "Értesítés ki",
+"de": "Wecker aus",
+"fr": "Alarme arrêtée",
+"es": "Alarma desactivada"
+},
+"alarm_alert_snooze_duration": {
+"res": "angler:PrebuiltDeskClockGoogle:alarm_alert_snooze_duration",
+"en": {
+"other": "%d min",
+"one": "1 min"
+},
+"hu": {
+"other": "%d perc",
+"one": "1 perc"
+},
+"de": {
+"other": "%d min",
+"one": "1 min"
+},
+"fr": {
+"other": "%d min",
+"one": "%d min"
+},
+"es": {
+"other": "%d min",
+"one": "1 min"
+}
+},
+"alarm_alert_snooze_set": {
+"res": "angler:PrebuiltDeskClockGoogle:alarm_alert_snooze_set",
+"en": {
+"other": "Snoozing for %d minutes.",
+"one": "Snoozing for 1 minute."
+},
+"hu": {
+"other": "Elhalasztva %d perccel.",
+"one": "Elhalasztva 1 perccel."
+},
+"de": {
+"other": "Schlummerfunktion für %d Minuten aktiv",
+"one": "Schlummerfunktion für 1 Minute aktiv"
+},
+"fr": {
+"other": "Répétition après %d minutes",
+"one": "Répétition après %d minute"
+},
+"es": {
+"other": "Pospuesta durante %d minutos.",
+"one": "Pospuesta durante 1 minuto."
+}
+},
+"alarm_alert_snooze_until": {
+"res": "angler:PrebuiltDeskClockGoogle:alarm_alert_snooze_until",
+"en": "Snoozing until %s",
+"hu": "Ébresztés elhalasztása eddig: %s",
+"de": "Schlummern bis %s",
+"fr": "Répétition jusqu'à %s",
+"es": "Pospuesta hasta: %s"
+},
+"alarm_missed_title": {
+"res": "angler:PrebuiltDeskClockGoogle:alarm_missed_title",
+"en": "Missed alarm",
+"hu": "Elmulasztott ébresztő",
+"de": "Entgangener Weckruf",
+"fr": "Alarme manquée",
+"es": "Alarma perdida"
+},
+"alarm_missed_text": {
+"res": "angler:PrebuiltDeskClockGoogle:alarm_missed_text",
+"en": "%s - %s",
+"hu": "%s – %s",
+"de": "%s–%s",
+"fr": "%s – %s",
+"es": "%s - %s"
+},
+"timer_notification_label": {
+"res": "angler:PrebuiltDeskClockGoogle:timer_notification_label",
+"en": "Timer",
+"hu": "Időzítő",
+"de": "Timer",
+"fr": "Minuteur",
+"es": "Temporizador"
+},
+"timer_plus_1_min": {
+"res": "angler:PrebuiltDeskClockGoogle:timer_plus_1_min",
+"en": "Add 1 min",
+"hu": "1 perc hozzáadása",
+"de": "1 Min. hinzufügen",
+"fr": "Ajouter 1 min",
+"es": "Añadir 1 min"
+},
+"timer_stop": {
+"res": "angler:PrebuiltDeskClockGoogle:timer_stop",
+"en": "Stop",
+"hu": "Leállítás",
+"de": "Anhalten",
+"fr": "Arrêter",
+"es": "Detener"
+},
+"timer_times_up": {
+"res": "angler:PrebuiltDeskClockGoogle:timer_times_up",
+"en": "Time's up",
+"hu": "Az idő lejárt!",
+"de": "Zeit ist abgelaufen.",
+"fr": "Le temps est écoulé.",
+"es": "Tiempo agotado"
+},
+"home_label": {
+"res": "angler:PrebuiltDeskClockGoogle:home_label",
+"en": "Home",
+"hu": "Otthoni",
+"de": "Zuhause",
+"fr": "Domicile",
+"es": "Casa"
+},
 "settings": {
 "res": "angler:PrebuiltDeskClockGoogle:settings",
 "en": "Settings",

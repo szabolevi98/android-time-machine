@@ -17,3 +17,11 @@ dc-ic_public.svg	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	ic_publ
 dc-ic_add_timer.svg	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	ic_add_timer	-
 dc-ic_delete.svg	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	ic_delete	-
 dc-ic_alarm.svg	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	ic_alarm	-
+# AlarmActivity (alarm_activity.xml): snooze, dismiss and the pulsing alarm button; the analog clock (Style)
+dc-ic_snooze.svg	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	ic_snooze	-
+dc-ic_dismiss.svg	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	ic_dismiss	-
+dc-ic_fab_alarm.svg	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	ic_fab_alarm	-
+dc-clock_analog_dial.svg	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	clock_analog_dial	-
+dc-clock_analog_hour.svg	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	clock_analog_hour	-
+dc-clock_analog_minute.svg	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	clock_analog_minute	-
+dc-clock_analog_second.svg	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	clock_analog_second	tint=#ffda4336

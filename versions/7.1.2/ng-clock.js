@@ -71,21 +71,36 @@
   // -- the pages -----------------------------------------------------------------------------------------------------
   const cityRow = id => (NG.deskClockCities || []).find(r => r[0] === id);
   const LANG_COL = {en: 2, hu: 3, de: 4, fr: 5, es: 6};
-  const cityName = (c, r) => String(r[LANG_COL[c.lang] ?? 2] || r[2]).split('=').pop();
+  const cityName = (c, r) => r[0] === 'home' ? r[2] : String(r[LANG_COL[c.lang] ?? 2] || r[2]).split('=').pop();
   const zoneTime = (c, tz, opts = {}) => { try { return new Intl.DateTimeFormat(c.locale(), {timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: !h24(c), ...opts}).format(new Date()); } catch { return ''; } };
   const zoneDay = tz => { try { const p = new Intl.DateTimeFormat('en-CA', {timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date()); return Date.parse(p); } catch { return 0; } };
   // world_clock_item: the city, its day when it is not today's, the time.
+  // Automatic home clock (WorldClockAdapter): with it on and Home time zone away from the phone's zone now, a city
+  // named home_label in that zone comes first.
+  const offsetOf = tz => { try { const p = new Intl.DateTimeFormat('en-US', {timeZone: tz, timeZoneName: 'longOffset'}).formatToParts(new Date()).find(x => x.type === 'timeZoneName').value; const m = /GMT([+-])(\d+)(?::(\d+))?/.exec(p); return m ? (m[1] === '-' ? -1 : 1) * ((+m[2]) * 60 + (+(m[3] || 0))) : 0; } catch { return 0; } };
+  function homeCity(c) {
+    if (prefs(c).automatic_home_clock === false) return null;
+    const tz = prefs(c).home_time_zone; if (!tz) return null;
+    return offsetOf(tz) === -new Date().getTimezoneOffset() ? null : ['home', tz, T().t('home_label')];
+  }
   function worldClocks(c) {
-    const rows = (S(c).cities || []).map(cityRow).filter(Boolean), today = zoneDay(Intl.DateTimeFormat().resolvedOptions().timeZone);
+    const home = homeCity(c), rows = [...(home ? [home] : []), ...(S(c).cities || []).map(cityRow).filter(Boolean)], today = zoneDay(Intl.DateTimeFormat().resolvedOptions().timeZone);
     return rows.map(r => {
       const d = zoneDay(r[1]), day = d !== today ? new Intl.DateTimeFormat(c.locale(), {timeZone: r[1], weekday: 'short'}).format(new Date()) : '';
       return `<div class="ngck-wc"><div class="ngck-wcname"><span>${c.safe(cityName(c, r))}</span>${day ? `<small>${c.safe(day)}</small>` : ''}</div><div class="ngck-wctime">${c.safe(zoneTime(c, r[1]))}</div></div>`;
     }).join('');
   }
+  // Style (clock_style): AnalogClock with clock_analog_dial and the hour, minute and second hands turned to the time.
+  const style = c => prefs(c).clock_style || 'digital';
+  function analog(now) {
+    const sec = now.getSeconds(), m = now.getMinutes() + sec / 60, h = (now.getHours() % 12) + m / 60;
+    const hand = (n, deg) => `<img class="ngck-hand" src="${A(`clock_analog_${n}.svg`)}" alt="" style="transform:rotate(${deg.toFixed(2)}deg)">`;
+    return `<div class="ngck-analog"><img src="${A('clock_analog_dial.svg')}" alt="">${hand('hour', h * 30)}${hand('minute', m * 6)}${hand('second', sec * 6)}</div>`;
+  }
   function clockPage(c) {
     const now = new Date(), next = nextAlarm(c);
     const date = new Intl.DateTimeFormat(c.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).format(now);
-    return `<div class="ngck-clock"><div class="ngck-big">${timeHtml(c, now.getHours(), now.getMinutes(), 'ngck-ampm')}</div>
+    return `<div class="ngck-clock">${style(c) === 'analog' ? analog(now) : `<div class="ngck-big">${timeHtml(c, now.getHours(), now.getMinutes(), 'ngck-ampm')}</div>`}
       <div class="ngck-labels"><span>${c.safe(date)}</span>${next ? `<b class="ngck-glyph">A</b><span>${c.safe(next)}</span>` : ''}</div><i class="ngck-hair"></i></div>${worldClocks(c)}`;
   }
   function alarmPage(c) {
@@ -109,8 +124,8 @@
   const pad2 = n => String(n).padStart(2, '0');
   function timerPage(c) {
     const t = T(), u = ui(c);
-    if (u.timer) {
-      const left = Math.max(0, u.timer.end ? u.timer.end - Date.now() : u.timer.left), total = u.timer.total;
+    if (S(c).timer) {
+      const left = Math.max(0, S(c).timer.end ? S(c).timer.end - Date.now() : S(c).timer.left), total = S(c).timer.total;
       const s = Math.ceil(left / 1000), text = s >= 3600 ? `${Math.floor(s / 3600)}:${pad2(Math.floor(s / 60) % 60)}:${pad2(s % 60)}` : `${Math.floor(s / 60)}:${pad2(s % 60)}`;
       return `<div class="ngck-circlewrap"><div class="ngck-circle" style="--p:${(1 - left / total).toFixed(4)}"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48"/><circle class="arc" cx="50" cy="50" r="48" pathLength="100"/></svg><span class="ngck-ctime">${c.safe(text)}</span></div></div>`;
     }
@@ -140,8 +155,8 @@
     if (u.tab === 'clock') return `<div class="ngck-footer"><span></span>${fab('ic_public.svg', t.t('button_cities'))}<span></span></div>`;
     if (u.tab === 'alarm') return `<div class="ngck-footer"><span></span>${fab('ic_add_white_24dp.png', t.t('button_alarms'))}<span></span></div>`;
     if (u.tab === 'timer') {
-      if (!u.timer) return `<div class="ngck-footer"><span></span>${u.timerDigits ? fab('ic_start_white_24dp.png', t.t('timer_start')) : '<i class="ngck-fabspace"></i>'}<span></span></div>`;
-      return `<div class="ngck-footer">${side('ngck-treset', 'ic_reset_white_24dp.png', t.t('timer_reset'))}${fab(u.timer.end ? 'ic_pause_white_24dp.png' : 'ic_start_white_24dp.png', t.t('timer_start'))}${u.timer.end ? side('ngck-tplus', 'ic_plusone.svg', t.t('timer_plus_one')) : side('ngck-tadd', 'ic_add_timer.svg', t.t('timer_add_timer'))}</div>`;
+      if (!S(c).timer) return `<div class="ngck-footer"><span></span>${u.timerDigits ? fab('ic_start_white_24dp.png', t.t('timer_start')) : '<i class="ngck-fabspace"></i>'}<span></span></div>`;
+      return `<div class="ngck-footer">${side('ngck-treset', 'ic_reset_white_24dp.png', t.t('timer_reset'))}${fab(S(c).timer.end ? 'ic_pause_white_24dp.png' : 'ic_start_white_24dp.png', t.t('timer_start'))}${S(c).timer.end ? side('ngck-tplus', 'ic_plusone.svg', t.t('timer_plus_one')) : side('ngck-tadd', 'ic_add_timer.svg', t.t('timer_add_timer'))}</div>`;
     }
     const s = u.sw;
     return `<div class="ngck-footer">${!s.running && s.acc ? side('ngck-swreset', 'ic_reset.svg', t.t('sw_reset_button')) : '<span></span>'}${fab(s.running ? 'ic_pause_white_24dp.png' : 'ic_start_white_24dp.png', t.t('sw_start_button'))}${s.running ? side('ngck-swlap', 'ic_lap.svg', t.t('sw_lap_button')) : s.acc ? side('ngck-swshare', 'ic_share.svg', t.t('sw_share_button')) : '<span></span>'}</div>`;
@@ -165,16 +180,18 @@
         const el = root.querySelector('.ngck-ctime'); if (el) el.innerHTML = swText(swElapsed(u));
         const circ = root.querySelector('.ngck-circle'), lap = u.sw.laps.length ? swElapsed(u) - u.sw.laps.reduce((a, b) => a + b, 0) : swElapsed(u);
         circ?.style.setProperty('--p', (u.sw.laps.length ? Math.min(1, lap / u.sw.laps[0]) : (swElapsed(u) % 60000) / 60000).toFixed(4));
-      } else if (u.tab === 'timer' && u.timer?.end) { if (Date.now() >= u.timer.end) { u.timer = null; c.toast(T().t('timer_reset'), false); } c.render(); }
+      } else if (u.tab === 'timer' && S(c).timer?.end) c.render();   // ng-alarm.js fires the timer when it runs out
     }, 50);
   }
 
   NG.clock24 = h24; NG.clockNextAlarmText = nextAlarm;
+  // For the alarm and timer alerts (ng-alarm.js): the hour's colour and the time markup.
+  NG.clockHourColor = () => HOUR_COLORS[new Date().getHours()]; NG.clockTimeHtml = timeHtml;
   NG.register('clock', {
     statusColor: () => HOUR_COLORS[new Date().getHours()],
     render,
     mount(c) { tickLoop(c); },
-    tick(c, now) { if (c.ui.view === 'clock' && (ui(c).tab === 'clock' || ui(c).tab === 'alarm' || ui(c).night) && now.getSeconds() === 0) c.render(); },
+    tick(c, now) { const u = ui(c); if (c.ui.view === 'clock' && !c.ui.overlay && (u.tab === 'clock' || u.tab === 'alarm' || u.night) && (now.getSeconds() === 0 || (u.tab === 'clock' && !u.night && style(c) === 'analog'))) { c.transition('none'); c.render(); } },
     back(c) { const u = ui(c); if (u.night) { u.night = false; c.render(); return true; } if (u.expanded) { u.expanded = null; c.render(); return true; } return false; },
     action(name, el, event, c) {
       const t = T(), u = ui(c), s = S(c), a = s.alarms.find(x => x.id === +el.dataset.id);
@@ -198,9 +215,9 @@
         case 'ngck-delete': s.alarms = s.alarms.filter(x => x !== a); u.expanded = null; save(); c.toast(t.t('alarm_deleted'), false); NG.system?.changed(c); return true;
         case 'ngck-tkey': if (u.timerDigits.length < 6 && !(u.timerDigits === '' && el.dataset.k === '0')) u.timerDigits += el.dataset.k; c.render(); return true;
         case 'ngck-tdel': u.timerDigits = u.timerDigits.slice(0, -1); c.render(); return true;
-        case 'ngck-treset': u.timer = null; c.render(); return true;
-        case 'ngck-tadd': u.timer = null; u.timerDigits = ''; c.render(); return true;
-        case 'ngck-tplus': if (u.timer?.end) { u.timer.end += 60000; u.timer.total += 60000; } c.render(); return true;
+        case 'ngck-treset': S(c).timer = null; c.save(); c.render(); return true;
+        case 'ngck-tadd': S(c).timer = null; u.timerDigits = ''; c.save(); c.render(); return true;
+        case 'ngck-tplus': if (S(c).timer?.end) { S(c).timer.end += 60000; S(c).timer.total += 60000; } c.save(); c.render(); return true;
         case 'ngck-swreset': u.sw = {start: 0, acc: 0, running: false, laps: []}; c.render(); return true;
         case 'ngck-swlap': { const totalMs = swElapsed(u), done = u.sw.laps.reduce((x, y) => x + y, 0); u.sw.laps.unshift(totalMs - done); c.render(); return true; }
         case 'ngck-swshare': {
@@ -223,10 +240,10 @@
             return true;
           }
           if (u.tab === 'timer') {
-            if (!u.timer) { const d = u.timerDigits.padStart(6, '0'); const ms = ((+d.slice(0, 2)) * 3600 + (+d.slice(2, 4)) * 60 + (+d.slice(4))) * 1000; if (!ms) return true; u.timer = {total: ms, left: ms, end: Date.now() + ms}; u.timerDigits = ''; }
-            else if (u.timer.end) { u.timer.left = u.timer.end - Date.now(); u.timer.end = 0; }
-            else u.timer.end = Date.now() + u.timer.left;
-            c.render(); return true;
+            if (!S(c).timer) { const d = u.timerDigits.padStart(6, '0'); const ms = ((+d.slice(0, 2)) * 3600 + (+d.slice(2, 4)) * 60 + (+d.slice(4))) * 1000; if (!ms) return true; S(c).timer = {total: ms, left: ms, end: Date.now() + ms}; u.timerDigits = ''; }
+            else if (S(c).timer.end) { S(c).timer.left = S(c).timer.end - Date.now(); S(c).timer.end = 0; }
+            else S(c).timer.end = Date.now() + S(c).timer.left;
+            c.save(); c.render(); return true;
           }
           if (u.sw.running) { u.sw.acc += Date.now() - u.sw.start; u.sw.running = false; } else { u.sw.start = Date.now(); u.sw.running = true; }
           c.render(); return true;

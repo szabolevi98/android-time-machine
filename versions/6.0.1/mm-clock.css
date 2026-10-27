@@ -34,7 +34,7 @@
 .mmck-day{width:calc(36 * var(--dp));height:calc(36 * var(--dp));border:0;border-radius:50%;background:none;color:#fff;font:500 calc(14 * var(--dp)) Roboto,sans-serif}
 .mmck-day.on{background:#fff;color:#212121}
 .mmck-opts{display:flex;align-items:center;justify-content:space-between}
-.mmck-ring{display:flex;align-items:center;gap:calc(16 * var(--dp));min-height:calc(48 * var(--dp));padding-left:calc(4 * var(--dp));font-size:calc(16 * var(--dp))}
+.mmck-ring{display:flex;align-items:center;gap:calc(16 * var(--dp));min-height:calc(48 * var(--dp));padding:0 0 0 calc(4 * var(--dp));border:0;background:none;color:inherit;font:inherit;font-size:calc(16 * var(--dp));text-align:start}
 .mmck-ring img,.mmck-labelbtn img,.mmck-del img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
 .mmck-labelbtn{display:flex;align-items:center;gap:calc(16 * var(--dp));width:100%;padding:calc(12 * var(--dp)) calc(4 * var(--dp));border:0;background:none;color:#fff;font-size:calc(16 * var(--dp));text-align:left}
 .mmck-labelbtn span{color:rgba(255,255,255,.5)}
@@ -98,3 +98,9 @@
 .mmck-city .mmst-check.on{background:#fff}
 .mmck-cname{flex:1;min-width:0;padding:0 calc(10 * var(--dp)) 0 calc(16 * var(--dp));font-size:calc(16 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mmck-ctimes{margin-right:calc(8 * var(--dp));color:rgba(255,255,255,.7);font-size:calc(14 * var(--dp))}
+/* Night mode (ScreensaverActivity): the clock page dimmed on black. */
+.mmck-night{background:#000;justify-content:center}
+.mmck-night .mmck-clock{opacity:.5}
+/* Style Analog (AnalogClock): the 294 dp dial (clock_analog_dial_mipmap) and the hands over it, within 60 dp margins. */
+.mmck-analog{position:relative;width:min(calc(294 * var(--dp)),calc(100% - 120 * var(--dp)));aspect-ratio:1;margin:calc(-48 * var(--dp)) 0 calc(14 * var(--dp))}
+.mmck-analog img{position:absolute;inset:0;width:100%;height:100%}

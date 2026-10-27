@@ -23,3 +23,13 @@ dc-ic_noalarms.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawa
 dc-ic_add_timer.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/ic_add_timer
 dc-ic_backspace_normal.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/ic_backspace_normal
 dc-ic_backspace_disabled.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/ic_backspace_disabled
+# AlarmActivity (alarm_activity.xml): snooze, dismiss and the pulsing alarm button; the analog clock (Style); the timer alert's stop and +1
+dc-ic_snooze_white_80dp.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/ic_snooze_white_80dp
+dc-ic_alarm_off_white_80dp.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/ic_alarm_off_white_80dp
+dc-ic_fab_alarm.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/ic_fab_alarm
+dc-clock_analog_dial.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/clock_analog_dial
+dc-clock_analog_hour.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/clock_analog_hour
+dc-clock_analog_minute.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/clock_analog_minute
+dc-clock_analog_second.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/clock_analog_second
+dc-ic_stop_white_24dp.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/ic_stop_white_24dp
+dc-ic_plusone.png	app/PrebuiltDeskClockGoogle/PrebuiltDeskClockGoogle.apk	drawable/ic_plusone

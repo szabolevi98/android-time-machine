@@ -73,20 +73,36 @@
   // (world_clock_list_item.xml): world_clock_label's city name and the time there in world_clock_12_hours_format.
   const cityRow = id => (MM.deskClockCities || []).find(r => r[0] === id);
   const LANG_COL = {en: 2, hu: 3, de: 4, fr: 5, es: 6};
-  const cityName = (c, r) => String(r[LANG_COL[c.lang] ?? 2] || r[2]).split('=').pop();
+  const cityName = (c, r) => r[0] === 'home' ? r[2] : String(r[LANG_COL[c.lang] ?? 2] || r[2]).split('=').pop();
   const zoneTime = (c, tz, opts = {}) => { try { return new Intl.DateTimeFormat(c.locale(), {timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: !h24(c), ...opts}).format(new Date()); } catch { return ''; } };
+  // Automatic home clock (WorldClockAdapter): with it on and Home time zone away from the phone's zone now, a city
+  // named home_label in that zone comes first.
+  const offsetOf = tz => { try { const p = new Intl.DateTimeFormat('en-US', {timeZone: tz, timeZoneName: 'longOffset'}).formatToParts(new Date()).find(x => x.type === 'timeZoneName').value; const m = /GMT([+-])(\d+)(?::(\d+))?/.exec(p); return m ? (m[1] === '-' ? -1 : 1) * ((+m[2]) * 60 + (+(m[3] || 0))) : 0; } catch { return 0; } };
+  function homeCity(c) {
+    if (MM.appPref(c, 'clock', 'automatic_home_clock', true) === false) return null;
+    const tz = MM.appPref(c, 'clock', 'home_time_zone'); if (!tz) return null;
+    return offsetOf(tz) === -new Date().getTimezoneOffset() ? null : ['home', tz, T().t('home_label')];
+  }
   function worldClocks(c) {
-    const rows = (S(c).cities || []).map(cityRow).filter(Boolean);
+    const home = homeCity(c), rows = [...(home ? [home] : []), ...(S(c).cities || []).map(cityRow).filter(Boolean)];
     if (!rows.length) return '';
     const cell = r => `<div class="mmck-wc"><span class="mmck-wcname">${c.safe(cityName(c, r))}</span><span class="mmck-wctime">${c.safe(zoneTime(c, r[1]))}</span></div>`;
     const out = [];
     for (let i = 0; i < rows.length; i += 2) out.push(`<div class="mmck-wcrow">${cell(rows[i])}${rows[i + 1] ? cell(rows[i + 1]) : '<div class="mmck-wc"></div>'}</div>`);
     return `<div class="mmck-world">${out.join('')}</div>`;
   }
+  // Style (clock_style): AnalogClock with the dial and the hour and minute hands (clock_analog_*_mipmap) turned to the
+  // time; DeskClock 4.2's main clock has no second hand.
+  const style = c => MM.appPref(c, 'clock', 'clock_style', 'digital');
+  function analog(now) {
+    const m = now.getMinutes() + now.getSeconds() / 60, h = (now.getHours() % 12) + m / 60;
+    const hand = (n, deg) => `<img class="mmck-hand" src="${A(`clock_analog_${n}`)}" alt="" style="transform:rotate(${deg.toFixed(2)}deg)">`;
+    return `<div class="mmck-analog"><img src="${A('clock_analog_dial')}" alt="">${hand('hour', h * 30)}${hand('minute', m * 6)}</div>`;
+  }
   function clockPage(c) {
     const now = new Date(), next = nextAlarm(c);
     const date = new Intl.DateTimeFormat(c.locale(), {weekday: 'short', month: 'long', day: 'numeric'}).format(now);
-    return `<div class="mmck-clock"><div class="mmck-big">${timeHtml(c, now.getHours(), now.getMinutes(), 'mmck-ampm')}</div>
+    return `<div class="mmck-clock">${style(c) === 'analog' ? analog(now) : `<div class="mmck-big">${timeHtml(c, now.getHours(), now.getMinutes(), 'mmck-ampm')}</div>`}
       <div class="mmck-labels"><span class="mmck-date">${c.safe(date)}</span>${next ? `<span class="mmck-next"><img src="${A('ic_alarm_small')}" alt="">${c.safe(next)}</span>` : ''}</div><i class="mmck-hair"></i>${worldClocks(c)}</div>`;
   }
   function alarmPage(c) {
@@ -101,7 +117,7 @@
       return `<div class="mmck-alarm open">${head}
         <label class="mmck-check"><input type="checkbox" data-action="mmck-repeat" data-id="${a.id}"${a.days.length ? ' checked' : ''}><i></i><span>${c.safe(t.t('alarm_repeat'))}</span></label>
         ${a.days.length ? `<div class="mmck-dayrow">${dayBtns}</div>` : ''}
-        <div class="mmck-opts"><span class="mmck-ring"><img src="${A('ic_ringtone')}" alt="">${c.safe(MM.settingsRingtones?.alarm?.default || 'Oxygen')}</span><label class="mmck-check"><input type="checkbox" data-action="mmck-vibrate" data-id="${a.id}"${a.vibrate ? ' checked' : ''}><i></i><span>${c.safe(t.t('alarm_vibrate'))}</span></label></div>
+        <div class="mmck-opts"><button type="button" class="mmck-ring" data-action="mmck-ring" data-id="${a.id}"><img src="${A('ic_ringtone')}" alt="">${c.safe(a.ringtone === '' ? MM.text('framework').t('ringtone_silent') : a.ringtone ?? MM.settingsRingtones?.alarm?.default ?? 'Oxygen')}</button><label class="mmck-check"><input type="checkbox" data-action="mmck-vibrate" data-id="${a.id}"${a.vibrate ? ' checked' : ''}><i></i><span>${c.safe(t.t('alarm_vibrate'))}</span></label></div>
         <button type="button" class="mmck-labelbtn" data-action="mmck-label" data-id="${a.id}"><img src="${A('ic_label_normal')}" alt="">${a.label ? c.safe(a.label) : `<span>${c.safe(t.t('label'))}</span>`}</button><i class="mmck-hair"></i>
         <div class="mmck-foot"><button type="button" class="mmck-del" data-action="mmck-delete" data-id="${a.id}"><img src="${A('ic_delete_small')}" alt="">${c.safe(t.t('delete'))}</button><button type="button" class="mmck-collapse" data-action="mmck-expand" data-id="${a.id}"><img src="${A('ic_expand_down')}" alt=""></button></div></div>`;
     }).join('')}</div>`;
@@ -109,8 +125,8 @@
   const pad2 = n => String(n).padStart(2, '0');
   function timerPage(c) {
     const t = T(), u = ui(c);
-    if (u.timer) {
-      const left = Math.max(0, u.timer.end ? u.timer.end - Date.now() : u.timer.left), total = u.timer.total;
+    if (S(c).timer) {
+      const left = Math.max(0, S(c).timer.end ? S(c).timer.end - Date.now() : S(c).timer.left), total = S(c).timer.total;
       const s = Math.ceil(left / 1000), text = s >= 3600 ? `${Math.floor(s / 3600)}:${pad2(Math.floor(s / 60) % 60)}:${pad2(s % 60)}` : `${Math.floor(s / 60)}:${pad2(s % 60)}`;
       return `<div class="mmck-circlewrap"><div class="mmck-circle" style="--p:${(1 - left / total).toFixed(4)}"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48"/><circle class="arc" cx="50" cy="50" r="48" pathLength="100"/></svg><span class="mmck-ctime">${c.safe(text)}</span></div></div>`;
     }
@@ -139,8 +155,8 @@
     if (u.tab === 'clock') return `<div class="mmck-footer"><span></span>${fab('ic_language_white_24dp')}<span></span></div>`;
     if (u.tab === 'alarm') return `<div class="mmck-footer"><span></span>${fab('ic_add_white_24dp')}<span></span></div>`;
     if (u.tab === 'timer') {
-      if (!u.timer) return `<div class="mmck-footer"><span></span>${u.timerDigits ? fab('ic_start_white_24dp') : '<i class="mmck-fabspace"></i>'}<span></span></div>`;
-      return `<div class="mmck-footer">${side('mmck-treset', 'ic_reset_white_24dp')}${fab(u.timer.end ? 'ic_pause_white_24dp' : 'ic_start_white_24dp')}${side('mmck-tadd', 'ic_add_timer')}</div>`;
+      if (!S(c).timer) return `<div class="mmck-footer"><span></span>${u.timerDigits ? fab('ic_start_white_24dp') : '<i class="mmck-fabspace"></i>'}<span></span></div>`;
+      return `<div class="mmck-footer">${side('mmck-treset', 'ic_reset_white_24dp')}${fab(S(c).timer.end ? 'ic_pause_white_24dp' : 'ic_start_white_24dp')}${side('mmck-tadd', 'ic_add_timer')}</div>`;
     }
     const s = u.sw;
     return `<div class="mmck-footer"><span>${!s.running && s.acc ? side('mmck-swreset', 'ic_reset_white_24dp') : ''}</span>${fab(s.running ? 'ic_pause_white_24dp' : 'ic_start_white_24dp')}<span>${s.running ? side('mmck-swlap', 'ic_lap_white_24dp') : s.acc ? side('mmck-swshare', 'ic_share') : ''}</span></div>`;
@@ -148,6 +164,7 @@
 
   function render(c) {
     const t = T(), u = ui(c), color = HOUR_COLORS[new Date().getHours()];
+    if (u.night) return `<div class="mmck mmck-night" data-action="mmck-nightoff">${clockPage(c)}</div>`;
     const page = {alarm: alarmPage, clock: clockPage, timer: timerPage, stopwatch: stopwatchPage}[u.tab](c);
     return `<div class="mmck" style="background:${color}"><div class="mmck-tabs">${TABS.map(([id, label]) => `<button type="button" data-action="mmck-tab" data-tab="${id}" aria-label="${c.safe(t.t(label))}"><img src="${A(`ic_tab_${id}_${u.tab === id ? 'activated' : 'normal'}`)}" alt=""></button>`).join('')}${MM.menu.button(c)}</div>
       <div class="mmck-page mmck-p-${u.tab}">${page}</div>${footer(c)}</div>`;
@@ -161,18 +178,20 @@
       if (c.ui.view !== 'clock' || c.ui.overlay) return;
       const u = ui(c), root = c.el.viewport;
       if (u.tab === 'stopwatch' && u.sw.running) { const el = root.querySelector('.mmck-ctime'); if (el) el.innerHTML = swText(swElapsed(u)); const circ = root.querySelector('.mmck-circle'); const lap = u.sw.laps.length ? swElapsed(u) - u.sw.laps.reduce((a, b) => a + b, 0) : swElapsed(u); circ?.style.setProperty('--p', (u.sw.laps.length ? Math.min(1, lap / u.sw.laps[0]) : (swElapsed(u) % 60000) / 60000).toFixed(4)); }
-      else if (u.tab === 'timer' && u.timer?.end) { if (Date.now() >= u.timer.end) { u.timer = null; c.toast(T().t('timer_reset'), false); } c.render(); }
+      else if (u.tab === 'timer' && S(c).timer?.end) c.render();   // mm-alarm.js fires the timer when it runs out
     }, 50);
   }
 
   // The clock widgets (mm-widgets.js) show the same time format and next alarm.
   MM.clock24 = h24; MM.clockNextAlarm = nextAlarm;
+  // For the alarm and timer alerts (mm-alarm.js): the hour's colour, the time markup, an alarm's next firing.
+  MM.clockHourColor = () => HOUR_COLORS[new Date().getHours()]; MM.clockTimeHtml = timeHtml; MM.clockNextFire = nextFire;
   MM.register('clock', {
     statusColor: c => HOUR_COLORS[new Date().getHours()],
     render,
     mount(c) { tickLoop(c); },
-    tick(c, now) { if (c.ui.view === 'clock' && (ui(c).tab === 'clock' || ui(c).tab === 'alarm') && now.getSeconds() === 0) c.render(); },
-    back(c) { const u = ui(c); if (u.expanded) { u.expanded = null; c.render(); return true; } return false; },
+    tick(c, now) { const u = ui(c); if (c.ui.view === 'clock' && !c.ui.overlay && (u.tab === 'clock' || u.tab === 'alarm' || u.night) && (now.getSeconds() === 0 || (u.tab === 'clock' && style(c) === 'analog' && now.getSeconds() % 10 === 0))) c.render(); },
+    back(c) { const u = ui(c); if (u.night) { u.night = false; c.render(); return true; } if (u.expanded) { u.expanded = null; c.render(); return true; } return false; },
     action(name, el, event, c) {
       const t = T(), u = ui(c), s = S(c), a = s.alarms.find(x => x.id === +el.dataset.id);
       const save = () => { c.save(); c.render(); };
@@ -184,13 +203,15 @@
         case 'mmck-day': { const d = +el.dataset.d; a.days = a.days.includes(d) ? a.days.filter(x => x !== d) : [...a.days, d]; save(); return true; }
         case 'mmck-repeat': a.days = a.days.length ? [] : [0, 1, 2, 3, 4, 5, 6]; save(); return true;
         case 'mmck-vibrate': a.vibrate = !a.vibrate; save(); return true;
+        // AlarmClockFragment.launchRingTonePicker: RingtoneManager's picker for the alarm sounds, Silent first.
+        case 'mmck-ring': MM.ringtonePicker?.(c, {kind: 'alarm', current: a.ringtone ?? MM.settingsRingtones?.alarm?.default, onPick: (c, v) => { a.ringtone = v; save(); }}); return true;
         case 'mmck-label': c.dialog({title: t.t('label'), html: `<div class="mmst-edit"><input type="text" class="mmst-input mmck-labelin" value="${c.safe(a.label)}"></div>`, buttons: [{label: t.t('time_picker_cancel')}, {label: 'OK', action: c => { a.label = c.ui.clockLabel ?? a.label; save(); }}],
           mount(c, win) { const i = win.querySelector('.mmck-labelin'); c.ui.clockLabel = a.label; i.addEventListener('input', () => { c.ui.clockLabel = i.value; }); setTimeout(() => i.focus(), 50); }}); return true;
         case 'mmck-delete': s.alarms = s.alarms.filter(x => x !== a); u.expanded = null; save(); c.toast(t.t('alarm_deleted'), false); return true;
         case 'mmck-tkey': if (u.timerDigits.length < 6 && !(u.timerDigits === '' && el.dataset.k === '0')) u.timerDigits += el.dataset.k; c.render(); return true;
         case 'mmck-tdel': u.timerDigits = u.timerDigits.slice(0, -1); c.render(); return true;
-        case 'mmck-treset': u.timer = null; c.render(); return true;
-        case 'mmck-tadd': u.timer = null; u.timerDigits = ''; c.render(); return true;
+        case 'mmck-treset': S(c).timer = null; c.save(); c.render(); return true;
+        case 'mmck-tadd': S(c).timer = null; u.timerDigits = ''; c.save(); c.render(); return true;
         case 'mmck-swreset': u.sw = {start: 0, acc: 0, running: false, laps: []}; c.render(); return true;
         case 'mmck-swlap': { const total = swElapsed(u), done = u.sw.laps.reduce((x, y) => x + y, 0); u.sw.laps.unshift(total - done); c.render(); return true; }
         case 'mmck-swshare': {
@@ -200,7 +221,9 @@
           MM.share(c, {title: t.t('sw_share_button'), subject: lines[Math.floor(Math.random() * lines.length)], text: `${AndroidStrings.format(t.t('sw_share_main'), plain(swElapsed(u)))}\n${laps}`});
           return true;
         }
-        case 'mm-menu': c.menu([{label: t.t('menu_item_settings'), action: c => MM.openPrefs(c, 'clock', 'settings')}, {label: t.t('menu_item_help'), action: c => c.open('help', 'clock')}]); return true;
+        // DeskClock's menu: Night mode on the Clock tab (ScreensaverActivity's dimmed clock), Settings, Help.
+        case 'mm-menu': c.menu([...(u.tab === 'clock' ? [{label: t.t('menu_item_night_mode'), action: c => { u.night = true; c.render(); }}] : []), {label: t.t('menu_item_settings'), action: c => MM.openPrefs(c, 'clock', 'settings')}, {label: t.t('menu_item_help'), action: c => c.open('help', 'clock')}]); return true;
+        case 'mmck-nightoff': u.night = false; c.render(); return true;
         case 'mmck-fab':
           if (u.tab === 'clock') { c.open('clock-cities'); return true; }
           if (u.tab === 'alarm') {
@@ -208,10 +231,10 @@
             return true;
           }
           if (u.tab === 'timer') {
-            if (!u.timer) { const d = u.timerDigits.padStart(6, '0'); const ms = ((+d.slice(0, 2)) * 3600 + (+d.slice(2, 4)) * 60 + (+d.slice(4))) * 1000; if (!ms) return true; u.timer = {total: ms, left: ms, end: Date.now() + ms}; u.timerDigits = ''; }
-            else if (u.timer.end) { u.timer.left = u.timer.end - Date.now(); u.timer.end = 0; }
-            else u.timer.end = Date.now() + u.timer.left;
-            c.render(); return true;
+            if (!S(c).timer) { const d = u.timerDigits.padStart(6, '0'); const ms = ((+d.slice(0, 2)) * 3600 + (+d.slice(2, 4)) * 60 + (+d.slice(4))) * 1000; if (!ms) return true; S(c).timer = {total: ms, left: ms, end: Date.now() + ms}; u.timerDigits = ''; }
+            else if (S(c).timer.end) { S(c).timer.left = S(c).timer.end - Date.now(); S(c).timer.end = 0; }
+            else S(c).timer.end = Date.now() + S(c).timer.left;
+            c.save(); c.render(); return true;
           }
           if (u.sw.running) { u.sw.acc += Date.now() - u.sw.start; u.sw.running = false; } else { u.sw.start = Date.now(); u.sw.running = true; }
           c.render(); return true;
