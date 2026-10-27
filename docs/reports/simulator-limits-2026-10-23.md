@@ -436,6 +436,58 @@ Sorrend: előbb az apró hibák és halott sorok, aztán appok szerint, végül 
 | 22 | T92 | Értesítések kibontása és műveletei |
 | 23 | T93 | Hangok és értesítési fény |
 
+#### Ellenőrzés és terv (2-es változat, 2026-10-27)
+
+**Státusz: csak felmérés és terv, jóváhagyásra vár.** A tulajdonos a teljes T71–T93 listából a „2-es változatot” kérte
+felmérni: csak a látható, de nem működő vagy hibás részek pótlását, a nagy újraépítések nélkül. Javítás nem indult; a hat
+félkész T71-javítás `git stash`-ben van („T71 partial fixes …”).
+
+**Ellenőrzés a kódban (nem az ügynökök szava alapján).** Megerősítve: a T71 tételei (a 7.1.2 DND-javaslat `r.enabled` /
+`r.on`, Users, inverzió, SIM PIN; a 6.0.1 Auto-sync, Backup account, Default apps hook nélkül, Restrict background csak
+be, Network operators; mindkettőben Trust agents dummy kapcsoló, üres Cast oldal, a mintázat láthatóságát a zár nem
+olvassa, a bug report csak kommentben van a főkapcsoló-menüben); Telefon (6.0.1 Clear call history, voicemail sorok
+hook nélkül), Névjegyek (6.0.1 szerkesztőmenü; az export megosztásként valódi vCard, fájlba mentve tartalom nélkül, az
+import csak üzenet), Messenger (a piszkozat csak `c.ui`-ban; 6.0.1 nincs üzenetművelet), Óra (sehol nincs riasztó- és
+lejárt-időzítő kód; a Style és Automatic home clock nem hat), Naptár (mindkettőben csak a `calendar_settings_headers`
+van, a General oldal a gyári appban kódból épül — dex kell; nincs ismétlődés, eseményemlékeztető), Kamera (6.0.1 a
+spec. módok sima képet mentenek, nincs rács; tap-to-focus egyikben sincs), Fotók (6.0.1 a videó Edit gombja „Slideshow”
+toastot ad; 7.1.2 `useAs` / `print` kulcs használatlan), Chrome (6.0.1 Clear browsing data és Text scaling rejtett;
+7.1.2 halott sorok, a keresőmotor fix „Google”), Gmail (6.0.1 nincs Cc/Bcc, a piszkozat beszélgetésként nyílik; az
+aláírás sehol nem kerül a levélbe; a Vacation responder rejtett), Hangouts (6.0.1 nincs csatolmány és törlés), Maps
+(sehol nincs avoid-beállítás; 6.0.1 nincs közlekedési mód), Drive és Letöltések (6.0.1 nincs Sort by), Beállítások
+(a dátum/idő, a fejlesztői effektek és a nagyítás csak tárolódik; képernyő-rögzítés nincs a Recentsben; hang sehol).
+
+Pontosítások:
+- **Téves:** „6.0.1 Chrome: nincs több lap” — a Chrome 44 document mode-ban fut, a valódi telefonon sincs lapváltó; a
+  lapok külön Recents-kártyák (ez a 6.0.1-ben hiányzik, de nagy tétel, kimarad).
+- **Részben:** Maps lépéslista — a 6.0.1-ben van navigáció lépésenként, csak a lista hiányzik. Apps with usage access —
+  a 6.0.1 a saját XML-jét nyitja.
+- **Tervezési döntés, nem hiba:** a 6.0.1 Play Music / Movies „a demófiók még semmit nem vett” alapon üres
+  (mm-playmedia.js fejkomment). Hogy kapjon-e demókönyvtárat az 5.1.1 szerint, a tulajdonos dönti el.
+- Nem ellenőrzött egyenként: a Play Store kisebb tételei, a 6.0.1 színkorrekció, a Contacts Customize csoportjai.
+
+**A 2-es változat csomagjai** (valós munkaidő-becslés, a második kör tapasztalata alapján):
+
+| # | Csomag | Tartalom | Becslés |
+|---|---|---|---|
+| 1 | T71 | Beállítások apró hibái és halott sorai (15 tétel, 6 kész a stash-ben) | 2–3 ó |
+| 2 | Óra (T75) | az ébresztő megszólal (Snooze / Dismiss, Silence after, Snooze length, hangerőgomb), az időzítő lejár („Time's up”), Style és home clock hat; 6.0.1 csengőhang-választó, Night mode | 3–4 ó |
+| 3 | Telefon, Névjegyek, Messenger (T72–T74) | 6.0.1 Clear call history, voicemail sorok, Sort by / Name format; valódi vCard-fájl és import; piszkozat mentése és „Draft”; 6.0.1 üzenetműveletek | 3–4 ó |
+| 4 | Chrome, Gmail (T79–T80) | Clear browsing data, keresőmotor, Text scaling; Cc/Bcc, 6.0.1 piszkozat szerkesztőben, aláírás a levélben, Vacation responder | 3–4 ó |
+| 5 | 6.0.1 apró apphiányok (T77–T78, T81–T83) | rácsvonal, videó Edit hiba, 7.1.2 Use as / Print; Hangouts törlés és Snooze; Maps mértékegység és előzmény; YouTube előzménytörlés; Drive Sort by és Restore; Letöltések Sort by és megnyitás | 3–4 ó |
+| 6 | Play Store, Play Games (T84, T87) | 6.0.1 Settings sorok és letöltés megszakítása; 7.1.2 Play Games beállítások | 1–2 ó |
+| 7 | Beállítások hatása (T88–T89 egy része) | dátum/idő az órán; Large text és Touch & hold delay; 6.0.1 Clear data; DND-szabályok bekapcsolnak; Cast oldal; Naptár General beállítások a dex alapján | 3–5 ó |
+
+Összesen kb. **18–26 óra**. Ellenőrzés csomagonként: böngészős teszt mindkét verzióban, asztali és telefonos
+szélességen, `npm test`; forrás a gyári APK / dex, nem kitalálás.
+
+**Kimarad a 2-es változatból** (külön döntés kell): 6.0.1 Play Music / Movies / Games könyvtár, a naptár ismétlődő
+eseményei és emlékeztetői, a 6.0.1 kamera spec. módjai, kérésre fotózás, Photo Sphere nézet, 6.0.1 fotószerkesztő és
+lapozás, kezdőképernyő élő átrendezése és mappán belüli rendezés, 6.0.1 widgetek, Google Now, értesítések kibontása,
+képernyő-rögzítés, hangok és értesítési fény, VPN / APN / tanúsítványtelepítő, fejlesztői effektek, nagyítás, Chrome
+document mode Recents-kártyák, Gmail kijelölő sáv és címkék, 6.0.1 Hangouts People & options, Maps avoid és lépéslista,
+Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery history.
+
 #### T71 — Beállítások: apró hibák és halott sorok
 
 - **Érintett:** 6.0.1, 7.1.2.
