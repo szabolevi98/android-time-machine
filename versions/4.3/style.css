@@ -655,3 +655,6 @@ html,body{overscroll-behavior-y:none}
 .settings-dialog>.settings-row{display:flex;align-items:center;justify-content:space-between;gap:calc(9.3941 * var(--dp));width:100%;min-height:calc(51.0686 * var(--dp));padding:0 0 0 calc(17.0268 * var(--dp));border:0;border-bottom:calc(1.1743 * var(--dp)) solid #ffffff1f;background:none;color:#f2f2f2;text-align:left;font-size:calc(19.1522 * var(--dp))}
 .settings-dialog>.settings-row .row-copy{color:#f2f2f2}
 .settings-dialog>.settings-row .holo-radio{width:calc(34.0419 * var(--dp));height:calc(34.0419 * var(--dp));flex:none}
+
+/* Long holds belong to the easter egg, including WebKit image callouts. */
+.jb-platlogo-view,.jb-platlogo-view *,.jb-beanbag,.jb-beanbag *{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-user-drag:none;}

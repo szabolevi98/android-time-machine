@@ -32,16 +32,23 @@
   function start(root, random = Math.random) {
     const board = {width: root.clientWidth, height: root.clientHeight};
     const cats = Array.from({length: NUM_CATS}, (_, i) => cat(i, board, random));
-    // Fixed stars: 20 star_anim drawables at scale 0.1-1; each animation starts after a random delay up to a second.
-    const stars = Array.from({length: NUM_STARS}, () => `<span class="nyan-star" style="transform:translate(${range(random, 0, board.width)}px,${range(random, 0, board.height)}px) scale(${range(random, .1, 1)});animation-delay:${Math.round(range(random, 0, 1000))}ms"></span>`).join('');
+    // star_anim's six 200 ms frames. Drive these with the scene, so disabling CSS window animations cannot
+    // leave every particle on transparent star0. Reduced motion retains the visible middle frame.
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const phases = Array.from({length: NUM_STARS}, () => range(random, 0, 1200));
+    const stars = phases.map(() => `<span class="nyan-star" style="transform:translate(${range(random, 0, board.width)}px,${range(random, 0, board.height)}px) scale(${range(random, .1, 1)})"></span>`).join('');
     root.innerHTML = stars + cats.map(() => `<span class="nyan-cat" style="animation-delay:${Math.round(range(random, 0, 1000))}ms"></span>`).join('');
     const nodes = [...root.querySelectorAll('.nyan-cat')];
+    const starNodes = [...root.querySelectorAll('.nyan-star')], began = performance.now();
     let last = performance.now(), frame = 0, running = true;
-    const paint = () => cats.forEach((item, i) => { nodes[i].style.transform = `translate(${item.x}px,${item.y}px) scale(${item.scale})`; });
+    const paint = (now = began) => {
+      cats.forEach((item, i) => { nodes[i].style.transform = `translate(${item.x}px,${item.y}px) scale(${item.scale})`; });
+      starNodes.forEach((node, i) => { const f = reduced ? 3 : Math.floor((now - began + phases[i]) / 200) % 6; if (node.dataset.frame !== String(f)) { node.dataset.frame = f; node.style.backgroundImage = `url('assets/star${f}.png')`; } });
+    };
     const tick = now => {
       if (!running) return;
       board.width = root.clientWidth || board.width; board.height = root.clientHeight || board.height;
-      step(cats, board, Math.min(.1, Math.max(0, (now - last) / 1000)), random); last = now; paint();
+      step(cats, board, Math.min(.1, Math.max(0, (now - last) / 1000)), random); last = now; paint(now);
       frame = requestAnimationFrame(tick);
     };
     paint(); frame = requestAnimationFrame(tick);

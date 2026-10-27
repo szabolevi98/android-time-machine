@@ -18,3 +18,6 @@
 .screen.kk-immersive.kk-bars-peek #status-bar,.screen.kk-immersive.kk-bars-peek #nav-bar{opacity:1;pointer-events:auto}
 .screen.kk-immersive.kk-bars-peek .status-button,.screen.kk-immersive.kk-bars-peek #nav-bar{background:#00000066}
 .screen .kk-egg-logo{pointer-events:auto}
+
+/* Long holds belong to the easter egg, including WebKit image callouts. */
+.kk-platlogo,.kk-platlogo *,.kk-dessert,.kk-dessert *{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-user-drag:none;}

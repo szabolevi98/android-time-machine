@@ -21,3 +21,6 @@
 .lp-lland-score{position:absolute;left:calc(16.0045 * var(--dp));top:calc(31.9978 * var(--dp));padding:calc(8.0023 * var(--dp)) calc(16.0045 * var(--dp));border-radius:calc(8.0023 * var(--dp));background:#fff;color:#aaa;font:400 calc(32.0089 * var(--dp)) Roboto,sans-serif;box-shadow:0 calc(8.8301 * var(--dp)) calc(22.0751 * var(--dp)) #0000004d;transform:translateY(calc(-551.8764 * var(--dp)));transition:transform 1.5s cubic-bezier(0,0,.2,1);pointer-events:none;z-index:2}
 .lp-lland-score.shown{transform:none}
 .lp-lland-score.over{background:#f00;color:#fff}
+
+/* Long holds belong to the easter egg, including WebKit image callouts. */
+.lp-platlogo,.lp-platlogo *,.lp-lland,.lp-lland *{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-user-drag:none;}

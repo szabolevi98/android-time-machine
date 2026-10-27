@@ -7,3 +7,6 @@
 .ngegg-cat{display:flex;flex-direction:column;align-items:center;padding:calc(8 * var(--dp)) calc(16 * var(--dp));cursor:pointer;user-select:none}.ngegg-cat:active{background:#ffffff1a}.ngegg-icon{position:relative;display:block;width:calc(96 * var(--dp));padding:calc(10 * var(--dp));box-sizing:border-box}.ngegg-icon>svg{display:block;width:calc(64 * var(--dp));height:calc(64 * var(--dp));margin:0 auto}.ngegg-name{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ngegg-context{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:flex-start}.ngegg-context button{display:grid;place-items:center;width:calc(40 * var(--dp));height:calc(40 * var(--dp));padding:calc(8 * var(--dp));border:0;background:#40000000;cursor:pointer}.ngegg-context img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));filter:invert(1)}
 .ngegg-edit{padding:0 calc(20 * var(--dp))}.ngegg-edit input{width:100%;box-sizing:border-box}
+
+/* Long holds belong to the easter egg, including WebKit image callouts. */
+.ngegg-plat,.ngegg-plat *,.ngegg-cat,.ngegg-cat *{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-user-drag:none;}

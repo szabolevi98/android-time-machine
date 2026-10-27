@@ -393,3 +393,6 @@ html,body{overscroll-behavior-y:none}
   .touch-key{position:static;margin:0;width:25%;height:52px}
   .touch-key svg{opacity:.35}
 }
+
+/* Long holds belong to the easter egg, including WebKit image callouts. */
+.gb-platlogo,.gb-platlogo *{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-user-drag:none;}

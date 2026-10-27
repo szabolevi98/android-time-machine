@@ -42,3 +42,6 @@
 .mmeg-setup button img{width:100%;height:100%}
 .mmeg-scores{display:flex;gap:calc(4 * var(--dp));height:calc(64 * var(--dp));padding:calc(12 * var(--dp));box-sizing:border-box}
 .mmeg-card{display:grid;place-items:center;min-width:calc(40 * var(--dp));padding:calc(4 * var(--dp)) calc(6 * var(--dp));border-radius:calc(4 * var(--dp));font:700 calc(22 * var(--dp))/1 Roboto,sans-serif;box-sizing:border-box;box-shadow:0 calc(4 * var(--dp)) calc(8 * var(--dp)) rgba(0,0,0,.3)}
+
+/* Long holds belong to the easter egg, including WebKit image callouts. */
+.mmeg,.mmeg *{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-user-drag:none;}

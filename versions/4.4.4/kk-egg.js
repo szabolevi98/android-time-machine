@@ -22,7 +22,7 @@
   const decelerate = 'cubic-bezier(0,0,.2,1)', accelerate = 'cubic-bezier(.4,0,1,1)';
 
   function platLogo(root, {release = '4.4.4', letter = 'K', onDessert, reduced = false} = {}) {
-    root.innerHTML = `<div class="kk-egg-bg"></div><div class="kk-egg-letter">${letter}</div><img class="kk-egg-logo" src="assets/kk-platlogo.png" alt="Android KitKat" hidden><div class="kk-egg-version" hidden>Android ${release}</div>`;
+    root.innerHTML = `<div class="kk-egg-bg"></div><div class="kk-egg-letter">${letter}</div><img draggable="false" class="kk-egg-logo" src="assets/kk-platlogo.png" alt="Android KitKat" hidden><div class="kk-egg-version" hidden>Android ${release}</div>`;
     const bg = root.querySelector('.kk-egg-bg'), k = root.querySelector('.kk-egg-letter'), logo = root.querySelector('.kk-egg-logo'), tv = root.querySelector('.kk-egg-version');
     let clicks = 0, rotation = 0, pressTimer = 0, longPressed = false, revealed = false;
     const spin = () => {
@@ -98,9 +98,10 @@
       occupied(tile).forEach(index => { cells[index] = tile; free.delete(index); });
       const rot = irand(0, 4) * 90;
       const transform = `translate(${x * cell + (span - 1) * cell / 2}px,${y * cell + (span - 1) * cell / 2}px) rotate(${rot}deg) scale(${span})`;
-      if (animate && !reduced) {
+      // Tile motion is the game itself. Reduced window motion removes the overshoot, not the game animation.
+      if (animate) {
         grid.append(tile.node);
-        tile.node.animate([{transform: tile.node.style.transform || transform}, {transform}], {duration: DURATION, easing: anticipateOvershoot});
+        tile.node.animate([{transform: tile.node.style.transform || transform}, {transform}], {duration: DURATION, easing: reduced ? decelerate : anticipateOvershoot});
       }
       tile.node.style.transform = transform;
     }
