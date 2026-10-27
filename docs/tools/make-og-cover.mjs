@@ -1,10 +1,10 @@
-// Renders docs/tools/og-cover.html into assets/og-cover.jpg (1200 x 630) with a local Chrome; no npm packages, no server.
+// Renders English og-cover.jpg and Hungarian og-cover-hu.jpg (1200 x 630) from the same source; no npm packages/server.
 //   node docs/tools/make-og-cover.mjs            (set CHROME=/path/to/chrome if Chrome is not found)
 //   node docs/tools/make-og-cover.mjs --portfolio <out.png>   the levente.net portfolio card instead: docs/tools/portfolio-cover.html,
 //                                                       1200 x 720 at 4/3 device pixels = 1600 x 960 PNG
 //   node docs/tools/make-og-cover.mjs --portfolio-thumb <out.png>   the same page laid out for the card's small picture
 //                                                       (portfolio web/assets/img/projects/thumbs/android-simulator.png)
-// After a change, bump ?v= of og-cover.jpg in the og:image tags of index.html and versions/*/index.html.
+// After artwork changes, bump the image revision in make-social-meta.mjs and regenerate the static metadata.
 import {spawn} from 'node:child_process';
 import {existsSync, mkdtempSync, rmSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
@@ -18,6 +18,9 @@ const [page, output, width, height, scale] = portfolio > 0
   ? ['portfolio-cover.html', resolve(process.argv[portfolio + 1]), 1200, 720, 4 / 3]
   : ['og-cover.html', join(root, 'assets', 'og-cover.jpg'), 1200, 630, 1];
 const source = pathToFileURL(join(root, 'docs', 'tools', page)).href + (thumb > 0 ? '#thumb' : '');
+const jobs = portfolio > 0 ? [{source, output}] : ['en', 'hu'].map(lang => ({
+  source: `${source}?lang=${lang}`, output: join(root, 'assets', lang === 'en' ? 'og-cover.jpg' : 'og-cover-hu.jpg')
+}));
 const candidates = [process.env.CHROME, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser'].filter(Boolean);
 const chromePath = candidates.find(path => existsSync(path));
@@ -38,16 +41,25 @@ try {
   socket.addEventListener('message', event => { const message = JSON.parse(event.data); pending.get(message.id)?.(message); pending.delete(message.id); });
   const send = (method, params = {}) => new Promise(done => { const n = ++id; pending.set(n, done); socket.send(JSON.stringify({id: n, method, params})); });
   await send('Emulation.setDeviceMetricsOverride', {width, height, deviceScaleFactor: 1, mobile: false});
-  await send('Page.navigate', {url: source});
-  // Wait until the fonts and every picture of the page have loaded.
-  const ready = `(async () => { await document.fonts.ready; await Promise.all([...document.images].map(img => img.complete ? 0 : new Promise(r => { img.onload = img.onerror = r; })));
-    await Promise.all([...document.querySelectorAll('.shot')].map(el => new Promise(r => { const i = new Image(); i.onload = i.onerror = r; i.src = getComputedStyle(el).backgroundImage.slice(5, -2); }))); return document.images.length; })()`;
-  await wait(500);
-  const loaded = await send('Runtime.evaluate', {expression: ready, awaitPromise: true, returnByValue: true});
-  await wait(300);
-  const shot = await send('Page.captureScreenshot', {...(portfolio > 0 ? {format: 'png'} : {format: 'jpeg', quality: 88}), clip: {x: 0, y: 0, width, height, scale}});
-  writeFileSync(output, Buffer.from(shot.result.data, 'base64'));
-  console.log(`${output} written (${loaded.result?.result?.value ?? '?'} pictures).`);
+  for (const job of jobs) {
+    await send('Page.navigate', {url: job.source});
+    let pageReady = false;
+    for (let i = 0; i < 80 && !pageReady; i++) {
+      await wait(100);
+      const r = await send('Runtime.evaluate', {expression: `location.href===${JSON.stringify(job.source)}&&document.readyState==='complete'&&!!document.querySelector('.phone')`, returnByValue: true});
+      pageReady = !!r.result?.result?.value;
+    }
+    if (!pageReady) throw new Error(`Cover source did not finish loading: ${job.source}`);
+    // Wait until the fonts and every picture of the page have loaded.
+    const ready = `(async () => { await document.fonts.ready; await Promise.all([...document.images].map(img => img.decode()));
+      await Promise.all([...document.querySelectorAll('.shot')].map(async el => {const img=new Image();img.src=getComputedStyle(el).backgroundImage.slice(5,-2);await img.decode();})); return document.images.length; })()`;
+    const loaded = await send('Runtime.evaluate', {expression: ready, awaitPromise: true, returnByValue: true});
+    if (loaded.result?.exceptionDetails) throw new Error(JSON.stringify(loaded.result.exceptionDetails));
+    await wait(300);
+    const shot = await send('Page.captureScreenshot', {...(portfolio > 0 ? {format: 'png'} : {format: 'jpeg', quality: 88}), clip: {x: 0, y: 0, width, height, scale}});
+    writeFileSync(job.output, Buffer.from(shot.result.data, 'base64'));
+    console.log(`${job.output} written (${loaded.result?.result?.value ?? '?'} pictures).`);
+  }
   socket.close();
 } finally {
   chrome.kill(); await wait(400);

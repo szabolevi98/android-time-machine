@@ -1,6 +1,6 @@
 <!doctype html>
-<!-- Source of assets/og-cover.jpg (1200 x 630). Regenerate with: node docs/tools/make-og-cover.mjs -->
-<html><head><meta charset="utf-8"><style>
+<!-- Source of assets/og-cover.jpg (English) and og-cover-hu.jpg (Hungarian), 1200 x 630. -->
+<html lang="en"><head><meta charset="utf-8"><style>
 @font-face{font-family:Roboto;src:url('../../versions/4.4.4/assets/Roboto-Regular.ttf')}
 @font-face{font-family:RobotoLight;src:url('../../versions/4.4.4/assets/Roboto-Light.ttf')}
 @font-face{font-family:RobotoBold;src:url('../../versions/4.4.4/assets/Roboto-Bold.ttf')}
@@ -23,11 +23,15 @@ h1 strong{display:block;font-weight:400;color:#75d3e3}
 </style></head><body>
 <div class="text">
   <div class="brand"><i></i><div>ANDROID <span>TIME MACHINE</span></div></div>
-  <h1>Régi Androidok,<strong>a böngészőben.</strong></h1>
+  <h1>Old Androids,<strong>in the browser.</strong></h1>
   <div class="range">ANDROID 2.1 – 7.1</div>
 </div>
 <div class="phones" id="phones"></div>
 <script>
+if (new URLSearchParams(location.search).get('lang') === 'hu') {
+  document.documentElement.lang = 'hu';
+  document.querySelector('h1').innerHTML = 'Régi Androidok,<strong>a böngészőben.</strong>';
+}
 const mm = 2.4;
 // [version, frame, SVG width / height, real height in mm, screen insets %, body top and bottom in SVG units, picture]
 // The SVGs have a margin round the body (side keys, shadow), so the body, not the whole drawing, is scaled to the real height.

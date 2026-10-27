@@ -1,6 +1,6 @@
 # Android Simulator
 
-![Android Time Machine: the Nexus S, Galaxy Nexus, Nexus 4 and Nexus 5, each running its own Android version](assets/og-cover.jpg)
+![Android Time Machine: five Nexus phones running classic Android versions](assets/og-cover.jpg?v=18)
 
 **Live demo:** [android.levente.net](https://android.levente.net/)
 
@@ -46,8 +46,9 @@ What each version does, screen by screen:
 
 ## Social preview image
 
-`assets/og-cover.jpg` (1200 × 630) is the `og:image` of every page. Its source is `docs/tools/og-cover.html`, which lays out the phones from each version's frame and `landing-home.jpg`. To redraw it after a change, for example when a new version gets a landing shot, run the command below. It needs only Node and a local Chrome, or set `CHROME` to point at one. Then bump the `?v=` of `og-cover.jpg` in the `og:image` tags.
+`assets/og-cover.jpg` is the English social preview; `assets/og-cover-hu.jpg` is its Hungarian counterpart. Both are 1200 × 630 and are rendered together from `docs/tools/og-cover.html`, using each phone's frame and `landing-home.jpg`. Run `node docs/tools/make-og-cover.mjs` with local Chrome (or set `CHROME`) to regenerate both.
 
+Every page ships English SEO, Open Graph and X/Twitter tags directly in its HTML. The English cover is the stable default for sharing, independent of the interface language selected in JavaScript. The Hungarian image remains separately available. Metadata comes from the English release catalogue: `node docs/tools/make-social-meta.mjs` updates all pages; `--check` verifies them. When the cover changes, bump its image revision in that script and regenerate the metadata.
 The portfolio card on levente.net uses a 1600 × 960 variant with an English headline, from `docs/tools/portfolio-cover.html`: `node docs/tools/make-og-cover.mjs --portfolio <png>` renders it (1200 × 720 at a 4/3 device pixel ratio).
 
 ```bash
