@@ -29,18 +29,18 @@
       const from = rotation, offset = from % 360;
       rotation = from + (Math.random() > .5 ? 360 : -360) - offset;
       k.getAnimations().forEach(a => a.cancel());
-      k.animate([{transform: `rotate(${from}deg)`}, {transform: `rotate(${rotation}deg)`}], {duration: reduced ? 0 : 700, easing: decelerate, fill: 'forwards'});
+      k.animate([{transform: `rotate(${from}deg)`}, {transform: `rotate(${rotation}deg)`}], {duration: 700, easing: decelerate, fill: 'forwards'});
     };
     function reveal() {
       if (revealed) return false;
       revealed = true;
-      const t = reduced ? 0 : 1;
-      bg.animate([{opacity: 0, transform: 'scaleX(.01)'}, {opacity: 1, transform: 'scaleX(1)'}], {duration: 300 * t, delay: 500 * t, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both'});
-      k.animate([{opacity: 1, transform: `rotate(${rotation}deg) scale(1)`}, {opacity: 0, transform: `rotate(${rotation + 360}deg) scale(.5)`}], {duration: 1000 * t, easing: accelerate, fill: 'forwards'});
+      // The egg's own interactions retain their native durations, including reduced-motion mode.
+      bg.animate([{opacity: 0, transform: 'scaleX(.01)'}, {opacity: 1, transform: 'scaleX(1)'}], {duration: 300, delay: 500, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both'});
+      k.animate([{opacity: 1, transform: `rotate(${rotation}deg) scale(1)`}, {opacity: 0, transform: `rotate(${rotation + 360}deg) scale(.5)`}], {duration: 1000, easing: accelerate, fill: 'forwards'});
       logo.hidden = false;
-      logo.animate([{opacity: 0, transform: 'scale(.5)'}, {opacity: 1, transform: 'scale(1)'}], {duration: 1000 * t, delay: 500 * t, easing: anticipateOvershoot, fill: 'both'});
+      logo.animate([{opacity: 0, transform: 'scale(.5)'}, {opacity: 1, transform: 'scale(1)'}], {duration: 1000, delay: 500, easing: reduced ? decelerate : anticipateOvershoot, fill: 'both'});
       tv.hidden = false;
-      tv.animate([{opacity: 0}, {opacity: 1}], {duration: 1000 * t, delay: 1000 * t, fill: 'both'});
+      tv.animate([{opacity: 0}, {opacity: 1}], {duration: 1000, delay: 1000, fill: 'both'});
       return true;
     }
     const down = event => {

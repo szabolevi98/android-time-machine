@@ -195,10 +195,10 @@
 .screen:has(.nyan-sky) #status-bar,.screen:has(.nyan-sky) #nav-bar{display:none}
 .screen:has(.nyan-sky) #viewport{top:0;bottom:0}
 .nyan-star{position:absolute;left:0;top:0;width:calc(41.1765 * var(--dp));height:calc(41.1765 * var(--dp));background:url('assets/star3.png') center/contain no-repeat;image-rendering:pixelated}
-.nyan-cat{position:absolute;left:0;top:0;width:calc(188.2353 * var(--dp));height:calc(188.2353 * var(--dp));background:url('assets/nyandroid00.png') center/contain no-repeat;image-rendering:pixelated;will-change:transform;animation:nyan-frames .96s steps(1) infinite}
+.nyan-cat{position:absolute;left:0;top:0;width:calc(188.2353 * var(--dp));height:calc(188.2353 * var(--dp));background:url('assets/nyandroid00.png') center/contain no-repeat;image-rendering:pixelated;will-change:transform}
 
-@keyframes nyan-frames{0%{background-image:url('assets/nyandroid00.png')}8.33%{background-image:url('assets/nyandroid01.png')}16.67%{background-image:url('assets/nyandroid02.png')}25%{background-image:url('assets/nyandroid03.png')}33.33%{background-image:url('assets/nyandroid04.png')}41.67%{background-image:url('assets/nyandroid05.png')}50%{background-image:url('assets/nyandroid06.png')}58.33%{background-image:url('assets/nyandroid07.png')}66.67%{background-image:url('assets/nyandroid08.png')}75%{background-image:url('assets/nyandroid09.png')}83.33%{background-image:url('assets/nyandroid10.png')}91.67%{background-image:url('assets/nyandroid11.png')}}
-@media(prefers-reduced-motion:reduce){.nyan-cat,.nyan-star{animation:none}}
+
+
 .lock-view{display:block;position:relative;background:#00000024;text-align:right}
 .lock-clock{position:absolute;top:calc(23.5295 * var(--dp));right:calc(31.7648 * var(--dp));text-align:right;text-shadow:0 calc(2.353 * var(--dp)) calc(7.0589 * var(--dp)) #0009}
 .lock-time{margin:0;font-size:calc(83.5295 * var(--dp));font-weight:300;letter-spacing:-.055em;line-height:1;color:#f3f5f5}

@@ -18,3 +18,9 @@ const moving=ny.cat(10,board,random),x0=moving.x;ny.step([moving],board,.5,rando
 const png=f=>fs.readFileSync(`versions/4.0.4/assets/${f}`);
 assert.ok(png('star0.png').length<png('star3.png').length,'star frames are not blank copies');
 console.log('Nyandroid checks passed: stepped logo zoom, cat depth, size and speed, re-entry and star frames.');
+
+// Native AnimationDrawable cadence: the hands/body use twelve 80 ms bitmaps, stars six 200 ms bitmaps.
+assert.deepEqual([0,79,80,879,880,959,960].map(ny.droidFrame),[0,0,1,10,11,11,0]);
+assert.deepEqual([0,199,200,999,1000,1199,1200].map(ny.starFrame),[0,0,1,4,5,5,0]);
+const crypto=require('node:crypto');
+for(const [prefix,count]of [['nyandroid',12],['star',6]]){const frames=Array.from({length:count},(_,i)=>crypto.createHash('sha256').update(png(prefix+(prefix==='nyandroid'?String(i).padStart(2,'0'):i)+'.png')).digest('hex'));assert.equal(new Set(frames).size,count,`${prefix}: distinct native bitmap frames`);}

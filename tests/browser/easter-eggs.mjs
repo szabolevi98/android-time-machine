@@ -40,10 +40,13 @@ try{
   if(v==='4.0.4'){
    await hold('.easter-robot',2700);await b.until(`document.querySelectorAll('.nyan-star').length===20`);
    assert.equal(await b.ev(`document.querySelectorAll('.nyan-cat').length`),20);
-   const frames=()=>b.ev(`[...document.querySelectorAll('.nyan-star')].map(e=>e.dataset.frame)`);
-   const before=await frames(),x=await b.ev(`document.querySelector('.nyan-cat').style.transform`);await sleep(300);
-   if(reduced)assert.ok((await frames()).every(f=>f==='3'),'reduced motion keeps visible star frames');
-   else assert.notDeepEqual(await frames(),before,'particle frames twinkle');
+   await b.until(`document.querySelector('.nyan-cat')?.dataset.frame!==undefined`);await sleep(1100);
+   // Check actual rendered bitmap URLs, independently of translation or bookkeeping attributes.
+   const rendered=selector=>b.ev(`getComputedStyle(document.querySelector('${selector}')).backgroundImage`);
+   const droids=new Set(),stars=new Set(),x=await b.ev(`document.querySelector('.nyan-cat').style.transform`);
+   for(let i=0;i<8;i++){droids.add(await rendered('.nyan-cat'));stars.add(await rendered('.nyan-star'));await sleep(90);}
+   assert.ok(droids.size>=5,`droid body/hand bitmaps animate (reduced=${reduced})`);
+   assert.ok(stars.size>=3,`particle bitmaps twinkle (reduced=${reduced})`);
    assert.notEqual(await b.ev(`document.querySelector('.nyan-cat').style.transform`),x,'androids fly');
    assert.equal(await b.ev(`getComputedStyle(document.querySelector('.nyan-sky')).backgroundColor`),'rgb(0, 51, 102)','Nyandroid retains its own sky');
   }else if(v==='4.3'){
@@ -51,7 +54,14 @@ try{
    assert.equal(await b.ev(`document.querySelector('#live-wallpaper').hidden`),false,'wallpaper also visible in BeanBag');
    await contextProtected('.jb-beanbag .bean');
   }else{
-   for(let i=0;i<6;i++)await b.click('[data-kk-platlogo]');await sleep(reduced?100:2100);
+   const angle=()=>b.ev(`(()=>{const m=new DOMMatrixReadOnly(getComputedStyle(document.querySelector('.kk-egg-letter')).transform);return Math.atan2(m.b,m.a)*180/Math.PI})()`);
+   await hold('[data-kk-platlogo]',50);await sleep(100);const first=await angle();await sleep(150);const second=await angle();
+   assert.ok(Math.abs(first)>1&&Math.abs(second-first)>1,`a real tap visibly rotates K (reduced=${reduced})`);
+   assert.equal(await b.ev(`document.querySelector('.kk-egg-letter').getAnimations()[0].effect.getTiming().duration`),700);
+   await sleep(600);assert.ok(Math.abs(await angle())<.1,'K completes a full turn');
+   for(let i=0;i<5;i++)await b.click('[data-kk-platlogo]');
+   await sleep(750);assert.equal(await b.ev(`document.querySelector('.kk-egg-logo').getAnimations().some(a=>a.playState==='running')`),true,'KitKat reveal also animates');
+   await sleep(1400);
    await hold('.kk-egg-logo',700);await b.until(`document.querySelectorAll('.kk-dessert-tile').length>10`);await sleep(2200);
    // Observe the actual halfway transform, including reduced-motion mode: movement is the game content.
    await b.ev(`window.__tile=document.querySelector('.kk-dessert-tile');window.__tile.click()`);await sleep(100);
