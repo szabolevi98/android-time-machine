@@ -353,8 +353,10 @@ location, észak, Share, Layers mentve, a saját settings.xml).
 - **Pótolandó (T35):** hangjegyzet: rövid generált WAV, menthető, lejátszható, újratöltve megmarad, mellékletként
   küldhető; Back megszakítja a felvételt, törlés megerősítéssel; a beállítások sorai a 3.3/3.4 APK settings XML-je
   szerint, ha ott több van a mostaninál.
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `03c75ebd`. Keep 3.3 / 3.4 az 5.1.1 T35 szintjén: hangjegyzet a gyorssáv mikrofonjával (Recording időzítővel, Back eldobja), a jegyzet rövid, helyben generált WAV-ot tart (mikrofon nélkül) lejátszással és hosszal, Delete voice recording? törli, Send mellékletként adja tovább (6.0.1: a megosztás melléklete, 7.1.2: a küldési modell dokumentuma); a Settings Sharing részében Display rich link previews. A 3.3/3.4-ben nincs settings XML (a lista kódból épül), így más sor nincs. Ellenőrzés: `tests/browser/play-keep.mjs` mindkét verzió, asztali és telefonos szélesség; `npm test` 260/260.
 
+
+**Az ötödik kör kész (2026-10-27):** T60–T66 mind kész, a tíz telepített app a 6.0.1-ben és a 7.1.2-ben az 5.1.1 szintjén. Deploy csak kérésre.
 ### Feladatcsomagok és készfeltételek
 
 **Az Ütem és — részcsomagnál — a Mostani rész az irányadó.** A teljes korábbi leírás későbbi jelöltként marad meg. Részcsomagnál a mag lezárásához csak a Mostani készfeltétel szükséges; a későbbi rész státusza ettől halasztott marad. Minden javítás commitja és ellenőrzése itt, a riport megfelelő T-lapján vezetendő.
