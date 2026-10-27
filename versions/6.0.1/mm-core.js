@@ -48,7 +48,7 @@
     'play-games': ['Play Games', 'PlayGames.apk'], 'android-pay': ['Android Pay', 'Wallet.apk'], 'project-fi': ['Project Fi', 'Tycho.apk'],
     // Installed from Play (not in the image: _aosp/<device>/playapps).
     'earth': ['Earth', 'GoogleEarth.apk (Play)'], 'keep': ['Keep', 'Keep.apk (Play)'],
-    docs: ['Docs', 'Docs.apk (Play)'], sheets: ['Sheets', 'Sheets.apk (Play)'], slides: ['Slides', 'Slides.apk (Play)'], fit: ['Fit', 'Fit.apk (Play)'], 'play-books': ['Play Books', 'Books.apk (Play)'], 'news-weather': ['News & Weather', 'News.apk (Play)'],
+    docs: ['Docs', 'Docs.apk (Play)'], sheets: ['Sheets', 'Sheets.apk (Play)'], slides: ['Slides', 'Slides.apk (Play)'], fit: ['Fit', 'Fit.apk (Play)'], 'play-books': ['Play Books', 'Books.apk (Play)'], 'news-weather': ['News & Weather', 'News.apk (Play)'], 'google-plus': ['Google+', 'PlusOne.apk (Play)'],
     downloads: ['Downloads', 'DownloadProviderUi.apk'], documents: ['Documents', 'DocumentsUI.apk'],
     'live-wallpapers': ['Live wallpapers', 'LiveWallpapersPicker.apk'], 'google-settings': ['Google Settings', 'PrebuiltGmsCore.apk'],
     // Quick settings details (QSPanel.showDetail), drawn inside the shade.

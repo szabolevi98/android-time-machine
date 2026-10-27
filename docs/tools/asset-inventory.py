@@ -29,7 +29,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 VERSIONS = {'2.1': ('passion', 'hdpi'), '6.0.1': ('bullhead', 'xxhdpi'), '2.3.6': ('crespo', 'hdpi'), '4.0.4': ('maguro', 'xhdpi'), '4.3': ('mako', 'xhdpi'), '4.4.4': ('hammerhead', 'xxhdpi'), '5.1.1': ('shamu', 'xxxhdpi'), '7.1.2': ('angler', 'xxhdpi')}
 RELEASES = ['passion', 'crespo', 'maguro', 'mako', 'hammerhead', 'shamu', 'bullhead', 'angler']
 # The apps installed from Play (_aosp/<device>/playapps/<Apk>.apk), lower-case, in the order the fourth round added them.
-PLAY_ORDER = ['googleearth', 'keep', 'docs', 'sheets', 'slides', 'fit', 'books', 'news']
+PLAY_ORDER = ['googleearth', 'keep', 'docs', 'sheets', 'slides', 'fit', 'books', 'news', 'plusone']
 DENSITIES = ['xxxhdpi', 'xxhdpi', 'xhdpi', 'hdpi', 'mdpi', 'ldpi', 'nodpi']
 IMAGES = ('.png', '.jpg', '.jpeg', '.gif', '.webp')
 MEDIA = ('.png', '.opng', '.jpg', '.jpeg', '.gif', '.webp', '.ogg', '.ttf', '.otf', '.xml', '.mp4')   # .opng: Gmail's PNGs

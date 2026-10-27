@@ -717,6 +717,37 @@ NG.appsData = {
 "res": "angler:playapps/News.apk:res/mipmap-xxxhdpi-v4/ic_launcher.png",
 "installed": true
 },
+"google-plus": {
+"pkg": "com.google.android.apps.plus",
+"cls": "com.google.android.apps.plus.phone.HomeActivity",
+"label": {
+"en": "Google+",
+"hu": "Google+",
+"de": "Google+",
+"fr": "Google+",
+"es": "Google+"
+},
+"icon": "assets/app-google-plus.png",
+"color": "#db4437",
+"version": "9.14.0.158314320",
+"codeSize": 24316820,
+"permGroups": [
+"camera",
+"contacts",
+"location",
+"phone",
+"storage"
+],
+"targetSdk": 23,
+"res": "angler:playapps/PlusOne.apk:res/mipmap-xxxhdpi-v4/product_logo_google_plus_launcher_color_48.png",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+],
+"installed": true
+},
 "sheets": {
 "pkg": "com.google.android.apps.docs.editors.sheets",
 "cls": "com.google.android.apps.docs.app.NewMainProxyActivity",

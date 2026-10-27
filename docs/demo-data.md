@@ -45,6 +45,8 @@ The account: `<device>.demo@gmail.com` (6.0.1: nexus5x.demo@gmail.com). Carrier:
   Alice's Adventures in Wonderland, Pride and Prejudice, The Three Musketeers, The Adventures of Sherlock Holmes.
 - **News & Weather (5.1.1; 6.0.1 and 7.1.2 as an app installed from Play):** the Riverside weather card; 5.1.1 has its own
   stories, 6.0.1 / 7.1.2 eight short made-up ones under Headlines, Technology and Sports.
+- **Google+ (4.0.4–5.1.1; 6.0.1 and 7.1.2 as an app installed from Play):** posts by Alex Morgan (a photo), the Android
+  page (its version of the year) and Taylor Lee (the meetup slides).
 - **Browser / Chrome bookmarks:** Google, Android, the Wikipedia Android article.
 - **Google Now:** weather card "Riverside 18°, partly cloudy" and the next Calendar event.
 - **Wi-Fi:** the saved network (5.1.1: AndroidAP; 6.0.1: Home Network) and nearby AndroidAP, CoffeeShop, Library
