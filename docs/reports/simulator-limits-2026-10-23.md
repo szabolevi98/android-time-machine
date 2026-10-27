@@ -295,7 +295,7 @@ location, észak, Share, Layers mentve, a saját settings.xml).
   screen: a dokumentumot nyitó parancsikon a kezdőképernyőn, újratöltve is, Remove a parancsikont is törli; Print a
   verzió nyomtatási útján, a dokumentum szövegének előnézetével; Starred jelölés a fájlmenüből (az 5.1.1-es saját
   gyűjtemények helyett a Drive starred mezője); a Drive-ból egy Docs/Sheets/Slides fájl a megfelelő appban nyílik.
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `e8308ca6`. A Docs/Sheets/Slides fájlmenüje mindkét verzióban az 5.1.1 útjait adja: Send file valódi .txt / .tsv mellékletként (6.0.1-en a megosztás mellékletet visz, a Gmail-piszkozat felveszi), Star / Unstar (selection_menu_star), Move (move_dialog_title: My Drive és a Drive mappái), Add to home screen (a fájlt nyitó parancsikon, a fájllal együtt törlődik), Print a verzió nyomtatási útján a dokumentum szövegével, Open document a dokumentumválasztóból (szöveg- és Office-fájl, más: error_opening_document; 6.0.1-en a Save as PDF szövege is megmarad). A Drive ezeket a fájlokat a megfelelő appban nyitja, a Drive-ban létrehozott új dokumentum szerkesztésre ott nyílik. Ellenőrzés: `tests/browser/play-editors.mjs` mindkét verzió, asztali és telefonos szélesség (Star, Move, parancsikon és megnyitása, Print, Send file Gmail-melléklettel, Open document, Drive-ból megnyitás); `ng-drive`, `ng-documents`, `ng-print`, `ng-send-media`; `npm test` 260/260.
 
 #### T61 — Fit az 5.1.1 szintjén
 
