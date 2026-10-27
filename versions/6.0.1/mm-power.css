@@ -2,6 +2,10 @@
 /* global_actions_item.xml: 64 dp, 6 dp above and below, 8 dp at the start, the 56 dp icon and 8 dp, the 22 sp message. */
 .mmpw-item{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:calc(6 * var(--dp)) 0 calc(6 * var(--dp)) calc(8 * var(--dp));box-sizing:border-box;font-size:calc(22 * var(--dp))}
 .mmpw-icon{flex:none;width:calc(56 * var(--dp));height:calc(56 * var(--dp));margin-right:calc(8 * var(--dp));background:rgba(0,0,0,.541);-webkit-mask:url('assets/fw-ic_lock_power_off_alpha.png') center/calc(32 * var(--dp)) no-repeat;mask:url('assets/fw-ic_lock_power_off_alpha.png') center/calc(32 * var(--dp)) no-repeat}
+/* BugReportAction: ic_lock_bugreport, the message over the status (textAppearanceSmall 14 sp, textColorSecondary). */
+.mmpw-icon.bug{-webkit-mask:url('assets/fw-ic_lock_bugreport.svg') center/calc(24 * var(--dp)) no-repeat;mask:url('assets/fw-ic_lock_bugreport.svg') center/calc(24 * var(--dp)) no-repeat}
+.mmpw-item>span>span{display:block}
+.mmpw-item small{display:block;font-size:calc(14 * var(--dp));color:rgba(0,0,0,.541)}
 /* Off and booting: black over everything; the boot animation's frames drawn at desc.txt's size in the middle. */
 .mmpw-layer{position:absolute;inset:0;z-index:70;background:#000}
 .mmpw-layer[hidden]{display:none}

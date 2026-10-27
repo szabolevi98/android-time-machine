@@ -98,6 +98,7 @@
       if (key === 'credentials_install') { c.toast(t.t('CertInstaller/no_cert_file_found')); return true; }
       // Google Play services' Smart Lock settings, an activity of its own (only with a secure lock).
       if (key === 'trust_agent') { MM.openPrefs(c, 'smartlock', 'personal_unlocking_settings_preferences', trustTitle()); return true; }
+      if (key === 'usage_access') { MM.settingsGo(c, 'usage-access', t.t('usage_access_title')); return true; }
       if (key === 'toggle_install_applications' && !s.unknownSources) {
         c.dialog({message: t.t('install_all_warning'), buttons: [{label: t.t('cancel')}, {label: t.t('okay'), action: c => { s.unknownSources = true; c.save(); c.render(); }}]});
         return true;
@@ -259,7 +260,7 @@
       const t = T(), l = lock(c), type = l.type, err = c.ui.confirmError || '';
       const head = `<div class="mmsc-cheader">${c.safe(t.t(`lockpassword_confirm_your_${type}_header`))}</div><div class="mmsc-details">${c.safe(t.t(`lockpassword_confirm_your_${type}_generic`))}</div>
         <button type="button" class="mmsc-cancel" data-action="mmsc-ccancel">${c.safe(t.t('cancel'))}</button>`;
-      if (type === 'pattern') return `<div class="mmsc-confirm pattern">${head}<div class="mmsc-cpat">${MM.pattern.markup('mmsc-pattern')}</div><div class="mmsc-error">${c.safe(err)}</div></div>`;
+      if (type === 'pattern') return `<div class="mmsc-confirm pattern">${head}<div class="mmsc-cpat">${MM.pattern.markup(lock(c).visible === false ? 'mmsc-pattern stealth' : 'mmsc-pattern')}</div><div class="mmsc-error">${c.safe(err)}</div></div>`;
       return `<div class="mmsc-confirm">${head}<i class="mmsc-fill"></i><input class="mmsc-centry" type="password" ${type === 'pin' ? 'inputmode="numeric"' : ''} autocomplete="off"><div class="mmsc-error">${c.safe(err)}</div></div>`;
     },
     mount(c, root, cur) {
@@ -299,5 +300,48 @@
       return true;
     },
     back(c) { c.ui.redaction = null; done(c); return true; }
+  };
+
+  /* TrustAgentSettings.updateAgents: the dummy row of trust_agent_settings.xml gives way to a SwitchPreference per
+     trust agent the image installs, Google Play services' Smart Lock (Google), on until switched off. */
+  X().trust_agent_settings.c = [{t: 'SwitchPreference', key: 'smartlock_agent'}];
+  H.trust_agent_settings = {
+    // The row is the agent service's label (GoogleTrustAgent: auth_personal_unlocking_service_name).
+    title: (c, key) => key === 'smartlock_agent' ? T().t('PrebuiltGmsCore/auth_personal_unlocking_service_name') : undefined,
+    get: (c, key) => key === 'smartlock_agent' ? S(c).trustAgentOff !== true : undefined,
+    set(c, key, v) { if (key !== 'smartlock_agent') return false; S(c).trustAgentOff = !v; return true; }
+  };
+
+  /* Apps with usage access (ManageApplications, LIST_TYPE_USAGE_ACCESS): AppStateUsageBridge's packages that request
+     PACKAGE_USAGE_STATS, without "android" and Settings itself (shouldIgnorePackage): on the 5X Google Play services and
+     Google Play Store, both granted it as privileged apps, so On (switch_on_text). A row opens UsageAccessDetails
+     (app_ops_permissions_details.xml): the app's header, Permit usage access, the description; App usage preferences
+     goes (neither app has a USAGE_ACCESS_CONFIG activity). */
+  const USAGE = ['com.google.android.gms', 'com.android.vending'];
+  const pkgOf = pkg => (MM.systemPackages || []).filter(p => p.pkg === pkg).find(p => p.label.en !== pkg) || {pkg, label: {en: pkg}, icon: 'assets/fw-sym_def_app_icon.png'};
+  const pkgLabel = (c, pkg) => { const p = pkgOf(pkg); return p.label[c.lang] || p.label.en; };
+  const usageOn = (c, pkg) => !(S(c).usageOff || []).includes(pkg);
+  MM.settingsScreens['usage-access'] = {
+    title: () => T().t('usage_access_title'),
+    render(c) {
+      const t = T(), col = new Intl.Collator(c.locale());
+      return `<div class="mmst-list">${[...USAGE].sort((a, b) => col.compare(pkgLabel(c, a), pkgLabel(c, b))).map(pkg => `<button type="button" class="mmap-row" data-action="mmsc-usage" data-app="${pkg}"><img src="${pkgOf(pkg).icon}" alt=""><span class="mmap-texts"><span class="mmap-line"><span class="mmap-label">${c.safe(pkgLabel(c, pkg))}</span></span><span class="mmap-sub">${c.safe(t.t(usageOn(c, pkg) ? 'switch_on_text' : 'switch_off_text'))}</span></span></button>`).join('')}</div>`;
+    },
+    action(c, name, el) {
+      if (name !== 'mmsc-usage') return false;
+      c.ui.usagePkg = el.dataset.app; MM.settingsGo(c, 'xml:app_ops_permissions_details', T().t('usage_access')); return true;
+    }
+  };
+  H.app_ops_permissions_details = {
+    hidden: ['app_ops_settings_preference'],
+    top: c => `<div class="mmai-head"><div class="mmap-row static"><img src="${pkgOf(c.ui.usagePkg).icon}" alt=""><span class="mmap-texts"><span class="mmap-line"><span class="mmap-label">${c.safe(pkgLabel(c, c.ui.usagePkg))}</span></span></span></div></div>`,
+    title: (c, key) => key === 'app_ops_settings_switch' ? T().t('permit_usage_access') : undefined,
+    summary: (c, key) => key === 'app_ops_settings_description' ? T().t('usage_access_description') : undefined,
+    selectable: (c, key) => key !== 'app_ops_settings_description',
+    get: (c, key) => key === 'app_ops_settings_switch' ? usageOn(c, c.ui.usagePkg) : undefined,
+    set(c, key, v) {
+      if (key !== 'app_ops_settings_switch') return false;
+      const off = new Set(S(c).usageOff || []); v ? off.delete(c.ui.usagePkg) : off.add(c.ui.usagePkg); S(c).usageOff = [...off]; return true;
+    }
   };
 })();

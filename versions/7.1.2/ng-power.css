@@ -4,6 +4,7 @@
 .ngpw-item{display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));padding:calc(6 * var(--dp)) calc(16 * var(--dp)) calc(6 * var(--dp)) calc(8 * var(--dp));box-sizing:border-box}
 .ngpw-icon{flex:none;width:calc(56 * var(--dp));height:calc(56 * var(--dp));margin-right:calc(8 * var(--dp));background:#0000008a;-webkit-mask:center/calc(24 * var(--dp)) no-repeat;mask:center/calc(24 * var(--dp)) no-repeat}
 .ngpw-item span{margin-right:calc(8 * var(--dp));font:400 calc(22 * var(--dp))/calc(29.2 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.ngpw-item small{display:block;font-size:calc(14 * var(--dp));line-height:calc(19 * var(--dp));color:#0000008a}
 .ngpw-layer{position:absolute;inset:0;z-index:40;background:#000}
 .ngpw-layer[hidden]{display:none}
 .ngpw-boot,.ngpw-frame{position:absolute}

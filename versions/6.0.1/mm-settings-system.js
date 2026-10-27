@@ -10,7 +10,8 @@
      def_wifi_scan_always_available 0 and ble_scan_always_enabled 0 leave them).
    - privacy_settings (PrivacySettings.getNonVisibleKeys / updateToggles): GSF's com.google.settings provider and an
      active backup service hide "Backup service is inactive"; Back up my data On / Off, the backup account
-     (backup_configure_account_default_summary without one), Automatic restore enabled with backup.
+     (the account's name while backup is on, backup_configure_account_default_summary when off; a
+     touch picks it or adds one), Automatic restore enabled with backup.
    - language_settings (InputMethodAndLanguageSettings): Language with the locale's name, the spell checker LatinImeGoogle's
      Google Spell Checker, Current Keyboard as getImeAndSubtypeDisplayName ("English (US) - Google Keyboard"), the
      enabled input methods (Google Keyboard with its implicit subtype, Google voice typing with Automatic), no hardware
@@ -134,8 +135,16 @@
     summary(c, key) {
       const t = T();
       if (key === 'backup_data') return t.t(S(c).backup ? 'accessibility_feature_state_on' : 'accessibility_feature_state_off');
-      if (key === 'configure_account') return t.t('backup_configure_account_default_summary');
+      // The Google transport's destination string: the account's name while backup is on.
+      if (key === 'configure_account') return S(c).backup ? MM.account.email : t.t('backup_configure_account_default_summary');
       return undefined;
+    },
+    click(c, key) {
+      if (key !== 'configure_account') return false;
+      const t = T(), radio = (on, label) => ({html: `<span class="mmst-choice"><i class="mmw-radio${on ? ' on' : ''}"></i><span>${c.safe(label)}</span></span>`});
+      c.dialog({title: t.t('backup_configure_account_title'), items: [radio(true, MM.account.email), {html: `<span class="mmst-choice">${c.safe(t.t('add_account_label'))}</span>`}],
+        onItem: i => { if (i === 1) MM.settingsGo(c, 'add-account', t.t('header_add_an_account')); }});
+      return true;
     }
   };
 
@@ -277,7 +286,7 @@
       const s = S(c), a = s.a11y || (s.a11y = {});
       if (key === 'toggle_lock_screen_rotation_preference') { s.rotationLocked = !v; MM.system?.changed(c); return true; }
       if (key === 'select_long_press_timeout_preference') { a.longPress = +v; return true; }
-      if (SWITCHES[key]) { a[SWITCHES[key]] = v; return true; }
+      if (SWITCHES[key]) { a[SWITCHES[key]] = v; if (key === 'toggle_inversion_preference') MM.system?.changed(c); return true; }
       return false;
     },
     summary(c, key) {
@@ -291,6 +300,21 @@
       if (SERVICES.some(([k]) => k === key) || key === 'screen_magnification_preference_screen' || key === 'enable_global_gesture_preference_screen') { MM.settingsGo(c, `a11y:${key}`, MM.settingsStr(n?.title) || T().t(SERVICES.find(([k]) => k === key)?.[1] || '')); return true; }
       return false;
     }
+  };
+  // ToggleDaltonizerPreferenceFragment: accessibility_daltonizer_settings under its switch bar (the feature's
+  // Secure.ACCESSIBILITY_DISPLAY_DALTONIZER_ENABLED, the summary on the Accessibility list); Mode only while it is on.
+  const a11y = c => S(c).a11y || (S(c).a11y = {});
+  H.accessibility_daltonizer_settings = {
+    get: (c, key) => key === 'type' ? String(a11y(c).daltonizer ?? 12) : undefined,
+    set(c, key, v) { if (key !== 'type') return false; a11y(c).daltonizer = +v; return true; },
+    disabled: c => !a11y(c).daltonizer_preference_screen
+  };
+  MM.settingsScreens['xml:accessibility_daltonizer_settings'] = {
+    bar(c) {
+      const on = !!a11y(c).daltonizer_preference_screen;
+      return `<button type="button" class="mmst-switchbar" data-action="mma1-dalton"><span>${c.safe(T().t(on ? 'switch_on_text' : 'switch_off_text'))}</span><i class="mmw-switch${on ? ' on' : ''}"><i class="mmw-thumb"></i></i></button>`;
+    },
+    action(c, name) { if (name !== 'mma1-dalton') return false; const a = a11y(c); a.daltonizer_preference_screen = !a.daltonizer_preference_screen; c.save(); c.render(); return true; }
   };
   // print_settings (PrintSettingsFragment): no print jobs (the category goes), the installed services with On / Off
   // (ENABLED_PRINT_SERVICES starts empty).

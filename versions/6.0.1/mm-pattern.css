@@ -7,3 +7,6 @@
 .mmpt[data-mode="correct"] .mmpt-path{fill:none}
 .mmpt[data-mode="wrong"] .mmpt-path{stroke:var(--mmpt-error)}
 .mmpt[data-mode="wrong"] .mmpt-dot.on{fill:var(--mmpt-error)}
+/* setInStealthMode (Make pattern visible off: the keyguard and ConfirmLockPattern): no path, the dots in the regular colour. */
+.mmpt.stealth .mmpt-path{display:none}
+.mmpt.stealth .mmpt-dot.on{fill:var(--mmpt-regular)}

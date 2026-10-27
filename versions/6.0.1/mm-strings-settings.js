@@ -5389,31 +5389,31 @@ MM.strings('settings', {
 "en": [
 "None",
 "WEP",
-"",
+"WPA/WPA2 PSK",
 "802.1x EAP"
 ],
 "hu": [
 "None",
 "WEP",
-"",
+"WPA/WPA2 PSK",
 "802.1x EAP"
 ],
 "de": [
 "None",
 "WEP",
-"",
+"WPA/WPA2 PSK",
 "802.1x EAP"
 ],
 "fr": [
 "None",
 "WEP",
-"",
+"WPA/WPA2 PSK",
 "802.1x EAP"
 ],
 "es": [
 "None",
 "WEP",
-"",
+"WPA/WPA2 PSK",
 "802.1x EAP"
 ]
 },
@@ -10533,6 +10533,76 @@ MM.strings('settings', {
 "de": "%1$s wird nicht unterstützt.",
 "fr": "Les paramètres régionaux %1$s ne sont pas compatibles.",
 "es": "No se admite el %1$s"
+},
+"sync_one_time_sync": {
+"res": "bullhead:Settings:sync_one_time_sync",
+"en": "Touch to sync now\n%1$s",
+"hu": "Érintse meg az azonnali szinkronizáláshoz\n%1$s",
+"de": "Zum sofortigen Synchronisieren berühren\n%1$s",
+"fr": "Appuyer ici pour lancer la synchronisation maintenant\n%1$s",
+"es": "Tocar para realizar la sincronización ahora\n%1$s"
+},
+"usage_access": {
+"res": "bullhead:Settings:usage_access",
+"en": "Usage access",
+"hu": "Használati hozzáférés",
+"de": "Zugriff auf Nutzungsdaten",
+"fr": "Accès aux données d'utilisation",
+"es": "Acceso de uso"
+},
+"permit_usage_access": {
+"res": "bullhead:Settings:permit_usage_access",
+"en": "Permit usage access",
+"hu": "Használati hozzáférés engedélye",
+"de": "Zugriff auf Nutzungsdaten gewähren",
+"fr": "Autoriser l'accès aux données d'utilisation",
+"es": "Permitir acceso de uso"
+},
+"app_usage_preference": {
+"res": "bullhead:Settings:app_usage_preference",
+"en": "App usage preferences",
+"hu": "Alkalmazáshasználati preferenciák",
+"de": "App-Nutzungseinstellungen",
+"fr": "Préférences d'utilisation de l'application",
+"es": "Preferencias de uso de aplicaciones"
+},
+"usage_access_description": {
+"res": "bullhead:Settings:usage_access_description",
+"en": "Usage access allows an app to track what other apps you’re using and how often, as well as your carrier, language settings, and other details.",
+"hu": "A használati hozzáférés lehetővé teszi egy alkalmazás számára a következők nyomon követését: Ön milyen más alkalmazásokat használ, milyen gyakran használja azokat, illetve a szolgáltatói, a nyelvi beállítási és egyéb részletek.",
+"de": "Der Zugriff auf die Nutzungsdaten ermöglicht es einer App, verschiedene Informationen zu erfassen, unter anderem, welche anderen Apps du wie oft verwendest, welchen Mobilfunkanbieter du nutzt und welche Spracheinstellungen du festgelegt hast.",
+"fr": "L'accès aux données d'utilisation permet à une application d'effectuer le suivi des applications que vous utilisez, de la fréquence d'utilisation, de l'opérateur, des paramètres de langue et d'autres détails.",
+"es": "El acceso de uso permite que una aplicación controle las aplicaciones que utilizas y con qué frecuencia, así como tu operador, los ajustes de idioma y otros detalles."
+},
+"wifi_display_no_devices_found": {
+"res": "bullhead:Settings:wifi_display_no_devices_found",
+"en": "No nearby devices were found.",
+"hu": "Nem található a közelben más eszköz.",
+"de": "Kein Gerät in der Nähe gefunden",
+"fr": "Aucun appareil détecté à proximité.",
+"es": "No hay dispositivos cercanos."
+},
+"wifi_display_enable_menu_item": {
+"res": "bullhead:Settings:wifi_display_enable_menu_item",
+"en": "Enable wireless display",
+"hu": "Vezeték nélküli kijelző engedélyezése",
+"de": "Kabellose Übertragung aktivieren",
+"fr": "Activer l'affichage sans fil",
+"es": "Habilitar pantalla inalámbrica"
+},
+"PrebuiltGmsCore/auth_personal_unlocking_service_name": {
+"res": "bullhead:PrebuiltGmsCore:auth_personal_unlocking_service_name",
+"en": "Smart Lock (Google)",
+"hu": "Smart Lock (Google)",
+"de": "Smart Lock (Google)",
+"fr": "Smart Lock (Google)",
+"es": "Smart Lock (Google)",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
 },
 "animator_duration_scale_entries": {
 "res": "bullhead:Settings:animator_duration_scale_entries",

@@ -21,8 +21,21 @@
   function powerItem(c) {
     return `<span class="mmpw-item"><i class="mmpw-icon"></i><span>${c.safe(T().t('global_action_power_off'))}</span></span>`;
   }
+  // BugReportAction: with Developer options' Bug report shortcut (bugreport_in_power_menu) on, ic_lock_bugreport,
+  // bugreport_title and getStatus' bugreport_status "%s (%s)" of Build.VERSION.RELEASE and Build.ID; a touch asks
+  // (bugreport_message, Cancel / Report) and then requests the report.
+  const bugreportOn = c => { const d = c.data.settings.dev; return !!(d && d.on !== false && d.bugreport_in_power); };
+  function bugItem(c) {
+    return `<span class="mmpw-item"><i class="mmpw-icon bug"></i><span><span>${c.safe(T().t('bugreport_title'))}</span><small>6.0.1 (MTC20K)</small></span></span>`;
+  }
   function spec(c) {
-    return {items: [{html: powerItem(c)}], cancelable: false, onItem: () => shutdown(c), onLongItem: () => { safeModeAsk(c); return true; }};
+    const bug = bugreportOn(c);
+    return {items: [{html: powerItem(c)}, ...(bug ? [{html: bugItem(c)}] : [])], cancelable: false,
+      onItem: i => i === 1 ? bugAsk(c) : shutdown(c), onLongItem: i => { if (i === 1) return false; safeModeAsk(c); return true; }};
+  }
+  function bugAsk(c) {
+    c.dialog({title: T().t('bugreport_title'), message: T().t('bugreport_message'),
+      buttons: [{label: T().t('cancel')}, {label: T().t('report'), action: c => setTimeout(() => c.toast(T().t('bugreport_title')), 500)}]});
   }
   function safeModeAsk(c) {
     c.closeOverlay();

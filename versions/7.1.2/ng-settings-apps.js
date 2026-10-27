@@ -335,6 +335,7 @@
       const t = T();
       if (key === 'high_power_apps') { go(c, 'high-power', t.t('high_power_apps')); return true; }
       if (key === 'data_saver') { go(c, 'data-unrestricted', t.t('unrestricted_data_saver')); return true; }
+      if (key === 'usage_access') { go(c, 'usage-access', t.t('usage_access')); return true; }
       return false;
     }
   };

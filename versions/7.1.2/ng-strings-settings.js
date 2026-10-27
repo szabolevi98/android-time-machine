@@ -12889,6 +12889,60 @@ NG.strings('settings', {
 "fr": "OK",
 "es": "Listo"
 },
+"permit_usage_access": {
+"res": "angler:SettingsGoogle:permit_usage_access",
+"en": "Permit usage access",
+"hu": "Használati hozzáférés engedélye",
+"de": "Zugriff auf Nutzungsdaten gewähren",
+"fr": "Autoriser l'accès aux données d'utilisation",
+"es": "Permitir acceso de uso"
+},
+"app_usage_preference": {
+"res": "angler:SettingsGoogle:app_usage_preference",
+"en": "App usage preferences",
+"hu": "Alkalmazáshasználati preferenciák",
+"de": "App-Nutzungseinstellungen",
+"fr": "Préférences d'utilisation de l'application",
+"es": "Preferencias de uso de aplicaciones"
+},
+"usage_access_description": {
+"res": "angler:SettingsGoogle:usage_access_description",
+"en": "Usage access allows an app to track what other apps you’re using and how often, as well as your carrier, language settings, and other details.",
+"hu": "A használati hozzáférés lehetővé teszi egy alkalmazás számára a következők nyomon követését: Ön milyen más alkalmazásokat használ, milyen gyakran használja azokat, illetve a szolgáltatói, a nyelvi beállítási és egyéb részletek.",
+"de": "Der Zugriff auf die Nutzungsdaten ermöglicht es einer App, verschiedene Informationen zu erfassen, unter anderem, welche anderen Apps du wie oft verwendest, welchen Mobilfunkanbieter du nutzt und welche Spracheinstellungen du festgelegt hast.",
+"fr": "L'accès aux données d'utilisation permet à une application d'effectuer le suivi des applications que vous utilisez, de la fréquence d'utilisation, de l'opérateur, des paramètres de langue et d'autres détails.",
+"es": "El acceso de uso permite que una aplicación controle las aplicaciones que utilizas y con qué frecuencia, así como tu operador, los ajustes de idioma y otros detalles."
+},
+"wifi_display_no_devices_found": {
+"res": "angler:SettingsGoogle:wifi_display_no_devices_found",
+"en": "No nearby devices were found.",
+"hu": "Nem található a közelben más eszköz.",
+"de": "Kein Gerät in der Nähe gefunden",
+"fr": "Aucun appareil détecté à proximité.",
+"es": "No hay dispositivos cercanos."
+},
+"wifi_display_enable_menu_item": {
+"res": "angler:SettingsGoogle:wifi_display_enable_menu_item",
+"en": "Enable wireless display",
+"hu": "Vezeték nélküli kijelző engedélyezése",
+"de": "Kabellose Übertragung aktivieren",
+"fr": "Activer l'affichage sans fil",
+"es": "Habilitar pantalla inalámbrica"
+},
+"PrebuiltGmsCore/auth_personal_unlocking_service_name": {
+"res": "angler:PrebuiltGmsCore:auth_personal_unlocking_service_name",
+"en": "Smart Lock (Google)",
+"hu": "Smart Lock (Google)",
+"de": "Smart Lock (Google)",
+"fr": "Smart Lock (Google)",
+"es": "Smart Lock (Google)",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
 "settings_suggestion_header_summary_hidden_items": {
 "res": "angler:SettingsGoogle:settings_suggestion_header_summary_hidden_items",
 "en": {

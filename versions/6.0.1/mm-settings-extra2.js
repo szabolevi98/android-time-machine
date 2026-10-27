@@ -176,4 +176,19 @@
       return true;
     }
   };
+
+  /* Cast (WifiDisplaySettings, wifi_display_settings.xml): no MediaRouter route and no wireless display nearby, so the
+     list's empty view says wifi_display_no_devices_found; the overflow's checkable Enable wireless display
+     (wifi_display_enable_menu_item) is Settings.Global.WIFI_DISPLAY_ON. */
+  MM.settingsScreens['xml:wifi_display_settings'] = {
+    title: () => MM.text('settings').t('wifi_display_settings_title'),
+    render: c => `<div class="mmst-empty center"><span class="medium">${c.safe(MM.text('settings').t('wifi_display_no_devices_found'))}</span></div>`,
+    actions: c => MM.menu.button(c),
+    action(c, name, el) {
+      if (name !== 'mm-menu') return false;
+      const s = c.data.settings;
+      c.menu([{label: MM.text('settings').t('wifi_display_enable_menu_item'), checked: !!s.wifiDisplay, action: c => { s.wifiDisplay = !s.wifiDisplay; c.save(); }}], el);
+      return true;
+    }
+  };
 })();

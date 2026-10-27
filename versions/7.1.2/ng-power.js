@@ -20,11 +20,17 @@
   const T = () => NG.text('power');
   let layer = null;
 
-  const item = (c, icon, label) => `<span class="ngpw-item"><i class="ngpw-icon" style="-webkit-mask-image:url('assets/${icon}');mask-image:url('assets/${icon}')"></i><span>${c.safe(label)}</span></span>`;
+  const item = (c, icon, label, status) => `<span class="ngpw-item"><i class="ngpw-icon" style="-webkit-mask-image:url('assets/${icon}');mask-image:url('assets/${icon}')"></i><span>${c.safe(label)}${status ? `<small>${c.safe(status)}</small>` : ''}</span></span>`;
+  // BugReportAction: with Developer options' Take bug report shortcut (bugreport_in_power_menu) on, ic_lock_bugreport,
+  // bugreport_title and getStatus' bugreport_status "%s (%s)" of Build.VERSION.RELEASE and Build.ID; a touch requests
+  // an interactive report after 500 ms, a long press a full one, neither asking.
+  const bugreportOn = c => { const d = c.data.settings.dev; return !!(d && d.on !== false && d.bugreport_in_power); };
   function spec(c) {
-    const t = T();
-    return {items: [{html: item(c, 'fw-ic_lock_power_off.svg', t.t('global_action_power_off'))}, {html: item(c, 'fw-ic_restart.svg', t.t('sim_restart_button'))}], cancelable: false,
-      onItem: i => shutdown(c, {reboot: i === 1}), onLongItem: () => { safeModeAsk(c); return true; }};
+    const t = T(), bug = bugreportOn(c);
+    const report = () => setTimeout(() => c.toast(t.t('bugreport_title')), 500);
+    return {items: [{html: item(c, 'fw-ic_lock_power_off.svg', t.t('global_action_power_off'))}, {html: item(c, 'fw-ic_restart.svg', t.t('sim_restart_button'))},
+      ...(bug ? [{html: item(c, 'fw-ic_lock_bugreport.svg', t.t('bugreport_title'), '7.1.2 (N2G48C)')}] : [])], cancelable: false,
+      onItem: i => i === 2 ? report() : shutdown(c, {reboot: i === 1}), onLongItem: i => { if (i === 2) { report(); return true; } safeModeAsk(c); return true; }};
   }
   function safeModeAsk(c) {
     c.closeOverlay();

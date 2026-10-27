@@ -67,6 +67,9 @@
 .ngpt[data-mode="correct"] .ngpt-path{fill:none}
 .ngpt[data-mode="wrong"] .ngpt-path{stroke:var(--ngpt-error)}
 .ngpt[data-mode="wrong"] .ngpt-dot.on{fill:var(--ngpt-error)}
+/* setInStealthMode (Make pattern visible off: the keyguard and ConfirmLockPattern): no path, the dots in the regular colour. */
+.ngpt.stealth .ngpt-path{display:none}
+.ngpt.stealth .ngpt-dot.on{fill:var(--ngpt-regular)}
 
 /* Nexus Imprint (ng-fingerprint.js): the GLIF pages in Theme.FingerprintEnroll (ic_fingerprint_header in #4285f4), the
    find-sensor video at the bottom, fingerprint_enroll_enrolling_content (the 88 dp picture on #12000000 that flashes the

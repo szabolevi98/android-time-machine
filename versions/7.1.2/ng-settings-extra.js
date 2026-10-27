@@ -43,4 +43,19 @@
   };
   function search(c){c.ui.p2pSearch=Date.now()+12000;c.render();setTimeout(()=>{if(c.ui.view==='settings')c.render();},12100);}
   function rename(c){let v=p2pName(c);c.dialog({title:t('wifi_p2p_menu_rename'),html:`<div class="ngst-edit"><input type="text" class="ngst-input" value="${c.safe(v)}" maxlength="32"></div>`,mount:(c,win)=>{const f=win.querySelector('input');f.addEventListener('input',()=>{v=f.value;});setTimeout(()=>f.focus(),50);},buttons:[{label:t('framework/cancel')},{label:t('framework/ok'),action:c=>{if(!v.trim()){c.toast(t('wifi_p2p_failed_rename_message'));return;}S(c).p2pName=v.trim();c.save();c.render();}}]});}
+
+  /* Cast (WifiDisplaySettings, wifi_display_settings.xml): no MediaRouter route and no wireless display nearby, so the
+     list's empty view says wifi_display_no_devices_found; the overflow's checkable Enable wireless display
+     (wifi_display_enable_menu_item) is Settings.Global.WIFI_DISPLAY_ON. */
+  NG.settingsScreens['xml:wifi_display_settings'] = {
+    title: () => NG.text('settings').t('wifi_display_settings_title'),
+    render: c => `<div class="ngst-emptyview center"><span>${c.safe(NG.text('settings').t('wifi_display_no_devices_found'))}</span></div>`,
+    actions: c => NG.menu.button(c),
+    action(c, name, el) {
+      if (name !== 'ng-menu') return false;
+      const s = c.data.settings;
+      c.menu([{label: NG.text('settings').t('wifi_display_enable_menu_item'), checked: !!s.wifiDisplay, action: c => { s.wifiDisplay = !s.wifiDisplay; c.save(); }}], el);
+      return true;
+    }
+  };
 })();

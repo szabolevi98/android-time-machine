@@ -71,8 +71,10 @@
     action(c, name, el) {
       const t = T(), s = S(c);
       if (name === 'mm-menu') {
-        c.menu([{label: t.t('data_usage_menu_restrict_background'), action: c => c.dialog({title: t.t('data_usage_restrict_background_title'), message: t.t('data_usage_restrict_background'),
-            buttons: [{label: t.t('cancel')}, {label: t.t('okay'), action: c => { s.restrictBackground = true; c.save(); }}]})},
+        // DataUsageSummary: the item is checkable; turning it on asks first (ConfirmRestrictFragment), off at once.
+        c.menu([{label: t.t('data_usage_menu_restrict_background'), checked: !!s.restrictBackground, action: c => s.restrictBackground ? (s.restrictBackground = false, c.save())
+            : c.dialog({title: t.t('data_usage_restrict_background_title'), message: t.t('data_usage_restrict_background'),
+              buttons: [{label: t.t('cancel')}, {label: t.t('okay'), action: c => { s.restrictBackground = true; c.save(); }}]})},
           {label: t.t(s.showWifi ? 'data_usage_menu_hide_wifi' : 'data_usage_menu_show_wifi'), action: c => { s.showWifi = !s.showWifi; if (!s.showWifi) c.ui.dataTab = 'mobile'; c.save(); c.render(); }},
           {label: t.t('data_usage_menu_cellular_networks'), action: c => MM.openPrefs(c, 'network', 'network_setting')}]);
         return true;

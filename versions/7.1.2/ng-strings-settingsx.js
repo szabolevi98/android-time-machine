@@ -153,6 +153,118 @@ NG.strings('settingsx', {
 "fr": "Sélectionner un opérateur réseau",
 "es": "Selecciona un operador de red"
 },
+"sim_enter_pin": {
+"res": "angler:SettingsGoogle:sim_enter_pin",
+"en": "SIM PIN",
+"hu": "SIM-kártya PIN-kódja",
+"de": "PIN für SIM-Karte",
+"fr": "Code PIN de la carte SIM",
+"es": "PIN de la tarjeta SIM"
+},
+"sim_enter_old": {
+"res": "angler:SettingsGoogle:sim_enter_old",
+"en": "Old SIM PIN",
+"hu": "SIM-kártya régi PIN-kódja",
+"de": "Alte PIN der SIM-Karte",
+"fr": "Ancien code PIN de la carte SIM",
+"es": "PIN de tarjeta SIM antiguo"
+},
+"sim_enter_new": {
+"res": "angler:SettingsGoogle:sim_enter_new",
+"en": "New SIM PIN",
+"hu": "Új PIN-kód a SIM kártyához",
+"de": "Neue PIN für SIM-Karte",
+"fr": "Nouveau code PIN de la carte SIM",
+"es": "Nuevo PIN de tarjeta SIM"
+},
+"sim_reenter_new": {
+"res": "angler:SettingsGoogle:sim_reenter_new",
+"en": "Re‑type new PIN",
+"hu": "Írja be ismét az új PIN-kódot",
+"de": "Neue PIN erneut eingeben",
+"fr": "Saisissez à nouveau le code d'accès.",
+"es": "Volver a introducir nuevo PIN"
+},
+"sim_change_pin": {
+"res": "angler:SettingsGoogle:sim_change_pin",
+"en": "SIM PIN",
+"hu": "SIM-kártya PIN-kódja",
+"de": "PIN für SIM-Karte",
+"fr": "Code PIN de la carte SIM",
+"es": "PIN de la tarjeta SIM"
+},
+"sim_enable_sim_lock": {
+"res": "angler:SettingsGoogle:sim_enable_sim_lock",
+"en": "Lock SIM card",
+"hu": "SIM-kártya lezárása",
+"de": "SIM-Karte sperren",
+"fr": "Verrouiller la carte SIM",
+"es": "Bloquear tarjeta SIM"
+},
+"sim_disable_sim_lock": {
+"res": "angler:SettingsGoogle:sim_disable_sim_lock",
+"en": "Unlock SIM card",
+"hu": "SIM-kártya feloldása",
+"de": "SIM-Karte entsperren",
+"fr": "Déverrouiller la carte SIM",
+"es": "Desbloquear tarjeta SIM"
+},
+"sim_enter_ok": {
+"res": "angler:SettingsGoogle:sim_enter_ok",
+"en": "OK",
+"hu": "OK",
+"de": "OK",
+"fr": "OK",
+"es": "Aceptar"
+},
+"sim_enter_cancel": {
+"res": "angler:SettingsGoogle:sim_enter_cancel",
+"en": "Cancel",
+"hu": "Mégse",
+"de": "Abbrechen",
+"fr": "Annuler",
+"es": "Cancelar"
+},
+"sim_bad_pin": {
+"res": "angler:SettingsGoogle:sim_bad_pin",
+"en": "Incorrect PIN",
+"hu": "Helytelen PIN-kód",
+"de": "Falsche PIN",
+"fr": "Code PIN incorrect.",
+"es": "PIN incorrecto"
+},
+"sim_pins_dont_match": {
+"res": "angler:SettingsGoogle:sim_pins_dont_match",
+"en": "PINs don’t match",
+"hu": "A PIN-kódok nem egyeznek",
+"de": "Die PINs stimmen nicht überein.",
+"fr": "Les codes PIN ne correspondent pas.",
+"es": "Los números PIN no coinciden."
+},
+"sim_change_succeeded": {
+"res": "angler:SettingsGoogle:sim_change_succeeded",
+"en": "SIM PIN changed successfully",
+"hu": "A SIM-kártya PIN-kódja sikeresen módosításra került",
+"de": "SIM-PIN erfolgreich geändert",
+"fr": "Le code PIN de la carte SIM a été modifié.",
+"es": "El PIN de la tarjeta SIM se ha modificado correctamente."
+},
+"sim_change_failed": {
+"res": "angler:SettingsGoogle:sim_change_failed",
+"en": "Can’t change PIN.\nPossibly incorrect PIN.",
+"hu": "Nem lehet megváltoztatni a PIN-kódot.\nLehet, hogy hibás a PIN-kód.",
+"de": "PIN kann nicht geändert werden.\nMöglicherweise ist es die falsche PIN.",
+"fr": "Impossible de modifier le code PIN.\nLe code PIN est peut-être incorrect.",
+"es": "No se puede modificar el PIN.\nEs posible que el PIN no sea correcto."
+},
+"sim_lock_failed": {
+"res": "angler:SettingsGoogle:sim_lock_failed",
+"en": "Can’t change SIM card lock state.\nPossibly incorrect PIN.",
+"hu": "Nem lehet megváltoztatni a SIM-kártya zárolási állapotát.\nLehet, hogy hibás a PIN-kód.",
+"de": "Status der SIM-Kartensperrung kann nicht geändert werden.\nMöglicherweise falsche PIN.",
+"fr": "Impossible de changer l'état de verrouillage de la carte SIM.\nLe code PIN est peut-être incorrect.",
+"es": "No se puede modificar el estado de bloqueo de la tarjeta SIM.\nEs posible que el PIN no sea correcto."
+},
 "framework/ok": {
 "res": "angler:framework:ok",
 "en": "OK",

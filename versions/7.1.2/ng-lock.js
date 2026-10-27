@@ -99,7 +99,7 @@
         ${[[1, 2, 3], [4, 5, 6], [7, 8, 9]].map(r => `<div class="ngbo-row">${r.map(key).join('')}</div>`).join('')}<div class="ngbo-row"><i></i>${key(0)}<button type="button" class="ngbo-key" data-action="ngbo-enter"><img src="${A('sui-ic_done_wht.png')}" alt=""></button></div></div>${eca}</div>`;
     } else if (type === 'password') {
       view = `<div class="ngbo-view password"><i class="ngbo-space7"></i>${msg}<input class="ngbo-field" type="password" autocomplete="off" spellcheck="false"><i class="ngbo-space2"></i>${eca}</div>`;
-    } else view = `<div class="ngbo-view pattern">${msg}<div class="ngbo-pat">${NG.pattern.markup('ngbo-pattern')}</div>${eca}</div>`;
+    } else view = `<div class="ngbo-view pattern">${msg}<div class="ngbo-pat">${NG.pattern.markup(s.lock.visible === false ? 'ngbo-pattern stealth' : 'ngbo-pattern')}</div>${eca}</div>`;
     return `<div class="ngbo"><div class="ngbo-scrim"></div><div class="ngbo-container${st.lockedUntil > Date.now() ? ' locked' : ''}">${view}</div></div>`;
   }
   function checked(c, ok) {

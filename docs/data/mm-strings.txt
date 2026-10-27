@@ -53,6 +53,7 @@ kg_wrong_pattern kg_wrong_password kg_wrong_pin kg_too_many_failed_attempts_coun
 [power] framework
 # GlobalActions (config_globalActionsList: power, bugreport, users), ShutdownThread, the safe mode reboot and watermark
 global_action_power_off power_off shutdown_progress reboot_safemode_title reboot_safemode_confirm safeMode cancel ok
+bugreport_title bugreport_message report
 [volume] SystemUI framework
 # VolumeDialog (headers from volume_stream_titles, which the image has in English only) and ZenFooter
 array:volume_stream_titles volume_stream_muted volume_stream_vibrate volume_stream_limited_dnd volume_stream_vibrate_dnd

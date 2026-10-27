@@ -189,3 +189,5 @@ fw-stat_sys_tether_wifi.svg	framework/framework-res.apk	stat_sys_tether_wifi	-
 sui-ic_person.svg	priv-app/SystemUI/SystemUI.apk	ic_person	tint=#ffffffff
 # The simulator's first-boot welcome notification (as every version): SystemUI's ic_android robot
 sui-ic_android.svg	priv-app/SystemUI/SystemUI.apk	ic_android	tint=#ffffffff
+# framework GlobalActions: BugReportAction (config_globalActionsList bugreport with bugreport_in_power_menu)
+fw-ic_lock_bugreport.svg	framework/framework-res.apk	ic_lock_bugreport	-

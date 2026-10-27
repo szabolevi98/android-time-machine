@@ -50,7 +50,7 @@
       icon: !s.bluetooth ? 'sui-ic_qs_bluetooth_off.svg' : btOn ? 'sui-ic_qs_bluetooth_connected.svg' : btIng ? 'sui-ic_qs_bluetooth_connecting.svg' : 'sui-ic_qs_bluetooth_on.svg',
       desc: !s.bluetooth ? t.t('accessibility_quick_settings_bluetooth_off') : btOn ? `${t.t('accessibility_quick_settings_bluetooth_connected')} ${t.fmt('accessibility_bluetooth_name', null, btOn.name)}`
         : t.t(btIng ? 'accessibility_quick_settings_bluetooth_connecting' : 'accessibility_quick_settings_bluetooth_on')});
-    // inversion: visible only while on or recently used (UsageTracker); the simulator has no colour inversion yet.
+    // inversion: visible only while on or recently used (UsageTracker); not drawn here (Accessibility turns it on).
     const zen = s.zen;
     out.push({id: 'dnd', label: t.t(['quick_settings_dnd_label', 'quick_settings_dnd_priority_label', 'quick_settings_dnd_none_label', 'quick_settings_dnd_alarms_label'][zen]),
       icon: zen === 2 ? 'sui-ic_qs_dnd_on_total_silence.svg' : zen ? 'sui-ic_qs_dnd_on.svg' : st.lastZen === 2 ? 'sui-ic_dnd_total_silence_disable_animation.svg' : 'sui-ic_dnd_disable_animation.svg',

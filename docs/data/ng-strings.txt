@@ -95,7 +95,7 @@ airplane_mode
 kg_wrong_pin kg_wrong_password kg_wrong_pattern kg_too_many_failed_attempts_countdown+args1 framework/lockscreen_emergency_call
 [power] framework
 # GlobalActions (PowerAction, RestartAction), ShutdownThread's dialogs, the safe_mode overlay
-global_action_power_off sim_restart_button power_off shutdown_progress reboot_safemode_title reboot_safemode_confirm cancel yes
+global_action_power_off sim_restart_button power_off shutdown_progress reboot_safemode_title reboot_safemode_confirm cancel yes bugreport_title
 safeMode
 [volume] SystemUI framework
 # VolumeDialog, VolumeDialogController's stream titles, ZenFooter (ZenModeConfig.getConditionSummary)
@@ -609,6 +609,7 @@ app_name notification_name default_tile_name notification_title default_cat_name
 [settingsx] SettingsGoogle TeleService framework
 wifi_p2p_settings_title wifi_p2p_device_info wifi_p2p_menu_search wifi_p2p_menu_searching wifi_p2p_menu_rename wifi_p2p_peer_devices wifi_p2p_remembered_groups wifi_p2p_failed_rename_message
 TeleService/roaming_enable TeleService/roaming_disable TeleService/roaming_warning TeleService/roaming_alert_title TeleService/load_networks_progress TeleService/empty_networks_list TeleService/registration_done TeleService/register_automatically TeleService/apn_settings TeleService/networks TeleService/sum_carrier_select
+sim_enter_pin sim_enter_old sim_enter_new sim_reenter_new sim_change_pin sim_enable_sim_lock sim_disable_sim_lock sim_enter_ok sim_enter_cancel sim_bad_pin sim_pins_dont_match sim_change_succeeded sim_change_failed sim_lock_failed
 framework/ok framework/cancel
 
 [smartlock] PrebuiltGmsCore FaceLock framework

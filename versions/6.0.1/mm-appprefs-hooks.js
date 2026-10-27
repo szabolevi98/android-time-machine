@@ -118,15 +118,34 @@
     },
     get(c, key) { if (key === 'button_cw_key') return MM.appPref(c, 'calls', key, true); }
   };
+  const NETWORKS = ['Telekom', 'Telenor', 'Vodafone'];   // the radio's network scan around the simulated phone (data, not texts)
   H.network = {
     color: ['#0288d1', '#0277bd'],
-    hidden: ['cdma_lte_data_service_key', 'preferred_network_mode_key', 'carrier_settings_key', 'button_srch_netwrks_key'],
+    hidden: ['cdma_lte_data_service_key', 'preferred_network_mode_key', 'carrier_settings_key'],
     append: {network_setting: ['gsm_umts_options']},
     screens: {button_carrier_sel_key: 'carrier_select'},
     get(c, key) { if (key === 'enabled_networks_key') return MM.appPref(c, 'network', key, '10'); if (key === 'button_auto_select_key') return true; },
     // MobileNetworkSettings.UpdateEnabledNetworksValueAndSummary: the chosen entry as the summary.
-    summary(c, key, n) { if (key === 'enabled_networks_key') { const v = MM.appPref(c, 'network', key, '10'); return MM.appPrefArr(n.entries)[MM.appPrefArr(n.entryValues).indexOf(v)] || ''; } },
-    click(c, key) {
+    summary(c, key, n) {
+      if (key === 'enabled_networks_key') { const v = MM.appPref(c, 'network', key, '10'); return MM.appPrefArr(n.entries)[MM.appPrefArr(n.entryValues).indexOf(v)] || ''; }
+      if (key === 'button_auto_select_key' && MM.appPref(c, 'network', 'manual')) return MM.appPref(c, 'network', 'manual');
+    },
+    click(c, key, n) {
+      // NetworkSetting (carrier_select.xml): Search networks waits on load_networks_progress, then lists what the
+      // radio found; a pick or Choose automatically registers (register_automatically) and says registration_done.
+      const register = (c, manual) => { set(c, 'network', 'manual', manual); c.dialog({progress: P().t(T + 'register_automatically'), buttons: [], cancelable: false});
+        setTimeout(() => { if (c.ui.overlay === 'dialog') c.closeOverlay(); c.toast(P().t(T + 'registration_done')); c.render(); }, 1200); };
+      if (key === 'button_srch_netwrks_key') {
+        c.dialog({progress: P().t(T + 'load_networks_progress'), buttons: [], cancelable: false});
+        setTimeout(() => {
+          if (c.ui.overlay === 'dialog') c.closeOverlay();
+          const cur = MM.appPref(c, 'network', 'manual');
+          c.dialog({title: MM.appPrefStr(n.title), items: NETWORKS.map(x => ({html: `<span class="mmst-choice"><i class="mmw-radio${x === cur ? ' on' : ''}"></i><span>${c.safe(x)}</span></span>`})),
+            buttons: [{label: MM.text('framework').t('cancel')}], onItem: i => register(c, NETWORKS[i])});
+        }, 1500);
+        return true;
+      }
+      if (key === 'button_auto_select_key') { register(c, undefined); return true; }
       if (key === 'button_apn_key') { c.open('settings', 'xml:apn_settings'); return true; }
       if (key === 'button_roaming_key' && !MM.appPref(c, 'network', key, false)) { c.dialog({title: P().t(T + 'roaming_alert_title'), message: P().t(T + 'roaming_warning'), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok'), action: c => set(c, 'network', key, true)}]}); return true; }
       return false;

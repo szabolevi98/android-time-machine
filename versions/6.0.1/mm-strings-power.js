@@ -64,5 +64,29 @@ MM.strings('power', {
 "de": "OK",
 "fr": "OK",
 "es": "Aceptar"
+},
+"bugreport_title": {
+"res": "bullhead:framework:bugreport_title",
+"en": "Take bug report",
+"hu": "Hibajelentés készítése",
+"de": "Fehlerbericht abrufen",
+"fr": "Créer un rapport de bug",
+"es": "Crear informe de errores"
+},
+"bugreport_message": {
+"res": "bullhead:framework:bugreport_message",
+"en": "This will collect information about your current device state, to send as an e-mail message. It will take a little time from starting the bug report until it is ready to be sent; please be patient.",
+"hu": "Ezzel információt fog gyűjteni az eszköz jelenlegi állapotáról, amelyet a rendszer e-mailben fog elküldeni. Kérjük, legyen türelemmel, amíg a hibajelentés elkészül, és küldhető állapotba kerül.",
+"de": "Bei diesem Fehlerbericht werden Daten zum aktuellen Status Ihres Geräts erfasst und als E-Mail versandt. Vom Start des Berichts bis zu seinem Versand kann es eine Weile dauern. Bitte haben Sie etwas Geduld.",
+"fr": "Cela permet de recueillir des informations concernant l'état actuel de votre appareil. Ces informations sont ensuite envoyées sous forme d'e-mail. Merci de patienter pendant la préparation du rapport de bug. Cette opération peut prendre quelques instants.",
+"es": "Se recopilará información sobre el estado actual de tu dispositivo y se enviará por correo electrónico. Pasarán unos minutos desde que empiece a generarse el informe de errores hasta que se envíe."
+},
+"report": {
+"res": "bullhead:framework:report",
+"en": "Report",
+"hu": "Jelentés",
+"de": "Bericht",
+"fr": "Rapport",
+"es": "Informar"
 }
 });

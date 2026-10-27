@@ -2622,6 +2622,38 @@ MM.strings('appprefs', {
 "fr": "Des frais importants peuvent s'appliquer.",
 "es": "El coste de este servicio puede ser significativo."
 },
+"TeleService/load_networks_progress": {
+"res": "bullhead:TeleService:load_networks_progress",
+"en": "Searching…",
+"hu": "Keresés…",
+"de": "Suche läuft...",
+"fr": "Recherche...",
+"es": "Buscando..."
+},
+"TeleService/register_automatically": {
+"res": "bullhead:TeleService:register_automatically",
+"en": "Automatic registration…",
+"hu": "Automatikus regisztráció...",
+"de": "Automatische Registrierung...",
+"fr": "Enregistrement automatique…",
+"es": "Registro automático..."
+},
+"TeleService/registration_done": {
+"res": "bullhead:TeleService:registration_done",
+"en": "Registered on network.",
+"hu": "Regisztrálva a hálózaton.",
+"de": "In Netzwerk registriert.",
+"fr": "Enregistré sur le réseau.",
+"es": "Conexión con la red establecida"
+},
+"TeleService/network_query_error": {
+"res": "bullhead:TeleService:network_query_error",
+"en": "Error while searching for networks.",
+"hu": "Hiba történt a hálózatok keresése közben.",
+"de": "Fehler bei der Netzwerksuche",
+"fr": "Une erreur s'est produite lors de la recherche de réseaux.",
+"es": "Se ha producido un error al buscar redes."
+},
 "TeleService/enabled_networks_choices": {
 "res": "bullhead:TeleService:enabled_networks_choices",
 "en": [

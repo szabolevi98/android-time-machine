@@ -213,7 +213,7 @@
       case 'Settings$ScreenLockSuggestionActivity': return secure;
       case 'Settings$FingerprintEnrollSuggestionActivity': return secure;
       case 'Settings$FingerprintSuggestionActivity': return prints !== 1;
-      case 'Settings$ZenModeAutomationSuggestionActivity': return (s.zenRules || []).some(r => r.enabled);
+      case 'Settings$ZenModeAutomationSuggestionActivity': return (s.zenRules || []).some(r => r.on);
       case 'WallpaperSuggestionActivity': return !!s.wallpaperSet;
       case 'Settings$WifiCallingSuggestionActivity': return true;
       // SuggestionFeatureProviderGoogleImpl: the Gservices flag settingsgoogle:should_show_backup_suggestion is off.

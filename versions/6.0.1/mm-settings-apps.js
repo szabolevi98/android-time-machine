@@ -242,6 +242,19 @@
       return true;
     }
   };
+  // ManageDefaultApps (default_apps.xml): the 5X has one candidate each, Chrome (DefaultBrowserPreference), Phone
+  // (DefaultPhonePreference) and Messenger (DefaultSmsPreference), set as the default; DefaultEmergencyPreference is
+  // left out (DEFAULT_EMERGENCY_APP_IS_CONFIGURABLE is false). A touch opens the AppListPreference with it checked.
+  const DEFAULTS = {default_browser: 'chrome', default_phone_app: 'phone', default_sms_app: 'messenger'};
+  MM.settingsHooks.default_apps = {
+    hidden: ['default_emergency_app'],
+    summary: (c, key) => DEFAULTS[key] ? appName(c, DEFAULTS[key]) : undefined,
+    click(c, key, n) {
+      if (!DEFAULTS[key]) return false;
+      c.dialog({title: MM.settingsStr(n.title), items: [{html: `<span class="mmst-choice"><i class="mmw-radio on"></i><span>${c.safe(appName(c, DEFAULTS[key]))}</span></span>`}], buttons: [{label: T().t('dlg_cancel')}]});
+      return true;
+    }
+  };
   MM.settingsHooks.advanced_apps = {
     click(c, key) {
       const t = T();

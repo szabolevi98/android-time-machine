@@ -89,7 +89,7 @@
         ${[[1, 2, 3], [4, 5, 6], [7, 8, 9]].map(r => `<div class="mmbo-row">${r.map(key).join('')}</div>`).join('')}<div class="mmbo-row"><i></i>${key(0)}<button type="button" class="mmbo-key" data-action="mmbo-enter"><img src="${A('sui-ic_done_wht.png')}" alt=""></button></div></div>${eca}</div>`;
     } else if (type === 'password') {
       view = `<div class="mmbo-view password"><i class="mmbo-space7"></i>${msg}<input class="mmbo-field" type="password" autocomplete="off" spellcheck="false"><i class="mmbo-space2"></i>${eca}</div>`;
-    } else view = `<div class="mmbo-view pattern">${msg}<div class="mmbo-pat">${MM.pattern.markup('mmbo-pattern')}</div>${eca}</div>`;
+    } else view = `<div class="mmbo-view pattern">${msg}<div class="mmbo-pat">${MM.pattern.markup(s.lock.visible === false ? 'mmbo-pattern stealth' : 'mmbo-pattern')}</div>${eca}</div>`;
     return `<div class="mmbo"><div class="mmbo-scrim"></div><div class="mmbo-container${st.lockedUntil > Date.now() ? ' locked' : ''}">${view}</div></div>`;
   }
   function checked(c, ok) {

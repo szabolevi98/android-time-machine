@@ -158,7 +158,14 @@
       if (s.brightnessAuto) return s.brightnessAdj < 0 ? 1 + s.brightnessAdj * 0.5 : 1;
       return 0.5 + 0.5 * (s.brightness / 255);
     },
-    applyBrightness(c) { const f = sys.brightness(c); c.el.screen.style.filter = f < 1 ? `brightness(${f.toFixed(3)})` : ''; },
+    // Color inversion (Accessibility's Secure.ACCESSIBILITY_DISPLAY_INVERSION_ENABLED, DisplayAdjustmentUtils'
+    // MATRIX_INVERT_COLOR: lightness inverted, hues kept) joins the brightness in the screen's filter.
+    applyBrightness(c) {
+      const f = sys.brightness(c), parts = [];
+      if (c.data.settings.a11y?.inversion) parts.push('invert(1) hue-rotate(180deg)');
+      if (f < 1) parts.push(`brightness(${f.toFixed(3)})`);
+      c.el.screen.style.filter = parts.join(' ');
+    },
     // Something changed: the status bar and an open shade draw it again.
     changed(c) {
       sys.applyBrightness(c);

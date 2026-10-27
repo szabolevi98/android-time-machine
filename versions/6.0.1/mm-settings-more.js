@@ -56,7 +56,7 @@
       const val = r => ({on_time: MM.elapsed(c, sinceMs * (key === 'screen' ? .3 : key === 'cell' ? 1 : .7)), no_coverage: MM.elapsed(c, 0), computed_power: `${Math.round(usedMah)} mAh`,
         cpu: MM.elapsed(c, sinceMs * e.share / 400), cpu_foreground: MM.elapsed(c, sinceMs * e.share / 1600), wake_lock: MM.elapsed(c, sinceMs * e.share / 900), gps: MM.elapsed(c, sinceMs * .01),
         data_wifi_send: String(Math.round(e.share * 37)), data_wifi_recv: String(Math.round(e.share * 112)), wifi_running: MM.elapsed(c, sinceMs)})[r];
-      const two = d.app ? `<div class="mmai-buttons"><button type="button" class="mmai-button" data-action="mmsx-battstop">${esc(c, t.t('battery_action_stop'))}</button><i></i><button type="button" class="mmai-button" data-action="mmsx-battinfo">${esc(c, t.t('battery_action_app_details'))}</button></div>`
+      const two = d.app ? `<div class="mmai-buttons"><button type="button" class="mmai-button" data-action="mmsx-battstop"${c.ui.battStopped ? ' disabled' : ''}>${esc(c, t.t('battery_action_stop'))}</button><i></i><button type="button" class="mmai-button" data-action="mmsx-battinfo">${esc(c, t.t('battery_action_app_details'))}</button></div>`
         : d.button ? `<div class="mmai-buttons"><button type="button" class="mmai-button" data-action="mmsx-battgo">${esc(c, t.t(d.button[0]))}</button></div>` : '';
       return `<div class="mmst-list"><div class="mmsx-batthead">${icon}<span><b>${esc(c, t.t(d.label))}</b><i class="mmsx-bar"><i style="width:${e.of.toFixed(1)}%"></i></i></span><em>${esc(c, pct(c, e.share))}</em></div>${two}
         ${d.app ? `<div class="mmst-cat">${esc(c, t.t('controls_subtitle'))}</div><button type="button" class="mmst-pref" data-action="mmsx-batthp"><span class="mmst-texts"><span class="mmst-title">${esc(c, t.t('high_power_apps'))}</span></span></button>` : ''}
@@ -69,7 +69,8 @@
       if (name === 'mmsx-battgo') { go(c, d.button[1], ''); return true; }
       if (name === 'mmsx-batthp') { go(c, 'high-power', t.t('high_power_apps')); return true; }
       if (name === 'mmsx-battinfo') { go(c, 'high-power', t.t('high_power_apps')); return true; }
-      if (name === 'mmsx-battstop') { c.dialog({title: t.t('force_stop_dlg_title'), message: t.t('force_stop_dlg_text'), buttons: [{label: t.t('dlg_cancel')}, {label: t.t('dlg_ok')}]}); return true; }
+      // PowerUsageDetail.killProcesses force-stops the entry's packages; checkForceStop then greys the button.
+      if (name === 'mmsx-battstop') { c.dialog({title: t.t('force_stop_dlg_title'), message: t.t('force_stop_dlg_text'), buttons: [{label: t.t('dlg_cancel')}, {label: t.t('dlg_ok'), action: c => { c.ui.battStopped = true; c.render(); }}]}); return true; }
       return false;
     }
   };
@@ -93,13 +94,16 @@
     title: () => T().t('PrebuiltGmsCore/common_google_platform_settings') || 'Google',
     actions: c => MM.menu.button(c),
     render(c) {
-      const t = T(), off = new Set(S(c).syncOff || []);
+      // AccountSyncSettings.setFeedsState: with auto-sync off (oneTimeSyncMode) every row is checked and reads
+      // sync_one_time_sync; a touch syncs that one once instead of switching it.
+      const t = T(), auto = S(c).autoSync ?? true, off = new Set(auto ? S(c).syncOff || [] : []);
       return `<div class="mmst-list"><div class="mmsx-acct big"><img src="assets/gms-auth_gls_ic_google_selected.png" alt=""><span><b>${esc(c, MM.account.email)}</b><small>${esc(c, t.t(off.size === (MM.syncAdapters || []).length ? 'sync_disabled' : 'sync_enabled'))}</small></span></div>
-        ${(MM.syncAdapters || []).map(a => `<button type="button" class="mmst-pref" data-action="mmsx-sync" data-a="${esc(c, a.authority)}"><span class="mmst-texts"><span class="mmst-title">${esc(c, a[c.lang] || a.en)}</span><span class="mmst-summary">${esc(c, off.has(a.authority) ? t.t('sync_disabled') : t.fmt('last_synced', null, lastSync(c)))}</span></span><span class="mmst-widget"><i class="mmst-check${off.has(a.authority) ? '' : ' on'}"></i></span></button>`).join('')}</div>`;
+        ${(MM.syncAdapters || []).map(a => `<button type="button" class="mmst-pref" data-action="mmsx-sync" data-a="${esc(c, a.authority)}"><span class="mmst-texts"><span class="mmst-title">${esc(c, a[c.lang] || a.en)}</span><span class="mmst-summary">${esc(c, !auto ? t.fmt('sync_one_time_sync', null, t.fmt('last_synced', null, lastSync(c))) : off.has(a.authority) ? t.t('sync_disabled') : t.fmt('last_synced', null, lastSync(c)))}</span></span><span class="mmst-widget"><i class="mmst-check${off.has(a.authority) ? '' : ' on'}"></i></span></button>`).join('')}</div>`;
     },
     action(c, name, el) {
       const t = T(), s = S(c);
       if (name === 'mm-menu') { c.menu([{label: t.t('sync_menu_sync_now'), action: c => { s.lastSync = Date.now(); c.save(); c.render(); }}]); return true; }
+      if (name === 'mmsx-sync' && !(s.autoSync ?? true)) { s.lastSync = Date.now(); c.save(); c.render(); return true; }
       if (name === 'mmsx-sync') { const a = el.dataset.a, off = new Set(s.syncOff || []); off.has(a) ? off.delete(a) : off.add(a); s.syncOff = [...off]; c.save(); c.render(); return true; }
       return false;
     }

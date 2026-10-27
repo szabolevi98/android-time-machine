@@ -27,7 +27,7 @@ call_feature_setting gsm_umts_call_options gsm_umts_additional_options voicemail
 +sum_cfu_disabled +sum_cfb_disabled +sum_cfnry_disabled +sum_cfnrc_disabled +manage_fdn_list +fdn_disabled
 [network] TeleService MobileNetworkSettings
 network_setting gsm_umts_options carrier_select
-+roaming_alert_title +roaming_warning
++roaming_alert_title +roaming_warning +load_networks_progress +register_automatically +registration_done +network_query_error
 [quickresponses] Telecom RespondViaSmsSettings
 respond_via_sms_settings
 [cellbroadcast] CellBroadcastReceiver CellBroadcastSettings

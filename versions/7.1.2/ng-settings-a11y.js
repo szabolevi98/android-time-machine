@@ -57,13 +57,16 @@
       const a = a11y(c);
       if (key === 'toggle_lock_screen_rotation_preference') return !S(c).rotationLocked;
       if (key === 'select_long_press_timeout_preference') return String(a.longPress ?? 500);
+      // Color inversion is Secure.ACCESSIBILITY_DISPLAY_INVERSION_ENABLED, the same value as the Quick Settings tile.
+      if (key === 'toggle_inversion_preference') return !!S(c).inversion;
       return SWITCHES[key] ? !!a[SWITCHES[key]] : undefined;
     },
     set(c, key, v) {
       const s = S(c), a = a11y(c);
       if (key === 'toggle_lock_screen_rotation_preference') { s.rotationLocked = !v; NG.system?.changed(c); return true; }
       if (key === 'select_long_press_timeout_preference') { a.longPress = +v; return true; }
-      if (SWITCHES[key]) { a[SWITCHES[key]] = v; if (key === 'toggle_inversion_preference') NG.system?.changed(c); return true; }
+      if (key === 'toggle_inversion_preference') { NG.system.setInversion(c, v); return true; }
+      if (SWITCHES[key]) { a[SWITCHES[key]] = v; return true; }
       return false;
     },
     summary(c, key) {

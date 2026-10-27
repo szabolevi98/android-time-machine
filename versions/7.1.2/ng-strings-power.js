@@ -65,6 +65,14 @@ NG.strings('power', {
 "fr": "OK",
 "es": "Aceptar"
 },
+"bugreport_title": {
+"res": "angler:framework:bugreport_title",
+"en": "Take bug report",
+"hu": "Hibajelentés készítése",
+"de": "Fehlerbericht abrufen",
+"fr": "Créer un rapport de bug",
+"es": "Crear informe de errores"
+},
 "safeMode": {
 "res": "angler:framework:safeMode",
 "en": "Safe mode",

@@ -37,6 +37,42 @@
   const X = () => NG.settingsXml;
   const radio = (c, label, on) => ({html: `<span class="ngst-choice"><i class="ngw-radio ngst-radio${on ? ' on' : ''}"></i><span>${c.safe(label)}</span></span>`});
   let core = null;
+  // IccLockSettings (sim_lock_settings.xml): the switch and Change SIM PIN open EditPinPreference's dialog
+  // (setDialogValues: the prompt as the message, an error before it; reasonablePin 4–8 digits). The logic is 6.0.1's.
+  function simPin(c, mode) {
+    const t = NG.text('settingsx'), s = S(c);
+    let step = mode === 'change' ? 'old' : 'pin', typed = '', fresh = '', error = '';
+    const title = () => t.t(mode === 'change' ? 'sim_change_pin' : s.simLock ? 'sim_disable_sim_lock' : 'sim_enable_sim_lock');
+    const prompt = () => t.t({pin: 'sim_enter_pin', old: 'sim_enter_old', new: 'sim_enter_new', again: 'sim_reenter_new'}[step]);
+    const open = () => {
+      const message = (error ? t.t(error) + '\n' : '') + prompt(); error = '';
+      c.dialog({title: title(), message, html: '<input class="ngwf-edit" type="password" inputmode="numeric" maxlength="8" autocomplete="off">',
+        mount(c, win) { typed = ''; const f = win.querySelector('input'); f.addEventListener('input', () => { f.value = f.value.replace(/\D/g, ''); typed = f.value; }); setTimeout(() => f.focus(), 50); },
+        buttons: [{label: t.t('sim_enter_cancel')}, {label: t.t('sim_enter_ok'), action: c => {
+          const v = typed;
+          if (v.length < 4) { error = 'sim_bad_pin'; open(); return; }
+          if (step === 'pin' || step === 'old') {
+            if (s.simPin && v !== s.simPin) { c.toast(t.t(mode === 'change' ? 'sim_change_failed' : 'sim_lock_failed')); return; }
+            if (!s.simPin) s.simPin = v;
+            if (mode === 'toggle') { s.simLock = !s.simLock; c.save(); c.render(); return; }
+            step = 'new'; open(); return;
+          }
+          if (step === 'new') { fresh = v; step = 'again'; open(); return; }
+          if (v !== fresh) { step = 'new'; error = 'sim_pins_dont_match'; open(); return; }
+          s.simPin = fresh; c.save(); c.toast(t.t('sim_change_succeeded')); c.render();
+        }}]});
+    };
+    open();
+  }
+  H.sim_lock_settings = {
+    get: (c, key) => key === 'sim_toggle' ? !!S(c).simLock : undefined,
+    disabled: (c, key) => key === 'sim_pin' && !S(c).simLock,
+    click(c, key) {
+      if (key === 'sim_toggle') { simPin(c, 'toggle'); return true; }
+      if (key === 'sim_pin') { simPin(c, 'change'); return true; }
+      return false;
+    }
+  };
   NG.register('settings-security', {app: false, init(c) { core = c; }, render: () => ''});
   NG.settingsFragments['com.android.settings.SecuritySettings'] = 'xml:security';
 
@@ -99,6 +135,7 @@
       if (key === 'credentials_install') { c.toast(t.t('CertInstaller/no_cert_file_found')); return true; }
       if (key === 'trust_agent') { NG.requireUnlock(c, () => { c.open('settings'); NG.settingsGo(c, 'smartlock', trustTitle()); }); return true; }
       if (key === 'sim_lock_settings') { NG.settingsGo(c, 'xml:sim_lock_settings', t.t('sim_lock_settings')); return true; }
+      if (key === 'usage_access') { NG.settingsGo(c, 'usage-access', t.t('usage_access_title')); return true; }
       if (key === 'crypt_keeper_encrypt_title') return true;
       if (key === 'toggle_install_applications' && !s.unknownSources) {
         c.dialog({message: t.t('install_all_warning'), buttons: [{label: t.t('no')}, {label: t.t('yes'), action: c => { s.unknownSources = true; c.save(); c.render(); }}]});
@@ -308,7 +345,7 @@
       const t = T(), l = lock(c), type = l.type, err = c.ui.confirmError || '';
       const head = `<div class="ngsc-cheader">${c.safe(t.t(`lockpassword_confirm_your_${type}_header`))}</div><div class="ngsc-details">${c.safe(t.t(`lockpassword_confirm_your_${type}_generic`))}</div>
         <button type="button" class="ngsc-ccancel" data-action="ngsc-ccancel">${c.safe(t.t('cancel'))}</button>`;
-      if (type === 'pattern') return `<div class="ngsc-confirm pattern">${head}<div class="ngsc-cpat">${NG.pattern.markup('ngsc-pattern ngsc-cpattern')}</div><div class="ngsc-error">${c.safe(err)}</div></div>`;
+      if (type === 'pattern') return `<div class="ngsc-confirm pattern">${head}<div class="ngsc-cpat">${NG.pattern.markup(lock(c).visible === false ? 'ngsc-pattern ngsc-cpattern stealth' : 'ngsc-pattern ngsc-cpattern')}</div><div class="ngsc-error">${c.safe(err)}</div></div>`;
       return `<div class="ngsc-confirm">${head}<i class="ngsc-fill"></i><input class="ngsc-centry" type="password" ${type === 'pin' ? 'inputmode="numeric"' : ''} autocomplete="off"><div class="ngsc-error">${c.safe(err)}</div></div>`;
     },
     mount(c, root) {
@@ -354,5 +391,49 @@
       return false;
     },
     back(c) { S(c).lockNotifications = c.ui.redaction ?? 'hide'; c.ui.redaction = null; c.save(); done(c); return true; }
+  };
+
+  /* TrustAgentSettings.updateAgents: the dummy row of trust_agent_settings.xml gives way to a SwitchPreference per
+     trust agent the image installs, Google Play services' Smart Lock (Google), on until switched off. */
+  X().trust_agent_settings.c = [{t: 'SwitchPreference', key: 'smartlock_agent'}];
+  H.trust_agent_settings = {
+    // The row is the agent service's label (GoogleTrustAgent: auth_personal_unlocking_service_name).
+    title: (c, key) => key === 'smartlock_agent' ? T().t('PrebuiltGmsCore/auth_personal_unlocking_service_name') : undefined,
+    get: (c, key) => key === 'smartlock_agent' ? S(c).trustAgentOff !== true : undefined,
+    set(c, key, v) { if (key !== 'smartlock_agent') return false; S(c).trustAgentOff = !v; return true; }
+  };
+
+  /* Apps with usage access / Special access › Usage access (ManageApplications, LIST_TYPE_USAGE_ACCESS):
+     AppStateUsageBridge's packages that request PACKAGE_USAGE_STATS, without "android" and Settings itself
+     (shouldIgnorePackage): on the 6P Google Play services, Google Play Store and Smart Storage, all privileged, so On
+     (ManageApplications' switch_on_text). A row opens UsageAccessDetails (app_ops_permissions_details.xml under the
+     AppInfoWithHeader header): Permit usage access and the description; App usage preferences goes (none of the three
+     has a USAGE_ACCESS_CONFIG activity). */
+  const USAGE = ['com.google.android.gms', 'com.android.vending', 'com.google.android.storagemanager'];
+  const pkgOf = pkg => (NG.systemPackages || []).filter(p => p.pkg === pkg).find(p => p.label.en !== pkg) || {pkg, label: {en: pkg}, icon: 'assets/fw-sym_def_app_icon.png'};
+  const pkgLabel = (c, pkg) => { const p = pkgOf(pkg); return p.label[c.lang] || p.label.en; };
+  const usageOn = (c, pkg) => !(S(c).usageOff || []).includes(pkg);
+  const usageRow = (c, pkg, sub, action) => `<${action ? `button type="button" data-action="${action}" data-app="${pkg}"` : 'div'} class="ngap-row${action ? '' : ' static'}"><img src="${pkgOf(pkg).icon}" alt=""><span class="ngap-texts"><span class="ngap-line"><span class="ngap-label">${c.safe(pkgLabel(c, pkg))}</span></span>${sub ? `<span class="ngap-sub">${c.safe(sub)}</span>` : ''}</span></${action ? 'button' : 'div'}>`;
+  NG.settingsScreens['usage-access'] = {
+    title: () => T().t('usage_access_title'),
+    render(c) {
+      const t = T(), col = new Intl.Collator(c.locale());
+      return `<div class="ngst-list">${[...USAGE].sort((a, b) => col.compare(pkgLabel(c, a), pkgLabel(c, b))).map(pkg => usageRow(c, pkg, t.t(usageOn(c, pkg) ? 'switch_on_text' : 'switch_off_text'), 'ngsc-usage')).join('')}</div>`;
+    },
+    action(c, name, el) {
+      if (name !== 'ngsc-usage') return false;
+      c.ui.usagePkg = el.dataset.app; NG.settingsGo(c, 'xml:app_ops_permissions_details', T().t('usage_access')); return true;
+    }
+  };
+  H.app_ops_permissions_details = {
+    hidden: ['app_ops_settings_preference'],
+    top: c => `<div class="ngap-head">${usageRow(c, c.ui.usagePkg, '', '')}</div>`,
+    title: (c, key) => key === 'app_ops_settings_switch' ? T().t('permit_usage_access') : undefined,
+    summary: (c, key) => key === 'app_ops_settings_description' ? T().t('usage_access_description') : undefined,
+    get: (c, key) => key === 'app_ops_settings_switch' ? usageOn(c, c.ui.usagePkg) : undefined,
+    set(c, key, v) {
+      if (key !== 'app_ops_settings_switch') return false;
+      const off = new Set(S(c).usageOff || []); v ? off.delete(c.ui.usagePkg) : off.add(c.ui.usagePkg); S(c).usageOff = [...off]; return true;
+    }
   };
 })();
