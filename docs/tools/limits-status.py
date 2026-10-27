@@ -17,7 +17,7 @@ def status(tid):
 
 if sys.argv[1] == '--next':
     # Each approved round's order: the rows of its table, | n | Tnn | ...
-    for name in ('Második kör', 'Harmadik kör', 'Negyedik kör', 'Ötödik kör', 'Hatodik kör'):
+    for name in ('Második kör', 'Harmadik kör', 'Negyedik kör', 'Ötödik kör', 'Hatodik kör', 'Hetedik kör'):
         part = s[s.index('### ' + name):]
         part = part[:part.index('\n### ', 5)]
         for n, tid in re.findall(r'^\| (\d+) \| (T\d+) \|', part, re.M):

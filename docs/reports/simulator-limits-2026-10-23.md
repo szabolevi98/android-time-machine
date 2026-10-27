@@ -394,6 +394,302 @@ editors-more.js) összevetettük a 6.0.1/7.1.2 sablonokkal.
 
 **A hatodik kör kész (2026-10-27):** az összevetés egyetlen valódi hiánya a Keepé volt (T70). Deploy csak kérésre.
 
+### Hetedik kör — rendszerappok összevetése az 5.1.1-gyel (2026-10-27)
+
+A hatodik kör csak a tíz Play-appot vetette össze. A tulajdonos kérésére (2026-10-27) most minden további előtelepített
+app és a rendszerfelület 5.1.1-es kódját vetettük össze a 6.0.1 és a 7.1.2 kódjával, funkcióról funkcióra: Telefon,
+Névjegyek, Messenger, Kamera, Fotók, Óra, Számológép, Naptár, Chrome, Gmail, Hangouts, Maps, YouTube, Drive, Letöltések,
+Play Store, Play Music, Play Movies & TV, Play Games, Google Settings, Wallet, a teljes Beállítások, kezdőképernyő,
+zárképernyő, értesítések, Recents, hangerő, főkapcsoló-menü, billentyűzet, Google Now és a szimulátorszintű funkciók.
+
+Rendben (5.1.1 szintjén vagy felette): Számológép, Google Settings, Wallet → Android Pay, zárképernyő, hangerőpanel,
+billentyűzet, Easter egg, bekapcsolási animáció, Location, Printing, About phone; a Beállításokban a Wi-Fi lista,
+Bluetooth, Display, Sound, Storage, Users (a T71 két 7.1.2-es hibáján kívül). A 7.1.2 a legtöbb appban közel van az
+5.1.1-hez; a hiányok zöme a 6.0.1-é. Szándékos korlát marad: Help/Feedback, külső linkek, valódi fiókkezelés,
+fizetés, hálózati szolgáltatás, fizikai hardver; nem hiány, amit a valódi 6/7-es app elhagyott (APK-ellenőrzéssel).
+
+Sorrend: előbb az apró hibák és halott sorok, aztán appok szerint, végül a nagy rendszerszintű tételek.
+
+| # | Tétel | Csomag |
+|---|---|---|
+| 1 | T71 | Beállítások: apró hibák és halott sorok |
+| 2 | T72 | Telefon |
+| 3 | T73 | Névjegyek |
+| 4 | T74 | Messenger |
+| 5 | T75 | Óra |
+| 6 | T76 | Naptár |
+| 7 | T77 | Kamera |
+| 8 | T78 | Fotók |
+| 9 | T79 | Chrome |
+| 10 | T80 | Gmail |
+| 11 | T81 | Hangouts |
+| 12 | T82 | Maps |
+| 13 | T83 | YouTube, Drive, Letöltések (6.0.1) |
+| 14 | T84 | Play Store |
+| 15 | T85 | Play Music |
+| 16 | T86 | Play Movies & TV |
+| 17 | T87 | Play Games |
+| 18 | T88 | Beállítások: hálózat és eszköz (nagyobb tételek) |
+| 19 | T89 | Beállítások: személyes és rendszer (nagyobb tételek) |
+| 20 | T90 | Kezdőképernyő |
+| 21 | T91 | Google Now |
+| 22 | T92 | Értesítések kibontása és műveletei |
+| 23 | T93 | Hangok és értesítési fény |
+
+#### T71 — Beállítások: apró hibák és halott sorok
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - 7.1.2: a DND-szabály javaslat `r.enabled`-et olvas, a szabály `r.on`-t tárol (ng-settings.js:216).
+  - 7.1.2: Users — már beállított felhasználónál is „Set up user now?” (ng-settings-device.js:217); 6.0.1 és 5.1.1 helyes.
+  - 7.1.2: Színinverzió — az Accessibility kapcsoló `a11y.inversion`-t ír, a szűrő `settings.inversion`-t olvas (ng-system.js:166).
+  - 7.1.2: SIM card lock — nincs PIN-kérés, a Change SIM PIN halott (6.0.1 mm-settings-extra2.js:31-61 a pár).
+  - 6.0.1: Auto-sync ki — az account-sync nem szürkíti a szinkronadaptereket (5.1.1 simulator.js:1466; 7.1.2 ng-settings-accounts.js:58).
+  - 6.0.1: Backup account — mindig „No account”, a sor a missing kártyát nyitja (7.1.2 ng-settings-personal.js:183 a pár).
+  - 6.0.1: Default apps — Browser/Phone/SMS sor halott (7.1.2 ng-settings-apps.js:305-319 a pár).
+  - 6.0.1: Data usage overflow Restrict background data csak bekapcsolható; Battery részlet Force stop OK halott.
+  - 6.0.1: Network operators — Search networks rejtett, Choose automatically halott (7.1.2 ng-settings-extra.js:15-28).
+  - 6.0.1: Color correction — nincs switch bar, nem kapcsolható be (7.1.2 ng-settings-a11y.js:136).
+  - Mindkettő: Trust agents — üres dummy kapcsoló a „Smart Lock (Google)” helyett (5.1.1 lp-security.js:31).
+  - Mindkettő: Apps with usage access — a sima Apps listát nyitja (5.1.1 lp-security.js:35).
+  - Mindkettő: Cast screen — üres oldal; 5.1.1-ben „No nearby devices were found.” és Enable wireless display (simulator.js:1121, 1388).
+  - Mindkettő: Make pattern visible — a zárképernyő nem olvassa (5.1.1 lockscreen.js:45).
+  - Mindkettő: a Power menüből hiányzik a Take bug report, ha a fejlesztői kapcsoló be van (5.1.1 global-actions.js:17).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T72 — Telefon
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - 6.0.1: Clear call history (5.1.1 lp-dialer.js:183; 7.1.2 ng-phone.js:346; bullhead `recentCalls_deleteAll`).
+  - Mindkettő: a Voicemail number és a voicemail Sound sor halott (EditPhoneNumberPreference / VoicemailRingtonePreference; 5.1.1 lp-dialer-prefs.js:73-77).
+  - 6.0.1: Sort by / Name format nem hat, és a Telefon és a Névjegyek külön tárolja (5.1.1 közös `contactPrefs`; 7.1.2 ng-people.js:71).
+  - APK-ellenőrzés: Caller ID by Google beállítás (mindkettő), All/Missed hívásnapló-képernyő (7.1.2).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T73 — Névjegyek
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - Mindkettő: Import/export csak színlel — 5.1.1 teljes vCardot ír és olvas (lp-people-io.js:157-188), egy/több/összes választással; az export minden szerkeszthető mezőt írjon.
+  - 7.1.2: a `pick:vcf` / `save:contacts.vcf` cél nincs kezelve a Files-ban; Import from SIM card csak toast.
+  - Mindkettő: Customize — csak „All other contacts”, nincs csoport és fiókfejléc (5.1.1 lp-people-io.js:197-219).
+  - 6.0.1: a szerkesztő menüjéből hiányzik a Link, Set ringtone, All calls to voicemail (7.1.2 ng-contacts.js:279-289; bullhead `menu_joinAggregate`).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T74 — Messenger
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - 6.0.1: egyes üzenet műveletei (Forward, View details, Delete; 7.1.2 ng-messenger.js:452-470 a pár).
+  - Mindkettő: a piszkozat nem mentődik, a listában nincs „Draft” (5.1.1 simulator.js:1661, messaging.js:37,86).
+  - 6.0.1: kijelölő mód (archive, block, delete) és swipe-archive (7.1.2 ng-messenger.js:385) — APK-ellenőrzés.
+  - APK-ellenőrzés: SMS karakterszámláló (5.1.1 messaging.js:20-33).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T75 — Óra
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - Mindkettő: az ébresztő sosem szól — 5.1.1 riaszt (simulator.js:1911), Snooze/Dismiss, Silence after, Snooze length, hangerőgomb-viselkedés.
+  - Mindkettő: Timer — több időzítő, +1 perc, törlés, „Time's up” értesítés, mentett állapot (5.1.1 lp-deskclock.js:140).
+  - Mindkettő: Style (Analog) és Automatic home clock csak tárolódik.
+  - 6.0.1: ébresztő csengőhang-választó és Night mode (7.1.2 ng-clock.js:191, 214 a pár).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T76 — Naptár
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - Mindkettő: a Settings General és Events from Gmail sora halott (5.1.1 calendar-prefs.js: hét kezdete, időzóna, elutasított események, alapidőtartam, értesítések, gyors válaszok, naptáronkénti Sync).
+  - Mindkettő: eseményszerkesztő — ismétlődés, emlékeztető, vendégek, elérhetőség, láthatóság, időzóna, záródátum; ismétlődő esemény szerkesztés/törlés-hatóköre; az emlékeztető értesítést küld (5.1.1 calendar.js, simulator.js:1845,1854).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T77 — Kamera
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - 6.0.1: Photo Sphere, Lens Blur és Panorama csak név — sima képet ment (5.1.1 lp-camera.js:135,167, lp-sphere.js, lp-refocus.js; 7.1.2 ng-camera-capture.js a pár).
+  - 6.0.1: rácsvonal és a Settings kapcsolói (grid, manual exposure, képméret → előnézet) nem hatnak.
+  - Mindkettő: tap to focus gyűrű (5.1.1 lp-camera.js:147; angler `tap_to_focus`).
+  - Mindkettő: kérésre fotózás (Retake / Done / Cancel) más appból (5.1.1 lp-camera.js:75,95).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T78 — Fotók
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - Mindkettő: 360°-os Photo Sphere nézet és Lens Blur újrafókusz a Fotókból (5.1.1 photos.js:112) — APK-ellenőrzés.
+  - 6.0.1: lapozás a nézegetőben, videólejátszás; a videó Edit gombja „Slideshow” toastot ad (hiba).
+  - 6.0.1: több kép kijelölése megosztásra/kukába.
+  - 6.0.1: a szerkesztőből hiányzik a szűrő és a vágás (5.1.1 plus-editor.js; 7.1.2 a pár).
+  - 7.1.2: a nézegető menüjéből hiányzik a Use as és a Print (kulcsok megvannak, ng-photos.js:30).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T79 — Chrome
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - 6.0.1: több lap, lapváltó, Close all tabs (7.1.2 ng-chrome.js:73-88 a pár).
+  - Mindkettő: Clear browsing data párbeszéd (5.1.1 chrome.js:65-73).
+  - Mindkettő: keresőmotor választása, az omnibox használja (5.1.1 chrome.js:101-112).
+  - Mindkettő: Text scaling csúszka és hatás (5.1.1 chrome.js:190,220-240).
+  - 6.0.1: Site settings (7.1.2 ng-chrome-sites.js a pár); mindkettő: Reduce data usage kapcsoló és statisztika.
+  - 7.1.2: Print — APK-ellenőrzés.
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T80 — Gmail
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - Mindkettő: kijelölő sáv (archive, delete, mark read) (5.1.1 lp-email.js:195-198).
+  - Mindkettő: Cc/Bcc (5.1.1 lp-email.js:181).
+  - 6.0.1: a piszkozat beszélgetésként nyílik, nem szerkesztőben.
+  - Mindkettő: Vacation responder, Manage labels, Days of mail to sync (5.1.1 gmail.js:53-133).
+  - Mindkettő: az aláírás és a kategóriák nem hatnak (5.1.1 simulator.js:2051, gmail.js:181,225).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T81 — Hangouts
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - 6.0.1: csatolmány (fotó, kép, hely, emoji), Delete conversation, People & options (csoport, átnevezés, kilépés, tiltás, Blocked people), Snooze sáv és értesítési beállítás hatása (7.1.2 a pár).
+  - Mindkettő: „How others get in touch with you” (5.1.1 hangouts-prefs.js:5-6).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T82 — Maps
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - Mindkettő: útvonal-beállítás (avoid highways/tolls/ferries) és lépéslista (5.1.1 maps-route.js:77-95).
+  - 6.0.1: közlekedési mód, kiindulópont, csere; Maps history; távolság-mértékegység (7.1.2 a pár).
+  - APK-ellenőrzés: Terrain réteg.
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T83 — YouTube, Drive, Letöltések (6.0.1)
+
+- **Érintett:** 6.0.1.
+- **Pótolandó:**
+  - YouTube: Clear watch/search history párbeszéd, Content location.
+  - Drive: mappák megnyitása, Move, Sort by, Filter by, Share link, Send file, PDF/kép megnyitása, Restore a kukából (7.1.2 a pár).
+  - Letöltések / dokumentumválasztó: Sort by, fájl megnyitása, gyökerek (Recent, Images, Videos, Audio, Downloads, mappák) (7.1.2 ng-documents.js a pár).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T84 — Play Store
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - 6.0.1: Settings sorok (auto-update, download mode, content level, purchase auth, clear history) (7.1.2 ng-play-prefs.js a pár).
+  - 6.0.1: értékelés, Share, keresési javaslatok, Top/Categories fülek, Cancel download.
+  - My apps „All” fül Remove-val (6.0.1 nincs fül, 7.1.2 nincs Remove); „Downloading…” értesítés; alkalmazásonkénti Auto-update; kártya-overflow; Similar, fejlesztői linkek, +1 (mindkettő).
+  - 7.1.2: mintavélemények és hisztogram (6.0.1 mm-play.js:111 a pár).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T85 — Play Music
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - 6.0.1: üres héj — lejátszás, album/előadó, fülek, sor, Now playing (thumbs, shuffle, repeat, seek), kártyamenük, lejátszási lista, mini lejátszó, zárképernyő-vezérlő, widget (7.1.2 ng-music.js a pár).
+  - 7.1.2: nincs demókönyvtár (5.1.1 music.js:5 hat számmal); vékonyabb menük (instant mix, playlistre, előadóra/albumra ugrás, Play next, shuffle).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T86 — Play Movies & TV
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - 6.0.1: üres héj — saját filmek és sorozatok, Watch Now haladással, lejátszó, letöltés/eltávolítás, Manage downloads, keresés (5.1.1 play-apps.js:204-251).
+  - 7.1.2: a könyvtár mindig üres; nincs saját cím, folytatás, pin/letöltés.
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T87 — Play Games
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - 6.0.1: a játékok nem koppinthatók; nincs részlet, achievementek, Play, Players, Explore, View in Play Store (5.1.1 play-apps.js:320-345).
+  - 7.1.2: Players üres; a részletből hiányoznak az achievementek; a beállításokból a Game Profile láthatóság, értesítések, Muted games (6.0.1 mm-gms.js:47 a pár).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T88 — Beállítások: hálózat és eszköz (nagyobb tételek)
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - Tanúsítványtelepítő (Wi-Fi Advanced és Security › Install from storage) (5.1.1 lp-certinstall.js).
+  - VPN profil szerkesztés, csatlakozás, törlés (6.0.1: semmi; 7.1.2: csak hozzáadás) (5.1.1 settings-system.js:287,316).
+  - APN lista, választás, hozzáadás/szerkesztés/törlés (5.1.1 settings-system.js:295,318).
+  - Data usage előző számlázási ciklus (5.1.1 settings-detail.js:28).
+  - DND automatikus szabályok tényleges bekapcsolása (5.1.1 lp-zen.js:63).
+  - Battery History details (APK-ellenőrzés); 6.0.1 Clear data / Clear cache valóban törölje az app tartalmát (7.1.2 ng-app-data.js:129).
+  - Process stats menü (APK-ellenőrzés), 6.0.1 Force stop a memória-részleten, 7.1.2 memória-részletoldal; 6.0.1 Wi-Fi Direct és WPS (7.1.2 ng-settings-extra.js:34).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T89 — Beállítások: személyes és rendszer (nagyobb tételek)
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - Képernyő-rögzítés: switch bar, zárolás feloldáskor, tű gomb a Recentsben, Back+Overview feloldás (5.1.1 lp-recents.js:73, simulator.js:877-882).
+  - 6.0.1: Google Keyboard Theme, Custom input styles, Advanced, Languages (7.1.2 Gboard a pár); hangbevitel szolgáltatás (APK-ellenőrzés).
+  - Dátum és idő: a beállított dátum, idő és időzóna hasson az óra-kijelzésre (5.1.1 deviceDate()).
+  - Kisegítő lehetőségek: nagyítás háromszoros koppintással; Large text / Font size és Touch & hold delay hatása.
+  - Fejlesztői beállítások: Show touches, Pointer location, Layout bounds, animációs skálák hatása.
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T90 — Kezdőképernyő
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - Élő átrendezés húzás közben, húzáskörvonal, mappa megnyitása fölötte (5.1.1 lp-launcher.js:18-50).
+  - Átrendezés nyitott mappán belül (5.1.1 simulator.js:3600-3635).
+  - 6.0.1: widget átméretezés, működő zene- és naptárwidget (7.1.2 a pár).
+  - Háttérkép-választó: kijelölő sáv törléssel, előnézet koppintásra; 7.1.2 tartsa meg a korábbi képeket; a háttér gördüljön a lapokkal.
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T91 — Google Now
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - 6.0.1: navigációs fiók, emlékeztetők idő/hely szerint ismétléssel, kártyahátlap (°C/°F), elvetés Undo-val (5.1.1 gel-now.js; 7.1.2 ng-google.js a pár).
+  - 7.1.2: emlékeztető helyválasztó, ismétlés, Undo.
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T92 — Értesítések kibontása és műveletei
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - 6.0.1: kibontott értesítés műveletgombokkal (Reply), két ujjas kibontás/összecsukás (5.1.1 lp-shade.js:94-104).
+  - 7.1.2: csak az első kibontott, a többi nem kapcsolható.
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
+#### T93 — Hangok és értesítési fény
+
+- **Érintett:** 6.0.1, 7.1.2.
+- **Pótolandó:**
+  - Csengőhang előhallgatása a választóban, ébresztő hangja (5.1.1 sounds.js) a Nexus 5X / 6P saját hangneveivel.
+  - Értesítési fény alvó képernyőn, ha a Pulse kapcsoló be van (APK-ellenőrzés a 6P-re).
+- **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
+- **Állapot:** Nyitott.
+
 ### Feladatcsomagok és készfeltételek
 
 **Az Ütem és — részcsomagnál — a Mostani rész az irányadó.** A teljes korábbi leírás későbbi jelöltként marad meg. Részcsomagnál a mag lezárásához csak a Mostani készfeltétel szükséges; a későbbi rész státusza ettől halasztott marad. Minden javítás commitja és ellenőrzése itt, a riport megfelelő T-lapján vezetendő.
