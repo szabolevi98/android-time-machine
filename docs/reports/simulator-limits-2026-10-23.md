@@ -306,7 +306,7 @@ location, észak, Share, Layers mentve, a saját settings.xml).
   fontban, kilogrammban és stone-ban; magasság (cm vagy ft/in); napi cél (aktív idő vagy lépés, Set a goal, Delete goal,
   Goal saved/deleted), amit a kerék használ; nem; mértékegységek (magasság, súly, távolság, energia); értesítések; mind a
   1.58/1.68 saját beállításkártyáinak szövegeivel.
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `8a65f59d`. Fit 1.58 / 1.68 az 5.1.1 T41 szintjén: tevékenységtípus-párbeszéd az APK összes típusával (az utóbbi 7 elöl, ActivitySpinnerAdapter), Discard changes? változás után, súly font / kilogramm / stone (st + lb), magasság cm vagy ft + in, cél (goal_card_menu: Edit goal, Delete goal; Active time vagy Steps each day; Add goal cél nélkül), amit a kerék követ; Settings: Basic information (Gender, Height, Weight), Units (magasság, súly, távolság, energia; 1.68-ban hidratálás is), értesítések. A korábbi kg/lb mentés átkerül a Units kártyára. Ellenőrzés: `tests/browser/play-fit.mjs` mindkét verzió, asztali és telefonos szélesség; `npm test` 260/260.
 
 #### T62 — Play Books az 5.1.1 szintjén
 
