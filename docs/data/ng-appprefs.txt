@@ -346,3 +346,5 @@ preferences gesture_preferences key_combo_preferences default_key_combo_preferen
 switch_access_preferences
 [earth] GoogleEarth -
 settings
+[newsstand] Newsstand -
+settings

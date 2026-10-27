@@ -5,9 +5,12 @@
    The home view lists the demo articles as cards; the library groups them by source; the saved view lists what was
    kept (or the APK's empty caption); Search finds articles by title or source ("No results found"). An article
    opens under its source with article_fragment_menu's Share and the keep / remove toggle (with its toast), in the
-   Article text size the overflow sets (Small, Normal, Large). The articles are the short made-up demo pieces of the
-   older versions' Newsstand (news-reader.js, copied by the generator; owner decision 2026-10-26), kept offline.
-   Explore, subscriptions, the store and Help & feedback keep the simulator's limit. */
+   Article text size (Small, Normal, Large) that Settings or the overflow sets. Settings is the APK's settings.xml on
+   the version's app settings screen (MM/NG.openPrefs; articleTextSize is the reader's). Downloaded only leaves only
+   the kept articles (else empty_list_caption_offline). The library has its tabs or sections as the version shows them
+   (3.5: News, Magazines, Topics; 4.5: the sources and My Magazines), Explore the APK's empty caption. The articles are
+   the short made-up demo pieces of the older versions' Newsstand (news-reader.js, copied by the generator; owner
+   decision 2026-10-26), kept offline. Subscriptions, the store and Help & feedback keep the simulator's limit. */
 (() => {
   'use strict';
   const T = () => MM.text('newsstand'), t = k => T().t(k);
@@ -26,9 +29,13 @@
     n3: {source: 'Weekend Kitchen', color: '#ef851c', title: 'Five autumn soups in thirty minutes', body: ['When the evenings get shorter, a pot of soup is the easiest dinner there is. All five of ours are on the table in half an hour.', 'Start with roasted squash and ginger, then leek and potato, a spiced lentil, a quick minestrone and a creamy mushroom that tastes like it took all afternoon.', 'Each one freezes well, so make a double batch on Sunday.']}
   };
   const HOME = ['n1', 'n2', 'n3', 'g2', 't1', 'k1'], ALL = [...new Set([...HOME, 'g1'])];
-  const CFG = {"theme": "dark", "drawer": true, "status": "#3f51b5", "help": "", "add": "bookmark_for_later", "remove": "remove_from_bookmarks", "added": "added_to_bookmarks", "removed": "removed_from_bookmarks", "emptySaved": "empty_list_caption_bookmarks", "views": [["home", "read_now_title", "ic_drawer_readnow"], ["library", "my_library_title", "ic_drawer_mylibrary"], ["saved", "saved_title", "ic_drawer_bookmarks"], ["explore", "explore_title", "ic_drawer_explore"]], "icon": {"menu": "", "back": "abc_ic_ab_back_mtrl_am_alpha", "search": "ic_search_wht_24dp", "share": "ic_share_wht_24dp", "save": "ic_bookmark_outline_wht_24dp", "saved": "ic_bookmark_wht_24dp"}};
+  const CFG = {"theme": "dark", "drawer": true, "tabs": [["news", "news_title"], ["magazines", "magazines_title"], ["topics", "topics_title"]], "status": "#3f51b5", "help": "", "add": "bookmark_for_later", "remove": "remove_from_bookmarks", "added": "added_to_bookmarks", "removed": "removed_from_bookmarks", "emptySaved": "empty_list_caption_bookmarks", "views": [["home", "read_now_title", "ic_drawer_readnow"], ["library", "my_library_title", "ic_drawer_mylibrary"], ["saved", "saved_title", "ic_drawer_bookmarks"], ["explore", "explore_title", "ic_drawer_explore"]], "icon": {"menu": "", "back": "abc_ic_ab_back_mtrl_am_alpha", "search": "ic_search_wht_24dp", "share": "ic_share_wht_24dp", "save": "ic_bookmark_outline_wht_24dp", "saved": "ic_bookmark_wht_24dp"}};
   const U = c => c.ui.newsstand ||= {view: 'home', drawer: false, search: false, query: '', article: ''};
-  const S = c => c.data.newsstand ||= {saved: [], size: 1};
+  const S = c => { const s = c.data.newsstand ||= {saved: []}; if (!('downloadedOnly' in s)) s.downloadedOnly = false; return s; };
+  // settings.xml's articleTextSize (entryValues SMALL, MEDIUM, LARGE), kept with the app's other settings.
+  const SIZE_VALUES = ['SMALL', 'MEDIUM', 'LARGE'];
+  const size = c => Math.max(0, SIZE_VALUES.indexOf(MM.appPref(c, 'newsstand', 'articleTextSize', S(c).size != null ? SIZE_VALUES[S(c).size] : 'MEDIUM')));
+  const setSize = (c, i) => { ((c.data.appPrefs ||= {}).newsstand ||= {}).articleTextSize = SIZE_VALUES[i]; c.save(); };
   const refuse = c => c.toast(c.t('This feature is not part of the simulator.'));
   const SIZES = ['article_text_size_small', 'article_text_size_normal', 'article_text_size_large'];
   // The drawer button is AppCompat's DrawerArrowDrawable (drawn in code); the alpha icons take the bar's colour.
@@ -37,14 +44,24 @@
   const card = (c, id) => { const a = ARTICLES[id]; return `<button type="button" class="mmns-card" data-action="mmns-open" data-id="${id}"><i style="background:${a.color}"></i><span><small>${c.safe(a.source)}</small><b>${c.safe(a.title)}</b><em>${c.safe(a.body[0])}</em></span></button>`; };
   function list(c) {
     const u = U(c), s = S(c), q = u.query.trim().toLocaleLowerCase();
+    const kept = id => !s.downloadedOnly || s.saved.includes(id), offline = `<div class="mmns-empty"><img src="${I('ic_empty_download')}" alt=""><p>${c.safe(t('empty_list_caption_offline'))}</p></div>`;
+    if (u.view === 'explore') return `<div class="mmns-empty"><p>${c.safe(t('empty_list_caption_edition'))}</p></div>`;
     if (u.search) { const found = q ? ALL.filter(id => (ARTICLES[id].title + ' ' + ARTICLES[id].source).toLocaleLowerCase().includes(q)) : []; return found.length ? found.map(id => card(c, id)).join('') : q ? `<p class="mmns-empty">${c.safe(t('empty_list_caption_search'))}</p>` : ''; }
     if (u.view === 'saved') return s.saved.length ? s.saved.map(id => card(c, id)).join('') : `<div class="mmns-empty"><img src="${I('ic_empty_bookmark')}" alt=""><p>${c.safe(t(CFG.emptySaved))}</p></div>`;
-    if (u.view === 'library') { const sources = [...new Set(ALL.map(id => ARTICLES[id].source))]; return sources.map(src => `<h3 class="mmns-source">${c.safe(src)}</h3>${ALL.filter(id => ARTICLES[id].source === src).map(id => card(c, id)).join('')}`).join(''); }
-    return HOME.map(id => card(c, id)).join('');
+    if (u.view === 'library') {
+      const tab = u.tab || 'news';
+      if (CFG.tabs.length && tab === 'magazines') return `<div class="mmns-empty"><p>${c.safe(t('empty_list_caption_my_magazines'))}</p></div>`;
+      if (CFG.tabs.length && tab === 'topics') return `<div class="mmns-empty"><p>${c.safe(t('empty_list_caption_edition'))}</p></div>`;
+      const ids = ALL.filter(kept), sources = [...new Set(ids.map(id => ARTICLES[id].source))];
+      const body = sources.map(src => `<h3 class="mmns-source">${c.safe(src)}</h3>${ids.filter(id => ARTICLES[id].source === src).map(id => card(c, id)).join('')}`).join('') || offline;
+      return CFG.tabs.length ? body : `${body}<h3 class="mmns-source">${c.safe(t('my_magazines_title'))}</h3><p class="mmns-empty small">${c.safe(t('empty_list_caption_my_magazines'))}</p>`;
+    }
+    const home = HOME.filter(kept);
+    return home.length ? home.map(id => card(c, id)).join('') : offline;
   }
   function article(c, id) {
     const a = ARTICLES[id], on = S(c).saved.includes(id);
-    return `<div class="mmns ${CFG.theme}"><header class="mmns-bar">${btn(c, 'mmns-close', t('abc_action_bar_up_description'), CFG.icon.back)}<b>${c.safe(a.source)}</b>${btn(c, 'mmns-share', t('share'), CFG.icon.share)}${btn(c, 'mmns-save', t(on ? CFG.remove : CFG.add), on ? CFG.icon.saved : CFG.icon.save, ` data-id="${id}" aria-pressed="${on}"`)}</header><article class="mmns-article size${S(c).size}"><i style="background:${a.color}"></i><h1>${c.safe(a.title)}</h1><p class="mmns-by">${c.safe(a.source)}</p>${a.body.map(p => `<p>${c.safe(p)}</p>`).join('')}</article></div>`;
+    return `<div class="mmns ${CFG.theme}"><header class="mmns-bar">${btn(c, 'mmns-close', t('abc_action_bar_up_description'), CFG.icon.back)}<b>${c.safe(a.source)}</b>${btn(c, 'mmns-share', t('share'), CFG.icon.share)}${btn(c, 'mmns-save', t(on ? CFG.remove : CFG.add), on ? CFG.icon.saved : CFG.icon.save, ` data-id="${id}" aria-pressed="${on}"`)}</header><article class="mmns-article size${size(c)}"><i style="background:${a.color}"></i><h1>${c.safe(a.title)}</h1><p class="mmns-by">${c.safe(a.source)}</p>${a.body.map(p => `<p>${c.safe(p)}</p>`).join('')}</article></div>`;
   }
   function render(c) {
     const u = U(c);
@@ -53,19 +70,21 @@
     const bar = u.search
       ? `<header class="mmns-bar">${btn(c, 'mmns-search-close', t('abc_action_bar_up_description'), CFG.icon.back)}<input class="mmns-query" data-ns-search value="${c.safe(u.query)}" placeholder="${c.safe(t('search'))}" aria-label="${c.safe(t('search'))}" autocomplete="off" spellcheck="false"></header>`
       : `<header class="mmns-bar">${CFG.drawer ? btn(c, 'mmns-drawer', t('abc_action_bar_home_description'), CFG.icon.menu) : '<i class="mmns-pad"></i>'}<b>${c.safe(title)}</b>${btn(c, 'mmns-search', t('search'), CFG.icon.search)}${MM.menu.button(c, 'mmns-more', CFG.theme === 'light')}</header>`;
+    const tabs = u.view === 'library' && !u.search && CFG.tabs.length ? `<div class="mmns-tabs">${CFG.tabs.map(([id, key]) => `<button type="button" class="${(u.tab || 'news') === id ? 'on' : ''}" data-action="mmns-tab" data-id="${id}">${c.safe(t(key))}</button>`).join('')}</div>` : '';
     const nav = CFG.drawer ? '' : `<nav class="mmns-nav">${CFG.views.map(([id, key, icon]) => `<button type="button" class="${u.view === id ? 'on' : ''}" data-action="mmns-view" data-id="${id}"><img src="${I(icon)}" alt=""><span>${c.safe(t(key))}</span></button>`).join('')}</nav>`;
-    const drawer = CFG.drawer && u.drawer ? `<div class="mmns-scrim" data-action="mmns-drawer"></div><nav class="mmns-drawer"><div class="mmns-account"><small>${c.safe(MM.account?.email || '')}</small></div>${CFG.views.map(([id, key, icon]) => `<button type="button" class="${u.view === id ? 'on' : ''}" data-action="mmns-view" data-id="${id}"><img src="${I(u.view === id ? icon + '_selected' : icon)}" alt=""><span>${c.safe(t(key))}</span></button>`).join('')}<hr><button type="button" data-action="mmns-size"><span>${c.safe(t('settings'))}</span></button></nav>` : '';
-    return `<div class="mmns ${CFG.theme}">${bar}<div class="mmns-scroll">${list(c)}</div>${nav}${drawer}</div>`;
+    const drawer = CFG.drawer && u.drawer ? `<div class="mmns-scrim" data-action="mmns-drawer"></div><nav class="mmns-drawer"><div class="mmns-account"><small>${c.safe(MM.account?.email || '')}</small></div>${CFG.views.map(([id, key, icon]) => `<button type="button" class="${u.view === id ? 'on' : ''}" data-action="mmns-view" data-id="${id}"><img src="${I(u.view === id ? icon + '_selected' : icon)}" alt=""><span>${c.safe(t(key))}</span></button>`).join('')}<hr><button type="button" data-action="mmns-downloaded" role="switch" aria-checked="${S(c).downloadedOnly}"><span>${c.safe(t('downloaded_only'))}</span><i class="mmns-switch${S(c).downloadedOnly ? ' on' : ''}"></i></button><button type="button" data-action="mmns-settings"><span>${c.safe(t('settings'))}</span></button></nav>` : '';
+    return `<div class="mmns ${CFG.theme}">${bar}${tabs}<div class="mmns-scroll">${list(c)}</div>${nav}${drawer}</div>`;
   }
   function mount(c, root) {
     const u = U(c), q = root.querySelector('[data-ns-search]');
     if (q) { q.addEventListener('input', () => { u.query = q.value; const at = q.selectionStart; c.render(); const n = c.el.viewport.querySelector('[data-ns-search]'); if (n) { n.focus(); n.setSelectionRange(at, at); } }); if (u.focus) { u.focus = false; requestAnimationFrame(() => q.focus()); } }
   }
-  const sizeDialog = c => c.dialog({title: t('article_text_size'), items: SIZES.map((k, i) => ({html: `<span class="mmns-radio${S(c).size === i ? ' on' : ''}"></span>${c.safe(t(k))}`})), onItem: (i, c) => { S(c).size = i; c.save(); c.render(); }});
+  const sizeDialog = c => c.dialog({title: t('article_text_size'), items: SIZES.map((k, i) => ({html: `<span class="mmns-radio${size(c) === i ? ' on' : ''}"></span>${c.safe(t(k))}`})), onItem: (i, c) => { setSize(c, i); c.render(); }});
+  const openSettings = c => MM.openPrefs(c, 'newsstand', 'settings', t('settings'));
   function action(name, el, ev, c) {
     const u = U(c), s = S(c);
     if (name === 'mm-menu') {
-      c.menu([{label: t('refresh'), action: c => c.render()}, {label: t('article_text_size'), action: sizeDialog}, ...(CFG.help ? [{label: t(CFG.help), action: refuse}] : [])], el);
+      c.menu([{label: t('refresh'), action: c => c.render()}, {label: t('downloaded_only'), checked: s.downloadedOnly, action: c => { s.downloadedOnly = !s.downloadedOnly; c.save(); c.render(); }}, {label: t('article_text_size'), action: sizeDialog}, {label: t('settings'), action: openSettings}, ...(CFG.help ? [{label: t(CFG.help), action: refuse}] : [])], el);
       return true;
     }
     if (!name.startsWith('mmns-')) return false;
@@ -73,7 +92,6 @@
       case 'drawer': u.drawer = !u.drawer; break;
       case 'view': {
         const id = el.dataset.id; u.drawer = false;
-        if (id === 'explore') { c.render(); refuse(c); return true; }
         u.view = id; break;
       }
       case 'search': Object.assign(u, {search: true, query: '', focus: true}); break;
@@ -85,7 +103,9 @@
         s.saved = on ? s.saved.filter(x => x !== id) : [...s.saved, id]; c.save(); c.render(); c.toast(t(on ? CFG.removed : CFG.added)); return true;
       }
       case 'share': { const a = ARTICLES[u.article]; if (a) MM.share(c, {title: t('share'), subject: a.title, text: `${a.title}\n${a.source}`}); return true; }
-      case 'size': u.drawer = false; c.render(); sizeDialog(c); return true;
+      case 'settings': u.drawer = false; c.render(); openSettings(c); return true;
+      case 'downloaded': s.downloadedOnly = !s.downloadedOnly; c.save(); break;
+      case 'tab': u.tab = el.dataset.id; break;
       default: return false;
     }
     c.render(); return true;

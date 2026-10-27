@@ -57,13 +57,37 @@ NG.strings('newsstand', {
 "fr": "Petite",
 "es": "Pequeño"
 },
-"close": {
-"res": "angler:Newsstand:close",
-"en": "Close",
-"hu": "Bezárás",
-"de": "Schließen",
-"fr": "Fermer",
-"es": "Cerrar"
+"downloaded_only": {
+"res": "angler:Newsstand:downloaded_only",
+"en": "Downloaded only",
+"hu": "Csak a letöltöttek",
+"de": "Nur heruntergeladene",
+"fr": "Téléchargés uniquement",
+"es": "Solo descargado"
+},
+"empty_list_caption_edition": {
+"res": "angler:Newsstand:empty_list_caption_edition",
+"en": "No recent articles",
+"hu": "Nincsenek friss cikkek",
+"de": "Keine neuen Artikel",
+"fr": "Aucun article récent",
+"es": "No hay artículos recientes"
+},
+"empty_list_caption_my_magazines": {
+"res": "angler:Newsstand:empty_list_caption_my_magazines",
+"en": "No magazines",
+"hu": "Nincsenek magazinok",
+"de": "Keine Zeitschriften",
+"fr": "Aucun magazine",
+"es": "No hay revistas"
+},
+"empty_list_caption_offline": {
+"res": "angler:Newsstand:empty_list_caption_offline",
+"en": "Download content to read offline",
+"hu": "Tölts le tartalmat offline olvasáshoz",
+"de": "Lade Inhalte herunter, um sie offline zu lesen.",
+"fr": "Téléchargez des contenus pour les consulter hors connexion.",
+"es": "Descargar contenido para leerlo sin conexión"
 },
 "empty_list_caption_read_later": {
 "res": "angler:Newsstand:empty_list_caption_read_later",
@@ -113,6 +137,14 @@ NG.strings('newsstand', {
 "fr": "Aide et commentaires",
 "es": "Ayuda y sugerencias"
 },
+"my_magazines_title": {
+"res": "angler:Newsstand:my_magazines_title",
+"en": "My Magazines",
+"hu": "Saját Magazinok",
+"de": "Meine Zeitschriften",
+"fr": "Mes magazines",
+"es": "Mis revistas"
+},
 "refresh": {
 "res": "angler:Newsstand:refresh",
 "en": "Refresh",
@@ -120,14 +152,6 @@ NG.strings('newsstand', {
 "de": "Aktualisieren",
 "fr": "Actualiser",
 "es": "Actualizar"
-},
-"remove": {
-"res": "angler:Newsstand:remove",
-"en": "Remove",
-"hu": "Eltávolítás",
-"de": "Entfernen",
-"fr": "Supprimer",
-"es": "Eliminar"
 },
 "remove_from_read_later": {
 "res": "angler:Newsstand:remove_from_read_later",

@@ -5,9 +5,12 @@
    The home view lists the demo articles as cards; the library groups them by source; the saved view lists what was
    kept (or the APK's empty caption); Search finds articles by title or source ("No results found"). An article
    opens under its source with article_fragment_menu's Share and the keep / remove toggle (with its toast), in the
-   Article text size the overflow sets (Small, Normal, Large). The articles are the short made-up demo pieces of the
-   older versions' Newsstand (news-reader.js, copied by the generator; owner decision 2026-10-26), kept offline.
-   Explore, subscriptions, the store and Help & feedback keep the simulator's limit. */
+   Article text size (Small, Normal, Large) that Settings or the overflow sets. Settings is the APK's settings.xml on
+   the version's app settings screen (MM/NG.openPrefs; articleTextSize is the reader's). Downloaded only leaves only
+   the kept articles (else empty_list_caption_offline). The library has its tabs or sections as the version shows them
+   (3.5: News, Magazines, Topics; 4.5: the sources and My Magazines), Explore the APK's empty caption. The articles are
+   the short made-up demo pieces of the older versions' Newsstand (news-reader.js, copied by the generator; owner
+   decision 2026-10-26), kept offline. Subscriptions, the store and Help & feedback keep the simulator's limit. */
 (() => {
   'use strict';
   const T = () => NG.text('newsstand'), t = k => T().t(k);
@@ -26,9 +29,13 @@
     n3: {source: 'Weekend Kitchen', color: '#ef851c', title: 'Five autumn soups in thirty minutes', body: ['When the evenings get shorter, a pot of soup is the easiest dinner there is. All five of ours are on the table in half an hour.', 'Start with roasted squash and ginger, then leek and potato, a spiced lentil, a quick minestrone and a creamy mushroom that tastes like it took all afternoon.', 'Each one freezes well, so make a double batch on Sunday.']}
   };
   const HOME = ['n1', 'n2', 'n3', 'g2', 't1', 'k1'], ALL = [...new Set([...HOME, 'g1'])];
-  const CFG = {"theme": "light", "drawer": false, "status": "#bdbdbd", "help": "help_feedback", "add": "add_to_read_later", "remove": "remove_from_read_later", "added": "added_to_read_later", "removed": "removed_from_read_later", "emptySaved": "empty_list_caption_read_later", "views": [["home", "for_you_title", "quantum_ic_play_newsstand_grey600_24"], ["library", "following_title", "ic_library_grid_icon"], ["saved", "saved_tab_title", "quantum_ic_bookmark_border_grey600_24"], ["explore", "explore_title", "quantum_ic_explore_grey600_24"]], "icon": {"menu": "", "back": "quantum_ic_arrow_back_white_24", "search": "quantum_ic_search_grey600_24", "share": "quantum_ic_share_grey600_24", "save": "quantum_ic_bookmark_border_grey600_24", "saved": "quantum_ic_bookmark_grey600_24"}};
+  const CFG = {"theme": "light", "drawer": false, "tabs": [], "status": "#bdbdbd", "help": "help_feedback", "add": "add_to_read_later", "remove": "remove_from_read_later", "added": "added_to_read_later", "removed": "removed_from_read_later", "emptySaved": "empty_list_caption_read_later", "views": [["home", "for_you_title", "quantum_ic_play_newsstand_grey600_24"], ["library", "following_title", "ic_library_grid_icon"], ["saved", "saved_tab_title", "quantum_ic_bookmark_border_grey600_24"], ["explore", "explore_title", "quantum_ic_explore_grey600_24"]], "icon": {"menu": "", "back": "quantum_ic_arrow_back_white_24", "search": "quantum_ic_search_grey600_24", "share": "quantum_ic_share_grey600_24", "save": "quantum_ic_bookmark_border_grey600_24", "saved": "quantum_ic_bookmark_grey600_24"}};
   const U = c => c.ui.newsstand ||= {view: 'home', drawer: false, search: false, query: '', article: ''};
-  const S = c => c.data.newsstand ||= {saved: [], size: 1};
+  const S = c => { const s = c.data.newsstand ||= {saved: []}; if (!('downloadedOnly' in s)) s.downloadedOnly = false; return s; };
+  // settings.xml's articleTextSize (entryValues SMALL, MEDIUM, LARGE), kept with the app's other settings.
+  const SIZE_VALUES = ['SMALL', 'MEDIUM', 'LARGE'];
+  const size = c => Math.max(0, SIZE_VALUES.indexOf(NG.appPref(c, 'newsstand', 'articleTextSize', S(c).size != null ? SIZE_VALUES[S(c).size] : 'MEDIUM')));
+  const setSize = (c, i) => { ((c.data.appPrefs ||= {}).newsstand ||= {}).articleTextSize = SIZE_VALUES[i]; c.save(); };
   const refuse = c => c.toast(c.t('This feature is not part of the simulator.'));
   const SIZES = ['article_text_size_small', 'article_text_size_normal', 'article_text_size_large'];
   // The drawer button is AppCompat's DrawerArrowDrawable (drawn in code); the alpha icons take the bar's colour.
@@ -37,14 +44,24 @@
   const card = (c, id) => { const a = ARTICLES[id]; return `<button type="button" class="ngns-card" data-action="ngns-open" data-id="${id}"><i style="background:${a.color}"></i><span><small>${c.safe(a.source)}</small><b>${c.safe(a.title)}</b><em>${c.safe(a.body[0])}</em></span></button>`; };
   function list(c) {
     const u = U(c), s = S(c), q = u.query.trim().toLocaleLowerCase();
+    const kept = id => !s.downloadedOnly || s.saved.includes(id), offline = `<div class="ngns-empty"><img src="${I('ic_empty_download')}" alt=""><p>${c.safe(t('empty_list_caption_offline'))}</p></div>`;
+    if (u.view === 'explore') return `<div class="ngns-empty"><p>${c.safe(t('empty_list_caption_edition'))}</p></div>`;
     if (u.search) { const found = q ? ALL.filter(id => (ARTICLES[id].title + ' ' + ARTICLES[id].source).toLocaleLowerCase().includes(q)) : []; return found.length ? found.map(id => card(c, id)).join('') : q ? `<p class="ngns-empty">${c.safe(t('empty_list_caption_search'))}</p>` : ''; }
     if (u.view === 'saved') return s.saved.length ? s.saved.map(id => card(c, id)).join('') : `<div class="ngns-empty"><img src="${I('ic_empty_bookmark')}" alt=""><p>${c.safe(t(CFG.emptySaved))}</p></div>`;
-    if (u.view === 'library') { const sources = [...new Set(ALL.map(id => ARTICLES[id].source))]; return sources.map(src => `<h3 class="ngns-source">${c.safe(src)}</h3>${ALL.filter(id => ARTICLES[id].source === src).map(id => card(c, id)).join('')}`).join(''); }
-    return HOME.map(id => card(c, id)).join('');
+    if (u.view === 'library') {
+      const tab = u.tab || 'news';
+      if (CFG.tabs.length && tab === 'magazines') return `<div class="ngns-empty"><p>${c.safe(t('empty_list_caption_my_magazines'))}</p></div>`;
+      if (CFG.tabs.length && tab === 'topics') return `<div class="ngns-empty"><p>${c.safe(t('empty_list_caption_edition'))}</p></div>`;
+      const ids = ALL.filter(kept), sources = [...new Set(ids.map(id => ARTICLES[id].source))];
+      const body = sources.map(src => `<h3 class="ngns-source">${c.safe(src)}</h3>${ids.filter(id => ARTICLES[id].source === src).map(id => card(c, id)).join('')}`).join('') || offline;
+      return CFG.tabs.length ? body : `${body}<h3 class="ngns-source">${c.safe(t('my_magazines_title'))}</h3><p class="ngns-empty small">${c.safe(t('empty_list_caption_my_magazines'))}</p>`;
+    }
+    const home = HOME.filter(kept);
+    return home.length ? home.map(id => card(c, id)).join('') : offline;
   }
   function article(c, id) {
     const a = ARTICLES[id], on = S(c).saved.includes(id);
-    return `<div class="ngns ${CFG.theme}"><header class="ngns-bar">${btn(c, 'ngns-close', t('abc_action_bar_up_description'), CFG.icon.back)}<b>${c.safe(a.source)}</b>${btn(c, 'ngns-share', t('share'), CFG.icon.share)}${btn(c, 'ngns-save', t(on ? CFG.remove : CFG.add), on ? CFG.icon.saved : CFG.icon.save, ` data-id="${id}" aria-pressed="${on}"`)}</header><article class="ngns-article size${S(c).size}"><i style="background:${a.color}"></i><h1>${c.safe(a.title)}</h1><p class="ngns-by">${c.safe(a.source)}</p>${a.body.map(p => `<p>${c.safe(p)}</p>`).join('')}</article></div>`;
+    return `<div class="ngns ${CFG.theme}"><header class="ngns-bar">${btn(c, 'ngns-close', t('abc_action_bar_up_description'), CFG.icon.back)}<b>${c.safe(a.source)}</b>${btn(c, 'ngns-share', t('share'), CFG.icon.share)}${btn(c, 'ngns-save', t(on ? CFG.remove : CFG.add), on ? CFG.icon.saved : CFG.icon.save, ` data-id="${id}" aria-pressed="${on}"`)}</header><article class="ngns-article size${size(c)}"><i style="background:${a.color}"></i><h1>${c.safe(a.title)}</h1><p class="ngns-by">${c.safe(a.source)}</p>${a.body.map(p => `<p>${c.safe(p)}</p>`).join('')}</article></div>`;
   }
   function render(c) {
     const u = U(c);
@@ -53,19 +70,21 @@
     const bar = u.search
       ? `<header class="ngns-bar">${btn(c, 'ngns-search-close', t('abc_action_bar_up_description'), CFG.icon.back)}<input class="ngns-query" data-ns-search value="${c.safe(u.query)}" placeholder="${c.safe(t('search'))}" aria-label="${c.safe(t('search'))}" autocomplete="off" spellcheck="false"></header>`
       : `<header class="ngns-bar">${CFG.drawer ? btn(c, 'ngns-drawer', t('abc_action_bar_home_description'), CFG.icon.menu) : '<i class="ngns-pad"></i>'}<b>${c.safe(title)}</b>${btn(c, 'ngns-search', t('search'), CFG.icon.search)}${NG.menu.button(c, 'ngns-more', CFG.theme === 'light')}</header>`;
+    const tabs = u.view === 'library' && !u.search && CFG.tabs.length ? `<div class="ngns-tabs">${CFG.tabs.map(([id, key]) => `<button type="button" class="${(u.tab || 'news') === id ? 'on' : ''}" data-action="ngns-tab" data-id="${id}">${c.safe(t(key))}</button>`).join('')}</div>` : '';
     const nav = CFG.drawer ? '' : `<nav class="ngns-nav">${CFG.views.map(([id, key, icon]) => `<button type="button" class="${u.view === id ? 'on' : ''}" data-action="ngns-view" data-id="${id}"><img src="${I(icon)}" alt=""><span>${c.safe(t(key))}</span></button>`).join('')}</nav>`;
-    const drawer = CFG.drawer && u.drawer ? `<div class="ngns-scrim" data-action="ngns-drawer"></div><nav class="ngns-drawer"><div class="ngns-account"><small>${c.safe(NG.account?.email || '')}</small></div>${CFG.views.map(([id, key, icon]) => `<button type="button" class="${u.view === id ? 'on' : ''}" data-action="ngns-view" data-id="${id}"><img src="${I(u.view === id ? icon + '_selected' : icon)}" alt=""><span>${c.safe(t(key))}</span></button>`).join('')}<hr><button type="button" data-action="ngns-size"><span>${c.safe(t('settings'))}</span></button></nav>` : '';
-    return `<div class="ngns ${CFG.theme}">${bar}<div class="ngns-scroll">${list(c)}</div>${nav}${drawer}</div>`;
+    const drawer = CFG.drawer && u.drawer ? `<div class="ngns-scrim" data-action="ngns-drawer"></div><nav class="ngns-drawer"><div class="ngns-account"><small>${c.safe(NG.account?.email || '')}</small></div>${CFG.views.map(([id, key, icon]) => `<button type="button" class="${u.view === id ? 'on' : ''}" data-action="ngns-view" data-id="${id}"><img src="${I(u.view === id ? icon + '_selected' : icon)}" alt=""><span>${c.safe(t(key))}</span></button>`).join('')}<hr><button type="button" data-action="ngns-downloaded" role="switch" aria-checked="${S(c).downloadedOnly}"><span>${c.safe(t('downloaded_only'))}</span><i class="ngns-switch${S(c).downloadedOnly ? ' on' : ''}"></i></button><button type="button" data-action="ngns-settings"><span>${c.safe(t('settings'))}</span></button></nav>` : '';
+    return `<div class="ngns ${CFG.theme}">${bar}${tabs}<div class="ngns-scroll">${list(c)}</div>${nav}${drawer}</div>`;
   }
   function mount(c, root) {
     const u = U(c), q = root.querySelector('[data-ns-search]');
     if (q) { q.addEventListener('input', () => { u.query = q.value; const at = q.selectionStart; c.render(); const n = c.el.viewport.querySelector('[data-ns-search]'); if (n) { n.focus(); n.setSelectionRange(at, at); } }); if (u.focus) { u.focus = false; requestAnimationFrame(() => q.focus()); } }
   }
-  const sizeDialog = c => c.dialog({title: t('article_text_size'), items: SIZES.map((k, i) => ({html: `<span class="ngns-radio${S(c).size === i ? ' on' : ''}"></span>${c.safe(t(k))}`})), onItem: (i, c) => { S(c).size = i; c.save(); c.render(); }});
+  const sizeDialog = c => c.dialog({title: t('article_text_size'), items: SIZES.map((k, i) => ({html: `<span class="ngns-radio${size(c) === i ? ' on' : ''}"></span>${c.safe(t(k))}`})), onItem: (i, c) => { setSize(c, i); c.render(); }});
+  const openSettings = c => NG.openPrefs(c, 'newsstand', 'settings', t('settings'));
   function action(name, el, ev, c) {
     const u = U(c), s = S(c);
     if (name === 'ng-menu') {
-      c.menu([{label: t('refresh'), action: c => c.render()}, {label: t('article_text_size'), action: sizeDialog}, ...(CFG.help ? [{label: t(CFG.help), action: refuse}] : [])], el);
+      c.menu([{label: t('refresh'), action: c => c.render()}, {label: t('downloaded_only'), checked: s.downloadedOnly, action: c => { s.downloadedOnly = !s.downloadedOnly; c.save(); c.render(); }}, {label: t('article_text_size'), action: sizeDialog}, {label: t('settings'), action: openSettings}, ...(CFG.help ? [{label: t(CFG.help), action: refuse}] : [])], el);
       return true;
     }
     if (!name.startsWith('ngns-')) return false;
@@ -73,7 +92,6 @@
       case 'drawer': u.drawer = !u.drawer; break;
       case 'view': {
         const id = el.dataset.id; u.drawer = false;
-        if (id === 'explore') { c.render(); refuse(c); return true; }
         u.view = id; break;
       }
       case 'search': Object.assign(u, {search: true, query: '', focus: true}); break;
@@ -85,7 +103,9 @@
         s.saved = on ? s.saved.filter(x => x !== id) : [...s.saved, id]; c.save(); c.render(); c.toast(t(on ? CFG.removed : CFG.added)); return true;
       }
       case 'share': { const a = ARTICLES[u.article]; if (a) NG.share(c, {title: t('share'), subject: a.title, text: `${a.title}\n${a.source}`}); return true; }
-      case 'size': u.drawer = false; c.render(); sizeDialog(c); return true;
+      case 'settings': u.drawer = false; c.render(); openSettings(c); return true;
+      case 'downloaded': s.downloadedOnly = !s.downloadedOnly; c.save(); break;
+      case 'tab': u.tab = el.dataset.id; break;
       default: return false;
     }
     c.render(); return true;

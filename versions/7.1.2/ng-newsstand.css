@@ -42,3 +42,12 @@
 .ngns-by{color:#972cb0;font:500 calc(13 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
 .ngns-radio{display:inline-block;width:calc(16 * var(--dp));height:calc(16 * var(--dp));margin-right:calc(24 * var(--dp));vertical-align:middle;border:calc(2 * var(--dp)) solid #0000008a;border-radius:50%}
 .ngns-radio.on{border-color:#972cb0;background:radial-gradient(circle,#972cb0 45%,transparent 50%)}
+.ngns-tabs{flex:none;display:flex;height:calc(48 * var(--dp));padding-left:calc(16 * var(--dp));background:#fafafa;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0003}
+.screen .ngns-tabs button{padding:0 calc(12 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid transparent;background:none;color:#ffffffb3;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.screen .ngns-tabs button.on{border-color:#fff;color:#fff}
+.ngns-empty.small{padding:calc(8 * var(--dp)) calc(16 * var(--dp));text-align:left;font-size:calc(14 * var(--dp))}
+.ngns-switch{position:relative;flex:none;width:calc(34 * var(--dp));height:calc(14 * var(--dp));border-radius:calc(7 * var(--dp));background:#00000042}
+.ngns-switch::after{content:'';position:absolute;left:calc(-3 * var(--dp));top:calc(-3 * var(--dp));width:calc(20 * var(--dp));height:calc(20 * var(--dp));border-radius:50%;background:#f1f1f1;box-shadow:0 calc(1 * var(--dp)) calc(3 * var(--dp)) #0006}
+.ngns-switch.on{background:#972cb0}
+.ngns-switch.on::after{left:calc(17 * var(--dp))}
+.ngns-drawer button span{flex:1}

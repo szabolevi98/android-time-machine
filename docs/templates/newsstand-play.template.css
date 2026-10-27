@@ -42,3 +42,12 @@
 .__CLS__-by{color:__ACCENT__;font:500 calc(13 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
 .__CLS__-radio{display:inline-block;width:calc(16 * var(--dp));height:calc(16 * var(--dp));margin-right:calc(24 * var(--dp));vertical-align:middle;border:calc(2 * var(--dp)) solid #0000008a;border-radius:50%}
 .__CLS__-radio.on{border-color:__ACCENT__;background:radial-gradient(circle,__ACCENT__ 45%,transparent 50%)}
+.__CLS__-tabs{flex:none;display:flex;height:calc(48 * var(--dp));padding-left:calc(16 * var(--dp));background:__BAR__;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0003}
+.screen .__CLS__-tabs button{padding:0 calc(12 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid transparent;background:none;color:#ffffffb3;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.screen .__CLS__-tabs button.on{border-color:#fff;color:#fff}
+.__CLS__-empty.small{padding:calc(8 * var(--dp)) calc(16 * var(--dp));text-align:left;font-size:calc(14 * var(--dp))}
+.__CLS__-switch{position:relative;flex:none;width:calc(34 * var(--dp));height:calc(14 * var(--dp));border-radius:calc(7 * var(--dp));background:#00000042}
+.__CLS__-switch::after{content:'';position:absolute;left:calc(-3 * var(--dp));top:calc(-3 * var(--dp));width:calc(20 * var(--dp));height:calc(20 * var(--dp));border-radius:50%;background:#f1f1f1;box-shadow:0 calc(1 * var(--dp)) calc(3 * var(--dp)) #0006}
+.__CLS__-switch.on{background:__ACCENT__}
+.__CLS__-switch.on::after{left:calc(17 * var(--dp))}
+.__CLS__-drawer button span{flex:1}

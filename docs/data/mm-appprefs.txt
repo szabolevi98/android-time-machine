@@ -70,3 +70,5 @@ personal_unlocking_settings_preferences trusted_devices_preferences trusted_plac
 [earth] GoogleEarth -
 settings
 +msg_clear_cache +about_info+args1
+[newsstand] Newsstand -
+settings

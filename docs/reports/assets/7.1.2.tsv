@@ -949,6 +949,7 @@ versions/7.1.2/assets/mw-open.png	083657b2f30e3ca1	copy	angler:/system/app/Prebu
 versions/7.1.2/assets/mw-outgoing.9.png	04a96bee5a286962	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/widget_msg_bubble_outgoing.9.png	drawable-xxxhdpi-v4		04a96bee5a286962
 versions/7.1.2/assets/mw-reply.png	af1548a69fa9bb0b	copy	angler:/system/app/PrebuiltBugle/PrebuiltBugle.apk!res/drawable-xxxhdpi-v4/ic_widget_fab_reply.png	drawable-xxxhdpi-v4		af1548a69fa9bb0b
 versions/7.1.2/assets/ns45-ic_empty_bookmark.png	2597302496850b26	copy	angler:/playapps/Newsstand.apk!res/drawable-xxxhdpi-v4/ic_empty_bookmark.png	drawable-xxxhdpi-v4		2597302496850b26
+versions/7.1.2/assets/ns45-ic_empty_download.png	255ed3d3aeb91c10	copy	angler:/playapps/Newsstand.apk!res/drawable-xxxhdpi-v4/ic_empty_download.png	drawable-xxxhdpi-v4		255ed3d3aeb91c10
 versions/7.1.2/assets/ns45-ic_library_grid_icon.png	7a3bc2c3bb874498	copy	angler:/playapps/Newsstand.apk!res/drawable-xxxhdpi-v4/ic_library_grid_icon.png	drawable-xxxhdpi-v4		7a3bc2c3bb874498
 versions/7.1.2/assets/ns45-quantum_ic_arrow_back_white_24.png	14f802c93af2ce62	copy	angler:/system/app/Drive/Drive.apk!res/drawable-xxxhdpi-v4/quantum_ic_arrow_back_white_24.png	drawable-xxxhdpi-v4		14f802c93af2ce62
 versions/7.1.2/assets/ns45-quantum_ic_bookmark_border_grey600_24.png	3ba64c350adb6502	copy	angler:/playapps/Newsstand.apk!res/drawable-xxxhdpi-v4/quantum_ic_bookmark_border_grey600_24.png	drawable-xxxhdpi-v4		3ba64c350adb6502

@@ -1,7 +1,8 @@
 // Play Newsstand installed from Play on 6.0.1 (3.5.2: the drawer) and 7.1.2 (4.5.0: the bottom bar): the home view's six
 // demo articles, an article kept (Bookmark for Later / Add to Read Later) and listed in the saved view, removed again
 // (the empty caption), Article text size from the overflow, the library by source, Search with "No results found",
-// Explore refused, Share opening the share sheet, and the phone width.
+// Explore's empty caption, Share opening the share sheet, and the phone width. Round five (T65): Downloaded only, Settings
+// (the APK's settings.xml) setting the reader's Article text size, and 3.5's library tabs.
 // node tests/browser/play-newsstand.mjs [6.0.1|7.1.2]
 import assert from 'node:assert/strict';
 import {marshmallow} from './mm-harness.mjs';
@@ -41,12 +42,31 @@ for (const [version, start, cls, ns, menuItem, dlg, sheet, saveLabel, empty] of 
     await menu('Article text size');
     await b.until(`[...document.querySelectorAll('.${dlg}-item')].some(x=>x.textContent.includes('Large'))`);
     await b.ev(`[...document.querySelectorAll('.${dlg}-item')].find(x=>x.textContent.includes('Large')).click()`);
-    assert.equal((await state()).size, 2);
+    assert.equal((await b.save()).appPrefs.newsstand.articleTextSize, 'LARGE');
     // The library by source, Explore refused, Search.
     await b.act(`${cls}-view`, {id: 'library'});
-    await b.until(`document.querySelectorAll('#viewport .${cls}-source').length===3`);
+    await b.until(`document.querySelectorAll('#viewport .${cls}-source').length>=3`);
+    if (version === '6.0.1') {
+      await b.click(`#viewport [data-action="${cls}-tab"][data-id="magazines"]`);
+      await b.until(`/No magazines/.test(document.querySelector('#viewport .${cls}-empty')?.textContent||'')`);
+      await b.click(`#viewport [data-action="${cls}-tab"][data-id="news"]`);
+    } else assert.ok(await b.ev(`/No magazines/.test(document.querySelector('#viewport').textContent)`), '4.5 shows My Magazines under the sources');
     await b.act(`${cls}-view`, {id: 'explore'});
-    assert.ok(await b.ev(`document.querySelectorAll('#viewport .${cls}-source').length===3`), 'Explore stays on the library');
+    await b.until(`/No recent articles/.test(document.querySelector('#viewport .${cls}-empty')?.textContent||'')`);
+    // Downloaded only leaves the kept articles: none now.
+    await b.act(`${cls}-view`, {id: 'home'});
+    await b.click(`#viewport .${cls}-more`);
+    await menu('Downloaded only');
+    await b.until(`/Download content to read offline/.test(document.querySelector('#viewport .${cls}-empty')?.textContent||'')`);
+    await b.click(`#viewport .${cls}-more`);
+    await menu('Downloaded only');
+    await b.until(`document.querySelectorAll('#viewport .${cls}-card').length===6`);
+    // Settings: the APK's settings.xml; Article text size there reaches the reader.
+    await b.click(`#viewport .${cls}-more`);
+    await menu('Settings');
+    await b.until(`/view-app-prefs/.test(document.querySelector('#screen').className) && /Article text size/.test(document.querySelector('#viewport').textContent)`);
+    await b.shot(`${version}-newsstand-settings`);
+    await b.open('newsstand');
     await b.act(`${cls}-search`);
     await type(`#viewport [data-ns-search]`, 'soups');
     await b.until(`document.querySelectorAll('#viewport .${cls}-card').length===1`);

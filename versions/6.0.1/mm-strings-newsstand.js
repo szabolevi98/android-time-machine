@@ -65,13 +65,13 @@ MM.strings('newsstand', {
 "fr": "Ajouter aux favoris pour plus tard",
 "es": "Marcar para más tarde"
 },
-"close": {
-"res": "bullhead:Newsstand:close",
-"en": "Close",
-"hu": "Bezárás",
-"de": "Schließen",
-"fr": "Fermer",
-"es": "Cerrar"
+"downloaded_only": {
+"res": "bullhead:Newsstand:downloaded_only",
+"en": "Downloaded only",
+"hu": "Csak a letöltöttek",
+"de": "Nur heruntergeladene",
+"fr": "Téléchargés uniquement",
+"es": "Solo descargado"
 },
 "empty_list_caption_bookmarks": {
 "res": "bullhead:Newsstand:empty_list_caption_bookmarks",
@@ -80,6 +80,30 @@ MM.strings('newsstand', {
 "de": "Keine Artikel als Lesezeichen gespeichert",
 "fr": "Aucun article ajouté aux favoris",
 "es": "No hay artículos añadidos a marcadores"
+},
+"empty_list_caption_edition": {
+"res": "bullhead:Newsstand:empty_list_caption_edition",
+"en": "No recent articles",
+"hu": "Nincsenek friss cikkek",
+"de": "Keine neuen Artikel",
+"fr": "Aucun article récent",
+"es": "No hay artículos recientes"
+},
+"empty_list_caption_my_magazines": {
+"res": "bullhead:Newsstand:empty_list_caption_my_magazines",
+"en": "No magazines",
+"hu": "Nincsenek magazinok",
+"de": "Keine Zeitschriften",
+"fr": "Aucun magazine",
+"es": "No hay revistas"
+},
+"empty_list_caption_offline": {
+"res": "bullhead:Newsstand:empty_list_caption_offline",
+"en": "Download content to read offline",
+"hu": "Tölts le tartalmat offline olvasáshoz",
+"de": "Lade Inhalte herunter, um sie offline zu lesen.",
+"fr": "Téléchargez des contenus pour les consulter hors connexion.",
+"es": "Descargar contenido para leerlo sin conexión"
 },
 "empty_list_caption_search": {
 "res": "bullhead:Newsstand:empty_list_caption_search",
@@ -97,6 +121,14 @@ MM.strings('newsstand', {
 "fr": "Découvrir",
 "es": "Explorar"
 },
+"magazines_title": {
+"res": "bullhead:Newsstand:magazines_title",
+"en": "Magazines",
+"hu": "Magazinok",
+"de": "Zeitschriften",
+"fr": "Magazines",
+"es": "Revistas"
+},
 "my_library_title": {
 "res": "bullhead:Newsstand:my_library_title",
 "en": "My Library",
@@ -104,6 +136,22 @@ MM.strings('newsstand', {
 "de": "Mein Kiosk",
 "fr": "Ma bibliothèque",
 "es": "Mi colección"
+},
+"my_magazines_title": {
+"res": "bullhead:Newsstand:my_magazines_title",
+"en": "My Magazines",
+"hu": "Saját Magazinok",
+"de": "Meine Zeitschriften",
+"fr": "Mes magazines",
+"es": "Mis revistas"
+},
+"news_title": {
+"res": "bullhead:Newsstand:news_title",
+"en": "News",
+"hu": "Hírek",
+"de": "Nachrichten",
+"fr": "Actualités",
+"es": "Noticias"
 },
 "read_now_title": {
 "res": "bullhead:Newsstand:read_now_title",
@@ -120,14 +168,6 @@ MM.strings('newsstand', {
 "de": "Aktualisieren",
 "fr": "Actualiser",
 "es": "Actualizar"
-},
-"remove": {
-"res": "bullhead:Newsstand:remove",
-"en": "Remove",
-"hu": "Eltávolítás",
-"de": "Entfernen",
-"fr": "Supprimer",
-"es": "Eliminar"
 },
 "remove_from_bookmarks": {
 "res": "bullhead:Newsstand:remove_from_bookmarks",
@@ -176,5 +216,13 @@ MM.strings('newsstand', {
 "de": "Teilen",
 "fr": "Partager",
 "es": "Compartir"
+},
+"topics_title": {
+"res": "bullhead:Newsstand:topics_title",
+"en": "Topics",
+"hu": "Témák",
+"de": "Themen",
+"fr": "Thèmes",
+"es": "Temas"
 }
 });
