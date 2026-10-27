@@ -242,6 +242,8 @@ cpe_crop_and_rotate_auto cpe_crop_and_rotate_reset cpe_editor_action_save cpe_a1
 photos_mediadetails_details_title photos_mediadetails_exif_header photos_mediadetails_caption_placeholder_hint
 photos_mediadetails_exif_pixels_value+args1 photos_pager_menu_slideshow photos_pager_menu_set_as photos_pager_menu_print
 photos_pager_menu_add_to_album photos_pager_menu_restore_from_trash photos_pager_menu_delete_from_trash photos_drawermenu_nav_search_subtitle
+mm_content_trim_clip mm_content_trim_view cpe_video_duration_error_msg
+
 [play] Phonesky framework
 # Google Play Store 5.12.7: the drawer, search, the details page, My apps, installing
 app_name menu_home my_downloads_menu menu_my_wishlist side_drawer_social_home side_drawer_my_account redeem_gift_card_menu
@@ -263,6 +265,8 @@ LABELED_AS HOME_LOCATION WORK_LOCATION SET_HOME_LOCATION SET_WORK_LOCATION SAVED
 OFFLINE_MAPS_HELP_TEXT OFFLINE_CACHE_START_SELECTION_BUTTON_IN_MENU OFFLINE_CACHE_SELECT_AREA_TITLE OFFLINE_CACHE_SELECT_AREA_HELP
 OFFLINE_CACHE_SELECT_AREA_SIZE_STRING OFFLINE_DOWNLOAD OFFLINE_NAME_AREA_TITLE OFFLINE_CACHE_SAVING OFFLINE_CACHE_SAVED OFFLINE_DOWNLOAD_SUCCEEDED
 GOOGLE_EARTH_NOT_AVAILABLE
+REMOVE MAPS_HISTORY DA_DISTANCE_FORMAT_MILES_ABBREVIATED DA_DISTANCE_FORMAT_FEET_ABBREVIATED
+
 [youtube] YouTube framework
 share_subject share_text
 # YouTube 10.28.60: search, the video cards, the watch page
@@ -271,6 +275,8 @@ no_results_found no_watch_history_found channel_watch_later menu_add_to create_p
 create_playlist_private watch_later_done watch_later_duplicate create_playlist_done action_bar_search_clear accessibility_search_edit_suggestion
 remove_from_history_button framework/ok framework/cancel no_playlists_found menu_add_to_playlist
 plurals:author_and_views plurals:age_and_views plurals:minutes_ago plurals:hours_ago plurals:days_ago plurals:weeks_ago
+confirm_clear_watch_history pref_clear_watch_history_title pref_clear_search_history_title
+
 [hangouts] Hangouts framework
 # Hangouts 4.1: the conversation list, the drawer, a conversation
 own:sim_reply_1 own:sim_reply_2
@@ -287,6 +293,8 @@ framework/ok framework/cancel
 app_name fab_new_conversation realtimechat_send_button_description realtimechat_message_text_hint menu_invites
 dnd_menu_item home_menu_settings help_feedback_menu_item_text menu_archived_conversations video_call_title
 voice_call_title posted_now
+realtimechat_conversation_delete_title realtimechat_conversation_delete_text realtimechat_conversation_delete_menu_item_text notifications_are_dnd notifications_dnd_cancel
+
 [drive] Drive framework
 # Drive 2.3: the drawer, My Drive, the create panel
 app_name_drive menu_my_drive menu_shared_with_me menu_show_recent menu_show_starred menu_show_pinned menu_show_upload
@@ -302,6 +310,8 @@ recent_activity_card_title recent_activity_empty action_card_star action_card_un
 announce_document_removed announce_collection_removed announce_rename+args1 button_ok chips_action_cancel default_new_folder_title
 default_new_kix_title default_new_trix_title default_new_punch_title ds_title_activity_capture ds_scanned_file_name+args1
 ds_scanner_introduction_header ds_scanner_introduction_text grid_sync_upload_label_format+args1 menu_overflow_content_description
+menu_sort_by menu_sort_title menu_sort_last_modified menu_sort_recently_opened menu_trash_restore
+
 [playmusic] Music2 framework
 # Play Music 6.0: the drawer and the empty library
 launcher_name top_menu_mainstage top_menu_my_library playlists_title top_menu_instant_mixes top_menu_shop settings

@@ -61,7 +61,7 @@
     const t = T(), u = ui(c), steps = navSteps(c, place), i = Math.min(u.nav.step, steps.length - 1), s = steps[i];
     const left = steps.slice(i).reduce((a, x) => a + x.m, 0), mins = Math.max(1, Math.round(left / 250));
     const arrive = new Intl.DateTimeFormat(c.locale(), {hour: 'numeric', minute: '2-digit'}).format(new Date(Date.now() + mins * 60000));
-    const dist = m => m >= 1000 ? AndroidStrings.format(t.t('DA_DISTANCE_FORMAT_KILOMETERS_ABBREVIATED'), (m / 1000).toLocaleString(c.locale(), {maximumFractionDigits: 1})) : AndroidStrings.format(t.t('DA_DISTANCE_FORMAT_METERS_ABBREVIATED'), m);
+    const dist = m => {const unit=MM.appPref(c,'maps','distance_units',''),imperial=unit==='MILES'||!unit&&c.locale()==='en-US';let n=m,k='METERS';if(imperial){n=m*3.28084;k='FEET';if(n>=5280){n/=5280;k='MILES';}}else if(m>=1000){n=m/1000;k='KILOMETERS';}return AndroidStrings.format(t.t('DA_DISTANCE_FORMAT_'+k+'_ABBREVIATED'),n.toLocaleString(c.locale(),{maximumFractionDigits:k==='MILES'||k==='KILOMETERS'?1:0}));};
     return `<div class="mmmp-nav"><img src="${A('ic_qu_navigation_white')}" alt=""><span>${s.m ? `<b>${esc(c, dist(s.m))}</b>` : ''}<span>${esc(c, s.text)}</span></span></div>
       <div class="mmmp-navfoot"><button type="button" class="mmmp-navx" data-action="mmmp-navexit" aria-label="${esc(c, t.t('DA_EXIT_NAVIGATION'))}">✕</button><span><b>${esc(c, t.plural('DA_MINUTES_ABBREVIATED', mins, null, mins))}</b><small>${esc(c, `${dist(left)} · ${AndroidStrings.format(t.t('ARRIVE_AT_TIME'), arrive)}`)}</small></span></div>`;
   }
@@ -72,6 +72,7 @@
     if (u.page === 'places') return `<div class="mmmp-page">${head(t.t('YOUR_PLACES'))}<div class="mmmp-plist">
       ${row('mmmp-label" data-k="home', t.t('HOME_LOCATION'), d.home || t.t('SET_HOME_LOCATION'))}${row('mmmp-label" data-k="work', t.t('WORK_LOCATION'), d.work || t.t('SET_WORK_LOCATION'))}
       <div class="mmmp-pcat">${esc(c, t.t('SAVED_PLACES'))}</div>${d.saved.map(id => { const p = PLACES.find(x => x.id === id); return p ? row('mmmp-place" data-id="' + p.id, p.name, p.kind) : ''; }).join('')}</div></div>`;
+    if (u.page === 'history') return `<div class="mmmp-page">${head(t.t('MAPS_HISTORY'))}<div class="mmmp-plist">${(d.searches||[]).map((x,i)=>`<div class="mmmp-history"><button type="button" data-action="mmmp-place" data-id="${esc(c,x.id)}">${esc(c,x.name)}</button><button type="button" data-action="mmmp-historydel" data-i="${i}">${esc(c,t.t('REMOVE'))}</button></div>`).join('')}</div></div>`;
     if (u.page === 'timeline') return `<div class="mmmp-page">${head(t.t('YOUR_TIMELINE'))}<div class="mmmp-pempty"><b>${esc(c, t.t('TIMELINE'))}</b>${d.history ? `<span>${esc(c, new Intl.DateTimeFormat(c.locale(), {weekday: 'long', month: 'long', day: 'numeric'}).format(new Date()))}</span><button type="button" data-action="mmmp-pback">${esc(c, t.t('LOCATION_HISTORY_LETS_GO'))}</button>` : `<button type="button" data-action="mmmp-history">${esc(c, t.t('LOCATION_HISTORY_TURN_ON'))}</button>`}</div></div>`;
     if (u.page === 'offline') return `<div class="mmmp-page">${head(t.t('OFFLINE_MAPS_TITLE'))}<div class="mmmp-plist"><p class="mmmp-ptext">${esc(c, t.t('OFFLINE_MAPS_HELP_TEXT'))}</p>
       ${d.areas.map((a, i) => row('mmmp-noop', a.name, t.t(a.done ? 'OFFLINE_CACHE_SAVED' : 'OFFLINE_CACHE_SAVING'))).join('')}<button type="button" class="mmmp-pbtn" data-action="mmmp-offselect">${esc(c, t.t('OFFLINE_CACHE_START_SELECTION_BUTTON_IN_MENU'))}</button></div></div>`;
@@ -136,7 +137,7 @@
         case 'mmmp-menu': u.menu = !u.menu; c.render(); return true;
         case 'mmmp-search': u.search = ''; c.render(); return true;
         case 'mmmp-voice': MM.googleOpen(c, true); return true;
-        case 'mmmp-place': { const p = PLACES.find(x => x.id === el.dataset.id); u.place = p.id; u.search = null; u.route = false; focus(c, p); c.render(); return true; }
+        case 'mmmp-place': { const p = PLACES.find(x => x.id === el.dataset.id); u.place = p.id; const md=mdata(c);md.searches=[{id:p.id,name:p.name,time:Date.now()},...(md.searches||[]).filter(x=>x.id!==p.id)].slice(0,50);c.save();u.page='';u.search = null; u.route = false; focus(c, p); c.render(); return true; }
         case 'mmmp-route': { const p = PLACES.find(x => x.id === u.place); u.route = true; focus(c, {x: (p.x + ME.x) / 2, y: (p.y + ME.y) / 2}); c.render(); return true; }
         case 'mmmp-dirsearch': u.search = ''; c.render(); return true;
         case 'mmmp-start': {
@@ -155,6 +156,7 @@
         case 'mmmp-help': u.menu = false; c.render(); c.open('help', 'maps'); return true;
         case 'mmmp-feedback': u.menu = false; c.render(); c.open('feedback', 'maps'); return true;
         case 'mmmp-settings': u.menu = false; c.render(); MM.openPrefs(c, 'maps', 'settings', T().t('SETTINGS')); return true;
+        case 'mmmp-historydel': mdata(c).searches.splice(+el.dataset.i,1);c.save();c.render();return true;
         case 'mmmp-history': mdata(c).history = true; c.save(); c.render(); return true;
         case 'mmmp-star': { const d = mdata(c); d.saved = d.saved.includes(u.place) ? d.saved.filter(x => x !== u.place) : [...d.saved, u.place]; c.save(); c.render(); return true; }
         case 'mmmp-label': {
@@ -184,4 +186,7 @@
       return false;
     }
   });
+  MM.appPrefsHooks.maps.hidden=MM.appPrefsHooks.maps.hidden.filter(k=>k!=='maps_history');
+  const oldMapsClick=MM.appPrefsHooks.maps.click;
+  MM.appPrefsHooks.maps.click=(c,key,node)=>{if(key==='maps_history'){ui(c).page='history';c.open('maps');return true;}return oldMapsClick?.(c,key,node)||false;};
 })();

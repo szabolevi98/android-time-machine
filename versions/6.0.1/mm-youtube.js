@@ -128,7 +128,7 @@
     }, 500);
   }
   // A search: kept at the top of the past searches, the results listed.
-  function go(c, q) { const u = ui(c), d = yt(c); u.search.q = q; u.search.done = q; d.searches = [q.toLowerCase(), ...d.searches.filter(x => x !== q.toLowerCase())].slice(0, 20); c.save(); c.render(); }
+  function go(c, q) { const u = ui(c), d = yt(c); u.search.q = q; u.search.done = q; if (!MM.appPref(c,'youtube','pause_search_history',false)) d.searches = [q.toLowerCase(), ...d.searches.filter(x => x !== q.toLowerCase())].slice(0, 20); c.save(); c.render(); }
   MM.register('youtube', {
     // The window animation's page (mm-core.js): deeper screens open over the ones they came from.
     page: c => { const u = c.ui.youtube || {}; return MM.page('youtube', u.screen, u.search && 'search', u.search?.done && 'results', u.watch && 'watch'); },
@@ -152,7 +152,7 @@
       const u = ui(c), t = T();
       switch (name) {
         case 'mmyt-tab': u.tab = +el.dataset.tab; c.render(); return true;
-        case 'mmyt-watch': { const h = yt(c); h.history = [+el.dataset.id, ...h.history.filter(x => x !== +el.dataset.id)].slice(0, 50); c.save(); }
+        case 'mmyt-watch': { const h = yt(c); if (!MM.appPref(c,'youtube','pause_watch_history',false)) h.history = [+el.dataset.id, ...h.history.filter(x => x !== +el.dataset.id)].slice(0, 50); c.save(); }
           u.watch = +el.dataset.id; u.pos = 0; u.playing = true; u.started = Date.now(); c.render(); c.el.viewport.querySelector('.mmyt-wpage')?.scrollTo(0, 0); tick(c); return true;
         case 'mmyt-toggle': if (event?.target?.closest('.mmyt-mini')) return false; if (u.playing) { u.pos = position(u); u.playing = false; } else { u.playing = true; u.started = Date.now(); tick(c); } c.render(); return true;
         case 'mmyt-close': u.pos = position(u); u.playing = false; u.watch = 0; c.render(); return true;
@@ -176,4 +176,10 @@
       return false;
     }
   });
+  const oldPrefsClick=MM.appPrefsHooks.youtube.click;
+  MM.appPrefsHooks.youtube.click=(c,key,node)=>{
+    if(!['clear_watch_history','clear_search_history'].includes(key))return oldPrefsClick?.(c,key,node)||false;
+    const watch=key==='clear_watch_history',title=T().t(watch?'pref_clear_watch_history_title':'pref_clear_search_history_title');
+    c.dialog({title,...(watch?{message:T().t('confirm_clear_watch_history')}:{}),buttons:[{label:MM.text('framework').t('cancel')},{label:MM.text('framework').t('ok'),action:c=>{yt(c)[watch?'history':'searches']=[];c.save();c.render();}}]});return true;
+  };
 })();

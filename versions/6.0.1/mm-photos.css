@@ -113,3 +113,6 @@
 .mmgp-irow small{font-size:calc(13 * var(--dp));color:#757575}
 .mmgp-slide{cursor:pointer}
 .mmgp-icap{background:none;color:#212121}
+
+/* Photos 1.4 video trim controller: filmstrip, source endpoints and range controls on black. */
+.mmgp-vtrim{padding:calc(16 * var(--dp));color:#fff;background:#000;}.mmgp-vframes{display:flex;height:calc(48 * var(--dp));overflow:hidden;}.mmgp-trimthumb{width:12.5%;height:100%;flex:none;}.mmgp-vtimes{display:flex;justify-content:space-between;gap:calc(8 * var(--dp));font-size:calc(12 * var(--dp));padding:calc(8 * var(--dp)) 0;}.mmgp-vtrim input{display:block;width:100%;accent-color:#4285f4;}

@@ -475,5 +475,45 @@ MM.strings('drive', {
 "de": "Weitere Optionen",
 "fr": "Autres options",
 "es": "Más opciones"
+},
+"menu_sort_by": {
+"res": "bullhead:Drive:menu_sort_by",
+"en": "Sort by",
+"hu": "Rendezési szempont",
+"de": "Sortieren nach",
+"fr": "Trier par",
+"es": "Ordenar por"
+},
+"menu_sort_title": {
+"res": "bullhead:Drive:menu_sort_title",
+"en": "Name",
+"hu": "Név",
+"de": "Name",
+"fr": "Nom",
+"es": "Nombre"
+},
+"menu_sort_last_modified": {
+"res": "bullhead:Drive:menu_sort_last_modified",
+"en": "Last modified",
+"hu": "Utolsó módosítás",
+"de": "Zuletzt geändert",
+"fr": "Dernière modification",
+"es": "Última modificación"
+},
+"menu_sort_recently_opened": {
+"res": "bullhead:Drive:menu_sort_recently_opened",
+"en": "Last opened by me",
+"hu": "Ált. ut. megnyit. dok.",
+"de": "Zuletzt von mir geöffnet",
+"fr": "Dernière ouv. par moi",
+"es": "Últimos que he abierto"
+},
+"menu_trash_restore": {
+"res": "bullhead:Drive:menu_trash_restore",
+"en": "Restore",
+"hu": "Visszaállítás",
+"de": "Wiederherstellen",
+"fr": "Restaurer",
+"es": "Restaurar"
 }
 });

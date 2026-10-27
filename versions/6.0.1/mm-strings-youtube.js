@@ -370,5 +370,29 @@ MM.strings('youtube', {
 "other": "Hace %1$d semanas",
 "one": "Hace %1$d semana"
 }
+},
+"confirm_clear_watch_history": {
+"res": "bullhead:YouTube:confirm_clear_watch_history",
+"en": "Are you sure you want to clear your watch history?",
+"hu": "Biztosan törlöd a megtekintési előzményeket?",
+"de": "Möchtest du deinen Wiedergabeverlauf wirklich löschen?",
+"fr": "Voulez-vous vraiment effacer l'historique des vidéos regardées ?",
+"es": "¿Seguro que quieres borrar el historial de reproducciones?"
+},
+"pref_clear_watch_history_title": {
+"res": "bullhead:YouTube:pref_clear_watch_history_title",
+"en": "Clear watch history",
+"hu": "Előzmények törlése",
+"de": "Wiedergabeverlauf löschen",
+"fr": "Effacer historique vidéos",
+"es": "Borrar historial de reproducciones"
+},
+"pref_clear_search_history_title": {
+"res": "bullhead:YouTube:pref_clear_search_history_title",
+"en": "Clear search history",
+"hu": "Keresési előzmények törlése",
+"de": "Suchverlauf löschen",
+"fr": "Effacer historique recherches",
+"es": "Borrar historial de búsqueda"
 }
 });

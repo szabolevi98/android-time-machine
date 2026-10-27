@@ -658,5 +658,29 @@ MM.strings('photos', {
 "de": "Personen, Orte und Dinge",
 "fr": "Personnes, lieux et objets",
 "es": "Personas, lugares y cosas"
+},
+"mm_content_trim_clip": {
+"res": "bullhead:Photos:mm_content_trim_clip",
+"en": "Trim video",
+"hu": "Videovágás",
+"de": "Video schneiden",
+"fr": "Éditer la vidéo",
+"es": "Recortar vídeo"
+},
+"mm_content_trim_view": {
+"res": "bullhead:Photos:mm_content_trim_view",
+"en": "Trim controls",
+"hu": "Szerkesztési vezérlők",
+"de": "Optionen zum Schneiden",
+"fr": "Commandes d'édition",
+"es": "Controles de recorte"
+},
+"cpe_video_duration_error_msg": {
+"res": "bullhead:Photos:cpe_video_duration_error_msg",
+"en": "This video is too short to be trimmed.",
+"hu": "A videó túl rövid a vágáshoz.",
+"de": "Dieses Video ist zu kurz zum Schneiden.",
+"fr": "Cette vidéo est trop courte pour pouvoir être coupée.",
+"es": "Este vídeo es demasiado corto para recortarlo."
 }
 });

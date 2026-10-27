@@ -86,3 +86,8 @@ button.mmsa-file:active{background:rgba(0,0,0,.08)}
 .mmsa-up img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
 .mmsa-field{min-width:0}
 .mmsa-field input{width:100%;box-sizing:border-box}
+
+/* DocumentsUI ACTION_VIEW of the simulator's locally saved text/PDF page model. */
+.mmsa-document{white-space:pre-wrap;overflow-wrap:anywhere;margin:calc(16 * var(--dp));padding:calc(24 * var(--dp));background:#fff;color:#212121;font:calc(14 * var(--dp))/1.5 Roboto,sans-serif;min-height:calc(300 * var(--dp));}
+
+button.mmsa-file{border:0;background:none;width:100%;text-align:left;font:inherit;color:inherit;}

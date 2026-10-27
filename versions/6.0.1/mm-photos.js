@@ -113,6 +113,10 @@
   }
   // The editor (Google Photos Editor): the picture, the adjustments (Auto, Light, Color, Pop, Vignette with their
   // sliders, Reset) or crop & rotate (the quarter turn, AUTO, RESET), the close button and SAVE.
+  // Photos 1.4 cpe_video_editor_activity / cpe_editor_video_controller_view: trim a local clip into a copy.
+  // This edits the simulator's existing duration/source-offset model; the original capture stays intact.
+  const videoTime=ms=>`${Math.floor(ms/60000)}:${String(Math.floor(ms/1000)%60).padStart(2,'0')}`;
+  function videoEditor(c,p){const d=ui(c).videoEdit,t=T();return `<div class="mmgp mmgp-editor"><div class="mmgp-etop"><button type="button" data-action="mmgp-vcancel" aria-label="${esc(c,t.t('cpe_a11y_close_editor'))}"><img src="${A('quantum_ic_close_white_24')}" alt=""></button><i></i><button type="button" class="mmgp-esave" data-action="mmgp-vsave">${esc(c,t.t('cpe_editor_action_save'))}</button></div><div class="mmgp-epic">${pic(p,'mmgp-vsvg')}</div><div class="mmgp-vtrim" aria-label="${esc(c,t.t('mm_content_trim_view'))}"><div class="mmgp-vframes">${Array.from({length:8},()=>pic(p,'mmgp-trimthumb',1)).join('')}</div><div class="mmgp-vtimes"><output data-trim-time="start">${videoTime(d.start)}</output><span>${esc(c,t.t('mm_content_trim_clip'))}</span><output data-trim-time="end">${videoTime(d.end)}</output></div>${['start','end'].map(k=>`<input type="range" data-trim="${k}" min="${k==='end'?d.start+100:0}" max="${k==='start'?d.end-100:p.duration}" step="100" value="${d[k]}" aria-label="${esc(c,t.t('mm_content_trim_view'))} ${k==='start'?'1':'2'}">`).join('')}</div></div>`;}
   function editor(c, p) {
     const t = T(), u = ui(c), e = u.edit, tab = u.etab || 'tune';
     const view = {...p, edit: e};
@@ -153,7 +157,7 @@
     if (u.pick) return picker(c);
     if (sub.startsWith('photo:')) { c.ui.sub = ''; c.data.photosOnboarded = true; u.screen = `photo:${sub.slice(6)}`; u.external = true; u.chrome = true; }
     if (!c.data.photosOnboarded) return onboarding(c);
-    if (u.screen.startsWith('photo:')) { const p = MM.media.photos(c).find(x => x.id === +u.screen.slice(6)); if (p) return u.edit ? editor(c, p) : viewer(c, p); u.screen = ''; }
+    if (u.screen.startsWith('photo:')) { const p = MM.media.photos(c).find(x => x.id === +u.screen.slice(6)); if (p) return u.videoEdit ? videoEditor(c,p) : u.edit ? editor(c, p) : viewer(c, p); u.screen = ''; }
     if (u.screen === 'slide') { const list = visible(c).filter(p => p.kind !== 'video'); const p = list[(u.slide || 0) % Math.max(1, list.length)]; clearTimeout(u.slideTimer); u.slideTimer = setTimeout(() => { if (ui(c).screen === 'slide' && c.ui.view === 'photos') { ui(c).slide = (ui(c).slide || 0) + 1; c.render(); } }, 3000); return `<div class="mmgp mmgp-viewer bare mmgp-slide" data-action="mmgp-slideend"><div class="mmgp-vpic">${p ? pic(p, 'mmgp-vsvg') : ''}</div></div>`; }
     return home(c);
   }
@@ -166,6 +170,7 @@
       const u = ui(c), q = root.querySelector('.mmgp-q');
       if (q) { q.addEventListener('input', () => { const p = q.selectionStart; u.q = q.value; c.render(); const g = c.el.viewport.querySelector('.mmgp-q'); if (g) { g.focus(); g.setSelectionRange(p, p); } }); if (document.activeElement !== q) setTimeout(() => q.focus(), 40); }
       root.querySelectorAll('.mmgp-sl input').forEach(r => r.addEventListener('input', () => { u.edit[r.dataset.k] = +r.value / 100; const pic = root.querySelector('.mmgp-epic'); const p = MM.media.photos(c).find(x => x.id === +u.screen.slice(6)); if (pic && p) { pic.innerHTML = MM.media.svg(p, 'mmgp-vsvg').replace('<svg ', `<svg style="${look({edit: u.edit})}" `); pic.style.setProperty('--vig', Math.max(0, u.edit.vignette).toFixed(2)); pic.classList.toggle('vig', u.edit.vignette > 0); } }));
+      root.querySelectorAll('[data-trim]').forEach(el=>el.addEventListener('input',()=>{const d=u.videoEdit;d[el.dataset.trim]=+el.value;root.querySelector('[data-trim="start"]').max=d.end-100;root.querySelector('[data-trim="end"]').min=d.start+100;root.querySelectorAll('[data-trim-time]').forEach(out=>out.textContent=videoTime(d[out.dataset.trimTime]));}));
       const cap = root.querySelector('.mmgp-icap');
       if (cap) cap.addEventListener('change', () => { const p = MM.media.photos(c).find(x => x.id === +u.screen.slice(6)); if (p) { p.caption = cap.value; c.save(); } });
     },
@@ -174,6 +179,7 @@
       if (u.pick) { u.pick = false; return false; }
       if (u.drawer) { u.drawer = false; c.render(); return true; }
       if (u.info) { u.info = false; c.render(); return true; }
+      if (u.videoEdit) { u.videoEdit=null;c.render();return true; }
       if (u.edit) { u.edit = null; c.render(); return true; }
       if (u.screen === 'slide') { u.screen = u.slideFrom || ''; c.render(); return true; }
       if (u.screen === 'folder:camera') { u.screen = 'folders'; c.render(); return true; }
@@ -219,12 +225,14 @@
         case 'mmgp-eauto': Object.assign(u.edit, {light: .15, color: .1, pop: .2}); c.render(); return true;
         case 'mmgp-ereset': Object.assign(u.edit, u.etab === 'crop' ? {rot: 0} : {light: 0, color: 0, pop: 0, vignette: 0}); c.render(); return true;
         case 'mmgp-erot': u.edit.rot = ((u.edit.rot || 0) + 1) % 4; c.render(); return true;
+        case 'mmgp-vcancel': u.videoEdit=null;c.render();return true;
+        case 'mmgp-vsave': {const d=u.videoEdit;if(!d||d.end-d.start<100)return true;const {id,...base}=p;const out=MM.media.add(c,{...base,duration:d.end-d.start,trimStart:(p.trimStart||0)+d.start,source:p.source||id,savedAt:Date.now()});u.videoEdit=null;u.screen='photo:'+out.id;c.render();return true;}
         case 'mmgp-eclose': u.edit = null; c.render(); return true;
         case 'mmgp-esave': { const e = u.edit; p.edit = Object.values(e).some(v => v) ? {...e} : undefined; c.save(); u.edit = null; c.toast(T().t('photos_photoeditor_save_complete'), false); c.render(); return true; }
         case 'mmgp-help': u.drawer = false; c.open('help', 'photos'); return true;
         case 'mmgp-search': u.screen = 'search'; u.q = ''; c.render(); return true;
         case 'mmgp-share': MM.share(c, {kind: 'image', exclude: ['photos']}); return true;
-        case 'mmgp-edit': if (p.kind === 'video') { c.toast(T().t('photos_pager_menu_slideshow'), false); return true; } u.edit = {light: 0, color: 0, pop: 0, vignette: 0, rot: 0, ...(p.edit || {})}; u.etab = 'tune'; c.render(); return true;
+        case 'mmgp-edit': if (p.kind === 'video') {if(!p.duration||p.duration<200){c.toast(T().t('cpe_video_duration_error_msg'));return true;}u.videoEdit={start:0,end:p.duration};c.render();return true;} u.edit = {light: 0, color: 0, pop: 0, vignette: 0, rot: 0, ...(p.edit || {})}; u.etab = 'tune'; c.render(); return true;
         case 'mmgp-info': u.info = !u.info; c.render(); return true;
         // The viewer's overflow: Slideshow, Use as (the wallpaper crop), Print, Add to album; in Trash Restore and
         // Permanently delete.

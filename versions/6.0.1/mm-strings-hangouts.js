@@ -807,5 +807,75 @@ MM.strings('hangouts', {
 "fr",
 "es"
 ]
+},
+"realtimechat_conversation_delete_title": {
+"res": "bullhead:Hangouts:realtimechat_conversation_delete_title",
+"en": "Delete Hangout",
+"hu": "Delete Hangout",
+"de": "Delete Hangout",
+"fr": "Delete Hangout",
+"es": "Delete Hangout",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"realtimechat_conversation_delete_text": {
+"res": "bullhead:Hangouts:realtimechat_conversation_delete_text",
+"en": "If you delete, you will lose this Hangout's messages and other history.",
+"hu": "If you delete, you will lose this Hangout's messages and other history.",
+"de": "If you delete, you will lose this Hangout's messages and other history.",
+"fr": "If you delete, you will lose this Hangout's messages and other history.",
+"es": "If you delete, you will lose this Hangout's messages and other history.",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"realtimechat_conversation_delete_menu_item_text": {
+"res": "bullhead:Hangouts:realtimechat_conversation_delete_menu_item_text",
+"en": "Delete",
+"hu": "Delete",
+"de": "Delete",
+"fr": "Delete",
+"es": "Delete",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"notifications_are_dnd": {
+"res": "bullhead:Hangouts:notifications_are_dnd",
+"en": "Notifications snoozed until %s",
+"hu": "Notifications snoozed until %s",
+"de": "Notifications snoozed until %s",
+"fr": "Notifications snoozed until %s",
+"es": "Notifications snoozed until %s",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
+},
+"notifications_dnd_cancel": {
+"res": "bullhead:Hangouts:notifications_dnd_cancel",
+"en": "Resume",
+"hu": "Resume",
+"de": "Resume",
+"fr": "Resume",
+"es": "Resume",
+"untranslated": [
+"hu",
+"de",
+"fr",
+"es"
+]
 }
 });

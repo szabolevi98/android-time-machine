@@ -31,11 +31,14 @@
     el.style.backgroundImage=`url("${image(p)}")`;el.style.backgroundPosition=`${p.x??50}% ${p.y??50}%`;el.style.backgroundSize=size(c,p);
     c.el.screen.style.setProperty('--ng-wallpaper-preview',`url("${image(p)}")`);
   }
+  function usePhoto(c,photo) {
+      const svg=NG.media.svg(photo),box=svg.match(/viewBox="([^"]+)"/)?.[1]?.split(/\s+/).map(Number)||[0,0,960,720];
+      U(c).draft={kind:'photo',photo:photo.id,image:withNs('data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)),aspect:box[2]/box[3],x:50,y:50,scale:1};
+  }
   function choosePhoto(c) {
     NG.pickDocument(c,{mode:'pick',mime:'image/*',onPick(c,files){
       const photo=NG.media.photos(c).find(p=>p.id===files[0]?.photo);if(!photo){c.toast(t('wallpaper_load_fail'));return;}
-      const svg=NG.media.svg(photo),box=svg.match(/viewBox="([^"]+)"/)?.[1]?.split(/\s+/).map(Number)||[0,0,960,720];
-      U(c).draft={kind:'photo',photo:photo.id,image:withNs('data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)),aspect:box[2]/box[3],x:50,y:50,scale:1};
+      usePhoto(c,photo);
     }});
   }
   function set(c,where) {
@@ -44,7 +47,7 @@
     else if(where===1)s.lock=picture;else{s.home=picture;s.lock=clone(picture);}
     c.data.settings.wallpaperSet=true;c.save();apply(c);c.home();
   }
-  NG.wallpaper={apply,image,size};
+  NG.wallpaper={apply,image,size,usePhoto};
   NG.register('wallpaper-system',{app:false,init(c){apply(c);window.addEventListener('resize',()=>{apply(c);if(c.ui.view==='wallpapers')paint(c);});}});
   NG.register('wallpapers',{
     app:false,noStatus:()=>true,statusColor:()=> 'transparent',

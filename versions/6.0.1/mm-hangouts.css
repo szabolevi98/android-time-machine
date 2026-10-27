@@ -57,3 +57,6 @@
 .mmho-end{position:absolute;bottom:calc(48 * var(--dp));left:50%;transform:translateX(-50%);width:calc(56 * var(--dp));height:calc(56 * var(--dp));padding:0;border:0;border-radius:50%;background:#db4437;display:grid;place-items:center;box-shadow:0 calc(3 * var(--dp)) calc(6 * var(--dp)) rgba(0,0,0,.3)}
 .mmho-end img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
 .mmho-title small{display:block;margin-top:calc(2 * var(--dp));color:#fff;font:400 calc(14 * var(--dp))/1.172 Roboto,sans-serif}
+
+/* Hangouts 4.1: snoozed-until status and Resume. */
+.mmho-snooze{display:flex;align-items:center;gap:calc(12 * var(--dp));padding:calc(12 * var(--dp));background:#fff9c4;font-size:calc(14 * var(--dp));}.mmho-snooze span{flex:1}.mmho-snooze button{border:0;background:none;color:#0f9d58;font:500 calc(14 * var(--dp)) Roboto,sans-serif;}

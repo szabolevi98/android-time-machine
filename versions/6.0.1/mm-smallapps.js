@@ -40,10 +40,10 @@
   // icon tinted colorControlNormal, the Subhead title, the date (90 dp) and the size in Body1.
   const docs = c => c.data.docs || (c.data.docs = []);
   function docRows(c) {
-    const list = [...docs(c)].sort((a, b) => b.time - a.time);
+    const list = [...docs(c)].sort((a, b) => c.data.downloadsSort === 'name' ? a.name.localeCompare(b.name,c.locale(),{numeric:true}) : c.data.downloadsSort === 'size' ? b.size-a.size : b.time-a.time);
     if (!list.length) return '';
     const day = time => new Intl.DateTimeFormat(c.locale(), new Date(time).toDateString() === new Date().toDateString() ? {hour: 'numeric', minute: '2-digit'} : {month: 'short', day: 'numeric'}).format(new Date(time));
-    return `<div class="mmsa-list">${list.map(d => `<div class="mmsa-file"><i class="mmsa-mime" style="-webkit-mask-image:url('assets/du-ic_doc_pdf_alpha.png');mask-image:url('assets/du-ic_doc_pdf_alpha.png')"></i><span><b>${esc(c, d.name)}</b><small><em>${esc(c, day(d.time))}</em><em>${esc(c, MM.fileSize(c, d.size))}</em></small></span></div>`).join('')}</div>`;
+    return `<div class="mmsa-list">${list.map(d => `<button type="button" class="mmsa-file" data-action="mmsa-view" data-i="${docs(c).indexOf(d)}"><i class="mmsa-mime" style="-webkit-mask-image:url('assets/du-ic_doc_pdf_alpha.png');mask-image:url('assets/du-ic_doc_pdf_alpha.png')"></i><span><b>${esc(c, d.name)}</b><small><em>${esc(c, day(d.time))}</em><em>${esc(c, MM.fileSize(c, d.size))}</em></small></span></button>`).join('')}</div>`;
   }
   /* ACTION_CREATE_DOCUMENT (printing's Save as PDF): DocumentsUI in Downloads with fragment_save.xml at the bottom, the
      PDF icon, the file name (selected) and SAVE; the roots drawer opens under title_save ("Save to"). */
@@ -82,7 +82,7 @@
     const t = T(), u = c.ui.downloads, q = (u.q || '').trim().toLowerCase();
     const hits = q ? docs(c).filter(d => d.name.toLowerCase().includes(q)) : [];
     return `<div class="mmsa"><div class="mmsa-bar dark" style="background:#37474f"><button type="button" class="mmsa-btn" data-action="mmsa-searchoff"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button><input class="mmsa-q" value="${esc(c, u.q || '')}" placeholder="${esc(c, t.t('framework/search_hint'))}" autocomplete="off"></div>
-      <div class="mmsa-page grey">${hits.length ? `<div class="mmsa-list">${hits.map(d => `<div class="mmsa-file"><i class="mmsa-mime" style="-webkit-mask-image:url('assets/du-ic_doc_pdf_alpha.png');mask-image:url('assets/du-ic_doc_pdf_alpha.png')"></i><span><b>${esc(c, d.name)}</b><small><em>${esc(c, MM.fileSize(c, d.size))}</em></small></span></div>`).join('')}</div>` : q ? `<div class="mmsa-empty">${esc(c, t.t('DocumentsUI/empty'))}</div>` : ''}</div></div>`;
+      <div class="mmsa-page grey">${hits.length ? `<div class="mmsa-list">${hits.map(d => `<button type="button" class="mmsa-file" data-action="mmsa-view" data-i="${docs(c).indexOf(d)}"><i class="mmsa-mime" style="-webkit-mask-image:url('assets/du-ic_doc_pdf_alpha.png');mask-image:url('assets/du-ic_doc_pdf_alpha.png')"></i><span><b>${esc(c, d.name)}</b><small><em>${esc(c, MM.fileSize(c, d.size))}</em></small></span></button>`).join('')}</div>` : q ? `<div class="mmsa-empty">${esc(c, t.t('DocumentsUI/empty'))}</div>` : ''}</div></div>`;
   }
   MM.register('downloads', {
     statusColor: () => '#263238',
@@ -116,7 +116,8 @@
       const t = T(), u = c.ui.downloads;
       if (name === 'mmsa-roots') { u.roots = !u.roots; c.render(); return true; }
       if (name === 'mmsa-grid') { u.grid = !u.grid; c.render(); return true; }
-      if (name === 'mm-menu') { c.menu([{label: t.t('DocumentsUI/menu_sort'), action: c => c.dialog({title: t.t('DocumentsUI/menu_sort'), items: ['DocumentsUI/sort_name', 'DocumentsUI/sort_date', 'DocumentsUI/sort_size'].map(k => ({html: c.safe(t.t(k))}))})}, {label: t.t('DocumentsUI/menu_advanced_show'), action: () => {}}]); return true; }
+      if (name === 'mm-menu') { c.menu([{label: t.t('DocumentsUI/menu_sort'), action: c => c.dialog({title: t.t('DocumentsUI/menu_sort'), items: ['DocumentsUI/sort_name', 'DocumentsUI/sort_date', 'DocumentsUI/sort_size'].map(k => ({html: c.safe(t.t(k))})), onItem(i,c){c.data.downloadsSort=['name','date','size'][i];c.save();c.render();}})}, {label: t.t('DocumentsUI/menu_advanced_show'), action: () => {}}]); return true; }
+      if (name === 'mmsa-view') { const d=docs(c)[+el.dataset.i];if(d){c.ui.documentView={...d};c.open('document-view','downloads');}return true; }
       if (name === 'mmsa-missing') { u.searching = true; u.q = ''; c.render(); return true; }
       if (name === 'mmsa-searchoff') { u.searching = false; u.q = ''; c.render(); return true; }
       if (name === 'mmsa-open') { u.path.push(el.dataset.name); c.render(); return true; }
@@ -220,4 +221,5 @@
       return false;
     }
   });
+  MM.register('document-view', {app:false,statusColor:()=> '#263238',render(c){const d=c.ui.documentView||{};return `<div class="mmsa">${bar(c,d.name||'', '#37474f',true,'','<button type="button" class="mmsa-btn" data-action="mmsa-view-back"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button>')}<div class="mmsa-page grey"><pre class="mmsa-document">${esc(c,d.text||d.content||d.name||'')}</pre></div></div>`;},action(name,el,event,c){if(name!=='mmsa-view-back')return false;c.back();return true;}});
 })();

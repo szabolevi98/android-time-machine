@@ -29,3 +29,6 @@
 .mmcm-mode i{flex:none;display:grid;place-items:center;width:calc(40 * var(--dp));height:calc(40 * var(--dp));margin:0 calc(16 * var(--dp)) 0 calc(8 * var(--dp));border-radius:50%;background:rgba(0,0,0,.298)}
 .mmcm-mode img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
 .mmcm-opts.ev button.on{background:radial-gradient(circle,rgba(255,255,255,.3) 55%,transparent 56%)}
+
+/* Google Camera grid-lines preference: rule-of-thirds guide over the viewfinder. */
+.mmcm-grid{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to right,transparent 33.2%,#ffffff80 33.2%,#ffffff80 33.5%,transparent 33.5%,transparent 66.5%,#ffffff80 66.5%,#ffffff80 66.8%,transparent 66.8%),linear-gradient(to bottom,transparent 33.2%,#ffffff80 33.2%,#ffffff80 33.5%,transparent 33.5%,transparent 66.5%,#ffffff80 66.5%,#ffffff80 66.8%,transparent 66.8%);}

@@ -41,7 +41,7 @@
   const row = (c, f, pick) => `<div class="mmgd-row"${pick ? ` data-action="mmgd-pickone" data-i="${files(c).indexOf(f)}"` : EDITOR[f.type] && MM.appsData?.[EDITOR[f.type]] && !f.trashed ? ` data-action="mmgd-open" data-i="${files(c).indexOf(f)}"` : ''}><img src="${A(ICON[f.type] || 'ic_type_doc')}" alt=""><span>${esc(c, f.name)}</span>${f.starred && !pick ? '<i class="mmgd-star"></i>' : ''}
     ${pick ? '' : `<button type="button" class="mmgd-more" data-action="mmgd-more" data-i="${files(c).indexOf(f)}" aria-label="${esc(c, T().t('menu_overflow_content_description'))}"><img src="assets/gm-ic_menu_moreoverflow_mtrl_alpha.png" alt=""></button>`}</div>`;
   function grouped(c, list, pick) {
-    const t = T(), folders = list.filter(f => f.type === 'folder'), docs = list.filter(f => f.type !== 'folder');
+    const t = T(), by=(a,b)=>c.data.driveSort==='name'?a.name.localeCompare(b.name,c.locale(),{numeric:true}):c.data.driveSort==='opened'?(b.openedTime||b.time||0)-(a.openedTime||a.time||0):(b.time||0)-(a.time||0), folders = list.filter(f => f.type === 'folder').sort(by), docs = list.filter(f => f.type !== 'folder').sort(by);
     return `${folders.length ? `<div class="mmgd-group">${esc(c, t.t('fast_scroll_title_grouper_collections'))}</div>${folders.map(f => row(c, f, pick)).join('')}` : ''}${docs.length ? `<div class="mmgd-group">${esc(c, t.t('title_grouper_files'))}</div>${docs.map(f => row(c, f, pick)).join('')}` : ''}`;
   }
   const empty = (c, title, details) => `<div class="mmgd-empty">${details === undefined ? `<img src="${A('ic_empty_drive')}" alt="">` : ''}<b>${esc(c, title)}</b>${details ? `<span>${esc(c, details)}</span>` : ''}</div>`;
@@ -88,7 +88,7 @@
       ${[['folder', 'create_new_choice_folder', 'ic_createpanel_folder'], ['upload', 'create_new_choice_upload', 'ic_createpanel_upload'], ['scan', 'create_new_choice_scan', 'ic_createpanel_scan'], ['doc', 'create_new_choice_document', 'ic_createpanel_doc'], ['sheet', 'create_new_choice_sheet', 'ic_createpanel_sheet'], ['slide', 'create_new_choice_slide', 'ic_createpanel_slide']]
         .map(([id, k, ic]) => `<button type="button" class="mmgd-crow" data-action="mmgd-new" data-t="${id}"><img src="${A(ic)}" alt=""><span>${esc(c, t.t(k))}</span></button>`).join('')}</div>` : '';
     return `<div class="mmgd"><div class="mmgd-bar"><button type="button" class="mmgd-btn" data-action="mmgd-drawer"><img src="${A('quantum_ic_menu_grey600_24')}" alt=""></button><span class="mmgd-title">${esc(c, t.t(u.view))}</span>
-      <button type="button" class="mmgd-btn" data-action="mmgd-search" aria-label="${esc(c, t.t('menu_search'))}"><img src="${A('ic_menu_search_alpha')}" alt=""></button><button type="button" class="mmgd-btn" data-action="mmgd-create" aria-label="${esc(c, t.t('create_new_choice_title'))}"><img src="${A('ic_add')}" alt=""></button></div>
+      <button type="button" class="mmgd-btn" data-action="mmgd-search" aria-label="${esc(c, t.t('menu_search'))}"><img src="${A('ic_menu_search_alpha')}" alt=""></button><button type="button" class="mmgd-btn" data-action="mmgd-create" aria-label="${esc(c, t.t('create_new_choice_title'))}"><img src="${A('ic_add')}" alt=""></button>${MM.menu.button(c, 'mmgd-over')}</div>
       <div class="mmgd-page">${body}</div>${create}${drawer}</div>`;
   }
   const add = (c, f) => { files(c).push({time: Date.now(), ...f}); c.save(); };
@@ -115,6 +115,7 @@
     action(name, el, event, c) {
       const u = ui(c), t = T();
       switch (name) {
+        case 'mm-menu': c.menu([{label:t.t('menu_sort_by'),action:c=>c.dialog({title:t.t('menu_sort_by'),items:['menu_sort_title','menu_sort_last_modified','menu_sort_recently_opened'].map(k=>({html:c.safe(t.t(k))})),onItem(i,c){c.data.driveSort=['name','modified','opened'][i];c.save();c.render();}})}]);return true;
         case 'mmgd-drawer': u.drawer = !u.drawer; c.render(); return true;
         case 'mmgd-create': u.create = !u.create; c.render(); return true;
         case 'mmgd-view': u.view = el.dataset.v; u.drawer = false; c.render(); return true;
@@ -125,7 +126,7 @@
           else c.open('help', 'drive');
           return true;
         }
-        case 'mmgd-open': if (!el.closest('[data-action="mmgd-more"]')) MM.editorsOpen?.(c, files(c)[+el.dataset.i]); return true;
+        case 'mmgd-open': if (!el.closest('[data-action="mmgd-more"]')) {const f=files(c)[+el.dataset.i];f.openedTime=Date.now();c.save();MM.editorsOpen?.(c,f);} return true;
         case 'mmgd-search': u.search = true; u.q = ''; c.render(); return true;
         case 'mmgd-searchoff': u.search = false; u.q = ''; c.render(); return true;
         case 'mmgd-qclear': u.q = ''; c.render(); return true;
@@ -147,7 +148,7 @@
         case 'mmgd-scansave': add(c, {type: 'pdf', name: `${u.scanName}.pdf`, size: 412000, uploaded: true}); u.scan = ''; c.toast(AndroidStrings.format(t.t('grid_sync_upload_label_format'), `${u.scanName}.pdf`)); c.render(); return true;
         case 'mmgd-more': {
           const f = files(c)[+el.dataset.i]; if (!f) return true;
-          if (f.trashed) return c.menu([{label: t.t('menu_delete'), action: c => { files(c).splice(files(c).indexOf(f), 1); c.save(); c.render(); }}]), true;
+          if (f.trashed) return c.menu([{label:t.t('menu_trash_restore'),action:c=>{f.trashed=false;c.save();c.render();}},{label: t.t('menu_delete'), action: c => { files(c).splice(files(c).indexOf(f), 1); c.save(); c.render(); }}]), true;
           c.menu([{label: t.t(f.starred ? 'action_card_unstar' : 'action_card_star'), action: c => { f.starred = !f.starred; c.save(); c.render(); }},
             {label: t.t('menu_rename'), action: c => {
               let v = f.name;

@@ -399,5 +399,37 @@ MM.strings('maps', {
 "de": "Google Earth kann nicht geöffnet werden.",
 "fr": "Impossible d'ouvrir Google Earth.",
 "es": "No se puede abrir Google Earth."
+},
+"REMOVE": {
+"res": "bullhead:Maps:REMOVE",
+"en": "Remove",
+"hu": "Eltávolítás",
+"de": "Entfernen",
+"fr": "Supprimer",
+"es": "Eliminar"
+},
+"MAPS_HISTORY": {
+"res": "bullhead:Maps:MAPS_HISTORY",
+"en": "Maps history",
+"hu": "Google Térkép előzményei",
+"de": "Google Maps-Verlauf",
+"fr": "Historique Google Maps",
+"es": "Historial de Google Maps"
+},
+"DA_DISTANCE_FORMAT_MILES_ABBREVIATED": {
+"res": "bullhead:Maps:DA_DISTANCE_FORMAT_MILES_ABBREVIATED",
+"en": "%s mi",
+"hu": "%s mf",
+"de": "%s mi",
+"fr": "%s mi",
+"es": "%s mi"
+},
+"DA_DISTANCE_FORMAT_FEET_ABBREVIATED": {
+"res": "bullhead:Maps:DA_DISTANCE_FORMAT_FEET_ABBREVIATED",
+"en": "%s ft",
+"hu": "%s láb",
+"de": "%s ft",
+"fr": "%s pi",
+"es": "%s ft"
 }
 });

@@ -88,7 +88,7 @@
       ${[['menu_invites', 'invites'], ['menu_archived_conversations', 'archived'], ['dnd_menu_item', 'dnd'], ['home_menu_settings', 'settings'], ['help_feedback_menu_item_text', 'help']].map(([k, id]) => `<button type="button" class="mmho-di" data-action="mmho-item" data-id="${id}">${esc(c, t.t(k))}${id === 'dnd' && prefs(c).dndUntil > Date.now() ? `<small>${esc(c, new Intl.DateTimeFormat(c.locale(), {hour: 'numeric', minute: '2-digit'}).format(new Date(prefs(c).dndUntil)))}</small>` : ''}</button>`).join('')}</div>` : '';
     const pick = u.pick ? `<div class="mmho-scrim" data-action="mmho-pick"></div><div class="mmho-sheet">${P().sorted(c).map(p => `<button type="button" class="mmho-prow" data-action="mmho-start" data-id="${p.id}">${P().tile(c, p, 'mmho-av')}<span>${esc(c, p.name)}</span></button>`).join('')}</div>` : '';
     return `<div class="mmho"><div class="mmho-bar"><button type="button" class="mmho-hb" data-action="mmho-drawer"><i></i><i></i><i></i></button><span class="mmho-title">${esc(c, t.t('app_name'))}</span><button type="button" class="mmho-btn" data-action="mmho-search"><img class="inv" src="${A('quantum_ic_search_black_24')}" alt=""></button></div>
-      <div class="mmho-page">${items.map(x => rowHtml(c, x)).join('')}</div>
+      <div class="mmho-page">${prefs(c).dndUntil > Date.now() ? `<div class="mmho-snooze"><span>${esc(c, AndroidStrings.format(t.t('notifications_are_dnd'),new Date(prefs(c).dndUntil).toLocaleTimeString(c.locale(),{hour:'numeric',minute:'2-digit'})))}</span><button type="button" data-action="mmho-resume">${esc(c,t.t('notifications_dnd_cancel'))}</button></div>` : ''}${items.map(x => rowHtml(c, x)).join('')}</div>
       <button type="button" class="mmho-fab" data-action="mmho-pick" aria-label="${esc(c, t.t('fab_new_conversation'))}"><img src="${A('quantum_ic_add_white_24')}" alt=""></button>${pick}${drawer}</div>`;
   }
   function chat(c, x) {
@@ -119,6 +119,7 @@
     page: c => { const u = c.ui.hangouts || {}; return MM.page('hangouts', ...(u.screen || '').split(':').filter(x => x !== 'set'), u.search != null && 'search', u.chat && 'chat', u.calling && 'call'); },
     statusColor: c => ui(c).calling ? '#000' : '#0b8043',
     render,
+    tick(c){const p=prefs(c);if(p.dndUntil&&p.dndUntil<=Date.now()){p.dndUntil=0;c.save();c.render();}},
     mount(c, root) {
       const msgs = root.querySelector('.mmho-msgs'); if (msgs) msgs.scrollTop = msgs.scrollHeight;
       const sf = root.querySelector('.mmho-sfield');
@@ -138,6 +139,7 @@
     action(name, el, event, c) {
       const u = ui(c);
       switch (name) {
+        case 'mmho-resume': prefs(c).dndUntil=0;c.save();c.render();return true;
         case 'mmho-drawer': u.drawer = !u.drawer; c.render(); return true;
         case 'mmho-pick': u.pick = !u.pick; c.render(); return true;
         case 'mmho-open': { u.chat = +el.dataset.id; const x = chats(c).find(y => y.id === u.chat); if (x?.archived) { x.archived = false; c.save(); } u.screen = ''; c.render(); return true; }
@@ -150,7 +152,7 @@
           if (id === 'dnd') {
             c.render();
             const hours = [0, 1, 2, 4, 8, 24, 72];
-            c.dialog({title: t.t('dnd_dialog_title'), items: hours.map(h => ({html: esc(c, h ? t.plural('dnd_hours', h, null, h) : t.t('dnd_off'))})), onItem: i => { prefs(c).dndUntil = hours[i] ? Date.now() + hours[i] * 36e5 : 0; c.save(); }});
+            c.dialog({title: t.t('dnd_dialog_title'), items: hours.map(h => ({html: esc(c, h ? t.plural('dnd_hours', h, null, h) : t.t('dnd_off'))})), onItem: i => { prefs(c).dndUntil = hours[i] ? Date.now() + hours[i] * 36e5 : 0; c.save(); c.render(); }});
             return true;
           }
           u.screen = id === 'settings' ? 'set:settings' : id; c.render(); return true;
@@ -172,7 +174,7 @@
         case 'mmho-endcall': endCall(c); return true;
         case 'mmho-cmenu': {
           const x = chats(c).find(y => y.id === u.chat), t = T(); if (!x) return true;
-          c.menu([{label: t.t('realtimechat_conversation_archive_menu_item_text'), action: c => { x.archived = true; c.save(); u.chat = 0; c.render(); c.toast(t.t('conversation_archived')); }},
+          c.menu([{label:t.t('realtimechat_conversation_delete_menu_item_text'),action:c=>c.dialog({title:t.t('realtimechat_conversation_delete_title'),message:t.t('realtimechat_conversation_delete_text'),buttons:[{label:MM.text('framework').t('cancel')},{label:t.t('realtimechat_conversation_delete_menu_item_text'),action:c=>{c.data.hangouts=chats(c).filter(y=>y!==x);delete u.draft[x.id];u.chat=0;c.save();c.render();}}]})},{label: t.t('realtimechat_conversation_archive_menu_item_text'), action: c => { x.archived = true; c.save(); u.chat = 0; c.render(); c.toast(t.t('conversation_archived')); }},
             {label: t.t(x.muted ? 'realtimechat_conversation_unmute_menu_item_text' : 'realtimechat_conversation_mute_menu_item_text'), action: c => { x.muted = !x.muted; c.save(); }}]);
           return true;
         }
@@ -182,10 +184,11 @@
           // The other side answers once (mm-notify.js), posted with stat_notify_hangout unless the chat is open.
           const who = MM.people?.byId(c, x.contact);
           if (who && MM.notifications) MM.notifications.answer(c, 'hangouts', x.id, c => {
+            if (!chats(c).includes(x)) return;
             const answer = MM.text('hangouts').t(`sim_reply_${who.id % 2 + 1}`), open = c.ui.view === 'hangouts' && ui(c).chat === x.id;
             x.messages.push({id: Date.now(), mine: false, text: answer, time: Date.now()}); c.save();
             if (open) { c.render(); return; }
-            if (x.muted) return;
+            if (x.muted || !on(c,'chat_enabled') || prefs(c).dndUntil > Date.now()) return;
             MM.notify(c, {app: 'hangouts', icon: 'assets/ho-stat_notify_hangout.png', title: who.name, text: answer, person: who.id, open: ['hangouts', `chat:${x.id}`]});
           });
           return true;

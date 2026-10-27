@@ -76,3 +76,5 @@
 .mmmp-offfoot button.dl{background:#4285f4;color:#fff;border-radius:calc(2 * var(--dp))}
 .mmmp-star{position:absolute;right:calc(72 * var(--dp));top:calc(12 * var(--dp));width:calc(40 * var(--dp));height:calc(40 * var(--dp));border:0;border-radius:50%;background:none;color:#bdbdbd;font-size:calc(24 * var(--dp))}
 .mmmp-star.on{color:#fbbc05}
+
+.mmmp-history{display:flex;gap:calc(12 * var(--dp));padding:calc(16 * var(--dp));border-bottom:calc(1 * var(--dp)) solid #eee;}.mmmp-history button{border:0;background:none;font:calc(14 * var(--dp)) Roboto,sans-serif;color:#4285f4;}.mmmp-history button:first-child{flex:1;text-align:left;color:#212121;}
