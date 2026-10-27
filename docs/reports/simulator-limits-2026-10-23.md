@@ -239,7 +239,7 @@ APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<sl
 
 #### T55 — News & Weather a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `74376c39`. Telepítettként: 6.0.1 News & Weather 2.7.1, 7.1.2 News & Weather 3.1.4, egy sablonból (`docs/templates/news-play.*`, `docs/tools/news-play.py`) a saját APK szövegeivel és ikonjaival: Headlines az időjárás-kártyával (az APK időjárásképe, Temp. / Precip. / Wind / Humidity fülek, C° / F°, a szekciófejléc menüje: Edit weather display, Temperature és Wind speed units), Technology és Sports szekció a fiókból, cikkoldal Open in browser és Share article menüvel, Search ("No matching news"), sötét téma. A cikkek nyolc rövid kitalált demódarab. Szekció hozzáadása, kiadások, Settings, Help: elutasítás. Ellenőrzés: `tests/browser/play-news.mjs` (mindkét verzió, telefonos szélesség is), `npm test`.
 
 #### T56 — Google+ a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
