@@ -336,7 +336,7 @@ location, észak, Share, Layers mentve, a saját settings.xml).
 - **Pótolandó (T23):** a megosztódobozban kép a telefon képei közül és a telefon helye (a poszton is megjelennek, a
   stream megtartja); Settings az APK beállításlistája: Notifications (pipák, csengőhang), About Google+ a verzióval; a
   fiókoldalas sorok korlátja marad.
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `1eee4634`. Google+ 8.4 / 9.14 az 5.1.1 T23 szintjén: a megosztódobozban kép a telefon képei közül (dokumentumválasztó; a 6.0.1-es választó már a kép azonosítóját is visszaadja) és a telefon helye (Mountain View, CA), a poszt a streamben mindkettőt mutatja és megtartja; Settings (a kódban épített lista): Notifications, Ringtone (alapértelmezett vagy Silent), Vibrate, Automatically play videos, About Google+ a verzióval; Account és Open source licenses: korlát. Ellenőrzés: `tests/browser/play-plus.mjs` mindkét verzió, asztali és telefonos szélesség; `npm test` 260/260.
 
 #### T65 — Play Newsstand az 5.1.1 szintjén
 
