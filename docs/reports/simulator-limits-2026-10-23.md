@@ -438,7 +438,7 @@ Sorrend: előbb az apró hibák és halott sorok, aztán appok szerint, végül 
 
 #### Ellenőrzés és terv (2-es változat, 2026-10-27)
 
-**Státusz: jóváhagyva, végrehajtás alatt.** A tulajdonos 2026-10-27-én mind a hét alábbi csomag végrehajtását kérte, az 1. csomagtól; commit és push engedélyezett, deploy nem kell. A teljes T71–T93 listából csak a „2-es változat” terjedelme érvényes: a látható, de nem működő vagy hibás részek pótlása, a nagy újraépítések nélkül. A félkész T71 stash feldolgozva; az 1–6. csomag kész (T71, T75, T72–T74, T79–T80, T77–T78, T81–T83, T84, T87). A folytatási sorrend az alábbi hétcsomagos tábláé; a T76 Naptár General a 7. csomag része.
+**Státusz: a 2-es változat mind a hét csomagja kész.** A tulajdonos 2026-10-27-én mind a hét alábbi csomag végrehajtását kérte, az 1. csomagtól; commit és push engedélyezett, deploy nem kell. A teljes T71–T93 listából csak a „2-es változat” terjedelme érvényes: a látható, de nem működő vagy hibás részek pótlása, a nagy újraépítések nélkül. A félkész T71 stash feldolgozva; az 1–7. csomag kész (T71, T75, T72–T74, T79–T80, T77–T78, T81–T83, T84, T87, továbbá T88–T89 jóváhagyott részei és T76 General). A 4–7. csomag kódcommitjai: `e4370a2c`, `d293c723`, `d6577601`, `60054d53`. A teljes T71–T93 lista fennmaradó, alább kizárt tételeihez külön döntés kell.
 
 **Ellenőrzés a kódban (nem az ügynökök szava alapján).** Megerősítve: a T71 tételei (a 7.1.2 DND-javaslat `r.enabled` /
 `r.on`, Users, inverzió, SIM PIN; a 6.0.1 Auto-sync, Backup account, Default apps hook nélkül, Restrict background csak
@@ -559,7 +559,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - Mindkettő: a Settings General és Events from Gmail sora halott (5.1.1 calendar-prefs.js: hét kezdete, időzóna, elutasított események, alapidőtartam, értesítések, gyors válaszok, naptáronkénti Sync).
   - Mindkettő: eseményszerkesztő — ismétlődés, emlékeztető, vendégek, elérhetőség, láthatóság, időzóna, záródátum; ismétlődő esemény szerkesztés/törlés-hatóköre; az emlékeztető értesítést küld (5.1.1 calendar.js, simulator.js:1845,1854).
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `60054d53`. Mindkét kiadás saját gyári Calendar APK-jának GeneralPreferences dex-e alapján General oldal: hét kezdete, készülék-/otthoni időzóna (az események nézeti példányát váltja át), hétszámok, elutasított események szűrése, alapidőtartam (15–120 perc és No end time, éjfélkor záródátummal), értesítés / standard hang / csengőhang / rezgés és menthető gyors válaszok; 7.1.2-ben alternatív naptár a havi nézetben. A Show more events a dex-ben tablet-only, ezért ezen telefonokon nincs. Events from Gmail helyi kapcsoló megerősítéssel a fromGmail rekordokat szűri; nincs valódi levélimport. Szűrés közben a mentés/törlés az összes nyers rekordból dolgozik, az elrejtett események megmaradnak. Az értesítési beállítások mentődnek; ismétlődés, emlékeztető-kézbesítés és a teljes eseményszerkesztő bővítése a kizárások szerint kimarad. Ellenőrzés: `system-settings-effects.mjs` mindkét kiadásban 1280/390 px, modulpróbák időzónával és éjféli időtartammal; `npm test` 272/272, teljes `npm run test:browser` sikeres.
 
 #### T77 — Kamera
 
@@ -688,7 +688,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - Battery History details (APK-ellenőrzés); 6.0.1 Clear data / Clear cache valóban törölje az app tartalmát (7.1.2 ng-app-data.js:129).
   - Process stats menü (APK-ellenőrzés), 6.0.1 Force stop a memória-részleten, 7.1.2 memória-részletoldal; 6.0.1 Wi-Fi Direct és WPS (7.1.2 ng-settings-extra.js:34).
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `60054d53`. Mindkét kiadásban a bekapcsolt DND automatikus szabály ténylegesen hat: ütemezés a kiválasztott napokon, éjfélen átnyúló intervallum, helyi naptáresemény és válaszfeltétel; átfedéskor a szigorúbb mód, kilépéskor az előző kézi mód visszaáll. Cast saját gyári üres készülékoldal és menthető Enable wireless display menü (hardveres felderítés nincs). 6.0.1 Clear data a helyi appállapotot és beállításokat valóban törli, a Chrome újra első indításra kerül, a Clock ébresztői/időzítője megszűnnek, a Play letöltés leáll; a névjegy/SMS/naptár/média/dokumentum szolgáltatói és a demófiók távoli rekordjai megmaradnak. Clear cache a modellezett gyorsítótárakat törli; újbóli megnyitás után ismét törölhető. VPN, APN, tanúsítvány, Battery history és Process stats a kizárt nagy tételek között marad. Ellenőrzés: `system-settings-effects.mjs` mindkét kiadás 1280/390 px, automatikus DND és Cancel/OK adattörlés; `npm test` 272/272, teljes böngészős sor sikeres.
 
 #### T89 — Beállítások: személyes és rendszer (nagyobb tételek)
 
@@ -700,7 +700,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - Kisegítő lehetőségek: nagyítás háromszoros koppintással; Large text / Font size és Touch & hold delay hatása.
   - Fejlesztői beállítások: Show touches, Pointer location, Layout bounds, animációs skálák hatása.
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `60054d53`. A kézi dátum/idő és időzóna a státuszsor, zárolás, árnyékpanel, óra és időwidget kijelzésére hat; az automatikus idő visszakapcsolásával a valós idő áll vissza. A 6.0.1 Large text és 7.1.2 Font size a frissen kirajzolt alkalmazás-/beállításszövegeket méretezi (nem csupán a mintát); a Display size továbbra is előnézet. Touch & hold delay a launcher hosszú nyomásához 500/1000/1500 ms; böngészős valódi egérpróba igazolja a késleltetést. Képernyőrögzítés, fejlesztői effektek és háromszoros koppintásos nagyítás a kizárások szerint kimarad. A közös preferencialista-olvasó javítva: a meglévő tömb mellett nem naplóz téves hiányzó fordítási kulcsot. Ellenőrzés: `system-settings-effects.mjs` mindkét kiadás 1280/390 px, `system-clock.mjs` mindkét kiadás (riasztó/szundi/időzítő regresszió), 272/272 modulpróba és a teljes böngészős sor; a Nougat ötnyelvű kapuja 170 alkalmazásmegnyitás és 620 preferenciaoldal után sikeres.
 
 #### T90 — Kezdőképernyő
 

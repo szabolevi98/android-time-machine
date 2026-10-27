@@ -18,7 +18,7 @@ def status(tid):
 if sys.argv[1] == '--next':
     # Each approved round's order: the rows of its table, | n | Tnn | ...
     for name in ('Második kör', 'Harmadik kör', 'Negyedik kör', 'Ötödik kör', 'Hatodik kör', 'Hetedik kör'):
-        if name == 'Hetedik kör' and '**Státusz: jóváhagyva, végrehajtás alatt.**' in s:
+        if name == 'Hetedik kör' and any(marker in s for marker in ('**Státusz: jóváhagyva, végrehajtás alatt.**', '**Státusz: a 2-es változat mind a hét csomagja kész.**')):
             # The owner's narrower option 2 overrides the full T71–T93 order. Calendar General is package 7;
             # recurrence, new media libraries, launcher rebuilding and the other exclusions are not queued.
             packages = [('T71',), ('T75',), ('T72', 'T73', 'T74'), ('T79', 'T80'),
