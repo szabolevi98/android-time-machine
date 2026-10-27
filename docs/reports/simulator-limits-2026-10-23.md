@@ -438,7 +438,7 @@ Sorrend: előbb az apró hibák és halott sorok, aztán appok szerint, végül 
 
 #### Ellenőrzés és terv (2-es változat, 2026-10-27)
 
-**Státusz: jóváhagyva, végrehajtás alatt.** A tulajdonos 2026-10-27-én mind a hét alábbi csomag végrehajtását kérte, az 1. csomagtól; commit és push engedélyezett, deploy nem kell. A teljes T71–T93 listából csak a „2-es változat” terjedelme érvényes: a látható, de nem működő vagy hibás részek pótlása, a nagy újraépítések nélkül. A félkész T71 stash feldolgozva; az 1–5. csomag kész (T71, T75, T72–T74, T79–T80, T77–T78, T81–T83). A folytatási sorrend az alábbi hétcsomagos tábláé; a T76 Naptár General a 7. csomag része.
+**Státusz: jóváhagyva, végrehajtás alatt.** A tulajdonos 2026-10-27-én mind a hét alábbi csomag végrehajtását kérte, az 1. csomagtól; commit és push engedélyezett, deploy nem kell. A teljes T71–T93 listából csak a „2-es változat” terjedelme érvényes: a látható, de nem működő vagy hibás részek pótlása, a nagy újraépítések nélkül. A félkész T71 stash feldolgozva; az 1–6. csomag kész (T71, T75, T72–T74, T79–T80, T77–T78, T81–T83, T84, T87). A folytatási sorrend az alábbi hétcsomagos tábláé; a T76 Naptár General a 7. csomag része.
 
 **Ellenőrzés a kódban (nem az ügynökök szava alapján).** Megerősítve: a T71 tételei (a 7.1.2 DND-javaslat `r.enabled` /
 `r.on`, Users, inverzió, SIM PIN; a 6.0.1 Auto-sync, Backup account, Default apps hook nélkül, Restrict background csak
@@ -647,7 +647,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - My apps „All” fül Remove-val (6.0.1 nincs fül, 7.1.2 nincs Remove); „Downloading…” értesítés; alkalmazásonkénti Auto-update; kártya-overflow; Similar, fejlesztői linkek, +1 (mindkettő).
   - 7.1.2: mintavélemények és hisztogram (6.0.1 mm-play.js:111 a pár).
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `d6577601`. A 6.0.1 Phonesky Settings auto-update/download-mode/purchase-auth sorai a saját APK lehetőségeivel és mentett összegzéssel választhatók. Clear local search history a helyben eltárolt kereséseket törli; a találatra lépés elmenti a keresést. Content filtering saját helyi be-/kikapcsolással, legalább négy számjegyes PIN létrehozásával és megerősítésével, belépésnél PIN-ellenőrzéssel és szintválasztással; hibás/cancel PIN nem módosít. A Cancel download azonnal és a végső 900 ms-os telepítési késleltetés alatt is érvényes, korábbi időzítő nem telepíti a megszakított vagy újraindított feladatot. Ellenőrzés: `system-store-games.mjs` 6.0.1 1280/390 px, mentés/újratöltés, hibás/short/cancel PIN, három telepítési időzítési eset; `npm test` 260/260. A többi T84-rész nem része a 2-es változatnak; valódi vásárlás és hálózati frissítés nem indul.
 
 #### T85 — Play Music
 
@@ -674,7 +674,7 @@ Play Store extrák (Similar, +1, kártyamenü), Process stats menü, Battery his
   - 6.0.1: a játékok nem koppinthatók; nincs részlet, achievementek, Play, Players, Explore, View in Play Store (5.1.1 play-apps.js:320-345).
   - 7.1.2: Players üres; a részletből hiányoznak az achievementek; a beállításokból a Game Profile láthatóság, értesítések, Muted games (6.0.1 mm-gms.js:47 a pár).
 - **Forrás:** az 5.1.1 kódja (a fenti hivatkozások), a 7.1.2 meglévő párja, ahol van, és az APK/dex ott, ahol a sor APK-ellenőrzést ír.
-- **Állapot:** Nyitott.
+- **Állapot:** Kész (2-es változat) — `d6577601`. A 7.1.2 PlayGames 3.7.24 GamesSettingsFragment saját dex-e alapján Game Profile public/hidden megerősítéssel (a meglévő gamer profil visible mezőjével összekötve), Multiplayer/Quests/Requests/Friend értesítéskapcsolók, Muted games üres állapota és meglévő némítás Unmute megerősítéssel. A Cancel nem módosít, minden változtatás helyben mentődik és újratöltés után megmarad. A 2017-es APK csatornái szerepelnek; a korábbi Level up sort nem másoltuk át. Ellenőrzés: a gyári PublicProfileListItem, NotificationChannelListItem és UnMuteDialog visszafejtve; saját APK-s szövegek generálva; `system-store-games.mjs` 1280/390 px, publikus profil elvetése/mentése, mind a négy kapcsoló, Unmute elvetése/mentése, újratöltés; 260 modulteszt. A játékok és achievementek nagyobb átépítése továbbra is kívül marad a 2-es változaton.
 
 #### T88 — Beállítások: hálózat és eszköz (nagyobb tételek)
 
