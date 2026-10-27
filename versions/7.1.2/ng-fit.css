@@ -75,3 +75,17 @@
 .ngfit-switch.on{background:#00838f80}
 .ngfit-switch.on::after{left:calc(17 * var(--dp));background:#00838f}
 .ngfit-white{filter:brightness(0) invert(1)}
+.ngfit-goal h3{position:relative}
+.screen .ngfit-cmenu{position:absolute;right:calc(-8 * var(--dp));top:calc(-8 * var(--dp));width:calc(40 * var(--dp));height:calc(40 * var(--dp));padding:0;border:0;background:none}
+.ngfit-cmenu img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.screen .ngfit-type{display:flex;align-items:center;gap:calc(16 * var(--dp));width:100%;padding:calc(8 * var(--dp)) 0;border:0;border-bottom:1px solid #0000006b;background:none;text-align:left}
+.ngfit-type span{display:flex;flex-direction:column}
+.ngfit-type small{color:#757575;font:400 calc(12 * var(--dp)) Roboto,sans-serif}
+.ngfit-type b{color:#212121;font:400 calc(16 * var(--dp)) Roboto,sans-serif}
+.ngfit-typeitem{display:flex;align-items:center;gap:calc(16 * var(--dp))}
+.ngfit-typeitem .ngfit-dot{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.ngfit-typeitem .ngfit-dot img{width:calc(16 * var(--dp));height:calc(16 * var(--dp))}
+.ngfit-select{max-width:55%;padding:calc(6 * var(--dp)) 0;border:0;border-bottom:1px solid #0000006b;background:none;color:#212121;font:400 calc(15 * var(--dp)) Roboto,sans-serif}
+label.ngfit-row{justify-content:space-between;cursor:default}
+.ngfit-sentence{margin:0;color:#212121;font:400 calc(18 * var(--dp))/2 Roboto,sans-serif}
+.ngfit-sentence input{width:calc(96 * var(--dp));text-align:center}
