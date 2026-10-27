@@ -247,7 +247,9 @@ APKMirror kiadási oldalak: `https://www.apkmirror.com/apk/google-inc/<slug>/<sl
 
 #### T57 — Play Newsstand a 6.0.1-ben és a 7.1.2-ben (telepítve)
 
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `29783718`. Telepítettként: 6.0.1 Play Newsstand 3.5.2 (app_color_material sáv, fiók: Read Now, My Library, Bookmarks), 7.1.2 Play Newsstand 4.5.0 (a 4.x újratervezés: világos sáv, alsó sáv: For You, Library, Read Later), egy sablonból (`docs/templates/newsstand-play.*`, `docs/tools/newsstand-play.py`) a saját APK szövegeivel és ikonjaival: cikkoldal Share-rel és a megtartás / eltávolítás kapcsolóval (toast), a megtartott cikkek listája vagy az APK üres felirata, könyvtár forrásonként, Article text size, Search ("No results found"). A cikkek a korábbi verziók kitalált demódarabjai (`news-reader.js`). Explore, előfizetés, áruház, Help: elutasítás. Ellenőrzés: `tests/browser/play-newsstand.mjs` (mindkét verzió, telefonos szélesség is), `npm test`.
+
+**A negyedik kör kész (2026-10-27):** mind a tíz app (T50–T57) telepítettként a 6.0.1-ben és a 7.1.2-ben, a forrás-APK-k ellenőrzőösszeggel a `docs/sources.md`-ben, a böngészős tesztek `tests/browser/play-*.mjs`, `mm-earth.mjs`, `ng-earth.mjs`. Nincs deployolva.
 
 ### Feladatcsomagok és készfeltételek
 
