@@ -345,7 +345,7 @@ location, észak, Share, Layers mentve, a saját settings.xml).
 - **Pótolandó (T36):** Settings az APK saját settings.xml-je (`MM/NG.openPrefs`), benne az Article text size;
   Downloaded only / On device only, amely csak a megtartottakat hagyja; a könyvtár lapjai és a többi szekció az APK üres
   feliratával; Explore elutasítás helyett az APK üres felirata.
-- **Állapot:** Nincs elkezdve.
+- **Állapot:** Kész — `5c0a0226`. Play Newsstand 3.5 / 4.5 az 5.1.1 T36 szintjén: Settings az APK settings.xml-je a verzió appbeállítás-képernyőjén (az Article text size az olvasóé; az overflow párbeszéde ugyanezt állítja), Downloaded only csak a megtartott cikkeket hagyja (különben empty_list_caption_offline), a 3.5 My Library News / Magazines / Topics lapjai, a 4.5 Library alatt My Magazines, az APK üres feliratai, Explore elutasítás helyett az APK üres felirata. Ellenőrzés: `tests/browser/play-newsstand.mjs` mindkét verzió, asztali és telefonos szélesség; `npm test` 260/260.
 
 #### T66 — Keep az 5.1.1 szintjén
 
