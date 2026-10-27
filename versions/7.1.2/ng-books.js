@@ -4,12 +4,17 @@
    button, the title, menu/fragment_home.xml's Search and Sort (My library; in 3.13's overflow) and the overflow (Refresh); Read
    now (3.13: Home) shows the books read last, My library (3.13: Library) every book under All books with the card's Download / Remove download and
    Delete from library; the drawer has Read now, My library, Shop, Downloaded only, Settings and Help & feedback.
-   The reader (menu/fragment_reader.xml): the reader_ab_solid_light bar with Contents and Display options, the page,
-   the page scrubber's " %1$s / %2$s ", tap the sides to turn; Contents lists the chapters; Display options sets the
-   theme (Day, Night, Sepia: books_sepia #ECE1CA, books_chocolate text) and the line height. Search finds books of the
+   The reader (menu/fragment_reader.xml): the reader_ab_solid_light bar with Contents, Display options and the overflow
+   (About this book, Share, Add / Remove bookmark, Read aloud, Settings), the page, the page scrubber's " %1$s / %2$s ",
+   tap the sides to turn; Contents has the Chapters and Bookmarks tabs; Display options (display_options_view.xml) sets
+   the theme (Day, Night, Sepia: books_sepia #ECE1CA, books_chocolate text), the typeface, the text alignment, the
+   brightness (auto or manual), the font size (steps of 1/8) and the line height (steps of 0.1875, at least 1.125), as
+   LocalPreferences keeps them. About this book shows the cover, the title, the author and the opening. Settings is
+   AppSettingsActivity's list (Auto-rotate screen, Download over Wi-Fi only, Use volume key to turn pages, the 3D page
+   turn, Enable PDF uploading, Automatically read aloud). My library has the All books and Purchases tabs. Search finds books of the
    library by title or author. The books are the demo phone's public-domain openings (docs/demo-data.md; the generator
-   copies 5.1.1's list); progress and the library are kept on the phone. Shop, Settings and Help & feedback keep the
-   simulator's limit. */
+   copies 5.1.1's list); progress, bookmarks, the display options and the settings are kept on the phone. Shop opens
+   the Play Store; Read aloud and Help & feedback keep the simulator's limit. */
 (() => {
   'use strict';
   const T = () => NG.text('books'), t = k => T().t(k);
@@ -52,7 +57,13 @@
   // menu/fragment_home.xml's Sort icon (3.13 has none and lists Sort in the overflow).
   const SORT_ICON = '';
   const U = c => c.ui.books ||= {view: 'read', drawer: false, search: false, query: '', book: '', toc: false, options: false, bars: true};
-  const S = c => c.data.books ||= {removed: [], notKept: [], progress: {}, opened: {}, sort: 'recency', downloadedOnly: false, theme: 'day', lineHeight: 1.5};
+  // LocalPreferences' defaults; older saves get what they lack.
+  const DEFAULTS = {removed: [], notKept: [], progress: {}, opened: {}, sort: 'recency', downloadedOnly: false, theme: 'day', lineHeight: 1.5, typeface: 'default', justify: 'default', brightness: -1, textZoom: 1, bookmarks: {}, settings: {rotation: 0, wifi: false, volume: 0, turn3d: true, pdf: false, autoRead: false}};
+  const S = c => { const s = c.data.books ||= {}; for (const [k, v] of Object.entries(DEFAULTS)) if (!(k in s)) s[k] = JSON.parse(JSON.stringify(v)); return s; };
+  const TYPEFACES = [['default', 'pref_font_book_default'], ['sans', 'pref_font_sans'], ['serif', 'pref_font_serif'], ['merriweather', 'pref_font_merriweather'], ['goudy', 'pref_font_oflsorts'], ['vollkorn', 'pref_font_vollkorn'], ['literata', 'pref_font_literata']];
+  const ALIGN = [['default', 'pref_justification_book_default'], ['left', 'pref_justification_left'], ['justify', 'pref_justification_justify'], ['right', 'pref_justification_right']];
+  const ZOOM_STEP = .125;
+  const PURCHASES = 'action_bar_title_free_and_purchased';
   const refuse = c => c.toast(c.t('This feature is not part of the simulator.'));
   const seedOf = id => [...String(id)].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
   // A cover drawn here: two colours, a shape, the title and the author.
@@ -81,30 +92,54 @@
     const bar = u.search
       ? `<header class="ngbk-bar">${btn(c, 'ngbk-search-close', t('abc_searchview_description_clear'), 'ic_arrow_back_white_24dp')}<input class="ngbk-query" data-bk-search value="${c.safe(u.query)}" placeholder="${c.safe(t('search_hint'))}" aria-label="${c.safe(t('abc_searchview_description_query'))}" autocomplete="off" spellcheck="false"></header>`
       : `<header class="ngbk-bar">${btn(c, 'ngbk-drawer', t('library_drawer_opened'), 'ic_drawer_white')}<b>${c.safe(title)}</b>${btn(c, 'ngbk-search', t('menu_search'), 'ic_search_white')}${u.view === 'library' && SORT_ICON ? btn(c, 'ngbk-sort', t('menu_sort'), SORT_ICON) : ''}${NG.menu.button(c, 'ngbk-more')}</header>`;
-    const tabs = u.view === 'library' && !u.search ? `<div class="ngbk-tabs"><span class="on">${c.safe(t('action_bar_title_all_books'))}</span></div>` : '';
+    const tabs = u.view === 'library' && !u.search ? `<div class="ngbk-tabs">${[['all', 'action_bar_title_all_books'], ...(PURCHASES ? [['purchases', PURCHASES]] : [])].map(([id, key]) => `<button type="button" class="${(u.tab || 'all') === id ? 'on' : ''}" data-action="ngbk-tab" data-id="${id}">${c.safe(t(key))}</button>`).join('')}</div>` : '';
     const empty = u.search ? (u.query.trim() ? `<p class="ngbk-empty">${c.safe(AndroidStrings.format(t('search_num_results_q0'), u.query.trim()))}</p>` : '')
       : u.view === 'read' ? `<div class="ngbk-empty"><p>${c.safe(t('empty_library'))}</p><button type="button" data-action="ngbk-view" data-id="library">${c.safe(t('open_my_library'))}</button></div>`
       : `<div class="ngbk-empty"><img src="${I('illo_empty_my_library')}" alt=""><p>${c.safe(t(s.downloadedOnly ? 'empty_downloaded_only' : 'home_book_empty'))}</p></div>`;
     const body = shown.length ? `<div class="ngbk-grid">${shown.map(b => card(c, b)).join('')}</div>` : empty;
     const nav = [['read', 'side_drawer_home'], ['library', 'side_drawer_library']];
-    const drawer = u.drawer ? `<div class="ngbk-scrim" data-action="ngbk-drawer"></div><nav class="ngbk-drawer"><div class="ngbk-account"><small>${c.safe(NG.account?.email || '')}</small></div>${nav.map(([id, key]) => `<button type="button" class="${u.view === id ? 'on' : ''}" data-action="ngbk-view" data-id="${id}"><span>${c.safe(t(key))}</span></button>`).join('')}<button type="button" data-action="ngbk-shop"><span>${c.safe(t('menu_shop'))}</span></button><hr><button type="button" data-action="ngbk-downloaded" role="switch" aria-checked="${s.downloadedOnly}"><span>${c.safe(t('side_drawer_downloaded_only'))}</span><i class="ngbk-switch${s.downloadedOnly ? ' on' : ''}"></i></button><hr><button type="button" data-action="ngbk-unavailable"><span>${c.safe(t('menu_app_settings'))}</span></button><button type="button" data-action="ngbk-unavailable"><span>${c.safe(t('menu_help'))}</span></button></nav>` : '';
+    const drawer = u.drawer ? `<div class="ngbk-scrim" data-action="ngbk-drawer"></div><nav class="ngbk-drawer"><div class="ngbk-account"><small>${c.safe(NG.account?.email || '')}</small></div>${nav.map(([id, key]) => `<button type="button" class="${u.view === id ? 'on' : ''}" data-action="ngbk-view" data-id="${id}"><span>${c.safe(t(key))}</span></button>`).join('')}<button type="button" data-action="ngbk-shop"><span>${c.safe(t('menu_shop'))}</span></button><hr><button type="button" data-action="ngbk-downloaded" role="switch" aria-checked="${s.downloadedOnly}"><span>${c.safe(t('side_drawer_downloaded_only'))}</span><i class="ngbk-switch${s.downloadedOnly ? ' on' : ''}"></i></button><hr><button type="button" data-action="ngbk-settings"><span>${c.safe(t('menu_app_settings'))}</span></button><button type="button" data-action="ngbk-unavailable"><span>${c.safe(t('menu_help'))}</span></button></nav>` : '';
     return `<div class="ngbk">${bar}${tabs}<div class="ngbk-scroll">${body}</div>${drawer}</div>`;
   }
   function reader(c, b) {
     const u = U(c), s = S(c), i = Math.min(s.progress[b.id] || 0, b.pages.length - 1), heading = b.starts.includes(i);
     const text = b.pages[i].split('\n').filter(Boolean).map((p, k) => heading ? `<h2${k ? ' class="sub"' : ''}>${c.safe(p)}</h2>` : `<p>${c.safe(p)}</p>`).join('');
     const dark = s.theme === 'night';
-    const top = u.bars ? `<header class="ngbk-rbar${dark ? ' dark' : ''}">${btn(c, 'ngbk-close', t('abc_searchview_description_clear'), dark ? 'ic_arrow_back_white_24dp' : 'ic_arrow_back_gray_24dp')}<span><b>${c.safe(b.title)}</b><small>${c.safe(b.author)}</small></span>${btn(c, 'ngbk-toc', t('menu_table_of_contents'), dark ? 'ic_toc_wht_24dp' : 'ic_toc_24dp')}<button type="button" class="ngbk-aa" data-action="ngbk-options" aria-label="${c.safe(t('menu_reader_settings'))}">${c.safe(t('display_options_visual_description'))}</button></header>` : '';
+    const top = u.bars ? `<header class="ngbk-rbar${dark ? ' dark' : ''}">${btn(c, 'ngbk-close', t('abc_searchview_description_clear'), dark ? 'ic_arrow_back_white_24dp' : 'ic_arrow_back_gray_24dp')}<span><b>${c.safe(b.title)}</b><small>${c.safe(b.author)}</small></span>${btn(c, 'ngbk-toc', t('menu_table_of_contents'), dark ? 'ic_toc_wht_24dp' : 'ic_toc_24dp')}<button type="button" class="ngbk-aa" data-action="ngbk-options" aria-label="${c.safe(t('menu_reader_settings'))}">${c.safe(t('display_options_visual_description'))}</button>${NG.menu.button(c, 'ngbk-rmore', !dark)}</header>` : '';
     const bottom = u.bars ? `<footer class="ngbk-scrub${dark ? ' dark' : ''}"><input type="range" min="1" max="${b.pages.length}" value="${i + 1}" data-bk-scrub aria-label="${c.safe(t('menu_table_of_contents'))}"><span>${c.safe(AndroidStrings.format(t('reader_scrub_summary'), i + 1, b.pages.length).trim())}</span></footer>` : '';
-    const options = u.options ? `<div class="ngbk-optscrim" data-action="ngbk-options"></div><div class="ngbk-options${dark ? ' dark' : ''}" aria-label="${c.safe(t('display_options_content_description'))}"><div class="ngbk-themes">${THEMES.map(([id, key]) => `<button type="button" class="ngbk-theme ${id}${s.theme === id ? ' on' : ''}" data-action="ngbk-theme" data-id="${id}">${c.safe(t(key))}</button>`).join('')}</div><div class="ngbk-step"><span>${c.safe(t('pref_line_height'))}</span><button type="button" data-action="ngbk-line" data-id="-1" aria-label="−">−</button><b>${Math.round(s.lineHeight / 1.5 * 100)}%</b><button type="button" data-action="ngbk-line" data-id="1" aria-label="+">+</button></div></div>` : '';
-    return `<div class="ngbk ngbk-reader ${s.theme}" style="--bk-lh:${(s.lineHeight / 1.5).toFixed(4)}">${top}<article class="ngbk-page" data-action="ngbk-tap">${text}</article>${bottom}${options}</div>`;
+    const pick = (key, label, list, value) => `<label class="ngbk-opt"><span>${c.safe(t(label))}</span><select data-bk-select="${key}" aria-label="${c.safe(t(label))}">${list.map(([id, k]) => `<option value="${id}"${id === value ? ' selected' : ''}>${c.safe(t(k))}</option>`).join('')}</select></label>`;
+    const step = (action, label, value) => `<div class="ngbk-step"><span>${c.safe(t(label))}</span><button type="button" data-action="ngbk-${action}" data-id="-1" aria-label="−">−</button><b>${value}%</b><button type="button" data-action="ngbk-${action}" data-id="1" aria-label="+">+</button></div>`;
+    const auto = s.brightness < 0;
+    const options = u.options ? `<div class="ngbk-optscrim" data-action="ngbk-options"></div><div class="ngbk-options${dark ? ' dark' : ''}" aria-label="${c.safe(t('display_options_content_description'))}"><div class="ngbk-themes" aria-label="${c.safe(t('pref_themes'))}">${THEMES.map(([id, key]) => `<button type="button" class="ngbk-theme ${id}${s.theme === id ? ' on' : ''}" data-action="ngbk-theme" data-id="${id}">${c.safe(t(key))}</button>`).join('')}</div>
+      <div class="ngbk-opt"><span>${c.safe(t('pref_brightness'))}</span><input type="range" min="0" max="100" value="${auto ? 50 : s.brightness}" data-bk-bright aria-label="${c.safe(t('brightness_slider_content_description'))}"${auto ? ' disabled' : ''}><button type="button" class="ngbk-auto${auto ? ' on' : ''}" data-action="ngbk-autobright" aria-pressed="${auto}">${c.safe(t(auto ? 'pref_brightness_auto_small' : 'pref_brightness_manual_small'))}</button></div>
+      ${pick('typeface', 'pref_typeface', TYPEFACES, s.typeface)}${pick('justify', 'pref_justification', ALIGN, s.justify)}${step('zoom', 'pref_text_size', Math.round(s.textZoom * 100))}${step('line', 'pref_line_height', Math.round(s.lineHeight / 1.5 * 100))}</div>` : '';
+    const mark = (s.bookmarks[b.id] || []).includes(i) ? '<i class="ngbk-mark"></i>' : '';
+    const veil = auto ? '' : `<div class="ngbk-veil" style="opacity:${((100 - s.brightness) / 100 * .7).toFixed(3)}"></div>`;
+    return `<div class="ngbk ngbk-reader ${s.theme} face-${s.typeface} align-${s.justify}" style="--bk-lh:${(s.lineHeight / 1.5).toFixed(4)};--bk-zoom:${s.textZoom}">${top}<article class="ngbk-page" data-action="ngbk-tap">${mark}${text}</article>${bottom}${veil}${options}</div>`;
   }
   function contents(c, b) {
     const s = S(c), at = Math.min(s.progress[b.id] || 0, b.pages.length - 1), current = b.starts.filter(x => x <= at).at(-1);
-    return `<div class="ngbk ngbk-toc"><header class="ngbk-bar">${btn(c, 'ngbk-toc', t('abc_searchview_description_clear'), 'ic_close_wht_24dp')}<b>${c.safe(t('menu_table_of_contents'))}</b></header><div class="ngbk-tabs"><span class="on">${c.safe(t('toc_chapter_tab'))}</span></div><div class="ngbk-scroll"><ul>${b.starts.map(x => `<li><button type="button" class="${x === current ? 'on' : ''}" data-action="ngbk-chapter" data-id="${x}"><span>${c.safe(b.pages[x].split('\n').join(' — '))}</span><small>${x + 1}</small></button></li>`).join('')}</ul></div></div>`;
+    const tab = U(c).tocTab || 'chapters', marks = (s.bookmarks[b.id] || []).slice().sort((x, y) => x - y);
+    const list = tab === 'chapters' ? b.starts.map(x => `<li><button type="button" class="${x === current ? 'on' : ''}" data-action="ngbk-chapter" data-id="${x}" aria-label="${c.safe(AndroidStrings.format(t('toc_a11y_chapter_name'), b.pages[x].split('\n')[0]))}"><span>${c.safe(b.pages[x].split('\n').join(' — '))}</span><small>${x + 1}</small></button></li>`).join('')
+      : marks.map(x => `<li><button type="button" data-action="ngbk-chapter" data-id="${x}" aria-label="${c.safe(AndroidStrings.format(t('toc_a11y_bookmark_text'), x + 1))}"><span>${c.safe(b.pages[x].slice(0, 80))}</span><small>${x + 1}</small></button></li>`).join('');
+    return `<div class="ngbk ngbk-toc"><header class="ngbk-bar">${btn(c, 'ngbk-toc', t('abc_searchview_description_clear'), 'ic_close_wht_24dp')}<b>${c.safe(t('menu_table_of_contents'))}</b></header><div class="ngbk-tabs">${[['chapters', 'toc_chapter_tab'], ['bookmarks', 'toc_bookmark_tab']].map(([id, key]) => `<button type="button" class="${tab === id ? 'on' : ''}" data-action="ngbk-toctab" data-id="${id}">${c.safe(t(key))}</button>`).join('')}</div><div class="ngbk-scroll"><ul>${list}</ul></div></div>`;
+  }
+  // About this book and AppSettingsActivity.
+  function about(c, b) {
+    const opening = b.pages.find((p, i) => !b.starts.includes(i)) || '';
+    return `<div class="ngbk ngbk-sub"><header class="ngbk-bar">${btn(c, 'ngbk-subclose', t('abc_action_bar_up_description'), 'ic_arrow_back_white_24dp')}<b>${c.safe(t('menu_about_this_book'))}</b></header><div class="ngbk-scroll"><div class="ngbk-about"><button type="button" class="ngbk-cover" data-action="ngbk-open" data-id="${b.id}" aria-label="${c.safe(b.title)}">${cover(c, b)}</button><div><h2>${c.safe(b.title)}</h2><p>${c.safe(b.author)}</p><button type="button" class="ngbk-read" data-action="ngbk-open" data-id="${b.id}">${c.safe(t('read_volume'))}</button></div></div><p class="ngbk-blurb">${c.safe(opening)}</p></div></div>`;
+  }
+  function settingsPage(c) {
+    const p = S(c).settings;
+    const sw = (key, title, summary) => `<button type="button" class="ngbk-pref" data-action="ngbk-setting" data-id="${key}" role="switch" aria-checked="${!!p[key]}"><span><b>${c.safe(t(title))}</b>${summary ? `<small>${c.safe(t(summary))}</small>` : ''}</span><i class="ngbk-switch${p[key] ? ' on' : ''}"></i></button>`;
+    const choice = (key, title, list) => `<label class="ngbk-pref"><span><b>${c.safe(t(title))}</b><small>${c.safe(t(list[p[key]]))}</small></span><select data-bk-setting="${key}" aria-label="${c.safe(t(title))}">${list.map((k, i) => `<option value="${i}"${i === p[key] ? ' selected' : ''}>${c.safe(t(k))}</option>`).join('')}</select></label>`;
+    return `<div class="ngbk ngbk-sub ngbk-settings"><header class="ngbk-bar">${btn(c, 'ngbk-subclose', t('abc_action_bar_up_description'), 'ic_arrow_back_white_24dp')}<b>${c.safe(t('app_settings_activity_title'))}</b></header><div class="ngbk-scroll">
+      ${choice('rotation', 'rotation_setting_title', ['rotation_system_setting', 'rotation_portrait_setting', 'rotation_landscape_setting'])}${sw('wifi', 'wifi_only_setting_title')}${choice('volume', 'volume_turn_setting_title', ['volume_key_off_setting', 'volume_key_comics_on_setting', 'volume_key_on_setting'])}${sw('turn3d', 'page_turn_setting_title')}${sw('pdf', 'enable_pdf_setting_title', 'enable_pdf_setting_subtitle')}${sw('autoRead', 'auto_read_setting_title')}</div></div>`;
   }
   function render(c) {
     const u = U(c), b = u.book && BOOKS.find(x => x.id === u.book);
+    if (u.settings) return settingsPage(c);
+    if (u.about && !b) return about(c, BOOKS.find(x => x.id === u.about) || BOOKS[0]);
     if (b) return u.toc ? contents(c, b) : reader(c, b);
     return home(c);
   }
@@ -113,10 +148,23 @@
     if (q) { q.addEventListener('input', () => { u.query = q.value; const at = q.selectionStart; c.render(); const n = c.el.viewport.querySelector('[data-bk-search]'); if (n) { n.focus(); n.setSelectionRange(at, at); } }); if (u.focus) { u.focus = false; requestAnimationFrame(() => q.focus()); } }
     const r = root.querySelector('[data-bk-scrub]');
     r?.addEventListener('change', () => { S(c).progress[u.book] = +r.value - 1; c.save(); c.render(); });
+    root.querySelectorAll('[data-bk-select]').forEach(el => el.addEventListener('change', () => { S(c)[el.dataset.bkSelect] = el.value; c.save(); c.render(); }));
+    root.querySelectorAll('[data-bk-setting]').forEach(el => el.addEventListener('change', () => { S(c).settings[el.dataset.bkSetting] = +el.value; c.save(); c.render(); }));
+    root.querySelector('[data-bk-bright]')?.addEventListener('input', e => { S(c).brightness = +e.target.value; c.save(); const v = c.el.viewport.querySelector('.ngbk-veil'); if (v) v.style.opacity = ((100 - S(c).brightness) / 100 * .7).toFixed(3); });
   }
   const turn = (c, d) => { const u = U(c), b = BOOKS.find(x => x.id === u.book), s = S(c); s.progress[b.id] = Math.max(0, Math.min(b.pages.length - 1, (s.progress[b.id] || 0) + d)); c.save(); };
   function action(name, el, ev, c) {
     const u = U(c), s = S(c);
+    const book = u.book && BOOKS.find(x => x.id === u.book);
+    if (name === 'ng-menu' && book && !u.toc) {
+      const i = Math.min(s.progress[book.id] || 0, book.pages.length - 1), marked = (s.bookmarks[book.id] || []).includes(i);
+      c.menu([{label: t('menu_about_this_book'), action: c => { Object.assign(U(c), {about: book.id, book: '', options: false}); c.render(); }},
+        {label: t('menu_share'), action: c => NG.share(c, {title: t('menu_share'), subject: book.title, text: `${book.title}\n${book.author}`})},
+        {label: t(marked ? 'menu_reader_remove_bookmark' : 'menu_reader_add_bookmark'), action: c => { const list = s.bookmarks[book.id] ||= []; s.bookmarks[book.id] = marked ? list.filter(x => x !== i) : [...list, i]; c.save(); c.render(); }},
+        {label: t('menu_read_aloud'), action: refuse},
+        {label: t('menu_app_settings'), action: c => { U(c).settings = true; c.render(); }}], el);
+      return true;
+    }
     if (name === 'ng-menu') { c.menu([...(u.view === 'library' && !SORT_ICON ? [{label: t('menu_sort'), action: c => action('ngbk-sort', el, ev, c)}] : []), {label: t('menu_refresh'), action: c => c.render()}], el); return true; }
     if (!name.startsWith('ngbk-')) return false;
     switch (name.slice('ngbk-'.length)) {
@@ -129,10 +177,18 @@
       case 'card': {
         const id = el.dataset.id, kept = !s.notKept.includes(id);
         c.menu([{label: t(kept ? 'book_popup_dont_keep' : 'book_popup_download'), action: c => { s.notKept = kept ? [...s.notKept, id] : s.notKept.filter(x => x !== id); c.save(); c.render(); }},
-          {label: t('book_popup_remove'), action: c => { s.removed.push(id); delete s.opened[id]; c.save(); c.render(); }}], el);
+          {label: t('book_popup_remove'), action: c => { s.removed.push(id); delete s.opened[id]; c.save(); c.render(); }},
+          {label: t('menu_about_this_book'), action: c => { U(c).about = id; c.render(); }}], el);
         return true;
       }
-      case 'open': { const id = el.dataset.id; s.opened[id] = Date.now(); Object.assign(u, {book: id, toc: false, options: false, bars: true}); c.save(); break; }
+      case 'open': { const id = el.dataset.id; s.opened[id] = Date.now(); Object.assign(u, {book: id, toc: false, options: false, bars: true, about: ''}); c.save(); break; }
+      case 'tab': u.tab = el.dataset.id; break;
+      case 'toctab': u.tocTab = el.dataset.id; break;
+      case 'settings': Object.assign(u, {settings: true, drawer: false}); break;
+      case 'subclose': Object.assign(u, {settings: false, about: ''}); break;
+      case 'setting': s.settings[el.dataset.id] = !s.settings[el.dataset.id]; c.save(); break;
+      case 'autobright': s.brightness = s.brightness < 0 ? 50 : -1; c.save(); break;
+      case 'zoom': { const d = +el.dataset.id; s.textZoom = d < 0 && s.textZoom <= 1.98 * ZOOM_STEP ? s.textZoom : Math.max(ZOOM_STEP * 2, Math.round((s.textZoom + d * ZOOM_STEP) / ZOOM_STEP) * ZOOM_STEP); c.save(); break; }
       case 'close': Object.assign(u, {book: '', toc: false, options: false}); break;
       case 'tap': {
         const r = el.getBoundingClientRect(), x = (ev?.clientX ?? r.left + r.width / 2) - r.left;
@@ -158,6 +214,8 @@
     back(c) {
       const u = U(c);
       if (u.options) { u.options = false; c.render(); return true; }
+      if (u.settings) { u.settings = false; c.render(); return true; }
+      if (u.about && !u.book) { u.about = ''; c.render(); return true; }
       if (u.toc) { u.toc = false; c.render(); return true; }
       if (u.book) { u.book = ''; c.render(); return true; }
       if (u.drawer) { u.drawer = false; c.render(); return true; }

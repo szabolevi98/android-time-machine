@@ -1,7 +1,8 @@
 // Google Play Books installed from Play on 6.0.1 (3.9.37) and 7.1.2 (3.13.17): the empty Read now / Home, My library
 // with 5.1.1's four books, Sort by Title, a book opened and read (page turns, the scrubber, Contents, Display options'
 // Night theme and line height), Read now listing it, the card's Remove download with Downloaded only, Delete from
-// library, Search, and the phone width.
+// library, Search, and the phone width. Round five (T62): the reader's other display options (typeface, alignment,
+// font size, brightness), Add bookmark and Contents' Bookmarks tab, About this book, the Purchases tab and Settings.
 // node tests/browser/play-books.mjs [6.0.1|7.1.2]
 import assert from 'node:assert/strict';
 import {marshmallow} from './mm-harness.mjs';
@@ -42,7 +43,41 @@ for (const [version, start, cls, ns, menuItem, dlg] of [['6.0.1', marshmallow, '
     const s = await books();
     assert.equal(s.theme, 'night'); assert.equal(s.lineHeight, 1.6875);
     await b.shot(`${version}-books-reader`);
+    // The other display options.
+    await b.ev(`(()=>{const f=document.querySelector('#viewport [data-bk-select="typeface"]');f.value='serif';f.dispatchEvent(new Event('change',{bubbles:true}));return 1})()`);
+    await b.ev(`(()=>{const f=document.querySelector('#viewport [data-bk-select="justify"]');f.value='left';f.dispatchEvent(new Event('change',{bubbles:true}));return 1})()`);
+    await b.click(`#viewport [data-action="${cls}-zoom"][data-id="1"]`);
+    await b.click(`#viewport [data-action="${cls}-autobright"]`);
+    const d = await books();
+    assert.equal(d.typeface, 'serif'); assert.equal(d.justify, 'left'); assert.equal(d.textZoom, 1.125); assert.equal(d.brightness, 50);
+    assert.ok(await b.ev(`!!document.querySelector('#viewport .${cls}-reader.face-serif.align-left .${cls}-veil')`));
+    await b.act(`${cls}-options`);
+    // Add bookmark from the overflow; Contents lists it under Bookmarks.
+    await b.click(`#viewport .${cls}-rmore`);
+    await menu('Add bookmark');
+    await b.until(`!!document.querySelector('#viewport .${cls}-mark')`);
+    await b.act(`${cls}-toc`);
+    await b.click(`#viewport [data-action="${cls}-toctab"][data-id="bookmarks"]`);
+    await b.until(`document.querySelectorAll('#viewport .${cls}-toc li').length===1`);
+    await b.act(`${cls}-toc`);
+    // Settings from the reader's overflow.
+    await b.click(`#viewport .${cls}-rmore`);
+    await menu('Settings');
+    await b.until(`/Auto-rotate screen/.test(document.querySelector('#viewport').textContent)`);
+    await b.click(`#viewport [data-action="${cls}-setting"][data-id="wifi"]`);
+    assert.equal((await books()).settings.wifi, true);
+    await b.shot(`${version}-books-settings`);
+    await b.act(`${cls}-subclose`);
     await b.act(`${cls}-close`);
+    // About this book from the card menu; the Purchases tab.
+    await b.act(`${cls}-view`, {id: 'library'});
+    await b.click(`#viewport .${cls}-card [data-action="${cls}-card"]`);
+    await menu('About this book');
+    await b.until(`!!document.querySelector('#viewport .${cls}-about h2')`);
+    await b.act(`${cls}-subclose`);
+    await b.click(`#viewport [data-action="${cls}-tab"][data-id="purchases"]`);
+    await b.until(`document.querySelector('#viewport [data-action="${cls}-tab"][data-id="purchases"]').classList.contains('on')`);
+    await b.click(`#viewport [data-action="${cls}-tab"][data-id="all"]`);
     // Read now lists the book read last.
     await b.act(`${cls}-view`, {id: 'read'});
     await b.until(`document.querySelectorAll('#viewport .${cls}-card').length===1`);
