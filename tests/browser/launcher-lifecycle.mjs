@@ -11,7 +11,9 @@ async function marshmallowDrags(width, touch = false, reduced = false) {
     return b.send('Input.dispatchMouseEvent', {type:{down:'mousePressed',move:'mouseMoved',up:'mouseReleased'}[phase], ...p, button:'left',buttons:phase==='up'?0:1,clickCount:phase==='move'?0:1});
   };
   const cell = (x,y) => b.ev(`(()=>{const r=document.querySelector('.mmh').getBoundingClientRect(),g=MM.launcherGrid,k=r.width/g.W;return {x:r.left+(g.ws.left+(${x}+.5)*g.cellW)*k,y:r.top+(g.ws.top+(${y}+.5)*g.cellH)*k}})()`);
-  const begin = async selector => {const p=await point(selector);await pointer('down',p);await sleep(650);await b.until(`!!document.querySelector('#viewport .mmh.dragging .mmh-dragview')`);};
+  // Press only once the point hits the item: the drawer opens with a circular clip-path reveal from the dock, and a
+  // press outside the circle so far (the top rows, on a slow runner) reaches nothing.
+  const begin = async selector => {const p=await point(selector);await b.until(`!!document.elementFromPoint(${p.x},${p.y})?.closest(${JSON.stringify(selector)})`);await pointer('down',p);await sleep(650);await b.until(`!!document.querySelector('#viewport .mmh.dragging .mmh-dragview')`);};
   const drop = async p => {await pointer('move',p);await pointer('up',p);await sleep(450);assert.equal(await b.ev(`!!document.querySelector('.mmh.dragging,.mmh-dragview')`),false,'drop clears drag mode');};
   const home = async () => {await b.click('#nav-bar [data-key="home"]');await sleep(400);};
   const roundTrips = async () => {for(let i=0;i<3;i++){await b.open('calculator');await home();}};
