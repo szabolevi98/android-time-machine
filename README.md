@@ -96,8 +96,6 @@ Both run on every push (`.github/workflows/tests.yml`). The text, asset and font
 files rebuilt is in [docs/sources.md](docs/sources.md); how the code is laid out and where to change an app is in
 [docs/architecture.md](docs/architecture.md).
 
-For AOSP asset sources and licenses, see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Comparisons with the original interfaces and the remaining differences are in the visual audits: [2.3](docs/visual-audit-2.3.md), [4.0.4](docs/visual-audit.md), [4.3](docs/visual-audit-4.3.md) and [4.4](docs/visual-audit-4.4.md).
-
 ## License
 
 Copyright © 2026 Levente Szabó (szabolevi98).
