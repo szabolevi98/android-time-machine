@@ -34,7 +34,9 @@
 .mmh-allapps{position:absolute;left:50%;top:50%;width:calc(46.476 * var(--dp));height:calc(46.476 * var(--dp));margin:calc(-23.238 * var(--dp)) 0 0 calc(-23.238 * var(--dp));padding:0;border:0;background:url('assets/gel-ic_allapps.png') center/100% no-repeat;-webkit-tap-highlight-color:transparent}
 .mmh-allapps:active{background-image:url('assets/gel-ic_allapps_pressed.png')}
 /* FolderIcon: portal_ring_inner 200 px, 5 px above the icon's place; the preview items over it; the label as an icon's. */
-.mmh-ring{position:absolute;left:50%;top:calc(-1.905 * var(--dp));width:calc(76.190 * var(--dp));height:calc(76.190 * var(--dp));margin-left:calc(-38.095 * var(--dp));background:url('assets/gel-portal_ring_inner.png') center/100% no-repeat}
+.mmh-ring{position:absolute;left:50%;top:calc(var(--cellpad,calc(4.190 * var(--dp))) - 6.095 * var(--dp));width:calc(76.190 * var(--dp));height:calc(76.190 * var(--dp));margin-left:calc(-38.095 * var(--dp));background:url('assets/gel-portal_ring_inner.png') center/100% no-repeat}
+/* The ring sits edge (16 px) above the preview's top, which follows the cell's top padding; the hotseat's is 11 px. */
+.mmh-icon.hs>.mmh-ring{top:calc(-1.905 * var(--dp))}
 .mmh-fi{position:absolute}
 .mmh-fi img{width:100%;height:100%;display:block;filter:brightness(calc(1 - var(--shade)))}
 /* The page indicator: ic_pageindicator markers (12 dp) above the hotseat, shown while the pages move. */
