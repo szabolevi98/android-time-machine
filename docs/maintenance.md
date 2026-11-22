@@ -63,6 +63,6 @@ node docs/tools/make-sitemap.mjs
 3. Run `node docs/tools/make-sitemap.mjs` so that the sitemap lists the new version.
 4. Start it with the shared used-phone demo data ([demo-data.md](demo-data.md)) and give it its own save key
    ([saved-state.md](saved-state.md)).
-5. Add it to the README's version table and gallery, with a `docs/features-<version>.md` page.
+5. Add it to the README's version table and gallery, with a `docs/features/<version>.md` page.
 
 Each version keeps its interface and saved state separate, so adding a release does not change the other versions.

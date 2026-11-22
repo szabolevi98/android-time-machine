@@ -8,7 +8,7 @@ const SHARED={
   // Logic and data without an era look.
   'calculator-engine.js':[['2.3.6','4.0.4','4.3','4.4.4','5.1.1']],'browser-session.js':[['4.0.4','4.3','4.4.4','5.1.1']],
   'play-store.js':[['4.0.4','4.3']],
-  // Not yet checked against each image (the audit's follow-up list in docs/audit-plan-2026-10.md).
+  // Not yet checked against each image (the audit's follow-up list in docs/plans/audit-2026-10.md).
   
   
   

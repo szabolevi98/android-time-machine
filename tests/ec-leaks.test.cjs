@@ -1,5 +1,5 @@
 const assert=require('node:assert/strict'),fs=require('node:fs');
-// Android 2.1 is built from its own image, nothing inherited (docs/plan-2.1.md, rules 1-4). This test keeps it that way:
+// Android 2.1 is built from its own image, nothing inherited (docs/plans/2.1.md, rules 1-4). This test keeps it that way:
 // - the page loads only ec- files and the shared root files (i18n.js, strings.js, state.js)
 // - no 2.1 file reaches into another version's folder or names another era's modules (GBSettings, ICSLockscreen …)
 // - every asset comes from the Nexus One image (the inventory's source is passion:…) or is our own, with its source named

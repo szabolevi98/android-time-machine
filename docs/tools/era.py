@@ -1,7 +1,7 @@
 """Which version the mm- generators (mm-assets.py, mm-vectors.py, mm-strings.py …) build: ERA=mm (the default, 6.0.1 from
 the Nexus 5X MTC20K image) or ERA=ng (7.1.2 from the Nexus 6P N2G48C image). The generators are 6.0.1's; for 7.1.2 they
 read the angler image, write versions/7.1.2 and take their lists from docs/data/ng-*.tsv / ng-*.txt, so nothing of
-6.0.1's lists, texts or drawables can reach 7.1.2 (docs/plan-7.1.2.md, rules 1, 4 and 5).
+6.0.1's lists, texts or drawables can reach 7.1.2 (docs/plans/7.1.2.md, rules 1, 4 and 5).
     ERA=ng python docs/tools/mm-strings.py"""
 import os
 

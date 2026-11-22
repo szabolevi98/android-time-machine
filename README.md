@@ -13,14 +13,14 @@ Each version links to what it does, screen by screen.
 
 | Version | Year | Phone and build | Store | Notes |
 | --- | --- | --- | --- | --- |
-| [Android 2.1 Eclair](docs/features-2.1.md) | 2010 | Nexus One, ERE27 | Android Market 1.71 | Rebuilt from its system image alone |
-| [Android 2.3.6 Gingerbread](docs/visual-audit-2.3.md) | 2011 | Nexus S, GRK39F | Android Market 2.3.4 | The visual audit doubles as its feature list |
-| [Android 4.0.4 Ice Cream Sandwich](docs/features-4.0.4.md) | 2012 | Galaxy Nexus, IMM76I | Google Play Store 3.4.7 | |
-| [Android 4.3 Jelly Bean](docs/features-4.3.md) | 2013 | Nexus 4, JWR66Y | Google Play Store 4.2.3 | |
-| [Android 4.4.4 KitKat](docs/features-4.4.4.md) | 2014 | Nexus 5, KTU84P | Google Play Store 4.5.10 | Stock Google apps |
-| [Android 5.1.1 Lollipop](docs/features-5.1.1.md) | 2015 | Nexus 6, LMY48Y | Google Play Store 5.2.13 | As its factory image ships it |
-| [Android 6.0.1 Marshmallow](docs/features-6.0.1.md) | 2016 | Nexus 5X, MTC20K | Google Play Store 5.12.7 | Plus period Google apps the image lacks, marked as installed from Play |
-| [Android 7.1.2 Nougat](docs/features-7.1.2.md) | 2017 | Nexus 6P, N2G48C | Google Play Store 7.4.31 | Split-screen, direct reply, launcher shortcuts; plus period Google apps, as in 6.0.1 |
+| [Android 2.1 Eclair](docs/features/2.1.md) | 2010 | Nexus One, ERE27 | Android Market 1.71 | Rebuilt from its system image alone |
+| [Android 2.3.6 Gingerbread](docs/audits/2.3.6.md) | 2011 | Nexus S, GRK39F | Android Market 2.3.4 | The visual audit doubles as its feature list |
+| [Android 4.0.4 Ice Cream Sandwich](docs/features/4.0.4.md) | 2012 | Galaxy Nexus, IMM76I | Google Play Store 3.4.7 | |
+| [Android 4.3 Jelly Bean](docs/features/4.3.md) | 2013 | Nexus 4, JWR66Y | Google Play Store 4.2.3 | |
+| [Android 4.4.4 KitKat](docs/features/4.4.4.md) | 2014 | Nexus 5, KTU84P | Google Play Store 4.5.10 | Stock Google apps |
+| [Android 5.1.1 Lollipop](docs/features/5.1.1.md) | 2015 | Nexus 6, LMY48Y | Google Play Store 5.2.13 | As its factory image ships it |
+| [Android 6.0.1 Marshmallow](docs/features/6.0.1.md) | 2016 | Nexus 5X, MTC20K | Google Play Store 5.12.7 | Plus period Google apps the image lacks, marked as installed from Play |
+| [Android 7.1.2 Nougat](docs/features/7.1.2.md) | 2017 | Nexus 6P, N2G48C | Google Play Store 7.4.31 | Split-screen, direct reply, launcher shortcuts; plus period Google apps, as in 6.0.1 |
 
 <table>
   <tr>
@@ -91,6 +91,8 @@ Both run on every push (`.github/workflows/tests.yml`). The text, asset and font
   shared demo content
 - [docs/maintenance.md](docs/maintenance.md): publishing, cache-busting, social preview images, the sitemap and adding
   a version
+
+Everything else (feature lists, visual audits, plans, tools) is indexed in [docs/README.md](docs/README.md).
 
 ## License
 

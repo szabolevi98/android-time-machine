@@ -1,4 +1,4 @@
-/* Android 6.0.1 (Nexus 5X, MTC20K): the core. Logic only, nothing of a look (docs/plan-6.0.1.md):
+/* Android 6.0.1 (Nexus 5X, MTC20K): the core. Logic only, nothing of a look (docs/plans/6.0.1.md):
    - the saved state (AndroidState, key android-time-machine-mm-v1) and the on-screen state (ui, never saved)
    - the screens: ui.view is the open screen ('home', 'lock', an app), ui.sub its page, ui.overlay a dialog or menu
    - one click handler: data-action="name" goes to the module that drew the element, then to the core's own actions

@@ -1,4 +1,4 @@
-/* Android 7.1.2 (Nexus 6P, N2G48C): the core. Logic only, nothing of a look (docs/plan-7.1.2.md); the logic is 6.0.1's
+/* Android 7.1.2 (Nexus 6P, N2G48C): the core. Logic only, nothing of a look (docs/plans/7.1.2.md); the logic is 6.0.1's
    (mm-core.js), nothing of its look came with it:
    - the saved state (AndroidState, key android-time-machine-ng-v1) and the on-screen state (ui, never saved)
    - the screens: ui.view is the open screen ('home', 'lock', an app), ui.sub its page, ui.overlay a dialog or menu

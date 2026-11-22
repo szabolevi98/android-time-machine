@@ -38,7 +38,7 @@
 .volume-rocker{position:absolute;left:382px;top:343.1px;width:12px;height:96.2px;z-index:2;cursor:pointer}
 
 /* A screen that is not rebuilt from the 7.1.2 image yet: a plain card in the project's own style, so a gap is visible and
-   never looks like an older Android (docs/plan-7.1.2.md, rule 2). */
+   never looks like an older Android (docs/plans/7.1.2.md, rule 2). */
 .ng-missing{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(6 * var(--dp));padding:calc(16 * var(--dp));background:repeating-linear-gradient(135deg,#15171c 0 calc(10 * var(--dp)),#1a1c22 calc(10 * var(--dp)) calc(20 * var(--dp)));color:#cfd7da;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:calc(13 * var(--dp))}
 .ng-missing b{color:#e6c46a;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 .ng-missing span{color:#e9f1f3;font-size:calc(15 * var(--dp))}

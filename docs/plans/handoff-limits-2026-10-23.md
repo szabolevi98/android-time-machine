@@ -1,4 +1,4 @@
-# Android Simulator — átadó a következő fejlesztési sessionhöz
+# Android Time Machine — átadó a következő fejlesztési sessionhöz
 
 Dátum: 2026-10-23. A fájl az átadáskori állapotot rögzíti; kezdéskor ellenőrizd az aktuális repót.
 

@@ -1,5 +1,5 @@
 const assert=require('node:assert/strict'),fs=require('node:fs');
-// Android 7.1.2 is built from its own image, nothing inherited (docs/plan-7.1.2.md, rules 1-5). This test keeps it that
+// Android 7.1.2 is built from its own image, nothing inherited (docs/plans/7.1.2.md, rules 1-5). This test keeps it that
 // way, the 6.0.1 checks (tests/mm-leaks.test.cjs) with 6.0.1 as the nearest neighbour:
 // - the page loads only ng- files and the shared root files (i18n.js, strings.js, state.js, earth-globe.js: the Blue
 //   Marble globe every Earth draws, owner decision 2026-10-26)

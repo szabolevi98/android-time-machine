@@ -1,5 +1,5 @@
 const assert=require('node:assert/strict'),fs=require('node:fs');
-// Android 6.0.1 is built from its own image, nothing inherited (docs/plan-6.0.1.md, rules 1-5). This test keeps it that
+// Android 6.0.1 is built from its own image, nothing inherited (docs/plans/6.0.1.md, rules 1-5). This test keeps it that
 // way, the 2.1 checks (tests/ec-leaks.test.cjs) with 5.1.1 as the nearest neighbour:
 // - the page loads only mm- files and the shared root files (i18n.js, strings.js, state.js)
 // - no 6.0.1 file reaches into another version's folder, names another era's modules (LPLauncher, EC.register …) or

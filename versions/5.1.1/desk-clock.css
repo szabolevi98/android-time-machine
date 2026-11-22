@@ -1,6 +1,6 @@
 /* Clock alarm dialogs (5.1.1): the Nexus 6 simulator draws the Clock app in lp-deskclock.js; only the alarm overlays of desk-clock.js (the
    ringing alarm, label, ringtone and delete dialogs) use these rules. The ringing alarm is still the shared dialog;
-   docs/audit-plan-2026-10.md 4.5 lists rebuilding it per image. */
+   docs/plans/audit-2026-10.md 4.5 lists rebuilding it per image. */
 @font-face{font-family:AndroidClock;src:url('assets/AndroidClock.ttf') format('truetype');font-display:swap}
 .desk-dialog{max-height:calc(100% - calc(35.3201 * var(--dp)));display:flex;flex-direction:column}
 .desk-dialog-scroll{overflow:auto;min-height:0;overscroll-behavior:contain;touch-action:pan-y}

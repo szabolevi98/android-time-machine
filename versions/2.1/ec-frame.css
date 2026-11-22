@@ -48,7 +48,7 @@
 .volume-rocker{position:absolute;left:-3px;top:107.8px;width:12px;height:101.8px;z-index:2;cursor:pointer}
 
 /* A screen that is not rebuilt from the 2.1 image yet: a plain card in the project's own style, so a gap is visible and
-   never looks like an older Android (docs/plan-2.1.md, rule 2). */
+   never looks like an older Android (docs/plans/2.1.md, rule 2). */
 .ec-missing{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(6 * var(--dp));padding:calc(16 * var(--dp));background:repeating-linear-gradient(135deg,#14181c 0 calc(10 * var(--dp)),#181d22 calc(10 * var(--dp)) calc(20 * var(--dp)));color:#9fb3ba;font:calc(12 * var(--dp))/1.4 ui-monospace,Consolas,monospace;text-align:center}
 .ec-missing b{color:#e6c46a;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 .ec-missing span{color:#e9f1f3;font-size:calc(14 * var(--dp))}

@@ -12,7 +12,7 @@
   // Developer options lists from the ICS window_animation_scale arrays.
   const scaleOptions=[[0,'Animation off'],[.5,'Animation scale .5x'],[1,'Animation scale 1x'],[1.5,'Animation scale 1.5x'],[2,'Animation scale 2x'],[5,'Animation scale 5x'],[10,'Animation scale 10x']];
   const animationScaleLabel=value=>(scaleOptions.find(([scale])=>scale===Number(value??1))||scaleOptions[2])[1];
-  // The simulator's rule: Sleep starts at Never (-1), an entry after the image's own (docs/todo-all-versions.md).
+  // The simulator's rule: Sleep starts at Never (-1), an entry after the image's own (docs/plans/todo-all-versions.md).
   const sleepOptions=[[15,'15 seconds'],[30,'30 seconds'],[60,'1 minute'],[120,'2 minutes'],[300,'5 minutes'],[600,'10 minutes'],[-1,'Never']]  // screen_timeout_entries: IMM76I has no 30 minutes;
   const sizes=(data,id,index=0)=>({app:12+index*3,data:1.2,cache:data.appCacheCleared?.includes(id)?0:2.4});
   // Settings' own strings of this image (stock-strings.js, group settings); a key it lacks stays as written.

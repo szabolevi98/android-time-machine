@@ -38,7 +38,7 @@
 .volume-rocker{position:absolute;left:378px;top:309.14px;width:12px;height:112.72px;z-index:2;cursor:pointer}
 
 /* A screen that is not rebuilt from the 6.0.1 image yet: a plain card in the project's own style, so a gap is visible and
-   never looks like an older Android (docs/plan-6.0.1.md, rule 2). */
+   never looks like an older Android (docs/plans/6.0.1.md, rule 2). */
 .mm-missing{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(6 * var(--dp));padding:calc(16 * var(--dp));background:repeating-linear-gradient(135deg,#14181c 0 calc(10 * var(--dp)),#181d22 calc(10 * var(--dp)) calc(20 * var(--dp)));color:#cfdde1;font-family:Arial,Helvetica,sans-serif;font-size:calc(12 * var(--dp));text-align:center}
 .mm-missing b{color:#e6c46a;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 .mm-missing span{color:#e9f1f3;font-size:calc(15 * var(--dp))}

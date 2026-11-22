@@ -14,7 +14,7 @@ that loads only its own files, so a change in one version cannot break another.
 | `versions/<v>/` | One phone: 2.3.6 (Nexus S), 4.0.4 (Galaxy Nexus), 4.3 (Nexus 4), 4.4.4 (Nexus 5), 5.1.1 (Nexus 6). |
 | `assets/` | Landing page art and the sounds 2.3.6 shares. |
 | `tests/` | Node module tests (`*.test.cjs`) and the headless Chrome flows (`tests/browser/flows.mjs`). |
-| `docs/` | The plan, notes and the tools that rebuild the generated files (below). |
+| `docs/` | Guides, feature lists, audits, plans and the tools that rebuild the generated files (below; index in `docs/README.md`). |
 | `_aosp/` | The unpacked factory images; not in Git (see `docs/sources.md`). |
 
 ## A version folder
@@ -62,7 +62,10 @@ file's header comment; and the shared root files contain no version's look.
 
 | Folder | Contents |
 | --- | --- |
-| `docs/` | The audit plan, this file, `sources.md` (images and regeneration), `saved-state.md`, the feature lists and the visual audits. |
+| `docs/` | The guides: this file, `sources.md` (images and regeneration), `saved-state.md`, `demo-data.md`, `maintenance.md`; `README.md` is the index. |
+| `docs/features/` | What each version does, one file per version. |
+| `docs/audits/` | The visual audits against the original interfaces, with their `screenshots/`. |
+| `docs/plans/` | Work plans, checklists and handoff notes, kept as a record. |
 | `docs/tools/` | Generators (`*.py`, `*.mjs`) that rebuild files from the factory images, and the checks. |
 | `docs/templates/` | The `*.template.js` / `.css` files the generators fill in. |
 | `docs/data/` | Fixed inputs of the generators (`image-strings-<v>.res`, `asset-sources.tsv` …). |
