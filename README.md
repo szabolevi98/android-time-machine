@@ -1,4 +1,4 @@
-# Android Simulator
+# Android Time Machine
 
 ![Android Time Machine: five Nexus phones running classic Android versions](assets/og-cover.jpg?v=18)
 
