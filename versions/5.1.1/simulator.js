@@ -453,6 +453,7 @@
     const newsRoot=viewport.querySelector('[data-news-sections]');
     if(ui.newsSectionsHook&&ui.newsSectionsHook.root!==newsRoot){ui.newsSectionsHook.destroy();ui.newsSectionsHook=null;}
     if(newsRoot&&!ui.newsSectionsHook)ui.newsSectionsHook={...NewsSections.attach(newsRoot,newsSectionsContext()),root:newsRoot};
+    if(ui.view==='news-weather'&&ui.newsAdd)NewsSections.mount(viewport);
     const fitRoot=viewport.querySelector('[data-fit-more]');
     if(ui.fitMoreHook&&ui.fitMoreHook.root!==fitRoot){ui.fitMoreHook.destroy();ui.fitMoreHook=null;}
     if(fitRoot&&!ui.fitMoreHook)ui.fitMoreHook={...FitMore.attach(fitRoot,fitContext()),root:fitRoot};
@@ -844,7 +845,7 @@
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
     if (!resume) { ui.camIntent = null; ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt10Dialog = null; ui.lsPage = ''; ui.lsStack = []; ui.lsDialog = null; ui.driveFolder = ''; ui.driveFilter = ''; ui.driveNavItem = 'my'; ui.driveStack = []; ui.driveDialog = ''; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.lpmPage = ''; ui.mpoDialog = ''; ui.paStack = []; ui.paMore = ''; }
     if(ui.locked)return;
-    if (app === 'news-weather' && !resume) { ui.newsWeb = ''; ui.newsDialog = ''; ui.newsExpanded = ''; ui.newsSearch = false; ui.newsQuery = ''; }
+    if (app === 'news-weather' && !resume) { ui.newsWeb = ''; ui.newsDialog = ''; ui.newsExpanded = ''; ui.newsSearch = false; ui.newsQuery = ''; ui.newsAdd = ''; ui.newsRemove = false; }
     if (GEL_ALIASES[app]) app = GEL_ALIASES[app];
     if (!appNames[app]) return;
     if (app === 'chrome') useBrowserSession(app);
@@ -3191,6 +3192,7 @@
     const form = event.target.closest('[data-form]');
     if (!form || !screen.contains(form)) return;
     event.preventDefault(); const values = new FormData(form);
+    if (ui.view === 'news-weather' && NewsSections.submit(form.dataset.form, values, newsSectionsContext())) return;
     if (['newsstand'].includes(ui.view) && NewsReader.submit(form.dataset.form, values, newsContext())) return;
     if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, mrContext()); return; }
     if (form.dataset.form === 'dpr-vmnumber') { LPDialerPrefs.saveVoicemail(values.get('text') || '', {data, ui}); save(); render(); return; }

@@ -12,3 +12,17 @@
 .nw2-dark .nwsec-row.dragging{background:#333}
 .nwsect-page h4{margin:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(8 * var(--dp));font:500 calc(14 * var(--dp)) Roboto,sans-serif;color:#757575}
 .nwsec-editions .nw2-radio{min-height:calc(48 * var(--dp))}
+/* dialog_content_add_section.xml under dialog_fragment.xml: the message, the field, the italic example (secondary text)
+   and the optional topic name; remove_section_dialog_text as the confirmation's message. */
+.nwsec-add p,.nwsec-confirm p{margin:0;padding:0 calc(24 * var(--dp)) calc(12 * var(--dp));font:400 calc(16 * var(--dp))/1.4 Roboto,sans-serif;color:#0000008a}
+.nwsec-confirm p{padding-top:calc(4 * var(--dp));color:#000000de}
+.nwsec-add input{display:block;box-sizing:border-box;width:calc(100% - calc(48 * var(--dp)));margin:0 calc(24 * var(--dp));padding:calc(8 * var(--dp)) 0;border:0;border-bottom:calc(2 * var(--dp)) solid #3367d6;background:none;color:inherit;font:400 calc(16 * var(--dp)) Roboto,sans-serif;outline:0}
+.nwsec-add input[name="name"]{margin-top:calc(8 * var(--dp));border-bottom-color:#0000001f}
+.nwsec-add input[name="name"]:focus{border-bottom-color:#3367d6}
+.nwsec-add em{display:block;padding:calc(4 * var(--dp)) calc(28 * var(--dp));font:italic 400 calc(14 * var(--dp)) Roboto,sans-serif;color:#0000008a}
+.screen .nwsec-add .nwsec-ok:disabled{color:#00000042}
+.nw2-dark .nw2-dialog{background:#424242;color:#ffffffde}
+.nw2-dark .nwsec-add p,.nw2-dark .nwsec-add em{color:#ffffff8a}
+.nw2-dark .nwsec-confirm p{color:#ffffffde}
+.nw2-empty-card{margin:0;padding:calc(16 * var(--dp));font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#0000008a}
+.nw2-dark .nw2-empty-card{color:#ffffff8a}

@@ -4134,6 +4134,41 @@ CASES.push({id:'T42',version:'5.1.1',name:'News › Search',async run(h){
   await h.key('Escape');
   h.check('Back closes the search',await h.until(`!document.querySelector('#viewport .nw2-sv') && !!document.querySelector('#viewport .nw2-weather')`));
 }});
+// 5.1.1 News & Weather › Add section (menu_group_add_section): Add topic… opens the add-section dialog with OK
+// waiting for text; the topic becomes the last section and lists its stories; Add location… gives a weather section;
+// Remove this section asks first; Manage sections has Add section and deletes a custom section.
+CASES.push({id:'T42',version:'5.1.1',name:'News › Add section',async run(h){
+  await h.openApp('news-weather');
+  await h.tap('#viewport [data-action="nwsec-add-menu"]');
+  h.check('Add section offers Add topic… and Add location…',await h.until(`[...document.querySelectorAll('.holo-menu button')].map(b=>b.textContent).join('|')==='Add topic…|Add location…'`));
+  await h.tap('[data-action="nwsec-add"][data-id="topic"]');
+  h.check('the dialog has the hint, the example and the name field',await h.until(`document.querySelector('#viewport .nwsec-add h3')?.textContent==='Add a topic' && document.querySelector('#viewport .nwsec-add [name="query"]').placeholder==='Enter a search term or phrase' && /Yankees AND Red Sox/.test(document.querySelector('#viewport .nwsec-add em').textContent) && !!document.querySelector('#viewport .nwsec-add [name="name"]')`));
+  h.check('OK waits for text',await h.ev(`document.querySelector('#viewport .nwsec-ok').disabled`));
+  await h.type('#viewport .nwsec-add [name="query"]','nexus security');await h.type('#viewport .nwsec-add [name="name"]','Nexus');
+  h.check('text enables OK',await h.ev(`!document.querySelector('#viewport .nwsec-ok').disabled`));
+  await h.tap('#viewport .nwsec-ok');
+  h.check('the topic opens as a section with its stories',await h.until(`document.querySelector('#viewport .nw2-bar b')?.textContent==='Nexus' && [...document.querySelectorAll('#viewport .nw2-story b')].map(b=>b.textContent).join('|')==='Android 5.1.1 security update rolls out to Nexus devices'`));
+  const saved=(await h.save()).news2;
+  h.check('the section is saved at the end',saved.custom.length===1&&saved.custom[0].query==='nexus security'&&saved.sectionsByEdition.us.at(-1)===saved.custom[0].id);
+  await h.tap('#viewport [data-action="nwsec-add-menu"]');await h.tap('[data-action="nwsec-add"][data-id="location"]');
+  h.check('Add location… has no name field',await h.until(`document.querySelector('#viewport .nwsec-add h3')?.textContent==='Add a location' && !document.querySelector('#viewport .nwsec-add [name="name"]')`));
+  await h.type('#viewport .nwsec-add [name="query"]','Szeged');await h.ev(`document.querySelector('#viewport .nwsec-add').requestSubmit()`);
+  h.check('a location shows its weather',await h.until(`document.querySelector('#viewport .nw2-bar b')?.textContent==='Szeged' && document.querySelector('#viewport .nw2-weather strong')?.textContent==='Szeged'`));
+  await h.tap('#viewport [data-action="sa-menu"]');
+  h.check('a custom section has Remove this section',await h.until(`!!document.querySelector('[data-action="nwsec-remove"]')`));
+  await h.tap('[data-action="nwsec-remove"]');
+  h.check('Remove asks first',await h.until(`/Remove this section\\?/.test(document.querySelector('#viewport .nwsec-confirm')?.textContent||'')`));
+  await h.tap('#viewport [data-action="nwsec-remove-ok"]');
+  h.check('OK removes it and returns to Headlines',await h.until(`!!document.querySelector('#viewport .nw2-weather') && document.querySelector('#viewport .nw2-bar b')?.textContent==='Headlines'`) && (await h.save()).news2.custom.length===1);
+  await h.tap('#viewport [data-action="sa-menu"]');
+  h.check('Headlines has no Remove this section',await h.until(`!!document.querySelector('[data-action="nwsec-manage"]') && !document.querySelector('[data-action="nwsec-remove"]')`));
+  await h.tap('[data-action="nwsec-manage"]');
+  h.check('Manage sections has Add section and lists the topic',await h.until(`!!document.querySelector('#viewport .nwsect-page [data-action="nwsec-add-menu"]') && [...document.querySelectorAll('#viewport .nwsec-active span')].map(s=>s.textContent).includes('Nexus')`));
+  const id=(await h.save()).news2.custom[0].id;
+  await h.tap(`#viewport [data-action="nwsec-hide"][data-id="${id}"]`);
+  h.check('removing a topic deletes it',await h.until(`![...document.querySelectorAll('#viewport .nwsect-page span')].some(s=>s.textContent==='Nexus')`) && (await h.save()).news2.custom.length===0);
+  await h.tap('#viewport [data-action="nwsec-back"]');
+}});
 CASES.push({id:'T42',version:'5.1.1',name:'News editions, section visibility/order and exact article URL',async run(h){
   const menu=async action=>{await h.tap('#viewport [data-action="sa-menu"]');await h.tap(`[data-action="${action}"]`);};
   await h.openApp('news-weather');await menu('nwsec-editions');await h.tap('[data-action="nwsec-cancel"]');
