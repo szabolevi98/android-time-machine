@@ -1,7 +1,7 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Nexus 4 (JWR66Y) extra launcher apps, each from its APK (audit step 4).
-const w={window:{AndroidI18n:{language:'en'}}};vm.runInNewContext(fs.readFileSync('versions/4.3/stock-strings.js','utf8')+fs.readFileSync('versions/4.3/jb-extra-apps.js','utf8')+fs.readFileSync('plus-messenger.js','utf8')+fs.readFileSync('movie-studio.js','utf8'),w);
+const w={window:{AndroidI18n:{language:'en'}}};vm.runInNewContext(fs.readFileSync('versions/4.3/stock-strings.js','utf8')+fs.readFileSync('versions/4.3/currents-customize.js','utf8')+fs.readFileSync('versions/4.3/jb-extra-apps.js','utf8')+fs.readFileSync('plus-messenger.js','utf8')+fs.readFileSync('movie-studio.js','utf8'),w);
 const X=w.window.JBExtraApps,t=k=>k,contacts=[{name:'Alex Morgan'},{name:'Sam Rivera'},{name:'Taylor Lee'}];
 const studio={ui:{},data:{},t,S:k=>w.window.JBExtraApps.text('studio',k),thumb:()=>'',addIcon:''};
 const r=(app,ui={})=>X.render(app,{ui,t,contacts,studio:app==='movie-studio'?{...studio,ui}:null});
@@ -15,6 +15,10 @@ const msg=X.render('messenger',{ui:{},t,contacts,messenger:mctx});
 assert.ok(msg.includes('msg-ic_menu_start_new_huddle.png')&&msg.includes('data-action="sa-menu"')&&(msg.match(/class="msg-row"/g)||[]).length===3);
 const cur=r('currents'),curOpen=r('currents',{currentsMenu:true});
 assert.ok(cur.includes('Breaking stories')&&cur.includes('Customize')&&curOpen.includes('menu-open'));
+// Currents' categories and Customize (currents-customize.js): the menu groups the editions; Customize lists a category's.
+assert.ok(cur.includes('>Science &amp; Tech<')&&cur.includes('>Lifestyle<')&&(cur.match(/data-action="ccz-open"/g)||[]).length===2);
+const cz=r('currents',{currentsCustomize:'lifestyle'});
+assert.ok(cz.includes('Customize Lifestyle')&&(cz.match(/data-ccz-row=/g)||[]).length===2&&cz.includes('data-ccz-breaking="lifestyle" checked'));
 const mag=r('play-magazines',{magDrawer:true});
 assert.ok(mag.includes('mag-ic_corpora_tile_magazines.png')&&mag.includes('>Read Now<')&&mag.includes('>Shop<')&&mag.includes('class="mag-card"'));
 const wal=r('wallet');
