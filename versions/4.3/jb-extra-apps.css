@@ -82,6 +82,20 @@
 .screen .loc-cats button{display:flex;flex-direction:column;align-items:center;gap:calc(1.9963 * var(--dp));margin-bottom:calc(4.0043 * var(--dp));padding:0;border:0;background:none;font:400 calc(12.001 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .loc-cats img{width:calc(54.0043 * var(--dp));height:calc(54.0043 * var(--dp))}
 .loc-cats span{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+/* Navigation's Contacts / Starred places pickers and Local's search field and results (as 4.0.4's ics-extra-apps.css). */
+.nav-pick{flex:1;min-height:0;overflow-y:auto;background:#000}
+.screen .nav-pick-row{display:flex;flex-direction:column;justify-content:center;width:100%;min-height:calc(64 * var(--dp));padding:calc(6 * var(--dp)) calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #ffffff1f;background:none;color:#fff;text-align:left;font-family:RobotoICS,Roboto,sans-serif}
+.screen .nav-pick-row:active{background:#33b5e566}
+.nav-pick-row b{font-weight:400;font-size:calc(18 * var(--dp))}
+.nav-pick-row small{font-size:calc(14 * var(--dp));color:#bebebe}
+.nav-pick-empty{margin:0;padding:calc(24 * var(--dp)) calc(16 * var(--dp));font:400 calc(16 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#bebebe;white-space:pre-line}
+.loc-sv{flex:1;min-width:0;display:flex;align-items:center}
+.loc-sv input{flex:1;min-width:0;height:calc(36 * var(--dp));margin:0 calc(8 * var(--dp));padding:0 calc(4 * var(--dp));border:0;border-bottom:calc(2 * var(--dp)) solid #33b5e5;background:none;color:#000;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif;outline:0}
+.loc-found{background:#fafcfe}
+.loc-results{flex:1;min-height:0;overflow-y:auto}
+.screen .loc-hit{display:flex;align-items:center;width:100%;min-height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #0000001f;background:none;color:#000;text-align:left;font:400 calc(18 * var(--dp)) RobotoICS,Roboto,sans-serif}
+.screen .loc-hit:active{background:#33b5e566}
+.loc-hit b{font-weight:400}
 
 /* Messenger (Google+ 4.0, audit step 4): the host bar (stock-apps.css .sa-bar) and conversation_list_item_view on
    bg_tacos_body (6 dp sides) over #e5e5e5. */

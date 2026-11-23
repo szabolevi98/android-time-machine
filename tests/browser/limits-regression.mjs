@@ -1750,16 +1750,17 @@ const lpSearchSettings = async h => {
   await h.tap('#viewport [data-action="gs-play-games"]');
   h.check('Google Settings › Play Games opens the Games app', await h.until(`!document.querySelector('#viewport .sa-gsettings6')`));
 };
-// 4.0.4 Navigation and Places (T28): the pickers' empty texts, then a contact's address and a starred place drive there;
-// Places' categories and search look through the stored places, a find opens on the map, Back returns to the picker.
-const icsNavPlaces = async h => {
+// 4.0.4 and 4.3 Navigation and Places / Local (T28): the pickers' empty texts, then a contact's address and a starred
+// place drive there; the categories and search look through the stored places, a find opens on the map, Back returns
+// to the picker.
+const navPlaces = key => async h => {
   await h.openApp('navigation');
   await h.tap('#viewport .nav-tile[data-id="contacts"]');
   h.check('Contacts without addresses says so', await h.until(`/contacts with addresses/.test(document.querySelector('#viewport .nav-pick-empty')?.textContent || '')`));
   await h.key('Escape');
   h.check('Back returns to the tiles', await h.until(`!!document.querySelector('#viewport .nav-tile')`));
   // A contact with an address and two places Maps keeps (one starred, one searched).
-  await h.ev(`(()=>{const k='android-time-machine-ics-v1';const d=JSON.parse(localStorage.getItem(k)||'{}');d.contacts=[{id:1,name:'Alex Morgan',phone:'202-555-0148',email:'alex@example.com',postals:[{type:'home',value:'1600 Amphitheatre Pkwy'}]},{id:2,name:'Sam Rivera',phone:'202-555-0192',email:'sam@example.com'},{id:3,name:'Taylor Lee',phone:'202-555-0116',email:'taylor@example.com'},{id:4,name:'Mom',phone:'202-555-0107',email:'mom@example.com'}];d.mapsStarred=['Blue Bottle Coffee'];d.mapsHistory=['Computer History Museum'];localStorage.setItem(k,JSON.stringify(d));return true})()`);
+  await h.ev(`(()=>{const k='${key}';const d=JSON.parse(localStorage.getItem(k)||'{}');d.contacts=[{id:1,name:'Alex Morgan',phone:'202-555-0148',email:'alex@example.com',postals:[{type:'home',value:'1600 Amphitheatre Pkwy'}]},{id:2,name:'Sam Rivera',phone:'202-555-0192',email:'sam@example.com'},{id:3,name:'Taylor Lee',phone:'202-555-0116',email:'taylor@example.com'},{id:4,name:'Mom',phone:'202-555-0107',email:'mom@example.com'}];d.mapsStarred=['Blue Bottle Coffee'];d.mapsHistory=['Computer History Museum'];localStorage.setItem(k,JSON.stringify(d));return true})()`);
   h.check('reloads', await h.reload());
   await h.openApp('navigation');
   await h.tap('#viewport .nav-tile[data-id="contacts"]');
@@ -3707,7 +3708,8 @@ const CASES = [
   {id: 'T25', version: '4.3', name: 'Google Search › Settings pages: Google Now, Notifications, My stuff, Voice, Phone search, Privacy', run: jbSearchSettings},
   {id: 'T25', version: '4.4.4', name: 'Google Search › Settings pages; Google Settings › Play Games', run: kkSearchSettings},
   {id: 'T25', version: '5.1.1', name: 'Google Search › Settings: the 4.1 headers and pages, Show cards', run: lpSearchSettings},
-  {id: 'T28', version: '4.0.4', name: 'Navigation › Contacts / Starred places; Places › categories and search', run: icsNavPlaces},
+  {id: 'T28', version: '4.0.4', name: 'Navigation › Contacts / Starred places; Places › categories and search', run: navPlaces('android-time-machine-ics-v1')},
+  {id: 'T28', version: '4.3', name: 'Navigation › Contacts / Starred places; Local › categories and search', run: navPlaces('android-time-machine-jb-v1')},
   {id: 'T32', version: '4.3', name: 'Hangouts › Settings, Hangout requests, Blocked People, People & options, Add people', run: jbHangoutsOptions},
   {id: 'T32', version: '4.4.4', name: 'Hangouts › Settings, SMS, Invites, Blocked People, People & options, New group MMS', run: kkHangoutsOptions},
   {id: 'T32', version: '5.1.1', name: 'Hangouts › Settings, People & options, Blocked people, Add people; Messenger › People & options', run: lpHangoutsOptions},

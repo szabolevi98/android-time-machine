@@ -1,7 +1,7 @@
 /* The remaining launcher apps of the Nexus 4 image (JWR66Y) as simple Holo screens, like the KitKat simulator's extras:
    Messenger (Google+ 4.0's group chat: the conversation list and "New conversation"), Navigation (Maps 6.14's
    DestinationActivity: Speak destination, Type destination, Contacts, Starred places), Local (Maps' Places: the category
-   list), Currents 2.1 (the editions library with Featured, Saved and "Add edition"), Play Magazines 2.0 (Read Now / My
+   list and the search), Currents 2.1 (the editions library with Featured, Saved and "Add edition"), Play Magazines 2.0 (Read Now / My
    Library), Wallet 1.6 (US only, English everywhere: the dashboard's four buttons) and Movie Studio (AOSP VideoEditor:
    the projects grid with "Create new project"). Texts come from the image's APKs; content is offline and made up. */
 (() => {
@@ -40,11 +40,33 @@
     pin: '<svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" fill="currentColor"/></svg>',
     card: '<svg viewBox="0 0 24 24"><path d="M3 5h18v14H3zm2 3v2h14V8zm0 5v4h14v-4z" fill="currentColor"/></svg>'
   };
+  /* Navigation's Contacts and Starred places pickers (da_picker_contacts / da_picker_starred_items): the contacts'
+     addresses and the places starred in Maps, each a row that drives there (maps-route.js); their empty texts are
+     da_picker_no_contacts and da_picker_no_starred_items. Local's search and categories look through the places Maps
+     keeps (the starred ones and the searches) by the category's words; a find opens on the map. As in 4.0.4. */
+  const CATEGORY_WORDS = {Restaurants: ['restaurant', 'diner', 'pizza', 'sushi', 'grill', 'bistro'], Coffee: ['coffee', 'cafe', 'café', 'espresso'],
+    Bars: ['bar', 'pub', 'tavern'], Hotels: ['hotel', 'inn', 'motel', 'hostel'], Attractions: ['museum', 'park', 'zoo', 'gallery', 'tower', 'bridge'],
+    ATMs: ['atm', 'bank'], 'Gas stations': ['gas', 'fuel', 'petrol', 'station']};
+  const storedPlaces = data => [...new Set([...(data.mapsStarred || []), ...(data.mapsHistory || [])])].filter(Boolean);
+  const placeHits = (data, words) => storedPlaces(data).filter(p => words.some(w => String(p).toLocaleLowerCase().includes(w)));
+  function picker(ui, t, data, contacts) {
+    const n = key => S('navigation', key, t), starred = ui.navPick === 'starred';
+    const rows = starred ? (data.mapsStarred || []).map(p => ['', p]) : contacts.flatMap(c => (c.postals || []).filter(a => a?.value).map(a => [c.name, a.value]));
+    const body = rows.length ? rows.map(([name, where]) => `<button class="nav-pick-row" data-action="xa-nav-go" data-id="${e(where)}">${name ? `<b>${e(name)}</b><small>${e(where)}</small>` : `<b>${e(where)}</b>`}</button>`).join('')
+      : `<p class="nav-pick-empty">${e(n(starred ? 'No starred places' : 'No contacts with addresses'))}</p>`;
+    return `<div class="app-view kkx-app nav614"><header class="nav-bar"><img src="assets/navigation.png" alt=""><b>${e(n(starred ? 'Starred places' : 'Contacts'))}</b></header><div class="nav-pick">${body}</div></div>`;
+  }
+  // Places' bar (the feature switcher, the title or the search field, Search) over the location bar.
+  const locBar = (title, ui, t) => `<header class="loc-bar"><span class="loc-switch"><img src="assets/loc-ic_feature_local.png" alt=""><img src="assets/loc-switcher_dropdown_triangle.png" alt=""></span><i></i>${ui.locSearching ? `<form class="loc-sv" data-form="xa-loc-search"><input name="query" placeholder="${e(S('navigation', 'Search Maps', t))}" autocomplete="off" spellcheck="false"></form>` : `<b>${e(title)}</b><i></i>`}<button data-action="xa-loc-search" aria-label="${e(t('Search'))}"><img src="assets/loc-actionbar_search.png" alt=""></button></header><div class="loc-where"><img src="assets/loc-gray_location.png" alt=""><span>Mountain View</span><img src="assets/loc-locationbar_triangle.png" alt=""></div>`;
+  function results(ui, t, data) {
+    const r = ui.locResults, words = r.category ? CATEGORY_WORDS[r.category] : [r.query.toLocaleLowerCase()], hits = placeHits(data, words);
+    return `<div class="app-view kkx-app loc614 loc-found">${locBar(r.category ? local(r.category, t) : r.query, ui, t)}<div class="loc-results">${hits.map(p => `<button class="loc-hit" data-action="xa-loc-open" data-id="${e(p)}"><b>${e(p)}</b></button>`).join('')}</div></div>`;
+  }
   const bar = (app, title, actions = '', cls = '') => `<header class="kkx-bar ${cls}"><button class="kkx-home" data-action="home" aria-label="${e(title)}"><img src="assets/${app}.png" alt=""></button><h2>${e(title)}</h2>${actions}</header>`;
   const action = (icon, label) => `<button class="kkx-btn" data-action="kkx-unavailable" aria-label="${e(label)}">${svg[icon]}</button>`;
   const row = (icon, label, sub = '', color = '#33b5e5') => `<button class="kkx-file" data-action="kkx-unavailable"><span class="kkx-file-icon" style="color:${color}">${svg[icon]}</span><span class="kkx-file-copy"><strong>${e(label)}</strong>${sub ? `<small>${e(sub)}</small>` : ''}</span></button>`;
   const tiles = (items, cls = '') => `<div class="jbx-grid ${cls}">${items.map(([title, color, sub = '']) => `<button class="jbx-tile" data-action="kkx-unavailable" style="--tile:${color}"><span class="jbx-tile-art">${e(title.charAt(0))}</span><strong>${e(title)}</strong>${sub ? `<small>${e(sub)}</small>` : ''}</button>`).join('')}</div>`;
-  function render(app, {studio, ui, t, chats = [], contacts = [], messenger, news}) {
+  function render(app, {studio, ui, t, chats = [], contacts = [], data = {}, messenger, news}) {
     if (app === 'messenger') {
       // Google+ 4.0's HostedMessengerFragment: onPrepareActionBar shows the title and the New conversation button; a
       // conversation, New conversation and the settings (plus-messenger.js) keep the bar with Up.
@@ -53,17 +75,21 @@
       const list = rows => `<div class="app-view kkx-app msg40">${bar({title: m('Messenger')})}<div class="msg-list">${rows ? rows.map(r => `<button class="msg-row" data-action="gpm-open" data-id="${e(r.id)}"><img src="assets/msg-ic_avatar.png" alt=""><span><b>${e(r.title)}</b><small>${e(r.snippet)}</small></span><time>${e(r.time)}</time></button>`).join('') : `<p class="gpm-empty">${e(m('Start a conversation'))}</p>`}</div></div>`;
       return window.PlusMessenger.render({...messenger, bar, list});
     }
+    if (app === 'navigation' && ui.navPick) return picker(ui, t, data, contacts);
+    if (app === 'local' && ui.locResults) return results(ui, t, data);
     if (app === 'navigation') {
       // Maps 6.14's DestinationActivity on a phone (da_destination_activity_redesign): the shortcut tiles of class aa.
       const n = key => S('navigation', key, t);
-      // Type destination asks for a place and drives there (maps-route.js); the other pickers need the network.
-      const tile = (key, icon) => `<button class="nav-tile" data-action="${key === 'Type destination' ? 'mr-type-dest' : 'kkx-unavailable'}"><img class="${icon}" src="assets/nav-${icon}.png" alt=""><span>${e(n(key))}</span></button>`;
+      // Type destination asks for a place and drives there (maps-route.js), Contacts and Starred places pick one;
+      // Speak destination needs the network's recognizer.
+      const tile = (key, icon) => `<button class="nav-tile" data-action="${{'Type destination': 'mr-type-dest', Contacts: 'xa-nav-pick', 'Starred places': 'xa-nav-pick'}[key] || 'kkx-unavailable'}" data-id="${key === 'Contacts' ? 'contacts' : key === 'Starred places' ? 'starred' : ''}"><img class="${icon}" src="assets/nav-${icon}.png" alt=""><span>${e(n(key))}</span></button>`;
       return `<div class="app-view kkx-app nav614"><header class="nav-bar"><img src="assets/navigation.png" alt=""><b>${e(n('Navigation'))}</b></header><div class="nav-strip"><b>${e(n('SHORTCUTS'))}</b><span>${e(n('STARRED'))}</span></div><div class="nav-tiles">${tile('Speak destination', 'da_picker_speak_destination')}${tile('Type destination', 'da_picker_type_destination')}${tile('Contacts', 'da_picker_contacts')}${tile('Starred places', 'da_picker_starred_items')}</div></div>`;
     }
     if (app === 'local') {
-      // Maps 6.14's Places (placesv2.xml); the categories are the ones Places offers by default, with the APK's icons.
+      // Maps 6.14's Places (placesv2.xml); the categories are the ones Places offers by default, with the APK's icons;
+      // Search opens a field in the bar.
       const cats = [['Restaurants', 'restaurants'], ['Coffee', 'cafe'], ['Bars', 'bars'], ['Hotels', 'hotels'], ['Attractions', 'attractions'], ['ATMs', 'atm'], ['Gas stations', 'gas']];
-      return `<div class="app-view kkx-app loc614"><header class="loc-bar"><span class="loc-switch"><img src="assets/loc-ic_feature_local.png" alt=""><img src="assets/loc-switcher_dropdown_triangle.png" alt=""></span><i></i><b>${e(S('navigation', 'Local', t))}</b><i></i><button data-action="kkx-unavailable" aria-label="${e(t('Search'))}"><img src="assets/loc-actionbar_search.png" alt=""></button></header><div class="loc-where"><img src="assets/loc-gray_location.png" alt=""><span>Mountain View</span><img src="assets/loc-locationbar_triangle.png" alt=""></div><div class="loc-cats">${cats.map(([key, icon]) => `<button data-action="kkx-unavailable"><img src="assets/loc-places_cat_icon_${icon}.png" alt=""><span>${e(local(key, t))}</span></button>`).join('')}</div></div>`;
+      return `<div class="app-view kkx-app loc614">${locBar(S('navigation', 'Local', t), ui, t)}<div class="loc-cats">${cats.map(([key, icon]) => `<button data-action="xa-loc-cat" data-id="${key}"><img src="assets/loc-places_cat_icon_${icon}.png" alt=""><span>${e(local(key, t))}</span></button>`).join('')}</div></div>`;
     }
     // The reader, search, Saved, an issue and the settings (news-reader.js) under an Up bar.
     if (news && (app === 'currents' || app === 'play-magazines')) {
@@ -99,5 +125,28 @@
     }
     return '';
   }
-  window.JBExtraApps = {APPS, render, text: (app, key) => S(app, key, k => k)};
+  // ctx: {ui, data, go(destination), openMap(query), render, focus(selector)}.
+  function handle(action, id, ctx) {
+    const {ui} = ctx;
+    switch (action) {
+      case 'xa-nav-pick': ui.navPick = id; ctx.render(); return true;
+      case 'xa-nav-go': ui.navPick = ''; ctx.go(id); return true;
+      case 'xa-loc-cat': ui.locResults = {category: id}; ctx.render(); return true;
+      case 'xa-loc-search': ui.locSearching = !ui.locSearching; ctx.render(); if (ui.locSearching) ctx.focus('.loc-sv input'); return true;
+      case 'xa-loc-open': ctx.openMap(id); return true;
+    }
+    return false;
+  }
+  function submit(form, values, ctx) {
+    if (form !== 'xa-loc-search') return false;
+    const q = String(values.get('query') || '').trim(); if (q) { ctx.ui.locSearching = false; ctx.ui.locResults = {query: q}; ctx.render(); }
+    return true;
+  }
+  // Back: a picker, the search field or the results return to their app's first screen.
+  function back(ui) {
+    if (ui.view === 'navigation' && ui.navPick) { ui.navPick = ''; return true; }
+    if (ui.view === 'local' && (ui.locResults || ui.locSearching)) { ui.locResults = null; ui.locSearching = false; return true; }
+    return false;
+  }
+  window.JBExtraApps = {APPS, render, handle, submit, back, text: (app, key) => S(app, key, k => k)};
 })();

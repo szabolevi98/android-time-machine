@@ -715,7 +715,7 @@
       case 'settings': return renderSettings();
       case 'browser': return renderBrowser();
       case 'chrome': return renderChrome();
-      case 'messenger': case 'navigation': case 'local': case 'currents': case 'play-magazines': case 'wallet': case 'movie-studio': if (ui.view === 'navigation' && ui.navRun) return MapsRoute.nav(mrContext()); return JBExtraApps.render(ui.view, {studio: ui.view === 'movie-studio' ? movieContext() : null, news: ['currents', 'play-magazines'].includes(ui.view) ? newsContext() : null, messenger: ui.view === 'messenger' ? messengerContext() : null, ui, t: key => i18n.t(key), contacts: data.contacts});
+      case 'messenger': case 'navigation': case 'local': case 'currents': case 'play-magazines': case 'wallet': case 'movie-studio': if (ui.view === 'navigation' && ui.navRun) return MapsRoute.nav(mrContext()); return JBExtraApps.render(ui.view, {studio: ui.view === 'movie-studio' ? movieContext() : null, news: ['currents', 'play-magazines'].includes(ui.view) ? newsContext() : null, messenger: ui.view === 'messenger' ? messengerContext() : null, ui, t: key => i18n.t(key), contacts: data.contacts, data});
       case 'google-search': case 'voice-search': case 'maps': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, plusCtx: ui.view === 'google-plus' ? plusContext() : null, ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
       case 'hangouts': return hangoutsScope(() => Hangouts.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime()));
       case 'downloads': return HoloDownloads.render(dlContext());
@@ -743,7 +743,7 @@
     // A capture for Messaging lasts while the Camera is open; Messaging opens on its compose screen, not over it.
     if (!resume) { ui.jbmaCapture = null; ui.camIntent = null; if (app === 'messaging') ui.jbmaScreen = null; }
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
-    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt4Dialog = null; ui.gsPage = ''; ui.gsStack = []; ui.gsDialog = null; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.paStack = []; ui.paMore = ''; }
+    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt4Dialog = null; ui.gsPage = ''; ui.gsStack = []; ui.gsDialog = null; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.paStack = []; ui.paMore = ''; ui.navPick = ''; ui.locResults = null; ui.locSearching = false; }
     if(ui.locked)return;
     if (app === 'news-weather' && !resume) { ui.newsSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
     if (app === 'google-keyboard') { openApp('settings'); ui.sub = 'language'; render(); return; }
@@ -776,6 +776,13 @@
   function dlContext() {
     return {data, ui, lang: i18n.language, locale: i18n.locale(), now: deviceDate().getTime(), hour24: !!data.settings.hour24, t: key => i18n.t(key),
       save, render, renderOverlay, toast, openApp};
+  }
+  // Navigation's pickers and Local's search (jb-extra-apps.js): a picked destination drives there as Type destination
+  // does; a Local find opens on the map.
+  function extraContext() {
+    return {ui, data, render, focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
+      go(to) { const rt = MapsRoute.route(mrContext(), {to, mode: 'drive', avoid: data.mapsAvoid || {}}); MapsRoute.startNav(mrContext(), {name: to, km: rt.km, min: rt.min, mode: 'drive'}); render(); },
+      openMap(query) { openApp('maps'); ui.mapsQuery = query; render(); }};
   }
   // Maps 6 directions and Navigation's drive (maps-route.js).
   function mrContext() {
@@ -827,6 +834,7 @@
     if (ui.view === 'google-settings' && GMSSettings.back(ui)) { render(); return; }
     if (ui.view === 'maps' && !ui.overlay && ui.mapsRoute && MapsRoute.back(mrContext())) return;
     if (ui.view === 'navigation' && !ui.overlay && ui.navRun) { ui.overlay = 'mr-exit'; renderOverlay(); return; }
+    if (['navigation', 'local'].includes(ui.view) && !ui.overlay && JBExtraApps.back(ui)) { render(); return; }
     // News & Weather: a settings dialog or nested screen, then the settings or the story page.
     if (ui.view === 'news-weather' && ui.newsSub && !ui.overlay) { if (!(ui.newsSub === 'settings' && NewsPrefs.back(ui))) { ui.newsSub = ''; ui.nwpScreen = ''; } render(); return; }
     if (ui.view === 'settings' && ['a11y-magnification', 'a11y-shortcut'].includes(ui.sub) && !ui.overlay) { ui.sub = 'accessibility'; render(); return; }
@@ -1978,6 +1986,8 @@
     if (Date.now() < suppressClickUntil) return;
     const { action, id, app, url } = button.dataset;
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
+    // Navigation's Contacts / Starred places pickers and Local's search and categories (jb-extra-apps.js).
+    if (action.startsWith('xa-') && JBExtraApps.handle(action, id, extraContext())) return;
     // Gmail's label settings, Days of mail to sync and the vacation responder (gmail.js).
     if (action.startsWith('lng-') && InputLanguage.handle(action, id, langContext())) return;
     if (action.startsWith('dev-') && JBDeveloperOptions.handle(action, id, devContext())) return;
@@ -2729,6 +2739,7 @@
     event.preventDefault(); const values = new FormData(form);
     if (['currents', 'play-magazines'].includes(ui.view) && NewsReader.submit(form.dataset.form, values, newsContext())) return;
     if (PlusMessenger.submit(form.dataset.form, values, messengerContext())) return;
+    if (JBExtraApps.submit(form.dataset.form, values, extraContext())) return;
     if (form.dataset.form === 'mr-type') { overlayRoot.querySelector('[data-action="mr-type-ok"]')?.click(); return; }
     if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, mrContext()); return; }
     if (ui.view === 'gmail' && gmailForm(form.dataset.form, values)) return;
