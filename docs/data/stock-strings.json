@@ -761,7 +761,18 @@
    "Article can now be found in %1$s": "Currents:saved_for_later",
    "@search_hint": "Currents:search_hint",
    "No results found": "Currents:search_empty",
-   "Share": "Currents:share"
+   "Share": "Currents:share",
+   "Customize %1$s": "Currents:customize_category",
+   "Science & Tech": "Currents:category_science",
+   "Lifestyle": "Currents:category_lifestyle",
+   "Add editions": "Currents:add_apps_title_long",
+   "In library": "Currents:in_library",
+   "Add for free": "Currents:add_for_free",
+   "Remove": "Currents:remove",
+   "Reorder": "Currents:reorder_editions",
+   "Include images for offline reading": "Currents:offline_images",
+   "%1$s - images will be available for offline reading.": "Currents:edition_has_been_pinned",
+   "%1$s - images will not be available for offline reading.": "Currents:edition_has_been_unpinned"
   },
   "magazines": {
    "Google Play Magazines": "Magazines:magazines_app_name",

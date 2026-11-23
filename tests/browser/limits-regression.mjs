@@ -4116,6 +4116,35 @@ CASES.push({id:'T36',version:'4.3',name:'Currents › editions in the menu',asyn
   await h.key('Escape');
   h.check('Back again returns to Breaking stories',await h.until(`document.querySelectorAll('#viewport .cur-tile').length===3 && document.querySelector('#viewport .cur-bar b')?.textContent!=='Trail & Summit'`));
 }});
+// 4.3 Currents › Customize (ContentManagementActivity): the menu groups the editions by category with a Customize row
+// each; Customize lists the category's editions (reorder, pin, remove) and the Breaking stories box; Add editions
+// brings a removed edition back.
+CASES.push({id:'T36',version:'4.3',name:'Currents › Customize',async run(h){
+  await h.openApp('currents');
+  await h.tap('#viewport [data-action="currents-menu"]');
+  h.check('the menu groups the editions by category',await h.until(`[...document.querySelectorAll('#viewport .cur-group')].map(p=>p.textContent).join('|')==='Science & Tech|Lifestyle' && document.querySelectorAll('#viewport .cur-customize').length===2`));
+  await h.tap('#viewport [data-action="ccz-open"][data-id="lifestyle"]');
+  h.check('Customize lists the category\'s editions and Breaking stories',await h.until(`document.querySelector('#viewport .ccz .sa-title b')?.textContent==='Customize Lifestyle' && [...document.querySelectorAll('#viewport .ccz-row[data-ccz-row] span')].map(s=>s.textContent).join('|')==='Trail & Summit|Weekend Kitchen' && document.querySelector('#viewport [data-ccz-breaking]')?.checked===true`));
+  const height=await h.ev(`document.querySelector('#viewport .ccz-row[data-ccz-row]').getBoundingClientRect().height`);
+  await h.drag('#viewport [data-ccz-drag="Weekend Kitchen"]',0,-height);
+  h.check('dragging saves the order',await h.until(`[...document.querySelectorAll('#viewport .ccz-row[data-ccz-row] span')].map(s=>s.textContent).join('|')==='Weekend Kitchen|Trail & Summit'`) && (await h.save()).currents.order.join('|')==='Tech Daily|Weekend Kitchen|Trail & Summit');
+  await h.tap('#viewport [data-action="ccz-pin"][data-id="Trail & Summit"]');
+  h.check('the pin keeps images for offline reading',await h.until(`/Trail & Summit - images will be available for offline reading/.test(document.querySelector('.toast')?.textContent||document.body.textContent)`) && (await h.save()).currents.pinned.includes('Trail & Summit'));
+  await h.tap('#viewport [data-action="ccz-remove"][data-id="Weekend Kitchen"]');
+  h.check('x removes the edition',await h.until(`[...document.querySelectorAll('#viewport .ccz-row[data-ccz-row] span')].map(s=>s.textContent).join('|')==='Trail & Summit'`));
+  await h.tap('#viewport [data-ccz-breaking]');
+  h.check('the box takes the category out of Breaking stories',(await h.save()).currents.noBreaking.join()==='lifestyle');
+  await h.key('Escape');
+  h.check('Back returns to the home screen without them',await h.until(`!document.querySelector('#viewport .ccz') && [...document.querySelectorAll('#viewport .cur-tile small')].map(s=>s.textContent).join('|')==='Tech Daily' && !document.querySelector('#viewport .cur-app[data-id="Weekend Kitchen"]')`));
+  await h.tap('#viewport [data-action="currents-menu"]');await h.tap('#viewport [data-action="ccz-open"][data-id="lifestyle"]');
+  await h.tap('#viewport [data-action="ccz-library"]');
+  h.check('Add editions offers the removed edition',await h.until(`document.querySelector('#viewport .ccz .sa-title b')?.textContent==='Add editions' && !!document.querySelector('#viewport [data-action="ccz-subscribe"][data-id="Weekend Kitchen"]') && /In library/.test(document.querySelector('#viewport .ccz-in')?.textContent||'')`));
+  await h.tap('#viewport [data-action="ccz-subscribe"][data-id="Weekend Kitchen"]');
+  await h.key('Escape');
+  h.check('Add for free brings it back at the end',await h.until(`[...document.querySelectorAll('#viewport .ccz-row[data-ccz-row] span')].map(s=>s.textContent).join('|')==='Trail & Summit|Weekend Kitchen'`));
+  await h.tap('#viewport [data-ccz-breaking]');await h.key('Escape');
+  h.check('Breaking stories mixes the editions again',await h.until(`document.querySelectorAll('#viewport .cur-tile').length===3`));
+}});
 // 5.1.1 News & Weather › Search (the toolbar's SearchView): a query lists the matching stories of every section and
 // opens one; a query with no match says "No matching news"; Back leaves the article, then the search.
 CASES.push({id:'T42',version:'5.1.1',name:'News › Search',async run(h){

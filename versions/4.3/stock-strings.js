@@ -761,7 +761,17 @@ window.StockStrings = {
   "Article can now be found in %1$s": {"res": "Currents:saved_for_later", "hu": "A cikk a következő alatt található: %1$s", "de": "Die Artikel sind im Abschnitt %1$s gespeichert.", "fr": "Vous pouvez retrouver l'article dans la section \"%1$s\".", "es": "Ahora puedes encontrar este artículo en %1$s."},
   "@search_hint": {"res": "Currents:search_hint", "hu": "Kiadások, blogok és cikkek keresése", "de": "Nach Ausgaben, Blogs und Artikeln suchen", "fr": "Rechercher des éditions, des blogs et des articles", "es": "Buscar ediciones, blogs y artículos", "en": "Search for editions, blogs, and articles"},
   "No results found": {"res": "Currents:search_empty", "hu": "Nincs találat", "de": "Keine Ergebnisse gefunden", "fr": "Aucun résultat trouvé.", "es": "No se han encontrado resultados."},
-  "Share": {"res": "Currents:share", "hu": "Megosztás", "de": "Teilen", "fr": "Partager", "es": "Compartir"}
+  "Share": {"res": "Currents:share", "hu": "Megosztás", "de": "Teilen", "fr": "Partager", "es": "Compartir"},
+  "Customize %1$s": {"res": "Currents:customize_category", "hu": "%1$s személyre szabása", "de": "%1$s anpassen", "fr": "Personnaliser %1$s", "es": "Personalizar %1$s"},
+  "Science & Tech": {"res": "Currents:category_science", "hu": "Tudomány és technika", "de": "Wissenschaft & Technik", "fr": "Science et technologie", "es": "Ciencia y tecnología"},
+  "Lifestyle": {"res": "Currents:category_lifestyle", "hu": "Életmód", "de": "Lifestyle", "fr": "Style de vie", "es": "Estilo de vida"},
+  "Add editions": {"res": "Currents:add_apps_title_long", "hu": "Kiadások hozzáadása", "de": "Ausgaben hinzufügen", "fr": "Ajouter des éditions", "es": "Añadir ediciones"},
+  "In library": {"res": "Currents:in_library", "hu": "A könyvtárban", "de": "In der Bibliothek", "fr": "Dans la bibliothèque", "es": "En la biblioteca"},
+  "Add for free": {"res": "Currents:add_for_free", "hu": "Adja hozzá ingyen", "de": "Kostenlos hinzufügen", "fr": "Ajouter gratuitement", "es": "Añadir de forma gratuita"},
+  "Remove": {"res": "Currents:remove", "hu": "Eltávolítás", "de": "Entfernen", "fr": "Supprimer", "es": "Eliminar"},
+  "Reorder": {"res": "Currents:reorder_editions", "hu": "Átrendezés", "de": "Neu anordnen", "fr": "Réorganiser", "es": "Reorganizar"},
+  "%1$s - images will be available for offline reading.": {"res": "Currents:edition_has_been_pinned", "hu": "%1$s – a képek elérhetők lesznek offline olvasásra.", "de": "%1$s – Bilder sind für Offline-Lesen verfügbar.", "fr": "%1$s : les images seront disponibles hors connexion.", "es": "%1$s: las imágenes se podrán leer sin conexión."},
+  "%1$s - images will not be available for offline reading.": {"res": "Currents:edition_has_been_unpinned", "hu": "%1$s – a képek nem lesznek elérhetők offline olvasásra.", "de": "%1$s – Bilder sind nicht für Offline-Lesen verfügbar.", "fr": "%1$s : les images ne seront pas disponibles hors connexion.", "es": "%1$s: las imágenes no se podrán leer sin conexión."}
  },
  "magazines": {
   "Google Play Magazines": {"res": "Magazines:magazines_app_name", "hu": "Google Play Magazinok", "de": "Google Play Magazines", "fr": "Google Play Magazines", "es": "Google Play Magazines"},

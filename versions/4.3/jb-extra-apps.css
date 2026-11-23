@@ -119,6 +119,34 @@
 .screen .cur-app{display:flex;align-items:center;gap:calc(6.0005 * var(--dp));width:100%;height:calc(48.0038 * var(--dp));padding:0 calc(8.9949 * var(--dp));border:0;border-top:calc(.9982 * var(--dp)) solid #555;background:#4c4c4c;text-align:left;font:400 calc(13.9972 * var(--dp)) Roboto,sans-serif;color:#fff}
 .cur-app i{flex:none;display:grid;place-items:center;width:calc(31.9986 * var(--dp));height:calc(31.9986 * var(--dp));font:700 calc(16.0052 * var(--dp)) Roboto,sans-serif;font-style:normal;color:#fff}
 .screen .cur-customize{font-style:italic;color:#b2b2b2}
+/* currents_home_category_menu_category_row.xml: 18 dp light #b2b2b2, list_item_half_padding (9 dp) at the sides. */
+.cur-group{margin:0;padding:calc(12 * var(--dp)) calc(9 * var(--dp)) calc(6 * var(--dp));font:300 calc(18 * var(--dp)) 'Roboto Light',Roboto,sans-serif;color:#b2b2b2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cur-empty{margin:calc(24 * var(--dp)) calc(16 * var(--dp));font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#777;text-align:center}
+/* ContentManagementActivity: manage_edition_row.xml rows (add_more_edition_padding 18 dp, internal spacing 8 dp, the
+   60 dp icon frame, 18 sp black name, 32 dp pin and x buttons) on the light Holo window; the fixed Breaking stories row
+   with its check box. LibraryManagementActivity: add_more_edition_row.xml (100 dp rows, 14 sp #707070 subtitle, the
+   accent #36b3e1 button). */
+.ccz{background:#f3f3f3;color:#000}
+.ccz-list{flex:1;overflow-y:auto}
+.ccz-row{display:flex;align-items:center;gap:calc(8 * var(--dp));min-height:calc(72 * var(--dp));padding:0 calc(10 * var(--dp)) 0 calc(4 * var(--dp));border-bottom:calc(1 * var(--dp)) solid #d8d8d8;background:#f3f3f3;position:relative;touch-action:pan-y}
+.ccz-row.dragging{z-index:2;background:#fff;box-shadow:0 calc(3 * var(--dp)) calc(8 * var(--dp)) #0004}
+.ccz-row>i,.ccz-lib-row>i{flex:none;display:grid;place-items:center;width:calc(44 * var(--dp));height:calc(44 * var(--dp));border:calc(1 * var(--dp)) solid #ccc;font:700 calc(20 * var(--dp)) Roboto,sans-serif;font-style:normal;color:#fff}
+.ccz-row>span{flex:1;min-width:0;font:400 calc(18 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .ccz-row>button{flex:none;display:grid;place-items:center;width:calc(40 * var(--dp));height:calc(48 * var(--dp));padding:0;border:0;background:none;cursor:pointer}
+.screen .ccz-row>button:active{background:#33b5e566}
+.ccz-grip{touch-action:none;cursor:grab!important}
+.ccz-grip img{width:calc(20 * var(--dp))}
+.ccz-pin img,.ccz-x img{width:calc(32 * var(--dp))}
+.ccz-fixed{padding-left:calc(14 * var(--dp))}
+.ccz-fixed>img{width:calc(44 * var(--dp));height:calc(44 * var(--dp))}
+.ccz-fixed input{width:calc(24 * var(--dp));height:calc(24 * var(--dp));margin:0 calc(8 * var(--dp));accent-color:#33b5e5}
+.ccz-addbtn img{width:calc(32 * var(--dp))}
+.ccz-lib-row{display:flex;align-items:flex-start;gap:calc(8 * var(--dp));min-height:calc(100 * var(--dp));box-sizing:border-box;padding:calc(18 * var(--dp)) calc(18 * var(--dp)) calc(24 * var(--dp));border-bottom:calc(1 * var(--dp)) solid #d8d8d8}
+.ccz-lib-row>span{flex:1;display:flex;flex-direction:column;min-width:0}
+.ccz-lib-row b{font:400 calc(18 * var(--dp)) Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ccz-lib-row small{font:400 calc(14 * var(--dp)) Roboto,sans-serif;color:#707070}
+.screen .ccz-lib-row>button{flex:none;align-self:center;padding:calc(6 * var(--dp)) calc(10 * var(--dp));border:0;background:none;font:700 calc(14 * var(--dp)) Roboto,sans-serif;color:#36b3e1;text-transform:none}
+.screen .ccz-lib-row>button:disabled{color:#8d8d8d}
 .cur-panel{position:absolute;inset:0;display:flex;flex-direction:column;background:#f1f1f1;box-shadow:calc(-10.0047 * var(--dp)) 0 calc(10.0047 * var(--dp)) calc(-5.0024 * var(--dp)) #0006;transition:transform .2s}
 .cur21.menu-open .cur-panel{transform:translateX(85%)}
 .cur-bar{flex:none;display:flex;align-items:center;height:calc(48.0038 * var(--dp));background:#f1f1f1;border-bottom:calc(1.9963 * var(--dp)) solid #d2d2d2}

@@ -406,6 +406,9 @@
     if (ui.jbgal && !viewport.querySelector('[data-jbgal]')?.isSameNode(ui.jbgal.root)) { ui.jbgal.destroy(); ui.jbgal = null; }
     const galRoot = viewport.querySelector('[data-jbgal]');
     if (galRoot && !ui.jbgal) ui.jbgal = {...JBGallery.attach(galRoot, {data, ui, t: key => i18n.t(key), media: ICSMedia, locale: i18n.locale(), save, render, toast, openCamera: () => { ui.galleryFromCamera = false; openApp('camera'); }, setWallpaper: galleryWallpaper, reduced: !!reducedMotion?.matches}), root: galRoot};
+    if (ui.ccz && !viewport.querySelector('[data-ccz]')?.isSameNode(ui.ccz.root)) { ui.ccz.destroy(); ui.ccz = null; }
+    const cczRoot = viewport.querySelector('[data-ccz]');
+    if (cczRoot && !ui.ccz) ui.ccz = {...CurrentsCustomize.attach(cczRoot, cczContext()), root: cczRoot};
     if (ui.jbcam && !viewport.querySelector('[data-jbcam]')?.isSameNode(ui.jbcam.root)) { ui.jbcam.destroy(); ui.jbcam = null; }
     const camRoot = viewport.querySelector('[data-jbcam]');
     if (camRoot && !ui.jbcam) ui.jbcam = {...JBCamera.attach(camRoot, {data, ui, t: key => i18n.t(key), media: ICSMedia, save, render, shoot: cameraShoot, gallery: cameraGallery, toast, reduced: !!reducedMotion?.matches}), root: camRoot};
@@ -736,7 +739,7 @@
   }
   function openApp(app, resume = false) {
     if (app === 'movie-studio' && !resume) MovieStudio.open(ui);
-    if (['currents', 'play-magazines'].includes(app) && !resume) { NewsReader.open(ui); ui.currentsEdition = ''; }
+    if (['currents', 'play-magazines'].includes(app) && !resume) { NewsReader.open(ui); ui.currentsEdition = ''; ui.currentsCustomize = ''; ui.currentsLibrary = false; }
     if (app === 'google-plus' && !resume) PlusPost.open(ui);
     if (app === 'messenger' && !resume) PlusMessenger.open(ui);
     if (app === 'earth' && !resume) EarthApp.open(ui);
@@ -779,6 +782,8 @@
   }
   // Navigation's pickers and Local's search (jb-extra-apps.js): a picked destination drives there as Type destination
   // does; a Local find opens on the map.
+  // Currents' Customize and Add editions (currents-customize.js).
+  const cczContext = () => ({ui, data, S: key => JBExtraApps.text('currents', key), save, render, toast: message => toast(message)});
   function extraContext() {
     return {ui, data, render, focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
       go(to) { const rt = MapsRoute.route(mrContext(), {to, mode: 'drive', avoid: data.mapsAvoid || {}}); MapsRoute.startNav(mrContext(), {name: to, km: rt.km, min: rt.min, mode: 'drive'}); render(); },
@@ -828,6 +833,7 @@
     if (ui.view === 'messenger' && !ui.overlay && PlusMessenger.back(ui)) { render(); return; }
     if (ui.view === 'google-plus' && !ui.overlay && PlusPost.back(ui)) { render(); return; }
     if (['currents', 'play-magazines'].includes(ui.view) && !ui.overlay && NewsReader.back(ui)) { render(); return; }
+    if (ui.view === 'currents' && !ui.overlay && CurrentsCustomize.back(ui)) { render(); return; }
     if (ui.view === 'currents' && !ui.overlay && (ui.currentsMenu || ui.currentsEdition)) { if (ui.currentsMenu) ui.currentsMenu = false; else ui.currentsEdition = ''; render(); return; }
     if (ui.view === 'movie-studio' && !ui.overlay && MovieStudio.back(ui)) { render(); return; }
     if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return; }
@@ -1996,6 +2002,7 @@
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Navigation's Contacts / Starred places pickers and Local's search and categories (jb-extra-apps.js).
     if (action.startsWith('xa-') && JBExtraApps.handle(action, id, extraContext())) return;
+    if (action.startsWith('ccz-') && CurrentsCustomize.handle(action, id, cczContext())) return;
     // Gmail's label settings, Days of mail to sync and the vacation responder (gmail.js).
     if (action.startsWith('lng-') && InputLanguage.handle(action, id, langContext())) return;
     if (action.startsWith('dev-') && JBDeveloperOptions.handle(action, id, devContext())) return;
@@ -2858,6 +2865,7 @@
   document.addEventListener('input', event => hangoutsScope(() => handleInput(event)));
   function handleInput(event) {
     if (['currents', 'play-magazines'].includes(ui.view) && NewsReader.input(event.target, newsContext())) return;
+    if (ui.view === 'currents' && CurrentsCustomize.change(event.target, cczContext())) return;
     if (PlusPost.input(event.target)) return;
     if (PlusMessenger.input(event.target, messengerContext())) return;
     if (event.target.matches('[data-lng-seek]') && InputLanguage.input(event.target, langContext())) return;

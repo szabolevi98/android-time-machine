@@ -99,13 +99,16 @@
     }
     if (app === 'currents') {
       // Currents 2.1's home: the story pager of the selected category over the category menu (the home button slides
-      // the panel aside). Breaking stories mixes the editions; an edition of the menu shows its own stories.
-      const c = key => S('currents', key, t), editions = [['Tech Daily', 'Technology', '#e53935'], ['Trail & Summit', 'Outdoors', '#43a047'], ['Weekend Kitchen', 'Food', '#fb8c00']];
+      // the panel aside). Breaking stories mixes the editions; an edition of the menu shows its own stories. The
+      // categories, Customize and Add editions are currents-customize.js.
+      const c = key => S('currents', key, t), CZ = window.CurrentsCustomize;
+      if (CZ && ui.currentsCustomize) return CZ.page({ui, data, t, S: c});
+      const editions = CZ ? CZ.editions(data) : [];
       const blurbs = {c1: 'A look at the season’s new hardware and what changed under the glass.', c2: 'Shaded routes, quiet lakes and where to park before nine.', c3: 'Roast once on Sunday and cook the week with what is left.'};
       const edition = editions.some(([name]) => name === ui.currentsEdition) ? ui.currentsEdition : '', A = window.NewsReader?.ARTICLES || {};
-      const stories = (edition ? ['c1', 'c2', 'c3', 't1', 'k1'].filter(id => A[id]?.source === edition) : ['c1', 'c2', 'c3']).filter(id => A[id]).map(id => [id, A[id].source, A[id].title, blurbs[id] || A[id].body[0]]);
-      const menu = `<nav class="cur-menu">${[[c('Breaking stories'), !edition, 'currents-edition', ''], [c('Saved'), false, 'nr-section', 'saved']].map(([label, on, action, id]) => `<button class="cur-cat${on ? ' on' : ''}" data-action="${action}" data-id="${id}">${e(label)}</button>`).join('')}${editions.map(([name, , color]) => `<button class="cur-app${name === edition ? ' on' : ''}" data-action="currents-edition" data-id="${e(name)}"><i style="background:${color}">${e(name[0])}</i>${e(name)}</button>`).join('')}<button class="cur-app cur-customize" data-action="kkx-unavailable">${e(c('Customize'))}</button></nav>`;
-      return `<div class="app-view kkx-app cur21${ui.currentsMenu ? ' menu-open' : ''}">${menu}<div class="cur-panel"><header class="cur-bar"><button class="cur-home" data-action="currents-menu" aria-label="${e(c('Currents'))}"><img src="assets/currents.png" alt=""></button><b>${e(edition || c('Breaking stories'))}</b><button class="msg-act" data-action="sa-menu" aria-label="${e(t('More options'))}"><img src="assets/ic_menu_moreoverflow_normal_holo_light.png" alt=""></button></header><div class="cur-stories">${stories.map(([id, ed, title, body]) => `<button class="cur-tile" data-action="nr-open" data-id="${id}"><b>${e(title)}</b><small>${e(ed)}</small><span>${e(body)}</span></button>`).join('')}</div></div></div>`;
+      const stories = (edition ? ['c1', 'c2', 'c3', 't1', 'k1'].filter(id => A[id]?.source === edition) : ['c1', 'c2', 'c3'].filter(id => CZ?.inBreaking(data, A[id]?.source))).filter(id => A[id]).map(id => [id, A[id].source, A[id].title, blurbs[id] || A[id].body[0]]);
+      const menu = `<nav class="cur-menu">${[[c('Breaking stories'), !edition, 'currents-edition', ''], [c('Saved'), false, 'nr-section', 'saved']].map(([label, on, action, id]) => `<button class="cur-cat${on ? ' on' : ''}" data-action="${action}" data-id="${id}">${e(label)}</button>`).join('')}${CZ ? CZ.menu(data, c, edition) : ''}</nav>`;
+      return `<div class="app-view kkx-app cur21${ui.currentsMenu ? ' menu-open' : ''}">${menu}<div class="cur-panel"><header class="cur-bar"><button class="cur-home" data-action="currents-menu" aria-label="${e(c('Currents'))}"><img src="assets/currents.png" alt=""></button><b>${e(edition || c('Breaking stories'))}</b><button class="msg-act" data-action="sa-menu" aria-label="${e(t('More options'))}"><img src="assets/ic_menu_moreoverflow_normal_holo_light.png" alt=""></button></header><div class="cur-stories">${stories.length ? '' : `<p class="cur-empty">${e(c('This section has no content.'))}</p>`}${stories.map(([id, ed, title, body]) => `<button class="cur-tile" data-action="nr-open" data-id="${id}"><b>${e(title)}</b><small>${e(ed)}</small><span>${e(body)}</span></button>`).join('')}</div></div></div>`;
     }
     if (app === 'play-magazines') {
       const page = ui.jbxMagazines || 'read', g = key => S('magazines', key, t);

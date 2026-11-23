@@ -144,6 +144,11 @@ versions/4.3/assets/clock-ic_lock_idle_alarm.png	0030f35443a18a19	resized	mako:/
 versions/4.3/assets/clock-ic_menu_add.png	71b6b64679925e52	resized	mako:/system/app/DeskClockGoogle.apk!res/drawable-xhdpi/ic_menu_add.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.14	4573b237d9e95a55
 versions/4.3/assets/clock-ic_setalarm_holo_dark.png	73938521b839f0b5	resized	mako:/system/app/DeskClockGoogle.apk!res/drawable-xhdpi/ic_setalarm_holo_dark.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.53	ab0261e2156fe5ff
 versions/4.3/assets/clock.png	44bf2b4f107b8109	same pixels	mako:/system/app/DeskClockGoogle.apk!res/mipmap-xhdpi/ic_launcher_alarmclock.png	mipmap-xhdpi		aa09da8dcfc2ac18
+versions/4.3/assets/cur-add.png	d50b2a99f36c08bf	copy	mako:/system/app/Currents.apk!res/drawable-xhdpi/add.png	drawable-xhdpi		d50b2a99f36c08bf
+versions/4.3/assets/cur-btn_download_pinned.png	5e682fbcdb9355e4	copy	mako:/system/app/Currents.apk!res/drawable-xhdpi/btn_download_pinned.png	drawable-xhdpi		5e682fbcdb9355e4
+versions/4.3/assets/cur-btn_download_stream.png	fbfc6b6ce4263909	copy	mako:/system/app/Currents.apk!res/drawable-xhdpi/btn_download_stream.png	drawable-xhdpi		fbfc6b6ce4263909
+versions/4.3/assets/cur-reorder.png	2f48300c2eb41589	copy	mako:/system/app/Currents.apk!res/drawable-hdpi/reorder.png	drawable-hdpi		2f48300c2eb41589
+versions/4.3/assets/cur-x.png	5dd3195e669dddda	copy	mako:/system/app/Currents.apk!res/drawable-hdpi/x.png	drawable-hdpi		5dd3195e669dddda
 versions/4.3/assets/currents.png	bccd1ef443af0441	copy	mako:/system/app/Currents.apk!res/mipmap-xhdpi/ic_launcher_currents.png	mipmap-xhdpi		bccd1ef443af0441
 versions/4.3/assets/dcal-ic_lockscreen_alarm.png	68290e1321f4b25b	copy	mako:/system/app/DeskClockGoogle.apk!res/drawable-xhdpi/ic_lockscreen_alarm.png	drawable-xhdpi		68290e1321f4b25b
 versions/4.3/assets/dcal-ic_lockscreen_glowdot.png	ce9d87ad6a122cc5	copy	mako:/system/app/DeskClockGoogle.apk!res/drawable-xhdpi/ic_lockscreen_glowdot.png	drawable-xhdpi		ce9d87ad6a122cc5
