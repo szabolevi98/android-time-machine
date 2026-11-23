@@ -225,20 +225,12 @@
      - Advanced, preferences_per_subscription.xml: MMS - Group messaging (group_mms_setting_dialog's two choices, a single
        MMS by default), Your phone number (the SIM gives none: "Unknown"; PhoneNumberPreference edits it), Auto-retrieve
        (on), Roaming auto-retrieve (off, dependent); Advanced - SMS delivery reports (off), Wireless alerts (the
-       CellBroadcastReceiver's CellBroadcastListActivity, cell-broadcast.js) and Access Point Names. The Debug category
-       is a debug build's only. Values live in data.lpmSettings.
-     - Access Point Names is Messenger's own ApnSettingsActivity (apn_settings.xml): the SIM's (216 30) MMS APNs from the
-       APK's res/xml/apns.xml as ApnPreference rows (apn_preference_layout.xml: the name, the APN, a radio button for
-       the one in use, the first until another is picked); New APN (ic_add_gray, ifRoom) and Reset to default
-       (restore_default_apn, then restore_default_apn_completed) in the menu. ApnEditorActivity (apn_editor.xml): Name,
-       MMSC, MMS proxy, MMS port, MCC, MNC as EditTextPreferences (apn_not_set when empty); the menu has Delete APN
-       (not for a new one), Save and Discard; Back saves after the checks error_apn_name_empty, error_mcc_not3 and
-       error_mnc_not23, shown in a dialog. Values live in data.lpmApns. */
-  // apns.xml rows of mcc 216 / mnc 30 whose type holds mms: [carrier, apn, mmsc, mmsproxy, mmsport].
-  const APNS = [['T-Mobile H', 'internet.telekom', 'http://mms.t-mobile.hu/servlets/mms', '212.51.126.10', '8080'], ['T-Mobile H MMS', 'internet.telekom', 'http://mms.t-mobile.hu/servlets/mms', '212.51.126.10', '8080'], ['T-Mobile MMS', 'mms', 'http://mms.t-mobile.hu/servlets/mms', '212.51.126.10', '8080']]
-    .map(([name, apn, mmsc, proxy, port], i) => ({id: `a${i + 1}`, name, apn, mmsc, proxy, port, mcc: '216', mnc: '30'}));
-  const APN_FIELDS = [['name', 'Name'], ['mmsc', 'MMSC'], ['proxy', 'MMS proxy'], ['port', 'MMS port'], ['mcc', 'MCC'], ['mnc', 'MNC']];
-  const apns = data => { const a = data.lpmApns; return a && Array.isArray(a.list) ? a : {list: APNS.map(x => ({...x})), selected: 'a1'}; };
+       CellBroadcastReceiver's CellBroadcastListActivity, cell-broadcast.js). Access Point Names (sms_apns_key) is
+       removed as PerSubscriptionSettingsFragment.onCreate removes it: the image's TelephonyProvider lets any app read the
+       mmsc column, so Messenger uses the system APN table (MmsUtils.useSystemApnTable) and, on a phone that never had
+       an older Messenger, has no local apn.db (ApnDatabase.doesDatabaseExist). Wireless alerts stays, as
+       config_cellBroadcastAppLinks is true and the CellBroadcastReceiver is enabled. The Debug category is a debug
+       build's only. Values live in data.lpmSettings. */
   const MSET = {sendSound: true, notify: true, vibrate: true, group: true, retrieve: true, roaming: false, reports: false};
   const mset = data => ({...MSET, ...(data.lpmSettings || {})});
   function renderMessengerSettings(data, ui, t) {
@@ -257,46 +249,13 @@
       title = M('Advanced settings');
       body = head(M('MMS')) + item('mset-group', M('Group messaging'), M(s.group ? 'Group enable' : 'Group disable')) + item('mset-number', M('Your phone number'), s.number || M('Unknown'))
         + toggle('retrieve', M('Auto-retrieve'), M('Auto-retrieve summary')) + toggle('roaming', M('Roaming'), M('Roaming summary'), !s.retrieve)
-        + head(M('Advanced category')) + toggle('reports', M('Delivery reports'), M('Delivery reports summary')) + item('mset-alerts', M('Wireless alerts')) + item('mset-page', M('Access Point Names'), '', '', false, 'apn');
-    }
-    let tools = '';
-    const tool = (action, label, file) => `<button type="button" class="lpm-tool" data-action="${action}" aria-label="${e(label)}"><img src="assets/${file}" alt=""></button>`;
-    const menuPop = items => ui.msetMenu ? `<button type="button" class="mpo-scrim mset-scrim" data-action="mset-menu-close" aria-label="${e(M('Cancel'))}"></button><div class="mset-pop" role="menu">${items.map(([action, label]) => `<button type="button" role="menuitem" data-action="${action}">${e(label)}</button>`).join('')}</div>` : '';
-    if (page === 'settings-apn') {
-      const a = apns(data); title = M('app');
-      body = a.list.map(x => `<div class="mset-apn"><button type="button" class="mpo-row" data-action="mset-apn-open" data-id="${e(x.id)}"><span class="mpo-text"><b>${e(x.name)}</b>${x.apn ? `<small>${e(x.apn)}</small>` : ''}</span></button><button type="button" class="mset-apn-radio${a.selected === x.id ? ' on' : ''}" data-action="mset-apn-select" data-id="${e(x.id)}" role="radio" aria-checked="${a.selected === x.id}" aria-label="${e(x.name)}"><i></i></button></div>`).join('');
-      tools = tool('mset-apn-new', M('New APN'), 'bg-ic_add_gray.png') + tool('mset-menu', t('More options'), 'gd-ic_overflow_menu.png');
-      d = menuPop([['mset-apn-reset', M('Reset to default')]]);
-    }
-    if (page === 'settings-apn-edit' && ui.msetApn) {
-      const draft = ui.msetApn.draft; title = M('app');
-      body = APN_FIELDS.map(([key, label]) => item('mset-apn-field', M(label), draft[key] || M('Not set'), '', false, key)).join('');
-      tools = tool('mset-menu', t('More options'), 'gd-ic_overflow_menu.png');
-      d = menuPop([...(ui.msetApn.id ? [['mset-apn-delete', M('Delete APN')]] : []), ['mset-apn-save', M('Save')], ['mset-apn-discard', M('Discard')]]);
+        + head(M('Advanced category')) + toggle('reports', M('Delivery reports'), M('Delivery reports summary')) + item('mset-alerts', M('Wireless alerts'));
     }
     const shell = (h, inner, buttons) => `<button type="button" class="mpo-scrim" data-action="mpo-close" aria-label="${e(M('Cancel'))}"></button><div class="mpo-dialog" role="dialog"><h3>${e(h)}</h3>${inner}${buttons ? `<div class="mpo-buttons">${buttons}</div>` : ''}</div>`;
     if (ui.mpoDialog === 'tone') { const names = tones('notifications'), at = ui.hgTone ?? Math.max(0, names.indexOf(toneOf(s.sound, 'notifications'))); d = shell(M('Sound'), `<div class="mpo-tones">${names.map((name, i) => `<button type="button" class="mpo-choice${at === i ? ' on' : ''}" data-action="mpo-tone" data-id="${i}" role="radio" aria-checked="${at === i}"><i></i><span>${e(name || M('Silent'))}</span></button>`).join('')}</div>`, `<button type="button" data-action="mpo-close">${e(M('Cancel'))}</button><button type="button" data-action="mset-tone-ok">${e(t('OK'))}</button>`); }
     if (ui.mpoDialog === 'group') d = shell(M('Group messaging'), `<div class="mpo-tones">${[['0', 'Group disable', !s.group], ['1', 'Group enable', s.group]].map(([id, key, on]) => `<button type="button" class="mpo-choice${on ? ' on' : ''}" data-action="mset-group-pick" data-id="${id}" role="radio" aria-checked="${on}"><i></i><span>${e(M(key))}</span></button>`).join('')}</div>`, '');
-    if (ui.mpoDialog === 'apn-field' && ui.msetApn) { const [key, label] = APN_FIELDS.find(([k]) => k === ui.msetField) || APN_FIELDS[0]; d = shell(M(label), `<input class="mset-input" data-mset-apn type="${['port', 'mcc', 'mnc'].includes(key) ? 'tel' : key === 'name' ? 'text' : 'url'}" value="${e(ui.msetApn.draft[key] || '')}" autocomplete="off" spellcheck="false">`, `<button type="button" data-action="mpo-close">${e(M('Cancel'))}</button><button type="button" data-action="mset-apn-field-ok">${e(t('OK'))}</button>`); }
-    if (ui.mpoDialog === 'apn-error') d = `<button type="button" class="mpo-scrim" data-action="mpo-close" aria-label="${e(t('OK'))}"></button><div class="mpo-dialog" role="alertdialog"><p class="mset-error">${e(M(ui.msetError || ''))}</p><div class="mpo-buttons"><button type="button" data-action="mpo-close">${e(t('OK'))}</button></div></div>`;
     if (ui.mpoDialog === 'number') d = shell(M('Your phone number'), `<input class="mset-input" data-mset-number type="tel" value="${e(s.number || '')}" autocomplete="off">`, `<button type="button" data-action="mpo-close">${e(M('Cancel'))}</button><button type="button" data-action="mset-number-ok">${e(t('OK'))}</button>`);
-    return `<div class="app-view lpm-app mpo-app"><header class="lpm-toolbar"><button type="button" class="lpm-tool" data-action="back" aria-label="${e(t('Navigate up'))}"><img src="assets/bg-ic_arrow_back_light.png" alt=""></button><h2>${e(title)}</h2>${tools}</header><div class="mpo-list">${body}</div>${d}</div>`;
-  }
-  // The editor's checks (ApnEditorFragment): a name, a three-digit MCC and a two- or three-digit MNC.
-  function apnError(draft) {
-    if (!String(draft.name || '').trim()) return "The Name field can't be empty.";
-    if (!/^\d{3}$/.test(draft.mcc || '')) return 'MCC field must be 3 digits.';
-    if (!/^\d{2,3}$/.test(draft.mnc || '')) return 'MNC field must be 2 or 3 digits.';
-    return '';
-  }
-  // Save the editor's APN (a new one joins the list); false with the error dialog when a check fails.
-  function apnSave(data, ui, ctx) {
-    const draft = ui.msetApn.draft, error = apnError(draft);
-    if (error) { ui.msetError = error; ui.mpoDialog = 'apn-error'; return false; }
-    const a = apns(data), id = ui.msetApn.id || `u${Date.now().toString(36)}`, row = {...draft, id, name: draft.name.trim()};
-    const list = ui.msetApn.id ? a.list.map(x => x.id === id ? row : x) : [...a.list, row];
-    data.lpmApns = {list, selected: list.some(x => x.id === a.selected) ? a.selected : list[0]?.id || ''}; ctx.save();
-    ui.msetApn = null; ui.lpmPage = 'settings-apn'; return true;
+    return `<div class="app-view lpm-app mpo-app"><header class="lpm-toolbar"><button type="button" class="lpm-tool" data-action="back" aria-label="${e(t('Navigate up'))}"><img src="assets/bg-ic_arrow_back_light.png" alt=""></button><h2>${e(title)}</h2></header><div class="mpo-list">${body}</div>${d}</div>`;
   }
   function renderMessenger(data, ui, t) {
     if (String(ui.lpmPage).startsWith('settings')) return renderMessengerSettings(data, ui, t);
@@ -326,17 +285,6 @@
       case 'mset-group-pick': setS({group: id === '1'}); close(); ctx.render(); return true;
       // Wireless alerts starts the CellBroadcastReceiver's list; Messenger keeps its page for Back.
       case 'mset-alerts': { const page = ui.lpmPage; ctx.openApp('settings'); ui.lpmPage = page; } ui.sub = 'cb-list'; ui.cbReturn = 'messaging'; ui.cbFromList = false; ctx.render(); return true;
-      case 'mset-menu': ui.msetMenu = true; ctx.render(); return true;
-      case 'mset-menu-close': ui.msetMenu = false; ctx.render(); return true;
-      case 'mset-apn-select': { const a = apns(data); if (a.list.some(x => x.id === id)) { data.lpmApns = {...a, selected: id}; ctx.save(); } ctx.render(); return true; }
-      case 'mset-apn-open': { const x = apns(data).list.find(row => row.id === id); if (!x) return true; ui.msetApn = {id, draft: {...x}}; ui.lpmPage = 'settings-apn-edit'; ctx.render(); return true; }
-      case 'mset-apn-new': ui.msetApn = {id: '', draft: {name: '', apn: '', mmsc: '', proxy: '', port: '', mcc: '216', mnc: '30'}}; ui.lpmPage = 'settings-apn-edit'; ctx.render(); return true;
-      case 'mset-apn-reset': ui.msetMenu = false; delete data.lpmApns; ctx.save(); ctx.render(); ctx.toast(M('Reset default APN settings completed.')); return true;
-      case 'mset-apn-field': if (!ui.msetApn) return true; ui.msetField = id; ui.mpoDialog = 'apn-field'; ctx.render(); requestAnimationFrame(() => { const f = ctx.root?.querySelector('[data-mset-apn]'); f?.focus(); f?.select?.(); }); return true;
-      case 'mset-apn-field-ok': { const v = String(ctx.root?.querySelector('[data-mset-apn]')?.value || '').trim(); if (ui.msetApn && APN_FIELDS.some(([k]) => k === ui.msetField)) ui.msetApn.draft[ui.msetField] = v.slice(0, 100); close(); ctx.render(); return true; }
-      case 'mset-apn-save': ui.msetMenu = false; apnSave(data, ui, ctx); ctx.render(); return true;
-      case 'mset-apn-discard': ui.msetMenu = false; ui.msetApn = null; ui.lpmPage = 'settings-apn'; ctx.render(); return true;
-      case 'mset-apn-delete': { ui.msetMenu = false; const a = apns(data), list = a.list.filter(x => x.id !== ui.msetApn?.id); data.lpmApns = {list, selected: list.some(x => x.id === a.selected) ? a.selected : list[0]?.id || ''}; ctx.save(); ui.msetApn = null; ui.lpmPage = 'settings-apn'; ctx.render(); return true; }
       case 'mset-number': ui.mpoDialog = 'number'; ctx.render(); requestAnimationFrame(() => ctx.root?.querySelector('[data-mset-number]')?.focus()); return true;
       case 'mset-number-ok': { const v = String(ctx.root?.querySelector('[data-mset-number]')?.value || '').trim(); setS({number: v}); close(); ctx.render(); return true; }
       case 'mpo-open': ui.overlay = ''; ctx.renderOverlay?.(); ui.lpmPage = 'options'; ctx.render(); return true;
@@ -352,14 +300,7 @@
       default: return false;
     }
   }
-  // Back: a dialog or menu closes; the APN editor saves (or shows why it can't) and returns to the APN list, which
-  // returns to Advanced.
-  function backMessenger(ui, data, ctx) {
-    if (ui.mpoDialog) { window.SystemSounds?.stop(); ui.mpoDialog = ''; ui.hgTone = undefined; return; }
-    if (ui.msetMenu) { ui.msetMenu = false; return; }
-    if (ui.lpmPage === 'settings-apn-edit') { if (!ui.msetApn || !data) { ui.lpmPage = 'settings-apn'; return; } apnSave(data, ui, ctx); return; }
-    ui.lpmPage = ui.lpmPage === 'settings-apn' ? 'settings-advanced' : /^settings-/.test(ui.lpmPage) ? 'settings' : '';
-  }
+  function backMessenger(ui) { if (ui.mpoDialog) { window.SystemSounds?.stop(); ui.mpoDialog = ''; ui.hgTone = undefined; return; } ui.lpmPage = /^settings-/.test(ui.lpmPage) ? 'settings' : ''; }
 
   window.HangoutsPrefs = {render, handle, back, mount, who, isGroup, receives, notifies, prefs, S};
   window.MessengerOptions = {render: renderMessenger, handle: handleMessenger, back: backMessenger, notifies: mNotifies, archived: mBlocked, M};

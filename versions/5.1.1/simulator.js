@@ -1028,7 +1028,7 @@
     if (ui.view === 'settings' && ['volumes','ringtone'].includes(ui.sub)) { ui.sub = 'sound'; render(); return; }
     // Hangouts' and Messenger's own pages (hangouts-prefs.js) step back through what opened them.
     if (ui.view === 'hangouts' && ui.hgPage) { HangoutsPrefs.back(ui); render(); return; }
-    if (ui.view === 'messaging' && ui.lpmPage) { MessengerOptions.back(ui, data, {save}); render(); return; }
+    if (ui.view === 'messaging' && ui.lpmPage) { MessengerOptions.back(ui); render(); return; }
     // Drive's dialogs, folders and filters (lp-drive.js).
     if (ui.view === 'drive' && window.LPDrive && LPDrive.back(ui)) { render(); return; }
     if (ui.view === 'messaging' && ui.sub === 'archived') { ui.sub = ''; render(); return; }
