@@ -11,7 +11,7 @@ Help/Feedback/Terms webes oldalak, valódi fiók, fizetés, hálózat) nem szere
 | Tétel | Állapot |
 |---|---|
 | 1.1 5.1.1 lista 300 dp-nél levágva | Javítva — `877369a0` (a szabály `.lpx-dialog .lpx-list`-re szűkítve) |
-| 1.2 5.1.1 Maps mikrofon címkéje | Marad (a gomb mögött nincs funkció; apróság) |
+| 1.2 5.1.1 Maps mikrofon címkéje | Javítva — `b0acec86` (`Maps:MENU_MIC_BUTTON`, „Tap to speak button.”, ahogy a Maps 9.3 `base.m.an` párosítja az `ic_qu_mic`-kel); a hangalapú keresés maga korlát marad |
 | 1.3 5.1.1 Earth „Reset to north” | Javítva — `877369a0` (`GoogleEarth:menu_north_up` az LMY48Y Earth APK-ból) |
 | 1.4 Vágólap Promise-hiba (5 hely) | Javítva — `877369a0` |
 | 2. Híváslista és csillagozott Mom (2.3.6–4.4.4) | Javítva — `c1d1d445`; a 4.0.4 és 4.3 híváslista ehhez megkapta a bejövő / nem fogadott hívás saját ikonját és feliratát |
@@ -21,10 +21,13 @@ Help/Feedback/Terms webes oldalak, valódi fiók, fizetés, hálózat) nem szere
 | 2. Letöltések 4.4.4 / 5.1.1 / 6.0.1 | Nyitott — a demóadat-lista nem írja elő |
 | 3. 4.3 Navigáció (Contacts, Starred places) és Helyi információk (kategóriák, keresés) | Javítva — `8774506e` (a 4.0.4 T28 logikája, a mako Maps APK szövegeivel) |
 | 3. Drive › View as Grid 4.4.4 / 5.1.1 | Javítva — `e548a68b` (doc_grid_item rács, a két Drive APK ikonjaival) |
-| 3. 5.1.1 Hírek és időjárás › Search | Javítva — `fc562544` (SearchView, „No matching news”); az Add section korlát marad |
-| 3. 4.3 Currents menü forrásai | Javítva — `67f83886` (mindegyik a saját cikkeit mutatja); a Customize korlát marad |
+| 3. 5.1.1 Hírek és időjárás › Search | Javítva — `fc562544` (SearchView, „No matching news”) |
+| 3. 5.1.1 Hírek és időjárás › Add section | Javítva — `47cfebea` (Add topic… / Add location… almenü, `dialog_content_add_section.xml`; a téma a saját offline cikkeit, a hely az időjárását mutatja; Remove this section, Manage sections) |
+| 3. 4.3 Currents menü forrásai | Javítva — `67f83886` (mindegyik a saját cikkeit mutatja) |
+| 3. 4.3 Currents › Customize | Javítva — `8940c6a1` (kategóriák a menüben; `ContentManagementActivity`: sorrend, offline képek, eltávolítás, Breaking stories; Add editions) |
 | 3. 5.1.1 Google Settings: Account History, Data management, Google Fit, Google+ | Javítva — `aad21e42` (GmsCore 6.7 oldalai; a Google+ a Google+ app beállításait nyitja) |
 | 3. SMS › Beállítások 2.3.6–5.1.1 | Javítva — `dfaec934` (a 2.3.6–4.3 Mms MessagingPreferenceActivity, az 5.1.1 Messenger General / Advanced oldala) |
+| 3. 5.1.1 Messenger › Wireless alerts, Access Point Names | Javítva — `86b46969` (CellBroadcastReceiver listája és beállításai, a Beállítások › Továbbiak › Emergency broadcasts is; a Messenger saját MMS APN-listája és -szerkesztője); a 4.3 Messaging „Cell broadcasts” sora korlát marad |
 | 3. Többi eltérés (Hangouts mood / videó, Photos Create movie, Google+ extrák, Latitude Add friends, Wallet, Street View) | Korlát marad (javaslat, 2026-11-23) |
 
 A régi mentések a demóadatot egyszer kapják meg (egy frissítési lépés jelzővel), ha a megfelelő lista még üres; amit a
