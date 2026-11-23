@@ -6,3 +6,7 @@ node_modules/
 _aosp/
 __pycache__/
 tests/browser/artifacts/
+
+# Local tooling: Claude Code settings and the private one-off audit scripts
+.claude/
+tests/browser/_*.mjs
