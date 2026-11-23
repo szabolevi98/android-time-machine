@@ -4014,6 +4014,21 @@ const editorsMore=app=>async h=>{
 };
 CASES.push(...['docs','sheets','slides'].map(app=>({id:'T40',version:'5.1.1',name:app+' › collections, grid/sort, sharing, move, picker and document shortcut',run:editorsMore(app)})));
 
+// 4.3 Currents › an edition of the menu (T36): Tech Daily, Trail & Summit and Weekend Kitchen each show their own
+// stories, which open in the reader; Back returns to Breaking stories.
+CASES.push({id:'T36',version:'4.3',name:'Currents › editions in the menu',async run(h){
+  await h.openApp('currents');
+  h.check('Breaking stories mixes the editions',await h.until(`document.querySelectorAll('#viewport .cur-tile').length===3`));
+  await h.tap('#viewport [data-action="currents-menu"]');
+  await h.tap('#viewport .cur-app[data-id="Trail & Summit"]');
+  h.check('an edition shows its own stories',await h.until(`document.querySelector('#viewport .cur-bar b')?.textContent==='Trail & Summit' && [...document.querySelectorAll('#viewport .cur-tile small')].every(s=>s.textContent==='Trail & Summit') && document.querySelectorAll('#viewport .cur-tile').length===2`));
+  await h.tap('#viewport .cur-tile[data-id="t1"]');
+  h.check('a story opens in the reader',await h.until(`/Packing light/.test(document.querySelector('#viewport .nr-article h1')?.textContent||'')`));
+  await h.key('Escape');
+  h.check('Back returns to the edition',await h.until(`document.querySelector('#viewport .cur-bar b')?.textContent==='Trail & Summit'`));
+  await h.key('Escape');
+  h.check('Back again returns to Breaking stories',await h.until(`document.querySelectorAll('#viewport .cur-tile').length===3 && document.querySelector('#viewport .cur-bar b')?.textContent!=='Trail & Summit'`));
+}});
 // 5.1.1 News & Weather › Search (the toolbar's SearchView): a query lists the matching stories of every section and
 // opens one; a query with no match says "No matching news"; Back leaves the article, then the search.
 CASES.push({id:'T42',version:'5.1.1',name:'News › Search',async run(h){

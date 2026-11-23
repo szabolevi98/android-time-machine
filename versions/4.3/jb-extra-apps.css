@@ -115,6 +115,7 @@
 .cur-menu{position:absolute;inset:0 15% 0 0;overflow-y:auto;background:#555}
 .screen .cur-cat{display:flex;align-items:center;width:100%;height:calc(48.0038 * var(--dp));padding:0 calc(8.9949 * var(--dp));border:0;background:none;text-align:left;font:400 calc(18.0015 * var(--dp)) Roboto,sans-serif;color:#b2b2b2}
 .screen .cur-cat.on{background:#0099cb;color:#fff}
+.screen .cur-app.on{background:#0099cb;color:#fff}
 .screen .cur-app{display:flex;align-items:center;gap:calc(6.0005 * var(--dp));width:100%;height:calc(48.0038 * var(--dp));padding:0 calc(8.9949 * var(--dp));border:0;border-top:calc(.9982 * var(--dp)) solid #555;background:#4c4c4c;text-align:left;font:400 calc(13.9972 * var(--dp)) Roboto,sans-serif;color:#fff}
 .cur-app i{flex:none;display:grid;place-items:center;width:calc(31.9986 * var(--dp));height:calc(31.9986 * var(--dp));font:700 calc(16.0052 * var(--dp)) Roboto,sans-serif;font-style:normal;color:#fff}
 .screen .cur-customize{font-style:italic;color:#b2b2b2}

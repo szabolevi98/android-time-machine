@@ -736,7 +736,7 @@
   }
   function openApp(app, resume = false) {
     if (app === 'movie-studio' && !resume) MovieStudio.open(ui);
-    if (['currents', 'play-magazines'].includes(app) && !resume) NewsReader.open(ui);
+    if (['currents', 'play-magazines'].includes(app) && !resume) { NewsReader.open(ui); ui.currentsEdition = ''; }
     if (app === 'google-plus' && !resume) PlusPost.open(ui);
     if (app === 'messenger' && !resume) PlusMessenger.open(ui);
     if (app === 'earth' && !resume) EarthApp.open(ui);
@@ -827,6 +827,7 @@
     if (ui.view === 'messenger' && !ui.overlay && PlusMessenger.back(ui)) { render(); return; }
     if (ui.view === 'google-plus' && !ui.overlay && PlusPost.back(ui)) { render(); return; }
     if (['currents', 'play-magazines'].includes(ui.view) && !ui.overlay && NewsReader.back(ui)) { render(); return; }
+    if (ui.view === 'currents' && !ui.overlay && (ui.currentsMenu || ui.currentsEdition)) { if (ui.currentsMenu) ui.currentsMenu = false; else ui.currentsEdition = ''; render(); return; }
     if (ui.view === 'movie-studio' && !ui.overlay && MovieStudio.back(ui)) { render(); return; }
     if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return; }
     if (ui.view === 'clock' && !ui.overlay && ClockPrefs.back(ui)) { render(); return; }
@@ -2383,6 +2384,8 @@
       // Play Music, Play Movies and Play Books
       case 'pa-drawer': ui.overlay = 'pa-drawer'; renderOverlay(); break;
       case 'currents-menu': ui.currentsMenu = !ui.currentsMenu; render(); break;
+      // Currents' menu: Breaking stories or one edition's stories (jb-extra-apps.js); the panel slides back.
+      case 'currents-edition': ui.currentsEdition = id || ''; ui.currentsMenu = false; render(); break;
       case 'pa-menu': ui.overlay = 'pa-menu'; renderOverlay(); break;
       case 'pa-refresh': ui.overlay = ''; renderOverlay(); render(); break;
       case 'pa-books-filter': ui.bkFilterOpen = !ui.bkFilterOpen; render(); break;
