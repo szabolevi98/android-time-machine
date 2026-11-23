@@ -1018,6 +1018,7 @@
     if (ui.view === 'settings' && ['about-sim', 'about-imei'].includes(ui.sub)) { ui.sub = 'about-status'; render(); return; }
     if (ui.view === 'settings' && ['easter', 'lland', 'about-status', 'about-legal'].includes(ui.sub)) { ui.sub = 'about'; render(); return; }
     if (ui.view === 'settings' && ui.sub?.startsWith('user:')) { ui.sub = 'users'; render(); return; }
+    if (ui.view === 'settings' && !ui.overlay && CellBroadcast.back(ui, openApp)) { render(); return; }
     if (ui.view === 'settings' && ['vpn', 'tethering', 'beam', 'mobile-networks'].includes(ui.sub)) { ui.sub = 'wireless'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'wifi-advanced') { ui.sub = 'wifi'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'sync-account') { ui.sub = 'sync-google'; render(); return; }
@@ -1027,7 +1028,7 @@
     if (ui.view === 'settings' && ['volumes','ringtone'].includes(ui.sub)) { ui.sub = 'sound'; render(); return; }
     // Hangouts' and Messenger's own pages (hangouts-prefs.js) step back through what opened them.
     if (ui.view === 'hangouts' && ui.hgPage) { HangoutsPrefs.back(ui); render(); return; }
-    if (ui.view === 'messaging' && ui.lpmPage) { MessengerOptions.back(ui); render(); return; }
+    if (ui.view === 'messaging' && ui.lpmPage) { MessengerOptions.back(ui, data, {save}); render(); return; }
     // Drive's dialogs, folders and filters (lp-drive.js).
     if (ui.view === 'drive' && window.LPDrive && LPDrive.back(ui)) { render(); return; }
     if (ui.view === 'messaging' && ui.sub === 'archived') { ui.sub = ''; render(); return; }
@@ -1180,6 +1181,8 @@
       overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog chr-a2hs" role="dialog" aria-label="${safe(chromeText('Add to homescreen'))}"><h3>${safe(chromeText('Add to homescreen'))}</h3><div class="chr-a2hs-row"><img src="assets/chr40-app_shortcut_icon.png" alt=""><input data-a2hs-title value="${safe(ui.a2hs?.title || '')}" placeholder="${safe(chromeText('Title'))}" aria-label="${safe(chromeText('Title'))}"></div><div class="settings-dialog-actions"><button data-action="close-overlay">${safe(chromeText('Cancel'))}</button><button data-action="chrome-a2hs-add">${safe(chromeText('Add'))}</button></div></div>`;
     } else if (ui.overlay === 'cert-install') {
       overlayRoot.innerHTML = CertInstall.overlay(certContext());
+    } else if(ui.overlay==='cb-menu'||ui.overlay==='cb-dialog'){
+      overlayRoot.innerHTML=CellBroadcast.overlay(ui,data,key=>i18n.t(key));
     } else if(ui.overlay==='sx-dialog'){
       overlayRoot.innerHTML=ICSSystemSettings.overlay(data,ui,key=>i18n.t(key));
     } else if (ui.overlay === 'search') {
@@ -1431,6 +1434,9 @@
     const s = ui.sub;
     if(s==='lock-setup')return lockControls.renderSetup();
     // Security's sub-pages (lp-security.js), then the other Lollipop pages.
+    // Cell Broadcasts' list and settings (cell-broadcast.js).
+    const cb=CellBroadcast.page(s,{data,t:key=>i18n.t(key)});
+    if(cb)return appView(cb.title,cb.body,'sx-page cb-page',cb.right||'');
     const lp=LPSecurity.page(s,{data,ui,t:key=>i18n.t(key)})||LPSettingsPages.render(s,{data,t:key=>i18n.t(key),locale:i18n.locale()});
     if(lp)return appView(lp.title,(lp.switchKey?switchBar(lp.switchKey,lp.switchOn):'')+lp.body,'','');
     const system=ICSSystemSettings.render(data,ui,key=>i18n.t(key),i18n.locale());
@@ -2280,6 +2286,7 @@
       }
     }
     if(action.startsWith('nwsec-')&&NewsSections.handle(action,id,newsSectionsContext()))return;
+    if(action.startsWith('cb-')&&CellBroadcast.handle(action,id,{data,ui,save,render,renderOverlay}))return;
     if(action.startsWith('fitm-')&&FitMore.handle(action,id,fitContext()))return;
     if(action.startsWith('emore-')&&EditorMore.handle(action,id,editorContext()))return;
     if(action.startsWith('kp-') && KeepMore.handle(action,id,keepMoreContext()))return;
@@ -3193,6 +3200,7 @@
     if (!form || !screen.contains(form)) return;
     event.preventDefault(); const values = new FormData(form);
     if (ui.view === 'news-weather' && NewsSections.submit(form.dataset.form, values, newsSectionsContext())) return;
+    if (CellBroadcast.submit(form.dataset.form, values, {data, ui, save, render, renderOverlay})) return;
     if (['newsstand'].includes(ui.view) && NewsReader.submit(form.dataset.form, values, newsContext())) return;
     if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, mrContext()); return; }
     if (form.dataset.form === 'dpr-vmnumber') { LPDialerPrefs.saveVoicemail(values.get('text') || '', {data, ui}); save(); render(); return; }

@@ -122,3 +122,15 @@
 .mpo-app .mpo-row .mpo-text small{white-space:normal}
 .mpo-dialog .mpo-choice span{padding:calc(8 * var(--dp)) 0}
 .mset-input{display:block;width:calc(100% - 48 * var(--dp));margin:0 calc(24 * var(--dp)) calc(8 * var(--dp));padding:calc(4 * var(--dp)) 0;border:0;border-bottom:calc(2 * var(--dp)) solid #0288d1;background:none;font:400 calc(18 * var(--dp)) Roboto,sans-serif;color:#000000de;outline:0}
+/* ApnSettingsActivity: apn_preference_layout.xml rows (the name over the APN, an 8 dp-margined radio button) and the
+   toolbar's overflow menu (popup_menu style, 48 dp items); ApnEditorActivity's error dialog. */
+.mset-apn{display:flex;align-items:center}
+.mset-apn>.mpo-row{flex:1;min-width:0}
+.screen .mset-apn-radio{flex:none;display:grid;place-items:center;width:calc(48 * var(--dp));height:calc(56 * var(--dp));margin-right:calc(8 * var(--dp));padding:0;border:0;background:none}
+.mset-apn-radio i{width:calc(20 * var(--dp));height:calc(20 * var(--dp));box-sizing:border-box;border:calc(2 * var(--dp)) solid #0000008a;border-radius:50%}
+.mset-apn-radio.on i{border-color:#0288d1;background:radial-gradient(#0288d1 0 calc(5 * var(--dp)),transparent calc(5.5 * var(--dp)))}
+.mset-scrim.mpo-scrim{background:none}
+.mset-pop{position:absolute;z-index:41;top:calc(4 * var(--dp));right:calc(4 * var(--dp));min-width:calc(168 * var(--dp));padding:calc(8 * var(--dp)) 0;background:#fff;border-radius:calc(2 * var(--dp));box-shadow:0 calc(4 * var(--dp)) calc(12 * var(--dp)) #0005}
+.screen .mset-pop button{display:block;width:100%;height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border:0;background:none;text-align:left;font:400 calc(16 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.screen .mset-pop button:active{background:#0000001a}
+.mset-error{margin:0;padding:calc(24 * var(--dp)) calc(24 * var(--dp)) calc(8 * var(--dp));font:400 calc(16 * var(--dp))/1.4 Roboto,sans-serif;color:#0000008a}
