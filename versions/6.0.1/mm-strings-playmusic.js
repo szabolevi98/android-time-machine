@@ -120,5 +120,101 @@ MM.strings('playmusic', {
 "de": "Du kannst nach beliebigen Interpreten, Titeln, Genres, Aktivitäten und mehr suchen.",
 "fr": "Recherchez un artiste, un titre, un genre, une activité, etc.",
 "es": "Busca cualquier artista, canción, género, actividad y mucho más"
+},
+"genres_title": {
+"res": "bullhead:Music2:genres_title",
+"en": "Genres",
+"hu": "Műfajok",
+"de": "Genres",
+"fr": "Genres",
+"es": "Géneros"
+},
+"artists_title": {
+"res": "bullhead:Music2:artists_title",
+"en": "Artists",
+"hu": "Előadók",
+"de": "Interpreten",
+"fr": "Artistes",
+"es": "Artistas"
+},
+"albums_title": {
+"res": "bullhead:Music2:albums_title",
+"en": "Albums",
+"hu": "Albumok",
+"de": "Alben",
+"fr": "Albums",
+"es": "Álbumes"
+},
+"tracks_title": {
+"res": "bullhead:Music2:tracks_title",
+"en": "Songs",
+"hu": "Dalok",
+"de": "Titel",
+"fr": "Titres",
+"es": "Canciones"
+},
+"shuffle_all": {
+"res": "bullhead:Music2:shuffle_all",
+"en": "Shuffle all",
+"hu": "Keverés",
+"de": "Alle zufällig wiedergeben",
+"fr": "Lecture aléatoire",
+"es": "Reproducir aleatoriamente"
+},
+"unknown_artist_name": {
+"res": "bullhead:Music2:unknown_artist_name",
+"en": "Unknown artist",
+"hu": "Ismeretlen előadó",
+"de": "Unbekannter Interpret",
+"fr": "Artiste inconnu",
+"es": "Artista desconocido"
+},
+"accessibility_play": {
+"res": "bullhead:Music2:accessibility_play",
+"en": "Play",
+"hu": "Lejátszás",
+"de": "Abspielen",
+"fr": "Écouter",
+"es": "Reproducir"
+},
+"accessibility_pause": {
+"res": "bullhead:Music2:accessibility_pause",
+"en": "Pause",
+"hu": "Szünet",
+"de": "Zeitweilig deaktivieren",
+"fr": "Pause",
+"es": "Pausar"
+},
+"accessibility_next": {
+"res": "bullhead:Music2:accessibility_next",
+"en": "Next",
+"hu": "Tovább",
+"de": "Nächster",
+"fr": "Suivant",
+"es": "Siguiente"
+},
+"accessibility_prev": {
+"res": "bullhead:Music2:accessibility_prev",
+"en": "Previous",
+"hu": "Előző",
+"de": "Vorheriger",
+"fr": "Précédent",
+"es": "Anterior"
+},
+"accessibility_shuffle": {
+"res": "bullhead:Music2:accessibility_shuffle",
+"en": "Shuffle",
+"hu": "Véletlen sorrendű lejátszás",
+"de": "Zufallswiedergabe",
+"fr": "Lecture aléatoire",
+"es": "Reproducción aleatoria"
+},
+"accessibility_repeat": {
+"res": "bullhead:Music2:accessibility_repeat",
+"en": "Repeat",
+"hu": "Ismétlés",
+"de": "Wiederholen",
+"fr": "Répéter",
+"es": "Repetir"
 }
 });

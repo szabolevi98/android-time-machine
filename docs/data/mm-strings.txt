@@ -332,6 +332,9 @@ menu_sort_by menu_sort_title menu_sort_last_modified menu_sort_recently_opened m
 launcher_name top_menu_mainstage top_menu_my_library playlists_title top_menu_instant_mixes top_menu_shop settings
 help_title no_music_heading no_music_setup_uploader_body empty_screen_my_library_all_music empty_screen_playlists
 search empty_screen_search empty_search_screen_helper_text
+# The local library (MyLibraryFragment's tabs without a subscription) and the now playing screen
+genres_title artists_title albums_title tracks_title shuffle_all unknown_artist_name accessibility_play accessibility_pause
+accessibility_next accessibility_prev accessibility_shuffle accessibility_repeat
 [playmovies] Videos framework
 # Play Movies & TV 3.8: the drawer and the empty library
 application_name_with_tv tab_watch_now tab_my_library menu_shop menu_settings menu_help_and_feedback no_movies no_shows

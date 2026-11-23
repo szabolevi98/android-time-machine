@@ -31,3 +31,47 @@
 .mmpm-plate{flex:1;display:flex;align-items:center;height:calc(48 * var(--dp));margin:0 calc(4 * var(--dp));border-radius:calc(2 * var(--dp));background:#fff;box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) rgba(0,0,0,.2)}
 .mmpm-plate .mmpm-btn img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
 .mmpm-sinput{flex:1;min-width:0;height:100%;border:0;outline:0;background:none;color:#212121;font:calc(18 * var(--dp)) Roboto,sans-serif}
+/* Play Music's own songs (mm-music.js): MyLibraryFragment's tabs (#fafafa, the play_music_primary underline), the 64 dp
+   song rows, the album / artist / genre cards, the bottom bar and the now playing screen. */
+.mmmu-tabs{position:sticky;top:0;z-index:1;display:flex;min-height:calc(48 * var(--dp));background:#fafafa;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) rgba(0,0,0,.13)}
+.mmmu-tabs button{flex:1;padding:0 calc(8 * var(--dp));border:0;border-bottom:calc(3 * var(--dp)) solid transparent;background:none;color:#757575;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase;white-space:nowrap}
+.mmmu-tabs button.on{border-bottom-color:#ef6c00;color:#ef6c00}
+.mmmu-shuffle{display:block;margin:calc(8 * var(--dp)) calc(8 * var(--dp)) 0;padding:calc(8 * var(--dp)) calc(16 * var(--dp));border:0;border-radius:calc(2 * var(--dp));background:none;color:#ef6c00;font:500 calc(14 * var(--dp)) Roboto,sans-serif;text-transform:uppercase}
+.mmmu-tracks{padding:calc(4 * var(--dp)) 0}
+.mmmu-track{display:flex;align-items:center;gap:calc(12 * var(--dp));width:100%;min-height:calc(64 * var(--dp));padding:calc(6 * var(--dp)) calc(16 * var(--dp)) calc(6 * var(--dp)) calc(12 * var(--dp));border:0;background:#fff;text-align:left}
+.mmmu-track.current{background:#fff3e0}
+.mmmu-track img{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));object-fit:cover}
+.mmmu-track span{flex:1;min-width:0}
+.mmmu-track b,.mmmu-track small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:400}
+.mmmu-track b{font-size:calc(16 * var(--dp));color:#212121}
+.mmmu-track small,.mmmu-track time{font-size:calc(14 * var(--dp));color:#757575}
+.mmmu-track time{font-size:calc(12 * var(--dp))}
+.mmmu-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(8 * var(--dp));padding:calc(8 * var(--dp))}
+.mmmu-cards button{display:flex;flex-direction:column;min-width:0;padding:0 0 calc(12 * var(--dp));border:0;background:#fff;text-align:left;box-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) rgba(0,0,0,.2)}
+.mmmu-cards img{width:100%;aspect-ratio:1;object-fit:cover}
+.mmmu-cards b,.mmmu-cards small{display:block;padding:0 calc(12 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:400}
+.mmmu-cards b{padding-top:calc(12 * var(--dp));font-size:calc(16 * var(--dp));color:#212121}
+.mmmu-cards small{font-size:calc(14 * var(--dp));color:#757575}
+.mmmu-mini{flex:none;display:flex;align-items:center;height:calc(64 * var(--dp));background:#fff;box-shadow:0 calc(-2 * var(--dp)) calc(4 * var(--dp)) rgba(0,0,0,.2)}
+.mmmu-mini>button:first-child{flex:1;min-width:0;display:flex;align-items:center;gap:calc(12 * var(--dp));height:100%;padding:0;border:0;background:none;text-align:left}
+.mmmu-mini>button:first-child img{width:calc(64 * var(--dp));height:calc(64 * var(--dp))}
+.mmmu-mini span{flex:1;min-width:0}
+.mmmu-mini b,.mmmu-mini small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:400}
+.mmmu-mini b{font-size:calc(14 * var(--dp));color:#212121}
+.mmmu-mini small{font-size:calc(12 * var(--dp));color:#757575}
+.mmmu-icon{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));padding:calc(12 * var(--dp));border:0;border-radius:50%;background:none;box-sizing:border-box;display:grid;place-items:center}
+.mmmu-icon img{width:calc(24 * var(--dp));height:calc(24 * var(--dp));object-fit:contain}
+.mmmu-player{flex:1;min-height:0;display:flex;flex-direction:column;background:#fff}
+.mmmu-cover{flex:1;min-height:calc(120 * var(--dp));background:#eee;overflow:hidden}
+.mmmu-cover img{width:100%;height:100%;object-fit:cover}
+.mmmu-now{flex:none;padding:calc(16 * var(--dp)) calc(24 * var(--dp)) calc(4 * var(--dp));text-align:center}
+.mmmu-now b,.mmmu-now small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:400}
+.mmmu-now b{font-size:calc(20 * var(--dp));color:#212121}
+.mmmu-now small{font-size:calc(14 * var(--dp));color:#757575}
+.mmmu-seek{flex:none;display:block;width:calc(100% - 32 * var(--dp));height:calc(24 * var(--dp));margin:calc(4 * var(--dp)) calc(16 * var(--dp)) 0;accent-color:#ef6c00}
+.mmmu-time{flex:none;display:flex;justify-content:space-between;padding:0 calc(16 * var(--dp));font-size:calc(12 * var(--dp));color:#757575}
+.mmmu-controls{flex:none;display:flex;align-items:center;justify-content:space-around;padding:calc(8 * var(--dp)) calc(16 * var(--dp)) calc(16 * var(--dp))}
+.mmmu-controls>[data-action="mmmu-toggle"]{width:calc(56 * var(--dp));height:calc(56 * var(--dp));background:#ff9800}
+.mmmu-controls>[data-action="mmmu-toggle"] img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.mmmu-controls>[aria-pressed="true"]{background:#fff3e0}
+.mmmu-np .mmpm-bar .mmpm-btn img{filter:brightness(0) invert(1)}
