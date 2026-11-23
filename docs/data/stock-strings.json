@@ -3531,7 +3531,11 @@
    "mph": "PrebuiltNewsWeather:speed_units_mph",
    "km/h": "PrebuiltNewsWeather:speed_units_kmh",
    "m/s": "PrebuiltNewsWeather:speed_units_ms",
-   "Switch to light theme": "PrebuiltNewsWeather:menu_switch_theme_light"
+   "Switch to light theme": "PrebuiltNewsWeather:menu_switch_theme_light",
+   "Search news": "PrebuiltNewsWeather:search_hint",
+   "No matching news": "PrebuiltNewsWeather:content_loading_empty_state",
+   "Close search": "PrebuiltNewsWeather:close_search_description",
+   "Clear query": "PrebuiltNewsWeather:abc_searchview_description_clear"
   },
   "keep": {
    "Voice recording": "PrebuiltKeep:voice_recording_icon_text",

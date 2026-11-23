@@ -348,7 +348,11 @@ window.StockStrings = {
   "mph": {"res": "PrebuiltNewsWeather:speed_units_mph", "hu": "mph", "de": "mph", "fr": "mi/h", "es": "mph"},
   "km/h": {"res": "PrebuiltNewsWeather:speed_units_kmh", "hu": "km/h", "de": "km/h", "fr": "km/h", "es": "km/h"},
   "m/s": {"res": "PrebuiltNewsWeather:speed_units_ms", "hu": "m/s", "de": "m/s", "fr": "m/s", "es": "m/s"},
-  "Switch to light theme": {"res": "PrebuiltNewsWeather:menu_switch_theme_light", "hu": "Váltás világos témára", "de": "Zum hellen Design wechseln", "fr": "Passer au thème clair", "es": "Cambiar a tema claro"}
+  "Switch to light theme": {"res": "PrebuiltNewsWeather:menu_switch_theme_light", "hu": "Váltás világos témára", "de": "Zum hellen Design wechseln", "fr": "Passer au thème clair", "es": "Cambiar a tema claro"},
+  "Search news": {"res": "PrebuiltNewsWeather:search_hint", "hu": "Hírek böngészése", "de": "In Nachrichten suchen", "fr": "Rechercher dans les actualités", "es": "Buscar noticias"},
+  "No matching news": {"res": "PrebuiltNewsWeather:content_loading_empty_state", "hu": "Nincs egyező hír", "de": "Keine passenden Nachrichten", "fr": "Aucune actualité correspondante", "es": "No hay noticias que coincidan"},
+  "Close search": {"res": "PrebuiltNewsWeather:close_search_description", "hu": "Keresés bezárása", "de": "Suche schließen", "fr": "Fermer la recherche", "es": "Cerrar búsqueda"},
+  "Clear query": {"res": "PrebuiltNewsWeather:abc_searchview_description_clear", "hu": "Lekérdezés törlése", "de": "Suchanfrage löschen", "fr": "Effacer la requête", "es": "Borrar consulta"}
  },
  "keep": {
   "Voice recording": {"res": "PrebuiltKeep:voice_recording_icon_text", "hu": "Hangfelvétel", "de": "Sprachaufnahme", "fr": "Enregistrement vocal", "es": "Grabación de voz"},

@@ -4014,6 +4014,24 @@ const editorsMore=app=>async h=>{
 };
 CASES.push(...['docs','sheets','slides'].map(app=>({id:'T40',version:'5.1.1',name:app+' › collections, grid/sort, sharing, move, picker and document shortcut',run:editorsMore(app)})));
 
+// 5.1.1 News & Weather › Search (the toolbar's SearchView): a query lists the matching stories of every section and
+// opens one; a query with no match says "No matching news"; Back leaves the article, then the search.
+CASES.push({id:'T42',version:'5.1.1',name:'News › Search',async run(h){
+  await h.openApp('news-weather');
+  await h.tap('#viewport [data-action="news2-search"]');
+  h.check('Search opens the search field',await h.until(`!!document.querySelector('#viewport .nw2-sv input')`));
+  await h.type('#viewport .nw2-sv input','cup');await h.ev(`document.querySelector('#viewport .nw2-sv').requestSubmit()`);
+  h.check('a query lists the matching stories from the other sections',await h.until(`[...document.querySelectorAll('#viewport .nw2-story b')].map(b=>b.textContent).join('|')==='Underdogs win the cup final'`));
+  await h.tap('#viewport .nw2-story[data-action="news2-open"]');
+  h.check('a result opens its article',await h.until(`/cup final/.test(document.querySelector('#viewport .nw2-article h2')?.textContent||'')`));
+  await h.key('Escape');
+  h.check('Back returns to the results',await h.until(`!!document.querySelector('#viewport .nw2-story') && !!document.querySelector('#viewport .nw2-sv')`));
+  await h.tap('#viewport [data-action="news2-search-clear"]');
+  await h.type('#viewport .nw2-sv input','zebra');await h.ev(`document.querySelector('#viewport .nw2-sv').requestSubmit()`);
+  h.check('no match says so',await h.until(`/No matching news/.test(document.querySelector('#viewport .nw2-none')?.textContent||'')`));
+  await h.key('Escape');
+  h.check('Back closes the search',await h.until(`!document.querySelector('#viewport .nw2-sv') && !!document.querySelector('#viewport .nw2-weather')`));
+}});
 CASES.push({id:'T42',version:'5.1.1',name:'News editions, section visibility/order and exact article URL',async run(h){
   const menu=async action=>{await h.tap('#viewport [data-action="sa-menu"]');await h.tap(`[data-action="${action}"]`);};
   await h.openApp('news-weather');await menu('nwsec-editions');await h.tap('[data-action="nwsec-cancel"]');
