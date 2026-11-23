@@ -277,6 +277,7 @@ window.StockStrings = {
   "Search": {"res": "GoogleEarth:search_id", "hu": "Keresés", "de": "Suche", "fr": "Recherche Google", "es": "Buscar"},
   "Example: Pizza": {"res": "GoogleEarth:search_hint", "hu": "példa: Pizza", "de": "Beispiel: Pizza", "fr": "Exemple : boulangerie", "es": "Ej.: Barcelona"},
   "Clear map": {"res": "GoogleEarth:menu_clear", "hu": "Térképjelölők törlése", "de": "Karte leeren", "fr": "Effacer la carte", "es": "Borrar mapa"},
+  "Reset to north": {"res": "GoogleEarth:menu_north_up", "hu": "Visszaállítás északi irányba", "de": "Auf Nordausrichtung zurücksetzen", "fr": "Rétablir l'orientation (nord en haut)", "es": "Restablecer el Norte"},
   "My location": {"res": "GoogleEarth:my_location", "hu": "Saját pozíció", "de": "Mein Standort", "fr": "Ma position", "es": "Mi ubicación"},
   "Share": {"res": "GoogleEarth:menu_share", "hu": "Megosztás", "de": "Teilen", "fr": "Partager", "es": "Compartir"},
   "Street View": {"res": "GoogleEarth:menu_streetview", "hu": "Utcakép", "de": "Street View", "fr": "Street View", "es": "Street View"},

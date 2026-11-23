@@ -3456,6 +3456,7 @@
    "Search": "GoogleEarth:search_id",
    "Example: Pizza": "GoogleEarth:search_hint",
    "Clear map": "GoogleEarth:menu_clear",
+   "Reset to north": "GoogleEarth:menu_north_up",
    "My location": "GoogleEarth:my_location",
    "Share": "GoogleEarth:menu_share",
    "Street View": "GoogleEarth:menu_streetview",

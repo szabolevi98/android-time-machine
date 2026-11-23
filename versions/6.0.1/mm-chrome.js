@@ -178,7 +178,7 @@
         case 'mmcr-info': {
           close(); const t = T(), [, , h] = host(cur), key = native(cur) ? 'page_info_connection_internal_page' : /^https:/.test(cur) ? 'page_info_connection_https' : 'page_info_connection_http';
           c.dialog({html: `<div class="mmcr-info"><b>${esc(c, native(cur) ? cur : h)}</b><p class="${key.endsWith('http') ? 'warn' : ''}">${esc(c, t.t(key))}</p></div>`,
-            buttons: [{label: t.t('page_info_copy_url_button'), action: c => { try { navigator.clipboard?.writeText(cur); } catch {} }}, {label: t.t('page_info_site_settings_button'), action: c => MM.openPrefs(c, 'chrome', 'content_preferences', t.t('page_info_site_settings_button'))}]});
+            buttons: [{label: t.t('page_info_copy_url_button'), action: c => { try { navigator.clipboard?.writeText(cur)?.catch(() => {}); } catch {} }}, {label: t.t('page_info_site_settings_button'), action: c => MM.openPrefs(c, 'chrome', 'content_preferences', t.t('page_info_site_settings_button'))}]});
           return true;
         }
         case 'mmcr-incognito': close(); s.incognito = true; c.save(); go(c, NTP); return true;

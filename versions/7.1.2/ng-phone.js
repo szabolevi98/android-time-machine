@@ -433,7 +433,7 @@
           const g = groups(c).find(x => String(x.key) === el.dataset.key), ids = new Set(g?.calls.map(x => x.id));
           c.data.calls = P().calls(c).filter(x => !ids.has(x.id)); c.save(); u.screen = ''; u.expanded = null; c.render(); return true;
         }
-        case 'ngph-copy': try { navigator.clipboard?.writeText(el.dataset.n); } catch {} c.toast(t.t('toast_text_copied')); return true;
+        case 'ngph-copy': try { navigator.clipboard?.writeText(el.dataset.n)?.catch(() => {}); } catch {} c.toast(t.t('toast_text_copied')); return true;
         case 'ngph-edit': u.screen = ''; u.dialpad = true; u.digits = P().digits(el.dataset.n); c.render(); return true;
         case 'ngph-block': block(c, el.dataset.n, true); return true;
         case 'ngph-unblock': block(c, el.dataset.n, false); return true;

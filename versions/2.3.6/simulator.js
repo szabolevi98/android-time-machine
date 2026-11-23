@@ -1796,7 +1796,7 @@
       case 'gbbr-star': { const on = data.bookmarks.includes(id); data.bookmarks = on ? data.bookmarks.filter(url => url !== id) : [...data.bookmarks, id]; ui.overlay = ''; save(); render(); toast(GBBrowser.text(i18n.language, on ? 'removed_from_bookmarks' : 'added_to_bookmarks')); break; }
       case 'gbbr-clear-history': data.browserHistory = []; ui.overlay = ''; save(); render(); break;
       case 'gbbr-open-new': ui.overlay = ''; if (!ICSBrowserSession.add(ui.browserSession)) break; navigateBrowser(id); break;
-      case 'gbbr-copy-url': try { navigator.clipboard?.writeText(id); } catch {} ui.overlay = ''; renderOverlay(); break;
+      case 'gbbr-copy-url': try { navigator.clipboard?.writeText(id)?.catch(() => {}); } catch {} ui.overlay = ''; renderOverlay(); break;
       case 'gbbr-remove-bookmark': data.bookmarks = data.bookmarks.filter(url => url !== id); ui.overlay = ''; save(); render(); break;
       case 'gbbr-remove-history': data.browserHistory = data.browserHistory.filter(url => url !== id); ui.overlay = ''; save(); render(); break;
       case 'gbbr-homepage': data.browserHome = id; ui.overlay = ''; save(); renderOverlay(); break;
@@ -1853,7 +1853,7 @@
       case 'gbmms-subject': ui.gbMmsSubject = true; ui.overlay = ''; render(); viewport.querySelector('[name=subject]')?.focus(); break;
       case 'gbmms-send': ui.overlay = ''; renderOverlay(); viewport.querySelector('.mms-compose')?.requestSubmit(); break;
       case 'gbmms-all-threads': ui.overlay = ''; ui.sub = ''; ui.gbMmsSubject = false; render(); break;
-      case 'gbmms-copy': { const message = data.messages.find(m => String(m.id) === String(ui.mmsMessage)); try { navigator.clipboard?.writeText(message?.body || ''); } catch {} ui.overlay = ''; renderOverlay(); break; }
+      case 'gbmms-copy': { const message = data.messages.find(m => String(m.id) === String(ui.mmsMessage)); try { navigator.clipboard?.writeText(message?.body || '')?.catch(() => {}); } catch {} ui.overlay = ''; renderOverlay(); break; }
       case 'gbmms-lock': { const message = data.messages.find(m => String(m.id) === String(ui.mmsMessage)); if (message) message.locked = !message.locked; ui.overlay = ''; save(); render(); break; }
       case 'gbmms-thread-menu': ui.thread = id; gbMmsDialog('thread'); break;
       case 'mms-recipient': { const person = contact(id); if (person) { messageDraft().recipient = person.phone; save(); render(); viewport.querySelector('.mms-compose textarea').focus(); } break; }

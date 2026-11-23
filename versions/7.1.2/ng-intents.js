@@ -117,7 +117,7 @@
     const s = c.ui.shareSpec, t = T();
     if (!s || !targets(c, s).some(x => x.id === id)) return;
     close(c, () => {
-      if (id === 'clipboard') { NG.clipboard = s.text || ''; try { navigator.clipboard?.writeText(s.text || ''); } catch {} c.toast(t.t('Drive/send_to_clipboard_success')); return; }
+      if (id === 'clipboard') { NG.clipboard = s.text || ''; try { navigator.clipboard?.writeText(s.text || '')?.catch(() => {}); } catch {} c.toast(t.t('Drive/send_to_clipboard_success')); return; }
       if (id === 'bluetooth') { bluetooth(c,s); return; }
       if (id === 'drive') { drive(c, s); return; }
       if (id === 'photos') { NG.appData.opened(c, 'photos'); photos(c, s); return; }
