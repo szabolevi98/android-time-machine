@@ -62,10 +62,10 @@
     const g = key => S(ctx, 'gsettings', key);
     const cat = key => `<h4 class="gs6-cat">${e(g(key))}</h4>`;
     const row = (key, action = 'sa-unsupported', id = '') => `<button class="gs6-row" data-action="${action}" data-id="${id}">${e(g(key))}</button>`;
-    // The pages GMS draws itself (gms-settings.js); Google+, Account History, Google Fit, Play Games and Data
-    // management are other screens, not drawn here.
+    // The pages GMS draws itself (gms-settings.js); Play Games opens the Games app and Google+ the Google+ app's
+    // settings.
     if (String(ctx.ui.sub || '').startsWith('gms-')) return window.GMSSettings.render(ctx, g);
-    return `<div class="app-view sa-app sa-gsettings6"><header class="gs6-bar"><b>${e(g('Google Settings'))}</b></header><div class="sa-scroll">${cat('Account')}${row('Google+')}${row('Account History')}${cat('Services')}${row('Ads', 'gms-open', 'ads')}${row('Connected apps', 'gms-open', 'apps')}${row('Google Fit') + row('Play Games', 'gs-play-games') + row('Data management')}${row('Search & Now', 'gel-overview-settings')}${row('Security', 'gms-open', 'security')}${row('Location', 'gms-open', 'location')}</div></div>`;
+    return `<div class="app-view sa-app sa-gsettings6"><header class="gs6-bar"><b>${e(g('Google Settings'))}</b></header><div class="sa-scroll">${cat('Account')}${row('Google+', 'gs-plus')}${row('Account History', 'gms-open', 'udc')}${cat('Services')}${row('Ads', 'gms-open', 'ads')}${row('Connected apps', 'gms-open', 'apps')}${row('Google Fit', 'gms-open', 'fit') + row('Play Games', 'gs-play-games') + row('Data management', 'gms-open', 'data')}${row('Search & Now', 'gel-overview-settings')}${row('Security', 'gms-open', 'security')}${row('Location', 'gms-open', 'location')}</div></div>`;
   }
 
 

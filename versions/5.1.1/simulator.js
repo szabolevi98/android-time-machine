@@ -2370,6 +2370,8 @@
       case 'gel-overview-settings': document.querySelectorAll('.gnow-page.drawer-open').forEach(page => page.classList.remove('drawer-open')); openApp('google-search'); ui.sub = 'settings'; ui.lsPage = ''; render(); break;
       // Google Settings' Play Games opens the Games app.
       case 'gs-play-games': openApp('play-games'); break;
+      // Google Settings › Google+: the Google+ app's settings (plus-post.js).
+      case 'gs-plus': openApp('google-plus'); ui.gppPrefs = 'root'; ui.gppDialog = ''; render(); break;
       case 'kk-overview-page': if (ui.overview) { ui.overview = false; ui.page = Number(id); render(); } break;
       case 'drawer-page': ui.drawerPage = Number(id); render(); break;
       case 'add-widget': { const added = addWidget(button.dataset.widgetType); if (!added) { toast('This home screen is full'); break; } const setup = ui.photoWidgetSetup; ui.photoWidgetSetup = null; home(false); ui.photoWidgetSetup = setup; if (added.type === 'photo') { ui.overlay = 'widget-photo-type'; renderOverlay(); } else toast('Widget added'); break; }
@@ -2679,11 +2681,14 @@
       case 'chrome-incognito': chromeNewTab(true); break;
       // Google, Voice Search, Maps, Drive, Keep, YouTube, Google+, Earth, News & Weather, Google Settings
       // Google Settings' GMS pages (gms-settings.js).
-      case 'gms-open': ui.sub = `gms-${id}`; ui.gmsDialog = ''; if (id === 'ads' && !data.gms?.adid) { data.gms = {...GMSSettings.state(data), adid: GMSSettings.newId()}; save(); } render(); break;
+      case 'gms-open': ui.gmsParent = ui.sub; ui.sub = `gms-${id}`; ui.gmsDialog = ''; if (id === 'ads' && !data.gms?.adid) { data.gms = {...GMSSettings.state(data), adid: GMSSettings.newId()}; save(); } render(); break;
       case 'gms-toggle': { const s = GMSSettings.state(data); data.gms = {...s, [id]: !s[id]}; save(); render(); break; }
       case 'gms-reset': ui.gmsDialog = ''; data.gms = {...GMSSettings.state(data), adid: GMSSettings.newId()}; save(); render(); break;
       case 'gms-dialog': ui.gmsDialog = id; ui.gmsUnderstand = false; render(); break;
       case 'gms-understand': ui.gmsUnderstand = !ui.gmsUnderstand; render(); break;
+      // Data management's choice dialog; Google Fit's Delete history empties the Fit app's history (fit-more.js).
+      case 'gms-drive': ui.gmsDialog = ''; data.gms = {...GMSSettings.state(data), driveWifi: id === 'wifi'}; save(); render(); break;
+      case 'gms-fit-delete': ui.gmsDialog = ''; if (window.FitMore) FitMore.clearHistory({data, locale: i18n.locale(), t: key => i18n.t(key)}); save(); render(); break;
       case 'gms-delete': ui.gmsDialog = ''; ui.gmsDeleting = true; render(); setTimeout(() => { ui.gmsDeleting = false; if (ui.sub === 'gms-history') render(); }, 1500); break;
       case 'sa-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
       case 'voice-listen': listenVoice(); break;

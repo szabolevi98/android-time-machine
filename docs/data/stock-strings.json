@@ -3453,7 +3453,22 @@
    "Permanently delete?": "PrebuiltGmsCore:location_settings_confirm_deleting_location_history_title",
    "Delete body": "PrebuiltGmsCore:location_settings_confirm_deleting_location_history_body",
    "I understand and want to delete": "PrebuiltGmsCore:common_ui_confirm_deleting_checkbox",
-   "Delete": "PrebuiltGmsCore:common_ui_confirm_deleting_button"
+   "Delete": "PrebuiltGmsCore:common_ui_confirm_deleting_button",
+   "Update Drive-enabled app files": "PrebuiltGmsCore:common_google_settings_drive_network_usage",
+   "Over Wi-Fi only": "PrebuiltGmsCore:common_settings_drive_network_usage_wifi",
+   "Over Wi-Fi or Cellular": "PrebuiltGmsCore:common_settings_drive_network_usage_all",
+   "Fit title": "PrebuiltGmsCore:fitness_settings_screen_title",
+   "Connected apps and devices": "PrebuiltGmsCore:fitness_settings_apps_and_devices",
+   "Delete history": "PrebuiltGmsCore:fitness_settings_menu_delete_history",
+   "Delete history?": "PrebuiltGmsCore:fitness_settings_confirm_delete_dialog",
+   "Fit delete message": "PrebuiltGmsCore:fitness_settings_confirm_delete_message",
+   "Fit understand": "PrebuiltGmsCore:fitness_settings_confirm_delete_confirmation",
+   "Fit delete": "PrebuiltGmsCore:fitness_settings_confirm_delete_button",
+   "Fit apps title": "PrebuiltGmsCore:plus_app_settings_fitness_apps_label",
+   "Fit connected apps": "PrebuiltGmsCore:fitness_settings_connected_apps_title",
+   "Fit connected devices": "PrebuiltGmsCore:fitness_settings_connected_devices_title",
+   "No devices are connected": "PrebuiltGmsCore:fitness_settings_connected_devices_title_empty",
+   "Only you can see your history": "PrebuiltGmsCore:udc_visible_only_to_you"
   },
   "earth": {
    "Earth": "GoogleEarth:app_name",

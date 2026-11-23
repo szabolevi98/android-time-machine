@@ -4014,6 +4014,40 @@ const editorsMore=app=>async h=>{
 };
 CASES.push(...['docs','sheets','slides'].map(app=>({id:'T40',version:'5.1.1',name:app+' › collections, grid/sort, sharing, move, picker and document shortcut',run:editorsMore(app)})));
 
+// 5.1.1 Google Settings (T25): Account History lists Location History and opens its page; Data management keeps the
+// Drive choice; Google Fit lists the Fit app and its Delete history (after "I understand") empties Fit's history;
+// Google+ opens the Google+ app's settings.
+CASES.push({id:'T25',version:'5.1.1',name:'Google Settings › Account History, Data management, Google Fit, Google+',async run(h){
+  await h.openApp('google-settings');
+  await h.tap('#viewport [data-action="gms-open"][data-id="udc"]');
+  h.check('Account History lists Location History',await h.until(`!!document.querySelector('#viewport [data-action="gms-open"][data-id="history"]')`));
+  await h.tap('#viewport [data-action="gms-open"][data-id="history"]');
+  h.check('it opens the Location History page',await h.until(`!!document.querySelector('#viewport .gms6-switchbar')`));
+  await h.key('Escape');
+  h.check('Back returns to Account History',await h.until(`!!document.querySelector('#viewport [data-action="gms-open"][data-id="history"]') && !document.querySelector('#viewport [data-id="reporting"]')`));
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="gms-open"][data-id="data"]');
+  await h.tap('#viewport [data-action="gms-dialog"][data-id="drive"]');
+  await h.tap('#viewport [data-action="gms-drive"][data-id="wifi"]');
+  h.check('Data management keeps Over Wi-Fi only',(await store(h,'gms'))?.driveWifi===true && await h.until(`/Wi-Fi only/.test(document.querySelector('#viewport .gms6-item small')?.textContent||'')`));
+  await h.key('Escape');
+  await h.ev(`(()=>{const k='android-time-machine-lp-v1';const d=JSON.parse(localStorage.getItem(k)||'{}');d.fit={...(d.fit||{}),sessions:[{type:'running',start:Date.now()-36e5,min:20}]};localStorage.setItem(k,JSON.stringify(d));return true})()`);
+  h.check('reloads',await h.reload());
+  await h.openApp('google-settings');
+  await h.tap('#viewport [data-action="gms-open"][data-id="fit"]');
+  await h.tap('#viewport [data-action="gms-open"][data-id="fitapps"]');
+  h.check('Google Fit lists the Fit app',await h.until(`!!document.querySelector('#viewport .gms6-app-row img[src*="fit.png"]')`));
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="gms-dialog"][data-id="fit-delete"]');
+  h.check('Delete waits for I understand',await h.ev(`document.querySelector('#viewport [data-action="gms-fit-delete"]').disabled`));
+  await h.tap('#viewport [data-action="gms-understand"]');
+  await h.tap('#viewport [data-action="gms-fit-delete"]');
+  h.check('Delete history empties the sessions',await h.until(`!document.querySelector('#viewport .gms6-dialog')`) && ((await store(h,'fit'))?.sessions||[]).length===0 && !!(await store(h,'fit'))?.cleared);
+  await h.key('Escape');await h.key('Escape');
+  await h.openApp('google-settings');
+  await h.tap('#viewport [data-action="gs-plus"]');
+  h.check('Google+ opens the Google+ settings',await h.until(`!!document.querySelector('#viewport .gpp-prefs')`));
+}});
 // 4.3 Currents › an edition of the menu (T36): Tech Daily, Trail & Summit and Weekend Kitchen each show their own
 // stories, which open in the reader; Back returns to Breaking stories.
 CASES.push({id:'T36',version:'4.3',name:'Currents › editions in the menu',async run(h){

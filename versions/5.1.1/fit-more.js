@@ -38,8 +38,10 @@
   }
   const midnight = (t = Date.now()) => { const d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); };
   // Today's and yesterday's sessions, newest first as TimelineAdapter lists them.
+  // Google Settings › Google Fit › Delete history (gms-settings.js): the sessions and weights go, the demo day before then too.
+  function clearHistory(c) { const s = state(c); s.sessions = []; s.weights = []; s.cleared = Date.now(); }
   function days(c, demo) {
-    const s = state(c), today = midnight(), list = [...demo.map(x => ({...x, start: today + (x.at[0] * 60 + x.at[1]) * 6e4, demo: true})), ...s.sessions].sort((a, b) => b.start - a.start);
+    const s = state(c), today = midnight(), list = [...demo.map(x => ({...x, start: today + (x.at[0] * 60 + x.at[1]) * 6e4, demo: true})).filter(x => !(s.cleared > x.start)), ...s.sessions].sort((a, b) => b.start - a.start);
     return {today: list.filter(x => x.start >= today), yesterday: list.filter(x => x.start >= today - DAY && x.start < today), goal: s.goal};
   }
   const two = n => String(n).padStart(2, '0');
@@ -222,5 +224,5 @@
     return {destroy() { root.removeEventListener('input', onInput); root.removeEventListener('change', onChange); root.removeEventListener('click', pick); }};
   }
   const menu = c => [['fitm-add', 'Add activity'], ['fitm-weight', 'Add your weight'], ['fitm-settings', 'Settings'], ['lpx-unavailable', 'Help & feedback']].map(([action, key]) => ({action, title: F(c, key)}));
-  window.FitMore = {TYPES, COLOR, OTHER, color, state, days, page, handle, back, attach, menu, weightKg, weightFields, heightCm, heightFields, weightText, typeOrder};
+  window.FitMore = {TYPES, COLOR, OTHER, color, state, days, clearHistory, page, handle, back, attach, menu, weightKg, weightFields, heightCm, heightFields, weightText, typeOrder};
 })();

@@ -13,15 +13,23 @@
      pages put location_settings_switch_bar.xml (56 dp, #DB4337, 16 sp white On / Off, the check box) under the
      action bar over the full text; Location History adds the delete button and common.ui's confirmation (the
      "I understand" check box enables Delete).
-   Defaults: personalised ads, locate, scanning and upload on; remote erase, reporting and history off.
-   Account History, Google Fit, Play Games, Data management and Google+ are other screens, not drawn here. */
+   - Account History, udc.ui.UdcSettingsListActivity (udc_settings_title): the account's history settings arrive from
+     Google's servers; the one the phone keeps itself, Location History (On / Off as the location page has it), opens
+     that page, under udc_visible_only_to_you.
+   - Data management, app.settings.DataManagementActivity: Update Drive-enabled app files (Over Wi-Fi only / Over
+     Wi-Fi or Cellular in a choice dialog).
+   - Google Fit, fitness.settings.FitnessSettingsActivity (fitness_settings.xml): Connected apps and devices (the list:
+     the Fit app under Connected apps, "No devices are connected"), and Delete history at the bottom, whose dialog
+     needs "I understand and want to delete" before Delete empties the Fit app's history (fit-more.js).
+   Defaults: personalised ads, locate, scanning and upload on; remote erase, reporting, history and Wi-Fi only off.
+   Play Games opens the Games app and Google+ the Google+ app's settings (com.google.android.apps.plus.PRIVACY_SETTINGS). */
 (() => {
   'use strict';
   const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
   const ACCOUNT = 'nexus6.demo@gmail.com';
   const rich = text => e(text).replace(/&lt;a href=[^&]*?(?:&quot;[^&]*?&quot;)?[^&]*?&gt;(.*?)&lt;\/a&gt;/g, '<span class="gms6-link">$1</span>').replace(/\n/g, '<br>');
   const newId = () => ([8, 4, 4, 4, 12].map(n => Array.from({length: n}, () => '0123456789abcdef'[Math.floor(Math.random() * 16)]).join('')).join('-'));
-  const state = data => ({optOut: false, adid: '', locate: true, wipe: false, verify: true, upload: true, access: true, reporting: false, history: false, ...data.gms});
+  const state = data => ({optOut: false, adid: '', locate: true, wipe: false, verify: true, upload: true, access: true, reporting: false, history: false, driveWifi: false, ...data.gms});
   const check = (on, disabled) => `<span class="lp-check${on ? ' on' : ''}${disabled ? ' disabled' : ''}" aria-hidden="true"></span>`;
   const bar = (title, t) => `<header class="gms6-bar"><button class="gms6-up" data-action="back" aria-label="${e(t('Navigate up'))}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/></svg></button><b>${e(title)}</b></header>`;
   function render(ctx, g) {
@@ -40,6 +48,17 @@
       ${item('gms-toggle', 'verify', g('Scan device for security threats'), g('Scan summary'), check(s.verify))}
       ${item('gms-toggle', 'upload', g('Improve harmful app detection'), g(s.verify ? 'Upload summary' : 'Upload disabled summary'), check(s.upload && s.verify, !s.verify), !s.verify)}</div></div>`;
     if (page === 'apps') return `<div class="app-view gms6-app">${bar(g('Connected apps title'), t)}<div class="gms6-scroll gms6-empty"><p>${rich(g('Apps empty').trim())}</p></div></div>`;
+    if (page === 'udc') return `<div class="app-view gms6-app">${bar(g('Account History'), t)}<div class="gms6-scroll"><h4 class="gms6-header">${e(ACCOUNT)}</h4>${item('gms-open', 'history', g('Location History'), g(s.history ? 'History on' : 'History off'))}<p class="gms6-note">${e(g('Only you can see your history'))}</p></div></div>`;
+    if (page === 'data') {
+      const radio = (id, key) => `<button class="gms6-choice" data-action="gms-drive" data-id="${id}" role="radio" aria-checked="${s.driveWifi === (id === 'wifi')}"><span class="lp-radio${s.driveWifi === (id === 'wifi') ? ' on' : ''}"></span><span>${e(g(key))}</span></button>`;
+      const dialog = ui.gmsDialog === 'drive' ? `<div class="settings-dialog-scrim gms6-scrim" data-action="gms-dialog" data-id=""></div><div class="settings-dialog gms6-dialog" role="dialog"><h3>${e(g('Update Drive-enabled app files'))}</h3>${radio('wifi', 'Over Wi-Fi only')}${radio('all', 'Over Wi-Fi or Cellular')}<div class="gms6-buttons"><button data-action="gms-dialog" data-id="">${e(t('Cancel'))}</button></div></div>` : '';
+      return `<div class="app-view gms6-app">${bar(g('Data management'), t)}<div class="gms6-scroll">${item('gms-dialog', 'drive', g('Update Drive-enabled app files'), g(s.driveWifi ? 'Over Wi-Fi only' : 'Over Wi-Fi or Cellular'))}</div>${dialog}</div>`;
+    }
+    if (page === 'fit') {
+      const dialog = ui.gmsDialog === 'fit-delete' ? confirm(g('Delete history?'), g('Fit delete message'), g('Fit delete'), 'gms-fit-delete', `<button class="gms6-dlgcheck" data-action="gms-understand" role="checkbox" aria-checked="${!!ui.gmsUnderstand}">${check(ui.gmsUnderstand)}<span>${e(g('Fit understand'))}</span></button>`) : '';
+      return `<div class="app-view gms6-app">${bar(g('Fit title'), t)}<div class="gms6-fit"><button class="gms6-fit-row" data-action="gms-open" data-id="fitapps">${e(g('Connected apps and devices'))}</button><button class="gms6-fit-row gms6-fit-delete" data-action="gms-dialog" data-id="fit-delete">${e(g('Delete history'))}</button></div>${dialog}</div>`;
+    }
+    if (page === 'fitapps') return `<div class="app-view gms6-app">${bar(g('Fit apps title'), t)}<div class="gms6-scroll">${cat(g('Fit connected apps'))}<div class="gms6-item gms6-static gms6-app-row"><img src="assets/fit.png" alt=""><span class="gms6-text"><b>${e(t('Fit'))}</b></span></div>${cat(g('Fit connected devices'))}<p class="gms6-note">${e(g('No devices are connected'))}</p></div></div>`;
     if (page === 'location') return `<div class="app-view gms6-app">${bar(g('Google location settings'), t)}<div class="gms6-scroll gms6-pad">
       <div class="gms6-access">${item('gms-toggle', 'access', g('Access location'), g('Access location summary'), check(s.access))}</div>
       <div class="gms6-account${s.access ? '' : ' off'}"><h4 class="gms6-header">${e(ACCOUNT)}</h4>${item('gms-open', 'reporting', g('Location Reporting'), g(s.reporting ? 'Reporting on' : 'Reporting off'))}<i class="gms6-div"></i>${item('gms-open', 'history', g('Location History'), g(s.history ? 'History on' : 'History off'))}</div></div></div>`;
@@ -53,7 +72,8 @@
   }
   function back(ui) {
     if (ui.gmsDialog) { ui.gmsDialog = ''; return true; }
-    if (['gms-reporting', 'gms-history'].includes(ui.sub)) { ui.sub = 'gms-location'; return true; }
+    if (['gms-reporting', 'gms-history'].includes(ui.sub)) { ui.sub = ui.gmsParent === 'gms-udc' ? 'gms-udc' : 'gms-location'; return true; }
+    if (ui.sub === 'gms-fitapps') { ui.sub = 'gms-fit'; return true; }
     if (String(ui.sub || '').startsWith('gms-')) { ui.sub = ''; return true; }
     return false;
   }

@@ -41,3 +41,12 @@
 .screen .gms6-buttons button{min-width:calc(63.9956 * var(--dp));height:calc(36.0045 * var(--dp));padding:0 calc(8.0023 * var(--dp));border:0;border-radius:calc(1.9978 * var(--dp));background:none;font:500 calc(13.9956 * var(--dp)) Roboto,sans-serif;color:#009688;text-transform:uppercase;cursor:pointer}
 .screen .gms6-buttons button:disabled{color:#00000042;cursor:default}
 .screen .gms6-buttons button:not(:disabled):active{background:#0000001a}
+/* Account History, Data management and Google Fit (gms-settings.js). */
+.gms6-note{margin:0;padding:calc(12 * var(--dp)) calc(16.0045 * var(--dp));font:400 calc(13.9956 * var(--dp)) Roboto,sans-serif;color:#0000008a}
+.screen .gms6-choice{display:flex;align-items:center;gap:calc(8 * var(--dp));width:100%;min-height:calc(48.0023 * var(--dp));padding:0 calc(16 * var(--dp)) 0 calc(8 * var(--dp));border:0;background:none;text-align:left;font:400 calc(16.0045 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.screen .gms6-choice:active{background:#0000001a}
+.gms6-fit{flex:1;min-height:0;display:flex;flex-direction:column;padding:0 calc(16 * var(--dp))}
+.screen .gms6-fit-row{flex:none;width:100%;padding:calc(20 * var(--dp)) 0;border:0;border-bottom:calc(1 * var(--dp)) solid #0000001f;background:none;text-align:center;font:400 calc(16.0045 * var(--dp)) Roboto,sans-serif;color:#000000de}
+.screen .gms6-fit-delete{margin:auto calc(-16 * var(--dp)) 0;width:calc(100% + 32 * var(--dp));border-top:calc(1 * var(--dp)) solid #0000001f;border-bottom:0}
+.screen .gms6-fit-row:active{background:#0000001a}
+.gms6-app-row img{flex:none;width:calc(40 * var(--dp));height:calc(40 * var(--dp));margin-right:calc(16 * var(--dp))}
