@@ -6,7 +6,7 @@ Szempontok (a tulajdonos kérése): mi van meg az egyik verzióban és hiányzik
 másikban; hibák a működésben vagy a megjelenésben. Az ismert, szándékos korlátok (Play Store vásárlás/letöltés,
 Help/Feedback/Terms webes oldalak, valódi fiók, fizetés, hálózat) nem szerepelnek hibaként.
 
-## Állapot (2026-11-23, a tulajdonos döntése: hibák és demóadat)
+## Állapot (2026-11-23, a tulajdonos döntése: hibák és demóadat, majd a verzióeltérések 1–2. pontja)
 
 | Tétel | Állapot |
 |---|---|
@@ -19,7 +19,13 @@ Help/Feedback/Terms webes oldalak, valódi fiók, fizetés, hálózat) nem szere
 | 2. Drive-fájlok 6.0.1 / 7.1.2 | Javítva — `bcbd691d` (Docs / Sheets / Slides is ezekből listáz) |
 | 2. Play Zene / Filmek könyvtár 6.0.1 / 7.1.2 | Nyitott — a korlát-felmérés szerint külön döntés kell |
 | 2. Letöltések 4.4.4 / 5.1.1 / 6.0.1 | Nyitott — a demóadat-lista nem írja elő |
-| 3. Verziók közti funkcióeltérések | Nyitott — külön döntés kell, melyiket építsük meg |
+| 3. 4.3 Navigáció (Contacts, Starred places) és Helyi információk (kategóriák, keresés) | Javítva — `8774506e` (a 4.0.4 T28 logikája, a mako Maps APK szövegeivel) |
+| 3. Drive › View as Grid 4.4.4 / 5.1.1 | Javítva — `e548a68b` (doc_grid_item rács, a két Drive APK ikonjaival) |
+| 3. 5.1.1 Hírek és időjárás › Search | Javítva — `fc562544` (SearchView, „No matching news”); az Add section korlát marad |
+| 3. 4.3 Currents menü forrásai | Javítva — `67f83886` (mindegyik a saját cikkeit mutatja); a Customize korlát marad |
+| 3. 5.1.1 Google Settings: Account History, Data management, Google Fit, Google+ | Javítva — `aad21e42` (GmsCore 6.7 oldalai; a Google+ a Google+ app beállításait nyitja) |
+| 3. SMS › Beállítások 2.3.6–5.1.1 | Nyitott — a tulajdonos döntése szerint a következő kör |
+| 3. Többi eltérés (Hangouts mood / videó, Photos Create movie, Google+ extrák, Latitude Add friends, Wallet, Street View) | Korlát marad (javaslat, 2026-11-23) |
 
 A régi mentések a demóadatot egyszer kapják meg (egy frissítési lépés jelzővel), ha a megfelelő lista még üres; amit a
 látogató maga állított be, marad.
