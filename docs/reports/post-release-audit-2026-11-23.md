@@ -6,6 +6,24 @@ Szempontok (a tulajdonos kérése): mi van meg az egyik verzióban és hiányzik
 másikban; hibák a működésben vagy a megjelenésben. Az ismert, szándékos korlátok (Play Store vásárlás/letöltés,
 Help/Feedback/Terms webes oldalak, valódi fiók, fizetés, hálózat) nem szerepelnek hibaként.
 
+## Állapot (2026-11-23, a tulajdonos döntése: hibák és demóadat)
+
+| Tétel | Állapot |
+|---|---|
+| 1.1 5.1.1 lista 300 dp-nél levágva | Javítva — `877369a0` (a szabály `.lpx-dialog .lpx-list`-re szűkítve) |
+| 1.2 5.1.1 Maps mikrofon címkéje | Marad (a gomb mögött nincs funkció; apróság) |
+| 1.3 5.1.1 Earth „Reset to north” | Javítva — `877369a0` (`GoogleEarth:menu_north_up` az LMY48Y Earth APK-ból) |
+| 1.4 Vágólap Promise-hiba (5 hely) | Javítva — `877369a0` |
+| 2. Híváslista és csillagozott Mom (2.3.6–4.4.4) | Javítva — `c1d1d445`; a 4.0.4 és 4.3 híváslista ehhez megkapta a bejövő / nem fogadott hívás saját ikonját és feliratát |
+| 2. 2.1 Galéria négy fotója | Javítva — `c7176e22` |
+| 2. Drive-fájlok 6.0.1 / 7.1.2 | Javítva — `bcbd691d` (Docs / Sheets / Slides is ezekből listáz) |
+| 2. Play Zene / Filmek könyvtár 6.0.1 / 7.1.2 | Nyitott — a korlát-felmérés szerint külön döntés kell |
+| 2. Letöltések 4.4.4 / 5.1.1 / 6.0.1 | Nyitott — a demóadat-lista nem írja elő |
+| 3. Verziók közti funkcióeltérések | Nyitott — külön döntés kell, melyiket építsük meg |
+
+A régi mentések a demóadatot egyszer kapják meg (egy frissítési lépés jelzővel), ha a megfelelő lista még üres; amit a
+látogató maga állított be, marad.
+
 ## Hogyan készült
 
 - **Bejárás minden verzióban:** minden indítóban lévő app megnyitva, az első képernyő minden vezérlője megnyomva

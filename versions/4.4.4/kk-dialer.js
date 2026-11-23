@@ -96,7 +96,7 @@
   }
   function logRow(call, person, t, locale, card = false) {
     const name = person?.name || call.number;
-    return `<div class="kkd-log-row${card ? ' kkd-log-card' : ''}"><button class="kkd-log-main" data-action="phone-log-detail" data-id="${call.time}">${letterTile(person || {name: ''}, 'kkd-log-photo')}<span class="kkd-log-copy"><span class="kkd-log-name">${e(name)}</span><span class="kkd-log-meta">${callTypeIcon(call)}<span>${e(person ? t('Mobile') : call.number)}</span><span class="kkd-log-time">${e(t(relative(call.time, locale)))}</span></span></span></button><span class="kkd-log-divider"></span><button class="kkd-log-call" data-action="phone-redial" data-id="${e(call.number)}" aria-label="${e(t('Call'))}"><img src="assets/kd-ic_phone_dk.png" alt=""></button></div>`;
+    return `<div class="kkd-log-row${card ? ' kkd-log-card' : ''}"><button class="kkd-log-main" data-action="phone-log-detail" data-id="${call.time}">${letterTile(person || {name: ''}, 'kkd-log-photo')}<span class="kkd-log-copy"><span class="kkd-log-name">${e(name)}</span><span class="kkd-log-meta">${callTypeIcon(call)}<span>${e(person ? t('Mobile') : call.number)}</span><span class="kkd-log-time">${e(relative(call.time, locale))}</span></span></span></button><span class="kkd-log-divider"></span><button class="kkd-log-call" data-action="phone-redial" data-id="${e(call.number)}" aria-label="${e(t('Call'))}"><img src="assets/kd-ic_phone_dk.png" alt=""></button></div>`;
   }
   function results(data, query, t) {
     const q = String(query || '').trim();
