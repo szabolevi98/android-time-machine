@@ -584,7 +584,7 @@
     if (app === 'messenger' && !resume) PlusMessenger.open(ui);
     if (app === 'earth' && !resume) EarthApp.open(ui);
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
-    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.navPick = ''; ui.locResults = null; ui.locSearching = false; }
+    if (!resume) { ui.mmsPrefs = ''; ui.mmsDialog = ''; ui.mapsPrefs = null; ui.mpsDialog = null; ui.navPick = ''; ui.locResults = null; ui.locSearching = false; }
     if (app === 'news-weather' && !resume) { ui.newsSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
     if (ICSGoogleApps.APPS.includes(app) && !resume) { ui.gaSub = ''; ui.gaYtStack = []; ui.gaYtDialog = null; ui.gaYtDrop = ''; if (app === 'voice-dialer') setTimeout(() => googleAppsContext().listen()); }
     if (app !== 'camera') ui.captureFor = '';
@@ -754,6 +754,7 @@
     if (ui.view === 'settings' && ui.sub === 'reset-info') { ui.sub = 'backup'; render(); return; }
     if (ui.view === 'settings' && ['brightness','wallpaper','sleep'].includes(ui.sub)) { ui.sub = 'display'; render(); return; }
     if (ui.view === 'settings' && ['volumes','ringtone'].includes(ui.sub)) { ui.sub = 'sound'; render(); return; }
+    if (ui.view === 'messaging' && !ui.overlay && MmsPrefs.back(ui)) { render(); return; }
     if (ui.view === 'messaging' && ui.sub === 'thread') { ui.sub = ui.mmsListMode || ''; render(); return; }
     if (ui.view === 'clock' && ui.sub === 'alarm-edit') { ui.alarmDraft=null; ui.sub='alarms'; render(); return; }
     if (ui.view === 'people' && ui.sub === 'edit') { ui.sub = 'detail'; render(); return; }
@@ -1146,7 +1147,11 @@
     const group = data.contactGroups.find(g=>g.id===ui.peopleEditGroup);
     return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><form class="settings-dialog mms-dialog people-editor" role="dialog" aria-label="${group?'Edit group':'New group'}" data-form="people-group"><h3>${group?'Edit group':'New group'}</h3><label>Group name<input name="name" required maxlength="50" value="${safe(group?.name||'')}"></label>${data.contacts.map(p=>`<label class="people-membership"><input type="checkbox" name="members" value="${p.id}" ${group?.members.includes(p.id)?'checked':''}>${safe(p.name)}</label>`).join('')}<div class="settings-dialog-actions"><button type="button" data-action="close-overlay">Cancel</button><button type="submit">Save</button></div></form>`;
   }
+  // Messaging › Settings (mms-prefs.js) under Messaging's own action bar.
+  const mmspContext = () => ({ui, data, version: '4.0.4', M: key => MmsStrings.t(key), t: key => i18n.t(key), save, render,
+    bar: (title, menu) => `<header class="mms-header"><button class="mms-up" data-action="back" aria-label="${safe(i18n.t('Back'))}"><span>‹</span><img src="assets/messaging.png" alt=""></button><div class="mms-title"><h2>${safe(title)}</h2></div>${menu ? `<button data-action="mms-menu" aria-label="${safe(i18n.t('More options'))}"><img src="assets/ic_menu_overflow.png" alt=""></button>` : ''}</header>`});
   function renderMessaging() {
+    if (ui.mmsPrefs) return MmsPrefs.render(mmspContext());
     return ICSMessaging.render(data, ui, key => i18n.t(key), i18n.locale());
   }
   function messageDraft() {
@@ -1178,14 +1183,15 @@
     const option = (action, text, id = '') => `<button data-action="${action}" data-id="${safe(id)}">${safe(text)}</button>`;
     const alert = (title, body, buttons = '', icon = false) => `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="mms-alert" role="alertdialog" aria-label="${safe(title)}" data-no-translate>${title ? `<h3>${icon ? '<img src="assets/mms-ic_dialog_alert_holo_light.png" alt="">' : ''}${safe(title)}</h3>` : ''}${body}${buttons ? `<div class="mms-alert-buttons">${buttons}</div>` : ''}</div>`;
     const message = data.messages.find(m => String(m.id) === String(ui.mmsMessage));
+    if (ui.overlay === 'mms-menu' && ui.mmsPrefs) return `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu" data-no-translate>${MmsPrefs.menu(mmspContext()).map(item => option(item.action, item.title)).join('')}</div>`;
     if (ui.overlay === 'mms-menu') {
       const composing = ['thread', 'new'].includes(ui.sub), draft = data.messageDrafts?.[ICSMessaging.draftKey(ui)] || {};
       const messages = ui.sub === 'thread' ? data.messages.filter(m => String(m.contact) === String(ui.thread)) : [];
       const to = ui.sub === 'thread' ? String(ui.thread) : ICSMessaging.recipient(draft.recipient || '', data.contacts)?.key || '';
       const items = composing
         ? option('toast', M('Add subject'), unavailable) + ((draft.body || '').trim() || draft.attachment ? option('mms-send-now', M('Send')) : '') + option('mms-smiley', M('Insert smiley'))
-          + (messages.length ? option('mms-delete-thread', M('Delete thread')) : option('mms-discard', M('Discard'))) + (to.startsWith('tel:') ? option('toast', M('Add to People'), unavailable) : '') + option('toast', M('Settings'), unavailable)
-        : option('toast', M('Settings'), unavailable) + (data.messages.length ? option('mms-delete-all', M('Delete all threads')) : '');
+          + (messages.length ? option('mms-delete-thread', M('Delete thread')) : option('mms-discard', M('Discard'))) + (to.startsWith('tel:') ? option('toast', M('Add to People'), unavailable) : '') + option('mmsp-open', M('Settings'))
+        : option('mmsp-open', M('Settings')) + (data.messages.length ? option('mms-delete-all', M('Delete all threads')) : '');
       return `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu ${composing ? '' : 'mms-menu-root'}" data-no-translate>${items}</div>`;
     }
     if (ui.overlay === 'mms-attach') return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog mms-dialog" role="dialog" aria-label="${safe(MmsStrings.t('Attach'))}" data-no-translate><h3>${safe(MmsStrings.t('Attach'))}</h3><div class="mms-dialog-list">${data.photos.map(p => `<button data-action="mms-photo" data-id="${p.id}">${ICSMessaging.photo(p)}</button>`).join('') || `<p>${safe(i18n.t('No photos'))}</p>`}</div></div>`;
@@ -1376,6 +1382,7 @@
     event.preventDefault();
     if (Date.now() < suppressClickUntil) return;
     const { action, id, app, url } = button.dataset;
+    if (action.startsWith('mmsp-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (MmsPrefs.handle(action, id, mmspContext())) return; }
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Navigation's Contacts / Starred places pickers and Places' search and categories (ics-extra-apps.js).
     if (action.startsWith('xa-') && JBExtraApps.handle(action, id, extraContext())) return;

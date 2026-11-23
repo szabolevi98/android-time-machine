@@ -1655,7 +1655,7 @@
     return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><form class="settings-dialog mms-dialog people-editor" role="dialog" aria-label="${group?'Edit group':'New group'}" data-form="people-group"><h3>${group?'Edit group':'New group'}</h3><label>Group name<input name="name" required maxlength="50" value="${safe(group?.name||'')}"></label>${data.contacts.map(p=>`<label class="people-membership"><input type="checkbox" name="members" value="${p.id}" ${group?.members.includes(p.id)?'checked':''}>${safe(p.name)}</label>`).join('')}<div class="settings-dialog-actions"><button type="button" data-action="close-overlay">Cancel</button><button type="submit">Save</button></div></form>`;
   }
   function renderMessaging() {
-    if (ui.lpmPage === 'options') return MessengerOptions.render(data, ui, key => i18n.t(key));
+    if (ui.lpmPage) return MessengerOptions.render(data, ui, key => i18n.t(key));
     return ICSMessaging.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime());
   }
   function messageDraft() {
@@ -1695,7 +1695,7 @@
     if (ui.overlay === 'mms-attach-photos') return dialog('Attach photo', `<div class="mms-dialog-list">${data.photos.map(p => `<button data-action="mms-photo" data-id="${p.id}">${ICSMessaging.photo(p)}</button>`).join('') || '<p>No photos</p>'}</div>`);
     if (ui.overlay === 'mms-menu' && ui.view === 'messaging') {
       // Messenger's overflow: the conversation list (Archived, Settings, Help & feedback) or a conversation.
-      const items = ui.sub === 'thread' ? [['mms-smiley', 'Insert smiley'], ['mpo-open', 'People & options'], ['mms-delete-thread', 'Delete'], ['mms-discard', 'Discard draft']] : ui.sub === 'new' ? [['mms-smiley', 'Insert smiley'], ['mms-discard', 'Discard draft']] : ui.sub === 'archived' ? [['toast:This feature is not part of the simulator.', 'Settings'], ['toast:Help is not available offline.', 'Help & feedback']] : [['mms-archived', 'Archived'], ['toast:This feature is not part of the simulator.', 'Settings'], ['toast:Help is not available offline.', 'Help & feedback']];
+      const items = ui.sub === 'thread' ? [['mms-smiley', 'Insert smiley'], ['mpo-open', 'People & options'], ['mms-delete-thread', 'Delete'], ['mms-discard', 'Discard draft']] : ui.sub === 'new' ? [['mms-smiley', 'Insert smiley'], ['mms-discard', 'Discard draft']] : ui.sub === 'archived' ? [['mpo-settings', 'Settings'], ['toast:Help is not available offline.', 'Help & feedback']] : [['mms-archived', 'Archived'], ['mpo-settings', 'Settings'], ['toast:Help is not available offline.', 'Help & feedback']];
       return `<div class="menu-scrim" data-action="close-overlay"></div><div class="lp-popup-menu" role="menu">${items.map(([action, title]) => { const [act, arg] = action.split(/:(.*)/); return `<button role="menuitem" data-action="${act}"${arg ? ` data-id="${safe(arg)}"` : ''}>${safe(i18n.t(title))}</button>`; }).join('')}</div>`;
     }
     if (ui.overlay === 'mms-menu') {
@@ -2231,7 +2231,7 @@
     if (ui.overlay === 'pa-more' && !action.startsWith('px-') && action !== 'close-overlay') { ui.overlay = ''; ui.paMore = ''; renderOverlay(); }
     if (action.startsWith('px-') && PlayMore.handle(action, id, {...playContext(ui.view), save, saveMusic, render, renderOverlay, toast, root: viewport, openApp, shareText: driveShareText})) return;
     if (action.startsWith('drv-') && LPDrive.handle(action, id, {data, ui, save, render, renderOverlay, toast, root: viewport, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), shareFile: driveShareFile, shareText: driveShareText})) return;
-    if (/^(hgp|mpo)-/.test(action)) {
+    if (/^(hgp|mpo|mset)-/.test(action)) {
       const ctx = {data, ui, save, render, renderOverlay, toast, root: viewport, openApp, openThread: key => openMessageThread(key)};
       if ((action.startsWith('hgp-') ? HangoutsPrefs : MessengerOptions).handle(action, id, ctx)) return;
     }

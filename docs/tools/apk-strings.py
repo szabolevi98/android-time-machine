@@ -105,10 +105,15 @@ def entry(res, tr, en=None):
     return row
 for key, value in mapping.items():
     if '@array/' in value:
+        # "?@array/name:i": an array this image may not have (left out when it is missing).
+        optional = value.startswith('?'); value = value.lstrip('?')
         source, _, rest = value.rpartition(':@array/') if ':@array/' in value else ('', '', value[len('@array/'):])
         name, _, index = rest.partition(':')
         app = {'Telephony': TELEPHONY}.get(source, source) or apk
-        en, tr = array_item(app, name, int(index or 0))
+        try: en, tr = array_item(app, name, int(index or 0))
+        except ValueError:
+            if optional: print(f'note: {app} has no array {name}; left out', file=sys.stderr); continue
+            raise
         table[key] = entry(f'{app}:@array/{name}:{int(index or 0)}', tr, en if en != key else None)
         if en != key: print(f'note: {name}:{index} is "{en}" in English, keyed as "{key}"', file=sys.stderr)
         continue

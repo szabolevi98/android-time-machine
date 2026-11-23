@@ -87,7 +87,7 @@
     if (over) return over;
     if (ctx.sub !== 'thread' && ctx.sub !== 'new') {
       const any = M.threads(ctx.data).length > 0;
-      return [{action: 'new-message', title: T('menu_compose_new'), icon: 'ic_menu_compose'}, ...(any ? [{action: 'gbmms-delete-all', title: T('menu_delete_all'), icon: 'ic_menu_delete'}] : []), {action: 'mms-search', title: ctx.t('Search'), icon: 'ic_menu_search'}, {action: 'gbset-toast', id: 'This feature is not part of the simulator.', title: T('menu_preferences'), icon: 'ic_menu_preferences'}];
+      return [{action: 'new-message', title: T('menu_compose_new'), icon: 'ic_menu_compose'}, ...(any ? [{action: 'gbmms-delete-all', title: T('menu_delete_all'), icon: 'ic_menu_delete'}] : []), {action: 'mms-search', title: ctx.t('Search'), icon: 'ic_menu_search'}, {action: 'gbpref-open', id: 'mms', title: T('menu_preferences'), icon: 'ic_menu_preferences'}];
     }
     const draft = ctx.draft || {}, detail = ctx.sub === 'thread';
     const target = detail ? {key: String(ctx.thread)} : M.recipient(draft.recipient || '', ctx.data.contacts);

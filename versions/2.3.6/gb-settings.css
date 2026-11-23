@@ -64,3 +64,7 @@
 .screen .gbset-row:has(.gbset-img){align-items:flex-start;padding-top:calc(10 * var(--dp));padding-bottom:calc(10 * var(--dp))}
 .gbset-img{flex:none;width:calc(75.3334 * var(--dp));height:calc(75.3334 * var(--dp));margin:calc(7 * var(--dp)) calc(7 * var(--dp)) 0 0}
 .gbset-row:has(.gbset-img) .gbset-check{align-self:center}
+/* Messaging settings (gb-prefs.js): NumberPickerDialog's 12 sp label over the 100 dip picker; ManageSimMessages' empty list. */
+.gbnp-label{margin:0;padding:calc(8 * var(--dp)) calc(16 * var(--dp)) 0;font-size:calc(12 * var(--dp));color:#fff;text-align:center}
+.gbnp .gbtp-picker{width:calc(100 * var(--dp))}
+.gbset-empty{margin:0;padding:calc(16 * var(--dp));font-size:calc(18 * var(--dp));color:#bebebe;text-align:center}

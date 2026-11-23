@@ -743,7 +743,7 @@
     // A capture for Messaging lasts while the Camera is open; Messaging opens on its compose screen, not over it.
     if (!resume) { ui.jbmaCapture = null; ui.camIntent = null; if (app === 'messaging') ui.jbmaScreen = null; }
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
-    if (!resume) { ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt4Dialog = null; ui.gsPage = ''; ui.gsStack = []; ui.gsDialog = null; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.paStack = []; ui.paMore = ''; ui.navPick = ''; ui.locResults = null; ui.locSearching = false; }
+    if (!resume) { ui.mmsPrefs = ''; ui.mmsDialog = ''; ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt4Dialog = null; ui.gsPage = ''; ui.gsStack = []; ui.gsDialog = null; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.paStack = []; ui.paMore = ''; ui.navPick = ''; ui.locResults = null; ui.locSearching = false; }
     if(ui.locked)return;
     if (app === 'news-weather' && !resume) { ui.newsSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
     if (app === 'google-keyboard') { openApp('settings'); ui.sub = 'language'; render(); return; }
@@ -820,6 +820,7 @@
     if (ui.view === 'settings' && ui.sub === 'musicfx' && !ui.overlay) { ui.mfxSpin = false; ui.sub = 'sound'; render(); return; }
     // Back in a capture request cancels it (RESULT_CANCELED).
     if (ui.view === 'camera' && ui.camIntent && !ui.overlay) { ui.camIntent.cancel(); return; }
+    if (ui.view === 'messaging' && !ui.overlay && MmsPrefs.back(ui)) { render(); return; }
     if (ui.view === 'messaging' && !ui.overlay && window.JBMmsAttach?.back(jbmaContext())) { render(); return; }
     if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
     if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
@@ -1468,7 +1469,11 @@
     const group = data.contactGroups.find(g=>g.id===ui.peopleEditGroup);
     return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><form class="settings-dialog mms-dialog people-editor" role="dialog" aria-label="${group?'Edit group':'New group'}" data-form="people-group"><h3>${group?'Edit group':'New group'}</h3><label>Group name<input name="name" required maxlength="50" value="${safe(group?.name||'')}"></label>${data.contacts.map(p=>`<label class="people-membership"><input type="checkbox" name="members" value="${p.id}" ${group?.members.includes(p.id)?'checked':''}>${safe(p.name)}</label>`).join('')}<div class="settings-dialog-actions"><button type="button" data-action="close-overlay">Cancel</button><button type="submit">Save</button></div></form>`;
   }
+  // Messaging › Settings (mms-prefs.js) under Messaging's own action bar.
+  const mmspContext = () => ({ui, data, version: '4.3', M: key => MmsStrings.t(key), t: key => i18n.t(key), save, render,
+    bar: (title, menu) => `<header class="mms-header"><button class="mms-up" data-action="back" aria-label="${safe(i18n.t('Back'))}"><span>‹</span><img src="assets/messaging.png" alt=""></button><div class="mms-title"><h2>${safe(title)}</h2></div>${menu ? `<button data-action="mms-menu" aria-label="${safe(i18n.t('More options'))}"><img src="assets/ic_menu_overflow.png" alt=""></button>` : ''}</header>`});
   function renderMessaging() {
+    if (ui.mmsPrefs) return MmsPrefs.render(mmspContext());
     return ICSMessaging.render(data, ui, key => i18n.t(key), i18n.locale());
   }
   function messageDraft() {
@@ -1524,14 +1529,15 @@
     const option = (action, text, id = '') => `<button data-action="${action}" data-id="${safe(id)}">${safe(text)}</button>`;
     const alert = (title, body, buttons = '', icon = false) => `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="mms-alert" role="alertdialog" aria-label="${safe(title)}" data-no-translate>${title ? `<h3>${icon ? '<img src="assets/mms-ic_dialog_alert_holo_light.png" alt="">' : ''}${safe(title)}</h3>` : ''}${body}${buttons ? `<div class="mms-alert-buttons">${buttons}</div>` : ''}</div>`;
     const message = data.messages.find(m => String(m.id) === String(ui.mmsMessage));
+    if (ui.overlay === 'mms-menu' && ui.mmsPrefs) return `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu" data-no-translate>${MmsPrefs.menu(mmspContext()).map(item => option(item.action, item.title)).join('')}</div>`;
     if (ui.overlay === 'mms-menu') {
       const composing = ['thread', 'new'].includes(ui.sub), draft = data.messageDrafts?.[ICSMessaging.draftKey(ui)] || {};
       const messages = ui.sub === 'thread' ? data.messages.filter(m => String(m.contact) === String(ui.thread)) : [];
       const to = ui.sub === 'thread' ? String(ui.thread) : ICSMessaging.recipient(draft.recipient || '', data.contacts)?.key || '';
       const items = composing
         ? option('toast', M('Add subject'), unavailable) + ((draft.body || '').trim() || draft.attachment ? option('mms-send-now', M('Send')) : '') + option('mms-smiley', M('Insert smiley'))
-          + (messages.length ? option('mms-delete-thread', M('Delete thread')) : option('mms-discard', M('Discard'))) + (to.startsWith('tel:') ? option('toast', M('Add to People'), unavailable) : '') + option('toast', M('Settings'), unavailable)
-        : option('toast', M('Settings'), unavailable) + (data.messages.length ? option('mms-delete-all', M('Delete all threads')) : '') + option('toast', M('Cell broadcasts'), unavailable);
+          + (messages.length ? option('mms-delete-thread', M('Delete thread')) : option('mms-discard', M('Discard'))) + (to.startsWith('tel:') ? option('toast', M('Add to People'), unavailable) : '') + option('mmsp-open', M('Settings'))
+        : option('mmsp-open', M('Settings')) + (data.messages.length ? option('mms-delete-all', M('Delete all threads')) : '') + option('toast', M('Cell broadcasts'), unavailable);
       return `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu ${composing ? '' : 'mms-menu-root'}" data-no-translate>${items}</div>`;
     }
     /* ComposeMessageActivity's attachment chooser: an AlertDialog ("Attach", ic_dialog_attach) over
@@ -1986,6 +1992,7 @@
     event.preventDefault();
     if (Date.now() < suppressClickUntil) return;
     const { action, id, app, url } = button.dataset;
+    if (action.startsWith('mmsp-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (MmsPrefs.handle(action, id, mmspContext())) return; }
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Navigation's Contacts / Starred places pickers and Local's search and categories (jb-extra-apps.js).
     if (action.startsWith('xa-') && JBExtraApps.handle(action, id, extraContext())) return;

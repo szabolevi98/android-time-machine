@@ -268,7 +268,8 @@
     if (GBApps.has(ui.view)) { GBApps.get(ui.view).keep?.(gappContext()); const items = GBApps.get(ui.view).menu?.(gappContext()) || []; if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'people' && GBContactsIO.has(ui.sub)) { const items = GBContactsIO.menu(ui.sub, gbctContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if ((ui.view === 'phone' && (!ui.activeCall || ui.gbCallBackground) && ui.sub !== 'call-detail') || (ui.view === 'people' && (!ui.sub || ui.sub === 'detail'))) { const items = GBPhone.menu(gbPhoneContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
-    if (ui.gbPrefs && (ui.gbPrefs.view || ui.gbPrefs.app) === ui.view || ui.view === 'calendar' && ui.gbCalSel || ui.view === 'email' && ui.gbEmSetup) return;
+    if (ui.gbPrefs && (ui.gbPrefs.view || ui.gbPrefs.app) === ui.view) { const items = GBPrefs.menu(gbPrefsContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
+    if (ui.view === 'calendar' && ui.gbCalSel || ui.view === 'email' && ui.gbEmSetup) return;
     if (ui.view === 'downloads') { ui.gbMenuItems = GBDownloads.menu(gbDlContext()); ui.overlay = 'gb-menu-settings'; renderOverlay(); return; }
     if (ui.view === 'search') { const items = GBSearch.menu(gbSearchContext()); if (items.length) { ui.qsb.selecting = false; ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); render(); } return; }
     if (ui.view === 'play-store') { const items = GBMarket.menu(gbMarketContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
@@ -357,7 +358,7 @@
   // Application preference screens (GBPrefs): Browser, Calendar and Email settings, stored in data.appPrefs.
   function gbPrefsContext(app = ui.gbPrefs?.app) {
     data.appPrefs ||= {}; data.appPrefs[app] ||= {};
-    return {app, lang: i18n.language, values: data.appPrefs[app], settings: data.settings, homepage: 'http://www.google.com/', account: ICSEmail.account, name: 'Nexus S', multi: ui.gbMulti, t: key => i18n.t(key), mapsCache: !!data.mapsCache, gmailAccount: GBGmail.ACCOUNT, gmailSync: data.appPrefs['gmail-sync'] || {}, servers: data.appPrefs['email-servers'] || {}};
+    return {app, lang: i18n.language, values: data.appPrefs[app], pick: ui.gbPick, settings: data.settings, homepage: 'http://www.google.com/', account: ICSEmail.account, name: 'Nexus S', multi: ui.gbMulti, t: key => i18n.t(key), mapsCache: !!data.mapsCache, gmailAccount: GBGmail.ACCOUNT, gmailSync: data.appPrefs['gmail-sync'] || {}, servers: data.appPrefs['email-servers'] || {}};
   }
   function gbPrefSet(key, value) { const ctx = gbPrefsContext(); ctx.values[key] = value; save(); }
   // PreferenceActivity keeps its list position while a preference changes.
@@ -1755,12 +1756,17 @@
         if (item.open) { ui.gbPrefs = {app: item.open, view: ui.gbPrefs.view || ui.view, parent: ui.gbPrefs}; render(); break; }
         // Google Mail's Clear search history / Clear "Show pictures" act at once.
         if (item.done) { if (key === 'clear-search-history') data.gmailSearches = []; if (key === 'clear-display-images-whitelist') data.gmailShowPictures = []; if (key === 'pref_gtalk_clear_history_key' && data.talk23) data.talk23.searches = []; if (key === 'clear_history' && data.youtube23) data.youtube23.searches = []; if (key === 'cache_settings_clear_cache') data.mapsCache = false; save(); gbPrefRender(); break; }
-        ui.gbMulti = null;
+        ui.gbMulti = null; ui.gbPick = undefined;
         ui.gbPrefDialog = key; ui.overlay = 'gb-dialog-pref'; renderOverlay(); break; }
       case 'gbpref-pick': { const [app, key, ...rest] = String(id).split(':'), item = GBPrefs.find(gbPrefsContext(app), key), value = rest.join(':'); if (item) gbPrefSet(key, item.kind === 'list' ? Number(value) : value); ui.overlay = ''; gbPrefRender(); break; }
       case 'gbpref-edit-ok': { const [app, key] = String(id).split(':'), input = overlayRoot.querySelector('[data-pref-edit]'), item = GBPrefs.find(gbPrefsContext(app), key);
         // A number field (Amount of mail to sync) keeps only 1-999.
         if (input && !(item?.edit?.number && !(Number(input.value) >= 1 && Number(input.value) <= 999))) gbPrefSet(key, item?.edit?.number ? Math.round(Number(input.value)) : input.value.trim()); ui.overlay = ''; gbPrefRender(); break; }
+      // NumberPickerDialog: the arrows step the draft within the picker's range (holding the value at its ends), Set stores it.
+      case 'gbpref-step': { const [app, key, delta] = String(id).split(':'), item = GBPrefs.find(gbPrefsContext(app), key); if (!item?.picker) break; const p = item.picker; ui.gbPick = Math.min(p.max, Math.max(p.min, (ui.gbPick ?? p.value) + Number(delta))); renderOverlay(); break; }
+      case 'gbpref-picker-ok': { const [, key] = String(id).split(':'); if (ui.gbPick !== undefined) gbPrefSet(key, ui.gbPick); ui.gbPick = undefined; ui.overlay = ''; gbPrefRender(); break; }
+      // Restore default settings: the screen's stored values go.
+      case 'gbpref-restore': ui.overlay = ''; ui.gbMenuItems = null; data.appPrefs[id] = {}; save(); gbPrefRender(); break;
       // MultiListPreference: the boxes toggle a draft, OK stores it.
       case 'gbpref-multi': { const [app, key, i] = String(id).split(':'), item = GBPrefs.find(gbPrefsContext(app), key); if (!item) break; const draft = ui.gbMulti ?? [...GBPrefs.get(item, gbPrefsContext(app).values)]; ui.gbMulti = draft.includes(Number(i)) ? draft.filter(x => x !== Number(i)) : [...draft, Number(i)].sort(); renderOverlay(); break; }
       case 'gbpref-multi-ok': { const [, key] = String(id).split(':'); if (ui.gbMulti) gbPrefSet(key, ui.gbMulti); ui.gbMulti = null; ui.overlay = ''; gbPrefRender(); break; }

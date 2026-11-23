@@ -4014,6 +4014,58 @@ const editorsMore=app=>async h=>{
 };
 CASES.push(...['docs','sheets','slides'].map(app=>({id:'T40',version:'5.1.1',name:app+' › collections, grid/sort, sharing, move, picker and document shortcut',run:editorsMore(app)})));
 
+// Messaging › Settings (T50): 2.3.6 to 4.3 Mms's MessagingPreferenceActivity (the limits' NumberPickerDialog behind
+// Delete old messages, Manage SIM card messages) and 5.1.1 Messenger's General / Advanced settings.
+const mmsAct = (h, action, id = '') => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};el.dataset.id=${JSON.stringify(id)};document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove();return true})()`);
+CASES.push({id:'T50',version:'2.3.6',name:'Messaging › Settings',async run(h){
+  await h.openApp('messaging'); await mmsAct(h,'gbpref-open','mms');
+  h.check('Settings lists the four categories',await h.until(`document.querySelectorAll('#viewport .gbset-cat').length===4`));
+  h.check('the limits wait for Delete old messages',await h.ev(`document.querySelector('#viewport [data-id="mms:pref_key_sms_delete_limit"]').disabled`));
+  await h.tap('#viewport [data-id="mms:pref_key_auto_delete"]');
+  await h.tap('#viewport [data-id="mms:pref_key_sms_delete_limit"]');
+  await h.tap('[data-action="gbpref-step"][data-id="mms:pref_key_sms_delete_limit:1"]');
+  await h.tap('[data-action="gbpref-picker-ok"]');
+  h.check('Set keeps the new limit',(await store(h,'appPrefs'))?.mms?.pref_key_sms_delete_limit===201 && await h.until(`/201/.test(document.querySelector('#viewport [data-id="mms:pref_key_sms_delete_limit"]').textContent)`));
+  await h.tap('#viewport [data-id="mms:pref_key_manage_sim_messages"]');
+  h.check('Manage SIM card messages says the SIM is empty',await h.until(`/No messages on the SIM card/.test(document.querySelector('#viewport .gbset-empty')?.textContent||'')`));
+}});
+const holoMmsSettings = jb => async h => {
+  await h.openApp('messaging'); await mmsAct(h,'mms-menu'); await h.tap('[data-action="mmsp-open"]');
+  h.check('Settings opens',await h.until(`document.querySelectorAll('#viewport .mmsp .mps-cat').length===4`));
+  h.check(jb?'4.3 has Group messaging':'4.0.4 has no Group messaging',await h.ev(`!!document.querySelector('#viewport [data-id="group"]')`)===jb);
+  await h.tap('#viewport [data-id="auto_delete"]');
+  await h.tap('#viewport [data-id="sms_limit"]');
+  await h.tap('#viewport [data-action="mmsp-step"][data-id="1"]');
+  await h.tap('#viewport [data-action="mmsp-set"]');
+  h.check('Set keeps the new limit',(await store(h,'mmsPrefs'))?.sms_limit===501);
+  await h.tap('#viewport [data-id="'+(jb?'vibrate':'vibrate_when')+'"]');
+  if (!jb) await h.tap('#viewport [data-action="mmsp-pick"][data-id="0"]');
+  h.check('Vibrate is kept',jb?(await store(h,'mmsPrefs'))?.vibrate===true:(await store(h,'mmsPrefs'))?.vibrate_when===0);
+  await mmsAct(h,'mms-menu'); await h.tap('[data-action="mmsp-restore"]');
+  h.check('Restore default settings clears them',Object.keys((await store(h,'mmsPrefs'))||{}).length===0);
+  await h.tap('#viewport [data-id="sim"]');
+  h.check('Manage SIM card messages says the SIM is empty',await h.until(`/No messages on SIM card/.test(document.querySelector('#viewport .mps-empty')?.textContent||'')`));
+  await h.key('Escape'); await h.key('Escape');
+  h.check('Back returns to the conversations',await h.until(`!document.querySelector('#viewport .mmsp') && !!document.querySelector('#viewport .mms-app')`));
+};
+CASES.push({id:'T50',version:'4.0.4',name:'Messaging › Settings',run:holoMmsSettings(false)});
+CASES.push({id:'T50',version:'4.3',name:'Messaging › Settings',run:holoMmsSettings(true)});
+CASES.push({id:'T50',version:'5.1.1',name:'Messenger › Settings: General, Advanced',async run(h){
+  await h.openApp('messaging'); await mmsAct(h,'mpo-settings');
+  h.check('Settings lists General and Advanced',await h.until(`document.querySelectorAll('#viewport .mset-item').length===2`));
+  await h.tap('#viewport [data-action="mset-page"][data-id="general"]');
+  await h.tap('#viewport [data-action="mset-toggle"][data-id="sendSound"]');
+  h.check('Send sound turns off',(await store(h,'lpmSettings'))?.sendSound===false);
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="mset-page"][data-id="advanced"]');
+  await h.tap('#viewport [data-action="mset-group"]');
+  await h.tap('#viewport [data-action="mset-group-pick"][data-id="0"]');
+  h.check('Group messaging keeps individual SMS',(await store(h,'lpmSettings'))?.group===false && await h.until(`/individual SMS/.test(document.querySelector('#viewport [data-action="mset-group"] small')?.textContent||'')`));
+  await h.tap('#viewport [data-action="mset-toggle"][data-id="retrieve"]');
+  h.check('Roaming auto-retrieve follows Auto-retrieve',await h.until(`document.querySelector('#viewport [data-action="mset-toggle"][data-id="roaming"]').disabled`));
+  await h.key('Escape'); await h.key('Escape');
+  h.check('Back returns to the conversations',await h.until(`!document.querySelector('#viewport .mpo-app')`));
+}});
 // 5.1.1 Google Settings (T25): Account History lists Location History and opens its page; Data management keeps the
 // Drive choice; Google Fit lists the Fit app and its Delete history (after "I understand") empties Fit's history;
 // Google+ opens the Google+ app's settings.

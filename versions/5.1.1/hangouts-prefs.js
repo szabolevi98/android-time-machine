@@ -218,7 +218,43 @@
   const mBlocked = (data, key) => (data.lpmBlocked || []).includes(String(key));
   const mNotifies = (data, key) => !mBlocked(data, key) && mconv(data, key).off !== true;
   const sw = on => `<i class="mpo-switch${on ? ' on' : ''}" role="switch" aria-checked="${!!on}"></i>`;
+  /* Messenger › Settings (SettingsActivity: General, and the one SIM's Advanced, 60 dp settings_item_view rows):
+     - General, preferences_application.xml: Change your default SMS app (Messenger is the default, so sms_enabled, which
+       opens Wireless & networks; "Currently Messenger"), Send sound, Notifications, Sound and Vibrate (send sound,
+       notifications and vibrate on by default; the sound is the default notification sound).
+     - Advanced, preferences_per_subscription.xml: MMS - Group messaging (group_mms_setting_dialog's two choices, a single
+       MMS by default), Your phone number (the SIM gives none: "Unknown"; PhoneNumberPreference edits it), Auto-retrieve
+       (on), Roaming auto-retrieve (off, dependent); Advanced - SMS delivery reports (off), Wireless alerts (the
+       CellBroadcastReceiver app) and Access Point Names, which stay the simulator's limit. The Debug category is a
+       debug build's only. Values live in data.lpmSettings. */
+  const MSET = {sendSound: true, notify: true, vibrate: true, group: true, retrieve: true, roaming: false, reports: false};
+  const mset = data => ({...MSET, ...(data.lpmSettings || {})});
+  function renderMessengerSettings(data, ui, t) {
+    const s = mset(data), page = ui.lpmPage;
+    const item = (action, title, subtitle, extra = '', off = false, id = '') => `<button type="button" class="mpo-row${off ? ' off' : ''}" data-action="${action}"${id ? ` data-id="${id}"` : ''}${off ? ' disabled' : ''}><span class="mpo-text"><b>${e(title)}</b>${subtitle ? `<small>${e(subtitle)}</small>` : ''}</span>${extra}</button>`;
+    const head = title => `<div class="mpo-head"><i></i><span>${e(title)}</span></div>`;
+    const toggle = (key, title, summary = '', off = false) => item('mset-toggle', title, summary, sw(s[key]), off, key);
+    let title = M('Settings'), body = '', d = '';
+    if (page === 'settings') body = `<button type="button" class="mset-item" data-action="mset-page" data-id="general"><b>${e(M('General'))}</b></button><button type="button" class="mset-item" data-action="mset-page" data-id="advanced"><b>${e(M('Advanced'))}</b></button>`;
+    if (page === 'settings-general') {
+      title = M('General settings');
+      body = item('mset-default', M('Change default'), AndroidStrings.format(M('Currently %s'), M('app'))) + toggle('sendSound', M('Send sound'), M('Send sound summary'))
+        + toggle('notify', M('App notifications')) + item('mset-tone', M('Sound'), toneOf(s.sound, 'notifications') || M('Silent')) + toggle('vibrate', M('Vibrate'));
+    }
+    if (page === 'settings-advanced') {
+      title = M('Advanced settings');
+      body = head(M('MMS')) + item('mset-group', M('Group messaging'), M(s.group ? 'Group enable' : 'Group disable')) + item('mset-number', M('Your phone number'), s.number || M('Unknown'))
+        + toggle('retrieve', M('Auto-retrieve'), M('Auto-retrieve summary')) + toggle('roaming', M('Roaming'), M('Roaming summary'), !s.retrieve)
+        + head(M('Advanced category')) + toggle('reports', M('Delivery reports'), M('Delivery reports summary')) + item('mset-limit', M('Wireless alerts')) + item('mset-limit', M('Access Point Names'));
+    }
+    const shell = (h, inner, buttons) => `<button type="button" class="mpo-scrim" data-action="mpo-close" aria-label="${e(M('Cancel'))}"></button><div class="mpo-dialog" role="dialog"><h3>${e(h)}</h3>${inner}${buttons ? `<div class="mpo-buttons">${buttons}</div>` : ''}</div>`;
+    if (ui.mpoDialog === 'tone') { const names = tones('notifications'), at = ui.hgTone ?? Math.max(0, names.indexOf(toneOf(s.sound, 'notifications'))); d = shell(M('Sound'), `<div class="mpo-tones">${names.map((name, i) => `<button type="button" class="mpo-choice${at === i ? ' on' : ''}" data-action="mpo-tone" data-id="${i}" role="radio" aria-checked="${at === i}"><i></i><span>${e(name || M('Silent'))}</span></button>`).join('')}</div>`, `<button type="button" data-action="mpo-close">${e(M('Cancel'))}</button><button type="button" data-action="mset-tone-ok">${e(t('OK'))}</button>`); }
+    if (ui.mpoDialog === 'group') d = shell(M('Group messaging'), `<div class="mpo-tones">${[['0', 'Group disable', !s.group], ['1', 'Group enable', s.group]].map(([id, key, on]) => `<button type="button" class="mpo-choice${on ? ' on' : ''}" data-action="mset-group-pick" data-id="${id}" role="radio" aria-checked="${on}"><i></i><span>${e(M(key))}</span></button>`).join('')}</div>`, '');
+    if (ui.mpoDialog === 'number') d = shell(M('Your phone number'), `<input class="mset-input" data-mset-number type="tel" value="${e(s.number || '')}" autocomplete="off">`, `<button type="button" data-action="mpo-close">${e(M('Cancel'))}</button><button type="button" data-action="mset-number-ok">${e(t('OK'))}</button>`);
+    return `<div class="app-view lpm-app mpo-app"><header class="lpm-toolbar"><button type="button" class="lpm-tool" data-action="back" aria-label="${e(t('Navigate up'))}"><img src="assets/bg-ic_arrow_back_light.png" alt=""></button><h2>${e(title)}</h2></header><div class="mpo-list">${body}</div>${d}</div>`;
+  }
   function renderMessenger(data, ui, t) {
+    if (String(ui.lpmPage).startsWith('settings')) return renderMessengerSettings(data, ui, t);
     const key = String(ui.thread), person = ICSMessaging.identity(key, data.contacts), c = mconv(data, key), on = c.off !== true;
     const item = (action, title, subtitle, extra = '', off = false) => `<button type="button" class="mpo-row${off ? ' off' : ''}" data-action="${action}"${off ? ' disabled' : ''}><span class="mpo-text"><b>${e(title)}</b>${subtitle ? `<small>${e(subtitle)}</small>` : ''}</span>${extra}</button>`;
     const isBlocked = mBlocked(data, key);
@@ -233,7 +269,19 @@
   function handleMessenger(action, id, ctx) {
     const {data, ui} = ctx, key = String(ui.thread), set2 = patch => { data.lpmConv = {...(data.lpmConv || {}), [key]: {...mconv(data, key), ...patch}}; ctx.save(); };
     const close = () => { window.SystemSounds?.stop(); ui.mpoDialog = ''; ui.hgTone = undefined; };
+    const setS = patch => { data.lpmSettings = {...(data.lpmSettings || {}), ...patch}; ctx.save(); };
     switch (action) {
+      case 'mpo-settings': ui.overlay = ''; ctx.renderOverlay?.(); ui.lpmPage = 'settings'; ui.mpoDialog = ''; ctx.render(); return true;
+      case 'mset-page': ui.lpmPage = `settings-${id}`; ctx.render(); return true;
+      case 'mset-toggle': setS({[id]: !mset(data)[id]}); ctx.render(); return true;
+      case 'mset-default': ui.lpmPage = ''; ctx.openApp('settings'); ui.sub = 'wireless'; ctx.render(); return true;
+      case 'mset-tone': ui.mpoDialog = 'tone'; ui.hgTone = undefined; ctx.render(); return true;
+      case 'mset-tone-ok': if (ui.hgTone !== undefined) setS({sound: tones('notifications')[ui.hgTone] || ''}); close(); ctx.render(); return true;
+      case 'mset-group': ui.mpoDialog = 'group'; ctx.render(); return true;
+      case 'mset-group-pick': setS({group: id === '1'}); close(); ctx.render(); return true;
+      case 'mset-number': ui.mpoDialog = 'number'; ctx.render(); requestAnimationFrame(() => ctx.root?.querySelector('[data-mset-number]')?.focus()); return true;
+      case 'mset-number-ok': { const v = String(ctx.root?.querySelector('[data-mset-number]')?.value || '').trim(); setS({number: v}); close(); ctx.render(); return true; }
+      case 'mset-limit': ctx.toast('This feature is not part of the simulator.'); return true;
       case 'mpo-open': ui.overlay = ''; ctx.renderOverlay?.(); ui.lpmPage = 'options'; ctx.render(); return true;
       case 'mpo-toggle': set2({off: mconv(data, key).off !== true}); ctx.render(); return true;
       case 'mpo-vibrate': set2({vibrate: mconv(data, key).vibrate === false}); ctx.render(); return true;
@@ -247,7 +295,7 @@
       default: return false;
     }
   }
-  function backMessenger(ui) { if (ui.mpoDialog) { window.SystemSounds?.stop(); ui.mpoDialog = ''; ui.hgTone = undefined; return; } ui.lpmPage = ''; }
+  function backMessenger(ui) { if (ui.mpoDialog) { window.SystemSounds?.stop(); ui.mpoDialog = ''; ui.hgTone = undefined; return; } ui.lpmPage = /^settings-/.test(ui.lpmPage) ? 'settings' : ''; }
 
   window.HangoutsPrefs = {render, handle, back, mount, who, isGroup, receives, notifies, prefs, S};
   window.MessengerOptions = {render: renderMessenger, handle: handleMessenger, back: backMessenger, notifies: mNotifies, archived: mBlocked, M};

@@ -674,6 +674,240 @@ window.GBStrings["mms"] = {
 "fr": "Impossible d'ajouter une vidéo et une image sur une diapositive.",
 "es": "No se pueden añadir vídeos ni imágenes a una diapositiva."
 },
+"pref_notification_settings_title": {
+"en": "Notification settings",
+"hu": "Értesítési beállítások",
+"de": "Benachrichtigungseinstellungen",
+"fr": "Paramètres de notification",
+"es": "Ajustes de notificaciones"
+},
+"pref_mms_settings_title": {
+"en": "Multimedia message (MMS) settings",
+"hu": "Multimédiás üzenetek (MMS) beállításai",
+"de": "Einstellungen für Multimedia-Nachr. (MMS)",
+"fr": "Paramètres des MMS",
+"es": "Ajustes de mensajes multimedia (MMS)"
+},
+"pref_sms_settings_title": {
+"en": "Text message (SMS) settings",
+"hu": "Szöveges üzenetek (SMS) beállításai",
+"de": "Einstellungen für Textnachrichten (SMS)",
+"fr": "Paramètres des SMS",
+"es": "Ajustes de mensajes de texto (SMS)"
+},
+"pref_sms_storage_title": {
+"en": "Storage settings",
+"hu": "Tárhelybeállítások",
+"de": "Speichereinstellungen",
+"fr": "Paramètres de stockage",
+"es": "Ajustes de almacenamiento"
+},
+"pref_summary_manage_sim_messages": {
+"en": "Manage messages stored on your SIM card",
+"hu": "A SIM-kártyán lévő üzenetek kezelése",
+"de": "Auf der SIM-Karte gespeicherte Nachrichten verwalten",
+"fr": "Gérer les messages enregistrés sur votre carte SIM",
+"es": "Administrar mensajes almacenados en la tarjeta SIM"
+},
+"pref_summary_mms_delivery_reports": {
+"en": "Request a delivery report for each message you send",
+"hu": "Kézbesítési jelentés kérése minden elküldött üzenetről",
+"de": "Zustellbestätigung für jede gesendete Nachricht anfordern",
+"fr": "Demander un accusé de réception pour chaque message envoyé",
+"es": "Solicitar un informe de entrega al enviar un mensaje"
+},
+"pref_summary_mms_read_reports": {
+"en": "Request a read report for each message you send",
+"hu": "Olvasási visszaigazolás kérése minden elküldött üzenetről",
+"de": "Lesebestätigung für jede gesendete Nachricht anfordern",
+"fr": "Demander une confirmation de lecture pour chaque message envoyé",
+"es": "Solicitar un informe de mensaje leído al enviar un mensaje"
+},
+"pref_summary_sms_delivery_reports": {
+"en": "Request a delivery report for each message you send",
+"hu": "Kézbesítési jelentés kérése minden elküldött üzenetről",
+"de": "Zustellbestätigung für jede gesendete Nachricht anfordern",
+"fr": "Demander un accusé de réception pour chaque message envoyé",
+"es": "Solicitar un informe de entrega cada vez que se envíe un mensaje"
+},
+"pref_summary_auto_delete": {
+"en": "Delete old messages as limits are reached",
+"hu": "Régi üzenetek törlése a korlát elérésekor",
+"de": "Alte Nachrichten beim Erreichen der Grenzwerte löschen",
+"fr": "Supprimer lorsque les limites suivantes sont atteintes",
+"es": "Eliminar mensajes antiguos al superar los límites"
+},
+"pref_summary_delete_limit": {
+"en": "%1$s messages per conversation",
+"hu": "%1$s üzenet beszélgetésenként",
+"de": "%1$s Nachrichten pro Konversation",
+"fr": "%1$s messages par conversation",
+"es": "%1$s mensajes por conversación"
+},
+"pref_title_manage_sim_messages": {
+"en": "Manage SIM card messages",
+"hu": "SIM-kártyán tárolt üzenetek kezelése",
+"de": "Nachrichten auf SIM-Karte",
+"fr": "Gestion messages carte SIM",
+"es": "Administrar mensajes de SIM"
+},
+"pref_title_mms_delivery_reports": {
+"en": "Delivery reports",
+"hu": "Kézbesítési jelentések",
+"de": "Zustellberichte",
+"fr": "Accusés de réception",
+"es": "Informes de entrega"
+},
+"pref_title_mms_read_reports": {
+"en": "Read reports",
+"hu": "Olvasási visszaigazolások",
+"de": "Leseberichte",
+"fr": "Confirmations de lecture",
+"es": "Informes de leídos"
+},
+"pref_title_sms_delivery_reports": {
+"en": "Delivery reports",
+"hu": "Kézbesítési jelentések",
+"de": "Zustellberichte",
+"fr": "Accusés de réception",
+"es": "Informes de entrega"
+},
+"pref_title_auto_delete": {
+"en": "Delete old messages",
+"hu": "Régi üzenetek törlése",
+"de": "Alte Nachrichten löschen",
+"fr": "Anciens messages",
+"es": "Eliminar mensajes antiguos"
+},
+"pref_title_sms_delete": {
+"en": "Text message limit",
+"hu": "Szöveges üzenetek korlátja",
+"de": "Höchstzahl an SMS",
+"fr": "Limite pour les SMS",
+"es": "Límite de mensajes de texto"
+},
+"pref_title_mms_delete": {
+"en": "Multimedia message limit",
+"hu": "Multimédiás üzenetek korlátja",
+"de": "Höchstzahl an MMS",
+"fr": "Limite pour les MMS",
+"es": "Límite de mensajes multimedia"
+},
+"pref_title_notification_enabled": {
+"en": "Notifications",
+"hu": "Értesítések",
+"de": "Benachrichtigungen",
+"fr": "Notifications",
+"es": "Notificaciones"
+},
+"pref_summary_notification_enabled": {
+"en": "Display message notifications in status bar",
+"hu": "Üzenetekkel kapcsolatos értesítések megjelenítése az állapotsoron",
+"de": "Bei Nachrichteneingang Benachrichtigung in Statuszeile anzeigen",
+"fr": "Afficher les notifications de message dans la barre d'état",
+"es": "Mostrar notificación de mensajes en la barra de estado"
+},
+"pref_title_notification_vibrateWhen": {
+"en": "Vibrate",
+"hu": "Rezgés",
+"de": "Vibration",
+"fr": "Vibreur",
+"es": "Vibración"
+},
+"pref_summary_notification_vibrateWhen": {
+"en": "Also vibrate when notified",
+"hu": "Rezgés értesítések esetén is",
+"de": "Bei Benachrichtigung vibrieren",
+"fr": "Vibrer également à la réception d'une notification",
+"es": "Vibrar también al notificar"
+},
+"pref_title_notification_ringtone": {
+"en": "Select ringtone",
+"hu": "Csengőhang kiválasztása",
+"de": "Klingelton auswählen",
+"fr": "Sonnerie",
+"es": "Seleccionar tono"
+},
+"pref_messages_to_save": {
+"en": "Set number of messages to save",
+"hu": "A menteni kívánt üzenetek számának beállítása",
+"de": "Anzahl der zu speichernden Nachrichten festlegen",
+"fr": "Définir le nombre de messages à enregistrer",
+"es": "Establece el número de mensajes que quieres guardar"
+},
+"prefDefault_vibrateWhen": {
+"en": "never"
+},
+"prefDialogTitle_vibrateWhen": {
+"en": "Vibrate",
+"hu": "Rezgés",
+"de": "Vibration",
+"fr": "Vibreur",
+"es": "Vibración"
+},
+"pref_title_mms_auto_retrieval": {
+"en": "Auto-retrieve",
+"hu": "Automatikus letöltés",
+"de": "Automatisch abrufen",
+"fr": "Récupération auto",
+"es": "Recuperar automáticamente"
+},
+"pref_summary_mms_auto_retrieval": {
+"en": "Automatically retrieve messages",
+"hu": "Üzenetek automatikus letöltése",
+"de": "Nachrichten automatisch empfangen",
+"fr": "Récupérer automatiquement les messages",
+"es": "Recuperar mensajes automáticamente"
+},
+"pref_title_mms_retrieval_during_roaming": {
+"en": "Roaming auto-retrieve",
+"hu": "Automatikus letöltés barangolás során",
+"de": "Autom. Roaming-Abruf",
+"fr": "Itinérance",
+"es": "Recuperar autom en itinerancia"
+},
+"pref_summary_mms_retrieval_during_roaming": {
+"en": "Automatically retrieve messages while roaming",
+"hu": "Üzenetek automatikus letöltése barangolás közben",
+"de": "Bei Roaming Nachrichten automatisch abrufen",
+"fr": "Récupérer automatiquement les messages en itinérance",
+"es": "Recuperar automáticamente mensajes en itinerancia"
+},
+"restore_default": {
+"en": "Restore default settings",
+"hu": "Alapértelmezett beállítások visszaállítása",
+"de": "Standardeinstellungen wiederherstellen",
+"fr": "Rétablir les paramètres par défaut",
+"es": "Restaurar configuración predeterminada"
+},
+"set": {
+"en": "Set",
+"hu": "Beállítás",
+"de": "Festlegen",
+"fr": "Définir",
+"es": "Establecer"
+},
+"refreshing": {
+"en": "Refreshing…",
+"hu": "Frissítés...",
+"de": "Wird aktualisiert...",
+"fr": "Actualisation…",
+"es": "Actualizando..."
+},
+"sim_empty": {
+"en": "No messages on the SIM card.",
+"hu": "Nincsenek üzenetek a SIM-kártyán.",
+"de": "Keine Nachrichten auf der SIM-Karte",
+"fr": "Aucun message sur la carte SIM.",
+"es": "No hay mensajes en la tarjeta SIM."
+},
+"sim_manage_messages_title": {
+"en": "Text messages on SIM card",
+"hu": "Szöveges üzenetek a SIM-kártyán",
+"de": "Auf SIM-Karte gespeicherte Textnachrichten",
+"fr": "Messages SMS sur la carte SIM",
+"es": "Mensajes de texto de tarjeta SIM"
+},
 "slide_duration_one": {
 "en": "%s sec",
 "de": "%s Sek.",
@@ -949,6 +1183,40 @@ window.GBStrings["mms"] = {
 "9 segundos",
 "10 segundos",
 "Otra..."
+]
+},
+"prefEntries_vibrateWhen": {
+"en": [
+"Always",
+"Only when silent",
+"Never"
+],
+"hu": [
+"Mindig",
+"Csak néma üzemmódban",
+"Soha"
+],
+"de": [
+"Immer",
+"Nur im Lautlosmodus",
+"Nie"
+],
+"fr": [
+"Toujours",
+"En mode silencieux",
+"Jamais"
+],
+"es": [
+"Siempre",
+"Solo en modo silencio",
+"Nunca"
+]
+},
+"prefValues_vibrateWhen": {
+"en": [
+"always",
+"silent",
+"never"
 ]
 }
 }

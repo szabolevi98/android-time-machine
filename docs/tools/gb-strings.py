@@ -40,8 +40,15 @@ search_empty view replace_image remove inline_subject menu_unlock
 replace edit play select_audio slideshow_activity edit_slideshow_activity add_slide add_slide_hint slide_number cannot_add_slide_anymore
 converting_to_picture_message converting_to_text_message remove_slide discard_slideshow slide_show_part preview done preview_slideshow
 remove_text remove_picture add_picture remove_music add_music remove_video add_video duration_sec duration_selector_title layout_top layout_bottom
-layout_selector_title select_top_text select_bottom_text type_to_compose_text_or_leave_blank cannot_add_picture_and_video'''.split(),
-        'arrays': ['default_smiley_names', 'default_smiley_texts', 'select_dialog_items'],
+layout_selector_title select_top_text select_bottom_text type_to_compose_text_or_leave_blank cannot_add_picture_and_video
+pref_notification_settings_title pref_mms_settings_title pref_sms_settings_title pref_sms_storage_title pref_summary_manage_sim_messages
+pref_summary_mms_delivery_reports pref_summary_mms_read_reports pref_summary_sms_delivery_reports pref_summary_auto_delete pref_summary_delete_limit
+pref_title_manage_sim_messages pref_title_mms_delivery_reports pref_title_mms_read_reports pref_title_sms_delivery_reports pref_title_auto_delete
+pref_title_sms_delete pref_title_mms_delete pref_title_notification_enabled pref_summary_notification_enabled pref_title_notification_vibrateWhen
+pref_summary_notification_vibrateWhen pref_title_notification_ringtone pref_messages_to_save prefDefault_vibrateWhen prefDialogTitle_vibrateWhen
+pref_title_mms_auto_retrieval pref_summary_mms_auto_retrieval pref_title_mms_retrieval_during_roaming pref_summary_mms_retrieval_during_roaming
+restore_default set refreshing sim_empty sim_manage_messages_title'''.split(),
+        'arrays': ['default_smiley_names', 'default_smiley_texts', 'select_dialog_items', 'prefEntries_vibrateWhen', 'prefValues_vibrateWhen'],
         'plurals': ['slide_duration'],
     },
     # Sound Recorder: Messaging's Record audio (GET_CONTENT audio/amr).

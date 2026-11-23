@@ -103,3 +103,10 @@
 .mms-suggestion-line>span{padding-left:calc(16.0052 * var(--dp));font:400 calc(13.9972 * var(--dp)) Roboto,RobotoICS,sans-serif;color:#777;white-space:nowrap}
 .screen .mms-suggestion-line>small{display:inline;margin-left:auto;padding-left:calc(16.0052 * var(--dp));font:400 calc(10.0047 * var(--dp)) Roboto,RobotoICS,sans-serif;color:#777}
 .mms-suggestion>img{flex:none;width:calc(48.0038 * var(--dp));height:calc(48.0038 * var(--dp));margin-left:calc(12.001 * var(--dp));object-fit:cover}
+/* Messaging › Settings (mms-prefs.js): Holo Light PreferenceCategory headers (14 sp bold caps, #33b5e5 on the light
+   list_section_divider) and Mms's NumberPickerDialog: the label over the picker, the chosen value between its neighbours. */
+.mmsp .mps-cat{padding:calc(16 * var(--dp)) calc(16 * var(--dp)) calc(4 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #33b5e5;font:700 calc(14 * var(--dp)) RobotoICS,Roboto,sans-serif;text-transform:uppercase;color:#33b5e5}
+.mps-dialog .mmsp-np-label{padding-bottom:0;font-size:calc(14 * var(--dp));text-align:center}
+.mmsp-np{display:flex;flex-direction:column;align-items:center;width:calc(100 * var(--dp));margin:calc(8 * var(--dp)) auto calc(16 * var(--dp))}
+.screen .mmsp-np-cell{display:block;width:100%;height:calc(40 * var(--dp));border:0;background:none;font:400 calc(18 * var(--dp))/calc(40 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#0000004d;text-align:center}
+.mmsp-np-value{display:block;width:100%;height:calc(44 * var(--dp));border-top:calc(2 * var(--dp)) solid #33b5e5;border-bottom:calc(2 * var(--dp)) solid #33b5e5;font:400 calc(22 * var(--dp))/calc(44 * var(--dp)) RobotoICS,Roboto,sans-serif;color:#000;text-align:center}

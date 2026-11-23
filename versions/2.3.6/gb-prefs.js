@@ -30,7 +30,14 @@
    Legal information and the disabled My Google Voice number and Build number. The image has C2DM, so
    configurePreferences drops Refresh inbox: Synchronize Inbox depends on Background data (the system's, shown Enabled /
    Disabled and opened in Accounts & sync) and Inbox notifications on Synchronize Inbox. Making calls, This phone's
-   number and Sign out change the account at Google, and the legal pages are Google's web pages: they stay closed. */
+   number and Sign out change the account at Google, and the legal pages are Google's web pages: they stay closed.
+   Messaging's MessagingPreferenceActivity (Mms.apk res/xml/preferences.xml): Storage (Delete old messages, then the
+   Text / Multimedia message limits, each MMS's NumberPickerDialog "Set number of messages to save" with Set / Cancel and
+   the summary "%1$s messages per conversation"; GRK39F has no mms_config limits, so MmsConfig's defaults hold: 200 and
+   20, 2 to 5000), Text (SMS) messages (Delivery reports, Manage SIM card messages), Multimedia (MMS) messages (Delivery
+   and Read reports, Auto-retrieve, Roaming auto-retrieve) and Notification settings (Notifications, Select ringtone,
+   Vibrate). The menu's Restore default settings clears them. Manage SIM card messages is ManageSimMessages
+   (sim_list.xml): the SIM holds no messages, so "No messages on the SIM card." */
 (() => {
   'use strict';
   const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -48,6 +55,33 @@
   const gmailLabel = (lang, label) => window.GBGmail?.labelName?.(lang, label) || label;
   const TZ_DEFAULT = 'America/Los_Angeles';
   const SCREENS = {
+    mms(ctx) {
+      const T = key => S('mms', ctx.lang, key), v = ctx.values, limits = {pref_key_sms_delete_limit: 200, pref_key_mms_delete_limit: 20};
+      const limit = key => action(key, T(key === 'pref_key_sms_delete_limit' ? 'pref_title_sms_delete' : 'pref_title_mms_delete'), AndroidStrings.format(T('pref_summary_delete_limit'), v[key] ?? limits[key]),
+        {dependency: 'pref_key_auto_delete', picker: {title: T(key === 'pref_key_sms_delete_limit' ? 'pref_title_sms_delete' : 'pref_title_mms_delete'), label: T('pref_messages_to_save'), value: v[key] ?? limits[key], min: 2, max: 5000, set: T('set'), cancel: T('no')}});
+      const vib = A('mms', ctx.lang, 'prefValues_vibrateWhen');
+      return {set: 'mms', title: T('menu_preferences'), menu: [{action: 'gbpref-restore', id: 'mms', title: T('restore_default'), icon: 'ic_menu_revert'}], items: [
+        cat(T('pref_sms_storage_title')),
+        check('pref_key_auto_delete', T('pref_title_auto_delete'), T('pref_summary_auto_delete'), false),
+        limit('pref_key_sms_delete_limit'), limit('pref_key_mms_delete_limit'),
+        cat(T('pref_sms_settings_title')),
+        check('pref_key_sms_delivery_reports', T('pref_title_sms_delivery_reports'), T('pref_summary_sms_delivery_reports'), false),
+        action('pref_key_manage_sim_messages', T('pref_title_manage_sim_messages'), T('pref_summary_manage_sim_messages'), {open: 'mms-sim'}),
+        cat(T('pref_mms_settings_title')),
+        check('pref_key_mms_delivery_reports', T('pref_title_mms_delivery_reports'), T('pref_summary_mms_delivery_reports'), false),
+        check('pref_key_mms_read_reports', T('pref_title_mms_read_reports'), T('pref_summary_mms_read_reports'), false),
+        check('pref_key_mms_auto_retrieval', T('pref_title_mms_auto_retrieval'), T('pref_summary_mms_auto_retrieval')),
+        check('pref_key_mms_retrieval_during_roaming', T('pref_title_mms_retrieval_during_roaming'), T('pref_summary_mms_retrieval_during_roaming'), false, {dependency: 'pref_key_mms_auto_retrieval'}),
+        cat(T('pref_notification_settings_title')),
+        check('pref_key_enable_notifications', T('pref_title_notification_enabled'), T('pref_summary_notification_enabled')),
+        action('pref_key_ringtone', T('pref_title_notification_ringtone'), '', {ringtone: true, dependency: 'pref_key_enable_notifications'}),
+        list('pref_key_vibrateWhen', T('pref_title_notification_vibrateWhen'), A('mms', ctx.lang, 'prefEntries_vibrateWhen'), Math.max(0, vib.indexOf(T('prefDefault_vibrateWhen'))), {dialogTitle: T('prefDialogTitle_vibrateWhen'), summary: T('pref_summary_notification_vibrateWhen'), dependency: 'pref_key_enable_notifications'})
+      ]};
+    },
+    'mms-sim'(ctx) {
+      const T = key => S('mms', ctx.lang, key);
+      return {set: 'mms', title: T('sim_manage_messages_title'), items: [], form: `<div class="app-view gbset" data-no-translate><div class="gb-titlebar">${e(T('sim_manage_messages_title'))}</div><p class="gbset-empty">${e(T('sim_empty'))}</p></div>`};
+    },
     browser(ctx) {
       const T = key => S('browser', ctx.lang, key), v = ctx.values, size = A('browser', ctx.lang, 'pref_text_size_choices'), zoom = A('browser', ctx.lang, 'pref_default_zoom_choices'), enc = A('browser', ctx.lang, 'pref_default_text_encoding_choices');
       const yesno = (key, base) => action(key, T(base), T(base + '_summary'), {confirm: {title: T('clear'), message: T(base + '_dlg')}});
@@ -412,6 +446,11 @@
     if (item.alert) return {title: item.alert.title, icon: 'ic_dialog_alert', message: item.alert.message, buttons: [{action: 'close-overlay', title: ok}]};
     if (item.confirm) return {title: item.confirm.title, icon: 'ic_dialog_alert', message: item.confirm.message, buttons: [{action: 'gbpref-confirm', id, title: ok}, {action: 'close-overlay', title: cancel}]};
     if (item.edit) return {title: item.edit.title, custom: `<label class="gbdlg-field"><input data-pref-edit maxlength="200"${item.edit.number ? ' type="number" inputmode="numeric" min="1" max="999"' : ''} value="${e(item.edit.value || '')}"></label>`, buttons: [{action: 'gbpref-edit-ok', id, title: ok}, {action: 'close-overlay', title: cancel}]};
+    // Mms's NumberPickerDialog: the label over one NumberPicker (ctx.pick is the draft), Set / Cancel.
+    if (item.picker) {
+      const p = item.picker, value = ctx.pick ?? p.value;
+      return {title: p.title, custom: `<p class="gbnp-label">${e(p.label)}</p><div class="gbtp gbnp"><div class="gbtp-picker"><button type="button" class="gbtp-up" data-action="gbpref-step" data-id="${id}:1" aria-label="+"></button><output class="gbtp-input">${e(value)}</output><button type="button" class="gbtp-down" data-action="gbpref-step" data-id="${id}:-1" aria-label="-"></button></div></div>`, buttons: [{action: 'gbpref-picker-ok', id, title: p.set}, {action: 'close-overlay', title: p.cancel}]};
+    }
     if (item.ringtone) {
       const sounds = ['default', '', ...(window.GBSettings?.NOTIFICATIONS || [])], current = ctx.values[key] ?? 'default';
       const name = n => n === 'default' ? fw(ctx.lang, 'ringtone_default') : n ? window.GBSettings.soundTitle(n) : fw(ctx.lang, 'ringtone_silent');
@@ -419,5 +458,7 @@
     }
     return null;
   }
-  window.GBPrefs = {SCREENS, render, dialog, find, get, server, serverValid, serverInput, serverSave, PORTS, text: S};
+  // The screen's menu (Messaging's Restore default settings).
+  const menu = ctx => screen(ctx)?.menu || [];
+  window.GBPrefs = {SCREENS, render, dialog, find, get, menu, server, serverValid, serverInput, serverSave, PORTS, text: S};
 })();
