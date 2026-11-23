@@ -24,7 +24,7 @@ Help/Feedback/Terms webes oldalak, valódi fiók, fizetés, hálózat) nem szere
 | 3. 5.1.1 Hírek és időjárás › Search | Javítva — `fc562544` (SearchView, „No matching news”); az Add section korlát marad |
 | 3. 4.3 Currents menü forrásai | Javítva — `67f83886` (mindegyik a saját cikkeit mutatja); a Customize korlát marad |
 | 3. 5.1.1 Google Settings: Account History, Data management, Google Fit, Google+ | Javítva — `aad21e42` (GmsCore 6.7 oldalai; a Google+ a Google+ app beállításait nyitja) |
-| 3. SMS › Beállítások 2.3.6–5.1.1 | Nyitott — a tulajdonos döntése szerint a következő kör |
+| 3. SMS › Beállítások 2.3.6–5.1.1 | Javítva — `dfaec934` (a 2.3.6–4.3 Mms MessagingPreferenceActivity, az 5.1.1 Messenger General / Advanced oldala) |
 | 3. Többi eltérés (Hangouts mood / videó, Photos Create movie, Google+ extrák, Latitude Add friends, Wallet, Street View) | Korlát marad (javaslat, 2026-11-23) |
 
 A régi mentések a demóadatot egyszer kapják meg (egy frissítési lépés jelzővel), ha a megfelelő lista még üres; amit a
