@@ -43,6 +43,10 @@ The account: `<device>.demo@gmail.com` (6.0.1: nexus5x.demo@gmail.com). Carrier:
 - **Drive (4.4.4 and later):** a Photos folder, "Trip plan <year>" (Docs), "Budget" (Sheets: Rent 850, Groceries 240,
   Transport 60, Fun 120), "<phone> guide" (PDF) and "Meetup slides" (Slides, the year's Android release). Docs, Sheets
   and Slides list Drive's files of their type. 6.0.1 and 7.1.2 since 2026-11-23.
+- **Downloads:** 4.0.4 / 4.3 the DownloadList's six entries (beach-panorama.jpg, the user guide PDF, a failed MP3, an
+  HTML page, a queued boarding pass, family-dinner.jpg); 4.4.4 / 5.1.1 the Downloads root's beach-panorama.jpg (the
+  "By the sea" photo), "<phone>-guide.pdf" and "Meetup-slides.pdf"; 6.0.1 the two PDFs; 7.1.2 the Download folder's
+  Android-7.1.2.txt and Meetup-slides.pdf (4.4.4–6.0.1 since 2026-11-23).
 - **Music:** six tracks, "Blue Horizon", "Afterglow" (First Light) and "Night Drive" (After Hours) by The Demo Tapes,
   "City Lights", "Sunday Morning" and "Home Again" (Small Worlds) by Paper Satellites. 4.0.4–5.1.1 in their players;
   7.1.2 as MP3 files in the phone's Music folder, which Play Music lists (since 2026-11-23).

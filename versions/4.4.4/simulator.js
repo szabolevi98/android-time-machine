@@ -37,6 +37,14 @@
       { id: 2, contact: 1, body: 'Absolutely. See you at 11!', mine: true, time: '10:45' },
       { id: 3, contact: 4, body: 'Don’t forget to call this weekend ☺', mine: false, time: 'Yesterday' }
     ],
+    // The Downloads root (DocumentsUI): what the demo phone downloaded, as 4.0.4 / 4.3 show it; a picture opens in
+    // Photos, a PDF in the PDF chooser. A save made before 2026-11-23 whose Downloads is empty gets them once.
+    downloads: [
+      { name: 'beach-panorama.jpg', size: 1384448, time: Date.now() - 40 * 60000, photoId: 3 },
+      { name: 'Nexus-5-guide.pdf', size: 3227648, time: Date.now() - 5 * 3600000, pdf: { name: 'Nexus-5-guide', title: 'Nexus 5 guide', lines: ['Welcome to Nexus 5.', 'Swipe left from the Home screen to see Google Now.', 'Say "OK Google" on the Home screen to search by voice.'], image: '' } },
+      { name: 'Meetup-slides.pdf', size: 2480000, time: Date.now() - 3 * 86400000, pdf: { name: 'Meetup-slides', title: 'Meetup slides', lines: ['What’s new in KitKat', '• Immersive mode', '• Printing', '• Host card emulation'], image: '' } }
+    ],
+    demoDownloads: 1,
     photos: [
       { id: 1, name: 'Mountain afternoon', colors: ['#96c8d0', '#e8ad7a', '#364e59'] },
       { id: 2, name: 'City lights', colors: ['#223850', '#ce6979', '#101d32'] },
@@ -59,6 +67,11 @@
   // error in one of the upgrade steps below is reported by name while the others still run.
   function load() {
     return AndroidState.load(STORE, defaultData, saved => ({ ...clone(defaultData), ...saved, settings: { ...defaultData.settings, ...saved.settings } }), [
+      ['demo downloads', (result, saved) => {
+        if (saved.demoDownloads) return;
+        if (!Array.isArray(saved.downloads) || !saved.downloads.length) result.downloads = clone(defaultData.downloads);
+        result.demoDownloads = 1;
+      }],
       // The demo's call log and starred Mom came on 2026-11-23: a save made before gets them once (a log the visitor
       // already has and a contact they starred or unstarred stay as they are).
       ['demo call log and starred Mom', (result, saved) => {

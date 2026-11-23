@@ -39,6 +39,18 @@
   // The files of the Downloads root (what the simulator saved there: printed PDFs), item_doc_list.xml rows: the mime
   // icon tinted colorControlNormal, the Subhead title, the date (90 dp) and the size in Body1.
   const docs = c => c.data.docs || (c.data.docs = []);
+  // What the demo phone downloaded, as the other versions' Downloads show it: the phone's guide and the meetup slides.
+  // A save made before 2026-11-23 whose Downloads is empty gets them once.
+  MM.defaults.docs = [
+    {name: 'Nexus-5X-guide.pdf', size: 3227648, mime: 'application/pdf', time: Date.now() - 5 * 3600000, text: 'Welcome to Nexus 5X.\n\nSwipe up on the Home screen to see all your apps.\nSay "OK Google" to search by voice.'},
+    {name: 'Meetup-slides.pdf', size: 2480000, mime: 'application/pdf', time: Date.now() - 3 * 86400000, text: 'What’s new in Marshmallow\n• Now on Tap\n• App permissions\n• Doze'}
+  ];
+  MM.defaults.demoDownloads = 1;
+  MM.upgrades.push(['demo downloads', (result, saved) => {
+    if (saved.demoDownloads) return;
+    if (!Array.isArray(saved.docs) || !saved.docs.length) result.docs = JSON.parse(JSON.stringify(MM.defaults.docs));
+    result.demoDownloads = 1;
+  }]);
   function docRows(c) {
     const list = [...docs(c)].sort((a, b) => c.data.downloadsSort === 'name' ? a.name.localeCompare(b.name,c.locale(),{numeric:true}) : c.data.downloadsSort === 'size' ? b.size-a.size : b.time-a.time);
     if (!list.length) return '';

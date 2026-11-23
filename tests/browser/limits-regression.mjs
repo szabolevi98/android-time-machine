@@ -3059,7 +3059,8 @@ const photosLocal = async h => {
 // shortcut on the home screen that opens the page.
 const printFlow = (open, expect, tag = '') => async h => {
   const act = (action, id) => h.ev(`(()=>{const el=document.createElement('button');el.dataset.action=${JSON.stringify(action)};${id !== undefined ? `el.dataset.id=${JSON.stringify(String(id))};` : ''}document.querySelector('#viewport').firstElementChild.append(el);el.click();el.remove()})()`);
-  const pdfs = async () => ((await store(h, 'downloads')) || []).filter(d => d.pdf);
+  // The PDFs printed here (not the demo phone's downloaded guide and slides).
+  const pdfs = async () => ((await store(h, 'downloads')) || []).filter(d => d.pdf && !/^(Nexus-\d-guide|Meetup-slides)\.pdf$/.test(d.name));
   const lp = await open(h, act);
   h.check('Print opens the print dialog with Save as PDF', await h.until(`/Save as PDF/.test(document.querySelector('.pr-panel, .pr-activity')?.textContent || '')`));
   if (tag) await h.shot(`print-${tag}`);
