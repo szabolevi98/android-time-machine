@@ -27,8 +27,8 @@
   <meta name="twitter:image:alt" content="Five Nexus phones showing their Android home screens beside the Android Time Machine title.">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=27">
-  <script defer src="i18n.js?v=109"></script>
+  <link rel="stylesheet" href="styles.css?v=28">
+  <script defer src="i18n.js?v=118"></script>
   <script defer src="versions/catalog.js?v=42"></script>
   <script defer src="app.js?v=14"></script>
 </head>
@@ -51,6 +51,20 @@
     <section class="versions" aria-labelledby="versions-title">
       <div class="section-heading"><h2 id="versions-title" data-i18n="Available versions">Available versions</h2><span id="version-count"></span></div>
       <div id="version-list" class="version-list"></div>
+    </section>
+
+    <section class="about-sim" aria-labelledby="about-sim-title">
+      <div class="about-sim-head">
+        <div class="eyebrow"><span class="live-dot"></span> <span data-i18n="HOW IT WORKS">HOW IT WORKS</span></div>
+        <h2 id="about-sim-title" data-i18n="A simulator, not an emulator">A simulator, not an emulator</h2>
+        <p data-i18n="An emulator boots the real Android system on virtual hardware. This site rebuilds every screen in HTML, CSS and JavaScript instead, taking the texts, icons, sounds and behaviour from each phone's original factory image.">An emulator boots the real Android system on virtual hardware. This site rebuilds every screen in HTML, CSS and JavaScript instead, taking the texts, icons, sounds and behaviour from each phone's original factory image.</p>
+      </div>
+      <ul class="about-sim-points">
+        <li><b data-i18n="Starts right away">Starts right away</b><span data-i18n="No multi-gigabyte system image, no virtualization and nothing to install: it runs in any modern browser, even on a phone.">No multi-gigabyte system image, no virtualization and nothing to install: it runs in any modern browser, even on a phone.</span></li>
+        <li><b data-i18n="Nothing to break">Nothing to break</b><span data-i18n="Everything happens in a sandbox in your browser. Your data stays on your device, and a factory reset gives you a fresh phone.">Everything happens in a sandbox in your browser. Your data stays on your device, and a factory reset gives you a fresh phone.</span></li>
+        <li><b data-i18n="The Google apps too">The Google apps too</b><span data-i18n="The servers behind the old Google apps are long gone, so even a real emulator would show them empty. Here they come back with demo data.">The servers behind the old Google apps are long gone, so even a real emulator would show them empty. Here they come back with demo data.</span></li>
+      </ul>
+      <p class="about-sim-note" data-i18n="The trade-off: there is no real network, calling or app installation. Whatever would need them is still shown, but marked as not part of the simulator.">The trade-off: there is no real network, calling or app installation. Whatever would need them is still shown, but marked as not part of the simulator.</p>
     </section>
 
     <footer class="footer"><span data-no-translate>Copyright © <span id="copyright-year">2026</span> <a class="footer-link" href="https://github.com/szabolevi98/android-time-machine" target="_blank" rel="noopener">szabolevi98</a></span><span data-i18n="Your simulated data stays in this browser.">Your simulated data stays in this browser.</span></footer>
