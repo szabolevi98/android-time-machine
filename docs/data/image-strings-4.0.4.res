@@ -246,3 +246,6 @@ Live Wallpapers	LiveWallpapersPicker:live_wallpaper_picker_label
 Nexus	LiveWallpapers:wallpaper_nexus
 About	Phonesky:settings_about_header
 Phone|Mute	Phone:onscreenMuteText
+Outgoing call	Contacts:type_outgoing
+Incoming call	Contacts:type_incoming
+Missed call	Contacts:type_missed

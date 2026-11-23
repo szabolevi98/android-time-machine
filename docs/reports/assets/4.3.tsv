@@ -338,6 +338,8 @@ versions/4.3/assets/ic_bt_cellphone.png	e87c48ccecbc984f	resized	mako:/system/ap
 versions/4.3/assets/ic_bt_config.png	58392d9791c44587	same pixels	mako:/system/app/Music2.apk!res/drawable-hdpi/ic_bt_config.png	drawable-hdpi		c50a2b440097105b
 versions/4.3/assets/ic_bt_headphones_a2dp.png	8b13a455c8095a12	resized	mako:/system/app/Settings.apk!res/drawable-xhdpi/ic_bt_headphones_a2dp.png	drawable-xhdpi	resized 96×96 → 72×72, mean difference 0.23	f9c506bb94586acc
 versions/4.3/assets/ic_bt_headset_hfp.png	4438e0a870ff5a5c	resized	mako:/system/app/Settings.apk!res/drawable-xhdpi/ic_bt_headset_hfp.png	drawable-xhdpi	resized 96×96 → 72×72, mean difference 0.24	1f535174da2782e3
+versions/4.3/assets/ic_call_incoming_holo_dark.png	15398dd0b7c35c2d	same pixels	mako:/system/app/Dialer.apk!res/drawable-hdpi/ic_call_incoming_holo_dark.png	drawable-hdpi		a41e874c02bdd983
+versions/4.3/assets/ic_call_missed_holo_dark.png	c859cba9c39a8f72	same pixels	mako:/system/app/Dialer.apk!res/drawable-hdpi/ic_call_missed_holo_dark.png	drawable-hdpi		1981e81c9b9dd17c
 versions/4.3/assets/ic_call_outgoing_holo_dark.png	13a5e8f75befc71a	same pixels	mako:/system/app/Dialer.apk!res/drawable-hdpi/ic_call_outgoing_holo_dark.png	drawable-hdpi		acbcffaf5ec432fc
 versions/4.3/assets/ic_contact_picture_holo_dark.png	47630753b3ddf5a7	resized	mako:/system/app/Contacts.apk!res/drawable-xhdpi/ic_contact_picture_holo_dark.png	drawable-xhdpi	resized 128×128 → 96×96, mean difference 0.01	539beadf8c0af009
 versions/4.3/assets/ic_dial_action_call.png	537aa133dc8a0481	same pixels	mako:/system/app/Dialer.apk!res/drawable-hdpi/ic_dial_action_call.png	drawable-hdpi		5505ad289d3a814a

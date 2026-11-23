@@ -99,6 +99,8 @@
     'Add call': {own: true, hu: 'Hívás hozzáadása', de: 'Anruf hinzufügen', fr: 'Ajouter un appel', es: 'Añadir llamada'},
     'Call details': {own: true, hu: 'Hívás részletei', de: 'Anrufdetails', fr: 'Détails de l’appel', es: 'Detalles de llamada'},
     'Outgoing call': {own: true, hu: 'Kimenő hívás', de: 'Ausgehender Anruf', fr: 'Appel sortant', es: 'Llamada saliente'},
+    'Incoming call': {own: true, hu: 'Bejövő hívás', de: 'Eingehender Anruf', fr: 'Appel entrant', es: 'Llamada entrante'},
+    'Missed call': {own: true, hu: 'Nem fogadott hívás', de: 'Entgangener Anruf', fr: 'Appel manqué', es: 'Llamada perdida'},
     'Duration': {own: true, hu: 'Időtartam', de: 'Dauer', fr: 'Durée', es: 'Duración'},
     'Ongoing call': {own: true, hu: 'Folyamatban lévő hívás', de: 'Aktiver Anruf', fr: 'Appel en cours', es: 'Llamada en curso'},
     'CALLS AND NOTIFICATIONS': {own: true, hu: 'HÍVÁSOK ÉS ÉRTESÍTÉSEK', de: 'ANRUFE UND BENACHRICHTIGUNGEN', fr: 'APPELS ET NOTIFICATIONS', es: 'LLAMADAS Y NOTIFICACIONES'},

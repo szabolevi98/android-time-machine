@@ -246,5 +246,8 @@ window.AndroidI18n?.extend({
   "Live Wallpapers": {"res":"LiveWallpapersPicker:live_wallpaper_picker_label","hu":"Élő háttérképek","de":"Live-Hintergründe","fr":"Fonds d'écran animés","es":"Fondos de pantalla animados"},
   "Nexus": {"res":"LiveWallpapers:wallpaper_nexus","hu":"Nexus","de":"Nexus","fr":"Nexus","es":"Conexión"},
   "About": {"res":"Phonesky:settings_about_header","hu":"Névjegy","de":"Über","fr":"À propos de","es":"Acerca de"},
-  "Phone|Mute": {"res":"Phone:onscreenMuteText","hu":"Lezárás","de":"Ton aus","fr":"Silencieux","es":"Silenciar"}
+  "Phone|Mute": {"res":"Phone:onscreenMuteText","hu":"Lezárás","de":"Ton aus","fr":"Silencieux","es":"Silenciar"},
+  "Outgoing call": {"res":"Contacts:type_outgoing","hu":"Kimenő hívás","de":"Ausgehender Anruf","fr":"Appel sortant","es":"Llamada saliente"},
+  "Incoming call": {"res":"Contacts:type_incoming","hu":"Bejövő hívás","de":"Eingehender Anruf","fr":"Appel entrant","es":"Llamada entrante"},
+  "Missed call": {"res":"Contacts:type_missed","hu":"Nem fogadott hívás","de":"Entgangener Anruf","fr":"Appel manqué","es":"Llamada perdida"}
 }, 'image-strings');

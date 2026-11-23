@@ -22,8 +22,15 @@
       { id: 1, name: 'Alex Morgan', phone: '202-555-0148', email: 'alex@example.com' },
       { id: 2, name: 'Sam Rivera', phone: '202-555-0192', email: 'sam@example.com' },
       { id: 3, name: 'Taylor Lee', phone: '202-555-0116', email: 'taylor@example.com' },
-      { id: 4, name: 'Mom', phone: '202-555-0107', email: 'mom@example.com' }
+      { id: 4, name: 'Mom', phone: '202-555-0107', email: 'mom@example.com', favorite: true }
     ],
+    // A used phone's call log: yesterday's call with Mom, then a missed call from Alex and the call back.
+    callHistory: [
+      { number: '202-555-0107', time: Date.now() - 26 * 3600000, duration: 754, connected: true, type: 'incoming' },
+      { number: '202-555-0148', time: Date.now() - 3 * 3600000, duration: 0, connected: false, type: 'missed' },
+      { number: '202-555-0148', time: Date.now() - 2.6 * 3600000, duration: 132, connected: true, type: 'outgoing' }
+    ],
+    demoCalls: 1,
     contactGroups: [{id:'friends',name:'Friends',members:[1,2,3]},{id:'family',name:'Family',members:[4]}],
     messages: [
       { id: 1, contact: 1, body: 'Hey! Are we still on for coffee tomorrow?', mine: false, time: '10:42' },
@@ -52,6 +59,15 @@
   // error in one of the upgrade steps below is reported by name while the others still run.
   function load() {
     return AndroidState.load(STORE, defaultData, saved => ({ ...clone(defaultData), ...saved, settings: { ...defaultData.settings, ...saved.settings } }), [
+      // The demo's call log and starred Mom came on 2026-11-23: a save made before gets them once (a log the visitor
+      // already has and a contact they starred or unstarred stay as they are).
+      ['demo call log and starred Mom', (result, saved) => {
+        if (saved.demoCalls) return;
+        if (!Array.isArray(saved.callHistory) || !saved.callHistory.length) result.callHistory = clone(defaultData.callHistory);
+        const mom = result.contacts?.find(person => person.id === 4 && person.phone === '202-555-0107');
+        if (mom && !result.contacts.some(person => person.favorite)) mom.favorite = true;
+        result.demoCalls = 1;
+      }],
       ['clings of an older save', (result, saved) => {
         if (!saved.clings) result.clings = LauncherClings.dismissedAll();
       }],

@@ -381,3 +381,6 @@ To see devices, turn wireless display on.	Settings:wifi_display_settings_empty_l
 About	Phonesky:settings_about_header
 Phone|Mute	Phone:onscreenMuteText
 Mobile	framework:phoneTypeMobile
+Outgoing call	Dialer:type_outgoing
+Incoming call	Dialer:type_incoming
+Missed call	Dialer:type_missed

@@ -366,6 +366,8 @@ versions/4.0.4/assets/ic_bt_config.png	58392d9791c44587	resized	maguro:/system/a
 versions/4.0.4/assets/ic_bt_headphones_a2dp.png	8b13a455c8095a12	resized	maguro:/system/app/Settings.apk!res/drawable-xhdpi/ic_bt_headphones_a2dp.png	drawable-xhdpi	resized 96×96 → 72×72, mean difference 0.23	f9c506bb94586acc
 versions/4.0.4/assets/ic_bt_headset_hfp.png	4438e0a870ff5a5c	resized	maguro:/system/app/Settings.apk!res/drawable-xhdpi/ic_bt_headset_hfp.png	drawable-xhdpi	resized 96×96 → 72×72, mean difference 0.24	1f535174da2782e3
 versions/4.0.4/assets/ic_btn_speak_now.png	162afcabc495d9a0	resized	maguro:/system/framework/framework-res.apk!res/drawable-xhdpi/ic_btn_speak_now.png	drawable-xhdpi	resized 64×64 → 48×48, mean difference 0.42	36beaf1726d6e777
+versions/4.0.4/assets/ic_call_incoming_holo_dark.png	de6d461a7602da01	copy	maguro:/system/app/Contacts.apk!res/drawable-xhdpi/ic_call_incoming_holo_dark.png	drawable-xhdpi		de6d461a7602da01
+versions/4.0.4/assets/ic_call_missed_holo_dark.png	f07efae7f1080f88	copy	maguro:/system/app/Contacts.apk!res/drawable-xhdpi/ic_call_missed_holo_dark.png	drawable-xhdpi		f07efae7f1080f88
 versions/4.0.4/assets/ic_call_outgoing_holo_dark.png	a523f5eb7fa5db69	copy	maguro:/system/app/Contacts.apk!res/drawable-xhdpi/ic_call_outgoing_holo_dark.png	drawable-xhdpi		a523f5eb7fa5db69
 versions/4.0.4/assets/ic_contact_picture_holo_dark.png	539beadf8c0af009	copy	maguro:/system/app/Contacts.apk!res/drawable-xhdpi/ic_contact_picture_holo_dark.png	drawable-xhdpi		539beadf8c0af009
 versions/4.0.4/assets/ic_dial_action_call.png	99e7d48b5ec55f2b	copy	maguro:/system/app/Contacts.apk!res/drawable-xhdpi/ic_dial_action_call.png	drawable-xhdpi		99e7d48b5ec55f2b
