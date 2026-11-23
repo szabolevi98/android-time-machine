@@ -3707,7 +3707,8 @@
    "Navigation menu": "Maps:ACCESSIBILITY_MENU_DIRECTIONS",
    "My Location": "Maps:DIRECTIONS_YOUR_LOCATION",
    "Route options": "Maps:DIRECTIONS_OPTIONS_TITLE",
-   "Avoid ferries": "Maps:DIRECTIONS_OPTIONS_AVOID_FERRIES"
+   "Avoid ferries": "Maps:DIRECTIONS_OPTIONS_AVOID_FERRIES",
+   "Tap to speak button.": "Maps:MENU_MIC_BUTTON"
   },
   "drive": {
    "My Drive": "Drive:menu_my_drive",

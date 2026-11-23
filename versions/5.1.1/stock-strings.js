@@ -513,7 +513,8 @@ window.StockStrings = {
   "Navigation menu": {"res": "Maps:ACCESSIBILITY_MENU_DIRECTIONS", "hu": "A Navigáció menüje", "de": "Navigationsmenü", "fr": "Menu de la fonctionnalité Navigation", "es": "Menú de navegación"},
   "My Location": {"res": "Maps:DIRECTIONS_YOUR_LOCATION", "hu": "Az Ön tartózkodási helye", "de": "Mein Standort", "fr": "Votre position", "es": "Tu ubicación", "en": "Your location"},
   "Route options": {"res": "Maps:DIRECTIONS_OPTIONS_TITLE", "hu": "Útvonalopciók", "de": "Routenoptionen", "fr": "Options d'itinéraire", "es": "Opciones de ruta"},
-  "Avoid ferries": {"res": "Maps:DIRECTIONS_OPTIONS_AVOID_FERRIES", "hu": "Kompok elkerülése", "de": "Fähren vermeiden", "fr": "Éviter les ferries", "es": "Evitar transbordadores (ferris)"}
+  "Avoid ferries": {"res": "Maps:DIRECTIONS_OPTIONS_AVOID_FERRIES", "hu": "Kompok elkerülése", "de": "Fähren vermeiden", "fr": "Éviter les ferries", "es": "Evitar transbordadores (ferris)"},
+  "Tap to speak button.": {"res": "Maps:MENU_MIC_BUTTON", "hu": "Koppintson a beszédhez gomb", "de": "Schaltfläche \"Zum Sprechen tippen\"", "fr": "Bouton \"Appuyer pour parler\"", "es": "Presiona el botón para hablar."}
  },
  "drive": {
   "My Drive": {"res": "Drive:menu_my_drive", "hu": "Saját meghajtó", "de": "Meine Ablage", "fr": "Mon Drive", "es": "Mi unidad"},
