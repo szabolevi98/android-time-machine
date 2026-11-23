@@ -19,6 +19,23 @@
   'use strict';
   const T = () => MM.text('drive');
   const A = n => `assets/dr-${n}.png`;
+  // The used phone's Drive (the demo's own files, as 4.4.4 and 5.1.1 have them, in the year of the image): a Photos
+  // folder, a trip plan (Docs), a budget (Sheets), the phone's guide (PDF) and meetup slides (Slides). A save made
+  // before 2026-11-23 whose Drive is still empty gets them once.
+  const DAY = 86400000, demoFile = (type, name, days, extra = {}) => { const t = Date.now() - days * DAY; return {type, name, time: t, created: t, modified: t, ...extra}; };
+  MM.defaults.driveFiles = [
+    demoFile('folder', 'Photos', 9),
+    demoFile('doc', 'Trip plan 2016', 0.2, {content: 'Day 1 — arrive in Lisbon, tram 28 to Alfama.\nDay 2 — Belém, pastéis de nata.\nDay 3 — Sintra by train.'}),
+    demoFile('sheet', 'Budget', 1, {content: 'Rent\t850\nGroceries\t240\nTransport\t60\nFun\t120'}),
+    demoFile('pdf', 'Nexus 5X guide', 3, {size: 2310000, content: 'Welcome to Nexus 5X. Swipe left from the Home screen to see Google Now.'}),
+    demoFile('slide', 'Meetup slides', 60, {content: 'What’s new in Marshmallow\n• Now on Tap\n• Doze\n• App permissions\n• Nexus Imprint'})
+  ];
+  MM.defaults.demoDrive = 1;
+  MM.upgrades.push(['demo Drive files', (result, saved) => {
+    if (saved.demoDrive) return;
+    if (!Array.isArray(saved.driveFiles) || !saved.driveFiles.length) result.driveFiles = JSON.parse(JSON.stringify(MM.defaults.driveFiles));
+    result.demoDrive = 1;
+  }]);
   const files = c => c.data.driveFiles || (c.data.driveFiles = []);
   const ui = c => c.ui.drive || (c.ui.drive = {view: 'menu_my_drive', drawer: false, create: false});
   const esc = (c, s) => c.safe(s);

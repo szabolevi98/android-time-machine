@@ -22,7 +22,8 @@ The account: `<device>.demo@gmail.com` (6.0.1: nexus5x.demo@gmail.com). Carrier:
 ## By app
 
 - **Phone, call log:** yesterday an incoming call from Mom (12:34 long), 3 hours ago a missed call from Alex, then the
-  call back to Alex (2:12).
+  call back to Alex (2:12). 2.1 has its own five-call log (ec-phone.js); 2.3.6–4.4.4 got this one and Mom's star on
+  2026-11-23.
 - **Messages (SMS):** Alex: "Hey! Are we still on for coffee tomorrow?" — me: "Absolutely. See you at 11!" (about an
   hour ago); Mom, yesterday: "Don’t forget to call this weekend ☺". A demo contact answers a new text once a session,
   4.5 s after it was sent (6.0.1: Messenger and Hangouts; texts own:sim_reply_1…3).
@@ -37,7 +38,11 @@ The account: `<device>.demo@gmail.com` (6.0.1: nexus5x.demo@gmail.com). Carrier:
   8:30 weekdays and 9:00 weekend, off. 2.1: the same 7:00 weekday alarm on, beside AlarmProvider's two. The home screen clock widget is on from 4.0.4
   on (owner's rule; not on 2.1 and 2.3.6 on purpose).
 - **Photos / Gallery:** four pictures (Mountain afternoon, City lights, By the sea, Sunset as drawn gradients; 6.0.1:
-  four seeded drawings, the last a panorama, two days and nine days old).
+  four seeded drawings, the last a panorama, two days and nine days old; 2.1: four shots of its camera's own drawn
+  scene, ec-media.js, since 2026-11-23).
+- **Drive (4.4.4 and later):** a Photos folder, "Trip plan <year>" (Docs), "Budget" (Sheets: Rent 850, Groceries 240,
+  Transport 60, Fun 120), "<phone> guide" (PDF) and "Meetup slides" (Slides, the year's Android release). Docs, Sheets
+  and Slides list Drive's files of their type. 6.0.1 and 7.1.2 since 2026-11-23.
 - **Keep (4.3–5.1.1; 6.0.1 and 7.1.2 as an app installed from Play):** "Buy concert tickets", "Groceries: milk, eggs, lollipops", "Call Mom on Sunday".
 - **Fit (5.1.1; 6.0.1 and 7.1.2 as an app installed from Play):** walking 9 min at 8:05, biking 4 min at 12:40,
   walking 5 min at 17:30 against a 30 min goal (6.0.1 / 7.1.2: a time still to come today falls on yesterday).
@@ -78,7 +83,7 @@ the version's phone, retro.example ("the <year> Web") with a page on the version
 5. Mail in the image's mail app (at least the welcome mail; the Gmail set from 6.0.1 is preferred).
 6. Calendar: Coffee with Alex today 11:00, plus the 6.0.1 events.
 7. The 7:00 alarm switched on, so the status bar shows the alarm icon; the clock widget on the home screen.
-8. Four photos.
+8. Four photos; from 4.4.4 on, the Drive files.
 9. Chrome bookmarks (Google, Android, Wikipedia) and the offline web pages of the year.
 10. Google Now weather and next event; Wi-Fi networks, Bluetooth headset, Telekom.
 11. The demo replies (a text answered once a session after 4.5 s).

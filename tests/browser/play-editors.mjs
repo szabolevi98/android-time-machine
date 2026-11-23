@@ -9,6 +9,8 @@ import {nougat} from './ng-harness.mjs';
 const TYPE = {docs: 'doc', sheets: 'sheet', slides: 'slide'};
 for (const [version, start, cls, ns, menuItem, dlg, sheet, attach, driveRow] of [['6.0.1', marshmallow, 'mmeds', 'MM', '.mmmenu-item', 'mmdlg', 'mmin', '.mmgm-att', '#viewport .mmgd-row[data-action="mmgd-open"]'], ['7.1.2', nougat, 'ngeds', 'NG', '.ngmenu-item', 'ngdlg', 'ngin', '.nggm-attachment', '#viewport [data-action="ngdv-file"]']]) {
   const b = await start();
+  // The welcome view and the first new file need an empty Drive: the demo's files are cleared first.
+  await b.ev(`${ns}.register('zz-empty-drive', {render: c => { c.data.driveFiles = []; c.save(); return ''; }})`); await b.open('zz-empty-drive');
   const files = async type => ((await b.save()).driveFiles || []).filter(f => f.type === type);
   const type = (sel, value) => b.ev(`(()=>{const f=document.querySelector(${JSON.stringify(sel)});f.value=${JSON.stringify(value)};f.dispatchEvent(new Event('input',{bubbles:true}));return 1})()`);
   const menu = async label => { await b.until(`[...document.querySelectorAll(${JSON.stringify(menuItem)})].some(x=>x.textContent.trim()===${JSON.stringify(label)})`); await b.ev(`[...document.querySelectorAll(${JSON.stringify(menuItem)})].find(x=>x.textContent.trim()===${JSON.stringify(label)}).click()`); };
