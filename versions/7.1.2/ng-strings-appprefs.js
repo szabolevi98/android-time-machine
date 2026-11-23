@@ -13344,6 +13344,30 @@ NG.strings('appprefs', {
 "fr": "Paramètres de diffusion cellulaire",
 "es": "Ajustes de radiodifusión"
 },
+"CellBroadcastReceiver/app_label": {
+"res": "angler:CellBroadcastReceiver:app_label",
+"en": "Cell Broadcasts",
+"hu": "Cellán belüli adások",
+"de": "Cell Broadcast",
+"fr": "Diffusions cellulaires",
+"es": "Mensajes de radiodifusión"
+},
+"CellBroadcastReceiver/no_cell_broadcasts": {
+"res": "angler:CellBroadcastReceiver:no_cell_broadcasts",
+"en": "There are no active alerts in your area. You can change the Alert settings using the Settings menu option.",
+"hu": "Jelenleg nincsenek aktív értesítések a tartózkodási helyén. A Beállítások menüben módosíthatja az Értesítés beállításait.",
+"de": "Es sind keine aktiven Warnungen für deine Umgebung vorhanden. Du kannst die Einstellungen für Warnmeldungen über die Menüoption \"Einstellungen\" ändern.",
+"fr": "Il n'existe aucune alerte active dans votre région. Vous pouvez modifier les paramètres d'alerte à l'aide de l'option de menu \"Paramètres\".",
+"es": "No hay alertas activas en tu zona. Puedes modificar la configuración de las alertas a través del menú Ajustes."
+},
+"CellBroadcastReceiver/menu_preferences": {
+"res": "angler:CellBroadcastReceiver:menu_preferences",
+"en": "Settings",
+"hu": "Beállítások",
+"de": "Einstellungen",
+"fr": "Paramètres",
+"es": "Ajustes"
+},
 "CellBroadcastReceiver/alert_reminder_interval_entries": {
 "res": "angler:CellBroadcastReceiver:alert_reminder_interval_entries",
 "en": [

@@ -32,6 +32,7 @@ network_setting gsm_umts_options carrier_select
 respond_via_sms_settings
 [cellbroadcast] CellBroadcastReceiver CellBroadcastSettings
 preferences
++app_label +no_cell_broadcasts +menu_preferences
 [chrome] Chrome Preferences
 main_preferences privacy_preferences accessibility_preferences content_preferences autofill_preferences
 bandwidth_reduction_preferences_off about_chrome_preferences legal_information_preferences document_mode_preferences

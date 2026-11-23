@@ -20,3 +20,6 @@
 /* Open source licences (LicenseActivity / LicenseMenuActivity). */
 .ngap-licframe{display:block;width:100%;height:100%;border:0;background:#fff}
 .ngap-lictext{margin:0;padding:calc(16 * var(--dp));white-space:pre-wrap;word-break:break-word;font:calc(12 * var(--dp))/1.4 "Roboto Mono",monospace;color:#000000de}
+
+/* CellBroadcastListActivity's empty list (cell_broadcast_list_screen.xml: textAppearanceMedium, centred). */
+.ngap-empty{margin:0;padding:calc(48 * var(--dp)) calc(24 * var(--dp));font:400 calc(18 * var(--dp))/1.4 Roboto,sans-serif;color:#000000de;text-align:center}

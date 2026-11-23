@@ -89,7 +89,7 @@ settings setting_input setting_keyboard setting_dictionary setting_fuzzy_pinyin 
 
 [cellbroadcast] CellBroadcastReceiver CellBroadcastSettings
 preferences
-+sms_cb_settings
++sms_cb_settings +app_label +no_cell_broadcasts +menu_preferences
 
 [talkback] talkback TalkBackPreferencesActivity
 preferences gesture_preferences key_combo_preferences default_key_combo_preferences dump_events_preferences

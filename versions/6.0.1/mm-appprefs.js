@@ -12,8 +12,9 @@
    Hooks (MM.appPrefsHooks[app]): {title(c, xml), hide(c, key, node) or hidden: [keys], summary(c, key, node),
    click(c, key, node), get(c, key), set(c, key, v), fragments: {class name: xml}, screens: {key: xml} (an empty
    PreferenceScreen the code fills from another file), append: {xml: [xml]} (files the code adds to a screen), top(c,
-   xml) → html above the rows, color: [primary, dark]}.
-   Use: MM.openPrefs(c, app, xml, title). */
+   xml) → html above the rows, color: [primary, dark], customs: {name: {title(c), render(c), actions(c)}} (a page of
+   the app's own, drawn under the same bar)}.
+   Use: MM.openPrefs(c, app, xml, title); opened from another app's settings screen, Back returns to that screen. */
 (() => {
   'use strict';
   const T = () => MM.text('appprefs');
@@ -38,7 +39,11 @@
   const hooks = c => MM.appPrefsHooks[st(c).app] || {};
   const store = c => { const d = c.data.appPrefs || (c.data.appPrefs = {}); return d[st(c).app] || (d[st(c).app] = {}); };
   MM.appPref = (c, id, key, def) => (c.data.appPrefs?.[id] || {})[key] ?? def;
-  MM.openPrefs = (c, id, xml, title = '') => { c.ui.appPrefs = {app: id, stack: [{xml, path: [], title}]}; c.open('app-prefs', id); };
+  MM.openPrefs = (c, id, xml, title = '') => {
+    const prev = c.ui.view === 'app-prefs' && c.ui.appPrefs ? c.ui.appPrefs : null;
+    c.ui.appPrefs = {app: id, stack: [{xml, path: [], title}], prev};
+    if (prev) c.render(); else c.open('app-prefs', id);
+  };
 
   function nodeOf(c) {
     const s = cur(c); let n = app(c).xml[s.xml];
@@ -100,12 +105,12 @@
 
   function render(c) {
     if (!st(c)) return '';
-    const s = cur(c), n = nodeOf(c), [primary] = colors(c), accent = app(c).theme?.colorAccent || '#009688';
-    const title = s.title || str(n.title) || hooks(c).title?.(c, s.xml) || MM.appLabel?.(c, st(c).app) || '';
+    const s = cur(c), custom = hooks(c).customs?.[s.xml], n = custom ? null : nodeOf(c), [primary] = colors(c), accent = app(c).theme?.colorAccent || '#009688';
+    const title = custom?.title?.(c) || s.title || str(n?.title) || hooks(c).title?.(c, s.xml) || MM.appLabel?.(c, st(c).app) || '';
     // A dark activity theme (Clock's, Camera's: a light textColorPrimary) draws the list light on its windowBackground.
     const th = app(c).theme || {}, dark = light(th.textColorPrimary || '#000000');
-    return `<div class="mmpf${dark ? ' dark' : ''}" style="--mmpf-accent:${accent};--mmw-accent:${accent};background:${th.windowBackground || '#fafafa'}"><div class="mmpf-bar${light(primary) ? ' light' : ''}" style="background:${primary}"><button type="button" class="mmpf-up" data-action="mmpf-up"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button><span>${esc(c, title)}</span></div>
-      <div class="mmpf-list">${hooks(c).top?.(c, s.xml) || ''}${rows(c, n)}${s.path.length ? '' : hooks(c).after?.(c, s.xml) || ''}${s.path.length ? '' : (hooks(c).append?.[s.xml] || []).map((x, k) => rows(c, app(c).xml[x], `@${k}.`)).join('')}</div></div>`;
+    return `<div class="mmpf${dark ? ' dark' : ''}" style="--mmpf-accent:${accent};--mmw-accent:${accent};background:${th.windowBackground || '#fafafa'}"><div class="mmpf-bar${light(primary) ? ' light' : ''}" style="background:${primary}"><button type="button" class="mmpf-up" data-action="mmpf-up"><img src="assets/fw-ic_ab_back_material.svg" alt=""></button><span>${esc(c, title)}</span>${custom?.actions?.(c) || ''}</div>
+      <div class="mmpf-list">${custom ? custom.render(c) : ''}${custom ? '' : `${hooks(c).top?.(c, s.xml) || ''}${rows(c, n)}${s.path.length ? '' : hooks(c).after?.(c, s.xml) || ''}${s.path.length ? '' : (hooks(c).append?.[s.xml] || []).map((x, k) => rows(c, app(c).xml[x], `@${k}.`)).join('')}`}</div></div>`;
   }
   function choose(c, n) {
     const items = entries(c, n), values = arr(n.entryValues), v = String(value(c, n));
@@ -139,7 +144,7 @@
     app: false,
     statusColor: c => st(c) ? colors(c)[1] : '#000',
     render,
-    back(c) { const s = st(c); if (s && s.stack.length > 1) { s.stack.pop(); c.render(); return true; } c.ui.appPrefs = null; return false; },
+    back(c) { const s = st(c); if (s && s.stack.length > 1) { s.stack.pop(); c.render(); return true; } if (s?.prev) { c.ui.appPrefs = s.prev; c.render(); return true; } c.ui.appPrefs = null; return false; },
     action(name, el, event, c) {
       if (name === 'mmpf-up') { if (!this.back(c)) c.back(); return true; }
       // A row a hook adds (after): data-xml opens that file of the app as the next screen.

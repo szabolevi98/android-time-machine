@@ -586,8 +586,10 @@
   // The switches without a defaultValue take the defaults of the carrier's mms_config as AOSP Messaging has them.
   const AP = () => NG.text('appprefs');
   const DEFAULTS = {buglesub_auto_retrieve_mms: true, buglesub_group_messaging: true};
+  // PerSubscriptionSettingsFragment drops Access Point Names: the image's TelephonyProvider lets Messenger read the
+  // mmsc column of the system APN table (MmsUtils.useSystemApnTable) and a new phone has no local apn.db.
   if (NG.appPrefsHooks) NG.appPrefsHooks.messenger = {
-    hidden: ['debug_category', 'sms_disabled', 'rcs_prefs'],
+    hidden: ['debug_category', 'sms_disabled', 'rcs_prefs', 'sms_apns_key'],
     get: (c, key) => key in DEFAULTS ? NG.appPref(c, 'messenger', key, DEFAULTS[key]) : undefined,
     summary(c, key) {
       const t = T();
@@ -614,8 +616,8 @@
         return true;
       }
       if (key === 'advanced_prefs') { NG.appPrefsGo(c, 'preferences_per_subscription', AP().t('PrebuiltBugle/advanced_settings_activity_title')); return true; }
-      if (key === 'buglesub_wireless_alerts_key') { NG.openPrefs(c, 'cellbroadcast', 'preferences', NG.appPrefStr('string/CellBroadcastReceiver/sms_cb_settings')); return true; }
-      if (key === 'sms_apns_key') { c.open('settings', 'xml:apn_settings'); return true; }
+      // Wireless alerts starts CellBroadcastListActivity (ng-cellbroadcast.js '@list').
+      if (key === 'buglesub_wireless_alerts_key') { NG.openPrefs(c, 'cellbroadcast', '@list', NG.appPrefStr('string/CellBroadcastReceiver/app_label')); return true; }
       if (key === 'current_country') return true;
       return false;
     },

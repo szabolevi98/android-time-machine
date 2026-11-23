@@ -22,3 +22,6 @@
 .mmpf.dark .mmst-summary{color:rgba(255,255,255,.7)}
 .mmpf.dark .mmst-check{background:rgba(255,255,255,.7)}
 .mmpf.dark .mmst-check.on{background:var(--mmpf-accent)}
+
+/* CellBroadcastListActivity's empty list (cell_broadcast_list_screen.xml: textAppearanceMedium, centred). */
+.mmpf-empty{margin:0;padding:calc(48 * var(--dp)) calc(24 * var(--dp));font:400 calc(18 * var(--dp))/1.4 Roboto,sans-serif;color:#000000de;text-align:center}

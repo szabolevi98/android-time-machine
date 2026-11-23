@@ -42,9 +42,12 @@
   };
 
   // Messenger (Bugle 1.5): the default SMS row it shows when it is the default app; per-subscription settings under
-  // Advanced; the debug category only in debug builds.
+  // Advanced; the debug category only in debug builds. PerSubscriptionSettingsFragment drops Access Point Names (the
+  // image's TelephonyProvider lets Messenger read the system APN table, and a new phone has no local apn.db) and keeps
+  // Wireless alerts (config_cellBroadcastAppLinks, the CellBroadcastReceiver enabled), which starts
+  // CellBroadcastListActivity (the cellbroadcast hooks' '@list').
   H.messenger = {
-    hidden: ['sms_disabled', 'debug_category', 'buglesub_wireless_alerts_key', 'sms_apns_key'],
+    hidden: ['sms_disabled', 'debug_category', 'sms_apns_key'],
     screens: {advanced_prefs: 'preferences_per_subscription'},
     summary(c, key) {
       if (key === 'sms_enabled') return MM.appLabel(c, 'messenger');
@@ -53,6 +56,7 @@
     },
     click(c, key) {
       if (key === 'sms_enabled') { c.open('settings', 'xml:default_apps'); return true; }
+      if (key === 'buglesub_wireless_alerts_key') { MM.openPrefs(c, 'cellbroadcast', '@list'); return true; }
       if (key === 'notification_sound') { MM.ringtonePicker?.(c, {kind: 'notification', current: MM.appPref(c, 'messenger', key) ?? MM.settingsRingtones?.notification.default, onPick: (c, v) => set(c, 'messenger', key, v)}); return true; }
       return false;
     }
@@ -165,7 +169,19 @@
       return false;
     }
   };
-  H.cellbroadcast = {hidden: ['category_etws_settings', 'category_brazil_settings', 'category_dev_settings']};
+  // CellBroadcastListActivity (label app_label): no alert has come, so cell_broadcast_list_screen.xml's empty text
+  // (no_cell_broadcasts); its overflow holds Settings (menu_preferences) only, Delete broadcasts being hidden while the
+  // list is empty; Settings opens CellBroadcastSettings (preferences.xml) over it.
+  const CB = k => MM.appPrefStr('string/CellBroadcastReceiver/' + k);
+  H.cellbroadcast = {
+    hidden: ['category_etws_settings', 'category_brazil_settings', 'category_dev_settings'],
+    customs: {'@list': {title: () => CB('app_label'), render: c => `<p class="mmpf-empty">${c.safe(CB('no_cell_broadcasts'))}</p>`, actions: c => MM.menu.button(c)}},
+    action(c, name, el) {
+      if (name !== 'mm-menu' || c.ui.appPrefs?.stack.at(-1)?.xml !== '@list') return false;
+      c.menu([{label: CB('menu_preferences'), action: c => { c.ui.appPrefs.stack.push({xml: 'preferences', path: [], title: ''}); c.render(); }}], el);
+      return true;
+    }
+  };
 
   // Google Keyboard: its settings' fragments; Theme and Custom input styles are the keyboard's own pickers.
   H.keyboard = {
