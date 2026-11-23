@@ -339,6 +339,8 @@ accessibility_next accessibility_prev accessibility_shuffle accessibility_repeat
 # Play Movies & TV 3.8: the drawer and the empty library
 application_name_with_tv tab_watch_now tab_my_library menu_shop menu_settings menu_help_and_feedback no_movies no_shows
 wishlist_is_empty menu_search no_results
+# The demo account's two films (My Movies, the duration) and the player's buttons
+tab_movies movie_duration accessibility_play accessibility_pause accessibility_purchased_badge
 [playgames] PlayGames framework
 # Play Games 3.2: the drawer
 games_app_launcher_name games_dest_nav_drawer_home games_dest_nav_drawer_my_games games_dest_nav_drawer_inbox

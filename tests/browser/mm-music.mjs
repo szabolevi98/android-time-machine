@@ -1,4 +1,4 @@
-// 6.0.1 Play Music (mm-music.js): the phone's six songs in Listen Now and My Library (GENRES, ARTISTS, ALBUMS, SONGS),
+// 6.0.1 Play Music (mm-music.js) and Play Movies (mm-movies.js): the phone's six songs in Listen Now and My Library (GENRES, ARTISTS, ALBUMS, SONGS),
 // an album's songs, playing one (the bottom bar, the now playing screen, pause, next, repeat), Back, Search and the
 // phone width.
 import assert from 'node:assert/strict';
@@ -39,9 +39,19 @@ try{
     await sleep(200);
     assert.equal(await count('#viewport .mmmu-track'),1,'Search finds Night Drive');
     if(width>500) await b.shot('6.0.1-music-library');
+    // Play Movies: the account's two films in My library; a poster plays the whole film, Back closes the player.
+    await b.open('play-movies');await b.act('mmpm-page',{i:'1',kind:''});
+    assert.deepEqual(await b.ev(`[...document.querySelectorAll('#viewport .mmmv-card b')].map(x=>x.textContent)`),['Northern Lights','Paper Kites'],'My library lists the two films');
+    await b.click('#viewport .mmmv-poster[data-id="m2-3"]');
+    assert.ok(await b.ev(`!!document.querySelector('#viewport .mmmv-watch') && +document.querySelector('#viewport .mmmv-seek').max===119*60000`),'a poster plays the film');
+    await b.click('#viewport [data-action="mmmv-toggle"]');
+    assert.ok(await b.ev(`/play/.test(document.querySelector('#viewport .mmmv-toggle img').src)`),'pause');
+    if(width>500) await b.shot('6.0.1-movies-player');
+    await b.click('#viewport [data-action="mmmv-close"]');
+    assert.equal(await count('#viewport .mmmv-card'),2,'Up returns to the library');
     await b.ev(`(()=>{const k='android-time-machine-mm-v1';const d=JSON.parse(localStorage.getItem(k));delete d.music6;localStorage.setItem(k,JSON.stringify(d));location.reload()})()`);
     await sleep(2500);
   }
   assert.deepEqual(b.errors,[]);
-  console.log('6.0.1 Play Music passed: Listen Now albums, My Library tabs and songs, an album, the player (pause, next, repeat), the bottom bar, Back, Search, phone width.');
+  console.log('6.0.1 Play Music and Movies passed: Listen Now albums, My Library tabs and songs, an album, the player (pause, next, repeat), the bottom bar, Back, Search; the two films and their player; phone width.');
 }finally{await b.close();}

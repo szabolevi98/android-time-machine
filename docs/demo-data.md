@@ -49,7 +49,10 @@ The account: `<device>.demo@gmail.com` (6.0.1: nexus5x.demo@gmail.com). Carrier:
   Android-7.1.2.txt and Meetup-slides.pdf (4.4.4–6.0.1 since 2026-11-23).
 - **Music:** six tracks, "Blue Horizon", "Afterglow" (First Light) and "Night Drive" (After Hours) by The Demo Tapes,
   "City Lights", "Sunday Morning" and "Home Again" (Small Worlds) by Paper Satellites. 4.0.4–5.1.1 in their players;
-  7.1.2 as MP3 files in the phone's Music folder, which Play Music lists (since 2026-11-23).
+  6.0.1 in Play Music's library (mm-music.js); 7.1.2 as MP3 files in the phone's Music folder, which Play Music lists
+  (both since 2026-11-23).
+- **Films:** 4.3–5.1.1 their Play Movies libraries (5.1.1: The Last Lighthouse, Paper Planes, Northern Line, Orbit Nine);
+  6.0.1 and 7.1.2 the store's own Northern Lights and Paper Kites, owned by the demo account and playable (2026-11-23).
 - **Keep (4.3–5.1.1; 6.0.1 and 7.1.2 as an app installed from Play):** "Buy concert tickets", "Groceries: milk, eggs, lollipops", "Call Mom on Sunday".
 - **Fit (5.1.1; 6.0.1 and 7.1.2 as an app installed from Play):** walking 9 min at 8:05, biking 4 min at 12:40,
   walking 5 min at 17:30 against a 30 min goal (6.0.1 / 7.1.2: a time still to come today falls on yesterday).

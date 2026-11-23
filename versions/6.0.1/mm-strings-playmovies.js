@@ -88,5 +88,45 @@ MM.strings('playmovies', {
 "de": "Keine Ergebnisse gefunden",
 "fr": "Aucun résultat trouvé.",
 "es": "No se han encontrado resultados"
+},
+"tab_movies": {
+"res": "bullhead:Videos:tab_movies",
+"en": "My Movies",
+"hu": "Saját filmek",
+"de": "Meine Filme",
+"fr": "Mes films",
+"es": "Mis películas"
+},
+"movie_duration": {
+"res": "bullhead:Videos:movie_duration",
+"en": "%1$s mins",
+"hu": "%1$s perc",
+"de": "%1$s Min.",
+"fr": "%1$s min",
+"es": "%1$s min"
+},
+"accessibility_play": {
+"res": "bullhead:Videos:accessibility_play",
+"en": "Play video",
+"hu": "Videó lejátszása",
+"de": "Video ansehen",
+"fr": "Lire la vidéo",
+"es": "Ver un vídeo"
+},
+"accessibility_pause": {
+"res": "bullhead:Videos:accessibility_pause",
+"en": "Pause video",
+"hu": "Videó szüneteltetése",
+"de": "Video anhalten",
+"fr": "Interrompre la vidéo",
+"es": "Pausar vídeo"
+},
+"accessibility_purchased_badge": {
+"res": "bullhead:Videos:accessibility_purchased_badge",
+"en": "Purchased",
+"hu": "Megvásárolva",
+"de": "Gekauft",
+"fr": "Acheté",
+"es": "Comprado"
 }
 });

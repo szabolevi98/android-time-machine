@@ -936,6 +936,8 @@ versions/6.0.1/assets/pv-ic_drawer_watchnow.png	eb84a3ea6c038f4d	copy	bullhead:/
 versions/6.0.1/assets/pv-ic_drawer_watchnow_selected.png	cd5afcc6443ae183	copy	bullhead:/system/app/Videos/Videos.apk!res/drawable-xxhdpi-v4/ic_drawer_watchnow_selected.png	drawable-xxhdpi-v4		cd5afcc6443ae183
 versions/6.0.1/assets/pv-ic_drawer_wishlist.png	6ffe031a0d340744	copy	bullhead:/system/app/Videos/Videos.apk!res/drawable-xxhdpi-v4/ic_drawer_wishlist.png	drawable-xxhdpi-v4		6ffe031a0d340744
 versions/6.0.1/assets/pv-ic_drawer_wishlist_selected.png	2874c22b8764c464	copy	bullhead:/system/app/Videos/Videos.apk!res/drawable-xxhdpi-v4/ic_drawer_wishlist_selected.png	drawable-xxhdpi-v4		2874c22b8764c464
+versions/6.0.1/assets/pv-ic_media_pause.png	59d7c4300f6875fe	copy	bullhead:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/ic_media_pause.png	drawable-xxhdpi-v4		59d7c4300f6875fe
+versions/6.0.1/assets/pv-ic_media_play.png	0d59ab4b27db9f3d	copy	bullhead:/system/app/Maps/Maps.apk!res/drawable-xxhdpi-v4/ic_media_play.png	drawable-xxhdpi-v4		0d59ab4b27db9f3d
 versions/6.0.1/assets/st-NOTICE.html.gz	506ca8d03b5e10e6	copy	bullhead:/system/etc/NOTICE.html.gz			506ca8d03b5e10e6
 versions/6.0.1/assets/st-caption_background.jpg	7b62f3ccbc515324	copy	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable-nodpi-v4/caption_background.jpg	drawable-nodpi-v4		7b62f3ccbc515324
 versions/6.0.1/assets/st-data_grid_border.9.png	9c43caeec6e89350	copy	bullhead:/system/priv-app/Settings/Settings.apk!res/drawable-xxhdpi-v4/data_grid_border.9.png	drawable-xxhdpi-v4		9c43caeec6e89350
