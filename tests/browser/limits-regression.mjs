@@ -4051,6 +4051,29 @@ const holoMmsSettings = jb => async h => {
 };
 CASES.push({id:'T50',version:'4.0.4',name:'Messaging › Settings',run:holoMmsSettings(false)});
 CASES.push({id:'T50',version:'4.3',name:'Messaging › Settings',run:holoMmsSettings(true)});
+// 4.3 Messaging › Cell broadcasts: the CellBroadcastReceiver's empty list, its Settings (the Nexus 4's rows, severe
+// threats following extreme threats, Alert reminder), Back to the list and to Messaging; Settings › More › Cell broadcasts.
+CASES.push({id:'T50',version:'4.3',name:'Messaging › Cell broadcasts; Settings › More › Cell broadcasts',async run(h){
+  await h.openApp('messaging'); await mmsAct(h,'mms-menu'); await h.tap('[data-action="mms-cell-broadcasts"]');
+  h.check('Cell broadcasts opens the empty alert list',await h.until(`/no active alerts in your area/.test(document.querySelector('#viewport .cb-empty')?.textContent||'')`));
+  await h.tap('#viewport [data-action="cb-menu"]');await h.tap('[data-action="cb-open-settings"]');
+  h.check('its Settings list the Nexus 4 alert settings',await h.until(`[...document.querySelectorAll('#viewport .settings-row .row-copy')].map(r=>r.firstChild.textContent).join('|')==='Show extreme threats|Show severe threats|Show AMBER alerts|Alert reminder|Vibrate'`));
+  await h.tap('#viewport [data-action="cb-toggle"][data-id="extreme"]');
+  h.check('severe threats follow extreme threats',await h.until(`document.querySelector('#viewport [data-action="cb-toggle"][data-id="severe"]').disabled`) && (await store(h,'cellBroadcast')).extreme===false);
+  await h.tap('#viewport [data-action="cb-list-pref"][data-id="reminder"]');
+  await h.tap('.sd-choice-list input[value="15"]');await h.ev(`document.querySelector('[data-form="cb-choice"]').requestSubmit()`);
+  h.check('Alert reminder keeps its choice',await h.until(`document.querySelector('#viewport [data-action="cb-list-pref"][data-id="reminder"] small')?.textContent==='Every 15 minutes'`));
+  await h.key('Escape');
+  h.check('Back returns to the alert list',await h.until(`!!document.querySelector('#viewport .cb-empty')`));
+  await h.key('Escape');
+  h.check('Back again returns to Messaging',await h.until(`!document.querySelector('#viewport .cb-empty') && !document.querySelector('#viewport .settings-app')`));
+  await h.openApp('settings');await h.tap('#viewport [data-action="settings-sub"][data-id="wireless"]');
+  h.check('More ends with Cell broadcasts',await h.until(`document.querySelector('#viewport .wireless-row:last-of-type')?.dataset.action==='cb-open'`));
+  await h.tap('#viewport [data-action="cb-open"]');
+  h.check('it opens the same settings',await h.until(`document.querySelector('#viewport [data-action="cb-list-pref"][data-id="reminder"] small')?.textContent==='Every 15 minutes'`));
+  await h.key('Escape');
+  h.check('Back returns to More',await h.until(`!!document.querySelector('#viewport [data-action="cb-open"]')`));
+}});
 CASES.push({id:'T50',version:'5.1.1',name:'Messenger › Settings: General, Advanced',async run(h){
   await h.openApp('messaging'); await mmsAct(h,'mpo-settings');
   h.check('Settings lists General and Advanced',await h.until(`document.querySelectorAll('#viewport .mset-item').length===2`));
@@ -4067,33 +4090,12 @@ CASES.push({id:'T50',version:'5.1.1',name:'Messenger › Settings: General, Adva
   await h.key('Escape'); await h.key('Escape');
   h.check('Back returns to the conversations',await h.until(`!document.querySelector('#viewport .mpo-app')`));
 }});
-// 5.1.1 Messenger › Advanced: Access Point Names (Messenger's ApnSettingsActivity and ApnEditorActivity) and Wireless
-// alerts (CellBroadcastReceiver's list, its Settings and Back to Messenger); Settings › More › Emergency broadcasts.
-CASES.push({id:'T50',version:'5.1.1',name:'Messenger › Access Point Names, Wireless alerts; Emergency broadcasts',async run(h){
+// 5.1.1 Messenger › Advanced: Wireless alerts (CellBroadcastReceiver's list, its Settings and Back to Messenger) and no
+// Access Point Names (Messenger uses the system APN table); Settings › More › Emergency broadcasts.
+CASES.push({id:'T50',version:'5.1.1',name:'Messenger › Wireless alerts; Emergency broadcasts',async run(h){
   await h.openApp('messaging'); await mmsAct(h,'mpo-settings');
   await h.tap('#viewport [data-action="mset-page"][data-id="advanced"]');
-  await h.tap('#viewport [data-action="mset-page"][data-id="apn"]');
-  h.check('the APN list has the SIM\'s MMS APNs, the first in use',await h.until(`[...document.querySelectorAll('#viewport .mset-apn b')].map(b=>b.textContent).join('|')==='T-Mobile H|T-Mobile H MMS|T-Mobile MMS' && document.querySelector('#viewport .mset-apn-radio.on')?.dataset.id==='a1'`));
-  await h.tap('#viewport [data-action="mset-apn-select"][data-id="a3"]');
-  h.check('a radio button picks the APN',(await store(h,'lpmApns'))?.selected==='a3');
-  await h.tap('#viewport [data-action="mset-apn-new"]');
-  h.check('New APN opens the editor with the SIM\'s MCC and MNC',await h.until(`[...document.querySelectorAll('#viewport .mpo-row small')].map(s=>s.textContent).join('|')==='Not set|Not set|Not set|Not set|216|30'`));
-  await h.key('Escape');
-  h.check('Back without a name says so',await h.until(`/Name field can't be empty/.test(document.querySelector('#viewport .mset-error')?.textContent||'')`));
-  await h.tap('#viewport .mpo-buttons [data-action="mpo-close"]');
-  await h.tap('#viewport [data-action="mset-apn-field"][data-id="name"]');
-  await h.ev(`(()=>{const f=document.querySelector('#viewport [data-mset-apn]');f.value='Demo MMS';return 1})()`);
-  await h.tap('#viewport [data-action="mset-apn-field-ok"]');
-  await h.tap('#viewport [data-action="mset-menu"]');await h.tap('#viewport [data-action="mset-apn-save"]');
-  h.check('Save adds the APN to the list',await h.until(`[...document.querySelectorAll('#viewport .mset-apn b')].map(b=>b.textContent).at(-1)==='Demo MMS'`) && (await store(h,'lpmApns')).list.length===4);
-  await h.tap('#viewport .mset-apn:last-child [data-action="mset-apn-open"]');
-  await h.tap('#viewport [data-action="mset-menu"]');
-  h.check('the editor menu has Delete APN, Save and Discard',await h.until(`[...document.querySelectorAll('#viewport .mset-pop button')].map(b=>b.textContent).join('|')==='Delete APN|Save|Discard'`));
-  await h.tap('#viewport [data-action="mset-apn-delete"]');
-  h.check('Delete APN removes it',await h.until(`document.querySelectorAll('#viewport .mset-apn').length===3`));
-  await h.tap('#viewport [data-action="mset-menu"]');await h.tap('#viewport [data-action="mset-apn-reset"]');
-  h.check('Reset to default brings the first back into use',await h.until(`document.querySelector('#viewport .mset-apn-radio.on')?.dataset.id==='a1'`) && !(await store(h,'lpmApns')));
-  await h.key('Escape');
+  h.check('Advanced ends with Wireless alerts, without Access Point Names',await h.until(`[...document.querySelectorAll('#viewport .mpo-row b')].map(b=>b.textContent).at(-1)==='Wireless alerts' && !/Access Point Names/.test(document.querySelector('#viewport .mpo-list').textContent)`));
   await h.tap('#viewport [data-action="mset-alerts"]');
   h.check('Wireless alerts opens the empty alert list',await h.until(`/no active alerts in your area/.test(document.querySelector('#viewport .cb-empty')?.textContent||'')`));
   await h.tap('#viewport [data-action="cb-menu"]');await h.tap('[data-action="cb-open-settings"]');

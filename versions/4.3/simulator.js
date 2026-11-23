@@ -894,6 +894,7 @@
     if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserFind !== undefined) { ui.browserFind = undefined; render(); return; }
     if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserIndex > 0) { browserBack(); return; }
     if (ui.view === 'settings' && ['easter', 'beanbag', 'about-status', 'about-legal', 'about-safety'].includes(ui.sub)) { ui.sub = 'about'; ui.jbLogoTapped = false; render(); return; }
+    if (ui.view === 'settings' && !ui.overlay && CellBroadcast.back(ui, openApp)) { render(); return; }
     if (ui.view === 'settings' && ['vpn', 'tethering', 'beam', 'mobile-networks'].includes(ui.sub)) { ui.sub = 'wireless'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'wifi-advanced') { ui.sub = 'wifi'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'sync-google') { ui.sub = 'sync'; render(); return; }
@@ -1028,6 +1029,8 @@
       overlayRoot.innerHTML = InputLanguage.overlay(langContext());
     } else if (ui.overlay === 'cert-install') {
       overlayRoot.innerHTML = CertInstall.overlay(certContext());
+    } else if(ui.overlay==='cb-menu'||ui.overlay==='cb-dialog'){
+      overlayRoot.innerHTML=CellBroadcast.overlay(ui,data,key=>i18n.t(key));
     } else if(ui.overlay==='sx-dialog'){
       overlayRoot.innerHTML=ICSSystemSettings.overlay(data,ui,key=>i18n.t(key));
     } else if (ui.overlay === 'search') {
@@ -1261,6 +1264,9 @@
     if(s==='lock-setup')return lockControls.renderSetup();
     // Music effects: MusicFX's ActivityMusic (*-musicfx.js).
     if(s==='musicfx'){const fx=MusicFX.render(musicFxContext());return appView(fx.title,fx.body,'mfx-page',fx.right);}
+    // Cell Broadcasts' list and settings (cell-broadcast.js).
+    const cb=CellBroadcast.page(s,{data,t:key=>i18n.t(key)});
+    if(cb)return appView(cb.title,cb.body,'sx-page cb-page',cb.right||'');
     const system=ICSSystemSettings.render(data,ui,key=>i18n.t(key),i18n.locale());
     if(system)return appView(system.title,system.body,'sx-page',system.right);
     const detail=ICSSettingsDetail.render(data,ui,apps,key=>i18n.t(key));
@@ -1278,7 +1284,7 @@
     if (s === 'about-safety') return appView('Safety information', `<div class="detail-pad"><p>Nexus 4 safety information is not available in this offline simulation.</p></div>`, 'about-settings');
     if (s === 'easter') return `<div class="jb-platlogo-view"><button class="jb-platlogo" data-action="jb-platlogo" aria-label="Android Jelly Bean"><img draggable="false" src="assets/${ui.jbLogoTapped ? 'jb-platlogo' : 'jb-platlogo_alt'}.png" alt=""></button></div>`;
     if (s === 'beanbag') return `<div class="jb-beanbag" data-beanbag aria-label="BeanBag"></div>`;
-    if (s === 'wireless') return appView('Wireless & networks', `${wirelessCheckRow('Airplane mode', '', 'airplane')}${wirelessRow('VPN', '', 'vpn')}${wirelessRow('Tethering & portable hotspot', '', 'tethering')}${wirelessCheckRow('NFC', 'Allow data exchange when the phone touches another device', 'nfc')}${wirelessRow('Android Beam', 'Ready to transmit app content via NFC', 'beam')}${wirelessRow('Mobile networks', '', 'mobile-networks')}`, 'wireless-more');
+    if (s === 'wireless') return appView('Wireless & networks', `${wirelessCheckRow('Airplane mode', '', 'airplane')}${wirelessRow('VPN', '', 'vpn')}${wirelessRow('Tethering & portable hotspot', '', 'tethering')}${wirelessCheckRow('NFC', 'Allow data exchange when the phone touches another device', 'nfc')}${wirelessRow('Android Beam', 'Ready to transmit app content via NFC', 'beam')}${wirelessRow('Mobile networks', '', 'mobile-networks')}${CellBroadcast.row()}`, 'wireless-more');
     if (s === 'beam') return appView('Android Beam', `${wirelessCheckRow('Android Beam', 'Ready to transmit app content via NFC', 'androidBeam')}`, 'wireless-more');
     if (s === 'brightness') return appView('Brightness', `<div class="detail-pad"><h3>Brightness</h3><input type="range" min="10" max="100" value="${data.settings.brightness}" data-field="brightness" aria-label="Brightness"><p>${data.settings.brightness}%</p></div>`);
     if (s === 'sync') return appView('Accounts & sync', `${toggleRow('Auto-sync', 'Sync app data automatically', 'autoSync', '↻')}${label('ACCOUNTS')}${row('Google', 'demo@android.local', 'settings-sub', 'sync-google', '◎')}${row('Add account', '', 'toast', 'Demo account already added', '+')}`);
@@ -1543,7 +1549,7 @@
       const items = composing
         ? option('toast', M('Add subject'), unavailable) + ((draft.body || '').trim() || draft.attachment ? option('mms-send-now', M('Send')) : '') + option('mms-smiley', M('Insert smiley'))
           + (messages.length ? option('mms-delete-thread', M('Delete thread')) : option('mms-discard', M('Discard'))) + (to.startsWith('tel:') ? option('toast', M('Add to People'), unavailable) : '') + option('mmsp-open', M('Settings'))
-        : option('mmsp-open', M('Settings')) + (data.messages.length ? option('mms-delete-all', M('Delete all threads')) : '') + option('toast', M('Cell broadcasts'), unavailable);
+        : option('mmsp-open', M('Settings')) + (data.messages.length ? option('mms-delete-all', M('Delete all threads')) : '') + option('mms-cell-broadcasts', M('Cell broadcasts'));
       return `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu ${composing ? '' : 'mms-menu-root'}" data-no-translate>${items}</div>`;
     }
     /* ComposeMessageActivity's attachment chooser: an AlertDialog ("Attach", ic_dialog_attach) over
@@ -2003,6 +2009,9 @@
     // Navigation's Contacts / Starred places pickers and Local's search and categories (jb-extra-apps.js).
     if (action.startsWith('xa-') && JBExtraApps.handle(action, id, extraContext())) return;
     if (action.startsWith('ccz-') && CurrentsCustomize.handle(action, id, cczContext())) return;
+    if (action.startsWith('cb-') && CellBroadcast.handle(action, id, {data, ui, save, render, renderOverlay})) return;
+    // Messaging's Cell broadcasts starts the CellBroadcastReceiver's list; Back returns to Messaging.
+    if (action === 'mms-cell-broadcasts') { ui.overlay = ''; renderOverlay(); openApp('settings'); ui.sub = 'cb-list'; ui.cbReturn = 'messaging'; ui.cbFromList = false; render(); return; }
     // Gmail's label settings, Days of mail to sync and the vacation responder (gmail.js).
     if (action.startsWith('lng-') && InputLanguage.handle(action, id, langContext())) return;
     if (action.startsWith('dev-') && JBDeveloperOptions.handle(action, id, devContext())) return;
@@ -2757,6 +2766,7 @@
     if (['currents', 'play-magazines'].includes(ui.view) && NewsReader.submit(form.dataset.form, values, newsContext())) return;
     if (PlusMessenger.submit(form.dataset.form, values, messengerContext())) return;
     if (JBExtraApps.submit(form.dataset.form, values, extraContext())) return;
+    if (CellBroadcast.submit(form.dataset.form, values, {data, ui, save, render, renderOverlay})) return;
     if (form.dataset.form === 'mr-type') { overlayRoot.querySelector('[data-action="mr-type-ok"]')?.click(); return; }
     if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, mrContext()); return; }
     if (ui.view === 'gmail' && gmailForm(form.dataset.form, values)) return;
