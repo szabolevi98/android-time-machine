@@ -32,7 +32,15 @@
     ['quality', 'pref_camera_jpegquality_title', 'pref_camera_jpegquality_entries', ['superfine', 'fine', 'normal'], null, 'superfine'],
     ['focus', 'pref_camera_focusmode_title', 'pref_camera_focusmode_entries', ['auto', 'infinity', 'macro'], [null, 'ic_viewfinder_focus_infinity', 'ic_viewfinder_focus_macro'], 'auto']
   ];
-  EC.defaults.photos = [];
+  // The used phone's four pictures (docs/demo-data.md, item 8): the camera's own drawn scene (ec-media.js), taken over
+  // the last days with the default settings. A save made before 2026-11-23 with no pictures gets them once.
+  EC.defaults.photos = [61, 137, 214, 389].map((seed, i) => ({id: i + 1, seed, effect: 'none', wb: 'auto', size: '2592x1936', when: Date.now() - (9 - i * 2.5) * 86400000}));
+  EC.defaults.demoPhotos = 1;
+  EC.upgrades.push(['demo photos', (result, saved) => {
+    if (saved.demoPhotos) return;
+    if (!Array.isArray(saved.photos) || !saved.photos.length) result.photos = JSON.parse(JSON.stringify(EC.defaults.photos));
+    result.demoPhotos = 1;
+  }]);
   const prefs = c => ({...Object.fromEntries(PREFS.map(p => [p[0], p[5]])), ...(c.data.cameraPrefs || {})});
   // The entries array for size has the 2592x1944 / 2592x1936 pair; the phone offers one of them.
   const entries = (p, c) => { const list = C().t(p[2]); return p[0] === 'size' ? [list[0], ...list.slice(2)] : list; };
