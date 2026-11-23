@@ -3,6 +3,19 @@
    rows, create_playlist_panel and nowplaying_screen; local media only. */
 (() => {
   'use strict';
+  /* The demo phone's Music folder: the six tracks the earlier versions' players have (5.1.1 music.js), as MP3 files with
+     their tags, so the library, artists, albums and the player have something to show. A save made before 2026-11-23
+     whose Music folder holds no audio gets them once. */
+  const DAY=864e5,TRACKS=[['Blue Horizon','The Demo Tapes','First Light',213],['Afterglow','The Demo Tapes','First Light',187],['Night Drive','The Demo Tapes','After Hours',246],['City Lights','Paper Satellites','Small Worlds',204],['Sunday Morning','Paper Satellites','Small Worlds',178],['Home Again','Paper Satellites','Small Worlds',231]];
+  const demoTracks=()=>TRACKS.map(([title,artist,album,sec],i)=>({id:`music-demo-${i+1}`,parent:'music',name:`${String(i+1).padStart(2,'0')} ${title}.mp3`,type:'audio',title,artist,album,genre:'Pop',duration:sec*1000,size:sec*40000,time:Date.now()-(20+i)*DAY}));
+  if(NG.defaults.documents&&!NG.defaults.documents.nodes.some(n=>n.type==='audio'))NG.defaults.documents.nodes.push(...demoTracks());
+  NG.defaults.demoMusic=1;
+  NG.upgrades?.push(['demo music',(result,saved)=>{
+    if(saved.demoMusic)return;
+    const docs=result.documents;
+    if(docs&&Array.isArray(docs.nodes)&&!docs.nodes.some(n=>n.type==='audio'&&n.parent==='music'))docs.nodes.push(...demoTracks());
+    result.demoMusic=1;
+  }]);
   const M=()=>NG.musicModel,T=()=>NG.text('music'),t=k=>T().t(k),E=(c,s)=>c.safe(s),U=c=>c.ui.music ||= {route:'listen',tab:'songs',query:null,drawer:false,pid:'',scope:null,stack:[]};
   const tabs={playlists:'playlists_title',artists:'artists_title',albums:'albums_title',songs:'spinner_songs',genres:'genres_title'};
   const pages={listen:'top_menu_mainstage',library:'top_menu_my_library',charts:'top_menu_top_charts',releases:'top_menu_new_releases',podcasts:'top_menu_podcasts',radio:'top_menu_browse_stations'};

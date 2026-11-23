@@ -43,6 +43,9 @@ The account: `<device>.demo@gmail.com` (6.0.1: nexus5x.demo@gmail.com). Carrier:
 - **Drive (4.4.4 and later):** a Photos folder, "Trip plan <year>" (Docs), "Budget" (Sheets: Rent 850, Groceries 240,
   Transport 60, Fun 120), "<phone> guide" (PDF) and "Meetup slides" (Slides, the year's Android release). Docs, Sheets
   and Slides list Drive's files of their type. 6.0.1 and 7.1.2 since 2026-11-23.
+- **Music:** six tracks, "Blue Horizon", "Afterglow" (First Light) and "Night Drive" (After Hours) by The Demo Tapes,
+  "City Lights", "Sunday Morning" and "Home Again" (Small Worlds) by Paper Satellites. 4.0.4–5.1.1 in their players;
+  7.1.2 as MP3 files in the phone's Music folder, which Play Music lists (since 2026-11-23).
 - **Keep (4.3–5.1.1; 6.0.1 and 7.1.2 as an app installed from Play):** "Buy concert tickets", "Groceries: milk, eggs, lollipops", "Call Mom on Sunday".
 - **Fit (5.1.1; 6.0.1 and 7.1.2 as an app installed from Play):** walking 9 min at 8:05, biking 4 min at 12:40,
   walking 5 min at 17:30 against a 30 min goal (6.0.1 / 7.1.2: a time still to come today falls on yesterday).
@@ -83,7 +86,7 @@ the version's phone, retro.example ("the <year> Web") with a page on the version
 5. Mail in the image's mail app (at least the welcome mail; the Gmail set from 6.0.1 is preferred).
 6. Calendar: Coffee with Alex today 11:00, plus the 6.0.1 events.
 7. The 7:00 alarm switched on, so the status bar shows the alarm icon; the clock widget on the home screen.
-8. Four photos; from 4.4.4 on, the Drive files.
+8. Four photos; from 4.4.4 on, the Drive files; the six demo tracks in the music player.
 9. Chrome bookmarks (Google, Android, Wikipedia) and the offline web pages of the year.
 10. Google Now weather and next event; Wi-Fi networks, Bluetooth headset, Telekom.
 11. The demo replies (a text answered once a session after 4.5 s).
