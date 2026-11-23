@@ -150,6 +150,8 @@ versions/4.4.4/assets/device-nexus-5.svg	1a9b314c4b7e2542	own	drawn by docs/tool
 versions/4.4.4/assets/dial_background_texture.png	209fcf5c34dfde2f	similar	hammerhead:/system/priv-app/GoogleDialer.apk!res/drawable-hdpi/dial_background_texture.png	drawable-hdpi	same size, mean difference 0.93	ba1c8a26d19b8e42
 versions/4.4.4/assets/downloads.png	ab480c3038a6a152	same pixels	hammerhead:/system/app/DownloadProviderUi.apk!res/mipmap-xxhdpi/ic_launcher_download.png	mipmap-xxhdpi		7544a8e1619f88f0
 versions/4.4.4/assets/dr-action_search.png	d9b7ed79ce3c7bc6	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/action_search.png	drawable-xhdpi		d9b7ed79ce3c7bc6
+versions/4.4.4/assets/dr-doc_grid_folder_background.png	03b4b97cec20732b	copy	hammerhead:/system/app/Drive.apk!res/drawable/doc_grid_folder_background.png	drawable		03b4b97cec20732b
+versions/4.4.4/assets/dr-doc_grid_thumbnail_gradient.png	2762f492082b8723	copy	hammerhead:/system/app/Drive.apk!res/drawable/doc_grid_thumbnail_gradient.png	drawable		2762f492082b8723
 versions/4.4.4/assets/dr-ic_actionbar_overflow.png	4d600c2c5ee39df9	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_actionbar_overflow.png	drawable-xhdpi		4d600c2c5ee39df9
 versions/4.4.4/assets/dr-ic_close.png	4daca5c26327714f	copy	hammerhead:/system/app/Drive.apk!res/drawable-xxhdpi/ic_close.png	drawable-xxhdpi		4daca5c26327714f
 versions/4.4.4/assets/dr-ic_drawer.png	8c04d4b2f6f8e0b3	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_drawer.png	drawable-xhdpi		8c04d4b2f6f8e0b3
@@ -161,15 +163,22 @@ versions/4.4.4/assets/dr-ic_drive_starred_inactive.png	b4ec3dd652da98c0	copy	ham
 versions/4.4.4/assets/dr-ic_drive_upload_inactive.png	d93685532f6b3d99	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_drive_upload_inactive.png	drawable-xhdpi		d93685532f6b3d99
 versions/4.4.4/assets/dr-ic_grid_toggle.png	31f1e6297e211424	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_grid_toggle.png	drawable-xhdpi		31f1e6297e211424
 versions/4.4.4/assets/dr-ic_information_gray_small.png	209ef9d28fa47cde	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_information_gray_small.png	drawable-xhdpi		209ef9d28fa47cde
+versions/4.4.4/assets/dr-ic_list_toggle.png	cca61fff2e4c7756	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_list_toggle.png	drawable-xhdpi		cca61fff2e4c7756
 versions/4.4.4/assets/dr-ic_new_folder.png	ebef8ebc2941d908	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_new_folder.png	drawable-xhdpi		ebef8ebc2941d908
 versions/4.4.4/assets/dr-ic_star_off.png	f15a09b4bb8f89e1	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_star_off.png	drawable-hdpi		f15a09b4bb8f89e1
 versions/4.4.4/assets/dr-ic_star_on.png	3bba7683adb14fdb	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_star_on.png	drawable-hdpi		3bba7683adb14fdb
 versions/4.4.4/assets/dr-ic_type_doc.png	ebd64f5df4d301fe	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_doc.png	drawable-hdpi		ebd64f5df4d301fe
+versions/4.4.4/assets/dr-ic_type_doc_big.png	ee2f454c55579857	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_doc_big.png	drawable-hdpi		ee2f454c55579857
 versions/4.4.4/assets/dr-ic_type_folder.png	fe71678baad7ce41	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_folder.png	drawable-hdpi		fe71678baad7ce41
+versions/4.4.4/assets/dr-ic_type_folder_big.png	3ec754290b97c974	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_folder_big.png	drawable-hdpi		3ec754290b97c974
 versions/4.4.4/assets/dr-ic_type_image.png	838be3c400ee4e48	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_image.png	drawable-hdpi		838be3c400ee4e48
+versions/4.4.4/assets/dr-ic_type_image_big.png	8780fa37206119ca	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_image_big.png	drawable-hdpi		8780fa37206119ca
 versions/4.4.4/assets/dr-ic_type_pdf.png	52d81a1b6adcd5d9	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_pdf.png	drawable-hdpi		52d81a1b6adcd5d9
+versions/4.4.4/assets/dr-ic_type_pdf_big.png	88985b9a01b142ff	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_pdf_big.png	drawable-hdpi		88985b9a01b142ff
 versions/4.4.4/assets/dr-ic_type_presentation.png	3cab05fcccd0de58	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_presentation.png	drawable-hdpi		3cab05fcccd0de58
+versions/4.4.4/assets/dr-ic_type_presentation_big.png	97f4bf98a48a3a02	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_presentation_big.png	drawable-hdpi		97f4bf98a48a3a02
 versions/4.4.4/assets/dr-ic_type_sheet.png	9e11067be63a04fd	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_sheet.png	drawable-hdpi		9e11067be63a04fd
+versions/4.4.4/assets/dr-ic_type_sheet_big.png	a0c128e565b712ec	copy	hammerhead:/system/app/Drive.apk!res/drawable-hdpi/ic_type_sheet_big.png	drawable-hdpi		a0c128e565b712ec
 versions/4.4.4/assets/dr-ic_upaffordance.png	b337b8aae35678b0	copy	hammerhead:/system/app/Drive.apk!res/drawable-xhdpi/ic_upaffordance.png	drawable-xhdpi		b337b8aae35678b0
 versions/4.4.4/assets/drive.png	868acbd5d39f5f96	copy	hammerhead:/system/priv-app/PrebuiltGmsCore.apk!res/drawable-xxhdpi/launcher_drive_icon.png	drawable-xxhdpi		868acbd5d39f5f96
 versions/4.4.4/assets/ea7-bluedot.png	fc7b2922d0423af7	copy	hammerhead:/system/app/GoogleEarth.apk!res/drawable/bluedot.png	drawable		fc7b2922d0423af7

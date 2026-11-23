@@ -30,7 +30,7 @@
   const files = data => data.driveFiles || window.StockApps?.FILES || [];
   const time = (f, key, ctx) => f[key] ?? (key === 'mtime' || (key === 'etime' && f.kind !== 'folder') ? now(ctx) - (f.age || 0) * DAY : null);
   const parent = f => f.parent || 'root';
-  const prefs = data => ({sort: 'modified', ...(data.drivePrefs || {})});
+  const prefs = data => ({sort: 'modified', grid: false, ...(data.drivePrefs || {})});
   const size = f => f.size ?? (f.kind === 'pdf' ? 1258291 : 0);
   // Formatter.formatFileSize as Lollipop writes it.
   function bytes(n, ctx) {
@@ -59,7 +59,28 @@
     if (sort === 'quota') return [...items].sort((a, b) => size(b) - size(a) || a.name.localeCompare(b.name, ctx.locale));
     return [...items].sort((a, b) => (time(b, key, ctx) ?? -Infinity) - (time(a, key, ctx) ?? -Infinity));
   }
+  /* View as Grid (menu_doc_view_grid_mode): doc_grid_row.xml rows of GridTile items (2 dp margins) on #fafafa, two to a
+     row on a phone. A file is doc_grid_item.xml: the thumbnail (doc_grid_item_drawable, #d9d9d9) with the start of its
+     text as the page Drive renders, or ic_type_*_black_big, then the 44 dp GridFooter (6 dp padding, the 24 dp type
+     icon, the title in 14 sp #4c4c4c). A folder is doc_grid_folder.xml: just the 56 dp white footer, its name on up to
+     two lines. The time range titles stay full width. */
+  function tile(ctx, f) {
+    const icon = `assets/dr2-${ICON[f.kind] || 'ic_type_doc'}.png`, hold = `data-action="drv-open" data-id="${e(f.id)}" data-drive-hold="${e(f.id)}"`;
+    if (f.kind === 'folder') return `<button class="drg2-tile folder" ${hold}><span class="drg2-foot"><img src="${icon}" alt=""><b>${e(f.name)}</b></span></button>`;
+    const text = String(f.text || '').split('\n').slice(0, 8).join('\n');
+    return `<button class="drg2-tile" ${hold}><span class="drg2-thumb">${text ? `<span class="drg2-page">${e(text)}</span>` : `<img src="assets/dr2-${ICON[f.kind] || 'ic_type_doc'}_black_big.png" alt="">`}</span><span class="drg2-foot"><img src="${icon}" alt=""><b>${e(f.name)}</b>${f.pinned ? '<i class="drv2-pin" aria-hidden="true"></i>' : ''}</span></button>`;
+  }
+  function grid(ctx, items, sort) {
+    const key = {modified: 'mtime', opened: 'otime', edited: 'etime'}[sort], groups = [];
+    for (const f of sorted(items, sort, ctx)) {
+      const t = key ? time(f, key, ctx) : null, group = key ? (t ? range(t, ctx) : 'Never') : '';
+      if (!groups.length || groups.at(-1).group !== group) groups.push({group, items: []});
+      groups.at(-1).items.push(f);
+    }
+    return groups.map(g => `${g.group ? `<h4 class="dr2-group">${e(D(ctx, g.group))}</h4>` : ''}<div class="drg2-grid">${g.items.map(f => tile(ctx, f)).join('')}</div>`).join('');
+  }
   function rows(ctx, items, sort) {
+    if (prefs(ctx.data).grid) return grid(ctx, items, sort);
     const key = {modified: 'mtime', opened: 'otime', edited: 'etime'}[sort];
     let last = '';
     return sorted(items, sort, ctx).map(f => {
@@ -124,6 +145,7 @@
       case 'drv-refresh': ui.overlay = ''; ctx.renderOverlay?.(); ui.driveRefreshing = true; ctx.render(); setTimeout(() => { ui.driveRefreshing = false; if (ui.view === 'drive') ctx.render(); }, 900); return true;
       case 'drv-filter': (ui.driveStack ||= []).push({folder: ui.driveFolder || '', nav: ui.driveNavItem || 'my', filter: ui.driveFilter || '', sub: ui.sub}); ui.driveFilter = id; ui.driveFolder = ''; close(); ctx.render(); return true;
       case 'drv-sort': data.drivePrefs = {...prefs(data), sort: id}; ctx.save(); close(); ctx.render(); return true;
+      case 'drv-grid': data.drivePrefs = {...prefs(data), grid: !prefs(data).grid}; ctx.save(); ctx.render(); return true;
       case 'drv-add': {
         close();
         if (id === 'folder') { ui.driveDialog = 'folder'; ctx.render(); ctx.root.querySelector('[data-drv-edit]')?.select(); return true; }
@@ -168,5 +190,5 @@
     if (!ui.sub && ui.driveNavItem && ui.driveNavItem !== 'my') { ui.driveNavItem = 'my'; return true; }
     return false;
   }
-  window.LPDrive = {list, dialog, menu, handle, back, files, NAV, D};
+  window.LPDrive = {list, dialog, menu, handle, back, files, NAV, D, prefs};
 })();

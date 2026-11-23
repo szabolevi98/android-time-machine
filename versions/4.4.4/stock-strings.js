@@ -614,6 +614,7 @@ window.StockStrings = {
   "Uploads": {"res": "Drive:menu_show_upload", "hu": "Feltöltések", "de": "Uploads", "fr": "Importations", "es": "Subidas"},
   "Search": {"res": "Drive:menu_search", "hu": "Keresés", "de": "Suchen", "fr": "Rechercher", "es": "Buscar"},
   "View as Grid": {"res": "Drive:menu_doc_view_grid_mode", "hu": "Rácsnézet", "de": "Als Raster anzeigen", "fr": "Grille", "es": "Ver como cuadrícula"},
+  "View as List": {"res": "Drive:menu_doc_view_list_mode", "hu": "Listanézet", "de": "Als Liste anzeigen", "fr": "Liste", "es": "Ver como lista"},
   "Add new": {"res": "Drive:menu_create_new_doc", "hu": "Új hozzáadása", "de": "Neu hinzufügen", "fr": "Ajouter", "es": "Nuevo"},
   "Refresh": {"res": "Drive:menu_refresh", "hu": "Frissítés", "de": "Aktualisieren", "fr": "Actualiser", "es": "Actualizar"},
   "Filter by": {"res": "Drive:menu_filter_by", "hu": "Szűrés:", "de": "Filtern nach", "fr": "Filtrer par", "es": "Filtrar por"},

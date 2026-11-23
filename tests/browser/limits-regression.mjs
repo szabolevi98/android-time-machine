@@ -2126,6 +2126,24 @@ const kkDriveFiles = async h => {
   await h.tap('#viewport .drv-row[data-action="drv-wifi"]');
   h.check('Settings keep Transfer files only over Wi-Fi', (await store(h, 'drivePrefs'))?.wifiOnly === false && await h.until(`!document.querySelector('#viewport .drv-row[data-action="drv-wifi"] .drv-check.on')`));
 };
+// 4.4.4 and 5.1.1 Drive › View as Grid (T34): the bar's toggle shows the same items as tiles and turns into View as
+// List; the choice stays after a reload; a tile opens its item; the toggle brings the list back.
+const driveGrid = ({row, tile}) => async h => {
+  await h.openApp('drive');
+  h.check('opens My Drive as a list', await h.until(`document.querySelectorAll('#viewport ${row}').length > 0 && !document.querySelector('#viewport ${tile}')`));
+  const count = await h.ev(`document.querySelectorAll('#viewport ${row}').length`);
+  await h.tap('#viewport [data-action="drv-grid"]');
+  h.check('View as Grid shows the items as tiles', await h.until(`document.querySelectorAll('#viewport ${tile}').length === ${count} && !document.querySelector('#viewport ${row}')`));
+  h.check('the toggle becomes View as List', await h.until(`/List/.test(document.querySelector('#viewport [data-action="drv-grid"]')?.getAttribute('aria-label') || '')`));
+  h.check('reloads', await h.reload());
+  await h.openApp('drive');
+  h.check('the grid stays after a reload', await h.until(`document.querySelectorAll('#viewport ${tile}').length === ${count}`));
+  await h.tap(`#viewport ${tile}:not(.folder) [data-action="drv-open"], #viewport ${tile}:not(.folder)[data-action="drv-open"]`);
+  h.check('a tile opens its item', await h.until(`!document.querySelector('#viewport ${tile}') && !!document.querySelector('#viewport .sa-drive')`));
+  await h.key('Escape');
+  await h.tap('#viewport [data-action="drv-grid"]');
+  h.check('View as List brings the list back', await h.until(`document.querySelectorAll('#viewport ${row}').length === ${count} && !document.querySelector('#viewport ${tile}')`));
+};
 // 5.1.1 Drive 2.1 (T34): Create's "New" sheet makes a folder and a Google Docs file; Sort by and Filter by reorder and
 // narrow the list; a held item moves into a folder, is renamed, kept on device (On device lists it) and removed;
 // Refresh reads the list again; the opened file's Send file hands it to Gmail.
@@ -3716,6 +3734,8 @@ const CASES = [
   {id: 'T34', version: '4.3', name: 'Drive is not on the Nexus 4 image', run: jbNoDrive},
   {id: 'T34', version: '4.4.4', name: 'Drive › Add new, Sort by, Filter by, Move to, Rename, Offline, Remove, Refresh, Send, Settings', run: kkDriveFiles},
   {id: 'T34', version: '5.1.1', name: 'Drive › Create, Sort by, Filter by, Move, Rename, Keep on device, Remove, Refresh, Send file', run: lpDriveFiles},
+  {id: 'T34', version: '4.4.4', name: 'Drive › View as Grid / List', run: driveGrid({row: '.dr-row', tile: '.drg-tile'})},
+  {id: 'T34', version: '5.1.1', name: 'Drive › View as Grid / List', run: driveGrid({row: '.dr2-row', tile: '.drg2-tile'})},
   {id: 'T29', version: '4.0.4', name: 'Settings › System updates and TalkBack, its warnings, Explore by touch and settings', run: icsA11y},
   {id: 'T43', version: '4.3', name: 'Play Music / Movies / Books › menus, keep on device, bookmarks, sort, settings', run: jbPlayMore},
   {id: 'T43', version: '4.4.4', name: 'Play Music / Movies / Books / Games › menus, keep on device, sort, settings', run: kkPlayMore},

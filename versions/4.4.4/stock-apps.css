@@ -291,6 +291,22 @@
 .dr-text small{padding:calc(1.0045 * var(--dp)) 0 calc(1.9978 * var(--dp));font:400 calc(13.0023 * var(--dp)) Roboto,sans-serif;color:#aaa}
 .screen .dr-info{flex:none;width:calc(60 * var(--dp));padding:0;border:0;background:none;display:grid;place-items:center}
 .dr-info img{width:calc(18.0023 * var(--dp));height:calc(18.0023 * var(--dp))}
+/* Drive 1.2 View as Grid (kk-drive.js): doc_grid_item.xml two to a row, 4 dp apart. */
+.drg-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(8 * var(--dp));padding:calc(4 * var(--dp)) calc(8 * var(--dp)) calc(8 * var(--dp))}
+.drg-tile{display:flex;flex-direction:column;min-width:0}
+.screen .drg-thumb{position:relative;display:block;width:100%;aspect-ratio:1;padding:0;border:0;overflow:hidden;background:#d9d9d9;text-align:left;cursor:pointer}
+.drg-thumb::after{content:'';position:absolute;left:0;right:0;bottom:0;height:calc(20 * var(--dp));background:url('assets/dr-doc_grid_thumbnail_gradient.png') 0 0/100% 100%;pointer-events:none}
+.drg-page{position:absolute;inset:calc(8 * var(--dp)) calc(8 * var(--dp)) 0;padding:calc(8 * var(--dp));background:#fff;font:400 calc(8 * var(--dp))/1.35 Roboto,sans-serif;color:#444;white-space:pre-wrap;overflow:hidden;tab-size:4}
+.drg-big{position:absolute;left:50%;top:50%;width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin:calc(-24 * var(--dp)) 0 0 calc(-24 * var(--dp))}
+.drg-tile.folder .drg-thumb{background:url('assets/dr-doc_grid_folder_background.png') 0 0/100% 100%}
+.drg-tile.folder .drg-thumb::after{display:none}
+.drg-name{position:absolute;inset:0;padding:calc(10 * var(--dp));font:700 calc(16 * var(--dp)) Roboto,sans-serif;color:#fff;text-shadow:0 calc(1 * var(--dp)) calc(2 * var(--dp)) #0008;overflow:hidden;text-overflow:ellipsis}
+.drg-thumb .drv-pin{position:absolute;right:calc(6 * var(--dp));top:calc(6 * var(--dp));margin:0}
+.drg-bar{display:flex;align-items:center;height:calc(48 * var(--dp));background:#fff;border-bottom:calc(2 * var(--dp)) solid #d4d4d4;border-radius:0 0 calc(2 * var(--dp)) calc(2 * var(--dp))}
+.drg-bar>img{flex:none;width:calc(16 * var(--dp));height:calc(16 * var(--dp));padding:0 calc(8 * var(--dp));box-sizing:content-box}
+.drg-bar b{flex:1;min-width:0;font:400 calc(13 * var(--dp)) Roboto,sans-serif;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen .drg-bar .dr-info{width:calc(34 * var(--dp));height:100%}
+.screen .drg-thumb:active{filter:brightness(.85)}
 .screen .dr-main:active,.screen .dr-info:active{background:#f90}
 .screen .dr-scrim{position:absolute;inset:calc(48.0023 * var(--dp)) 0 0;z-index:2;border:0;background:#0006}
 .dr-nav{position:absolute;left:0;top:calc(48.0023 * var(--dp));bottom:0;z-index:2;width:min(calc(300 * var(--dp)),85%);overflow-y:auto;background:#eee}

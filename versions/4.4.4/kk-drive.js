@@ -31,7 +31,7 @@
   const files = data => data.driveFiles || window.StockApps?.FILES || [];
   const time = (f, key, ctx) => f[key] ?? (key === 'mtime' || (key === 'etime' && f.kind !== 'folder') ? now(ctx) - (f.age || 0) * DAY : null);
   const parent = f => f.parent || 'root';
-  const prefs = data => ({sort: 'modified', wifiOnly: true, ...(data.drivePrefs || {})});
+  const prefs = data => ({sort: 'modified', wifiOnly: true, grid: false, ...(data.drivePrefs || {})});
   const size = f => f.size ?? (f.kind === 'pdf' ? 1258291 : 0);
   // Formatter.formatFileSize as KitKat writes it.
   function bytes(n, ctx) {
@@ -61,7 +61,27 @@
     if (sort === 'quota') return [...items].sort((a, b) => size(b) - size(a) || a.name.localeCompare(b.name, ctx.locale));
     return [...items].sort((a, b) => (time(b, key, ctx) ?? -Infinity) - (time(a, key, ctx) ?? -Infinity));
   }
+  /* View as Grid (menu_doc_view_grid_mode): doc_grid_row.xml rows of doc_grid_item.xml, two to a row on a phone, 4 dp
+     apart (doc_grid_item_spacing). The thumbnail (#d9d9d9 doc_grid_entry_background under doc_grid_thumbnail_gradient)
+     shows the start of the item's text as the page Drive renders; a folder's is doc_grid_folder_background with its
+     name in 16 sp bold white. Under it the 48 dp doc_grid_card_bottom_background bar (white over a 2 dp #d4d4d4 edge):
+     the type icon in 32 dp, the 13 sp title and the info button. The time range titles stay full width. */
+  function tile(ctx, f) {
+    const folder = f.kind === 'folder', text = String(f.text || '').split('\n').slice(0, 8).join('\n');
+    const thumb = folder ? `<span class="drg-name">${e(f.name)}</span>` : text ? `<span class="drg-page">${e(text)}</span>` : `<img class="drg-big" src="assets/dr-${ICON[f.kind] || 'ic_type_doc'}_big.png" alt="">`;
+    return `<div class="drg-tile${folder ? ' folder' : ''}" data-drive-hold="${e(f.id)}"><button class="drg-thumb" data-action="drv-open" data-id="${e(f.id)}" aria-label="${e(f.name)}">${thumb}${f.pinned ? '<i class="drv-pin" aria-hidden="true"></i>' : ''}</button><span class="drg-bar"><img src="assets/dr-${ICON[f.kind] || 'ic_type_doc'}_big.png" alt=""><b>${e(f.name)}</b><button class="dr-info" data-action="drv-detail" data-id="${e(f.id)}" aria-label="${e(D(ctx, 'Show item properties'))}"><img src="assets/dr-ic_information_gray_small.png" alt=""></button></span></div>`;
+  }
+  function grid(ctx, items, sort) {
+    const key = {modified: 'mtime', opened: 'otime', edited: 'etime'}[sort], groups = [];
+    for (const f of sorted(items, sort, ctx)) {
+      const t = key ? time(f, key, ctx) : null, group = key ? (t ? range(t, ctx) : 'Never') : '';
+      if (!groups.length || groups.at(-1).group !== group) groups.push({group, items: []});
+      groups.at(-1).items.push(f);
+    }
+    return groups.map(g => `${g.group ? `<h4 class="dr-group">${e(D(ctx, g.group))}</h4>` : ''}<div class="drg-grid">${g.items.map(f => tile(ctx, f)).join('')}</div>`).join('');
+  }
   function rows(ctx, items, sort) {
+    if (prefs(ctx.data).grid) return grid(ctx, items, sort);
     const key = {modified: 'mtime', opened: 'otime', edited: 'etime'}[sort];
     let last = '';
     return sorted(items, sort, ctx).map(f => {
@@ -152,6 +172,7 @@
       case 'drv-refresh': ui.overlay = ''; ctx.renderOverlay?.(); ui.driveRefreshing = true; ctx.render(); setTimeout(() => { ui.driveRefreshing = false; if (ui.view === 'drive') ctx.render(); }, 900); return true;
       case 'drv-filter': (ui.driveStack ||= []).push({folder: ui.driveFolder || '', nav: ui.driveNavItem || 'my', filter: ui.driveFilter || '', sub: ui.sub}); ui.driveFilter = id; ui.driveFolder = ''; close(); ctx.render(); return true;
       case 'drv-sort': data.drivePrefs = {...prefs(data), sort: id}; ctx.save(); close(); ctx.render(); return true;
+      case 'drv-grid': data.drivePrefs = {...prefs(data), grid: !prefs(data).grid}; ctx.save(); ctx.render(); return true;
       case 'drv-settings': ui.overlay = ''; ctx.renderOverlay?.(); ui.sub = 'drive-settings'; ctx.render(); return true;
       case 'drv-wifi': data.drivePrefs = {...prefs(data), wifiOnly: !prefs(data).wifiOnly}; ctx.save(); ctx.render(); return true;
       case 'drv-clear-cache': ui.driveDialog = 'clear-cache'; ctx.render(); return true;
