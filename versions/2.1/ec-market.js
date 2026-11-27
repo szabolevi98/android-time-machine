@@ -41,7 +41,7 @@
     {id: 'clock', app: 'clock', kind: 'apps', category: 'Tools', developer: 'Android Demo', rating: 4.1, size: '1.2 MB', description: 'A familiar clock and alarms for your day.'},
     {id: 'calculator', app: 'calculator', kind: 'apps', category: 'Tools', developer: 'Android Demo', rating: 4.7, size: '0.8 MB', description: 'Everyday sums and scientific discoveries.'},
     {id: 'lunar-golf', kind: 'games', category: 'Arcade & Action', name: 'Lunar Golf', developer: 'Crater Games', rating: 4.4, price: '$0.99', size: '9.8 MB', description: 'Eighteen holes in low gravity.', art: 'golf', perms: [NET]},
-    {id: 'pocket-planner', kind: 'apps', category: 'Productivity', name: 'Pocket Planner', developer: 'Quiet Tools', rating: 4.3, price: '$1.99', size: '1.6 MB', description: 'Plan your week on one simple page.', art: 'planner', perms: [CAL]}
+    {id: 'pocket-planner', kind: 'apps', category: 'Productivity', name: 'Pocket Planner', developer: 'Quiet Tools', rating: 4.3, price: '', size: '1.6 MB', description: 'Plan your week on one simple page.', art: 'planner', perms: [CAL]}
   ].map((x, i) => ({downloads: ['250,000 - 1,000,000', '50,000 - 250,000', '10,000 - 50,000', '5,000 - 10,000'][i % 4], votes: 120 + i * 47, version: `1.${i}.${(i * 3) % 7}`, ...x}));
   // The server's categories of the time (Market sends them; not part of the APK).
   const CATEGORIES = {

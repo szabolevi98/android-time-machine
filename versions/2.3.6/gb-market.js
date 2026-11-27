@@ -152,7 +152,7 @@
   };
   const EXTRA = [
     {id: 'lunar-golf', kind: 'games', category: 'Arcade & Action', art: 'golf', name: 'Lunar Golf', developer: 'Crater Games', rating: 4.4, price: '$0.99', size: '9.8 MB', description: 'Eighteen holes in low gravity.', colors: ['#0c1022', '#b9bfd0']},
-    {id: 'pocket-planner', kind: 'apps', category: 'Productivity', art: 'planner', name: 'Pocket Planner', developer: 'Quiet Tools', rating: 4.3, price: '$1.99', size: '1.6 MB', description: 'Plan your week on one simple page.', colors: ['#2a6fbd', '#e8453c']}
+    {id: 'pocket-planner', kind: 'apps', category: 'Productivity', art: 'planner', name: 'Pocket Planner', developer: 'Quiet Tools', rating: 4.3, price: 'FREE', size: '1.6 MB', description: 'Plan your week on one simple page.', colors: ['#2a6fbd', '#e8453c']}
   ];
   const CATEGORY = {Games: 'Arcade & Action', Photography: 'Multimedia', Communication: 'Communication', 'Music & audio': 'Multimedia', Productivity: 'Productivity', Tools: 'Tools'};
   const catalog = () => (window.ICSPlayStore?.catalog || []).map((item, i) => ({...item, kind: item.category === 'Games' ? 'games' : 'apps', category: CATEGORY[item.category] || 'Tools', price: 'FREE', downloads: ['1,000,000 - 5,000,000', '100,000 - 500,000', '50,000 - 100,000', '10,000 - 50,000'][i % 4], votes: 1200 + i * 417, version: `1.${i}.${(i * 3) % 7}`, updated: ['Aug 2, 2011', 'Jul 21, 2011', 'Jun 14, 2011', 'May 30, 2011'][i % 4]}));

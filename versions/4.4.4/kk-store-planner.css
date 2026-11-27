@@ -1,0 +1,30 @@
+/* Pocket Planner on 4.4.4 (kk-store-planner.js): Holo light with the app's dark action bar. */
+.kkplan{display:flex;flex-direction:column;background:#f3f3f3;color:#222;font-family:Roboto,sans-serif;overflow:hidden}
+.kkplan-bar{display:flex;align-items:center;height:calc(48 * var(--dp));flex:none;background:#2a6fbd;color:#fff;padding-left:calc(8 * var(--dp))}
+.kkplan-icon{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-right:calc(8 * var(--dp))}
+.kkplan-title{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.kkplan-title b{font-weight:400;font-size:calc(18 * var(--dp));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kkplan-title small{font-size:calc(12 * var(--dp));opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kkplan-action{width:calc(56 * var(--dp));height:calc(48 * var(--dp));border:0;background:none;display:grid;place-items:center;padding:0;cursor:pointer}
+.kkplan-action:active{background:#ffffff33}
+.kkplan-action img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.kkplan-action i{position:relative;width:calc(18 * var(--dp));height:calc(18 * var(--dp))}
+.kkplan-action i::before,.kkplan-action i::after{content:'';position:absolute;left:50%;top:50%;background:#fff;transform:translate(-50%,-50%)}
+.kkplan-action i::before{width:100%;height:calc(2 * var(--dp))}
+.kkplan-action i::after{width:calc(2 * var(--dp));height:100%}
+.kkplan-week{display:flex;align-items:center;height:calc(40 * var(--dp));flex:none;background:#fff;border-bottom:calc(1 * var(--dp)) solid #d7d7d7}
+.kkplan-week button{width:calc(48 * var(--dp));height:100%;border:0;background:none;color:#2a6fbd;font-size:calc(26 * var(--dp));line-height:1;padding:0;cursor:pointer}
+.kkplan-week button:active{background:#33b5e566}
+.kkplan-week span{flex:1;text-align:center;font-size:calc(15 * var(--dp));color:#333}
+.kkplan-list{flex:1;overflow-y:auto;scrollbar-width:none;padding-bottom:calc(16 * var(--dp))}
+/* listSeparatorTextViewStyle (Holo light): bold caps 14 sp, a divider under it. */
+.kkplan-day{display:flex;align-items:flex-end;width:calc(100% - 16 * var(--dp));margin:calc(12 * var(--dp)) calc(8 * var(--dp)) 0;border:0;border-bottom:calc(1 * var(--dp)) solid #c8c8c8;padding:0 calc(8 * var(--dp)) calc(4 * var(--dp));background:none;color:#555;font:700 calc(14 * var(--dp))/1.3 Roboto,sans-serif;text-transform:uppercase;text-align:left;cursor:pointer}
+.kkplan-day span{flex:1;min-width:0}
+.kkplan-day.today{color:#2a6fbd;border-bottom:calc(2 * var(--dp)) solid #2a6fbd}
+.kkplan-day em{font-style:normal;font-size:calc(12 * var(--dp))}
+.kkplan-task{display:flex;align-items:center;gap:calc(8 * var(--dp));width:100%;min-height:calc(48 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #e2e2e2;padding:0 calc(16 * var(--dp)) 0 calc(8 * var(--dp));background:none;color:#222;text-align:left;cursor:pointer}
+.kkplan-task:active{background:#33b5e566}
+.kkplan-task img{width:calc(32 * var(--dp));height:calc(32 * var(--dp));flex:none}
+.kkplan-task span{flex:1;min-width:0;font-size:calc(16 * var(--dp));overflow-wrap:anywhere}
+.kkplan-task.done span{color:#999;text-decoration:line-through}
+.kkplan-empty{margin:0;padding:calc(10 * var(--dp)) calc(16 * var(--dp));font-size:calc(14 * var(--dp));color:#999}

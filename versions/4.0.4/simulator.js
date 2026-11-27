@@ -242,15 +242,16 @@
      the image's contact picture as the icon, the name as the label. Launcher2's InstallShortcutReceiver tries the default screen, then the screens beside it outwards, the first free cell of each; none free gives out_of_space; the toast names it (shortcut_installed). */
   const contactShortcut = id => String(id).startsWith('contact:') ? data.contacts.find(p => p.id === Number(String(id).slice(8))) || {name: ''} : null;
   const VCARD = key => { const row = window.StockStrings?.vcard?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : key; };
-  function placeContactShortcut(person) {
-    if (!person) return;
+  function placeContactShortcut(person) { if (person) placeShortcut(`contact:${person.id}`, person.name); }
+  // InstallShortcutReceiver: a shortcut (a contact, an app the store installed) on the first free cell.
+  function placeShortcut(key, label) {
     const free = page => (data.homePages[page] || []).findIndex((id, index) => !id && !(data.homeWidgets[page] || []).some(w => { const s = widgetSize(w); return index % 4 >= w.x && index % 4 < w.x + s.width && Math.floor(index / 4) >= w.y && Math.floor(index / 4) < w.y + s.height; }));
     const count = data.homePages.length;
     const order = [2, 3, 1, 4, 0].filter(i => i < count);
     let page = order.find(i => free(i) >= 0);
     if (page === undefined) { toast(VCARD('No room')); return; }
-    data.homePages[page][free(page)] = `contact:${person.id}`; save();
-    toast(AndroidStrings.format(VCARD('Shortcut "%s" created.'), person.name));
+    data.homePages[page][free(page)] = key; save();
+    toast(AndroidStrings.format(VCARD('Shortcut "%s" created.'), label));
   }
   const launcherIcon = id => contactShortcut(id) ? `<button class="launcher-icon contact-shortcut" data-action="open-contact" data-id="${safe(String(id).slice(8))}" aria-label="${safe(contactShortcut(id).name)}" data-no-translate>${appIcon(id)}<span>${safe(contactShortcut(id).name)}</span></button>` : ICSLauncherFolders.folder(data,id)
     ? `<button class="launcher-icon" data-action="folder-open" data-folder-id="${safe(id)}" aria-label="${safe(folderName(id))}" data-no-translate>${appIcon(id)}<span>${safe(folderName(id))}</span></button>`

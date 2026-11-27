@@ -243,6 +243,30 @@
   const i18n = window.AndroidI18n;
   const appNames = Object.fromEntries(apps.map(app => [app[0], app[1]]));
   appNames.google = 'Google';
+  /* The store apps that work (docs/plans/play-apps.md, store-apps/legacy-host.js): the store's installed ones join the
+     launcher's apps (icon assets/<id>.png) while installed, open as StoreHost modules, and leave with their icons and
+     data when uninstalled. */
+  function storeAppsSync() {
+    const want = (data.marketInstalled || []).map(id => StoreHost.runtime(id)).filter(Boolean);
+    for (const id of want) if (!apps.some(a => a[0] === id)) { const m = StoreHost.module(id); apps.push([id, m.title, '', m.color || '#888', m.dark || '#444']); appNames[id] = m.title; iconAssets.add(id); }
+    for (let i = apps.length - 1; i >= 0; i--) if (String(apps[i][0]).startsWith('store-') && !want.includes(apps[i][0])) { delete appNames[apps[i][0]]; apps.splice(i, 1); }
+  }
+  storeAppsSync();
+  function storeContext() { return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key)}); }
+  // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
+  function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (jbPlayContext().prefs.shortcuts) placeShortcut(r, appNames[r]); }
+  // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
+  function storeUninstall(id) {
+    data.marketInstalled = (data.marketInstalled || []).filter(x => x !== id);
+    const r = StoreHost.runtime(id); if (!r) return;
+    StoreHost.module(r).clearData?.(storeContext());
+    data.homePages = data.homePages.map(page => page.map(x => x === r ? null : x));
+    if (Array.isArray(data.dock)) data.dock = data.dock.map(x => x === r ? null : x);
+    for (const f of Object.values(data.folders || {})) if (Array.isArray(f.items)) f.items = f.items.filter(x => x !== r);
+    ui.recent = (ui.recent || []).filter(x => x !== r);
+    if (ui.view === r) { ui.view = 'home'; ui.sub = ''; }
+    storeAppsSync();
+  }
   ICSLauncherFolders.initialize(data,apps.map(app=>app[0]));
   const screen = document.querySelector('#screen');
   // dp → CSS px now: the display is 384 dp wide (the desktop frame's width, the whole width on a phone).
@@ -280,15 +304,16 @@
      the image's contact picture as the icon, the name as the label. Launcher2's InstallShortcutReceiver tries the default screen, then the screens beside it outwards, the first free cell of each; none free gives out_of_space; the toast names it (shortcut_installed). */
   const contactShortcut = id => String(id).startsWith('contact:') ? data.contacts.find(p => p.id === Number(String(id).slice(8))) || {name: ''} : null;
   const VCARD = key => { const row = window.StockStrings?.vcard?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : key; };
-  function placeContactShortcut(person) {
-    if (!person) return;
+  function placeContactShortcut(person) { if (person) placeShortcut(`contact:${person.id}`, person.name); }
+  // InstallShortcutReceiver: a shortcut (a contact, an app the store installed) on the first free cell.
+  function placeShortcut(key, label) {
     const free = page => (data.homePages[page] || []).findIndex((id, index) => !id && !(data.homeWidgets[page] || []).some(w => { const s = widgetSize(w); return index % 4 >= w.x && index % 4 < w.x + s.width && Math.floor(index / 4) >= w.y && Math.floor(index / 4) < w.y + s.height; }));
     const count = data.homePages.length;
     const order = [2, 3, 1, 4, 0].filter(i => i < count);
     let page = order.find(i => free(i) >= 0);
     if (page === undefined) { toast(VCARD('No room')); return; }
-    data.homePages[page][free(page)] = `contact:${person.id}`; save();
-    toast(AndroidStrings.format(VCARD('Shortcut "%s" created.'), person.name));
+    data.homePages[page][free(page)] = key; save();
+    toast(AndroidStrings.format(VCARD('Shortcut "%s" created.'), label));
   }
   const launcherIcon = id => contactShortcut(id) ? `<button class="launcher-icon contact-shortcut" data-action="open-contact" data-id="${safe(String(id).slice(8))}" aria-label="${safe(contactShortcut(id).name)}" data-no-translate>${appIcon(id)}<span>${safe(contactShortcut(id).name)}</span></button>` : ICSLauncherFolders.folder(data,id)
     ? `<button class="launcher-icon" data-action="folder-open" data-folder-id="${safe(id)}" aria-label="${safe(folderName(id))}" data-no-translate>${appIcon(id)}<span>${safe(folderName(id))}</span></button>`
@@ -391,6 +416,7 @@
     renderOverlay();
     i18n.translateDOM(screen);
     if (ui.view === 'earth') EarthApp.mount(viewport, earthContext());
+    if (StoreHost.has(ui.view)) StoreHost.mount(ui.view, storeContext(), viewport);
     const scene = {view: ui.view, sub: ui.sub}, transit = ui.sleeping ? '' : ICSTransitions.kind(lastScene, scene, pendingNav);
     lastScene = scene;
     // Launcher icons, folders and the drawer start apps with a scale-up from the tapped icon.
@@ -706,6 +732,7 @@
     const r = screen.getBoundingClientRect(); liveWallpaper.tap(event.clientX - r.left, event.clientY - r.top);
   });
   function renderApp() {
+    if (StoreHost.has(ui.view)) return StoreHost.render(ui.view, storeContext());
     if (ui.sub === 'sim-import' && ['people', 'phone'].includes(ui.view)) return PeopleIO.sim({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
     // Contacts to display, Customize and Settings (people-io.js).
     if (ui.view === 'people' && PeopleIO.PAGES.includes(ui.sub)) return PeopleIO.page({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
@@ -819,6 +846,7 @@
     save, render, renderOverlay, toast: message => toast(i18n.t(message)),
     openVoice: () => { openApp('google-search'); ui.sub = 'settings'; ui.gsStack = []; ui.gsPage = 'voice'; ui.gsDialog = null; ui.voiceFromSettings = true; render(); }});
   function navigateBack() {
+    if ((ui.overlay === 'store-host' || !ui.overlay && StoreHost.has(ui.view)) && StoreHost.back(storeContext())) return;
     if (ui.view === 'settings' && ui.sub.startsWith('lng-') && !ui.overlay && InputLanguage.back(langContext())) return;
     if (ui.view === 'google-search' && ui.voiceFromSettings && ui.sub === 'settings' && !ui.overlay && !(ui.gsStack || []).length) { ui.voiceFromSettings = false; openApp('settings'); ui.sub = 'language'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'dev-backup-pw' && !ui.overlay) { ui.sub = 'development'; render(); return; }
@@ -1010,6 +1038,8 @@
       // Clear all: an AlertDialog with delete_all_confirmation and No / Yes.
       const T = key => Ears.text(i18n.language, key);
       overlayRoot.innerHTML = `<div class="ga-scrim" data-action="close-overlay"></div><div class="ga-dialog ga-alert" role="alertdialog" aria-label="${safe(T('delete_all'))}" data-no-translate><p class="ga-body">${safe(T('delete_all_confirmation'))}</p><div class="ga-buttons"><button type="button" data-action="close-overlay">${safe(T('no'))}</button><button type="button" data-action="ears-clear">${safe(T('yes'))}</button></div></div>`;
+    } else if (ui.overlay === 'store-host') {
+      overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
     } else if (ui.overlay === 'dream') {
       overlayRoot.innerHTML = renderDream();
     } else if (ui.overlay === 'dev-list') {
@@ -1425,7 +1455,7 @@
     ui.marketTimer = setInterval(() => {
       const d = ui.marketDownload; if (!d) { clearInterval(ui.marketTimer); return; }
       if (d.phase === 'downloading') { d.progress = Math.min(1, d.progress + .12); if (d.progress >= 1) d.phase = 'installing'; }
-      else { clearInterval(ui.marketTimer); ui.marketDownload = null; data.marketInstalled = [...new Set([...(data.marketInstalled || []), id])]; data.marketEverInstalled = [...new Set([...(data.marketEverInstalled || []), id])]; data.notifications = data.notifications.filter(n => n.kind !== 'market-dl'); if ((data.marketPrefs?.notify) !== false) data.notifications.unshift({id: Date.now(), title: item.name, detail: JBPlay.text(i18n.language, 'Successfully installed.'), kind: 'market'}); save(); renderStatus(); }
+      else { clearInterval(ui.marketTimer); ui.marketDownload = null; data.marketInstalled = [...new Set([...(data.marketInstalled || []), id])]; storeInstalled(id); data.marketEverInstalled = [...new Set([...(data.marketEverInstalled || []), id])]; data.notifications = data.notifications.filter(n => n.kind !== 'market-dl'); if ((data.marketPrefs?.notify) !== false) data.notifications.unshift({id: Date.now(), title: item.name, detail: JBPlay.text(i18n.language, 'Successfully installed.'), kind: 'market'}); save(); renderStatus(); }
       if (ui.view === 'play-store' && !ui.marketSearching) jbPlayKeepScroll();
     }, 350);
   }
@@ -1921,6 +1951,7 @@
     ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);ui.browserOwner='browser';ui.browserSessions={};syncBrowserState();ui.peopleDraft=null;ui.peopleQuery='';ui.peopleTab='all';save();home();
   }
   function clearAppData(id) {
+    if(StoreHost.has(id)){StoreHost.module(id).clearData?.(storeContext());save();}
     if(id==='chrome'){delete data.chromeSession;delete ui.browserSessions.chrome;if(ui.browserOwner==='chrome'){ui.browserSession=restoreChrome();syncBrowserState();}save();}
     if(id==='browser'){delete data.browserSession;data.browserHistory=clone(defaultData.browserHistory);data.bookmarks=clone(defaultData.bookmarks||[]);data.savedPages=[];ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);syncBrowserState();}
     if(id==='music'){ui.music=ICSMusic.restore();saveMusic();}
@@ -2038,6 +2069,8 @@
       if(!['back','alarm-dismiss','alarm-snooze','lock-media'].includes(action))return;
     }
     if(action.startsWith('kp-') && KeepMore.handle(action,id,keepMoreContext()))return;
+    // A store app's own controls and the host's dialog and menu (store-apps/legacy-host.js).
+    if ((action.startsWith('sth-') || StoreHost.has(ui.view)) && StoreHost.action(action, button, storeContext())) return;
     // The Contacts editor (contact-editor.js): fields, types, photo and its dialogs.
     if (ui.view === 'people' && action.startsWith('hce-') && HoloContactEditor.handle(action, id, {draft: ui.peopleDraft, form: viewport.querySelector('#people-editor'), ui, render, renderOverlay,
       focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
@@ -2136,8 +2169,8 @@
       case 'jbp-buy': { const item = JBPlay.find(id); ui.overlay = ''; renderOverlay(); if (item && item.price !== 'FREE') { toast(JBPlay.text(i18n.language, 'Unavailable')); break; } ui.marketTarget = id; ui.overlay = 'jbp-perms'; renderOverlay(); break; }
       case 'jbp-accept': ui.overlay = ''; renderOverlay(); jbPlayDownload(id); break;
       case 'jbp-cancel': clearInterval(ui.marketTimer); ui.marketDownload = null; data.notifications = data.notifications.filter(n => n.kind !== 'market-dl'); save(); renderStatus(); render(); break;
-      case 'jbp-open': { const item = JBPlay.find(id); if (item?.app) openApp(item.app); else toast(JBPlay.text(i18n.language, 'Unavailable')); break; }
-      case 'jbp-uninstall': ui.overlay = ''; renderOverlay(); data.marketInstalled = (data.marketInstalled || []).filter(x => x !== id); save(); render(); break;
+      case 'jbp-open': { const item = JBPlay.find(id); if (item?.app) openApp(item.app); else if (StoreHost.runtime(id)) { storeAppsSync(); openApp(StoreHost.runtime(id)); } else toast(JBPlay.text(i18n.language, 'Unavailable')); break; }
+      case 'jbp-uninstall': ui.overlay = ''; renderOverlay(); storeUninstall(id); save(); render(); break;
       case 'jbp-uninstall-ask': ui.marketTarget = id; ui.overlay = 'jbp-uninstall'; renderOverlay(); break;
       case 'jbp-archive': data.marketEverInstalled = (data.marketEverInstalled || []).filter(x => x !== id); save(); jbPlayKeepScroll(); break;
       case 'jbp-rate-dialog': ui.marketTarget = id; ui.marketRateDraft = undefined; ui.overlay = 'jbp-rate'; renderOverlay(); break;
@@ -2235,6 +2268,8 @@
       case 'sd-dialog': ui.settingsField=id;ui.overlay='sd-dialog';renderOverlay();break;
       case 'sd-apps-tab': ui.settingsAppsTab=id;render();break;
       case 'sd-app-info': ui.settingsApp=id;ui.sub='app-info';render();break;
+      // Uninstall on a store app's App info: UninstallerActivity's question, then the app goes and App info closes.
+      case 'sd-uninstall': { const r = ui.settingsApp, m = StoreHost.module(r); if (!m) break; storeContext().dialog({title: m.title, message: JBPlay.text(i18n.language, 'Do you want to uninstall this app?'), buttons: [{label: i18n.t('Cancel')}, {label: i18n.t('OK'), action: () => { storeUninstall(r.slice(6)); save(); ui.sub = 'apps'; render(); }}]}); break; }
       case 'sd-data-app': ui.settingsApp=id;ui.sub='data-app';render();break;
       case 'sd-storage-open': if(id==='gallery'||id==='music')openApp(id);else{ui.sub=id;if(id==='apps')ui.settingsAppsTab='All';render();}break;
       case 'sd-battery-history': ui.sub='battery-history';render();break;
