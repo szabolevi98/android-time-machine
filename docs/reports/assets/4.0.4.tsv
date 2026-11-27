@@ -725,6 +725,7 @@ versions/4.0.4/assets/stat_sys_signal_4_fully.png	9ffd6c3562deb939	resized	magur
 versions/4.0.4/assets/stat_sys_signal_flightmode.png	59f8406ebe0c4353	resized	maguro:/system/app/SystemUI.apk!res/drawable-xhdpi/stat_sys_signal_flightmode.png	drawable-xhdpi	resized 39×36 → 30×27, mean difference 0.00	00dc3e334e74e35e
 versions/4.0.4/assets/stat_sys_wifi_signal_4_fully.png	bc5a36bfae8885a9	resized	maguro:/system/app/SystemUI.apk!res/drawable-xhdpi/stat_sys_wifi_signal_4_fully.png	drawable-xhdpi	resized 39×36 → 30×27, mean difference 0.66	08db21edb058df69
 versions/4.0.4/assets/status_bar_close_on.png	5a3323c8dacac0c6	resized	maguro:/system/app/SystemUI.apk!res/drawable-xhdpi/status_bar_close_on.9.png	drawable-xhdpi	resized 128×64 → 96×48, mean difference 0.25	53d748c990a42e5d
+versions/4.0.4/assets/store-pocket-planner.png	6b776c67081e8caf	not traced				
 versions/4.0.4/assets/talk.png	19289c328f8c7f62	copy	maguro:/system/app/Talk.apk!res/drawable-xhdpi/ic_launcher_google_talk.png	drawable-xhdpi		19289c328f8c7f62
 versions/4.0.4/assets/toast_frame_holo.png	7fd4fe41686ec2b6	same pixels	maguro:/system/framework/framework-res.apk!res/drawable-xhdpi/toast_frame_holo.9.png	drawable-xhdpi		39634b26f134b6ca
 versions/4.0.4/assets/voice-dialer.png	721ad791a8021917	copy	maguro:/system/app/VoiceDialer.apk!res/drawable-hdpi/app_voicedialer.png	drawable-hdpi		721ad791a8021917

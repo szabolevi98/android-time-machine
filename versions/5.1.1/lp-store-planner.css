@@ -1,0 +1,39 @@
+/* Pocket Planner on 5.1.1 (lp-store-planner.js): Toolbar in colorPrimary, the week bar, day cards, the FAB. */
+.lpplan{display:flex;flex-direction:column;background:#eeeeee;font-family:Roboto,sans-serif;color:#000000de}
+.lpplan-bar{display:flex;align-items:center;height:calc(56 * var(--dp));padding:0 calc(4 * var(--dp)) 0 calc(16 * var(--dp));background:#2a6fbd;color:#fff;flex:none}
+.lpplan-title{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.lpplan-title b{font:500 calc(20 * var(--dp))/1.2 Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lpplan-title small{font-size:calc(14 * var(--dp));opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lpplan-week{display:flex;align-items:center;height:calc(48 * var(--dp));background:#2a6fbd;color:#fff;flex:none;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0000003d;position:relative;z-index:1}
+.lpplan-week span{flex:1;text-align:center;font:500 calc(14 * var(--dp))/1 Roboto,sans-serif;letter-spacing:.02em}
+.lpplan-week button{width:calc(48 * var(--dp));height:calc(48 * var(--dp));border:0;background:none;display:grid;place-items:center;padding:0;cursor:pointer}
+.lpplan-week i{width:calc(10 * var(--dp));height:calc(10 * var(--dp));border:solid #fff;border-width:0 0 calc(2 * var(--dp)) calc(2 * var(--dp))}
+.lpplan-week i.prev{transform:translateX(calc(2 * var(--dp))) rotate(45deg)}
+.lpplan-week i.next{transform:translateX(calc(-2 * var(--dp))) rotate(-135deg)}
+.lpplan-list{flex:1;overflow-y:auto;padding:calc(8 * var(--dp)) calc(8 * var(--dp)) calc(88 * var(--dp))}
+.lpplan-card{background:#fff;border-radius:calc(2 * var(--dp));box-shadow:0 calc(1 * var(--dp)) calc(1.5 * var(--dp)) #0000001f,0 calc(1 * var(--dp)) calc(1 * var(--dp)) #0000003d;margin-bottom:calc(8 * var(--dp))}
+.lpplan-card>header{display:flex;align-items:center;min-height:calc(48 * var(--dp));padding:0 0 0 calc(16 * var(--dp))}
+.lpplan-card>header>div{flex:1;min-width:0;display:flex;align-items:baseline;gap:calc(8 * var(--dp))}
+.lpplan-card>header b{font:500 calc(16 * var(--dp))/1.3 Roboto,sans-serif;text-transform:capitalize}
+.lpplan-card>header small{font-size:calc(14 * var(--dp));color:#0000008a}
+.lpplan-card.today>header b{color:#2a6fbd}
+.lpplan-card>header em{font:500 calc(12 * var(--dp))/1 Roboto,sans-serif;font-style:normal;color:#fff;background:#e8453c;border-radius:calc(2 * var(--dp));padding:calc(4 * var(--dp)) calc(6 * var(--dp));text-transform:uppercase}
+.lpplan-add{width:calc(48 * var(--dp));height:calc(48 * var(--dp));border:0;background:none;display:grid;place-items:center;padding:0;cursor:pointer}
+.lpplan-add i,.lpplan-fab i{position:relative;width:calc(14 * var(--dp));height:calc(14 * var(--dp))}
+.lpplan-add i::before,.lpplan-add i::after,.lpplan-fab i::before,.lpplan-fab i::after{content:'';position:absolute;background:#0000008a;left:50%;top:50%;transform:translate(-50%,-50%)}
+.lpplan-add i::before,.lpplan-fab i::before{width:100%;height:calc(2 * var(--dp))}
+.lpplan-add i::after,.lpplan-fab i::after{width:calc(2 * var(--dp));height:100%}
+.lpplan-task{display:flex;align-items:center;min-height:calc(48 * var(--dp));border-top:calc(1 * var(--dp)) solid #0000001f}
+.lpplan-check{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin-left:calc(4 * var(--dp));border:0;background:none;display:grid;place-items:center;padding:0;cursor:pointer}
+.lpplan-check svg{width:calc(18 * var(--dp));height:calc(18 * var(--dp));box-sizing:border-box;border:calc(2 * var(--dp)) solid #0000008a;border-radius:calc(2 * var(--dp));fill:transparent}
+.lpplan-check.on svg{background:#2a6fbd;border-color:#2a6fbd;fill:#fff}
+.lpplan-text{flex:1;min-width:0;text-align:left;border:0;background:none;padding:calc(12 * var(--dp)) calc(16 * var(--dp)) calc(12 * var(--dp)) calc(4 * var(--dp));font:400 calc(16 * var(--dp))/1.35 Roboto,sans-serif;color:inherit;overflow-wrap:anywhere;cursor:pointer}
+.lpplan-task.done .lpplan-text{color:#00000061;text-decoration:line-through}
+.lpplan-empty{margin:0;padding:0 calc(16 * var(--dp)) calc(14 * var(--dp));font-size:calc(14 * var(--dp));color:#00000061}
+.lpplan-fab{position:absolute;right:calc(16 * var(--dp));bottom:calc(16 * var(--dp));width:calc(56 * var(--dp));height:calc(56 * var(--dp));border-radius:50%;border:0;background:#e8453c;display:grid;place-items:center;box-shadow:0 calc(6 * var(--dp)) calc(10 * var(--dp)) #0000003d,0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0000002e;cursor:pointer;z-index:2}
+.lpplan-fab i::before,.lpplan-fab i::after{background:#fff}
+.lpplan-edit{padding:0 calc(24 * var(--dp))}
+.lpplan-more{width:calc(48 * var(--dp));height:calc(48 * var(--dp));border:0;background:none;display:grid;place-items:center;padding:0;cursor:pointer}
+.lpplan-more img{width:calc(24 * var(--dp));height:calc(24 * var(--dp))}
+.lpplan{position:relative}
+.lpplan-input{width:100%;box-sizing:border-box;margin:calc(8 * var(--dp)) 0 0;padding:calc(8 * var(--dp)) 0;border:0;border-bottom:calc(2 * var(--dp)) solid #2a6fbd;background:none;color:inherit;outline:none;font:calc(16 * var(--dp)) Roboto,sans-serif}

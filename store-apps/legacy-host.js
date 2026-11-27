@@ -1,7 +1,9 @@
 /* The store apps that work (docs/plans/play-apps.md) on the versions built on one simulator.js each (2.3.6, 4.0.4, 4.3,
    4.4.4, 5.1.1). Logic only: it carries no look of its own. The dialog and the menu are put together from each
    version's own framework pieces: settings-dialog with its scrim and actions, the version's AlertDialog, and
-   holo-menu, the version's popup menu. 2.3.6 passes its own Menu key panel.
+   holo-menu, the version's popup menu (or the class the version names: menuClass, lp-popup-menu on 5.1.1). A version
+   with framework widgets of its own passes them: dialogMarkup(spec) for its AlertDialog and menu(items) / closeMenu()
+   for its options panel (2.3.6: GBUI.dialog and the Menu key's IconMenu).
    An app registers itself as the newer versions' modules do (EC / MM / NG.register):
      StoreHost.register('store-<id>', {title, statusColor, render(c), mount(c, root), action(name, el, c), menu(c),
                         back(c), clearData(c)})
@@ -29,29 +31,30 @@
     context(base) {
       const c = Object.create(base);
       c.dialog = spec => { dialog = spec; menu = null; base.ui.overlay = 'store-host'; base.renderOverlay(); };
-      c.menu = base.menu || ((items, anchor) => {
-        const r = anchor?.getBoundingClientRect?.(), s = base.screen?.getBoundingClientRect?.();
-        menu = {items, top: r && s ? (r.top - s.top) / (s.height / base.screen.offsetHeight || 1) : 0};
-        dialog = null; base.ui.overlay = 'store-host'; base.renderOverlay();
-      });
+      c.menu = (items, anchor) => {
+        menu = {items}; dialog = null;
+        if (base.menu) { base.menu(items, anchor); return; }
+        base.ui.overlay = 'store-host'; base.renderOverlay();
+      };
       c.closeOverlay = () => close(base);
       return c;
     },
     render: (id, c) => mods[id].render(c),
     mount(id, c, root) { mods[id]?.mount?.(c, root); },
     overlay(c) {
+      if (dialog && c.dialogMarkup) return c.dialogMarkup(dialog);
       if (dialog) {
         const d = dialog;
         const items = d.items ? `<div class="sth-items">${d.items.map((label, i) => `<button type="button" class="settings-row sth-item" data-action="sth-item" data-index="${i}"><span class="row-copy">${e(label)}</span></button>`).join('')}</div>` : '';
         const buttons = d.buttons?.length ? `<div class="settings-dialog-actions">${d.buttons.map((b, i) => `<button type="button" data-action="sth-btn" data-index="${i}">${e(b.label)}</button>`).join('')}</div>` : '';
         return `<div class="settings-dialog-scrim" data-action="sth-cancel"></div><div class="settings-dialog sth-dialog" role="dialog" aria-label="${e(d.title || '')}">${d.title ? `<h3>${e(d.title)}</h3>` : ''}${d.message ? `<p class="sth-message">${e(d.message)}</p>` : ''}${d.html || ''}${items}${buttons}</div>`;
       }
-      if (menu) return `<div class="menu-scrim" data-action="sth-cancel"></div><div class="holo-menu sth-menu" role="menu">${menu.items.map((it, i) => `<button type="button" role="menuitem" data-action="sth-mi" data-index="${i}"${it.disabled ? ' disabled' : ''}>${e(it.label)}</button>`).join('')}</div>`;
+      if (menu) return `<div class="menu-scrim" data-action="sth-cancel"></div><div class="${c.menuClass || 'holo-menu'} sth-menu" role="menu">${menu.items.map((it, i) => `<button type="button" role="menuitem" data-action="sth-mi" data-index="${i}"${it.disabled ? ' disabled' : ''}>${e(it.label)}</button>`).join('')}</div>`;
       return '';
     },
     // After renderOverlay drew it: the text field gets the focus, Enter presses the dialog's default button.
     mountOverlay(c, root) {
-      const input = root.querySelector('.sth-dialog input');
+      const input = root.querySelector('[role="dialog"] input');
       if (!input || !dialog) return;
       setTimeout(() => { input.focus(); input.setSelectionRange?.(input.value.length, input.value.length); }, 30);
       input.addEventListener('keydown', ev => {
@@ -64,11 +67,11 @@
     action(name, el, c) {
       if (name === 'sth-cancel') { const d = dialog; close(c); d?.onCancel?.(c); return true; }
       if (name === 'sth-btn') {
-        const d = dialog, b = d?.buttons?.[+el.dataset.index], value = el.closest('.sth-dialog')?.querySelector('input')?.value;
+        const d = dialog, b = d?.buttons?.[+(el.dataset.index ?? el.dataset.id)], value = el.closest('[role="dialog"]')?.querySelector('input')?.value;
         close(c); b?.action?.(c, value); return true;
       }
-      if (name === 'sth-item') { const d = dialog; close(c); d?.onItem?.(+el.dataset.index, c); return true; }
-      if (name === 'sth-mi') { const it = menu?.items[+el.dataset.index]; if (it?.disabled) return true; close(c); it?.action?.(c); return true; }
+      if (name === 'sth-item') { const d = dialog; close(c); d?.onItem?.(+(el.dataset.index ?? el.dataset.id), c); return true; }
+      if (name === 'sth-mi') { const it = menu?.items[+(el.dataset.index ?? el.dataset.id)]; if (it?.disabled) return true; c.closeMenu?.(); close(c); it?.action?.(c); return true; }
       if (name === 'sth-overflow') { mods[c.ui.view]?.menu?.(c, el); return true; }
       return !!mods[c.ui.view]?.action?.(name, el, c);
     },

@@ -18,13 +18,14 @@ From another release's image (the own image has no such file; to review): maguro
 
 ## 4.0.4 (maguro)
 
-copy: 452, same pixels: 146, resized: 135, own: 15, converted: 4, similar: 4, cropped: 2, generated: 1, not traced: 1
+copy: 452, same pixels: 146, resized: 135, own: 15, converted: 4, similar: 4, not traced: 2, cropped: 2, generated: 1
 
 From another release's image (the own image has no such file; to review): hammerhead 1, mako 2, passion 23 — the source column of the TSV names each.
 
 Not traced:
 
 - `versions/4.0.4/assets/camera-ic_settings_holo_light.png`
+- `versions/4.0.4/assets/store-pocket-planner.png`
 
 ## 4.3 (mako)
 
@@ -52,7 +53,7 @@ Not traced:
 
 ## 5.1.1 (shamu)
 
-copy: 915, vector: 199, resized: 158, same pixels: 143, converted: 31, similar: 7, generated: 6, own: 3, not traced: 2, cropped: 1
+copy: 915, vector: 199, resized: 158, same pixels: 143, converted: 31, similar: 7, generated: 6, not traced: 3, own: 3, cropped: 1
 
 From another release's image (the own image has no such file; to review): hammerhead 26, maguro 30, mako 21, passion 1 — the source column of the TSV names each.
 
@@ -60,6 +61,7 @@ Not traced:
 
 - `versions/5.1.1/assets/calwidget-header_bg_cal_widget_pressed_holo.png`
 - `versions/5.1.1/assets/jb-kg_widget_bg_padded.png`
+- `versions/5.1.1/assets/store-pocket-planner.png`
 
 ## 7.1.2 (angler)
 
