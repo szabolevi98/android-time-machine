@@ -35,6 +35,8 @@
   const CORPORA = [['quick_apps', '#689f38'], ['games_corpus_title', '#689f38'], ['corpus_title_movies', '#ed3b3b'], ['corpus_title_music', '#ef6c00'], ['corpus_title_books', '#039be5'], ['corpus_title_newsstand', '#9c27b0']];
   // The simulator's own fictional apps (2016).
   const FICTION = [
+    // The store apps that work (docs/plans/play-apps.md): their logic and icon come from store-apps/.
+    {id: 'pocket-planner', name: 'Pocket Planner', dev: 'Quiet Tools', cat: 'Productivity', rating: 4.3, size: '1.6 MB', dl: '100,000+', color: '#2a6fbd', glyph: '✓', get icon() { const s = globalThis.StoreApps?.planner?.STORE.icon; return s ? 'data:image/svg+xml,' + encodeURIComponent(s) : ''; }, desc: 'Plan your week on one simple page.', news: 'A card for every day, and a button to add a task to today.'},
     {id: 'trail-notes', name: 'Trail Notes', dev: 'Northbound Labs', cat: 'Travel & Local', rating: 4.6, size: '8.4 MB', dl: '500,000+', color: '#2e7d32', glyph: '▲', desc: 'Keep a journal of every hike: routes, photos and notes that work offline.', news: 'Elevation charts for your saved routes.'},
     {id: 'pocket-budget', name: 'Pocket Budget', dev: 'Tidy Coin', cat: 'Finance', rating: 4.4, size: '5.1 MB', dl: '1,000,000+', color: '#00897b', glyph: '¤', desc: 'See where your money goes with simple categories and monthly goals.', news: 'Dark theme and a new widget.'},
     {id: 'snap-filters', name: 'Snap Filters', dev: 'Lumen Apps', cat: 'Photography', rating: 4.3, size: '14 MB', dl: '5,000,000+', color: '#8e24aa', glyph: '◐', desc: 'Give your photos a look in one tap, then fine-tune light and colour.', news: 'Twelve new film looks.'},
@@ -71,6 +73,38 @@
   const icon = (it, cls = '') => it.icon ? `<img class="mmps-ic ${cls}" src="${it.icon}" alt="">` : `<span class="mmps-ic mmps-gl ${cls}" style="background:${it.color}"><b>${it.glyph}</b></span>`;
   const stars = r => `<span class="mmps-stars" style="--r:${(r / 5 * 100).toFixed(0)}%">★★★★★</span>`;
   const isInstalled = (c, it) => it.system || st(c).installed.includes(it.id);
+  /* A store app that works (a module 'store-<id>', docs/plans/play-apps.md): installed, it gets its app entry
+     (the drawer, Settings › Apps, Recents) and, with Play's "Add icon to Home screen" (auto-add-shortcuts) on, its
+     icon on the home screen (InstallShortcutReceiver); uninstalled, the entry, its icons and its data go. The other
+     fictional apps keep the fiction-app card. */
+  const runtime = id => MM.module?.('store-' + id) ? 'store-' + id : null;
+  function registerApp(c, id) {
+    const r = runtime(id), it = item(c, id); if (!r || !it || !MM.appsData) return null;
+    const pkg = 'example.androidtimemachine.' + id.replace(/-/g, '');
+    MM.appsData[r] = {pkg, cls: pkg + '.MainActivity', label: {en: it.name, de: it.name, fr: it.name, es: it.name, hu: it.name}, icon: it.icon, color: it.color,
+      version: '1.3', codeSize: Math.round(parseFloat(it.size) * 1048576), permGroups: [], targetSdk: 23, installed: true, storeId: id};
+    return r;
+  }
+  function installed(c, id) {
+    if (!st(c).installed.includes(id)) st(c).installed.push(id);
+    const r = registerApp(c, id);
+    if (r && MM.appPref?.(c, 'play', 'auto-add-shortcuts', true) !== false && String(MM.appPref?.(c, 'play', 'auto-add-shortcuts', true)) !== 'false') MM.launcherInstall?.(c, {type: 'app', app: r});
+  }
+  function removeApp(c, id) {
+    st(c).installed = st(c).installed.filter(x => x !== id);
+    const r = runtime(id); if (!r) return;
+    MM.module(r)?.clearData?.(c);
+    if (MM.appsData) delete MM.appsData[r];
+    const h = c.data.home;
+    if (h) {
+      h.pages = h.pages.map(list => list.filter(i => i.app !== r).map(i => i.type === 'folder' ? {...i, items: i.items.filter(a => a !== r)} : i).filter(i => i.type !== 'folder' || i.items.length));
+      h.hotseat = h.hotseat?.map(a => a === r ? null : a);
+    }
+    c.data.recentApps = (c.data.recentApps || []).filter(a => a !== r);
+    c.ui.recent = (c.ui.recent || []).filter(a => (a.view || a) !== r);
+    const s = c.data.settings; if (s) { s.disabledApps = (s.disabledApps || []).filter(a => a !== r); for (const k of ['appNotif', 'perms']) if (s[k]) delete s[k][r]; }
+  }
+  MM.storeUninstall = (c, appId) => { const id = MM.appsData?.[appId]?.storeId; if (id) removeApp(c, id); };
   function card(c, it) {
     const t = T();
     return `<button type="button" class="mmps-card" data-action="mmps-item" data-id="${it.id}"><span class="mmps-thumb">${icon(it)}</span><span class="mmps-ctitle">${esc(c, it.name)}</span><span class="mmps-csub">${esc(c, it.dev)}</span><span class="mmps-cfoot">${stars(it.rating)}<small>${esc(c, it.media ? priceLabel(c, it) : isInstalled(c, it) ? t.t('installed_list_state') : T().t('price_free'))}</small></span></button>`;
@@ -150,7 +184,7 @@
     const step = () => {
       if (u.dl !== task) return;
       u.dl.p = Math.min(100, u.dl.p + 9 + Math.floor(Math.random() * 12));
-      if (u.dl.p >= 100) { setTimeout(() => { if(u.dl!==task)return;u.dl = null; if(!st(c).installed.includes(id))st(c).installed.push(id); c.save(); MM.notify ? MM.notify(c, {app: 'play-store', icon: 'assets/ps-stat_notify_installed.png', title: item(c, id)?.name || id, text: T().t('notification_installation_success_message'), open: ['play-store', ''], heads: false}) : c.toast(T().t('notification_installation_success_message'), false); if (c.ui.view === 'play-store') c.render(); }, 900); }
+      if (u.dl.p >= 100) { setTimeout(() => { if(u.dl!==task)return;u.dl = null; installed(c, id); c.save(); MM.notify ? MM.notify(c, {app: 'play-store', icon: 'assets/ps-stat_notify_installed.png', title: item(c, id)?.name || id, text: T().t('notification_installation_success_message'), open: ['play-store', ''], heads: false}) : c.toast(T().t('notification_installation_success_message'), false); if (c.ui.view === 'play-store') c.render(); }, 900); }
       else setTimeout(step, 250);
       if (c.ui.view === 'play-store') c.render();
     };
@@ -163,6 +197,8 @@
   });
   MM.register('play-store', {
     clearData(c){if(c.ui.play)c.ui.play.dl=null;},
+    // The installed store apps get their app entries back when the phone starts.
+    init(c) { for (const id of st(c).installed) registerApp(c, id); },
     // The window animation's page (mm-core.js): deeper screens open over the ones they came from.
     page: c => { const u = c.ui.play; return u ? MM.page('play', ...u.history.map(h => `${h.page}:${h.item}`), `${u.page}:${u.item}`) : 'play'; },
     statusColor: c => ui(c).search !== null ? '#757575' : GREEN_DARK,
@@ -193,8 +229,8 @@
         case 'mmps-readmore': u.more = !u.more; c.render(); return true;
         case 'mmps-cancel': u.dl=null;c.render();return true;
         case 'mmps-install': install(c, el.dataset.id); return true;
-        case 'mmps-uninstall': c.dialog({message: t.t('uninstall_app_msg'), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok'), action: c => { st(c).installed = st(c).installed.filter(x => x !== el.dataset.id); c.save(); c.render(); }}]}); return true;
-        case 'mmps-open': { const id = el.dataset.id; if (MM.appsData?.[id]) c.open(id); else c.open('fiction-app', id); return true; }
+        case 'mmps-uninstall': c.dialog({message: t.t('uninstall_app_msg'), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok'), action: c => { removeApp(c, el.dataset.id); c.save(); c.render(); }}]}); return true;
+        case 'mmps-open': { const id = el.dataset.id; if (MM.appsData?.[id]) c.open(id); else if (runtime(id)) { registerApp(c, id); c.open(runtime(id)); } else c.open('fiction-app', id); return true; }
         case 'mmps-corpus': case 'mmps-othercorpus': go('corpus', el.dataset.i); return true;
         case 'mmps-moreclick': u.listTitle = el.dataset.title; go('list', el.dataset.ids); return true;
         case 'mmps-dpage': {

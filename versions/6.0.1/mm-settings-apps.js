@@ -114,6 +114,8 @@
       const t = T(), id = cur.screen.slice(4), s = S(c);
       if (name === 'mmai-disable') {
         // An app installed from Play before the demo (mm-apps.js installed: Earth …): Uninstall is not simulated.
+        // A store app that works (mm-play.js) uninstalls as its Play page does, then App info closes.
+        if (MM.appsData[id]?.storeId) { c.dialog({message: MM.text('play').t('uninstall_app_msg'), buttons: [{label: MM.text('framework').t('cancel')}, {label: MM.text('framework').t('ok'), action: c => { MM.storeUninstall(c, id); c.save(); c.back(); }}]}); return true; }
         if (MM.appsData[id]?.installed) { c.toast(c.t('This feature is not part of the simulator.')); return true; }
         if (disabled(c, id)) { s.disabledApps = (s.disabledApps || []).filter(x => x !== id); c.save(); c.render(); return true; }
         c.dialog({message: t.t('app_disable_dlg_text'), buttons: [{label: t.t('dlg_cancel')}, {label: t.t('app_disable_dlg_positive'), action: c => {
