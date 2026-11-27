@@ -42,7 +42,8 @@ Two rounds, three apps each; each round ships complete in all eight versions bef
   - **Pixel Blocks**: its own block puzzle, not a copy of a known game.
 
 Every version's store sells the round's apps. 6.0.1 and 7.1.2 add them to their `FICTION` lists; 2.3.6–5.1.1 add Orbit
-Hopper where it is missing. The prices stay at "Free" or the catalogue's price: a paid item stays not buyable, as now.
+Hopper where it is missing. An app that works is free in every catalogue (the simulator sells nothing; Pocket Planner
+was $1.99 in 2.1–5.1.1 before).
 
 ## Code design
 
@@ -81,3 +82,10 @@ Following the owner's "done means done" rule, for each app and each version:
 - the texts exist in all five languages (hu, en, de, fr, es)
 - it works at desktop size and at phone width
 - unit tests cover the shared model; a browser test runs install → open → use → uninstall in every version
+
+## Progress
+
+- 2026-11-27: Pocket Planner works in all eight versions (store-apps/pocket-planner.js; ec-, gb-, ics-, jb-, kk-, lp-,
+  mm-, ng-store-planner.js; store-apps/legacy-host.js hosts it on 2.3.6–5.1.1). tests/store-pocket-planner.test.cjs
+  covers the logic, tests/browser/store-apps.mjs installs, opens, uses and uninstalls it in every version.
+- Next: Lunar Golf and Orbit Hopper (round 1), then round 2.
