@@ -58,6 +58,30 @@
   const icon = (x, cls = '') => x.app ? `<img class="${cls}" src="assets/app-${x.app}.png" alt="">` : `<span class="${cls} ecmk-svg">${ICONS[x.art]}</span>`;
   const find = id => CATALOG.find(x => x.id === id);
   const st = c => c.data.market ||= {installed: [], ratings: {}, notify: true, flagged: []};
+  /* A made-up app that works (docs/plans/play-apps.md: a module 'store-<id>'): installed, it joins the launcher's list
+     (EC.apps) and Manage applications as a downloaded package; Open starts it; uninstalling takes it, its home screen
+     shortcuts and its data away. The others still say they cannot be opened (notlaunched). The Market of 2010 put no
+     shortcut on the home screen. */
+  const PERMS = {'pocket-planner': ['android.permission.READ_CALENDAR']};
+  const runtime = x => EC.module?.('store-' + x.id) ? 'store-' + x.id : null;
+  function register(x) {
+    const r = runtime(x); if (!r) return null;
+    EC.apps.add({id: r, name: nameOf(x), icon: `app-${r}.png`, view: r, storeId: x.id, pkg: 'example.androidtimemachine.' + x.id.replace(/-/g, ''),
+      version: x.version, size: Math.round(parseFloat(x.size) * 1048576), perms: PERMS[x.id] || []});
+    return r;
+  }
+  function unregister(c, x) {
+    const r = runtime(x), s = st(c);
+    s.installed = s.installed.filter(id => id !== x.id); delete s.ratings[x.id];
+    if (!r) return;
+    EC.module(r)?.clearData?.(c);
+    EC.apps.remove(r);
+    const keep = item => item.app !== r;
+    if (c.data.home?.pages) c.data.home.pages = c.data.home.pages.map(list => list.filter(keep).map(i => i.items ? {...i, items: i.items.filter(a => a !== r && a?.app !== r)} : i));
+    c.ui.recent = (c.ui.recent || []).filter(v => v !== r);
+  }
+  // Uninstalling from Settings › Manage applications › Application info (ec-settings-apps.js).
+  EC.marketUninstall = (c, storeId) => { const x = find(storeId); if (x) unregister(c, x); };
   let job = null;   // the download in progress: {id, phase: 'pending' | 'downloading' | 'installing', pct}
   const stateOf = (c, x) => job?.id === x.id ? job.phase : x.app || st(c).installed.includes(x.id) ? 'installed' : '';
   const priceText = (c, x) => { const s = stateOf(c, x); return s === 'installed' ? t('installed') : s ? t(s === 'installing' ? 'installing' : 'downloading') : x.price || t('asset_free_label'); };
@@ -169,7 +193,7 @@
       if (job.phase === 'pending') job.phase = 'downloading';
       else if (job.phase === 'downloading') { job.pct = Math.min(100, job.pct + 17); if (job.pct >= 100) job.phase = 'installing'; }
       else if (job.phase === 'installing') {
-        st(c).installed.push(job.id); c.save();
+        st(c).installed.push(job.id); register(x); c.save();
         c.notify?.({icon: 'mk-stat_sys_install_complete.png', title: nameOf(x), text: t('notification_installation_success_message'), ticker: M().fmt('notification_installation_success_status', c.lang, nameOf(x)), view: 'market', sub: `details:${x.id}`});
         job = null;
       }
@@ -218,11 +242,12 @@
         case 'ecmk-cancel': clearTimeout(jobTimer); job = null; c.render(); return true;
         case 'ecmk-launch':
           if (x.app) { c.open(x.app); return true; }
+          if (runtime(x)) { register(x); c.open(runtime(x)); return true; }
           c.dialog({title: t('notlaunched_title'), icon: 'fw-ic_dialog_alert.png', message: M().fmt('notlaunched', c.lang, nameOf(x)), buttons: [{label: t('ok')}]});
           return true;
         case 'ecmk-uninstall':
           c.dialog({title: t('uninstall_application'), icon: null, message: M().fmt('uninstall_application_text_non_refund', c.lang, nameOf(x)),
-            buttons: [{label: t('ok'), action: () => { const s = st(c); s.installed = s.installed.filter(id => id !== x.id); delete s.ratings[x.id]; c.save(); c.render(); c.toast(t('uninstalling')); }}, {label: t('cancel')}]});
+            buttons: [{label: t('ok'), action: () => { unregister(c, x); c.save(); c.render(); c.toast(t('uninstalling')); }}, {label: t('cancel')}]});
           return true;
         case 'ecmk-rate': rateDialog(c, x); return true;
         case 'ecmk-dev-apps': push(c, {page: 'search', query: x.developer}); return true;
@@ -263,6 +288,8 @@
   document.addEventListener('DOMContentLoaded', () => {
     const c = EC.context, open = c.open;
     c.ui.mkStack = []; c.ui.mkPromo = 0;
+    // The installed made-up apps that work are on the phone again after a restart.
+    for (const id of st(c).installed) { const x = find(id); if (x) register(x); }
     c.open = (view, sub, opts) => {
       const fresh = c.ui.view !== 'market' && view === 'market';
       if (fresh) c.ui.mkStack = sub?.startsWith('details:') ? [{page: 'details', id: sub.slice(8)}] : [];

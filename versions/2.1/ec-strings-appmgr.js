@@ -330,6 +330,42 @@ EC.strings('appmgr', {
 "hu": "Az összes megjelenítése",
 "huFrom": "crespo:framework:perms_show_all"
 },
+"uninstall_text": {
+"res": "passion:Settings:uninstall_text",
+"en": "Uninstall",
+"de": "Deinstallieren",
+"fr": "Désinstaller",
+"es": "Desinstalar",
+"hu": "Eltávolítás",
+"huFrom": "crespo:Settings:uninstall_text"
+},
+"PackageInstaller/uninstall_application_question": {
+"res": "passion:PackageInstaller:uninstall_application_question",
+"en": "Uninstall application?",
+"de": "Anwendung deinstallieren?",
+"fr": "Désinstaller l'application ?",
+"es": "¿Desinstalar aplicación?",
+"hu": "Eltávolítja az alkalmazást?",
+"huFrom": "crespo:PackageInstaller:uninstall_application_question"
+},
+"PackageInstaller/uninstall_application_text": {
+"res": "passion:PackageInstaller:uninstall_application_text",
+"en": "This application will be removed from your phone.",
+"de": "Diese Anwendung wird von Ihrem Telefon entfernt.",
+"fr": "Cette application va être supprimée de votre téléphone.",
+"es": "Esta aplicación se eliminará de tu teléfono.",
+"hu": "Az alkalmazás el lesz távolítva a telefonról.",
+"huOwn": true
+},
+"PackageInstaller/uninstall_done": {
+"res": "passion:PackageInstaller:uninstall_done",
+"en": "Uninstall finished!",
+"de": "Deinstallation abgeschlossen!",
+"fr": "Désinstallation terminée !",
+"es": "Desinstalación completada",
+"hu": "Az eltávolítás befejeződött.",
+"huOwn": true
+},
 "runningservices_settings_title": {
 "res": "passion:Settings:runningservices_settings_title",
 "en": "Running services",

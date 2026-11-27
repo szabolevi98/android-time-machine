@@ -29,6 +29,7 @@ versions/2.1/assets/app-music.png	280d823316a94bee	copy	passion:/system/app/Mms.
 versions/2.1/assets/app-news-weather.png	bdd37f280b282773	copy	passion:/system/app/GenieWidget.apk!res/drawable-hdpi/ic_launcher_news_weather.png	drawable-hdpi		bdd37f280b282773
 versions/2.1/assets/app-phone.png	8c630a6e0d92f9b6	copy	passion:/system/app/Contacts.apk!res/drawable-hdpi/ic_launcher_phone.png	drawable-hdpi		8c630a6e0d92f9b6
 versions/2.1/assets/app-settings.png	a713deab9712d08f	copy	passion:/system/app/GoogleSettingsProvider.apk!res/drawable-hdpi/ic_launcher_settings.png	drawable-hdpi		a713deab9712d08f
+versions/2.1/assets/app-store-pocket-planner.png	b779d9354c43928a	own	Own drawing: the store app icons of store-apps/*.js (STORE.icon SVG) rendered to PNG at the version's launcher density (docs/plans/play-apps.md)			
 versions/2.1/assets/app-talk.png	4f3888a9a779af2e	copy	passion:/system/app/Talk.apk!res/drawable-hdpi/ic_launcher_google_talk.png	drawable-hdpi		4f3888a9a779af2e
 versions/2.1/assets/app-voice-dialer.png	721ad791a8021917	copy	passion:/system/app/VoiceDialer.apk!res/drawable-hdpi/app_voicedialer.png	drawable-hdpi		721ad791a8021917
 versions/2.1/assets/app-voice-search.png	1f9ff9dc66694f6a	copy	passion:/system/app/VoiceSearchWithKeyboard.apk!res/drawable-hdpi/app_voicesearch.png	drawable-hdpi		1f9ff9dc66694f6a

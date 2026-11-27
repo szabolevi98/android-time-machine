@@ -1,0 +1,22 @@
+/* Pocket Planner on 2.1 (ec-store-planner.js): the black list of the default theme with its framework pieces. */
+.ecplan{position:absolute;inset:0;overflow-y:auto;scrollbar-width:none;background:#000;color:#fff}
+.ecplan-week{display:flex;align-items:center;min-height:calc(40 * var(--dp));padding:0 calc(4 * var(--dp));background:#000;border-bottom:calc(1 * var(--dp)) solid #333}
+.ecplan-week button{width:calc(40 * var(--dp));height:calc(40 * var(--dp));border:0;background:none;color:#fff;font-size:calc(26 * var(--dp));line-height:1;padding:0;cursor:pointer}
+.ecplan-week button:active{color:#ff9c00}
+.ecplan-week span{flex:1;display:flex;flex-direction:column;align-items:center;padding:calc(3 * var(--dp)) 0}
+.ecplan-week b{font-size:calc(18 * var(--dp))}
+.ecplan-week small{font-size:calc(12 * var(--dp));color:#bebebe}
+/* listSeparatorTextViewStyle: dark_header, 14 sp bold #bebebe, 5 dp in. */
+.ecplan-day{display:block;width:100%;margin:0;border:0;padding:calc(2 * var(--dp)) calc(5 * var(--dp));background:url('assets/fw-dark_header.9.png') 0 0/100% 100%;color:#bebebe;font:inherit;font-size:calc(14 * var(--dp));text-align:left;cursor:pointer}
+.ecplan-day b{text-transform:capitalize}
+.ecplan-day.today{color:#fff}
+.ecplan-day em{font-style:normal;color:#ff9c00}
+/* simple_list_item_multiple_choice: 64 dp listPreferredItemHeight, textAppearanceLarge, the check box at the right. */
+.ecplan-task{position:relative;display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));border:0;padding:0 calc(6 * var(--dp)) 0 calc(10 * var(--dp));background:none;color:#fff;text-align:left;cursor:pointer}
+.ecplan-task .ec-pressed{opacity:0}
+.ecplan-task:active .ec-pressed{opacity:1}
+.ecplan-task span{position:relative;flex:1;min-width:0;font-size:calc(22 * var(--dp));line-height:1.2;overflow-wrap:anywhere}
+.ecplan-task.done span{color:#808080}
+.ecplan-task img{position:relative;width:calc(32 * var(--dp));height:calc(32 * var(--dp));flex:none}
+.ecplan-empty{padding:calc(10 * var(--dp)) calc(10 * var(--dp)) calc(12 * var(--dp));font-size:calc(16 * var(--dp));color:#808080}
+.ecplan-edit{padding:calc(8 * var(--dp)) calc(14 * var(--dp))}
