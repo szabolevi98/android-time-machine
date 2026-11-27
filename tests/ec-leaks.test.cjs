@@ -1,4 +1,5 @@
 const assert=require('node:assert/strict'),fs=require('node:fs');
+// The store's made-up apps keep their logic and texts in ../../store-apps/*.js (no look; docs/plans/play-apps.md).
 // Android 2.1 is built from its own image, nothing inherited (docs/plans/2.1.md, rules 1-4). This test keeps it that way:
 // - the page loads only ec- files and the shared root files (i18n.js, strings.js, state.js)
 // - no 2.1 file reaches into another version's folder or names another era's modules (GBSettings, ICSLockscreen …)
@@ -8,7 +9,7 @@ const V='versions/2.1';
 const files=fs.readdirSync(V).filter(f=>/\.(js|css|html)$/.test(f));
 const html=fs.readFileSync(`${V}/index.html`,'utf8');
 for(const [,ref] of html.matchAll(/(?:src|href)="([^":?#]+\.(?:js|css))[?"]/g)){
-  assert.ok(/^ec-[\w-]+\.(js|css)$/.test(ref)||/^\.\.\/\.\.\/(i18n|strings|state|boot-ready)\.js$/.test(ref),`2.1 loads ${ref}`);
+  assert.ok(/^ec-[\w-]+\.(js|css)$/.test(ref)||/^\.\.\/\.\.\/(i18n|strings|state|boot-ready)\.js$/.test(ref)||/^\.\.\/\.\.\/store-apps\/[a-z-]+\.js$/.test(ref),`2.1 loads ${ref}`);
 }
 for(const f of files){
   assert.ok(f==='index.html'||f.startsWith('ec-'),`${V}/${f} has no ec- prefix`);

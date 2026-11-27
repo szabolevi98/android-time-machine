@@ -1,4 +1,5 @@
 const assert=require('node:assert/strict'),fs=require('node:fs');
+// The store's made-up apps keep their logic and texts in ../../store-apps/*.js (no look; docs/plans/play-apps.md).
 // Android 6.0.1 is built from its own image, nothing inherited (docs/plans/6.0.1.md, rules 1-5). This test keeps it that
 // way, the 2.1 checks (tests/ec-leaks.test.cjs) with 5.1.1 as the nearest neighbour:
 // - the page loads only mm- files and the shared root files (i18n.js, strings.js, state.js)
@@ -10,7 +11,7 @@ const V='versions/6.0.1';
 const files=fs.readdirSync(V).filter(f=>/\.(js|css|html)$/.test(f));
 const html=fs.readFileSync(`${V}/index.html`,'utf8');
 for(const [,ref] of html.matchAll(/(?:src|href)="([^":?#]+\.(?:js|css))[?"]/g)){
-  assert.ok(/^mm-[\w-]+\.(js|css)$/.test(ref)||/^\.\.\/\.\.\/(i18n|strings|state|earth-globe|boot-ready)\.js$/.test(ref),`6.0.1 loads ${ref}`);
+  assert.ok(/^mm-[\w-]+\.(js|css)$/.test(ref)||/^\.\.\/\.\.\/(i18n|strings|state|earth-globe|boot-ready)\.js$/.test(ref)||/^\.\.\/\.\.\/store-apps\/[a-z-]+\.js$/.test(ref),`6.0.1 loads ${ref}`);
 }
 for(const f of files){
   assert.ok(f==='index.html'||f.startsWith('mm-'),`${V}/${f} has no mm- prefix`);

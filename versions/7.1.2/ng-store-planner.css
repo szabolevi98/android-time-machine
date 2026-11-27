@@ -1,0 +1,35 @@
+/* Pocket Planner on 7.1.2 (ng-store-planner.js): Toolbar in colorPrimary, the week bar, day cards, the FAB. */
+.ngplan{position:absolute;inset:0;display:flex;flex-direction:column;background:#eeeeee;font-family:Roboto,sans-serif;color:#000000de}
+.ngplan-bar{display:flex;align-items:center;height:calc(56 * var(--dp));padding:0 calc(4 * var(--dp)) 0 calc(16 * var(--dp));background:#2a6fbd;color:#fff;flex:none}
+.ngplan-title{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.ngplan-title b{font:500 calc(20 * var(--dp))/1.2 Roboto,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngplan-title small{font-size:calc(14 * var(--dp));opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ngplan-week{display:flex;align-items:center;height:calc(48 * var(--dp));background:#2a6fbd;color:#fff;flex:none;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0000003d;position:relative;z-index:1}
+.ngplan-week span{flex:1;text-align:center;font:500 calc(14 * var(--dp))/1 Roboto,sans-serif;letter-spacing:.02em}
+.ngplan-week button{width:calc(48 * var(--dp));height:calc(48 * var(--dp));border:0;background:none;display:grid;place-items:center;padding:0;cursor:pointer}
+.ngplan-week i{width:calc(10 * var(--dp));height:calc(10 * var(--dp));border:solid #fff;border-width:0 0 calc(2 * var(--dp)) calc(2 * var(--dp))}
+.ngplan-week i.prev{transform:translateX(calc(2 * var(--dp))) rotate(45deg)}
+.ngplan-week i.next{transform:translateX(calc(-2 * var(--dp))) rotate(-135deg)}
+.ngplan-list{flex:1;overflow-y:auto;padding:calc(8 * var(--dp)) calc(8 * var(--dp)) calc(88 * var(--dp))}
+.ngplan-card{background:#fff;border-radius:calc(2 * var(--dp));box-shadow:0 calc(1 * var(--dp)) calc(1.5 * var(--dp)) #0000001f,0 calc(1 * var(--dp)) calc(1 * var(--dp)) #0000003d;margin-bottom:calc(8 * var(--dp))}
+.ngplan-card>header{display:flex;align-items:center;min-height:calc(48 * var(--dp));padding:0 0 0 calc(16 * var(--dp))}
+.ngplan-card>header>div{flex:1;min-width:0;display:flex;align-items:baseline;gap:calc(8 * var(--dp))}
+.ngplan-card>header b{font:500 calc(16 * var(--dp))/1.3 Roboto,sans-serif;text-transform:capitalize}
+.ngplan-card>header small{font-size:calc(14 * var(--dp));color:#0000008a}
+.ngplan-card.today>header b{color:#2a6fbd}
+.ngplan-card>header em{font:500 calc(12 * var(--dp))/1 Roboto,sans-serif;font-style:normal;color:#fff;background:#e8453c;border-radius:calc(2 * var(--dp));padding:calc(4 * var(--dp)) calc(6 * var(--dp));text-transform:uppercase}
+.ngplan-add{width:calc(48 * var(--dp));height:calc(48 * var(--dp));border:0;background:none;display:grid;place-items:center;padding:0;cursor:pointer}
+.ngplan-add i,.ngplan-fab i{position:relative;width:calc(14 * var(--dp));height:calc(14 * var(--dp))}
+.ngplan-add i::before,.ngplan-add i::after,.ngplan-fab i::before,.ngplan-fab i::after{content:'';position:absolute;background:#0000008a;left:50%;top:50%;transform:translate(-50%,-50%)}
+.ngplan-add i::before,.ngplan-fab i::before{width:100%;height:calc(2 * var(--dp))}
+.ngplan-add i::after,.ngplan-fab i::after{width:calc(2 * var(--dp));height:100%}
+.ngplan-task{display:flex;align-items:center;min-height:calc(48 * var(--dp));border-top:calc(1 * var(--dp)) solid #0000001f}
+.ngplan-check{flex:none;width:calc(48 * var(--dp));height:calc(48 * var(--dp));margin-left:calc(4 * var(--dp));border:0;background:none;display:grid;place-items:center;padding:0;cursor:pointer}
+.ngplan-check svg{width:calc(18 * var(--dp));height:calc(18 * var(--dp));box-sizing:border-box;border:calc(2 * var(--dp)) solid #0000008a;border-radius:calc(2 * var(--dp));fill:transparent}
+.ngplan-check.on svg{background:#2a6fbd;border-color:#2a6fbd;fill:#fff}
+.ngplan-text{flex:1;min-width:0;text-align:left;border:0;background:none;padding:calc(12 * var(--dp)) calc(16 * var(--dp)) calc(12 * var(--dp)) calc(4 * var(--dp));font:400 calc(16 * var(--dp))/1.35 Roboto,sans-serif;color:inherit;overflow-wrap:anywhere;cursor:pointer}
+.ngplan-task.done .ngplan-text{color:#00000061;text-decoration:line-through}
+.ngplan-empty{margin:0;padding:0 calc(16 * var(--dp)) calc(14 * var(--dp));font-size:calc(14 * var(--dp));color:#00000061}
+.ngplan-fab{position:absolute;right:calc(16 * var(--dp));bottom:calc(16 * var(--dp));width:calc(56 * var(--dp));height:calc(56 * var(--dp));border-radius:50%;border:0;background:#e8453c;display:grid;place-items:center;box-shadow:0 calc(6 * var(--dp)) calc(10 * var(--dp)) #0000003d,0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0000002e;cursor:pointer;z-index:2}
+.ngplan-fab i::before,.ngplan-fab i::after{background:#fff}
+.ngplan-edit{padding:0 calc(24 * var(--dp))}

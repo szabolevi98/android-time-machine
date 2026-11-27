@@ -108,7 +108,8 @@
     if (id === 'drive') c.data.driveFiles = (c.data.driveFiles || []).filter(f => !(f.uploadReadyAt > Date.now())).map(f => {
       const out = {...f}; delete out.offline; delete out.previewCached; return out;
     });
-    if (id === 'chrome') NG.module('chrome')?.clearData?.(c);
+    // Chrome and the store's own apps (ng-store-*.js) clear what they keep themselves.
+    if (id === 'chrome' || NG.appsData?.[id]?.storeId) NG.module(id)?.clearData?.(c);
     if (id === 'hangouts' && c.data.hangouts) {
       const old = c.data.hangouts; delete c.data.hangouts;
       const fresh = NG.hangoutsModel.state(c);
