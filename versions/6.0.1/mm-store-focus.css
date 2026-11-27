@@ -1,0 +1,23 @@
+/* Focus Timer on 6.0.1 (mm-store-focus.js): Toolbar, session chips, the ring, the round button. */
+.mmft{position:absolute;inset:0;display:flex;flex-direction:column;background:#fafafa;font-family:Roboto,sans-serif;color:#000000de}
+.mmft-bar{display:flex;align-items:center;height:calc(56 * var(--dp));padding:0 calc(4 * var(--dp)) 0 calc(16 * var(--dp));background:#e53935;color:#fff;flex:none;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0000003d}
+.mmft-bar b{flex:1;font:500 calc(20 * var(--dp))/1 Roboto,sans-serif}
+.mmft-main{flex:1;display:flex;flex-direction:column;align-items:center;padding:calc(20 * var(--dp)) calc(16 * var(--dp));overflow-y:auto}
+.mmft-chips{display:flex;gap:calc(8 * var(--dp));flex-wrap:wrap;justify-content:center}
+.mmft-chip{padding:calc(6 * var(--dp)) calc(12 * var(--dp));border-radius:calc(16 * var(--dp));background:#e0e0e0;color:#000000de;font-size:calc(13 * var(--dp))}
+.mmft-chip.on{background:#e53935;color:#fff}
+.mmft-ring{position:relative;width:calc(240 * var(--dp));height:calc(240 * var(--dp));margin:calc(24 * var(--dp)) 0 calc(16 * var(--dp))}
+.mmft-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.mmft-ring circle{fill:none;stroke-width:12}
+.mmft-ring .track{stroke:#eeeeee}
+.mmft-ring .fill{stroke:#e53935;stroke-linecap:round;transition:stroke-dashoffset .3s linear}
+.mmft-ring>div{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.mmft-time{font:300 calc(56 * var(--dp))/1 Roboto,sans-serif;letter-spacing:-.02em}
+.mmft-ring small{margin-top:calc(8 * var(--dp));font-size:calc(14 * var(--dp));color:#0000008a}
+.mmft-play{position:relative;width:calc(64 * var(--dp));height:calc(64 * var(--dp));border-radius:50%;border:0;background:#ffb300;box-shadow:0 calc(4 * var(--dp)) calc(8 * var(--dp)) #0000004d;cursor:pointer}
+.mmft-play i{position:absolute;left:52%;top:50%;transform:translate(-50%,-50%);width:0;height:0;border-style:solid;border-width:calc(12 * var(--dp)) 0 calc(12 * var(--dp)) calc(20 * var(--dp));border-color:transparent transparent transparent #fff}
+.mmft-play.running i{left:50%;width:calc(20 * var(--dp));height:calc(22 * var(--dp));border:0;background:linear-gradient(90deg,#fff 0 35%,transparent 35% 65%,#fff 65%)}
+.mmft-actions{display:flex;gap:calc(8 * var(--dp));margin-top:calc(16 * var(--dp))}
+.mmft-actions button{border:0;background:none;color:#e53935;font:500 calc(14 * var(--dp))/1 Roboto,sans-serif;text-transform:uppercase;padding:calc(10 * var(--dp)) calc(12 * var(--dp));border-radius:calc(2 * var(--dp));cursor:pointer}
+.mmft-actions button:active{background:#e539351f}
+.mmft-bar .mm-overflow{width:calc(48 * var(--dp));height:calc(48 * var(--dp));border:0;background:none;display:grid;place-items:center;padding:0}.mmft-bar .mm-overflow img{filter:none;width:calc(24 * var(--dp))}

@@ -1,0 +1,21 @@
+/* Daily Weather on 2.3.6 (gb-store-weather.js): the black window, the now block, separators, rows. */
+.gbdw{display:flex;flex-direction:column;background:#000;color:#fff;overflow:hidden}
+.gbdw-list{flex:1;overflow-y:auto;scrollbar-width:none}
+.gbdw-now{display:flex;flex-direction:column;align-items:center;padding:calc(10 * var(--dp)) calc(10 * var(--dp)) calc(12 * var(--dp))}
+.gbdw-city{font-size:calc(20 * var(--dp));color:#bebebe}
+.gbdw-big{display:flex;align-items:center;gap:calc(6 * var(--dp))}
+.gbdw-big svg{width:calc(80 * var(--dp));height:calc(80 * var(--dp))}
+.gbdw-big span{font-size:calc(60 * var(--dp));line-height:1}
+.gbdw-sky{font-size:calc(18 * var(--dp))}
+.gbdw-more{margin-top:calc(4 * var(--dp));font-size:calc(14 * var(--dp));color:#bebebe;text-align:center}
+.gbdw-sep{padding:calc(2 * var(--dp)) calc(5 * var(--dp));background:url('assets/gb-dark_header.png') 0 0/100% 100%;color:#bebebe;font-size:calc(14 * var(--dp));font-weight:700}
+.gbdw-hours{display:flex;justify-content:space-around;padding:calc(6 * var(--dp)) 0}
+.gbdw-hour{display:flex;flex-direction:column;align-items:center;gap:calc(2 * var(--dp))}
+.gbdw-hour small{font-size:calc(12 * var(--dp));color:#bebebe}
+.gbdw-hour svg{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.gbdw-day{border-bottom:calc(1 * var(--dp)) solid #2e2e2e;display:flex;align-items:center;gap:calc(8 * var(--dp));min-height:calc(56 * var(--dp));padding:0 calc(10 * var(--dp))}
+.gbdw-day>b{width:calc(60 * var(--dp));font-size:calc(18 * var(--dp));font-weight:400;text-transform:capitalize}
+.gbdw-day svg{width:calc(32 * var(--dp));height:calc(32 * var(--dp));flex:none}
+.gbdw-day span{flex:1;min-width:0;font-size:calc(14 * var(--dp));color:#bebebe;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gbdw-day strong{font-size:calc(18 * var(--dp));font-weight:400}
+.gbdw-day>small{width:calc(34 * var(--dp));text-align:right;font-size:calc(18 * var(--dp));color:#808080}

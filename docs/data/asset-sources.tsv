@@ -23,3 +23,4 @@ versions/*/assets/stat_notify_hangouts.png	drawn for the simulator: a white Hang
 versions/*/assets/c27-ntp-*.png	docs/tools/chrome-pak.py: the data: URIs of the ntp_android page in the image's Chrome 27 resources.pak
 versions/*/assets/c32-ntp-*.png	docs/tools/chrome-pak.py: the data: URIs of the ntp_android page in the image's Chrome 32 resources.pak
 versions/*/assets/app-store-*.png	Own drawing: the store app icons of store-apps/*.js (STORE.icon SVG) rendered to PNG at the version's launcher density (docs/plans/play-apps.md)
+versions/*/assets/store-*.png	Own drawing: the store app icons of store-apps/*.js (STORE.icon SVG) rendered to PNG at the version's launcher density (docs/plans/play-apps.md)

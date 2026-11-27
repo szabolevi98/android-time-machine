@@ -1,13 +1,13 @@
-/* The store's made-up games on Android 7.1.2 (docs/plans/play-apps.md): Lunar Golf and Orbit Hopper. A game draws
-   itself on its canvas (its rules and art are shared: store-apps/lunar-golf.js, store-apps/orbit-hopper.js); this file
+/* The store's made-up games on Android 7.1.2 (docs/plans/play-apps.md): Lunar Golf, Orbit Hopper and Pixel Blocks. A game draws
+   itself on its canvas (its rules and art are shared: store-apps/lunar-golf.js, orbit-hopper.js, pixel-blocks.js); this file
    registers each as the runtime the Play Store installs (ng-play-model.js: 'demo-<id>'), full screen under the status
    bar, with a New game button of the game's own. */
 (() => {
   'use strict';
-  const GAMES = [['lunar-golf', () => StoreApps.golf, 'golf'], ['orbit', () => StoreApps.orbit, 'orbit']];
+  const GAMES = [['lunar-golf', () => StoreApps.golf, 'golf'], ['orbit', () => StoreApps.orbit, 'orbit'], ['blocks', () => StoreApps.blocks, 'blocks']];
   for (const [id, G, key] of GAMES) {
     NG.register('demo-' + id, {
-      title: id === 'orbit' ? 'Orbit Hopper' : 'Lunar Golf',
+      title: {'lunar-golf': 'Lunar Golf', orbit: 'Orbit Hopper', blocks: 'Pixel Blocks'}[id],
       statusColor: () => G()?.STORE.dark || '#000',
       render: c => G() ? `<div class="nggame" data-no-translate><canvas class="nggame-canvas"></canvas><button type="button" class="nggame-new" data-action="nggame-new" aria-label="${c.safe(G().t('New game', c.lang))}">↻</button></div>` : '',
       mount(c, root) { const canvas = root.querySelector('.nggame-canvas'); if (canvas) G().mount(canvas, {data: c.data, ui: c.ui, save: () => c.save(), get lang() { return c.lang; }}); },

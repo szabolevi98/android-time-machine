@@ -88,4 +88,24 @@ Following the owner's "done means done" rule, for each app and each version:
 - 2026-11-27: Pocket Planner works in all eight versions (store-apps/pocket-planner.js; ec-, gb-, ics-, jb-, kk-, lp-,
   mm-, ng-store-planner.js; store-apps/legacy-host.js hosts it on 2.3.6–5.1.1). tests/store-pocket-planner.test.cjs
   covers the logic, tests/browser/store-apps.mjs installs, opens, uses and uninstalls it in every version.
-- Next: Lunar Golf and Orbit Hopper (round 1), then round 2.
+- 2026-11-27/28: Lunar Golf and Orbit Hopper work in all eight versions. A game draws itself on its canvas (its own
+  art, as games had in every era), so its rules, physics, texts and drawing are shared (store-apps/lunar-golf.js,
+  store-apps/orbit-hopper.js); each version only wires it (ec-, gb-, ics-, jb-, kk-, lp-, mm-, ng-store-games.js): full
+  screen, New game from the Menu key on 2.1 and 2.3.6, a button of the game's own on the others. Lunar Golf is free in
+  every catalogue now. tests/store-lunar-golf.test.cjs plays every hole; tests/store-orbit-hopper.test.cjs hops ten
+  planets; tests/browser/store-apps.mjs installs, opens and uninstalls all three apps in every version.
+- Round 1 is done.
+- 2026-11-28: Focus Timer (round 2) works in all eight versions (store-apps/focus-timer.js; ec-, gb-, ics-, jb-, kk-,
+  lp-, mm-, ng-store-focus.js). Its session runs from the end time it keeps, so it ends while the app is closed and
+  posts the version's notification; store-apps/legacy-host.js now gives the older versions' apps a tick every second
+  (StoreHost.provide) and notify(). The older catalogues sell it next to Pocket Planner.
+- 2026-11-28: Daily Weather (round 2) works in all eight versions (store-apps/daily-weather.js; ec-, gb-, ics-, jb-,
+  kk-, lp-, mm-, ng-store-weather.js): Riverside's made-up forecast, the same for everyone on a given day and hour (from
+  the date, with the season's means), now, the next hours and seven days; Celsius or Fahrenheit (a Units dialog on the
+  older versions, checked menu items on 6.0.1 and 7.1.2) and Refresh. tests/store-daily-weather.test.cjs.
+- 2026-11-28: Pixel Blocks (round 2) works in all eight versions: the store's own block puzzle (store-apps/pixel-blocks.js),
+  tap a group of two or more blocks of one colour to clear it (n × (n − 1) points), the blocks fall and empty columns
+  close up, a cleared board scores 500 more, the best score is kept. It is the catalogues' existing 'blocks' item; the
+  games files wire it next to Lunar Golf and Orbit Hopper. tests/store-pixel-blocks.test.cjs plays a game to its end.
+- Round 2 is done: six store apps install, open, show in Settings › Apps and uninstall with their data in every
+  version (tests/browser/store-apps.mjs, 48 runs).

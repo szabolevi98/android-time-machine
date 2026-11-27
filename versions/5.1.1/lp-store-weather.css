@@ -1,0 +1,30 @@
+/* Daily Weather on 5.1.1 (lp-store-weather.js): Toolbar, the now card, the hours row, the days card. */
+.lpdw{position:relative;display:flex;flex-direction:column;background:#eceff1;font-family:Roboto,sans-serif;color:#000000de}
+.lpdw-bar{display:flex;align-items:center;height:calc(56 * var(--dp));padding:0 calc(4 * var(--dp)) 0 calc(16 * var(--dp));background:#1e88e5;color:#fff;flex:none;box-shadow:0 calc(2 * var(--dp)) calc(4 * var(--dp)) #0000003d}
+.lpdw-bar b{flex:1;font:500 calc(20 * var(--dp))/1 Roboto,sans-serif}
+.lpdw-list{flex:1;overflow-y:auto;padding:calc(8 * var(--dp)) calc(8 * var(--dp)) calc(16 * var(--dp))}
+.lpdw-now,.lpdw-hours,.lpdw-days{background:#fff;border-radius:calc(2 * var(--dp));box-shadow:0 calc(1 * var(--dp)) calc(1.5 * var(--dp)) #0000001f,0 calc(1 * var(--dp)) calc(1 * var(--dp)) #0000003d}
+.lpdw-now{padding:calc(16 * var(--dp));text-align:center}
+.lpdw-now h2{margin:0;font:400 calc(20 * var(--dp))/1.2 Roboto,sans-serif;color:#0000008a}
+.lpdw-big{display:flex;align-items:center;justify-content:center;gap:calc(8 * var(--dp));margin:calc(8 * var(--dp)) 0 0}
+.lpdw-big svg{width:calc(88 * var(--dp));height:calc(88 * var(--dp))}
+.lpdw-big b{font:300 calc(64 * var(--dp))/1 Roboto,sans-serif}
+.lpdw-now p{margin:calc(4 * var(--dp)) 0;font-size:calc(18 * var(--dp))}
+.lpdw-now small{color:#0000008a;font-size:calc(14 * var(--dp))}
+.lpdw-now ul{display:flex;justify-content:center;flex-wrap:wrap;gap:calc(4 * var(--dp)) calc(16 * var(--dp));margin:calc(12 * var(--dp)) 0 0;padding:0;list-style:none;font-size:calc(13 * var(--dp));color:#000000b3}
+.lpdw-list h3{margin:calc(16 * var(--dp)) calc(8 * var(--dp)) calc(8 * var(--dp));font:500 calc(14 * var(--dp))/1 Roboto,sans-serif;color:#1e88e5}
+.lpdw-hours{display:flex;overflow-x:auto;scrollbar-width:none;padding:calc(8 * var(--dp)) 0}
+.lpdw-hour{flex:none;width:calc(64 * var(--dp));display:flex;flex-direction:column;align-items:center;gap:calc(4 * var(--dp))}
+.lpdw-hour small{font-size:calc(12 * var(--dp));color:#0000008a}
+.lpdw-hour svg{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.lpdw-hour b{font-weight:400;font-size:calc(15 * var(--dp))}
+.lpdw-day{display:flex;align-items:center;gap:calc(12 * var(--dp));min-height:calc(56 * var(--dp));padding:0 calc(16 * var(--dp));border-top:calc(1 * var(--dp)) solid #0000001f}
+.lpdw-day:first-child{border-top:0}
+.lpdw-day>b{width:calc(56 * var(--dp));font-weight:500;font-size:calc(14 * var(--dp));text-transform:capitalize}
+.lpdw-day svg{width:calc(32 * var(--dp));height:calc(32 * var(--dp));flex:none}
+.lpdw-day span{flex:1;min-width:0;font-size:calc(14 * var(--dp));color:#000000b3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lpdw-day em{font-style:normal;color:#1e88e5}
+.lpdw-day strong{font-weight:500;font-size:calc(15 * var(--dp))}
+.lpdw-day>small{width:calc(32 * var(--dp));text-align:right;color:#0000008a;font-size:calc(15 * var(--dp))}
+
+.lpdw-more{width:calc(48 * var(--dp));height:calc(48 * var(--dp));border:0;background:none;display:grid;place-items:center;padding:0;cursor:pointer}.lpdw-more img{width:calc(24 * var(--dp))}

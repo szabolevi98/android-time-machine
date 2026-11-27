@@ -10,18 +10,21 @@
    and the version's simulator.js hosts it: renderApp() draws StoreHost.render, the click handler offers
    StoreHost.action first, Back offers StoreHost.back, renderOverlay() draws StoreHost.overlay for the overlay
    'store-host'. The context `c` an app gets is the version's own: {data, ui, save, render, toast, lang, locale, safe,
-   openApp}, plus c.dialog(spec) and c.menu(items, anchor) from here.
+   openApp, notify(title, text)}, plus c.dialog(spec) and c.menu(items, anchor) from here. The version gives its context
+   to StoreHost.provide(fn); an app's tick(c) then runs every second, open or not (a timer that ends while closed).
      c.dialog({title, message, html, items: [label], buttons: [{label, action(c, value)}], onItem(i, c), enter: index})
        (buttons in the order the version shows them; value is the dialog's text field, if it has one)
      c.menu([{label, action(c), disabled}], anchor) */
 (() => {
   'use strict';
   const mods = {};
+  let provider = null;
   const e = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[ch]);
   let dialog = null, menu = null;
   function close(c) { dialog = null; menu = null; if (c.ui.overlay === 'store-host') { c.ui.overlay = ''; c.renderOverlay(); } }
   const H = window.StoreHost = {
     register(id, spec) { mods[id] = spec; },
+    provide(fn) { provider = fn; },
     has: id => !!mods[id],
     module: id => mods[id],
     ids: () => Object.keys(mods),
@@ -83,4 +86,10 @@
     // The Menu key (2.3.6, 4.0.4's apps without an action bar overflow): the app's options.
     menuKey(c) { const m = mods[c.ui.view]; if (!m?.menu) return false; m.menu(c); return true; }
   };
+  // Every second, the apps with a tick (once the version has given its context).
+  setInterval(() => {
+    if (!provider) return;
+    let c = null;
+    for (const m of Object.values(mods)) if (m.tick) { c ||= provider(); m.tick(c); }
+  }, 1000);
 })();

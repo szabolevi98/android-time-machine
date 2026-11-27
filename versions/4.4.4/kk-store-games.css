@@ -1,0 +1,5 @@
+/* The store's games on 4.4.4 (kk-store-games.js): the canvas fills the app's window; the game's own New game button. */
+.kkgame{position:relative;background:#05070f;overflow:hidden}
+.kkgame-canvas{display:block;width:100%;height:100%;touch-action:none}
+.kkgame-new{position:absolute;top:calc(8 * var(--dp));right:calc(8 * var(--dp));width:calc(40 * var(--dp));height:calc(40 * var(--dp));border:calc(1 * var(--dp)) solid #ffffff55;border-radius:50%;background:#ffffff14;color:#fff;font-size:calc(20 * var(--dp));line-height:1;padding:0;cursor:pointer}
+.kkgame-new:active{background:#ffffff33}

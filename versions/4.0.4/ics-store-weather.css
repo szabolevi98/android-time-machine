@@ -1,0 +1,28 @@
+/* Daily Weather on 4.0.4 (ics-store-weather.js): Holo light with the app's action bar, section headers and rows. */
+.icsdw{display:flex;flex-direction:column;background:#f3f3f3;color:#222;font-family:Roboto,sans-serif;overflow:hidden}
+.icsdw-bar{display:flex;align-items:center;height:calc(48 * var(--dp));flex:none;background:#1e88e5;color:#fff;padding-left:calc(8 * var(--dp))}
+.icsdw-icon{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-right:calc(8 * var(--dp))}
+.icsdw-bar b{flex:1;font-weight:400;font-size:calc(18 * var(--dp))}
+.icsdw-more{width:calc(48 * var(--dp));height:calc(48 * var(--dp));border:0;background:none;display:grid;place-items:center;padding:0;cursor:pointer}
+.icsdw-more img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.icsdw-list{flex:1;overflow-y:auto;scrollbar-width:none;padding-bottom:calc(12 * var(--dp))}
+.icsdw-now{display:flex;flex-direction:column;align-items:center;padding:calc(12 * var(--dp)) calc(16 * var(--dp))}
+.icsdw-city{font-weight:400;font-size:calc(18 * var(--dp));color:#555}
+.icsdw-big{display:flex;align-items:center;gap:calc(6 * var(--dp))}
+.icsdw-big svg{width:calc(80 * var(--dp));height:calc(80 * var(--dp))}
+.icsdw-big span{font:100 calc(64 * var(--dp))/1 Roboto,sans-serif}
+.icsdw-now p{margin:calc(2 * var(--dp)) 0;font-size:calc(18 * var(--dp))}
+.icsdw-now small{font-size:calc(13 * var(--dp));color:#777;text-align:center;line-height:1.5}
+.icsdw-head{margin:calc(12 * var(--dp)) calc(8 * var(--dp)) 0;padding:0 calc(8 * var(--dp)) calc(4 * var(--dp));border-bottom:calc(1 * var(--dp)) solid #c8c8c8;color:#555;font:700 calc(14 * var(--dp))/1.3 Roboto,sans-serif;text-transform:uppercase}
+.icsdw-hours{display:flex;overflow-x:auto;scrollbar-width:none;padding:calc(8 * var(--dp)) calc(4 * var(--dp))}
+.icsdw-hour{flex:none;width:calc(62 * var(--dp));display:flex;flex-direction:column;align-items:center;gap:calc(3 * var(--dp))}
+.icsdw-hour small{font-size:calc(12 * var(--dp));color:#777}
+.icsdw-hour svg{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.icsdw-hour b{font-weight:400;font-size:calc(15 * var(--dp))}
+.icsdw-day{display:flex;align-items:center;gap:calc(10 * var(--dp));min-height:calc(48 * var(--dp));padding:0 calc(16 * var(--dp));border-bottom:calc(1 * var(--dp)) solid #e2e2e2}
+.icsdw-day>b{width:calc(56 * var(--dp));font-weight:400;font-size:calc(15 * var(--dp));text-transform:capitalize}
+.icsdw-day svg{width:calc(32 * var(--dp));height:calc(32 * var(--dp));flex:none}
+.icsdw-day span{flex:1;min-width:0;font-size:calc(14 * var(--dp));color:#555;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icsdw-day em{font-style:normal;color:#1e88e5}
+.icsdw-day strong{font-weight:400;font-size:calc(16 * var(--dp))}
+.icsdw-day>small{width:calc(32 * var(--dp));text-align:right;font-size:calc(16 * var(--dp));color:#999}

@@ -1,0 +1,23 @@
+/* Focus Timer on 4.4.4 (kk-store-focus.js): Holo light, the app's action bar and tabs, the stopwatch's button bar. */
+.kkft{display:flex;flex-direction:column;background:#f3f3f3;color:#222;font-family:Roboto,sans-serif;overflow:hidden}
+.kkft-bar{display:flex;align-items:center;height:calc(48 * var(--dp));flex:none;background:#e53935;color:#fff;padding-left:calc(8 * var(--dp))}
+.kkft-icon{width:calc(32 * var(--dp));height:calc(32 * var(--dp));margin-right:calc(8 * var(--dp))}
+.kkft-bar b{flex:1;font-weight:400;font-size:calc(18 * var(--dp))}
+.kkft-more{width:calc(48 * var(--dp));height:calc(48 * var(--dp));border:0;background:none;display:grid;place-items:center;padding:0;cursor:pointer}
+.kkft-more img{width:calc(32 * var(--dp));height:calc(32 * var(--dp))}
+.kkft-tabs{display:flex;flex:none;background:#c62828}
+.kkft-tab{flex:1;text-align:center;padding:calc(12 * var(--dp)) 0 calc(9 * var(--dp));color:#ffffffb3;font:700 calc(12 * var(--dp))/1 Roboto,sans-serif;text-transform:uppercase;border-bottom:calc(3 * var(--dp)) solid transparent}
+.kkft-tab.on{color:#fff;border-bottom-color:#fff}
+.kkft-main{flex:1;display:grid;place-items:center}
+.kkft-ring{position:relative;width:calc(240 * var(--dp));height:calc(240 * var(--dp))}
+.kkft-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.kkft-ring circle{fill:none;stroke-width:6}
+.kkft-ring .track{stroke:#dcdcdc}
+.kkft-ring .fill{stroke:#e53935;transition:stroke-dashoffset .3s linear}
+.kkft-ring>div{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.kkft-time{font:100 calc(64 * var(--dp))/1 Roboto,sans-serif}
+.kkft-ring small{margin-top:calc(8 * var(--dp));font-size:calc(14 * var(--dp));color:#777}
+.kkft-buttons{display:flex;align-items:center;flex:none;height:calc(48 * var(--dp));border-top:calc(1 * var(--dp)) solid #d7d7d7;background:#f3f3f3}
+.kkft-buttons button{flex:1;height:100%;border:0;background:none;color:#222;font:400 calc(16 * var(--dp))/1 Roboto,sans-serif;cursor:pointer}
+.kkft-buttons button:active{background:#33b5e566}
+.kkft-buttons i{width:calc(1 * var(--dp));height:calc(28 * var(--dp));background:#d7d7d7}

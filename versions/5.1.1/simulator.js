@@ -242,7 +242,7 @@
     for (let i = apps.length - 1; i >= 0; i--) if (String(apps[i][0]).startsWith('store-') && !want.includes(apps[i][0])) { delete appNames[apps[i][0]]; apps.splice(i, 1); }
   }
   storeAppsSync();
-  function storeContext() { return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, menuClass: 'lp-popup-menu', lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key)}); }
+  function storeContext() { return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, notify: (title, text) => addNotification(title, text), menuClass: 'lp-popup-menu', lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key)}); }
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
   function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (jbPlayContext().prefs.shortcuts) placeShortcut(r, appNames[r]); }
   // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
@@ -257,6 +257,7 @@
     if (ui.view === r) { ui.view = 'home'; ui.sub = ''; }
     storeAppsSync();
   }
+  StoreHost.provide(storeContext);
   ICSLauncherFolders.initialize(data,apps.map(app=>app[0]).concat((data.driveFiles||StockApps.FILES).map(f=>'office:'+f.id)));
   const screen = document.querySelector('#screen');
   // dp → CSS px now: the display is 411.43 dp wide (the desktop frame's width, the whole width on a phone).

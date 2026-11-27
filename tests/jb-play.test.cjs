@@ -16,16 +16,17 @@ assert.match(html,/Albums from \$3\.99/);assert.match(html,/\d MORE<\/em>/);asse
 assert.match(P.render(ctx({lang:'hu'})),/Magazinok/);
 // Corpus pages: action_bar_bg_apps (#96AA39 over #819231), the tab strip with Featured selected, listing rows.
 html=P.render(ctx({page:'section',section:'apps',tab:'Featured'}));assert.match(html,/--bar:#96AA39;--edge:#819231/);assert.match(html,/class="on" data-action="jbp-tab" data-id="Featured">FEATURED/);assert.match(html,/Phone Highlights/);
-html=P.render(ctx({page:'section',section:'games',tab:'Top Paid'}));assert.match(html,/<b>Lunar Golf<\/b>/);
+// Lunar Golf is free since it works (docs/plans/play-apps.md): Top Free lists it, Top Paid no longer does.
+html=P.render(ctx({page:'section',section:'games',tab:'Top Free'}));assert.match(html,/<b>Lunar Golf<\/b>/);assert.doesNotMatch(P.render(ctx({page:'section',section:'games',tab:'Top Paid'})),/<b>Lunar Golf<\/b>/);
 // Details: INSTALL or BUY, OPEN / UNINSTALL once installed; owned apps list What's new first and get Rate & review.
 html=P.render(ctx({page:'detail',selected:'orbit'}));assert.match(html,/jbp-btn buy[^>]*>INSTALL</);assert.doesNotMatch(html,/Rate &amp; review/);assert.match(html,/Description[^]*What&#39;s new/);assert.match(html,/Reviews/);assert.match(html,/1,000,000\+ downloads/);
 assert.match(html,/jbp-ab wish/);
-assert.match(P.render(ctx({page:'detail',selected:'lunar-golf'})),/>BUY \$0\.99</);
+assert.match(P.render(ctx({page:'detail',selected:'movie-quiet'})),/>BUY \$2\.99</);assert.match(P.render(ctx({page:'detail',selected:'lunar-golf'})),/jbp-btn buy[^>]*>INSTALL</);
 html=P.render(ctx({page:'detail',selected:'orbit',installed:['orbit']}));assert.match(html,/>OPEN</);assert.match(html,/>UNINSTALL</);assert.match(html,/Rate &amp; review/);assert.match(html,/What&#39;s new[^]*Description/);
 html=P.render(ctx({page:'detail',selected:'orbit',downloading:'orbit',phase:'downloading',progress:.5}));assert.match(html,/width:50%/);assert.match(html,/>50%</);
 // Dialogs: permissions (framework group labels) with ACCEPT, the card overflow, auto-update, review, content filter.
 html=P.dialog('perms',ctx({target:'orbit'}));assert.match(html,/<b>Orbit Hopper<\/b> needs access to:/);assert.match(html,/Network communication/);assert.match(html,/ACCEPT/);
-html=P.dialog('card',ctx({target:'lunar-golf'}));assert.match(html,/Add to wishlist/);assert.match(html,/Buy \$0\.99/);
+html=P.dialog('card',ctx({target:'movie-quiet'}));assert.match(html,/Add to wishlist/);assert.match(html,/Buy \$2\.99/);
 assert.match(P.dialog('card',ctx({target:'lunar-golf',wishlist:['lunar-golf']})),/Remove from wishlist/);
 html=P.dialog('auto',ctx());assert.match(html,/Do not auto-update apps/);assert.match(html,/data-id="wifi" role="radio" aria-checked="true"/);
 assert.match(P.dialog('rate',ctx({target:'orbit',rateDraft:4})),/Rate it![^]*Above average/);

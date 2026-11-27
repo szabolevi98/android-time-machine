@@ -1,0 +1,3 @@
+/* The Market's games on 2.1 (ec-store-games.js): the canvas fills the window. */
+.ecgame{position:absolute;inset:0;background:#05070f;overflow:hidden}
+.ecgame-canvas{display:block;width:100%;height:100%;touch-action:none}

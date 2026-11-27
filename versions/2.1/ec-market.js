@@ -40,7 +40,9 @@
     {id: 'calendar', app: 'calendar', kind: 'apps', category: 'Productivity', developer: 'Android Demo', rating: 4.2, size: '1.8 MB', description: 'Make room for the things that matter.'},
     {id: 'clock', app: 'clock', kind: 'apps', category: 'Tools', developer: 'Android Demo', rating: 4.1, size: '1.2 MB', description: 'A familiar clock and alarms for your day.'},
     {id: 'calculator', app: 'calculator', kind: 'apps', category: 'Tools', developer: 'Android Demo', rating: 4.7, size: '0.8 MB', description: 'Everyday sums and scientific discoveries.'},
-    {id: 'lunar-golf', kind: 'games', category: 'Arcade & Action', name: 'Lunar Golf', developer: 'Crater Games', rating: 4.4, price: '$0.99', size: '9.8 MB', description: 'Eighteen holes in low gravity.', art: 'golf', perms: [NET]},
+    {id: 'lunar-golf', kind: 'games', category: 'Arcade & Action', name: 'Lunar Golf', developer: 'Crater Games', rating: 4.4, price: '', size: '9.8 MB', description: 'Eighteen holes in low gravity.', art: 'golf', perms: [NET]},
+    {id: 'daily-weather', kind: 'apps', category: 'News & Weather', name: 'Daily Weather', developer: 'Clear Sky Co.', rating: 4.5, price: '', size: '6.2 MB', description: 'Riverside\'s weather now, for the next hours and for the week.', art: 'weather', perms: [NET]},
+    {id: 'focus-timer', kind: 'apps', category: 'Productivity', name: 'Focus Timer', developer: 'Calm Desk', rating: 4.6, price: '', size: '3.0 MB', description: 'Work in short focused sessions with breaks in between.', art: 'focus', perms: [['permgrouplab_systemTools', 'permlab_vibrate']]},
     {id: 'pocket-planner', kind: 'apps', category: 'Productivity', name: 'Pocket Planner', developer: 'Quiet Tools', rating: 4.3, price: '', size: '1.6 MB', description: 'Plan your week on one simple page.', art: 'planner', perms: [CAL]}
   ].map((x, i) => ({downloads: ['250,000 - 1,000,000', '50,000 - 250,000', '10,000 - 50,000', '5,000 - 10,000'][i % 4], votes: 120 + i * 47, version: `1.${i}.${(i * 3) % 7}`, ...x}));
   // The server's categories of the time (Market sends them; not part of the APK).
@@ -52,6 +54,8 @@
     orbit: '<svg viewBox="0 0 48 48"><defs><radialGradient id="mko" cx=".35" cy=".3"><stop offset="0" stop-color="#ffd27a"/><stop offset="1" stop-color="#d0631e"/></radialGradient></defs><rect x="2" y="2" width="44" height="44" rx="9" fill="#152049"/><circle cx="24" cy="24" r="9" fill="url(#mko)"/><ellipse cx="24" cy="24" rx="17" ry="6" fill="none" stroke="#9fb4ff" stroke-width="2" transform="rotate(-20 24 24)"/></svg>',
     blocks: '<svg viewBox="0 0 48 48"><rect x="2" y="2" width="44" height="44" rx="9" fill="#2b2b2b"/><g stroke="#0006"><rect x="8" y="26" width="10" height="10" fill="#ff5a4e"/><rect x="18" y="26" width="10" height="10" fill="#ffc533"/><rect x="28" y="26" width="10" height="10" fill="#4ec2ff"/><rect x="18" y="16" width="10" height="10" fill="#6ddc5a"/></g></svg>',
     golf: '<svg viewBox="0 0 48 48"><rect x="2" y="2" width="44" height="44" rx="9" fill="#0c1022"/><circle cx="24" cy="40" r="20" fill="#b9bfd0"/><path d="M28 30V10l9 4-9 4" fill="#e04848" stroke="#ddd" stroke-width="1.2"/><circle cx="16" cy="24" r="2.4" fill="#fff"/></svg>',
+    weather: '<svg viewBox="0 0 48 48"><rect x="2" y="2" width="44" height="44" rx="9" fill="#1e88e5"/><g transform="translate(2 4) scale(.92)"><circle cx="24" cy="24" r="9" fill="#ffe082"/><g stroke="#ffe082" stroke-width="3" stroke-linecap="round"><path d="M24 6v5M24 37v5M6 24h5M37 24h5M11 11l3.5 3.5M33.5 33.5L37 37M11 37l3.5-3.5M33.5 14.5L37 11"/></g></g><g transform="translate(6 8) scale(.85)"><path d="M15 36h20a8 8 0 0 0 0-16 11 11 0 0 0-21-1 8.5 8.5 0 0 0 1 17z" fill="#ffffff"/></g></svg>',
+    focus: '<svg viewBox="0 0 48 48"><rect x="2" y="2" width="44" height="44" rx="9" fill="#e53935"/><circle cx="24" cy="26" r="14" fill="#fff"/><path d="M24 26V16" stroke="#e53935" stroke-width="3" stroke-linecap="round"/><path d="M24 26l6 4" stroke="#b71c1c" stroke-width="3" stroke-linecap="round"/><rect x="20" y="6" width="8" height="4" rx="1" fill="#fff"/></svg>',
     planner: '<svg viewBox="0 0 48 48"><rect x="2" y="2" width="44" height="44" rx="9" fill="#2a6fbd"/><rect x="10" y="12" width="28" height="26" rx="2" fill="#fff"/><rect x="10" y="12" width="28" height="7" rx="2" fill="#e8453c"/><path d="M17 29l4 4 9-9" fill="none" stroke="#2a6fbd" stroke-width="3"/></svg>'
   };
   const nameOf = x => x.app ? EC.apps.label(x.app) : x.name;
@@ -62,7 +66,7 @@
      (EC.apps) and Manage applications as a downloaded package; Open starts it; uninstalling takes it, its home screen
      shortcuts and its data away. The others still say they cannot be opened (notlaunched). The Market of 2010 put no
      shortcut on the home screen. */
-  const PERMS = {'pocket-planner': ['android.permission.READ_CALENDAR']};
+  const PERMS = {'pocket-planner': ['android.permission.READ_CALENDAR'], 'focus-timer': ['android.permission.VIBRATE'], 'daily-weather': ['android.permission.INTERNET'], blocks: ['android.permission.INTERNET'], 'lunar-golf': ['android.permission.INTERNET'], orbit: ['android.permission.INTERNET', 'android.permission.WRITE_EXTERNAL_STORAGE']};
   const runtime = x => EC.module?.('store-' + x.id) ? 'store-' + x.id : null;
   function register(x) {
     const r = runtime(x); if (!r) return null;
