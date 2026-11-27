@@ -173,7 +173,7 @@ pref_exposure_title zoom_control_title switch_to_camera_lable switch_to_video_la
         'keys': 'text_copied recent_tasks_title no_recent_tasks ringtone_default ringtone_silent ringtone_picker_title ok cancel yes no volume_ringtone volume_music volume_call volume_alarm volume_notification volume_unknown volume_music_hint_silent_ringtone_selected'.split(),
     },
     'settings2': {
-        'apks': ['Settings', 'framework'],
+        'apks': ['Settings', 'framework', 'PackageInstaller'],
         'keys': '''dock_settings_title dock_audio_settings_title dock_audio_summary_none dock_not_found_title dock_not_found_text dock_sounds_enable_title
 dock_sounds_enable_summary_on dock_sounds_enable_summary_off manageapplications_settings_title runningservices_settings_title filter_apps_all filter_apps_third_party filter_apps_running
 filter_apps_onsdcard no_applications sort_order_alpha sort_order_size internal_storage sd_card_storage service_background_processes
@@ -187,7 +187,7 @@ power_screen power_wifi power_bluetooth power_cell power_phone power_idle usage_
 usage_type_on_time usage_type_no_coverage battery_action_stop battery_action_app_details battery_action_display battery_action_wifi
 process_kernel_label legal_information settings_license_activity_title settings_license_activity_loading master_clear_title
 master_clear_desc erase_external_storage erase_external_storage_description master_clear_button_text master_clear_final_desc
-master_clear_final_button_text master_clear_gesture_explanation'''.split(),
+master_clear_final_button_text master_clear_gesture_explanation uninstall_application_question uninstall_application_text uninstall_done'''.split(),
     },
     'accounts': {
         'apks': ['AccountAndSyncSettings', 'framework'],

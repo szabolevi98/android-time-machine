@@ -1672,6 +1672,7 @@ versions/2.3.6/assets/stat_sys_signal_4_fully.png	9ffd6c3562deb939	resized	magur
 versions/2.3.6/assets/stat_sys_signal_flightmode.png	c21322f0ea23d2df	resized	maguro:/system/app/SystemUI.apk!res/drawable-sw600dp-xhdpi/stat_sys_signal_flightmode.png	drawable-sw600dp-xhdpi	resized 52×48 → 30×27, mean difference 0.55	800d38aaa7f8e008
 versions/2.3.6/assets/stat_sys_wifi_signal_4_fully.png	bc5a36bfae8885a9	resized	maguro:/system/app/SystemUI.apk!res/drawable-xhdpi/stat_sys_wifi_signal_4_fully.png	drawable-xhdpi	resized 39×36 → 30×27, mean difference 0.66	08db21edb058df69
 versions/2.3.6/assets/status_bar_close_on.png	5a3323c8dacac0c6	resized	maguro:/system/app/SystemUI.apk!res/drawable-xhdpi/status_bar_close_on.9.png	drawable-xhdpi	resized 128×64 → 96×48, mean difference 0.25	53d748c990a42e5d
+versions/2.3.6/assets/store-pocket-planner.png	b779d9354c43928a	not traced				
 versions/2.3.6/assets/tags.png	d6374961ccaa8578	copy	crespo:/system/app/TagGoogle.apk!res/drawable-hdpi/ic_launcher_nfc.png	drawable-hdpi		d6374961ccaa8578
 versions/2.3.6/assets/talk.png	4f3888a9a779af2e	copy	crespo:/system/app/GoogleServicesFramework.apk!res/drawable-hdpi/app_instant_message.png	drawable-hdpi		4f3888a9a779af2e
 versions/2.3.6/assets/tg-ic_launcher_nfc.png	d6374961ccaa8578	copy	crespo:/system/app/TagGoogle.apk!res/drawable-hdpi/ic_launcher_nfc.png	drawable-hdpi		d6374961ccaa8578

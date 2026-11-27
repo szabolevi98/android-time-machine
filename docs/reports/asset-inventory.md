@@ -12,9 +12,13 @@ copy: 979, vector: 211, generated: 9, own: 2
 
 ## 2.3.6 (crespo)
 
-same pixels: 1066, copy: 608, transcoded: 241, resized: 52, converted: 33, own: 10, similar: 4, rotated: 4, generated: 2
+same pixels: 1066, copy: 608, transcoded: 241, resized: 52, converted: 33, own: 10, similar: 4, rotated: 4, generated: 2, not traced: 1
 
 From another release's image (the own image has no such file; to review): maguro 69, mako 6 — the source column of the TSV names each.
+
+Not traced:
+
+- `versions/2.3.6/assets/store-pocket-planner.png`
 
 ## 4.0.4 (maguro)
 

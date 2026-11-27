@@ -18,6 +18,9 @@
   }
   // Stable per-app sizes for the simulator's packages (code, data, cache in bytes).
   function sizes(id) {
+    // A store app has its own size, a little data once it was used, and no cache.
+    const m = window.StoreHost?.module(id);
+    if (m) return {code: Math.round((m.size || 1) * 1048576), data: m.key && window.StoreHost.data?.(m.key) ? 4096 : 0, cache: 0};
     let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) >>> 0;
     return {code: 900000 + h % 5200000, data: 20000 + (h >>> 7) % 900000, cache: (h >>> 13) % 120000};
   }
@@ -31,8 +34,9 @@
     const tabs = [['downloaded', 'filter_apps_third_party'], ['sdcard', 'filter_apps_onsdcard'], ['running', 'filter_apps_running'], ['all', 'filter_apps_all']];
     const head = `<div class="gbp-tabs gbsp-tabs" role="tablist">${tabs.map(([id, key]) => `<button class="gbp-tab${tab === id ? ' selected' : ''}" role="tab" aria-selected="${tab === id}" data-action="gbsp-tab" data-id="${id}"><span class="gbsp-tablabel">${e(T(key))}</span></button>`).join('')}</div>`;
     if (tab === 'running') return `<div class="app-view gbset gbsp" data-no-translate>${head}${running(ctx)}</div>`;
-    // The simulator's applications are part of the system image: Downloaded and USB storage are empty, All lists them.
-    let list = tab === 'all' ? [...ctx.apps] : [];
+    // The simulator's applications are part of the system image; Downloaded lists the ones the Market installed
+    // (store-apps/legacy-host.js), All lists every one.
+    let list = tab === 'all' ? [...ctx.apps] : tab === 'downloaded' ? ctx.apps.filter(app => String(app.id).startsWith('store-')) : [];
     list.sort((a, b) => ctx.sortBySize ? (sizes(b.id).code + sizes(b.id).data) - (sizes(a.id).code + sizes(a.id).data) : a.name.localeCompare(b.name, ctx.locale));
     const rows = list.map(app => `<button class="gbsp-app" data-action="gbsp-app" data-id="${e(app.id)}">${app.icon}<span><b>${e(app.name)}</b><small>${e(size(sizes(app.id).code + sizes(app.id).data + sizes(app.id).cache))}</small></span></button>`).join('');
     const used = 0.26, free = ctx.freeText;
@@ -59,8 +63,8 @@
     const s = ctx.cleared ? {...sizes(app.id), data: 0, cache: 0} : sizes(app.id);
     const pair = (label, value) => `<div class="gbsp-pair"><span>${e(label)}</span><i></i><span>${e(value)}</span></div>`;
     return `<div class="app-view gbset gbsp" data-no-translate>${titleBar(T('application_info_label'))}<div class="gbsp-scroll">
-      <div class="gbsp-snippet">${app.icon}<span><b>${e(app.name)}</b><small>${e(AndroidStrings.format(T('version_text'), VERSIONS[app.id] || '2.3.6'))}</small></span></div>
-      <div class="gbsp-buttons">${button('gbsp-force-stop', T('force_stop'), app.id, !ctx.isRunning)}${button('gbsp-uninstall', T('uninstall_text'), app.id, true)}</div>
+      <div class="gbsp-snippet">${app.icon}<span><b>${e(app.name)}</b><small>${e(AndroidStrings.format(T('version_text'), VERSIONS[app.id] || window.StoreHost?.module(app.id)?.version || '2.3.6'))}</small></span></div>
+      <div class="gbsp-buttons">${button('gbsp-force-stop', T('force_stop'), app.id, !ctx.isRunning)}${button('gbsp-uninstall', T('uninstall_text'), app.id, !String(app.id).startsWith('store-'))}</div>
       ${separator(T('storage_label'))}<div class="gbsp-pairs">${pair(T('total_size_label'), size(s.code + s.data))}${pair(T('application_size_label'), size(s.code))}${pair(T('data_size_label'), size(s.data))}</div>
       <div class="gbsp-buttons center">${button('gbsp-clear-data', T('clear_user_data_text'), app.id, !s.data)}</div>
       ${separator(T('cache_header_label'))}<div class="gbsp-pairs">${pair(T('cache_size_label'), size(s.cache))}</div><div class="gbsp-buttons center">${button('gbsp-clear-cache', T('clear_cache_btn_text'), app.id, !s.cache)}</div>

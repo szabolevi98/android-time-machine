@@ -1,0 +1,23 @@
+/* Pocket Planner on 2.3.6 (gb-store-planner.js): the black list of the default theme with its framework pieces. */
+.gbplan{display:flex;flex-direction:column;background:#000;color:#fff;overflow:hidden}
+.gbplan-list{flex:1;overflow-y:auto;scrollbar-width:none}
+.gbplan-week{display:flex;align-items:center;min-height:calc(44 * var(--dp));padding:0 calc(4 * var(--dp));border-bottom:calc(1 * var(--dp)) solid #333}
+.gbplan-week button{width:calc(40 * var(--dp));height:calc(40 * var(--dp));border:0;background:none;color:#fff;font-size:calc(26 * var(--dp));line-height:1;padding:0;cursor:pointer}
+.gbplan-week button:active{color:#ff9900}
+.gbplan-week span{flex:1;display:flex;flex-direction:column;align-items:center;padding:calc(3 * var(--dp)) 0}
+.gbplan-week b{font-size:calc(18 * var(--dp))}
+.gbplan-week small{font-size:calc(12 * var(--dp));color:#bebebe}
+/* listSeparatorTextViewStyle: dark_header, 14 sp bold #bebebe, 5 dp in. */
+.gbplan-day{display:block;width:100%;margin:0;border:0;padding:calc(2 * var(--dp)) calc(5 * var(--dp));background:url('assets/gb-dark_header.png') 0 0/100% 100%;color:#bebebe;font:inherit;font-size:calc(14 * var(--dp));text-align:left;cursor:pointer}
+.gbplan-day b{text-transform:capitalize}
+.gbplan-day.today{color:#fff}
+.gbplan-day em{font-style:normal;color:#ff9900}
+/* simple_list_item_multiple_choice: 64 dp listPreferredItemHeight, textAppearanceLarge, the check box at the right. */
+.gbplan-task{position:relative;display:flex;align-items:center;width:100%;min-height:calc(64 * var(--dp));border:0;border-bottom:calc(1 * var(--dp)) solid #2e2e2e;padding:0 calc(6 * var(--dp)) 0 calc(10 * var(--dp));background:none;color:#fff;text-align:left;cursor:pointer}
+.gbplan-task:active{background:url('assets/gb-list_selector_background_pressed.png') 0 0/100% 100%}
+.gbplan-task span{flex:1;min-width:0;font-size:calc(22 * var(--dp));line-height:1.2;overflow-wrap:anywhere}
+.gbplan-task.done span{color:#808080}
+.gbplan-task img{width:calc(32 * var(--dp));height:calc(32 * var(--dp));flex:none}
+.gbplan-empty{padding:calc(10 * var(--dp)) calc(10 * var(--dp)) calc(12 * var(--dp));font-size:calc(16 * var(--dp));color:#808080}
+.gbplan-edit{padding:calc(4 * var(--dp)) 0}
+.gbplan-input{display:block;width:100%;box-sizing:border-box;padding:calc(8 * var(--dp));border:0;border:calc(1 * var(--dp)) solid #999;border-radius:calc(4 * var(--dp));background:#fff;color:#000;font-size:calc(18 * var(--dp))}

@@ -175,6 +175,36 @@
   const i18n = window.AndroidI18n;
   const appNames = Object.fromEntries(apps.map(app => [app[0], app[1]]));
   appNames.google = 'Google';
+  /* The store apps that work (docs/plans/play-apps.md, store-apps/legacy-host.js): the store's installed ones join the
+     launcher's apps (icon assets/<id>.png) while installed, open as StoreHost modules, and leave with their icons and
+     data when uninstalled. */
+  function storeAppsSync() {
+    const want = (data.marketInstalled || []).map(id => StoreHost.runtime(id)).filter(Boolean);
+    for (const id of want) if (!apps.some(a => a[0] === id)) { const m = StoreHost.module(id); apps.push([id, m.title, '', m.color || '#888', m.dark || '#444']); appNames[id] = m.title; iconAssets.add(id); }
+    for (let i = apps.length - 1; i >= 0; i--) if (String(apps[i][0]).startsWith('store-') && !want.includes(apps[i][0])) { delete appNames[apps[i][0]]; apps.splice(i, 1); }
+  }
+  storeAppsSync();
+  // Gingerbread's own AlertDialog (GBUI.dialog) and the Menu key's IconMenu (GBUI.menu) for the store apps.
+  function storeContext() {
+    return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key),
+      dialogMarkup: d => GBUI.dialog({title: d.title, message: d.message, custom: d.html, items: d.items?.map((title, i) => ({title, action: 'sth-item', id: i})), buttons: (d.buttons || []).map((b, i) => ({title: b.label, action: 'sth-btn', id: i})), cancel: 'sth-cancel', noTranslate: true, t: key => i18n.t(key)}),
+      menu: items => { ui.gbMenuItems = items.map((it, i) => ({action: 'sth-mi', id: i, title: it.label, icon: it.icon, disabled: it.disabled})); ui.overlay = 'gb-menu-settings'; renderOverlay(); },
+      closeMenu: () => closeGBMenu()});
+  }
+  // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
+  function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (false) placeShortcut(r, appNames[r]); }
+  // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
+  function storeUninstall(id) {
+    data.marketInstalled = (data.marketInstalled || []).filter(x => x !== id);
+    const r = StoreHost.runtime(id); if (!r) return;
+    StoreHost.module(r).clearData?.(storeContext());
+    data.homePages = data.homePages.map(page => page.map(x => x === r ? null : x));
+    if (Array.isArray(data.dock)) data.dock = data.dock.map(x => x === r ? null : x);
+    for (const f of Object.values(data.folders || {})) if (Array.isArray(f.items)) f.items = f.items.filter(x => x !== r);
+    ui.recent = (ui.recent || []).filter(x => x !== r);
+    if (ui.view === r) { ui.view = 'home'; ui.sub = ''; }
+    storeAppsSync();
+  }
   ICSLauncherFolders.initialize(data,apps.map(app=>app[0]));
   const screen = document.querySelector('#screen');
   // dp → CSS px now: the display is 320 dp wide (276 px in the desktop frame, the whole width on a phone).
@@ -265,6 +295,7 @@
     if (ui.overlay === 'shade') return;
     if (ui.view === 'home' && !ui.overlay) { ui.overlay = 'gb-menu-home'; renderOverlay(); return; }
     if (ui.view === 'drawer') return;
+    if (StoreHost.has(ui.view)) { StoreHost.menuKey(storeContext()); return; }
     if (GBApps.has(ui.view)) { GBApps.get(ui.view).keep?.(gappContext()); const items = GBApps.get(ui.view).menu?.(gappContext()) || []; if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'people' && GBContactsIO.has(ui.sub)) { const items = GBContactsIO.menu(ui.sub, gbctContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if ((ui.view === 'phone' && (!ui.activeCall || ui.gbCallBackground) && ui.sub !== 'call-detail') || (ui.view === 'people' && (!ui.sub || ui.sub === 'detail'))) { const items = GBPhone.menu(gbPhoneContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
@@ -422,6 +453,7 @@
     else if (ui.view === 'drawer') viewport.innerHTML = renderDrawer();
     else viewport.innerHTML = renderApp();
     if (GBApps.has(ui.view)) GBApps.get(ui.view).mounted?.(gappContext());
+    if (StoreHost.has(ui.view)) StoreHost.mount(ui.view, storeContext(), viewport);
     if (ui.view === 'messaging') window.GBMmsAttach?.mounted(gbMmsContext());
     snapResting(viewport);
     renderOverlay();
@@ -645,6 +677,7 @@
     const r = screen.getBoundingClientRect(); liveWallpaper.tap(event.clientX - r.left, event.clientY - r.top);
   });
   function renderApp() {
+    if (StoreHost.has(ui.view)) return StoreHost.render(ui.view, storeContext());
     if (ui.gbPrefs && (ui.gbPrefs.view || ui.gbPrefs.app) === ui.view) return GBPrefs.render(gbPrefsContext());
     if (ui.view === 'email' && ui.gbEmSetup) return GBEmail.setup({lang: i18n.language, ...ui.gbEmSetup});
     if (ui.view === 'calendar' && ui.gbCalSel) return GBCalendar.selectCalendars({lang: i18n.language, account: ICSEmail.account, accountType: GBEmail.text ? GBEmail.text(i18n.language, 'exchange_name') : 'Corporate', ok: GBSettings.text(i18n.language, 'fw_ok'), cancel: GBSettings.text(i18n.language, 'fw_cancel'), ...ui.gbCalSel});
@@ -698,6 +731,7 @@
   function home(resetPage = true) { if(ui.locked)return;if(ui.photoWidgetSetup){const setup=ui.photoWidgetSetup;data.homeWidgets[setup.page]=data.homeWidgets[setup.page].filter(widget=>widget.id!==setup.id);ui.photoWidgetSetup=null;save();}if(ui.sub==='lock-setup')lockControls.lock();captureRecentView(); ui.view = 'home'; ui.sub = ''; ui.overlay = ''; if (resetPage) ui.page = 2; render(); }
   function back() { pendingNav = 'back'; try { navigateBack(); } finally { pendingNav = ''; } }
   function navigateBack() {
+    if ((ui.overlay === 'store-host' || !ui.overlay && StoreHost.has(ui.view)) && StoreHost.back(storeContext())) return;
     if (ui.view === 'messaging' && !ui.overlay && window.GBMmsAttach?.back(gbMmsContext())) { render(); return; }
     if (ui.view === 'settings' && !ui.overlay && GBNetwork.back(gbNetContext())) return;
     if (ui.view === 'people' && !ui.overlay && GBContactsIO.back(gbctContext())) return;
@@ -868,6 +902,8 @@
     if (ui.overlay === 'gb-previews') {
       overlayRoot.innerHTML = `<div class="gbprev-scrim" data-action="close-overlay"></div><div class="gbprev" role="listbox" aria-label="${safe(i18n.t('Home screen'))}">${data.homePages.map((_, index) => `<button class="gbprev-item${index === ui.page ? ' current' : ''}" role="option" aria-selected="${index === ui.page}" data-action="gb-preview-go" data-id="${index}" aria-label="${safe(i18n.t('Home screen'))} ${index + 1}"><span class="gbprev-thumb"></span></button>`).join('')}</div>`;
       fillPreviews();
+    } else if (ui.overlay === 'store-host') {
+      overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
     } else if (ui.overlay === 'gb-menu-home') {
       ui.gbMenuItems = launcherMenu();
       overlayRoot.innerHTML = GBUI.menu(ui.gbMenuItems, key => i18n.t(key));
@@ -1144,7 +1180,7 @@
     ui.marketTimer = setInterval(() => {
       const d = ui.marketDownload; if (!d) { clearInterval(ui.marketTimer); return; }
       if (d.phase === 'downloading') { d.progress = Math.min(1, d.progress + .12); if (d.progress >= 1) d.phase = 'installing'; }
-      else { clearInterval(ui.marketTimer); ui.marketDownload = null; data.marketInstalled = [...new Set([...(data.marketInstalled || []), id])]; data.notifications = data.notifications.filter(n => n.kind !== 'market-dl'); if ((data.marketPrefs?.notify) !== false) data.notifications.unshift({id: Date.now(), title: item.name, detail: GBMarket.text(i18n.language, 'Successfully installed.'), kind: 'market'}); save(); renderStatus(); }
+      else { clearInterval(ui.marketTimer); ui.marketDownload = null; data.marketInstalled = [...new Set([...(data.marketInstalled || []), id])]; storeInstalled(id); data.notifications = data.notifications.filter(n => n.kind !== 'market-dl'); if ((data.marketPrefs?.notify) !== false) data.notifications.unshift({id: Date.now(), title: item.name, detail: GBMarket.text(i18n.language, 'Successfully installed.'), kind: 'market'}); save(); renderStatus(); }
       if (ui.view === 'play-store') { const bar = viewport.querySelector('.gbmk-progress b'); if (bar && ui.marketDownload?.phase === 'downloading') bar.style.width = `${Math.round(ui.marketDownload.progress * 100)}%`; else render(); }
     }, 350);
   }
@@ -1486,6 +1522,8 @@
     if (Date.now() < suppressClickUntil) return;
     const { action, id, app, url } = button.dataset;
     if(ui.locked&&!['back','alarm-dismiss','alarm-snooze'].includes(action))return;
+    // A store app's own controls and the host's dialog and menu (store-apps/legacy-host.js).
+    if ((action.startsWith('sth-') || StoreHost.has(ui.view)) && StoreHost.action(action, button, storeContext())) return;
     if (action.startsWith('gbnet-') && GBNetwork.handle(action, id, gbNetContext(), button)) return;
     if (action.startsWith('gbct-') && GBContactsIO.handle(action, id, gbctContext())) return;
     if (ui.view === 'messaging' && action.startsWith('gbma-') && window.GBMmsAttach?.handle(action, id, gbMmsContext())) return;
@@ -1594,8 +1632,8 @@
       case 'gbmk-buy': { const item = GBMarket.find(id); if (item && item.price !== 'FREE') { toast(GBMarket.text(i18n.language, 'Unavailable')); break; } gbMarketGo({page: 'permissions', selected: id}); break; }
       case 'gbmk-accept': ui.market = ui.marketHistory.pop() || {page: 'detail', selected: id}; gbMarketDownload(id); break;
       case 'gbmk-cancel': clearInterval(ui.marketTimer); ui.marketDownload = null; data.notifications = data.notifications.filter(n => n.kind !== 'market-dl'); save(); render(); renderStatus(); break;
-      case 'gbmk-open': { const item = GBMarket.find(id); if (item?.app) openApp(item.app); else toast(GBMarket.text(i18n.language, 'Unavailable')); break; }
-      case 'gbmk-uninstall': data.marketInstalled = (data.marketInstalled || []).filter(x => x !== id); save(); if (ui.market?.page === 'uninstall') ui.market = ui.marketHistory.pop() || {page: 'home'}; render(); break;
+      case 'gbmk-open': { const item = GBMarket.find(id); if (item?.app) openApp(item.app); else if (StoreHost.runtime(id)) { storeAppsSync(); openApp(StoreHost.runtime(id)); } else toast(GBMarket.text(i18n.language, 'Unavailable')); break; }
+      case 'gbmk-uninstall': storeUninstall(id); save(); if (ui.market?.page === 'uninstall') ui.market = ui.marketHistory.pop() || {page: 'home'}; render(); break;
       case 'gbmk-my-apps': gbMarketGo({page: 'my-apps'}); break;
       case 'gbmk-settings': gbMarketGo({page: 'settings'}); break;
       case 'gbmk-search': ui.marketSearching = true; ui.marketEdit = ''; render(); viewport.querySelector('.gbbr-search input')?.focus(); break;
@@ -1692,6 +1730,8 @@
       case 'gbacc-sync': ui.overlay = ''; ui.gbSyncing = true; render(); clearTimeout(ui.gbSyncTimer); ui.gbSyncTimer = setTimeout(() => { ui.gbSyncing = false; data.gbLastSync = Date.now(); save(); if (ui.view === 'settings') render(); }, 2500); break;
       case 'gbacc-cancel': ui.overlay = ''; ui.gbSyncing = false; clearTimeout(ui.gbSyncTimer); render(); break;
       case 'gbsp-sort': ui.gbAppsSize = id === 'size'; ui.overlay = ''; render(); break;
+      // Uninstall on a store app's Application info: UninstallerActivity ("Uninstall application?"), then the list.
+      case 'gbsp-uninstall': { const m = StoreHost.module(id); if (!m) break; const T = key => GBSettingsPages.text(i18n.language, key); storeContext().dialog({title: m.title, message: `${T('uninstall_application_question')} ${T('uninstall_application_text')}`, buttons: [{label: T('dlg_ok'), action: () => { storeUninstall(id.slice(6)); save(); ui.sub = (ui.gbSettingsStack || []).pop() || 'apps'; render(); toast(T('uninstall_done')); }}, {label: T('dlg_cancel')}]}); break; }
       case 'gbsp-app': if (!apps.some(app => app[0] === id)) break; (ui.gbSettingsStack ||= []).push(ui.sub); ui.settingsApp = id; ui.sub = 'app-info'; ui.overlay = ''; render(); break;
       case 'gbsp-battery-item': (ui.gbSettingsStack ||= []).push(ui.sub); ui.batteryDetail = id; ui.sub = 'battery-detail'; render(); break;
       case 'gbsp-force-stop': ui.settingsApp = id; ui.gbspDialog = 'force-stop'; ui.overlay = 'gb-dialog-sp'; renderOverlay(); break;
