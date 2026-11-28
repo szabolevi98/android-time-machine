@@ -278,7 +278,7 @@
     }
   }
   // The names the jb-* modules bind (generated as code moves out; docs/plans/engine-migration-4.3.md).
-  const moduleApi = {get A11Y() { return A11Y; }, get HOLD_NAMES() { return HOLD_NAMES; }, get PLAY_APPS() { return PLAY_APPS; }, get addNotification() { return addNotification; }, get appIcon() { return appIcon; }, get appView() { return appView; }, get applyMagnification() { return applyMagnification; }, get apps() { return apps; }, get back() { return back; }, get cameraIntent() { return cameraIntent; }, get cameraShoot() { return cameraShoot; }, get captureRecentView() { return captureRecentView; }, get carrierName() { return carrierName; }, get cczContext() { return cczContext; }, get clearAppData() { return clearAppData; }, get clock() { return clock; }, get clone() { return clone; }, get composeEmail() { return composeEmail; }, get composeGmail() { return composeGmail; }, get connectivityRow() { return connectivityRow; }, get connectivitySwitch() { return connectivitySwitch; }, get contact() { return contact; }, get content() { return content; }, get data() { return data; }, get defaultData() { return defaultData; }, get deviceDate() { return deviceDate; }, get digitalClockWidget() { return digitalClockWidget; }, get dp() { return dp; }, get dreams() { return dreams; }, get emailContext() { return emailContext; }, get emailData() { return emailData; }, get fullDate() { return fullDate; }, get hangoutsScope() { return hangoutsScope; }, get hangoutsSwap() { return hangoutsSwap; }, set hangoutsSwap(v) { hangoutsSwap = v; }, get home() { return home; }, get i18n() { return i18n; }, get jbmaContext() { return jbmaContext; }, get jbmaReturn() { return jbmaReturn; }, get keepMoreContext() { return keepMoreContext; }, get label() { return label; }, get lastActivity() { return lastActivity; }, set lastActivity(v) { lastActivity = v; }, get lockControls() { return lockControls; }, get lockScreen() { return lockScreen; }, get messageDraft() { return messageDraft; }, get messengerContext() { return messengerContext; }, get movieContext() { return movieContext; }, get mrContext() { return mrContext; }, get musicActive() { return musicActive; }, get navRoot() { return navRoot; }, get navigateBack() { return navigateBack; }, get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; }, get openApp() { return openApp; }, get openMessageThread() { return openMessageThread; }, get overlayRoot() { return overlayRoot; }, get placeContactShortcut() { return placeContactShortcut; }, get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; }, get powerLayer() { return powerLayer; }, get prefRow() { return prefRow; }, get reducedMotion() { return reducedMotion; }, get render() { return render; }, get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; }, get restoreChrome() { return restoreChrome; }, get row() { return row; }, get safe() { return safe; }, get save() { return save; }, get saveMusic() { return saveMusic; }, get screen() { return screen; }, get shareText() { return shareText; }, get shareVcard() { return shareVcard; }, get startPhoneCall() { return startPhoneCall; }, get statusRoot() { return statusRoot; }, get storeAppsSync() { return storeAppsSync; }, get storeContext() { return storeContext; }, get storeInstalled() { return storeInstalled; }, get storeUninstall() { return storeUninstall; }, get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; }, get syncBrowserState() { return syncBrowserState; }, get toast() { return toast; }, get today() { return today; }, get toggleRow() { return toggleRow; }, get tracks() { return tracks; }, get ui() { return ui; }, get viewport() { return viewport; }, get volumeLayer() { return volumeLayer; }, get wallpaperChoices() { return wallpaperChoices; }, get wifiNetworks() { return wifiNetworks; }, get wirelessCheckRow() { return wirelessCheckRow; }, get wirelessRow() { return wirelessRow; }};
+  const moduleApi = {get A11Y() { return A11Y; }, get HOLD_NAMES() { return HOLD_NAMES; }, get PLAY_APPS() { return PLAY_APPS; }, get addNotification() { return addNotification; }, get appIcon() { return appIcon; }, get appView() { return appView; }, get applyMagnification() { return applyMagnification; }, get apps() { return apps; }, get back() { return back; }, get cameraIntent() { return cameraIntent; }, get cameraShoot() { return cameraShoot; }, get captureRecentView() { return captureRecentView; }, get carrierName() { return carrierName; }, get cczContext() { return cczContext; }, get clearAppData() { return clearAppData; }, get clock() { return clock; }, get clone() { return clone; }, get composeEmail() { return composeEmail; }, get composeGmail() { return composeGmail; }, get connectivityRow() { return connectivityRow; }, get connectivitySwitch() { return connectivitySwitch; }, get contact() { return contact; }, get contactByPhone() { return contactByPhone; }, get content() { return content; }, get data() { return data; }, get defaultData() { return defaultData; }, get deviceDate() { return deviceDate; }, get digitalClockWidget() { return digitalClockWidget; }, get dp() { return dp; }, get dreams() { return dreams; }, get emailContext() { return emailContext; }, get emailData() { return emailData; }, get fullDate() { return fullDate; }, get hangoutsScope() { return hangoutsScope; }, get hangoutsSwap() { return hangoutsSwap; }, set hangoutsSwap(v) { hangoutsSwap = v; }, get home() { return home; }, get i18n() { return i18n; }, get jbmaContext() { return jbmaContext; }, get jbmaReturn() { return jbmaReturn; }, get keepMoreContext() { return keepMoreContext; }, get label() { return label; }, get lastActivity() { return lastActivity; }, set lastActivity(v) { lastActivity = v; }, get lockControls() { return lockControls; }, get lockScreen() { return lockScreen; }, get messageDraft() { return messageDraft; }, get messengerContext() { return messengerContext; }, get movieContext() { return movieContext; }, get mrContext() { return mrContext; }, get musicActive() { return musicActive; }, get navRoot() { return navRoot; }, get navigateBack() { return navigateBack; }, get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; }, get openApp() { return openApp; }, get openMessageThread() { return openMessageThread; }, get overlayRoot() { return overlayRoot; }, get placeContactShortcut() { return placeContactShortcut; }, get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; }, get powerLayer() { return powerLayer; }, get prefRow() { return prefRow; }, get reducedMotion() { return reducedMotion; }, get render() { return render; }, get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; }, get restoreChrome() { return restoreChrome; }, get row() { return row; }, get safe() { return safe; }, get save() { return save; }, get saveMusic() { return saveMusic; }, get screen() { return screen; }, get shareText() { return shareText; }, get shareVcard() { return shareVcard; }, get startPhoneCall() { return startPhoneCall; }, get statusRoot() { return statusRoot; }, get storeAppsSync() { return storeAppsSync; }, get storeContext() { return storeContext; }, get storeInstalled() { return storeInstalled; }, get storeUninstall() { return storeUninstall; }, get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; }, get syncBrowserState() { return syncBrowserState; }, get toast() { return toast; }, get today() { return today; }, get toggleRow() { return toggleRow; }, get tracks() { return tracks; }, get ui() { return ui; }, get viewport() { return viewport; }, get volumeLayer() { return volumeLayer; }, get wallpaperChoices() { return wallpaperChoices; }, get wifiNetworks() { return wifiNetworks; }, get wirelessCheckRow() { return wirelessCheckRow; }, get wirelessRow() { return wirelessRow; }};
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
   function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (jbPlayContext().prefs.shortcuts) placeShortcut(r, appNames[r]); }
   // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
@@ -371,17 +371,9 @@
     // Android 4.3 security views (KeyguardPatternView/PINView/PasswordView) inside the SlidingChallengeLayout.
     look:{wrong:kind=>JBKeyguard.WRONG[kind],clearMs:JBKeyguard.S.clear,message:({state,remaining})=>JBKeyguard.securityMessage({error:state.error,errorAt:state.errorAt,remaining,owner:data.settings.showOwner?data.settings.ownerInfo:''},key=>i18n.t(key)),renderLock:api=>renderSecureKeyguard(api)}});
   ui.locked=ICSLockscreen.secure(data);if(ui.locked)ui.view='lock';lockControls.lock();lockControls.bind(screen);
-  const statusIndicators = () => `<span class="status-right">${data.settings.bluetooth ? '<img class="status-bluetooth" src="assets/stat_sys_data_bluetooth.png" alt="">' : ''}${data.settings.silent ? `<img src="assets/stat_sys_ringer_${data.settings.silentMode === 'vibrate' ? 'vibrate' : 'silent'}.png" alt="">` : ''}${data.alarms.some(alarm => alarm.enabled) ? '<img src="assets/stat_sys_alarm.png" alt="">' : ''}<span class="status-cluster">${data.settings.wifi && data.settings.wifiNetwork ? '<img class="status-wifi" src="assets/stat_sys_wifi_signal_4_fully.png" alt="">' : ''}${!data.settings.airplane && data.settings.dataEnabled !== false && !(data.settings.wifi && data.settings.wifiNetwork) ? '<img class="status-data-type" src="assets/jb-stat_sys_data_fully_connected_h.png" alt="">' : ''}<img src="assets/${data.settings.airplane ? 'stat_sys_signal_flightmode' : 'stat_sys_signal_4_fully'}.png" alt=""></span><img class="status-battery" src="assets/stat_sys_battery_71.png" alt=""><span class="status-clock">${clock()}</span></span>`;
 
-  function renderStatus() {
-    const notificationIcons = data.notifications.length ? `${data.notifications.some(item => item.id === 2) ? '<img src="assets/stat_notify_sms.png" alt="">' : ''}${data.notifications.some(item => item.kind === 'calendar') ? '<img src="assets/calendar-stat_notify_calendar.png" alt="">' : ''}${data.notifications.some(item => item.id !== 2 && item.kind !== 'calendar') ? '<img src="assets/stat_notify_more.png" alt="">' : ''}` : '';
-    statusRoot.innerHTML = `<button class="status-button" data-action="shade" aria-label="Open notifications"><span class="status-left">${notificationIcons}</span>${statusIndicators()}</button>`;
-    i18n.translateDOM(statusRoot);
-  }
-  function renderNav() {
-    navRoot.innerHTML = `<button class="nav-key nav-back" data-action="back" aria-label="Back"><img src="assets/nav-back.png" alt=""></button><button class="nav-key nav-home" data-action="home" aria-label="Home screen"><img src="assets/nav-home.png" alt=""></button><button class="nav-key nav-recent" data-action="recent" aria-label="Recent apps"><img src="assets/nav-recent.png" alt=""></button>${ui.view==='music'&&!ui.locked?'<button class="nav-key nav-menu" data-action="legacy-menu" aria-label="Menu"><img src="assets/ic_sysbar_menu.png" alt=""></button>':''}`;
-    if(ui.locked)navRoot.querySelectorAll('.nav-home,.nav-recent').forEach(button=>{button.disabled=true;button.setAttribute('aria-hidden','true');});
-  }
+  function renderStatus(...args) { return StoreHost.module('statusbar').exports.renderStatus(storeContext(), ...args); }
+  function renderNav(...args) { return StoreHost.module('statusbar').exports.renderNav(storeContext(), ...args); }
   // Window transitions: the outgoing view is kept in a temporary layer while both animate.
   let lastScene = null, pendingNav = '', activeTransition = null, launchFrom = null;
   const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
@@ -708,15 +700,10 @@
     const moduleOverlay = ui.overlay ? moduleHook('overlay', null) : undefined;
     if (typeof moduleOverlay === 'string') overlayRoot.innerHTML = moduleOverlay;
     else if (moduleOverlay) { /* drawn by the module */ }
-    else if (ui.overlay === 'shade') {
-      const call = ui.activeCall ? `<button class="phone-resume-call" data-action="open-app" data-app="phone">${safe(i18n.t('Ongoing call'))} · ${safe(contactByPhone(ui.activeCall.number)?.name||ui.activeCall.number)}</button>` : '';
-      overlayRoot.innerHTML = '<div class="jb-shade-scrim" data-action="close-overlay"></div>' + JBShade.render({...data, notifications: data.notifications.map(decorateNotification)}, ui, key => i18n.t(key), {locale: i18n.locale(), clock: clock(), date: fullDate(), carrier: data.settings.airplane ? i18n.t('No service.') : (data.settings.networkOperator || 'Telekom'), alarm: nextAlarmLabel(), extra: call});
-    } else if (ui.overlay === 'store-host') {
+    else if (ui.overlay === 'store-host') {
       overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
     } else if (ui.overlay === 'dream') {
       overlayRoot.innerHTML = renderDream();
-    } else if (ui.overlay === 'qs-brightness') {
-      overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog jb-brightness" role="dialog" aria-label="${safe(i18n.t('Brightness'))}"><h3>${safe(i18n.t('Brightness'))}</h3><div class="jb-brightness-row"><img src="assets/jb-ic_qs_brightness_auto_off.png" alt=""><input type="range" min="10" max="100" value="${data.settings.brightness}" data-field="brightness" aria-label="${safe(i18n.t('Brightness'))}" ${data.settings.autoBrightness ? 'disabled' : ''}><label><input type="checkbox" data-field="auto-brightness" ${data.settings.autoBrightness ? 'checked' : ''}><span>${safe(i18n.t('AUTO'))}</span></label></div></div>`;
     } else if (ui.overlay.startsWith('widget-photo')) {
       overlayRoot.innerHTML = ICSWidgets.photoOverlay(data, ui, key => i18n.t(key));
     } else if (ui.overlay === 'search') {
@@ -887,24 +874,8 @@
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
   }
 
-  // NotificationPanelView wraps its content (header, list, carrier label and handle); the rest is scrim.
-  function shadeFullHeight(shade) {
-    // Measure the open panel: its CSS top and bottom, not the drag's explicit height or bottom:auto.
-    const previous = shade.style.height, previousBottom = shade.style.bottom; shade.style.height = ''; shade.style.bottom = '';
-    const full = Math.min(shade.offsetHeight, screen.clientHeight - shade.offsetTop - navRoot.offsetHeight);
-    shade.style.height = previous; shade.style.bottom = previousBottom; return full;
-  }
-  function decorateNotification(note) {
-    if (note.id === 2) return {...note, icon: 'mms-ic_contact_picture.png', smallIcon: 'stat_notify_sms.png', big: 'Hey! Are we still on for coffee tomorrow?\nSee you at 11!'};
-    if (note.kind === 'message' && note.channel === 'hangouts') return {...note, icon: 'mms-ic_contact_picture.png', smallIcon: 'hg1-stat_notify_chat.png', big: note.detail};
-    if (note.kind === 'calendar') return {...note, icon: 'calendar.png', smallIcon: 'calendar-stat_notify_calendar.png', big: note.detail, actions: [{id: 'snooze', label: 'Snooze', icon: 'calendar-ic_alarm_holo_dark.png'}]};
-    return {...note, icon: 'settings.png', smallIcon: 'stat_notify_more.png'};
-  }
-  // Settings.System.NEXT_ALARM_FORMATTED, shown by the temporary alarm tile.
-  function nextAlarmLabel() {
-    const next = data.alarms.filter(alarm => alarm.enabled).map(alarm => ICSDeskClock.nextOccurrence(alarm, deviceDate())).filter(Boolean).sort((a, b) => a - b)[0];
-    return next ? next.toLocaleString(i18n.locale(), {weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: !data.settings.hour24}) : '';
-  }
+  function shadeFullHeight(...args) { return StoreHost.module('shade').exports.shadeFullHeight(storeContext(), ...args); }
+  function nextAlarmLabel(...args) { return StoreHost.module('shade').exports.nextAlarmLabel(storeContext(), ...args); }
   function addNotification(title, detail) { data.notifications.unshift({ id: Date.now(), title, detail }); save(); renderStatus(); }
 
   let suppressClickUntil = 0;
@@ -968,7 +939,6 @@
         save(); render(); break;
       case 'widget-music-play': ui.musicActive=true;ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
       // The search box microphones open the image's voice search.
-      case 'shade': ui.overlay = ui.overlay === 'shade' ? '' : 'shade'; renderOverlay(); break;
       case 'recent': {
         if (ui.view === 'lock') break;
         if (ui.overlay === 'recent') { closeRecents(); break; }
@@ -985,32 +955,8 @@
       case 'recent-app-info': ui.overlay = ''; ui.recentPopup = null; openApp('settings'); ui.settingsApp = id; ui.sub = 'app-info'; render(); break;
       case 'close-overlay': if (ui.overlay === 'recent') { closeRecents(); break; } ui.overlay = ''; renderOverlay(); break;
       case 'remove-recent': event.stopPropagation(); ui.recentPopup = null; removeTask(id); if (!ui.recent.length) ui.overlay = ''; renderOverlay(); break;
-      case 'clear-notifications': {
-        const rows = [...overlayRoot.querySelectorAll('.jb-note')], delays = JBShade.clearDelays(rows.length);
-        if (reducedMotion?.matches || !rows.length) { data.notifications = []; ui.overlay = ''; save(); renderStatus(); renderOverlay(); break; }
-        overlayRoot.querySelector('.jb-shade-clear')?.setAttribute('hidden', '');
-        rows.forEach((row, index) => row.animate([{transform: 'translateX(0)', opacity: 1}, {transform: `translateX(${row.offsetWidth}px)`, opacity: 0}], {duration: 125, delay: delays[index], easing: 'linear', fill: 'forwards'}));
-        setTimeout(() => { data.notifications = []; save(); renderStatus(); if (ui.overlay === 'shade') { ui.overlay = ''; renderOverlay(); } }, (delays.at(-1) || 0) + 125 + 225);
-        break;
-      }
-      case 'shade-flip': ui.shadeSettings = !ui.shadeSettings; JBShade.flip(overlayRoot.querySelector('.jb-shade'), ui.shadeSettings, reducedMotion?.matches); { const button = overlayRoot.querySelector('.jb-shade-flip'); button?.setAttribute('aria-label', i18n.t(ui.shadeSettings ? 'Notifications.' : 'Quick settings.')); overlayRoot.querySelector('.jb-shade-clear')?.toggleAttribute('hidden', ui.shadeSettings || !data.notifications.length); } break;
       case 'dream-exit': ui.overlay = ''; renderOverlay(); break;
-      case 'qs-user': ui.overlay = ''; openApp('people'); break;
-      case 'qs-brightness': ui.overlay = 'qs-brightness'; renderOverlay(); break;
-      case 'qs-settings': ui.overlay = ''; openApp('settings'); break;
-      case 'qs-wifi': ui.overlay = ''; openApp('settings'); ui.sub = 'wifi'; render(); break;
-      case 'qs-rssi': ui.overlay = ''; openApp('settings'); ui.sub = 'data'; render(); break;
-      case 'qs-battery': ui.overlay = ''; openApp('settings'); ui.sub = 'battery'; render(); break;
-      case 'qs-airplane': data.settings.airplane = !data.settings.airplane; if (data.settings.airplane) { data.settings.wifi = false; data.settings.bluetooth = false; } save(); renderStatus(); renderOverlay(); break;
-      case 'qs-bluetooth': ui.overlay = ''; openApp('settings'); ui.sub = 'bluetooth'; render(); break;
-      case 'qs-alarm': ui.overlay = ''; openApp('clock'); break;
-      case 'qs-location': ui.overlay = ''; openApp('settings'); ui.sub = 'location'; render(); break;
-      case 'notification-action': { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar' && button.dataset.noteAction === 'snooze') { data.notifications = data.notifications.filter(item => item !== note); (data.calendarSnoozes ||= []).push({eventId: note.eventId, date: note.date, title: note.title, detail: note.detail, at: deviceDate().getTime() + 5 * 60000}); save(); renderStatus(); if (!data.notifications.length) ui.overlay = ''; renderOverlay(); toast('Snoozed'); } break; }
-      case 'notification-open': { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar') { data.notifications = data.notifications.filter(item => item !== note); save(); ui.overlay = ''; openApp('calendar'); ui.selectedEvent = note.eventId; ui.selectedInstance = note.date; ui.selectedDate = note.date; ui.sub = 'event'; render(); break; } }
-        if (note?.kind === 'message' && note.channel === 'hangouts') { data.notifications = data.notifications.filter(item => item !== note); ui.overlay = ''; openApp('hangouts'); ui.hgPage = ''; hangoutsScope(() => openMessageThread(note.contact)); break; }
-        ui.overlay = ''; if (Number(id) === 2) openMessageThread(1); else { ui.view = 'settings'; ui.sub = 'about'; render(); } break;
       // Uninstall on a store app's App info: UninstallerActivity's question, then the app goes and App info closes.
-      case 'qs-wifi-display': ui.overlay = ''; ui.view = 'settings'; ui.sub = 'wifi-display'; render(); break;
       // Developer options' ListPreferences: the choice is kept in data.settings['dev_<key>'] (index into the entries).
       case 'wallpaper': data.wallpaper = Number(id); delete data.liveWallpaper; delete data.customWallpaper; delete data.customWallpaperPhoto; save(); if (ui.view === 'wallpaper-picker') home(false); else render(); toast('Wallpaper set'); break;
       case 'factory-reset': if (confirm(i18n.t('Reset all local Jelly Bean simulator data?'))) resetSimulator(); break;
@@ -1492,28 +1438,6 @@
     }
   }
   let lastWheelPage = 0;
-  /* Jelly Bean notifications expand with a two-finger swipe down or a pinch out (trackpad pinches arrive as
-     Ctrl+wheel), and collapse with the opposite gesture. */
-  function setNoteExpanded(id, expanded) {
-    ui.noteExpanded = {...ui.noteExpanded, [id]: expanded};
-    renderOverlay();
-  }
-  screen.addEventListener('wheel', event => {
-    const note = ui.overlay === 'shade' && event.ctrlKey ? event.target.closest('.jb-note') : null;
-    if (!note) return;
-    event.preventDefault(); event.stopImmediatePropagation();
-    setNoteExpanded(note.dataset.id, event.deltaY < 0);
-  }, {passive: false, capture: true});
-  let noteGesture = null;
-  screen.addEventListener('touchstart', event => {
-    const note = ui.overlay === 'shade' && event.touches.length === 2 ? event.target.closest('.jb-note') : null;
-    noteGesture = note ? {id: note.dataset.id, y: (event.touches[0].clientY + event.touches[1].clientY) / 2} : null;
-  }, {passive: true});
-  screen.addEventListener('touchmove', event => {
-    if (!noteGesture || event.touches.length !== 2) return;
-    const y = (event.touches[0].clientY + event.touches[1].clientY) / 2;
-    if (Math.abs(y - noteGesture.y) > 30) { const {id} = noteGesture, down = y > noteGesture.y; noteGesture = null; setNoteExpanded(id, down); }
-  }, {passive: true});
   screen.addEventListener('wheel', event => {
     if (ui.view !== 'home' || ui.overlay || dragState || !event.target.closest('.home-content')) return;
     const widgetList = event.target.closest('.calw-list');
@@ -1888,6 +1812,8 @@
     }
   }, 1000);
 
+  // Once, before the first render: the modules' own listeners (init(make, c); make() gives a fresh context later).
+  moduleEach('init', null, storeContext);
   i18n.translateDOM(document.body);
   render();
   coldBoot();
