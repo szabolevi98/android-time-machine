@@ -462,3 +462,74 @@
   const menu = ctx => screen(ctx)?.menu || [];
   window.GBPrefs = {SCREENS, render, dialog, find, get, menu, server, serverValid, serverInput, serverSave, PORTS, text: S};
 })();
+
+/* The application settings screens (GBPrefs) as a module (docs/plans/engine-migration.md): an app's Menu › Settings
+   opens its screen over the app's view (ui.gbPrefs, gbpref-open), and while it is open the shell asks this module
+   instead of the app's: the screen, its Menu (Restore default settings), its dialogs and pickers, Back (to the parent
+   screen, then the app), the clicks, Email's server form and fields. */
+(() => {
+  'use strict';
+  const i18n = window.AndroidI18n;
+  // The shell's bindings the screens' code uses, and their helpers on them.
+  function shell(c) {
+    const {data, ui, save, render, viewport} = c;
+    // Application preference screens (GBPrefs): Browser, Calendar and Email settings, stored in data.appPrefs.
+    function gbPrefsContext(app = ui.gbPrefs?.app) {
+      data.appPrefs ||= {}; data.appPrefs[app] ||= {};
+      return {app, lang: i18n.language, values: data.appPrefs[app], pick: ui.gbPick, settings: data.settings, homepage: 'http://www.google.com/', account: ICSEmail.account, name: 'Nexus S', multi: ui.gbMulti, t: key => i18n.t(key), mapsCache: !!data.mapsCache, gmailAccount: GBGmail.ACCOUNT, gmailSync: data.appPrefs['gmail-sync'] || {}, servers: data.appPrefs['email-servers'] || {}};
+    }
+    function gbPrefSet(key, value) { const ctx = gbPrefsContext(); ctx.values[key] = value; save(); }
+    // PreferenceActivity keeps its list position while a preference changes.
+    function gbPrefRender() { const y = viewport.querySelector('.gbset-list')?.scrollTop || 0; render(); const list = viewport.querySelector('.gbset-list'); if (list) list.scrollTop = y; }
+    return {data, ui, save, render, renderOverlay: c.renderOverlay, toast: c.toast, overlayRoot: c.overlayRoot, gbPrefsContext, gbPrefSet, gbPrefRender};
+  }
+  window.GB?.register('prefs', {
+    render: c => GBPrefs.render(shell(c).gbPrefsContext()),
+    menu(c) { c.gbMenu(GBPrefs.menu(shell(c).gbPrefsContext())); },
+    dialog: (kind, c) => GBPrefs.dialog(shell(c).gbPrefsContext(), kind),
+    back(c) { const ui = c.ui; ui.gbPrefs = ui.gbPrefs.parent || null; c.render(); return true; },
+    action(name, el, c) {
+      const id = el.dataset.id, {data, ui, save, render, renderOverlay, toast, overlayRoot, gbPrefsContext, gbPrefSet, gbPrefRender} = shell(c);
+      switch (name) {
+        case 'gbpref-open': ui.overlay = ''; ui.gbPrefs = {app: id, view: ui.view}; render(); break;
+        case 'gbpref-check': { const [app, key] = String(id).split(':'), ctx = gbPrefsContext(app), item = GBPrefs.find(ctx, key); if (item) gbPrefSet(key, !GBPrefs.get(item, ctx.values)); gbPrefRender(); break; }
+        case 'gbpref-list': case 'gbpref-action': { const [app, key] = String(id).split(':'), item = GBPrefs.find(gbPrefsContext(app), key); if (!item) break;
+          if (item.toast) { toast('This feature is not part of the simulator.'); break; }
+          if (item.open) { ui.gbPrefs = {app: item.open, view: ui.gbPrefs.view || ui.view, parent: ui.gbPrefs}; render(); break; }
+          // Google Mail's Clear search history / Clear "Show pictures" act at once.
+          if (item.done) { if (key === 'clear-search-history') data.gmailSearches = []; if (key === 'clear-display-images-whitelist') data.gmailShowPictures = []; if (key === 'pref_gtalk_clear_history_key' && data.talk23) data.talk23.searches = []; if (key === 'clear_history' && data.youtube23) data.youtube23.searches = []; if (key === 'cache_settings_clear_cache') data.mapsCache = false; save(); gbPrefRender(); break; }
+          ui.gbMulti = null; ui.gbPick = undefined;
+          ui.gbPrefDialog = key; ui.overlay = 'gb-dialog-pref'; renderOverlay(); break; }
+        case 'gbpref-pick': { const [app, key, ...rest] = String(id).split(':'), item = GBPrefs.find(gbPrefsContext(app), key), value = rest.join(':'); if (item) gbPrefSet(key, item.kind === 'list' ? Number(value) : value); ui.overlay = ''; gbPrefRender(); break; }
+        case 'gbpref-edit-ok': { const [app, key] = String(id).split(':'), input = overlayRoot.querySelector('[data-pref-edit]'), item = GBPrefs.find(gbPrefsContext(app), key);
+          // A number field (Amount of mail to sync) keeps only 1-999.
+          if (input && !(item?.edit?.number && !(Number(input.value) >= 1 && Number(input.value) <= 999))) gbPrefSet(key, item?.edit?.number ? Math.round(Number(input.value)) : input.value.trim()); ui.overlay = ''; gbPrefRender(); break; }
+        // NumberPickerDialog: the arrows step the draft within the picker's range (holding the value at its ends), Set stores it.
+        case 'gbpref-step': { const [app, key, delta] = String(id).split(':'), item = GBPrefs.find(gbPrefsContext(app), key); if (!item?.picker) break; const p = item.picker; ui.gbPick = Math.min(p.max, Math.max(p.min, (ui.gbPick ?? p.value) + Number(delta))); renderOverlay(); break; }
+        case 'gbpref-picker-ok': { const [, key] = String(id).split(':'); if (ui.gbPick !== undefined) gbPrefSet(key, ui.gbPick); ui.gbPick = undefined; ui.overlay = ''; gbPrefRender(); break; }
+        // Restore default settings: the screen's stored values go.
+        case 'gbpref-restore': ui.overlay = ''; ui.gbMenuItems = null; data.appPrefs[id] = {}; save(); gbPrefRender(); break;
+        // MultiListPreference: the boxes toggle a draft, OK stores it.
+        case 'gbpref-multi': { const [app, key, i] = String(id).split(':'), item = GBPrefs.find(gbPrefsContext(app), key); if (!item) break; const draft = ui.gbMulti ?? [...GBPrefs.get(item, gbPrefsContext(app).values)]; ui.gbMulti = draft.includes(Number(i)) ? draft.filter(x => x !== Number(i)) : [...draft, Number(i)].sort(); renderOverlay(); break; }
+        case 'gbpref-multi-ok': { const [, key] = String(id).split(':'); if (ui.gbMulti) gbPrefSet(key, ui.gbMulti); ui.gbMulti = null; ui.overlay = ''; gbPrefRender(); break; }
+        // BrowserYesNoPreference: the clears act on the simulated data; Reset to default drops the stored Browser settings.
+        case 'gbpref-confirm': { const [app, key] = String(id).split(':');
+          if (key === 'privacy_clear_history') { data.browserHistory = []; data.qsbShortcuts = (data.qsbShortcuts || []).filter(s => s.kind !== 'url'); }
+          if (key === 'reset_default_preferences') data.appPrefs[app] = {};
+          save(); ui.overlay = ''; gbPrefRender(); break; }
+        default: return false;
+      }
+      return true;
+    },
+    // Email's server settings: Next keeps valid fields and returns to the account's settings.
+    submit(name, values, c, form) {
+      const {data, ui, save, render} = shell(c);
+      if (name === 'gbem-server') { data.appPrefs ||= {}; if (GBPrefs.serverSave(form, data.appPrefs['email-servers'] ||= {})) { save(); ui.gbPrefs = ui.gbPrefs?.parent || null; render(); } return true; }
+      return false;
+    },
+    input(event, c) {
+      if (event.target.closest('[data-form="gbem-server"]')) { GBPrefs.serverInput(event.target.closest('form'), event.target); return true; }
+      return false;
+    }
+  });
+})();

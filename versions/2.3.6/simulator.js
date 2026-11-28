@@ -192,6 +192,9 @@
   // The view's module is in front, unless the app's settings screen (GBPrefs, Menu › Settings) is open over it.
   const prefsOpen = () => !!ui.gbPrefs && (ui.gbPrefs.view || ui.gbPrefs.app) === ui.view;
   const moduleView = () => StoreHost.has(ui.view) && !prefsOpen();
+  // A Google app (gb-apps.js) still takes its own clicks, forms and mount behind its settings screen (Earth's About,
+  // Voice's Background data).
+  const googleBehindPrefs = () => prefsOpen() && StoreHost.module(ui.view)?.google ? StoreHost.module(ui.view) : null;
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
   function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (false) placeShortcut(r, appNames[r]); }
   // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
@@ -297,7 +300,7 @@
     if (ui.view === 'home' && !ui.overlay) { ui.overlay = 'gb-menu-home'; renderOverlay(); return; }
     if (ui.view === 'drawer') return;
     if (moduleView()) { StoreHost.menuKey(storeContext()); return; }
-    if (ui.gbPrefs && (ui.gbPrefs.view || ui.gbPrefs.app) === ui.view) { const items = GBPrefs.menu(gbPrefsContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
+    if (prefsOpen()) { GB.module('prefs').menu(storeContext()); return; }
     const button = [...viewport.querySelectorAll('[data-action$="-menu"]')].find(node => !node.disabled);
     button?.click();
   }
@@ -340,14 +343,6 @@
     openApp('search'); ui.qsb = {corpus, query: '', selecting: false, page: ''}; render();
     viewport.querySelector('.gbqs-field input')?.focus();
   }
-  // Application preference screens (GBPrefs): Browser, Calendar and Email settings, stored in data.appPrefs.
-  function gbPrefsContext(app = ui.gbPrefs?.app) {
-    data.appPrefs ||= {}; data.appPrefs[app] ||= {};
-    return {app, lang: i18n.language, values: data.appPrefs[app], pick: ui.gbPick, settings: data.settings, homepage: 'http://www.google.com/', account: ICSEmail.account, name: 'Nexus S', multi: ui.gbMulti, t: key => i18n.t(key), mapsCache: !!data.mapsCache, gmailAccount: GBGmail.ACCOUNT, gmailSync: data.appPrefs['gmail-sync'] || {}, servers: data.appPrefs['email-servers'] || {}};
-  }
-  function gbPrefSet(key, value) { const ctx = gbPrefsContext(); ctx.values[key] = value; save(); }
-  // PreferenceActivity keeps its list position while a preference changes.
-  function gbPrefRender() { const y = viewport.querySelector('.gbset-list')?.scrollTop || 0; render(); const list = viewport.querySelector('.gbset-list'); if (list) list.scrollTop = y; }
   // Window transitions: the outgoing view is kept in a temporary layer while both animate.
   let lastScene = null, pendingNav = '', activeTransition = null;
   const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
@@ -401,6 +396,7 @@
     else if (ui.view === 'drawer') viewport.innerHTML = renderDrawer();
     else viewport.innerHTML = renderApp();
     if (moduleView()) StoreHost.mount(ui.view, storeContext(), viewport);
+    else googleBehindPrefs()?.mount(storeContext(), viewport);
     snapResting(viewport);
     renderOverlay();
     i18n.translateDOM(screen);
@@ -595,7 +591,7 @@
     const r = screen.getBoundingClientRect(); liveWallpaper.tap(event.clientX - r.left, event.clientY - r.top);
   });
   function renderApp() {
-    if (prefsOpen()) return GBPrefs.render(gbPrefsContext());
+    if (prefsOpen()) return GB.module('prefs').render(storeContext());
     if (StoreHost.has(ui.view)) return StoreHost.render(ui.view, storeContext());
     switch (ui.view) {
       default: return renderHome();
@@ -629,7 +625,7 @@
   function navigateBack() {
     if ((ui.overlay === 'store-host' || !ui.overlay && moduleView()) && StoreHost.back(storeContext())) return;
     if(ui.view==='lock'&&ui.gbPasswordEntry&&data.settings.screenLock!=='pattern'){ui.gbPasswordEntry=false;lockControls.lock();render();return;}
-    if (ui.gbPrefs && (ui.gbPrefs.view || ui.gbPrefs.app) === ui.view && !ui.overlay) { ui.gbPrefs = ui.gbPrefs.parent || null; render(); return; }
+    if (prefsOpen() && !ui.overlay && GB.module('prefs').back(storeContext())) return;
     if (ui.overlay === 'shade') { closeShade(); return; }
     if (ui.overlay) { ui.overlay = ''; render(); return; }
     if (ui.view === 'lock') return;
@@ -676,7 +672,7 @@
       {action: 'gb-new-folder', id: 'phone', title: t('Contacts with phone numbers'), icon: 'ic_launcher_folder_live_contacts_phone'},
       {action: 'gb-new-folder', id: 'starred', title: t('Starred contacts'), icon: 'ic_launcher_folder_live_contacts_starred'}]};
     if (ui.overlay === 'gb-dialog-emsetup') return GB.module('email').dialog('setup:' + ui.gbEmSetupDialog, storeContext());
-    if (ui.overlay === 'gb-dialog-pref') return GBPrefs.dialog(gbPrefsContext(), ui.gbPrefDialog) || {title: '', items: []};
+    if (ui.overlay === 'gb-dialog-pref') return GB.module('prefs').dialog(ui.gbPrefDialog, storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-module') return StoreHost.module(ui.view)?.dialog?.(ui.gbModuleDialog, storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-gbmk') return GB.module('play-store').dialog(ui.gbmkDialog, storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-clearlog' || ui.overlay === 'gb-dialog-gbct' || ui.overlay === 'gb-dialog-ce') return GB.module('people').dialog(ui.overlay.slice(10), storeContext()) || {title: '', items: []};
@@ -953,6 +949,7 @@
     if(ui.locked&&!['back','alarm-dismiss','alarm-snooze'].includes(action))return;
     // A store app's own controls and the host's dialog and menu (store-apps/legacy-host.js).
     if ((action.startsWith('sth-') || moduleView()) && StoreHost.action(action, button, storeContext())) return;
+    if (googleBehindPrefs()?.action(action, button, storeContext())) return;
     switch (action) {
       case 'open-app': openApp(app || id, !!button.closest('.recent-item')); break;
       case 'home': if (ui.view !== 'lock') home(); break;
@@ -1037,32 +1034,6 @@
       case 'toast': toast(id); break;
       case 'noop': break;
       case 'browser-search': openSearch(''); break;
-      case 'gbpref-open': ui.overlay = ''; ui.gbPrefs = {app: id, view: ui.view}; render(); break;
-      case 'gbpref-check': { const [app, key] = String(id).split(':'), ctx = gbPrefsContext(app), item = GBPrefs.find(ctx, key); if (item) gbPrefSet(key, !GBPrefs.get(item, ctx.values)); gbPrefRender(); break; }
-      case 'gbpref-list': case 'gbpref-action': { const [app, key] = String(id).split(':'), item = GBPrefs.find(gbPrefsContext(app), key); if (!item) break;
-        if (item.toast) { toast('This feature is not part of the simulator.'); break; }
-        if (item.open) { ui.gbPrefs = {app: item.open, view: ui.gbPrefs.view || ui.view, parent: ui.gbPrefs}; render(); break; }
-        // Google Mail's Clear search history / Clear "Show pictures" act at once.
-        if (item.done) { if (key === 'clear-search-history') data.gmailSearches = []; if (key === 'clear-display-images-whitelist') data.gmailShowPictures = []; if (key === 'pref_gtalk_clear_history_key' && data.talk23) data.talk23.searches = []; if (key === 'clear_history' && data.youtube23) data.youtube23.searches = []; if (key === 'cache_settings_clear_cache') data.mapsCache = false; save(); gbPrefRender(); break; }
-        ui.gbMulti = null; ui.gbPick = undefined;
-        ui.gbPrefDialog = key; ui.overlay = 'gb-dialog-pref'; renderOverlay(); break; }
-      case 'gbpref-pick': { const [app, key, ...rest] = String(id).split(':'), item = GBPrefs.find(gbPrefsContext(app), key), value = rest.join(':'); if (item) gbPrefSet(key, item.kind === 'list' ? Number(value) : value); ui.overlay = ''; gbPrefRender(); break; }
-      case 'gbpref-edit-ok': { const [app, key] = String(id).split(':'), input = overlayRoot.querySelector('[data-pref-edit]'), item = GBPrefs.find(gbPrefsContext(app), key);
-        // A number field (Amount of mail to sync) keeps only 1-999.
-        if (input && !(item?.edit?.number && !(Number(input.value) >= 1 && Number(input.value) <= 999))) gbPrefSet(key, item?.edit?.number ? Math.round(Number(input.value)) : input.value.trim()); ui.overlay = ''; gbPrefRender(); break; }
-      // NumberPickerDialog: the arrows step the draft within the picker's range (holding the value at its ends), Set stores it.
-      case 'gbpref-step': { const [app, key, delta] = String(id).split(':'), item = GBPrefs.find(gbPrefsContext(app), key); if (!item?.picker) break; const p = item.picker; ui.gbPick = Math.min(p.max, Math.max(p.min, (ui.gbPick ?? p.value) + Number(delta))); renderOverlay(); break; }
-      case 'gbpref-picker-ok': { const [, key] = String(id).split(':'); if (ui.gbPick !== undefined) gbPrefSet(key, ui.gbPick); ui.gbPick = undefined; ui.overlay = ''; gbPrefRender(); break; }
-      // Restore default settings: the screen's stored values go.
-      case 'gbpref-restore': ui.overlay = ''; ui.gbMenuItems = null; data.appPrefs[id] = {}; save(); gbPrefRender(); break;
-      // MultiListPreference: the boxes toggle a draft, OK stores it.
-      case 'gbpref-multi': { const [app, key, i] = String(id).split(':'), item = GBPrefs.find(gbPrefsContext(app), key); if (!item) break; const draft = ui.gbMulti ?? [...GBPrefs.get(item, gbPrefsContext(app).values)]; ui.gbMulti = draft.includes(Number(i)) ? draft.filter(x => x !== Number(i)) : [...draft, Number(i)].sort(); renderOverlay(); break; }
-      case 'gbpref-multi-ok': { const [, key] = String(id).split(':'); if (ui.gbMulti) gbPrefSet(key, ui.gbMulti); ui.gbMulti = null; ui.overlay = ''; gbPrefRender(); break; }
-      // BrowserYesNoPreference: the clears act on the simulated data; Reset to default drops the stored Browser settings.
-      case 'gbpref-confirm': { const [app, key] = String(id).split(':');
-        if (key === 'privacy_clear_history') { data.browserHistory = []; data.qsbShortcuts = (data.qsbShortcuts || []).filter(s => s.kind !== 'url'); }
-        if (key === 'reset_default_preferences') data.appPrefs[app] = {};
-        save(); ui.overlay = ''; gbPrefRender(); break; }
       case 'alarm-snooze': {
         const alarm=data.alarms.find(item=>item.id===ui.ringingAlarm.id);
         // Snooze duration from the Clock settings (snooze_duration: 5, 10, ... 30 minutes).
@@ -1079,10 +1050,10 @@
     const form = event.target.closest('[data-form]');
     if (!form || !screen.contains(form)) return;
     event.preventDefault(); const values = new FormData(form);
+    if (googleBehindPrefs()?.submit(form.dataset.form, values, storeContext())) return;
     if (moduleView() && StoreHost.submit(form.dataset.form, values, storeContext())) return;
+    if (prefsOpen() && GB.module('prefs').submit(form.dataset.form, values, storeContext(), form)) return;
     if(form.dataset.form==='folder-name'){event.target.querySelector('input')?.blur();render();return;}
-    // Email's server settings: Next keeps valid fields and returns to the account's settings.
-    if (form.dataset.form === 'gbem-server') { data.appPrefs ||= {}; if (GBPrefs.serverSave(form, data.appPrefs['email-servers'] ||= {})) { save(); ui.gbPrefs = ui.gbPrefs?.parent || null; render(); } return; }
     switch (form.dataset.form) {
       default: StoreHost.ids().some(other => other !== ui.view && !other.startsWith('store-') && !StoreHost.module(other).google && StoreHost.module(other).submit?.(form.dataset.form, values, storeContext())); break;
     }
@@ -1098,8 +1069,7 @@
   document.addEventListener('input', event => {
     if (moduleView() && StoreHost.input(event, storeContext())) return;
     if (event.target.matches('[data-bk-bright]')) { data.booksPrefs = {...GBGoogleApps.bookPrefs(data), brightness: Number(event.target.value)}; delete data.booksNight; save(); viewport.querySelector('.bk-prefs')?.style.setProperty('--bk-dim', ((100 - Number(event.target.value)) / 100 * .7).toFixed(3)); return; }
-    // AccountSetupBasics.validateFields: Next and Manual setup follow the address and password (the password is never stored).
-    if (event.target.closest('[data-form="gbem-server"]')) { GBPrefs.serverInput(event.target.closest('form'), event.target); return; }
+    if (prefsOpen() && GB.module('prefs').input(event, storeContext())) return;
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
   });
 

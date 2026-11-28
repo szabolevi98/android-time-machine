@@ -38,7 +38,8 @@ one `GB.register(id, {...})` module per screen.
 | Settings | gb-settings.js | 9ef7cef0 |
 | Market | gb-market.js | 2ae2c24f |
 | Live wallpapers, wallpaper picker | gb-wallpapers.js (new) | 89eacdf4 |
-| The Google apps (GBApps.register is a GB module) | gb-apps.js | |
+| The Google apps (GBApps.register is a GB module) | gb-apps.js | 72357291 |
+| App settings screens (GBPrefs) | gb-prefs.js (the prefs module) | |
 
 Bugs fixed on the way (their own commits):
 
