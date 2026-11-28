@@ -29,5 +29,5 @@ assert.deepEqual(labels(menu),['New tab','New incognito tab','Bookmarks','Other 
 menu=C.menu({ui:{sub:'tabs',browserIndex:0,browserHistory:['a']},data,t,locale:'hu',url:C.NTP});
 assert.deepEqual(labels(menu),['Új lap','Új inkognitólap','Összes lap bezárása','Beállítások']);
 const sim=engineSource('4.4.4');
-assert.ok(sim.includes("case 'chrome': return renderChrome();")&&sim.includes("if (app === 'chrome') useBrowserSession(app);")&&!sim.includes("['browser', 'Browser'")&&!/GEL_ALIASES = {[^}]*chrome/.test(sim));
+assert.ok(sim.includes("return renderChrome();")&&sim.includes("for (const id of ['chrome']) KK.register(id, spec);")&&sim.includes("if (app === 'chrome') useBrowserSession(app);")&&!sim.includes("['browser', 'Browser'")&&!/GEL_ALIASES = {[^}]*chrome/.test(sim));
 console.log('kk-chrome ok');
