@@ -82,4 +82,75 @@
   const menu = ctx => ctx.page ? [] : [{action: 'gbqs-settings', id: '', title: text(ctx.lang, 'menu_settings'), icon: 'ic_menu_preferences'}];
   const clearDialog = lang => ({title: text(lang, 'clear_shortcuts'), icon: 'ic_dialog_alert', message: text(lang, 'clear_shortcuts_prompt'), buttons: [{action: 'gbqs-clear-ok', title: text(lang, 'agree')}, {action: 'close-overlay', title: text(lang, 'disagree')}]});
   window.GBSearch = {CORPORA, ORDER, DEFAULT_CORPORA, text, label, enabled, suggest, list, render, menu, clearDialog};
+
+  /* QuickSearchBox SearchActivity as a module (docs/plans/engine-migration.md): ui.qsb holds the corpus, the query, the
+     selector and the settings page; picked suggestions become shortcuts (data.qsbShortcuts) shown for an empty query.
+     The Search key and the Browser's search open it with a corpus (simulator.js openSearch). */
+  function context(c) {
+    const q = c.ui.qsb ||= {corpus: '', query: '', selecting: false, page: ''}, data = c.data;
+    const ctx = {lang: c.lang, corpus: q.corpus, query: q.query, selecting: q.selecting, page: q.page, corpora: data.qsbCorpora, webSuggest: data.qsbWebSuggest, shortcuts: data.qsbShortcuts || [],
+      apps: c.appList(), contacts: data.contacts, tracks: ICSMusic.tracks, history: data.browserHistory || [], titleOf: c.browserTitle,
+      messages: data.messages.map(m => ({...m, from: c.contactName(m.contact) || ''}))};
+    ctx.items = c.ui.qsbItems = suggest(ctx);
+    return ctx;
+  }
+  const focusField = c => c.viewport.querySelector('.gbqs-field input')?.focus();
+  // A picked suggestion: kept as a shortcut, then opened where it belongs.
+  function launch(c, item) {
+    if (!item) return;
+    const data = c.data;
+    if (!item.shortcut) data.qsbShortcuts = [{kind: item.kind, corpus: item.corpus, id: item.id, text1: item.text1, text2: item.text2 || '', icon: item.icon}, ...(data.qsbShortcuts || []).filter(s => !(s.kind === item.kind && s.id === item.id))].slice(0, 12);
+    c.save(); c.ui.qsb = null;
+    if (item.kind === 'web') c.intent.browse('search:' + item.id);
+    else if (item.kind === 'url') c.intent.browse(item.id);
+    else if (item.kind === 'app') c.openApp(item.id);
+    else if (item.kind === 'contact') c.intent.contact(Number(item.id));
+    else if (item.kind === 'message') c.intent.thread(Number(item.id));
+    else if (item.kind === 'track') c.intent.track(Number(item.id));
+  }
+  window.GB?.register('search', {
+    render: c => render(context(c)),
+    menu(c) { const items = menu(context(c)); if (!items.length) return; c.ui.qsb.selecting = false; c.gbMenu(items); c.render(); },
+    dialog: (kind, c) => clearDialog(c.lang),
+    back(c) {
+      const q = c.ui.qsb;
+      if (q?.selecting) { q.selecting = false; c.render(); return true; }
+      if (q?.page) { q.page = q.page === 'settings' ? '' : 'settings'; c.render(); return true; }
+      return false;
+    },
+    action(name, el, c) {
+      const id = el.dataset.id, data = c.data, ui = c.ui;
+      switch (name) {
+        case 'gbqs-corpora': ui.qsb.selecting = !ui.qsb.selecting; c.render(); return true;
+        case 'gbqs-corpora-close': ui.qsb.selecting = false; c.render(); return true;
+        case 'gbqs-corpus': Object.assign(ui.qsb, {corpus: id || '', selecting: false}); c.render(); focusField(c); return true;
+        case 'gbqs-pick': launch(c, ui.qsbItems?.[Number(id)]); return true;
+        // SearchSettings: id '' is the main page; Searchable items and Google search are its sub-pages.
+        case 'gbqs-settings': ui.overlay = ''; Object.assign(ui.qsb ||= {corpus: '', query: ''}, {selecting: false, page: id || 'settings'}); c.render(); return true;
+        case 'gbqs-toggle-corpus': { const on = enabled(data.qsbCorpora); data.qsbCorpora = on.includes(id) ? on.filter(x => x !== id) : [...on, id]; if (ui.qsb?.corpus === id) ui.qsb.corpus = ''; c.save(); c.render(); return true; }
+        case 'gbqs-toggle-web': data.qsbWebSuggest = data.qsbWebSuggest === false; c.save(); c.render(); return true;
+        case 'gbqs-clear': c.gbDialog('clear'); return true;
+        case 'gbqs-clear-ok': data.qsbShortcuts = []; c.save(); ui.overlay = ''; c.render(); return true;
+      }
+      return false;
+    },
+    // The query: a web address opens in the Browser, words search the web or the chosen corpus.
+    submit(name, values, c) {
+      if (name !== 'gbqs-search') return false;
+      const q = String(values.get('q') || '').trim(); if (!q) return true;
+      c.ui.qsb.query = q; const ctx = context(c);
+      if (!c.ui.qsb.corpus || c.ui.qsb.corpus === 'web') { const url = !c.normalizeAddress(q).startsWith('search:'); launch(c, {kind: url ? 'url' : 'web', corpus: 'web', id: q, text1: q, icon: url ? 'gb-qsb-globe.png' : 'gb-qsb-magnifying_glass.png'}); }
+      else launch(c, ctx.items.find(item => !item.shortcut) || ctx.items[0]);
+      return true;
+    },
+    // Typing refreshes the suggestions without drawing the field again.
+    input(event, c) {
+      if (!event.target.closest('.gbqs-field') || !c.ui.qsb) return false;
+      c.ui.qsb.query = event.target.value;
+      const ctx = context(c), box = c.viewport.querySelector('.gbqs-list'), form = c.viewport.querySelector('.gbqs-plate');
+      if (box) box.innerHTML = list(ctx.items);
+      form?.classList.toggle('empty', !ctx.query);
+      return true;
+    }
+  });
 })();
