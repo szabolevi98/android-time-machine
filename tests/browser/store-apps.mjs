@@ -41,7 +41,8 @@ const VERSIONS = {
   '2.1': ID => ({
     v: '2.1', key: 'ec-v1',
     ready: `!!window.EC?.context && !document.querySelector('.ecsys-boot') && ['home', 'lock'].includes(EC.context.ui.view)`,
-    install: `const c = EC.context; if (c.ui.view === 'lock') c.unlock(); await __sleep(400); c.open('market', 'details:${ID}'); await __sleep(700);
+    // A slow machine may still be finishing the boot and lock the phone again: retry until the Market's page shows.
+    install: `const c = EC.context; for (let i = 0; i < 20 && !document.querySelector('#viewport [data-action="ecmk-install"]'); i++) { if (c.ui.view === 'lock') c.unlock(); await __sleep(400); c.open('market', 'details:${ID}'); await __sleep(700); }
       __click('#viewport [data-action="ecmk-install"]'); await __sleep(500); __click('#viewport [data-action="ecmk-perm-ok"]');`,
     installed: `EC.context.data.market.installed.includes('${ID}') && !!EC.apps.get('store-${ID}')`,
     open: `__click('#viewport [data-action="ecmk-launch"]');`,

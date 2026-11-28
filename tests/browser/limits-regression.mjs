@@ -4281,7 +4281,9 @@ CASES.push({id:'T41',version:'5.1.1',name:'Fit add activity, weight, goal, units
   await h.ev(`(()=>{const t=document.querySelector('#viewport [data-fitm-time]'),d=new Date(Date.now()-3*36e5);t.value=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');t.dispatchEvent(new Event('change',{bubbles:true}));const x=document.querySelector('#viewport [data-fitm-date]'),y=new Date(Date.now()-3*36e5);x.value=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');x.dispatchEvent(new Event('change',{bubbles:true}));return 1})()`);
   await h.type('#viewport [data-fitm-field="h"]','1');await h.type('#viewport [data-fitm-field="m"]','5');await h.tap('#viewport [data-action="fitm-save"]');
   h.check('a valid activity is saved',await h.until(`!document.querySelector('#viewport .fitm-editor')`)&&(await fit()).sessions?.[0]?.type==='yoga'&&(await fit()).sessions[0].min===65);
-  h.check('the timeline and wheel count it',await h.ev(`document.querySelector('#viewport .fit-timeline').textContent.includes('1 hr 5 min doing yoga')&&!!document.querySelector('#viewport .fit-legend img[src*="fit-ic_yoga"]')`));await h.shot('fit-timeline');
+  // The activity starts three hours ago: between midnight and 3 am that is yesterday, which the timeline shows under
+  // Yesterday and today's wheel and legend leave out.
+  h.check('the timeline and wheel count it',await h.ev(`document.querySelector('#viewport .fit-timeline').textContent.includes('1 hr 5 min doing yoga')&&(new Date(Date.now()-3*36e5).getDate()!==new Date().getDate()||!!document.querySelector('#viewport .fit-legend img[src*="fit-ic_yoga"]'))`));await h.shot('fit-timeline');
   await menu('fitm-weight');await h.ev(`(()=>{const s=document.querySelector('#viewport [data-fitm-select="unit"]');s.value='1';s.dispatchEvent(new Event('change',{bubbles:true}));return 1})()`);
   await h.type('#viewport [data-fitm-field="b"]','-4');await h.tap('#viewport [data-action="fitm-save"]');
   h.check('a negative weight is refused',await h.until(`!!document.querySelector('#viewport .fitm-error')`)&&!(await fit()).weights?.length);
