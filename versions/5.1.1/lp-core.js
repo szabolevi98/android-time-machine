@@ -12,30 +12,33 @@
 window.LP = window.StoreHost;
 (() => {
   'use strict';
-  const live = LP.live = {}, defined = [];
-  LP.define = (id, factory) => { defined.push([id, factory]); };
-  LP.kernel = getters => { Object.defineProperties(live, Object.getOwnPropertyDescriptors(getters)); };
+  // LP is the host itself: what is added here must not replace one of its own methods (overlay, action, ...).
+  const add = (name, value) => { if (name in LP) throw new Error(`LP.${name} is the host's`); LP[name] = value; };
+  const live = {}, defined = [];
+  add('live', live);
+  add('define', (id, factory) => { defined.push([id, factory]); });
+  add('kernel', getters => { Object.defineProperties(live, Object.getOwnPropertyDescriptors(getters)); });
   // A screen shared by several views (the Play apps) is defined once under all of their ids.
-  LP.start = () => { for (const [id, factory] of defined) { const spec = factory(live, live); for (const one of [id].flat()) LP.register(one, spec); } };
+  add('start', () => { for (const [id, factory] of defined) { const spec = factory(live, live); for (const one of [id].flat()) LP.register(one, spec); } });
   const specs = () => [...new Set(LP.ids().map(id => LP.module(id)))];
   // A screen's own overlay (ui.overlay names it): true when a module drew it into root.
-  LP.overlay = (name, root) => {
+  add('drawOverlay', (name, root) => {
     for (const m of specs()) { const draw = m.overlays?.[name]; if (draw) { draw(root); return true; } }
     // a module that names its overlays itself: overlay(name, root), true when it drew one
     for (const m of specs()) if (m.overlay?.(name, root)) return true;
     return false;
-  };
-  LP.click = (action, button, event) => {
+  });
+  add('click', (action, button, event) => {
     for (const m of specs()) if (m.click?.(action, button, event)) return true;
     return false;
-  };
+  });
   // A form's submit (data-form names it) and a field's input: true when a module took it.
-  LP.submit = (name, values, event, form) => {
+  add('submit', (name, values, event, form) => {
     for (const m of specs()) if (m.submit?.(name, values, event, form)) return true;
     return false;
-  };
-  LP.input = event => {
+  });
+  add('input', event => {
     for (const m of specs()) if (m.input?.(event)) return true;
     return false;
-  };
+  });
 })();

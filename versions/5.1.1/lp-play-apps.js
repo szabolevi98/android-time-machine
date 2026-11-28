@@ -1,8 +1,7 @@
 /* TODO */
 'use strict';
 LP.define(['play-music', 'play-movies', 'play-books', 'play-games'], ({
-  clone, driveShareText, i18n, openApp, overlayRoot, render, renderOverlay, safe, save, toast, tracks, ui,
-  viewport
+  clone, i18n, openApp, overlayRoot, render, renderOverlay, safe, save, toast, tracks, ui, viewport
 }, lp) => {
   // Play Music, Movies & TV, Books and Games (play-apps.js).
   const PLAY_APPS = ['play-music', 'play-movies', 'play-books', 'play-games'];
@@ -44,7 +43,7 @@ LP.define(['play-music', 'play-movies', 'play-books', 'play-games'], ({
     },
     preClick(action, id, button) {
       if (ui.overlay === 'pa-more' && !action.startsWith('px-') && action !== 'close-overlay') { ui.overlay = ''; ui.paMore = ''; renderOverlay(); }
-      if (action.startsWith('px-') && PlayMore.handle(action, id, {...playContext(ui.view), save, saveMusic, render, renderOverlay, toast, root: viewport, openApp, shareText: driveShareText})) return true;
+      if (action.startsWith('px-') && PlayMore.handle(action, id, {...playContext(ui.view), save, saveMusic, render, renderOverlay, toast, root: viewport, openApp, shareText: lp.driveShareText})) return true;
       // lp:preClick
       return false;
     },

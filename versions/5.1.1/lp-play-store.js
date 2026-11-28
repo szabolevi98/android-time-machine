@@ -1,8 +1,8 @@
 /* TODO */
 'use strict';
 LP.define('play-store', ({
-  appNames, dp, driveShareText, i18n, openApp, overlayRoot, placeShortcut, render, renderOverlay, renderStatus,
-  safe, save, screen, storeAppsSync, storeContext, toast, ui, viewport
+  appNames, dp, i18n, openApp, overlayRoot, placeShortcut, render, renderOverlay, renderStatus, safe, save, screen,
+  storeAppsSync, storeContext, toast, ui, viewport
 }, lp) => {
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
   function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (jbPlayContext().prefs.shortcuts) placeShortcut(r, appNames[r]); }
@@ -139,7 +139,7 @@ LP.define('play-store', ({
         case 'jbp-settings': jbPlayGo({page: 'settings'}); break;
         // Share on the details page: the chooser, then the target's compose screen with the link (play-store.js).
         case 'jbp-share': ui.marketTarget = id || ui.market?.selected; ui.overlay = 'jbp-share'; renderOverlay(); break;
-        case 'jbp-share-to': { const [app, itemId] = String(id).split('|'), item = JBPlay.find(itemId); ui.overlay = ''; renderOverlay(); if (item) driveShareText(app, JBPlay.shareLink(item), JBPlay.fmt(JBPlay.text(i18n.language, 'Check out "%1$s"'), item.name)); break; }
+        case 'jbp-share-to': { const [app, itemId] = String(id).split('|'), item = JBPlay.find(itemId); ui.overlay = ''; renderOverlay(); if (item) lp.driveShareText(app, JBPlay.shareLink(item), JBPlay.fmt(JBPlay.text(i18n.language, 'Check out "%1$s"'), item.name)); break; }
         case 'jbp-dev-email': { const item = JBPlay.find(id); if (!item) break; openApp('gmail'); lp.composeEmail(null, false, JBPlay.developerEmail(item)); const d = lp.mailbox().find(m => m.id === ui.emailId); if (d) d.subject = item.name; save(); render(); break; }
         case 'lpp-readmore': ui.market = {...(ui.market || {}), expanded: true}; jbPlayKeepScroll(); break;
         case 'jbp-unavailable': ui.overlay = ''; renderOverlay(); toast(JBPlay.text(i18n.language, 'Unavailable')); break;
