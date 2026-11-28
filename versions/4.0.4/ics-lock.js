@@ -110,11 +110,9 @@
       }
     },
     pointercancel(c) { const lockHandle = c.viewport.querySelector('.lock-handle'); if (lockHandle) lockHandle.style.removeProperty('--lock-x'); },
-    // Every second: the keyguard's countdown first; then the clock.
-    clocks() {
+    // Every second: the keyguard's countdown, then the clock.
+    tick(c) {
       lockControls.tick();
-    },
-    second(c) {
       const {ui, data, save, render, renderOverlay, renderStatus, toast, openApp, home, viewport, overlayRoot, statusRoot, navRoot, screen, i18n, safe, clone, deviceDate, today, clock, apps, appNames, iconAssets, tracks, dp, snapResting, reducedMotion} = c;
       const lockTime = document.querySelector('.lock-time'); if (lockTime) lockTime.textContent = clock();
     },

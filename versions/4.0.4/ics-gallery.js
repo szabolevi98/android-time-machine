@@ -117,7 +117,7 @@
       if(ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && ['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();galleryStep(c, event.key==='ArrowLeft'?-1:1);return true;}
     },
     // The slideshow's next picture.
-    second(c) {
+    tick(c) {
       const {ui} = c;
       if(ui.view==='gallery' && ui.sub==='photo' && ui.gallerySlideshow && !ui.overlay && Date.now()-ui.gallerySlideAt>=3000){ui.gallerySlideAt=Date.now();galleryStep(c, 1);}
     },

@@ -80,7 +80,7 @@
       return false;
     },
     // Every second: a due alarm rings; the clock face's time and date follow the device clock.
-    second(c, now) {
+    tick(c, now = c.deviceDate()) {
       const {data, i18n} = c;
       checkAlarms(c, now);
       const deskTime=document.querySelector('.desk-time');

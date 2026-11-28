@@ -14,14 +14,30 @@
                        ownOverlay(c), mountOverlay(c, root), submit(form, values, c), input(event, c), key(event, c),
                        contextmenu(event, c), back(c), goHome(c), launch(c, resume, app), open(c, resume), clearData(c),
                        pointerdown / pointermove / pointerdrag / pointerup / pointerdrop / pointercancel, scrollstart(c),
-                       clocks(c, now), second(c, now), rendering(c), backdrop(c), rendered(c), beforeOverlay(c),
+                       tick(c, now), rendering(c), backdrop(c), rendered(c), beforeOverlay(c),
                        afterOverlay(root, c), init(c), start(c), touch, scroller, legacyMenu(c)})
-   docs/plans/engine-migration-4.0.4.md says what each hook is for. The modules load after this file; the core starts
-   once they all have (DOMContentLoaded: every script is deferred). */
+   The hook names are 2.1's (EC), 6.0.1's (MM) and 7.1.2's (NG) where they do the same; tick(c, now) runs every second
+   through the host (it ticks every registered module, open or not). docs/plans/engine-migration-4.0.4.md says what
+   each hook is for. The modules load after this file; the core starts once they all have (DOMContentLoaded: every
+   script is deferred). The layout follows ec-core.js: the screen's elements, the saved and the on-screen state, the
+   device clock, the context and the dispatch, drawing, open / home / back, toasts, reset and Clear data, the screen
+   off, the click, form and key dispatch, the pointer, the site controls, start. */
 window.ICS = window.StoreHost;
 (() => {
   'use strict';
   function start() {
+    // ---- Text and the screen's elements
+    const safe = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+    const i18n = window.AndroidI18n;
+    const screen = document.querySelector('#screen');
+    // dp → CSS px now: the display is 360 dp wide (the desktop frame's width, the whole width on a phone).
+    const dp = n => n * screen.clientWidth / 360;
+    const viewport = document.querySelector('#viewport');
+    const statusRoot = document.querySelector('#status-bar');
+    const navRoot = document.querySelector('#nav-bar');
+    const overlayRoot = document.querySelector('#overlay-root');
+
+    // ---- The saved state (with the upgrades of older saves) and the on-screen state, the apps
     const STORE = 'android-time-machine-ics-v1';
     const localDate = (date = new Date()) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     const defaultData = {
@@ -202,9 +218,15 @@ window.ICS = window.StoreHost;
     ];
     const wallpaperFiles = ['architecture','bubblegum','canyon','chroma','escape','fidelity','flora','kepler','leaf','noir','outofthebox'];
     const iconAssets = new Set(['downloads', 'google-plus', 'talk', 'youtube', 'play-books', 'play-movies', 'search', 'voice-dialer', 'latitude', 'maps', 'earth', 'news-weather', 'messenger', 'navigation', 'local', 'movie-studio', 'play-music', 'gmail', 'phone', 'people', 'messaging', 'browser', 'camera', 'gallery', 'settings', 'clock', 'calendar', 'calculator', 'music', 'email', 'apps']);
-    const i18n = window.AndroidI18n;
     const appNames = Object.fromEntries(apps.map(app => [app[0], app[1]]));
     appNames.google = 'Google';
+    function syncBrowserState() {
+      const tab = ICSBrowserSession.current(ui.browserSession);
+      ui.browserUrl = ICSBrowserSession.url(ui.browserSession);
+      ui.browserHistory = tab.history; ui.browserIndex = tab.index;
+      ui.browserTab = ui.browserSession.active;
+      ui.browserTabs = ui.browserSession.tabs.map(tab => tab.history[tab.index]);
+    }
     /* The store apps that work (docs/plans/play-apps.md, store-apps/legacy-host.js): the store's installed ones join the
        launcher's apps (icon assets/<id>.png) while installed, open as StoreHost modules, and leave with their icons and
        data when uninstalled. */
@@ -233,14 +255,8 @@ window.ICS = window.StoreHost;
     }
     StoreHost.provide(storeContext);
     ICSLauncherFolders.initialize(data,apps.map(app=>app[0]));
-    const screen = document.querySelector('#screen');
-    // dp → CSS px now: the display is 360 dp wide (the desktop frame's width, the whole width on a phone).
-    const dp = n => n * screen.clientWidth / 360;
-    const viewport = document.querySelector('#viewport');
-    const statusRoot = document.querySelector('#status-bar');
-    const navRoot = document.querySelector('#nav-bar');
-    const overlayRoot = document.querySelector('#overlay-root');
-    const safe = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+
+    // ---- The device clock and the helpers the screens share
     const deviceDate = () => ICSSystemSettings.wallDate(data);
     const today = () => localDate(deviceDate());
     const clock = () => deviceDate().toLocaleTimeString(i18n.locale(), { hour: 'numeric', minute: '2-digit', hour12: !data.settings.hour24 });
@@ -251,9 +267,30 @@ window.ICS = window.StoreHost;
     const HOLD = [500, 1000, 1500];
     const holdDelay = ms => ms + (HOLD[data.settings.longPressTimeout || 0] - 500);
     const carrierName = () => data.settings.airplane ? i18n.t('No service.') : safe(data.settings.networkOperator||'Telekom');
-    let lastActivity=Date.now();
-    for(const name of ['pointerdown','keydown','input','wheel'])document.addEventListener(name,()=>{lastActivity=Date.now();},{passive:true,capture:true});
+    window.ICSCarrierName = () => carrierName();
 
+    // ---- The context every module hook gets, and the dispatch to the modules
+    /* The context every module hook gets (ics-core.js, docs/plans/engine-migration.md): the saved and the on-screen
+       state, the shell's drawing and navigation, and the helpers the screens share. */
+    const c = {
+      get data() { return data; }, defaults: defaultData, emailSeed: emailData, ui, save, render, renderOverlay, renderStatus, toast, openApp, home, back, navigateBack, captureRecentView,
+      screen, viewport, overlayRoot, statusRoot, navRoot, get pointer() { return pointerStart; },
+      notify: (title, text) => addNotification(title, text), get lang() { return i18n.language; }, get locale() { return i18n.locale(); }, t: key => i18n.t(key), i18n, safe, clone,
+      dp, snapResting, holdDelay, deviceDate, today, clock, fullDate, carrierName, contact, tracks, syncBrowserState, apps, appNames, iconAssets, wallpaperFiles, get reducedMotion() { return reducedMotion; }, storeInstalled, storeAppsSync, clearAppData, resetSimulator, storeUninstall, lockScreen,
+      endPointer: () => { pointerStart = null; }, poke: () => { lastActivity = Date.now(); }, resetScene: scene => { lastScene = scene; }, legacyMenu: () => modules().some(m => m.legacyMenu?.(storeContext())),
+      suppressClick: ms => { suppressClickUntil = Date.now() + ms; }, suppressReleaseClick
+    };
+    // This version's modules (the store apps aside): the open screen's first, then the others in the order they registered.
+    function modules() { const ids = StoreHost.ids().filter(id => !id.startsWith('store-')); return [...new Set([...ids.filter(id => id === ui.view), ...ids.filter(id => id !== ui.view)].map(id => StoreHost.module(id)))]; }
+    // A hook offered to the modules until one takes it (returns true), or run on every module.
+    function ask(hook, ...args) { const cx = storeContext(); return modules().some(m => m[hook]?.(...args, cx)); }
+    function each(hook, ...args) { const cx = storeContext(); for (const m of modules()) m[hook]?.(...args, cx); }
+    // The overlay a module draws (its markup, '' for nothing), or null when it is none of theirs.
+    function moduleOverlay() { const cx = storeContext(); for (const m of modules()) { const html = m.overlay?.(cx); if (html != null) return {html, m, cx}; } return null; }
+    // The modules in the order they registered (init and start).
+    function allModules() { return [...new Set(StoreHost.ids().filter(id => !id.startsWith('store-')).map(id => StoreHost.module(id)))]; }
+
+    // ---- Drawing: the screen, the bars, the window transitions, the overlay
     function renderStatus() { const m = StoreHost.module('statusbar'); statusRoot.innerHTML = m.render(storeContext()); i18n.translateDOM(statusRoot); }
     function renderNav() { const m = StoreHost.module('navbar'), cx = storeContext(); navRoot.innerHTML = m.render(cx); m.mount?.(cx, navRoot); }
     // Window transitions: the outgoing view is kept in a temporary layer while both animate.
@@ -316,12 +353,24 @@ window.ICS = window.StoreHost;
       }
       each('rendered');
     }
-    function lockScreen(){captureRecentView();c.lockControls.lock();ui.locked=ICSLockscreen.secure(data);ui.sleeping=data.settings.screenLock==='none';ui.view=ui.sleeping?'home':'lock';ui.overlay='';render();}
-
     function renderApp() {
       if (StoreHost.has(ui.view)) return StoreHost.render(ui.view, storeContext());
       return StoreHost.module('home').render(storeContext());
     }
+    function renderOverlay() {
+      if (ask('beforeOverlay')) return;
+      { const cx = storeContext(); for (const m of modules()) { const html = m.ownOverlay?.(cx); if (html != null) { overlayRoot.innerHTML = html; return; } } }
+      const drawn = moduleOverlay();
+      if (drawn) {
+        overlayRoot.innerHTML = drawn.html; drawn.m.mountOverlay?.(drawn.cx, overlayRoot);
+      } else if (ui.overlay === 'store-host') {
+        overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
+      } else overlayRoot.innerHTML = '';
+      i18n.translateDOM(overlayRoot);
+      each('afterOverlay', overlayRoot);
+    }
+
+    // ---- Opening an app, Home and Back, Recents' task records
     function openApp(app, resume = false) {
       if (!isStoreApp(app)) StoreHost.module(app)?.launch?.(storeContext(), resume, app);
       // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
@@ -356,36 +405,17 @@ window.ICS = window.StoreHost;
       if (ui.sub) { ui.sub = ''; render(); return; }
       home(false);
     }
+
+    // ---- Toasts and notifications
     function toast(message) {
       document.querySelector('.toast')?.remove();
       const element = document.createElement('div'); element.className = 'toast'; element.textContent = i18n.t(message);
       screen.append(element);
       clearTimeout(ui.toastTimer); ui.toastTimer = setTimeout(() => element.remove(), 2500);
     }
-    function renderOverlay() {
-      if (ask('beforeOverlay')) return;
-      { const cx = storeContext(); for (const m of modules()) { const html = m.ownOverlay?.(cx); if (html != null) { overlayRoot.innerHTML = html; return; } } }
-      const drawn = moduleOverlay();
-      if (drawn) {
-        overlayRoot.innerHTML = drawn.html; drawn.m.mountOverlay?.(drawn.cx, overlayRoot);
-      } else if (ui.overlay === 'store-host') {
-        overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
-      } else overlayRoot.innerHTML = '';
-      i18n.translateDOM(overlayRoot);
-      each('afterOverlay', overlayRoot);
-    }
-    window.ICSCarrierName = () => carrierName();
+    function addNotification(title, detail) { data.notifications.unshift({ id: Date.now(), title, detail }); save(); renderStatus(); }
 
-    function syncBrowserState() {
-      const tab = ICSBrowserSession.current(ui.browserSession);
-      ui.browserUrl = ICSBrowserSession.url(ui.browserSession);
-      ui.browserHistory = tab.history; ui.browserIndex = tab.index;
-      ui.browserTab = ui.browserSession.active;
-      ui.browserTabs = ui.browserSession.tabs.map(tab => tab.history[tab.index]);
-    }
-
-
-
+    // ---- Factory reset and Clear data
     function resetSimulator() {
       data=clone(defaultData);data.settings={...ICSSettingsDetail.defaults,...ICSSystemSettings.defaults,...data.settings};
       data.mailbox=ICSEmail.restore(null,emailData,[]);ui.music=ICSMusic.restore();ui.musicActive=false;ui.photoStacks={};ui.photoWidgetSetup=null;ui.musicTrack=0;ui.musicPlaying=false;ui.musicPosition=0;
@@ -398,29 +428,15 @@ window.ICS = window.StoreHost;
       ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
     }
 
-    function addNotification(title, detail) { data.notifications.unshift({ id: Date.now(), title, detail }); save(); renderStatus(); }
+    // ---- The screen off: the keyguard, the activity and the screen-off timeout
+    let lastActivity=Date.now();
+    for(const name of ['pointerdown','keydown','input','wheel'])document.addEventListener(name,()=>{lastActivity=Date.now();},{passive:true,capture:true});
+    function lockScreen(){captureRecentView();c.lockControls.lock();ui.locked=ICSLockscreen.secure(data);ui.sleeping=data.settings.screenLock==='none';ui.view=ui.sleeping?'home':'lock';ui.overlay='';render();}
+    setInterval(() => {
+      if(!document.hidden && !ui.sleeping && ui.view!=='lock' && !ui.overlay && !ui.activeCall && !c.dragging() && data.settings.sleep>0&&Date.now()-lastActivity>=data.settings.sleep*1000){captureRecentView();lockScreen();lastActivity=Date.now();}
+    }, 1000);
 
-    /* The context every module hook gets (ics-core.js, docs/plans/engine-migration.md): the saved and the on-screen
-       state, the shell's drawing and navigation, and the helpers the screens share. */
-    const c = {
-      get data() { return data; }, defaults: defaultData, emailSeed: emailData, ui, save, render, renderOverlay, renderStatus, toast, openApp, home, back, navigateBack, captureRecentView,
-      screen, viewport, overlayRoot, statusRoot, navRoot, get pointer() { return pointerStart; },
-      notify: (title, text) => addNotification(title, text), get lang() { return i18n.language; }, get locale() { return i18n.locale(); }, t: key => i18n.t(key), i18n, safe, clone,
-      dp, snapResting, holdDelay, deviceDate, today, clock, fullDate, carrierName, contact, tracks, syncBrowserState, apps, appNames, iconAssets, wallpaperFiles, reducedMotion, storeInstalled, storeAppsSync, clearAppData, resetSimulator, storeUninstall, lockScreen,
-      endPointer: () => { pointerStart = null; }, poke: () => { lastActivity = Date.now(); }, resetScene: scene => { lastScene = scene; }, legacyMenu: () => modules().some(m => m.legacyMenu?.(storeContext())),
-      suppressClick: ms => { suppressClickUntil = Date.now() + ms; }, suppressReleaseClick
-    };
-    // This version's modules (the store apps aside): the open screen's first, then the others in the order they registered.
-    function modules() { const ids = StoreHost.ids().filter(id => !id.startsWith('store-')); return [...new Set([...ids.filter(id => id === ui.view), ...ids.filter(id => id !== ui.view)].map(id => StoreHost.module(id)))]; }
-    // A hook offered to the modules until one takes it (returns true), or run on every module.
-    function ask(hook, ...args) { const cx = storeContext(); return modules().some(m => m[hook]?.(...args, cx)); }
-    function each(hook, ...args) { const cx = storeContext(); for (const m of modules()) m[hook]?.(...args, cx); }
-    // The overlay a module draws (its markup, '' for nothing), or null when it is none of theirs.
-    function moduleOverlay() { const cx = storeContext(); for (const m of modules()) { const html = m.overlay?.(cx); if (html != null) return {html, m, cx}; } return null; }
-    // Every second, in the order the modules registered (the old tick's order).
-    // In the order they registered (the old tick's order).
-    function allModules() { return [...new Set(StoreHost.ids().filter(id => !id.startsWith('store-')).map(id => StoreHost.module(id)))]; }
-    function everySecond(now) { const cx = storeContext(); for (const m of allModules()) m.second?.(cx, now); }
+    // ---- Clicks, forms, typing and keys: the modules first, then the core's own actions
     let suppressClickUntil = 0;
     document.addEventListener('click', event => {
       const button = event.target.closest('[data-action]');
@@ -455,7 +471,17 @@ window.ICS = window.StoreHost;
     document.addEventListener('input', event => {
       if (ask('input', event)) return;
     });
+    document.addEventListener('keydown', event => {
+      if (ask('key', event)) return;
+    });
+    // A long press opens a dialog under the finger; the release must not activate it (Android ignores it too).
+    function suppressReleaseClick() {
+      suppressClickUntil = Infinity;
+      window.addEventListener('pointerup', () => { suppressClickUntil = Date.now() + 350; }, {once: true, capture: true});
+      window.addEventListener('pointercancel', () => { suppressClickUntil = Date.now() + 350; }, {once: true, capture: true});
+    }
 
+    // ---- The pointer: the modules' gestures around the lists the mouse drags
     let pointerStart = null;
     screen.addEventListener('dragstart', event => event.preventDefault());
     screen.addEventListener('contextmenu', event => {
@@ -471,12 +497,6 @@ window.ICS = window.StoreHost;
         if (event.cancelable) event.preventDefault();
       }
     }, { passive: false });
-    // A long press opens a dialog under the finger; the release must not activate it (Android ignores it too).
-    function suppressReleaseClick() {
-      suppressClickUntil = Infinity;
-      window.addEventListener('pointerup', () => { suppressClickUntil = Date.now() + 350; }, {once: true, capture: true});
-      window.addEventListener('pointercancel', () => { suppressClickUntil = Date.now() + 350; }, {once: true, capture: true});
-    }
     screen.addEventListener('pointerdown', event => {
       if (event.pointerType === 'mouse' && event.button !== 0) return;
       if (data.settings.showTouches) { const dot = document.createElement('span'); const rect = screen.getBoundingClientRect(); dot.className = 'touch-indicator'; dot.style.left = `${event.clientX - rect.left}px`; dot.style.top = `${event.clientY - rect.top}px`; screen.append(dot); setTimeout(() => dot.remove(), 400); }
@@ -512,10 +532,8 @@ window.ICS = window.StoreHost;
       pointerStart = null;
     });
     window.addEventListener('pointercancel', () => { each('pointercancel'); screen.classList.remove('dragging', 'page-swiping', 'settings-scrolling', 'lock-dragging'); pointerStart = null; });
-    document.addEventListener('keydown', event => {
-      if (ask('key', event)) return;
 
-    });
+    // ---- The site controls around the phone: full screen, the header, language, reset
     // Full screen (Fullscreen API): hides the browser chrome on phones and keeps portrait where the browser allows it.
     const fullscreenButton = document.querySelector('#fullscreen-button');
     const fullscreenElement = () => document.fullscreenElement || document.webkitFullscreenElement;
@@ -543,13 +561,8 @@ window.ICS = window.StoreHost;
       if (!confirm(i18n.t('Reset all local ICS simulator data?'))) return;
       resetSimulator();
     });
-    setInterval(() => {
-      const now = deviceDate();
-      { const cx = storeContext(); for (const m of allModules()) m.clocks?.(cx, now); }
-      if(!document.hidden && !ui.sleeping && ui.view!=='lock' && !ui.overlay && !ui.activeCall && !c.dragging() && data.settings.sleep>0&&Date.now()-lastActivity>=data.settings.sleep*1000){captureRecentView();lockScreen();lastActivity=Date.now();}
-      everySecond(now);
-    }, 1000);
 
+    // ---- Start: the modules' init, the first draw, then their start (a fresh tab's boot)
     for (const m of allModules()) m.init?.(c);
     i18n.translateDOM(document.body);
     render();

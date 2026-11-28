@@ -766,7 +766,7 @@
       if (focusedStack && ['ArrowUp','ArrowDown'].includes(event.key)) { event.preventDefault(); const id = focusedStack.dataset.photoStack; stepPhotoStack(id, event.key === 'ArrowDown' ? 1 : -1); viewport.querySelector(`[data-photo-stack="${CSS.escape(id)}"] .phw-front`)?.focus(); return true; }
     },
     // Every second: the analog clocks; once a minute the calendar widgets (their "now" line and next events).
-    second(c, now) {
+    tick(c, now = c.deviceDate()) {
       const {ui, data, save, render, renderOverlay, renderStatus, toast, openApp, home, viewport, overlayRoot, statusRoot, navRoot, screen, i18n, safe, clone, deviceDate, today, clock, apps, appNames, iconAssets, tracks, dp, snapResting, reducedMotion} = c;
       document.querySelectorAll('.analog-clock').forEach(node => {
         node.setAttribute('aria-label', clock());

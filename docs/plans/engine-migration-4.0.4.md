@@ -13,6 +13,8 @@ following the pattern of 2.3.6's Calculator (commit 3585865f).
 - One context `c` for every hook (the core's state with getters, the shell's drawing and navigation, shared helpers);
   `storeContext()` = `StoreHost.context(c)` adds the host's dialog and menu. A module may add the helpers it shares to `c`
   in `init(c)` (Messaging's `c.openMessageThread`, Music's `c.saveMusic`, the launcher's `c.appIcon` ...).
+- The core follows ec-core.js's layout (owner, 2026-11-28: each version its own core, all of them alike) and the
+  module hooks use EC / MM / NG's names where they do the same.
 - The hooks are asked of the open screen's module first, then of the other modules in the order they registered (the
   store apps aside; a spec registered for several views is asked once); a hook that takes the event returns true. The
   old code dispatched clicks by name only and guarded the rest by view, overlay or touch target, so asking every module
@@ -35,8 +37,8 @@ following the pattern of 2.3.6's Calculator (commit 3585865f).
     `pointerdown(event, p, c)` (all), `pointermove(event, p, dx, dy, c)`, then the core's list scrolling (`scrollstart(c)`
     when it starts), then `pointerdrag(...)` (the launcher's page swipe and icon drag); `pointerup(...)`, the list
     scrolling's end, `pointerdrop(...)` (the launcher's drop, the shade's swipe and pull); `pointercancel(c)` (all)
-  - every second, in the order the modules registered: `clocks(c, now)` (the keyguard's countdown, the status bar's
-    clock), the screen-off timeout, then `second(c, now)` (not `tick`, which the host already runs for its store apps)
+  - `tick(c, now)` every second, open or not: run by the host (store-apps/legacy-host.js ticks every registered
+    module), as EC / MM / NG name it; the core itself keeps only the screen-off timeout
   - `clearData(c)`: Settings › Apps › Clear data; `init(c)`: once, before the first draw; `start(c)`: once, after it
   - `scroller`: the screen's scrolling list (Recents keeps its scroll); `legacyMenu(c)`: the navigation bar's menu key
 - No behaviour changes; the save format stays.

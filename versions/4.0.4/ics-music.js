@@ -104,7 +104,7 @@
     pointermove(event, p, dx, dy, c) { if (Math.hypot(dx,dy) > c.dp(9)) clearTimeout(holdTimer); },
     pointerup() { clearTimeout(holdTimer); },
     pointercancel() { clearTimeout(holdTimer); },
-    second(c) { tickMusic(c); },
+    tick(c) { tickMusic(c); },
     clearData(c) { c.ui.music=ICSMusic.restore();c.saveMusic(); }
   });
 })();

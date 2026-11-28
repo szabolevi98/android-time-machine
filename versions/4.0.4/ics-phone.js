@@ -73,7 +73,7 @@
       return false;
     },
     // The call's time and state while it runs.
-    second(c) {
+    tick(c) {
       const {ui, viewport, i18n} = c;
       if(ui.activeCall){
         const dialing=Date.now()<ui.activeCall.connected;

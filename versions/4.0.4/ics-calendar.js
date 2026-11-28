@@ -171,7 +171,7 @@
       if(p.calendarSwiping){if(Math.abs(dx)>c.dp(53))calendarMove(c, dx<0?1:-1);else c.viewport.querySelector('[data-calendar-swipe]').style.transform='';c.suppressClick(350);return true;}
     },
     pointercancel(c) { const surface=c.viewport.querySelector('[data-calendar-swipe]');if(surface)surface.style.transform=''; },
-    second(c, now) { checkReminders(c, now); },
+    tick(c, now = c.deviceDate()) { checkReminders(c, now); },
     clearData(c) { c.data.events=c.clone(c.defaults.events); }
   });
 })();

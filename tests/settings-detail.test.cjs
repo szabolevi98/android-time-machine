@@ -15,7 +15,8 @@ for(const name of ['calculator','phone','clock','calendar','music','browser','pe
 ctx.storeContext=()=>({get data(){return ctx.data;},ui:ctx.ui,defaults,emailSeed:ctx.emailData,clone:ctx.clone,save:ctx.save,saveMusic:ctx.saveMusic,syncBrowserState:ctx.syncBrowserState});
 // resetSimulator and clearAppData: 4.0.4's core (ics-core.js; simulator.js until it moved).
 const source=fs.readFileSync(fs.existsSync('versions/4.0.4/simulator.js')?'versions/4.0.4/simulator.js':'versions/4.0.4/ics-core.js','utf8');
-vm.runInContext(source.slice(source.indexOf('function resetSimulator()'),source.indexOf('function addNotification(')),ctx);
+const from=source.indexOf('function resetSimulator()'),to=source.indexOf('\n    }\n',source.indexOf('function clearAppData('))+7;
+vm.runInContext(source.slice(from,to),ctx);
 ctx.clearAppData('calculator');assert.equal(ctx.data.calcHistory.length,0);
 ctx.clearAppData('play-store');assert.equal(ctx.data.playRatings,undefined);
 ctx.clearAppData('messaging');assert.equal(Object.keys(ctx.data.messageDrafts).length,0);assert.equal(ctx.data.messages[0].body,'Hello');
