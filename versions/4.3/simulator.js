@@ -255,6 +255,18 @@
   // The context of the store apps and of the jb-* modules (jb-core.js); `extra` adds what one call gives (the click's
   // event, the submitted form, the app whose data is cleared).
   function storeContext(extra) { return StoreHost.context(Object.setPrototypeOf({data, ui, save, render, renderOverlay, toast, openApp, screen, viewport, dp, snapResting, holdDelay, suppressClick: ms => { suppressClickUntil = Date.now() + ms; }, notify: (title, text) => addNotification(title, text), lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key), ...extra}, moduleApi)); }
+  // A click, a form, typing or an overlay is offered to every jb-* module (a case can be reached from another screen:
+  // the shade, a widget, a ringing alarm), at the place its code stood; the first that takes it ends the search.
+  function moduleHook(hook, extra, ...args) {
+    const c = storeContext(extra), seen = new Set();
+    for (const id of StoreHost.ids()) {
+      const m = StoreHost.module(id);
+      if (id.startsWith('store-') || seen.has(m) || !m[hook]) continue;
+      seen.add(m);
+      const result = m[hook](...args, c);
+      if (result) return result;
+    }
+  }
   // The names the jb-* modules bind (generated as code moves out; docs/plans/engine-migration-4.3.md).
   const moduleApi = {get back() { return back; }, get data() { return data; }, get home() { return home; }, get i18n() { return i18n; }, get jbmaContext() { return jbmaContext; }, get label() { return label; }, get messageDraft() { return messageDraft; }, get overlayRoot() { return overlayRoot; }, get render() { return render; }, get renderOverlay() { return renderOverlay; }, get safe() { return safe; }, get save() { return save; }, get ui() { return ui; }};
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
@@ -986,7 +998,7 @@
     if (ui.view === 'downloads' && ui.overlay.startsWith('hdl-')) { overlayRoot.innerHTML = HoloDownloads.overlay(dlContext()) || ''; return; }
     const closingFolder = overlayRoot.querySelector('.launcher-folder');
     // A module's own overlays (jb-core.js: overlay(c) returns the markup, or true when it drew them itself).
-    const moduleOverlay = ui.overlay && StoreHost.has(ui.view) ? StoreHost.module(ui.view).overlay?.(storeContext()) : undefined;
+    const moduleOverlay = ui.overlay ? moduleHook('overlay', null) : undefined;
     if (typeof moduleOverlay === 'string') overlayRoot.innerHTML = moduleOverlay;
     else if (moduleOverlay) { /* drawn by the module */ }
     else if (ui.overlay === 'shade') {
@@ -2030,8 +2042,8 @@
     if (ui.view === 'messaging' && action.startsWith('jbma-') && JBMmsAttach.handle(action, id, jbmaContext())) return;
     if (ui.view === 'youtube' && action.startsWith('yt4-') && JBYouTube.handle(action, id, ytContext())) return;
     if (ui.view === 'google-search' && action.startsWith('gsp-') && JBSearchPrefs.handle(action, id, gsContext())) return;
-    // The screen's module (jb-*.js), where its cases stood in this switch.
-    if (!ui.view.startsWith('store-') && StoreHost.has(ui.view) && StoreHost.action(action, button, storeContext({event}))) return;
+    // The jb-* modules' cases, where they stood in this switch.
+    if (moduleHook('action', {event}, action, button)) return;
     switch (action) {
       case 'open-app': {
         const icon = button.closest('.launcher-icon, .drawer-app, .dock-app') || button;
@@ -2740,7 +2752,7 @@
       data.settings.bluetoothName = name;
       save(); ui.overlay = ''; render(); return;
     }
-    if (StoreHost.has(ui.view) && StoreHost.module(ui.view).submit?.(form.dataset.form, values, storeContext({event, form}))) return;
+    if (moduleHook('submit', {event, form}, form.dataset.form, values)) return;
     switch (form.dataset.form) {
       case 'browser-find': ui.browserFind=String(values.get('query')||'').trim(); render(); break;
       case 'people-search': ui.peopleQuery=String(values.get('query')||'').trim(); render(); break;
@@ -2817,7 +2829,7 @@
   document.addEventListener('submit', event => hangoutsScope(() => handleSubmit(event)));
   document.addEventListener('input', event => hangoutsScope(() => handleInput(event)));
   function handleInput(event) {
-    if (StoreHost.has(ui.view) && StoreHost.module(ui.view).input?.(event, storeContext())) return;
+    if (moduleHook('input', null, event)) return;
     if (['currents', 'play-magazines'].includes(ui.view) && NewsReader.input(event.target, newsContext())) return;
     if (ui.view === 'currents' && CurrentsCustomize.change(event.target, cczContext())) return;
     if (PlusPost.input(event.target)) return;
