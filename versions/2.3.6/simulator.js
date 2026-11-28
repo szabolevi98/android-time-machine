@@ -185,7 +185,7 @@
   function storeContext() {
     return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, viewport, dp, snapResting, suppressClick: ms => { suppressClickUntil = Date.now() + ms; },
       // 2.3.6's own AlertDialog (a spec the module's dialog(kind, c) returns) and the Menu key's IconMenu items.
-      saveMusic, deviceDate, today, home, cancelPhotoWidget, composeEmail, messageDraft, gapp: () => gappContext(), gbCapture, gbmaCancel, gbmaReturn, gbceReturn, defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
+      saveMusic, deviceDate, today, home, cancelPhotoWidget, composeEmail, messageDraft, gapp: () => gappContext(), gbCapture, gbmaCancel, gbmaReturn, gbceReturn, back, contact, startPhoneCall, editPerson, clock, defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
       appList: () => apps.map(app => [app[0], i18n.t(app[1])]), browserTitle: gbBrowserTitle, contactName: id => contact(id)?.name, normalizeAddress,
       intent: {browse(url) { openApp('browser'); navigateBrowser(url); }, contact(id) { openApp('people'); ui.selectedContact = id; ui.sub = 'detail'; render(); }, thread: id => openMessageThread(id),
         track(i) { openApp('music'); ui.music.queue = ICSMusic.tracks.map((_, n) => n); ui.music.track = i; ui.music.position = 0; ui.music.playing = true; saveMusic(); ui.sub = 'player'; render(); }},
@@ -310,8 +310,6 @@
     if (ui.view === 'play-store') { const items = GBMarket.menu(gbMarketContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'settings' && GBSettingsPages.has(ui.sub)) { const items = GBSettingsPages.menu(ui.sub, gbPagesContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'browser') { if (ui.gbBrEdit) return; const items = GBBrowser.menu(gbBrowserContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
-    // The slideshow player and Sound Recorder have no menu.
-    if (ui.view === 'messaging') { const items = GBMms.menu(gbMmsContext()); if (!items.length) return; ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); return; }
     if (ui.view === 'settings' && GBNetwork.has(ui.sub)) { const items = GBNetwork.menu(ui.sub, gbNetContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'settings' && GBSettings.has(ui.sub || 'main')) { const items = GBSettings.menu(ui.sub, gbSettingsContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     const button = [...viewport.querySelectorAll('[data-action$="-menu"]')].find(node => !node.disabled);
@@ -418,7 +416,6 @@
     else viewport.innerHTML = renderApp();
     if (GBApps.has(ui.view)) GBApps.get(ui.view).mounted?.(gappContext());
     if (moduleView()) StoreHost.mount(ui.view, storeContext(), viewport);
-    if (ui.view === 'messaging') window.GBMmsAttach?.mounted(gbMmsContext());
     snapResting(viewport);
     renderOverlay();
     i18n.translateDOM(screen);
@@ -651,7 +648,6 @@
       case 'browser': return renderBrowser();
       case 'phone': return renderPhone();
       case 'people': return renderPeople();
-      case 'messaging': return renderMessaging();
       default: return renderHome();
     }
   }
@@ -685,7 +681,6 @@
   function back() { pendingNav = 'back'; try { navigateBack(); } finally { pendingNav = ''; } }
   function navigateBack() {
     if ((ui.overlay === 'store-host' || !ui.overlay && moduleView()) && StoreHost.back(storeContext())) return;
-    if (ui.view === 'messaging' && !ui.overlay && window.GBMmsAttach?.back(gbMmsContext())) { render(); return; }
     if (ui.view === 'settings' && !ui.overlay && GBNetwork.back(gbNetContext())) return;
     if (ui.view === 'people' && !ui.overlay && GBContactsIO.back(gbctContext())) return;
     if(ui.view==='settings'&&ui.sub==='lock-setup'){lockControls.cancel();if(ui.gbSettingsStack?.length)ui.gbSettingsStack.pop();return;}
@@ -720,7 +715,6 @@
     if (ui.view === 'settings' && ui.sub === 'reset-info') { ui.sub = 'backup'; render(); return; }
     if (ui.view === 'settings' && ['brightness','wallpaper','sleep'].includes(ui.sub)) { ui.sub = 'display'; render(); return; }
     if (ui.view === 'settings' && ['volumes','ringtone'].includes(ui.sub)) { ui.sub = 'sound'; render(); return; }
-    if (ui.view === 'messaging' && ui.sub === 'thread') { ui.sub = ui.mmsListMode || ''; render(); return; }
     if (ui.view === 'people' && ui.sub === 'edit') { ui.sub = 'detail'; render(); return; }
     if (ui.sub) { ui.sub = ''; render(); if (ui.view === 'settings') viewport.querySelector('.settings-app').scrollTop = ui.settingsRootScroll; return; }
     home(false);
@@ -783,7 +777,7 @@
     if (ui.overlay === 'gb-dialog-cal') return GB.module('calendar').dialog(ui.gbCalDialog, storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-br') return GBBrowser.dialog(ui.gbBrDialog, gbBrowserContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-music') return GB.module('music').dialog(ui.gbMusicDialog, storeContext()) || {title: '', items: []};
-    if (ui.overlay === 'gb-dialog-mms') return GBMms.dialog(ui.gbMmsDialog, gbMmsContext()) || {title: '', items: []};
+    if (ui.overlay === 'gb-dialog-mms') return GB.module('messaging').dialog(ui.gbMmsDialog, storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-set') return GBSettings.dialog(ui.gbSetDialog, gbSettingsContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-lw-mapmode') { const modes = ['normal', 'satellite', 'terrain']; return {title: lwText('maps_map_mode'), items: modes.map(id => ({action: 'lw-mapmode-pick', id, title: lwText(`maps_mode_${id}`)})), choice: 'single', selected: modes.indexOf(data.lwPrefs?.maps?.mode || 'satellite'), buttons: [{action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]}; }
     if (ui.overlay === 'gb-dialog-lw-palette') { const current = data.lwPrefs?.polar?.palette || ''; return {title: lwText('palette'), items: LiveWallpapers.PALETTE_ORDER.map(id => ({action: 'lw-palette-pick', id, title: lwText(id)})), choice: 'single', selected: LiveWallpapers.PALETTE_ORDER.indexOf(current), buttons: [{action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]}; }
@@ -1155,24 +1149,8 @@
     const T = key => GBPhone.text(i18n.language, key);
     return GBUI.dialog({t: key => i18n.t(key), title: T('deleteConfirmation_title'), icon: 'ic_dialog_alert', message: T('deleteConfirmation'), buttons: [{action: 'people-confirm-delete', title: GBSettings.text(i18n.language, 'fw_ok')}, {action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]});
   }
-  function renderMessaging() { return GBMms.render(gbMmsContext()); }
-  function gbMmsContext() {
-    const composing = ui.sub === 'thread' || ui.sub === 'new';
-    return {lang: i18n.language, locale: i18n.locale(), t: key => i18n.t(key), hour24: data.settings.hour24, now: Date.now(), sub: ui.sub, thread: ui.thread, query: ui.mmsSearch, data, draft: composing ? data.messageDrafts?.[ICSMessaging.draftKey(ui)] : null, subjectVisible: composing && !!ui.gbMmsSubject, message: data.messages.find(m => String(m.id) === String(ui.mmsMessage)), ok: GBSettings.text(i18n.language, 'fw_ok'), cancel: GBSettings.text(i18n.language, 'fw_cancel'),
-      // gb-mms-attach.js: the draft, the shell, the Camera's capture and Back.
-      ui, root: viewport, draftOf: messageDraft, save, render, renderOverlay, toast, dialog: gbMmsDialog, capture: gbmaCapture, back};
-  }
-  // Capture picture / video (IMAGE_CAPTURE, VIDEO_CAPTURE): the Camera, then back to the message with what it took.
-  function gbmaCapture(type, target) {
-    ui.gbmaCapture = {type, target, ret: {sub: ui.sub, thread: ui.thread, screen: ui.gbmaScreen, slide: ui.gbmaSlide}};
-    const capture = ui.gbmaCapture; openApp('camera'); ui.gbmaCapture = capture; ui.gbcamMode = type === 'video' ? 'video' : 'photo'; render();
-  }
   // A capture request open in the Camera: Messaging's (gbmaCapture) or the contact editor's Take photo (gbceCapture).
   const gbCapture = () => ui.gbmaCapture || ui.gbceCapture || null;
-  function gbmaCancel() {
-    const c = ui.gbmaCapture; ui.gbmaCapture = null; if (!c) return;
-    openApp('messaging'); Object.assign(ui, {sub: c.ret.sub, thread: c.ret.thread, gbmaScreen: c.ret.screen, gbmaSlide: c.ret.slide}); render(); scrollMessages();
-  }
   // EditContactActivity's camera request returns the picture as the contact's photo (kept with the contacts, not in the
   // Gallery); Cancel or Back leaves the editor as it was.
   function gbceReturn(photo) {
@@ -1181,29 +1159,11 @@
     if (photo && ui.peopleDraft) { data.contactPhotos = [...(data.contactPhotos || []), photo]; ui.peopleDraft.photo = photo.id; save(); }
     render();
   }
-  function gbmaReturn(part) {
-    const c = ui.gbmaCapture; ui.gbmaCapture = null; if (!c) return;
-    openApp('messaging'); Object.assign(ui, {sub: c.ret.sub, thread: c.ret.thread, gbmaScreen: c.ret.screen, gbmaSlide: c.ret.slide});
-    GBMmsAttach.apply(gbMmsContext(), c.target, part); render(); scrollMessages();
-  }
-  function gbMmsDialog(kind) { ui.gbMmsDialog = kind; ui.overlay = 'gb-dialog-mms'; renderOverlay(); }
-  function messageDraft() {
-    data.messageDrafts ||= {};
-    const key = ICSMessaging.draftKey(ui);
-    return data.messageDrafts[key] ||= {body:'',recipient:''};
-  }
-  function openMessageThread(key) {
-    if (ui.view !== 'messaging') openApp('messaging');
-    if (ui.sub !== 'thread') ui.mmsListMode = ui.sub === 'search' ? 'search' : '';
-    ui.thread = key; ui.sub = 'thread'; ui.overlay = '';
-    data.messages.filter(m => String(m.contact) === String(key)).forEach(m => { m.read = true; });
-    if (String(key) === '1') data.notifications = data.notifications.filter(n => n.id !== 2);
-    save(); render(); scrollMessages();
-  }
-  function scrollMessages() {
-    const history = viewport.querySelector('.mms-history');
-    if (history) history.scrollTop = history.scrollHeight;
-  }
+  // Messaging (gb-mms.js): a thread opens, the draft being written, a capture returns to the message.
+  function openMessageThread(key) { GB.module('messaging').openThread(storeContext(), key); }
+  function messageDraft() { return GB.module('messaging').draft(storeContext()); }
+  function gbmaCancel() { GB.module('messaging').captureCancel(storeContext()); }
+  function gbmaReturn(part) { GB.module('messaging').captureReturn(storeContext(), part); }
   function photoStyle(photo) { return `background-image:url('${ICSMedia.image(photo)}');background-size:cover;background-position:center`; }
 
   // Calendar AlertService: a status-bar notification at the reminder time while the page is running.
@@ -1263,7 +1223,6 @@
   function clearAppData(id) {
     if(id==='browser'){delete data.browserSession;data.browserHistory=clone(defaultData.browserHistory);data.bookmarks=clone(defaultData.bookmarks||[]);data.savedPages=[];ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);syncBrowserState();}
     if(id==='people'){data.contacts=clone(defaultData.contacts);data.contactGroups=clone(defaultData.contactGroups);ui.peopleDraft=null;}
-    if(id==='messaging'){data.messages=clone(defaultData.messages);data.messageDrafts={};}
     if(id==='phone'){data.callHistory=[];ui.activeCall=null;}
     StoreHost.clearData(id, storeContext());
     if(id==='play-store')delete data.playRatings;
@@ -1275,14 +1234,6 @@
     for (const [icon, wait] of GBLauncher.blinkFrames(times)) { setTimeout(() => { ui.tipsIcon = icon; if (ui.view === 'home') { const img = viewport.querySelector('.gbtips-droid img'); if (img) img.src = `assets/gb-tips-${icon}.png`; } }, delay); delay += wait; }
   }
   function addNotification(title, detail) { data.notifications.unshift({ id: Date.now(), title, detail }); save(); renderStatus(); }
-  function sendMessage(id, body, attachment) {
-    if (!body && !attachment) return;
-    const subject = String(data.messageDrafts?.[ICSMessaging.draftKey(ui)]?.subject || '').trim();
-    data.messages.push({ id: Date.now(), contact: id, body, mine: true, time: clock(), timestamp:Date.now(), read:true, ...(attachment ? {attachment:clone(attachment)} : {}), ...(subject ? {subject} : {}) });
-    ui.gbMmsSubject = false;
-    delete data.messageDrafts?.[ICSMessaging.draftKey(ui)];
-    openMessageThread(id);
-  }
 
   let suppressClickUntil = 0;
   document.addEventListener('click', event => {
@@ -1296,7 +1247,6 @@
     if ((action.startsWith('sth-') || moduleView()) && StoreHost.action(action, button, storeContext())) return;
     if (action.startsWith('gbnet-') && GBNetwork.handle(action, id, gbNetContext(), button)) return;
     if (action.startsWith('gbct-') && GBContactsIO.handle(action, id, gbctContext())) return;
-    if (ui.view === 'messaging' && action.startsWith('gbma-') && window.GBMmsAttach?.handle(action, id, gbMmsContext())) return;
     if (GBApps.has(ui.view) && !['back', 'home', 'menu-key', 'search-key', 'open-app'].includes(action) && GBApps.get(ui.view).handle?.(action, id, gappContext(), button)) return;
     switch (action) {
       case 'open-app': openApp(app || id, !!button.closest('.recent-item')); break;
@@ -1638,37 +1588,6 @@
       case 'people-delete': ui.overlay='people-delete'; renderOverlay(); break;
       case 'people-confirm-delete': ICSPeople.remove(data,ui.selectedContact); save(); ui.sub=''; ui.overlay=''; render(); break;
       case 'contact': ui.selectedContact = Number(id); ui.sub = 'detail'; render(); break;
-      case 'thread': openMessageThread(id); break;
-      case 'mms-search': ui.sub = 'search'; ui.overlay = ''; ui.mmsSearch = ''; render(); viewport.querySelector('.mms-search input')?.focus(); break;
-      case 'mms-attach': gbMmsDialog('attach'); break;
-      case 'mms-smiley': gbMmsDialog('smiley'); break;
-      case 'gbmms-pictures': gbMmsDialog('pictures'); break;
-      case 'gbmms-delete-all': gbMmsDialog('delete-all'); break;
-      case 'gbmms-delete-all-ok': data.messages = []; data.messageDrafts = data.messageDrafts?.new ? {new: data.messageDrafts.new} : {}; data.notifications = data.notifications.filter(n => n.id !== 2); ui.overlay = ''; save(); render(); break;
-      case 'gbmms-view-contact': ui.overlay = ''; openApp('people'); ui.selectedContact = Number(id); ui.sub = 'detail'; render(); break;
-      case 'gbmms-add-contact': { const target = ui.sub === 'new' ? ICSMessaging.recipient(messageDraft().recipient || '', data.contacts) : ICSMessaging.identity(ui.thread, data.contacts); ui.overlay = ''; openApp('people'); editPerson(true); ui.peopleDraft.phone = target?.phone || ''; render(); break; }
-      case 'gbmms-subject': ui.gbMmsSubject = true; ui.overlay = ''; render(); viewport.querySelector('[name=subject]')?.focus(); break;
-      case 'gbmms-send': ui.overlay = ''; renderOverlay(); viewport.querySelector('.mms-compose')?.requestSubmit(); break;
-      case 'gbmms-all-threads': ui.overlay = ''; ui.sub = ''; ui.gbMmsSubject = false; render(); break;
-      case 'gbmms-copy': { const message = data.messages.find(m => String(m.id) === String(ui.mmsMessage)); try { navigator.clipboard?.writeText(message?.body || '')?.catch(() => {}); } catch {} ui.overlay = ''; renderOverlay(); break; }
-      case 'gbmms-lock': { const message = data.messages.find(m => String(m.id) === String(ui.mmsMessage)); if (message) message.locked = !message.locked; ui.overlay = ''; save(); render(); break; }
-      case 'gbmms-thread-menu': ui.thread = id; gbMmsDialog('thread'); break;
-      case 'mms-recipient': { const person = contact(id); if (person) { messageDraft().recipient = person.phone; save(); render(); viewport.querySelector('.mms-compose textarea').focus(); } break; }
-      case 'mms-call': {const person=ICSMessaging.identity(ui.thread,data.contacts);startPhoneCall(person.phone);break;}
-      case 'mms-photo': { const photo = data.photos.find(p => p.id === Number(id)); if (photo) { messageDraft().attachment = clone(photo); messageDraft().updated = Date.now(); save(); ui.overlay = ''; render(); scrollMessages(); } break; }
-      case 'mms-remove-attachment': { const draft = messageDraft(); delete draft.attachment; if (!draft.subject) toast(GBMms.text(i18n.language, 'converting_to_text_message')); save(); render(); scrollMessages(); break; }
-      case 'mms-insert-smiley': messageDraft().body = ((messageDraft().body || '') + ' ' + id).trim().slice(0,2000); messageDraft().updated = Date.now(); save(); ui.overlay = ''; render(); scrollMessages(); break;
-      case 'mms-discard': delete data.messageDrafts?.[ICSMessaging.draftKey(ui)]; ui.gbMmsSubject = false; save(); ui.overlay = ''; if (ui.sub === 'new') ui.sub = ''; render(); scrollMessages(); break;
-      case 'mms-message': ui.mmsMessage = id; gbMmsDialog('message'); break;
-      case 'mms-details': gbMmsDialog('details'); break;
-      case 'mms-forward': { const message = data.messages.find(m => String(m.id) === String(ui.mmsMessage)); if (!message) break; ui.sub = 'new'; Object.assign(messageDraft(),{body:message.body,recipient:'',attachment:message.attachment ? clone(message.attachment) : null,updated:Date.now()}); save(); ui.overlay = ''; render(); break; }
-      case 'mms-delete-thread': case 'mms-delete-message': ui.mmsDelete = action === 'mms-delete-thread' ? 'thread' : 'message'; gbMmsDialog(`delete-${ui.mmsDelete}`); break;
-      case 'mms-confirm-delete': {
-        data.messages = data.messages.filter(m => ui.mmsDelete === 'thread' ? String(m.contact) !== String(ui.thread) : String(m.id) !== String(ui.mmsMessage));
-        if (ui.mmsDelete === 'thread') { delete data.messageDrafts?.[String(ui.thread)]; ui.sub = ''; }
-        save(); ui.overlay = ''; render(); break;
-      }
-      case 'new-message': ui.sub = 'new'; ui.overlay = ''; render(); viewport.querySelector('[name=recipient]')?.focus(); break;
       case 'alarm-snooze': {
         const alarm=data.alarms.find(item=>item.id===ui.ringingAlarm.id);
         // Snooze duration from the Clock settings (snooze_duration: 5, 10, ... 30 minutes).
@@ -1726,12 +1645,6 @@
       case 'address': navigateBrowser(values.get('address')); break;
       case 'gbmk-search': { const q = String(values.get('query') || '').trim(); if (!q) break; data.marketSearches = [q, ...(data.marketSearches || []).filter(x => x !== q)].slice(0, 10); save(); gbMarketGo({page: 'search', query: q}); break; }
       case 'web-search': navigateBrowser(`search:${values.get('query')}`); break;
-      case 'mms-search': ui.mmsSearch = String(values.get('query') || '').trim(); render(); break;
-      case 'mms-send': {
-        const target = ui.sub === 'thread' ? {key:ui.thread} : ICSMessaging.recipient(values.get('recipient'),data.contacts);
-        if (!target) { toast('Enter a contact name or valid phone number'); return; }
-        sendMessage(target.key, String(values.get('body') || '').trim(), messageDraft().attachment); break;
-      }
       case 'contact': {
         const name = String(values.get('name')).trim(), phone = String(values.get('phone')).trim(), email = String(values.get('email')).trim();
         if (!name || !phone) return;
@@ -1765,22 +1678,6 @@
     if (ui.view === 'play-store' && event.target.closest('.gbbr-search')) { ui.marketEdit = event.target.value; const pos = event.target.selectionStart; render(); const input = viewport.querySelector('.gbbr-search input'); input?.focus(); input?.setSelectionRange(pos, pos); return; }
     if (event.target.closest('.gbbr-search')) { ui.gbBrEditValue = event.target.value; const box = viewport.querySelector('.gbbr-suggest'); if (box) box.innerHTML = GBBrowser.suggestions(gbBrowserContext()); return; }
     if (event.target.closest('.gbbr-find')) { ui.browserFind = event.target.value; ui.gbBrMark = -1; const page = viewport.querySelector('.browser-page'); page.innerHTML = renderWebsite(ui.browserUrl); if (ui.browserFind) highlightBrowserText(); else viewport.querySelector('.web-find-count').textContent = ''; return; }
-    if (event.target.closest('.mms-compose')) {
-      const draft = messageDraft();
-      if (event.target.name === 'body') draft.body = event.target.value;
-      if (event.target.name === 'subject') draft.subject = event.target.value;
-      if (event.target.name === 'recipient') {
-        draft.recipient = event.target.value;
-        const query = draft.recipient.trim().toLocaleLowerCase();
-        viewport.querySelector('.mms-suggestions').innerHTML = query ? data.contacts.filter(p => `${p.name} ${p.phone}`.toLocaleLowerCase().includes(query)).slice(0,5).map(p => `<button type="button" data-action="mms-recipient" data-id="${p.id}">${safe(p.name)}<small>${safe(p.phone)}</small></button>`).join('') : '';
-      }
-      draft.updated = Date.now(); save();
-      const count = ICSMessaging.counter(draft.body || '');
-      viewport.querySelector('.mms-counter').textContent = draft.attachment ? 'MMS' : count.count > 1 || count.remaining <= 10 ? `${count.remaining} / ${count.count}` : '';
-      viewport.querySelector('.mms-send').disabled = !(draft.body || '').trim() && !draft.attachment;
-      if (event.target.name === 'body') { event.target.style.height = 'calc(48 * var(--dp))'; event.target.style.height = `${Math.min(dp(93.913),event.target.scrollHeight)}px`; }
-      return;
-    }
     if (event.target.dataset.field === 'brightness') {
       data.settings.brightness = Number(event.target.value); save();
       const display = event.target.closest('.detail-pad')?.querySelector('p'); if (display) display.textContent = `${data.settings.brightness}%`;
@@ -2176,10 +2073,6 @@
   screen.addEventListener('contextmenu', event => {
     if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
     event.preventDefault();
-    const message = event.target.closest('.mms-message');
-    if (message && !ui.overlay) { ui.mmsMessage = message.dataset.id; gbMmsDialog('message'); }
-    const thread = event.target.closest('.gbmms-thread[data-action="thread"]');
-    if (thread && !ui.overlay) { ui.thread = thread.dataset.id; gbMmsDialog('thread'); }
     const link = event.target.closest('[data-gbbr-item]');
     if (link && !ui.overlay) { ui.gbBrTarget = link.dataset.id; ui.overlay = 'gb-dialog-br'; ui.gbBrDialog = link.dataset.gbbrItem; renderOverlay(); }
     const ct = event.target.closest('[data-gbct-hold]');
@@ -2210,16 +2103,12 @@
       ? (ui.view === 'settings' && event.target.closest('.settings-app .app-content') ? event.target.closest('.settings-app') : event.target.closest('.play-content,.mms-scroll,.people-scroll,.browser-page,.web-tabs,.web-library,.gbdc-alarms,.gallery-scroll,.cal-scroll,.music-library-scroll,.email-scroll')) : null);
     pointerStart = { x: event.clientX, y: event.clientY, target: event.target, source: dragSource(event.target), pointerType: event.pointerType, pointerId: event.pointerId, downTime: performance.now(), scrollTarget, scrollTop: scrollTarget?.scrollTop || 0, lockDrag: ui.view === 'lock' && !!event.target.closest('.lock-handle'), shadeDragEligible: !ui.overlay && !ui.locked && !!event.target.closest('#status-bar'), shadeCloseEligible: ui.overlay === 'shade' && !!event.target.closest('.gbsh-close'), pageSwipeEligible: ui.view === 'home' && !ui.overlay && !!event.target.closest('.home-view') && !event.target.closest('.dock, .page-indicators, .home-search'), drawerSwipeEligible: ui.view === 'drawer' && !!event.target.closest('.drawer-page') };
     if (ui.view === 'home' && !ui.overlay && event.target.closest('.home-slot') && !pointerStart.source) homeLongPressTimer = setTimeout(() => { ui.overlay = 'wallpaper-source'; renderOverlay(); pointerStart = null; suppressReleaseClick(); }, 550);
-    const message = event.target.closest('.mms-message');
-    if (message && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.mmsMessage = message.dataset.id; suppressReleaseClick(); gbMmsDialog('message'); }, 550);
     const heldLink = event.target.closest('[data-gbbr-item]');
     if (heldLink && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.gbBrTarget = heldLink.dataset.id; suppressReleaseClick(); ui.overlay = 'gb-dialog-br'; ui.gbBrDialog = heldLink.dataset.gbbrItem; renderOverlay(); }, 550);
     const heldCt = event.target.closest('[data-gbct-hold]');
     if (heldCt && !ui.overlay) messageHoldTimer = setTimeout(() => { suppressReleaseClick(); GBContactsIO.hold(heldCt.dataset.gbctHold, gbctContext()); }, 550);
     const heldNet = event.target.closest('[data-gbnet-hold]');
     if (heldNet && !ui.overlay) messageHoldTimer = setTimeout(() => { suppressReleaseClick(); GBNetwork.hold(heldNet.dataset.gbnetHold, gbNetContext()); }, 550);
-    const heldThread = event.target.closest('.gbmms-thread[data-action="thread"]');
-    if (heldThread && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.thread = heldThread.dataset.id; suppressReleaseClick(); gbMmsDialog('thread'); }, 550);
     if (pointerStart.lockDrag) { clearTimeout(ui.lockReleaseTimer); viewport.querySelectorAll('.lock-chevron').forEach(chevron => chevron.getAnimations().forEach(animation => animation.cancel())); screen.classList.remove('lock-releasing'); screen.classList.add('lock-dragging'); try { screen.setPointerCapture(event.pointerId); } catch {} }
     else if (ui.view === 'lock' && !ui.locked && event.target.closest('.lock-wave')) lockPing();
     if (ui.view === 'home' && !ui.overlay) pointerStart.photoStack = event.target.closest('[data-photo-stack]')?.dataset.photoStack || '';
