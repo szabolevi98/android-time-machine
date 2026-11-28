@@ -59,6 +59,6 @@ for(const v of ['2.3.6','4.0.4']){
   assert.equal(M.cropDrag({clientX:5,clientY:5},frame,c,()=>{}),false);
   assert.ok(M.overlay(data,{overlay:'gallery-crop-saving',selectedPhoto:1},t,'hu','hu').includes('Kép mentése...'));
   const sim=engineSource('4.0.4');
-  assert.ok(sim.includes("case 'gallery-crop-save':")&&sim.includes('ui.selectedPhoto=copy.id')&&sim.includes("if (ui.overlay === 'gallery-crop-saving') return;"));
+  assert.ok(sim.includes("case 'gallery-crop-save':")&&sim.includes('ui.selectedPhoto=copy.id')&&sim.includes("if (ui.overlay === 'gallery-crop-saving') return true;"));
 }
 console.log('gallery-crop ok');

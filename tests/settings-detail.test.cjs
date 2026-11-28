@@ -11,7 +11,7 @@ ctx.ui={recent:['calculator','play-store'],recentState:{},recentSnapshots:{},mus
 // The apps' Clear data is their module's (versions/4.0.4/ics-*.js, hosted by store-apps/legacy-host.js as ICS).
 ctx.setInterval=()=>0;vm.runInContext(fs.readFileSync('store-apps/legacy-host.js','utf8'),ctx);ctx.StoreHost=ctx.window.StoreHost;
 vm.runInContext(fs.readFileSync('versions/4.0.4/ics-core.js','utf8'),ctx);ctx.ICS=ctx.window.ICS;
-for(const name of ['calculator','phone','clock','calendar','music','browser','people','messaging','email'])vm.runInContext(fs.readFileSync(`versions/4.0.4/ics-${name}.js`,'utf8'),ctx);
+for(const name of ['calculator','phone','clock','calendar','music','browser','people','messaging','email','gallery','camera'])vm.runInContext(fs.readFileSync(`versions/4.0.4/ics-${name}.js`,'utf8'),ctx);
 ctx.storeContext=()=>({get data(){return ctx.data;},ui:ctx.ui,defaults,emailSeed:ctx.emailData,clone:ctx.clone,save:ctx.save,saveMusic:ctx.saveMusic,syncBrowserState:ctx.syncBrowserState});
 const source=fs.readFileSync('versions/4.0.4/simulator.js','utf8');
 vm.runInContext(source.slice(source.indexOf('  function resetSimulator()'),source.indexOf('  function addNotification(')),ctx);

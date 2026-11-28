@@ -384,34 +384,6 @@
     const nyanRoot = viewport.querySelector('[data-nyandroid]');
     if (nyanRoot && !ui.nyandroid) requestAnimationFrame(() => { if (nyanRoot.isConnected && !ui.nyandroid) ui.nyandroid = {...ICSNyandroid.start(nyanRoot), root: nyanRoot}; });
     each('rendered');
-    cameraAttach();
-  }
-  /* VideoCamera and PanoramaActivity (media.js, ics-pano.js) and the Gallery's MovieActivity (ics-movie.js): a
-     controller per screen, rebuilt when its root is redrawn. Leaving the camera while recording stops and keeps the clip. */
-  let panoCtl = null, movieCtl = null, recTimer = 0;
-  function cameraAttach() {
-    if (ui.cameraRec && ui.view !== 'camera') cameraStop();
-    if (ui.view !== 'camera') ui.captureFor = '';
-    if (panoCtl && !viewport.querySelector('[data-icp]')?.isSameNode(panoCtl.root)) { panoCtl.destroy(); panoCtl = null; }
-    const icp = viewport.querySelector('[data-icp]');
-    if (icp && !panoCtl) panoCtl = {...ICSPano.attach(icp, {ui, rerender: render, shoot: cameraSave}), root: icp};
-    if (movieCtl && !viewport.querySelector('[data-icm]')?.isSameNode(movieCtl.root)) { movieCtl.destroy(); movieCtl = null; }
-    const icm = viewport.querySelector('[data-icm]'), clip = data.photos.find(p => p.id === ui.selectedPhoto);
-    if (icm && clip && !movieCtl) movieCtl = {...ICSMovie.attach(icm, {photo: clip, ui, rerender: render, reduced: matchMedia('(prefers-reduced-motion: reduce)').matches}), root: icm};
-    clearInterval(recTimer);
-    if (ui.cameraRec && ui.view === 'camera') { const paint = () => { const el = viewport.querySelector('[data-camera-rec]'); if (el) el.textContent = ICSMovie.time(Date.now() - ui.cameraRec.start); }; paint(); recTimer = setInterval(paint, 250); }
-  }
-  // A clip or panorama into the Camera album, named as VideoCamera / PanoramaActivity name them.
-  function cameraSave(clip) {
-    const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
-    const photo = {...ICSMedia.scene(data), id: Date.now(), name: `${clip.pano ? 'PANO' : 'VID'}_${stamp.slice(0, 8)}_${stamp.slice(8)}`, album: 'camera', created: Date.now(), ...(clip.pano ? {pano: true} : {video: true, duration: Math.max(1000, Math.round(clip.duration))})};
-    data.photos.unshift(photo); save(); return photo;
-  }
-  // A clip recorded for YouTube's Record (quickCapture) returns to it at once.
-  function cameraStop() {
-    const rec = ui.cameraRec; ui.cameraRec = null; clearInterval(recTimer); if (!rec) return;
-    const clip = cameraSave({duration: Date.now() - rec.start});
-    if (ui.captureFor === 'youtube' && ui.view === 'camera') { openApp('youtube', true); ICSGoogleApps.captured(clip, googleAppsContext()); }
   }
   function restoreWidgetScroll() {
     ui.widgetScroll = ui.widgetScroll || {};
@@ -589,8 +561,6 @@
       case 'google-plus': case 'talk': case 'youtube': case 'play-books': case 'play-movies': case 'search': case 'voice-dialer': return ICSGoogleApps.render(ui.view, googleAppsContext());
       case 'maps': case 'latitude': case 'earth': case 'news-weather': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), now: deviceDate()});
       case 'messenger': case 'navigation': case 'local': case 'movie-studio': if (ui.view === 'navigation' && ui.navRun) return MapsRoute.nav(mrContext()); return JBExtraApps.render(ui.view, {studio: ui.view === 'movie-studio' ? movieContext() : null, messenger: ui.view === 'messenger' ? messengerContext() : null, ui, t: key => i18n.t(key), contacts: data.contacts, data});
-      case 'gallery': return renderGallery();
-      case 'camera': return renderCamera();
       default: return renderHome();
     }
   }
@@ -608,14 +578,14 @@
     if (!appNames[app]) return;
     captureRecentView();
     if (app === 'play-store' && !resume) { ui.play = ICSPlayStore.initial(); ui.playHistory = []; ui.market = {page: 'home'}; ui.marketHistory = []; ui.marketSearching = false; }
-    if (app === 'gallery') ui.galleryPick = '';
+    if (!isStoreApp(app)) StoreHost.module(app)?.open?.(storeContext(), resume);
     ui.view = app; ui.sub = resume ? ui.recentState?.[app]?.sub || '' : ''; ui.overlay = ''; if (app === 'settings' && !resume) ui.settingsRootScroll = 0;
     ui.recent = [app, ...ui.recent.filter(id => id !== app)].slice(0, 7);
     render();
     if (resume && viewport.firstElementChild) appScrollContainer(app).scrollTop = ui.recentState?.[app]?.scrollTop || 0;
   }
   function appScrollContainer(app) {
-    return viewport.querySelector(StoreHost.module(app)?.scroller || (app === 'play-store' ? '.icsp-scroll' : app === 'gallery' ? '.gallery-scroll' : '.app-view')) || viewport.firstElementChild;
+    return viewport.querySelector(StoreHost.module(app)?.scroller || (app === 'play-store' ? '.icsp-scroll' : '.app-view')) || viewport.firstElementChild;
   }
   function captureRecentView() {
     if (appNames[ui.view] && viewport.firstElementChild) {
@@ -714,8 +684,6 @@
     if (!ui.overlay && JBExtraApps.back(ui)) { render(); return; }
     // News & Weather: a settings dialog or nested screen, then the settings or the story page.
     if (ui.view === 'news-weather' && ui.newsSub && !ui.overlay) { if (!(ui.newsSub === 'settings' && NewsPrefs.back(ui))) { ui.newsSub = ''; ui.nwpScreen = ''; } render(); return; }
-    // The Gallery's picker (GET_CONTENT from Email's Attach file) returns without a picture.
-    if (ui.view === 'gallery' && ui.galleryPick && !ui.sub && !ui.overlay) { const caller = ui.galleryPick; ui.galleryPick = ''; openApp(caller, true); return; }
     if (ui.view === 'downloads' && HoloDownloads.back(dlContext())) return;
     // Play Books' reader: a dropdown, Display options, then the Contents popup close before the reader does.
     if (ui.view === 'play-books' && ui.gaSub === 'read' && (ui.gaBkSpin || ui.gaBkOptions || ui.gaBkToc)) { if (ui.gaBkSpin) ui.gaBkSpin = ''; else if (ui.gaBkOptions) ui.gaBkOptions = false; else ui.gaBkToc = false; render(); return; }
@@ -734,18 +702,9 @@
     }
     if(ui.view==='settings'&&ui.sub==='lock-setup'){lockControls.cancel();return;}
     if (ui.overlay.startsWith('widget-photo')) { cancelPhotoWidget(); return; }
-    if (ui.overlay === 'gallery-crop-saving') return;
     if (ui.overlay) { ui.overlay = ''; render(); return; }
     if (ui.view === 'live-wallpapers') { const sub = String(ui.sub || ''); if (sub.startsWith('settings:')) ui.sub = `preview:${sub.slice(9)}`; else if (sub) ui.sub = ''; else { home(false); return; } render(); return; }
     if (ui.view === 'lock') return;
-    if (ui.view === 'gallery' && ui.galleryCrop) { ui.galleryCrop=null;render();return; }
-    if (ui.view === 'gallery' && ui.gallerySlideshow) { ui.gallerySlideshow=false;render();return; }
-    // YouTube's capture: Back before recording returns to it without a clip (RESULT_CANCELED).
-    if (ui.view === 'camera' && ui.captureFor && !ui.cameraRec && !ui.overlay) { openApp(ui.captureFor, true); return; }
-    if (ui.view === 'camera' && ui.cameraRec && !ui.overlay) { cameraStop(); render(); return; }
-    if (ui.view === 'camera' && ui.icsPano?.state === 'capture' && !ui.overlay) { ui.icsPano = null; render(); return; }
-    if (ui.view === 'gallery' && ui.sub === 'movie') { ui.sub='photo';ui.galleryMovie=null;render();return; }
-    if (ui.view === 'gallery' && ui.sub === 'photo') { ui.sub='album';ui.galleryZoom=false;render();return; }
     if(ui.view==='settings' && ['apn','operators','tether-help','device-admin'].includes(ui.sub)){ui.sub={apn:'mobile-networks',operators:'mobile-networks','tether-help':'tethering','device-admin':'security'}[ui.sub];render();return;}
     if(ui.view==='settings' && ['app-info','data-app','battery-history','battery-detail','storage-misc'].includes(ui.sub)){ui.sub={'app-info':'apps','data-app':'data','battery-history':'battery','battery-detail':'battery','storage-misc':'storage'}[ui.sub];render();return;}
     if (ui.view === 'play-store' && ui.marketSearching) { ui.marketSearching = false; render(); return; }
@@ -816,8 +775,6 @@
       overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
     } else if (ui.overlay === 'recent') {
       overlayRoot.innerHTML = `<div class="recent-panel" data-action="close-overlay">${ui.recent.length ? `<div class="recent-list">${[...ui.recent].reverse().map(id => `<div class="recent-item" data-action="open-app" data-app="${id}" role="button" tabindex="0" aria-label="${appNames[id]}"><span class="recent-label">${appNames[id]}</span><span class="recent-thumbnail" aria-hidden="true"><span class="recent-thumbnail-inner" inert>${ui.recentSnapshots[id] || `<div class="recent-fallback">${appIcon(id)}</div>`}</span></span><span class="recent-app-icon" aria-hidden="true">${appIcon(id)}</span></div>`).join('')}</div>` : '<p class="recent-empty">No recent apps</p>'}</div>`;
-    } else if (ui.overlay.startsWith('gallery-') || ui.overlay.startsWith('camera-')) {
-      overlayRoot.innerHTML=ICSMedia.overlay(data,ui,key=>i18n.t(key),i18n.locale(),i18n.language);
     } else if (ui.overlay.startsWith('sd-')) {
       overlayRoot.innerHTML = ICSSettingsDetail.overlay(data,ui,key=>i18n.t(key));
     } else if (ui.overlay === 'play-menu') {
@@ -1028,14 +985,6 @@
     ui.playHistory.push({...ui.play,scrollTop:viewport.querySelector('.play-content')?.scrollTop || 0});
     ui.play = {...ui.play,...next}; ui.overlay = ''; render();
   }
-  function photoStyle(photo) { return `background-image:url('${ICSMedia.image(photo)}');background-size:cover;background-position:center`; }
-  function renderGallery() { return ICSMedia.gallery(data,ui,key=>i18n.t(key),i18n.language); }
-  function renderCamera() { return ICSMedia.camera(data,ui,key=>i18n.t(key)); }
-  function galleryStep(direction) {
-    const items=ICSMedia.photos(data,ui.galleryAlbum); if(!items.length)return;
-    const index=Math.max(0,items.findIndex(p=>p.id===ui.selectedPhoto));
-    ui.selectedPhoto=items[(index+direction+items.length)%items.length].id;ui.galleryZoom=false;render();
-  }
 
 
   function resetSimulator() {
@@ -1047,8 +996,6 @@
   }
   function clearAppData(id) {
     if(window.StoreHost?.has(id)){StoreHost.module(id).clearData?.(storeContext());save();}
-    if(id==='gallery'){data.photos=clone(defaultData.photos);}
-    if(id==='camera')delete data.cameraSettings;
     if(id==='play-store')delete data.playRatings;
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
   }
@@ -1061,7 +1008,7 @@
     get data() { return data; }, defaults: defaultData, emailSeed: emailData, ui, save, render, renderOverlay, renderStatus, toast, openApp, home, back, navigateBack, captureRecentView,
     screen, viewport, overlayRoot, statusRoot, navRoot, get pointer() { return pointerStart; },
     notify: (title, text) => addNotification(title, text), get lang() { return i18n.language; }, get locale() { return i18n.locale(); }, t: key => i18n.t(key), i18n, safe, clone,
-    dp, snapResting, holdDelay, deviceDate, today, clock, contact, tracks, syncBrowserState, placeShortcut, gmailContext,
+    dp, snapResting, holdDelay, deviceDate, today, clock, contact, tracks, syncBrowserState, placeShortcut, gmailContext, googleAppsContext,
     suppressClick: ms => { suppressClickUntil = Date.now() + ms; }, suppressReleaseClick
   };
   // This version's modules (the store apps aside): the open screen's first, then the others in the order they registered.
@@ -1304,60 +1251,6 @@
       case 'a11y-hold-pick': data.settings.longPressTimeout = Number(id); ui.overlay = ''; save(); renderOverlay(); render(); break;
       case 'toast': toast(id); break;
       case 'noop': break;
-      case 'gallery-camera': openApp('camera'); break;
-      case 'gallery-album': ui.galleryAlbum=id; ui.sub='album';ui.gallerySlideshow=false;render();break;
-      // GET_CONTENT hands the picture back to whichever app asked: Email or Gmail.
-      case 'gallery-pick': { const photo = data.photos.find(p => p.id === Number(id)), caller = ui.galleryPick; ui.galleryPick = ''; ui.sub = ''; openApp(caller, true); if (caller === 'gmail') ICSGmail.attach(gmailContext(), photo); else ICSEmail.attach(c.emailContext(), photo); render(); break; }
-      case 'gallery-pick-cancel': { const caller = ui.galleryPick || 'email'; ui.galleryPick = ''; ui.sub = ''; openApp(caller, true); break; }
-      case 'photo': ui.selectedPhoto=Number(id);ui.galleryAlbum=ICSMedia.album(data.photos.find(p=>p.id===Number(id))||{});ui.sub='photo';ui.galleryZoom=false;render();break;
-      case 'gallery-step': galleryStep(Number(id));break;
-      case 'gallery-photo-zoom': ui.galleryZoom=!ui.galleryZoom;render();break;
-      case 'gallery-menu': case 'gallery-share': case 'gallery-details': ui.overlay=action;renderOverlay();break;
-      // PhotoPage's Crop starts CropImage; Crop saves <name>-<n>.jpg beside the picture with its title and date
-      // (saveLocalImage), and REQUEST_CROP's result shows the new picture. Cancel, Up and Back leave it unsaved.
-      case 'gallery-crop': {const photo=data.photos.find(p=>p.id===Number(id));ui.overlay='';if(photo&&!photo.video){ui.selectedPhoto=photo.id;ui.galleryZoom=false;ui.gallerySlideshow=false;ui.galleryCrop=ICSMedia.cropDefault();}render();break;}
-      case 'gallery-crop-cancel': ui.galleryCrop=null;render();break;
-      case 'gallery-crop-save': {
-        const photo=data.photos.find(p=>p.id===ui.selectedPhoto),c=ui.galleryCrop;
-        if(!photo||!c){ui.galleryCrop=null;render();break;}
-        ui.overlay='gallery-crop-saving';renderOverlay();
-        setTimeout(()=>{
-          const copy={...clone(photo),id:Date.now(),album:ICSMedia.album(photo),source:clone(photo),crop:{x:c.x,y:c.y,w:c.w,h:c.h},rotation:0,zoom:1};
-          data.photos.splice(Math.max(0,data.photos.indexOf(photo)),0,copy);save();
-          ui.selectedPhoto=copy.id;ui.galleryCrop=null;if(ui.overlay==='gallery-crop-saving')ui.overlay='';render();renderOverlay();
-        },600);
-        break;
-      }
-      case 'gallery-rotate': {const photo=data.photos.find(p=>p.id===ui.selectedPhoto);if(photo)photo.rotation=((photo.rotation||0)+Number(id)+360)%360;save();ui.overlay='';render();break;}
-      case 'gallery-slideshow': {const items=ICSMedia.photos(data,ui.galleryAlbum);if(!items.length)break;if(ui.sub!=='photo')ui.selectedPhoto=items[0].id;ui.sub='photo';ui.overlay='';ui.gallerySlideshow=true;ui.gallerySlideAt=Date.now();render();break;}
-      case 'gallery-stop': ui.gallerySlideshow=false;render();break;
-      case 'gallery-share-message': {const photo=data.photos.find(p=>p.id===ui.selectedPhoto);if(!photo)break;openApp('messaging');ui.sub='new';c.messageDraft().attachment=clone(photo);save();render();break;}
-      case 'photo-delete': ui.selectedPhoto=Number(id);ui.overlay='gallery-delete';renderOverlay();break;
-      case 'gallery-confirm-delete': {
-        const items=ICSMedia.photos(data,ui.galleryAlbum);const index=items.findIndex(p=>p.id===ui.selectedPhoto);
-        data.photos=data.photos.filter(p=>p.id!==ui.selectedPhoto);save();ui.overlay='';
-        const remaining=ICSMedia.photos(data,ui.galleryAlbum);if(remaining.length)ui.selectedPhoto=remaining[Math.min(index,remaining.length-1)].id;else ui.sub='album';
-        render();toast('Photo deleted');break;
-      }
-      case 'photo-wallpaper': {const photo=data.photos.find(p=>p.id===Number(id));if(!photo)break;data.wallpaper=11;delete data.liveWallpaper;data.customWallpaper=photo.colors;data.customWallpaperPhoto=clone(photo);save();ui.overlay='';render();toast('Wallpaper set');break;}
-      case 'shoot': {
-        // Video: the shutter starts and stops recording; Panorama: it starts and stops the sweep.
-        if (ui.cameraMode === 'video') { if (ui.cameraRec) cameraStop(); else ui.cameraRec = {start: Date.now()}; render(); break; }
-        if (ui.cameraMode === 'panorama') { panoCtl?.toggle(); break; }
-        const photo={...ICSMedia.scene(data),id:Date.now(),name:`IMG_${new Date().toISOString().replace(/[-:T]/g,'').slice(0,14)}`,album:'camera',created:Date.now()};
-        data.photos.unshift(photo);save();render();screen.animate([{opacity:1},{opacity:.4},{opacity:1}],{duration:240});toast('Photo saved to Gallery');break;
-      }
-      case 'camera-review': {const photo=ICSMedia.photos(data,'camera')[0];openApp('gallery');if(photo){ui.galleryAlbum='camera';ui.selectedPhoto=photo.id;ui.sub='photo';render();}break;}
-      case 'camera-focus': {const preview=viewport.querySelector('.camera-focus-area');preview.classList.remove('focusing');void preview.offsetWidth;preview.classList.add('focusing');break;}
-      case 'camera-flip': data.cameraSettings=ICSMedia.settings(data);data.cameraSettings.front=!data.cameraSettings.front;save();render();break;
-      case 'camera-level': ui.cameraLevel2=!ui.cameraLevel2;render();break;
-      case 'camera-modes': ui.cameraModes=!ui.cameraModes;render();break;
-      case 'camera-mode': ui.cameraModes=false;ui.cameraLevel2=false;if(['camera','video','panorama'].includes(id)&&!ui.cameraRec){ui.cameraMode=id;ui.icsPano=null;}render();break;
-      case 'gallery-movie': ui.sub='movie';ui.galleryMovie=null;render();break;
-      case 'camera-setting': ui.cameraSetting=id;ui.overlay='camera-setting';renderOverlay();break;
-      case 'camera-pick': {data.cameraSettings=ICSMedia.settings(data);const key=ui.cameraSetting;data.cameraSettings[key]=key==='exposure'?Number(id):id;save();ui.overlay='';renderOverlay();render();break;}
-      case 'camera-knob': {data.cameraSettings=ICSMedia.settings(data);const [key,step]=id.split(':'),values=ICSMedia.PREF[key].values,i=values.indexOf(data.cameraSettings[key]);data.cameraSettings[key]=values[Math.max(0,Math.min(values.length-1,i+Number(step)))];save();renderOverlay();break;}
-      case 'camera-location': data.cameraSettings=ICSMedia.settings(data);data.cameraSettings.location=!data.cameraSettings.location;save();renderOverlay();break;
       // NewsActivity (Theme.NoTitleBar, targetSdkVersion 11) has no action bar, so PhoneWindow asks for the menu key.
       case 'legacy-menu': if(ui.view==='news-weather'){ui.overlay='sa-menu';renderOverlay();}break;
       default: break;
@@ -1424,11 +1317,6 @@
     if (event.target.matches('[data-icsp-auto]')) { const id = event.target.dataset.icspAuto, list = data.marketAuto || []; data.marketAuto = event.target.checked ? [...new Set([...list, id])] : list.filter(x => x !== id); save(); return; }
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
     if(event.target.dataset.field==='data-cycle'){ui.dataCycle=event.target.value;render();return;}
-    if(event.target.matches('.camera-zoom input')) {
-      data.cameraSettings=ICSMedia.settings(data);data.cameraSettings.zoom=Number(event.target.value);save();
-      viewport.querySelector('.camera-focus-area .media-photo').src=ICSMedia.image(ICSMedia.scene(data));
-      return;
-    }
     if (event.target.classList.contains('sd-brightness-bar')) { screen.style.filter = `brightness(${.5 + Number(event.target.value) / 135})`; return; }
     if (event.target.dataset.field === 'brightness') {
       data.settings.brightness = Number(event.target.value); save();
@@ -1831,13 +1719,6 @@
     window.addEventListener('pointerup', () => { suppressClickUntil = Date.now() + 350; }, {once: true, capture: true});
     window.addEventListener('pointercancel', () => { suppressClickUntil = Date.now() + 350; }, {once: true, capture: true});
   }
-  // CropImage's CropView owns its drags: they never reach the screen's swipe and long-press handling.
-  screen.addEventListener('pointerdown', event => {
-    if (ui.view !== 'gallery' || !ui.galleryCrop || ui.overlay || (event.pointerType === 'mouse' && event.button !== 0)) return;
-    const frame = event.target.closest('.gallery-crop')?.querySelector('[data-crop-frame]');
-    if (!frame || event.target.closest('button')) return;
-    if (ICSMedia.cropDrag(event, frame, ui.galleryCrop, () => {})) { event.stopPropagation(); event.preventDefault(); }
-  }, true);
   screen.addEventListener('pointerdown', event => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
     if (data.settings.showTouches) { const dot = document.createElement('span'); const rect = screen.getBoundingClientRect(); dot.className = 'touch-indicator'; dot.style.left = `${event.clientX - rect.left}px`; dot.style.top = `${event.clientY - rect.top}px`; screen.append(dot); setTimeout(() => dot.remove(), 400); }
@@ -1882,11 +1763,6 @@
       recentCard.style.transform = `translateX(${dx}px)`;
       recentCard.style.opacity = String(Math.max(.25, 1 - Math.abs(dx) / 240));
       return;
-    }
-    if (ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && pointerStart.target.closest('[data-gallery-swipe]') && Math.abs(dx)>dp(12) && Math.abs(dx)>Math.abs(dy)) {
-      pointerStart.gallerySwiping=true;suppressClickUntil=Date.now()+350;event.preventDefault();
-      try{screen.setPointerCapture(event.pointerId);}catch{}
-      const picture=viewport.querySelector('.gallery-image');if(picture)picture.style.transform=`translateX(${dx}px)`;return;
     }
     if (pointerStart.lockDrag) { event.preventDefault(); pointerStart.lockActive = lockMove(dx, dy); return; }
     if (pointerStart.shadeDragging || pointerStart.shadeDragEligible && dy > dp(9) && dy > Math.abs(dx) || pointerStart.shadeCloseEligible && dy < -dp(9) && -dy > Math.abs(dx)) {
@@ -1942,7 +1818,6 @@
     // The ViewPager tab strip and pages follow a horizontal fling.
     if (ui.view === 'play-store' && (ui.market?.page === 'section' || ui.market?.page === 'my-apps') && !ui.overlay && pointerStart.target.closest('.icsp-scroll,.icsp-tabs') && Math.abs(dx) > dp(71) && Math.abs(dx) > Math.abs(dy) * 1.5) { const next = viewport.querySelector(`.icsp-tabs button:${dx < 0 ? 'last' : 'first'}-child`); if (next && !next.disabled) { ui.market.tab = next.dataset.id; render(); } suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if (pointerStart.photoSwiping) { if (Math.abs(dy) > dp(35)) stepPhotoStack(pointerStart.photoStack, dy > 0 ? 1 : -1); else render(); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
-    if (pointerStart.gallerySwiping) { if(Math.abs(dx)>dp(53))galleryStep(dx<0?1:-1);else render();suppressClickUntil=Date.now()+350;pointerStart=null;return; }
     if (pointerStart.drawerSwiping) { finishDrawerPage(dx); pointerStart = null; return; }
     if (pointerStart.recentSwiping) {
       const card = pointerStart.target.closest('.recent-item, .notification');
@@ -1997,11 +1872,9 @@
     pointerStart = null;
   });
   window.addEventListener('pointercancel', () => { each('pointercancel'); clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(dragState?.edgeTimer);clearTimeout(dragState?.folderExitTimer);clearTimeout(dragState?.folderHoverTimer);clearFolderDragFeedback();dragState?.ghost.remove(); clearDragOutlines(); dragState = null; screen.classList.remove('dragging', 'page-swiping', 'settings-scrolling', 'lock-dragging'); setHomePage(ui.page); const drawerPage = viewport.querySelector('.drawer-page'); if (drawerPage) drawerPage.style.transform = ''; const lockHandle = viewport.querySelector('.lock-handle'); if (lockHandle) lockHandle.style.removeProperty('--lock-x'); if (pointerStart?.shadeDragging || ui.overlay === 'recent' || ui.overlay === 'shade' || ui.overlay === 'folder') renderOverlay(); pointerStart = null; });
-  window.addEventListener('pointercancel',()=>{const photo=viewport.querySelector('.gallery-image');if(photo)photo.style.transform='';});
   document.addEventListener('keydown', event => {
     const focusedStack = ui.view === 'home' && !ui.overlay && document.activeElement?.closest?.('[data-photo-stack]');
     if (focusedStack && ['ArrowUp','ArrowDown'].includes(event.key)) { event.preventDefault(); const id = focusedStack.dataset.photoStack; stepPhotoStack(id, event.key === 'ArrowDown' ? 1 : -1); viewport.querySelector(`[data-photo-stack="${CSS.escape(id)}"] .phw-front`)?.focus(); return; }
-    if(ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && ['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();galleryStep(event.key==='ArrowLeft'?-1:1);return;}
     if (event.target.matches('.recent-item,.web-tab-preview') && ['Enter',' '].includes(event.key)) { event.preventDefault(); event.target.click(); return; }
     if (ask('key', event)) return;
     if (event.key === 'Escape' || event.key === 'Backspace' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); back(); }
@@ -2112,7 +1985,6 @@
     const now = deviceDate();
     if(!document.hidden && !ui.sleeping && ui.view!=='lock' && !ui.overlay && !ui.activeCall && !dragState && data.settings.sleep>0&&Date.now()-lastActivity>=data.settings.sleep*1000){captureRecentView();lockScreen();lastActivity=Date.now();}
     everySecond(now);
-    if(ui.view==='gallery' && ui.sub==='photo' && ui.gallerySlideshow && !ui.overlay && Date.now()-ui.gallerySlideAt>=3000){ui.gallerySlideAt=Date.now();galleryStep(1);}
     document.querySelectorAll('.analog-clock').forEach(node => {
       node.setAttribute('aria-label', clock());
       node.querySelector('.clock-hour').style.transform = `rotate(${now.getHours() % 12 * 30 + now.getMinutes() / 2}deg)`;
