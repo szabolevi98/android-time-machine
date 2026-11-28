@@ -493,7 +493,7 @@
     const landRoot = viewport.querySelector('[data-lp-lland]');
     if (landRoot && !ui.lland) requestAnimationFrame(() => { if (landRoot.isConnected && !ui.lland) { ui.lland = LPEgg.land(landRoot, {vibrate: ms => navigator.vibrate?.(ms)}); landRoot.focus({preventScroll: true}); } });
     LP.module('clock').afterRender();
-    if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserFind) highlightBrowserText();
+    LP.module('chrome').afterRender();
     if (ui.view === 'photos' && ui.sub === 'photo') attachPhotosSwipe();
     LP.module('messaging').afterRender();
     if (ui.view === 'photos' && ui.sub === 'sphere') LPSphere.attachViewer(viewport);
@@ -832,7 +832,6 @@
     switch (ui.view) {
       case 'play-store': return JBPlay.render(jbPlayContext());
       case 'settings': return renderSettings();
-      case 'chrome': return renderChrome();
       case 'photos': return PhotosApp.render(photosContext());
       case 'play-music': case 'play-movies': case 'play-books': case 'play-games': return PlayApps.render(playContext(ui.view));
       case 'google-search': case 'voice-search': case 'maps': case 'drive': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, plusCtx: ui.view === 'google-plus' ? plusContext() : null, ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
@@ -851,7 +850,7 @@
     if (app === 'news-weather' && !resume) { ui.newsWeb = ''; ui.newsDialog = ''; ui.newsExpanded = ''; ui.newsSearch = false; ui.newsQuery = ''; ui.newsAdd = ''; ui.newsRemove = false; }
     if (GEL_ALIASES[app]) app = GEL_ALIASES[app];
     if (!appNames[app]) return;
-    if (app === 'chrome') useBrowserSession(app);
+    LP.module('chrome').opening(app);
     LP.module('email').opening(app);
     if (app === 'voice-search') setTimeout(listenVoice);
     if (app === 'keep' && !Array.isArray(data.keepNotes)) data.keepNotes = clone(defaultData.keepNotes);
@@ -886,7 +885,7 @@
   // Drive's files as the apps change them (the editors, Drive).
   const officeFiles = () => data.driveFiles || StockApps.FILES;
   const fitContext=()=>({data,ui,locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,toast});
-  const newsSectionsContext=()=>({data,ui,locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,toast,article:key=>StockApps.newsArticle(data,key),browser:url=>{openApp('chrome');navigateBrowser(url);}});
+  const newsSectionsContext=()=>({data,ui,locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,toast,article:key=>StockApps.newsArticle(data,key),browser:url=>{openApp('chrome');lp.navigateBrowser(url);}});
   const editorContext=()=>({data,ui,files:officeFiles(),locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,
     openDrive(){openApp('drive');},pick(){lp.docPick(ui.view,EditorMore.ACCEPT[ui.view]);},shareText:driveShareText,shareFile:driveShareFile,
     shortcut(file){placeShortcut('office:'+file.id,file.name);}});
@@ -1007,10 +1006,7 @@
     // Chrome settings: dialogs first, then the page, then back to the browser.
     // Gmail settings: the dialogs, then the pages, then back to the mail.
     if (LP.module('email').back()) return;
-    if (['browser', 'chrome'].includes(ui.view) && (ui.chromeClear || ui.chromeList || ui.chromePrefMenu || ui.chromeConfirm) && !ui.chromeClear?.busy) { ui.chromeClear = null; ui.chromeList = ''; ui.chromePrefMenu = false; ui.chromeConfirm = ''; render(); return; }
-    if (['browser', 'chrome'].includes(ui.view) && ui.sub === 'chrome-settings') { if (!ChromeApp.prefBack(ui)) ui.sub = ''; render(); return; }
-    if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserFind !== undefined) { ui.browserFind = undefined; render(); return; }
-    if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserIndex > 0) { browserBack(); return; }
+    if (LP.module('chrome').back()) return;
     if (ui.view === 'settings' && ['about-sim', 'about-imei'].includes(ui.sub)) { ui.sub = 'about-status'; render(); return; }
     if (ui.view === 'settings' && ['easter', 'lland', 'about-status', 'about-legal'].includes(ui.sub)) { ui.sub = 'about'; render(); return; }
     if (ui.view === 'settings' && ui.sub?.startsWith('user:')) { ui.sub = 'users'; render(); return; }
@@ -1198,10 +1194,6 @@
       overlayRoot.innerHTML = PhotosApp.prefDialog(photosContext());
     } else if (ui.overlay === 'photos-delete') {
       overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog mms-dialog" role="dialog" aria-label="${safe(i18n.t('Delete'))}"><h3>${safe(i18n.t('Delete'))}</h3><p>${safe(i18n.t('Delete this photo?'))}</p><div class="settings-dialog-actions"><button data-action="close-overlay">${safe(i18n.t('Cancel'))}</button><button data-action="photos-confirm-delete">${safe(i18n.t('Delete'))}</button></div></div>`;
-    } else if (ui.overlay === 'browser-menu' && ui.view === 'chrome') {
-      overlayRoot.innerHTML = ChromeApp.menu({ui, data, t: key => i18n.t(key), locale: i18n.locale(), url: ui.browserUrl, incognito: !!ICSBrowserSession.current(ui.browserSession)?.incognito});
-    } else if (ui.overlay === 'browser-menu') {
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu web-menu"><button data-action="browser-forward" ${ui.browserIndex >= ui.browserHistory.length-1?'disabled':''}>Forward</button><button data-action="browser-refresh">Refresh</button><button data-action="browser-new-tab">New tab</button><button data-action="browser-save">Bookmark</button><button data-action="browser-bookmarks">Bookmarks</button><button data-action="browser-saved">Saved pages</button><button data-action="browser-save-page">Save for offline reading</button><button data-action="browser-find">Find on page</button></div>`;
     } else if (ui.overlay === 'play-menu') {
       // The action bar overflow: a Holo Light popup below the overflow button (Play 5.2: a Material popup over it).
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="jbp-menu" role="menu">${JBPlay.menu(jbPlayContext()).map(item => `<button data-action="${item.action}"${item.checked !== undefined ? ` role="menuitemcheckbox" aria-checked="${item.checked}"` : ''}>${safe(item.title)}${item.checked !== undefined ? `<i class="lpp-check${item.checked ? ' on' : ''}"></i>` : ''}</button>`).join('')}</div>`;
@@ -1471,93 +1463,12 @@
     return appView('Settings', `<div class="lp-dashboard">${category('Wireless & networks', [tile('wifi', 'ic_settings_wireless', 'Wi‑Fi'), tile('bluetooth', 'ic_settings_bluetooth2', 'Bluetooth'), tile('data', 'ic_settings_data_usage', 'Data usage'), tile('wireless', 'ic_settings_more', 'More')])}${category('Device', [tile('display', 'ic_settings_display_am', 'Display'), tile('sound', 'ic_settings_notifications', 'Sound & notification'), tile('storage', 'ic_settings_storage', 'Storage'), tile('battery', 'ic_settings_battery', 'Battery'), tile('apps', 'ic_settings_applications', 'Apps'), tile('users', 'ic_settings_multiuser', 'Users'), tile('nfc-payment', 'ic_settings_nfc_payment_am', 'Tap & pay')])}${category('Personal', [tile('location', 'ic_settings_location', 'Location'), tile('security', 'ic_settings_security', 'Security'), tile('sync', 'ic_settings_accounts', 'Accounts'), tile('language', 'ic_settings_language', 'Language & input'), tile('backup', 'ic_settings_backup', 'Backup & reset')])}${category('System', [tile('date', 'ic_settings_date_time', 'Date & time'), tile('accessibility', 'ic_settings_accessibility', 'Accessibility'), tile('print', 'ic_settings_print', 'Printing'), ...(data.settings.developerUnlocked ? [tile('development', 'ic_settings_development', 'Developer options')] : []), tile('about', 'ic_settings_about', 'About phone')])}</div>`, 'lp-dash-page', `<button class="lp-ab-action" data-action="toast" data-id="Search is not available offline" aria-label="${safe(i18n.t('Search'))}"><img src="assets/lp-fw-ic_search_api_material.svg" alt=""></button>`);
   }
 
-  function normalizeAddress(raw) {
-    const value = raw.trim().replace(/^https?:\/\//i, '').replace(/\/$/, '');
-    if (!value) return 'www.google.com';
-    if (value.startsWith('search:') || value.startsWith('chrome://')) return value;
-    if (value.includes(' ') || !value.includes('.')) return ui.browserOwner === 'chrome' ? ChromeApp.searchUrl(value, {data, locale: i18n.locale()}) : `search:${value}`;
-    return value.toLowerCase();
-  }
   function syncBrowserState() {
     const tab = ICSBrowserSession.current(ui.browserSession);
     ui.browserUrl = ICSBrowserSession.url(ui.browserSession);
     ui.browserHistory = tab.history; ui.browserIndex = tab.index;
     ui.browserTab = ui.browserSession.active;
     ui.browserTabs = ui.browserSession.tabs.map(tab => tab.history[tab.index]);
-  }
-  function saveBrowserState() {
-    syncBrowserState();
-    if (ui.browserOwner === 'chrome') {
-      // Incognito tabs are not stored.
-      const tabs = ui.browserSession.tabs.filter(tab => !tab.incognito), current = ICSBrowserSession.current(ui.browserSession);
-      data.chromeSession = clone({tabs: tabs.length ? tabs : [{history: [ChromeApp.NTP], index: 0}], active: Math.max(0, tabs.indexOf(current))});
-    } else data.browserSession = clone(ui.browserSession);
-    save();
-  }
-  const restoreChrome = () => ICSBrowserSession.restore(data.chromeSession, [ChromeApp.NTP]);
-  function useBrowserSession(owner) {
-    if (ui.browserOwner === owner) return;
-    ui.browserSessions[ui.browserOwner] = ui.browserSession;
-    ui.browserSession = ui.browserSessions[owner] || (owner === 'chrome' ? restoreChrome() : ICSBrowserSession.restore(data.browserSession, data.browserHistory));
-    ui.browserOwner = owner; ui.browserFind = undefined; syncBrowserState();
-  }
-  function chromeTitle(url) { return url === ChromeApp.NTP ? i18n.t('New tab') : url === ChromeApp.HISTORY ? i18n.t('History') : browserTitle(url); }
-  function renderChrome() {
-    const session = ui.browserSession, tab = ICSBrowserSession.current(session);
-    return ChromeApp.render({ui, data, t: key => i18n.t(key), locale: i18n.locale(), page: renderWebsite, title: chromeTitle, url: ui.browserUrl, incognito: !!tab.incognito, tabs: session.tabs.map(item => ({url: item.history[item.index], incognito: !!item.incognito})), active: session.active});
-  }
-  function chromeNewTab(incognito) {
-    if (!ICSBrowserSession.add(ui.browserSession)) { toast('Tab limit reached'); return; }
-    const tab = ICSBrowserSession.current(ui.browserSession);
-    tab.history = [ChromeApp.NTP]; tab.index = 0; if (incognito) tab.incognito = true;
-    ui.sub = ''; ui.overlay = ''; ui.browserFind = undefined; renderOverlay(); saveBrowserState(); render();
-  }
-  function chromeSection(id) {
-    const incognito = !!ICSBrowserSession.current(ui.browserSession).incognito;
-    ui[incognito ? 'chromeNtpIncognito' : 'chromeNtp'] = id; ui.overlay = ''; renderOverlay();
-    if (ui.browserUrl !== ChromeApp.NTP) navigateBrowser(ChromeApp.NTP); else render();
-  }
-  function navigateBrowser(url) {
-    const normalized = normalizeAddress(url);
-    ICSBrowserSession.navigate(ui.browserSession,normalized);
-    if (!normalized.startsWith('chrome://') && !(ui.browserOwner === 'chrome' && ICSBrowserSession.current(ui.browserSession).incognito)) data.browserHistory = [...data.browserHistory,normalized].slice(-50);
-    ui.sub = ''; ui.overlay = ''; ui.browserFind = undefined; saveBrowserState(); render();
-  }
-  function browserBack() { ICSBrowserSession.move(ui.browserSession,-1); saveBrowserState(); render(); }
-  function browserForward() { ICSBrowserSession.move(ui.browserSession,1); ui.overlay = ''; saveBrowserState(); render(); }
-  function browserLink(url, title, subtitle = '') { return `<div class="web-result"><a href="#" data-action="browser-link" data-url="${safe(url)}"><strong>${safe(title)}</strong></a><small>${safe(url)}</small><p>${safe(subtitle)}</p></div>`; }
-  function renderWebsite(url) {
-    if (url === 'www.google.com') return `<div class="google-logo"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></div><form class="search-form" data-form="web-search"><input name="query" aria-label="Search the web" placeholder="Search the web" required><button type="submit">Search</button></form><div class="browser-tiles">${[['www.android.com','Android'],['en.wikipedia.org/wiki/Android','Wikipedia'],['news.example','News'],['retro.example','2015 Web']].map(item => `<button data-action="browser-link" data-url="${item[0]}">${item[1]}</button>`).join('')}</div><p style="font-size:calc(12.1413 * var(--dp));color:#888;margin-top:calc(26.4901 * var(--dp))">Offline demo pages · 2015</p>`;
-    const engineHit = window.ChromeApp?.searchResult(url);
-    if (url.startsWith('search:') || engineHit) {
-      const term = engineHit ? engineHit.term : url.slice(7);
-      return `${engineHit ? `<p class="web-engine">${safe(engineHit.name)}</p>` : ''}<h2>Search results</h2><p>Results for <strong>${safe(term)}</strong></p>${browserLink('www.android.com', 'Android – Discover Android 5.1, Lollipop', 'Lollipop brings Material design, heads-up notifications, a new Overview and Smart Lock.')}${browserLink('en.wikipedia.org/wiki/Android', 'Android (operating system) – Wikipedia', 'An overview of the Android mobile operating system.')}${browserLink('news.example', 'Tech News', `Stories related to ${term}.`)}`;
-    }
-    if (url.includes('android.com')) return `<h2 style="color:#79b93f">android</h2><h3>Android 5.1, Lollipop</h3><p>Material design brings bold colour, responsive motion and depth to every screen. Notifications reach you on the lock screen and as heads-up alerts, Overview keeps your recent apps and tabs in a stack of cards, and Smart Lock keeps your phone unlocked near a trusted device.</p><div style="background:#00bcd4;color:white;padding:calc(27.5939 * var(--dp));text-align:center;font-size:calc(41.9427 * var(--dp))">🍭<br><small style="font-size:calc(18.7638 * var(--dp))">Lollipop</small></div>${browserLink('en.wikipedia.org/wiki/Android','Learn about Android','The story of Android.')}`;
-    if (url.includes('wikipedia.org')) return `<h2>Android (operating system)</h2><p><small>From Wikipedia, the free encyclopedia</small></p><hr><p>Android is a mobile operating system based on a modified version of the Linux kernel. Android 4.0, known as Ice Cream Sandwich, introduced the Holo interface and virtual navigation buttons; versions 4.1–4.3, Jelly Bean, added Project Butter, Google Now and expandable notifications; Android 4.4, KitKat, was tuned to run on devices with 512 MB of RAM; Android 5.0, Lollipop, introduced Material design, the ART runtime and 64-bit support, and 5.1 added multiple SIM cards and Device Protection.</p><h3>Versions</h3><p>Gingerbread · Ice Cream Sandwich · Jelly Bean · KitKat · Lollipop</p>${browserLink('www.android.com','Official Android website')}`;
-    const newsPage = window.StockApps?.newsPage(url); if (newsPage) return newsPage;
-    if (url === 'news.example/nexus-6' || url === 'retro.example/lollipop') return `<article class="web-offline-article"><h2>${url.startsWith('news')?'A day with the Nexus 6':'A closer look at Lollipop'}</h2><time>November 3, 2014 · Demo archive</time><p>The phone has a 6-inch Quad HD screen, front-facing stereo speakers and a Turbo Charger that adds six hours of use in fifteen minutes. Open the app drawer to discover the Lollipop experience.</p><h3>Everyday essentials</h3><p>Contacts, messages and the browser share a simple visual language. Swipe between home screens, arrange your favorite apps, and pull down the notification shade.</p><h3>Make it yours</h3><p>Choose a wallpaper, add an analog clock and keep your favorite contacts close. This small offline archive is a fictional snapshot of the early smartphone era.</p>${browserLink('news.example','Back to Tech News')}${browserLink('retro.example/lollipop','Explore Lollipop')}</article>`;
-    if (url.includes('news.example')) return `<h2>Tech News</h2><p style="color:#777">Thursday, October 22, 2015</p><hr><h3>Android 5.1.1 security update arrives on the Nexus 6</h3><p>Build LMY48Y brings the November security patches to Google's Nexus devices.</p><h3>Apps in your pocket</h3><p>Material design apps are arriving on Google Play every week.</p>${browserLink('news.example/nexus-6','Read the Nexus 6 story')}${browserLink('retro.example','Visit the 2015 Web')}`;
-    if (url.includes('retro.example')) return `<h2>Welcome to the 2015 Web</h2><p>A little time capsule from the Material design era.</p><ul><li>Share photos</li><li>Check your email</li><li>Customize your phone</li></ul>${browserLink('retro.example/lollipop','Explore Lollipop')}${browserLink('maps.example','Open the sample map')}${browserLink('www.google.com','Back to Google')}`;
-    if (url.includes('maps.example')) return `<h2>Maps</h2><div style="height:calc(253.8632 * var(--dp));background:repeating-linear-gradient(35deg,#e2ead9,#e2ead9 calc(19.8676 * var(--dp)),#c7dfd7 calc(19.8676 * var(--dp)),#c7dfd7 calc(26.4901 * var(--dp)));display:grid;place-items:center;color:#426a68">San Francisco · Demo map</div><p>Map data is a local illustration.</p>`;
-    return `<h2>Webpage unavailable</h2><p>The simulator browses a small collection of offline example pages.</p>${browserLink('www.google.com','Go to Google')}`;
-  }
-  function browserTitle(url) {
-    return url === 'www.google.com' ? 'Google' : url.startsWith('search:') ? url.slice(7) : url.replace(/^www\./,'');
-  }
-  function highlightBrowserText() {
-    const root=viewport.querySelector('.browser-page'), query=ui.browserFind.toLocaleLowerCase();
-    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT), nodes=[]; let node;
-    while((node=walker.nextNode())) nodes.push(node);
-    let count=0;
-    for(const text of nodes) {
-      let value=text.nodeValue, offset=0, index=value.toLocaleLowerCase().indexOf(query); if(index<0)continue;
-      const fragment=document.createDocumentFragment();
-      while(index>=0) { fragment.append(document.createTextNode(value.slice(offset,index)));const mark=document.createElement('mark');mark.textContent=value.slice(index,index+query.length);fragment.append(mark);count++;offset=index+query.length;index=value.toLocaleLowerCase().indexOf(query,offset); }
-      fragment.append(document.createTextNode(value.slice(offset)));text.replaceWith(fragment);
-    }
-    viewport.querySelector('.web-find-count').textContent=`${count} ${i18n.t('matches')}`;
-    root.querySelector('mark')?.scrollIntoView({block:'nearest'});
   }
 
   /* Google Play Store 5.2.13: ui.market holds the page, section, tab and selection, ui.marketHistory the back stack;
@@ -1663,7 +1574,7 @@
   }
   const keepMoreContext=()=>({data,ui,t:key=>i18n.t(key),locale:i18n.locale(),account:GmailApp.account,save,render,renderOverlay,saveNote:saveKeepNote,
     sync(){ui.kpScreen='';openApp('settings');ui.kpSyncReturn=true;ui.sub='sync-google';render();},
-    website(url){ui.kpScreen='';openApp('chrome');navigateBrowser(url);},
+    website(url){ui.kpScreen='';openApp('chrome');lp.navigateBrowser(url);},
     send(app,spec){ui.kpScreen='';ui.overlay='';renderOverlay();openApp(app);lp.composeEmail();const draft=(app==='gmail'?data.gmailbox:data.mailbox).find(m=>m.id===ui.emailId);if(draft){draft.body=spec.text;draft.subject=spec.text.split('\n')[0]||'';if(spec.audio)draft.attachment={...clone(spec.audio),kind:'audio',vcard:true};else if(spec.photo)draft.attachment=clone(data.photos.find(p=>p.id===spec.photo));}save();render();}
   });
   const keepCurrent = () => (data.keepNotes || []).find(item => item.id === ui.keepNote);
@@ -1728,7 +1639,6 @@
   }
   function clearAppData(id) {
     if(window.StoreHost?.has(id)){StoreHost.module(id).clearData?.(storeContext(), id);save();}
-    if(id==='chrome'){delete data.chromeSession;delete ui.browserSessions.chrome;if(ui.browserOwner==='chrome'){ui.browserSession=restoreChrome();syncBrowserState();}save();}
     if(id==='browser'){delete data.browserSession;data.browserHistory=clone(defaultData.browserHistory);data.bookmarks=clone(defaultData.bookmarks||[]);data.savedPages=[];ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);syncBrowserState();}
     if(id==='music'){ui.music=ICSMusic.restore();saveMusic();}
     if(id==='gallery'){data.photos=clone(defaultData.photos);}
@@ -1855,14 +1765,6 @@
     }
     // A store app's own controls and the host's dialog and menu (store-apps/legacy-host.js).
     if ((action.startsWith('sth-') || StoreHost.has(ui.view)) && StoreHost.action(action, button, storeContext())) return;
-    if (action.startsWith('chrome-') && ui.sub === 'chrome-settings') {
-      const result = ChromeApp.prefAction(action, id, {ui, data, locale: i18n.locale(), t: key => i18n.t(key)});
-      if (result) {
-        if (result === 'save' || result.toast) save();
-        if (result.open) { ui.sub = ''; ui.chromePrefStack = []; chromeNewTab(false); navigateBrowser(result.open); return; }
-        render(); if (result.toast) toast(result.toast); return;
-      }
-    }
     if(action.startsWith('nwsec-')&&NewsSections.handle(action,id,newsSectionsContext()))return;
     if(action.startsWith('cb-')&&CellBroadcast.handle(action,id,{data,ui,save,render,renderOverlay}))return;
     if(action.startsWith('fitm-')&&FitMore.handle(action,id,fitContext()))return;
@@ -2208,21 +2110,6 @@
       case 'lps-cert-toggle': { const off = new Set(data.settings.disabledCerts || []); if (off.has(ui.lpsCert)) off.delete(ui.lpsCert); else off.add(ui.lpsCert); data.settings.disabledCerts = [...off]; save(); ui.overlay = ''; renderOverlay(); render(); break; }
       case 'lps-agent': data.settings.smartLockAgent = data.settings.smartLockAgent === false; save(); render(); break;
       case 'noop': break;
-      case 'browser-search': openApp('chrome'); document.querySelector('.chr-omnibox input')?.focus(); break;
-      case 'browser-link': navigateBrowser(url); break;
-      case 'browser-forward': browserForward(); break;
-      case 'browser-tabs': ui.sub = 'tabs'; render(); break;
-      case 'browser-menu': ui.overlay = 'browser-menu'; renderOverlay(); break;
-      case 'browser-bookmarks': ui.sub = 'bookmarks'; ui.overlay = ''; render(); break;
-      case 'browser-bookmark': navigateBrowser(id); break;
-      case 'browser-saved': ui.sub='saved'; ui.overlay=''; render(); break;
-      case 'browser-save-page': data.savedPages ||= []; if(!data.savedPages.includes(ui.browserUrl))data.savedPages.push(ui.browserUrl); save(); ui.overlay=''; renderOverlay(); toast('Page saved'); break;
-      case 'browser-close-tab': { const last = ui.browserSession.tabs.length === 1; ICSBrowserSession.close(ui.browserSession,Number(id)); if (last && ui.browserOwner === 'chrome') ui.browserSession.tabs[0].history = [ChromeApp.NTP]; saveBrowserState(); render(); break; }
-      case 'browser-refresh': ui.overlay=''; render(); break;
-      case 'browser-find': ui.browserFind=''; ui.overlay=''; render(); viewport.querySelector('.web-find input')?.focus(); break;
-      case 'browser-close-find': ui.browserFind=undefined; render(); break;
-      // Chrome menu and New Tab page
-      case 'chrome-incognito': chromeNewTab(true); break;
       // Google, Voice Search, Maps, Drive, Keep, YouTube, Google+, Earth, News & Weather, Google Settings
       // Google Settings' GMS pages (gms-settings.js).
       case 'gms-open': ui.gmsParent = ui.sub; ui.sub = `gms-${id}`; ui.gmsDialog = ''; if (id === 'ads' && !data.gms?.adid) { data.gms = {...GMSSettings.state(data), adid: GMSSettings.newId()}; save(); } render(); break;
@@ -2392,35 +2279,8 @@
       case 'photos-pref-pick': (data.photosPrefs ||= {})[ui.photosPrefList] = id; ui.overlay = ''; renderOverlay(); save(); render(); break;
       case 'photos-pref-online': toast(i18n.t('This feature is not part of the simulator.')); break;
       case 'photos-print': { const photo = photosCurrent(); ui.overlay = ''; renderOverlay(); if (photo) PrintSpooler.open(printContext(), {name: photo.name, image: ICSMedia.image(photo)}); break; }
-      // Chrome's Print…: the page as it is shown, its heading as the job's name.
-      case 'chrome-print': { const page = viewport.querySelector('.browser-page'); ui.overlay = ''; renderOverlay(); const title = page?.querySelector('h1, h2, strong')?.textContent?.trim() || ui.browserUrl; PrintSpooler.open(printContext(), {name: title, title, lines: String(page?.innerText || ui.browserUrl).split('\n').map(x => x.trim()).filter(Boolean)}); break; }
-      case 'chrome-a2hs': { const page = viewport.querySelector('.browser-page'); ui.a2hs = {url: ui.browserUrl, title: page?.querySelector('h1, h2, strong')?.textContent?.trim() || ui.browserUrl}; ui.overlay = 'chrome-a2hs'; renderOverlay(); overlayRoot.querySelector('[data-a2hs-title]')?.focus(); break; }
-      case 'chrome-a2hs-add': { const title = String(overlayRoot.querySelector('[data-a2hs-title]')?.value || ui.a2hs?.title || '').trim() || ui.a2hs.url; const item = {id: Date.now(), title, url: ui.a2hs.url}; (data.webShortcuts ||= []).push(item); ui.overlay = ''; renderOverlay(); placeShortcut(`web:${item.id}`, title); break; }
       case 'open-office-shortcut': {const f=officeFiles().find(f=>f.id===id&&!f.trashed);if(f){openApp(EditorMore.APP[f.kind]);ui.sub=f.id;ui.edFrom='';render();}break;}
-      case 'open-web-shortcut': { const item = (data.webShortcuts || []).find(w => String(w.id) === id); if (!item) break; openApp('chrome'); navigateBrowser(item.url); break; }
       case 'photos-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
-      case 'chrome-close-all': ui.browserSession = {tabs: [{history: [ChromeApp.NTP], index: 0}], active: 0}; ui.sub = ''; ui.overlay = ''; renderOverlay(); saveBrowserState(); render(); break;
-      case 'chrome-ntp': chromeSection(id); break;
-      case 'chrome-bookmarks': chromeSection('bookmarks'); break;
-      case 'chrome-devices': chromeSection('devices'); break;
-      case 'chrome-history': ui.chromeHistoryQuery = ''; navigateBrowser(ChromeApp.HISTORY); break;
-      case 'chrome-share': { const link = ui.browserUrl; ui.overlay = ''; renderOverlay(); if (ChromeApp.internal(link)) break; openApp('messaging'); ui.sub = 'new'; lp.messageDraft().body = link.startsWith('search:') ? link.slice(7) : `http://${link}`; save(); render(); break; }
-      case 'chrome-desktop': ui.chromeDesktop = !ui.chromeDesktop; ui.overlay = ''; renderOverlay(); render(); break;
-      case 'chrome-settings': ui.overlay = ''; renderOverlay(); ui.sub = 'chrome-settings'; ui.chromePrefStack = []; ui.chromePrefMenu = false; ui.chromeConfirm = ''; render(); break;
-      case 'chrome-pref-menu': ui.chromePrefMenu = !ui.chromePrefMenu; render(); break;
-      case 'chrome-list-open': ui.chromeList = id; render(); break;
-      case 'chrome-list-pick': { const [key, value] = id.split(':'); (data.chromePrefs ||= {})[key] = Number(value); ui.chromeList = ''; save(); render(); break; }
-      case 'chrome-list-close': ui.chromeList = ''; render(); break;
-      case 'chrome-noop': break;
-      // Clear browsing data: the dialog's ticks, then a short "Please wait…" before the history goes.
-      case 'chrome-clear-open': ui.chromePrefMenu = false; ui.chromeClear = Object.fromEntries(ChromeApp.CLEAR_ITEMS.map(([key, , on]) => [key, on])); render(); break;
-      case 'chrome-clear-toggle': if (ui.chromeClear) { ui.chromeClear[id] = !ui.chromeClear[id]; render(); } break;
-      case 'chrome-clear-cancel': ui.chromeClear = null; render(); break;
-      case 'chrome-clear-run': { const picked = ui.chromeClear; if (!picked) break; ui.chromeClear = {...picked, busy: true}; render(); setTimeout(() => { if (picked.history) { data.browserHistory = []; ui.chromeHistoryQuery = ''; } ui.chromeClear = null; save(); render(); }, 900); break; }
-      case 'chrome-unsupported': ui.chromePrefMenu = false; if (ui.sub === 'chrome-settings') render(); ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
-      case 'browser-tab': ui.browserSession.active = Number(id); ui.sub = ''; ui.browserFind = undefined; saveBrowserState(); render(); break;
-      case 'browser-new-tab': if (ui.view === 'chrome') { chromeNewTab(false); break; } if (!ICSBrowserSession.add(ui.browserSession)) { toast('Tab limit reached'); break; } ui.sub = ''; ui.overlay = ''; ui.browserFind = undefined; saveBrowserState(); render(); break;
-      case 'browser-save': ui.overlay = ''; renderOverlay(); if (!data.bookmarks.includes(ui.browserUrl)) { data.bookmarks.push(ui.browserUrl); save(); toast('Bookmark saved'); } else toast('Already bookmarked'); break;
       case 'lpx-open': {const f=officeFiles().find(f=>f.id===id);if(f){data.driveFiles=officeFiles().map(f=>f.id===id?{...f,otime:Date.now()}:f);save();}} ui.edFrom = ui.sub; ui.sub = id; render(); break;
       // Docs / Sheets / Slides: Add new opens an untitled file; the actions menu renames or removes one (Drive shows the same list).
       case 'ed-new': { const kind = LPExtraApps.KIND[ui.view], E = key => AndroidStrings.pick(window.StockStrings?.editors?.[key], i18n.language, key), base = E(LPExtraApps.UNTITLED[kind]), names = new Set(officeFiles().map(f => f.name)); let name = base, n = 2; while (names.has(name)) name = `${base} (${n++})`;
@@ -2492,9 +2352,6 @@
     // The screens' own forms (lp-*.js modules).
     if (LP.submit(form.dataset.form, values, event, form)) return;
     switch (form.dataset.form) {
-      case 'browser-find': ui.browserFind=String(values.get('query')||'').trim(); render(); break;
-      case 'address': navigateBrowser(values.get('address')); break;
-      case 'web-search': navigateBrowser(`search:${values.get('query')}`); break;
       case 'maps-search': ui.mapsQuery = String(values.get('query') || '').trim().slice(0, 60); window.MapsPrefs?.remember(data, ui.mapsQuery); save(); render(); break;
       case 'ed-search': { const query = String(values.get('query') || '').trim(); if (!query) return; ui.edQuery = query; ui.sub = 'results'; render(); break; }
       case 'drive-search': { const query = String(values.get('query') || '').trim(); if (!query) return; ui.driveQuery = query; ui.sub = 'results'; render(); break; }
@@ -2503,7 +2360,6 @@
       case 'keep-li-add': { const text = String(values.get('text') || '').trim(), note = keepCurrent(); if (!text || !note?.list) return; note.list.push({text, checked: false}); save(); render(); viewport.querySelector('.kp-ed-add input')?.focus(); break; }
       case 'keep-add': { const text = String(values.get('text') || '').trim(); if (!text) return; data.keepNotes = [{id: 'k' + Date.now(), text, color: (data.keepNotes || []).length % 5}, ...(data.keepNotes || [])]; save(); render(); break; }
       case 'earth-search': ui.earthSearching = false; EarthApp.search(values.get('query'), earthContext()); render(); break;
-      case 'chrome-history-search': ui.chromeHistoryQuery = String(values.get('query') || '').trim(); render(); break;
       case 'sd-volumes': for(const key of ['mediaVolume','ringVolume','alarmVolume'])data.settings[key]=Math.max(0,Math.min(100,Number(values.get(key))));save();ui.overlay='';render();break;
       case 'sd-choice': {const choice=String(values.get('choice'));if(ui.settingsField==='sleep')data.settings.sleep=Number(choice);else if(['windowScale','transitionScale','animatorScale'].includes(ui.settingsField))data.settings[ui.settingsField]=Number(choice);else if(ui.settingsField==='font'){data.settings.fontSize=choice;data.settings.largeText=choice==='large'||choice==='huge';}else if(ui.settingsField==='silent'){data.settings.silent=choice!=='off';data.settings.silentMode=choice;}else data.settings[ui.settingsField]=choice;save();ui.overlay='';render();break;}
       default: break;
@@ -2528,7 +2384,6 @@
       if (key === 'until') { r.until = value; return; }
       r[key] = Number(value); if (key === 'end' && r.end === 1 && !r.until) r.until = ICSCalendar.iso(new Date(deviceDate().getTime() + 30 * 864e5)); render(); return; }
     if (event.target.matches('[data-lng-seek]') && InputLanguage.input(event.target, langContext())) return;
-    if (event.target.matches?.('[data-chr-seek]')) { const ctx = {ui, data, locale: i18n.locale()}; ChromeApp.prefSeek(event.target.value, ctx); ChromeApp.seekPaint(viewport, ctx); save(); return; }
     if (event.target.matches('[data-keep-search]')) { ui.keepQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-keep-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
     if (event.target.matches('[data-photos-search]')) { ui.photosQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-photos-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
     if (event.target.matches('[data-pa-search]')) { ui.paQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-pa-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
@@ -3539,9 +3394,9 @@
     get homeLongPressTimer() { return homeLongPressTimer; }, set homeLongPressTimer(v) { homeLongPressTimer = v; },
     get i18n() { return i18n; }, get keepAttach() { return keepAttach; },
     get messageHoldTimer() { return messageHoldTimer; }, set messageHoldTimer(v) { messageHoldTimer = v; },
-    get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; },
-    get openApp() { return openApp; }, get overlayRoot() { return overlayRoot; },
-    get photosContext() { return photosContext; }, get placeShortcut() { return placeShortcut; },
+    get nextAlarmLabel() { return nextAlarmLabel; }, get openApp() { return openApp; },
+    get overlayRoot() { return overlayRoot; }, get photosContext() { return photosContext; },
+    get placeShortcut() { return placeShortcut; },
     get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; },
     get printContext() { return printContext; }, get reducedMotion() { return reducedMotion; },
     get render() { return render; }, get renderOverlay() { return renderOverlay; },
@@ -3549,9 +3404,9 @@
     get save() { return save; }, get screen() { return screen; }, get snapResting() { return snapResting; },
     get storeContext() { return storeContext; },
     get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; },
-    get suppressReleaseClick() { return suppressReleaseClick; }, get toast() { return toast; },
-    get today() { return today; }, get ui() { return ui; }, get viewport() { return viewport; },
-    get wallpaperFiles() { return wallpaperFiles; }
+    get suppressReleaseClick() { return suppressReleaseClick; }, get syncBrowserState() { return syncBrowserState; },
+    get toast() { return toast; }, get today() { return today; }, get ui() { return ui; },
+    get viewport() { return viewport; }, get wallpaperFiles() { return wallpaperFiles; }
   });
   // lp:kernel-end
   LP.start();

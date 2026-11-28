@@ -1,8 +1,8 @@
 /* TODO */
 'use strict';
 LP.define('clock', ({
-  clone, defaultData, deviceDate, dp, i18n, navigateBrowser, nextAlarmLabel, openApp, overlayRoot, render,
-  renderOverlay, renderStatus, safe, save, screen, toast, ui, viewport
+  clone, defaultData, deviceDate, dp, i18n, nextAlarmLabel, openApp, overlayRoot, render, renderOverlay,
+  renderStatus, safe, save, screen, toast, ui, viewport
 }, lp) => {
   // 4.2 DeskClock pages; the alarm list and editor keep the ICS AlarmClock/SetAlarm screens.
   const jbClockState = () => { lp.data.jbClock ||= {tab: 'clock', timers: [], stopwatch: {accumulated: 0, started: null, laps: []}}; return {...lp.data.jbClock, timerDigits: ui.timerDigits || '', timerSetup: !!ui.timerSetup}; };
@@ -137,7 +137,7 @@ LP.define('clock', ({
         const result = ClockPrefs.handle(action, id, {data: lp.data, ui});
         if (['cpref-main', 'jbclock-cities-menu'].includes(ui.overlay)) { ui.overlay = ''; renderOverlay(); }
         if (result === 'save') save();
-        if (result?.open) { openApp('chrome'); navigateBrowser(result.open); return; }
+        if (result?.open) { openApp('chrome'); lp.navigateBrowser(result.open); return; }
         if (result) { render(); return; }
       }
       // lp:click
