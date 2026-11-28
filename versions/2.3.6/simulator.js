@@ -417,49 +417,6 @@
     });
   }
   function lockScreen(){captureRecentView();lockControls.lock();ui.locked=ICSLockscreen.secure(data);ui.gbPasswordEntry=false;ui.sleeping=data.settings.screenLock==='none';ui.view=ui.sleeping?'home':'lock';ui.overlay='';render();}
-  /* MultiWaveView (keyguard_screen_tab_unlock): targets sit on the ring (radius 135dp), the handle follows the
-     finger inside it and snaps to a target within the 60dp hit radius. Release elsewhere returns the handle in
-     300 ms (Quart ease-out), fades the targets after 200 ms over 1200 ms, then pings the right chevrons
-     (three, 160 ms apart, 850 ms Quad ease-out, scale 0.5 -> 2, alpha 1 -> 0). */
-  const lockWave = {radius: 112, hit: 54};
-  function lockPing() {
-    const chevrons = [...viewport.querySelectorAll('.lock-chevron')];
-    if (!chevrons.length || reducedMotion?.matches) return;
-    chevrons.forEach((chevron, index) => {
-      chevron.getAnimations().forEach(animation => animation.cancel());
-      chevron.animate([{transform: 'translateX(39px) scale(.5)', opacity: 1}, {transform: `translateX(${lockWave.radius * .9}px) scale(2)`, opacity: 0}], {duration: 850, delay: index * 160, easing: 'cubic-bezier(.25,.46,.45,.94)', fill: 'backwards'});
-    });
-  }
-  function lockMove(dx, dy) {
-    const handle = viewport.querySelector('.lock-handle');
-    if (!handle) return null;
-    const distance = Math.hypot(dx, dy), scale = distance > lockWave.radius ? lockWave.radius / distance : 1;
-    let x = dx * scale, y = dy * scale, active = null;
-    for (const [name, tx] of [['unlock', lockWave.radius], ['camera', -lockWave.radius]]) if (Math.hypot(x - tx, y) < lockWave.hit) { active = name; x = tx; y = 0; }
-    handle.style.setProperty('--lock-x', `${x}px`); handle.style.setProperty('--lock-y', `${y}px`);
-    viewport.querySelectorAll('.lock-target').forEach(target => target.classList.toggle('active', target.classList.contains(`lock-target-${active}`)));
-    handle.classList.toggle('over-target', !!active);
-    if (active && active !== pointerStart?.lockActive && data.settings.haptic !== false) navigator.vibrate?.(20);
-    return active;
-  }
-  function lockRelease(active) {
-    const handle = viewport.querySelector('.lock-handle');
-    screen.classList.remove('lock-dragging');
-    if (active) {
-      viewport.querySelectorAll(`.lock-target:not(.lock-target-${active})`).forEach(target => target.classList.add('dismissed'));
-      viewport.querySelector('.lock-outer-ring')?.classList.add('dismissed');
-      suppressClickUntil = Date.now() + 350;
-      if (active === 'unlock') home(); else openApp('camera');
-      return;
-    }
-    viewport.querySelectorAll('.lock-target').forEach(target => target.classList.remove('active'));
-    if (!handle) return;
-    handle.classList.remove('over-target');
-    screen.classList.add('lock-releasing');
-    handle.style.setProperty('--lock-x', '0px'); handle.style.setProperty('--lock-y', '0px');
-    clearTimeout(ui.lockReleaseTimer);
-    ui.lockReleaseTimer = setTimeout(() => { screen.classList.remove('lock-releasing'); lockPing(); }, 300);
-  }
   // Next alarm as NEXT_ALARM_FORMATTED ("EEE h:mm aa" or "EEE k:mm") and the lock screen date (full_wday_month_day_no_year).
   function nextAlarmLabel() {
     const next = data.alarms.filter(alarm => alarm.enabled).map(alarm => ICSDeskClock.nextOccurrence(alarm, deviceDate())).filter(Boolean).sort((a, b) => a - b)[0];
@@ -1483,10 +1440,8 @@
     const widgetList = ui.view === 'home' && !ui.overlay ? event.target.closest('.calw-list') : null;
     const scrollTarget = widgetList || (event.pointerType === 'mouse' && !ui.overlay && !event.target.closest('input, select, textarea, .wallpaper-choice')
       ? (ui.view === 'settings' && event.target.closest('.settings-app .app-content') ? event.target.closest('.settings-app') : event.target.closest('.play-content,.mms-scroll,.people-scroll,.browser-page,.web-tabs,.web-library,.gbdc-alarms,.gallery-scroll,.cal-scroll,.music-library-scroll,.email-scroll')) : null);
-    pointerStart = { x: event.clientX, y: event.clientY, target: event.target, source: dragSource(event.target), pointerType: event.pointerType, pointerId: event.pointerId, downTime: performance.now(), scrollTarget, scrollTop: scrollTarget?.scrollTop || 0, lockDrag: ui.view === 'lock' && !!event.target.closest('.lock-handle'), shadeDragEligible: !ui.overlay && !ui.locked && !!event.target.closest('#status-bar'), shadeCloseEligible: ui.overlay === 'shade' && !!event.target.closest('.gbsh-close'), pageSwipeEligible: ui.view === 'home' && !ui.overlay && !!event.target.closest('.home-view') && !event.target.closest('.dock, .page-indicators, .home-search'), drawerSwipeEligible: ui.view === 'drawer' && !!event.target.closest('.drawer-page') };
+    pointerStart = { x: event.clientX, y: event.clientY, target: event.target, source: dragSource(event.target), pointerType: event.pointerType, pointerId: event.pointerId, downTime: performance.now(), scrollTarget, scrollTop: scrollTarget?.scrollTop || 0, shadeDragEligible: !ui.overlay && !ui.locked && !!event.target.closest('#status-bar'), shadeCloseEligible: ui.overlay === 'shade' && !!event.target.closest('.gbsh-close'), pageSwipeEligible: ui.view === 'home' && !ui.overlay && !!event.target.closest('.home-view') && !event.target.closest('.dock, .page-indicators, .home-search'), drawerSwipeEligible: ui.view === 'drawer' && !!event.target.closest('.drawer-page') };
     if (ui.view === 'home' && !ui.overlay && event.target.closest('.home-slot') && !pointerStart.source) homeLongPressTimer = setTimeout(() => { ui.overlay = 'wallpaper-source'; renderOverlay(); pointerStart = null; suppressReleaseClick(); }, 550);
-    if (pointerStart.lockDrag) { clearTimeout(ui.lockReleaseTimer); viewport.querySelectorAll('.lock-chevron').forEach(chevron => chevron.getAnimations().forEach(animation => animation.cancel())); screen.classList.remove('lock-releasing'); screen.classList.add('lock-dragging'); try { screen.setPointerCapture(event.pointerId); } catch {} }
-    else if (ui.view === 'lock' && !ui.locked && event.target.closest('.lock-wave')) lockPing();
     if (ui.view === 'home' && !ui.overlay) pointerStart.photoStack = event.target.closest('[data-photo-stack]')?.dataset.photoStack || '';
     if (pointerStart.source) dragTimer = setTimeout(() => startDrag(event.clientX, event.clientY), 440);
   });
@@ -1514,7 +1469,6 @@
       recentCard.style.opacity = String(Math.max(.25, 1 - Math.abs(dx) / 240));
       return;
     }
-    if (pointerStart.lockDrag) { event.preventDefault(); pointerStart.lockActive = lockMove(dx, dy); return; }
     if (pointerStart.shadeDragging || pointerStart.shadeDragEligible && dy > dp(9) && dy > Math.abs(dx) || pointerStart.shadeCloseEligible && Math.abs(dy) > dp(5)) {
       const rect = screen.getBoundingClientRect(), scale = screen.clientHeight / rect.height;
       if (!pointerStart.shadeDragging) {
@@ -1604,12 +1558,6 @@
       shadeFling(track.y, velocity, expand);
       pointerStart = null; return;
     }
-    if (pointerStart.lockDrag) {
-      const active = lockMove(dx, dy);
-      if (!active && Math.hypot(dx, dy) > 6) suppressClickUntil = Date.now() + 350;
-      lockRelease(active);
-      pointerStart = null; return;
-    }
     if (pointerStart.scrolling) { screen.classList.remove('settings-scrolling'); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if (pointerStart.swiping || pointerStart.pageSwipeEligible && !dragState && Math.abs(dx) > dp(52) && Math.abs(dx) > Math.abs(dy) && (!pointerStart.source || pointerStart.source.type === 'home' && performance.now() - pointerStart.downTime < 260)) {
       finishHomePage(dx); pointerStart = null; return;
@@ -1620,7 +1568,7 @@
     if (ui.overlay === 'shade' && pointerStart.target.closest('.notification') && Math.abs(dx) > dp(64)) { const id = Number(pointerStart.target.closest('.notification').dataset.id); data.notifications = data.notifications.filter(n => n.id !== id); save(); renderStatus(); renderOverlay(); pointerStart = null; return; }
     pointerStart = null;
   });
-  window.addEventListener('pointercancel', () => { clearTimeout(messageHoldTimer); clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(dragState?.edgeTimer);clearTimeout(dragState?.folderExitTimer);clearTimeout(dragState?.folderHoverTimer);clearFolderDragFeedback();dragState?.ghost.remove(); clearDragOutlines(); dragState = null; screen.classList.remove('dragging', 'page-swiping', 'settings-scrolling', 'lock-dragging'); setHomePage(ui.page); const drawerPage = viewport.querySelector('.drawer-page'); if (drawerPage) drawerPage.style.transform = ''; const lockHandle = viewport.querySelector('.lock-handle'); if (lockHandle) lockHandle.style.removeProperty('--lock-x'); if (pointerStart?.shadeDragging || ui.overlay === 'recent' || ui.overlay === 'shade' || ui.overlay === 'folder') renderOverlay(); pointerStart = null; });
+  window.addEventListener('pointercancel', () => { clearTimeout(messageHoldTimer); clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(dragState?.edgeTimer);clearTimeout(dragState?.folderExitTimer);clearTimeout(dragState?.folderHoverTimer);clearFolderDragFeedback();dragState?.ghost.remove(); clearDragOutlines(); dragState = null; screen.classList.remove('dragging', 'page-swiping', 'settings-scrolling'); setHomePage(ui.page); const drawerPage = viewport.querySelector('.drawer-page'); if (drawerPage) drawerPage.style.transform = ''; if (pointerStart?.shadeDragging || ui.overlay === 'recent' || ui.overlay === 'shade' || ui.overlay === 'folder') renderOverlay(); pointerStart = null; });
   document.addEventListener('keydown', event => {
     const focusedStack = ui.view === 'home' && !ui.overlay && document.activeElement?.closest?.('[data-photo-stack]');
     if (focusedStack && ['ArrowUp','ArrowDown'].includes(event.key)) { event.preventDefault(); const id = focusedStack.dataset.photoStack; stepPhotoStack(id, event.key === 'ArrowDown' ? 1 : -1); viewport.querySelector(`[data-photo-stack="${CSS.escape(id)}"] .phw-front`)?.focus(); return; }
