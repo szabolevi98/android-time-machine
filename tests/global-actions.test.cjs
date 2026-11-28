@@ -59,10 +59,12 @@ async function playOrder(v,exitAfter,frames){
     d.parts.forEach((p,i)=>assert.equal(frames[`part${i}`],p.count?p.count*p.frames:p.frames,`${v} part${i}`));}
   {const frames={};await playOrder('2.3.6',30,frames);assert.equal(frames.part1%49,0,'2.3.6: the looping X shine is not cut off half-way');}
   // Cold start: a new tab boots each version once (sessionStorage), after the first render, into the lock screen.
-  // simulator.js ends with the cold boot; the boot itself may have moved into a module (lib/engine-source.cjs).
-  for(const v of ['2.3.6','4.0.4','4.3','4.4.4','5.1.1']){const src=fs.readFileSync(`versions/${v}/simulator.js`,'utf8').replace(/\r\n/g,'\n'),engine=engineSource(v).replace(/\r\n/g,'\n');
+  // simulator.js (or the core it moved into: 5.1.1's lp-core.js, whose start() runs on DOMContentLoaded) ends with
+  // the cold boot; the boot itself may have moved into a module (lib/engine-source.cjs).
+  for(const v of ['2.3.6','4.0.4','4.3','4.4.4','5.1.1']){const main=fs.existsSync(`versions/${v}/simulator.js`)?`versions/${v}/simulator.js`:`versions/${v}/lp-core.js`;
+    const src=fs.readFileSync(main,'utf8').replace(/\r\n/g,'\n'),engine=engineSource(v).replace(/\r\n/g,'\n');
     assert.ok(engine.includes(`AndroidBoot.shouldBoot('${v}')`)&&engine.includes('AndroidBoot.prepare'),v);
-    assert.ok(/\n  render\(\);\n  coldBoot\(\);\n\}\)\(\);\s*$/.test(src),`${v}: coldBoot after the first render`);
+    assert.ok(/\n  render\(\);\n  coldBoot\(\);\n(\}\)\(\);|\}\ndocument\.addEventListener\('DOMContentLoaded', start\);)\s*$/.test(src),`${v}: coldBoot after the first render`);
     assert.ok(/const finish = \(\) => \{[^\n]*lockScreen\(\)/.test(engine),`${v}: the boot ends on the lock screen`);}
   console.log('Global actions checks passed: item order per version, ringer modes, dialogs, assets and boot animations.');
 })().catch(error=>{console.error(error);process.exit(1);});
