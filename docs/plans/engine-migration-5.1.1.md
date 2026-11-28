@@ -35,3 +35,4 @@ the module core, screen by screen, until it is gone.
 | 2 | Document picker | lp-docpicker-app.js | moved |
 | 2 | Camera | lp-camera-app.js | moved |
 | 2 | Clock | lp-clock.js | moved |
+| 2 | Calendar (with its date, time and time zone pickers) | lp-calendar.js | moved |
