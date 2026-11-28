@@ -726,7 +726,6 @@
   function renderApp() {
     if (StoreHost.has(ui.view)) return StoreHost.render(ui.view, storeContext());
     switch (ui.view) {
-      case 'ears-history': return Ears.history(data.earsHistory || [], i18n.language, i18n.locale());
       case 'wallpaper-picker': return `<div class="app-view wallpaper-picker"><div class="actionbar"><button class="up" data-action="back" aria-label="Back">‹</button><h2>Wallpapers</h2></div><div class="app-content dark">${wallpaperChoices()}</div></div>`;
       default: return renderHome();
     }
@@ -774,7 +773,6 @@
     if (!ui.view.startsWith('store-') && StoreHost.has(ui.view) && StoreHost.module(ui.view).back?.(storeContext())) return;
     if (ui.overlay.startsWith('widget-photo')) { cancelPhotoWidget(); return; }
     if (ui.overlay) { ui.overlay = ''; render(); return; }
-    if (ui.view === 'ears-history' && !ui.overlay) { home(false); return; }
     if (ui.view === 'lock' && ui.kgChallenge?.bouncing()) { ui.kgChallenge.hideBouncer(); return; }
     if (ui.view === 'lock') return;
     if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return; }
@@ -788,27 +786,6 @@
     clearTimeout(ui.toastTimer); ui.toastTimer = setTimeout(() => element.remove(), 2500);
   }
   let openFolderId = '';
-  /* Sound Search capture: EarsWidgetCaptureService listens for at most Ears.CAPTURE_MS; here the song the Music app is
-     playing is recognized after Ears.MATCH_MS, anything else ends without a match. The widget alone is repainted. */
-  function earsPaint() { viewport.querySelectorAll('.widget-ears').forEach(node => { const id = node.dataset.widgetId; node.innerHTML = Ears.widget(ui.ears, i18n.language) + (node.querySelector('[data-resize-frame]')?.outerHTML || ''); }); }
-  function earsStart() {
-    clearTimeout(ui.earsTimer); clearInterval(ui.earsTick);
-    const hears = ui.music.playing ? tracks[ui.music.track] : null;
-    ui.ears = {phase: 'listening', started: Date.now(), hears}; earsPaint();
-    ui.earsTick = setInterval(() => { if (ui.ears?.phase === 'listening') earsPaint(); else clearInterval(ui.earsTick); }, 150);
-    ui.earsTimer = setTimeout(earsFinish, hears ? Ears.MATCH_MS : Ears.CAPTURE_MS);
-  }
-  function earsFinish() {
-    if (ui.ears?.phase !== 'listening') return;
-    clearTimeout(ui.earsTimer); clearInterval(ui.earsTick);
-    const song = ui.music.playing ? tracks[ui.music.track] : null;
-    ui.ears = {phase: 'lookup'}; earsPaint();
-    ui.earsTimer = setTimeout(() => {
-      if (song) { ui.ears = {phase: 'result', title: song.title, artist: song.artist}; data.earsHistory = [{title: song.title, artist: song.artist, time: Date.now()}, ...(data.earsHistory || [])].slice(0, 100); save(); }
-      else ui.ears = {phase: 'nomatch'};
-      earsPaint();
-    }, Ears.LOOKUP_MS);
-  }
   /* RecentsPanelView.handleSwipe and the card's "Remove from list": ActivityManager.removeTask(id, REMOVE_TASK_KILL_PROCESS).
      The task and its saved state go; when it is the app on screen, that app is gone too, so once the panel closes (Back,
      the Recent apps key, the scrim, the last card) the home screen is there, with no app-closing transition. */
@@ -831,13 +808,6 @@
     else if (ui.overlay === 'shade') {
       const call = ui.activeCall ? `<button class="phone-resume-call" data-action="open-app" data-app="phone">${safe(i18n.t('Ongoing call'))} · ${safe(contactByPhone(ui.activeCall.number)?.name||ui.activeCall.number)}</button>` : '';
       overlayRoot.innerHTML = '<div class="jb-shade-scrim" data-action="close-overlay"></div>' + JBShade.render({...data, notifications: data.notifications.map(decorateNotification)}, ui, key => i18n.t(key), {locale: i18n.locale(), clock: clock(), date: fullDate(), carrier: data.settings.airplane ? i18n.t('No service.') : (data.settings.networkOperator || 'Telekom'), alarm: nextAlarmLabel(), extra: call});
-    } else if (ui.overlay === 'ears-menu') {
-      // history_menu.xml in the Holo dark overflow.
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu ears-menu" data-no-translate>${Ears.menu(i18n.language).map(([action, title]) => `<button data-action="${action}">${safe(title)}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'ears-clear') {
-      // Clear all: an AlertDialog with delete_all_confirmation and No / Yes.
-      const T = key => Ears.text(i18n.language, key);
-      overlayRoot.innerHTML = `<div class="ga-scrim" data-action="close-overlay"></div><div class="ga-dialog ga-alert" role="alertdialog" aria-label="${safe(T('delete_all'))}" data-no-translate><p class="ga-body">${safe(T('delete_all_confirmation'))}</p><div class="ga-buttons"><button type="button" data-action="close-overlay">${safe(T('no'))}</button><button type="button" data-action="ears-clear">${safe(T('yes'))}</button></div></div>`;
     } else if (ui.overlay === 'store-host') {
       overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
     } else if (ui.overlay === 'dream') {
@@ -1098,14 +1068,6 @@
       case 'widget-photo-image': configurePhotoWidget({source: 'photo', photo: Number(id)}); break;
       case 'widget-photo-cancel': cancelPhotoWidget(); break;
       case 'open-wallpapers': ui.overlay = ''; ui.view = 'wallpaper-picker'; render(); break;
-      case 'ears-listen': earsStart(); break;
-      case 'ears-stop': earsFinish(); break;
-      case 'ears-close': clearTimeout(ui.earsTimer); ui.ears = {phase: 'idle'}; earsPaint(); break;
-      case 'ears-history': captureRecentView(); ui.view = 'ears-history'; ui.sub = ''; ui.overlay = ''; render(); break;
-      case 'ears-menu': ui.overlay = 'ears-menu'; renderOverlay(); break;
-      case 'ears-account': ui.overlay = ''; renderOverlay(); toast('This feature is not part of the simulator.'); break;
-      case 'ears-clear-ask': ui.overlay = 'ears-clear'; renderOverlay(); break;
-      case 'ears-clear': data.earsHistory = []; save(); ui.overlay = ''; render(); break;
       case 'open-live-wallpapers': ui.overlay = ''; ui.view = 'live-wallpapers'; ui.sub = ''; render(); break;
       // LiveWallpaperPreview.setLiveWallpaper: set it and return to the launcher.
       case 'market': openApp('play-store'); break;
