@@ -58,8 +58,8 @@ Bugs fixed on the way (their own commits):
 - The Menu key over a Google app's settings screen (Gmail, Talk, YouTube, Maps…) opened the app's own menu: the
   settings screen is asked first now (it has none, or Restore default settings).
 - A key typed in Focus Timer, Pocket Planner or Daily Weather threw (their spec's `key` is their store id, which the
-  host called as the key handler; store-apps.mjs 2.3.6 failed on main): only a function is called now. 4.0.4–5.1.1
-  may have the same (not checked here).
+  host called as the key handler; store-apps.mjs 2.3.6 failed on main). Fixed for every version in the host on main
+  (9552645e); the 2.3.6-side guard went when main was merged in.
 
 Notes:
 

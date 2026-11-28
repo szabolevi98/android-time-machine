@@ -700,8 +700,7 @@ GB.gesture = (root, {move, end, cancel}) => {
     });
     document.addEventListener('keydown', event => {
       if (event.target.matches('.recent-item,.web-tab-preview') && ['Enter',' '].includes(event.key)) { event.preventDefault(); event.target.click(); return; }
-      // A store app's own key (its store id: Focus Timer, Pocket Planner, Daily Weather) is not a key handler.
-      if (moduleView() && typeof StoreHost.module(ui.view).key === 'function' && StoreHost.key(event, storeContext())) return;
+      if (moduleView() && StoreHost.key(event, storeContext())) return;
       if (event.key === 'Escape' || event.key === 'Backspace' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); back(); }
       else if (event.key === 'Home' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); if (ui.view !== 'lock') home(); }
 
