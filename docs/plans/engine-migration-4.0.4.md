@@ -35,7 +35,7 @@ following the pattern of 2.3.6's Calculator (commit 3585865f).
 - [x] `ics-core.js`, the module dispatch in simulator.js, Calculator (`ics-calculator.js`)
 - [x] Clock, Calendar (with the framework pickers), Music, Phone, Browser, People, Messaging, Email
 - [x] Gallery, Camera
-- [ ] Settings
+- [x] Settings
 - [ ] Play Store, Downloads, Gmail, Play Music, the Google apps, Maps / Navigation / Places / Latitude, Earth,
       News & Weather, Messenger, Movie Studio
 - [ ] The shell: status bar, lock screen, home and the drawer (widgets, folders, clings, wallpapers), shade, Recents,
