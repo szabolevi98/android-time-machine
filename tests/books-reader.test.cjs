@@ -1,3 +1,4 @@
+const engineSource=require('./lib/engine-source.cjs');
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Play Books' reader settings and contents (audit step 6): the Display options in each image's order with working
@@ -74,7 +75,7 @@ const load=(v,files)=>{const context={window:{}};for(const f of files)vm.runInNe
   assert.ok(G.render('play-books',ctx({gaBkOptions:true,gaBkSpin:'theme'})).includes('data-id="theme:1"'));
   const pr=B.bookPrefs({});assert.equal(B.stepPref(pr,'textZoom',1),1.1);assert.equal(B.stepPref(pr,'lineHeight',-1),1.55);assert.equal(B.stepPref(pr,'lineHeight',1),1.8);assert.equal(B.stepPref({...pr,textZoom:.1},'textZoom',-1),.1);
   assert.ok(G.render('play-books',ctx({},{gaBookPrefs:{theme:'1',typeface:'Vollkorn'}})).includes('ga-bk-night ga-bk-face-Vollkorn'));
-  const sim=fs.readFileSync('versions/4.0.4/simulator.js','utf8');assert.ok(sim.includes('[data-ga-bk-bright]')&&sim.includes("ui.gaBkSpin || ui.gaBkOptions || ui.gaBkToc"));
+  const sim=engineSource('4.0.4');assert.ok(sim.includes('[data-ga-bk-bright]')&&sim.includes("ui.gaBkSpin || ui.gaBkOptions || ui.gaBkToc"));
 }
 // 2.3.6: Books 1.2.2: menu/reader.xml, ReadingPreferenceActivity (preview, Text size, Typeface, Line space,
 // Justification, Themes, Brightness) and reader_tab_chapters.xml.

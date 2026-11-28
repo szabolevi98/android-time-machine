@@ -1,3 +1,4 @@
+const engineSource=require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs');
 // T48 (core part): the apps the limits work touched refuse with the one translated key; no untranslated variant of the
 // same meaning is left in them.
@@ -12,7 +13,7 @@ for(const file of TOUCHED){
 }
 // The shells: People's menus and Email's unavailable rows.
 for(const v of ['4.0.4','4.3','4.4.4','5.1.1']){
-  const s=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');
+  const s=engineSource(v);
   assert.ok(s.includes(`PeopleStrings.t(key), unavailable = '${KEY}'`),v);
   assert.ok(s.includes(`case 'emailpref-unsupported': toast('${KEY}')`),v);
   assert.ok(!/email-unavailable'[^\n]*Not available in this simulator/.test(s),v);

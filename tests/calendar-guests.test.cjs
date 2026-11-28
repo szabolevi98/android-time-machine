@@ -1,3 +1,4 @@
+const engineSource=require('./lib/engine-source.cjs');
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Calendar (audit step 6): guests, Show me as / Privacy (5.1: Visibility) and the event's time zone (4.3 / 4.4.4: the
@@ -26,7 +27,7 @@ for(const v of ['4.0.4','4.3','4.4.4','5.1.1']){
     const allDay=details({date:'2027-01-01',endDate:'2027-01-02',time:'01:30',endTime:'02:30',tz:'Asia/Tokyo',allDay:true});
     assert.match(allDay,/Friday, January 1, 2027 – Saturday, January 2, 2027/);assert.doesNotMatch(allDay,/17:30|GMT|December 31/);
   }
-  const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');assert.ok(sim.includes("event.guests=String(values.get('guests')||'').trim();event.tz=String(values.get('tz')||'');"),v);
+  const sim=engineSource(v);assert.ok(sim.includes("event.guests=String(values.get('guests')||'').trim();event.tz=String(values.get('tz')||'');"),v);
   assert.ok(fs.readFileSync(`versions/${v}/index.html`,'utf8').includes(PICKER?'tzpicker.js?v=':'calendar-timezones.js?v='),v);
 }
 console.log('calendar-guests ok');

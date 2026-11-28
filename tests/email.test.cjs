@@ -1,3 +1,4 @@
+const engineSource=require('./lib/engine-source.cjs');
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Email 4.0.4 (versions/4.0.4/email.js from docs/templates/ics-email.template.js): the mailbox model, then the screens and menus of
@@ -39,8 +40,8 @@ mail.handle('email-compose',null,ctx);assert.equal(mail.shown(data.mailbox,'Draf
 assert.ok(mail.submit('email',new Map([['to',''],['subject','x'],['body','y']]),ctx));assert.ok(toasts.includes('You must add at least one recipient.'));
 assert.ok(mail.submit('email',new Map([['to','alex@example.com'],['subject','Hi'],['body','There']]),ctx));assert.equal(mail.list(data.mailbox,'Sent').length,1);
 ctx.lang='hu';ui.sub='';ui.emailFolder='Inbox';html=mail.render(ctx);assert.ok(html.includes('Beérkezett üzenetek'));
-const sim=fs.readFileSync('versions/4.0.4/simulator.js','utf8');
-assert.ok(sim.includes("if (ui.view === 'email' && action.startsWith('email-') && ICSEmail.handle(action, id, emailContext())) return;")&&sim.includes("case 'gallery-pick':"));
+const sim=engineSource('4.0.4');
+assert.ok(sim.includes("if (ui.view === 'email' && action.startsWith('email-') && ICSEmail.handle(action, id, emailContext(c))) return true;")&&sim.includes("case 'gallery-pick':"));
 // Email 4.3 (versions/4.3/email.js from docs/templates/email-4.3.template.js): one menu per screen; the message view adds Mark as
 // unread to the bar, the folder list has no menu and a plain "Folders" title.
 {

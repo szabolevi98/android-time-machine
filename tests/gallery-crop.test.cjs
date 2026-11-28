@@ -1,3 +1,4 @@
+const engineSource=require('./lib/engine-source.cjs');
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Gallery crop on 2.3.6 (Gallery3D's CropImage / HighlightView) and 4.0.4 (Gallery2's CropImage / CropView): the menu
@@ -57,7 +58,7 @@ for(const v of ['2.3.6','4.0.4']){
   assert.ok(Math.abs(c.x-.2)<1e-9&&Math.abs(c.w-.5)<1e-9&&Math.abs(c.h-.6)<1e-9);
   assert.equal(M.cropDrag({clientX:5,clientY:5},frame,c,()=>{}),false);
   assert.ok(M.overlay(data,{overlay:'gallery-crop-saving',selectedPhoto:1},t,'hu','hu').includes('Kép mentése...'));
-  const sim=fs.readFileSync('versions/4.0.4/simulator.js','utf8');
+  const sim=engineSource('4.0.4');
   assert.ok(sim.includes("case 'gallery-crop-save':")&&sim.includes('ui.selectedPhoto=copy.id')&&sim.includes("if (ui.overlay === 'gallery-crop-saving') return;"));
 }
 console.log('gallery-crop ok');

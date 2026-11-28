@@ -33,7 +33,7 @@ following the pattern of 2.3.6's Calculator (commit 3585865f).
 ## Progress
 
 - [x] `ics-core.js`, the module dispatch in simulator.js, Calculator (`ics-calculator.js`)
-- [ ] Clock, Calendar (with the framework pickers), Music, Phone, Browser, People, Messaging, Email
+- [x] Clock, Calendar (with the framework pickers), Music, Phone, Browser, People, Messaging, Email
 - [ ] Gallery, Camera
 - [ ] Settings
 - [ ] Play Store, Downloads, Gmail, Play Music, the Google apps, Maps / Navigation / Places / Latitude, Earth,

@@ -1,3 +1,4 @@
+const engineSource=require('./lib/engine-source.cjs');
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // News & Weather (audit step 6): GenieWidget's Preferences (weather, news topics, refresh) with their effects, the
@@ -33,5 +34,5 @@ for(const v of ['4.0.4','4.3','4.4.4']){
   NP.refresh(d,Date.UTC(2014,5,20,10));const rs=S.render('news-weather',{...ctx,ui:{newsSub:'settings',nwpScreen:'refresh'},data:d});assert.ok(rs.includes('Utolsó frissítés')||rs.includes('Last refresh'),v);
   assert.ok(rendered>5);
 }
-const ics=fs.readFileSync('versions/4.0.4/simulator.js','utf8');assert.ok(ics.includes("ui.view==='news-weather'&&!ui.newsSub")&&ics.includes("else if(ui.view==='news-weather'){ui.overlay='sa-menu'"));
+const ics=engineSource('4.0.4');assert.ok(ics.includes("ui.view==='news-weather'&&!ui.newsSub")&&ics.includes("if(ui.view==='news-weather'){ui.overlay='sa-menu'"));
 console.log('news-weather ok');
