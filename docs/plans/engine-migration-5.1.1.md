@@ -30,3 +30,7 @@ the module core, screen by screen, until it is gone.
 | 1 | the core | lp-core.js | started |
 | 2 | Calculator | lp-calculator.js | moved |
 | 2 | Downloads | lp-downloads-app.js | moved |
+| 2 | Wallpaper picker | lp-wallpaper-picker-app.js | moved |
+| 2 | Live Wallpapers | lp-live-wallpapers.js | moved |
+| 2 | Document picker | lp-docpicker-app.js | moved |
+| 2 | Camera | lp-camera-app.js | moved |

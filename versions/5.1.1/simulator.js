@@ -485,9 +485,7 @@
     const fitRoot=viewport.querySelector('[data-fit-more]');
     if(ui.fitMoreHook&&ui.fitMoreHook.root!==fitRoot){ui.fitMoreHook.destroy();ui.fitMoreHook=null;}
     if(fitRoot&&!ui.fitMoreHook)ui.fitMoreHook={...FitMore.attach(fitRoot,fitContext()),root:fitRoot};
-    if (ui.jbcam && !viewport.querySelector('[data-gcam]')?.isSameNode(ui.jbcam.root)) { ui.jbcam.destroy(); ui.jbcam = null; }
-    const camRoot = viewport.querySelector('[data-gcam]');
-    if (camRoot && !ui.jbcam) ui.jbcam = {...LPCamera.attach(camRoot, {data, ui, t: key => i18n.t(key), media: ICSMedia, save, render, shoot: cameraShoot, gallery: cameraGallery, toast, reduced: !!reducedMotion?.matches}), root: camRoot};
+    LP.module('camera').afterRender();
     // PlatLogoActivity; after five taps a long press records Settings.System.EGG_MODE and starts LLand.
     if (ui.lpEgg && !viewport.querySelector('[data-lp-platlogo]')?.isSameNode(ui.lpEgg.root)) { ui.lpEgg.destroy(); ui.lpEgg = null; }
     const eggRoot = viewport.querySelector('[data-lp-platlogo]');
@@ -830,11 +828,6 @@
     if (setup) data.homeWidgets[setup.page] = data.homeWidgets[setup.page].filter(widget => widget.id !== setup.id);
     ui.photoWidgetSetup = null; ui.overlay = ''; save(); render();
   }
-  /* LivePicker's LiveWallpaperActivity (LivePickerTheme: Theme.Holo without a title): the LMY48Y image declares no
-     WallpaperService at all, so the list shows its empty view, live_wallpaper_empty in textAppearanceMedium. */
-  function renderLiveWallpapers() {
-    return `<div class="app-view lp-lw-empty"><p>${safe(i18n.t('No live wallpapers.'))}</p></div>`;
-  }
   function renderApp() {
     if (StoreHost.module(ui.view)?.render) return StoreHost.render(ui.view, storeContext());
     if (ui.view === 'phone' && LPDialerPrefs.PAGES.includes(ui.sub)) return LPDialerPrefs.render({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
@@ -843,9 +836,6 @@
     if (ui.view === 'people' && PeopleIO.PAGES.includes(ui.sub)) return PeopleIO.page({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
     switch (ui.view) {
       case 'play-store': return JBPlay.render(jbPlayContext());
-      case 'live-wallpapers': return renderLiveWallpapers();
-      case 'wallpaper-picker': return KKWallpaperPicker.render(wallpaperPickerContext());
-      case 'kk-doc-picker': return LPDocPicker.render(docContext());
       case 'settings': return renderSettings();
       case 'chrome': return renderChrome();
       case 'photos': return PhotosApp.render(photosContext());
@@ -856,7 +846,6 @@
       case 'people': return renderPeople();
       case 'messaging': return renderMessaging();
       case 'hangouts': return Hangouts.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime());
-      case 'camera': return renderCamera();
       case 'calendar': return renderCalendar();
       case 'clock': return renderClock();
       case 'email': return renderEmail();
@@ -882,7 +871,7 @@
     captureRecentView();
     // Wallet's warm welcome: the intro splash, then the pager (WarmWelcomeActivity.startIntroAnimation).
     if (app === 'wallet' && !resume) { ui.walPage = undefined; setTimeout(() => { if (ui.view === 'wallet' && ui.walPage == null) { ui.walPage = 0; render(); } }, 2000); }
-    if (app === 'camera' && !resume) { ui.gcsPage = ''; ui.gcsDialog = ''; ui.gcamExposure = false; }
+    LP.module('camera').opening(app, resume);
     if (app === 'play-store' && !resume) { ui.play = ICSPlayStore.initial(); ui.playHistory = []; ui.market = {page: 'home'}; ui.marketHistory = []; ui.marketSearching = false; }
     ui.view = app; ui.sub = resume ? ui.recentState?.[app]?.sub || '' : ''; ui.overlay = ''; if (app === 'settings' && !resume) ui.settingsRootScroll = 0;
     ui.recent = [app, ...ui.recent.filter(id => id !== app)].slice(0, 7);
@@ -912,7 +901,7 @@
   const fitContext=()=>({data,ui,locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,toast});
   const newsSectionsContext=()=>({data,ui,locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,toast,article:key=>StockApps.newsArticle(data,key),browser:url=>{openApp('chrome');navigateBrowser(url);}});
   const editorContext=()=>({data,ui,files:officeFiles(),locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,
-    openDrive(){openApp('drive');},pick(){docPick(ui.view,EditorMore.ACCEPT[ui.view]);},shareText:driveShareText,shareFile:driveShareFile,
+    openDrive(){openApp('drive');},pick(){lp.docPick(ui.view,EditorMore.ACCEPT[ui.view]);},shareText:driveShareText,shareFile:driveShareFile,
     shortcut(file){placeShortcut('office:'+file.id,file.name);}});
 
   // Screen pinning: the reminder toast, and unpinning (lock_to_app_exit, then the lock screen when it asks for the lock).
@@ -962,7 +951,7 @@
     if (ui.view === 'settings' && ui.sub === 'dev-backup-pw' && !ui.overlay) { ui.sub = 'development'; render(); return; }
     if (ui.view === 'settings' && ui.sub.startsWith('dev-procstats') && !ui.overlay) { ui.sub = ui.sub === 'dev-procstats' ? 'development' : 'dev-procstats'; render(); return; }
     // Back in a capture request cancels it (RESULT_CANCELED).
-    if (ui.view === 'camera' && ui.camIntent && !ui.overlay) { ui.camIntent.cancel(); return; }
+    if (LP.module('camera').backIntent()) return;
     if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
     if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
     if (ui.view === 'earth' && !ui.overlay && EarthApp.back(ui)) { render(); return; }
@@ -986,9 +975,8 @@
     if(ui.view==='settings'&&ui.sub==='lock-setup'){lockControls.cancel();return;}
     if (ui.overlay.startsWith('widget-photo')) { cancelPhotoWidget(); return; }
     if (ui.overlay) { ui.overlay = ''; render(); return; }
-    if (ui.view === 'camera' && LPCamera.back(ui)) { render(); return; }
-    if (ui.view === 'camera' && (ui.gcamModes || ui.gcamOptions)) { ui.gcamModes = false; ui.gcamOptions = false; ui.gcamExposure = false; render(); return; }
-    if (ui.view === 'live-wallpapers') { home(false); return; }
+    if (LP.module('camera').back()) return;
+    if (LP.module('live-wallpapers').back()) return;
     if (ui.view === 'lock' && ui.kgBouncing) { ui.kgBouncing = false; ui.kgPending = null; lockControls.lock(); render(); return; }
     if (ui.view === 'lock') return;
     if(ui.view==='phone' && !ui.activeCall && ui.kkDialpad){ui.kkDialpad=false;ui.dial='';render();return;}
@@ -1032,8 +1020,8 @@
     if (ui.view === 'calculator' && StoreHost.back(storeContext())) return;
     if (ui.view === 'drawer' && ui.drawerWidgets) { ui.drawerWidgets = false; ui.drawerPage = 0; home(false); ui.overview = true; render(); return; }
     if (ui.view === 'home' && ui.overview) { ui.overview = false; render(); return; }
-    if (ui.view === 'wallpaper-picker' && ui.wp?.checked?.length) { ui.wp.checked = []; wallpaperPickerRender(); return; }
-    if (ui.view === 'kk-doc-picker') { if (LPDocPicker.back(docContext()) !== 'render') docReturn(); render(); return; }
+    if (LP.module('wallpaper-picker').back()) return;
+    if (LP.module('kk-doc-picker').back()) return;
     if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return; }
     // Chrome settings: dialogs first, then the page, then back to the browser.
     // Gmail settings: the dialogs, then the pages, then back to the mail.
@@ -1167,8 +1155,6 @@
       overlayRoot.innerHTML = KKDeskClock.picker(ui.kdcPicker, {t: key => i18n.t(key), hour24: !!data.settings.hour24, accent: ui.kdcPicker.zen ? '#009688' : undefined});
     } else if (ui.overlay === 'kk-cast-menu') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu"><button data-action="kk-cast-enable" role="menuitemcheckbox" aria-checked="${!!data.settings.wifiDisplay}" class="kk-check-item">${safe(i18n.t('Enable wireless display'))}<img src="assets/btn_check_${data.settings.wifiDisplay ? 'on' : 'off'}_holo_dark.png" alt=""></button></div>`;
-    } else if (ui.overlay.startsWith?.('ldp-') && ui.docs) {
-      overlayRoot.innerHTML = LPDocPicker.menu(ui.overlay.slice(4), docContext());
     } else if (ui.overlay === 'lp-zen-drop') {
       overlayRoot.innerHTML = LPZen.dropdown(ui.zenDrop, data.settings, key => i18n.t(key));
       // overlapAnchor: the list covers the preference, from its start padding.
@@ -1465,8 +1451,8 @@
     // Cell Broadcasts' list and settings (cell-broadcast.js).
     const cb=CellBroadcast.page(s,{data,t:key=>i18n.t(key)});
     if(cb)return appView(cb.title,cb.body,'sx-page cb-page',cb.right||'');
-    const lp=LPSecurity.page(s,{data,ui,t:key=>i18n.t(key)})||LPSettingsPages.render(s,{data,t:key=>i18n.t(key),locale:i18n.locale()});
-    if(lp)return appView(lp.title,(lp.switchKey?switchBar(lp.switchKey,lp.switchOn):'')+lp.body,'','');
+    const page=LPSecurity.page(s,{data,ui,t:key=>i18n.t(key)})||LPSettingsPages.render(s,{data,t:key=>i18n.t(key),locale:i18n.locale()});
+    if(page)return appView(page.title,(page.switchKey?switchBar(page.switchKey,page.switchOn):'')+page.body,'','');
     const system=ICSSystemSettings.render(data,ui,key=>i18n.t(key),i18n.locale());
     if(system)return appView(system.title,system.body,'sx-page',system.right);
     const detail=ICSSettingsDetail.render(data,ui,apps,key=>i18n.t(key));
@@ -1809,65 +1795,6 @@
   function photoStyle(photo) { return `background-image:url('${ICSMedia.image(photo)}');background-size:cover;background-position:center`; }
   const galleryItems = () => LPGallery.items(data, ui, i18n.locale());
   function galleryWallpaper(photo, quiet) { data.wallpaper = 11; data.customWallpaper = photo.colors; data.customWallpaperPhoto = clone(photo); save(); if (quiet) return; render(); toast('Wallpaper set'); }
-  const wallpaperPickerContext = () => ({data, ui, t: key => i18n.t(key), image: photo => ICSMedia.image(photo), bundled: wallpaperFiles.slice(1)});
-  /* DocumentsUI's GET_CONTENT picker (lp-docpicker.js) for the wallpaper picker, Keep (image/*) and Gmail / Email's
-     Attach file (any type). It runs as its own screen in the asking app's task; ui.docPickFor names that app. The
-     free space of Internal storage is the Storage screen's Available figure (settings-detail.js). */
-  const docContext = () => ({data, ui, t: key => { const row = window.StockStrings?.docsui?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, locale: i18n.locale(), image: photo => ICSMedia.image(photo), album: ICSMedia.album, tracks: ICSMusic.tracks, now: deviceDate().getTime(), free: `${(9.93).toLocaleString(i18n.locale(), {minimumFractionDigits: 2})} GB`});
-  function docPick(caller, accept) { ui.overlay = ''; renderOverlay(); LPDocPicker.start(data, ui, caller, accept, docContext()); ui.docPickFor = caller; ui.view = 'kk-doc-picker'; render(); }
-  function docReturn() { const caller = ui.docPickFor; ui.docs = null; ui.docPickFor = ''; ui.view = {wallpaper: 'wallpaper-picker'}[caller] || caller || 'wallpaper-picker'; return caller; }
-  // The document picked goes back to the app that asked: a picture to the wallpaper strip or a Keep note, any file to
-  // the message being written.
-  function docPicked(file) {
-    const caller = docReturn();
-    if(EditorMore.APP[LPExtraApps.KIND[caller]]){EditorMore.importFile(editorContext(),file);return;}
-    if (caller === 'keep') { keepAttach(file.photo.id, ui.keepPhotoTo); return; }
-    if (caller === 'wallpaper') { const wp = ui.wp ||= {selected: '', temp: [], checked: []}, pid = file.photo.id; wp.temp = [pid, ...(wp.temp || []).filter(x => x !== pid)]; wp.selected = `photo:${pid}`; render(); return; }
-    const item = mailbox().find(item => item.id === ui.emailId);
-    if (item) item.files = [...(item.files || []), {name: file.name, mime: file.mime, size: file.size, ...(file.photo ? {photo: clone(file.photo)} : {})}];
-    save(); render();
-  }
-  // Re-render the picker but keep the strip where it was scrolled.
-  function wallpaperPickerRender() { const left = viewport.querySelector('.kwp-scroll')?.scrollLeft || 0; render(); const strip = viewport.querySelector('.kwp-scroll'); if (strip) strip.scrollLeft = left; }
-  screen.addEventListener('wheel', event => {
-    if (ui.view !== 'wallpaper-picker' || ui.overlay || event.ctrlKey) return;
-    const strip = event.target.closest('.kwp-scroll'); if (!strip) return;
-    const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-    strip.scrollLeft += delta * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? strip.clientWidth : 1);
-    event.preventDefault();
-  }, {passive: false});
-  function renderCamera() { return LPCamera.render(data, ui, key => i18n.t(key), ICSMedia, i18n.locale(), i18n.language); }
-  // JB Camera callbacks: a capture adds a local illustration to the Camera album; the filmstrip opens Gallery.
-  // A picture, with clip = {duration} a video (VID_..., its first frame), with clip = {pano} a panorama (PANO_...),
-  // with clip = {sphere: frames} a photo sphere (PANO_... too), into the Camera album.
-  function cameraShoot(clip) {
-    const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
-    const photo = {...ICSMedia.scene(data), id: Date.now(), name: clip?.pano || clip?.sphere ? `PANO_${stamp.slice(0, 8)}_${stamp.slice(8)}` : clip ? `VID_${stamp.slice(0, 8)}_${stamp.slice(8)}` : `IMG_${stamp}`, album: 'camera', created: Date.now(), ...(clip?.refocus ? {refocus: {focus: [.5, .5], strength: .6}} : clip?.sphere ? {sphere: true, frames: clip.sphere} : clip?.pano ? {pano: true} : clip ? {video: true, duration: Math.max(1000, Math.round(clip.duration))} : {})};
-    // An IMAGE_CAPTURE request keeps the picture for its review (lp-camera.js) and hands it to the caller, not the camera roll.
-    if (ui.camIntent && !clip) { ui.camIntent.taken = photo; return photo; }
-    data.photos.unshift(photo); save(); return photo;
-  }
-  // An IMAGE_CAPTURE request open in the Camera: Done hands the picture back, Cancel or Back returns without one, Retake
-  // goes back to the shutter.
-  function cameraIntent(done, cancel) {
-    const intent = {type: 'image', taken: null, done: () => { const photo = intent.taken; ui.camIntent = null; done(photo); }, cancel: () => { ui.camIntent = null; cancel(); }};
-    return intent;
-  }
-  // Hangouts' Take photo: the picture joins the conversation's draft as its attachment.
-  function hangoutsTakePhoto() {
-    const ret = {sub: ui.sub, thread: ui.thread};
-    ui.overlay = ''; renderOverlay(); openApp('camera'); ui.jbcamModule = 'photo';
-    const back = () => { openApp('hangouts'); Object.assign(ui, ret); };
-    ui.camIntent = cameraIntent(photo => { back(); const d = messageDraft(); d.attachment = clone(photo); d.updated = Date.now(); save(); render(); scrollMessages(); }, () => { back(); render(); scrollMessages(); });
-    render();
-  }
-  // Camera review: LMY48Y has no Gallery, so the picture opens in the Photos viewer.
-  function cameraGallery(id) {
-    const photo = data.photos.find(item => item.id === id) || ICSMedia.photos(data, 'camera')[0];
-    openApp('photos'); if (!photo) return;
-    const index = PhotosApp.list(photosContext()).findIndex(item => item.id === photo.id);
-    if (index >= 0) { ui.photosIndex = index; ui.sub = 'photo'; render(); }
-  }
   function galleryStep(direction) {
     const items=galleryItems(); if(!items.length)return;
     const index=Math.max(0,items.findIndex(p=>p.id===ui.selectedPhoto));
@@ -2089,7 +2016,6 @@
     if(id==='people'){data.contacts=clone(defaultData.contacts);data.contactGroups=clone(defaultData.contactGroups);ui.peopleDraft=null;}
     if(id==='messaging'||id==='hangouts'){data.messages=clone(defaultData.messages);data.messageDrafts={};}
     if(id==='gallery'){data.photos=clone(defaultData.photos);}
-    if(id==='camera')delete data.cameraSettings;
     if(id==='phone'){data.callHistory=[];ui.activeCall=null;}
     if(id==='play-store')delete data.playRatings;
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
@@ -2239,14 +2165,6 @@
     // Email's Quick responses, ringtone and server screens (email-prefs.js).
     if (action.startsWith('empx-') && EmailPrefs.handle(action, id, {data, ui, save, render, root: viewport, account: ICSEmail.account})) return;
     if (action.startsWith('pe-') && window.PlusEditor?.handle(action, button, peContext())) return;
-    if (action.startsWith('ldp-') && ui.docs) {
-      const result = LPDocPicker.act(action, id, docContext());
-      if (result.save) save();
-      if (result.overlay) { ui.overlay = `ldp-${result.overlay}`; renderOverlay(); return; }
-      ui.overlay = ''; renderOverlay();
-      if (result.pick) { docPicked(result.pick); return; }
-      render(); if (result.focus) viewport.querySelector('.ldp-search input')?.focus(); return;
-    }
     if (action.startsWith('lpu-') && window.LPUsers?.handle(action, button, {data, save, render, open: sub => { ui.sub = sub; render(); }, back: () => { ui.sub = 'users'; render(); }})) return;
     if (ui.view === 'gallery' && ui.galleryPopup && action !== 'gallery-menu') ui.galleryPopup = '';
     // A tap outside the Recents popup menu only dismisses it.
@@ -2389,25 +2307,6 @@
       case 'widget-photo-album': configurePhotoWidget({source: 'album', album: id}); break;
       case 'widget-photo-image': configurePhotoWidget({source: 'photo', photo: Number(id)}); break;
       case 'widget-photo-cancel': cancelPhotoWidget(); break;
-      case 'open-wallpapers': ui.overlay = ''; ui.overview = false; ui.wp = {selected: '', temp: [], checked: [], stripHidden: false}; ui.view = 'wallpaper-picker'; render(); break;
-      // Launcher3 WallpaperPickerActivity: tiles preview, the action bar sets, a long press on a picked or saved image
-      // starts the delete CAB, Pick image goes through DocumentsUI.
-      case 'kwp-tile': {
-        const wp = ui.wp ||= {selected: '', temp: [], checked: []};
-        if (wp.checked?.length) { if (button.dataset.kwpLong) { wp.checked = wp.checked.includes(id) ? wp.checked.filter(k => k !== id) : [...wp.checked, id]; wallpaperPickerRender(); } break; }
-        wp.selected = id; wp.stripHidden = false; wallpaperPickerRender(); break;
-      }
-      case 'kwp-tap': if (ui.wp) { ui.wp.stripHidden = !ui.wp.stripHidden; viewport.querySelector('.kwp-strip')?.classList.toggle('hidden', ui.wp.stripHidden); } break;
-      case 'kwp-pick': docPick('wallpaper', 'image/*'); break;
-      case 'kwp-cab-done': if (ui.wp) { ui.wp.checked = []; wallpaperPickerRender(); } break;
-      case 'kwp-delete': { const wp = ui.wp, gone = new Set((wp?.checked || []).map(k => Number(k.slice(6)))); if (!wp) break; data.kkSavedWallpapers = (data.kkSavedWallpapers || []).filter(x => !gone.has(x)); wp.temp = (wp.temp || []).filter(x => !gone.has(x)); if (wp.checked.includes(wp.selected)) wp.selected = ''; wp.checked = []; save(); wallpaperPickerRender(); break; }
-      case 'kwp-set': {
-        const key = ui.wp?.selected || '';
-        if (key === 'default' || key.startsWith('wp:')) { data.wallpaper = key === 'default' ? 0 : Number(key.slice(3)); delete data.customWallpaper; delete data.customWallpaperPhoto; save(); }
-        else if (key.startsWith('photo:')) { const photo = data.photos.find(p => p.id === Number(key.slice(6))); if (photo) { data.kkSavedWallpapers = [photo.id, ...(data.kkSavedWallpapers || []).filter(x => x !== photo.id)]; galleryWallpaper(photo, true); } }
-        ui.wp = null; home(false); break;
-      }
-      case 'open-live-wallpapers': ui.overlay = ''; ui.view = 'live-wallpapers'; ui.sub = ''; render(); break;
       case 'photos-set-wallpaper': ui.overlay = ''; openApp('photos'); break;
       case 'market': openApp('play-store'); break;
       case 'play-menu': case 'jbp-menu': ui.overlay = 'play-menu'; renderOverlay(); break;
@@ -2637,7 +2536,6 @@
         if (id === 'nfc' && data.settings.nfc) data.settings.androidBeam = true;
         save(); render(); const settingsView = viewport.querySelector('.settings-app'); if (settingsView) settingsView.scrollTop = previousScroll; break;
       }
-      case 'wallpaper': data.wallpaper = Number(id); delete data.customWallpaper; delete data.customWallpaperPhoto; save(); if (ui.view === 'wallpaper-picker') home(false); else render(); toast('Wallpaper set'); break;
       case 'factory-reset': if (confirm(i18n.t('Reset all local Lollipop simulator data?'))) resetSimulator(); break;
       case 'about-tap':
         ui.aboutTapTimes = [...(ui.aboutTapTimes || []), performance.now()].slice(-3);
@@ -2717,8 +2615,8 @@
       case 'keep-checkboxes': { ui.overlay = ''; renderOverlay(); const note = keepCurrent(); if (!note) break; saveKeepNote(); if (!note.list) { note.list = String(note.text || '').split('\n').filter(line => line.trim()).map(text => ({text, checked: false})); note.text = ''; } else if (note.list.some(item => item.checked)) ui.keepDialog = 'hide-checkboxes'; else keepToText(note, false); save(); render(); break; }
       case 'keep-hide-keep': case 'keep-hide-delete': { const note = keepCurrent(); ui.keepDialog = ''; if (note?.list) keepToText(note, action === 'keep-hide-delete'); save(); render(); break; }
       case 'keep-picture': saveKeepNote(); ui.keepDialog = 'picture'; render(); break;
-      case 'keep-photo-take': { ui.keepDialog = ''; saveKeepNote(); keepAttach(cameraShoot().id, ui.sub === 'note' ? ui.keepNote : ''); break; }
-      case 'keep-photo-choose': ui.keepDialog = ''; saveKeepNote(); ui.keepPhotoTo = ui.sub === 'note' ? ui.keepNote : ''; docPick('keep', 'image/*'); break;
+      case 'keep-photo-take': { ui.keepDialog = ''; saveKeepNote(); keepAttach(lp.cameraShoot().id, ui.sub === 'note' ? ui.keepNote : ''); break; }
+      case 'keep-photo-choose': ui.keepDialog = ''; saveKeepNote(); ui.keepPhotoTo = ui.sub === 'note' ? ui.keepNote : ''; lp.docPick('keep', 'image/*'); break;
       case 'keep-photo-remove': saveKeepNote(); ui.keepDialog = 'remove-photo'; render(); break;
       case 'keep-photo-delete': { ui.keepDialog = ''; const note = keepCurrent(); if (note) { delete note.photo; save(); } render(); break; }
       case 'keep-dialog-close': ui.keepDialog = ''; render(); break;
@@ -2954,10 +2852,7 @@
       // New Hangout: a picked contact or typed number opens its conversation and takes along a shared draft.
       case 'hg-pick': pickHangout(id); break;
       case 'hg-attach-photo': ui.overlay = 'mms-attach-photos'; renderOverlay(); break;
-      case 'hg-take-photo': hangoutsTakePhoto(); break;
-      case 'cam-review-done': ui.camIntent?.taken && ui.camIntent.done(); break;
-      case 'cam-review-retake': if (ui.camIntent) { ui.camIntent.taken = null; render(); } break;
-      case 'cam-review-cancel': ui.camIntent?.cancel(); break;
+      case 'hg-take-photo': lp.hangoutsTakePhoto(); break;
       case 'hg-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
       // Hangouts 2.5: the attachment button's "Share your location" sends the demo place; conversations archive until
       // something newer arrives; the snooze dialog (1–72 hours) shows dnd_list_item.xml's banner until Resume.
@@ -2991,10 +2886,6 @@
       case 'photo': ui.selectedPhoto=Number(id);if(!galleryItems().some(p=>p.id===Number(id))){ui.galleryCluster='album';ui.galleryAlbum=ICSMedia.album(data.photos.find(p=>p.id===Number(id))||{});}ui.sub='photo';ui.galleryZoom=false;ui.galleryFilm=false;ui.galleryBars=true;ui.galleryFromCamera=false;render();break;
       case 'gallery-menu': case 'gallery-share': case 'gallery-details': ui.overlay=action;renderOverlay();break;
       case 'gallery-share-message': {const photo=data.photos.find(p=>p.id===ui.selectedPhoto);if(!photo)break;openApp('messaging');ui.sub='new';messageDraft().attachment=clone(photo);save();render();break;}
-      case 'shoot': {
-        const photo={...ICSMedia.scene(data),id:Date.now(),name:`IMG_${new Date().toISOString().replace(/[-:T]/g,'').slice(0,14)}`,album:'camera',created:Date.now()};
-        data.photos.unshift(photo);save();render();screen.animate([{opacity:1},{opacity:.4},{opacity:1}],{duration:240});toast('Photo saved to Gallery');break;
-      }
       case 'calendar-prev': calendarMove(-1); break;
       case 'calendar-next': calendarMove(1); break;
       case 'calendar-day': ui.selectedDate=id;ui.calendarMode=data.calendarMode='Day';save();calendarRender();break;
@@ -3148,7 +3039,7 @@
       case 'email-attach': ui.overlay='email-attach';renderOverlay();break;
       case 'email-attach-photo': {const item=mailbox().find(item=>item.id===ui.emailId),photo=data.photos.find(photo=>photo.id===Number(id));if(item&&photo)item.attachment=clone(photo);ui.overlay='';save();render();break;}
       case 'email-remove-attachment': {const item=mailbox().find(item=>item.id===ui.emailId);if(item)delete item.attachment;save();render();break;}
-      case 'email-attach-file': docPick(ui.view, '*/*'); break;
+      case 'email-attach-file': lp.docPick(ui.view, '*/*'); break;
       case 'email-remove-file': {const item=mailbox().find(item=>item.id===ui.emailId);if(item?.files)item.files.splice(Number(id),1);save();render();break;}
       case 'email-discard': ui.overlay='email-discard';renderOverlay();break;
       case 'email-confirm-discard': ICSEmail.trash(mailbox(),[ui.emailId]);ui.sub='';ui.overlay='';save();render();break;
@@ -3181,7 +3072,6 @@
     if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, mrContext()); return; }
     if (form.dataset.form === 'dpr-vmnumber') { LPDialerPrefs.saveVoicemail(values.get('text') || '', {data, ui}); save(); render(); return; }
     if (form.dataset.form === 'dpr-quick') { LPDialerPrefs.saveQuick(values.get('text') || '', {data, ui, t: key => i18n.t(key), locale: i18n.locale()}); save(); render(); return; }
-    if (form.dataset.form === 'ldp-search') { LPDocPicker.search(values.get('q'), docContext()); render(); return; }
     if(form.dataset.form==='folder-name'){event.target.querySelector('input')?.blur();render();return;}
     if(form.dataset.form==='sx-save'){ui.systemError=ICSSystemSettings.submit(data,ui,values);if(ui.systemError){ui.systemValues=Object.fromEntries(values);renderOverlay();return;}save();ui.overlay='';render();return;}
     if(form.dataset.form==='sx-vpn-connect'){ui.vpnConnected=ui.vpnConnected===ui.systemId?null:ui.systemId;ui.overlay='';render();return;}
@@ -3985,10 +3875,7 @@
     if (ui.view === 'home' && event.target.closest('.lp-cling .cling-shade')) homeLongPressTimer = setTimeout(() => { data.clings.workspace = true; save(); LauncherClings.dismiss(clingLayerRoot().querySelector('[data-cling="workspace"]'), () => { ui.overview = true; render(); }); pointerStart = null; suppressReleaseClick(); }, holdDelay(550));
     if (ui.view === 'home' && !ui.overlay && !ui.overview && event.target.closest('.home-slot') && !pointerStart.source) homeLongPressTimer = setTimeout(() => { ui.overview = true; render(); pointerStart = null; suppressReleaseClick(); }, holdDelay(550));
     const message = event.target.closest('.mms-message');
-    const kwpScroll = ui.view === 'wallpaper-picker' ? event.target.closest('.kwp-scroll') : null;
-    if (kwpScroll) { pointerStart.kwpScroll = kwpScroll; pointerStart.kwpLeft = kwpScroll.scrollLeft; }
-    const kwpLong = ui.view === 'wallpaper-picker' && !ui.wp?.checked?.length ? event.target.closest('[data-kwp-long]') : null;
-    if (kwpLong) homeLongPressTimer = setTimeout(() => { ui.wp.checked = [kwpLong.dataset.id]; pointerStart = null; suppressReleaseClick(); wallpaperPickerRender(); }, holdDelay(550));
+    if (LP.module('wallpaper-picker').pointerdown(event)) return;
     if (message && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.mmsMessage = message.dataset.id; ui.overlay = 'mms-message'; suppressReleaseClick(); renderOverlay(); }, holdDelay(550));
     // Drive: a held item opens menu_doclist_context.xml for it (lp-drive.js).
     const heldDrive = event.target.closest('[data-drive-hold]');
@@ -4005,7 +3892,7 @@
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
     if (Math.hypot(dx,dy) > dp(9)) { clearTimeout(homeLongPressTimer); LP.module('calculator').cancelHold(); clearTimeout(messageHoldTimer); }
     // The wallpaper strip scrolls sideways under a mouse drag as it would under a finger.
-    if (pointerStart.kwpScroll && event.pointerType === 'mouse' && (pointerStart.kwpDragging || Math.abs(dx) > dp(9))) { pointerStart.kwpDragging = true; const k = screen.getBoundingClientRect().width / screen.offsetWidth || 1; pointerStart.kwpScroll.scrollLeft = pointerStart.kwpLeft - dx / k; suppressClickUntil = Date.now() + 350; event.preventDefault(); return; }
+    if (LP.module('wallpaper-picker').pointermove(event, dx)) return;
     if (LP.module('calculator').pointermove(event, dx, dy)) return;
     if (pointerStart.drawerSwipeEligible && (pointerStart.drawerSwiping || Math.abs(dx) > dp(13) && Math.abs(dx) > Math.abs(dy) * 1.1)) {
       pointerStart.drawerSwiping = true;
@@ -4124,7 +4011,7 @@
     }
     clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); LP.module('calculator').cancelHold(); clearTimeout(messageHoldTimer);
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
-    if (pointerStart.kwpDragging) { suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
+    if (LP.module('wallpaper-picker').pointerup()) return;
     if(pointerStart.clockSwiping){const tabs=JBDeskClock.TABS,index=tabs.indexOf(data.jbClock?.tab||'clock'),next=Math.max(0,Math.min(tabs.length-1,index+(Math.abs(dx)>dp(50)?(dx<0?1:-1):0)));data.jbClock.tab=tabs[next];save();render();suppressClickUntil=Date.now()+350;pointerStart=null;return;}
     // Play Store 4.8: a swipe from the left edge of a top-level page opens the drawer, a swipe to the left closes it.
     if (ui.view === 'play-store' && Math.abs(dx) > dp(55) && Math.abs(dx) > Math.abs(dy) * 1.5) {
@@ -4372,15 +4259,22 @@
 
   // lp:kernel (the core's bindings the lp-*.js modules use, live; written by the migration's move tool)
   LP.kernel({
-    get data() { return data; }, set data(v) { data = v; }, get dp() { return dp; },
-    get holdDelay() { return holdDelay; }, get i18n() { return i18n; }, get openApp() { return openApp; },
+    get clone() { return clone; }, get data() { return data; }, set data(v) { data = v; },
+    get deviceDate() { return deviceDate; }, get dp() { return dp; }, get editorContext() { return editorContext; },
+    get galleryWallpaper() { return galleryWallpaper; }, get holdDelay() { return holdDelay; },
+    get home() { return home; },
+    get homeLongPressTimer() { return homeLongPressTimer; }, set homeLongPressTimer(v) { homeLongPressTimer = v; },
+    get i18n() { return i18n; }, get keepAttach() { return keepAttach; }, get mailbox() { return mailbox; },
+    get messageDraft() { return messageDraft; }, get openApp() { return openApp; },
     get overlayRoot() { return overlayRoot; }, get photosContext() { return photosContext; },
     get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; },
-    get printContext() { return printContext; }, get render() { return render; },
-    get renderOverlay() { return renderOverlay; }, get safe() { return safe; }, get save() { return save; },
-    get screen() { return screen; }, get snapResting() { return snapResting; },
+    get printContext() { return printContext; }, get reducedMotion() { return reducedMotion; },
+    get render() { return render; }, get renderOverlay() { return renderOverlay; }, get safe() { return safe; },
+    get save() { return save; }, get screen() { return screen; }, get scrollMessages() { return scrollMessages; },
+    get snapResting() { return snapResting; },
     get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; },
-    get toast() { return toast; }, get ui() { return ui; }, get viewport() { return viewport; }
+    get suppressReleaseClick() { return suppressReleaseClick; }, get toast() { return toast; },
+    get ui() { return ui; }, get viewport() { return viewport; }, get wallpaperFiles() { return wallpaperFiles; }
   });
   // lp:kernel-end
   LP.start();

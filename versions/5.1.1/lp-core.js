@@ -21,6 +21,8 @@ window.LP = window.StoreHost;
   // A screen's own overlay (ui.overlay names it): true when a module drew it into root.
   LP.overlay = (name, root) => {
     for (const m of specs()) { const draw = m.overlays?.[name]; if (draw) { draw(root); return true; } }
+    // a module that names its overlays itself: overlay(name, root), true when it drew one
+    for (const m of specs()) if (m.overlay?.(name, root)) return true;
     return false;
   };
   LP.click = (action, button, event) => {
