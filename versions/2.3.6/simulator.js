@@ -172,7 +172,7 @@
   function storeContext() {
     return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, viewport, dp, snapResting, suppressClick: ms => { suppressClickUntil = Date.now() + ms; },
       // 2.3.6's own AlertDialog (a spec the module's dialog(kind, c) returns) and the Menu key's IconMenu items.
-      saveMusic, deviceDate, today, home, cancelPhotoWidget, composeEmail, messageDraft, gapp: () => gappContext(), gbCapture, gbmaCancel, gbmaReturn, gbceReturn, back, contact, contactByPhone, captureRecentView, appName: id => appNames[id] || id, startPhoneCall, editPerson, clock, blinkTips, renderStatus, apps, appNames, appIcon, carrierName, gbClock, lockControls, navigateBrowser, clearAppData, resetSimulator, storeUninstall, storeInstalled, storeAppsSync, wallpaperFiles, reducedMotion, lockDate: gbLockDate, fullDate, launcherIcon, folderName, renderWebsite, openSearch, snapResting, tweenWallpaperOffset, liveWallpaper: () => liveWallpaper, pressing: () => !!pointerStart, live: () => storeContext(), defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
+      saveMusic, deviceDate, today, home, cancelPhotoWidget, composeEmail, messageDraft, gapp: () => gappContext(), gbCapture, gbmaCancel, gbmaReturn, gbceReturn, back, contact, contactByPhone, captureRecentView, appName: id => appNames[id] || id, startPhoneCall, editPerson, clock, blinkTips, renderStatus, apps, appNames, appIcon, carrierName, gbClock, lockControls, navigateBrowser, clearAppData, resetSimulator, storeUninstall, storeInstalled, storeAppsSync, wallpaperFiles, reducedMotion, lockDate: gbLockDate, fullDate, launcherIcon, folderName, renderWebsite, openSearch, snapResting, tweenWallpaperOffset, liveWallpaper: () => liveWallpaper, pressing: () => !!pointerStart, live: () => storeContext(), statusRoot, navRoot, lockScreen, noteActivity: () => { lastActivity = Date.now(); }, defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
       appList: () => apps.map(app => [app[0], i18n.t(app[1])]), browserTitle: gbBrowserTitle, contactName: id => contact(id)?.name, normalizeAddress,
       intent: {browse(url) { openApp('browser'); navigateBrowser(url); }, contact(id) { openApp('people'); ui.selectedContact = id; ui.sub = 'detail'; render(); }, thread: id => openMessageThread(id),
         track(i) { openApp('music'); ui.music.queue = ICSMusic.tracks.map((_, n) => n); ui.music.track = i; ui.music.position = 0; ui.music.playing = true; saveMusic(); ui.sub = 'player'; render(); }},
@@ -247,26 +247,10 @@
   ui.locked=ICSLockscreen.secure(data);if(ui.locked)ui.view='lock';lockControls.lock();lockControls.bind(screen);
   const statusIndicators = () => `<span class="status-right">${data.settings.bluetooth ? '<img class="status-bluetooth" src="assets/stat_sys_data_bluetooth.png" alt="">' : ''}${data.settings.silent ? `<img src="assets/stat_sys_ringer_${data.settings.silentMode === 'vibrate' ? 'vibrate' : 'silent'}.png" alt="">` : ''}${data.alarms.some(alarm => alarm.enabled) ? '<img src="assets/stat_sys_alarm.png" alt="">' : ''}${data.settings.wifi && data.settings.wifiNetwork ? '<img src="assets/stat_sys_wifi_signal_4_fully.png" alt="">' : ''}<img src="assets/${data.settings.airplane ? 'stat_sys_signal_flightmode' : 'stat_sys_signal_4_fully'}.png" alt=""><img class="status-battery" src="assets/stat_sys_battery_71.png" alt=""><span class="status-clock">${clock()}</span></span>`;
 
-  // Gingerbread status bar: one 25 dp icon per notification on the left, config_statusBarIcons on the right.
-  const noteIcon = n => n.id === 2 ? 'gb-app-mms-stat_notify_sms.png' : n.kind === 'calendar' ? 'gb-app-calendar-stat_notify_calendar.png' : n.kind === 'alarm' ? 'gb-app-deskclock-stat_notify_alarm.png' : n.kind === 'market-dl' ? 'gb-stat_sys_download_anim0.png' : n.kind === 'market' ? 'gb-stat_sys_download_anim5.png' : 'gb-stat_sys_adb.png';
   // Clock.java: twelve_hour_time_format h:mm a with AM_PM_STYLE_GONE, or H:mm.
   const gbClock = () => { const now = deviceDate(), h = now.getHours(), m = String(now.getMinutes()).padStart(2, '0'); return `${data.settings.hour24 ? h : h % 12 || 12}:${m}`; };
-  let seenNotes = null, stopTicker = null;
-  function renderStatus() {
-    const icons = data.notifications.map(noteIcon);
-    icons.unshift(...GBNetwork.statusIcons(gbNetContext()));
-    if (ui.activeCall) icons.unshift(ui.activeCall.hold ? 'gb-stat_sys_phone_call_on_hold.png' : ui.activeCall.bluetooth ? 'gb-stat_sys_phone_call_bluetooth.png' : 'gb-stat_sys_phone_call.png');
-    GBStatusBar.bar(statusRoot, {
-      label: i18n.t('Open notifications'), notifications: icons, clock: gbClock(), expanded: ui.overlay === 'shade',
-      date: deviceDate().toLocaleDateString(i18n.locale(), {year: 'numeric', month: 'long', day: 'numeric'}),
-      state: {bluetooth: data.settings.bluetooth, ringer: data.settings.silent ? (data.settings.silentMode === 'vibrate' ? 'vibrate' : 'silent') : '', airplane: data.settings.airplane, wifi: data.settings.wifi && !!data.settings.wifiNetwork, data: data.settings.mobileData === false || data.settings.dataEnabled === false ? '' : '3g', battery: 78, alarm: data.alarms.some(alarm => alarm.enabled)}
-    });
-    // Ticker: newly posted notifications scroll through the bar once (tickerText = the notification title).
-    const ids = new Set(data.notifications.map(n => n.id));
-    const fresh = seenNotes ? data.notifications.filter(n => !seenNotes.has(n.id)) : [];
-    seenNotes = ids;
-    if (fresh.length && !ui.sleeping) { stopTicker?.(); stopTicker = GBStatusBar.ticker(statusRoot, fresh.reverse().map(n => ({icon: noteIcon(n), text: n.title})), () => { stopTicker = null; }); }
-  }
+  // The status bar (gb-system.js).
+  function renderStatus() { GB.module('statusbar').render(storeContext()); }
   // Nexus S capacitive keys under the glass (Back, Menu, Search, Home). Long-pressing Home shows the recent apps.
   const touchGlyphs = {
     back: '<path d="M8.5 5.5 5 9l3.5 3.5M5.5 9H15a4.5 4.5 0 0 1 0 9H8"/>',
@@ -445,23 +429,8 @@
     screen.append(element);
     clearTimeout(ui.toastTimer); ui.toastTimer = setTimeout(() => element.remove(), 2500);
   }
-  // Shade motion (StatusBarService): the panel's bottom edge follows the finger and flings with +-2000 px/s^2.
-  let shadeTracking = null, stopShade = null;
-  const shadeBottom = () => screen.clientHeight;
-  function shadeFling(from, velocity, expand) {
-    const panel = overlayRoot.querySelector('.gbsh-panel'); if (!panel) return;
-    stopShade?.();
-    stopShade = GBStatusBar.slide(panel, {from, velocity, accel: (expand ? 1 : -1) * GBStatusBar.ACCEL(), top: statusRoot.offsetHeight, bottom: shadeBottom(), reduced: !!reducedMotion?.matches}, opened => {
-      stopShade = null;
-      if (!opened && ui.overlay === 'shade') { ui.overlay = ''; renderOverlay(); renderStatus(); }
-    });
-  }
-  function closeShade() {
-    const panel = overlayRoot.querySelector('.gbsh-panel');
-    if (!panel || ui.overlay !== 'shade') { ui.overlay = ''; renderOverlay(); renderStatus(); return; }
-    const y = new DOMMatrixReadOnly(getComputedStyle(panel).transform).m42 + shadeBottom();
-    shadeFling(Math.min(shadeBottom() - 1, y), -2000 * GBStatusBar.PX(), false);
-  }
+  // The notification shade (gb-system.js) closes with its fling.
+  function closeShade() { GB.module('shade').close(storeContext()); }
   // The 2.3.6 AlertDialog (GBUI.dialog) of the overlay: its module's spec.
   function gbDialogSpec() {
     if (['gb-dialog-add', 'gb-dialog-shortcuts', 'gb-dialog-widgets', 'gb-dialog-folders', 'gb-dialog-rename', 'gb-dialog-wallpaper'].includes(ui.overlay)) return GB.module('home').dialog(ui.overlay.slice(10), storeContext());
@@ -496,28 +465,16 @@
       overlayRoot.innerHTML = GBUI.expanded(ui.gbMenuItems || [], key => i18n.t(key));
     } else if (ui.overlay.startsWith('gb-dialog')) {
       overlayRoot.innerHTML = GBUI.dialog({...gbDialogSpec(), t: key => i18n.t(key)});
-    } else if (ui.overlay === 'shade') {
-      const time = n => n.id > 1e12 ? new Date(n.id).toLocaleTimeString(i18n.locale(), {hour: 'numeric', minute: '2-digit', hour12: !data.settings.hour24}) : '';
-      const ongoing = ui.activeCall ? [{id: 'call', action: 'gbp-return-call', icon: ui.activeCall.hold ? 'gb-stat_sys_phone_call_on_hold.png' : ui.activeCall.bluetooth ? 'gb-stat_sys_phone_call_bluetooth.png' : 'gb-stat_sys_phone_call.png', title: ui.activeCall.hold ? GBPhone.phoneText(i18n.language, 'notification_on_hold') : AndroidStrings.format(GBPhone.phoneText(i18n.language, 'notification_ongoing_call_format'), GBPhone.elapsedText(ui.activeCall)), text: contactByPhone(ui.activeCall.number)?.name || ui.activeCall.number}] : [];
-      ongoing.push(...GBNetwork.ongoing(gbNetContext()));
-      const latest = data.notifications.map(n => ({id: n.id, icon: noteIcon(n), title: n.title, text: n.detail, time: time(n)}));
-      const open = overlayRoot.querySelector('.gbsh');
-      overlayRoot.innerHTML = GBStatusBar.shade({t: key => i18n.t(key), carrier: carrierName(), ongoing, latest, clearable: latest.length > 0});
-      const panel = overlayRoot.querySelector('.gbsh-panel');
-      if (open || shadeTracking) GBStatusBar.place(panel, shadeTracking ? shadeTracking.y : screen.clientHeight, shadeBottom());
-      else shadeFling(statusRoot.offsetHeight, 2000 * GBStatusBar.PX(), true);
-      renderStatus();
-    } else if (ui.overlay === 'recent') {
-      // RecentApplicationsDialog (recent_apps_dialog.xml): "Recent", up to eight 80 dip icon buttons in rows of four, newest first,
-      // or "No recent applications."; recent_dialog_background behind it, fading in and out.
-      const fw = key => AndroidStrings.resources(() => window.GBStrings?.framework).t(key, i18n.language);
-      const items = ui.recent.filter(id => appNames[id]).slice(0, 8);
-      const rows = items.length ? [items.slice(0, 4), items.slice(4, 8)].filter(row => row.length).map(row => `<div class="gbrecent-row">${row.map(id => `<button class="gbrecent-item" data-action="open-app" data-app="${id}">${appIcon(id)}<span>${safe(appNames[id])}</span></button>`).join('')}</div>`).join('') : `<div class="gbrecent-empty">${safe(fw('no_recent_tasks'))}</div>`;
-      overlayRoot.innerHTML = `<div class="gbrecent-scrim" data-action="close-overlay"></div><div class="gbrecent" role="dialog" aria-label="${safe(fw('recent_tasks_title'))}"><div class="gbrecent-title">${safe(fw('recent_tasks_title'))}</div>${rows}<div class="gbrecent-spacer"></div></div>`;
     } else if (ui.overlay.startsWith('gallery-') || ui.overlay.startsWith('camera-')) {
       overlayRoot.innerHTML=ICSMedia.overlay(data,ui,key=>i18n.t(key),i18n.locale());
+    } else if (ui.overlay === 'shade') {
+      GB.module('shade').overlay(storeContext(), overlayRoot);
+    } else if (ui.overlay === 'recent') {
+      overlayRoot.innerHTML = GB.module('recents').overlay(storeContext());
+    } else if (ui.overlay === 'power-menu' || ui.overlay === 'power-confirm' || ui.overlay === 'power-progress') {
+      overlayRoot.innerHTML = GB.module('power').overlay(storeContext());
     } else if (ui.overlay === 'clock-ringing' && ui.ringingAlarm) {
-      overlayRoot.innerHTML = GBDeskClock.alert({...GB.module('clock').context(storeContext()), wallpaper: ui.locked ? screen.style.background : ''});
+      overlayRoot.innerHTML = GB.module('alarm').overlay(storeContext());
     } else if (ui.overlay.startsWith('clock-')) {
       const dialog = GBDeskClock.dialog(ui.overlay.slice(6), GB.module('clock').context(storeContext()));
       overlayRoot.innerHTML = dialog ? GBUI.dialog({...dialog, t: key => i18n.t(key)}) : '';
@@ -535,20 +492,6 @@
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu phone-overflow"><button data-action="phone-add-contact">Add to contacts</button></div>`;
     } else if (['connectivity-menu', 'wifi-add', 'bluetooth-pair', 'bluetooth-rename', 'bluetooth-files', 'wifi-dialog'].includes(ui.overlay)) {
       overlayRoot.innerHTML = GB.module('settings').overlay(storeContext());
-    } else if (ui.overlay === 'power-menu') {
-      // GlobalActions (2.3.6): "Phone options" over a bright list - Silent mode and Airplane mode toggles with their status
-      // line (global_actions_item.xml), then Power off.
-      const t = key => i18n.t(key), silent = !!data.settings.silent, vibrate = data.settings.silentMode === 'vibrate';
-      overlayRoot.innerHTML = GBUI.dialog({t, title: t('Phone options'), items: [
-        {action: 'gb-ga-silent', title: t('Silent mode'), summary: t(silent ? 'Sound is OFF' : 'Sound is ON'), icon: silent ? (vibrate ? 'ic_lock_silent_mode_vibrate' : 'ic_lock_silent_mode') : 'ic_lock_silent_mode_off'},
-        {action: 'ga-airplane', title: t('Airplane mode'), summary: t(data.settings.airplane ? 'Airplane mode is ON' : 'Airplane mode is OFF'), icon: data.settings.airplane ? 'ic_lock_airplane_mode' : 'ic_lock_airplane_mode_off'},
-        {action: 'ga-power', title: t('Power off'), icon: 'ic_lock_power_off'}]});
-    } else if (ui.overlay === 'power-confirm') {
-      // ShutdownThread.shutdown(confirm): ic_dialog_alert, "Power off", shutdown_confirm, OK / Cancel.
-      overlayRoot.innerHTML = GBUI.dialog({t: key => i18n.t(key), title: i18n.t('Power off'), icon: 'ic_dialog_alert', message: i18n.t('Your phone will shut down.'), buttons: [{action: 'ga-confirm', id: 'shutdown', title: i18n.t('OK')}, {action: 'close-overlay', title: i18n.t('Cancel')}]});
-    } else if (ui.overlay === 'power-progress') {
-      // ProgressDialog: spinner_white_48 (12 frames, 100 ms) beside "Shutting down…"; not cancelable.
-      overlayRoot.innerHTML = GBUI.dialog({t: key => i18n.t(key), title: i18n.t('Power off'), custom: `<div class="gbdlg-progress"><img src="assets/gb-spinner_white_48.png" alt=""><span>${safe(i18n.t('Shutting down…'))}</span></div>`, cancel: 'noop'});
     } else overlayRoot.innerHTML = '';
     i18n.translateDOM(overlayRoot);
     GB.module('home').afterOverlay(storeContext(), closingFolder);
@@ -594,39 +537,9 @@
 
   // Launcher (gb-launcher.js): leaving the Gallery's picker without a picture drops the Picture frame being added.
   function cancelPhotoWidget() { GB.module('home').cancelPhotoWidget(storeContext()); }
-  // Calendar AlertService: a status-bar notification at the reminder time while the page is running.
-  function checkReminders(now) {
-    data.calendarFired=Array.isArray(data.calendarFired)?data.calendarFired.slice(-60):[];
-    for(const {key,event} of ICSCalendar.dueReminders(data.events,now,data.calendarFired)) {
-      data.calendarFired.push(key);
-      const when=event.allDay?i18n.t('All day'):`${event.time} – ${event.endTime}`;
-      data.notifications.unshift({id:Date.now()+data.notifications.length,title:event.title,detail:[when,event.location].filter(Boolean).join(' · '),kind:'calendar',eventId:event.id,date:event.date});
-      save();renderStatus();if(ui.overlay==='shade')renderOverlay();
-    }
-  }
-  function checkAlarms(now) {
-    if(ui.overlay==='clock-ringing')return;
-    const alarm=data.alarms.find(alarm=>ICSDeskClock.due(alarm,now));
-    if(!alarm)return;
-    alarm.lastFiredMinute=Math.floor(now.getTime()/60000);
-    delete alarm.snoozedUntil;
-    if(!ICSDeskClock.normalize(alarm).days.length)alarm.enabled=false;
-    ui.ringingAlarm=clone(alarm); save(); ui.overlay='clock-ringing'; renderOverlay();
-  }
 
-  function saveMusic() {
-    ui.musicTrack=ui.music.track;ui.musicPlaying=ui.music.playing;ui.musicPosition=ui.music.position;
-    data.music=clone(ui.music);delete data.music.playing;save();
-  }
-  function tickMusic() {
-    if(!ui.music.playing)return;
-    const previous=ui.music.track;ICSMusic.tick(ui.music);
-    ui.musicTrack=ui.music.track;ui.musicPlaying=ui.music.playing;
-    if(previous!==ui.music.track || !ui.music.playing){saveMusic();if(ui.view==='music'||ui.view==='home'||ui.view==='lock'&&!pointerStart)render();}
-    else if(Math.floor(ui.music.position)%10===0)saveMusic();
-    const progress=viewport.querySelector('.music-progress');if(progress&&document.activeElement!==progress)progress.value=ui.music.position;
-    const elapsed=viewport.querySelector('.music-elapsed');if(elapsed)elapsed.textContent=ICSMusic.time(ui.music.position);
-  }
+  // Music's playback (gb-music.js: MediaPlaybackService) keeps its state in the save.
+  function saveMusic() { GB.module('music').save(storeContext()); }
   // What the image's Google apps (gb-apps.js) render and act with.
   function gappContext() {
     return {data, ui, view: ui.view, root: viewport, account: window.GBGmail?.ACCOUNT || '', appName: id => appNames[id] || id, lang: i18n.language, locale: i18n.locale(), now: deviceDate(), hour24: !!data.settings.hour24,
@@ -676,32 +589,15 @@
       case 'back': back(); break;
       case 'menu-key': menuKey(); break;
       case 'search-key': searchKey(); break;
-      case 'gb-ga-silent': { const silent = !data.settings.silent; data.settings.silent = silent; data.settings.silentMode = silent ? (data.settings.vibrateSilent === false ? 'mute' : 'vibrate') : 'off'; ui.overlay = ''; save(); render(); break; }
-      case 'ga-power': ui.overlay = 'power-confirm'; ui.powerKind = 'shutdown'; renderOverlay(); break;
-      case 'ga-airplane': ui.overlay = ''; data.settings.airplane = !data.settings.airplane; if (data.settings.airplane) { data.settings.wifi = false; data.settings.bluetooth = false; } save(); render(); break;
-      case 'ga-confirm': powerConfirm(); break;
       // The search box and widget microphones start Voice Search's recognition dialog (gb-google-apps.js).
       case 'voice-search': openApp('voice-search'); break;
       case 'gb-menu-more': ui.overlay = 'gb-menu-more'; renderOverlay(); break;
       case 'settings-open': ui.overlay = ''; ui.view = 'settings'; ui.sub = id; ui.gbSettingsStack = id ? [''] : []; render(); break;
       // Select text arms the page (Browser / Google Mail): the next touch there selects (gb-browser.js).
       case 'gb-select-text': ui.overlay = ''; ui.gbMenuItems = null; renderOverlay(); ui.gbSelecting = ui.view; break;
-      case 'shade': if (ui.overlay === 'shade') { closeShade(); break; } if (ui.locked) break; ui.overlay = 'shade'; renderOverlay(); break;
-      case 'recent': if (ui.view === 'lock') break; if (ui.overlay !== 'recent') captureRecentView(); ui.overlay = ui.overlay === 'recent' ? '' : 'recent'; renderOverlay(); break;
       case 'close-overlay': if (ui.overlay === 'shade') { closeShade(); break; } ui.overlay = ''; renderOverlay(); break;
-      case 'clear-notifications': data.notifications = []; save(); renderStatus(); renderOverlay(); closeShade(); break;
-      case 'notification-open': { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar') { data.notifications = data.notifications.filter(item => item !== note); save(); ui.overlay = ''; openApp('calendar'); ui.selectedEvent = note.eventId; ui.selectedInstance = note.date; ui.selectedDate = note.date; ui.sub = 'event'; render(); break; } }
-        ui.overlay = ''; if (Number(id) === 2) openMessageThread(1); else { ui.view = 'settings'; ui.sub = 'about'; render(); } break;
       case 'toast': toast(id); break;
       case 'noop': break;
-      case 'alarm-snooze': {
-        const alarm=data.alarms.find(item=>item.id===ui.ringingAlarm.id);
-        // Snooze duration from the Clock settings (snooze_duration: 5, 10, ... 30 minutes).
-        const minutes=5*((data.appPrefs?.clock?.snooze_duration??1)+1);
-        if(alarm){alarm.enabled=true;alarm.snoozedUntil=deviceDate().getTime()+minutes*60000;save();}
-        ui.overlay='';render();toast(AndroidStrings.format(GBDeskClock.text(i18n.language,'alarm_alert_snooze_set'), String(minutes)));break;
-      }
-      case 'alarm-dismiss': ui.overlay=''; render(); break;
       default: StoreHost.ids().some(other => other !== ui.view && !other.startsWith('store-') && !StoreHost.module(other).google && StoreHost.module(other).action?.(action, button, storeContext())); break;
     }
   });
@@ -780,37 +676,11 @@
     if (data.settings.showTouches) { const dot = document.createElement('span'); const rect = screen.getBoundingClientRect(); dot.className = 'touch-indicator'; dot.style.left = `${event.clientX - rect.left}px`; dot.style.top = `${event.clientY - rect.top}px`; screen.append(dot); setTimeout(() => dot.remove(), 400); }
     const scrollTarget = (event.pointerType === 'mouse' && !ui.overlay && !event.target.closest('input, select, textarea, .wallpaper-choice')
       ? (ui.view === 'settings' && event.target.closest('.settings-app .app-content') ? event.target.closest('.settings-app') : event.target.closest('.play-content,.mms-scroll,.people-scroll,.browser-page,.web-tabs,.web-library,.gbdc-alarms,.gallery-scroll,.cal-scroll,.music-library-scroll,.email-scroll')) : null);
-    pointerStart = { x: event.clientX, y: event.clientY, target: event.target, pointerType: event.pointerType, pointerId: event.pointerId, downTime: performance.now(), scrollTarget, scrollTop: scrollTarget?.scrollTop || 0, shadeDragEligible: !ui.overlay && !ui.locked && !!event.target.closest('#status-bar'), shadeCloseEligible: ui.overlay === 'shade' && !!event.target.closest('.gbsh-close') };
+    pointerStart = { x: event.clientX, y: event.clientY, target: event.target, pointerType: event.pointerType, pointerId: event.pointerId, downTime: performance.now(), scrollTarget, scrollTop: scrollTarget?.scrollTop || 0 };
   });
   window.addEventListener('pointermove', event => {
     if (!pointerStart || event.pointerId !== pointerStart.pointerId) return;
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
-    const recentCard = ui.overlay === 'recent' ? pointerStart.target.closest('.recent-item') : ui.overlay === 'shade' ? pointerStart.target.closest('.notification') : null;
-    if (recentCard && (pointerStart.recentSwiping || Math.abs(dx) > dp(10) && Math.abs(dx) > Math.abs(dy))) {
-      pointerStart.recentSwiping = true;
-      suppressClickUntil = Date.now() + 350;
-      event.preventDefault();
-      try { screen.setPointerCapture(event.pointerId); } catch {}
-      recentCard.style.transform = `translateX(${dx}px)`;
-      recentCard.style.opacity = String(Math.max(.25, 1 - Math.abs(dx) / 240));
-      return;
-    }
-    if (pointerStart.shadeDragging || pointerStart.shadeDragEligible && dy > dp(9) && dy > Math.abs(dx) || pointerStart.shadeCloseEligible && Math.abs(dy) > dp(5)) {
-      const rect = screen.getBoundingClientRect(), scale = screen.clientHeight / rect.height;
-      if (!pointerStart.shadeDragging) {
-        pointerStart.shadeDragging = true; stopShade?.(); stopShade = null;
-        const panel = overlayRoot.querySelector('.gbsh-panel');
-        const start = panel ? new DOMMatrixReadOnly(getComputedStyle(panel).transform).m42 + shadeBottom() : statusRoot.offsetHeight;
-        shadeTracking = {expanded: ui.overlay === 'shade', offset: pointerStart.shadeCloseEligible ? start - (pointerStart.y - rect.top) * scale : 0, y: start, samples: []};
-        if (ui.overlay !== 'shade') { ui.overlay = 'shade'; renderOverlay(); }
-        try { screen.setPointerCapture(event.pointerId); } catch {}
-      }
-      event.preventDefault();
-      const y = Math.max(statusRoot.offsetHeight, Math.min(shadeBottom(), (event.clientY - rect.top) * scale + shadeTracking.offset));
-      shadeTracking.y = y; shadeTracking.samples.push([performance.now(), y]); if (shadeTracking.samples.length > 6) shadeTracking.samples.shift();
-      const panel = overlayRoot.querySelector('.gbsh-panel'); if (panel) GBStatusBar.place(panel, y, shadeBottom());
-      return;
-    }
     if (pointerStart.scrolling) { event.preventDefault(); pointerStart.scrollTarget.scrollTop = pointerStart.scrollTop - dy; return; }
     if (pointerStart.scrollTarget && Math.abs(dy) > dp(7) && Math.abs(dy) > Math.abs(dx)) {
       pointerStart.scrolling = true; screen.classList.add('settings-scrolling');
@@ -822,46 +692,10 @@
   window.addEventListener('pointerup', event => {
     if (!pointerStart || event.pointerId !== pointerStart.pointerId) return;
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
-    if (pointerStart.recentSwiping) {
-      const card = pointerStart.target.closest('.recent-item, .notification');
-      if (card) {
-        card.style.transition = 'transform .16s ease-out, opacity .16s ease-out';
-        if (Math.abs(dx) > dp(64)) {
-          const id = card.dataset.app;
-          card.style.transform = `translateX(${Math.sign(dx || 1) * screen.clientWidth}px)`;
-          card.style.opacity = '0';
-          setTimeout(() => {
-            if (card.classList.contains('notification')) {
-              data.notifications = data.notifications.filter(item => item.id !== Number(card.dataset.id));
-              save(); renderStatus();
-              if (ui.overlay === 'shade') { if (!data.notifications.length) ui.overlay = ''; renderOverlay(); }
-              return;
-            }
-            ui.recent = ui.recent.filter(item => item !== id);
-            if (ui.overlay !== 'recent') return;
-            if (!ui.recent.length) ui.overlay = '';
-            renderOverlay();
-          }, 160);
-        } else { card.style.transform = ''; card.style.opacity = ''; }
-      }
-      suppressClickUntil = Date.now() + 350;
-      pointerStart = null; return;
-    }
-    if (pointerStart.shadeDragging) {
-      suppressClickUntil = Date.now() + 350;
-      const track = shadeTracking; shadeTracking = null;
-      const [first, last] = [track.samples[0], track.samples.at(-1)];
-      let velocity = first && last && last[0] > first[0] ? (last[1] - first[1]) / ((last[0] - first[0]) / 1000) : 0;
-      const expand = GBStatusBar.flingDirection(track.expanded, track.y, velocity, screen.clientHeight);
-      if (expand ? velocity < 0 : velocity > 0) velocity = 0;
-      shadeFling(track.y, velocity, expand);
-      pointerStart = null; return;
-    }
     if (pointerStart.scrolling) { screen.classList.remove('settings-scrolling'); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
-    if (ui.overlay === 'shade' && pointerStart.target.closest('.notification') && Math.abs(dx) > dp(64)) { const id = Number(pointerStart.target.closest('.notification').dataset.id); data.notifications = data.notifications.filter(n => n.id !== id); save(); renderStatus(); renderOverlay(); pointerStart = null; return; }
     pointerStart = null;
   });
-  window.addEventListener('pointercancel', () => { screen.classList.remove('settings-scrolling'); if (pointerStart?.shadeDragging || ui.overlay === 'recent' || ui.overlay === 'shade') renderOverlay(); pointerStart = null; });
+  window.addEventListener('pointercancel', () => { screen.classList.remove('settings-scrolling'); pointerStart = null; });
   document.addEventListener('keydown', event => {
     if (event.target.matches('.recent-item,.web-tab-preview') && ['Enter',' '].includes(event.key)) { event.preventDefault(); event.target.click(); return; }
     // A store app's own key (its store id: Focus Timer, Pocket Planner, Daily Weather) is not a key handler.
@@ -870,9 +704,6 @@
     else if (event.key === 'Home' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); if (ui.view !== 'lock') home(); }
 
   });
-  function powerKey() { if (ui.power === 'off') { bootUp(); return; } if (ui.power || ui.overlay === 'power-progress') return; if(ui.locked){ui.sleeping=!ui.sleeping;lockControls.lock();render();}else if(ui.sleeping||ui.view==='lock'){ui.sleeping=false;home(false);}else lockScreen(); }
-  // PhoneWindowManager: holding the key opens GlobalActions only while the screen is on; otherwise it just wakes.
-  function powerHold() { if (ui.power || ui.sleeping || ui.overlay === 'power-progress') { powerKey(); return; } ui.overlay = 'power-menu'; render(); }
   // Touch keys: any touch on the device lights them; holding Home for the 500 ms long-press timeout opens the recent apps.
   document.querySelector('#device').addEventListener('pointerdown', pokeKeylight, true);
   document.addEventListener('keydown', pokeKeylight, true);
@@ -881,86 +712,6 @@
     if (event.target.matches('[data-wifi-show]')) { const input = overlayRoot.querySelector('[data-wifi-password]'); if (input) input.type = event.target.checked ? 'text' : 'password'; }
     if (event.target.matches('[data-vol-same]')) overlayRoot.querySelector('[data-vol-notification]')?.toggleAttribute('hidden', event.target.checked);
   });
-  let homeHold = 0;
-  navRoot.addEventListener('pointerdown', event => {
-    const key = event.target.closest('.touch-home'); if (!key || key.disabled || event.button) return;
-    clearTimeout(homeHold);
-    homeHold = setTimeout(() => {
-      homeHold = 0;
-      const swallow = click => { click.stopPropagation(); click.preventDefault(); window.removeEventListener('click', swallow, true); };
-      window.addEventListener('click', swallow, true); setTimeout(() => window.removeEventListener('click', swallow, true), 600);
-      if (ui.view !== 'lock' && ui.overlay !== 'recent') { captureRecentView(); ui.overlay = 'recent'; renderOverlay(); }
-    }, 500);
-  });
-  for (const type of ['pointerup', 'pointercancel', 'pointerleave']) navRoot.addEventListener(type, () => { clearTimeout(homeHold); homeHold = 0; });
-  for (const key of [document.querySelector('#power-button'), document.querySelector('.power-key')]) { key.addEventListener('click', powerKey); GlobalActions.hold(key, powerHold); }
-  // ShutdownThread: the confirmation, the "Shutting down…" progress dialog with a 500 ms vibration, then off.
-  function powerConfirm() {
-    ui.overlay = 'power-progress'; renderOverlay(); navigator.vibrate?.(500);
-    setTimeout(powerOff, GlobalActions.SHUTDOWN_MS);
-  }
-  function powerOff() {
-    if (ui.activeCall) ui.activeCall = null;
-    if (ui.music) ui.music.playing = false;
-    ui.overlay = ''; ui.view = 'home'; ui.sub = ''; ui.recent = []; ui.recentState = {}; ui.recentSnapshots = {}; ui.power = 'off';
-    render(); renderPower();
-  }
-  function bootUp(booted) {
-    booted ||= AndroidBoot.prepare({markup: apps.map(app => appIcon(app[0])).join('')});
-    ui.power = 'boot'; renderPower();
-    // Finish after the native movie, or after a requested skip once startup resources are ready.
-    let finished = false, stop = () => {};
-    const finish = () => { if (finished) return; finished = true; stop(); AndroidBoot.complete('2.3.6'); ui.power = ''; lockScreen(); ui.sleeping = false; if (!ui.locked && ui.view !== 'lock') home(); else render(); renderPower(); lastActivity = Date.now(); };
-    stop = GlobalActions.playBoot(powerLayer.firstElementChild, finish, booted);
-    return finish;
-  }
-  /* A fresh tab always shows the image's boot movie, including reduced-motion/private browsing.
-     Its exit waits for decoded launcher/keyguard resources; a requested skip cannot reveal unloaded icons. */
-  function coldBoot() {
-    if (!AndroidBoot.shouldBoot('2.3.6')) return;
-    const booted = AndroidBoot.prepare({markup: apps.map(app => appIcon(app[0])).join('')});
-    const finish = bootUp(booted);
-    const skip = event => { off(); if (ui.power !== 'boot') return; event.preventDefault(); event.stopPropagation(); suppressClickUntil = Date.now() + 350; booted.then(finish); };
-    const off = () => { powerLayer.removeEventListener('pointerdown', skip); window.removeEventListener('keydown', skip, true); };
-    powerLayer.addEventListener('pointerdown', skip); window.addEventListener('keydown', skip, true);
-  }
-  // Volume keys: the active stream's slider, a 3 s timeout, and a touch anywhere else closes it.
-  const volumeLayer = document.createElement('div'); volumeLayer.id = 'volume-layer'; screen.append(volumeLayer);
-  let volumeTimer = 0, volumePrevious = 0;
-  const volumeStream = () => VolumePanel.activeStream({inCall: !!ui.activeCall, musicActive: !!ui.music?.playing});
-  function volumeKey(direction) {
-    if (ui.power) return;
-    // AlarmAlert: the side buttons do what Clock's volume_button_setting says (None / Snooze / Dismiss).
-    if (ui.overlay === 'clock-ringing') { const how = data.appPrefs?.clock?.volume_button_setting ?? 2; if (how) { const key = document.createElement('button'); key.dataset.action = how === 1 ? 'alarm-snooze' : 'alarm-dismiss'; overlayRoot.append(key); key.click(); key.remove(); return; } }
-    const stream = volumeStream();
-    // With the screen off the keys only reach music that is playing, and no panel is shown.
-    if (ui.sleeping && stream !== 'music') return;
-    const result = VolumePanel.adjust(data.settings, stream, direction, volumePrevious); volumePrevious = direction;
-    save(); renderStatus();
-    if (result.vibrate) setTimeout(() => navigator.vibrate?.(VolumePanel.VIBRATE_DURATION), VolumePanel.VIBRATE_DELAY);
-    if (!ui.sleeping) showVolume(stream);
-  }
-  function showVolume(stream) {
-    volumeLayer.innerHTML = VolumePanel.render(data.settings, stream, key => i18n.t(key), i18n.language);
-    VolumePanel.bindSeek(volumeLayer, VolumePanel.STREAMS[stream].max, value => { VolumePanel.setIndex(data.settings, stream, value); save(); VolumePanel.update(volumeLayer, data.settings, stream); resetVolumeTimeout(); });
-    resetVolumeTimeout();
-  }
-  function resetVolumeTimeout() { clearTimeout(volumeTimer); volumeTimer = setTimeout(hideVolume, VolumePanel.TIMEOUT); }
-  function hideVolume() { clearTimeout(volumeTimer); const panel = volumeLayer.firstElementChild; if (!panel || panel.classList.contains('fading')) return; panel.classList.add('fading'); setTimeout(() => panel.remove(), 400); }
-  // The volume toast stays for its LENGTH_SHORT whatever is touched.
-  // Held keys repeat after config_keyRepeatTimeout (500 ms) every 50 ms, as key repeats do.
-  function bindVolumeKey(element, direction) {
-    let delay = 0, repeat = 0;
-    const stop = () => { clearTimeout(delay); clearInterval(repeat); };
-    element.addEventListener('pointerdown', event => { if (event.button) return; event.preventDefault(); const dir = typeof direction === 'function' ? direction(event) : direction; volumeKey(dir); stop(); delay = setTimeout(() => { repeat = setInterval(() => volumeKey(dir), 50); }, 500); });
-    ['pointerup', 'pointercancel', 'pointerleave'].forEach(type => element.addEventListener(type, stop));
-    element.addEventListener('click', event => { if (event.detail === 0) volumeKey(typeof direction === 'function' ? 1 : direction); });
-  }
-  bindVolumeKey(document.querySelector('#volume-down'), -1);
-  bindVolumeKey(document.querySelector('#volume-up'), 1);
-  bindVolumeKey(document.querySelector('.volume-rocker'), event => event.offsetY < event.currentTarget.clientHeight / 2 ? 1 : -1);
-  const powerLayer = document.createElement('div'); powerLayer.id = 'power-layer'; screen.append(powerLayer);
-  function renderPower() { if (ui.power === 'boot' && powerLayer.querySelector('.ga-boot')) return; powerLayer.innerHTML = ui.power === 'off' ? '<div class="ga-off"></div>' : ui.power === 'boot' ? GlobalActions.boot() : ''; }
   screen.addEventListener('pointerdown',()=>{if(ui.sleeping){ui.sleeping=false;suppressClickUntil=Date.now()+350;if(ui.locked)render();else home(false);}},true);
   // Full screen (Fullscreen API): hides the browser chrome on phones and keeps portrait where the browser allows it.
   const fullscreenButton = document.querySelector('#fullscreen-button');
@@ -994,19 +745,16 @@
     document.querySelectorAll('.status-clock').forEach(node => { node.textContent = clock(); });
     const now = deviceDate();
     if(!document.hidden && !ui.sleeping && ui.view!=='lock' && !ui.overlay && !ui.activeCall && !GB.module('home').dragging() && SCREEN_TIMEOUT[data.settings.screenTimeout ?? GBSettings.DEFAULTS.screenTimeout]!==undefined&&Date.now()-lastActivity>=SCREEN_TIMEOUT[data.settings.screenTimeout ?? GBSettings.DEFAULTS.screenTimeout]){captureRecentView();lockScreen();lastActivity=Date.now();}
-    checkAlarms(now);
-    checkReminders(now);
     document.querySelectorAll('.analog-clock').forEach(node => {
       node.setAttribute('aria-label', clock());
       node.querySelector('.clock-hour').style.transform = `rotate(${now.getHours() % 12 * 30 + now.getMinutes() / 2}deg)`;
       node.querySelector('.clock-minute').style.transform = `rotate(${now.getMinutes() * 6}deg)`;
     });
     const lockTime = document.querySelector('.lock-time'); if (lockTime) lockTime.textContent = clock();
-    tickMusic();
   }, 1000);
 
   for (const id of StoreHost.ids()) StoreHost.module(id).init?.(storeContext());
   i18n.translateDOM(document.body);
   render();
-  coldBoot();
+  GB.module('power').coldBoot(storeContext());
 })();

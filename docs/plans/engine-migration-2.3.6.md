@@ -44,6 +44,8 @@ one `GB.register(id, {...})` module per screen.
 | App settings screens (GBPrefs) | gb-prefs.js (the prefs module) | 59597d79 |
 | Lock screen | gb-keyguard.js | e06357db |
 | Home screen, app drawer | gb-launcher.js (home, drawer) | 7ae0ced5 |
+| Status bar, shade, Recents, power and boot, volume | gb-system.js (new) | |
+| Alarm alert, music playback, calendar reminders | gb-deskclock.js (alarm), gb-music.js, gb-calendar.js | |
 
 Bugs fixed on the way (their own commits):
 

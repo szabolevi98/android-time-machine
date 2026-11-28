@@ -58,9 +58,10 @@ async function playOrder(v,exitAfter,frames){
     d.parts.forEach((p,i)=>assert.equal(frames[`part${i}`],p.count?p.count*p.frames:p.frames,`${v} part${i}`));}
   {const frames={};await playOrder('2.3.6',30,frames);assert.equal(frames.part1%49,0,'2.3.6: the looping X shine is not cut off half-way');}
   // Cold start: a new tab boots each version once (sessionStorage), after the first render, into the lock screen.
-  for(const v of ['2.3.6','4.0.4','4.3','4.4.4','5.1.1']){const src=fs.readFileSync(`versions/${v}/simulator.js`,'utf8').replace(/\r\n/g,'\n');
+  // 2.3.6 runs on its module core (gb-core.js; the boot is gb-system.js's power module).
+  for(const v of ['2.3.6','4.0.4','4.3','4.4.4','5.1.1']){const src=(v==='2.3.6'?require('./lib/engine-source.cjs')(v):fs.readFileSync(`versions/${v}/simulator.js`,'utf8')).replace(/\r\n/g,'\n');
     assert.ok(src.includes(`AndroidBoot.shouldBoot('${v}')`)&&src.includes('AndroidBoot.prepare'),v);
-    assert.ok(/\n  render\(\);\n  coldBoot\(\);\n\}\)\(\);\s*$/.test(src),`${v}: coldBoot after the first render`);
+    assert.ok(v==='2.3.6'?/\n\s*render\(\);\n\s*GB\.module\('power'\)\.coldBoot\(/.test(src):/\n  render\(\);\n  coldBoot\(\);\n\}\)\(\);\s*$/.test(src),`${v}: coldBoot after the first render`);
     assert.ok(/const finish = \(\) => \{[^\n]*lockScreen\(\)/.test(src),`${v}: the boot ends on the lock screen`);}
   console.log('Global actions checks passed: item order per version, ringer modes, dialogs, assets and boot animations.');
 })().catch(error=>{console.error(error);process.exit(1);});

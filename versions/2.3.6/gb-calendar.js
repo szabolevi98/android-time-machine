@@ -389,3 +389,21 @@
     clearData(c) { c.data.events = c.clone(c.defaults.events); }
   });
 })();
+
+// Calendar AlertService: a status-bar notification at the reminder time while the page is running.
+(() => {
+  'use strict';
+  const calendar = window.GB?.module('calendar'); if (!calendar) return;
+  const i18n = window.AndroidI18n;
+  calendar.tick = c => {
+    const {data, ui, save, renderStatus, renderOverlay} = c, now = c.deviceDate();
+    data.calendarFired=Array.isArray(data.calendarFired)?data.calendarFired.slice(-60):[];
+    for(const {key,event} of ICSCalendar.dueReminders(data.events,now,data.calendarFired)) {
+      data.calendarFired.push(key);
+      const when=event.allDay?i18n.t('All day'):`${event.time} – ${event.endTime}`;
+      data.notifications.unshift({id:Date.now()+data.notifications.length,title:event.title,detail:[when,event.location].filter(Boolean).join(' · '),kind:'calendar',eventId:event.id,date:event.date});
+      save();renderStatus();if(ui.overlay==='shade')renderOverlay();
+    }
+  
+  };
+})();
