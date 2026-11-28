@@ -49,3 +49,5 @@ the module core, screen by screen, until it is gone.
 | 2 | Settings (with Print, cell broadcasts, users, security, Interruptions, Daydream's settings) | lp-settings.js | moved |
 | 3 | Volume panel | lp-volume.js | moved |
 | 3 | Power key, global actions, power off and boot | lp-power.js | moved |
+| 3 | Daydream (the screen saver) | lp-dream.js | moved |
+| 3 | Recents and screen pinning | lp-recents-app.js | moved |

@@ -453,48 +453,6 @@
     });
   }
   const mixVelocity = (old, value, k) => old === undefined ? value : old + (value - old) * k;
-  /* TaskStackView.onStackTaskRemoved: the front-most remaining task keeps its place (the stack scroll moves by as much
-     as it would fall back) and the other cards glide to their new transforms in 200 ms
-     (requestSynchronizeStackViewsWithModel(200), fast_out_slow_in). With no task left, onAllTaskViewsDismissed runs
-     mFinishLaunchHomeRunnable: Home starts with recents_to_launcher_enter (150 ms linear fade in) under
-     recents_to_launcher_exit (Recents fades out in 150 ms, linear_out_slow_in). */
-  function removeRecentTask(id) {
-    if (ui.overlay !== 'recent') return;
-    const panel = overlayRoot.querySelector('.lp-recents'), tasks = [...ui.recent].reverse(), index = tasks.indexOf(id);
-    if (index < 0) return;
-    ui.recent = ui.recent.filter(item => item !== id);
-    if (!ui.recent.length) {
-      ui.lpRecents?.destroy(); ui.lpRecents = null; ui.recentsScroll = undefined;
-      home(false); updateBarMode();
-      if (panel?.animate && !reducedMotion?.matches) {
-        panel.style.pointerEvents = 'none'; overlayRoot.append(panel);
-        panel.animate([{opacity: 1}, {opacity: 0}], {duration: 150, easing: 'cubic-bezier(0,0,.2,1)', fill: 'forwards'}).finished.then(() => panel.remove(), () => panel.remove());
-        viewport.animate([{opacity: 0}, {opacity: 1}], {duration: 150, easing: 'linear'});
-      }
-      return;
-    }
-    const old = new Map([...(panel?.querySelectorAll('.lp-task') || [])].filter(card => !card.hidden).map(card => [card.dataset.app, card.style.transform]));
-    const m = LPRecents.metrics(tasks.length), between = tasks.length > 1 ? m.progress[1] - m.progress[0] : 0;
-    if (ui.recentsScroll !== undefined && index !== tasks.length - 1) ui.recentsScroll -= between;
-    ui.recentsFrom = null;
-    renderOverlay();
-    const next = overlayRoot.querySelector('.lp-recents');
-    if (!next) return;
-    ui.recentsScroll = LPRecents.layout(next, ui.recentsScroll);
-    if (reducedMotion?.matches) return;
-    next.querySelectorAll('.lp-task').forEach(card => {
-      const from = old.get(card.dataset.app);
-      if (from && !card.hidden && from !== card.style.transform) card.animate([{transform: from}, {transform: card.style.transform}], {duration: 200, easing: 'cubic-bezier(.4,0,.2,1)'});
-    });
-  }
-  // recents_return_to_launcher: Recents fades out while the launcher fades back in (250 ms).
-  // Leaving Overview for home: the stack drops away (recents_task_exit_to_home_duration, 225 ms) as the launcher returns.
-  function closeRecents() {
-    const panel = overlayRoot.querySelector('.recent-panel'); ui.recentPopup = null; ui.recentsScroll = undefined;
-    const done = () => { ui.overlay = ''; ui.lpRecents?.destroy(); ui.lpRecents = null; renderOverlay(); updateBarMode(); };
-    if (!panel?.animate || reducedMotion?.matches) { done(); return; }
-    LPRecents.exit(panel).then(done, done);
-  }
   /* SearchPanelView: an upward swipe of navbar_search_up_threshhold (40dp) from the navigation bar shows the ring;
      releasing on the assist target starts search (the Google Search app on Google builds, Browser here). */
   // PointerLocationView: the bar at the top follows the primary pointer while the option is on.
@@ -503,16 +461,6 @@
   screen.addEventListener('pointermove', event => { if (data.settings.pointerLocation) JBDeveloperOptions.pointerMove(screen, event, event.buttons > 0, 1); }, true);
   window.addEventListener('pointerup', event => { if (data.settings.pointerLocation) JBDeveloperOptions.pointerMove(screen, event, false, 1); }, true);
   let searchSwipe = null;
-  const pinHeld = new Set(); let pinTimer = 0;
-  navRoot.addEventListener('pointerdown', event => {
-    if (!ui.pinned) return;
-    const key = event.target.closest('.nav-back') ? 'back' : event.target.closest('.nav-recent') ? 'recent' : '';
-    if (!key) return;
-    pinHeld.add(key); clearTimeout(pinTimer);
-    if (pinHeld.has('recent')) pinTimer = setTimeout(() => { if (pinHeld.has('recent')) { suppressClickUntil = Date.now() + 400; unpin(); } }, pinHeld.has('back') ? 500 : 1000);
-  });
-  window.addEventListener('pointerup', event => { pinHeld.clear(); clearTimeout(pinTimer); });
-  window.addEventListener('pointercancel', () => { pinHeld.clear(); clearTimeout(pinTimer); });
   navRoot.addEventListener('pointerdown', event => { if (ui.locked || ui.view === 'lock' || event.button > 0) return; searchSwipe = {id: event.pointerId, x: event.clientX, y: event.clientY, panel: null}; }, true);
   window.addEventListener('pointermove', event => {
     if (!searchSwipe || event.pointerId !== searchSwipe.id) return;
@@ -580,16 +528,6 @@
     handle.style.setProperty('--lock-x', '0px'); handle.style.setProperty('--lock-y', '0px');
     clearTimeout(ui.lockReleaseTimer);
     ui.lockReleaseTimer = setTimeout(() => { screen.classList.remove('lock-releasing'); lockPing(); }, 300);
-  }
-  const dreams = [['clock', 'Clock'], ['colors', 'Colors'], ['photoframe', 'Photo Frame']];
-  // Dreams: DeskClock Screensaver (dimmed clock that moves every minute), SystemUI Colors and a photo slideshow.
-  function renderDream() {
-    const type = data.settings.daydreamType || 'clock', now = deviceDate();
-    if (type === 'colors') return '<div class="jb-dream jb-dream-colors" data-action="dream-exit" role="button" tabindex="0" aria-label="Daydream"></div>';
-    if (type === 'photoframe') { const photo = data.photos[Math.floor(Date.now() / 6000) % Math.max(1, data.photos.length)]; return `<div class="jb-dream jb-dream-photo" data-action="dream-exit" role="button" tabindex="0" aria-label="Daydream">${photo ? `<img src="${ICSMedia.image(photo)}" alt="">` : ''}</div>`; }
-    const time = now.toLocaleTimeString(i18n.locale(), {hour: data.settings.hour24 ? '2-digit' : 'numeric', minute: '2-digit', hour12: !data.settings.hour24}), [hours, rest = ''] = time.split(/[:.]/);
-    const spot = Math.floor(Date.now() / 60000) % 4;
-    return `<div class="jb-dream jb-dream-clock" data-action="dream-exit" role="button" tabindex="0" aria-label="Daydream"><div class="jb-dream-saver" style="--spot:${spot}"><div class="jbclock-time"><span class="jbclock-hours">${safe(hours)}</span><span class="jbclock-minutes">:${safe(rest.replace(/\s?[^\d].*$/, ''))}</span></div><div class="jbclock-date">${safe(now.toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).toLocaleUpperCase(i18n.locale()))}${nextAlarmLabel() ? ` <img src="assets/dc5-ic_alarm_small.png" alt="">${safe(nextAlarmLabel())}` : ''}</div></div></div>`;
   }
   function renderLock() {
     if(ui.locked)return lockControls.renderLock();
@@ -803,14 +741,6 @@
   function home(resetPage = true) { if(ui.locked)return;if(ui.photoWidgetSetup){const setup=ui.photoWidgetSetup;data.homeWidgets[setup.page]=data.homeWidgets[setup.page].filter(widget=>widget.id!==setup.id);ui.photoWidgetSetup=null;save();}if(ui.sub==='lock-setup')lockControls.lock();captureRecentView(); ui.view = 'home'; ui.sub = ''; ui.overlay = ''; ui.overview = false; if (resetPage) ui.page = 0; render(); }
   function back() { pendingNav = 'back'; try { navigateBack(); } finally { pendingNav = ''; } }
 
-  // Screen pinning: the reminder toast, and unpinning (lock_to_app_exit, then the lock screen when it asks for the lock).
-  function pinnedToast() { toast(i18n.t('To unpin this screen, touch and hold Back and Overview at the same time.')); }
-  function unpin() {
-    if (!ui.pinned) return;
-    ui.pinned = null; updateBarMode(); toast(i18n.t('Screen unpinned'));
-    const secure = ['pin', 'password', 'pattern'].includes(data.settings.screenLock);
-    if (data.settings.pinExitLocked ?? secure) { lockScreen(); ui.sleeping = false; render(); }
-  }
   const chromeText = key => AndroidStrings.pick(window.StockStrings?.chrome?.[key], i18n.locale(), key);
   function navigateBack() {
     if ((ui.overlay === 'store-host' || !ui.overlay && ui.view.startsWith('store-')) && StoreHost.back(storeContext())) return;
@@ -828,7 +758,7 @@
     if (LP.module('clock').back()) return;
     if (LP.module('google-search').backGms()) return;
     // A pinned app keeps its first screen: Back stops there.
-    if (ui.pinned && ui.view === ui.pinned && !ui.overlay && !ui.sub) { pinnedToast(); return; }
+    if (LP.module('recent').backPinned()) return;
     if (LP.module('google-search').backRoute()) return;
     // News & Weather: a dialog, then the article page, then an expanded story.
     if (LP.module('google-search').backNews()) return;
@@ -959,8 +889,6 @@
       // A screen's own menu or dialog (lp-*.js modules).
     } else if (ui.overlay === 'store-host') {
       overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
-    } else if (ui.overlay === 'dream') {
-      overlayRoot.innerHTML = renderDream();
     } else if (ui.overlay === 'kg-widget-picker') {
       const choices = [['calendar', 'Calendar', 'calendar.png'], ['clock', 'Digital clock', 'clock.png']];
       overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog jbk-picker" role="dialog" aria-label="${safe(i18n.t('Choose widget'))}"><h3>${safe(i18n.t('Choose widget'))}</h3>${choices.map(([type, label, icon]) => `<button data-action="kg-pick-widget" data-id="${type}"><img src="assets/${icon}" alt=""><span>${safe(i18n.t(label))}</span></button>`).join('')}<div class="settings-dialog-actions"><button data-action="close-overlay">${safe(i18n.t('Cancel'))}</button></div></div>`;
@@ -973,16 +901,6 @@
       overlayRoot.innerHTML = ICSWidgets.photoOverlay(data, ui, key => i18n.t(key));
     } else if (ui.overlay === 'search') {
       if (!overlayRoot.querySelector('[data-jb-search]')) overlayRoot.innerHTML = JBSearchPanel.markup(key => i18n.t(key));
-    } else if (ui.overlay === 'recent') {
-      ui.lpRecents?.destroy();
-      const searchCard = `<div class="lp-qsb-card"><button data-action="browser-search" aria-label="${safe(i18n.t('Search'))}"><img class="lp-qsb-logo" src="assets/gnl-ic_searchbox_google.png" alt="Google"></button><button class="voice-search" data-action="voice-search" aria-label="${safe(i18n.t('Voice Search'))}"><img class="lp-qsb-mic" src="assets/gnl-ic_mic_none.png" alt=""></button></div>`;
-      overlayRoot.innerHTML = LPRecents.render(ui.recent, {names: appNames, icon: appIcon, snapshots: ui.recentSnapshots, colors: LP_PRIMARY, statusColors: LP_STATUS_COLORS, t: key => i18n.t(key), pin: !!data.settings.screenPinning, search: searchCard});
-      const panel = overlayRoot.querySelector('.lp-recents');
-      ui.lpRecents = LPRecents.attach(panel, {scroll: ui.recentsScroll, reduced: !!reducedMotion?.matches, from: ui.recentsFrom, elapsed: performance.now() - (ui.recentsAt || 0), onScroll: (value, end) => { ui.recentsScroll = value; if (end) suppressClickUntil = Date.now() + 300; }});
-      if (ui.recentsScroll === undefined) ui.recentsScroll = LPRecents.layout(panel);
-    } else if (ui.overlay === 'pin-request') {
-      const ring = key => `<span class="pin-key ${key}"><i></i><img src="assets/lp-ic_sysbar_${key}.png" alt=""></span>`;
-      overlayRoot.innerHTML = `<div class="pin-scrim"></div><div class="pin-request" role="dialog" aria-label="${safe(i18n.t('Screen is pinned'))}" data-no-translate><h3>${safe(i18n.t('Screen is pinned'))}</h3><p>${safe(i18n.t('This keeps it in view until you unpin. Touch and hold Back and Overview at the same time to unpin.'))}</p><div class="pin-buttons"><button data-action="pin-cancel">${safe(i18n.t('No thanks'))}</button><button data-action="pin-ok">${safe(i18n.t('Got it'))}</button></div><div class="pin-nav">${ring('back')}<span class="pin-key home"><img src="assets/lp-ic_sysbar_home.png" alt=""></span>${ring('recent')}</div></div>`;
     } else if (ui.overlay === 'folder') {
       overlayRoot.innerHTML = renderFolder();
       positionFolder();
@@ -1184,7 +1102,7 @@
     // Email's Quick responses, ringtone and server screens (email-prefs.js).
     if (ui.view === 'gallery' && ui.galleryPopup && action !== 'gallery-menu') ui.galleryPopup = '';
     // A tap outside the Recents popup menu only dismisses it.
-    if (ui.overlay === 'recent' && ui.recentPopup && !['remove-recent', 'recent-app-info'].includes(action)) { ui.recentPopup = null; renderOverlay(); return; }
+    if (LP.module('recent').preClick(action)) return;
     if(ui.locked){
       // KeyguardHostView: launching from a widget or adding one needs the bouncer first.
       const pending={'kg-add-widget':{type:'add'},'widget-calendar-open':{type:'calendar'},'widget-calendar-event':{type:'calendar',id,date:button.dataset.date}}[action];
@@ -1205,14 +1123,7 @@
         openApp(app || id, !!button.closest('.recent-item')); break;
       }
       // Screen pinning: Home and Overview only remind how to unpin; ScreenPinningRequest confirms the pin.
-      case 'home': if (ui.pinned && ui.view !== 'lock') { pinnedToast(); break; } if (ui.view !== 'lock') home(); break;
-      case 'lp-pin': event.stopPropagation(); ui.recentPopup = null; ui.recentsScroll = undefined; ui.lpRecents?.destroy(); ui.lpRecents = null; openApp(app, true); ui.overlay = 'pin-request'; renderOverlay(); updateBarMode(); break;
-      case 'pin-ok': ui.pinned = ui.view; ui.overlay = ''; renderOverlay(); updateBarMode(); toast(i18n.t('Screen pinned')); break;
-      case 'pin-cancel': ui.overlay = ''; renderOverlay(); break;
-      case 'lp-pin-lock': { const secure = ['pin', 'password', 'pattern'].includes(data.settings.screenLock), current = data.settings.pinExitLocked ?? secure;
-        // Without a secure lock, turning it on asks for one first (ChooseLockGeneric).
-        if (!current && !secure) { data.settings.pinExitLocked = true; save(); lockControls.open(); render(); break; }
-        data.settings.pinExitLocked = !current; save(); render(); break; }
+      case 'home': if (ui.pinned && ui.view !== 'lock') { lp.pinnedToast(); break; } if (ui.view !== 'lock') home(); break;
       case 'back': back(); break;
       case 'drawer': {
         // The reveal starts on the all apps button: its centre's offset from the panel centre, in screen px.
@@ -1249,26 +1160,7 @@
       case 'lock-media': if (id === 'play') { ui.music.playing = !ui.music.playing; if (ui.music.playing && ui.music.position >= tracks[ui.music.track].duration) ui.music.position = 0; } else ICSMusic.step(ui.music, id === 'previous' ? -1 : 1); ui.musicTrack = ui.music.track; lp.saveMusic(); render(); break;
       case 'lock-hint': screen.classList.add('lock-dragging'); setTimeout(() => { if (!pointerStart?.lockDrag) lockRelease(null); }, 1000); break;
       case 'shade': if (ui.pinned) break; ui.overlay = ui.overlay === 'shade' ? '' : 'shade'; renderOverlay(); break;
-      case 'recent': {
-        if (ui.view === 'lock') break;
-        if (ui.pinned) { pinnedToast(); break; }
-        if (ui.overlay === 'recent') { closeRecents(); break; }
-        captureRecentView(); ui.recentPopup = null; ui.recentsScroll = undefined;
-        ui.recentsFrom = ui.view === 'home' ? 'home' : 'app'; ui.recentsAt = performance.now(); ui.overlay = 'recent'; renderOverlay(); updateBarMode();
-        break;
-      }
-      case 'recent-app-info': ui.overlay = ''; ui.recentPopup = null; openApp('settings'); ui.settingsApp = id; ui.sub = 'app-info'; render(); break;
-      case 'close-overlay': if (ui.overlay === 'recent') { closeRecents(); break; } ui.overlay = ''; renderOverlay(); break;
-      case 'remove-recent': {
-        // TaskView.startDeleteTaskAnimation: translationX to recents_task_view_remove_anim_translation_x (100 dp) and alpha
-        // 0 over recents_animate_task_view_remove_duration (250 ms) with fast_out_slow_in, then the task goes.
-        event.stopPropagation(); ui.recentPopup = null;
-        const card = button.closest('.lp-task');
-        if (!card || reducedMotion?.matches) { removeRecentTask(id); break; }
-        card.style.transition = 'translate .25s cubic-bezier(.4,0,.2,1), opacity .25s cubic-bezier(.4,0,.2,1)';
-        card.style.translate = `${(100 * LPRecents.DP()).toFixed(2)}px 0`; card.style.opacity = '0';
-        setTimeout(() => removeRecentTask(id), 250); break;
-      }
+      case 'close-overlay': if (ui.overlay === 'recent') { lp.closeRecents(); break; } ui.overlay = ''; renderOverlay(); break;
       case 'clear-notifications': {
         const rows = [...overlayRoot.querySelectorAll('.jb-note')], delays = LPShade.clearDelays(rows.length);
         if (reducedMotion?.matches || !rows.length) { data.notifications = []; ui.overlay = ''; save(); renderStatus(); renderOverlay(); break; }
@@ -1277,8 +1169,6 @@
         setTimeout(() => { data.notifications = []; save(); renderStatus(); if (ui.overlay === 'shade') { ui.overlay = ''; renderOverlay(); } }, (delays.at(-1) || 0) + 125 + 225);
         break;
       }
-      case 'dream-start': ui.overlay = 'dream'; ui.dreamKey = ''; renderOverlay(); break;
-      case 'dream-exit': ui.overlay = ''; renderOverlay(); break;
       case 'kg-add-widget': ui.overlay = 'kg-widget-picker'; renderOverlay(); break;
       case 'kg-pick-widget': { const widgets = data.keyguardWidgets ||= []; if (widgets.length < JBKeyguard.MAX_WIDGETS) { widgets.push({id: `kg-${Date.now()}`, type: id}); save(); ui.kgPage = widgets.length; } ui.overlay = ''; if (ui.kgRelock) { ui.kgRelock = false; const page = ui.kgPage; lockScreen(); ui.kgPage = page; render(); } else render(); break; }
       // Lollipop Quick Settings: the icon toggles, the dual label opens the tile's detail.
@@ -2075,7 +1965,7 @@
           const duration = velocity ? Math.min(150, Math.abs(target - dx) * 1000 / Math.abs(velocity)) : 75;
           card.style.transition = `translate ${duration.toFixed(0)}ms linear`; card.style.translate = `${target}px 0`;
           const id = card.dataset.app;
-          setTimeout(() => removeRecentTask(id), duration);
+          setTimeout(() => lp.removeRecentTask(id), duration);
         } else {
           card.style.transition = 'translate .25s cubic-bezier(0,0,.2,1)'; card.style.translate = '';
         }
@@ -2199,13 +2089,7 @@
     lp.checkTimers();
     // Interruptions: the end of a countdown, alarm or downtime condition, and Downtime's autotrigger.
     if (LPZen.tick(data.settings, now.getTime(), nextAlarmTime())) { save(); renderStatus(); if (ui.view === 'settings' && ui.sub === 'zen' && !ui.overlay) render(); }
-    // Dreams redraw only when the saver moves (each minute) or the slideshow advances; otherwise just the text changes.
-    if (ui.overlay === 'dream' && !pointerStart) {
-      const key = `${data.settings.daydreamType}:${Math.floor(Date.now() / 60000)}:${Math.floor(Date.now() / 6000)}`, type = data.settings.daydreamType || 'clock';
-      const changed = type === 'clock' ? key.split(':')[1] !== ui.dreamKey?.split(':')[1] : type === 'photoframe' ? key !== ui.dreamKey : false;
-      if (changed || !ui.dreamKey) { ui.dreamKey = key; renderOverlay(); }
-      else { const fresh = document.createElement('div'); fresh.innerHTML = renderDream(); const saver = overlayRoot.querySelector('.jb-dream-saver'), next = fresh.querySelector('.jb-dream-saver'); if (saver && next) { saver.querySelector('.jbclock-time').innerHTML = next.querySelector('.jbclock-time').innerHTML; } }
-    }
+    LP.module('dream').clockTick();
     lp.checkReminders(now);
     LP.module('photos').clockTick();
     const deskTime=document.querySelector('.desk-time');
@@ -2236,17 +2120,18 @@
     get chromeText() { return chromeText; }, get clearAppData() { return clearAppData; },
     get clock() { return clock; }, get clone() { return clone; }, get contact() { return contact; },
     get data() { return data; }, set data(v) { data = v; }, get defaultData() { return defaultData; },
-    get deviceDate() { return deviceDate; }, get dp() { return dp; }, get dreams() { return dreams; },
-    get emailData() { return emailData; }, get headsUp() { return headsUp; },
-    get HOLD_NAMES() { return HOLD_NAMES; }, get holdDelay() { return holdDelay; }, get home() { return home; },
+    get deviceDate() { return deviceDate; }, get dp() { return dp; }, get emailData() { return emailData; },
+    get headsUp() { return headsUp; }, get HOLD_NAMES() { return HOLD_NAMES; },
+    get holdDelay() { return holdDelay; }, get home() { return home; },
     get homeLongPressTimer() { return homeLongPressTimer; }, set homeLongPressTimer(v) { homeLongPressTimer = v; },
     get i18n() { return i18n; },
     get lastActivity() { return lastActivity; }, set lastActivity(v) { lastActivity = v; },
     get lockControls() { return lockControls; }, get lockScreen() { return lockScreen; },
+    get LP_PRIMARY() { return LP_PRIMARY; }, get LP_STATUS_COLORS() { return LP_STATUS_COLORS; },
     get messageHoldTimer() { return messageHoldTimer; }, set messageHoldTimer(v) { messageHoldTimer = v; },
-    get nextAlarmLabel() { return nextAlarmLabel; }, get nextAlarmTime() { return nextAlarmTime; },
-    get openApp() { return openApp; }, get overlayRoot() { return overlayRoot; },
-    get placeShortcut() { return placeShortcut; },
+    get navRoot() { return navRoot; }, get nextAlarmLabel() { return nextAlarmLabel; },
+    get nextAlarmTime() { return nextAlarmTime; }, get openApp() { return openApp; },
+    get overlayRoot() { return overlayRoot; }, get placeShortcut() { return placeShortcut; },
     get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; },
     get reducedMotion() { return reducedMotion; }, get render() { return render; },
     get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; },
@@ -2256,8 +2141,8 @@
     get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; },
     get suppressReleaseClick() { return suppressReleaseClick; }, get syncBrowserState() { return syncBrowserState; },
     get toast() { return toast; }, get today() { return today; }, get tracks() { return tracks; },
-    get ui() { return ui; }, get viewport() { return viewport; }, get wallpaperFiles() { return wallpaperFiles; },
-    get wifiNetworks() { return wifiNetworks; }
+    get ui() { return ui; }, get updateBarMode() { return updateBarMode; }, get viewport() { return viewport; },
+    get wallpaperFiles() { return wallpaperFiles; }, get wifiNetworks() { return wifiNetworks; }
   });
   // lp:kernel-end
   LP.start();

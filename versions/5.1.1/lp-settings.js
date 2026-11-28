@@ -1,7 +1,7 @@
 /* TODO */
 'use strict';
 LP.define('settings', ({
-  applyMagnification, apps, clearAppData, clone, deviceDate, dreams, HOLD_NAMES, i18n, lockControls, nextAlarmTime,
+  applyMagnification, apps, clearAppData, clone, deviceDate, HOLD_NAMES, i18n, lockControls, nextAlarmTime,
   openApp, overlayRoot, render, renderOverlay, resetSimulator, safe, save, screen, storeContext, toast, ui,
   viewport, wifiNetworks
 }, lp) => {
@@ -39,7 +39,7 @@ LP.define('settings', ({
   function renderDaydreamSettings() {
     const on = !!lp.data.settings.daydream, current = lp.data.settings.daydreamType || 'clock', when = lp.data.settings.daydreamWhen || 'charging';
     const whenLabel = {charging: 'While charging', docked: 'While docked', either: 'Either'}[when];
-    const list = dreams;
+    const list = lp.dreams;
     return appView('Daydream', `${toggleRow('Daydream', on ? whenLabel : 'Off', 'daydream')}${on ? `${list.map(([id, name]) => `<button class="settings-row jb-dream-row" data-action="dream-pick" data-id="${id}" role="radio" aria-checked="${current === id}"><span class="row-copy">${safe(i18n.t(name))}</span><img class="holo-radio" src="assets/btn_radio_${current === id ? 'on' : 'off'}_holo_dark.png" alt=""></button>`).join('')}${label('')}${row('Start now', '', 'dream-start', '')}${row('When to daydream', i18n.t(whenLabel), 'dream-when', '')}` : `<div class="detail-pad"><p>${safe(i18n.t('To control what happens when the phone is docked and/or sleeping, turn Daydream on.'))}</p></div>`}`);
   }
   // Advanced Wi-Fi's Install certificates (*-certinstall.js) and its dialogs.
