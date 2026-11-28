@@ -85,6 +85,8 @@
     // About phone's platform logo: a long press zooms it, then Nyandroid starts.
     touch: '.easter-robot',
     open(c, resume) { if (!resume) c.ui.settingsRootScroll = 0; },
+    // Home from the screen lock setup: the keyguard is as it was.
+    goHome(c) { if (c.ui.sub === 'lock-setup') c.lockControls.lock(); },
     render(c) { return helpers(c).renderSettings(); },
     overlay(c) {
       const {ui, data, save, render, renderOverlay, renderStatus, toast, openApp, home, viewport, overlayRoot, screen, i18n, safe, clone, deviceDate, apps} = c;

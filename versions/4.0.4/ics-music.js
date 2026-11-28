@@ -31,7 +31,9 @@
 
   ICS.register('music', {
     scroller: '.music-library-scroll',
-    init(c) { c.saveMusic = () => saveMusic(c); },
+    // The Music service is active: playing, paused part way, or started from a widget (the lock screen's transport and
+    // the Music widget show it).
+    init(c) { c.saveMusic = () => saveMusic(c); c.musicActive = () => c.ui.music.playing || c.ui.music.position > 0 || !!c.ui.musicActive; },
     render(c) { const {ui, i18n} = c; return ICSMusic.render(ui.music,ui,key=>i18n.t(key)); },
     // AOSP Music (targetSdkVersion 9): the navigation bar's legacy menu key.
     legacyMenu(c) { return c.ui.view === 'music'; },

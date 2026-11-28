@@ -112,6 +112,10 @@
       }
       return true;
     },
+    // Enter or Space on a tab's preview opens the tab.
+    key(event) {
+      if (event.target.matches('.web-tab-preview') && ['Enter',' '].includes(event.key)) { event.preventDefault(); event.target.click(); return true; }
+    },
     // After every draw: Find on page marks its matches.
     rendered(c) { const {ui} = c; if (ui.view === 'browser' && !ui.sub && ui.browserFind) highlightBrowserText(c); },
     back(c) {

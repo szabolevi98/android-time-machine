@@ -13,8 +13,9 @@ ctx.setInterval=()=>0;vm.runInContext(fs.readFileSync('store-apps/legacy-host.js
 vm.runInContext(fs.readFileSync('versions/4.0.4/ics-core.js','utf8'),ctx);ctx.ICS=ctx.window.ICS;
 for(const name of ['calculator','phone','clock','calendar','music','browser','people','messaging','email','gallery','camera','play-store'])vm.runInContext(fs.readFileSync(`versions/4.0.4/ics-${name}.js`,'utf8'),ctx);
 ctx.storeContext=()=>({get data(){return ctx.data;},ui:ctx.ui,defaults,emailSeed:ctx.emailData,clone:ctx.clone,save:ctx.save,saveMusic:ctx.saveMusic,syncBrowserState:ctx.syncBrowserState});
-const source=fs.readFileSync('versions/4.0.4/simulator.js','utf8');
-vm.runInContext(source.slice(source.indexOf('  function resetSimulator()'),source.indexOf('  function addNotification(')),ctx);
+// resetSimulator and clearAppData: 4.0.4's core (ics-core.js; simulator.js until it moved).
+const source=fs.readFileSync(fs.existsSync('versions/4.0.4/simulator.js')?'versions/4.0.4/simulator.js':'versions/4.0.4/ics-core.js','utf8');
+vm.runInContext(source.slice(source.indexOf('function resetSimulator()'),source.indexOf('function addNotification(')),ctx);
 ctx.clearAppData('calculator');assert.equal(ctx.data.calcHistory.length,0);
 ctx.clearAppData('play-store');assert.equal(ctx.data.playRatings,undefined);
 ctx.clearAppData('messaging');assert.equal(Object.keys(ctx.data.messageDrafts).length,0);assert.equal(ctx.data.messages[0].body,'Hello');
