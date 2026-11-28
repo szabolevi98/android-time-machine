@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource=require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Hangouts (audit step 6): archiving and Archived Hangouts, Snooze notifications with the banner, sharing a location.
 const load=(v,files)=>{const context={document:{documentElement:{lang:'hu'}}};context.window=context;for(const f of files)vm.runInNewContext(fs.readFileSync(`versions/${v}/${f}`,'utf8'),context);return context.window;};
@@ -34,7 +35,7 @@ const t=k=>k;
   assert.ok(H.overlay(data,{overlay:'mms-menu',sub:'thread',thread:'1'},t).includes('data-action="hg-unarchive"'));
   assert.ok(H.overlay(data,{overlay:'mms-hg-dnd'},t).includes('Minden értesítés halasztása'));
   assert.ok(!H.render(data,{sub:'thread',thread:'1'},t,'hu',now).includes('hg-location'));
-  const sim=fs.readFileSync('versions/4.3/simulator.js','utf8');assert.ok(sim.includes("if (ui.view === 'hangouts') { const own = Hangouts.overlay(")&&sim.includes("case 'hg-dnd-set':"));
+  const sim=engineSource('4.3');assert.ok(sim.includes("if (ui.view === 'hangouts') { const own = Hangouts.overlay(")&&sim.includes("case 'hg-dnd-set':"));
 }
 // 5.1.1: Hangouts 2.5: Archived / Snooze notifications in the overflow, Archive / Unarchive and Delete in a conversation,
 // the attachment button (quantum_ic_attachment) with Attach photo and Share your location.

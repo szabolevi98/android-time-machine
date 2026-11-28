@@ -59,3 +59,54 @@
   }
   window.JBSearchPanel = {S, markup, geometry, snapped, attach};
 })();
+/* The swipe up from the navigation bar to Google of Android 4.3 (SearchPanelView), moved out of simulator.js
+   (docs/plans/engine-migration.md): the panel follows the finger from the bar, a release on the Google ring opens
+   Google Search, anywhere else it closes (JBSearchPanel above). */
+(() => {
+  'use strict';
+  if (!window.JB) return; // loaded on its own (the renderer's unit tests)
+  let $c, data, home, i18n, navRoot, openApp, overlayRoot, reducedMotion, renderOverlay, ui;
+  const $bind = c => { $c = c; ({data, home, i18n, navRoot, openApp, overlayRoot, reducedMotion, renderOverlay, ui} = c); };
+  const spec = {
+    overlay(c) {
+      $bind(c);
+      if (ui.overlay === 'search') {
+        if (!overlayRoot.querySelector('[data-jb-search]')) overlayRoot.innerHTML = JBSearchPanel.markup(key => i18n.t(key));
+      }
+      else return;
+      return true;
+    },
+    // Once: the navigation bar's press starts the swipe; the window follows the move and the release.
+    init(make, c) {
+      $bind(c);
+      let searchSwipe = null;
+      navRoot.addEventListener('pointerdown', event => { $bind(make()); if (ui.locked || ui.view === 'lock' || event.button > 0) return; searchSwipe = {id: event.pointerId, x: event.clientX, y: event.clientY, panel: null}; }, true);
+      window.addEventListener('pointermove', event => {
+        if (!searchSwipe || event.pointerId !== searchSwipe.id) return;
+        $bind(make());
+        const box = overlayRoot.getBoundingClientRect(), k = box.width / overlayRoot.offsetWidth || 1;
+        if (!searchSwipe.panel) {
+          if ((searchSwipe.y - event.clientY) / k < JBSearchPanel.S.up) return;
+          const home = navRoot.querySelector('.nav-home').getBoundingClientRect();
+          ui.overlay = 'search'; overlayRoot.innerHTML = ''; renderOverlay();
+          searchSwipe.panel = JBSearchPanel.attach(overlayRoot.querySelector('[data-jb-search]'), {homeX: (home.left + home.width / 2 - box.left) / k, haptic: () => data.settings.haptic !== false, reduced: !!reducedMotion?.matches,
+            onLaunch: () => { ui.overlay = ''; renderOverlay(); openApp('google-search'); },
+            onClose: () => { if (ui.overlay === 'search') { ui.overlay = ''; renderOverlay(); } }});
+          $c.suppressClickUntil = Infinity;
+        }
+        const panel = overlayRoot.querySelector('[data-jb-search]').getBoundingClientRect();
+        searchSwipe.panel.move((event.clientX - panel.left) / k, (event.clientY - panel.top) / k);
+      }, true);
+      const endSearchSwipe = event => {
+        if (!searchSwipe || event.pointerId !== searchSwipe.id) return;
+        $bind(make());
+        const panel = searchSwipe.panel; searchSwipe = null;
+        if (!panel) return;
+        $c.suppressClickUntil = Date.now() + 350;
+        event.type === 'pointercancel' ? panel.cancel() : panel.release();
+      };
+      window.addEventListener('pointerup', endSearchSwipe, true); window.addEventListener('pointercancel', endSearchSwipe, true);
+    }
+  };
+  JB.register('search', spec);
+})();

@@ -348,3 +348,173 @@
   }
   window.JBGallery = {G, CLUSTERS, BORDERS, ADJUST, groups, items, fit, strip, render, back, attach, editState, editKey};
 })();
+/* Gallery and Camera on Android 4.3 (Gallery2 and Camera of JWR66Y), moved out of simulator.js
+   (docs/plans/engine-migration.md): the albums, the photo view with its swipe, zoom, slideshow and menus, the picker
+   other apps open, wallpaper from a photo; the camera's shutter, the capture requests of Messaging, Hangouts and Keep
+   with their review, and the live parts (JBGallery.attach, JBCamera.attach) made after every render. */
+(() => {
+  'use strict';
+  if (!window.JB) return; // loaded on its own (the renderer's unit tests)
+  let $c, clone, data, defaultData, dp, emailContext, i18n, jbmaReturn, messageDraft, openApp, overlayRoot, reducedMotion, render, renderOverlay, save, screen, toast, ui, viewport;
+  const $bind = c => { $c = c; ({clone, data, defaultData, dp, emailContext, i18n, jbmaReturn, messageDraft, openApp, overlayRoot, reducedMotion, render, renderOverlay, save, screen, toast, ui, viewport} = c); };
+  function photoStyle(photo) { return `background-image:url('${ICSMedia.image(photo)}');background-size:cover;background-position:center`; }
+  function renderGallery() { return JBGallery.render(data, ui, key => i18n.t(key), ICSMedia, i18n.locale()); }
+  const galleryItems = () => JBGallery.items(data, ui, i18n.locale());
+  function galleryWallpaper(photo) { data.wallpaper = 'custom'; delete data.liveWallpaper; data.customWallpaper = photo.colors; data.customWallpaperPhoto = clone(photo); save(); render(); toast('Wallpaper set'); }
+  function renderCamera() { return JBCamera.render(data, ui, key => i18n.t(key), ICSMedia); }
+  // JB Camera callbacks: a capture adds a local illustration to the Camera album; the filmstrip opens Gallery.
+  // A picture, with clip = {duration} a video (VID_..., its first frame), with clip = {pano} a panorama (PANO_...),
+  // into the Camera album.
+  function cameraShoot(clip) {
+    const stamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
+    const photo = {...ICSMedia.scene(data), id: Date.now(), name: clip?.pano ? `PANO_${stamp.slice(0, 8)}_${stamp.slice(8)}` : clip ? `VID_${stamp.slice(0, 8)}_${stamp.slice(8)}` : `IMG_${stamp}`, album: 'camera', created: Date.now(), ...(clip?.pano ? {pano: true} : clip ? {video: true, duration: Math.max(1000, Math.round(clip.duration))} : {})};
+    // An IMAGE_CAPTURE request keeps the picture for its review (jb-camera.js) and hands it to the caller, not the Gallery.
+    if (ui.camIntent && !clip) { ui.camIntent.taken = photo; return photo; }
+    data.photos.unshift(photo); save();
+    // VIDEO_CAPTURE for Messaging: back with what was taken.
+    if (ui.jbmaCapture && !clip?.pano && (ui.jbmaCapture.type === 'video') === !!clip) { const c = ui.jbmaCapture; ui.jbmaCapture = null; setTimeout(() => jbmaReturn(c, photo), 450); }
+    return photo;
+  }
+  // An IMAGE_CAPTURE request open in the Camera: review_module_control's Done hands the picture back, Cancel or Back
+  // returns without one, Retake goes back to the shutter.
+  function cameraIntent(done, cancel) {
+    const intent = {type: 'image', taken: null, done: () => { const photo = intent.taken; ui.camIntent = null; done(photo); }, cancel: () => { ui.camIntent = null; cancel(); }};
+    return intent;
+  }
+  function cameraGallery(id) {
+    const photo = data.photos.find(item => item.id === id) || ICSMedia.photos(data, 'camera')[0];
+    openApp('gallery'); if (photo) { ui.galleryCluster = 'album'; ui.galleryAlbum = 'camera'; ui.selectedPhoto = photo.id; ui.sub = 'photo'; ui.galleryFilm = false; ui.galleryBars = true; ui.galleryFromCamera = true; render(); }
+  }
+  function galleryStep(direction) {
+    const items=galleryItems(); if(!items.length)return;
+    const index=Math.max(0,items.findIndex(p=>p.id===ui.selectedPhoto));
+    ui.selectedPhoto=items[(index+direction+items.length)%items.length].id;ui.galleryZoom=false;render();
+  }
+  window.addEventListener('pointercancel',()=>{if(!$c)return;const photo=viewport.querySelector('.gallery-image');if(photo)photo.style.transform='';});
+  const spec = {
+    render(c) {
+      $bind(c);
+      switch (ui.view) {
+        case 'gallery': return renderGallery();
+        case 'camera': return renderCamera();
+      }
+    },
+    action(action, button, c) {
+      $bind(c);
+      const event = c.event, { id, app, url } = button.dataset;
+      switch (action) {
+        case 'gallery-wallpaper': ui.overlay = ''; openApp('gallery'); break;
+        case 'cam-review-done': ui.camIntent?.taken && ui.camIntent.done(); break;
+        case 'cam-review-retake': if (ui.camIntent) { ui.camIntent.taken = null; render(); } break;
+        case 'cam-review-cancel': ui.camIntent?.cancel(); break;
+        case 'gallery-camera': openApp('camera'); break;
+        case 'gallery-album': ui.galleryAlbum=id; ui.sub='album';ui.gallerySlideshow=false;render();break;
+        case 'gallery-pick': { const photo = data.photos.find(p => p.id === Number(id)); ui.galleryPick = ''; ui.sub = ''; openApp('email', true); ICSEmail.attach(emailContext(), photo); render(); break; }
+        case 'gallery-pick-cancel': ui.galleryPick = ''; ui.sub = ''; openApp('email', true); break;
+        case 'photo': ui.selectedPhoto=Number(id);if(!galleryItems().some(p=>p.id===Number(id))){ui.galleryCluster='album';ui.galleryAlbum=ICSMedia.album(data.photos.find(p=>p.id===Number(id))||{});}ui.sub='photo';ui.galleryZoom=false;ui.galleryFilm=false;ui.galleryBars=true;ui.galleryFromCamera=false;render();break;
+        case 'gallery-step': galleryStep(Number(id));break;
+        case 'gallery-photo-zoom': ui.galleryZoom=!ui.galleryZoom;render();break;
+        case 'gallery-menu': case 'gallery-share': case 'gallery-details': ui.overlay=action;renderOverlay();break;
+        case 'gallery-rotate': {const photo=data.photos.find(p=>p.id===ui.selectedPhoto);if(photo)photo.rotation=((photo.rotation||0)+Number(id)+360)%360;save();ui.overlay='';render();break;}
+        case 'gallery-slideshow': {const items=galleryItems();ui.galleryFilm=false;if(!items.length)break;if(ui.sub!=='photo')ui.selectedPhoto=items[0].id;ui.sub='photo';ui.overlay='';ui.gallerySlideshow=true;ui.gallerySlideAt=Date.now();render();break;}
+        case 'gallery-stop': ui.gallerySlideshow=false;render();break;
+        case 'gallery-share-message': {const photo=data.photos.find(p=>p.id===ui.selectedPhoto);if(!photo)break;openApp('messaging');ui.sub='new';messageDraft().attachment=clone(photo);save();render();break;}
+        case 'gallery-confirm-delete': {
+          const items=galleryItems();const index=items.findIndex(p=>p.id===ui.selectedPhoto);
+          data.photos=data.photos.filter(p=>p.id!==ui.selectedPhoto);save();ui.overlay='';
+          const remaining=galleryItems();if(remaining.length)ui.selectedPhoto=remaining[Math.min(index,remaining.length-1)].id;else ui.sub='album';
+          render();toast('Photo deleted');break;
+        }
+        case 'shoot': {
+          const photo={...ICSMedia.scene(data),id:Date.now(),name:`IMG_${new Date().toISOString().replace(/[-:T]/g,'').slice(0,14)}`,album:'camera',created:Date.now()};
+          data.photos.unshift(photo);save();render();screen.animate([{opacity:1},{opacity:.4},{opacity:1}],{duration:240});toast('Photo saved to Gallery');break;
+        }
+        default: return false;
+      }
+      return true;
+    },
+    back(c) {
+      $bind(c);
+      // Back in a capture request cancels it (RESULT_CANCELED).
+      if (ui.view === 'camera' && ui.camIntent && !ui.overlay) { ui.camIntent.cancel(); return true; }
+      // The Gallery's picker (GET_CONTENT from Email's Attach file) returns without a picture.
+      if (ui.view === 'gallery' && ui.galleryPick && !ui.overlay) { if (ui.sub === 'album') { ui.sub = ''; render(); return true; } ui.galleryPick = ''; openApp('email', true); return true; }
+      if (ui.overlay) return false;
+      if (ui.view === 'gallery' && ui.gallerySlideshow) { ui.gallerySlideshow=false;render();return true; }
+      if (ui.view === 'gallery') { ui.galleryZoom = false; const handled = JBGallery.back(ui, data); if (handled === 'camera') { ui.galleryFromCamera = false; openApp('camera'); return true; } if (handled) { render(); return true; } }
+      return false;
+    },
+    // Clicks taken before the keyguard's filter (the core's click handler).
+    actionEarly(action, button, c) {
+      $bind(c);
+      const event = c.event, { id, app, url } = button.dataset;
+      if (ui.view === 'gallery' && ui.galleryPopup && action !== 'gallery-menu') ui.galleryPopup = '';
+      return false;
+    },
+    // Opening, once the core has checked the phone is not locked.
+    openUnlocked(c, resume, app) {
+      $bind(c);
+      if (app === 'gallery') ui.galleryPick = '';
+    },
+    clearData(c) {
+      $bind(c);
+      const id = c.clearId;
+      if(id==='gallery'){data.photos=clone(defaultData.photos);}
+      if(id==='camera')delete data.cameraSettings;
+    },
+    overlay(c) {
+      $bind(c);
+      if (ui.overlay.startsWith('gallery-') || ui.overlay.startsWith('camera-')) {
+        overlayRoot.innerHTML=ICSMedia.overlay(data,ui,key=>i18n.t(key),i18n.locale());
+      }
+      else return;
+      return true;
+    },
+    // After every render, whichever screen is in front: the Gallery's and the Camera's live parts follow their roots.
+    afterRender(c) {
+      $bind(c);
+      if (ui.jbgal && !viewport.querySelector('[data-jbgal]')?.isSameNode(ui.jbgal.root)) { ui.jbgal.destroy(); ui.jbgal = null; }
+      const galRoot = viewport.querySelector('[data-jbgal]');
+      if (galRoot && !ui.jbgal) ui.jbgal = {...JBGallery.attach(galRoot, {data, ui, t: key => i18n.t(key), media: ICSMedia, locale: i18n.locale(), save, render, toast, openCamera: () => { ui.galleryFromCamera = false; openApp('camera'); }, setWallpaper: galleryWallpaper, reduced: !!reducedMotion?.matches}), root: galRoot};
+      if (ui.jbcam && !viewport.querySelector('[data-jbcam]')?.isSameNode(ui.jbcam.root)) { ui.jbcam.destroy(); ui.jbcam = null; }
+      const camRoot = viewport.querySelector('[data-jbcam]');
+      if (camRoot && !ui.jbcam) ui.jbcam = {...JBCamera.attach(camRoot, {data, ui, t: key => i18n.t(key), media: ICSMedia, save, render, shoot: cameraShoot, gallery: cameraGallery, toast, reduced: !!reducedMotion?.matches}), root: camRoot};
+    },
+    // The photo follows a sideways drag and the next or previous one comes in (the core's pointer handlers).
+    pointerMove(event, pointerStart, dx, dy, c) {
+      $bind(c);
+      if (ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && pointerStart.target.closest('[data-gallery-swipe]') && Math.abs(dx)>dp(12) && Math.abs(dx)>Math.abs(dy)) {
+        pointerStart.gallerySwiping=true;$c.suppressClick(350);event.preventDefault();
+        try{screen.setPointerCapture(event.pointerId);}catch{}
+        const picture=viewport.querySelector('.gallery-image');if(picture)picture.style.transform=`translateX(${dx}px)`;return true;
+      }
+    },
+    pointerUp(event, pointerStart, dx, dy, c) {
+      $bind(c);
+      if (pointerStart.gallerySwiping) { if(Math.abs(dx)>dp(53))galleryStep(dx<0?1:-1);else render();$c.suppressClick(350);return true; }
+    },
+    // The computer's Left / Right keys step through the photos.
+    key(event, c) {
+      $bind(c);
+      if(ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && ['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();galleryStep(event.key==='ArrowLeft'?-1:1);return true;}
+    },
+    exports: {
+      galleryWallpaper: (c, ...args) => { $bind(c); return galleryWallpaper(...args); },
+      cameraShoot: (c, ...args) => { $bind(c); return cameraShoot(...args); },
+      cameraIntent: (c, ...args) => { $bind(c); return cameraIntent(...args); },
+      cameraGallery: (c, ...args) => { $bind(c); return cameraGallery(...args); },
+      galleryStep: (c, ...args) => { $bind(c); return galleryStep(...args); }
+    },
+    input(event, c) {
+      $bind(c);
+      if(event.target.matches('.camera-zoom input')) {
+        data.cameraSettings=ICSMedia.settings(data);data.cameraSettings.zoom=Number(event.target.value);save();
+        viewport.querySelector('.camera-focus-area .media-photo').src=ICSMedia.image(ICSMedia.scene(data));
+        viewport.querySelector('.camera-zoom output').textContent=Number(event.target.value).toFixed(1)+'×';return true;
+      }
+      return false;
+    }
+  };
+  JB.register('gallery', spec);
+  JB.register('camera', spec);
+})();

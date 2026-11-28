@@ -49,7 +49,7 @@ const STOCK = {
   'kk-extra-apps.js': [], 'stock-apps.js': [], 'messaging.js': [], 'media.js': ['GalleryGoogle', 'framework'],
 };
 const VERSIONS = {
-  // simulator.js also draws the Browser; the Nexus 4 image has Chrome instead, so 4.3 keeps the Browser rows.
+  // 4.3 also draws the Browser (jb-browser.js); the Nexus 4 image has Chrome instead, so 4.3 keeps the Browser rows.
   '2.3.6': {device: 'crespo', build: 'Nexus S GRK39F', general: ['Browser', 'Contacts', 'Mms', 'MusicGoogle', 'AccountAndSyncSettings']},
   '4.0.4': {device: 'maguro', build: 'Galaxy Nexus IMM76I', general: ['BrowserGoogle']},
   '4.3': {device: 'mako', build: 'Nexus 4 JWR66Y', general: []},

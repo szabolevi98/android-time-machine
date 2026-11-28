@@ -150,3 +150,42 @@
   }
   window.HoloDownloads = {seed, bins, binOf, size, render, overlay, handle, back, T};
 })();
+/* The Downloads app on Android 4.3 (DownloadProviderUi of JWR66Y), moved out of simulator.js
+   (docs/plans/engine-migration.md): its screen, actions, dialogs and Back go to HoloDownloads above with this context. */
+(() => {
+  'use strict';
+  if (!window.JB) return; // loaded on its own (the renderer's unit tests)
+  let $c, data, deviceDate, i18n, openApp, overlayRoot, render, renderOverlay, save, toast, ui;
+  const $bind = c => { $c = c; ({data, deviceDate, i18n, openApp, overlayRoot, render, renderOverlay, save, toast, ui} = c); };
+  // Downloads: data.downloads (seeded on first use); the sort order and the selection live in ui.hdl.
+  function dlContext() {
+    return {data, ui, lang: i18n.language, locale: i18n.locale(), now: deviceDate().getTime(), hour24: !!data.settings.hour24, t: key => i18n.t(key),
+      save, render, renderOverlay, toast, openApp};
+  }
+  const spec = {
+    render(c) {
+      $bind(c);
+      switch (ui.view) {
+        case 'downloads': return HoloDownloads.render(dlContext());
+      }
+    },
+    action(action, button, c) {
+      $bind(c);
+      const event = c.event, { id, app, url } = button.dataset;
+      if (ui.view === 'downloads' && action.startsWith('hdl-') && HoloDownloads.handle(action, id, dlContext())) return true;
+      return false;
+    },
+    back(c) {
+      $bind(c);
+      if (ui.view === 'downloads' && HoloDownloads.back(dlContext())) return true;
+      return false;
+    },
+    // Overlays drawn before the core's own, which end renderOverlay there.
+    overlayEarly(c) {
+      $bind(c);
+      if (ui.view === 'downloads' && ui.overlay.startsWith('hdl-')) { overlayRoot.innerHTML = HoloDownloads.overlay(dlContext()) || ''; return true; }
+      return false;
+    }
+  };
+  JB.register('downloads', spec);
+})();

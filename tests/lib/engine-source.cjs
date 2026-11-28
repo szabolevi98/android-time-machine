@@ -1,9 +1,9 @@
-// The engine code of a version, for the tests that read it: its simulator.js and, as the version moves onto the module
-// core (docs/plans/engine-migration.md), its core and modules: the scripts of its own folder named <prefix>-core.js or
-// registering a screen (GB / ICS / JB / KK / LP.register), in the order its index.html loads them.
-const fs = require('node:fs');
-module.exports = v => {
-  const dir = `versions/${v}/`, html = fs.readFileSync(dir + 'index.html', 'utf8');
-  const files = [...html.matchAll(/<script[^>]*\ssrc="([\w.-]+\.js)(?:\?[^"]*)?"/g)].map(m => m[1]).filter(f => fs.existsSync(dir + f));
-  return files.map(f => [f, fs.readFileSync(dir + f, 'utf8')]).filter(([f, s]) => f === 'simulator.js' || /-core\.js$/.test(f) || /\b(GB|ICS|JB|KK|LP)\.register\(/.test(s)).map(([, s]) => s).join('\n');
+// A version's engine as the page loads it (docs/plans/engine-migration.md): the code moves out of simulator.js into
+// its core and modules, so a test that looks for a piece of it reads all of the version's own scripts, in the order
+// index.html loads them.
+const fs = require('node:fs'), path = require('node:path');
+module.exports = version => {
+  const dir = path.join(__dirname, '..', '..', 'versions', version);
+  const html = fs.readFileSync(path.join(dir, 'index.html'), 'utf8');
+  return [...html.matchAll(/<script[^>]*\ssrc="([^"/?]+)(?:\?[^"]*)?"/g)].map(m => fs.readFileSync(path.join(dir, m[1]), 'utf8')).join('\n');
 };
