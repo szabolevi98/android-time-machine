@@ -271,7 +271,8 @@
   const kkScope = {
     get data() { return data; }, get dp() { return dp; }, get holdDelay() { return holdDelay; },
     get i18n() { return i18n; }, get openApp() { return openApp; }, get overlayRoot() { return overlayRoot; },
-    get pointerStart() { return pointerStart; }, get render() { return render; },
+    get photosContext() { return photosContext; }, get pointerStart() { return pointerStart; },
+    get printContext() { return printContext; }, get render() { return render; },
     get renderOverlay() { return renderOverlay; }, get safe() { return safe; }, get save() { return save; },
     get screen() { return screen; }, get snapResting() { return snapResting; },
     get suppressClickUntil() { return suppressClickUntil; }, get toast() { return toast; }, get ui() { return ui; },
@@ -809,7 +810,6 @@
       case 'clock': return renderClock();
       case 'email': return renderEmail();
       case 'newsstand': case 'quickoffice': case 'wallet': return KKExtraApps.render(ui.view, {news: ui.view === 'newsstand' ? newsContext() : null, files: officeFiles().filter(f => !f.trashed), ui, data, locale:i18n.locale(), t: key => i18n.t(key)});
-      case 'downloads': return KKDownloads.render(data.downloads || [], ui, key => i18n.t(key), i18n.locale());
       default: return renderHome();
     }
   }
@@ -1038,8 +1038,6 @@
       overlayRoot.innerHTML = KKDeskClock.picker(ui.kdcPicker, {t: key => i18n.t(key), hour24: !!data.settings.hour24});
     } else if (ui.overlay === 'kk-cast-menu') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu"><button data-action="kk-cast-enable" role="menuitemcheckbox" aria-checked="${!!data.settings.wifiDisplay}" class="kk-check-item">${safe(i18n.t('Enable wireless display'))}<img src="assets/btn_check_${data.settings.wifiDisplay ? 'on' : 'off'}_holo_dark.png" alt=""></button></div>`;
-    } else if (ui.overlay === 'kdu-sort' || ui.overlay === 'kdu-overflow') {
-      overlayRoot.innerHTML = KKDownloads.menu(ui.overlay.slice(4), ui, key => i18n.t(key));
     } else if (ui.overlay === 'kk-sms-app') {
       // SmsDefaultDialog-style list preference: the SMS-capable apps (only Messaging in AOSP).
       overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog" role="dialog" aria-label="${safe(i18n.t('Default SMS app'))}"><h3>${safe(i18n.t('Default SMS app'))}</h3><button class="settings-row jb-dream-row" data-action="close-overlay" role="radio" aria-checked="true"><span class="row-copy">${safe(i18n.t('Messaging'))}</span><img class="holo-radio" src="assets/btn_radio_on_holo_dark.png" alt=""></button><div class="settings-dialog-actions"><button data-action="close-overlay">${safe(i18n.t('Cancel'))}</button></div></div>`;
@@ -2173,10 +2171,6 @@
       case 'kk-sms-app': ui.overlay = 'kk-sms-app'; renderOverlay(); break;
       case 'kk-cast-menu': ui.overlay = 'kk-cast-menu'; renderOverlay(); break;
       case 'kk-cast-enable': data.settings.wifiDisplay = !data.settings.wifiDisplay; save(); ui.overlay = ''; render(); break;
-      case 'kdu-menu': ui.overlay = `kdu-${id}`; renderOverlay(); break;
-      case 'kdu-sort': ui.dlSort = id; ui.overlay = ''; render(); break;
-      case 'kdu-view': ui.dlGrid = id === 'grid'; ui.overlay = ''; render(); break;
-      case 'kdu-search': toast('No items'); break;
       case 'settings-sub': ui.overlay = ''; if (id === 'development' && !data.settings.developerUnlocked) break; if (ui.view === 'settings' && !ui.sub) ui.settingsRootScroll = viewport.querySelector('.settings-app')?.scrollTop || 0; ui.sub = id; render(); break;
       case 'sd-dialog': ui.settingsField=id;ui.overlay='sd-dialog';renderOverlay();break;
       case 'sd-apps-tab': ui.settingsAppsTab=id;render();break;
@@ -2434,8 +2428,6 @@
       case 'chrome-a2hs': { const page = viewport.querySelector('.browser-page'); ui.a2hs = {url: ui.browserUrl, title: page?.querySelector('h1, h2, strong')?.textContent?.trim() || ui.browserUrl}; ui.overlay = 'chrome-a2hs'; renderOverlay(); overlayRoot.querySelector('[data-a2hs-title]')?.focus(); break; }
       case 'chrome-a2hs-add': { const title = String(overlayRoot.querySelector('[data-a2hs-title]')?.value || ui.a2hs?.title || '').trim() || ui.a2hs.url; const item = {id: Date.now(), title, url: ui.a2hs.url}; (data.webShortcuts ||= []).push(item); ui.overlay = ''; renderOverlay(); placeShortcut(`web:${item.id}`, title); break; }
       case 'open-web-shortcut': { const item = (data.webShortcuts || []).find(w => String(w.id) === id); if (!item) break; openApp('chrome'); navigateBrowser(item.url); break; }
-      case 'dl-open-pdf': { const doc = (data.downloads || []).find(d => String(d.time) === id); if (doc) PrintSpooler.openPdf(printContext(), doc); break; }
-      case 'dl-open-photo': { const photo = data.photos.find(p => p.id === Number(id)); if (!photo) break; openApp('photos'); ui.photosList = 'all'; const list = PhotosApp.list(photosContext()); ui.photosIndex = Math.max(0, list.findIndex(p => p.id === photo.id)); ui.selectedPhoto = photo.id; ui.sub = 'photo'; render(); break; }
       case 'photos-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
       case 'chrome-close-all': ui.browserSession = {tabs: [{history: [ChromeApp.NTP], index: 0}], active: 0}; ui.sub = ''; ui.overlay = ''; renderOverlay(); saveBrowserState(); render(); break;
       case 'chrome-ntp': chromeSection(id); break;

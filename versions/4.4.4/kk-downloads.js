@@ -41,3 +41,41 @@
   }
   window.KKDownloads = {render, menu, sorted, size, mime, SORTS};
 })();
+/* Downloads in the 4.4.4 shell (docs/plans/engine-migration.md): the screen, its Sort by / overflow menus and its
+   rows opening a PDF or a picture, moved out of simulator.js. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {data, i18n, openApp, overlayRoot, photosContext, printContext, render, renderOverlay, toast, ui} = c;
+    return {
+      render() {
+        return KKDownloads.render(data.downloads || [], ui, key => i18n.t(key), i18n.locale());
+      },
+      click(action, button, event) {
+        const {id, app, url} = button.dataset;
+        switch (action) {
+          case 'kdu-menu': ui.overlay = `kdu-${id}`; renderOverlay(); break;
+          case 'kdu-sort': ui.dlSort = id; ui.overlay = ''; render(); break;
+          case 'kdu-view': ui.dlGrid = id === 'grid'; ui.overlay = ''; render(); break;
+          case 'kdu-search': toast('No items'); break;
+          case 'dl-open-pdf': { const doc = (data.downloads || []).find(d => String(d.time) === id); if (doc) PrintSpooler.openPdf(printContext(), doc); break; }
+          case 'dl-open-photo': { const photo = data.photos.find(p => p.id === Number(id)); if (!photo) break; openApp('photos'); ui.photosList = 'all'; const list = PhotosApp.list(photosContext()); ui.photosIndex = Math.max(0, list.findIndex(p => p.id === photo.id)); ui.selectedPhoto = photo.id; ui.sub = 'photo'; render(); break; }
+          default: return false;
+        }
+        return true;
+      },
+      overlay() {
+        if (ui.overlay === 'kdu-sort' || ui.overlay === 'kdu-overflow') {
+          overlayRoot.innerHTML = KKDownloads.menu(ui.overlay.slice(4), ui, key => i18n.t(key));
+        } else return false;
+        return true;
+      }
+    };
+  }
+  const spec = {
+    render: c => scope(c).render(),
+    click: (action, button, c, event) => scope(c).click(action, button, event),
+    overlay: c => scope(c).overlay()
+  };
+  for (const id of ['downloads']) KK.register(id, spec);
+})();
