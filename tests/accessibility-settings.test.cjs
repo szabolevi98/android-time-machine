@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource=require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Accessibility sub-pages (audit step 5): Touch & hold delay with a real effect on the simulator's long presses,
 // Magnification gestures (triple tap) and the accessibility shortcut page on 4.3 / 4.4.4 / 5.1.1.
@@ -6,7 +7,7 @@ for(const v of ['4.0.4','4.3','4.4.4','5.1.1']){
   const w={window:{}};w.window.window=w.window;vm.runInNewContext(fs.readFileSync(`versions/${v}/stock-strings.js`,'utf8'),w);
   const a=w.window.StockStrings.a11y;assert.equal(a['Touch & hold delay'].hu,'Érintés és tartási késleltetés');
   assert.deepEqual(['Short','Medium','Long'].map(k=>a[k].hu),['Rövid','Közepes','Hosszú']);
-  const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');
+  const sim=engineSource(v);
   assert.ok(sim.includes("const HOLD = [500, 1000, 1500]")&&sim.includes("case 'a11y-hold-pick'")&&sim.includes("ui.overlay === 'a11y-hold'"),v);
   assert.ok((sim.match(/holdDelay\(\d{3}\)/g)||[]).length>=4,`${v} long-press timers`);
   if(v==='4.0.4')continue;

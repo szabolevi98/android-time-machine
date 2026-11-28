@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource=require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const context={window:{},Intl,Date};vm.runInNewContext(fs.readFileSync('versions/4.3/settings-system.js','utf8'),context);
 const sys=context.window.ICSSystemSettings,t=k=>k;
@@ -12,7 +13,7 @@ assert.ok(titles[1].includes('‑'));
 assert.equal(sys.defaults.wifiOptimize,true);assert.equal(sys.defaults.wifiScanAlways,false);assert.equal(sys.defaults.wifiBand,'auto');
 const off=sys.render({settings:{wifi:false}},{sub:'wifi-advanced'},t,'en-US');
 assert.ok(/data-id="wifiNotify"[^>]*disabled/.test(off.body),'network notification follows the Wi-Fi switch');
-const sim=fs.readFileSync('versions/4.3/simulator.js','utf8');
+const sim=engineSource('4.3');
 assert.ok(sim.includes('data-action="wifi-wps" data-id="pbc"')&&sim.includes('jb-ic_menu_add.png'),'WPS and Add network sit in the action bar');
 assert.ok(sim.indexOf('>Scan</button><button data-action="wifi-wps" data-id="pin"')>0&&sim.includes('data-id="wifi-direct"'),'overflow: Scan, WPS Pin Entry, Wi-Fi Direct, Advanced');
 for(const f of ['jb-ic_wps','jb-ic_menu_add','jb-progress_bg_holo_dark','jb-btn_default_normal_holo_dark'])assert.ok(fs.existsSync(`versions/4.3/assets/${f}.png`),f);
