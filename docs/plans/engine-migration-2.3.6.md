@@ -17,6 +17,8 @@ one `GB.register(id, {...})` module per screen.
   index.html loads them.
 - A click goes to the module in front, then to the shell's own cases; one neither takes goes to the other modules (the
   shade's ongoing call returns to Phone this way); a form likewise.
+- A module's `init(c)` runs once before the first render, for listeners on the whole page (the launcher's gestures:
+  a drag starts on the drawer and ends on home). `c.live()` gives such a listener the context of the moment.
 - An app's settings screen (GBPrefs, Menu › Settings) is drawn over its view: while it is open the module is not in
   front (`moduleView()` in the shell).
 
@@ -40,7 +42,8 @@ one `GB.register(id, {...})` module per screen.
 | Live wallpapers, wallpaper picker | gb-wallpapers.js (new) | 89eacdf4 |
 | The Google apps (GBApps.register is a GB module) | gb-apps.js | 72357291 |
 | App settings screens (GBPrefs) | gb-prefs.js (the prefs module) | 59597d79 |
-| Lock screen | gb-keyguard.js | |
+| Lock screen | gb-keyguard.js | e06357db |
+| Home screen, app drawer | gb-launcher.js (home, drawer) | |
 
 Bugs fixed on the way (their own commits):
 
