@@ -155,3 +155,119 @@
   }
   window.JBExtraApps = {APPS, render, handle, submit, back, text: (app, key) => S(app, key, k => k)};
 })();
+/* The rest of the Nexus 4 image's launcher (Messenger, Navigation, Local, Currents, Play Magazines, Wallet, Movie
+   Studio), moved out of simulator.js (docs/plans/engine-migration.md): their screens (JBExtraApps above), Navigation's
+   drive and Maps 6 directions (maps-route.js), Currents' reader and Customize, Movie Studio's projects, Messenger's
+   conversations; their actions, forms, typing, dialogs, Back and opening. */
+(() => {
+  'use strict';
+  if (!window.JB) return; // loaded on its own (the renderer's unit tests)
+  let $c, cczContext, data, i18n, messageDraft, messengerContext, movieContext, openApp, overlayRoot, render, renderOverlay, row, safe, save, toast, ui, viewport;
+  const $bind = c => { $c = c; ({cczContext, data, i18n, messageDraft, messengerContext, movieContext, openApp, overlayRoot, render, renderOverlay, row, safe, save, toast, ui, viewport} = c); };
+  function extraContext() {
+    return {ui, data, render, focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
+      go(to) { const rt = MapsRoute.route(mrContext(), {to, mode: 'drive', avoid: data.mapsAvoid || {}}); MapsRoute.startNav(mrContext(), {name: to, km: rt.km, min: rt.min, mode: 'drive'}); render(); },
+      openMap(query) { openApp('maps'); ui.mapsQuery = query; render(); }};
+  }
+  // Maps 6 directions and Navigation's drive (maps-route.js).
+  function mrContext() {
+    return {ui, data, t: key => i18n.t(key), locale: i18n.locale(), root: viewport, save, render,
+      focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
+      unsupported: () => toast(i18n.t('This feature is not part of the simulator.')),
+      mapSvg: StockApps.mapSvg({ui: {...ui, mapsRoute: null, mapsQuery: ''}, data, t: key => i18n.t(key), locale: i18n.locale()}).replace(/^<svg[^>]*>|<\/svg>$/g, ''),
+      navigate: run => { ui.mapsRoute = ui.mapsRoute ? {...ui.mapsRoute, screen: 'map'} : null; openApp('navigation'); MapsRoute.startNav(mrContext(), run); render(); }};
+  }
+  // Currents / Magazines / Newsstand reading and settings (news-reader.js).
+  const newsContext = () => ({app: ui.view, profile: ui.view === 'currents' ? 'currents' : 'magazines', ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.[ui.view === 'currents' ? 'currents' : 'magazines']?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, account: 'jellybean.demo@gmail.com', save, render, toast: message => toast(message), unavailable: 'kkx-unavailable', emptyFor: {}, share: (text, subject) => { ui.overlay = ''; renderOverlay(); openApp('messaging'); ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); save(); render(); }});
+  const spec = {
+    render(c) {
+      $bind(c);
+      switch (ui.view) {
+        case 'messenger': case 'navigation': case 'local': case 'currents': case 'play-magazines': case 'wallet': case 'movie-studio': if (ui.view === 'navigation' && ui.navRun) return MapsRoute.nav(mrContext()); return JBExtraApps.render(ui.view, {studio: ui.view === 'movie-studio' ? movieContext() : null, news: ['currents', 'play-magazines'].includes(ui.view) ? newsContext() : null, messenger: ui.view === 'messenger' ? messengerContext() : null, ui, t: key => i18n.t(key), contacts: data.contacts, data});
+      }
+    },
+    action(action, button, c) {
+      $bind(c);
+      const event = c.event, { id, app, url } = button.dataset;
+      if (ui.view === 'messenger' && action.startsWith('gpm-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (PlusMessenger.handle(action, id, messengerContext())) return true; }
+      if (['currents', 'play-magazines'].includes(ui.view) && action.startsWith('nr-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } ui.kkxDrawer = false; ui.lpxDrawer = false; ui.magDrawer = false; ui.currentsMenu = false; if (NewsReader.handle(action, id, newsContext())) return true; }
+      if (ui.view === 'movie-studio' && action.startsWith('mst-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (MovieStudio.handle(action, id, movieContext())) return true; }
+      switch (action) {
+        case 'currents-menu': ui.currentsMenu = !ui.currentsMenu; render(); break;
+        case 'currents-edition': ui.currentsEdition = id || ''; ui.currentsMenu = false; render(); break;
+        default: return false;
+      }
+      return true;
+    },
+    submit(name, values, c) {
+      $bind(c);
+      const event = c.event, form = c.form;
+      if (['currents', 'play-magazines'].includes(ui.view) && NewsReader.submit(form.dataset.form, values, newsContext())) return true;
+      if (PlusMessenger.submit(form.dataset.form, values, messengerContext())) return true;
+      if (JBExtraApps.submit(form.dataset.form, values, extraContext())) return true;
+      if (form.dataset.form === 'mr-type') { overlayRoot.querySelector('[data-action="mr-type-ok"]')?.click(); return true; }
+      if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, mrContext()); return true; }
+      return false;
+    },
+    input(event, c) {
+      $bind(c);
+      if (['currents', 'play-magazines'].includes(ui.view) && NewsReader.input(event.target, newsContext())) return true;
+      if (ui.view === 'currents' && CurrentsCustomize.change(event.target, cczContext())) return true;
+      if (PlusMessenger.input(event.target, messengerContext())) return true;
+      return false;
+    },
+    back(c) {
+      $bind(c);
+      if (ui.view === 'messenger' && !ui.overlay && PlusMessenger.back(ui)) { render(); return true; }
+      if (['currents', 'play-magazines'].includes(ui.view) && !ui.overlay && NewsReader.back(ui)) { render(); return true; }
+      if (ui.view === 'currents' && !ui.overlay && CurrentsCustomize.back(ui)) { render(); return true; }
+      if (ui.view === 'currents' && !ui.overlay && (ui.currentsMenu || ui.currentsEdition)) { if (ui.currentsMenu) ui.currentsMenu = false; else ui.currentsEdition = ''; render(); return true; }
+      if (ui.view === 'movie-studio' && !ui.overlay && MovieStudio.back(ui)) { render(); return true; }
+      if (ui.view === 'navigation' && !ui.overlay && ui.navRun) { ui.overlay = 'mr-exit'; renderOverlay(); return true; }
+      if (['navigation', 'local'].includes(ui.view) && !ui.overlay && JBExtraApps.back(ui)) { render(); return true; }
+      return false;
+    },
+    // Clicks taken before the keyguard's filter (the core's click handler).
+    actionEarly(action, button, c) {
+      $bind(c);
+      const event = c.event, { id, app, url } = button.dataset;
+      if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return true;
+      // Navigation's Contacts / Starred places pickers and Local's search and categories (jb-extra-apps.js).
+      if (action.startsWith('xa-') && JBExtraApps.handle(action, id, extraContext())) return true;
+      if (action.startsWith('ccz-') && CurrentsCustomize.handle(action, id, cczContext())) return true;
+      if (action === 'mr-type-dest') { ui.overlay = 'mr-type'; renderOverlay(); overlayRoot.querySelector('input')?.focus(); return true; }
+      if (action === 'mr-type-ok') { const to = overlayRoot.querySelector('input')?.value.trim(); ui.overlay = ''; renderOverlay(); if (to) { const rt = MapsRoute.route(mrContext(), {to, mode: 'drive', avoid: data.mapsAvoid || {}}); MapsRoute.startNav(mrContext(), {name: to, km: rt.km, min: rt.min, mode: 'drive'}); render(); } return true; }
+      if (action === 'mr-exit-ok') { ui.overlay = ''; renderOverlay(); MapsRoute.stopNav(mrContext()); render(); return true; }
+      return false;
+    },
+    open(c, resume, app) {
+      $bind(c);
+      if (app === 'movie-studio' && !resume) MovieStudio.open(ui);
+      if (['currents', 'play-magazines'].includes(app) && !resume) { NewsReader.open(ui); ui.currentsEdition = ''; ui.currentsCustomize = ''; ui.currentsLibrary = false; }
+      if (app === 'messenger' && !resume) PlusMessenger.open(ui);
+    },
+    overlay(c) {
+      $bind(c);
+      if (ui.overlay === 'mr-type') {
+        // Navigation's Type destination: the address field with OK / Cancel.
+        const S = key => MapsRoute.S(mrContext(), key), title = JBExtraApps.text ? JBExtraApps.text('navigation', 'Type destination') : 'Type destination';
+        overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><form class="settings-dialog" data-form="mr-type" role="dialog" aria-label="${safe(title)}" data-no-translate><h3>${safe(title)}</h3><input class="settings-dialog-input" name="to" autocomplete="off" spellcheck="false" style="display:block;width:calc(100% - calc(28.1823 * var(--dp)));margin:calc(4.6971 * var(--dp)) calc(14.0912 * var(--dp)) calc(14.0912 * var(--dp));padding:calc(7.0456 * var(--dp));font:inherit"><div class="settings-dialog-actions"><button type="button" data-action="close-overlay">${safe(S('Cancel'))}</button><button type="button" data-action="mr-type-ok">${safe(S('OK'))}</button></div></form>`;
+      } else if (ui.overlay === 'mr-exit') {
+        const S = key => MapsRoute.S(mrContext(), key);
+        overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog" role="dialog" aria-label="${safe(S('Exit navigation?'))}" data-no-translate><h3>${safe(S('Exit navigation?'))}</h3><div class="settings-dialog-actions"><button data-action="close-overlay">${safe(S('Cancel'))}</button><button data-action="mr-exit-ok">${safe(S('OK'))}</button></div></div>`;
+      }
+      else return;
+      return true;
+    },
+    exports: {
+      mrContext: (c, ...args) => { $bind(c); return mrContext(...args); }
+    }
+  };
+  JB.register('messenger', spec);
+  JB.register('navigation', spec);
+  JB.register('local', spec);
+  JB.register('currents', spec);
+  JB.register('play-magazines', spec);
+  JB.register('wallet', spec);
+  JB.register('movie-studio', spec);
+})();

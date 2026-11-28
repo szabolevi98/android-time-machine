@@ -268,7 +268,7 @@
     }
   }
   // The names the jb-* modules bind (generated as code moves out; docs/plans/engine-migration-4.3.md).
-  const moduleApi = {get PLAY_APPS() { return PLAY_APPS; }, get back() { return back; }, get cameraShoot() { return cameraShoot; }, get clock() { return clock; }, get clone() { return clone; }, get composeEmail() { return composeEmail; }, get composeGmail() { return composeGmail; }, get data() { return data; }, get defaultData() { return defaultData; }, get deviceDate() { return deviceDate; }, get dp() { return dp; }, get home() { return home; }, get i18n() { return i18n; }, get jbmaContext() { return jbmaContext; }, get keepMoreContext() { return keepMoreContext; }, get label() { return label; }, get messageDraft() { return messageDraft; }, get messengerContext() { return messengerContext; }, get movieContext() { return movieContext; }, get mrContext() { return mrContext; }, get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; }, get openApp() { return openApp; }, get overlayRoot() { return overlayRoot; }, get pointerStart() { return pointerStart; }, get render() { return render; }, get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; }, get row() { return row; }, get safe() { return safe; }, get save() { return save; }, get saveMusic() { return saveMusic; }, get screen() { return screen; }, get shareText() { return shareText; }, get toast() { return toast; }, get tracks() { return tracks; }, get ui() { return ui; }, get viewport() { return viewport; }};
+  const moduleApi = {get PLAY_APPS() { return PLAY_APPS; }, get back() { return back; }, get cameraShoot() { return cameraShoot; }, get cczContext() { return cczContext; }, get clock() { return clock; }, get clone() { return clone; }, get composeEmail() { return composeEmail; }, get composeGmail() { return composeGmail; }, get data() { return data; }, get defaultData() { return defaultData; }, get deviceDate() { return deviceDate; }, get dp() { return dp; }, get home() { return home; }, get i18n() { return i18n; }, get jbmaContext() { return jbmaContext; }, get keepMoreContext() { return keepMoreContext; }, get label() { return label; }, get messageDraft() { return messageDraft; }, get messengerContext() { return messengerContext; }, get movieContext() { return movieContext; }, get mrContext() { return mrContext; }, get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; }, get openApp() { return openApp; }, get overlayRoot() { return overlayRoot; }, get pointerStart() { return pointerStart; }, get render() { return render; }, get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; }, get row() { return row; }, get safe() { return safe; }, get save() { return save; }, get saveMusic() { return saveMusic; }, get screen() { return screen; }, get shareText() { return shareText; }, get toast() { return toast; }, get tracks() { return tracks; }, get ui() { return ui; }, get viewport() { return viewport; }};
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
   function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (jbPlayContext().prefs.shortcuts) placeShortcut(r, appNames[r]); }
   // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
@@ -742,7 +742,6 @@
       case 'settings': return renderSettings();
       case 'browser': return renderBrowser();
       case 'chrome': return renderChrome();
-      case 'messenger': case 'navigation': case 'local': case 'currents': case 'play-magazines': case 'wallet': case 'movie-studio': if (ui.view === 'navigation' && ui.navRun) return MapsRoute.nav(mrContext()); return JBExtraApps.render(ui.view, {studio: ui.view === 'movie-studio' ? movieContext() : null, news: ['currents', 'play-magazines'].includes(ui.view) ? newsContext() : null, messenger: ui.view === 'messenger' ? messengerContext() : null, ui, t: key => i18n.t(key), contacts: data.contacts, data});
       case 'hangouts': return hangoutsScope(() => Hangouts.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime()));
       case 'gmail': return renderGmail();
       case 'phone': return renderPhone();
@@ -758,9 +757,6 @@
   }
   function openApp(app, resume = false) {
     if (StoreHost.has(app) && StoreHost.module(app).open?.(storeContext(), resume, app)) return;
-    if (app === 'movie-studio' && !resume) MovieStudio.open(ui);
-    if (['currents', 'play-magazines'].includes(app) && !resume) { NewsReader.open(ui); ui.currentsEdition = ''; ui.currentsCustomize = ''; ui.currentsLibrary = false; }
-    if (app === 'messenger' && !resume) PlusMessenger.open(ui);
     // A capture for Messaging lasts while the Camera is open; Messaging opens on its compose screen, not over it.
     if (!resume) { ui.jbmaCapture = null; ui.camIntent = null; if (app === 'messaging') ui.jbmaScreen = null; }
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
@@ -795,23 +791,9 @@
   // does; a Local find opens on the map.
   // Currents' Customize and Add editions (currents-customize.js).
   const cczContext = () => ({ui, data, S: key => JBExtraApps.text('currents', key), save, render, toast: message => toast(message)});
-  function extraContext() {
-    return {ui, data, render, focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
-      go(to) { const rt = MapsRoute.route(mrContext(), {to, mode: 'drive', avoid: data.mapsAvoid || {}}); MapsRoute.startNav(mrContext(), {name: to, km: rt.km, min: rt.min, mode: 'drive'}); render(); },
-      openMap(query) { openApp('maps'); ui.mapsQuery = query; render(); }};
-  }
-  // Maps 6 directions and Navigation's drive (maps-route.js).
-  function mrContext() {
-    return {ui, data, t: key => i18n.t(key), locale: i18n.locale(), root: viewport, save, render,
-      focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
-      unsupported: () => toast(i18n.t('This feature is not part of the simulator.')),
-      mapSvg: StockApps.mapSvg({ui: {...ui, mapsRoute: null, mapsQuery: ''}, data, t: key => i18n.t(key), locale: i18n.locale()}).replace(/^<svg[^>]*>|<\/svg>$/g, ''),
-      navigate: run => { ui.mapsRoute = ui.mapsRoute ? {...ui.mapsRoute, screen: 'map'} : null; openApp('navigation'); MapsRoute.startNav(mrContext(), run); render(); }};
-  }
+  function mrContext(...args) { return StoreHost.module('messenger').exports.mrContext(storeContext(), ...args); }
   // Movie Studio (movie-studio.js): the projects and the editor shell.
   const movieContext = () => ({ui, data, t: key => i18n.t(key), S: key => JBExtraApps.text('studio', key), save, render, toast: message => toast(message), refuse: () => toast(i18n.t('This feature is not part of the simulator.')), thumb: i => StockApps.thumb(i), addIcon: 'assets/ms-ic_menu_add_clip_normal.png'});
-  // Currents / Magazines / Newsstand reading and settings (news-reader.js).
-  const newsContext = () => ({app: ui.view, profile: ui.view === 'currents' ? 'currents' : 'magazines', ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.[ui.view === 'currents' ? 'currents' : 'magazines']?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, account: 'jellybean.demo@gmail.com', save, render, toast: message => toast(message), unavailable: 'kkx-unavailable', emptyFor: {}, share: (text, subject) => { ui.overlay = ''; renderOverlay(); openApp('messaging'); ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); save(); render(); }});
   // Google+ Messenger (plus-messenger.js): Google+ 4.0's conversations, New conversation and settings.
   const messengerContext = () => ({ui, data, t: key => i18n.t(key), S: key => JBExtraApps.text('gplus', key), contacts: data.contacts, now: deviceDate(), locale: i18n.locale(), save, render, toast: message => toast(message), avatar: 'assets/msg-ic_avatar.png', photoIcon: 'assets/gpm-ic_send_photo_holo_light.png', sendIcon: 'assets/gpm-ic_menu_send_holo_light.png', version: '4.0', listMenu: ['Send feedback', 'Settings', 'Help', 'Sign out'], me: i18n.t('Me')});
   const musicFxContext = () => ({data, ui, language: i18n.language, locale: i18n.locale(), save, render, toast: message => toast(message)});
@@ -836,13 +818,6 @@
     if (ui.view === 'messaging' && !ui.overlay && window.JBMmsAttach?.back(jbmaContext())) { render(); return; }
     if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
     if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
-    if (ui.view === 'messenger' && !ui.overlay && PlusMessenger.back(ui)) { render(); return; }
-    if (['currents', 'play-magazines'].includes(ui.view) && !ui.overlay && NewsReader.back(ui)) { render(); return; }
-    if (ui.view === 'currents' && !ui.overlay && CurrentsCustomize.back(ui)) { render(); return; }
-    if (ui.view === 'currents' && !ui.overlay && (ui.currentsMenu || ui.currentsEdition)) { if (ui.currentsMenu) ui.currentsMenu = false; else ui.currentsEdition = ''; render(); return; }
-    if (ui.view === 'movie-studio' && !ui.overlay && MovieStudio.back(ui)) { render(); return; }
-    if (ui.view === 'navigation' && !ui.overlay && ui.navRun) { ui.overlay = 'mr-exit'; renderOverlay(); return; }
-    if (['navigation', 'local'].includes(ui.view) && !ui.overlay && JBExtraApps.back(ui)) { render(); return; }
     if (ui.view === 'settings' && ['a11y-magnification', 'a11y-shortcut'].includes(ui.sub) && !ui.overlay) { ui.sub = 'accessibility'; render(); return; }
     if (ui.view === 'calendar' && ui.sub === 'calendar-settings' && !ui.overlay) { if (CalendarPrefs.back(ui) === 'leave') { ui.sub = ''; ui.calPref = ''; } render(); return; }
     if (ui.view === 'email' && ui.sub === 'em-settings' && !ui.overlay) { if (ui.emPrefList || ui.emPrefEdit) { ui.emPrefList = ''; ui.emPrefEdit = ''; ui.emPrefTone = undefined; window.SystemSounds?.stop(); } else if (ui.emPref) ui.emPref = EmailPrefs.parent(ui.emPref); else ui.sub = ''; render(); return; }
@@ -1031,13 +1006,6 @@
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="jbp-menu" role="menu">${JBPlay.menu(jbPlayContext()).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
     } else if (ui.overlay.startsWith('jbp-')) {
       overlayRoot.innerHTML = JBPlay.dialog(ui.overlay.slice(4), jbPlayContext());
-    } else if (ui.overlay === 'mr-type') {
-      // Navigation's Type destination: the address field with OK / Cancel.
-      const S = key => MapsRoute.S(mrContext(), key), title = JBExtraApps.text ? JBExtraApps.text('navigation', 'Type destination') : 'Type destination';
-      overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><form class="settings-dialog" data-form="mr-type" role="dialog" aria-label="${safe(title)}" data-no-translate><h3>${safe(title)}</h3><input class="settings-dialog-input" name="to" autocomplete="off" spellcheck="false" style="display:block;width:calc(100% - calc(28.1823 * var(--dp)));margin:calc(4.6971 * var(--dp)) calc(14.0912 * var(--dp)) calc(14.0912 * var(--dp));padding:calc(7.0456 * var(--dp));font:inherit"><div class="settings-dialog-actions"><button type="button" data-action="close-overlay">${safe(S('Cancel'))}</button><button type="button" data-action="mr-type-ok">${safe(S('OK'))}</button></div></form>`;
-    } else if (ui.overlay === 'mr-exit') {
-      const S = key => MapsRoute.S(mrContext(), key);
-      overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog" role="dialog" aria-label="${safe(S('Exit navigation?'))}" data-no-translate><h3>${safe(S('Exit navigation?'))}</h3><div class="settings-dialog-actions"><button data-action="close-overlay">${safe(S('Cancel'))}</button><button data-action="mr-exit-ok">${safe(S('OK'))}</button></div></div>`;
     } else if (ui.overlay === 'phone-menu') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu phone-overflow"><button data-action="phone-add-contact">Add to contacts</button></div>`;
     } else if (ui.overlay === 'connectivity-menu') {
@@ -1795,10 +1763,6 @@
     // The jb-* modules' handlers that stood here, before the keyguard's filter below.
     if (moduleHook('actionEarly', {event}, action, button)) return;
     if (action.startsWith('mmsp-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (MmsPrefs.handle(action, id, mmspContext())) return; }
-    if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
-    // Navigation's Contacts / Starred places pickers and Local's search and categories (jb-extra-apps.js).
-    if (action.startsWith('xa-') && JBExtraApps.handle(action, id, extraContext())) return;
-    if (action.startsWith('ccz-') && CurrentsCustomize.handle(action, id, cczContext())) return;
     if (action.startsWith('cb-') && CellBroadcast.handle(action, id, {data, ui, save, render, renderOverlay})) return;
     // Messaging's Cell broadcasts starts the CellBroadcastReceiver's list; Back returns to Messaging.
     if (action === 'mms-cell-broadcasts') { ui.overlay = ''; renderOverlay(); openApp('settings'); ui.sub = 'cb-list'; ui.cbReturn = 'messaging'; ui.cbFromList = false; render(); return; }
@@ -1812,9 +1776,6 @@
     if (action.startsWith('calpref-') && CalendarPrefs.handle(action, id, {data, ui, save, render, toast, root: viewport, pickZone: zone => { ui.tzp = TimeZonePicker.open(zone, Date.now()); ui.tzpFor = 'home'; ui.overlay = 'tzpicker'; renderTzPicker(true); }})) return;
     // Email's Quick responses, ringtone and server screens (email-prefs.js).
     if (action.startsWith('empx-') && EmailPrefs.handle(action, id, {data, ui, save, render, root: viewport, account: ICSEmail.account})) return;
-    if (action === 'mr-type-dest') { ui.overlay = 'mr-type'; renderOverlay(); overlayRoot.querySelector('input')?.focus(); return; }
-    if (action === 'mr-type-ok') { const to = overlayRoot.querySelector('input')?.value.trim(); ui.overlay = ''; renderOverlay(); if (to) { const rt = MapsRoute.route(mrContext(), {to, mode: 'drive', avoid: data.mapsAvoid || {}}); MapsRoute.startNav(mrContext(), {name: to, km: rt.km, min: rt.min, mode: 'drive'}); render(); } return; }
-    if (action === 'mr-exit-ok') { ui.overlay = ''; renderOverlay(); MapsRoute.stopNav(mrContext()); render(); return; }
     if (ui.view === 'gallery' && ui.galleryPopup && action !== 'gallery-menu') ui.galleryPopup = '';
     // A tap outside the Recents popup menu only dismisses it.
     if (ui.overlay === 'recent' && ui.recentPopup && !['remove-recent', 'recent-app-info'].includes(action)) { ui.recentPopup = null; renderOverlay(); return; }
@@ -1846,9 +1807,6 @@
       const result = PeopleIO.handle(action, id, {data, ui, t: key => i18n.t(key), locale: i18n.locale()});
       if (result) { if (result.save) save(); for (const title of result.notify || []) addNotification(title, ''); renderOverlay(); render(); if (result.toast) toast(result.toast); return; }
     }
-    if (ui.view === 'messenger' && action.startsWith('gpm-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (PlusMessenger.handle(action, id, messengerContext())) return; }
-    if (['currents', 'play-magazines'].includes(ui.view) && action.startsWith('nr-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } ui.kkxDrawer = false; ui.lpxDrawer = false; ui.magDrawer = false; ui.currentsMenu = false; if (NewsReader.handle(action, id, newsContext())) return; }
-    if (ui.view === 'movie-studio' && action.startsWith('mst-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (MovieStudio.handle(action, id, movieContext())) return; }
     if (ui.view === 'messaging' && action.startsWith('jbma-') && JBMmsAttach.handle(action, id, jbmaContext())) return;
     // The jb-* modules' cases, where they stood in this switch.
     if (moduleHook('action', {event}, action, button)) return;
@@ -2125,9 +2083,7 @@
       case 'play-store-open': ui.magDrawer = false; openApp('play-store'); break;
       case 'mag-drawer': ui.magDrawer = !ui.magDrawer; render(); break;
       // Play Music, Play Movies and Play Books
-      case 'currents-menu': ui.currentsMenu = !ui.currentsMenu; render(); break;
       // Currents' menu: Breaking stories or one edition's stories (jb-extra-apps.js); the panel slides back.
-      case 'currents-edition': ui.currentsEdition = id || ''; ui.currentsMenu = false; render(); break;
       // Play Books 2.8.91's reader: Contents (TableOfContentsActivity) and the Display options popup (ReaderSettingsController).
       // Chrome menu and New Tab page
       case 'chrome-incognito': chromeNewTab(true); break;
@@ -2363,12 +2319,7 @@
     const form = event.target.closest('[data-form]');
     if (!form || !screen.contains(form)) return;
     event.preventDefault(); const values = new FormData(form);
-    if (['currents', 'play-magazines'].includes(ui.view) && NewsReader.submit(form.dataset.form, values, newsContext())) return;
-    if (PlusMessenger.submit(form.dataset.form, values, messengerContext())) return;
-    if (JBExtraApps.submit(form.dataset.form, values, extraContext())) return;
     if (CellBroadcast.submit(form.dataset.form, values, {data, ui, save, render, renderOverlay})) return;
-    if (form.dataset.form === 'mr-type') { overlayRoot.querySelector('[data-action="mr-type-ok"]')?.click(); return; }
-    if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, mrContext()); return; }
     if (ui.view === 'gmail' && gmailForm(form.dataset.form, values)) return;
     if(form.dataset.form==='folder-name'){event.target.querySelector('input')?.blur();render();return;}
     if(form.dataset.form==='sx-save'){ui.systemError=ICSSystemSettings.submit(data,ui,values);if(ui.systemError){ui.systemValues=Object.fromEntries(values);renderOverlay();return;}save();ui.overlay='';render();return;}
@@ -2469,10 +2420,7 @@
   document.addEventListener('input', event => hangoutsScope(() => handleInput(event)));
   function handleInput(event) {
     if (moduleHook('input', null, event)) return;
-    if (['currents', 'play-magazines'].includes(ui.view) && NewsReader.input(event.target, newsContext())) return;
-    if (ui.view === 'currents' && CurrentsCustomize.change(event.target, cczContext())) return;
     if (PlusPost.input(event.target)) return;
-    if (PlusMessenger.input(event.target, messengerContext())) return;
     if (event.target.matches('[data-lng-seek]') && InputLanguage.input(event.target, langContext())) return;
     if (event.target.matches('[data-mfx]') && MusicFX.input(event.target, musicFxContext())) return;
     if (event.target.matches?.('[data-cpref-volume]')) { ui.clockDraft = Number(event.target.value); return; }
