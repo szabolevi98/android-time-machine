@@ -64,3 +64,11 @@ and modules use the same hook names as EC / MM / NG.
 - 2026-11-28: **4.0.4 and 4.3 done** and live (d224b464): their simulator.js is gone; ics-core.js and jb-core.js plus
   modules. Found on the way and fixed on main: 2.3.6's Clock settings (Menu › Settings) drew the clock (667ceedf), and
   the host's key hook tripped over the store apps' `key` field (9552645e).
+- 2026-11-28: **2.3.6, 4.4.4 and 5.1.1 done** and live (120503e3). No version has a simulator.js any more: all eight
+  run on their own `<pfx>-core.js` (ec, gb, ics, jb, kk, lp, mm, ng) with modules. The full CI on the merged state
+  (all ten browser jobs) passed before main got it; each version was also clicked through on the live site.
+- Follow-ups: the cores differ in size (gb 810, ics 572, jb 1078, kk 2139, lp 1060 lines): kk-core.js still holds
+  shell code the others moved into modules; store-apps/legacy-host.js is now the five cores' shared module host and
+  could be renamed for that role; 5.1.1's modules reach the core through `lp.<name>`.
+- Local note: this checkout uses `core.autocrlf=false` (set 2026-11-28); with Windows' default CRLF checkout some
+  tests that read sources (sitemap, text-tables, settings-detail) fail locally though CI passes.
