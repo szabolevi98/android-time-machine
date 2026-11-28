@@ -1,8 +1,8 @@
 /* TODO */
 'use strict';
 LP.define('people', ({
-  addNotification, captureRecentView, clone, composeEmail, contact, defaultData, i18n, mailbox, openApp,
-  overlayRoot, placeShortcut, render, renderOverlay, safe, save, toast, ui, viewport
+  addNotification, captureRecentView, clone, contact, defaultData, i18n, openApp, overlayRoot, placeShortcut,
+  render, renderOverlay, safe, save, toast, ui, viewport
 }, lp) => {
   function placeContactShortcut(person) { if (person) placeShortcut(`contact:${person.id}`, person.name); }
   function renderPeople() { return ICSPeople.render(lp.data,ui,key => i18n.t(key),i18n.locale()); }
@@ -25,7 +25,7 @@ LP.define('people', ({
     const group = lp.data.contactGroups.find(g=>g.id===ui.peopleEditGroup);
     return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><form class="settings-dialog mms-dialog people-editor" role="dialog" aria-label="${group?'Edit group':'New group'}" data-form="people-group"><h3>${group?'Edit group':'New group'}</h3><label>Group name<input name="name" required maxlength="50" value="${safe(group?.name||'')}"></label>${lp.data.contacts.map(p=>`<label class="people-membership"><input type="checkbox" name="members" value="${p.id}" ${group?.members.includes(p.id)?'checked':''}>${safe(p.name)}</label>`).join('')}<div class="settings-dialog-actions"><button type="button" data-action="close-overlay">Cancel</button><button type="submit">Save</button></div></form>`;
   }
-  function shareVcard(app, file) { ui.overlay = ''; renderOverlay(); openApp(app); composeEmail(); const d = mailbox().find(m => m.id === ui.emailId); if (d) (d.files ||= []).push({name: file.name, mime: file.mime, size: file.size, text: file.text}); save(); render(); }
+  function shareVcard(app, file) { ui.overlay = ''; renderOverlay(); openApp(app); lp.composeEmail(); const d = lp.mailbox().find(m => m.id === ui.emailId); if (d) (d.files ||= []).push({name: file.name, mime: file.mime, size: file.size, text: file.text}); save(); render(); }
   Object.assign(lp, {shareVcard, editPerson});
   // lp:code
   return {
@@ -106,7 +106,7 @@ LP.define('people', ({
         case 'new-contact': editPerson(true); break;
         case 'contact-call': lp.startPhoneCall(contact(id)?.phone||'');break;
         case 'contact-message': lp.openMessageThread(id); break;
-        case 'contact-email': {const recipient=contact(id)?.email||'';openApp('email');composeEmail(null,false,recipient);break;}
+        case 'contact-email': {const recipient=contact(id)?.email||'';openApp('email');lp.composeEmail(null,false,recipient);break;}
         // lp:cases
         default: return false;
       }
