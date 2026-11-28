@@ -60,3 +60,23 @@
   }
   window.JBSearchPanel = {S, markup, geometry, snapped, attach};
 })();
+/* The navigation bar's search panel (SearchPanelView) in the 4.4.4 shell (docs/plans/engine-migration.md): its
+   overlay, moved out of simulator.js. The swipe up from the navigation bar stays with the shell. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {i18n, overlayRoot, ui} = c;
+    return {
+      overlay() {
+        if (ui.overlay === 'search') {
+          if (!overlayRoot.querySelector('[data-jb-search]')) overlayRoot.innerHTML = JBSearchPanel.markup(key => i18n.t(key));
+        } else return false;
+        return true;
+      }
+    };
+  }
+  const spec = {
+    overlay: c => scope(c).overlay()
+  };
+  if (window.KK) for (const id of ['search-panel']) KK.register(id, spec);
+})();

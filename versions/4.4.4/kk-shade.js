@@ -68,3 +68,75 @@
   }
   window.JBShade = {FLIP_OUT, FLIP_IN, clearDelays, tiles, row, isExpanded, render, flip};
 })();
+/* The notification shade of the 4.4.4 shell (docs/plans/engine-migration.md): the panel with its notifications
+   and Quick Settings (kk-shade.js), their tiles, the brightness dialog, a notification's open and action buttons and
+   Clear, moved out of simulator.js. The pull-down and the swipes stay with the shell's pointer handling. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {clock, contactByPhone, data, deviceDate, fullDate, i18n, nextAlarmLabel, openApp, openMessageThread, overlayRoot, reducedMotion, render, renderOverlay, renderStatus, safe, save, screen, toast, ui} = c;
+    function decorateNotification(note) {
+      if (note.id === 2) return {...note, icon: 'mms-ic_contact_picture.png', smallIcon: 'stat_notify_hangouts.png', big: 'Hey! Are we still on for coffee tomorrow?\nSee you at 11!'};
+      if (note.kind === 'calendar') return {...note, icon: 'calendar.png', smallIcon: 'calendar-stat_notify_calendar.png', big: note.detail, actions: [{id: 'snooze', label: 'Snooze', icon: 'calendar-ic_alarm_holo_dark.png'}]};
+      if (note.kind === 'message') return {...note, icon: 'mms-ic_contact_picture.png', smallIcon: 'stat_notify_hangouts.png', big: note.detail};
+      return {...note, icon: 'settings.png', smallIcon: 'stat_notify_more.png'};
+    }
+    return {
+      action(action, button, event) {
+        const {id, app, url} = button.dataset;
+        switch (action) {
+          case 'shade': ui.overlay = ui.overlay === 'shade' ? '' : 'shade'; renderOverlay(); break;
+          case 'clear-notifications': {
+            const rows = [...overlayRoot.querySelectorAll('.jb-note')], delays = JBShade.clearDelays(rows.length);
+            if (reducedMotion?.matches || !rows.length) { data.notifications = []; ui.overlay = ''; save(); renderStatus(); renderOverlay(); break; }
+            overlayRoot.querySelector('.jb-shade-clear')?.setAttribute('hidden', '');
+            rows.forEach((row, index) => row.animate([{transform: 'translateX(0)', opacity: 1}, {transform: `translateX(${row.offsetWidth}px)`, opacity: 0}], {duration: 125, delay: delays[index], easing: 'linear', fill: 'forwards'}));
+            setTimeout(() => { data.notifications = []; save(); renderStatus(); if (ui.overlay === 'shade') { ui.overlay = ''; renderOverlay(); } }, (delays.at(-1) || 0) + 125 + 225);
+            break;
+          }
+          case 'shade-flip': ui.shadeSettings = !ui.shadeSettings; JBShade.flip(overlayRoot.querySelector('.jb-shade'), ui.shadeSettings, reducedMotion?.matches); { const button = overlayRoot.querySelector('.jb-shade-flip'); button?.setAttribute('aria-label', i18n.t(ui.shadeSettings ? 'Notifications.' : 'Quick settings.')); overlayRoot.querySelector('.jb-shade-clear')?.toggleAttribute('hidden', ui.shadeSettings || !data.notifications.length); } break;
+          case 'qs-user': ui.overlay = ''; openApp('people'); break;
+          case 'qs-brightness': ui.overlay = 'qs-brightness'; renderOverlay(); break;
+          case 'qs-settings': ui.overlay = ''; openApp('settings'); break;
+          case 'qs-wifi': ui.overlay = ''; openApp('settings'); ui.sub = 'wifi'; render(); break;
+          case 'qs-rssi': ui.overlay = ''; openApp('settings'); ui.sub = 'data'; render(); break;
+          case 'qs-battery': ui.overlay = ''; openApp('settings'); ui.sub = 'battery'; render(); break;
+          case 'qs-airplane': data.settings.airplane = !data.settings.airplane; if (data.settings.airplane) { data.settings.wifi = false; data.settings.bluetooth = false; } save(); renderStatus(); renderOverlay(); break;
+          case 'qs-bluetooth': ui.overlay = ''; openApp('settings'); ui.sub = 'bluetooth'; render(); break;
+          case 'qs-alarm': ui.overlay = ''; openApp('clock'); break;
+          case 'qs-location': ui.overlay = ''; openApp('settings'); ui.sub = 'location'; render(); break;
+          case 'notification-action': { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar' && button.dataset.noteAction === 'snooze') { data.notifications = data.notifications.filter(item => item !== note); (data.calendarSnoozes ||= []).push({eventId: note.eventId, date: note.date, title: note.title, detail: note.detail, at: deviceDate().getTime() + 5 * 60000}); save(); renderStatus(); if (!data.notifications.length) ui.overlay = ''; renderOverlay(); toast('Snoozed'); } break; }
+          case 'notification-open': { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar') { data.notifications = data.notifications.filter(item => item !== note); save(); ui.overlay = ''; openApp('calendar'); ui.selectedEvent = note.eventId; ui.selectedInstance = note.date; ui.selectedDate = note.date; ui.sub = 'event'; render(); break; } }
+            ui.overlay = ''; if (Number(id) === 2) openMessageThread(1); else if (note?.kind === 'message') openMessageThread(note.contact); else { ui.view = 'settings'; ui.sub = 'about'; render(); } break;
+          case 'qs-wifi-display': ui.overlay = ''; ui.view = 'settings'; ui.sub = 'wifi-display'; render(); break;
+          default: return false;
+        }
+        return true;
+      },
+      input(event) {
+        if (event.target.dataset.field === 'auto-brightness') { data.settings.autoBrightness = event.target.checked; save(); const slider = event.target.closest('.jb-brightness')?.querySelector('[data-field="brightness"]'); if (slider) slider.disabled = data.settings.autoBrightness; return true; }
+        if (event.target.dataset.field === 'brightness') {
+          data.settings.brightness = Number(event.target.value); save();
+          const display = event.target.closest('.detail-pad')?.querySelector('p'); if (display) display.textContent = `${data.settings.brightness}%`;
+          screen.style.filter = `brightness(${.5 + data.settings.brightness / 135})`;
+        }
+        return false;
+      },
+      overlay() {
+        if (ui.overlay === 'shade') {
+          const call = ui.activeCall ? `<button class="phone-resume-call" data-action="open-app" data-app="phone">${safe(i18n.t('Ongoing call'))} · ${safe(contactByPhone(ui.activeCall.number)?.name||ui.activeCall.number)}</button>` : '';
+          overlayRoot.innerHTML = '<div class="jb-shade-scrim" data-action="close-overlay"></div>' + JBShade.render({...data, notifications: data.notifications.map(decorateNotification)}, ui, key => i18n.t(key), {locale: i18n.locale(), clock: clock(), date: fullDate(), carrier: data.settings.airplane ? i18n.t('No service.') : (data.settings.networkOperator || 'Telekom'), alarm: nextAlarmLabel(), extra: call});
+        } else if (ui.overlay === 'qs-brightness') {
+          overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog jb-brightness" role="dialog" aria-label="${safe(i18n.t('Brightness'))}"><h3>${safe(i18n.t('Brightness'))}</h3><div class="jb-brightness-row"><img src="assets/jb-ic_qs_brightness_auto_off.png" alt=""><input type="range" min="10" max="100" value="${data.settings.brightness}" data-field="brightness" aria-label="${safe(i18n.t('Brightness'))}" ${data.settings.autoBrightness ? 'disabled' : ''}><label><input type="checkbox" data-field="auto-brightness" ${data.settings.autoBrightness ? 'checked' : ''}><span>${safe(i18n.t('AUTO'))}</span></label></div></div>`;
+        } else return false;
+        return true;
+      }
+    };
+  }
+  const spec = {
+    action: (name, el, event, c) => scope(c).action(name, el, event),
+    input: (event, c) => scope(c).input(event),
+    overlay: c => scope(c).overlay()
+  };
+  if (window.KK) for (const id of ['shade']) KK.register(id, spec);
+})();

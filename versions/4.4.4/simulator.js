@@ -271,18 +271,20 @@
   const kkScope = {
     get A11Y() { return A11Y; }, get HOLD_NAMES() { return HOLD_NAMES; }, get PLAY_APPS() { return PLAY_APPS; },
     get REPLIES() { return REPLIES; }, get addNotification() { return addNotification; },
-    get appView() { return appView; }, get applyMagnification() { return applyMagnification; },
-    get apps() { return apps; }, get calendarEdit() { return calendarEdit; },
-    get cameraShoot() { return cameraShoot; }, get carrierName() { return carrierName; },
+    get appIcon() { return appIcon; }, get appNames() { return appNames; }, get appView() { return appView; },
+    get applyMagnification() { return applyMagnification; }, get apps() { return apps; },
+    get calendarEdit() { return calendarEdit; }, get cameraShoot() { return cameraShoot; },
+    get captureRecentView() { return captureRecentView; }, get carrierName() { return carrierName; },
     get clearAppData() { return clearAppData; }, get clock() { return clock; }, get clone() { return clone; },
-    get composeEmail() { return composeEmail; }, get connectivityRow() { return connectivityRow; },
-    get connectivitySwitch() { return connectivitySwitch; }, get contact() { return contact; },
-    get contactByPhone() { return contactByPhone; }, get data() { return data; },
+    get closeRecents() { return closeRecents; }, get composeEmail() { return composeEmail; },
+    get connectivityRow() { return connectivityRow; }, get connectivitySwitch() { return connectivitySwitch; },
+    get contact() { return contact; }, get contactByPhone() { return contactByPhone; }, get data() { return data; },
     get deviceDate() { return deviceDate; }, get dp() { return dp; }, get driveShareFile() { return driveShareFile; },
     get driveShareText() { return driveShareText; }, get earthContext() { return earthContext; },
-    get editPerson() { return editPerson; }, get galleryWallpaper() { return galleryWallpaper; },
-    get hangoutsTakePhoto() { return hangoutsTakePhoto; }, get holdDelay() { return holdDelay; },
-    get home() { return home; }, get homeLongPressTimer() { return homeLongPressTimer; }, get i18n() { return i18n; },
+    get editPerson() { return editPerson; }, get fullDate() { return fullDate; },
+    get galleryWallpaper() { return galleryWallpaper; }, get hangoutsTakePhoto() { return hangoutsTakePhoto; },
+    get holdDelay() { return holdDelay; }, get home() { return home; },
+    get homeLongPressTimer() { return homeLongPressTimer; }, get i18n() { return i18n; },
     get jbPlayContext() { return jbPlayContext; }, get keepAttach() { return keepAttach; },
     get keepCurrent() { return keepCurrent; }, get keepMoreContext() { return keepMoreContext; },
     get label() { return label; }, get listenVoice() { return listenVoice; },
@@ -294,17 +296,20 @@
     get overlayRoot() { return overlayRoot; }, get photosContext() { return photosContext; },
     get placeContactShortcut() { return placeContactShortcut; }, get placeShortcut() { return placeShortcut; },
     get plusContext() { return plusContext; }, get pointerStart() { return pointerStart; },
-    get prefRow() { return prefRow; }, get printContext() { return printContext; }, get render() { return render; },
-    get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; },
-    get renderStockApp() { return renderStockApp; }, get resetSimulator() { return resetSimulator; },
-    get row() { return row; }, get safe() { return safe; }, get save() { return save; },
-    get saveBrowserState() { return saveBrowserState; }, get saveKeepNote() { return saveKeepNote; },
-    get saveMusic() { return saveMusic; }, get screen() { return screen; },
-    get scrollMessages() { return scrollMessages; }, get shareVcard() { return shareVcard; },
-    get snapResting() { return snapResting; }, get startPhoneCall() { return startPhoneCall; },
-    get statusRoot() { return statusRoot; }, get storeAppsSync() { return storeAppsSync; },
-    get storeContext() { return storeContext; }, get storeInstalled() { return storeInstalled; },
-    get storeUninstall() { return storeUninstall; }, get suppressClickUntil() { return suppressClickUntil; },
+    get powerOff() { return powerOff; }, get prefRow() { return prefRow; },
+    get printContext() { return printContext; }, get reducedMotion() { return reducedMotion; },
+    get removeTask() { return removeTask; }, get render() { return render; },
+    get renderDream() { return renderDream; }, get renderOverlay() { return renderOverlay; },
+    get renderStatus() { return renderStatus; }, get renderStockApp() { return renderStockApp; },
+    get resetSimulator() { return resetSimulator; }, get row() { return row; }, get safe() { return safe; },
+    get save() { return save; }, get saveBrowserState() { return saveBrowserState; },
+    get saveKeepNote() { return saveKeepNote; }, get saveMusic() { return saveMusic; },
+    get screen() { return screen; }, get scrollMessages() { return scrollMessages; },
+    get shareVcard() { return shareVcard; }, get snapResting() { return snapResting; },
+    get startPhoneCall() { return startPhoneCall; }, get statusRoot() { return statusRoot; },
+    get storeAppsSync() { return storeAppsSync; }, get storeContext() { return storeContext; },
+    get storeInstalled() { return storeInstalled; }, get storeUninstall() { return storeUninstall; },
+    get suppressClickUntil() { return suppressClickUntil; },
     get suppressReleaseClick() { return suppressReleaseClick; }, get toast() { return toast; },
     get today() { return today; }, get toggleRow() { return toggleRow; }, get tracks() { return tracks; },
     get ui() { return ui; }, get viewport() { return viewport; }, get wallpaperFiles() { return wallpaperFiles; },
@@ -897,42 +902,16 @@
       if (ui.view === gone) { ui.view = 'home'; ui.sub = ''; lastScene = {view: 'home', sub: ''}; render(); return; }
     }
     const closingFolder = overlayRoot.querySelector('.launcher-folder');
-    if (ui.overlay === 'shade') {
-      const call = ui.activeCall ? `<button class="phone-resume-call" data-action="open-app" data-app="phone">${safe(i18n.t('Ongoing call'))} · ${safe(contactByPhone(ui.activeCall.number)?.name||ui.activeCall.number)}</button>` : '';
-      overlayRoot.innerHTML = '<div class="jb-shade-scrim" data-action="close-overlay"></div>' + JBShade.render({...data, notifications: data.notifications.map(decorateNotification)}, ui, key => i18n.t(key), {locale: i18n.locale(), clock: clock(), date: fullDate(), carrier: data.settings.airplane ? i18n.t('No service.') : (data.settings.networkOperator || 'Telekom'), alarm: nextAlarmLabel(), extra: call});
-    } else if (ui.overlay === 'store-host') {
+    if (ui.overlay === 'store-host') {
       overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
-    } else if (ui.overlay === 'dream') {
-      overlayRoot.innerHTML = renderDream();
-      const dessertDream = overlayRoot.querySelector('[data-kk-dream-dessert]');
-      if (dessertDream) requestAnimationFrame(() => { if (dessertDream.isConnected) KKEgg.dessertCase(dessertDream, {reduced: !!reducedMotion?.matches}); });
     } else if (ui.overlay === 'kg-widget-picker') {
       const choices = [['calendar', 'Calendar', 'calendar.png'], ['clock', 'Digital clock', 'clock.png']];
       overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog jbk-picker" role="dialog" aria-label="${safe(i18n.t('Choose widget'))}"><h3>${safe(i18n.t('Choose widget'))}</h3>${choices.map(([type, label, icon]) => `<button data-action="kg-pick-widget" data-id="${type}"><img src="assets/${icon}" alt=""><span>${safe(i18n.t(label))}</span></button>`).join('')}<div class="settings-dialog-actions"><button data-action="close-overlay">${safe(i18n.t('Cancel'))}</button></div></div>`;
-    } else if (ui.overlay === 'qs-brightness') {
-      overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog jb-brightness" role="dialog" aria-label="${safe(i18n.t('Brightness'))}"><h3>${safe(i18n.t('Brightness'))}</h3><div class="jb-brightness-row"><img src="assets/jb-ic_qs_brightness_auto_off.png" alt=""><input type="range" min="10" max="100" value="${data.settings.brightness}" data-field="brightness" aria-label="${safe(i18n.t('Brightness'))}" ${data.settings.autoBrightness ? 'disabled' : ''}><label><input type="checkbox" data-field="auto-brightness" ${data.settings.autoBrightness ? 'checked' : ''}><span>${safe(i18n.t('AUTO'))}</span></label></div></div>`;
     } else if (ui.overlay.startsWith('widget-photo')) {
       overlayRoot.innerHTML = ICSWidgets.photoOverlay(data, ui, key => i18n.t(key));
-    } else if (ui.overlay === 'print') {
-      overlayRoot.innerHTML = PrintSpooler.overlay(printContext());
-    } else if (ui.overlay === 'search') {
-      if (!overlayRoot.querySelector('[data-jb-search]')) overlayRoot.innerHTML = JBSearchPanel.markup(key => i18n.t(key));
-    } else if (ui.overlay === 'recent') {
-      overlayRoot.innerHTML = JBRecents.render(ui.recent, {names: appNames, icon: appIcon, snapshots: ui.recentSnapshots, popup: ui.recentPopup, t: key => i18n.t(key)});
-      // PopupMenu keeps itself on screen: shift it left when the anchor is near the right edge.
-      const popup = overlayRoot.querySelector('.jb-recent-popup'); if (popup) popup.style.left = `${Math.max(4, Math.min(parseFloat(popup.style.left), popup.parentElement.clientWidth - popup.offsetWidth - 4))}px`;
-      JBRecents.bindLongPress(overlayRoot.querySelector('.recent-panel'), popup => { ui.recentPopup = popup; suppressClickUntil = Infinity; window.addEventListener('pointerup', () => { suppressClickUntil = Date.now() + 50; }, {once: true, capture: true}); renderOverlay(); });
     } else if (ui.overlay === 'sa-menu') {
       // The Google apps' action bar overflow (StockApps.menu: their menu XML's overflow items).
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${StockApps.menu(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()}).map(item => `<button data-action="${item.action}"${item.id != null ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'power-menu') {
-      overlayRoot.innerHTML = GlobalActions.menu({airplane: data.settings.airplane, ringer: GlobalActions.ringerOf(data.settings), bugreport: data.settings.bugreportPower}, key => i18n.t(key));
-      // 4.1+: a long press on Power off offers the safe-mode reboot.
-      GlobalActions.hold(overlayRoot.querySelector('[data-action="ga-power"]'), () => { ui.overlay = 'power-confirm'; ui.powerKind = 'safemode'; renderOverlay(); });
-    } else if (ui.overlay === 'power-confirm') {
-      overlayRoot.innerHTML = GlobalActions.confirm(ui.powerKind, key => i18n.t(key));
-    } else if (ui.overlay === 'power-progress') {
-      overlayRoot.innerHTML = GlobalActions.progress(key => i18n.t(key));
     } else if (ui.overlay === 'folder') {
       overlayRoot.innerHTML = renderFolder();
       positionFolder();
@@ -1213,12 +1192,6 @@
     const full = Math.min(shade.offsetHeight, screen.clientHeight - shade.offsetTop - navRoot.offsetHeight);
     shade.style.height = previous; shade.style.bottom = previousBottom; return full;
   }
-  function decorateNotification(note) {
-    if (note.id === 2) return {...note, icon: 'mms-ic_contact_picture.png', smallIcon: 'stat_notify_hangouts.png', big: 'Hey! Are we still on for coffee tomorrow?\nSee you at 11!'};
-    if (note.kind === 'calendar') return {...note, icon: 'calendar.png', smallIcon: 'calendar-stat_notify_calendar.png', big: note.detail, actions: [{id: 'snooze', label: 'Snooze', icon: 'calendar-ic_alarm_holo_dark.png'}]};
-    if (note.kind === 'message') return {...note, icon: 'mms-ic_contact_picture.png', smallIcon: 'stat_notify_hangouts.png', big: note.detail};
-    return {...note, icon: 'settings.png', smallIcon: 'stat_notify_more.png'};
-  }
   // Settings.System.NEXT_ALARM_FORMATTED, shown by the temporary alarm tile.
   function nextAlarmLabel() {
     const next = data.alarms.filter(alarm => alarm.enabled).map(alarm => ICSDeskClock.nextOccurrence(alarm, deviceDate())).filter(Boolean).sort((a, b) => a - b)[0];
@@ -1237,7 +1210,6 @@
     event.preventDefault();
     if (Date.now() < suppressClickUntil) return;
     const { action, id, app, url } = button.dataset;
-    if (action.startsWith('pr-') && PrintSpooler.handle(action, id, printContext())) return;
     if (ui.view === 'gallery' && ui.galleryPopup && action !== 'gallery-menu') ui.galleryPopup = '';
     // A tap outside the Recents popup menu only dismisses it.
     if (ui.overlay === 'recent' && ui.recentPopup && !['remove-recent', 'recent-app-info'].includes(action)) { ui.recentPopup = null; renderOverlay(); return; }
@@ -1260,11 +1232,6 @@
       }
       case 'home': if (ui.view !== 'lock') home(); break;
       case 'back': back(); break;
-      case 'ga-power': ui.overlay = 'power-confirm'; ui.powerKind = 'shutdown'; renderOverlay(); break;
-      case 'ga-bugreport': ui.overlay = 'power-confirm'; ui.powerKind = 'bugreport'; renderOverlay(); break;
-      case 'ga-airplane': ui.overlay = ''; data.settings.airplane = !data.settings.airplane; if (data.settings.airplane) { data.settings.wifi = false; data.settings.bluetooth = false; } save(); render(); break;
-      case 'ga-ringer': GlobalActions.setRinger(data.settings, id); save(); renderStatus(); renderOverlay(); setTimeout(() => { if (ui.overlay === 'power-menu') { ui.overlay = ''; render(); } }, GlobalActions.DISMISS_DELAY); break;
-      case 'ga-confirm': powerConfirm(id); break;
       case 'drawer': ui.view = 'drawer'; ui.sub = ''; ui.overlay = ''; ui.overview = false; ui.drawerWidgets = false; if (ui.drawerPage >= drawerAppPages()) ui.drawerPage = 0; render(); break;
       case 'cling-dismiss': if (data.clings) { data.clings[id] = true; save(); } LauncherClings.dismiss(clingLayerRoot().querySelector(`[data-cling="${id}"]`), () => syncClings()); break;
       case 'folder-open': ui.folderId=button.dataset.folderId;ui.overlay='folder';renderOverlay();break;
@@ -1325,51 +1292,11 @@
       case 'widget-music-play': ui.musicActive=true;ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
       case 'lock-media': if (id === 'play') { ui.music.playing = !ui.music.playing; if (ui.music.playing && ui.music.position >= tracks[ui.music.track].duration) ui.music.position = 0; } else ICSMusic.step(ui.music, id === 'previous' ? -1 : 1); ui.musicTrack = ui.music.track; saveMusic(); render(); break;
       case 'lock-hint': screen.classList.add('lock-dragging'); setTimeout(() => { if (!pointerStart?.lockDrag) lockRelease(null); }, 1000); break;
-      case 'shade': ui.overlay = ui.overlay === 'shade' ? '' : 'shade'; renderOverlay(); break;
-      case 'recent': {
-        if (ui.view === 'lock') break;
-        if (ui.overlay === 'recent') { closeRecents(); break; }
-        captureRecentView(); ui.recentPopup = null;
-        const fromApp = !!appNames[ui.view], outgoing = viewport.firstElementChild?.cloneNode(true);
-        ui.overlay = 'recent'; renderOverlay();
-        // The outgoing window animates in a layer above Recents (makeThumbnailScaleDownAnimation is ZORDER_TOP).
-        const layer = document.createElement('div'); layer.className = 'jb-recents-layer';
-        Object.assign(layer.style, {top: `${viewport.offsetTop}px`, left: `${viewport.offsetLeft}px`, width: `${viewport.offsetWidth}px`, height: `${viewport.offsetHeight}px`});
-        screen.append(layer); setTimeout(() => layer.remove(), JBRecents.R.window + 80);
-        JBRecents.open(overlayRoot.querySelector('.recent-panel'), outgoing, {fromApp, reduced: !!reducedMotion?.matches, layer});
-        break;
-      }
-      case 'recent-app-info': ui.overlay = ''; ui.recentPopup = null; openApp('settings'); ui.settingsApp = id; ui.sub = 'app-info'; render(); break;
       case 'close-overlay': if (ui.overlay === 'recent') { closeRecents(); break; } ui.overlay = ''; renderOverlay(); break;
-      case 'remove-recent': event.stopPropagation(); ui.recentPopup = null; removeTask(id); if (!ui.recent.length) ui.overlay = ''; renderOverlay(); break;
-      case 'clear-notifications': {
-        const rows = [...overlayRoot.querySelectorAll('.jb-note')], delays = JBShade.clearDelays(rows.length);
-        if (reducedMotion?.matches || !rows.length) { data.notifications = []; ui.overlay = ''; save(); renderStatus(); renderOverlay(); break; }
-        overlayRoot.querySelector('.jb-shade-clear')?.setAttribute('hidden', '');
-        rows.forEach((row, index) => row.animate([{transform: 'translateX(0)', opacity: 1}, {transform: `translateX(${row.offsetWidth}px)`, opacity: 0}], {duration: 125, delay: delays[index], easing: 'linear', fill: 'forwards'}));
-        setTimeout(() => { data.notifications = []; save(); renderStatus(); if (ui.overlay === 'shade') { ui.overlay = ''; renderOverlay(); } }, (delays.at(-1) || 0) + 125 + 225);
-        break;
-      }
-      case 'shade-flip': ui.shadeSettings = !ui.shadeSettings; JBShade.flip(overlayRoot.querySelector('.jb-shade'), ui.shadeSettings, reducedMotion?.matches); { const button = overlayRoot.querySelector('.jb-shade-flip'); button?.setAttribute('aria-label', i18n.t(ui.shadeSettings ? 'Notifications.' : 'Quick settings.')); overlayRoot.querySelector('.jb-shade-clear')?.toggleAttribute('hidden', ui.shadeSettings || !data.notifications.length); } break;
-      case 'dream-exit': ui.overlay = ''; renderOverlay(); break;
       case 'kg-add-widget': ui.overlay = 'kg-widget-picker'; renderOverlay(); break;
       case 'kg-pick-widget': { const widgets = data.keyguardWidgets ||= []; if (widgets.length < JBKeyguard.MAX_WIDGETS) { widgets.push({id: `kg-${Date.now()}`, type: id}); save(); ui.kgPage = widgets.length; } ui.overlay = ''; if (ui.kgRelock) { ui.kgRelock = false; const page = ui.kgPage; lockScreen(); ui.kgPage = page; render(); } else render(); break; }
-      case 'qs-user': ui.overlay = ''; openApp('people'); break;
-      case 'qs-brightness': ui.overlay = 'qs-brightness'; renderOverlay(); break;
-      case 'qs-settings': ui.overlay = ''; openApp('settings'); break;
-      case 'qs-wifi': ui.overlay = ''; openApp('settings'); ui.sub = 'wifi'; render(); break;
-      case 'qs-rssi': ui.overlay = ''; openApp('settings'); ui.sub = 'data'; render(); break;
-      case 'qs-battery': ui.overlay = ''; openApp('settings'); ui.sub = 'battery'; render(); break;
-      case 'qs-airplane': data.settings.airplane = !data.settings.airplane; if (data.settings.airplane) { data.settings.wifi = false; data.settings.bluetooth = false; } save(); renderStatus(); renderOverlay(); break;
-      case 'qs-bluetooth': ui.overlay = ''; openApp('settings'); ui.sub = 'bluetooth'; render(); break;
-      case 'qs-alarm': ui.overlay = ''; openApp('clock'); break;
-      case 'qs-location': ui.overlay = ''; openApp('settings'); ui.sub = 'location'; render(); break;
-      case 'notification-action': { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar' && button.dataset.noteAction === 'snooze') { data.notifications = data.notifications.filter(item => item !== note); (data.calendarSnoozes ||= []).push({eventId: note.eventId, date: note.date, title: note.title, detail: note.detail, at: deviceDate().getTime() + 5 * 60000}); save(); renderStatus(); if (!data.notifications.length) ui.overlay = ''; renderOverlay(); toast('Snoozed'); } break; }
-      case 'notification-open': { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar') { data.notifications = data.notifications.filter(item => item !== note); save(); ui.overlay = ''; openApp('calendar'); ui.selectedEvent = note.eventId; ui.selectedInstance = note.date; ui.selectedDate = note.date; ui.sub = 'event'; render(); break; } }
-        ui.overlay = ''; if (Number(id) === 2) openMessageThread(1); else if (note?.kind === 'message') openMessageThread(note.contact); else { ui.view = 'settings'; ui.sub = 'about'; render(); } break;
       case 'unlock': ui.view = 'home'; render(); break;
       case 'unlock-camera': openApp('camera'); break;
-      case 'qs-wifi-display': ui.overlay = ''; ui.view = 'settings'; ui.sub = 'wifi-display'; render(); break;
       case 'toast': toast(id); break;
       case 'open-contact': { const person = data.contacts.find(p => p.id === Number(id)); openApp('people'); if (person) { ui.selectedContact = person.id; ui.sub = 'detail'; render(); } break; }
       case 'noop': break;
@@ -1396,7 +1323,6 @@
   });
   document.addEventListener('input', event => {
     if (kkOffer('input', event, storeContext())) return;
-    if (event.target.matches('[data-pr]') && PrintSpooler.input(event.target, printContext())) return;
     if (event.target.matches('[data-gnp-q]') && ui.gnowDraft?.placeDialog) { ui.gnowDraft.placeDialog.q = event.target.value; const at = event.target.selectionStart; render(); const field = viewport.querySelector('[data-gnp-q]'); field?.focus(); field?.setSelectionRange(at, at); return; }
     if (event.target.matches('[data-gnr-rule]') && ui.gnowDraft?.ruleDialog) { const r = ui.gnowDraft.ruleDialog, key = event.target.dataset.gnrRule, value = event.target.value;
       if (key === 'interval' || key === 'count') { r[key] = Math.max(1, Math.min(key === 'count' ? 730 : 99, Number(value) || 1)); const label = event.target.closest('.gnr-interval'); if (label && key === 'interval') { const keep = event.target.selectionStart; render(); const f = viewport.querySelector('[data-gnr-rule="interval"]'); f?.focus(); try { f?.setSelectionRange(keep, keep); } catch (error) { /* number input */ } } return; }
@@ -1404,12 +1330,6 @@
       r[key] = Number(value); if (key === 'end' && r.end === 1 && !r.until) r.until = ICSCalendar.iso(new Date(deviceDate().getTime() + 30 * 864e5)); render(); return; }
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
     if (event.target.matches('[data-gnr-title]')) { if (ui.gnowDraft) ui.gnowDraft.title = event.target.value; return; }
-    if (event.target.dataset.field === 'auto-brightness') { data.settings.autoBrightness = event.target.checked; save(); const slider = event.target.closest('.jb-brightness')?.querySelector('[data-field="brightness"]'); if (slider) slider.disabled = data.settings.autoBrightness; return; }
-    if (event.target.dataset.field === 'brightness') {
-      data.settings.brightness = Number(event.target.value); save();
-      const display = event.target.closest('.detail-pad')?.querySelector('p'); if (display) display.textContent = `${data.settings.brightness}%`;
-      screen.style.filter = `brightness(${.5 + data.settings.brightness / 135})`;
-    }
     if(event.target.dataset.field==='music-position'){ui.music.position=Number(event.target.value);saveMusic();const elapsed=viewport.querySelector('.music-elapsed');if(elapsed)elapsed.textContent=ICSMusic.time(ui.music.position);}
   });
 
@@ -2194,12 +2114,6 @@
   // PhoneWindowManager: holding the key opens GlobalActions only while the screen is on; otherwise it just wakes.
   function powerHold() { if (ui.power || ui.sleeping || ui.overlay === 'power-progress') { powerKey(); return; } ui.overlay = 'power-menu'; render(); }
   for (const key of [document.querySelector('#power-button'), document.querySelector('.power-key')]) { key.addEventListener('click', powerKey); GlobalActions.hold(key, powerHold); }
-  // ShutdownThread: the confirmation, the "Shutting down…" progress dialog with a 500 ms vibration, then off.
-  function powerConfirm(kind) {
-    if (kind === 'bugreport') { ui.overlay = ''; render(); setTimeout(() => addNotification('Bug report captured', 'Touch to share your bug report'), 6000); return; }
-    ui.overlay = 'power-progress'; renderOverlay(); navigator.vibrate?.(500);
-    setTimeout(() => powerOff(kind === 'safemode'), GlobalActions.SHUTDOWN_MS);
-  }
   function powerOff(reboot) {
     if (ui.activeCall) ui.activeCall = null;
     if (ui.music) ui.music.playing = false;
