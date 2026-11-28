@@ -1,5 +1,6 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const engineSource=require('./lib/engine-source.cjs');
 // Stock Nexus 5: Google+ 4.2.3 Photos: the host bar with the photo_spinner views, CAMERA / HIGHLIGHTS tabs, the Folders
 // tile and view, search, and the one-up viewer with photo_action_bar.xml.
 const context={window:{}};vm.runInNewContext(fs.readFileSync('versions/4.4.4/photos-video.js','utf8'),context);vm.runInNewContext(fs.readFileSync('versions/4.4.4/photos.js','utf8'),context);
@@ -22,6 +23,6 @@ assert.ok(cam.includes('data-action="photos-spinner"')&&cam.includes('gp-ic_crea
 assert.equal((P.render(ctx({photosSpinner:true})).match(/data-action="photos-view"/g)||[]).length,6);
 assert.ok(P.render(ctx({sub:'search'})).includes('gp-ic_sunglasses_24'));assert.equal((P.render(ctx({sub:'search',photosQuery:'B'})).match(/data-list="search"/g)||[]).length,1);
 assert.ok(P.render(ctx({sub:'search',photosQuery:'zzz'})).includes('zzz')&&!P.render(ctx({sub:'search',photosQuery:'<i>'})).includes('<i>'));
-const sim=fs.readFileSync('versions/4.4.4/simulator.js','utf8');
-assert.ok(sim.includes("case 'photos': return PhotosApp.render(photosContext());")&&!/GEL_ALIASES = {[^}]*photos/.test(sim));
+const sim=engineSource('4.4.4');
+assert.ok(sim.includes("return PhotosApp.render(photosContext());")&&sim.includes("for (const id of ['photos']) KK.register(id, spec);")&&!/GEL_ALIASES = {[^}]*photos/.test(sim));
 console.log('kk-photos ok');
