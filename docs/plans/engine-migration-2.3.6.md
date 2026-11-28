@@ -35,7 +35,8 @@ one `GB.register(id, {...})` module per screen.
 | Messaging | gb-mms.js | 77737d05 |
 | Phone, Contacts | gb-phone.js | a2683caf |
 | Browser | gb-browser.js | f1a071a4 |
-| Settings | gb-settings.js | |
+| Settings | gb-settings.js | 9ef7cef0 |
+| Market | gb-market.js | |
 
 Bugs fixed on the way (their own commits):
 
