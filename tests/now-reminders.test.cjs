@@ -1,5 +1,6 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const engineSource=require('./lib/engine-source.cjs');
 // Google Now reminders and card settings (audit step 5): Velvet 3.3.11 (4.4.4) and 4.1.29 (5.1.1).
 for(const [v,third] of [['4.4.4','Weekend'],['5.1.1','Occasionally']]){
   const w={window:{}};w.window.window=w.window;
@@ -29,7 +30,7 @@ for(const [v,third] of [['4.4.4','Weekend'],['5.1.1','Occasionally']]){
   const ed=N.reminders({data,t,locale:'en-US',now,ui:{gnowDraft:N.draftFrom(null,now),gnowSpin:'time'}});
   assert.match(ed,/Add a title[\s\S]*When[\s\S]*Where/);assert.equal((ed.match(/gnow-reminder-pick/g)||[]).length,6);assert.match(ed,/Set time…/);
   // The simulator wires the actions.
-  const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');
+  const sim=engineSource(v);
   for(const a of ['gnow-reminders','gnow-reminder-new','gnow-reminder-set','gnow-reminder-delete','gnow-card-back','gnow-units'])assert.ok(sim.includes(`case '${a}'`),`${v} ${a}`);
 }
 console.log('now-reminders ok');

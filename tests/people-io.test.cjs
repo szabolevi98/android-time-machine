@@ -1,5 +1,6 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const engineSource=require('./lib/engine-source.cjs');
 // Contacts' Import/export (T11) and the 5.1 Phone app's Settings (T44): vCard 2.1 out and back, the provider-style
 // merge, the dialogs' steps, and the Phone's name order.
 const plain=x=>JSON.parse(JSON.stringify(x));
@@ -50,7 +51,7 @@ for(const [v,p,full] of [['4.0.4','ics',true],['4.3','jb',true],['4.4.4','kk',tr
   const pu={sub:''};IO.pageAction('pfl-open','',{data:fd,ui:pu});assert.equal(pu.sub,'people-filter');IO.pageAction('pfl-pick','customize',{data:fd,ui:pu});assert.equal(pu.sub,'people-customize');
   IO.pageAction('pfl-toggle','friends',{data:fd,ui:pu});assert.equal(IO.back(pu),true);assert.equal(fd.contactsCustom.friends,false,'Back keeps the old view');assert.equal(pu.sub,'people-filter');
   IO.pageAction('pfl-pick','all',{data:fd,ui:pu});assert.equal(fd.contactsFilter,'all');assert.equal(pu.sub,'');
-  const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');
+  const sim=engineSource(v);
   assert.ok(sim.includes("if (action.startsWith('vcf-'))")&&sim.includes("PeopleIO.sim("),v);
   if(full)assert.ok(sim.includes("case 'people-ringtone': { const person = contact(ui.selectedContact)")&&!sim.includes("option('toast', 'Set ringtone'"),v);
 }

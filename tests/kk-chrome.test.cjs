@@ -1,5 +1,6 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const engineSource=require('./lib/engine-source.cjs');
 // Stock Nexus 5: Chrome 32.0.1700.99 (Chrome.apk of KTU84P): toolbar, chrome://newtab, incognito, history, overview, menu.
 const context={window:{}};for(const f of ['stock-strings.js','chrome-pak.js','chrome.js'])vm.runInNewContext(fs.readFileSync(`versions/4.4.4/${f}`,'utf8'),context);
 const C=context.window.ChromeApp,t=k=>k;
@@ -27,6 +28,6 @@ menu=C.menu({ui:{browserIndex:0,browserHistory:['a']},data,t,locale:'en',url:C.N
 assert.deepEqual(labels(menu),['New tab','New incognito tab','Bookmarks','Other devices','History','Print…','Find in page','Settings','Help']);
 menu=C.menu({ui:{sub:'tabs',browserIndex:0,browserHistory:['a']},data,t,locale:'hu',url:C.NTP});
 assert.deepEqual(labels(menu),['Új lap','Új inkognitólap','Összes lap bezárása','Beállítások']);
-const sim=fs.readFileSync('versions/4.4.4/simulator.js','utf8');
+const sim=engineSource('4.4.4');
 assert.ok(sim.includes("case 'chrome': return renderChrome();")&&sim.includes("if (app === 'chrome') useBrowserSession(app);")&&!sim.includes("['browser', 'Browser'")&&!/GEL_ALIASES = {[^}]*chrome/.test(sim));
 console.log('kk-chrome ok');

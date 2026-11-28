@@ -1,5 +1,6 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const engineSource=require('./lib/engine-source.cjs');
 // Panorama with a demonstration result: the 4.3 / 4.4.4 PanoramaModule layouts, the LP approximation, PANO_ pictures.
 for(const [ver,cam] of [['4.3','jb-camera.js'],['4.4.4','kk-camera.js']]){
   const dir=`versions/${ver}/`,html=fs.readFileSync(dir+'index.html','utf8');
@@ -14,5 +15,5 @@ for(const [ver,cam] of [['4.3','jb-camera.js'],['4.4.4','kk-camera.js']]){
   assert.ok(fs.readFileSync(dir+cam,'utf8').includes('pano?.toggle()'));
 }
 const lp=fs.readFileSync('versions/5.1.1/lp-camera.js','utf8');assert.ok(lp.includes("mode === 'panorama') { panoToggle(); return; }")&&lp.includes('pano_target_activated'));
-for(const v of ['4.3','4.4.4','5.1.1'])assert.ok(fs.readFileSync(`versions/${v}/simulator.js`,'utf8').includes('PANO_${stamp.slice(0, 8)}'),v);
+for(const v of ['4.3','4.4.4','5.1.1'])assert.ok(engineSource(v).includes('PANO_${stamp.slice(0, 8)}'),v);
 console.log('camera-pano ok');

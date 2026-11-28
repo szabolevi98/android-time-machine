@@ -1,5 +1,6 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const engineSource=require('./lib/engine-source.cjs');
 // World clock: each image's cities.xml (dc-cities.js) and its DeskClock's CitiesActivity / world clock rows.
 for(const [v,file,count,selected] of [['4.3','jb-deskclock.js',280,false],['4.4.4','kk-deskclock.js',299,true],['5.1.1','lp-deskclock.js',300,true]]){
   const c={window:{},Intl,Date,CSS:{escape:x=>x}};vm.runInNewContext(fs.readFileSync(`versions/${v}/dc-cities.js`,'utf8'),c);vm.runInNewContext(fs.readFileSync(`versions/${v}/${file}`,'utf8'),c);
@@ -13,6 +14,6 @@ for(const [v,file,count,selected] of [['4.3','jb-deskclock.js',280,false],['4.4.
   assert.match(html,/data-action="jbclock-city" data-id="C139"[^>]*aria-checked="true"/);
   assert.equal(/Kiválasztott városok/.test(html),selected,`${v} Selected Cities header`);
   const index=fs.readFileSync(`versions/${v}/index.html`,'utf8');assert.ok(index.indexOf('dc-cities.js')>0&&index.indexOf('dc-cities.js')<index.indexOf(file));
-  assert.doesNotMatch(fs.readFileSync(`versions/${v}/simulator.js`,'utf8'),/case 'jbclock-cities': case 'jbclock-menu'/);
+  assert.doesNotMatch(engineSource(v),/case 'jbclock-cities': case 'jbclock-menu'/);
 }
 console.log('World clock checks passed: cities per image, times, selection, headers.');

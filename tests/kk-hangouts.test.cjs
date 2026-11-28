@@ -1,5 +1,6 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const engineSource=require('./lib/engine-source.cjs');
 // Stock Nexus 5: Hangouts 2.0 presents the shared SMS data (conversation list, New Hangout, conversation, menus).
 const context={window:{}};context.window.window=context.window;
 for(const f of ['messaging.js','hangouts.js'])vm.runInNewContext(fs.readFileSync(`versions/4.4.4/${f}`,'utf8'),context.window);
@@ -15,7 +16,7 @@ assert.ok(thread.includes('data-form="mms-send"')&&thread.includes('Send an SMS 
 assert.ok(Hangouts.overlay(data,{overlay:'mms-menu',sub:''},t).includes('Archived Hangouts'));
 assert.ok(Hangouts.overlay(data,{overlay:'mms-attach',sub:'thread'},t).includes('Google+ albums'));
 assert.equal(Hangouts.overlay(data,{overlay:'mms-details',sub:'thread'},t),null);
-const sim=fs.readFileSync('versions/4.4.4/simulator.js','utf8');
+const sim=engineSource('4.4.4');
 // Hangouts is its own app; AOSP Messaging stays in the drawer. Notifications and shares open Hangouts.
 assert.ok(sim.includes("case 'hangouts': return Hangouts.render(")&&!sim.includes("case 'messaging':")&&!sim.includes("['messaging', 'Messaging'")&&sim.includes("openApp('hangouts')"));
 assert.ok(!/GEL_ALIASES = \{[^}]*hangouts/.test(sim));

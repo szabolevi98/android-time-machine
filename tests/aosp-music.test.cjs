@@ -1,5 +1,6 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const engineSource=require('./lib/engine-source.cjs');
 // AOSP Music on 4.0.4 and 4.3: its own menus (long-press context menus, the legacy menu key), no simulator buttons inside.
 for(const v of ['4.0.4','4.3']){
   const ctx={window:{AndroidI18n:{language:'en'}}};vm.runInNewContext(fs.readFileSync(`versions/${v}/music-strings.js`,'utf8')+fs.readFileSync(`versions/${v}/music.js`,'utf8'),ctx);
@@ -17,7 +18,7 @@ for(const v of ['4.0.4','4.3']){
   // Deleted songs leave the lists.
   state.deleted=[0];assert.doesNotMatch(M.render(state,{musicTab:'Songs'},t),/data-music-hold="track:0"/,v);
   // The simulator shows the legacy menu key for Music (targetSdkVersion 9) and opens the menus.
-  const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');assert.match(sim,/data-action="legacy-menu"/,v);assert.match(sim,/ui\.overlay='music-options'/,v);assert.match(sim,/ui\.overlay = 'music-context'/,v);
+  const sim=engineSource(v);assert.match(sim,/data-action="legacy-menu"/,v);assert.match(sim,/ui\.overlay='music-options'/,v);assert.match(sim,/ui\.overlay = 'music-context'/,v);
   assert.ok(fs.existsSync(`versions/${v}/assets/ic_sysbar_menu.png`)&&fs.existsSync(`versions/${v}/assets/music-ic_mp_playlist_recently_added_list.png`),v);
 }
 console.log('aosp-music ok');

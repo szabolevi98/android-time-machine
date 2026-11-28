@@ -1,5 +1,6 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const engineSource=require('./lib/engine-source.cjs');
 // Hangouts (audit step 6): archiving and Archived Hangouts, Snooze notifications with the banner, sharing a location.
 const load=(v,files)=>{const context={document:{documentElement:{lang:'hu'}}};context.window=context;for(const f of files)vm.runInNewContext(fs.readFileSync(`versions/${v}/${f}`,'utf8'),context);return context.window;};
 const t=k=>k;
@@ -22,7 +23,7 @@ const t=k=>k;
   const dnd=H.overlay(data,{overlay:'mms-hg-dnd'},t);assert.deepEqual([...dnd.matchAll(/data-id="(\d+)">([^<]+)</g)].map(m=>m[2]),['1 óra','2 óra','4 óra','8 óra','24 óra','72 óra']);
   const loc=H.render(data,{sub:'thread',thread:'1',hgLocation:true},t,'hu',now);assert.ok(loc.includes('hg-ic_map_pin')&&loc.includes('data-action="hg-share-location"')&&loc.includes('Hely megosztása'));
   assert.ok(H.locationBody(t).includes('maps.google.com/maps?q=37.422,-122.0841'));
-  const sim=fs.readFileSync('versions/4.4.4/simulator.js','utf8');
+  const sim=engineSource('4.4.4');
   assert.ok(sim.includes("case 'hg-share-location':")&&sim.includes("case 'hg-dnd-set':")&&sim.includes("ui.sub === 'archived' ? 'archived'"));
 }
 // 4.3: Hangouts 1.0.2: the same archive and snooze; no mood item and no location sharing yet.
