@@ -41,6 +41,8 @@ Bugs fixed on the way (their own commits):
 - Clock › Menu › Settings drew the clock: the module host was asked before GBPrefs (`moduleView`). `GB.hold` added its
   listeners to `#viewport` on every render; they go on the screen's element now, and a right mouse button no longer
   starts the long press.
+- Back (the touch key or Escape) on Settings' screen lock setup cancelled the setup even with the shade or a dialog
+  open over it, which then stayed: the overlay closes first now.
 
 Notes:
 
