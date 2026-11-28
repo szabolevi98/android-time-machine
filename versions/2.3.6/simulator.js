@@ -188,7 +188,7 @@
   function storeContext() {
     return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, viewport, dp, snapResting, suppressClick: ms => { suppressClickUntil = Date.now() + ms; },
       // 2.3.6's own AlertDialog (a spec the module's dialog(kind, c) returns) and the Menu key's IconMenu items.
-      saveMusic, deviceDate, today, home, cancelPhotoWidget, composeEmail, messageDraft, gapp: () => gappContext(), defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
+      saveMusic, deviceDate, today, home, cancelPhotoWidget, composeEmail, messageDraft, gapp: () => gappContext(), gbCapture, gbmaCancel, gbmaReturn, gbceReturn, defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
       appList: () => apps.map(app => [app[0], i18n.t(app[1])]), browserTitle: gbBrowserTitle, contactName: id => contact(id)?.name, normalizeAddress,
       intent: {browse(url) { openApp('browser'); navigateBrowser(url); }, contact(id) { openApp('people'); ui.selectedContact = id; ui.sub = 'detail'; render(); }, thread: id => openMessageThread(id),
         track(i) { openApp('music'); ui.music.queue = ICSMusic.tracks.map((_, n) => n); ui.music.track = i; ui.music.position = 0; ui.music.playing = true; saveMusic(); ui.sub = 'player'; render(); }},
@@ -313,7 +313,6 @@
     if (ui.view === 'email' && ui.gbEmSetup) return;
     if (ui.view === 'play-store') { const items = GBMarket.menu(gbMarketContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'settings' && GBSettingsPages.has(ui.sub)) { const items = GBSettingsPages.menu(ui.sub, gbPagesContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
-    if (ui.view === 'camera') { const items = GBCamera.menu(gbCameraContext()); if (!items.length) return; ui.gbcamPopup = ''; ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; render(); renderOverlay(); return; }
     if (ui.view === 'email') { gbEmSync(); const items = GBEmail.menu(gbEmailContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'browser') { if (ui.gbBrEdit) return; const items = GBBrowser.menu(gbBrowserContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     // The slideshow player and Sound Recorder have no menu.
@@ -659,7 +658,6 @@
       case 'phone': return renderPhone();
       case 'people': return renderPeople();
       case 'messaging': return renderMessaging();
-      case 'camera': return renderCamera();
       case 'email': return renderEmail();
       default: return renderHome();
     }
@@ -711,10 +709,6 @@
     if(ui.view==='phone' && ui.activeCall && ui.gbAddCall){ui.gbAddCall=false;ui.gbCallBackground=false;render();return;}
     if(ui.view==='phone' && ui.activeCall && !ui.gbCallBackground){if(ui.activeCall.keypad){ui.activeCall.keypad=false;render();}else home(false);return;}
     if (ui.view === 'people' && (ui.sub === 'edit' || ui.sub === 'new') && viewport.querySelector('.gbce')) { viewport.querySelector('.gbce').requestSubmit(); return; }
-    if (ui.view === 'camera' && ui.gbcamPopup) { ui.gbcamPopup = ''; render(); return; }
-    // Back in a capture request cancels it (RESULT_CANCELED), a recording included.
-    if (ui.view === 'camera' && gbCapture()) { gbcamStopRecording(false); ui.gbcamPopup = ''; if (ui.gbmaCapture) gbmaCancel(); else gbceReturn(null); return; }
-    if (ui.view === 'camera' && ui.gbcamRec) { gbcamStopRecording(); render(); return; }
     if (ui.view === 'email' && ui.sub === 'compose') { gbEmSync(); const item = data.mailbox.find(m => m.id === ui.emailId); if (item && [item.to, item.subject, item.body].some(v => String(v || '').trim())) { item.folder = 'Drafts'; gbEmLeaveCompose('message_saved_toast'); } else { data.mailbox = data.mailbox.filter(m => m.id !== ui.emailId); gbEmLeaveCompose(''); } return; }
     if(ui.view==='settings' && ['app-info','data-app','battery-history','battery-detail','storage-misc'].includes(ui.sub)){ui.sub={'app-info':'apps','data-app':'data','battery-history':'battery','battery-detail':'battery','storage-misc':'storage'}[ui.sub];render();return;}
     if (ui.view === 'play-store' && ui.marketSearching) { ui.marketSearching = false; render(); return; }
@@ -790,7 +784,7 @@
     if (ui.overlay === 'gb-dialog-net') return {...(GBNetwork.dialog(ui.gbNetDialog, gbNetContext()) || {title: '', items: []}), noTranslate: true};
     if (ui.overlay === 'gb-dialog-sp') return GBSettingsPages.dialog(ui.gbspDialog, gbPagesContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-ce') return GBContactEditor.dialog(ui.gbceDialog, gbceContext()) || {title: '', items: []};
-    if (ui.overlay === 'gb-dialog-camera') return {title: GBCamera.text(i18n.language, 'confirm_restore_title'), icon: 'ic_dialog_alert', message: GBCamera.text(i18n.language, 'confirm_restore_message'), buttons: [{action: 'gbcam-restore-ok', title: GBSettings.text(i18n.language, 'fw_ok')}, {action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]};
+    if (ui.overlay === 'gb-dialog-camera') return GB.module('camera').dialog('restore', storeContext());
     if (ui.overlay === 'gb-dialog-gallery' || ui.overlay === 'gb-dialog-crop-saving') return GB.module('gallery').dialog(ui.overlay.slice(10), storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-email') return GBEmail.dialog(ui.gbEmDialog, gbEmailContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-hotpot') return GBGoogleWidgets.placeDialog(gappContext());
@@ -1220,23 +1214,6 @@
     if (history) history.scrollTop = history.scrollHeight;
   }
   function photoStyle(photo) { return `background-image:url('${ICSMedia.image(photo)}');background-size:cover;background-position:center`; }
-  function renderCamera() { return GBCamera.render(gbCameraContext()); }
-  function gbCameraContext() {
-    const saved = data.cameraSettings || {}, s = GBCamera.settings(saved);
-    return {lang: i18n.language, saved: {...saved, ...s}, mode: ui.gbcamMode || 'photo', popup: ui.gbcamPopup || '', focus: ui.gbcamFocus || '', recording: !!ui.gbcamRec, recordTime: gbcamClock(), last: ICSMedia.photos(data, 'camera')[0], effectFilter: GBCamera.EFFECTS[s.effect] || 'none', capture: gbCapture() && {video: gbCapture().type === 'video', taken: gbCapture().taken}};
-  }
-  const gbcamClock = () => { if (!ui.gbcamRec) return '00:00'; const t = Math.floor((Date.now() - ui.gbcamRec) / 1000); return `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`; };
-  function gbcamSet(changes) { const s = {...GBCamera.settings(data.cameraSettings || {}), ...changes}; data.cameraSettings = {...s, front: s.facing === 'front', exposure: Number(s.exposure)}; save(); }
-  // FocusRectangle: focusing, then focused (or failed), cleared after a moment.
-  function gbcamFocus(done) {
-    clearTimeout(ui.gbcamFocusTimer); ui.gbcamFocus = 'focusing'; render();
-    ui.gbcamFocusTimer = setTimeout(() => { if (ui.view !== 'camera') return; ui.gbcamFocus = 'focused'; render(); done?.(); ui.gbcamFocusTimer = setTimeout(() => { ui.gbcamFocus = ''; if (ui.view === 'camera') render(); }, 1200); }, 600);
-  }
-  function gbcamStopRecording(keep = true) {
-    if (!ui.gbcamRec) return;
-    clearInterval(ui.gbcamRecTimer); const started = ui.gbcamRec; ui.gbcamRec = 0;
-    if (keep) { const stamp = new Date(started).toISOString().replace(/[-:T]/g, '').slice(0, 14), cap = gbCapture(), item = {...ICSMedia.scene(data), ...(GBCamera.settings(data.cameraSettings || {}).gps === 'on' ? {location: {fx: GBMaps.ME.fx, fy: GBMaps.ME.fy}} : {}), id: Date.now(), name: `VID_${stamp.slice(0, 8)}_${stamp.slice(8)}`, album: 'camera', created: Date.now(), video: true, duration: Math.round((Date.now() - started) / 1000)}; if (cap) cap.taken = item; else { data.photos.unshift(item); save(); } }
-  }
 
   // Calendar AlertService: a status-bar notification at the reminder time while the page is running.
   function checkReminders(now) {
@@ -1313,7 +1290,6 @@
     if(id==='email'){data.mailbox=ICSEmail.restore(null,emailData,[]);data.sentEmails=[];ui.emailFolder='Inbox';ui.emailQuery=undefined;ui.emailSelected=[];}
     if(id==='people'){data.contacts=clone(defaultData.contacts);data.contactGroups=clone(defaultData.contactGroups);ui.peopleDraft=null;}
     if(id==='messaging'){data.messages=clone(defaultData.messages);data.messageDrafts={};}
-    if(id==='camera')delete data.cameraSettings;
     if(id==='phone'){data.callHistory=[];ui.activeCall=null;}
     StoreHost.clearData(id, storeContext());
     if(id==='play-store')delete data.playRatings;
@@ -1591,10 +1567,6 @@
       case 'gbem-setup-cancel': clearTimeout(ui.gbEmSetupTimer); ui.overlay = ''; renderOverlay(); break;
       case 'gbce-photo': gbceSync(); ui.gbceDialog = ui.peopleDraft?.photo ? 'photo-edit' : 'photo'; ui.overlay = 'gb-dialog-ce'; renderOverlay(); break;
       case 'gbce-photo-take': { gbceSync(); ui.overlay = ''; renderOverlay(); const ret = {sub: ui.sub}; openApp('camera'); ui.gbceCapture = {type: 'image', ret, taken: null}; ui.gbcamMode = 'photo'; render(); break; }
-      case 'gbcam-cap-ok': { const cap = gbCapture(); if (!cap?.taken) break; if (ui.gbmaCapture) gbmaReturn(cap.type === 'video' ? {video: clone(cap.taken)} : {image: clone(cap.taken)}); else gbceReturn(cap.taken); break; }
-      case 'gbcam-cap-retake': { const cap = gbCapture(); if (cap) cap.taken = null; render(); break; }
-      case 'gbcam-cap-cancel': gbcamStopRecording(false); if (ui.gbmaCapture) gbmaCancel(); else gbceReturn(null); break;
-      case 'gbcam-cap-play': toast('This feature is not part of the simulator.'); break;
       // Gallery's GET_CONTENT pick returns to the editor with the picture (Back returns without one).
       case 'gbce-photo-pick': { ui.overlay = ''; const sub = ui.sub; captureRecentView(); ui.gbcePick = {sub}; ui.view = 'gallery'; ui.sub = ''; ui.gbgPick = true; render(); break; }
       case 'gbce-photo-remove': if (ui.peopleDraft) ui.peopleDraft.photo = null; ui.overlay = ''; render(); break;
@@ -1726,24 +1698,6 @@
         save(); ui.overlay = ''; render(); break;
       }
       case 'new-message': ui.sub = 'new'; ui.overlay = ''; render(); viewport.querySelector('[name=recipient]')?.focus(); break;
-      case 'gbcam-popup': ui.gbcamPopup = ui.gbcamPopup === id ? '' : id; render(); break;
-      case 'gbcam-popup-close': ui.gbcamPopup = ''; render(); break;
-      case 'gbcam-set': { const [key, value] = id.split(':'); gbcamSet({[key]: value}); if (ui.gbcamPopup !== 'settings') ui.gbcamPopup = ''; render(); break; }
-      case 'gbcam-restore': ui.gbcamPopup = ''; ui.overlay = 'gb-dialog-camera'; render(); renderOverlay(); break;
-      case 'gbcam-restore-ok': data.cameraSettings = {...GBCamera.DEFAULTS, front: false, exposure: 0}; save(); ui.overlay = ''; render(); break;
-      case 'gbcam-focus': if (ui.gbcamPopup) { ui.gbcamPopup = ''; render(); break; } gbcamFocus(); break;
-      case 'gbcam-switch-camera': gbcamSet({facing: GBCamera.settings(data.cameraSettings || {}).facing === 'front' ? 'back' : 'front'}); ui.overlay = ''; render(); break;
-      case 'gbcam-mode': gbcamStopRecording(); ui.gbcamMode = ui.gbcamMode === 'video' ? 'photo' : 'video'; ui.gbcamPopup = ''; ui.overlay = ''; render(); break;
-      case 'gbcam-shutter':
-        ui.gbcamPopup = '';
-        if (ui.gbcamMode === 'video') {
-          if (ui.gbcamRec) { gbcamStopRecording(); render(); break; }
-          ui.gbcamRec = Date.now(); render(); ui.gbcamRecTimer = setInterval(() => { const label = viewport.querySelector('.gbcam-rec span'); if (label) label.textContent = gbcamClock(); else clearInterval(ui.gbcamRecTimer); }, 500); break;
-        }
-        // ShutterButton: autofocus, then the capture; the new picture slides into the review thumbnail.
-        gbcamFocus(() => { const photo = {...ICSMedia.scene(data), ...(GBCamera.settings(data.cameraSettings || {}).gps === 'on' ? {location: {fx: GBMaps.ME.fx, fy: GBMaps.ME.fy}} : {}), id: Date.now(), name: `IMG_${new Date().toISOString().replace(/[-:T]/g, '').slice(0, 8)}_${new Date().toISOString().replace(/[-:T]/g, '').slice(8, 14)}`, album: 'camera', created: Date.now()}; const cap = gbCapture(); if (cap) { cap.taken = photo; render(); return; } data.photos.unshift(photo); save(); render(); viewport.querySelector('.gbcam-preview')?.animate([{opacity: 1}, {opacity: .15}, {opacity: 1}], {duration: 260}); viewport.querySelector('.gbcam-thumb img')?.animate([{transform: 'scale(1.6)', opacity: .3}, {transform: 'none', opacity: 1}], {duration: 380}); });
-        break;
-      case 'camera-review': {gbcamStopRecording();const photo=ICSMedia.photos(data,'camera')[0];openApp('gallery');if(photo){ui.galleryAlbum='camera';ui.selectedPhoto=photo.id;ui.sub='photo';render();}break;}
       case 'alarm-snooze': {
         const alarm=data.alarms.find(item=>item.id===ui.ringingAlarm.id);
         // Snooze duration from the Clock settings (snooze_duration: 5, 10, ... 30 minutes).
@@ -1865,11 +1819,6 @@
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
     if(event.target.dataset.field==='data-cycle'){ui.dataCycle=event.target.value;render();return;}
     if(event.target.closest('.email-compose')&&event.target.name){const item=data.mailbox.find(item=>item.id===ui.emailId);if(item){item[event.target.name]=event.target.value;save();}return;}
-    if(event.target.matches('.camera-zoom input')) {
-      data.cameraSettings=ICSMedia.settings(data);data.cameraSettings.zoom=Number(event.target.value);save();
-      viewport.querySelector('.camera-focus-area .media-photo').src=ICSMedia.image(ICSMedia.scene(data));
-      viewport.querySelector('.camera-zoom output').textContent=Number(event.target.value).toFixed(1)+'×';return;
-    }
     if(event.target.closest('#people-editor')) {
       if(event.target.name==='groups')ui.peopleDraft.groups=[...viewport.querySelectorAll('[name=groups]:checked')].map(input=>input.value);
       else ui.peopleDraft[event.target.name]=event.target.value;
@@ -1877,7 +1826,6 @@
     }
     if (event.target.matches('[data-gbmk-auto]')) { const id = event.target.dataset.gbmkAuto, list = data.marketAuto || []; data.marketAuto = event.target.checked ? [...new Set([...list, id])] : list.filter(x => x !== id); save(); return; }
     if (event.target.matches('[data-gbsp-erase]')) { ui.gbspErase = event.target.checked; return; }
-    if (event.target.matches('[data-gbcam-zoom]')) { gbcamSet({zoom: GBCamera.ZOOMS[Number(event.target.value)] || 1}); const out = event.target.nextElementSibling; if (out) out.textContent = GBCamera.zoomText(GBCamera.ZOOMS[Number(event.target.value)] || 1); const ind = viewport.querySelector('.gbcam-ind[data-id="zoom"] b'); if (ind) ind.textContent = out.textContent; viewport.querySelector('.gbcam-scene img')?.style.setProperty('transform', `scale(${GBCamera.ZOOMS[Number(event.target.value)] || 1})`); return; }
     if (ui.view === 'play-store' && event.target.closest('.gbbr-search')) { ui.marketEdit = event.target.value; const pos = event.target.selectionStart; render(); const input = viewport.querySelector('.gbbr-search input'); input?.focus(); input?.setSelectionRange(pos, pos); return; }
     if (event.target.closest('.gbbr-search')) { ui.gbBrEditValue = event.target.value; const box = viewport.querySelector('.gbbr-suggest'); if (box) box.innerHTML = GBBrowser.suggestions(gbBrowserContext()); return; }
     if (event.target.closest('.gbbr-find')) { ui.browserFind = event.target.value; ui.gbBrMark = -1; const page = viewport.querySelector('.browser-page'); page.innerHTML = renderWebsite(ui.browserUrl); if (ui.browserFind) highlightBrowserText(); else viewport.querySelector('.web-find-count').textContent = ''; return; }
