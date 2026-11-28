@@ -51,3 +51,74 @@
   }
   window.KKWallpaperPicker = {tiles, render, openFrom};
 })();
+/* The Google Now Launcher's wallpaper picker in the 4.4.4 shell (docs/plans/engine-migration.md): the picker and
+   the DocumentsUI "Open from" screen it (and Keep) opens, the tiles, the strip's mouse drag and long press, Delete, Set
+   wallpaper and Back, moved out of simulator.js. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {data, dp, galleryWallpaper, holdDelay, home, i18n, keepAttach, render, save, screen, suppressReleaseClick, toast, ui, viewport, wallpaperFiles} = c;
+    const wallpaperPickerContext = () => ({data, ui, t: key => i18n.t(key), image: photo => ICSMedia.image(photo), bundled: wallpaperFiles.slice(1), live: LiveWallpapers.sorted(key => i18n.t(key), i18n.locale())});
+    // Re-render the picker but keep the strip where it was scrolled.
+    function wallpaperPickerRender() { const left = viewport.querySelector('.kwp-scroll')?.scrollLeft || 0; render(); const strip = viewport.querySelector('.kwp-scroll'); if (strip) strip.scrollLeft = left; }
+    return {
+      render() {
+        switch (ui.view) {
+          case 'wallpaper-picker': return KKWallpaperPicker.render(wallpaperPickerContext());
+          case 'kk-doc-picker': return KKWallpaperPicker.openFrom(wallpaperPickerContext());
+        }
+      },
+      click(action, button, event) {
+        const {id, app, url} = button.dataset;
+        switch (action) {
+          case 'open-wallpapers': ui.overlay = ''; ui.overview = false; ui.wp = {selected: '', temp: [], checked: [], stripHidden: false}; ui.view = 'wallpaper-picker'; render(); break;
+          // Launcher3 WallpaperPickerActivity: tiles preview, the action bar sets, a long press on a picked or saved image
+          // starts the delete CAB, Pick image goes through DocumentsUI.
+          case 'kwp-tile': {
+            const wp = ui.wp ||= {selected: '', temp: [], checked: []};
+            if (wp.checked?.length) { if (button.dataset.kwpLong) { wp.checked = wp.checked.includes(id) ? wp.checked.filter(k => k !== id) : [...wp.checked, id]; wallpaperPickerRender(); } break; }
+            if (id.startsWith('live:')) { ui.lwFromPicker = true; ui.view = 'live-wallpapers'; ui.sub = `preview:${id.slice(5)}`; render(); break; }
+            wp.selected = id; wp.stripHidden = false; wallpaperPickerRender(); break;
+          }
+          case 'kwp-tap': if (ui.wp) { ui.wp.stripHidden = !ui.wp.stripHidden; viewport.querySelector('.kwp-strip')?.classList.toggle('hidden', ui.wp.stripHidden); } break;
+          case 'kwp-pick': ui.docPickFor = ''; ui.view = 'kk-doc-picker'; render(); break;
+          case 'kwp-picked': if (ui.docPickFor === 'keep') { ui.docPickFor = ''; keepAttach(Number(id), ui.keepPhotoTo); break; } { const wp = ui.wp ||= {selected: '', temp: [], checked: []}, pid = Number(id); wp.temp = [pid, ...(wp.temp || []).filter(x => x !== pid)]; wp.selected = `photo:${pid}`; ui.view = 'wallpaper-picker'; render(); break; }
+          case 'kwp-cab-done': if (ui.wp) { ui.wp.checked = []; wallpaperPickerRender(); } break;
+          case 'kwp-delete': { const wp = ui.wp, gone = new Set((wp?.checked || []).map(k => Number(k.slice(6)))); if (!wp) break; data.kkSavedWallpapers = (data.kkSavedWallpapers || []).filter(x => !gone.has(x)); wp.temp = (wp.temp || []).filter(x => !gone.has(x)); if (wp.checked.includes(wp.selected)) wp.selected = ''; wp.checked = []; save(); wallpaperPickerRender(); break; }
+          case 'kwp-set': {
+            const key = ui.wp?.selected || '';
+            if (key === 'default' || key.startsWith('wp:')) { data.wallpaper = key === 'default' ? 0 : Number(key.slice(3)); delete data.liveWallpaper; delete data.customWallpaper; delete data.customWallpaperPhoto; save(); }
+            else if (key.startsWith('photo:')) { const photo = data.photos.find(p => p.id === Number(key.slice(6))); if (photo) { data.kkSavedWallpapers = [photo.id, ...(data.kkSavedWallpapers || []).filter(x => x !== photo.id)]; galleryWallpaper(photo, true); } }
+            ui.wp = null; home(false); break;
+          }
+          case 'wallpaper': data.wallpaper = Number(id); delete data.liveWallpaper; delete data.customWallpaper; delete data.customWallpaperPhoto; save(); if (ui.view === 'wallpaper-picker') home(false); else render(); toast('Wallpaper set'); break;
+          default: return false;
+        }
+        return true;
+      },
+      back() {
+        if (ui.view === 'wallpaper-picker' && ui.wp?.checked?.length) { ui.wp.checked = []; wallpaperPickerRender(); return true; }
+        if (ui.view === 'kk-doc-picker') { ui.view = ui.docPickFor === 'keep' ? 'keep' : 'wallpaper-picker'; ui.docPickFor = ''; render(); return true; }
+        return false;
+      },
+      gestureDown(event) {
+        const kwpScroll = ui.view === 'wallpaper-picker' ? event.target.closest('.kwp-scroll') : null;
+        if (kwpScroll) { c.pointerStart.kwpScroll = kwpScroll; c.pointerStart.kwpLeft = kwpScroll.scrollLeft; }
+        const kwpLong = ui.view === 'wallpaper-picker' && !ui.wp?.checked?.length ? event.target.closest('[data-kwp-long]') : null;
+        if (kwpLong) c.homeLongPressTimer = setTimeout(() => { ui.wp.checked = [kwpLong.dataset.id]; c.pointerStart = null; suppressReleaseClick(); wallpaperPickerRender(); }, holdDelay(550));
+      },
+      gestureMove(event, dx, dy) {
+        if (c.pointerStart.kwpScroll && event.pointerType === 'mouse' && (c.pointerStart.kwpDragging || Math.abs(dx) > dp(9))) { c.pointerStart.kwpDragging = true; const k = screen.getBoundingClientRect().width / screen.offsetWidth || 1; c.pointerStart.kwpScroll.scrollLeft = c.pointerStart.kwpLeft - dx / k; c.suppressClickUntil = Date.now() + 350; event.preventDefault(); return true; }
+        return false;
+      }
+    };
+  }
+  const spec = {
+    render: c => scope(c).render(),
+    click: (action, button, c, event) => scope(c).click(action, button, event),
+    back: c => scope(c).back(),
+    gestureDown: (event, c) => scope(c).gestureDown(event),
+    gestureMove: (event, dx, dy, c) => scope(c).gestureMove(event, dx, dy)
+  };
+  if (window.KK) for (const id of ['wallpaper-picker', 'kk-doc-picker']) KK.register(id, spec);
+})();

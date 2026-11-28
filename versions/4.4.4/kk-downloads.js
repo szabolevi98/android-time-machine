@@ -77,5 +77,5 @@
     click: (action, button, c, event) => scope(c).click(action, button, event),
     overlay: c => scope(c).overlay()
   };
-  for (const id of ['downloads']) KK.register(id, spec);
+  if (window.KK) for (const id of ['downloads']) KK.register(id, spec);
 })();
