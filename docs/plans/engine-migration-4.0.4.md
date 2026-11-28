@@ -64,7 +64,7 @@ The shell: `ics-home.js` (home and the drawer: widgets, drag and drop, folders, 
 - [x] Play Store, Downloads, Gmail, Play Music, the Google apps, the Maps family
 - [x] The shell: status bar, lock screen, home and the drawer (widgets, folders, clings, wallpapers), shade, Recents,
       power menu, volume, keys
-- [ ] What is left into `ics-core.js`, simulator.js deleted
+- [x] What is left into `ics-core.js` (started on DOMContentLoaded, once every module has registered), simulator.js deleted
 
 ## How it was checked
 

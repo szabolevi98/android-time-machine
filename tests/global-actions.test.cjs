@@ -62,7 +62,7 @@ async function playOrder(v,exitAfter,frames){
   for(const v of ['2.3.6','4.0.4','4.3','4.4.4','5.1.1']){const src=engineSource(v).replace(/\r\n/g,'\n');
     assert.ok(src.includes(`AndroidBoot.shouldBoot('${v}')`)&&src.includes('AndroidBoot.prepare'),v);
     // 4.0.4's core starts its modules after the first render; the power module's start is the cold boot.
-    assert.ok(/\n  render\(\);\n  coldBoot\(\);\n\}\)\(\);\s*$/.test(src)||/\n  render\(\);\n  for \(const m of allModules\(\)\) m\.start\?\.\(storeContext\(\)\);\n/.test(src)&&src.includes('start(c) { api(c).coldBoot(); }'),`${v}: coldBoot after the first render`);
+    assert.ok(/\n  render\(\);\n  coldBoot\(\);\n\}\)\(\);\s*$/.test(src)||/\n\s*render\(\);\n\s*for \(const m of allModules\(\)\) m\.start\?\.\(storeContext\(\)\);\n/.test(src)&&src.includes('start(c) { api(c).coldBoot(); }'),`${v}: coldBoot after the first render`);
     assert.ok(/const finish = \(\) => \{[^\n]*lockScreen\(\)/.test(src),`${v}: the boot ends on the lock screen`);}
   console.log('Global actions checks passed: item order per version, ringer modes, dialogs, assets and boot animations.');
 })().catch(error=>{console.error(error);process.exit(1);});

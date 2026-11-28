@@ -9,7 +9,7 @@ ctx.defaultData=defaults;ctx.emailData=[{id:1,from:'Android',subject:'Welcome',b
 ctx.data={...ctx.clone(defaults),calcHistory:[{expression:'1+1'}],playRatings:{demo:5},messageDrafts:{new:{body:'Draft'}},callHistory:[{number:'123'}]};
 ctx.ui={recent:['calculator','play-store'],recentState:{},recentSnapshots:{},music:ctx.ICSMusic.restore(),musicPlaying:false};ctx.save=()=>{};ctx.syncBrowserState=()=>{};ctx.home=()=>{};ctx.saveMusic=()=>{ctx.data.music=ctx.clone(ctx.ui.music);};
 // The apps' Clear data is their module's (versions/4.0.4/ics-*.js, hosted by store-apps/legacy-host.js as ICS).
-ctx.setInterval=()=>0;vm.runInContext(fs.readFileSync('store-apps/legacy-host.js','utf8'),ctx);ctx.StoreHost=ctx.window.StoreHost;
+ctx.setInterval=()=>0;ctx.document={addEventListener(){}};vm.runInContext(fs.readFileSync('store-apps/legacy-host.js','utf8'),ctx);ctx.StoreHost=ctx.window.StoreHost;
 vm.runInContext(fs.readFileSync('versions/4.0.4/ics-core.js','utf8'),ctx);ctx.ICS=ctx.window.ICS;
 for(const name of ['calculator','phone','clock','calendar','music','browser','people','messaging','email','gallery','camera','play-store'])vm.runInContext(fs.readFileSync(`versions/4.0.4/ics-${name}.js`,'utf8'),ctx);
 ctx.storeContext=()=>({get data(){return ctx.data;},ui:ctx.ui,defaults,emailSeed:ctx.emailData,clone:ctx.clone,save:ctx.save,saveMusic:ctx.saveMusic,syncBrowserState:ctx.syncBrowserState});
