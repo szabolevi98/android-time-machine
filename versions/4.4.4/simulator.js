@@ -270,14 +270,15 @@
      binding the shell reassigns (data on a reset) stays current. store-apps/legacy-host.js hands it to them as `c`. */
   const kkScope = {
     get PLAY_APPS() { return PLAY_APPS; }, get REPLIES() { return REPLIES; },
-    get calendarEdit() { return calendarEdit; }, get cameraShoot() { return cameraShoot; },
-    get clock() { return clock; }, get clone() { return clone; }, get composeEmail() { return composeEmail; },
-    get contact() { return contact; }, get data() { return data; }, get deviceDate() { return deviceDate; },
-    get dp() { return dp; }, get driveShareFile() { return driveShareFile; },
+    get addNotification() { return addNotification; }, get calendarEdit() { return calendarEdit; },
+    get cameraShoot() { return cameraShoot; }, get clock() { return clock; }, get clone() { return clone; },
+    get composeEmail() { return composeEmail; }, get contact() { return contact; },
+    get contactByPhone() { return contactByPhone; }, get data() { return data; },
+    get deviceDate() { return deviceDate; }, get dp() { return dp; }, get driveShareFile() { return driveShareFile; },
     get driveShareText() { return driveShareText; }, get earthContext() { return earthContext; },
-    get galleryWallpaper() { return galleryWallpaper; }, get hangoutsTakePhoto() { return hangoutsTakePhoto; },
-    get holdDelay() { return holdDelay; }, get home() { return home; },
-    get homeLongPressTimer() { return homeLongPressTimer; }, get i18n() { return i18n; },
+    get editPerson() { return editPerson; }, get galleryWallpaper() { return galleryWallpaper; },
+    get hangoutsTakePhoto() { return hangoutsTakePhoto; }, get holdDelay() { return holdDelay; },
+    get home() { return home; }, get homeLongPressTimer() { return homeLongPressTimer; }, get i18n() { return i18n; },
     get keepAttach() { return keepAttach; }, get keepCurrent() { return keepCurrent; },
     get keepMoreContext() { return keepMoreContext; }, get listenVoice() { return listenVoice; },
     get mailbox() { return mailbox; }, get messageDraft() { return messageDraft; },
@@ -285,13 +286,14 @@
     get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; },
     get officeFiles() { return officeFiles; }, get openApp() { return openApp; },
     get openMessageThread() { return openMessageThread; }, get overlayRoot() { return overlayRoot; },
-    get photosContext() { return photosContext; }, get plusContext() { return plusContext; },
-    get pointerStart() { return pointerStart; }, get printContext() { return printContext; },
-    get render() { return render; }, get renderOverlay() { return renderOverlay; },
-    get renderStatus() { return renderStatus; }, get renderStockApp() { return renderStockApp; },
-    get safe() { return safe; }, get save() { return save; }, get saveKeepNote() { return saveKeepNote; },
-    get saveMusic() { return saveMusic; }, get screen() { return screen; },
-    get scrollMessages() { return scrollMessages; }, get snapResting() { return snapResting; },
+    get photosContext() { return photosContext; }, get placeContactShortcut() { return placeContactShortcut; },
+    get plusContext() { return plusContext; }, get pointerStart() { return pointerStart; },
+    get printContext() { return printContext; }, get render() { return render; },
+    get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; },
+    get renderStockApp() { return renderStockApp; }, get safe() { return safe; }, get save() { return save; },
+    get saveKeepNote() { return saveKeepNote; }, get saveMusic() { return saveMusic; },
+    get screen() { return screen; }, get scrollMessages() { return scrollMessages; },
+    get shareVcard() { return shareVcard; }, get snapResting() { return snapResting; },
     get startPhoneCall() { return startPhoneCall; }, get statusRoot() { return statusRoot; },
     get suppressClickUntil() { return suppressClickUntil; },
     get suppressReleaseClick() { return suppressReleaseClick; }, get toast() { return toast; },
@@ -798,15 +800,10 @@
   function renderStockApp() { return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, plusCtx: ui.view === 'google-plus' ? plusContext() : null, ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), now: deviceDate(), account: GmailApp.account}); }
   function renderApp() {
     if (StoreHost.has(ui.view)) return StoreHost.render(ui.view, storeContext());
-    if (ui.sub === 'sim-import' && ['people', 'phone'].includes(ui.view)) return PeopleIO.sim({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
-    // Contacts to display, Customize and Settings (people-io.js).
-    if (ui.view === 'people' && PeopleIO.PAGES.includes(ui.sub)) return PeopleIO.page({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
     switch (ui.view) {
       case 'play-store': return JBPlay.render(jbPlayContext());
       case 'settings': return renderSettings();
       case 'chrome': return renderChrome();
-      case 'phone': return renderPhone();
-      case 'people': return renderPeople();
       default: return renderHome();
     }
   }
@@ -883,8 +880,6 @@
     if (ui.view === 'settings' && ui.sub === 'dev-backup-pw' && !ui.overlay) { ui.sub = 'development'; render(); return; }
     if (ui.view === 'settings' && ui.sub.startsWith('dev-procstats') && !ui.overlay) { ui.sub = ui.sub === 'dev-procstats' ? 'development' : 'dev-procstats'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'musicfx' && !ui.overlay) { ui.mfxSpin = false; ui.sub = 'sound'; render(); return; }
-    if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
-    if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
     if (ui.chromeReturn && ui.view === ui.chromeReturn.view && ui.sub === ui.chromeReturn.sub && !ui.overlay) { const back = ui.chromeReturn; ui.chromeReturn = null; openApp('chrome'); ui.sub = 'chrome-settings'; ui.chromePrefStack = back.stack; render(); return; }
     if (ui.view === 'settings' && ['a11y-magnification', 'a11y-shortcut'].includes(ui.sub) && !ui.overlay) { ui.sub = 'accessibility'; render(); return; }
     if(ui.view==='settings'&&ui.sub==='lock-setup'){lockControls.cancel();return;}
@@ -892,11 +887,6 @@
     if (ui.overlay) { ui.overlay = ''; render(); return; }
     if (ui.view === 'lock' && ui.kgChallenge?.bouncing()) { ui.kgChallenge.hideBouncer(); return; }
     if (ui.view === 'lock') return;
-    if(ui.view==='phone' && !ui.activeCall && ui.kkDialpad){ui.kkDialpad=false;ui.dial='';render();return;}
-    if(ui.view==='phone' && !ui.activeCall && ['kk-history','kk-all'].includes(ui.sub)){ui.sub='';render();return;}
-    if(ui.view==='phone' && !ui.activeCall && ui.sub==='call-detail'){ui.sub=ui.kkLogFrom||'';render();return;}
-    if(ui.view==='phone' && !ui.activeCall && (ui.phoneSearch||'').trim()){ui.phoneSearch='';render();return;}
-    if(ui.view==='phone' && ui.activeCall){if(ui.activeCall.keypad){ui.activeCall.keypad=false;render();}else home(false);return;}
     if (ui.gnowSpin) { ui.gnowSpin = ''; render(); return; }
     if (ui.gnowDraft || ui.gnowDialog) { ui.gnowDraft = null; ui.gnowDialog = ''; render(); return; }
     if(ui.view==='settings' && ui.kpSyncReturn && ui.sub==='sync-google'){ui.kpSyncReturn=false;openApp('keep',true);ui.kpScreen='settings';render();return;}
@@ -920,7 +910,6 @@
     if (ui.view === 'settings' && ui.sub === 'reset-info') { ui.sub = 'backup'; render(); return; }
     if (ui.view === 'settings' && ['brightness','wallpaper','sleep'].includes(ui.sub)) { ui.sub = 'display'; render(); return; }
     if (ui.view === 'settings' && ['volumes','ringtone'].includes(ui.sub)) { ui.sub = 'sound'; render(); return; }
-    if (ui.view === 'people' && ui.sub === 'edit') { ui.sub = 'detail'; render(); return; }
     if (ui.sub) { ui.sub = ''; render(); if (ui.view === 'settings') viewport.querySelector('.settings-app').scrollTop = ui.settingsRootScroll; return; }
     home(false);
   }
@@ -993,12 +982,8 @@
       // PopupMenu keeps itself on screen: shift it left when the anchor is near the right edge.
       const popup = overlayRoot.querySelector('.jb-recent-popup'); if (popup) popup.style.left = `${Math.max(4, Math.min(parseFloat(popup.style.left), popup.parentElement.clientWidth - popup.offsetWidth - 4))}px`;
       JBRecents.bindLongPress(overlayRoot.querySelector('.recent-panel'), popup => { ui.recentPopup = popup; suppressClickUntil = Infinity; window.addEventListener('pointerup', () => { suppressClickUntil = Date.now() + 50; }, {once: true, capture: true}); renderOverlay(); });
-    } else if (ui.overlay === 'hce-dialog') {
-      overlayRoot.innerHTML = HoloContactEditor.overlay({lang: i18n.language, draft: ui.peopleDraft, dialog: ui.hceDialog || '', photos: data.photos, photoUrl: pid => { const photo = data.photos.find(p => String(p.id) === String(pid)); return photo ? ICSMedia.image(photo) : ''; }});
     } else if (ui.overlay.startsWith('sd-')) {
       overlayRoot.innerHTML = ICSSettingsDetail.overlay(data,ui,key=>i18n.t(key));
-    } else if (ui.overlay.startsWith('people-')) {
-      overlayRoot.innerHTML = peopleOverlay();
     } else if (ui.overlay === 'browser-menu' && ui.view === 'chrome') {
       overlayRoot.innerHTML = ChromeApp.menu({ui, data, t: key => i18n.t(key), locale: i18n.locale(), url: ui.browserUrl, incognito: !!ICSBrowserSession.current(ui.browserSession)?.incognito});
     } else if (ui.overlay === 'browser-menu') {
@@ -1011,8 +996,6 @@
     } else if (ui.overlay === 'sa-menu') {
       // The Google apps' action bar overflow (StockApps.menu: their menu XML's overflow items).
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${StockApps.menu(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()}).map(item => `<button data-action="${item.action}"${item.id != null ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'phone-menu') {
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu phone-overflow"><button data-action="phone-add-contact">Add to contacts</button></div>`;
     } else if (ui.overlay === 'connectivity-menu') {
       const wifi = ui.connectivityMenu === 'wifi';
       const enabled = data.settings[wifi ? 'wifi' : 'bluetooth'];
@@ -1326,12 +1309,6 @@
     ui.playHistory.push({...ui.play,scrollTop:viewport.querySelector('.play-content')?.scrollTop || 0});
     ui.play = {...ui.play,...next}; ui.overlay = ''; render();
   }
-  function renderPhone() {
-    if(ui.activeCall)return ICSPhoneCall.render(ui.activeCall,contactByPhone(ui.activeCall.number),(key,context)=>i18n.t(key,context));
-    if(ui.sub==='call-detail'){const call=(data.callHistory||[]).find(call=>call.time===ui.phoneCallId);if(call)return ICSPhoneCall.details(call,contactByPhone(call.number),key=>i18n.t(key),i18n.locale());}
-    // Android 4.4 Dialer (kk-dialer.js): speed dial, search, sliding dialpad and the History screen.
-    return KKDialer.render({data, ui, t: key => i18n.t(key), locale: i18n.locale(), byPhone: contactByPhone});
-  }
   function contactByPhone(number) { const normalized = String(number).replace(/[^\d+]/g, ''); return data.contacts.find(item => item.phone.replace(/[^\d+]/g, '') === normalized); }
   function startPhoneCall(number) {
     if(!number)return;
@@ -1339,29 +1316,11 @@
     captureRecentView();ui.recent=['phone',...ui.recent.filter(id=>id!=='phone')].slice(0,7);
     ui.callNumber=ui.activeCall.number;ui.view='phone';ui.sub='calling';ui.overlay='';render();
   }
-  function renderPeople() { return ICSPeople.render(data,ui,key => i18n.t(key),i18n.locale()); }
   function editPerson(isNew = false) {
     const person = isNew ? {} : contact(ui.selectedContact);
     if (!person) return;
     ui.peopleDraft = HoloContactEditor.fromPerson(person,data.contactGroups.filter(g=>g.members.includes(person.id)).map(g=>g.id));
     ui.sub = isNew ? 'new' : 'edit'; ui.overlay = ''; render();
-  }
-  function peopleOverlay() {
-    /* ContactDetailFragment's view_contact menu (Edit, Share, Delete, Set ringtone, the checkable All calls to voicemail
-       and, from 4.2, Place on Home screen), people_options' overflow (Contacts to display, Import/export, Accounts,
-       Settings and, from 4.2, Help; Clear frequents only with frequent contacts) and ContactDeletionInteraction (Ice Cream
-       Sandwich titles it "Delete contact?" with the alert icon; later releases show only the message), in this image's
-       words (people-strings.js). */
-    if (ui.overlay === 'people-share') return PeopleIO.shareOverlay({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
-    if (ui.overlay === 'people-vcard') return PeopleIO.overlay({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
-    if (ui.overlay === 'people-ringtone') return PeopleIO.ringtone({data, ui, t: key => i18n.t(key), locale: i18n.locale()}, contact(ui.selectedContact));
-    const P = key => PeopleStrings.t(key), unavailable = 'This feature is not part of the simulator.';
-    const option = (action, label, id = '') => `<button data-action="${action}" data-id="${safe(id)}">${safe(P(label))}</button>`;
-    if (ui.overlay === 'people-menu') { const person = contact(ui.selectedContact); return `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu people-menu" data-no-translate>${option('people-edit', 'Edit')}${option('psh-open', 'Share', person?.id)}${option('people-delete', 'Delete')}${option('people-ringtone', 'Set ringtone')}<button data-action="people-voicemail" role="menuitemcheckbox" aria-checked="${!!person?.sendToVoicemail}"><span>${safe(P('All calls to voicemail'))}</span><img src="assets/btn_check_${person?.sendToVoicemail ? 'on' : 'off'}_holo_dark.png" alt=""></button>${PeopleStrings.has('Place on Home screen') ? option('people-place-home', 'Place on Home screen', person?.id) : ''}</div>`; }
-    if (ui.overlay === 'people-list-menu') return `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu people-menu people-list-menu" data-no-translate>${['Contacts to display', 'Import/export', 'Accounts', 'Settings', ...(PeopleStrings.has('Help') ? ['Help'] : [])].map(label => label === 'Import/export' ? option('vcf-open', label) : label === 'Contacts to display' ? option('pfl-open', label) : label === 'Settings' ? option('pst-open', label) : option('toast', label, unavailable)).join('')}</div>`;
-    if (ui.overlay === 'people-delete') return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="people-alert" role="alertdialog" aria-label="${safe(P('This contact will be deleted.'))}" data-no-translate>${PeopleStrings.has('Delete contact?') ? `<h3><img src="assets/people-ic_dialog_alert_holo_light.png" alt="">${safe(P('Delete contact?'))}</h3>` : ''}<p>${safe(P('This contact will be deleted.'))}</p><div class="people-alert-buttons">${option('close-overlay', 'Cancel')}${option('people-confirm-delete', 'OK')}</div></div>`;
-    const group = data.contactGroups.find(g=>g.id===ui.peopleEditGroup);
-    return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><form class="settings-dialog mms-dialog people-editor" role="dialog" aria-label="${group?'Edit group':'New group'}" data-form="people-group"><h3>${group?'Edit group':'New group'}</h3><label>Group name<input name="name" required maxlength="50" value="${safe(group?.name||'')}"></label>${data.contacts.map(p=>`<label class="people-membership"><input type="checkbox" name="members" value="${p.id}" ${group?.members.includes(p.id)?'checked':''}>${safe(p.name)}</label>`).join('')}<div class="settings-dialog-actions"><button type="button" data-action="close-overlay">Cancel</button><button type="submit">Save</button></div></form>`;
   }
   function messageDraft() {
     data.messageDrafts ||= {};
@@ -1555,10 +1514,6 @@
     }
     // A store app's own controls and the host's dialog and menu (store-apps/legacy-host.js).
     if ((action.startsWith('sth-') || ui.view.startsWith('store-') && StoreHost.has(ui.view)) && StoreHost.action(action, button, storeContext())) return;
-    // The Contacts editor (contact-editor.js): fields, types, photo and its dialogs.
-    if (ui.view === 'people' && action.startsWith('hce-') && HoloContactEditor.handle(action, id, {draft: ui.peopleDraft, form: viewport.querySelector('#people-editor'), ui, render, renderOverlay,
-      focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
-      takePhoto: () => { const photo = {...ICSMedia.scene(data), id: Date.now(), name: `IMG_${new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14)}`, album: 'camera', created: Date.now()}; data.photos.unshift(photo); save(); ui.peopleDraft.photo = photo.id; render(); }})) return;
     if (action.startsWith('chrome-') && ui.sub === 'chrome-settings') {
       const result = ChromeApp.prefAction(action, id, {ui, data, locale: i18n.locale(), t: key => i18n.t(key)});
       if (result) {
@@ -1567,11 +1522,6 @@
         if (result.open) { ui.sub = ''; ui.chromePrefStack = []; chromeNewTab(false); navigateBrowser(result.open); return; }
         render(); if (result.toast) toast(result.toast); return;
       }
-    }
-    if (/^(pfl|pst|psh)-/.test(action)) { const result = PeopleIO.pageAction(action, id, {data, ui}); if (result) { if (result.share) { shareVcard(result.share.app, result.share.file); return; } if (result.save) save(); renderOverlay(); render(); return; } }
-    if (action.startsWith('vcf-')) {
-      const result = PeopleIO.handle(action, id, {data, ui, t: key => i18n.t(key), locale: i18n.locale()});
-      if (result) { if (result.save) save(); for (const title of result.notify || []) addNotification(title, ''); renderOverlay(); render(); if (result.toast) toast(result.toast); return; }
     }
     if (kkOffer('action', action, button, event, storeContext())) return;
     switch (action) {
@@ -1830,7 +1780,6 @@
       case 'a11y-hold': ui.overlay = 'a11y-hold'; renderOverlay(); break;
       case 'a11y-hold-pick': data.settings.longPressTimeout = Number(id); ui.overlay = ''; save(); renderOverlay(); render(); break;
       case 'toast': toast(id); break;
-      case 'people-place-home': ui.overlay = ''; renderOverlay(); placeContactShortcut(data.contacts.find(p => p.id === (Number(id) || ui.selectedContact))); break;
       case 'open-contact': { const person = data.contacts.find(p => p.id === Number(id)); openApp('people'); if (person) { ui.selectedContact = person.id; ui.sub = 'detail'; render(); } break; }
       case 'noop': break;
       case 'browser-search': openApp('chrome'); document.querySelector('.chr-omnibox input')?.focus(); break;
@@ -1878,45 +1827,6 @@
       case 'browser-tab': ui.browserSession.active = Number(id); ui.sub = ''; ui.browserFind = undefined; saveBrowserState(); render(); break;
       case 'browser-new-tab': if (ui.view === 'chrome') { chromeNewTab(false); break; } if (!ICSBrowserSession.add(ui.browserSession)) { toast('Tab limit reached'); break; } ui.sub = ''; ui.overlay = ''; ui.browserFind = undefined; saveBrowserState(); render(); break;
       case 'browser-save': ui.overlay = ''; renderOverlay(); if (!data.bookmarks.includes(ui.browserUrl)) { data.bookmarks.push(ui.browserUrl); save(); toast('Bookmark saved'); } else toast('Already bookmarked'); break;
-      case 'phone-tab': ui.phoneTab = id; ui.phoneSearch = undefined; render(); break;
-      case 'phone-search': ui.phoneTab = 'favorites'; ui.phoneSearch = ''; ui.overlay = ''; render(); viewport.querySelector('.phone-search input')?.focus(); break;
-      case 'phone-menu': ui.overlay = 'phone-menu'; renderOverlay(); break;
-      case 'phone-add-contact': openApp('people'); editPerson(true); ui.peopleDraft.phones[0].value=ui.dial; render(); break;
-      case 'phone-redial': startPhoneCall(id); break;
-      case 'dial': if (ui.dial.length < 30) ui.dial += id; render(); break;
-      case 'dial-delete': ui.dial = ui.dial.slice(0, -1); render(); break;
-      case 'call': if(!ui.dial){toast('Enter a phone number');break;}startPhoneCall(ui.dial);break;
-      case 'hangup': if(ui.activeCall)data.callHistory=[...(data.callHistory||[]),ICSPhoneCall.finish(ui.activeCall)].slice(-50);ui.activeCall=null;save();ui.sub='';ui.dial='';render();toast('Call ended');break;
-      case 'incall-toggle': if(ui.activeCall)ui.activeCall[id]=!ui.activeCall[id];render();break;
-      case 'incall-digit': if(ui.activeCall)ui.activeCall.digits=(ui.activeCall.digits+id).slice(-24);render();break;
-      case 'phone-log-detail': ui.kkLogFrom=ui.sub==='kk-history'?'kk-history':'';ui.phoneCallId=Number(id);ui.sub='call-detail';render();break;
-      case 'phone-log-back': ui.sub=ui.kkLogFrom||'';ui.phoneTab='history';render();break;
-      case 'kk-dialer-all': ui.sub = 'kk-all'; ui.overlay = ''; render(); break;
-      case 'kk-dialer-history': ui.sub = 'kk-history'; ui.kkDialpad = false; ui.overlay = ''; render(); break;
-      case 'kk-dialer-back': ui.sub = ''; render(); break;
-      case 'kk-dialer-log-tab': ui.kkLogTab = id; render(); break;
-      case 'kk-dialer-pad': ui.kkDialpad = true; render(); break;
-      case 'kk-dialer-clear': ui.phoneSearch = ''; render(); viewport.querySelector('[data-kk-dialer-search]')?.focus(); break;
-      case 'phone-log-message': { const recipient=ICSMessaging.recipient(id,data.contacts); if(recipient)openMessageThread(recipient.key);else toast('Enter a valid phone number');break; }
-      case 'people-tab': ui.peopleTab=id; ui.sub=''; ui.peopleQuery=''; ui.peopleSearching=false; render(); break;
-      case 'people-search': ui.peopleTab='all'; ui.peopleSearching=true; render(); viewport.querySelector('.people-search input')?.focus(); break;
-      case 'people-edit': editPerson(); break;
-      case 'people-menu': ui.overlay='people-menu'; renderOverlay(); break;
-      case 'people-star': { const person=contact(ui.selectedContact); if(person)person.favorite=!person.favorite; save(); render(); break; }
-      case 'people-delete': ui.overlay='people-delete'; renderOverlay(); break;
-      case 'people-list-menu': ui.overlay='people-list-menu'; renderOverlay(); break;
-      case 'people-voicemail': { const person=contact(ui.selectedContact); if(person)person.sendToVoicemail=!person.sendToVoicemail; save(); ui.overlay=''; renderOverlay(); break; }
-      case 'people-confirm-delete': ICSPeople.remove(data,ui.selectedContact); save(); ui.sub=''; ui.overlay=''; render(); break;
-      case 'people-ringtone': ui.overlay = 'people-ringtone'; renderOverlay(); break;
-      case 'people-group': ui.peopleGroup=id; ui.sub='group'; ui.peopleQuery=''; render(); break;
-      case 'people-new-group': ui.peopleEditGroup=''; ui.overlay='people-group'; renderOverlay(); break;
-      case 'people-edit-group': ui.peopleEditGroup=ui.peopleGroup; ui.overlay='people-group'; renderOverlay(); break;
-      case 'contact': ui.selectedContact = Number(id); ui.sub = 'detail'; render(); break;
-      case 'new-contact': editPerson(true); break;
-      case 'contact-call': startPhoneCall(button.dataset.number||contact(id)?.phone||'');break;
-      case 'people-discard': ui.sub=ui.sub==='edit'?'detail':'';ui.peopleDraft=null;render();break;
-      case 'contact-message': openMessageThread(id); break;
-      case 'contact-email': {const recipient=button.dataset.email||contact(id)?.email||'';openApp('email');composeEmail(null,false,recipient);break;}
       case 'music-play': ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
       case 'music-prev': case 'music-next': ICSMusic.step(ui.music,action==='music-prev'?-1:1);saveMusic();render();break;
       case 'music-shuffle': ui.music.shuffle=!ui.music.shuffle;saveMusic();render();break;
@@ -1936,7 +1846,6 @@
     if(form.dataset.form==='sx-profile-delete'){ICSSystemSettings.removeProfile(data,ui);save();ui.overlay='';render();return;}
     if (form.dataset.form === 'jbp-search') { const q = String(values.get('query') || '').trim(); if (!q) return; data.marketSearches = [q, ...(data.marketSearches || []).filter(x => x !== q)].slice(0, 10); save(); jbPlayGo({page: 'search', query: q}); return; }
     if (form.dataset.form === 'play-search') { ui.play.query = String(values.get('query') || '').trim(); render(); return; }
-    if (form.dataset.form === 'phone-search') { ui.phoneSearch = String(values.get('query') || '').trim(); render(); return; }
     if (form.dataset.form === 'wifi-add') {
       const name = String(values.get('ssid') || '').trim();
       const security = values.get('security');
@@ -1960,35 +1869,9 @@
     }
     switch (form.dataset.form) {
       case 'browser-find': ui.browserFind=String(values.get('query')||'').trim(); render(); break;
-      case 'people-search': ui.peopleQuery=String(values.get('query')||'').trim(); render(); break;
-      case 'hce-label': HoloContactEditor.submitLabel(values,{draft:ui.peopleDraft,ui,render,renderOverlay}); break;
-      case 'people-save': {
-        // ContactEditorFragment.save: every field of the form; a card with nothing in it is not kept.
-        const id=ui.sub==='edit'?ui.selectedContact:Date.now();
-        const person=HoloContactEditor.commit(viewport.querySelector('#people-editor'),ui.peopleDraft,contact(id)||{id});
-        if(!person.name&&!person.phone&&!person.email){ui.sub=ui.sub==='edit'?'detail':'';ui.peopleDraft=null;render();break;}
-        if(!person.name)person.name=person.phone||person.email;
-        const index=data.contacts.findIndex(p=>p.id===id);if(index>=0)data.contacts[index]=person;else data.contacts.push(person);
-        const groups=ui.peopleDraft.groups||[];
-        data.contactGroups.forEach(g=>{g.members=g.members.filter(member=>member!==id);if(groups.includes(g.id))g.members.push(id);});
-        save();ui.selectedContact=id;ui.sub='detail';ui.peopleDraft=null;render();toast(HoloContactEditor.T(i18n.language,'Contact saved.'));break;
-      }
-      case 'people-ringtone': { const person = contact(ui.selectedContact), choice = String(values.get('choice') || 'default'); if (person) { if (choice === 'default') delete person.ringtone; else person.ringtone = choice; save(); } ui.overlay = ''; renderOverlay(); window.SystemSounds?.stop?.(); render(); break; }
-      case 'people-group': {
-        const name=String(values.get('name')||'').trim();if(!name)return;
-        const group=data.contactGroups.find(g=>g.id===ui.peopleEditGroup)||{id:'group-'+Date.now()};
-        group.name=name;group.members=values.getAll('members').map(Number).filter(id=>!!contact(id));
-        if(!data.contactGroups.some(g=>g.id===group.id))data.contactGroups.push(group);
-        save();ui.peopleGroup=group.id;ui.peopleTab='groups';ui.sub='group';ui.overlay='';render();break;
-      }
       case 'address': navigateBrowser(values.get('address')); break;
       case 'web-search': navigateBrowser(`search:${values.get('query')}`); break;
       case 'chrome-history-search': ui.chromeHistoryQuery = String(values.get('query') || '').trim(); render(); break;
-      case 'contact': {
-        const name = String(values.get('name')).trim(), phone = String(values.get('phone')).trim(), email = String(values.get('email')).trim();
-        if (!name || !phone) return;
-        const id = Date.now(); data.contacts.push({ id, name, phone, email }); save(); ui.selectedContact = id; ui.sub = 'detail'; render(); toast('Contact saved'); break;
-      }
       case 'sd-volumes': for(const key of ['mediaVolume','ringVolume','alarmVolume'])data.settings[key]=Math.max(0,Math.min(100,Number(values.get(key))));save();ui.overlay='';render();break;
       case 'sd-choice': {const choice=String(values.get('choice'));if(ui.settingsField==='sleep')data.settings.sleep=Number(choice);else if(['windowScale','transitionScale','animatorScale'].includes(ui.settingsField))data.settings[ui.settingsField]=Number(choice);else if(ui.settingsField==='font'){data.settings.fontSize=choice;data.settings.largeText=choice==='large'||choice==='huge';}else if(ui.settingsField==='silent'){data.settings.silent=choice!=='off';data.settings.silentMode=choice;}else data.settings[ui.settingsField]=choice;save();ui.overlay='';render();break;}
       default: break;
@@ -2005,15 +1888,8 @@
     if (event.target.matches('[data-lng-seek]') && InputLanguage.input(event.target, langContext())) return;
     if (event.target.matches('[data-mfx]') && MusicFX.input(event.target, musicFxContext())) return;
     if (event.target.matches?.('[data-chr-seek]')) { const ctx = {ui, data, locale: i18n.locale()}; ChromeApp.prefSeek(event.target.value, ctx); ChromeApp.seekPaint(viewport, ctx); save(); return; }
-    if (event.target.matches?.('[data-kk-dialer-search]')) {
-      ui.phoneSearch = event.target.value;
-      const list = viewport.querySelector('[data-kk-dialer-list]');
-      if (list) { const fresh = document.createElement('div'); fresh.innerHTML = KKDialer.render({data, ui, t: key => i18n.t(key), locale: i18n.locale(), byPhone: contactByPhone}); list.innerHTML = fresh.querySelector('[data-kk-dialer-list]').innerHTML; i18n.translateDOM?.(list); }
-      return;
-    }
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
     if(event.target.dataset.field==='data-cycle'){ui.dataCycle=event.target.value;render();return;}
-    if(event.target.closest('#people-editor')) { HoloContactEditor.sync(event.target.closest('#people-editor'),ui.peopleDraft); return; }
     if (event.target.closest('.jbp-bar.searching')) { ui.marketEdit = event.target.value; const view = viewport.querySelector('.jbp'); view?.querySelector('.jbp-suggest')?.remove(); const tmp = document.createElement('div'); tmp.innerHTML = JBPlay.render(jbPlayContext()); const sug = tmp.querySelector('.jbp-suggest'); if (sug && view) view.append(sug); return; }
     if (event.target.matches('[data-jbp-auto]')) { const id = event.target.dataset.jbpAuto, list = data.marketAuto || []; data.marketAuto = event.target.checked ? [...new Set([...list, id])] : list.filter(x => x !== id); save(); return; }
     if (event.target.matches('[data-gnr-title]')) { if (ui.gnowDraft) ui.gnowDraft.title = event.target.value; return; }

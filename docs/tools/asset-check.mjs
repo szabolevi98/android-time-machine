@@ -37,7 +37,7 @@ const KNOWN = {
   'versions/4.4.4/settings-system.js assets/ic_google_account.png': "the shared template's ICS branch",
   'versions/5.1.1/settings-system.js assets/ic_google_account.png': "the shared template's ICS branch",
   'versions/4.3/simulator.js assets/people-ic_dialog_alert_holo_light.png': "the delete dialog's title only ICS has (PeopleStrings.has('Delete contact?'))",
-  'versions/4.4.4/simulator.js assets/people-ic_dialog_alert_holo_light.png': "the delete dialog's title only ICS has",
+  'versions/4.4.4/kk-people.js assets/people-ic_dialog_alert_holo_light.png': "the delete dialog's title only ICS has",
   'versions/5.1.1/chrome.js assets/ic_ab_back_holo_light.png': 'the Holo up arrow of the shared Chrome code; 5.1.1 draws the Material bar',
   'versions/5.1.1/email-prefs.js assets/ic_ab_back_holo_light.png': 'the Holo up arrow; 5.1.1 takes the material branch',
 };
