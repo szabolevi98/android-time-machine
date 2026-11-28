@@ -46,6 +46,8 @@ Bugs fixed on the way (their own commits):
   starts the long press.
 - Back (the touch key or Escape) on Settings' screen lock setup cancelled the setup even with the shade or a dialog
   open over it, which then stayed: the overlay closes first now.
+- The Menu key over a Google app's settings screen (Gmail, Talk, YouTube, Maps…) opened the app's own menu: the
+  settings screen is asked first now (it has none, or Restore default settings).
 
 Notes:
 
