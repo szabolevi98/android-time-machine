@@ -41,3 +41,4 @@ the module core, screen by screen, until it is gone.
 | 2 | Messenger and Hangouts | lp-messaging.js | moved |
 | 2 | Email and Gmail | lp-mail.js | moved |
 | 2 | Chrome | lp-chrome.js | moved |
+| 2 | Play Store | lp-play-store.js | moved |

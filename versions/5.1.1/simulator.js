@@ -245,20 +245,6 @@
   }
   storeAppsSync();
   function storeContext() { return StoreHost.context(Object.create(lp, Object.getOwnPropertyDescriptors({data, ui, save, render, renderOverlay, toast, openApp, screen, notify: (title, text) => addNotification(title, text), menuClass: 'lp-popup-menu', lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key)}))); }
-  // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
-  function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (jbPlayContext().prefs.shortcuts) placeShortcut(r, appNames[r]); }
-  // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
-  function storeUninstall(id) {
-    data.marketInstalled = (data.marketInstalled || []).filter(x => x !== id);
-    const r = StoreHost.runtime(id); if (!r) return;
-    StoreHost.module(r).clearData?.(storeContext());
-    data.homePages = data.homePages.map(page => page.map(x => x === r ? null : x));
-    if (Array.isArray(data.dock)) data.dock = data.dock.map(x => x === r ? null : x);
-    for (const f of Object.values(data.folders || {})) if (Array.isArray(f.items)) f.items = f.items.filter(x => x !== r);
-    ui.recent = (ui.recent || []).filter(x => x !== r);
-    if (ui.view === r) { ui.view = 'home'; ui.sub = ''; }
-    storeAppsSync();
-  }
   StoreHost.provide(storeContext);
   ICSLauncherFolders.initialize(data,apps.map(app=>app[0]).concat((data.driveFiles||StockApps.FILES).map(f=>'office:'+f.id)));
   const screen = document.querySelector('#screen');
@@ -365,7 +351,7 @@
     // RecentsTheme: transparent system bars over the wallpaper.
     screen.classList.toggle('lp-recents-open', ui.overlay === 'recent');
     // Window.setStatusBarColor: the app's colorPrimaryDark (LP_STATUS_COLORS), black where the theme sets none.
-    screen.style.setProperty('--lp-sb', ui.view === 'youtube' && ['search', 'results'].includes(ui.sub) ? '#d9d9d9' : ui.sub === 'chrome-settings' && ['chrome', 'browser'].includes(ui.view) ? '#161e21' : ui.view === 'wallet' ? LPExtraApps.walletStatus(ui) : ui.view === 'play-store' && window.JBPlay?.statusColor ? JBPlay.statusColor(jbPlayContext()) : LP_STATUS_COLORS[ui.view] || LPExtraApps.COLORS[ui.view]?.[1] || '#000');
+    screen.style.setProperty('--lp-sb', ui.view === 'youtube' && ['search', 'results'].includes(ui.sub) ? '#d9d9d9' : ui.sub === 'chrome-settings' && ['chrome', 'browser'].includes(ui.view) ? '#161e21' : ui.view === 'wallet' ? LPExtraApps.walletStatus(ui) : ui.view === 'play-store' && window.JBPlay?.statusColor ? JBPlay.statusColor(lp.jbPlayContext()) : LP_STATUS_COLORS[ui.view] || LPExtraApps.COLORS[ui.view]?.[1] || '#000');
     // QuickContactActivity tints the status bar with the darker shade of the contact's colour.
     if (ui.view === 'people' && ui.sub === 'detail') { const person = contact(ui.selectedContact); if (person) screen.style.setProperty('--lp-sb', LPDialer.tileColorDark(person.name)); }
     // Google+'s VideoViewActivity: VideoViewTheme's colorPrimaryDark (Theme.EmeraldSea, quantum_googred700).
@@ -830,7 +816,6 @@
   function renderApp() {
     if (StoreHost.module(ui.view)?.render) return StoreHost.render(ui.view, storeContext());
     switch (ui.view) {
-      case 'play-store': return JBPlay.render(jbPlayContext());
       case 'settings': return renderSettings();
       case 'photos': return PhotosApp.render(photosContext());
       case 'play-music': case 'play-movies': case 'play-books': case 'play-games': return PlayApps.render(playContext(ui.view));
@@ -858,7 +843,7 @@
     // Wallet's warm welcome: the intro splash, then the pager (WarmWelcomeActivity.startIntroAnimation).
     if (app === 'wallet' && !resume) { ui.walPage = undefined; setTimeout(() => { if (ui.view === 'wallet' && ui.walPage == null) { ui.walPage = 0; render(); } }, 2000); }
     LP.module('camera').opening(app, resume);
-    if (app === 'play-store' && !resume) { ui.play = ICSPlayStore.initial(); ui.playHistory = []; ui.market = {page: 'home'}; ui.marketHistory = []; ui.marketSearching = false; }
+    LP.module('play-store').opening(app, resume);
     ui.view = app; ui.sub = resume ? ui.recentState?.[app]?.sub || '' : ''; ui.overlay = ''; if (app === 'settings' && !resume) ui.settingsRootScroll = 0;
     ui.recent = [app, ...ui.recent.filter(id => id !== app)].slice(0, 7);
     render();
@@ -995,8 +980,7 @@
     if(ui.view==='settings' && ['apn','operators','tether-help','device-admin','wifi-direct','wifi-display','location-mode'].includes(ui.sub)){ui.sub={apn:'mobile-networks',operators:'mobile-networks','tether-help':'tethering','device-admin':'security','wifi-direct':'wifi','wifi-display':'display','location-mode':'location'}[ui.sub];render();return;}
     if(ui.view==='settings' && ['app-info','data-app','battery-history','battery-detail','storage-misc','language-pick'].includes(ui.sub)){ui.sub={'language-pick':'language','app-info':'apps','data-app':'data','battery-history':'battery','battery-detail':'battery','storage-misc':'storage'}[ui.sub];render();return;}
     if(ui.view==='music' && ui.sub==='queue'){ui.sub='player';render();return;}
-    if (ui.view === 'play-store' && ui.marketSearching) { ui.marketSearching = false; render(); return; }
-    if (ui.view === 'play-store' && ui.marketHistory?.length) { const prev = ui.marketHistory.pop(); ui.market = prev; render(); const list = viewport.querySelector('.jbp-scroll'); if (list) list.scrollTop = prev.scroll || 0; return; }
+    if (LP.module('play-store').back()) return;
     if (ui.view === 'calculator' && StoreHost.back(storeContext())) return;
     if (ui.view === 'drawer' && ui.drawerWidgets) { ui.drawerWidgets = false; ui.drawerPage = 0; home(false); ui.overview = true; render(); return; }
     if (ui.view === 'home' && ui.overview) { ui.overview = false; render(); return; }
@@ -1194,11 +1178,6 @@
       overlayRoot.innerHTML = PhotosApp.prefDialog(photosContext());
     } else if (ui.overlay === 'photos-delete') {
       overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog mms-dialog" role="dialog" aria-label="${safe(i18n.t('Delete'))}"><h3>${safe(i18n.t('Delete'))}</h3><p>${safe(i18n.t('Delete this photo?'))}</p><div class="settings-dialog-actions"><button data-action="close-overlay">${safe(i18n.t('Cancel'))}</button><button data-action="photos-confirm-delete">${safe(i18n.t('Delete'))}</button></div></div>`;
-    } else if (ui.overlay === 'play-menu') {
-      // The action bar overflow: a Holo Light popup below the overflow button (Play 5.2: a Material popup over it).
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="jbp-menu" role="menu">${JBPlay.menu(jbPlayContext()).map(item => `<button data-action="${item.action}"${item.checked !== undefined ? ` role="menuitemcheckbox" aria-checked="${item.checked}"` : ''}>${safe(item.title)}${item.checked !== undefined ? `<i class="lpp-check${item.checked ? ' on' : ''}"></i>` : ''}</button>`).join('')}</div>`;
-    } else if (ui.overlay.startsWith('jbp-')) {
-      overlayRoot.innerHTML = JBPlay.dialog(ui.overlay.slice(4), jbPlayContext());
     } else if (ui.overlay === 'sa-menu') {
       // The Google apps' action bar overflow (StockApps.menu: their menu XML's overflow items).
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${StockApps.menu(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()}).map(item => `<button data-action="${item.action}"${item.id != null ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
@@ -1471,31 +1450,6 @@
     ui.browserTabs = ui.browserSession.tabs.map(tab => tab.history[tab.index]);
   }
 
-  /* Google Play Store 5.2.13: ui.market holds the page, section, tab and selection, ui.marketHistory the back stack;
-     downloads run on a timer with a notification while they last and "Successfully installed." afterwards. */
-  function jbPlayContext() {
-    const m = ui.market || {page: 'home'};
-    return {lang: i18n.language, locale: i18n.locale(), t: key => i18n.t(key), ...m, installed: data.marketInstalled || [], everInstalled: data.marketEverInstalled || [], downloading: ui.marketDownload?.id || '', phase: ui.marketDownload?.phase || '', progress: ui.marketDownload?.progress || 0, plussed: data.marketPlus || [], autoUpdate: data.marketAuto || [], wishlist: data.marketWishlist || [], rated: data.marketRated || {}, prefs: {notify: true, shortcuts: true, autoMode: 'wifi', auth: 'session', ...(data.marketPrefs || {})}, rateDraft: ui.marketRateDraft, filterDraft: ui.marketFilterDraft, account: 'demo@android.local', permOpen: ui.marketPermOpen || '', permView: !!ui.marketPermView, searching: !!ui.marketSearching, editValue: ui.marketEdit || '', history: data.marketSearches || [], target: ui.marketTarget, popTop: ui.marketPopTop};
-  }
-  function jbPlayGo(next) { (ui.marketHistory ||= []).push({...(ui.market || {page: 'home'}), scroll: viewport.querySelector('.jbp-scroll')?.scrollTop || 0}); ui.market = {...(ui.market || {}), ...next}; ui.overlay = ''; ui.marketSearching = false; render(); }
-  function jbPlayKeepScroll() { const top = viewport.querySelector('.jbp-scroll')?.scrollTop || 0; render(); const list = viewport.querySelector('.jbp-scroll'); if (list) list.scrollTop = top; }
-  function jbPlayDownload(id) {
-    const item = JBPlay.find(id); if (!item) return;
-    clearInterval(ui.marketTimer); ui.marketDownload = {id, phase: 'downloading', progress: 0};
-    data.notifications = data.notifications.filter(n => n.kind !== 'market-dl');
-    data.notifications.unshift({id: Date.now(), title: item.name, detail: JBPlay.text(i18n.language, 'Downloading…'), kind: 'market-dl'});
-    save(); render(); renderStatus();
-    ui.marketTimer = setInterval(() => {
-      const d = ui.marketDownload; if (!d) { clearInterval(ui.marketTimer); return; }
-      if (d.phase === 'downloading') { d.progress = Math.min(1, d.progress + .12); if (d.progress >= 1) d.phase = 'installing'; }
-      else { clearInterval(ui.marketTimer); ui.marketDownload = null; data.marketInstalled = [...new Set([...(data.marketInstalled || []), id])]; storeInstalled(id); data.marketEverInstalled = [...new Set([...(data.marketEverInstalled || []), id])]; data.notifications = data.notifications.filter(n => n.kind !== 'market-dl'); if ((data.marketPrefs?.notify) !== false) data.notifications.unshift({id: Date.now(), title: item.name, detail: JBPlay.text(i18n.language, 'Successfully installed.'), kind: 'market'}); save(); renderStatus(); }
-      if (ui.view === 'play-store' && !ui.marketSearching) jbPlayKeepScroll();
-    }, 350);
-  }
-  function navigatePlay(next) {
-    ui.playHistory.push({...ui.play,scrollTop:viewport.querySelector('.play-content')?.scrollTop || 0});
-    ui.play = {...ui.play,...next}; ui.overlay = ''; render();
-  }
   // Google+ Photos (the Nexus 6's Photos) over the simulator's pictures.
   const photosContext = () => ({data, ui, t: key => i18n.t(key), locale: i18n.locale(), media: ICSMedia, groups: LPGallery.groups(data, 'album', i18n.locale())});
   // Google+'s photo editor (plus-editor.js) over the same pictures.
@@ -1642,7 +1596,6 @@
     if(id==='browser'){delete data.browserSession;data.browserHistory=clone(defaultData.browserHistory);data.bookmarks=clone(defaultData.bookmarks||[]);data.savedPages=[];ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);syncBrowserState();}
     if(id==='music'){ui.music=ICSMusic.restore();saveMusic();}
     if(id==='gallery'){data.photos=clone(defaultData.photos);}
-    if(id==='play-store')delete data.playRatings;
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
   }
 
@@ -1864,60 +1817,6 @@
       case 'widget-photo-image': configurePhotoWidget({source: 'photo', photo: Number(id)}); break;
       case 'widget-photo-cancel': cancelPhotoWidget(); break;
       case 'photos-set-wallpaper': ui.overlay = ''; openApp('photos'); break;
-      case 'market': openApp('play-store'); break;
-      case 'play-menu': case 'jbp-menu': ui.overlay = 'play-menu'; renderOverlay(); break;
-      case 'jbp-section': jbPlayGo({page: 'section', section: id, tab: button.dataset.tab || 'Home'}); break;
-      case 'jbp-tab': if (id) { ui.market.tab = id; render(); viewport.querySelector('.jbp-tabs button.on')?.scrollIntoView({inline: 'center', block: 'nearest'}); } break;
-      case 'jbp-detail': jbPlayGo({page: 'detail', selected: id, expanded: false}); break;
-      case 'jbp-card-menu': { const rect = button.getBoundingClientRect(), box = screen.getBoundingClientRect(); ui.marketTarget = id; ui.marketPopTop = Math.round((rect.bottom - box.top) / (box.height / screen.offsetHeight)) - 26; ui.overlay = 'jbp-card'; renderOverlay(); break; }
-      case 'jbp-wish': { const list = data.marketWishlist || [], had = list.includes(id); data.marketWishlist = had ? list.filter(x => x !== id) : [...list, id]; save(); ui.overlay = ''; renderOverlay(); jbPlayKeepScroll(); break; }
-      case 'jbp-buy': { const item = JBPlay.find(id); ui.overlay = ''; renderOverlay(); if (item && item.price !== 'FREE') { toast(JBPlay.text(i18n.language, 'Unavailable')); break; } ui.marketTarget = id; ui.marketPermOpen = ''; ui.marketPermView = false; ui.overlay = 'jbp-perms'; renderOverlay(); break; }
-      case 'jbp-accept': ui.overlay = ''; renderOverlay(); jbPlayDownload(id); break;
-      case 'jbp-cancel': clearInterval(ui.marketTimer); ui.marketDownload = null; data.notifications = data.notifications.filter(n => n.kind !== 'market-dl'); save(); renderStatus(); render(); break;
-      case 'jbp-open': { const item = JBPlay.find(id); if (item?.app) openApp(item.app); else if (StoreHost.runtime(id)) { storeAppsSync(); openApp(StoreHost.runtime(id)); } else toast(JBPlay.text(i18n.language, 'Unavailable')); break; }
-      case 'jbp-uninstall': ui.overlay = ''; renderOverlay(); storeUninstall(id); save(); render(); break;
-      case 'jbp-uninstall-ask': ui.marketTarget = id; ui.overlay = 'jbp-uninstall'; renderOverlay(); break;
-      case 'jbp-archive': data.marketEverInstalled = (data.marketEverInstalled || []).filter(x => x !== id); save(); jbPlayKeepScroll(); break;
-      case 'jbp-rate-dialog': ui.marketTarget = id; ui.marketRateDraft = button.dataset.stars ? Number(button.dataset.stars) : undefined; ui.overlay = 'jbp-rate'; renderOverlay(); break;
-      case 'jbp-rate-pick': ui.marketRateDraft = Number(id); renderOverlay(); break;
-      case 'jbp-rate-ok': data.marketRated = {...(data.marketRated || {}), [id]: ui.marketRateDraft ?? (data.marketRated || {})[id] ?? 0}; save(); ui.overlay = ''; renderOverlay(); jbPlayKeepScroll(); break;
-      case 'jbp-content-filter': ui.marketFilterDraft = undefined; ui.overlay = 'jbp-filter'; renderOverlay(); break;
-      case 'jbp-filter-pick': { const levels = ['Everyone', 'Low maturity', 'Medium maturity', 'High maturity', 'Show all apps'], cur = ui.marketFilterDraft || jbPlayContext().prefs.filter || levels; let next = cur.includes(id) ? cur.filter(x => x !== id && (id !== 'Show all apps' ? x !== 'Show all apps' : true)) : [...cur, id]; if (id === 'Show all apps') next = cur.includes(id) ? [] : levels; else if (levels.slice(0, 4).every(l => next.includes(l))) next = levels; ui.marketFilterDraft = next; renderOverlay(); break; }
-      case 'jbp-filter-ok': data.marketPrefs = {...jbPlayContext().prefs, filter: ui.marketFilterDraft || jbPlayContext().prefs.filter}; save(); ui.overlay = ''; renderOverlay(); break;
-      case 'lpp-auth': ui.overlay = 'jbp-auth'; renderOverlay(); break;
-      case 'lpp-auth-pick': data.marketPrefs = {...jbPlayContext().prefs, auth: id}; save(); ui.overlay = ''; renderOverlay(); jbPlayKeepScroll(); break;
-      case 'lpp-auto-item': { const sel = ui.market?.selected, list = data.marketAuto || []; if (sel) data.marketAuto = list.includes(sel) ? list.filter(x => x !== sel) : [...list, sel]; save(); ui.overlay = ''; renderOverlay(); break; }
-      case 'jbp-noop': break;
-      case 'jbp-plus': { const list = data.marketPlus || []; data.marketPlus = list.includes(id) ? list.filter(x => x !== id) : [...list, id]; save(); jbPlayKeepScroll(); break; }
-      case 'jbp-my-apps': jbPlayGo({page: 'my-apps', tab: 'INSTALLED'}); break;
-      case 'jbp-wishlist': jbPlayGo({page: 'wishlist'}); break;
-      case 'jbp-settings': jbPlayGo({page: 'settings'}); break;
-      // Share on the details page: the chooser, then the target's compose screen with the link (play-store.js).
-      case 'jbp-share': ui.marketTarget = id || ui.market?.selected; ui.overlay = 'jbp-share'; renderOverlay(); break;
-      case 'jbp-share-to': { const [app, itemId] = String(id).split('|'), item = JBPlay.find(itemId); ui.overlay = ''; renderOverlay(); if (item) driveShareText(app, JBPlay.shareLink(item), JBPlay.fmt(JBPlay.text(i18n.language, 'Check out "%1$s"'), item.name)); break; }
-      case 'jbp-dev-email': { const item = JBPlay.find(id); if (!item) break; openApp('gmail'); lp.composeEmail(null, false, JBPlay.developerEmail(item)); const d = lp.mailbox().find(m => m.id === ui.emailId); if (d) d.subject = item.name; save(); render(); break; }
-      case 'lpp-readmore': ui.market = {...(ui.market || {}), expanded: true}; jbPlayKeepScroll(); break;
-      case 'jbp-unavailable': ui.overlay = ''; renderOverlay(); toast(JBPlay.text(i18n.language, 'Unavailable')); break;
-      case 'jbp-pref': { const base = jbPlayContext().prefs; data.marketPrefs = {...base, [id]: !base[id]}; save(); jbPlayKeepScroll(); break; }
-      case 'jbp-auto-update': ui.overlay = 'jbp-auto'; renderOverlay(); break;
-      case 'jbp-auto-pick': data.marketPrefs = {...jbPlayContext().prefs, autoMode: id}; save(); ui.overlay = ''; renderOverlay(); jbPlayKeepScroll(); break;
-      case 'jbp-clear-history': data.marketSearches = []; save(); break;
-      // Play Store 4.8: the navigation drawer, the permissions note on the home page, the grouped permission rows and
-      // "Permission details", and the Require password list.
-      case 'kkp-drawer': ui.overlay = 'jbp-drawer'; renderOverlay(); break;
-      case 'kkp-home': ui.marketHistory = []; ui.market = {page: 'home'}; ui.overlay = ''; ui.marketSearching = false; render(); break;
-      case 'kkp-perm': ui.marketPermOpen = ui.marketPermOpen === id ? '' : id; renderOverlay(); break;
-      case 'kkp-perm-details': ui.marketTarget = id; ui.marketPermOpen = ''; ui.marketPermView = true; ui.overlay = 'jbp-perms'; renderOverlay(); break;
-      case 'jbp-search': ui.marketSearching = true; ui.marketEdit = ''; render(); viewport.querySelector('.jbp-bar input')?.focus(); break;
-      case 'jbp-search-run': data.marketSearches = [id, ...(data.marketSearches || []).filter(q => q !== id)].slice(0, 10); save(); jbPlayGo({page: 'search', query: id}); break;
-      case 'play-search': navigatePlay({page:'search',category:'',query:''}); viewport.querySelector('.play-search input')?.focus(); break;
-      case 'play-tab': ui.play = {...ICSPlayStore.initial(),tab:id}; ui.playHistory = []; render(); break;
-      case 'play-category': navigatePlay({page:'list',category:id,query:''}); break;
-      case 'play-detail': navigatePlay({page:'detail',selected:id,preview:0}); break;
-      case 'play-preview': navigatePlay({page:'preview',selected:id,preview:Number(button.dataset.preview || 0)}); break;
-      case 'play-preview-step': ui.play.preview = (ui.play.preview + Number(id) + 3) % 3; render(); break;
-      case 'play-open': { const entry = ICSPlayStore.catalog.find(item => item.id === id); if (entry?.app) openApp(entry.app); break; }
-      case 'play-rate': { const top = viewport.querySelector('.play-content').scrollTop; data.playRatings ||= {}; data.playRatings[ui.play.selected] = Number(id); save(); render(); viewport.querySelector('.play-content').scrollTop = top; break; }
       case 'page': setHomePage(Number(id)); break;
       case 'power-toggle':
         if (id === 'brightness') data.settings.brightness = data.settings.brightness < 30 ? 55 : data.settings.brightness < 80 ? 100 : 20;
@@ -1999,7 +1898,7 @@
       case 'sd-apps-tab': ui.settingsAppsTab=id;render();break;
       case 'sd-app-info': ui.settingsApp=id;ui.sub='app-info';render();break;
       // Uninstall on a store app's App info: UninstallerActivity's question, then the app goes and App info closes.
-      case 'sd-uninstall': { const r = ui.settingsApp, m = StoreHost.module(r); if (!m) break; storeContext().dialog({title: m.title, message: JBPlay.text(i18n.language, 'Do you want to uninstall this app?'), buttons: [{label: i18n.t('Cancel')}, {label: i18n.t('OK'), action: () => { storeUninstall(r.slice(6)); save(); ui.sub = 'apps'; render(); }}]}); break; }
+      case 'sd-uninstall': { const r = ui.settingsApp, m = StoreHost.module(r); if (!m) break; storeContext().dialog({title: m.title, message: JBPlay.text(i18n.language, 'Do you want to uninstall this app?'), buttons: [{label: i18n.t('Cancel')}, {label: i18n.t('OK'), action: () => { lp.storeUninstall(r.slice(6)); save(); ui.sub = 'apps'; render(); }}]}); break; }
       case 'sd-data-app': ui.settingsApp=id;ui.sub='data-app';render();break;
       case 'sd-storage-open': if(id==='gallery'||id==='music')openApp(id==='gallery'?'photos':'play-music');else{ui.sub=id;if(id==='apps')ui.settingsAppsTab='All';render();}break;
       case 'sd-battery-history': ui.sub='battery-history';render();break;
@@ -2326,8 +2225,6 @@
     if(form.dataset.form==='sx-save'){ui.systemError=ICSSystemSettings.submit(data,ui,values);if(ui.systemError){ui.systemValues=Object.fromEntries(values);renderOverlay();return;}save();ui.overlay='';render();return;}
     if(form.dataset.form==='sx-vpn-connect'){ui.vpnConnected=ui.vpnConnected===ui.systemId?null:ui.systemId;ui.overlay='';render();return;}
     if(form.dataset.form==='sx-profile-delete'){ICSSystemSettings.removeProfile(data,ui);save();ui.overlay='';render();return;}
-    if (form.dataset.form === 'jbp-search') { const q = String(values.get('query') || '').trim(); if (!q) return; data.marketSearches = [q, ...(data.marketSearches || []).filter(x => x !== q)].slice(0, 10); save(); jbPlayGo({page: 'search', query: q}); return; }
-    if (form.dataset.form === 'play-search') { ui.play.query = String(values.get('query') || '').trim(); render(); return; }
     if (form.dataset.form === 'wifi-add') {
       const name = String(values.get('ssid') || '').trim();
       const security = values.get('security');
@@ -2365,13 +2262,6 @@
       default: break;
     }
   });
-  // Play Store 5.2 details: the toolbar floats clear over the hero and takes the corpus colour once the hero has scrolled
-  // under it (FinskyHeaderListLayout).
-  document.addEventListener('scroll', event => {
-    const list = event.target; if (!list?.matches?.('.lpp-detail .jbp-scroll')) return;
-    const bar = list.parentElement.querySelector('.lpp-bar.overlay'), hero = list.querySelector('.lpp-hero');
-    if (bar && hero) bar.classList.toggle('solid', list.scrollTop > hero.offsetHeight - bar.offsetHeight);
-  }, true);
   document.addEventListener('input', event => {
     // The screens' own fields (lp-*.js modules).
     if (LP.input(event)) return;
@@ -2395,8 +2285,6 @@
       viewport.querySelector('.camera-focus-area .media-photo').src=ICSMedia.image(ICSMedia.scene(data));
       viewport.querySelector('.camera-zoom output').textContent=Number(event.target.value).toFixed(1)+'×';return;
     }
-    if (event.target.closest('.jbp-bar.searching')) { ui.marketEdit = event.target.value; const view = viewport.querySelector('.jbp'); view?.querySelector('.jbp-suggest')?.remove(); const tmp = document.createElement('div'); tmp.innerHTML = JBPlay.render(jbPlayContext()); const sug = tmp.querySelector('.jbp-suggest'); if (sug && view) view.append(sug); return; }
-    if (event.target.matches('[data-jbp-auto]')) { const id = event.target.dataset.jbpAuto, list = data.marketAuto || []; data.marketAuto = event.target.checked ? [...new Set([...list, id])] : list.filter(x => x !== id); save(); return; }
     if (event.target.matches('[data-gnr-title]')) { if (ui.gnowDraft) ui.gnowDraft.title = event.target.value; return; }
     if (event.target.matches('[data-keep-li]')) { const item = keepCurrent()?.list?.[Number(event.target.dataset.keepLi)]; if (item) { item.text = event.target.value; save(); } return; }
     if (event.target.matches('.keep-text')) { const note = (data.keepNotes || []).find(item => item.id === ui.keepNote); if (note) { note.text = event.target.value; save(); } return; }
@@ -3140,13 +3028,7 @@
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
     if (LP.module('wallpaper-picker').pointerup()) return;
     if (LP.module('clock').pointerup(event, dx)) return;
-    // Play Store 4.8: a swipe from the left edge of a top-level page opens the drawer, a swipe to the left closes it.
-    if (ui.view === 'play-store' && Math.abs(dx) > dp(55) && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      const left = (pointerStart.x - screen.getBoundingClientRect().left) / (screen.getBoundingClientRect().width / screen.offsetWidth);
-      if (!ui.overlay && dx > 0 && left < 20 && ['home', 'my-apps', 'wishlist'].includes(ui.market?.page || 'home')) { ui.overlay = 'jbp-drawer'; renderOverlay(); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
-      if (ui.overlay === 'jbp-drawer' && dx < 0) { ui.overlay = ''; renderOverlay(); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
-    }
-    if (ui.view === 'play-store' && (ui.market?.page === 'section' || ui.market?.page === 'my-apps') && !ui.overlay && pointerStart.target.closest('.jbp-scroll') && Math.abs(dx) > dp(66) && Math.abs(dx) > Math.abs(dy) * 1.5) { const tabs = [...viewport.querySelectorAll('.jbp-tabs button')], i = tabs.findIndex(b => b.classList.contains('on')), next = tabs[i + (dx < 0 ? 1 : -1)]; if (next) next.click(); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
+    if (LP.module('play-store').pointerup(event, dx, dy)) return;
     if (LP.module('calendar').pointerup(event, dx)) return;
     if (pointerStart.photoSwiping) { if (Math.abs(dy) > dp(33)) stepPhotoStack(pointerStart.photoStack, dy > 0 ? 1 : -1); else render(); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if (pointerStart.gallerySwiping) { if(Math.abs(dx)>dp(50))galleryStep(dx<0?1:-1);else render();suppressClickUntil=Date.now()+350;pointerStart=null;return; }
@@ -3385,10 +3267,12 @@
 
   // lp:kernel (the core's bindings the lp-*.js modules use, live; written by the migration's move tool)
   LP.kernel({
-    get addNotification() { return addNotification; }, get captureRecentView() { return captureRecentView; },
-    get clock() { return clock; }, get clone() { return clone; }, get contact() { return contact; },
+    get addNotification() { return addNotification; }, get appNames() { return appNames; },
+    get captureRecentView() { return captureRecentView; }, get clock() { return clock; },
+    get clone() { return clone; }, get contact() { return contact; },
     get data() { return data; }, set data(v) { data = v; }, get defaultData() { return defaultData; },
-    get deviceDate() { return deviceDate; }, get dp() { return dp; }, get editorContext() { return editorContext; },
+    get deviceDate() { return deviceDate; }, get dp() { return dp; },
+    get driveShareText() { return driveShareText; }, get editorContext() { return editorContext; },
     get emailData() { return emailData; }, get galleryWallpaper() { return galleryWallpaper; },
     get headsUp() { return headsUp; }, get holdDelay() { return holdDelay; }, get home() { return home; },
     get homeLongPressTimer() { return homeLongPressTimer; }, set homeLongPressTimer(v) { homeLongPressTimer = v; },
@@ -3402,7 +3286,7 @@
     get render() { return render; }, get renderOverlay() { return renderOverlay; },
     get renderStatus() { return renderStatus; }, get REPLIES() { return REPLIES; }, get safe() { return safe; },
     get save() { return save; }, get screen() { return screen; }, get snapResting() { return snapResting; },
-    get storeContext() { return storeContext; },
+    get storeAppsSync() { return storeAppsSync; }, get storeContext() { return storeContext; },
     get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; },
     get suppressReleaseClick() { return suppressReleaseClick; }, get syncBrowserState() { return syncBrowserState; },
     get toast() { return toast; }, get today() { return today; }, get ui() { return ui; },
