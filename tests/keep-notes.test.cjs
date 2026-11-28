@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource = require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Keep list and picture notes (audit step 5): Keep 1.0 (4.3), 2.0 (4.4.4) and 3.0 (5.1.1).
 const list=['Milk','Eggs','Bread','Coffee','Apples','Butter','Cheese'].map((text,i)=>({text,checked:i===1||i===4}));
@@ -31,7 +32,7 @@ for(const [v,max,checked] of [['4.3',4,'kp-ic_checked_dark.png'],['4.4.4',4,'kp2
   for(const key of ['List item','Hide checkboxes','Delete checked items?','Remove photo?'])assert.ok(strings.includes(`"${key}"`),`${v} ${key}`);
   for(const f of [checked,'kp'+(v==='4.3'?'':v==='4.4.4'?'2':'3')+'-'+(v==='5.1.1'?'ic_material_delete_dark.png':'ic_delete_dark.png')])assert.ok(fs.existsSync(`versions/${v}/assets/${f}`),f);
   // simulator.js: the actions, the list item form and the picture flows.
-  const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');
+  const sim=engineSource(v);
   for(const a of ['keep-new-list','keep-li-check','keep-li-delete','keep-checkboxes','keep-hide-delete','keep-photo-take','keep-photo-delete','keep-li-add'])assert.ok(sim.includes(`case '${a}'`),`${v} ${a}`);
   // Choose photo goes through the image's document picker: 4.4.4's own, 5.1.1's DocumentsUI (lp-docpicker.js).
   if(v!=='4.3')assert.ok(sim.includes("case 'keep-photo-choose'")&&(v==='5.1.1'?sim.includes("docPick('keep', 'image/*')")&&sim.includes("if (caller === 'keep')"):sim.includes("if (ui.docPickFor === 'keep')")),v);

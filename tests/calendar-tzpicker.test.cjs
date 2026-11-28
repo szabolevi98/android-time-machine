@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource = require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // TimeZonePickerDialog of the 4.3 / 4.4.4 / 5.1.1 Calendar (tzpicker.js, generated from each image).
 const same=(a,b,m)=>assert.equal(JSON.stringify(a),JSON.stringify(b),m);
@@ -52,7 +53,7 @@ for(const v of ['4.3','4.4.4','5.1.1']){
   // saveRecentTimezone: the newest last, three at most.
   same(P.saveRecent(null,'Asia/Tokyo'),['Asia/Tokyo']);
   same(P.saveRecent(['A','B','C'],'D'),['B','C','D']);same(P.saveRecent(['A','B','C'],'A'),['B','C','A']);
-  const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');
+  const sim=engineSource(v);
   for(const action of ['caltz','tzp-field','tzp-filter','tzp-clear','tzp-pick'])assert.ok(sim.includes(`case '${action}'`),v+' '+action);
   assert.ok(fs.existsSync(`versions/${v}/assets/tzp-ic_search_holo_light.png`)&&fs.existsSync(`versions/${v}/assets/tzp-ic_clear_search_holo_light.png`),v);
 }

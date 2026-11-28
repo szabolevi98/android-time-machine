@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource = require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Play Books' reader settings and contents (audit step 6): the Display options in each image's order with working
 // theme / typeface / alignment / brightness / size / line height, and the chapter list that jumps to a chapter.
@@ -57,7 +58,7 @@ const load=(v,files)=>{const context={window:{}};for(const f of files)vm.runInNe
   const toc=P.render(ctx({bkToc:true}));
   assert.ok(toc.includes('bk33-ic_close_wht_24dp')&&toc.includes('aria-label="Close table of contents"')&&toc.includes('<b>Pride and Prejudice</b>')&&toc.includes('class="current" data-action="bk-chapter" data-id="4"'));
   assert.ok(P.render(ctx({bkToc:true,bkTocTab:'bookmarks'})).includes('To add a bookmark, touch the top corner of the page'));
-  assert.ok(fs.readFileSync('versions/5.1.1/simulator.js','utf8').includes("Play Books 3.3.15's reader"));
+  assert.ok(engineSource('5.1.1').includes("Play Books 3.3.15's reader"));
 }
 // 4.0.4: Play Books 2.3.6: the Contents ListPopupWindow, fragment_reader.xml's overflow and ReaderSettingsFragment's panel
 // (THEME, TYPEFACE, TEXT ALIGNMENT, BRIGHTNESS, then FONT SIZE beside LINE HEIGHT); text zoom steps 0.1, line height 1.55 + 0.25.

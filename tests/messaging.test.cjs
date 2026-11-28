@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource = require('./lib/engine-source.cjs');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
@@ -39,7 +40,7 @@ for (const [v, cell] of [['4.0.4', false], ['4.3', true]]) {
   assert.equal(S.SMILEYS.length, 21);
   for (const [name, , icon] of S.SMILEYS) { assert.ok(S.has(name), `${v} ${name}`); assert.ok(fs.existsSync(`versions/${v}/assets/mms-emo_im_${icon}.png`), `${v} ${icon}`); }
   for (const f of ['mms-ic_lock_message_sms.png', 'mms-ic_dialog_alert_holo_light.png']) assert.ok(fs.existsSync(`versions/${v}/assets/${f}`), `${v} ${f}`);
-  const sim = fs.readFileSync(`versions/${v}/simulator.js`, 'utf8'), index = fs.readFileSync(`versions/${v}/index.html`, 'utf8');
+  const sim = engineSource(v), index = fs.readFileSync(`versions/${v}/index.html`, 'utf8');
   assert.ok(index.indexOf('mms-strings.js') > 0 && index.indexOf('mms-strings.js') < index.indexOf('messaging.js'), `${v} loads mms-strings.js first`);
   assert.equal(/Cell broadcasts/.test(sim), cell, `${v} Cell broadcasts menu item`);
   assert.doesNotMatch(sim, /Delete this conversation or message from the simulator/);

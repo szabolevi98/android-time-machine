@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource = require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const context={window:{}};vm.runInNewContext(fs.readFileSync('versions/4.3/launcher-clings.js','utf8'),context);
 const c=context.window.LauncherClings,t=k=>k;
@@ -19,5 +20,5 @@ assert.ok(html.includes('Choose some apps')&&html.includes('cling-hand')&&html.i
 assert.ok(c.markup('workspace',t,[1,1]).includes('To see all your apps, touch the circle.'));
 assert.ok(!c.markup('folder',t,null).includes('cling-punch'));
 for(const v of ['4.0.4','4.3'])for(const f of ['bg_cling1','bg_cling2','bg_cling3','cling','hand','btn_cling_normal','btn_cling_pressed'])assert.ok(fs.existsSync(`versions/${v}/assets/cling-${f}.png`),`${v} ${f}`);
-for(const v of ['4.0.4','4.3']){const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');assert.ok(sim.includes('if (!saved.clings) result.clings = LauncherClings.dismissedAll();'),'saved desktops skip the first-run clings');}
+for(const v of ['4.0.4','4.3']){const sim=engineSource(v);assert.ok(sim.includes('if (!saved.clings) result.clings = LauncherClings.dismissedAll();'),'saved desktops skip the first-run clings');}
 console.log('Launcher cling checks passed: timings, scaling, when each cling shows, markup and assets.');

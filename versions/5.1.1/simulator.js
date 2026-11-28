@@ -1,6 +1,8 @@
 /* Android 5.1.1 Lollipop browser simulation (Nexus 6, LMY48Y). No network or Android runtime required. */
 (() => {
   'use strict';
+  // The migrated screens' shared names (lp-core.js): what they add, and the core's bindings they use (lp:kernel below).
+  const lp = LP.live;
 
   // Each user of lp-users.js keeps a phone of its own: the owner's key, or the key with "-<id>" (sessionStorage lp-user).
   const STORE = 'android-time-machine-lp-v1' + (() => { try { const u = sessionStorage.getItem('lp-user'); return u && u !== 'owner' ? `-${u}` : ''; } catch { return ''; } })();
@@ -135,7 +137,7 @@
     dial: '', callNumber: '', aboutTaps: 0, buildTaps: 0, easterNyan: false, settingsRootScroll: 0,
     browserUrl: data.browserHistory.at(-1) || 'www.google.com', browserHistory: [...data.browserHistory], browserIndex: data.browserHistory.length - 1, browserTabs: [data.browserHistory.at(-1) || 'www.google.com'], browserTab: 0,
     calendarMode: ['Agenda','Day','Week','Month'].includes(data.calendarMode)?data.calendarMode:'Agenda', selectedDate: localDate(ICSSystemSettings.wallDate(data)),
-    calc: '', calcFresh: false, calcPanel: 0, calcHistoryIndex: -1, phoneTab: 'dialpad',
+    phoneTab: 'dialpad',
     play: ICSPlayStore.initial(), playHistory: [],
     musicPlaying: false, musicTrack: 0, musicPosition: 0,
     emailId: 1, recent: [], recentSnapshots: {}, toastTimer: null, wifiTarget: '', bluetoothScanned: false
@@ -242,7 +244,7 @@
     for (let i = apps.length - 1; i >= 0; i--) if (String(apps[i][0]).startsWith('store-') && !want.includes(apps[i][0])) { delete appNames[apps[i][0]]; apps.splice(i, 1); }
   }
   storeAppsSync();
-  function storeContext() { return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, notify: (title, text) => addNotification(title, text), menuClass: 'lp-popup-menu', lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key)}); }
+  function storeContext() { return StoreHost.context(Object.create(lp, Object.getOwnPropertyDescriptors({data, ui, save, render, renderOverlay, toast, openApp, screen, notify: (title, text) => addNotification(title, text), menuClass: 'lp-popup-menu', lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key)}))); }
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
   function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (jbPlayContext().prefs.shortcuts) placeShortcut(r, appNames[r]); }
   // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
@@ -834,7 +836,7 @@
     return `<div class="app-view lp-lw-empty"><p>${safe(i18n.t('No live wallpapers.'))}</p></div>`;
   }
   function renderApp() {
-    if (StoreHost.has(ui.view)) return StoreHost.render(ui.view, storeContext());
+    if (StoreHost.module(ui.view)?.render) return StoreHost.render(ui.view, storeContext());
     if (ui.view === 'phone' && LPDialerPrefs.PAGES.includes(ui.sub)) return LPDialerPrefs.render({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
     if (ui.sub === 'sim-import' && ['people', 'phone'].includes(ui.view)) return PeopleIO.sim({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
     // Contacts to display, Customize and Settings (people-io.js).
@@ -857,10 +859,8 @@
       case 'camera': return renderCamera();
       case 'calendar': return renderCalendar();
       case 'clock': return renderClock();
-      case 'calculator': return renderCalculator();
       case 'email': return renderEmail();
       case 'docs': case 'sheets': case 'slides': case 'fit': case 'newsstand': case 'wallet': return LPExtraApps.render(ui.view, {news: ui.view === 'newsstand' ? newsContext() : null, files: officeFiles(), ui, data, t: key => i18n.t(key), locale: i18n.locale()});
-      case 'downloads': return LPDownloads.render(data.downloads || [], ui, key => i18n.t(key), i18n.locale());
       default: return renderHome();
     }
   }
@@ -955,7 +955,7 @@
   const printContext = () => ({ui, data, root: overlayRoot, language: i18n.language, locale: i18n.locale(), t: key => i18n.t(key), save, renderOverlay, toast: message => toast(i18n.t(message)), mime: name => LPDownloads.mime(name), saved: () => { if (ui.view === 'downloads') render(); }});
   const chromeText = key => AndroidStrings.pick(window.StockStrings?.chrome?.[key], i18n.locale(), key);
   function navigateBack() {
-    if ((ui.overlay === 'store-host' || !ui.overlay && StoreHost.has(ui.view)) && StoreHost.back(storeContext())) return;
+    if ((ui.overlay === 'store-host' || !ui.overlay && ui.view.startsWith('store-')) && StoreHost.back(storeContext())) return;
     if (ui.overlay === 'print') { const u = ui.print; if (u?.step === 'printers') { u.step = 'config'; renderOverlay(); } else if (u?.expanded) { u.expanded = false; renderOverlay(); } else { ui.print = null; ui.overlay = ''; renderOverlay(); } return; }
     if (ui.view === 'settings' && ui.sub.startsWith('lng-') && !ui.overlay && InputLanguage.back(langContext())) return;
     if (ui.view === 'google-search' && ui.voiceFromSettings && ui.sub === 'settings' && !ui.overlay && !(ui.lsStack || []).length) { ui.voiceFromSettings = false; openApp('settings'); ui.sub = 'language'; render(); return; }
@@ -1029,7 +1029,7 @@
     if(ui.view==='music' && ui.sub==='queue'){ui.sub='player';render();return;}
     if (ui.view === 'play-store' && ui.marketSearching) { ui.marketSearching = false; render(); return; }
     if (ui.view === 'play-store' && ui.marketHistory?.length) { const prev = ui.marketHistory.pop(); ui.market = prev; render(); const list = viewport.querySelector('.jbp-scroll'); if (list) list.scrollTop = prev.scroll || 0; return; }
-    if (ui.view === 'calculator' && ui.calcPanel) { setCalculatorPanel(0); return; }
+    if (ui.view === 'calculator' && StoreHost.back(storeContext())) return;
     if (ui.view === 'drawer' && ui.drawerWidgets) { ui.drawerWidgets = false; ui.drawerPage = 0; home(false); ui.overview = true; render(); return; }
     if (ui.view === 'home' && ui.overview) { ui.overview = false; render(); return; }
     if (ui.view === 'wallpaper-picker' && ui.wp?.checked?.length) { ui.wp.checked = []; wallpaperPickerRender(); return; }
@@ -1157,6 +1157,8 @@
         const shade = overlayRoot.querySelector('.lp-shade'), scrim = overlayRoot.querySelector('.lp-shade-scrim');
         LPShade.animate(shade, 0, LPShade.maxHeight(shade), {scrim, done: () => LPShade.settle(shade, scrim)});
       }
+    } else if (LP.overlay(ui.overlay, overlayRoot)) {
+      // A screen's own menu or dialog (lp-*.js modules).
     } else if (ui.overlay === 'store-host') {
       overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
     } else if (ui.overlay === 'dream') {
@@ -1165,8 +1167,6 @@
       overlayRoot.innerHTML = KKDeskClock.picker(ui.kdcPicker, {t: key => i18n.t(key), hour24: !!data.settings.hour24, accent: ui.kdcPicker.zen ? '#009688' : undefined});
     } else if (ui.overlay === 'kk-cast-menu') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu"><button data-action="kk-cast-enable" role="menuitemcheckbox" aria-checked="${!!data.settings.wifiDisplay}" class="kk-check-item">${safe(i18n.t('Enable wireless display'))}<img src="assets/btn_check_${data.settings.wifiDisplay ? 'on' : 'off'}_holo_dark.png" alt=""></button></div>`;
-    } else if (ui.overlay === 'ldu-sort' || ui.overlay === 'ldu-overflow') {
-      overlayRoot.innerHTML = LPDownloads.menu(ui.overlay.slice(4), ui, key => i18n.t(key));
     } else if (ui.overlay.startsWith?.('ldp-') && ui.docs) {
       overlayRoot.innerHTML = LPDocPicker.menu(ui.overlay.slice(4), docContext());
     } else if (ui.overlay === 'lp-zen-drop') {
@@ -1286,8 +1286,6 @@
     } else if (ui.overlay === 'sa-menu') {
       // The Google apps' action bar overflow (StockApps.menu: their menu XML's overflow items).
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${StockApps.menu(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()}).map(item => `<button data-action="${item.action}"${item.id != null ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'calc-menu') {
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu"><button data-action="calc-clear">Clear history</button><button data-action="calc-panel" data-id="${ui.calcPanel ? 0 : 1}">${ui.calcPanel ? 'Basic panel' : 'Advanced panel'}</button></div>`;
     } else if (ui.overlay === 'phone-menu') {
       // The dialer's popup menus (LPDialer.menu); the dialpad's opens over its overflow button (PopupMenu, overlapAnchor).
       const items = LPDialer.menu(ui.phoneMenu, {data, t: phoneText, byPhone: contactByPhone});
@@ -1970,38 +1968,6 @@
     clearTimeout(clockSilenceTimer); { const after = Number(ClockPrefs.prefs(data).silence), ringing = ui.ringingAlarm; if (after > 0) clockSilenceTimer = setTimeout(() => { if (ui.overlay === 'clock-ringing' && ui.ringingAlarm === ringing) { ui.overlay = ''; render(); } }, after * 60000); }
   }
 
-  /* Calculator 5.1 (packages/apps/Calculator android-5.1.1_r26, activity_calculator_port): the white display (4 dp
-     elevation) with the formula (sans-serif-light, #8A000000, 64 sp shrinking in 8 sp steps to 36 sp; 48 dp above,
-     24 dp below, 16 dp sides) and the live result (36 sp #6C000000); below, the #434343 numeric pad (12 dp in, 32 sp
-     white keys: 7 8 9 / 4 5 6 / 1 2 3 / . 0 =) beside the #636363 operator column (DEL or CLR in 15 sp caps, ÷ × − +
-     in 23 sp), and the #1DE9B6 advanced pad peeking 24 dp at the right edge (sin cos tan / ln log ! / π e ^ / ( ) √,
-     20 sp #91000000), swiped or tapped in. The status bar is the #00BCD4 accent; clearing reveals it over the display. */
-  const LP_CALC_PEEK = 21.74;
-  function calcPreview(expression) {
-    if (!expression || expression === 'Error' || !/[÷×−+^!√(]|sin|cos|tan|ln|log|π|e/.test(expression.replace(/^−/, ''))) return '';
-    try { const value = ICSCalculator.evaluate(expression); return value === expression ? '' : value; } catch { return ''; }
-  }
-  function renderCalculator() {
-    const numeric = ['7','8','9','4','5','6','1','2','3','.','0','='];
-    const operators = ['÷','×','−','+'];
-    const advanced = ['sin','cos','tan','ln','log','!','π','e','^','(',')','√'];
-    const key = (k, cls = '') => `<button class="lpcalc-key ${cls}" data-action="calc-key" data-id="${k}">${k}</button>`;
-    const error = ui.calc === 'Error', formula = error ? '' : ui.calc, result = error ? i18n.t('Error') : ui.calcFresh ? '' : calcPreview(ui.calc);
-    const width = 343 / .906, len = Math.max(1, [...formula].length);
-    const size = [64, 56, 48, 40, 36].find(sp => len * .55 * sp <= width) || 36;
-    const reveal = ui.calcReveal && Date.now() - ui.calcReveal < 600 ? `<span class="lpcalc-reveal${ui.calcRevealError ? ' error' : ''}"></span>` : '';
-    return `<div class="app-view lpcalc"><div class="lpcalc-display">${reveal}<output class="lpcalc-formula" aria-label="${safe(i18n.t('Calculator display'))}" style="font-size:calc(${size} * var(--dp))">${safe(formula)}</output><output class="lpcalc-result${error ? ' error' : ''}">${safe(result)}</output></div><div class="calc-pager lpcalc-pager"><div class="calc-panels lpcalc-track" style="transform:translateX(${ui.calcPanel ? `calc(-100% + ${LP_CALC_PEEK}px)` : '0'})"><div class="lpcalc-main" ${ui.calcPanel ? 'inert' : ''}><div class="lpcalc-numeric">${numeric.map(k => key(k, k === '=' ? 'eq' : 'digit')).join('')}</div><div class="lpcalc-operators">${ui.calcFresh || error ? `<button class="lpcalc-key text" data-action="calc-key" data-id="C">${safe(i18n.t('clr').toUpperCase())}</button>` : `<button class="lpcalc-key text" data-action="calc-key" data-id="⌫">${safe(i18n.t('del').toUpperCase())}</button>`}${operators.map(k => key(k, 'op')).join('')}</div></div><div class="lpcalc-advanced"${ui.calcPanel ? '' : ` data-action="calc-panel" data-id="1"`}><div class="lpcalc-advanced-grid" ${ui.calcPanel ? '' : 'inert'}>${advanced.map(k => key(k, 'adv')).join('')}</div></div></div></div></div>`;
-  }
-  function setCalculatorPanel(index) {
-    ui.calcPanel = index;
-    const track = viewport.querySelector('.calc-panels');
-    if (!track) return;
-    track.style.transition = '';
-    track.style.transform = index ? `translateX(calc(-100% + ${LP_CALC_PEEK}px))` : 'translateX(0)'; snapResting(track);
-    const main = track.querySelector('.lpcalc-main'), grid = track.querySelector('.lpcalc-advanced-grid'), adv = track.querySelector('.lpcalc-advanced');
-    if (main) main.inert = !!index; if (grid) grid.inert = !index;
-    if (adv) { if (index) { delete adv.dataset.action; delete adv.dataset.id; } else { adv.dataset.action = 'calc-panel'; adv.dataset.id = '1'; } }
-  }
   function saveMusic() {
     ui.musicTrack=ui.music.track;ui.musicPlaying=ui.music.playing;ui.musicPosition=ui.music.position;
     data.music=clone(ui.music);delete data.music.playing;save();
@@ -2125,27 +2091,10 @@
     if(id==='gallery'){data.photos=clone(defaultData.photos);}
     if(id==='camera')delete data.cameraSettings;
     if(id==='phone'){data.callHistory=[];ui.activeCall=null;}
-    if(id==='calculator'){ui.calc='';ui.calcHistoryIndex=-1;data.calcHistory=[];}
     if(id==='play-store')delete data.playRatings;
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
   }
 
-  function operateCalculator(key) {
-    if (key === 'C') { ui.calcRevealError = ui.calc === 'Error'; ui.calcReveal = Date.now(); ui.calc = ''; ui.calcFresh = false; return; }
-    if (key === '⌫') { ui.calc = ui.calc === 'Error' ? '' : ui.calc.replace(/(?:sin|cos|tan|log|sqrt|√|ln)\($|.$/, ''); ui.calcFresh = false; return; }
-    if (key === '=') {
-      if (!ui.calc || ui.calc === 'Error') return;
-      try { const expression = ui.calc; ui.calc = ICSCalculator.evaluate(expression); data.calcHistory = [...(data.calcHistory || []), {expression, result:ui.calc}].slice(-50); ui.calcHistoryIndex = -1; save(); } catch { ui.calc = 'Error'; }
-      ui.calcFresh = true; return;
-    }
-    if (ui.calc.length > 150) return;
-    const operator = ['÷','×','−','+','^','!'].includes(key);
-    if (ui.calc === 'Error' || ui.calcFresh && !operator) ui.calc = '';
-    ui.calcFresh = false;
-    const token = key === '√' ? '√(' : /^(sin|cos|tan|ln|log)$/.test(key) ? `${key}(` : key;
-    if (operator && key !== '!' && /[÷×−+^]$/.test(ui.calc) && key !== '−') ui.calc = ui.calc.slice(0,-1);
-    ui.calc += token;
-  }
   // QS tile clicks (QSTile.handleClick): Wi-Fi, Bluetooth, airplane, rotation, flashlight, location, invert and hotspot
   // toggle in place; Cellular opens data usage and Cast its settings, as their details point there.
   function lpQsToggle(id) {
@@ -2354,6 +2303,8 @@
     if (action.startsWith('mps-') && window.MapsPrefs?.handle(action, id, mapsPrefsContext())) return;
     if (ui.view === 'youtube' && action.startsWith('yt10-') && LPYouTube.handle(action, id, ytContext())) return;
     if (ui.view === 'google-search' && action.startsWith('lsp-') && LPSearchPrefs.handle(action, id, gsContext())) return;
+    // The screens' own buttons (lp-*.js modules).
+    if (LP.click(action, button, event)) return;
     switch (action) {
       case 'open-app': if (GEL_UNSIMULATED.includes(app)) { toast(i18n.t('This app is not part of the simulator.')); break; } {
         const icon = button.closest('.launcher-icon, .drawer-app, .dock-app') || button;
@@ -2588,10 +2539,6 @@
       case 'kk-sms-app': ui.overlay = 'kk-sms-app'; renderOverlay(); break;
       case 'kk-cast-menu': ui.overlay = 'kk-cast-menu'; renderOverlay(); break;
       case 'kk-cast-enable': data.settings.wifiDisplay = !data.settings.wifiDisplay; save(); ui.overlay = ''; render(); break;
-      case 'ldu-menu': ui.overlay = `ldu-${id}`; renderOverlay(); break;
-      case 'ldu-sort': ui.dlSort = id; ui.overlay = ''; render(); break;
-      case 'ldu-view': ui.dlGrid = id === 'grid'; ui.overlay = ''; render(); break;
-      case 'ldu-search': toast('No items'); break;
       case 'settings-sub': ui.overlay = ''; if (id === 'development' && !data.settings.developerUnlocked) break; if (ui.view === 'settings' && !ui.sub) ui.settingsRootScroll = viewport.querySelector('.settings-app')?.scrollTop || 0; ui.sub = id; render(); break;
       case 'sd-dialog': ui.settingsField=id;ui.overlay='sd-dialog';renderOverlay();break;
       case 'sd-apps-tab': ui.settingsAppsTab=id;render();break;
@@ -2910,8 +2857,6 @@
       case 'chrome-a2hs-add': { const title = String(overlayRoot.querySelector('[data-a2hs-title]')?.value || ui.a2hs?.title || '').trim() || ui.a2hs.url; const item = {id: Date.now(), title, url: ui.a2hs.url}; (data.webShortcuts ||= []).push(item); ui.overlay = ''; renderOverlay(); placeShortcut(`web:${item.id}`, title); break; }
       case 'open-office-shortcut': {const f=officeFiles().find(f=>f.id===id&&!f.trashed);if(f){openApp(EditorMore.APP[f.kind]);ui.sub=f.id;ui.edFrom='';render();}break;}
       case 'open-web-shortcut': { const item = (data.webShortcuts || []).find(w => String(w.id) === id); if (!item) break; openApp('chrome'); navigateBrowser(item.url); break; }
-      case 'dl-open-pdf': { const doc = (data.downloads || []).find(d => String(d.time) === id); if (doc) PrintSpooler.openPdf(printContext(), doc); break; }
-      case 'dl-open-photo': { const photo = data.photos.find(p => p.id === Number(id)); if (!photo) break; openApp('photos'); ui.photosList = 'all'; const list = PhotosApp.list(photosContext()); ui.photosIndex = Math.max(0, list.findIndex(p => p.id === photo.id)); ui.selectedPhoto = photo.id; ui.sub = 'photo'; render(); break; }
       case 'photos-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
       case 'chrome-close-all': ui.browserSession = {tabs: [{history: [ChromeApp.NTP], index: 0}], active: 0}; ui.sub = ''; ui.overlay = ''; renderOverlay(); saveBrowserState(); render(); break;
       case 'chrome-ntp': chromeSection(id); break;
@@ -3168,10 +3113,6 @@
       }
       case 'alarm-dismiss': ui.overlay=''; render(); break;
       case 'alarm-toggle': { const alarm = data.alarms.find(item => item.id === Number(id)); if (alarm) { alarm.enabled = !alarm.enabled; delete alarm.snoozedUntil; } save(); render(); break; }
-      case 'calc-menu': ui.overlay = 'calc-menu'; renderOverlay(); break;
-      case 'calc-panel': ui.overlay = ''; renderOverlay(); setCalculatorPanel(Number(id)); break;
-      case 'calc-clear': data.calcHistory = []; ui.calcHistoryIndex = -1; save(); operateCalculator('C'); ui.overlay = ''; render(); break;
-      case 'calc-key': operateCalculator(id); render(); break;
       case 'music-play': ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
       case 'music-prev': case 'music-next': ICSMusic.step(ui.music,action==='music-prev'?-1:1);saveMusic();render();break;
       case 'music-shuffle': ui.music.shuffle=!ui.music.shuffle;saveMusic();render();break;
@@ -3269,6 +3210,8 @@
       data.settings.bluetoothName = name;
       save(); ui.overlay = ''; render(); return;
     }
+    // The screens' own forms (lp-*.js modules).
+    if (LP.submit(form.dataset.form, values, event, form)) return;
     switch (form.dataset.form) {
       case 'browser-find': ui.browserFind=String(values.get('query')||'').trim(); render(); break;
       case 'people-search': ui.peopleQuery=String(values.get('query')||'').trim(); render(); break;
@@ -3348,6 +3291,8 @@
     if (bar && hero) bar.classList.toggle('solid', list.scrollTop > hero.offsetHeight - bar.offsetHeight);
   }, true);
   document.addEventListener('input', event => {
+    // The screens' own fields (lp-*.js modules).
+    if (LP.input(event)) return;
     if (['newsstand'].includes(ui.view) && NewsReader.input(event.target, newsContext())) return;
     if (PlusPost.input(event.target)) return;
     if (event.target.matches('[data-pr]') && PrintSpooler.input(event.target, printContext())) return;
@@ -3905,7 +3850,7 @@
     setHomePage(ui.page + Math.sign(delta));
   }, {passive:false});
   screen.addEventListener('dragstart', event => event.preventDefault());
-  let homeLongPressTimer = null, calculatorClearTimer = null, messageHoldTimer = null;
+  let homeLongPressTimer = null, messageHoldTimer = null;
   let kdcDialDrag = false;
   const kdcDialPick = event => { const dial = overlayRoot.querySelector('[data-kdc-dial]'); if (!dial || !ui.kdcPicker) return; const r = dial.getBoundingClientRect(); ui.kdcPicker = KKDeskClock.pick(ui.kdcPicker, (event.clientX - r.left) * dial.offsetWidth / r.width, (event.clientY - r.top) * dial.offsetHeight / r.height, dial.offsetWidth, !!data.settings.hour24); renderOverlay(); };
   overlayRoot.addEventListener('pointerdown', event => { if (!event.target.closest('[data-kdc-dial]') || event.target.closest('button')) return; kdcDialDrag = true; event.preventDefault(); kdcDialPick(event); });
@@ -4050,8 +3995,7 @@
     if (heldDrive && !ui.overlay && !ui.driveDialog) messageHoldTimer = setTimeout(() => { suppressReleaseClick(); LPDrive.handle('drv-hold', heldDrive.dataset.driveHold, {data, ui, save, render, toast, root: viewport}); }, holdDelay(550));
     if (pointerStart.lockDrag) { clearTimeout(ui.lockReleaseTimer); viewport.querySelectorAll('.lock-chevron').forEach(chevron => chevron.getAnimations().forEach(animation => animation.cancel())); screen.classList.remove('lock-releasing'); screen.classList.add('lock-dragging'); try { screen.setPointerCapture(event.pointerId); } catch {} }
     else if (ui.view === 'lock' && !ui.locked && event.target.closest('.lock-wave')) lockPing();
-    if (ui.view === 'calculator' && !ui.overlay && event.target.closest('.calc-pager')) pointerStart.calculatorSwipe = true;
-    if (event.target.closest('.ics-calc-delete button')) calculatorClearTimer = setTimeout(() => { operateCalculator('C'); suppressClickUntil = Date.now() + 350; render(); }, holdDelay(600));
+    LP.module('calculator').pointerdown(event);
     if (ui.view === 'home' && !ui.overlay) pointerStart.photoStack = event.target.closest('[data-photo-stack]')?.dataset.photoStack || '';
     if (pointerStart.source) dragTimer = setTimeout(() => startDrag(event.clientX, event.clientY), holdDelay(440));
   });
@@ -4059,16 +4003,10 @@
     if (!pointerStart || event.pointerId !== pointerStart.pointerId) return;
     if (dragState) { moveGhost(event.clientX, event.clientY); return; }
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
-    if (Math.hypot(dx,dy) > dp(9)) { clearTimeout(homeLongPressTimer); clearTimeout(calculatorClearTimer); clearTimeout(messageHoldTimer); }
+    if (Math.hypot(dx,dy) > dp(9)) { clearTimeout(homeLongPressTimer); LP.module('calculator').cancelHold(); clearTimeout(messageHoldTimer); }
     // The wallpaper strip scrolls sideways under a mouse drag as it would under a finger.
     if (pointerStart.kwpScroll && event.pointerType === 'mouse' && (pointerStart.kwpDragging || Math.abs(dx) > dp(9))) { pointerStart.kwpDragging = true; const k = screen.getBoundingClientRect().width / screen.offsetWidth || 1; pointerStart.kwpScroll.scrollLeft = pointerStart.kwpLeft - dx / k; suppressClickUntil = Date.now() + 350; event.preventDefault(); return; }
-    if (pointerStart.calculatorSwipe && (pointerStart.calculatorSwiping || Math.abs(dx) > dp(13) && Math.abs(dx) > Math.abs(dy))) {
-      pointerStart.calculatorSwiping = true; suppressClickUntil = Date.now() + 350; event.preventDefault();
-      try { screen.setPointerCapture(event.pointerId); } catch {}
-      const track = viewport.querySelector('.calc-panels');
-      if (track) { track.style.transition = 'none'; track.style.transform = `translateX(${Math.max(-(screen.clientWidth - LP_CALC_PEEK), Math.min(0, -ui.calcPanel * (screen.clientWidth - LP_CALC_PEEK) + dx))}px)`; }
-      return;
-    }
+    if (LP.module('calculator').pointermove(event, dx, dy)) return;
     if (pointerStart.drawerSwipeEligible && (pointerStart.drawerSwiping || Math.abs(dx) > dp(13) && Math.abs(dx) > Math.abs(dy) * 1.1)) {
       pointerStart.drawerSwiping = true;
       clearTimeout(dragTimer);
@@ -4184,7 +4122,7 @@
       if (ui.shadePeek) { ui.peekCollapse = true; if (ui.peekDone) closePeek(); }
       suppressClickUntil = Date.now() + 350; pointerStart = null; return;
     }
-    clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(calculatorClearTimer); clearTimeout(messageHoldTimer);
+    clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); LP.module('calculator').cancelHold(); clearTimeout(messageHoldTimer);
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
     if (pointerStart.kwpDragging) { suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if(pointerStart.clockSwiping){const tabs=JBDeskClock.TABS,index=tabs.indexOf(data.jbClock?.tab||'clock'),next=Math.max(0,Math.min(tabs.length-1,index+(Math.abs(dx)>dp(50)?(dx<0?1:-1):0)));data.jbClock.tab=tabs[next];save();render();suppressClickUntil=Date.now()+350;pointerStart=null;return;}
@@ -4198,7 +4136,7 @@
     if(pointerStart.calendarSwiping){if(Math.abs(dx)>dp(50))calendarMove(dx<0?1:-1);else viewport.querySelector('[data-calendar-swipe]').style.transform='';suppressClickUntil=Date.now()+350;pointerStart=null;return;}
     if (pointerStart.photoSwiping) { if (Math.abs(dy) > dp(33)) stepPhotoStack(pointerStart.photoStack, dy > 0 ? 1 : -1); else render(); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if (pointerStart.gallerySwiping) { if(Math.abs(dx)>dp(50))galleryStep(dx<0?1:-1);else render();suppressClickUntil=Date.now()+350;pointerStart=null;return; }
-    if (pointerStart.calculatorSwiping) { setCalculatorPanel(Math.abs(dx) > dp(55) ? (dx < 0 ? 1 : 0) : ui.calcPanel); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
+    if (LP.module('calculator').pointerup(dx)) return;
     if (pointerStart.drawerSwiping) { finishDrawerPage(dx); pointerStart = null; return; }
     if (pointerStart.recentSwiping) {
       const card = pointerStart.target.closest('.recent-item, .notification');
@@ -4272,7 +4210,7 @@
     if (!ui.overlay && pointerStart.target.closest('#status-bar') && dy > dp(50)) { ui.overlay = 'shade'; renderOverlay(); }
     pointerStart = null;
   });
-  window.addEventListener('pointercancel', () => { clearTimeout(calculatorClearTimer); clearTimeout(messageHoldTimer); const calcTrack = viewport.querySelector('.calc-panels'); if (calcTrack) { calcTrack.style.transition = ''; calcTrack.style.transform = `translateX(-${ui.calcPanel * 50}%)`; snapResting(calcTrack); } clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(dragState?.edgeTimer);clearTimeout(dragState?.folderExitTimer);clearTimeout(dragState?.folderHoverTimer);clearFolderDragFeedback();dragState?.ghost.remove(); clearDragOutlines(); dragState = null; screen.classList.remove('dragging', 'page-swiping', 'settings-scrolling', 'lock-dragging'); if (ui.extraScreen) { stripEmptyScreens(); save(); if (ui.view === 'home') render(); } setHomePage(ui.page); const drawerPage = viewport.querySelector('.drawer-page'); if (drawerPage) drawerPage.style.transform = ''; const lockHandle = viewport.querySelector('.lock-handle'); if (lockHandle) lockHandle.style.removeProperty('--lock-x'); if (pointerStart?.shadeDragging || ui.overlay === 'recent' || ui.overlay === 'shade' || ui.overlay === 'folder') renderOverlay(); pointerStart = null; });
+  window.addEventListener('pointercancel', () => { LP.module('calculator').pointercancel(); clearTimeout(messageHoldTimer); clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(dragState?.edgeTimer);clearTimeout(dragState?.folderExitTimer);clearTimeout(dragState?.folderHoverTimer);clearFolderDragFeedback();dragState?.ghost.remove(); clearDragOutlines(); dragState = null; screen.classList.remove('dragging', 'page-swiping', 'settings-scrolling', 'lock-dragging'); if (ui.extraScreen) { stripEmptyScreens(); save(); if (ui.view === 'home') render(); } setHomePage(ui.page); const drawerPage = viewport.querySelector('.drawer-page'); if (drawerPage) drawerPage.style.transform = ''; const lockHandle = viewport.querySelector('.lock-handle'); if (lockHandle) lockHandle.style.removeProperty('--lock-x'); if (pointerStart?.shadeDragging || ui.overlay === 'recent' || ui.overlay === 'shade' || ui.overlay === 'folder') renderOverlay(); pointerStart = null; });
   window.addEventListener('pointercancel',()=>{const photo=viewport.querySelector('.gallery-image');if(photo)photo.style.transform='';});
   window.addEventListener('pointercancel',()=>{const surface=viewport.querySelector('[data-calendar-swipe]');if(surface)surface.style.transform='';});
   document.addEventListener('keydown', event => {
@@ -4280,14 +4218,7 @@
     if (focusedStack && ['ArrowUp','ArrowDown'].includes(event.key)) { event.preventDefault(); const id = focusedStack.dataset.photoStack; stepPhotoStack(id, event.key === 'ArrowDown' ? 1 : -1); viewport.querySelector(`[data-photo-stack="${CSS.escape(id)}"] .phw-front`)?.focus(); return; }
     if(ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && ['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();galleryStep(event.key==='ArrowLeft'?-1:1);return;}
     if (event.target.matches?.('.recent-item,.web-tab-preview') && ['Enter',' '].includes(event.key)) { event.preventDefault(); event.target.click(); return; }
-    if (ui.view === 'calculator' && !ui.overlay && ['ArrowUp','ArrowDown'].includes(event.key) && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) {
-      event.preventDefault(); const history = data.calcHistory || []; if (!history.length) return;
-      ui.calcHistoryIndex = event.key === 'ArrowUp' ? (ui.calcHistoryIndex < 0 ? history.length - 1 : Math.max(0,ui.calcHistoryIndex - 1)) : (ui.calcHistoryIndex < 0 ? history.length - 1 : Math.min(history.length - 1,ui.calcHistoryIndex + 1));
-      ui.calc = history[ui.calcHistoryIndex].expression; ui.calcFresh = false; render(); return;
-    }
-    if (ui.view === 'calculator' && !ui.overlay && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName) && (/^[0-9.+\-*/=()!^]$/.test(event.key) || ['Enter','Backspace','Delete'].includes(event.key))) {
-      event.preventDefault(); const map = {'*':'×','/':'÷','-':'−','Enter':'=','Backspace':'⌫','Delete':'C'}; operateCalculator(map[event.key] || event.key); render(); return;
-    }
+    if (ui.view === 'calculator' && StoreHost.key(event, storeContext())) return;
     if (event.key === 'Escape' || event.key === 'Backspace' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); back(); }
     else if (event.key === 'Home' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); if (ui.view !== 'lock') home(); }
 
@@ -4438,6 +4369,21 @@
       if (ui.view === 'home' && !ui.overlay && !pointerStart && !dragState && viewport.querySelector('.calw')) render();
     }
   }, 1000);
+
+  // lp:kernel (the core's bindings the lp-*.js modules use, live; written by the migration's move tool)
+  LP.kernel({
+    get data() { return data; }, set data(v) { data = v; }, get dp() { return dp; },
+    get holdDelay() { return holdDelay; }, get i18n() { return i18n; }, get openApp() { return openApp; },
+    get overlayRoot() { return overlayRoot; }, get photosContext() { return photosContext; },
+    get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; },
+    get printContext() { return printContext; }, get render() { return render; },
+    get renderOverlay() { return renderOverlay; }, get safe() { return safe; }, get save() { return save; },
+    get screen() { return screen; }, get snapResting() { return snapResting; },
+    get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; },
+    get toast() { return toast; }, get ui() { return ui; }, get viewport() { return viewport; }
+  });
+  // lp:kernel-end
+  LP.start();
 
   i18n.translateDOM(document.body);
   render();
