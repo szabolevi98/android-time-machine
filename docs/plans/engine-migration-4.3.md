@@ -35,3 +35,10 @@ module can register; the core itself starts on DOMContentLoaded, once all of the
 - The shared touch handlers (home page swipe, drawer swipe, drag start, shade pull, lock drag, Recents swipe) are still
   the core's: they call the launcher, keyguard, shade and Recents through their modules, as one dispatcher.
 - Magnification (Settings › Accessibility) and the page's site controls stay in the core.
+
+## Checked (2026-11-28, 8b229ef4)
+
+- `node tests/browser/ci.mjs 4.3` on the branch: boot-startup, flows, limits-regression (all 4.3 cases), drawer-mouse
+  pass; store-apps passes after 8b229ef4.
+- `npm test`: all pass but asset-inventory, sitemap and text-tables, which fail only in a CRLF checkout (as before).
+- Each move was compared with the original 4.3 in headless Chrome, step by step (same screens, saves and overlays).
