@@ -300,7 +300,6 @@
      the image's contact picture as the icon, the name as the label. Launcher3's InstallShortcutReceiver adds it on the first free cell from the second screen on (startSearchPageIndex), a new screen when all are full; the toast names it (shortcut_installed). */
   const contactShortcut = id => String(id).startsWith('contact:') ? data.contacts.find(p => p.id === Number(String(id).slice(8))) || {name: ''} : null;
   const VCARD = key => { const row = window.StockStrings?.vcard?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : key; };
-  function placeContactShortcut(person) { if (person) placeShortcut(`contact:${person.id}`, person.name); }
   function placeShortcut(key, label) {
     const free = page => (data.homePages[page] || []).findIndex((id, index) => !id && !(data.homeWidgets[page] || []).some(w => { const s = widgetSize(w); return index % 4 >= w.x && index % 4 < w.x + s.width && Math.floor(index / 4) >= w.y && Math.floor(index / 4) < w.y + s.height; }));
     const count = homePageCount ? homePageCount() : data.homePages.length;
@@ -831,9 +830,8 @@
   function renderApp() {
     if (StoreHost.module(ui.view)?.render) return StoreHost.render(ui.view, storeContext());
     if (ui.view === 'phone' && LPDialerPrefs.PAGES.includes(ui.sub)) return LPDialerPrefs.render({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
-    if (ui.sub === 'sim-import' && ['people', 'phone'].includes(ui.view)) return PeopleIO.sim({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
-    // Contacts to display, Customize and Settings (people-io.js).
-    if (ui.view === 'people' && PeopleIO.PAGES.includes(ui.sub)) return PeopleIO.page({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
+    // Import from SIM card, opened from the Phone too (lp-people.js draws it).
+    if (ui.sub === 'sim-import' && ui.view === 'phone') return StoreHost.render('people', storeContext());
     switch (ui.view) {
       case 'play-store': return JBPlay.render(jbPlayContext());
       case 'settings': return renderSettings();
@@ -843,7 +841,6 @@
       case 'play-music': case 'play-movies': case 'play-books': case 'play-games': return PlayApps.render(playContext(ui.view));
       case 'google-search': case 'voice-search': case 'maps': case 'drive': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, plusCtx: ui.view === 'google-plus' ? plusContext() : null, ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
       case 'phone': return renderPhone();
-      case 'people': return renderPeople();
       case 'messaging': return renderMessaging();
       case 'hangouts': return Hangouts.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime());
       case 'email': return renderEmail();
@@ -950,8 +947,7 @@
     if (ui.view === 'settings' && ui.sub.startsWith('dev-procstats') && !ui.overlay) { ui.sub = ui.sub === 'dev-procstats' ? 'development' : 'dev-procstats'; render(); return; }
     // Back in a capture request cancels it (RESULT_CANCELED).
     if (LP.module('camera').backIntent()) return;
-    if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
-    if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
+    if (LP.module('people').backIo()) return;
     if (ui.view === 'earth' && !ui.overlay && EarthApp.back(ui)) { render(); return; }
     if (ui.view === 'google-plus' && !ui.overlay && PlusPost.back(ui)) { render(); return; }
     if (['newsstand'].includes(ui.view) && !ui.overlay && NewsReader.back(ui)) { render(); return; }
@@ -1048,9 +1044,7 @@
     if (ui.view === 'hangouts' && ui.sub === 'archived') { ui.sub = ''; render(); return; }
     if (['messaging', 'hangouts'].includes(ui.view) && ui.sub === 'thread') { ui.sub = ui.mmsListMode || ''; render(); return; }
     if (LP.module('clock').backCities()) return;
-    if (ui.view === 'people' && ui.sub === 'edit') { ui.sub = 'detail'; render(); return; }
-    if (ui.view === 'people' && ui.sub === 'detail' && ui.quickContactReturn) { const back = ui.quickContactReturn; ui.quickContactReturn = null; ui.view = back.view; ui.sub = back.sub; render(); return; }
-    if (ui.view === 'people' && ui.peopleSearching) { ui.peopleSearching = false; ui.peopleQuery = ''; render(); return; }
+    if (LP.module('people').back()) return;
     if (ui.sub) { ui.sub = ''; render(); if (ui.view === 'settings') viewport.querySelector('.settings-app').scrollTop = ui.settingsRootScroll; return; }
     home(false);
   }
@@ -1200,8 +1194,6 @@
       overlayRoot.innerHTML = LPEmail.overlay(mailbox(),ui,data.photos,key=>i18n.t(key),i18n.language,ui.view==='gmail'?gmailOptions():{app:'email'});
     } else if (ui.overlay.startsWith('sd-')) {
       overlayRoot.innerHTML = ICSSettingsDetail.overlay(data,ui,key=>i18n.t(key));
-    } else if (ui.overlay.startsWith('people-')) {
-      overlayRoot.innerHTML = peopleOverlay();
     } else if (ui.overlay === 'pa-drawer') {
       overlayRoot.innerHTML = PlayApps.drawer(playContext(ui.view));
     } else if(ui.overlay.startsWith('emore-')) {
@@ -1638,26 +1630,6 @@
     captureRecentView();ui.recent=['phone',...ui.recent.filter(id=>id!=='phone')].slice(0,7);
     ui.callNumber=ui.activeCall.number;ui.view='phone';ui.sub='calling';ui.overlay='';render();
   }
-  function renderPeople() { return ICSPeople.render(data,ui,key => i18n.t(key),i18n.locale()); }
-  function editPerson(isNew = false) {
-    const person = isNew ? {} : contact(ui.selectedContact);
-    if (!person) return;
-    ui.peopleDraft = {...person,groups:data.contactGroups.filter(g=>g.members.includes(person.id)).map(g=>g.id)};
-    ui.sub = isNew ? 'new' : 'edit'; ui.overlay = ''; render();
-  }
-  function peopleOverlay() {
-    /* GoogleContacts 1.1: quickcontact's overflow (Delete, Share, Place on Home screen) and people_options' (Contacts to
-       display, Import/export, Accounts, Settings, Help; Clear frequents only with frequent contacts), and
-       ContactDeletionInteraction's Material alert (the message, then Cancel / OK in the #0288D1 accent), in this image's
-       words (people-strings.js). */
-    if (ui.overlay === 'people-share') return PeopleIO.shareOverlay({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
-    if (ui.overlay === 'people-vcard') return PeopleIO.overlay({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
-    const P = key => PeopleStrings.t(key), unavailable = 'This feature is not part of the simulator.';
-    if (ui.overlay === 'people-menu') { const items = ui.sub === 'detail' ? [['people-delete', 'Delete'], ['psh-open', 'Share'], ['people-place-home', 'Place on Home screen']] : [['pfl-open', 'Contacts to display'], ['vcf-open', 'Import/export'], ['open-settings-sync', 'Accounts'], ['pst-open', 'Settings'], ['toast', 'Help']]; return `<div class="menu-scrim" data-action="close-overlay"></div><div class="lp-popup-menu" role="menu" data-no-translate>${items.map(([action, title]) => `<button role="menuitem" data-action="${action}"${action === 'toast' ? ` data-id="${safe(unavailable)}"` : ''}>${safe(P(title))}</button>`).join('')}</div>`; }
-    if (ui.overlay === 'people-delete') return `<div class="lpp-alert-scrim" data-action="close-overlay"></div><div class="lpp-alert" role="alertdialog" aria-label="${safe(P('This contact will be deleted.'))}" data-no-translate><p>${safe(P('This contact will be deleted.'))}</p><div class="lpp-alert-buttons"><button data-action="close-overlay">${safe(P('Cancel'))}</button><button data-action="people-confirm-delete">${safe(P('OK'))}</button></div></div>`;
-    const group = data.contactGroups.find(g=>g.id===ui.peopleEditGroup);
-    return `<div class="settings-dialog-scrim" data-action="close-overlay"></div><form class="settings-dialog mms-dialog people-editor" role="dialog" aria-label="${group?'Edit group':'New group'}" data-form="people-group"><h3>${group?'Edit group':'New group'}</h3><label>Group name<input name="name" required maxlength="50" value="${safe(group?.name||'')}"></label>${data.contacts.map(p=>`<label class="people-membership"><input type="checkbox" name="members" value="${p.id}" ${group?.members.includes(p.id)?'checked':''}>${safe(p.name)}</label>`).join('')}<div class="settings-dialog-actions"><button type="button" data-action="close-overlay">Cancel</button><button type="submit">Save</button></div></form>`;
-  }
   function renderMessaging() {
     if (ui.lpmPage) return MessengerOptions.render(data, ui, key => i18n.t(key));
     return ICSMessaging.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime());
@@ -1855,7 +1827,7 @@
   }
   // Drive's Send file (the item as an attachment) and Share link (its link as the text) in Gmail, Email or Hangouts.
   function driveShareFile(app, file) {
-    if (!file.photo) { shareVcard(app, file); return; }
+    if (!file.photo) { lp.shareVcard(app, file); return; }
     const photo = data.photos.find(p => p.id === file.photo); ui.overlay = ''; renderOverlay(); openApp(app); composeEmail();
     const d = mailbox().find(m => m.id === ui.emailId); if (d && photo) (d.files ||= []).push({name: photo.name, mime: 'image/jpeg', size: photo.size || 1843200, photo: clone(photo)}); save(); render();
   }
@@ -1864,7 +1836,6 @@
     if (app === 'hangouts') { openApp('hangouts'); ui.sub = 'new'; messageDraft().body = text; save(); render(); return; }
     openApp(app); composeEmail(); const d = mailbox().find(m => m.id === ui.emailId); if (d) { d.subject = subject; d.body = text; } save(); render();
   }
-  function shareVcard(app, file) { ui.overlay = ''; renderOverlay(); openApp(app); composeEmail(); const d = mailbox().find(m => m.id === ui.emailId); if (d) (d.files ||= []).push({name: file.name, mime: file.mime, size: file.size, text: file.text}); save(); render(); }
   function composeEmail(source=null,forward=false,to='') {
     const draft=ICSEmail.draft(source,forward);if(to)draft.to=to;
     if(ui.view==='gmail'){draft.from=draft.address=GmailApp.account;}
@@ -1888,7 +1859,6 @@
     if(id==='music'){ui.music=ICSMusic.restore();saveMusic();}
     if(id==='gmail'){data.gmailbox=GmailApp.restore(null);delete data.gmailWelcomeSeen;delete data.gmailTeaserDismissed;delete data.gmailSeen;if(ui.mailApp==='gmail'){ui.emailFolder='Primary';ui.emailSelected=[];}}
     if(id==='email'){data.mailbox=ICSEmail.restore(null,emailData,[]);data.sentEmails=[];ui.emailFolder='Inbox';ui.emailQuery=undefined;ui.emailSelected=[];}
-    if(id==='people'){data.contacts=clone(defaultData.contacts);data.contactGroups=clone(defaultData.contactGroups);ui.peopleDraft=null;}
     if(id==='messaging'||id==='hangouts'){data.messages=clone(defaultData.messages);data.messageDrafts={};}
     if(id==='gallery'){data.photos=clone(defaultData.photos);}
     if(id==='phone'){data.callHistory=[];ui.activeCall=null;}
@@ -2076,11 +2046,6 @@
       if (result?.submit) { LPDialerPrefs.saveQuick(viewport.querySelector('.ldp2-edit input')?.value || '', {data, ui, t: key => i18n.t(key), locale: i18n.locale()}); save(); render(); return; }
       if (result === 'save') save();
       if (result) { render(); return; }
-    }
-    if (/^(pfl|pst|psh)-/.test(action)) { const result = PeopleIO.pageAction(action, id, {data, ui}); if (result) { if (result.share) { shareVcard(result.share.app, result.share.file); return; } if (result.save) save(); renderOverlay(); render(); return; } }
-    if (action.startsWith('vcf-')) {
-      const result = PeopleIO.handle(action, id, {data, ui, t: key => i18n.t(key), locale: i18n.locale()});
-      if (result) { if (result.save) save(); for (const title of result.notify || []) addNotification(title, ''); renderOverlay(); render(); if (result.toast) toast(result.toast); return; }
     }
     if (ui.view === 'earth' && /^(earth|eps)-/.test(action)) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (EarthApp.handle(action, id, earthContext())) return; }
     if (ui.view === 'google-plus' && action.startsWith('gpp-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (PlusPost.handle(action, id, plusContext())) return; }
@@ -2420,8 +2385,6 @@
       case 'a11y-hold': ui.overlay = 'a11y-hold'; renderOverlay(); break;
       case 'a11y-hold-pick': data.settings.longPressTimeout = Number(id); ui.overlay = ''; save(); renderOverlay(); render(); break;
       case 'toast': toast(id); break;
-      case 'people-place-home': ui.overlay = ''; renderOverlay(); placeContactShortcut(data.contacts.find(p => p.id === (Number(id) || ui.selectedContact))); break;
-      case 'open-contact': { const person = data.contacts.find(p => p.id === Number(id)); openApp('people'); if (person) { ui.selectedContact = person.id; ui.sub = 'detail'; render(); } break; }
       // Security's sub-pages (lp-security.js).
       case 'lps-toast': toast(i18n.t(id)); break;
       case 'lps-sim': ui.lpsPin = {mode: id, step: 'pin'}; ui.overlay = 'lps-pin'; renderOverlay(); break;
@@ -2649,8 +2612,8 @@
       case 'phone-search': ui.phoneTab = 'favorites'; ui.phoneSearch = ''; ui.overlay = ''; render(); viewport.querySelector('.phone-search input')?.focus(); break;
       case 'phone-menu': ui.phoneMenu = id || ''; ui.overlay = 'phone-menu'; renderOverlay(); break;
       case 'dial-pause': case 'dial-wait': ui.dial = (ui.dial + (action === 'dial-pause' ? ',' : ';')).slice(0, 30); ui.overlay = ''; render(); break;
-      case 'phone-add-contact': { const number = id || ui.dial; openApp('people'); editPerson(true); ui.peopleDraft.phone = number; render(); break; }
-      case 'phone-new-contact': openApp('people'); editPerson(true); render(); break;
+      case 'phone-add-contact': { const number = id || ui.dial; openApp('people'); lp.editPerson(true); ui.peopleDraft.phone = number; render(); break; }
+      case 'phone-new-contact': openApp('people'); lp.editPerson(true); render(); break;
       case 'phone-dial-sms': ui.overlay = ''; renderOverlay(); { const recipient = ICSMessaging.recipient(ui.dial, data.contacts); if (recipient) openMessageThread(recipient.key); else toast('Enter a valid phone number'); } break;
       case 'lpd-clear-frequents': case 'lpd-clear-log': ui.lpdConfirm = action === 'lpd-clear-log' ? 'log' : 'frequents'; ui.overlay = 'lpd-confirm'; renderOverlay(); break;
       case 'lpd-clear-frequents-ok': data.frequentsClearedAt = Date.now(); save(); ui.overlay = ''; render(); break;
@@ -2678,19 +2641,6 @@
       case 'lpd-dismiss-card': ui.kkRecentDismissed = [...(ui.kkRecentDismissed || []), Number(id)]; render(); break;
       case 'kk-dialer-clear': ui.phoneSearch = ''; render(); viewport.querySelector('[data-kk-dialer-search]')?.focus(); break;
       case 'phone-log-message': { const recipient=ICSMessaging.recipient(id,data.contacts); if(recipient)openMessageThread(recipient.key);else toast('Enter a valid phone number');break; }
-      case 'people-tab': ui.peopleTab=id; ui.sub=''; ui.peopleQuery=''; ui.peopleSearching=false; render(); break;
-      case 'people-search': ui.peopleTab='all'; ui.peopleSearching=true; render(); viewport.querySelector('[data-people-search]')?.focus(); break;
-      case 'people-edit': editPerson(); break;
-      case 'people-menu': ui.overlay='people-menu'; renderOverlay(); break;
-      case 'people-star': { const person=contact(ui.selectedContact); if(person)person.favorite=!person.favorite; save(); render(); break; }
-      case 'people-delete': ui.overlay='people-delete'; renderOverlay(); break;
-      case 'people-confirm-delete': ICSPeople.remove(data,ui.selectedContact); save(); ui.sub=''; ui.overlay=''; render(); break;
-      case 'people-group': ui.peopleGroup=id; ui.sub='group'; ui.peopleQuery=''; render(); break;
-      case 'contact': {
-        // From the dialer (or any other app) a contact opens Contacts' QuickContactActivity; back returns there.
-        if (ui.view !== 'people') { ui.quickContactReturn = {view: ui.view, sub: ui.sub}; captureRecentView(); ui.view = 'people'; }
-        ui.selectedContact = Number(id); ui.sub = 'detail'; ui.overlay = ''; render(); break;
-      }
       case 'lpx-open': {const f=officeFiles().find(f=>f.id===id);if(f){data.driveFiles=officeFiles().map(f=>f.id===id?{...f,otime:Date.now()}:f);save();}} ui.edFrom = ui.sub; ui.sub = id; render(); break;
       // Docs / Sheets / Slides: Add new opens an untitled file; the actions menu renames or removes one (Drive shows the same list).
       case 'ed-new': { const kind = LPExtraApps.KIND[ui.view], E = key => AndroidStrings.pick(window.StockStrings?.editors?.[key], i18n.language, key), base = E(LPExtraApps.UNTITLED[kind]), names = new Set(officeFiles().map(f => f.name)); let name = base, n = 2; while (names.has(name)) name = `${base} (${n++})`;
@@ -2709,12 +2659,7 @@
       case 'lpx-drawer': ui.lpxDrawer = !ui.lpxDrawer; render(); break;
       case 'vol-zen': data.settings.zenMode = id; if (id === 'all') data.settings.zenExit = null; save(); renderStatus(); showVolume(volumeStream()); break;
       case 'vol-settings': hideVolume(); openApp('settings'); ui.sub = 'sound'; render(); break;
-      case 'people-search-close': ui.peopleSearching = false; ui.peopleQuery = ''; render(); break;
       case 'open-settings-sync': ui.overlay = ''; openApp('settings'); ui.sub = 'sync'; render(); break;
-      case 'new-contact': editPerson(true); break;
-      case 'contact-call': startPhoneCall(contact(id)?.phone||'');break;
-      case 'contact-message': openMessageThread(id); break;
-      case 'contact-email': {const recipient=contact(id)?.email||'';openApp('email');composeEmail(null,false,recipient);break;}
       case 'thread': openMessageThread(id); break;
       // New Hangout: a picked contact or typed number opens its conversation and takes along a shared draft.
       case 'hg-pick': pickHangout(id); break;
@@ -2854,24 +2799,6 @@
     if (LP.submit(form.dataset.form, values, event, form)) return;
     switch (form.dataset.form) {
       case 'browser-find': ui.browserFind=String(values.get('query')||'').trim(); render(); break;
-      case 'people-search': ui.peopleQuery=String(values.get('query')||'').trim(); render(); break;
-      case 'people-save': {
-        const name=String(values.get('name')||'').trim(); if(!name)return;
-        const id=ui.sub==='edit'?ui.selectedContact:Date.now();
-        const person=contact(id)||{id};
-        for(const key of ['name','phone','email','company','notes'])person[key]=String(values.get(key)||'').trim();
-        if(!contact(id))data.contacts.push(person);
-        const groups=values.getAll('groups');
-        data.contactGroups.forEach(g=>{g.members=g.members.filter(member=>member!==id);if(groups.includes(g.id))g.members.push(id);});
-        save();ui.selectedContact=id;ui.sub='detail';ui.peopleDraft=null;render();toast('Contact saved');break;
-      }
-      case 'people-group': {
-        const name=String(values.get('name')||'').trim();if(!name)return;
-        const group=data.contactGroups.find(g=>g.id===ui.peopleEditGroup)||{id:'group-'+Date.now()};
-        group.name=name;group.members=values.getAll('members').map(Number).filter(id=>!!contact(id));
-        if(!data.contactGroups.some(g=>g.id===group.id))data.contactGroups.push(group);
-        save();ui.peopleGroup=group.id;ui.peopleTab='groups';ui.sub='group';ui.overlay='';render();break;
-      }
       case 'address': navigateBrowser(values.get('address')); break;
       case 'web-search': navigateBrowser(`search:${values.get('query')}`); break;
       case 'maps-search': ui.mapsQuery = String(values.get('query') || '').trim().slice(0, 60); window.MapsPrefs?.remember(data, ui.mapsQuery); save(); render(); break;
@@ -2889,11 +2816,6 @@
         const target = ui.sub === 'thread' ? {key:ui.thread} : ICSMessaging.recipient(values.get('recipient'),data.contacts);
         if (!target) { toast('Enter a contact name or valid phone number'); return; }
         sendMessage(target.key, String(values.get('body') || '').trim(), messageDraft().attachment); break;
-      }
-      case 'contact': {
-        const name = String(values.get('name')).trim(), phone = String(values.get('phone')).trim(), email = String(values.get('email')).trim();
-        if (!name || !phone) return;
-        const id = Date.now(); data.contacts.push({ id, name, phone, email }); save(); ui.selectedContact = id; ui.sub = 'detail'; render(); toast('Contact saved'); break;
       }
       case 'email': {const item=mailbox().find(item=>item.id===ui.emailId);if(!item)break;for(const key of ['to','cc','bcc','subject','body'])if(values.has(key))item[key]=String(values.get(key)).trim();if(!ICSEmail.send(item)){ui.emailError='Enter valid email addresses';save();render();break;}save();ui.emailFolder='Sent';ui.emailQuery=undefined;ui.sub='read';ui.emailError='';render();toast('Demo email sent');break;}
       case 'email-search': ui.emailQuery=String(values.get('query')||'').trim();ui.emailSelected=[];render();break;
@@ -2925,12 +2847,6 @@
     if (event.target.matches('[data-keep-search]')) { ui.keepQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-keep-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
     if (event.target.matches('[data-photos-search]')) { ui.photosQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-photos-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
     if (event.target.matches('[data-pa-search]')) { ui.paQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-pa-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
-    if (event.target.matches?.('[data-people-search]')) {
-      ui.peopleQuery = event.target.value;
-      const list = viewport.querySelector('.lpp-list');
-      if (list) { const fresh = document.createElement('div'); fresh.innerHTML = renderPeople(); list.innerHTML = fresh.querySelector('.lpp-list').innerHTML; i18n.translateDOM?.(list); }
-      return;
-    }
     if (event.target.matches?.('[data-kk-dialer-search]')) {
       ui.phoneSearch = event.target.value;
       const list = viewport.querySelector('[data-kk-dialer-list]');
@@ -2945,11 +2861,6 @@
       data.cameraSettings=ICSMedia.settings(data);data.cameraSettings.zoom=Number(event.target.value);save();
       viewport.querySelector('.camera-focus-area .media-photo').src=ICSMedia.image(ICSMedia.scene(data));
       viewport.querySelector('.camera-zoom output').textContent=Number(event.target.value).toFixed(1)+'×';return;
-    }
-    if(event.target.closest('#people-editor')) {
-      if(event.target.name==='groups')ui.peopleDraft.groups=[...viewport.querySelectorAll('[name=groups]:checked')].map(input=>input.value);
-      else ui.peopleDraft[event.target.name]=event.target.value;
-      return;
     }
     if (event.target.closest('.jbp-bar.searching')) { ui.marketEdit = event.target.value; const view = viewport.querySelector('.jbp'); view?.querySelector('.jbp-suggest')?.remove(); const tmp = document.createElement('div'); tmp.innerHTML = JBPlay.render(jbPlayContext()); const sug = tmp.querySelector('.jbp-suggest'); if (sug && view) view.append(sug); return; }
     if (event.target.matches('[data-jbp-auto]')) { const id = event.target.dataset.jbpAuto, list = data.marketAuto || []; data.marketAuto = event.target.checked ? [...new Set([...list, id])] : list.filter(x => x !== id); save(); return; }
@@ -3966,21 +3877,24 @@
 
   // lp:kernel (the core's bindings the lp-*.js modules use, live; written by the migration's move tool)
   LP.kernel({
-    get clone() { return clone; }, get data() { return data; }, set data(v) { data = v; },
-    get defaultData() { return defaultData; }, get deviceDate() { return deviceDate; }, get dp() { return dp; },
-    get editorContext() { return editorContext; }, get galleryWallpaper() { return galleryWallpaper; },
-    get headsUp() { return headsUp; }, get holdDelay() { return holdDelay; }, get home() { return home; },
+    get addNotification() { return addNotification; }, get captureRecentView() { return captureRecentView; },
+    get clone() { return clone; }, get composeEmail() { return composeEmail; }, get contact() { return contact; },
+    get data() { return data; }, set data(v) { data = v; }, get defaultData() { return defaultData; },
+    get deviceDate() { return deviceDate; }, get dp() { return dp; }, get editorContext() { return editorContext; },
+    get galleryWallpaper() { return galleryWallpaper; }, get headsUp() { return headsUp; },
+    get holdDelay() { return holdDelay; }, get home() { return home; },
     get homeLongPressTimer() { return homeLongPressTimer; }, set homeLongPressTimer(v) { homeLongPressTimer = v; },
     get i18n() { return i18n; }, get keepAttach() { return keepAttach; }, get mailbox() { return mailbox; },
     get messageDraft() { return messageDraft; }, get navigateBrowser() { return navigateBrowser; },
     get nextAlarmLabel() { return nextAlarmLabel; }, get openApp() { return openApp; },
-    get overlayRoot() { return overlayRoot; }, get photosContext() { return photosContext; },
+    get openMessageThread() { return openMessageThread; }, get overlayRoot() { return overlayRoot; },
+    get photosContext() { return photosContext; }, get placeShortcut() { return placeShortcut; },
     get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; },
     get printContext() { return printContext; }, get reducedMotion() { return reducedMotion; },
     get render() { return render; }, get renderOverlay() { return renderOverlay; },
     get renderStatus() { return renderStatus; }, get safe() { return safe; }, get save() { return save; },
     get screen() { return screen; }, get scrollMessages() { return scrollMessages; },
-    get snapResting() { return snapResting; },
+    get snapResting() { return snapResting; }, get startPhoneCall() { return startPhoneCall; },
     get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; },
     get suppressReleaseClick() { return suppressReleaseClick; }, get toast() { return toast; },
     get today() { return today; }, get ui() { return ui; }, get viewport() { return viewport; },
