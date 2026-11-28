@@ -1,5 +1,6 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const engineSource=require('./lib/engine-source.cjs');
 // DeskClock's menus, Settings, Night mode, analog style, Home clock and Cities search (T33): 2.0.3 (4.3), 3.0.0 (4.4.4),
 // 3.0.4 (5.1.1), each on its own APK's texts (clock-prefs-strings.py).
 const plain=x=>JSON.parse(JSON.stringify(x));
@@ -42,7 +43,7 @@ for(const [v,p,zones] of [['4.3','jb',84],['4.4.4','kk',85],['5.1.1','lp',85]]){
   assert.deepEqual(plain(C.handle('cpref-help','',ctx)),{open:'http'+(v==='4.3'?'':'s')+'://support.google.com/mobile/?p=clock_main'});
   for(const n of ['dial','hour','minute','second'])assert.ok(fs.existsSync(`versions/${v}/assets/${v==='5.1.1'?'dc5':'jbclock'}-clock_analog_${n}.png`),n);
   // simulator.js: the menu, the screens, the snooze length, Silence after and the volume keys.
-  const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');
+  const sim=engineSource(v);
   for(const bit of ["case 'jbclock-menu': ui.overlay = 'cpref-main'","ClockPrefs.handle(action, id, {data, ui})","ClockPrefs.prefs(data).snooze*60000","clockSilenceTimer = setTimeout","buttons === '1' ? 'alarm-snooze' : 'alarm-dismiss'","ClockPrefs.settings(","ClockPrefs.night(","clockExtras("])assert.ok(sim.includes(bit),`${v} ${bit}`);
   assert.doesNotMatch(sim,/'jbclock-menu': toast/);
 }
