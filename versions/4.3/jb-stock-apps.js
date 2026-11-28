@@ -131,6 +131,8 @@
         case 'nwp-open': case 'nwp-toggle': case 'nwp-topic': case 'nwp-remove': case 'nwp-dialog': case 'nwp-cancel': case 'nwp-choose': case 'nwp-ok': case 'nwp-unsupported':
           NewsPrefs.handle(action, id, {ui, data, lang: i18n.language, save, render, input: () => viewport.querySelector('[data-nwp-input]')?.value, unsupported: () => toast(i18n.t('This feature is not part of the simulator.'))}); break;
         case 'maps-search-open': ui.mapsSearching = true; render(); viewport.querySelector('.sa-maps6-search input')?.focus(); break;
+        case 'gel-overview-settings': ui.overlay = ''; renderOverlay(); openApp('google-search'); ui.sub = 'settings'; ui.gsPage = ''; render(); break;
+        case 'google-now-toggle': data.googleNowOn = data.googleNowOn === false; save(); render(); break;
         default: return false;
       }
       return true;

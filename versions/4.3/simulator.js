@@ -872,7 +872,6 @@
       case 'open-wallpapers': ui.overlay = ''; ui.view = 'wallpaper-picker'; render(); break;
       case 'open-live-wallpapers': ui.overlay = ''; ui.view = 'live-wallpapers'; ui.sub = ''; render(); break;
       // LiveWallpaperPreview.setLiveWallpaper: set it and return to the launcher.
-      case 'market': openApp('play-store'); break;
       // Share on the details page: the chooser, then the target's compose screen with the link (play-store.js).
       case 'page': setHomePage(Number(id)); break;
       case 'power-toggle':
@@ -894,15 +893,10 @@
       case 'noop': break;
       // Google, Voice Search, Maps, Keep, YouTube, Google+, Earth, News & Weather, Google Settings
       // Google Settings' GMS pages (gms-settings.js).
-      case 'gel-overview-settings': ui.overlay = ''; renderOverlay(); openApp('google-search'); ui.sub = 'settings'; ui.gsPage = ''; render(); break;
-      case 'google-now-toggle': data.googleNowOn = data.googleNowOn === false; save(); render(); break;
       // Maps 6.14: the feature switcher, Places (Local), Layers, Clear map, the zoom controls.
       // Keep 1.0's menus: New note, the note color (cycled through the picker's colors), Archive, the column view, Archived notes.
       // List and picture notes (stock-apps.js keepEditor / keepDialog).
       // News & Weather: Refresh records the time the refresh status shows; Settings, the story page and Share story.
-      case 'kkx-unavailable': toast(i18n.t('This feature is not part of the simulator.')); break;
-      case 'jbx-tab': ui.jbxMagazines = id; ui.magDrawer = false; render(); break;
-      case 'mag-drawer': ui.magDrawer = !ui.magDrawer; render(); break;
       // Play Music, Play Movies and Play Books
       // Currents' menu: Breaking stories or one edition's stories (jb-extra-apps.js); the panel slides back.
       // Play Books 2.8.91's reader: Contents (TableOfContentsActivity) and the Display options popup (ReaderSettingsController).

@@ -195,6 +195,9 @@
       switch (action) {
         case 'currents-menu': ui.currentsMenu = !ui.currentsMenu; render(); break;
         case 'currents-edition': ui.currentsEdition = id || ''; ui.currentsMenu = false; render(); break;
+        case 'kkx-unavailable': toast(i18n.t('This feature is not part of the simulator.')); break;
+        case 'jbx-tab': ui.jbxMagazines = id; ui.magDrawer = false; render(); break;
+        case 'mag-drawer': ui.magDrawer = !ui.magDrawer; render(); break;
         default: return false;
       }
       return true;

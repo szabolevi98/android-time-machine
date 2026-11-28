@@ -529,6 +529,7 @@
         case 'play-open': { const entry = ICSPlayStore.catalog.find(item => item.id === id); if (entry?.app) openApp(entry.app); break; }
         case 'play-rate': { const top = viewport.querySelector('.play-content').scrollTop; data.playRatings ||= {}; data.playRatings[ui.play.selected] = Number(id); save(); render(); viewport.querySelector('.play-content').scrollTop = top; break; }
         case 'play-store-open': ui.magDrawer = false; openApp('play-store'); break;
+        case 'market': openApp('play-store'); break;
         default: return false;
       }
       return true;
