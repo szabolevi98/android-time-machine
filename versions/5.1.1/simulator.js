@@ -478,15 +478,8 @@
     if (landRoot && !ui.lland) requestAnimationFrame(() => { if (landRoot.isConnected && !ui.lland) { ui.lland = LPEgg.land(landRoot, {vibrate: ms => navigator.vibrate?.(ms)}); landRoot.focus({preventScroll: true}); } });
     LP.module('clock').afterRender();
     LP.module('chrome').afterRender();
-    if (ui.view === 'photos' && ui.sub === 'photo') attachPhotosSwipe();
+    LP.module('photos').afterRender();
     LP.module('messaging').afterRender();
-    if (ui.view === 'photos' && ui.sub === 'sphere') LPSphere.attachViewer(viewport);
-    if (ui.view === 'photos' && ui.sub === 'refocus' && ui.refocusEdit) { const photo = PhotosApp.list(photosContext())[ui.photosIndex]; if (photo) LPRefocus.attachViewer(viewport, {photo, edit: ui.refocusEdit, media: ICSMedia}); }
-    if (ui.view === 'photos' && ui.sub === 'edit') PlusEditor.attach(viewport.querySelector('[data-pe-root]'), peContext());
-    // VideoViewActivity's player (photos-video.js).
-    if (ui.gpv && !viewport.querySelector('[data-gpv-root]')?.isSameNode(ui.gpv.root)) { ui.gpv.destroy(); ui.gpv = null; }
-    const gpvRoot = viewport.querySelector('[data-gpv-root]');
-    if (gpvRoot && !ui.gpv) { const photo = PhotosApp.list(photosContext())[ui.photosIndex]; if (photo) ui.gpv = {...GPVideo.attach(gpvRoot, {photo, ui, rerender: render, reduced: !!reducedMotion?.matches}), root: gpvRoot}; }
     LP.module('calendar').afterRender();
   }
   function restoreWidgetScroll() {
@@ -815,7 +808,6 @@
     if (StoreHost.module(ui.view)?.render) return StoreHost.render(ui.view, storeContext());
     switch (ui.view) {
       case 'settings': return renderSettings();
-      case 'photos': return PhotosApp.render(photosContext());
       case 'google-search': case 'voice-search': case 'maps': case 'drive': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, plusCtx: ui.view === 'google-plus' ? plusContext() : null, ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
       case 'docs': case 'sheets': case 'slides': case 'fit': case 'newsstand': case 'wallet': return LPExtraApps.render(ui.view, {news: ui.view === 'newsstand' ? newsContext() : null, files: officeFiles(), ui, data, t: key => i18n.t(key), locale: i18n.locale()});
       default: return renderHome();
@@ -960,15 +952,7 @@
     if (StockApps.APPS.includes(ui.view) && ui.sub) { if (ui.view === 'keep') saveKeepNote(true); ui.sub = ''; render(); return; }
     // Play Books' reader: a dropdown, then the Display options popup, then Contents close before the reader does.
     if (LP.module('play-music').back()) return;
-    if (ui.view === 'photos' && ui.sub === 'edit' && PlusEditor.back(peContext())) return;
-    if (ui.view === 'photos' && ui.photosSpinner) { ui.photosSpinner = false; render(); return; }
-    if (ui.view === 'photos' && ui.sub === 'video') { ui.sub = 'photo'; ui.photosVideo = null; render(); return; }
-    if (ui.view === 'photos' && ui.sub === 'sphere') { ui.sub = 'photo'; render(); return; }
-    if (ui.view === 'photos' && ui.sub === 'refocus') { ui.refocusEdit = null; ui.sub = 'photo'; render(); return; }
-    if (ui.view === 'photos' && Array.isArray(ui.photosSelect)) { ui.photosSelect = null; render(); return; }
-    if (ui.view === 'photos' && ui.sub === 'settings-backup') { ui.sub = 'settings'; render(); return; }
-    if (ui.view === 'photos' && ui.sub === 'photo') photosSlideshowStop();
-    if (ui.view === 'photos' && ui.sub) { ui.sub = ui.sub === 'photo' ? ui.photosReturn || '' : ui.sub === 'folder' ? 'folders' : ''; ui.photosChrome = true; render(); return; }
+    if (LP.module('photos').back()) return;
     if (LP.module('calendar').backEdit()) return;
     if(ui.view==='settings' && ['apn','operators','tether-help','device-admin','wifi-direct','wifi-display','location-mode'].includes(ui.sub)){ui.sub={apn:'mobile-networks',operators:'mobile-networks','tether-help':'tethering','device-admin':'security','wifi-direct':'wifi','wifi-display':'display','location-mode':'location'}[ui.sub];render();return;}
     if(ui.view==='settings' && ['app-info','data-app','battery-history','battery-detail','storage-misc','language-pick'].includes(ui.sub)){ui.sub={'language-pick':'language','app-info':'apps','data-app':'data','battery-history':'battery','battery-detail':'battery','storage-misc':'storage'}[ui.sub];render();return;}
@@ -1141,8 +1125,6 @@
       const panel = overlayRoot.querySelector('.lp-recents');
       ui.lpRecents = LPRecents.attach(panel, {scroll: ui.recentsScroll, reduced: !!reducedMotion?.matches, from: ui.recentsFrom, elapsed: performance.now() - (ui.recentsAt || 0), onScroll: (value, end) => { ui.recentsScroll = value; if (end) suppressClickUntil = Date.now() + 300; }});
       if (ui.recentsScroll === undefined) ui.recentsScroll = LPRecents.layout(panel);
-    } else if (ui.overlay.startsWith('gallery-') || ui.overlay.startsWith('camera-')) {
-      overlayRoot.innerHTML=ICSMedia.overlay(data,ui,key=>i18n.t(key),i18n.locale());
     } else if (ui.overlay.startsWith('sd-')) {
       overlayRoot.innerHTML = ICSSettingsDetail.overlay(data,ui,key=>i18n.t(key));
     } else if(ui.overlay.startsWith('emore-')) {
@@ -1156,14 +1138,6 @@
       overlayRoot.innerHTML = `<div class="pin-scrim"></div><div class="pin-request" role="dialog" aria-label="${safe(i18n.t('Screen is pinned'))}" data-no-translate><h3>${safe(i18n.t('Screen is pinned'))}</h3><p>${safe(i18n.t('This keeps it in view until you unpin. Touch and hold Back and Overview at the same time to unpin.'))}</p><div class="pin-buttons"><button data-action="pin-cancel">${safe(i18n.t('No thanks'))}</button><button data-action="pin-ok">${safe(i18n.t('Got it'))}</button></div><div class="pin-nav">${ring('back')}<span class="pin-key home"><img src="assets/lp-ic_sysbar_home.png" alt=""></span>${ring('recent')}</div></div>`;
     } else if (ui.overlay === 'lpx-overflow') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="lpa-menu">${LPExtraApps.menu(ui.view, key => i18n.t(key), i18n.locale(),editorContext()).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'photos-menu') {
-      overlayRoot.innerHTML = PhotosApp.menu(photosContext());
-    } else if (ui.overlay === 'photos-delete-many') {
-      overlayRoot.innerHTML = PhotosApp.deleteDialog(photosContext());
-    } else if (ui.overlay === 'photos-pref-list') {
-      overlayRoot.innerHTML = PhotosApp.prefDialog(photosContext());
-    } else if (ui.overlay === 'photos-delete') {
-      overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog mms-dialog" role="dialog" aria-label="${safe(i18n.t('Delete'))}"><h3>${safe(i18n.t('Delete'))}</h3><p>${safe(i18n.t('Delete this photo?'))}</p><div class="settings-dialog-actions"><button data-action="close-overlay">${safe(i18n.t('Cancel'))}</button><button data-action="photos-confirm-delete">${safe(i18n.t('Delete'))}</button></div></div>`;
     } else if (ui.overlay === 'sa-menu') {
       // The Google apps' action bar overflow (StockApps.menu: their menu XML's overflow items).
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${StockApps.menu(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()}).map(item => `<button data-action="${item.action}"${item.id != null ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
@@ -1436,61 +1410,6 @@
     ui.browserTabs = ui.browserSession.tabs.map(tab => tab.history[tab.index]);
   }
 
-  // Google+ Photos (the Nexus 6's Photos) over the simulator's pictures.
-  const photosContext = () => ({data, ui, t: key => i18n.t(key), locale: i18n.locale(), media: ICSMedia, groups: LPGallery.groups(data, 'album', i18n.locale())});
-  // Google+'s photo editor (plus-editor.js) over the same pictures.
-  const peContext = () => ({...photosContext(), save, render, toast});
-  function photosCurrent() { const list = PhotosApp.list(photosContext()); return list[ui.photosIndex] || null; }
-  const photosText = key => AndroidStrings.pick(window.StockStrings?.photos?.[key], i18n.locale(), key);
-  /* Slideshow (PhotoOneUpFragment's slideshow runnable): full screen, the pager scrolls one page in 600 ms
-     (AccelerateDecelerateInterpolator) every 5000 ms, and the last picture ends it with the bars back. A tap ends it. */
-  function photosSlideshowStop() { clearTimeout(ui.photosSlideTimer); ui.photosSlideTimer = null; ui.photosSlideshow = false; }
-  function photosSlideshowStep() {
-    if (!ui.photosSlideshow || ui.view !== 'photos' || ui.sub !== 'photo') { photosSlideshowStop(); return; }
-    const list = PhotosApp.list(photosContext());
-    if (ui.photosIndex >= list.length - 1) { photosSlideshowStop(); ui.photosChrome = true; render(); return; }
-    ui.photosIndex += 1; ui.selectedPhoto = list[ui.photosIndex].id; render();
-    viewport.querySelector('.ph-viewer > img')?.classList.add('ph-slide-in');
-    ui.photosSlideTimer = setTimeout(photosSlideshowStep, 5000);
-  }
-  /* Download (DownloadManager.addCompletedDownload): "Downloading image…", then a copy in the Download folder named
-     after download_file_name_format ('download'_yyyyMMdd_HHmmss), listed in Downloads, and "Download complete." */
-  function photosDownload(photo) {
-    toast(photosText('Downloading image…'));
-    setTimeout(() => {
-      const now = new Date(), two = n => String(n).padStart(2, '0');
-      const name = `download_${now.getFullYear()}${two(now.getMonth() + 1)}${two(now.getDate())}_${two(now.getHours())}${two(now.getMinutes())}${two(now.getSeconds())}`;
-      const copy = {...clone(photo), id: Date.now(), name, album: 'download', created: now.getTime()};
-      data.photos.push(copy);
-      (data.downloads ||= []).unshift({name: `${name}.jpg`, size: 1048576 + (copy.id % 900000), time: now.getTime(), photoId: copy.id});
-      save(); if (ui.view === 'photos') render(); toast(photosText('Download complete.'));
-    }, 1200);
-  }
-  function photosShare(photo) { if (!photo) return; ui.overlay = ''; renderOverlay(); openApp('messaging'); ui.sub = 'new'; lp.messageDraft().attachment = clone(photo); save(); render(); }
-  // Swipe between pictures in the viewer; a tap shows or hides the bars.
-  function attachPhotosSwipe() {
-    const pane = viewport.querySelector('.ph-viewer');
-    if (!pane || pane.dataset.swipe) return;
-    pane.dataset.swipe = '1';
-    let start = null;
-    pane.addEventListener('pointerdown', event => { start = {x: event.clientX, y: event.clientY}; });
-    pane.addEventListener('pointerup', event => {
-      if (!start) return;
-      const dx = event.clientX - start.x, dy = event.clientY - start.y; start = null;
-      if (Math.abs(dx) < dp(44) || Math.abs(dx) < Math.abs(dy)) return;
-      const list = PhotosApp.list(photosContext()), next = ui.photosIndex + (dx < 0 ? 1 : -1);
-      if (next < 0 || next >= list.length) return;
-      ui.photosIndex = next; ui.selectedPhoto = list[next].id; suppressReleaseClick(); render();
-    });
-  }
-  function photoStyle(photo) { return `background-image:url('${ICSMedia.image(photo)}');background-size:cover;background-position:center`; }
-  const galleryItems = () => LPGallery.items(data, ui, i18n.locale());
-  function galleryWallpaper(photo, quiet) { data.wallpaper = 11; data.customWallpaper = photo.colors; data.customWallpaperPhoto = clone(photo); save(); if (quiet) return; render(); toast('Wallpaper set'); }
-  function galleryStep(direction) {
-    const items=galleryItems(); if(!items.length)return;
-    const index=Math.max(0,items.findIndex(p=>p.id===ui.selectedPhoto));
-    ui.selectedPhoto=items[(index+direction+items.length)%items.length].id;ui.galleryZoom=false;render();
-  }
 
 
   // Voice Search listens for three seconds, then asks to try again.
@@ -1665,7 +1584,6 @@
     if (LP.module('play-music').preClick(action, id, button)) return;
     if (action.startsWith('drv-') && LPDrive.handle(action, id, {data, ui, save, render, renderOverlay, toast, root: viewport, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), shareFile: driveShareFile, shareText: driveShareText})) return;
     // Email's Quick responses, ringtone and server screens (email-prefs.js).
-    if (action.startsWith('pe-') && window.PlusEditor?.handle(action, button, peContext())) return;
     if (action.startsWith('lpu-') && window.LPUsers?.handle(action, button, {data, save, render, open: sub => { ui.sub = sub; render(); }, back: () => { ui.sub = 'users'; render(); }})) return;
     if (ui.view === 'gallery' && ui.galleryPopup && action !== 'gallery-menu') ui.galleryPopup = '';
     // A tap outside the Recents popup menu only dismisses it.
@@ -1776,7 +1694,6 @@
       case 'widget-photo-album': configurePhotoWidget({source: 'album', album: id}); break;
       case 'widget-photo-image': configurePhotoWidget({source: 'photo', photo: Number(id)}); break;
       case 'widget-photo-cancel': cancelPhotoWidget(); break;
-      case 'photos-set-wallpaper': ui.overlay = ''; openApp('photos'); break;
       case 'page': setHomePage(Number(id)); break;
       case 'power-toggle':
         if (id === 'brightness') data.settings.brightness = data.settings.brightness < 30 ? 55 : data.settings.brightness < 80 ? 100 : 20;
@@ -2049,46 +1966,7 @@
         ui.newsDialog = ''; ui.newsPick = undefined; save(); render(); break;
       }
       case 'news2-theme': ui.overlay = ''; renderOverlay(); data.news2 = {...StockApps.news2(data), dark: !StockApps.news2(data).dark}; save(); render(); break;
-      // Google+ Photos
-      case 'photos-tab': ui.photosTab = id; render(); break;
-      case 'photos-folders': ui.sub = 'folders'; render(); break;
-      case 'photos-folder': ui.sub = 'folder'; ui.photosFolder = id; render(); break;
-      case 'photos-open': { ui.photosList = ['folder', 'search', 'videos'].includes(button.dataset.list) ? button.dataset.list : 'all'; ui.photosReturn = ui.sub; const list = PhotosApp.list(photosContext()); ui.photosIndex = Math.max(0, list.findIndex(photo => String(photo.id) === id)); ui.selectedPhoto = list[ui.photosIndex]?.id; ui.sub = 'photo'; ui.photosChrome = true; render(); break; }
-      case 'photos-play': ui.photosVideo = null; ui.sub = 'video'; render(); break;
-      case 'photos-sphere': ui.sub = 'sphere'; render(); break;
-      // Lens Blur's viewer edits a copy; Done keeps it, Back drops it.
-      case 'photos-refocus': { const photo = PhotosApp.list(photosContext())[ui.photosIndex]; if (photo?.refocus) { ui.refocusEdit = JSON.parse(JSON.stringify(photo.refocus)); ui.sub = 'refocus'; render(); } break; }
-      case 'photos-refocus-done': { const photo = PhotosApp.list(photosContext())[ui.photosIndex]; if (photo?.refocus && ui.refocusEdit) { photo.refocus = ui.refocusEdit; save(); } ui.refocusEdit = null; ui.sub = 'photo'; render(); break; }
-      case 'photos-toggle-bars': if (ui.photosSlideshow) { photosSlideshowStop(); viewport.querySelectorAll('.ph-slide-out, .ph-slide-in').forEach(el => el.classList.remove('ph-slide-out', 'ph-slide-in')); }
-        ui.photosChrome = ui.photosChrome === false; viewport.querySelector('.ph-viewer-view')?.classList.toggle('ph-bare', ui.photosChrome === false); break;
-      case 'photos-menu': ui.overlay = 'photos-menu'; renderOverlay(); break;
-      case 'photos-share-day': photosShare(data.photos.find(photo => String(photo.id) === id)); break;
-      case 'photos-wallpaper': { const photo = photosCurrent(); ui.overlay = ''; renderOverlay(); if (photo) galleryWallpaper(photo); break; }
-      case 'photos-details': { const photo = photosCurrent(); ui.overlay = ''; renderOverlay(); if (photo) toast(`${photo.name}${photo.created ? ' · ' + new Date(photo.created).toLocaleString(i18n.locale()) : ''}`); break; }
-      case 'photos-delete': ui.overlay = 'photos-delete'; renderOverlay(); break;
-      case 'photos-confirm-delete': { const photo = photosCurrent(); ui.overlay = ''; renderOverlay(); if (!photo) break; data.photos = data.photos.filter(item => item.id !== photo.id); save(); const list = PhotosApp.list(photosContext()); if (!list.length) ui.sub = ui.photosReturn || ''; else ui.photosIndex = Math.min(ui.photosIndex, list.length - 1); render(); break; }
-      // The drawer (PhotosHomeActivity's views) and search.
-      case 'photos-drawer': ui.photosSpinner = !ui.photosSpinner; render(); break;
-      case 'photos-view': ui.photosView = id; ui.photosSpinner = false; render(); break;
-      case 'photos-search': ui.sub = 'search'; ui.photosQuery = ''; render(); viewport.querySelector('[data-photos-search]')?.focus(); break;
-      case 'photos-edit': { const photo = photosCurrent(); ui.overlay = ''; renderOverlay(); if (!photo || photo.video) break; PlusEditor.open(ui, photo); ui.sub = 'edit'; render(); break; }
-      case 'photos-slideshow': ui.overlay = ''; renderOverlay(); photosSlideshowStop(); ui.photosSlideshow = true; ui.photosChrome = false; render(); ui.photosSlideTimer = setTimeout(photosSlideshowStep, 5000); break;
-      case 'photos-download': { const photo = photosCurrent(); ui.overlay = ''; renderOverlay(); if (photo) photosDownload(photo); break; }
-      case 'photos-select': ui.overlay = ''; renderOverlay(); ui.photosSelect = []; ui.photosSpinner = false; render(); break;
-      case 'photos-pick': { const n = Number(id), list = ui.photosSelect || []; ui.photosSelect = list.includes(n) ? list.filter(x => x !== n) : [...list, n]; render(); break; }
-      case 'photos-select-done': ui.photosSelect = null; render(); break;
-      case 'photos-select-share': { const chosen = (ui.photosSelect || []).map(n => data.photos.find(p => p.id === n)).filter(Boolean); if (!chosen.length) break; ui.photosSelect = null; photosShare(chosen[0]); if (chosen.length > 1) { lp.messageDraft().moreAttachments = chosen.slice(1).map(clone); save(); } break; }
-      case 'photos-select-delete': ui.overlay = 'photos-delete-many'; renderOverlay(); break;
-      case 'photos-select-confirm': { const gone = ui.photosSelect || []; ui.overlay = ''; renderOverlay(); data.photos = data.photos.filter(p => !gone.includes(p.id)); ui.photosSelect = null; save(); render(); break; }
-      case 'photos-settings': ui.overlay = ''; renderOverlay(); ui.sub = 'settings'; render(); break;
-      case 'photos-settings-backup': ui.sub = 'settings-backup'; render(); break;
-      case 'photos-pref': { const prefs = data.photosPrefs ||= {}; prefs[id] = !({...PhotosApp.PREFS, ...prefs})[id]; save(); render(); break; }
-      case 'photos-pref-list': ui.photosPrefList = id; ui.overlay = 'photos-pref-list'; renderOverlay(); break;
-      case 'photos-pref-pick': (data.photosPrefs ||= {})[ui.photosPrefList] = id; ui.overlay = ''; renderOverlay(); save(); render(); break;
-      case 'photos-pref-online': toast(i18n.t('This feature is not part of the simulator.')); break;
-      case 'photos-print': { const photo = photosCurrent(); ui.overlay = ''; renderOverlay(); if (photo) PrintSpooler.open(printContext(), {name: photo.name, image: ICSMedia.image(photo)}); break; }
       case 'open-office-shortcut': {const f=officeFiles().find(f=>f.id===id&&!f.trashed);if(f){openApp(EditorMore.APP[f.kind]);ui.sub=f.id;ui.edFrom='';render();}break;}
-      case 'photos-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
       case 'lpx-open': {const f=officeFiles().find(f=>f.id===id);if(f){data.driveFiles=officeFiles().map(f=>f.id===id?{...f,otime:Date.now()}:f);save();}} ui.edFrom = ui.sub; ui.sub = id; render(); break;
       // Docs / Sheets / Slides: Add new opens an untitled file; the actions menu renames or removes one (Drive shows the same list).
       case 'ed-new': { const kind = LPExtraApps.KIND[ui.view], E = key => AndroidStrings.pick(window.StockStrings?.editors?.[key], i18n.language, key), base = E(LPExtraApps.UNTITLED[kind]), names = new Set(officeFiles().map(f => f.name)); let name = base, n = 2; while (names.has(name)) name = `${base} (${n++})`;
@@ -2108,9 +1986,6 @@
       case 'vol-zen': data.settings.zenMode = id; if (id === 'all') data.settings.zenExit = null; save(); renderStatus(); showVolume(volumeStream()); break;
       case 'vol-settings': hideVolume(); openApp('settings'); ui.sub = 'sound'; render(); break;
       case 'open-settings-sync': ui.overlay = ''; openApp('settings'); ui.sub = 'sync'; render(); break;
-      case 'photo': ui.selectedPhoto=Number(id);if(!galleryItems().some(p=>p.id===Number(id))){ui.galleryCluster='album';ui.galleryAlbum=ICSMedia.album(data.photos.find(p=>p.id===Number(id))||{});}ui.sub='photo';ui.galleryZoom=false;ui.galleryFilm=false;ui.galleryBars=true;ui.galleryFromCamera=false;render();break;
-      case 'gallery-menu': case 'gallery-share': case 'gallery-details': ui.overlay=action;renderOverlay();break;
-      case 'gallery-share-message': {const photo=data.photos.find(p=>p.id===ui.selectedPhoto);if(!photo)break;openApp('messaging');ui.sub='new';lp.messageDraft().attachment=clone(photo);save();render();break;}
 
       // Docs / Sheets / Slides' Print: the file's own text.
       case 'ed-print': { const file = officeFiles().find(f => f.id === ui.edFile); ui.overlay=''; renderOverlay(); if (!file) break; PrintSpooler.open(printContext(), {name: file.name, title: file.name, lines: String(file.text || '').split('\n')}); break; }
@@ -2180,7 +2055,6 @@
       r[key] = Number(value); if (key === 'end' && r.end === 1 && !r.until) r.until = ICSCalendar.iso(new Date(deviceDate().getTime() + 30 * 864e5)); render(); return; }
     if (event.target.matches('[data-lng-seek]') && InputLanguage.input(event.target, langContext())) return;
     if (event.target.matches('[data-keep-search]')) { ui.keepQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-keep-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
-    if (event.target.matches('[data-photos-search]')) { ui.photosQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-photos-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);delete folder.nameKey;save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
     if(event.target.dataset.field==='data-cycle'){ui.dataCycle=event.target.value;render();return;}
     if(event.target.matches('.camera-zoom input')) {
@@ -2851,11 +2725,7 @@
     }
     if (LP.module('clock').pointermove(event, dx, dy)) return;
     if (LP.module('calendar').pointermove(event, dx, dy)) return;
-    if (ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && pointerStart.target.closest('[data-gallery-swipe]') && Math.abs(dx)>dp(11) && Math.abs(dx)>Math.abs(dy)) {
-      pointerStart.gallerySwiping=true;suppressClickUntil=Date.now()+350;event.preventDefault();
-      try{screen.setPointerCapture(event.pointerId);}catch{}
-      const picture=viewport.querySelector('.gallery-image');if(picture)picture.style.transform=`translateX(${dx}px)`;return;
-    }
+    if (LP.module('photos').pointermove(event, dx, dy)) return;
     if (pointerStart.lockDrag) { event.preventDefault(); pointerStart.lockActive = lockMove(dx, dy); return; }
     // NotificationPanelView: pulling down again on the open panel expands Quick Settings.
     if (pointerStart.qsPullEligible && !ui.shadeSettings && dy > dp(40) && dy > Math.abs(dx)) { ui.shadeSettings = true; ui.qsDetail = ''; renderOverlay(); suppressClickUntil = Date.now() + 350; pointerStart.qsPullEligible = false; pointerStart.qsPulled = true; return; }
@@ -2933,7 +2803,7 @@
     if (LP.module('play-store').pointerup(event, dx, dy)) return;
     if (LP.module('calendar').pointerup(event, dx)) return;
     if (pointerStart.photoSwiping) { if (Math.abs(dy) > dp(33)) stepPhotoStack(pointerStart.photoStack, dy > 0 ? 1 : -1); else render(); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
-    if (pointerStart.gallerySwiping) { if(Math.abs(dx)>dp(50))galleryStep(dx<0?1:-1);else render();suppressClickUntil=Date.now()+350;pointerStart=null;return; }
+    if (LP.module('photos').pointerup(event, dx)) return;
     if (LP.module('calculator').pointerup(dx)) return;
     if (pointerStart.drawerSwiping) { finishDrawerPage(dx); pointerStart = null; return; }
     if (pointerStart.recentSwiping) {
@@ -3013,7 +2883,7 @@
   document.addEventListener('keydown', event => {
     const focusedStack = ui.view === 'home' && !ui.overlay && document.activeElement?.closest?.('[data-photo-stack]');
     if (focusedStack && ['ArrowUp','ArrowDown'].includes(event.key)) { event.preventDefault(); const id = focusedStack.dataset.photoStack; stepPhotoStack(id, event.key === 'ArrowDown' ? 1 : -1); viewport.querySelector(`[data-photo-stack="${CSS.escape(id)}"] .phw-front`)?.focus(); return; }
-    if(ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && ['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();galleryStep(event.key==='ArrowLeft'?-1:1);return;}
+    if (LP.module('photos').keydown(event)) return;
     if (event.target.matches?.('.recent-item,.web-tab-preview') && ['Enter',' '].includes(event.key)) { event.preventDefault(); event.target.click(); return; }
     if (ui.view === 'calculator' && StoreHost.key(event, storeContext())) return;
     if (event.key === 'Escape' || event.key === 'Backspace' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); back(); }
@@ -3146,7 +3016,7 @@
       else { const fresh = document.createElement('div'); fresh.innerHTML = renderDream(); const saver = overlayRoot.querySelector('.jb-dream-saver'), next = fresh.querySelector('.jb-dream-saver'); if (saver && next) { saver.querySelector('.jbclock-time').innerHTML = next.querySelector('.jbclock-time').innerHTML; } }
     }
     lp.checkReminders(now);
-    if(ui.view==='gallery' && ui.sub==='photo' && ui.gallerySlideshow && !ui.overlay && Date.now()-ui.gallerySlideAt>=3000){ui.gallerySlideAt=Date.now();galleryStep(1);}
+    LP.module('photos').clockTick();
     const deskTime=document.querySelector('.desk-time');
     if(deskTime) {
       deskTime.textContent=now.toLocaleTimeString(i18n.locale(),{hour:'2-digit',minute:'2-digit',hour12:!data.settings.hour24});
@@ -3175,14 +3045,13 @@
     get data() { return data; }, set data(v) { data = v; }, get defaultData() { return defaultData; },
     get deviceDate() { return deviceDate; }, get dp() { return dp; },
     get driveShareText() { return driveShareText; }, get editorContext() { return editorContext; },
-    get emailData() { return emailData; }, get galleryWallpaper() { return galleryWallpaper; },
-    get headsUp() { return headsUp; }, get holdDelay() { return holdDelay; }, get home() { return home; },
+    get emailData() { return emailData; }, get headsUp() { return headsUp; }, get holdDelay() { return holdDelay; },
+    get home() { return home; },
     get homeLongPressTimer() { return homeLongPressTimer; }, set homeLongPressTimer(v) { homeLongPressTimer = v; },
     get i18n() { return i18n; }, get keepAttach() { return keepAttach; },
     get messageHoldTimer() { return messageHoldTimer; }, set messageHoldTimer(v) { messageHoldTimer = v; },
     get nextAlarmLabel() { return nextAlarmLabel; }, get openApp() { return openApp; },
-    get overlayRoot() { return overlayRoot; }, get photosContext() { return photosContext; },
-    get placeShortcut() { return placeShortcut; },
+    get overlayRoot() { return overlayRoot; }, get placeShortcut() { return placeShortcut; },
     get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; },
     get printContext() { return printContext; }, get reducedMotion() { return reducedMotion; },
     get render() { return render; }, get renderOverlay() { return renderOverlay; },

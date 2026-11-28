@@ -1,7 +1,7 @@
 /* TODO */
 'use strict';
 LP.define('camera', ({
-  clone, i18n, openApp, photosContext, reducedMotion, render, renderOverlay, save, screen, toast, ui, viewport
+  clone, i18n, openApp, overlayRoot, reducedMotion, render, renderOverlay, save, screen, toast, ui, viewport
 }, lp) => {
   function renderCamera() { return LPCamera.render(lp.data, ui, key => i18n.t(key), ICSMedia, i18n.locale(), i18n.language); }
   // JB Camera callbacks: a capture adds a local illustration to the Camera album; the filmstrip opens Gallery.
@@ -32,13 +32,21 @@ LP.define('camera', ({
   function cameraGallery(id) {
     const photo = lp.data.photos.find(item => item.id === id) || ICSMedia.photos(lp.data, 'camera')[0];
     openApp('photos'); if (!photo) return;
-    const index = PhotosApp.list(photosContext()).findIndex(item => item.id === photo.id);
+    const index = PhotosApp.list(lp.photosContext()).findIndex(item => item.id === photo.id);
     if (index >= 0) { ui.photosIndex = index; ui.sub = 'photo'; render(); }
   }
   Object.assign(lp, {cameraShoot, hangoutsTakePhoto});
   // lp:code
   return {
     // lp:hooks
+    overlay(name, root) {
+      if (ui.overlay.startsWith('gallery-') || ui.overlay.startsWith('camera-')) {
+        overlayRoot.innerHTML=ICSMedia.overlay(lp.data,ui,key=>i18n.t(key),i18n.locale());
+        return true;
+      }
+      // lp:overlay
+      return false;
+    },
     // Settings › Apps › Camera › Clear data (clearAppData offers it to the screen of that id).
     clearData() { delete lp.data.cameraSettings; },
     back() {

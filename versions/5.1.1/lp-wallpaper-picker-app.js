@@ -1,8 +1,7 @@
 /* TODO */
 'use strict';
 LP.define('wallpaper-picker', ({
-  dp, galleryWallpaper, holdDelay, home, i18n, render, save, screen, suppressReleaseClick, toast, ui, viewport,
-  wallpaperFiles
+  dp, holdDelay, home, i18n, render, save, screen, suppressReleaseClick, toast, ui, viewport, wallpaperFiles
 }, lp) => {
   const wallpaperPickerContext = () => ({data: lp.data, ui, t: key => i18n.t(key), image: photo => ICSMedia.image(photo), bundled: wallpaperFiles.slice(1)});
   // Re-render the picker but keep the strip where it was scrolled.
@@ -62,7 +61,7 @@ LP.define('wallpaper-picker', ({
         case 'kwp-set': {
           const key = ui.wp?.selected || '';
           if (key === 'default' || key.startsWith('wp:')) { lp.data.wallpaper = key === 'default' ? 0 : Number(key.slice(3)); delete lp.data.customWallpaper; delete lp.data.customWallpaperPhoto; save(); }
-          else if (key.startsWith('photo:')) { const photo = lp.data.photos.find(p => p.id === Number(key.slice(6))); if (photo) { lp.data.kkSavedWallpapers = [photo.id, ...(lp.data.kkSavedWallpapers || []).filter(x => x !== photo.id)]; galleryWallpaper(photo, true); } }
+          else if (key.startsWith('photo:')) { const photo = lp.data.photos.find(p => p.id === Number(key.slice(6))); if (photo) { lp.data.kkSavedWallpapers = [photo.id, ...(lp.data.kkSavedWallpapers || []).filter(x => x !== photo.id)]; lp.galleryWallpaper(photo, true); } }
           ui.wp = null; home(false); break;
         }
         case 'wallpaper': lp.data.wallpaper = Number(id); delete lp.data.customWallpaper; delete lp.data.customWallpaperPhoto; save(); if (ui.view === 'wallpaper-picker') home(false); else render(); toast('Wallpaper set'); break;
