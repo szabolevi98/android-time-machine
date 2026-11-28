@@ -185,7 +185,7 @@
   function storeContext() {
     return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, viewport, dp, snapResting, suppressClick: ms => { suppressClickUntil = Date.now() + ms; },
       // 2.3.6's own AlertDialog (a spec the module's dialog(kind, c) returns) and the Menu key's IconMenu items.
-      saveMusic, deviceDate, today, home, cancelPhotoWidget, composeEmail, messageDraft, gapp: () => gappContext(), gbCapture, gbmaCancel, gbmaReturn, gbceReturn, back, contact, startPhoneCall, editPerson, clock, defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
+      saveMusic, deviceDate, today, home, cancelPhotoWidget, composeEmail, messageDraft, gapp: () => gappContext(), gbCapture, gbmaCancel, gbmaReturn, gbceReturn, back, contact, contactByPhone, captureRecentView, appName: id => appNames[id] || id, startPhoneCall, editPerson, clock, blinkTips, renderStatus, defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
       appList: () => apps.map(app => [app[0], i18n.t(app[1])]), browserTitle: gbBrowserTitle, contactName: id => contact(id)?.name, normalizeAddress,
       intent: {browse(url) { openApp('browser'); navigateBrowser(url); }, contact(id) { openApp('people'); ui.selectedContact = id; ui.sub = 'detail'; render(); }, thread: id => openMessageThread(id),
         track(i) { openApp('music'); ui.music.queue = ICSMusic.tracks.map((_, n) => n); ui.music.track = i; ui.music.position = 0; ui.music.playing = true; saveMusic(); ui.sub = 'player'; render(); }},
@@ -304,8 +304,6 @@
     if (ui.view === 'drawer') return;
     if (moduleView()) { StoreHost.menuKey(storeContext()); return; }
     if (GBApps.has(ui.view)) { GBApps.get(ui.view).keep?.(gappContext()); const items = GBApps.get(ui.view).menu?.(gappContext()) || []; if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
-    if (ui.view === 'people' && GBContactsIO.has(ui.sub)) { const items = GBContactsIO.menu(ui.sub, gbctContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
-    if ((ui.view === 'phone' && (!ui.activeCall || ui.gbCallBackground) && ui.sub !== 'call-detail') || (ui.view === 'people' && (!ui.sub || ui.sub === 'detail'))) { const items = GBPhone.menu(gbPhoneContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.gbPrefs && (ui.gbPrefs.view || ui.gbPrefs.app) === ui.view) { const items = GBPrefs.menu(gbPrefsContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'play-store') { const items = GBMarket.menu(gbMarketContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'settings' && GBSettingsPages.has(ui.sub)) { const items = GBSettingsPages.menu(ui.sub, gbPagesContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
@@ -646,8 +644,6 @@
       case 'wallpaper-picker': { const selected = Number.isInteger(ui.wpChoice) ? ui.wpChoice : Math.max(0, data.wallpaper); return `<div class="app-view gbwp"><div class="gbwp-preview"><img src="assets/gb-wallpaper_${wallpaperFiles[selected]}.jpg" alt=""></div><div class="gbwp-gallery" role="listbox" aria-label="${safe(i18n.t('Wallpapers'))}">${wallpaperFiles.map((name, index) => `<button class="gbwp-item${index === selected ? ' selected' : ''}" role="option" aria-selected="${index === selected}" data-action="gb-wp-pick" data-id="${index}" aria-label="${safe(name.replace(/_/g, ' '))}"><img src="assets/gb-wallpaper_${name}_small.jpg" alt=""></button>`).join('')}</div><button class="gbwp-set" data-action="wallpaper" data-id="${selected}">${safe(i18n.t('Set wallpaper'))}</button></div>`; }
       case 'settings': return renderSettings();
       case 'browser': return renderBrowser();
-      case 'phone': return renderPhone();
-      case 'people': return renderPeople();
       default: return renderHome();
     }
   }
@@ -661,7 +657,6 @@
     ui.view = app; ui.sub = resume ? ui.recentState?.[app]?.sub || '' : ''; if (!resume) { ui.gbPrefs = null; ui.gbCalSel = null; ui.gbEmSetup = null; } ui.overlay = ''; if (app === 'settings' && !resume) ui.settingsRootScroll = 0;
     if (GBApps.has(app)) GBApps.get(app).open?.(gappContext(), resume);
     StoreHost.open(app, storeContext(), resume);
-    if (app === 'phone' && ui.activeCall && !resume) { ui.gbCallBackground = true; ui.gbAddCall = false; ui.phoneTab = 'dialpad'; }
     ui.recent = [app, ...ui.recent.filter(id => id !== app)].slice(0, 8);
     render();
     if (resume && viewport.firstElementChild) appScrollContainer(app).scrollTop = ui.recentState?.[app]?.scrollTop || 0;
@@ -682,7 +677,6 @@
   function navigateBack() {
     if ((ui.overlay === 'store-host' || !ui.overlay && moduleView()) && StoreHost.back(storeContext())) return;
     if (ui.view === 'settings' && !ui.overlay && GBNetwork.back(gbNetContext())) return;
-    if (ui.view === 'people' && !ui.overlay && GBContactsIO.back(gbctContext())) return;
     if(ui.view==='settings'&&ui.sub==='lock-setup'){lockControls.cancel();if(ui.gbSettingsStack?.length)ui.gbSettingsStack.pop();return;}
     if(ui.view==='settings'&&ui.gbSettingsStack)while(ui.gbSettingsStack.length&&ui.gbSettingsStack.at(-1)===ui.sub)ui.gbSettingsStack.pop();
     if(ui.view==='settings'&&ui.sub&&ui.gbSettingsStack?.length&&!ui.overlay){ui.sub=ui.gbSettingsStack.pop();render();return;}
@@ -693,9 +687,6 @@
     if (ui.overlay) { ui.overlay = ''; render(); return; }
     if (ui.view === 'live-wallpapers') { const sub = String(ui.sub || ''); if (sub.startsWith('settings:')) ui.sub = `preview:${sub.slice(9)}`; else if (sub) ui.sub = ''; else { home(false); return; } render(); return; }
     if (ui.view === 'lock') return;
-    if(ui.view==='phone' && ui.activeCall && ui.gbAddCall){ui.gbAddCall=false;ui.gbCallBackground=false;render();return;}
-    if(ui.view==='phone' && ui.activeCall && !ui.gbCallBackground){if(ui.activeCall.keypad){ui.activeCall.keypad=false;render();}else home(false);return;}
-    if (ui.view === 'people' && (ui.sub === 'edit' || ui.sub === 'new') && viewport.querySelector('.gbce')) { viewport.querySelector('.gbce').requestSubmit(); return; }
     if(ui.view==='settings' && ['app-info','data-app','battery-history','battery-detail','storage-misc'].includes(ui.sub)){ui.sub={'app-info':'apps','data-app':'data','battery-history':'battery','battery-detail':'battery','storage-misc':'storage'}[ui.sub];render();return;}
     if (ui.view === 'play-store' && ui.marketSearching) { ui.marketSearching = false; render(); return; }
     if (ui.view === 'play-store' && ui.marketHistory?.length) { const prev = ui.marketHistory.pop(); ui.market = prev; render(); const box = viewport.querySelector('.gbmk-scroll'); if (box) box.scrollTop = prev.scroll || 0; return; }
@@ -715,7 +706,6 @@
     if (ui.view === 'settings' && ui.sub === 'reset-info') { ui.sub = 'backup'; render(); return; }
     if (ui.view === 'settings' && ['brightness','wallpaper','sleep'].includes(ui.sub)) { ui.sub = 'display'; render(); return; }
     if (ui.view === 'settings' && ['volumes','ringtone'].includes(ui.sub)) { ui.sub = 'sound'; render(); return; }
-    if (ui.view === 'people' && ui.sub === 'edit') { ui.sub = 'detail'; render(); return; }
     if (ui.sub) { ui.sub = ''; render(); if (ui.view === 'settings') viewport.querySelector('.settings-app').scrollTop = ui.settingsRootScroll; return; }
     home(false);
   }
@@ -763,12 +753,9 @@
     if (ui.overlay === 'gb-dialog-pref') return GBPrefs.dialog(gbPrefsContext(), ui.gbPrefDialog) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-module') return StoreHost.module(ui.view)?.dialog?.(ui.gbModuleDialog, storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-gbmk') return GBMarket.dialog(ui.gbmkDialog, gbMarketContext()) || {title: '', items: []};
-    if (ui.overlay === 'gb-dialog-clearlog') return {title: GBPhone.text(i18n.language, 'clearCallLogConfirmation_title'), icon: 'ic_dialog_alert', message: GBPhone.text(i18n.language, 'clearCallLogConfirmation'), buttons: [{action: 'gbp-clear-log-ok', title: GBSettings.text(i18n.language, 'fw_ok')}, {action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]};
-    // Its texts come localized from the images' strings and profile names are the user's: no interface translation.
-    if (ui.overlay === 'gb-dialog-gbct') return {...(GBContactsIO.dialog(ui.gbctDialog, gbctContext()) || {title: '', items: []}), noTranslate: true};
+    if (ui.overlay === 'gb-dialog-clearlog' || ui.overlay === 'gb-dialog-gbct' || ui.overlay === 'gb-dialog-ce') return GB.module('people').dialog(ui.overlay.slice(10), storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-net') return {...(GBNetwork.dialog(ui.gbNetDialog, gbNetContext()) || {title: '', items: []}), noTranslate: true};
     if (ui.overlay === 'gb-dialog-sp') return GBSettingsPages.dialog(ui.gbspDialog, gbPagesContext()) || {title: '', items: []};
-    if (ui.overlay === 'gb-dialog-ce') return GBContactEditor.dialog(ui.gbceDialog, gbceContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-camera') return GB.module('camera').dialog('restore', storeContext());
     if (ui.overlay === 'gb-dialog-gallery' || ui.overlay === 'gb-dialog-crop-saving') return GB.module('gallery').dialog(ui.overlay.slice(10), storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-email') return GB.module('email').dialog(ui.gbEmDialog, storeContext()) || {title: '', items: []};
@@ -857,7 +844,7 @@
     } else if (ui.overlay.startsWith('music-')) {
       overlayRoot.innerHTML = ICSMusic.overlay(ui.music,ui,key=>i18n.t(key));
     } else if (ui.overlay.startsWith('people-')) {
-      overlayRoot.innerHTML = peopleOverlay();
+      overlayRoot.innerHTML = GB.module('people').overlay(storeContext());
     } else if (ui.overlay === 'browser-menu') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu web-menu"><button data-action="browser-forward" ${ui.browserIndex >= ui.browserHistory.length-1?'disabled':''}>Forward</button><button data-action="browser-refresh">Refresh</button><button data-action="browser-new-tab">New tab</button><button data-action="browser-save">Bookmark</button><button data-action="browser-bookmarks">Bookmarks</button><button data-action="browser-saved">Saved pages</button><button data-action="browser-save-page">Save for offline reading</button><button data-action="browser-find">Find on page</button></div>`;
     } else if (ui.overlay === 'play-menu') {
@@ -1100,55 +1087,12 @@
     ui.playHistory.push({...ui.play,scrollTop:viewport.querySelector('.play-content')?.scrollTop || 0});
     ui.play = {...ui.play,...next}; ui.overlay = ''; render();
   }
-  function renderPhone() {
-    if(ui.activeCall&&!ui.gbCallBackground)return GBPhone.inCall(ui.activeCall,{lang:i18n.language,t:key=>i18n.t(key),person:contactByPhone(ui.activeCall.number),bluetoothAvailable:!!(data.settings.bluetooth&&data.settings.pairedDevice)});
-    if(ui.sub==='call-detail'){const call=(data.callHistory||[]).find(call=>call.time===ui.phoneCallId);if(call)return GBPhone.callDetail(call,contactByPhone(call.number),{lang:i18n.language,locale:i18n.locale()});}
-    return GBPhone.render(gbPhoneContext());
-  }
   function contactByPhone(number) { const normalized = String(number).replace(/[^\d+]/g, ''); return data.contacts.find(item => item.phone.replace(/[^\d+]/g, '') === normalized); }
-  function startPhoneCall(number) {
-    if(!number)return;
-    // Add call: the simulator keeps one line, so the call in progress ends and the new one is dialed.
-    if(ui.activeCall&&ui.gbAddCall&&!ui.activeCall.endedAt){data.callHistory=[...(data.callHistory||[]),ICSPhoneCall.finish(ui.activeCall)].slice(-50);ui.activeCall=null;save();}
-    if(!ui.activeCall)ui.activeCall=ICSPhoneCall.start(number);
-    ui.gbCallBackground=false;ui.gbAddCall=false;
-    captureRecentView();ui.recent=['phone',...ui.recent.filter(id=>id!=='phone')].slice(0,8);
-    ui.callNumber=ui.activeCall.number;ui.view='phone';ui.sub='calling';ui.overlay='';render();
-  }
-  // Dialtacts context: the Contacts launcher icon opens the same activity on its Contacts tab.
-  function gbPhoneContext() {
-    const person = ui.view === 'people' && ui.sub === 'detail' ? contact(ui.selectedContact) : null;
-    return {lang: i18n.language, locale: i18n.locale(), t: key => i18n.t(key), now: Date.now(), tab: ui.view === 'people' ? 'contacts' : ui.phoneTab || 'dialpad', dial: ui.dial || '', callActive: !!ui.activeCall, addCall: !!ui.gbAddCall, calls: data.callHistory || [], contactOf: number => contactByPhone(number), people: data.contacts, detail: person, io: GBContactsIO.view(data, i18n.language)};
-  }
-  function gbceContext() { return {lang: i18n.language, draft: ui.peopleDraft, isNew: ui.sub === 'new', moreName: !!ui.gbceMoreName, secondary: !!ui.gbceSecondary, familyFirst: false}; }
-  // The editor's fields are kept on the draft whenever a button changes the form.
+  // A contact's photo as the people screens draw it: a Gallery picture or one the Camera took for the contact.
   window.GBContactPhoto = person => { const photo = person?.photo && (data.photos.find(p => p.id === person.photo) || (data.contactPhotos || []).find(p => p.id === person.photo)); return photo ? ICSMedia.image(photo) : ''; };
-  function gbceSync() {
-    const form = viewport.querySelector('.gbce'); if (!form || !ui.peopleDraft) return;
-    for (const key of ['given', 'family', 'prefix', 'middle', 'suffix', 'phone', 'email', 'company', 'notes']) if (form.elements[key]) ui.peopleDraft[key] = form.elements[key].value;
-  }
-  // Contacts' Display options, Import/Export and SIM import (gb-contacts-io.js).
-  function gbctContext() {
-    return {data, ui, lang: i18n.language, save, render, renderOverlay, toast, account: ICSEmail.account, appName: id => appNames[id] || id,
-      openAccounts: () => { ui.view = 'settings'; ui.sub = 'sync'; ui.gbSettingsStack = ['']; render(); },
-      unsupported: () => toast('This feature is not part of the simulator.'),
-      // Gmail takes the vCard as the compose screen's attachment.
-      shareVcard: attachment => { openApp('gmail'); ui.gmDraft = {source: '', body: '', mode: '', attachment}; ui.gmCc = false; ui.gmView = 'compose'; render(); }};
-  }
-  function renderPeople() { if (GBContactsIO.has(ui.sub)) return GBContactsIO.render(ui.sub, gbctContext()); if (ui.sub === 'edit' || ui.sub === 'new') return GBContactEditor.render(gbceContext()); if (ui.sub === 'detail' && !contact(ui.selectedContact)) ui.sub = ''; return GBPhone.render(gbPhoneContext()); }
-  function editPerson(isNew = false) {
-    const person = isNew ? {} : contact(ui.selectedContact);
-    if (!person) return;
-    // EntityModifier.ensureKindExists: the editor always offers a phone and an email row.
-    ui.peopleDraft = {...person,phone:person.phone??'',email:person.email??'',groups:data.contactGroups.filter(g=>g.members.includes(person.id)).map(g=>g.id)};
-    ui.sub = isNew ? 'new' : 'edit'; ui.overlay = ''; render();
-  }
-  // ContactDeletionInteraction 2.3: deleteConfirmation_title with ic_dialog_alert, deleteConfirmation, OK / Cancel.
-  function peopleOverlay() {
-    if (ui.overlay !== 'people-delete') return '';
-    const T = key => GBPhone.text(i18n.language, key);
-    return GBUI.dialog({t: key => i18n.t(key), title: T('deleteConfirmation_title'), icon: 'ic_dialog_alert', message: T('deleteConfirmation'), buttons: [{action: 'people-confirm-delete', title: GBSettings.text(i18n.language, 'fw_ok')}, {action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]});
-  }
+  // Phone and Contacts (gb-phone.js): a call starts, the contact editor opens.
+  function startPhoneCall(number) { GB.module('phone').call(storeContext(), number); }
+  function editPerson(isNew = false) { GB.module('people').edit(storeContext(), isNew); }
   // A capture request open in the Camera: Messaging's (gbmaCapture) or the contact editor's Take photo (gbceCapture).
   const gbCapture = () => ui.gbmaCapture || ui.gbceCapture || null;
   // EditContactActivity's camera request returns the picture as the contact's photo (kept with the contacts, not in the
@@ -1222,8 +1166,6 @@
   }
   function clearAppData(id) {
     if(id==='browser'){delete data.browserSession;data.browserHistory=clone(defaultData.browserHistory);data.bookmarks=clone(defaultData.bookmarks||[]);data.savedPages=[];ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);syncBrowserState();}
-    if(id==='people'){data.contacts=clone(defaultData.contacts);data.contactGroups=clone(defaultData.contactGroups);ui.peopleDraft=null;}
-    if(id==='phone'){data.callHistory=[];ui.activeCall=null;}
     StoreHost.clearData(id, storeContext());
     if(id==='play-store')delete data.playRatings;
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
@@ -1246,7 +1188,6 @@
     // A store app's own controls and the host's dialog and menu (store-apps/legacy-host.js).
     if ((action.startsWith('sth-') || moduleView()) && StoreHost.action(action, button, storeContext())) return;
     if (action.startsWith('gbnet-') && GBNetwork.handle(action, id, gbNetContext(), button)) return;
-    if (action.startsWith('gbct-') && GBContactsIO.handle(action, id, gbctContext())) return;
     if (GBApps.has(ui.view) && !['back', 'home', 'menu-key', 'search-key', 'open-app'].includes(action) && GBApps.get(ui.view).handle?.(action, id, gappContext(), button)) return;
     switch (action) {
       case 'open-app': openApp(app || id, !!button.closest('.recent-item')); break;
@@ -1486,11 +1427,6 @@
       case 'noop': break;
       case 'browser-search': openSearch(''); break;
       case 'gbpref-open': ui.overlay = ''; ui.gbPrefs = {app: id, view: ui.view}; render(); break;
-      case 'gbce-photo': gbceSync(); ui.gbceDialog = ui.peopleDraft?.photo ? 'photo-edit' : 'photo'; ui.overlay = 'gb-dialog-ce'; renderOverlay(); break;
-      case 'gbce-photo-take': { gbceSync(); ui.overlay = ''; renderOverlay(); const ret = {sub: ui.sub}; openApp('camera'); ui.gbceCapture = {type: 'image', ret, taken: null}; ui.gbcamMode = 'photo'; render(); break; }
-      // Gallery's GET_CONTENT pick returns to the editor with the picture (Back returns without one).
-      case 'gbce-photo-pick': { ui.overlay = ''; const sub = ui.sub; captureRecentView(); ui.gbcePick = {sub}; ui.view = 'gallery'; ui.sub = ''; ui.gbgPick = true; render(); break; }
-      case 'gbce-photo-remove': if (ui.peopleDraft) ui.peopleDraft.photo = null; ui.overlay = ''; render(); break;
       case 'gbbr-share': ui.overlay = 'gb-dialog-share'; renderOverlay(); break;
       // EXTRA_TEXT carries the address and EXTRA_SUBJECT the page title.
       case 'gbbr-share-to': { const url = ICSBrowserSession.url(ui.browserSession) || '', address = browserAddress(String(url)), title = gbBrowserTitle(url); ui.overlay = '';
@@ -1553,41 +1489,6 @@
       case 'browser-tab': ui.browserSession.active = Number(id); ui.sub = ''; ui.browserFind = undefined; saveBrowserState(); render(); break;
       case 'browser-new-tab': if (!ICSBrowserSession.add(ui.browserSession)) break; browserLoading(); ui.sub = ''; ui.overlay = ''; ui.browserFind = undefined; saveBrowserState(); render(); break;
       case 'browser-save': ui.overlay = ''; renderOverlay(); if (!data.bookmarks.includes(ui.browserUrl)) { data.bookmarks.push(ui.browserUrl); save(); toast('Bookmark saved'); } else toast('Already bookmarked'); break;
-      case 'phone-tab': ui.phoneTab = id; ui.phoneSearch = undefined; if (id === 'contacts') { ui.view = 'people'; ui.sub = ''; } else if (ui.view === 'people') { ui.view = 'phone'; ui.sub = ''; } render(); break;
-      case 'gbp-contact': ui.selectedContact = Number(id); ui.view = 'people'; ui.sub = 'detail'; render(); break;
-      case 'gbp-voicemail': toast('Voicemail number not set'); break;
-      case 'gbp-new-contact': ui.overlay = ''; openApp('people'); editPerson(true); break;
-      case 'gbp-email': ui.overlay = ''; openApp('email'); break;
-      case 'gbp-clear-log': ui.overlay = 'gb-dialog-clearlog'; renderOverlay(); break;
-      case 'gbp-clear-log-ok': data.callHistory = []; ui.overlay = ''; save(); render(); break;
-      case 'phone-search': ui.phoneTab = 'favorites'; ui.phoneSearch = ''; ui.overlay = ''; render(); viewport.querySelector('.phone-search input')?.focus(); break;
-      case 'phone-menu': ui.overlay = 'phone-menu'; renderOverlay(); break;
-      case 'phone-add-contact': openApp('people'); editPerson(true); ui.peopleDraft.phone=ui.dial; render(); break;
-      case 'phone-redial': startPhoneCall(id); break;
-      case 'dial': if (ui.dial.length < 30) ui.dial += id; if (ui.dial.endsWith('*#*#8477#*#*')) { ui.dial = ''; data.protips = {index: 0, set: 1 - (data.protips?.set || 0)}; save(); home(false); setTimeout(() => blinkTips(3), 300); break; } render(); break;
-      case 'dial-delete': ui.dial = ui.dial.slice(0, -1); render(); break;
-      case 'call': if(!ui.dial){toast('Enter a phone number');break;}startPhoneCall(ui.dial);break;
-      case 'hangup': { const call=ui.activeCall; if(!call||call.endedAt)break; call.endedAt=Date.now(); call.keypad=false; render(); setTimeout(()=>{if(ui.activeCall===call&&ui.view==='phone')render();},GBPhone.HANGING_UP); setTimeout(()=>{if(ui.activeCall!==call)return; data.callHistory=[...(data.callHistory||[]),ICSPhoneCall.finish(call,call.endedAt)].slice(-50); ui.activeCall=null; ui.gbCallBackground=false; ui.gbAddCall=false; save(); if(ui.view==='phone'){ui.sub='';ui.dial='';render();} else renderStatus();},GBPhone.HANGING_UP+GBPhone.ENDED); break; }
-      case 'gbp-add-call': if(!ui.activeCall)break; ui.gbCallBackground=true; ui.gbAddCall=true; ui.phoneTab='dialpad'; ui.view='phone'; ui.sub=''; ui.dial=''; render(); break;
-      case 'gbp-dtmf': if(!ui.activeCall)break; ui.gbCallBackground=false; ui.gbAddCall=false; ui.activeCall.keypad=GBPhone.callState(ui.activeCall)==='active'; ui.view='phone'; render(); break;
-      case 'gbp-return-call': if(!ui.activeCall)break; ui.overlay=''; ui.gbCallBackground=false; ui.gbAddCall=false; captureRecentView(); ui.view='phone'; ui.sub='calling'; ui.recent=['phone',...ui.recent.filter(id=>id!=='phone')].slice(0,8); render(); break;
-      case 'incall-toggle': if(ui.activeCall&&!ui.activeCall.endedAt){ui.activeCall[id]=!ui.activeCall[id];if(id==='hold')ui.activeCall.keypad=false;}render();renderStatus();break;
-      case 'incall-digit': if(ui.activeCall)ui.activeCall.digits=(ui.activeCall.digits+id).slice(-24);render();break;
-      case 'phone-log-detail': ui.phoneCallId=Number(id);ui.sub='call-detail';render();break;
-      case 'phone-log-message': { const recipient=ICSMessaging.recipient(id,data.contacts); if(recipient)openMessageThread(recipient.key);else toast('Enter a valid phone number');break; }
-      case 'people-search': ui.peopleTab='all'; ui.peopleSearching=true; render(); viewport.querySelector('.people-search input')?.focus(); break;
-      case 'people-edit': ui.gbceMoreName = false; ui.gbceSecondary = false; editPerson(); break;
-      case 'gbce-type': gbceSync(); ui.gbceDialog = id; ui.overlay = 'gb-dialog-ce'; renderOverlay(); break;
-      case 'gbce-set-type': { const [kind, type] = id.split(':'); ui.peopleDraft[`${kind}Type`] = type; ui.overlay = ''; render(); break; }
-      case 'gbce-remove': gbceSync(); ui.peopleDraft[id] = null; render(); break;
-      case 'gbce-add': gbceSync(); ui.peopleDraft[id] = ''; render(); viewport.querySelector(`.gbce [name="${id}"]`)?.focus(); break;
-      case 'gbce-more-name': gbceSync(); ui.gbceMoreName = !ui.gbceMoreName; render(); break;
-      case 'gbce-secondary': gbceSync(); ui.gbceSecondary = !ui.gbceSecondary; render(); break;
-      case 'gbce-revert': ui.sub = ui.sub === 'edit' && contact(ui.selectedContact) ? 'detail' : ''; ui.peopleDraft = null; render(); break;
-      case 'people-star': { const person=contact(ui.selectedContact); if(person)person.favorite=!person.favorite; save(); render(); break; }
-      case 'people-delete': ui.overlay='people-delete'; renderOverlay(); break;
-      case 'people-confirm-delete': ICSPeople.remove(data,ui.selectedContact); save(); ui.sub=''; ui.overlay=''; render(); break;
-      case 'contact': ui.selectedContact = Number(id); ui.sub = 'detail'; render(); break;
       case 'alarm-snooze': {
         const alarm=data.alarms.find(item=>item.id===ui.ringingAlarm.id);
         // Snooze duration from the Clock settings (snooze_duration: 5, 10, ... 30 minutes).
@@ -1596,7 +1497,7 @@
         ui.overlay='';render();toast(AndroidStrings.format(GBDeskClock.text(i18n.language,'alarm_alert_snooze_set'), String(minutes)));break;
       }
       case 'alarm-dismiss': ui.overlay=''; render(); break;
-      default: break;
+      default: StoreHost.ids().some(other => other !== ui.view && !other.startsWith('store-') && StoreHost.module(other).action?.(action, button, storeContext())); break;
     }
   });
 
@@ -1610,7 +1511,6 @@
     // Email's server settings: Next keeps valid fields and returns to the account's settings.
     if (form.dataset.form === 'gbem-server') { data.appPrefs ||= {}; if (GBPrefs.serverSave(form, data.appPrefs['email-servers'] ||= {})) { save(); ui.gbPrefs = ui.gbPrefs?.parent || null; render(); } return; }
     if (form.dataset.form === 'play-search') { ui.play.query = String(values.get('query') || '').trim(); render(); return; }
-    if (form.dataset.form === 'phone-search') { ui.phoneSearch = String(values.get('query') || '').trim(); render(); return; }
     if (form.dataset.form === 'wifi-add') {
       const name = String(values.get('ssid') || '').trim();
       const security = values.get('security');
@@ -1629,27 +1529,9 @@
     }
     switch (form.dataset.form) {
       case 'browser-find': ui.browserFind=String(values.get('query')||'').trim(); render(); break;
-      case 'people-search': ui.peopleQuery=String(values.get('query')||'').trim(); render(); break;
-      case 'people-save': {
-        // ContactEditorActivity: the structured name is joined into the display name; an empty contact is not saved.
-        const name=values.has('given')?GBContactEditor.join([values.get('prefix'),values.get('given'),values.get('middle')].filter(Boolean).join(' '),[values.get('family'),values.get('suffix')].filter(Boolean).join(' ')):String(values.get('name')||'').trim(); if(!name){ui.sub=ui.sub==='edit'&&contact(ui.selectedContact)?'detail':'';ui.peopleDraft=null;render();break;}
-        const id=ui.sub==='edit'?ui.selectedContact:Date.now();
-        const person=contact(id)||{id};
-        person.name=name;for(const key of ['phone','email','company','notes'])person[key]=String(values.get(key)||'').trim();
-        if(ui.peopleDraft&&'photo' in ui.peopleDraft){if(ui.peopleDraft.photo)person.photo=ui.peopleDraft.photo;else delete person.photo;}
-        if(ui.peopleDraft?.phoneType)person.phoneType=ui.peopleDraft.phoneType;if(ui.peopleDraft?.emailType)person.emailType=ui.peopleDraft.emailType;
-        if(!contact(id))data.contacts.push(person);
-        if(!values.has('given')){const groups=values.getAll('groups');data.contactGroups.forEach(g=>{g.members=g.members.filter(member=>member!==id);if(groups.includes(g.id))g.members.push(id);});}
-        save();ui.selectedContact=id;ui.sub='detail';ui.peopleDraft=null;render();toast(GBContactEditor.text(i18n.language,'contactSavedToast'));break;
-      }
       case 'address': navigateBrowser(values.get('address')); break;
       case 'gbmk-search': { const q = String(values.get('query') || '').trim(); if (!q) break; data.marketSearches = [q, ...(data.marketSearches || []).filter(x => x !== q)].slice(0, 10); save(); gbMarketGo({page: 'search', query: q}); break; }
       case 'web-search': navigateBrowser(`search:${values.get('query')}`); break;
-      case 'contact': {
-        const name = String(values.get('name')).trim(), phone = String(values.get('phone')).trim(), email = String(values.get('email')).trim();
-        if (!name || !phone) return;
-        const id = Date.now(); data.contacts.push({ id, name, phone, email }); save(); ui.selectedContact = id; ui.sub = 'detail'; render(); toast('Contact saved'); break;
-      }
       default: break;
     }
   });
@@ -1668,11 +1550,6 @@
     if (event.target.closest('[data-form="gbem-server"]')) { GBPrefs.serverInput(event.target.closest('form'), event.target); return; }
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
     if(event.target.dataset.field==='data-cycle'){ui.dataCycle=event.target.value;render();return;}
-    if(event.target.closest('#people-editor')) {
-      if(event.target.name==='groups')ui.peopleDraft.groups=[...viewport.querySelectorAll('[name=groups]:checked')].map(input=>input.value);
-      else ui.peopleDraft[event.target.name]=event.target.value;
-      return;
-    }
     if (event.target.matches('[data-gbmk-auto]')) { const id = event.target.dataset.gbmkAuto, list = data.marketAuto || []; data.marketAuto = event.target.checked ? [...new Set([...list, id])] : list.filter(x => x !== id); save(); return; }
     if (event.target.matches('[data-gbsp-erase]')) { ui.gbspErase = event.target.checked; return; }
     if (ui.view === 'play-store' && event.target.closest('.gbbr-search')) { ui.marketEdit = event.target.value; const pos = event.target.selectionStart; render(); const input = viewport.querySelector('.gbbr-search input'); input?.focus(); input?.setSelectionRange(pos, pos); return; }
@@ -2075,8 +1952,6 @@
     event.preventDefault();
     const link = event.target.closest('[data-gbbr-item]');
     if (link && !ui.overlay) { ui.gbBrTarget = link.dataset.id; ui.overlay = 'gb-dialog-br'; ui.gbBrDialog = link.dataset.gbbrItem; renderOverlay(); }
-    const ct = event.target.closest('[data-gbct-hold]');
-    if (ct && !ui.overlay) GBContactsIO.hold(ct.dataset.gbctHold, gbctContext());
     const net = event.target.closest('[data-gbnet-hold]');
     if (net && !ui.overlay) GBNetwork.hold(net.dataset.gbnetHold, gbNetContext());
     if (!dragState && ui.view === 'home' && !ui.overlay && event.button === 2 && event.target.closest('.home-slot') && !event.target.closest('.launcher-icon')) { ui.overlay = 'wallpaper-source'; renderOverlay(); }
@@ -2105,8 +1980,6 @@
     if (ui.view === 'home' && !ui.overlay && event.target.closest('.home-slot') && !pointerStart.source) homeLongPressTimer = setTimeout(() => { ui.overlay = 'wallpaper-source'; renderOverlay(); pointerStart = null; suppressReleaseClick(); }, 550);
     const heldLink = event.target.closest('[data-gbbr-item]');
     if (heldLink && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.gbBrTarget = heldLink.dataset.id; suppressReleaseClick(); ui.overlay = 'gb-dialog-br'; ui.gbBrDialog = heldLink.dataset.gbbrItem; renderOverlay(); }, 550);
-    const heldCt = event.target.closest('[data-gbct-hold]');
-    if (heldCt && !ui.overlay) messageHoldTimer = setTimeout(() => { suppressReleaseClick(); GBContactsIO.hold(heldCt.dataset.gbctHold, gbctContext()); }, 550);
     const heldNet = event.target.closest('[data-gbnet-hold]');
     if (heldNet && !ui.overlay) messageHoldTimer = setTimeout(() => { suppressReleaseClick(); GBNetwork.hold(heldNet.dataset.gbnetHold, gbNetContext()); }, 550);
     if (pointerStart.lockDrag) { clearTimeout(ui.lockReleaseTimer); viewport.querySelectorAll('.lock-chevron').forEach(chevron => chevron.getAnimations().forEach(animation => animation.cancel())); screen.classList.remove('lock-releasing'); screen.classList.add('lock-dragging'); try { screen.setPointerCapture(event.pointerId); } catch {} }
@@ -2405,11 +2278,6 @@
     document.querySelectorAll('.status-clock').forEach(node => { node.textContent = clock(); });
     const now = deviceDate();
     if(!document.hidden && !ui.sleeping && ui.view!=='lock' && !ui.overlay && !ui.activeCall && !dragState && SCREEN_TIMEOUT[data.settings.screenTimeout ?? GBSettings.DEFAULTS.screenTimeout]!==undefined&&Date.now()-lastActivity>=SCREEN_TIMEOUT[data.settings.screenTimeout ?? GBSettings.DEFAULTS.screenTimeout]){captureRecentView();lockScreen();lastActivity=Date.now();}
-    if(ui.activeCall){
-      const screen=viewport.querySelector('.gbic'),state=GBPhone.callState(ui.activeCall);
-      if(screen&&screen.dataset.state!==state)render();
-      else if(screen&&state==='active'){const elapsed=screen.querySelector('.gbic-elapsed');if(elapsed)elapsed.textContent=GBPhone.elapsedText(ui.activeCall);}
-    }
     checkAlarms(now);
     checkReminders(now);
     document.querySelectorAll('.analog-clock').forEach(node => {

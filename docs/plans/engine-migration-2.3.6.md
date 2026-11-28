@@ -15,6 +15,8 @@ one `GB.register(id, {...})` module per screen.
   render); long presses use `GB.hold`, drags `GB.gesture`.
 - Tests that look for a piece of the engine read `tests/lib/engine-source.cjs` ('2.3.6'): the version's scripts as
   index.html loads them.
+- A click goes to the module in front, then to the shell's own cases; one neither takes goes to the other modules (the
+  shade's ongoing call returns to Phone this way).
 - An app's settings screen (GBPrefs, Menu › Settings) is drawn over its view: while it is open the module is not in
   front (`moduleView()` in the shell).
 
@@ -30,7 +32,8 @@ one `GB.register(id, {...})` module per screen.
 | Gallery | gb-gallery.js | 9d8d8e72 |
 | Camera | gb-camera.js | 965c3e4a |
 | Email | gb-email.js | 1537deba |
-| Messaging | gb-mms.js | |
+| Messaging | gb-mms.js | 77737d05 |
+| Phone, Contacts | gb-phone.js | |
 
 Bugs fixed on the way (their own commits):
 

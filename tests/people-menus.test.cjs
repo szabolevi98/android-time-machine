@@ -12,7 +12,7 @@ for(const [v,shortcut,title] of [['4.0.4',false,true],['4.3',true,false],['4.4.4
   assert.doesNotMatch(sim,/Messages will be kept under the phone number|Sharing is not available offline/);
   if(v!=='5.1.1'){assert.match(sim,/people-voicemail/);assert.match(sim,/people-list-menu/);assert.doesNotMatch(fs.readFileSync(`versions/${v}/people.js`,'utf8'),/people-delete" data-action/);}
 }
-const gb=fs.readFileSync('versions/2.3.6/simulator.js','utf8');
+const gb=require('./lib/engine-source.cjs')('2.3.6');
 assert.match(gb,/deleteConfirmation_title/);assert.doesNotMatch(gb,/case 'people-group':|ICSPeople\.render/);
 assert.ok(!fs.existsSync('versions/2.3.6/people.css'));
 const c={window:{}};vm.runInNewContext(fs.readFileSync('versions/2.3.6/people.js','utf8'),c);assert.deepEqual(Object.keys(c.window.ICSPeople),['remove']);
