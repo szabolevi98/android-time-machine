@@ -742,7 +742,6 @@
       case 'browser': return renderBrowser();
       case 'chrome': return renderChrome();
       case 'gmail': return renderGmail();
-      case 'music': return renderMusic();
       case 'email': return renderEmail();
       default: return renderHome();
     }
@@ -814,7 +813,6 @@
     if (ui.view === 'lock') return;
     if(ui.view==='settings' && ['apn','operators','tether-help','device-admin','wifi-direct','wifi-display'].includes(ui.sub)){ui.sub={apn:'mobile-networks',operators:'mobile-networks','tether-help':'tethering','device-admin':'security','wifi-direct':'wifi','wifi-display':'display'}[ui.sub];render();return;}
     if(ui.view==='settings' && ['app-info','data-app','battery-history','battery-detail','storage-misc','language-pick'].includes(ui.sub)){ui.sub={'language-pick':'language','app-info':'apps','data-app':'data','battery-history':'battery','battery-detail':'battery','storage-misc':'storage'}[ui.sub];render();return;}
-    if(ui.view==='music' && ui.sub==='queue'){ui.sub='player';render();return;}
     if (ui.view === 'play-store' && ui.marketSearching) { ui.marketSearching = false; render(); return; }
     if (ui.view === 'play-store' && ui.marketHistory?.length) { const prev = ui.marketHistory.pop(); ui.market = prev; render(); const list = viewport.querySelector('.jbp-scroll'); if (list) list.scrollTop = prev.scroll || 0; return; }
     if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return; }
@@ -936,8 +934,6 @@
       JBRecents.bindLongPress(overlayRoot.querySelector('.recent-panel'), popup => { ui.recentPopup = popup; suppressClickUntil = Infinity; window.addEventListener('pointerup', () => { suppressClickUntil = Date.now() + 50; }, {once: true, capture: true}); renderOverlay(); });
     } else if (ui.overlay === 'hce-dialog') {
       overlayRoot.innerHTML = HoloContactEditor.overlay({lang: i18n.language, draft: ui.peopleDraft, dialog: ui.hceDialog || '', photos: data.photos, photoUrl: pid => { const photo = data.photos.find(p => String(p.id) === String(pid)); return photo ? ICSMedia.image(photo) : ''; }});
-    } else if (ui.overlay.startsWith('music-')) {
-      overlayRoot.innerHTML = ICSMusic.overlay(ui.music,ui,key=>i18n.t(key));
     } else if (ui.overlay.startsWith('email-') && ui.view === 'gmail') {
       overlayRoot.innerHTML = KKEmail.overlay(data.gmailbox,ui,data.photos,key=>i18n.t(key),i18n.language,gmailOptions());
     } else if (ui.overlay.startsWith('email-')) {
@@ -1303,9 +1299,6 @@
   function checkTimers(...args) { return StoreHost.module('clock').exports.checkTimers(storeContext(), ...args); }
   function checkAlarms(...args) { return StoreHost.module('clock').exports.checkAlarms(storeContext(), ...args); }
 
-  function renderMusic() {
-    return ICSMusic.render(ui.music,ui,key=>i18n.t(key));
-  }
   function saveMusic() {
     ui.musicTrack=ui.music.track;ui.musicPlaying=ui.music.playing;ui.musicPosition=ui.music.position;
     data.music=clone(ui.music);delete data.music.playing;save();
@@ -1431,7 +1424,6 @@
     if(window.StoreHost?.has(id)){StoreHost.module(id).clearData?.(storeContext({clearId: id}));save();}
     if(id==='chrome'){delete data.chromeSession;delete ui.browserSessions.chrome;if(ui.browserOwner==='chrome'){ui.browserSession=restoreChrome();syncBrowserState();}save();}
     if(id==='browser'){delete data.browserSession;data.browserHistory=clone(defaultData.browserHistory);data.bookmarks=clone(defaultData.bookmarks||[]);data.savedPages=[];ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);syncBrowserState();}
-    if(id==='music'){ui.music=ICSMusic.restore();saveMusic();}
     if(id==='email'){data.mailbox=ICSEmail.restore(null,emailData,[]);data.sentEmails=[];ui.emailFolder='Inbox';ui.emailQuery=undefined;ui.emailSelected=[];}
     if(id==='play-store')delete data.playRatings;
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
@@ -1804,34 +1796,7 @@
       // straight into the form's hidden input, as the date and time pickers do.
       // CitiesActivity: the chosen cities are kept in the clock state; the list keeps its place while ticking them.
 
-      case 'music-play': ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
-      case 'music-prev': case 'music-next': ICSMusic.step(ui.music,action==='music-prev'?-1:1);saveMusic();render();break;
-      case 'music-tab': ui.musicTab=id;ui.sub='';render();break;
-      case 'music-library': ui.sub='';render();break;
-      case 'music-player': ui.sub='player';render();break;
-      case 'music-queue': ui.sub='queue';render();break;
-      case 'music-group': ui.musicGroup=id;ui.sub='music-group';render();break;
-      case 'music-select': ui.music.queue=[...ICSMusic.listing(ui.music,ui)];ui.music.track=Number(id);ui.music.position=0;ui.music.playing=true;saveMusic();ui.sub='player';render();break;
-      case 'music-shuffle': ui.music.shuffle=!ui.music.shuffle;saveMusic();render();break;
-      case 'music-repeat': ui.music.repeat={off:'all',all:'one',one:'off'}[ui.music.repeat];saveMusic();render();break;
       // AOSP Music (targetSdkVersion 9): the navigation bar's legacy menu key and the long-press context menus.
-      case 'legacy-menu': if(ui.view==='music'){ui.music.lang=i18n.language;ui.overlay='music-options';renderOverlay();}break;
-      case 'music-ctx-play': {
-        const [kind,key]=String(id).includes(':')?String(id).split(/:(.*)/s):['track',id];
-        const list=kind==='track'?[Number(key)]:kind==='playlist'?(key==='recent'?ICSMusic.listing(ui.music,{sub:''}):ui.music.playlists.find(p=>String(p.id)===key)?.tracks||[]):tracks.map((_,i)=>i).filter(i=>tracks[i].artist===key||tracks[i].album===key);
-        ui.overlay='';renderOverlay();if(!list.length)break;ui.music.queue=[...list];ui.music.track=list[0];ui.music.position=0;ui.music.playing=true;saveMusic();ui.sub='player';render();break;
-      }
-      case 'music-party': ui.music.party=!ui.music.party;if(ui.music.party)ui.music.shuffle=true;ui.overlay='';renderOverlay();saveMusic();render();break;
-      case 'music-shuffle-all': {const list=ICSMusic.listing(ui.music,{sub:''});ui.overlay='';renderOverlay();if(!list.length)break;ui.music.shuffle=true;ui.music.queue=[...list];ui.music.track=list[Math.floor(Math.random()*list.length)];ui.music.position=0;ui.music.playing=true;saveMusic();ui.sub='player';render();break;}
-      case 'music-ringtone': {const track=tracks[Number(id)];ui.overlay='';renderOverlay();if(!track)break;data.settings.ringtoneName=track.title;save();toast(AndroidStrings.format(ICSMusic.M('ringtone_set',i18n.language), track.title));break;}
-      case 'music-delete': {const n=Number(String(id).replace(/^group:/,''));if(String(id).startsWith('group:')){ui.musicSelected=null;ui.overlay='';renderOverlay();break;}ui.musicSelected=n;ui.music.lang=i18n.language;ui.overlay='music-delete';renderOverlay();break;}
-      case 'music-delete-confirm': {ui.music.deleted=[...new Set([...(ui.music.deleted||[]),ui.musicSelected])];ui.music.queue=ui.music.queue.filter(x=>x!==ui.musicSelected);ui.music.playlists.forEach(p=>{p.tracks=p.tracks.filter(x=>x!==ui.musicSelected);});if(ui.music.track===ui.musicSelected){ui.music.playing=false;ui.sub='';}ui.overlay='';renderOverlay();saveMusic();render();break;}
-      case 'music-playlist-delete': ui.music.playlists=ui.music.playlists.filter(p=>String(p.id)!==id);ui.overlay='';renderOverlay();saveMusic();render();break;
-      case 'music-search': ui.overlay='';renderOverlay();openApp('search');break;
-      case 'music-add-to-playlist': if(id&&!String(id).startsWith('group:'))ui.musicSelected=Number(id);ui.music.lang=i18n.language;ui.overlay='music-playlist-choice';renderOverlay();break;
-      case 'music-new-playlist': ui.musicAddPending=id==='add';ui.overlay='music-new-playlist';renderOverlay();break;
-      case 'music-add-confirm': {const playlist=ui.music.playlists.find(p=>String(p.id)===id);if(playlist&&!playlist.tracks.includes(ui.musicSelected))playlist.tracks.push(ui.musicSelected);saveMusic();ui.overlay='';render();toast('Added to playlist');break;}
-      case 'music-remove-from-playlist': {const playlist=ui.music.playlists.find(p=>String(p.id)===ui.musicGroup);if(playlist)playlist.tracks=playlist.tracks.filter(track=>track!==ui.musicSelected);saveMusic();ui.overlay='';render();break;}
       default: break;
     }
   }
@@ -1876,7 +1841,6 @@
       case 'address': navigateBrowser(values.get('address')); break;
       case 'web-search': navigateBrowser(`search:${values.get('query')}`); break;
       case 'chrome-history-search': ui.chromeHistoryQuery = String(values.get('query') || '').trim(); render(); break;
-      case 'music-playlist': {const name=String(values.get('name')||'').trim();if(!name)return;ui.music.playlists.push({id:Date.now(),name,tracks:ui.musicAddPending?[ui.musicSelected]:[]});saveMusic();ui.overlay='';render();break;}
       case 'email': case 'email-search': ICSEmail.submit(form.dataset.form, values, emailContext()); break;
       case 'sd-volumes': for(const key of ['mediaVolume','ringVolume','alarmVolume'])data.settings[key]=Math.max(0,Math.min(100,Number(values.get(key))));save();ui.overlay='';render();break;
       case 'sd-choice': {const choice=String(values.get('choice'));if(ui.settingsField==='sleep')data.settings.sleep=Number(choice);else if(['windowScale','transitionScale','animatorScale'].includes(ui.settingsField))data.settings[ui.settingsField]=Number(choice);else if(ui.settingsField==='font'){data.settings.fontSize=choice;data.settings.largeText=choice==='large'||choice==='huge';}else if(ui.settingsField==='silent'){data.settings.silent=choice!=='off';data.settings.silentMode=choice;}else data.settings[ui.settingsField]=choice;save();ui.overlay='';render();break;}
@@ -1910,7 +1874,6 @@
       const display = event.target.closest('.detail-pad')?.querySelector('p'); if (display) display.textContent = `${data.settings.brightness}%`;
       screen.style.filter = `brightness(${.5 + data.settings.brightness / 135})`;
     }
-    if(event.target.dataset.field==='music-position'){ui.music.position=Number(event.target.value);saveMusic();const elapsed=viewport.querySelector('.music-elapsed');if(elapsed)elapsed.textContent=ICSMusic.time(ui.music.position);}
   }
 
   let pointerStart = null, eggTimer = null, dragTimer = null, dragState = null;
