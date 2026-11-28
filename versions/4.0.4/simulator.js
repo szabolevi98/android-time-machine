@@ -143,7 +143,7 @@
     dial: '', callNumber: '', aboutTaps: 0, buildTaps: 0, easterNyan: false, settingsRootScroll: 0,
     browserUrl: data.browserHistory.at(-1) || 'www.google.com', browserHistory: [...data.browserHistory], browserIndex: data.browserHistory.length - 1, browserTabs: [data.browserHistory.at(-1) || 'www.google.com'], browserTab: 0,
     calendarMode: ['Day','Week','Month','Agenda'].includes(data.calendarMode)?data.calendarMode:'Month', selectedDate: localDate(ICSSystemSettings.wallDate(data)),
-    calc: '', calcFresh: false, calcPanel: 0, calcHistoryIndex: -1, phoneTab: 'dialpad',
+    phoneTab: 'dialpad',
     play: ICSPlayStore.initial(), playHistory: [],
     musicPlaying: false, musicTrack: 0, musicPosition: 0,
     emailId: 1, recent: [], recentSnapshots: {}, toastTimer: null, wifiTarget: '', bluetoothScanned: false
@@ -214,7 +214,9 @@
     for (let i = apps.length - 1; i >= 0; i--) if (String(apps[i][0]).startsWith('store-') && !want.includes(apps[i][0])) { delete appNames[apps[i][0]]; apps.splice(i, 1); }
   }
   storeAppsSync();
-  function storeContext() { return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, notify: (title, text) => addNotification(title, text), lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key)}); }
+  // The context of the store apps and of this version's own modules (ics-*.js): c below, with the host's dialog and menu.
+  function storeContext() { return StoreHost.context(c); }
+  const isStoreApp = id => String(id).startsWith('store-') && StoreHost.has(id);
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
   function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (icsPlayContext().prefs.widgets) placeShortcut(r, appNames[r]); }
   // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
@@ -600,7 +602,6 @@
       case 'camera': return renderCamera();
       case 'calendar': return renderCalendar();
       case 'clock': return renderClock();
-      case 'calculator': return renderCalculator();
       case 'music': return renderMusic();
       case 'email': return renderEmail();
       default: return renderHome();
@@ -712,7 +713,8 @@
   const musicFxContext = () => ({data, ui, language: i18n.language, locale: i18n.locale(), save, render, toast: message => toast(message)});
   const devContext = () => ({data, ui, root: viewport, save, render, renderOverlay, toast: message => toast(message), t: key => i18n.t(key), language: i18n.language});
   function navigateBack() {
-    if ((ui.overlay === 'store-host' || !ui.overlay && StoreHost.has(ui.view)) && StoreHost.back(storeContext())) return;
+    if ((ui.overlay === 'store-host' || !ui.overlay && isStoreApp(ui.view)) && StoreHost.back(storeContext())) return;
+    if (ask('back')) return;
     if (ui.view === 'settings' && ui.sub === 'dev-backup-pw' && !ui.overlay) { ui.sub = 'development'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'musicfx' && !ui.overlay) { ui.mfxSpin = false; ui.sub = 'sound'; render(); return; }
     if (ui.view === 'play-music' && !ui.overlay && ICSPlayMusic.back(ui)) { render(); return; }
@@ -768,7 +770,6 @@
     if(ui.view==='music' && ui.sub==='queue'){ui.sub='player';render();return;}
     if (ui.view === 'play-store' && ui.marketSearching) { ui.marketSearching = false; render(); return; }
     if (ui.view === 'play-store' && ui.marketHistory?.length) { const prev = ui.marketHistory.pop(); ui.market = prev; render(); const list = viewport.querySelector('.icsp-scroll'); if (list) list.scrollTop = prev.scroll || 0; return; }
-    if (ui.view === 'calculator' && ui.calcPanel) { setCalculatorPanel(0); return; }
     if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return; }
     if (ui.view === 'browser' && !ui.sub && ui.browserFind !== undefined) { ui.browserFind = undefined; render(); return; }
     if (ui.view === 'browser' && !ui.sub && ui.browserIndex > 0) { browserBack(); return; }
@@ -826,7 +827,10 @@
     if (ui.view === 'play-music' && ui.overlay.startsWith('pm4-')) { overlayRoot.innerHTML = ICSPlayMusic.overlay(playMusicContext()) || ''; return; }
     if (ui.view === 'gmail' && ui.overlay.startsWith('g4-')) { overlayRoot.innerHTML = ICSGmail.overlay(gmailContext()) || ''; return; }
     if (ui.overlay === 'vs3') { overlayRoot.innerHTML = ICSVoice.render(ui.vs3 || {phase: 'waiting'}, i18n.language, data.inputPrefs?.vsLanguage || 'en-US'); return; }
-    if (ui.overlay === 'shade') {
+    const moduleHtml = moduleOverlay();
+    if (moduleHtml != null) {
+      overlayRoot.innerHTML = moduleHtml;
+    } else if (ui.overlay === 'shade') {
       overlayRoot.innerHTML = `<div class="notification-shade"><div class="shade-top"><span class="shade-date">${shadeDate()}</span><button data-action="open-app" data-app="settings" aria-label="Settings"><img src="assets/ic_notify_quicksettings_normal.png" alt=""></button>${data.notifications.length ? '<button class="shade-clear" data-action="clear-notifications" aria-label="Clear notifications"><img src="assets/ic_notify_clear_normal.png" alt=""></button>' : ''}</div><div class="shade-divider"></div><div class="shade-body"><div class="shade-list">${ui.activeCall?`<button class="phone-resume-call" data-action="open-app" data-app="phone">${safe(i18n.t('Ongoing call'))} · ${safe(contactByPhone(ui.activeCall.number)?.name||ui.activeCall.number)}</button>`:''}${data.notifications.map(n => `<button class="notification" data-action="notification-open" data-id="${n.id}"><span class="notification-icon"><img src="assets/${n.id === 2 ? 'stat_notify_sms.png' : n.kind === 'calendar' ? 'calendar.png' : 'settings.png'}" alt=""></span><span><strong>${safe(n.title)}</strong><small>${safe(n.detail)}</small></span></button>`).join('')}</div><div class="shade-carrier">${carrierName()}</div></div><button class="shade-handle" data-action="close-overlay" aria-label="Close notifications"><img src="assets/status_bar_close_on.png" alt=""></button></div>`;
     } else if (ui.overlay.startsWith('widget-photo')) {
       overlayRoot.innerHTML = ICSWidgets.photoOverlay(data, ui, key => i18n.t(key));
@@ -882,8 +886,6 @@
     } else if (ui.overlay === 'sa-menu') {
       // The Google apps' action bar overflow (StockApps.menu: their menu XML's overflow items).
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${StockApps.menu(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()}).map(item => `<button data-action="${item.action}"${item.id != null ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'calc-menu') {
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu"><button data-action="calc-clear">${safe(CALC('Clear history'))}</button><button data-action="calc-panel" data-id="${ui.calcPanel ? 0 : 1}">${safe(CALC(ui.calcPanel ? 'Basic panel' : 'Advanced panel'))}</button></div>`;
     } else if (ui.overlay === 'phone-menu') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu phone-overflow"><button data-action="phone-add-contact">Add to contacts</button></div>`;
     } else if (ui.overlay === 'connectivity-menu') {
@@ -1302,27 +1304,6 @@
     ui.ringingAlarm=clone(alarm); save(); ui.overlay='clock-ringing'; renderOverlay();
   }
 
-  /* Calculator (IMM76I Calculator.apk), layout-port/main.xml: the display (display_style: 30 sp, 8 dp padding) with the
-     overflow_menu button (48 dp, shown as the phone has no menu key), the btn_function strip with CLR / DELETE (15 dp) at a
-     quarter, and the CalculatorViewPager's simple_pad.xml / advanced_pad.xml (weights 3 : 1.5 : 10). button_style 40 dp on
-     btn_function, digit_button_style on btn_digit, button_small_style 30 dp for sin, cos, tan, ln and log; 1 dp gaps. The
-     labels are the image's (strings.xml: "sen" in Spanish, "E" in French). */
-  const CALC = key => { const row = window.StockStrings?.calculator?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : key; };
-  function renderCalculator() {
-    const basic = ['7','8','9','÷','4','5','6','×','1','2','3','−','.','0','=','+'];
-    const advanced = ['sin','cos','tan','ln','log','!','π','e','^','(',')','√'], small = ['sin','cos','tan','ln','log'];
-    const label = key => ['sin','cos','tan','ln','log','e'].includes(key) ? CALC(key) : key;
-    const keys = items => items.map(key => `<button class="${/^[0-9.]$/.test(key) ? 'digit' : small.includes(key) ? 'function small' : 'function'}" data-action="calc-key" data-id="${key}">${safe(label(key))}</button>`).join('');
-    return `<div class="app-view"><div class="ics-calculator"><div class="ics-calc-display"><output aria-label="Calculator display">${safe(ui.calc === 'Error' ? CALC('Error') : ui.calc)}</output><button data-action="calc-menu" aria-label="More options"><img src="assets/ic_menu_overflow.png" alt=""></button></div><div class="ics-calc-delete"><span></span><button data-action="calc-key" data-id="${ui.calcFresh ? 'C' : '⌫'}" aria-label="${ui.calcFresh ? 'Clear' : 'Delete'}">${safe(CALC(ui.calcFresh ? 'CLR' : 'DELETE'))}</button></div><div class="calc-pager"><div class="calc-panels" style="transform:translateX(-${ui.calcPanel * 50}%)"><div class="ics-calc-grid" aria-label="${safe(CALC('Basic panel'))}" ${ui.calcPanel ? 'inert' : ''}>${keys(basic)}</div><div class="ics-calc-grid scientific" aria-label="${safe(CALC('Advanced panel'))}" ${ui.calcPanel ? '' : 'inert'}>${keys(advanced)}</div></div></div></div></div>`;
-  }
-  function setCalculatorPanel(index) {
-    ui.calcPanel = index;
-    const track = viewport.querySelector('.calc-panels');
-    if (!track) return;
-    track.style.transition = '';
-    track.style.transform = `translateX(-${index * 50}%)`; snapResting(track);
-    track.querySelectorAll('.ics-calc-grid').forEach((panel, i) => { panel.inert = i !== index; });
-  }
   function renderMusic() {
     return ICSMusic.render(ui.music,ui,key=>i18n.t(key));
   }
@@ -1378,27 +1359,10 @@
     if(id==='gallery'){data.photos=clone(defaultData.photos);}
     if(id==='camera')delete data.cameraSettings;
     if(id==='phone'){data.callHistory=[];ui.activeCall=null;}
-    if(id==='calculator'){ui.calc='';ui.calcHistoryIndex=-1;data.calcHistory=[];}
     if(id==='play-store')delete data.playRatings;
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
   }
 
-  function operateCalculator(key) {
-    if (key === 'C') { ui.calc = ''; ui.calcFresh = false; return; }
-    if (key === '⌫') { ui.calc = ui.calc === 'Error' ? '' : ui.calc.replace(/(?:sin|cos|tan|log|sqrt|√|ln)\($|.$/, ''); ui.calcFresh = false; return; }
-    if (key === '=') {
-      if (!ui.calc || ui.calc === 'Error') return;
-      try { const expression = ui.calc; ui.calc = ICSCalculator.evaluate(expression); data.calcHistory = [...(data.calcHistory || []), {expression, result:ui.calc}].slice(-50); ui.calcHistoryIndex = -1; save(); } catch { ui.calc = 'Error'; }
-      ui.calcFresh = true; return;
-    }
-    if (ui.calc.length > 150) return;
-    const operator = ['÷','×','−','+','^','!'].includes(key);
-    if (ui.calc === 'Error' || ui.calcFresh && !operator) ui.calc = '';
-    ui.calcFresh = false;
-    const token = key === '√' ? '√(' : /^(sin|cos|tan|ln|log)$/.test(key) ? `${key}(` : key;
-    if (operator && key !== '!' && /[÷×−+^]$/.test(ui.calc) && key !== '−') ui.calc = ui.calc.slice(0,-1);
-    ui.calc += token;
-  }
   function addNotification(title, detail) { data.notifications.unshift({ id: Date.now(), title, detail }); save(); renderStatus(); }
   function sendMessage(id, body, attachment) {
     if (!body && !attachment) return;
@@ -1407,6 +1371,21 @@
     openMessageThread(id);
   }
 
+  /* The context every module hook gets (ics-core.js, docs/plans/engine-migration.md): the saved and the on-screen
+     state, the shell's drawing and navigation, and the helpers the screens share. */
+  const c = {
+    get data() { return data; }, ui, save, render, renderOverlay, renderStatus, toast, openApp, home, back, screen, viewport, overlayRoot,
+    notify: (title, text) => addNotification(title, text), get lang() { return i18n.language; }, get locale() { return i18n.locale(); }, t: key => i18n.t(key), i18n, safe, clone,
+    dp, snapResting, holdDelay, deviceDate, today, clock,
+    suppressClick: ms => { suppressClickUntil = Date.now() + ms; }, suppressReleaseClick
+  };
+  // This version's modules (the store apps aside): the open screen's first, then the others in the order they registered.
+  function modules() { const ids = StoreHost.ids().filter(id => !id.startsWith('store-')); return [...ids.filter(id => id === ui.view), ...ids.filter(id => id !== ui.view)].map(id => StoreHost.module(id)); }
+  // A hook offered to the modules until one takes it (returns true), or run on every module.
+  function ask(hook, ...args) { const cx = storeContext(); return modules().some(m => m[hook]?.(...args, cx)); }
+  function each(hook, ...args) { const cx = storeContext(); for (const m of modules()) m[hook]?.(...args, cx); }
+  // The overlay a module draws (its markup, '' for nothing), or null when it is none of theirs.
+  function moduleOverlay() { const cx = storeContext(); for (const m of modules()) { const html = m.overlay?.(cx); if (html != null) return html; } return null; }
   let suppressClickUntil = 0;
   document.addEventListener('click', event => {
     const button = event.target.closest('[data-action]');
@@ -1422,6 +1401,8 @@
     if (action === 'mr-type-ok') { const to = overlayRoot.querySelector('input')?.value.trim(); ui.overlay = ''; renderOverlay(); if (to) { const rt = MapsRoute.route(mrContext(), {to, mode: 'drive', avoid: data.mapsAvoid || {}}); MapsRoute.startNav(mrContext(), {name: to, km: rt.km, min: rt.min, mode: 'drive'}); render(); } return; }
     if (action === 'mr-exit-ok') { ui.overlay = ''; renderOverlay(); MapsRoute.stopNav(mrContext()); render(); return; }
     if(ui.locked&&!['back','alarm-dismiss','alarm-snooze'].includes(action))return;
+    // The modules' own controls (the open screen's module first).
+    if (ask('action', action, button)) return;
     if (ui.view === 'downloads' && action.startsWith('hdl-') && HoloDownloads.handle(action, id, dlContext())) return;
     if (ui.view === 'gmail' && action.startsWith('g4-') && ICSGmail.handle(action, id, gmailContext())) return;
     if (ui.view === 'gmail' && action.startsWith('g4p-') && ICSGmailPrefs.handle(action, id, gmailContext())) return;
@@ -1458,7 +1439,7 @@
     if (action.startsWith('lng-') && ICSLanguage.handle(action, id, {data, ui, save, render, renderOverlay, toast: text => toast(i18n.t(text))})) return;
     if (ui.view === 'play-music' && action.startsWith('pm4-') && ICSPlayMusic.handle(action, id, playMusicContext(), button)) return;
     // A store app's own controls and the host's dialog and menu (store-apps/legacy-host.js).
-    if ((action.startsWith('sth-') || StoreHost.has(ui.view)) && StoreHost.action(action, button, storeContext())) return;
+    if ((action.startsWith('sth-') || isStoreApp(ui.view)) && StoreHost.action(action, button, storeContext())) return;
     // The Contacts editor (contact-editor.js): fields, types, photo and its dialogs.
     if (ui.view === 'people' && action.startsWith('hce-') && HoloContactEditor.handle(action, id, {draft: ui.peopleDraft, form: viewport.querySelector('#people-editor'), ui, render, renderOverlay,
       focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
@@ -1871,10 +1852,6 @@
       }
       case 'alarm-dismiss': ui.overlay=''; render(); break;
       case 'alarm-toggle': { const alarm = data.alarms.find(item => item.id === Number(id)); if (alarm) { alarm.enabled = !alarm.enabled; delete alarm.snoozedUntil; } save(); render(); break; }
-      case 'calc-menu': ui.overlay = 'calc-menu'; renderOverlay(); break;
-      case 'calc-panel': ui.overlay = ''; renderOverlay(); setCalculatorPanel(Number(id)); break;
-      case 'calc-clear': data.calcHistory = []; ui.calcHistoryIndex = -1; save(); operateCalculator('C'); ui.overlay = ''; render(); break;
-      case 'calc-key': operateCalculator(id); render(); break;
       case 'music-play': ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
       case 'music-prev': case 'music-next': ICSMusic.step(ui.music,action==='music-prev'?-1:1);saveMusic();render();break;
       case 'music-tab': ui.musicTab=id;ui.sub='';render();break;
@@ -2434,7 +2411,7 @@
     setHomePage(ui.page + Math.sign(delta));
   }, {passive:false});
   screen.addEventListener('dragstart', event => event.preventDefault());
-  let homeLongPressTimer = null, calculatorClearTimer = null, messageHoldTimer = null;
+  let homeLongPressTimer = null, messageHoldTimer = null;
   screen.addEventListener('contextmenu', event => {
     if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
     event.preventDefault();
@@ -2448,7 +2425,7 @@
   // gesture. Cancel only gestures owned by the simulator; lists scroll natively.
   screen.addEventListener('touchmove', event => {
     if (event.touches.length !== 1 || !pointerStart || event.target.closest('input, textarea, select')) return;
-    if (pointerStart.source || pointerStart.target.closest('#status-bar, #nav-bar, .home-view, .drawer-view, .lock-view, .shade-top, .shade-handle, .calc-pager, .easter-robot')) {
+    if (pointerStart.source || pointerStart.target.closest(['#status-bar, #nav-bar, .home-view, .drawer-view, .lock-view, .shade-top, .shade-handle, .easter-robot', ...modules().map(m => m.touch).filter(Boolean)].join(', '))) {
       if (event.cancelable) event.preventDefault();
     }
   }, { passive: false });
@@ -2485,8 +2462,7 @@
       const zoom = () => { count++; if (data.settings.haptic !== false) navigator.vibrate?.(50 * count); robot.style.transform = `scale(${ICSNyandroid.zoomScale(count)})`; if (count <= 3) eggTimer = setTimeout(zoom, ICSNyandroid.LONG_PRESS); else requestAnimationFrame(() => { suppressReleaseClick(); ui.easterNyan = true; render(); }); };
       eggTimer = setTimeout(zoom, 2 * ICSNyandroid.LONG_PRESS);
     }
-    if (ui.view === 'calculator' && !ui.overlay && event.target.closest('.calc-pager')) pointerStart.calculatorSwipe = true;
-    if (event.target.closest('.ics-calc-delete button')) calculatorClearTimer = setTimeout(() => { operateCalculator('C'); suppressClickUntil = Date.now() + 350; render(); }, holdDelay(600));
+    each('pointerdown', event, pointerStart);
     if (ui.view === 'home' && !ui.overlay) pointerStart.photoStack = event.target.closest('[data-photo-stack]')?.dataset.photoStack || '';
     if (pointerStart.source) dragTimer = setTimeout(() => startDrag(event.clientX, event.clientY), holdDelay(440));
   });
@@ -2494,14 +2470,8 @@
     if (!pointerStart || event.pointerId !== pointerStart.pointerId) return;
     if (dragState) { moveGhost(event.clientX, event.clientY); return; }
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
-    if (Math.hypot(dx,dy) > dp(9)) { clearTimeout(homeLongPressTimer); clearTimeout(calculatorClearTimer); clearTimeout(messageHoldTimer); }
-    if (pointerStart.calculatorSwipe && (pointerStart.calculatorSwiping || Math.abs(dx) > dp(14) && Math.abs(dx) > Math.abs(dy))) {
-      pointerStart.calculatorSwiping = true; suppressClickUntil = Date.now() + 350; event.preventDefault();
-      try { screen.setPointerCapture(event.pointerId); } catch {}
-      const track = viewport.querySelector('.calc-panels');
-      if (track) { track.style.transition = 'none'; track.style.transform = `translateX(${Math.max(-screen.clientWidth, Math.min(0, -ui.calcPanel * screen.clientWidth + dx))}px)`; }
-      return;
-    }
+    if (Math.hypot(dx,dy) > dp(9)) { clearTimeout(homeLongPressTimer); clearTimeout(messageHoldTimer); }
+    if (ask('pointermove', event, pointerStart, dx, dy)) return;
     if (pointerStart.drawerSwipeEligible && (pointerStart.drawerSwiping || Math.abs(dx) > dp(14) && Math.abs(dx) > Math.abs(dy) * 1.1)) {
       pointerStart.drawerSwiping = true;
       clearTimeout(dragTimer);
@@ -2579,14 +2549,14 @@
   });
   window.addEventListener('pointerup', event => {
     if (!pointerStart || event.pointerId !== pointerStart.pointerId) return;
-    clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(calculatorClearTimer); clearTimeout(messageHoldTimer);
+    clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(messageHoldTimer);
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
+    if (ask('pointerup', event, pointerStart, dx, dy)) { pointerStart = null; return; }
     // The ViewPager tab strip and pages follow a horizontal fling.
     if (ui.view === 'play-store' && (ui.market?.page === 'section' || ui.market?.page === 'my-apps') && !ui.overlay && pointerStart.target.closest('.icsp-scroll,.icsp-tabs') && Math.abs(dx) > dp(71) && Math.abs(dx) > Math.abs(dy) * 1.5) { const next = viewport.querySelector(`.icsp-tabs button:${dx < 0 ? 'last' : 'first'}-child`); if (next && !next.disabled) { ui.market.tab = next.dataset.id; render(); } suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if(pointerStart.calendarSwiping){if(Math.abs(dx)>dp(53))calendarMove(dx<0?1:-1);else viewport.querySelector('[data-calendar-swipe]').style.transform='';suppressClickUntil=Date.now()+350;pointerStart=null;return;}
     if (pointerStart.photoSwiping) { if (Math.abs(dy) > dp(35)) stepPhotoStack(pointerStart.photoStack, dy > 0 ? 1 : -1); else render(); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if (pointerStart.gallerySwiping) { if(Math.abs(dx)>dp(53))galleryStep(dx<0?1:-1);else render();suppressClickUntil=Date.now()+350;pointerStart=null;return; }
-    if (pointerStart.calculatorSwiping) { setCalculatorPanel(Math.abs(dx) > dp(59) ? (dx < 0 ? 1 : 0) : ui.calcPanel); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if (pointerStart.drawerSwiping) { finishDrawerPage(dx); pointerStart = null; return; }
     if (pointerStart.recentSwiping) {
       const card = pointerStart.target.closest('.recent-item, .notification');
@@ -2640,7 +2610,7 @@
     if (!ui.overlay && pointerStart.target.closest('#status-bar') && dy > dp(53)) { ui.overlay = 'shade'; renderOverlay(); }
     pointerStart = null;
   });
-  window.addEventListener('pointercancel', () => { clearTimeout(calculatorClearTimer); clearTimeout(messageHoldTimer); const calcTrack = viewport.querySelector('.calc-panels'); if (calcTrack) { calcTrack.style.transition = ''; calcTrack.style.transform = `translateX(-${ui.calcPanel * 50}%)`; snapResting(calcTrack); } clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(dragState?.edgeTimer);clearTimeout(dragState?.folderExitTimer);clearTimeout(dragState?.folderHoverTimer);clearFolderDragFeedback();dragState?.ghost.remove(); clearDragOutlines(); dragState = null; screen.classList.remove('dragging', 'page-swiping', 'settings-scrolling', 'lock-dragging'); setHomePage(ui.page); const drawerPage = viewport.querySelector('.drawer-page'); if (drawerPage) drawerPage.style.transform = ''; const lockHandle = viewport.querySelector('.lock-handle'); if (lockHandle) lockHandle.style.removeProperty('--lock-x'); if (pointerStart?.shadeDragging || ui.overlay === 'recent' || ui.overlay === 'shade' || ui.overlay === 'folder') renderOverlay(); pointerStart = null; });
+  window.addEventListener('pointercancel', () => { clearTimeout(messageHoldTimer); each('pointercancel'); clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(dragState?.edgeTimer);clearTimeout(dragState?.folderExitTimer);clearTimeout(dragState?.folderHoverTimer);clearFolderDragFeedback();dragState?.ghost.remove(); clearDragOutlines(); dragState = null; screen.classList.remove('dragging', 'page-swiping', 'settings-scrolling', 'lock-dragging'); setHomePage(ui.page); const drawerPage = viewport.querySelector('.drawer-page'); if (drawerPage) drawerPage.style.transform = ''; const lockHandle = viewport.querySelector('.lock-handle'); if (lockHandle) lockHandle.style.removeProperty('--lock-x'); if (pointerStart?.shadeDragging || ui.overlay === 'recent' || ui.overlay === 'shade' || ui.overlay === 'folder') renderOverlay(); pointerStart = null; });
   window.addEventListener('pointercancel',()=>{const photo=viewport.querySelector('.gallery-image');if(photo)photo.style.transform='';});
   window.addEventListener('pointercancel',()=>{const surface=viewport.querySelector('[data-calendar-swipe]');if(surface)surface.style.transform='';});
   document.addEventListener('keydown', event => {
@@ -2648,14 +2618,7 @@
     if (focusedStack && ['ArrowUp','ArrowDown'].includes(event.key)) { event.preventDefault(); const id = focusedStack.dataset.photoStack; stepPhotoStack(id, event.key === 'ArrowDown' ? 1 : -1); viewport.querySelector(`[data-photo-stack="${CSS.escape(id)}"] .phw-front`)?.focus(); return; }
     if(ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && ['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();galleryStep(event.key==='ArrowLeft'?-1:1);return;}
     if (event.target.matches('.recent-item,.web-tab-preview') && ['Enter',' '].includes(event.key)) { event.preventDefault(); event.target.click(); return; }
-    if (ui.view === 'calculator' && !ui.overlay && ['ArrowUp','ArrowDown'].includes(event.key) && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) {
-      event.preventDefault(); const history = data.calcHistory || []; if (!history.length) return;
-      ui.calcHistoryIndex = event.key === 'ArrowUp' ? (ui.calcHistoryIndex < 0 ? history.length - 1 : Math.max(0,ui.calcHistoryIndex - 1)) : (ui.calcHistoryIndex < 0 ? history.length - 1 : Math.min(history.length - 1,ui.calcHistoryIndex + 1));
-      ui.calc = history[ui.calcHistoryIndex].expression; ui.calcFresh = false; render(); return;
-    }
-    if (ui.view === 'calculator' && !ui.overlay && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName) && (/^[0-9.+\-*/=()!^]$/.test(event.key) || ['Enter','Backspace','Delete'].includes(event.key))) {
-      event.preventDefault(); const map = {'*':'×','/':'÷','-':'−','Enter':'=','Backspace':'⌫','Delete':'C'}; operateCalculator(map[event.key] || event.key); render(); return;
-    }
+    if (ask('key', event)) return;
     if (event.key === 'Escape' || event.key === 'Backspace' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); back(); }
     else if (event.key === 'Home' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); if (ui.view !== 'lock') home(); }
 
@@ -2791,6 +2754,7 @@
     }
   }, 1000);
 
+  each('init');
   i18n.translateDOM(document.body);
   render();
   coldBoot();
