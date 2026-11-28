@@ -268,7 +268,7 @@
     }
   }
   // The names the jb-* modules bind (generated as code moves out; docs/plans/engine-migration-4.3.md).
-  const moduleApi = {get back() { return back; }, get data() { return data; }, get home() { return home; }, get i18n() { return i18n; }, get jbmaContext() { return jbmaContext; }, get label() { return label; }, get messageDraft() { return messageDraft; }, get overlayRoot() { return overlayRoot; }, get render() { return render; }, get renderOverlay() { return renderOverlay; }, get safe() { return safe; }, get save() { return save; }, get ui() { return ui; }};
+  const moduleApi = {get back() { return back; }, get clone() { return clone; }, get data() { return data; }, get defaultData() { return defaultData; }, get deviceDate() { return deviceDate; }, get dp() { return dp; }, get home() { return home; }, get i18n() { return i18n; }, get jbmaContext() { return jbmaContext; }, get label() { return label; }, get messageDraft() { return messageDraft; }, get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; }, get openApp() { return openApp; }, get overlayRoot() { return overlayRoot; }, get pointerStart() { return pointerStart; }, get render() { return render; }, get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; }, get safe() { return safe; }, get save() { return save; }, get screen() { return screen; }, get toast() { return toast; }, get ui() { return ui; }, get viewport() { return viewport; }};
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
   function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (jbPlayContext().prefs.shortcuts) placeShortcut(r, appNames[r]); }
   // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
@@ -458,7 +458,6 @@
     if (ui.beanBag && !viewport.querySelector('[data-beanbag]')?.isSameNode(ui.beanBag.root)) { ui.beanBag.stop(); ui.beanBag = null; }
     const beanRoot = viewport.querySelector('[data-beanbag]');
     if (beanRoot && !ui.beanBag) requestAnimationFrame(() => { if (beanRoot.isConnected && !ui.beanBag) ui.beanBag = {...JBBeanBag.start(beanRoot), root: beanRoot}; });
-    if (ui.view === 'clock' && viewport.querySelector('.jbclock-app')) clockTicker();
     if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserFind) highlightBrowserText();
     if(ui.view==='calendar' && viewport.querySelector('.cal-time-scroll'))viewport.querySelector('.cal-time-scroll').scrollTop=dp(8*48/.8516);
   }
@@ -756,7 +755,6 @@
       case 'gallery': return renderGallery();
       case 'camera': return renderCamera();
       case 'calendar': return renderCalendar();
-      case 'clock': return renderClock();
       case 'music': return renderMusic();
       case 'email': return renderEmail();
       default: return renderHome();
@@ -864,7 +862,6 @@
     if (ui.view === 'currents' && !ui.overlay && (ui.currentsMenu || ui.currentsEdition)) { if (ui.currentsMenu) ui.currentsMenu = false; else ui.currentsEdition = ''; render(); return; }
     if (ui.view === 'movie-studio' && !ui.overlay && MovieStudio.back(ui)) { render(); return; }
     if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return; }
-    if (ui.view === 'clock' && !ui.overlay && ClockPrefs.back(ui)) { render(); return; }
     if (ui.chromeReturn && ui.view === ui.chromeReturn.view && ui.sub === ui.chromeReturn.sub && !ui.overlay) { const back = ui.chromeReturn; ui.chromeReturn = null; openApp('chrome'); ui.sub = 'chrome-settings'; ui.chromePrefStack = back.stack; render(); return; }
     if (ui.view === 'google-settings' && GMSSettings.back(ui)) { render(); return; }
     if (ui.view === 'maps' && !ui.overlay && ui.mapsRoute && MapsRoute.back(mrContext())) return;
@@ -930,8 +927,6 @@
     if (ui.view === 'hangouts' && ui.sub === 'archived') { ui.sub = ''; render(); return; }
     if (ui.view === 'hangouts' && ui.sub === 'thread') { ui.sub = ui.mmsListMode === 'archived' ? 'archived' : ''; render(); return; }
     if (ui.view === 'messaging' && ui.sub === 'thread') { ui.sub = ui.mmsListMode || ''; render(); return; }
-    if (ui.view === 'clock' && ui.sub === 'cities') { ui.sub = ''; render(); return; }
-    if (ui.view === 'clock' && ui.sub === 'alarm-edit') { ui.alarmDraft=null; ui.sub='alarms'; render(); return; }
     if (ui.view === 'people' && ui.sub === 'edit') { ui.sub = 'detail'; render(); return; }
     if (ui.sub) { ui.sub = ''; render(); if (ui.view === 'settings') viewport.querySelector('.settings-app').scrollTop = ui.settingsRootScroll; return; }
     home(false);
@@ -1045,17 +1040,6 @@
       JBRecents.bindLongPress(overlayRoot.querySelector('.recent-panel'), popup => { ui.recentPopup = popup; suppressClickUntil = Infinity; window.addEventListener('pointerup', () => { suppressClickUntil = Date.now() + 50; }, {once: true, capture: true}); renderOverlay(); });
     } else if (ui.overlay.startsWith('gallery-') || ui.overlay.startsWith('camera-')) {
       overlayRoot.innerHTML=ICSMedia.overlay(data,ui,key=>i18n.t(key),i18n.locale());
-    } else if (ui.overlay === 'jba-picker' && ui.jbaPicker) {
-      overlayRoot.innerHTML = JBAlarms.picker(ui.jbaPicker, {hour24: !!data.settings.hour24});
-    } else if (ui.overlay === 'jba-menu') {
-      const A = key => AndroidStrings.table('', window.AlarmStrings || {}).t(key, i18n.language);
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu" data-no-translate>${['menu_item_settings', 'menu_item_help'].map(key => `<button data-action="toast" data-id="This feature is not part of the simulator.">${safe(A(key))}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'jbclock-cities-menu' || ui.overlay === 'cpref-main') {
-      const items = ClockPrefs.menu(ui.overlay === 'cpref-main' ? 'main' : 'cities', {data, t: key => i18n.t(key), locale: i18n.locale(), tab: jbClockState().tab});
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${items.map(([action, id, label]) => `<button data-action="${action}" data-id="${id}">${safe(label)}</button>`).join('')}</div>`;
-    } else if (ui.overlay.startsWith('clock-')) {
-      overlayRoot.innerHTML = ICSDeskClock.overlay(ui,key=>i18n.t(key),{hour24:!!data.settings.hour24,locale:i18n.locale(),now:deviceDate()});
-      if(ui.overlay==='clock-ringing')ICSDeskClock.bindRinging?.(overlayRoot);
     } else if (ui.overlay === 'dtp') {
       // Calendar's datetimepicker dialogs (dtp.js).
       overlayRoot.innerHTML = DateTimePicker.render(ui.dtp, i18n.locale(), deviceDate());
@@ -1664,64 +1648,8 @@
     ui.eventDraft=ICSCalendar.normalize(item || {date:ui.selectedDate,time:'12:00',title:'',reminder:CalendarPrefs.prefs(data).reminder});
     ui.calendarError='';ui.overlay='';ui.sub='event-edit';render();
   }
-  // 4.2 DeskClock pages; the alarm list and editor keep the ICS AlarmClock/SetAlarm screens.
-  const jbClockState = () => { data.jbClock ||= {tab: 'clock', timers: [], stopwatch: {accumulated: 0, started: null, laps: []}}; return {...data.jbClock, timerDigits: ui.timerDigits || '', timerSetup: !!ui.timerSetup}; };
-  // DeskClock's settings (clock-prefs): the analog style and the Home clock reach the clock page through its state.
-  const clockExtras = state => ({...state, home: ClockPrefs.home(data, Date.now(), i18n.locale()), analog: ClockPrefs.prefs(data).style === 'analog' ? ClockPrefs.analog(deviceDate()) : ''});
-  function renderClock() {
-    if (ui.sub === 'clock-settings') return ClockPrefs.settings({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
-    if (ui.sub === 'night') return ClockPrefs.night({data, ui, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), hour24: !!data.settings.hour24, date: deviceDate().toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'})});
-    if (ui.sub === 'cities') return JBDeskClock.cities(jbClockState(), key => i18n.t(key), {locale: i18n.locale(), now: deviceDate(), hour24: !!data.settings.hour24, words: {title: i18n.t('Cities'), selected: i18n.t('Selected Cities')}});
-    // The 4.3 AlarmClock activity (jb-alarms.js); alarm-edit is the old SetAlarm screen the list no longer opens.
-    if (ui.sub === 'alarms') return JBAlarms.page(data.alarms, {expandedId: ui.jbaExpanded, locale: i18n.locale(), hour24: !!data.settings.hour24, normalize: ICSDeskClock.normalize});
-    if (ui.sub === 'alarm-edit') return ICSDeskClock.render(data,ui,key=>i18n.t(key),i18n.locale(),deviceDate());
-    return JBDeskClock.render(clockExtras(jbClockState()), key => i18n.t(key), {locale: i18n.locale(), now: deviceDate(), hour24: !!data.settings.hour24, alarm: nextAlarmLabel(), date: deviceDate().toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).toLocaleUpperCase(i18n.locale())});
-  }
-  let clockFrame = 0, clockSilenceTimer = 0;
-  function clockTicker() {
-    cancelAnimationFrame(clockFrame);
-    const step = () => {
-      const root = viewport.querySelector('.jbclock-app');
-      if (!root || ui.view !== 'clock') return;
-      JBDeskClock.tick(root, data.jbClock, Date.now(), key => i18n.t(key));
-      clockFrame = requestAnimationFrame(step);
-    };
-    clockFrame = requestAnimationFrame(step);
-  }
-  // TimerReceiver: a finished timer posts "Time's up" and shows its alert in the Timer page.
-  function checkTimers() {
-    const now = Date.now();
-    for (const timer of data.jbClock?.timers || []) {
-      if (timer.state !== 'running' || JBDeskClock.remaining(timer, now) > 0) continue;
-      Object.assign(timer, {state: 'done', left: 0, started: null});
-      data.notifications.unshift({id: now + data.notifications.length, title: i18n.t("Time's up"), detail: i18n.t('Timer'), kind: 'timer'}); save();
-      renderStatus(); if (ui.overlay === 'shade') renderOverlay();
-      if (ui.view === 'clock') { data.jbClock.tab = 'timer'; render(); }
-      toast("Time's up");
-    }
-  }
-  // Label and ringtone edits from a 4.3 alarm card go straight into that alarm.
-  function jbaCommit() {
-    if (!ui.jbaEditing) return;
-    const alarm = data.alarms.find(item => item.id === ui.jbaEditing);
-    if (alarm) { alarm.label = ui.alarmDraft.label; alarm.tone = ui.alarmDraft.tone; save(); }
-    ui.jbaEditing = null; ui.alarmDraft = null;
-  }
-  function editAlarm(id) {
-    ui.alarmDraft=ICSDeskClock.normalize(data.alarms.find(alarm=>alarm.id===Number(id)));
-    ui.sub='alarm-edit'; ui.overlay=''; render();
-  }
-  function checkAlarms(now) {
-    if(ui.overlay==='clock-ringing')return;
-    const alarm=data.alarms.find(alarm=>ICSDeskClock.due(alarm,now));
-    if(!alarm)return;
-    alarm.lastFiredMinute=Math.floor(now.getTime()/60000);
-    delete alarm.snoozedUntil;
-    if(!ICSDeskClock.normalize(alarm).days.length)alarm.enabled=false;
-    ui.ringingAlarm=clone(alarm); save(); ui.overlay='clock-ringing'; renderOverlay();
-    // Silence after: an alarm left ringing stops by itself.
-    clearTimeout(clockSilenceTimer); { const after = Number(ClockPrefs.prefs(data).silence), ringing = ui.ringingAlarm; if (after > 0) clockSilenceTimer = setTimeout(() => { if (ui.overlay === 'clock-ringing' && ui.ringingAlarm === ringing) { ui.overlay = ''; render(); } }, after * 60000); }
-  }
+  function checkTimers(...args) { return StoreHost.module('clock').exports.checkTimers(storeContext(), ...args); }
+  function checkAlarms(...args) { return StoreHost.module('clock').exports.checkAlarms(storeContext(), ...args); }
 
   function renderMusic() {
     return ICSMusic.render(ui.music,ui,key=>i18n.t(key));
@@ -1907,7 +1835,6 @@
     if(id==='browser'){delete data.browserSession;data.browserHistory=clone(defaultData.browserHistory);data.bookmarks=clone(defaultData.bookmarks||[]);data.savedPages=[];ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);syncBrowserState();}
     if(id==='music'){ui.music=ICSMusic.restore();saveMusic();}
     if(id==='email'){data.mailbox=ICSEmail.restore(null,emailData,[]);data.sentEmails=[];ui.emailFolder='Inbox';ui.emailQuery=undefined;ui.emailSelected=[];}
-    if(id==='clock')data.alarms=clone(defaultData.alarms);
     if(id==='calendar')data.events=clone(defaultData.events);
     if(id==='people'){data.contacts=clone(defaultData.contacts);data.contactGroups=clone(defaultData.contactGroups);ui.peopleDraft=null;}
     if(id==='messaging'){data.messages=clone(defaultData.messages);data.messageDrafts={};}
@@ -2020,13 +1947,6 @@
         if (result.open) { ui.sub = ''; ui.chromePrefStack = []; chromeNewTab(false); navigateBrowser(result.open); return; }
         render(); if (result.toast) toast(result.toast); return;
       }
-    }
-    if (action.startsWith('cpref-') && ui.view === 'clock') {
-      const result = ClockPrefs.handle(action, id, {data, ui});
-      if (['cpref-main', 'jbclock-cities-menu'].includes(ui.overlay)) { ui.overlay = ''; renderOverlay(); }
-      if (result === 'save') save();
-      if (result?.open) { openApp('chrome'); navigateBrowser(result.open); return; }
-      if (result) { render(); return; }
     }
     if (/^(pfl|pst|psh)-/.test(action)) { const result = PeopleIO.pageAction(action, id, {data, ui}); if (result) { if (result.share) { shareVcard(result.share.app, result.share.file); return; } if (result.save) save(); renderOverlay(); render(); return; } }
     if (action.startsWith('vcf-')) {
@@ -2614,72 +2534,8 @@
       case 'event-cancel': ui.sub=ui.eventDraft?.id?'event':'';ui.eventDraft=null;calendarRender();break;
       case 'event-delete': ui.overlay=ICSCalendar.normalize(data.events.find(item=>item.id===ui.selectedEvent)||{}).repeat!=='none'?'calendar-delete-scope':'calendar-delete';renderOverlay();break;
       case 'event-confirm-delete': data.events=data.events.filter(item=>item.id!==ui.selectedEvent);save();ui.overlay='';ui.sub='';calendarRender();break;
-      case 'clock-alarms': ui.sub='alarms'; render(); break;
-      case 'jbclock-tab': jbClockState(); data.jbClock.tab = id; save(); render(); break;
-      case 'jbclock-key': ui.timerDigits = JBDeskClock.setupDigits(ui.timerDigits || '', id); render(); break;
-      case 'jbclock-setup-cancel': ui.timerSetup = false; ui.timerDigits = ''; render(); break;
-      case 'jbclock-setup-start': { const time = JBDeskClock.setupTime(ui.timerDigits || ''); if (!time.ms) break; jbClockState(); data.jbClock.timers.push({id: `t${Date.now()}`, length: time.ms, left: time.ms, started: Date.now(), state: 'running', label: ''}); ui.timerSetup = false; ui.timerDigits = ''; save(); render(); break; }
-      case 'jbclock-timer-add': ui.timerSetup = true; ui.timerDigits = ''; render(); break;
-      case 'jbclock-timer-toggle': case 'jbclock-timer-plus': { const timers = jbClockState() && data.jbClock.timers, index = timers.findIndex(timer => timer.id === id); if (index < 0) break; timers[index] = JBDeskClock.timerAction(timers[index], action === 'jbclock-timer-plus' ? 'plus' : 'toggle', Date.now()); save(); render(); break; }
-      case 'jbclock-timer-delete': jbClockState(); data.jbClock.timers = data.jbClock.timers.filter(timer => timer.id !== id); save(); render(); break;
-      case 'jbclock-sw': {
-        jbClockState();
-        if (id === 'share') {
-          const watch = data.jbClock.stopwatch, laps = watch.laps || [], total = JBDeskClock.elapsed(watch, Date.now());
-          const text = [`${i18n.t('Stopwatch')}: ${JBDeskClock.formatStopwatch(total)}`, ...laps.map((lap, i) => `# ${i + 1}  ${JBDeskClock.formatStopwatch(lap - (laps[i - 1] || 0))}`)].join('\n');
-          openApp('messaging'); ui.sub = 'new'; messageDraft().body = text; save(); render(); break;
-        }
-        data.jbClock.stopwatch = JBDeskClock.stopwatchAction(data.jbClock.stopwatch, id, Date.now()); save(); render(); break;
-      }
-      case 'jba-add': ui.jbaPicker={id:null,digits:'',ampm:''}; ui.overlay='jba-picker'; renderOverlay(); break;
-      case 'jba-time': ui.jbaPicker={id:Number(id),digits:'',ampm:''}; ui.overlay='jba-picker'; renderOverlay(); break;
-      case 'jba-key': ui.jbaPicker=JBAlarms.pickerKey(ui.jbaPicker,id,!!data.settings.hour24); renderOverlay(); break;
-      case 'jba-picker-cancel': ui.jbaPicker=null; ui.overlay=''; renderOverlay(); break;
-      case 'jba-picker-set': {
-        // AlarmClock.onTimeSet: an edited alarm is switched on; a new one is added, enabled and expanded.
-        const v=JBAlarms.pickerValue(ui.jbaPicker.digits,!!data.settings.hour24,ui.jbaPicker.ampm); if(!v)break;
-        const time=`${String(v.h).padStart(2,'0')}:${String(v.m).padStart(2,'0')}`, p=ui.jbaPicker;
-        if(p.id){const alarm=data.alarms.find(item=>item.id===p.id); if(alarm){alarm.time=time;alarm.enabled=true;delete alarm.snoozedUntil;}}
-        else{const alarm=ICSDeskClock.normalize({time,enabled:true});alarm.id=Date.now();data.alarms.push(alarm);ui.jbaExpanded=alarm.id;}
-        save(); ui.jbaPicker=null; ui.overlay=''; render(); renderOverlay(); toast('Alarm set'); break;
-      }
-      case 'jba-expand': ui.jbaExpanded=ui.jbaExpanded===Number(id)?null:Number(id); render(); break;
-      case 'jba-repeat': { const alarm=data.alarms.find(item=>item.id===Number(id)); if(!alarm)break; const n=ICSDeskClock.normalize(alarm); if(n.days.length){alarm.days=[];alarm.repeatOpen=false;}else alarm.repeatOpen=!alarm.repeatOpen; save(); render(); break; }
-      case 'jba-day': { const [alarmId,day]=id.split(':').map(Number); const alarm=data.alarms.find(item=>item.id===alarmId); if(!alarm)break; const days=new Set(ICSDeskClock.normalize(alarm).days); days.has(day)?days.delete(day):days.add(day); alarm.days=[...days].sort(); save(); render(); break; }
-      case 'jba-vibrate': { const alarm=data.alarms.find(item=>item.id===Number(id)); if(!alarm)break; alarm.vibrate=!ICSDeskClock.normalize(alarm).vibrate; save(); render(); break; }
-      case 'jba-label': case 'jba-tone': { const alarm=data.alarms.find(item=>item.id===Number(id)); if(!alarm)break; ui.alarmDraft=ICSDeskClock.normalize(alarm); ui.jbaEditing=alarm.id; ui.overlay=action==='jba-label'?'clock-label':'clock-tone'; renderOverlay(); break; }
-      case 'jba-menu': ui.overlay='jba-menu'; renderOverlay(); break;
-      case 'jbclock-menu': ui.overlay = 'cpref-main'; renderOverlay(); break;
       // CitiesActivity: the chosen cities are kept in the clock state; the list keeps its place while ticking them.
-      case 'jbclock-cities': ui.sub = 'cities'; ui.overlay = ''; render(); break;
-      case 'jbclock-city': { const list = viewport.querySelector('.jbclock-city-list'), top = list?.scrollTop || 0; jbClockState(); const chosen = data.jbClock.cities ||= []; const at = chosen.indexOf(id); if (at >= 0) chosen.splice(at, 1); else chosen.push(id); save(); render(); const after = viewport.querySelector('.jbclock-city-list'); if (after) after.scrollTop = top; break; }
-      case 'jbclock-cities-menu': ui.overlay = 'jbclock-cities-menu'; renderOverlay(); break;
 
-      case 'clock-dim': ui.clockDim=!ui.clockDim; render(); break;
-      case 'alarm-new': editAlarm(); break;
-      case 'alarm-edit': editAlarm(id); break;
-      case 'alarm-cancel': ui.alarmDraft=null; ui.sub='alarms'; render(); break;
-      case 'alarm-draft-toggle': ui.alarmDraft[id]=!ui.alarmDraft[id]; render(); break;
-      case 'alarm-field': ui.overlay='clock-'+id; renderOverlay(); break;
-      case 'alarm-time-step': {
-        const [field,step]=id.split(':'); const input=overlayRoot.querySelector(`[name="${field}"]`);
-        const count=field==='hour'?24:60; input.value=String(((Number(input.value)||0)+Number(step)+count)%count).padStart(2,'0'); break;
-      }
-      case 'alarm-save': {
-        const alarm=ICSDeskClock.normalize(ui.alarmDraft); delete alarm.snoozedUntil; delete alarm.lastFiredMinute;
-        const index=data.alarms.findIndex(item=>item.id===alarm.id);
-        if(index<0){alarm.id=Date.now();data.alarms.push(alarm);}else data.alarms[index]=alarm;
-        save(); ui.alarmDraft=null; ui.sub='alarms'; render(); toast('Alarm set'); break;
-      }
-      case 'alarm-delete': ui.overlay='clock-delete'; renderOverlay(); break;
-      case 'alarm-confirm-delete': data.alarms=data.alarms.filter(alarm=>alarm.id!==ui.alarmDraft.id); save(); ui.alarmDraft=null; ui.overlay=''; ui.sub='alarms'; render(); break;
-      case 'alarm-snooze': {
-        const alarm=data.alarms.find(item=>item.id===ui.ringingAlarm.id);
-        if(alarm){alarm.enabled=true;alarm.snoozedUntil=deviceDate().getTime()+ClockPrefs.prefs(data).snooze*60000;save();}
-        ui.overlay='';render();{const message=ICSDeskClock.snoozeMessage(new Date(alarm?.snoozedUntil||deviceDate().getTime()+ClockPrefs.prefs(data).snooze*60000),{hour24:!!data.settings.hour24,locale:i18n.locale()});if(message)toast(message);}break;
-      }
-      case 'alarm-dismiss': ui.overlay=''; render(); break;
-      case 'alarm-toggle': { const alarm = data.alarms.find(item => item.id === Number(id)); if (alarm) { alarm.enabled = !alarm.enabled; delete alarm.snoozedUntil; } save(); render(); break; }
       case 'music-play': ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
       case 'music-prev': case 'music-next': ICSMusic.step(ui.music,action==='music-prev'?-1:1);saveMusic();render();break;
       case 'music-tab': ui.musicTab=id;ui.sub='';render();break;
@@ -2818,8 +2674,6 @@
       case 'music-playlist': {const name=String(values.get('name')||'').trim();if(!name)return;ui.music.playlists.push({id:Date.now(),name,tracks:ui.musicAddPending?[ui.musicSelected]:[]});saveMusic();ui.overlay='';render();break;}
       case 'alarm-time': ui.alarmDraft.time=String(values.get('hour')).padStart(2,'0')+':'+String(values.get('minute')).padStart(2,'0'); ui.overlay='';render();break;
       case 'alarm-days': ui.alarmDraft.days=values.getAll('days').map(Number);ui.overlay='';render();break;
-      case 'alarm-tone': ui.alarmDraft.tone=String(values.get('tone'));ui.overlay='';jbaCommit();render();break;
-      case 'alarm-label': ui.alarmDraft.label=String(values.get('label')||'').trim();ui.overlay='';jbaCommit();render();break;
       case 'email': case 'email-search': ICSEmail.submit(form.dataset.form, values, emailContext()); break;
       case 'sd-volumes': for(const key of ['mediaVolume','ringVolume','alarmVolume'])data.settings[key]=Math.max(0,Math.min(100,Number(values.get(key))));save();ui.overlay='';render();break;
       case 'sd-choice': {const choice=String(values.get('choice'));if(ui.settingsField==='sleep')data.settings.sleep=Number(choice);else if(['windowScale','transitionScale','animatorScale'].includes(ui.settingsField))data.settings[ui.settingsField]=Number(choice);else if(ui.settingsField==='font'){data.settings.fontSize=choice;data.settings.largeText=choice==='large'||choice==='huge';}else if(ui.settingsField==='silent'){data.settings.silent=choice!=='off';data.settings.silentMode=choice;}else data.settings[ui.settingsField]=choice;save();ui.overlay='';render();break;}
@@ -3347,10 +3201,6 @@
   }, {passive:false});
   screen.addEventListener('dragstart', event => event.preventDefault());
   let homeLongPressTimer = null, messageHoldTimer = null;
-  let jbaSwipe = null;
-  viewport.addEventListener('pointerdown', event => { const card = event.target.closest('[data-jba-swipe]'); if (!card || event.target.closest('.jba-expand,.holo-switch')) return; jbaSwipe = {card, x: event.clientX, y: event.clientY, dx: 0}; });
-  window.addEventListener('pointermove', event => { if (!jbaSwipe) return; const dx = event.clientX - jbaSwipe.x; if (Math.abs(event.clientY - jbaSwipe.y) > 24 && Math.abs(dx) < dp(28)) { jbaSwipe.card.style.transform = ''; jbaSwipe = null; return; } jbaSwipe.dx = dx; if (Math.abs(dx) > dp(14)) { jbaSwipe.card.style.transition = 'none'; jbaSwipe.card.style.transform = `translateX(${dx}px)`; jbaSwipe.card.style.opacity = String(Math.max(.2, 1 - Math.abs(dx) / jbaSwipe.card.offsetWidth)); } });
-  window.addEventListener('pointerup', () => { if (!jbaSwipe) return; const {card, dx} = jbaSwipe; jbaSwipe = null; card.style.transition = ''; if (Math.abs(dx) > card.offsetWidth * .4) { const id = Number(card.dataset.jbaSwipe); data.alarms = data.alarms.filter(alarm => alarm.id !== id); if (ui.jbaExpanded === id) ui.jbaExpanded = null; save(); render(); toast(window.AlarmStrings?.alarm_deleted ? AndroidStrings.table('', window.AlarmStrings).t('alarm_deleted', i18n.language) : 'Alarm deleted.'); suppressClickUntil = Date.now() + 350; } else { card.style.transform = ''; card.style.opacity = ''; if (Math.abs(dx) > dp(14)) suppressClickUntil = Date.now() + 350; } });
   screen.addEventListener('contextmenu', event => {
     if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
     event.preventDefault();
@@ -3502,12 +3352,8 @@
       recentCard.style.opacity = String(Math.max(.25, 1 - Math.abs(dx) / 240));
       return;
     }
-    if((pointerStart.clockSwiping || ui.view==='clock' && !ui.sub && !ui.overlay && pointerStart.target.closest('[data-jbclock-swipe]') && Math.abs(dx)>dp(14) && Math.abs(dx)>Math.abs(dy)*1.2)) {
-      pointerStart.clockSwiping=true;suppressClickUntil=Date.now()+350;event.preventDefault();
-      try{screen.setPointerCapture(event.pointerId);}catch{}
-      const track=viewport.querySelector('.jbclock-track'),index=JBDeskClock.TABS.indexOf(data.jbClock?.tab||'clock');
-      if(track){track.style.transition='none';track.style.transform=`translateX(calc(${-index*100}% + ${dx}px))`;}return;
-    }
+    // The modules' gestures (jb-core.js: pointerMove / pointerUp), where the apps' branches stood.
+    if (moduleHook('pointerMove', null, event, pointerStart, dx, dy)) return;
     if(ui.view==='calendar' && !ui.sub && !ui.overlay && !pointerStart.scrolling && pointerStart.target.closest('[data-calendar-swipe]') && Math.abs(dx)>dp(14) && Math.abs(dx)>Math.abs(dy)*1.2) {
       pointerStart.calendarSwiping=true;suppressClickUntil=Date.now()+350;event.preventDefault();
       try{screen.setPointerCapture(event.pointerId);}catch{}
@@ -3571,7 +3417,7 @@
     if (!pointerStart || event.pointerId !== pointerStart.pointerId) return;
     clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(messageHoldTimer);
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
-    if(pointerStart.clockSwiping){const tabs=JBDeskClock.TABS,index=tabs.indexOf(data.jbClock?.tab||'clock'),next=Math.max(0,Math.min(2,index+(Math.abs(dx)>dp(53)?(dx<0?1:-1):0)));data.jbClock.tab=tabs[next];save();render();suppressClickUntil=Date.now()+350;pointerStart=null;return;}
+    if (moduleHook('pointerUp', null, event, pointerStart, dx, dy)) { pointerStart = null; return; }
     if (ui.view === 'play-store' && (ui.market?.page === 'section' || ui.market?.page === 'my-apps') && !ui.overlay && pointerStart.target.closest('.jbp-scroll') && Math.abs(dx) > dp(70) && Math.abs(dx) > Math.abs(dy) * 1.5) { const tabs = [...viewport.querySelectorAll('.jbp-tabs button')], i = tabs.findIndex(b => b.classList.contains('on')), next = tabs[i + (dx < 0 ? 1 : -1)]; if (next) next.click(); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if(pointerStart.calendarSwiping){if(Math.abs(dx)>dp(53))calendarMove(dx<0?1:-1);else viewport.querySelector('[data-calendar-swipe]').style.transform='';suppressClickUntil=Date.now()+350;pointerStart=null;return;}
     if (pointerStart.photoSwiping) { if (Math.abs(dy) > dp(35)) stepPhotoStack(pointerStart.photoStack, dy > 0 ? 1 : -1); else render(); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
