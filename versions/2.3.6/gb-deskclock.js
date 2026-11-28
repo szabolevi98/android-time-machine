@@ -131,18 +131,7 @@
     ui.sub='alarm-edit'; ui.overlay=''; render();
   }
   // AlarmClock: a long press (or a right click) on an alarm opens its context menu.
-  function mount(c, root) {
-    let timer = null, start = null;
-    const open = el => { c.ui.dcContext = Number(el.dataset.id); c.ui.overlay = 'clock-context'; c.renderOverlay(); };
-    root.addEventListener('pointerdown', event => {
-      const alarm = event.target.closest('.gbdc-alarm-body'); if (!alarm || c.ui.overlay) return;
-      start = {x: event.clientX, y: event.clientY};
-      timer = setTimeout(() => { c.suppressRelease(); open(alarm); }, 550);
-    });
-    root.addEventListener('pointermove', event => { if (start && Math.hypot(event.clientX - start.x, event.clientY - start.y) > 8) clearTimeout(timer); });
-    for (const name of ['pointerup', 'pointercancel']) root.addEventListener(name, () => { clearTimeout(timer); start = null; });
-    root.addEventListener('contextmenu', event => { const alarm = event.target.closest('.gbdc-alarm-body'); if (alarm && !c.ui.overlay) open(alarm); });
-  }
+  function mount(c, root) { GB.hold(c, root, '.gbdc-alarm-body', alarm => { c.ui.dcContext = Number(alarm.dataset.id); c.ui.overlay = 'clock-context'; c.renderOverlay(); }); }
   window.GB?.register('clock', {
     context,
     render: c => GBDeskClock.render(context(c)),
