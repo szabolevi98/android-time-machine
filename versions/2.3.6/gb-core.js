@@ -10,8 +10,10 @@
 window.GB = window.StoreHost;
 
 // A long press (550 ms, ViewConfiguration's long-press timeout) or a right click on an element of the screen opens
-// its context menu: open(el) runs and the release does not also tap the element.
+// its context menu: open(el) runs and the release does not also tap the element. The listeners go on the screen's own
+// element (root's first child, drawn anew by every render), so they leave with it.
 GB.hold = (c, root, selector, open) => {
+  root = root.firstElementChild || root;
   let timer = null, start = null;
   root.addEventListener('pointerdown', event => {
     const el = event.target.closest(selector); if (!el || c.ui.overlay) return;

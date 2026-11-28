@@ -198,6 +198,9 @@
       closeMenu: () => closeGBMenu()});
   }
   StoreHost.provide(storeContext);
+  // The view's module is in front, unless the app's settings screen (GBPrefs, Menu › Settings) is open over it.
+  const prefsOpen = () => !!ui.gbPrefs && (ui.gbPrefs.view || ui.gbPrefs.app) === ui.view;
+  const moduleView = () => StoreHost.has(ui.view) && !prefsOpen();
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
   function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (false) placeShortcut(r, appNames[r]); }
   // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
@@ -302,7 +305,7 @@
     if (ui.overlay === 'shade') return;
     if (ui.view === 'home' && !ui.overlay) { ui.overlay = 'gb-menu-home'; renderOverlay(); return; }
     if (ui.view === 'drawer') return;
-    if (StoreHost.has(ui.view)) { StoreHost.menuKey(storeContext()); return; }
+    if (moduleView()) { StoreHost.menuKey(storeContext()); return; }
     if (GBApps.has(ui.view)) { GBApps.get(ui.view).keep?.(gappContext()); const items = GBApps.get(ui.view).menu?.(gappContext()) || []; if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'people' && GBContactsIO.has(ui.sub)) { const items = GBContactsIO.menu(ui.sub, gbctContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if ((ui.view === 'phone' && (!ui.activeCall || ui.gbCallBackground) && ui.sub !== 'call-detail') || (ui.view === 'people' && (!ui.sub || ui.sub === 'detail'))) { const items = GBPhone.menu(gbPhoneContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
@@ -421,7 +424,7 @@
     else if (ui.view === 'drawer') viewport.innerHTML = renderDrawer();
     else viewport.innerHTML = renderApp();
     if (GBApps.has(ui.view)) GBApps.get(ui.view).mounted?.(gappContext());
-    if (StoreHost.has(ui.view)) StoreHost.mount(ui.view, storeContext(), viewport);
+    if (moduleView()) StoreHost.mount(ui.view, storeContext(), viewport);
     if (ui.view === 'messaging') window.GBMmsAttach?.mounted(gbMmsContext());
     snapResting(viewport);
     renderOverlay();
@@ -645,8 +648,8 @@
     const r = screen.getBoundingClientRect(); liveWallpaper.tap(event.clientX - r.left, event.clientY - r.top);
   });
   function renderApp() {
+    if (prefsOpen()) return GBPrefs.render(gbPrefsContext());
     if (StoreHost.has(ui.view)) return StoreHost.render(ui.view, storeContext());
-    if (ui.gbPrefs && (ui.gbPrefs.view || ui.gbPrefs.app) === ui.view) return GBPrefs.render(gbPrefsContext());
     if (ui.view === 'email' && ui.gbEmSetup) return GBEmail.setup({lang: i18n.language, ...ui.gbEmSetup});
     if (ui.view === 'calendar' && ui.gbCalSel) return GBCalendar.selectCalendars({lang: i18n.language, account: ICSEmail.account, accountType: GBEmail.text ? GBEmail.text(i18n.language, 'exchange_name') : 'Corporate', ok: GBSettings.text(i18n.language, 'fw_ok'), cancel: GBSettings.text(i18n.language, 'fw_cancel'), ...ui.gbCalSel});
     if (GBApps.has(ui.view)) return GBApps.get(ui.view).render(gappContext());
@@ -695,7 +698,7 @@
   function home(resetPage = true) { if(ui.locked)return;if(ui.photoWidgetSetup){const setup=ui.photoWidgetSetup;data.homeWidgets[setup.page]=data.homeWidgets[setup.page].filter(widget=>widget.id!==setup.id);ui.photoWidgetSetup=null;save();}if(ui.sub==='lock-setup')lockControls.lock();captureRecentView(); ui.view = 'home'; ui.sub = ''; ui.overlay = ''; if (resetPage) ui.page = 2; render(); }
   function back() { pendingNav = 'back'; try { navigateBack(); } finally { pendingNav = ''; } }
   function navigateBack() {
-    if ((ui.overlay === 'store-host' || !ui.overlay && StoreHost.has(ui.view)) && StoreHost.back(storeContext())) return;
+    if ((ui.overlay === 'store-host' || !ui.overlay && moduleView()) && StoreHost.back(storeContext())) return;
     if (ui.view === 'messaging' && !ui.overlay && window.GBMmsAttach?.back(gbMmsContext())) { render(); return; }
     if (ui.view === 'settings' && !ui.overlay && GBNetwork.back(gbNetContext())) return;
     if (ui.view === 'people' && !ui.overlay && GBContactsIO.back(gbctContext())) return;
@@ -1410,7 +1413,7 @@
     const { action, id, app, url } = button.dataset;
     if(ui.locked&&!['back','alarm-dismiss','alarm-snooze'].includes(action))return;
     // A store app's own controls and the host's dialog and menu (store-apps/legacy-host.js).
-    if ((action.startsWith('sth-') || StoreHost.has(ui.view)) && StoreHost.action(action, button, storeContext())) return;
+    if ((action.startsWith('sth-') || moduleView()) && StoreHost.action(action, button, storeContext())) return;
     if (action.startsWith('gbnet-') && GBNetwork.handle(action, id, gbNetContext(), button)) return;
     if (action.startsWith('gbct-') && GBContactsIO.handle(action, id, gbctContext())) return;
     if (ui.view === 'messaging' && action.startsWith('gbma-') && window.GBMmsAttach?.handle(action, id, gbMmsContext())) return;
@@ -1951,7 +1954,7 @@
     if (!form || !screen.contains(form)) return;
     event.preventDefault(); const values = new FormData(form);
     if (GBApps.has(ui.view) && GBApps.get(ui.view).submit?.(form.dataset.form, values, gappContext())) return;
-    if (StoreHost.has(ui.view) && StoreHost.submit(form.dataset.form, values, storeContext())) return;
+    if (moduleView() && StoreHost.submit(form.dataset.form, values, storeContext())) return;
     if(form.dataset.form==='folder-name'){event.target.querySelector('input')?.blur();render();return;}
     // Email's server settings: Next keeps valid fields and returns to the account's settings.
     if (form.dataset.form === 'gbem-server') { data.appPrefs ||= {}; if (GBPrefs.serverSave(form, data.appPrefs['email-servers'] ||= {})) { save(); ui.gbPrefs = ui.gbPrefs?.parent || null; render(); } return; }
@@ -2035,7 +2038,7 @@
     GBBrowser.selectDrag(page, event, text => { if (!text) return; ui.clipboard = text; navigator.clipboard?.writeText(text).catch(() => {}); toast(AndroidStrings.resources(() => window.GBStrings?.framework).t('text_copied', i18n.language)); });
   }, true);
   document.addEventListener('input', event => {
-    if (StoreHost.has(ui.view) && StoreHost.input(event, storeContext())) return;
+    if (moduleView() && StoreHost.input(event, storeContext())) return;
     if (event.target.matches('[data-bk-bright]')) { data.booksPrefs = {...GBGoogleApps.bookPrefs(data), brightness: Number(event.target.value)}; delete data.booksNight; save(); viewport.querySelector('.bk-prefs')?.style.setProperty('--bk-dim', ((100 - Number(event.target.value)) / 100 * .7).toFixed(3)); return; }
     // AccountSetupBasics.validateFields: Next and Manual setup follow the address and password (the password is never stored).
     if (event.target.closest('[data-form="gbem-server"]')) { GBPrefs.serverInput(event.target.closest('form'), event.target); return; }
@@ -2694,7 +2697,7 @@
     if (focusedStack && ['ArrowUp','ArrowDown'].includes(event.key)) { event.preventDefault(); const id = focusedStack.dataset.photoStack; stepPhotoStack(id, event.key === 'ArrowDown' ? 1 : -1); viewport.querySelector(`[data-photo-stack="${CSS.escape(id)}"] .phw-front`)?.focus(); return; }
     if(ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && ['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();galleryStep(event.key==='ArrowLeft'?-1:1);return;}
     if (event.target.matches('.recent-item,.web-tab-preview') && ['Enter',' '].includes(event.key)) { event.preventDefault(); event.target.click(); return; }
-    if (StoreHost.has(ui.view) && StoreHost.key(event, storeContext())) return;
+    if (moduleView() && StoreHost.key(event, storeContext())) return;
     if (event.key === 'Escape' || event.key === 'Backspace' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); back(); }
     else if (event.key === 'Home' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); if (ui.view !== 'lock') home(); }
 
