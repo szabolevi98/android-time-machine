@@ -322,10 +322,11 @@
     get suppressReleaseClick() { return suppressReleaseClick; }, get syncClings() { return syncClings; },
     get toast() { return toast; }, get today() { return today; }, get toggleRow() { return toggleRow; },
     get tracks() { return tracks; }, get ui() { return ui; }, get viewport() { return viewport; },
-    get wallpaperFiles() { return wallpaperFiles; }, get widgetArt() { return widgetArt; },
-    get widgetSize() { return widgetSize; }, get widgetTypes() { return widgetTypes; },
-    get wifiNetworks() { return wifiNetworks; }, get wirelessCheckRow() { return wirelessCheckRow; },
-    get wirelessRow() { return wirelessRow; }, set homeLongPressTimer(value) { homeLongPressTimer = value; },
+    get volumeLayer() { return volumeLayer; }, get wallpaperFiles() { return wallpaperFiles; },
+    get widgetArt() { return widgetArt; }, get widgetSize() { return widgetSize; },
+    get widgetTypes() { return widgetTypes; }, get wifiNetworks() { return wifiNetworks; },
+    get wirelessCheckRow() { return wirelessCheckRow; }, get wirelessRow() { return wirelessRow; },
+    set homeLongPressTimer(value) { homeLongPressTimer = value; },
     set messageHoldTimer(value) { messageHoldTimer = value; }, set pointerStart(value) { pointerStart = value; },
     set suppressClickUntil(value) { suppressClickUntil = value; }, get lang() { return i18n.language; },
     get locale() { return i18n.locale(); }, t: key => i18n.t(key),
@@ -431,8 +432,6 @@
     // Android 4.3 security views (KeyguardPatternView/PINView/PasswordView) inside the SlidingChallengeLayout.
     look:{wrong:kind=>JBKeyguard.WRONG[kind],clearMs:JBKeyguard.S.clear,message:({state,remaining})=>JBKeyguard.securityMessage({error:state.error,errorAt:state.errorAt,remaining,owner:data.settings.showOwner?data.settings.ownerInfo:''},key=>i18n.t(key)),renderLock:api=>renderSecureKeyguard(api)}});
   ui.locked=ICSLockscreen.secure(data);if(ui.locked)ui.view='lock';lockControls.lock();lockControls.bind(screen);
-  // BatteryMeterView (4.4): the button is 25 %-75 % wide and 12 % tall; frame #66FFFFFF, level white, red at 15 % or less.
-  const kkBattery = level => `<svg class="kk-battery" viewBox="0 0 10.5 16" aria-label="Battery ${level}%"><path d="M2.75 .4h5v1.6h-5zM.4 2.32h9.7v13.28H.4z" fill="#fff" fill-opacity=".4"/><rect x=".4" y="${(2.32 + 13.28 * (1 - level / 100)).toFixed(2)}" width="9.7" height="${(13.28 * level / 100).toFixed(2)}" fill="${level <= 15 ? '#ff3300' : '#fff'}"/></svg>`;
   const statusBarHeight = () => statusRoot.offsetHeight || 22.65;
   // Launcher3 and the keyguard draw under translucent system bars; apps get opaque ones.
   function updateBarMode() {
@@ -444,12 +443,10 @@
     screen.classList.toggle('kk-immersive', egg && ui.sub === 'dessert');
     if (!egg) screen.classList.remove('kk-bars-peek');
   }
-  const statusIndicators = () => `<span class="status-right">${data.settings.bluetooth ? '<img class="status-bluetooth" src="assets/kk-stat_sys_data_bluetooth.png" alt="">' : ''}${data.settings.silent ? `<img src="assets/kk-stat_sys_ringer_${data.settings.silentMode === 'vibrate' ? 'vibrate' : 'silent'}.png" alt="">` : ''}${data.alarms.some(alarm => alarm.enabled) ? '<img src="assets/kk-stat_sys_alarm.png" alt="">' : ''}<span class="status-cluster">${data.settings.wifi && data.settings.wifiNetwork ? '<img class="status-wifi" src="assets/kk-stat_sys_wifi_signal_4_fully.png" alt="">' : ''}${!data.settings.airplane && data.settings.dataEnabled !== false && !(data.settings.wifi && data.settings.wifiNetwork) ? '<img class="status-data-type" src="assets/kk-stat_sys_data_fully_connected_h.png" alt="">' : ''}<img src="assets/kk-${data.settings.airplane ? 'stat_sys_signal_flightmode' : 'stat_sys_signal_4_fully'}.png" alt=""></span>${kkBattery(71)}<span class="status-clock">${clock()}</span></span>`;
 
   function renderStatus() {
     updateBarMode();
-    const notificationIcons = data.notifications.length ? `${data.notifications.some(item => item.id === 2) ? '<img src="assets/stat_notify_hangouts.png" alt="">' : ''}${data.notifications.some(item => item.kind === 'calendar') ? '<img src="assets/calendar-stat_notify_calendar.png" alt="">' : ''}${data.notifications.some(item => item.id !== 2 && item.kind !== 'calendar') ? '<img src="assets/stat_notify_more.png" alt="">' : ''}` : '';
-    statusRoot.innerHTML = `<button class="status-button" data-action="shade" aria-label="Open notifications"><span class="status-left">${notificationIcons}</span>${statusIndicators()}</button>`;
+    statusRoot.innerHTML = StoreHost.render('statusbar', storeContext());
     i18n.translateDOM(statusRoot);
   }
   function renderNav() {
@@ -1998,7 +1995,9 @@
   }
   // Volume keys: the active stream's slider, a 3 s timeout, and a touch anywhere else closes it.
   const volumeLayer = document.createElement('div'); volumeLayer.id = 'volume-layer'; screen.append(volumeLayer);
-  let volumeTimer = 0, volumePrevious = 0;
+  let volumePrevious = 0;
+  // The panel (kk-volume.js).
+  const showVolume = stream => KK.module('volume').api(storeContext()).showVolume(stream), hideVolume = () => KK.module('volume').api(storeContext()).hideVolume();
   const volumeStream = () => VolumePanel.activeStream({inCall: !!ui.activeCall, musicActive: !!ui.music?.playing});
   function volumeKey(direction) {
     const buttons = ClockPrefs.prefs(data).buttons;
@@ -2012,13 +2011,6 @@
     if (result.vibrate) setTimeout(() => navigator.vibrate?.(VolumePanel.VIBRATE_DURATION), VolumePanel.VIBRATE_DELAY);
     if (!ui.sleeping) showVolume(stream);
   }
-  function showVolume(stream) {
-    volumeLayer.innerHTML = VolumePanel.render(data.settings, stream, key => i18n.t(key));
-    VolumePanel.bindSeek(volumeLayer, VolumePanel.STREAMS[stream].max, value => { VolumePanel.setIndex(data.settings, stream, value); save(); VolumePanel.update(volumeLayer, data.settings, stream); resetVolumeTimeout(); });
-    resetVolumeTimeout();
-  }
-  function resetVolumeTimeout() { clearTimeout(volumeTimer); volumeTimer = setTimeout(hideVolume, VolumePanel.TIMEOUT); }
-  function hideVolume() { clearTimeout(volumeTimer); const panel = volumeLayer.firstElementChild; if (!panel || panel.classList.contains('fading')) return; panel.classList.add('fading'); setTimeout(() => panel.remove(), 400); }
   document.addEventListener('pointerdown', event => { if (volumeLayer.firstElementChild && !volumeLayer.contains(event.target) && !event.target.closest?.('.volume-key,.volume-rocker')) hideVolume(); }, true);
   // Held keys repeat after config_keyRepeatTimeout (500 ms) every 50 ms, as key repeats do.
   function bindVolumeKey(element, direction) {
