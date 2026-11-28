@@ -5,6 +5,10 @@
    - = keeps the expression and its result in data.calcHistory (the last 50); the computer's Up and Down keys bring them
      back, and its digit and operator keys type
    - the Menu key: Clear history, Advanced panel / Basic panel. The expression is evaluated by calculator-engine.js. */
+  /* Calculator 2.3.6 (layout-port/main.xml, Theme.Black.NoTitleBar): the CalculatorDisplay (weight 1) over the
+     PanelSwitcher (weight 4). The simple pad has an empty gradient cell and CLEAR (tap deletes, long press clears), then
+     digit rows on blue_button and operators on button; the advanced pad has sin cos tan / ln log ! / pi e ^ / ( ) sqrt.
+     ColorButton draws white text and the "magic flame" outline. */
 (() => {
   'use strict';
   const text = (c, key) => AndroidStrings.resources(() => window.GBStrings?.calculator).t(key, c.lang);

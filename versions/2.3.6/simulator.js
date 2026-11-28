@@ -188,6 +188,7 @@
   function storeContext() {
     return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, viewport, dp, snapResting, suppressClick: ms => { suppressClickUntil = Date.now() + ms; },
       // 2.3.6's own AlertDialog (a spec the module's dialog(kind, c) returns) and the Menu key's IconMenu items.
+      deviceDate, defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
       appList: () => apps.map(app => [app[0], i18n.t(app[1])]), browserTitle: gbBrowserTitle, contactName: id => contact(id)?.name, normalizeAddress,
       intent: {browse(url) { openApp('browser'); navigateBrowser(url); }, contact(id) { openApp('people'); ui.selectedContact = id; ui.sub = 'detail'; render(); }, thread: id => openMessageThread(id),
         track(i) { openApp('music'); ui.music.queue = ICSMusic.tracks.map((_, n) => n); ui.music.track = i; ui.music.position = 0; ui.music.playing = true; saveMusic(); ui.sub = 'player'; render(); }},
@@ -318,7 +319,6 @@
       ui.gbMenuItems = ui.sub === 'player' ? [{action: 'music-library', title: musicText('goto_start'), icon: 'ic_menu_music_library'}, party, {action: 'music-track-menu-add', title: musicText('add_to_playlist'), icon: 'ic_menu_add'}, {action: 'music-ringtone', id: String(ui.music.track), title: musicText('ringtone_menu_short'), icon: 'ic_menu_set_as_ringtone'}, {action: 'music-delete', id: String(ui.music.track), title: musicText('delete_item'), icon: 'ic_menu_delete'}] : [party, {action: 'music-shuffle-all', title: musicText('shuffle_all'), icon: 'ic_menu_shuffle'}];
       ui.overlay = 'gb-menu-settings'; renderOverlay(); return;
     }
-    if (ui.view === 'clock') { const items = GBDeskClock.menu(gbClockContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     // The slideshow player and Sound Recorder have no menu.
     if (ui.view === 'messaging') { const items = GBMms.menu(gbMmsContext()); if (!items.length) return; ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); return; }
     if (ui.view === 'settings' && GBNetwork.has(ui.sub)) { const items = GBNetwork.menu(ui.sub, gbNetContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
@@ -667,7 +667,6 @@
       case 'gallery': return renderGallery();
       case 'camera': return renderCamera();
       case 'calendar': return renderCalendar();
-      case 'clock': return renderClock();
       case 'music': return renderMusic();
       case 'email': return renderEmail();
       default: return renderHome();
@@ -757,7 +756,6 @@
     if (ui.view === 'settings' && ['brightness','wallpaper','sleep'].includes(ui.sub)) { ui.sub = 'display'; render(); return; }
     if (ui.view === 'settings' && ['volumes','ringtone'].includes(ui.sub)) { ui.sub = 'sound'; render(); return; }
     if (ui.view === 'messaging' && ui.sub === 'thread') { ui.sub = ui.mmsListMode || ''; render(); return; }
-    if (ui.view === 'clock' && ui.sub === 'alarm-edit') { document.querySelector('[data-action="alarm-save"]')?.click(); return; }
     if (ui.view === 'people' && ui.sub === 'edit') { ui.sub = 'detail'; render(); return; }
     if (ui.sub) { ui.sub = ''; render(); if (ui.view === 'settings') viewport.querySelector('.settings-app').scrollTop = ui.settingsRootScroll; return; }
     home(false);
@@ -901,9 +899,9 @@
     } else if (ui.overlay.startsWith('gallery-') || ui.overlay.startsWith('camera-')) {
       overlayRoot.innerHTML=ICSMedia.overlay(data,ui,key=>i18n.t(key),i18n.locale());
     } else if (ui.overlay === 'clock-ringing' && ui.ringingAlarm) {
-      overlayRoot.innerHTML = GBDeskClock.alert({...gbClockContext(), wallpaper: ui.locked ? screen.style.background : ''});
+      overlayRoot.innerHTML = GBDeskClock.alert({...GB.module('clock').context(storeContext()), wallpaper: ui.locked ? screen.style.background : ''});
     } else if (ui.overlay.startsWith('clock-')) {
-      const dialog = GBDeskClock.dialog(ui.overlay.slice(6), gbClockContext());
+      const dialog = GBDeskClock.dialog(ui.overlay.slice(6), GB.module('clock').context(storeContext()));
       overlayRoot.innerHTML = dialog ? GBUI.dialog({...dialog, t: key => i18n.t(key)}) : '';
     } else if (ui.overlay.startsWith('calendar-')) {
       overlayRoot.innerHTML = ICSCalendar.overlay(ui,key=>i18n.t(key));
@@ -1330,20 +1328,6 @@
     ui.eventDraft=ICSCalendar.normalize(item || {date:ui.selectedDate,time:'12:00',title:'',reminder:10});ui.gbCalExtra=false;
     ui.calendarError='';ui.overlay='';ui.sub='event-edit';render();
   }
-  function renderClock() { return GBDeskClock.render(gbClockContext()); }
-  function gbClockContext() {
-    const now = deviceDate();
-    // The weather DeskClock reads from News & Weather: today's forecast for its city, in its units (Use metric).
-    const today = window.GBGoogleApps?.FORECAST?.[0], metric = window.NewsPrefs ? NewsPrefs.metric(data, i18n.language) : i18n.language !== 'en', deg = f => metric ? Math.round((f - 32) * 5 / 9) : f;
-    const weather = today && {icon: today[1], temp: deg(72), high: deg(today[2]), low: deg(today[3]), location: window.NewsPrefs ? NewsPrefs.city(data, 'Mountain View, CA') : 'Mountain View, CA'};
-    return {lang: i18n.language, locale: i18n.locale(), t: key => i18n.t(key), hour24: !!data.settings.hour24, now, sub: ui.sub, weather, dim: !!ui.clockDim, alarms: data.alarms.map(alarm => ICSDeskClock.normalize(alarm)), next: data.alarms.map(alarm => ICSDeskClock.nextOccurrence(alarm, now)).filter(Boolean).sort((a, b) => a - b)[0], draft: ui.alarmDraft ? ICSDeskClock.normalize(ui.alarmDraft) : null, temp: ui.dcTemp, contextAlarm: data.alarms.find(alarm => alarm.id === ui.dcContext), ringing: ui.ringingAlarm ? ICSDeskClock.normalize(ui.ringingAlarm) : null, ok: GBSettings.text(i18n.language, 'fw_ok'), cancel: GBSettings.text(i18n.language, 'fw_cancel')};
-  }
-  // Alarms.formatToast after an enabled alarm is saved or switched on.
-  function alarmSetToast(alarm) { const now = deviceDate(), next = ICSDeskClock.nextOccurrence(alarm, now); if (next) toast(GBDeskClock.setToast(next, now, i18n.language)); }
-  function editAlarm(id) {
-    ui.alarmDraft=ICSDeskClock.normalize(data.alarms.find(alarm=>alarm.id===Number(id)));
-    ui.sub='alarm-edit'; ui.overlay=''; render();
-  }
   function checkAlarms(now) {
     if(ui.overlay==='clock-ringing')return;
     const alarm=data.alarms.find(alarm=>ICSDeskClock.due(alarm,now));
@@ -1354,10 +1338,6 @@
     ui.ringingAlarm=clone(alarm); save(); ui.overlay='clock-ringing'; renderOverlay();
   }
 
-  /* Calculator 2.3.6 (layout-port/main.xml, Theme.Black.NoTitleBar): the CalculatorDisplay (weight 1) over the
-     PanelSwitcher (weight 4). The simple pad has an empty gradient cell and CLEAR (tap deletes, long press clears), then
-     digit rows on blue_button and operators on button; the advanced pad has sin cos tan / ln log ! / pi e ^ / ( ) sqrt.
-     ColorButton draws white text and the "magic flame" outline. */
   const MUSIC = AndroidStrings.resources(() => window.GBStrings?.music), musicText = key => MUSIC.t(key, i18n.language);
   // Music's plurals (Nalbums, Nsongs, Nsongscomp): the one / other text of the image, %d and %n$d / %n$s filled in.
   // The quantity the language's plural rules pick (CLDR, as Android's Resources.getQuantityString).
@@ -1419,8 +1399,7 @@
     if(id==='browser'){delete data.browserSession;data.browserHistory=clone(defaultData.browserHistory);data.bookmarks=clone(defaultData.bookmarks||[]);data.savedPages=[];ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);syncBrowserState();}
     if(id==='music'){ui.music=ICSMusic.restore();saveMusic();}
     if(id==='email'){data.mailbox=ICSEmail.restore(null,emailData,[]);data.sentEmails=[];ui.emailFolder='Inbox';ui.emailQuery=undefined;ui.emailSelected=[];}
-    if(id==='clock')data.alarms=clone(defaultData.alarms);
-    if(id==='calendar')data.events=clone(defaultData.events);
+        if(id==='calendar')data.events=clone(defaultData.events);
     if(id==='people'){data.contacts=clone(defaultData.contacts);data.contactGroups=clone(defaultData.contactGroups);ui.peopleDraft=null;}
     if(id==='messaging'){data.messages=clone(defaultData.messages);data.messageDrafts={};}
     if(id==='gallery'){data.photos=clone(defaultData.photos);}
@@ -1950,30 +1929,6 @@
       case 'event-cancel': ui.sub=ui.eventDraft?.id?'event':'';ui.eventDraft=null;calendarRender();break;
       case 'event-delete': if(ui.sub==='event-edit'&&!ui.eventDraft?.id)break;gbCalDialog(ICSCalendar.normalize(data.events.find(item=>item.id===ui.selectedEvent)||{}).repeat!=='none'?'delete-scope':'delete');break;
       case 'event-confirm-delete': data.events=data.events.filter(item=>item.id!==ui.selectedEvent);save();ui.overlay='';ui.sub='';calendarRender();break;
-      case 'clock-alarms': ui.sub='alarms'; render(); break;
-      case 'clock-dim': ui.clockDim=!ui.clockDim; render(); break;
-      case 'alarm-new': editAlarm(); ui.alarmDraft.enabled = true; ui.alarmDraft.isNew = true; ui.dcTemp = {time: ui.alarmDraft.time}; ui.overlay = 'clock-time'; renderOverlay(); break;
-      case 'alarm-edit': editAlarm(id); break;
-      case 'alarm-cancel': ui.alarmDraft=null; ui.sub='alarms'; render(); break;
-      case 'alarm-draft-toggle': ui.alarmDraft[id]=!ui.alarmDraft[id]; render(); break;
-      case 'alarm-field': ui.dcTemp = {time: ui.alarmDraft.time, days: [...(ui.alarmDraft.days || [])], tone: ICSDeskClock.normalize(ui.alarmDraft).tone}; ui.overlay='clock-'+id; renderOverlay(); break;
-      case 'dc-time-step': { const [field, step] = id.split(':'); let [h, m] = ui.dcTemp.time.split(':').map(Number); if (field === 'hour') h = (h + Number(step) + 24) % 24; else m = (m + Number(step) + 60) % 60; ui.dcTemp.time = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`; renderOverlay(); break; }
-      case 'dc-ampm': { const [h, m] = ui.dcTemp.time.split(':').map(Number); ui.dcTemp.time = `${String((h + 12) % 24).padStart(2, '0')}:${String(m).padStart(2, '0')}`; renderOverlay(); break; }
-      case 'dc-time-set': ui.alarmDraft.time = ui.dcTemp.time; ui.alarmDraft.enabled = true; ui.overlay = ''; render(); break;
-      case 'dc-day': { const day = Number(id), days = ui.dcTemp.days; ui.dcTemp.days = days.includes(day) ? days.filter(d => d !== day) : [...days, day].sort(); renderOverlay(); break; }
-      case 'dc-days-ok': ui.alarmDraft.days = ui.dcTemp.days; ui.overlay = ''; render(); break;
-      case 'dc-tone': ui.dcTemp.tone = id; renderOverlay(); break;
-      case 'dc-tone-ok': ui.alarmDraft.tone = ui.dcTemp.tone; ui.overlay = ''; render(); break;
-      case 'dc-label-ok': ui.alarmDraft.label = String(overlayRoot.querySelector('[data-dc-label]')?.value || '').trim().slice(0, 60); ui.overlay = ''; render(); break;
-      case 'dc-delete-from-list': ui.alarmDraft = ICSDeskClock.normalize(data.alarms.find(alarm => alarm.id === Number(id))); ui.overlay = 'clock-delete'; renderOverlay(); break;
-      case 'alarm-save': {
-        const alarm=ICSDeskClock.normalize(ui.alarmDraft); delete alarm.snoozedUntil; delete alarm.lastFiredMinute;
-        const index=data.alarms.findIndex(item=>item.id===alarm.id);
-        if(index<0){alarm.id=Date.now();data.alarms.push(alarm);}else data.alarms[index]=alarm;
-        delete alarm.isNew; save(); ui.alarmDraft=null; ui.sub='alarms'; render(); if (alarm.enabled) alarmSetToast(alarm); break;
-      }
-      case 'alarm-delete': ui.overlay='clock-delete'; renderOverlay(); break;
-      case 'alarm-confirm-delete': data.alarms=data.alarms.filter(alarm=>alarm.id!==ui.alarmDraft.id); save(); ui.alarmDraft=null; ui.overlay=''; ui.sub='alarms'; render(); break;
       case 'alarm-snooze': {
         const alarm=data.alarms.find(item=>item.id===ui.ringingAlarm.id);
         // Snooze duration from the Clock settings (snooze_duration: 5, 10, ... 30 minutes).
@@ -1982,7 +1937,6 @@
         ui.overlay='';render();toast(AndroidStrings.format(GBDeskClock.text(i18n.language,'alarm_alert_snooze_set'), String(minutes)));break;
       }
       case 'alarm-dismiss': ui.overlay=''; render(); break;
-      case 'alarm-toggle': { const alarm = data.alarms.find(item => item.id === Number(id)); if (alarm) { alarm.enabled = !alarm.enabled; delete alarm.snoozedUntil; } ui.overlay = ''; save(); render(); if (alarm?.enabled) alarmSetToast(alarm); break; }
       case 'music-play': ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
       case 'music-prev': case 'music-next': ICSMusic.step(ui.music,action==='music-prev'?-1:1);saveMusic();render();break;
       case 'music-tab': ui.musicTab=id;ui.sub='';render();break;
@@ -2591,8 +2545,6 @@
     if (ct && !ui.overlay) GBContactsIO.hold(ct.dataset.gbctHold, gbctContext());
     const net = event.target.closest('[data-gbnet-hold]');
     if (net && !ui.overlay) GBNetwork.hold(net.dataset.gbnetHold, gbNetContext());
-    const alarm = event.target.closest('.gbdc-alarm-body');
-    if (alarm && !ui.overlay) { ui.dcContext = Number(alarm.dataset.id); ui.overlay = 'clock-context'; renderOverlay(); }
     if (!dragState && ui.view === 'home' && !ui.overlay && event.button === 2 && event.target.closest('.home-slot') && !event.target.closest('.launcher-icon')) { ui.overlay = 'wallpaper-source'; renderOverlay(); }
   });
   // Older WebKit versions may still start page rubber-banding during a custom
@@ -2636,8 +2588,6 @@
     if (heldLink && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.gbBrTarget = heldLink.dataset.id; suppressReleaseClick(); ui.overlay = 'gb-dialog-br'; ui.gbBrDialog = heldLink.dataset.gbbrItem; renderOverlay(); }, 550);
     const heldSong = event.target.closest('.stock-music [data-action="music-select"]');
     if (heldSong && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.musicSelected = Number(heldSong.dataset.id); suppressReleaseClick(); ui.overlay = 'gb-dialog-music'; ui.gbMusicDialog = 'track'; renderOverlay(); }, 550);
-    const heldAlarm = event.target.closest('.gbdc-alarm-body');
-    if (heldAlarm && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.dcContext = Number(heldAlarm.dataset.id); suppressReleaseClick(); ui.overlay = 'clock-context'; renderOverlay(); }, 550);
     const heldCt = event.target.closest('[data-gbct-hold]');
     if (heldCt && !ui.overlay) messageHoldTimer = setTimeout(() => { suppressReleaseClick(); GBContactsIO.hold(heldCt.dataset.gbctHold, gbctContext()); }, 550);
     const heldNet = event.target.closest('[data-gbnet-hold]');
