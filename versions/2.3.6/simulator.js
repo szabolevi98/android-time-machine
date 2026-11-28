@@ -188,7 +188,7 @@
   function storeContext() {
     return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, viewport, dp, snapResting, suppressClick: ms => { suppressClickUntil = Date.now() + ms; },
       // 2.3.6's own AlertDialog (a spec the module's dialog(kind, c) returns) and the Menu key's IconMenu items.
-      deviceDate, defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
+      saveMusic, deviceDate, defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
       appList: () => apps.map(app => [app[0], i18n.t(app[1])]), browserTitle: gbBrowserTitle, contactName: id => contact(id)?.name, normalizeAddress,
       intent: {browse(url) { openApp('browser'); navigateBrowser(url); }, contact(id) { openApp('people'); ui.selectedContact = id; ui.sub = 'detail'; render(); }, thread: id => openMessageThread(id),
         track(i) { openApp('music'); ui.music.queue = ICSMusic.tracks.map((_, n) => n); ui.music.track = i; ui.music.position = 0; ui.music.playing = true; saveMusic(); ui.sub = 'player'; render(); }},
@@ -314,11 +314,6 @@
     if (ui.view === 'email') { gbEmSync(); const items = GBEmail.menu(gbEmailContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'calendar') { gbCalSyncDraft(); const items = GBCalendar.menu(gbCalContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'browser') { if (ui.gbBrEdit) return; const items = GBBrowser.menu(gbBrowserContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
-    if (ui.view === 'music') {
-      const party = {action: 'music-party', title: musicText(ui.music.party ? 'party_shuffle_off' : 'party_shuffle'), icon: 'gb-mu-ic_menu_party_shuffle.png'};
-      ui.gbMenuItems = ui.sub === 'player' ? [{action: 'music-library', title: musicText('goto_start'), icon: 'ic_menu_music_library'}, party, {action: 'music-track-menu-add', title: musicText('add_to_playlist'), icon: 'ic_menu_add'}, {action: 'music-ringtone', id: String(ui.music.track), title: musicText('ringtone_menu_short'), icon: 'ic_menu_set_as_ringtone'}, {action: 'music-delete', id: String(ui.music.track), title: musicText('delete_item'), icon: 'ic_menu_delete'}] : [party, {action: 'music-shuffle-all', title: musicText('shuffle_all'), icon: 'ic_menu_shuffle'}];
-      ui.overlay = 'gb-menu-settings'; renderOverlay(); return;
-    }
     // The slideshow player and Sound Recorder have no menu.
     if (ui.view === 'messaging') { const items = GBMms.menu(gbMmsContext()); if (!items.length) return; ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); return; }
     if (ui.view === 'settings' && GBNetwork.has(ui.sub)) { const items = GBNetwork.menu(ui.sub, gbNetContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
@@ -667,7 +662,6 @@
       case 'gallery': return renderGallery();
       case 'camera': return renderCamera();
       case 'calendar': return renderCalendar();
-      case 'music': return renderMusic();
       case 'email': return renderEmail();
       default: return renderHome();
     }
@@ -736,7 +730,6 @@
     if (ui.view === 'calendar' && !ui.sub && ui.gbCalBack) { ui.calendarMode = ui.gbCalBack; ui.gbCalBack = ''; calendarRender(); return; }
     if (ui.view === 'calendar' && ui.sub === 'event-edit') { ui.sub=ui.eventDraft?.id?'event':'';ui.eventDraft=null;calendarRender();return; }
     if(ui.view==='settings' && ['app-info','data-app','battery-history','battery-detail','storage-misc'].includes(ui.sub)){ui.sub={'app-info':'apps','data-app':'data','battery-history':'battery','battery-detail':'battery','storage-misc':'storage'}[ui.sub];render();return;}
-    if(ui.view==='music' && ui.sub==='queue'){ui.sub='player';render();return;}
     if (ui.view === 'play-store' && ui.marketSearching) { ui.marketSearching = false; render(); return; }
     if (ui.view === 'play-store' && ui.marketHistory?.length) { const prev = ui.marketHistory.pop(); ui.market = prev; render(); const box = viewport.querySelector('.gbmk-scroll'); if (box) box.scrollTop = prev.scroll || 0; return; }
     if (ui.view === 'play-store' && ui.playHistory.length) {
@@ -819,15 +812,7 @@
     if (ui.overlay === 'gb-dialog-gapp') return GBApps.get(ui.view)?.dialog?.(ui.gappDialog, gappContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-cal') return GBCalendar.dialog(ui.gbCalDialog, gbCalContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-br') return GBBrowser.dialog(ui.gbBrDialog, gbBrowserContext()) || {title: '', items: []};
-    if (ui.overlay === 'gb-dialog-music') {
-      const track = ICSMusic.tracks[ui.musicSelected], inPlaylist = ui.sub === 'music-group' && String(ui.musicGroup).startsWith('playlist|');
-      // DeleteItems (layout-finger/confirm_delete.xml, no title): delete_song_desc_nosdcard — the Nexus S keeps music on
-      // its built-in USB storage (isExternalStorageRemovable is false) — then OK and Cancel.
-      if (ui.gbMusicDialog === 'delete') return {icon: 'ic_dialog_alert', message: AndroidStrings.format(musicText('delete_song_desc_nosdcard'), track?.title || ''), buttons: [{action: 'music-delete-ok', title: musicText('delete_confirm_button_text')}, {action: 'close-overlay', title: musicText('cancel')}]};
-      if (ui.gbMusicDialog === 'add') return {title: musicText('add_to_playlist'), items: [{action: 'music-add-queue', title: musicText('queue')}, {action: 'music-new-playlist', id: 'add', title: musicText('new_playlist')}, ...ui.music.playlists.map(p => ({action: 'music-add-confirm', id: p.id, title: p.name}))]};
-      if (ui.gbMusicDialog === 'new') return {title: musicText('new_playlist'), custom: `<form data-form="music-playlist"><input name="name" maxlength="60" required aria-label="${safe(i18n.t('Playlist name'))}" value="${safe(AndroidStrings.format(musicText('new_playlist_name_template'), String(ui.music.playlists.length + 1)))}"></form>`, buttons: [{action: 'music-playlist-save', title: musicText('create_playlist_create_text')}, {action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]};
-      return {title: track?.title || '', items: [{action: 'music-play-selected', title: musicText('play_selection')}, {action: 'music-add-to-playlist', title: musicText('add_to_playlist')}, ...(inPlaylist ? [{action: 'music-remove-from-playlist', title: musicText('remove_from_playlist')}] : []), {action: 'music-ringtone', id: String(ui.musicSelected), title: musicText('ringtone_menu')}, {action: 'music-delete', id: String(ui.musicSelected), title: musicText('delete_item')}, {action: 'gbset-toast', id: 'This feature is not part of the simulator.', title: musicText('search_title')}]};
-    }
+    if (ui.overlay === 'gb-dialog-music') return GB.module('music').dialog(ui.gbMusicDialog, storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-mms') return GBMms.dialog(ui.gbMmsDialog, gbMmsContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-set') return GBSettings.dialog(ui.gbSetDialog, gbSettingsContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-lw-mapmode') { const modes = ['normal', 'satellite', 'terrain']; return {title: lwText('maps_map_mode'), items: modes.map(id => ({action: 'lw-mapmode-pick', id, title: lwText(`maps_mode_${id}`)})), choice: 'single', selected: modes.indexOf(data.lwPrefs?.maps?.mode || 'satellite'), buttons: [{action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]}; }
@@ -1338,13 +1323,6 @@
     ui.ringingAlarm=clone(alarm); save(); ui.overlay='clock-ringing'; renderOverlay();
   }
 
-  const MUSIC = AndroidStrings.resources(() => window.GBStrings?.music), musicText = key => MUSIC.t(key, i18n.language);
-  // Music's plurals (Nalbums, Nsongs, Nsongscomp): the one / other text of the image, %d and %n$d / %n$s filled in.
-  // The quantity the language's plural rules pick (CLDR, as Android's Resources.getQuantityString).
-  const musicPlural = (key, n, ...rest) => MUSIC.plural(key, n, i18n.language, n, ...rest);
-  function renderMusic() {
-    return ICSMusic.render(ui.music,ui,key=>i18n.t(key),musicText,musicPlural);
-  }
   function saveMusic() {
     ui.musicTrack=ui.music.track;ui.musicPlaying=ui.music.playing;ui.musicPosition=ui.music.position;
     data.music=clone(ui.music);delete data.music.playing;save();
@@ -1397,7 +1375,6 @@
   }
   function clearAppData(id) {
     if(id==='browser'){delete data.browserSession;data.browserHistory=clone(defaultData.browserHistory);data.bookmarks=clone(defaultData.bookmarks||[]);data.savedPages=[];ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);syncBrowserState();}
-    if(id==='music'){ui.music=ICSMusic.restore();saveMusic();}
     if(id==='email'){data.mailbox=ICSEmail.restore(null,emailData,[]);data.sentEmails=[];ui.emailFolder='Inbox';ui.emailQuery=undefined;ui.emailSelected=[];}
         if(id==='calendar')data.events=clone(defaultData.events);
     if(id==='people'){data.contacts=clone(defaultData.contacts);data.contactGroups=clone(defaultData.contactGroups);ui.peopleDraft=null;}
@@ -1937,39 +1914,6 @@
         ui.overlay='';render();toast(AndroidStrings.format(GBDeskClock.text(i18n.language,'alarm_alert_snooze_set'), String(minutes)));break;
       }
       case 'alarm-dismiss': ui.overlay=''; render(); break;
-      case 'music-play': ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
-      case 'music-prev': case 'music-next': ICSMusic.step(ui.music,action==='music-prev'?-1:1);saveMusic();render();break;
-      case 'music-tab': ui.musicTab=id;ui.sub='';render();break;
-      case 'music-library': ui.sub='';render();break;
-      case 'music-player': ui.sub='player';render();break;
-      case 'music-queue': ui.sub='queue';render();break;
-      case 'music-group': ui.musicGroup=id;ui.sub='music-group';render();break;
-      case 'music-expand': {const open=new Set(ui.musicExpanded||[]);if(open.has(id))open.delete(id);else open.add(id);ui.musicExpanded=[...open];render();break;}
-      case 'music-select': ui.music.queue=[...ICSMusic.listing(ui.music,ui)];ui.music.track=Number(id);ui.music.position=0;ui.music.playing=true;saveMusic();ui.sub='player';render();break;
-      case 'music-shuffle': ui.music.shuffle=!ui.music.shuffle;if(!ui.music.shuffle)ui.music.party=false;saveMusic();render();toast(musicText(ui.music.shuffle?'shuffle_on_notif':'shuffle_off_notif'));break;
-      case 'music-repeat': ui.music.repeat={off:'all',all:'one',one:'off'}[ui.music.repeat];saveMusic();render();toast(musicText({all:'repeat_all_notif',one:'repeat_current_notif',off:'repeat_off_notif'}[ui.music.repeat]));break;
-      case 'music-track-menu': ui.musicSelected=Number(id);ui.overlay='gb-dialog-music';ui.gbMusicDialog='track';renderOverlay();break;
-      case 'music-track-menu-add': ui.musicSelected=ui.music.track;ui.overlay='gb-dialog-music';ui.gbMusicDialog='add';renderOverlay();break;
-      case 'music-party': ui.music.party=!ui.music.party;ui.music.shuffle=ui.music.party;if(ui.music.party)ui.music.playing=true;ui.overlay='';saveMusic();render();break;
-      case 'music-shuffle-all': ui.music.queue=ICSMusic.tracks.map((_,i)=>i);ui.music.shuffle=true;ui.music.track=Math.floor(Math.random()*ICSMusic.tracks.length);ui.music.position=0;ui.music.playing=true;ui.overlay='';saveMusic();ui.sub='player';render();break;
-      case 'music-play-selected': ui.overlay='';{const button=document.createElement('button');button.dataset.action='music-select';button.dataset.id=String(ui.musicSelected);viewport.append(button);button.click();button.remove();}break;
-      case 'music-playlist-save': overlayRoot.querySelector('form[data-form="music-playlist"]')?.requestSubmit();break;
-      case 'music-add-to-playlist': ui.overlay='gb-dialog-music';ui.gbMusicDialog='add';renderOverlay();break;
-      case 'music-add-queue': if(!ui.music.queue.includes(ui.musicSelected))ui.music.queue.push(ui.musicSelected);saveMusic();ui.overlay='';render();break;
-      case 'music-new-playlist': ui.musicAddPending=id==='add';ui.overlay='gb-dialog-music';ui.gbMusicDialog='new';renderOverlay();overlayRoot.querySelector('[name=name]')?.focus();break;
-      case 'music-add-confirm': {const playlist=ui.music.playlists.find(p=>String(p.id)===id);if(playlist&&!playlist.tracks.includes(ui.musicSelected))playlist.tracks.push(ui.musicSelected);saveMusic();ui.overlay='';render();toast('Added to playlist');break;}
-      // Use as phone ringtone: the song is flagged IS_RINGTONE and becomes Settings › Sound › Phone ringtone.
-      case 'music-ringtone': { const n = Number(id); if (!ICSMusic.setRingtone(ui.music, n)) break; data.settings.ringtone = `music:${n}`; saveMusic(); save(); ui.overlay = ''; renderOverlay(); toast(AndroidStrings.format(musicText('ringtone_set'), ICSMusic.tracks[n].title)); break; }
-      case 'music-delete': ui.musicSelected = Number(id); ui.overlay = 'gb-dialog-music'; ui.gbMusicDialog = 'delete'; renderOverlay(); break;
-      case 'music-delete-ok': {
-        const n = ui.musicSelected; ICSMusic.remove(ui.music, n);
-        if (data.settings.ringtone === `music:${n}`) delete data.settings.ringtone;
-        ui.musicTrack = ui.music.track; ui.musicPlaying = ui.music.playing; ui.overlay = '';
-        // MediaPlaybackActivity finishes once nothing is loaded.
-        if (ui.music.track == null && (ui.sub === 'player' || ui.sub === 'queue')) ui.sub = '';
-        saveMusic(); save(); renderOverlay(); render(); toast(musicPlural('NNNtracksdeleted', 1)); break;
-      }
-      case 'music-remove-from-playlist': {const playlist=ui.music.playlists.find(p=>`playlist|${p.id}`===ui.musicGroup);if(playlist)playlist.tracks=playlist.tracks.filter(track=>track!==ui.musicSelected);saveMusic();ui.overlay='';render();break;}
       case 'email-read': {const item=data.mailbox.find(item=>item.id===id);if(!item)break;ui.emailId=id;item.read=true;ui.sub=item.folder==='Drafts'?'compose':'read';ui.emailError='';save();render();break;}
       case 'email-compose': composeEmail();break;
       case 'gbem-mailboxes': ui.sub = 'mailboxes'; ui.overlay = ''; render(); break;
@@ -2077,7 +2021,6 @@
         const edited=existing>=0;save();ui.selectedDate=event.date;ui.selectedEvent=event.id;ui.selectedInstance=scope&&scope!=='all'?event.date:instance||'';ui.eventDraft=null;ui.sub=edited?'event':'';render();toast(GBCalendar.text(i18n.language,edited?'saving_event':'creating_event'));break;
       }
       case 'calendar-search': ui.calendarSearch=String(values.get('query')||'').trim();render();break;
-      case 'music-playlist': {const name=String(values.get('name')||'').trim();if(!name)return;ui.music.playlists.push({id:Date.now(),name,tracks:ui.musicAddPending?[ui.musicSelected]:[]});saveMusic();ui.overlay='';render();break;}
       case 'email': {const item=data.mailbox.find(item=>item.id===ui.emailId);if(!item)break;for(const key of ['to','cc','bcc','subject','body'])if(values.has(key))item[key]=String(values.get(key)).trim();if(!ICSEmail.recipients(item.to).length){save();toast(emailText('message_compose_error_no_recipients'));break;}if(item.quoted){item.body=[item.body,item.quoted].filter(Boolean).join('\n\n');delete item.quoted;}if(!ICSEmail.send(item)){save();toast(emailText('message_compose_error_invalid_email'));break;}ui.emailCc=false;ui.sub='';ui.emailError='';save();render();break;}
       case 'email-search': ui.emailQuery=String(values.get('query')||'').trim();ui.emailSelected=[];render();break;
       default: break;
@@ -2142,7 +2085,6 @@
       const display = event.target.closest('.detail-pad')?.querySelector('p'); if (display) display.textContent = `${data.settings.brightness}%`;
       screen.style.filter = `brightness(${.5 + data.settings.brightness / 135})`;
     }
-    if(event.target.dataset.field==='music-position'){ui.music.position=Number(event.target.value);saveMusic();const elapsed=viewport.querySelector('.music-elapsed');if(elapsed)elapsed.textContent=ICSMusic.time(ui.music.position);}
   });
 
   let pointerStart = null, eggTimer = null, dragTimer = null, dragState = null;
@@ -2539,8 +2481,6 @@
     if (thread && !ui.overlay) { ui.thread = thread.dataset.id; gbMmsDialog('thread'); }
     const link = event.target.closest('[data-gbbr-item]');
     if (link && !ui.overlay) { ui.gbBrTarget = link.dataset.id; ui.overlay = 'gb-dialog-br'; ui.gbBrDialog = link.dataset.gbbrItem; renderOverlay(); }
-    const song = event.target.closest('.stock-music [data-action="music-select"]');
-    if (song && !ui.overlay) { ui.musicSelected = Number(song.dataset.id); ui.overlay = 'gb-dialog-music'; ui.gbMusicDialog = 'track'; renderOverlay(); }
     const ct = event.target.closest('[data-gbct-hold]');
     if (ct && !ui.overlay) GBContactsIO.hold(ct.dataset.gbctHold, gbctContext());
     const net = event.target.closest('[data-gbnet-hold]');
@@ -2586,8 +2526,6 @@
     if (heldDay && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.gbCalTarget = heldDay.dataset.gbcalDay; suppressReleaseClick(); gbCalDialog('day-context'); }, 550);
     const heldLink = event.target.closest('[data-gbbr-item]');
     if (heldLink && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.gbBrTarget = heldLink.dataset.id; suppressReleaseClick(); ui.overlay = 'gb-dialog-br'; ui.gbBrDialog = heldLink.dataset.gbbrItem; renderOverlay(); }, 550);
-    const heldSong = event.target.closest('.stock-music [data-action="music-select"]');
-    if (heldSong && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.musicSelected = Number(heldSong.dataset.id); suppressReleaseClick(); ui.overlay = 'gb-dialog-music'; ui.gbMusicDialog = 'track'; renderOverlay(); }, 550);
     const heldCt = event.target.closest('[data-gbct-hold]');
     if (heldCt && !ui.overlay) messageHoldTimer = setTimeout(() => { suppressReleaseClick(); GBContactsIO.hold(heldCt.dataset.gbctHold, gbctContext()); }, 550);
     const heldNet = event.target.closest('[data-gbnet-hold]');
