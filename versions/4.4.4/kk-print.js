@@ -133,3 +133,34 @@
   }
   window.PrintSpooler = {open, overlay, handle, input, openPdf, pages, SIZES};
 })();
+/* The print dialog (PrintSpooler) of the 4.4.4 shell (docs/plans/engine-migration.md): its overlay, buttons and
+   fields, moved out of simulator.js. Gallery, Chrome and Downloads open it. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {overlayRoot, printContext, ui} = c;
+    return {
+      action(action, button, event) {
+        const {id, app, url} = button.dataset;
+        if (action.startsWith('pr-') && PrintSpooler.handle(action, id, printContext())) return;
+        return false;
+      },
+      input(event) {
+        if (event.target.matches('[data-pr]') && PrintSpooler.input(event.target, printContext())) return true;
+        return false;
+      },
+      overlay() {
+        if (ui.overlay === 'print') {
+          overlayRoot.innerHTML = PrintSpooler.overlay(printContext());
+        } else return false;
+        return true;
+      }
+    };
+  }
+  const spec = {
+    action: (name, el, event, c) => scope(c).action(name, el, event),
+    input: (event, c) => scope(c).input(event),
+    overlay: c => scope(c).overlay()
+  };
+  if (window.KK) for (const id of ['print']) KK.register(id, spec);
+})();

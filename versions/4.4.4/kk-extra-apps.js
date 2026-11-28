@@ -86,3 +86,82 @@
   }
   window.KKExtraApps = {qoDialog, QO_KIND, local, APPS, render, menu};
 })();
+/* Play Newsstand, Quickoffice and Wallet in the 4.4.4 shell (docs/plans/engine-migration.md): their screens
+   (kk-extra-apps.js), Newsstand's reader (news-reader.js), Quickoffice's files, dialogs and editor (quickoffice-more.js),
+   their menus, the held file's menu and Back, moved out of simulator.js. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {data, deviceDate, holdDelay, i18n, messageDraft, officeFiles, openApp, overlayRoot, render, renderOverlay, safe, save, suppressReleaseClick, toast, ui} = c;
+    const quickofficeContext=()=>({files:officeFiles(),data,ui,locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay});
+    const QO = key => { const row = window.StockStrings?.quickoffice?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : key; };
+    // Currents / Magazines / Newsstand reading and settings (news-reader.js).
+    const newsContext = () => ({app: ui.view, profile: 'newsstand-kk', ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.['newsstand']?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, account: 'kitkat.demo@gmail.com', save, render, toast: message => toast(message), unavailable: 'kkx-unavailable', emptyFor: {'My News': 'No news sources', 'My Magazines': 'No magazines'}, share: (text, subject) => { ui.overlay = ''; renderOverlay(); openApp('hangouts'); ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); save(); render(); }});
+    return {
+      render() {
+        return KKExtraApps.render(ui.view, {news: ui.view === 'newsstand' ? newsContext() : null, files: officeFiles().filter(f => !f.trashed), ui, data, locale:i18n.locale(), t: key => i18n.t(key)});
+      },
+      action(action, button, event) {
+        const {id, app, url} = button.dataset;
+        if(action.startsWith('qox-')&&QuickofficeMore.handle(action,id,quickofficeContext()))return;
+        if (['newsstand'].includes(ui.view) && action.startsWith('nr-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } ui.kkxDrawer = false; ui.lpxDrawer = false; ui.magDrawer = false; ui.currentsMenu = false; if (NewsReader.handle(action, id, newsContext())) return; }
+        switch (action) {
+          case 'kkx-open': ui.sub = id; render(); break;
+          // Quickoffice: create, save, rename and delete files in the saved Drive list.
+          case 'qo-new': ui.overlay = 'qo-create'; renderOverlay(); break;
+          case 'qo-create': ui.overlay = ''; renderOverlay(); ui.qoKind = id; ui.sub = 'qo-new'; render(); break;
+          case 'qo-save': { const [base, ext] = KKExtraApps.QO_KIND[ui.qoKind], label = QO(base), names = new Set(officeFiles().map(f => f.name)); let name = `${label}${ext}`, n = 1; while (names.has(name)) name = `${label} (${n++})${ext}`;
+            data.driveFiles = [{id: `q${Date.now().toString(36)}`, name, kind: ui.qoKind, local:true, parent:'device', date: deviceDate().toLocaleDateString(i18n.locale(), {month: 'short', day: 'numeric'}), age: 0, text: ''}, ...officeFiles()]; save(); ui.sub = ''; render(); toast(AndroidStrings.format(QO('File saved to %1$s'), KKExtraApps.local('Device', key => i18n.t(key)))); break; }
+          case 'qo-rename': ui.overlay = 'qo-rename'; renderOverlay(); overlayRoot.querySelector('[data-qo-name]')?.select(); break;
+          case 'qo-rename-ok': { const name = overlayRoot.querySelector('[data-qo-name]')?.value.trim(); if (name) { data.driveFiles = officeFiles().map(f => f.id === ui.qoFile ? {...f, name} : f); save(); } ui.overlay = ''; renderOverlay(); render(); break; }
+          case 'qo-delete': ui.overlay = 'qo-delete'; renderOverlay(); break;
+          case 'qo-delete-ok': data.driveFiles = officeFiles().filter(f => f.id !== ui.qoFile); save(); ui.overlay = ''; renderOverlay(); render(); break;
+          case 'kkx-unavailable': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
+          case 'kkx-drawer': ui.kkxDrawer = !ui.kkxDrawer; render(); break;
+          case 'kkx-menu': ui.overlay = 'kkx-menu'; renderOverlay(); break;
+          default: return false;
+        }
+        return true;
+      },
+      submit(form, event) {
+        const values = new FormData(form);
+        if (['newsstand'].includes(ui.view) && NewsReader.submit(form.dataset.form, values, newsContext())) return true;
+        return false;
+      },
+      input(event) {
+        if (['newsstand'].includes(ui.view) && NewsReader.input(event.target, newsContext())) return true;
+        return false;
+      },
+      overlay() {
+        if (ui.overlay.startsWith('qox-')) {
+          overlayRoot.innerHTML=QuickofficeMore.dialog(quickofficeContext());
+        } else if (ui.overlay.startsWith('qo-')) {
+          overlayRoot.innerHTML = KKExtraApps.qoDialog({'qo-create': 'create', 'qo-file': 'file', 'qo-rename': 'rename', 'qo-delete': 'delete'}[ui.overlay], {files: officeFiles(), ui, t: key => i18n.t(key)});
+        } else if (ui.overlay === 'kkx-menu') {
+          overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu holo-menu-light">${KKExtraApps.menu(ui.view, key => i18n.t(key), ui).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
+        } else return false;
+        return true;
+      },
+      back() {
+        if (['newsstand'].includes(ui.view) && !ui.overlay && NewsReader.back(ui)) { render(); return true; }
+        if(ui.view==='quickoffice'&&!ui.overlay&&QuickofficeMore.back(quickofficeContext()))return true;
+        if (ui.view === 'quickoffice' && ui.sub === 'qo-new' && !ui.overlay) { ui.sub = ''; render(); return true; }
+        return false;
+      },
+      gestureDown(event) {
+        const heldQo = event.target.closest('[data-qo-hold]');
+        if (heldQo && !ui.overlay) c.messageHoldTimer = setTimeout(() => { suppressReleaseClick(); ui.qoFile = heldQo.dataset.qoHold; ui.overlay = 'qo-file'; renderOverlay(); }, holdDelay(550));
+      }
+    };
+  }
+  const spec = {
+    render: c => scope(c).render(),
+    action: (name, el, event, c) => scope(c).action(name, el, event),
+    submit: (form, event, c) => scope(c).submit(form, event),
+    input: (event, c) => scope(c).input(event),
+    overlay: c => scope(c).overlay(),
+    back: c => scope(c).back(),
+    gestureDown: (event, c) => scope(c).gestureDown(event)
+  };
+  if (window.KK) for (const id of ['newsstand', 'quickoffice', 'wallet']) KK.register(id, spec);
+})();

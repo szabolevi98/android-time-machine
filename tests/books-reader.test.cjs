@@ -43,7 +43,7 @@ const load=(v,files)=>{const context={window:{}};for(const f of files)vm.runInNe
   assert.ok(opts.includes('bk3-options')&&opts.includes('bk3-ic_settings_fontsize_larger_on_holo_light')&&opts.indexOf('data-id="theme"')<opts.indexOf('data-id="typeface"')&&opts.indexOf('data-id="typeface"')<opts.indexOf('data-id="justification"'));
   assert.ok(P.render(ctx({},{bookPrefs:{theme:'1'}})).includes('pb-top bk3-dark'));
   const toc=P.render(ctx({bkToc:true}));assert.equal((toc.match(/data-action="bk-chapter"/g)||[]).length,3);assert.ok(toc.includes('class="current" data-action="bk-chapter" data-id="0"'));
-  const sim=fs.readFileSync('versions/4.4.4/simulator.js','utf8');assert.ok(sim.includes("Play Books 3.1.33's reader")&&sim.includes('[data-bk-bright]'));
+  const sim=engineSource('4.4.4');assert.ok(sim.includes("Play Books 3.1.33's reader")&&sim.includes('[data-bk-bright]'));
 }
 // 5.1.1: Play Books 3.3.15's card: theme buttons, brightness, the "T" and alignment spinners, size and line buttons
 // (addTheme, addBrightness, addTypeFace, addJustification, addTextSize, addLineHeight), and ContentsView's blue header.

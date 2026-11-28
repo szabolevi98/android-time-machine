@@ -31,7 +31,7 @@ for(const [v,max,checked] of [['4.3',4,'kp-ic_checked_dark.png'],['4.4.4',4,'kp2
   const strings=fs.readFileSync(`versions/${v}/stock-strings.js`,'utf8');
   for(const key of ['List item','Hide checkboxes','Delete checked items?','Remove photo?'])assert.ok(strings.includes(`"${key}"`),`${v} ${key}`);
   for(const f of [checked,'kp'+(v==='4.3'?'':v==='4.4.4'?'2':'3')+'-'+(v==='5.1.1'?'ic_material_delete_dark.png':'ic_delete_dark.png')])assert.ok(fs.existsSync(`versions/${v}/assets/${f}`),f);
-  // simulator.js: the actions, the list item form and the picture flows.
+  // The engine (simulator.js and its modules): the actions, the list item form and the picture flows.
   const sim=engineSource(v);
   for(const a of ['keep-new-list','keep-li-check','keep-li-delete','keep-checkboxes','keep-hide-delete','keep-photo-take','keep-photo-delete','keep-li-add'])assert.ok(sim.includes(`case '${a}'`),`${v} ${a}`);
   // Choose photo goes through the image's document picker: 4.4.4's own, 5.1.1's DocumentsUI (lp-docpicker.js).

@@ -349,3 +349,96 @@
   }
   window.JBGallery = {G, CLUSTERS, BORDERS, ADJUST, groups, items, fit, strip, render, back, attach, editState, editKey};
 })();
+/* Gallery in the 4.4.4 shell (docs/plans/engine-migration.md): the albums and the photo page (kk-gallery.js), the
+   swipe and arrow keys between pictures, the slideshow, rotate, share, print, delete, the Gallery and Camera menus and
+   dialogs (media.js) and Back, moved out of simulator.js. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {clone, data, dp, i18n, messageDraft, openApp, overlayRoot, photosContext, printContext, render, renderOverlay, save, screen, toast, ui, viewport} = c;
+    function renderGallery() { return JBGallery.render(data, ui, key => i18n.t(key), ICSMedia, i18n.locale()); }
+    const galleryItems = () => JBGallery.items(data, ui, i18n.locale());
+    function galleryStep(direction) {
+      const items=galleryItems(); if(!items.length)return;
+      const index=Math.max(0,items.findIndex(p=>p.id===ui.selectedPhoto));
+      ui.selectedPhoto=items[(index+direction+items.length)%items.length].id;ui.galleryZoom=false;render();
+    }
+    function photoStyle(photo) { return `background-image:url('${ICSMedia.image(photo)}');background-size:cover;background-position:center`; }
+    return {
+      render() {
+        return renderGallery();
+      },
+      action(action, button, event) {
+        const {id, app, url} = button.dataset;
+        switch (action) {
+          case 'gallery-wallpaper': ui.overlay = ''; openApp('gallery'); break;
+          case 'gallery-print': { const photo = data.photos.find(x => x.id === ui.selectedPhoto); ui.overlay = ''; ui.galleryPopup = ''; renderOverlay(); if (photo) { render(); PrintSpooler.open(printContext(), {name: photo.name, image: ICSMedia.image(photo)}); } break; }
+          case 'gallery-camera': openApp('camera'); break;
+          case 'gallery-album': ui.galleryAlbum=id; ui.sub='album';ui.gallerySlideshow=false;render();break;
+          case 'photo': ui.selectedPhoto=Number(id);if(!galleryItems().some(p=>p.id===Number(id))){ui.galleryCluster='album';ui.galleryAlbum=ICSMedia.album(data.photos.find(p=>p.id===Number(id))||{});}ui.sub='photo';ui.galleryZoom=false;ui.galleryFilm=false;ui.galleryBars=true;ui.galleryFromCamera=false;render();break;
+          case 'gallery-step': galleryStep(Number(id));break;
+          case 'gallery-photo-zoom': ui.galleryZoom=!ui.galleryZoom;render();break;
+          case 'gallery-menu': case 'gallery-share': case 'gallery-details': ui.overlay=action;renderOverlay();break;
+          case 'gallery-rotate': {const photo=data.photos.find(p=>p.id===ui.selectedPhoto);if(photo)photo.rotation=((photo.rotation||0)+Number(id)+360)%360;save();ui.overlay='';render();break;}
+          case 'gallery-slideshow': {const items=galleryItems();ui.galleryFilm=false;if(!items.length)break;if(ui.sub!=='photo')ui.selectedPhoto=items[0].id;ui.sub='photo';ui.overlay='';ui.gallerySlideshow=true;ui.gallerySlideAt=Date.now();render();break;}
+          case 'gallery-stop': ui.gallerySlideshow=false;render();break;
+          case 'gallery-share-message': {const photo=data.photos.find(p=>p.id===ui.selectedPhoto);if(!photo)break;openApp('hangouts');ui.sub='new';messageDraft().attachment=clone(photo);save();render();break;}
+          case 'gallery-confirm-delete': {
+            const items=galleryItems();const index=items.findIndex(p=>p.id===ui.selectedPhoto);
+            data.photos=data.photos.filter(p=>p.id!==ui.selectedPhoto);save();ui.overlay='';
+            const remaining=galleryItems();if(remaining.length)ui.selectedPhoto=remaining[Math.min(index,remaining.length-1)].id;else ui.sub='album';
+            render();toast('Photo deleted');break;
+          }
+          default: return false;
+        }
+        return true;
+      },
+      overlay() {
+        if (ui.overlay.startsWith('gallery-') || ui.overlay.startsWith('camera-')) {
+          overlayRoot.innerHTML=ICSMedia.overlay(data,ui,key=>i18n.t(key),i18n.locale());
+        } else return false;
+        return true;
+      },
+      back() {
+        if (ui.view === 'gallery' && ui.gallerySlideshow) { ui.gallerySlideshow=false;render();return true; }
+        if (ui.view === 'gallery' && ui.galleryFromPhotos && ui.sub === 'photo' && !ui.galleryPopup) { const id = ui.selectedPhoto; ui.galleryFromPhotos = false; openApp('photos'); ui.photosList = 'all'; const list = PhotosApp.list(photosContext()); ui.photosIndex = Math.max(0, list.findIndex(photo => photo.id === id)); ui.sub = 'photo'; render(); return true; }
+        if (ui.view === 'gallery') { ui.galleryZoom = false; const handled = JBGallery.back(ui, data); if (handled === 'camera') { ui.galleryFromCamera = false; openApp('camera'); return true; } if (handled) { render(); return true; } }
+        return false;
+      },
+      key(event) {
+        if(ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && ['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();galleryStep(event.key==='ArrowLeft'?-1:1);return true;}
+        return false;
+      },
+      gestureMove(event, dx, dy) {
+        if (ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && c.pointerStart.target.closest('[data-gallery-swipe]') && Math.abs(dx)>dp(11) && Math.abs(dx)>Math.abs(dy)) {
+          c.pointerStart.gallerySwiping=true;c.suppressClickUntil=Date.now()+350;event.preventDefault();
+          try{screen.setPointerCapture(event.pointerId);}catch{}
+          const picture=viewport.querySelector('.gallery-image');if(picture)picture.style.transform=`translateX(${dx}px)`;return true;
+        }
+        return false;
+      },
+      gestureUp(event, dx, dy) {
+        if (c.pointerStart.gallerySwiping) { if(Math.abs(dx)>dp(50))galleryStep(dx<0?1:-1);else render();c.suppressClickUntil=Date.now()+350;c.pointerStart=null;return true; }
+        return false;
+      },
+      gestureCancel() {
+        const photo=viewport.querySelector('.gallery-image');if(photo)photo.style.transform='';
+      },
+      second(now) {
+        if(ui.view==='gallery' && ui.sub==='photo' && ui.gallerySlideshow && !ui.overlay && Date.now()-ui.gallerySlideAt>=3000){ui.gallerySlideAt=Date.now();galleryStep(1);}
+      }
+    };
+  }
+  const spec = {
+    render: c => scope(c).render(),
+    action: (name, el, event, c) => scope(c).action(name, el, event),
+    overlay: c => scope(c).overlay(),
+    back: c => scope(c).back(),
+    key: (event, c) => scope(c).key(event),
+    gestureMove: (event, dx, dy, c) => scope(c).gestureMove(event, dx, dy),
+    gestureUp: (event, dx, dy, c) => scope(c).gestureUp(event, dx, dy),
+    gestureCancel: c => scope(c).gestureCancel(),
+    second: (now, c) => scope(c).second(now)
+  };
+  if (window.KK) for (const id of ['gallery']) KK.register(id, spec);
+})();

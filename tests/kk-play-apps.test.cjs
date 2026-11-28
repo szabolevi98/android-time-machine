@@ -1,5 +1,6 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const engineSource=require('./lib/engine-source.cjs');
 // Stock Nexus 5: Play Music, Play Movies & TV, Play Books and Play Games (late 2013 looks, own art and sample content).
 const w={window:{}};for(const f of ['kk-play-more.js','play-apps.js'])vm.runInNewContext(fs.readFileSync('versions/4.4.4/'+f,'utf8'),w);
 const P=w.window.PlayApps,t=k=>k,tracks=[{title:'A',artist:'X',album:'One',duration:100},{title:'B',artist:'X',album:'One',duration:90},{title:'C',artist:'Y',album:'Two',duration:80}];
@@ -37,7 +38,7 @@ assert.ok(P.render(ctx('play-games',{paPage:{'play-games':'recommended'}})).incl
 const drawer=P.drawer(ctx('play-games'));
 for(const label of ['Play Now','My Games','My Activity','Players','Recommended Games','Shop'])assert.ok(drawer.includes(`>${label}<`),label);
 assert.ok(P.drawer(ctx('play-movies')).includes('class="on" data-action="pa-page" data-id="movies"'));
-const sim=fs.readFileSync('versions/4.4.4/simulator.js','utf8');
+const sim=engineSource('4.4.4');
 assert.ok(sim.includes("const GEL_UNSIMULATED = [];")&&sim.includes("return PlayApps.render(playContext(ui.view));"));
 // Play Games 1.1 (audit step 4): getDrawerItems and games_destination_main_menu.
 assert.equal([...P.drawer(ctx('play-games')).matchAll(/<button[^>]*>([^<]*)</g)].map(m=>m[1]).join(),'Play Now,My Games,My Activity,Players,Recommended Games,Shop');

@@ -14,8 +14,9 @@
   const animationScaleLabel=value=>(scaleOptions.find(([scale])=>scale===Number(value??1))||scaleOptions[2])[1];
   // The simulator's rule: Sleep starts at Never (-1), an entry after the image's own (docs/plans/todo-all-versions.md).
   const sleepOptions=[[15,'15 seconds'],[30,'30 seconds'],[60,'1 minute'],[120,'2 minutes'],[300,'5 minutes'],[600,'10 minutes'],[1800,'30 minutes'],[-1,'Never']];
-  // A store app (store-apps/legacy-host.js) has its own size and no cache.
-  const sizes=(data,id,index=0)=>window.StoreHost?.has(id)?{app:StoreHost.module(id).size||1,data:data.storeApps?.[StoreHost.module(id).key]?0.1:0,cache:0}:({app:12+index*3,data:1.2,cache:data.appCacheCleared?.includes(id)?0:2.4});
+  // A store app (store-apps/legacy-host.js, its id store-<id>) has its own size and no cache; the other modules the host
+  // carries are the image's own apps (docs/plans/engine-migration.md).
+  const sizes=(data,id,index=0)=>String(id).startsWith('store-')&&window.StoreHost?.has(id)?{app:StoreHost.module(id).size||1,data:data.storeApps?.[StoreHost.module(id).key]?0.1:0,cache:0}:({app:12+index*3,data:1.2,cache:data.appCacheCleared?.includes(id)?0:2.4});
   // Settings' own strings of this image (stock-strings.js, group settings); a key it lacks stays as written.
   const S=key=>{const row=window.StockStrings?.settings?.[key];return row ? AndroidStrings.pick(row, window.AndroidI18n?.language, key) :key;};
   const label=text=>`<h3 class="section-label">${e(S(text).toLocaleUpperCase())}</h3>`;

@@ -1,5 +1,6 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const engineSource=require('./lib/engine-source.cjs');
 // Photo Sphere (T49) in the 4.4 and 5.1 cameras: LightCycle's targets, the hold that takes a frame, Undo / discard,
 // Done once two frames are in, the saved equirectangular picture and the viewers' wiring.
 for(const [v,file,name,state] of [['4.4.4','kk-sphere.js','KKSphere','kkSphere'],['5.1.1','lp-sphere.js','LPSphere','lpSphere']]){
@@ -34,7 +35,7 @@ for(const [v,file,name,state] of [['4.4.4','kk-sphere.js','KKSphere','kkSphere']
   const full=svg(M.image({sphere:true,frames:'all'}));assert.doesNotMatch(full,/<rect x="[^"]*" y="\d+" width="512"/);
   assert.match(svg(M.sphereImage({frames:[{col:3,row:1}]},true)),/<clipPath id="taken"[^>]*><rect x="1280" y="256" width="512" height="512"\/>/);
   // Saved as a PANO_ picture from the camera.
-  const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');
+  const sim=engineSource(v);
   assert.ok(sim.includes("clip?.sphere ? {sphere: true, frames: clip.sphere}")&&sim.includes("clip?.pano || clip?.sphere ? `PANO_"),v);
   const html=fs.readFileSync(`versions/${v}/index.html`,'utf8');assert.match(html,new RegExp(`${file.replace('.','\\.')}\\?v=\\d+`));
 }

@@ -1,5 +1,6 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const engineSource=require('./lib/engine-source.cjs');
 // Stock Nexus 5: Gmail 4.6.1 (Gmail2.apk of KTU84P) on the UnifiedEmail screens (sectioned inbox teaser, drawer, carets, Archive, label chip).
 const w={};w.window=w;
 for(const f of ['stock-strings.js','email.js','kk-email.js','gmail.js'])vm.runInNewContext(fs.readFileSync(`versions/4.4.4/${f}`,'utf8'),w);
@@ -33,6 +34,6 @@ assert.ok(huList.includes('2 új')&&huList.includes('3 olvasatlan')&&huList.incl
 assert.equal(G.tr('hu','Primary'),'Elsődleges');
 const email=K.render([],{emailFolder:'Inbox'},t,'en','en');
 assert.ok(email.includes('assets/email.png')&&!email.includes('kem-teaser'),'AOSP Email unchanged when empty');
-const sim=fs.readFileSync('versions/4.4.4/simulator.js','utf8');
+const sim=engineSource('4.4.4');
 assert.ok(sim.includes("case 'gmail': return renderGmail();")&&sim.includes("const GEL_ALIASES = {};")&&!sim.includes('data.mailbox.find'));
 console.log('kk-gmail ok');

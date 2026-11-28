@@ -141,3 +141,89 @@
   }
   window.KKDialer = {COLORS, javaHash, tileColor, letterTile, speedDial, results, render, KEYS};
 })();
+/* Phone (the KitKat Dialer) in the 4.4.4 shell (docs/plans/engine-migration.md): speed dial, the dialpad, the call
+   log and its details, all contacts, search, the overflow menu, a call's buttons, SIM import and Back, moved out of
+   simulator.js. The call itself (its timer, the shade's ongoing call) stays with the shell. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {contactByPhone, data, editPerson, home, i18n, openApp, openMessageThread, overlayRoot, render, renderOverlay, save, startPhoneCall, toast, ui, viewport} = c;
+    function renderPhone() {
+      if(ui.activeCall)return ICSPhoneCall.render(ui.activeCall,contactByPhone(ui.activeCall.number),(key,context)=>i18n.t(key,context));
+      if(ui.sub==='call-detail'){const call=(data.callHistory||[]).find(call=>call.time===ui.phoneCallId);if(call)return ICSPhoneCall.details(call,contactByPhone(call.number),key=>i18n.t(key),i18n.locale());}
+      // Android 4.4 Dialer (kk-dialer.js): speed dial, search, sliding dialpad and the History screen.
+      return KKDialer.render({data, ui, t: key => i18n.t(key), locale: i18n.locale(), byPhone: contactByPhone});
+    }
+    return {
+      render() {
+        if (ui.sub === 'sim-import' && ['people', 'phone'].includes(ui.view)) return PeopleIO.sim({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
+        return renderPhone();
+      },
+      action(action, button, event) {
+        const {id, app, url} = button.dataset;
+        switch (action) {
+          case 'phone-tab': ui.phoneTab = id; ui.phoneSearch = undefined; render(); break;
+          case 'phone-search': ui.phoneTab = 'favorites'; ui.phoneSearch = ''; ui.overlay = ''; render(); viewport.querySelector('.phone-search input')?.focus(); break;
+          case 'phone-menu': ui.overlay = 'phone-menu'; renderOverlay(); break;
+          case 'phone-add-contact': openApp('people'); editPerson(true); ui.peopleDraft.phones[0].value=ui.dial; render(); break;
+          case 'phone-redial': startPhoneCall(id); break;
+          case 'dial': if (ui.dial.length < 30) ui.dial += id; render(); break;
+          case 'dial-delete': ui.dial = ui.dial.slice(0, -1); render(); break;
+          case 'call': if(!ui.dial){toast('Enter a phone number');break;}startPhoneCall(ui.dial);break;
+          case 'hangup': if(ui.activeCall)data.callHistory=[...(data.callHistory||[]),ICSPhoneCall.finish(ui.activeCall)].slice(-50);ui.activeCall=null;save();ui.sub='';ui.dial='';render();toast('Call ended');break;
+          case 'incall-toggle': if(ui.activeCall)ui.activeCall[id]=!ui.activeCall[id];render();break;
+          case 'incall-digit': if(ui.activeCall)ui.activeCall.digits=(ui.activeCall.digits+id).slice(-24);render();break;
+          case 'phone-log-detail': ui.kkLogFrom=ui.sub==='kk-history'?'kk-history':'';ui.phoneCallId=Number(id);ui.sub='call-detail';render();break;
+          case 'phone-log-back': ui.sub=ui.kkLogFrom||'';ui.phoneTab='history';render();break;
+          case 'kk-dialer-all': ui.sub = 'kk-all'; ui.overlay = ''; render(); break;
+          case 'kk-dialer-history': ui.sub = 'kk-history'; ui.kkDialpad = false; ui.overlay = ''; render(); break;
+          case 'kk-dialer-back': ui.sub = ''; render(); break;
+          case 'kk-dialer-log-tab': ui.kkLogTab = id; render(); break;
+          case 'kk-dialer-pad': ui.kkDialpad = true; render(); break;
+          case 'kk-dialer-clear': ui.phoneSearch = ''; render(); viewport.querySelector('[data-kk-dialer-search]')?.focus(); break;
+          case 'phone-log-message': { const recipient=ICSMessaging.recipient(id,data.contacts); if(recipient)openMessageThread(recipient.key);else toast('Enter a valid phone number');break; }
+          default: return false;
+        }
+        return true;
+      },
+      submit(form, event) {
+        const values = new FormData(form);
+        if (form.dataset.form === 'phone-search') { ui.phoneSearch = String(values.get('query') || '').trim(); render(); return true; }
+        return false;
+      },
+      input(event) {
+        if (event.target.matches?.('[data-kk-dialer-search]')) {
+          ui.phoneSearch = event.target.value;
+          const list = viewport.querySelector('[data-kk-dialer-list]');
+          if (list) { const fresh = document.createElement('div'); fresh.innerHTML = KKDialer.render({data, ui, t: key => i18n.t(key), locale: i18n.locale(), byPhone: contactByPhone}); list.innerHTML = fresh.querySelector('[data-kk-dialer-list]').innerHTML; i18n.translateDOM?.(list); }
+          return true;
+        }
+        return false;
+      },
+      overlay() {
+        if (ui.overlay === 'phone-menu') {
+          overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu phone-overflow"><button data-action="phone-add-contact">Add to contacts</button></div>`;
+        } else return false;
+        return true;
+      },
+      back() {
+        if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return true; }
+        if(ui.view==='phone' && !ui.activeCall && ui.kkDialpad){ui.kkDialpad=false;ui.dial='';render();return true;}
+        if(ui.view==='phone' && !ui.activeCall && ['kk-history','kk-all'].includes(ui.sub)){ui.sub='';render();return true;}
+        if(ui.view==='phone' && !ui.activeCall && ui.sub==='call-detail'){ui.sub=ui.kkLogFrom||'';render();return true;}
+        if(ui.view==='phone' && !ui.activeCall && (ui.phoneSearch||'').trim()){ui.phoneSearch='';render();return true;}
+        if(ui.view==='phone' && ui.activeCall){if(ui.activeCall.keypad){ui.activeCall.keypad=false;render();}else home(false);return true;}
+        return false;
+      }
+    };
+  }
+  const spec = {
+    render: c => scope(c).render(),
+    action: (name, el, event, c) => scope(c).action(name, el, event),
+    submit: (form, event, c) => scope(c).submit(form, event),
+    input: (event, c) => scope(c).input(event),
+    overlay: c => scope(c).overlay(),
+    back: c => scope(c).back()
+  };
+  if (window.KK) for (const id of ['phone']) KK.register(id, spec);
+})();

@@ -440,3 +440,136 @@
   }
   window.JBPlay = {drawer, SECTIONS, TABS, EXTRA, VERSION, text, fmt, all, find, packageName, shareLink, developerEmail, installedState, render, menu, dialog, art};
 })();
+/* Google Play Store 4.8 in the 4.4.4 shell (docs/plans/engine-migration.md): the home, sections, details,
+   search, My apps, the wishlist, settings and their dialogs (kk-play.js), the drawer and its edge swipe, the tabs'
+   swipe, downloads and Back, moved out of simulator.js. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {data, dp, driveShareText, i18n, jbPlayContext, openApp, overlayRoot, render, renderOverlay, renderStatus, safe, save, screen, storeAppsSync, storeInstalled, storeUninstall, toast, ui, viewport} = c;
+    function jbPlayGo(next) { (ui.marketHistory ||= []).push({...(ui.market || {page: 'home'}), scroll: viewport.querySelector('.jbp-scroll')?.scrollTop || 0}); ui.market = {...(ui.market || {}), ...next}; ui.overlay = ''; ui.marketSearching = false; render(); }
+    function jbPlayKeepScroll() { const top = viewport.querySelector('.jbp-scroll')?.scrollTop || 0; render(); const list = viewport.querySelector('.jbp-scroll'); if (list) list.scrollTop = top; }
+    function jbPlayDownload(id) {
+      const item = JBPlay.find(id); if (!item) return;
+      clearInterval(ui.marketTimer); ui.marketDownload = {id, phase: 'downloading', progress: 0};
+      data.notifications = data.notifications.filter(n => n.kind !== 'market-dl');
+      data.notifications.unshift({id: Date.now(), title: item.name, detail: JBPlay.text(i18n.language, 'Downloading…'), kind: 'market-dl'});
+      save(); render(); renderStatus();
+      ui.marketTimer = setInterval(() => {
+        const d = ui.marketDownload; if (!d) { clearInterval(ui.marketTimer); return; }
+        if (d.phase === 'downloading') { d.progress = Math.min(1, d.progress + .12); if (d.progress >= 1) d.phase = 'installing'; }
+        else { clearInterval(ui.marketTimer); ui.marketDownload = null; data.marketInstalled = [...new Set([...(data.marketInstalled || []), id])]; storeInstalled(id); data.marketEverInstalled = [...new Set([...(data.marketEverInstalled || []), id])]; data.notifications = data.notifications.filter(n => n.kind !== 'market-dl'); if ((data.marketPrefs?.notify) !== false) data.notifications.unshift({id: Date.now(), title: item.name, detail: JBPlay.text(i18n.language, 'Successfully installed.'), kind: 'market'}); save(); renderStatus(); }
+        if (ui.view === 'play-store' && !ui.marketSearching) jbPlayKeepScroll();
+      }, 350);
+    }
+    function navigatePlay(next) {
+      ui.playHistory.push({...ui.play,scrollTop:viewport.querySelector('.play-content')?.scrollTop || 0});
+      ui.play = {...ui.play,...next}; ui.overlay = ''; render();
+    }
+    return {
+      render() {
+        return JBPlay.render(jbPlayContext());
+      },
+      action(action, button, event) {
+        const {id, app, url} = button.dataset;
+        switch (action) {
+          case 'market': openApp('play-store'); break;
+          case 'play-menu': case 'jbp-menu': ui.overlay = 'play-menu'; renderOverlay(); break;
+          case 'jbp-section': jbPlayGo({page: 'section', section: id, tab: button.dataset.tab || 'Featured'}); break;
+          case 'jbp-tab': if (id) { ui.market.tab = id; render(); viewport.querySelector('.jbp-tabs button.on')?.scrollIntoView({inline: 'center', block: 'nearest'}); } break;
+          case 'jbp-detail': jbPlayGo({page: 'detail', selected: id, expanded: false}); break;
+          case 'jbp-card-menu': { const rect = button.getBoundingClientRect(), box = screen.getBoundingClientRect(); ui.marketTarget = id; ui.marketPopTop = Math.round((rect.bottom - box.top) / (box.height / screen.offsetHeight)) - 26; ui.overlay = 'jbp-card'; renderOverlay(); break; }
+          case 'jbp-wish': { const list = data.marketWishlist || [], had = list.includes(id), item = JBPlay.find(id); data.marketWishlist = had ? list.filter(x => x !== id) : [...list, id]; save(); ui.overlay = ''; renderOverlay(); jbPlayKeepScroll(); if (item) toast(JBPlay.fmt(JBPlay.text(i18n.language, had ? '%1$s removed from wishlist' : '%1$s added to wishlist'), item.name)); break; }
+          case 'jbp-buy': { const item = JBPlay.find(id); ui.overlay = ''; renderOverlay(); if (item && item.price !== 'FREE') { toast(JBPlay.text(i18n.language, 'Unavailable')); break; } ui.marketTarget = id; ui.overlay = 'jbp-perms'; renderOverlay(); break; }
+          case 'jbp-accept': ui.overlay = ''; renderOverlay(); jbPlayDownload(id); break;
+          case 'jbp-cancel': clearInterval(ui.marketTimer); ui.marketDownload = null; data.notifications = data.notifications.filter(n => n.kind !== 'market-dl'); save(); renderStatus(); render(); break;
+          case 'jbp-open': { const item = JBPlay.find(id); if (item?.app) openApp(item.app); else if (StoreHost.runtime(id)) { storeAppsSync(); openApp(StoreHost.runtime(id)); } else toast(JBPlay.text(i18n.language, 'Unavailable')); break; }
+          case 'jbp-uninstall': ui.overlay = ''; renderOverlay(); storeUninstall(id); save(); render(); break;
+          case 'jbp-uninstall-ask': ui.marketTarget = id; ui.overlay = 'jbp-uninstall'; renderOverlay(); break;
+          case 'jbp-archive': data.marketEverInstalled = (data.marketEverInstalled || []).filter(x => x !== id); save(); jbPlayKeepScroll(); break;
+          case 'jbp-rate-dialog': ui.marketTarget = id; ui.marketRateDraft = button.dataset.stars ? Number(button.dataset.stars) : undefined; ui.overlay = 'jbp-rate'; renderOverlay(); break;
+          case 'jbp-rate-pick': ui.marketRateDraft = Number(id); renderOverlay(); break;
+          case 'jbp-rate-ok': data.marketRated = {...(data.marketRated || {}), [id]: ui.marketRateDraft ?? (data.marketRated || {})[id] ?? 0}; save(); ui.overlay = ''; renderOverlay(); jbPlayKeepScroll(); break;
+          case 'jbp-content-filter': ui.marketFilterDraft = undefined; ui.overlay = 'jbp-filter'; renderOverlay(); break;
+          case 'jbp-filter-pick': { const levels = ['Everyone', 'Low maturity', 'Medium maturity', 'High maturity', 'Show all apps'], cur = ui.marketFilterDraft || jbPlayContext().prefs.filter || levels; let next = cur.includes(id) ? cur.filter(x => x !== id && (id !== 'Show all apps' ? x !== 'Show all apps' : true)) : [...cur, id]; if (id === 'Show all apps') next = cur.includes(id) ? [] : levels; else if (levels.slice(0, 4).every(l => next.includes(l))) next = levels; ui.marketFilterDraft = next; renderOverlay(); break; }
+          case 'jbp-filter-ok': data.marketPrefs = {...jbPlayContext().prefs, filter: ui.marketFilterDraft || jbPlayContext().prefs.filter}; save(); ui.overlay = ''; renderOverlay(); break;
+          case 'jbp-accounts': ui.overlay = 'jbp-accounts'; renderOverlay(); break;
+          case 'jbp-noop': break;
+          case 'jbp-plus': { const list = data.marketPlus || []; data.marketPlus = list.includes(id) ? list.filter(x => x !== id) : [...list, id]; save(); jbPlayKeepScroll(); break; }
+          case 'jbp-my-apps': jbPlayGo({page: 'my-apps', tab: 'INSTALLED'}); break;
+          case 'jbp-wishlist': jbPlayGo({page: 'wishlist'}); break;
+          case 'jbp-settings': jbPlayGo({page: 'settings'}); break;
+          // Share on the details page: the chooser, then the target's compose screen with the link (play-store.js).
+          case 'jbp-share': ui.marketTarget = id || ui.market?.selected; ui.overlay = 'jbp-share'; renderOverlay(); break;
+          case 'jbp-share-to': { const [app, itemId] = String(id).split('|'), item = JBPlay.find(itemId); ui.overlay = ''; renderOverlay(); if (item) driveShareText(app, JBPlay.shareLink(item), JBPlay.fmt(JBPlay.text(i18n.language, 'Check out "%1$s"'), item.name)); break; }
+          case 'jbp-unavailable': ui.overlay = ''; renderOverlay(); toast(JBPlay.text(i18n.language, 'Unavailable')); break;
+          case 'jbp-pref': { const base = jbPlayContext().prefs; data.marketPrefs = {...base, [id]: !base[id]}; save(); jbPlayKeepScroll(); break; }
+          case 'jbp-auto-update': ui.overlay = 'jbp-auto'; renderOverlay(); break;
+          case 'jbp-auto-pick': data.marketPrefs = {...jbPlayContext().prefs, autoMode: id}; save(); ui.overlay = ''; renderOverlay(); jbPlayKeepScroll(); break;
+          case 'jbp-clear-history': data.marketSearches = []; save(); break;
+          // Play Store 4.8: the navigation drawer, the permissions note on the home page, the grouped permission rows and
+          // "Permission details", and the Require password list.
+          case 'kkp-drawer': ui.overlay = 'jbp-drawer'; renderOverlay(); break;
+          case 'kkp-home': ui.marketHistory = []; ui.market = {page: 'home'}; ui.overlay = ''; ui.marketSearching = false; render(); break;
+          case 'jbp-search': ui.marketSearching = true; ui.marketEdit = ''; render(); viewport.querySelector('.jbp-bar input')?.focus(); break;
+          case 'jbp-search-run': data.marketSearches = [id, ...(data.marketSearches || []).filter(q => q !== id)].slice(0, 10); save(); jbPlayGo({page: 'search', query: id}); break;
+          case 'play-search': navigatePlay({page:'search',category:'',query:''}); viewport.querySelector('.play-search input')?.focus(); break;
+          case 'play-tab': ui.play = {...ICSPlayStore.initial(),tab:id}; ui.playHistory = []; render(); break;
+          case 'play-category': navigatePlay({page:'list',category:id,query:''}); break;
+          case 'play-detail': navigatePlay({page:'detail',selected:id,preview:0}); break;
+          case 'play-preview': navigatePlay({page:'preview',selected:id,preview:Number(button.dataset.preview || 0)}); break;
+          case 'play-preview-step': ui.play.preview = (ui.play.preview + Number(id) + 3) % 3; render(); break;
+          case 'play-open': { const entry = ICSPlayStore.catalog.find(item => item.id === id); if (entry?.app) openApp(entry.app); break; }
+          case 'play-rate': { const top = viewport.querySelector('.play-content').scrollTop; data.playRatings ||= {}; data.playRatings[ui.play.selected] = Number(id); save(); render(); viewport.querySelector('.play-content').scrollTop = top; break; }
+          default: return false;
+        }
+        return true;
+      },
+      submit(form, event) {
+        const values = new FormData(form);
+        if (form.dataset.form === 'jbp-search') { const q = String(values.get('query') || '').trim(); if (!q) return true; data.marketSearches = [q, ...(data.marketSearches || []).filter(x => x !== q)].slice(0, 10); save(); jbPlayGo({page: 'search', query: q}); return true; }
+        if (form.dataset.form === 'play-search') { ui.play.query = String(values.get('query') || '').trim(); render(); return true; }
+        return false;
+      },
+      input(event) {
+        if (event.target.closest('.jbp-bar.searching')) { ui.marketEdit = event.target.value; const view = viewport.querySelector('.jbp'); view?.querySelector('.jbp-suggest')?.remove(); const tmp = document.createElement('div'); tmp.innerHTML = JBPlay.render(jbPlayContext()); const sug = tmp.querySelector('.jbp-suggest'); if (sug && view) view.append(sug); return true; }
+        if (event.target.matches('[data-jbp-auto]')) { const id = event.target.dataset.jbpAuto, list = data.marketAuto || []; data.marketAuto = event.target.checked ? [...new Set([...list, id])] : list.filter(x => x !== id); save(); return true; }
+        return false;
+      },
+      overlay() {
+        if (ui.overlay === 'play-menu') {
+          // The action bar overflow: a Holo Light popup below the overflow button.
+          overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="jbp-menu" role="menu">${JBPlay.menu(jbPlayContext()).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
+        } else if (ui.overlay.startsWith('jbp-')) {
+          overlayRoot.innerHTML = JBPlay.dialog(ui.overlay.slice(4), jbPlayContext());
+        } else return false;
+        return true;
+      },
+      back() {
+        if (ui.view === 'play-store' && ui.marketSearching) { ui.marketSearching = false; render(); return true; }
+        if (ui.view === 'play-store' && ui.marketHistory?.length) { const prev = ui.marketHistory.pop(); ui.market = prev; render(); const list = viewport.querySelector('.jbp-scroll'); if (list) list.scrollTop = prev.scroll || 0; return true; }
+        return false;
+      },
+      gestureUp(event, dx, dy) {
+        // Play Store 4.8: a swipe from the left edge of a top-level page opens the drawer, a swipe to the left closes it.
+        if (ui.view === 'play-store' && Math.abs(dx) > dp(55) && Math.abs(dx) > Math.abs(dy) * 1.5) {
+          const left = (c.pointerStart.x - screen.getBoundingClientRect().left) / (screen.getBoundingClientRect().width / screen.offsetWidth);
+          if (!ui.overlay && dx > 0 && left < 20 && ['home', 'my-apps', 'wishlist'].includes(ui.market?.page || 'home')) { ui.overlay = 'jbp-drawer'; renderOverlay(); c.suppressClickUntil = Date.now() + 350; c.pointerStart = null; return true; }
+          if (ui.overlay === 'jbp-drawer' && dx < 0) { ui.overlay = ''; renderOverlay(); c.suppressClickUntil = Date.now() + 350; c.pointerStart = null; return true; }
+        }
+        if (ui.view === 'play-store' && (ui.market?.page === 'section' || ui.market?.page === 'my-apps') && !ui.overlay && c.pointerStart.target.closest('.jbp-scroll') && Math.abs(dx) > dp(66) && Math.abs(dx) > Math.abs(dy) * 1.5) { const tabs = [...viewport.querySelectorAll('.jbp-tabs button')], i = tabs.findIndex(b => b.classList.contains('on')), next = tabs[i + (dx < 0 ? 1 : -1)]; if (next) next.click(); c.suppressClickUntil = Date.now() + 350; c.pointerStart = null; return true; }
+        return false;
+      }
+    };
+  }
+  const spec = {
+    render: c => scope(c).render(),
+    action: (name, el, event, c) => scope(c).action(name, el, event),
+    submit: (form, event, c) => scope(c).submit(form, event),
+    input: (event, c) => scope(c).input(event),
+    overlay: c => scope(c).overlay(),
+    back: c => scope(c).back(),
+    gestureUp: (event, dx, dy, c) => scope(c).gestureUp(event, dx, dy)
+  };
+  if (window.KK) for (const id of ['play-store']) KK.register(id, spec);
+})();

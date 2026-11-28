@@ -406,3 +406,51 @@
   }
   window.JBCamera = {P, SIZES, DURATIONS, MODULES, settings, tree, indicators, centerAngle, frame, itemAngle, itemPoint, labelPoint, polar, findItem, pulledToCenter, slicePath, arcPath, captureFrame, render, attach};
 })();
+/* Camera in the 4.4.4 shell (docs/plans/engine-migration.md): the viewfinder (kk-camera.js), the shutter, zoom,
+   a capture request's review (Done, Retake, Cancel) and Back, moved out of simulator.js. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {data, i18n, render, save, screen, toast, ui, viewport} = c;
+    function renderCamera() { return JBCamera.render(data, ui, key => i18n.t(key), ICSMedia); }
+    return {
+      render() {
+        return renderCamera();
+      },
+      action(action, button, event) {
+        const {id, app, url} = button.dataset;
+        switch (action) {
+          case 'cam-review-done': ui.camIntent?.taken && ui.camIntent.done(); break;
+          case 'cam-review-retake': if (ui.camIntent) { ui.camIntent.taken = null; render(); } break;
+          case 'cam-review-cancel': ui.camIntent?.cancel(); break;
+          case 'shoot': {
+            const photo={...ICSMedia.scene(data),id:Date.now(),name:`IMG_${new Date().toISOString().replace(/[-:T]/g,'').slice(0,14)}`,album:'camera',created:Date.now()};
+            data.photos.unshift(photo);save();render();screen.animate([{opacity:1},{opacity:.4},{opacity:1}],{duration:240});toast('Photo saved to Gallery');break;
+          }
+          default: return false;
+        }
+        return true;
+      },
+      input(event) {
+        if(event.target.matches('.camera-zoom input')) {
+          data.cameraSettings=ICSMedia.settings(data);data.cameraSettings.zoom=Number(event.target.value);save();
+          viewport.querySelector('.camera-focus-area .media-photo').src=ICSMedia.image(ICSMedia.scene(data));
+          viewport.querySelector('.camera-zoom output').textContent=Number(event.target.value).toFixed(1)+'×';return true;
+        }
+        return false;
+      },
+      back() {
+        // Back in a capture request cancels it (RESULT_CANCELED).
+        if (ui.view === 'camera' && ui.camIntent && !ui.overlay) { ui.camIntent.cancel(); return true; }
+        return false;
+      }
+    };
+  }
+  const spec = {
+    render: c => scope(c).render(),
+    action: (name, el, event, c) => scope(c).action(name, el, event),
+    input: (event, c) => scope(c).input(event),
+    back: c => scope(c).back()
+  };
+  if (window.KK) for (const id of ['camera']) KK.register(id, spec);
+})();

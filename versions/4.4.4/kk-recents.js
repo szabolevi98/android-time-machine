@@ -58,3 +58,49 @@
   }
   window.JBRecents = {R, render, open, close, bindLongPress};
 })();
+/* Recent apps of the 4.4.4 shell (docs/plans/engine-migration.md): the panel (kk-recents.js), opening and removing
+   a task and its App info, moved out of simulator.js. Its swipe stays with the shell's pointer handling. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {appIcon, appNames, captureRecentView, closeRecents, i18n, openApp, overlayRoot, reducedMotion, removeTask, render, renderOverlay, screen, ui, viewport} = c;
+    return {
+      action(action, button, event) {
+        const {id, app, url} = button.dataset;
+        switch (action) {
+          case 'recent': {
+            if (ui.view === 'lock') break;
+            if (ui.overlay === 'recent') { closeRecents(); break; }
+            captureRecentView(); ui.recentPopup = null;
+            const fromApp = !!appNames[ui.view], outgoing = viewport.firstElementChild?.cloneNode(true);
+            ui.overlay = 'recent'; renderOverlay();
+            // The outgoing window animates in a layer above Recents (makeThumbnailScaleDownAnimation is ZORDER_TOP).
+            const layer = document.createElement('div'); layer.className = 'jb-recents-layer';
+            Object.assign(layer.style, {top: `${viewport.offsetTop}px`, left: `${viewport.offsetLeft}px`, width: `${viewport.offsetWidth}px`, height: `${viewport.offsetHeight}px`});
+            screen.append(layer); setTimeout(() => layer.remove(), JBRecents.R.window + 80);
+            JBRecents.open(overlayRoot.querySelector('.recent-panel'), outgoing, {fromApp, reduced: !!reducedMotion?.matches, layer});
+            break;
+          }
+          case 'recent-app-info': ui.overlay = ''; ui.recentPopup = null; openApp('settings'); ui.settingsApp = id; ui.sub = 'app-info'; render(); break;
+          case 'remove-recent': event.stopPropagation(); ui.recentPopup = null; removeTask(id); if (!ui.recent.length) ui.overlay = ''; renderOverlay(); break;
+          default: return false;
+        }
+        return true;
+      },
+      overlay() {
+        if (ui.overlay === 'recent') {
+          overlayRoot.innerHTML = JBRecents.render(ui.recent, {names: appNames, icon: appIcon, snapshots: ui.recentSnapshots, popup: ui.recentPopup, t: key => i18n.t(key)});
+          // PopupMenu keeps itself on screen: shift it left when the anchor is near the right edge.
+          const popup = overlayRoot.querySelector('.jb-recent-popup'); if (popup) popup.style.left = `${Math.max(4, Math.min(parseFloat(popup.style.left), popup.parentElement.clientWidth - popup.offsetWidth - 4))}px`;
+          JBRecents.bindLongPress(overlayRoot.querySelector('.recent-panel'), popup => { ui.recentPopup = popup; c.suppressClickUntil = Infinity; window.addEventListener('pointerup', () => { c.suppressClickUntil = Date.now() + 50; }, {once: true, capture: true}); renderOverlay(); });
+        } else return false;
+        return true;
+      }
+    };
+  }
+  const spec = {
+    action: (name, el, event, c) => scope(c).action(name, el, event),
+    overlay: c => scope(c).overlay()
+  };
+  if (window.KK) for (const id of ['recent']) KK.register(id, spec);
+})();

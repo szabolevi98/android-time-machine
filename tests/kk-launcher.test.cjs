@@ -1,5 +1,6 @@
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const engineSource=require('./lib/engine-source.cjs');
 // KitKat Launcher3 clings: first run, then the workspace cling; the folder cling on an open folder; none in overview.
 const context={window:{}};vm.runInNewContext(fs.readFileSync('versions/4.4.4/launcher-clings.js','utf8'),context);
 const c=context.window.LauncherClings,t=k=>k;
@@ -15,7 +16,7 @@ assert.equal(c.wanted({view:'home',overlay:''},c.dismissedAll()),'');
 assert.ok(c.markup('firstRun',t).includes('Create more screens for apps and folders'));
 assert.ok(c.markup('workspace',t).includes('kk-cling-ring')&&c.markup('workspace',t).includes('data-id="workspace"'));
 // Stock Nexus 5 (Google Now Launcher): one home pane with the Google folder and Play Store, Phone/Hangouts/Chrome dock.
-const sim=fs.readFileSync('versions/4.4.4/simulator.js','utf8').replace(/\r\n/g,'\n');
+const sim=engineSource('4.4.4').replace(/\r\n/g,'\n');
 assert.ok(sim.includes("homePages: [Array.from({length: 16}, (_, slot) => slot === 12 ? 'folder-google' : slot === 15 ? 'play-store' : null)]"));
 assert.ok(sim.includes("dock: ['phone', 'hangouts', 'apps', 'chrome', 'camera']"));
 assert.ok(sim.includes("view: 'home', sub: '', page: 0,"),'the home pane right of Google Now is the default');
