@@ -12,7 +12,9 @@ one `GB.register(id, {...})` module per screen.
 - The screen's helpers move with it, inside a `shell(c)` function that takes the shell's bindings from `c` and returns
   them with the helpers, so the moved code keeps its names.
 - Gestures go into `mount(c, root)`, on the screen's own element (`root.firstElementChild`, drawn anew by every
-  render); long presses use `GB.hold`.
+  render); long presses use `GB.hold`, drags `GB.gesture`.
+- Tests that look for a piece of the engine read `tests/lib/engine-source.cjs` ('2.3.6'): the version's scripts as
+  index.html loads them.
 - An app's settings screen (GBPrefs, Menu › Settings) is drawn over its view: while it is open the module is not in
   front (`moduleView()` in the shell).
 
@@ -24,7 +26,8 @@ one `GB.register(id, {...})` module per screen.
 | Downloads, Search | gb-downloads.js, gb-search.js | ef14be02 |
 | Clock | gb-deskclock.js | 6dfac9b3 |
 | Music | gb-music.js | 2d85c4d4 |
-| Calendar | gb-calendar.js | |
+| Calendar | gb-calendar.js | 23788113 |
+| Gallery | gb-gallery.js | |
 
 Bugs fixed on the way (their own commits):
 

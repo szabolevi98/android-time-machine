@@ -143,3 +143,145 @@
   }
   window.GBGallery = {DP, ITEM_W, ITEM_H, ALBUMS, CROP, text, albumName, render, details, cropDefault, cropDrag};
 })();
+
+/* Gallery on Android 2.3.6 (Gallery3D of GRK39F) as a module (docs/plans/engine-migration.md): the albums, the grid and
+   the picture with its swipe, arrow keys and slideshow, the selection mode (long press), the MenuBar's popups, crop,
+   details, and the picker mode that returns a picture to Gmail, the contact editor or a Picture frame widget. */
+(() => {
+  'use strict';
+  const i18n = window.AndroidI18n;
+  // The shell's bindings the screen's code uses, and its helpers on them.
+  function shell(c) {
+    const {data, ui, render, viewport, deviceDate} = c;
+    function gbGalleryContext() {
+      return {pick: !!ui.gbgPick, lang: i18n.language, locale: i18n.locale(), now: deviceDate(), data, sub: ui.sub || '', album: ui.galleryAlbum || 'camera', photo: data.photos.find(p => p.id === ui.selectedPhoto), crop: ui.gbgCrop || null, selecting: !!ui.gbgSelect, selected: ui.gbgSelected || [], popup: ui.gbgPopup || '', caption: !!ui.gbgCaption, zoom: !!ui.galleryZoom, slideshow: !!ui.gallerySlideshow, hudHidden: !!ui.gbgHudHidden, stackMode: !!ui.gbgStack, width: viewport.clientWidth || 276, height: viewport.clientHeight || 438, timebar: 48 * GBGallery.DP()};
+    }
+    // The photos a selection stands for: whole albums on the album screen, single photos elsewhere.
+    function gbgSelectedPhotos() {
+      const ids = ui.gbgSelected || [];
+      return ui.sub ? data.photos.filter(p => ids.includes(String(p.id))) : data.photos.filter(p => ids.includes(ICSMedia.album(p)));
+    }
+    function gbgEndSelection() { ui.gbgSelect = false; ui.gbgSelected = []; ui.gbgPopup = ''; }
+    function galleryStep(direction) {
+      const items=ICSMedia.photos(data,ui.galleryAlbum); if(!items.length)return;
+      const index=Math.max(0,items.findIndex(p=>p.id===ui.selectedPhoto));
+      ui.selectedPhoto=items[(index+direction+items.length)%items.length].id;ui.galleryZoom=false;render();
+    }
+    return {data, ui, save: c.save, render, renderOverlay: c.renderOverlay, toast: c.toast, viewport, clone: c.clone, openApp: c.openApp, home: c.home, cancelPhotoWidget: c.cancelPhotoWidget, composeEmail: c.composeEmail, messageDraft: c.messageDraft, gappContext: c.gapp, gbGalleryContext, gbgSelectedPhotos, gbgEndSelection, galleryStep};
+  }
+  function mount(c, root) {
+    const {data, ui, render, viewport, dp} = c, {galleryStep} = shell(c);
+    // CropImage's HighlightView owns its drags: they never reach the picture's swipe and the screen's handling.
+    root.firstElementChild?.addEventListener('pointerdown', event => {
+      if (!ui.gbgCrop || ui.overlay || (event.pointerType === 'mouse' && event.button !== 0)) return;
+      const view = event.target.closest('.gbg-crop'), frame = view?.querySelector('[data-crop-frame]'), photo = data.photos.find(p => p.id === ui.selectedPhoto);
+      if (!frame || !photo || event.target.closest('button')) return;
+      if (GBGallery.cropDrag(event, frame, ui.gbgCrop, photo, () => {})) { event.stopPropagation(); event.preventDefault(); }
+    }, true);
+    // A long press on an album or a picture starts the selection mode.
+    GB.hold(c, root, '[data-gbg-hold]', held => { ui.gbgSelect = true; ui.gbgSelected = [held.dataset.gbgHold]; ui.gbgPopup = ''; render(); }, {rightClick: false, when: () => !ui.gbgSelect});
+    // The picture follows the finger; past 52 dp it steps to the next or previous one.
+    GB.gesture(root, {
+      move(g, event, dx, dy) {
+        if (ui.sub==='photo' && !ui.overlay && g.target.closest('[data-gallery-swipe]') && Math.abs(dx)>dp(12) && Math.abs(dx)>Math.abs(dy)) {
+          g.gallerySwiping=true;c.suppressClick(350);event.preventDefault();g.capture(event);
+          const picture=viewport.querySelector('.gallery-image');if(picture)picture.style.transform=`translateX(${dx}px)`;
+        }
+      },
+      end(g, event, dx) { if (g.gallerySwiping) { if(Math.abs(dx)>dp(52))galleryStep(dx<0?1:-1);else render();c.suppressClick(350); } },
+      cancel() { const photo=viewport.querySelector('.gallery-image');if(photo)photo.style.transform=''; }
+    });
+  }
+  window.GB?.register('gallery', {
+    render: c => GBGallery.render(shell(c).gbGalleryContext()),
+    mount,
+    // Details and CropImage's "Saving picture…" (Util.startBackgroundJob's ProgressDialog with no title).
+    dialog(kind, c) {
+      const safe = c.safe;
+      if (kind === 'crop-saving') return {custom: `<div class="gbdlg-progress"><img src="assets/gb-spinner_white_48.png" alt=""><span>${safe(GBGallery.text(i18n.language, 'saving_image'))}</span></div>`, cancel: 'noop'};
+      return GBGallery.details(shell(c).gbGalleryContext());
+    },
+    // The picker returns nothing (a Picture frame being added is removed); then crop, the popups, the selection, the
+    // slideshow and the picture close in turn.
+    back(c) {
+      const {ui, render, home, cancelPhotoWidget, gbgEndSelection} = shell(c);
+      if (ui.gbgPick && !ui.sub && ui.gbgmPick) { ui.gbgPick = false; ui.gbgmPick = false; ui.view = 'gmail'; render(); return true; }
+      if (ui.gbgPick && !ui.sub && ui.gbcePick) { ui.gbgPick = false; ui.view = 'people'; ui.sub = ui.gbcePick.sub; ui.gbcePick = null; render(); return true; }
+      if (ui.gbgPick && !ui.sub) { ui.gbgPick = false; cancelPhotoWidget(); home(false); return true; }
+      if (ui.gbgCrop) { ui.gbgCrop = null; render(); return true; }
+      if (ui.gbgPopup) { ui.gbgPopup = ''; render(); return true; }
+      if (ui.gbgSelect) { gbgEndSelection(); render(); return true; }
+      if (ui.gallerySlideshow) { ui.gallerySlideshow=false;render();return true; }
+      if (ui.sub === 'photo') { ui.sub='album';ui.galleryZoom=false;render();return true; }
+      return false;
+    },
+    // The arrow keys step through the pictures.
+    key(event, c) {
+      const {ui, galleryStep} = shell(c);
+      if(ui.sub==='photo' && !ui.overlay && ['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();galleryStep(event.key==='ArrowLeft'?-1:1);return true;}
+      return false;
+    },
+    // The slideshow moves on every 3 s.
+    tick(c) {
+      const ui = c.ui;
+      if(ui.view==='gallery' && ui.sub==='photo' && ui.gallerySlideshow && !ui.overlay && Date.now()-ui.gallerySlideAt>=3000){ui.gallerySlideAt=Date.now();shell(c).galleryStep(1);}
+    },
+    action(name, el, c) {
+      const id = el.dataset.id, action = name, {data, ui, save, render, renderOverlay, toast, clone, openApp, composeEmail, messageDraft, gappContext, gbgSelectedPhotos, gbgEndSelection} = shell(c);
+      switch (name) {
+        case 'gallery-camera': openApp('camera'); break;
+        case 'gallery-album': ui.galleryAlbum=id; ui.sub='album';ui.gallerySlideshow=false;ui.gbgStack=false;render();break;
+        case 'gbg-home': gbgEndSelection(); ui.sub = ''; ui.gallerySlideshow = false; render(); break;
+        case 'gbg-up': gbgEndSelection(); ui.sub = 'album'; ui.gallerySlideshow = false; render(); break;
+        case 'gbg-caption': ui.gbgCaption = !ui.gbgCaption; render(); break;
+        case 'gbg-mode': ui.gbgStack = !ui.gbgStack; render(); break;
+        case 'gbg-hud': if (ui.gallerySlideshow) { ui.gallerySlideshow = false; render(); break; } ui.gbgHudHidden = !ui.gbgHudHidden; render(); break;
+        case 'gbg-zoom': ui.galleryZoom = Number(id) > 0; render(); break;
+        case 'gbg-toggle': { const list = ui.gbgSelected || []; ui.gbgSelected = list.includes(id) ? list.filter(x => x !== id) : [...list, id]; ui.gbgPopup = ''; if (!ui.gbgSelected.length && ui.sub !== 'photo') gbgEndSelection(); render(); break; }
+        case 'gbg-select-all': ui.gbgSelected = ui.sub ? ICSMedia.photos(data, ui.galleryAlbum).map(p => String(p.id)) : GBGallery.ALBUMS.filter(key => ICSMedia.photos(data, key).length); ui.gbgPopup = ''; render(); break;
+        case 'gbg-deselect': gbgEndSelection(); render(); break;
+        case 'gbg-select-current': ui.gbgSelect = true; ui.gbgSelected = [String(ui.selectedPhoto)]; ui.gbgPopup = ''; render(); break;
+        case 'gbg-share': case 'gbg-delete': case 'gbg-more': { const kind = action.slice(4); if (!(ui.gbgSelected || []).length) break; ui.gbgPopup = ui.gbgPopup === kind ? '' : kind; render(); break; }
+        case 'gbg-popup-close': ui.gbgPopup = ''; render(); break;
+        case 'gbg-confirm-delete': {
+          const gone = gbgSelectedPhotos().map(p => p.id); data.photos = data.photos.filter(p => !gone.includes(p.id)); save(); gbgEndSelection();
+          if (ui.sub === 'photo') { const rest = ICSMedia.photos(data, ui.galleryAlbum); if (rest.length) ui.selectedPhoto = rest[0].id; else ui.sub = 'album'; }
+          if (ui.sub === 'album' && !ICSMedia.photos(data, ui.galleryAlbum).length) ui.sub = '';
+          render(); break;
+        }
+        case 'gbg-rotate': gbgSelectedPhotos().forEach(p => p.rotation = ((p.rotation || 0) + Number(id) + 360) % 360); save(); ui.gbgPopup = ''; if (ui.sub === 'photo') gbgEndSelection(); render(); break;
+        // MenuBar's Crop starts CropImage on the picture; Save writes <name>-<n>.jpg beside it with the original title and
+        // date (CropImage.saveOutput), so the copy sits next to the original, and Discard / Back just leave.
+        case 'gbg-crop': { const photo = gbgSelectedPhotos()[0]; gbgEndSelection(); if (photo && !photo.video) { ui.selectedPhoto = photo.id; ui.galleryZoom = false; ui.gbgCrop = GBGallery.cropDefault(photo); } render(); break; }
+        case 'gbg-crop-discard': ui.gbgCrop = null; render(); break;
+        case 'gbg-crop-save': {
+          const photo = data.photos.find(p => p.id === ui.selectedPhoto), c = ui.gbgCrop;
+          if (!photo || !c) { ui.gbgCrop = null; render(); break; }
+          ui.overlay = 'gb-dialog-crop-saving'; renderOverlay();
+          setTimeout(() => {
+            const copy = {...clone(photo), id: Date.now(), album: ICSMedia.album(photo), source: clone(photo), crop: {x: c.x, y: c.y, w: c.w, h: c.h}, rotation: 0, zoom: 1};
+            data.photos.splice(Math.max(0, data.photos.indexOf(photo)), 0, copy); save();
+            ui.gbgCrop = null; if (ui.overlay === 'gb-dialog-crop-saving') ui.overlay = ''; render(); renderOverlay();
+          }, 600);
+          break;
+        }
+        case 'gbg-wallpaper': { const photo = gbgSelectedPhotos()[0]; gbgEndSelection(); if (photo) { data.wallpaper = 99; delete data.liveWallpaper; data.customWallpaper = photo.colors; data.customWallpaperPhoto = clone(photo); save(); toast('Wallpaper set'); } render(); break; }
+        case 'gbg-share-email': { const photo = gbgSelectedPhotos()[0]; gbgEndSelection(); if (!photo) break; openApp('email'); composeEmail(); const item = data.mailbox.find(m => m.id === ui.emailId); if (item) item.attachment = clone(photo); save(); render(); break; }
+        case 'photo': if (ui.view === 'gallery' && ui.gbgPick && ui.gbgmPick) { ui.gbgPick = false; ui.gbgmPick = false; ui.view = 'gmail'; GBGmail.attach(gappContext(), data.photos.find(p => p.id === Number(id))); render(); break; }
+          if (ui.view === 'gallery' && ui.gbgPick && ui.gbcePick) { ui.gbgPick = false; if (ui.peopleDraft) ui.peopleDraft.photo = Number(id); ui.view = 'people'; ui.sub = ui.gbcePick.sub; ui.gbcePick = null; render(); break; }
+          if (ui.view === 'gallery' && ui.gbgPick) { ui.gbgPick = false; const setup = ui.photoWidgetSetup; ui.photoWidgetSetup = null; const widget = setup && data.homeWidgets[setup.page]?.find(w => w.id === setup.id); if (widget) Object.assign(widget, {source: 'photo', photo: Number(id)}); save(); ui.page = setup?.page ?? ui.page; ui.view = 'home'; ui.sub = ''; render(); break; }
+          if (ui.view === 'home') { openApp('gallery'); }
+          ui.selectedPhoto=Number(id);ui.galleryAlbum=ICSMedia.album(data.photos.find(p=>p.id===Number(id))||{});ui.sub='photo';ui.galleryZoom=false;render();break;
+        // Show on map: Util.openMaps with the item's location, the nearest address as the marker's text.
+        case 'gbg-show-map': { const photo = gbgSelectedPhotos()[0]; ui.gbgPopup = ''; if (!photo?.location) { render(); break; } const p = GBMaps.place(photo.location.fx, photo.location.fy); gbgEndSelection(); GBMaps.showPoint(ui, {name: p.address, address: '', fx: photo.location.fx, fy: photo.location.fy}); openApp('maps'); break; }
+        case 'gallery-details': { const photo = gbgSelectedPhotos()[0] || data.photos.find(p => p.id === ui.selectedPhoto); if (photo) ui.selectedPhoto = photo.id; ui.gbgPopup = ''; ui.overlay = 'gb-dialog-gallery'; render(); renderOverlay(); break; }
+        case 'gallery-share': ui.overlay=action;renderOverlay();break;
+        case 'gallery-slideshow': {const items=ICSMedia.photos(data,ui.galleryAlbum);if(!items.length)break;if(ui.sub!=='photo')ui.selectedPhoto=items[0].id;ui.sub='photo';ui.overlay='';ui.gallerySlideshow=true;ui.gallerySlideAt=Date.now();render();break;}
+        case 'gallery-share-message': {const photo=gbgSelectedPhotos()[0]||data.photos.find(p=>p.id===ui.selectedPhoto);gbgEndSelection();if(!photo)break;openApp('messaging');ui.sub='new';messageDraft().attachment=clone(photo);save();render();break;}
+        default: return false;
+      }
+      return true;
+    },
+    clearData(c) { c.data.photos = c.clone(c.defaults.photos); }
+  });
+})();

@@ -263,31 +263,24 @@
   function mount(c, root) {
     const {ui, viewport, dp} = c, {calendarMove, gbCalDialog} = shell(c);
     const box = root.querySelector('.gbcal-scroll'); if (box) box.scrollTop = box.clientHeight * .8;
-    GB.hold(c, root, '[data-gbcal-day]', day => { ui.gbCalTarget = day.dataset.gbcalDay; gbCalDialog('day-context'); }, false);
-    const view = root.firstElementChild; if (!view) return;
-    let start = null;
-    view.addEventListener('pointerdown', event => { if (event.pointerType === 'mouse' && event.button !== 0) return; start = {x: event.clientX, y: event.clientY, id: event.pointerId, target: event.target}; });
-    view.addEventListener('pointermove', event => {
-      if (!start || event.pointerId !== start.id) return;
-      const dx = event.clientX - start.x, dy = event.clientY - start.y;
-      if (!ui.sub && !ui.overlay && start.target.closest('[data-gbcal-swipe]') && Math.abs(dy) > dp(14) && Math.abs(dy) > Math.abs(dx)) {
-        start.gbCalSwiping = true; c.suppressClick(350); event.preventDefault();
-        try { view.setPointerCapture(event.pointerId); } catch {}
-        viewport.querySelector('[data-gbcal-swipe]').style.transform = `translateY(${dy}px)`; return;
-      }
-      if (!ui.sub && !ui.overlay && start.target.closest('[data-calendar-swipe]') && Math.abs(dx) > dp(14) && Math.abs(dx) > Math.abs(dy) * 1.2) {
-        start.calendarSwiping = true; c.suppressClick(350); event.preventDefault();
-        try { view.setPointerCapture(event.pointerId); } catch {}
-        const surface = viewport.querySelector('[data-calendar-swipe]'); surface.style.transform = `translateX(${dx}px)`;
-      }
+    GB.hold(c, root, '[data-gbcal-day]', day => { ui.gbCalTarget = day.dataset.gbcalDay; gbCalDialog('day-context'); }, {rightClick: false});
+    GB.gesture(root, {
+      move(g, event, dx, dy) {
+        if (!ui.sub && !ui.overlay && g.target.closest('[data-gbcal-swipe]') && Math.abs(dy) > dp(14) && Math.abs(dy) > Math.abs(dx)) {
+          g.gbCalSwiping = true; c.suppressClick(350); event.preventDefault(); g.capture(event);
+          viewport.querySelector('[data-gbcal-swipe]').style.transform = `translateY(${dy}px)`; return;
+        }
+        if (!ui.sub && !ui.overlay && g.target.closest('[data-calendar-swipe]') && Math.abs(dx) > dp(14) && Math.abs(dx) > Math.abs(dy) * 1.2) {
+          g.calendarSwiping = true; c.suppressClick(350); event.preventDefault(); g.capture(event);
+          const surface = viewport.querySelector('[data-calendar-swipe]'); surface.style.transform = `translateX(${dx}px)`;
+        }
+      },
+      end(g, event, dx, dy) {
+        if (g.gbCalSwiping) { if (Math.abs(dy) > dp(58)) calendarMove(dy < 0 ? 1 : -1); else viewport.querySelector('[data-gbcal-swipe]').style.transform = ''; c.suppressClick(350); return; }
+        if (g.calendarSwiping) { if (Math.abs(dx) > dp(52)) calendarMove(dx < 0 ? 1 : -1); else viewport.querySelector('[data-calendar-swipe]').style.transform = ''; c.suppressClick(350); }
+      },
+      cancel() { const surface = viewport.querySelector('[data-calendar-swipe]'); if (surface) surface.style.transform = ''; }
     });
-    view.addEventListener('pointerup', event => {
-      if (!start || event.pointerId !== start.id) return;
-      const dx = event.clientX - start.x, dy = event.clientY - start.y, s = start; start = null;
-      if (s.gbCalSwiping) { if (Math.abs(dy) > dp(58)) calendarMove(dy < 0 ? 1 : -1); else viewport.querySelector('[data-gbcal-swipe]').style.transform = ''; c.suppressClick(350); return; }
-      if (s.calendarSwiping) { if (Math.abs(dx) > dp(52)) calendarMove(dx < 0 ? 1 : -1); else viewport.querySelector('[data-calendar-swipe]').style.transform = ''; c.suppressClick(350); }
-    });
-    view.addEventListener('pointercancel', () => { start = null; const surface = viewport.querySelector('[data-calendar-swipe]'); if (surface) surface.style.transform = ''; });
   }
   window.GB?.register('calendar', {
     render(c) {

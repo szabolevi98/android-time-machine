@@ -188,7 +188,7 @@
   function storeContext() {
     return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, viewport, dp, snapResting, suppressClick: ms => { suppressClickUntil = Date.now() + ms; },
       // 2.3.6's own AlertDialog (a spec the module's dialog(kind, c) returns) and the Menu key's IconMenu items.
-      saveMusic, deviceDate, today, defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
+      saveMusic, deviceDate, today, home, cancelPhotoWidget, composeEmail, messageDraft, gapp: () => gappContext(), defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
       appList: () => apps.map(app => [app[0], i18n.t(app[1])]), browserTitle: gbBrowserTitle, contactName: id => contact(id)?.name, normalizeAddress,
       intent: {browse(url) { openApp('browser'); navigateBrowser(url); }, contact(id) { openApp('people'); ui.selectedContact = id; ui.sub = 'detail'; render(); }, thread: id => openMessageThread(id),
         track(i) { openApp('music'); ui.music.queue = ICSMusic.tracks.map((_, n) => n); ui.music.track = i; ui.music.position = 0; ui.music.playing = true; saveMusic(); ui.sub = 'player'; render(); }},
@@ -659,7 +659,6 @@
       case 'phone': return renderPhone();
       case 'people': return renderPeople();
       case 'messaging': return renderMessaging();
-      case 'gallery': return renderGallery();
       case 'camera': return renderCamera();
       case 'email': return renderEmail();
       default: return renderHome();
@@ -716,14 +715,6 @@
     // Back in a capture request cancels it (RESULT_CANCELED), a recording included.
     if (ui.view === 'camera' && gbCapture()) { gbcamStopRecording(false); ui.gbcamPopup = ''; if (ui.gbmaCapture) gbmaCancel(); else gbceReturn(null); return; }
     if (ui.view === 'camera' && ui.gbcamRec) { gbcamStopRecording(); render(); return; }
-    if (ui.view === 'gallery' && ui.gbgPick && !ui.sub && ui.gbgmPick) { ui.gbgPick = false; ui.gbgmPick = false; ui.view = 'gmail'; render(); return; }
-    if (ui.view === 'gallery' && ui.gbgPick && !ui.sub && ui.gbcePick) { ui.gbgPick = false; ui.view = 'people'; ui.sub = ui.gbcePick.sub; ui.gbcePick = null; render(); return; }
-    if (ui.view === 'gallery' && ui.gbgPick && !ui.sub) { ui.gbgPick = false; cancelPhotoWidget(); home(false); return; }
-    if (ui.view === 'gallery' && ui.gbgCrop) { ui.gbgCrop = null; render(); return; }
-    if (ui.view === 'gallery' && ui.gbgPopup) { ui.gbgPopup = ''; render(); return; }
-    if (ui.view === 'gallery' && ui.gbgSelect) { gbgEndSelection(); render(); return; }
-    if (ui.view === 'gallery' && ui.gallerySlideshow) { ui.gallerySlideshow=false;render();return; }
-    if (ui.view === 'gallery' && ui.sub === 'photo') { ui.sub='album';ui.galleryZoom=false;render();return; }
     if (ui.view === 'email' && ui.sub === 'compose') { gbEmSync(); const item = data.mailbox.find(m => m.id === ui.emailId); if (item && [item.to, item.subject, item.body].some(v => String(v || '').trim())) { item.folder = 'Drafts'; gbEmLeaveCompose('message_saved_toast'); } else { data.mailbox = data.mailbox.filter(m => m.id !== ui.emailId); gbEmLeaveCompose(''); } return; }
     if(ui.view==='settings' && ['app-info','data-app','battery-history','battery-detail','storage-misc'].includes(ui.sub)){ui.sub={'app-info':'apps','data-app':'data','battery-history':'battery','battery-detail':'battery','storage-misc':'storage'}[ui.sub];render();return;}
     if (ui.view === 'play-store' && ui.marketSearching) { ui.marketSearching = false; render(); return; }
@@ -800,9 +791,7 @@
     if (ui.overlay === 'gb-dialog-sp') return GBSettingsPages.dialog(ui.gbspDialog, gbPagesContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-ce') return GBContactEditor.dialog(ui.gbceDialog, gbceContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-camera') return {title: GBCamera.text(i18n.language, 'confirm_restore_title'), icon: 'ic_dialog_alert', message: GBCamera.text(i18n.language, 'confirm_restore_message'), buttons: [{action: 'gbcam-restore-ok', title: GBSettings.text(i18n.language, 'fw_ok')}, {action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]};
-    if (ui.overlay === 'gb-dialog-gallery') return GBGallery.details(gbGalleryContext()) || {title: '', items: []};
-    // CropImage.onSaveClicked: Util.startBackgroundJob's ProgressDialog with no title and saving_image.
-    if (ui.overlay === 'gb-dialog-crop-saving') return {custom: `<div class="gbdlg-progress"><img src="assets/gb-spinner_white_48.png" alt=""><span>${safe(GBGallery.text(i18n.language, 'saving_image'))}</span></div>`, cancel: 'noop'};
+    if (ui.overlay === 'gb-dialog-gallery' || ui.overlay === 'gb-dialog-crop-saving') return GB.module('gallery').dialog(ui.overlay.slice(10), storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-email') return GBEmail.dialog(ui.gbEmDialog, gbEmailContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-hotpot') return GBGoogleWidgets.placeDialog(gappContext());
     if (ui.overlay === 'gb-dialog-gapp') return GBApps.get(ui.view)?.dialog?.(ui.gappDialog, gappContext()) || {title: '', items: []};
@@ -1231,16 +1220,6 @@
     if (history) history.scrollTop = history.scrollHeight;
   }
   function photoStyle(photo) { return `background-image:url('${ICSMedia.image(photo)}');background-size:cover;background-position:center`; }
-  function renderGallery() { return GBGallery.render(gbGalleryContext()); }
-  function gbGalleryContext() {
-    return {pick: !!ui.gbgPick, lang: i18n.language, locale: i18n.locale(), now: deviceDate(), data, sub: ui.sub || '', album: ui.galleryAlbum || 'camera', photo: data.photos.find(p => p.id === ui.selectedPhoto), crop: ui.gbgCrop || null, selecting: !!ui.gbgSelect, selected: ui.gbgSelected || [], popup: ui.gbgPopup || '', caption: !!ui.gbgCaption, zoom: !!ui.galleryZoom, slideshow: !!ui.gallerySlideshow, hudHidden: !!ui.gbgHudHidden, stackMode: !!ui.gbgStack, width: viewport.clientWidth || 276, height: viewport.clientHeight || 438, timebar: 48 * GBGallery.DP()};
-  }
-  // The photos a selection stands for: whole albums on the album screen, single photos elsewhere.
-  function gbgSelectedPhotos() {
-    const ids = ui.gbgSelected || [];
-    return ui.sub ? data.photos.filter(p => ids.includes(String(p.id))) : data.photos.filter(p => ids.includes(ICSMedia.album(p)));
-  }
-  function gbgEndSelection() { ui.gbgSelect = false; ui.gbgSelected = []; ui.gbgPopup = ''; }
   function renderCamera() { return GBCamera.render(gbCameraContext()); }
   function gbCameraContext() {
     const saved = data.cameraSettings || {}, s = GBCamera.settings(saved);
@@ -1257,11 +1236,6 @@
     if (!ui.gbcamRec) return;
     clearInterval(ui.gbcamRecTimer); const started = ui.gbcamRec; ui.gbcamRec = 0;
     if (keep) { const stamp = new Date(started).toISOString().replace(/[-:T]/g, '').slice(0, 14), cap = gbCapture(), item = {...ICSMedia.scene(data), ...(GBCamera.settings(data.cameraSettings || {}).gps === 'on' ? {location: {fx: GBMaps.ME.fx, fy: GBMaps.ME.fy}} : {}), id: Date.now(), name: `VID_${stamp.slice(0, 8)}_${stamp.slice(8)}`, album: 'camera', created: Date.now(), video: true, duration: Math.round((Date.now() - started) / 1000)}; if (cap) cap.taken = item; else { data.photos.unshift(item); save(); } }
-  }
-  function galleryStep(direction) {
-    const items=ICSMedia.photos(data,ui.galleryAlbum); if(!items.length)return;
-    const index=Math.max(0,items.findIndex(p=>p.id===ui.selectedPhoto));
-    ui.selectedPhoto=items[(index+direction+items.length)%items.length].id;ui.galleryZoom=false;render();
   }
 
   // Calendar AlertService: a status-bar notification at the reminder time while the page is running.
@@ -1339,7 +1313,6 @@
     if(id==='email'){data.mailbox=ICSEmail.restore(null,emailData,[]);data.sentEmails=[];ui.emailFolder='Inbox';ui.emailQuery=undefined;ui.emailSelected=[];}
     if(id==='people'){data.contacts=clone(defaultData.contacts);data.contactGroups=clone(defaultData.contactGroups);ui.peopleDraft=null;}
     if(id==='messaging'){data.messages=clone(defaultData.messages);data.messageDrafts={};}
-    if(id==='gallery'){data.photos=clone(defaultData.photos);}
     if(id==='camera')delete data.cameraSettings;
     if(id==='phone'){data.callHistory=[];ui.activeCall=null;}
     StoreHost.clearData(id, storeContext());
@@ -1753,55 +1726,6 @@
         save(); ui.overlay = ''; render(); break;
       }
       case 'new-message': ui.sub = 'new'; ui.overlay = ''; render(); viewport.querySelector('[name=recipient]')?.focus(); break;
-      case 'gallery-camera': openApp('camera'); break;
-      case 'gallery-album': ui.galleryAlbum=id; ui.sub='album';ui.gallerySlideshow=false;ui.gbgStack=false;render();break;
-      case 'gbg-home': gbgEndSelection(); ui.sub = ''; ui.gallerySlideshow = false; render(); break;
-      case 'gbg-up': gbgEndSelection(); ui.sub = 'album'; ui.gallerySlideshow = false; render(); break;
-      case 'gbg-caption': ui.gbgCaption = !ui.gbgCaption; render(); break;
-      case 'gbg-mode': ui.gbgStack = !ui.gbgStack; render(); break;
-      case 'gbg-hud': if (ui.gallerySlideshow) { ui.gallerySlideshow = false; render(); break; } ui.gbgHudHidden = !ui.gbgHudHidden; render(); break;
-      case 'gbg-zoom': ui.galleryZoom = Number(id) > 0; render(); break;
-      case 'gbg-toggle': { const list = ui.gbgSelected || []; ui.gbgSelected = list.includes(id) ? list.filter(x => x !== id) : [...list, id]; ui.gbgPopup = ''; if (!ui.gbgSelected.length && ui.sub !== 'photo') gbgEndSelection(); render(); break; }
-      case 'gbg-select-all': ui.gbgSelected = ui.sub ? ICSMedia.photos(data, ui.galleryAlbum).map(p => String(p.id)) : GBGallery.ALBUMS.filter(key => ICSMedia.photos(data, key).length); ui.gbgPopup = ''; render(); break;
-      case 'gbg-deselect': gbgEndSelection(); render(); break;
-      case 'gbg-select-current': ui.gbgSelect = true; ui.gbgSelected = [String(ui.selectedPhoto)]; ui.gbgPopup = ''; render(); break;
-      case 'gbg-share': case 'gbg-delete': case 'gbg-more': { const kind = action.slice(4); if (!(ui.gbgSelected || []).length) break; ui.gbgPopup = ui.gbgPopup === kind ? '' : kind; render(); break; }
-      case 'gbg-popup-close': ui.gbgPopup = ''; render(); break;
-      case 'gbg-confirm-delete': {
-        const gone = gbgSelectedPhotos().map(p => p.id); data.photos = data.photos.filter(p => !gone.includes(p.id)); save(); gbgEndSelection();
-        if (ui.sub === 'photo') { const rest = ICSMedia.photos(data, ui.galleryAlbum); if (rest.length) ui.selectedPhoto = rest[0].id; else ui.sub = 'album'; }
-        if (ui.sub === 'album' && !ICSMedia.photos(data, ui.galleryAlbum).length) ui.sub = '';
-        render(); break;
-      }
-      case 'gbg-rotate': gbgSelectedPhotos().forEach(p => p.rotation = ((p.rotation || 0) + Number(id) + 360) % 360); save(); ui.gbgPopup = ''; if (ui.sub === 'photo') gbgEndSelection(); render(); break;
-      // MenuBar's Crop starts CropImage on the picture; Save writes <name>-<n>.jpg beside it with the original title and
-      // date (CropImage.saveOutput), so the copy sits next to the original, and Discard / Back just leave.
-      case 'gbg-crop': { const photo = gbgSelectedPhotos()[0]; gbgEndSelection(); if (photo && !photo.video) { ui.selectedPhoto = photo.id; ui.galleryZoom = false; ui.gbgCrop = GBGallery.cropDefault(photo); } render(); break; }
-      case 'gbg-crop-discard': ui.gbgCrop = null; render(); break;
-      case 'gbg-crop-save': {
-        const photo = data.photos.find(p => p.id === ui.selectedPhoto), c = ui.gbgCrop;
-        if (!photo || !c) { ui.gbgCrop = null; render(); break; }
-        ui.overlay = 'gb-dialog-crop-saving'; renderOverlay();
-        setTimeout(() => {
-          const copy = {...clone(photo), id: Date.now(), album: ICSMedia.album(photo), source: clone(photo), crop: {x: c.x, y: c.y, w: c.w, h: c.h}, rotation: 0, zoom: 1};
-          data.photos.splice(Math.max(0, data.photos.indexOf(photo)), 0, copy); save();
-          ui.gbgCrop = null; if (ui.overlay === 'gb-dialog-crop-saving') ui.overlay = ''; render(); renderOverlay();
-        }, 600);
-        break;
-      }
-      case 'gbg-wallpaper': { const photo = gbgSelectedPhotos()[0]; gbgEndSelection(); if (photo) { data.wallpaper = 99; delete data.liveWallpaper; data.customWallpaper = photo.colors; data.customWallpaperPhoto = clone(photo); save(); toast('Wallpaper set'); } render(); break; }
-      case 'gbg-share-email': { const photo = gbgSelectedPhotos()[0]; gbgEndSelection(); if (!photo) break; openApp('email'); composeEmail(); const item = data.mailbox.find(m => m.id === ui.emailId); if (item) item.attachment = clone(photo); save(); render(); break; }
-      case 'photo': if (ui.view === 'gallery' && ui.gbgPick && ui.gbgmPick) { ui.gbgPick = false; ui.gbgmPick = false; ui.view = 'gmail'; GBGmail.attach(gappContext(), data.photos.find(p => p.id === Number(id))); render(); break; }
-        if (ui.view === 'gallery' && ui.gbgPick && ui.gbcePick) { ui.gbgPick = false; if (ui.peopleDraft) ui.peopleDraft.photo = Number(id); ui.view = 'people'; ui.sub = ui.gbcePick.sub; ui.gbcePick = null; render(); break; }
-        if (ui.view === 'gallery' && ui.gbgPick) { ui.gbgPick = false; const setup = ui.photoWidgetSetup; ui.photoWidgetSetup = null; const widget = setup && data.homeWidgets[setup.page]?.find(w => w.id === setup.id); if (widget) Object.assign(widget, {source: 'photo', photo: Number(id)}); save(); ui.page = setup?.page ?? ui.page; ui.view = 'home'; ui.sub = ''; render(); break; }
-        if (ui.view === 'home') { openApp('gallery'); }
-        ui.selectedPhoto=Number(id);ui.galleryAlbum=ICSMedia.album(data.photos.find(p=>p.id===Number(id))||{});ui.sub='photo';ui.galleryZoom=false;render();break;
-      // Show on map: Util.openMaps with the item's location, the nearest address as the marker's text.
-      case 'gbg-show-map': { const photo = gbgSelectedPhotos()[0]; ui.gbgPopup = ''; if (!photo?.location) { render(); break; } const p = GBMaps.place(photo.location.fx, photo.location.fy); gbgEndSelection(); GBMaps.showPoint(ui, {name: p.address, address: '', fx: photo.location.fx, fy: photo.location.fy}); openApp('maps'); break; }
-      case 'gallery-details': { const photo = gbgSelectedPhotos()[0] || data.photos.find(p => p.id === ui.selectedPhoto); if (photo) ui.selectedPhoto = photo.id; ui.gbgPopup = ''; ui.overlay = 'gb-dialog-gallery'; render(); renderOverlay(); break; }
-      case 'gallery-share': ui.overlay=action;renderOverlay();break;
-      case 'gallery-slideshow': {const items=ICSMedia.photos(data,ui.galleryAlbum);if(!items.length)break;if(ui.sub!=='photo')ui.selectedPhoto=items[0].id;ui.sub='photo';ui.overlay='';ui.gallerySlideshow=true;ui.gallerySlideAt=Date.now();render();break;}
-      case 'gallery-share-message': {const photo=gbgSelectedPhotos()[0]||data.photos.find(p=>p.id===ui.selectedPhoto);gbgEndSelection();if(!photo)break;openApp('messaging');ui.sub='new';messageDraft().attachment=clone(photo);save();render();break;}
       case 'gbcam-popup': ui.gbcamPopup = ui.gbcamPopup === id ? '' : id; render(); break;
       case 'gbcam-popup-close': ui.gbcamPopup = ''; render(); break;
       case 'gbcam-set': { const [key, value] = id.split(':'); gbcamSet({[key]: value}); if (ui.gbcamPopup !== 'settings') ui.gbcamPopup = ''; render(); break; }
@@ -2394,13 +2318,6 @@
     window.addEventListener('pointerup', () => { suppressClickUntil = Date.now() + 350; }, {once: true, capture: true});
     window.addEventListener('pointercancel', () => { suppressClickUntil = Date.now() + 350; }, {once: true, capture: true});
   }
-  // CropImage's HighlightView owns its drags: they never reach the screen's swipe and long-press handling.
-  screen.addEventListener('pointerdown', event => {
-    if (ui.view !== 'gallery' || !ui.gbgCrop || ui.overlay || (event.pointerType === 'mouse' && event.button !== 0)) return;
-    const view = event.target.closest('.gbg-crop'), frame = view?.querySelector('[data-crop-frame]'), photo = data.photos.find(p => p.id === ui.selectedPhoto);
-    if (!frame || !photo || event.target.closest('button')) return;
-    if (GBGallery.cropDrag(event, frame, ui.gbgCrop, photo, () => {})) { event.stopPropagation(); event.preventDefault(); }
-  }, true);
   screen.addEventListener('pointerdown', event => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
     if (data.settings.showTouches) { const dot = document.createElement('span'); const rect = screen.getBoundingClientRect(); dot.className = 'touch-indicator'; dot.style.left = `${event.clientX - rect.left}px`; dot.style.top = `${event.clientY - rect.top}px`; screen.append(dot); setTimeout(() => dot.remove(), 400); }
@@ -2411,8 +2328,6 @@
     if (ui.view === 'home' && !ui.overlay && event.target.closest('.home-slot') && !pointerStart.source) homeLongPressTimer = setTimeout(() => { ui.overlay = 'wallpaper-source'; renderOverlay(); pointerStart = null; suppressReleaseClick(); }, 550);
     const message = event.target.closest('.mms-message');
     if (message && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.mmsMessage = message.dataset.id; suppressReleaseClick(); gbMmsDialog('message'); }, 550);
-    const heldGallery = event.target.closest('[data-gbg-hold]');
-    if (heldGallery && !ui.overlay && !ui.gbgSelect) messageHoldTimer = setTimeout(() => { ui.gbgSelect = true; ui.gbgSelected = [heldGallery.dataset.gbgHold]; ui.gbgPopup = ''; suppressReleaseClick(); render(); }, 550);
     const heldMail = event.target.closest('[data-gbem-item]');
     if (heldMail && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.gbEmTarget = heldMail.dataset.gbemItem; suppressReleaseClick(); gbEmDialog('context'); }, 550);
     const heldLink = event.target.closest('[data-gbbr-item]');
@@ -2451,11 +2366,6 @@
       recentCard.style.transform = `translateX(${dx}px)`;
       recentCard.style.opacity = String(Math.max(.25, 1 - Math.abs(dx) / 240));
       return;
-    }
-    if (ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && pointerStart.target.closest('[data-gallery-swipe]') && Math.abs(dx)>dp(12) && Math.abs(dx)>Math.abs(dy)) {
-      pointerStart.gallerySwiping=true;suppressClickUntil=Date.now()+350;event.preventDefault();
-      try{screen.setPointerCapture(event.pointerId);}catch{}
-      const picture=viewport.querySelector('.gallery-image');if(picture)picture.style.transform=`translateX(${dx}px)`;return;
     }
     if (pointerStart.lockDrag) { event.preventDefault(); pointerStart.lockActive = lockMove(dx, dy); return; }
     if (pointerStart.shadeDragging || pointerStart.shadeDragEligible && dy > dp(9) && dy > Math.abs(dx) || pointerStart.shadeCloseEligible && Math.abs(dy) > dp(5)) {
@@ -2512,7 +2422,6 @@
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
     if (ui.view === 'play-store' && ui.market?.page === 'section' && !ui.overlay && pointerStart.target.closest('.gbmk-scroll,.gbmk-tabs') && Math.abs(dx) > dp(70) && Math.abs(dx) > Math.abs(dy) * 1.5) { const next = viewport.querySelector(`.gbmk-tabs button:${dx < 0 ? 'last' : 'first'}-child`); if (next && !next.disabled) { ui.market.tab = next.dataset.id; render(); } suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if (pointerStart.photoSwiping) { if (Math.abs(dy) > dp(35)) stepPhotoStack(pointerStart.photoStack, dy > 0 ? 1 : -1); else render(); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
-    if (pointerStart.gallerySwiping) { if(Math.abs(dx)>dp(52))galleryStep(dx<0?1:-1);else render();suppressClickUntil=Date.now()+350;pointerStart=null;return; }
     if (pointerStart.drawerSwiping) { finishDrawerPage(dx); pointerStart = null; return; }
     if (pointerStart.recentSwiping) {
       const card = pointerStart.target.closest('.recent-item, .notification');
@@ -2566,11 +2475,9 @@
     pointerStart = null;
   });
   window.addEventListener('pointercancel', () => { clearTimeout(messageHoldTimer); clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(dragState?.edgeTimer);clearTimeout(dragState?.folderExitTimer);clearTimeout(dragState?.folderHoverTimer);clearFolderDragFeedback();dragState?.ghost.remove(); clearDragOutlines(); dragState = null; screen.classList.remove('dragging', 'page-swiping', 'settings-scrolling', 'lock-dragging'); setHomePage(ui.page); const drawerPage = viewport.querySelector('.drawer-page'); if (drawerPage) drawerPage.style.transform = ''; const lockHandle = viewport.querySelector('.lock-handle'); if (lockHandle) lockHandle.style.removeProperty('--lock-x'); if (pointerStart?.shadeDragging || ui.overlay === 'recent' || ui.overlay === 'shade' || ui.overlay === 'folder') renderOverlay(); pointerStart = null; });
-  window.addEventListener('pointercancel',()=>{const photo=viewport.querySelector('.gallery-image');if(photo)photo.style.transform='';});
   document.addEventListener('keydown', event => {
     const focusedStack = ui.view === 'home' && !ui.overlay && document.activeElement?.closest?.('[data-photo-stack]');
     if (focusedStack && ['ArrowUp','ArrowDown'].includes(event.key)) { event.preventDefault(); const id = focusedStack.dataset.photoStack; stepPhotoStack(id, event.key === 'ArrowDown' ? 1 : -1); viewport.querySelector(`[data-photo-stack="${CSS.escape(id)}"] .phw-front`)?.focus(); return; }
-    if(ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && ['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();galleryStep(event.key==='ArrowLeft'?-1:1);return;}
     if (event.target.matches('.recent-item,.web-tab-preview') && ['Enter',' '].includes(event.key)) { event.preventDefault(); event.target.click(); return; }
     if (moduleView() && StoreHost.key(event, storeContext())) return;
     if (event.key === 'Escape' || event.key === 'Backspace' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); back(); }
@@ -2734,7 +2641,6 @@
     }
     checkAlarms(now);
     checkReminders(now);
-    if(ui.view==='gallery' && ui.sub==='photo' && ui.gallerySlideshow && !ui.overlay && Date.now()-ui.gallerySlideAt>=3000){ui.gallerySlideAt=Date.now();galleryStep(1);}
     document.querySelectorAll('.analog-clock').forEach(node => {
       node.setAttribute('aria-label', clock());
       node.querySelector('.clock-hour').style.transform = `rotate(${now.getHours() % 12 * 30 + now.getMinutes() / 2}deg)`;
