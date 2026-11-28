@@ -375,6 +375,11 @@
     exports: {
       checkTimers: (c, ...args) => { $bind(c); return checkTimers(...args); },
       checkAlarms: (c, ...args) => { $bind(c); return checkAlarms(...args); }
+    },
+    input(event, c) {
+      $bind(c);
+      if (event.target.matches?.('[data-cpref-volume]')) { ui.clockDraft = Number(event.target.value); return true; }
+      return false;
     }
   };
   JB.register('clock', spec);

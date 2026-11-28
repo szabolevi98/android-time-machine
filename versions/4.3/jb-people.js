@@ -179,6 +179,8 @@
         overlayRoot.innerHTML = peopleOverlay();
       } else if (ui.overlay === 'phone-menu') {
         overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu phone-overflow"><button data-action="phone-add-contact">Add to contacts</button></div>`;
+      } else if (ui.overlay === 'hce-dialog') {
+        overlayRoot.innerHTML = HoloContactEditor.overlay({lang: i18n.language, draft: ui.peopleDraft, dialog: ui.hceDialog || '', photos: data.photos, photoUrl: pid => { const photo = data.photos.find(p => String(p.id) === String(pid)); return photo ? ICSMedia.image(photo) : ''; }});
       }
       else return;
       return true;

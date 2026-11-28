@@ -85,6 +85,7 @@
     input(event, c) {
       $bind(c);
       if (event.target.matches('[data-bk-bright]')) { data.bookPrefs = {...PlayApps.bookPrefs(data), brightness: Number(event.target.value)}; save(); viewport.querySelector('.pb-reader')?.style.setProperty('--bk-dim', ((100 - Number(event.target.value)) / 100 * .7).toFixed(3)); return true; }
+      if (event.target.matches('[data-pa-search]')) { ui.paQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-pa-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return true; }
       return false;
     },
     back(c) {

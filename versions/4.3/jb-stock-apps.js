@@ -152,6 +152,7 @@
       $bind(c);
       if (event.target.matches('[data-keep-li]')) { const item = keepCurrent()?.list?.[Number(event.target.dataset.keepLi)]; if (item) { item.text = event.target.value; save(); } return true; }
       if (event.target.matches('.keep-text')) { const note = (data.keepNotes || []).find(item => item.id === ui.keepNote); if (note) { note.text = event.target.value; save(); } return true; }
+      if (PlusPost.input(event.target)) return true;
       return false;
     },
     back(c) {

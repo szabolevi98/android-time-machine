@@ -911,8 +911,6 @@
       // PopupMenu keeps itself on screen: shift it left when the anchor is near the right edge.
       const popup = overlayRoot.querySelector('.jb-recent-popup'); if (popup) popup.style.left = `${Math.max(4, Math.min(parseFloat(popup.style.left), popup.parentElement.clientWidth - popup.offsetWidth - 4))}px`;
       JBRecents.bindLongPress(overlayRoot.querySelector('.recent-panel'), popup => { ui.recentPopup = popup; suppressClickUntil = Infinity; window.addEventListener('pointerup', () => { suppressClickUntil = Date.now() + 50; }, {once: true, capture: true}); renderOverlay(); });
-    } else if (ui.overlay === 'hce-dialog') {
-      overlayRoot.innerHTML = HoloContactEditor.overlay({lang: i18n.language, draft: ui.peopleDraft, dialog: ui.hceDialog || '', photos: data.photos, photoUrl: pid => { const photo = data.photos.find(p => String(p.id) === String(pid)); return photo ? ICSMedia.image(photo) : ''; }});
     } else if (ui.overlay.startsWith('sd-')) {
       overlayRoot.innerHTML = ICSSettingsDetail.overlay(data,ui,key=>i18n.t(key));
     } else if (ui.overlay === 'connectivity-menu') {
@@ -1448,7 +1446,6 @@
       // Chrome menu and New Tab page
       // Share: the Nexus 4 shares a link by SMS in Messaging (Hangouts took over SMS only on KitKat).
       // Clear browsing data: the dialog's ticks, then a short "Please wait…" before the history goes.
-      case 'thread': openMessageThread(id); break;
       // Hangouts 1.0.2: conversations archive until something newer arrives; the snooze dialog (1–72 hours) shows
       // dnd_list_item.xml's banner until Resume.
       // Calendar's From / To buttons open the datetimepicker at the form's value; Done writes it back and, like
@@ -1504,18 +1501,10 @@
   document.addEventListener('input', event => hangoutsScope(() => handleInput(event)));
   function handleInput(event) {
     if (moduleHook('input', null, event)) return;
-    if (PlusPost.input(event.target)) return;
     if (event.target.matches('[data-lng-seek]') && InputLanguage.input(event.target, langContext())) return;
     if (event.target.matches('[data-mfx]') && MusicFX.input(event.target, musicFxContext())) return;
-    if (event.target.matches?.('[data-cpref-volume]')) { ui.clockDraft = Number(event.target.value); return; }
-    if (event.target.matches('[data-pa-search]')) { ui.paQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-pa-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
     if(event.target.dataset.field==='data-cycle'){ui.dataCycle=event.target.value;render();return;}
-    if(event.target.matches('.camera-zoom input')) {
-      data.cameraSettings=ICSMedia.settings(data);data.cameraSettings.zoom=Number(event.target.value);save();
-      viewport.querySelector('.camera-focus-area .media-photo').src=ICSMedia.image(ICSMedia.scene(data));
-      viewport.querySelector('.camera-zoom output').textContent=Number(event.target.value).toFixed(1)+'×';return;
-    }
     if (event.target.dataset.field === 'auto-brightness') { data.settings.autoBrightness = event.target.checked; save(); const slider = event.target.closest('.jb-brightness')?.querySelector('[data-field="brightness"]'); if (slider) slider.disabled = data.settings.autoBrightness; return; }
     if (event.target.dataset.field === 'brightness') {
       data.settings.brightness = Number(event.target.value); save();

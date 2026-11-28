@@ -191,6 +191,7 @@
         }
         case 'mms-chip': if (!ui.mmsChipSelected) { ui.mmsChipSelected = true; render(); break; } removeRecipientChip(); break;
         case 'new-message': ui.sub = 'new'; ui.overlay = ''; render(); viewport.querySelector('[name=recipient]')?.focus(); break;
+        case 'thread': openMessageThread(id); break;
         default: return false;
       }
       return true;

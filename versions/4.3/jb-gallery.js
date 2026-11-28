@@ -504,6 +504,15 @@
       cameraIntent: (c, ...args) => { $bind(c); return cameraIntent(...args); },
       cameraGallery: (c, ...args) => { $bind(c); return cameraGallery(...args); },
       galleryStep: (c, ...args) => { $bind(c); return galleryStep(...args); }
+    },
+    input(event, c) {
+      $bind(c);
+      if(event.target.matches('.camera-zoom input')) {
+        data.cameraSettings=ICSMedia.settings(data);data.cameraSettings.zoom=Number(event.target.value);save();
+        viewport.querySelector('.camera-focus-area .media-photo').src=ICSMedia.image(ICSMedia.scene(data));
+        viewport.querySelector('.camera-zoom output').textContent=Number(event.target.value).toFixed(1)+'×';return true;
+      }
+      return false;
     }
   };
   JB.register('gallery', spec);
