@@ -90,7 +90,8 @@
     // The Menu key (2.3.6, 4.0.4's apps without an action bar overflow): the app's options.
     menuKey(c) { const m = mods[c.ui.view]; if (!m?.menu) return false; m.menu(c); return true; },
     // A key typed while the screen is open (the keyboard of the computer): true when the screen took it.
-    key(event, c) { return !!mods[c.ui.view]?.key?.(event, c); },
+    // (A store app's `key` is the name of its saved data, not this hook.)
+    key(event, c) { const hook = mods[c.ui.view]?.key; return typeof hook === 'function' && !!hook(event, c); },
     // A form of the screen is sent (name: its data-form, values: its FormData) and a field of it is typed in.
     submit(name, values, c) { return !!mods[c.ui.view]?.submit?.(name, values, c); },
     input(event, c) { return !!mods[c.ui.view]?.input?.(event, c); },
