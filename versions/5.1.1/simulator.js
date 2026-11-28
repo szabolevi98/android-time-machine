@@ -242,7 +242,7 @@
     for (let i = apps.length - 1; i >= 0; i--) if (String(apps[i][0]).startsWith('store-') && !want.includes(apps[i][0])) { delete appNames[apps[i][0]]; apps.splice(i, 1); }
   }
   storeAppsSync();
-  function storeContext() { return StoreHost.context(Object.create(lp, Object.getOwnPropertyDescriptors({data, ui, save, render, renderOverlay, toast, openApp, screen, notify: (title, text) => addNotification(title, text), menuClass: 'lp-popup-menu', lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key)}))); }
+  function storeContext() { return StoreHost.context(Object.create(lp, Object.getOwnPropertyDescriptors({data, ui, save, render, renderOverlay, toast, openApp, screen, notify: (title, text) => lp.addNotification(title, text), menuClass: 'lp-popup-menu', lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key)}))); }
   StoreHost.provide(storeContext);
   ICSLauncherFolders.initialize(data,apps.map(app=>app[0]).concat((data.driveFiles||StockApps.FILES).map(f=>'office:'+f.id)));
   const screen = document.querySelector('#screen');
@@ -434,7 +434,7 @@
      "h:mm" or "kk:mm", bottom_text_spacing_digital -8dp), then the 14sp date (EEEMMMMd, "Sat, October 3") and the next
      alarm in #B3FFFFFF with ic_alarm_small, 8dp after the date. */
   function digitalClockWidget(tag = 'button') {
-    const now = deviceDate(), alarm = nextAlarmLabel(), hour24 = !!data.settings.hour24;
+    const now = deviceDate(), alarm = lp.nextAlarmLabel(), hour24 = !!data.settings.hour24;
     const time = `${hour24 ? String(now.getHours()).padStart(2, '0') : now.getHours() % 12 || 12}:${String(now.getMinutes()).padStart(2, '0')}`;
     const attrs = tag === 'button' ? ' data-action="open-app" data-app="clock"' : '';
     return `<${tag} class="jbw-digital lpw-digital"${attrs} aria-label="${safe(clock())}"><span class="jbw-digital-time" aria-hidden="true">${safe(time)}</span><span class="jbw-digital-date"><span>${safe(now.toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'long', day: 'numeric'}))}</span>${alarm ? `<span class="jbw-digital-alarm"><img src="assets/dc5-ic_alarm_small.png" alt="">${safe(alarm)}</span>` : ''}</span></${tag}>`;
@@ -640,14 +640,6 @@
   }
   let openFolderId = '';
   let closingVelocity = 0, shownOverlay = '';
-  function startPeek() {
-    if (ui.overlay || ui.locked || ui.view === 'lock') return;
-    ui.shadePeek = true; ui.peekDone = false; ui.peekCollapse = false; ui.overlay = 'shade'; renderOverlay();
-    const shade = overlayRoot.querySelector('.notification-shade'), scrim = overlayRoot.querySelector('.lp-shade-scrim');
-    if (!shade) return;
-    LPShade.peek(shade, scrim, () => { ui.peekDone = true; if (ui.peekCollapse) closePeek(); });
-  }
-  function closePeek() { if (!ui.shadePeek) return; ui.shadePeek = false; ui.peekCollapse = false; if (ui.overlay === 'shade') { ui.overlay = ''; renderOverlay(); } }
   // Animation.Material.Dialog / .Popup (popup_enter_material, popup_exit_material): dialogs, menus and their dim fade in
   // and out with decelerate_cubic in config_activityShortDur (150 ms), without the Holo zoom.
   const FADING = '.settings-dialog, .settings-dialog-scrim, .holo-menu, .menu-scrim, .lp-popup-menu';
@@ -666,44 +658,11 @@
   function renderOverlay() {
     fadeOverlay(shownOverlay); shownOverlay = ui.overlay;
     const closingFolder = overlayRoot.querySelector('.launcher-folder');
-    // NotificationPanelView.collapse: the open panel folds up into the status bar and the scrim fades, whatever closed it
-    // (Back, Home, the scrim, a swipe up or an action); the old nodes are put back after this render for the animation.
-    const closingShade = ui.overlay !== 'shade' && overlayRoot.querySelector('.lp-shade:not(.lp-closing)');
-    if (closingShade?._lpAnim) cancelAnimationFrame(closingShade._lpAnim);
-    if (closingShade) {
-      const scrim = overlayRoot.querySelector('.lp-shade-scrim'), height = closingShade.offsetHeight, opacity = scrim ? getComputedStyle(scrim).opacity : '1';
-      closingShade.remove(); scrim?.remove();
-      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) queueMicrotask(() => {
-        for (const node of [scrim, closingShade]) if (node) { node.classList.add('lp-closing'); node.style.pointerEvents = 'none'; node.style.animation = 'none'; node.removeAttribute('data-action'); overlayRoot.append(node); }
-        if (scrim) scrim.style.opacity = opacity;
-        LPShade.animate(closingShade, Math.min(height, LPShade.maxHeight(closingShade)), 0, {velocity: closingVelocity, scrim, done: () => { closingShade.remove(); scrim?.remove(); }});
-        closingVelocity = 0;
-      });
-    }
-    // Collapsing the panel also collapses Quick Settings and closes a tile detail.
-    if (ui.overlay !== 'shade') { ui.shadeAnimated = false; ui.shadeSettings = false; ui.qsDetail = ''; }
-    if (ui.overlay === 'shade') {
-      const call = ui.activeCall ? `<button class="phone-resume-call" data-action="open-app" data-app="phone">${safe(i18n.t('Ongoing call'))} · ${safe(lp.contactByPhone(ui.activeCall.number)?.name||ui.activeCall.number)}</button>` : '';
-      const scroll = overlayRoot.querySelector('.lp-shade-scroll')?.scrollTop || 0;
-      overlayRoot.innerHTML = '<div class="lp-shade-scrim" data-action="close-overlay"></div>' + LPShade.render({...data, notifications: data.notifications.map(decorateNotification)}, ui, key => i18n.t(key), {locale: i18n.locale(), clock: clock(), date: fullDate(), shortDate: shadeDate(), carrier: lp.carrierName(), alarm: nextAlarmLabel(), statusIcons: lp.statusIndicators(), networks: lp.allWifiNetworks(), extra: call});
-      const body = overlayRoot.querySelector('.lp-shade-scroll'); if (body) body.scrollTop = scroll;
-      LPShade.playIcons(overlayRoot, reducedMotion?.matches ? null : ui.qsIconAnim);
-      const opening = !ui.shadeAnimated;
-      overlayRoot.querySelectorAll('.lp-shade,.lp-shade-scrim').forEach(node => { node.style.animation = 'none'; });
-      ui.shadeAnimated = true;
-      if (opening && !pointerStart?.shadeDragging && !ui.shadePeek && !reducedMotion?.matches) {
-        const shade = overlayRoot.querySelector('.lp-shade'), scrim = overlayRoot.querySelector('.lp-shade-scrim');
-        LPShade.animate(shade, 0, LPShade.maxHeight(shade), {scrim, done: () => LPShade.settle(shade, scrim)});
-      }
-    } else if (LP.drawOverlay(ui.overlay, overlayRoot)) {
-      // A screen's own menu or dialog (lp-*.js modules).
+    LP.module('shade').beforeOverlay();
+    // A screen's own overlay, menu or dialog (lp-*.js modules: the shade first).
+    if (LP.drawOverlay(ui.overlay, overlayRoot)) {
     } else if (ui.overlay === 'store-host') {
       overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
-    } else if (ui.overlay === 'lp-brightness') {
-      const auto = !!data.settings.autoBrightness;
-      overlayRoot.innerHTML = `<div class="lp-bright-scrim" data-action="close-overlay"></div><div class="lp-bright-dlg" role="dialog" aria-label="${safe(i18n.t('Brightness'))}"><button type="button" class="lp-bright-auto${auto ? ' on' : ''}" data-action="lp-brightness-auto" aria-pressed="${auto}" aria-label="${safe(i18n.t('AUTO'))}"><img src="assets/lp-sysui-ic_qs_brightness_auto_${auto ? 'on' : 'off'}_alpha.png" alt=""></button><div class="lp-qs-brightness lp-bright-slider"><input type="range" min="10" max="100" value="${data.settings.brightness}" data-field="brightness" aria-label="${safe(i18n.t('Brightness'))}" style="--v:${(data.settings.brightness - 10) / .9}%"></div></div>`;
-    } else if (ui.overlay === 'qs-brightness') {
-      overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog jb-brightness" role="dialog" aria-label="${safe(i18n.t('Brightness'))}"><h3>${safe(i18n.t('Brightness'))}</h3><div class="jb-brightness-row"><img src="assets/jb-ic_qs_brightness_auto_off.png" alt=""><input type="range" min="10" max="100" value="${data.settings.brightness}" data-field="brightness" aria-label="${safe(i18n.t('Brightness'))}" ${data.settings.autoBrightness ? 'disabled' : ''}><label><input type="checkbox" data-field="auto-brightness" ${data.settings.autoBrightness ? 'checked' : ''}><span>${safe(i18n.t('AUTO'))}</span></label></div></div>`;
     } else if (ui.overlay.startsWith('widget-photo')) {
       overlayRoot.innerHTML = ICSWidgets.photoOverlay(data, ui, key => i18n.t(key));
     } else if (ui.overlay === 'folder') {
@@ -807,85 +766,9 @@
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
   }
 
-  // QS tile clicks (QSTile.handleClick): Wi-Fi, Bluetooth, airplane, rotation, flashlight, location, invert and hotspot
-  // toggle in place; Cellular opens data usage and Cast its settings, as their details point there.
-  function lpQsToggle(id) {
-    const s = data.settings;
-    if (id === 'wifi') { s.wifi = !s.wifi; if (s.wifi) { s.airplane = false; s.portableHotspot = false; } }
-    else if (id === 'bluetooth') s.bluetooth = !s.bluetooth;
-    else if (id === 'airplane') { s.airplane = !s.airplane; if (s.airplane) { s.wifi = false; s.bluetooth = false; } }
-    else if (id === 'rotation') s.rotate = s.rotate === false;
-    else if (id === 'flashlight') s.flashlight = !s.flashlight;
-    else if (id === 'location') s.locationAccess = !(s.locationAccess !== false && (s.gps || s.networkLocation)) ? true : false, s.locationAccess && !s.gps && !s.networkLocation && (s.networkLocation = true);
-    else if (id === 'inversion') s.inversion = !s.inversion;
-    else if (id === 'hotspot') { s.portableHotspot = !s.portableHotspot; if (s.portableHotspot) s.wifi = false; }
-    else if (id === 'cell') { ui.overlay = ''; openApp('settings'); ui.sub = 'data'; render(); return; }
-    else if (id === 'cast') { ui.overlay = ''; openApp('settings'); ui.sub = 'wifi-display'; render(); return; }
-    if (['airplane', 'rotation', 'flashlight', 'location', 'inversion', 'hotspot'].includes(id)) ui.qsIconAnim = {...ui.qsIconAnim, [id]: performance.now()};
-    save(); lp.renderStatus(); renderOverlay(); JBDeveloperOptions.apply(screen, data.settings);
-  }
-  /* Each notification's Material look: the app's small icon on its accent colour (Notification.color) in the 40 dp
-     circle, or the large icon (a contact photo) with the small icon badged on the colour. */
-  function decorateNotification(note) {
-    if (note.id === 2) return {...note, largeIcon: 'mms-ic_contact_picture.png', smallIcon: 'lpn-messenger.png', color: '#0277bd', big: 'Hey! Are we still on for coffee tomorrow?\nSee you at 11!', actions: [{id: 'reply', label: 'Reply'}]};
-    if (note.kind === 'message' && note.channel === 'hangouts') return {...note, largeIcon: 'mms-ic_contact_picture.png', smallIcon: 'lpn-hangouts.png', color: '#0f9d58', big: note.detail, actions: [{id: 'reply', label: 'Reply'}]};
-    if (note.kind === 'message') return {...note, largeIcon: 'mms-ic_contact_picture.png', smallIcon: 'lpn-messenger.png', color: '#0277bd', big: note.detail, actions: [{id: 'reply', label: 'Reply'}]};
-    if (note.kind === 'calendar') return {...note, smallIcon: 'lpn-calendar.png', color: '#4285f4', big: note.detail, actions: [{id: 'snooze', label: 'Snooze'}]};
-    if (note.kind === 'timer') return {...note, smallIcon: 'lpn-timer.png', color: '#00796b'};
-    if (note.kind === 'market-dl') return {...note, smallIcon: 'lpn-download.png', color: '#607d8b'};
-    if (note.kind === 'market-done') return {...note, smallIcon: 'lpn-play-installed.png', color: '#607d8b'};
-    return {...note, smallIcon: 'lp-sysui-android.svg', color: '#9e9e9e'};
-  }
-  // AlarmManager.getNextAlarmClock: the next enabled alarm, in ms of device time (0 without one).
-  function nextAlarmTime() { const next = data.alarms.filter(alarm => alarm.enabled).map(alarm => ICSDeskClock.nextOccurrence(alarm, deviceDate())).filter(Boolean).sort((a, b) => a - b)[0]; return next ? next.getTime() : 0; }
-  // Settings.System.NEXT_ALARM_FORMATTED, shown by the temporary alarm tile.
-  function nextAlarmLabel() {
-    const next = data.alarms.filter(alarm => alarm.enabled).map(alarm => ICSDeskClock.nextOccurrence(alarm, deviceDate())).filter(Boolean).sort((a, b) => a - b)[0];
-    return next ? next.toLocaleString(i18n.locale(), {weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: !data.settings.hour24}) : '';
-  }
-  function addNotification(title, detail) { data.notifications.unshift({ id: Date.now(), title, detail }); save(); lp.renderStatus(); }
   /* A simulated answer shows Lollipop's heads-up notification: a few seconds after a text to one of the demo contacts
      they write back once (per contact and session). */
   const REPLIES = {1: 'Sounds good, see you then!', 2: 'Got it, thanks!', 3: 'Haha, nice 😄', 4: 'Love you! Talk soon ♥'};
-  /* HeadsUpNotificationView (5.1): a high-priority notification drops in at the top over the running app, 8 dp in from
-     the sides, and leaves after heads_up_notification_decay (10 s) or when swiped away; tapping it opens it. */
-  let headsUpTimer = 0;
-  // OvershootInterpolator (tension 2), DecelerateInterpolator / AccelerateInterpolator (factor 1), sampled.
-  function headsUpFrames(enter) {
-    const overshoot = t => { t -= 1; return t * t * (3 * t + 2) + 1; };
-    return Array.from({length: 13}, (_, i) => {
-      const t = i / 12, y = enter ? -50 * (1 - overshoot(t)) : -50 * overshoot(t), alpha = enter ? 1 - (1 - t) * (1 - t) : 1 - t * t;
-      return {offset: t, transform: `translateY(${y.toFixed(2)}%)`, opacity: alpha.toFixed(3)};
-    });
-  }
-  function headsUp(note) {
-    if (ui.locked || ui.view === 'lock' || ui.sleeping || ui.overlay === 'shade') return;
-    let layer = screen.querySelector('#lp-headsup');
-    if (!layer) { layer = document.createElement('div'); layer.id = 'lp-headsup'; screen.insertBefore(layer, overlayRoot); }
-    layer.innerHTML = LPShade.row(decorateNotification(note), key => i18n.t(key), i18n.locale(), true).replace('class="notification jb-note lp-note', 'class="notification lp-note lp-headsup-card');
-    i18n.translateDOM(layer);
-    const card = layer.firstElementChild;
-    // Swiping the heads-up card up or sideways dismisses it into the shade (HeadsUpNotificationView.EdgeSwipeHelper).
-    card.addEventListener('pointerdown', down => {
-      const start = {x: down.clientX, y: down.clientY};
-      const move = event => { const dx = event.clientX - start.x, dy = event.clientY - start.y; card.style.transform = Math.abs(dx) > Math.abs(dy) ? `translateX(${dx}px)` : `translateY(${Math.min(0, dy)}px)`; card.style.opacity = String(1 - Math.min(.7, Math.abs(dx) / 400)); };
-      const up = event => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); const dx = event.clientX - start.x, dy = event.clientY - start.y; if (dy < -dp(26) || Math.abs(dx) > dp(99)) { suppressClickUntil = Date.now() + 300; card.style.transform = ''; card.style.opacity = ''; releaseHeadsUp(dy < -dp(26) && Math.abs(dy) > Math.abs(dx) ? 'up' : dx < 0 ? 'left' : 'right'); } else { card.style.transform = ''; card.style.opacity = ''; } };
-      window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
-    });
-    // Animation.StatusBar.HeadsUp (heads_up_enter): from -50 % with the overshoot interpolator, fading in with
-    // decelerate_quad, config_shortAnimTime (200 ms).
-    if (!reducedMotion?.matches) card.animate(headsUpFrames(true), {duration: 200, fill: 'backwards'});
-    clearTimeout(headsUpTimer); headsUpTimer = setTimeout(() => releaseHeadsUp(), 10000);
-  }
-  function releaseHeadsUp(direction = 'up') {
-    clearTimeout(headsUpTimer);
-    const card = screen.querySelector('#lp-headsup .lp-headsup-card'); if (!card) return;
-    const done = () => card.remove();
-    if (reducedMotion?.matches || !card.animate) { done(); return; }
-    // heads_up_exit: up to -50 % (overshoot) fading with accelerate_quad in 200 ms; a sideways swipe flies out.
-    if (direction === 'up') { card.animate(headsUpFrames(false), {duration: 200, fill: 'forwards'}).finished.then(done, done); return; }
-    card.animate([{transform: 'none', opacity: 1}, {transform: `translateX(${direction === 'left' ? '-' : ''}110%)`, opacity: 0}], {duration: 220, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards'}).finished.then(done, done);
-  }
 
   let suppressClickUntil = 0;
   // PanelView.onEmptySpaceClick: in the shade, a tap on the panel where no card, header or tile is collapses it.
@@ -962,36 +845,7 @@
         if(id==='bluetooth'&&!data.settings.bluetooth)data.settings.bluetoothTether=false;
         save(); render(); break;
       case 'widget-music-play': ui.musicActive=true;ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;lp.saveMusic();render();break;
-      case 'shade': if (ui.pinned) break; ui.overlay = ui.overlay === 'shade' ? '' : 'shade'; renderOverlay(); break;
       case 'close-overlay': if (ui.overlay === 'recent') { lp.closeRecents(); break; } ui.overlay = ''; renderOverlay(); break;
-      case 'clear-notifications': {
-        const rows = [...overlayRoot.querySelectorAll('.jb-note')], delays = LPShade.clearDelays(rows.length);
-        if (reducedMotion?.matches || !rows.length) { data.notifications = []; ui.overlay = ''; save(); lp.renderStatus(); renderOverlay(); break; }
-        overlayRoot.querySelector('.jb-shade-clear')?.setAttribute('hidden', '');
-        rows.forEach((row, index) => row.animate([{transform: 'translateX(0)', opacity: 1}, {transform: `translateX(${row.offsetWidth}px)`, opacity: 0}], {duration: 125, delay: delays[index], easing: 'linear', fill: 'forwards'}));
-        setTimeout(() => { data.notifications = []; save(); lp.renderStatus(); if (ui.overlay === 'shade') { ui.overlay = ''; renderOverlay(); } }, (delays.at(-1) || 0) + 125 + 225);
-        break;
-      }
-      // Lollipop Quick Settings: the icon toggles, the dual label opens the tile's detail.
-      case 'lp-qs-expand': ui.shadeSettings = !ui.shadeSettings; ui.qsDetail = ''; renderOverlay(); break;
-      case 'lp-qs-user': toast('Only the owner can be signed in on this simulator.'); break;
-      case 'lp-qs-toggle': lpQsToggle(id); break;
-      case 'lp-qs-detail': ui.qsDetail = id; renderOverlay(); break;
-      case 'lp-qsd-done': ui.qsDetail = ''; renderOverlay(); break;
-      case 'lp-qsd-more': ui.qsDetail = ''; ui.overlay = ''; openApp('settings'); ui.sub = id === 'wifi' ? 'wifi' : 'bluetooth'; render(); break;
-      case 'lp-qsd-switch': lpQsToggle(id); break;
-      case 'lp-qsd-item': if (id === 'wifi') { data.settings.wifiNetwork = button.dataset.key; save(); lp.renderStatus(); renderOverlay(); } break;
-      case 'lp-qsd-disconnect': if (id === 'wifi') data.settings.wifiNetwork = ''; else data.settings.pairedDevice = ''; save(); lp.renderStatus(); renderOverlay(); break;
-      case 'qs-brightness': ui.overlay = 'qs-brightness'; renderOverlay(); break;
-      case 'lp-brightness': ui.overlay = 'lp-brightness'; renderOverlay(); break;
-      case 'lp-brightness-auto': data.settings.autoBrightness = !data.settings.autoBrightness; save(); renderOverlay(); break;
-      case 'qs-settings': ui.overlay = ''; openApp('settings'); break;
-      case 'qs-alarm': ui.overlay = ''; openApp('clock'); break;
-      case 'notification-action': if (button.dataset.noteAction === 'reply') { const note = data.notifications.find(item => String(item.id) === id); releaseHeadsUp(); data.notifications = data.notifications.filter(item => item !== note); save(); lp.renderStatus(); ui.overlay = ''; openApp(note?.channel === 'hangouts' ? 'hangouts' : 'messaging'); lp.openMessageThread(note?.contact || 1); break; } { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar' && button.dataset.noteAction === 'snooze') { data.notifications = data.notifications.filter(item => item !== note); (data.calendarSnoozes ||= []).push({eventId: note.eventId, date: note.date, title: note.title, detail: note.detail, at: deviceDate().getTime() + 5 * 60000}); save(); lp.renderStatus(); if (!data.notifications.length) ui.overlay = ''; renderOverlay(); toast('Snoozed'); } break; }
-      case 'notification-open': { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar') { data.notifications = data.notifications.filter(item => item !== note); save(); ui.overlay = ''; openApp('calendar'); ui.selectedEvent = note.eventId; ui.selectedInstance = note.date; ui.selectedDate = note.date; ui.sub = 'event'; render(); break; }
-        releaseHeadsUp();
-        if (note?.kind === 'message') { data.notifications = data.notifications.filter(item => item !== note); save(); lp.renderStatus(); ui.overlay = ''; openApp(note.channel === 'hangouts' ? 'hangouts' : 'messaging'); lp.openMessageThread(note.contact); break; }
-        ui.overlay = ''; if (Number(id) === 2) lp.openMessageThread(1); else { ui.view = 'settings'; ui.sub = 'about'; render(); } break; }
       case 'toast': toast(id); break;
       case 'noop': break;
 
@@ -1453,28 +1307,6 @@
     }
   }
   let lastWheelPage = 0;
-  /* Jelly Bean notifications expand with a two-finger swipe down or a pinch out (trackpad pinches arrive as
-     Ctrl+wheel), and collapse with the opposite gesture. */
-  function setNoteExpanded(id, expanded) {
-    ui.noteExpanded = {...ui.noteExpanded, [id]: expanded};
-    renderOverlay();
-  }
-  screen.addEventListener('wheel', event => {
-    const note = ui.overlay === 'shade' && event.ctrlKey ? event.target.closest('.jb-note') : null;
-    if (!note) return;
-    event.preventDefault(); event.stopImmediatePropagation();
-    setNoteExpanded(note.dataset.id, event.deltaY < 0);
-  }, {passive: false, capture: true});
-  let noteGesture = null;
-  screen.addEventListener('touchstart', event => {
-    const note = ui.overlay === 'shade' && event.touches.length === 2 ? event.target.closest('.jb-note') : null;
-    noteGesture = note ? {id: note.dataset.id, y: (event.touches[0].clientY + event.touches[1].clientY) / 2} : null;
-  }, {passive: true});
-  screen.addEventListener('touchmove', event => {
-    if (!noteGesture || event.touches.length !== 2) return;
-    const y = (event.touches[0].clientY + event.touches[1].clientY) / 2;
-    if (Math.abs(y - noteGesture.y) > 30) { const {id} = noteGesture, down = y > noteGesture.y; noteGesture = null; setNoteExpanded(id, down); }
-  }, {passive: true});
   screen.addEventListener('wheel', event => {
     if (ui.view !== 'home' || ui.overlay || dragState || !event.target.closest('.home-content')) return;
     const widgetList = event.target.closest('.calw-list');
@@ -1604,10 +1436,7 @@
     // Lists scroll by mouse drag in lp-scroll.js (OverScroller fling, EdgeEffect); only the widget picker keeps this one.
     const scrollTarget = widgetList || null;
     pointerStart = { x: event.clientX, y: event.clientY, target: event.target, source: dragSource(event.target), pointerType: event.pointerType, pointerId: event.pointerId, downTime: performance.now(), scrollTarget, scrollTop: scrollTarget?.scrollTop || 0, lockDrag: ui.view === 'lock' && !!event.target.closest('.lock-handle'), qsPullEligible: ui.overlay === 'shade' && !ui.shadeSettings && !!event.target.closest('.lp-shade') && !event.target.closest('.lp-note,input') && !(overlayRoot.querySelector('.lp-shade-scroll')?.scrollTop > 0), shadeDragEligible: !ui.overlay && !!event.target.closest('#status-bar'), shadeCloseEligible: ui.overlay === 'shade' && !!event.target.closest('.shade-handle,.shade-top'), pageSwipeEligible: ui.view === 'home' && !ui.overlay && !!event.target.closest('.home-view') && !event.target.closest('.dock, .page-indicators, .home-search'), drawerSwipeEligible: ui.view === 'drawer' && !!event.target.closest('.drawer-page') };
-    // PanelView.schedulePeek: a finger resting on the status bar for ViewConfiguration.TAP_TIMEOUT (100 ms) peeks the panel.
-    if (pointerStart.shadeDragEligible && !reducedMotion?.matches) pointerStart.peekTimer = setTimeout(() => startPeek(), 100);
-    const qsToggle = ui.overlay === 'shade' ? event.target.closest('[data-qs-toggle]') : null;
-    if (qsToggle) homeLongPressTimer = setTimeout(() => { const key = qsToggle.dataset.qsToggle; data.settings[key] = !data.settings[key]; if (data.settings[key]) data.settings.airplane = false; if (key === 'wifi' && data.settings.wifi) data.settings.portableHotspot = false; save(); lp.renderStatus(); renderOverlay(); pointerStart = null; suppressReleaseClick(); }, holdDelay(500));
+    LP.module('shade').pointerdown(event);
     if (ui.view === 'home' && event.target.closest('.lp-cling .cling-shade')) homeLongPressTimer = setTimeout(() => { data.clings.workspace = true; save(); LauncherClings.dismiss(clingLayerRoot().querySelector('[data-cling="workspace"]'), () => { ui.overview = true; render(); }); pointerStart = null; suppressReleaseClick(); }, holdDelay(550));
     if (ui.view === 'home' && !ui.overlay && !ui.overview && event.target.closest('.home-slot') && !pointerStart.source) homeLongPressTimer = setTimeout(() => { ui.overview = true; render(); pointerStart = null; suppressReleaseClick(); }, holdDelay(550));
     LP.module('messaging').pointerdown(event);
@@ -1659,32 +1488,7 @@
     if (LP.module('calendar').pointermove(event, dx, dy)) return;
     if (LP.module('photos').pointermove(event, dx, dy)) return;
     if (LP.module('lock').pointermove(event, dx, dy)) return;
-    // NotificationPanelView: pulling down again on the open panel expands Quick Settings.
-    if (pointerStart.qsPullEligible && !ui.shadeSettings && dy > dp(40) && dy > Math.abs(dx)) { ui.shadeSettings = true; ui.qsDetail = ''; renderOverlay(); suppressClickUntil = Date.now() + 350; pointerStart.qsPullEligible = false; pointerStart.qsPulled = true; return; }
-    if (pointerStart.qsPulled) return;
-    if (pointerStart.shadeDragging || pointerStart.shadeDragEligible && dy > dp(9) && dy > Math.abs(dx) || pointerStart.shadeCloseEligible && dy < -dp(9) && -dy > Math.abs(dx)) {
-      if (!pointerStart.shadeDragging) {
-        clearTimeout(pointerStart.peekTimer); pointerStart.shadeDragging = true;
-        if (ui.shadePeek) {
-          // The finger moved during the peek: tracking continues from the height the peek reached.
-          const peeking = overlayRoot.querySelector('.notification-shade'); ui.shadePeek = false; ui.peekCollapse = false;
-          if (peeking) { if (peeking._lpAnim) cancelAnimationFrame(peeking._lpAnim); pointerStart.shadeFrom = peeking.offsetHeight - dy; }
-        } else { if (ui.overlay !== 'shade') ui.shadeSettings = activeTouches.size >= 2; ui.overlay = 'shade'; renderOverlay(); }
-        try { screen.setPointerCapture(event.pointerId); } catch {}
-      }
-      event.preventDefault();
-      const shade = overlayRoot.querySelector('.notification-shade');
-      if (shade) {
-        // PanelView.setExpandedHeight follows the finger (an open panel starts from its full height); the fling on
-        // release is handled below.
-        const now = performance.now(), max = screen.clientHeight - shade.offsetTop - navRoot.offsetHeight;
-        if (pointerStart.shadeLast) { const dt = now - pointerStart.shadeLast.t; if (dt > 0) pointerStart.shadeVelocity = (event.clientY - pointerStart.shadeLast.y) / dt * 1000; }
-        pointerStart.shadeLast = {t: now, y: event.clientY};
-        if (pointerStart.shadeFrom === undefined) pointerStart.shadeFrom = pointerStart.shadeCloseEligible ? shade.offsetHeight && LPShade.maxHeight(shade) : 0;
-        LPShade.expand(shade, Math.max(0, Math.min(max, pointerStart.shadeFrom + dy)), overlayRoot.querySelector('.lp-shade-scrim'));
-      }
-      return;
-    }
+    if (LP.module('shade').pointermove(event, dx, dy)) return;
     // StackView: a vertical fling on the front picture moves through the stack.
     if (pointerStart.photoStack && (pointerStart.photoSwiping || Math.abs(dy) > dp(7) && Math.abs(dy) > Math.abs(dx) * 1.2)) {
       if (!pointerStart.photoSwiping) { pointerStart.photoSwiping = true; clearTimeout(dragTimer); suppressClickUntil = Date.now() + 350; try { screen.setPointerCapture(event.pointerId); } catch {} }
@@ -1722,12 +1526,7 @@
   window.addEventListener('pointerup', event => {
     if (!pointerStart || event.pointerId !== pointerStart.pointerId) return;
     clearTimeout(pointerStart.peekTimer);
-    // A tap on the status bar (PanelView.collapse during a peek): the panel peeks, then collapses (mCollapseAfterPeek).
-    if (pointerStart.shadeDragEligible && !pointerStart.shadeDragging && !reducedMotion?.matches) {
-      if (!ui.shadePeek) startPeek();
-      if (ui.shadePeek) { ui.peekCollapse = true; if (ui.peekDone) closePeek(); }
-      suppressClickUntil = Date.now() + 350; pointerStart = null; return;
-    }
+    if (LP.module('shade').pointerupPeek()) return;
     clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); LP.module('calculator').cancelHold(); clearTimeout(messageHoldTimer);
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
     if (LP.module('wallpaper-picker').pointerup()) return;
@@ -1782,17 +1581,7 @@
       suppressClickUntil = Date.now() + 350;
       pointerStart = null; return;
     }
-    if (pointerStart.qsPulled) { pointerStart = null; return; }
-    if (pointerStart.shadeDragging) {
-      suppressClickUntil = Date.now() + 350;
-      // PanelView.onTrackingStopped: a fling decides by its direction, a slow release by the half-way point.
-      const shade = overlayRoot.querySelector('.notification-shade'), scrim = overlayRoot.querySelector('.lp-shade-scrim');
-      const velocity = pointerStart.shadeVelocity || 0, height = shade ? shade.offsetHeight : 0, full = shade ? LPShade.maxHeight(shade) : 0;
-      const close = Math.abs(velocity) > 400 * LPShade.DP() ? velocity < 0 : height < full / 2;
-      if (close) { closingVelocity = Math.abs(velocity); ui.overlay = ''; renderOverlay(); }
-      else if (shade) LPShade.animate(shade, height, full, {velocity: Math.max(0, velocity), scrim, done: () => LPShade.settle(shade, scrim)});
-      pointerStart = null; return;
-    }
+    if (LP.module('shade').pointerup()) return;
     if (LP.module('lock').pointerup(event, dx, dy)) return;
     if (pointerStart.scrolling) { screen.classList.remove('settings-scrolling'); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if (pointerStart.swiping || pointerStart.pageSwipeEligible && !dragState && Math.abs(dx) > dp(50) && Math.abs(dx) > Math.abs(dy) && (!pointerStart.source || pointerStart.source.type === 'home' && performance.now() - pointerStart.downTime < 260)) {
@@ -1801,8 +1590,7 @@
     if (!dragState && pointerStart?.source && !['drawer', 'drawer-widget'].includes(pointerStart.source.type) && Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > dp(10)) startDrag(event.clientX, event.clientY);
     if (finishDrag(event.clientX, event.clientY)) { pointerStart = null; return; }
     if (!pointerStart) return;
-    if (ui.overlay === 'shade' && pointerStart.target.closest('.notification') && Math.abs(dx) > dp(61)) { const id = Number(pointerStart.target.closest('.notification').dataset.id); data.notifications = data.notifications.filter(n => n.id !== id); save(); lp.renderStatus(); renderOverlay(); pointerStart = null; return; }
-    if (!ui.overlay && pointerStart.target.closest('#status-bar') && dy > dp(50)) { ui.overlay = 'shade'; renderOverlay(); }
+    if (LP.module('shade').pointerupLate(event, dx, dy)) return;
     pointerStart = null;
   });
   window.addEventListener('pointercancel', () => { LP.module('calculator').pointercancel(); clearTimeout(messageHoldTimer); clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(dragState?.edgeTimer);clearTimeout(dragState?.folderExitTimer);clearTimeout(dragState?.folderHoverTimer);clearFolderDragFeedback();dragState?.ghost.remove(); clearDragOutlines(); dragState = null; screen.classList.remove('dragging', 'page-swiping', 'settings-scrolling', 'lock-dragging'); if (ui.extraScreen) { stripEmptyScreens(); save(); if (ui.view === 'home') render(); } setHomePage(ui.page); const drawerPage = viewport.querySelector('.drawer-page'); if (drawerPage) drawerPage.style.transform = ''; const lockHandle = viewport.querySelector('.lock-handle'); if (lockHandle) lockHandle.style.removeProperty('--lock-x'); if (pointerStart?.shadeDragging || ui.overlay === 'recent' || ui.overlay === 'shade' || ui.overlay === 'folder') renderOverlay(); pointerStart = null; });
@@ -1870,7 +1658,7 @@
     lp.checkAlarms(now);
     lp.checkTimers();
     // Interruptions: the end of a countdown, alarm or downtime condition, and Downtime's autotrigger.
-    if (LPZen.tick(data.settings, now.getTime(), nextAlarmTime())) { save(); lp.renderStatus(); if (ui.view === 'settings' && ui.sub === 'zen' && !ui.overlay) render(); }
+    if (LPZen.tick(data.settings, now.getTime(), lp.nextAlarmTime())) { save(); lp.renderStatus(); if (ui.view === 'settings' && ui.sub === 'zen' && !ui.overlay) render(); }
     LP.module('dream').clockTick();
     lp.checkReminders(now);
     LP.module('photos').clockTick();
@@ -1896,27 +1684,25 @@
 
   // lp:kernel (the core's bindings the lp-*.js modules use, live; written by the migration's move tool)
   LP.kernel({
-    get addNotification() { return addNotification; }, get appIcon() { return appIcon; },
+    get activeTouches() { return activeTouches; }, get appIcon() { return appIcon; },
     get applyMagnification() { return applyMagnification; }, get appNames() { return appNames; },
     get apps() { return apps; }, get captureRecentView() { return captureRecentView; },
     get chromeText() { return chromeText; }, get clearAppData() { return clearAppData; },
-    get clock() { return clock; }, get clone() { return clone; }, get contact() { return contact; },
-    get data() { return data; }, set data(v) { data = v; },
-    get decorateNotification() { return decorateNotification; }, get defaultData() { return defaultData; },
-    get deviceDate() { return deviceDate; }, get digitalClockWidget() { return digitalClockWidget; },
-    get dp() { return dp; }, get emailData() { return emailData; }, get fullDate() { return fullDate; },
-    get headsUp() { return headsUp; }, get HOLD_NAMES() { return HOLD_NAMES; },
-    get holdDelay() { return holdDelay; }, get home() { return home; },
+    get clock() { return clock; }, get clone() { return clone; },
+    get closingVelocity() { return closingVelocity; }, set closingVelocity(v) { closingVelocity = v; },
+    get contact() { return contact; }, get data() { return data; }, set data(v) { data = v; },
+    get defaultData() { return defaultData; }, get deviceDate() { return deviceDate; },
+    get digitalClockWidget() { return digitalClockWidget; }, get dp() { return dp; },
+    get emailData() { return emailData; }, get fullDate() { return fullDate; },
+    get HOLD_NAMES() { return HOLD_NAMES; }, get holdDelay() { return holdDelay; }, get home() { return home; },
     get homeLongPressTimer() { return homeLongPressTimer; }, set homeLongPressTimer(v) { homeLongPressTimer = v; },
     get i18n() { return i18n; },
     get lastActivity() { return lastActivity; }, set lastActivity(v) { lastActivity = v; },
     get lockControls() { return lockControls; }, get LP_PRIMARY() { return LP_PRIMARY; },
     get LP_STATUS_COLORS() { return LP_STATUS_COLORS; },
     get messageHoldTimer() { return messageHoldTimer; }, set messageHoldTimer(v) { messageHoldTimer = v; },
-    get musicActive() { return musicActive; }, get navRoot() { return navRoot; },
-    get nextAlarmLabel() { return nextAlarmLabel; }, get nextAlarmTime() { return nextAlarmTime; },
-    get openApp() { return openApp; }, get overlayRoot() { return overlayRoot; },
-    get placeShortcut() { return placeShortcut; },
+    get musicActive() { return musicActive; }, get navRoot() { return navRoot; }, get openApp() { return openApp; },
+    get overlayRoot() { return overlayRoot; }, get placeShortcut() { return placeShortcut; },
     get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; },
     get reducedMotion() { return reducedMotion; }, get render() { return render; },
     get renderOverlay() { return renderOverlay; }, get REPLIES() { return REPLIES; },

@@ -53,3 +53,19 @@ the module core, screen by screen, until it is gone.
 | 3 | Recents and screen pinning | lp-recents-app.js | moved |
 | 3 | Status bar and navigation bar (with the search panel swipe and the immersive bars peek) | lp-statusbar.js | moved |
 | 3 | Lock screen (keyguard, bouncer, its widgets and notifications) | lp-lock.js | moved |
+| 3 | Notification shade and Quick Settings (heads-up, peek, pull, brightness dialogs) | lp-shade-panel.js | moved |
+
+## Left (2026-11-28, session paused at the usage limit)
+
+- Step 3: home and the app drawer (widgets, folders, clings, drag and drop, page swipes, widget resize) into lp-home.js;
+  the shared card swipe (Recents / notifications) may stay in the core's pointer pipeline.
+- Step 4: what is left of simulator.js (state, render, renderApp, openApp, navigateBack, the click / submit / input
+  dispatch, the pointer pipeline, keys, the device clock tick, the header buttons) moves into lp-core.js, simulator.js
+  is deleted; tests/global-actions.test.cjs then reads lp-core.js's ending.
+- Tidy: the modules' "/* TODO */" headers get their descriptions, the move tool's "// lp:" markers and empty
+  click / submit hooks go.
+- Before a push: npm test (asset-inventory, sitemap and text-tables fail on a CRLF checkout, also on main) and
+  `node tests/browser/ci.mjs 5.1.1` plus `5.1.1b`; the last full runs passed boot, flows, wallpaper-scroll, the
+  first limits half, drawer-mouse and store-apps; their failures were socket errors (net::ERR_NO_BUFFER_SPACE) or the
+  LP.overlay bug fixed in 05e22981. Nothing is pushed yet.
+- The move tool (lpmove.cjs, inv.cjs) is in the shared side-session notes folder.

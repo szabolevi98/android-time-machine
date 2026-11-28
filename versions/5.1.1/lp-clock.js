@@ -1,8 +1,8 @@
 /* TODO */
 'use strict';
 LP.define('clock', ({
-  clone, defaultData, deviceDate, dp, i18n, nextAlarmLabel, openApp, overlayRoot, render, renderOverlay, safe,
-  save, screen, toast, ui, viewport
+  clone, defaultData, deviceDate, dp, i18n, openApp, overlayRoot, render, renderOverlay, safe, save, screen, toast,
+  ui, viewport
 }, lp) => {
   // 4.2 DeskClock pages; the alarm list and editor keep the ICS AlarmClock/SetAlarm screens.
   const jbClockState = () => { lp.data.jbClock ||= {tab: 'clock', timers: [], stopwatch: {accumulated: 0, started: null, laps: []}}; return {...lp.data.jbClock, timerDigits: ui.timerDigits || '', timerSetup: !!ui.timerSetup}; };
@@ -13,7 +13,7 @@ LP.define('clock', ({
     if (ui.sub === 'night') return ClockPrefs.night({data: lp.data, ui, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), hour24: !!lp.data.settings.hour24, date: deviceDate().toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'})});
     if (ui.sub === 'cities') return JBDeskClock.cities({...jbClockState(), cityQuery: ui.cityQuery}, key => i18n.t(key), {locale: i18n.locale(), now: deviceDate(), hour24: !!lp.data.settings.hour24, words: {title: i18n.t('Cities'), selected: i18n.t('Selected Cities')}});
     const clockState = {...jbClockState(), alarmPage: KKDeskClock.page(lp.data.alarms, {expandedId: ui.kdcExpanded, t: key => i18n.t(key), locale: i18n.locale(), hour24: !!lp.data.settings.hour24, normalize: ICSDeskClock.normalize})};
-    return JBDeskClock.render(clockExtras(clockState), key => i18n.t(key), {locale: i18n.locale(), now: deviceDate(), hour24: !!lp.data.settings.hour24, alarm: nextAlarmLabel(), date: deviceDate().toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).toLocaleUpperCase(i18n.locale())});
+    return JBDeskClock.render(clockExtras(clockState), key => i18n.t(key), {locale: i18n.locale(), now: deviceDate(), hour24: !!lp.data.settings.hour24, alarm: lp.nextAlarmLabel(), date: deviceDate().toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).toLocaleUpperCase(i18n.locale())});
   }
   let clockFrame = 0, clockSilenceTimer = 0;
   function clockTicker() {

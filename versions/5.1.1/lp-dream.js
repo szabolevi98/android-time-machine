@@ -1,7 +1,7 @@
 /* TODO */
 'use strict';
 LP.define('dream', ({
-  deviceDate, i18n, nextAlarmLabel, overlayRoot, renderOverlay, safe, ui
+  deviceDate, i18n, overlayRoot, renderOverlay, safe, ui
 }, lp) => {
   const dreams = [['clock', 'Clock'], ['colors', 'Colors'], ['photoframe', 'Photo Frame']];
   // Dreams: DeskClock Screensaver (dimmed clock that moves every minute), SystemUI Colors and a photo slideshow.
@@ -11,7 +11,7 @@ LP.define('dream', ({
     if (type === 'photoframe') { const photo = lp.data.photos[Math.floor(Date.now() / 6000) % Math.max(1, lp.data.photos.length)]; return `<div class="jb-dream jb-dream-photo" data-action="dream-exit" role="button" tabindex="0" aria-label="Daydream">${photo ? `<img src="${ICSMedia.image(photo)}" alt="">` : ''}</div>`; }
     const time = now.toLocaleTimeString(i18n.locale(), {hour: lp.data.settings.hour24 ? '2-digit' : 'numeric', minute: '2-digit', hour12: !lp.data.settings.hour24}), [hours, rest = ''] = time.split(/[:.]/);
     const spot = Math.floor(Date.now() / 60000) % 4;
-    return `<div class="jb-dream jb-dream-clock" data-action="dream-exit" role="button" tabindex="0" aria-label="Daydream"><div class="jb-dream-saver" style="--spot:${spot}"><div class="jbclock-time"><span class="jbclock-hours">${safe(hours)}</span><span class="jbclock-minutes">:${safe(rest.replace(/\s?[^\d].*$/, ''))}</span></div><div class="jbclock-date">${safe(now.toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).toLocaleUpperCase(i18n.locale()))}${nextAlarmLabel() ? ` <img src="assets/dc5-ic_alarm_small.png" alt="">${safe(nextAlarmLabel())}` : ''}</div></div></div>`;
+    return `<div class="jb-dream jb-dream-clock" data-action="dream-exit" role="button" tabindex="0" aria-label="Daydream"><div class="jb-dream-saver" style="--spot:${spot}"><div class="jbclock-time"><span class="jbclock-hours">${safe(hours)}</span><span class="jbclock-minutes">:${safe(rest.replace(/\s?[^\d].*$/, ''))}</span></div><div class="jbclock-date">${safe(now.toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).toLocaleUpperCase(i18n.locale()))}${lp.nextAlarmLabel() ? ` <img src="assets/dc5-ic_alarm_small.png" alt="">${safe(lp.nextAlarmLabel())}` : ''}</div></div></div>`;
   }
   Object.assign(lp, {dreams});
   // lp:code

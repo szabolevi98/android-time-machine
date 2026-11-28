@@ -1,9 +1,9 @@
 /* TODO */
 'use strict';
 LP.define('lock', ({
-  captureRecentView, clock, decorateNotification, deviceDate, digitalClockWidget, dp, fullDate, home, i18n,
-  lockControls, musicActive, nextAlarmLabel, openApp, overlayRoot, reducedMotion, render, renderOverlay, safe,
-  save, screen, shadeDate, today, tracks, ui, viewport
+  captureRecentView, clock, deviceDate, digitalClockWidget, dp, fullDate, home, i18n, lockControls, musicActive,
+  openApp, overlayRoot, reducedMotion, render, renderOverlay, safe, save, screen, shadeDate, today, tracks, ui,
+  viewport
 }, lp) => {
   function lockScreen(){captureRecentView();lockControls.lock();ui.kgUp=true;ui.kgBouncing=false;ui.kgPending=null;ui.kgRelock=false;ui.locked=ICSLockscreen.secure(lp.data);ui.sleeping=lp.data.settings.screenLock==='none';ui.view=ui.sleeping?'home':'lock';ui.overlay='';render();}
   /* MultiWaveView (keyguard_screen_tab_unlock): targets sit on the ring (radius 135dp), the handle follows the
@@ -62,9 +62,9 @@ LP.define('lock', ({
     const now = deviceDate(), hour24 = !!lp.data.settings.hour24;
     return {t: key => i18n.t(key), locale: i18n.locale(), secure, height: screen.clientHeight || 662.67,
       clock: now.toLocaleTimeString(i18n.locale(), {hour: hour24 ? '2-digit' : 'numeric', minute: '2-digit', hour12: !hour24}).replace(/\s?[AaPp]\.?\s?[Mm]\.?$/, ''),
-      date: now.toLocaleDateString(i18n.locale(), {weekday: 'long', month: 'long', day: 'numeric'}), shortDate: shadeDate(), alarm: nextAlarmLabel(),
+      date: now.toLocaleDateString(i18n.locale(), {weekday: 'long', month: 'long', day: 'numeric'}), shortDate: shadeDate(), alarm: lp.nextAlarmLabel(),
       owner: lp.data.settings.showOwner ? lp.data.settings.ownerInfo : '', carrier: lp.carrierName(), statusIcons: lp.statusIndicators(),
-      notifications: lp.data.notifications.map(decorateNotification), activated: ui.kgActivated || '', hint: ui.kgHint || ''};
+      notifications: lp.data.notifications.map(lp.decorateNotification), activated: ui.kgActivated || '', hint: ui.kgHint || ''};
   }
   function kgHint(text) {
     ui.kgHint = i18n.t(text); clearTimeout(ui.kgHintTimer);
@@ -79,7 +79,7 @@ LP.define('lock', ({
     if (!Number.isInteger(ui.kgPage) || ui.kgPage >= kgPages.length || kgPages[ui.kgPage]?.type === 'camera') ui.kgPage = JBKeyguard.defaultPage(kgPages);
     const now = deviceDate(), hour24 = !!lp.data.settings.hour24;
     return {list: kgPages, parts: {
-      t: key => i18n.t(key), carrier: lp.data.settings.airplane ? i18n.t('No service.') : lp.data.settings.networkOperator || 'Telekom', owner: lp.data.settings.showOwner ? lp.data.settings.ownerInfo : '', alarm: nextAlarmLabel(),
+      t: key => i18n.t(key), carrier: lp.data.settings.airplane ? i18n.t('No service.') : lp.data.settings.networkOperator || 'Telekom', owner: lp.data.settings.showOwner ? lp.data.settings.ownerInfo : '', alarm: lp.nextAlarmLabel(),
       clock: now.toLocaleTimeString(i18n.locale(), {hour: hour24 ? '2-digit' : 'numeric', minute: '2-digit', hour12: !hour24}).replace(/\s?[AaPp]\.?\s?[Mm]\.?$/, ''),
       ampm: hour24 ? '' : now.getHours() < 12 ? 'AM' : 'PM', date: now.toLocaleDateString(i18n.locale(), {weekday: 'long', month: 'long', day: 'numeric'}).toLocaleUpperCase(i18n.locale()),
       transport: transport.replace('class="lock-transport"', 'class="lock-transport jbk-transport-view"'), widget: keyguardWidget

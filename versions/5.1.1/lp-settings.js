@@ -1,9 +1,8 @@
 /* TODO */
 'use strict';
 LP.define('settings', ({
-  applyMagnification, apps, clearAppData, clone, deviceDate, HOLD_NAMES, i18n, lockControls, nextAlarmTime,
-  openApp, overlayRoot, render, renderOverlay, resetSimulator, safe, save, screen, storeContext, toast, ui,
-  viewport, wifiNetworks
+  applyMagnification, apps, clearAppData, clone, deviceDate, HOLD_NAMES, i18n, lockControls, openApp, overlayRoot,
+  render, renderOverlay, resetSimulator, safe, save, screen, storeContext, toast, ui, viewport, wifiNetworks
 }, lp) => {
   /* Settings 5.1 toolbar (Widget.Material.Light.ActionBar.Solid on colorPrimary #263238): the up arrow
      (ic_ab_back_material) on sub-screens, the 20 sp title 16 dp in (72 dp after the arrow). */
@@ -460,7 +459,7 @@ LP.define('settings', ({
             const old = s.zenMode || 'all', oldExit = s.zenExit || null;
             s.zenMode = value;
             if (value === 'all') s.zenExit = null;
-            else { const now = deviceDate().getTime(); ui.zenCond = {mode: value, old, oldExit, index: 0, list: LPZen.conditions(s, now, nextAlarmTime())}; ui.overlay = 'lp-zen-cond'; }
+            else { const now = deviceDate().getTime(); ui.zenCond = {mode: value, old, oldExit, index: 0, list: LPZen.conditions(s, now, lp.nextAlarmTime())}; ui.overlay = 'lp-zen-cond'; }
           }
           if (kind === 'from') s.zenFrom = value;
           if (kind === 'downtime' && s.zenSleepNone !== (value === 'none')) { s.zenSleepNone = value === 'none'; delete s.zenDowntimed; }

@@ -1,8 +1,8 @@
 /* TODO */
 'use strict';
 LP.define('calendar', ({
-  clone, defaultData, deviceDate, dp, headsUp, i18n, overlayRoot, render, renderOverlay, save, screen, toast,
-  today, ui, viewport
+  clone, defaultData, deviceDate, dp, i18n, overlayRoot, render, renderOverlay, save, screen, toast, today, ui,
+  viewport
 }, lp) => {
   // The time zone picker's context: the language, the 12 / 24 hour clock, the instant now (the set time included) and
   // the Calendar's recent zones (preferences_recent_timezones).
@@ -48,7 +48,7 @@ LP.define('calendar', ({
       lp.data.calendarFired.push(key);
       const when=event.allDay?i18n.t('All day'):`${event.time} – ${event.endTime}`;
       lp.data.notifications.unshift({id:Date.now()+lp.data.notifications.length,title:event.title,detail:[when,event.location].filter(Boolean).join(' · '),kind:'calendar',eventId:event.id,date:event.date});
-      save();lp.renderStatus();if(ui.overlay==='shade')renderOverlay();headsUp(lp.data.notifications[0]);
+      save();lp.renderStatus();if(ui.overlay==='shade')renderOverlay();lp.headsUp(lp.data.notifications[0]);
     }
   }
   function calendarEdit(item) {

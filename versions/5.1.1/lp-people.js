@@ -1,8 +1,8 @@
 /* TODO */
 'use strict';
 LP.define('people', ({
-  addNotification, captureRecentView, clone, contact, defaultData, i18n, openApp, overlayRoot, placeShortcut,
-  render, renderOverlay, safe, save, toast, ui, viewport
+  captureRecentView, clone, contact, defaultData, i18n, openApp, overlayRoot, placeShortcut, render, renderOverlay,
+  safe, save, toast, ui, viewport
 }, lp) => {
   function placeContactShortcut(person) { if (person) placeShortcut(`contact:${person.id}`, person.name); }
   function renderPeople() { return ICSPeople.render(lp.data,ui,key => i18n.t(key),i18n.locale()); }
@@ -83,7 +83,7 @@ LP.define('people', ({
       if (/^(pfl|pst|psh)-/.test(action)) { const result = PeopleIO.pageAction(action, id, {data: lp.data, ui}); if (result) { if (result.share) { shareVcard(result.share.app, result.share.file); return; } if (result.save) save(); renderOverlay(); render(); return; } }
       if (action.startsWith('vcf-')) {
         const result = PeopleIO.handle(action, id, {data: lp.data, ui, t: key => i18n.t(key), locale: i18n.locale()});
-        if (result) { if (result.save) save(); for (const title of result.notify || []) addNotification(title, ''); renderOverlay(); render(); if (result.toast) toast(result.toast); return; }
+        if (result) { if (result.save) save(); for (const title of result.notify || []) lp.addNotification(title, ''); renderOverlay(); render(); if (result.toast) toast(result.toast); return; }
       }
       // lp:click
       switch (action) {

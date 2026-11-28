@@ -1,7 +1,7 @@
 /* TODO */
 'use strict';
 LP.define('power', ({
-  addNotification, appIcon, apps, home, i18n, lockControls, overlayRoot, render, renderOverlay, screen, ui
+  appIcon, apps, home, i18n, lockControls, overlayRoot, render, renderOverlay, screen, ui
 }, lp) => {
   function powerKey() { if (ui.power === 'off') { bootUp(false); return; } if (ui.power || ui.overlay === 'power-progress') return; if(ui.locked){ui.sleeping=!ui.sleeping;lockControls.lock();render();}else if(ui.sleeping||ui.view==='lock'){ui.sleeping=false;home(false);}else lp.lockScreen(); }
   // PhoneWindowManager: holding the key opens GlobalActions only while the screen is on; otherwise it just wakes.
@@ -9,7 +9,7 @@ LP.define('power', ({
   for (const key of [document.querySelector('#power-button'), document.querySelector('.power-key')]) { key.addEventListener('click', powerKey); GlobalActions.hold(key, powerHold); }
   // ShutdownThread: the confirmation, the "Shutting down…" progress dialog with a 500 ms vibration, then off.
   function powerConfirm(kind) {
-    if (kind === 'bugreport') { ui.overlay = ''; render(); setTimeout(() => addNotification('Bug report captured', 'Touch to share your bug report'), 6000); return; }
+    if (kind === 'bugreport') { ui.overlay = ''; render(); setTimeout(() => lp.addNotification('Bug report captured', 'Touch to share your bug report'), 6000); return; }
     ui.overlay = 'power-progress'; renderOverlay(); navigator.vibrate?.(500);
     setTimeout(() => powerOff(kind === 'safemode'), GlobalActions.SHUTDOWN_MS);
   }
