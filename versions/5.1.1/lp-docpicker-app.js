@@ -1,7 +1,7 @@
 /* TODO */
 'use strict';
 LP.define('kk-doc-picker', ({
-  clone, deviceDate, editorContext, i18n, overlayRoot, render, renderOverlay, save, ui, viewport
+  clone, deviceDate, i18n, overlayRoot, render, renderOverlay, save, ui, viewport
 }, lp) => {
   /* DocumentsUI's GET_CONTENT picker (lp-docpicker.js) for the wallpaper picker, Keep (image/*) and Gmail / Email's
      Attach file (any type). It runs as its own screen in the asking app's task; ui.docPickFor names that app. The
@@ -13,7 +13,7 @@ LP.define('kk-doc-picker', ({
   // the message being written.
   function docPicked(file) {
     const caller = docReturn();
-    if(EditorMore.APP[LPExtraApps.KIND[caller]]){EditorMore.importFile(editorContext(),file);return;}
+    if(EditorMore.APP[LPExtraApps.KIND[caller]]){EditorMore.importFile(lp.editorContext(),file);return;}
     if (caller === 'keep') { lp.keepAttach(file.photo.id, ui.keepPhotoTo); return; }
     if (caller === 'wallpaper') { const wp = ui.wp ||= {selected: '', temp: [], checked: []}, pid = file.photo.id; wp.temp = [pid, ...(wp.temp || []).filter(x => x !== pid)]; wp.selected = `photo:${pid}`; render(); return; }
     const item = lp.mailbox().find(item => item.id === ui.emailId);

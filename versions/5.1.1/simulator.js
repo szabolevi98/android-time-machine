@@ -461,9 +461,7 @@
       ICSTransitions.play(viewport.firstElementChild, activeTransition.spec.enter, activeTransition.factor).forEach(animation => { animation.currentTime = elapsed; activeTransition.animations.push(animation); });
     }
     LP.module('google-search').afterRenderNews();
-    const fitRoot=viewport.querySelector('[data-fit-more]');
-    if(ui.fitMoreHook&&ui.fitMoreHook.root!==fitRoot){ui.fitMoreHook.destroy();ui.fitMoreHook=null;}
-    if(fitRoot&&!ui.fitMoreHook)ui.fitMoreHook={...FitMore.attach(fitRoot,fitContext()),root:fitRoot};
+    LP.module('docs').afterRenderFit();
     LP.module('camera').afterRender();
     // PlatLogoActivity; after five taps a long press records Settings.System.EGG_MODE and starts LLand.
     if (ui.lpEgg && !viewport.querySelector('[data-lp-platlogo]')?.isSameNode(ui.lpEgg.root)) { ui.lpEgg.destroy(); ui.lpEgg = null; }
@@ -804,14 +802,12 @@
     if (StoreHost.module(ui.view)?.render) return StoreHost.render(ui.view, storeContext());
     switch (ui.view) {
       case 'settings': return renderSettings();
-      case 'docs': case 'sheets': case 'slides': case 'fit': case 'newsstand': case 'wallet': return LPExtraApps.render(ui.view, {news: ui.view === 'newsstand' ? lp.newsContext() : null, files: officeFiles(), ui, data, t: key => i18n.t(key), locale: i18n.locale()});
       default: return renderHome();
     }
   }
   function openApp(app, resume = false) {
-    if (['newsstand'].includes(app) && !resume) NewsReader.open(ui);
+    LP.module('docs').opening(app, resume);
     LP.module('google-search').openingApps(app, resume);
-    if(!resume&&LPExtraApps.KIND[app]){ui.editorDrawer=false;ui.editorRefreshing=false;}
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
     if (!resume) { ui.camIntent = null; ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt10Dialog = null; ui.lsPage = ''; ui.lsStack = []; ui.lsDialog = null; ui.driveFolder = ''; ui.driveFilter = ''; ui.driveNavItem = 'my'; ui.driveStack = []; ui.driveDialog = ''; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.lpmPage = ''; ui.mpoDialog = ''; ui.paStack = []; ui.paMore = ''; }
     if(ui.locked)return;
@@ -824,7 +820,7 @@
     if (app === 'keep' && !Array.isArray(data.keepNotes)) data.keepNotes = clone(defaultData.keepNotes);
     captureRecentView();
     // Wallet's warm welcome: the intro splash, then the pager (WarmWelcomeActivity.startIntroAnimation).
-    if (app === 'wallet' && !resume) { ui.walPage = undefined; setTimeout(() => { if (ui.view === 'wallet' && ui.walPage == null) { ui.walPage = 0; render(); } }, 2000); }
+    LP.module('docs').openingWallet(app, resume);
     LP.module('camera').opening(app, resume);
     LP.module('play-store').opening(app, resume);
     ui.view = app; ui.sub = resume ? ui.recentState?.[app]?.sub || '' : ''; ui.overlay = ''; if (app === 'settings' && !resume) ui.settingsRootScroll = 0;
@@ -844,12 +840,6 @@
   }
   function home(resetPage = true) { if(ui.locked)return;if(ui.photoWidgetSetup){const setup=ui.photoWidgetSetup;data.homeWidgets[setup.page]=data.homeWidgets[setup.page].filter(widget=>widget.id!==setup.id);ui.photoWidgetSetup=null;save();}if(ui.sub==='lock-setup')lockControls.lock();captureRecentView(); ui.view = 'home'; ui.sub = ''; ui.overlay = ''; ui.overview = false; if (resetPage) ui.page = 0; render(); }
   function back() { pendingNav = 'back'; try { navigateBack(); } finally { pendingNav = ''; } }
-  // Drive's files as the apps change them (the editors, Drive).
-  const officeFiles = () => data.driveFiles || StockApps.FILES;
-  const fitContext=()=>({data,ui,locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,toast});
-  const editorContext=()=>({data,ui,files:officeFiles(),locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,
-    openDrive(){openApp('drive');},pick(){lp.docPick(ui.view,EditorMore.ACCEPT[ui.view]);},shareText:lp.driveShareText,shareFile:lp.driveShareFile,
-    shortcut(file){placeShortcut('office:'+file.id,file.name);}});
 
   // Screen pinning: the reminder toast, and unpinning (lock_to_app_exit, then the lock screen when it asks for the lock).
   function pinnedToast() { toast(i18n.t('To unpin this screen, touch and hold Back and Overview at the same time.')); }
@@ -881,7 +871,7 @@
     if (LP.module('camera').backIntent()) return;
     if (LP.module('people').backIo()) return;
     if (LP.module('google-search').backEarth()) return;
-    if (['newsstand'].includes(ui.view) && !ui.overlay && NewsReader.back(ui)) { render(); return; }
+    if (LP.module('docs').backNews()) return;
     if (LP.module('google-search').backMaps()) return;
     if (LP.module('phone').backPrefs()) return;
     if (LP.module('clock').back()) return;
@@ -891,7 +881,7 @@
     if (LP.module('google-search').backRoute()) return;
     // News & Weather: a dialog, then the article page, then an expanded story.
     if (LP.module('google-search').backNews()) return;
-    if(ui.view==='fit'&&!ui.overlay&&FitMore.back(fitContext()))return;
+    if (LP.module('docs').backFit()) return;
     if (ui.view === 'news-weather' && !ui.overlay && (ui.newsDialog || ui.newsWeb || ui.newsSearch)) { if (ui.newsDialog) { ui.newsDialog = ''; ui.newsPick = undefined; } else if (ui.newsWeb) ui.newsWeb = ''; else { ui.newsSearch = false; ui.newsQuery = ''; } render(); return; }
     if (ui.view === 'settings' && ['a11y-magnification', 'a11y-shortcut'].includes(ui.sub) && !ui.overlay) { ui.sub = 'accessibility'; render(); return; }
     if (LP.module('calendar').back()) return;
@@ -904,13 +894,13 @@
     if (ui.view === 'lock' && ui.kgBouncing) { ui.kgBouncing = false; ui.kgPending = null; lockControls.lock(); render(); return; }
     if (ui.view === 'lock') return;
     if (LP.module('phone').back()) return;
-    if (['docs', 'sheets', 'slides'].includes(ui.view) && ui.sub) { ui.sub = !['search', 'results'].includes(ui.sub) && ui.edFrom === 'results' ? 'results' : ''; ui.edFrom = ''; render(); return; }
+    if (LP.module('docs').backDocs()) return;
     if (ui.view === 'drive' && ui.sub === 'file' && ui.driveFrom === 'results') { ui.sub = 'results'; ui.driveFrom = ''; render(); return; }
     if (LP.module('google-search').backYt()) return;
     if (ui.view === 'youtube' && ui.sub === 'video' && ui.ytFrom === 'results') { ui.sub = 'results'; ui.ytFrom = ''; render(); return; }
     if (LP.module('google-search').backNow()) return;
     if(ui.view==='settings' && ui.kpSyncReturn && ui.sub==='sync-google'){ui.kpSyncReturn=false;openApp('keep',true);ui.kpScreen='settings';render();return;}
-    if(LPExtraApps.KIND[ui.view]&&ui.editorDrawer){ui.editorDrawer=false;render();return;}
+    if (LP.module('docs').backDrawer()) return;
     if (ui.view === 'keep' && ui.keepDialog) { ui.keepDialog = ''; render(); return; }
     if (LP.module('google-search').backApps()) return;
     // Play Books' reader: a dropdown, then the Display options popup, then Contents close before the reader does.
@@ -1090,17 +1080,9 @@
       if (ui.recentsScroll === undefined) ui.recentsScroll = LPRecents.layout(panel);
     } else if (ui.overlay.startsWith('sd-')) {
       overlayRoot.innerHTML = ICSSettingsDetail.overlay(data,ui,key=>i18n.t(key));
-    } else if(ui.overlay.startsWith('emore-')) {
-      overlayRoot.innerHTML=EditorMore.dialog(editorContext());
-    } else if (['ed-menu', 'ed-rename', 'ed-remove'].includes(ui.overlay)) {
-      // #overlay-root has no height of its own (its children are placed against the screen), so the row's place and the room below come from the screen.
-      overlayRoot.innerHTML = LPExtraApps.edDialog(ui.overlay.slice(3), {files: officeFiles(), ui, t: key => i18n.t(key), locale: i18n.locale()});
-      if (ui.overlay === 'ed-menu') { const anchor = viewport.querySelector(`[data-action="ed-item"][data-id="${CSS.escape(ui.edFile)}"]`), menu = overlayRoot.querySelector('.ed-itemmenu'); if (anchor && menu) { const a = anchor.getBoundingClientRect(), box = overlayRoot.getBoundingClientRect(), frame = screen.getBoundingClientRect(), scale = frame.height / screen.offsetHeight || 1, top = (a.top - box.top) / scale; menu.style.top = `${Math.max(8, Math.min(top, screen.offsetHeight - menu.offsetHeight - 8))}px`; } }
     } else if (ui.overlay === 'pin-request') {
       const ring = key => `<span class="pin-key ${key}"><i></i><img src="assets/lp-ic_sysbar_${key}.png" alt=""></span>`;
       overlayRoot.innerHTML = `<div class="pin-scrim"></div><div class="pin-request" role="dialog" aria-label="${safe(i18n.t('Screen is pinned'))}" data-no-translate><h3>${safe(i18n.t('Screen is pinned'))}</h3><p>${safe(i18n.t('This keeps it in view until you unpin. Touch and hold Back and Overview at the same time to unpin.'))}</p><div class="pin-buttons"><button data-action="pin-cancel">${safe(i18n.t('No thanks'))}</button><button data-action="pin-ok">${safe(i18n.t('Got it'))}</button></div><div class="pin-nav">${ring('back')}<span class="pin-key home"><img src="assets/lp-ic_sysbar_home.png" alt=""></span>${ring('recent')}</div></div>`;
-    } else if (ui.overlay === 'lpx-overflow') {
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="lpa-menu">${LPExtraApps.menu(ui.view, key => i18n.t(key), i18n.locale(),editorContext()).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
     } else if (ui.overlay === 'sa-menu') {
       // The Google apps' action bar overflow (StockApps.menu: their menu XML's overflow items).
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${StockApps.menu(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()}).map(item => `<button data-action="${item.action}"${item.id != null ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
@@ -1506,10 +1488,7 @@
     // A store app's own controls and the host's dialog and menu (store-apps/legacy-host.js).
     if ((action.startsWith('sth-') || StoreHost.has(ui.view)) && StoreHost.action(action, button, storeContext())) return;
     if(action.startsWith('cb-')&&CellBroadcast.handle(action,id,{data,ui,save,render,renderOverlay}))return;
-    if(action.startsWith('fitm-')&&FitMore.handle(action,id,fitContext()))return;
-    if(action.startsWith('emore-')&&EditorMore.handle(action,id,editorContext()))return;
     // The Phone app's Settings (lp-dialer-prefs.js).
-    if (['newsstand'].includes(ui.view) && action.startsWith('nr-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } ui.kkxDrawer = false; ui.lpxDrawer = false; ui.magDrawer = false; ui.currentsMenu = false; if (NewsReader.handle(action, id, lp.newsContext())) return; }
     // The screens' own buttons (lp-*.js modules).
     if (LP.click(action, button, event)) return;
     switch (action) {
@@ -1753,29 +1732,10 @@
       // News & Weather 2.2: Refresh shows content_loading_placeholder while it gathers; stories expand and open
       // WebContentActivity; the weather card's menu and the app menu open its dialogs; the theme switches.
       case 'sa-news-refresh': ui.overlay = ''; renderOverlay(); ui.newsRefreshing = true; render(); setTimeout(() => { ui.newsRefreshing = false; if (ui.view === 'news-weather') render(); }, 900); break;
-      case 'open-office-shortcut': {const f=officeFiles().find(f=>f.id===id&&!f.trashed);if(f){openApp(EditorMore.APP[f.kind]);ui.sub=f.id;ui.edFrom='';render();}break;}
-      case 'lpx-open': {const f=officeFiles().find(f=>f.id===id);if(f){data.driveFiles=officeFiles().map(f=>f.id===id?{...f,otime:Date.now()}:f);save();}} ui.edFrom = ui.sub; ui.sub = id; render(); break;
-      // Docs / Sheets / Slides: Add new opens an untitled file; the actions menu renames or removes one (Drive shows the same list).
-      case 'ed-new': { const kind = LPExtraApps.KIND[ui.view], E = key => AndroidStrings.pick(window.StockStrings?.editors?.[key], i18n.language, key), base = E(LPExtraApps.UNTITLED[kind]), names = new Set(officeFiles().map(f => f.name)); let name = base, n = 2; while (names.has(name)) name = `${base} (${n++})`;
-        const file = {id: `e${Date.now().toString(36)}`, name, kind, date: deviceDate().toLocaleDateString(i18n.locale(), {month: 'short', day: 'numeric'}), age: 0, text: ''}; data.driveFiles = [file, ...officeFiles()]; save(); ui.edFrom = ui.sub; ui.sub = file.id; render(); break; }
-      case 'ed-item': ui.edFile = id; ui.overlay = 'ed-menu'; renderOverlay(); break;
-      case 'ed-rename': ui.overlay = 'ed-rename'; renderOverlay(); overlayRoot.querySelector('[data-ed-name]')?.select(); break;
-      case 'ed-rename-ok': { const name = overlayRoot.querySelector('[data-ed-name]')?.value.trim(); if (name) { data.driveFiles = officeFiles().map(f => f.id === ui.edFile ? {...f, name} : f); save(); } ui.overlay = ''; renderOverlay(); render(); break; }
-      case 'ed-remove': ui.overlay = 'ed-remove'; renderOverlay(); break;
-      case 'ed-remove-ok': data.driveFiles = officeFiles().filter(f => f.id !== ui.edFile); save(); ui.overlay = ''; renderOverlay(); render(); break;
-      case 'ed-search-open': ui.sub = 'search'; ui.edQuery = ''; render(); viewport.querySelector('[data-form="ed-search"] input')?.focus(); break;
-      case 'ed-search-clear': ui.sub = ''; ui.edQuery = ''; render(); break;
-      case 'lpx-unavailable': case 'lpx-menu': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
-      case 'lpx-overflow': ui.overlay = 'lpx-overflow'; renderOverlay(); break;
-      case 'wal-next': ui.walPage = Math.min((ui.walPage ?? 0) + 1, LPExtraApps.WAL_PAGES.length - 1); render(); break;
-      case 'wal-finish': toast(i18n.t('This feature is not part of the simulator.')); break;
-      case 'lpx-drawer': ui.lpxDrawer = !ui.lpxDrawer; render(); break;
       case 'vol-zen': data.settings.zenMode = id; if (id === 'all') data.settings.zenExit = null; save(); renderStatus(); showVolume(volumeStream()); break;
       case 'vol-settings': hideVolume(); openApp('settings'); ui.sub = 'sound'; render(); break;
       case 'open-settings-sync': ui.overlay = ''; openApp('settings'); ui.sub = 'sync'; render(); break;
 
-      // Docs / Sheets / Slides' Print: the file's own text.
-      case 'ed-print': { const file = officeFiles().find(f => f.id === ui.edFile); ui.overlay=''; renderOverlay(); if (!file) break; PrintSpooler.open(printContext(), {name: file.name, title: file.name, lines: String(file.text || '').split('\n')}); break; }
       default: break;
     }
   });
@@ -1786,7 +1746,6 @@
     event.preventDefault(); const values = new FormData(form);
     if (ui.view === 'news-weather' && NewsSections.submit(form.dataset.form, values, lp.newsSectionsContext())) return;
     if (CellBroadcast.submit(form.dataset.form, values, {data, ui, save, render, renderOverlay})) return;
-    if (['newsstand'].includes(ui.view) && NewsReader.submit(form.dataset.form, values, lp.newsContext())) return;
     if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, lp.mrContext()); return; }
     if(form.dataset.form==='folder-name'){event.target.querySelector('input')?.blur();render();return;}
     if(form.dataset.form==='sx-save'){ui.systemError=ICSSystemSettings.submit(data,ui,values);if(ui.systemError){ui.systemValues=Object.fromEntries(values);renderOverlay();return;}save();ui.overlay='';render();return;}
@@ -1816,7 +1775,6 @@
     // The screens' own forms (lp-*.js modules).
     if (LP.submit(form.dataset.form, values, event, form)) return;
     switch (form.dataset.form) {
-      case 'ed-search': { const query = String(values.get('query') || '').trim(); if (!query) return; ui.edQuery = query; ui.sub = 'results'; render(); break; }
       case 'sd-volumes': for(const key of ['mediaVolume','ringVolume','alarmVolume'])data.settings[key]=Math.max(0,Math.min(100,Number(values.get(key))));save();ui.overlay='';render();break;
       case 'sd-choice': {const choice=String(values.get('choice'));if(ui.settingsField==='sleep')data.settings.sleep=Number(choice);else if(['windowScale','transitionScale','animatorScale'].includes(ui.settingsField))data.settings[ui.settingsField]=Number(choice);else if(ui.settingsField==='font'){data.settings.fontSize=choice;data.settings.largeText=choice==='large'||choice==='huge';}else if(ui.settingsField==='silent'){data.settings.silent=choice!=='off';data.settings.silentMode=choice;}else data.settings[ui.settingsField]=choice;save();ui.overlay='';render();break;}
       default: break;
@@ -1825,7 +1783,6 @@
   document.addEventListener('input', event => {
     // The screens' own fields (lp-*.js modules).
     if (LP.input(event)) return;
-    if (['newsstand'].includes(ui.view) && NewsReader.input(event.target, lp.newsContext())) return;
     if (event.target.matches('[data-pr]') && PrintSpooler.input(event.target, printContext())) return;
     if (event.target.matches('[data-lng-seek]') && InputLanguage.input(event.target, langContext())) return;
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);delete folder.nameKey;save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
@@ -2810,9 +2767,8 @@
     get captureRecentView() { return captureRecentView; }, get clock() { return clock; },
     get clone() { return clone; }, get contact() { return contact; },
     get data() { return data; }, set data(v) { data = v; }, get defaultData() { return defaultData; },
-    get deviceDate() { return deviceDate; }, get dp() { return dp; }, get editorContext() { return editorContext; },
-    get emailData() { return emailData; }, get headsUp() { return headsUp; }, get holdDelay() { return holdDelay; },
-    get home() { return home; },
+    get deviceDate() { return deviceDate; }, get dp() { return dp; }, get emailData() { return emailData; },
+    get headsUp() { return headsUp; }, get holdDelay() { return holdDelay; }, get home() { return home; },
     get homeLongPressTimer() { return homeLongPressTimer; }, set homeLongPressTimer(v) { homeLongPressTimer = v; },
     get i18n() { return i18n; },
     get messageHoldTimer() { return messageHoldTimer; }, set messageHoldTimer(v) { messageHoldTimer = v; },

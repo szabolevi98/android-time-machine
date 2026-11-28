@@ -45,3 +45,4 @@ the module core, screen by screen, until it is gone.
 | 2 | Play Music, Movies, Books and Games | lp-play-apps.js | moved |
 | 2 | Photos | lp-photos.js | moved |
 | 2 | Google apps (Search and Now, Voice Search, Maps, Drive, Keep, YouTube, Google+, Earth, News & Weather, Google Settings) | lp-google-apps.js | moved |
+| 2 | Docs, Sheets, Slides, Fit, Newsstand, Wallet | lp-extra-apps-app.js | moved |
