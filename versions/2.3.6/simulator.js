@@ -297,7 +297,6 @@
     if (ui.view === 'home' && !ui.overlay) { ui.overlay = 'gb-menu-home'; renderOverlay(); return; }
     if (ui.view === 'drawer') return;
     if (moduleView()) { StoreHost.menuKey(storeContext()); return; }
-    if (GBApps.has(ui.view) && !prefsOpen()) { GBApps.get(ui.view).keep?.(gappContext()); const items = GBApps.get(ui.view).menu?.(gappContext()) || []; if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.gbPrefs && (ui.gbPrefs.view || ui.gbPrefs.app) === ui.view) { const items = GBPrefs.menu(gbPrefsContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     const button = [...viewport.querySelectorAll('[data-action$="-menu"]')].find(node => !node.disabled);
     button?.click();
@@ -401,7 +400,6 @@
     else if (ui.view === 'home') { viewport.innerHTML = renderHome(); restoreWidgetScroll(); }
     else if (ui.view === 'drawer') viewport.innerHTML = renderDrawer();
     else viewport.innerHTML = renderApp();
-    if (GBApps.has(ui.view)) GBApps.get(ui.view).mounted?.(gappContext());
     if (moduleView()) StoreHost.mount(ui.view, storeContext(), viewport);
     snapResting(viewport);
     renderOverlay();
@@ -599,7 +597,6 @@
   function renderApp() {
     if (prefsOpen()) return GBPrefs.render(gbPrefsContext());
     if (StoreHost.has(ui.view)) return StoreHost.render(ui.view, storeContext());
-    if (GBApps.has(ui.view)) return GBApps.get(ui.view).render(gappContext());
     switch (ui.view) {
       default: return renderHome();
     }
@@ -611,7 +608,6 @@
     if (!resume) { ui.gbmaCapture = null; ui.gbceCapture = null; if (app === 'messaging') ui.gbmaScreen = null; }
     captureRecentView();
     ui.view = app; ui.sub = resume ? ui.recentState?.[app]?.sub || '' : ''; if (!resume) { ui.gbPrefs = null; ui.gbCalSel = null; ui.gbEmSetup = null; } ui.overlay = ''; if (app === 'settings' && !resume) ui.settingsRootScroll = 0;
-    if (GBApps.has(app)) GBApps.get(app).open?.(gappContext(), resume);
     StoreHost.open(app, storeContext(), resume);
     ui.recent = [app, ...ui.recent.filter(id => id !== app)].slice(0, 8);
     render();
@@ -634,7 +630,6 @@
     if ((ui.overlay === 'store-host' || !ui.overlay && moduleView()) && StoreHost.back(storeContext())) return;
     if(ui.view==='lock'&&ui.gbPasswordEntry&&data.settings.screenLock!=='pattern'){ui.gbPasswordEntry=false;lockControls.lock();render();return;}
     if (ui.gbPrefs && (ui.gbPrefs.view || ui.gbPrefs.app) === ui.view && !ui.overlay) { ui.gbPrefs = ui.gbPrefs.parent || null; render(); return; }
-    if (GBApps.has(ui.view) && !ui.overlay && GBApps.get(ui.view).back?.(gappContext())) return;
     if (ui.overlay === 'shade') { closeShade(); return; }
     if (ui.overlay) { ui.overlay = ''; render(); return; }
     if (ui.view === 'lock') return;
@@ -958,7 +953,6 @@
     if(ui.locked&&!['back','alarm-dismiss','alarm-snooze'].includes(action))return;
     // A store app's own controls and the host's dialog and menu (store-apps/legacy-host.js).
     if ((action.startsWith('sth-') || moduleView()) && StoreHost.action(action, button, storeContext())) return;
-    if (GBApps.has(ui.view) && !['back', 'home', 'menu-key', 'search-key', 'open-app'].includes(action) && GBApps.get(ui.view).handle?.(action, id, gappContext(), button)) return;
     switch (action) {
       case 'open-app': openApp(app || id, !!button.closest('.recent-item')); break;
       case 'home': if (ui.view !== 'lock') home(); break;
@@ -1077,7 +1071,7 @@
         ui.overlay='';render();toast(AndroidStrings.format(GBDeskClock.text(i18n.language,'alarm_alert_snooze_set'), String(minutes)));break;
       }
       case 'alarm-dismiss': ui.overlay=''; render(); break;
-      default: StoreHost.ids().some(other => other !== ui.view && !other.startsWith('store-') && StoreHost.module(other).action?.(action, button, storeContext())); break;
+      default: StoreHost.ids().some(other => other !== ui.view && !other.startsWith('store-') && !StoreHost.module(other).google && StoreHost.module(other).action?.(action, button, storeContext())); break;
     }
   });
 
@@ -1085,13 +1079,12 @@
     const form = event.target.closest('[data-form]');
     if (!form || !screen.contains(form)) return;
     event.preventDefault(); const values = new FormData(form);
-    if (GBApps.has(ui.view) && GBApps.get(ui.view).submit?.(form.dataset.form, values, gappContext())) return;
     if (moduleView() && StoreHost.submit(form.dataset.form, values, storeContext())) return;
     if(form.dataset.form==='folder-name'){event.target.querySelector('input')?.blur();render();return;}
     // Email's server settings: Next keeps valid fields and returns to the account's settings.
     if (form.dataset.form === 'gbem-server') { data.appPrefs ||= {}; if (GBPrefs.serverSave(form, data.appPrefs['email-servers'] ||= {})) { save(); ui.gbPrefs = ui.gbPrefs?.parent || null; render(); } return; }
     switch (form.dataset.form) {
-      default: StoreHost.ids().some(other => other !== ui.view && !other.startsWith('store-') && StoreHost.module(other).submit?.(form.dataset.form, values, storeContext())); break;
+      default: StoreHost.ids().some(other => other !== ui.view && !other.startsWith('store-') && !StoreHost.module(other).google && StoreHost.module(other).submit?.(form.dataset.form, values, storeContext())); break;
     }
   });
   // Select text: a touch on the Browser page or the Google Mail message while the mode is armed.
