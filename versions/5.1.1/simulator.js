@@ -983,14 +983,6 @@
     } else if (ui.overlay === 'pin-request') {
       const ring = key => `<span class="pin-key ${key}"><i></i><img src="assets/lp-ic_sysbar_${key}.png" alt=""></span>`;
       overlayRoot.innerHTML = `<div class="pin-scrim"></div><div class="pin-request" role="dialog" aria-label="${safe(i18n.t('Screen is pinned'))}" data-no-translate><h3>${safe(i18n.t('Screen is pinned'))}</h3><p>${safe(i18n.t('This keeps it in view until you unpin. Touch and hold Back and Overview at the same time to unpin.'))}</p><div class="pin-buttons"><button data-action="pin-cancel">${safe(i18n.t('No thanks'))}</button><button data-action="pin-ok">${safe(i18n.t('Got it'))}</button></div><div class="pin-nav">${ring('back')}<span class="pin-key home"><img src="assets/lp-ic_sysbar_home.png" alt=""></span>${ring('recent')}</div></div>`;
-    } else if (ui.overlay === 'power-menu') {
-      overlayRoot.innerHTML = GlobalActions.menu({bugreport: data.settings.bugreportPower}, key => i18n.t(key));
-      // 4.1+: a long press on Power off offers the safe-mode reboot.
-      GlobalActions.hold(overlayRoot.querySelector('[data-action="ga-power"]'), () => { ui.overlay = 'power-confirm'; ui.powerKind = 'safemode'; renderOverlay(); });
-    } else if (ui.overlay === 'power-confirm') {
-      overlayRoot.innerHTML = GlobalActions.confirm(ui.powerKind, key => i18n.t(key));
-    } else if (ui.overlay === 'power-progress') {
-      overlayRoot.innerHTML = GlobalActions.progress(key => i18n.t(key));
     } else if (ui.overlay === 'folder') {
       overlayRoot.innerHTML = renderFolder();
       positionFolder();
@@ -1222,9 +1214,6 @@
         if (!current && !secure) { data.settings.pinExitLocked = true; save(); lockControls.open(); render(); break; }
         data.settings.pinExitLocked = !current; save(); render(); break; }
       case 'back': back(); break;
-      case 'ga-power': ui.overlay = 'power-confirm'; ui.powerKind = 'shutdown'; renderOverlay(); break;
-      case 'ga-bugreport': ui.overlay = 'power-confirm'; ui.powerKind = 'bugreport'; renderOverlay(); break;
-      case 'ga-confirm': powerConfirm(id); break;
       case 'drawer': {
         // The reveal starts on the all apps button: its centre's offset from the panel centre, in screen px.
         const box = button.getBoundingClientRect(), frame = screen.getBoundingClientRect(), k = frame.width / screen.clientWidth;
@@ -1319,8 +1308,6 @@
       case 'unlock-camera': openApp('camera'); break;
       case 'toast': toast(id); break;
       case 'noop': break;
-      case 'vol-zen': data.settings.zenMode = id; if (id === 'all') data.settings.zenExit = null; save(); renderStatus(); showVolume(volumeStream()); break;
-      case 'vol-settings': hideVolume(); openApp('settings'); ui.sub = 'sound'; render(); break;
 
       default: break;
     }
@@ -2158,80 +2145,16 @@
     else if (event.key === 'Home' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); if (ui.view !== 'lock') home(); }
 
   });
-  function powerKey() { if (ui.power === 'off') { bootUp(false); return; } if (ui.power || ui.overlay === 'power-progress') return; if(ui.locked){ui.sleeping=!ui.sleeping;lockControls.lock();render();}else if(ui.sleeping||ui.view==='lock'){ui.sleeping=false;home(false);}else lockScreen(); }
-  // PhoneWindowManager: holding the key opens GlobalActions only while the screen is on; otherwise it just wakes.
-  function powerHold() { if (ui.power || ui.sleeping || ui.overlay === 'power-progress') { powerKey(); return; } ui.overlay = 'power-menu'; render(); }
-  for (const key of [document.querySelector('#power-button'), document.querySelector('.power-key')]) { key.addEventListener('click', powerKey); GlobalActions.hold(key, powerHold); }
-  // ShutdownThread: the confirmation, the "Shutting down…" progress dialog with a 500 ms vibration, then off.
-  function powerConfirm(kind) {
-    if (kind === 'bugreport') { ui.overlay = ''; render(); setTimeout(() => addNotification('Bug report captured', 'Touch to share your bug report'), 6000); return; }
-    ui.overlay = 'power-progress'; renderOverlay(); navigator.vibrate?.(500);
-    setTimeout(() => powerOff(kind === 'safemode'), GlobalActions.SHUTDOWN_MS);
-  }
-  function powerOff(reboot) {
-    if (ui.activeCall) ui.activeCall = null;
-    if (ui.music) ui.music.playing = false;
-    ui.overlay = ''; ui.view = 'home'; ui.sub = ''; ui.recent = []; ui.recentState = {}; ui.recentSnapshots = {}; ui.safeMode = false; ui.power = 'off';
-    render(); renderPower();
-    if (reboot) setTimeout(() => bootUp(true), 900);
-  }
-  function bootUp(safeMode, booted) {
-    booted ||= AndroidBoot.prepare({markup: apps.map(app => appIcon(app[0])).join('')});
-    ui.power = 'boot'; ui.safeMode = safeMode; renderPower();
-    // Finish after the native movie, or after a requested skip once startup resources are ready.
-    let finished = false, stop = () => {};
-    const finish = () => { if (finished) return; finished = true; stop(); AndroidBoot.complete('5.1.1'); ui.power = ''; lockScreen(); ui.sleeping = false; if (!ui.locked && ui.view !== 'lock') home(); else render(); renderPower(); lastActivity = Date.now(); };
-    stop = GlobalActions.playBoot(powerLayer.firstElementChild, finish, booted);
-    return finish;
-  }
   /* A fresh tab always shows the image's boot movie, including reduced-motion/private browsing.
      Its exit waits for decoded launcher/keyguard resources; a requested skip cannot reveal unloaded icons. */
   function coldBoot() {
     if (!AndroidBoot.shouldBoot('5.1.1')) return;
     const booted = AndroidBoot.prepare({markup: apps.map(app => appIcon(app[0])).join('')});
-    const finish = bootUp(false, booted);
+    const finish = lp.bootUp(false, booted);
     const skip = event => { off(); if (ui.power !== 'boot') return; event.preventDefault(); event.stopPropagation(); suppressClickUntil = Date.now() + 350; booted.then(finish); };
-    const off = () => { powerLayer.removeEventListener('pointerdown', skip); window.removeEventListener('keydown', skip, true); };
-    powerLayer.addEventListener('pointerdown', skip); window.addEventListener('keydown', skip, true);
+    const off = () => { lp.powerLayer.removeEventListener('pointerdown', skip); window.removeEventListener('keydown', skip, true); };
+    lp.powerLayer.addEventListener('pointerdown', skip); window.addEventListener('keydown', skip, true);
   }
-  // Volume keys: the active stream's slider, a 3 s timeout, and a touch anywhere else closes it.
-  const volumeLayer = document.createElement('div'); volumeLayer.id = 'volume-layer'; screen.append(volumeLayer);
-  let volumeTimer = 0, volumePrevious = 0;
-  const volumeStream = () => VolumePanel.activeStream({inCall: !!ui.activeCall, musicActive: !!ui.music?.playing});
-  function volumeKey(direction) {
-    const buttons = ClockPrefs.prefs(data).buttons;
-    if (ui.overlay === 'clock-ringing' && buttons !== '0') { const b = document.createElement('button'); b.dataset.action = buttons === '1' ? 'alarm-snooze' : 'alarm-dismiss'; viewport.append(b); b.click(); b.remove(); return; }
-    if (ui.power) return;
-    const stream = volumeStream();
-    // With the screen off the keys only reach music that is playing, and no panel is shown.
-    if (ui.sleeping && stream !== 'music') return;
-    const result = VolumePanel.adjust(data.settings, stream, direction, volumePrevious); volumePrevious = direction;
-    save(); renderStatus();
-    if (result.vibrate) setTimeout(() => navigator.vibrate?.(VolumePanel.VIBRATE_DURATION), VolumePanel.VIBRATE_DELAY);
-    if (!ui.sleeping) showVolume(stream);
-  }
-  function showVolume(stream) {
-    volumeLayer.innerHTML = VolumePanel.render(data.settings, stream, key => i18n.t(key));
-    VolumePanel.bindSeek(volumeLayer, VolumePanel.STREAMS[stream].max, value => { VolumePanel.setIndex(data.settings, stream, value); save(); VolumePanel.update(volumeLayer, data.settings, stream); resetVolumeTimeout(); });
-    resetVolumeTimeout();
-  }
-  function resetVolumeTimeout() { clearTimeout(volumeTimer); volumeTimer = setTimeout(hideVolume, VolumePanel.TIMEOUT); }
-  function hideVolume() { clearTimeout(volumeTimer); const panel = volumeLayer.firstElementChild; if (!panel || panel.classList.contains('fading')) return; panel.classList.add('fading'); setTimeout(() => panel.remove(), 400); }
-  document.addEventListener('pointerdown', event => { if (volumeLayer.firstElementChild && !volumeLayer.contains(event.target) && !event.target.closest?.('.volume-key,.volume-rocker')) hideVolume(); }, true);
-  // Held keys repeat after config_keyRepeatTimeout (500 ms) every 50 ms, as key repeats do.
-  function bindVolumeKey(element, direction) {
-    let delay = 0, repeat = 0;
-    const stop = () => { clearTimeout(delay); clearInterval(repeat); };
-    element.addEventListener('pointerdown', event => { if (event.button) return; event.preventDefault(); const dir = typeof direction === 'function' ? direction(event) : direction; volumeKey(dir); stop(); delay = setTimeout(() => { repeat = setInterval(() => volumeKey(dir), 50); }, 500); });
-    ['pointerup', 'pointercancel', 'pointerleave'].forEach(type => element.addEventListener(type, stop));
-    element.addEventListener('click', event => { if (event.detail === 0) volumeKey(typeof direction === 'function' ? 1 : direction); });
-  }
-  bindVolumeKey(document.querySelector('#volume-down'), -1);
-  bindVolumeKey(document.querySelector('#volume-up'), 1);
-  bindVolumeKey(document.querySelector('.volume-rocker'), event => event.offsetY < event.currentTarget.clientHeight / 2 ? 1 : -1);
-  const powerLayer = document.createElement('div'); powerLayer.id = 'power-layer'; screen.append(powerLayer);
-  function renderPower() { if (ui.power === 'boot' && powerLayer.querySelector('.ga-boot')) return; powerLayer.innerHTML = ui.power === 'off' ? '<div class="ga-off"></div>' : ui.power === 'boot' ? GlobalActions.boot() : ui.safeMode ? GlobalActions.safeMode(key => i18n.t(key)) : ''; }
-  screen.addEventListener('pointerdown',()=>{if(ui.sleeping){ui.sleeping=false;suppressClickUntil=Date.now()+350;if(ui.locked)render();else home(false);}},true);
   // Full screen (Fullscreen API): hides the browser chrome on phones and keeps portrait where the browser allows it.
   const fullscreenButton = document.querySelector('#fullscreen-button');
   const fullscreenElement = () => document.fullscreenElement || document.webkitFullscreenElement;
@@ -2307,16 +2230,19 @@
 
   // lp:kernel (the core's bindings the lp-*.js modules use, live; written by the migration's move tool)
   LP.kernel({
-    get addNotification() { return addNotification; }, get applyMagnification() { return applyMagnification; },
-    get appNames() { return appNames; }, get apps() { return apps; },
-    get captureRecentView() { return captureRecentView; }, get chromeText() { return chromeText; },
-    get clearAppData() { return clearAppData; }, get clock() { return clock; }, get clone() { return clone; },
-    get contact() { return contact; }, get data() { return data; }, set data(v) { data = v; },
-    get defaultData() { return defaultData; }, get deviceDate() { return deviceDate; }, get dp() { return dp; },
-    get dreams() { return dreams; }, get emailData() { return emailData; }, get headsUp() { return headsUp; },
+    get addNotification() { return addNotification; }, get appIcon() { return appIcon; },
+    get applyMagnification() { return applyMagnification; }, get appNames() { return appNames; },
+    get apps() { return apps; }, get captureRecentView() { return captureRecentView; },
+    get chromeText() { return chromeText; }, get clearAppData() { return clearAppData; },
+    get clock() { return clock; }, get clone() { return clone; }, get contact() { return contact; },
+    get data() { return data; }, set data(v) { data = v; }, get defaultData() { return defaultData; },
+    get deviceDate() { return deviceDate; }, get dp() { return dp; }, get dreams() { return dreams; },
+    get emailData() { return emailData; }, get headsUp() { return headsUp; },
     get HOLD_NAMES() { return HOLD_NAMES; }, get holdDelay() { return holdDelay; }, get home() { return home; },
     get homeLongPressTimer() { return homeLongPressTimer; }, set homeLongPressTimer(v) { homeLongPressTimer = v; },
-    get i18n() { return i18n; }, get lockControls() { return lockControls; },
+    get i18n() { return i18n; },
+    get lastActivity() { return lastActivity; }, set lastActivity(v) { lastActivity = v; },
+    get lockControls() { return lockControls; }, get lockScreen() { return lockScreen; },
     get messageHoldTimer() { return messageHoldTimer; }, set messageHoldTimer(v) { messageHoldTimer = v; },
     get nextAlarmLabel() { return nextAlarmLabel; }, get nextAlarmTime() { return nextAlarmTime; },
     get openApp() { return openApp; }, get overlayRoot() { return overlayRoot; },

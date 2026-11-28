@@ -47,3 +47,5 @@ the module core, screen by screen, until it is gone.
 | 2 | Google apps (Search and Now, Voice Search, Maps, Drive, Keep, YouTube, Google+, Earth, News & Weather, Google Settings) | lp-google-apps.js | moved |
 | 2 | Docs, Sheets, Slides, Fit, Newsstand, Wallet | lp-extra-apps-app.js | moved |
 | 2 | Settings (with Print, cell broadcasts, users, security, Interruptions, Daydream's settings) | lp-settings.js | moved |
+| 3 | Volume panel | lp-volume.js | moved |
+| 3 | Power key, global actions, power off and boot | lp-power.js | moved |
