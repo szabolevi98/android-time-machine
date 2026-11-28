@@ -270,23 +270,25 @@
      binding the shell reassigns (data on a reset) stays current. store-apps/legacy-host.js hands it to them as `c`. */
   const kkScope = {
     get PLAY_APPS() { return PLAY_APPS; }, get calendarEdit() { return calendarEdit; },
-    get cameraShoot() { return cameraShoot; }, get clone() { return clone; }, get data() { return data; },
-    get deviceDate() { return deviceDate; }, get dp() { return dp; }, get driveShareFile() { return driveShareFile; },
+    get cameraShoot() { return cameraShoot; }, get clone() { return clone; },
+    get composeEmail() { return composeEmail; }, get data() { return data; }, get deviceDate() { return deviceDate; },
+    get dp() { return dp; }, get driveShareFile() { return driveShareFile; },
     get driveShareText() { return driveShareText; }, get earthContext() { return earthContext; },
     get galleryWallpaper() { return galleryWallpaper; }, get holdDelay() { return holdDelay; },
     get home() { return home; }, get homeLongPressTimer() { return homeLongPressTimer; }, get i18n() { return i18n; },
     get keepAttach() { return keepAttach; }, get keepCurrent() { return keepCurrent; },
     get keepMoreContext() { return keepMoreContext; }, get listenVoice() { return listenVoice; },
-    get messageDraft() { return messageDraft; }, get messageHoldTimer() { return messageHoldTimer; },
-    get navRoot() { return navRoot; }, get navigateBrowser() { return navigateBrowser; },
-    get nextAlarmLabel() { return nextAlarmLabel; }, get officeFiles() { return officeFiles; },
-    get openApp() { return openApp; }, get overlayRoot() { return overlayRoot; },
-    get photosContext() { return photosContext; }, get plusContext() { return plusContext; },
-    get pointerStart() { return pointerStart; }, get printContext() { return printContext; },
-    get render() { return render; }, get renderOverlay() { return renderOverlay; },
-    get renderStatus() { return renderStatus; }, get renderStockApp() { return renderStockApp; },
-    get safe() { return safe; }, get save() { return save; }, get saveKeepNote() { return saveKeepNote; },
-    get saveMusic() { return saveMusic; }, get screen() { return screen; }, get snapResting() { return snapResting; },
+    get mailbox() { return mailbox; }, get messageDraft() { return messageDraft; },
+    get messageHoldTimer() { return messageHoldTimer; }, get navRoot() { return navRoot; },
+    get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; },
+    get officeFiles() { return officeFiles; }, get openApp() { return openApp; },
+    get overlayRoot() { return overlayRoot; }, get photosContext() { return photosContext; },
+    get plusContext() { return plusContext; }, get pointerStart() { return pointerStart; },
+    get printContext() { return printContext; }, get render() { return render; },
+    get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; },
+    get renderStockApp() { return renderStockApp; }, get safe() { return safe; }, get save() { return save; },
+    get saveKeepNote() { return saveKeepNote; }, get saveMusic() { return saveMusic; },
+    get screen() { return screen; }, get snapResting() { return snapResting; },
     get statusRoot() { return statusRoot; }, get suppressClickUntil() { return suppressClickUntil; },
     get suppressReleaseClick() { return suppressReleaseClick; }, get toast() { return toast; },
     get today() { return today; }, get tracks() { return tracks; }, get ui() { return ui; },
@@ -800,11 +802,9 @@
       case 'play-store': return JBPlay.render(jbPlayContext());
       case 'settings': return renderSettings();
       case 'chrome': return renderChrome();
-      case 'gmail': return renderGmail();
       case 'phone': return renderPhone();
       case 'people': return renderPeople();
       case 'hangouts': return Hangouts.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime());
-      case 'email': return renderEmail();
       default: return renderHome();
     }
   }
@@ -885,7 +885,6 @@
     if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
     if (ui.chromeReturn && ui.view === ui.chromeReturn.view && ui.sub === ui.chromeReturn.sub && !ui.overlay) { const back = ui.chromeReturn; ui.chromeReturn = null; openApp('chrome'); ui.sub = 'chrome-settings'; ui.chromePrefStack = back.stack; render(); return; }
     if (ui.view === 'settings' && ['a11y-magnification', 'a11y-shortcut'].includes(ui.sub) && !ui.overlay) { ui.sub = 'accessibility'; render(); return; }
-    if (ui.view === 'email' && ui.sub === 'em-settings' && !ui.overlay) { if (ui.emPrefList || ui.emPrefEdit) { ui.emPrefList = ''; ui.emPrefEdit = ''; ui.emPrefTone = undefined; window.SystemSounds?.stop(); } else if (ui.emPref) ui.emPref = EmailPrefs.parent(ui.emPref); else ui.sub = ''; render(); return; }
     if(ui.view==='settings'&&ui.sub==='lock-setup'){lockControls.cancel();return;}
     if (ui.overlay.startsWith('widget-photo')) { cancelPhotoWidget(); return; }
     if (ui.overlay) { ui.overlay = ''; render(); return; }
@@ -908,10 +907,6 @@
     if (ui.view === 'drawer' && ui.drawerWidgets) { ui.drawerWidgets = false; ui.drawerPage = 0; home(false); ui.overview = true; render(); return; }
     if (ui.view === 'home' && ui.overview) { ui.overview = false; render(); return; }
     if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return; }
-    // Chrome settings: dialogs first, then the page, then back to the browser.
-    // Gmail settings: the dialogs, then the pages, then back to the mail.
-    if (ui.view === 'gmail' && ui.sub === 'gm-settings' && GmailApp.prefBack(ui, {data, root: viewport, toast})) { render(); return; }
-    if (ui.view === 'gmail' && ui.sub === 'gm-settings') { if (ui.gmPrefList || ui.gmSignature !== undefined) { ui.gmPrefList = ''; ui.gmSignature = undefined; } else if (ui.gmPref === 'categories') ui.gmPref = 'account'; else if (ui.gmPref === 'licenses') ui.gmPref = 'about'; else if (ui.gmPref) ui.gmPref = ''; else ui.sub = ''; render(); return; }
     if (['browser', 'chrome'].includes(ui.view) && (ui.chromeClear || ui.chromeList || ui.chromePrefMenu || ui.chromeConfirm) && !ui.chromeClear?.busy) { ui.chromeClear = null; ui.chromeList = ''; ui.chromePrefMenu = false; ui.chromeConfirm = ''; render(); return; }
     if (['browser', 'chrome'].includes(ui.view) && ui.sub === 'chrome-settings') { if (!ChromeApp.prefBack(ui)) ui.sub = ''; render(); return; }
     if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserFind !== undefined) { ui.browserFind = undefined; render(); return; }
@@ -1003,8 +998,6 @@
       JBRecents.bindLongPress(overlayRoot.querySelector('.recent-panel'), popup => { ui.recentPopup = popup; suppressClickUntil = Infinity; window.addEventListener('pointerup', () => { suppressClickUntil = Date.now() + 50; }, {once: true, capture: true}); renderOverlay(); });
     } else if (ui.overlay === 'hce-dialog') {
       overlayRoot.innerHTML = HoloContactEditor.overlay({lang: i18n.language, draft: ui.peopleDraft, dialog: ui.hceDialog || '', photos: data.photos, photoUrl: pid => { const photo = data.photos.find(p => String(p.id) === String(pid)); return photo ? ICSMedia.image(photo) : ''; }});
-    } else if (ui.overlay.startsWith('email-')) {
-      overlayRoot.innerHTML = KKEmail.overlay(mailbox(),ui,data.photos,key=>i18n.t(key),i18n.language,ui.view==='gmail'?gmailOptions():{});
     } else if (ui.overlay.startsWith('sd-')) {
       overlayRoot.innerHTML = ICSSettingsDetail.overlay(data,ui,key=>i18n.t(key));
     } else if (ui.overlay.startsWith('people-')) {
@@ -1499,13 +1492,7 @@
     if (!note) { note = {id: 'k' + Date.now(), text: '', color: 0}; data.keepNotes = [note, ...(data.keepNotes || [])]; }
     note.photo = photoId; ui.keepNote = note.id; ui.sub = 'note'; ui.view = 'keep'; save(); render();
   }
-  function renderEmail() {
-    if (ui.sub === 'em-settings') return EmailPrefs.render(data, ui, i18n.language, key => i18n.t(key), ICSEmail.account);
-    return KKEmail.render(data.mailbox,ui,key=>i18n.t(key),i18n.locale(),i18n.language,{teaserDismissed:!!data.emailTeaserDismissed});
-  }
   const mailbox = () => ui.view === 'gmail' ? data.gmailbox : data.mailbox;
-  const gmailOptions = () => GmailApp.options(data, ui, i18n.language, key => KKEmail.tr(i18n.language, key, 'gmail'));
-  function renderGmail() { if (ui.sub === 'gm-settings') return GmailApp.settings(data, ui, i18n.language, key => i18n.t(key)); return KKEmail.render(data.gmailbox, ui, key => i18n.t(key), i18n.locale(), i18n.language, gmailOptions()); }
   // Each mail app keeps its own folder, conversation and selection.
   function useMailApp(app) {
     if (ui.mailApp === app) return;
@@ -1614,11 +1601,8 @@
     if (action.startsWith('ps-') && ProcStats.handle(action, id, procStatsContext())) return;
     if (action.startsWith('mfx-') && MusicFX.handle(action, id, musicFxContext())) return;
     if (action.startsWith('cert-') && CertInstall.handle(action, id, certContext())) return;
-    if (action.startsWith('gmx-') && GmailApp.handlePref(action, id, {data, ui, save, render, toast, root: viewport})) return;
     if (action.startsWith('hgp-') && HangoutsPrefs.handle(action, id, {data, ui, save, render, renderOverlay, toast, root: viewport, openApp, openThread: key => openMessageThread(key),
       smsApp: () => { ui.overlay = 'kk-sms-app'; renderOverlay(); }, openApn: () => { openApp('settings'); ui.sub = 'apn'; render(); }})) return;
-    // Email's Quick responses, ringtone and server screens (email-prefs.js).
-    if (action.startsWith('empx-') && EmailPrefs.handle(action, id, {data, ui, save, render, root: viewport, account: ICSEmail.account})) return;
     if (ui.view === 'gallery' && ui.galleryPopup && action !== 'gallery-menu') ui.galleryPopup = '';
     // A tap outside the Recents popup menu only dismisses it.
     if (ui.overlay === 'recent' && ui.recentPopup && !['remove-recent', 'recent-app-info'].includes(action)) { ui.recentPopup = null; renderOverlay(); return; }
@@ -1902,15 +1886,6 @@
         else if (remaining < 5) toast(AndroidStrings.format(i18n.t(AndroidStrings.quantity(remaining) === 'one' ? 'You are now %d step away from being a developer.' : 'You are now %d steps away from being a developer.'), remaining));
         break;
       }
-      // The Email app's settings (email-prefs.js, from the image's EmailGoogle preference XMLs).
-      case 'emailpref-page': ui.emPref = id; render(); break;
-      case 'emailpref-toggle': (data.emailPrefs ||= {})[id] = !EmailPrefs.value(data, id, ICSEmail.account); save(); render(); break;
-      case 'emailpref-list': ui.emPrefList = id; render(); break;
-      case 'emailpref-pick': { const [key, value] = id.split(':'); (data.emailPrefs ||= {})[key] = Number(value); ui.emPrefList = ''; save(); render(); break; }
-      case 'emailpref-edit': ui.emPrefEdit = id; ui.emPrefEditValue = undefined; render(); viewport.querySelector('[data-email-pref-edit]')?.focus(); break;
-      case 'emailpref-save': { const field = viewport.querySelector('[data-email-pref-edit]'); if (ui.emPrefEdit && field) { (data.emailPrefs ||= {})[ui.emPrefEdit] = field.value.trim(); save(); } ui.emPrefEdit = ''; render(); break; }
-      case 'emailpref-close': ui.emPrefList = ''; ui.emPrefEdit = ''; ui.emPrefTone = undefined; window.SystemSounds?.stop(); render(); break;
-      case 'emailpref-unsupported': toast('This feature is not part of the simulator.'); break;
       case 'a11y-hold': ui.overlay = 'a11y-hold'; renderOverlay(); break;
       case 'a11y-hold-pick': data.settings.longPressTimeout = Number(id); ui.overlay = ''; save(); renderOverlay(); render(); break;
       case 'toast': toast(id); break;
@@ -2039,49 +2014,6 @@
       case 'music-prev': case 'music-next': ICSMusic.step(ui.music,action==='music-prev'?-1:1);saveMusic();render();break;
       case 'music-shuffle': ui.music.shuffle=!ui.music.shuffle;saveMusic();render();break;
       case 'music-repeat': ui.music.repeat={off:'all',all:'one',one:'off'}[ui.music.repeat];saveMusic();render();break;
-      case 'email-read': {const item=mailbox().find(item=>item.id===id);if(!item)break;if(ui.view==='gmail')data.gmailWelcomeSeen=true;ui.emailId=id;item.read=true;ui.sub=item.folder==='Drafts'?'compose':'read';ui.emailError='';save();render();break;}
-      case 'email-compose': composeEmail();break;
-      case 'email-reply': case 'email-forward': composeEmail(mailbox().find(item=>item.id===ui.emailId),action==='email-forward');break;
-      case 'email-list': ui.sub='';ui.overlay='';ui.emailSelected=[];render();break;
-      case 'email-folders': case 'email-menu': ui.emailMenu=id||'list';ui.overlay=action;renderOverlay();break;
-      // 4.4 Email (UnifiedEmail): the folder drawer, Save draft, Reply all, Move to and the menu entries without a screen.
-      case 'email-drawer': ui.overlay='email-drawer';renderOverlay();break;
-      case 'email-save': ui.sub='';ui.overlay='';ui.emailSelected=[];render();toast(KKEmail.tr(i18n.language,'Message saved as draft.',ui.view==='gmail'?'gmail':'email'));break;
-      case 'email-reply-all': ui.overlay='';composeEmail(mailbox().find(item=>item.id===ui.emailId),false);break;
-      case 'email-move': {const item=mailbox().find(item=>item.id===ui.emailId);if(item){if(id==='Trash')ICSEmail.trash(mailbox(),[item.id]);else{item.folder=id;delete item.previousFolder;}}ui.overlay='';ui.sub='';save();render();break;}
-      case 'email-unavailable': ui.overlay='';renderOverlay();toast('This feature is not part of the simulator.');break;
-      case 'email-folder': if(ui.view==='gmail'){data.gmailSeen={...data.gmailSeen,[id]:Date.now()};save();}ui.emailFolder=id;ui.sub='';ui.emailQuery=undefined;ui.emailSelected=[];ui.overlay='';render();break;
-      case 'email-star': {const item=mailbox().find(item=>item.id===id);if(item)item.starred=!item.starred;save();render();break;}
-      case 'email-select': ui.emailSelected ||= [];ui.emailSelected=ui.emailSelected.includes(id)?ui.emailSelected.filter(key=>key!==id):[...ui.emailSelected,id];render();break;
-      case 'email-clear-selection': ui.emailSelected=[];render();break;
-      case 'email-trash': case 'email-selected-trash': ICSEmail.trash(mailbox(),action==='email-trash'?[ui.emailId]:ui.emailSelected||[]);ui.sub='';ui.emailSelected=[];save();render();break;
-      case 'email-restore': case 'email-selected-restore': {const ids=action==='email-restore'?[ui.emailId]:ui.emailSelected||[];mailbox().filter(item=>ids.includes(item.id)).forEach(ICSEmail.untrash);ui.sub='';ui.emailSelected=[];save();render();break;}
-      case 'email-selected-read': mailbox().filter(item=>(ui.emailSelected||[]).includes(item.id)).forEach(item=>item.read=true);ui.emailSelected=[];save();render();break;
-      case 'email-unread': {const item=mailbox().find(item=>item.id===ui.emailId);if(item)item.read=false;ui.sub='';ui.overlay='';save();render();break;}
-      case 'email-search': ui.emailQuery='';render();viewport.querySelector('[data-form="email-search"] input')?.focus();break;
-      case 'email-refresh': toast('Local mailbox is up to date');break;
-      case 'email-cc': ui.emailCc=true;ui.overlay='';render();break;
-      case 'email-attach': ui.overlay='email-attach';renderOverlay();break;
-      case 'email-attach-photo': {const item=mailbox().find(item=>item.id===ui.emailId),photo=data.photos.find(photo=>photo.id===Number(id));if(item&&photo)item.attachment=clone(photo);ui.overlay='';save();render();break;}
-      case 'email-remove-attachment': {const item=mailbox().find(item=>item.id===ui.emailId);if(item)delete item.attachment;save();render();break;}
-      case 'email-discard': ui.overlay='email-discard';renderOverlay();break;
-      case 'email-confirm-discard': ICSEmail.trash(mailbox(),[ui.emailId]);ui.sub='';ui.overlay='';save();render();break;
-      // Gmail: Archive leaves the inbox (the conversation stays in All mail); tips and teaser links.
-      case 'email-archive': case 'email-selected-archive': {const ids=action==='email-archive'?[ui.emailId]:ui.emailSelected||[];mailbox().filter(item=>ids.includes(item.id)&&item.folder==='Inbox').forEach(item=>{item.folder='Archive';});ui.sub='';ui.emailSelected=[];save();render();break;}
-      case 'email-dismiss-teaser': if(ui.view==='gmail')data.gmailTeaserDismissed=true;else data.emailTeaserDismissed=true;save();render();break;
-      // Gmail settings (gmail.js GmailApp.settings); Email's own settings are not simulated.
-      case 'email-settings': ui.overlay = ''; renderOverlay(); if (ui.view === 'gmail') { ui.sub = 'gm-settings'; ui.gmPref = ''; } else { ui.sub = 'em-settings'; ui.emPref = ''; } render(); break;
-      case 'gmail-licenses': ui.gmPref = 'licenses'; render(); break;
-      case 'gmail-categories': ui.sub = 'gm-settings'; ui.gmPref = 'categories'; render(); break;
-      case 'gmail-pref': if (id.startsWith('label:')) ui.gmLabelFrom = ui.gmPref || 'account'; ui.gmPref = id; render(); break;
-      case 'gmail-pref-toggle': { const prefs = data.gmailPrefs ||= {}; const fallback = id.startsWith('category-') ? !['updates', 'forums'].includes(id.slice(9)) : !['reply-all', 'starred'].concat([]).includes(id); prefs[id] = !(prefs[id] ?? fallback); save(); render(); break; }
-      case 'gmail-pref-list': ui.gmPrefList = id; render(); break;
-      case 'gmail-pref-pick': { const [key, value] = id.split(':'); (data.gmailPrefs ||= {})[key] = Number(value); ui.gmPrefList = ''; save(); render(); break; }
-      case 'gmail-pref-close': ui.gmPrefList = ''; ui.gmSignature = undefined; render(); break;
-      case 'gmail-signature': ui.gmSignature = (data.gmailPrefs || {}).signature || ''; render(); viewport.querySelector('[data-gmail-signature]')?.focus(); break;
-      case 'gmail-signature-save': { const text = viewport.querySelector('[data-gmail-signature]')?.value ?? ui.gmSignature ?? ''; (data.gmailPrefs ||= {}).signature = String(text).trim(); ui.gmSignature = undefined; save(); render(); break; }
-      case 'gmail-noop': break;
-      case 'gmail-unavailable': toast(i18n.t('This feature is not part of the simulator.'));break;
       default: break;
     }
   });
@@ -2157,8 +2089,6 @@
         if (!name || !phone) return;
         const id = Date.now(); data.contacts.push({ id, name, phone, email }); save(); ui.selectedContact = id; ui.sub = 'detail'; render(); toast('Contact saved'); break;
       }
-      case 'email': {const item=mailbox().find(item=>item.id===ui.emailId);if(!item)break;for(const key of ['to','cc','bcc','subject','body'])if(values.has(key))item[key]=String(values.get(key)).trim();if(!ICSEmail.send(item)){ui.emailError='Enter valid email addresses';save();render();break;}save();ui.emailFolder='Sent';ui.emailQuery=undefined;ui.sub='read';ui.emailError='';render();toast('Demo email sent');break;}
-      case 'email-search': ui.emailQuery=String(values.get('query')||'').trim();ui.emailSelected=[];render();break;
       case 'sd-volumes': for(const key of ['mediaVolume','ringVolume','alarmVolume'])data.settings[key]=Math.max(0,Math.min(100,Number(values.get(key))));save();ui.overlay='';render();break;
       case 'sd-choice': {const choice=String(values.get('choice'));if(ui.settingsField==='sleep')data.settings.sleep=Number(choice);else if(['windowScale','transitionScale','animatorScale'].includes(ui.settingsField))data.settings[ui.settingsField]=Number(choice);else if(ui.settingsField==='font'){data.settings.fontSize=choice;data.settings.largeText=choice==='large'||choice==='huge';}else if(ui.settingsField==='silent'){data.settings.silent=choice!=='off';data.settings.silentMode=choice;}else data.settings[ui.settingsField]=choice;save();ui.overlay='';render();break;}
       default: break;
@@ -2183,12 +2113,10 @@
     }
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
     if(event.target.dataset.field==='data-cycle'){ui.dataCycle=event.target.value;render();return;}
-    if(event.target.closest('.email-compose')&&event.target.name){const item=mailbox().find(item=>item.id===ui.emailId);if(item){item[event.target.name]=event.target.value;save();}return;}
     if(event.target.closest('#people-editor')) { HoloContactEditor.sync(event.target.closest('#people-editor'),ui.peopleDraft); return; }
     if (event.target.closest('.jbp-bar.searching')) { ui.marketEdit = event.target.value; const view = viewport.querySelector('.jbp'); view?.querySelector('.jbp-suggest')?.remove(); const tmp = document.createElement('div'); tmp.innerHTML = JBPlay.render(jbPlayContext()); const sug = tmp.querySelector('.jbp-suggest'); if (sug && view) view.append(sug); return; }
     if (event.target.matches('[data-jbp-auto]')) { const id = event.target.dataset.jbpAuto, list = data.marketAuto || []; data.marketAuto = event.target.checked ? [...new Set([...list, id])] : list.filter(x => x !== id); save(); return; }
     if (event.target.matches('[data-gnr-title]')) { if (ui.gnowDraft) ui.gnowDraft.title = event.target.value; return; }
-    if (event.target.matches('[data-gmail-signature]')) { ui.gmSignature = event.target.value; return; }
     if (event.target.closest('.hg-new')) {
       const query = event.target.value.trim().toLocaleLowerCase();
       (data.messageDrafts ||= {}).new ||= {body: '', recipient: ''};
