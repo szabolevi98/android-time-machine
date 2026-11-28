@@ -1,10 +1,9 @@
 /* TODO */
 'use strict';
 LP.define('power', ({
-  addNotification, appIcon, apps, home, i18n, lockControls, lockScreen, overlayRoot, render, renderOverlay, screen,
-  ui
+  addNotification, appIcon, apps, home, i18n, lockControls, overlayRoot, render, renderOverlay, screen, ui
 }, lp) => {
-  function powerKey() { if (ui.power === 'off') { bootUp(false); return; } if (ui.power || ui.overlay === 'power-progress') return; if(ui.locked){ui.sleeping=!ui.sleeping;lockControls.lock();render();}else if(ui.sleeping||ui.view==='lock'){ui.sleeping=false;home(false);}else lockScreen(); }
+  function powerKey() { if (ui.power === 'off') { bootUp(false); return; } if (ui.power || ui.overlay === 'power-progress') return; if(ui.locked){ui.sleeping=!ui.sleeping;lockControls.lock();render();}else if(ui.sleeping||ui.view==='lock'){ui.sleeping=false;home(false);}else lp.lockScreen(); }
   // PhoneWindowManager: holding the key opens GlobalActions only while the screen is on; otherwise it just wakes.
   function powerHold() { if (ui.power || ui.sleeping || ui.overlay === 'power-progress') { powerKey(); return; } ui.overlay = 'power-menu'; render(); }
   for (const key of [document.querySelector('#power-button'), document.querySelector('.power-key')]) { key.addEventListener('click', powerKey); GlobalActions.hold(key, powerHold); }
@@ -26,7 +25,7 @@ LP.define('power', ({
     ui.power = 'boot'; ui.safeMode = safeMode; renderPower();
     // Finish after the native movie, or after a requested skip once startup resources are ready.
     let finished = false, stop = () => {};
-    const finish = () => { if (finished) return; finished = true; stop(); AndroidBoot.complete('5.1.1'); ui.power = ''; lockScreen(); ui.sleeping = false; if (!ui.locked && ui.view !== 'lock') home(); else render(); renderPower(); lp.lastActivity = Date.now(); };
+    const finish = () => { if (finished) return; finished = true; stop(); AndroidBoot.complete('5.1.1'); ui.power = ''; lp.lockScreen(); ui.sleeping = false; if (!ui.locked && ui.view !== 'lock') home(); else render(); renderPower(); lp.lastActivity = Date.now(); };
     stop = GlobalActions.playBoot(powerLayer.firstElementChild, finish, booted);
     return finish;
   }

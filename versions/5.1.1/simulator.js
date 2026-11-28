@@ -302,10 +302,10 @@
   const holdDelay = ms => ms + (HOLD[data.settings.longPressTimeout || 0] - 500);
   let lastActivity=Date.now();
   for(const name of ['pointerdown','keydown','input','wheel'])document.addEventListener(name,()=>{lastActivity=Date.now();},{passive:true,capture:true});
-  const lockControls=ICSLockscreen.controller({getData:()=>data,getUI:()=>ui,t:key=>i18n.t(key),save,render,clock,date:fullDate,carrier:()=>data.settings.airplane?i18n.t('No service.'):data.settings.networkOperator||'Telekom',toast,unlock:()=>{ui.locked=false;ui.sleeping=false;const pending=ui.kgPending;ui.kgPending=null;ui.kgBouncing=false;ui.kgUp=true;home(false);if(pending)afterKeyguardDismiss(pending);},
+  const lockControls=ICSLockscreen.controller({getData:()=>data,getUI:()=>ui,t:key=>i18n.t(key),save,render,clock,date:fullDate,carrier:()=>data.settings.airplane?i18n.t('No service.'):data.settings.networkOperator||'Telekom',toast,unlock:()=>{ui.locked=false;ui.sleeping=false;const pending=ui.kgPending;ui.kgPending=null;ui.kgBouncing=false;ui.kgUp=true;home(false);if(pending)lp.afterKeyguardDismiss(pending);},
     // Android 4.3 security views (KeyguardPatternView/PINView/PasswordView) inside the SlidingChallengeLayout.
     // Lollipop security views: the kg_* instructions, the kg_wrong_* errors and the countdown.
-    look:{wrong:kind=>({pattern:'Wrong Pattern',pin:'Wrong PIN',password:'Wrong Password'})[kind],clearMs:2000,message:({state,remaining})=>remaining?AndroidStrings.format(i18n.t('Try again in %d seconds.'), remaining):state.error&&Date.now()-state.errorAt<5000?i18n.t(state.error):i18n.t({pattern:'Draw your pattern',pin:'Enter PIN',password:'Enter Password'}[state.kind]||''),renderLock:api=>renderSecureKeyguard(api)}});
+    look:{wrong:kind=>({pattern:'Wrong Pattern',pin:'Wrong PIN',password:'Wrong Password'})[kind],clearMs:2000,message:({state,remaining})=>remaining?AndroidStrings.format(i18n.t('Try again in %d seconds.'), remaining):state.error&&Date.now()-state.errorAt<5000?i18n.t(state.error):i18n.t({pattern:'Draw your pattern',pin:'Enter PIN',password:'Enter Password'}[state.kind]||''),renderLock:api=>lp.renderSecureKeyguard(api)}});
   ui.locked=ICSLockscreen.secure(data);if(ui.locked)ui.view='lock';lockControls.lock();lockControls.bind(screen);
 
   // Window transitions: the outgoing view is kept in a temporary layer while both animate.
@@ -361,7 +361,7 @@
     JBDeveloperOptions.apply(screen, data.settings);
     if (ui.view !== 'lock' && ui.kgPad) { ui.kgPad.destroy(); ui.kgPad = null; }
     if (ui.view !== 'lock' && ui.kgChallenge) { ui.kgChallenge.destroy(); ui.kgChallenge = null; }
-    if (ui.view === 'lock') { viewport.innerHTML = renderLock(); attachKeyguard(); }
+    if (ui.view === 'lock') { viewport.innerHTML = lp.renderLock(); lp.attachKeyguard(); }
     else if (ui.view === 'home') { viewport.innerHTML = renderHome(); restoreWidgetScroll(); }
     else if (ui.view === 'drawer') viewport.innerHTML = renderDrawer();
     else viewport.innerHTML = renderApp();
@@ -405,115 +405,6 @@
     });
   }
   const mixVelocity = (old, value, k) => old === undefined ? value : old + (value - old) * k;
-  function lockScreen(){captureRecentView();lockControls.lock();ui.kgUp=true;ui.kgBouncing=false;ui.kgPending=null;ui.kgRelock=false;ui.locked=ICSLockscreen.secure(data);ui.sleeping=data.settings.screenLock==='none';ui.view=ui.sleeping?'home':'lock';ui.overlay='';render();}
-  /* MultiWaveView (keyguard_screen_tab_unlock): targets sit on the ring (radius 135dp), the handle follows the
-     finger inside it and snaps to a target within the 60dp hit radius. Release elsewhere returns the handle in
-     300 ms (Quart ease-out), fades the targets after 200 ms over 1200 ms, then pings the right chevrons
-     (three, 160 ms apart, 850 ms Quad ease-out, scale 0.5 -> 2, alpha 1 -> 0). */
-  const lockWave = {radius: 112, hit: 54};
-  function lockPing() {
-    const chevrons = [...viewport.querySelectorAll('.lock-chevron')];
-    if (!chevrons.length || reducedMotion?.matches) return;
-    chevrons.forEach((chevron, index) => {
-      chevron.getAnimations().forEach(animation => animation.cancel());
-      chevron.animate([{transform: 'translateX(39px) scale(.5)', opacity: 1}, {transform: `translateX(${lockWave.radius * .9}px) scale(2)`, opacity: 0}], {duration: 850, delay: index * 160, easing: 'cubic-bezier(.25,.46,.45,.94)', fill: 'backwards'});
-    });
-  }
-  function lockMove(dx, dy) {
-    const handle = viewport.querySelector('.lock-handle');
-    if (!handle) return null;
-    const distance = Math.hypot(dx, dy), scale = distance > lockWave.radius ? lockWave.radius / distance : 1;
-    let x = dx * scale, y = dy * scale, active = null;
-    for (const [name, tx] of [['unlock', lockWave.radius], ['camera', -lockWave.radius]]) if (Math.hypot(x - tx, y) < lockWave.hit) { active = name; x = tx; y = 0; }
-    handle.style.setProperty('--lock-x', `${x}px`); handle.style.setProperty('--lock-y', `${y}px`);
-    viewport.querySelectorAll('.lock-target').forEach(target => target.classList.toggle('active', target.classList.contains(`lock-target-${active}`)));
-    handle.classList.toggle('over-target', !!active);
-    if (active && active !== pointerStart?.lockActive && data.settings.haptic !== false) navigator.vibrate?.(20);
-    return active;
-  }
-  function lockRelease(active) {
-    const handle = viewport.querySelector('.lock-handle');
-    screen.classList.remove('lock-dragging');
-    if (active) {
-      viewport.querySelectorAll(`.lock-target:not(.lock-target-${active})`).forEach(target => target.classList.add('dismissed'));
-      viewport.querySelector('.lock-outer-ring')?.classList.add('dismissed');
-      suppressClickUntil = Date.now() + 350;
-      if (active === 'unlock') home(); else openApp('camera');
-      return;
-    }
-    viewport.querySelectorAll('.lock-target').forEach(target => target.classList.remove('active'));
-    if (!handle) return;
-    handle.classList.remove('over-target');
-    screen.classList.add('lock-releasing');
-    handle.style.setProperty('--lock-x', '0px'); handle.style.setProperty('--lock-y', '0px');
-    clearTimeout(ui.lockReleaseTimer);
-    ui.lockReleaseTimer = setTimeout(() => { screen.classList.remove('lock-releasing'); lockPing(); }, 300);
-  }
-  function renderLock() {
-    if(ui.locked)return lockControls.renderLock();
-    return LPKeyguard.render(lpKeyguardParts(false));
-  }
-  function renderSecureKeyguard(api) {
-    const parts = lpKeyguardParts(true);
-    return LPKeyguard.render({...parts, bouncer: ui.kgBouncing ? LPKeyguard.bouncer(api, parts) : ''});
-  }
-  // What the Lollipop lock screen shows: clock, date and alarm, owner info, the notification cards and the hint.
-  function lpKeyguardParts(secure) {
-    const now = deviceDate(), hour24 = !!data.settings.hour24;
-    return {t: key => i18n.t(key), locale: i18n.locale(), secure, height: screen.clientHeight || 662.67,
-      clock: now.toLocaleTimeString(i18n.locale(), {hour: hour24 ? '2-digit' : 'numeric', minute: '2-digit', hour12: !hour24}).replace(/\s?[AaPp]\.?\s?[Mm]\.?$/, ''),
-      date: now.toLocaleDateString(i18n.locale(), {weekday: 'long', month: 'long', day: 'numeric'}), shortDate: shadeDate(), alarm: nextAlarmLabel(),
-      owner: data.settings.showOwner ? data.settings.ownerInfo : '', carrier: lp.carrierName(), statusIcons: lp.statusIndicators(),
-      notifications: data.notifications.map(decorateNotification), activated: ui.kgActivated || '', hint: ui.kgHint || ''};
-  }
-  function kgHint(text) {
-    ui.kgHint = i18n.t(text); clearTimeout(ui.kgHintTimer);
-    const line = viewport.querySelector('.lp-kg-indication'); if (line) { line.textContent = ui.kgHint; line.classList.add('visible'); }
-    LPKeyguard.bounce(viewport.querySelector('[data-lp-kg]'), !!reducedMotion?.matches);
-    ui.kgHintTimer = setTimeout(() => { ui.kgHint = ''; ui.kgActivated = ''; viewport.querySelector('.lp-kg-indication')?.classList.remove('visible'); viewport.querySelectorAll('.lp-kg-note.activated').forEach(node => node.classList.remove('activated')); }, 3500);
-  }
-  function keyguardParts() {
-    // TransportControlView covers the clock rows while the Music service is active.
-    const track = tracks[ui.music.track], transport = musicActive() ? `<div class="lock-transport" data-no-translate><div class="lock-transport-art"></div><div class="lock-transport-bar"><p><span>${safe(track.title)}</span> - ${safe(track.artist)} - ${safe(track.album)}</p><div><button data-action="lock-media" data-id="previous" aria-label="${safe(i18n.t('Previous track'))}"><img src="assets/music-ic_media_previous.png" alt=""></button><button data-action="lock-media" data-id="play" aria-label="${safe(i18n.t(ui.music.playing ? 'Pause' : 'Play'))}"><img src="assets/music-ic_media_${ui.music.playing ? 'pause' : 'play'}.png" alt=""></button><button data-action="lock-media" data-id="next" aria-label="${safe(i18n.t('Next track'))}"><img src="assets/music-ic_media_next.png" alt=""></button></div></div></div>` : '';
-    const kgPages = JBKeyguard.pages(data.keyguardWidgets || [], {music: musicActive()});
-    if (!Number.isInteger(ui.kgPage) || ui.kgPage >= kgPages.length || kgPages[ui.kgPage]?.type === 'camera') ui.kgPage = JBKeyguard.defaultPage(kgPages);
-    const now = deviceDate(), hour24 = !!data.settings.hour24;
-    return {list: kgPages, parts: {
-      t: key => i18n.t(key), carrier: data.settings.airplane ? i18n.t('No service.') : data.settings.networkOperator || 'Telekom', owner: data.settings.showOwner ? data.settings.ownerInfo : '', alarm: nextAlarmLabel(),
-      clock: now.toLocaleTimeString(i18n.locale(), {hour: hour24 ? '2-digit' : 'numeric', minute: '2-digit', hour12: !hour24}).replace(/\s?[AaPp]\.?\s?[Mm]\.?$/, ''),
-      ampm: hour24 ? '' : now.getHours() < 12 ? 'AM' : 'PM', date: now.toLocaleDateString(i18n.locale(), {weekday: 'long', month: 'long', day: 'numeric'}).toLocaleUpperCase(i18n.locale()),
-      transport: transport.replace('class="lock-transport"', 'class="lock-transport jbk-transport-view"'), widget: keyguardWidget
-    }};
-    return `<div class="lock-view${transport ? ' with-transport' : ''}">${transport}<div class="lock-clock"><div class="lock-time">${clock()}</div><div class="lock-date">${fullDate()}</div>${data.settings.showOwner?`<div class="lock-owner">${safe(data.settings.ownerInfo)}</div>`:''}</div><div class="lock-wave"><div class="lock-outer-ring"></div><button class="lock-target lock-target-unlock" data-action="unlock" aria-label="Unlock"><img src="assets/ic_lockscreen_unlock_normal.png" alt=""><img class="lock-activated" src="assets/ic_lockscreen_unlock_activated.png" alt=""></button><button class="lock-target lock-target-camera" data-action="unlock-camera" aria-label="Camera"><img src="assets/ic_lockscreen_camera_normal.png" alt=""><img class="lock-activated" src="assets/ic_lockscreen_camera_activated.png" alt=""></button>${[0,1,2].map(() => '<img class="lock-chevron" src="assets/ic_lockscreen_chevron_right.png" alt="">').join('')}<button class="lock-handle" data-action="lock-hint" aria-label="Slide to unlock"><img src="assets/ic_lockscreen_handle_normal.png" alt=""><img class="lock-activated" src="assets/ic_lockscreen_handle_pressed.png" alt=""></button></div><div class="lock-carrier">${lp.carrierName()}</div></div>`;
-  }
-  // Keyguard-capable widgets: the Calendar list and the 4.2 DeskClock digital clock.
-  function keyguardWidget(widget) {
-    if (widget.type === 'calendar') return ICSWidgets.calendar(data, key => i18n.t(key), i18n.locale(), deviceDate(), !!data.settings.hour24);
-    return digitalClockWidget('div');
-  }
-  function requestBouncer(pending) {
-    ui.kgPending = pending; ui.kgBouncing = true; ui.kgHint = ''; render();
-  }
-  // OnDismissAction: what the widget asked for once the security check passes.
-  function afterKeyguardDismiss(pending) {
-    if (pending.type === 'add') { ui.kgRelock = true; ui.overlay = 'kg-widget-picker'; renderOverlay(); return; }
-    if (pending.type === 'camera' || pending.type === 'phone') { openApp(pending.type); return; }
-    if (pending.type === 'note') { const button = document.createElement('button'); button.dataset.action = 'notification-open'; button.dataset.id = pending.id; screen.append(button); button.click(); button.remove(); return; }
-    const event = pending.id && data.events.find(item => String(item.id) === pending.id);
-    if (!event) { ui.selectedDate = today(); openApp('calendar'); return; }
-    const date = pending.date || event.date; ui.selectedDate = date < today() ? today() : date; openApp('calendar'); ui.selectedEvent = event.id; ui.selectedInstance = date; ui.sub = 'event'; render();
-  }
-  function attachKeyguard() {
-    ui.kgPad?.destroy(); ui.kgPad = null; ui.kgChallenge?.destroy(); ui.kgChallenge = null;
-    const root = viewport.querySelector('[data-lp-kg]');
-    if (!root) return;
-    ui.kgPad = LPKeyguard.attach(root, {
-      suppressClick: () => { suppressClickUntil = Date.now() + 350; },
-      onTap: kind => kgHint(kind === 'camera' ? 'Swipe left for camera' : kind === 'phone' ? 'Swipe right for phone' : 'Swipe up to unlock'),
-      onUnlock: () => { if (ui.locked) requestBouncer(null); else { suppressClickUntil = Date.now() + 350; home(); } },
-      onAffordance: kind => { if (ui.locked) requestBouncer({type: kind}); else { ui.kgHint = ''; openApp(kind); } }
-    });
-  }
   function analogClock() {
     const now = deviceDate();
     return `<div class="analog-clock" aria-label="${clock()}"><img class="clock-dial" src="assets/appwidget_clock_dial.png" alt=""><img class="clock-hour" src="assets/appwidget_clock_hour.png" alt="" style="transform:rotate(${(now.getHours() % 12) * 30 + now.getMinutes() / 2}deg)"><img class="clock-minute" src="assets/appwidget_clock_minute.png" alt="" style="transform:rotate(${now.getMinutes() * 6}deg)"></div>`;
@@ -692,8 +583,7 @@
     if (ui.overlay) { ui.overlay = ''; render(); return; }
     if (LP.module('camera').back()) return;
     if (LP.module('live-wallpapers').back()) return;
-    if (ui.view === 'lock' && ui.kgBouncing) { ui.kgBouncing = false; ui.kgPending = null; lockControls.lock(); render(); return; }
-    if (ui.view === 'lock') return;
+    if (LP.module('lock').back()) return;
     if (LP.module('phone').back()) return;
     if (LP.module('docs').backDocs()) return;
     if (ui.view === 'drive' && ui.sub === 'file' && ui.driveFrom === 'results') { ui.sub = 'results'; ui.driveFrom = ''; render(); return; }
@@ -809,9 +699,6 @@
       // A screen's own menu or dialog (lp-*.js modules).
     } else if (ui.overlay === 'store-host') {
       overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
-    } else if (ui.overlay === 'kg-widget-picker') {
-      const choices = [['calendar', 'Calendar', 'calendar.png'], ['clock', 'Digital clock', 'clock.png']];
-      overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog jbk-picker" role="dialog" aria-label="${safe(i18n.t('Choose widget'))}"><h3>${safe(i18n.t('Choose widget'))}</h3>${choices.map(([type, label, icon]) => `<button data-action="kg-pick-widget" data-id="${type}"><img src="assets/${icon}" alt=""><span>${safe(i18n.t(label))}</span></button>`).join('')}<div class="settings-dialog-actions"><button data-action="close-overlay">${safe(i18n.t('Cancel'))}</button></div></div>`;
     } else if (ui.overlay === 'lp-brightness') {
       const auto = !!data.settings.autoBrightness;
       overlayRoot.innerHTML = `<div class="lp-bright-scrim" data-action="close-overlay"></div><div class="lp-bright-dlg" role="dialog" aria-label="${safe(i18n.t('Brightness'))}"><button type="button" class="lp-bright-auto${auto ? ' on' : ''}" data-action="lp-brightness-auto" aria-pressed="${auto}" aria-label="${safe(i18n.t('AUTO'))}"><img src="assets/lp-sysui-ic_qs_brightness_auto_${auto ? 'on' : 'off'}_alpha.png" alt=""></button><div class="lp-qs-brightness lp-bright-slider"><input type="range" min="10" max="100" value="${data.settings.brightness}" data-field="brightness" aria-label="${safe(i18n.t('Brightness'))}" style="--v:${(data.settings.brightness - 10) / .9}%"></div></div>`;
@@ -1024,7 +911,7 @@
     if(ui.locked){
       // KeyguardHostView: launching from a widget or adding one needs the bouncer first.
       const pending={'kg-add-widget':{type:'add'},'widget-calendar-open':{type:'calendar'},'widget-calendar-event':{type:'calendar',id,date:button.dataset.date}}[action];
-      if(pending&&ui.view==='lock'){requestBouncer(pending);return;}
+      if(pending&&ui.view==='lock'){lp.requestBouncer(pending);return;}
       if(!['back','alarm-dismiss','alarm-snooze','lock-media'].includes(action))return;
     }
     // A store app's own controls and the host's dialog and menu (store-apps/legacy-host.js).
@@ -1075,8 +962,6 @@
         if(id==='bluetooth'&&!data.settings.bluetooth)data.settings.bluetoothTether=false;
         save(); render(); break;
       case 'widget-music-play': ui.musicActive=true;ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;lp.saveMusic();render();break;
-      case 'lock-media': if (id === 'play') { ui.music.playing = !ui.music.playing; if (ui.music.playing && ui.music.position >= tracks[ui.music.track].duration) ui.music.position = 0; } else ICSMusic.step(ui.music, id === 'previous' ? -1 : 1); ui.musicTrack = ui.music.track; lp.saveMusic(); render(); break;
-      case 'lock-hint': screen.classList.add('lock-dragging'); setTimeout(() => { if (!pointerStart?.lockDrag) lockRelease(null); }, 1000); break;
       case 'shade': if (ui.pinned) break; ui.overlay = ui.overlay === 'shade' ? '' : 'shade'; renderOverlay(); break;
       case 'close-overlay': if (ui.overlay === 'recent') { lp.closeRecents(); break; } ui.overlay = ''; renderOverlay(); break;
       case 'clear-notifications': {
@@ -1087,8 +972,6 @@
         setTimeout(() => { data.notifications = []; save(); lp.renderStatus(); if (ui.overlay === 'shade') { ui.overlay = ''; renderOverlay(); } }, (delays.at(-1) || 0) + 125 + 225);
         break;
       }
-      case 'kg-add-widget': ui.overlay = 'kg-widget-picker'; renderOverlay(); break;
-      case 'kg-pick-widget': { const widgets = data.keyguardWidgets ||= []; if (widgets.length < JBKeyguard.MAX_WIDGETS) { widgets.push({id: `kg-${Date.now()}`, type: id}); save(); ui.kgPage = widgets.length; } ui.overlay = ''; if (ui.kgRelock) { ui.kgRelock = false; const page = ui.kgPage; lockScreen(); ui.kgPage = page; render(); } else render(); break; }
       // Lollipop Quick Settings: the icon toggles, the dual label opens the tile's detail.
       case 'lp-qs-expand': ui.shadeSettings = !ui.shadeSettings; ui.qsDetail = ''; renderOverlay(); break;
       case 'lp-qs-user': toast('Only the owner can be signed in on this simulator.'); break;
@@ -1109,11 +992,6 @@
         releaseHeadsUp();
         if (note?.kind === 'message') { data.notifications = data.notifications.filter(item => item !== note); save(); lp.renderStatus(); ui.overlay = ''; openApp(note.channel === 'hangouts' ? 'hangouts' : 'messaging'); lp.openMessageThread(note.contact); break; }
         ui.overlay = ''; if (Number(id) === 2) lp.openMessageThread(1); else { ui.view = 'settings'; ui.sub = 'about'; render(); } break; }
-      case 'unlock': ui.view = 'home'; render(); break;
-      // ActivatableNotificationView: the first touch activates the card ("Touch again to open"), the second opens it.
-      case 'lp-kg-note': if (ui.kgActivated !== id) { ui.kgActivated = id; viewport.querySelectorAll('.lp-kg-note').forEach(node => node.classList.toggle('activated', node.dataset.id === id)); kgHint('Touch again to open'); break; }
-        ui.kgActivated = ''; if (ui.locked) { requestBouncer({type: 'note', id}); break; } { const opener = document.createElement('button'); opener.dataset.action = 'notification-open'; opener.dataset.id = id; screen.append(opener); home(false); opener.click(); opener.remove(); } break;
-      case 'unlock-camera': openApp('camera'); break;
       case 'toast': toast(id); break;
       case 'noop': break;
 
@@ -1735,8 +1613,7 @@
     LP.module('messaging').pointerdown(event);
     if (LP.module('wallpaper-picker').pointerdown(event)) return;
     LP.module('google-search').pointerdown(event);
-    if (pointerStart.lockDrag) { clearTimeout(ui.lockReleaseTimer); viewport.querySelectorAll('.lock-chevron').forEach(chevron => chevron.getAnimations().forEach(animation => animation.cancel())); screen.classList.remove('lock-releasing'); screen.classList.add('lock-dragging'); try { screen.setPointerCapture(event.pointerId); } catch {} }
-    else if (ui.view === 'lock' && !ui.locked && event.target.closest('.lock-wave')) lockPing();
+    LP.module('lock').pointerdown(event);
     LP.module('calculator').pointerdown(event);
     if (ui.view === 'home' && !ui.overlay) pointerStart.photoStack = event.target.closest('[data-photo-stack]')?.dataset.photoStack || '';
     if (pointerStart.source) dragTimer = setTimeout(() => startDrag(event.clientX, event.clientY), holdDelay(440));
@@ -1781,7 +1658,7 @@
     if (LP.module('clock').pointermove(event, dx, dy)) return;
     if (LP.module('calendar').pointermove(event, dx, dy)) return;
     if (LP.module('photos').pointermove(event, dx, dy)) return;
-    if (pointerStart.lockDrag) { event.preventDefault(); pointerStart.lockActive = lockMove(dx, dy); return; }
+    if (LP.module('lock').pointermove(event, dx, dy)) return;
     // NotificationPanelView: pulling down again on the open panel expands Quick Settings.
     if (pointerStart.qsPullEligible && !ui.shadeSettings && dy > dp(40) && dy > Math.abs(dx)) { ui.shadeSettings = true; ui.qsDetail = ''; renderOverlay(); suppressClickUntil = Date.now() + 350; pointerStart.qsPullEligible = false; pointerStart.qsPulled = true; return; }
     if (pointerStart.qsPulled) return;
@@ -1916,12 +1793,7 @@
       else if (shade) LPShade.animate(shade, height, full, {velocity: Math.max(0, velocity), scrim, done: () => LPShade.settle(shade, scrim)});
       pointerStart = null; return;
     }
-    if (pointerStart.lockDrag) {
-      const active = lockMove(dx, dy);
-      if (!active && Math.hypot(dx, dy) > dp(7)) suppressClickUntil = Date.now() + 350;
-      lockRelease(active);
-      pointerStart = null; return;
-    }
+    if (LP.module('lock').pointerup(event, dx, dy)) return;
     if (pointerStart.scrolling) { screen.classList.remove('settings-scrolling'); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if (pointerStart.swiping || pointerStart.pageSwipeEligible && !dragState && Math.abs(dx) > dp(50) && Math.abs(dx) > Math.abs(dy) && (!pointerStart.source || pointerStart.source.type === 'home' && performance.now() - pointerStart.downTime < 260)) {
       finishHomePage(dx); pointerStart = null; return;
@@ -1988,7 +1860,7 @@
     lockControls.tick();
     document.querySelectorAll('.status-clock').forEach(node => { node.textContent = clock(); });
     const now = deviceDate();
-    if(!document.hidden && !ui.sleeping && ui.view!=='lock' && !ui.overlay && !ui.activeCall && !dragState && data.settings.sleep>0&&Date.now()-lastActivity>=data.settings.sleep*1000){captureRecentView();lockScreen();lastActivity=Date.now();}
+    if(!document.hidden && !ui.sleeping && ui.view!=='lock' && !ui.overlay && !ui.activeCall && !dragState && data.settings.sleep>0&&Date.now()-lastActivity>=data.settings.sleep*1000){captureRecentView();lp.lockScreen();lastActivity=Date.now();}
     if(ui.activeCall){
       const dialing=Date.now()<ui.activeCall.connected;
       const elapsed=viewport.querySelector('.incall-elapsed'),state=viewport.querySelector('.incall-state');
@@ -2029,26 +1901,29 @@
     get apps() { return apps; }, get captureRecentView() { return captureRecentView; },
     get chromeText() { return chromeText; }, get clearAppData() { return clearAppData; },
     get clock() { return clock; }, get clone() { return clone; }, get contact() { return contact; },
-    get data() { return data; }, set data(v) { data = v; }, get defaultData() { return defaultData; },
-    get deviceDate() { return deviceDate; }, get dp() { return dp; }, get emailData() { return emailData; },
+    get data() { return data; }, set data(v) { data = v; },
+    get decorateNotification() { return decorateNotification; }, get defaultData() { return defaultData; },
+    get deviceDate() { return deviceDate; }, get digitalClockWidget() { return digitalClockWidget; },
+    get dp() { return dp; }, get emailData() { return emailData; }, get fullDate() { return fullDate; },
     get headsUp() { return headsUp; }, get HOLD_NAMES() { return HOLD_NAMES; },
     get holdDelay() { return holdDelay; }, get home() { return home; },
     get homeLongPressTimer() { return homeLongPressTimer; }, set homeLongPressTimer(v) { homeLongPressTimer = v; },
     get i18n() { return i18n; },
     get lastActivity() { return lastActivity; }, set lastActivity(v) { lastActivity = v; },
-    get lockControls() { return lockControls; }, get lockScreen() { return lockScreen; },
-    get LP_PRIMARY() { return LP_PRIMARY; }, get LP_STATUS_COLORS() { return LP_STATUS_COLORS; },
+    get lockControls() { return lockControls; }, get LP_PRIMARY() { return LP_PRIMARY; },
+    get LP_STATUS_COLORS() { return LP_STATUS_COLORS; },
     get messageHoldTimer() { return messageHoldTimer; }, set messageHoldTimer(v) { messageHoldTimer = v; },
-    get navRoot() { return navRoot; }, get nextAlarmLabel() { return nextAlarmLabel; },
-    get nextAlarmTime() { return nextAlarmTime; }, get openApp() { return openApp; },
-    get overlayRoot() { return overlayRoot; }, get placeShortcut() { return placeShortcut; },
+    get musicActive() { return musicActive; }, get navRoot() { return navRoot; },
+    get nextAlarmLabel() { return nextAlarmLabel; }, get nextAlarmTime() { return nextAlarmTime; },
+    get openApp() { return openApp; }, get overlayRoot() { return overlayRoot; },
+    get placeShortcut() { return placeShortcut; },
     get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; },
     get reducedMotion() { return reducedMotion; }, get render() { return render; },
     get renderOverlay() { return renderOverlay; }, get REPLIES() { return REPLIES; },
     get resetSimulator() { return resetSimulator; }, get safe() { return safe; }, get save() { return save; },
-    get screen() { return screen; }, get snapResting() { return snapResting; },
-    get statusRoot() { return statusRoot; }, get storeAppsSync() { return storeAppsSync; },
-    get storeContext() { return storeContext; },
+    get screen() { return screen; }, get shadeDate() { return shadeDate; },
+    get snapResting() { return snapResting; }, get statusRoot() { return statusRoot; },
+    get storeAppsSync() { return storeAppsSync; }, get storeContext() { return storeContext; },
     get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; },
     get suppressReleaseClick() { return suppressReleaseClick; }, get syncBrowserState() { return syncBrowserState; },
     get toast() { return toast; }, get today() { return today; }, get tracks() { return tracks; },

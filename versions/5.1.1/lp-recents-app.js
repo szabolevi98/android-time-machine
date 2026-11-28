@@ -1,8 +1,8 @@
 /* TODO */
 'use strict';
 LP.define('recent', ({
-  appIcon, appNames, captureRecentView, home, i18n, lockControls, lockScreen, LP_PRIMARY, LP_STATUS_COLORS,
-  navRoot, openApp, overlayRoot, reducedMotion, render, renderOverlay, safe, save, toast, ui, viewport
+  appIcon, appNames, captureRecentView, home, i18n, lockControls, LP_PRIMARY, LP_STATUS_COLORS, navRoot, openApp,
+  overlayRoot, reducedMotion, render, renderOverlay, safe, save, toast, ui, viewport
 }, lp) => {
   /* TaskStackView.onStackTaskRemoved: the front-most remaining task keeps its place (the stack scroll moves by as much
      as it would fall back) and the other cards glide to their new transforms in 200 ms
@@ -62,7 +62,7 @@ LP.define('recent', ({
     if (!ui.pinned) return;
     ui.pinned = null; lp.updateBarMode(); toast(i18n.t('Screen unpinned'));
     const secure = ['pin', 'password', 'pattern'].includes(lp.data.settings.screenLock);
-    if (lp.data.settings.pinExitLocked ?? secure) { lockScreen(); ui.sleeping = false; render(); }
+    if (lp.data.settings.pinExitLocked ?? secure) { lp.lockScreen(); ui.sleeping = false; render(); }
   }
   Object.assign(lp, {pinnedToast, closeRecents, removeRecentTask});
   // lp:code
