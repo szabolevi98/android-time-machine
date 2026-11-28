@@ -307,7 +307,6 @@
     if (ui.gbPrefs && (ui.gbPrefs.view || ui.gbPrefs.app) === ui.view) { const items = GBPrefs.menu(gbPrefsContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'play-store') { const items = GBMarket.menu(gbMarketContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'settings' && GBSettingsPages.has(ui.sub)) { const items = GBSettingsPages.menu(ui.sub, gbPagesContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
-    if (ui.view === 'browser') { if (ui.gbBrEdit) return; const items = GBBrowser.menu(gbBrowserContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'settings' && GBNetwork.has(ui.sub)) { const items = GBNetwork.menu(ui.sub, gbNetContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     if (ui.view === 'settings' && GBSettings.has(ui.sub || 'main')) { const items = GBSettings.menu(ui.sub, gbSettingsContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
     const button = [...viewport.querySelectorAll('[data-action$="-menu"]')].find(node => !node.disabled);
@@ -425,7 +424,6 @@
       const elapsed = performance.now() - activeTransition.start;
       ICSTransitions.play(viewport.firstElementChild, ICSTransitions.specs[activeTransition.name].enter, activeTransition.factor).forEach(animation => { animation.currentTime = elapsed; activeTransition.animations.push(animation); });
     }
-    if (ui.view === 'browser' && !ui.sub && ui.browserFind) highlightBrowserText();
   }
   function restoreWidgetScroll() {
     ui.widgetScroll = ui.widgetScroll || {};
@@ -643,7 +641,6 @@
       case 'live-wallpapers': return renderLiveWallpapers();
       case 'wallpaper-picker': { const selected = Number.isInteger(ui.wpChoice) ? ui.wpChoice : Math.max(0, data.wallpaper); return `<div class="app-view gbwp"><div class="gbwp-preview"><img src="assets/gb-wallpaper_${wallpaperFiles[selected]}.jpg" alt=""></div><div class="gbwp-gallery" role="listbox" aria-label="${safe(i18n.t('Wallpapers'))}">${wallpaperFiles.map((name, index) => `<button class="gbwp-item${index === selected ? ' selected' : ''}" role="option" aria-selected="${index === selected}" data-action="gb-wp-pick" data-id="${index}" aria-label="${safe(name.replace(/_/g, ' '))}"><img src="assets/gb-wallpaper_${name}_small.jpg" alt=""></button>`).join('')}</div><button class="gbwp-set" data-action="wallpaper" data-id="${selected}">${safe(i18n.t('Set wallpaper'))}</button></div>`; }
       case 'settings': return renderSettings();
-      case 'browser': return renderBrowser();
       default: return renderHome();
     }
   }
@@ -696,9 +693,6 @@
       return;
     }
     if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return; }
-    if (ui.view === 'browser' && ui.gbBrEdit) { ui.gbBrEdit = false; render(); return; }
-    if (ui.view === 'browser' && !ui.sub && ui.browserFind !== undefined) { ui.browserFind = undefined; render(); return; }
-    if (ui.view === 'browser' && !ui.sub && ui.browserIndex > 0) { browserBack(); return; }
     if (ui.view === 'settings' && ['easter', 'about-status', 'about-legal', 'about-safety'].includes(ui.sub)) { ui.sub = 'about'; render(); return; }
     if (ui.view === 'settings' && ['vpn', 'beam'].includes(ui.sub)) { ui.sub = 'wireless'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'wifi-advanced') { ui.sub = 'wifi'; render(); return; }
@@ -747,8 +741,6 @@
       {action: 'gb-new-folder', id: 'all', title: t('All contacts'), icon: 'ic_launcher_folder_live_contacts'},
       {action: 'gb-new-folder', id: 'phone', title: t('Contacts with phone numbers'), icon: 'ic_launcher_folder_live_contacts_phone'},
       {action: 'gb-new-folder', id: 'starred', title: t('Starred contacts'), icon: 'ic_launcher_folder_live_contacts_starred'}]};
-    // Browser.sharePage: Intent.createChooser(ACTION_SEND text/plain, "Share via"); the AOSP build offers Email and Messaging.
-    if (ui.overlay === 'gb-dialog-share') return {title: GBBrowser.text(i18n.language, 'choosertitle_sharevia'), items: [['email', 'Email'], ['messaging', 'Messaging']].map(([id, name]) => ({action: 'gbbr-share-to', id, title: i18n.t(name), icon: `${id}.png`}))};
     if (ui.overlay === 'gb-dialog-emsetup') return GB.module('email').dialog('setup:' + ui.gbEmSetupDialog, storeContext());
     if (ui.overlay === 'gb-dialog-pref') return GBPrefs.dialog(gbPrefsContext(), ui.gbPrefDialog) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-module') return StoreHost.module(ui.view)?.dialog?.(ui.gbModuleDialog, storeContext()) || {title: '', items: []};
@@ -762,7 +754,7 @@
     if (ui.overlay === 'gb-dialog-hotpot') return GBGoogleWidgets.placeDialog(gappContext());
     if (ui.overlay === 'gb-dialog-gapp') return GBApps.get(ui.view)?.dialog?.(ui.gappDialog, gappContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-cal') return GB.module('calendar').dialog(ui.gbCalDialog, storeContext()) || {title: '', items: []};
-    if (ui.overlay === 'gb-dialog-br') return GBBrowser.dialog(ui.gbBrDialog, gbBrowserContext()) || {title: '', items: []};
+    if (ui.overlay === 'gb-dialog-br' || ui.overlay === 'gb-dialog-share') return GB.module('browser').dialog(ui.overlay === 'gb-dialog-share' ? 'share' : ui.gbBrDialog, storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-music') return GB.module('music').dialog(ui.gbMusicDialog, storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-mms') return GB.module('messaging').dialog(ui.gbMmsDialog, storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-set') return GBSettings.dialog(ui.gbSetDialog, gbSettingsContext()) || {title: '', items: []};
@@ -992,77 +984,13 @@
     return GBSettings.render('main', gbSettingsContext()).html;
   }
 
-  function normalizeAddress(raw) {
-    const value = raw.trim().replace(/^https?:\/\//i, '').replace(/\/$/, '');
-    if (!value) return 'www.google.com';
-    if (value.startsWith('search:')) return value;
-    if (value.includes(' ') || !value.includes('.')) return `search:${value}`;
-    return value.toLowerCase();
-  }
-  function syncBrowserState() {
-    const tab = ICSBrowserSession.current(ui.browserSession);
-    ui.browserUrl = ICSBrowserSession.url(ui.browserSession);
-    ui.browserHistory = tab.history; ui.browserIndex = tab.index;
-    ui.browserTab = ui.browserSession.active;
-    ui.browserTabs = ui.browserSession.tabs.map(tab => tab.history[tab.index]);
-  }
-  function saveBrowserState() { syncBrowserState(); data.browserSession = clone(ui.browserSession); save(); }
-  function navigateBrowser(url) {
-    const normalized = normalizeAddress(url);
-    ICSBrowserSession.navigate(ui.browserSession,normalized);
-    data.browserHistory = [...data.browserHistory,normalized].slice(-50);
-    ui.sub = ''; ui.overlay = ''; ui.browserFind = undefined; ui.gbBrEdit = false; browserLoading(); saveBrowserState(); render();
-  }
-  function browserBack() { ICSBrowserSession.move(ui.browserSession,-1); browserLoading(); saveBrowserState(); render(); }
-  function browserForward() { ICSBrowserSession.move(ui.browserSession,1); ui.overlay = ''; browserLoading(); saveBrowserState(); render(); }
-  function browserLink(url, title, subtitle = '') { return `<div class="web-result"><a href="#" data-action="browser-link" data-url="${safe(url)}"><strong>${safe(title)}</strong></a><small>${safe(url)}</small><p>${safe(subtitle)}</p></div>`; }
-  function renderWebsite(url) {
-    if (url === 'www.google.com') return `<div class="google-logo"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></div><form class="search-form" data-form="web-search"><input name="query" aria-label="Search the web" placeholder="Search the web" required><button type="submit">Search</button></form><div class="browser-tiles">${[['www.android.com','Android'],['en.wikipedia.org/wiki/Android','Wikipedia'],['news.example','News'],['retro.example','2011 Web']].map(item => `<button data-action="browser-link" data-url="${item[0]}">${item[1]}</button>`).join('')}</div><p style="font-size:calc(12.7537 * var(--dp));color:#888;margin-top:calc(27.8261 * var(--dp))">Offline demo pages · 2011</p>`;
-    if (url.startsWith('search:')) {
-      const term = url.slice(7);
-      return `<h2>Search results</h2><p>Results for <strong>${safe(term)}</strong></p>${browserLink('www.android.com', 'Android – Discover Android 2.3', 'Gingerbread brings a faster, simpler interface, a new keyboard and NFC.')}${browserLink('en.wikipedia.org/wiki/Android', 'Android (operating system) – Wikipedia', 'An overview of the Android mobile operating system.')}${browserLink('news.example', 'Tech News', `Stories related to ${term}.`)}`;
-    }
-    // Google Books' About the book page (Books' reader › About) for the demo library's books.
-    if (url.startsWith('books.google.com/books?id=')) { const book = (window.GBGoogleApps?.BOOKS || []).find(b => b.id === url.split('id=')[1]); if (book) return `<div class="web-book"><h2>${safe(book.title)}</h2><p><small>${safe(book.author)}</small></p><hr><p>${safe(book.pages.find(p => p.length > 80) || book.pages[1] || '')}</p><p><small>${book.pages.length} pages · public domain</small></p></div>`; }
-    if (url.includes('android.com')) return `<h2 style="color:#79b93f">android</h2><h3>Meet Android 2.3</h3><p>The fastest version of Android yet: a simpler interface, a new keyboard, one-touch word selection and copy/paste, and Near Field Communication.</p><div style="background:#23343c;color:white;padding:calc(28.9856 * var(--dp));text-align:center;font-size:calc(44.058 * var(--dp))">🤖<br><small style="font-size:calc(19.7102 * var(--dp))">Gingerbread</small></div>${browserLink('en.wikipedia.org/wiki/Android','Learn about Android','The story of Android.')}`;
-    if (url.includes('wikipedia.org')) return `<h2>Android (operating system)</h2><p><small>From Wikipedia, the free encyclopedia</small></p><hr><p>Android is a mobile operating system based on a modified version of the Linux kernel. Android 2.3, known as Gingerbread, refined the user interface and added support for NFC and internet calling.</p><h3>Versions</h3><p>Cupcake · Donut · Eclair · Froyo · Gingerbread · Honeycomb</p>${browserLink('www.android.com','Official Android website')}`;
-    if (url === 'news.example/galaxy-nexus' || url === 'retro.example/holo') return `<article class="web-offline-article"><h2>${url.startsWith('news')?'A day with Nexus S':'A closer look at Gingerbread'}</h2><time>September 2, 2011 · Demo archive</time><p>The phone has a curved glass screen, four touch keys and a green-accented interface. Open the app drawer to discover the classic Android experience.</p><h3>Everyday essentials</h3><p>Contacts, messages and the browser share a simple visual language. Swipe between home screens, arrange your favorite apps, and pull down the notification shade.</p><h3>Make it yours</h3><p>Choose a wallpaper, add an analog clock and keep your favorite contacts close. This small offline archive is a fictional snapshot of the early smartphone era.</p>${browserLink('news.example','Back to Tech News')}${browserLink('retro.example/holo','Explore the Gingerbread interface')}</article>`;
-    if (url.includes('news.example')) return `<h2>Tech News</h2><p style="color:#777">Friday, September 2, 2011</p><hr><h3>The Nexus S experience</h3><p>Android 2.3 makes typing, copy and paste and managing apps easier than ever.</p><h3>Apps in your pocket</h3><p>Explore the growing world of mobile apps and connected devices.</p>${browserLink('news.example/galaxy-nexus','Read the Nexus S story')}${browserLink('retro.example','Visit the 2011 Web')}`;
-    if (url.includes('retro.example')) return `<h2>Welcome to the 2011 Web</h2><p>A little time capsule from the early smartphone era.</p><ul><li>Share photos</li><li>Check your email</li><li>Customize your phone</li></ul>${browserLink('retro.example/holo','Explore the Gingerbread interface')}${browserLink('maps.example','Open the sample map')}${browserLink('www.google.com','Back to Google')}`;
-    if (url.includes('maps.example')) return `<h2>Maps</h2><div style="height:calc(266.6667 * var(--dp));background:repeating-linear-gradient(35deg,#e2ead9,#e2ead9 calc(20.8696 * var(--dp)),#c7dfd7 calc(20.8696 * var(--dp)),#c7dfd7 calc(27.8261 * var(--dp)));display:grid;place-items:center;color:#426a68">San Francisco · Demo map</div><p>Map data is a local illustration.</p>`;
-    return `<h2>Webpage unavailable</h2><p>The simulator browses a small collection of offline example pages.</p>${browserLink('www.google.com','Go to Google')}`;
-  }
-  function browserTitle(url) {
-    return url === 'www.google.com' ? 'Google' : url.startsWith('search:') ? url.slice(7) : url.replace(/^www\./,'');
-  }
-  // The page address as the 2.3 title bar shows it while loading (searches go to the Google results page).
-  const browserAddress = url => url.startsWith('search:') ? `www.google.com/search?q=${encodeURIComponent(url.slice(7))}` : url;
-  function gbBrowserContext() {
-    const t = key => i18n.t(key);
-    return {lang: i18n.language, t, sub: ui.sub === 'saved' ? 'bookmarks' : ui.sub, url: browserAddress(ui.browserUrl), title: gbBrowserTitle(ui.browserUrl), loading: Date.now() < (ui.gbBrLoadingUntil || 0), editing: !!ui.gbBrEdit, editValue: ui.gbBrEditValue ?? '', find: ui.browserFind, bookmarks: data.bookmarks, history: data.browserHistory, titleOf: gbBrowserTitle, thumbnail: url => renderWebsite(url), tabs: ui.browserTabs, active: ui.browserTab, canForward: ui.browserIndex < ui.browserHistory.length - 1, listView: !!ui.gbBrList, target: ui.gbBrTarget, ok: GBSettings.text(i18n.language, 'fw_ok'), cancel: GBSettings.text(i18n.language, 'fw_cancel')};
-  }
-  const gbBrowserTitle = url => data.bookmarkTitles?.[url] || browserTitle(url);
-  function renderBrowser() { return GBBrowser.render(gbBrowserContext(), renderWebsite(ui.browserUrl)); }
-  // Tab.onPageStarted / onPageFinished: the progress bar and the stop button for a moment after each load.
-  function browserLoading() {
-    ui.gbBrLoadingUntil = Date.now() + 800;
-    clearTimeout(ui.gbBrLoadTimer);
-    ui.gbBrLoadTimer = setTimeout(() => { if (ui.view === 'browser' && !ui.sub && !ui.gbBrEdit) render(); }, 820);
-  }
-  function highlightBrowserText() {
-    const root=viewport.querySelector('.browser-page'), query=ui.browserFind.toLocaleLowerCase();
-    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT), nodes=[]; let node;
-    while((node=walker.nextNode())) nodes.push(node);
-    let count=0;
-    for(const text of nodes) {
-      let value=text.nodeValue, offset=0, index=value.toLocaleLowerCase().indexOf(query); if(index<0)continue;
-      const fragment=document.createDocumentFragment();
-      while(index>=0) { fragment.append(document.createTextNode(value.slice(offset,index)));const mark=document.createElement('mark');mark.textContent=value.slice(index,index+query.length);fragment.append(mark);count++;offset=index+query.length;index=value.toLocaleLowerCase().indexOf(query,offset); }
-      fragment.append(document.createTextNode(value.slice(offset)));text.replaceWith(fragment);
-    }
-    viewport.querySelector('.web-find-count').textContent=`${count} ${i18n.t('matches')}`;
-    root.querySelector('mark')?.scrollIntoView({block:'nearest'});
-  }
+
+  // Browser (gb-browser.js): a page opens, the tabs' state, a page's title and its offline content.
+  const normalizeAddress = raw => GB.module('browser').normalize(raw);
+  function syncBrowserState() { GB.module('browser').sync(ui); }
+  function navigateBrowser(url) { GB.module('browser').navigate(storeContext(), url); }
+  const gbBrowserTitle = url => GB.module('browser').title(data, url);
+  const renderWebsite = url => GB.module('browser').website(url);
 
   // Android Market 3.x state: page, section, tab, selected item, query; the downloads run on a timer.
   function gbMarketContext() {
@@ -1165,7 +1093,6 @@
     ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);syncBrowserState();ui.peopleDraft=null;ui.peopleQuery='';ui.peopleTab='all';save();home();
   }
   function clearAppData(id) {
-    if(id==='browser'){delete data.browserSession;data.browserHistory=clone(defaultData.browserHistory);data.bookmarks=clone(defaultData.bookmarks||[]);data.savedPages=[];ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);syncBrowserState();}
     StoreHost.clearData(id, storeContext());
     if(id==='play-store')delete data.playRatings;
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
@@ -1427,12 +1354,6 @@
       case 'noop': break;
       case 'browser-search': openSearch(''); break;
       case 'gbpref-open': ui.overlay = ''; ui.gbPrefs = {app: id, view: ui.view}; render(); break;
-      case 'gbbr-share': ui.overlay = 'gb-dialog-share'; renderOverlay(); break;
-      // EXTRA_TEXT carries the address and EXTRA_SUBJECT the page title.
-      case 'gbbr-share-to': { const url = ICSBrowserSession.url(ui.browserSession) || '', address = browserAddress(String(url)), title = gbBrowserTitle(url); ui.overlay = '';
-        if (id === 'email') { openApp('email'); composeEmail(); const draft = data.mailbox.find(m => m.id === ui.emailId); if (draft) { draft.subject = title; draft.body = 'http://' + address; save(); render(); } }
-        else { openApp('messaging'); ui.sub = 'new'; data.messageDrafts ||= {}; data.messageDrafts.new = {...(data.messageDrafts.new || {}), body: 'http://' + address, updated: Date.now()}; save(); render(); }
-        break; }
       case 'gbpref-check': { const [app, key] = String(id).split(':'), ctx = gbPrefsContext(app), item = GBPrefs.find(ctx, key); if (item) gbPrefSet(key, !GBPrefs.get(item, ctx.values)); gbPrefRender(); break; }
       case 'gbpref-list': case 'gbpref-action': { const [app, key] = String(id).split(':'), item = GBPrefs.find(gbPrefsContext(app), key); if (!item) break;
         if (item.toast) { toast('This feature is not part of the simulator.'); break; }
@@ -1458,37 +1379,6 @@
         if (key === 'privacy_clear_history') { data.browserHistory = []; data.qsbShortcuts = (data.qsbShortcuts || []).filter(s => s.kind !== 'url'); }
         if (key === 'reset_default_preferences') data.appPrefs[app] = {};
         save(); ui.overlay = ''; gbPrefRender(); break; }
-      case 'browser-link': navigateBrowser(url); break;
-      case 'browser-forward': browserForward(); break;
-      case 'browser-tabs': ui.sub = 'tabs'; ui.overlay = ''; render(); break;
-      case 'browser-menu': ui.overlay = 'browser-menu'; renderOverlay(); break;
-      case 'browser-bookmarks': ui.sub = 'bookmarks'; ui.overlay = ''; render(); break;
-      case 'browser-bookmark': navigateBrowser(id); break;
-      case 'browser-saved': ui.sub='saved'; ui.overlay=''; render(); break;
-      case 'browser-save-page': data.savedPages ||= []; if(!data.savedPages.includes(ui.browserUrl))data.savedPages.push(ui.browserUrl); save(); ui.overlay=''; renderOverlay(); toast('Page saved'); break;
-      case 'browser-close-tab': ICSBrowserSession.close(ui.browserSession,Number(id)); saveBrowserState(); render(); break;
-      case 'browser-refresh': ui.overlay=''; browserLoading(); render(); break;
-      case 'gbbr-stop': ui.gbBrLoadingUntil = 0; ui.overlay = ''; render(); break;
-      case 'gbbr-edit': ui.gbBrEdit = true; ui.gbBrEditValue = browserAddress(ui.browserUrl); ui.overlay = ''; render(); { const input = viewport.querySelector('.gbbr-search input'); input?.focus(); input?.select(); } break;
-      case 'gbbr-edit-cancel': ui.gbBrEdit = false; render(); break;
-      case 'gbbr-library': ui.sub = id; render(); break;
-      case 'gbbr-switch-view': ui.gbBrList = !ui.gbBrList; ui.overlay = ''; render(); break;
-      case 'gbbr-add-bookmark': ui.overlay = 'gb-dialog-br'; ui.gbBrDialog = 'add'; renderOverlay(); break;
-      case 'gbbr-add-bookmark-ok': { const name = overlayRoot.querySelector('[data-gbbr-name]')?.value.trim(), location = normalizeAddress(overlayRoot.querySelector('[data-gbbr-location]')?.value || ''); if (!name) { toast(GBBrowser.text(i18n.language, 'bookmark_needs_title')); break; } if (!location) break; if (!data.bookmarks.includes(location)) data.bookmarks.push(location); data.bookmarkTitles = {...(data.bookmarkTitles || {}), [location]: name}; ui.overlay = ''; save(); render(); toast(GBBrowser.text(i18n.language, 'added_to_bookmarks')); break; }
-      case 'gbbr-page-info': ui.overlay = 'gb-dialog-br'; ui.gbBrDialog = 'info'; renderOverlay(); break;
-      case 'gbbr-star': { const on = data.bookmarks.includes(id); data.bookmarks = on ? data.bookmarks.filter(url => url !== id) : [...data.bookmarks, id]; ui.overlay = ''; save(); render(); toast(GBBrowser.text(i18n.language, on ? 'removed_from_bookmarks' : 'added_to_bookmarks')); break; }
-      case 'gbbr-clear-history': data.browserHistory = []; ui.overlay = ''; save(); render(); break;
-      case 'gbbr-open-new': ui.overlay = ''; if (!ICSBrowserSession.add(ui.browserSession)) break; navigateBrowser(id); break;
-      case 'gbbr-copy-url': try { navigator.clipboard?.writeText(id)?.catch(() => {}); } catch {} ui.overlay = ''; renderOverlay(); break;
-      case 'gbbr-remove-bookmark': data.bookmarks = data.bookmarks.filter(url => url !== id); ui.overlay = ''; save(); render(); break;
-      case 'gbbr-remove-history': data.browserHistory = data.browserHistory.filter(url => url !== id); ui.overlay = ''; save(); render(); break;
-      case 'gbbr-homepage': data.browserHome = id; ui.overlay = ''; save(); renderOverlay(); break;
-      case 'gbbr-find-step': { const marks = [...viewport.querySelectorAll('.browser-page mark')]; if (!marks.length) break; ui.gbBrMark = ((ui.gbBrMark ?? -1) + Number(id) + marks.length) % marks.length; marks.forEach((m, k) => m.classList.toggle('current', k === ui.gbBrMark)); marks[ui.gbBrMark].scrollIntoView({block: 'nearest'}); break; }
-      case 'browser-find': ui.browserFind=''; ui.overlay=''; render(); viewport.querySelector('.gbbr-find input')?.focus(); break;
-      case 'browser-close-find': ui.browserFind=undefined; render(); break;
-      case 'browser-tab': ui.browserSession.active = Number(id); ui.sub = ''; ui.browserFind = undefined; saveBrowserState(); render(); break;
-      case 'browser-new-tab': if (!ICSBrowserSession.add(ui.browserSession)) break; browserLoading(); ui.sub = ''; ui.overlay = ''; ui.browserFind = undefined; saveBrowserState(); render(); break;
-      case 'browser-save': ui.overlay = ''; renderOverlay(); if (!data.bookmarks.includes(ui.browserUrl)) { data.bookmarks.push(ui.browserUrl); save(); toast('Bookmark saved'); } else toast('Already bookmarked'); break;
       case 'alarm-snooze': {
         const alarm=data.alarms.find(item=>item.id===ui.ringingAlarm.id);
         // Snooze duration from the Clock settings (snooze_duration: 5, 10, ... 30 minutes).
@@ -1528,11 +1418,8 @@
       save(); ui.overlay = ''; render(); return;
     }
     switch (form.dataset.form) {
-      case 'browser-find': ui.browserFind=String(values.get('query')||'').trim(); render(); break;
-      case 'address': navigateBrowser(values.get('address')); break;
       case 'gbmk-search': { const q = String(values.get('query') || '').trim(); if (!q) break; data.marketSearches = [q, ...(data.marketSearches || []).filter(x => x !== q)].slice(0, 10); save(); gbMarketGo({page: 'search', query: q}); break; }
-      case 'web-search': navigateBrowser(`search:${values.get('query')}`); break;
-      default: break;
+      default: StoreHost.ids().some(other => other !== ui.view && !other.startsWith('store-') && StoreHost.module(other).submit?.(form.dataset.form, values, storeContext())); break;
     }
   });
   // Select text: a touch on the Browser page or the Google Mail message while the mode is armed.
@@ -1553,8 +1440,6 @@
     if (event.target.matches('[data-gbmk-auto]')) { const id = event.target.dataset.gbmkAuto, list = data.marketAuto || []; data.marketAuto = event.target.checked ? [...new Set([...list, id])] : list.filter(x => x !== id); save(); return; }
     if (event.target.matches('[data-gbsp-erase]')) { ui.gbspErase = event.target.checked; return; }
     if (ui.view === 'play-store' && event.target.closest('.gbbr-search')) { ui.marketEdit = event.target.value; const pos = event.target.selectionStart; render(); const input = viewport.querySelector('.gbbr-search input'); input?.focus(); input?.setSelectionRange(pos, pos); return; }
-    if (event.target.closest('.gbbr-search')) { ui.gbBrEditValue = event.target.value; const box = viewport.querySelector('.gbbr-suggest'); if (box) box.innerHTML = GBBrowser.suggestions(gbBrowserContext()); return; }
-    if (event.target.closest('.gbbr-find')) { ui.browserFind = event.target.value; ui.gbBrMark = -1; const page = viewport.querySelector('.browser-page'); page.innerHTML = renderWebsite(ui.browserUrl); if (ui.browserFind) highlightBrowserText(); else viewport.querySelector('.web-find-count').textContent = ''; return; }
     if (event.target.dataset.field === 'brightness') {
       data.settings.brightness = Number(event.target.value); save();
       const display = event.target.closest('.detail-pad')?.querySelector('p'); if (display) display.textContent = `${data.settings.brightness}%`;
@@ -1950,8 +1835,6 @@
   screen.addEventListener('contextmenu', event => {
     if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
     event.preventDefault();
-    const link = event.target.closest('[data-gbbr-item]');
-    if (link && !ui.overlay) { ui.gbBrTarget = link.dataset.id; ui.overlay = 'gb-dialog-br'; ui.gbBrDialog = link.dataset.gbbrItem; renderOverlay(); }
     const net = event.target.closest('[data-gbnet-hold]');
     if (net && !ui.overlay) GBNetwork.hold(net.dataset.gbnetHold, gbNetContext());
     if (!dragState && ui.view === 'home' && !ui.overlay && event.button === 2 && event.target.closest('.home-slot') && !event.target.closest('.launcher-icon')) { ui.overlay = 'wallpaper-source'; renderOverlay(); }
@@ -1978,8 +1861,6 @@
       ? (ui.view === 'settings' && event.target.closest('.settings-app .app-content') ? event.target.closest('.settings-app') : event.target.closest('.play-content,.mms-scroll,.people-scroll,.browser-page,.web-tabs,.web-library,.gbdc-alarms,.gallery-scroll,.cal-scroll,.music-library-scroll,.email-scroll')) : null);
     pointerStart = { x: event.clientX, y: event.clientY, target: event.target, source: dragSource(event.target), pointerType: event.pointerType, pointerId: event.pointerId, downTime: performance.now(), scrollTarget, scrollTop: scrollTarget?.scrollTop || 0, lockDrag: ui.view === 'lock' && !!event.target.closest('.lock-handle'), shadeDragEligible: !ui.overlay && !ui.locked && !!event.target.closest('#status-bar'), shadeCloseEligible: ui.overlay === 'shade' && !!event.target.closest('.gbsh-close'), pageSwipeEligible: ui.view === 'home' && !ui.overlay && !!event.target.closest('.home-view') && !event.target.closest('.dock, .page-indicators, .home-search'), drawerSwipeEligible: ui.view === 'drawer' && !!event.target.closest('.drawer-page') };
     if (ui.view === 'home' && !ui.overlay && event.target.closest('.home-slot') && !pointerStart.source) homeLongPressTimer = setTimeout(() => { ui.overlay = 'wallpaper-source'; renderOverlay(); pointerStart = null; suppressReleaseClick(); }, 550);
-    const heldLink = event.target.closest('[data-gbbr-item]');
-    if (heldLink && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.gbBrTarget = heldLink.dataset.id; suppressReleaseClick(); ui.overlay = 'gb-dialog-br'; ui.gbBrDialog = heldLink.dataset.gbbrItem; renderOverlay(); }, 550);
     const heldNet = event.target.closest('[data-gbnet-hold]');
     if (heldNet && !ui.overlay) messageHoldTimer = setTimeout(() => { suppressReleaseClick(); GBNetwork.hold(heldNet.dataset.gbnetHold, gbNetContext()); }, 550);
     if (pointerStart.lockDrag) { clearTimeout(ui.lockReleaseTimer); viewport.querySelectorAll('.lock-chevron').forEach(chevron => chevron.getAnimations().forEach(animation => animation.cancel())); screen.classList.remove('lock-releasing'); screen.classList.add('lock-dragging'); try { screen.setPointerCapture(event.pointerId); } catch {} }
