@@ -218,7 +218,9 @@
 /* Holo dialog rows for Sort reviews / Options. */
 .icsp-dialog{padding:0;background:#282828}
 .icsp-dialog h3{margin:0;padding:calc(16.4706 * var(--dp)) calc(18.8236 * var(--dp));border-bottom:calc(2 * var(--dp)) solid #33b5e5;color:#33b5e5;font-size:calc(20 * var(--dp));font-weight:400}
-.icsp-dialog .settings-dialog-actions{display:flex;border-top:calc(1.1765 * var(--dp)) solid #3a3a3a}
+.icsp-dialog .settings-dialog-actions{display:flex;margin:0;border-top:calc(1.1765 * var(--dp)) solid #3a3a3a}
+.icsp-dialog .settings-dialog-actions button+button{border-left:calc(1.1765 * var(--dp)) solid #3a3a3a}
+.icsp-dialog .icsp-dlg-text{margin:0;padding:calc(18.8236 * var(--dp));font-size:calc(16.4706 * var(--dp));color:#ddd}
 .icsp-dialog .settings-dialog-actions button{flex:1;min-height:calc(48 * var(--dp));border:0;background:none;color:#eee;font-size:calc(16.4706 * var(--dp));cursor:pointer}
 /* 3.8: the purple Magazines tile mark and magazine covers. */
 .icsp-cover.magazines{border-radius:calc(1.1765 * var(--dp));box-shadow:inset 0 0 0 calc(1.1765 * var(--dp)) #ffffff26,0 calc(1.1765 * var(--dp)) calc(2.353 * var(--dp)) #0006}
