@@ -212,7 +212,7 @@ async function finish(steps, check) {
 }
 
 let failures = 0;
-for (const [version, mobile] of [...VERSIONS.map(v => [v, false]), ...(picked.length ? picked.filter(v => v === '6.0.1').map(v => [v, true]) : [['6.0.1', true], ['5.1.1', true], ['2.3.6', true], ['2.1', true]])]) {
+for (const [version, mobile] of [...VERSIONS.map(v => [v, false]), ...['6.0.1', '5.1.1', '2.3.6', '2.1'].filter(v => !picked.length || picked.includes(v)).map(v => [v, true])]) {
   const name = `${version}${mobile ? ' (phone width)' : ''}`;
   try { const steps = await flow(version, mobile); console.log(`ok   ${name}: ${steps.map(s => s.name).join(', ')}`); }
   catch (error) {

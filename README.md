@@ -83,7 +83,9 @@ real mouse dragging, wheel scrolling, selection and phone touch in 5.1.1, 6.0.1 
 npm run test:browser
 ```
 
-Both run on every push (`.github/workflows/tests.yml`). The text, asset and font checks (`npm run check:texts`,
+Both run on every push (`.github/workflows/tests.yml`): the module tests always; the browser flows in nine parallel
+jobs, one per version and one for the rest (`node tests/browser/ci.mjs <version|shared>`), skipped when a push only
+changes documentation, tools or module tests. The text, asset and font checks (`npm run check:texts`,
 `check:assets`, `check:fonts`) write their reports to `docs/reports/`.
 
 ## Development
