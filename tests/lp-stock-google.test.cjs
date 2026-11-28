@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource = require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // 5.1.1 stock Google apps checked against the LMY48Y APKs and their odex code (audit step 4).
 const w={window:{GELNow:{render:()=>'<div class="gnow-page"></div>'}}};vm.runInNewContext(fs.readFileSync('earth-app.js','utf8'),w);vm.runInNewContext(fs.readFileSync('plus-post.js','utf8'),w);for(const f of ['stock-strings.js','lp-drive.js','stock-apps.js'])vm.runInNewContext(fs.readFileSync('versions/5.1.1/'+f,'utf8'),w);
@@ -12,7 +13,7 @@ const ea=A.render('earth',ctx());assert.ok(ea.includes('ea8-bar')&&ea.includes('
 const ea2=A.render('earth',ctx({earthQuery:'Pizza'}));assert.ok(ea2.includes('earth-clear')&&ea2.includes('data-action="sa-menu"'));
 // News & Weather 2.2: the light Toolbar with Search and Add section, Headlines' weather card and section card, the drawer.
 const nw=A.render('news-weather',ctx({newsDrawer:true},'hu'));assert.ok(nw.includes('nw2-bar')&&nw.includes('Címsorok')&&nw.includes('nw2-ic_add_white_24dp.png')&&nw.includes('nw2-weather')&&nw.includes('Súgó és visszajelzés'));
-assert.ok(fs.readFileSync('versions/5.1.1/simulator.js','utf8').includes("'news-weather': '#9e9e9e'"));
+assert.ok(engineSource('5.1.1').includes("'news-weather': '#9e9e9e'"));
 // Keep 3.0: the yellow Toolbar with Search, the floating quick-edit bar, DrawerFragment's items in the dex's order.
 const kp=A.render('keep',{...ctx({keepDrawer:true}),data:{keepNotes:[{id:'k1',text:'Milk'}]}});assert.ok(kp.includes('kp3-bar')&&kp.includes('kp3-ic_material_search_light.png')&&kp.includes('kp3-quick'));
 assert.equal([...kp.matchAll(/data-action="keep-landing" data-id="(\w+)"/g)].map(m=>m[1]).join(),'notes,reminders,archive,trash');
@@ -27,7 +28,7 @@ assert.equal(JSON.stringify(A.menu('drive',ctx()).map(i=>i.title)),JSON.stringif
 // YouTube 10.03: the red Toolbar with Search, q_video_feed_entry rows, the guide's local entries in the bhx order.
 const yt=A.render('youtube',ctx({ytGuide:true}));assert.ok(yt.includes('yt10-bar')&&yt.includes('yt10-item')&&yt.includes('yt10-ic_drawer_what_to_watch.png'));
 assert.ok(/Watch later.*Favorites.*Uploads.*History.*Offline/s.test(yt.slice(yt.indexOf('yt10-guide'))));
-assert.ok(fs.readFileSync('versions/5.1.1/simulator.js','utf8').includes("youtube: '#c31c13'"));
+assert.ok(engineSource('5.1.1').includes("youtube: '#c31c13'"));
 // Google+ 4.9: the red Toolbar with "Home" and the notifications button, the compose FAB, the host menu.
 const gp=A.render('google-plus',ctx());assert.ok(gp.includes('gp49-bar')&&gp.includes('gp49-quantum_ic_notifications_none_white_24.png')&&gp.includes('gp49-fab'));
 assert.equal(JSON.stringify(A.menu('google-plus',ctx()).map(i=>i.title)),JSON.stringify(['Refresh','Feedback','Settings','Help','Sign out']));

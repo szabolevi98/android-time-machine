@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource = require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Lollipop Interruptions (versions/5.1.1/lp-zen.js): ZenModeSettings, ZenModeConditionSelection and Downtime as the
 // android-5.1.1_r26 Settings and DowntimeConditionProvider have them.
@@ -7,7 +8,7 @@ const Z=w.LPZen,t=k=>k,plain=v=>JSON.parse(JSON.stringify(v));
 const at=(y,m,d,h,min=0)=>new Date(y,m-1,d,h,min).getTime(),MIN=60000,HOUR=60*MIN;
 // default_zen_mode_config.xml and ZenModeConfig: no calls or messages, events on, from anyone, 22:00-07:00, no days.
 assert.deepEqual(plain(Z.config({})),{calls:false,messages:false,events:true,from:'anyone',days:[],start:'22:00',end:'07:00',sleepNone:false});
-assert.ok(fs.readFileSync('versions/5.1.1/simulator.js','utf8').includes("zenEvents: true, zenCalls: false, zenMessages: false"));
+assert.ok(engineSource('5.1.1').includes("zenEvents: true, zenCalls: false, zenMessages: false"));
 // Days come back Monday first (ZenModeDowntimeDaysSelection.DAYS); Calendar numbers, 1 = Sunday.
 assert.deepEqual(plain(Z.config({zenDays:[1,7,2]}).days),[2,7,1]);
 // DowntimeCalendar: a Monday downtime 22:00-07:00 runs into Tuesday morning; Tuesday evening is not chosen.

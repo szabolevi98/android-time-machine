@@ -1,6 +1,6 @@
 require('./lib/vm-strings.cjs');
+const engineSource = require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
-const engineSource=require('./lib/engine-source.cjs');
 // Photo Sphere (T49) in the 4.4 and 5.1 cameras: LightCycle's targets, the hold that takes a frame, Undo / discard,
 // Done once two frames are in, the saved equirectangular picture and the viewers' wiring.
 for(const [v,file,name,state] of [['4.4.4','kk-sphere.js','KKSphere','kkSphere'],['5.1.1','lp-sphere.js','LPSphere','lpSphere']]){

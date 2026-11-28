@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource = require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const context={window:{},encodeURIComponent,ResizeObserver:class{observe(){}}};vm.createContext(context);
 vm.runInContext(fs.readFileSync('versions/4.3/media.js','utf8'),context);vm.runInContext(fs.readFileSync('versions/4.3/gallery-video.js','utf8'),context);vm.runInContext(fs.readFileSync('versions/4.3/jb-gallery.js','utf8'),context);
@@ -51,6 +52,6 @@ console.log('JB gallery checks passed: clusters, slot and film geometry, back st
   const kk=fs.readFileSync('versions/4.4.4/kk-gallery.js','utf8');assert.match(kk,/"hu":"Nyomtatás"|"hu": "Nyomtatás"/);assert.match(kk,/GalleryGoogle 1\.1\.40304/);
   const c={window:{}};vm.runInNewContext(fs.readFileSync('versions/5.1.1/lp-gallery.js','utf8'),c);
   assert.deepEqual(Object.keys(c.window.LPGallery),['groups','items']);
-  assert.ok(!fs.existsSync('versions/5.1.1/lp-gallery.css'));assert.doesNotMatch(fs.readFileSync('versions/5.1.1/simulator.js','utf8'),/JBGallery|data-jbgal/);
+  assert.ok(!fs.existsSync('versions/5.1.1/lp-gallery.css'));assert.doesNotMatch(engineSource('5.1.1'),/JBGallery|data-jbgal/);
   console.log('Gallery per image checks passed.');
 }

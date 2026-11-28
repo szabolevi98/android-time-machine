@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource = require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Downloads opens DocumentsUI in manage mode: KitKat's Holo Light version (kk-downloads.js) and Lollipop's own Material
 // DocumentsUI 5.1.1 (lp-downloads.js), each with the mime icons of its image's APK.
@@ -16,6 +17,6 @@ for(const [v,M,prefix] of [['4.4.4',KK,'kdu'],['5.1.1',LP,'ldu']]){
 const lp=LP.render(items,{dlGrid:true},k=>k,'en-US'),css=fs.readFileSync('versions/5.1.1/lp-downloads.css','utf8');
 assert.match(lp,/ldu-toolbar/);assert.match(lp,/ldu-cell/);assert.doesNotMatch(lp,/kdu-|holo/);
 assert.match(css,/\.ldu-toolbar\{[^}]*background:#37474f/);assert.match(LP.menu('sort',{},k=>k),/lp-popup-menu/);
-const sim=fs.readFileSync('versions/5.1.1/simulator.js','utf8');
+const sim=engineSource('5.1.1');
 assert.match(sim,/LPDownloads\.render/);assert.doesNotMatch(sim,/KKDownloads/);assert.match(sim,/downloads: '#263238'/);assert.match(sim,/downloads: '#37474f'/);
 console.log('Downloads checks passed: DocumentsUI per image, mime icons, sorting, Lollipop Material toolbar.');

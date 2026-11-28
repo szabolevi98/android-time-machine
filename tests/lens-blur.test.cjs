@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource = require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Lens Blur (T49, 5.1.1): the sweep counts only a slow drag upwards, a full one succeeds; the saved picture blurs
 // round its focus by its strength.
@@ -18,7 +19,7 @@ const out=svg(M.image({id:9,colors:['#96c8d0','#e8ad7a','#364e59'],refocus:{focu
 assert.match(out,/feGaussianBlur stdDeviation="11.00"/);assert.match(out,/<ellipse cx="256" cy="576"/);assert.equal((out.match(/<image /g)||[]).length,2);
 assert.match(svg(M.image({id:9,rotation:90,refocus:{focus:[.5,.5],strength:0}})),/width="768" height="1024"/);
 // The camera, Photos and the shell are wired.
-const cam=fs.readFileSync('versions/5.1.1/lp-camera.js','utf8'),sim=fs.readFileSync('versions/5.1.1/simulator.js','utf8');
+const cam=fs.readFileSync('versions/5.1.1/lp-camera.js','utf8'),sim=engineSource('5.1.1');
 assert.ok(cam.includes("if (mode === 'refocus') { refocus?.shutter(); return; }"));
 assert.ok(sim.includes("clip?.refocus ? {refocus: {focus: [.5, .5], strength: .6}}")&&sim.includes("case 'photos-refocus-done'"));
 assert.ok(fs.readFileSync('versions/5.1.1/photos.js','utf8').includes("photo.refocus ? 'photos-refocus'"));

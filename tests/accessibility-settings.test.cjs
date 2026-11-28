@@ -8,7 +8,7 @@ for(const v of ['4.0.4','4.3','4.4.4','5.1.1']){
   const a=w.window.StockStrings.a11y;assert.equal(a['Touch & hold delay'].hu,'Érintés és tartási késleltetés');
   assert.deepEqual(['Short','Medium','Long'].map(k=>a[k].hu),['Rövid','Közepes','Hosszú']);
   const sim=engineSource(v);
-  assert.ok(sim.includes("const HOLD = [500, 1000, 1500]")&&sim.includes("case 'a11y-hold-pick'")&&sim.includes("ui.overlay === 'a11y-hold'"),v);
+  assert.ok(sim.includes("const HOLD = [500, 1000, 1500]")&&sim.includes("case 'a11y-hold-pick'")&&(sim.includes("ui.overlay === 'a11y-hold'")||sim.includes("'a11y-hold'() {")),v);
   assert.ok((sim.match(/holdDelay\(\d{3}\)/g)||[]).length>=4,`${v} long-press timers`);
   if(v==='4.0.4')continue;
   assert.match(a['Magnification summary'].en,/triple-tap/i);

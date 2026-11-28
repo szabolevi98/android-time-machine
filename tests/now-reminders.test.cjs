@@ -1,6 +1,6 @@
 require('./lib/vm-strings.cjs');
+const engineSource = require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
-const engineSource=require('./lib/engine-source.cjs');
 // Google Now reminders and card settings (audit step 5): Velvet 3.3.11 (4.4.4) and 4.1.29 (5.1.1).
 for(const [v,third] of [['4.4.4','Weekend'],['5.1.1','Occasionally']]){
   const w={window:{}};w.window.window=w.window;
