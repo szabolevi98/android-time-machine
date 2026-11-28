@@ -278,7 +278,7 @@
     }
   }
   // The names the jb-* modules bind (generated as code moves out; docs/plans/engine-migration-4.3.md).
-  const moduleApi = {get A11Y() { return A11Y; }, get HOLD_NAMES() { return HOLD_NAMES; }, get PLAY_APPS() { return PLAY_APPS; }, get addNotification() { return addNotification; }, get appIcon() { return appIcon; }, get appView() { return appView; }, get applyMagnification() { return applyMagnification; }, get apps() { return apps; }, get back() { return back; }, get cameraIntent() { return cameraIntent; }, get cameraShoot() { return cameraShoot; }, get captureRecentView() { return captureRecentView; }, get carrierName() { return carrierName; }, get cczContext() { return cczContext; }, get clearAppData() { return clearAppData; }, get clock() { return clock; }, get clone() { return clone; }, get composeEmail() { return composeEmail; }, get composeGmail() { return composeGmail; }, get connectivityRow() { return connectivityRow; }, get connectivitySwitch() { return connectivitySwitch; }, get contact() { return contact; }, get contactByPhone() { return contactByPhone; }, get content() { return content; }, get data() { return data; }, get defaultData() { return defaultData; }, get deviceDate() { return deviceDate; }, get digitalClockWidget() { return digitalClockWidget; }, get dp() { return dp; }, get dreams() { return dreams; }, get emailContext() { return emailContext; }, get emailData() { return emailData; }, get fullDate() { return fullDate; }, get hangoutsScope() { return hangoutsScope; }, get hangoutsSwap() { return hangoutsSwap; }, set hangoutsSwap(v) { hangoutsSwap = v; }, get home() { return home; }, get i18n() { return i18n; }, get jbmaContext() { return jbmaContext; }, get jbmaReturn() { return jbmaReturn; }, get keepMoreContext() { return keepMoreContext; }, get label() { return label; }, get lastActivity() { return lastActivity; }, set lastActivity(v) { lastActivity = v; }, get lockControls() { return lockControls; }, get lockScreen() { return lockScreen; }, get messageDraft() { return messageDraft; }, get messengerContext() { return messengerContext; }, get movieContext() { return movieContext; }, get mrContext() { return mrContext; }, get musicActive() { return musicActive; }, get navRoot() { return navRoot; }, get navigateBack() { return navigateBack; }, get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; }, get openApp() { return openApp; }, get openMessageThread() { return openMessageThread; }, get overlayRoot() { return overlayRoot; }, get placeContactShortcut() { return placeContactShortcut; }, get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; }, get powerLayer() { return powerLayer; }, get prefRow() { return prefRow; }, get reducedMotion() { return reducedMotion; }, get render() { return render; }, get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; }, get restoreChrome() { return restoreChrome; }, get row() { return row; }, get safe() { return safe; }, get save() { return save; }, get saveMusic() { return saveMusic; }, get screen() { return screen; }, get shareText() { return shareText; }, get shareVcard() { return shareVcard; }, get startPhoneCall() { return startPhoneCall; }, get statusRoot() { return statusRoot; }, get storeAppsSync() { return storeAppsSync; }, get storeContext() { return storeContext; }, get storeInstalled() { return storeInstalled; }, get storeUninstall() { return storeUninstall; }, get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; }, get syncBrowserState() { return syncBrowserState; }, get toast() { return toast; }, get today() { return today; }, get toggleRow() { return toggleRow; }, get tracks() { return tracks; }, get ui() { return ui; }, get viewport() { return viewport; }, get volumeLayer() { return volumeLayer; }, get wallpaperChoices() { return wallpaperChoices; }, get wifiNetworks() { return wifiNetworks; }, get wirelessCheckRow() { return wirelessCheckRow; }, get wirelessRow() { return wirelessRow; }};
+  const moduleApi = {get A11Y() { return A11Y; }, get HOLD_NAMES() { return HOLD_NAMES; }, get PLAY_APPS() { return PLAY_APPS; }, get addNotification() { return addNotification; }, get appIcon() { return appIcon; }, get appNames() { return appNames; }, get appView() { return appView; }, get applyMagnification() { return applyMagnification; }, get apps() { return apps; }, get back() { return back; }, get cameraIntent() { return cameraIntent; }, get cameraShoot() { return cameraShoot; }, get captureRecentView() { return captureRecentView; }, get carrierName() { return carrierName; }, get cczContext() { return cczContext; }, get clearAppData() { return clearAppData; }, get clock() { return clock; }, get clone() { return clone; }, get composeEmail() { return composeEmail; }, get composeGmail() { return composeGmail; }, get connectivityRow() { return connectivityRow; }, get connectivitySwitch() { return connectivitySwitch; }, get contact() { return contact; }, get contactByPhone() { return contactByPhone; }, get content() { return content; }, get data() { return data; }, get defaultData() { return defaultData; }, get deviceDate() { return deviceDate; }, get digitalClockWidget() { return digitalClockWidget; }, get dp() { return dp; }, get emailContext() { return emailContext; }, get emailData() { return emailData; }, get fullDate() { return fullDate; }, get hangoutsScope() { return hangoutsScope; }, get hangoutsSwap() { return hangoutsSwap; }, set hangoutsSwap(v) { hangoutsSwap = v; }, get home() { return home; }, get i18n() { return i18n; }, get jbmaContext() { return jbmaContext; }, get jbmaReturn() { return jbmaReturn; }, get keepMoreContext() { return keepMoreContext; }, get label() { return label; }, get lastActivity() { return lastActivity; }, set lastActivity(v) { lastActivity = v; }, get lockControls() { return lockControls; }, get lockScreen() { return lockScreen; }, get messageDraft() { return messageDraft; }, get messengerContext() { return messengerContext; }, get movieContext() { return movieContext; }, get mrContext() { return mrContext; }, get musicActive() { return musicActive; }, get navRoot() { return navRoot; }, get navigateBack() { return navigateBack; }, get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; }, get openApp() { return openApp; }, get openMessageThread() { return openMessageThread; }, get overlayRoot() { return overlayRoot; }, get placeContactShortcut() { return placeContactShortcut; }, get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; }, get powerLayer() { return powerLayer; }, get prefRow() { return prefRow; }, get reducedMotion() { return reducedMotion; }, get render() { return render; }, get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; }, get restoreChrome() { return restoreChrome; }, get row() { return row; }, get safe() { return safe; }, get save() { return save; }, get saveMusic() { return saveMusic; }, get screen() { return screen; }, get shareText() { return shareText; }, get shareVcard() { return shareVcard; }, get startPhoneCall() { return startPhoneCall; }, get statusRoot() { return statusRoot; }, get storeAppsSync() { return storeAppsSync; }, get storeContext() { return storeContext; }, get storeInstalled() { return storeInstalled; }, get storeUninstall() { return storeUninstall; }, get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; }, get syncBrowserState() { return syncBrowserState; }, get toast() { return toast; }, get today() { return today; }, get toggleRow() { return toggleRow; }, get tracks() { return tracks; }, get ui() { return ui; }, get viewport() { return viewport; }, get volumeLayer() { return volumeLayer; }, get wallpaperChoices() { return wallpaperChoices; }, get wifiNetworks() { return wifiNetworks; }, get wirelessCheckRow() { return wirelessCheckRow; }, get wirelessRow() { return wirelessRow; }};
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
   function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (jbPlayContext().prefs.shortcuts) placeShortcut(r, appNames[r]); }
   // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
@@ -457,11 +457,7 @@
       list.scrollTop = ui.widgetScroll[id] || 0;
     });
   }
-  // recents_return_to_launcher: Recents fades out while the launcher fades back in (250 ms).
-  function closeRecents() {
-    const panel = overlayRoot.querySelector('.recent-panel'); ui.recentPopup = null;
-    JBRecents.close(panel, () => { ui.overlay = ''; renderOverlay(); if (!reducedMotion?.matches) viewport.firstElementChild?.animate([{opacity: 0}, {opacity: 1}], {duration: JBRecents.R.window, easing: 'cubic-bezier(.215,.61,.355,1)'}); }, !!reducedMotion?.matches);
-  }
+  function closeRecents(...args) { return StoreHost.module('recents').exports.closeRecents(storeContext(), ...args); }
   /* SearchPanelView: an upward swipe of navbar_search_up_threshhold (40dp) from the navigation bar shows the ring;
      releasing on the assist target starts search (the Google Search app on Google builds, Browser here). */
   // PointerLocationView: the bar at the top follows the primary pointer while the option is on.
@@ -469,45 +465,11 @@
   screen.addEventListener('pointerdown', event => { pointerDownCount++; if (data.settings.pointerLocation) JBDeveloperOptions.pointerMove(screen, event, true, 1); }, true);
   screen.addEventListener('pointermove', event => { if (data.settings.pointerLocation) JBDeveloperOptions.pointerMove(screen, event, event.buttons > 0, 1); }, true);
   window.addEventListener('pointerup', event => { if (data.settings.pointerLocation) JBDeveloperOptions.pointerMove(screen, event, false, 1); }, true);
-  let searchSwipe = null;
-  navRoot.addEventListener('pointerdown', event => { if (ui.locked || ui.view === 'lock' || event.button > 0) return; searchSwipe = {id: event.pointerId, x: event.clientX, y: event.clientY, panel: null}; }, true);
-  window.addEventListener('pointermove', event => {
-    if (!searchSwipe || event.pointerId !== searchSwipe.id) return;
-    const box = overlayRoot.getBoundingClientRect(), k = box.width / overlayRoot.offsetWidth || 1;
-    if (!searchSwipe.panel) {
-      if ((searchSwipe.y - event.clientY) / k < JBSearchPanel.S.up) return;
-      const home = navRoot.querySelector('.nav-home').getBoundingClientRect();
-      ui.overlay = 'search'; overlayRoot.innerHTML = ''; renderOverlay();
-      searchSwipe.panel = JBSearchPanel.attach(overlayRoot.querySelector('[data-jb-search]'), {homeX: (home.left + home.width / 2 - box.left) / k, haptic: () => data.settings.haptic !== false, reduced: !!reducedMotion?.matches,
-        onLaunch: () => { ui.overlay = ''; renderOverlay(); openApp('google-search'); },
-        onClose: () => { if (ui.overlay === 'search') { ui.overlay = ''; renderOverlay(); } }});
-      suppressClickUntil = Infinity;
-    }
-    const panel = overlayRoot.querySelector('[data-jb-search]').getBoundingClientRect();
-    searchSwipe.panel.move((event.clientX - panel.left) / k, (event.clientY - panel.top) / k);
-  }, true);
-  const endSearchSwipe = event => {
-    if (!searchSwipe || event.pointerId !== searchSwipe.id) return;
-    const panel = searchSwipe.panel; searchSwipe = null;
-    if (!panel) return;
-    suppressClickUntil = Date.now() + 350;
-    event.type === 'pointercancel' ? panel.cancel() : panel.release();
-  };
-  window.addEventListener('pointerup', endSearchSwipe, true); window.addEventListener('pointercancel', endSearchSwipe, true);
   function lockScreen(...args) { return StoreHost.module('keyguard').exports.lockScreen(storeContext(), ...args); }
   function lockPing(...args) { return StoreHost.module('keyguard').exports.lockPing(storeContext(), ...args); }
   function lockMove(...args) { return StoreHost.module('keyguard').exports.lockMove(storeContext(), ...args); }
   function lockRelease(...args) { return StoreHost.module('keyguard').exports.lockRelease(storeContext(), ...args); }
-  const dreams = [['clock', 'Clock'], ['colors', 'Colors'], ['photoframe', 'Photo Frame']];
-  // Dreams: DeskClock Screensaver (dimmed clock that moves every minute), SystemUI Colors and a photo slideshow.
-  function renderDream() {
-    const type = data.settings.daydreamType || 'clock', now = deviceDate();
-    if (type === 'colors') return '<div class="jb-dream jb-dream-colors" data-action="dream-exit" role="button" tabindex="0" aria-label="Daydream"></div>';
-    if (type === 'photoframe') { const photo = data.photos[Math.floor(Date.now() / 6000) % Math.max(1, data.photos.length)]; return `<div class="jb-dream jb-dream-photo" data-action="dream-exit" role="button" tabindex="0" aria-label="Daydream">${photo ? `<img src="${ICSMedia.image(photo)}" alt="">` : ''}</div>`; }
-    const time = now.toLocaleTimeString(i18n.locale(), {hour: data.settings.hour24 ? '2-digit' : 'numeric', minute: '2-digit', hour12: !data.settings.hour24}), [hours, rest = ''] = time.split(/[:.]/);
-    const spot = Math.floor(Date.now() / 60000) % 4;
-    return `<div class="jb-dream jb-dream-clock" data-action="dream-exit" role="button" tabindex="0" aria-label="Daydream"><div class="jb-dream-saver" style="--spot:${spot}"><div class="jbclock-time"><span class="jbclock-hours">${safe(hours)}</span><span class="jbclock-minutes">:${safe(rest.replace(/\s?[^\d].*$/, ''))}</span></div><div class="jbclock-date">${safe(now.toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).toLocaleUpperCase(i18n.locale()))}${nextAlarmLabel() ? ` <img src="assets/jbclock-ic_alarm_small.png" alt="">${safe(nextAlarmLabel())}` : ''}</div></div></div>`;
-  }
+  function renderDream(...args) { return StoreHost.module('settings').exports.renderDream(storeContext(), ...args); }
   function renderLock(...args) { return StoreHost.module('keyguard').exports.renderLock(storeContext(), ...args); }
   function renderSecureKeyguard(...args) { return StoreHost.module('keyguard').exports.renderSecureKeyguard(storeContext(), ...args); }
   function requestBouncer(...args) { return StoreHost.module('keyguard').exports.requestBouncer(storeContext(), ...args); }
@@ -681,14 +643,7 @@
     clearTimeout(ui.toastTimer); ui.toastTimer = setTimeout(() => element.remove(), 2500);
   }
   let openFolderId = '';
-  /* RecentsPanelView.handleSwipe and the card's "Remove from list": ActivityManager.removeTask(id, REMOVE_TASK_KILL_PROCESS).
-     The task and its saved state go; when it is the app on screen, that app is gone too, so once the panel closes (Back,
-     the Recent apps key, the scrim, the last card) the home screen is there, with no app-closing transition. */
-  function removeTask(id) {
-    ui.recent = ui.recent.filter(item => item !== id);
-    delete ui.recentState?.[id]; delete ui.recentSnapshots[id];
-    if (ui.view === id) ui.removedTask = id;
-  }
+  function removeTask(...args) { return StoreHost.module('recents').exports.removeTask(storeContext(), ...args); }
   function renderOverlay() {
     if (ui.removedTask && ui.overlay !== 'recent') {
       const gone = ui.removedTask; ui.removedTask = null;
@@ -702,17 +657,8 @@
     else if (moduleOverlay) { /* drawn by the module */ }
     else if (ui.overlay === 'store-host') {
       overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
-    } else if (ui.overlay === 'dream') {
-      overlayRoot.innerHTML = renderDream();
     } else if (ui.overlay.startsWith('widget-photo')) {
       overlayRoot.innerHTML = ICSWidgets.photoOverlay(data, ui, key => i18n.t(key));
-    } else if (ui.overlay === 'search') {
-      if (!overlayRoot.querySelector('[data-jb-search]')) overlayRoot.innerHTML = JBSearchPanel.markup(key => i18n.t(key));
-    } else if (ui.overlay === 'recent') {
-      overlayRoot.innerHTML = JBRecents.render(ui.recent, {names: appNames, icon: appIcon, snapshots: ui.recentSnapshots, popup: ui.recentPopup, t: key => i18n.t(key)});
-      // PopupMenu keeps itself on screen: shift it left when the anchor is near the right edge.
-      const popup = overlayRoot.querySelector('.jb-recent-popup'); if (popup) popup.style.left = `${Math.max(4, Math.min(parseFloat(popup.style.left), popup.parentElement.clientWidth - popup.offsetWidth - 4))}px`;
-      JBRecents.bindLongPress(overlayRoot.querySelector('.recent-panel'), popup => { ui.recentPopup = popup; suppressClickUntil = Infinity; window.addEventListener('pointerup', () => { suppressClickUntil = Date.now() + 50; }, {once: true, capture: true}); renderOverlay(); });
     } else if (ui.overlay === 'wallpaper-source') {
       overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="wallpaper-source" role="dialog" aria-label="Select wallpaper from"><h3>Select wallpaper from</h3>${[['gallery-wallpaper', 'Gallery'], ['open-live-wallpapers', 'Live Wallpapers'], ['open-wallpapers', 'Wallpapers']].sort((a, b) => new Intl.Collator(i18n.locale()).compare(i18n.t(a[1]), i18n.t(b[1]))).map(([action, label]) => `<button data-action="${action}" data-no-translate>${safe(i18n.t(label))}</button>`).join('')}</div>`;
     } else if (ui.overlay === 'folder') {
@@ -887,8 +833,6 @@
     const { action, id, app, url } = button.dataset;
     // The jb-* modules' handlers that stood here, before the keyguard's filter below.
     if (moduleHook('actionEarly', {event}, action, button)) return;
-    // A tap outside the Recents popup menu only dismisses it.
-    if (ui.overlay === 'recent' && ui.recentPopup && !['remove-recent', 'recent-app-info'].includes(action)) { ui.recentPopup = null; renderOverlay(); return; }
     if(ui.locked){
       // KeyguardHostView: launching from a widget or adding one needs the bouncer first.
       const pending={'kg-add-widget':{type:'add'},'widget-calendar-open':{type:'calendar'},'widget-calendar-event':{type:'calendar',id,date:button.dataset.date}}[action];
@@ -939,23 +883,7 @@
         save(); render(); break;
       case 'widget-music-play': ui.musicActive=true;ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
       // The search box microphones open the image's voice search.
-      case 'recent': {
-        if (ui.view === 'lock') break;
-        if (ui.overlay === 'recent') { closeRecents(); break; }
-        captureRecentView(); ui.recentPopup = null;
-        const fromApp = !!appNames[ui.view], outgoing = viewport.firstElementChild?.cloneNode(true);
-        ui.overlay = 'recent'; renderOverlay();
-        // The outgoing window animates in a layer above Recents (makeThumbnailScaleDownAnimation is ZORDER_TOP).
-        const layer = document.createElement('div'); layer.className = 'jb-recents-layer';
-        Object.assign(layer.style, {top: `${viewport.offsetTop}px`, left: `${viewport.offsetLeft}px`, width: `${viewport.offsetWidth}px`, height: `${viewport.offsetHeight}px`});
-        screen.append(layer); setTimeout(() => layer.remove(), JBRecents.R.window + 80);
-        JBRecents.open(overlayRoot.querySelector('.recent-panel'), outgoing, {fromApp, reduced: !!reducedMotion?.matches, layer});
-        break;
-      }
-      case 'recent-app-info': ui.overlay = ''; ui.recentPopup = null; openApp('settings'); ui.settingsApp = id; ui.sub = 'app-info'; render(); break;
       case 'close-overlay': if (ui.overlay === 'recent') { closeRecents(); break; } ui.overlay = ''; renderOverlay(); break;
-      case 'remove-recent': event.stopPropagation(); ui.recentPopup = null; removeTask(id); if (!ui.recent.length) ui.overlay = ''; renderOverlay(); break;
-      case 'dream-exit': ui.overlay = ''; renderOverlay(); break;
       // Uninstall on a store app's App info: UninstallerActivity's question, then the app goes and App info closes.
       // Developer options' ListPreferences: the choice is kept in data.settings['dev_<key>'] (index into the entries).
       case 'wallpaper': data.wallpaper = Number(id); delete data.liveWallpaper; delete data.customWallpaper; delete data.customWallpaperPhoto; save(); if (ui.view === 'wallpaper-picker') home(false); else render(); toast('Wallpaper set'); break;

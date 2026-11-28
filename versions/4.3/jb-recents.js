@@ -56,3 +56,74 @@
   }
   window.JBRecents = {R, render, open, close, bindLongPress};
 })();
+/* Recent apps of Android 4.3 (SystemUI's RecentsPanelView), moved out of simulator.js
+   (docs/plans/engine-migration.md): the panel with its thumbnails, the long-press popup (Remove from list, App info),
+   removing a task and closing the panel. Swiping a card away is the core's gesture; it calls removeTask. */
+(() => {
+  'use strict';
+  if (!window.JB) return; // loaded on its own (the renderer's unit tests)
+  let $c, appIcon, appNames, captureRecentView, i18n, openApp, overlayRoot, reducedMotion, render, renderOverlay, screen, ui, viewport;
+  const $bind = c => { $c = c; ({appIcon, appNames, captureRecentView, i18n, openApp, overlayRoot, reducedMotion, render, renderOverlay, screen, ui, viewport} = c); };
+  // recents_return_to_launcher: Recents fades out while the launcher fades back in (250 ms).
+  function closeRecents() {
+    const panel = overlayRoot.querySelector('.recent-panel'); ui.recentPopup = null;
+    JBRecents.close(panel, () => { ui.overlay = ''; renderOverlay(); if (!reducedMotion?.matches) viewport.firstElementChild?.animate([{opacity: 0}, {opacity: 1}], {duration: JBRecents.R.window, easing: 'cubic-bezier(.215,.61,.355,1)'}); }, !!reducedMotion?.matches);
+  }
+  /* RecentsPanelView.handleSwipe and the card's "Remove from list": ActivityManager.removeTask(id, REMOVE_TASK_KILL_PROCESS).
+     The task and its saved state go; when it is the app on screen, that app is gone too, so once the panel closes (Back,
+     the Recent apps key, the scrim, the last card) the home screen is there, with no app-closing transition. */
+  function removeTask(id) {
+    ui.recent = ui.recent.filter(item => item !== id);
+    delete ui.recentState?.[id]; delete ui.recentSnapshots[id];
+    if (ui.view === id) ui.removedTask = id;
+  }
+  const spec = {
+    action(action, button, c) {
+      $bind(c);
+      const event = c.event, { id, app, url } = button.dataset;
+      switch (action) {
+        case 'recent': {
+          if (ui.view === 'lock') break;
+          if (ui.overlay === 'recent') { closeRecents(); break; }
+          captureRecentView(); ui.recentPopup = null;
+          const fromApp = !!appNames[ui.view], outgoing = viewport.firstElementChild?.cloneNode(true);
+          ui.overlay = 'recent'; renderOverlay();
+          // The outgoing window animates in a layer above Recents (makeThumbnailScaleDownAnimation is ZORDER_TOP).
+          const layer = document.createElement('div'); layer.className = 'jb-recents-layer';
+          Object.assign(layer.style, {top: `${viewport.offsetTop}px`, left: `${viewport.offsetLeft}px`, width: `${viewport.offsetWidth}px`, height: `${viewport.offsetHeight}px`});
+          screen.append(layer); setTimeout(() => layer.remove(), JBRecents.R.window + 80);
+          JBRecents.open(overlayRoot.querySelector('.recent-panel'), outgoing, {fromApp, reduced: !!reducedMotion?.matches, layer});
+          break;
+        }
+        case 'recent-app-info': ui.overlay = ''; ui.recentPopup = null; openApp('settings'); ui.settingsApp = id; ui.sub = 'app-info'; render(); break;
+        case 'remove-recent': event.stopPropagation(); ui.recentPopup = null; removeTask(id); if (!ui.recent.length) ui.overlay = ''; renderOverlay(); break;
+        default: return false;
+      }
+      return true;
+    },
+    // Clicks taken before the keyguard's filter (the core's click handler).
+    actionEarly(action, button, c) {
+      $bind(c);
+      const event = c.event, { id, app, url } = button.dataset;
+      // A tap outside the Recents popup menu only dismisses it.
+      if (ui.overlay === 'recent' && ui.recentPopup && !['remove-recent', 'recent-app-info'].includes(action)) { ui.recentPopup = null; renderOverlay(); return true; }
+      return false;
+    },
+    overlay(c) {
+      $bind(c);
+      if (ui.overlay === 'recent') {
+        overlayRoot.innerHTML = JBRecents.render(ui.recent, {names: appNames, icon: appIcon, snapshots: ui.recentSnapshots, popup: ui.recentPopup, t: key => i18n.t(key)});
+        // PopupMenu keeps itself on screen: shift it left when the anchor is near the right edge.
+        const popup = overlayRoot.querySelector('.jb-recent-popup'); if (popup) popup.style.left = `${Math.max(4, Math.min(parseFloat(popup.style.left), popup.parentElement.clientWidth - popup.offsetWidth - 4))}px`;
+        JBRecents.bindLongPress(overlayRoot.querySelector('.recent-panel'), popup => { ui.recentPopup = popup; $c.suppressClickUntil = Infinity; window.addEventListener('pointerup', () => { $c.suppressClickUntil = Date.now() + 50; }, {once: true, capture: true}); renderOverlay(); });
+      }
+      else return;
+      return true;
+    },
+    exports: {
+      closeRecents: (c, ...args) => { $bind(c); return closeRecents(...args); },
+      removeTask: (c, ...args) => { $bind(c); return removeTask(...args); }
+    }
+  };
+  JB.register('recents', spec);
+})();

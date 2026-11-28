@@ -6,8 +6,8 @@
 (() => {
   'use strict';
   if (!window.JB) return; // loaded on its own (the renderer's unit tests)
-  let $c, A11Y, HOLD_NAMES, appView, applyMagnification, apps, carrierName, clearAppData, clone, connectivityRow, connectivitySwitch, data, dreams, i18n, keepMoreContext, label, lockControls, openApp, overlayRoot, prefRow, render, renderOverlay, row, safe, save, saveMusic, screen, storeContext, storeUninstall, toast, toggleRow, ui, viewport, wallpaperChoices, wifiNetworks, wirelessCheckRow, wirelessRow;
-  const $bind = c => { $c = c; ({A11Y, HOLD_NAMES, appView, applyMagnification, apps, carrierName, clearAppData, clone, connectivityRow, connectivitySwitch, data, dreams, i18n, keepMoreContext, label, lockControls, openApp, overlayRoot, prefRow, render, renderOverlay, row, safe, save, saveMusic, screen, storeContext, storeUninstall, toast, toggleRow, ui, viewport, wallpaperChoices, wifiNetworks, wirelessCheckRow, wirelessRow} = c); };
+  let $c, A11Y, HOLD_NAMES, appView, applyMagnification, apps, carrierName, clearAppData, clone, connectivityRow, connectivitySwitch, data, deviceDate, i18n, keepMoreContext, label, lockControls, nextAlarmLabel, openApp, overlayRoot, prefRow, render, renderOverlay, row, safe, save, saveMusic, screen, storeContext, storeUninstall, toast, toggleRow, ui, viewport, wallpaperChoices, wifiNetworks, wirelessCheckRow, wirelessRow;
+  const $bind = c => { $c = c; ({A11Y, HOLD_NAMES, appView, applyMagnification, apps, carrierName, clearAppData, clone, connectivityRow, connectivitySwitch, data, deviceDate, i18n, keepMoreContext, label, lockControls, nextAlarmLabel, openApp, overlayRoot, prefRow, render, renderOverlay, row, safe, save, saveMusic, screen, storeContext, storeUninstall, toast, toggleRow, ui, viewport, wallpaperChoices, wifiNetworks, wirelessCheckRow, wirelessRow} = c); };
   function renderDaydreamSettings() {
     const on = !!data.settings.daydream, current = data.settings.daydreamType || 'clock', when = data.settings.daydreamWhen || 'docked';
     const whenLabel = {charging: 'While charging', docked: 'While docked', either: 'Either'}[when];
@@ -115,6 +115,16 @@
     return appView('Settings', `${label('WIRELESS & NETWORKS')}${connectivityRow('Wi-Fi', 'wifi')}${connectivityRow('Bluetooth', 'bluetooth')}${row('Data usage', '', 'settings-sub', 'data', '◕')}${row('More...', '', 'settings-sub', 'wireless', null)}${label('DEVICE')}${row('Sound', '', 'settings-sub', 'sound', '♫')}${row('Display', '', 'settings-sub', 'display', '☼')}${row('Storage', '', 'settings-sub', 'storage', '▤')}${row('Battery', '', 'settings-sub', 'battery', '◧')}${row('Apps', '', 'settings-sub', 'apps', '▦')}${label('PERSONAL')}${row('Location access', '', 'settings-sub', 'location', '◎')}${row('Security', '', 'settings-sub', 'security', '◉')}${row('Language & input', '', 'settings-sub', 'language', '◎')}${row('Backup & reset', '', 'settings-sub', 'backup', '↻')}${label('ACCOUNTS')}${row('Google', '', 'settings-sub', 'sync-google', '◎')}${row('Add account', '', 'toast', 'Demo account already added', '+')}${label('SYSTEM')}${row('Date & time', '', 'settings-sub', 'date', '◷')}${row('Accessibility', '', 'settings-sub', 'accessibility', '◉')}${data.settings.developerUnlocked ? row('Developer options', '', 'settings-sub', 'development', '⚙') : ''}${row('About phone', '', 'settings-sub', 'about', '◉')}`);
   }
   setInterval(() => { if (!$c) return; if (ui.overlay === 'wifi-wps') renderOverlay(); }, 1000);
+  const dreams = [['clock', 'Clock'], ['colors', 'Colors'], ['photoframe', 'Photo Frame']];
+  // Dreams: DeskClock Screensaver (dimmed clock that moves every minute), SystemUI Colors and a photo slideshow.
+  function renderDream() {
+    const type = data.settings.daydreamType || 'clock', now = deviceDate();
+    if (type === 'colors') return '<div class="jb-dream jb-dream-colors" data-action="dream-exit" role="button" tabindex="0" aria-label="Daydream"></div>';
+    if (type === 'photoframe') { const photo = data.photos[Math.floor(Date.now() / 6000) % Math.max(1, data.photos.length)]; return `<div class="jb-dream jb-dream-photo" data-action="dream-exit" role="button" tabindex="0" aria-label="Daydream">${photo ? `<img src="${ICSMedia.image(photo)}" alt="">` : ''}</div>`; }
+    const time = now.toLocaleTimeString(i18n.locale(), {hour: data.settings.hour24 ? '2-digit' : 'numeric', minute: '2-digit', hour12: !data.settings.hour24}), [hours, rest = ''] = time.split(/[:.]/);
+    const spot = Math.floor(Date.now() / 60000) % 4;
+    return `<div class="jb-dream jb-dream-clock" data-action="dream-exit" role="button" tabindex="0" aria-label="Daydream"><div class="jb-dream-saver" style="--spot:${spot}"><div class="jbclock-time"><span class="jbclock-hours">${safe(hours)}</span><span class="jbclock-minutes">:${safe(rest.replace(/\s?[^\d].*$/, ''))}</span></div><div class="jbclock-date">${safe(now.toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).toLocaleUpperCase(i18n.locale()))}${nextAlarmLabel() ? ` <img src="assets/jbclock-ic_alarm_small.png" alt="">${safe(nextAlarmLabel())}` : ''}</div></div></div>`;
+  }
   const spec = {
     render(c) {
       $bind(c);
@@ -208,6 +218,7 @@
         case 'jb-platlogo': ui.jbLogoTapped = true; render(); platLogoToast(); break;
         case 'a11y-hold': ui.overlay = 'a11y-hold'; renderOverlay(); break;
         case 'a11y-hold-pick': data.settings.longPressTimeout = Number(id); ui.overlay = ''; save(); renderOverlay(); render(); break;
+        case 'dream-exit': ui.overlay = ''; renderOverlay(); break;
         default: return false;
       }
       return true;
@@ -334,6 +345,8 @@
         const network = allWifiNetworks().find(item => item.name === ui.wifiTarget);
         const connected = data.settings.wifiNetwork === ui.wifiTarget;
         overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog" role="dialog" aria-label="${safe(ui.wifiTarget)}"><h3>${safe(ui.wifiTarget)}</h3><p>${safe(network?.security || 'WPA2')}</p>${connected ? '<p>Connected</p>' : network?.security !== 'Open' ? '<label>Password<input class="wifi-password" type="password" autocomplete="off"></label>' : ''}<div class="settings-dialog-actions"><button data-action="close-overlay">Cancel</button>${connected ? '<button data-action="wifi-forget">Forget</button>' : '<button data-action="wifi-connect">Connect</button>'}</div></div>`;
+      } else if (ui.overlay === 'dream') {
+        overlayRoot.innerHTML = renderDream();
       }
       else return;
       return true;
@@ -344,6 +357,9 @@
       if (ui.beanBag && !viewport.querySelector('[data-beanbag]')?.isSameNode(ui.beanBag.root)) { ui.beanBag.stop(); ui.beanBag = null; }
       const beanRoot = viewport.querySelector('[data-beanbag]');
       if (beanRoot && !ui.beanBag) requestAnimationFrame(() => { if (beanRoot.isConnected && !ui.beanBag) ui.beanBag = {...JBBeanBag.start(beanRoot), root: beanRoot}; });
+    },
+    exports: {
+      renderDream: (c, ...args) => { $bind(c); return renderDream(...args); }
     }
   };
   JB.register('settings', spec);
