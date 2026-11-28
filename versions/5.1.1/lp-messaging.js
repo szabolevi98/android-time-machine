@@ -1,8 +1,8 @@
 /* TODO */
 'use strict';
 LP.define(['messaging', 'hangouts'], ({
-  clock, clone, contact, defaultData, deviceDate, dp, headsUp, holdDelay, i18n, openApp, overlayRoot, render, renderOverlay,
-  renderStatus, REPLIES, safe, save, suppressReleaseClick, toast, ui, viewport
+  clock, clone, contact, defaultData, deviceDate, dp, headsUp, holdDelay, i18n, openApp, overlayRoot, render,
+  renderOverlay, REPLIES, safe, save, suppressReleaseClick, toast, ui, viewport
 }, lp) => {
   function renderMessaging() {
     if (ui.lpmPage) return MessengerOptions.render(lp.data, ui, key => i18n.t(key));
@@ -86,7 +86,7 @@ LP.define(['messaging', 'hangouts'], ({
       if (!open && quiet) { save(); if (['messaging', 'hangouts'].includes(ui.view) && !ui.sub) render(); }
       else if (!open) {
         const note = {id: Date.now(), title: who.name, detail: i18n.t(REPLIES[key]), kind: 'message', contact: key, time: deviceDate().getTime(), ...(channel === 'hangouts' ? {channel} : {})};
-        lp.data.notifications.unshift(note); save(); renderStatus(); headsUp(note);
+        lp.data.notifications.unshift(note); save(); lp.renderStatus(); headsUp(note);
       } else { save(); render(); }
       if (ui.overlay === 'shade') renderOverlay();
     }, 4500);

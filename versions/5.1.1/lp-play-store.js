@@ -1,7 +1,7 @@
 /* TODO */
 'use strict';
 LP.define('play-store', ({
-  appNames, dp, i18n, openApp, overlayRoot, placeShortcut, render, renderOverlay, renderStatus, safe, save, screen,
+  appNames, dp, i18n, openApp, overlayRoot, placeShortcut, render, renderOverlay, safe, save, screen,
   storeAppsSync, storeContext, toast, ui, viewport
 }, lp) => {
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
@@ -31,11 +31,11 @@ LP.define('play-store', ({
     clearInterval(ui.marketTimer); ui.marketDownload = {id, phase: 'downloading', progress: 0};
     lp.data.notifications = lp.data.notifications.filter(n => n.kind !== 'market-dl');
     lp.data.notifications.unshift({id: Date.now(), title: item.name, detail: JBPlay.text(i18n.language, 'Downloading…'), kind: 'market-dl'});
-    save(); render(); renderStatus();
+    save(); render(); lp.renderStatus();
     ui.marketTimer = setInterval(() => {
       const d = ui.marketDownload; if (!d) { clearInterval(ui.marketTimer); return; }
       if (d.phase === 'downloading') { d.progress = Math.min(1, d.progress + .12); if (d.progress >= 1) d.phase = 'installing'; }
-      else { clearInterval(ui.marketTimer); ui.marketDownload = null; lp.data.marketInstalled = [...new Set([...(lp.data.marketInstalled || []), id])]; storeInstalled(id); lp.data.marketEverInstalled = [...new Set([...(lp.data.marketEverInstalled || []), id])]; lp.data.notifications = lp.data.notifications.filter(n => n.kind !== 'market-dl'); if ((lp.data.marketPrefs?.notify) !== false) lp.data.notifications.unshift({id: Date.now(), title: item.name, detail: JBPlay.text(i18n.language, 'Successfully installed.'), kind: 'market'}); save(); renderStatus(); }
+      else { clearInterval(ui.marketTimer); ui.marketDownload = null; lp.data.marketInstalled = [...new Set([...(lp.data.marketInstalled || []), id])]; storeInstalled(id); lp.data.marketEverInstalled = [...new Set([...(lp.data.marketEverInstalled || []), id])]; lp.data.notifications = lp.data.notifications.filter(n => n.kind !== 'market-dl'); if ((lp.data.marketPrefs?.notify) !== false) lp.data.notifications.unshift({id: Date.now(), title: item.name, detail: JBPlay.text(i18n.language, 'Successfully installed.'), kind: 'market'}); save(); lp.renderStatus(); }
       if (ui.view === 'play-store' && !ui.marketSearching) jbPlayKeepScroll();
     }, 350);
   }
@@ -118,7 +118,7 @@ LP.define('play-store', ({
         case 'jbp-wish': { const list = lp.data.marketWishlist || [], had = list.includes(id); lp.data.marketWishlist = had ? list.filter(x => x !== id) : [...list, id]; save(); ui.overlay = ''; renderOverlay(); jbPlayKeepScroll(); break; }
         case 'jbp-buy': { const item = JBPlay.find(id); ui.overlay = ''; renderOverlay(); if (item && item.price !== 'FREE') { toast(JBPlay.text(i18n.language, 'Unavailable')); break; } ui.marketTarget = id; ui.marketPermOpen = ''; ui.marketPermView = false; ui.overlay = 'jbp-perms'; renderOverlay(); break; }
         case 'jbp-accept': ui.overlay = ''; renderOverlay(); jbPlayDownload(id); break;
-        case 'jbp-cancel': clearInterval(ui.marketTimer); ui.marketDownload = null; lp.data.notifications = lp.data.notifications.filter(n => n.kind !== 'market-dl'); save(); renderStatus(); render(); break;
+        case 'jbp-cancel': clearInterval(ui.marketTimer); ui.marketDownload = null; lp.data.notifications = lp.data.notifications.filter(n => n.kind !== 'market-dl'); save(); lp.renderStatus(); render(); break;
         case 'jbp-open': { const item = JBPlay.find(id); if (item?.app) openApp(item.app); else if (StoreHost.runtime(id)) { storeAppsSync(); openApp(StoreHost.runtime(id)); } else toast(JBPlay.text(i18n.language, 'Unavailable')); break; }
         case 'jbp-uninstall': ui.overlay = ''; renderOverlay(); storeUninstall(id); save(); render(); break;
         case 'jbp-uninstall-ask': ui.marketTarget = id; ui.overlay = 'jbp-uninstall'; renderOverlay(); break;

@@ -51,3 +51,4 @@ the module core, screen by screen, until it is gone.
 | 3 | Power key, global actions, power off and boot | lp-power.js | moved |
 | 3 | Daydream (the screen saver) | lp-dream.js | moved |
 | 3 | Recents and screen pinning | lp-recents-app.js | moved |
+| 3 | Status bar and navigation bar (with the search panel swipe and the immersive bars peek) | lp-statusbar.js | moved |

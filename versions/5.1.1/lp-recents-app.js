@@ -2,8 +2,7 @@
 'use strict';
 LP.define('recent', ({
   appIcon, appNames, captureRecentView, home, i18n, lockControls, lockScreen, LP_PRIMARY, LP_STATUS_COLORS,
-  navRoot, openApp, overlayRoot, reducedMotion, render, renderOverlay, safe, save, toast, ui, updateBarMode,
-  viewport
+  navRoot, openApp, overlayRoot, reducedMotion, render, renderOverlay, safe, save, toast, ui, viewport
 }, lp) => {
   /* TaskStackView.onStackTaskRemoved: the front-most remaining task keeps its place (the stack scroll moves by as much
      as it would fall back) and the other cards glide to their new transforms in 200 ms
@@ -17,7 +16,7 @@ LP.define('recent', ({
     ui.recent = ui.recent.filter(item => item !== id);
     if (!ui.recent.length) {
       ui.lpRecents?.destroy(); ui.lpRecents = null; ui.recentsScroll = undefined;
-      home(false); updateBarMode();
+      home(false); lp.updateBarMode();
       if (panel?.animate && !reducedMotion?.matches) {
         panel.style.pointerEvents = 'none'; overlayRoot.append(panel);
         panel.animate([{opacity: 1}, {opacity: 0}], {duration: 150, easing: 'cubic-bezier(0,0,.2,1)', fill: 'forwards'}).finished.then(() => panel.remove(), () => panel.remove());
@@ -43,7 +42,7 @@ LP.define('recent', ({
   // Leaving Overview for home: the stack drops away (recents_task_exit_to_home_duration, 225 ms) as the launcher returns.
   function closeRecents() {
     const panel = overlayRoot.querySelector('.recent-panel'); ui.recentPopup = null; ui.recentsScroll = undefined;
-    const done = () => { ui.overlay = ''; ui.lpRecents?.destroy(); ui.lpRecents = null; renderOverlay(); updateBarMode(); };
+    const done = () => { ui.overlay = ''; ui.lpRecents?.destroy(); ui.lpRecents = null; renderOverlay(); lp.updateBarMode(); };
     if (!panel?.animate || reducedMotion?.matches) { done(); return; }
     LPRecents.exit(panel).then(done, done);
   }
@@ -61,7 +60,7 @@ LP.define('recent', ({
   function pinnedToast() { toast(i18n.t('To unpin this screen, touch and hold Back and Overview at the same time.')); }
   function unpin() {
     if (!ui.pinned) return;
-    ui.pinned = null; updateBarMode(); toast(i18n.t('Screen unpinned'));
+    ui.pinned = null; lp.updateBarMode(); toast(i18n.t('Screen unpinned'));
     const secure = ['pin', 'password', 'pattern'].includes(lp.data.settings.screenLock);
     if (lp.data.settings.pinExitLocked ?? secure) { lockScreen(); ui.sleeping = false; render(); }
   }
@@ -97,8 +96,8 @@ LP.define('recent', ({
     click(action, button, event) {
       const {id, app, url} = button.dataset;
       switch (action) {
-        case 'lp-pin': event.stopPropagation(); ui.recentPopup = null; ui.recentsScroll = undefined; ui.lpRecents?.destroy(); ui.lpRecents = null; openApp(app, true); ui.overlay = 'pin-request'; renderOverlay(); updateBarMode(); break;
-        case 'pin-ok': ui.pinned = ui.view; ui.overlay = ''; renderOverlay(); updateBarMode(); toast(i18n.t('Screen pinned')); break;
+        case 'lp-pin': event.stopPropagation(); ui.recentPopup = null; ui.recentsScroll = undefined; ui.lpRecents?.destroy(); ui.lpRecents = null; openApp(app, true); ui.overlay = 'pin-request'; renderOverlay(); lp.updateBarMode(); break;
+        case 'pin-ok': ui.pinned = ui.view; ui.overlay = ''; renderOverlay(); lp.updateBarMode(); toast(i18n.t('Screen pinned')); break;
         case 'pin-cancel': ui.overlay = ''; renderOverlay(); break;
         case 'lp-pin-lock': { const secure = ['pin', 'password', 'pattern'].includes(lp.data.settings.screenLock), current = lp.data.settings.pinExitLocked ?? secure;
           // Without a secure lock, turning it on asks for one first (ChooseLockGeneric).
@@ -109,7 +108,7 @@ LP.define('recent', ({
           if (ui.pinned) { pinnedToast(); break; }
           if (ui.overlay === 'recent') { closeRecents(); break; }
           captureRecentView(); ui.recentPopup = null; ui.recentsScroll = undefined;
-          ui.recentsFrom = ui.view === 'home' ? 'home' : 'app'; ui.recentsAt = performance.now(); ui.overlay = 'recent'; renderOverlay(); updateBarMode();
+          ui.recentsFrom = ui.view === 'home' ? 'home' : 'app'; ui.recentsAt = performance.now(); ui.overlay = 'recent'; renderOverlay(); lp.updateBarMode();
           break;
         }
         case 'recent-app-info': ui.overlay = ''; ui.recentPopup = null; openApp('settings'); ui.settingsApp = id; ui.sub = 'app-info'; render(); break;

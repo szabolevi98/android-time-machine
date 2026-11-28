@@ -1,7 +1,7 @@
 /* TODO */
 'use strict';
 LP.define('volume', ({
-  i18n, openApp, render, renderStatus, save, screen, ui, viewport
+  i18n, openApp, render, save, screen, ui, viewport
 }, lp) => {
   // Volume keys: the active stream's slider, a 3 s timeout, and a touch anywhere else closes it.
   const volumeLayer = document.createElement('div'); volumeLayer.id = 'volume-layer'; screen.append(volumeLayer);
@@ -15,7 +15,7 @@ LP.define('volume', ({
     // With the screen off the keys only reach music that is playing, and no panel is shown.
     if (ui.sleeping && stream !== 'music') return;
     const result = VolumePanel.adjust(lp.data.settings, stream, direction, volumePrevious); volumePrevious = direction;
-    save(); renderStatus();
+    save(); lp.renderStatus();
     if (result.vibrate) setTimeout(() => navigator.vibrate?.(VolumePanel.VIBRATE_DURATION), VolumePanel.VIBRATE_DELAY);
     if (!ui.sleeping) showVolume(stream);
   }
@@ -44,7 +44,7 @@ LP.define('volume', ({
     click(action, button, event) {
       const {id, app, url} = button.dataset;
       switch (action) {
-        case 'vol-zen': lp.data.settings.zenMode = id; if (id === 'all') lp.data.settings.zenExit = null; save(); renderStatus(); showVolume(volumeStream()); break;
+        case 'vol-zen': lp.data.settings.zenMode = id; if (id === 'all') lp.data.settings.zenExit = null; save(); lp.renderStatus(); showVolume(volumeStream()); break;
         case 'vol-settings': hideVolume(); openApp('settings'); ui.sub = 'sound'; render(); break;
         // lp:cases
         default: return false;

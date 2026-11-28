@@ -307,55 +307,7 @@
     // Lollipop security views: the kg_* instructions, the kg_wrong_* errors and the countdown.
     look:{wrong:kind=>({pattern:'Wrong Pattern',pin:'Wrong PIN',password:'Wrong Password'})[kind],clearMs:2000,message:({state,remaining})=>remaining?AndroidStrings.format(i18n.t('Try again in %d seconds.'), remaining):state.error&&Date.now()-state.errorAt<5000?i18n.t(state.error):i18n.t({pattern:'Draw your pattern',pin:'Enter PIN',password:'Enter Password'}[state.kind]||''),renderLock:api=>renderSecureKeyguard(api)}});
   ui.locked=ICSLockscreen.secure(data);if(ui.locked)ui.view='lock';lockControls.lock();lockControls.bind(screen);
-  // BatteryMeterView (5.1): 9.5 x 14.5 dp; the button is 25 %-75 % wide and 12 % tall; frame #66FFFFFF, level white,
-  // battery_saver_mode_color (#F4511E) at 15 % or less.
-  const kkBattery = level => `<svg class="kk-battery" viewBox="0 0 9.5 14.5" aria-label="Battery ${level}%"><path d="M2.375 0h4.75v1.74h-4.75zM0 1.74h9.5V14.5H0z" fill="#fff" fill-opacity=".4"/><rect x="0" y="${(1.74 + 12.76 * (1 - level / 100)).toFixed(2)}" width="9.5" height="${(12.76 * level / 100).toFixed(2)}" fill="${level <= 15 ? '#f4511e' : '#fff'}"/></svg>`;
-  const statusBarHeight = () => statusRoot.offsetHeight || 22.65;
-  // Launcher3 and the keyguard draw under translucent system bars; apps get opaque ones.
-  function updateBarMode() {
-    screen.classList.toggle('kk-translucent', ['home', 'lock', 'drawer'].includes(ui.view) && !ui.sleeping);
-    screen.classList.toggle('lp-on-keyguard', ui.view === 'lock' && !ui.sleeping);
-    // RecentsTheme: transparent system bars over the wallpaper.
-    screen.classList.toggle('lp-recents-open', ui.overlay === 'recent');
-    // Window.setStatusBarColor: the app's colorPrimaryDark (LP_STATUS_COLORS), black where the theme sets none.
-    screen.style.setProperty('--lp-sb', ui.view === 'youtube' && ['search', 'results'].includes(ui.sub) ? '#d9d9d9' : ui.sub === 'chrome-settings' && ['chrome', 'browser'].includes(ui.view) ? '#161e21' : ui.view === 'wallet' ? LPExtraApps.walletStatus(ui) : ui.view === 'play-store' && window.JBPlay?.statusColor ? JBPlay.statusColor(lp.jbPlayContext()) : LP_STATUS_COLORS[ui.view] || LPExtraApps.COLORS[ui.view]?.[1] || '#000');
-    // QuickContactActivity tints the status bar with the darker shade of the contact's colour.
-    if (ui.view === 'people' && ui.sub === 'detail') { const person = contact(ui.selectedContact); if (person) screen.style.setProperty('--lp-sb', LPDialer.tileColorDark(person.name)); }
-    // Google+'s VideoViewActivity: VideoViewTheme's colorPrimaryDark (Theme.EmeraldSea, quantum_googred700).
-    if (ui.view === 'photos' && ui.sub === 'video') screen.style.setProperty('--lp-sb', '#c53929');
-    // DeskClock's translucent status bar (#26000000) over the hour colour.
-    if (ui.view === 'clock') screen.style.setProperty('--lp-sb', `color-mix(in srgb, ${JBDeskClock.SPECTRUM[deviceDate().getHours()]}, #000 15%)`);
-    // Messenger colours a conversation's bars with the participant's tile colour.
-    if (ui.view === 'messaging' && ui.sub === 'thread') screen.style.setProperty('--lp-sb', LPDialer.tileColorDark(ICSMessaging.identity(ui.thread, data.contacts).name));
-    // PlatLogoActivity is fullscreen; the Dessert Case hides both bars (immersive sticky).
-    const egg = ui.view === 'settings' && ui.sub === 'easter';
-    if (ui.view === 'settings' && ui.sub === 'lland') screen.style.setProperty('--lp-sb', '#757575');
-    // Theme.WallpaperPicker is fullscreen as well.
-    screen.classList.toggle('kk-hide-status', egg || ui.view === 'wallpaper-picker');
-    screen.classList.toggle('kk-immersive', false);
-    if (!egg) screen.classList.remove('kk-bars-peek');
-  }
-  /* PhoneStatusBarPolicy icons (Bluetooth, the 5.0 interruptions/vibrate icon, alarm), then SignalClusterView (Wi-Fi,
-     the mobile signal with its data type in the corner, or the airplane), BatteryMeterView and the clock. */
-  const sysui = name => `assets/lp-sysui-${name}.svg`;
-  const statusIndicators = () => {
-    const wifi = data.settings.wifi && data.settings.wifiNetwork, zen = data.settings.zenMode && data.settings.zenMode !== 'all';
-    const mobile = data.settings.airplane ? `<img src="${sysui('stat_sys_airplane_mode')}" alt="">` : (!wifi && data.settings.dataEnabled !== false ? `<span class="lp-mobile lp-mobile-wide"><img src="${sysui('stat_sys_signal_4_fully')}" alt=""><img class="lp-mobile-type" src="${sysui('stat_sys_data_fully_connected_lte')}" alt=""></span>` : `<span class="lp-mobile"><img src="${sysui('stat_sys_signal_4_fully')}" alt=""></span>`);
-    return `<span class="status-right">${data.settings.bluetooth ? `<img class="status-bluetooth" src="${sysui('stat_sys_data_bluetooth')}" alt="">` : ''}${zen ? `<img src="${sysui(data.settings.zenMode === 'none' ? 'stat_sys_zen_none' : 'stat_sys_zen_important')}" alt="">` : ''}${data.settings.silent && data.settings.silentMode === 'vibrate' ? `<img src="${sysui('stat_sys_ringer_vibrate')}" alt="">` : ''}${data.alarms.some(alarm => alarm.enabled) ? `<img src="${sysui('stat_sys_alarm')}" alt="">` : ''}<span class="status-cluster${wifi && data.settings.airplane ? ' lp-wifi-airplane' : ''}">${wifi ? `<img class="status-wifi" src="${sysui('stat_sys_wifi_signal_4_fully')}" alt="">` : ''}${mobile}</span>${kkBattery(71)}<span class="status-clock">${clock()}</span></span>`;
-  };
 
-  function renderStatus() {
-    updateBarMode();
-    const notificationIcons = data.notifications.length ? `${data.notifications.some(item => item.id === 2) ? '<img src="assets/stat_notify_hangouts.png" alt="">' : ''}${data.notifications.some(item => item.kind === 'calendar') ? '<img src="assets/calendar-stat_notify_calendar.png" alt="">' : ''}${data.notifications.some(item => item.id !== 2 && item.kind !== 'calendar') ? '<img src="assets/stat_notify_more.png" alt="">' : ''}` : '';
-    statusRoot.innerHTML = `<button class="status-button" data-action="shade" aria-label="Open notifications"><span class="status-left">${notificationIcons}</span>${statusIndicators()}</button>`;
-    i18n.translateDOM(statusRoot);
-  }
-  function renderNav() {
-    // navigation_bar.xml: the side padding and the keys (values-sw400dp: 50 dp, 80 dp) spread by weighted spacers; Back turns down for the IME.
-    navRoot.innerHTML = `<button class="nav-key nav-back" data-action="back" aria-label="Back"><img src="assets/lp-ic_sysbar_back${ui.imeShown ? '_ime' : ''}.png" alt=""></button><span class="nav-spacer"></span><button class="nav-key nav-home" data-action="home" aria-label="Home screen"><img src="assets/lp-ic_sysbar_home.png" alt=""></button><span class="nav-spacer"></span><button class="nav-key nav-recent" data-action="recent" aria-label="Overview"><img src="assets/lp-ic_sysbar_recent.png" alt=""></button>`;
-    // Over the keyguard the navigation bar is empty (StatusBarManager.DISABLE_HOME | _RECENT | _BACK); the bouncer brings Back.
-    if(ui.view==='lock'&&!ui.sleeping)navRoot.querySelectorAll(ui.kgBouncing?'.nav-home,.nav-recent':'.nav-key').forEach(button=>{button.disabled=true;button.setAttribute('aria-hidden','true');button.classList.add('nav-hidden');});
-  }
   // Window transitions: the outgoing view is kept in a temporary layer while both animate.
   let lastScene = null, pendingNav = '', activeTransition = null, launchFrom = null;
   const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
@@ -396,7 +348,7 @@
   function render() {
     LP.module('google-search').beforeRender();
     if(ui.kpSyncReturn&&(ui.view!=='settings'||ui.sub!=='sync-google'))ui.kpSyncReturn=false;
-    updateBarMode();
+    lp.updateBarMode();
     viewport.querySelectorAll('.home-widget .calw-list').forEach(list => { (ui.widgetScroll ||= {})[list.closest('.home-widget').dataset.widgetId] = list.scrollTop; });
     if(ui.locked)ui.view='lock';
     const outgoing = viewport.firstElementChild;
@@ -404,7 +356,7 @@
     screen.style.background = data.wallpaper === 11 && data.customWallpaperPhoto ? `#080d14 url('${ICSMedia.image(data.customWallpaperPhoto)}') center / cover no-repeat` : data.wallpaper === 11 && data.customWallpaper ? `linear-gradient(160deg, ${data.customWallpaper[0]}, ${data.customWallpaper[1]} 53%, ${data.customWallpaper[2]})` : `#080d14 url('${wallpaperUrl(data.wallpaper)}') ${(wallpaperOffset(['home', 'drawer'].includes(ui.view) ? ui.page : 0, false) * 100).toFixed(3)}% center / auto 100% no-repeat`;
     screen.style.transition = 'none';
     screen.style.filter = `brightness(${.5 + data.settings.brightness / 135})`;
-    renderStatus(); renderNav();
+    lp.renderStatus(); lp.renderNav();
     document.querySelector('.notification-led')?.classList.toggle('on', !!ui.sleeping && !ui.power && data.settings.pulse !== false && data.notifications.length > 0);
     JBDeveloperOptions.apply(screen, data.settings);
     if (ui.view !== 'lock' && ui.kgPad) { ui.kgPad.destroy(); ui.kgPad = null; }
@@ -453,38 +405,6 @@
     });
   }
   const mixVelocity = (old, value, k) => old === undefined ? value : old + (value - old) * k;
-  /* SearchPanelView: an upward swipe of navbar_search_up_threshhold (40dp) from the navigation bar shows the ring;
-     releasing on the assist target starts search (the Google Search app on Google builds, Browser here). */
-  // PointerLocationView: the bar at the top follows the primary pointer while the option is on.
-  let pointerDownCount = 0;
-  screen.addEventListener('pointerdown', event => { pointerDownCount++; if (data.settings.pointerLocation) JBDeveloperOptions.pointerMove(screen, event, true, 1); }, true);
-  screen.addEventListener('pointermove', event => { if (data.settings.pointerLocation) JBDeveloperOptions.pointerMove(screen, event, event.buttons > 0, 1); }, true);
-  window.addEventListener('pointerup', event => { if (data.settings.pointerLocation) JBDeveloperOptions.pointerMove(screen, event, false, 1); }, true);
-  let searchSwipe = null;
-  navRoot.addEventListener('pointerdown', event => { if (ui.locked || ui.view === 'lock' || event.button > 0) return; searchSwipe = {id: event.pointerId, x: event.clientX, y: event.clientY, panel: null}; }, true);
-  window.addEventListener('pointermove', event => {
-    if (!searchSwipe || event.pointerId !== searchSwipe.id) return;
-    const box = overlayRoot.getBoundingClientRect(), k = box.width / overlayRoot.offsetWidth || 1;
-    if (!searchSwipe.panel) {
-      if ((searchSwipe.y - event.clientY) / k < JBSearchPanel.S.up) return;
-      const home = navRoot.querySelector('.nav-home').getBoundingClientRect();
-      ui.overlay = 'search'; overlayRoot.innerHTML = ''; renderOverlay();
-      searchSwipe.panel = JBSearchPanel.attach(overlayRoot.querySelector('[data-jb-search]'), {homeX: (home.left + home.width / 2 - box.left) / k, haptic: () => data.settings.haptic !== false, reduced: !!reducedMotion?.matches,
-        onLaunch: () => { ui.overlay = ''; renderOverlay(); openApp('google-search'); },
-        onClose: () => { if (ui.overlay === 'search') { ui.overlay = ''; renderOverlay(); } }});
-      suppressClickUntil = Infinity;
-    }
-    const panel = overlayRoot.querySelector('[data-jb-search]').getBoundingClientRect();
-    searchSwipe.panel.move((event.clientX - panel.left) / k, (event.clientY - panel.top) / k);
-  }, true);
-  const endSearchSwipe = event => {
-    if (!searchSwipe || event.pointerId !== searchSwipe.id) return;
-    const panel = searchSwipe.panel; searchSwipe = null;
-    if (!panel) return;
-    suppressClickUntil = Date.now() + 350;
-    event.type === 'pointercancel' ? panel.cancel() : panel.release();
-  };
-  window.addEventListener('pointerup', endSearchSwipe, true); window.addEventListener('pointercancel', endSearchSwipe, true);
   function lockScreen(){captureRecentView();lockControls.lock();ui.kgUp=true;ui.kgBouncing=false;ui.kgPending=null;ui.kgRelock=false;ui.locked=ICSLockscreen.secure(data);ui.sleeping=data.settings.screenLock==='none';ui.view=ui.sleeping?'home':'lock';ui.overlay='';render();}
   /* MultiWaveView (keyguard_screen_tab_unlock): targets sit on the ring (radius 135dp), the handle follows the
      finger inside it and snaps to a target within the 60dp hit radius. Release elsewhere returns the handle in
@@ -543,7 +463,7 @@
     return {t: key => i18n.t(key), locale: i18n.locale(), secure, height: screen.clientHeight || 662.67,
       clock: now.toLocaleTimeString(i18n.locale(), {hour: hour24 ? '2-digit' : 'numeric', minute: '2-digit', hour12: !hour24}).replace(/\s?[AaPp]\.?\s?[Mm]\.?$/, ''),
       date: now.toLocaleDateString(i18n.locale(), {weekday: 'long', month: 'long', day: 'numeric'}), shortDate: shadeDate(), alarm: nextAlarmLabel(),
-      owner: data.settings.showOwner ? data.settings.ownerInfo : '', carrier: lp.carrierName(), statusIcons: statusIndicators(),
+      owner: data.settings.showOwner ? data.settings.ownerInfo : '', carrier: lp.carrierName(), statusIcons: lp.statusIndicators(),
       notifications: data.notifications.map(decorateNotification), activated: ui.kgActivated || '', hint: ui.kgHint || ''};
   }
   function kgHint(text) {
@@ -875,7 +795,7 @@
     if (ui.overlay === 'shade') {
       const call = ui.activeCall ? `<button class="phone-resume-call" data-action="open-app" data-app="phone">${safe(i18n.t('Ongoing call'))} · ${safe(lp.contactByPhone(ui.activeCall.number)?.name||ui.activeCall.number)}</button>` : '';
       const scroll = overlayRoot.querySelector('.lp-shade-scroll')?.scrollTop || 0;
-      overlayRoot.innerHTML = '<div class="lp-shade-scrim" data-action="close-overlay"></div>' + LPShade.render({...data, notifications: data.notifications.map(decorateNotification)}, ui, key => i18n.t(key), {locale: i18n.locale(), clock: clock(), date: fullDate(), shortDate: shadeDate(), carrier: lp.carrierName(), alarm: nextAlarmLabel(), statusIcons: statusIndicators(), networks: lp.allWifiNetworks(), extra: call});
+      overlayRoot.innerHTML = '<div class="lp-shade-scrim" data-action="close-overlay"></div>' + LPShade.render({...data, notifications: data.notifications.map(decorateNotification)}, ui, key => i18n.t(key), {locale: i18n.locale(), clock: clock(), date: fullDate(), shortDate: shadeDate(), carrier: lp.carrierName(), alarm: nextAlarmLabel(), statusIcons: lp.statusIndicators(), networks: lp.allWifiNetworks(), extra: call});
       const body = overlayRoot.querySelector('.lp-shade-scroll'); if (body) body.scrollTop = scroll;
       LPShade.playIcons(overlayRoot, reducedMotion?.matches ? null : ui.qsIconAnim);
       const opening = !ui.shadeAnimated;
@@ -899,8 +819,6 @@
       overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog jb-brightness" role="dialog" aria-label="${safe(i18n.t('Brightness'))}"><h3>${safe(i18n.t('Brightness'))}</h3><div class="jb-brightness-row"><img src="assets/jb-ic_qs_brightness_auto_off.png" alt=""><input type="range" min="10" max="100" value="${data.settings.brightness}" data-field="brightness" aria-label="${safe(i18n.t('Brightness'))}" ${data.settings.autoBrightness ? 'disabled' : ''}><label><input type="checkbox" data-field="auto-brightness" ${data.settings.autoBrightness ? 'checked' : ''}><span>${safe(i18n.t('AUTO'))}</span></label></div></div>`;
     } else if (ui.overlay.startsWith('widget-photo')) {
       overlayRoot.innerHTML = ICSWidgets.photoOverlay(data, ui, key => i18n.t(key));
-    } else if (ui.overlay === 'search') {
-      if (!overlayRoot.querySelector('[data-jb-search]')) overlayRoot.innerHTML = JBSearchPanel.markup(key => i18n.t(key));
     } else if (ui.overlay === 'folder') {
       overlayRoot.innerHTML = renderFolder();
       positionFolder();
@@ -1017,7 +935,7 @@
     else if (id === 'cell') { ui.overlay = ''; openApp('settings'); ui.sub = 'data'; render(); return; }
     else if (id === 'cast') { ui.overlay = ''; openApp('settings'); ui.sub = 'wifi-display'; render(); return; }
     if (['airplane', 'rotation', 'flashlight', 'location', 'inversion', 'hotspot'].includes(id)) ui.qsIconAnim = {...ui.qsIconAnim, [id]: performance.now()};
-    save(); renderStatus(); renderOverlay(); JBDeveloperOptions.apply(screen, data.settings);
+    save(); lp.renderStatus(); renderOverlay(); JBDeveloperOptions.apply(screen, data.settings);
   }
   /* Each notification's Material look: the app's small icon on its accent colour (Notification.color) in the 40 dp
      circle, or the large icon (a contact photo) with the small icon badged on the colour. */
@@ -1038,7 +956,7 @@
     const next = data.alarms.filter(alarm => alarm.enabled).map(alarm => ICSDeskClock.nextOccurrence(alarm, deviceDate())).filter(Boolean).sort((a, b) => a - b)[0];
     return next ? next.toLocaleString(i18n.locale(), {weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: !data.settings.hour24}) : '';
   }
-  function addNotification(title, detail) { data.notifications.unshift({ id: Date.now(), title, detail }); save(); renderStatus(); }
+  function addNotification(title, detail) { data.notifications.unshift({ id: Date.now(), title, detail }); save(); lp.renderStatus(); }
   /* A simulated answer shows Lollipop's heads-up notification: a few seconds after a text to one of the demo contacts
      they write back once (per contact and session). */
   const REPLIES = {1: 'Sounds good, see you then!', 2: 'Got it, thanks!', 3: 'Haha, nice 😄', 4: 'Love you! Talk soon ♥'};
@@ -1128,7 +1046,7 @@
       case 'drawer': {
         // The reveal starts on the all apps button: its centre's offset from the panel centre, in screen px.
         const box = button.getBoundingClientRect(), frame = screen.getBoundingClientRect(), k = frame.width / screen.clientWidth;
-        const panelCenterY = (statusBarHeight() + (screen.clientHeight - navRoot.offsetHeight - 23.2)) / 2;
+        const panelCenterY = (lp.statusBarHeight() + (screen.clientHeight - navRoot.offsetHeight - 23.2)) / 2;
         ui.drawerReveal = reducedMotion?.matches ? null : {dx: Math.round((box.left + box.width / 2 - frame.left) / k - screen.clientWidth / 2), dy: Math.round((box.top + box.height / 2 - frame.top) / k - panelCenterY)};
         ui.view = 'drawer'; ui.sub = ''; ui.overlay = ''; ui.overview = false; ui.drawerWidgets = false; if (ui.drawerPage >= drawerAppPages()) ui.drawerPage = 0; render();
         ui.drawerReveal = null; setTimeout(() => viewport.querySelector('.lp-drawer')?.classList.remove('lp-revealing'), 320); break;
@@ -1163,10 +1081,10 @@
       case 'close-overlay': if (ui.overlay === 'recent') { lp.closeRecents(); break; } ui.overlay = ''; renderOverlay(); break;
       case 'clear-notifications': {
         const rows = [...overlayRoot.querySelectorAll('.jb-note')], delays = LPShade.clearDelays(rows.length);
-        if (reducedMotion?.matches || !rows.length) { data.notifications = []; ui.overlay = ''; save(); renderStatus(); renderOverlay(); break; }
+        if (reducedMotion?.matches || !rows.length) { data.notifications = []; ui.overlay = ''; save(); lp.renderStatus(); renderOverlay(); break; }
         overlayRoot.querySelector('.jb-shade-clear')?.setAttribute('hidden', '');
         rows.forEach((row, index) => row.animate([{transform: 'translateX(0)', opacity: 1}, {transform: `translateX(${row.offsetWidth}px)`, opacity: 0}], {duration: 125, delay: delays[index], easing: 'linear', fill: 'forwards'}));
-        setTimeout(() => { data.notifications = []; save(); renderStatus(); if (ui.overlay === 'shade') { ui.overlay = ''; renderOverlay(); } }, (delays.at(-1) || 0) + 125 + 225);
+        setTimeout(() => { data.notifications = []; save(); lp.renderStatus(); if (ui.overlay === 'shade') { ui.overlay = ''; renderOverlay(); } }, (delays.at(-1) || 0) + 125 + 225);
         break;
       }
       case 'kg-add-widget': ui.overlay = 'kg-widget-picker'; renderOverlay(); break;
@@ -1179,17 +1097,17 @@
       case 'lp-qsd-done': ui.qsDetail = ''; renderOverlay(); break;
       case 'lp-qsd-more': ui.qsDetail = ''; ui.overlay = ''; openApp('settings'); ui.sub = id === 'wifi' ? 'wifi' : 'bluetooth'; render(); break;
       case 'lp-qsd-switch': lpQsToggle(id); break;
-      case 'lp-qsd-item': if (id === 'wifi') { data.settings.wifiNetwork = button.dataset.key; save(); renderStatus(); renderOverlay(); } break;
-      case 'lp-qsd-disconnect': if (id === 'wifi') data.settings.wifiNetwork = ''; else data.settings.pairedDevice = ''; save(); renderStatus(); renderOverlay(); break;
+      case 'lp-qsd-item': if (id === 'wifi') { data.settings.wifiNetwork = button.dataset.key; save(); lp.renderStatus(); renderOverlay(); } break;
+      case 'lp-qsd-disconnect': if (id === 'wifi') data.settings.wifiNetwork = ''; else data.settings.pairedDevice = ''; save(); lp.renderStatus(); renderOverlay(); break;
       case 'qs-brightness': ui.overlay = 'qs-brightness'; renderOverlay(); break;
       case 'lp-brightness': ui.overlay = 'lp-brightness'; renderOverlay(); break;
       case 'lp-brightness-auto': data.settings.autoBrightness = !data.settings.autoBrightness; save(); renderOverlay(); break;
       case 'qs-settings': ui.overlay = ''; openApp('settings'); break;
       case 'qs-alarm': ui.overlay = ''; openApp('clock'); break;
-      case 'notification-action': if (button.dataset.noteAction === 'reply') { const note = data.notifications.find(item => String(item.id) === id); releaseHeadsUp(); data.notifications = data.notifications.filter(item => item !== note); save(); renderStatus(); ui.overlay = ''; openApp(note?.channel === 'hangouts' ? 'hangouts' : 'messaging'); lp.openMessageThread(note?.contact || 1); break; } { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar' && button.dataset.noteAction === 'snooze') { data.notifications = data.notifications.filter(item => item !== note); (data.calendarSnoozes ||= []).push({eventId: note.eventId, date: note.date, title: note.title, detail: note.detail, at: deviceDate().getTime() + 5 * 60000}); save(); renderStatus(); if (!data.notifications.length) ui.overlay = ''; renderOverlay(); toast('Snoozed'); } break; }
+      case 'notification-action': if (button.dataset.noteAction === 'reply') { const note = data.notifications.find(item => String(item.id) === id); releaseHeadsUp(); data.notifications = data.notifications.filter(item => item !== note); save(); lp.renderStatus(); ui.overlay = ''; openApp(note?.channel === 'hangouts' ? 'hangouts' : 'messaging'); lp.openMessageThread(note?.contact || 1); break; } { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar' && button.dataset.noteAction === 'snooze') { data.notifications = data.notifications.filter(item => item !== note); (data.calendarSnoozes ||= []).push({eventId: note.eventId, date: note.date, title: note.title, detail: note.detail, at: deviceDate().getTime() + 5 * 60000}); save(); lp.renderStatus(); if (!data.notifications.length) ui.overlay = ''; renderOverlay(); toast('Snoozed'); } break; }
       case 'notification-open': { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar') { data.notifications = data.notifications.filter(item => item !== note); save(); ui.overlay = ''; openApp('calendar'); ui.selectedEvent = note.eventId; ui.selectedInstance = note.date; ui.selectedDate = note.date; ui.sub = 'event'; render(); break; }
         releaseHeadsUp();
-        if (note?.kind === 'message') { data.notifications = data.notifications.filter(item => item !== note); save(); renderStatus(); ui.overlay = ''; openApp(note.channel === 'hangouts' ? 'hangouts' : 'messaging'); lp.openMessageThread(note.contact); break; }
+        if (note?.kind === 'message') { data.notifications = data.notifications.filter(item => item !== note); save(); lp.renderStatus(); ui.overlay = ''; openApp(note.channel === 'hangouts' ? 'hangouts' : 'messaging'); lp.openMessageThread(note.contact); break; }
         ui.overlay = ''; if (Number(id) === 2) lp.openMessageThread(1); else { ui.view = 'settings'; ui.sub = 'about'; render(); } break; }
       case 'unlock': ui.view = 'home'; render(); break;
       // ActivatableNotificationView: the first touch activates the card ("Touch again to open"), the second opens it.
@@ -1696,14 +1614,6 @@
   }, {passive:false});
   screen.addEventListener('dragstart', event => event.preventDefault());
   let homeLongPressTimer = null, messageHoldTimer = null;
-  let barsPeekTimer = 0;
-  screen.addEventListener('pointerdown', event => {
-    if (!screen.classList.contains('kk-immersive')) return;
-    const rect = screen.getBoundingClientRect(), y = event.clientY - rect.top;
-    if (y > 24 && y < rect.height - 24) return;
-    screen.classList.add('kk-bars-peek'); clearTimeout(barsPeekTimer);
-    barsPeekTimer = setTimeout(() => screen.classList.remove('kk-bars-peek'), 3000);
-  }, true);
   screen.addEventListener('contextmenu', event => {
     if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
     event.preventDefault();
@@ -1819,7 +1729,7 @@
     // PanelView.schedulePeek: a finger resting on the status bar for ViewConfiguration.TAP_TIMEOUT (100 ms) peeks the panel.
     if (pointerStart.shadeDragEligible && !reducedMotion?.matches) pointerStart.peekTimer = setTimeout(() => startPeek(), 100);
     const qsToggle = ui.overlay === 'shade' ? event.target.closest('[data-qs-toggle]') : null;
-    if (qsToggle) homeLongPressTimer = setTimeout(() => { const key = qsToggle.dataset.qsToggle; data.settings[key] = !data.settings[key]; if (data.settings[key]) data.settings.airplane = false; if (key === 'wifi' && data.settings.wifi) data.settings.portableHotspot = false; save(); renderStatus(); renderOverlay(); pointerStart = null; suppressReleaseClick(); }, holdDelay(500));
+    if (qsToggle) homeLongPressTimer = setTimeout(() => { const key = qsToggle.dataset.qsToggle; data.settings[key] = !data.settings[key]; if (data.settings[key]) data.settings.airplane = false; if (key === 'wifi' && data.settings.wifi) data.settings.portableHotspot = false; save(); lp.renderStatus(); renderOverlay(); pointerStart = null; suppressReleaseClick(); }, holdDelay(500));
     if (ui.view === 'home' && event.target.closest('.lp-cling .cling-shade')) homeLongPressTimer = setTimeout(() => { data.clings.workspace = true; save(); LauncherClings.dismiss(clingLayerRoot().querySelector('[data-cling="workspace"]'), () => { ui.overview = true; render(); }); pointerStart = null; suppressReleaseClick(); }, holdDelay(550));
     if (ui.view === 'home' && !ui.overlay && !ui.overview && event.target.closest('.home-slot') && !pointerStart.source) homeLongPressTimer = setTimeout(() => { ui.overview = true; render(); pointerStart = null; suppressReleaseClick(); }, holdDelay(550));
     LP.module('messaging').pointerdown(event);
@@ -1981,7 +1891,7 @@
           setTimeout(() => {
             if (card.classList.contains('notification')) {
               data.notifications = data.notifications.filter(item => item.id !== Number(card.dataset.id));
-              save(); renderStatus();
+              save(); lp.renderStatus();
               if (ui.overlay === 'shade') { if (!data.notifications.length) ui.overlay = ''; renderOverlay(); }
               return;
             }
@@ -2019,7 +1929,7 @@
     if (!dragState && pointerStart?.source && !['drawer', 'drawer-widget'].includes(pointerStart.source.type) && Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > dp(10)) startDrag(event.clientX, event.clientY);
     if (finishDrag(event.clientX, event.clientY)) { pointerStart = null; return; }
     if (!pointerStart) return;
-    if (ui.overlay === 'shade' && pointerStart.target.closest('.notification') && Math.abs(dx) > dp(61)) { const id = Number(pointerStart.target.closest('.notification').dataset.id); data.notifications = data.notifications.filter(n => n.id !== id); save(); renderStatus(); renderOverlay(); pointerStart = null; return; }
+    if (ui.overlay === 'shade' && pointerStart.target.closest('.notification') && Math.abs(dx) > dp(61)) { const id = Number(pointerStart.target.closest('.notification').dataset.id); data.notifications = data.notifications.filter(n => n.id !== id); save(); lp.renderStatus(); renderOverlay(); pointerStart = null; return; }
     if (!ui.overlay && pointerStart.target.closest('#status-bar') && dy > dp(50)) { ui.overlay = 'shade'; renderOverlay(); }
     pointerStart = null;
   });
@@ -2088,7 +1998,7 @@
     lp.checkAlarms(now);
     lp.checkTimers();
     // Interruptions: the end of a countdown, alarm or downtime condition, and Downtime's autotrigger.
-    if (LPZen.tick(data.settings, now.getTime(), nextAlarmTime())) { save(); renderStatus(); if (ui.view === 'settings' && ui.sub === 'zen' && !ui.overlay) render(); }
+    if (LPZen.tick(data.settings, now.getTime(), nextAlarmTime())) { save(); lp.renderStatus(); if (ui.view === 'settings' && ui.sub === 'zen' && !ui.overlay) render(); }
     LP.module('dream').clockTick();
     lp.checkReminders(now);
     LP.module('photos').clockTick();
@@ -2134,15 +2044,16 @@
     get overlayRoot() { return overlayRoot; }, get placeShortcut() { return placeShortcut; },
     get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; },
     get reducedMotion() { return reducedMotion; }, get render() { return render; },
-    get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; },
-    get REPLIES() { return REPLIES; }, get resetSimulator() { return resetSimulator; }, get safe() { return safe; },
-    get save() { return save; }, get screen() { return screen; }, get snapResting() { return snapResting; },
-    get storeAppsSync() { return storeAppsSync; }, get storeContext() { return storeContext; },
+    get renderOverlay() { return renderOverlay; }, get REPLIES() { return REPLIES; },
+    get resetSimulator() { return resetSimulator; }, get safe() { return safe; }, get save() { return save; },
+    get screen() { return screen; }, get snapResting() { return snapResting; },
+    get statusRoot() { return statusRoot; }, get storeAppsSync() { return storeAppsSync; },
+    get storeContext() { return storeContext; },
     get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; },
     get suppressReleaseClick() { return suppressReleaseClick; }, get syncBrowserState() { return syncBrowserState; },
     get toast() { return toast; }, get today() { return today; }, get tracks() { return tracks; },
-    get ui() { return ui; }, get updateBarMode() { return updateBarMode; }, get viewport() { return viewport; },
-    get wallpaperFiles() { return wallpaperFiles; }, get wifiNetworks() { return wifiNetworks; }
+    get ui() { return ui; }, get viewport() { return viewport; }, get wallpaperFiles() { return wallpaperFiles; },
+    get wifiNetworks() { return wifiNetworks; }
   });
   // lp:kernel-end
   LP.start();

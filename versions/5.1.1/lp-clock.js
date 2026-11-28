@@ -1,8 +1,8 @@
 /* TODO */
 'use strict';
 LP.define('clock', ({
-  clone, defaultData, deviceDate, dp, i18n, nextAlarmLabel, openApp, overlayRoot, render, renderOverlay,
-  renderStatus, safe, save, screen, toast, ui, viewport
+  clone, defaultData, deviceDate, dp, i18n, nextAlarmLabel, openApp, overlayRoot, render, renderOverlay, safe,
+  save, screen, toast, ui, viewport
 }, lp) => {
   // 4.2 DeskClock pages; the alarm list and editor keep the ICS AlarmClock/SetAlarm screens.
   const jbClockState = () => { lp.data.jbClock ||= {tab: 'clock', timers: [], stopwatch: {accumulated: 0, started: null, laps: []}}; return {...lp.data.jbClock, timerDigits: ui.timerDigits || '', timerSetup: !!ui.timerSetup}; };
@@ -33,7 +33,7 @@ LP.define('clock', ({
       if (timer.state !== 'running' || JBDeskClock.remaining(timer, now) > 0) continue;
       Object.assign(timer, {state: 'done', left: 0, started: null});
       lp.data.notifications.unshift({id: now + lp.data.notifications.length, title: i18n.t("Time's up"), detail: i18n.t('Timer'), kind: 'timer'}); save();
-      renderStatus(); if (ui.overlay === 'shade') renderOverlay();
+      lp.renderStatus(); if (ui.overlay === 'shade') renderOverlay();
       if (ui.view === 'clock') { lp.data.jbClock.tab = 'timer'; render(); }
       toast("Time's up");
     }
