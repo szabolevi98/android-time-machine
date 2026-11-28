@@ -6,7 +6,8 @@
    for its options panel (2.3.6: GBUI.dialog and the Menu key's IconMenu).
    An app registers itself as the newer versions' modules do (EC / MM / NG.register):
      StoreHost.register('store-<id>', {title, statusColor, render(c), mount(c, root), action(name, el, c), menu(c),
-                        back(c), key(event, c), open(c, resume), clearData(c), tick(c)})
+                        back(c), key(event, c), submit(name, values, c), input(event, c), open(c, resume),
+                        clearData(c), tick(c)})
    It is also the module host of the engine migration (docs/plans/engine-migration.md): a version's own screens move
    out of its simulator.js into modules registered here under their view id (2.3.6: GB.register('calculator', ...),
    gb-core.js), and simulator.js asks the host first.
@@ -90,6 +91,9 @@
     menuKey(c) { const m = mods[c.ui.view]; if (!m?.menu) return false; m.menu(c); return true; },
     // A key typed while the screen is open (the keyboard of the computer): true when the screen took it.
     key(event, c) { return !!mods[c.ui.view]?.key?.(event, c); },
+    // A form of the screen is sent (name: its data-form, values: its FormData) and a field of it is typed in.
+    submit(name, values, c) { return !!mods[c.ui.view]?.submit?.(name, values, c); },
+    input(event, c) { return !!mods[c.ui.view]?.input?.(event, c); },
     // The screen is opened (resume: from Recents) and Settings › Apps › Clear data.
     open(id, c, resume) { mods[id]?.open?.(c, resume); },
     clearData(id, c) { mods[id]?.clearData?.(c); }

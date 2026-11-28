@@ -70,4 +70,36 @@
     return null;
   }
   window.GBDownloads = {KINDS, seed, bins, binOf, size, render, menu, dialog, text};
+
+  // The Downloads screen as a module (docs/plans/engine-migration.md): data.downloads (seeded on first use); the sort
+  // order, the selection and the open groups live in ui.gbdl.
+  function context(c) {
+    c.data.downloads ||= seed(Date.now());
+    const d = c.ui.gbdl ||= {selected: [], bySize: false, expanded: null};
+    return {lang: c.lang, locale: c.locale, now: Date.now(), hour24: !!c.data.settings.hour24, downloads: c.data.downloads, selected: d.selected, bySize: d.bySize, expanded: d.expanded};
+  }
+  window.GB?.register('downloads', {
+    render: c => render(context(c)),
+    menu(c) { c.gbMenu(menu(context(c))); },
+    dialog: (kind, c) => dialog(c.data.downloads?.find(d => d.id === kind), c.lang) || {title: '', items: []},
+    action(name, el, c) {
+      const id = el.dataset.id, data = c.data, ui = c.ui;
+      switch (name) {
+        // DownloadList.handleItemClick: open a finished file with its app, explain a failed or queued one.
+        case 'gbdl-open': { const d = data.downloads?.find(x => x.id === Number(id)); if (!d) return true;
+          if (d.status === 'failed' || d.status === 'queued') { c.gbDialog(d.id); return true; }
+          if (d.status !== 'success') return true;
+          const app = KINDS[d.kind]?.app; if (app) c.openApp(app); else c.toast(text(c.lang, 'download_no_application_title')); return true; }
+        case 'gbdl-select': { const sel = context(c).selected, n = Number(id); ui.gbdl.selected = sel.includes(n) ? sel.filter(x => x !== n) : [...sel, n]; c.render(); return true; }
+        case 'gbdl-deselect': ui.gbdl.selected = []; c.render(); return true;
+        case 'gbdl-delete': data.downloads = data.downloads.filter(d => !ui.gbdl.selected.includes(d.id)); ui.gbdl.selected = []; c.save(); c.render(); return true;
+        case 'gbdl-group': { const ctx = context(c), edges = bins(ctx.now), present = [...new Set(ctx.downloads.map(d => binOf(d.time, edges)))].sort(), open = ui.gbdl.expanded || present.slice(0, 1), bin = Number(id); ui.gbdl.expanded = open.includes(bin) ? open.filter(b => b !== bin) : [...open, bin]; c.render(); return true; }
+        case 'gbdl-sort': ui.overlay = ''; ui.gbdl.bySize = id === 'size'; c.render(); return true;
+        case 'gbdl-remove': data.downloads = data.downloads.filter(d => d.id !== Number(id)); ui.gbdl.selected = ui.gbdl.selected.filter(x => x !== Number(id)); c.save(); ui.overlay = ''; c.render(); return true;
+        // Retry restarts the download: In progress, then Complete.
+        case 'gbdl-retry': { const d = data.downloads.find(x => x.id === Number(id)); ui.overlay = ''; if (d) { d.status = 'running'; d.time = Date.now(); c.save(); setTimeout(() => { d.status = 'success'; c.save(); if (ui.view === 'downloads') c.render(); }, 3000); } c.render(); return true; }
+      }
+      return false;
+    }
+  });
 })();
