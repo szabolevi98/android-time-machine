@@ -179,7 +179,7 @@
   function storeContext() {
     return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, viewport, dp, snapResting, suppressClick: ms => { suppressClickUntil = Date.now() + ms; },
       // 2.3.6's own AlertDialog (a spec the module's dialog(kind, c) returns) and the Menu key's IconMenu items.
-      saveMusic, deviceDate, today, home, cancelPhotoWidget, composeEmail, messageDraft, gapp: () => gappContext(), gbCapture, gbmaCancel, gbmaReturn, gbceReturn, back, contact, contactByPhone, captureRecentView, appName: id => appNames[id] || id, startPhoneCall, editPerson, clock, blinkTips, renderStatus, apps, appNames, appIcon, carrierName, gbClock, lockControls, navigateBrowser, clearAppData, resetSimulator, storeUninstall, storeInstalled, storeAppsSync, wallpaperFiles, reducedMotion, defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
+      saveMusic, deviceDate, today, home, cancelPhotoWidget, composeEmail, messageDraft, gapp: () => gappContext(), gbCapture, gbmaCancel, gbmaReturn, gbceReturn, back, contact, contactByPhone, captureRecentView, appName: id => appNames[id] || id, startPhoneCall, editPerson, clock, blinkTips, renderStatus, apps, appNames, appIcon, carrierName, gbClock, lockControls, navigateBrowser, clearAppData, resetSimulator, storeUninstall, storeInstalled, storeAppsSync, wallpaperFiles, reducedMotion, lockDate: gbLockDate, defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
       appList: () => apps.map(app => [app[0], i18n.t(app[1])]), browserTitle: gbBrowserTitle, contactName: id => contact(id)?.name, normalizeAddress,
       intent: {browse(url) { openApp('browser'); navigateBrowser(url); }, contact(id) { openApp('people'); ui.selectedContact = id; ui.sub = 'detail'; render(); }, thread: id => openMessageThread(id),
         track(i) { openApp('music'); ui.music.queue = ICSMusic.tracks.map((_, n) => n); ui.music.track = i; ui.music.position = 0; ui.music.playing = true; saveMusic(); ui.sub = 'player'; render(); }},
@@ -391,8 +391,7 @@
     screen.style.background = data.wallpaper === 99 && data.customWallpaperPhoto ? `#080d14 url('${ICSMedia.image(data.customWallpaperPhoto)}') center / cover no-repeat` : data.wallpaper === 99 && data.customWallpaper ? `linear-gradient(160deg, ${data.customWallpaper[0]}, ${data.customWallpaper[1]} 53%, ${data.customWallpaper[2]})` : `#000 url('assets/gb-wallpaper_${wallpaperFiles[data.wallpaper] || 'street_lights'}.jpg') ${ui.page * 25}% center / auto 100% no-repeat`;
     screen.style.filter = `brightness(${.5 + data.settings.brightness / 135})`;
     renderStatus(); renderNav(); syncLiveWallpaper();
-    if (ui.view === 'lock') { viewport.innerHTML = renderLock(); attachGBLock(); }
-    else if (ui.view === 'home') { viewport.innerHTML = renderHome(); restoreWidgetScroll(); }
+    if (ui.view === 'home') { viewport.innerHTML = renderHome(); restoreWidgetScroll(); }
     else if (ui.view === 'drawer') viewport.innerHTML = renderDrawer();
     else viewport.innerHTML = renderApp();
     if (moduleView()) StoreHost.mount(ui.view, storeContext(), viewport);
@@ -417,38 +416,8 @@
     });
   }
   function lockScreen(){captureRecentView();lockControls.lock();ui.locked=ICSLockscreen.secure(data);ui.gbPasswordEntry=false;ui.sleeping=data.settings.screenLock==='none';ui.view=ui.sleeping?'home':'lock';ui.overlay='';render();}
-  // Next alarm as NEXT_ALARM_FORMATTED ("EEE h:mm aa" or "EEE k:mm") and the lock screen date (full_wday_month_day_no_year).
-  function nextAlarmLabel() {
-    const next = data.alarms.filter(alarm => alarm.enabled).map(alarm => ICSDeskClock.nextOccurrence(alarm, deviceDate())).filter(Boolean).sort((a, b) => a - b)[0];
-    if (!next) return '';
-    const day = next.toLocaleDateString(i18n.locale(), {weekday: 'short'}), h = next.getHours(), m = String(next.getMinutes()).padStart(2, '0');
-    return data.settings.hour24 ? `${day} ${h}:${m}` : `${day} ${h % 12 || 12}:${m} ${h < 12 ? 'AM' : 'PM'}`;
-  }
+  // The lock screen's date (full_wday_month_day_no_year), which the pattern and password screens show too.
   const gbLockDate = () => deviceDate().toLocaleDateString(i18n.locale(), {weekday: 'long', month: 'long', day: 'numeric'});
-  /* LockPatternKeyguardView.getInitialMode: a pattern lock opens straight on the pattern screen; PIN and password locks
-     show the SlidingTab lock screen first and its unlock tab leads to the password screen. */
-  function renderLock() {
-    if (ui.locked && (data.settings.screenLock === 'pattern' || ui.gbPasswordEntry)) return lockControls.renderLock();
-    return GBKeyguard.slideScreen({t: key => i18n.t(key), carrier: data.settings.airplane ? i18n.t('No service.') : data.settings.networkOperator || 'Telekom', ...GBKeyguard.time(deviceDate(), !!data.settings.hour24), date: gbLockDate(), alarm: nextAlarmLabel(), silent: !!data.settings.silent, vibrate: data.settings.silentMode === 'vibrate', toast: ui.gbLockToast});
-  }
-  let gbTabs = null;
-  function attachGBLock() {
-    gbTabs?.destroy(); gbTabs = null;
-    const root = viewport.querySelector('.gbkg-tab-screen'); if (!root) return;
-    gbTabs = GBKeyguard.slidingTab(root, {haptic: () => data.settings.haptic !== false, reduced: !!reducedMotion?.matches, onTrigger: side => {
-      if (ui.view !== 'lock') return;
-      suppressClickUntil = Date.now() + 350;
-      if (side === 'left') { if (ui.locked) { ui.gbPasswordEntry = true; render(); } else home(); return; }
-      // LockScreen.onTrigger(RIGHT_HANDLE): toggle silent mode (vibrate when "vibrate in silent" is on) and toast it for 3.5 s.
-      const silent = !data.settings.silent;
-      data.settings.silent = silent;
-      if (silent) data.settings.silentMode = data.settings.vibrateSilent === false ? 'silent' : 'vibrate';
-      save(); renderStatus();
-      ui.gbLockToast = silent ? {text: i18n.t('Sound is OFF'), color: '#ffffff', icon: 'gb-ic_lock_ringer_off.png'} : {text: i18n.t('Sound is ON'), color: '#e69310', icon: 'gb-ic_lock_ringer_on.png'};
-      clearTimeout(ui.gbLockToastTimer); ui.gbLockToastTimer = setTimeout(() => { ui.gbLockToast = null; if (ui.view === 'lock') render(); }, 3500);
-      render();
-    }});
-  }
 
   function analogClock() {
     const now = deviceDate();
@@ -581,7 +550,8 @@
   function back() { pendingNav = 'back'; try { navigateBack(); } finally { pendingNav = ''; } }
   function navigateBack() {
     if ((ui.overlay === 'store-host' || !ui.overlay && moduleView()) && StoreHost.back(storeContext())) return;
-    if(ui.view==='lock'&&ui.gbPasswordEntry&&data.settings.screenLock!=='pattern'){ui.gbPasswordEntry=false;lockControls.lock();render();return;}
+    // The password screen returns to the lock screen, over a dialog too (a ringing alarm).
+    if (ui.view === 'lock' && GB.module('lock').back(storeContext())) return;
     if (prefsOpen() && !ui.overlay && GB.module('prefs').back(storeContext())) return;
     if (ui.overlay === 'shade') { closeShade(); return; }
     if (ui.overlay) { ui.overlay = ''; render(); return; }
@@ -987,7 +957,6 @@
       case 'clear-notifications': data.notifications = []; save(); renderStatus(); renderOverlay(); closeShade(); break;
       case 'notification-open': { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar') { data.notifications = data.notifications.filter(item => item !== note); save(); ui.overlay = ''; openApp('calendar'); ui.selectedEvent = note.eventId; ui.selectedInstance = note.date; ui.selectedDate = note.date; ui.sub = 'event'; render(); break; } }
         ui.overlay = ''; if (Number(id) === 2) openMessageThread(1); else { ui.view = 'settings'; ui.sub = 'about'; render(); } break;
-      case 'unlock': ui.view = 'home'; render(); break;
       case 'toast': toast(id); break;
       case 'noop': break;
       case 'browser-search': openSearch(''); break;
