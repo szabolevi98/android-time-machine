@@ -95,7 +95,7 @@
       const ui = state(c.ui);
       if (ui.overlay === 'calc-menu') return `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu"><button data-action="calc-clear">Clear history</button><button data-action="calc-panel" data-id="${ui.calcPanel ? 0 : 1}">${ui.calcPanel ? 'Basic panel' : 'Advanced panel'}</button></div>`;
     },
-    back(c) { if (!c.ui.calcPanel) return false; setPanel(c, 0); return true; },
+    back(c) { if (c.ui.overlay || !c.ui.calcPanel) return false; setPanel(c, 0); return true; },
     // The computer's keyboard: Up / Down step through the history, the digit and operator keys type.
     key(event, c) {
       const ui = state(c.ui), data = c.data;

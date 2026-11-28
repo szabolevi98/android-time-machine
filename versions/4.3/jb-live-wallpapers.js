@@ -46,6 +46,7 @@
     },
     back(c) {
       $bind(c);
+      if (ui.overlay) return false;
       if (ui.view === 'live-wallpapers') { const sub = String(ui.sub || ''); if (sub.startsWith('settings:')) ui.sub = `preview:${sub.slice(9)}`; else if (sub) ui.sub = ''; else { home(false); return true; } render(); return true; }
       return false;
     },

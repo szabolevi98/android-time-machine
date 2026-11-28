@@ -329,6 +329,7 @@
     back(c) {
       $bind(c);
       if (ui.view === 'clock' && !ui.overlay && ClockPrefs.back(ui)) { render(); return true; }
+      if (ui.overlay) return false;
       if (ui.view === 'clock' && ui.sub === 'cities') { ui.sub = ''; render(); return true; }
       if (ui.view === 'clock' && ui.sub === 'alarm-edit') { ui.alarmDraft=null; ui.sub='alarms'; render(); return true; }
       return false;

@@ -746,7 +746,6 @@
       case 'messenger': case 'navigation': case 'local': case 'currents': case 'play-magazines': case 'wallet': case 'movie-studio': if (ui.view === 'navigation' && ui.navRun) return MapsRoute.nav(mrContext()); return JBExtraApps.render(ui.view, {studio: ui.view === 'movie-studio' ? movieContext() : null, news: ['currents', 'play-magazines'].includes(ui.view) ? newsContext() : null, messenger: ui.view === 'messenger' ? messengerContext() : null, ui, t: key => i18n.t(key), contacts: data.contacts, data});
       case 'google-search': case 'voice-search': case 'maps': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, plusCtx: ui.view === 'google-plus' ? plusContext() : null, ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
       case 'hangouts': return hangoutsScope(() => Hangouts.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime()));
-      case 'downloads': return HoloDownloads.render(dlContext());
       case 'gmail': return renderGmail();
       case 'play-music': case 'play-movies': case 'play-books': return PlayApps.render(playContext(ui.view));
       case 'phone': return renderPhone();
@@ -799,11 +798,6 @@
   }
   function home(resetPage = true) { if(ui.locked)return;if(ui.photoWidgetSetup){const setup=ui.photoWidgetSetup;data.homeWidgets[setup.page]=data.homeWidgets[setup.page].filter(widget=>widget.id!==setup.id);ui.photoWidgetSetup=null;save();}if(ui.sub==='lock-setup')lockControls.lock();captureRecentView(); ui.view = 'home'; ui.sub = ''; ui.overlay = ''; if (resetPage) ui.page = 2; render(); }
   function back() { pendingNav = 'back'; try { navigateBack(); } finally { pendingNav = ''; } }
-  // Downloads: data.downloads (seeded on first use); the sort order and the selection live in ui.hdl.
-  function dlContext() {
-    return {data, ui, lang: i18n.language, locale: i18n.locale(), now: deviceDate().getTime(), hour24: !!data.settings.hour24, t: key => i18n.t(key),
-      save, render, renderOverlay, toast, openApp};
-  }
   // Navigation's pickers and Local's search (jb-extra-apps.js): a picked destination drives there as Type destination
   // does; a Local find opens on the map.
   // Currents' Customize and Add editions (currents-customize.js).
@@ -843,7 +837,9 @@
     save, render, renderOverlay, toast: message => toast(i18n.t(message)),
     openVoice: () => { openApp('google-search'); ui.sub = 'settings'; ui.gsStack = []; ui.gsPage = 'voice'; ui.gsDialog = null; ui.voiceFromSettings = true; render(); }});
   function navigateBack() {
-    if ((ui.overlay === 'store-host' || !ui.overlay && StoreHost.has(ui.view)) && StoreHost.back(storeContext())) return;
+    if ((ui.overlay === 'store-host' || !ui.overlay && ui.view.startsWith('store-') && StoreHost.has(ui.view)) && StoreHost.back(storeContext())) return;
+    // The screen's module (jb-*.js), open overlay or not: its lines that stood after the overlay closes below check it.
+    if (!ui.view.startsWith('store-') && StoreHost.has(ui.view) && StoreHost.module(ui.view).back?.(storeContext())) return;
     if (ui.view === 'settings' && ui.sub.startsWith('lng-') && !ui.overlay && InputLanguage.back(langContext())) return;
     if (ui.view === 'google-search' && ui.voiceFromSettings && ui.sub === 'settings' && !ui.overlay && !(ui.gsStack || []).length) { ui.voiceFromSettings = false; openApp('settings'); ui.sub = 'language'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'dev-backup-pw' && !ui.overlay) { ui.sub = 'development'; render(); return; }
@@ -875,7 +871,6 @@
     if (ui.view === 'email' && ICSEmail.back(emailContext())) return;
     // The Gallery's picker (GET_CONTENT from Email's Attach file) returns without a picture.
     if (ui.view === 'gallery' && ui.galleryPick && !ui.overlay) { if (ui.sub === 'album') { ui.sub = ''; render(); return; } ui.galleryPick = ''; openApp('email', true); return; }
-    if (ui.view === 'downloads' && HoloDownloads.back(dlContext())) return;
     if(ui.view==='settings'&&ui.sub==='lock-setup'){lockControls.cancel();return;}
     if (ui.overlay.startsWith('widget-photo')) { cancelPhotoWidget(); return; }
     if (ui.overlay) { ui.overlay = ''; render(); return; }
@@ -990,7 +985,7 @@
       const gone = ui.removedTask; ui.removedTask = null;
       if (ui.view === gone) { ui.view = 'home'; ui.sub = ''; lastScene = {view: 'home', sub: ''}; render(); return; }
     }
-    if (ui.view === 'downloads' && ui.overlay.startsWith('hdl-')) { overlayRoot.innerHTML = HoloDownloads.overlay(dlContext()) || ''; return; }
+    if (moduleHook('overlayEarly', null)) return;
     const closingFolder = overlayRoot.querySelector('.launcher-folder');
     // A module's own overlays (jb-core.js: overlay(c) returns the markup, or true when it drew them itself).
     const moduleOverlay = ui.overlay ? moduleHook('overlay', null) : undefined;
@@ -1938,7 +1933,6 @@
       takePhoto: () => { const photo = {...ICSMedia.scene(data), id: Date.now(), name: `IMG_${new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14)}`, album: 'camera', created: Date.now()}; data.photos.unshift(photo); save(); ui.peopleDraft.photo = photo.id; render(); }})) return;
     if (ui.view === 'gmail' && gmailAction(action, id, button)) return;
     if (ui.view === 'email' && action.startsWith('email-') && ICSEmail.handle(action, id, emailContext())) return;
-    if (ui.view === 'downloads' && action.startsWith('hdl-') && HoloDownloads.handle(action, id, dlContext())) return;
     if (action.startsWith('chrome-') && ui.sub === 'chrome-settings') {
       const result = ChromeApp.prefAction(action, id, {ui, data, locale: i18n.locale(), t: key => i18n.t(key)});
       if (result) {
