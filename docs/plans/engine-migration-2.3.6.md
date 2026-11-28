@@ -43,7 +43,7 @@ one `GB.register(id, {...})` module per screen.
 | The Google apps (GBApps.register is a GB module) | gb-apps.js | 72357291 |
 | App settings screens (GBPrefs) | gb-prefs.js (the prefs module) | 59597d79 |
 | Lock screen | gb-keyguard.js | e06357db |
-| Home screen, app drawer | gb-launcher.js (home, drawer) | |
+| Home screen, app drawer | gb-launcher.js (home, drawer) | 7ae0ced5 |
 
 Bugs fixed on the way (their own commits):
 
@@ -63,3 +63,15 @@ Notes:
 - Calendar: `data-gbcal-swipe` (the vertical swipe) is not drawn by GBCalendar, so that branch moved as it was but is
   not reached; Day and Week swipe horizontally (`data-calendar-swipe`). The inherited ICS overlay branch
   (`calendar-views`, `calendar-menu`) stays in the shell; GBCalendar does not open it.
+
+## Left (2026-11-28, session stopped at its usage limit)
+
+simulator.js (~1,000 lines) still holds the system UI and the core:
+- status bar + shade (renderStatus, ticker, shadeFling/closeShade, the shade pull and card swipes, notification
+  actions) → system modules in gb-statusbar.js; Recents (overlay, held Home); power (GlobalActions overlays, ga-*,
+  powerKey/Hold/Confirm/Off, boot); volume (volumeKey/showVolume); the alarm alert (checkAlarms, clock-ringing,
+  alarm-snooze/dismiss) → gb-deskclock.js; the music service (saveMusic, tickMusic) → gb-music.js.
+- then the rest into gb-core.js laid out like ec-core.js (owner's target in engine-migration.md), simulator.js deleted,
+  and the tests that still read versions/2.3.6/simulator.js (global-actions, messaging, books-reader, email-servers)
+  switched to tests/lib/engine-source.cjs.
+- Last full `ci.mjs 2.3.6` run: before the lock and launcher commits (all passed after fixes); rerun it.
