@@ -38,3 +38,4 @@ the module core, screen by screen, until it is gone.
 | 2 | Calendar (with its date, time and time zone pickers) | lp-calendar.js | moved |
 | 2 | Contacts (People) | lp-people.js | moved |
 | 2 | Phone | lp-phone.js | moved |
+| 2 | Messenger and Hangouts | lp-messaging.js | moved |

@@ -1,8 +1,7 @@
 /* TODO */
 'use strict';
 LP.define('camera', ({
-  clone, i18n, messageDraft, openApp, photosContext, reducedMotion, render, renderOverlay, save, screen,
-  scrollMessages, toast, ui, viewport
+  clone, i18n, openApp, photosContext, reducedMotion, render, renderOverlay, save, screen, toast, ui, viewport
 }, lp) => {
   function renderCamera() { return LPCamera.render(lp.data, ui, key => i18n.t(key), ICSMedia, i18n.locale(), i18n.language); }
   // JB Camera callbacks: a capture adds a local illustration to the Camera album; the filmstrip opens Gallery.
@@ -26,7 +25,7 @@ LP.define('camera', ({
     const ret = {sub: ui.sub, thread: ui.thread};
     ui.overlay = ''; renderOverlay(); openApp('camera'); ui.jbcamModule = 'photo';
     const back = () => { openApp('hangouts'); Object.assign(ui, ret); };
-    ui.camIntent = cameraIntent(photo => { back(); const d = messageDraft(); d.attachment = clone(photo); d.updated = Date.now(); save(); render(); scrollMessages(); }, () => { back(); render(); scrollMessages(); });
+    ui.camIntent = cameraIntent(photo => { back(); const d = lp.messageDraft(); d.attachment = clone(photo); d.updated = Date.now(); save(); render(); lp.scrollMessages(); }, () => { back(); render(); lp.scrollMessages(); });
     render();
   }
   // Camera review: LMY48Y has no Gallery, so the picture opens in the Photos viewer.

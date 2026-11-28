@@ -1,8 +1,8 @@
 /* TODO */
 'use strict';
 LP.define('clock', ({
-  clone, defaultData, deviceDate, dp, i18n, messageDraft, navigateBrowser, nextAlarmLabel, openApp, overlayRoot,
-  render, renderOverlay, renderStatus, safe, save, screen, toast, ui, viewport
+  clone, defaultData, deviceDate, dp, i18n, navigateBrowser, nextAlarmLabel, openApp, overlayRoot, render,
+  renderOverlay, renderStatus, safe, save, screen, toast, ui, viewport
 }, lp) => {
   // 4.2 DeskClock pages; the alarm list and editor keep the ICS AlarmClock/SetAlarm screens.
   const jbClockState = () => { lp.data.jbClock ||= {tab: 'clock', timers: [], stopwatch: {accumulated: 0, started: null, laps: []}}; return {...lp.data.jbClock, timerDigits: ui.timerDigits || '', timerSetup: !!ui.timerSetup}; };
@@ -174,7 +174,7 @@ LP.define('clock', ({
           if (id === 'share') {
             const watch = lp.data.jbClock.stopwatch, laps = watch.laps || [], total = JBDeskClock.elapsed(watch, Date.now());
             const text = [`${i18n.t('Stopwatch')}: ${JBDeskClock.formatStopwatch(total)}`, ...laps.map((lap, i) => `# ${i + 1}  ${JBDeskClock.formatStopwatch(lap - (laps[i - 1] || 0))}`)].join('\n');
-            openApp('messaging'); ui.sub = 'new'; messageDraft().body = text; save(); render(); break;
+            openApp('messaging'); ui.sub = 'new'; lp.messageDraft().body = text; save(); render(); break;
           }
           lp.data.jbClock.stopwatch = JBDeskClock.stopwatchAction(lp.data.jbClock.stopwatch, id, Date.now()); save(); render(); break;
         }

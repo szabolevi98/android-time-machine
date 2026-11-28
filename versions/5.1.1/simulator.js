@@ -495,7 +495,7 @@
     LP.module('clock').afterRender();
     if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserFind) highlightBrowserText();
     if (ui.view === 'photos' && ui.sub === 'photo') attachPhotosSwipe();
-    if (ui.view === 'hangouts' && ui.hgPage === 'add') HangoutsPrefs.mount(viewport, ui, render);
+    LP.module('messaging').afterRender();
     if (ui.view === 'photos' && ui.sub === 'sphere') LPSphere.attachViewer(viewport);
     if (ui.view === 'photos' && ui.sub === 'refocus' && ui.refocusEdit) { const photo = PhotosApp.list(photosContext())[ui.photosIndex]; if (photo) LPRefocus.attachViewer(viewport, {photo, edit: ui.refocusEdit, media: ICSMedia}); }
     if (ui.view === 'photos' && ui.sub === 'edit') PlusEditor.attach(viewport.querySelector('[data-pe-root]'), peContext());
@@ -837,8 +837,6 @@
       case 'gmail': return renderGmail();
       case 'play-music': case 'play-movies': case 'play-books': case 'play-games': return PlayApps.render(playContext(ui.view));
       case 'google-search': case 'voice-search': case 'maps': case 'drive': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, plusCtx: ui.view === 'google-plus' ? plusContext() : null, ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
-      case 'messaging': return renderMessaging();
-      case 'hangouts': return Hangouts.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime());
       case 'email': return renderEmail();
       case 'docs': case 'sheets': case 'slides': case 'fit': case 'newsstand': case 'wallet': return LPExtraApps.render(ui.view, {news: ui.view === 'newsstand' ? newsContext() : null, files: officeFiles(), ui, data, t: key => i18n.t(key), locale: i18n.locale()});
       default: return renderHome();
@@ -906,11 +904,11 @@
   // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
   const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
   // Currents / Magazines / Newsstand reading and settings (news-reader.js).
-  const newsContext = () => ({app: ui.view, profile: 'newsstand-lp', ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.['newsstand']?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, account: 'nexus6.demo@gmail.com', save, render, toast: message => toast(message), unavailable: 'lpx-unavailable', emptyFor: {'My Library': 'No magazines'}, share: (text, subject) => { ui.overlay = ''; renderOverlay(); openApp('messaging'); ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); save(); render(); }});
+  const newsContext = () => ({app: ui.view, profile: 'newsstand-lp', ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.['newsstand']?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, account: 'nexus6.demo@gmail.com', save, render, toast: message => toast(message), unavailable: 'lpx-unavailable', emptyFor: {'My Library': 'No magazines'}, share: (text, subject) => { ui.overlay = ''; renderOverlay(); openApp('messaging'); ui.sub = 'new'; Object.assign(lp.messageDraft(), {body: text, updated: Date.now()}); save(); render(); }});
   // Google+ posting and settings (plus-post.js): Google+ 4.9's New post, own posts and Settings.
   const plusContext = () => { PlusPost.bind(ui); return {ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.gplus?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, version: '4.9', me: i18n.t('Me'), account: 'nexus6.demo@gmail.com', now: deviceDate(), locale: i18n.locale(), save, render, thumb: i => StockApps.thumb(i), openMessengerSettings: () => { openApp('messenger'); ui.gpmPrefs = true; render(); }}; };
   // Earth (earth-app.js): Earth 8.0.1's settings, search, My location and Share.
-  const earthContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, save, render, toast: message => toast(message), earth: '8.0.1', account: 'nexus6.demo@gmail.com', dark: false, dot: 'assets/ea8-bluedot.png', shareTargets: [['messaging', 'Messenger']], share: (app, text, subject) => { ui.overlay = ''; renderOverlay(); openApp(app); ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); save(); render(); }, openLocation: () => { openApp('settings'); ui.sub = 'location'; render(); }});
+  const earthContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, save, render, toast: message => toast(message), earth: '8.0.1', account: 'nexus6.demo@gmail.com', dark: false, dot: 'assets/ea8-bluedot.png', shareTargets: [['messaging', 'Messenger']], share: (app, text, subject) => { ui.overlay = ''; renderOverlay(); openApp(app); ui.sub = 'new'; Object.assign(lp.messageDraft(), {body: text, updated: Date.now()}); save(); render(); }, openLocation: () => { openApp('settings'); ui.sub = 'location'; render(); }});
   // Advanced Wi-Fi's Install certificates (*-certinstall.js) and its dialogs.
   const certContext = () => ({ui, data, language: i18n.language, root: overlayRoot, save, toast: message => toast(message),
     open: () => { ui.overlay = 'cert-install'; renderOverlay(); overlayRoot.querySelector('[data-cert-name]')?.focus(); }, close: () => { ui.overlay = ''; renderOverlay(); },
@@ -1028,13 +1026,10 @@
     if (ui.view === 'settings' && ['brightness','wallpaper','sleep'].includes(ui.sub)) { ui.sub = 'display'; render(); return; }
     if (ui.view === 'settings' && ['volumes','ringtone'].includes(ui.sub)) { ui.sub = 'sound'; render(); return; }
     // Hangouts' and Messenger's own pages (hangouts-prefs.js) step back through what opened them.
-    if (ui.view === 'hangouts' && ui.hgPage) { HangoutsPrefs.back(ui); render(); return; }
-    if (ui.view === 'messaging' && ui.lpmPage) { MessengerOptions.back(ui); render(); return; }
+    if (LP.module('messaging').backPages()) return;
     // Drive's dialogs, folders and filters (lp-drive.js).
     if (ui.view === 'drive' && window.LPDrive && LPDrive.back(ui)) { render(); return; }
-    if (ui.view === 'messaging' && ui.sub === 'archived') { ui.sub = ''; render(); return; }
-    if (ui.view === 'hangouts' && ui.sub === 'archived') { ui.sub = ''; render(); return; }
-    if (['messaging', 'hangouts'].includes(ui.view) && ui.sub === 'thread') { ui.sub = ui.mmsListMode || ''; render(); return; }
+    if (LP.module('messaging').back()) return;
     if (LP.module('clock').backCities()) return;
     if (LP.module('people').back()) return;
     if (ui.sub) { ui.sub = ''; render(); if (ui.view === 'settings') viewport.querySelector('.settings-app').scrollTop = ui.settingsRootScroll; return; }
@@ -1212,8 +1207,6 @@
       overlayRoot.innerHTML = ChromeApp.menu({ui, data, t: key => i18n.t(key), locale: i18n.locale(), url: ui.browserUrl, incognito: !!ICSBrowserSession.current(ui.browserSession)?.incognito});
     } else if (ui.overlay === 'browser-menu') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu web-menu"><button data-action="browser-forward" ${ui.browserIndex >= ui.browserHistory.length-1?'disabled':''}>Forward</button><button data-action="browser-refresh">Refresh</button><button data-action="browser-new-tab">New tab</button><button data-action="browser-save">Bookmark</button><button data-action="browser-bookmarks">Bookmarks</button><button data-action="browser-saved">Saved pages</button><button data-action="browser-save-page">Save for offline reading</button><button data-action="browser-find">Find on page</button></div>`;
-    } else if (ui.overlay.startsWith('mms-')) {
-      overlayRoot.innerHTML = renderMessageOverlay();
     } else if (ui.overlay === 'play-menu') {
       // The action bar overflow: a Holo Light popup below the overflow button (Play 5.2: a Material popup over it).
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="jbp-menu" role="menu">${JBPlay.menu(jbPlayContext()).map(item => `<button data-action="${item.action}"${item.checked !== undefined ? ` role="menuitemcheckbox" aria-checked="${item.checked}"` : ''}>${safe(item.title)}${item.checked !== undefined ? `<i class="lpp-check${item.checked ? ' on' : ''}"></i>` : ''}</button>`).join('')}</div>`;
@@ -1597,63 +1590,6 @@
     ui.playHistory.push({...ui.play,scrollTop:viewport.querySelector('.play-content')?.scrollTop || 0});
     ui.play = {...ui.play,...next}; ui.overlay = ''; render();
   }
-  function renderMessaging() {
-    if (ui.lpmPage) return MessengerOptions.render(data, ui, key => i18n.t(key));
-    return ICSMessaging.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime());
-  }
-  function messageDraft() {
-    data.messageDrafts ||= {};
-    const key = ICSMessaging.draftKey(ui);
-    return data.messageDrafts[key] ||= {body:'',recipient:''};
-  }
-  function openMessageThread(key) {
-    if (!['messaging', 'hangouts'].includes(ui.view)) openApp('messaging');
-    if (ui.sub !== 'thread') ui.mmsListMode = ui.sub === 'search' ? 'search' : ui.sub === 'archived' ? 'archived' : '';
-    ui.thread = key; ui.sub = 'thread'; ui.overlay = '';
-    data.messages.filter(m => String(m.contact) === String(key)).forEach(m => { m.read = true; });
-    if (String(key) === '1') data.notifications = data.notifications.filter(n => n.id !== 2);
-    save(); render(); scrollMessages();
-  }
-  function pickHangout(key) {
-    const pending = data.messageDrafts?.['hg:new'];
-    if (pending && (pending.body || pending.attachment)) {
-      const target = data.messageDrafts['hg:' + String(key)] ||= {body: '', recipient: ''};
-      target.body = [target.body, pending.body].filter(Boolean).join(' ').slice(0, 2000);
-      if (pending.attachment) target.attachment = pending.attachment;
-      target.updated = Date.now();
-    }
-    if (data.messageDrafts) delete data.messageDrafts['hg:new'];
-    ui.mmsListMode = '';
-    openMessageThread(key);
-  }
-  function scrollMessages() {
-    const history = viewport.querySelector('.mms-history');
-    if (history) history.scrollTop = history.scrollHeight;
-  }
-  function renderMessageOverlay() {
-    const dialog = (title, content) => `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog mms-dialog" role="dialog" aria-label="${safe(i18n.t(title))}"><h3>${safe(i18n.t(title))}</h3>${content}</div>`;
-    const option = (action, text, id = '') => `<button data-action="${action}" data-id="${safe(id)}">${safe(i18n.t(text))}</button>`;
-    const hangouts = ui.view === 'hangouts' ? Hangouts.overlay(data, ui, key => i18n.t(key)) : null;
-    if (hangouts !== null) return hangouts;
-    if (ui.overlay === 'mms-attach-photos') return dialog('Attach photo', `<div class="mms-dialog-list">${data.photos.map(p => `<button data-action="mms-photo" data-id="${p.id}">${ICSMessaging.photo(p)}</button>`).join('') || '<p>No photos</p>'}</div>`);
-    if (ui.overlay === 'mms-menu' && ui.view === 'messaging') {
-      // Messenger's overflow: the conversation list (Archived, Settings, Help & feedback) or a conversation.
-      const items = ui.sub === 'thread' ? [['mms-smiley', 'Insert smiley'], ['mpo-open', 'People & options'], ['mms-delete-thread', 'Delete'], ['mms-discard', 'Discard draft']] : ui.sub === 'new' ? [['mms-smiley', 'Insert smiley'], ['mms-discard', 'Discard draft']] : ui.sub === 'archived' ? [['mpo-settings', 'Settings'], ['toast:Help is not available offline.', 'Help & feedback']] : [['mms-archived', 'Archived'], ['mpo-settings', 'Settings'], ['toast:Help is not available offline.', 'Help & feedback']];
-      return `<div class="menu-scrim" data-action="close-overlay"></div><div class="lp-popup-menu" role="menu">${items.map(([action, title]) => { const [act, arg] = action.split(/:(.*)/); return `<button role="menuitem" data-action="${act}"${arg ? ` data-id="${safe(arg)}"` : ''}>${safe(i18n.t(title))}</button>`; }).join('')}</div>`;
-    }
-    if (ui.overlay === 'mms-menu') {
-      const composing = ['thread','new'].includes(ui.sub);
-      return `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu ${composing ? '' : 'mms-menu-root'}">${composing ? option('mms-smiley','Insert smiley') + option('mms-discard','Discard draft') + (ui.sub === 'thread' ? option('mms-delete-thread','Delete thread') : '') : option('new-message','New message') + option('mms-search','Search messages')}</div>`;
-    }
-    if (ui.overlay === 'mms-attach') return dialog('Add attachment', `<div class="mms-dialog-list">${data.photos.map(p => `<button data-action="mms-photo" data-id="${p.id}">${ICSMessaging.photo(p)}</button>`).join('') || '<p>No photos</p>'}</div>`);
-    if (ui.overlay === 'mms-smiley') return dialog('Insert smiley', `<div class="mms-dialog-list">${[':-)',':-(', ';-)',':-D',':-P'].map(face=>option('mms-insert-smiley',face,face)).join('')}</div>`);
-    if (ui.overlay === 'mms-delete-confirm') return dialog(ui.mmsDelete === 'thread' ? 'Delete thread' : 'Delete message', `<p>Delete this conversation or message from the simulator?</p><div class="settings-dialog-actions">${option('close-overlay','Cancel')}${option('mms-confirm-delete','Delete')}</div>`);
-    const message = data.messages.find(m => String(m.id) === String(ui.mmsMessage));
-    if (!message) return '';
-    if (ui.overlay === 'mms-message') return dialog('Message options', `<div class="mms-dialog-list">${option('mms-forward','Forward message')}${option('mms-details','View message details')}${option('mms-delete-message','Delete message')}</div>`);
-    if (ui.overlay === 'mms-details') return dialog('Message details', `<p>${message.attachment ? 'MMS' : 'SMS'} · ${safe(i18n.t(message.mine ? 'Sent' : 'Received'))}</p><p>${safe(ICSMessaging.identity(message.contact,data.contacts).phone)}</p><p>${safe(message.timestamp ? new Date(message.timestamp).toLocaleString(i18n.locale()) : i18n.t(message.time))}</p><p>${safe(message.body)}</p><div class="settings-dialog-actions">${option('close-overlay','OK')}</div>`);
-    return '';
-  }
   // Google+ Photos (the Nexus 6's Photos) over the simulator's pictures.
   const photosContext = () => ({data, ui, t: key => i18n.t(key), locale: i18n.locale(), media: ICSMedia, groups: LPGallery.groups(data, 'album', i18n.locale())});
   // Google+'s photo editor (plus-editor.js) over the same pictures.
@@ -1684,7 +1620,7 @@
       save(); if (ui.view === 'photos') render(); toast(photosText('Download complete.'));
     }, 1200);
   }
-  function photosShare(photo) { if (!photo) return; ui.overlay = ''; renderOverlay(); openApp('messaging'); ui.sub = 'new'; messageDraft().attachment = clone(photo); save(); render(); }
+  function photosShare(photo) { if (!photo) return; ui.overlay = ''; renderOverlay(); openApp('messaging'); ui.sub = 'new'; lp.messageDraft().attachment = clone(photo); save(); render(); }
   // Swipe between pictures in the viewer; a tap shows or hides the bars.
   function attachPhotosSwipe() {
     const pane = viewport.querySelector('.ph-viewer');
@@ -1800,7 +1736,7 @@
   }
   function driveShareText(app, text, subject) {
     ui.overlay = ''; renderOverlay();
-    if (app === 'hangouts') { openApp('hangouts'); ui.sub = 'new'; messageDraft().body = text; save(); render(); return; }
+    if (app === 'hangouts') { openApp('hangouts'); ui.sub = 'new'; lp.messageDraft().body = text; save(); render(); return; }
     openApp(app); composeEmail(); const d = mailbox().find(m => m.id === ui.emailId); if (d) { d.subject = subject; d.body = text; } save(); render();
   }
   function composeEmail(source=null,forward=false,to='') {
@@ -1826,7 +1762,6 @@
     if(id==='music'){ui.music=ICSMusic.restore();saveMusic();}
     if(id==='gmail'){data.gmailbox=GmailApp.restore(null);delete data.gmailWelcomeSeen;delete data.gmailTeaserDismissed;delete data.gmailSeen;if(ui.mailApp==='gmail'){ui.emailFolder='Primary';ui.emailSelected=[];}}
     if(id==='email'){data.mailbox=ICSEmail.restore(null,emailData,[]);data.sentEmails=[];ui.emailFolder='Inbox';ui.emailQuery=undefined;ui.emailSelected=[];}
-    if(id==='messaging'||id==='hangouts'){data.messages=clone(defaultData.messages);data.messageDrafts={};}
     if(id==='gallery'){data.photos=clone(defaultData.photos);}
     if(id==='play-store')delete data.playRatings;
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
@@ -1869,39 +1804,9 @@
     return next ? next.toLocaleString(i18n.locale(), {weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: !data.settings.hour24}) : '';
   }
   function addNotification(title, detail) { data.notifications.unshift({ id: Date.now(), title, detail }); save(); renderStatus(); }
-  function sendMessage(id, body, attachment) {
-    if (!body && !attachment) return;
-    const more = data.messageDrafts?.[ICSMessaging.draftKey(ui)]?.moreAttachments || [];
-    // Messenger carries SMS; Hangouts keeps its own chats (channel 'hangouts').
-    data.messages.push({ id: Date.now(), contact: id, body, mine: true, time: clock(), timestamp:Date.now(), read:true, ...(ui.view === 'hangouts' ? {channel: 'hangouts'} : {}), ...(attachment ? {attachment:clone(attachment)} : {}) });
-    more.forEach((photo, i) => data.messages.push({ id: Date.now() + i + 1, contact: id, body: '', mine: true, time: clock(), timestamp: Date.now(), read: true, ...(ui.view === 'hangouts' ? {channel: 'hangouts'} : {}), attachment: clone(photo) }));
-    delete data.messageDrafts?.[ICSMessaging.draftKey(ui)];
-    openMessageThread(id);
-    scheduleReply(id, ui.view === 'hangouts' ? 'hangouts' : 'sms');
-  }
   /* A simulated answer shows Lollipop's heads-up notification: a few seconds after a text to one of the demo contacts
      they write back once (per contact and session). */
   const REPLIES = {1: 'Sounds good, see you then!', 2: 'Got it, thanks!', 3: 'Haha, nice 😄', 4: 'Love you! Talk soon ♥'};
-  function scheduleReply(id, channel = 'sms') {
-    const key = Number(id), app = channel === 'hangouts' ? 'hangouts' : 'messaging';
-    if (!REPLIES[key] || (ui.repliedTo ||= new Set()).has(`${channel}:${key}`)) return;
-    // A blocked person's Hangouts messages do not arrive (realtimechat_block_user_text).
-    if (channel === 'hangouts' && !HangoutsPrefs.receives(data, key)) return;
-    ui.repliedTo.add(`${channel}:${key}`);
-    setTimeout(() => {
-      const who = contact(key); if (!who) return;
-      const open = ui.view === app && ui.sub === 'thread' && Number(ui.thread) === key;
-      data.messages.push({id: Date.now(), contact: key, body: i18n.t(REPLIES[key]), mine: false, time: clock(), timestamp: Date.now(), read: open, ...(channel === 'hangouts' ? {channel} : {})});
-      // Notifications off for the app or the conversation, a snooze or a block keep the answer silent.
-      const quiet = channel === 'hangouts' ? !HangoutsPrefs.notifies(data, key, deviceDate().getTime()) : !MessengerOptions.notifies(data, key);
-      if (!open && quiet) { save(); if (['messaging', 'hangouts'].includes(ui.view) && !ui.sub) render(); }
-      else if (!open) {
-        const note = {id: Date.now(), title: who.name, detail: i18n.t(REPLIES[key]), kind: 'message', contact: key, time: deviceDate().getTime(), ...(channel === 'hangouts' ? {channel} : {})};
-        data.notifications.unshift(note); save(); renderStatus(); headsUp(note);
-      } else { save(); render(); }
-      if (ui.overlay === 'shade') renderOverlay();
-    }, 4500);
-  }
   /* HeadsUpNotificationView (5.1): a high-priority notification drops in at the top over the running app, 8 dp in from
      the sides, and leaves after heads_up_notification_decay (10 s) or when swiped away; tapping it opens it. */
   let headsUpTimer = 0;
@@ -1968,10 +1873,6 @@
     if (ui.overlay === 'pa-more' && !action.startsWith('px-') && action !== 'close-overlay') { ui.overlay = ''; ui.paMore = ''; renderOverlay(); }
     if (action.startsWith('px-') && PlayMore.handle(action, id, {...playContext(ui.view), save, saveMusic, render, renderOverlay, toast, root: viewport, openApp, shareText: driveShareText})) return;
     if (action.startsWith('drv-') && LPDrive.handle(action, id, {data, ui, save, render, renderOverlay, toast, root: viewport, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), shareFile: driveShareFile, shareText: driveShareText})) return;
-    if (/^(hgp|mpo|mset)-/.test(action)) {
-      const ctx = {data, ui, save, render, renderOverlay, toast, root: viewport, openApp, openThread: key => openMessageThread(key)};
-      if ((action.startsWith('hgp-') ? HangoutsPrefs : MessengerOptions).handle(action, id, ctx)) return;
-    }
     // Email's Quick responses, ringtone and server screens (email-prefs.js).
     if (action.startsWith('empx-') && EmailPrefs.handle(action, id, {data, ui, save, render, root: viewport, account: ICSEmail.account})) return;
     if (action.startsWith('pe-') && window.PlusEditor?.handle(action, button, peContext())) return;
@@ -2210,11 +2111,11 @@
       case 'lp-brightness-auto': data.settings.autoBrightness = !data.settings.autoBrightness; save(); renderOverlay(); break;
       case 'qs-settings': ui.overlay = ''; openApp('settings'); break;
       case 'qs-alarm': ui.overlay = ''; openApp('clock'); break;
-      case 'notification-action': if (button.dataset.noteAction === 'reply') { const note = data.notifications.find(item => String(item.id) === id); releaseHeadsUp(); data.notifications = data.notifications.filter(item => item !== note); save(); renderStatus(); ui.overlay = ''; openApp(note?.channel === 'hangouts' ? 'hangouts' : 'messaging'); openMessageThread(note?.contact || 1); break; } { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar' && button.dataset.noteAction === 'snooze') { data.notifications = data.notifications.filter(item => item !== note); (data.calendarSnoozes ||= []).push({eventId: note.eventId, date: note.date, title: note.title, detail: note.detail, at: deviceDate().getTime() + 5 * 60000}); save(); renderStatus(); if (!data.notifications.length) ui.overlay = ''; renderOverlay(); toast('Snoozed'); } break; }
+      case 'notification-action': if (button.dataset.noteAction === 'reply') { const note = data.notifications.find(item => String(item.id) === id); releaseHeadsUp(); data.notifications = data.notifications.filter(item => item !== note); save(); renderStatus(); ui.overlay = ''; openApp(note?.channel === 'hangouts' ? 'hangouts' : 'messaging'); lp.openMessageThread(note?.contact || 1); break; } { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar' && button.dataset.noteAction === 'snooze') { data.notifications = data.notifications.filter(item => item !== note); (data.calendarSnoozes ||= []).push({eventId: note.eventId, date: note.date, title: note.title, detail: note.detail, at: deviceDate().getTime() + 5 * 60000}); save(); renderStatus(); if (!data.notifications.length) ui.overlay = ''; renderOverlay(); toast('Snoozed'); } break; }
       case 'notification-open': { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar') { data.notifications = data.notifications.filter(item => item !== note); save(); ui.overlay = ''; openApp('calendar'); ui.selectedEvent = note.eventId; ui.selectedInstance = note.date; ui.selectedDate = note.date; ui.sub = 'event'; render(); break; }
         releaseHeadsUp();
-        if (note?.kind === 'message') { data.notifications = data.notifications.filter(item => item !== note); save(); renderStatus(); ui.overlay = ''; openApp(note.channel === 'hangouts' ? 'hangouts' : 'messaging'); openMessageThread(note.contact); break; }
-        ui.overlay = ''; if (Number(id) === 2) openMessageThread(1); else { ui.view = 'settings'; ui.sub = 'about'; render(); } break; }
+        if (note?.kind === 'message') { data.notifications = data.notifications.filter(item => item !== note); save(); renderStatus(); ui.overlay = ''; openApp(note.channel === 'hangouts' ? 'hangouts' : 'messaging'); lp.openMessageThread(note.contact); break; }
+        ui.overlay = ''; if (Number(id) === 2) lp.openMessageThread(1); else { ui.view = 'settings'; ui.sub = 'about'; render(); } break; }
       case 'unlock': ui.view = 'home'; render(); break;
       // ActivatableNotificationView: the first touch activates the card ("Touch again to open"), the second opens it.
       case 'lp-kg-note': if (ui.kgActivated !== id) { ui.kgActivated = id; viewport.querySelectorAll('.lp-kg-note').forEach(node => node.classList.toggle('activated', node.dataset.id === id)); kgHint('Touch again to open'); break; }
@@ -2432,7 +2333,7 @@
       case 'news2-search': ui.newsSearch = true; ui.newsQuery = ''; ui.newsDrawer = false; render(); requestAnimationFrame(() => viewport.querySelector('.nw2-sv input')?.focus()); break;
       case 'news2-search-clear': ui.newsQuery = ''; render(); requestAnimationFrame(() => viewport.querySelector('.nw2-sv input')?.focus()); break;
       case 'news2-search-close': ui.newsSearch = false; ui.newsQuery = ''; render(); break;
-      case 'news2-share': { ui.overlay = ''; renderOverlay(); const title = viewport.querySelector(`[data-id="${id}"]`)?.closest('.nw2-expanded')?.querySelector('b')?.textContent || viewport.querySelector('.nw2-article h2')?.textContent || ''; openApp('messaging'); ui.sub = 'new'; messageDraft().body = title; save(); render(); break; }
+      case 'news2-share': { ui.overlay = ''; renderOverlay(); const title = viewport.querySelector(`[data-id="${id}"]`)?.closest('.nw2-expanded')?.querySelector('b')?.textContent || viewport.querySelector('.nw2-article h2')?.textContent || ''; openApp('messaging'); ui.sub = 'new'; lp.messageDraft().body = title; save(); render(); break; }
       case 'news2-weather-menu': ui.newsMenu = 'weather'; ui.overlay = 'sa-menu'; renderOverlay(); break;
       case 'news2-dialog': ui.overlay = ''; renderOverlay(); ui.newsDialog = id; ui.newsPick = undefined; render(); break;
       case 'news2-pick': { const place = viewport.querySelector('[data-news2-place]')?.value; ui.newsPick = id; render(); const input = viewport.querySelector('[data-news2-place]'); if (input && place !== undefined) input.value = place; break; }
@@ -2523,7 +2424,7 @@
       case 'photos-select': ui.overlay = ''; renderOverlay(); ui.photosSelect = []; ui.photosSpinner = false; render(); break;
       case 'photos-pick': { const n = Number(id), list = ui.photosSelect || []; ui.photosSelect = list.includes(n) ? list.filter(x => x !== n) : [...list, n]; render(); break; }
       case 'photos-select-done': ui.photosSelect = null; render(); break;
-      case 'photos-select-share': { const chosen = (ui.photosSelect || []).map(n => data.photos.find(p => p.id === n)).filter(Boolean); if (!chosen.length) break; ui.photosSelect = null; photosShare(chosen[0]); if (chosen.length > 1) { messageDraft().moreAttachments = chosen.slice(1).map(clone); save(); } break; }
+      case 'photos-select-share': { const chosen = (ui.photosSelect || []).map(n => data.photos.find(p => p.id === n)).filter(Boolean); if (!chosen.length) break; ui.photosSelect = null; photosShare(chosen[0]); if (chosen.length > 1) { lp.messageDraft().moreAttachments = chosen.slice(1).map(clone); save(); } break; }
       case 'photos-select-delete': ui.overlay = 'photos-delete-many'; renderOverlay(); break;
       case 'photos-select-confirm': { const gone = ui.photosSelect || []; ui.overlay = ''; renderOverlay(); data.photos = data.photos.filter(p => !gone.includes(p.id)); ui.photosSelect = null; save(); render(); break; }
       case 'photos-settings': ui.overlay = ''; renderOverlay(); ui.sub = 'settings'; render(); break;
@@ -2545,7 +2446,7 @@
       case 'chrome-bookmarks': chromeSection('bookmarks'); break;
       case 'chrome-devices': chromeSection('devices'); break;
       case 'chrome-history': ui.chromeHistoryQuery = ''; navigateBrowser(ChromeApp.HISTORY); break;
-      case 'chrome-share': { const link = ui.browserUrl; ui.overlay = ''; renderOverlay(); if (ChromeApp.internal(link)) break; openApp('messaging'); ui.sub = 'new'; messageDraft().body = link.startsWith('search:') ? link.slice(7) : `http://${link}`; save(); render(); break; }
+      case 'chrome-share': { const link = ui.browserUrl; ui.overlay = ''; renderOverlay(); if (ChromeApp.internal(link)) break; openApp('messaging'); ui.sub = 'new'; lp.messageDraft().body = link.startsWith('search:') ? link.slice(7) : `http://${link}`; save(); render(); break; }
       case 'chrome-desktop': ui.chromeDesktop = !ui.chromeDesktop; ui.overlay = ''; renderOverlay(); render(); break;
       case 'chrome-settings': ui.overlay = ''; renderOverlay(); ui.sub = 'chrome-settings'; ui.chromePrefStack = []; ui.chromePrefMenu = false; ui.chromeConfirm = ''; render(); break;
       case 'chrome-pref-menu': ui.chromePrefMenu = !ui.chromePrefMenu; render(); break;
@@ -2581,44 +2482,9 @@
       case 'vol-zen': data.settings.zenMode = id; if (id === 'all') data.settings.zenExit = null; save(); renderStatus(); showVolume(volumeStream()); break;
       case 'vol-settings': hideVolume(); openApp('settings'); ui.sub = 'sound'; render(); break;
       case 'open-settings-sync': ui.overlay = ''; openApp('settings'); ui.sub = 'sync'; render(); break;
-      case 'thread': openMessageThread(id); break;
-      // New Hangout: a picked contact or typed number opens its conversation and takes along a shared draft.
-      case 'hg-pick': pickHangout(id); break;
-      case 'hg-attach-photo': ui.overlay = 'mms-attach-photos'; renderOverlay(); break;
-      case 'hg-take-photo': lp.hangoutsTakePhoto(); break;
-      case 'hg-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
-      // Hangouts 2.5: the attachment button's "Share your location" sends the demo place; conversations archive until
-      // something newer arrives; the snooze dialog (1–72 hours) shows dnd_list_item.xml's banner until Resume.
-      case 'hg-share-location': ui.overlay = ''; renderOverlay(); sendMessage(ui.thread, Hangouts.locationBody(key => i18n.t(key))); save(); break;
-      case 'hg-archive': (data.hgArchived ||= {})[ui.thread] = Date.now(); ui.overlay = ''; ui.sub = ''; ui.mmsListMode = ''; save(); renderOverlay(); render(); toast(Hangouts.H(key => i18n.t(key), 'Hangout archived.')); break;
-      case 'hg-unarchive': if (data.hgArchived) delete data.hgArchived[ui.thread]; ui.overlay = ''; if (ui.mmsListMode === 'archived') ui.mmsListMode = ''; save(); renderOverlay(); render(); break;
-      case 'hg-archived': ui.overlay = ''; ui.sub = 'archived'; renderOverlay(); render(); break;
-      case 'mms-archived': ui.overlay = ''; ui.sub = 'archived'; renderOverlay(); render(); break;
-      case 'hg-dnd': ui.overlay = 'mms-hg-dnd'; renderOverlay(); break;
-      case 'hg-drawer': ui.overlay = 'mms-hg-drawer'; renderOverlay(); break;
-      case 'hg-dnd-set': data.hgSnooze = deviceDate().getTime() + Number(id) * 60000; ui.overlay = ''; save(); renderOverlay(); render(); break;
-      case 'hg-dnd-cancel': delete data.hgSnooze; save(); render(); break;
-      case 'mms-search': ui.sub = 'search'; ui.overlay = ''; ui.mmsSearch = ''; render(); viewport.querySelector('.mms-search input')?.focus(); break;
-      case 'mms-menu': case 'mms-attach': case 'mms-smiley': ui.overlay = action; renderOverlay(); break;
-      case 'mms-recipient': { const person = contact(id); if (person) { messageDraft().recipient = person.phone; save(); render(); viewport.querySelector('.mms-compose textarea')?.focus(); } break; }
-      case 'mms-call': {const person=ICSMessaging.identity(ui.thread,data.contacts);lp.startPhoneCall(person.phone);break;}
-      case 'mms-photo': { const photo = data.photos.find(p => p.id === Number(id)); if (photo) { messageDraft().attachment = clone(photo); messageDraft().updated = Date.now(); save(); ui.overlay = ''; render(); scrollMessages(); } break; }
-      case 'mms-remove-attachment': delete messageDraft().attachment; save(); render(); scrollMessages(); break;
-      case 'mms-insert-smiley': messageDraft().body = ((messageDraft().body || '') + ' ' + id).trim().slice(0,2000); messageDraft().updated = Date.now(); save(); ui.overlay = ''; render(); scrollMessages(); break;
-      case 'mms-discard': delete data.messageDrafts?.[ICSMessaging.draftKey(ui)]; save(); ui.overlay = ''; render(); scrollMessages(); break;
-      case 'mms-message': ui.mmsMessage = id; ui.overlay = 'mms-message'; renderOverlay(); break;
-      case 'mms-details': ui.overlay = 'mms-details'; renderOverlay(); break;
-      case 'mms-forward': { const message = data.messages.find(m => String(m.id) === String(ui.mmsMessage)); if (!message) break; ui.sub = 'new'; Object.assign(messageDraft(),{body:message.body,recipient:'',attachment:message.attachment ? clone(message.attachment) : null,updated:Date.now()}); save(); ui.overlay = ''; render(); break; }
-      case 'mms-delete-thread': case 'mms-delete-message': ui.mmsDelete = action === 'mms-delete-thread' ? 'thread' : 'message'; ui.overlay = 'mms-delete-confirm'; renderOverlay(); break;
-      case 'mms-confirm-delete': {
-        data.messages = data.messages.filter(m => ui.mmsDelete === 'thread' ? String(m.contact) !== String(ui.thread) : String(m.id) !== String(ui.mmsMessage));
-        if (ui.mmsDelete === 'thread') { delete data.messageDrafts?.[String(ui.thread)]; ui.sub = ''; }
-        save(); ui.overlay = ''; render(); break;
-      }
-      case 'new-message': ui.sub = 'new'; ui.overlay = ''; render(); viewport.querySelector('[name=recipient]')?.focus(); break;
       case 'photo': ui.selectedPhoto=Number(id);if(!galleryItems().some(p=>p.id===Number(id))){ui.galleryCluster='album';ui.galleryAlbum=ICSMedia.album(data.photos.find(p=>p.id===Number(id))||{});}ui.sub='photo';ui.galleryZoom=false;ui.galleryFilm=false;ui.galleryBars=true;ui.galleryFromCamera=false;render();break;
       case 'gallery-menu': case 'gallery-share': case 'gallery-details': ui.overlay=action;renderOverlay();break;
-      case 'gallery-share-message': {const photo=data.photos.find(p=>p.id===ui.selectedPhoto);if(!photo)break;openApp('messaging');ui.sub='new';messageDraft().attachment=clone(photo);save();render();break;}
+      case 'gallery-share-message': {const photo=data.photos.find(p=>p.id===ui.selectedPhoto);if(!photo)break;openApp('messaging');ui.sub='new';lp.messageDraft().attachment=clone(photo);save();render();break;}
 
       case 'music-play': ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
       case 'music-prev': case 'music-next': ICSMusic.step(ui.music,action==='music-prev'?-1:1);saveMusic();render();break;
@@ -2728,13 +2594,6 @@
       case 'keep-add': { const text = String(values.get('text') || '').trim(); if (!text) return; data.keepNotes = [{id: 'k' + Date.now(), text, color: (data.keepNotes || []).length % 5}, ...(data.keepNotes || [])]; save(); render(); break; }
       case 'earth-search': ui.earthSearching = false; EarthApp.search(values.get('query'), earthContext()); render(); break;
       case 'chrome-history-search': ui.chromeHistoryQuery = String(values.get('query') || '').trim(); render(); break;
-      case 'mms-search': ui.mmsSearch = String(values.get('query') || '').trim(); render(); break;
-      case 'hg-new': { const target = ICSMessaging.recipient(values.get('recipient'), data.contacts); if (!target) { toast('Enter a contact name or valid phone number'); return; } pickHangout(target.key); break; }
-      case 'mms-send': {
-        const target = ui.sub === 'thread' ? {key:ui.thread} : ICSMessaging.recipient(values.get('recipient'),data.contacts);
-        if (!target) { toast('Enter a contact name or valid phone number'); return; }
-        sendMessage(target.key, String(values.get('body') || '').trim(), messageDraft().attachment); break;
-      }
       case 'email': {const item=mailbox().find(item=>item.id===ui.emailId);if(!item)break;for(const key of ['to','cc','bcc','subject','body'])if(values.has(key))item[key]=String(values.get(key)).trim();if(!ICSEmail.send(item)){ui.emailError='Enter valid email addresses';save();render();break;}save();ui.emailFolder='Sent';ui.emailQuery=undefined;ui.sub='read';ui.emailError='';render();toast('Demo email sent');break;}
       case 'email-search': ui.emailQuery=String(values.get('query')||'').trim();ui.emailSelected=[];render();break;
       case 'sd-volumes': for(const key of ['mediaVolume','ringVolume','alarmVolume'])data.settings[key]=Math.max(0,Math.min(100,Number(values.get(key))));save();ui.overlay='';render();break;
@@ -2780,28 +2639,6 @@
     if (event.target.matches('[data-gmail-signature]')) { ui.gmSignature = event.target.value; return; }
     if (event.target.matches('[data-keep-li]')) { const item = keepCurrent()?.list?.[Number(event.target.dataset.keepLi)]; if (item) { item.text = event.target.value; save(); } return; }
     if (event.target.matches('.keep-text')) { const note = (data.keepNotes || []).find(item => item.id === ui.keepNote); if (note) { note.text = event.target.value; save(); } return; }
-    if (event.target.closest('.hg-new')) {
-      const query = event.target.value.trim().toLocaleLowerCase();
-      (data.messageDrafts ||= {}).new ||= {body: '', recipient: ''};
-      data.messageDrafts.new.recipient = event.target.value; save();
-      viewport.querySelectorAll('.hg-person').forEach(row => { row.hidden = !!query && !row.dataset.search.includes(query); });
-      return;
-    }
-    if (event.target.closest('.mms-compose')) {
-      const draft = messageDraft();
-      if (event.target.name === 'body') draft.body = event.target.value;
-      if (event.target.name === 'recipient') {
-        draft.recipient = event.target.value;
-        const query = draft.recipient.trim().toLocaleLowerCase();
-        viewport.querySelector('.mms-suggestions').innerHTML = query ? data.contacts.filter(p => `${p.name} ${p.phone}`.toLocaleLowerCase().includes(query)).slice(0,5).map(p => `<button type="button" data-action="mms-recipient" data-id="${p.id}">${safe(p.name)}<small>${safe(p.phone)}</small></button>`).join('') : '';
-      }
-      draft.updated = Date.now(); save();
-      const count = ICSMessaging.counter(draft.body || '');
-      viewport.querySelector('.mms-counter').textContent = draft.attachment ? 'MMS' : count.count > 1 || count.remaining < 10 ? `${count.remaining} / ${count.count}` : '';
-      viewport.querySelector('.mms-send').disabled = !(draft.body || '').trim() && !draft.attachment;
-      if (event.target.name === 'body') { event.target.style.height = 'calc(48.5652 * var(--dp))'; event.target.style.height = `${Math.min(dp(97.1303),event.target.scrollHeight)}px`; }
-      return;
-    }
     if (event.target.dataset.field === 'lp-volume') { data.settings[event.target.dataset.key] = Number(event.target.value); event.target.style.setProperty('--v', `${event.target.value}%`); save(); return; }
     if (event.target.dataset.field === 'auto-brightness') { data.settings.autoBrightness = event.target.checked; save(); const slider = event.target.closest('.jb-brightness')?.querySelector('[data-field="brightness"]'); if (slider) slider.disabled = data.settings.autoBrightness; return; }
     if (event.target.dataset.field === 'brightness') {
@@ -3297,8 +3134,7 @@
   screen.addEventListener('contextmenu', event => {
     if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
     event.preventDefault();
-    const message = event.target.closest('.mms-message');
-    if (message && !ui.overlay) { ui.mmsMessage = message.dataset.id; ui.overlay = 'mms-message'; renderOverlay(); }
+    LP.module('messaging').contextmenu(event);
     const driveItem = event.target.closest('[data-drive-hold]');
     if (driveItem && !ui.overlay && !ui.driveDialog) LPDrive.handle('drv-hold', driveItem.dataset.driveHold, {data, ui, save, render, toast, root: viewport});
     if (!dragState && ui.view === 'home' && !ui.overlay && !ui.overview && event.button === 2 && event.target.closest('.home-slot') && !event.target.closest('.launcher-icon')) { ui.overview = true; render(); }
@@ -3414,9 +3250,8 @@
     if (qsToggle) homeLongPressTimer = setTimeout(() => { const key = qsToggle.dataset.qsToggle; data.settings[key] = !data.settings[key]; if (data.settings[key]) data.settings.airplane = false; if (key === 'wifi' && data.settings.wifi) data.settings.portableHotspot = false; save(); renderStatus(); renderOverlay(); pointerStart = null; suppressReleaseClick(); }, holdDelay(500));
     if (ui.view === 'home' && event.target.closest('.lp-cling .cling-shade')) homeLongPressTimer = setTimeout(() => { data.clings.workspace = true; save(); LauncherClings.dismiss(clingLayerRoot().querySelector('[data-cling="workspace"]'), () => { ui.overview = true; render(); }); pointerStart = null; suppressReleaseClick(); }, holdDelay(550));
     if (ui.view === 'home' && !ui.overlay && !ui.overview && event.target.closest('.home-slot') && !pointerStart.source) homeLongPressTimer = setTimeout(() => { ui.overview = true; render(); pointerStart = null; suppressReleaseClick(); }, holdDelay(550));
-    const message = event.target.closest('.mms-message');
+    LP.module('messaging').pointerdown(event);
     if (LP.module('wallpaper-picker').pointerdown(event)) return;
-    if (message && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.mmsMessage = message.dataset.id; ui.overlay = 'mms-message'; suppressReleaseClick(); renderOverlay(); }, holdDelay(550));
     // Drive: a held item opens menu_doclist_context.xml for it (lp-drive.js).
     const heldDrive = event.target.closest('[data-drive-hold]');
     if (heldDrive && !ui.overlay && !ui.driveDialog) messageHoldTimer = setTimeout(() => { suppressReleaseClick(); LPDrive.handle('drv-hold', heldDrive.dataset.driveHold, {data, ui, save, render, toast, root: viewport}); }, holdDelay(550));
@@ -3790,23 +3625,23 @@
   // lp:kernel (the core's bindings the lp-*.js modules use, live; written by the migration's move tool)
   LP.kernel({
     get addNotification() { return addNotification; }, get captureRecentView() { return captureRecentView; },
-    get clone() { return clone; }, get composeEmail() { return composeEmail; }, get contact() { return contact; },
-    get data() { return data; }, set data(v) { data = v; }, get defaultData() { return defaultData; },
-    get deviceDate() { return deviceDate; }, get dp() { return dp; }, get editorContext() { return editorContext; },
-    get galleryWallpaper() { return galleryWallpaper; }, get headsUp() { return headsUp; },
-    get holdDelay() { return holdDelay; }, get home() { return home; },
+    get clock() { return clock; }, get clone() { return clone; }, get composeEmail() { return composeEmail; },
+    get contact() { return contact; }, get data() { return data; }, set data(v) { data = v; },
+    get defaultData() { return defaultData; }, get deviceDate() { return deviceDate; }, get dp() { return dp; },
+    get editorContext() { return editorContext; }, get galleryWallpaper() { return galleryWallpaper; },
+    get headsUp() { return headsUp; }, get holdDelay() { return holdDelay; }, get home() { return home; },
     get homeLongPressTimer() { return homeLongPressTimer; }, set homeLongPressTimer(v) { homeLongPressTimer = v; },
     get i18n() { return i18n; }, get keepAttach() { return keepAttach; }, get mailbox() { return mailbox; },
-    get messageDraft() { return messageDraft; }, get navigateBrowser() { return navigateBrowser; },
-    get nextAlarmLabel() { return nextAlarmLabel; }, get openApp() { return openApp; },
-    get openMessageThread() { return openMessageThread; }, get overlayRoot() { return overlayRoot; },
+    get messageHoldTimer() { return messageHoldTimer; }, set messageHoldTimer(v) { messageHoldTimer = v; },
+    get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; },
+    get openApp() { return openApp; }, get overlayRoot() { return overlayRoot; },
     get photosContext() { return photosContext; }, get placeShortcut() { return placeShortcut; },
     get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; },
     get printContext() { return printContext; }, get reducedMotion() { return reducedMotion; },
     get render() { return render; }, get renderOverlay() { return renderOverlay; },
-    get renderStatus() { return renderStatus; }, get safe() { return safe; }, get save() { return save; },
-    get screen() { return screen; }, get scrollMessages() { return scrollMessages; },
-    get snapResting() { return snapResting; }, get storeContext() { return storeContext; },
+    get renderStatus() { return renderStatus; }, get REPLIES() { return REPLIES; }, get safe() { return safe; },
+    get save() { return save; }, get screen() { return screen; }, get snapResting() { return snapResting; },
+    get storeContext() { return storeContext; },
     get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; },
     get suppressReleaseClick() { return suppressReleaseClick; }, get toast() { return toast; },
     get today() { return today; }, get ui() { return ui; }, get viewport() { return viewport; },

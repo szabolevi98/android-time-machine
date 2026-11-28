@@ -1,8 +1,8 @@
 /* TODO */
 'use strict';
 LP.define('phone', ({
-  captureRecentView, home, i18n, openApp, openMessageThread, overlayRoot, render, renderOverlay, safe, save,
-  storeContext, toast, ui, viewport
+  captureRecentView, home, i18n, openApp, overlayRoot, render, renderOverlay, safe, save, storeContext, toast, ui,
+  viewport
 }, lp) => {
   // Toast.LENGTH_SHORT (NotificationManagerService.SHORT_DELAY, 2 s) inside Animation.Toast: toast_enter fades in and
   // toast_exit fades out over config_longAnimTime (500 ms) with decelerate_quad / accelerate_quad.
@@ -96,7 +96,7 @@ LP.define('phone', ({
         case 'dial-pause': case 'dial-wait': ui.dial = (ui.dial + (action === 'dial-pause' ? ',' : ';')).slice(0, 30); ui.overlay = ''; render(); break;
         case 'phone-add-contact': { const number = id || ui.dial; openApp('people'); lp.editPerson(true); ui.peopleDraft.phone = number; render(); break; }
         case 'phone-new-contact': openApp('people'); lp.editPerson(true); render(); break;
-        case 'phone-dial-sms': ui.overlay = ''; renderOverlay(); { const recipient = ICSMessaging.recipient(ui.dial, lp.data.contacts); if (recipient) openMessageThread(recipient.key); else toast('Enter a valid phone number'); } break;
+        case 'phone-dial-sms': ui.overlay = ''; renderOverlay(); { const recipient = ICSMessaging.recipient(ui.dial, lp.data.contacts); if (recipient) lp.openMessageThread(recipient.key); else toast('Enter a valid phone number'); } break;
         case 'lpd-clear-frequents': case 'lpd-clear-log': ui.lpdConfirm = action === 'lpd-clear-log' ? 'log' : 'frequents'; ui.overlay = 'lpd-confirm'; renderOverlay(); break;
         case 'lpd-clear-frequents-ok': lp.data.frequentsClearedAt = Date.now(); save(); ui.overlay = ''; render(); break;
         case 'lpd-clear-log-ok': lp.data.callHistory = []; ui.lpLogExpanded = null; save(); ui.overlay = ''; render(); break;
@@ -122,7 +122,7 @@ LP.define('phone', ({
         case 'lpd-log-expand': ui.lpLogExpanded = ui.lpLogExpanded === Number(id) ? null : Number(id); render(); break;
         case 'lpd-dismiss-card': ui.kkRecentDismissed = [...(ui.kkRecentDismissed || []), Number(id)]; render(); break;
         case 'kk-dialer-clear': ui.phoneSearch = ''; render(); viewport.querySelector('[data-kk-dialer-search]')?.focus(); break;
-        case 'phone-log-message': { const recipient=ICSMessaging.recipient(id,lp.data.contacts); if(recipient)openMessageThread(recipient.key);else toast('Enter a valid phone number');break; }
+        case 'phone-log-message': { const recipient=ICSMessaging.recipient(id,lp.data.contacts); if(recipient)lp.openMessageThread(recipient.key);else toast('Enter a valid phone number');break; }
         // lp:cases
         default: return false;
       }
