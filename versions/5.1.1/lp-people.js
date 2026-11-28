@@ -2,8 +2,7 @@
 'use strict';
 LP.define('people', ({
   addNotification, captureRecentView, clone, composeEmail, contact, defaultData, i18n, mailbox, openApp,
-  openMessageThread, overlayRoot, placeShortcut, render, renderOverlay, safe, save, startPhoneCall, toast, ui,
-  viewport
+  openMessageThread, overlayRoot, placeShortcut, render, renderOverlay, safe, save, toast, ui, viewport
 }, lp) => {
   function placeContactShortcut(person) { if (person) placeShortcut(`contact:${person.id}`, person.name); }
   function renderPeople() { return ICSPeople.render(lp.data,ui,key => i18n.t(key),i18n.locale()); }
@@ -105,7 +104,7 @@ LP.define('people', ({
         }
         case 'people-search-close': ui.peopleSearching = false; ui.peopleQuery = ''; render(); break;
         case 'new-contact': editPerson(true); break;
-        case 'contact-call': startPhoneCall(contact(id)?.phone||'');break;
+        case 'contact-call': lp.startPhoneCall(contact(id)?.phone||'');break;
         case 'contact-message': openMessageThread(id); break;
         case 'contact-email': {const recipient=contact(id)?.email||'';openApp('email');composeEmail(null,false,recipient);break;}
         // lp:cases

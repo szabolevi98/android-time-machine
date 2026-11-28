@@ -829,9 +829,6 @@
   }
   function renderApp() {
     if (StoreHost.module(ui.view)?.render) return StoreHost.render(ui.view, storeContext());
-    if (ui.view === 'phone' && LPDialerPrefs.PAGES.includes(ui.sub)) return LPDialerPrefs.render({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
-    // Import from SIM card, opened from the Phone too (lp-people.js draws it).
-    if (ui.sub === 'sim-import' && ui.view === 'phone') return StoreHost.render('people', storeContext());
     switch (ui.view) {
       case 'play-store': return JBPlay.render(jbPlayContext());
       case 'settings': return renderSettings();
@@ -840,7 +837,6 @@
       case 'gmail': return renderGmail();
       case 'play-music': case 'play-movies': case 'play-books': case 'play-games': return PlayApps.render(playContext(ui.view));
       case 'google-search': case 'voice-search': case 'maps': case 'drive': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, plusCtx: ui.view === 'google-plus' ? plusContext() : null, ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
-      case 'phone': return renderPhone();
       case 'messaging': return renderMessaging();
       case 'hangouts': return Hangouts.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime());
       case 'email': return renderEmail();
@@ -952,7 +948,7 @@
     if (ui.view === 'google-plus' && !ui.overlay && PlusPost.back(ui)) { render(); return; }
     if (['newsstand'].includes(ui.view) && !ui.overlay && NewsReader.back(ui)) { render(); return; }
     if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return; }
-    if (ui.view === 'phone' && !ui.overlay && LPDialerPrefs.back(ui)) { render(); return; }
+    if (LP.module('phone').backPrefs()) return;
     if (LP.module('clock').back()) return;
     if (ui.view === 'google-settings' && GMSSettings.back(ui)) { render(); return; }
     // A pinned app keeps its first screen: Back stops there.
@@ -972,11 +968,7 @@
     if (LP.module('live-wallpapers').back()) return;
     if (ui.view === 'lock' && ui.kgBouncing) { ui.kgBouncing = false; ui.kgPending = null; lockControls.lock(); render(); return; }
     if (ui.view === 'lock') return;
-    if(ui.view==='phone' && !ui.activeCall && ui.kkDialpad){ui.kkDialpad=false;ui.dial='';render();return;}
-    if(ui.view==='phone' && !ui.activeCall && ['kk-history','kk-all'].includes(ui.sub)){ui.sub='';render();return;}
-    if(ui.view==='phone' && !ui.activeCall && ui.sub==='call-detail'){ui.sub=ui.kkLogFrom||'';render();return;}
-    if(ui.view==='phone' && !ui.activeCall && (ui.lpSearchOpen || (ui.phoneSearch||'').trim())){ui.phoneSearch='';ui.lpSearchOpen=false;render();return;}
-    if(ui.view==='phone' && ui.activeCall){if(ui.activeCall.keypad){ui.activeCall.keypad=false;render();}else home(false);return;}
+    if (LP.module('phone').back()) return;
     if (['docs', 'sheets', 'slides'].includes(ui.view) && ui.sub) { ui.sub = !['search', 'results'].includes(ui.sub) && ui.edFrom === 'results' ? 'results' : ''; ui.edFrom = ''; render(); return; }
     if (ui.view === 'drive' && ui.sub === 'file' && ui.driveFrom === 'results') { ui.sub = 'results'; ui.driveFrom = ''; render(); return; }
     if (ui.view === 'youtube' && !ui.overlay && LPYouTube.back(ytContext())) return;
@@ -1055,10 +1047,6 @@
     // Toast.LENGTH_LONG (3.5 s), then the toast_exit fade (config_longAnimTime, accelerate_quad); toasts outlive the activity.
     screen.append(element); setTimeout(() => { element.animate?.([{opacity: 1}, {opacity: 0}], {duration: 500, easing: 'cubic-bezier(.55,.085,.68,.53)', fill: 'forwards'}); setTimeout(() => element.remove(), 500); }, 3500);
   }
-  // Toast.LENGTH_SHORT (NotificationManagerService.SHORT_DELAY, 2 s) inside Animation.Toast: toast_enter fades in and
-  // toast_exit fades out over config_longAnimTime (500 ms) with decelerate_quad / accelerate_quad.
-  // The dialer's screens read the GoogleDialer rows keyed 'Phone|…' first (lp-strings.txt contexts).
-  const phoneText = key => i18n.t(key, 'Phone');
   function toast(message) {
     document.querySelector('.toast')?.remove();
     const element = document.createElement('div'); element.className = 'toast'; element.textContent = i18n.t(message);
@@ -1113,7 +1101,7 @@
     // Collapsing the panel also collapses Quick Settings and closes a tile detail.
     if (ui.overlay !== 'shade') { ui.shadeAnimated = false; ui.shadeSettings = false; ui.qsDetail = ''; }
     if (ui.overlay === 'shade') {
-      const call = ui.activeCall ? `<button class="phone-resume-call" data-action="open-app" data-app="phone">${safe(i18n.t('Ongoing call'))} · ${safe(contactByPhone(ui.activeCall.number)?.name||ui.activeCall.number)}</button>` : '';
+      const call = ui.activeCall ? `<button class="phone-resume-call" data-action="open-app" data-app="phone">${safe(i18n.t('Ongoing call'))} · ${safe(lp.contactByPhone(ui.activeCall.number)?.name||ui.activeCall.number)}</button>` : '';
       const scroll = overlayRoot.querySelector('.lp-shade-scroll')?.scrollTop || 0;
       overlayRoot.innerHTML = '<div class="lp-shade-scrim" data-action="close-overlay"></div>' + LPShade.render({...data, notifications: data.notifications.map(decorateNotification)}, ui, key => i18n.t(key), {locale: i18n.locale(), clock: clock(), date: fullDate(), shortDate: shadeDate(), carrier: carrierName(), alarm: nextAlarmLabel(), statusIcons: statusIndicators(), networks: allWifiNetworks(), extra: call});
       const body = overlayRoot.querySelector('.lp-shade-scroll'); if (body) body.scrollTop = scroll;
@@ -1234,14 +1222,6 @@
     } else if (ui.overlay === 'sa-menu') {
       // The Google apps' action bar overflow (StockApps.menu: their menu XML's overflow items).
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${StockApps.menu(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()}).map(item => `<button data-action="${item.action}"${item.id != null ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'phone-menu') {
-      // The dialer's popup menus (LPDialer.menu); the dialpad's opens over its overflow button (PopupMenu, overlapAnchor).
-      const items = LPDialer.menu(ui.phoneMenu, {data, t: phoneText, byPhone: contactByPhone});
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="lp-popup-menu lpd-menu${ui.phoneMenu === 'dialpad' ? ' lpd-menu-pad' : ''}" role="menu" data-no-translate>${items.map(([action, title]) => { const [act, arg] = action.split(/:(.*)/); return `<button role="menuitem" data-action="${act}"${arg ? ` data-id="${safe(arg)}"` : ''}>${safe(title)}</button>`; }).join('')}</div>`;
-      const anchor = ui.phoneMenu === 'dialpad' && viewport.querySelector('.lpd-digits-menu'), list = overlayRoot.querySelector('.lpd-menu');
-      if (anchor && list) { const a = anchor.getBoundingClientRect(), box = overlayRoot.getBoundingClientRect(), scale = box.width / overlayRoot.offsetWidth || 1; list.style.left = `${(a.left - box.left) / scale}px`; list.style.top = `${(a.top - box.top) / scale}px`; list.style.right = 'auto'; }
-    } else if (ui.overlay === 'lpd-confirm') {
-      overlayRoot.innerHTML = LPDialer.confirm(ui.lpdConfirm, phoneText);
     } else if (ui.overlay === 'lp-settings-menu') {
       if (ui.lpMenu === 'accounts') { const on = data.settings.autoSync !== false; overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="lp-popup-menu" role="menu"><button role="menuitemcheckbox" aria-checked="${on}" data-action="lp-auto-sync" class="lp-menu-check"><span>${safe(i18n.t('Auto-sync data'))}</span><i class="lp-check${on ? ' on' : ''}"></i></button></div>`; return; }
       const items = ui.lpMenu === 'sync-account' ? [['lp-sync-now', 'Sync now'], ['toast:This feature is not part of the simulator.', 'Remove account']] : ui.lpMenu === 'wifi' ? [['wifi-add', 'Add network'], ['settings-sub:wifi-saved', 'Saved networks'], ['wifi-scan', 'Refresh'], ['settings-sub:wifi-advanced', 'Advanced']] : [['bluetooth-scan', 'Refresh'], ['bluetooth-rename', 'Rename this device'], ['bluetooth-files', 'Show received files']];
@@ -1617,19 +1597,6 @@
     ui.playHistory.push({...ui.play,scrollTop:viewport.querySelector('.play-content')?.scrollTop || 0});
     ui.play = {...ui.play,...next}; ui.overlay = ''; render();
   }
-  function renderPhone() {
-    if(ui.activeCall)return ICSPhoneCall.render(ui.activeCall,contactByPhone(ui.activeCall.number),phoneText);
-    if(ui.sub==='call-detail'){const call=(data.callHistory||[]).find(call=>call.time===ui.phoneCallId);if(call)return ICSPhoneCall.details(call,contactByPhone(call.number),phoneText,i18n.locale());}
-    // Google Dialer 5.1 (lp-dialer.js): speed dial, recents and contacts tabs, search, the sliding dialpad, History.
-    return LPDialer.render({data, ui, t: phoneText, locale: i18n.locale(), byPhone: contactByPhone});
-  }
-  function contactByPhone(number) { const normalized = String(number).replace(/[^\d+]/g, ''); return data.contacts.find(item => item.phone.replace(/[^\d+]/g, '') === normalized); }
-  function startPhoneCall(number) {
-    if(!number)return;
-    if(!ui.activeCall)ui.activeCall=ICSPhoneCall.start(number);
-    captureRecentView();ui.recent=['phone',...ui.recent.filter(id=>id!=='phone')].slice(0,7);
-    ui.callNumber=ui.activeCall.number;ui.view='phone';ui.sub='calling';ui.overlay='';render();
-  }
   function renderMessaging() {
     if (ui.lpmPage) return MessengerOptions.render(data, ui, key => i18n.t(key));
     return ICSMessaging.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime());
@@ -1861,7 +1828,6 @@
     if(id==='email'){data.mailbox=ICSEmail.restore(null,emailData,[]);data.sentEmails=[];ui.emailFolder='Inbox';ui.emailQuery=undefined;ui.emailSelected=[];}
     if(id==='messaging'||id==='hangouts'){data.messages=clone(defaultData.messages);data.messageDrafts={};}
     if(id==='gallery'){data.photos=clone(defaultData.photos);}
-    if(id==='phone'){data.callHistory=[];ui.activeCall=null;}
     if(id==='play-store')delete data.playRatings;
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
   }
@@ -2035,18 +2001,6 @@
     if(action.startsWith('emore-')&&EditorMore.handle(action,id,editorContext()))return;
     if(action.startsWith('kp-') && KeepMore.handle(action,id,keepMoreContext()))return;
     // The Phone app's Settings (lp-dialer-prefs.js).
-    if ((action.startsWith('dpr-')) && ui.view === 'phone') {
-      if (action === 'dpr-settings') { ui.overlay = ''; renderOverlay(); ui.dialerBack = [ui.sub || '']; ui.sub = 'dialer-settings'; ui.dialerDialog = ''; render(); return; }
-      if (action === 'dpr-ringtone') { ui.settingsField = 'ringtone'; ui.overlay = 'sd-dialog'; renderOverlay(); return; }
-      // Voicemail's Sound: a notification sound of its own; Nearby places' button opens Settings › Location.
-      if (action === 'dpr-vmtone') { ui.settingsField = 'vmTone'; ui.overlay = 'sd-dialog'; renderOverlay(); return; }
-      if (action === 'dpr-location') { openApp('settings'); ui.sub = 'location'; render(); return; }
-      const result = LPDialerPrefs.handle(action, id, {data, ui, t: key => i18n.t(key), locale: i18n.locale()});
-      if (result?.vmnumber) { LPDialerPrefs.saveVoicemail(viewport.querySelector('.ldp2-edit input')?.value || '', {data, ui}); save(); render(); return; }
-      if (result?.submit) { LPDialerPrefs.saveQuick(viewport.querySelector('.ldp2-edit input')?.value || '', {data, ui, t: key => i18n.t(key), locale: i18n.locale()}); save(); render(); return; }
-      if (result === 'save') save();
-      if (result) { render(); return; }
-    }
     if (ui.view === 'earth' && /^(earth|eps)-/.test(action)) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (EarthApp.handle(action, id, earthContext())) return; }
     if (ui.view === 'google-plus' && action.startsWith('gpp-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (PlusPost.handle(action, id, plusContext())) return; }
     if (['newsstand'].includes(ui.view) && action.startsWith('nr-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } ui.kkxDrawer = false; ui.lpxDrawer = false; ui.magDrawer = false; ui.currentsMenu = false; if (NewsReader.handle(action, id, newsContext())) return; }
@@ -2608,39 +2562,6 @@
       case 'browser-tab': ui.browserSession.active = Number(id); ui.sub = ''; ui.browserFind = undefined; saveBrowserState(); render(); break;
       case 'browser-new-tab': if (ui.view === 'chrome') { chromeNewTab(false); break; } if (!ICSBrowserSession.add(ui.browserSession)) { toast('Tab limit reached'); break; } ui.sub = ''; ui.overlay = ''; ui.browserFind = undefined; saveBrowserState(); render(); break;
       case 'browser-save': ui.overlay = ''; renderOverlay(); if (!data.bookmarks.includes(ui.browserUrl)) { data.bookmarks.push(ui.browserUrl); save(); toast('Bookmark saved'); } else toast('Already bookmarked'); break;
-      case 'phone-tab': ui.phoneTab = id; ui.phoneSearch = undefined; render(); break;
-      case 'phone-search': ui.phoneTab = 'favorites'; ui.phoneSearch = ''; ui.overlay = ''; render(); viewport.querySelector('.phone-search input')?.focus(); break;
-      case 'phone-menu': ui.phoneMenu = id || ''; ui.overlay = 'phone-menu'; renderOverlay(); break;
-      case 'dial-pause': case 'dial-wait': ui.dial = (ui.dial + (action === 'dial-pause' ? ',' : ';')).slice(0, 30); ui.overlay = ''; render(); break;
-      case 'phone-add-contact': { const number = id || ui.dial; openApp('people'); lp.editPerson(true); ui.peopleDraft.phone = number; render(); break; }
-      case 'phone-new-contact': openApp('people'); lp.editPerson(true); render(); break;
-      case 'phone-dial-sms': ui.overlay = ''; renderOverlay(); { const recipient = ICSMessaging.recipient(ui.dial, data.contacts); if (recipient) openMessageThread(recipient.key); else toast('Enter a valid phone number'); } break;
-      case 'lpd-clear-frequents': case 'lpd-clear-log': ui.lpdConfirm = action === 'lpd-clear-log' ? 'log' : 'frequents'; ui.overlay = 'lpd-confirm'; renderOverlay(); break;
-      case 'lpd-clear-frequents-ok': data.frequentsClearedAt = Date.now(); save(); ui.overlay = ''; render(); break;
-      case 'lpd-clear-log-ok': data.callHistory = []; ui.lpLogExpanded = null; save(); ui.overlay = ''; render(); break;
-      case 'lpd-edit-before-call': { const call = (data.callHistory || []).find(c => c.time === ui.phoneCallId); ui.overlay = ''; ui.sub = ''; ui.kkDialpad = true; ui.lpSearchOpen = false; ui.phoneSearch = ''; ui.dial = (call?.number || '').slice(0, 30); render(); break; }
-      case 'lpd-remove-call': data.callHistory = (data.callHistory || []).filter(c => c.time !== ui.phoneCallId); ui.lpLogExpanded = null; save(); ui.sub = ui.kkLogFrom || ''; render(); break;
-      case 'phone-redial': startPhoneCall(id); break;
-      case 'dial': if (ui.dial.length < 30) ui.dial += id; render(); break;
-      case 'dial-delete': ui.dial = ui.dial.slice(0, -1); render(); break;
-      case 'smartdial-call': if (id) { ui.dial = id; startPhoneCall(id); } break;
-      case 'call': if(!ui.dial){toast('Enter a phone number');break;}startPhoneCall(ui.dial);break;
-      case 'hangup': if(ui.activeCall)data.callHistory=[...(data.callHistory||[]),ICSPhoneCall.finish(ui.activeCall)].slice(-50);ui.activeCall=null;save();ui.sub='';ui.dial='';render();toast('Call ended');break;
-      case 'incall-toggle': if(ui.activeCall)ui.activeCall[id]=!ui.activeCall[id];render();break;
-      case 'incall-digit': if(ui.activeCall)ui.activeCall.digits=(ui.activeCall.digits+id).slice(-24);render();break;
-      case 'phone-log-detail': ui.kkLogFrom=ui.sub==='kk-history'?'kk-history':'';ui.phoneCallId=Number(id);ui.sub='call-detail';render();break;
-      case 'phone-log-back': ui.sub=ui.kkLogFrom||'';ui.phoneTab='history';render();break;
-      case 'kk-dialer-history': ui.sub = 'kk-history'; ui.kkDialpad = false; ui.overlay = ''; render(); break;
-      case 'kk-dialer-back': ui.sub = ''; render(); break;
-      case 'kk-dialer-log-tab': ui.kkLogTab = id; render(); break;
-      case 'kk-dialer-pad': ui.kkDialpad = true; ui.lpSearchOpen = false; ui.phoneSearch = ''; render(); break;
-      case 'lpd-tab': ui.lpDialTab = id; ui.lpLogExpanded = null; render(); viewport.querySelector('.lpd-pane')?.scrollTo(0, 0); break;
-      case 'lpd-search-open': ui.lpSearchOpen = true; render(); viewport.querySelector('[data-kk-dialer-search]')?.focus(); break;
-      case 'lpd-search-close': ui.lpSearchOpen = false; ui.phoneSearch = ''; render(); break;
-      case 'lpd-log-expand': ui.lpLogExpanded = ui.lpLogExpanded === Number(id) ? null : Number(id); render(); break;
-      case 'lpd-dismiss-card': ui.kkRecentDismissed = [...(ui.kkRecentDismissed || []), Number(id)]; render(); break;
-      case 'kk-dialer-clear': ui.phoneSearch = ''; render(); viewport.querySelector('[data-kk-dialer-search]')?.focus(); break;
-      case 'phone-log-message': { const recipient=ICSMessaging.recipient(id,data.contacts); if(recipient)openMessageThread(recipient.key);else toast('Enter a valid phone number');break; }
       case 'lpx-open': {const f=officeFiles().find(f=>f.id===id);if(f){data.driveFiles=officeFiles().map(f=>f.id===id?{...f,otime:Date.now()}:f);save();}} ui.edFrom = ui.sub; ui.sub = id; render(); break;
       // Docs / Sheets / Slides: Add new opens an untitled file; the actions menu renames or removes one (Drive shows the same list).
       case 'ed-new': { const kind = LPExtraApps.KIND[ui.view], E = key => AndroidStrings.pick(window.StockStrings?.editors?.[key], i18n.language, key), base = E(LPExtraApps.UNTITLED[kind]), names = new Set(officeFiles().map(f => f.name)); let name = base, n = 2; while (names.has(name)) name = `${base} (${n++})`;
@@ -2680,7 +2601,7 @@
       case 'mms-search': ui.sub = 'search'; ui.overlay = ''; ui.mmsSearch = ''; render(); viewport.querySelector('.mms-search input')?.focus(); break;
       case 'mms-menu': case 'mms-attach': case 'mms-smiley': ui.overlay = action; renderOverlay(); break;
       case 'mms-recipient': { const person = contact(id); if (person) { messageDraft().recipient = person.phone; save(); render(); viewport.querySelector('.mms-compose textarea')?.focus(); } break; }
-      case 'mms-call': {const person=ICSMessaging.identity(ui.thread,data.contacts);startPhoneCall(person.phone);break;}
+      case 'mms-call': {const person=ICSMessaging.identity(ui.thread,data.contacts);lp.startPhoneCall(person.phone);break;}
       case 'mms-photo': { const photo = data.photos.find(p => p.id === Number(id)); if (photo) { messageDraft().attachment = clone(photo); messageDraft().updated = Date.now(); save(); ui.overlay = ''; render(); scrollMessages(); } break; }
       case 'mms-remove-attachment': delete messageDraft().attachment; save(); render(); scrollMessages(); break;
       case 'mms-insert-smiley': messageDraft().body = ((messageDraft().body || '') + ' ' + id).trim().slice(0,2000); messageDraft().updated = Date.now(); save(); ui.overlay = ''; render(); scrollMessages(); break;
@@ -2765,15 +2686,12 @@
     if (CellBroadcast.submit(form.dataset.form, values, {data, ui, save, render, renderOverlay})) return;
     if (['newsstand'].includes(ui.view) && NewsReader.submit(form.dataset.form, values, newsContext())) return;
     if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, mrContext()); return; }
-    if (form.dataset.form === 'dpr-vmnumber') { LPDialerPrefs.saveVoicemail(values.get('text') || '', {data, ui}); save(); render(); return; }
-    if (form.dataset.form === 'dpr-quick') { LPDialerPrefs.saveQuick(values.get('text') || '', {data, ui, t: key => i18n.t(key), locale: i18n.locale()}); save(); render(); return; }
     if(form.dataset.form==='folder-name'){event.target.querySelector('input')?.blur();render();return;}
     if(form.dataset.form==='sx-save'){ui.systemError=ICSSystemSettings.submit(data,ui,values);if(ui.systemError){ui.systemValues=Object.fromEntries(values);renderOverlay();return;}save();ui.overlay='';render();return;}
     if(form.dataset.form==='sx-vpn-connect'){ui.vpnConnected=ui.vpnConnected===ui.systemId?null:ui.systemId;ui.overlay='';render();return;}
     if(form.dataset.form==='sx-profile-delete'){ICSSystemSettings.removeProfile(data,ui);save();ui.overlay='';render();return;}
     if (form.dataset.form === 'jbp-search') { const q = String(values.get('query') || '').trim(); if (!q) return; data.marketSearches = [q, ...(data.marketSearches || []).filter(x => x !== q)].slice(0, 10); save(); jbPlayGo({page: 'search', query: q}); return; }
     if (form.dataset.form === 'play-search') { ui.play.query = String(values.get('query') || '').trim(); render(); return; }
-    if (form.dataset.form === 'phone-search') { ui.phoneSearch = String(values.get('query') || '').trim(); render(); return; }
     if (form.dataset.form === 'wifi-add') {
       const name = String(values.get('ssid') || '').trim();
       const security = values.get('security');
@@ -2847,12 +2765,6 @@
     if (event.target.matches('[data-keep-search]')) { ui.keepQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-keep-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
     if (event.target.matches('[data-photos-search]')) { ui.photosQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-photos-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
     if (event.target.matches('[data-pa-search]')) { ui.paQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-pa-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
-    if (event.target.matches?.('[data-kk-dialer-search]')) {
-      ui.phoneSearch = event.target.value;
-      const list = viewport.querySelector('[data-kk-dialer-list]');
-      if (list) { const fresh = document.createElement('div'); fresh.innerHTML = LPDialer.render({data, ui, t: phoneText, locale: i18n.locale(), byPhone: contactByPhone}); list.innerHTML = fresh.querySelector('[data-kk-dialer-list]').innerHTML; i18n.translateDOM?.(list); }
-      return;
-    }
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);delete folder.nameKey;save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
     if (event.target.matches('[data-bk-bright]')) { data.bookPrefs = {...PlayApps.bookPrefs(data), brightness: Number(event.target.value)}; save(); viewport.querySelector('.pb-reader')?.style.setProperty('--bk-dim', ((100 - Number(event.target.value)) / 100 * .7).toFixed(3)); return; }
     if(event.target.dataset.field==='data-cycle'){ui.dataCycle=event.target.value;render();return;}
@@ -3894,7 +3806,7 @@
     get render() { return render; }, get renderOverlay() { return renderOverlay; },
     get renderStatus() { return renderStatus; }, get safe() { return safe; }, get save() { return save; },
     get screen() { return screen; }, get scrollMessages() { return scrollMessages; },
-    get snapResting() { return snapResting; }, get startPhoneCall() { return startPhoneCall; },
+    get snapResting() { return snapResting; }, get storeContext() { return storeContext; },
     get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; },
     get suppressReleaseClick() { return suppressReleaseClick; }, get toast() { return toast; },
     get today() { return today; }, get ui() { return ui; }, get viewport() { return viewport; },
