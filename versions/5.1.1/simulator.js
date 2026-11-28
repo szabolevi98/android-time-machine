@@ -493,7 +493,7 @@
     if (ui.lland && !viewport.querySelector('[data-lp-lland]')?.isSameNode(ui.lland.root)) { ui.lland.stop(); ui.lland = null; }
     const landRoot = viewport.querySelector('[data-lp-lland]');
     if (landRoot && !ui.lland) requestAnimationFrame(() => { if (landRoot.isConnected && !ui.lland) { ui.lland = LPEgg.land(landRoot, {vibrate: ms => navigator.vibrate?.(ms)}); landRoot.focus({preventScroll: true}); } });
-    if (ui.view === 'clock' && viewport.querySelector('.jbclock-app')) clockTicker();
+    LP.module('clock').afterRender();
     if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserFind) highlightBrowserText();
     if (ui.view === 'photos' && ui.sub === 'photo') attachPhotosSwipe();
     if (ui.view === 'hangouts' && ui.hgPage === 'add') HangoutsPrefs.mount(viewport, ui, render);
@@ -847,7 +847,6 @@
       case 'messaging': return renderMessaging();
       case 'hangouts': return Hangouts.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime());
       case 'calendar': return renderCalendar();
-      case 'clock': return renderClock();
       case 'email': return renderEmail();
       case 'docs': case 'sheets': case 'slides': case 'fit': case 'newsstand': case 'wallet': return LPExtraApps.render(ui.view, {news: ui.view === 'newsstand' ? newsContext() : null, files: officeFiles(), ui, data, t: key => i18n.t(key), locale: i18n.locale()});
       default: return renderHome();
@@ -959,8 +958,7 @@
     if (['newsstand'].includes(ui.view) && !ui.overlay && NewsReader.back(ui)) { render(); return; }
     if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return; }
     if (ui.view === 'phone' && !ui.overlay && LPDialerPrefs.back(ui)) { render(); return; }
-    if (ui.view === 'clock' && !ui.overlay && ClockPrefs.back(ui)) { render(); return; }
-    if (ui.view === 'clock' && ui.sub === 'cities' && ui.cityQuery !== undefined && !ui.overlay) { ui.cityQuery = undefined; render(); return; }
+    if (LP.module('clock').back()) return;
     if (ui.view === 'google-settings' && GMSSettings.back(ui)) { render(); return; }
     // A pinned app keeps its first screen: Back stops there.
     if (ui.pinned && ui.view === ui.pinned && !ui.overlay && !ui.sub) { pinnedToast(); return; }
@@ -1050,7 +1048,7 @@
     if (ui.view === 'messaging' && ui.sub === 'archived') { ui.sub = ''; render(); return; }
     if (ui.view === 'hangouts' && ui.sub === 'archived') { ui.sub = ''; render(); return; }
     if (['messaging', 'hangouts'].includes(ui.view) && ui.sub === 'thread') { ui.sub = ui.mmsListMode || ''; render(); return; }
-    if (ui.view === 'clock' && ui.sub === 'cities') { ui.sub = ''; render(); return; }
+    if (LP.module('clock').backCities()) return;
     if (ui.view === 'people' && ui.sub === 'edit') { ui.sub = 'detail'; render(); return; }
     if (ui.view === 'people' && ui.sub === 'detail' && ui.quickContactReturn) { const back = ui.quickContactReturn; ui.quickContactReturn = null; ui.view = back.view; ui.sub = back.sub; render(); return; }
     if (ui.view === 'people' && ui.peopleSearching) { ui.peopleSearching = false; ui.peopleQuery = ''; render(); return; }
@@ -1151,8 +1149,6 @@
       overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
     } else if (ui.overlay === 'dream') {
       overlayRoot.innerHTML = renderDream();
-    } else if (ui.overlay === 'kdc-picker' && ui.kdcPicker) {
-      overlayRoot.innerHTML = KKDeskClock.picker(ui.kdcPicker, {t: key => i18n.t(key), hour24: !!data.settings.hour24, accent: ui.kdcPicker.zen ? '#009688' : undefined});
     } else if (ui.overlay === 'kk-cast-menu') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu"><button data-action="kk-cast-enable" role="menuitemcheckbox" aria-checked="${!!data.settings.wifiDisplay}" class="kk-check-item">${safe(i18n.t('Enable wireless display'))}<img src="assets/btn_check_${data.settings.wifiDisplay ? 'on' : 'off'}_holo_dark.png" alt=""></button></div>`;
     } else if (ui.overlay === 'lp-zen-drop') {
@@ -1212,12 +1208,6 @@
       if (ui.recentsScroll === undefined) ui.recentsScroll = LPRecents.layout(panel);
     } else if (ui.overlay.startsWith('gallery-') || ui.overlay.startsWith('camera-')) {
       overlayRoot.innerHTML=ICSMedia.overlay(data,ui,key=>i18n.t(key),i18n.locale());
-    } else if (ui.overlay === 'jbclock-cities-menu' || ui.overlay === 'cpref-main') {
-      const items = ClockPrefs.menu(ui.overlay === 'cpref-main' ? 'main' : 'cities', {data, t: key => i18n.t(key), locale: i18n.locale(), tab: jbClockState().tab});
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="lp-popup-menu">${items.map(([action, id, label]) => `<button data-action="${action}" data-id="${id}">${safe(label)}</button>`).join('')}</div>`;
-    } else if (ui.overlay.startsWith('clock-')) {
-      overlayRoot.innerHTML = ICSDeskClock.overlay(ui,key=>i18n.t(key),{hour24:!!data.settings.hour24,locale:i18n.locale(),now:deviceDate()});
-      if(ui.overlay==='clock-ringing')ICSDeskClock.bindRinging?.(overlayRoot);
     } else if (ui.overlay === 'dtp') {
       // Calendar's datetimepicker dialogs (dtp.js).
       overlayRoot.innerHTML = DateTimePicker.render(ui.dtp, i18n.locale(), deviceDate());
@@ -1842,58 +1832,6 @@
     ui.eventDraft=ICSCalendar.normalize(item || {date:ui.selectedDate,time:'12:00',endTime:`${String(12+Math.floor(length/60)).padStart(2,'0')}:${String(length%60).padStart(2,'0')}`,title:''});
     ui.calendarError='';ui.overlay='';ui.sub='event-edit';render();
   }
-  // 4.2 DeskClock pages; the alarm list and editor keep the ICS AlarmClock/SetAlarm screens.
-  const jbClockState = () => { data.jbClock ||= {tab: 'clock', timers: [], stopwatch: {accumulated: 0, started: null, laps: []}}; return {...data.jbClock, timerDigits: ui.timerDigits || '', timerSetup: !!ui.timerSetup}; };
-  // DeskClock's settings (clock-prefs): the analog style and the Home clock reach the clock page through its state.
-  const clockExtras = state => ({...state, home: ClockPrefs.home(data, Date.now(), i18n.locale()), analog: ClockPrefs.prefs(data).style === 'analog' ? ClockPrefs.analog(deviceDate()) : ''});
-  function renderClock() {
-    if (ui.sub === 'clock-settings') return ClockPrefs.settings({data, ui, t: key => i18n.t(key), locale: i18n.locale(), color: JBDeskClock.SPECTRUM[deviceDate().getHours()]});
-    if (ui.sub === 'night') return ClockPrefs.night({data, ui, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), hour24: !!data.settings.hour24, date: deviceDate().toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'})});
-    if (ui.sub === 'cities') return JBDeskClock.cities({...jbClockState(), cityQuery: ui.cityQuery}, key => i18n.t(key), {locale: i18n.locale(), now: deviceDate(), hour24: !!data.settings.hour24, words: {title: i18n.t('Cities'), selected: i18n.t('Selected Cities')}});
-    const clockState = {...jbClockState(), alarmPage: KKDeskClock.page(data.alarms, {expandedId: ui.kdcExpanded, t: key => i18n.t(key), locale: i18n.locale(), hour24: !!data.settings.hour24, normalize: ICSDeskClock.normalize})};
-    return JBDeskClock.render(clockExtras(clockState), key => i18n.t(key), {locale: i18n.locale(), now: deviceDate(), hour24: !!data.settings.hour24, alarm: nextAlarmLabel(), date: deviceDate().toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).toLocaleUpperCase(i18n.locale())});
-  }
-  let clockFrame = 0, clockSilenceTimer = 0;
-  function clockTicker() {
-    cancelAnimationFrame(clockFrame);
-    const step = () => {
-      const root = viewport.querySelector('.jbclock-app');
-      if (!root || ui.view !== 'clock') return;
-      JBDeskClock.tick(root, data.jbClock, Date.now(), key => i18n.t(key));
-      clockFrame = requestAnimationFrame(step);
-    };
-    clockFrame = requestAnimationFrame(step);
-  }
-  // TimerReceiver: a finished timer posts "Time's up" and shows its alert in the Timer page.
-  function checkTimers() {
-    const now = Date.now();
-    for (const timer of data.jbClock?.timers || []) {
-      if (timer.state !== 'running' || JBDeskClock.remaining(timer, now) > 0) continue;
-      Object.assign(timer, {state: 'done', left: 0, started: null});
-      data.notifications.unshift({id: now + data.notifications.length, title: i18n.t("Time's up"), detail: i18n.t('Timer'), kind: 'timer'}); save();
-      renderStatus(); if (ui.overlay === 'shade') renderOverlay();
-      if (ui.view === 'clock') { data.jbClock.tab = 'timer'; render(); }
-      toast("Time's up");
-    }
-  }
-  // Label and ringtone edits from a 4.4 alarm card go straight into that alarm.
-  function kdcCommit() {
-    if (!ui.kdcEditing) return;
-    const alarm = data.alarms.find(item => item.id === ui.kdcEditing);
-    if (alarm) { alarm.label = ui.alarmDraft.label; alarm.tone = ui.alarmDraft.tone; save(); }
-    ui.kdcEditing = null; ui.alarmDraft = null;
-  }
-  function checkAlarms(now) {
-    if(ui.overlay==='clock-ringing')return;
-    const alarm=data.alarms.find(alarm=>ICSDeskClock.due(alarm,now));
-    if(!alarm)return;
-    alarm.lastFiredMinute=Math.floor(now.getTime()/60000);
-    delete alarm.snoozedUntil;
-    if(!ICSDeskClock.normalize(alarm).days.length)alarm.enabled=false;
-    ui.ringingAlarm=clone(alarm); save(); ui.overlay='clock-ringing'; renderOverlay();
-    // Silence after: an alarm left ringing stops by itself.
-    clearTimeout(clockSilenceTimer); { const after = Number(ClockPrefs.prefs(data).silence), ringing = ui.ringingAlarm; if (after > 0) clockSilenceTimer = setTimeout(() => { if (ui.overlay === 'clock-ringing' && ui.ringingAlarm === ringing) { ui.overlay = ''; render(); } }, after * 60000); }
-  }
 
   function saveMusic() {
     ui.musicTrack=ui.music.track;ui.musicPlaying=ui.music.playing;ui.musicPosition=ui.music.position;
@@ -2011,7 +1949,6 @@
     if(id==='music'){ui.music=ICSMusic.restore();saveMusic();}
     if(id==='gmail'){data.gmailbox=GmailApp.restore(null);delete data.gmailWelcomeSeen;delete data.gmailTeaserDismissed;delete data.gmailSeen;if(ui.mailApp==='gmail'){ui.emailFolder='Primary';ui.emailSelected=[];}}
     if(id==='email'){data.mailbox=ICSEmail.restore(null,emailData,[]);data.sentEmails=[];ui.emailFolder='Inbox';ui.emailQuery=undefined;ui.emailSelected=[];}
-    if(id==='clock')data.alarms=clone(defaultData.alarms);
     if(id==='calendar')data.events=clone(defaultData.events);
     if(id==='people'){data.contacts=clone(defaultData.contacts);data.contactGroups=clone(defaultData.contactGroups);ui.peopleDraft=null;}
     if(id==='messaging'||id==='hangouts'){data.messages=clone(defaultData.messages);data.messageDrafts={};}
@@ -2190,13 +2127,6 @@
     if(action.startsWith('fitm-')&&FitMore.handle(action,id,fitContext()))return;
     if(action.startsWith('emore-')&&EditorMore.handle(action,id,editorContext()))return;
     if(action.startsWith('kp-') && KeepMore.handle(action,id,keepMoreContext()))return;
-    if (action.startsWith('cpref-') && ui.view === 'clock') {
-      const result = ClockPrefs.handle(action, id, {data, ui});
-      if (['cpref-main', 'jbclock-cities-menu'].includes(ui.overlay)) { ui.overlay = ''; renderOverlay(); }
-      if (result === 'save') save();
-      if (result?.open) { openApp('chrome'); navigateBrowser(result.open); return; }
-      if (result) { render(); return; }
-    }
     // The Phone app's Settings (lp-dialer-prefs.js).
     if ((action.startsWith('dpr-')) && ui.view === 'phone') {
       if (action === 'dpr-settings') { ui.overlay = ''; renderOverlay(); ui.dialerBack = [ui.sub || '']; ui.sub = 'dialer-settings'; ui.dialerDialog = ''; render(); return; }
@@ -2953,57 +2883,7 @@
       case 'event-cancel': ui.sub=ui.eventDraft?.id?'event':'';ui.eventDraft=null;calendarRender();break;
       case 'event-delete': ui.overlay=ICSCalendar.normalize(data.events.find(item=>item.id===ui.selectedEvent)||{}).repeat!=='none'?'calendar-delete-scope':'calendar-delete';renderOverlay();break;
       case 'event-confirm-delete': data.events=data.events.filter(item=>item.id!==ui.selectedEvent);save();ui.overlay='';ui.sub='';calendarRender();break;
-      case 'clock-alarms': jbClockState(); data.jbClock.tab='alarm'; save(); ui.sub=''; render(); break;
-      case 'kdc-add': { const now=deviceDate(); ui.kdcPicker={id:null,hour:now.getHours(),minute:now.getMinutes(),mode:'hour'}; ui.overlay='kdc-picker'; renderOverlay(); break; }
-      case 'kdc-time': { const alarm=ICSDeskClock.normalize(data.alarms.find(item=>item.id===Number(id))); const [h,m]=alarm.time.split(':').map(Number); ui.kdcPicker={id:alarm.id,hour:h,minute:m,mode:'hour'}; ui.overlay='kdc-picker'; renderOverlay(); break; }
-      case 'kdc-picker-mode': ui.kdcPicker.mode=id; renderOverlay(); break;
-      case 'kdc-picker-ampm': { const p=ui.kdcPicker; const pm=id?id==='pm':p.hour<12; p.hour=p.hour%12+(pm?12:0); renderOverlay(); break; }
-      case 'kdc-picker-cancel': ui.kdcPicker=null; ui.overlay=''; renderOverlay(); break;
-      case 'kdc-picker-done': {
-        // AlarmClockFragment.onTimeSet: an edited alarm is switched on; a new one is added, enabled and expanded.
-        const p=ui.kdcPicker, time=`${String(p.hour).padStart(2,'0')}:${String(p.minute).padStart(2,'0')}`;
-        if(p.zen){data.settings[p.zen==='start'?'zenStart':'zenEnd']=time;delete data.settings.zenDowntimed;save();ui.kdcPicker=null;ui.overlay='';render();renderOverlay();break;}
-        if(p.id){const alarm=data.alarms.find(item=>item.id===p.id); if(alarm){alarm.time=time;alarm.enabled=true;delete alarm.snoozedUntil;}}
-        else{const alarm=ICSDeskClock.normalize({time,enabled:true});alarm.id=Date.now();data.alarms.push(alarm);ui.kdcExpanded=alarm.id;}
-        save(); ui.kdcPicker=null; ui.overlay=''; render(); toast('Alarm set'); break;
-      }
-      case 'kdc-expand': ui.kdcExpanded=ui.kdcExpanded===Number(id)?null:Number(id); render(); break;
-      case 'kdc-repeat': { const alarm=data.alarms.find(item=>item.id===Number(id)); if(!alarm)break; const days=ICSDeskClock.normalize(alarm).days; alarm.days=days.length?[]:[0,1,2,3,4,5,6]; save(); render(); break; }
-      case 'kdc-day': { const [alarmId,day]=id.split(':').map(Number); const alarm=data.alarms.find(item=>item.id===alarmId); if(!alarm)break; const days=new Set(ICSDeskClock.normalize(alarm).days); days.has(day)?days.delete(day):days.add(day); alarm.days=[...days].sort(); save(); render(); break; }
-      case 'kdc-vibrate': { const alarm=data.alarms.find(item=>item.id===Number(id)); if(!alarm)break; alarm.vibrate=!ICSDeskClock.normalize(alarm).vibrate; save(); render(); break; }
-      case 'kdc-label': case 'kdc-tone': { const alarm=data.alarms.find(item=>item.id===Number(id)); if(!alarm)break; ui.alarmDraft=ICSDeskClock.normalize(alarm); ui.kdcEditing=alarm.id; ui.overlay=action==='kdc-label'?'clock-label':'clock-tone'; renderOverlay(); break; }
-      case 'kdc-delete': data.alarms=data.alarms.filter(alarm=>alarm.id!==Number(id)); if(ui.kdcExpanded===Number(id))ui.kdcExpanded=null; save(); render(); toast('Alarm deleted'); break;
-      case 'jbclock-tab': jbClockState(); data.jbClock.tab = id; save(); render(); break;
-      case 'jbclock-key': ui.timerDigits = JBDeskClock.setupDigits(ui.timerDigits || '', id); render(); break;
-      case 'jbclock-setup-cancel': ui.timerSetup = false; ui.timerDigits = ''; render(); break;
-      case 'jbclock-setup-start': { const time = JBDeskClock.setupTime(ui.timerDigits || ''); if (!time.ms) break; jbClockState(); data.jbClock.timers.push({id: `t${Date.now()}`, length: time.ms, left: time.ms, started: Date.now(), state: 'running', label: ''}); ui.timerSetup = false; ui.timerDigits = ''; save(); render(); break; }
-      case 'jbclock-timer-add': ui.timerSetup = true; ui.timerDigits = ''; render(); break;
-      case 'jbclock-timer-toggle': case 'jbclock-timer-plus': { const timers = jbClockState() && data.jbClock.timers, index = timers.findIndex(timer => timer.id === id); if (index < 0) break; timers[index] = JBDeskClock.timerAction(timers[index], action === 'jbclock-timer-plus' ? 'plus' : 'toggle', Date.now()); save(); render(); break; }
-      case 'jbclock-timer-delete': jbClockState(); data.jbClock.timers = data.jbClock.timers.filter(timer => timer.id !== id); save(); render(); break;
-      case 'jbclock-sw': {
-        jbClockState();
-        if (id === 'share') {
-          const watch = data.jbClock.stopwatch, laps = watch.laps || [], total = JBDeskClock.elapsed(watch, Date.now());
-          const text = [`${i18n.t('Stopwatch')}: ${JBDeskClock.formatStopwatch(total)}`, ...laps.map((lap, i) => `# ${i + 1}  ${JBDeskClock.formatStopwatch(lap - (laps[i - 1] || 0))}`)].join('\n');
-          openApp('messaging'); ui.sub = 'new'; messageDraft().body = text; save(); render(); break;
-        }
-        data.jbClock.stopwatch = JBDeskClock.stopwatchAction(data.jbClock.stopwatch, id, Date.now()); save(); render(); break;
-      }
-      case 'jbclock-menu': ui.overlay = 'cpref-main'; renderOverlay(); break;
-      // CitiesActivity: the chosen cities are kept in the clock state; the list keeps its place while ticking them.
-      case 'jbclock-cities': ui.cityQuery = undefined; ui.sub = 'cities'; ui.overlay = ''; render(); break;
-      case 'jbclock-city': { const list = viewport.querySelector('.jbclock-city-list'), top = list?.scrollTop || 0; jbClockState(); const chosen = data.jbClock.cities ||= []; const at = chosen.indexOf(id); if (at >= 0) chosen.splice(at, 1); else chosen.push(id); save(); render(); const after = viewport.querySelector('.jbclock-city-list'); if (after) after.scrollTop = top; break; }
-      case 'jbclock-city-search': ui.cityQuery = ''; render(); viewport.querySelector('[data-city-search]')?.focus(); break;
-      case 'jbclock-cities-menu': ui.overlay = 'jbclock-cities-menu'; renderOverlay(); break;
-      case 'jbclock-city-sort': jbClockState(); data.jbClock.citySort = data.jbClock.citySort === 'time' ? 'name' : 'time'; save(); ui.overlay = ''; renderOverlay(); render(); break;
 
-      case 'alarm-snooze': {
-        const alarm=data.alarms.find(item=>item.id===ui.ringingAlarm.id);
-        if(alarm){alarm.enabled=true;alarm.snoozedUntil=deviceDate().getTime()+ClockPrefs.prefs(data).snooze*60000;save();}
-        ui.overlay='';render();{const message=ICSDeskClock.snoozeMessage(new Date(alarm?.snoozedUntil||deviceDate().getTime()+ClockPrefs.prefs(data).snooze*60000),{hour24:!!data.settings.hour24,locale:i18n.locale()});if(message)toast(message);}break;
-      }
-      case 'alarm-dismiss': ui.overlay=''; render(); break;
-      case 'alarm-toggle': { const alarm = data.alarms.find(item => item.id === Number(id)); if (alarm) { alarm.enabled = !alarm.enabled; delete alarm.snoozedUntil; } save(); render(); break; }
       case 'music-play': ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
       case 'music-prev': case 'music-next': ICSMusic.step(ui.music,action==='music-prev'?-1:1);saveMusic();render();break;
       case 'music-shuffle': ui.music.shuffle=!ui.music.shuffle;saveMusic();render();break;
@@ -3164,8 +3044,6 @@
         save();ui.selectedDate=event.date;ui.selectedEvent=event.id;ui.selectedInstance=scope&&scope!=='all'?event.date:instance||'';ui.eventDraft=null;ui.sub='event';render();toast('Event saved');break;
       }
       case 'calendar-search': ui.calendarSearch=String(values.get('query')||'').trim();render();break;
-      case 'alarm-tone': ui.alarmDraft.tone=String(values.get('tone'));ui.overlay='';kdcCommit();render();break;
-      case 'alarm-label': ui.alarmDraft.label=String(values.get('label')||'').trim();ui.overlay='';kdcCommit();render();break;
       case 'email': {const item=mailbox().find(item=>item.id===ui.emailId);if(!item)break;for(const key of ['to','cc','bcc','subject','body'])if(values.has(key))item[key]=String(values.get(key)).trim();if(!ICSEmail.send(item)){ui.emailError='Enter valid email addresses';save();render();break;}save();ui.emailFolder='Sent';ui.emailQuery=undefined;ui.sub='read';ui.emailError='';render();toast('Demo email sent');break;}
       case 'email-search': ui.emailQuery=String(values.get('query')||'').trim();ui.emailSelected=[];render();break;
       case 'sd-volumes': for(const key of ['mediaVolume','ringVolume','alarmVolume'])data.settings[key]=Math.max(0,Math.min(100,Number(values.get(key))));save();ui.overlay='';render();break;
@@ -3192,8 +3070,6 @@
       if (key === 'until') { r.until = value; return; }
       r[key] = Number(value); if (key === 'end' && r.end === 1 && !r.until) r.until = ICSCalendar.iso(new Date(deviceDate().getTime() + 30 * 864e5)); render(); return; }
     if (event.target.matches('[data-lng-seek]') && InputLanguage.input(event.target, langContext())) return;
-    if (event.target.matches?.('[data-city-search]')) { ui.cityQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-city-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
-    if (event.target.matches?.('[data-cpref-volume]')) { ui.clockDraft = Number(event.target.value); return; }
     if (event.target.matches?.('[data-chr-seek]')) { const ctx = {ui, data, locale: i18n.locale()}; ChromeApp.prefSeek(event.target.value, ctx); ChromeApp.seekPaint(viewport, ctx); save(); return; }
     if (event.target.matches('[data-tzp-search]') && ui.tzp) { TimeZonePicker.input(ui.tzp, event.target.value, tzpContext()); renderTzPicker(true); return; }
     if (event.target.matches('[data-keep-search]')) { ui.keepQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-keep-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
@@ -3741,11 +3617,6 @@
   }, {passive:false});
   screen.addEventListener('dragstart', event => event.preventDefault());
   let homeLongPressTimer = null, messageHoldTimer = null;
-  let kdcDialDrag = false;
-  const kdcDialPick = event => { const dial = overlayRoot.querySelector('[data-kdc-dial]'); if (!dial || !ui.kdcPicker) return; const r = dial.getBoundingClientRect(); ui.kdcPicker = KKDeskClock.pick(ui.kdcPicker, (event.clientX - r.left) * dial.offsetWidth / r.width, (event.clientY - r.top) * dial.offsetHeight / r.height, dial.offsetWidth, !!data.settings.hour24); renderOverlay(); };
-  overlayRoot.addEventListener('pointerdown', event => { if (!event.target.closest('[data-kdc-dial]') || event.target.closest('button')) return; kdcDialDrag = true; event.preventDefault(); kdcDialPick(event); });
-  window.addEventListener('pointermove', event => { if (kdcDialDrag) kdcDialPick(event); });
-  window.addEventListener('pointerup', () => { if (!kdcDialDrag) return; kdcDialDrag = false; if (ui.kdcPicker?.mode === 'hour') { ui.kdcPicker.mode = 'minute'; setTimeout(renderOverlay, 120); } });
   let barsPeekTimer = 0;
   screen.addEventListener('pointerdown', event => {
     if (!screen.classList.contains('kk-immersive')) return;
@@ -3923,12 +3794,7 @@
       recentCard.style.opacity = String(Math.max(.25, 1 - Math.abs(dx) / 240));
       return;
     }
-    if((pointerStart.clockSwiping || ui.view==='clock' && !ui.sub && !ui.overlay && pointerStart.target.closest('[data-jbclock-swipe]') && Math.abs(dx)>dp(13) && Math.abs(dx)>Math.abs(dy)*1.2)) {
-      pointerStart.clockSwiping=true;suppressClickUntil=Date.now()+350;event.preventDefault();
-      try{screen.setPointerCapture(event.pointerId);}catch{}
-      const track=viewport.querySelector('.jbclock-track'),index=JBDeskClock.TABS.indexOf(data.jbClock?.tab||'clock');
-      if(track){track.style.transition='none';track.style.transform=`translateX(calc(${-index*100}% + ${dx}px))`;}return;
-    }
+    if (LP.module('clock').pointermove(event, dx, dy)) return;
     if(ui.view==='calendar' && !ui.sub && !ui.overlay && !pointerStart.scrolling && pointerStart.target.closest('[data-calendar-swipe]') && Math.abs(dx)>dp(13) && Math.abs(dx)>Math.abs(dy)*1.2) {
       pointerStart.calendarSwiping=true;suppressClickUntil=Date.now()+350;event.preventDefault();
       try{screen.setPointerCapture(event.pointerId);}catch{}
@@ -4012,7 +3878,7 @@
     clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); LP.module('calculator').cancelHold(); clearTimeout(messageHoldTimer);
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
     if (LP.module('wallpaper-picker').pointerup()) return;
-    if(pointerStart.clockSwiping){const tabs=JBDeskClock.TABS,index=tabs.indexOf(data.jbClock?.tab||'clock'),next=Math.max(0,Math.min(tabs.length-1,index+(Math.abs(dx)>dp(50)?(dx<0?1:-1):0)));data.jbClock.tab=tabs[next];save();render();suppressClickUntil=Date.now()+350;pointerStart=null;return;}
+    if (LP.module('clock').pointerup(event, dx)) return;
     // Play Store 4.8: a swipe from the left edge of a top-level page opens the drawer, a swipe to the left closes it.
     if (ui.view === 'play-store' && Math.abs(dx) > dp(55) && Math.abs(dx) > Math.abs(dy) * 1.5) {
       const left = (pointerStart.x - screen.getBoundingClientRect().left) / (screen.getBoundingClientRect().width / screen.offsetWidth);
@@ -4224,8 +4090,8 @@
       if(elapsed)elapsed.textContent=dialing?'':ICSPhoneCall.duration(ICSPhoneCall.elapsed(ui.activeCall));
       if(state)state.textContent=i18n.t(ICSPhoneCall.stateLabel(ui.activeCall))||'';
     }
-    checkAlarms(now);
-    checkTimers();
+    lp.checkAlarms(now);
+    lp.checkTimers();
     // Interruptions: the end of a countdown, alarm or downtime condition, and Downtime's autotrigger.
     if (LPZen.tick(data.settings, now.getTime(), nextAlarmTime())) { save(); renderStatus(); if (ui.view === 'settings' && ui.sub === 'zen' && !ui.overlay) render(); }
     // Dreams redraw only when the saver moves (each minute) or the slideshow advances; otherwise just the text changes.
@@ -4260,17 +4126,19 @@
   // lp:kernel (the core's bindings the lp-*.js modules use, live; written by the migration's move tool)
   LP.kernel({
     get clone() { return clone; }, get data() { return data; }, set data(v) { data = v; },
-    get deviceDate() { return deviceDate; }, get dp() { return dp; }, get editorContext() { return editorContext; },
-    get galleryWallpaper() { return galleryWallpaper; }, get holdDelay() { return holdDelay; },
-    get home() { return home; },
+    get defaultData() { return defaultData; }, get deviceDate() { return deviceDate; }, get dp() { return dp; },
+    get editorContext() { return editorContext; }, get galleryWallpaper() { return galleryWallpaper; },
+    get holdDelay() { return holdDelay; }, get home() { return home; },
     get homeLongPressTimer() { return homeLongPressTimer; }, set homeLongPressTimer(v) { homeLongPressTimer = v; },
     get i18n() { return i18n; }, get keepAttach() { return keepAttach; }, get mailbox() { return mailbox; },
-    get messageDraft() { return messageDraft; }, get openApp() { return openApp; },
+    get messageDraft() { return messageDraft; }, get navigateBrowser() { return navigateBrowser; },
+    get nextAlarmLabel() { return nextAlarmLabel; }, get openApp() { return openApp; },
     get overlayRoot() { return overlayRoot; }, get photosContext() { return photosContext; },
     get pointerStart() { return pointerStart; }, set pointerStart(v) { pointerStart = v; },
     get printContext() { return printContext; }, get reducedMotion() { return reducedMotion; },
-    get render() { return render; }, get renderOverlay() { return renderOverlay; }, get safe() { return safe; },
-    get save() { return save; }, get screen() { return screen; }, get scrollMessages() { return scrollMessages; },
+    get render() { return render; }, get renderOverlay() { return renderOverlay; },
+    get renderStatus() { return renderStatus; }, get safe() { return safe; }, get save() { return save; },
+    get screen() { return screen; }, get scrollMessages() { return scrollMessages; },
     get snapResting() { return snapResting; },
     get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; },
     get suppressReleaseClick() { return suppressReleaseClick; }, get toast() { return toast; },

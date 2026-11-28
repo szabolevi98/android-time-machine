@@ -16,5 +16,8 @@ module.exports = function engineSource(version) {
       if (core.test(file) || registers.test(text)) parts.push(text);
     }
   }
-  return parts.join('\n');
+  // 5.1.1's moved code reads the core's changing bindings and shared functions through lp (lp-core.js: lp.data,
+  // lp.pointerStart, lp.cameraShoot()); the tests read it as the core had it.
+  const text = parts.join('\n');
+  return version === '5.1.1' ? text.replace(/([{,]\s*)([A-Za-z_$][\w$]*): lp\.\2\b/g, '$1$2').replace(/\blp\.(?=[A-Za-z_$])/g, '') : text;
 };
