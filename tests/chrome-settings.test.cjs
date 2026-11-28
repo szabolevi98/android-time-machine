@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource=require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Chrome settings and Clear browsing data (audit step 5): Chrome 27 (4.3), 32 (4.4.4) and 40 (5.1.1).
 for(const [v,version,last,inBar] of [['4.3','27.0.1453.111','Developer tools',true],['4.4.4','32.0.1700.99','About Chrome',true],['5.1.1','40.0.2214.89','About Chrome',false]]){
@@ -27,7 +28,7 @@ for(const [v,version,last,inBar] of [['4.3','27.0.1453.111','Developer tools',tr
   assert.match(C.render({...ctx(),url:C.HISTORY}),/chr-clear" data-action="chrome-clear-open"/);
   assert.match(C.render(ctx({sub:'chrome-settings',chromePrefStack:['about']})),new RegExp(`Chrome ${version.replace(/\./g,'\\.')}`));
   assert.match(C.menu(ctx()),/data-action="chrome-settings"/);
-  const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');
+  const sim=engineSource(v);
   for(const a of ['chrome-settings','chrome-list-pick','chrome-clear-open','chrome-clear-run'])assert.ok(sim.includes(`case '${a}'`),`${v} ${a}`);
   assert.ok(sim.includes('ChromeApp.prefAction(action, id,')&&sim.includes('ChromeApp.prefBack(ui)')&&sim.includes('ChromeApp.seekPaint(viewport'),v);
   // T07: the local pages. No Home page (no partner home page provider on the images); every header but the sign-in,

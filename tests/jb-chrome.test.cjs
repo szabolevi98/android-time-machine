@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource=require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Nexus 4: Chrome 27.0.1453.111 (Chrome.apk of JWR66Y): toolbar, chrome://newtab, incognito, history, overview, menu.
 const context={window:{}};for(const f of ['stock-strings.js','chrome-pak.js','chrome.js'])vm.runInNewContext(fs.readFileSync(`versions/4.3/${f}`,'utf8'),context);
@@ -27,6 +28,6 @@ menu=C.menu({ui:{browserIndex:0,browserHistory:['a']},data,t,locale:'en',url:C.N
 assert.deepEqual(labels(menu),['New tab','New incognito tab','Bookmarks','Other devices','Find in page...','Settings','Help']);
 menu=C.menu({ui:{sub:'tabs',browserIndex:0,browserHistory:['a']},data,t,locale:'hu',url:C.NTP});
 assert.deepEqual(labels(menu),['Új lap','Új inkognitólap','Összes lap bezárása','Beállítások']);
-const sim=fs.readFileSync('versions/4.3/simulator.js','utf8');
+const sim=engineSource('4.3');
 assert.ok(sim.includes('ChromeApp.menu({ui, data, t: key => i18n.t(key), locale: i18n.locale()')&&fs.readFileSync('versions/4.3/index.html','utf8').includes('chrome-pak.js'));
 console.log('jb-chrome ok');
