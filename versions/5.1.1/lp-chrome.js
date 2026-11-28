@@ -99,14 +99,6 @@ LP.define('chrome', ({
       // lp:clearData
       return false;
     },
-    overlay(name, root) {
-      if (ui.overlay === 'browser-menu' && ui.view === 'chrome') {
-        overlayRoot.innerHTML = ChromeApp.menu({ui, data: lp.data, t: key => i18n.t(key), locale: i18n.locale(), url: ui.browserUrl, incognito: !!ICSBrowserSession.current(ui.browserSession)?.incognito});
-        return true;
-      }
-      // lp:overlay
-      return false;
-    },
     back() {
       if (['browser', 'chrome'].includes(ui.view) && (ui.chromeClear || ui.chromeList || ui.chromePrefMenu || ui.chromeConfirm) && !ui.chromeClear?.busy) { ui.chromeClear = null; ui.chromeList = ''; ui.chromePrefMenu = false; ui.chromeConfirm = ''; render(); return true; }
       if (['browser', 'chrome'].includes(ui.view) && ui.sub === 'chrome-settings') { if (!ChromeApp.prefBack(ui)) ui.sub = ''; render(); return true; }
@@ -130,7 +122,9 @@ LP.define('chrome', ({
       return false;
     },
     overlays: {
+      // Chrome's menu, the AOSP Browser's in any other browser view.
       'browser-menu'() {
+        if (ui.view === 'chrome') { overlayRoot.innerHTML = ChromeApp.menu({ui, data: lp.data, t: key => i18n.t(key), locale: i18n.locale(), url: ui.browserUrl, incognito: !!ICSBrowserSession.current(ui.browserSession)?.incognito}); return; }
         overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu web-menu"><button data-action="browser-forward" ${ui.browserIndex >= ui.browserHistory.length-1?'disabled':''}>Forward</button><button data-action="browser-refresh">Refresh</button><button data-action="browser-new-tab">New tab</button><button data-action="browser-save">Bookmark</button><button data-action="browser-bookmarks">Bookmarks</button><button data-action="browser-saved">Saved pages</button><button data-action="browser-save-page">Save for offline reading</button><button data-action="browser-find">Find on page</button></div>`;
       },
       'chrome-a2hs'() {
