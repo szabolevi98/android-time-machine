@@ -89,3 +89,54 @@
   function searched(query, data) { if (pref(data, 'no_search_history', false)) return; data.yt5Searches = [query, ...(data.yt5Searches || []).filter(x => x !== query)].slice(0, 20); }
   window.KKYouTube = {settings, handle, back, searched};
 })();
+/* YouTube 5.2 in the 4.4.4 shell (docs/plans/engine-migration.md): the screen (stock-apps.js), the guide, search, videos, likes, Settings and Back, moved out of simulator.js. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {data, i18n, render, renderOverlay, renderStockApp, save, toast, ui, viewport} = c;
+    // YouTube 5.2's Settings (kk-youtube.js).
+    function ytContext() {
+      return {ui, data, t: key => i18n.t(key), locale: i18n.locale(), save, render,
+        closeOverlay() { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } },
+        unsupported: () => toast(i18n.t('This feature is not part of the simulator.'))};
+    }
+    return {
+      render() {
+        return renderStockApp();
+      },
+      action(action, button, event) {
+        const {id, app, url} = button.dataset;
+        if (ui.view === 'youtube' && action.startsWith('yt5-') && KKYouTube.handle(action, id, ytContext())) return;
+        switch (action) {
+          case 'yt-video': ui.ytFrom = ui.sub; ui.ytVideo = id; ui.ytPaused = false; ui.sub = 'video'; render(); break;
+          case 'yt-search-open': case 'yt-search-clear': ui.sub = 'search'; if (id !== 'keep') ui.ytQuery = ''; render(); viewport.querySelector('.yt-sv input')?.focus(); break;
+          case 'yt-guide': ui.ytGuide = !ui.ytGuide; render(); break;
+          case 'yt-toggle': ui.ytPaused = !ui.ytPaused; render(); break;
+          case 'yt-like': { const likes = data.ytLikes || []; data.ytLikes = likes.includes(id) ? likes.filter(x => x !== id) : [...likes, id]; save(); render(); break; }
+          default: return false;
+        }
+        return true;
+      },
+      submit(form, event) {
+        const values = new FormData(form);
+        switch (form.dataset.form) {
+          case 'yt-search': { const query = String(values.get('query') || '').trim(); if (!query) return; KKYouTube.searched(query, data); save(); ui.ytQuery = query; ui.sub = 'results'; render(); break; }
+          default: return false;
+        }
+        return true;
+      },
+      back() {
+        if (ui.view === 'youtube' && !ui.overlay && KKYouTube.back(ytContext())) return true;
+        if (ui.view === 'youtube' && ui.sub === 'video' && ui.ytFrom === 'results') { ui.sub = 'results'; ui.ytFrom = ''; render(); return true; }
+        return false;
+      }
+    };
+  }
+  const spec = {
+    render: c => scope(c).render(),
+    action: (name, el, event, c) => scope(c).action(name, el, event),
+    submit: (form, event, c) => scope(c).submit(form, event),
+    back: c => scope(c).back()
+  };
+  if (window.KK) for (const id of ['youtube']) KK.register(id, spec);
+})();

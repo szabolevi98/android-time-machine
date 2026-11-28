@@ -227,3 +227,53 @@
   }
   window.KKDrive = {list, page, menu, handle, back, files, NAV: NAV_ITEMS, D, prefs};
 })();
+/* Drive 1.2 in the 4.4.4 shell (docs/plans/engine-migration.md): the screen (stock-apps.js and kk-drive.js), its navigation, search, files, the held item's menu and Back, moved out of simulator.js. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {data, deviceDate, driveShareFile, driveShareText, holdDelay, i18n, render, renderOverlay, renderStockApp, save, suppressReleaseClick, toast, ui, viewport} = c;
+    return {
+      render() {
+        return renderStockApp();
+      },
+      action(action, button, event) {
+        const {id, app, url} = button.dataset;
+        if (action.startsWith('drv-') && KKDrive.handle(action, id, {data, ui, save, render, renderOverlay, toast, root: viewport, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), shareFile: driveShareFile, shareText: driveShareText})) return;
+        switch (action) {
+          case 'drive-nav': ui.driveNav = !ui.driveNav; render(); break;
+          case 'drive-open': ui.driveFrom = ui.sub; ui.driveFile = id; ui.sub = 'file'; render(); break;
+          case 'drive-search-open': ui.sub = 'search'; ui.driveQuery = ''; render(); viewport.querySelector('[data-form="drive-search"] input')?.focus(); break;
+          default: return false;
+        }
+        return true;
+      },
+      submit(form, event) {
+        const values = new FormData(form);
+        switch (form.dataset.form) {
+          case 'drive-search': { const query = String(values.get('query') || '').trim(); if (!query) return; ui.driveQuery = query; ui.sub = 'results'; render(); break; }
+          default: return false;
+        }
+        return true;
+      },
+      back() {
+        if (ui.view === 'drive' && ui.sub === 'file' && ui.driveFrom === 'results') { ui.sub = 'results'; ui.driveFrom = ''; render(); return true; }
+        // Drive's dialogs, detail panel, Settings, folders and filters (kk-drive.js).
+        if (ui.view === 'drive' && window.KKDrive && KKDrive.back(ui)) { render(); return true; }
+        return false;
+      },
+      gestureDown(event) {
+        // Drive: a held item opens menu_doclist_context.xml for it (kk-drive.js).
+        const heldDrive = event.target.closest('[data-drive-hold]');
+        if (heldDrive && !ui.overlay && !ui.driveDialog) c.messageHoldTimer = setTimeout(() => { suppressReleaseClick(); KKDrive.handle('drv-hold', heldDrive.dataset.driveHold, {data, ui, save, render, toast, root: viewport}); }, holdDelay(550));
+      }
+    };
+  }
+  const spec = {
+    render: c => scope(c).render(),
+    action: (name, el, event, c) => scope(c).action(name, el, event),
+    submit: (form, event, c) => scope(c).submit(form, event),
+    back: c => scope(c).back(),
+    gestureDown: (event, c) => scope(c).gestureDown(event)
+  };
+  if (window.KK) for (const id of ['drive']) KK.register(id, spec);
+})();

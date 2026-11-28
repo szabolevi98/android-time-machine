@@ -51,7 +51,7 @@
       render() {
         return KKDownloads.render(data.downloads || [], ui, key => i18n.t(key), i18n.locale());
       },
-      click(action, button, event) {
+      action(action, button, event) {
         const {id, app, url} = button.dataset;
         switch (action) {
           case 'kdu-menu': ui.overlay = `kdu-${id}`; renderOverlay(); break;
@@ -74,7 +74,7 @@
   }
   const spec = {
     render: c => scope(c).render(),
-    click: (action, button, c, event) => scope(c).click(action, button, event),
+    action: (name, el, event, c) => scope(c).action(name, el, event),
     overlay: c => scope(c).overlay()
   };
   if (window.KK) for (const id of ['downloads']) KK.register(id, spec);

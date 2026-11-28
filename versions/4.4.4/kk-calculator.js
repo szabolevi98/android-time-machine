@@ -47,7 +47,7 @@
       render() {
         return renderCalculator();
       },
-      click(action, button, event) {
+      action(action, button, event) {
         const {id, app, url} = button.dataset;
         switch (action) {
           case 'calc-menu': ui.overlay = 'calc-menu'; renderOverlay(); break;
@@ -109,7 +109,7 @@
   }
   const spec = {
     render: c => scope(c).render(),
-    click: (action, button, c, event) => scope(c).click(action, button, event),
+    action: (name, el, event, c) => scope(c).action(name, el, event),
     overlay: c => scope(c).overlay(),
     back: c => scope(c).back(),
     key: (event, c) => scope(c).key(event),

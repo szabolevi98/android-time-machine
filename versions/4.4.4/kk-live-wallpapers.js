@@ -17,7 +17,7 @@
       render() {
         return renderLiveWallpapers();
       },
-      click(action, button, event) {
+      action(action, button, event) {
         const {id, app, url} = button.dataset;
         switch (action) {
           case 'open-live-wallpapers': ui.overlay = ''; ui.view = 'live-wallpapers'; ui.sub = ''; render(); break;
@@ -37,7 +37,7 @@
   }
   const spec = {
     render: c => scope(c).render(),
-    click: (action, button, c, event) => scope(c).click(action, button, event),
+    action: (name, el, event, c) => scope(c).action(name, el, event),
     back: c => scope(c).back()
   };
   for (const id of ['live-wallpapers']) KK.register(id, spec);

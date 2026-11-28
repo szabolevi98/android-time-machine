@@ -68,7 +68,7 @@
           case 'kk-doc-picker': return KKWallpaperPicker.openFrom(wallpaperPickerContext());
         }
       },
-      click(action, button, event) {
+      action(action, button, event) {
         const {id, app, url} = button.dataset;
         switch (action) {
           case 'open-wallpapers': ui.overlay = ''; ui.overview = false; ui.wp = {selected: '', temp: [], checked: [], stripHidden: false}; ui.view = 'wallpaper-picker'; render(); break;
@@ -115,7 +115,7 @@
   }
   const spec = {
     render: c => scope(c).render(),
-    click: (action, button, c, event) => scope(c).click(action, button, event),
+    action: (name, el, event, c) => scope(c).action(name, el, event),
     back: c => scope(c).back(),
     gestureDown: (event, c) => scope(c).gestureDown(event),
     gestureMove: (event, dx, dy, c) => scope(c).gestureMove(event, dx, dy)
