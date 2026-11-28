@@ -277,13 +277,14 @@
     get keepAttach() { return keepAttach; }, get keepCurrent() { return keepCurrent; },
     get keepMoreContext() { return keepMoreContext; }, get listenVoice() { return listenVoice; },
     get messageDraft() { return messageDraft; }, get messageHoldTimer() { return messageHoldTimer; },
-    get openApp() { return openApp; }, get overlayRoot() { return overlayRoot; },
-    get photosContext() { return photosContext; }, get plusContext() { return plusContext; },
-    get pointerStart() { return pointerStart; }, get printContext() { return printContext; },
-    get render() { return render; }, get renderOverlay() { return renderOverlay; },
-    get renderStockApp() { return renderStockApp; }, get safe() { return safe; }, get save() { return save; },
-    get saveKeepNote() { return saveKeepNote; }, get screen() { return screen; },
-    get snapResting() { return snapResting; }, get suppressClickUntil() { return suppressClickUntil; },
+    get officeFiles() { return officeFiles; }, get openApp() { return openApp; },
+    get overlayRoot() { return overlayRoot; }, get photosContext() { return photosContext; },
+    get plusContext() { return plusContext; }, get pointerStart() { return pointerStart; },
+    get printContext() { return printContext; }, get render() { return render; },
+    get renderOverlay() { return renderOverlay; }, get renderStockApp() { return renderStockApp; },
+    get safe() { return safe; }, get save() { return save; }, get saveKeepNote() { return saveKeepNote; },
+    get screen() { return screen; }, get snapResting() { return snapResting; },
+    get suppressClickUntil() { return suppressClickUntil; },
     get suppressReleaseClick() { return suppressReleaseClick; }, get toast() { return toast; },
     get ui() { return ui; }, get viewport() { return viewport; }, get wallpaperFiles() { return wallpaperFiles; },
     set homeLongPressTimer(value) { homeLongPressTimer = value; },
@@ -809,7 +810,6 @@
       case 'calendar': return renderCalendar();
       case 'clock': return renderClock();
       case 'email': return renderEmail();
-      case 'newsstand': case 'quickoffice': case 'wallet': return KKExtraApps.render(ui.view, {news: ui.view === 'newsstand' ? newsContext() : null, files: officeFiles().filter(f => !f.trashed), ui, data, locale:i18n.locale(), t: key => i18n.t(key)});
       default: return renderHome();
     }
   }
@@ -849,10 +849,6 @@
   function back() { pendingNav = 'back'; try { navigateBack(); } finally { pendingNav = ''; } }
   // Drive's files as the apps change them (Quickoffice, Drive).
   const officeFiles = () => data.driveFiles || StockApps.FILES;
-  const quickofficeContext=()=>({files:officeFiles(),data,ui,locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay});
-  const QO = key => { const row = window.StockStrings?.quickoffice?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : key; };
-  // Currents / Magazines / Newsstand reading and settings (news-reader.js).
-  const newsContext = () => ({app: ui.view, profile: 'newsstand-kk', ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.['newsstand']?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, account: 'kitkat.demo@gmail.com', save, render, toast: message => toast(message), unavailable: 'kkx-unavailable', emptyFor: {'My News': 'No news sources', 'My Magazines': 'No magazines'}, share: (text, subject) => { ui.overlay = ''; renderOverlay(); openApp('hangouts'); ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); save(); render(); }});
   // Google+ posting and settings (plus-post.js): Google+ 4.2.3's New post, own posts and Settings.
   const plusContext = () => { PlusPost.bind(ui); return {ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.gplus?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, version: '4.2.3', me: i18n.t('Me'), account: 'kitkat.demo@gmail.com', now: deviceDate(), locale: i18n.locale(), save, render, thumb: i => StockApps.thumb(i), openMessengerSettings: () => { openApp('messenger'); ui.gpmPrefs = true; render(); }}; };
   // Earth (earth-app.js): Earth 7.1.3's settings, search, My location and Share.
@@ -894,12 +890,9 @@
     if (ui.view === 'camera' && ui.camIntent && !ui.overlay) { ui.camIntent.cancel(); return; }
     if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
     if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
-    if (['newsstand'].includes(ui.view) && !ui.overlay && NewsReader.back(ui)) { render(); return; }
     if (ui.view === 'clock' && !ui.overlay && ClockPrefs.back(ui)) { render(); return; }
     if (ui.view === 'clock' && ui.sub === 'cities' && ui.cityQuery !== undefined && !ui.overlay) { ui.cityQuery = undefined; render(); return; }
     if (ui.chromeReturn && ui.view === ui.chromeReturn.view && ui.sub === ui.chromeReturn.sub && !ui.overlay) { const back = ui.chromeReturn; ui.chromeReturn = null; openApp('chrome'); ui.sub = 'chrome-settings'; ui.chromePrefStack = back.stack; render(); return; }
-    if(ui.view==='quickoffice'&&!ui.overlay&&QuickofficeMore.back(quickofficeContext()))return;
-    if (ui.view === 'quickoffice' && ui.sub === 'qo-new' && !ui.overlay) { ui.sub = ''; render(); return; }
     if (ui.view === 'settings' && ['a11y-magnification', 'a11y-shortcut'].includes(ui.sub) && !ui.overlay) { ui.sub = 'accessibility'; render(); return; }
     if (ui.view === 'calendar' && ui.sub === 'calendar-settings' && !ui.overlay) { if (CalendarPrefs.back(ui) === 'leave') { ui.sub = ''; ui.calPref = ''; } render(); return; }
     if (ui.view === 'email' && ui.sub === 'em-settings' && !ui.overlay) { if (ui.emPrefList || ui.emPrefEdit) { ui.emPrefList = ''; ui.emPrefEdit = ''; ui.emPrefTone = undefined; window.SystemSounds?.stop(); } else if (ui.emPref) ui.emPref = EmailPrefs.parent(ui.emPref); else ui.sub = ''; render(); return; }
@@ -1074,12 +1067,6 @@
       overlayRoot.innerHTML = peopleOverlay();
     } else if (ui.overlay === 'pa-drawer') {
       overlayRoot.innerHTML = PlayApps.drawer(playContext(ui.view));
-    } else if (ui.overlay.startsWith('qox-')) {
-      overlayRoot.innerHTML=QuickofficeMore.dialog(quickofficeContext());
-    } else if (ui.overlay.startsWith('qo-')) {
-      overlayRoot.innerHTML = KKExtraApps.qoDialog({'qo-create': 'create', 'qo-file': 'file', 'qo-rename': 'rename', 'qo-delete': 'delete'}[ui.overlay], {files: officeFiles(), ui, t: key => i18n.t(key)});
-    } else if (ui.overlay === 'kkx-menu') {
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu holo-menu-light">${KKExtraApps.menu(ui.view, key => i18n.t(key), ui).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
     } else if (ui.overlay === 'pa-menu') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu holo-menu-light">${PlayApps.menu(playContext(ui.view)).map(item => `<button data-action="${item.action}"${item.id ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
     } else if (ui.overlay === 'pa-more') {
@@ -1884,7 +1871,6 @@
         render(); if (result.toast) toast(result.toast); return;
       }
     }
-    if(action.startsWith('qox-')&&QuickofficeMore.handle(action,id,quickofficeContext()))return;
     if (action.startsWith('cpref-') && ui.view === 'clock') {
       const result = ClockPrefs.handle(action, id, {data, ui});
       if (['cpref-main', 'jbclock-cities-menu'].includes(ui.overlay)) { ui.overlay = ''; renderOverlay(); }
@@ -1897,7 +1883,6 @@
       const result = PeopleIO.handle(action, id, {data, ui, t: key => i18n.t(key), locale: i18n.locale()});
       if (result) { if (result.save) save(); for (const title of result.notify || []) addNotification(title, ''); renderOverlay(); render(); if (result.toast) toast(result.toast); return; }
     }
-    if (['newsstand'].includes(ui.view) && action.startsWith('nr-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } ui.kkxDrawer = false; ui.lpxDrawer = false; ui.magDrawer = false; ui.currentsMenu = false; if (NewsReader.handle(action, id, newsContext())) return; }
     if (kkOffer('action', action, button, event, storeContext())) return;
     switch (action) {
       case 'open-app': if (GEL_UNSIMULATED.includes(app)) { toast(i18n.t('This app is not part of the simulator.')); break; } {
@@ -1967,19 +1952,6 @@
       case 'widget-photo-image': configurePhotoWidget({source: 'photo', photo: Number(id)}); break;
       case 'widget-photo-cancel': cancelPhotoWidget(); break;
       case 'gallery-wallpaper': ui.overlay = ''; openApp('gallery'); break;
-      case 'kkx-open': ui.sub = id; render(); break;
-      // Quickoffice: create, save, rename and delete files in the saved Drive list.
-      case 'qo-new': ui.overlay = 'qo-create'; renderOverlay(); break;
-      case 'qo-create': ui.overlay = ''; renderOverlay(); ui.qoKind = id; ui.sub = 'qo-new'; render(); break;
-      case 'qo-save': { const [base, ext] = KKExtraApps.QO_KIND[ui.qoKind], label = QO(base), names = new Set(officeFiles().map(f => f.name)); let name = `${label}${ext}`, n = 1; while (names.has(name)) name = `${label} (${n++})${ext}`;
-        data.driveFiles = [{id: `q${Date.now().toString(36)}`, name, kind: ui.qoKind, local:true, parent:'device', date: deviceDate().toLocaleDateString(i18n.locale(), {month: 'short', day: 'numeric'}), age: 0, text: ''}, ...officeFiles()]; save(); ui.sub = ''; render(); toast(AndroidStrings.format(QO('File saved to %1$s'), KKExtraApps.local('Device', key => i18n.t(key)))); break; }
-      case 'qo-rename': ui.overlay = 'qo-rename'; renderOverlay(); overlayRoot.querySelector('[data-qo-name]')?.select(); break;
-      case 'qo-rename-ok': { const name = overlayRoot.querySelector('[data-qo-name]')?.value.trim(); if (name) { data.driveFiles = officeFiles().map(f => f.id === ui.qoFile ? {...f, name} : f); save(); } ui.overlay = ''; renderOverlay(); render(); break; }
-      case 'qo-delete': ui.overlay = 'qo-delete'; renderOverlay(); break;
-      case 'qo-delete-ok': data.driveFiles = officeFiles().filter(f => f.id !== ui.qoFile); save(); ui.overlay = ''; renderOverlay(); render(); break;
-      case 'kkx-unavailable': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
-      case 'kkx-drawer': ui.kkxDrawer = !ui.kkxDrawer; render(); break;
-      case 'kkx-menu': ui.overlay = 'kkx-menu'; renderOverlay(); break;
       case 'photos-set-wallpaper': ui.overlay = ''; openApp('photos'); break;
       case 'market': openApp('play-store'); break;
       case 'play-menu': case 'jbp-menu': ui.overlay = 'play-menu'; renderOverlay(); break;
@@ -2588,7 +2560,6 @@
     if (!form || !screen.contains(form)) return;
     event.preventDefault(); const values = new FormData(form);
     if (kkOffer('submit', form, event, storeContext())) return;
-    if (['newsstand'].includes(ui.view) && NewsReader.submit(form.dataset.form, values, newsContext())) return;
     if(form.dataset.form==='folder-name'){event.target.querySelector('input')?.blur();render();return;}
     if(form.dataset.form==='sx-save'){ui.systemError=ICSSystemSettings.submit(data,ui,values);if(ui.systemError){ui.systemValues=Object.fromEntries(values);renderOverlay();return;}save();ui.overlay='';render();return;}
     if(form.dataset.form==='sx-vpn-connect'){ui.vpnConnected=ui.vpnConnected===ui.systemId?null:ui.systemId;ui.overlay='';render();return;}
@@ -2685,7 +2656,6 @@
   });
   document.addEventListener('input', event => {
     if (kkOffer('input', event, storeContext())) return;
-    if (['newsstand'].includes(ui.view) && NewsReader.input(event.target, newsContext())) return;
     if (event.target.matches('[data-pr]') && PrintSpooler.input(event.target, printContext())) return;
     if (event.target.matches('[data-gnp-q]') && ui.gnowDraft?.placeDialog) { ui.gnowDraft.placeDialog.q = event.target.value; const at = event.target.selectionStart; render(); const field = viewport.querySelector('[data-gnp-q]'); field?.focus(); field?.setSelectionRange(at, at); return; }
     if (event.target.matches('[data-gnr-rule]') && ui.gnowDraft?.ruleDialog) { const r = ui.gnowDraft.ruleDialog, key = event.target.dataset.gnrRule, value = event.target.value;
@@ -3388,8 +3358,6 @@
     if (ui.view === 'home' && !ui.overlay && !ui.overview && event.target.closest('.home-slot') && !pointerStart.source) homeLongPressTimer = setTimeout(() => { ui.overview = true; render(); pointerStart = null; suppressReleaseClick(); }, holdDelay(550));
     const message = event.target.closest('.mms-message');
     if (message && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.mmsMessage = message.dataset.id; ui.overlay = 'mms-message'; suppressReleaseClick(); renderOverlay(); }, holdDelay(550));
-    const heldQo = event.target.closest('[data-qo-hold]');
-    if (heldQo && !ui.overlay) messageHoldTimer = setTimeout(() => { suppressReleaseClick(); ui.qoFile = heldQo.dataset.qoHold; ui.overlay = 'qo-file'; renderOverlay(); }, holdDelay(550));
     if (pointerStart.lockDrag) { clearTimeout(ui.lockReleaseTimer); viewport.querySelectorAll('.lock-chevron').forEach(chevron => chevron.getAnimations().forEach(animation => animation.cancel())); screen.classList.remove('lock-releasing'); screen.classList.add('lock-dragging'); try { screen.setPointerCapture(event.pointerId); } catch {} }
     else if (ui.view === 'lock' && !ui.locked && event.target.closest('.lock-wave')) lockPing();
     kkEach('gestureDown', event, storeContext());
