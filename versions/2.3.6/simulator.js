@@ -179,7 +179,7 @@
   function storeContext() {
     return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, viewport, dp, snapResting, suppressClick: ms => { suppressClickUntil = Date.now() + ms; },
       // 2.3.6's own AlertDialog (a spec the module's dialog(kind, c) returns) and the Menu key's IconMenu items.
-      saveMusic, deviceDate, today, home, cancelPhotoWidget, composeEmail, messageDraft, gapp: () => gappContext(), gbCapture, gbmaCancel, gbmaReturn, gbceReturn, back, contact, contactByPhone, captureRecentView, appName: id => appNames[id] || id, startPhoneCall, editPerson, clock, blinkTips, renderStatus, apps, appNames, appIcon, carrierName, gbClock, lockControls, navigateBrowser, clearAppData, resetSimulator, storeUninstall, storeInstalled, storeAppsSync, defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
+      saveMusic, deviceDate, today, home, cancelPhotoWidget, composeEmail, messageDraft, gapp: () => gappContext(), gbCapture, gbmaCancel, gbmaReturn, gbceReturn, back, contact, contactByPhone, captureRecentView, appName: id => appNames[id] || id, startPhoneCall, editPerson, clock, blinkTips, renderStatus, apps, appNames, appIcon, carrierName, gbClock, lockControls, navigateBrowser, clearAppData, resetSimulator, storeUninstall, storeInstalled, storeAppsSync, wallpaperFiles, reducedMotion, defaults: defaultData, clone, overlayRoot, suppressRelease: () => suppressReleaseClick(),
       appList: () => apps.map(app => [app[0], i18n.t(app[1])]), browserTitle: gbBrowserTitle, contactName: id => contact(id)?.name, normalizeAddress,
       intent: {browse(url) { openApp('browser'); navigateBrowser(url); }, contact(id) { openApp('people'); ui.selectedContact = id; ui.sub = 'detail'; render(); }, thread: id => openMessageThread(id),
         track(i) { openApp('music'); ui.music.queue = ICSMusic.tracks.map((_, n) => n); ui.music.track = i; ui.music.position = 0; ui.music.playing = true; saveMusic(); ui.sub = 'player'; render(); }},
@@ -592,32 +592,6 @@
     if (setup) data.homeWidgets[setup.page] = data.homeWidgets[setup.page].filter(widget => widget.id !== setup.id);
     ui.photoWidgetSetup = null; ui.overlay = ''; save(); render();
   }
-  /* LivePicker 2.3.6: LiveWallpaperListActivity (Theme.NoTitleBar; live_wallpaper_entry rows with the 75 dip thumbnail,
-     the label and the Html description), LiveWallpaperPreview (two 160 dip buttons at the bottom; Settings… only with a
-     settings activity), MagicSmokeSelector ("Tap to change", OK) and PolarClockSettings (Theme, two checkboxes and a list). */
-  const lwText = key => AndroidStrings.resources(() => window.GBStrings?.wallpapers).t(key, i18n.language);
-  const lwLabel = spec => lwText(spec.gb?.[0] || spec.label);
-  function renderLiveWallpapers() {
-    const sub = String(ui.sub || ''), T = lwText;
-    if (sub.startsWith('preview:')) {
-      const spec = LiveWallpapers.find(sub.slice(8));
-      return `<div class="app-view lw-preview gblw-preview" data-no-translate><div class="gblw-buttons"><button class="gblw-btn" data-action="lw-set" data-id="${safe(spec?.id || '')}">${safe(T('wallpaper_instructions'))}</button>${spec?.settings ? `<button class="gblw-btn" data-action="lw-settings" data-id="${spec.id}">${safe(T('configure_wallpaper'))}</button>` : ''}</div></div>`;
-    }
-    if (sub === 'settings:magicsmoke') return `<div class="app-view lw-preview gblw-smoke" data-action="lw-smoke-tap" data-no-translate><div class="gblw-smoke-hint">${safe(T('taptochange'))}</div><button class="gblw-btn" data-action="lw-smoke-ok">${safe(T('ok'))}</button></div>`;
-    // Maps 5.4.0's MapWallpaperSettingsActivity (wallpaper_prefs.xml): Show traffic (off by default) and Map mode.
-    if (sub === 'settings:maps') {
-      const traffic = data.lwPrefs?.maps?.traffic === true;
-      return `<div class="app-view gbset" data-no-translate><div class="gb-titlebar">${safe(T('maps_settings'))}</div><div class="gbset-list"><button class="gbset-row" data-action="lw-flag" data-id="maps:traffic" role="checkbox" aria-checked="${traffic}"><span class="gbset-text"><span class="gbset-title">${safe(T('maps_show_traffic'))}</span></span><img class="gbset-check" src="assets/gb-btn_check_${traffic ? 'on' : 'off'}.png" alt=""></button><button class="gbset-row" data-action="lw-mapmode"><span class="gbset-text"><span class="gbset-title">${safe(T('maps_map_mode'))}</span><span class="gbset-sum">${safe(T('maps_map_mode_summary'))}</span></span></button></div></div>`;
-    }
-    if (sub.startsWith('settings:')) {
-      const p = data.lwPrefs?.polar || {};
-      const check = (key, title) => `<button class="gbset-row" data-action="lw-toggle" data-id="polar:${key}" role="checkbox" aria-checked="${p[key] !== false}"><span class="gbset-text"><span class="gbset-title">${safe(T(title))}</span></span><img class="gbset-check" src="assets/gb-btn_check_${p[key] !== false ? 'on' : 'off'}.png" alt=""></button>`;
-      return `<div class="app-view gbset" data-no-translate><div class="gb-titlebar">${safe(T('clock_settings'))}</div><div class="gbset-list">${check('showSeconds', 'show_seconds')}${check('variableWidth', 'variable_line_width')}<button class="gbset-row" data-action="lw-palette"><span class="gbset-text"><span class="gbset-title">${safe(T('palette'))}</span></span></button></div></div>`;
-    }
-    const collator = new Intl.Collator(i18n.locale());
-    const list = [...LiveWallpapers.LIST].sort((a, b) => collator.compare(lwLabel(a), lwLabel(b)));
-    return `<div class="app-view lw-picker gblw" data-no-translate>${list.map(spec => `<button class="gblw-entry" data-action="lw-preview" data-id="${spec.id}"><img src="assets/${spec.thumb}" alt=""><span class="gblw-copy"><span class="gblw-title">${safe(lwLabel(spec))}</span><span class="gblw-desc">${safe(T(spec.gb[1])).replace(/\s*&lt;br&gt;\s*/g, '<br>')}</span></span></button>`).join('')}</div>`;
-  }
   viewport.addEventListener('click', event => {
     if (ui.view !== 'home' || !liveWallpaper || event.target.closest('button,a,input,[data-action],.widget,.home-search,.dock')) return;
     const r = screen.getBoundingClientRect(); liveWallpaper.tap(event.clientX - r.left, event.clientY - r.top);
@@ -627,8 +601,6 @@
     if (StoreHost.has(ui.view)) return StoreHost.render(ui.view, storeContext());
     if (GBApps.has(ui.view)) return GBApps.get(ui.view).render(gappContext());
     switch (ui.view) {
-      case 'live-wallpapers': return renderLiveWallpapers();
-      case 'wallpaper-picker': { const selected = Number.isInteger(ui.wpChoice) ? ui.wpChoice : Math.max(0, data.wallpaper); return `<div class="app-view gbwp"><div class="gbwp-preview"><img src="assets/gb-wallpaper_${wallpaperFiles[selected]}.jpg" alt=""></div><div class="gbwp-gallery" role="listbox" aria-label="${safe(i18n.t('Wallpapers'))}">${wallpaperFiles.map((name, index) => `<button class="gbwp-item${index === selected ? ' selected' : ''}" role="option" aria-selected="${index === selected}" data-action="gb-wp-pick" data-id="${index}" aria-label="${safe(name.replace(/_/g, ' '))}"><img src="assets/gb-wallpaper_${name}_small.jpg" alt=""></button>`).join('')}</div><button class="gbwp-set" data-action="wallpaper" data-id="${selected}">${safe(i18n.t('Set wallpaper'))}</button></div>`; }
       default: return renderHome();
     }
   }
@@ -665,9 +637,8 @@
     if (GBApps.has(ui.view) && !ui.overlay && GBApps.get(ui.view).back?.(gappContext())) return;
     if (ui.overlay === 'shade') { closeShade(); return; }
     if (ui.overlay) { ui.overlay = ''; render(); return; }
-    if (ui.view === 'live-wallpapers') { const sub = String(ui.sub || ''); if (sub.startsWith('settings:')) ui.sub = `preview:${sub.slice(9)}`; else if (sub) ui.sub = ''; else { home(false); return; } render(); return; }
     if (ui.view === 'lock') return;
-    if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return; }
+    if (ui.view === 'drawer') { home(false); return; }
     if (ui.sub) { ui.sub = ''; render(); return; }
     home(false);
   }
@@ -714,6 +685,7 @@
     if (ui.overlay === 'gb-dialog-module') return StoreHost.module(ui.view)?.dialog?.(ui.gbModuleDialog, storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-gbmk') return GB.module('play-store').dialog(ui.gbmkDialog, storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-clearlog' || ui.overlay === 'gb-dialog-gbct' || ui.overlay === 'gb-dialog-ce') return GB.module('people').dialog(ui.overlay.slice(10), storeContext()) || {title: '', items: []};
+    if (ui.overlay.startsWith('gb-dialog-lw-')) return GB.module('live-wallpapers').dialog(ui.overlay.slice(13), storeContext());
     if (['gb-dialog-net', 'gb-dialog-sp', 'gb-dialog-set', 'gb-dialog-list', 'gb-dialog-brightness'].includes(ui.overlay)) return GB.module('settings').dialog(ui.overlay.slice(10), storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-camera') return GB.module('camera').dialog('restore', storeContext());
     if (ui.overlay === 'gb-dialog-gallery' || ui.overlay === 'gb-dialog-crop-saving') return GB.module('gallery').dialog(ui.overlay.slice(10), storeContext()) || {title: '', items: []};
@@ -724,8 +696,6 @@
     if (ui.overlay === 'gb-dialog-br' || ui.overlay === 'gb-dialog-share') return GB.module('browser').dialog(ui.overlay === 'gb-dialog-share' ? 'share' : ui.gbBrDialog, storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-music') return GB.module('music').dialog(ui.gbMusicDialog, storeContext()) || {title: '', items: []};
     if (ui.overlay === 'gb-dialog-mms') return GB.module('messaging').dialog(ui.gbMmsDialog, storeContext()) || {title: '', items: []};
-    if (ui.overlay === 'gb-dialog-lw-mapmode') { const modes = ['normal', 'satellite', 'terrain']; return {title: lwText('maps_map_mode'), items: modes.map(id => ({action: 'lw-mapmode-pick', id, title: lwText(`maps_mode_${id}`)})), choice: 'single', selected: modes.indexOf(data.lwPrefs?.maps?.mode || 'satellite'), buttons: [{action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]}; }
-    if (ui.overlay === 'gb-dialog-lw-palette') { const current = data.lwPrefs?.polar?.palette || ''; return {title: lwText('palette'), items: LiveWallpapers.PALETTE_ORDER.map(id => ({action: 'lw-palette-pick', id, title: lwText(id)})), choice: 'single', selected: LiveWallpapers.PALETTE_ORDER.indexOf(current), buttons: [{action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]}; }
     if (ui.overlay === 'gb-dialog-rename') return {title: t('Rename folder'), custom: `<label class="gbdlg-field"><span>${safe(t('Folder name'))}</span><input maxlength="40" value="${safe(ICSLauncherFolders.folder(data, ui.folderId)?.name || t('Folder'))}"></label>`, buttons: [{action: 'gb-rename-folder', title: t('OK')}, {action: 'gb-rename-cancel', title: t('Cancel')}], cancel: 'gb-rename-cancel'};
     if (ui.overlay === 'gb-dialog-wallpaper') return {title: t('Select wallpaper from'), items: [
       {action: 'open-app', app: 'gallery', title: t('Gallery'), icon: 'gallery.png'},
@@ -1009,19 +979,6 @@
       case 'widget-photo-open': { const photo = data.photos.find(item => item.id === Number(id)); if (!photo) break; openApp('gallery'); ui.selectedPhoto = photo.id; ui.galleryAlbum = ICSMedia.album(photo); ui.sub = 'photo'; ui.galleryZoom = false; render(); break; }
       case 'open-wallpapers': ui.overlay = ''; ui.wpChoice = null; ui.view = 'wallpaper-picker'; render(); viewport.querySelector('.gbwp-item.selected')?.scrollIntoView({inline: 'center', block: 'nearest'}); break;
       case 'open-live-wallpapers': ui.overlay = ''; ui.view = 'live-wallpapers'; ui.sub = ''; render(); break;
-      case 'lw-preview': ui.sub = `preview:${id}`; render(); break;
-      case 'lw-settings': ui.sub = `settings:${id}`; render(); break;
-      // LiveWallpaperPreview.setLiveWallpaper: set it and return to the launcher.
-      case 'lw-set': data.liveWallpaper = {id}; save(); ui.sub = ''; home(false); break;
-      case 'lw-toggle': { const [wid, key] = String(id).split(':'); data.lwPrefs ||= {}; data.lwPrefs[wid] ||= {}; data.lwPrefs[wid][key] = data.lwPrefs[wid][key] === false; save(); render(); break; }
-      case 'lw-palette': ui.overlay = 'gb-dialog-lw-palette'; renderOverlay(); break;
-      // MagicSmokeSelector.onTouchEvent: every touch steps back one preset; OK finishes the selector.
-      case 'lw-smoke-tap': { data.lwPrefs ||= {}; data.lwPrefs.magicsmoke ||= {}; const n = LiveWallpapers.SMOKE_PRESETS.length, cur = Number(data.lwPrefs.magicsmoke.preset ?? LiveWallpapers.SMOKE_DEFAULT); data.lwPrefs.magicsmoke.preset = cur <= 0 || cur >= n ? n - 1 : cur - 1; save(); break; }
-      case 'lw-smoke-ok': ui.sub = 'preview:magicsmoke'; render(); break;
-      case 'lw-flag': { const [wid, key] = String(id).split(':'); data.lwPrefs ||= {}; data.lwPrefs[wid] ||= {}; data.lwPrefs[wid][key] = data.lwPrefs[wid][key] !== true; save(); render(); break; }
-      case 'lw-mapmode': ui.overlay = 'gb-dialog-lw-mapmode'; renderOverlay(); break;
-      case 'lw-mapmode-pick': data.lwPrefs ||= {}; data.lwPrefs.maps ||= {}; data.lwPrefs.maps.mode = id; save(); ui.overlay = ''; render(); break;
-      case 'lw-palette-pick': data.lwPrefs ||= {}; data.lwPrefs.polar ||= {}; data.lwPrefs.polar.palette = id; save(); ui.overlay = ''; render(); break;
       case 'gallery-wallpaper': ui.overlay = ''; openApp('gallery'); break;
       // The Google apps' home screen widgets open their story, video or app.
       case 'gbw-news': openApp('news-weather'); if (id !== 'weather') { ui.nwTab = 'Top Stories'; ui.nwStory = id; } render(); break;
@@ -1073,7 +1030,6 @@
       case 'add-widget-gb': { ui.overlay = ''; const added = addWidget(id); if (!added) { renderOverlay(); toast('No more room on this Home screen.'); break; } if (ui.gbgPickPending) { ui.gbgPickPending = false; save(); const setup = ui.photoWidgetSetup; openApp('gallery'); ui.photoWidgetSetup = setup; ui.gbgPick = true; ui.sub = ''; render(); break; } if (ui.overlay) renderOverlay(); render(); break; }
       case 'widget-bookmark-step': { const host = button.closest('.home-widget'); if (!host) break; (ui.bookmarkWidget ||= {})[host.dataset.widgetId] = (ui.bookmarkWidget[host.dataset.widgetId] || 0) + Number(id); render(); break; }
       case 'widget-bookmark-open': openApp('browser'); navigateBrowser(id); break;
-      case 'gb-wp-pick': ui.wpChoice = Number(id); render(); viewport.querySelector('.gbwp-item.selected')?.scrollIntoView({inline: 'center', block: 'nearest', behavior: reducedMotion?.matches ? 'auto' : 'smooth'}); break;
       case 'gb-preview-go': ui.overlay = ''; renderOverlay(); setHomePage(Number(id)); break;
       case 'gb-tip-next': data.protips = {...(data.protips || {set: 0}), index: ((data.protips?.index ?? -1) + 1) % GBLauncher.tips(i18n.language, data.protips?.set).length}; save(); render(); break;
       case 'gb-tip-poke': blinkTips(1); break;
@@ -1084,7 +1040,6 @@
       case 'notification-open': { const note = data.notifications.find(item => String(item.id) === id); if (note?.kind === 'calendar') { data.notifications = data.notifications.filter(item => item !== note); save(); ui.overlay = ''; openApp('calendar'); ui.selectedEvent = note.eventId; ui.selectedInstance = note.date; ui.selectedDate = note.date; ui.sub = 'event'; render(); break; } }
         ui.overlay = ''; if (Number(id) === 2) openMessageThread(1); else { ui.view = 'settings'; ui.sub = 'about'; render(); } break;
       case 'unlock': ui.view = 'home'; render(); break;
-      case 'wallpaper': data.wallpaper = Number(id); delete data.liveWallpaper; delete data.customWallpaper; delete data.customWallpaperPhoto; save(); if (ui.view === 'wallpaper-picker') home(false); else render(); toast('Wallpaper set'); break;
       case 'toast': toast(id); break;
       case 'noop': break;
       case 'browser-search': openSearch(''); break;

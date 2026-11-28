@@ -54,7 +54,7 @@ for(const v of ['2.3.6','4.0.4','4.3']){
   const c={window:{devicePixelRatio:1},Intl,performance,document:{},Image:class{},requestAnimationFrame:()=>0,cancelAnimationFrame:()=>{}};
   vm.runInNewContext(fs.readFileSync(`versions/${v}/live-wallpapers.js`,'utf8'),c);
   const spec=c.window.LiveWallpapers.find('maps');assert.ok(spec&&spec.settings,v);assert.ok(fs.existsSync(`versions/${v}/assets/lw-maps_thumb.png`),v);
-  const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');assert.ok(sim.includes("sub === 'settings:maps'")&&sim.includes("case 'lw-mapmode-pick'"),v);
+  const sim=require('./lib/engine-source.cjs')(v);assert.ok(sim.includes("sub === 'settings:maps'")&&sim.includes("case 'lw-mapmode-pick'"),v);
   assert.equal(sim.includes("data-id=\"maps:traffic\""),v==='2.3.6','Show traffic only in Maps 5.4.0 (Nexus S)');
 }
 assert.ok(fs.readFileSync('i18n.js','utf8').includes("'Maps|Normal': {own: true, hu: 'Normál', de: 'Normal', fr: 'Standard', es: 'Normal'}"));

@@ -36,7 +36,8 @@ one `GB.register(id, {...})` module per screen.
 | Phone, Contacts | gb-phone.js | a2683caf |
 | Browser | gb-browser.js | f1a071a4 |
 | Settings | gb-settings.js | 9ef7cef0 |
-| Market | gb-market.js | |
+| Market | gb-market.js | 2ae2c24f |
+| Live wallpapers, wallpaper picker | gb-wallpapers.js (new) | |
 
 Bugs fixed on the way (their own commits):
 
