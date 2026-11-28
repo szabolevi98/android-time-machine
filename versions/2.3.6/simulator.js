@@ -125,7 +125,7 @@
     dial: '', callNumber: '', aboutTaps: 0, buildTaps: 0, settingsRootScroll: 0,
     browserUrl: data.browserHistory.at(-1) || 'www.google.com', browserHistory: [...data.browserHistory], browserIndex: data.browserHistory.length - 1, browserTabs: [data.browserHistory.at(-1) || 'www.google.com'], browserTab: 0,
     calendarMode: ['Day','Week','Month','Agenda'].includes(data.calendarMode)?data.calendarMode:'Month', selectedDate: localDate(ICSSystemSettings.wallDate(data)),
-    calc: '', calcFresh: false, calcPanel: 0, calcHistoryIndex: -1, phoneTab: 'dialpad',
+    phoneTab: 'dialpad',
     play: ICSPlayStore.initial(), playHistory: [],
     musicPlaying: false, musicTrack: 0, musicPosition: 0,
     emailId: 1, recent: [], recentSnapshots: {}, toastTimer: null, wifiTarget: '', bluetoothScanned: false
@@ -186,7 +186,7 @@
   storeAppsSync();
   // Gingerbread's own AlertDialog (GBUI.dialog) and the Menu key's IconMenu (GBUI.menu) for the store apps.
   function storeContext() {
-    return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, notify: (title, text) => addNotification(title, text), lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key),
+    return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, viewport, dp, snapResting, suppressClick: ms => { suppressClickUntil = Date.now() + ms; }, notify: (title, text) => addNotification(title, text), lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key),
       dialogMarkup: d => GBUI.dialog({title: d.title, message: d.message, custom: d.html, items: d.items?.map((title, i) => ({title, action: 'sth-item', id: i})), buttons: (d.buttons || []).map((b, i) => ({title: b.label, action: 'sth-btn', id: i})), cancel: 'sth-cancel', noTranslate: true, t: key => i18n.t(key)}),
       menu: items => { ui.gbMenuItems = items.map((it, i) => ({action: 'sth-mi', id: i, title: it.label, icon: it.icon, disabled: it.disabled})); ui.overlay = 'gb-menu-settings'; renderOverlay(); },
       closeMenu: () => closeGBMenu()});
@@ -316,7 +316,6 @@
       ui.overlay = 'gb-menu-settings'; renderOverlay(); return;
     }
     if (ui.view === 'clock') { const items = GBDeskClock.menu(gbClockContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
-    if (ui.view === 'calculator') { ui.gbMenuItems = [{action: 'calc-clear', title: calcText('clear_history'), icon: 'gb-calc-clear_history.png'}, ui.calcPanel ? {action: 'calc-panel', id: 0, title: calcText('basic'), icon: 'gb-calc-simple.png'} : {action: 'calc-panel', id: 1, title: calcText('advanced'), icon: 'gb-calc-advanced.png'}]; ui.overlay = 'gb-menu-settings'; renderOverlay(); return; }
     // The slideshow player and Sound Recorder have no menu.
     if (ui.view === 'messaging') { const items = GBMms.menu(gbMmsContext()); if (!items.length) return; ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); return; }
     if (ui.view === 'settings' && GBNetwork.has(ui.sub)) { const items = GBNetwork.menu(ui.sub, gbNetContext()); if (items.length) { ui.gbMenuItems = items; ui.overlay = 'gb-menu-settings'; renderOverlay(); } return; }
@@ -698,7 +697,6 @@
       case 'camera': return renderCamera();
       case 'calendar': return renderCalendar();
       case 'clock': return renderClock();
-      case 'calculator': return renderCalculator();
       case 'music': return renderMusic();
       case 'email': return renderEmail();
       default: return renderHome();
@@ -713,6 +711,7 @@
     if (app === 'play-store' && !resume) { ui.play = ICSPlayStore.initial(); ui.playHistory = []; ui.market = {page: 'home'}; ui.marketHistory = []; ui.marketSearching = false; }
     ui.view = app; ui.sub = resume ? ui.recentState?.[app]?.sub || '' : ''; if (!resume) { ui.gbPrefs = null; ui.gbCalSel = null; ui.gbEmSetup = null; } ui.overlay = ''; if (app === 'settings' && !resume) ui.settingsRootScroll = 0;
     if (GBApps.has(app)) GBApps.get(app).open?.(gappContext(), resume);
+    StoreHost.open(app, storeContext(), resume);
     if (app === 'phone' && ui.activeCall && !resume) { ui.gbCallBackground = true; ui.gbAddCall = false; ui.phoneTab = 'dialpad'; }
     ui.recent = [app, ...ui.recent.filter(id => id !== app)].slice(0, 8);
     render();
@@ -777,7 +776,6 @@
       viewport.querySelector('.play-content').scrollTop = ui.play.scrollTop || 0;
       return;
     }
-    if (ui.view === 'calculator' && ui.calcPanel) { setCalculatorPanel(0); return; }
     if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return; }
     if (ui.view === 'browser' && ui.gbBrEdit) { ui.gbBrEdit = false; render(); return; }
     if (ui.view === 'browser' && !ui.sub && ui.browserFind !== undefined) { ui.browserFind = undefined; render(); return; }
@@ -949,8 +947,6 @@
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu web-menu"><button data-action="browser-forward" ${ui.browserIndex >= ui.browserHistory.length-1?'disabled':''}>Forward</button><button data-action="browser-refresh">Refresh</button><button data-action="browser-new-tab">New tab</button><button data-action="browser-save">Bookmark</button><button data-action="browser-bookmarks">Bookmarks</button><button data-action="browser-saved">Saved pages</button><button data-action="browser-save-page">Save for offline reading</button><button data-action="browser-find">Find on page</button></div>`;
     } else if (ui.overlay === 'play-menu') {
       overlayRoot.innerHTML = '<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu"><button data-action="play-my-apps">My apps</button><button data-action="market">Shop</button></div>';
-    } else if (ui.overlay === 'calc-menu') {
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu"><button data-action="calc-clear">Clear history</button><button data-action="calc-panel" data-id="${ui.calcPanel ? 0 : 1}">${ui.calcPanel ? 'Basic panel' : 'Advanced panel'}</button></div>`;
     } else if (ui.overlay === 'phone-menu') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu phone-overflow"><button data-action="phone-add-contact">Add to contacts</button></div>`;
     } else if (ui.overlay === 'connectivity-menu') {
@@ -1394,23 +1390,6 @@
      PanelSwitcher (weight 4). The simple pad has an empty gradient cell and CLEAR (tap deletes, long press clears), then
      digit rows on blue_button and operators on button; the advanced pad has sin cos tan / ln log ! / pi e ^ / ( ) sqrt.
      ColorButton draws white text and the "magic flame" outline. */
-  const calcText = key => AndroidStrings.resources(() => window.GBStrings?.calculator).t(key, i18n.language);
-  function renderCalculator() {
-    const key = (id, cls = '') => `<button class="gbcalc-key${cls}" data-action="calc-key" data-id="${id}">${safe(id)}</button>`;
-    const row = keys => `<div class="gbcalc-row">${keys.map(([id, cls]) => key(id, cls)).join('')}</div>`;
-    const simple = `<div class="gbcalc-pad gbcalc-simple" aria-label="${safe(calcText('basic'))}" ${ui.calcPanel ? 'inert' : ''}><div class="gbcalc-row gbcalc-top"><span class="gbcalc-blank"></span><button class="gbcalc-key gbcalc-del" data-action="calc-key" data-id="⌫" aria-label="${safe(calcText('del'))}">${safe(calcText('clear'))}</button></div>${row([['7', ' digit'], ['8', ' digit'], ['9', ' digit'], ['÷']])}${row([['4', ' digit'], ['5', ' digit'], ['6', ' digit'], ['×']])}${row([['1', ' digit'], ['2', ' digit'], ['3', ' digit'], ['−']])}${row([['.', ' digit'], ['0', ' digit'], ['='], ['+']])}</div>`;
-    const advanced = `<div class="gbcalc-pad gbcalc-advanced" aria-label="${safe(calcText('advanced'))}" ${ui.calcPanel ? '' : 'inert'}>${row([['sin', ' small'], ['cos', ' small'], ['tan', ' small']])}${row([['ln', ' small'], ['log', ' small'], ['!']])}${row([['π'], ['e'], ['^']])}${row([['('], [')'], ['√']])}</div>`;
-    const shown = ui.calc === 'Error' ? calcText('error') : ui.calc;
-    return `<div class="app-view gbcalc" data-no-translate><div class="gbcalc-display"><output aria-label="${safe(calcText('app_name'))}">${safe(shown)}</output><i class="gbcalc-caret"></i></div><div class="calc-pager gbcalc-pager"><div class="calc-panels" style="transform:translateX(-${ui.calcPanel * 50}%)">${simple}${advanced}</div></div></div>`;
-  }
-  function setCalculatorPanel(index) {
-    ui.calcPanel = index;
-    const track = viewport.querySelector('.calc-panels');
-    if (!track) return;
-    track.style.transition = '';
-    track.style.transform = `translateX(-${index * 50}%)`; snapResting(track);
-    track.querySelectorAll('.ics-calc-grid,.gbcalc-pad').forEach((panel, i) => { panel.inert = i !== index; });
-  }
   const MUSIC = AndroidStrings.resources(() => window.GBStrings?.music), musicText = key => MUSIC.t(key, i18n.language);
   // Music's plurals (Nalbums, Nsongs, Nsongscomp): the one / other text of the image, %d and %n$d / %n$s filled in.
   // The quantity the language's plural rules pick (CLDR, as Android's Resources.getQuantityString).
@@ -1479,28 +1458,11 @@
     if(id==='gallery'){data.photos=clone(defaultData.photos);}
     if(id==='camera')delete data.cameraSettings;
     if(id==='phone'){data.callHistory=[];ui.activeCall=null;}
-    if(id==='calculator'){ui.calc='';ui.calcHistoryIndex=-1;data.calcHistory=[];}
+    StoreHost.clearData(id, storeContext());
     if(id==='play-store')delete data.playRatings;
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
   }
 
-  function operateCalculator(key) {
-    if (key === 'C') { ui.calc = ''; ui.calcFresh = false; return; }
-    // Logic.onDelete: on a result or an error DELETE clears the display.
-    if (key === '⌫') { ui.calc = ui.calc === 'Error' || ui.calcFresh ? '' : ui.calc.replace(/(?:sin|cos|tan|log|sqrt|√|ln)\($|.$/, ''); ui.calcFresh = false; return; }
-    if (key === '=') {
-      if (!ui.calc || ui.calc === 'Error') return;
-      try { const expression = ui.calc; ui.calc = ICSCalculator.evaluate(expression); data.calcHistory = [...(data.calcHistory || []), {expression, result:ui.calc}].slice(-50); ui.calcHistoryIndex = -1; save(); } catch { ui.calc = 'Error'; }
-      ui.calcFresh = true; return;
-    }
-    if (ui.calc.length > 150) return;
-    const operator = ['÷','×','−','+','^','!'].includes(key);
-    if (ui.calc === 'Error' || ui.calcFresh && !operator) ui.calc = '';
-    ui.calcFresh = false;
-    const token = key === '√' ? '√(' : /^(sin|cos|tan|ln|log)$/.test(key) ? `${key}(` : key;
-    if (operator && key !== '!' && /[÷×−+^]$/.test(ui.calc) && key !== '−') ui.calc = ui.calc.slice(0,-1);
-    ui.calc += token;
-  }
   function blinkTips(times) {
     let delay = 0;
     for (const [icon, wait] of GBLauncher.blinkFrames(times)) { setTimeout(() => { ui.tipsIcon = icon; if (ui.view === 'home') { const img = viewport.querySelector('.gbtips-droid img'); if (img) img.src = `assets/gb-tips-${icon}.png`; } }, delay); delay += wait; }
@@ -2076,10 +2038,6 @@
       }
       case 'alarm-dismiss': ui.overlay=''; render(); break;
       case 'alarm-toggle': { const alarm = data.alarms.find(item => item.id === Number(id)); if (alarm) { alarm.enabled = !alarm.enabled; delete alarm.snoozedUntil; } ui.overlay = ''; save(); render(); if (alarm?.enabled) alarmSetToast(alarm); break; }
-      case 'calc-menu': ui.overlay = 'calc-menu'; renderOverlay(); break;
-      case 'calc-panel': ui.overlay = ''; renderOverlay(); setCalculatorPanel(Number(id)); break;
-      case 'calc-clear': data.calcHistory = []; ui.calcHistoryIndex = -1; save(); operateCalculator('C'); ui.overlay = ''; render(); break;
-      case 'calc-key': operateCalculator(id); render(); viewport.querySelector(`.gbcalc-key[data-id="${CSS.escape(id)}"]`)?.classList.add('gbcalc-flame'); break;
       case 'music-play': ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
       case 'music-prev': case 'music-next': ICSMusic.step(ui.music,action==='music-prev'?-1:1);saveMusic();render();break;
       case 'music-tab': ui.musicTab=id;ui.sub='';render();break;
@@ -2672,7 +2630,7 @@
     setHomePage(ui.page + Math.sign(delta));
   }, {passive:false});
   screen.addEventListener('dragstart', event => event.preventDefault());
-  let homeLongPressTimer = null, calculatorClearTimer = null, messageHoldTimer = null;
+  let homeLongPressTimer = null, messageHoldTimer = null;
   screen.addEventListener('contextmenu', event => {
     if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
     event.preventDefault();
@@ -2743,8 +2701,6 @@
     if (heldThread && !ui.overlay) messageHoldTimer = setTimeout(() => { ui.thread = heldThread.dataset.id; suppressReleaseClick(); gbMmsDialog('thread'); }, 550);
     if (pointerStart.lockDrag) { clearTimeout(ui.lockReleaseTimer); viewport.querySelectorAll('.lock-chevron').forEach(chevron => chevron.getAnimations().forEach(animation => animation.cancel())); screen.classList.remove('lock-releasing'); screen.classList.add('lock-dragging'); try { screen.setPointerCapture(event.pointerId); } catch {} }
     else if (ui.view === 'lock' && !ui.locked && event.target.closest('.lock-wave')) lockPing();
-    if (ui.view === 'calculator' && !ui.overlay && event.target.closest('.calc-pager')) pointerStart.calculatorSwipe = true;
-    if (event.target.closest('.ics-calc-delete button,.gbcalc-del')) calculatorClearTimer = setTimeout(() => { operateCalculator('C'); suppressClickUntil = Date.now() + 350; render(); }, 600);
     if (ui.view === 'home' && !ui.overlay) pointerStart.photoStack = event.target.closest('[data-photo-stack]')?.dataset.photoStack || '';
     if (pointerStart.source) dragTimer = setTimeout(() => startDrag(event.clientX, event.clientY), 440);
   });
@@ -2752,14 +2708,7 @@
     if (!pointerStart || event.pointerId !== pointerStart.pointerId) return;
     if (dragState) { moveGhost(event.clientX, event.clientY); return; }
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
-    if (Math.hypot(dx,dy) > 8) { clearTimeout(homeLongPressTimer); clearTimeout(calculatorClearTimer); clearTimeout(messageHoldTimer); }
-    if (pointerStart.calculatorSwipe && (pointerStart.calculatorSwiping || Math.abs(dx) > dp(14) && Math.abs(dx) > Math.abs(dy))) {
-      pointerStart.calculatorSwiping = true; suppressClickUntil = Date.now() + 350; event.preventDefault();
-      try { screen.setPointerCapture(event.pointerId); } catch {}
-      const track = viewport.querySelector('.calc-panels');
-      if (track) { track.style.transition = 'none'; track.style.transform = `translateX(${Math.max(-screen.clientWidth, Math.min(0, -ui.calcPanel * screen.clientWidth + dx))}px)`; }
-      return;
-    }
+    if (Math.hypot(dx,dy) > 8) { clearTimeout(homeLongPressTimer); clearTimeout(messageHoldTimer); }
     if (pointerStart.drawerSwipeEligible && (pointerStart.drawerSwiping || Math.abs(dx) > dp(14) && Math.abs(dx) > Math.abs(dy) * 1.1 && performance.now() - pointerStart.downTime < 260)) {
       pointerStart.drawerSwiping = true;
       clearTimeout(dragTimer);
@@ -2845,14 +2794,13 @@
   });
   window.addEventListener('pointerup', event => {
     if (!pointerStart || event.pointerId !== pointerStart.pointerId) return;
-    clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(calculatorClearTimer); clearTimeout(messageHoldTimer);
+    clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(messageHoldTimer);
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
     if (ui.view === 'play-store' && ui.market?.page === 'section' && !ui.overlay && pointerStart.target.closest('.gbmk-scroll,.gbmk-tabs') && Math.abs(dx) > dp(70) && Math.abs(dx) > Math.abs(dy) * 1.5) { const next = viewport.querySelector(`.gbmk-tabs button:${dx < 0 ? 'last' : 'first'}-child`); if (next && !next.disabled) { ui.market.tab = next.dataset.id; render(); } suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if(pointerStart.gbCalSwiping){if(Math.abs(dy)>dp(58))calendarMove(dy<0?1:-1);else viewport.querySelector('[data-gbcal-swipe]').style.transform='';suppressClickUntil=Date.now()+350;pointerStart=null;return;}
     if(pointerStart.calendarSwiping){if(Math.abs(dx)>dp(52))calendarMove(dx<0?1:-1);else viewport.querySelector('[data-calendar-swipe]').style.transform='';suppressClickUntil=Date.now()+350;pointerStart=null;return;}
     if (pointerStart.photoSwiping) { if (Math.abs(dy) > dp(35)) stepPhotoStack(pointerStart.photoStack, dy > 0 ? 1 : -1); else render(); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if (pointerStart.gallerySwiping) { if(Math.abs(dx)>dp(52))galleryStep(dx<0?1:-1);else render();suppressClickUntil=Date.now()+350;pointerStart=null;return; }
-    if (pointerStart.calculatorSwiping) { setCalculatorPanel(Math.abs(dx) > dp(58) ? (dx < 0 ? 1 : 0) : ui.calcPanel); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if (pointerStart.drawerSwiping) { finishDrawerPage(dx); pointerStart = null; return; }
     if (pointerStart.recentSwiping) {
       const card = pointerStart.target.closest('.recent-item, .notification');
@@ -2905,7 +2853,7 @@
     if (ui.overlay === 'shade' && pointerStart.target.closest('.notification') && Math.abs(dx) > dp(64)) { const id = Number(pointerStart.target.closest('.notification').dataset.id); data.notifications = data.notifications.filter(n => n.id !== id); save(); renderStatus(); renderOverlay(); pointerStart = null; return; }
     pointerStart = null;
   });
-  window.addEventListener('pointercancel', () => { clearTimeout(calculatorClearTimer); clearTimeout(messageHoldTimer); const calcTrack = viewport.querySelector('.calc-panels'); if (calcTrack) { calcTrack.style.transition = ''; calcTrack.style.transform = `translateX(-${ui.calcPanel * 50}%)`; snapResting(calcTrack); } clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(dragState?.edgeTimer);clearTimeout(dragState?.folderExitTimer);clearTimeout(dragState?.folderHoverTimer);clearFolderDragFeedback();dragState?.ghost.remove(); clearDragOutlines(); dragState = null; screen.classList.remove('dragging', 'page-swiping', 'settings-scrolling', 'lock-dragging'); setHomePage(ui.page); const drawerPage = viewport.querySelector('.drawer-page'); if (drawerPage) drawerPage.style.transform = ''; const lockHandle = viewport.querySelector('.lock-handle'); if (lockHandle) lockHandle.style.removeProperty('--lock-x'); if (pointerStart?.shadeDragging || ui.overlay === 'recent' || ui.overlay === 'shade' || ui.overlay === 'folder') renderOverlay(); pointerStart = null; });
+  window.addEventListener('pointercancel', () => { clearTimeout(messageHoldTimer); clearTimeout(eggTimer); clearTimeout(dragTimer); clearTimeout(homeLongPressTimer); clearTimeout(dragState?.edgeTimer);clearTimeout(dragState?.folderExitTimer);clearTimeout(dragState?.folderHoverTimer);clearFolderDragFeedback();dragState?.ghost.remove(); clearDragOutlines(); dragState = null; screen.classList.remove('dragging', 'page-swiping', 'settings-scrolling', 'lock-dragging'); setHomePage(ui.page); const drawerPage = viewport.querySelector('.drawer-page'); if (drawerPage) drawerPage.style.transform = ''; const lockHandle = viewport.querySelector('.lock-handle'); if (lockHandle) lockHandle.style.removeProperty('--lock-x'); if (pointerStart?.shadeDragging || ui.overlay === 'recent' || ui.overlay === 'shade' || ui.overlay === 'folder') renderOverlay(); pointerStart = null; });
   window.addEventListener('pointercancel',()=>{const photo=viewport.querySelector('.gallery-image');if(photo)photo.style.transform='';});
   window.addEventListener('pointercancel',()=>{const surface=viewport.querySelector('[data-calendar-swipe]');if(surface)surface.style.transform='';});
   document.addEventListener('keydown', event => {
@@ -2913,14 +2861,7 @@
     if (focusedStack && ['ArrowUp','ArrowDown'].includes(event.key)) { event.preventDefault(); const id = focusedStack.dataset.photoStack; stepPhotoStack(id, event.key === 'ArrowDown' ? 1 : -1); viewport.querySelector(`[data-photo-stack="${CSS.escape(id)}"] .phw-front`)?.focus(); return; }
     if(ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && ['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();galleryStep(event.key==='ArrowLeft'?-1:1);return;}
     if (event.target.matches('.recent-item,.web-tab-preview') && ['Enter',' '].includes(event.key)) { event.preventDefault(); event.target.click(); return; }
-    if (ui.view === 'calculator' && !ui.overlay && ['ArrowUp','ArrowDown'].includes(event.key) && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) {
-      event.preventDefault(); const history = data.calcHistory || []; if (!history.length) return;
-      ui.calcHistoryIndex = event.key === 'ArrowUp' ? (ui.calcHistoryIndex < 0 ? history.length - 1 : Math.max(0,ui.calcHistoryIndex - 1)) : (ui.calcHistoryIndex < 0 ? history.length - 1 : Math.min(history.length - 1,ui.calcHistoryIndex + 1));
-      ui.calc = history[ui.calcHistoryIndex].expression; ui.calcFresh = false; render(); return;
-    }
-    if (ui.view === 'calculator' && !ui.overlay && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName) && (/^[0-9.+\-*/=()!^]$/.test(event.key) || ['Enter','Backspace','Delete'].includes(event.key))) {
-      event.preventDefault(); const map = {'*':'×','/':'÷','-':'−','Enter':'=','Backspace':'⌫','Delete':'C'}; operateCalculator(map[event.key] || event.key); render(); return;
-    }
+    if (StoreHost.has(ui.view) && StoreHost.key(event, storeContext())) return;
     if (event.key === 'Escape' || event.key === 'Backspace' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); back(); }
     else if (event.key === 'Home' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) { event.preventDefault(); if (ui.view !== 'lock') home(); }
 
