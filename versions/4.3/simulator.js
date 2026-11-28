@@ -268,7 +268,7 @@
     }
   }
   // The names the jb-* modules bind (generated as code moves out; docs/plans/engine-migration-4.3.md).
-  const moduleApi = {get PLAY_APPS() { return PLAY_APPS; }, get back() { return back; }, get clock() { return clock; }, get clone() { return clone; }, get data() { return data; }, get defaultData() { return defaultData; }, get deviceDate() { return deviceDate; }, get dp() { return dp; }, get home() { return home; }, get i18n() { return i18n; }, get jbmaContext() { return jbmaContext; }, get label() { return label; }, get messageDraft() { return messageDraft; }, get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; }, get openApp() { return openApp; }, get overlayRoot() { return overlayRoot; }, get pointerStart() { return pointerStart; }, get render() { return render; }, get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; }, get safe() { return safe; }, get save() { return save; }, get saveMusic() { return saveMusic; }, get screen() { return screen; }, get shareText() { return shareText; }, get toast() { return toast; }, get tracks() { return tracks; }, get ui() { return ui; }, get viewport() { return viewport; }};
+  const moduleApi = {get PLAY_APPS() { return PLAY_APPS; }, get back() { return back; }, get cameraShoot() { return cameraShoot; }, get clock() { return clock; }, get clone() { return clone; }, get composeEmail() { return composeEmail; }, get composeGmail() { return composeGmail; }, get data() { return data; }, get defaultData() { return defaultData; }, get deviceDate() { return deviceDate; }, get dp() { return dp; }, get home() { return home; }, get i18n() { return i18n; }, get jbmaContext() { return jbmaContext; }, get keepMoreContext() { return keepMoreContext; }, get label() { return label; }, get messageDraft() { return messageDraft; }, get messengerContext() { return messengerContext; }, get movieContext() { return movieContext; }, get mrContext() { return mrContext; }, get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; }, get openApp() { return openApp; }, get overlayRoot() { return overlayRoot; }, get pointerStart() { return pointerStart; }, get render() { return render; }, get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; }, get row() { return row; }, get safe() { return safe; }, get save() { return save; }, get saveMusic() { return saveMusic; }, get screen() { return screen; }, get shareText() { return shareText; }, get toast() { return toast; }, get tracks() { return tracks; }, get ui() { return ui; }, get viewport() { return viewport; }};
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
   function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (jbPlayContext().prefs.shortcuts) placeShortcut(r, appNames[r]); }
   // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
@@ -432,7 +432,6 @@
     snapResting(viewport);
     renderOverlay();
     i18n.translateDOM(screen);
-    if (ui.view === 'earth') EarthApp.mount(viewport, earthContext());
     if (StoreHost.has(ui.view)) StoreHost.mount(ui.view, storeContext(), viewport);
     const scene = {view: ui.view, sub: ui.sub}, transit = ui.sleeping ? '' : ICSTransitions.kind(lastScene, scene, pendingNav);
     lastScene = scene;
@@ -744,7 +743,6 @@
       case 'browser': return renderBrowser();
       case 'chrome': return renderChrome();
       case 'messenger': case 'navigation': case 'local': case 'currents': case 'play-magazines': case 'wallet': case 'movie-studio': if (ui.view === 'navigation' && ui.navRun) return MapsRoute.nav(mrContext()); return JBExtraApps.render(ui.view, {studio: ui.view === 'movie-studio' ? movieContext() : null, news: ['currents', 'play-magazines'].includes(ui.view) ? newsContext() : null, messenger: ui.view === 'messenger' ? messengerContext() : null, ui, t: key => i18n.t(key), contacts: data.contacts, data});
-      case 'google-search': case 'voice-search': case 'maps': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, plusCtx: ui.view === 'google-plus' ? plusContext() : null, ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
       case 'hangouts': return hangoutsScope(() => Hangouts.render(data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime()));
       case 'gmail': return renderGmail();
       case 'phone': return renderPhone();
@@ -762,18 +760,14 @@
     if (StoreHost.has(app) && StoreHost.module(app).open?.(storeContext(), resume, app)) return;
     if (app === 'movie-studio' && !resume) MovieStudio.open(ui);
     if (['currents', 'play-magazines'].includes(app) && !resume) { NewsReader.open(ui); ui.currentsEdition = ''; ui.currentsCustomize = ''; ui.currentsLibrary = false; }
-    if (app === 'google-plus' && !resume) PlusPost.open(ui);
     if (app === 'messenger' && !resume) PlusMessenger.open(ui);
-    if (app === 'earth' && !resume) EarthApp.open(ui);
     // A capture for Messaging lasts while the Camera is open; Messaging opens on its compose screen, not over it.
     if (!resume) { ui.jbmaCapture = null; ui.camIntent = null; if (app === 'messaging') ui.jbmaScreen = null; }
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
     if (!resume) { ui.mmsPrefs = ''; ui.mmsDialog = ''; ui.mapsPrefs = null; ui.mpsDialog = null; ui.yt4Dialog = null; ui.gsPage = ''; ui.gsStack = []; ui.gsDialog = null; ui.hgPage = ''; ui.hgStack = []; ui.hgDialog = ''; ui.paStack = []; ui.paMore = ''; ui.navPick = ''; ui.locResults = null; ui.locSearching = false; }
     if(ui.locked)return;
-    if (app === 'news-weather' && !resume) { ui.newsSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
+    if (StoreHost.has(app) && StoreHost.module(app).openUnlocked?.(storeContext(), resume, app)) return;
     if (app === 'google-keyboard') { openApp('settings'); ui.sub = 'language'; render(); return; }
-    if (app === 'voice-search') setTimeout(listenVoice);
-    if (app === 'keep' && !Array.isArray(data.keepNotes)) data.keepNotes = clone(defaultData.keepNotes);
     if (app === 'email' || app === 'gmail') useMailApp(app);
     if (app === 'chrome' || app === 'browser') useBrowserSession(app);
     if (!appNames[app]) return;
@@ -814,18 +808,12 @@
       mapSvg: StockApps.mapSvg({ui: {...ui, mapsRoute: null, mapsQuery: ''}, data, t: key => i18n.t(key), locale: i18n.locale()}).replace(/^<svg[^>]*>|<\/svg>$/g, ''),
       navigate: run => { ui.mapsRoute = ui.mapsRoute ? {...ui.mapsRoute, screen: 'map'} : null; openApp('navigation'); MapsRoute.startNav(mrContext(), run); render(); }};
   }
-  // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
-  const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
   // Movie Studio (movie-studio.js): the projects and the editor shell.
   const movieContext = () => ({ui, data, t: key => i18n.t(key), S: key => JBExtraApps.text('studio', key), save, render, toast: message => toast(message), refuse: () => toast(i18n.t('This feature is not part of the simulator.')), thumb: i => StockApps.thumb(i), addIcon: 'assets/ms-ic_menu_add_clip_normal.png'});
   // Currents / Magazines / Newsstand reading and settings (news-reader.js).
   const newsContext = () => ({app: ui.view, profile: ui.view === 'currents' ? 'currents' : 'magazines', ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.[ui.view === 'currents' ? 'currents' : 'magazines']?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, account: 'jellybean.demo@gmail.com', save, render, toast: message => toast(message), unavailable: 'kkx-unavailable', emptyFor: {}, share: (text, subject) => { ui.overlay = ''; renderOverlay(); openApp('messaging'); ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); save(); render(); }});
-  // Google+ posting and settings (plus-post.js): Google+ 4.0's New post, own posts and Settings.
-  const plusContext = () => { PlusPost.bind(ui); return {ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.gplus?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, version: '4.0', me: i18n.t('Me'), account: 'jellybean.demo@gmail.com', now: deviceDate(), locale: i18n.locale(), save, render, thumb: i => StockApps.thumb(i), openMessengerSettings: () => { openApp('messenger'); ui.gpmPrefs = true; render(); }}; };
   // Google+ Messenger (plus-messenger.js): Google+ 4.0's conversations, New conversation and settings.
   const messengerContext = () => ({ui, data, t: key => i18n.t(key), S: key => JBExtraApps.text('gplus', key), contacts: data.contacts, now: deviceDate(), locale: i18n.locale(), save, render, toast: message => toast(message), avatar: 'assets/msg-ic_avatar.png', photoIcon: 'assets/gpm-ic_send_photo_holo_light.png', sendIcon: 'assets/gpm-ic_menu_send_holo_light.png', version: '4.0', listMenu: ['Send feedback', 'Settings', 'Help', 'Sign out'], me: i18n.t('Me')});
-  // Earth (earth-app.js): Earth 7.1.1's settings, search, My location and Share.
-  const earthContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, save, render, toast: message => toast(message), earth: '7.1.1', account: 'jellybean.demo@gmail.com', dark: true, dot: 'assets/ea7-bluedot.png', shareTargets: [['gmail', 'Gmail'], ['messaging', 'Messaging']], share: (app, text, subject) => { ui.overlay = ''; renderOverlay(); if (app === 'gmail') { shareText('gmail', text, subject); return; } openApp(app); ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); save(); render(); }, openLocation: () => { openApp('settings'); ui.sub = 'location'; render(); }});
   const musicFxContext = () => ({data, ui, language: i18n.language, locale: i18n.locale(), save, render, toast: message => toast(message)});
   // Advanced Wi-Fi's Install certificates (*-certinstall.js) and its dialogs.
   const certContext = () => ({ui, data, language: i18n.language, root: overlayRoot, save, toast: message => toast(message),
@@ -840,7 +828,6 @@
     // The screen's module (jb-*.js), open overlay or not: its lines that stood after the overlay closes below check it.
     if (!ui.view.startsWith('store-') && StoreHost.has(ui.view) && StoreHost.module(ui.view).back?.(storeContext())) return;
     if (ui.view === 'settings' && ui.sub.startsWith('lng-') && !ui.overlay && InputLanguage.back(langContext())) return;
-    if (ui.view === 'google-search' && ui.voiceFromSettings && ui.sub === 'settings' && !ui.overlay && !(ui.gsStack || []).length) { ui.voiceFromSettings = false; openApp('settings'); ui.sub = 'language'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'dev-backup-pw' && !ui.overlay) { ui.sub = 'development'; render(); return; }
     if (ui.view === 'settings' && ui.sub === 'musicfx' && !ui.overlay) { ui.mfxSpin = false; ui.sub = 'sound'; render(); return; }
     // Back in a capture request cancels it (RESULT_CANCELED).
@@ -849,21 +836,13 @@
     if (ui.view === 'messaging' && !ui.overlay && window.JBMmsAttach?.back(jbmaContext())) { render(); return; }
     if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return; }
     if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return; }
-    if (ui.view === 'earth' && !ui.overlay && EarthApp.back(ui)) { render(); return; }
     if (ui.view === 'messenger' && !ui.overlay && PlusMessenger.back(ui)) { render(); return; }
-    if (ui.view === 'google-plus' && !ui.overlay && PlusPost.back(ui)) { render(); return; }
     if (['currents', 'play-magazines'].includes(ui.view) && !ui.overlay && NewsReader.back(ui)) { render(); return; }
     if (ui.view === 'currents' && !ui.overlay && CurrentsCustomize.back(ui)) { render(); return; }
     if (ui.view === 'currents' && !ui.overlay && (ui.currentsMenu || ui.currentsEdition)) { if (ui.currentsMenu) ui.currentsMenu = false; else ui.currentsEdition = ''; render(); return; }
     if (ui.view === 'movie-studio' && !ui.overlay && MovieStudio.back(ui)) { render(); return; }
-    if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return; }
-    if (ui.chromeReturn && ui.view === ui.chromeReturn.view && ui.sub === ui.chromeReturn.sub && !ui.overlay) { const back = ui.chromeReturn; ui.chromeReturn = null; openApp('chrome'); ui.sub = 'chrome-settings'; ui.chromePrefStack = back.stack; render(); return; }
-    if (ui.view === 'google-settings' && GMSSettings.back(ui)) { render(); return; }
-    if (ui.view === 'maps' && !ui.overlay && ui.mapsRoute && MapsRoute.back(mrContext())) return;
     if (ui.view === 'navigation' && !ui.overlay && ui.navRun) { ui.overlay = 'mr-exit'; renderOverlay(); return; }
     if (['navigation', 'local'].includes(ui.view) && !ui.overlay && JBExtraApps.back(ui)) { render(); return; }
-    // News & Weather: a settings dialog or nested screen, then the settings or the story page.
-    if (ui.view === 'news-weather' && ui.newsSub && !ui.overlay) { if (!(ui.newsSub === 'settings' && NewsPrefs.back(ui))) { ui.newsSub = ''; ui.nwpScreen = ''; } render(); return; }
     if (ui.view === 'settings' && ['a11y-magnification', 'a11y-shortcut'].includes(ui.sub) && !ui.overlay) { ui.sub = 'accessibility'; render(); return; }
     if (ui.view === 'calendar' && ui.sub === 'calendar-settings' && !ui.overlay) { if (CalendarPrefs.back(ui) === 'leave') { ui.sub = ''; ui.calPref = ''; } render(); return; }
     if (ui.view === 'email' && ui.sub === 'em-settings' && !ui.overlay) { if (ui.emPrefList || ui.emPrefEdit) { ui.emPrefList = ''; ui.emPrefEdit = ''; ui.emPrefTone = undefined; window.SystemSounds?.stop(); } else if (ui.emPref) ui.emPref = EmailPrefs.parent(ui.emPref); else ui.sub = ''; render(); return; }
@@ -886,14 +865,7 @@
     if (ui.view === 'play-store' && ui.marketSearching) { ui.marketSearching = false; render(); return; }
     if (ui.view === 'play-store' && ui.marketHistory?.length) { const prev = ui.marketHistory.pop(); ui.market = prev; render(); const list = viewport.querySelector('.jbp-scroll'); if (list) list.scrollTop = prev.scroll || 0; return; }
     if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return; }
-    if (ui.view === 'youtube' && !ui.overlay && JBYouTube.back(ytContext())) return;
-    if (ui.view === 'google-search' && ui.sub === 'settings' && !ui.overlay && JBSearchPrefs.back(gsContext())) return;
-    if (ui.view === 'youtube' && ui.sub === 'video' && ui.ytFrom === 'results') { ui.sub = 'results'; ui.ytFrom = ''; render(); return; }
-    if(ui.view==='keep' && KeepMore.back(keepMoreContext()))return;
     if(ui.view==='settings' && ui.kpSyncReturn && ui.sub==='sync-google'){ui.kpSyncReturn=false;openApp('keep',true);ui.kpScreen='settings';render();return;}
-    if (ui.view === 'keep' && ui.keepDialog) { ui.keepDialog = ''; render(); return; }
-    if (StockApps.APPS.includes(ui.view) && ui.sub) { if (ui.view === 'keep') saveKeepNote(true); ui.sub = ''; render(); return; }
-    if (ui.view === 'keep' && ui.keepArchived) { ui.keepArchived = false; render(); return; }
     // Chrome settings: dialogs first, then the page, then back to the browser.
     // Gmail settings: the dialogs, then the pages, then back to the mail.
     if (ui.view === 'gmail' && ui.sub === 'gm-settings' && GmailApp.prefBack(ui, {data, root: viewport, toast})) { render(); return; }
@@ -1066,9 +1038,6 @@
     } else if (ui.overlay === 'mr-exit') {
       const S = key => MapsRoute.S(mrContext(), key);
       overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog" role="dialog" aria-label="${safe(S('Exit navigation?'))}" data-no-translate><h3>${safe(S('Exit navigation?'))}</h3><div class="settings-dialog-actions"><button data-action="close-overlay">${safe(S('Cancel'))}</button><button data-action="mr-exit-ok">${safe(S('OK'))}</button></div></div>`;
-    } else if (ui.overlay === 'sa-menu') {
-      // The Google apps' action bar overflow (StockApps.menu: their menu XML's overflow items).
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${(ui.view === 'messenger' ? PlusMessenger.menu(messengerContext()) : ui.view === 'movie-studio' ? MovieStudio.menu(movieContext()) : StockApps.menu(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()})).map(item => `<button data-action="${item.action}"${item.id != null ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
     } else if (ui.overlay === 'phone-menu') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu phone-overflow"><button data-action="phone-add-contact">Add to contacts</button></div>`;
     } else if (ui.overlay === 'connectivity-menu') {
@@ -1648,35 +1617,12 @@
     const progress=viewport.querySelector('.music-progress');if(progress&&document.activeElement!==progress)progress.value=ui.music.position;
     const elapsed=viewport.querySelector('.music-elapsed');if(elapsed)elapsed.textContent=ICSMusic.time(ui.music.position);
   }
-  // Voice Search listens for three seconds, then asks to try again.
-  let voiceTimer = null;
-  function listenVoice() {
-    clearTimeout(voiceTimer); ui.voiceState = 'listening'; if (ui.view === 'voice-search') render();
-    voiceTimer = setTimeout(() => { ui.voiceState = 'retry'; if (ui.view === 'voice-search') render(); }, 3000);
-  }
   const keepMoreContext=()=>({data,ui,t:key=>i18n.t(key),locale:i18n.locale(),account:GmailApp.account,save,render,renderOverlay,saveNote:saveKeepNote,
     sync(){ui.kpScreen='';openApp('settings');ui.kpSyncReturn=true;ui.sub='sync-google';render();},
     website(url){ui.kpScreen='';openApp('chrome');navigateBrowser(url);},
     send(app,spec){ui.kpScreen='';ui.overlay='';renderOverlay();openApp(app);if(app==='gmail')composeGmail();else composeEmail();const draft=(app==='gmail'?data.gmailbox:data.mailbox).find(m=>m.id===ui.emailId);if(draft){draft.body=spec.text;draft.subject=spec.text.split('\n')[0]||'';if(spec.audio)draft.attachment={...clone(spec.audio),kind:'audio',vcard:true};else if(spec.photo)draft.attachment=clone(data.photos.find(p=>p.id===spec.photo));}save();render();}
   });
-  const keepCurrent = () => (data.keepNotes || []).find(item => item.id === ui.keepNote);
-  // Keeps the editor's text; on leaving, empty list items go and a note without text, items or picture is dropped.
-  function saveKeepNote(leaving) {
-    const area = viewport.querySelector('.keep-text'), note = keepCurrent();
-    if (!note) return;
-    if (area) note.text = area.value;
-    if (leaving && note.list) note.list = note.list.filter(item => item.text.trim());
-    if (leaving && !String(note.text || '').trim() && !(note.list || []).length && !note.photo && !note.audio) data.keepNotes = data.keepNotes.filter(item => item !== note);
-    save();
-  }
-  // A picture goes to the open note, or starts a new picture note from the browse bar.
-  function keepAttach(photoId, noteId) {
-    let note = (data.keepNotes || []).find(item => item.id === noteId);
-    if (!note) { note = {id: 'k' + Date.now(), text: '', color: 0}; data.keepNotes = [note, ...(data.keepNotes || [])]; }
-    note.photo = photoId; ui.keepNote = note.id; ui.sub = 'note'; ui.view = 'keep'; save(); render();
-  }
-  // Show / Hide checkboxes: lines become unchecked items; back to text drops the checked ones when asked to.
-  function keepToText(note, dropChecked) { note.text = note.list.filter(item => !(dropChecked && item.checked)).map(item => item.text).join('\n'); delete note.list; }
+  function saveKeepNote(...args) { return StoreHost.module('google-search').exports.saveKeepNote(storeContext(), ...args); }
   function tickPlayVideo(...args) { return StoreHost.module('play-music').exports.tickPlayVideo(storeContext(), ...args); }
   setInterval(tickPlayVideo, 1000);
   // Gmail 4.5.1: KitKat's UnifiedEmail screens on its own mailbox, folder, conversation and selection.
@@ -1763,27 +1709,6 @@
     if (ui.sub === 'em-settings') return EmailPrefs.render(data, ui, i18n.language, key => i18n.t(key), ICSEmail.account);
     return ICSEmail.render(emailContext());
   }
-  // Share contact via Email or Gmail: the app's compose with the contact card attached.
-  // Google Search's settings pages (jb-search-prefs.js); Location services is Google Settings' Location.
-  function gsContext() {
-    return {ui, data, t: key => i18n.t(key), locale: i18n.locale(), account: GmailApp.account, save, render,
-      unsupported: () => toast(i18n.t('This feature is not part of the simulator.')),
-      openLocation() { openApp('google-settings'); ui.sub = 'gms-location'; ui.gmsDialog = ''; render(); }};
-  }
-  // YouTube 4.5's watch page (jb-youtube.js): ACTION_SEND text/plain puts the subject and the link into the app's new message.
-  function ytContext() {
-    return {ui, data, t: key => i18n.t(key), locale: i18n.locale(), save, render, toast,
-      focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
-      closeOverlay() { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } },
-      unsupported: () => toast(i18n.t('This feature is not part of the simulator.')),
-      video: vid => StockApps.VIDEOS.find(v => v.id === vid),
-      share(app, subject, text) {
-        openApp(app);
-        if (app === 'gmail' || app === 'email') { if (app === 'gmail') composeGmail(); else composeEmail(); const d = (app === 'gmail' ? data.gmailbox : data.mailbox).find(m => m.id === ui.emailId); if (d) Object.assign(d, {subject, body: text + (d.body || '')}); }
-        else { ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); }
-        save(); render();
-      }};
-  }
   // Text shared from an app (Play Books' Share): a new Gmail or Email message with the subject and the text.
   function shareText(app, text, subject) {
     ui.overlay = ''; renderOverlay(); openApp(app); if (app === 'gmail') composeGmail(); else composeEmail();
@@ -1867,6 +1792,8 @@
     event.preventDefault();
     if (Date.now() < suppressClickUntil) return;
     const { action, id, app, url } = button.dataset;
+    // The jb-* modules' handlers that stood here, before the keyguard's filter below.
+    if (moduleHook('actionEarly', {event}, action, button)) return;
     if (action.startsWith('mmsp-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (MmsPrefs.handle(action, id, mmspContext())) return; }
     if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
     // Navigation's Contacts / Starred places pickers and Local's search and categories (jb-extra-apps.js).
@@ -1897,7 +1824,6 @@
       if(pending&&ui.view==='lock'){requestBouncer(pending);return;}
       if(!['back','alarm-dismiss','alarm-snooze','lock-media'].includes(action))return;
     }
-    if(action.startsWith('kp-') && KeepMore.handle(action,id,keepMoreContext()))return;
     // A store app's own controls and the host's dialog and menu (store-apps/legacy-host.js).
     if ((action.startsWith('sth-') || ui.view.startsWith('store-') && StoreHost.has(ui.view)) && StoreHost.action(action, button, storeContext())) return;
     // The Contacts editor (contact-editor.js): fields, types, photo and its dialogs.
@@ -1920,15 +1846,10 @@
       const result = PeopleIO.handle(action, id, {data, ui, t: key => i18n.t(key), locale: i18n.locale()});
       if (result) { if (result.save) save(); for (const title of result.notify || []) addNotification(title, ''); renderOverlay(); render(); if (result.toast) toast(result.toast); return; }
     }
-    if (ui.view === 'earth' && /^(earth|eps)-/.test(action)) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (EarthApp.handle(action, id, earthContext())) return; }
     if (ui.view === 'messenger' && action.startsWith('gpm-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (PlusMessenger.handle(action, id, messengerContext())) return; }
-    if (ui.view === 'google-plus' && action.startsWith('gpp-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (PlusPost.handle(action, id, plusContext())) return; }
     if (['currents', 'play-magazines'].includes(ui.view) && action.startsWith('nr-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } ui.kkxDrawer = false; ui.lpxDrawer = false; ui.magDrawer = false; ui.currentsMenu = false; if (NewsReader.handle(action, id, newsContext())) return; }
     if (ui.view === 'movie-studio' && action.startsWith('mst-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (MovieStudio.handle(action, id, movieContext())) return; }
-    if (action.startsWith('mps-') && window.MapsPrefs?.handle(action, id, mapsPrefsContext())) return;
     if (ui.view === 'messaging' && action.startsWith('jbma-') && JBMmsAttach.handle(action, id, jbmaContext())) return;
-    if (ui.view === 'youtube' && action.startsWith('yt4-') && JBYouTube.handle(action, id, ytContext())) return;
-    if (ui.view === 'google-search' && action.startsWith('gsp-') && JBSearchPrefs.handle(action, id, gsContext())) return;
     // The jb-* modules' cases, where they stood in this switch.
     if (moduleHook('action', {event}, action, button)) return;
     switch (action) {
@@ -2027,7 +1948,6 @@
         save(); render(); break;
       case 'widget-music-play': ui.musicActive=true;ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
       // The search box microphones open the image's voice search.
-      case 'voice-search': openApp('voice-search'); break;
       case 'lock-media': if (id === 'play') { ui.music.playing = !ui.music.playing; if (ui.music.playing && ui.music.position >= tracks[ui.music.track].duration) ui.music.position = 0; } else ICSMusic.step(ui.music, id === 'previous' ? -1 : 1); ui.musicTrack = ui.music.track; saveMusic(); render(); break;
       case 'lock-hint': screen.classList.add('lock-dragging'); setTimeout(() => { if (!pointerStart?.lockDrag) lockRelease(null); }, 1000); break;
       case 'shade': ui.overlay = ui.overlay === 'shade' ? '' : 'shade'; renderOverlay(); break;
@@ -2194,62 +2114,12 @@
       case 'browser-tab': ui.browserSession.active = Number(id); ui.sub = ''; ui.browserFind = undefined; saveBrowserState(); render(); break;
       // Google, Voice Search, Maps, Keep, YouTube, Google+, Earth, News & Weather, Google Settings
       // Google Settings' GMS pages (gms-settings.js).
-      case 'gms-open': ui.sub = `gms-${id}`; ui.gmsDialog = ''; render(); break;
-      case 'gms-toggle': { const s = GMSSettings.state(data); data.gms = {...s, [id]: !s[id]}; save(); render(); break; }
-      case 'gms-dialog': ui.gmsDialog = id; ui.gmsUnderstand = false; render(); break;
-      case 'gms-understand': ui.gmsUnderstand = !ui.gmsUnderstand; render(); break;
-      case 'gms-delete': ui.gmsDialog = ''; ui.gmsDeleting = true; render(); setTimeout(() => { ui.gmsDeleting = false; if (ui.sub === 'gms-history') render(); }, 1500); break;
-      case 'sa-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
-      case 'voice-listen': listenVoice(); break;
       case 'gel-overview-settings': ui.overlay = ''; renderOverlay(); openApp('google-search'); ui.sub = 'settings'; ui.gsPage = ''; render(); break;
       case 'google-now-toggle': data.googleNowOn = data.googleNowOn === false; save(); render(); break;
-      case 'maps-locate': ui.mapsQuery = ''; render(); break;
       // Maps 6.14: the feature switcher, Places (Local), Layers, Clear map, the zoom controls.
-      case 'maps-switcher': ui.mapsMenu = 'switcher'; ui.overlay = 'sa-menu'; renderOverlay(); break;
-      case 'maps-layers': ui.mapsMenu = 'layers'; ui.overlay = 'sa-menu'; renderOverlay(); break;
-      case 'maps-places': openApp('local'); break;
-      case 'earth-search-open': ui.earthSearching = true; render(); viewport.querySelector('.sa-earth-field input')?.focus(); break;
-      case 'earth-search-close': ui.earthSearching = false; render(); break;
-      case 'earth-clear': ui.overlay = ''; renderOverlay(); ui.earthQuery = ''; render(); break;
-      case 'gplus-refresh': ui.overlay = ''; renderOverlay(); render(); break;
-      case 'maps-feature': ui.overlay = ''; ui.mapsMenu = ''; renderOverlay(); if (id === 'local' || id === 'navigation') openApp(id); else { data.mapsLayer = id === 'traffic' ? 'traffic' : ''; save(); render(); } break;
-      case 'maps-layer': ui.overlay = ''; ui.mapsMenu = ''; renderOverlay(); data.mapsLayer = data.mapsLayer === id ? '' : id; save(); render(); break;
-      case 'maps-clear': ui.overlay = ''; renderOverlay(); ui.mapsQuery = ''; ui.mapsSearching = false; data.mapsLayer = ''; save(); render(); break;
-      case 'maps-zoom': { const map = viewport.querySelector('.sa-maps6-map .sa-map'); if (map) { ui.mapsZoom = Math.max(1, Math.min(3, (ui.mapsZoom || 1) * (Number(id) > 0 ? 1.4 : 1 / 1.4))); map.style.transform = `scale(${ui.mapsZoom})`; } break; }
-      case 'keep-open': ui.keepNote = id; ui.sub = 'note'; render(); viewport.querySelector('.keep-text')?.focus(); break;
-      case 'keep-delete': ui.overlay = ''; renderOverlay(); data.keepNotes = (data.keepNotes || []).filter(note => note.id !== ui.keepNote); ui.sub = ''; save(); render(); break;
       // Keep 1.0's menus: New note, the note color (cycled through the picker's colors), Archive, the column view, Archived notes.
-      case 'keep-new': { const note = {id: 'k' + Date.now(), text: '', color: 0}; data.keepNotes = [note, ...(data.keepNotes || [])]; ui.keepNote = note.id; ui.sub = 'note'; render(); viewport.querySelector('.keep-text')?.focus(); break; }
-      case 'keep-color': { const note = (data.keepNotes || []).find(item => item.id === ui.keepNote); if (note) { saveKeepNote(); note.color = ((note.color || 0) + 1) % 5; save(); render(); } break; }
-      case 'keep-archive': { ui.overlay = ''; renderOverlay(); const note = (data.keepNotes || []).find(item => item.id === ui.keepNote); if (note) { saveKeepNote(); note.archived = !note.archived; ui.sub = ''; save(); render(); } break; }
-      case 'keep-columns': ui.overlay = ''; renderOverlay(); data.keepSingle = !data.keepSingle; save(); render(); break;
-      case 'keep-refresh': ui.overlay = ''; renderOverlay(); render(); break;
       // List and picture notes (stock-apps.js keepEditor / keepDialog).
-      case 'keep-new-list': { const note = {id: 'k' + Date.now(), text: '', color: 0, list: []}; data.keepNotes = [note, ...(data.keepNotes || [])]; ui.keepNote = note.id; ui.sub = 'note'; render(); viewport.querySelector('.kp-ed-add input')?.focus(); break; }
-      case 'keep-li-check': { const item = keepCurrent()?.list?.[Number(id)]; if (item) { item.checked = !item.checked; save(); render(); } break; }
-      case 'keep-li-delete': { const note = keepCurrent(); if (note?.list) { note.list.splice(Number(id), 1); save(); render(); } break; }
-      case 'keep-checkboxes': { ui.overlay = ''; renderOverlay(); const note = keepCurrent(); if (!note) break; saveKeepNote(); if (!note.list) { note.list = String(note.text || '').split('\n').filter(line => line.trim()).map(text => ({text, checked: false})); note.text = ''; } else if (note.list.some(item => item.checked)) ui.keepDialog = 'hide-checkboxes'; else keepToText(note, false); save(); render(); break; }
-      case 'keep-hide-keep': case 'keep-hide-delete': { const note = keepCurrent(); ui.keepDialog = ''; if (note?.list) keepToText(note, action === 'keep-hide-delete'); save(); render(); break; }
-      case 'keep-photo-take': { ui.keepDialog = ''; saveKeepNote(); keepAttach(cameraShoot().id, ui.sub === 'note' ? ui.keepNote : ''); break; }
-      case 'keep-photo-remove': saveKeepNote(); ui.keepDialog = 'remove-photo'; render(); break;
-      case 'keep-photo-delete': { ui.keepDialog = ''; const note = keepCurrent(); if (note) { delete note.photo; save(); } render(); break; }
-      case 'keep-dialog-close': ui.keepDialog = ''; render(); break;
-      case 'keep-archived': ui.overlay = ''; renderOverlay(); ui.keepArchived = true; render(); break;
-      case 'yt-video': ui.ytFrom = ui.sub; ui.ytVideo = id; ui.ytPaused = false; ui.sub = 'video'; render(); break;
-      case 'yt-search-open': case 'yt-search-clear': ui.sub = 'search'; if (id !== 'keep') ui.ytQuery = ''; render(); viewport.querySelector('.yt-sv input')?.focus(); break;
-      case 'yt-toggle': ui.ytPaused = !ui.ytPaused; render(); break;
-      case 'yt-like': ui.overlay = ''; renderOverlay(); { const vid = id || ui.ytVideo, likes = data.ytLikes || []; data.ytLikes = likes.includes(vid) ? likes.filter(x => x !== vid) : [...likes, vid]; save(); render(); break; }
-      case 'gplus-plus': { const plus = data.gplusPlus || []; data.gplusPlus = plus.includes(id) ? plus.filter(x => x !== id) : [...plus, id]; save(); render(); break; }
-      case 'news-tab': ui.newsTab = id; render(); break;
-      case 'sa-menu': ui.mapsMenu = ''; ui.overlay = 'sa-menu'; renderOverlay(); break;
       // News & Weather: Refresh records the time the refresh status shows; Settings, the story page and Share story.
-      case 'sa-news-refresh': ui.overlay = ''; renderOverlay(); NewsPrefs.refresh(data, deviceDate().getTime()); save(); render(); toast(AndroidStrings.pick(window.StockStrings?.news?.['Updating news topics…'], i18n.language, 'Updating news topics…')); break;
-      case 'news-settings': ui.overlay = ''; renderOverlay(); ui.newsSub = 'settings'; ui.nwpScreen = 'root'; ui.nwpDialog = ''; render(); break;
-      case 'news-story': ui.newsSub = 'story'; ui.newsStory = id; render(); break;
-      case 'news-share': { ui.overlay = ''; renderOverlay(); const title = viewport.querySelector('.nwp-story h2')?.textContent || ''; openApp('messaging'); ui.sub = 'new'; messageDraft().body = title; save(); render(); break; }
-      case 'nwp-open': case 'nwp-toggle': case 'nwp-topic': case 'nwp-remove': case 'nwp-dialog': case 'nwp-cancel': case 'nwp-choose': case 'nwp-ok': case 'nwp-unsupported':
-        NewsPrefs.handle(action, id, {ui, data, lang: i18n.language, save, render, input: () => viewport.querySelector('[data-nwp-input]')?.value, unsupported: () => toast(i18n.t('This feature is not part of the simulator.'))}); break;
-      case 'maps-search-open': ui.mapsSearching = true; render(); viewport.querySelector('.sa-maps6-search input')?.focus(); break;
       case 'kkx-unavailable': toast(i18n.t('This feature is not part of the simulator.')); break;
       case 'jbx-tab': ui.jbxMagazines = id; ui.magDrawer = false; render(); break;
       case 'play-store-open': ui.magDrawer = false; openApp('play-store'); break;
@@ -2556,11 +2426,6 @@
       case 'web-search': navigateBrowser(`search:${values.get('query')}`); break;
       case 'chrome-history-search': ui.chromeHistoryQuery = String(values.get('query') || '').trim(); render(); break;
       case 'mms-search': ui.mmsSearch = String(values.get('query') || '').trim(); render(); break;
-      case 'maps-search': ui.mapsQuery = String(values.get('query') || '').trim().slice(0, 60); window.MapsPrefs?.remember(data, ui.mapsQuery); save(); render(); break;
-      case 'yt-search': { const query = String(values.get('query') || '').trim(); if (!query) return; JBYouTube.searched(query, data); save(); ui.ytQuery = query; ui.sub = 'results'; render(); break; }
-      case 'keep-li-add': { const text = String(values.get('text') || '').trim(), note = keepCurrent(); if (!text || !note?.list) return; note.list.push({text, checked: false}); save(); render(); viewport.querySelector('.kp-ed-add input')?.focus(); break; }
-      case 'keep-add': { const text = String(values.get('text') || '').trim(); if (!text) return; data.keepNotes = [{id: 'k' + Date.now(), text, color: (data.keepNotes || []).length % 5}, ...(data.keepNotes || [])]; save(); render(); break; }
-      case 'earth-search': ui.earthSearching = false; EarthApp.search(values.get('query'), earthContext()); render(); break;
       case 'hg-new': { const target = ICSMessaging.recipient(values.get('recipient'), data.contacts); if (!target) { toast('Enter a contact name or valid phone number'); return; } pickHangout(target.key); break; }
       case 'mms-send': {
         const draft = messageDraft(), target = ui.sub === 'thread' ? {key:ui.thread} : ICSMessaging.recipient(draft.chip ? draft.recipient : values.get('recipient'),data.contacts);
@@ -2615,8 +2480,6 @@
     if (event.target.matches('[data-tzp-search]') && ui.tzp) { TimeZonePicker.input(ui.tzp, event.target.value, tzpContext()); renderTzPicker(true); return; }
     if (event.target.matches('[data-pa-search]')) { ui.paQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-pa-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
     if (event.target.matches('[data-gmail-signature]')) { ui.gmSignature = event.target.value; return; }
-    if (event.target.matches('[data-keep-li]')) { const item = keepCurrent()?.list?.[Number(event.target.dataset.keepLi)]; if (item) { item.text = event.target.value; save(); } return; }
-    if (event.target.matches('.keep-text')) { const note = (data.keepNotes || []).find(item => item.id === ui.keepNote); if (note) { note.text = event.target.value; save(); } return; }
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
     if(event.target.dataset.field==='data-cycle'){ui.dataCycle=event.target.value;render();return;}
     if(event.target.closest('.email-compose')&&event.target.name){const item=data.mailbox.find(item=>item.id===ui.emailId);if(item){item[event.target.name]=event.target.value;save();}return;}
