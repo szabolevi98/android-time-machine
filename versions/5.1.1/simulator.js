@@ -801,7 +801,7 @@
     if ((action.startsWith('sth-') || StoreHost.has(ui.view)) && StoreHost.action(action, button, storeContext())) return;
     // The Phone app's Settings (lp-dialer-prefs.js).
     // The screens' own buttons (lp-*.js modules).
-    if (LP.click(action, button, event)) return;
+    if (LP.dispatchClick(action, button, event)) return;
     switch (action) {
       case 'open-app': if (GEL_UNSIMULATED.includes(app)) { toast(i18n.t('This app is not part of the simulator.')); break; } {
         const icon = button.closest('.launcher-icon, .drawer-app, .dock-app') || button;
@@ -861,14 +861,14 @@
     if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, lp.mrContext()); return; }
     if(form.dataset.form==='folder-name'){event.target.querySelector('input')?.blur();render();return;}
     // The screens' own forms (lp-*.js modules).
-    if (LP.submit(form.dataset.form, values, event, form)) return;
+    if (LP.dispatchSubmit(form.dataset.form, values, event, form)) return;
     switch (form.dataset.form) {
       default: break;
     }
   });
   document.addEventListener('input', event => {
     // The screens' own fields (lp-*.js modules).
-    if (LP.input(event)) return;
+    if (LP.dispatchInput(event)) return;
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);delete folder.nameKey;save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
   });
 

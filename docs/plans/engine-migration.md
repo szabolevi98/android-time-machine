@@ -39,6 +39,13 @@ until the old one is empty).
 Order: 2.3.6 first (it already has `GBApps.register` for its Google apps, which folds into `GB`), then 4.0.4, 4.3,
 4.4.4, 5.1.1.
 
+## Target
+
+Owner, 2026-11-28: no single shared core; each version keeps its own core, but the eight must look alike. So every
+`<pfx>-core.js` follows ec-core.js's layout (header with the hook list, the saved state and `ui`, the context `c`,
+render / renderOverlay, open / home / back, the click, form and key dispatch, the device clock, the site controls),
+and modules use the same hook names as EC / MM / NG.
+
 ## Rules
 
 - No behaviour changes on the way: a step moves code, it does not fix or redesign. A bug found on the way is fixed in

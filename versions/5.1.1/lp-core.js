@@ -20,7 +20,8 @@ window.LP = window.StoreHost;
   add('kernel', getters => { Object.defineProperties(live, Object.getOwnPropertyDescriptors(getters)); });
   // A screen shared by several views (the Play apps) is defined once under all of their ids.
   add('start', () => { for (const [id, factory] of defined) { const spec = factory(live, live); for (const one of [id].flat()) LP.register(one, spec); } });
-  const specs = () => [...new Set(LP.ids().map(id => LP.module(id)))];
+  // The version's own screens (the store apps answer the host's view-scoped hooks instead).
+  const specs = () => [...new Set(LP.ids().filter(id => !id.startsWith('store-')).map(id => LP.module(id)))];
   // A screen's own overlay (ui.overlay names it): true when a module drew it into root.
   add('drawOverlay', (name, root) => {
     for (const m of specs()) { const draw = m.overlays?.[name]; if (draw) { draw(root); return true; } }
@@ -28,16 +29,16 @@ window.LP = window.StoreHost;
     for (const m of specs()) if (m.overlay?.(name, root)) return true;
     return false;
   });
-  add('click', (action, button, event) => {
+  add('dispatchClick', (action, button, event) => {
     for (const m of specs()) if (m.click?.(action, button, event)) return true;
     return false;
   });
   // A form's submit (data-form names it) and a field's input: true when a module took it.
-  add('submit', (name, values, event, form) => {
+  add('dispatchSubmit', (name, values, event, form) => {
     for (const m of specs()) if (m.submit?.(name, values, event, form)) return true;
     return false;
   });
-  add('input', event => {
+  add('dispatchInput', event => {
     for (const m of specs()) if (m.input?.(event)) return true;
     return false;
   });

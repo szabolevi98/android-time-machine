@@ -13,7 +13,7 @@ the module core, screen by screen, until it is gone.
     A binding that is reassigned (`data` on Reset, `pointerStart`, `suppressClickUntil`) is read as `lp.<name>`;
     the others are destructured once. A function a module shares with the core or other modules is added to `lp`
     (`Object.assign(lp, {...})`) and called as `lp.<name>()` there.
-  - `LP.click / LP.submit / LP.input / LP.drawOverlay`: the click switch, the submit switch, the input handler and
+  - `LP.dispatchClick / dispatchSubmit / dispatchInput / drawOverlay`: the click switch, the submit switch, the input handler and
     renderOverlay offer their event to the modules first, at the place the moved cases were (the switches' cases
     leave whole, so the order cannot change).
 - The code itself moves unchanged (a scratch tool cuts the statements, switch cases and handler blocks by their syntax
