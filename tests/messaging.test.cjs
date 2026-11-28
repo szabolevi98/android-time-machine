@@ -64,7 +64,7 @@ for (const [v, cell] of [['4.0.4', false], ['4.3', true]]) {
   assert.equal(old.window.ICSMessaging.suggestions, undefined);
 }
 // Gingerbread draws Messaging with gb-mms.js; the ICS overlay is gone and messaging.js keeps the shared helpers.
-assert.doesNotMatch(fs.readFileSync('versions/2.3.6/simulator.js','utf8'), /function renderMessageOverlay/);
+assert.doesNotMatch(require('./lib/engine-source.cjs')('2.3.6'), /function renderMessageOverlay/);
 const gb = {window:{}}; vm.runInNewContext(fs.readFileSync('versions/2.3.6/messaging.js','utf8'), gb);
 assert.equal(gb.window.ICSMessaging.render, undefined);
 assert.equal(typeof gb.window.ICSMessaging.threads, 'function');

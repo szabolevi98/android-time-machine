@@ -10,5 +10,5 @@ assert.ok(!V.text('en','personalization_popup_message').includes('START_LINK'));
 const ctx=lang=>({settings:{},lang,t:k=>k,about:{},cred:{}});
 const voice=G.render('voice',ctx('en')).html;assert.ok(voice.includes('Voice input')&&voice.includes("Settings for &#39;Google&#39;")&&voice.includes('Voice output'));
 const rec=G.render('voice-recognizer',ctx('hu')).html;assert.ok(rec.includes('Google voice recognition settings')&&rec.includes('Default - Hungarian (Hungary)')&&rec.includes('Moderate — Filter explicit images only<br>Applies only to Google search by voice')&&rec.includes('gbvs-personal'));
-const sim=fs.readFileSync(dir+'simulator.js','utf8');assert.ok(sim.includes("case 'voice-search': openApp('voice-search'); break;")&&!sim.includes('Voice search unavailable offline'));
+const sim=require('./lib/engine-source.cjs')('2.3.6');assert.ok(sim.includes("case 'voice-search': openApp('voice-search'); break;")&&!sim.includes('Voice search unavailable offline'));
 console.log('gb-voice-settings ok');

@@ -96,6 +96,6 @@ const load=(v,files)=>{const context={window:{}};for(const f of files)vm.runInNe
   m.handle('bk-typeface',null,ctx);assert.equal(ui.dlg,'typeface');const d=m.dialog('typeface',ctx);assert.equal(d.items.map(i=>i.title).join(),'Droid Sans,Droid Serif,Vollkorn,Sorts Mill Goudy');assert.equal(d.selected,1);
   m.handle('bk-typeface-set','Vollkorn',ctx);assert.ok(m.back(ctx));html=m.render(ctx);
   assert.ok(html.includes('bk-reader night')&&html.includes('font-size:calc(42.667 * var(--dp))')&&html.includes("'BK Vollkorn'")&&html.includes('text-align:justify'));
-  assert.ok(fs.readFileSync('versions/2.3.6/simulator.js','utf8').includes('[data-bk-bright]'));
+  assert.ok(require('./lib/engine-source.cjs')('2.3.6').includes('[data-bk-bright]'));
 }
 console.log('books-reader ok');

@@ -3,7 +3,7 @@ Music classes in Google's build), in English, Hungarian, German, French and Span
 the image extracted (see docs/tools/extract-image.py and docs/sources.md):
     python docs/tools/gb-music-strings.py
 The output keeps the docs/tools/gb-strings.py shape, window.GBStrings.music = {strings: {key: {en, hu, ...}}, plurals: {key:
-{en: {one, other}, ...}}}; music.js, the dialogs in simulator.js and the search settings read it."""
+{en: {one, other}, ...}}}; music.js, gb-music.js's dialogs and the search settings read it."""
 import json, re
 from loguru import logger; logger.remove()
 from androguard.core.apk import APK
