@@ -1,3 +1,4 @@
+const engineSource=require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Email's server screens (T09): validateFields (user name and password, a server name, a port 1-65535; outgoing
 // without Require sign-in needs no user), the ports a security type sets, and no stored password.
@@ -15,7 +16,7 @@ for(const v of ['4.0.4','4.3','4.4.4','5.1.1']){
   assert.equal(s.passwordSet,true);assert.equal('password' in s,false);assert.equal(s.server,'mail.example.org');
   const src=fs.readFileSync(`versions/${v}/email-prefs.js`,'utf8');
   assert.ok(src.includes("PORTS = {incoming: [143, 993], outgoing: [587, 465]}"),v);
-  assert.ok(fs.readFileSync(`versions/${v}/simulator.js`,'utf8').includes("action.startsWith('empx-') && EmailPrefs.handle("),v);
+  assert.ok(engineSource(v).includes("action.startsWith('empx-') && EmailPrefs.handle("),v);
 }
 {
   const w={window:{GBStrings:{}},document};w.window.window=w.window;w.AndroidStrings={resources:()=>({t:k=>k,array:()=>[]})};

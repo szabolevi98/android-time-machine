@@ -1,3 +1,4 @@
+const engineSource=require('./lib/engine-source.cjs');
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Email app settings (audit step 5): generated from each image's EmailGoogle preference XMLs (docs/tools/email-prefs.py).
@@ -15,7 +16,7 @@ for(const [v,version,sig,first]of [['4.0.4','4.1','\n','auto_advance'],['4.3','4
   assert.match(P.render({},{emPref:'general'},'hu',t,acct),/Általános|Automatikus/);
   assert.equal(P.signatureBody({emailPrefs:{account_signature:'Regards'}}),sig+'Regards');assert.equal(P.signatureBody({}),'');
   assert.equal(P.value({emailPrefs:{account_sync_email:false}},'account_sync_email',acct),false);
-  const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');
+  const sim=engineSource(v);
   for(const a of ['emailpref-page','emailpref-toggle','emailpref-pick','emailpref-save'])assert.ok(sim.includes(`case '${a}'`),`${v} ${a}`);
   assert.ok(fs.readFileSync(`versions/${v}/index.html`,'utf8').includes('email-prefs.js?v='),v);
 }

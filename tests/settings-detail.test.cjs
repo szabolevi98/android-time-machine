@@ -8,8 +8,15 @@ const defaults={homePages:[Array(16).fill(null)],dock:['phone',null,'apps',null,
 ctx.defaultData=defaults;ctx.emailData=[{id:1,from:'Android',subject:'Welcome',body:'Hello'}];ctx.clone=value=>JSON.parse(JSON.stringify(value));
 ctx.data={...ctx.clone(defaults),calcHistory:[{expression:'1+1'}],playRatings:{demo:5},messageDrafts:{new:{body:'Draft'}},callHistory:[{number:'123'}]};
 ctx.ui={recent:['calculator','play-store'],recentState:{},recentSnapshots:{},music:ctx.ICSMusic.restore(),musicPlaying:false};ctx.save=()=>{};ctx.syncBrowserState=()=>{};ctx.home=()=>{};ctx.saveMusic=()=>{ctx.data.music=ctx.clone(ctx.ui.music);};
-const source=fs.readFileSync('versions/4.0.4/simulator.js','utf8');
-vm.runInContext(source.slice(source.indexOf('  function resetSimulator()'),source.indexOf('  function operateCalculator(')),ctx);
+// The apps' Clear data is their module's (versions/4.0.4/ics-*.js, hosted by store-apps/legacy-host.js as ICS).
+ctx.setInterval=()=>0;ctx.document={addEventListener(){}};vm.runInContext(fs.readFileSync('store-apps/legacy-host.js','utf8'),ctx);ctx.StoreHost=ctx.window.StoreHost;
+vm.runInContext(fs.readFileSync('versions/4.0.4/ics-core.js','utf8'),ctx);ctx.ICS=ctx.window.ICS;
+for(const name of ['calculator','phone','clock','calendar','music','browser','people','messaging','email','gallery','camera','play-store'])vm.runInContext(fs.readFileSync(`versions/4.0.4/ics-${name}.js`,'utf8'),ctx);
+ctx.storeContext=()=>({get data(){return ctx.data;},ui:ctx.ui,defaults,emailSeed:ctx.emailData,clone:ctx.clone,save:ctx.save,saveMusic:ctx.saveMusic,syncBrowserState:ctx.syncBrowserState});
+// resetSimulator and clearAppData: 4.0.4's core (ics-core.js; simulator.js until it moved).
+const source=fs.readFileSync(fs.existsSync('versions/4.0.4/simulator.js')?'versions/4.0.4/simulator.js':'versions/4.0.4/ics-core.js','utf8');
+const from=source.indexOf('function resetSimulator()'),to=source.indexOf('\n    }\n',source.indexOf('function clearAppData('))+7;
+vm.runInContext(source.slice(from,to),ctx);
 ctx.clearAppData('calculator');assert.equal(ctx.data.calcHistory.length,0);
 ctx.clearAppData('play-store');assert.equal(ctx.data.playRatings,undefined);
 ctx.clearAppData('messaging');assert.equal(Object.keys(ctx.data.messageDrafts).length,0);assert.equal(ctx.data.messages[0].body,'Hello');
