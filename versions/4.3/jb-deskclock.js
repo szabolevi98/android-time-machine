@@ -322,6 +322,8 @@
       switch (form.dataset.form) {
         case 'alarm-tone': ui.alarmDraft.tone=String(values.get('tone'));ui.overlay='';jbaCommit();render();break;
         case 'alarm-label': ui.alarmDraft.label=String(values.get('label')||'').trim();ui.overlay='';jbaCommit();render();break;
+        case 'alarm-time': ui.alarmDraft.time=String(values.get('hour')).padStart(2,'0')+':'+String(values.get('minute')).padStart(2,'0'); ui.overlay='';render();break;
+        case 'alarm-days': ui.alarmDraft.days=values.getAll('days').map(Number);ui.overlay='';render();break;
         default: return false;
       }
       return true;
