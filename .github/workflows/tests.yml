@@ -1,13 +1,18 @@
 name: Tests
 
+# Every push: the module tests and a quick browser smoke check. The full browser flows run every night and on demand
+# (Actions › Tests › Run workflow), so a long series of small commits does not wait an hour each.
 on:
   push:
   pull_request:
+  schedule:
+    - cron: '30 4 * * *'
+  workflow_dispatch:
 
-# A newer push to the same branch replaces the run still going.
+# A newer push to the same branch replaces the run still going (the nightly and manual runs are left alone).
 concurrency:
-  group: tests-${{ github.ref }}
-  cancel-in-progress: true
+  group: tests-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
 
 jobs:
   # The module tests (tests/*.cjs), on every push.
@@ -28,9 +33,10 @@ jobs:
         run: node docs/tools/test-ci.mjs
 
   # Whether the push can change what the browser sees: a push of only documentation, reports, tools or module tests
-  # skips the browser flows.
+  # skips the smoke check.
   changes:
     name: Changed files
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     outputs:
       browser: ${{ steps.diff.outputs.browser }}
@@ -53,17 +59,40 @@ jobs:
             echo "browser=true" >> "$GITHUB_OUTPUT"
           fi
 
-  # The browser flows (what `npm run test:browser` runs), split into parallel jobs: one per version and one for the
-  # flows that are not per version (tests/browser/ci.mjs).
-  browser:
-    name: Browser ${{ matrix.job }}
+  # Every push: all eight versions boot and their basic flows work (tests/browser/ci.mjs smoke, a few minutes).
+  smoke:
+    name: Browser smoke
     needs: changes
     if: needs.changes.outputs.browser == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Boots and basic flows
+        run: |
+          python3 -m http.server 8090 --bind 127.0.0.1 > /tmp/server.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8090/ > /dev/null && break; sleep 1; done
+          BASE=http://127.0.0.1:8090 CHROME=google-chrome node tests/browser/ci.mjs smoke
+      - name: Screenshots of failed flows
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-smoke
+          path: tests/browser/artifacts/
+          if-no-files-found: ignore
+
+  # Nightly and on demand: the full browser flows (what `npm run test:browser` runs), split into parallel jobs: one per
+  # version (5.1.1's cases in two), and one for the flows that are not per version (tests/browser/ci.mjs).
+  browser:
+    name: Browser ${{ matrix.job }}
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        job: ['2.1', '2.3.6', '4.0.4', '4.3', '4.4.4', '5.1.1', '6.0.1', '7.1.2', 'shared']
+        job: ['2.1', '2.3.6', '4.0.4', '4.3', '4.4.4', '5.1.1', '5.1.1b', '6.0.1', '7.1.2', 'shared']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

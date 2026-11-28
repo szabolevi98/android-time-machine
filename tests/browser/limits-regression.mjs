@@ -4304,7 +4304,9 @@ const args = process.argv.slice(2), picked =args.filter(a => /^T\d+/i.test(a)).m
 const WIDTHS = args.includes('--desktop') ? ['desktop'] : args.includes('--phone') ? ['phone'] : ['desktop', 'phone'];
 const only = args.includes('--version') ? args[args.indexOf('--version') + 1] : '';
 const onlyName=args.includes('--name')?args[args.indexOf('--name')+1]:'';
-const cases = CASES.filter(c => (!onlyName||c.name.includes(onlyName)) && (!picked.length || picked.includes(c.id)) && (!only || c.version === only));
+// --part k/n runs every n-th of the chosen cases from the k-th (CI splits the longest version into parallel jobs).
+const [partK, partN] = args.includes('--part') ? args[args.indexOf('--part') + 1].split('/').map(Number) : [1, 1];
+const cases = CASES.filter(c => (!onlyName||c.name.includes(onlyName)) && (!picked.length || picked.includes(c.id)) && (!only || c.version === only)).filter((c, i) => i % partN === partK - 1);
 if (!cases.length) { console.log(picked.length ? `No case for ${picked.join(', ')}` : 'No case yet'); process.exit(picked.length ? 1 : 0); }
 
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'limits-')), port = 9700 + Math.floor(Math.random() * 600);
