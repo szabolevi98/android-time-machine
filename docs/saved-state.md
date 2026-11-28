@@ -15,7 +15,7 @@ point 13).
 
 ## What a save holds
 
-One JSON object: `defaultData` of the version's `simulator.js` with the visitor's changes. The top-level fields:
+One JSON object: `defaultData` of the version's `simulator.js` (2.3.6: `gb-core.js`) with the visitor's changes. The top-level fields:
 
 - desktop: `wallpaper` (index into the version's own wallpaper list; a picked photo is `customWallpaper` /
   `customWallpaperPhoto` with its own slot, `'custom'` on 4.3), `liveWallpaper` / `lwPrefs`, `homePages` (one array of cells per page; a cell is an app id or `null`),

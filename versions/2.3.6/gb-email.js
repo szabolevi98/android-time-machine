@@ -122,3 +122,122 @@
     : {title: text(lang, 'account_setup_failed_dlg_title'), icon: 'ic_dialog_alert', message: text(lang, 'account_setup_failed_dlg_server_message'), buttons: [{action: 'close-overlay', title: text(lang, 'account_setup_failed_dlg_edit_details_action')}]};
   window.GBEmail = {ACCOUNT, MAILBOXES, text, folderName, stamp, render, menu, dialog, quote, setup, setupDialog, validAddress};
 })();
+
+/* Email on Android 2.3.6 (Email.apk of GRK39F) as a module (docs/plans/engine-migration.md): the message list with its
+   folders, selection and long press, the message, MessageCompose (Back keeps a draft), the mailboxes and accounts, the
+   account setup with its offline check, search, the Menu key, the dialogs and Clear data. Other apps start a message
+   through compose(c, source, forward, to, all) (the shell's composeEmail). */
+(() => {
+  'use strict';
+  const i18n = window.AndroidI18n;
+  // The demo mailbox (ICSEmail.restore keeps the visitor's changes to it).
+  const emailData = [
+    { id: 1, from: 'Android Team', subject: 'Welcome to Android', body: 'Your Nexus S is ready. Explore Android 2.3, customize your home screen, and discover the little surprise hidden in Settings.', time: '9:41 AM' },
+    { id: 2, from: 'Alex Morgan', subject: 'Photos from the weekend', body: 'I added a few pictures to our album. Take a look when you have a moment!', time: 'Yesterday' },
+    { id: 3, from: 'Calendar', subject: 'Coffee with Alex', body: 'Reminder: Coffee with Alex at 11:00.', time: 'Yesterday' }
+  ];
+  // The shell's bindings the screen's code uses, and its helpers on them.
+  function shell(c) {
+    const {data, ui, save, render, renderOverlay, toast, viewport, deviceDate} = c;
+    function gbEmailContext() {
+      return {lang: i18n.language, locale: i18n.locale(), hour24: !!data.settings.hour24, now: deviceDate(), sub: ui.sub, folder: ui.emailFolder || 'Inbox', mail: data.mailbox, item: data.mailbox.find(item => item.id === ui.emailId), selected: ui.emailSelected || [], query: ui.emailQuery, cc: !!ui.emailCc, error: '', photos: data.photos, target: data.mailbox.find(item => item.id === ui.gbEmTarget)};
+    }
+    const emailText = key => GBEmail.text(i18n.language, key);
+    function gbEmDialog(kind) { ui.gbEmDialog = kind; ui.overlay = 'gb-dialog-email'; renderOverlay(); }
+    // The compose form's fields are kept on the draft before menus, attachments or leaving the screen.
+    function gbEmSync() {
+      const form = viewport.querySelector('.gbem-compose'), item = data.mailbox.find(m => m.id === ui.emailId); if (!form || !item) return;
+      for (const key of ['to', 'cc', 'bcc', 'subject', 'body']) if (form.elements[key]) item[key] = String(form.elements[key].value);
+    }
+    function gbEmLeaveCompose(message) { ui.sub = ''; ui.overlay = ''; ui.emailCc = false; save(); render(); if (message) toast(emailText(message)); }
+    const composeEmail = (...args) => compose(c, ...args);
+    return {data, ui, save, render, renderOverlay, toast, viewport, clone: c.clone, gbEmailContext, emailText, gbEmDialog, gbEmSync, gbEmLeaveCompose, composeEmail};
+  }
+  function compose(c, ...args) {
+    const {data, ui, save, render} = c;
+    function composeEmail(source=null,forward=false,to='',all=false) {
+      const draft=ICSEmail.draft(source,forward);if(to)draft.to=to;
+      // MessageCompose keeps the original below the "Quoted text" bar; reply all adds the other recipients as Cc.
+      if(source){draft.quoted=GBEmail.quote(source,forward,i18n.language);draft.body='';if(all&&!forward)draft.cc=ICSEmail.recipients([source.to,source.cc].join(',')).filter(address=>address!==ICSEmail.account&&address!==draft.to).join(', ');}
+      data.mailbox.unshift(draft);ui.emailId=draft.id;ui.emailCc=false;ui.emailError='';ui.overlay='';ui.sub='compose';save();render();
+    }
+    composeEmail(...args);
+  }
+  window.GB?.register('email', {
+    demo: emailData,
+    compose,
+    render(c) { const ui = c.ui; if (ui.gbEmSetup) return GBEmail.setup({lang: i18n.language, ...ui.gbEmSetup}); return GBEmail.render(shell(c).gbEmailContext()); },
+    // A long press on a message opens its context menu.
+    mount(c, root) { GB.hold(c, root, '[data-gbem-item]', held => { c.ui.gbEmTarget = held.dataset.gbemItem; shell(c).gbEmDialog('context'); }, {rightClick: false}); },
+    // The account setup has no menu; MessageCompose keeps its fields first.
+    menu(c) { if (c.ui.gbEmSetup) return; const {gbEmSync, gbEmailContext} = shell(c); gbEmSync(); c.gbMenu(GBEmail.menu(gbEmailContext())); },
+    // The setup's check ("setup:checking", "setup:failed") and Email's own dialogs.
+    dialog(kind, c) { if (kind.startsWith('setup:')) return GBEmail.setupDialog(kind.slice(6), i18n.language); return GBEmail.dialog(kind, shell(c).gbEmailContext()); },
+    // The account setup closes; MessageCompose saves a draft (or drops an empty one).
+    back(c) {
+      const {data, ui, render, gbEmSync, gbEmLeaveCompose} = shell(c);
+      if (ui.gbEmSetup) { ui.gbEmSetup = null; render(); return true; }
+      if (ui.sub === 'compose') { gbEmSync(); const item = data.mailbox.find(m => m.id === ui.emailId); if (item && [item.to, item.subject, item.body].some(v => String(v || '').trim())) { item.folder = 'Drafts'; gbEmLeaveCompose('message_saved_toast'); } else { data.mailbox = data.mailbox.filter(m => m.id !== ui.emailId); gbEmLeaveCompose(''); } return true; }
+      return false;
+    },
+    action(name, el, c) {
+      const id = el.dataset.id, action = name, {data, ui, save, render, renderOverlay, toast, viewport, clone, emailText, gbEmDialog, gbEmSync, gbEmLeaveCompose, composeEmail} = shell(c);
+      switch (name) {
+        case 'gbem-add-account': ui.overlay = ''; ui.gbEmSetup = {email: '', def: false}; render(); viewport.querySelector('.gbem-setup [name=email]')?.focus(); break;
+        case 'gbem-setup-manual': toast('This feature is not part of the simulator.'); break;
+        case 'gbem-setup-cancel': clearTimeout(ui.gbEmSetupTimer); ui.overlay = ''; renderOverlay(); break;
+        case 'email-read': {const item=data.mailbox.find(item=>item.id===id);if(!item)break;ui.emailId=id;item.read=true;ui.sub=item.folder==='Drafts'?'compose':'read';ui.emailError='';save();render();break;}
+        case 'email-compose': composeEmail();break;
+        case 'gbem-mailboxes': ui.sub = 'mailboxes'; ui.overlay = ''; render(); break;
+        case 'gbem-accounts': ui.sub = 'accounts'; ui.overlay = ''; render(); break;
+        case 'gbem-reply-all': composeEmail(data.mailbox.find(item => item.id === ui.emailId), false, '', true); break;
+        case 'gbem-selected-star': { const items = data.mailbox.filter(item => (ui.emailSelected || []).includes(item.id)), on = !items.every(item => item.starred); items.forEach(item => item.starred = on); save(); render(); break; }
+        case 'gbem-save-draft': { gbEmSync(); const item = data.mailbox.find(m => m.id === ui.emailId); if (item) item.folder = 'Drafts'; gbEmLeaveCompose('message_saved_toast'); break; }
+        case 'gbem-discard': data.mailbox = data.mailbox.filter(item => item.id !== ui.emailId); gbEmLeaveCompose('message_discarded_toast'); break;
+        case 'gbem-send': ui.overlay = ''; renderOverlay(); viewport.querySelector('.gbem-compose')?.requestSubmit(); break;
+        case 'gbem-drop-quoted': { gbEmSync(); const item = data.mailbox.find(m => m.id === ui.emailId); if (item) delete item.quoted; render(); break; }
+        case 'gbem-context-delete': { const item = data.mailbox.find(m => m.id === id); if (!item) break; if (item.folder === 'Drafts' || item.folder === 'Trash') data.mailbox = data.mailbox.filter(m => m.id !== id); else ICSEmail.trash(data.mailbox, [id]); ui.overlay = ''; save(); render(); toast(emailText(item.folder === 'Drafts' ? 'message_discarded_toast' : 'message_deleted_toast_one')); break; }
+        case 'gbem-context-reply': case 'gbem-context-reply-all': case 'gbem-context-forward': ui.overlay = ''; composeEmail(data.mailbox.find(m => m.id === id), action === 'gbem-context-forward', '', action === 'gbem-context-reply-all'); break;
+        case 'gbem-context-read': { const item = data.mailbox.find(m => m.id === id); if (item) item.read = !item.read; ui.overlay = ''; save(); render(); break; }
+        case 'email-reply': case 'email-forward': composeEmail(data.mailbox.find(item=>item.id===ui.emailId),action==='email-forward');break;
+        case 'email-folder': ui.emailFolder=id;ui.sub='';ui.emailQuery=undefined;ui.emailSelected=[];ui.overlay='';render();break;
+        case 'email-star': {const item=data.mailbox.find(item=>item.id===id);if(item)item.starred=!item.starred;save();render();break;}
+        case 'email-select': ui.emailSelected ||= [];ui.emailSelected=ui.emailSelected.includes(id)?ui.emailSelected.filter(key=>key!==id):[...ui.emailSelected,id];render();break;
+        case 'email-clear-selection': ui.emailSelected=[];render();break;
+        case 'email-trash': case 'email-selected-trash': {const ids=action==='email-trash'?[ui.emailId]:ui.emailSelected||[];ICSEmail.trash(data.mailbox,ids);ui.sub='';ui.overlay='';ui.emailSelected=[];save();render();toast(emailText(ids.length>1?'message_deleted_toast_other':'message_deleted_toast_one'));break;}
+        case 'email-restore': case 'email-selected-restore': {const ids=action==='email-restore'?[ui.emailId]:ui.emailSelected||[];data.mailbox.filter(item=>ids.includes(item.id)).forEach(ICSEmail.untrash);ui.sub='';ui.emailSelected=[];save();render();break;}
+        case 'email-selected-read': data.mailbox.filter(item=>(ui.emailSelected||[]).includes(item.id)).forEach(item=>item.read=true);ui.emailSelected=[];save();render();break;
+        case 'email-unread': {const item=data.mailbox.find(item=>item.id===ui.emailId);if(item)item.read=false;ui.sub='';ui.overlay='';save();render();break;}
+        case 'email-search': ui.emailQuery='';render();viewport.querySelector('[data-form="email-search"] input')?.focus();break;
+        case 'email-refresh': toast('Local mailbox is up to date');break;
+        case 'email-cc': gbEmSync();ui.emailCc=true;ui.overlay='';render();break;
+        case 'email-attach': gbEmSync();gbEmDialog('attach');break;
+        case 'email-attach-photo': {const item=data.mailbox.find(item=>item.id===ui.emailId),photo=data.photos.find(photo=>photo.id===Number(id));if(item&&photo)item.attachment=clone(photo);ui.overlay='';save();render();break;}
+        case 'email-remove-attachment': {const item=data.mailbox.find(item=>item.id===ui.emailId);if(item)delete item.attachment;save();render();break;}
+        default: return false;
+      }
+      return true;
+    },
+    submit(name, values, c) {
+      const {data, ui, save, render, renderOverlay, toast, emailText} = shell(c);
+      switch (name) {
+        // AccountSetupCheckSettings: the simulator is offline, so the incoming server check fails like a phone without a connection.
+        case 'gbem-setup': { if (!GBEmail.validAddress(values.get('email')) || !values.get('password')) break; ui.gbEmSetup = {email: String(values.get('email')).trim(), def: values.has('def')}; ui.gbEmSetupDialog = 'checking'; ui.overlay = 'gb-dialog-emsetup'; renderOverlay();
+          clearTimeout(ui.gbEmSetupTimer); ui.gbEmSetupTimer = setTimeout(() => { if (ui.overlay !== 'gb-dialog-emsetup') return; ui.gbEmSetupDialog = 'failed'; renderOverlay(); }, 2500); break; }
+        case 'email': {const item=data.mailbox.find(item=>item.id===ui.emailId);if(!item)break;for(const key of ['to','cc','bcc','subject','body'])if(values.has(key))item[key]=String(values.get(key)).trim();if(!ICSEmail.recipients(item.to).length){save();toast(emailText('message_compose_error_no_recipients'));break;}if(item.quoted){item.body=[item.body,item.quoted].filter(Boolean).join('\n\n');delete item.quoted;}if(!ICSEmail.send(item)){save();toast(emailText('message_compose_error_invalid_email'));break;}ui.emailCc=false;ui.sub='';ui.emailError='';save();render();break;}
+        case 'email-search': ui.emailQuery=String(values.get('query')||'').trim();ui.emailSelected=[];render();break;
+        default: return false;
+      }
+      return true;
+    },
+    // AccountSetupBasics.validateFields: Next and Manual setup follow the address and password (the password is never
+    // stored); the inherited ICS compose form keeps its fields on the draft.
+    input(event, c) {
+      const {data, ui, save} = shell(c);
+      if (event.target.closest('.gbem-setup') && ui.gbEmSetup) { const form = event.target.closest('form'), ok = GBEmail.validAddress(form.elements.email.value) && !!form.elements.password.value; ui.gbEmSetup.email = form.elements.email.value; ui.gbEmSetup.def = form.elements.def.checked; form.querySelectorAll('.gbem-setup-bar button').forEach(b => { b.disabled = !ok; }); return true; }
+      if(event.target.closest('.email-compose')&&event.target.name){const item=data.mailbox.find(item=>item.id===ui.emailId);if(item){item[event.target.name]=event.target.value;save();}return true;}
+      return false;
+    },
+    clearData(c) { const {data, ui} = c; data.mailbox=ICSEmail.restore(null,emailData,[]);data.sentEmails=[];ui.emailFolder='Inbox';ui.emailQuery=undefined;ui.emailSelected=[]; }
+  });
+})();

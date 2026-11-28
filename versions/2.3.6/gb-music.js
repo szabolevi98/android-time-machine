@@ -83,3 +83,29 @@
     clearData(c) { c.ui.music = ICSMusic.restore(); c.saveMusic(); }
   });
 })();
+
+/* Music's playback (MediaPlaybackService) as part of the music module: the state kept in the save and the position that
+   moves on every second, whatever screen is open (the home widget and the lock screen show it too). */
+(() => {
+  'use strict';
+  const music = window.GB?.module('music'); if (!music) return;
+  function service(c) {
+    const {data, ui, save, render, viewport} = c, clone = c.clone, pointerStart = c.pressing();
+    function saveMusic() {
+      ui.musicTrack=ui.music.track;ui.musicPlaying=ui.music.playing;ui.musicPosition=ui.music.position;
+      data.music=clone(ui.music);delete data.music.playing;save();
+    }
+    function tickMusic() {
+      if(!ui.music.playing)return;
+      const previous=ui.music.track;ICSMusic.tick(ui.music);
+      ui.musicTrack=ui.music.track;ui.musicPlaying=ui.music.playing;
+      if(previous!==ui.music.track || !ui.music.playing){saveMusic();if(ui.view==='music'||ui.view==='home'||ui.view==='lock'&&!pointerStart)render();}
+      else if(Math.floor(ui.music.position)%10===0)saveMusic();
+      const progress=viewport.querySelector('.music-progress');if(progress&&document.activeElement!==progress)progress.value=ui.music.position;
+      const elapsed=viewport.querySelector('.music-elapsed');if(elapsed)elapsed.textContent=ICSMusic.time(ui.music.position);
+    }
+    return {saveMusic, tickMusic};
+  }
+  music.save = c => service(c).saveMusic();
+  music.tick = c => service(c).tickMusic();
+})();

@@ -38,8 +38,8 @@ for(const v of ['2.3.6','4.0.4']){
   assert.ok(drag(e=>G.cropDrag(e,frame,c,photo,()=>{}),[(c.x+c.w/2)*400,(c.y+c.h/2)*300],[-500,-500]));
   assert.ok(c.x===0&&c.y===0);
   assert.equal(G.cropDrag({clientX:399,clientY:299},frame,c,photo,()=>{}),false);
-  const sim=fs.readFileSync('versions/2.3.6/simulator.js','utf8');
-  assert.ok(sim.includes("case 'gbg-crop-save':")&&sim.includes("source: clone(photo), crop:")&&sim.includes("ui.overlay === 'gb-dialog-crop-saving'")&&sim.includes("if (ui.view === 'gallery' && ui.gbgCrop) { ui.gbgCrop = null;"));
+  const sim=require('./lib/engine-source.cjs')('2.3.6');
+  assert.ok(sim.includes("case 'gbg-crop-save':")&&sim.includes("source: clone(photo), crop:")&&sim.includes("ui.overlay === 'gb-dialog-crop-saving'")&&sim.includes("if (ui.gbgCrop) { ui.gbgCrop = null;"));
 }
 
 // 4.0.4: photo.xml's Crop after Rotate right, the action bar (crop_label, Cancel, crop_save_text), setInitRectangle's

@@ -24,5 +24,6 @@
     }, true);
   }
   const start = () => { const screen = document.querySelector('#screen'); if (screen) attach(screen); };
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+  // On DOMContentLoaded, after the core (gb-core.js) has built the screen's layers, so the scrollbars stay above them.
+  if (document.readyState !== 'complete') document.addEventListener('DOMContentLoaded', start); else start();
 })();

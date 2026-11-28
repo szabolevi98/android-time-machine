@@ -174,3 +174,42 @@
     clearData(c) { c.data.alarms = c.clone(c.defaults.alarms); }
   });
 })();
+
+/* AlarmAlert of Android 2.3.6 (DeskClock.apk) as a module (docs/plans/engine-migration.md): a due alarm rings over any
+   screen (the keyguard's wallpaper behind it when locked); Snooze sets it again after Clock's snooze duration. */
+(() => {
+  'use strict';
+  const i18n = window.AndroidI18n;
+  window.GB?.register('alarm', {
+    overlay(c) {
+      const {ui, screen} = c;
+      return GBDeskClock.alert({...GB.module('clock').context(c), wallpaper: ui.locked ? screen.style.background : ''});
+    },
+    tick(c) {
+      const {data, ui, save, renderOverlay} = c, clone = c.clone, now = c.deviceDate();
+    if(ui.overlay==='clock-ringing')return;
+    const alarm=data.alarms.find(alarm=>ICSDeskClock.due(alarm,now));
+    if(!alarm)return;
+    alarm.lastFiredMinute=Math.floor(now.getTime()/60000);
+    delete alarm.snoozedUntil;
+    if(!ICSDeskClock.normalize(alarm).days.length)alarm.enabled=false;
+    ui.ringingAlarm=clone(alarm); save(); ui.overlay='clock-ringing'; renderOverlay();
+  
+    },
+    action(name, el, c) {
+      const {data, ui, save, render, toast, deviceDate} = c;
+      switch (name) {
+        case 'alarm-snooze': {
+          const alarm=data.alarms.find(item=>item.id===ui.ringingAlarm.id);
+          // Snooze duration from the Clock settings (snooze_duration: 5, 10, ... 30 minutes).
+          const minutes=5*((data.appPrefs?.clock?.snooze_duration??1)+1);
+          if(alarm){alarm.enabled=true;alarm.snoozedUntil=deviceDate().getTime()+minutes*60000;save();}
+          ui.overlay='';render();toast(AndroidStrings.format(GBDeskClock.text(i18n.language,'alarm_alert_snooze_set'), String(minutes)));break;
+        }
+        case 'alarm-dismiss': ui.overlay=''; render(); break;
+        default: return false;
+      }
+      return true;
+    }
+  });
+})();

@@ -61,8 +61,9 @@ async function playOrder(v,exitAfter,frames){
   // Cold start: a new tab boots each version once (sessionStorage), after the first render, into the lock screen.
   for(const v of ['2.3.6','4.0.4','4.3','4.4.4','5.1.1']){const src=fs.readFileSync(fs.existsSync(`versions/${v}/simulator.js`)?`versions/${v}/simulator.js`:`versions/${v}/${{'2.3.6':'gb','4.0.4':'ics','4.3':'jb','4.4.4':'kk','5.1.1':'lp'}[v]}-core.js`,'utf8').replace(/\r\n/g,'\n'),all=engineSource(v).replace(/\r\n/g,'\n');
     assert.ok(all.includes(`AndroidBoot.shouldBoot('${v}')`)&&all.includes('AndroidBoot.prepare'),v);
-    // 4.0.4's core starts its modules after the first render; the power module's start is the cold boot.
-    assert.ok(/\n  render\(\);\n  coldBoot\(\);\n\}\)(\(\))?;\s*$/.test(src)||/\n\s*render\(\);\n\s*for \(const m of allModules\(\)\) m\.start\?\.\(storeContext\(\)\);\n/.test(src)&&all.includes('start(c) { api(c).coldBoot(); }'),`${v}: coldBoot after the first render`);
+    // 4.0.4's core starts its modules after the first render (the power module's start is the cold boot); 2.3.6's
+    // core asks its power module (gb-system.js) for it.
+    assert.ok(/\n  render\(\);\n  coldBoot\(\);\n\}\)(\(\))?;\s*$/.test(src)||/\n\s*render\(\);\n\s*for \(const m of allModules\(\)\) m\.start\?\.\(storeContext\(\)\);\n/.test(src)&&all.includes('start(c) { api(c).coldBoot(); }')||/\n\s*render\(\);\n\s*GB\.module\('power'\)\.coldBoot\(/.test(all),`${v}: coldBoot after the first render`);
     assert.ok(/const finish = \(\) => \{[^\n]*lockScreen\(\)/.test(all),`${v}: the boot ends on the lock screen`);}
   console.log('Global actions checks passed: item order per version, ringer modes, dialogs, assets and boot animations.');
 })().catch(error=>{console.error(error);process.exit(1);});

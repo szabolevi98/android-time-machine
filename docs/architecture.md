@@ -33,6 +33,10 @@ changes, or browsers keep the old copy.
   `ICSMessaging` …) with a `render…()` that returns the HTML of its screens and, for larger apps, its own action handler.
   A file name carries the era prefix of the version that owns it (`gb-`, `ics-`, `jb-`, `kk-`, `lp-`) when it is that
   version's own build of an app; files without a prefix are the version's copy of a common module.
+- **2.1, 2.3.6, 6.0.1 and 7.1.2** have no `simulator.js`: a small core (`ec-core.js`, `gb-core.js`, `mm-core.js`,
+  `ng-core.js`) routes everything, and every screen (the launcher and the system UI too) is a module that registers
+  itself with its hooks (`render`, `action`, `back`, `menu` …); the core's header lists them. The other versions are
+  moving onto the same design (docs/plans/engine-migration.md).
 - **Stylesheets** follow the modules (`kk-deskclock.css`, `lp-downloads.css` …); `style.css` holds the frame, the
   launcher basics and shared widgets. Every size on the screen is dp: `calc(N * var(--dp))`, with `--dp` set at the top
   of `style.css` to the frame's scale (1 dp in px of the drawn display) and, at phone width, to `100vw / <dp width>`, so

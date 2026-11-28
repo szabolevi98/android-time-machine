@@ -7,7 +7,7 @@ for(const v of ['2.3.6','4.4.4','5.1.1']){
   assert.deepEqual(Object.keys(w.window.ICSEmail),['account','restore','list','recipients','validRecipients','draft','trash','untrash','send'],v);
   assert.ok(!fs.readFileSync(`versions/${v}/index.html`,'utf8').includes('href="email.css'),v);
 }
-const gb=fs.readFileSync('versions/2.3.6/simulator.js','utf8');
+const gb=require('./lib/engine-source.cjs')('2.3.6');
 assert.ok(!gb.includes("'email-confirm-discard'")&&gb.includes("case 'gbem-discard':")&&gb.includes("gbEmLeaveCompose('message_discarded_toast')"));
 const load=(v,files)=>{const w={window:{AndroidI18n:{t:k=>k}},document:{}};w.window.window=w.window;for(const f of files)vm.runInNewContext(fs.readFileSync(`versions/${v}/${f}`,'utf8'),w);return w.window;};
 {

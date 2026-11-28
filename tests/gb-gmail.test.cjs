@@ -27,6 +27,6 @@ assert.equal(mail.find(c=>c.id==='gm-2').messages.length,4);assert.ok(toasts.inc
 gm.handle('gm-compose',null,ctx);assert.ok(gm.submit('gm-compose',new Map([['to',''],['body','x']]),ctx));assert.ok(toasts.includes('Please add at least one recipient.'));
 assert.ok(gm.back(ctx));assert.equal(G.list(mail,'Drafts').length,1,'Back keeps a draft');
 ctx.lang='hu';ctx.ui.gmView='';html=gm.render(ctx);assert.ok(html.includes('Beérkezett üzenetek (1)'));
-const sim=fs.readFileSync('versions/2.3.6/simulator.js','utf8');
-assert.ok(sim.includes("if (GBApps.has(ui.view)) return GBApps.get(ui.view).render(gappContext());")&&sim.includes("['gmail', 'Gmail',"));
+const sim=require('./lib/engine-source.cjs')('2.3.6');
+assert.ok(sim.includes("render: c => module.render(c.gapp())")&&sim.includes("['gmail', 'Gmail',"));
 console.log('gb-gmail ok');

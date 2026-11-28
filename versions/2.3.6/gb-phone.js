@@ -134,3 +134,199 @@
 
   window.GBPhone = {TABS, KEYS, HANGING_UP, ENDED, text, phoneText, relative, render, menu, callState, elapsedText, inCall, callDetail};
 })();
+
+/* Phone and Contacts on Android 2.3.6 (Contacts.apk of GRK39F: DialtactsActivity's Phone, Call log, Contacts and
+   Favorites tabs, the contact screens, the editor and Import/Export; Phone.apk's in-call screen) as modules
+   (docs/plans/engine-migration.md). The two launcher icons open one activity: 'phone' and 'people' share their hooks.
+   The ongoing call is the system's: the status bar and the shade (which returns to the call) stay with the shell. */
+(() => {
+  'use strict';
+  const i18n = window.AndroidI18n;
+  // The shell's bindings the screens' code uses, and their helpers on them.
+  function shell(c) {
+    const {data, ui, save, render, renderOverlay, toast, viewport, openApp, contact, contactByPhone, captureRecentView} = c;
+    function renderPhone() {
+      if(ui.activeCall&&!ui.gbCallBackground)return GBPhone.inCall(ui.activeCall,{lang:i18n.language,t:key=>i18n.t(key),person:contactByPhone(ui.activeCall.number),bluetoothAvailable:!!(data.settings.bluetooth&&data.settings.pairedDevice)});
+      if(ui.sub==='call-detail'){const call=(data.callHistory||[]).find(call=>call.time===ui.phoneCallId);if(call)return GBPhone.callDetail(call,contactByPhone(call.number),{lang:i18n.language,locale:i18n.locale()});}
+      return GBPhone.render(gbPhoneContext());
+    }
+    function startPhoneCall(number) {
+      if(!number)return;
+      // Add call: the simulator keeps one line, so the call in progress ends and the new one is dialed.
+      if(ui.activeCall&&ui.gbAddCall&&!ui.activeCall.endedAt){data.callHistory=[...(data.callHistory||[]),ICSPhoneCall.finish(ui.activeCall)].slice(-50);ui.activeCall=null;save();}
+      if(!ui.activeCall)ui.activeCall=ICSPhoneCall.start(number);
+      ui.gbCallBackground=false;ui.gbAddCall=false;
+      captureRecentView();ui.recent=['phone',...ui.recent.filter(id=>id!=='phone')].slice(0,8);
+      ui.callNumber=ui.activeCall.number;ui.view='phone';ui.sub='calling';ui.overlay='';render();
+    }
+    // Dialtacts context: the Contacts launcher icon opens the same activity on its Contacts tab.
+    function gbPhoneContext() {
+      const person = ui.view === 'people' && ui.sub === 'detail' ? contact(ui.selectedContact) : null;
+      return {lang: i18n.language, locale: i18n.locale(), t: key => i18n.t(key), now: Date.now(), tab: ui.view === 'people' ? 'contacts' : ui.phoneTab || 'dialpad', dial: ui.dial || '', callActive: !!ui.activeCall, addCall: !!ui.gbAddCall, calls: data.callHistory || [], contactOf: number => contactByPhone(number), people: data.contacts, detail: person, io: GBContactsIO.view(data, i18n.language)};
+    }
+    function gbceContext() { return {lang: i18n.language, draft: ui.peopleDraft, isNew: ui.sub === 'new', moreName: !!ui.gbceMoreName, secondary: !!ui.gbceSecondary, familyFirst: false}; }
+    // The editor's fields are kept on the draft whenever a button changes the form.
+    function gbceSync() {
+      const form = viewport.querySelector('.gbce'); if (!form || !ui.peopleDraft) return;
+      for (const key of ['given', 'family', 'prefix', 'middle', 'suffix', 'phone', 'email', 'company', 'notes']) if (form.elements[key]) ui.peopleDraft[key] = form.elements[key].value;
+    }
+    // Contacts' Display options, Import/Export and SIM import (gb-contacts-io.js).
+    function gbctContext() {
+      return {data, ui, lang: i18n.language, save, render, renderOverlay, toast, account: ICSEmail.account, appName: c.appName,
+        openAccounts: () => { ui.view = 'settings'; ui.sub = 'sync'; ui.gbSettingsStack = ['']; render(); },
+        unsupported: () => toast('This feature is not part of the simulator.'),
+        // Gmail takes the vCard as the compose screen's attachment.
+        shareVcard: attachment => { openApp('gmail'); ui.gmDraft = {source: '', body: '', mode: '', attachment}; ui.gmCc = false; ui.gmView = 'compose'; render(); }};
+    }
+    function renderPeople() { if (GBContactsIO.has(ui.sub)) return GBContactsIO.render(ui.sub, gbctContext()); if (ui.sub === 'edit' || ui.sub === 'new') return GBContactEditor.render(gbceContext()); if (ui.sub === 'detail' && !contact(ui.selectedContact)) ui.sub = ''; return GBPhone.render(gbPhoneContext()); }
+    function editPerson(isNew = false) {
+      const person = isNew ? {} : contact(ui.selectedContact);
+      if (!person) return;
+      // EntityModifier.ensureKindExists: the editor always offers a phone and an email row.
+      ui.peopleDraft = {...person,phone:person.phone??'',email:person.email??'',groups:data.contactGroups.filter(g=>g.members.includes(person.id)).map(g=>g.id)};
+      ui.sub = isNew ? 'new' : 'edit'; ui.overlay = ''; render();
+    }
+    // ContactDeletionInteraction 2.3: deleteConfirmation_title with ic_dialog_alert, deleteConfirmation, OK / Cancel.
+    function peopleOverlay() {
+      if (ui.overlay !== 'people-delete') return '';
+      const T = key => GBPhone.text(i18n.language, key);
+      return GBUI.dialog({t: key => i18n.t(key), title: T('deleteConfirmation_title'), icon: 'ic_dialog_alert', message: T('deleteConfirmation'), buttons: [{action: 'people-confirm-delete', title: GBSettings.text(i18n.language, 'fw_ok')}, {action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]});
+    }
+    return {data, ui, save, render, renderOverlay, toast, viewport, clone: c.clone, openApp, home: c.home, contact, contactByPhone, captureRecentView, openMessageThread: c.intent.thread, blinkTips: c.blinkTips, renderStatus: c.renderStatus, renderPhone, startPhoneCall, gbPhoneContext, gbceContext, gbceSync, gbctContext, renderPeople, editPerson, peopleOverlay};
+  }
+  const dialtacts = {
+    render: c => c.ui.view === 'phone' ? shell(c).renderPhone() : shell(c).renderPeople(),
+    // A long press (or a right click) on an account or a contact source of Import/Export.
+    mount(c, root) { GB.hold(c, root, '[data-gbct-hold]', held => GBContactsIO.hold(held.dataset.gbctHold, shell(c).gbctContext())); },
+    // Import/Export's screens, then the tabs and the contact (none during a call, on a call's details or in the editor).
+    menu(c) {
+      const {ui, gbctContext, gbPhoneContext} = shell(c);
+      if (ui.view === 'people' && GBContactsIO.has(ui.sub)) { c.gbMenu(GBContactsIO.menu(ui.sub, gbctContext())); return; }
+      if ((ui.view === 'phone' && (!ui.activeCall || ui.gbCallBackground) && ui.sub !== 'call-detail') || (ui.view === 'people' && (!ui.sub || ui.sub === 'detail'))) { c.gbMenu(GBPhone.menu(gbPhoneContext())); return; }
+    },
+    // Clear call log, Import/Export's dialogs (their texts come localized from the image's strings and profile names
+    // are the user's: no interface translation) and the editor's.
+    dialog(kind, c) {
+      const {ui, gbctContext, gbceContext} = shell(c);
+      if (kind === 'clearlog') return {title: GBPhone.text(i18n.language, 'clearCallLogConfirmation_title'), icon: 'ic_dialog_alert', message: GBPhone.text(i18n.language, 'clearCallLogConfirmation'), buttons: [{action: 'gbp-clear-log-ok', title: GBSettings.text(i18n.language, 'fw_ok')}, {action: 'close-overlay', title: GBSettings.text(i18n.language, 'fw_cancel')}]};
+      if (kind === 'gbct') return {...(GBContactsIO.dialog(ui.gbctDialog, gbctContext()) || {title: '', items: []}), noTranslate: true};
+      return GBContactEditor.dialog(ui.gbceDialog, gbceContext());
+    },
+    // The delete confirmation (the inherited people- overlay).
+    overlay: c => shell(c).peopleOverlay(),
+    // Import/Export's screens; Add call returns to the call; the in-call keypad closes, then the call goes to the
+    // background; the editor saves (Back is Done); a contact's edit returns to it.
+    back(c) {
+      const {ui, viewport, render, home, gbctContext} = shell(c);
+      if (ui.view === 'people' && GBContactsIO.back(gbctContext())) return true;
+      if(ui.view==='phone' && ui.activeCall && ui.gbAddCall){ui.gbAddCall=false;ui.gbCallBackground=false;render();return true;}
+      if(ui.view==='phone' && ui.activeCall && !ui.gbCallBackground){if(ui.activeCall.keypad){ui.activeCall.keypad=false;render();}else home(false);return true;}
+      if (ui.view === 'people' && (ui.sub === 'edit' || ui.sub === 'new') && viewport.querySelector('.gbce')) { viewport.querySelector('.gbce').requestSubmit(); return true; }
+      if (ui.view === 'people' && ui.sub === 'edit') { ui.sub = 'detail'; render(); return true; }
+      return false;
+    },
+    action(name, el, c) {
+      const id = el.dataset.id, action = name, {data, ui, save, render, renderOverlay, renderStatus, toast, viewport, clone, openApp, home, contact, captureRecentView, openMessageThread, blinkTips, startPhoneCall, gbctContext, gbceSync, editPerson} = shell(c);
+      if (action.startsWith('gbct-') && GBContactsIO.handle(action, id, gbctContext())) return true;
+      switch (name) {
+        case 'gbce-photo': gbceSync(); ui.gbceDialog = ui.peopleDraft?.photo ? 'photo-edit' : 'photo'; ui.overlay = 'gb-dialog-ce'; renderOverlay(); break;
+        case 'gbce-photo-take': { gbceSync(); ui.overlay = ''; renderOverlay(); const ret = {sub: ui.sub}; openApp('camera'); ui.gbceCapture = {type: 'image', ret, taken: null}; ui.gbcamMode = 'photo'; render(); break; }
+        // Gallery's GET_CONTENT pick returns to the editor with the picture (Back returns without one).
+        case 'gbce-photo-pick': { ui.overlay = ''; const sub = ui.sub; captureRecentView(); ui.gbcePick = {sub}; ui.view = 'gallery'; ui.sub = ''; ui.gbgPick = true; render(); break; }
+        case 'gbce-photo-remove': if (ui.peopleDraft) ui.peopleDraft.photo = null; ui.overlay = ''; render(); break;
+        case 'phone-tab': ui.phoneTab = id; ui.phoneSearch = undefined; if (id === 'contacts') { ui.view = 'people'; ui.sub = ''; } else if (ui.view === 'people') { ui.view = 'phone'; ui.sub = ''; } render(); break;
+        case 'gbp-contact': ui.selectedContact = Number(id); ui.view = 'people'; ui.sub = 'detail'; render(); break;
+        case 'gbp-voicemail': toast('Voicemail number not set'); break;
+        case 'gbp-new-contact': ui.overlay = ''; openApp('people'); editPerson(true); break;
+        case 'gbp-email': ui.overlay = ''; openApp('email'); break;
+        case 'gbp-clear-log': ui.overlay = 'gb-dialog-clearlog'; renderOverlay(); break;
+        case 'gbp-clear-log-ok': data.callHistory = []; ui.overlay = ''; save(); render(); break;
+        case 'phone-search': ui.phoneTab = 'favorites'; ui.phoneSearch = ''; ui.overlay = ''; render(); viewport.querySelector('.phone-search input')?.focus(); break;
+        case 'phone-menu': ui.overlay = 'phone-menu'; renderOverlay(); break;
+        case 'phone-add-contact': openApp('people'); editPerson(true); ui.peopleDraft.phone=ui.dial; render(); break;
+        case 'phone-redial': startPhoneCall(id); break;
+        case 'dial': if (ui.dial.length < 30) ui.dial += id; if (ui.dial.endsWith('*#*#8477#*#*')) { ui.dial = ''; data.protips = {index: 0, set: 1 - (data.protips?.set || 0)}; save(); home(false); setTimeout(() => blinkTips(3), 300); break; } render(); break;
+        case 'dial-delete': ui.dial = ui.dial.slice(0, -1); render(); break;
+        case 'call': if(!ui.dial){toast('Enter a phone number');break;}startPhoneCall(ui.dial);break;
+        case 'hangup': { const call=ui.activeCall; if(!call||call.endedAt)break; call.endedAt=Date.now(); call.keypad=false; render(); setTimeout(()=>{if(ui.activeCall===call&&ui.view==='phone')render();},GBPhone.HANGING_UP); setTimeout(()=>{if(ui.activeCall!==call)return; data.callHistory=[...(data.callHistory||[]),ICSPhoneCall.finish(call,call.endedAt)].slice(-50); ui.activeCall=null; ui.gbCallBackground=false; ui.gbAddCall=false; save(); if(ui.view==='phone'){ui.sub='';ui.dial='';render();} else renderStatus();},GBPhone.HANGING_UP+GBPhone.ENDED); break; }
+        case 'gbp-add-call': if(!ui.activeCall)break; ui.gbCallBackground=true; ui.gbAddCall=true; ui.phoneTab='dialpad'; ui.view='phone'; ui.sub=''; ui.dial=''; render(); break;
+        case 'gbp-dtmf': if(!ui.activeCall)break; ui.gbCallBackground=false; ui.gbAddCall=false; ui.activeCall.keypad=GBPhone.callState(ui.activeCall)==='active'; ui.view='phone'; render(); break;
+        case 'gbp-return-call': if(!ui.activeCall)break; ui.overlay=''; ui.gbCallBackground=false; ui.gbAddCall=false; captureRecentView(); ui.view='phone'; ui.sub='calling'; ui.recent=['phone',...ui.recent.filter(id=>id!=='phone')].slice(0,8); render(); break;
+        case 'incall-toggle': if(ui.activeCall&&!ui.activeCall.endedAt){ui.activeCall[id]=!ui.activeCall[id];if(id==='hold')ui.activeCall.keypad=false;}render();renderStatus();break;
+        case 'incall-digit': if(ui.activeCall)ui.activeCall.digits=(ui.activeCall.digits+id).slice(-24);render();break;
+        case 'phone-log-detail': ui.phoneCallId=Number(id);ui.sub='call-detail';render();break;
+        case 'phone-log-message': { const recipient=ICSMessaging.recipient(id,data.contacts); if(recipient)openMessageThread(recipient.key);else toast('Enter a valid phone number');break; }
+        case 'people-search': ui.peopleTab='all'; ui.peopleSearching=true; render(); viewport.querySelector('.people-search input')?.focus(); break;
+        case 'people-edit': ui.gbceMoreName = false; ui.gbceSecondary = false; editPerson(); break;
+        case 'gbce-type': gbceSync(); ui.gbceDialog = id; ui.overlay = 'gb-dialog-ce'; renderOverlay(); break;
+        case 'gbce-set-type': { const [kind, type] = id.split(':'); ui.peopleDraft[`${kind}Type`] = type; ui.overlay = ''; render(); break; }
+        case 'gbce-remove': gbceSync(); ui.peopleDraft[id] = null; render(); break;
+        case 'gbce-add': gbceSync(); ui.peopleDraft[id] = ''; render(); viewport.querySelector(`.gbce [name="${id}"]`)?.focus(); break;
+        case 'gbce-more-name': gbceSync(); ui.gbceMoreName = !ui.gbceMoreName; render(); break;
+        case 'gbce-secondary': gbceSync(); ui.gbceSecondary = !ui.gbceSecondary; render(); break;
+        case 'gbce-revert': ui.sub = ui.sub === 'edit' && contact(ui.selectedContact) ? 'detail' : ''; ui.peopleDraft = null; render(); break;
+        case 'people-star': { const person=contact(ui.selectedContact); if(person)person.favorite=!person.favorite; save(); render(); break; }
+        case 'people-delete': ui.overlay='people-delete'; renderOverlay(); break;
+        case 'people-confirm-delete': ICSPeople.remove(data,ui.selectedContact); save(); ui.sub=''; ui.overlay=''; render(); break;
+        case 'contact': ui.selectedContact = Number(id); ui.sub = 'detail'; render(); break;
+        default: return false;
+      }
+      return true;
+    },
+    submit(name, values, c) {
+      const {data, ui, save, render, toast, contact} = shell(c);
+      if (name === 'phone-search') { ui.phoneSearch = String(values.get('query') || '').trim(); render(); return true; }
+      switch (name) {
+        case 'people-search': ui.peopleQuery=String(values.get('query')||'').trim(); render(); break;
+        case 'people-save': {
+          // ContactEditorActivity: the structured name is joined into the display name; an empty contact is not saved.
+          const name=values.has('given')?GBContactEditor.join([values.get('prefix'),values.get('given'),values.get('middle')].filter(Boolean).join(' '),[values.get('family'),values.get('suffix')].filter(Boolean).join(' ')):String(values.get('name')||'').trim(); if(!name){ui.sub=ui.sub==='edit'&&contact(ui.selectedContact)?'detail':'';ui.peopleDraft=null;render();break;}
+          const id=ui.sub==='edit'?ui.selectedContact:Date.now();
+          const person=contact(id)||{id};
+          person.name=name;for(const key of ['phone','email','company','notes'])person[key]=String(values.get(key)||'').trim();
+          if(ui.peopleDraft&&'photo' in ui.peopleDraft){if(ui.peopleDraft.photo)person.photo=ui.peopleDraft.photo;else delete person.photo;}
+          if(ui.peopleDraft?.phoneType)person.phoneType=ui.peopleDraft.phoneType;if(ui.peopleDraft?.emailType)person.emailType=ui.peopleDraft.emailType;
+          if(!contact(id))data.contacts.push(person);
+          if(!values.has('given')){const groups=values.getAll('groups');data.contactGroups.forEach(g=>{g.members=g.members.filter(member=>member!==id);if(groups.includes(g.id))g.members.push(id);});}
+          save();ui.selectedContact=id;ui.sub='detail';ui.peopleDraft=null;render();toast(GBContactEditor.text(i18n.language,'contactSavedToast'));break;
+        }
+        case 'contact': {
+          const name = String(values.get('name')).trim(), phone = String(values.get('phone')).trim(), email = String(values.get('email')).trim();
+          if (!name || !phone) return true;
+          const id = Date.now(); data.contacts.push({ id, name, phone, email }); save(); ui.selectedContact = id; ui.sub = 'detail'; render(); toast('Contact saved'); break;
+        }
+        default: return false;
+      }
+      return true;
+    },
+    // The inherited ICS editor's fields.
+    input(event, c) {
+      const {ui, viewport} = shell(c);
+      if(event.target.closest('#people-editor')) {
+        if(event.target.name==='groups')ui.peopleDraft.groups=[...viewport.querySelectorAll('[name=groups]:checked')].map(input=>input.value);
+        else ui.peopleDraft[event.target.name]=event.target.value;
+        return true;
+      }
+      return false;
+    }
+  };
+  window.GB?.register('phone', {...dialtacts,
+    call: (c, number) => shell(c).startPhoneCall(number),
+    // Opened from the launcher during a call: the dialpad to add one, the call itself in the background.
+    open(c, resume) { const ui = c.ui; if (ui.activeCall && !resume) { ui.gbCallBackground = true; ui.gbAddCall = false; ui.phoneTab = 'dialpad'; } },
+    // The in-call screen's state and its elapsed time.
+    tick(c) {
+      const {data, ui, render} = c;
+      if(ui.activeCall){
+        const screen=c.viewport.querySelector('.gbic'),state=GBPhone.callState(ui.activeCall);
+        if(screen&&screen.dataset.state!==state)render();
+        else if(screen&&state==='active'){const elapsed=screen.querySelector('.gbic-elapsed');if(elapsed)elapsed.textContent=GBPhone.elapsedText(ui.activeCall);}
+      }
+    },
+    clearData(c) { const {data, ui} = c; data.callHistory=[];ui.activeCall=null; }
+  });
+  window.GB?.register('people', {...dialtacts,
+    edit: (c, isNew) => shell(c).editPerson(isNew),
+    clearData(c) { const {data, ui} = c, clone = c.clone, defaultData = c.defaults; data.contacts=clone(defaultData.contacts);data.contactGroups=clone(defaultData.contactGroups);ui.peopleDraft=null; }
+  });
+})();
