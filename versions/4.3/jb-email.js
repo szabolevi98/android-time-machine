@@ -155,3 +155,198 @@
   }
   window.KKEmail = {S, tr, TILE_COLORS, hash, tile, shortDate, render, overlay};
 })();
+/* Email (Email.apk of JWR66Y) and Gmail 4.5.1 on Android 4.3, moved out of simulator.js
+   (docs/plans/engine-migration.md): the AOSP Email's folders, message, compose and settings (email.js, email-prefs.js)
+   and Gmail's UnifiedEmail screens (jb-email.js above, gmail.js) with its settings; sharing text and contacts into a
+   new message; their actions, forms, typing, overlays, Back, opening and Clear data. */
+(() => {
+  'use strict';
+  if (!window.JB) return; // loaded on its own (the renderer's unit tests)
+  let $c, clone, data, deviceDate, emailData, i18n, navigateBack, openApp, overlayRoot, render, renderOverlay, save, toast, ui, viewport;
+  const $bind = c => { $c = c; ({clone, data, deviceDate, emailData, i18n, navigateBack, openApp, overlayRoot, render, renderOverlay, save, toast, ui, viewport} = c); };
+  // Gmail 4.5.1: KitKat's UnifiedEmail screens on its own mailbox, folder, conversation and selection.
+  const gmailOptions = () => GmailApp.options(data, ui, i18n.language, key => KKEmail.tr(i18n.language, key, 'gmail'));
+  function renderGmail() { if (ui.sub === 'gm-settings') return GmailApp.settings(data, ui, i18n.language, key => i18n.t(key)); return KKEmail.render(data.gmailbox, ui, key => i18n.t(key), i18n.locale(), i18n.language, gmailOptions()); }
+  function useMailApp(app) {
+    if (ui.mailApp === app) return;
+    ui.mailStates ||= {};
+    if (ui.mailApp) ui.mailStates[ui.mailApp] = {folder: ui.emailFolder, id: ui.emailId, sub: ui.sub};
+    const state = ui.mailStates[app] || {folder: app === 'gmail' ? 'Primary' : 'Inbox', id: null};
+    ui.emailFolder = state.folder; ui.emailId = state.id; ui.emailSelected = []; ui.emailQuery = undefined; ui.mailApp = app;
+  }
+  function composeGmail(source=null,forward=false,to='') {
+    const draft=ICSEmail.draft(source,forward);if(to)draft.to=to;draft.from=draft.address=GmailApp.account;
+    // Gmail's signature preference (gmail.js): "\n\n%s" after what the message starts with.
+    if(data.gmailPrefs?.signature)draft.body='\n\n'+data.gmailPrefs.signature+(draft.body?'\n\n'+draft.body:'');
+    data.gmailbox.unshift(draft);ui.emailId=draft.id;ui.emailCc=false;ui.emailError='';ui.overlay='';ui.sub='compose';save();render();
+  }
+  // Gmail's taps (the KitKat simulator's UnifiedEmail handlers on data.gmailbox); false lets the shared handler run.
+  function gmailAction(action, id, button) {
+    switch (action) {
+      case 'email-read': {const item=data.gmailbox.find(item=>item.id===id);if(!item)break;if(ui.view==='gmail')data.gmailWelcomeSeen=true;ui.emailId=id;item.read=true;ui.sub=item.folder==='Drafts'?'compose':'read';ui.emailError='';save();render();break;}
+      case 'email-compose': composeGmail();break;
+      case 'email-reply': case 'email-forward': composeGmail(data.gmailbox.find(item=>item.id===ui.emailId),action==='email-forward');break;
+      case 'email-list': ui.sub='';ui.overlay='';ui.emailSelected=[];render();break;
+      case 'email-folders': case 'email-menu': ui.emailMenu=id||'list';ui.overlay=action;renderOverlay();break;
+      // 4.4 Email (UnifiedEmail): the folder drawer, Save draft, Reply all, Move to and the menu entries without a screen.
+      case 'email-drawer': ui.overlay='email-drawer';renderOverlay();break;
+      case 'email-save': ui.sub='';ui.overlay='';ui.emailSelected=[];render();toast(KKEmail.tr(i18n.language,'Message saved as draft.',ui.view==='gmail'?'gmail':'email'));break;
+      case 'email-reply-all': ui.overlay='';composeGmail(data.gmailbox.find(item=>item.id===ui.emailId),false);break;
+      case 'email-move': {const item=data.gmailbox.find(item=>item.id===ui.emailId);if(item){if(id==='Trash')ICSEmail.trash(data.gmailbox,[item.id]);else{item.folder=id;delete item.previousFolder;}}ui.overlay='';ui.sub='';save();render();break;}
+      case 'email-unavailable': ui.overlay='';renderOverlay();toast('This feature is not part of the simulator.');break;
+      case 'email-folder': if(ui.view==='gmail'){data.gmailSeen={...data.gmailSeen,[id]:Date.now()};save();}ui.emailFolder=id;ui.sub='';ui.emailQuery=undefined;ui.emailSelected=[];ui.overlay='';render();break;
+      case 'email-star': {const item=data.gmailbox.find(item=>item.id===id);if(item)item.starred=!item.starred;save();render();break;}
+      case 'email-select': ui.emailSelected ||= [];ui.emailSelected=ui.emailSelected.includes(id)?ui.emailSelected.filter(key=>key!==id):[...ui.emailSelected,id];render();break;
+      case 'email-clear-selection': ui.emailSelected=[];render();break;
+      case 'email-trash': case 'email-selected-trash': ICSEmail.trash(data.gmailbox,action==='email-trash'?[ui.emailId]:ui.emailSelected||[]);ui.sub='';ui.emailSelected=[];save();render();break;
+      case 'email-restore': case 'email-selected-restore': {const ids=action==='email-restore'?[ui.emailId]:ui.emailSelected||[];data.gmailbox.filter(item=>ids.includes(item.id)).forEach(ICSEmail.untrash);ui.sub='';ui.emailSelected=[];save();render();break;}
+      case 'email-selected-read': data.gmailbox.filter(item=>(ui.emailSelected||[]).includes(item.id)).forEach(item=>item.read=true);ui.emailSelected=[];save();render();break;
+      case 'email-unread': {const item=data.gmailbox.find(item=>item.id===ui.emailId);if(item)item.read=false;ui.sub='';ui.overlay='';save();render();break;}
+      case 'email-search': ui.emailQuery='';render();viewport.querySelector('[data-form="email-search"] input')?.focus();break;
+      case 'email-refresh': toast('Local mailbox is up to date');break;
+      case 'email-cc': ui.emailCc=true;ui.overlay='';render();break;
+      case 'email-attach': ui.overlay='email-attach';renderOverlay();break;
+      case 'email-attach-photo': {const item=data.gmailbox.find(item=>item.id===ui.emailId),photo=data.photos.find(photo=>photo.id===Number(id));if(item&&photo)item.attachment=clone(photo);ui.overlay='';save();render();break;}
+      case 'email-remove-attachment': {const item=data.gmailbox.find(item=>item.id===ui.emailId);if(item)delete item.attachment;save();render();break;}
+      case 'email-discard': ui.overlay='email-discard';renderOverlay();break;
+      case 'email-confirm-discard': ICSEmail.trash(data.gmailbox,[ui.emailId]);ui.sub='';ui.overlay='';save();render();break;
+      // Gmail: Archive leaves the inbox (the conversation stays in All mail); tips and teaser links.
+      case 'email-archive': case 'email-selected-archive': {const ids=action==='email-archive'?[ui.emailId]:ui.emailSelected||[];data.gmailbox.filter(item=>ids.includes(item.id)&&item.folder==='Inbox').forEach(item=>{item.folder='Archive';});ui.sub='';ui.emailSelected=[];save();render();break;}
+      case 'email-dismiss-teaser': if(ui.view==='gmail')data.gmailTeaserDismissed=true;else data.emailTeaserDismissed=true;save();render();break;
+      // Gmail settings (gmail.js GmailApp.settings); Email's own settings (email-prefs.js).
+      case 'email-settings': ui.overlay = ''; renderOverlay(); if (ui.view === 'gmail') { ui.sub = 'gm-settings'; ui.gmPref = ''; } else { ui.sub = 'em-settings'; ui.emPref = ''; } render(); break;
+      case 'gmail-licenses': ui.gmPref = 'licenses'; render(); break;
+      case 'gmail-categories': ui.sub = 'gm-settings'; ui.gmPref = 'categories'; render(); break;
+      case 'gmail-pref': if (id.startsWith('label:')) ui.gmLabelFrom = ui.gmPref || 'account'; ui.gmPref = id; render(); break;
+      case 'gmail-pref-toggle': { const prefs = data.gmailPrefs ||= {}; const fallback = id.startsWith('category-') ? !['updates', 'forums'].includes(id.slice(9)) : !['reply-all', 'starred'].concat([]).includes(id); prefs[id] = !(prefs[id] ?? fallback); save(); render(); break; }
+      case 'gmail-pref-list': ui.gmPrefList = id; render(); break;
+      case 'gmail-pref-pick': { const [key, value] = id.split(':'); (data.gmailPrefs ||= {})[key] = Number(value); ui.gmPrefList = ''; save(); render(); break; }
+      case 'gmail-pref-close': ui.gmPrefList = ''; ui.gmSignature = undefined; render(); break;
+      case 'gmail-signature': ui.gmSignature = (data.gmailPrefs || {}).signature || ''; render(); viewport.querySelector('[data-gmail-signature]')?.focus(); break;
+      case 'gmail-signature-save': { const text = viewport.querySelector('[data-gmail-signature]')?.value ?? ui.gmSignature ?? ''; (data.gmailPrefs ||= {}).signature = String(text).trim(); ui.gmSignature = undefined; save(); render(); break; }
+      case 'gmail-noop': break;
+      case 'gmail-unavailable': toast(i18n.t('This feature is not part of the simulator.'));break;
+      default: return false;
+    }
+    return true;
+  }
+  function gmailForm(form, values) {
+    switch (form) {
+      case 'email': {const item=data.gmailbox.find(item=>item.id===ui.emailId);if(!item)break;for(const key of ['to','cc','bcc','subject','body'])if(values.has(key))item[key]=String(values.get(key)).trim();if(!ICSEmail.send(item)){ui.emailError='Enter valid email addresses';save();render();break;}save();ui.emailFolder='Sent';ui.emailQuery=undefined;ui.sub='read';ui.emailError='';render();toast('Demo email sent');break;}
+      case 'email-search': ui.emailQuery=String(values.get('query')||'').trim();ui.emailSelected=[];render();break;
+      default: return false;
+    }
+    return true;
+  }
+  // Email 4.3 (email.js): its screens, menus and actions; Attach file opens the Gallery's picker.
+  function emailContext() {
+    return {data, ui, lang: i18n.language, locale: i18n.locale(), now: deviceDate().getTime(), hour24: !!data.settings.hour24, root: viewport, signature: EmailPrefs.signatureBody(data), openSettings: () => { ui.sub = 'em-settings'; ui.emPref = ''; render(); },
+      save, render, renderOverlay, toast, back: navigateBack, focus: selector => viewport.querySelector(selector)?.focus(),
+      photo: photo => ICSMedia.art(photo), pickPicture: () => { openApp('gallery'); ui.galleryPick = 'email'; ui.galleryAlbum = ''; ui.sub = ''; render(); }};
+  }
+  function renderEmail() {
+    if (ui.sub === 'em-settings') return EmailPrefs.render(data, ui, i18n.language, key => i18n.t(key), ICSEmail.account);
+    return ICSEmail.render(emailContext());
+  }
+  // Text shared from an app (Play Books' Share): a new Gmail or Email message with the subject and the text.
+  function shareText(app, text, subject) {
+    ui.overlay = ''; renderOverlay(); openApp(app); if (app === 'gmail') composeGmail(); else composeEmail();
+    const d = (app === 'gmail' ? data.gmailbox : data.mailbox).find(m => m.id === ui.emailId); if (d) { d.subject = subject; d.body = text; } save(); render();
+  }
+  function shareVcard(app, file) { ui.overlay = ''; renderOverlay(); openApp(app); if (app === 'gmail') composeGmail(); else composeEmail(); const d = (app === 'gmail' ? data.gmailbox : data.mailbox).find(m => m.id === ui.emailId); if (d) d.attachment = file; save(); render(); }
+  function composeEmail(source=null,forward=false,to='') {
+    ICSEmail.startCompose(emailContext(),source,source?(forward?'forward':'reply'):'',to);
+  }
+  const spec = {
+    render(c) {
+      $bind(c);
+      switch (ui.view) {
+        case 'gmail': return renderGmail();
+        case 'email': return renderEmail();
+      }
+    },
+    action(action, button, c) {
+      $bind(c);
+      const event = c.event, { id, app, url } = button.dataset;
+      if (ui.view === 'gmail' && gmailAction(action, id, button)) return true;
+      if (ui.view === 'email' && action.startsWith('email-') && ICSEmail.handle(action, id, emailContext())) return true;
+      switch (action) {
+        case 'emailpref-page': ui.emPref = id; render(); break;
+        case 'emailpref-toggle': (data.emailPrefs ||= {})[id] = !EmailPrefs.value(data, id, ICSEmail.account); save(); render(); break;
+        case 'emailpref-list': ui.emPrefList = id; render(); break;
+        case 'emailpref-pick': { const [key, value] = id.split(':'); (data.emailPrefs ||= {})[key] = Number(value); ui.emPrefList = ''; save(); render(); break; }
+        case 'emailpref-edit': ui.emPrefEdit = id; ui.emPrefEditValue = undefined; render(); viewport.querySelector('[data-email-pref-edit]')?.focus(); break;
+        case 'emailpref-save': { const field = viewport.querySelector('[data-email-pref-edit]'); if (ui.emPrefEdit && field) { (data.emailPrefs ||= {})[ui.emPrefEdit] = field.value.trim(); save(); } ui.emPrefEdit = ''; render(); break; }
+        case 'emailpref-close': ui.emPrefList = ''; ui.emPrefEdit = ''; ui.emPrefTone = undefined; window.SystemSounds?.stop(); render(); break;
+        case 'emailpref-unsupported': toast('This feature is not part of the simulator.'); break;
+        default: return false;
+      }
+      return true;
+    },
+    submit(name, values, c) {
+      $bind(c);
+      const event = c.event, form = c.form;
+      if (ui.view === 'gmail' && gmailForm(form.dataset.form, values)) return true;
+      switch (form.dataset.form) {
+        case 'email': case 'email-search': ICSEmail.submit(form.dataset.form, values, emailContext()); break;
+        default: return false;
+      }
+      return true;
+    },
+    input(event, c) {
+      $bind(c);
+      if (event.target.matches('[data-gmail-signature]')) { ui.gmSignature = event.target.value; return true; }
+      if(event.target.closest('.email-compose')&&event.target.name){const item=data.mailbox.find(item=>item.id===ui.emailId);if(item){item[event.target.name]=event.target.value;save();}return true;}
+      return false;
+    },
+    back(c) {
+      $bind(c);
+      if (ui.view === 'email' && ui.sub === 'em-settings' && !ui.overlay) { if (ui.emPrefList || ui.emPrefEdit) { ui.emPrefList = ''; ui.emPrefEdit = ''; ui.emPrefTone = undefined; window.SystemSounds?.stop(); } else if (ui.emPref) ui.emPref = EmailPrefs.parent(ui.emPref); else ui.sub = ''; render(); return true; }
+      if (ui.view === 'email' && ICSEmail.back(emailContext())) return true;
+      if (ui.overlay) return false;
+      // Chrome settings: dialogs first, then the page, then back to the browser.
+      // Gmail settings: the dialogs, then the pages, then back to the mail.
+      if (ui.view === 'gmail' && ui.sub === 'gm-settings' && GmailApp.prefBack(ui, {data, root: viewport, toast})) { render(); return true; }
+      if (ui.view === 'gmail' && ui.sub === 'gm-settings') { if (ui.gmPrefList || ui.gmSignature !== undefined) { ui.gmPrefList = ''; ui.gmSignature = undefined; } else if (ui.gmPref === 'categories') ui.gmPref = 'account'; else if (ui.gmPref === 'licenses') ui.gmPref = 'about'; else if (ui.gmPref) ui.gmPref = ''; else ui.sub = ''; render(); return true; }
+      return false;
+    },
+    // Clicks taken before the keyguard's filter (the core's click handler).
+    actionEarly(action, button, c) {
+      $bind(c);
+      const event = c.event, { id, app, url } = button.dataset;
+      if (action.startsWith('gmx-') && GmailApp.handlePref(action, id, {data, ui, save, render, toast, root: viewport})) return true;
+      // Email's Quick responses, ringtone and server screens (email-prefs.js).
+      if (action.startsWith('empx-') && EmailPrefs.handle(action, id, {data, ui, save, render, root: viewport, account: ICSEmail.account})) return true;
+      return false;
+    },
+    // Opening, once the core has checked the phone is not locked.
+    openUnlocked(c, resume, app) {
+      $bind(c);
+      if (app === 'email' || app === 'gmail') useMailApp(app);
+    },
+    clearData(c) {
+      $bind(c);
+      const id = c.clearId;
+      if(id==='email'){data.mailbox=ICSEmail.restore(null,emailData,[]);data.sentEmails=[];ui.emailFolder='Inbox';ui.emailQuery=undefined;ui.emailSelected=[];}
+    },
+    overlay(c) {
+      $bind(c);
+      if (ui.overlay.startsWith('email-') && ui.view === 'gmail') {
+        overlayRoot.innerHTML = KKEmail.overlay(data.gmailbox,ui,data.photos,key=>i18n.t(key),i18n.language,gmailOptions());
+      } else if (ui.overlay.startsWith('email-')) {
+        overlayRoot.innerHTML = ICSEmail.overlay(emailContext());
+      }
+      else return;
+      return true;
+    },
+    exports: {
+      composeGmail: (c, ...args) => { $bind(c); return composeGmail(...args); },
+      emailContext: (c, ...args) => { $bind(c); return emailContext(...args); },
+      shareText: (c, ...args) => { $bind(c); return shareText(...args); },
+      shareVcard: (c, ...args) => { $bind(c); return shareVcard(...args); },
+      composeEmail: (c, ...args) => { $bind(c); return composeEmail(...args); }
+    }
+  };
+  JB.register('email', spec);
+  JB.register('gmail', spec);
+})();
