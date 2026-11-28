@@ -1,4 +1,7 @@
-/* TODO */
+/* The wallpaper picker on Android 5.1.1 (lp-wallpaper-picker.js draws it), moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - the tiles and the strip (its wheel, long press and mouse drag), the delete CAB, Pick image, Set wallpaper
+   - wallpapers set from elsewhere (data-action="wallpaper"); Back */
 'use strict';
 LP.define('wallpaper-picker', ({
   dp, holdDelay, home, i18n, render, save, screen, suppressReleaseClick, toast, ui, viewport, wallpaperFiles
@@ -13,17 +16,13 @@ LP.define('wallpaper-picker', ({
     strip.scrollLeft += delta * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? strip.clientWidth : 1);
     event.preventDefault();
   }, {passive: false});
-  // lp:code
   return {
-    // lp:hooks
     pointerup() {
       if (lp.pointerStart.kwpDragging) { lp.suppressClickUntil = Date.now() + 350; lp.pointerStart = null; return true; }
-      // lp:pointerup
       return false;
     },
     pointermove(event, dx) {
       if (lp.pointerStart.kwpScroll && event.pointerType === 'mouse' && (lp.pointerStart.kwpDragging || Math.abs(dx) > dp(9))) { lp.pointerStart.kwpDragging = true; const k = screen.getBoundingClientRect().width / screen.offsetWidth || 1; lp.pointerStart.kwpScroll.scrollLeft = lp.pointerStart.kwpLeft - dx / k; lp.suppressClickUntil = Date.now() + 350; event.preventDefault(); return true; }
-      // lp:pointermove
       return false;
     },
     pointerdown(event) {
@@ -31,20 +30,17 @@ LP.define('wallpaper-picker', ({
       if (kwpScroll) { lp.pointerStart.kwpScroll = kwpScroll; lp.pointerStart.kwpLeft = kwpScroll.scrollLeft; }
       const kwpLong = ui.view === 'wallpaper-picker' && !ui.wp?.checked?.length ? event.target.closest('[data-kwp-long]') : null;
       if (kwpLong) lp.homeLongPressTimer = setTimeout(() => { ui.wp.checked = [kwpLong.dataset.id]; lp.pointerStart = null; suppressReleaseClick(); wallpaperPickerRender(); }, holdDelay(550));
-      // lp:pointerdown
       return false;
     },
     back() {
       if (ui.view === 'wallpaper-picker' && ui.wp?.checked?.length) { ui.wp.checked = []; wallpaperPickerRender(); return true; }
-      // lp:back
       return false;
     },
     render() {
       return KKWallpaperPicker.render(wallpaperPickerContext());
-      // lp:render
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       switch (action) {
         case 'open-wallpapers': ui.overlay = ''; ui.overview = false; ui.wp = {selected: '', temp: [], checked: [], stripHidden: false}; ui.view = 'wallpaper-picker'; render(); break;
         // Launcher3 WallpaperPickerActivity: tiles preview, the action bar sets, a long press on a picked or saved image
@@ -65,14 +61,6 @@ LP.define('wallpaper-picker', ({
           ui.wp = null; home(false); break;
         }
         case 'wallpaper': lp.data.wallpaper = Number(id); delete lp.data.customWallpaper; delete lp.data.customWallpaperPhoto; save(); if (ui.view === 'wallpaper-picker') home(false); else render(); toast('Wallpaper set'); break;
-        // lp:cases
-        default: return false;
-      }
-      return true;
-    },
-    submit(name, values, event, form) {
-      switch (name) {
-        // lp:scases
         default: return false;
       }
       return true;

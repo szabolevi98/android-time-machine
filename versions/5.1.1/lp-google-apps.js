@@ -1,4 +1,9 @@
-/* TODO */
+/* The Google apps on Android 5.1.1 (stock-apps.js draws them), moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - Google Search and Now (cards and their swipe, reminders), Voice Search, Maps and its routes, Drive, Keep,
+     YouTube, Google+, Earth, News & Weather and Google Settings
+   - their buttons, forms, fields, prefix handlers (mr-, drv-, nwsec-, kp-, earth-, gpp-, mps-, yt10-, lsp-), the
+     overflow menu, the held Drive item, their openings and Back at each of its places */
 'use strict';
 LP.define(['google-search', 'voice-search', 'maps', 'drive', 'keep', 'youtube', 'google-plus', 'earth', 'news-weather', 'google-settings'], ({
   clone, deviceDate, holdDelay, i18n, openApp, overlayRoot, render, renderOverlay, safe, save,
@@ -84,27 +89,22 @@ LP.define(['google-search', 'voice-search', 'maps', 'drive', 'keep', 'youtube', 
     openApp(app); lp.composeEmail(); const d = lp.mailbox().find(m => m.id === ui.emailId); if (d) { d.subject = subject; d.body = text; } save(); render();
   }
   Object.assign(lp, {newsContext, driveShareText, driveShareFile, newsSectionsContext, mrContext, keepAttach});
-  // lp:code
   return {
-    // lp:hooks
     overlays: {
       'sa-menu'() {
         // The Google apps' action bar overflow (StockApps.menu: their menu XML's overflow items).
         overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${StockApps.menu(ui.view, {ui, data: lp.data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()}).map(item => `<button data-action="${item.action}"${item.id != null ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
       },
-      // lp:overlays
     },
     pointerdown(event) {
       // Drive: a held item opens menu_doclist_context.xml for it (lp-drive.js).
       const heldDrive = event.target.closest('[data-drive-hold]');
       if (heldDrive && !ui.overlay && !ui.driveDialog) lp.messageHoldTimer = setTimeout(() => { suppressReleaseClick(); LPDrive.handle('drv-hold', heldDrive.dataset.driveHold, {data: lp.data, ui, save, render, toast, root: viewport}); }, holdDelay(550));
-      // lp:pointerdown
       return false;
     },
     contextmenu(event) {
       const driveItem = event.target.closest('[data-drive-hold]');
       if (driveItem && !ui.overlay && !ui.driveDialog) LPDrive.handle('drv-hold', driveItem.dataset.driveHold, {data: lp.data, ui, save, render, toast, root: viewport});
-      // lp:contextmenu
       return false;
     },
     input(event) {
@@ -118,93 +118,77 @@ LP.define(['google-search', 'voice-search', 'maps', 'drive', 'keep', 'youtube', 
       if (event.target.matches('[data-gnr-title]')) { if (ui.gnowDraft) ui.gnowDraft.title = event.target.value; return true; }
       if (event.target.matches('[data-keep-li]')) { const item = keepCurrent()?.list?.[Number(event.target.dataset.keepLi)]; if (item) { item.text = event.target.value; save(); } return true; }
       if (event.target.matches('.keep-text')) { const note = (lp.data.keepNotes || []).find(item => item.id === ui.keepNote); if (note) { note.text = event.target.value; save(); } return true; }
-      // lp:input
       return false;
     },
     backDrive() {
       if (ui.view === 'drive' && window.LPDrive && LPDrive.back(ui)) { render(); return true; }
-      // lp:backDrive
       return false;
     },
     backApps() {
       if (StockApps.APPS.includes(ui.view) && ui.sub) { if (ui.view === 'keep') saveKeepNote(true); ui.sub = ''; render(); return true; }
-      // lp:backApps
       return false;
     },
     backNow() {
       if (ui.gnowSpin) { ui.gnowSpin = ''; render(); return true; }
       if (ui.gnowDraft || ui.gnowDialog) { ui.gnowDraft = null; ui.gnowDialog = ''; render(); return true; }
       if(ui.view==='keep' && KeepMore.back(keepMoreContext()))return true;
-      // lp:backNow
       return false;
     },
     backYt() {
       if (ui.view === 'youtube' && !ui.overlay && LPYouTube.back(ytContext())) return true;
       if (ui.view === 'google-search' && ui.sub === 'settings' && !ui.overlay && LPSearchPrefs.back(gsContext())) return true;
-      // lp:backYt
       return false;
     },
     backNews() {
       if(ui.view==='news-weather'&&!ui.overlay&&NewsSections.back(newsSectionsContext()))return true;
-      // lp:backNews
       return false;
     },
     backRoute() {
       if (ui.view === 'maps' && !ui.overlay && (ui.mapsRoute || ui.navRun) && MapsRoute.back(mrContext())) return true;
-      // lp:backRoute
       return false;
     },
     backGms() {
       if (ui.view === 'google-settings' && GMSSettings.back(ui)) { render(); return true; }
-      // lp:backGms
       return false;
     },
     backMaps() {
       if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return true; }
-      // lp:backMaps
       return false;
     },
     backEarth() {
       if (ui.view === 'earth' && !ui.overlay && EarthApp.back(ui)) { render(); return true; }
       if (ui.view === 'google-plus' && !ui.overlay && PlusPost.back(ui)) { render(); return true; }
-      // lp:backEarth
       return false;
     },
     openingVoice(app) {
       if (app === 'voice-search') setTimeout(listenVoice);
-      // lp:openingVoice
       return false;
     },
     openingApps(app, resume) {
       if (app === 'google-plus' && !resume) PlusPost.open(ui);
       if (app === 'earth' && !resume) EarthApp.open(ui);
-      // lp:openingApps
       return false;
     },
     render() {
       return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, plusCtx: ui.view === 'google-plus' ? plusContext() : null, ui, data: lp.data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
-      // lp:render
     },
     afterRenderNews() {
       const newsRoot=viewport.querySelector('[data-news-sections]');
       if(ui.newsSectionsHook&&ui.newsSectionsHook.root!==newsRoot){ui.newsSectionsHook.destroy();ui.newsSectionsHook=null;}
       if(newsRoot&&!ui.newsSectionsHook)ui.newsSectionsHook={...NewsSections.attach(newsRoot,newsSectionsContext()),root:newsRoot};
       if(ui.view==='news-weather'&&ui.newsAdd)NewsSections.mount(viewport);
-      // lp:afterRenderNews
       return false;
     },
     mount() {
       if (ui.view === 'earth') EarthApp.mount(viewport, earthContext());
-      // lp:mount
       return false;
     },
     beforeRender() {
       if(ui.view!=='keep')window.KeepMore?.leave(ui);
-      // lp:beforeRender
       return false;
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id, app} = button.dataset;
       if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
       if (action.startsWith('drv-') && LPDrive.handle(action, id, {data: lp.data, ui, save, render, renderOverlay, toast, root: viewport, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), shareFile: driveShareFile, shareText: driveShareText})) return;
       if(action.startsWith('nwsec-')&&NewsSections.handle(action,id,newsSectionsContext()))return;
@@ -214,7 +198,6 @@ LP.define(['google-search', 'voice-search', 'maps', 'drive', 'keep', 'youtube', 
       if (action.startsWith('mps-') && window.MapsPrefs?.handle(action, id, mapsPrefsContext())) return;
       if (ui.view === 'youtube' && action.startsWith('yt10-') && LPYouTube.handle(action, id, ytContext())) return;
       if (ui.view === 'google-search' && action.startsWith('lsp-') && LPSearchPrefs.handle(action, id, gsContext())) return;
-      // lp:click
       switch (action) {
         // The Google Now Launcher's third overview button opens the Google Search settings (not simulated).
         case 'gnow-drawer': document.querySelectorAll('.gnow-page').forEach(page => page.classList.toggle('drawer-open')); break;
@@ -336,7 +319,6 @@ LP.define(['google-search', 'voice-search', 'maps', 'drive', 'keep', 'youtube', 
         // News & Weather 2.2: Refresh shows content_loading_placeholder while it gathers; stories expand and open
         // WebContentActivity; the weather card's menu and the app menu open its dialogs; the theme switches.
         case 'sa-news-refresh': ui.overlay = ''; renderOverlay(); ui.newsRefreshing = true; render(); setTimeout(() => { ui.newsRefreshing = false; if (ui.view === 'news-weather') render(); }, 900); break;
-        // lp:cases
         default: return false;
       }
       return true;
@@ -350,7 +332,6 @@ LP.define(['google-search', 'voice-search', 'maps', 'drive', 'keep', 'youtube', 
         case 'keep-li-add': { const text = String(values.get('text') || '').trim(), note = keepCurrent(); if (!text || !note?.list) return; note.list.push({text, checked: false}); save(); render(); viewport.querySelector('.kp-ed-add input')?.focus(); break; }
         case 'keep-add': { const text = String(values.get('text') || '').trim(); if (!text) return; lp.data.keepNotes = [{id: 'k' + Date.now(), text, color: (lp.data.keepNotes || []).length % 5}, ...(lp.data.keepNotes || [])]; save(); render(); break; }
         case 'earth-search': ui.earthSearching = false; EarthApp.search(values.get('query'), earthContext()); render(); break;
-        // lp:scases
         default: return false;
       }
       return true;

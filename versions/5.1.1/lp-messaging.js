@@ -1,4 +1,9 @@
-/* TODO */
+/* Messenger and Hangouts on Android 5.1.1, moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - their lists, threads, compose and attachments, the archive, Do not disturb, People & options and the
+     Hangouts settings, the menus and dialogs
+   - sending and the simulated replies with their heads-up notification (lp.sendMessage, lp.scheduleReply)
+   - the long press and right click on a message, Back and Clear data */
 'use strict';
 LP.define(['messaging', 'hangouts'], ({
   clock, clone, contact, defaultData, deviceDate, dp, holdDelay, i18n, openApp, overlayRoot, render, renderOverlay,
@@ -92,21 +97,17 @@ LP.define(['messaging', 'hangouts'], ({
     }, 4500);
   }
   Object.assign(lp, {messageDraft, openMessageThread, scrollMessages});
-  // lp:code
   return {
-    // lp:hooks
     // Settings › Apps › Messenger or Hangouts › Clear data: their shared conversations.
     clearData() { lp.data.messages=clone(defaultData.messages);lp.data.messageDrafts={}; },
     pointerdown(event) {
       const message = event.target.closest('.mms-message');
       if (message && !ui.overlay) lp.messageHoldTimer = setTimeout(() => { ui.mmsMessage = message.dataset.id; ui.overlay = 'mms-message'; suppressReleaseClick(); renderOverlay(); }, holdDelay(550));
-      // lp:pointerdown
       return false;
     },
     contextmenu(event) {
       const message = event.target.closest('.mms-message');
       if (message && !ui.overlay) { ui.mmsMessage = message.dataset.id; ui.overlay = 'mms-message'; renderOverlay(); }
-      // lp:contextmenu
       return false;
     },
     input(event) {
@@ -132,7 +133,6 @@ LP.define(['messaging', 'hangouts'], ({
         if (event.target.name === 'body') { event.target.style.height = 'calc(48.5652 * var(--dp))'; event.target.style.height = `${Math.min(dp(97.1303),event.target.scrollHeight)}px`; }
         return true;
       }
-      // lp:input
       return false;
     },
     overlay(name, root) {
@@ -140,39 +140,33 @@ LP.define(['messaging', 'hangouts'], ({
         overlayRoot.innerHTML = renderMessageOverlay();
         return true;
       }
-      // lp:overlay
       return false;
     },
     back() {
       if (ui.view === 'messaging' && ui.sub === 'archived') { ui.sub = ''; render(); return true; }
       if (ui.view === 'hangouts' && ui.sub === 'archived') { ui.sub = ''; render(); return true; }
       if (['messaging', 'hangouts'].includes(ui.view) && ui.sub === 'thread') { ui.sub = ui.mmsListMode || ''; render(); return true; }
-      // lp:back
       return false;
     },
     backPages() {
       if (ui.view === 'hangouts' && ui.hgPage) { HangoutsPrefs.back(ui); render(); return true; }
       if (ui.view === 'messaging' && ui.lpmPage) { MessengerOptions.back(ui); render(); return true; }
-      // lp:backPages
       return false;
     },
     render() {
       if (ui.view === 'hangouts') return Hangouts.render(lp.data, ui, key => i18n.t(key), i18n.locale(), deviceDate().getTime());
       return renderMessaging();
-      // lp:render
     },
     afterRender() {
       if (ui.view === 'hangouts' && ui.hgPage === 'add') HangoutsPrefs.mount(viewport, ui, render);
-      // lp:afterRender
       return false;
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       if (/^(hgp|mpo|mset)-/.test(action)) {
         const ctx = {data: lp.data, ui, save, render, renderOverlay, toast, root: viewport, openApp, openThread: key => openMessageThread(key)};
         if ((action.startsWith('hgp-') ? HangoutsPrefs : MessengerOptions).handle(action, id, ctx)) return;
       }
-      // lp:click
       switch (action) {
         case 'thread': openMessageThread(id); break;
         // New Hangout: a picked contact or typed number opens its conversation and takes along a shared draft.
@@ -209,7 +203,6 @@ LP.define(['messaging', 'hangouts'], ({
           save(); ui.overlay = ''; render(); break;
         }
         case 'new-message': ui.sub = 'new'; ui.overlay = ''; render(); viewport.querySelector('[name=recipient]')?.focus(); break;
-        // lp:cases
         default: return false;
       }
       return true;
@@ -223,7 +216,6 @@ LP.define(['messaging', 'hangouts'], ({
           if (!target) { toast('Enter a contact name or valid phone number'); return; }
           sendMessage(target.key, String(values.get('body') || '').trim(), messageDraft().attachment); break;
         }
-        // lp:scases
         default: return false;
       }
       return true;

@@ -1,4 +1,7 @@
-/* TODO */
+/* The power key on Android 5.1.1, moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - press and hold, the global actions menu and its dialogs, shutdown, reboot and safe mode, the boot
+     (lp.bootUp) and the power layer, waking from sleep. The cold boot stays at the end of the core. */
 'use strict';
 LP.define('power', ({
   apps, home, i18n, lockControls, overlayRoot, render, renderOverlay, screen, ui
@@ -33,9 +36,7 @@ LP.define('power', ({
   function renderPower() { if (ui.power === 'boot' && powerLayer.querySelector('.ga-boot')) return; powerLayer.innerHTML = ui.power === 'off' ? '<div class="ga-off"></div>' : ui.power === 'boot' ? GlobalActions.boot() : ui.safeMode ? GlobalActions.safeMode(key => i18n.t(key)) : ''; }
   screen.addEventListener('pointerdown',()=>{if(ui.sleeping){ui.sleeping=false;lp.suppressClickUntil=Date.now()+350;if(ui.locked)render();else home(false);}},true);
   Object.assign(lp, {bootUp, powerLayer});
-  // lp:code
   return {
-    // lp:hooks
     overlays: {
       'power-menu'() {
         overlayRoot.innerHTML = GlobalActions.menu({bugreport: lp.data.settings.bugreportPower}, key => i18n.t(key));
@@ -48,22 +49,13 @@ LP.define('power', ({
       'power-progress'() {
         overlayRoot.innerHTML = GlobalActions.progress(key => i18n.t(key));
       },
-      // lp:overlays
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       switch (action) {
         case 'ga-power': ui.overlay = 'power-confirm'; ui.powerKind = 'shutdown'; renderOverlay(); break;
         case 'ga-bugreport': ui.overlay = 'power-confirm'; ui.powerKind = 'bugreport'; renderOverlay(); break;
         case 'ga-confirm': powerConfirm(id); break;
-        // lp:cases
-        default: return false;
-      }
-      return true;
-    },
-    submit(name, values, event, form) {
-      switch (name) {
-        // lp:scases
         default: return false;
       }
       return true;

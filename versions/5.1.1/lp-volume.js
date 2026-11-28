@@ -1,4 +1,6 @@
-/* TODO */
+/* The volume panel on Android 5.1.1 (volume-panel.js draws it), moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - the panel's layer, the keys with their repeat, the streams, the timeout, Interruptions and Settings */
 'use strict';
 LP.define('volume', ({
   i18n, openApp, render, save, screen, ui, viewport
@@ -38,22 +40,12 @@ LP.define('volume', ({
   bindVolumeKey(document.querySelector('#volume-down'), -1);
   bindVolumeKey(document.querySelector('#volume-up'), 1);
   bindVolumeKey(document.querySelector('.volume-rocker'), event => event.offsetY < event.currentTarget.clientHeight / 2 ? 1 : -1);
-  // lp:code
   return {
-    // lp:hooks
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       switch (action) {
         case 'vol-zen': lp.data.settings.zenMode = id; if (id === 'all') lp.data.settings.zenExit = null; save(); lp.renderStatus(); showVolume(volumeStream()); break;
         case 'vol-settings': hideVolume(); openApp('settings'); ui.sub = 'sound'; render(); break;
-        // lp:cases
-        default: return false;
-      }
-      return true;
-    },
-    submit(name, values, event, form) {
-      switch (name) {
-        // lp:scases
         default: return false;
       }
       return true;

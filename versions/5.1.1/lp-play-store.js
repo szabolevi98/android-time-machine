@@ -1,4 +1,8 @@
-/* TODO */
+/* The Play Store (5.2.13) on Android 5.1.1 (lp-play.js draws it), moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - its pages, details, install and uninstall (the store apps join and leave the launcher: lp.storeInstalled,
+     lp.storeUninstall), ratings, the content filter, settings, search, menus and dialogs
+   - the drawer swipe, the details toolbar over the hero, Back and Clear data */
 'use strict';
 LP.define('play-store', ({
   appNames, dp, i18n, openApp, overlayRoot, render, renderOverlay, safe, save, screen, storeAppsSync, storeContext,
@@ -51,9 +55,7 @@ LP.define('play-store', ({
     if (bar && hero) bar.classList.toggle('solid', list.scrollTop > hero.offsetHeight - bar.offsetHeight);
   }, true);
   Object.assign(lp, {jbPlayContext, storeUninstall});
-  // lp:code
   return {
-    // lp:hooks
     pointerup(event, dx, dy) {
       // Play Store 4.8: a swipe from the left edge of a top-level page opens the drawer, a swipe to the left closes it.
       if (ui.view === 'play-store' && Math.abs(dx) > dp(55) && Math.abs(dx) > Math.abs(dy) * 1.5) {
@@ -62,18 +64,15 @@ LP.define('play-store', ({
         if (ui.overlay === 'jbp-drawer' && dx < 0) { ui.overlay = ''; renderOverlay(); lp.suppressClickUntil = Date.now() + 350; lp.pointerStart = null; return true; }
       }
       if (ui.view === 'play-store' && (ui.market?.page === 'section' || ui.market?.page === 'my-apps') && !ui.overlay && lp.pointerStart.target.closest('.jbp-scroll') && Math.abs(dx) > dp(66) && Math.abs(dx) > Math.abs(dy) * 1.5) { const tabs = [...viewport.querySelectorAll('.jbp-tabs button')], i = tabs.findIndex(b => b.classList.contains('on')), next = tabs[i + (dx < 0 ? 1 : -1)]; if (next) next.click(); lp.suppressClickUntil = Date.now() + 350; lp.pointerStart = null; return true; }
-      // lp:pointerup
       return false;
     },
     input(event) {
       if (event.target.closest('.jbp-bar.searching')) { ui.marketEdit = event.target.value; const view = viewport.querySelector('.jbp'); view?.querySelector('.jbp-suggest')?.remove(); const tmp = document.createElement('div'); tmp.innerHTML = JBPlay.render(jbPlayContext()); const sug = tmp.querySelector('.jbp-suggest'); if (sug && view) view.append(sug); return true; }
       if (event.target.matches('[data-jbp-auto]')) { const id = event.target.dataset.jbpAuto, list = lp.data.marketAuto || []; lp.data.marketAuto = event.target.checked ? [...new Set([...list, id])] : list.filter(x => x !== id); save(); return true; }
-      // lp:input
       return false;
     },
     clearData() {
       delete lp.data.playRatings;
-      // lp:clearData
       return false;
     },
     overlay(name, root) {
@@ -81,33 +80,28 @@ LP.define('play-store', ({
         overlayRoot.innerHTML = JBPlay.dialog(ui.overlay.slice(4), jbPlayContext());
         return true;
       }
-      // lp:overlay
       return false;
     },
     back() {
       if (ui.view === 'play-store' && ui.marketSearching) { ui.marketSearching = false; render(); return true; }
       if (ui.view === 'play-store' && ui.marketHistory?.length) { const prev = ui.marketHistory.pop(); ui.market = prev; render(); const list = viewport.querySelector('.jbp-scroll'); if (list) list.scrollTop = prev.scroll || 0; return true; }
-      // lp:back
       return false;
     },
     opening(app, resume) {
       if (app === 'play-store' && !resume) { ui.play = ICSPlayStore.initial(); ui.playHistory = []; ui.market = {page: 'home'}; ui.marketHistory = []; ui.marketSearching = false; }
-      // lp:opening
       return false;
     },
     render() {
       return JBPlay.render(jbPlayContext());
-      // lp:render
     },
     overlays: {
       'play-menu'() {
         // The action bar overflow: a Holo Light popup below the overflow button (Play 5.2: a Material popup over it).
         overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="jbp-menu" role="menu">${JBPlay.menu(jbPlayContext()).map(item => `<button data-action="${item.action}"${item.checked !== undefined ? ` role="menuitemcheckbox" aria-checked="${item.checked}"` : ''}>${safe(item.title)}${item.checked !== undefined ? `<i class="lpp-check${item.checked ? ' on' : ''}"></i>` : ''}</button>`).join('')}</div>`;
       },
-      // lp:overlays
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id, app} = button.dataset;
       switch (action) {
         case 'market': openApp('play-store'); break;
         case 'play-menu': case 'jbp-menu': ui.overlay = 'play-menu'; renderOverlay(); break;
@@ -163,7 +157,6 @@ LP.define('play-store', ({
         case 'play-preview-step': ui.play.preview = (ui.play.preview + Number(id) + 3) % 3; render(); break;
         case 'play-open': { const entry = ICSPlayStore.catalog.find(item => item.id === id); if (entry?.app) openApp(entry.app); break; }
         case 'play-rate': { const top = viewport.querySelector('.play-content').scrollTop; lp.data.playRatings ||= {}; lp.data.playRatings[ui.play.selected] = Number(id); save(); render(); viewport.querySelector('.play-content').scrollTop = top; break; }
-        // lp:cases
         default: return false;
       }
       return true;
@@ -171,9 +164,7 @@ LP.define('play-store', ({
     submit(name, values, event, form) {
       if (form.dataset.form === 'jbp-search') { const q = String(values.get('query') || '').trim(); if (!q) return; lp.data.marketSearches = [q, ...(lp.data.marketSearches || []).filter(x => x !== q)].slice(0, 10); save(); jbPlayGo({page: 'search', query: q}); return; }
       if (form.dataset.form === 'play-search') { ui.play.query = String(values.get('query') || '').trim(); render(); return; }
-      // lp:submit
       switch (name) {
-        // lp:scases
         default: return false;
       }
       return true;

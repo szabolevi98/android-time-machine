@@ -1,4 +1,8 @@
-/* TODO */
+/* Photos (Google+ Photos) on Android 5.1.1, moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - the tabs, folders and the one-up viewer with its swipe and keys; Select, the slideshow, Download, sharing
+   - the editor (plus-editor.js), photo sphere, refocus and video players; settings, menus and dialogs
+   - the Gallery code the image has no app for; Back */
 'use strict';
 LP.define('photos', ({
   clone, dp, i18n, openApp, overlayRoot, reducedMotion, render, renderOverlay, safe, save, screen,
@@ -60,22 +64,17 @@ LP.define('photos', ({
     ui.selectedPhoto=items[(index+direction+items.length)%items.length].id;ui.galleryZoom=false;render();
   }
   Object.assign(lp, {galleryWallpaper, photosContext});
-  // lp:code
   return {
-    // lp:hooks
     clockTick() {
       if(ui.view==='gallery' && ui.sub==='photo' && ui.gallerySlideshow && !ui.overlay && Date.now()-ui.gallerySlideAt>=3000){ui.gallerySlideAt=Date.now();galleryStep(1);}
-      // lp:clockTick
       return false;
     },
     keydown(event) {
       if(ui.view==='gallery' && ui.sub==='photo' && !ui.overlay && ['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();galleryStep(event.key==='ArrowLeft'?-1:1);return true;}
-      // lp:keydown
       return false;
     },
     pointerup(event, dx) {
       if (lp.pointerStart.gallerySwiping) { if(Math.abs(dx)>dp(50))galleryStep(dx<0?1:-1);else render();lp.suppressClickUntil=Date.now()+350;lp.pointerStart=null;return true; }
-      // lp:pointerup
       return false;
     },
     pointermove(event, dx, dy) {
@@ -84,12 +83,10 @@ LP.define('photos', ({
         try{screen.setPointerCapture(event.pointerId);}catch{}
         const picture=viewport.querySelector('.gallery-image');if(picture)picture.style.transform=`translateX(${dx}px)`;return true;
       }
-      // lp:pointermove
       return false;
     },
     input(event) {
       if (event.target.matches('[data-photos-search]')) { ui.photosQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-photos-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return true; }
-      // lp:input
       return false;
     },
     back() {
@@ -102,12 +99,10 @@ LP.define('photos', ({
       if (ui.view === 'photos' && ui.sub === 'settings-backup') { ui.sub = 'settings'; render(); return true; }
       if (ui.view === 'photos' && ui.sub === 'photo') photosSlideshowStop();
       if (ui.view === 'photos' && ui.sub) { ui.sub = ui.sub === 'photo' ? ui.photosReturn || '' : ui.sub === 'folder' ? 'folders' : ''; ui.photosChrome = true; render(); return true; }
-      // lp:back
       return false;
     },
     render() {
       return PhotosApp.render(photosContext());
-      // lp:render
     },
     afterRender() {
       if (ui.view === 'photos' && ui.sub === 'photo') attachPhotosSwipe();
@@ -118,7 +113,6 @@ LP.define('photos', ({
       if (ui.gpv && !viewport.querySelector('[data-gpv-root]')?.isSameNode(ui.gpv.root)) { ui.gpv.destroy(); ui.gpv = null; }
       const gpvRoot = viewport.querySelector('[data-gpv-root]');
       if (gpvRoot && !ui.gpv) { const photo = PhotosApp.list(photosContext())[ui.photosIndex]; if (photo) ui.gpv = {...GPVideo.attach(gpvRoot, {photo, ui, rerender: render, reduced: !!reducedMotion?.matches}), root: gpvRoot}; }
-      // lp:afterRender
       return false;
     },
     overlays: {
@@ -134,12 +128,10 @@ LP.define('photos', ({
       'photos-delete'() {
         overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog mms-dialog" role="dialog" aria-label="${safe(i18n.t('Delete'))}"><h3>${safe(i18n.t('Delete'))}</h3><p>${safe(i18n.t('Delete this photo?'))}</p><div class="settings-dialog-actions"><button data-action="close-overlay">${safe(i18n.t('Cancel'))}</button><button data-action="photos-confirm-delete">${safe(i18n.t('Delete'))}</button></div></div>`;
       },
-      // lp:overlays
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       if (action.startsWith('pe-') && window.PlusEditor?.handle(action, button, peContext())) return;
-      // lp:click
       switch (action) {
         case 'photos-set-wallpaper': ui.overlay = ''; openApp('photos'); break;
         // Google+ Photos
@@ -184,14 +176,6 @@ LP.define('photos', ({
         case 'photo': ui.selectedPhoto=Number(id);if(!galleryItems().some(p=>p.id===Number(id))){ui.galleryCluster='album';ui.galleryAlbum=ICSMedia.album(lp.data.photos.find(p=>p.id===Number(id))||{});}ui.sub='photo';ui.galleryZoom=false;ui.galleryFilm=false;ui.galleryBars=true;ui.galleryFromCamera=false;render();break;
         case 'gallery-menu': case 'gallery-share': case 'gallery-details': ui.overlay=action;renderOverlay();break;
         case 'gallery-share-message': {const photo=lp.data.photos.find(p=>p.id===ui.selectedPhoto);if(!photo)break;openApp('messaging');ui.sub='new';lp.messageDraft().attachment=clone(photo);save();render();break;}
-        // lp:cases
-        default: return false;
-      }
-      return true;
-    },
-    submit(name, values, event, form) {
-      switch (name) {
-        // lp:scases
         default: return false;
       }
       return true;

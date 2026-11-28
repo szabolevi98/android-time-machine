@@ -1,4 +1,7 @@
-/* TODO */
+/* DocumentsUI's GET_CONTENT picker on Android 5.1.1 (lp-docpicker.js draws it), moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - opened for the wallpaper picker, Keep's pictures, Email / Gmail's Attach file and the editors (lp.docPick)
+   - its roots, search, Sort by and overflow menus, and the picked document handed back to the asking app */
 'use strict';
 LP.define('kk-doc-picker', ({
   clone, deviceDate, i18n, overlayRoot, render, renderOverlay, save, ui, viewport
@@ -21,9 +24,7 @@ LP.define('kk-doc-picker', ({
     save(); render();
   }
   Object.assign(lp, {docPick, docContext});
-  // lp:code
   return {
-    // lp:hooks
     // Sort by and the overflow menu (ui.overlay ldp-<menu>).
     overlay(name) {
       if (!(name.startsWith?.('ldp-') && ui.docs)) return false;
@@ -32,15 +33,13 @@ LP.define('kk-doc-picker', ({
     },
     back() {
       if (ui.view === 'kk-doc-picker') { if (LPDocPicker.back(docContext()) !== 'render') docReturn(); render(); return true; }
-      // lp:back
       return false;
     },
     render() {
       return LPDocPicker.render(docContext());
-      // lp:render
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       if (action.startsWith('ldp-') && ui.docs) {
         const result = LPDocPicker.act(action, id, docContext());
         if (result.save) save();
@@ -49,18 +48,14 @@ LP.define('kk-doc-picker', ({
         if (result.pick) { docPicked(result.pick); return; }
         render(); if (result.focus) viewport.querySelector('.ldp-search input')?.focus(); return;
       }
-      // lp:click
       switch (action) {
-        // lp:cases
         default: return false;
       }
       return true;
     },
     submit(name, values, event, form) {
       if (form.dataset.form === 'ldp-search') { LPDocPicker.search(values.get('q'), docContext()); render(); return; }
-      // lp:submit
       switch (name) {
-        // lp:scases
         default: return false;
       }
       return true;

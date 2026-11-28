@@ -1,4 +1,7 @@
-/* TODO */
+/* Play Music, Movies, Books and Games on Android 5.1.1 (play-apps.js draws them), moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - their pages, drawers, menus and More pages (lp-play-more.js); the music player and queue (lp.saveMusic, and
+     lp.tickMusic in the device clock's tick); the video player's clock; the Books reader and its options; Back */
 'use strict';
 LP.define(['play-music', 'play-movies', 'play-books', 'play-games'], ({
   clone, i18n, openApp, overlayRoot, render, renderOverlay, safe, save, toast, tracks, ui, viewport
@@ -31,20 +34,16 @@ LP.define(['play-music', 'play-movies', 'play-books', 'play-games'], ({
   }
   setInterval(tickPlayVideo, 1000);
   Object.assign(lp, {PLAY_APPS, saveMusic, tickMusic});
-  // lp:code
   return {
-    // lp:hooks
     input(event) {
       if (event.target.matches('[data-pa-search]')) { ui.paQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-pa-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return true; }
       if (event.target.matches('[data-bk-bright]')) { lp.data.bookPrefs = {...PlayApps.bookPrefs(lp.data), brightness: Number(event.target.value)}; save(); viewport.querySelector('.pb-reader')?.style.setProperty('--bk-dim', ((100 - Number(event.target.value)) / 100 * .7).toFixed(3)); return true; }
       if(event.target.dataset.field==='music-position'){ui.music.position=Number(event.target.value);saveMusic();const elapsed=viewport.querySelector('.music-elapsed');if(elapsed)elapsed.textContent=ICSMusic.time(ui.music.position);}
-      // lp:input
       return false;
     },
     preClick(action, id, button) {
       if (ui.overlay === 'pa-more' && !action.startsWith('px-') && action !== 'close-overlay') { ui.overlay = ''; ui.paMore = ''; renderOverlay(); }
       if (action.startsWith('px-') && PlayMore.handle(action, id, {...playContext(ui.view), save, saveMusic, render, renderOverlay, toast, root: viewport, openApp, shareText: lp.driveShareText})) return true;
-      // lp:preClick
       return false;
     },
     back() {
@@ -53,12 +52,10 @@ LP.define(['play-music', 'play-movies', 'play-books', 'play-games'], ({
       // The Play apps' own pages (lp-play-more.js) go back to where they were opened.
       if (PLAY_APPS.includes(ui.view) && PlayMore.back(ui)) { render(); return true; }
       if (PLAY_APPS.includes(ui.view) && ui.sub) { ui.sub = ui.sub === 'queue' ? 'player' : ui.sub === 'player' ? ui.paReturn || '' : ui.sub === 'album' && ui.paFromSearch ? 'search' : ''; if (ui.sub !== 'album') ui.paFromSearch = ui.sub === 'search' && ui.paFromSearch; ui.paBars = true; render(); return true; }
-      // lp:back
       return false;
     },
     render() {
       return PlayApps.render(playContext(ui.view));
-      // lp:render
     },
     overlays: {
       'pa-drawer'() {
@@ -71,10 +68,9 @@ LP.define(['play-music', 'play-movies', 'play-books', 'play-games'], ({
         // The Play apps' card, now playing and reader menus and their dialogs (lp-play-more.js).
         overlayRoot.innerHTML = PlayMore.overlay(playContext(ui.view));
       },
-      // lp:overlays
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       switch (action) {
         // Play Music, Movies & TV, Books and Games
         case 'pa-drawer': ui.overlay = 'pa-drawer'; renderOverlay(); break;
@@ -131,14 +127,6 @@ LP.define(['play-music', 'play-movies', 'play-books', 'play-games'], ({
         case 'music-prev': case 'music-next': ICSMusic.step(ui.music,action==='music-prev'?-1:1);saveMusic();render();break;
         case 'music-shuffle': ui.music.shuffle=!ui.music.shuffle;saveMusic();render();break;
         case 'music-repeat': ui.music.repeat={off:'all',all:'one',one:'off'}[ui.music.repeat];saveMusic();render();break;
-        // lp:cases
-        default: return false;
-      }
-      return true;
-    },
-    submit(name, values, event, form) {
-      switch (name) {
-        // lp:scases
         default: return false;
       }
       return true;

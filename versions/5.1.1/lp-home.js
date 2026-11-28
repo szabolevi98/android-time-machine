@@ -1,4 +1,9 @@
-/* TODO */
+/* The home screen and the app drawer on Android 5.1.1 (Google Now Launcher), moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - the workspace, its pages and the dock; launcher icons, folders and shortcuts (lp.placeShortcut); the clings
+   - the widgets, their picker, the photo widget's setup and the resize frame
+   - the overview, the drawer and its pages; drag and drop with the reorder and the outlines; the page swipes
+     (the core's gesture pipeline calls in); Back from them */
 'use strict';
 LP.define(['home', 'drawer'], ({
   appNames, apps, clock, deviceDate, dp, fullDate, home, i18n, iconAssets, navRoot, openApp, overlayRoot,
@@ -704,9 +709,7 @@ LP.define(['home', 'drawer'], ({
   };
   window.addEventListener('pointerup', endResize); window.addEventListener('pointercancel', endResize);
   Object.assign(lp, {homePageCount, renderHome, restoreWidgetScroll, renderDrawer, GEL_UNSIMULATED, folderName, dragSource, clingLayerRoot, startDrag, moveGhost, moveHomePage, stepPhotoStack, finishDrawerPage, finishHomePage, finishDrag, clearFolderDragFeedback, clearDragOutlines, stripEmptyScreens, setHomePage, appIcon, digitalClockWidget, musicActive, placeShortcut});
-  // lp:code
   return {
-    // lp:hooks
     afterOverlay(closingFolder) {
       // Folder.animateOpen/animateClosed run only when the folder actually opens or closes, not on content updates.
       const folderPanel = ui.overlay === 'folder' ? overlayRoot.querySelector('.launcher-folder') : null;
@@ -728,7 +731,6 @@ LP.define(['home', 'drawer'], ({
       lp.openFolderId = folderPanel ? ui.folderId : '';
       if (!folderPanel) ui.folderSettled = '';
       syncClings();
-      // lp:afterOverlay
       return false;
     },
     overlay(name, root) {
@@ -736,23 +738,19 @@ LP.define(['home', 'drawer'], ({
         overlayRoot.innerHTML = ICSWidgets.photoOverlay(lp.data, ui, key => i18n.t(key));
         return true;
       }
-      // lp:overlay
       return false;
     },
     backDrawer() {
       if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return true; }
-      // lp:backDrawer
       return false;
     },
     back() {
       if (ui.view === 'drawer' && ui.drawerWidgets) { ui.drawerWidgets = false; ui.drawerPage = 0; home(false); ui.overview = true; render(); return true; }
       if (ui.view === 'home' && ui.overview) { ui.overview = false; render(); return true; }
-      // lp:back
       return false;
     },
     backPhotoWidget() {
       if (ui.overlay.startsWith('widget-photo')) { cancelPhotoWidget(); return true; }
-      // lp:backPhotoWidget
       return false;
     },
     overlays: {
@@ -760,10 +758,9 @@ LP.define(['home', 'drawer'], ({
         overlayRoot.innerHTML = renderFolder();
         positionFolder();
       },
-      // lp:overlays
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       switch (action) {
         case 'drawer': {
           // The reveal starts on the all apps button: its centre's offset from the panel centre, in screen px.
@@ -797,14 +794,6 @@ LP.define(['home', 'drawer'], ({
           if(id==='bluetooth'&&!lp.data.settings.bluetooth)lp.data.settings.bluetoothTether=false;
           save(); render(); break;
         case 'widget-music-play': ui.musicActive=true;ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;lp.saveMusic();render();break;
-        // lp:cases
-        default: return false;
-      }
-      return true;
-    },
-    submit(name, values, event, form) {
-      switch (name) {
-        // lp:scases
         default: return false;
       }
       return true;

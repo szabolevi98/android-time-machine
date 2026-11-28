@@ -1,4 +1,8 @@
-/* TODO */
+/* Recents (Overview) on Android 5.1.1 (lp-recents.js draws it), moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - the overlay, its popup, removing a task and closing (lp.removeRecentTask, lp.closeRecents), App info
+   - screen pinning: the request, the pinned toast, Back and Overview held together to unpin
+   The card swipe, shared with the notification swipe, is in the core's gesture pipeline. */
 'use strict';
 LP.define('recent', ({
   appNames, captureRecentView, home, i18n, lockControls, LP_PRIMARY, LP_STATUS_COLORS, navRoot, openApp,
@@ -65,17 +69,13 @@ LP.define('recent', ({
     if (lp.data.settings.pinExitLocked ?? secure) { lp.lockScreen(); ui.sleeping = false; render(); }
   }
   Object.assign(lp, {pinnedToast, closeRecents, removeRecentTask});
-  // lp:code
   return {
-    // lp:hooks
     preClick(action) {
       if (ui.overlay === 'recent' && ui.recentPopup && !['remove-recent', 'recent-app-info'].includes(action)) { ui.recentPopup = null; renderOverlay(); return true; }
-      // lp:preClick
       return false;
     },
     backPinned() {
       if (ui.pinned && ui.view === ui.pinned && !ui.overlay && !ui.sub) { pinnedToast(); return true; }
-      // lp:backPinned
       return false;
     },
     overlays: {
@@ -91,10 +91,9 @@ LP.define('recent', ({
         const ring = key => `<span class="pin-key ${key}"><i></i><img src="assets/lp-ic_sysbar_${key}.png" alt=""></span>`;
         overlayRoot.innerHTML = `<div class="pin-scrim"></div><div class="pin-request" role="dialog" aria-label="${safe(i18n.t('Screen is pinned'))}" data-no-translate><h3>${safe(i18n.t('Screen is pinned'))}</h3><p>${safe(i18n.t('This keeps it in view until you unpin. Touch and hold Back and Overview at the same time to unpin.'))}</p><div class="pin-buttons"><button data-action="pin-cancel">${safe(i18n.t('No thanks'))}</button><button data-action="pin-ok">${safe(i18n.t('Got it'))}</button></div><div class="pin-nav">${ring('back')}<span class="pin-key home"><img src="assets/lp-ic_sysbar_home.png" alt=""></span>${ring('recent')}</div></div>`;
       },
-      // lp:overlays
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id, app} = button.dataset;
       switch (action) {
         case 'lp-pin': event.stopPropagation(); ui.recentPopup = null; ui.recentsScroll = undefined; ui.lpRecents?.destroy(); ui.lpRecents = null; openApp(app, true); ui.overlay = 'pin-request'; renderOverlay(); lp.updateBarMode(); break;
         case 'pin-ok': ui.pinned = ui.view; ui.overlay = ''; renderOverlay(); lp.updateBarMode(); toast(i18n.t('Screen pinned')); break;
@@ -122,14 +121,6 @@ LP.define('recent', ({
           card.style.translate = `${(100 * LPRecents.DP()).toFixed(2)}px 0`; card.style.opacity = '0';
           setTimeout(() => removeRecentTask(id), 250); break;
         }
-        // lp:cases
-        default: return false;
-      }
-      return true;
-    },
-    submit(name, values, event, form) {
-      switch (name) {
-        // lp:scases
         default: return false;
       }
       return true;

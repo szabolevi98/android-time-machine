@@ -58,7 +58,7 @@ window.LP = window.StoreHost;
 
 // The core, once every module has loaded (deferred scripts run before DOMContentLoaded).
 function start() {
-  // The modules' shared names: what they add, and the core's bindings they use (lp:kernel at the end).
+  // The modules' shared names: what they add, and the core's bindings they use (LP.kernel at the end).
   const lp = LP.live;
 
 
@@ -1016,7 +1016,7 @@ function start() {
 
 
   // ---- Start: the modules get the core, the first render, the boot ----
-  // lp:kernel (the core's bindings the lp-*.js modules use, live; written by the migration's move tool)
+  // The core's bindings the lp-*.js modules use, live (a setter for each let: lp.data = ... writes the core's).
   LP.kernel({
     get activeTouches() { return activeTouches; }, get applyMagnification() { return applyMagnification; },
     get appNames() { return appNames; }, get apps() { return apps; },
@@ -1051,7 +1051,6 @@ function start() {
     get ui() { return ui; }, get viewport() { return viewport; }, get wallpaperFiles() { return wallpaperFiles; },
     get wifiNetworks() { return wifiNetworks; }
   });
-  // lp:kernel-end
   LP.start();
 
   i18n.translateDOM(document.body);

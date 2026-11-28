@@ -1,4 +1,7 @@
-/* TODO */
+/* Docs, Sheets, Slides, Fit, Newsstand and Wallet on Android 5.1.1 (lp-extra-apps.js draws them), moved out of
+   simulator.js (docs/plans/engine-migration.md; the code moved unchanged).
+   - the editors' lists, search, rename, remove, print, their More pages (editors-more.js) and menus
+   - Fit's pages (fit-more.js), Newsstand's reader (news-reader), Wallet's warm welcome; openings and Back */
 'use strict';
 LP.define(['docs', 'sheets', 'slides', 'fit', 'newsstand', 'wallet'], ({
   deviceDate, i18n, openApp, overlayRoot, render, renderOverlay, safe, save, screen, toast, ui, viewport
@@ -10,12 +13,9 @@ LP.define(['docs', 'sheets', 'slides', 'fit', 'newsstand', 'wallet'], ({
     openDrive(){openApp('drive');},pick(){lp.docPick(ui.view,EditorMore.ACCEPT[ui.view]);},shareText:lp.driveShareText,shareFile:lp.driveShareFile,
     shortcut(file){lp.placeShortcut('office:'+file.id,file.name);}});
   Object.assign(lp, {editorContext});
-  // lp:code
   return {
-    // lp:hooks
     input(event) {
       if (['newsstand'].includes(ui.view) && NewsReader.input(event.target, lp.newsContext())) return true;
-      // lp:input
       return false;
     },
     overlay(name, root) {
@@ -29,63 +29,52 @@ LP.define(['docs', 'sheets', 'slides', 'fit', 'newsstand', 'wallet'], ({
         if (ui.overlay === 'ed-menu') { const anchor = viewport.querySelector(`[data-action="ed-item"][data-id="${CSS.escape(ui.edFile)}"]`), menu = overlayRoot.querySelector('.ed-itemmenu'); if (anchor && menu) { const a = anchor.getBoundingClientRect(), box = overlayRoot.getBoundingClientRect(), frame = screen.getBoundingClientRect(), scale = frame.height / screen.offsetHeight || 1, top = (a.top - box.top) / scale; menu.style.top = `${Math.max(8, Math.min(top, screen.offsetHeight - menu.offsetHeight - 8))}px`; } }
         return true;
       }
-      // lp:overlay
       return false;
     },
     backDrawer() {
       if(LPExtraApps.KIND[ui.view]&&ui.editorDrawer){ui.editorDrawer=false;render();return true;}
-      // lp:backDrawer
       return false;
     },
     backDocs() {
       if (['docs', 'sheets', 'slides'].includes(ui.view) && ui.sub) { ui.sub = !['search', 'results'].includes(ui.sub) && ui.edFrom === 'results' ? 'results' : ''; ui.edFrom = ''; render(); return true; }
-      // lp:backDocs
       return false;
     },
     backFit() {
       if(ui.view==='fit'&&!ui.overlay&&FitMore.back(fitContext()))return true;
-      // lp:backFit
       return false;
     },
     backNews() {
       if (['newsstand'].includes(ui.view) && !ui.overlay && NewsReader.back(ui)) { render(); return true; }
-      // lp:backNews
       return false;
     },
     openingWallet(app, resume) {
       if (app === 'wallet' && !resume) { ui.walPage = undefined; setTimeout(() => { if (ui.view === 'wallet' && ui.walPage == null) { ui.walPage = 0; render(); } }, 2000); }
-      // lp:openingWallet
       return false;
     },
     opening(app, resume) {
       if (['newsstand'].includes(app) && !resume) NewsReader.open(ui);
       if(!resume&&LPExtraApps.KIND[app]){ui.editorDrawer=false;ui.editorRefreshing=false;}
-      // lp:opening
       return false;
     },
     render() {
       return LPExtraApps.render(ui.view, {news: ui.view === 'newsstand' ? lp.newsContext() : null, files: officeFiles(), ui, data: lp.data, t: key => i18n.t(key), locale: i18n.locale()});
-      // lp:render
     },
     afterRenderFit() {
       const fitRoot=viewport.querySelector('[data-fit-more]');
       if(ui.fitMoreHook&&ui.fitMoreHook.root!==fitRoot){ui.fitMoreHook.destroy();ui.fitMoreHook=null;}
       if(fitRoot&&!ui.fitMoreHook)ui.fitMoreHook={...FitMore.attach(fitRoot,fitContext()),root:fitRoot};
-      // lp:afterRenderFit
       return false;
     },
     overlays: {
       'lpx-overflow'() {
         overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="lpa-menu">${LPExtraApps.menu(ui.view, key => i18n.t(key), i18n.locale(),editorContext()).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
       },
-      // lp:overlays
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       if(action.startsWith('fitm-')&&FitMore.handle(action,id,fitContext()))return;
       if(action.startsWith('emore-')&&EditorMore.handle(action,id,editorContext()))return;
       if (['newsstand'].includes(ui.view) && action.startsWith('nr-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } ui.kkxDrawer = false; ui.lpxDrawer = false; ui.magDrawer = false; ui.currentsMenu = false; if (NewsReader.handle(action, id, lp.newsContext())) return; }
-      // lp:click
       switch (action) {
         case 'open-office-shortcut': {const f=officeFiles().find(f=>f.id===id&&!f.trashed);if(f){openApp(EditorMore.APP[f.kind]);ui.sub=f.id;ui.edFrom='';render();}break;}
         case 'lpx-open': {const f=officeFiles().find(f=>f.id===id);if(f){lp.data.driveFiles=officeFiles().map(f=>f.id===id?{...f,otime:Date.now()}:f);save();}} ui.edFrom = ui.sub; ui.sub = id; render(); break;
@@ -106,17 +95,14 @@ LP.define(['docs', 'sheets', 'slides', 'fit', 'newsstand', 'wallet'], ({
         case 'lpx-drawer': ui.lpxDrawer = !ui.lpxDrawer; render(); break;
         // Docs / Sheets / Slides' Print: the file's own text.
         case 'ed-print': { const file = officeFiles().find(f => f.id === ui.edFile); ui.overlay=''; renderOverlay(); if (!file) break; PrintSpooler.open(lp.printContext(), {name: file.name, title: file.name, lines: String(file.text || '').split('\n')}); break; }
-        // lp:cases
         default: return false;
       }
       return true;
     },
     submit(name, values, event, form) {
       if (['newsstand'].includes(ui.view) && NewsReader.submit(form.dataset.form, values, lp.newsContext())) return;
-      // lp:submit
       switch (name) {
         case 'ed-search': { const query = String(values.get('query') || '').trim(); if (!query) return; ui.edQuery = query; ui.sub = 'results'; render(); break; }
-        // lp:scases
         default: return false;
       }
       return true;

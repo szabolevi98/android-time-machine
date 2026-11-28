@@ -1,4 +1,8 @@
-/* TODO */
+/* Clock (DeskClock) on Android 5.1.1, moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - the alarm, clock, timer and stopwatch pages and their swipe; cities and their search; the clock settings
+   - the alarm editor, its time picker dial, ringtone and label; the ringing alarm (snooze, dismiss, silence after)
+   - alarms and timers, checked by the device clock's tick (lp.checkAlarms, lp.checkTimers); Back; Clear data */
 'use strict';
 LP.define('clock', ({
   clone, defaultData, deviceDate, dp, i18n, openApp, overlayRoot, render, renderOverlay, safe, save, screen, toast,
@@ -62,12 +66,9 @@ LP.define('clock', ({
   window.addEventListener('pointermove', event => { if (kdcDialDrag) kdcDialPick(event); });
   window.addEventListener('pointerup', () => { if (!kdcDialDrag) return; kdcDialDrag = false; if (ui.kdcPicker?.mode === 'hour') { ui.kdcPicker.mode = 'minute'; setTimeout(renderOverlay, 120); } });
   Object.assign(lp, {checkAlarms, checkTimers});
-  // lp:code
   return {
-    // lp:hooks
     clearData() {
       lp.data.alarms=clone(defaultData.alarms);
-      // lp:clearData
       return false;
     },
     overlay(name, root) {
@@ -80,12 +81,10 @@ LP.define('clock', ({
         if(ui.overlay==='clock-ringing')ICSDeskClock.bindRinging?.(overlayRoot);
         return true;
       }
-      // lp:overlay
       return false;
     },
     pointerup(event, dx) {
       if(lp.pointerStart.clockSwiping){const tabs=JBDeskClock.TABS,index=tabs.indexOf(lp.data.jbClock?.tab||'clock'),next=Math.max(0,Math.min(tabs.length-1,index+(Math.abs(dx)>dp(50)?(dx<0?1:-1):0)));lp.data.jbClock.tab=tabs[next];save();render();lp.suppressClickUntil=Date.now()+350;lp.pointerStart=null;return true;}
-      // lp:pointerup
       return false;
     },
     pointermove(event, dx, dy) {
@@ -95,33 +94,27 @@ LP.define('clock', ({
         const track=viewport.querySelector('.jbclock-track'),index=JBDeskClock.TABS.indexOf(lp.data.jbClock?.tab||'clock');
         if(track){track.style.transition='none';track.style.transform=`translateX(calc(${-index*100}% + ${dx}px))`;}return true;
       }
-      // lp:pointermove
       return false;
     },
     input(event) {
       if (event.target.matches?.('[data-city-search]')) { ui.cityQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-city-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return true; }
       if (event.target.matches?.('[data-cpref-volume]')) { ui.clockDraft = Number(event.target.value); return true; }
-      // lp:input
       return false;
     },
     backCities() {
       if (ui.view === 'clock' && ui.sub === 'cities') { ui.sub = ''; render(); return true; }
-      // lp:backCities
       return false;
     },
     back() {
       if (ui.view === 'clock' && !ui.overlay && ClockPrefs.back(ui)) { render(); return true; }
       if (ui.view === 'clock' && ui.sub === 'cities' && ui.cityQuery !== undefined && !ui.overlay) { ui.cityQuery = undefined; render(); return true; }
-      // lp:back
       return false;
     },
     render() {
       return renderClock();
-      // lp:render
     },
     afterRender() {
       if (ui.view === 'clock' && viewport.querySelector('.jbclock-app')) clockTicker();
-      // lp:afterRender
       return false;
     },
     overlays: {
@@ -129,10 +122,9 @@ LP.define('clock', ({
         const items = ClockPrefs.menu(ui.overlay === 'cpref-main' ? 'main' : 'cities', {data: lp.data, t: key => i18n.t(key), locale: i18n.locale(), tab: jbClockState().tab});
         overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="lp-popup-menu">${items.map(([action, id, label]) => `<button data-action="${action}" data-id="${id}">${safe(label)}</button>`).join('')}</div>`;
       }])),
-      // lp:overlays
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       if (action.startsWith('cpref-') && ui.view === 'clock') {
         const result = ClockPrefs.handle(action, id, {data: lp.data, ui});
         if (['cpref-main', 'jbclock-cities-menu'].includes(ui.overlay)) { ui.overlay = ''; renderOverlay(); }
@@ -140,7 +132,6 @@ LP.define('clock', ({
         if (result?.open) { openApp('chrome'); lp.navigateBrowser(result.open); return; }
         if (result) { render(); return; }
       }
-      // lp:click
       switch (action) {
         case 'clock-alarms': jbClockState(); lp.data.jbClock.tab='alarm'; save(); ui.sub=''; render(); break;
         case 'kdc-add': { const now=deviceDate(); ui.kdcPicker={id:null,hour:now.getHours(),minute:now.getMinutes(),mode:'hour'}; ui.overlay='kdc-picker'; renderOverlay(); break; }
@@ -192,7 +183,6 @@ LP.define('clock', ({
         }
         case 'alarm-dismiss': ui.overlay=''; render(); break;
         case 'alarm-toggle': { const alarm = lp.data.alarms.find(item => item.id === Number(id)); if (alarm) { alarm.enabled = !alarm.enabled; delete alarm.snoozedUntil; } save(); render(); break; }
-        // lp:cases
         default: return false;
       }
       return true;
@@ -201,7 +191,6 @@ LP.define('clock', ({
       switch (name) {
         case 'alarm-tone': ui.alarmDraft.tone=String(values.get('tone'));ui.overlay='';kdcCommit();render();break;
         case 'alarm-label': ui.alarmDraft.label=String(values.get('label')||'').trim();ui.overlay='';kdcCommit();render();break;
-        // lp:scases
         default: return false;
       }
       return true;

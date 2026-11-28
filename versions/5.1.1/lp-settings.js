@@ -1,4 +1,9 @@
-/* TODO */
+/* Settings on Android 5.1.1, moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - every page and its helpers (rows, switches, the switch bar, the toolbar); Wi-Fi and its dialogs, Wi-Fi Direct,
+     Cast screen, Bluetooth, data usage, sound, display, Interruptions, security, users, language & input,
+     developer options, process stats, apps and storage, VPN and mobile networks, Daydream's settings, About
+   - cell broadcasts, printing and certificates; the fields, forms, menus, dialogs and Back at each of its places */
 'use strict';
 LP.define('settings', ({
   applyMagnification, apps, clearAppData, clone, deviceDate, HOLD_NAMES, i18n, lockControls, openApp, overlayRoot,
@@ -192,9 +197,7 @@ LP.define('settings', ({
     return appView('Settings', `<div class="lp-dashboard">${category('Wireless & networks', [tile('wifi', 'ic_settings_wireless', 'Wi‑Fi'), tile('bluetooth', 'ic_settings_bluetooth2', 'Bluetooth'), tile('data', 'ic_settings_data_usage', 'Data usage'), tile('wireless', 'ic_settings_more', 'More')])}${category('Device', [tile('display', 'ic_settings_display_am', 'Display'), tile('sound', 'ic_settings_notifications', 'Sound & notification'), tile('storage', 'ic_settings_storage', 'Storage'), tile('battery', 'ic_settings_battery', 'Battery'), tile('apps', 'ic_settings_applications', 'Apps'), tile('users', 'ic_settings_multiuser', 'Users'), tile('nfc-payment', 'ic_settings_nfc_payment_am', 'Tap & pay')])}${category('Personal', [tile('location', 'ic_settings_location', 'Location'), tile('security', 'ic_settings_security', 'Security'), tile('sync', 'ic_settings_accounts', 'Accounts'), tile('language', 'ic_settings_language', 'Language & input'), tile('backup', 'ic_settings_backup', 'Backup & reset')])}${category('System', [tile('date', 'ic_settings_date_time', 'Date & time'), tile('accessibility', 'ic_settings_accessibility', 'Accessibility'), tile('print', 'ic_settings_print', 'Printing'), ...(lp.data.settings.developerUnlocked ? [tile('development', 'ic_settings_development', 'Developer options')] : []), tile('about', 'ic_settings_about', 'About phone')])}</div>`, 'lp-dash-page', `<button class="lp-ab-action" data-action="toast" data-id="Search is not available offline" aria-label="${safe(i18n.t('Search'))}"><img src="assets/lp-fw-ic_search_api_material.svg" alt=""></button>`);
   }
   Object.assign(lp, {carrierName, allWifiNetworks, printContext});
-  // lp:code
   return {
-    // lp:hooks
     input(event) {
       if (event.target.matches('[data-pr]') && PrintSpooler.input(event.target, printContext())) return true;
       if (event.target.matches('[data-lng-seek]') && InputLanguage.input(event.target, langContext())) return true;
@@ -206,7 +209,6 @@ LP.define('settings', ({
         const display = event.target.closest('.detail-pad')?.querySelector('p'); if (display) display.textContent = `${lp.data.settings.brightness}%`;
         screen.style.filter = `brightness(${.5 + lp.data.settings.brightness / 135})`;
       }
-      // lp:input
       return false;
     },
     overlay(name, root) {
@@ -235,7 +237,6 @@ LP.define('settings', ({
         overlayRoot.innerHTML = ICSSettingsDetail.overlay(lp.data,ui,key=>i18n.t(key));
         return true;
       }
-      // lp:overlay
       return false;
     },
     back() {
@@ -250,49 +251,40 @@ LP.define('settings', ({
       if (ui.view === 'settings' && ui.sub === 'reset-info') { ui.sub = 'backup'; render(); return true; }
       if (ui.view === 'settings' && ['brightness','wallpaper','sleep'].includes(ui.sub)) { ui.sub = 'display'; render(); return true; }
       if (ui.view === 'settings' && ['volumes','ringtone'].includes(ui.sub)) { ui.sub = 'sound'; render(); return true; }
-      // lp:back
       return false;
     },
     backPages() {
       if(ui.view==='settings' && ['apn','operators','tether-help','device-admin','wifi-direct','wifi-display','location-mode'].includes(ui.sub)){ui.sub={apn:'mobile-networks',operators:'mobile-networks','tether-help':'tethering','device-admin':'security','wifi-direct':'wifi','wifi-display':'display','location-mode':'location'}[ui.sub];render();return true;}
       if(ui.view==='settings' && ['app-info','data-app','battery-history','battery-detail','storage-misc','language-pick'].includes(ui.sub)){ui.sub={'language-pick':'language','app-info':'apps','data-app':'data','battery-history':'battery','battery-detail':'battery','storage-misc':'storage'}[ui.sub];render();return true;}
-      // lp:backPages
       return false;
     },
     backSync() {
       if(ui.view==='settings' && ui.kpSyncReturn && ui.sub==='sync-google'){ui.kpSyncReturn=false;openApp('keep',true);ui.kpScreen='settings';render();return true;}
-      // lp:backSync
       return false;
     },
     backLock() {
       if(ui.view==='settings'&&ui.sub==='lock-setup'){lockControls.cancel();return true;}
-      // lp:backLock
       return false;
     },
     backA11y() {
       if (ui.view === 'settings' && ['a11y-magnification', 'a11y-shortcut'].includes(ui.sub) && !ui.overlay) { ui.sub = 'accessibility'; render(); return true; }
-      // lp:backA11y
       return false;
     },
     backDev() {
       if (ui.view === 'settings' && ui.sub === 'dev-backup-pw' && !ui.overlay) { ui.sub = 'development'; render(); return true; }
       if (ui.view === 'settings' && ui.sub.startsWith('dev-procstats') && !ui.overlay) { ui.sub = ui.sub === 'dev-procstats' ? 'development' : 'dev-procstats'; render(); return true; }
-      // lp:backDev
       return false;
     },
     backLang() {
       if (ui.view === 'settings' && ui.sub.startsWith('lng-') && !ui.overlay && InputLanguage.back(langContext())) return true;
-      // lp:backLang
       return false;
     },
     backPrint() {
       if (ui.overlay === 'print') { const u = ui.print; if (u?.step === 'printers') { u.step = 'config'; renderOverlay(); } else if (u?.expanded) { u.expanded = false; renderOverlay(); } else { ui.print = null; ui.overlay = ''; renderOverlay(); } return true; }
-      // lp:backPrint
       return false;
     },
     render() {
       return renderSettings();
-      // lp:render
     },
     overlays: {
       'kk-cast-menu'() {
@@ -376,10 +368,9 @@ LP.define('settings', ({
         overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog lp-wifi-dialog" role="dialog" aria-label="${safe(ui.wifiTarget)}"><h3 data-no-translate>${safe(ui.wifiTarget)}</h3><div class="lp-wifi-info">${rows}</div>${secret}<div class="settings-dialog-actions"><button data-action="close-overlay">${T('Cancel')}</button>${connected ? `<button data-action="wifi-forget">${T('Forget')}</button>` : `<button data-action="wifi-connect">${T('Connect')}</button>`}</div></div>`;
         overlayRoot.querySelector('[data-wifi-show-password]')?.addEventListener('change', event => { const field = overlayRoot.querySelector('.wifi-password'); if (field) field.type = event.target.checked ? 'text' : 'password'; });
       },
-      // lp:overlays
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id, app} = button.dataset;
       if (action.startsWith('lng-') && InputLanguage.handle(action, id, langContext())) return;
       if (action.startsWith('pr-') && PrintSpooler.handle(action, id, printContext())) return;
       if (action.startsWith('dev-') && JBDeveloperOptions.handle(action, id, devContext())) return;
@@ -387,7 +378,6 @@ LP.define('settings', ({
       if (action.startsWith('cert-') && CertInstall.handle(action, id, certContext())) return;
       if (action.startsWith('lpu-') && window.LPUsers?.handle(action, button, {data: lp.data, save, render, open: sub => { ui.sub = sub; render(); }, back: () => { ui.sub = 'users'; render(); }})) return;
       if(action.startsWith('cb-')&&CellBroadcast.handle(action,id,{data: lp.data,ui,save,render,renderOverlay}))return;
-      // lp:click
       switch (action) {
         case 'dream-pick': lp.data.settings.daydreamType = id; save(); render(); break;
         case 'dream-when': ui.overlay = 'dream-when'; renderOverlay(); break;
@@ -511,7 +501,6 @@ LP.define('settings', ({
         case 'lps-cert-toggle': { const off = new Set(lp.data.settings.disabledCerts || []); if (off.has(ui.lpsCert)) off.delete(ui.lpsCert); else off.add(ui.lpsCert); lp.data.settings.disabledCerts = [...off]; save(); ui.overlay = ''; renderOverlay(); render(); break; }
         case 'lps-agent': lp.data.settings.smartLockAgent = lp.data.settings.smartLockAgent === false; save(); render(); break;
         case 'open-settings-sync': ui.overlay = ''; openApp('settings'); ui.sub = 'sync'; render(); break;
-        // lp:cases
         default: return false;
       }
       return true;
@@ -542,11 +531,9 @@ LP.define('settings', ({
         lp.data.settings.bluetoothName = name;
         save(); ui.overlay = ''; render(); return;
       }
-      // lp:submit
       switch (name) {
         case 'sd-volumes': for(const key of ['mediaVolume','ringVolume','alarmVolume'])lp.data.settings[key]=Math.max(0,Math.min(100,Number(values.get(key))));save();ui.overlay='';render();break;
         case 'sd-choice': {const choice=String(values.get('choice'));if(ui.settingsField==='sleep')lp.data.settings.sleep=Number(choice);else if(['windowScale','transitionScale','animatorScale'].includes(ui.settingsField))lp.data.settings[ui.settingsField]=Number(choice);else if(ui.settingsField==='font'){lp.data.settings.fontSize=choice;lp.data.settings.largeText=choice==='large'||choice==='huge';}else if(ui.settingsField==='silent'){lp.data.settings.silent=choice!=='off';lp.data.settings.silentMode=choice;}else lp.data.settings[ui.settingsField]=choice;save();ui.overlay='';render();break;}
-        // lp:scases
         default: return false;
       }
       return true;

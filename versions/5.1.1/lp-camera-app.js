@@ -1,4 +1,8 @@
-/* TODO */
+/* Camera on Android 5.1.1 (lp-camera.js draws it), moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - capture: pictures, videos, panoramas and photo spheres into the Camera album (lp.cameraShoot); the review
+   - capture requests of other apps (IMAGE_CAPTURE: Keep, Hangouts' Take photo) and Back that cancels them
+   - the zoom slider, the media overlays (gallery- / camera-), Clear data */
 'use strict';
 LP.define('camera', ({
   clone, i18n, openApp, overlayRoot, reducedMotion, render, renderOverlay, save, screen, toast, ui, viewport
@@ -36,16 +40,13 @@ LP.define('camera', ({
     if (index >= 0) { ui.photosIndex = index; ui.sub = 'photo'; render(); }
   }
   Object.assign(lp, {cameraShoot, hangoutsTakePhoto});
-  // lp:code
   return {
-    // lp:hooks
     input(event) {
       if(event.target.matches('.camera-zoom input')) {
         lp.data.cameraSettings=ICSMedia.settings(lp.data);lp.data.cameraSettings.zoom=Number(event.target.value);save();
         viewport.querySelector('.camera-focus-area .media-photo').src=ICSMedia.image(ICSMedia.scene(lp.data));
         viewport.querySelector('.camera-zoom output').textContent=Number(event.target.value).toFixed(1)+'×';return true;
       }
-      // lp:input
       return false;
     },
     overlay(name, root) {
@@ -53,7 +54,6 @@ LP.define('camera', ({
         overlayRoot.innerHTML=ICSMedia.overlay(lp.data,ui,key=>i18n.t(key),i18n.locale());
         return true;
       }
-      // lp:overlay
       return false;
     },
     // Settings › Apps › Camera › Clear data (clearAppData offers it to the screen of that id).
@@ -61,32 +61,27 @@ LP.define('camera', ({
     back() {
       if (ui.view === 'camera' && LPCamera.back(ui)) { render(); return true; }
       if (ui.view === 'camera' && (ui.gcamModes || ui.gcamOptions)) { ui.gcamModes = false; ui.gcamOptions = false; ui.gcamExposure = false; render(); return true; }
-      // lp:back
       return false;
     },
     backIntent() {
       if (ui.view === 'camera' && ui.camIntent && !ui.overlay) { ui.camIntent.cancel(); return true; }
-      // lp:backIntent
       return false;
     },
     opening(app, resume) {
       if (app === 'camera' && !resume) { ui.gcsPage = ''; ui.gcsDialog = ''; ui.gcamExposure = false; }
-      // lp:opening
       return false;
     },
     render() {
       return renderCamera();
-      // lp:render
     },
     afterRender() {
       if (ui.jbcam && !viewport.querySelector('[data-gcam]')?.isSameNode(ui.jbcam.root)) { ui.jbcam.destroy(); ui.jbcam = null; }
       const camRoot = viewport.querySelector('[data-gcam]');
       if (camRoot && !ui.jbcam) ui.jbcam = {...LPCamera.attach(camRoot, {data: lp.data, ui, t: key => i18n.t(key), media: ICSMedia, save, render, shoot: cameraShoot, gallery: cameraGallery, toast, reduced: !!reducedMotion?.matches}), root: camRoot};
-      // lp:afterRender
       return false;
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       switch (action) {
         case 'cam-review-done': ui.camIntent?.taken && ui.camIntent.done(); break;
         case 'cam-review-retake': if (ui.camIntent) { ui.camIntent.taken = null; render(); } break;
@@ -95,14 +90,6 @@ LP.define('camera', ({
           const photo={...ICSMedia.scene(lp.data),id:Date.now(),name:`IMG_${new Date().toISOString().replace(/[-:T]/g,'').slice(0,14)}`,album:'camera',created:Date.now()};
           lp.data.photos.unshift(photo);save();render();screen.animate([{opacity:1},{opacity:.4},{opacity:1}],{duration:240});toast('Photo saved to Gallery');break;
         }
-        // lp:cases
-        default: return false;
-      }
-      return true;
-    },
-    submit(name, values, event, form) {
-      switch (name) {
-        // lp:scases
         default: return false;
       }
       return true;

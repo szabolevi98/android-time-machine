@@ -1,4 +1,7 @@
-/* TODO */
+/* Email and Gmail on Android 5.1.1 (lp-email.js and gmail.js draw them), moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - the mailboxes, folders, reading, selection, compose and attachments (lp.composeEmail, lp.mailbox)
+   - Email's and Gmail's settings, the menus and dialogs, their openings, Back and Clear data */
 'use strict';
 LP.define(['email', 'gmail'], ({
   clone, emailData, i18n, overlayRoot, render, renderOverlay, save, toast, ui, viewport
@@ -28,19 +31,15 @@ LP.define(['email', 'gmail'], ({
     mailbox().unshift(draft);ui.emailId=draft.id;ui.emailCc=false;ui.emailError='';ui.overlay='';ui.sub='compose';save();render();
   }
   Object.assign(lp, {composeEmail, mailbox});
-  // lp:code
   return {
-    // lp:hooks
     input(event) {
       if(event.target.closest('.email-compose')&&event.target.name){const item=mailbox().find(item=>item.id===ui.emailId);if(item){item[event.target.name]=event.target.value;save();}return true;}
       if (event.target.matches('[data-gmail-signature]')) { ui.gmSignature = event.target.value; return true; }
-      // lp:input
       return false;
     },
     clearData(c, id) {
       if(id==='gmail'){lp.data.gmailbox=GmailApp.restore(null);delete lp.data.gmailWelcomeSeen;delete lp.data.gmailTeaserDismissed;delete lp.data.gmailSeen;if(ui.mailApp==='gmail'){ui.emailFolder='Primary';ui.emailSelected=[];}}
       if(id==='email'){lp.data.mailbox=ICSEmail.restore(null,emailData,[]);lp.data.sentEmails=[];ui.emailFolder='Inbox';ui.emailQuery=undefined;ui.emailSelected=[];}
-      // lp:clearData
       return false;
     },
     overlay(name, root) {
@@ -48,35 +47,29 @@ LP.define(['email', 'gmail'], ({
         overlayRoot.innerHTML = LPEmail.overlay(mailbox(),ui,lp.data.photos,key=>i18n.t(key),i18n.language,ui.view==='gmail'?gmailOptions():{app:'email'});
         return true;
       }
-      // lp:overlay
       return false;
     },
     back() {
       if (ui.view === 'gmail' && ui.sub === 'gm-settings' && GmailApp.prefBack(ui, {data: lp.data, root: viewport, toast})) { render(); return true; }
       if (ui.view === 'gmail' && ui.sub === 'gm-settings') { if (ui.gmPrefList || ui.gmSignature !== undefined) { ui.gmPrefList = ''; ui.gmSignature = undefined; } else if (ui.gmPref === 'categories') ui.gmPref = 'account'; else if (ui.gmPref) ui.gmPref = ''; else ui.sub = ''; render(); return true; }
-      // lp:back
       return false;
     },
     backEmailPrefs() {
       if (ui.view === 'email' && ui.sub === 'em-settings' && !ui.overlay) { if (ui.emPrefList || ui.emPrefEdit) { ui.emPrefList = ''; ui.emPrefEdit = ''; ui.emPrefTone = undefined; window.SystemSounds?.stop(); } else if (ui.emPref) ui.emPref = EmailPrefs.parent(ui.emPref); else ui.sub = ''; render(); return true; }
-      // lp:backEmailPrefs
       return false;
     },
     opening(app) {
       if (app === 'email' || app === 'gmail') useMailApp(app);
-      // lp:opening
       return false;
     },
     render() {
       if (ui.view === 'gmail') return renderGmail();
       return renderEmail();
-      // lp:render
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       if (action.startsWith('gmx-') && GmailApp.handlePref(action, id, {data: lp.data, ui, save, render, toast, root: viewport})) return;
       if (action.startsWith('empx-') && EmailPrefs.handle(action, id, {data: lp.data, ui, save, render, root: viewport, account: ICSEmail.account})) return;
-      // lp:click
       switch (action) {
         // The Email app's settings (email-prefs.js, from the image's EmailGoogle preference XMLs).
         case 'emailpref-page': ui.emPref = id; render(); break;
@@ -135,7 +128,6 @@ LP.define(['email', 'gmail'], ({
         case 'gmail-signature-save': { const text = viewport.querySelector('[data-gmail-signature]')?.value ?? ui.gmSignature ?? ''; (lp.data.gmailPrefs ||= {}).signature = String(text).trim(); ui.gmSignature = undefined; save(); render(); break; }
         case 'gmail-noop': break;
         case 'gmail-unavailable': toast(i18n.t('This feature is not part of the simulator.'));break;
-        // lp:cases
         default: return false;
       }
       return true;
@@ -144,7 +136,6 @@ LP.define(['email', 'gmail'], ({
       switch (name) {
         case 'email': {const item=mailbox().find(item=>item.id===ui.emailId);if(!item)break;for(const key of ['to','cc','bcc','subject','body'])if(values.has(key))item[key]=String(values.get(key)).trim();if(!ICSEmail.send(item)){ui.emailError='Enter valid email addresses';save();render();break;}save();ui.emailFolder='Sent';ui.emailQuery=undefined;ui.sub='read';ui.emailError='';render();toast('Demo email sent');break;}
         case 'email-search': ui.emailQuery=String(values.get('query')||'').trim();ui.emailSelected=[];render();break;
-        // lp:scases
         default: return false;
       }
       return true;

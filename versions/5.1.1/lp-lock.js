@@ -1,4 +1,8 @@
-/* TODO */
+/* The lock screen on Android 5.1.1, moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - locking (lp.lockScreen), the keyguard and its parts, the bouncer, the notification cards, the media controls
+   - the keyguard widgets and their picker, the unlock wave and its drag, the camera, Back on the lock screen
+   The core draws it in render() (lp.renderLock, lp.attachKeyguard) and keeps the credential lock's controller. */
 'use strict';
 LP.define('lock', ({
   captureRecentView, clock, deviceDate, dp, fullDate, home, i18n, lockControls, openApp, overlayRoot,
@@ -114,9 +118,7 @@ LP.define('lock', ({
     });
   }
   Object.assign(lp, {afterKeyguardDismiss, renderSecureKeyguard, renderLock, attachKeyguard, requestBouncer, lockScreen});
-  // lp:code
   return {
-    // lp:hooks
     pointerup(event, dx, dy) {
       if (lp.pointerStart.lockDrag) {
         const active = lockMove(dx, dy);
@@ -124,24 +126,20 @@ LP.define('lock', ({
         lockRelease(active);
         lp.pointerStart = null; return true;
       }
-      // lp:pointerup
       return false;
     },
     pointermove(event, dx, dy) {
       if (lp.pointerStart.lockDrag) { event.preventDefault(); lp.pointerStart.lockActive = lockMove(dx, dy); return true; }
-      // lp:pointermove
       return false;
     },
     pointerdown(event) {
       if (lp.pointerStart.lockDrag) { clearTimeout(ui.lockReleaseTimer); viewport.querySelectorAll('.lock-chevron').forEach(chevron => chevron.getAnimations().forEach(animation => animation.cancel())); screen.classList.remove('lock-releasing'); screen.classList.add('lock-dragging'); try { screen.setPointerCapture(event.pointerId); } catch {} }
       else if (ui.view === 'lock' && !ui.locked && event.target.closest('.lock-wave')) lockPing();
-      // lp:pointerdown
       return false;
     },
     back() {
       if (ui.view === 'lock' && ui.kgBouncing) { ui.kgBouncing = false; ui.kgPending = null; lockControls.lock(); render(); return true; }
       if (ui.view === 'lock') return true;
-      // lp:back
       return false;
     },
     overlays: {
@@ -149,10 +147,9 @@ LP.define('lock', ({
         const choices = [['calendar', 'Calendar', 'calendar.png'], ['clock', 'Digital clock', 'clock.png']];
         overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog jbk-picker" role="dialog" aria-label="${safe(i18n.t('Choose widget'))}"><h3>${safe(i18n.t('Choose widget'))}</h3>${choices.map(([type, label, icon]) => `<button data-action="kg-pick-widget" data-id="${type}"><img src="assets/${icon}" alt=""><span>${safe(i18n.t(label))}</span></button>`).join('')}<div class="settings-dialog-actions"><button data-action="close-overlay">${safe(i18n.t('Cancel'))}</button></div></div>`;
       },
-      // lp:overlays
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       switch (action) {
         case 'lock-media': if (id === 'play') { ui.music.playing = !ui.music.playing; if (ui.music.playing && ui.music.position >= tracks[ui.music.track].duration) ui.music.position = 0; } else ICSMusic.step(ui.music, id === 'previous' ? -1 : 1); ui.musicTrack = ui.music.track; lp.saveMusic(); render(); break;
         case 'lock-hint': screen.classList.add('lock-dragging'); setTimeout(() => { if (!lp.pointerStart?.lockDrag) lockRelease(null); }, 1000); break;
@@ -163,14 +160,6 @@ LP.define('lock', ({
         case 'lp-kg-note': if (ui.kgActivated !== id) { ui.kgActivated = id; viewport.querySelectorAll('.lp-kg-note').forEach(node => node.classList.toggle('activated', node.dataset.id === id)); kgHint('Touch again to open'); break; }
           ui.kgActivated = ''; if (ui.locked) { requestBouncer({type: 'note', id}); break; } { const opener = document.createElement('button'); opener.dataset.action = 'notification-open'; opener.dataset.id = id; screen.append(opener); home(false); opener.click(); opener.remove(); } break;
         case 'unlock-camera': openApp('camera'); break;
-        // lp:cases
-        default: return false;
-      }
-      return true;
-    },
-    submit(name, values, event, form) {
-      switch (name) {
-        // lp:scases
         default: return false;
       }
       return true;

@@ -1,4 +1,8 @@
-/* TODO */
+/* Contacts on Android 5.1.1, moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - the list, search, the contact page, the editor, groups, the menus and dialogs
+   - Import/export, Import from SIM card (the Phone opens it too), sharing a card, Place on Home screen
+   - Back and Clear data */
 'use strict';
 LP.define('people', ({
   captureRecentView, clone, contact, defaultData, i18n, openApp, overlayRoot, render, renderOverlay, safe, save,
@@ -27,9 +31,7 @@ LP.define('people', ({
   }
   function shareVcard(app, file) { ui.overlay = ''; renderOverlay(); openApp(app); lp.composeEmail(); const d = lp.mailbox().find(m => m.id === ui.emailId); if (d) (d.files ||= []).push({name: file.name, mime: file.mime, size: file.size, text: file.text}); save(); render(); }
   Object.assign(lp, {shareVcard, editPerson});
-  // lp:code
   return {
-    // lp:hooks
     input(event) {
       if (event.target.matches?.('[data-people-search]')) {
         ui.peopleQuery = event.target.value;
@@ -42,12 +44,10 @@ LP.define('people', ({
         else ui.peopleDraft[event.target.name]=event.target.value;
         return true;
       }
-      // lp:input
       return false;
     },
     clearData() {
       lp.data.contacts=clone(defaultData.contacts);lp.data.contactGroups=clone(defaultData.contactGroups);ui.peopleDraft=null;
-      // lp:clearData
       return false;
     },
     overlay(name, root) {
@@ -55,20 +55,17 @@ LP.define('people', ({
         overlayRoot.innerHTML = peopleOverlay();
         return true;
       }
-      // lp:overlay
       return false;
     },
     back() {
       if (ui.view === 'people' && ui.sub === 'edit') { ui.sub = 'detail'; render(); return true; }
       if (ui.view === 'people' && ui.sub === 'detail' && ui.quickContactReturn) { const back = ui.quickContactReturn; ui.quickContactReturn = null; ui.view = back.view; ui.sub = back.sub; render(); return true; }
       if (ui.view === 'people' && ui.peopleSearching) { ui.peopleSearching = false; ui.peopleQuery = ''; render(); return true; }
-      // lp:back
       return false;
     },
     backIo() {
       if (ui.sub === 'sim-import' && !ui.overlay) { ui.sub = ui.peopleBack || ''; render(); return true; }
       if (ui.view === 'people' && !ui.overlay && PeopleIO.back(ui)) { render(); return true; }
-      // lp:backIo
       return false;
     },
     render() {
@@ -76,16 +73,14 @@ LP.define('people', ({
       // Contacts to display, Customize and Settings (people-io.js).
       if (ui.view === 'people' && PeopleIO.PAGES.includes(ui.sub)) return PeopleIO.page({data: lp.data, ui, t: key => i18n.t(key), locale: i18n.locale()});
       return renderPeople();
-      // lp:render
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id, app} = button.dataset;
       if (/^(pfl|pst|psh)-/.test(action)) { const result = PeopleIO.pageAction(action, id, {data: lp.data, ui}); if (result) { if (result.share) { shareVcard(result.share.app, result.share.file); return; } if (result.save) save(); renderOverlay(); render(); return; } }
       if (action.startsWith('vcf-')) {
         const result = PeopleIO.handle(action, id, {data: lp.data, ui, t: key => i18n.t(key), locale: i18n.locale()});
         if (result) { if (result.save) save(); for (const title of result.notify || []) lp.addNotification(title, ''); renderOverlay(); render(); if (result.toast) toast(result.toast); return; }
       }
-      // lp:click
       switch (action) {
         case 'people-place-home': ui.overlay = ''; renderOverlay(); placeContactShortcut(lp.data.contacts.find(p => p.id === (Number(id) || ui.selectedContact))); break;
         case 'open-contact': { const person = lp.data.contacts.find(p => p.id === Number(id)); openApp('people'); if (person) { ui.selectedContact = person.id; ui.sub = 'detail'; render(); } break; }
@@ -107,7 +102,6 @@ LP.define('people', ({
         case 'contact-call': lp.startPhoneCall(contact(id)?.phone||'');break;
         case 'contact-message': lp.openMessageThread(id); break;
         case 'contact-email': {const recipient=contact(id)?.email||'';openApp('email');lp.composeEmail(null,false,recipient);break;}
-        // lp:cases
         default: return false;
       }
       return true;
@@ -137,7 +131,6 @@ LP.define('people', ({
           if (!name || !phone) return;
           const id = Date.now(); lp.data.contacts.push({ id, name, phone, email }); save(); ui.selectedContact = id; ui.sub = 'detail'; render(); toast('Contact saved'); break;
         }
-        // lp:scases
         default: return false;
       }
       return true;

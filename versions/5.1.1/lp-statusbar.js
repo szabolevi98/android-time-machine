@@ -1,4 +1,7 @@
-/* TODO */
+/* The status bar and the navigation bar on Android 5.1.1, moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - the status bar's icons, battery and colours (lp.renderStatus, lp.updateBarMode); the navigation keys
+   - the search panel's swipe up from the navigation bar and its overlay; the bars' peek in immersive mode */
 'use strict';
 LP.define('statusbar', ({
   clock, contact, deviceDate, i18n, LP_STATUS_COLORS, navRoot, openApp, overlayRoot, reducedMotion, renderOverlay,
@@ -93,29 +96,11 @@ LP.define('statusbar', ({
     barsPeekTimer = setTimeout(() => screen.classList.remove('kk-bars-peek'), 3000);
   }, true);
   Object.assign(lp, {updateBarMode, renderStatus, renderNav, statusIndicators, statusBarHeight});
-  // lp:code
   return {
-    // lp:hooks
     overlays: {
       'search'() {
         if (!overlayRoot.querySelector('[data-jb-search]')) overlayRoot.innerHTML = JBSearchPanel.markup(key => i18n.t(key));
       },
-      // lp:overlays
-    },
-    click(action, button, event) {
-      const {id, app, url} = button.dataset;
-      switch (action) {
-        // lp:cases
-        default: return false;
-      }
-      return true;
-    },
-    submit(name, values, event, form) {
-      switch (name) {
-        // lp:scases
-        default: return false;
-      }
-      return true;
     }
   };
 });

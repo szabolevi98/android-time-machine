@@ -1,4 +1,8 @@
-/* TODO */
+/* Chrome 40 on Android 5.1.1 (chrome.js draws it), moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - tabs and their sessions, the omnibox, pages, Find in page, the menu, bookmarks, history and Recent tabs
+   - Add to homescreen, Print, Share; Chrome's settings and Clear browsing data; Back; Clear data
+   - the AOSP Browser's menu and buttons the image has no app for */
 'use strict';
 LP.define('chrome', ({
   chromeText, clone, i18n, openApp, overlayRoot, render, renderOverlay, safe, save, syncBrowserState, toast, ui,
@@ -86,17 +90,13 @@ LP.define('chrome', ({
     root.querySelector('mark')?.scrollIntoView({block:'nearest'});
   }
   Object.assign(lp, {navigateBrowser});
-  // lp:code
   return {
-    // lp:hooks
     input(event) {
       if (event.target.matches?.('[data-chr-seek]')) { const ctx = {ui, data: lp.data, locale: i18n.locale()}; ChromeApp.prefSeek(event.target.value, ctx); ChromeApp.seekPaint(viewport, ctx); save(); return true; }
-      // lp:input
       return false;
     },
     clearData(c, id) {
       if(id==='chrome'){delete lp.data.chromeSession;delete ui.browserSessions.chrome;if(ui.browserOwner==='chrome'){ui.browserSession=restoreChrome();syncBrowserState();}save();}
-      // lp:clearData
       return false;
     },
     back() {
@@ -104,21 +104,17 @@ LP.define('chrome', ({
       if (['browser', 'chrome'].includes(ui.view) && ui.sub === 'chrome-settings') { if (!ChromeApp.prefBack(ui)) ui.sub = ''; render(); return true; }
       if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserFind !== undefined) { ui.browserFind = undefined; render(); return true; }
       if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserIndex > 0) { browserBack(); return true; }
-      // lp:back
       return false;
     },
     opening(app) {
       if (app === 'chrome') useBrowserSession(app);
-      // lp:opening
       return false;
     },
     render() {
       return renderChrome();
-      // lp:render
     },
     afterRender() {
       if (['browser', 'chrome'].includes(ui.view) && !ui.sub && ui.browserFind) highlightBrowserText();
-      // lp:afterRender
       return false;
     },
     overlays: {
@@ -131,10 +127,9 @@ LP.define('chrome', ({
         // Chrome's Add to homescreen: the page's title in the Title field, Cancel / Add.
         overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog chr-a2hs" role="dialog" aria-label="${safe(chromeText('Add to homescreen'))}"><h3>${safe(chromeText('Add to homescreen'))}</h3><div class="chr-a2hs-row"><img src="assets/chr40-app_shortcut_icon.png" alt=""><input data-a2hs-title value="${safe(ui.a2hs?.title || '')}" placeholder="${safe(chromeText('Title'))}" aria-label="${safe(chromeText('Title'))}"></div><div class="settings-dialog-actions"><button data-action="close-overlay">${safe(chromeText('Cancel'))}</button><button data-action="chrome-a2hs-add">${safe(chromeText('Add'))}</button></div></div>`;
       },
-      // lp:overlays
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id, url} = button.dataset;
       if (action.startsWith('chrome-') && ui.sub === 'chrome-settings') {
         const result = ChromeApp.prefAction(action, id, {ui, data: lp.data, locale: i18n.locale(), t: key => i18n.t(key)});
         if (result) {
@@ -143,7 +138,6 @@ LP.define('chrome', ({
           render(); if (result.toast) toast(result.toast); return;
         }
       }
-      // lp:click
       switch (action) {
         case 'browser-search': openApp('chrome'); document.querySelector('.chr-omnibox input')?.focus(); break;
         case 'browser-link': navigateBrowser(url); break;
@@ -187,7 +181,6 @@ LP.define('chrome', ({
         case 'browser-tab': ui.browserSession.active = Number(id); ui.sub = ''; ui.browserFind = undefined; saveBrowserState(); render(); break;
         case 'browser-new-tab': if (ui.view === 'chrome') { chromeNewTab(false); break; } if (!ICSBrowserSession.add(ui.browserSession)) { toast('Tab limit reached'); break; } ui.sub = ''; ui.overlay = ''; ui.browserFind = undefined; saveBrowserState(); render(); break;
         case 'browser-save': ui.overlay = ''; renderOverlay(); if (!lp.data.bookmarks.includes(ui.browserUrl)) { lp.data.bookmarks.push(ui.browserUrl); save(); toast('Bookmark saved'); } else toast('Already bookmarked'); break;
-        // lp:cases
         default: return false;
       }
       return true;
@@ -198,7 +191,6 @@ LP.define('chrome', ({
         case 'address': navigateBrowser(values.get('address')); break;
         case 'web-search': navigateBrowser(`search:${values.get('query')}`); break;
         case 'chrome-history-search': ui.chromeHistoryQuery = String(values.get('query') || '').trim(); render(); break;
-        // lp:scases
         default: return false;
       }
       return true;

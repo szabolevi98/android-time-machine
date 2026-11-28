@@ -1,4 +1,7 @@
-/* TODO */
+/* Phone on Android 5.1.1 (lp-dialer.js draws it), moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - the dialer's tabs, dialpad, search, call log and its menus and dialogs; calls and the in-call screen
+     (lp.startPhoneCall); the Phone's settings (lp-dialer-prefs.js); Back and Clear data */
 'use strict';
 LP.define('phone', ({
   captureRecentView, home, i18n, openApp, overlayRoot, render, renderOverlay, safe, save, storeContext, toast, ui,
@@ -22,9 +25,7 @@ LP.define('phone', ({
     ui.callNumber=ui.activeCall.number;ui.view='phone';ui.sub='calling';ui.overlay='';render();
   }
   Object.assign(lp, {contactByPhone, phoneText, startPhoneCall});
-  // lp:code
   return {
-    // lp:hooks
     input(event) {
       if (event.target.matches?.('[data-kk-dialer-search]')) {
         ui.phoneSearch = event.target.value;
@@ -32,12 +33,10 @@ LP.define('phone', ({
         if (list) { const fresh = document.createElement('div'); fresh.innerHTML = LPDialer.render({data: lp.data, ui, t: phoneText, locale: i18n.locale(), byPhone: contactByPhone}); list.innerHTML = fresh.querySelector('[data-kk-dialer-list]').innerHTML; i18n.translateDOM?.(list); }
         return true;
       }
-      // lp:input
       return false;
     },
     clearData() {
       lp.data.callHistory=[];ui.activeCall=null;
-      // lp:clearData
       return false;
     },
     back() {
@@ -46,12 +45,10 @@ LP.define('phone', ({
       if(ui.view==='phone' && !ui.activeCall && ui.sub==='call-detail'){ui.sub=ui.kkLogFrom||'';render();return true;}
       if(ui.view==='phone' && !ui.activeCall && (ui.lpSearchOpen || (ui.phoneSearch||'').trim())){ui.phoneSearch='';ui.lpSearchOpen=false;render();return true;}
       if(ui.view==='phone' && ui.activeCall){if(ui.activeCall.keypad){ui.activeCall.keypad=false;render();}else home(false);return true;}
-      // lp:back
       return false;
     },
     backPrefs() {
       if (ui.view === 'phone' && !ui.overlay && LPDialerPrefs.back(ui)) { render(); return true; }
-      // lp:backPrefs
       return false;
     },
     render() {
@@ -59,7 +56,6 @@ LP.define('phone', ({
       // Import from SIM card, opened from the Phone too (lp-people.js draws it).
       if (ui.sub === 'sim-import' && ui.view === 'phone') return StoreHost.render('people', storeContext());
       return renderPhone();
-      // lp:render
     },
     overlays: {
       'phone-menu'() {
@@ -72,10 +68,9 @@ LP.define('phone', ({
       'lpd-confirm'() {
         overlayRoot.innerHTML = LPDialer.confirm(ui.lpdConfirm, phoneText);
       },
-      // lp:overlays
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       if ((action.startsWith('dpr-')) && ui.view === 'phone') {
         if (action === 'dpr-settings') { ui.overlay = ''; renderOverlay(); ui.dialerBack = [ui.sub || '']; ui.sub = 'dialer-settings'; ui.dialerDialog = ''; render(); return; }
         if (action === 'dpr-ringtone') { ui.settingsField = 'ringtone'; ui.overlay = 'sd-dialog'; renderOverlay(); return; }
@@ -88,7 +83,6 @@ LP.define('phone', ({
         if (result === 'save') save();
         if (result) { render(); return; }
       }
-      // lp:click
       switch (action) {
         case 'phone-tab': ui.phoneTab = id; ui.phoneSearch = undefined; render(); break;
         case 'phone-search': ui.phoneTab = 'favorites'; ui.phoneSearch = ''; ui.overlay = ''; render(); viewport.querySelector('.phone-search input')?.focus(); break;
@@ -123,7 +117,6 @@ LP.define('phone', ({
         case 'lpd-dismiss-card': ui.kkRecentDismissed = [...(ui.kkRecentDismissed || []), Number(id)]; render(); break;
         case 'kk-dialer-clear': ui.phoneSearch = ''; render(); viewport.querySelector('[data-kk-dialer-search]')?.focus(); break;
         case 'phone-log-message': { const recipient=ICSMessaging.recipient(id,lp.data.contacts); if(recipient)lp.openMessageThread(recipient.key);else toast('Enter a valid phone number');break; }
-        // lp:cases
         default: return false;
       }
       return true;
@@ -132,9 +125,7 @@ LP.define('phone', ({
       if (form.dataset.form === 'dpr-vmnumber') { LPDialerPrefs.saveVoicemail(values.get('text') || '', {data: lp.data, ui}); save(); render(); return; }
       if (form.dataset.form === 'dpr-quick') { LPDialerPrefs.saveQuick(values.get('text') || '', {data: lp.data, ui, t: key => i18n.t(key), locale: i18n.locale()}); save(); render(); return; }
       if (form.dataset.form === 'phone-search') { ui.phoneSearch = String(values.get('query') || '').trim(); render(); return; }
-      // lp:submit
       switch (name) {
-        // lp:scases
         default: return false;
       }
       return true;

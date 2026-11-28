@@ -1,4 +1,9 @@
-/* TODO */
+/* Calendar on Android 5.1.1, moved out of simulator.js
+   (docs/plans/engine-migration.md; the code moved unchanged).
+   - the agenda, day, week and month views, the day swipe, search and the menus; the event page and editor with its
+     spinners; Calendar's settings
+   - the date and time pickers (dtp.js) and the time zone picker (tzpicker.js), which Google Now's reminders use too
+   - reminders, checked by the device clock's tick (lp.checkReminders); Back; Clear data */
 'use strict';
 LP.define('calendar', ({
   clone, defaultData, deviceDate, dp, i18n, overlayRoot, render, renderOverlay, save, screen, toast, today, ui,
@@ -58,12 +63,9 @@ LP.define('calendar', ({
   }
   window.addEventListener('pointercancel',()=>{const surface=viewport.querySelector('[data-calendar-swipe]');if(surface)surface.style.transform='';});
   Object.assign(lp, {calendarEdit, checkReminders});
-  // lp:code
   return {
-    // lp:hooks
     pointerup(event, dx) {
       if(lp.pointerStart.calendarSwiping){if(Math.abs(dx)>dp(50))calendarMove(dx<0?1:-1);else viewport.querySelector('[data-calendar-swipe]').style.transform='';lp.suppressClickUntil=Date.now()+350;lp.pointerStart=null;return true;}
-      // lp:pointerup
       return false;
     },
     pointermove(event, dx, dy) {
@@ -72,7 +74,6 @@ LP.define('calendar', ({
         try{screen.setPointerCapture(event.pointerId);}catch{}
         const surface=viewport.querySelector('[data-calendar-swipe]');surface.style.transform=`translateX(${dx}px)`;return true;
       }
-      // lp:pointermove
       return false;
     },
     input(event) {
@@ -81,12 +82,10 @@ LP.define('calendar', ({
         ui.eventDraft[event.target.name]=event.target.type==='checkbox'?event.target.checked:event.target.value;
         return true;
       }
-      // lp:input
       return false;
     },
     clearData() {
       lp.data.events=clone(defaultData.events);
-      // lp:clearData
       return false;
     },
     overlay(name, root) {
@@ -94,26 +93,21 @@ LP.define('calendar', ({
         overlayRoot.innerHTML = ICSCalendar.overlay(ui,key=>i18n.t(key));
         return true;
       }
-      // lp:overlay
       return false;
     },
     backEdit() {
       if (ui.view === 'calendar' && ui.sub === 'event-edit') { ui.sub=ui.eventDraft?.id?'event':'';ui.eventDraft=null;calendarRender();return true; }
-      // lp:backEdit
       return false;
     },
     back() {
       if (ui.view === 'calendar' && ui.sub === 'calendar-settings' && !ui.overlay) { if (CalendarPrefs.back(ui) === 'leave') { ui.sub = ''; ui.calPref = ''; } render(); return true; }
-      // lp:back
       return false;
     },
     render() {
       return renderCalendar();
-      // lp:render
     },
     afterRender() {
       if(ui.view==='calendar' && viewport.querySelector('.cal-time-scroll'))viewport.querySelector('.cal-time-scroll').scrollTop=dp(8*48/.906);
-      // lp:afterRender
       return false;
     },
     overlays: {
@@ -125,12 +119,10 @@ LP.define('calendar', ({
         // Calendar's TimeZonePickerDialog (tzpicker.js).
         overlayRoot.innerHTML = TimeZonePicker.render(ui.tzp, tzpContext());
       },
-      // lp:overlays
     },
     click(action, button, event) {
-      const {id, app, url} = button.dataset;
+      const {id} = button.dataset;
       if (action.startsWith('calpref-') && CalendarPrefs.handle(action, id, {data: lp.data, ui, save, render, toast, root: viewport, pickZone: zone => { ui.tzp = TimeZonePicker.open(zone, Date.now()); ui.tzpFor = 'home'; ui.overlay = 'tzpicker'; renderTzPicker(true); }})) return;
-      // lp:click
       switch (action) {
         case 'calendar-prev': calendarMove(-1); break;
         case 'calendar-next': calendarMove(1); break;
@@ -199,7 +191,6 @@ LP.define('calendar', ({
         case 'event-cancel': ui.sub=ui.eventDraft?.id?'event':'';ui.eventDraft=null;calendarRender();break;
         case 'event-delete': ui.overlay=ICSCalendar.normalize(lp.data.events.find(item=>item.id===ui.selectedEvent)||{}).repeat!=='none'?'calendar-delete-scope':'calendar-delete';renderOverlay();break;
         case 'event-confirm-delete': lp.data.events=lp.data.events.filter(item=>item.id!==ui.selectedEvent);save();ui.overlay='';ui.sub='';calendarRender();break;
-        // lp:cases
         default: return false;
       }
       return true;
@@ -225,7 +216,6 @@ LP.define('calendar', ({
           save();ui.selectedDate=event.date;ui.selectedEvent=event.id;ui.selectedInstance=scope&&scope!=='all'?event.date:instance||'';ui.eventDraft=null;ui.sub='event';render();toast('Event saved');break;
         }
         case 'calendar-search': ui.calendarSearch=String(values.get('query')||'').trim();render();break;
-        // lp:scases
         default: return false;
       }
       return true;
