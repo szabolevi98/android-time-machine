@@ -58,3 +58,9 @@ and modules use the same hook names as EC / MM / NG.
 
 - 2026-11-28: the plan; CI changed for the long series of commits (a smoke check per push, the full flows nightly and
   on demand).
+- 2026-11-28: each version migrated in its own session and worktree; progress in docs/plans/engine-migration-<v>.md.
+  A finished branch is checked by the full CI on it (Actions › Tests › Run workflow on the branch, clean Linux
+  runners), then on a trial merge with main, before main gets it.
+- 2026-11-28: **4.0.4 and 4.3 done** and live (d224b464): their simulator.js is gone; ics-core.js and jb-core.js plus
+  modules. Found on the way and fixed on main: 2.3.6's Clock settings (Menu › Settings) drew the clock (667ceedf), and
+  the host's key hook tripped over the store apps' `key` field (9552645e).
