@@ -1,4 +1,5 @@
 require('./lib/vm-strings.cjs');
+const engineSource=require('./lib/engine-source.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Play Books' reader settings and contents (audit step 6): the Display options in each image's order with working
 // theme / typeface / alignment / brightness / size / line height, and the chapter list that jumps to a chapter.
@@ -31,7 +32,7 @@ const load=(v,files)=>{const context={window:{}};for(const f of files)vm.runInNe
   assert.equal((toc.match(/data-action="bk-chapter"/g)||[]).length,3);
   assert.ok(/class="current" data-action="bk-chapter" data-id="4"><span>CHAPTER II\. The Pool of Tears<\/span><em>5<\/em>/.test(toc));
   assert.ok(P.render(ctx({bkToc:true,bkTocTab:'bookmarks'})).includes('bk28-bookmark_sample_half'));
-  const sim=fs.readFileSync('versions/4.3/simulator.js','utf8');
+  const sim=engineSource('4.3');
   assert.ok(sim.includes("case 'bk-chapter':")&&sim.includes("case 'bk-pref-step'")&&sim.includes('[data-bk-bright]')&&sim.includes("ui.view === 'play-books' && ui.sub === 'reader' && (ui.bkSpin || ui.bkOptions || ui.bkToc)"));
 }
 // 4.4.4: Play Books 3.1.33 keeps 2.8.91's ReaderSettingsController order, arrays and Contents.
