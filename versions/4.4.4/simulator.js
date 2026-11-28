@@ -287,29 +287,30 @@
     get homeLongPressTimer() { return homeLongPressTimer; }, get i18n() { return i18n; },
     get jbPlayContext() { return jbPlayContext; }, get keepAttach() { return keepAttach; },
     get keepCurrent() { return keepCurrent; }, get keepMoreContext() { return keepMoreContext; },
-    get label() { return label; }, get listenVoice() { return listenVoice; },
-    get lockControls() { return lockControls; }, get mailbox() { return mailbox; },
-    get messageDraft() { return messageDraft; }, get messageHoldTimer() { return messageHoldTimer; },
-    get navRoot() { return navRoot; }, get navigateBrowser() { return navigateBrowser; },
-    get nextAlarmLabel() { return nextAlarmLabel; }, get officeFiles() { return officeFiles; },
-    get openApp() { return openApp; }, get openMessageThread() { return openMessageThread; },
-    get overlayRoot() { return overlayRoot; }, get photosContext() { return photosContext; },
-    get placeContactShortcut() { return placeContactShortcut; }, get placeShortcut() { return placeShortcut; },
-    get plusContext() { return plusContext; }, get pointerStart() { return pointerStart; },
-    get powerOff() { return powerOff; }, get prefRow() { return prefRow; },
-    get printContext() { return printContext; }, get reducedMotion() { return reducedMotion; },
-    get removeTask() { return removeTask; }, get render() { return render; },
-    get renderDream() { return renderDream; }, get renderOverlay() { return renderOverlay; },
-    get renderStatus() { return renderStatus; }, get renderStockApp() { return renderStockApp; },
-    get resetSimulator() { return resetSimulator; }, get row() { return row; }, get safe() { return safe; },
-    get save() { return save; }, get saveBrowserState() { return saveBrowserState; },
-    get saveKeepNote() { return saveKeepNote; }, get saveMusic() { return saveMusic; },
-    get screen() { return screen; }, get scrollMessages() { return scrollMessages; },
-    get shareVcard() { return shareVcard; }, get snapResting() { return snapResting; },
-    get startPhoneCall() { return startPhoneCall; }, get statusRoot() { return statusRoot; },
-    get storeAppsSync() { return storeAppsSync; }, get storeContext() { return storeContext; },
-    get storeInstalled() { return storeInstalled; }, get storeUninstall() { return storeUninstall; },
-    get suppressClickUntil() { return suppressClickUntil; },
+    get keyguardParts() { return keyguardParts; }, get label() { return label; },
+    get listenVoice() { return listenVoice; }, get lockControls() { return lockControls; },
+    get lockRelease() { return lockRelease; }, get lockScreen() { return lockScreen; },
+    get mailbox() { return mailbox; }, get messageDraft() { return messageDraft; },
+    get messageHoldTimer() { return messageHoldTimer; }, get navRoot() { return navRoot; },
+    get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; },
+    get officeFiles() { return officeFiles; }, get openApp() { return openApp; },
+    get openMessageThread() { return openMessageThread; }, get overlayRoot() { return overlayRoot; },
+    get photosContext() { return photosContext; }, get placeContactShortcut() { return placeContactShortcut; },
+    get placeShortcut() { return placeShortcut; }, get plusContext() { return plusContext; },
+    get pointerStart() { return pointerStart; }, get powerOff() { return powerOff; },
+    get prefRow() { return prefRow; }, get printContext() { return printContext; },
+    get reducedMotion() { return reducedMotion; }, get removeTask() { return removeTask; },
+    get render() { return render; }, get renderDream() { return renderDream; },
+    get renderOverlay() { return renderOverlay; }, get renderStatus() { return renderStatus; },
+    get renderStockApp() { return renderStockApp; }, get resetSimulator() { return resetSimulator; },
+    get row() { return row; }, get safe() { return safe; }, get save() { return save; },
+    get saveBrowserState() { return saveBrowserState; }, get saveKeepNote() { return saveKeepNote; },
+    get saveMusic() { return saveMusic; }, get screen() { return screen; },
+    get scrollMessages() { return scrollMessages; }, get shareVcard() { return shareVcard; },
+    get snapResting() { return snapResting; }, get startPhoneCall() { return startPhoneCall; },
+    get statusRoot() { return statusRoot; }, get storeAppsSync() { return storeAppsSync; },
+    get storeContext() { return storeContext; }, get storeInstalled() { return storeInstalled; },
+    get storeUninstall() { return storeUninstall; }, get suppressClickUntil() { return suppressClickUntil; },
     get suppressReleaseClick() { return suppressReleaseClick; }, get toast() { return toast; },
     get today() { return today; }, get toggleRow() { return toggleRow; }, get tracks() { return tracks; },
     get ui() { return ui; }, get viewport() { return viewport; }, get wallpaperFiles() { return wallpaperFiles; },
@@ -498,7 +499,7 @@
     JBDeveloperOptions.apply(screen, data.settings);
     if (ui.view !== 'lock' && ui.kgPad) { ui.kgPad.destroy(); ui.kgPad = null; }
     if (ui.view !== 'lock' && ui.kgChallenge) { ui.kgChallenge.destroy(); ui.kgChallenge = null; }
-    if (ui.view === 'lock') { viewport.innerHTML = renderLock(); attachKeyguard(); }
+    if (ui.view === 'lock') { viewport.innerHTML = StoreHost.render(ui.view, storeContext()); attachKeyguard(); }
     else if (ui.view === 'home') { viewport.innerHTML = renderHome(); restoreWidgetScroll(); }
     else if (ui.view === 'drawer') viewport.innerHTML = renderDrawer();
     else viewport.innerHTML = renderApp();
@@ -632,11 +633,6 @@
     const time = now.toLocaleTimeString(i18n.locale(), {hour: data.settings.hour24 ? '2-digit' : 'numeric', minute: '2-digit', hour12: !data.settings.hour24}), [hours, rest = ''] = time.split(/[:.]/);
     const spot = Math.floor(Date.now() / 60000) % 4;
     return `<div class="jb-dream jb-dream-clock" data-action="dream-exit" role="button" tabindex="0" aria-label="Daydream"><div class="jb-dream-saver" style="--spot:${spot}"><div class="jbclock-time"><span class="jbclock-hours">${safe(hours)}</span><span class="jbclock-minutes">:${safe(rest.replace(/\s?[^\d].*$/, ''))}</span></div><div class="jbclock-date">${safe(now.toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'}).toLocaleUpperCase(i18n.locale()))}${nextAlarmLabel() ? ` <img src="assets/jbclock-ic_alarm_small.png" alt="">${safe(nextAlarmLabel())}` : ''}</div></div></div>`;
-  }
-  function renderLock() {
-    if(ui.locked)return lockControls.renderLock();
-    const {list, parts} = keyguardParts();
-    return JBKeyguard.render(list, ui.kgPage, parts);
   }
   function renderSecureKeyguard(api) {
     const {list, parts} = keyguardParts();
@@ -868,8 +864,6 @@
     if (ui.overlay === 'print') { const u = ui.print; if (u?.step === 'printers') { u.step = 'config'; renderOverlay(); } else if (u?.expanded) { u.expanded = false; renderOverlay(); } else { ui.print = null; ui.overlay = ''; renderOverlay(); } return; }
     if (ui.overlay.startsWith('widget-photo')) { cancelPhotoWidget(); return; }
     if (ui.overlay) { ui.overlay = ''; render(); return; }
-    if (ui.view === 'lock' && ui.kgChallenge?.bouncing()) { ui.kgChallenge.hideBouncer(); return; }
-    if (ui.view === 'lock') return;
     if (ui.gnowSpin) { ui.gnowSpin = ''; render(); return; }
     if (ui.gnowDraft || ui.gnowDialog) { ui.gnowDraft = null; ui.gnowDialog = ''; render(); return; }
     if (StockApps.APPS.includes(ui.view) && ui.sub) { if (ui.view === 'keep') saveKeepNote(true); ui.sub = ''; render(); return; }
@@ -904,9 +898,6 @@
     const closingFolder = overlayRoot.querySelector('.launcher-folder');
     if (ui.overlay === 'store-host') {
       overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
-    } else if (ui.overlay === 'kg-widget-picker') {
-      const choices = [['calendar', 'Calendar', 'calendar.png'], ['clock', 'Digital clock', 'clock.png']];
-      overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog jbk-picker" role="dialog" aria-label="${safe(i18n.t('Choose widget'))}"><h3>${safe(i18n.t('Choose widget'))}</h3>${choices.map(([type, label, icon]) => `<button data-action="kg-pick-widget" data-id="${type}"><img src="assets/${icon}" alt=""><span>${safe(i18n.t(label))}</span></button>`).join('')}<div class="settings-dialog-actions"><button data-action="close-overlay">${safe(i18n.t('Cancel'))}</button></div></div>`;
     } else if (ui.overlay.startsWith('widget-photo')) {
       overlayRoot.innerHTML = ICSWidgets.photoOverlay(data, ui, key => i18n.t(key));
     } else if (ui.overlay === 'sa-menu') {
@@ -1290,13 +1281,7 @@
         if(id==='bluetooth'&&!data.settings.bluetooth)data.settings.bluetoothTether=false;
         save(); render(); break;
       case 'widget-music-play': ui.musicActive=true;ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
-      case 'lock-media': if (id === 'play') { ui.music.playing = !ui.music.playing; if (ui.music.playing && ui.music.position >= tracks[ui.music.track].duration) ui.music.position = 0; } else ICSMusic.step(ui.music, id === 'previous' ? -1 : 1); ui.musicTrack = ui.music.track; saveMusic(); render(); break;
-      case 'lock-hint': screen.classList.add('lock-dragging'); setTimeout(() => { if (!pointerStart?.lockDrag) lockRelease(null); }, 1000); break;
       case 'close-overlay': if (ui.overlay === 'recent') { closeRecents(); break; } ui.overlay = ''; renderOverlay(); break;
-      case 'kg-add-widget': ui.overlay = 'kg-widget-picker'; renderOverlay(); break;
-      case 'kg-pick-widget': { const widgets = data.keyguardWidgets ||= []; if (widgets.length < JBKeyguard.MAX_WIDGETS) { widgets.push({id: `kg-${Date.now()}`, type: id}); save(); ui.kgPage = widgets.length; } ui.overlay = ''; if (ui.kgRelock) { ui.kgRelock = false; const page = ui.kgPage; lockScreen(); ui.kgPage = page; render(); } else render(); break; }
-      case 'unlock': ui.view = 'home'; render(); break;
-      case 'unlock-camera': openApp('camera'); break;
       case 'toast': toast(id); break;
       case 'open-contact': { const person = data.contacts.find(p => p.id === Number(id)); openApp('people'); if (person) { ui.selectedContact = person.id; ui.sub = 'detail'; render(); } break; }
       case 'noop': break;

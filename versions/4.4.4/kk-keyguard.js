@@ -292,3 +292,54 @@
   }
   window.JBKeyguard = {G, S, MAX_WIDGETS, KLONDIKE, WRONG, pointCloud, pointAlpha, pages, defaultPage, render, renderSecure, securityView, securityMessage, settleDuration, settleShows, challengeAlpha, glowPad, pager, challenge};
 })();
+/* The lock screen of the 4.4.4 shell (docs/plans/engine-migration.md): the keyguard with its widget pages, the
+   music transport, the camera page and the widget picker (kk-keyguard.js), the glow pad's taps and Back, moved out of
+   simulator.js. The secure lock (lockscreen.js's controller), the glow pad drag and the bouncer stay with the shell. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {data, i18n, keyguardParts, lockControls, lockRelease, lockScreen, openApp, overlayRoot, pointerStart, render, renderOverlay, safe, save, saveMusic, screen, tracks, ui} = c;
+    function renderLock() {
+      if(ui.locked)return lockControls.renderLock();
+      const {list, parts} = keyguardParts();
+      return JBKeyguard.render(list, ui.kgPage, parts);
+    }
+    return {
+      render() {
+        return renderLock();
+      },
+      action(action, button, event) {
+        const {id, app, url} = button.dataset;
+        switch (action) {
+          case 'lock-media': if (id === 'play') { ui.music.playing = !ui.music.playing; if (ui.music.playing && ui.music.position >= tracks[ui.music.track].duration) ui.music.position = 0; } else ICSMusic.step(ui.music, id === 'previous' ? -1 : 1); ui.musicTrack = ui.music.track; saveMusic(); render(); break;
+          case 'lock-hint': screen.classList.add('lock-dragging'); setTimeout(() => { if (!pointerStart?.lockDrag) lockRelease(null); }, 1000); break;
+          case 'kg-add-widget': ui.overlay = 'kg-widget-picker'; renderOverlay(); break;
+          case 'kg-pick-widget': { const widgets = data.keyguardWidgets ||= []; if (widgets.length < JBKeyguard.MAX_WIDGETS) { widgets.push({id: `kg-${Date.now()}`, type: id}); save(); ui.kgPage = widgets.length; } ui.overlay = ''; if (ui.kgRelock) { ui.kgRelock = false; const page = ui.kgPage; lockScreen(); ui.kgPage = page; render(); } else render(); break; }
+          case 'unlock': ui.view = 'home'; render(); break;
+          case 'unlock-camera': openApp('camera'); break;
+          default: return false;
+        }
+        return true;
+      },
+      overlay() {
+        if (ui.overlay === 'kg-widget-picker') {
+          const choices = [['calendar', 'Calendar', 'calendar.png'], ['clock', 'Digital clock', 'clock.png']];
+          overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog jbk-picker" role="dialog" aria-label="${safe(i18n.t('Choose widget'))}"><h3>${safe(i18n.t('Choose widget'))}</h3>${choices.map(([type, label, icon]) => `<button data-action="kg-pick-widget" data-id="${type}"><img src="assets/${icon}" alt=""><span>${safe(i18n.t(label))}</span></button>`).join('')}<div class="settings-dialog-actions"><button data-action="close-overlay">${safe(i18n.t('Cancel'))}</button></div></div>`;
+        } else return false;
+        return true;
+      },
+      back() {
+        if (ui.view === 'lock' && ui.kgChallenge?.bouncing()) { ui.kgChallenge.hideBouncer(); return true; }
+        if (ui.view === 'lock') return true;
+        return false;
+      }
+    };
+  }
+  const spec = {
+    render: c => scope(c).render(),
+    action: (name, el, event, c) => scope(c).action(name, el, event),
+    overlay: c => scope(c).overlay(),
+    back: c => scope(c).back()
+  };
+  if (window.KK) for (const id of ['lock']) KK.register(id, spec);
+})();
