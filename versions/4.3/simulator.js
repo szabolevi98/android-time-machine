@@ -252,7 +252,11 @@
     for (let i = apps.length - 1; i >= 0; i--) if (String(apps[i][0]).startsWith('store-') && !want.includes(apps[i][0])) { delete appNames[apps[i][0]]; apps.splice(i, 1); }
   }
   storeAppsSync();
-  function storeContext() { return StoreHost.context({data, ui, save, render, renderOverlay, toast, openApp, screen, viewport, dp, snapResting, holdDelay, suppressClick: ms => { suppressClickUntil = Date.now() + ms; }, notify: (title, text) => addNotification(title, text), lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key)}); }
+  // The context of the store apps and of the jb-* modules (jb-core.js); `extra` adds what one call gives (the click's
+  // event, the submitted form, the app whose data is cleared).
+  function storeContext(extra) { return StoreHost.context(Object.setPrototypeOf({data, ui, save, render, renderOverlay, toast, openApp, screen, viewport, dp, snapResting, holdDelay, suppressClick: ms => { suppressClickUntil = Date.now() + ms; }, notify: (title, text) => addNotification(title, text), lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key), ...extra}, moduleApi)); }
+  // The names the jb-* modules bind (generated as code moves out; docs/plans/engine-migration-4.3.md).
+  const moduleApi = {get back() { return back; }, get i18n() { return i18n; }, get jbmaContext() { return jbmaContext; }, get messageDraft() { return messageDraft; }, get render() { return render; }, get save() { return save; }, get ui() { return ui; }};
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
   function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (jbPlayContext().prefs.shortcuts) placeShortcut(r, appNames[r]); }
   // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
@@ -740,7 +744,6 @@
     switch (ui.view) {
       case 'play-store': return JBPlay.render(jbPlayContext());
       case 'live-wallpapers': return renderLiveWallpapers();
-      case 'sound-recorder': return SoundRecorder.render(ui.sr ||= SoundRecorder.initial(), i18n.language);
       case 'ears-history': return Ears.history(data.earsHistory || [], i18n.language, i18n.locale());
       case 'wallpaper-picker': return `<div class="app-view wallpaper-picker"><div class="actionbar"><button class="up" data-action="back" aria-label="Back">‹</button><h2>Wallpapers</h2></div><div class="app-content dark">${wallpaperChoices()}</div></div>`;
       case 'settings': return renderSettings();
@@ -765,6 +768,7 @@
     }
   }
   function openApp(app, resume = false) {
+    if (StoreHost.has(app) && StoreHost.module(app).open?.(storeContext(), resume, app)) return;
     if (app === 'movie-studio' && !resume) MovieStudio.open(ui);
     if (['currents', 'play-magazines'].includes(app) && !resume) { NewsReader.open(ui); ui.currentsEdition = ''; ui.currentsCustomize = ''; ui.currentsLibrary = false; }
     if (app === 'google-plus' && !resume) PlusPost.open(ui);
@@ -884,7 +888,6 @@
     if (ui.overlay.startsWith('widget-photo')) { cancelPhotoWidget(); return; }
     if (ui.overlay) { ui.overlay = ''; render(); return; }
     if (ui.view === 'ears-history' && !ui.overlay) { home(false); return; }
-    if (ui.view === 'sound-recorder' && !ui.overlay) { const st = ui.sr.state; if (st === 'idle') srFinish(ui.sr.length > 0); else if (st === 'playing') srStop(); else { clearInterval(ui.srTimer); ui.sr = SoundRecorder.initial(); render(); } return; }
     if (ui.view === 'live-wallpapers') { const sub = String(ui.sub || ''); if (sub.startsWith('settings:')) ui.sub = `preview:${sub.slice(9)}`; else if (sub) ui.sub = ''; else { home(false); return; } render(); return; }
     if (ui.view === 'lock' && ui.kgChallenge?.bouncing()) { ui.kgChallenge.hideBouncer(); return; }
     if (ui.view === 'lock') return;
@@ -955,33 +958,6 @@
   let openFolderId = '';
   /* Sound Search capture: EarsWidgetCaptureService listens for at most Ears.CAPTURE_MS; here the song the Music app is
      playing is recognized after Ears.MATCH_MS, anything else ends without a match. The widget alone is repainted. */
-  /* Sound Recorder: the recording runs until stopped or until the MMS size limit (SoundRecorder.LIMIT seconds, then
-     "Maximum length reached"); playback runs to the end of the sample. The view repaints four times a second. */
-  function srTick() {
-    clearInterval(ui.srTimer);
-    ui.srTimer = setInterval(() => {
-      if (ui.view !== 'sound-recorder' || ui.sr.state === 'idle') { clearInterval(ui.srTimer); return; }
-      const t = SoundRecorder.progress(ui.sr);
-      if (ui.sr.state === 'recording' && t >= SoundRecorder.LIMIT) { ui.sr = {...ui.sr, state: 'idle', length: SoundRecorder.LIMIT, interrupted: true, error: 'max_length_reached'}; }
-      else if (ui.sr.state === 'playing' && t >= ui.sr.length) ui.sr = {...ui.sr, state: 'idle'};
-      render();
-    }, 250);
-    render();
-  }
-  function srStart() { if (ui.sr.state === 'recording') return; ui.sr = {...SoundRecorder.initial(), state: 'recording', started: Date.now()}; srTick(); }
-  function srStop() {
-    if (ui.sr.state === 'recording') ui.sr = {...ui.sr, state: 'idle', length: Math.max(1, SoundRecorder.progress(ui.sr))};
-    else if (ui.sr.state === 'playing') ui.sr = {...ui.sr, state: 'idle'};
-    clearInterval(ui.srTimer); render();
-  }
-  // Back in Messaging: saveSample's result becomes the draft's audio attachment.
-  function srFinish(keep) {
-    clearInterval(ui.srTimer);
-    const back = ui.srReturn || {view: 'messaging', sub: ''};
-    ui.view = back.view; ui.sub = back.sub; ui.thread = back.thread; ui.jbmaScreen = back.screen || null; ui.jbmaSlide = back.slide;
-    if (keep && ui.sr.length > 0) { if (back.target === 'slide') JBMmsAttach.apply(jbmaContext(), 'slide', {audio: SoundRecorder.sample(ui.sr, i18n.language)}); else { const draft = messageDraft(); draft.attachment = SoundRecorder.sample(ui.sr, i18n.language); draft.updated = Date.now(); save(); } }
-    ui.sr = SoundRecorder.initial(); render();
-  }
   function earsPaint() { viewport.querySelectorAll('.widget-ears').forEach(node => { const id = node.dataset.widgetId; node.innerHTML = Ears.widget(ui.ears, i18n.language) + (node.querySelector('[data-resize-frame]')?.outerHTML || ''); }); }
   function earsStart() {
     clearTimeout(ui.earsTimer); clearInterval(ui.earsTick);
@@ -1937,7 +1913,7 @@
     ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);ui.browserOwner='browser';ui.browserSessions={};syncBrowserState();ui.peopleDraft=null;ui.peopleQuery='';ui.peopleTab='all';save();home();
   }
   function clearAppData(id) {
-    if(window.StoreHost?.has(id)){StoreHost.module(id).clearData?.(storeContext());save();}
+    if(window.StoreHost?.has(id)){StoreHost.module(id).clearData?.(storeContext({clearId: id}));save();}
     if(id==='chrome'){delete data.chromeSession;delete ui.browserSessions.chrome;if(ui.browserOwner==='chrome'){ui.browserSession=restoreChrome();syncBrowserState();}save();}
     if(id==='browser'){delete data.browserSession;data.browserHistory=clone(defaultData.browserHistory);data.bookmarks=clone(defaultData.bookmarks||[]);data.savedPages=[];ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);syncBrowserState();}
     if(id==='music'){ui.music=ICSMusic.restore();saveMusic();}
@@ -2039,7 +2015,7 @@
     }
     if(action.startsWith('kp-') && KeepMore.handle(action,id,keepMoreContext()))return;
     // A store app's own controls and the host's dialog and menu (store-apps/legacy-host.js).
-    if ((action.startsWith('sth-') || StoreHost.has(ui.view)) && StoreHost.action(action, button, storeContext())) return;
+    if ((action.startsWith('sth-') || ui.view.startsWith('store-') && StoreHost.has(ui.view)) && StoreHost.action(action, button, storeContext())) return;
     // The Contacts editor (contact-editor.js): fields, types, photo and its dialogs.
     if (ui.view === 'people' && action.startsWith('hce-') && HoloContactEditor.handle(action, id, {draft: ui.peopleDraft, form: viewport.querySelector('#people-editor'), ui, render, renderOverlay,
       focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
@@ -2077,6 +2053,8 @@
     if (ui.view === 'messaging' && action.startsWith('jbma-') && JBMmsAttach.handle(action, id, jbmaContext())) return;
     if (ui.view === 'youtube' && action.startsWith('yt4-') && JBYouTube.handle(action, id, ytContext())) return;
     if (ui.view === 'google-search' && action.startsWith('gsp-') && JBSearchPrefs.handle(action, id, gsContext())) return;
+    // The screen's module (jb-*.js), where its cases stood in this switch.
+    if (!ui.view.startsWith('store-') && StoreHost.has(ui.view) && StoreHost.action(action, button, storeContext({event}))) return;
     switch (action) {
       case 'open-app': {
         const icon = button.closest('.launcher-icon, .drawer-app, .dock-app') || button;
@@ -2537,11 +2515,6 @@
       case 'mms-search': ui.sub = 'search'; ui.overlay = ''; ui.mmsSearch = ''; render(); viewport.querySelector('.mms-search input')?.focus(); break;
       case 'mms-menu': case 'mms-attach': case 'mms-smiley': ui.overlay = action; renderOverlay(); break;
       case 'mms-attach-type': if (id === 'pictures') { ui.overlay = 'mms-attach-pick'; renderOverlay(); } else JBMmsAttach.start(jbmaContext(), id); break;
-      case 'sr-record': srStart(); break;
-      case 'sr-play': if (ui.sr.state === 'idle' && ui.sr.length) { ui.sr = {...ui.sr, state: 'playing', started: Date.now(), interrupted: false, error: ''}; srTick(); } break;
-      case 'sr-stop': srStop(); break;
-      case 'sr-accept': srStop(); srFinish(true); break;
-      case 'sr-discard': srStop(); srFinish(false); break;
       case 'mms-recipient': { const person = contact(id); if (person) { Object.assign(messageDraft(), {recipient: person.phone, chip: true, query: ''}); ui.mmsChipSelected = false; save(); render(); viewport.querySelector('.mms-compose textarea').focus(); } break; }
       case 'mms-call': {const person=ICSMessaging.identity(ui.thread,data.contacts);startPhoneCall(person.phone);break;}
       case 'mms-photo': { const photo = data.photos.find(p => p.id === Number(id)); if (photo) { messageDraft().attachment = clone(photo); messageDraft().updated = Date.now(); save(); ui.overlay = ''; render(); scrollMessages(); } break; }
@@ -2798,6 +2771,7 @@
       data.settings.bluetoothName = name;
       save(); ui.overlay = ''; render(); return;
     }
+    if (StoreHost.has(ui.view) && StoreHost.module(ui.view).submit?.(form.dataset.form, values, storeContext({event, form}))) return;
     switch (form.dataset.form) {
       case 'browser-find': ui.browserFind=String(values.get('query')||'').trim(); render(); break;
       case 'people-search': ui.peopleQuery=String(values.get('query')||'').trim(); render(); break;
@@ -2874,6 +2848,7 @@
   document.addEventListener('submit', event => hangoutsScope(() => handleSubmit(event)));
   document.addEventListener('input', event => hangoutsScope(() => handleInput(event)));
   function handleInput(event) {
+    if (StoreHost.has(ui.view) && StoreHost.module(ui.view).input?.(event, storeContext())) return;
     if (['currents', 'play-magazines'].includes(ui.view) && NewsReader.input(event.target, newsContext())) return;
     if (ui.view === 'currents' && CurrentsCustomize.change(event.target, cczContext())) return;
     if (PlusPost.input(event.target)) return;
