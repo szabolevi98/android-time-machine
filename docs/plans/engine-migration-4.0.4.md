@@ -36,8 +36,12 @@ following the pattern of 2.3.6's Calculator (commit 3585865f).
 - [x] Clock, Calendar (with the framework pickers), Music, Phone, Browser, People, Messaging, Email
 - [x] Gallery, Camera
 - [x] Settings
-- [ ] Play Store, Downloads, Gmail, Play Music, the Google apps, Maps / Navigation / Places / Latitude, Earth,
-      News & Weather, Messenger, Movie Studio
+- [x] Play Store (`ics-play-store.js`), Downloads, Gmail, Play Music (`ics-<view>-app.js`, as their logic files have the
+      plain names), the seven Google apps of ics-google-apps.js (`ics-google.js`: Google+, Talk, YouTube, Play Books,
+      Play Movies, Search, Voice Dialer), and Maps, Latitude, Navigation, Places, Earth, News & Weather, Messenger and
+      Movie Studio (`ics-stock-apps.js`, as their code was one block). New hooks: `launch(c, resume, app)` (a start
+      before the lock check), `open(c, resume)` (before the screen switches), `ownOverlay(c)` (an overlay drawn as it is,
+      not translated), `rendering(c)` (before every draw); a spec registered for several views is asked once.
 - [ ] The shell: status bar, lock screen, home and the drawer (widgets, folders, clings, wallpapers), shade, Recents,
       power menu, volume, keys
 - [ ] What is left into `ics-core.js`, simulator.js deleted

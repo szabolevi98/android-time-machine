@@ -1,3 +1,4 @@
+const engineSource=require('./lib/engine-source.cjs');
 require('./lib/vm-strings.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 // Galaxy Nexus 4.0.4 and Nexus 4 4.3: DownloadList (ics-downloads.js / jb-downloads.js from docs/templates/holo-downloads.template.js).
@@ -14,6 +15,6 @@ for(const [v,f,failed] of [['4.0.4','ics-downloads.js','Failed'],['4.3','jb-down
   H.handle('hdl-open','3',ctx);assert.equal(ctx.ui.overlay,'hdl-failed:3');assert.ok(H.overlay(ctx).includes('Retry'));
   ctx.ui.overlay='';H.handle('hdl-open','4',ctx);assert.equal(opened.at(-1),'browser');
   assert.equal(H.T('hu','Sort by size'),'Rendezés méret szerint');assert.equal(H.T('hu','Today'),'ma');
-  const sim=fs.readFileSync(`versions/${v}/simulator.js`,'utf8');assert.ok(sim.includes("case 'downloads': return HoloDownloads.render(dlContext());"));
+  const sim=engineSource(v);assert.ok(sim.includes("case 'downloads': return HoloDownloads.render(dlContext());")||sim.includes("render(c) { return HoloDownloads.render(api(c).dlContext()); }"),v);
 }
 console.log('holo-downloads ok');

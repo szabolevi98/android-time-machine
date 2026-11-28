@@ -212,7 +212,7 @@
   function storeContext() { return StoreHost.context(c); }
   const isStoreApp = id => String(id).startsWith('store-') && StoreHost.has(id);
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
-  function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (icsPlayContext().prefs.widgets) placeShortcut(r, appNames[r]); }
+  function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (c.icsPlayContext().prefs.widgets) placeShortcut(r, appNames[r]); }
   // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
   function storeUninstall(id) {
     data.marketInstalled = (data.marketInstalled || []).filter(x => x !== id);
@@ -293,7 +293,7 @@
     i18n.translateDOM(statusRoot);
   }
   function renderNav() {
-    navRoot.innerHTML = `<button class="nav-key nav-back" data-action="back" aria-label="Back"><img src="assets/nav-back.png" alt=""></button><button class="nav-key nav-home" data-action="home" aria-label="Home screen"><img src="assets/nav-home.png" alt=""></button><button class="nav-key nav-recent" data-action="recent" aria-label="Recent apps"><img src="assets/nav-recent.png" alt=""></button>${(modules().some(m => m.legacyMenu?.(c))||ui.view==='news-weather'&&!ui.newsSub)&&!ui.locked?'<button class="nav-key nav-menu" data-action="legacy-menu" aria-label="Menu"><img src="assets/ic_sysbar_menu.png" alt=""></button>':''}`;
+    navRoot.innerHTML = `<button class="nav-key nav-back" data-action="back" aria-label="Back"><img src="assets/nav-back.png" alt=""></button><button class="nav-key nav-home" data-action="home" aria-label="Home screen"><img src="assets/nav-home.png" alt=""></button><button class="nav-key nav-recent" data-action="recent" aria-label="Recent apps"><img src="assets/nav-recent.png" alt=""></button>${modules().some(m => m.legacyMenu?.(c))&&!ui.locked?'<button class="nav-key nav-menu" data-action="legacy-menu" aria-label="Menu"><img src="assets/ic_sysbar_menu.png" alt=""></button>':''}`;
     if(ui.locked)navRoot.querySelectorAll('.nav-home,.nav-recent').forEach(button=>{button.disabled=true;button.setAttribute('aria-hidden','true');});
   }
   // Window transitions: the outgoing view is kept in a temporary layer while both animate.
@@ -336,8 +336,7 @@
   function render() {
     viewport.querySelectorAll('.home-widget .calw-list').forEach(list => { (ui.widgetScroll ||= {})[list.closest('.home-widget').dataset.widgetId] = list.scrollTop; });
     if(ui.locked)ui.view='lock';
-    // Read aloud stops once the reader is left.
-    if (ui.gaBkAloud && !(ui.view === 'play-books' && ui.gaSub === 'read')) ICSGoogleApps.books.stopAloud(ui);
+    each('rendering');
     const outgoing = viewport.firstElementChild;
     screen.className = `screen${activeTransition ? ' transitioning' : ''} wallpaper-${data.wallpaper}${data.settings.largeText ? ' large-text' : ''}${ui.sleeping?' sleeping':''}${ui.locked?' credential-locked':''}`;
     screen.style.background = data.wallpaper === 11 && data.customWallpaperPhoto ? `#080d14 url('${ICSMedia.image(data.customWallpaperPhoto)}') center / cover no-repeat` : data.wallpaper === 11 && data.customWallpaper ? `linear-gradient(160deg, ${data.customWallpaper[0]}, ${data.customWallpaper[1]} 53%, ${data.customWallpaper[2]})` : `#080d14 url('assets/wallpaper_${wallpaperFiles[data.wallpaper] || 'chroma'}.jpg') center center / cover no-repeat`;
@@ -350,7 +349,6 @@
     snapResting(viewport);
     renderOverlay();
     i18n.translateDOM(screen);
-    if (ui.view === 'earth') EarthApp.mount(viewport, earthContext());
     if (StoreHost.has(ui.view)) StoreHost.mount(ui.view, storeContext(), viewport);
     const scene = {view: ui.view, sub: ui.sub}, transit = ui.sleeping ? '' : ICSTransitions.kind(lastScene, scene, pendingNav);
     lastScene = scene;
@@ -528,32 +526,19 @@
   function renderApp() {
     if (StoreHost.has(ui.view)) return StoreHost.render(ui.view, storeContext());
     switch (ui.view) {
-      case 'play-store': return ICSPlay.render(icsPlayContext());
       case 'live-wallpapers': return renderLiveWallpapers();
       case 'wallpaper-picker': return `<div class="app-view wallpaper-picker"><div class="actionbar"><button class="up" data-action="back" aria-label="Back">‹</button><h2>Wallpapers</h2></div><div class="app-content dark">${wallpaperChoices()}</div></div>`;
-      case 'downloads': return HoloDownloads.render(dlContext());
-      case 'gmail': return ICSGmail.render(gmailContext());
-      case 'play-music': return ICSPlayMusic.render(playMusicContext());
-      case 'google-plus': case 'talk': case 'youtube': case 'play-books': case 'play-movies': case 'search': case 'voice-dialer': return ICSGoogleApps.render(ui.view, googleAppsContext());
-      case 'maps': case 'latitude': case 'earth': case 'news-weather': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), now: deviceDate()});
-      case 'messenger': case 'navigation': case 'local': case 'movie-studio': if (ui.view === 'navigation' && ui.navRun) return MapsRoute.nav(mrContext()); return JBExtraApps.render(ui.view, {studio: ui.view === 'movie-studio' ? movieContext() : null, messenger: ui.view === 'messenger' ? messengerContext() : null, ui, t: key => i18n.t(key), contacts: data.contacts, data});
       default: return renderHome();
     }
   }
   function openApp(app, resume = false) {
-    if (app === 'movie-studio' && !resume) MovieStudio.open(ui);
-    if (app === 'google-plus' && !resume) PlusPost.open(ui);
-    if (app === 'messenger' && !resume) PlusMessenger.open(ui);
-    if (app === 'earth' && !resume) EarthApp.open(ui);
+    if (!isStoreApp(app)) StoreHost.module(app)?.launch?.(storeContext(), resume, app);
     // A fresh start of Maps (or Latitude) opens on the map, not on its settings (maps-prefs.js).
     if (!resume) { ui.mmsPrefs = ''; ui.mmsDialog = ''; ui.mapsPrefs = null; ui.mpsDialog = null; ui.navPick = ''; ui.locResults = null; ui.locSearching = false; }
-    if (app === 'news-weather' && !resume) { ui.newsSub = ''; ui.nwpScreen = ''; ui.nwpDialog = ''; }
-    if (ICSGoogleApps.APPS.includes(app) && !resume) { ui.gaSub = ''; ui.gaYtStack = []; ui.gaYtDialog = null; ui.gaYtDrop = ''; if (app === 'voice-dialer') setTimeout(() => googleAppsContext().listen()); }
     if (app !== 'camera') ui.captureFor = '';
     if(ui.locked)return;
     if (!appNames[app]) return;
     captureRecentView();
-    if (app === 'play-store' && !resume) { ui.play = ICSPlayStore.initial(); ui.playHistory = []; ui.market = {page: 'home'}; ui.marketHistory = []; ui.marketSearching = false; }
     if (!isStoreApp(app)) StoreHost.module(app)?.open?.(storeContext(), resume);
     ui.view = app; ui.sub = resume ? ui.recentState?.[app]?.sub || '' : ''; ui.overlay = '';
     ui.recent = [app, ...ui.recent.filter(id => id !== app)].slice(0, 7);
@@ -572,112 +557,13 @@
   }
   function home(resetPage = true) { if(ui.locked)return;if(ui.photoWidgetSetup){const setup=ui.photoWidgetSetup;data.homeWidgets[setup.page]=data.homeWidgets[setup.page].filter(widget=>widget.id!==setup.id);ui.photoWidgetSetup=null;save();}if(ui.sub==='lock-setup')lockControls.lock();captureRecentView(); ui.view = 'home'; ui.sub = ''; ui.overlay = ''; if (resetPage) ui.page = 2; render(); }
   function back() { pendingNav = 'back'; try { navigateBack(); } finally { pendingNav = ''; } }
-  // Play Music 4.1 plays the demo library through the shared engine (ui.music), like AOSP Music.
-  function playMusicContext() {
-    return {tracks, music: ui.music, ui, data, lang: i18n.language, time: ICSMusic.time, save, render, renderOverlay, toast, account: window.ICSGmail?.account,
-      focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
-      play(ids, track) { ui.music.queue = [...ids]; ui.music.track = track; ui.music.position = 0; ui.music.playing = true; ui.musicActive = true; ui.musicTrack = track; ui.musicPlaying = true; c.saveMusic(); }};
-  }
-  // Google+, Talk, YouTube, Play Books / Movies, Search, Voice Dialer and Latitude (ics-google-apps.js).
-  let voiceDialTimer = null;
-  function googleAppsContext() {
-    return {plus: ui.view === 'google-plus' ? plusContext() : null, data, ui, view: ui.view, lang: i18n.language, account: ICSGmail.account, now: deviceDate().getTime(), t: key => i18n.t(key), save, render, renderOverlay, toast, openApp,
-      closeOverlay() { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } },
-      focus(selector) { requestAnimationFrame(() => viewport.querySelector(selector)?.focus()); },
-      browse(query) { openApp('browser'); c.navigateBrowser(`search:${query}`); },
-      // The Play Store (Finsky) on a page: Books' About the book and its searches.
-      play(next) { openApp('play-store'); icsPlayGo(next); },
-      // A manual sync (Books' Refresh): the status bar's sync icon while it runs.
-      sync(ms) { ui.syncing = true; renderStatus(); setTimeout(() => { ui.syncing = false; renderStatus(); }, ms); },
-      // YouTube's Record: the camcorder in VIDEO_CAPTURE with quickCapture, whose clip goes back to YouTube (cameraStop).
-      record() { ui.captureFor = 'youtube'; ui.cameraMode = 'video'; ui.cameraModes = false; ui.icsPano = null; openApp('camera'); },
-      // ACTION_SEND text/plain: the subject and the text into the chosen app's new message.
-      share(app, subject, text) {
-        openApp(app);
-        if (app === 'gmail') { ICSGmail.handle('g4-compose', '', gmailContext()); const d = data.gmail40.find(m => m.id === ui.g4Id); if (d) Object.assign(d, {subject, body: text}); }
-        else if (app === 'email') { c.composeEmail(); const d = data.mailbox.find(m => m.id === ui.emailId); if (d) Object.assign(d, {subject, body: text + (d.body || '')}); }
-        else { ui.sub = 'new'; Object.assign(c.messageDraft(), {body: text, updated: Date.now()}); }
-        save(); render();
-      },
-      notify(title) { addNotification(title, ''); },
-      // Google Search's searchable items open what they find: an app, a page, a contact, a conversation.
-      apps: apps.map(([id, name]) => [id, i18n.t(name), iconAssets.has(id) ? `assets/${id}.png` : '']),
-      openUrl(url) { openApp('browser'); c.navigateBrowser(url); },
-      openContact(id) { openApp('people'); ui.selectedContact = id; ui.sub = 'detail'; render(); },
-      openThread(key) { c.openMessageThread(key); render(); },
-      listen() { clearTimeout(voiceDialTimer); ui.gaVoice = 'listening'; render(); voiceDialTimer = setTimeout(() => { ui.gaVoice = 'failed'; if (ui.view === 'voice-dialer') render(); }, 3000); }};
-  }
-  // The context Gmail's module renders and acts with.
-  function gmailContext() {
-    return {data, ui, lang: i18n.language, locale: i18n.locale(), now: deviceDate().getTime(), save, render, renderOverlay, toast, t: key => i18n.t(key), account: ICSGmail.account, root: viewport,
-      focus: selector => viewport.querySelector(selector)?.focus(), submit: selector => viewport.querySelector(selector)?.requestSubmit(),
-      keep: () => ICSGmail.keepDraft(data, ui, viewport.querySelector('.g4-form')), photo: photo => ICSMedia.art(photo),
-      pickPicture: () => { openApp('gallery'); ui.galleryPick = 'gmail'; ui.galleryAlbum = ''; render(); }};
-  }
-  // Downloads: data.downloads (seeded on first use); the sort order and the selection live in ui.hdl.
-  function dlContext() {
-    return {data, ui, lang: i18n.language, locale: i18n.locale(), now: deviceDate().getTime(), hour24: !!data.settings.hour24, t: key => i18n.t(key),
-      save, render, renderOverlay, toast, openApp};
-  }
-  // A picked destination drives there as Type destination does; a Places find opens on the map.
-  function extraContext() {
-    return {ui, data, render, focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
-      go(to) { const rt = MapsRoute.route(mrContext(), {to, mode: 'drive', avoid: data.mapsAvoid || {}}); MapsRoute.startNav(mrContext(), {name: to, km: rt.km, min: rt.min, mode: 'drive'}); render(); },
-      openMap(query) { openApp('maps'); ui.mapsQuery = query; render(); }};
-  }
-  // Maps 6 directions and Navigation's drive (maps-route.js).
-  function mrContext() {
-    return {ui, data, t: key => i18n.t(key), locale: i18n.locale(), root: viewport, save, render,
-      focus: selector => requestAnimationFrame(() => viewport.querySelector(selector)?.focus()),
-      unsupported: () => toast(i18n.t('This feature is not part of the simulator.')),
-      mapSvg: StockApps.mapSvg({ui: {...ui, mapsRoute: null, mapsQuery: ''}, data, t: key => i18n.t(key), locale: i18n.locale()}).replace(/^<svg[^>]*>|<\/svg>$/g, ''),
-      navigate: run => { ui.mapsRoute = ui.mapsRoute ? {...ui.mapsRoute, screen: 'map'} : null; openApp('navigation'); MapsRoute.startNav(mrContext(), run); render(); }};
-  }
-  // Maps' settings screens (maps-prefs.js): the shell's save / render and opening another app's page.
-  const mapsPrefsContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, locale: i18n.locale(), save, render, renderOverlay, open: (app, sub) => { openApp(app); if (sub) { ui.sub = sub; render(); } }});
-  // Movie Studio (movie-studio.js): the projects and the editor shell.
-  const movieContext = () => ({ui, data, t: key => i18n.t(key), S: key => JBExtraApps.text('studio', key), save, render, toast: message => toast(message), refuse: () => toast(i18n.t('This feature is not part of the simulator.')), thumb: i => StockApps.thumb(i), addIcon: 'assets/ms-ic_menu_add_clip_normal.png'});
-  // Google+ posting and settings (plus-post.js): Google+ 2.4's New post, own posts and Settings.
-  const plusContext = () => { PlusPost.bind(ui); return {ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.gplus?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, version: '2.4', me: i18n.t('Me'), account: 'icecream.demo@gmail.com', now: deviceDate(), locale: i18n.locale(), save, render, thumb: i => StockApps.thumb(i), openMessengerSettings: () => { openApp('messenger'); ui.gpmPrefs = true; render(); }}; };
-  // Google+ Messenger (plus-messenger.js): Google+ 2.4's conversations, New conversation and settings.
-  const messengerContext = () => ({ui, data, t: key => i18n.t(key), S: key => JBExtraApps.text('gplus', key), contacts: data.contacts, now: deviceDate(), locale: i18n.locale(), save, render, toast: message => toast(message), avatar: 'assets/msg-default_avatar.png', photoIcon: 'assets/gpm-ic_send_photo_holo_light.png', sendIcon: 'assets/gpm-ic_send_holo_light.png', version: '2.4', listMenu: ['Settings', 'Send feedback', 'Help'], me: i18n.t('Me')});
-  // Earth (earth-app.js): Earth 6.1's settings, search, My location and Share.
-  const earthContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, save, render, toast: message => toast(message), earth: '6.1', account: 'icecream.demo@gmail.com', dark: true, dot: 'assets/ea6-bluedot.png', shareTargets: [['messaging', 'Messaging']], share: (app, text, subject) => { ui.overlay = ''; renderOverlay(); openApp(app); ui.sub = 'new'; Object.assign(c.messageDraft(), {body: text, updated: Date.now()}); save(); render(); }, openLocation: () => { openApp('settings'); toast(i18n.t('This feature is not part of the simulator.')); }});
   function navigateBack() {
     if ((ui.overlay === 'store-host' || !ui.overlay && isStoreApp(ui.view)) && StoreHost.back(storeContext())) return;
     if (ask('back')) return;
-    if (ui.view === 'play-music' && !ui.overlay && ICSPlayMusic.back(ui)) { render(); return; }
-    if (ui.view === 'earth' && !ui.overlay && EarthApp.back(ui)) { render(); return; }
-    if (ui.view === 'messenger' && !ui.overlay && PlusMessenger.back(ui)) { render(); return; }
-    if (ui.view === 'movie-studio' && !ui.overlay && MovieStudio.back(ui)) { render(); return; }
-    if ((ui.view === 'maps' || ui.view === 'latitude') && !ui.overlay && window.MapsPrefs?.back(ui)) { render(); return; }
-    if (ui.view === 'maps' && !ui.overlay && ui.mapsRoute && MapsRoute.back(mrContext())) return;
-    if (ui.view === 'navigation' && !ui.overlay && ui.navRun) { ui.overlay = 'mr-exit'; renderOverlay(); return; }
-    if (!ui.overlay && JBExtraApps.back(ui)) { render(); return; }
-    // News & Weather: a settings dialog or nested screen, then the settings or the story page.
-    if (ui.view === 'news-weather' && ui.newsSub && !ui.overlay) { if (!(ui.newsSub === 'settings' && NewsPrefs.back(ui))) { ui.newsSub = ''; ui.nwpScreen = ''; } render(); return; }
-    if (ui.view === 'downloads' && HoloDownloads.back(dlContext())) return;
-    // Play Books' reader: a dropdown, Display options, then the Contents popup close before the reader does.
-    if (ui.view === 'play-books' && ui.gaSub === 'read' && (ui.gaBkSpin || ui.gaBkOptions || ui.gaBkToc)) { if (ui.gaBkSpin) ui.gaBkSpin = ''; else if (ui.gaBkOptions) ui.gaBkOptions = false; else ui.gaBkToc = false; render(); return; }
-    if (ui.view === 'play-books') { ui.gaBkSpin = ''; ui.gaBkOptions = false; ui.gaBkToc = false; }
-    // Talk: an open dialog first; Friend info returns to its chat, Blocked friends to Talk settings.
-    if (ui.view === 'talk' && (ui.gaTkDialog || ui.gaSub === 'info' || ui.gaSub === 'blocked')) { if (ui.gaTkDialog) ui.gaTkDialog = null; else ui.gaSub = ui.gaSub === 'info' ? 'chat' : 'settings'; render(); return; }
-    if (ui.view === 'google-plus' && !ui.overlay && PlusPost.back(ui)) { render(); return; }
-    if ((ui.view === 'youtube' || ui.view === 'play-movies' || ui.view === 'play-books') && !ui.overlay && ICSGoogleApps.back(googleAppsContext())) return;
-    if (ICSGoogleApps.APPS.includes(ui.view) && ui.gaSub) { ui.gaSub = ''; render(); return; }
-    if (ui.view === 'gmail' && ui.sub === 'g4-prefs' && !ui.overlay) { ICSGmailPrefs.back(ui); render(); return; }
-    if (ui.view === 'gmail') {
-      if (ui.overlay) { ui.overlay = ''; renderOverlay(); return; }
-      if (ui.sub === 'compose') { ICSGmail.keepDraft(data, ui, viewport.querySelector('.g4-form')); save(); }
-      if (!ui.sub && (ui.g4Selected || []).length) { ui.g4Selected = []; render(); return; }
-      if (!ui.sub && ui.g4Query !== undefined) { ui.g4Query = undefined; render(); return; }
-    }
     if (ui.overlay.startsWith('widget-photo')) { cancelPhotoWidget(); return; }
     if (ui.overlay) { ui.overlay = ''; render(); return; }
     if (ui.view === 'live-wallpapers') { const sub = String(ui.sub || ''); if (sub.startsWith('settings:')) ui.sub = `preview:${sub.slice(9)}`; else if (sub) ui.sub = ''; else { home(false); return; } render(); return; }
     if (ui.view === 'lock') return;
-    if (ui.view === 'play-store' && ui.marketSearching) { ui.marketSearching = false; render(); return; }
-    if (ui.view === 'play-store' && ui.marketHistory?.length) { const prev = ui.marketHistory.pop(); ui.market = prev; render(); const list = viewport.querySelector('.icsp-scroll'); if (list) list.scrollTop = prev.scroll || 0; return; }
     if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return; }
     if (ui.sub) { ui.sub = ''; render(); return; }
     home(false);
@@ -713,10 +599,8 @@
       const gone = ui.removedTask; ui.removedTask = null;
       if (ui.view === gone) { ui.view = 'home'; ui.sub = ''; lastScene = {view: 'home', sub: ''}; render(); return; }
     }
-    if (ui.view === 'downloads' && ui.overlay.startsWith('hdl-')) { overlayRoot.innerHTML = HoloDownloads.overlay(dlContext()) || ''; return; }
+    { const cx = storeContext(); for (const m of modules()) { const html = m.ownOverlay?.(cx); if (html != null) { overlayRoot.innerHTML = html; return; } } }
     const closingFolder = overlayRoot.querySelector('.launcher-folder');
-    if (ui.view === 'play-music' && ui.overlay.startsWith('pm4-')) { overlayRoot.innerHTML = ICSPlayMusic.overlay(playMusicContext()) || ''; return; }
-    if (ui.view === 'gmail' && ui.overlay.startsWith('g4-')) { overlayRoot.innerHTML = ICSGmail.overlay(gmailContext()) || ''; return; }
     if (ui.overlay === 'vs3') { overlayRoot.innerHTML = ICSVoice.render(ui.vs3 || {phase: 'waiting'}, i18n.language, data.inputPrefs?.vsLanguage || 'en-US'); return; }
     const drawn = moduleOverlay();
     if (drawn) {
@@ -729,26 +613,6 @@
       overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
     } else if (ui.overlay === 'recent') {
       overlayRoot.innerHTML = `<div class="recent-panel" data-action="close-overlay">${ui.recent.length ? `<div class="recent-list">${[...ui.recent].reverse().map(id => `<div class="recent-item" data-action="open-app" data-app="${id}" role="button" tabindex="0" aria-label="${appNames[id]}"><span class="recent-label">${appNames[id]}</span><span class="recent-thumbnail" aria-hidden="true"><span class="recent-thumbnail-inner" inert>${ui.recentSnapshots[id] || `<div class="recent-fallback">${appIcon(id)}</div>`}</span></span><span class="recent-app-icon" aria-hidden="true">${appIcon(id)}</span></div>`).join('')}</div>` : '<p class="recent-empty">No recent apps</p>'}</div>`;
-    } else if (ui.overlay === 'play-menu') {
-      // The action bar overflow: a Holo popup anchored below the overflow button.
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${ICSPlay.menu(icsPlayContext()).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
-    } else if (ui.overlay?.startsWith('icsp-')) {
-      overlayRoot.innerHTML = ICSPlay.dialog(ui.overlay.slice(5), icsPlayContext());
-    } else if (ui.overlay === 'jbx-menu') {
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${(ui.view === 'messenger' ? PlusMessenger.menu(messengerContext()) : ui.view === 'movie-studio' ? MovieStudio.menu(movieContext()) : JBExtraApps.menu(ui.view, key => i18n.t(key))).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'ga-menu') {
-      // The ICS Google apps' action bar overflow (their menu XML's never-shown-as-action items).
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu ga-holo-menu">${ICSGoogleApps.menu(googleAppsContext()).map(item => `<button data-action="${item.action}"${item.id ? ` data-id="${safe(item.id)}"` : ''}${item.disabled ? ' disabled' : ''}${item.checked !== undefined ? ` role="menuitemcheckbox" aria-checked="${item.checked}"` : ''}><span>${safe(item.title)}</span>${item.checked !== undefined ? `<img src="assets/btn_check_${item.checked ? 'on' : 'off'}_holo_dark.png" alt="">` : ''}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'mr-type') {
-      // Navigation's Type destination: the address field with OK / Cancel.
-      const S = key => MapsRoute.S(mrContext(), key), title = JBExtraApps.text ? JBExtraApps.text('navigation', 'Type destination') : 'Type destination';
-      overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><form class="settings-dialog" data-form="mr-type" role="dialog" aria-label="${safe(title)}" data-no-translate><h3>${safe(title)}</h3><input class="settings-dialog-input" name="to" autocomplete="off" spellcheck="false" style="display:block;width:calc(100% - calc(28.2353 * var(--dp)));margin:calc(4.7059 * var(--dp)) calc(14.1177 * var(--dp)) calc(14.1177 * var(--dp));padding:calc(7.0589 * var(--dp));font:inherit"><div class="settings-dialog-actions"><button type="button" data-action="close-overlay">${safe(S('Cancel'))}</button><button type="button" data-action="mr-type-ok">${safe(S('OK'))}</button></div></form>`;
-    } else if (ui.overlay === 'mr-exit') {
-      const S = key => MapsRoute.S(mrContext(), key);
-      overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog" role="dialog" aria-label="${safe(S('Exit navigation?'))}" data-no-translate><h3>${safe(S('Exit navigation?'))}</h3><div class="settings-dialog-actions"><button data-action="close-overlay">${safe(S('Cancel'))}</button><button data-action="mr-exit-ok">${safe(S('OK'))}</button></div></div>`;
-    } else if (ui.overlay === 'sa-menu') {
-      // The Google apps' action bar overflow (StockApps.menu: their menu XML's overflow items).
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${StockApps.menu(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()}).map(item => `<button data-action="${item.action}"${item.id != null ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
     } else if (ui.overlay === 'wallpaper-source') {
       overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="wallpaper-source" role="dialog" aria-label="Select wallpaper from"><h3>Select wallpaper from</h3>${[['gallery-wallpaper', 'Gallery'], ['open-live-wallpapers', 'Live Wallpapers'], ['open-wallpapers', 'Wallpapers']].sort((a, b) => new Intl.Collator(i18n.locale()).compare(i18n.t(a[1]), i18n.t(b[1]))).map(([action, label]) => `<button data-action="${action}" data-no-translate>${safe(i18n.t(label))}</button>`).join('')}</div>`;
     } else if (ui.overlay === 'lw-mapmode') {
@@ -852,30 +716,6 @@
     ui.browserTabs = ui.browserSession.tabs.map(tab => tab.history[tab.index]);
   }
 
-  /* Google Play Store 3.4.7: ui.market holds the page, section, tab and selection, ui.marketHistory the back stack; downloads
-     run on a timer with a notification while they last and "Successfully installed." afterwards. */
-  function icsPlayContext() {
-    const m = ui.market || {page: 'home'};
-    return {lang: i18n.language, locale: i18n.locale(), ...m, installed: data.marketInstalled || [], everInstalled: data.marketEverInstalled || [], downloading: ui.marketDownload?.id || '', phase: ui.marketDownload?.phase || '', progress: ui.marketDownload?.progress || 0, plussed: data.marketPlus || [], autoUpdate: data.marketAuto || [], prefs: {notify: true, autoUpdate: false, wifiOnly: false, widgets: true, pin: false, admob: true, ...(data.marketPrefs || {})}, unlocked: !!ui.icspUnlocked, pinStep: ui.icspPinStep, pinWrong: !!ui.icspPinWrong, filterDraft: ui.icspFilterDraft, searching: !!ui.marketSearching, editValue: ui.marketEdit || '', history: data.marketSearches || [], reviewSort: ui.reviewSort || 'helpful', reviewLatest: !!ui.reviewLatest, reviewDevice: !!ui.reviewDevice};
-  }
-  function icsPlayGo(next) { (ui.marketHistory ||= []).push({...(ui.market || {page: 'home'}), scroll: viewport.querySelector('.icsp-scroll')?.scrollTop || 0}); ui.market = {...(ui.market || {}), ...next}; ui.overlay = ''; ui.marketSearching = false; render(); }
-  function icsPlayDownload(id) {
-    const item = ICSPlay.find(id); if (!item) return;
-    clearInterval(ui.marketTimer); ui.marketDownload = {id, phase: 'downloading', progress: 0};
-    data.notifications = data.notifications.filter(n => n.kind !== 'market-dl');
-    data.notifications.unshift({id: Date.now(), title: item.name, detail: ICSPlay.text(i18n.language, 'Downloading…'), kind: 'market-dl'});
-    save(); render(); renderStatus();
-    ui.marketTimer = setInterval(() => {
-      const d = ui.marketDownload; if (!d) { clearInterval(ui.marketTimer); return; }
-      if (d.phase === 'downloading') { d.progress = Math.min(1, d.progress + .12); if (d.progress >= 1) d.phase = 'installing'; }
-      else { clearInterval(ui.marketTimer); ui.marketDownload = null; data.marketInstalled = [...new Set([...(data.marketInstalled || []), id])]; storeInstalled(id); data.marketEverInstalled = [...new Set([...(data.marketEverInstalled || []), id])]; data.notifications = data.notifications.filter(n => n.kind !== 'market-dl'); if ((data.marketPrefs?.notify) !== false) data.notifications.unshift({id: Date.now(), title: item.name, detail: ICSPlay.text(i18n.language, 'Successfully installed.'), kind: 'market'}); save(); renderStatus(); }
-      if (ui.view === 'play-store') { const bar = viewport.querySelector('.icsp-progress b'); if (bar && ui.marketDownload?.phase === 'downloading') bar.style.width = `${Math.round(ui.marketDownload.progress * 100)}%`; else render(); }
-    }, 350);
-  }
-  function navigatePlay(next) {
-    ui.playHistory.push({...ui.play,scrollTop:viewport.querySelector('.play-content')?.scrollTop || 0});
-    ui.play = {...ui.play,...next}; ui.overlay = ''; render();
-  }
 
 
   function resetSimulator() {
@@ -887,7 +727,6 @@
   }
   function clearAppData(id) {
     if(window.StoreHost?.has(id)){StoreHost.module(id).clearData?.(storeContext());save();}
-    if(id==='play-store')delete data.playRatings;
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
   }
 
@@ -899,18 +738,18 @@
     get data() { return data; }, defaults: defaultData, emailSeed: emailData, ui, save, render, renderOverlay, renderStatus, toast, openApp, home, back, navigateBack, captureRecentView,
     screen, viewport, overlayRoot, statusRoot, navRoot, get pointer() { return pointerStart; },
     notify: (title, text) => addNotification(title, text), get lang() { return i18n.language; }, get locale() { return i18n.locale(); }, t: key => i18n.t(key), i18n, safe, clone,
-    dp, snapResting, holdDelay, deviceDate, today, clock, contact, tracks, syncBrowserState, placeShortcut, gmailContext, googleAppsContext, apps, lockControls, clearAppData, resetSimulator, storeUninstall, wallpaperChoices,
+    dp, snapResting, holdDelay, deviceDate, today, clock, contact, tracks, syncBrowserState, placeShortcut, apps, iconAssets, storeInstalled, storeAppsSync, lockControls, clearAppData, resetSimulator, storeUninstall, wallpaperChoices,
     suppressClick: ms => { suppressClickUntil = Date.now() + ms; }, suppressReleaseClick
   };
   // This version's modules (the store apps aside): the open screen's first, then the others in the order they registered.
-  function modules() { const ids = StoreHost.ids().filter(id => !id.startsWith('store-')); return [...ids.filter(id => id === ui.view), ...ids.filter(id => id !== ui.view)].map(id => StoreHost.module(id)); }
+  function modules() { const ids = StoreHost.ids().filter(id => !id.startsWith('store-')); return [...new Set([...ids.filter(id => id === ui.view), ...ids.filter(id => id !== ui.view)].map(id => StoreHost.module(id)))]; }
   // A hook offered to the modules until one takes it (returns true), or run on every module.
   function ask(hook, ...args) { const cx = storeContext(); return modules().some(m => m[hook]?.(...args, cx)); }
   function each(hook, ...args) { const cx = storeContext(); for (const m of modules()) m[hook]?.(...args, cx); }
   // The overlay a module draws (its markup, '' for nothing), or null when it is none of theirs.
   function moduleOverlay() { const cx = storeContext(); for (const m of modules()) { const html = m.overlay?.(cx); if (html != null) return {html, m, cx}; } return null; }
   // Every second, in the order the modules registered (the old tick's order).
-  function everySecond(now) { const cx = storeContext(); for (const id of StoreHost.ids()) if (!id.startsWith('store-')) StoreHost.module(id).second?.(cx, now); }
+  function everySecond(now) { const cx = storeContext(); for (const m of new Set(StoreHost.ids().filter(id => !id.startsWith('store-')).map(id => StoreHost.module(id)))) m.second?.(cx, now); }
   let suppressClickUntil = 0;
   document.addEventListener('click', event => {
     const button = event.target.closest('[data-action]');
@@ -920,48 +759,9 @@
     const { action, id, app, url } = button.dataset;
     // Before the lock check: the modules' early controls (Messaging › Settings).
     if (ask('early', action, button)) return;
-    if (action.startsWith('mr-') && window.MapsRoute && MapsRoute.handle(action, id, mrContext())) return;
-    // Navigation's Contacts / Starred places pickers and Places' search and categories (ics-extra-apps.js).
-    if (action.startsWith('xa-') && JBExtraApps.handle(action, id, extraContext())) return;
-    if (action === 'mr-type-dest') { ui.overlay = 'mr-type'; renderOverlay(); overlayRoot.querySelector('input')?.focus(); return; }
-    if (action === 'mr-type-ok') { const to = overlayRoot.querySelector('input')?.value.trim(); ui.overlay = ''; renderOverlay(); if (to) { const rt = MapsRoute.route(mrContext(), {to, mode: 'drive', avoid: data.mapsAvoid || {}}); MapsRoute.startNav(mrContext(), {name: to, km: rt.km, min: rt.min, mode: 'drive'}); render(); } return; }
-    if (action === 'mr-exit-ok') { ui.overlay = ''; renderOverlay(); MapsRoute.stopNav(mrContext()); render(); return; }
     if(ui.locked&&!['back','alarm-dismiss','alarm-snooze'].includes(action))return;
     // The modules' own controls (the open screen's module first).
     if (ask('action', action, button)) return;
-    if (ui.view === 'downloads' && action.startsWith('hdl-') && HoloDownloads.handle(action, id, dlContext())) return;
-    if (ui.view === 'gmail' && action.startsWith('g4-') && ICSGmail.handle(action, id, gmailContext())) return;
-    if (ui.view === 'gmail' && action.startsWith('g4p-') && ICSGmailPrefs.handle(action, id, gmailContext())) return;
-    // Maps, Earth, News & Weather and the simple extras.
-    if (['maps', 'latitude', 'earth', 'news-weather', 'messenger', 'navigation', 'local', 'movie-studio'].includes(ui.view)) {
-      if (ui.view === 'earth' && /^(earth|eps)-/.test(action)) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (EarthApp.handle(action, id, earthContext())) return; }
-      if (ui.view === 'messenger' && action.startsWith('gpm-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (PlusMessenger.handle(action, id, messengerContext())) return; }
-      if (ui.view === 'movie-studio' && action.startsWith('mst-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (MovieStudio.handle(action, id, movieContext())) return; }
-      if (action.startsWith('mps-') && window.MapsPrefs?.handle(action, id, mapsPrefsContext())) return;
-      if (action === 'jbx-menu') { ui.overlay = 'jbx-menu'; renderOverlay(); return; }
-      if (action === 'sa-unsupported' || action === 'kkx-unavailable') { ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); return; }
-      if (action === 'maps-switcher' || action === 'maps-layers') { ui.mapsMenu = action === 'maps-switcher' ? 'switcher' : 'layers'; ui.overlay = 'sa-menu'; renderOverlay(); return; }
-      if (action === 'maps-places') { openApp('local'); return; }
-      if (action === 'maps-feature') { ui.overlay = ''; ui.mapsMenu = ''; renderOverlay(); if (id === 'local' || id === 'navigation' || id === 'latitude' && ui.view !== 'latitude') openApp(id); else if (id === 'map' && ui.view === 'latitude') openApp('maps'); else if (id !== 'latitude') { data.mapsLayer = id === 'traffic' ? 'traffic' : ''; save(); render(); } return; }
-      // Latitude's arrows: me, then each friend, round again (StockApps.LAT_FRIENDS).
-      if (action === 'maps-lat-step') { const n = StockApps.LAT_FRIENDS.length + 1; ui.latIndex = ((ui.latIndex ?? (Number(id) > 0 ? -1 : 0)) + Number(id) + n) % n; render(); return; }
-      if (action === 'maps-layer') { ui.overlay = ''; ui.mapsMenu = ''; renderOverlay(); data.mapsLayer = data.mapsLayer === id ? '' : id; save(); render(); return; }
-      if (action === 'maps-clear') { ui.overlay = ''; renderOverlay(); ui.mapsQuery = ''; ui.mapsSearching = false; data.mapsLayer = ''; save(); render(); return; }
-      if (action === 'maps-zoom') { const map = viewport.querySelector('.sa-maps6-map .sa-map'); if (map) { ui.mapsZoom = Math.max(1, Math.min(3, (ui.mapsZoom || 1) * (Number(id) > 0 ? 1.4 : 1 / 1.4))); map.style.transform = `scale(${ui.mapsZoom})`; } return; }
-      if (action === 'maps-locate') { ui.mapsQuery = ''; ui.mapsSearching = false; render(); return; }
-      if (action === 'maps-search-open') { ui.mapsSearching = true; render(); viewport.querySelector('.sa-maps6-search input')?.focus(); return; }
-      if (action === 'news-tab') { ui.newsTab = id; render(); return; }
-      if (action === 'sa-menu') { ui.mapsMenu = ''; ui.overlay = 'sa-menu'; renderOverlay(); return; }
-      // News & Weather: Refresh records the time the refresh status shows; Settings, the story page and Share story.
-      if (action === 'sa-news-refresh') { ui.overlay = ''; renderOverlay(); NewsPrefs.refresh(data, deviceDate().getTime()); save(); render(); toast(AndroidStrings.pick(window.StockStrings?.news?.['Updating news topics…'], i18n.language, 'Updating news topics…')); return; }
-      if (action === 'news-settings') { ui.overlay = ''; renderOverlay(); ui.newsSub = 'settings'; ui.nwpScreen = 'root'; ui.nwpDialog = ''; render(); return; }
-      if (action === 'news-story') { ui.newsSub = 'story'; ui.newsStory = id; render(); return; }
-      if (action === 'news-share') { ui.overlay = ''; renderOverlay(); const title = viewport.querySelector('.nwp-story h2')?.textContent || ''; openApp('messaging'); ui.sub = 'new'; c.messageDraft().body = title; save(); render(); return; }
-      if (action.startsWith('nwp-')) { NewsPrefs.handle(action, id, {ui, data, lang: i18n.language, save, render, input: () => viewport.querySelector('[data-nwp-input]')?.value, unsupported: () => toast(i18n.t('This feature is not part of the simulator.'))}); return; }
-    }
-    if (ui.view === 'google-plus' && action.startsWith('gpp-')) { if (ui.overlay) { ui.overlay = ''; renderOverlay(); } if (PlusPost.handle(action, id, plusContext())) return; }
-    if (ICSGoogleApps.APPS.includes(ui.view) && action.startsWith('ga-') && ICSGoogleApps.handle(action, id, googleAppsContext())) return;
-    if (ui.view === 'play-music' && action.startsWith('pm4-') && ICSPlayMusic.handle(action, id, playMusicContext(), button)) return;
     // A store app's own controls and the host's dialog and menu (store-apps/legacy-host.js).
     if ((action.startsWith('sth-') || isStoreApp(ui.view)) && StoreHost.action(action, button, storeContext())) return;
     switch (action) {
@@ -999,50 +799,6 @@
       case 'lw-mapmode-pick': data.lwPrefs ||= {}; data.lwPrefs.maps ||= {}; data.lwPrefs.maps.mode = id; save(); ui.overlay = ''; render(); break;
       case 'lw-palette-pick': data.lwPrefs ||= {}; data.lwPrefs.polar ||= {}; data.lwPrefs.polar.palette = id; save(); ui.overlay = ''; render(); break;
       case 'gallery-wallpaper': ui.overlay = ''; openApp('gallery'); break;
-      case 'market': openApp('play-store'); break;
-      case 'play-menu': case 'icsp-menu': ui.overlay = 'play-menu'; renderOverlay(); break;
-      case 'icsp-section': icsPlayGo({page: 'section', section: id, tab: 'FEATURED'}); break;
-      case 'icsp-tab': if (id) { ui.market.tab = id; render(); } break;
-      case 'icsp-detail': icsPlayGo({page: 'detail', selected: id}); break;
-      case 'widget-play-item': openApp('play-store'); icsPlayGo({page: 'detail', selected: id}); break;
-      case 'icsp-buy': { const item = ICSPlay.find(id); if (item && item.price !== 'FREE') { toast(ICSPlay.text(i18n.language, 'Unavailable')); break; } icsPlayGo({page: 'permissions', selected: id}); break; }
-      case 'icsp-accept': ui.market = ui.marketHistory.pop() || {page: 'detail', selected: id}; icsPlayDownload(id); break;
-      case 'icsp-cancel': clearInterval(ui.marketTimer); ui.marketDownload = null; data.notifications = data.notifications.filter(n => n.kind !== 'market-dl'); save(); renderStatus(); render(); break;
-      case 'icsp-open': { const item = ICSPlay.find(id); if (item?.app) openApp(item.app); else if (StoreHost.runtime(id)) { storeAppsSync(); openApp(StoreHost.runtime(id)); } else toast(ICSPlay.text(i18n.language, 'Unavailable')); break; }
-      case 'icsp-uninstall': ui.overlay = ''; renderOverlay(); storeUninstall(id); save(); render(); break;
-      case 'icsp-uninstall-ask': ui.overlay = 'icsp-uninstall'; renderOverlay(); break;
-      case 'icsp-plus': { const list = data.marketPlus || []; data.marketPlus = list.includes(id) ? list.filter(x => x !== id) : [...list, id]; save(); const top = viewport.querySelector('.icsp-scroll')?.scrollTop || 0; render(); const list2 = viewport.querySelector('.icsp-scroll'); if (list2) list2.scrollTop = top; break; }
-      case 'icsp-my-apps': icsPlayGo({page: 'my-apps', tab: 'INSTALLED'}); break;
-      case 'icsp-settings': icsPlayGo({page: 'settings'}); break;
-      case 'icsp-unavailable': ui.overlay = ''; renderOverlay(); toast(ICSPlay.text(i18n.language, 'Unavailable')); break;
-      case 'icsp-pref': { const base = icsPlayContext().prefs; data.marketPrefs = {...base, [id]: !base[id]}; save(); const top = viewport.querySelector('.icsp-scroll')?.scrollTop || 0; render(); const list = viewport.querySelector('.icsp-scroll'); if (list) list.scrollTop = top; break; }
-      // Content filtering and the PIN (ics-play.js's PinEntryDialog): a new PIN is typed twice; with a PIN the user
-      // controls stay locked until Unlock settings, and editing it can remove it.
-      case 'icsp-filter': ui.icspFilterDraft = undefined; ui.overlay = 'icsp-filter'; renderOverlay(); break;
-      case 'icsp-filter-pick': { const levels = ICSPlay.LEVELS, cur = ui.icspFilterDraft || icsPlayContext().prefs.filter || levels; let next = cur.includes(id) ? cur.filter(x => x !== id && (id === 'Show all apps' || x !== 'Show all apps')) : [...cur, id]; if (id === 'Show all apps') next = cur.includes(id) ? [] : [...levels]; else if (levels.slice(0, 4).every(l => next.includes(l))) next = [...levels]; ui.icspFilterDraft = next; renderOverlay(); break; }
-      case 'icsp-filter-ok': data.marketPrefs = {...icsPlayContext().prefs, filter: ui.icspFilterDraft || icsPlayContext().prefs.filter || ICSPlay.LEVELS}; save(); ui.overlay = ''; renderOverlay(); render(); break;
-      case 'icsp-unlock': case 'icsp-pin': ui.icspPinNext = action; ui.icspPinStep = action === 'icsp-unlock' ? 'settings' : data.marketPrefs?.pinCode ? 'edit' : 'create'; ui.icspPinWrong = false; ui.overlay = 'icsp-pin'; renderOverlay(); overlayRoot.querySelector('[data-icsp-pin]')?.focus(); break;
-      case 'icsp-pin-remove': { const p = {...icsPlayContext().prefs}; delete p.pinCode; p.pin = false; data.marketPrefs = p; save(); ui.overlay = ''; renderOverlay(); render(); break; }
-      case 'icsp-pin-ok': {
-        const value = String(overlayRoot.querySelector('[data-icsp-pin]')?.value || '').trim(), prefs = icsPlayContext().prefs, step = ui.icspPinStep;
-        const again = wrong => { ui.icspPinWrong = wrong; renderOverlay(); overlayRoot.querySelector('[data-icsp-pin]')?.focus(); };
-        if (!/^\d+$/.test(value)) { again(!!value); break; }
-        if (step === 'settings') { if (value !== prefs.pinCode) { again(true); break; } ui.icspUnlocked = true; ui.overlay = ''; renderOverlay(); render(); break; }
-        if (step === 'create' || step === 'edit') { ui.icspPinNew = value; ui.icspPinStep = 'confirm'; again(false); break; }
-        if (value !== ui.icspPinNew) { ui.icspPinStep = data.marketPrefs?.pinCode ? 'edit' : 'create'; again(true); break; }
-        data.marketPrefs = {...prefs, pinCode: value}; ui.icspUnlocked = false; save(); ui.overlay = ''; renderOverlay(); render(); break;
-      }
-      case 'icsp-clear-history': data.marketSearches = []; save(); break;
-      case 'icsp-search': ui.marketSearching = true; ui.marketEdit = ''; render(); viewport.querySelector('.icsp-bar input')?.focus(); break;
-      case 'icsp-search-run': data.marketSearches = [id, ...(data.marketSearches || []).filter(q => q !== id)].slice(0, 10); save(); icsPlayGo({page: 'search', query: id}); break;
-      case 'play-search': navigatePlay({page:'search',category:'',query:''}); viewport.querySelector('.play-search input')?.focus(); break;
-      case 'play-tab': ui.play = {...ICSPlayStore.initial(),tab:id}; ui.playHistory = []; render(); break;
-      case 'play-category': navigatePlay({page:'list',category:id,query:''}); break;
-      case 'play-detail': navigatePlay({page:'detail',selected:id,preview:0}); break;
-      case 'play-preview': navigatePlay({page:'preview',selected:id,preview:Number(button.dataset.preview || 0)}); break;
-      case 'play-preview-step': ui.play.preview = (ui.play.preview + Number(id) + 3) % 3; render(); break;
-      case 'play-open': { const entry = ICSPlayStore.catalog.find(item => item.id === id); if (entry?.app) openApp(entry.app); break; }
-      case 'play-rate': { const top = viewport.querySelector('.play-content').scrollTop; data.playRatings ||= {}; data.playRatings[ui.play.selected] = Number(id); save(); render(); viewport.querySelector('.play-content').scrollTop = top; break; }
       case 'page': setHomePage(Number(id)); break;
       case 'power-toggle':
         if (id === 'brightness') data.settings.brightness = data.settings.brightness < 30 ? 55 : data.settings.brightness < 80 ? 100 : 20;
@@ -1068,8 +824,6 @@
       case 'unlock-camera': openApp('camera'); break;
       case 'toast': toast(id); break;
       case 'noop': break;
-      // NewsActivity (Theme.NoTitleBar, targetSdkVersion 11) has no action bar, so PhoneWindow asks for the menu key.
-      case 'legacy-menu': if(ui.view==='news-weather'){ui.overlay='sa-menu';renderOverlay();}break;
       default: break;
     }
   });
@@ -1079,35 +833,13 @@
     if (!form || !screen.contains(form)) return;
     event.preventDefault(); const values = new FormData(form);
     if (ask('submit', form, values)) return;
-    if (PlusMessenger.submit(form.dataset.form, values, messengerContext())) return;
-    if (JBExtraApps.submit(form.dataset.form, values, extraContext())) return;
-    if (form.dataset.form === 'pm4-search') { viewport.querySelector('[data-pm4-query]')?.blur(); return; }
-    if (form.dataset.form === 'mr-type') { overlayRoot.querySelector('[data-action="mr-type-ok"]')?.click(); return; }
-    if (form.dataset.form === 'mr-go') { MapsRoute.submit(values, mrContext()); return; }
-    if (ui.view === 'gmail' && ICSGmail.submit(form.dataset.form, values, gmailContext())) return;
-    if (ICSGoogleApps.APPS.includes(ui.view) && ICSGoogleApps.submit(form.dataset.form, values, googleAppsContext())) return;
-    if (form.dataset.form === 'maps-search') { ui.mapsQuery = String(values.get('query') || '').trim().slice(0, 60); window.MapsPrefs?.remember(data, ui.mapsQuery); save(); render(); return; }
-    if (form.dataset.form === 'earth-search') { ui.earthSearching = false; EarthApp.search(new FormData(form).get('query'), earthContext()); render(); return; }
     if(form.dataset.form==='folder-name'){event.target.querySelector('input')?.blur();render();return;}
-    if (form.dataset.form === 'icsp-search') { const q = String(values.get('query') || '').trim(); if (!q) return; data.marketSearches = [q, ...(data.marketSearches || []).filter(x => x !== q)].slice(0, 10); save(); icsPlayGo({page: 'search', query: q}); return; }
-    if (form.dataset.form === 'play-search') { ui.play.query = String(values.get('query') || '').trim(); render(); return; }
     switch (form.dataset.form) {
       default: break;
     }
   });
   document.addEventListener('input', event => {
     if (ask('input', event)) return;
-    if (PlusPost.input(event.target)) return;
-    if (PlusMessenger.input(event.target, messengerContext())) return;
-    // Play Music's search: the sections follow the query; the field keeps its focus and caret.
-    if (event.target.matches('[data-pm4-query]')) { ui.pm4Query = event.target.value; const at = event.target.selectionStart; render(); const field = viewport.querySelector('[data-pm4-query]'); if (field) { field.focus(); field.setSelectionRange(at, at); } return; }
-    // Talk's SearchView and Add friend field: the suggestions follow the query without re-rendering the field.
-    if (event.target.closest('.ga-tk-sv')) { ui.gaTalkQ = event.target.value; const box = viewport.querySelector('.ga-tk-extras'), tmp = document.createElement('div'); tmp.innerHTML = ICSGoogleApps.render(ui.view, googleAppsContext()); if (box) box.innerHTML = tmp.querySelector('.ga-tk-extras')?.innerHTML || ''; return; }
-    if (event.target.matches('.ga-tk-add-field')) { ui.gaInvite = event.target.value; return; }
-    if (event.target.matches('[data-ga-bk-bright]')) { data.gaBookPrefs = {...ICSGoogleApps.books.bookPrefs(data), brightness: Number(event.target.value)}; save(); viewport.querySelector('.ga-bk-reader')?.style.setProperty('--bk-dim', ((100 - Number(event.target.value)) / 100 * .7).toFixed(3)); return; }
-    // SearchView: the suggestion dropdown follows the query without re-rendering the field.
-    if (event.target.closest('.icsp-bar.searching')) { ui.marketEdit = event.target.value; const view = viewport.querySelector('.icsp'); view?.querySelector('.icsp-suggest')?.remove(); const html = ICSPlay.render(icsPlayContext()); const tmp = document.createElement('div'); tmp.innerHTML = html; const sug = tmp.querySelector('.icsp-suggest'); if (sug && view) view.append(sug); return; }
-    if (event.target.matches('[data-icsp-auto]')) { const id = event.target.dataset.icspAuto, list = data.marketAuto || []; data.marketAuto = event.target.checked ? [...new Set([...list, id])] : list.filter(x => x !== id); save(); return; }
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
   });
 
@@ -1595,8 +1327,6 @@
     clearTimeout(dragTimer); clearTimeout(homeLongPressTimer);
     const dx = event.clientX - pointerStart.x, dy = event.clientY - pointerStart.y;
     if (ask('pointerup', event, pointerStart, dx, dy)) { pointerStart = null; return; }
-    // The ViewPager tab strip and pages follow a horizontal fling.
-    if (ui.view === 'play-store' && (ui.market?.page === 'section' || ui.market?.page === 'my-apps') && !ui.overlay && pointerStart.target.closest('.icsp-scroll,.icsp-tabs') && Math.abs(dx) > dp(71) && Math.abs(dx) > Math.abs(dy) * 1.5) { const next = viewport.querySelector(`.icsp-tabs button:${dx < 0 ? 'last' : 'first'}-child`); if (next && !next.disabled) { ui.market.tab = next.dataset.id; render(); } suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if (pointerStart.photoSwiping) { if (Math.abs(dy) > dp(35)) stepPhotoStack(pointerStart.photoStack, dy > 0 ? 1 : -1); else render(); suppressClickUntil = Date.now() + 350; pointerStart = null; return; }
     if (pointerStart.drawerSwiping) { finishDrawerPage(dx); pointerStart = null; return; }
     if (pointerStart.recentSwiping) {
