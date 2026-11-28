@@ -2,7 +2,8 @@
    Every screen moves into a module that registers itself, as 2.1's (EC), 6.0.1's (MM) and 7.1.2's (NG) do:
      JB.register(id, {render(c), mount(c, root), action(name, el, c), back(c), menu(c), key(event, c), open(c, resume),
                       clearData(c), tick(c), overlay(c)})
-   overlay(c) draws the module's own overlays (its ui.overlay names; anything else: undefined).
+   overlay(c) draws the module's own overlays (its ui.overlay names): it returns their markup, or true when it drew them
+   into overlayRoot itself; anything else: undefined.
    For now simulator.js hosts the modules through store-apps/legacy-host.js and gives them its context `c`
    (storeContext): {data, ui, save, render, renderOverlay, toast, openApp, safe, lang, locale, t, viewport, screen,
    dp(n), suppressClick(ms), snapResting(el), holdDelay(ms)}, plus c.dialog(spec) and c.menu(items) from the host. */

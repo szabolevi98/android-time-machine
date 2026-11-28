@@ -256,7 +256,7 @@
   // event, the submitted form, the app whose data is cleared).
   function storeContext(extra) { return StoreHost.context(Object.setPrototypeOf({data, ui, save, render, renderOverlay, toast, openApp, screen, viewport, dp, snapResting, holdDelay, suppressClick: ms => { suppressClickUntil = Date.now() + ms; }, notify: (title, text) => addNotification(title, text), lang: i18n.language, locale: i18n.locale(), safe, t: key => i18n.t(key), ...extra}, moduleApi)); }
   // The names the jb-* modules bind (generated as code moves out; docs/plans/engine-migration-4.3.md).
-  const moduleApi = {get back() { return back; }, get i18n() { return i18n; }, get jbmaContext() { return jbmaContext; }, get messageDraft() { return messageDraft; }, get render() { return render; }, get save() { return save; }, get ui() { return ui; }};
+  const moduleApi = {get back() { return back; }, get data() { return data; }, get home() { return home; }, get i18n() { return i18n; }, get jbmaContext() { return jbmaContext; }, get label() { return label; }, get messageDraft() { return messageDraft; }, get overlayRoot() { return overlayRoot; }, get render() { return render; }, get renderOverlay() { return renderOverlay; }, get safe() { return safe; }, get save() { return save; }, get ui() { return ui; }};
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
   function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (jbPlayContext().prefs.shortcuts) placeShortcut(r, appNames[r]); }
   // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
@@ -716,22 +716,6 @@
     if (setup) data.homeWidgets[setup.page] = data.homeWidgets[setup.page].filter(widget => widget.id !== setup.id);
     ui.photoWidgetSetup = null; ui.overlay = ''; save(); render();
   }
-  // LivePicker: the list (LiveWallpaperActivity), the preview with its button bar, and Polar clock's settings.
-  function renderLiveWallpapers() {
-    const sub = String(ui.sub || '');
-    if (sub.startsWith('preview:')) {
-      const spec = LiveWallpapers.find(sub.slice(8));
-      return `<div class="app-view lw-preview"><div class="lw-preview-bar">${spec?.settings ? `<button data-action="lw-settings" data-id="${spec.id}">${safe(i18n.t('Settings…'))}</button>` : ''}<button data-action="lw-set" data-id="${safe(spec?.id || '')}">${safe(i18n.t('Set wallpaper'))}</button></div></div>`;
-    }
-    // Maps: MapWallpaperSettingsActivity (wallpaper_prefs.xml): one ListPreference, its summary fixed in the XML.
-    if (sub === 'settings:maps') return `<div class="app-view settings-app"><div class="actionbar"><button class="up" data-action="back" aria-label="Back">‹</button><h2>${safe(i18n.t('Maps live wallpaper settings'))}</h2></div><div class="app-content dark lw-settings"><button class="settings-row wireless-row" data-action="lw-mapmode"><span class="row-copy">${safe(i18n.t('Map mode'))}<small>${safe(i18n.t('The mode of the map e.g. Satellite'))}</small></span></button></div></div>`;
-    if (sub.startsWith('settings:')) {
-      const p = data.lwPrefs?.polar || {}, palette = p.palette || '';
-      const check = (key, title) => `<button class="settings-row wireless-row" data-action="lw-toggle" data-id="polar:${key}" role="checkbox" aria-checked="${p[key] !== false}"><span class="row-copy">${safe(i18n.t(title))}</span><img class="holo-checkbox" src="assets/btn_check_${p[key] !== false ? 'on' : 'off'}_holo_dark.png" alt=""></button>`;
-      return `<div class="app-view settings-app"><div class="actionbar"><button class="up" data-action="back" aria-label="Back">‹</button><h2>${safe(i18n.t('Polar clock settings'))}</h2></div><div class="app-content dark lw-settings">${check('showSeconds', 'Show seconds')}${check('variableWidth', 'Vary ring widths')}<button class="settings-row wireless-row" data-action="lw-palette"><span class="row-copy">${safe(i18n.t('Color palette'))}${palette ? `<small>${safe(i18n.t(LiveWallpapers.PALETTE_NAMES[palette]))}</small>` : ''}</span></button></div></div>`;
-    }
-    return `<div class="app-view lw-picker" data-no-translate>${LiveWallpapers.sorted(key => i18n.t(key), i18n.locale()).map(spec => `<button class="lw-entry" data-action="lw-preview" data-id="${spec.id}"><img src="assets/${spec.thumb}" alt=""><span>${safe(LiveWallpapers.labelOf(spec, key => i18n.t(key)))}</span></button>`).join('')}</div>`;
-  }
   viewport.addEventListener('click', event => {
     if (ui.view !== 'home' || !liveWallpaper || event.target.closest('button,a,input,[data-action],.widget,.home-search,.dock')) return;
     const r = screen.getBoundingClientRect(); liveWallpaper.tap(event.clientX - r.left, event.clientY - r.top);
@@ -743,7 +727,6 @@
     if (ui.view === 'people' && PeopleIO.PAGES.includes(ui.sub)) return PeopleIO.page({data, ui, t: key => i18n.t(key), locale: i18n.locale()});
     switch (ui.view) {
       case 'play-store': return JBPlay.render(jbPlayContext());
-      case 'live-wallpapers': return renderLiveWallpapers();
       case 'ears-history': return Ears.history(data.earsHistory || [], i18n.language, i18n.locale());
       case 'wallpaper-picker': return `<div class="app-view wallpaper-picker"><div class="actionbar"><button class="up" data-action="back" aria-label="Back">‹</button><h2>Wallpapers</h2></div><div class="app-content dark">${wallpaperChoices()}</div></div>`;
       case 'settings': return renderSettings();
@@ -888,7 +871,6 @@
     if (ui.overlay.startsWith('widget-photo')) { cancelPhotoWidget(); return; }
     if (ui.overlay) { ui.overlay = ''; render(); return; }
     if (ui.view === 'ears-history' && !ui.overlay) { home(false); return; }
-    if (ui.view === 'live-wallpapers') { const sub = String(ui.sub || ''); if (sub.startsWith('settings:')) ui.sub = `preview:${sub.slice(9)}`; else if (sub) ui.sub = ''; else { home(false); return; } render(); return; }
     if (ui.view === 'lock' && ui.kgChallenge?.bouncing()) { ui.kgChallenge.hideBouncer(); return; }
     if (ui.view === 'lock') return;
     if(ui.view==='phone' && ui.activeCall){if(ui.activeCall.keypad){ui.activeCall.keypad=false;render();}else home(false);return;}
@@ -1003,9 +985,10 @@
     }
     if (ui.view === 'downloads' && ui.overlay.startsWith('hdl-')) { overlayRoot.innerHTML = HoloDownloads.overlay(dlContext()) || ''; return; }
     const closingFolder = overlayRoot.querySelector('.launcher-folder');
-    // A module's own overlays (jb-core.js: overlay(c)).
+    // A module's own overlays (jb-core.js: overlay(c) returns the markup, or true when it drew them itself).
     const moduleOverlay = ui.overlay && StoreHost.has(ui.view) ? StoreHost.module(ui.view).overlay?.(storeContext()) : undefined;
     if (typeof moduleOverlay === 'string') overlayRoot.innerHTML = moduleOverlay;
+    else if (moduleOverlay) { /* drawn by the module */ }
     else if (ui.overlay === 'shade') {
       const call = ui.activeCall ? `<button class="phone-resume-call" data-action="open-app" data-app="phone">${safe(i18n.t('Ongoing call'))} · ${safe(contactByPhone(ui.activeCall.number)?.name||ui.activeCall.number)}</button>` : '';
       overlayRoot.innerHTML = '<div class="jb-shade-scrim" data-action="close-overlay"></div>' + JBShade.render({...data, notifications: data.notifications.map(decorateNotification)}, ui, key => i18n.t(key), {locale: i18n.locale(), clock: clock(), date: fullDate(), carrier: data.settings.airplane ? i18n.t('No service.') : (data.settings.networkOperator || 'Telekom'), alarm: nextAlarmLabel(), extra: call});
@@ -1136,12 +1119,6 @@
       overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog" role="dialog" aria-label="${safe(ui.wifiTarget)}"><h3>${safe(ui.wifiTarget)}</h3><p>${safe(network?.security || 'WPA2')}</p>${connected ? '<p>Connected</p>' : network?.security !== 'Open' ? '<label>Password<input class="wifi-password" type="password" autocomplete="off"></label>' : ''}<div class="settings-dialog-actions"><button data-action="close-overlay">Cancel</button>${connected ? '<button data-action="wifi-forget">Forget</button>' : '<button data-action="wifi-connect">Connect</button>'}</div></div>`;
     } else if (ui.overlay === 'wallpaper-source') {
       overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="wallpaper-source" role="dialog" aria-label="Select wallpaper from"><h3>Select wallpaper from</h3>${[['gallery-wallpaper', 'Gallery'], ['open-live-wallpapers', 'Live Wallpapers'], ['open-wallpapers', 'Wallpapers']].sort((a, b) => new Intl.Collator(i18n.locale()).compare(i18n.t(a[1]), i18n.t(b[1]))).map(([action, label]) => `<button data-action="${action}" data-no-translate>${safe(i18n.t(label))}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'lw-mapmode') {
-      const current = data.lwPrefs?.maps?.mode || 'satellite';
-      overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog" role="dialog" aria-label="${safe(i18n.t('Map mode'))}"><h3>${safe(i18n.t('Map mode'))}</h3>${[['normal', 'Normal'], ['satellite', 'Satellite'], ['terrain', 'Terrain']].map(([id, label]) => `<button class="settings-row wireless-row" data-action="lw-mapmode-pick" data-id="${id}" role="radio" aria-checked="${current === id}"><span class="row-copy">${safe(i18n.t(label, 'Maps'))}</span><img class="holo-radio" src="assets/btn_radio_${current === id ? 'on' : 'off'}_holo_dark.png" alt=""></button>`).join('')}<div class="settings-dialog-actions"><button data-action="close-overlay">${safe(i18n.t('Cancel'))}</button></div></div>`;
-    } else if (ui.overlay === 'lw-palette') {
-      const current = data.lwPrefs?.polar?.palette || '';
-      overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog" role="dialog" aria-label="${safe(i18n.t('Color palette'))}"><h3>${safe(i18n.t('Color palette'))}</h3>${LiveWallpapers.PALETTE_ORDER.map(id => `<button class="settings-row wireless-row" data-action="lw-palette-pick" data-id="${id}" role="radio" aria-checked="${current === id}"><span class="row-copy">${safe(i18n.t(LiveWallpapers.PALETTE_NAMES[id]))}</span><img class="holo-radio" src="assets/btn_radio_${current === id ? 'on' : 'off'}_holo_dark.png" alt=""></button>`).join('')}<div class="settings-dialog-actions"><button data-action="close-overlay">${safe(i18n.t('Cancel'))}</button></div></div>`;
     } else if (ui.overlay === 'power-menu') {
       overlayRoot.innerHTML = GlobalActions.menu({airplane: data.settings.airplane, ringer: GlobalActions.ringerOf(data.settings), bugreport: data.settings.bugreportPower}, key => i18n.t(key));
       // 4.1+: a long press on Power off offers the safe-mode reboot.
@@ -2096,15 +2073,7 @@
       case 'ears-clear-ask': ui.overlay = 'ears-clear'; renderOverlay(); break;
       case 'ears-clear': data.earsHistory = []; save(); ui.overlay = ''; render(); break;
       case 'open-live-wallpapers': ui.overlay = ''; ui.view = 'live-wallpapers'; ui.sub = ''; render(); break;
-      case 'lw-preview': ui.sub = `preview:${id}`; render(); break;
-      case 'lw-settings': ui.sub = `settings:${id}`; render(); break;
       // LiveWallpaperPreview.setLiveWallpaper: set it and return to the launcher.
-      case 'lw-set': data.liveWallpaper = {id}; save(); ui.sub = ''; home(false); break;
-      case 'lw-toggle': { const [wid, key] = String(id).split(':'); data.lwPrefs ||= {}; data.lwPrefs[wid] ||= {}; data.lwPrefs[wid][key] = data.lwPrefs[wid][key] === false; save(); render(); break; }
-      case 'lw-palette': ui.overlay = 'lw-palette'; renderOverlay(); break;
-      case 'lw-mapmode': ui.overlay = 'lw-mapmode'; renderOverlay(); break;
-      case 'lw-mapmode-pick': data.lwPrefs ||= {}; data.lwPrefs.maps ||= {}; data.lwPrefs.maps.mode = id; save(); ui.overlay = ''; render(); break;
-      case 'lw-palette-pick': data.lwPrefs ||= {}; data.lwPrefs.polar ||= {}; data.lwPrefs.polar.palette = id; save(); ui.overlay = ''; render(); break;
       case 'gallery-wallpaper': ui.overlay = ''; openApp('gallery'); break;
       case 'market': openApp('play-store'); break;
       case 'play-menu': case 'jbp-menu': ui.overlay = 'play-menu'; renderOverlay(); break;
