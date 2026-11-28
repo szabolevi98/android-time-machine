@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 
 # The checkout this file is in (a worktree's own copy edits that worktree).
-ROOT = str(Path(__file__).resolve().parents[2]).replace('\', '/') + '/'
+ROOT = Path(__file__).resolve().parents[2].as_posix() + '/'
 
 
 class Sim:
