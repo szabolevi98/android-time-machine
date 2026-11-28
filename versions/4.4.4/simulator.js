@@ -271,33 +271,40 @@
   const kkScope = {
     get A11Y() { return A11Y; }, get HOLD_NAMES() { return HOLD_NAMES; }, get PLAY_APPS() { return PLAY_APPS; },
     get REPLIES() { return REPLIES; }, get addNotification() { return addNotification; },
-    get appIcon() { return appIcon; }, get appNames() { return appNames; }, get appView() { return appView; },
-    get applyMagnification() { return applyMagnification; }, get apps() { return apps; },
-    get calendarEdit() { return calendarEdit; }, get cameraShoot() { return cameraShoot; },
+    get addWidget() { return addWidget; }, get appIcon() { return appIcon; }, get appNames() { return appNames; },
+    get appView() { return appView; }, get applyMagnification() { return applyMagnification; },
+    get apps() { return apps; }, get calendarEdit() { return calendarEdit; },
+    get cameraShoot() { return cameraShoot; }, get cancelPhotoWidget() { return cancelPhotoWidget; },
     get captureRecentView() { return captureRecentView; }, get carrierName() { return carrierName; },
-    get clearAppData() { return clearAppData; }, get clock() { return clock; }, get clone() { return clone; },
-    get closeRecents() { return closeRecents; }, get composeEmail() { return composeEmail; },
-    get connectivityRow() { return connectivityRow; }, get connectivitySwitch() { return connectivitySwitch; },
-    get contact() { return contact; }, get contactByPhone() { return contactByPhone; }, get data() { return data; },
-    get deviceDate() { return deviceDate; }, get dp() { return dp; }, get driveShareFile() { return driveShareFile; },
-    get driveShareText() { return driveShareText; }, get earthContext() { return earthContext; },
-    get editPerson() { return editPerson; }, get fullDate() { return fullDate; },
+    get clearAppData() { return clearAppData; }, get clingLayerRoot() { return clingLayerRoot; },
+    get clock() { return clock; }, get clone() { return clone; }, get closeRecents() { return closeRecents; },
+    get composeEmail() { return composeEmail; }, get connectivityRow() { return connectivityRow; },
+    get connectivitySwitch() { return connectivitySwitch; }, get contact() { return contact; },
+    get contactByPhone() { return contactByPhone; }, get data() { return data; },
+    get deviceDate() { return deviceDate; }, get digitalClockWidget() { return digitalClockWidget; },
+    get dp() { return dp; }, get drawerAppPages() { return drawerAppPages; },
+    get drawerPageCount() { return drawerPageCount; }, get drawerRange() { return drawerRange; },
+    get driveShareFile() { return driveShareFile; }, get driveShareText() { return driveShareText; },
+    get earthContext() { return earthContext; }, get editPerson() { return editPerson; },
+    get folderName() { return folderName; }, get fullDate() { return fullDate; },
     get galleryWallpaper() { return galleryWallpaper; }, get hangoutsTakePhoto() { return hangoutsTakePhoto; },
     get holdDelay() { return holdDelay; }, get home() { return home; },
     get homeLongPressTimer() { return homeLongPressTimer; }, get i18n() { return i18n; },
     get jbPlayContext() { return jbPlayContext; }, get keepAttach() { return keepAttach; },
     get keepCurrent() { return keepCurrent; }, get keepMoreContext() { return keepMoreContext; },
     get keyguardParts() { return keyguardParts; }, get label() { return label; },
-    get listenVoice() { return listenVoice; }, get lockControls() { return lockControls; },
-    get lockRelease() { return lockRelease; }, get lockScreen() { return lockScreen; },
-    get mailbox() { return mailbox; }, get messageDraft() { return messageDraft; },
-    get messageHoldTimer() { return messageHoldTimer; }, get navRoot() { return navRoot; },
+    get launcherIcon() { return launcherIcon; }, get listenVoice() { return listenVoice; },
+    get lockControls() { return lockControls; }, get lockRelease() { return lockRelease; },
+    get lockScreen() { return lockScreen; }, get mailbox() { return mailbox; },
+    get messageDraft() { return messageDraft; }, get messageHoldTimer() { return messageHoldTimer; },
+    get musicActive() { return musicActive; }, get navRoot() { return navRoot; },
     get navigateBrowser() { return navigateBrowser; }, get nextAlarmLabel() { return nextAlarmLabel; },
     get officeFiles() { return officeFiles; }, get openApp() { return openApp; },
     get openMessageThread() { return openMessageThread; }, get overlayRoot() { return overlayRoot; },
-    get photosContext() { return photosContext; }, get placeContactShortcut() { return placeContactShortcut; },
-    get placeShortcut() { return placeShortcut; }, get plusContext() { return plusContext; },
-    get pointerStart() { return pointerStart; }, get powerOff() { return powerOff; },
+    get pageMarker() { return pageMarker; }, get photosContext() { return photosContext; },
+    get placeContactShortcut() { return placeContactShortcut; }, get placeShortcut() { return placeShortcut; },
+    get plusContext() { return plusContext; }, get pointerStart() { return pointerStart; },
+    get positionFolder() { return positionFolder; }, get powerOff() { return powerOff; },
     get prefRow() { return prefRow; }, get printContext() { return printContext; },
     get reducedMotion() { return reducedMotion; }, get removeTask() { return removeTask; },
     get render() { return render; }, get renderDream() { return renderDream; },
@@ -306,14 +313,17 @@
     get row() { return row; }, get safe() { return safe; }, get save() { return save; },
     get saveBrowserState() { return saveBrowserState; }, get saveKeepNote() { return saveKeepNote; },
     get saveMusic() { return saveMusic; }, get screen() { return screen; },
-    get scrollMessages() { return scrollMessages; }, get shareVcard() { return shareVcard; },
-    get snapResting() { return snapResting; }, get startPhoneCall() { return startPhoneCall; },
-    get statusRoot() { return statusRoot; }, get storeAppsSync() { return storeAppsSync; },
-    get storeContext() { return storeContext; }, get storeInstalled() { return storeInstalled; },
-    get storeUninstall() { return storeUninstall; }, get suppressClickUntil() { return suppressClickUntil; },
-    get suppressReleaseClick() { return suppressReleaseClick; }, get toast() { return toast; },
-    get today() { return today; }, get toggleRow() { return toggleRow; }, get tracks() { return tracks; },
-    get ui() { return ui; }, get viewport() { return viewport; }, get wallpaperFiles() { return wallpaperFiles; },
+    get scrollMessages() { return scrollMessages; }, get setHomePage() { return setHomePage; },
+    get shareVcard() { return shareVcard; }, get snapResting() { return snapResting; },
+    get startPhoneCall() { return startPhoneCall; }, get statusRoot() { return statusRoot; },
+    get storeAppsSync() { return storeAppsSync; }, get storeContext() { return storeContext; },
+    get storeInstalled() { return storeInstalled; }, get storeUninstall() { return storeUninstall; },
+    get suppressClickUntil() { return suppressClickUntil; },
+    get suppressReleaseClick() { return suppressReleaseClick; }, get syncClings() { return syncClings; },
+    get toast() { return toast; }, get today() { return today; }, get toggleRow() { return toggleRow; },
+    get tracks() { return tracks; }, get ui() { return ui; }, get viewport() { return viewport; },
+    get wallpaperFiles() { return wallpaperFiles; }, get widgetArt() { return widgetArt; },
+    get widgetSize() { return widgetSize; }, get widgetTypes() { return widgetTypes; },
     get wifiNetworks() { return wifiNetworks; }, get wirelessCheckRow() { return wirelessCheckRow; },
     get wirelessRow() { return wirelessRow; }, set homeLongPressTimer(value) { homeLongPressTimer = value; },
     set messageHoldTimer(value) { messageHoldTimer = value; }, set pointerStart(value) { pointerStart = value; },
@@ -500,8 +510,8 @@
     if (ui.view !== 'lock' && ui.kgPad) { ui.kgPad.destroy(); ui.kgPad = null; }
     if (ui.view !== 'lock' && ui.kgChallenge) { ui.kgChallenge.destroy(); ui.kgChallenge = null; }
     if (ui.view === 'lock') { viewport.innerHTML = StoreHost.render(ui.view, storeContext()); attachKeyguard(); }
-    else if (ui.view === 'home') { viewport.innerHTML = renderHome(); restoreWidgetScroll(); }
-    else if (ui.view === 'drawer') viewport.innerHTML = renderDrawer();
+    else if (ui.view === 'home') { viewport.innerHTML = StoreHost.render(ui.view, storeContext()); restoreWidgetScroll(); }
+    else if (ui.view === 'drawer') viewport.innerHTML = StoreHost.render(ui.view, storeContext());
     else viewport.innerHTML = renderApp();
     snapResting(viewport);
     renderOverlay();
@@ -708,14 +718,6 @@
     return '<img class="widget-preview-image" src="assets/gallery-widget_preview.png" alt="">';
   }
   const musicActive = () => ui.music.playing || ui.music.position > 0 || !!ui.musicActive;
-  function widgetBody(widget) {
-    const t = key => i18n.t(key);
-    if (widget.type === 'calendar') return ICSWidgets.calendar(data, t, i18n.locale(), deviceDate(), !!data.settings.hour24);
-    if (widget.type === 'music') return ICSWidgets.music(ui.music, tracks, musicActive(), t);
-    if (widget.type === 'photo') return ICSWidgets.photo(data, widget, ui.photoStacks?.[widget.id] || 0, t);
-    if (widget.type === 'digitalclock') return digitalClockWidget();
-    return null;
-  }
   /* DeskClock 4.3 digital_appwidget / digital_widget_time: bold sans-serif hours and thin minutes (widget_big_font_size
      80dp, scaled down when the widget is narrower than 160dp), then the condensed bold date and the grey next alarm. */
   function digitalClockWidget(tag = 'button') {
@@ -724,32 +726,10 @@
     const attrs = tag === 'button' ? ' data-action="open-app" data-app="clock"' : '';
     return `<${tag} class="jbw-digital"${attrs} aria-label="${safe(clock())}"><span class="jbw-digital-time" aria-hidden="true"><b>${safe(hours)}</b><i>${safe(minutes)}</i></span><span class="jbw-digital-date"><span>${safe(now.toLocaleDateString(i18n.locale(), {weekday: 'short', month: 'short', day: 'numeric'}))}</span>${alarm ? `<span class="jbw-digital-alarm"><img src="assets/jbclock-ic_alarm_small.png" alt="">${safe(alarm)}</span>` : ''}</span></${tag}>`;
   }
-  const homeWidget = widget => {
-    const spec = widgetSize(widget);
-    const body = widgetBody(widget) ?? (widget.type === 'power' ? `<div class="power-widget">${[['wifi','Wi-Fi','wifi'],['bluetooth','Bluetooth','bluetooth'],['gps','GPS satellites','gps'],['autoSync','Auto-sync','sync'],['brightness','Brightness','brightness']].map(([key,title,asset]) => `<button class="power-cell ${data.settings[key] ? 'enabled' : ''}" data-action="power-toggle" data-id="${key}" aria-label="${title}" aria-pressed="${!!data.settings[key]}"><img src="assets/power-${asset}-${key === 'brightness' ? data.settings.brightness > 70 ? 'full' : data.settings.brightness > 25 ? 'half' : 'off' : data.settings[key] ? 'on' : 'off'}.png" alt=""><i></i></button>`).join('')}</div>` : `<button data-action="open-app" data-app="${spec.app || 'gallery'}" aria-label="${safe(spec.name || 'Widget')}">${widgetArt(widget.type)}</button>`);
-    const frame = ui.resizeWidget === widget.id && spec.resize ? `<div class="jb-resize-frame" data-resize-frame>${['left', 'top', 'right', 'bottom'].map(edge => `<button class="jb-resize-handle jb-resize-${edge}" data-resize-edge="${edge}" aria-label="${safe(i18n.t('Resize'))}"><img src="assets/l3-widget_resize_handle_${edge}.png" alt=""></button>`).join('')}</div>` : '';
-    return `<div class="home-widget widget-${widget.type}${frame ? ' resizing' : ''}" data-widget-id="${safe(widget.id)}" style="grid-column:${widget.x + 1}/span ${spec.width};grid-row:${widget.y + 1}/span ${spec.height}">${body}${frame}</div>`;
-  };
   const pageMarker = (active, add = false) => `<img class="kk-pi-off" src="assets/l3-ic_pageindicator_${add ? 'add' : 'default'}.png" alt=""><img class="kk-pi-on" src="assets/l3-ic_pageindicator_current.png" alt="">`;
-  function renderHome() {
-    const pages = data.homePages.length;
-    const nowPane = `<div class="gel-now-layer" ${ui.page === -1 ? '' : 'inert aria-hidden="true"'}>${GELNow.render({data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), ui})}</div>`;
-    return `<div class="home-view kk-home gel-home${ui.overview ? ' kk-overview' : ''}${ui.page === -1 ? ' gel-now-open' : ''}" style="--gnow:${ui.page === -1 ? 1 : 0}">${nowPane}<div class="home-search"><button data-action="browser-search" aria-label="${safe(i18n.t('Search'))}"><img class="kk-qsb-logo" src="assets/gel-ic_google_small_light.png" alt="Google"><span class="gel-hint">${safe(i18n.t('Say “Ok Google”'))}</span></button><button class="voice-search" data-action="voice-search" aria-label="${safe(i18n.t('Voice search'))}"><img class="search-microphone" src="assets/gel-ic_mic_light.png" alt=""></button></div><div class="home-content"><div class="home-pages" style="transform:translateX(${-ui.page * 100}%)">${data.homePages.map((page, index) => `<div class="home-grid" data-home-page="${index}" data-action="kk-overview-page" data-id="${index}" style="--rel:${index - ui.page}" ${index !== ui.page && !ui.overview ? 'inert' : ''}>${page.map((id, slot) => `<div class="home-slot" data-home-slot="${slot}" style="grid-column:${slot % 4 + 1};grid-row:${Math.floor(slot / 4) + 1}">${id ? launcherIcon(id) : ''}</div>`).join('')}${(data.homeWidgets[index] || []).map(homeWidget).join('')}</div>`).join('')}</div></div><div class="page-indicators"><button class="gel-now-marker ${ui.page === -1 ? 'active' : ''}" data-action="page" data-id="-1" aria-label="Google Now">${pageMarker(ui.page === -1)}</button>${Array.from({ length: pages }, (_, i) => `<button class="${i === ui.page ? 'active' : ''}" data-action="page" data-id="${i}" aria-label="${safe(i18n.t('Home screen'))} ${i + 1}">${pageMarker(i === ui.page, ui.extraScreen && i === pages - 1)}</button>`).join('')}</div><div class="dock">${data.dock.map((id, slot) => `<div class="dock-slot" data-dock-slot="${slot}">${id ? launcherIcon(id) : ''}</div>`).join('')}</div><div class="drop-target-bar"><div class="drop-target" data-drop-remove="true"><img src="assets/l3-ic_launcher_clear_normal_holo.png" alt=""><img class="drop-target-active" src="assets/l3-ic_launcher_clear_active_holo.png" alt=""><span>${safe(i18n.t('Remove'))}</span></div><div class="drop-target info-drop-target" data-drop-info="true"><img src="assets/l3-ic_launcher_info_normal_holo.png" alt=""><img class="drop-target-active" src="assets/l3-ic_launcher_info_active_holo.png" alt=""><span>${safe(i18n.t('App info'))}</span></div></div><div class="kk-overview-panel" ${ui.overview ? '' : 'inert'}><button data-action="open-wallpapers" style="--pressed:url('assets/l3-ic_wallpaper_pressed.png')"><img src="assets/l3-ic_wallpaper.png" alt="">${safe(i18n.t('Wallpapers'))}</button><button data-action="kk-overview-widgets" style="--pressed:url('assets/l3-ic_widget_pressed.png')"><img src="assets/l3-ic_widget.png" alt="">${safe(i18n.t('Widgets'))}</button><button data-action="gel-overview-settings" style="--pressed:url('assets/l3-ic_setting_pressed.png')"><img src="assets/l3-ic_setting.png" alt="">${safe(i18n.t('Settings'))}</button></div></div>`;
-  }
   const drawerAppPages = () => Math.ceil(apps.length / 20);
   const drawerPageCount = () => drawerAppPages() + Math.ceil(widgetTypes.length / 4);
   const drawerRange = () => ui.drawerWidgets ? [drawerAppPages(), drawerPageCount() - 1] : [0, drawerAppPages() - 1];
-  function renderDrawer() {
-    const appPages = drawerAppPages(), pages = drawerPageCount();
-    const [first, last] = drawerRange();
-    const current = Math.max(first, Math.min(ui.drawerPage, last));
-    const isApps = current < appPages;
-    ui.drawerTab = isApps ? 'apps' : 'widgets';
-    const sortedApps = [...apps].sort((a,b) => i18n.t(a[1]).localeCompare(i18n.t(b[1]), i18n.locale()));
-    const widgetPage = current - appPages;
-    const items = isApps ? sortedApps.slice(current * 20, current * 20 + 20).map(app => launcherIcon(app[0])).join('') : widgetTypes.slice(widgetPage * 4, widgetPage * 4 + 4).map(widget => `<button class="drawer-widget" data-action="add-widget" data-widget-type="${widget.type}" aria-label="${safe(widget.name)}"><span class="drawer-widget-title">${safe(widget.name)} <small>${widget.width} × ${widget.height}</small></span><span class="drawer-widget-preview widget-${widget.type}">${widgetArt(widget.type)}</span></button>`).join('');
-    return `<div class="drawer-view kk-drawer"><div class="drawer-page ${isApps ? 'drawer-apps' : 'drawer-widgets'}">${items}</div><div class="drawer-indicators">${Array.from({length:pages},(_,i)=>i < first || i > last ? '' : `<button class="${i===current?'active':''}" data-action="drawer-page" data-id="${i}" aria-label="${safe(i18n.t('Page'))} ${i+1}">${pageMarker(i === current)}</button>`).join('')}</div></div>`;
-  }
 
   function widgetFits(page, x, y, type, ignoredId = '') {
     const {width, height} = widgetSize(type);
@@ -780,12 +760,6 @@
     const stack = viewport.querySelector(`[data-photo-stack="${CSS.escape(id)}"]`);
     if (stack) stack.classList.add(direction > 0 ? 'stack-next' : 'stack-previous');
   }
-  const pendingPhotoWidget = () => ui.photoWidgetSetup && data.homeWidgets[ui.photoWidgetSetup.page]?.find(widget => widget.id === ui.photoWidgetSetup.id);
-  function configurePhotoWidget(options) {
-    const widget = pendingPhotoWidget();
-    if (widget) Object.assign(widget, options);
-    ui.photoWidgetSetup = null; ui.overlay = ''; save(); render(); toast('Widget added');
-  }
   // Leaving WidgetConfigure without a choice removes the pending widget, as on Android.
   function cancelPhotoWidget() {
     const setup = ui.photoWidgetSetup;
@@ -801,7 +775,7 @@
   function renderApp() {
     if (StoreHost.has(ui.view)) return StoreHost.render(ui.view, storeContext());
     switch (ui.view) {
-      default: return renderHome();
+      default: return StoreHost.render('home', storeContext());
     }
   }
   function openApp(app, resume = false) {
@@ -844,18 +818,6 @@
   const plusContext = () => { PlusPost.bind(ui); return {ui, data, t: key => i18n.t(key), S: key => { const row = window.StockStrings?.gplus?.[key]; return row ? AndroidStrings.pick(row, i18n.language, key) : i18n.t(key); }, version: '4.2.3', me: i18n.t('Me'), account: 'kitkat.demo@gmail.com', now: deviceDate(), locale: i18n.locale(), save, render, thumb: i => StockApps.thumb(i), openMessengerSettings: () => { openApp('messenger'); ui.gpmPrefs = true; render(); }}; };
   // Earth (earth-app.js): Earth 7.1.3's settings, search, My location and Share.
   const earthContext = () => ({ui, data, t: key => i18n.t(key), lang: i18n.language, save, render, toast: message => toast(message), earth: '7.1.3', account: 'kitkat.demo@gmail.com', dark: true, dot: 'assets/ea7-bluedot.png', shareTargets: [['hangouts', 'Hangouts']], share: (app, text, subject) => { ui.overlay = ''; renderOverlay(); openApp(app); ui.sub = 'new'; Object.assign(messageDraft(), {body: text, updated: Date.now()}); save(); render(); }, openLocation: () => { openApp('settings'); ui.sub = 'location'; render(); }});
-  document.addEventListener('pointerdown', event => {
-    const card = event.target.closest?.('[data-gnow-swipe]');
-    if (!card || event.target.closest('button')) return;
-    event.stopPropagation();
-    const x = event.clientX, y = event.clientY, key = card.dataset.gnowSwipe;
-    let dx = 0, moved = false;
-    const move = ev => { dx = ev.clientX - x; if (!moved && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(ev.clientY - y)) moved = true; if (moved) { card.style.translate = `${dx}px 0`; card.style.opacity = String(Math.max(0, 1 - Math.abs(dx) / card.clientWidth)); } };
-    const end = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', end); window.removeEventListener('pointercancel', end);
-      if (moved && Math.abs(dx) > card.clientWidth * .4) { (data.nowDismissed ||= []).push(key); ui.gnowUndo = key; save(); render(); setTimeout(() => { if (ui.gnowUndo === key) { ui.gnowUndo = ''; render(); } }, 6000); }
-      else { card.style.translate = ''; card.style.opacity = ''; } };
-    window.addEventListener('pointermove', move); window.addEventListener('pointerup', end); window.addEventListener('pointercancel', end);
-  }, true);
   const printContext = () => ({ui, data, root: overlayRoot, language: i18n.language, locale: i18n.locale(), t: key => i18n.t(key), save, renderOverlay, toast: message => toast(i18n.t(message)), mime: name => KKDownloads.mime(name), saved: () => { if (ui.view === 'downloads') render(); }});
   function navigateBack() {
     if ((ui.overlay === 'store-host' || !ui.overlay && StoreHost.has(ui.view)) && StoreHost.back(storeContext())) return;
@@ -868,8 +830,6 @@
     if (ui.gnowDraft || ui.gnowDialog) { ui.gnowDraft = null; ui.gnowDialog = ''; render(); return; }
     if (StockApps.APPS.includes(ui.view) && ui.sub) { if (ui.view === 'keep') saveKeepNote(true); ui.sub = ''; render(); return; }
     if(ui.view==='music' && ui.sub==='queue'){ui.sub='player';render();return;}
-    if (ui.view === 'drawer' && ui.drawerWidgets) { ui.drawerWidgets = false; ui.drawerPage = 0; home(false); ui.overview = true; render(); return; }
-    if (ui.view === 'home' && ui.overview) { ui.overview = false; render(); return; }
     if (ui.view === 'drawer' || ui.view === 'wallpaper-picker') { home(false); return; }
     if (ui.sub) { ui.sub = ''; render(); if (ui.view === 'settings') viewport.querySelector('.settings-app').scrollTop = ui.settingsRootScroll; return; }
     home(false);
@@ -898,14 +858,6 @@
     const closingFolder = overlayRoot.querySelector('.launcher-folder');
     if (ui.overlay === 'store-host') {
       overlayRoot.innerHTML = StoreHost.overlay(storeContext()); StoreHost.mountOverlay(storeContext(), overlayRoot);
-    } else if (ui.overlay.startsWith('widget-photo')) {
-      overlayRoot.innerHTML = ICSWidgets.photoOverlay(data, ui, key => i18n.t(key));
-    } else if (ui.overlay === 'sa-menu') {
-      // The Google apps' action bar overflow (StockApps.menu: their menu XML's overflow items).
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${StockApps.menu(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()}).map(item => `<button data-action="${item.action}"${item.id != null ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'folder') {
-      overlayRoot.innerHTML = renderFolder();
-      positionFolder();
     } else if (!kkOffer('overlay', storeContext())) overlayRoot.innerHTML = '';
     i18n.translateDOM(overlayRoot);
     // Folder.animateOpen/animateClosed run only when the folder actually opens or closes, not on content updates.
@@ -958,12 +910,6 @@
   }
 
   window.addEventListener('resize', () => syncClings());
-
-  function renderFolder() {
-    const folder=ICSLauncherFolders.folder(data,ui.folderId);if(!folder){ui.overlay='';return '';}
-    const {columns,rows}=ICSLauncherFolders.dimensions(folder.items.length);
-    return `<div class="launcher-folder-scrim" data-action="close-overlay"></div><div class="launcher-folder" role="dialog" aria-label="${safe(i18n.t('Folder'))}: ${safe(folderName(ui.folderId))}" style="width:calc(${((columns*74+24)/.906).toFixed(4)} * var(--dp));--folder-columns:${columns}"><div class="launcher-folder-grid">${Array.from({length:columns*rows},(_,slot)=>`<div class="launcher-folder-cell" data-folder-slot="${slot}">${folder.items[slot]?launcherIcon(folder.items[slot]):''}</div>`).join('')}</div><form class="launcher-folder-name" data-form="folder-name"><input name="name" aria-label="Folder name" placeholder="Unnamed folder" maxlength="40" autocomplete="off" value="${safe(folder.name)}"></form></div>`;
-  }
   function positionFolder() {
     const panel=overlayRoot.querySelector('.launcher-folder');if(!panel)return;
     const icon=[...viewport.querySelectorAll('[data-folder-id]')].find(button=>button.dataset.folderId===ui.folderId&&!button.closest('[inert]'));
@@ -1223,75 +1169,9 @@
       }
       case 'home': if (ui.view !== 'lock') home(); break;
       case 'back': back(); break;
-      case 'drawer': ui.view = 'drawer'; ui.sub = ''; ui.overlay = ''; ui.overview = false; ui.drawerWidgets = false; if (ui.drawerPage >= drawerAppPages()) ui.drawerPage = 0; render(); break;
-      case 'cling-dismiss': if (data.clings) { data.clings[id] = true; save(); } LauncherClings.dismiss(clingLayerRoot().querySelector(`[data-cling="${id}"]`), () => syncClings()); break;
-      case 'folder-open': ui.folderId=button.dataset.folderId;ui.overlay='folder';renderOverlay();break;
-      // Overview mode: Widgets opens all apps on the first widget page; a tap on a page returns to it.
-      case 'kk-overview-widgets': ui.overview = false; ui.view = 'drawer'; ui.drawerWidgets = true; ui.drawerPage = drawerAppPages(); render(); break;
-      // The Google Now Launcher's third overview button opens the Google Search settings (not simulated).
-      // Google Now reminders and card settings (gel-now.js).
-      case 'gnow-reminders': ui.gnowDraft = null; ui.gnowDialog = ''; openApp('google-search'); ui.sub = 'reminders'; render(); break;
-      case 'gnow-reminder-new': ui.gnowDraft = {...GELNow.draftFrom(null, deviceDate()), home: data.mapsHome || '', work: data.mapsWork || ''}; ui.gnowSpin = ''; render(); viewport.querySelector('[data-gnr-title]')?.focus(); break;
-      case 'gnow-reminder-edit': { const item = (data.nowReminders || []).find(r => r.id === id); if (item) { ui.gnowDraft = {...GELNow.draftFrom(item, deviceDate()), home: data.mapsHome || '', work: data.mapsWork || ''}; ui.gnowSpin = ''; render(); } break; }
-      case 'gnow-reminder-spin': ui.gnowSpin = ui.gnowSpin === id ? '' : id; render(); break;
-      case 'gnow-reminder-pick': if (id === 'day:3' || id === 'time:5') { const d = ui.gnowDraft; ui.gnowSpin = ''; render(); ui.dtp = DateTimePicker.fromValue(id === 'day:3' ? 'date' : 'time', id === 'day:3' ? (d.date || ICSCalendar.iso(deviceDate())) : (d.time || '09:00'), {field: 'gnow', setAction: 'gnow-dtp-set', hour24: !!data.settings.hour24}); ui.overlay = 'dtp'; renderOverlay(); break; } {
-        const [kind, value] = id.split(':'), next = {...ui.gnowDraft, [kind === 'day' ? 'day' : 'slot']: Number(value)}; ui.gnowSpin = ''; if (GELNow.draftReminder({...next, day: kind === 'day' ? next.day : 0, slot: kind === 'time' ? next.slot : 0}, deviceDate())) ui.gnowDraft = next; else toast('Not available in this demo'); render(); break; }
-      case 'gnow-dtp-set': { const p = ui.dtp, d = ui.gnowDraft; ui.overlay = ''; renderOverlay(); if (!p || !d) break; if (p.kind === 'date') Object.assign(d, {day: -1, date: DateTimePicker.iso(p)}); else Object.assign(d, {slot: -1, time: DateTimePicker.hhmm(p)}); render(); break; }
-      // Where: the location spinner's Home / Work (set once through the place search) and Set location.
-      case 'gnow-trigger': if (ui.gnowDraft) { ui.gnowDraft.trigger = id; ui.gnowSpin = ''; render(); } break;
-      case 'gnow-place-option': { const d = ui.gnowDraft; if (!d) break; ui.gnowSpin = ''; if (id !== 'custom' && d[id]) d.place = {label: id, address: d[id]}; else d.placeDialog = {kind: id, q: ''}; render(); viewport.querySelector('[data-gnp-q]')?.focus(); break; }
-      case 'gnow-place-pick': { const d = ui.gnowDraft, hit = GELNow.PLACES.find(([name]) => name === id); if (!d || !hit) break; const [name, address] = hit, kind = d.placeDialog?.kind;
-        if (kind === 'home' || kind === 'work') { data[kind === 'home' ? 'mapsHome' : 'mapsWork'] = address; d[kind] = address; d.place = {label: kind, address}; save(); } else d.place = {name, address};
-        d.placeDialog = null; render(); break; }
-      case 'gnow-place-close': if (ui.gnowDraft) { ui.gnowDraft.placeDialog = null; render(); } break;
-      // Repeat: the recurrence dialog's switch, week days, month pattern and Done.
-      case 'gnow-rule-open': { const d = ui.gnowDraft; if (!d) break; const date = GELNow.draftReminder(d, deviceDate())?.date || ICSCalendar.iso(deviceDate()); d.ruleDialog = {...GELNow.ruleFrom(date, d.rule), on: !!d.rule}; render(); break; }
-      case 'gnow-rule-switch': if (ui.gnowDraft?.ruleDialog) { ui.gnowDraft.ruleDialog.on = !ui.gnowDraft.ruleDialog.on; render(); } break;
-      case 'gnow-rule-day': { const r = ui.gnowDraft?.ruleDialog; if (!r) break; const day = Number(id); r.days = r.days.includes(day) ? (r.days.length > 1 ? r.days.filter(x => x !== day) : r.days) : [...r.days, day].sort(); render(); break; }
-      case 'gnow-rule-month': if (ui.gnowDraft?.ruleDialog) { ui.gnowDraft.ruleDialog.monthly = id; render(); } break;
-      case 'gnow-rule-cancel': if (ui.gnowDraft) { ui.gnowDraft.ruleDialog = null; render(); } break;
-      case 'gnow-rule-done': { const d = ui.gnowDraft, r = d?.ruleDialog; if (!r) break; d.rule = r.on ? {freq: r.freq, interval: r.interval, days: r.days, monthly: r.monthly, end: r.end, until: r.until, count: r.count} : null; d.ruleDialog = null; render(); break; }
-      // The appointment card's back: its event in Calendar's editor.
-      case 'gnow-event-edit': { const event = (data.events || []).find(item => String(item.id) === String(id)); ui.gnowBack = ''; if (!event) break; openApp('calendar'); ui.selectedEvent = event.id; calendarEdit(event); break; }
-      case 'gnow-undo': data.nowDismissed = (data.nowDismissed || []).filter(key => key !== ui.gnowUndo); ui.gnowUndo = ''; save(); render(); break;
-      case 'gnow-reminder-cancel': ui.gnowDraft = null; ui.gnowSpin = ''; render(); break;
-      case 'gnow-reminder-set': { const draft = ui.gnowDraft, when = draft && GELNow.draftReminder(draft, deviceDate()), title = String(draft?.title || '').trim(); if (!when || !title || (draft.trigger === 'place' && !draft.place)) break; const extra = {occasionally: !!when.occasionally, trigger: draft.trigger || 'time', place: draft.trigger === 'place' ? draft.place : null, rule: draft.trigger === 'place' ? null : draft.rule || null}; const list = data.nowReminders ||= []; const item = list.find(r => r.id === draft.id); if (item) Object.assign(item, {title, ...when, ...extra}); else list.push({id: 'r' + Date.now(), title, ...when, ...extra}); ui.gnowDraft = null; ui.gnowSpin = ''; save(); render(); toast(AndroidStrings.pick(window.StockStrings?.google?.['Reminder saved'], i18n.locale(), 'Reminder saved')); break; }
-      case 'gnow-reminder-menu': ui.gnowDialog = id; render(); break;
-      case 'gnow-reminder-delete': data.nowReminders = (data.nowReminders || []).filter(r => r.id !== id); ui.gnowDialog = ''; ui.gnowDraft = null; save(); render(); break;
-      case 'gnow-dialog-close': ui.gnowDialog = ''; render(); break;
-      case 'gnow-card-back': ui.gnowBack = ui.gnowBack === id ? '' : id; render(); break;
-      case 'gnow-units': data.nowUnits = Number(id); save(); render(); break;
-      case 'gel-overview-settings': openApp('google-search'); ui.sub = 'settings'; ui.ksPage = ''; render(); break;
-      case 'kk-overview-page': if (ui.overview) { ui.overview = false; ui.page = Number(id); render(); } break;
-      case 'drawer-page': ui.drawerPage = Number(id); render(); break;
-      case 'add-widget': { const added = addWidget(button.dataset.widgetType); if (!added) { toast('This home screen is full'); break; } const setup = ui.photoWidgetSetup; ui.photoWidgetSetup = null; home(false); ui.photoWidgetSetup = setup; if (added.type === 'photo') { ui.overlay = 'widget-photo-type'; renderOverlay(); } else toast('Widget added'); break; }
-      case 'widget-music-open': openApp('play-music'); break;
-      case 'widget-music-next': ICSMusic.step(ui.music, 1); ui.musicActive = true; ui.musicTrack = ui.music.track; saveMusic(); render(); break;
-      case 'widget-music-prev': ICSMusic.step(ui.music, -1); ui.musicActive = true; ui.musicTrack = ui.music.track; saveMusic(); render(); break;
-      case 'widget-photo-open': { const photo = data.photos.find(item => item.id === Number(id)); if (!photo) break; openApp('gallery'); ui.selectedPhoto = photo.id; ui.galleryAlbum = ICSMedia.album(photo); ui.sub = 'photo'; ui.galleryZoom = false; render(); break; }
-      case 'widget-photo-type': if (id === 'shuffle') configurePhotoWidget({source: 'shuffle'}); else { ui.overlay = id === 'album' ? 'widget-photo-album' : 'widget-photo-image'; renderOverlay(); } break;
-      case 'widget-photo-album': configurePhotoWidget({source: 'album', album: id}); break;
-      case 'widget-photo-image': configurePhotoWidget({source: 'photo', photo: Number(id)}); break;
-      case 'widget-photo-cancel': cancelPhotoWidget(); break;
-      case 'page': setHomePage(Number(id)); break;
-      case 'power-toggle':
-        if (id === 'brightness') data.settings.brightness = data.settings.brightness < 30 ? 55 : data.settings.brightness < 80 ? 100 : 20;
-        else data.settings[id] = !data.settings[id];
-        if(id==='wifi'&&data.settings.wifi)data.settings.portableHotspot=false;
-        if(id==='bluetooth'&&!data.settings.bluetooth)data.settings.bluetoothTether=false;
-        save(); render(); break;
-      case 'widget-music-play': ui.musicActive=true;ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
       case 'close-overlay': if (ui.overlay === 'recent') { closeRecents(); break; } ui.overlay = ''; renderOverlay(); break;
       case 'toast': toast(id); break;
-      case 'open-contact': { const person = data.contacts.find(p => p.id === Number(id)); openApp('people'); if (person) { ui.selectedContact = person.id; ui.sub = 'detail'; render(); } break; }
       case 'noop': break;
-      case 'sa-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
-      case 'sa-menu': ui.overlay = 'sa-menu'; renderOverlay(); break;
-      case 'open-web-shortcut': { const item = (data.webShortcuts || []).find(w => String(w.id) === id); if (!item) break; openApp('chrome'); navigateBrowser(item.url); break; }
-      case 'music-play': ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
-      case 'music-prev': case 'music-next': ICSMusic.step(ui.music,action==='music-prev'?-1:1);saveMusic();render();break;
-      case 'music-shuffle': ui.music.shuffle=!ui.music.shuffle;saveMusic();render();break;
-      case 'music-repeat': ui.music.repeat={off:'all',all:'one',one:'off'}[ui.music.repeat];saveMusic();render();break;
       default: break;
     }
   });
@@ -1301,21 +1181,12 @@
     if (!form || !screen.contains(form)) return;
     event.preventDefault(); const values = new FormData(form);
     if (kkOffer('submit', form, event, storeContext())) return;
-    if(form.dataset.form==='folder-name'){event.target.querySelector('input')?.blur();render();return;}
     switch (form.dataset.form) {
       default: break;
     }
   });
   document.addEventListener('input', event => {
     if (kkOffer('input', event, storeContext())) return;
-    if (event.target.matches('[data-gnp-q]') && ui.gnowDraft?.placeDialog) { ui.gnowDraft.placeDialog.q = event.target.value; const at = event.target.selectionStart; render(); const field = viewport.querySelector('[data-gnp-q]'); field?.focus(); field?.setSelectionRange(at, at); return; }
-    if (event.target.matches('[data-gnr-rule]') && ui.gnowDraft?.ruleDialog) { const r = ui.gnowDraft.ruleDialog, key = event.target.dataset.gnrRule, value = event.target.value;
-      if (key === 'interval' || key === 'count') { r[key] = Math.max(1, Math.min(key === 'count' ? 730 : 99, Number(value) || 1)); const label = event.target.closest('.gnr-interval'); if (label && key === 'interval') { const keep = event.target.selectionStart; render(); const f = viewport.querySelector('[data-gnr-rule="interval"]'); f?.focus(); try { f?.setSelectionRange(keep, keep); } catch (error) { /* number input */ } } return; }
-      if (key === 'until') { r.until = value; return; }
-      r[key] = Number(value); if (key === 'end' && r.end === 1 && !r.until) r.until = ICSCalendar.iso(new Date(deviceDate().getTime() + 30 * 864e5)); render(); return; }
-    if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
-    if (event.target.matches('[data-gnr-title]')) { if (ui.gnowDraft) ui.gnowDraft.title = event.target.value; return; }
-    if(event.target.dataset.field==='music-position'){ui.music.position=Number(event.target.value);saveMusic();const elapsed=viewport.querySelector('.music-elapsed');if(elapsed)elapsed.textContent=ICSMusic.time(ui.music.position);}
   });
 
   let pointerStart = null, eggTimer = null, dragTimer = null, dragState = null;

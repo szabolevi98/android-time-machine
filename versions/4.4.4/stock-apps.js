@@ -313,3 +313,34 @@
   }
   window.StockApps = {thumb, FILES: FILES0, APPS: SIMPLE, VIDEOS, POSTS, DEFAULT_NOTES, render, menu};
 })();
+/* The Google apps' shared overflow menu (stock-apps.js's StockApps.menu) in the 4.4.4 shell
+   (docs/plans/engine-migration.md), moved out of simulator.js. */
+(() => {
+  'use strict';
+  function scope(c) {
+    const {data, deviceDate, i18n, overlayRoot, renderOverlay, safe, toast, ui} = c;
+    return {
+      action(action, button, event) {
+        const {id, app, url} = button.dataset;
+        switch (action) {
+          case 'sa-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
+          case 'sa-menu': ui.overlay = 'sa-menu'; renderOverlay(); break;
+          default: return false;
+        }
+        return true;
+      },
+      overlay() {
+        if (ui.overlay === 'sa-menu') {
+          // The Google apps' action bar overflow (StockApps.menu: their menu XML's overflow items).
+          overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${StockApps.menu(ui.view, {ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()}).map(item => `<button data-action="${item.action}"${item.id != null ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
+        } else return false;
+        return true;
+      }
+    };
+  }
+  const spec = {
+    action: (name, el, event, c) => scope(c).action(name, el, event),
+    overlay: c => scope(c).overlay()
+  };
+  if (window.KK) for (const id of ['stock-apps']) KK.register(id, spec);
+})();
