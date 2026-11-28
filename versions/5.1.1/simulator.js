@@ -195,8 +195,6 @@
   // Folder and grid size of the Large Phone profile.
   const GRID = 5;
   const GEL_UNSIMULATED = [];
-  // Play Music, Movies & TV, Books and Games (play-apps.js).
-  const PLAY_APPS = ['play-music', 'play-movies', 'play-books', 'play-games'];
   const wifiNetworks = [
     { name: 'AndroidAP', security: 'WPA2', strength: 4 },
     { name: 'CoffeeShop', security: 'Open', strength: 3 },
@@ -818,7 +816,6 @@
     switch (ui.view) {
       case 'settings': return renderSettings();
       case 'photos': return PhotosApp.render(photosContext());
-      case 'play-music': case 'play-movies': case 'play-books': case 'play-games': return PlayApps.render(playContext(ui.view));
       case 'google-search': case 'voice-search': case 'maps': case 'drive': case 'keep': case 'youtube': case 'google-plus': case 'earth': case 'news-weather': case 'google-settings': return StockApps.render(ui.view, {earthCtx: ui.view === 'earth' ? earthContext() : null, plusCtx: ui.view === 'google-plus' ? plusContext() : null, ui, data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), account: GmailApp.account});
       case 'docs': case 'sheets': case 'slides': case 'fit': case 'newsstand': case 'wallet': return LPExtraApps.render(ui.view, {news: ui.view === 'newsstand' ? newsContext() : null, files: officeFiles(), ui, data, t: key => i18n.t(key), locale: i18n.locale()});
       default: return renderHome();
@@ -850,7 +847,7 @@
     if (resume && viewport.firstElementChild) appScrollContainer(app).scrollTop = ui.recentState?.[app]?.scrollTop || 0;
   }
   function appScrollContainer(app) {
-    return viewport.querySelector(app === 'play-store' ? '.jbp-scroll' : ['messaging', 'hangouts'].includes(app) ? '.mms-scroll' : ['email', 'gmail'].includes(app) ? '.email-scroll' : app === 'music' ? '.music-library-scroll' : app === 'calendar' ? '.cal-scroll' : app === 'gallery' ? '.gallery-scroll' : app === 'clock' ? '.desk-scroll' : app === 'people' ? '.people-scroll' : app === 'browser' ? '.browser-page,.web-tabs,.web-library' : app === 'chrome' ? '.chr-ntp-scroll,.chr-history,.chr-stack,.browser-page' : app === 'photos' ? '.ph-scroll' : StockApps.APPS.includes(app) ? '.sa-scroll,.gnow-scroll' : PLAY_APPS.includes(app) ? '.pa-scroll,.pm-queue' : '.app-view') || viewport.firstElementChild;
+    return viewport.querySelector(app === 'play-store' ? '.jbp-scroll' : ['messaging', 'hangouts'].includes(app) ? '.mms-scroll' : ['email', 'gmail'].includes(app) ? '.email-scroll' : app === 'music' ? '.music-library-scroll' : app === 'calendar' ? '.cal-scroll' : app === 'gallery' ? '.gallery-scroll' : app === 'clock' ? '.desk-scroll' : app === 'people' ? '.people-scroll' : app === 'browser' ? '.browser-page,.web-tabs,.web-library' : app === 'chrome' ? '.chr-ntp-scroll,.chr-history,.chr-stack,.browser-page' : app === 'photos' ? '.ph-scroll' : StockApps.APPS.includes(app) ? '.sa-scroll,.gnow-scroll' : lp.PLAY_APPS.includes(app) ? '.pa-scroll,.pm-queue' : '.app-view') || viewport.firstElementChild;
   }
   function captureRecentView() {
     if (appNames[ui.view] && viewport.firstElementChild) {
@@ -962,11 +959,7 @@
     if (ui.view === 'keep' && ui.keepDialog) { ui.keepDialog = ''; render(); return; }
     if (StockApps.APPS.includes(ui.view) && ui.sub) { if (ui.view === 'keep') saveKeepNote(true); ui.sub = ''; render(); return; }
     // Play Books' reader: a dropdown, then the Display options popup, then Contents close before the reader does.
-    if (ui.view === 'play-books' && ui.sub === 'reader' && (ui.bkSpin || ui.bkOptions || ui.bkToc)) { if (ui.bkSpin) ui.bkSpin = ''; else if (ui.bkOptions) ui.bkOptions = false; else ui.bkToc = false; render(); return; }
-    if (ui.view === 'play-books' && ui.sub === 'reader') { ui.bkOptions = false; ui.bkToc = false; ui.bkSpin = ''; }
-    // The Play apps' own pages (lp-play-more.js) go back to where they were opened.
-    if (PLAY_APPS.includes(ui.view) && PlayMore.back(ui)) { render(); return; }
-    if (PLAY_APPS.includes(ui.view) && ui.sub) { ui.sub = ui.sub === 'queue' ? 'player' : ui.sub === 'player' ? ui.paReturn || '' : ui.sub === 'album' && ui.paFromSearch ? 'search' : ''; if (ui.sub !== 'album') ui.paFromSearch = ui.sub === 'search' && ui.paFromSearch; ui.paBars = true; render(); return; }
+    if (LP.module('play-music').back()) return;
     if (ui.view === 'photos' && ui.sub === 'edit' && PlusEditor.back(peContext())) return;
     if (ui.view === 'photos' && ui.photosSpinner) { ui.photosSpinner = false; render(); return; }
     if (ui.view === 'photos' && ui.sub === 'video') { ui.sub = 'photo'; ui.photosVideo = null; render(); return; }
@@ -1152,8 +1145,6 @@
       overlayRoot.innerHTML=ICSMedia.overlay(data,ui,key=>i18n.t(key),i18n.locale());
     } else if (ui.overlay.startsWith('sd-')) {
       overlayRoot.innerHTML = ICSSettingsDetail.overlay(data,ui,key=>i18n.t(key));
-    } else if (ui.overlay === 'pa-drawer') {
-      overlayRoot.innerHTML = PlayApps.drawer(playContext(ui.view));
     } else if(ui.overlay.startsWith('emore-')) {
       overlayRoot.innerHTML=EditorMore.dialog(editorContext());
     } else if (['ed-menu', 'ed-rename', 'ed-remove'].includes(ui.overlay)) {
@@ -1165,11 +1156,6 @@
       overlayRoot.innerHTML = `<div class="pin-scrim"></div><div class="pin-request" role="dialog" aria-label="${safe(i18n.t('Screen is pinned'))}" data-no-translate><h3>${safe(i18n.t('Screen is pinned'))}</h3><p>${safe(i18n.t('This keeps it in view until you unpin. Touch and hold Back and Overview at the same time to unpin.'))}</p><div class="pin-buttons"><button data-action="pin-cancel">${safe(i18n.t('No thanks'))}</button><button data-action="pin-ok">${safe(i18n.t('Got it'))}</button></div><div class="pin-nav">${ring('back')}<span class="pin-key home"><img src="assets/lp-ic_sysbar_home.png" alt=""></span>${ring('recent')}</div></div>`;
     } else if (ui.overlay === 'lpx-overflow') {
       overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="lpa-menu">${LPExtraApps.menu(ui.view, key => i18n.t(key), i18n.locale(),editorContext()).map(item => `<button data-action="${item.action}">${safe(item.title)}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'pa-menu') {
-      overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="lpa-menu">${PlayApps.menu(playContext(ui.view)).map(item => `<button data-action="${item.action}"${item.id ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
-    } else if (ui.overlay === 'pa-more') {
-      // The Play apps' card, now playing and reader menus and their dialogs (lp-play-more.js).
-      overlayRoot.innerHTML = PlayMore.overlay(playContext(ui.view));
     } else if (ui.overlay === 'photos-menu') {
       overlayRoot.innerHTML = PhotosApp.menu(photosContext());
     } else if (ui.overlay === 'photos-delete-many') {
@@ -1507,19 +1493,6 @@
   }
 
 
-  function saveMusic() {
-    ui.musicTrack=ui.music.track;ui.musicPlaying=ui.music.playing;ui.musicPosition=ui.music.position;
-    data.music=clone(ui.music);delete data.music.playing;save();
-  }
-  function tickMusic() {
-    if(!ui.music.playing)return;
-    const previous=ui.music.track;ICSMusic.tick(ui.music);
-    ui.musicTrack=ui.music.track;ui.musicPlaying=ui.music.playing;
-    if(previous!==ui.music.track || !ui.music.playing){saveMusic();if(ui.view==='music'||ui.view==='play-music'||ui.view==='home'||ui.view==='lock'&&!pointerStart)render();}
-    else if(Math.floor(ui.music.position)%10===0)saveMusic();
-    const progress=viewport.querySelector('.music-progress');if(progress&&document.activeElement!==progress){progress.value=ui.music.position;progress.style.setProperty('--p',`${(ui.music.position/tracks[ui.music.track].duration*100).toFixed(2)}%`);}
-    const elapsed=viewport.querySelector('.music-elapsed');if(elapsed)elapsed.textContent=ICSMusic.time(ui.music.position);
-  }
   // Voice Search listens for three seconds, then asks to try again.
   let voiceTimer = null;
   function listenVoice() {
@@ -1549,18 +1522,6 @@
   }
   // Show / Hide checkboxes: lines become unchecked items; back to text drops the checked ones when asked to.
   function keepToText(note, dropChecked) { note.text = note.list.filter(item => !(dropChecked && item.checked)).map(item => item.text).join('\n'); delete note.list; }
-  const playContext = app => ({app, ui, data, locale: i18n.locale(), t: key => i18n.t(key), music: ui.music, tracks, time: ICSMusic.time});
-  // The Play Movies player counts seconds without re-rendering (the picture keeps panning).
-  function tickPlayVideo() {
-    if (ui.view !== 'play-movies' || ui.sub !== 'movie' || ui.paPlaying === false || ui.locked) return;
-    ui.paSeconds = (ui.paSeconds || 0) + 1;
-    const item = [...PlayApps.MOVIES, ...PlayApps.SHOWS].find(entry => entry.id === ui.paItem); if (!item) return;
-    const total = (item.mins || 24) * 60, pos = Math.min(total, Math.floor(total * (item.progress || 0)) + ui.paSeconds);
-    const clock = value => `${Math.floor(value / 3600)}:${String(Math.floor(value / 60) % 60).padStart(2, '0')}:${String(value % 60).padStart(2, '0')}`;
-    const footer = viewport.querySelector('.pm-video-bottom'); if (!footer) return;
-    footer.querySelector('span').textContent = clock(pos); footer.querySelector('i').style.setProperty('--p', `${(pos / total * 100).toFixed(1)}%`);
-  }
-  setInterval(tickPlayVideo, 1000);
   // Share contact via Email or Gmail: the app's compose with the contact card among its files.
   // Google Search's settings (lp-search-prefs.js).
   function gsContext() {
@@ -1594,7 +1555,7 @@
   function clearAppData(id) {
     if(window.StoreHost?.has(id)){StoreHost.module(id).clearData?.(storeContext(), id);save();}
     if(id==='browser'){delete data.browserSession;data.browserHistory=clone(defaultData.browserHistory);data.bookmarks=clone(defaultData.bookmarks||[]);data.savedPages=[];ui.browserSession=ICSBrowserSession.restore(null,data.browserHistory);syncBrowserState();}
-    if(id==='music'){ui.music=ICSMusic.restore();saveMusic();}
+    if(id==='music'){ui.music=ICSMusic.restore();lp.saveMusic();}
     if(id==='gallery'){data.photos=clone(defaultData.photos);}
     ui.recent=ui.recent.filter(app=>app!==id);delete ui.recentState?.[id];delete ui.recentSnapshots[id];save();
   }
@@ -1701,8 +1662,7 @@
     if (action.startsWith('ps-') && ProcStats.handle(action, id, procStatsContext())) return;
     if (action.startsWith('cert-') && CertInstall.handle(action, id, certContext())) return;
     // A choice in a Play app's menu closes it before its action runs (lp-play-more.js handles its own).
-    if (ui.overlay === 'pa-more' && !action.startsWith('px-') && action !== 'close-overlay') { ui.overlay = ''; ui.paMore = ''; renderOverlay(); }
-    if (action.startsWith('px-') && PlayMore.handle(action, id, {...playContext(ui.view), save, saveMusic, render, renderOverlay, toast, root: viewport, openApp, shareText: driveShareText})) return;
+    if (LP.module('play-music').preClick(action, id, button)) return;
     if (action.startsWith('drv-') && LPDrive.handle(action, id, {data, ui, save, render, renderOverlay, toast, root: viewport, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate(), shareFile: driveShareFile, shareText: driveShareText})) return;
     // Email's Quick responses, ringtone and server screens (email-prefs.js).
     if (action.startsWith('pe-') && window.PlusEditor?.handle(action, button, peContext())) return;
@@ -1810,8 +1770,8 @@
       case 'widget-calendar-open': ui.selectedDate = today(); openApp('calendar'); break;
       case 'widget-calendar-event': { const event = data.events.find(item => String(item.id) === id); if (!event) break; const date = button.dataset.date || event.date; ui.selectedDate = date < today() ? today() : date; openApp('calendar'); ui.selectedEvent = event.id; ui.selectedInstance = date; ui.sub = 'event'; render(); break; }
       case 'widget-music-open': openApp('play-music'); break;
-      case 'widget-music-next': ICSMusic.step(ui.music, 1); ui.musicActive = true; ui.musicTrack = ui.music.track; saveMusic(); render(); break;
-      case 'widget-music-prev': ICSMusic.step(ui.music, -1); ui.musicActive = true; ui.musicTrack = ui.music.track; saveMusic(); render(); break;
+      case 'widget-music-next': ICSMusic.step(ui.music, 1); ui.musicActive = true; ui.musicTrack = ui.music.track; lp.saveMusic(); render(); break;
+      case 'widget-music-prev': ICSMusic.step(ui.music, -1); ui.musicActive = true; ui.musicTrack = ui.music.track; lp.saveMusic(); render(); break;
       case 'widget-photo-type': if (id === 'shuffle') configurePhotoWidget({source: 'shuffle'}); else { ui.overlay = id === 'album' ? 'widget-photo-album' : 'widget-photo-image'; renderOverlay(); } break;
       case 'widget-photo-album': configurePhotoWidget({source: 'album', album: id}); break;
       case 'widget-photo-image': configurePhotoWidget({source: 'photo', photo: Number(id)}); break;
@@ -1824,9 +1784,9 @@
         if(id==='wifi'&&data.settings.wifi)data.settings.portableHotspot=false;
         if(id==='bluetooth'&&!data.settings.bluetooth)data.settings.bluetoothTether=false;
         save(); render(); break;
-      case 'widget-music-play': ui.musicActive=true;ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
+      case 'widget-music-play': ui.musicActive=true;ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;lp.saveMusic();render();break;
       case 'voice-search': toast('Voice search unavailable offline'); break;
-      case 'lock-media': if (id === 'play') { ui.music.playing = !ui.music.playing; if (ui.music.playing && ui.music.position >= tracks[ui.music.track].duration) ui.music.position = 0; } else ICSMusic.step(ui.music, id === 'previous' ? -1 : 1); ui.musicTrack = ui.music.track; saveMusic(); render(); break;
+      case 'lock-media': if (id === 'play') { ui.music.playing = !ui.music.playing; if (ui.music.playing && ui.music.position >= tracks[ui.music.track].duration) ui.music.position = 0; } else ICSMusic.step(ui.music, id === 'previous' ? -1 : 1); ui.musicTrack = ui.music.track; lp.saveMusic(); render(); break;
       case 'lock-hint': screen.classList.add('lock-dragging'); setTimeout(() => { if (!pointerStart?.lockDrag) lockRelease(null); }, 1000); break;
       case 'shade': if (ui.pinned) break; ui.overlay = ui.overlay === 'shade' ? '' : 'shade'; renderOverlay(); break;
       case 'recent': {
@@ -1906,7 +1866,7 @@
       case 'sd-clear-cache': data.appCacheCleared=[...new Set([...(data.appCacheCleared||[]),ui.settingsApp])];save();render();break;
       case 'sd-clear-data': ui.overlay='sd-clear-data';renderOverlay();break;
       case 'sd-confirm-clear': clearAppData(ui.settingsApp);ui.overlay='';render();toast('App data cleared');break;
-      case 'sd-force-stop': if(ui.settingsApp==='phone')ui.activeCall=null;if(ui.settingsApp==='music'){ui.music.playing=false;saveMusic();}ui.recent=ui.recent.filter(app=>app!==ui.settingsApp);delete ui.recentState?.[ui.settingsApp];delete ui.recentSnapshots[ui.settingsApp];toast('App stopped');break;
+      case 'sd-force-stop': if(ui.settingsApp==='phone')ui.activeCall=null;if(ui.settingsApp==='music'){ui.music.playing=false;lp.saveMusic();}ui.recent=ui.recent.filter(app=>app!==ui.settingsApp);delete ui.recentState?.[ui.settingsApp];delete ui.recentSnapshots[ui.settingsApp];toast('App stopped');break;
       case 'wifi-wps': ui.wps = {mode: id === 'pin' ? 'pin' : 'pbc', start: Date.now(), pin: String(Math.floor(10000000 + Math.random() * 89999999))}; ui.overlay = 'wifi-wps'; renderOverlay(); break;
       case 'p2p-search': startP2pSearch(); render(); break;
       case 'p2p-menu': ui.overlay = 'p2p-menu'; renderOverlay(); break;
@@ -2089,57 +2049,6 @@
         ui.newsDialog = ''; ui.newsPick = undefined; save(); render(); break;
       }
       case 'news2-theme': ui.overlay = ''; renderOverlay(); data.news2 = {...StockApps.news2(data), dark: !StockApps.news2(data).dark}; save(); render(); break;
-      // Play Music, Movies & TV, Books and Games
-      case 'pa-drawer': ui.overlay = 'pa-drawer'; renderOverlay(); break;
-      case 'pa-menu': ui.overlay = 'pa-menu'; renderOverlay(); break;
-      case 'pa-refresh': ui.overlay = ''; renderOverlay(); render(); break;
-      case 'pa-mixtab': ui.paMixTab = id; render(); break;
-      case 'pa-movietab': ui.paMovieTab = id; render(); break;
-      case 'pa-bookstab': ui.bkFilterTab = id; render(); break;
-      case 'pa-page': ui.paPage ||= {}; ui.paPage[ui.view] = id; ui.sub = ''; ui.overlay = ''; renderOverlay(); render(); break;
-      case 'pa-unsupported': case 'pa-game-play': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
-      case 'pa-album': ui.paFromSearch = ui.sub === 'search'; ui.paAlbum = id; ui.sub = 'album'; render(); break;
-      case 'pa-search': case 'pa-search-clear': ui.paQuery = ''; ui.sub = 'search'; ui.overlay = ''; renderOverlay(); render(); viewport.querySelector('[data-pa-search]')?.focus(); break;
-      case 'pa-song': {
-        const track = Number(id), queue = button.dataset.queue;
-        if (queue === 'all') ui.music.queue = tracks.map((_, i) => i);
-        else if (queue && queue !== 'keep') ui.music.queue = tracks.map((item, i) => item.album === queue ? i : -1).filter(i => i >= 0);
-        if (!ui.music.queue.includes(track)) ui.music.queue = [...ui.music.queue, track];
-        ui.music.track = track; ui.music.position = 0; ui.music.playing = true; saveMusic();
-        if (ui.sub !== 'player' && ui.sub !== 'queue') ui.paReturn = ui.sub;
-        ui.sub = 'player'; render(); break;
-      }
-      case 'pa-player': ui.paReturn = ui.sub; ui.sub = 'player'; render(); break;
-      case 'pa-queue': ui.sub = ui.sub === 'queue' ? 'player' : 'queue'; render(); break;
-      case 'pa-thumb': { data.playMusicThumbs ||= {}; const value = Number(id); if (data.playMusicThumbs[ui.music.track] === value) delete data.playMusicThumbs[ui.music.track]; else data.playMusicThumbs[ui.music.track] = value; save(); render(); break; }
-      case 'pa-libtab': ui.paMusicTab = id; render(); break;
-      case 'pa-libtab-songs': ui.paPage ||= {}; ui.paPage['play-music'] = 'library'; ui.paMusicTab = 'songs'; render(); break;
-      case 'pa-movie': ui.paItem = id; ui.sub = 'movie'; ui.paPlaying = true; ui.paSeconds = 0; ui.paBars = true; render(); break;
-      case 'pa-video-bars': ui.paBars = ui.paBars === false; viewport.querySelector('.pm-video')?.classList.toggle('bare', ui.paBars === false); break;
-      case 'pa-video-toggle': ui.paPlaying = ui.paPlaying === false; render(); break;
-      case 'pa-shop': openApp('play-store'); break;
-      case 'pa-book': ui.paItem = id; ui.sub = 'reader'; ui.paBars = true; render(); break;
-      case 'pa-reader-tap': {
-        const box = button.getBoundingClientRect(), x = (event.clientX - box.left) / box.width;
-        if (x > .3 && x < .7) { ui.paBars = ui.paBars === false; viewport.querySelector('.pb-reader')?.classList.toggle('bare', ui.paBars === false); break; }
-        data.playBooks ||= {}; const pages = PlayApps.bookPages(ui.paItem), now = data.playBooks[ui.paItem] || 0;
-        data.playBooks[ui.paItem] = Math.max(0, Math.min(pages - 1, now + (x >= .7 ? 1 : -1))); save(); render(); break;
-      }
-      // Play Books 3.3.15's reader: Contents (TableOfContentsActivity) and the Display options popup (ReaderSettingsController).
-      case 'bk-toc': ui.bkToc = !ui.bkToc; ui.bkTocTab = 'chapters'; ui.bkOptions = false; ui.bkSpin = ''; render(); break;
-      case 'bk-toc-tab': ui.bkTocTab = id; render(); break;
-      case 'bk-chapter': data.playBooks ||= {}; data.playBooks[ui.paItem] = Number(id) || 0; ui.bkToc = false; save(); render(); break;
-      case 'bk-options': ui.bkOptions = !ui.bkOptions; ui.bkSpin = ''; render(); break;
-      case 'bk-pref-spin': ui.bkSpin = ui.bkSpin === id ? '' : id; render(); break;
-      case 'bk-pref': case 'bk-pref-step': {
-        const [key, value] = String(id).split(':'), prefs = PlayApps.bookPrefs(data);
-        data.bookPrefs = {...prefs, [key]: action === 'bk-pref' ? value : PlayApps.stepPref(prefs, key, Number(value))}; ui.bkSpin = ''; save(); render(); break;
-      }
-      case 'bk-pref-auto': { const prefs = PlayApps.bookPrefs(data); data.bookPrefs = {...prefs, brightness: prefs.brightness < 0 ? Math.max(5, Math.round(data.settings?.brightness ?? 100)) : -1}; save(); render(); break; }
-      case 'pa-see-all': ui.paPage ||= {}; ui.paPage['play-books'] = 'library'; render(); break;
-      case 'pa-game': ui.paItem = id; ui.sub = 'game'; render(); break;
-      case 'pa-gtab': ui.paGamesTab = id; render(); break;
-      case 'pa-games-mine': case 'pa-games-players': ui.paPage ||= {}; ui.paPage['play-games'] = action === 'pa-games-mine' ? 'mine' : 'players'; render(); break;
       // Google+ Photos
       case 'photos-tab': ui.photosTab = id; render(); break;
       case 'photos-folders': ui.sub = 'folders'; render(); break;
@@ -2203,10 +2112,6 @@
       case 'gallery-menu': case 'gallery-share': case 'gallery-details': ui.overlay=action;renderOverlay();break;
       case 'gallery-share-message': {const photo=data.photos.find(p=>p.id===ui.selectedPhoto);if(!photo)break;openApp('messaging');ui.sub='new';lp.messageDraft().attachment=clone(photo);save();render();break;}
 
-      case 'music-play': ui.music.playing=!ui.music.playing;if(ui.music.playing&&ui.music.position>=tracks[ui.music.track].duration)ui.music.position=0;saveMusic();render();break;
-      case 'music-prev': case 'music-next': ICSMusic.step(ui.music,action==='music-prev'?-1:1);saveMusic();render();break;
-      case 'music-shuffle': ui.music.shuffle=!ui.music.shuffle;saveMusic();render();break;
-      case 'music-repeat': ui.music.repeat={off:'all',all:'one',one:'off'}[ui.music.repeat];saveMusic();render();break;
       // Docs / Sheets / Slides' Print: the file's own text.
       case 'ed-print': { const file = officeFiles().find(f => f.id === ui.edFile); ui.overlay=''; renderOverlay(); if (!file) break; PrintSpooler.open(printContext(), {name: file.name, title: file.name, lines: String(file.text || '').split('\n')}); break; }
       default: break;
@@ -2276,9 +2181,7 @@
     if (event.target.matches('[data-lng-seek]') && InputLanguage.input(event.target, langContext())) return;
     if (event.target.matches('[data-keep-search]')) { ui.keepQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-keep-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
     if (event.target.matches('[data-photos-search]')) { ui.photosQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-photos-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
-    if (event.target.matches('[data-pa-search]')) { ui.paQuery = event.target.value; const at = event.target.selectionStart; render(); const input = viewport.querySelector('[data-pa-search]'); if (input) { input.focus(); input.setSelectionRange(at, at); } return; }
     if(event.target.closest('[data-form="folder-name"]')){const folder=ICSLauncherFolders.folder(data,ui.folderId);if(folder){folder.name=event.target.value.slice(0,40);delete folder.nameKey;save();for(const button of viewport.querySelectorAll('[data-folder-id]'))if(button.dataset.folderId===ui.folderId){button.setAttribute('aria-label',folderName(ui.folderId));button.lastElementChild.textContent=folderName(ui.folderId);}}return;}
-    if (event.target.matches('[data-bk-bright]')) { data.bookPrefs = {...PlayApps.bookPrefs(data), brightness: Number(event.target.value)}; save(); viewport.querySelector('.pb-reader')?.style.setProperty('--bk-dim', ((100 - Number(event.target.value)) / 100 * .7).toFixed(3)); return; }
     if(event.target.dataset.field==='data-cycle'){ui.dataCycle=event.target.value;render();return;}
     if(event.target.matches('.camera-zoom input')) {
       data.cameraSettings=ICSMedia.settings(data);data.cameraSettings.zoom=Number(event.target.value);save();
@@ -2295,7 +2198,6 @@
       const display = event.target.closest('.detail-pad')?.querySelector('p'); if (display) display.textContent = `${data.settings.brightness}%`;
       screen.style.filter = `brightness(${.5 + data.settings.brightness / 135})`;
     }
-    if(event.target.dataset.field==='music-position'){ui.music.position=Number(event.target.value);saveMusic();const elapsed=viewport.querySelector('.music-elapsed');if(elapsed)elapsed.textContent=ICSMusic.time(ui.music.position);}
   });
 
   let pointerStart = null, eggTimer = null, dragTimer = null, dragState = null;
@@ -3257,7 +3159,7 @@
     });
     const lockTime = document.querySelector('.lock-time'); if (lockTime) lockTime.textContent = clock();
     const kgClock = viewport.querySelector('.jbk-clock'); if (kgClock && !pointerStart) { const hour24 = !!data.settings.hour24; kgClock.firstChild.textContent = now.toLocaleTimeString(i18n.locale(), {hour: hour24 ? '2-digit' : 'numeric', minute: '2-digit', hour12: !hour24}).replace(/\s?[AaPp]\.?\s?[Mm]\.?$/, ''); }
-    tickMusic();
+    lp.tickMusic();
     const minute = stamp => `${stamp.toDateString()} ${stamp.getHours()}:${stamp.getMinutes()}`;
     if (minute(now) !== lastWidgetMinute) {
       lastWidgetMinute = minute(now);
@@ -3289,8 +3191,8 @@
     get storeAppsSync() { return storeAppsSync; }, get storeContext() { return storeContext; },
     get suppressClickUntil() { return suppressClickUntil; }, set suppressClickUntil(v) { suppressClickUntil = v; },
     get suppressReleaseClick() { return suppressReleaseClick; }, get syncBrowserState() { return syncBrowserState; },
-    get toast() { return toast; }, get today() { return today; }, get ui() { return ui; },
-    get viewport() { return viewport; }, get wallpaperFiles() { return wallpaperFiles; }
+    get toast() { return toast; }, get today() { return today; }, get tracks() { return tracks; },
+    get ui() { return ui; }, get viewport() { return viewport; }, get wallpaperFiles() { return wallpaperFiles; }
   });
   // lp:kernel-end
   LP.start();
