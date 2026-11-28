@@ -39,6 +39,15 @@ LP.define('camera', ({
   // lp:code
   return {
     // lp:hooks
+    input(event) {
+      if(event.target.matches('.camera-zoom input')) {
+        lp.data.cameraSettings=ICSMedia.settings(lp.data);lp.data.cameraSettings.zoom=Number(event.target.value);save();
+        viewport.querySelector('.camera-focus-area .media-photo').src=ICSMedia.image(ICSMedia.scene(lp.data));
+        viewport.querySelector('.camera-zoom output').textContent=Number(event.target.value).toFixed(1)+'×';return true;
+      }
+      // lp:input
+      return false;
+    },
     overlay(name, root) {
       if (ui.overlay.startsWith('gallery-') || ui.overlay.startsWith('camera-')) {
         overlayRoot.innerHTML=ICSMedia.overlay(lp.data,ui,key=>i18n.t(key),i18n.locale());

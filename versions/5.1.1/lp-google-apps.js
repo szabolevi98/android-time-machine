@@ -1,8 +1,8 @@
 /* TODO */
 'use strict';
 LP.define(['google-search', 'voice-search', 'maps', 'drive', 'keep', 'youtube', 'google-plus', 'earth', 'news-weather', 'google-settings'], ({
-  clone, deviceDate, holdDelay, i18n, openApp, render, renderOverlay, save, suppressReleaseClick, toast, ui,
-  viewport
+  clone, deviceDate, holdDelay, i18n, openApp, overlayRoot, render, renderOverlay, safe, save,
+  suppressReleaseClick, toast, ui, viewport
 }, lp) => {
   // Maps directions and navigation (maps-route.js).
   function mrContext() {
@@ -87,6 +87,13 @@ LP.define(['google-search', 'voice-search', 'maps', 'drive', 'keep', 'youtube', 
   // lp:code
   return {
     // lp:hooks
+    overlays: {
+      'sa-menu'() {
+        // The Google apps' action bar overflow (StockApps.menu: their menu XML's overflow items).
+        overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu">${StockApps.menu(ui.view, {ui, data: lp.data, t: key => i18n.t(key), locale: i18n.locale(), now: deviceDate()}).map(item => `<button data-action="${item.action}"${item.id != null ? ` data-id="${safe(item.id)}"` : ''}>${safe(item.title)}</button>`).join('')}</div>`;
+      },
+      // lp:overlays
+    },
     pointerdown(event) {
       // Drive: a held item opens menu_doclist_context.xml for it (lp-drive.js).
       const heldDrive = event.target.closest('[data-drive-hold]');
@@ -324,6 +331,11 @@ LP.define(['google-search', 'voice-search', 'maps', 'drive', 'keep', 'youtube', 
           ui.newsDialog = ''; ui.newsPick = undefined; save(); render(); break;
         }
         case 'news2-theme': ui.overlay = ''; renderOverlay(); lp.data.news2 = {...StockApps.news2(lp.data), dark: !StockApps.news2(lp.data).dark}; save(); render(); break;
+        case 'sa-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
+        case 'sa-menu': ui.newsMenu = ''; ui.overlay = 'sa-menu'; renderOverlay(); break;
+        // News & Weather 2.2: Refresh shows content_loading_placeholder while it gathers; stories expand and open
+        // WebContentActivity; the weather card's menu and the app menu open its dialogs; the theme switches.
+        case 'sa-news-refresh': ui.overlay = ''; renderOverlay(); ui.newsRefreshing = true; render(); setTimeout(() => { ui.newsRefreshing = false; if (ui.view === 'news-weather') render(); }, 900); break;
         // lp:cases
         default: return false;
       }

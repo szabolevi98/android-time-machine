@@ -1,7 +1,7 @@
 /* TODO */
 'use strict';
 LP.define('chrome', ({
-  clone, i18n, openApp, overlayRoot, placeShortcut, printContext, render, renderOverlay, safe, save,
+  chromeText, clone, i18n, openApp, overlayRoot, placeShortcut, render, renderOverlay, safe, save,
   syncBrowserState, toast, ui, viewport
 }, lp) => {
   function normalizeAddress(raw) {
@@ -133,6 +133,10 @@ LP.define('chrome', ({
       'browser-menu'() {
         overlayRoot.innerHTML = `<div class="menu-scrim" data-action="close-overlay"></div><div class="holo-menu web-menu"><button data-action="browser-forward" ${ui.browserIndex >= ui.browserHistory.length-1?'disabled':''}>Forward</button><button data-action="browser-refresh">Refresh</button><button data-action="browser-new-tab">New tab</button><button data-action="browser-save">Bookmark</button><button data-action="browser-bookmarks">Bookmarks</button><button data-action="browser-saved">Saved pages</button><button data-action="browser-save-page">Save for offline reading</button><button data-action="browser-find">Find on page</button></div>`;
       },
+      'chrome-a2hs'() {
+        // Chrome's Add to homescreen: the page's title in the Title field, Cancel / Add.
+        overlayRoot.innerHTML = `<div class="settings-dialog-scrim" data-action="close-overlay"></div><div class="settings-dialog chr-a2hs" role="dialog" aria-label="${safe(chromeText('Add to homescreen'))}"><h3>${safe(chromeText('Add to homescreen'))}</h3><div class="chr-a2hs-row"><img src="assets/chr40-app_shortcut_icon.png" alt=""><input data-a2hs-title value="${safe(ui.a2hs?.title || '')}" placeholder="${safe(chromeText('Title'))}" aria-label="${safe(chromeText('Title'))}"></div><div class="settings-dialog-actions"><button data-action="close-overlay">${safe(chromeText('Cancel'))}</button><button data-action="chrome-a2hs-add">${safe(chromeText('Add'))}</button></div></div>`;
+      },
       // lp:overlays
     },
     click(action, button, event) {
@@ -163,7 +167,7 @@ LP.define('chrome', ({
         // Chrome menu and New Tab page
         case 'chrome-incognito': chromeNewTab(true); break;
         // Chrome's Print…: the page as it is shown, its heading as the job's name.
-        case 'chrome-print': { const page = viewport.querySelector('.browser-page'); ui.overlay = ''; renderOverlay(); const title = page?.querySelector('h1, h2, strong')?.textContent?.trim() || ui.browserUrl; PrintSpooler.open(printContext(), {name: title, title, lines: String(page?.innerText || ui.browserUrl).split('\n').map(x => x.trim()).filter(Boolean)}); break; }
+        case 'chrome-print': { const page = viewport.querySelector('.browser-page'); ui.overlay = ''; renderOverlay(); const title = page?.querySelector('h1, h2, strong')?.textContent?.trim() || ui.browserUrl; PrintSpooler.open(lp.printContext(), {name: title, title, lines: String(page?.innerText || ui.browserUrl).split('\n').map(x => x.trim()).filter(Boolean)}); break; }
         case 'chrome-a2hs': { const page = viewport.querySelector('.browser-page'); ui.a2hs = {url: ui.browserUrl, title: page?.querySelector('h1, h2, strong')?.textContent?.trim() || ui.browserUrl}; ui.overlay = 'chrome-a2hs'; renderOverlay(); overlayRoot.querySelector('[data-a2hs-title]')?.focus(); break; }
         case 'chrome-a2hs-add': { const title = String(overlayRoot.querySelector('[data-a2hs-title]')?.value || ui.a2hs?.title || '').trim() || ui.a2hs.url; const item = {id: Date.now(), title, url: ui.a2hs.url}; (lp.data.webShortcuts ||= []).push(item); ui.overlay = ''; renderOverlay(); placeShortcut(`web:${item.id}`, title); break; }
         case 'open-web-shortcut': { const item = (lp.data.webShortcuts || []).find(w => String(w.id) === id); if (!item) break; openApp('chrome'); navigateBrowser(item.url); break; }

@@ -1,8 +1,8 @@
 /* TODO */
 'use strict';
 LP.define(['docs', 'sheets', 'slides', 'fit', 'newsstand', 'wallet'], ({
-  deviceDate, i18n, openApp, overlayRoot, placeShortcut, printContext, render, renderOverlay, safe, save, screen,
-  toast, ui, viewport
+  deviceDate, i18n, openApp, overlayRoot, placeShortcut, render, renderOverlay, safe, save, screen, toast, ui,
+  viewport
 }, lp) => {
   // Drive's files as the apps change them (the editors, Drive).
   const officeFiles = () => lp.data.driveFiles || StockApps.FILES;
@@ -106,7 +106,7 @@ LP.define(['docs', 'sheets', 'slides', 'fit', 'newsstand', 'wallet'], ({
         case 'wal-finish': toast(i18n.t('This feature is not part of the simulator.')); break;
         case 'lpx-drawer': ui.lpxDrawer = !ui.lpxDrawer; render(); break;
         // Docs / Sheets / Slides' Print: the file's own text.
-        case 'ed-print': { const file = officeFiles().find(f => f.id === ui.edFile); ui.overlay=''; renderOverlay(); if (!file) break; PrintSpooler.open(printContext(), {name: file.name, title: file.name, lines: String(file.text || '').split('\n')}); break; }
+        case 'ed-print': { const file = officeFiles().find(f => f.id === ui.edFile); ui.overlay=''; renderOverlay(); if (!file) break; PrintSpooler.open(lp.printContext(), {name: file.name, title: file.name, lines: String(file.text || '').split('\n')}); break; }
         // lp:cases
         default: return false;
       }

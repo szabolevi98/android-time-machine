@@ -2,7 +2,7 @@
    (docs/plans/engine-migration.md): the screen, its Sort by and overflow menus, and opening a downloaded PDF or photo. */
 'use strict';
 LP.define('downloads', ({
-  i18n, openApp, overlayRoot, printContext, render, renderOverlay, toast, ui
+  i18n, openApp, overlayRoot, render, renderOverlay, toast, ui
 }, lp) => {
   // lp:code
   return {
@@ -24,7 +24,7 @@ LP.define('downloads', ({
         case 'ldu-sort': ui.dlSort = id; ui.overlay = ''; render(); break;
         case 'ldu-view': ui.dlGrid = id === 'grid'; ui.overlay = ''; render(); break;
         case 'ldu-search': toast('No items'); break;
-        case 'dl-open-pdf': { const doc = (lp.data.downloads || []).find(d => String(d.time) === id); if (doc) PrintSpooler.openPdf(printContext(), doc); break; }
+        case 'dl-open-pdf': { const doc = (lp.data.downloads || []).find(d => String(d.time) === id); if (doc) PrintSpooler.openPdf(lp.printContext(), doc); break; }
         case 'dl-open-photo': { const photo = lp.data.photos.find(p => p.id === Number(id)); if (!photo) break; openApp('photos'); ui.photosList = 'all'; const list = PhotosApp.list(lp.photosContext()); ui.photosIndex = Math.max(0, list.findIndex(p => p.id === photo.id)); ui.selectedPhoto = photo.id; ui.sub = 'photo'; render(); break; }
         // lp:cases
         default: return false;

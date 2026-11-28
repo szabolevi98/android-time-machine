@@ -1,7 +1,7 @@
 /* TODO */
 'use strict';
 LP.define('photos', ({
-  clone, dp, i18n, openApp, overlayRoot, printContext, reducedMotion, render, renderOverlay, safe, save, screen,
+  clone, dp, i18n, openApp, overlayRoot, reducedMotion, render, renderOverlay, safe, save, screen,
   suppressReleaseClick, toast, ui, viewport
 }, lp) => {
   // Google+ Photos (the Nexus 6's Photos) over the simulator's pictures.
@@ -179,7 +179,7 @@ LP.define('photos', ({
         case 'photos-pref-list': ui.photosPrefList = id; ui.overlay = 'photos-pref-list'; renderOverlay(); break;
         case 'photos-pref-pick': (lp.data.photosPrefs ||= {})[ui.photosPrefList] = id; ui.overlay = ''; renderOverlay(); save(); render(); break;
         case 'photos-pref-online': toast(i18n.t('This feature is not part of the simulator.')); break;
-        case 'photos-print': { const photo = photosCurrent(); ui.overlay = ''; renderOverlay(); if (photo) PrintSpooler.open(printContext(), {name: photo.name, image: ICSMedia.image(photo)}); break; }
+        case 'photos-print': { const photo = photosCurrent(); ui.overlay = ''; renderOverlay(); if (photo) PrintSpooler.open(lp.printContext(), {name: photo.name, image: ICSMedia.image(photo)}); break; }
         case 'photos-unsupported': ui.overlay = ''; renderOverlay(); toast(i18n.t('This feature is not part of the simulator.')); break;
         case 'photo': ui.selectedPhoto=Number(id);if(!galleryItems().some(p=>p.id===Number(id))){ui.galleryCluster='album';ui.galleryAlbum=ICSMedia.album(lp.data.photos.find(p=>p.id===Number(id))||{});}ui.sub='photo';ui.galleryZoom=false;ui.galleryFilm=false;ui.galleryBars=true;ui.galleryFromCamera=false;render();break;
         case 'gallery-menu': case 'gallery-share': case 'gallery-details': ui.overlay=action;renderOverlay();break;

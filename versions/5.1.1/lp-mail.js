@@ -1,7 +1,7 @@
 /* TODO */
 'use strict';
 LP.define(['email', 'gmail'], ({
-  clone, emailData, i18n, overlayRoot, printContext, render, renderOverlay, save, toast, ui, viewport
+  clone, emailData, i18n, overlayRoot, render, renderOverlay, save, toast, ui, viewport
 }, lp) => {
   function renderEmail() {
     if (ui.sub === 'em-settings') return EmailPrefs.render(lp.data, ui, i18n.language, key => i18n.t(key), ICSEmail.account);
@@ -99,7 +99,7 @@ LP.define(['email', 'gmail'], ({
         case 'email-move': {const item=mailbox().find(item=>item.id===ui.emailId);if(item){if(id==='Trash')ICSEmail.trash(mailbox(),[item.id]);else{item.folder=id;delete item.previousFolder;}}ui.overlay='';ui.sub='';save();render();break;}
         case 'email-unavailable': ui.overlay='';renderOverlay();toast('This feature is not part of the simulator.');break;
         // Gmail's Print: the open message (sender, date, subject over the body) as the job.
-        case 'email-print': { const m = (lp.data.mailbox || []).find(x => x.id === ui.emailId) || (lp.data.gmailbox || []).find(x => x.id === ui.emailId); ui.overlay=''; renderOverlay(); if (!m) break; PrintSpooler.open(printContext(), {name: m.subject || '', title: m.subject || '', lines: [m.from || '', m.time || '', ...String(m.body || '').split('\n')].filter(Boolean)}); break; }
+        case 'email-print': { const m = (lp.data.mailbox || []).find(x => x.id === ui.emailId) || (lp.data.gmailbox || []).find(x => x.id === ui.emailId); ui.overlay=''; renderOverlay(); if (!m) break; PrintSpooler.open(lp.printContext(), {name: m.subject || '', title: m.subject || '', lines: [m.from || '', m.time || '', ...String(m.body || '').split('\n')].filter(Boolean)}); break; }
         case 'email-folder': if(ui.view==='gmail'){lp.data.gmailSeen={...lp.data.gmailSeen,[id]:Date.now()};save();}ui.emailFolder=id;ui.sub='';ui.emailQuery=undefined;ui.emailSelected=[];ui.overlay='';render();break;
         case 'email-star': {const item=mailbox().find(item=>item.id===id);if(item)item.starred=!item.starred;ui.overlay='';renderOverlay();save();render();break;}
         case 'email-empty-trash': ui.overlay='email-empty-trash';renderOverlay();break;
