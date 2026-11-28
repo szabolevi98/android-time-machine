@@ -28,7 +28,8 @@ one `GB.register(id, {...})` module per screen.
 | Music | gb-music.js | 2d85c4d4 |
 | Calendar | gb-calendar.js | 23788113 |
 | Gallery | gb-gallery.js | 9d8d8e72 |
-| Camera | gb-camera.js | |
+| Camera | gb-camera.js | 965c3e4a |
+| Email | gb-email.js | |
 
 Bugs fixed on the way (their own commits):
 
