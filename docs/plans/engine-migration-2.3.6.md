@@ -1,0 +1,39 @@
+# Engine migration: 2.3.6
+
+2.3.6's part of [engine-migration.md](engine-migration.md): `versions/2.3.6/simulator.js` moves into `gb-core.js` and
+one `GB.register(id, {...})` module per screen.
+
+## How a screen moves
+
+- The click cases go verbatim into the module's `action(name, el, c)` (docs/tools/migrate.py), the form cases into
+  `submit(name, values, c)`, the field handlers into `input(event, c)`, the Back steps into `back(c)`, the Menu key's
+  items into `menu(c)` (`c.gbMenu(items)`), the AlertDialog specs into `dialog(kind, c)`, Clear data into
+  `clearData(c)`.
+- The screen's helpers move with it, inside a `shell(c)` function that takes the shell's bindings from `c` and returns
+  them with the helpers, so the moved code keeps its names.
+- Gestures go into `mount(c, root)`, on the screen's own element (`root.firstElementChild`, drawn anew by every
+  render); long presses use `GB.hold`.
+- An app's settings screen (GBPrefs, Menu › Settings) is drawn over its view: while it is open the module is not in
+  front (`moduleView()` in the shell).
+
+## Progress
+
+| Screen | Module | Commit |
+| --- | --- | --- |
+| Calculator | gb-calculator.js | 3585865f |
+| Downloads, Search | gb-downloads.js, gb-search.js | ef14be02 |
+| Clock | gb-deskclock.js | 6dfac9b3 |
+| Music | gb-music.js | 2d85c4d4 |
+| Calendar | gb-calendar.js | |
+
+Bugs fixed on the way (their own commits):
+
+- Clock › Menu › Settings drew the clock: the module host was asked before GBPrefs (`moduleView`). `GB.hold` added its
+  listeners to `#viewport` on every render; they go on the screen's element now, and a right mouse button no longer
+  starts the long press.
+
+Notes:
+
+- Calendar: `data-gbcal-swipe` (the vertical swipe) is not drawn by GBCalendar, so that branch moved as it was but is
+  not reached; Day and Week swipe horizontally (`data-calendar-swipe`). The inherited ICS overlay branch
+  (`calendar-views`, `calendar-menu`) stays in the shell; GBCalendar does not open it.

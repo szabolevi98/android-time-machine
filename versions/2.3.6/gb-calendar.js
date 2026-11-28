@@ -212,3 +212,187 @@
   }
   window.GBCalendar = {COLOR, text, array, repeatText, reminderText, whenText, render, menu, dialog, step, selectCalendars};
 })();
+
+/* Calendar on Android 2.3.6 (Calendar.apk of GRK39F) as a module (docs/plans/engine-migration.md): the month, week, day
+   and agenda views with their swipes, the event screen, EditEvent and its pickers, Select calendars, the Menu key, the
+   dialogs and the day's long press. The reminders' notifications (AlertService) and the home screen widget are the
+   system's and stay with the shell. */
+(() => {
+  'use strict';
+  const i18n = window.AndroidI18n;
+  // The shell's bindings the screen's code uses, and its helpers on them.
+  function shell(c) {
+    const {data, ui, save, render, renderOverlay, viewport, deviceDate} = c;
+    function gbCalContext() {
+      const event = data.events.find(item => item.id === ui.selectedEvent);
+      return {lang: i18n.language, locale: i18n.locale(), t: key => i18n.t(key), now: deviceDate(), hour24: !!data.settings.hour24, sub: ui.sub, mode: ui.calendarMode || 'Month', selected: ui.selectedDate, first: i18n.locale() === 'en-US' ? 0 : 1, events: data.calendarState ? [] : data.events, event, instance: ui.selectedInstance, draft: ui.eventDraft, temp: ui.gbCalTemp, extra: !!ui.gbCalExtra, error: ui.calendarError ? i18n.t(ui.calendarError) : '', account: 'demo@example.com', target: ui.gbCalTarget, ok: GBSettings.text(i18n.language, 'fw_ok'), cancel: GBSettings.text(i18n.language, 'fw_cancel'), setLabel: GBDeskClock.text(i18n.language, 'date_time_set')};
+    }
+    function gbCalDialog(kind) { ui.gbCalDialog = kind; ui.overlay = 'gb-dialog-cal'; renderOverlay(); }
+    // The edit form's text fields live in the draft so the pickers and spinners can re-render it.
+    function gbCalSyncDraft() {
+      const form = viewport.querySelector('.gbcal-edit'); if (!form || !ui.eventDraft) return;
+      for (const name of ['title', 'location', 'description']) ui.eventDraft[name] = form.elements[name]?.value ?? ui.eventDraft[name];
+    }
+    function calendarRender() {
+      render();
+      const timeline=viewport.querySelector('.gbcal-scroll');
+      if(timeline)timeline.scrollTop=timeline.clientHeight*.8;
+    }
+    function calendarMove(direction) {
+      const mode=ui.calendarMode || 'Month';
+      if(mode==='Month') {const date=ICSCalendar.parse(ui.selectedDate);date.setDate(1);date.setMonth(date.getMonth()+direction);ui.selectedDate=ICSCalendar.iso(date);}
+      else ui.selectedDate=ICSCalendar.plus(ui.selectedDate,direction*(mode==='Week'?7:1));
+      calendarRender();
+    }
+    function deleteEventScope(scope) {
+      const series=data.events.find(item=>item.id===ui.selectedEvent);if(!series)return;
+      const item=ICSCalendar.instance(series,ui.selectedInstance);
+      if(scope==='this')series.exdates=[...new Set([...(series.exdates||[]),item.date])];
+      else if(scope==='future'&&item.date!==item.seriesStart)series.until=ICSCalendar.plus(item.date,-1);
+      else data.events=data.events.filter(event=>event.id!==series.id);
+      save();ui.overlay='';ui.sub='';calendarRender();
+    }
+    function calendarEdit(item) {
+      // A new event gets preferences_default_reminder_default (10 minutes), as EditEvent adds it.
+      ui.eventDraft=ICSCalendar.normalize(item || {date:ui.selectedDate,time:'12:00',title:'',reminder:10});ui.gbCalExtra=false;
+      ui.calendarError='';ui.overlay='';ui.sub='event-edit';render();
+    }
+    return {data, ui, save, render, renderOverlay, toast: c.toast, viewport, today: c.today, gbCalContext, gbCalDialog, gbCalSyncDraft, calendarRender, calendarMove, deleteEventScope, calendarEdit};
+  }
+  // Day and Week swipe vertically, Month horizontally; a long press on a day opens its context menu.
+  function mount(c, root) {
+    const {ui, viewport, dp} = c, {calendarMove, gbCalDialog} = shell(c);
+    const box = root.querySelector('.gbcal-scroll'); if (box) box.scrollTop = box.clientHeight * .8;
+    GB.hold(c, root, '[data-gbcal-day]', day => { ui.gbCalTarget = day.dataset.gbcalDay; gbCalDialog('day-context'); }, false);
+    const view = root.firstElementChild; if (!view) return;
+    let start = null;
+    view.addEventListener('pointerdown', event => { if (event.pointerType === 'mouse' && event.button !== 0) return; start = {x: event.clientX, y: event.clientY, id: event.pointerId, target: event.target}; });
+    view.addEventListener('pointermove', event => {
+      if (!start || event.pointerId !== start.id) return;
+      const dx = event.clientX - start.x, dy = event.clientY - start.y;
+      if (!ui.sub && !ui.overlay && start.target.closest('[data-gbcal-swipe]') && Math.abs(dy) > dp(14) && Math.abs(dy) > Math.abs(dx)) {
+        start.gbCalSwiping = true; c.suppressClick(350); event.preventDefault();
+        try { view.setPointerCapture(event.pointerId); } catch {}
+        viewport.querySelector('[data-gbcal-swipe]').style.transform = `translateY(${dy}px)`; return;
+      }
+      if (!ui.sub && !ui.overlay && start.target.closest('[data-calendar-swipe]') && Math.abs(dx) > dp(14) && Math.abs(dx) > Math.abs(dy) * 1.2) {
+        start.calendarSwiping = true; c.suppressClick(350); event.preventDefault();
+        try { view.setPointerCapture(event.pointerId); } catch {}
+        const surface = viewport.querySelector('[data-calendar-swipe]'); surface.style.transform = `translateX(${dx}px)`;
+      }
+    });
+    view.addEventListener('pointerup', event => {
+      if (!start || event.pointerId !== start.id) return;
+      const dx = event.clientX - start.x, dy = event.clientY - start.y, s = start; start = null;
+      if (s.gbCalSwiping) { if (Math.abs(dy) > dp(58)) calendarMove(dy < 0 ? 1 : -1); else viewport.querySelector('[data-gbcal-swipe]').style.transform = ''; c.suppressClick(350); return; }
+      if (s.calendarSwiping) { if (Math.abs(dx) > dp(52)) calendarMove(dx < 0 ? 1 : -1); else viewport.querySelector('[data-calendar-swipe]').style.transform = ''; c.suppressClick(350); }
+    });
+    view.addEventListener('pointercancel', () => { start = null; const surface = viewport.querySelector('[data-calendar-swipe]'); if (surface) surface.style.transform = ''; });
+  }
+  window.GB?.register('calendar', {
+    render(c) {
+      const ui = c.ui;
+      if (ui.gbCalSel) return GBCalendar.selectCalendars({lang: i18n.language, account: ICSEmail.account, accountType: GBEmail.text ? GBEmail.text(i18n.language, 'exchange_name') : 'Corporate', ok: GBSettings.text(i18n.language, 'fw_ok'), cancel: GBSettings.text(i18n.language, 'fw_cancel'), ...ui.gbCalSel});
+      return GBCalendar.render(shell(c).gbCalContext());
+    },
+    mount,
+    // Select calendars has no menu.
+    menu(c) { if (c.ui.gbCalSel) return; const {gbCalSyncDraft, gbCalContext} = shell(c); gbCalSyncDraft(); c.gbMenu(GBCalendar.menu(gbCalContext())); },
+    dialog: (kind, c) => GBCalendar.dialog(kind, shell(c).gbCalContext()),
+    // Select calendars closes; a day opened from another view returns to it; EditEvent is cancelled.
+    back(c) {
+      const {ui, render, calendarRender} = shell(c);
+      if (ui.gbCalSel) { ui.gbCalSel = null; render(); return true; }
+      if (!ui.sub && ui.gbCalBack) { ui.calendarMode = ui.gbCalBack; ui.gbCalBack = ''; calendarRender(); return true; }
+      if (ui.sub === 'event-edit') { ui.sub=ui.eventDraft?.id?'event':'';ui.eventDraft=null;calendarRender();return true; }
+      return false;
+    },
+    action(name, el, c) {
+      const id = el.dataset.id, action = name, button = el, {data, ui, save, render, renderOverlay, viewport, today, gbCalDialog, gbCalSyncDraft, calendarRender, calendarMove, deleteEventScope, calendarEdit} = shell(c);
+      switch (name) {
+        // SelectCalendarsActivity edits a draft; OK writes it back (a calendar that is not visible hides its events).
+        case 'gbcal-select': ui.overlay = ''; ui.gbCalSel = {state: data.calendarState || 0, expanded: true}; render(); break;
+        case 'gbcal-select-cycle': ui.gbCalSel.state = (ui.gbCalSel.state + 1) % 3; render(); break;
+        case 'gbcal-select-group': ui.gbCalSel.expanded = !ui.gbCalSel.expanded; render(); break;
+        case 'gbcal-select-ok': data.calendarState = ui.gbCalSel.state; ui.gbCalSel = null; save(); render(); break;
+        case 'calendar-prev': calendarMove(-1); break;
+        case 'calendar-next': calendarMove(1); break;
+        case 'calendar-day': if ((ui.calendarMode || 'Month') !== 'Day') ui.gbCalBack = ui.calendarMode || 'Month'; ui.selectedDate=id;ui.calendarMode='Day';ui.overlay='';calendarRender();break;
+        case 'calendar-today': ui.selectedDate=today();ui.overlay='';calendarRender();break;
+        case 'calendar-views': case 'calendar-menu': ui.overlay=action;renderOverlay();break;
+        case 'calendar-mode': ui.gbCalBack='';ui.calendarMode=data.calendarMode=id;save();ui.calendarSearch=undefined;ui.overlay='';calendarRender();break;
+        case 'calendar-search': ui.calendarMode='Agenda';ui.calendarSearch='';ui.overlay='';render();viewport.querySelector('.cal-search input').focus();break;
+        case 'calendar-slot': {const [date,time]=id.split('|');calendarEdit({date,time,title:''});break;}
+        case 'event-new': calendarEdit();break;
+        case 'gbcal-new-on': ui.selectedDate = id; calendarEdit(); break;
+        case 'gbcal-agenda-from': ui.selectedDate = id; ui.gbCalBack = ui.calendarMode || 'Month'; ui.calendarMode = 'Agenda'; ui.overlay = ''; calendarRender(); break;
+        case 'gbcal-agenda-step': ui.selectedDate = ICSCalendar.plus(ui.selectedDate, Number(id) * 30); render(); break;
+        case 'gbcal-extra': gbCalSyncDraft(); ui.gbCalExtra = !ui.gbCalExtra; ui.overlay = ''; render(); break;
+        case 'gbcal-dialog': gbCalSyncDraft(); ui.gbCalTemp = {field: id, value: ['date', 'endDate', 'time', 'endTime'].includes(id) ? ui.eventDraft?.[id] : ''}; gbCalDialog(id); break;
+        case 'gbcal-date-step': { const [field, delta] = id.split(':'); ui.gbCalTemp.value = GBCalendar.step('date', ui.gbCalTemp.value, field, Number(delta)); renderOverlay(); break; }
+        case 'gbcal-time-step': { const [field, delta] = id.split(':'); ui.gbCalTemp.value = GBCalendar.step('time', ui.gbCalTemp.value, field, Number(delta)); renderOverlay(); break; }
+        case 'gbcal-ampm': ui.gbCalTemp.value = GBCalendar.step('time', ui.gbCalTemp.value, 'ampm', 0); renderOverlay(); break;
+        case 'gbcal-picker-set': {
+          // EditEvent: moving the start keeps the duration; an end before the start is pulled up to it.
+          const d = ui.eventDraft, field = ui.gbCalTemp.field, value = ui.gbCalTemp.value, stamp = (date, time) => new Date(`${date}T${time}:00`).getTime();
+          const span = stamp(d.endDate, d.endTime) - stamp(d.date, d.time);
+          d[field] = value;
+          if (field === 'date' || field === 'time') { const end = new Date(stamp(d.date, d.time) + span); d.endDate = ICSCalendar.iso(end); d.endTime = `${String(end.getHours()).padStart(2, '0')}:${String(end.getMinutes()).padStart(2, '0')}`; }
+          else if (stamp(d.endDate, d.endTime) < stamp(d.date, d.time)) { d.endDate = d.date; d.endTime = d.time; }
+          ui.calendarError = ''; ui.overlay = ''; render(); break;
+        }
+        case 'gbcal-choose': {
+          const [field, value] = id.split(':');
+          if (field === 'info-reminder') { const series = data.events.find(item => item.id === ui.selectedEvent); if (series) { series.reminder = Number(value); save(); } }
+          else if (ui.eventDraft) ui.eventDraft[field] = field === 'repeat' ? value : Number(value);
+          ui.overlay = ''; render(); break;
+        }
+        case 'gbcal-reminder': gbCalSyncDraft(); ui.eventDraft.reminder = Number(id) > 0 ? 10 : -1; render(); break;
+        case 'gbcal-info-reminder': { const series = data.events.find(item => item.id === ui.selectedEvent); if (series) { series.reminder = Number(id) > 0 ? 10 : -1; save(); } render(); break; }
+        case 'event-open': ui.selectedEvent=Number(id);ui.selectedInstance=button.dataset.date||'';ui.sub='event';render();break;
+        case 'event-edit': { const series=data.events.find(item=>item.id===ui.selectedEvent); if(series&&ICSCalendar.normalize(series).repeat!=='none')gbCalDialog('edit-scope'); else calendarEdit(series); break; }
+        case 'event-edit-scope': { const series=data.events.find(item=>item.id===ui.selectedEvent); if(!series)break; const item=ICSCalendar.instance(series,ui.selectedInstance); calendarEdit({...series,date:item.date,endDate:item.endDate,...(id==='this'?{repeat:'none'}:{})}); ui.eventDraft.scope=id; ui.eventDraft.instance=item.date; ui.eventDraft.seriesStart=item.seriesStart; render(); break; }
+        case 'event-delete-scope': deleteEventScope(id); break;
+        case 'event-cancel': ui.sub=ui.eventDraft?.id?'event':'';ui.eventDraft=null;calendarRender();break;
+        case 'event-delete': if(ui.sub==='event-edit'&&!ui.eventDraft?.id)break;gbCalDialog(ICSCalendar.normalize(data.events.find(item=>item.id===ui.selectedEvent)||{}).repeat!=='none'?'delete-scope':'delete');break;
+        case 'event-confirm-delete': data.events=data.events.filter(item=>item.id!==ui.selectedEvent);save();ui.overlay='';ui.sub='';calendarRender();break;
+        default: return false;
+      }
+      return true;
+    },
+    submit(name, values, c) {
+      const {data, ui, save, render, toast} = shell(c);
+      switch (name) {
+        case 'event': {
+          const event={...ui.eventDraft,id:ui.eventDraft?.id || Date.now(),title:String(values.get('title')||'').trim(),date:String(values.get('date')),time:String(values.get('time')),endDate:String(values.get('endDate')),endTime:String(values.get('endTime')),allDay:values.has('allDay'),location:String(values.get('location')||'').trim(),description:String(values.get('description')||'').trim()};
+          ui.eventDraft=event;
+          if(!ICSCalendar.valid(event)){ui.calendarError='End must be after start';render();return true;}
+          event.repeat=String(values.get('repeat')||'none');event.reminder=Number(values.get('reminder')??-1);
+          const {scope,instance,seriesStart}=event;delete event.scope;delete event.instance;delete event.seriesStart;
+          const existing=data.events.findIndex(item=>item.id===event.id);
+          if(scope&&existing>=0){
+            const series=data.events[existing];
+            if(scope==='this'){series.exdates=[...new Set([...(series.exdates||[]),instance])];event.id=Date.now();delete event.exdates;delete event.until;data.events.push(event);}
+            else if(scope==='future'&&instance!==seriesStart){series.until=ICSCalendar.plus(instance,-1);event.id=Date.now();delete event.exdates;delete event.until;data.events.push(event);}
+            else {const shift=Math.round((ICSCalendar.parse(event.date)-ICSCalendar.parse(instance))/864e5),span=Math.round((ICSCalendar.parse(event.endDate)-ICSCalendar.parse(event.date))/864e5);event.date=ICSCalendar.plus(seriesStart,shift);event.endDate=ICSCalendar.plus(event.date,span);data.events[existing]=event;}
+          } else if(existing<0)data.events.push(event);else data.events[existing]=event;
+          const edited=existing>=0;save();ui.selectedDate=event.date;ui.selectedEvent=event.id;ui.selectedInstance=scope&&scope!=='all'?event.date:instance||'';ui.eventDraft=null;ui.sub=edited?'event':'';render();toast(GBCalendar.text(i18n.language,edited?'saving_event':'creating_event'));break;
+        }
+        case 'calendar-search': ui.calendarSearch=String(values.get('query')||'').trim();render();break;
+        default: return false;
+      }
+      return true;
+    },
+    // The edit form's fields (the inherited ICS editor's and EditEvent's).
+    input(event, c) {
+      const {ui, render, gbCalSyncDraft} = shell(c);
+      if(event.target.closest('.cal-editor') && event.target.name) {
+        ui.eventDraft[event.target.name]=event.target.type==='checkbox'?event.target.checked:event.target.value;
+        return true;
+      }
+      if (event.target.closest('.gbcal-edit') && ui.eventDraft) { if (event.target.name === 'allDay') { gbCalSyncDraft(); ui.eventDraft.allDay = event.target.checked; render(); } else if (['title', 'location', 'description'].includes(event.target.name)) ui.eventDraft[event.target.name] = event.target.value; return true; }
+      return false;
+    },
+    clearData(c) { c.data.events = c.clone(c.defaults.events); }
+  });
+})();
