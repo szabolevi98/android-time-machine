@@ -36,3 +36,12 @@ The code moves verbatim. A module is one IIFE:
 
 - 2026-11-28: kk-core.js (`window.KK = window.StoreHost`), the core's hook points, and the first module:
   kk-calculator.js (screen, overflow menu, panel swipe, Back, CLR / DELETE hold, keys, Clear data).
+- 2026-11-28 (later): modules for Downloads, the wallpaper picker, Live Wallpapers, the Google apps (YouTube, Drive,
+  Maps, Earth, Google+, Google Settings, News & Weather, Google Search / Voice Search, Keep), Newsstand / Quickoffice /
+  Wallet, the four Play apps, Photos, Gallery, Camera, Clock, Calendar, Email / Gmail, Hangouts, Phone, People, Chrome,
+  the Play Store and Settings. Hooks follow EC: action(name, el, event, c), submit(form, event, c). Each move was
+  checked against main by a differential walk (the same clicks on both, the screens compared).
+- Left: the shell (status bar, lock / keyguard, home / drawer / folders / widgets / Google Now, the shade and quick
+  settings, Recents, the power menu, volume, the search panel, print, dreams), then the rest of simulator.js into
+  kk-core.js laid out like ec-core.js (docs/plans/engine-migration.md, Target), and simulator.js deleted.
+  factory-drawers and global-actions tests still cut spans out of simulator.js.
