@@ -69,3 +69,4 @@ the module core, screen by screen, until it is gone.
   first limits half, drawer-mouse and store-apps; their failures were socket errors (net::ERR_NO_BUFFER_SPACE) or the
   LP.overlay bug fixed in 05e22981. Nothing is pushed yet.
 - The move tool (lpmove.cjs, inv.cjs) is in the shared side-session notes folder.
+| 3 | Home screen and app drawer (widgets, folders, clings, shortcuts, drag and drop, page swipes, widget resize) | lp-home.js | moved |

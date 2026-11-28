@@ -1,11 +1,11 @@
 /* TODO */
 'use strict';
 LP.define('play-store', ({
-  appNames, dp, i18n, openApp, overlayRoot, placeShortcut, render, renderOverlay, safe, save, screen,
-  storeAppsSync, storeContext, toast, ui, viewport
+  appNames, dp, i18n, openApp, overlayRoot, render, renderOverlay, safe, save, screen, storeAppsSync, storeContext,
+  toast, ui, viewport
 }, lp) => {
   // Installed from the store: the app joins the launcher and, with the store's shortcut setting on, the home screen.
-  function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (jbPlayContext().prefs.shortcuts) placeShortcut(r, appNames[r]); }
+  function storeInstalled(id) { const r = StoreHost.runtime(id); if (!r) return; storeAppsSync(); if (jbPlayContext().prefs.shortcuts) lp.placeShortcut(r, appNames[r]); }
   // Uninstalled (the store or Settings › Apps): the app, its icons and its data go.
   function storeUninstall(id) {
     lp.data.marketInstalled = (lp.data.marketInstalled || []).filter(x => x !== id);

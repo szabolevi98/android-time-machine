@@ -1,9 +1,8 @@
 /* TODO */
 'use strict';
 LP.define('lock', ({
-  captureRecentView, clock, deviceDate, digitalClockWidget, dp, fullDate, home, i18n, lockControls, musicActive,
-  openApp, overlayRoot, reducedMotion, render, renderOverlay, safe, save, screen, shadeDate, today, tracks, ui,
-  viewport
+  captureRecentView, clock, deviceDate, dp, fullDate, home, i18n, lockControls, openApp, overlayRoot,
+  reducedMotion, render, renderOverlay, safe, save, screen, shadeDate, today, tracks, ui, viewport
 }, lp) => {
   function lockScreen(){captureRecentView();lockControls.lock();ui.kgUp=true;ui.kgBouncing=false;ui.kgPending=null;ui.kgRelock=false;ui.locked=ICSLockscreen.secure(lp.data);ui.sleeping=lp.data.settings.screenLock==='none';ui.view=ui.sleeping?'home':'lock';ui.overlay='';render();}
   /* MultiWaveView (keyguard_screen_tab_unlock): targets sit on the ring (radius 135dp), the handle follows the
@@ -74,8 +73,8 @@ LP.define('lock', ({
   }
   function keyguardParts() {
     // TransportControlView covers the clock rows while the Music service is active.
-    const track = tracks[ui.music.track], transport = musicActive() ? `<div class="lock-transport" data-no-translate><div class="lock-transport-art"></div><div class="lock-transport-bar"><p><span>${safe(track.title)}</span> - ${safe(track.artist)} - ${safe(track.album)}</p><div><button data-action="lock-media" data-id="previous" aria-label="${safe(i18n.t('Previous track'))}"><img src="assets/music-ic_media_previous.png" alt=""></button><button data-action="lock-media" data-id="play" aria-label="${safe(i18n.t(ui.music.playing ? 'Pause' : 'Play'))}"><img src="assets/music-ic_media_${ui.music.playing ? 'pause' : 'play'}.png" alt=""></button><button data-action="lock-media" data-id="next" aria-label="${safe(i18n.t('Next track'))}"><img src="assets/music-ic_media_next.png" alt=""></button></div></div></div>` : '';
-    const kgPages = JBKeyguard.pages(lp.data.keyguardWidgets || [], {music: musicActive()});
+    const track = tracks[ui.music.track], transport = lp.musicActive() ? `<div class="lock-transport" data-no-translate><div class="lock-transport-art"></div><div class="lock-transport-bar"><p><span>${safe(track.title)}</span> - ${safe(track.artist)} - ${safe(track.album)}</p><div><button data-action="lock-media" data-id="previous" aria-label="${safe(i18n.t('Previous track'))}"><img src="assets/music-ic_media_previous.png" alt=""></button><button data-action="lock-media" data-id="play" aria-label="${safe(i18n.t(ui.music.playing ? 'Pause' : 'Play'))}"><img src="assets/music-ic_media_${ui.music.playing ? 'pause' : 'play'}.png" alt=""></button><button data-action="lock-media" data-id="next" aria-label="${safe(i18n.t('Next track'))}"><img src="assets/music-ic_media_next.png" alt=""></button></div></div></div>` : '';
+    const kgPages = JBKeyguard.pages(lp.data.keyguardWidgets || [], {music: lp.musicActive()});
     if (!Number.isInteger(ui.kgPage) || ui.kgPage >= kgPages.length || kgPages[ui.kgPage]?.type === 'camera') ui.kgPage = JBKeyguard.defaultPage(kgPages);
     const now = deviceDate(), hour24 = !!lp.data.settings.hour24;
     return {list: kgPages, parts: {
@@ -89,7 +88,7 @@ LP.define('lock', ({
   // Keyguard-capable widgets: the Calendar list and the 4.2 DeskClock digital clock.
   function keyguardWidget(widget) {
     if (widget.type === 'calendar') return ICSWidgets.calendar(lp.data, key => i18n.t(key), i18n.locale(), deviceDate(), !!lp.data.settings.hour24);
-    return digitalClockWidget('div');
+    return lp.digitalClockWidget('div');
   }
   function requestBouncer(pending) {
     ui.kgPending = pending; ui.kgBouncing = true; ui.kgHint = ''; render();

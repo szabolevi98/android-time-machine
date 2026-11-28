@@ -1,10 +1,10 @@
 /* TODO */
 'use strict';
 LP.define('people', ({
-  captureRecentView, clone, contact, defaultData, i18n, openApp, overlayRoot, placeShortcut, render, renderOverlay,
-  safe, save, toast, ui, viewport
+  captureRecentView, clone, contact, defaultData, i18n, openApp, overlayRoot, render, renderOverlay, safe, save,
+  toast, ui, viewport
 }, lp) => {
-  function placeContactShortcut(person) { if (person) placeShortcut(`contact:${person.id}`, person.name); }
+  function placeContactShortcut(person) { if (person) lp.placeShortcut(`contact:${person.id}`, person.name); }
   function renderPeople() { return ICSPeople.render(lp.data,ui,key => i18n.t(key),i18n.locale()); }
   function editPerson(isNew = false) {
     const person = isNew ? {} : contact(ui.selectedContact);

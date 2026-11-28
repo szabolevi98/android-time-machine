@@ -1,8 +1,8 @@
 /* TODO */
 'use strict';
 LP.define('chrome', ({
-  chromeText, clone, i18n, openApp, overlayRoot, placeShortcut, render, renderOverlay, safe, save,
-  syncBrowserState, toast, ui, viewport
+  chromeText, clone, i18n, openApp, overlayRoot, render, renderOverlay, safe, save, syncBrowserState, toast, ui,
+  viewport
 }, lp) => {
   function normalizeAddress(raw) {
     const value = raw.trim().replace(/^https?:\/\//i, '').replace(/\/$/, '');
@@ -163,7 +163,7 @@ LP.define('chrome', ({
         // Chrome's Print…: the page as it is shown, its heading as the job's name.
         case 'chrome-print': { const page = viewport.querySelector('.browser-page'); ui.overlay = ''; renderOverlay(); const title = page?.querySelector('h1, h2, strong')?.textContent?.trim() || ui.browserUrl; PrintSpooler.open(lp.printContext(), {name: title, title, lines: String(page?.innerText || ui.browserUrl).split('\n').map(x => x.trim()).filter(Boolean)}); break; }
         case 'chrome-a2hs': { const page = viewport.querySelector('.browser-page'); ui.a2hs = {url: ui.browserUrl, title: page?.querySelector('h1, h2, strong')?.textContent?.trim() || ui.browserUrl}; ui.overlay = 'chrome-a2hs'; renderOverlay(); overlayRoot.querySelector('[data-a2hs-title]')?.focus(); break; }
-        case 'chrome-a2hs-add': { const title = String(overlayRoot.querySelector('[data-a2hs-title]')?.value || ui.a2hs?.title || '').trim() || ui.a2hs.url; const item = {id: Date.now(), title, url: ui.a2hs.url}; (lp.data.webShortcuts ||= []).push(item); ui.overlay = ''; renderOverlay(); placeShortcut(`web:${item.id}`, title); break; }
+        case 'chrome-a2hs-add': { const title = String(overlayRoot.querySelector('[data-a2hs-title]')?.value || ui.a2hs?.title || '').trim() || ui.a2hs.url; const item = {id: Date.now(), title, url: ui.a2hs.url}; (lp.data.webShortcuts ||= []).push(item); ui.overlay = ''; renderOverlay(); lp.placeShortcut(`web:${item.id}`, title); break; }
         case 'open-web-shortcut': { const item = (lp.data.webShortcuts || []).find(w => String(w.id) === id); if (!item) break; openApp('chrome'); navigateBrowser(item.url); break; }
         case 'chrome-close-all': ui.browserSession = {tabs: [{history: [ChromeApp.NTP], index: 0}], active: 0}; ui.sub = ''; ui.overlay = ''; renderOverlay(); saveBrowserState(); render(); break;
         case 'chrome-ntp': chromeSection(id); break;

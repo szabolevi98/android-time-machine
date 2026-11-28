@@ -1,15 +1,14 @@
 /* TODO */
 'use strict';
 LP.define(['docs', 'sheets', 'slides', 'fit', 'newsstand', 'wallet'], ({
-  deviceDate, i18n, openApp, overlayRoot, placeShortcut, render, renderOverlay, safe, save, screen, toast, ui,
-  viewport
+  deviceDate, i18n, openApp, overlayRoot, render, renderOverlay, safe, save, screen, toast, ui, viewport
 }, lp) => {
   // Drive's files as the apps change them (the editors, Drive).
   const officeFiles = () => lp.data.driveFiles || StockApps.FILES;
   const fitContext=()=>({data: lp.data,ui,locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,toast});
   const editorContext=()=>({data: lp.data,ui,files:officeFiles(),locale:i18n.locale(),t:key=>i18n.t(key),save,render,renderOverlay,
     openDrive(){openApp('drive');},pick(){lp.docPick(ui.view,EditorMore.ACCEPT[ui.view]);},shareText:lp.driveShareText,shareFile:lp.driveShareFile,
-    shortcut(file){placeShortcut('office:'+file.id,file.name);}});
+    shortcut(file){lp.placeShortcut('office:'+file.id,file.name);}});
   Object.assign(lp, {editorContext});
   // lp:code
   return {

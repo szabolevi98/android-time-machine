@@ -1,7 +1,7 @@
 /* TODO */
 'use strict';
 LP.define('power', ({
-  appIcon, apps, home, i18n, lockControls, overlayRoot, render, renderOverlay, screen, ui
+  apps, home, i18n, lockControls, overlayRoot, render, renderOverlay, screen, ui
 }, lp) => {
   function powerKey() { if (ui.power === 'off') { bootUp(false); return; } if (ui.power || ui.overlay === 'power-progress') return; if(ui.locked){ui.sleeping=!ui.sleeping;lockControls.lock();render();}else if(ui.sleeping||ui.view==='lock'){ui.sleeping=false;home(false);}else lp.lockScreen(); }
   // PhoneWindowManager: holding the key opens GlobalActions only while the screen is on; otherwise it just wakes.
@@ -21,7 +21,7 @@ LP.define('power', ({
     if (reboot) setTimeout(() => bootUp(true), 900);
   }
   function bootUp(safeMode, booted) {
-    booted ||= AndroidBoot.prepare({markup: apps.map(app => appIcon(app[0])).join('')});
+    booted ||= AndroidBoot.prepare({markup: apps.map(app => lp.appIcon(app[0])).join('')});
     ui.power = 'boot'; ui.safeMode = safeMode; renderPower();
     // Finish after the native movie, or after a requested skip once startup resources are ready.
     let finished = false, stop = () => {};

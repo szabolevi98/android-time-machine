@@ -1,7 +1,7 @@
 /* TODO */
 'use strict';
 LP.define('recent', ({
-  appIcon, appNames, captureRecentView, home, i18n, lockControls, LP_PRIMARY, LP_STATUS_COLORS, navRoot, openApp,
+  appNames, captureRecentView, home, i18n, lockControls, LP_PRIMARY, LP_STATUS_COLORS, navRoot, openApp,
   overlayRoot, reducedMotion, render, renderOverlay, safe, save, toast, ui, viewport
 }, lp) => {
   /* TaskStackView.onStackTaskRemoved: the front-most remaining task keeps its place (the stack scroll moves by as much
@@ -82,7 +82,7 @@ LP.define('recent', ({
       'recent'() {
         ui.lpRecents?.destroy();
         const searchCard = `<div class="lp-qsb-card"><button data-action="browser-search" aria-label="${safe(i18n.t('Search'))}"><img class="lp-qsb-logo" src="assets/gnl-ic_searchbox_google.png" alt="Google"></button><button class="voice-search" data-action="voice-search" aria-label="${safe(i18n.t('Voice Search'))}"><img class="lp-qsb-mic" src="assets/gnl-ic_mic_none.png" alt=""></button></div>`;
-        overlayRoot.innerHTML = LPRecents.render(ui.recent, {names: appNames, icon: appIcon, snapshots: ui.recentSnapshots, colors: LP_PRIMARY, statusColors: LP_STATUS_COLORS, t: key => i18n.t(key), pin: !!lp.data.settings.screenPinning, search: searchCard});
+        overlayRoot.innerHTML = LPRecents.render(ui.recent, {names: appNames, icon: lp.appIcon, snapshots: ui.recentSnapshots, colors: LP_PRIMARY, statusColors: LP_STATUS_COLORS, t: key => i18n.t(key), pin: !!lp.data.settings.screenPinning, search: searchCard});
         const panel = overlayRoot.querySelector('.lp-recents');
         ui.lpRecents = LPRecents.attach(panel, {scroll: ui.recentsScroll, reduced: !!reducedMotion?.matches, from: ui.recentsFrom, elapsed: performance.now() - (ui.recentsAt || 0), onScroll: (value, end) => { ui.recentsScroll = value; if (end) lp.suppressClickUntil = Date.now() + 300; }});
         if (ui.recentsScroll === undefined) ui.recentsScroll = LPRecents.layout(panel);
